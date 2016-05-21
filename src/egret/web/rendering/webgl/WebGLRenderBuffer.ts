@@ -238,8 +238,14 @@ module egret.web {
          * @param useMaxSize 若传入true，则将改变后的尺寸与已有尺寸对比，保留较大的尺寸。
          */
         public resize(width:number, height:number, useMaxSize?:boolean):void {
+
+            width = width || 1;
+            height = height || 1;
+
             // render target 尺寸重置
-            this.rootRenderTarget.resize(width, height);
+            if(width != this.rootRenderTarget.width || height != this.rootRenderTarget.height) {
+                this.rootRenderTarget.resize(width, height);
+            }
 
             this.renderContext.pushBuffer(this);
 

@@ -101,9 +101,7 @@ module egret.web {
         }
 
         public bindBufferTarget(buffer:WebGLRenderBuffer) {
-            // 绑定buffer的frameBuffer
-            var gl = this.context;
-            gl.bindFramebuffer(gl.FRAMEBUFFER, buffer.rootRenderTarget.getFrameBuffer());
+            buffer.rootRenderTarget.activate();
         }
 
         // 是否绑定了indices，如果绑定了，则不再切换！

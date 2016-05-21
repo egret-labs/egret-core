@@ -5484,59 +5484,65 @@ var egret;
 (function (egret) {
     var web;
     (function (web) {
+        // render target 对象池
+        var renderTargetPool = [];
         /**
          * @private
-         * WebGLRenderTarget
+         * WebGLRenderTarget类
          * 一个WebGL渲染目标，拥有一个frame buffer和texture
-         * A webgl render target, has a frame buffer and a texture
          */
         var WebGLRenderTarget = (function () {
             function WebGLRenderTarget(gl, width, height, useFrameBuffer) {
                 if (useFrameBuffer === void 0) { useFrameBuffer = true; }
+                // 清除色
+                this.clearColor = [0, 0, 0, 0];
                 this.gl = gl;
-                // width and height cannot be 0, or webgl will throw a warn
+                // 如果尺寸为 0 chrome会报警
                 this.width = width || 1;
                 this.height = height || 1;
                 this.useFrameBuffer = useFrameBuffer;
+                // 创建材质
                 this.texture = this.createTexture();
-                // create a frame buffer
+                // 创建frame buffer
                 this.frameBuffer = gl.createFramebuffer();
                 gl.bindFramebuffer(gl.FRAMEBUFFER, this.frameBuffer);
-                // bind a texture to frame buffer, store color data
+                // 绑定材质
                 gl.framebufferTexture2D(gl.FRAMEBUFFER, gl.COLOR_ATTACHMENT0, gl.TEXTURE_2D, this.texture, 0);
-                // bind a stencil buffer to frame buffer, store stencil data
+                // 绑定stencil buffer
                 this.stencilBuffer = gl.createRenderbuffer();
                 gl.bindRenderbuffer(gl.RENDERBUFFER, this.stencilBuffer);
                 gl.renderbufferStorage(gl.RENDERBUFFER, gl.DEPTH_STENCIL, this.width, this.height);
                 gl.framebufferRenderbuffer(gl.FRAMEBUFFER, gl.DEPTH_STENCIL_ATTACHMENT, gl.RENDERBUFFER, this.stencilBuffer);
-                gl.bindFramebuffer(gl.FRAMEBUFFER, null);
             }
             var d = __define,c=WebGLRenderTarget,p=c.prototype;
             /**
-             * resize this render target, this will cause render target unbind
+             * 重置render target的尺寸
              */
             p.resize = function (width, height) {
-                width = width || 1;
-                height = height || 1;
-                if (this.width == width && this.height == height) {
-                    return;
-                }
                 var gl = this.gl;
-                this.width = width;
-                this.height = height;
-                // resize texture
+                // 设置texture尺寸
                 gl.bindTexture(gl.TEXTURE_2D, this.texture);
                 gl.texImage2D(gl.TEXTURE_2D, 0, gl.RGBA, this.width, this.height, 0, gl.RGBA, gl.UNSIGNED_BYTE, null);
-                gl.bindTexture(gl.TEXTURE_2D, null);
-                // resize renderbuffer
-                gl.bindFramebuffer(gl.FRAMEBUFFER, this.frameBuffer);
-                gl.bindRenderbuffer(gl.RENDERBUFFER, this.stencilBuffer);
+                // gl.bindTexture(gl.TEXTURE_2D, null);
+                // 设置render buffer的尺寸
+                gl.bindFramebuffer(gl.FRAMEBUFFER, this.frameBuffer); // 是否需要强制绑定？
+                gl.bindRenderbuffer(gl.RENDERBUFFER, this.stencilBuffer); // 是否需要强制绑定？
                 gl.renderbufferStorage(gl.RENDERBUFFER, gl.DEPTH_STENCIL, this.width, this.height);
-                // cause frame buffer unbind!!!
-                gl.bindFramebuffer(gl.FRAMEBUFFER, null);
+                this.width = width;
+                this.height = height;
+                // 此处不解绑是否会造成bug？
+                // gl.bindFramebuffer(gl.FRAMEBUFFER, null);
             };
-            // if dont use frame buffer, get frame buffer will return null
-            // so gl will bind frame buffer with a null
+            /**
+             * 激活此render target
+             */
+            p.activate = function () {
+                var gl = this.gl;
+                gl.bindFramebuffer(gl.FRAMEBUFFER, this.getFrameBuffer());
+            };
+            /**
+             * 获取frame buffer
+             */
             p.getFrameBuffer = function () {
                 if (!this.useFrameBuffer) {
                     return null;
@@ -5544,20 +5550,60 @@ var egret;
                 return this.frameBuffer;
             };
             /**
-             * create a texture
+             * 创建材质
+             * TODO 创建材质的方法可以合并
              */
             p.createTexture = function () {
                 var gl = this.gl;
                 var texture = gl.createTexture();
                 gl.bindTexture(gl.TEXTURE_2D, texture);
-                // set width and height, cannot be 0
                 gl.texImage2D(gl.TEXTURE_2D, 0, gl.RGBA, this.width, this.height, 0, gl.RGBA, gl.UNSIGNED_BYTE, null);
                 gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MAG_FILTER, gl.LINEAR);
                 gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MIN_FILTER, gl.LINEAR);
                 gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_WRAP_S, gl.CLAMP_TO_EDGE);
                 gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_WRAP_T, gl.CLAMP_TO_EDGE);
-                gl.bindTexture(gl.TEXTURE_2D, null);
                 return texture;
+            };
+            /**
+             * 清除render target颜色缓存
+             */
+            p.clear = function (bind) {
+                var gl = this.gl;
+                if (bind) {
+                    this.activate();
+                }
+                gl.colorMask(true, true, true, true);
+                gl.clearColor(this.clearColor[0], this.clearColor[1], this.clearColor[2], this.clearColor[3]);
+                gl.clear(gl.COLOR_BUFFER_BIT);
+            };
+            /**
+             * 从对象池中取出或创建一个新的render target对象。
+             * 目前只支持一个上下文共用此对象池，多个上下文会导致错误
+             */
+            WebGLRenderTarget.create = function (gl, width, height) {
+                var renderTarget = renderTargetPool.pop();
+                if (!renderTarget) {
+                    renderTarget = new WebGLRenderTarget(gl, width, height);
+                }
+                else {
+                    if (width != renderTarget.width || height != renderTarget.height) {
+                        renderTarget.resize(width, height);
+                    }
+                    else {
+                        renderTarget.clear(true);
+                    }
+                }
+                return renderTarget;
+            };
+            /**
+             * 释放一个render target实例到对象池
+             */
+            WebGLRenderTarget.release = function (renderTarget) {
+                if (!renderTarget) {
+                    return;
+                }
+                // 是否需要resize以节省内存？
+                renderTargetPool.push(renderTarget);
             };
             return WebGLRenderTarget;
         }());
@@ -5653,9 +5699,7 @@ var egret;
                 }
             };
             p.bindBufferTarget = function (buffer) {
-                // 绑定buffer的frameBuffer
-                var gl = this.context;
-                gl.bindFramebuffer(gl.FRAMEBUFFER, buffer.rootRenderTarget.getFrameBuffer());
+                buffer.rootRenderTarget.activate();
             };
             p.bindBufferData = function (buffer) {
                 var gl = this.context;
@@ -5992,8 +6036,12 @@ var egret;
              * @param useMaxSize 若传入true，则将改变后的尺寸与已有尺寸对比，保留较大的尺寸。
              */
             p.resize = function (width, height, useMaxSize) {
+                width = width || 1;
+                height = height || 1;
                 // render target 尺寸重置
-                this.rootRenderTarget.resize(width, height);
+                if (width != this.rootRenderTarget.width || height != this.rootRenderTarget.height) {
+                    this.rootRenderTarget.resize(width, height);
+                }
                 this.renderContext.pushBuffer(this);
                 // 如果是舞台的渲染缓冲，执行resize，否则surface大小不随之改变
                 if (this.renderContext.$bufferStack[0] == this) {
