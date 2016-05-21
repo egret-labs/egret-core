@@ -174,7 +174,7 @@ module egret.web {
         /**
          * 释放一个render target实例到对象池
          */
-        public release(renderTarget:WebGLRenderTarget):void {
+        public releaseRenderTarget(renderTarget:WebGLRenderTarget):void {
             if(!renderTarget){
                 return;
             }

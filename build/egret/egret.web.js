@@ -5520,12 +5520,12 @@ var egret;
                 var gl = this.gl;
                 // 设置texture尺寸
                 gl.bindTexture(gl.TEXTURE_2D, this.texture);
-                gl.texImage2D(gl.TEXTURE_2D, 0, gl.RGBA, this.width, this.height, 0, gl.RGBA, gl.UNSIGNED_BYTE, null);
+                gl.texImage2D(gl.TEXTURE_2D, 0, gl.RGBA, width, height, 0, gl.RGBA, gl.UNSIGNED_BYTE, null);
                 // gl.bindTexture(gl.TEXTURE_2D, null);
                 // 设置render buffer的尺寸
                 gl.bindFramebuffer(gl.FRAMEBUFFER, this.frameBuffer); // 是否需要强制绑定？
                 gl.bindRenderbuffer(gl.RENDERBUFFER, this.stencilBuffer); // 是否需要强制绑定？
-                gl.renderbufferStorage(gl.RENDERBUFFER, gl.DEPTH_STENCIL, this.width, this.height);
+                gl.renderbufferStorage(gl.RENDERBUFFER, gl.DEPTH_STENCIL, width, height);
                 this.width = width;
                 this.height = height;
                 // 此处不解绑是否会造成bug？
@@ -5722,7 +5722,7 @@ var egret;
             /**
              * 释放一个render target实例到对象池
              */
-            p.release = function (renderTarget) {
+            p.releaseRenderTarget = function (renderTarget) {
                 if (!renderTarget) {
                     return;
                 }
