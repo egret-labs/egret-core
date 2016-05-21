@@ -42,6 +42,9 @@ module egret.web {
         return canvas;
     }
 
+    // render target 对象池
+    var renderTargetPool = [];
+
     /**
      * @private
      * WebGL上下文对象，提供简单的绘图接口
@@ -58,7 +61,9 @@ module egret.web {
          */
         public surface:HTMLCanvasElement;
 
-        // 单例
+        /**
+         * WebGLRenderContext单例
+         */
         private static instance:WebGLRenderContext;
         public static getInstance(width:number, height:number):WebGLRenderContext {
             if(this.instance) {
@@ -101,7 +106,7 @@ module egret.web {
         }
 
         public bindBufferTarget(buffer:WebGLRenderBuffer) {
-            buffer.rootRenderTarget.activate();
+            this.activateRenderTarget(buffer.rootRenderTarget);
         }
 
         // 是否绑定了indices，如果绑定了，则不再切换！
@@ -129,17 +134,52 @@ module egret.web {
             this.onResize(buffer.width, buffer.height);
         }
 
+        // 当前启用的render target
+        public currentRenderTarget:WebGLRenderTarget;
+
         /**
-         * 创建render target 对象
-         * 由此类创建是为了消除创建造成的解绑效果
+         * 启用render target
          */
-        public createRenderTarget(width:number, height:number):WebGLRenderTarget {
-            var target = new WebGLRenderTarget(this.context, width, height);
-            // 恢复绑定
-            if(this.currentBuffer) {
-                this.bindBufferTarget(this.currentBuffer);
+        public activateRenderTarget(renderTarget:WebGLRenderTarget) {
+            renderTarget.activate();
+            this.currentRenderTarget = renderTarget;
+        }
+
+        /**
+         * 从对象池中取出或创建一个新的render target对象。
+         */
+        public createRenderTarget(width:number, height:number, activate?:boolean):WebGLRenderTarget {
+            var gl = this.context;
+
+            var renderTarget = renderTargetPool.pop();
+            if (!renderTarget) {
+                renderTarget = new WebGLRenderTarget(gl, width, height);
+            } else {
+                if(width != renderTarget.width || height != renderTarget.height) {
+                    renderTarget.resize(width, height);
+                } else {
+                    renderTarget.clear(true);
+                }
             }
-            return target;
+
+            if(!activate && this.currentRenderTarget) {
+                this.activateRenderTarget(this.currentRenderTarget);
+            } else {
+                this.activateRenderTarget(renderTarget);
+            }
+
+            return renderTarget;
+        }
+
+        /**
+         * 释放一个render target实例到对象池
+         */
+        public release(renderTarget:WebGLRenderTarget):void {
+            if(!renderTarget){
+                return;
+            }
+            // 是否需要resize以节省内存？
+            renderTargetPool.push(renderTarget);
         }
 
         public constructor(width?:number, height?:number) {

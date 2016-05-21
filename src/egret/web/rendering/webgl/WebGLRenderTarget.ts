@@ -29,9 +29,6 @@
 
 module egret.web {
 
-    // render target 对象池
-    var renderTargetPool = [];
-
     /**
      * @private
      * WebGLRenderTarget类
@@ -53,20 +50,15 @@ module egret.web {
         public width:number;
         public height:number;
 
-        // 是否启用frame buffer
-        public useFrameBuffer:boolean;
-
         // 清除色
         public clearColor = [0, 0, 0, 0];
 
-        public constructor(gl:WebGLRenderingContext, width:number, height:number, useFrameBuffer:boolean = true) {
+        public constructor(gl:WebGLRenderingContext, width:number, height:number) {
             this.gl = gl;
 
             // 如果尺寸为 0 chrome会报警
             this.width = width || 1;
             this.height = height || 1;
-
-            this.useFrameBuffer = useFrameBuffer;
 
             // 创建材质
             this.texture = this.createTexture();
@@ -117,6 +109,8 @@ module egret.web {
             gl.bindFramebuffer(gl.FRAMEBUFFER, this.getFrameBuffer());
         }
 
+        // 是否启用frame buffer, 默认为true
+        public useFrameBuffer:boolean = true;
         /**
          * 获取frame buffer
          */
@@ -157,35 +151,6 @@ module egret.web {
             gl.colorMask(true, true, true, true);
             gl.clearColor(this.clearColor[0], this.clearColor[1], this.clearColor[2], this.clearColor[3]);
             gl.clear(gl.COLOR_BUFFER_BIT);
-        }
-
-        /**
-         * 从对象池中取出或创建一个新的render target对象。
-         * 目前只支持一个上下文共用此对象池，多个上下文会导致错误
-         */
-        public static create(gl:WebGLRenderingContext, width:number, height:number):WebGLRenderTarget {
-            var renderTarget = renderTargetPool.pop();
-            if (!renderTarget) {
-                renderTarget = new WebGLRenderTarget(gl, width, height);
-            } else {
-                if(width != renderTarget.width || height != renderTarget.height) {
-                    renderTarget.resize(width, height);
-                } else {
-                    renderTarget.clear(true);
-                }
-            }
-            return renderTarget;
-        }
-
-        /**
-         * 释放一个render target实例到对象池
-         */
-        public static release(renderTarget:WebGLRenderTarget):void {
-            if(!renderTarget){
-                return;
-            }
-            // 是否需要resize以节省内存？
-            renderTargetPool.push(renderTarget);
         }
     }
 

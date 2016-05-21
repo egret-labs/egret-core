@@ -5484,23 +5484,21 @@ var egret;
 (function (egret) {
     var web;
     (function (web) {
-        // render target 对象池
-        var renderTargetPool = [];
         /**
          * @private
          * WebGLRenderTarget类
          * 一个WebGL渲染目标，拥有一个frame buffer和texture
          */
         var WebGLRenderTarget = (function () {
-            function WebGLRenderTarget(gl, width, height, useFrameBuffer) {
-                if (useFrameBuffer === void 0) { useFrameBuffer = true; }
+            function WebGLRenderTarget(gl, width, height) {
                 // 清除色
                 this.clearColor = [0, 0, 0, 0];
+                // 是否启用frame buffer, 默认为true
+                this.useFrameBuffer = true;
                 this.gl = gl;
                 // 如果尺寸为 0 chrome会报警
                 this.width = width || 1;
                 this.height = height || 1;
-                this.useFrameBuffer = useFrameBuffer;
                 // 创建材质
                 this.texture = this.createTexture();
                 // 创建frame buffer
@@ -5576,35 +5574,6 @@ var egret;
                 gl.clearColor(this.clearColor[0], this.clearColor[1], this.clearColor[2], this.clearColor[3]);
                 gl.clear(gl.COLOR_BUFFER_BIT);
             };
-            /**
-             * 从对象池中取出或创建一个新的render target对象。
-             * 目前只支持一个上下文共用此对象池，多个上下文会导致错误
-             */
-            WebGLRenderTarget.create = function (gl, width, height) {
-                var renderTarget = renderTargetPool.pop();
-                if (!renderTarget) {
-                    renderTarget = new WebGLRenderTarget(gl, width, height);
-                }
-                else {
-                    if (width != renderTarget.width || height != renderTarget.height) {
-                        renderTarget.resize(width, height);
-                    }
-                    else {
-                        renderTarget.clear(true);
-                    }
-                }
-                return renderTarget;
-            };
-            /**
-             * 释放一个render target实例到对象池
-             */
-            WebGLRenderTarget.release = function (renderTarget) {
-                if (!renderTarget) {
-                    return;
-                }
-                // 是否需要resize以节省内存？
-                renderTargetPool.push(renderTarget);
-            };
             return WebGLRenderTarget;
         }());
         web.WebGLRenderTarget = WebGLRenderTarget;
@@ -5655,6 +5624,8 @@ var egret;
             egret.$toBitmapData(canvas);
             return canvas;
         }
+        // render target 对象池
+        var renderTargetPool = [];
         /**
          * @private
          * WebGL上下文对象，提供简单的绘图接口
@@ -5699,7 +5670,7 @@ var egret;
                 }
             };
             p.bindBufferTarget = function (buffer) {
-                buffer.rootRenderTarget.activate();
+                this.activateRenderTarget(buffer.rootRenderTarget);
             };
             p.bindBufferData = function (buffer) {
                 var gl = this.context;
@@ -5717,16 +5688,46 @@ var egret;
                 this.onResize(buffer.width, buffer.height);
             };
             /**
-             * 创建render target 对象
-             * 由此类创建是为了消除创建造成的解绑效果
+             * 启用render target
              */
-            p.createRenderTarget = function (width, height) {
-                var target = new web.WebGLRenderTarget(this.context, width, height);
-                // 恢复绑定
-                if (this.currentBuffer) {
-                    this.bindBufferTarget(this.currentBuffer);
+            p.activateRenderTarget = function (renderTarget) {
+                renderTarget.activate();
+                this.currentRenderTarget = renderTarget;
+            };
+            /**
+             * 从对象池中取出或创建一个新的render target对象。
+             */
+            p.createRenderTarget = function (width, height, activate) {
+                var gl = this.context;
+                var renderTarget = renderTargetPool.pop();
+                if (!renderTarget) {
+                    renderTarget = new web.WebGLRenderTarget(gl, width, height);
                 }
-                return target;
+                else {
+                    if (width != renderTarget.width || height != renderTarget.height) {
+                        renderTarget.resize(width, height);
+                    }
+                    else {
+                        renderTarget.clear(true);
+                    }
+                }
+                if (!activate && this.currentRenderTarget) {
+                    this.activateRenderTarget(this.currentRenderTarget);
+                }
+                else {
+                    this.activateRenderTarget(renderTarget);
+                }
+                return renderTarget;
+            };
+            /**
+             * 释放一个render target实例到对象池
+             */
+            p.release = function (renderTarget) {
+                if (!renderTarget) {
+                    return;
+                }
+                // 是否需要resize以节省内存？
+                renderTargetPool.push(renderTarget);
             };
             /**
              * 销毁绘制对象
