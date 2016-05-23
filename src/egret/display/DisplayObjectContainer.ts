@@ -127,7 +127,6 @@ module egret {
 
             if (child.$parent == this)
                 index--;
-
             return this.$doAddChild(child, index);
         }
 
@@ -196,7 +195,6 @@ module egret {
             var stage:Stage = this.$stage;
             if (stage) {//当前容器在舞台
                 child.$onAddToStage(stage, this.$nestLevel + 1);
-
             }
             if (notifyListeners) {
                 child.dispatchEventWith(Event.ADDED, true);
@@ -414,9 +412,11 @@ module egret {
                 var list = DisplayObjectContainer.$EVENT_REMOVE_FROM_STAGE_LIST
                 while (list.length > 0) {
                     var childAddToStage = list.shift();
-                    if (notifyListeners) {
+                    if (notifyListeners && childAddToStage.$hasAddToStage) {
+                        childAddToStage.$hasAddToStage = false;
                         childAddToStage.dispatchEventWith(Event.REMOVED_FROM_STAGE);
                     }
+                    childAddToStage.$hasAddToStage = false;
                     childAddToStage.$stage = null;
                 }
             }

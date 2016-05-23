@@ -341,6 +341,11 @@ module egret {
         $hasAnyFlags(flags:number):boolean {
             return !!(this.$displayFlags & flags);
         }
+        /**
+         * @private
+         * 是否添加到舞台上，防止重复发送 removed_from_stage 消息
+         */
+        $hasAddToStage:boolean;
 
         /**
          * @private
@@ -434,6 +439,7 @@ module egret {
         $onAddToStage(stage:Stage, nestLevel:number):void {
             this.$stage = stage;
             this.$nestLevel = nestLevel;
+            this.$hasAddToStage = true;
             Sprite.$EVENT_ADD_TO_STAGE_LIST.push(this);
         }
 
