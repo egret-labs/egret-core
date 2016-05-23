@@ -93,6 +93,7 @@ module egret.native {
             function onPlaying():void{
                 egret.log('onPlaying');
                 video['setVideoRect'](0, 0, 1, 1);
+                self.maxVolume = video.maxVolume;
                 video.pause();
                 video.currentTime = 0;
                 self.loaded = true;
@@ -220,6 +221,12 @@ module egret.native {
                 this.$invalidateContentBounds();
             },this);
         }
+
+        /**
+         * 获取系统最大音量，安卓手机最大音量不相同
+         * @private
+         */
+        private maxVolume:number;
         /**
          * @inheritDoc
          */
@@ -230,7 +237,7 @@ module egret.native {
         public get volume():number {
             if (!this.loaded)
                 return 0;
-            return this.originVideo.volume;
+            return this.originVideo.volume/this.maxVolume;
         }
 
         /**
@@ -239,7 +246,7 @@ module egret.native {
         public set volume(value:number) {
             if (!this.loaded)
                 return;
-            this.originVideo.volume = value;
+            this.originVideo.volume = value*this.maxVolume;
         }
         /**
          * @inheritDoc
@@ -261,17 +268,11 @@ module egret.native {
         public pause(){
             this.originVideo.pause();
         }
-        private _bitmapData:BitmapData;
-        //todo
+        private _bitmapData:BitmapData = null;
         /**
          * @inheritDoc
          */
         public get bitmapData():BitmapData {
-            //if (!this.originVideo || !this.loaded)
-            //    return null;
-            //if (!this._bitmapData) {
-            //    this._bitmapData = $toBitmapData(this.originVideo);
-            //}
             return this._bitmapData;
         }
         /**
