@@ -176,5 +176,23 @@ module egret.web {
                 }
             }
         }
+
+        /**
+         * 同步视角坐标
+         */
+        public syncProjection(projectionX:number, projectionY:number):void {
+            var gl:WebGLRenderingContext = this.gl;
+            gl.uniform2f(this.projectionVector, projectionX, projectionY);
+        }
+
+        /**
+         * 设置attribute pointer
+         */
+        public setAttribPointer(stride:number):void {
+            var gl:WebGLRenderingContext = this.gl;
+            gl.vertexAttribPointer(this.aVertexPosition, 2, gl.FLOAT, false, stride, 0);
+            gl.vertexAttribPointer(this.aTextureCoord, 2, gl.FLOAT, false, stride, 2 * 4);
+            gl.vertexAttribPointer(this.colorAttribute, 1, gl.FLOAT, false, stride, 4 * 4);
+        }
     }
 }

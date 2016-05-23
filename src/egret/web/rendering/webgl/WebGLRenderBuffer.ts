@@ -34,7 +34,7 @@ module egret.web {
      * $renderWebGL方法依据drawable对象的类型，调用不同的绘制方法
      * TODO 提供drawable类型接口并且创建对象池？
      */
-     const enum DRAWABLE_TYPE {
+     export const enum DRAWABLE_TYPE {
          TEXTURE,
          RECT,
          PUSH_MASK,
@@ -514,8 +514,6 @@ module egret.web {
                 textureSourceWidth, textureSourceHeight, meshUVs, meshVertices, meshIndices, bounds);
 
         }
-
-        private currentBatchSize:number = 0;
 
         /**
          * @private
@@ -1041,25 +1039,7 @@ module egret.web {
                     }
                 }
 
-                switch(data.type) {
-                    case DRAWABLE_TYPE.TEXTURE:
-                        offset += this.drawTextureElements(data, offset);
-                        break;
-                    case DRAWABLE_TYPE.RECT:
-                        offset += this.drawRectElements(data, offset);
-                        break;
-                    case DRAWABLE_TYPE.PUSH_MASK:
-                        offset += this.drawPushMaskElements(data, offset);
-                        break;
-                    case DRAWABLE_TYPE.POP_MASK:
-                        offset += this.drawPopMaskElements(data, offset);
-                        break;
-                    case DRAWABLE_TYPE.BLEND:
-                        this.context.setBlendMode(data.value);
-                        break;
-                    default:
-                        break;
-                }
+                this.context.drawData(data, offset);
 
                 // add drawCall except blend type
                 if(data.type != DRAWABLE_TYPE.BLEND) {
@@ -1107,7 +1087,6 @@ module egret.web {
         }
 
         private startShader() {
-            var gl:any = this.context.context;
             var shader;
             if (this.filterType == "colorTransform") {
                 shader = this.context.shaderManager.colorTransformShader;
@@ -1139,15 +1118,15 @@ module egret.web {
                     shader = this.context.shaderManager.primitiveShader;
                 }
             }
+
             this.context.shaderManager.activateShader(shader);
+
             shader.syncUniforms();
 
-            gl.uniform2f(shader.projectionVector, this.context.projectionX, this.context.projectionY);
+            shader.syncProjection(this.context.projectionX, this.context.projectionY);
 
             var stride = this.vertSize * 4;
-            gl.vertexAttribPointer(shader.aVertexPosition, 2, gl.FLOAT, false, stride, 0);
-            gl.vertexAttribPointer(shader.aTextureCoord, 2, gl.FLOAT, false, stride, 2 * 4);
-            gl.vertexAttribPointer(shader.colorAttribute, 1, gl.FLOAT, false, stride, 4 * 4);
+            shader.setAttribPointer(stride);
         }
 
         private globalMatrix:Matrix = new Matrix();
@@ -1267,92 +1246,6 @@ module egret.web {
                 // this.currentBatchSize++;
                 // this.drawData[this.drawData.length - 1].count++;
                 this.drawData[this.drawData.length - 1].count += 2;
-            }
-        }
-
-        /**
-         * @private
-         * draw texture elements
-         **/
-        private drawTextureElements(data:any, offset:number):number {
-            var gl = this.context.context;
-            gl.bindTexture(gl.TEXTURE_2D, data.texture);
-            // var size = data.count * 6;
-            var size = data.count * 3;
-            gl.drawElements(gl.TRIANGLES, size, gl.UNSIGNED_SHORT, offset * 2);
-            return size;
-        }
-
-        /**
-         * @private
-         * draw rect elements
-         **/
-        private drawRectElements(data:any, offset:number):number {
-            var gl = this.context.context;
-            gl.bindTexture(gl.TEXTURE_2D, null);
-            // var size = data.count * 6;
-            var size = data.count * 3;
-            gl.drawElements(gl.TRIANGLES, size, gl.UNSIGNED_SHORT, offset * 2);
-            return size;
-        }
-
-        /**
-         * @private
-         * draw push mask elements
-         **/
-        private drawPushMaskElements(data:any, offset:number):number {
-            var gl = this.context.context;
-            if(this.stencilHandleCount == 0) {
-                this.enableStencil();
-                gl.clear(gl.STENCIL_BUFFER_BIT);
-            }
-            var level = this.stencilHandleCount;
-            this.stencilHandleCount++;
-            gl.colorMask(false, false, false, false);
-            gl.stencilFunc(gl.EQUAL, level, 0xFF);
-            gl.stencilOp(gl.KEEP, gl.KEEP, gl.INCR);
-
-            gl.bindTexture(gl.TEXTURE_2D, null);
-            // var size = data.count * 6;
-            var size = data.count * 3;
-            gl.drawElements(gl.TRIANGLES, size, gl.UNSIGNED_SHORT, offset * 2);
-
-            gl.stencilFunc(gl.EQUAL, level + 1, 0xFF);
-            gl.colorMask(true, true, true, true);
-            gl.stencilOp(gl.KEEP, gl.KEEP, gl.KEEP);
-
-            return size;
-        }
-
-        /**
-         * @private
-         * draw pop mask elements
-         **/
-        private drawPopMaskElements(data:any, offset:number) {
-            var gl = this.context.context;
-            this.stencilHandleCount--;
-            if(this.stencilHandleCount == 0) {
-                this.disableStencil();
-                // skip this draw
-                // var size = data.count * 6;
-                var size = data.count * 3;
-                return size;
-            } else {
-                var level = this.stencilHandleCount;
-                gl.colorMask(false, false, false, false);
-                gl.stencilFunc(gl.EQUAL, level + 1, 0xFF);
-                gl.stencilOp(gl.KEEP, gl.KEEP, gl.DECR);
-
-                gl.bindTexture(gl.TEXTURE_2D, null);
-                // var size = data.count * 6;
-                var size = data.count * 3;
-                gl.drawElements(gl.TRIANGLES, size, gl.UNSIGNED_SHORT, offset * 2);
-
-                gl.stencilFunc(gl.EQUAL, level, 0xFF);
-                gl.colorMask(true, true, true, true);
-                gl.stencilOp(gl.KEEP, gl.KEEP, gl.KEEP);
-
-                return size;
             }
         }
 

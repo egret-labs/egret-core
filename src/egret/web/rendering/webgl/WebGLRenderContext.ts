@@ -403,6 +403,125 @@ module egret.web {
         }
 
         /**
+         * 执行绘制命令
+         */
+        public drawData(data:any, offset:number) {
+            if(!data) {
+                return;
+            }
+
+            switch(data.type) {
+                case DRAWABLE_TYPE.TEXTURE:
+                    offset += this.drawTextureElements(data, offset);
+                    break;
+                case DRAWABLE_TYPE.RECT:
+                    offset += this.drawRectElements(data, offset);
+                    break;
+                case DRAWABLE_TYPE.PUSH_MASK:
+                    offset += this.drawPushMaskElements(data, offset);
+                    break;
+                case DRAWABLE_TYPE.POP_MASK:
+                    offset += this.drawPopMaskElements(data, offset);
+                    break;
+                case DRAWABLE_TYPE.BLEND:
+                    this.setBlendMode(data.value);
+                    break;
+                default:
+                    break;
+            }
+
+            return offset;
+        }
+
+        /**
+         * 画texture
+         **/
+        private drawTextureElements(data:any, offset:number):number {
+            var gl:any = this.context;
+            gl.bindTexture(gl.TEXTURE_2D, data.texture);
+            var size = data.count * 3;
+            gl.drawElements(gl.TRIANGLES, size, gl.UNSIGNED_SHORT, offset * 2);
+            return size;
+        }
+
+        /**
+         * @private
+         * 画rect
+         **/
+        private drawRectElements(data:any, offset:number):number {
+            var gl:any = this.context;
+            // gl.bindTexture(gl.TEXTURE_2D, null);
+            var size = data.count * 3;
+            gl.drawElements(gl.TRIANGLES, size, gl.UNSIGNED_SHORT, offset * 2);
+            return size;
+        }
+
+        /**
+         * 画push mask
+         **/
+        private drawPushMaskElements(data:any, offset:number):number {
+            var gl:any = this.context;
+
+            var size = data.count * 3;
+
+            var buffer = this.currentBuffer;
+            if(buffer) {
+                if(buffer.stencilHandleCount == 0) {
+                    buffer.enableStencil();
+                    gl.clear(gl.STENCIL_BUFFER_BIT);// clear
+                }
+
+                var level = buffer.stencilHandleCount;
+                buffer.stencilHandleCount++;
+
+                gl.colorMask(false, false, false, false);
+                gl.stencilFunc(gl.EQUAL, level, 0xFF);
+                gl.stencilOp(gl.KEEP, gl.KEEP, gl.INCR);
+
+                // gl.bindTexture(gl.TEXTURE_2D, null);
+                gl.drawElements(gl.TRIANGLES, size, gl.UNSIGNED_SHORT, offset * 2);
+
+                gl.stencilFunc(gl.EQUAL, level + 1, 0xFF);
+                gl.colorMask(true, true, true, true);
+                gl.stencilOp(gl.KEEP, gl.KEEP, gl.KEEP);
+            }
+
+            return size;
+        }
+
+        /**
+         * 画pop mask
+         **/
+        private drawPopMaskElements(data:any, offset:number) {
+            var gl:any = this.context;
+
+            var size = data.count * 3;
+
+            var buffer = this.currentBuffer;
+            if(buffer) {
+                buffer.stencilHandleCount--;
+
+                if(buffer.stencilHandleCount == 0) {
+                    buffer.disableStencil();// skip this draw
+                } else {
+                    var level = buffer.stencilHandleCount;
+                    gl.colorMask(false, false, false, false);
+                    gl.stencilFunc(gl.EQUAL, level + 1, 0xFF);
+                    gl.stencilOp(gl.KEEP, gl.KEEP, gl.DECR);
+
+                    // gl.bindTexture(gl.TEXTURE_2D, null);
+                    gl.drawElements(gl.TRIANGLES, size, gl.UNSIGNED_SHORT, offset * 2);
+
+                    gl.stencilFunc(gl.EQUAL, level, 0xFF);
+                    gl.colorMask(true, true, true, true);
+                    gl.stencilOp(gl.KEEP, gl.KEEP, gl.KEEP);
+                }
+            }
+
+            return size;
+        }
+
+        /**
          * 设置混色
          */
         public setBlendMode(value:string):void {
