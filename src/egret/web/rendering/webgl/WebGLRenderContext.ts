@@ -112,7 +112,7 @@ module egret.web {
         // 是否绑定了indices，如果绑定了，则不再切换！
         private bindIndices:boolean;
         private bindBufferData(buffer:WebGLRenderBuffer) {
-            var gl = this.context;
+            var gl:any =this.context;
 
             if(!this.bindIndices) {
                 gl.bindBuffer(gl.ELEMENT_ARRAY_BUFFER, buffer.indexBuffer);
@@ -149,7 +149,7 @@ module egret.web {
          * 从对象池中取出或创建一个新的render target对象。
          */
         public createRenderTarget(width:number, height:number, activate?:boolean):WebGLRenderTarget {
-            var gl = this.context;
+            var gl:any =this.context;
 
             var renderTarget = renderTargetPool.pop();
             if (!renderTarget) {
@@ -309,7 +309,122 @@ module egret.web {
             gl.disable(gl.CULL_FACE);
             gl.enable(gl.BLEND);
             gl.colorMask(true, true, true, true);
+
+            // 目前只使用0号材质单元，默认开启
+            gl.activeTexture(gl.TEXTURE0);
+        }
+
+        /**
+         * 开启模版检测
+         */
+        public enableStencilTest():void {
+            var gl:any =this.context;
+            gl.enable(gl.STENCIL_TEST);
+        }
+
+        /**
+         * 关闭模版检测
+         */
+        public disableStencilTest():void {
+            var gl:any =this.context;
+            gl.disable(gl.STENCIL_TEST);
+        }
+
+        /**
+         * 获取像素信息
+         */
+        public getPixels(x, y, width, height, pixels):void {
+            var gl:any =this.context;
+            gl.readPixels(x, y, width, height, gl.RGBA, gl.UNSIGNED_BYTE, pixels);
+        }
+
+        /**
+         * 创建一个WebGLTexture
+         */
+        public createTexture(bitmapData:BitmapData):WebGLTexture {
+            var gl:any = this.context;
+
+            var texture = gl.createTexture();
+
+            if (!texture) {
+                //先创建texture失败,然后lost事件才发出来..
+                this.contextLost = true;
+                return;
+            }
+
+            texture.glContext = gl;
+
+            gl.bindTexture(gl.TEXTURE_2D, texture);
+            gl.pixelStorei(gl.UNPACK_PREMULTIPLY_ALPHA_WEBGL, 1);
+
+            gl.texImage2D(gl.TEXTURE_2D, 0, gl.RGBA, gl.RGBA, gl.UNSIGNED_BYTE, bitmapData);
+            gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MAG_FILTER, gl.LINEAR);
+            gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MIN_FILTER, gl.LINEAR);
+
+            gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_WRAP_S, gl.CLAMP_TO_EDGE);
+            gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_WRAP_T, gl.CLAMP_TO_EDGE);
+
+            return texture;
+        }
+
+        /**
+         * 更新材质的bitmapData
+         */
+        public updateTexture(texture:WebGLTexture, bitmapData:BitmapData):void {
+            var gl:any =this.context;
+            gl.bindTexture(gl.TEXTURE_2D, texture);
+            gl.texImage2D(gl.TEXTURE_2D, 0, gl.RGBA, gl.RGBA, gl.UNSIGNED_BYTE, bitmapData);
+        }
+
+        /**
+         * 获取一个WebGLTexture
+         * 如果有缓存的texture返回缓存的texture，如果没有则创建并缓存texture
+         */
+        public getWebGLTexture(bitmapData:BitmapData):WebGLTexture {
+            var _bitmapData:any = bitmapData;
+            if (!_bitmapData.webGLTexture) {
+                _bitmapData.webGLTexture = {};
+            }
+            if (!_bitmapData.webGLTexture[this.glID]) {
+                var texture = this.createTexture(_bitmapData);
+                _bitmapData.webGLTexture[this.glID] = texture;
+            }
+            return _bitmapData.webGLTexture[this.glID];
+        }
+
+        /**
+         * 清除颜色缓存
+         */
+        public clear():void {
+            var gl:any = this.context;
+            gl.colorMask(true, true, true, true);
+            gl.clearColor(0, 0, 0, 0);
+            gl.clear(gl.COLOR_BUFFER_BIT);
+        }
+
+        /**
+         * 设置混色
+         */
+        public setBlendMode(value:string):void {
+            var gl:any =this.context;
+            var blendModeWebGL = WebGLRenderContext.blendModesForGL[value];
+            if (blendModeWebGL) {
+                gl.blendFunc(blendModeWebGL[0], blendModeWebGL[1]);
+            }
+        }
+
+        public static blendModesForGL:any = null;
+
+        public static initBlendMode():void {
+            WebGLRenderContext.blendModesForGL = {};
+            WebGLRenderContext.blendModesForGL["source-over"] = [1, 771];
+            WebGLRenderContext.blendModesForGL["lighter"] = [770, 1];
+            WebGLRenderContext.blendModesForGL["lighter-in"] = [770, 771];
+            WebGLRenderContext.blendModesForGL["destination-out"] = [0, 771];
+            WebGLRenderContext.blendModesForGL["destination-in"] = [0, 770];
         }
     }
+
+    WebGLRenderContext.initBlendMode();
 
 }

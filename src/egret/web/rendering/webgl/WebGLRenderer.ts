@@ -59,9 +59,9 @@ module egret.web {
             var webglBuffer: WebGLRenderBuffer = <WebGLRenderBuffer>buffer;
             var root: DisplayObject = forRenderTexture ? displayObject : null;
 
-            var needPush = webglBuffer.renderContext.currentBuffer != webglBuffer;
+            var needPush = webglBuffer.context.currentBuffer != webglBuffer;
             if (needPush) {
-                webglBuffer.renderContext.pushBuffer(webglBuffer);
+                webglBuffer.context.pushBuffer(webglBuffer);
             }
 
             //绘制显示对象
@@ -71,7 +71,7 @@ module egret.web {
             webglBuffer.onRenderFinish();
 
             if (needPush) {
-                webglBuffer.renderContext.popBuffer();
+                webglBuffer.context.popBuffer();
             }
 
             this.nestLevel--;
@@ -327,8 +327,8 @@ module egret.web {
             else {
                 //绘制显示对象自身，若有scrollRect，应用clip
                 var displayBuffer = this.createRenderBuffer(region.width, region.height);
-                var displayContext = displayBuffer.context;
-                displayBuffer.renderContext.pushBuffer(displayBuffer);
+                // var displayContext = displayBuffer.context;
+                displayBuffer.context.pushBuffer(displayBuffer);
                 displayBuffer.setTransform(1, 0, 0, 1, -region.minX, -region.minY);
                 var offsetM = Matrix.create().setTo(1, 0, 0, 1, -region.minX, -region.minY);
 
@@ -346,8 +346,8 @@ module egret.web {
                     //}
                     //else {
                     var maskBuffer = this.createRenderBuffer(region.width, region.height);
-                    var maskContext = maskBuffer.context;
-                    maskBuffer.renderContext.pushBuffer(maskBuffer);
+                    // var maskContext = maskBuffer.context;
+                    maskBuffer.context.pushBuffer(maskBuffer);
                     maskBuffer.setTransform(1, 0, 0, 1, -region.minX, -region.minY);
                     offsetM = Matrix.create().setTo(1, 0, 0, 1, -region.minX, -region.minY);
                     var calls = this.drawDisplayObject(mask, maskBuffer, dirtyList, offsetM,
@@ -355,7 +355,7 @@ module egret.web {
 
                     maskBuffer.$drawWebGL();
                     maskBuffer.onRenderFinish();
-                    maskBuffer.renderContext.popBuffer();
+                    maskBuffer.context.popBuffer();
 
                     if (calls > 0) {
                         drawCalls += calls;
@@ -376,7 +376,7 @@ module egret.web {
                 displayBuffer.setGlobalCompositeOperation(defaultCompositeOp);
                 displayBuffer.$drawWebGL();
                 displayBuffer.onRenderFinish();
-                displayBuffer.renderContext.popBuffer();
+                displayBuffer.context.popBuffer();
 
                 //绘制结果到屏幕
                 if (drawCalls > 0) {
@@ -487,7 +487,7 @@ module egret.web {
             var webglBuffer: WebGLRenderBuffer = <WebGLRenderBuffer>buffer;
 
             //pushRenderTARGET
-            webglBuffer.renderContext.pushBuffer(webglBuffer);
+            webglBuffer.context.pushBuffer(webglBuffer);
 
             webglBuffer.setTransform(matrix.a, matrix.b, matrix.c, matrix.d, matrix.tx, matrix.ty);
             this.renderNode(node, buffer, forHitTest);
@@ -495,7 +495,7 @@ module egret.web {
             webglBuffer.onRenderFinish();
 
             //popRenderTARGET
-            webglBuffer.renderContext.popBuffer();
+            webglBuffer.context.popBuffer();
         }
 
         /**
@@ -620,14 +620,11 @@ module egret.web {
                 // 拷贝canvas到texture
                 var texture = node.$texture;
                 if (!texture) {
-                    texture = buffer.createTexture(<BitmapData><any>surface);
+                    texture = buffer.context.createTexture(<BitmapData><any>surface);
                     node.$texture = texture;
                 } else {
                     // 重新拷贝新的图像
-                    var gl = buffer.context;
-                    gl.bindTexture(gl.TEXTURE_2D, texture);
-                    gl.texImage2D(gl.TEXTURE_2D, 0, gl.RGBA, gl.RGBA, gl.UNSIGNED_BYTE, surface);
-                    gl.bindTexture(gl.TEXTURE_2D, null);
+                    buffer.context.updateTexture(texture, <BitmapData><any>surface);
                 }
                 // 保存材质尺寸
                 node.$textureWidth = surface.width;
@@ -674,24 +671,20 @@ module egret.web {
             if(forHitTest) {
                 this.canvasRenderer["renderGraphics"](node, this.canvasRenderBuffer.context, true);
                 WebGLUtils.deleteWebGLTexture(surface);
-                buffer.createWebGLTexture(<BitmapData><any>surface);
-                var texture = surface["webGLTexture"][buffer.renderContext.glID]
+                var texture = buffer.context.getWebGLTexture(<BitmapData><any>surface);
                 buffer.drawTexture(texture, 0, 0, width, height, 0, 0, width, height, surface.width, surface.height);
             } else {
                 if (node.dirtyRender) {
                     this.canvasRenderer["renderGraphics"](node, this.canvasRenderBuffer.context);
 
                     // 拷贝canvas到texture
-                    var texture = node.$texture;
+                    var texture:WebGLTexture = node.$texture;
                     if (!texture) {
-                        texture = buffer.createTexture(<BitmapData><any>surface);
+                        texture = buffer.context.createTexture(<BitmapData><any>surface);
                         node.$texture = texture;
                     } else {
                         // 重新拷贝新的图像
-                        var gl = buffer.context;
-                        gl.bindTexture(gl.TEXTURE_2D, texture);
-                        gl.texImage2D(gl.TEXTURE_2D, 0, gl.RGBA, gl.RGBA, gl.UNSIGNED_BYTE, surface);
-                        gl.bindTexture(gl.TEXTURE_2D, null);
+                        buffer.context.updateTexture(texture, <BitmapData><any>surface);
                     }
                     // 保存材质尺寸
                     node.$textureWidth = surface.width;
