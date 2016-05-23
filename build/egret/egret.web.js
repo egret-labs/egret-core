@@ -5664,6 +5664,50 @@ var egret;
          * 抽象出此类，以实现共用一个context
          */
         var WebGLRenderContext = (function () {
+            // 当前启用的render target
+            // public currentRenderTarget:WebGLRenderTarget;
+            /**
+             * 启用render target
+             */
+            // public activateRenderTarget(renderTarget:WebGLRenderTarget) {
+            //     renderTarget.activate();
+            //     this.currentRenderTarget = renderTarget;
+            // }
+            /**
+             * 从对象池中取出或创建一个新的render target对象。
+             */
+            // public createRenderTarget(width:number, height:number, activate?:boolean):WebGLRenderTarget {
+            //     var gl:any =this.context;
+            //
+            //     var renderTarget = renderTargetPool.pop();
+            //     if (!renderTarget) {
+            //         renderTarget = new WebGLRenderTarget(gl, width, height);
+            //     } else {
+            //         if(width != renderTarget.width || height != renderTarget.height) {
+            //             renderTarget.resize(width, height);
+            //         } else {
+            //             renderTarget.clear(true);
+            //         }
+            //     }
+            //
+            //     if(!activate && this.currentRenderTarget) {
+            //         this.activateRenderTarget(this.currentRenderTarget);
+            //     } else {
+            //         this.activateRenderTarget(renderTarget);
+            //     }
+            //
+            //     return renderTarget;
+            // }
+            /**
+             * 释放一个render target实例到对象池
+             */
+            // public releaseRenderTarget(renderTarget:WebGLRenderTarget):void {
+            //     if(!renderTarget){
+            //         return;
+            //     }
+            //     // 是否需要resize以节省内存？
+            //     renderTargetPool.push(renderTarget);
+            // }
             function WebGLRenderContext(width, height) {
                 this.glID = null;
                 this.projectionX = NaN;
@@ -5683,13 +5727,16 @@ var egret;
                 return this.instance;
             };
             /**
-             * buffer 管理
+             * 推入一个RenderBuffer并绑定
              */
             p.pushBuffer = function (buffer) {
                 this.$bufferStack.push(buffer);
                 this.bindBuffer(buffer);
                 this.currentBuffer = buffer;
             };
+            /**
+             * 推出一个RenderBuffer并绑定上一个RenderBuffer（如果有）
+             */
             p.popBuffer = function () {
                 this.$bufferStack.pop();
                 var buffer = this.$bufferStack[this.$bufferStack.length - 1];
@@ -5701,65 +5748,39 @@ var egret;
                     this.currentBuffer = null;
                 }
             };
-            p.bindBufferTarget = function (buffer) {
-                this.activateRenderTarget(buffer.rootRenderTarget);
-            };
-            p.bindBufferData = function (buffer) {
-                var gl = this.context;
+            /**
+             * 绑定RenderBuffer
+             */
+            p.bindBuffer = function (buffer) {
+                buffer.rootRenderTarget.activate();
                 if (!this.bindIndices) {
-                    gl.bindBuffer(gl.ELEMENT_ARRAY_BUFFER, buffer.indexBuffer);
-                    gl.bufferData(gl.ELEMENT_ARRAY_BUFFER, buffer.indices, gl.STATIC_DRAW);
+                    this.uploadIndicesArray(buffer.indices, buffer.indexBuffer);
                     this.bindIndices = true;
                 }
                 buffer.bindBuffer = false;
-            };
-            p.bindBuffer = function (buffer) {
-                this.bindBufferTarget(buffer);
-                this.bindBufferData(buffer);
                 buffer.restoreStencil();
                 this.onResize(buffer.width, buffer.height);
             };
             /**
-             * 启用render target
+             * 上传顶点数据
              */
-            p.activateRenderTarget = function (renderTarget) {
-                renderTarget.activate();
-                this.currentRenderTarget = renderTarget;
-            };
-            /**
-             * 从对象池中取出或创建一个新的render target对象。
-             */
-            p.createRenderTarget = function (width, height, activate) {
+            p.uploadVerticesArray = function (array, bindBuffer) {
                 var gl = this.context;
-                var renderTarget = renderTargetPool.pop();
-                if (!renderTarget) {
-                    renderTarget = new web.WebGLRenderTarget(gl, width, height);
+                if (bindBuffer) {
+                    gl.bindBuffer(gl.ARRAY_BUFFER, bindBuffer);
                 }
-                else {
-                    if (width != renderTarget.width || height != renderTarget.height) {
-                        renderTarget.resize(width, height);
-                    }
-                    else {
-                        renderTarget.clear(true);
-                    }
-                }
-                if (!activate && this.currentRenderTarget) {
-                    this.activateRenderTarget(this.currentRenderTarget);
-                }
-                else {
-                    this.activateRenderTarget(renderTarget);
-                }
-                return renderTarget;
+                gl.bufferData(gl.ARRAY_BUFFER, array, gl.STREAM_DRAW);
+                // gl.bufferSubData(gl.ARRAY_BUFFER, 0, array);
             };
             /**
-             * 释放一个render target实例到对象池
+             * 上传索引数据
              */
-            p.releaseRenderTarget = function (renderTarget) {
-                if (!renderTarget) {
-                    return;
+            p.uploadIndicesArray = function (array, bindBuffer) {
+                var gl = this.context;
+                if (bindBuffer) {
+                    gl.bindBuffer(gl.ELEMENT_ARRAY_BUFFER, bindBuffer);
                 }
-                // 是否需要resize以节省内存？
-                renderTargetPool.push(renderTarget);
+                gl.bufferData(gl.ELEMENT_ARRAY_BUFFER, array, gl.STATIC_DRAW);
             };
             /**
              * 销毁绘制对象
@@ -5801,17 +5822,6 @@ var egret;
                     }
                 }
                 this.onResize();
-            };
-            /**
-             * 改变渲染缓冲为指定大小，但保留原始图像数据
-             * @param width 改变后的宽
-             * @param height 改变后的高
-             * @param offsetX 原始图像数据在改变后缓冲区的绘制起始位置x
-             * @param offsetY 原始图像数据在改变后缓冲区的绘制起始位置y
-             */
-            p.resizeTo = function (width, height, offsetX, offsetY) {
-                this.surface.width = width;
-                this.surface.height = height;
             };
             p.initWebGL = function () {
                 this.onResize();
@@ -6054,6 +6064,17 @@ var egret;
                 WebGLRenderContext.blendModesForGL["destination-out"] = [0, 771];
                 WebGLRenderContext.blendModesForGL["destination-in"] = [0, 770];
             };
+            /**
+             * 改变渲染缓冲为指定大小，但保留原始图像数据
+             * @param width 改变后的宽
+             * @param height 改变后的高
+             * @param offsetX 原始图像数据在改变后缓冲区的绘制起始位置x
+             * @param offsetY 原始图像数据在改变后缓冲区的绘制起始位置y
+             */
+            // public resizeTo(width:number, height:number, offsetX:number, offsetY:number):void {
+            //     this.surface.width = width;
+            //     this.surface.height = height;
+            // }
             WebGLRenderContext.glContextId = 0;
             WebGLRenderContext.blendModesForGL = null;
             return WebGLRenderContext;
@@ -6134,6 +6155,18 @@ var egret;
                 this.indexIndex = 0;
                 this.colorMatrixFilter = null;
                 this.blurFilter = null;
+                /**
+                 * 缓存顶点与索引信息
+                 * 如果后三个参数缺省，默认为构成矩形的顶点
+                 * */
+                this.defaultMeshVertices = [0, 0, 1, 0, 1, 1, 0, 1];
+                this.defaultMeshUvs = [
+                    0, 0,
+                    1, 0,
+                    1, 1,
+                    0, 1
+                ];
+                this.defaultMeshIndices = [0, 1, 2, 0, 2, 3];
                 this.drawData = [];
                 this.$drawCalls = 0;
                 this.$computeDrawCall = false;
@@ -6144,7 +6177,7 @@ var egret;
                 // 获取webglRenderContext
                 this.context = web.WebGLRenderContext.getInstance(width, height);
                 // buffer 对应的 render target
-                this.rootRenderTarget = this.context.createRenderTarget(width, height);
+                this.rootRenderTarget = new web.WebGLRenderTarget(this.context.context, width, height);
                 // TODO 抽像WebGLState类用于管理webgl状态，包括stencil，blend，colorMask等等
                 this.stencilState = false;
                 this.initVertexArrayObjects();
@@ -6156,6 +6189,11 @@ var egret;
                     this.surface = this.context.surface;
                 }
                 else {
+                    // 由于创建renderTarget造成的frameBuffer绑定，这里重置绑定
+                    var lastBuffer = this.context.currentBuffer;
+                    if (lastBuffer) {
+                        lastBuffer.rootRenderTarget.activate();
+                    }
                     this.surface = this.rootRenderTarget;
                 }
             }
@@ -6265,13 +6303,16 @@ var egret;
                 if (width != this.rootRenderTarget.width || height != this.rootRenderTarget.height) {
                     this.rootRenderTarget.resize(width, height);
                 }
-                this.context.pushBuffer(this);
                 // 如果是舞台的渲染缓冲，执行resize，否则surface大小不随之改变
                 if (this.context.$bufferStack[0] == this) {
                     this.context.resize(width, height, useMaxSize);
                 }
-                this.clear();
-                this.context.popBuffer();
+                this.rootRenderTarget.clear(true);
+                // 由于resize与clear造成的frameBuffer绑定，这里重置绑定
+                var lastBuffer = this.context.currentBuffer;
+                if (lastBuffer) {
+                    lastBuffer.rootRenderTarget.activate();
+                }
             };
             /**
              * 改变渲染缓冲为指定大小，但保留原始图像数据
@@ -6302,11 +6343,11 @@ var egret;
                 // dirtyRegionPolicy hack
                 if (this._dirtyRegionPolicy) {
                     this.rootRenderTarget.useFrameBuffer = true;
-                    this.context.bindBufferTarget(this);
+                    this.rootRenderTarget.activate();
                 }
                 else {
                     this.rootRenderTarget.useFrameBuffer = false;
-                    this.context.bindBufferTarget(this);
+                    this.rootRenderTarget.activate();
                     this.clear();
                 }
                 offsetX = +offsetX || 0;
@@ -6392,19 +6433,18 @@ var egret;
              */
             p.drawFrameBufferToSurface = function (sourceX, sourceY, sourceWidth, sourceHeight, destX, destY, destWidth, destHeight, clear) {
                 if (clear === void 0) { clear = false; }
-                var gl = this.context.context;
                 this.rootRenderTarget.useFrameBuffer = false;
-                this.context.pushBuffer(this);
-                var target = this.rootRenderTarget;
-                gl.disable(gl.STENCIL_TEST); // 切换frameBuffer注意要禁用STENCIL_TEST
+                this.rootRenderTarget.activate();
+                this.context.disableStencilTest(); // 切换frameBuffer注意要禁用STENCIL_TEST
                 this.setTransform(1, 0, 0, 1, 0, 0);
                 this.setGlobalAlpha(1);
                 this.setGlobalCompositeOperation("source-over");
                 clear && this.clear();
-                this.drawImage(target, sourceX, sourceY, sourceWidth, sourceHeight, destX, destY, destWidth, destHeight, sourceWidth, sourceHeight);
+                this.drawImage(this.rootRenderTarget, sourceX, sourceY, sourceWidth, sourceHeight, destX, destY, destWidth, destHeight, sourceWidth, sourceHeight);
                 this.$drawWebGL();
                 this.rootRenderTarget.useFrameBuffer = true;
-                this.context.popBuffer();
+                this.rootRenderTarget.activate();
+                this.restoreStencil();
             };
             /**
              * 交换surface的图像到frameBuffer中
@@ -6413,10 +6453,9 @@ var egret;
              */
             p.drawSurfaceToFrameBuffer = function (sourceX, sourceY, sourceWidth, sourceHeight, destX, destY, destWidth, destHeight, clear) {
                 if (clear === void 0) { clear = false; }
-                var gl = this.context.context;
                 this.rootRenderTarget.useFrameBuffer = true;
-                this.context.pushBuffer(this);
-                gl.disable(gl.STENCIL_TEST); // 切换frameBuffer注意要禁用STENCIL_TEST
+                this.rootRenderTarget.activate();
+                this.context.disableStencilTest(); // 切换frameBuffer注意要禁用STENCIL_TEST
                 this.setTransform(1, 0, 0, 1, 0, 0);
                 this.setGlobalAlpha(1);
                 this.setGlobalCompositeOperation("source-over");
@@ -6424,7 +6463,8 @@ var egret;
                 this.drawImage(this.context.surface, sourceX, sourceY, sourceWidth, sourceHeight, destX, destY, destWidth, destHeight, sourceWidth, sourceHeight);
                 this.$drawWebGL();
                 this.rootRenderTarget.useFrameBuffer = false;
-                this.context.popBuffer();
+                this.rootRenderTarget.activate();
+                this.restoreStencil();
             };
             /**
              * 清空缓冲区数据
@@ -6787,25 +6827,15 @@ var egret;
                 // this.drawData[this.drawData.length - 1].count++;
                 this.drawData[this.drawData.length - 1].count += 2;
             };
-            /**
-             * 缓存顶点与索引信息
-             * 如果后三个参数缺省，默认为构成矩形的顶点
-             * */
             p.cacheArrays = function (sourceX, sourceY, sourceWidth, sourceHeight, destX, destY, destWidth, destHeight, textureSourceWidth, textureSourceHeight, meshUVs, meshVertices, meshIndices) {
                 // 如果后三个值缺省，默认为构成矩形的顶点
-                meshVertices = meshVertices || [
-                    0, 0,
-                    sourceWidth, 0,
-                    sourceWidth, sourceHeight,
-                    0, sourceHeight
-                ];
-                meshUVs = meshUVs || [
-                    0, 0,
-                    1, 0,
-                    1, 1,
-                    0, 1
-                ];
-                meshIndices = meshIndices || [0, 1, 2, 0, 2, 3];
+                if (!meshVertices) {
+                    this.defaultMeshVertices[2] = this.defaultMeshVertices[4] = sourceWidth;
+                    this.defaultMeshVertices[5] = this.defaultMeshVertices[7] = sourceHeight;
+                }
+                meshVertices = meshVertices || this.defaultMeshVertices;
+                meshUVs = meshUVs || this.defaultMeshUvs;
+                meshIndices = meshIndices || this.defaultMeshIndices;
                 //计算出绘制矩阵，之后把矩阵还原回之前的
                 var locWorldTransform = this.globalMatrix;
                 var originalA = locWorldTransform.a;
@@ -6875,108 +6905,94 @@ var egret;
                 return uv;
             };
             p.$drawWebGL = function () {
-                // if ((this.currentBatchSize == 0 && this.drawData.length == 0) || this.context.contextLost) {
-                if ((this.vertexIndex == 0 && this.drawData.length == 0) || this.context.contextLost) {
+                if (this.drawData.length == 0 || this.context.contextLost) {
                     return;
                 }
-                this.start();
-                // update the vertices data
-                var gl = this.context.context;
+                // 上传顶点数组
                 if (this.vertexIndex > 0) {
-                    // var view = this.vertices.subarray(0, this.currentBatchSize * 4 * this.vertSize);
-                    // gl.bufferSubData(gl.ARRAY_BUFFER, 0, view);
                     var view = this.vertices.subarray(0, this.vertexIndex * this.vertSize);
-                    gl.bufferData(gl.ARRAY_BUFFER, view, gl.STREAM_DRAW);
+                    this.context.uploadVerticesArray(view, this.bindBuffer ? null : this.vertexBuffer);
+                    this.bindBuffer = true;
                 }
+                // 有mesh，则使用indicesForMesh
                 if (this.hasMesh) {
-                    gl.bindBuffer(gl.ELEMENT_ARRAY_BUFFER, this.indexBuffer);
-                    gl.bufferData(gl.ELEMENT_ARRAY_BUFFER, this.indicesForMesh, gl.STATIC_DRAW);
+                    this.context.uploadIndicesArray(this.indicesForMesh, this.indexBuffer);
                 }
                 var length = this.drawData.length;
                 var offset = 0;
-                var shaderStarted = false;
+                this.shaderStarted = false;
                 for (var i = 0; i < length; i++) {
                     var data = this.drawData[i];
-                    var drawingTexture = (data.type == 0 /* TEXTURE */);
-                    // 根据filter开启shader
-                    if (data.filter) {
-                        var filter = data.filter;
-                        // 如果是blur，需要判断是否重新上传uv坐标
-                        if (filter.type == "blur") {
-                            var uvDirty = false;
-                            if (data.uv) {
-                                if (this.uv) {
-                                    if (this.uv[0] != data.uv[0] || this.uv[1] != data.uv[1] || this.uv[2] != data.uv[2] || this.uv[3] != data.uv[3]) {
-                                        this.uv = data.uv;
-                                        uvDirty = true;
-                                    }
-                                    else {
-                                        uvDirty = false;
-                                    }
-                                }
-                                else {
-                                    this.uv = data.uv;
-                                    uvDirty = true;
-                                }
-                            }
-                            else {
-                                if (this.uv) {
-                                    this.uv = null;
-                                    uvDirty = true;
-                                }
-                                else {
-                                    uvDirty = false;
-                                }
-                            }
-                        }
-                        if (filter != this.filter || uvDirty) {
-                            this.filterType = filter.type;
-                            this.filter = filter;
-                            this.uv = data.uv;
-                            this.startShader();
-                            shaderStarted = false;
-                        }
-                    }
-                    else {
-                        if (!shaderStarted || this.drawingTexture != drawingTexture) {
-                            this.filterType = "";
-                            this.filter = null;
-                            this.drawingTexture = drawingTexture;
-                            this.startShader();
-                            shaderStarted = true;
-                        }
-                    }
+                    this.prepareShader(data);
                     this.context.drawData(data, offset);
-                    // add drawCall except blend type
+                    // 计算draw call
                     if (data.type != 4 /* BLEND */) {
                         if (this.$computeDrawCall) {
                             this.$drawCalls++;
                         }
                     }
                 }
+                // 切换回默认indices
                 if (this.hasMesh) {
-                    gl.bindBuffer(gl.ELEMENT_ARRAY_BUFFER, this.indexBuffer);
-                    gl.bufferData(gl.ELEMENT_ARRAY_BUFFER, this.indices, gl.STATIC_DRAW);
+                    this.context.uploadIndicesArray(this.indices);
                 }
-                // flush draw data
+                // 清空数据
                 this.hasMesh = false;
                 this.drawData.length = 0;
-                // this.currentBatchSize = 0;
                 this.vertexIndex = 0;
                 this.indexIndex = 0;
                 this.filter = null;
             };
-            p.start = function () {
-                if (this.context.contextLost) {
-                    return;
+            p.prepareShader = function (data) {
+                var drawingTexture = (data.type == 0 /* TEXTURE */);
+                // 根据filter开启shader
+                if (data.filter) {
+                    var filter = data.filter;
+                    // 如果是blur，需要判断是否重新上传uv坐标
+                    if (filter.type == "blur") {
+                        var uvDirty = false;
+                        if (data.uv) {
+                            if (this.uv) {
+                                if (this.uv[0] != data.uv[0] || this.uv[1] != data.uv[1] || this.uv[2] != data.uv[2] || this.uv[3] != data.uv[3]) {
+                                    this.uv = data.uv;
+                                    uvDirty = true;
+                                }
+                                else {
+                                    uvDirty = false;
+                                }
+                            }
+                            else {
+                                this.uv = data.uv;
+                                uvDirty = true;
+                            }
+                        }
+                        else {
+                            if (this.uv) {
+                                this.uv = null;
+                                uvDirty = true;
+                            }
+                            else {
+                                uvDirty = false;
+                            }
+                        }
+                    }
+                    if (filter != this.filter || uvDirty) {
+                        this.filterType = filter.type;
+                        this.filter = filter;
+                        this.uv = data.uv;
+                        this.startShader();
+                        this.shaderStarted = false;
+                    }
                 }
-                var gl = this.context.context;
-                if (!this.bindBuffer) {
-                    gl.bindBuffer(gl.ARRAY_BUFFER, this.vertexBuffer);
-                    //gl.bufferData(gl.ARRAY_BUFFER, buffer.vertices, gl.DYNAMIC_DRAW);
-                    this.bindBuffer = true;
+                else {
+                    if (!this.shaderStarted || this.drawingTexture != drawingTexture) {
+                        this.filterType = "";
+                        this.filter = null;
+                        this.drawingTexture = drawingTexture;
+                        this.startShader();
+                        this.shaderStarted = true;
+                    }
                 }
-                // this.startShader();
             };
             p.startShader = function () {
                 var shader;

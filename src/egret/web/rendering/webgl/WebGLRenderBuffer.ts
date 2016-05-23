@@ -70,7 +70,7 @@ module egret.web {
             // 获取webglRenderContext
             this.context = WebGLRenderContext.getInstance(width, height);
             // buffer 对应的 render target
-            this.rootRenderTarget = this.context.createRenderTarget(width, height);
+            this.rootRenderTarget = new WebGLRenderTarget(this.context.context, width, height);
 
             // TODO 抽像WebGLState类用于管理webgl状态，包括stencil，blend，colorMask等等
             this.stencilState = false;
@@ -85,6 +85,12 @@ module egret.web {
                 // 画布
                 this.surface = this.context.surface;
             } else {
+                // 由于创建renderTarget造成的frameBuffer绑定，这里重置绑定
+                var lastBuffer = this.context.currentBuffer;
+                if(lastBuffer) {
+                    lastBuffer.rootRenderTarget.activate();
+                }
+
                 this.surface = this.rootRenderTarget;
             }
         }
@@ -237,15 +243,18 @@ module egret.web {
                 this.rootRenderTarget.resize(width, height);
             }
 
-            this.context.pushBuffer(this);
-
             // 如果是舞台的渲染缓冲，执行resize，否则surface大小不随之改变
             if(this.context.$bufferStack[0] == this) {
                 this.context.resize(width, height, useMaxSize);
             }
-            this.clear();
 
-            this.context.popBuffer();
+            this.rootRenderTarget.clear(true);
+
+            // 由于resize与clear造成的frameBuffer绑定，这里重置绑定
+            var lastBuffer = this.context.currentBuffer;
+            if(lastBuffer) {
+                lastBuffer.rootRenderTarget.activate();
+            }
         }
 
 
@@ -287,10 +296,10 @@ module egret.web {
             // dirtyRegionPolicy hack
             if(this._dirtyRegionPolicy) {
                 this.rootRenderTarget.useFrameBuffer = true;
-                this.context.bindBufferTarget(this);
+                this.rootRenderTarget.activate();
             } else {
                 this.rootRenderTarget.useFrameBuffer = false;
-                this.context.bindBufferTarget(this);
+                this.rootRenderTarget.activate();
                 this.clear();
             }
 
@@ -392,22 +401,22 @@ module egret.web {
          */
         private drawFrameBufferToSurface(sourceX:number,
           sourceY:number, sourceWidth:number, sourceHeight:number, destX:number, destY:number, destWidth:number, destHeight:number, clear:boolean = false):void {
-            var gl = this.context.context;
-
             this.rootRenderTarget.useFrameBuffer = false;
-            this.context.pushBuffer(this);
-            var target = this.rootRenderTarget;
+            this.rootRenderTarget.activate();
 
-            gl.disable(gl.STENCIL_TEST);// 切换frameBuffer注意要禁用STENCIL_TEST
+            this.context.disableStencilTest();// 切换frameBuffer注意要禁用STENCIL_TEST
+
             this.setTransform(1, 0, 0, 1, 0, 0);
             this.setGlobalAlpha(1);
             this.setGlobalCompositeOperation("source-over");
             clear && this.clear();
-            this.drawImage(<BitmapData><any>target, sourceX, sourceY, sourceWidth, sourceHeight, destX, destY, destWidth, destHeight, sourceWidth, sourceHeight);
+            this.drawImage(<BitmapData><any>this.rootRenderTarget, sourceX, sourceY, sourceWidth, sourceHeight, destX, destY, destWidth, destHeight, sourceWidth, sourceHeight);
             this.$drawWebGL();
 
             this.rootRenderTarget.useFrameBuffer = true;
-            this.context.popBuffer();
+            this.rootRenderTarget.activate();
+
+            this.restoreStencil();
         }
         /**
          * 交换surface的图像到frameBuffer中
@@ -416,12 +425,11 @@ module egret.web {
          */
         private drawSurfaceToFrameBuffer(sourceX:number,
           sourceY:number, sourceWidth:number, sourceHeight:number, destX:number, destY:number, destWidth:number, destHeight:number, clear:boolean = false):void {
-            var gl = this.context.context;
-
             this.rootRenderTarget.useFrameBuffer = true;
-            this.context.pushBuffer(this);
+            this.rootRenderTarget.activate();
 
-            gl.disable(gl.STENCIL_TEST);// 切换frameBuffer注意要禁用STENCIL_TEST
+            this.context.disableStencilTest();// 切换frameBuffer注意要禁用STENCIL_TEST
+
             this.setTransform(1, 0, 0, 1, 0, 0);
             this.setGlobalAlpha(1);
             this.setGlobalCompositeOperation("source-over");
@@ -430,7 +438,9 @@ module egret.web {
             this.$drawWebGL();
 
             this.rootRenderTarget.useFrameBuffer = false;
-            this.context.popBuffer();
+            this.rootRenderTarget.activate();
+
+            this.restoreStencil();
         }
 
         /**
@@ -866,23 +876,27 @@ module egret.web {
          * 缓存顶点与索引信息
          * 如果后三个参数缺省，默认为构成矩形的顶点
          * */
+        private defaultMeshVertices = [0, 0, 1, 0, 1, 1, 0, 1];
+        private defaultMeshUvs = [
+            0, 0,
+            1, 0,
+            1, 1,
+            0, 1
+        ];
+        private defaultMeshIndices = [0, 1, 2, 0, 2, 3];
         private cacheArrays(sourceX:number, sourceY:number, sourceWidth:number, sourceHeight:number,
                                 destX:number, destY:number, destWidth:number, destHeight:number, textureSourceWidth:number, textureSourceHeight:number,
                                 meshUVs?:number[], meshVertices?:number[], meshIndices?:number[]):void {
+
             // 如果后三个值缺省，默认为构成矩形的顶点
-            meshVertices = meshVertices || [
-                0, 0,
-                sourceWidth, 0,
-                sourceWidth, sourceHeight,
-                0, sourceHeight
-            ];
-            meshUVs = meshUVs || [
-                0, 0,
-                1, 0,
-                1, 1,
-                0, 1
-            ];
-            meshIndices = meshIndices || [0, 1, 2, 0, 2, 3];
+            if(!meshVertices) {
+                this.defaultMeshVertices[2] = this.defaultMeshVertices[4] = sourceWidth;
+                this.defaultMeshVertices[5] = this.defaultMeshVertices[7] = sourceHeight;
+            }
+
+            meshVertices = meshVertices || this.defaultMeshVertices;
+            meshUVs = meshUVs || this.defaultMeshUvs;
+            meshIndices = meshIndices || this.defaultMeshIndices;
             //计算出绘制矩阵，之后把矩阵还原回之前的
             var locWorldTransform = this.globalMatrix;
             var originalA:number = locWorldTransform.a;
@@ -964,84 +978,33 @@ module egret.web {
         public $computeDrawCall:boolean = false;
 
         public $drawWebGL():void {
-            // if ((this.currentBatchSize == 0 && this.drawData.length == 0) || this.context.contextLost) {
-            if ((this.vertexIndex == 0 && this.drawData.length == 0) || this.context.contextLost) {
+            if (this.drawData.length == 0 || this.context.contextLost) {
                 return;
             }
 
-            this.start();
-
-            // update the vertices data
-            var gl:any = this.context.context;
-
+            // 上传顶点数组
             if(this.vertexIndex > 0) {
-                // var view = this.vertices.subarray(0, this.currentBatchSize * 4 * this.vertSize);
-                // gl.bufferSubData(gl.ARRAY_BUFFER, 0, view);
                 var view = this.vertices.subarray(0, this.vertexIndex * this.vertSize);
-                gl.bufferData(gl.ARRAY_BUFFER, view, gl.STREAM_DRAW);
+                this.context.uploadVerticesArray(view, this.bindBuffer ? null : this.vertexBuffer);
+                this.bindBuffer = true;
             }
 
+            // 有mesh，则使用indicesForMesh
             if (this.hasMesh){
-                gl.bindBuffer(gl.ELEMENT_ARRAY_BUFFER, this.indexBuffer);
-                gl.bufferData(gl.ELEMENT_ARRAY_BUFFER, this.indicesForMesh, gl.STATIC_DRAW);
+                this.context.uploadIndicesArray(this.indicesForMesh, this.indexBuffer);
             }
 
             var length = this.drawData.length;
             var offset = 0;
-            var shaderStarted = false;
+            this.shaderStarted = false;
             for (var i = 0; i < length; i++) {
                 var data = this.drawData[i];
 
-                var drawingTexture = (data.type == DRAWABLE_TYPE.TEXTURE);
-                // 根据filter开启shader
-                if(data.filter) {
-                    var filter = data.filter;
-
-                    // 如果是blur，需要判断是否重新上传uv坐标
-                    if(filter.type == "blur") {
-                        var uvDirty = false;
-                        if(data.uv) {
-                            if(this.uv) {
-                                if(this.uv[0] != data.uv[0] || this.uv[1] != data.uv[1] || this.uv[2] != data.uv[2] || this.uv[3] != data.uv[3]) {
-                                    this.uv = data.uv;
-                                    uvDirty = true;
-                                } else {
-                                    uvDirty = false;
-                                }
-                            } else {
-                                this.uv = data.uv;
-                                uvDirty = true;
-                            }
-                        } else {
-                            if(this.uv) {
-                                this.uv = null;
-                                uvDirty = true;
-                            } else {
-                                uvDirty = false;
-                            }
-                        }
-                    }
-
-                    if(filter != this.filter || uvDirty) {
-                        this.filterType = filter.type;
-                        this.filter = filter;
-                        this.uv = data.uv;
-                        this.startShader();
-                        shaderStarted = false;
-                    }
-                } else {
-                    if(!shaderStarted || this.drawingTexture != drawingTexture) {
-                        this.filterType = "";
-                        this.filter = null;
-                        this.drawingTexture = drawingTexture;
-                        this.startShader();
-                        shaderStarted = true;
-                    }
-                }
+                this.prepareShader(data);
 
                 this.context.drawData(data, offset);
 
-                // add drawCall except blend type
+                // 计算draw call
                 if(data.type != DRAWABLE_TYPE.BLEND) {
                     if (this.$computeDrawCall) {
                         this.$drawCalls++;
@@ -1049,19 +1012,16 @@ module egret.web {
                 }
             }
 
+            // 切换回默认indices
             if(this.hasMesh) {
-                gl.bindBuffer(gl.ELEMENT_ARRAY_BUFFER, this.indexBuffer);
-                gl.bufferData(gl.ELEMENT_ARRAY_BUFFER, this.indices, gl.STATIC_DRAW);
+                this.context.uploadIndicesArray(this.indices);
             }
 
-            // flush draw data
+            // 清空数据
             this.hasMesh = false;
             this.drawData.length = 0;
-
-            // this.currentBatchSize = 0;
             this.vertexIndex = 0;
             this.indexIndex = 0;
-
             this.filter = null;
         }
 
@@ -1070,20 +1030,55 @@ module egret.web {
         private uv;
         public bindBuffer:boolean = false;
         private drawingTexture:boolean;
+        private shaderStarted:boolean;
 
-        private start():void {
-            if (this.context.contextLost) {
-                return;
+        private prepareShader(data:any):void {
+            var drawingTexture = (data.type == DRAWABLE_TYPE.TEXTURE);
+            // 根据filter开启shader
+            if(data.filter) {
+                var filter = data.filter;
+
+                // 如果是blur，需要判断是否重新上传uv坐标
+                if(filter.type == "blur") {
+                    var uvDirty = false;
+                    if(data.uv) {
+                        if(this.uv) {
+                            if(this.uv[0] != data.uv[0] || this.uv[1] != data.uv[1] || this.uv[2] != data.uv[2] || this.uv[3] != data.uv[3]) {
+                                this.uv = data.uv;
+                                uvDirty = true;
+                            } else {
+                                uvDirty = false;
+                            }
+                        } else {
+                            this.uv = data.uv;
+                            uvDirty = true;
+                        }
+                    } else {
+                        if(this.uv) {
+                            this.uv = null;
+                            uvDirty = true;
+                        } else {
+                            uvDirty = false;
+                        }
+                    }
+                }
+
+                if(filter != this.filter || uvDirty) {
+                    this.filterType = filter.type;
+                    this.filter = filter;
+                    this.uv = data.uv;
+                    this.startShader();
+                    this.shaderStarted = false;
+                }
+            } else {
+                if(!this.shaderStarted || this.drawingTexture != drawingTexture) {
+                    this.filterType = "";
+                    this.filter = null;
+                    this.drawingTexture = drawingTexture;
+                    this.startShader();
+                    this.shaderStarted = true;
+                }
             }
-            var gl:any = this.context.context;
-
-            if(!this.bindBuffer) {
-                gl.bindBuffer(gl.ARRAY_BUFFER, this.vertexBuffer);
-                //gl.bufferData(gl.ARRAY_BUFFER, buffer.vertices, gl.DYNAMIC_DRAW);
-                this.bindBuffer = true;
-            }
-
-            // this.startShader();
         }
 
         private startShader() {

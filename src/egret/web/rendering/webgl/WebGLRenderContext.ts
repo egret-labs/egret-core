@@ -84,7 +84,7 @@ module egret.web {
         public currentBuffer:WebGLRenderBuffer;
 
         /**
-         * buffer 管理
+         * 推入一个RenderBuffer并绑定
          */
         public pushBuffer(buffer:WebGLRenderBuffer):void {
             this.$bufferStack.push(buffer);
@@ -93,6 +93,9 @@ module egret.web {
             this.currentBuffer = buffer;
         }
 
+        /**
+         * 推出一个RenderBuffer并绑定上一个RenderBuffer（如果有）
+         */
         public popBuffer():void {
             this.$bufferStack.pop();
 
@@ -105,82 +108,99 @@ module egret.web {
             }
         }
 
-        public bindBufferTarget(buffer:WebGLRenderBuffer) {
-            this.activateRenderTarget(buffer.rootRenderTarget);
-        }
-
-        // 是否绑定了indices，如果绑定了，则不再切换！
         private bindIndices:boolean;
-        private bindBufferData(buffer:WebGLRenderBuffer) {
-            var gl:any =this.context;
-
-            if(!this.bindIndices) {
-                gl.bindBuffer(gl.ELEMENT_ARRAY_BUFFER, buffer.indexBuffer);
-                gl.bufferData(gl.ELEMENT_ARRAY_BUFFER, buffer.indices, gl.STATIC_DRAW);
-                this.bindIndices = true;
-            }
-
-            buffer.bindBuffer = false;
-        }
-
+        /**
+         * 绑定RenderBuffer
+         */
         private bindBuffer(buffer:WebGLRenderBuffer):void {
 
-            this.bindBufferTarget(buffer);
+            buffer.rootRenderTarget.activate();
 
-            this.bindBufferData(buffer);
+            if(!this.bindIndices) {
+                this.uploadIndicesArray(buffer.indices, buffer.indexBuffer);
+                this.bindIndices = true;
+            }
+            buffer.bindBuffer = false;
 
             buffer.restoreStencil();
 
             this.onResize(buffer.width, buffer.height);
         }
 
+        /**
+         * 上传顶点数据
+         */
+        public uploadVerticesArray(array:any, bindBuffer?:any):void {
+            var gl:any =this.context;
+
+            if(bindBuffer) {
+                gl.bindBuffer(gl.ARRAY_BUFFER, bindBuffer);
+            }
+
+            gl.bufferData(gl.ARRAY_BUFFER, array, gl.STREAM_DRAW);
+            // gl.bufferSubData(gl.ARRAY_BUFFER, 0, array);
+        }
+
+        /**
+         * 上传索引数据
+         */
+        public uploadIndicesArray(array:any, bindBuffer?:any):void {
+            var gl:any =this.context;
+
+            if(bindBuffer) {
+                gl.bindBuffer(gl.ELEMENT_ARRAY_BUFFER, bindBuffer);
+            }
+
+            gl.bufferData(gl.ELEMENT_ARRAY_BUFFER, array, gl.STATIC_DRAW);
+        }
+
         // 当前启用的render target
-        public currentRenderTarget:WebGLRenderTarget;
+        // public currentRenderTarget:WebGLRenderTarget;
 
         /**
          * 启用render target
          */
-        public activateRenderTarget(renderTarget:WebGLRenderTarget) {
-            renderTarget.activate();
-            this.currentRenderTarget = renderTarget;
-        }
+        // public activateRenderTarget(renderTarget:WebGLRenderTarget) {
+        //     renderTarget.activate();
+        //     this.currentRenderTarget = renderTarget;
+        // }
 
         /**
          * 从对象池中取出或创建一个新的render target对象。
          */
-        public createRenderTarget(width:number, height:number, activate?:boolean):WebGLRenderTarget {
-            var gl:any =this.context;
-
-            var renderTarget = renderTargetPool.pop();
-            if (!renderTarget) {
-                renderTarget = new WebGLRenderTarget(gl, width, height);
-            } else {
-                if(width != renderTarget.width || height != renderTarget.height) {
-                    renderTarget.resize(width, height);
-                } else {
-                    renderTarget.clear(true);
-                }
-            }
-
-            if(!activate && this.currentRenderTarget) {
-                this.activateRenderTarget(this.currentRenderTarget);
-            } else {
-                this.activateRenderTarget(renderTarget);
-            }
-
-            return renderTarget;
-        }
+        // public createRenderTarget(width:number, height:number, activate?:boolean):WebGLRenderTarget {
+        //     var gl:any =this.context;
+        //
+        //     var renderTarget = renderTargetPool.pop();
+        //     if (!renderTarget) {
+        //         renderTarget = new WebGLRenderTarget(gl, width, height);
+        //     } else {
+        //         if(width != renderTarget.width || height != renderTarget.height) {
+        //             renderTarget.resize(width, height);
+        //         } else {
+        //             renderTarget.clear(true);
+        //         }
+        //     }
+        //
+        //     if(!activate && this.currentRenderTarget) {
+        //         this.activateRenderTarget(this.currentRenderTarget);
+        //     } else {
+        //         this.activateRenderTarget(renderTarget);
+        //     }
+        //
+        //     return renderTarget;
+        // }
 
         /**
          * 释放一个render target实例到对象池
          */
-        public releaseRenderTarget(renderTarget:WebGLRenderTarget):void {
-            if(!renderTarget){
-                return;
-            }
-            // 是否需要resize以节省内存？
-            renderTargetPool.push(renderTarget);
-        }
+        // public releaseRenderTarget(renderTarget:WebGLRenderTarget):void {
+        //     if(!renderTarget){
+        //         return;
+        //     }
+        //     // 是否需要resize以节省内存？
+        //     renderTargetPool.push(renderTarget);
+        // }
 
         public constructor(width?:number, height?:number) {
 
@@ -243,10 +263,10 @@ module egret.web {
          * @param offsetX 原始图像数据在改变后缓冲区的绘制起始位置x
          * @param offsetY 原始图像数据在改变后缓冲区的绘制起始位置y
          */
-        public resizeTo(width:number, height:number, offsetX:number, offsetY:number):void {
-            this.surface.width = width;
-            this.surface.height = height;
-        }
+        // public resizeTo(width:number, height:number, offsetX:number, offsetY:number):void {
+        //     this.surface.width = width;
+        //     this.surface.height = height;
+        // }
 
         public static glContextId:number = 0;
         public glID:number = null;
