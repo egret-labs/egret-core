@@ -6933,7 +6933,7 @@ var egret;
                 for (var i = 0; i < length; i++) {
                     var data = this.drawData[i];
                     this.prepareShader(data);
-                    this.context.drawData(data, offset);
+                    offset = this.context.drawData(data, offset);
                     // 计算draw call
                     if (data.type != 4 /* BLEND */) {
                         if (this.$computeDrawCall) {

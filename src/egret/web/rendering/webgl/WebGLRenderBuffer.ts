@@ -1010,7 +1010,7 @@ module egret.web {
 
                 this.prepareShader(data);
 
-                this.context.drawData(data, offset);
+                offset = this.context.drawData(data, offset);
 
                 // 计算draw call
                 if(data.type != DRAWABLE_TYPE.BLEND) {
