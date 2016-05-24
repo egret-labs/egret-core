@@ -3258,7 +3258,13 @@ var egret;
                  * @private
                  * */
                 this.loop = false;
+                /**
+                 * @private
+                 * */
                 this.isPlayed = false;
+                /**
+                 * @private
+                 * */
                 this.firstPlay = true;
                 /**
                  * @inheritDoc
@@ -3268,6 +3274,7 @@ var egret;
                  * @inheritDoc
                  */
                 this.fullscreen = true;
+                this._bitmapData = null;
                 /**
                  * @inheritDoc
                  */
@@ -3319,20 +3326,16 @@ var egret;
                 video.load();
                 var self = this;
                 function onCanPlay() {
-                    //video.current=0;
                     video['setVideoRect'](0, 0, 1, 1);
                     video.play();
-                    egret.log('onCanPlay');
                 }
                 function onPlaying() {
-                    egret.log('onPlaying');
                     video['setVideoRect'](0, 0, 1, 1);
                     video.pause();
                     video.currentTime = 0;
                     self.loaded = true;
                     self.loading = false;
                     removeListeners();
-                    //video["setVideoVisible"](false);
                     self.dispatchEventWith(egret.Event.COMPLETE);
                     video.addEventListener('pause', function () {
                         self.paused = true;
@@ -3341,7 +3344,6 @@ var egret;
                         self.paused = false;
                     });
                     video.addEventListener('ended', function () {
-                        egret.log('ended');
                         self.dispatchEventWith(egret.Event.ENDED);
                         if (self.loop) {
                             self.play(0, true);
@@ -3349,12 +3351,10 @@ var egret;
                     });
                 }
                 function onVideoError() {
-                    egret.log('onVideoError');
                     removeListeners();
                     self.dispatchEventWith(egret.IOErrorEvent.IO_ERROR);
                 }
                 function removeListeners() {
-                    egret.log('removeListeners');
                     video.removeEventListener("canplaythrough", onCanPlay);
                     video.removeEventListener("error", onVideoError);
                     video.removeEventListener("playing", onPlaying);
@@ -3390,7 +3390,6 @@ var egret;
                 this.firstPlay = false;
                 this.setVideoSize();
                 this.isPlayed = true;
-                //this.originVideo["setVideoVisible"](true);
                 if (!haveStartTime && this.paused && this.position != 0) {
                     this.originVideo['resume']();
                 }
@@ -3484,16 +3483,10 @@ var egret;
                 this.originVideo.pause();
             };
             d(p, "bitmapData"
-                //todo
                 /**
                  * @inheritDoc
                  */
                 ,function () {
-                    //if (!this.originVideo || !this.loaded)
-                    //    return null;
-                    //if (!this._bitmapData) {
-                    //    this._bitmapData = $toBitmapData(this.originVideo);
-                    //}
                     return this._bitmapData;
                 }
             );
@@ -3514,10 +3507,11 @@ var egret;
              */
             p.$onAddToStage = function (stage, nestLevel) {
                 this.isAddToStage = true;
-                //this.startPlay();
                 if (this.originVideo) {
                     this.originVideo["setVideoVisible"](true);
                 }
+                this.$invalidate();
+                this.$invalidateContentBounds();
                 _super.prototype.$onAddToStage.call(this, stage, nestLevel);
             };
             /**
@@ -3603,8 +3597,6 @@ var egret;
             p.setVideoSize = function () {
                 var video = this.originVideo;
                 if (video) {
-                    //egret.log('fullscreen:',this.fullscreen);
-                    //egret.log(this.x, this.y, this.widthSet, this.heightSet);
                     if (this.fullscreen) {
                         video['setFullScreen'](true);
                     }
@@ -3624,9 +3616,6 @@ var egret;
              */
             p.$measureContentBounds = function (bounds) {
                 var posterData = this.posterData;
-                // if (bitmapData) {
-                //     bounds.setTo(0, 0, this.getPlayWidth(), this.getPlayHeight());
-                // }
                 if (posterData) {
                     bounds.setTo(0, 0, this.getPlayWidth(), this.getPlayHeight());
                 }
@@ -3639,7 +3628,6 @@ var egret;
              */
             p.$render = function () {
                 var node = this.$renderNode;
-                //var bitmapData = this.bitmapData;
                 var posterData = this.posterData;
                 var width = this.getPlayWidth();
                 var height = this.getPlayHeight();
