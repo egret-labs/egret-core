@@ -87,32 +87,48 @@ module egret.web {
          * 推入一个RenderBuffer并绑定
          */
         public pushBuffer(buffer:WebGLRenderBuffer):void {
+
             this.$bufferStack.push(buffer);
 
-            this.bindBuffer(buffer);
+            if(buffer != this.currentBuffer) {
+                // this.currentBuffer.$drawWebGL();
+
+                this.activateBuffer(buffer);
+            }
+
             this.currentBuffer = buffer;
+
         }
 
         /**
-         * 推出一个RenderBuffer并绑定上一个RenderBuffer（如果有）
+         * 推出一个RenderBuffer并绑定上一个RenderBuffer
          */
         public popBuffer():void {
-            this.$bufferStack.pop();
-
-            var buffer = this.$bufferStack[this.$bufferStack.length - 1];
-            if(buffer) {
-                this.bindBuffer(buffer);
-                this.currentBuffer = buffer;
-            } else {
-                this.currentBuffer = null;
+            // 如果只剩下一个buffer，则不执行pop操作
+            // 保证舞台buffer永远在最开始
+            if(this.$bufferStack.length <= 1) {
+                return;
             }
+
+            var buffer = this.$bufferStack.pop();
+
+            var lastBuffer = this.$bufferStack[this.$bufferStack.length - 1];
+
+            // 重新绑定
+            if(buffer != lastBuffer) {
+                // buffer.$drawWebGL();
+
+                this.activateBuffer(lastBuffer);
+            }
+
+            this.currentBuffer = lastBuffer;
         }
 
         private bindIndices:boolean;
         /**
-         * 绑定RenderBuffer
+         * 启用RenderBuffer
          */
-        private bindBuffer(buffer:WebGLRenderBuffer):void {
+        private activateBuffer(buffer:WebGLRenderBuffer):void {
 
             buffer.rootRenderTarget.activate();
 

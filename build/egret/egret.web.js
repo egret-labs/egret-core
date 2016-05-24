@@ -5731,27 +5731,34 @@ var egret;
              */
             p.pushBuffer = function (buffer) {
                 this.$bufferStack.push(buffer);
-                this.bindBuffer(buffer);
+                if (buffer != this.currentBuffer) {
+                    // this.currentBuffer.$drawWebGL();
+                    this.activateBuffer(buffer);
+                }
                 this.currentBuffer = buffer;
             };
             /**
-             * 推出一个RenderBuffer并绑定上一个RenderBuffer（如果有）
+             * 推出一个RenderBuffer并绑定上一个RenderBuffer
              */
             p.popBuffer = function () {
-                this.$bufferStack.pop();
-                var buffer = this.$bufferStack[this.$bufferStack.length - 1];
-                if (buffer) {
-                    this.bindBuffer(buffer);
-                    this.currentBuffer = buffer;
+                // 如果只剩下一个buffer，则不执行pop操作
+                // 保证舞台buffer永远在最开始
+                if (this.$bufferStack.length <= 1) {
+                    return;
                 }
-                else {
-                    this.currentBuffer = null;
+                var buffer = this.$bufferStack.pop();
+                var lastBuffer = this.$bufferStack[this.$bufferStack.length - 1];
+                // 重新绑定
+                if (buffer != lastBuffer) {
+                    // buffer.$drawWebGL();
+                    this.activateBuffer(lastBuffer);
                 }
+                this.currentBuffer = lastBuffer;
             };
             /**
-             * 绑定RenderBuffer
+             * 启用RenderBuffer
              */
-            p.bindBuffer = function (buffer) {
+            p.activateBuffer = function (buffer) {
                 buffer.rootRenderTarget.activate();
                 if (!this.bindIndices) {
                     this.uploadIndicesArray(buffer.indices, buffer.indexBuffer);
@@ -6182,8 +6189,10 @@ var egret;
                 this.stencilState = false;
                 this.initVertexArrayObjects();
                 this.setGlobalCompositeOperation("source-over");
+                // 如果是第一个加入的buffer，说明是舞台buffer
+                this.root = this.context.$bufferStack.length == 0;
                 // 如果是用于舞台渲染的renderBuffer，则默认添加renderTarget到renderContext中，而且是第一个
-                if (this.context.$bufferStack.length == 0) {
+                if (this.root) {
                     this.context.pushBuffer(this);
                     // 画布
                     this.surface = this.context.surface;
@@ -6304,7 +6313,7 @@ var egret;
                     this.rootRenderTarget.resize(width, height);
                 }
                 // 如果是舞台的渲染缓冲，执行resize，否则surface大小不随之改变
-                if (this.context.$bufferStack[0] == this) {
+                if (this.root) {
                     this.context.resize(width, height, useMaxSize);
                 }
                 this.rootRenderTarget.clear(true);
@@ -6393,10 +6402,10 @@ var egret;
                 var pixels = new Uint8Array(4);
                 var useFrameBuffer = this.rootRenderTarget.useFrameBuffer;
                 this.rootRenderTarget.useFrameBuffer = true;
-                this.context.pushBuffer(this);
+                this.rootRenderTarget.activate();
                 this.context.getPixels(x, y, 1, 1, pixels);
                 this.rootRenderTarget.useFrameBuffer = useFrameBuffer;
-                this.context.popBuffer();
+                this.rootRenderTarget.activate();
                 return pixels;
             };
             /**
@@ -6415,7 +6424,7 @@ var egret;
             p.onRenderFinish = function () {
                 this.$drawCalls = 0;
                 // 如果是舞台渲染buffer，判断脏矩形策略
-                if (this.context.$bufferStack.length == 1) {
+                if (this.root) {
                     // dirtyRegionPolicy hack
                     if (!this._dirtyRegionPolicy && this.dirtyRegionPolicy) {
                         this.drawSurfaceToFrameBuffer(0, 0, this.rootRenderTarget.width, this.rootRenderTarget.height, 0, 0, this.rootRenderTarget.width, this.rootRenderTarget.height, true);
@@ -6909,11 +6918,11 @@ var egret;
                     return;
                 }
                 // 上传顶点数组
-                if (this.vertexIndex > 0) {
-                    var view = this.vertices.subarray(0, this.vertexIndex * this.vertSize);
-                    this.context.uploadVerticesArray(view, this.bindBuffer ? null : this.vertexBuffer);
-                    this.bindBuffer = true;
-                }
+                // if(this.vertexIndex > 0) {
+                var view = this.vertices.subarray(0, this.vertexIndex * this.vertSize);
+                this.context.uploadVerticesArray(view, this.bindBuffer ? null : this.vertexBuffer);
+                this.bindBuffer = true;
+                // }
                 // 有mesh，则使用indicesForMesh
                 if (this.hasMesh) {
                     this.context.uploadIndicesArray(this.indicesForMesh, this.indexBuffer);
@@ -7213,18 +7222,13 @@ var egret;
                 this.nestLevel++;
                 var webglBuffer = buffer;
                 var root = forRenderTexture ? displayObject : null;
-                var needPush = webglBuffer.context.currentBuffer != webglBuffer;
-                if (needPush) {
-                    webglBuffer.context.pushBuffer(webglBuffer);
-                }
+                webglBuffer.context.pushBuffer(webglBuffer);
                 //绘制显示对象
                 this.drawDisplayObject(displayObject, webglBuffer, dirtyList, matrix, null, null, root);
                 webglBuffer.$drawWebGL();
                 var drawCall = webglBuffer.$drawCalls;
                 webglBuffer.onRenderFinish();
-                if (needPush) {
-                    webglBuffer.context.popBuffer();
-                }
+                webglBuffer.context.popBuffer();
                 this.nestLevel--;
                 if (this.nestLevel === 0) {
                     //最大缓存6个渲染缓冲
