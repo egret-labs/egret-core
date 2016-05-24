@@ -48,6 +48,7 @@ module egret {
     locale_strings[1042] = "drawToTexture方法传入的区域各个参数需要为整数,否则某些浏览器绘制会出现异常";
     locale_strings[1043] = "{0} 中存在编译错误，属性名 : {1}，属性值 : {2}";
     locale_strings[1046] = "BitmapText 找不到对应字符:{0}，请检查配置文件";
+    locale_strings[1047] = "egret.localStorage.setItem保存失败,key={0}&value={1}";
 
 
     //gui  3000-3099
