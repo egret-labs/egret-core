@@ -150,8 +150,6 @@ module egret.web {
         private vertSize:number = 5;
         public indices:Uint16Array = null;
         private indicesForMesh:Uint16Array = null;
-        public vertexBuffer;
-        public indexBuffer;
         public initVertexArrayObjects() {
             var numVerts = this.vertexMaxSize * this.vertSize;
             var numIndices = this.vertexMaxSize * 3 / 2;
@@ -168,10 +166,6 @@ module egret.web {
                 this.indices[i + 4] = j + 2;
                 this.indices[i + 5] = j + 3;
             }
-
-            var gl = this.context.context;
-            this.vertexBuffer = gl.createBuffer();
-            this.indexBuffer = gl.createBuffer();
         }
 
         /**
@@ -993,13 +987,12 @@ module egret.web {
             // 上传顶点数组
             // if(this.vertexIndex > 0) {
                 var view = this.vertices.subarray(0, this.vertexIndex * this.vertSize);
-                this.context.uploadVerticesArray(view, this.bindBuffer ? null : this.vertexBuffer);
-                this.bindBuffer = true;
+                this.context.uploadVerticesArray(view);
             // }
 
             // 有mesh，则使用indicesForMesh
             if (this.hasMesh){
-                this.context.uploadIndicesArray(this.indicesForMesh, this.indexBuffer);
+                this.context.uploadIndicesArray(this.indicesForMesh);
             }
 
             var length = this.drawData.length;
@@ -1036,7 +1029,6 @@ module egret.web {
         private filterType;
         private filter;
         private uv;
-        public bindBuffer:boolean = false;
         private drawingTexture:boolean;
         private shaderStarted:boolean;
 

@@ -5664,50 +5664,6 @@ var egret;
          * 抽象出此类，以实现共用一个context
          */
         var WebGLRenderContext = (function () {
-            // 当前启用的render target
-            // public currentRenderTarget:WebGLRenderTarget;
-            /**
-             * 启用render target
-             */
-            // public activateRenderTarget(renderTarget:WebGLRenderTarget) {
-            //     renderTarget.activate();
-            //     this.currentRenderTarget = renderTarget;
-            // }
-            /**
-             * 从对象池中取出或创建一个新的render target对象。
-             */
-            // public createRenderTarget(width:number, height:number, activate?:boolean):WebGLRenderTarget {
-            //     var gl:any =this.context;
-            //
-            //     var renderTarget = renderTargetPool.pop();
-            //     if (!renderTarget) {
-            //         renderTarget = new WebGLRenderTarget(gl, width, height);
-            //     } else {
-            //         if(width != renderTarget.width || height != renderTarget.height) {
-            //             renderTarget.resize(width, height);
-            //         } else {
-            //             renderTarget.clear(true);
-            //         }
-            //     }
-            //
-            //     if(!activate && this.currentRenderTarget) {
-            //         this.activateRenderTarget(this.currentRenderTarget);
-            //     } else {
-            //         this.activateRenderTarget(renderTarget);
-            //     }
-            //
-            //     return renderTarget;
-            // }
-            /**
-             * 释放一个render target实例到对象池
-             */
-            // public releaseRenderTarget(renderTarget:WebGLRenderTarget):void {
-            //     if(!renderTarget){
-            //         return;
-            //     }
-            //     // 是否需要resize以节省内存？
-            //     renderTargetPool.push(renderTarget);
-            // }
             function WebGLRenderContext(width, height) {
                 this.glID = null;
                 this.projectionX = NaN;
@@ -5717,6 +5673,11 @@ var egret;
                 this.surface = createCanvas(width, height);
                 this.initWebGL();
                 this.$bufferStack = [];
+                var gl = this.context;
+                this.vertexBuffer = gl.createBuffer();
+                this.indexBuffer = gl.createBuffer();
+                gl.bindBuffer(gl.ARRAY_BUFFER, this.vertexBuffer);
+                gl.bindBuffer(gl.ELEMENT_ARRAY_BUFFER, this.indexBuffer);
             }
             var d = __define,c=WebGLRenderContext,p=c.prototype;
             WebGLRenderContext.getInstance = function (width, height) {
@@ -5761,32 +5722,25 @@ var egret;
             p.activateBuffer = function (buffer) {
                 buffer.rootRenderTarget.activate();
                 if (!this.bindIndices) {
-                    this.uploadIndicesArray(buffer.indices, buffer.indexBuffer);
+                    this.uploadIndicesArray(buffer.indices);
                     this.bindIndices = true;
                 }
-                buffer.bindBuffer = false;
                 buffer.restoreStencil();
                 this.onResize(buffer.width, buffer.height);
             };
             /**
              * 上传顶点数据
              */
-            p.uploadVerticesArray = function (array, bindBuffer) {
+            p.uploadVerticesArray = function (array) {
                 var gl = this.context;
-                if (bindBuffer) {
-                    gl.bindBuffer(gl.ARRAY_BUFFER, bindBuffer);
-                }
                 gl.bufferData(gl.ARRAY_BUFFER, array, gl.STREAM_DRAW);
                 // gl.bufferSubData(gl.ARRAY_BUFFER, 0, array);
             };
             /**
              * 上传索引数据
              */
-            p.uploadIndicesArray = function (array, bindBuffer) {
+            p.uploadIndicesArray = function (array) {
                 var gl = this.context;
-                if (bindBuffer) {
-                    gl.bindBuffer(gl.ELEMENT_ARRAY_BUFFER, bindBuffer);
-                }
                 gl.bufferData(gl.ELEMENT_ARRAY_BUFFER, array, gl.STATIC_DRAW);
             };
             /**
@@ -6177,7 +6131,6 @@ var egret;
                 this.drawData = [];
                 this.$drawCalls = 0;
                 this.$computeDrawCall = false;
-                this.bindBuffer = false;
                 this.globalMatrix = new egret.Matrix();
                 this.savedGlobalMatrix = new egret.Matrix();
                 this._globalAlpha = 1;
@@ -6245,9 +6198,6 @@ var egret;
                     this.indices[i + 4] = j + 2;
                     this.indices[i + 5] = j + 3;
                 }
-                var gl = this.context.context;
-                this.vertexBuffer = gl.createBuffer();
-                this.indexBuffer = gl.createBuffer();
             };
             p.enableStencil = function () {
                 if (!this.stencilState) {
@@ -6920,12 +6870,11 @@ var egret;
                 // 上传顶点数组
                 // if(this.vertexIndex > 0) {
                 var view = this.vertices.subarray(0, this.vertexIndex * this.vertSize);
-                this.context.uploadVerticesArray(view, this.bindBuffer ? null : this.vertexBuffer);
-                this.bindBuffer = true;
+                this.context.uploadVerticesArray(view);
                 // }
                 // 有mesh，则使用indicesForMesh
                 if (this.hasMesh) {
-                    this.context.uploadIndicesArray(this.indicesForMesh, this.indexBuffer);
+                    this.context.uploadIndicesArray(this.indicesForMesh);
                 }
                 var length = this.drawData.length;
                 var offset = 0;
