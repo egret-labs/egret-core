@@ -11815,6 +11815,7 @@ var egret;
     locale_strings[1042] = "The parameters passed in the region needs is an integer in drawToTexture method. Otherwise, some browsers will draw abnormal.";
     locale_strings[1043] = "Compile errors in {0}, the attribute name: {1}, the attribute value: {2}.";
     locale_strings[1046] = "BitmapText no corresponding characters: {0}, please check the configuration file";
+    locale_strings[1047] = "egret.localStorage.setItem save failed,key={0}&value={1}";
     //gui  3000-3099
     locale_strings[3000] = "Theme configuration file failed to load: {0}";
     locale_strings[3001] = "Cannot find the skin name which is configured in Theme: {0}";
@@ -11957,6 +11958,7 @@ var egret;
     locale_strings[1042] = "drawToTexture方法传入的区域各个参数需要为整数,否则某些浏览器绘制会出现异常";
     locale_strings[1043] = "{0} 中存在编译错误，属性名 : {1}，属性值 : {2}";
     locale_strings[1046] = "BitmapText 找不到对应字符:{0}，请检查配置文件";
+    locale_strings[1047] = "egret.localStorage.setItem保存失败,key={0}&value={1}";
     //gui  3000-3099
     locale_strings[3000] = "主题配置文件加载失败: {0}";
     locale_strings[3001] = "找不到主题中所配置的皮肤类名: {0}";

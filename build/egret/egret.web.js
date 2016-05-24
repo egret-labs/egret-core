@@ -168,7 +168,7 @@ var egret;
                     return true;
                 }
                 catch (e) {
-                    egret.$warn(1018, key, value);
+                    egret.$warn(1047, key, value);
                     return false;
                 }
             }
@@ -5364,6 +5364,9 @@ var egret;
                     "vec4 locColor = texColor * matrix;\n" +
                     "if(texColor.a != 0.0){\n" +
                     "locColor += colorAdd;\n" +
+                    "}\n" +
+                    "if(locColor.a <= 0.0){\n" +
+                    "discard;\n" +
                     "}\n" +
                     "gl_FragColor = vColor*vec4(locColor.rgb*locColor.a,locColor.a);\n" +
                     "}";
