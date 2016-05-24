@@ -59,10 +59,7 @@ module egret.web {
             var webglBuffer: WebGLRenderBuffer = <WebGLRenderBuffer>buffer;
             var root: DisplayObject = forRenderTexture ? displayObject : null;
 
-            var needPush = webglBuffer.context.currentBuffer != webglBuffer;
-            if (needPush) {
-                webglBuffer.context.pushBuffer(webglBuffer);
-            }
+            webglBuffer.context.pushBuffer(webglBuffer);
 
             //绘制显示对象
             this.drawDisplayObject(displayObject, webglBuffer, dirtyList, matrix, null, null, root);
@@ -70,9 +67,8 @@ module egret.web {
             var drawCall = webglBuffer.$drawCalls;
             webglBuffer.onRenderFinish();
 
-            if (needPush) {
-                webglBuffer.context.popBuffer();
-            }
+
+            webglBuffer.context.popBuffer();
 
             this.nestLevel--;
             if (this.nestLevel === 0) {

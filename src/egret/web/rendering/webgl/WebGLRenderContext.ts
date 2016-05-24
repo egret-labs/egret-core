@@ -87,40 +87,55 @@ module egret.web {
          * 推入一个RenderBuffer并绑定
          */
         public pushBuffer(buffer:WebGLRenderBuffer):void {
+
             this.$bufferStack.push(buffer);
 
-            this.bindBuffer(buffer);
+            if(buffer != this.currentBuffer) {
+                // this.currentBuffer.$drawWebGL();
+
+                this.activateBuffer(buffer);
+            }
+
             this.currentBuffer = buffer;
+
         }
 
         /**
-         * 推出一个RenderBuffer并绑定上一个RenderBuffer（如果有）
+         * 推出一个RenderBuffer并绑定上一个RenderBuffer
          */
         public popBuffer():void {
-            this.$bufferStack.pop();
-
-            var buffer = this.$bufferStack[this.$bufferStack.length - 1];
-            if(buffer) {
-                this.bindBuffer(buffer);
-                this.currentBuffer = buffer;
-            } else {
-                this.currentBuffer = null;
+            // 如果只剩下一个buffer，则不执行pop操作
+            // 保证舞台buffer永远在最开始
+            if(this.$bufferStack.length <= 1) {
+                return;
             }
+
+            var buffer = this.$bufferStack.pop();
+
+            var lastBuffer = this.$bufferStack[this.$bufferStack.length - 1];
+
+            // 重新绑定
+            if(buffer != lastBuffer) {
+                // buffer.$drawWebGL();
+
+                this.activateBuffer(lastBuffer);
+            }
+
+            this.currentBuffer = lastBuffer;
         }
 
         private bindIndices:boolean;
         /**
-         * 绑定RenderBuffer
+         * 启用RenderBuffer
          */
-        private bindBuffer(buffer:WebGLRenderBuffer):void {
+        private activateBuffer(buffer:WebGLRenderBuffer):void {
 
             buffer.rootRenderTarget.activate();
 
             if(!this.bindIndices) {
-                this.uploadIndicesArray(buffer.indices, buffer.indexBuffer);
+                this.uploadIndicesArray(buffer.indices);
                 this.bindIndices = true;
             }
-            buffer.bindBuffer = false;
 
             buffer.restoreStencil();
 
@@ -130,12 +145,8 @@ module egret.web {
         /**
          * 上传顶点数据
          */
-        public uploadVerticesArray(array:any, bindBuffer?:any):void {
+        public uploadVerticesArray(array:any):void {
             var gl:any =this.context;
-
-            if(bindBuffer) {
-                gl.bindBuffer(gl.ARRAY_BUFFER, bindBuffer);
-            }
 
             gl.bufferData(gl.ARRAY_BUFFER, array, gl.STREAM_DRAW);
             // gl.bufferSubData(gl.ARRAY_BUFFER, 0, array);
@@ -144,12 +155,8 @@ module egret.web {
         /**
          * 上传索引数据
          */
-        public uploadIndicesArray(array:any, bindBuffer?:any):void {
+        public uploadIndicesArray(array:any):void {
             var gl:any =this.context;
-
-            if(bindBuffer) {
-                gl.bindBuffer(gl.ELEMENT_ARRAY_BUFFER, bindBuffer);
-            }
 
             gl.bufferData(gl.ELEMENT_ARRAY_BUFFER, array, gl.STATIC_DRAW);
         }
@@ -202,6 +209,9 @@ module egret.web {
         //     renderTargetPool.push(renderTarget);
         // }
 
+        public vertexBuffer;
+        public indexBuffer;
+
         public constructor(width?:number, height?:number) {
 
             this.surface = createCanvas(width, height);
@@ -209,6 +219,12 @@ module egret.web {
             this.initWebGL();
 
             this.$bufferStack = [];
+
+            var gl = this.context;
+            this.vertexBuffer = gl.createBuffer();
+            this.indexBuffer = gl.createBuffer();
+            gl.bindBuffer(gl.ARRAY_BUFFER, this.vertexBuffer);
+            gl.bindBuffer(gl.ELEMENT_ARRAY_BUFFER, this.indexBuffer);
         }
 
         /**

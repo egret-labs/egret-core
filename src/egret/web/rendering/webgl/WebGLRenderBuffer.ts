@@ -66,6 +66,11 @@ module egret.web {
          */
         public context:WebGLRenderContext;
 
+        /**
+         * 是否为舞台buffer
+         */
+        private root:boolean;
+
         public constructor(width?:number, height?:number) {
             // 获取webglRenderContext
             this.context = WebGLRenderContext.getInstance(width, height);
@@ -79,8 +84,11 @@ module egret.web {
 
             this.setGlobalCompositeOperation("source-over");
 
+            // 如果是第一个加入的buffer，说明是舞台buffer
+            this.root = this.context.$bufferStack.length == 0;
+
             // 如果是用于舞台渲染的renderBuffer，则默认添加renderTarget到renderContext中，而且是第一个
-            if(this.context.$bufferStack.length == 0) {
+            if(this.root) {
                 this.context.pushBuffer(this);
                 // 画布
                 this.surface = this.context.surface;
@@ -142,8 +150,6 @@ module egret.web {
         private vertSize:number = 5;
         public indices:Uint16Array = null;
         private indicesForMesh:Uint16Array = null;
-        public vertexBuffer;
-        public indexBuffer;
         public initVertexArrayObjects() {
             var numVerts = this.vertexMaxSize * this.vertSize;
             var numIndices = this.vertexMaxSize * 3 / 2;
@@ -160,10 +166,6 @@ module egret.web {
                 this.indices[i + 4] = j + 2;
                 this.indices[i + 5] = j + 3;
             }
-
-            var gl = this.context.context;
-            this.vertexBuffer = gl.createBuffer();
-            this.indexBuffer = gl.createBuffer();
         }
 
         /**
@@ -244,7 +246,7 @@ module egret.web {
             }
 
             // 如果是舞台的渲染缓冲，执行resize，否则surface大小不随之改变
-            if(this.context.$bufferStack[0] == this) {
+            if(this.root) {
                 this.context.resize(width, height, useMaxSize);
             }
 
@@ -353,12 +355,12 @@ module egret.web {
 
             var useFrameBuffer = this.rootRenderTarget.useFrameBuffer;
             this.rootRenderTarget.useFrameBuffer = true;
-            this.context.pushBuffer(this);
+            this.rootRenderTarget.activate();
 
             this.context.getPixels(x, y, 1, 1, pixels);
 
             this.rootRenderTarget.useFrameBuffer = useFrameBuffer;
-            this.context.popBuffer();
+            this.rootRenderTarget.activate();
 
             return <number[]><any>pixels;
         }
@@ -382,7 +384,7 @@ module egret.web {
             this.$drawCalls = 0;
 
             // 如果是舞台渲染buffer，判断脏矩形策略
-            if(this.context.$bufferStack.length == 1) {
+            if(this.root) {
                 // dirtyRegionPolicy hack
                 if(!this._dirtyRegionPolicy && this.dirtyRegionPolicy) {
                     this.drawSurfaceToFrameBuffer(0, 0, this.rootRenderTarget.width, this.rootRenderTarget.height, 0, 0, this.rootRenderTarget.width, this.rootRenderTarget.height, true);
@@ -983,15 +985,14 @@ module egret.web {
             }
 
             // 上传顶点数组
-            if(this.vertexIndex > 0) {
+            // if(this.vertexIndex > 0) {
                 var view = this.vertices.subarray(0, this.vertexIndex * this.vertSize);
-                this.context.uploadVerticesArray(view, this.bindBuffer ? null : this.vertexBuffer);
-                this.bindBuffer = true;
-            }
+                this.context.uploadVerticesArray(view);
+            // }
 
             // 有mesh，则使用indicesForMesh
             if (this.hasMesh){
-                this.context.uploadIndicesArray(this.indicesForMesh, this.indexBuffer);
+                this.context.uploadIndicesArray(this.indicesForMesh);
             }
 
             var length = this.drawData.length;
@@ -1002,7 +1003,7 @@ module egret.web {
 
                 this.prepareShader(data);
 
-                this.context.drawData(data, offset);
+                offset = this.context.drawData(data, offset);
 
                 // 计算draw call
                 if(data.type != DRAWABLE_TYPE.BLEND) {
@@ -1028,7 +1029,6 @@ module egret.web {
         private filterType;
         private filter;
         private uv;
-        public bindBuffer:boolean = false;
         private drawingTexture:boolean;
         private shaderStarted:boolean;
 
