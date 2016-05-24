@@ -85,20 +85,16 @@ module egret.native {
             video.load();
             var self = this;
             function onCanPlay():void {
-                //video.current=0;
                 video['setVideoRect'](0, 0, 1, 1);
                 video.play();
-                egret.log('onCanPlay');
             }
             function onPlaying():void{
-                egret.log('onPlaying');
                 video['setVideoRect'](0, 0, 1, 1);
                 video.pause();
                 video.currentTime = 0;
                 self.loaded = true;
                 self.loading = false;
                 removeListeners();
-                //video["setVideoVisible"](false);
                 self.dispatchEventWith(egret.Event.COMPLETE);
                 video.addEventListener('pause',function(){
                     self.paused = true;
@@ -107,7 +103,6 @@ module egret.native {
                     self.paused = false;
                 });
                 video.addEventListener('ended',function(){
-                    egret.log('ended')
                     self.dispatchEventWith(egret.Event.ENDED);
                     if(self.loop){
                         self.play(0,true);
@@ -115,12 +110,10 @@ module egret.native {
                 });
             }
             function onVideoError():void {
-                egret.log('onVideoError');
                 removeListeners();
                 self.dispatchEventWith(egret.IOErrorEvent.IO_ERROR);
             }
             function removeListeners():void {
-                egret.log('removeListeners');
                 video.removeEventListener("canplaythrough", onCanPlay);
                 video.removeEventListener("error", onVideoError);
                 video.removeEventListener("playing",onPlaying);
@@ -147,7 +140,13 @@ module egret.native {
             }
             this.startPlay(haveStartTime);
         }
+        /**
+         * @private
+         * */
         private isPlayed:boolean = false;
+        /**
+         * @private
+         * */
         private firstPlay:boolean = true;
         /**
          * @private
@@ -159,7 +158,6 @@ module egret.native {
             this.firstPlay = false;
             this.setVideoSize();
             this.isPlayed = true;
-            //this.originVideo["setVideoVisible"](true);
             if(!haveStartTime && this.paused && this.position!=0){
                 this.originVideo['resume']();
             }else{
@@ -291,7 +289,6 @@ module egret.native {
          */
         $onAddToStage(stage:Stage, nestLevel:number):void {
             this.isAddToStage = true;
-            //this.startPlay();
             if(this.originVideo){
                 this.originVideo["setVideoVisible"](true);
             }
@@ -390,11 +387,8 @@ module egret.native {
         private setVideoSize():void{
             var video = this.originVideo;
             if(video){
-                //egret.log('fullscreen:',this.fullscreen);
-                //egret.log(this.x, this.y, this.widthSet, this.heightSet);
                 if(this.fullscreen){
                     video['setFullScreen'](true);
-                    //this.originVideo['setVideoRect'](this.x, this.y, this.stage.stageWidth, this.stage.stageHeight);
                 }else{
                     video['setFullScreen'](false);
                     if(!this.firstPlay){
@@ -410,9 +404,6 @@ module egret.native {
          */
         $measureContentBounds(bounds:Rectangle){
             var posterData = this.posterData;
-            // if (bitmapData) {
-            //     bounds.setTo(0, 0, this.getPlayWidth(), this.getPlayHeight());
-            // }
             if (posterData) {
                 bounds.setTo(0, 0, this.getPlayWidth(), this.getPlayHeight());
             }
@@ -425,7 +416,6 @@ module egret.native {
          */
         $render():void {
             var node = <sys.BitmapNode>this.$renderNode;
-            //var bitmapData = this.bitmapData;
             var posterData = this.posterData;
             var width = this.getPlayWidth();
             var height = this.getPlayHeight();

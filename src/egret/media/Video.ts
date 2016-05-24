@@ -115,7 +115,7 @@ module egret {
          * @language en_US
          * The URL of the video you want to play.
          * @version Egret 2.4
-         * @platform Web
+         * @platform Web,Native
          */
         /**
          * @language zh_CN
@@ -129,7 +129,7 @@ module egret {
          * @language en_US
          * The URL of an image you want to display before the video is loaded or video cannot been draw on the canvas on some mobile device.
          * @version Egret 2.4
-         * @platform Web
+         * @platform Web,Native
          */
         /**
          * @language zh_CN
@@ -144,7 +144,7 @@ module egret {
          * Should play the video in fullscreen mode (default = true).
          * Currently only supports full-screen mobile terminal web.
          * @version Egret 2.4
-         * @platform Web
+         * @platform Web,Native
          */
         /**
          * @language zh_CN
@@ -158,7 +158,7 @@ module egret {
          * @language en_US
          * The volume, ranging from 0 (silent) to 1 (full volume).
          * @version Egret 2.4
-         * @platform Web
+         * @platform Web,Native
          */
         /**
          * @language zh_CN
@@ -173,7 +173,7 @@ module egret {
          * When the video is playing, the position property indicates
          * in seconds the current point that is being played in the video file.
          * @version Egret 2.4
-         * @platform Web
+         * @platform Web,Native
          */
         /**
          * @language zh_CN
