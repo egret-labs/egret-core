@@ -46,6 +46,9 @@ module egret.web {
                 "if(texColor.a != 0.0){\n" +
                     "locColor += colorAdd;\n" +
                 "}\n" +
+                "if(locColor.a <= 0.0){\n" +
+                    "discard;\n" +
+                "}\n" +
                 "gl_FragColor = vColor*vec4(locColor.rgb*locColor.a,locColor.a);\n" +
             "}";
 
