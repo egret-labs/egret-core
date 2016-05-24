@@ -39,5 +39,34 @@ module egret {
          * @platform Web,Native
          */
         public type:string = null;
+        
+        private $targets:DisplayObject[] = [];
+        
+        public $addTarget(target:DisplayObject):void {
+            var length:number = this.$targets.length;
+            for(var i:number = 0 ; i < length ; i++) {
+                if(this.$targets[i].$hashCode == target.$hashCode) {
+                    return;
+                }
+            }
+            this.$targets.push(target);
+        }
+        
+        public $removeTarget(target:DisplayObject):void {
+            var length:number = this.$targets.length;
+            for(var i:number = 0 ; i < length ; i++) {
+                if(this.$targets[i].$hashCode == target.$hashCode) {
+                    this.$targets.splice(i, 1);
+                    return;
+                }
+            }
+        }
+        
+        protected invalidate():void {
+            var length:number = this.$targets.length;
+            for(var i:number = 0 ; i < length ; i++) {
+                this.$targets[i].$invalidateContentBounds();
+            }
+        }
     }
 }

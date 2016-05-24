@@ -100,9 +100,9 @@ module egret.web {
             var point = this.$textfield.localToGlobal(0, 0);
             var x = point.x;
             var y = point.y;
-            var m = this.$textfield.$renderNode.renderMatrix;
-            var cX = m.a;
-            var cY = m.d;
+            // var m = this.$textfield.$renderNode.renderMatrix;
+            // var cX = m.a;
+            // var cY = m.d;
 
             var scaleX = this.htmlInput.$scaleX;
             var scaleY = this.htmlInput.$scaleY;
@@ -120,7 +120,22 @@ module egret.web {
 
                 this.inputElement.style.top = 0 + "px";
             }
-
+            
+            var node:any = this.$textfield;
+            var cX = 1;
+            var cY = 1;
+            var rotation = 0;
+            while (node.parent) {
+                cX *= node.scaleX;
+                cY *= node.scaleY;
+                rotation += node.rotation;
+                
+                node = node.parent;
+            }
+            
+            var transformKey = egret.web.getPrefixStyleName("transform");
+            this.inputDiv.style[transformKey] = "rotate(" + rotation + "deg)";
+            
             this._gscaleX = scaleX * cX;
             this._gscaleY = scaleY * cY;
         }
@@ -281,21 +296,19 @@ module egret.web {
                 }
                 else {
                     window.setTimeout(function () {
-                        if(self.inputElement) {
-                            if(self.inputElement.selectionStart && self.inputElement.selectionEnd) {
-                                if (self.inputElement.selectionStart == self.inputElement.selectionEnd) {
-                                    self.textValue = self.inputElement.value;
+                        if(self.inputElement && self.inputElement.selectionStart && self.inputElement.selectionEnd) {
+                            if (self.inputElement.selectionStart == self.inputElement.selectionEnd) {
+                                self.textValue = self.inputElement.value;
 
-                                    egret.Event.dispatchEvent(self, "updateText", false);
-                                }                                
-                            }
+                                egret.Event.dispatchEvent(self, "updateText", false);
+                            }                                
                         }
                     }, 0);
                 }
             }
             else {
                 window.setTimeout(function () {
-                    if (self.inputElement.selectionStart == self.inputElement.selectionEnd) {
+                    if (self.inputElement && self.inputElement.selectionStart == self.inputElement.selectionEnd) {
                         self.textValue = self.inputElement.value;
 
                         egret.Event.dispatchEvent(self, "updateText", false);

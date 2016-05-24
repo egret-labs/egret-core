@@ -58,14 +58,9 @@ module egret.web {
             "varying vec2 vTextureCoord;\n" +
             "varying vec4 vColor;\n" +
             "uniform sampler2D uSampler;\n" +
-            "uniform float uPureColor;\n" +
 
             "void main(void) {\n" +
-                "if(uPureColor == 1.0) {\n" +
-                    "gl_FragColor = vColor ;\n" +
-                "} else {\n" +
-                    "gl_FragColor = texture2D(uSampler, vTextureCoord) * vColor ;\n" +
-                "}\n" +
+                "gl_FragColor = texture2D(uSampler, vTextureCoord) * vColor ;\n" +
             "}";
         private uSampler:WebGLUniformLocation;
         public projectionVector:WebGLUniformLocation;
@@ -75,7 +70,6 @@ module egret.web {
         public aTextureCoord:number;
         public colorAttribute:number;
         public attributes:Array<number>;
-        public uPureColor:WebGLUniformLocation;
         public uniforms:any = null;
 
         constructor(gl:WebGLRenderingContext) {
@@ -96,7 +90,6 @@ module egret.web {
             this.aVertexPosition = gl.getAttribLocation(program, "aVertexPosition");
             this.aTextureCoord = gl.getAttribLocation(program, "aTextureCoord");
             this.colorAttribute = gl.getAttribLocation(program, "aColor");
-            this.uPureColor = gl.getUniformLocation(program, "uPureColor");
 
             if (this.colorAttribute === -1) {
                 this.colorAttribute = 2;
@@ -182,6 +175,24 @@ module egret.web {
                     uniform.glFunc.call(gl, uniform.uniformLocation, uniform.value.x, uniform.value.y, uniform.value.z, uniform.value.w);
                 }
             }
+        }
+
+        /**
+         * 同步视角坐标
+         */
+        public syncProjection(projectionX:number, projectionY:number):void {
+            var gl:WebGLRenderingContext = this.gl;
+            gl.uniform2f(this.projectionVector, projectionX, projectionY);
+        }
+
+        /**
+         * 设置attribute pointer
+         */
+        public setAttribPointer(stride:number):void {
+            var gl:WebGLRenderingContext = this.gl;
+            gl.vertexAttribPointer(this.aVertexPosition, 2, gl.FLOAT, false, stride, 0);
+            gl.vertexAttribPointer(this.aTextureCoord, 2, gl.FLOAT, false, stride, 2 * 4);
+            gl.vertexAttribPointer(this.colorAttribute, 1, gl.FLOAT, false, stride, 4 * 4);
         }
     }
 }

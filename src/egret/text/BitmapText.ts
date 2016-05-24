@@ -485,7 +485,7 @@ module egret {
                             xPos += emptyWidth;
                         }
                         else {
-                            egret.$warn(1011, character);
+                            egret.$warn(1046, character);
                         }
                         continue;
                     }
@@ -640,7 +640,7 @@ module egret {
                             textureHeight = emptyHeight;
                         }
                         else {
-                            egret.$warn(1011, character);
+                            egret.$warn(1046, character);
                             if (isFirstChar) {
                                 isFirstChar = false;
                             }

@@ -161,7 +161,9 @@ module egret {
             color = +color || 0;
             alpha = +alpha || 0;
             this.fillPath = this.$renderNode.beginFill(color, alpha, this.strokePath);
-            this.fillPath.moveTo(this.lastX, this.lastY);
+            if(this.$renderNode.drawData.length > 1) {
+                this.fillPath.moveTo(this.lastX, this.lastY);
+            }
         }
 
 
@@ -193,7 +195,9 @@ module egret {
          */
         public beginGradientFill(type:string, colors:number[], alphas:number[], ratios:number[], matrix:egret.Matrix = null):void {
             this.fillPath = this.$renderNode.beginGradientFill(type, colors, alphas, ratios, matrix, this.strokePath);
-            this.fillPath.moveTo(this.lastX, this.lastY);
+            if(this.$renderNode.drawData.length > 1) {
+                this.fillPath.moveTo(this.lastX, this.lastY);
+            }
         }
 
         /**
@@ -252,7 +256,9 @@ module egret {
                 miterLimit = +miterLimit || 0;
                 this.setStrokeWidth(thickness);
                 this.strokePath = this.$renderNode.lineStyle(thickness, color, alpha, caps, joints, miterLimit);
-                this.strokePath.moveTo(this.lastX, this.lastY);
+                if(this.$renderNode.drawData.length > 1) {
+                    this.strokePath.moveTo(this.lastX, this.lastY);
+                }
             }
         }
 

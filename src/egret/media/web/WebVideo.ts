@@ -113,22 +113,12 @@ module egret.web {
             this.video = video;
         }
 
-        public get length():number {
-            if (this.video) {
-                return this.video.duration;
-            }
-
-            throw new Error("Video not loaded!");
-            //return 0;
-        }
-
         private isPlayed:boolean = false;
 
         /**
          * @inheritDoc
          */
         public play(startTime?:number, loop:boolean = false) {
-
             if (this.loaded == false) {
                 this.load(this.src);
                 this.once(egret.Event.COMPLETE, e=> this.play(startTime, loop), this);
@@ -153,32 +143,65 @@ module egret.web {
             video.style.left = "0px";
             video.height = video.videoHeight;
             video.width = video.videoWidth;
+            if (egret.Capabilities.os != "Windows PC" && egret.Capabilities.os != "Mac OS") {
+                window.setTimeout(function () {//为了解决视频返回挤压页面内容
+                    video.width = 0;
+                }, 1000);
+            }
+
             this.checkFullScreen(this._fullscreen);
         }
 
         private checkFullScreen(playFullScreen:boolean):void {
             var video = this.video;
+
             if (playFullScreen) {
                 if (video.parentElement == null) {
                     video.removeAttribute("webkit-playsinline");
-                    video.style.width = "100%"
-                    video.style.height = "100%"
                     document.body.appendChild(video);
                 }
                 egret.stopTick(this.markDirty, this);
-                this.setFullScreenMonitor(true);
+                this.goFullscreen();
             }
             else {
                 if (video.parentElement != null) {
                     video.parentElement.removeChild(video);
                 }
                 video.setAttribute("webkit-playsinline", "true");
+
                 this.setFullScreenMonitor(false);
-                if(!egret.Capabilities.isMobile){//移动平台不再渲染
-                    egret.startTick(this.markDirty, this);    
+
+                egret.startTick(this.markDirty, this);
+                
+                if (egret.Capabilities.isMobile) {
+                    this.video.currentTime = 0;
+                    this.onVideoEnded();
+                    return;
                 }
             }
+
             video.play();
+        }
+
+        private goFullscreen():boolean {
+            var video = this.video;
+
+            var fullscreenType:string;
+            fullscreenType = egret.web.getPrefixStyleName('requestFullscreen', video);
+            if (!video[fullscreenType]) {
+                fullscreenType = egret.web.getPrefixStyleName('requestFullScreen', video);
+                if (!video[fullscreenType]) {
+                    return true;
+                }
+            }
+
+            video.removeAttribute("webkit-playsinline");
+
+            video[fullscreenType]();
+
+            this.setFullScreenMonitor(true);
+
+            return true;
         }
 
         private setFullScreenMonitor(use:boolean):void {
@@ -201,13 +224,17 @@ module egret.web {
         }
 
         private screenError():void {
-            egret.$error(3103);
+            egret.$error(3003);
         }
 
         private screenChanged = (e):void => {
             var isfullscreen = !!this.video['webkitDisplayingFullscreen'];
             if (!isfullscreen) {
                 this.checkFullScreen(false);
+                
+                if (!egret.Capabilities.isMobile) {
+                    this._fullscreen = isfullscreen;
+                }
             }
         };
 
@@ -232,15 +259,10 @@ module egret.web {
          *
          */
         private onVideoEnded() {
-            var video = this.video;
-            if (video.parentElement != null) {
-                video.parentElement.removeChild(video);
-            }
             this.pause();
             this.isPlayed = false;
-            if(!this._fullscreen){
-                this.$invalidateContentBounds();    
-            }
+            this.$invalidateContentBounds();
+
             this.dispatchEventWith(egret.Event.ENDED);
         }
 
@@ -333,6 +355,9 @@ module egret.web {
          * @inheritDoc
          */
         public set fullscreen(value:boolean) {
+            if (egret.Capabilities.isMobile) {
+                return;
+            }
             this._fullscreen = !!value;
             if (this.video && this.video.paused == false) {
                 this.checkFullScreen(this._fullscreen);
@@ -449,14 +474,11 @@ module egret.web {
             var posterData = this.posterData;
             var width = this.getPlayWidth();
             var height = this.getPlayHeight();
-            if (width <= 0 || height <= 0) {
-                return;
-            }
             if ((!this.isPlayed || egret.Capabilities.isMobile) && posterData) {
                 node.image = posterData;
                 node.drawImage(0, 0, posterData.width, posterData.height, 0, 0, width, height);
             }
-            else if (this.isPlayed && bitmapData && !this._fullscreen && !egret.Capabilities.isMobile) {
+            else if (this.isPlayed && bitmapData) {
                 node.image = bitmapData;
                 node.drawImage(0, 0, bitmapData.width, bitmapData.height, 0, 0, width, height);
             }
@@ -485,7 +507,7 @@ module egret.web {
         $setWidth(value:number):boolean {
             this.widthSet = +value || 0;
             this.$invalidate();
-            this.$invalidateContentBounds();            
+            this.$invalidateContentBounds();
             return super.$setWidth(value);
         }
 
@@ -493,8 +515,16 @@ module egret.web {
             if (this.video) {
                 return this.video.paused;
             }
-
             return true;
+        }
+        /**
+         * @inheritDoc
+         */
+        public get length():number{
+            if(this.video){
+                return this.video.duration;
+            }
+            throw new Error("Video not loaded!");
         }
     }
 
