@@ -186,6 +186,7 @@ module egret.native {
             this.loading = false;
             this.originVideo = null;
             this.loop = false;
+            this.src = null;
         }
         /**
          * @inheritDoc
@@ -218,10 +219,20 @@ module egret.native {
                 this.$invalidateContentBounds();
             },this);
         }
+        private _fullscreen: boolean = true;
         /**
          * @inheritDoc
          */
-        public fullscreen: boolean = true;
+        public set fullscreen(value:boolean){
+            this._fullscreen = value;
+            this.setVideoSize();
+        }
+        /**
+         * @inheritDoc
+         */
+        public get fullscreen():boolean{
+            return this._fullscreen;
+        }
         /**
          * @inheritDoc
          */
@@ -301,8 +312,8 @@ module egret.native {
          */
         $onRemoveFromStage():void {
             this.isAddToStage = false;
-            this.stopPlay();
             if(this.originVideo){
+                this.stopPlay();
                 this.originVideo["setVideoVisible"](false);
             }
             super.$onRemoveFromStage();
