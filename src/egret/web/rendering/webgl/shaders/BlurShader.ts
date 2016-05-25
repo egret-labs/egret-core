@@ -65,5 +65,27 @@ module egret.web {
             blur: {type: '2f', value: {x: 2, y: 2}},
             uBounds: {type: '4f', value: {x: 0, y: 0, z: 1, w: 1}}
         };
+
+        public setBlur(blurX:number, blurY:number):void {
+            this.uniforms.blur.value.x = blurX;
+            this.uniforms.blur.value.y = blurY;
+        }
+
+        /**
+         * 设置模糊滤镜需要传入的uv坐标
+         */
+        public setUv(uv:any):void {
+            if(uv) {
+                this.uniforms.uBounds.value.x = uv[0];
+                this.uniforms.uBounds.value.y = uv[1];
+                this.uniforms.uBounds.value.z = uv[2];
+                this.uniforms.uBounds.value.w = uv[3];
+            } else {
+                this.uniforms.uBounds.value.x = 0;
+                this.uniforms.uBounds.value.y = 0;
+                this.uniforms.uBounds.value.z = 1;
+                this.uniforms.uBounds.value.w = 1;
+            }
+        }
     }
 }

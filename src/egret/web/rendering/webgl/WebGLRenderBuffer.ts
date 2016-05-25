@@ -564,7 +564,6 @@ module egret.web {
                     destX, destY, destWidth, destHeight, textureWidth, textureHeight,
                     width, height, offsetX, offsetY, meshUVs, meshVertices, meshIndices);// 后参数用于draw mesh
             } else {
-                this.filterType = "";
                 this.filter = null;
 
                 var count = meshIndices ? meshIndices.length / 3 : 2;
@@ -734,7 +733,7 @@ module egret.web {
                 this.$drawWebGL();
 
                 output.clearFilters();
-                output.filterType = "";
+                output.filter = null;
                 renderBufferPool.push(output);
             }
         }
@@ -764,7 +763,7 @@ module egret.web {
             this.context.popBuffer();
             if(input["rootRenderTarget"] && release) { // 如果输入的是buffer,回收
                 input.clearFilters();
-                input.filterType = "";
+                input.filter = null;
                 renderBufferPool.push(input);
             }
         }
@@ -843,7 +842,7 @@ module egret.web {
             }
 
             output.clearFilters();
-            output.filterType = "";
+            output.filter = null;
             renderBufferPool.push(output);
         }
 
@@ -1026,7 +1025,6 @@ module egret.web {
             this.filter = null;
         }
 
-        private filterType;
         private filter;
         private uv;
         private drawingTexture:boolean;
@@ -1064,57 +1062,19 @@ module egret.web {
                 }
 
                 if(filter != this.filter || uvDirty) {
-                    this.filterType = filter.type;
                     this.filter = filter;
                     this.uv = data.uv;
-                    this.startShader();
+                    this.context.startShader(drawingTexture, filter, data.uv);
                     this.shaderStarted = false;
                 }
             } else {
                 if(!this.shaderStarted || this.drawingTexture != drawingTexture) {
-                    this.filterType = "";
                     this.filter = null;
                     this.drawingTexture = drawingTexture;
-                    this.startShader();
+                    this.context.startShader(drawingTexture, null, null);
                     this.shaderStarted = true;
                 }
             }
-        }
-
-        private startShader() {
-            var shader;
-            if (this.filterType == "colorTransform") {
-                shader = this.context.shaderManager.colorTransformShader;
-                shader.uniforms.matrix.value = [
-                    this.filter.matrix[0],this.filter.matrix[1],this.filter.matrix[2],this.filter.matrix[3],
-                    this.filter.matrix[5],this.filter.matrix[6],this.filter.matrix[7],this.filter.matrix[8],
-                    this.filter.matrix[10],this.filter.matrix[11],this.filter.matrix[12],this.filter.matrix[13],
-                    this.filter.matrix[15],this.filter.matrix[16],this.filter.matrix[17],this.filter.matrix[18]
-                ];
-                shader.uniforms.colorAdd.value.x = this.filter.matrix[4] / 255.0;
-                shader.uniforms.colorAdd.value.y = this.filter.matrix[9] / 255.0;
-                shader.uniforms.colorAdd.value.z = this.filter.matrix[14] / 255.0;
-                shader.uniforms.colorAdd.value.w = this.filter.matrix[19] / 255.0;
-            }
-            else if (this.filterType == "blur") {
-                shader = this.context.shaderManager.blurShader;
-                shader.uniforms.blur.value = {x: this.filter.blurX, y: this.filter.blurY};
-                if(this.uv) {
-                    var uv = this.uv;
-                    shader.uniforms.uBounds.value = {x: uv[0], y: uv[1], z: uv[2], w: uv[3]};
-                } else {
-                    shader.uniforms.uBounds.value = {x: 0, y: 0, z: 1, w: 1};
-                }
-            }
-            else {
-                if(this.drawingTexture) {
-                    shader = this.context.shaderManager.defaultShader;
-                } else {
-                    shader = this.context.shaderManager.primitiveShader;
-                }
-            }
-
-            this.context.shaderManager.activateShader(shader, this.context.projectionX, this.context.projectionY, this.vertSize * 4);
         }
 
         private globalMatrix:Matrix = new Matrix();

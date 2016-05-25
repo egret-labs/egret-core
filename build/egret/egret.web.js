@@ -5237,6 +5237,27 @@ var egret;
                 };
             }
             var d = __define,c=BlurShader,p=c.prototype;
+            p.setBlur = function (blurX, blurY) {
+                this.uniforms.blur.value.x = blurX;
+                this.uniforms.blur.value.y = blurY;
+            };
+            /**
+             * 设置模糊滤镜需要传入的uv坐标
+             */
+            p.setUv = function (uv) {
+                if (uv) {
+                    this.uniforms.uBounds.value.x = uv[0];
+                    this.uniforms.uBounds.value.y = uv[1];
+                    this.uniforms.uBounds.value.z = uv[2];
+                    this.uniforms.uBounds.value.w = uv[3];
+                }
+                else {
+                    this.uniforms.uBounds.value.x = 0;
+                    this.uniforms.uBounds.value.y = 0;
+                    this.uniforms.uBounds.value.z = 1;
+                    this.uniforms.uBounds.value.w = 1;
+                }
+            };
             return BlurShader;
         }(web.TextureShader));
         web.BlurShader = BlurShader;
@@ -5309,6 +5330,18 @@ var egret;
                 };
             }
             var d = __define,c=ColorTransformShader,p=c.prototype;
+            p.setMatrix = function (matrix) {
+                this.uniforms.matrix.value = [
+                    matrix[0], matrix[1], matrix[2], matrix[3],
+                    matrix[5], matrix[6], matrix[7], matrix[8],
+                    matrix[10], matrix[11], matrix[12], matrix[13],
+                    matrix[15], matrix[16], matrix[17], matrix[18]
+                ];
+                this.uniforms.colorAdd.value.x = matrix[4] / 255.0;
+                this.uniforms.colorAdd.value.y = matrix[9] / 255.0;
+                this.uniforms.colorAdd.value.z = matrix[14] / 255.0;
+                this.uniforms.colorAdd.value.w = matrix[19] / 255.0;
+            };
             return ColorTransformShader;
         }(web.TextureShader));
         web.ColorTransformShader = ColorTransformShader;
@@ -5607,6 +5640,7 @@ var egret;
                 this.projectionY = NaN;
                 this.shaderManager = null;
                 this.contextLost = false;
+                this.vertSize = 5;
                 this.surface = createCanvas(width, height);
                 this.initWebGL();
                 this.$bufferStack = [];
@@ -5943,6 +5977,28 @@ var egret;
                     }
                 }
                 return size;
+            };
+            p.startShader = function (drawingTexture, filter, uv) {
+                var shader;
+                if (filter && filter.type == "colorTransform") {
+                    shader = this.shaderManager.colorTransformShader;
+                    shader.setMatrix(filter.matrix);
+                }
+                else if (filter && filter.type == "blur") {
+                    shader = this.shaderManager.blurShader;
+                    shader.setBlur(filter.blurX, filter.blurY);
+                    // 模糊滤镜需要传入的uv坐标
+                    shader.setUv(uv);
+                }
+                else {
+                    if (drawingTexture) {
+                        shader = this.shaderManager.defaultShader;
+                    }
+                    else {
+                        shader = this.shaderManager.primitiveShader;
+                    }
+                }
+                this.shaderManager.activateShader(shader, this.projectionX, this.projectionY, this.vertSize * 4);
             };
             /**
              * 设置混色
@@ -6447,7 +6503,6 @@ var egret;
                     this.drawTextureWidthFilter(filters, webGLTexture, sourceX, sourceY, sourceWidth, sourceHeight, destX, destY, destWidth, destHeight, textureWidth, textureHeight, width, height, offsetX, offsetY, meshUVs, meshVertices, meshIndices); // 后参数用于draw mesh
                 }
                 else {
-                    this.filterType = "";
                     this.filter = null;
                     var count = meshIndices ? meshIndices.length / 3 : 2;
                     if (this.drawData.length > 0 && this.drawData[this.drawData.length - 1].type == 0 /* TEXTURE */ && webGLTexture == this.drawData[this.drawData.length - 1].texture && (this.prevIsMesh == !!meshUVs) && !this.drawData[this.drawData.length - 1].filter) {
@@ -6599,7 +6654,7 @@ var egret;
                     // 确保完全绘制完成后才能释放output
                     this.$drawWebGL();
                     output.clearFilters();
-                    output.filterType = "";
+                    output.filter = null;
                     renderBufferPool.push(output);
                 }
             };
@@ -6627,7 +6682,7 @@ var egret;
                 this.context.popBuffer();
                 if (input["rootRenderTarget"] && release) {
                     input.clearFilters();
-                    input.filterType = "";
+                    input.filter = null;
                     renderBufferPool.push(input);
                 }
             };
@@ -6696,7 +6751,7 @@ var egret;
                     this.drawData[this.drawData.length - 1].count += 2;
                 }
                 output.clearFilters();
-                output.filterType = "";
+                output.filter = null;
                 renderBufferPool.push(output);
             };
             /**
@@ -6872,58 +6927,20 @@ var egret;
                         }
                     }
                     if (filter != this.filter || uvDirty) {
-                        this.filterType = filter.type;
                         this.filter = filter;
                         this.uv = data.uv;
-                        this.startShader();
+                        this.context.startShader(drawingTexture, filter, data.uv);
                         this.shaderStarted = false;
                     }
                 }
                 else {
                     if (!this.shaderStarted || this.drawingTexture != drawingTexture) {
-                        this.filterType = "";
                         this.filter = null;
                         this.drawingTexture = drawingTexture;
-                        this.startShader();
+                        this.context.startShader(drawingTexture, null, null);
                         this.shaderStarted = true;
                     }
                 }
-            };
-            p.startShader = function () {
-                var shader;
-                if (this.filterType == "colorTransform") {
-                    shader = this.context.shaderManager.colorTransformShader;
-                    shader.uniforms.matrix.value = [
-                        this.filter.matrix[0], this.filter.matrix[1], this.filter.matrix[2], this.filter.matrix[3],
-                        this.filter.matrix[5], this.filter.matrix[6], this.filter.matrix[7], this.filter.matrix[8],
-                        this.filter.matrix[10], this.filter.matrix[11], this.filter.matrix[12], this.filter.matrix[13],
-                        this.filter.matrix[15], this.filter.matrix[16], this.filter.matrix[17], this.filter.matrix[18]
-                    ];
-                    shader.uniforms.colorAdd.value.x = this.filter.matrix[4] / 255.0;
-                    shader.uniforms.colorAdd.value.y = this.filter.matrix[9] / 255.0;
-                    shader.uniforms.colorAdd.value.z = this.filter.matrix[14] / 255.0;
-                    shader.uniforms.colorAdd.value.w = this.filter.matrix[19] / 255.0;
-                }
-                else if (this.filterType == "blur") {
-                    shader = this.context.shaderManager.blurShader;
-                    shader.uniforms.blur.value = { x: this.filter.blurX, y: this.filter.blurY };
-                    if (this.uv) {
-                        var uv = this.uv;
-                        shader.uniforms.uBounds.value = { x: uv[0], y: uv[1], z: uv[2], w: uv[3] };
-                    }
-                    else {
-                        shader.uniforms.uBounds.value = { x: 0, y: 0, z: 1, w: 1 };
-                    }
-                }
-                else {
-                    if (this.drawingTexture) {
-                        shader = this.context.shaderManager.defaultShader;
-                    }
-                    else {
-                        shader = this.context.shaderManager.primitiveShader;
-                    }
-                }
-                this.context.shaderManager.activateShader(shader, this.context.projectionX, this.context.projectionY, this.vertSize * 4);
             };
             p.setTransform = function (a, b, c, d, tx, ty) {
                 this.globalMatrix.setTo(a, b, c, d, tx, ty);

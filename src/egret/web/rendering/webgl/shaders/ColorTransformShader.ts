@@ -59,5 +59,18 @@ module egret.web {
                 0, 0, 0, 1]},
             colorAdd: {type: '4f', value: {x: 0, y: 0, z: 0, w: 0}}
         };
+
+        public setMatrix(matrix:any):void {
+            this.uniforms.matrix.value = [
+                matrix[0],matrix[1],matrix[2],matrix[3],
+                matrix[5],matrix[6],matrix[7],matrix[8],
+                matrix[10],matrix[11],matrix[12],matrix[13],
+                matrix[15],matrix[16],matrix[17],matrix[18]
+            ];
+            this.uniforms.colorAdd.value.x = matrix[4] / 255.0;
+            this.uniforms.colorAdd.value.y = matrix[9] / 255.0;
+            this.uniforms.colorAdd.value.z = matrix[14] / 255.0;
+            this.uniforms.colorAdd.value.w = matrix[19] / 255.0;
+        }
     }
 }

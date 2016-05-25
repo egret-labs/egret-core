@@ -557,6 +557,31 @@ module egret.web {
             return size;
         }
 
+        private vertSize:number = 5;
+
+        public startShader(drawingTexture:boolean, filter:any, uv?:any) {
+            var shader;
+            if (filter && filter.type == "colorTransform") {
+                shader = this.shaderManager.colorTransformShader;
+                shader.setMatrix(filter.matrix);
+            }
+            else if (filter && filter.type == "blur") {
+                shader = this.shaderManager.blurShader;
+                shader.setBlur(filter.blurX, filter.blurY);
+                // 模糊滤镜需要传入的uv坐标
+                shader.setUv(uv);
+            }
+            else {
+                if(drawingTexture) {
+                    shader = this.shaderManager.defaultShader;
+                } else {
+                    shader = this.shaderManager.primitiveShader;
+                }
+            }
+
+            this.shaderManager.activateShader(shader, this.projectionX, this.projectionY, this.vertSize * 4);
+        }
+
         /**
          * 设置混色
          */
