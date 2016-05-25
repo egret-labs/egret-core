@@ -18631,18 +18631,18 @@ var eui;
                         case "number":
                             if (value.indexOf("#") == 0) {
                                 if (DEBUG && isNaN(value.substring(1))) {
-                                    egret.$warn(1043, this.currentClassName, key, value);
+                                    egret.$warn(2021, this.currentClassName, key, value);
                                 }
                                 value = "0x" + value.substring(1);
                             }
                             else if (value.indexOf("%") != -1) {
                                 if (DEBUG && isNaN(value.substr(0, value.length - 1))) {
-                                    egret.$warn(1043, this.currentClassName, key, value);
+                                    egret.$warn(2021, this.currentClassName, key, value);
                                 }
                                 value = (parseFloat(value.substr(0, value.length - 1))).toString();
                             }
                             else if (DEBUG && isNaN(value)) {
-                                egret.$warn(1043, this.currentClassName, key, value);
+                                egret.$warn(2021, this.currentClassName, key, value);
                             }
                             break;
                         case "boolean":
@@ -19759,6 +19759,7 @@ var eui;
     locale_strings[2018] = "EXML parsing error {0}: format error of 'skinName' property value on the node: {1}";
     locale_strings[2019] = "EXML parsing error {0}: the container’s child item must be visible nodes: {1}";
     locale_strings[2020] = "EXML parsing error {0}: for child nodes in w: Declarations, the includeIn and excludeFrom properties are not allowed to use \n {1}";
+    locale_strings[2021] = "Compile errors in {0}, the attribute name: {1}, the attribute value: {2}.";
     locale_strings[2101] = "EXML parsing warnning : fail to register the class property : {0},there is already a class with the same name in the global,please try to rename the class name for the exml. \n {1}";
     locale_strings[2102] = "EXML parsing warnning {0}: no child node can be found on the property code \n {1}";
     locale_strings[2103] = "EXML parsing warnning {0}: the same property '{1}' on the node is assigned multiple times \n {2}";
@@ -19823,6 +19824,7 @@ var eui;
     locale_strings[2018] = "EXML解析错误 {0}: 节点上'skinName'属性值的格式错误:{1}";
     locale_strings[2019] = "EXML解析错误 {0}: 容器的子项必须是可视节点:{1}";
     locale_strings[2020] = "EXML解析错误 {0}: 在w:Declarations内的子节点，不允许使用includeIn和excludeFrom属性\n{1}";
+    locale_strings[2021] = "{0} 中存在编译错误，属性名 : {1}，属性值 : {2}";
     //EXML警告信息
     locale_strings[2101] = "EXML解析警告: 在EXML根节点上声明的 class 属性: {0} 注册失败，所对应的类已经存在，请尝试重命名要注册的类名。\n{1}";
     locale_strings[2102] = "EXML解析警告 {0}: 在属性节点上找不到任何子节点\n{1}";
