@@ -45,7 +45,7 @@ module egret.web {
         }
 
         public currentShader:any = null;
-        public defaultShader:EgretShader = null;
+        public defaultShader:TextureShader = null;
         public primitiveShader:PrimitiveShader = null;
         public colorTransformShader:ColorTransformShader = null;
         public blurShader:BlurShader = null;
@@ -53,19 +53,24 @@ module egret.web {
         public setContext(gl:any) {
             this.gl = gl;
             this.primitiveShader = new PrimitiveShader(gl);
-            this.defaultShader = new EgretShader(gl);
-            this.defaultShader.init();
+            this.defaultShader = new TextureShader(gl);
             this.colorTransformShader = new ColorTransformShader(gl);
             this.blurShader = new BlurShader(gl);
-            this.activateShader(this.defaultShader);
+            this.primitiveShader.init();
+            this.defaultShader.init();
+            this.colorTransformShader.init();
+            this.blurShader.init();
         }
 
-        public activateShader(shader) {
+        public activateShader(shader, projectionX:number, projectionY:number, stride:number) {
             if (this.currentShader != shader) {
                 this.gl.useProgram(shader.program);
                 this.setAttribs(shader.attributes);
+                shader.setAttribPointer(stride);
                 this.currentShader = shader;
             }
+            shader.syncUniforms();
+            shader.syncProjection(projectionX, projectionY);
         }
 
         private setAttribs(attribs) {

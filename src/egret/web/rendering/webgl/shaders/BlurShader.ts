@@ -30,7 +30,7 @@ module egret.web {
     /**
      * @private
      */
-    export class BlurShader extends EgretShader {
+    export class BlurShader extends TextureShader {
         public fragmentSrc =
             "precision mediump float;"+
 
@@ -65,10 +65,5 @@ module egret.web {
             blur: {type: '2f', value: {x: 2, y: 2}},
             uBounds: {type: '4f', value: {x: 0, y: 0, z: 1, w: 1}}
         };
-
-        constructor(gl:WebGLRenderingContext) {
-            super(gl);
-            this.init();
-        }
     }
 }

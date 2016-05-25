@@ -30,8 +30,11 @@
 module egret.web {
     /**
      * @private
+     * 抽象shader类，所有shader的基类
      */
     export class EgretShader {
+
+        // 着色器源码
         private defaultVertexSrc =
             "attribute vec2 aVertexPosition;\n" +
             "attribute vec2 aTextureCoord;\n" +
@@ -50,27 +53,24 @@ module egret.web {
             "   vTextureCoord = aTextureCoord;\n" +
             "   vColor = vec4(aColor.x, aColor.x, aColor.x, aColor.x);\n" +
             "}";
+        public fragmentSrc:string = "";
 
         private gl:WebGLRenderingContext = null;
-        public program:WebGLProgram = null;
-        public fragmentSrc:string =
-            "precision lowp float;\n" +
-            "varying vec2 vTextureCoord;\n" +
-            "varying vec4 vColor;\n" +
-            "uniform sampler2D uSampler;\n" +
 
-            "void main(void) {\n" +
-                "gl_FragColor = texture2D(uSampler, vTextureCoord) * vColor ;\n" +
-            "}";
-        private uSampler:WebGLUniformLocation;
-        public projectionVector:WebGLUniformLocation;
-        private offsetVector:WebGLUniformLocation;
-        private dimensions:WebGLUniformLocation;
+        public program:WebGLProgram = null;
+
+        public attributes:Array<number>;
+
+        public uniforms:any = null;
+
+        // 有关顶点信息的通用属性
         public aVertexPosition:number;
         public aTextureCoord:number;
         public colorAttribute:number;
-        public attributes:Array<number>;
-        public uniforms:any = null;
+
+        // 视角与便宜的通用属性
+        public projectionVector:WebGLUniformLocation;
+        // public offsetVector:WebGLUniformLocation;// 废弃？
 
         constructor(gl:WebGLRenderingContext) {
             this.gl = gl;
@@ -82,10 +82,8 @@ module egret.web {
             var program:WebGLProgram = WebGLUtils.compileProgram(gl, this.defaultVertexSrc, this.fragmentSrc);
             gl.useProgram(program);
 
-            this.uSampler = gl.getUniformLocation(program, "uSampler");
             this.projectionVector = gl.getUniformLocation(program, "projectionVector");
-            this.offsetVector = gl.getUniformLocation(program, "offsetVector");
-            this.dimensions = gl.getUniformLocation(program, "dimensions");
+            // this.offsetVector = gl.getUniformLocation(program, "offsetVector");// 废弃？
 
             this.aVertexPosition = gl.getAttribLocation(program, "aVertexPosition");
             this.aTextureCoord = gl.getAttribLocation(program, "aTextureCoord");

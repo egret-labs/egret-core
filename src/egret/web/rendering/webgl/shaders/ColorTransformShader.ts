@@ -30,7 +30,7 @@ module egret.web {
     /**
      * @private
      */
-    export class ColorTransformShader extends EgretShader {
+    export class ColorTransformShader extends TextureShader {
         public fragmentSrc =
             "precision mediump float;\n" +
             "varying vec2 vTextureCoord;\n" +
@@ -59,10 +59,5 @@ module egret.web {
                 0, 0, 0, 1]},
             colorAdd: {type: '4f', value: {x: 0, y: 0, z: 0, w: 0}}
         };
-
-        constructor(gl:WebGLRenderingContext) {
-            super(gl);
-            this.init();
-        }
     }
 }

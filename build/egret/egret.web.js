@@ -4928,9 +4928,12 @@ var egret;
     (function (web) {
         /**
          * @private
+         * 抽象shader类，所有shader的基类
          */
         var EgretShader = (function () {
+            // public offsetVector:WebGLUniformLocation;// 废弃？
             function EgretShader(gl) {
+                // 着色器源码
                 this.defaultVertexSrc = "attribute vec2 aVertexPosition;\n" +
                     "attribute vec2 aTextureCoord;\n" +
                     "attribute vec2 aColor;\n" +
@@ -4944,15 +4947,9 @@ var egret;
                     "   vTextureCoord = aTextureCoord;\n" +
                     "   vColor = vec4(aColor.x, aColor.x, aColor.x, aColor.x);\n" +
                     "}";
+                this.fragmentSrc = "";
                 this.gl = null;
                 this.program = null;
-                this.fragmentSrc = "precision lowp float;\n" +
-                    "varying vec2 vTextureCoord;\n" +
-                    "varying vec4 vColor;\n" +
-                    "uniform sampler2D uSampler;\n" +
-                    "void main(void) {\n" +
-                    "gl_FragColor = texture2D(uSampler, vTextureCoord) * vColor ;\n" +
-                    "}";
                 this.uniforms = null;
                 this.gl = gl;
             }
@@ -4961,10 +4958,8 @@ var egret;
                 var gl = this.gl;
                 var program = web.WebGLUtils.compileProgram(gl, this.defaultVertexSrc, this.fragmentSrc);
                 gl.useProgram(program);
-                this.uSampler = gl.getUniformLocation(program, "uSampler");
                 this.projectionVector = gl.getUniformLocation(program, "projectionVector");
-                this.offsetVector = gl.getUniformLocation(program, "offsetVector");
-                this.dimensions = gl.getUniformLocation(program, "dimensions");
+                // this.offsetVector = gl.getUniformLocation(program, "offsetVector");// 废弃？
                 this.aVertexPosition = gl.getAttribLocation(program, "aVertexPosition");
                 this.aTextureCoord = gl.getAttribLocation(program, "aTextureCoord");
                 this.colorAttribute = gl.getAttribLocation(program, "aColor");
@@ -5101,138 +5096,74 @@ var egret;
         /**
          * @private
          */
-        var PrimitiveShader = (function () {
-            function PrimitiveShader(gl) {
-                this.defaultVertexSrc = "attribute vec2 aVertexPosition;\n" +
-                    "attribute vec2 aTextureCoord;\n" +
-                    "attribute vec2 aColor;\n" +
-                    "uniform vec2 projectionVector;\n" +
-                    "uniform vec2 offsetVector;\n" +
+        var TextureShader = (function (_super) {
+            __extends(TextureShader, _super);
+            function TextureShader() {
+                _super.apply(this, arguments);
+                this.fragmentSrc = "precision lowp float;\n" +
                     "varying vec2 vTextureCoord;\n" +
                     "varying vec4 vColor;\n" +
-                    "const vec2 center = vec2(-1.0, 1.0);\n" +
+                    "uniform sampler2D uSampler;\n" +
                     "void main(void) {\n" +
-                    "   gl_Position = vec4( ((aVertexPosition + offsetVector) / projectionVector) + center , 0.0, 1.0);\n" +
-                    "   vTextureCoord = aTextureCoord;\n" +
-                    "   vColor = vec4(aColor.x, aColor.x, aColor.x, aColor.x);\n" +
+                    "gl_FragColor = texture2D(uSampler, vTextureCoord) * vColor;\n" +
                     "}";
-                this.gl = null;
-                this.program = null;
+            }
+            var d = __define,c=TextureShader,p=c.prototype;
+            return TextureShader;
+        }(web.EgretShader));
+        web.TextureShader = TextureShader;
+        egret.registerClass(TextureShader,'egret.web.TextureShader');
+    })(web = egret.web || (egret.web = {}));
+})(egret || (egret = {}));
+//////////////////////////////////////////////////////////////////////////////////////
+//
+//  Copyright (c) 2014-2015, Egret Technology Inc.
+//  All rights reserved.
+//  Redistribution and use in source and binary forms, with or without
+//  modification, are permitted provided that the following conditions are met:
+//
+//     * Redistributions of source code must retain the above copyright
+//       notice, this list of conditions and the following disclaimer.
+//     * Redistributions in binary form must reproduce the above copyright
+//       notice, this list of conditions and the following disclaimer in the
+//       documentation and/or other materials provided with the distribution.
+//     * Neither the name of the Egret nor the
+//       names of its contributors may be used to endorse or promote products
+//       derived from this software without specific prior written permission.
+//
+//  THIS SOFTWARE IS PROVIDED BY EGRET AND CONTRIBUTORS "AS IS" AND ANY EXPRESS
+//  OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES
+//  OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED.
+//  IN NO EVENT SHALL EGRET AND CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT,
+//  INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT
+//  LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES;LOSS OF USE, DATA,
+//  OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF
+//  LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING
+//  NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE,
+//  EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+//
+//////////////////////////////////////////////////////////////////////////////////////
+var egret;
+(function (egret) {
+    var web;
+    (function (web) {
+        /**
+         * @private
+         */
+        var PrimitiveShader = (function (_super) {
+            __extends(PrimitiveShader, _super);
+            function PrimitiveShader() {
+                _super.apply(this, arguments);
                 this.fragmentSrc = "precision lowp float;\n" +
                     "varying vec2 vTextureCoord;\n" +
                     "varying vec4 vColor;\n" +
                     "void main(void) {\n" +
-                    "gl_FragColor = vColor ;\n" +
+                    "gl_FragColor = vColor;\n" +
                     "}";
-                this.uniforms = null;
-                this.gl = gl;
-                this.init();
             }
             var d = __define,c=PrimitiveShader,p=c.prototype;
-            p.init = function () {
-                var gl = this.gl;
-                var program = web.WebGLUtils.compileProgram(gl, this.defaultVertexSrc, this.fragmentSrc);
-                gl.useProgram(program);
-                this.projectionVector = gl.getUniformLocation(program, "projectionVector");
-                this.offsetVector = gl.getUniformLocation(program, "offsetVector");
-                this.dimensions = gl.getUniformLocation(program, "dimensions");
-                this.aVertexPosition = gl.getAttribLocation(program, "aVertexPosition");
-                this.aTextureCoord = gl.getAttribLocation(program, "aTextureCoord");
-                this.colorAttribute = gl.getAttribLocation(program, "aColor");
-                if (this.colorAttribute === -1) {
-                    this.colorAttribute = 2;
-                }
-                this.attributes = [this.aVertexPosition, this.aTextureCoord, this.colorAttribute];
-                for (var key in this.uniforms) {
-                    this.uniforms[key].uniformLocation = gl.getUniformLocation(program, key);
-                }
-                this.initUniforms();
-                this.program = program;
-            };
-            p.initUniforms = function () {
-                if (!this.uniforms) {
-                    return;
-                }
-                var gl = this.gl;
-                var uniform;
-                for (var key in this.uniforms) {
-                    uniform = this.uniforms[key];
-                    var type = uniform.type;
-                    if (type === 'mat2' || type === 'mat3' || type === 'mat4') {
-                        uniform.glMatrix = true;
-                        uniform.glValueLength = 1;
-                        if (type === 'mat2') {
-                            uniform.glFunc = gl.uniformMatrix2fv;
-                        }
-                        else if (type === 'mat3') {
-                            uniform.glFunc = gl.uniformMatrix3fv;
-                        }
-                        else if (type === 'mat4') {
-                            uniform.glFunc = gl.uniformMatrix4fv;
-                        }
-                    }
-                    else {
-                        uniform.glFunc = gl['uniform' + type];
-                        if (type === '2f' || type === '2i') {
-                            uniform.glValueLength = 2;
-                        }
-                        else if (type === '3f' || type === '3i') {
-                            uniform.glValueLength = 3;
-                        }
-                        else if (type === '4f' || type === '4i') {
-                            uniform.glValueLength = 4;
-                        }
-                        else {
-                            uniform.glValueLength = 1;
-                        }
-                    }
-                }
-            };
-            p.syncUniforms = function () {
-                if (!this.uniforms) {
-                    return;
-                }
-                var uniform;
-                var gl = this.gl;
-                for (var key in this.uniforms) {
-                    uniform = this.uniforms[key];
-                    if (uniform.glValueLength === 1) {
-                        if (uniform.glMatrix === true) {
-                            uniform.glFunc.call(gl, uniform.uniformLocation, uniform.transpose, uniform.value);
-                        }
-                        else {
-                            uniform.glFunc.call(gl, uniform.uniformLocation, uniform.value);
-                        }
-                    }
-                    else if (uniform.glValueLength === 2) {
-                        uniform.glFunc.call(gl, uniform.uniformLocation, uniform.value.x, uniform.value.y);
-                    }
-                    else if (uniform.glValueLength === 3) {
-                        uniform.glFunc.call(gl, uniform.uniformLocation, uniform.value.x, uniform.value.y, uniform.value.z);
-                    }
-                    else if (uniform.glValueLength === 4) {
-                        uniform.glFunc.call(gl, uniform.uniformLocation, uniform.value.x, uniform.value.y, uniform.value.z, uniform.value.w);
-                    }
-                }
-            };
-            /**
-             * 同步视角坐标
-             */
-            p.syncProjection = function (projectionX, projectionY) {
-                var gl = this.gl;
-                gl.uniform2f(this.projectionVector, projectionX, projectionY);
-            };
-            /**
-             * 设置attribute pointer
-             */
-            p.setAttribPointer = function (stride) {
-                var gl = this.gl;
-                gl.vertexAttribPointer(this.aVertexPosition, 2, gl.FLOAT, false, stride, 0);
-                gl.vertexAttribPointer(this.aTextureCoord, 2, gl.FLOAT, false, stride, 2 * 4);
-                gl.vertexAttribPointer(this.colorAttribute, 1, gl.FLOAT, false, stride, 4 * 4);
-            };
             return PrimitiveShader;
-        }());
+        }(web.EgretShader));
         web.PrimitiveShader = PrimitiveShader;
         egret.registerClass(PrimitiveShader,'egret.web.PrimitiveShader');
     })(web = egret.web || (egret.web = {}));
@@ -5274,8 +5205,8 @@ var egret;
          */
         var BlurShader = (function (_super) {
             __extends(BlurShader, _super);
-            function BlurShader(gl) {
-                _super.call(this, gl);
+            function BlurShader() {
+                _super.apply(this, arguments);
                 this.fragmentSrc = "precision mediump float;" +
                     "uniform vec2 blur;" +
                     "uniform sampler2D uSampler;" +
@@ -5304,11 +5235,10 @@ var egret;
                     blur: { type: '2f', value: { x: 2, y: 2 } },
                     uBounds: { type: '4f', value: { x: 0, y: 0, z: 1, w: 1 } }
                 };
-                this.init();
             }
             var d = __define,c=BlurShader,p=c.prototype;
             return BlurShader;
-        }(web.EgretShader));
+        }(web.TextureShader));
         web.BlurShader = BlurShader;
         egret.registerClass(BlurShader,'egret.web.BlurShader');
     })(web = egret.web || (egret.web = {}));
@@ -5350,8 +5280,8 @@ var egret;
          */
         var ColorTransformShader = (function (_super) {
             __extends(ColorTransformShader, _super);
-            function ColorTransformShader(gl) {
-                _super.call(this, gl);
+            function ColorTransformShader() {
+                _super.apply(this, arguments);
                 this.fragmentSrc = "precision mediump float;\n" +
                     "varying vec2 vTextureCoord;\n" +
                     "varying vec4 vColor;\n" +
@@ -5377,11 +5307,10 @@ var egret;
                             0, 0, 0, 1] },
                     colorAdd: { type: '4f', value: { x: 0, y: 0, z: 0, w: 0 } }
                 };
-                this.init();
             }
             var d = __define,c=ColorTransformShader,p=c.prototype;
             return ColorTransformShader;
-        }(web.EgretShader));
+        }(web.TextureShader));
         web.ColorTransformShader = ColorTransformShader;
         egret.registerClass(ColorTransformShader,'egret.web.ColorTransformShader');
     })(web = egret.web || (egret.web = {}));
@@ -5442,18 +5371,23 @@ var egret;
             p.setContext = function (gl) {
                 this.gl = gl;
                 this.primitiveShader = new web.PrimitiveShader(gl);
-                this.defaultShader = new web.EgretShader(gl);
-                this.defaultShader.init();
+                this.defaultShader = new web.TextureShader(gl);
                 this.colorTransformShader = new web.ColorTransformShader(gl);
                 this.blurShader = new web.BlurShader(gl);
-                this.activateShader(this.defaultShader);
+                this.primitiveShader.init();
+                this.defaultShader.init();
+                this.colorTransformShader.init();
+                this.blurShader.init();
             };
-            p.activateShader = function (shader) {
+            p.activateShader = function (shader, projectionX, projectionY, stride) {
                 if (this.currentShader != shader) {
                     this.gl.useProgram(shader.program);
                     this.setAttribs(shader.attributes);
+                    shader.setAttribPointer(stride);
                     this.currentShader = shader;
                 }
+                shader.syncUniforms();
+                shader.syncProjection(projectionX, projectionY);
             };
             p.setAttribs = function (attribs) {
                 var i;
@@ -6989,11 +6923,7 @@ var egret;
                         shader = this.context.shaderManager.primitiveShader;
                     }
                 }
-                this.context.shaderManager.activateShader(shader);
-                shader.syncUniforms();
-                shader.syncProjection(this.context.projectionX, this.context.projectionY);
-                var stride = this.vertSize * 4;
-                shader.setAttribPointer(stride);
+                this.context.shaderManager.activateShader(shader, this.context.projectionX, this.context.projectionY, this.vertSize * 4);
             };
             p.setTransform = function (a, b, c, d, tx, ty) {
                 this.globalMatrix.setTo(a, b, c, d, tx, ty);

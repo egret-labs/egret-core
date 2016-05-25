@@ -1114,14 +1114,7 @@ module egret.web {
                 }
             }
 
-            this.context.shaderManager.activateShader(shader);
-
-            shader.syncUniforms();
-
-            shader.syncProjection(this.context.projectionX, this.context.projectionY);
-
-            var stride = this.vertSize * 4;
-            shader.setAttribPointer(stride);
+            this.context.shaderManager.activateShader(shader, this.context.projectionX, this.context.projectionY, this.vertSize * 4);
         }
 
         private globalMatrix:Matrix = new Matrix();
