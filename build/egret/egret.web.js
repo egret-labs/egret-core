@@ -6842,6 +6842,9 @@ var egret;
                 if (this.vao.reachMaxSize()) {
                     this.$drawWebGL();
                 }
+                if (meshUVs) {
+                    this.vao.changeToMeshIndices();
+                }
                 var filters = this.getFilters();
                 if (filters.length > 0) {
                     var width = destWidth;
@@ -6862,9 +6865,7 @@ var egret;
                     this.vao.cacheArrays(this.globalMatrix, this._globalAlpha, sourceX, sourceY, sourceWidth, sourceHeight, destX, destY, destWidth, destHeight, textureWidth, textureHeight, meshUVs, meshVertices, meshIndices);
                 }
                 // if(!this.hasMesh) {
-                if (meshUVs) {
-                    this.vao.changeToMeshIndices();
-                }
+
                 // }
             };
             /**

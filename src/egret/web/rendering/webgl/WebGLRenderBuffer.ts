@@ -538,6 +538,10 @@ module egret.web {
                 this.$drawWebGL();
             }
 
+            if(meshUVs) {
+                this.vao.changeToMeshIndices();
+            }
+
             var filters = this.getFilters();
             if(filters.length > 0) {
                 var width = destWidth;
@@ -565,14 +569,14 @@ module egret.web {
 
 
             // if(!this.hasMesh) {
-                if(meshUVs) {
-                    this.vao.changeToMeshIndices();
+                // if(meshUVs) {
+                    // this.vao.changeToMeshIndices();
                     // this.hasMesh = true;
                     // // 拷贝默认index信息到for mesh中
                     // for (var i = 0, l = this.indexIndex; i < l; ++i) {
                     //     this.indicesForMesh[i] = this.indices[i];
                     // }
-                }
+                // }
             // }
 
         }
