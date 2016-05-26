@@ -70,10 +70,6 @@ module egret.web {
         public aTextureCoord:number;
         public colorAttribute:number;
 
-        // 视角与便宜的通用属性
-        // public projectionVector:WebGLUniformLocation;
-        // public offsetVector:WebGLUniformLocation;// 废弃？
-
         constructor(gl:WebGLRenderingContext) {
             this.gl = gl;
         }
@@ -83,9 +79,6 @@ module egret.web {
 
             var program:WebGLProgram = WebGLUtils.compileProgram(gl, this.defaultVertexSrc, this.fragmentSrc);
             gl.useProgram(program);
-
-            // this.projectionVector = gl.getUniformLocation(program, "projectionVector");
-            // this.offsetVector = gl.getUniformLocation(program, "offsetVector");// 废弃？
 
             this.aVertexPosition = gl.getAttribLocation(program, "aVertexPosition");
             this.aTextureCoord = gl.getAttribLocation(program, "aTextureCoord");

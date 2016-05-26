@@ -4931,9 +4931,6 @@ var egret;
          * 抽象shader类，所有shader的基类
          */
         var EgretShader = (function () {
-            // 视角与便宜的通用属性
-            // public projectionVector:WebGLUniformLocation;
-            // public offsetVector:WebGLUniformLocation;// 废弃？
             function EgretShader(gl) {
                 // 着色器源码
                 this.defaultVertexSrc = "attribute vec2 aVertexPosition;\n" +
@@ -4962,8 +4959,6 @@ var egret;
                 var gl = this.gl;
                 var program = web.WebGLUtils.compileProgram(gl, this.defaultVertexSrc, this.fragmentSrc);
                 gl.useProgram(program);
-                // this.projectionVector = gl.getUniformLocation(program, "projectionVector");
-                // this.offsetVector = gl.getUniformLocation(program, "offsetVector");// 废弃？
                 this.aVertexPosition = gl.getAttribLocation(program, "aVertexPosition");
                 this.aTextureCoord = gl.getAttribLocation(program, "aTextureCoord");
                 this.colorAttribute = gl.getAttribLocation(program, "aColor");
@@ -5481,7 +5476,6 @@ var egret;
                     shader.setAttribPointer(stride);
                     this.currentShader = shader;
                 }
-                shader.syncUniforms();
             };
             p.setAttribs = function (attribs) {
                 var i;
@@ -5964,24 +5958,28 @@ var egret;
                         }
                         shader.setProjection(this.projectionX, this.projectionY);
                         this.shaderManager.activateShader(shader, this.vertSize * 4);
+                        shader.syncUniforms();
                         offset += this.drawTextureElements(data, offset);
                         break;
                     case 1 /* RECT */:
                         shader = this.shaderManager.primitiveShader;
                         shader.setProjection(this.projectionX, this.projectionY);
                         this.shaderManager.activateShader(shader, this.vertSize * 4);
+                        shader.syncUniforms();
                         offset += this.drawRectElements(data, offset);
                         break;
                     case 2 /* PUSH_MASK */:
                         shader = this.shaderManager.primitiveShader;
                         shader.setProjection(this.projectionX, this.projectionY);
                         this.shaderManager.activateShader(shader, this.vertSize * 4);
+                        shader.syncUniforms();
                         offset += this.drawPushMaskElements(data, offset);
                         break;
                     case 3 /* POP_MASK */:
                         shader = this.shaderManager.primitiveShader;
                         shader.setProjection(this.projectionX, this.projectionY);
                         this.shaderManager.activateShader(shader, this.vertSize * 4);
+                        shader.syncUniforms();
                         offset += this.drawPopMaskElements(data, offset);
                         break;
                     case 4 /* BLEND */:
@@ -6064,30 +6062,6 @@ var egret;
                 }
                 return size;
             };
-            // public startShader(drawingTexture:boolean, filter:any, uv?:any) {
-            //     var shader;
-            //     if (filter && filter.type == "colorTransform") {
-            //         shader = this.shaderManager.colorTransformShader;
-            //         shader.setMatrix(filter.matrix);
-            //     }
-            //     else if (filter && filter.type == "blur") {
-            //         shader = this.shaderManager.blurShader;
-            //         shader.setBlur(filter.blurX, filter.blurY);
-            //         // 模糊滤镜需要传入的uv坐标
-            //         shader.setUv(uv);
-            //     }
-            //     else {
-            //         if(drawingTexture) {
-            //             shader = this.shaderManager.defaultShader;
-            //         } else {
-            //             shader = this.shaderManager.primitiveShader;
-            //         }
-            //     }
-            //
-            //     shader.setProjection(this.projectionX, this.projectionY);
-            //
-            //     this.shaderManager.activateShader(shader, this.vertSize * 4);
-            // }
             /**
              * 设置混色
              */
@@ -6192,7 +6166,6 @@ var egret;
                 this.dirtyRegionPolicy = true;
                 this._dirtyRegionPolicy = true; // 默认设置为true，保证第一帧绘制在frameBuffer上
                 this.hasMesh = false;
-                this.prevIsMesh = false;
                 this.vertexIndex = 0;
                 this.indexIndex = 0;
                 this.colorMatrixFilter = null;
@@ -6212,56 +6185,6 @@ var egret;
                 this.drawData = [];
                 this.$drawCalls = 0;
                 this.$computeDrawCall = false;
-                // private filter; //仅方法内使用
-                // private shaderStarted:boolean;
-                // private uv; //仅方法内使用
-                // private drawingTexture:boolean;// 仅方法内使用
-                // private prepareShader(data:any):void {
-                //     // var drawingTexture = (data.type == DRAWABLE_TYPE.TEXTURE);
-                //     // 根据filter开启shader
-                //     // if(data.filter) {
-                //         // var filter = data.filter;
-                //
-                //         // 如果是blur，需要判断是否重新上传uv坐标
-                //         // if(filter.type == "blur") {
-                //         //     var uvDirty = false;
-                //         //     if(data.uv) {
-                //         //         if(this.uv) {
-                //         //             if(this.uv[0] != data.uv[0] || this.uv[1] != data.uv[1] || this.uv[2] != data.uv[2] || this.uv[3] != data.uv[3]) {
-                //         //                 this.uv = data.uv;
-                //         //                 uvDirty = true;
-                //         //             } else {
-                //         //                 uvDirty = false;
-                //         //             }
-                //         //         } else {
-                //         //             this.uv = data.uv;
-                //         //             uvDirty = true;
-                //         //         }
-                //         //     } else {
-                //         //         if(this.uv) {
-                //         //             this.uv = null;
-                //         //             uvDirty = true;
-                //         //         } else {
-                //         //             uvDirty = false;
-                //         //         }
-                //         //     }
-                //         // }
-                //
-                //         // if(filter != this.filter || uvDirty) {
-                //             // this.filter = filter;
-                //             // this.uv = data.uv;
-                //             // this.context.startShader(drawingTexture, filter, data.uv);
-                //             // this.shaderStarted = false;
-                //         // }
-                //     } else {
-                //         // if(!this.shaderStarted || this.drawingTexture != drawingTexture) {
-                //             // this.filter = null;
-                //             // this.drawingTexture = drawingTexture;
-                //             // this.context.startShader(drawingTexture, null, null);
-                //             // this.shaderStarted = true;
-                //         // }
-                //     }
-                // }
                 this.globalMatrix = new egret.Matrix();
                 this.savedGlobalMatrix = new egret.Matrix();
                 this._globalAlpha = 1;
@@ -6641,9 +6564,8 @@ var egret;
                     this.drawTextureWidthFilter(filters, webGLTexture, sourceX, sourceY, sourceWidth, sourceHeight, destX, destY, destWidth, destHeight, textureWidth, textureHeight, width, height, offsetX, offsetY, meshUVs, meshVertices, meshIndices); // 后参数用于draw mesh
                 }
                 else {
-                    // this.filter = null;
                     var count = meshIndices ? meshIndices.length / 3 : 2;
-                    if (this.drawData.length > 0 && this.drawData[this.drawData.length - 1].type == 0 /* TEXTURE */ && webGLTexture == this.drawData[this.drawData.length - 1].texture && (this.prevIsMesh == !!meshUVs) && !this.drawData[this.drawData.length - 1].filter) {
+                    if (this.drawData.length > 0 && this.drawData[this.drawData.length - 1].type == 0 /* TEXTURE */ && webGLTexture == this.drawData[this.drawData.length - 1].texture && !this.drawData[this.drawData.length - 1].filter) {
                         this.drawData[this.drawData.length - 1].count += count;
                     }
                     else {
@@ -6651,12 +6573,14 @@ var egret;
                     }
                     this.cacheArrays(sourceX, sourceY, sourceWidth, sourceHeight, destX, destY, destWidth, destHeight, textureWidth, textureHeight, meshUVs, meshVertices, meshIndices);
                 }
-                if (meshUVs) {
-                    this.hasMesh = true;
-                    this.prevIsMesh = true;
-                }
-                else {
-                    this.prevIsMesh = false;
+                if (!this.hasMesh) {
+                    if (meshUVs) {
+                        this.hasMesh = true;
+                        // 拷贝默认index信息到for mesh中
+                        for (var i = 0, l = this.indexIndex; i < l; ++i) {
+                            this.indicesForMesh[i] = this.indices[i];
+                        }
+                    }
                 }
             };
             /**
@@ -6973,8 +6897,10 @@ var egret;
                     vertices[index + iD + 4] = alpha;
                 }
                 // 缓存索引数组
-                for (i = 0, l = meshIndices.length; i < l; ++i) {
-                    this.indicesForMesh[this.indexIndex + i] = meshIndices[i] + this.vertexIndex;
+                if (this.hasMesh) {
+                    for (var i = 0, l = meshIndices.length; i < l; ++i) {
+                        this.indicesForMesh[this.indexIndex + i] = meshIndices[i] + this.vertexIndex;
+                    }
                 }
                 this.vertexIndex += meshUVs.length / 2;
                 this.indexIndex += meshIndices.length;
@@ -7011,7 +6937,6 @@ var egret;
                 // this.shaderStarted = false;
                 for (var i = 0; i < length; i++) {
                     var data = this.drawData[i];
-                    // this.prepareShader(data);
                     offset = this.context.drawData(data, offset);
                     // 计算draw call
                     if (data.type != 4 /* BLEND */) {
@@ -7029,7 +6954,6 @@ var egret;
                 this.drawData.length = 0;
                 this.vertexIndex = 0;
                 this.indexIndex = 0;
-                // this.filter = null;
             };
             p.setTransform = function (a, b, c, d, tx, ty) {
                 this.globalMatrix.setTo(a, b, c, d, tx, ty);

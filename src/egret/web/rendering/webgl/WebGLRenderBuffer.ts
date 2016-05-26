@@ -498,7 +498,6 @@ module egret.web {
         }
 
         private hasMesh: boolean = false;
-        private prevIsMesh: boolean = false;
         private vertexIndex: number = 0;
         private indexIndex: number = 0;
 
@@ -564,10 +563,9 @@ module egret.web {
                     destX, destY, destWidth, destHeight, textureWidth, textureHeight,
                     width, height, offsetX, offsetY, meshUVs, meshVertices, meshIndices);// 后参数用于draw mesh
             } else {
-                // this.filter = null;
 
                 var count = meshIndices ? meshIndices.length / 3 : 2;
-                if (this.drawData.length > 0 && this.drawData[this.drawData.length - 1].type == DRAWABLE_TYPE.TEXTURE && webGLTexture == this.drawData[this.drawData.length - 1].texture && (this.prevIsMesh == !!meshUVs) && !this.drawData[this.drawData.length - 1].filter) {
+                if (this.drawData.length > 0 && this.drawData[this.drawData.length - 1].type == DRAWABLE_TYPE.TEXTURE && webGLTexture == this.drawData[this.drawData.length - 1].texture && !this.drawData[this.drawData.length - 1].filter) {
                     this.drawData[this.drawData.length - 1].count += count;
                 } else {
                     this.drawData.push({type: DRAWABLE_TYPE.TEXTURE, texture: webGLTexture, count: count});
@@ -577,11 +575,14 @@ module egret.web {
                     meshUVs, meshVertices, meshIndices);
             }
 
-            if(meshUVs) {
-                this.hasMesh = true;
-                this.prevIsMesh = true;
-            } else {
-                this.prevIsMesh = false;
+            if(!this.hasMesh) {
+                if(meshUVs) {
+                    this.hasMesh = true;
+                    // 拷贝默认index信息到for mesh中
+                    for (var i = 0, l = this.indexIndex; i < l; ++i) {
+                        this.indicesForMesh[i] = this.indices[i];
+                    }
+                }
             }
 
         }
@@ -951,8 +952,10 @@ module egret.web {
             }
 
             // 缓存索引数组
-            for (i = 0, l = meshIndices.length; i < l; ++i) {
-                this.indicesForMesh[this.indexIndex + i] = meshIndices[i] + this.vertexIndex;
+            if(this.hasMesh) {
+                for (var i = 0, l = meshIndices.length; i < l; ++i) {
+                    this.indicesForMesh[this.indexIndex + i] = meshIndices[i] + this.vertexIndex;
+                }
             }
 
             this.vertexIndex += meshUVs.length / 2;
@@ -1000,8 +1003,6 @@ module egret.web {
             for (var i = 0; i < length; i++) {
                 var data = this.drawData[i];
 
-                // this.prepareShader(data);
-
                 offset = this.context.drawData(data, offset);
 
                 // 计算draw call
@@ -1022,61 +1023,7 @@ module egret.web {
             this.drawData.length = 0;
             this.vertexIndex = 0;
             this.indexIndex = 0;
-            // this.filter = null;
         }
-
-        // private filter; //仅方法内使用
-        // private shaderStarted:boolean;
-        // private uv; //仅方法内使用
-        // private drawingTexture:boolean;// 仅方法内使用
-
-
-        // private prepareShader(data:any):void {
-        //     // var drawingTexture = (data.type == DRAWABLE_TYPE.TEXTURE);
-        //     // 根据filter开启shader
-        //     // if(data.filter) {
-        //         // var filter = data.filter;
-        //
-        //         // 如果是blur，需要判断是否重新上传uv坐标
-        //         // if(filter.type == "blur") {
-        //         //     var uvDirty = false;
-        //         //     if(data.uv) {
-        //         //         if(this.uv) {
-        //         //             if(this.uv[0] != data.uv[0] || this.uv[1] != data.uv[1] || this.uv[2] != data.uv[2] || this.uv[3] != data.uv[3]) {
-        //         //                 this.uv = data.uv;
-        //         //                 uvDirty = true;
-        //         //             } else {
-        //         //                 uvDirty = false;
-        //         //             }
-        //         //         } else {
-        //         //             this.uv = data.uv;
-        //         //             uvDirty = true;
-        //         //         }
-        //         //     } else {
-        //         //         if(this.uv) {
-        //         //             this.uv = null;
-        //         //             uvDirty = true;
-        //         //         } else {
-        //         //             uvDirty = false;
-        //         //         }
-        //         //     }
-        //         // }
-        //
-        //         // if(filter != this.filter || uvDirty) {
-        //             // this.filter = filter;
-        //             // this.uv = data.uv;
-        //             // this.context.startShader(drawingTexture, filter, data.uv);
-        //             // this.shaderStarted = false;
-        //         // }
-        //     } else {
-        //         // if(!this.shaderStarted || this.drawingTexture != drawingTexture) {
-        //             // this.filter = null;
-        //             // this.drawingTexture = drawingTexture;
-        //             // this.context.startShader(drawingTexture, null, null);
-        //             // this.shaderStarted = true;
-        //         // }
-        //     }
-        // }
 
         private globalMatrix:Matrix = new Matrix();
         private savedGlobalMatrix:Matrix = new Matrix();

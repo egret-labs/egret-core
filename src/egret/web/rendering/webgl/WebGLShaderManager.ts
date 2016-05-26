@@ -69,7 +69,6 @@ module egret.web {
                 shader.setAttribPointer(stride);
                 this.currentShader = shader;
             }
-            shader.syncUniforms();
         }
 
         private setAttribs(attribs) {
