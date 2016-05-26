@@ -279,6 +279,10 @@
             "platform": "web"
           },
           {
+            "path": "web/rendering/webgl/WebGLVertexArrayObject.ts",
+            "platform": "web"
+          },
+          {
             "path": "web/rendering/webgl/WebGLRenderTarget.ts",
             "platform": "web"
           },

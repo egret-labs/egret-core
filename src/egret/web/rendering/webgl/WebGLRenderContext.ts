@@ -136,7 +136,7 @@ module egret.web {
             buffer.rootRenderTarget.activate();
 
             if(!this.bindIndices) {
-                this.uploadIndicesArray(buffer.indices);
+                this.uploadIndicesArray(buffer.vao.getIndices());
                 this.bindIndices = true;
             }
 
