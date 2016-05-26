@@ -67,8 +67,6 @@ module egret.web {
             // TODO 抽像WebGLState类用于管理webgl状态，包括stencil，blend，colorMask等等
             this.stencilState = false;
 
-            // this.initVertexArrayObjects();
-
             this.drawCmdManager = new WebGLDrawCmdManager();
 
             this.vao = new WebGLVertexArrayObject();
@@ -133,32 +131,6 @@ module egret.web {
         public rootRenderTarget:WebGLRenderTarget;
 
         public vao:WebGLVertexArrayObject;
-        /**
-         * 初始化顶点数组和缓存
-         */
-        // private size:number = 2000;
-        // private vertexMaxSize:number = 2000 * 4;
-        // public vertices:Float32Array = null;
-        // private vertSize:number = 5;
-        // public indices:Uint16Array = null;
-        // private indicesForMesh:Uint16Array = null;
-        // public initVertexArrayObjects() {
-        //     var numVerts = this.vertexMaxSize * this.vertSize;
-        //     var numIndices = this.vertexMaxSize * 3 / 2;
-        //
-        //     this.vertices = new Float32Array(numVerts);
-        //     this.indices = new Uint16Array(numIndices);
-        //     this.indicesForMesh = new Uint16Array(numIndices);
-        //
-        //     for (var i = 0, j = 0; i < numIndices; i += 6, j += 4) {
-        //         this.indices[i + 0] = j + 0;
-        //         this.indices[i + 1] = j + 1;
-        //         this.indices[i + 2] = j + 2;
-        //         this.indices[i + 3] = j + 0;
-        //         this.indices[i + 4] = j + 2;
-        //         this.indices[i + 5] = j + 3;
-        //     }
-        // }
 
         /**
          * stencil state
@@ -489,10 +461,6 @@ module egret.web {
             }
         }
 
-        // private hasMesh: boolean = false;
-        // private vertexIndex: number = 0;
-        // private indexIndex: number = 0;
-
         public drawMesh(texture:BitmapData,
                          sourceX:number, sourceY:number, sourceWidth:number, sourceHeight:number,
                          destX:number, destY:number, destWidth:number, destHeight:number,
@@ -566,18 +534,6 @@ module egret.web {
                 this.vao.cacheArrays(this.globalMatrix, this._globalAlpha, sourceX, sourceY, sourceWidth, sourceHeight, destX, destY, destWidth, destHeight, textureWidth, textureHeight,
                     meshUVs, meshVertices, meshIndices);
             }
-
-
-            // if(!this.hasMesh) {
-                // if(meshUVs) {
-                    // this.vao.changeToMeshIndices();
-                    // this.hasMesh = true;
-                    // // 拷贝默认index信息到for mesh中
-                    // for (var i = 0, l = this.indexIndex; i < l; ++i) {
-                    //     this.indicesForMesh[i] = this.indices[i];
-                    // }
-                // }
-            // }
 
         }
 
@@ -858,94 +814,6 @@ module egret.web {
             this.vao.cacheArrays(this.globalMatrix, this._globalAlpha, 0, 0, width, height, x, y, width, height, width, height);
         }
 
-        /**
-         * 缓存顶点与索引信息
-         * 如果后三个参数缺省，默认为构成矩形的顶点
-         * */
-        // private defaultMeshVertices = [0, 0, 1, 0, 1, 1, 0, 1];
-        // private defaultMeshUvs = [
-        //     0, 0,
-        //     1, 0,
-        //     1, 1,
-        //     0, 1
-        // ];
-        // private defaultMeshIndices = [0, 1, 2, 0, 2, 3];
-        // private cacheArrays(sourceX:number, sourceY:number, sourceWidth:number, sourceHeight:number,
-        //                         destX:number, destY:number, destWidth:number, destHeight:number, textureSourceWidth:number, textureSourceHeight:number,
-        //                         meshUVs?:number[], meshVertices?:number[], meshIndices?:number[]):void {
-        //
-        //     // 如果后三个值缺省，默认为构成矩形的顶点
-        //     if(!meshVertices) {
-        //         this.defaultMeshVertices[2] = this.defaultMeshVertices[4] = sourceWidth;
-        //         this.defaultMeshVertices[5] = this.defaultMeshVertices[7] = sourceHeight;
-        //     }
-        //
-        //     meshVertices = meshVertices || this.defaultMeshVertices;
-        //     meshUVs = meshUVs || this.defaultMeshUvs;
-        //     meshIndices = meshIndices || this.defaultMeshIndices;
-        //     //计算出绘制矩阵，之后把矩阵还原回之前的
-        //     var locWorldTransform = this.globalMatrix;
-        //     var originalA:number = locWorldTransform.a;
-        //     var originalB:number = locWorldTransform.b;
-        //     var originalC:number = locWorldTransform.c;
-        //     var originalD:number = locWorldTransform.d;
-        //     var originalTx:number = locWorldTransform.tx;
-        //     var originalTy:number = locWorldTransform.ty;
-        //     if (destX != 0 || destY != 0) {
-        //         locWorldTransform.append(1, 0, 0, 1, destX, destY);
-        //     }
-        //     if (sourceWidth / destWidth != 1 || sourceHeight / destHeight != 1) {
-        //         locWorldTransform.append(destWidth / sourceWidth, 0, 0, destHeight / sourceHeight, 0, 0);
-        //     }
-        //     var a:number = locWorldTransform.a;
-        //     var b:number = locWorldTransform.b;
-        //     var c:number = locWorldTransform.c;
-        //     var d:number = locWorldTransform.d;
-        //     var tx:number = locWorldTransform.tx;
-        //     var ty:number = locWorldTransform.ty;
-        //
-        //     locWorldTransform.a = originalA;
-        //     locWorldTransform.b = originalB;
-        //     locWorldTransform.c = originalC;
-        //     locWorldTransform.d = originalD;
-        //     locWorldTransform.tx = originalTx;
-        //     locWorldTransform.ty = originalTy;
-        //
-        //     var vertices:Float32Array = this.vertices;
-        //     var index:number = this.vertexIndex * this.vertSize;
-        //     var alpha:number = this._globalAlpha;
-        //
-        //     // 缓存顶点数组
-        //     var i = 0, iD = 0, l = 0;
-        //     var u = 0, v = 0, x = 0, y = 0;
-        //     for (i = 0, l = meshUVs.length; i < l; i += 2) {
-        //         iD = i * 5 / 2;
-        //         x = meshVertices[i];
-        //         y = meshVertices[i + 1];
-        //         u = meshUVs[i];
-        //         v = meshUVs[i + 1];
-        //
-        //         // xy
-        //         vertices[index + iD + 0] = a * x + c * y + tx;
-        //         vertices[index + iD + 1] = b * x + d * y + ty;
-        //         // uv
-        //         vertices[index + iD + 2] = (sourceX + u * sourceWidth) / textureSourceWidth;
-        //         vertices[index + iD + 3] = (sourceY + v * sourceHeight) / textureSourceHeight;
-        //         // alpha
-        //         vertices[index + iD + 4] = alpha;
-        //     }
-        //
-        //     // 缓存索引数组
-        //     if(this.hasMesh) {
-        //         for (var i = 0, l = meshIndices.length; i < l; ++i) {
-        //             this.indicesForMesh[this.indexIndex + i] = meshIndices[i] + this.vertexIndex;
-        //         }
-        //     }
-        //
-        //     this.vertexIndex += meshUVs.length / 2;
-        //     this.indexIndex += meshIndices.length;
-        // }
-
         private getUv(sourceX, sourceY, sourceWidth, sourceHeight, textureSourceWidth, textureSourceHeight) {
             var uv = [
                 0, 0,
@@ -970,12 +838,7 @@ module egret.web {
                 return;
             }
 
-            // 上传顶点数组
-            // if(this.vertexIndex > 0) {
-                // var view = this.vertices.subarray(0, this.vertexIndex * this.vertSize);
-                // this.context.uploadVerticesArray(view);
-                this.context.uploadVerticesArray(this.vao.getVertices());
-            // }
+            this.context.uploadVerticesArray(this.vao.getVertices());
 
             // 有mesh，则使用indicesForMesh
             if (this.vao.isMesh()){
@@ -1004,12 +867,8 @@ module egret.web {
             }
 
             // 清空数据
-            // this.hasMesh = false;
             this.drawCmdManager.clear();
             this.vao.clear();
-            // this.drawData.length = 0;
-            // this.vertexIndex = 0;
-            // this.indexIndex = 0;
         }
 
         private globalMatrix:Matrix = new Matrix();
