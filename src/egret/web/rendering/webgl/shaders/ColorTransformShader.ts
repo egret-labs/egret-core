@@ -53,24 +53,75 @@ module egret.web {
             "}";
 
         public uniforms = {
+            projectionVector: {type: '2f', value: {x: 0, y: 0}, dirty: true},
             matrix: {type: 'mat4', value: [1, 0, 0, 0,
                 0, 1, 0, 0,
                 0, 0, 1, 0,
-                0, 0, 0, 1]},
-            colorAdd: {type: '4f', value: {x: 0, y: 0, z: 0, w: 0}}
+                0, 0, 0, 1], dirty: true},
+            colorAdd: {type: '4f', value: {x: 0, y: 0, z: 0, w: 0}, dirty: true}
         };
 
         public setMatrix(matrix:any):void {
-            this.uniforms.matrix.value = [
-                matrix[0],matrix[1],matrix[2],matrix[3],
-                matrix[5],matrix[6],matrix[7],matrix[8],
-                matrix[10],matrix[11],matrix[12],matrix[13],
-                matrix[15],matrix[16],matrix[17],matrix[18]
-            ];
-            this.uniforms.colorAdd.value.x = matrix[4] / 255.0;
-            this.uniforms.colorAdd.value.y = matrix[9] / 255.0;
-            this.uniforms.colorAdd.value.z = matrix[14] / 255.0;
-            this.uniforms.colorAdd.value.w = matrix[19] / 255.0;
+            var uniform = this.uniforms.matrix;
+
+            if(uniform.value[0] != matrix[0] ||
+                uniform.value[0] != matrix[0] ||
+                uniform.value[1] != matrix[1] ||
+                uniform.value[2] != matrix[2] ||
+                uniform.value[3] != matrix[3] ||
+
+                uniform.value[4] != matrix[5] ||
+                uniform.value[5] != matrix[6] ||
+                uniform.value[6] != matrix[7] ||
+                uniform.value[7] != matrix[8] ||
+
+                uniform.value[8] != matrix[10] ||
+                uniform.value[9] != matrix[11] ||
+                uniform.value[10] != matrix[12] ||
+                uniform.value[11] != matrix[13] ||
+
+                uniform.value[12] != matrix[15] ||
+                uniform.value[13] != matrix[16] ||
+                uniform.value[14] != matrix[17] ||
+                uniform.value[15] != matrix[18]) {
+
+                uniform.value[0] = matrix[0];
+                uniform.value[1] = matrix[1];
+                uniform.value[2] = matrix[2];
+                uniform.value[3] = matrix[3];
+
+                uniform.value[4] = matrix[5];
+                uniform.value[5] = matrix[6];
+                uniform.value[6] = matrix[7];
+                uniform.value[7] = matrix[8];
+
+                uniform.value[8] = matrix[10];
+                uniform.value[9] = matrix[11];
+                uniform.value[10] = matrix[12];
+                uniform.value[11] = matrix[13];
+
+                uniform.value[12] = matrix[15];
+                uniform.value[13] = matrix[16];
+                uniform.value[14] = matrix[17];
+                uniform.value[15] = matrix[18];
+
+                uniform.dirty = true;
+            }
+
+            var uniform2 = this.uniforms.colorAdd;
+
+            if(uniform2.value.x != matrix[4] / 255.0 ||
+                uniform2.value.y != matrix[9] / 255.0 ||
+                uniform2.value.z != matrix[14] / 255.0 ||
+                uniform2.value.w != matrix[19] / 255.0) {
+
+                uniform2.value.x = matrix[4] / 255.0;
+                uniform2.value.y = matrix[9] / 255.0;
+                uniform2.value.z = matrix[14] / 255.0;
+                uniform2.value.w = matrix[19] / 255.0;
+
+                uniform2.dirty = true;
+            }
         }
     }
 }

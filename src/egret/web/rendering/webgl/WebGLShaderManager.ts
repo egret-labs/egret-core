@@ -62,7 +62,7 @@ module egret.web {
             this.blurShader.init();
         }
 
-        public activateShader(shader, projectionX:number, projectionY:number, stride:number) {
+        public activateShader(shader, stride:number) {
             if (this.currentShader != shader) {
                 this.gl.useProgram(shader.program);
                 this.setAttribs(shader.attributes);
@@ -70,7 +70,6 @@ module egret.web {
                 this.currentShader = shader;
             }
             shader.syncUniforms();
-            shader.syncProjection(projectionX, projectionY);
         }
 
         private setAttribs(attribs) {

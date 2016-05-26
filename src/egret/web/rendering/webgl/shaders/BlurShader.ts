@@ -62,29 +62,46 @@ module egret.web {
             "}";
 
         public uniforms = {
-            blur: {type: '2f', value: {x: 2, y: 2}},
-            uBounds: {type: '4f', value: {x: 0, y: 0, z: 1, w: 1}}
+            projectionVector: {type: '2f', value: {x: 0, y: 0}, dirty: true},
+            blur: {type: '2f', value: {x: 2, y: 2}, dirty: true},
+            uBounds: {type: '4f', value: {x: 0, y: 0, z: 1, w: 1}, dirty: true}
         };
 
         public setBlur(blurX:number, blurY:number):void {
-            this.uniforms.blur.value.x = blurX;
-            this.uniforms.blur.value.y = blurY;
+            var uniform = this.uniforms.blur;
+
+            if(uniform.value.x != blurX || uniform.value.y != blurY) {
+                uniform.value.x = blurX;
+                uniform.value.y = blurY;
+
+                uniform.dirty = true;
+            }
         }
 
         /**
          * 设置模糊滤镜需要传入的uv坐标
          */
         public setUv(uv:any):void {
+            var uniform = this.uniforms.uBounds;
+
             if(uv) {
-                this.uniforms.uBounds.value.x = uv[0];
-                this.uniforms.uBounds.value.y = uv[1];
-                this.uniforms.uBounds.value.z = uv[2];
-                this.uniforms.uBounds.value.w = uv[3];
+                if(uniform.value.x != uv[0] || uniform.value.y != uv[1] || uniform.value.z != uv[2] || uniform.value.w != uv[3]) {
+                    uniform.value.x = uv[0];
+                    uniform.value.y = uv[1];
+                    uniform.value.z = uv[2];
+                    uniform.value.w = uv[3];
+
+                    uniform.dirty = true;
+                }
             } else {
-                this.uniforms.uBounds.value.x = 0;
-                this.uniforms.uBounds.value.y = 0;
-                this.uniforms.uBounds.value.z = 1;
-                this.uniforms.uBounds.value.w = 1;
+                if(uniform.value.x != 0 || uniform.value.y != 0 || uniform.value.z != 1 || uniform.value.w != 1) {
+                    uniform.value.x = 0;
+                    uniform.value.y = 0;
+                    uniform.value.z = 1;
+                    uniform.value.w = 1;
+
+                    uniform.dirty = true;
+                }
             }
         }
     }

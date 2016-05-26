@@ -448,15 +448,47 @@ module egret.web {
 
             switch(data.type) {
                 case DRAWABLE_TYPE.TEXTURE:
+
+                    var filter = data.filter;
+                    var shader;
+                    if (filter && filter.type == "colorTransform") {
+                        shader = this.shaderManager.colorTransformShader;
+                        shader.setMatrix(filter.matrix);
+                    }
+                    else if (filter && filter.type == "blur") {
+                        shader = this.shaderManager.blurShader;
+                        shader.setBlur(filter.blurX, filter.blurY);
+                        shader.setUv(data.uv);
+                    } else {
+                        shader = this.shaderManager.defaultShader;
+                    }
+                    shader.setProjection(this.projectionX, this.projectionY);
+                    this.shaderManager.activateShader(shader, this.vertSize * 4);
+
                     offset += this.drawTextureElements(data, offset);
                     break;
                 case DRAWABLE_TYPE.RECT:
+
+                    shader = this.shaderManager.primitiveShader;
+                    shader.setProjection(this.projectionX, this.projectionY);
+                    this.shaderManager.activateShader(shader, this.vertSize * 4);
+
                     offset += this.drawRectElements(data, offset);
                     break;
                 case DRAWABLE_TYPE.PUSH_MASK:
+
+                    shader = this.shaderManager.primitiveShader;
+                    shader.setProjection(this.projectionX, this.projectionY);
+                    this.shaderManager.activateShader(shader, this.vertSize * 4);
+
                     offset += this.drawPushMaskElements(data, offset);
                     break;
                 case DRAWABLE_TYPE.POP_MASK:
+
+                    shader = this.shaderManager.primitiveShader;
+                    shader.setProjection(this.projectionX, this.projectionY);
+                    this.shaderManager.activateShader(shader, this.vertSize * 4);
+
                     offset += this.drawPopMaskElements(data, offset);
                     break;
                 case DRAWABLE_TYPE.BLEND:
@@ -559,28 +591,30 @@ module egret.web {
 
         private vertSize:number = 5;
 
-        public startShader(drawingTexture:boolean, filter:any, uv?:any) {
-            var shader;
-            if (filter && filter.type == "colorTransform") {
-                shader = this.shaderManager.colorTransformShader;
-                shader.setMatrix(filter.matrix);
-            }
-            else if (filter && filter.type == "blur") {
-                shader = this.shaderManager.blurShader;
-                shader.setBlur(filter.blurX, filter.blurY);
-                // 模糊滤镜需要传入的uv坐标
-                shader.setUv(uv);
-            }
-            else {
-                if(drawingTexture) {
-                    shader = this.shaderManager.defaultShader;
-                } else {
-                    shader = this.shaderManager.primitiveShader;
-                }
-            }
-
-            this.shaderManager.activateShader(shader, this.projectionX, this.projectionY, this.vertSize * 4);
-        }
+        // public startShader(drawingTexture:boolean, filter:any, uv?:any) {
+        //     var shader;
+        //     if (filter && filter.type == "colorTransform") {
+        //         shader = this.shaderManager.colorTransformShader;
+        //         shader.setMatrix(filter.matrix);
+        //     }
+        //     else if (filter && filter.type == "blur") {
+        //         shader = this.shaderManager.blurShader;
+        //         shader.setBlur(filter.blurX, filter.blurY);
+        //         // 模糊滤镜需要传入的uv坐标
+        //         shader.setUv(uv);
+        //     }
+        //     else {
+        //         if(drawingTexture) {
+        //             shader = this.shaderManager.defaultShader;
+        //         } else {
+        //             shader = this.shaderManager.primitiveShader;
+        //         }
+        //     }
+        //
+        //     shader.setProjection(this.projectionX, this.projectionY);
+        //
+        //     this.shaderManager.activateShader(shader, this.vertSize * 4);
+        // }
 
         /**
          * 设置混色

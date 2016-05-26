@@ -41,7 +41,7 @@ module egret.web {
             "attribute vec2 aColor;\n" +
 
             "uniform vec2 projectionVector;\n" +
-            "uniform vec2 offsetVector;\n" +
+            // "uniform vec2 offsetVector;\n" +
 
             "varying vec2 vTextureCoord;\n" +
             "varying vec4 vColor;\n" +
@@ -49,7 +49,7 @@ module egret.web {
             "const vec2 center = vec2(-1.0, 1.0);\n" +
 
             "void main(void) {\n" +
-            "   gl_Position = vec4( ((aVertexPosition + offsetVector) / projectionVector) + center , 0.0, 1.0);\n" +
+            "   gl_Position = vec4( (aVertexPosition / projectionVector) + center , 0.0, 1.0);\n" +
             "   vTextureCoord = aTextureCoord;\n" +
             "   vColor = vec4(aColor.x, aColor.x, aColor.x, aColor.x);\n" +
             "}";
@@ -61,7 +61,9 @@ module egret.web {
 
         public attributes:Array<number>;
 
-        public uniforms:any = null;
+        public uniforms = {
+            projectionVector: {type: '2f', value: {x: 0, y: 0}, dirty: true}
+        };
 
         // 有关顶点信息的通用属性
         public aVertexPosition:number;
@@ -69,7 +71,7 @@ module egret.web {
         public colorAttribute:number;
 
         // 视角与便宜的通用属性
-        public projectionVector:WebGLUniformLocation;
+        // public projectionVector:WebGLUniformLocation;
         // public offsetVector:WebGLUniformLocation;// 废弃？
 
         constructor(gl:WebGLRenderingContext) {
@@ -82,7 +84,7 @@ module egret.web {
             var program:WebGLProgram = WebGLUtils.compileProgram(gl, this.defaultVertexSrc, this.fragmentSrc);
             gl.useProgram(program);
 
-            this.projectionVector = gl.getUniformLocation(program, "projectionVector");
+            // this.projectionVector = gl.getUniformLocation(program, "projectionVector");
             // this.offsetVector = gl.getUniformLocation(program, "offsetVector");// 废弃？
 
             this.aVertexPosition = gl.getAttribLocation(program, "aVertexPosition");
@@ -111,6 +113,7 @@ module egret.web {
 
             for (var key in this.uniforms) {
                 uniform = this.uniforms[key];
+                uniform.dirty = true;
                 var type = uniform.type;
                 if (type === 'mat2' || type === 'mat3' || type === 'mat4') {
                     uniform.glMatrix = true;
@@ -155,32 +158,43 @@ module egret.web {
             for (var key in this.uniforms) {
                 uniform = this.uniforms[key];
 
-                if (uniform.glValueLength === 1) {
-                    if (uniform.glMatrix === true) {
-                        uniform.glFunc.call(gl, uniform.uniformLocation, uniform.transpose, uniform.value);
+                if(uniform.dirty) {
+                    if (uniform.glValueLength === 1) {
+                        if (uniform.glMatrix === true) {
+                            uniform.glFunc.call(gl, uniform.uniformLocation, uniform.transpose, uniform.value);
+                        }
+                        else {
+                            uniform.glFunc.call(gl, uniform.uniformLocation, uniform.value);
+                        }
                     }
-                    else {
-                        uniform.glFunc.call(gl, uniform.uniformLocation, uniform.value);
+                    else if (uniform.glValueLength === 2) {
+                        uniform.glFunc.call(gl, uniform.uniformLocation, uniform.value.x, uniform.value.y);
                     }
+                    else if (uniform.glValueLength === 3) {
+                        uniform.glFunc.call(gl, uniform.uniformLocation, uniform.value.x, uniform.value.y, uniform.value.z);
+                    }
+                    else if (uniform.glValueLength === 4) {
+                        uniform.glFunc.call(gl, uniform.uniformLocation, uniform.value.x, uniform.value.y, uniform.value.z, uniform.value.w);
+                    }
+
+                    uniform.dirty = false;
                 }
-                else if (uniform.glValueLength === 2) {
-                    uniform.glFunc.call(gl, uniform.uniformLocation, uniform.value.x, uniform.value.y);
-                }
-                else if (uniform.glValueLength === 3) {
-                    uniform.glFunc.call(gl, uniform.uniformLocation, uniform.value.x, uniform.value.y, uniform.value.z);
-                }
-                else if (uniform.glValueLength === 4) {
-                    uniform.glFunc.call(gl, uniform.uniformLocation, uniform.value.x, uniform.value.y, uniform.value.z, uniform.value.w);
-                }
+
             }
         }
 
         /**
          * 同步视角坐标
          */
-        public syncProjection(projectionX:number, projectionY:number):void {
-            var gl:WebGLRenderingContext = this.gl;
-            gl.uniform2f(this.projectionVector, projectionX, projectionY);
+        public setProjection(projectionX:number, projectionY:number):void {
+            var uniform = this.uniforms.projectionVector;
+
+            if(uniform.value.x != projectionX || uniform.value.y != projectionY) {
+                uniform.value.x = projectionX;
+                uniform.value.y = projectionY;
+
+                uniform.dirty = true;
+            }
         }
 
         /**
