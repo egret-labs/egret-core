@@ -91,7 +91,10 @@ module egret.web {
             this.$bufferStack.push(buffer);
 
             if(buffer != this.currentBuffer) {
-                // this.currentBuffer.$drawWebGL();
+
+                if(this.currentBuffer) {
+                    this.currentBuffer.$drawWebGL();
+                }
 
                 this.activateBuffer(buffer);
             }
@@ -116,7 +119,7 @@ module egret.web {
 
             // 重新绑定
             if(buffer != lastBuffer) {
-                // buffer.$drawWebGL();
+                buffer.$drawWebGL();
 
                 this.activateBuffer(lastBuffer);
             }

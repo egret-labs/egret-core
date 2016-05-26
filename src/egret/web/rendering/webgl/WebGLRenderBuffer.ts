@@ -30,19 +30,6 @@
 module egret.web {
 
     /**
-     * draw类型，所有的绘图操作都会缓存在drawData中，每个drawData都是一个drawable对象
-     * $renderWebGL方法依据drawable对象的类型，调用不同的绘制方法
-     * TODO 提供drawable类型接口并且创建对象池？
-     */
-     export const enum DRAWABLE_TYPE {
-         TEXTURE,
-         RECT,
-         PUSH_MASK,
-         POP_MASK,
-         BLEND
-     }
-
-    /**
      * 创建一个canvas。
      */
     function createCanvas(width?:number, height?:number):HTMLCanvasElement {
@@ -81,6 +68,8 @@ module egret.web {
             this.stencilState = false;
 
             this.initVertexArrayObjects();
+
+            this.drawCmdManager = new WebGLDrawCmdManager();
 
             this.setGlobalCompositeOperation("source-over");
 
@@ -565,11 +554,7 @@ module egret.web {
             } else {
 
                 var count = meshIndices ? meshIndices.length / 3 : 2;
-                if (this.drawData.length > 0 && this.drawData[this.drawData.length - 1].type == DRAWABLE_TYPE.TEXTURE && webGLTexture == this.drawData[this.drawData.length - 1].texture && !this.drawData[this.drawData.length - 1].filter) {
-                    this.drawData[this.drawData.length - 1].count += count;
-                } else {
-                    this.drawData.push({type: DRAWABLE_TYPE.TEXTURE, texture: webGLTexture, count: count});
-                }
+                this.drawCmdManager.pushDrawTexture(webGLTexture, count);
 
                 this.cacheArrays(sourceX, sourceY, sourceWidth, sourceHeight, destX, destY, destWidth, destHeight, textureWidth, textureHeight,
                     meshUVs, meshVertices, meshIndices);
@@ -718,7 +703,7 @@ module egret.web {
                 this.transform(1, 0, 0, -1, 0, output.$getHeight() + 2 * offsetY + (destY - offsetY - gOffsetY) * 2);
                 this.cacheArrays(-offsetX, -offsetY, output.$getWidth() + 2 * offsetX, output.$getHeight() + 2 * offsetY, destX - offsetX - gOffsetX, destY - offsetY - gOffsetY, output.$getWidth() + 2 * offsetX, output.$getHeight() + 2 * offsetY, output.$getWidth(), output.$getHeight());
                 this.restoreTransform();
-                this.drawData.push({type: DRAWABLE_TYPE.TEXTURE, texture: output["rootRenderTarget"].texture, filter: filter, count: 2});
+                this.drawCmdManager.pushDrawTexture(output["rootRenderTarget"].texture, 2, filter);
             } else {
                 if (filter.type == "blur") {
                     offsetX = filter.blurX * 0.028 * realWidth;
@@ -726,7 +711,7 @@ module egret.web {
                 }
                 this.cacheArrays(sourceX - offsetX, sourceY - offsetY, sourceWidth + 2 * offsetX, sourceHeight + 2 * offsetY, destX - offsetX - gOffsetX, destY - offsetY - gOffsetY, destWidth + 2 * offsetX, destHeight + 2 * offsetY, textureWidth, textureHeight, meshUVs, meshVertices, meshIndices);
                 var uv = this.getUv(sourceX, sourceY, sourceWidth, sourceHeight, textureWidth, textureHeight);
-                this.drawData.push({type: DRAWABLE_TYPE.TEXTURE, texture: webGLTexture, filter: filter, count: meshIndices ? meshIndices.length / 3 : 2, uv: uv});
+                this.drawCmdManager.pushDrawTexture(webGLTexture, meshIndices ? meshIndices.length / 3 : 2, filter, uv);
             }
 
             if(output) {
@@ -836,10 +821,7 @@ module egret.web {
                 this.transform(1, 0, 0, -1, 0, result.$getHeight() + (destY + offsetY) * 2);
                 this.cacheArrays(0, 0, result.$getWidth(), result.$getHeight(), destX + offsetX, destY + offsetY, result.$getWidth(), result.$getHeight(), result.$getWidth(), result.$getHeight());
                 this.restoreTransform();
-                this.drawData.push({type: DRAWABLE_TYPE.TEXTURE, texture: result.rootRenderTarget.texture, count: 0});
-                // this.currentBatchSize++;
-                // this.drawData[this.drawData.length - 1].count++;
-                this.drawData[this.drawData.length - 1].count += 2;
+                this.drawCmdManager.pushDrawTexture(result.rootRenderTarget.texture);
             }
 
             output.clearFilters();
@@ -860,18 +842,11 @@ module egret.web {
             // if (this.currentBatchSize >= this.size - 1) {
             if (this.vertexIndex >= this.vertexMaxSize - 1) {
                 this.$drawWebGL();
-                this.drawData.push({type: DRAWABLE_TYPE.RECT, count: 0});
-            } else if(this.drawData.length > 0 && this.drawData[this.drawData.length - 1].type == DRAWABLE_TYPE.RECT) {
-                // merge to one draw
-            } else {
-                this.drawData.push({type: DRAWABLE_TYPE.RECT, count: 0});
             }
 
-            this.cacheArrays(0, 0, width, height, x, y, width, height, width, height);
+            this.drawCmdManager.pushDrawRect();
 
-            // this.currentBatchSize++;
-            // this.drawData[this.drawData.length - 1].count++;
-            this.drawData[this.drawData.length - 1].count += 2;
+            this.cacheArrays(0, 0, width, height, x, y, width, height, width, height);
         }
 
         /**
@@ -977,12 +952,12 @@ module egret.web {
             return uv;
         }
 
-        private drawData = [];
+        private drawCmdManager:WebGLDrawCmdManager;
         public $drawCalls:number = 0;
         public $computeDrawCall:boolean = false;
 
         public $drawWebGL():void {
-            if (this.drawData.length == 0 || this.context.contextLost) {
+            if (this.drawCmdManager.drawData.length == 0 || this.context.contextLost) {
                 return;
             }
 
@@ -997,11 +972,11 @@ module egret.web {
                 this.context.uploadIndicesArray(this.indicesForMesh);
             }
 
-            var length = this.drawData.length;
+            var length = this.drawCmdManager.drawData.length;
             var offset = 0;
             // this.shaderStarted = false;
             for (var i = 0; i < length; i++) {
-                var data = this.drawData[i];
+                var data = this.drawCmdManager.drawData[i];
 
                 offset = this.context.drawData(data, offset);
 
@@ -1020,7 +995,8 @@ module egret.web {
 
             // 清空数据
             this.hasMesh = false;
-            this.drawData.length = 0;
+            this.drawCmdManager.clear();
+            // this.drawData.length = 0;
             this.vertexIndex = 0;
             this.indexIndex = 0;
         }
@@ -1055,35 +1031,7 @@ module egret.web {
         }
 
         public setGlobalCompositeOperation(value:string) {
-            var len = this.drawData.length;
-            // 有无遍历到有效绘图操作
-            var drawState = false;
-            for(var i = len - 1; i >= 0; i--) {
-                var data = this.drawData[i];
-
-                if(data){
-                    if(data.type != DRAWABLE_TYPE.BLEND && data.type != DRAWABLE_TYPE.PUSH_MASK && data.type != DRAWABLE_TYPE.POP_MASK) {
-                        drawState = true;
-                    }
-
-                    // 如果与上一次blend操作之间无有效绘图，上一次操作无效
-                    if(!drawState && data.type == DRAWABLE_TYPE.BLEND) {
-                        this.drawData.splice(i, 1);
-                        continue;
-                    }
-
-                    // 如果与上一次blend操作重复，本次操作无效
-                    if(data.type == DRAWABLE_TYPE.BLEND) {
-                        if(data.value == value) {
-                            return;
-                        } else {
-                            break;
-                        }
-                    }
-                }
-            }
-
-            this.drawData.push({type:DRAWABLE_TYPE.BLEND, value: value});
+            this.drawCmdManager.pushSetBlend(value);
         }
 
         public pushMask(mask):void {
@@ -1091,15 +1039,11 @@ module egret.web {
             // TODO mask count
             this.$stencilList.push(mask);
 
-            // if (this.currentBatchSize >= this.size - 1) {
             if (this.vertexIndex >= this.vertexMaxSize - 1) {
                 this.$drawWebGL();
-                this.drawData.push({type: DRAWABLE_TYPE.PUSH_MASK, pushMask: mask, count: 0});
-            } else {
-                this.drawData.push({type: DRAWABLE_TYPE.PUSH_MASK, pushMask: mask, count: 0});
             }
 
-            this.drawMask(mask);
+            this.drawMask(mask, true);
         }
 
         public popMask():void {
@@ -1107,12 +1051,8 @@ module egret.web {
             // TODO mask count
             var mask = this.$stencilList.pop();
 
-            // if (this.currentBatchSize >= this.size - 1) {
             if (this.vertexIndex >= this.vertexMaxSize - 1) {
                 this.$drawWebGL();
-                this.drawData.push({type: DRAWABLE_TYPE.POP_MASK, popMask: mask, count: 0});
-            } else {
-                this.drawData.push({type: DRAWABLE_TYPE.POP_MASK, popMask: mask, count: 0});
             }
 
             this.drawMask(mask);
@@ -1122,7 +1062,7 @@ module egret.web {
          * @private
          * draw masks with default shader
          **/
-        private drawMask(mask) {
+        private drawMask(mask, push?:boolean) {
             if (this.context.contextLost) {
                 return;
             }
@@ -1132,16 +1072,12 @@ module egret.web {
                 for (var i = 0; i < length; i++) {
                     var item:sys.Region = mask[i];
                     this.cacheArrays(0, 0, item.width, item.height, item.minX, item.minY, item.width, item.height, item.width, item.height);
-                    // this.currentBatchSize++;
-                    // this.drawData[this.drawData.length - 1].count++;
-                    this.drawData[this.drawData.length - 1].count += 2;
+                    push ? this.drawCmdManager.pushPushMask() : this.drawCmdManager.pushPopMask();
                 }
             }
             else {
                 this.cacheArrays(0, 0, mask.width, mask.height, mask.x, mask.y, mask.width, mask.height, mask.width, mask.height);
-                // this.currentBatchSize++;
-                // this.drawData[this.drawData.length - 1].count++;
-                this.drawData[this.drawData.length - 1].count += 2;
+                push ? this.drawCmdManager.pushPushMask() : this.drawCmdManager.pushPopMask();
             }
         }
 

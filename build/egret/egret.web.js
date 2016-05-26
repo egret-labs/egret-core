@@ -5544,6 +5544,137 @@ var egret;
     (function (web) {
         /**
          * @private
+         * 绘制指令管理器
+         * 用来维护drawData数组
+         */
+        var WebGLDrawCmdManager = (function () {
+            function WebGLDrawCmdManager() {
+                /**
+                 * 用于缓存绘制命令的数组
+                 */
+                this.drawData = [];
+            }
+            var d = __define,c=WebGLDrawCmdManager,p=c.prototype;
+            /**
+             * 压入绘制矩形指令
+             */
+            p.pushDrawRect = function () {
+                if (this.drawData.length == 0 || this.drawData[this.drawData.length - 1].type != 1 /* RECT */) {
+                    this.drawData.push({ type: 1 /* RECT */, count: 0 });
+                }
+                this.drawData[this.drawData.length - 1].count += 2;
+            };
+            /**
+             * 压入绘制texture指令
+             */
+            p.pushDrawTexture = function (texture, count, filter, uv) {
+                if (count === void 0) { count = 2; }
+                if (filter) {
+                    // 目前有滤镜的情况下不会合并绘制
+                    this.drawData.push({ type: 0 /* TEXTURE */, texture: texture, filter: filter, count: count, uv: uv });
+                }
+                else {
+                    if (this.drawData.length == 0 || this.drawData[this.drawData.length - 1].type != 0 /* TEXTURE */ || texture != this.drawData[this.drawData.length - 1].texture || this.drawData[this.drawData.length - 1].filter) {
+                        this.drawData.push({ type: 0 /* TEXTURE */, texture: texture, count: 0 });
+                    }
+                    this.drawData[this.drawData.length - 1].count += count;
+                }
+            };
+            /**
+             * 压入pushMask指令
+             */
+            p.pushPushMask = function () {
+                if (this.drawData.length == 0 || this.drawData[this.drawData.length - 1].type != 2 /* PUSH_MASK */) {
+                    this.drawData.push({ type: 2 /* PUSH_MASK */, count: 0 });
+                }
+                this.drawData[this.drawData.length - 1].count += 2;
+            };
+            /**
+             * 压入popMask指令
+             */
+            p.pushPopMask = function () {
+                if (this.drawData.length == 0 || this.drawData[this.drawData.length - 1].type != 3 /* POP_MASK */) {
+                    this.drawData.push({ type: 3 /* POP_MASK */, count: 0 });
+                }
+                this.drawData[this.drawData.length - 1].count += 2;
+            };
+            /**
+             * 压入混色指令
+             */
+            p.pushSetBlend = function (value) {
+                var len = this.drawData.length;
+                // 有无遍历到有效绘图操作
+                var drawState = false;
+                for (var i = len - 1; i >= 0; i--) {
+                    var data = this.drawData[i];
+                    if (data) {
+                        if (data.type != 4 /* BLEND */ && data.type != 2 /* PUSH_MASK */ && data.type != 3 /* POP_MASK */) {
+                            drawState = true;
+                        }
+                        // 如果与上一次blend操作之间无有效绘图，上一次操作无效
+                        if (!drawState && data.type == 4 /* BLEND */) {
+                            this.drawData.splice(i, 1);
+                            continue;
+                        }
+                        // 如果与上一次blend操作重复，本次操作无效
+                        if (data.type == 4 /* BLEND */) {
+                            if (data.value == value) {
+                                return;
+                            }
+                            else {
+                                break;
+                            }
+                        }
+                    }
+                }
+                this.drawData.push({ type: 4 /* BLEND */, value: value });
+            };
+            /**
+             * 清空命令数组
+             */
+            p.clear = function () {
+                this.drawData.length = 0;
+            };
+            return WebGLDrawCmdManager;
+        }());
+        web.WebGLDrawCmdManager = WebGLDrawCmdManager;
+        egret.registerClass(WebGLDrawCmdManager,'egret.web.WebGLDrawCmdManager');
+    })(web = egret.web || (egret.web = {}));
+})(egret || (egret = {}));
+//////////////////////////////////////////////////////////////////////////////////////
+//
+//  Copyright (c) 2014-2015, Egret Technology Inc.
+//  All rights reserved.
+//  Redistribution and use in source and binary forms, with or without
+//  modification, are permitted provided that the following conditions are met:
+//
+//     * Redistributions of source code must retain the above copyright
+//       notice, this list of conditions and the following disclaimer.
+//     * Redistributions in binary form must reproduce the above copyright
+//       notice, this list of conditions and the following disclaimer in the
+//       documentation and/or other materials provided with the distribution.
+//     * Neither the name of the Egret nor the
+//       names of its contributors may be used to endorse or promote products
+//       derived from this software without specific prior written permission.
+//
+//  THIS SOFTWARE IS PROVIDED BY EGRET AND CONTRIBUTORS "AS IS" AND ANY EXPRESS
+//  OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES
+//  OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED.
+//  IN NO EVENT SHALL EGRET AND CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT,
+//  INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT
+//  LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES;LOSS OF USE, DATA,
+//  OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF
+//  LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING
+//  NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE,
+//  EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+//
+//////////////////////////////////////////////////////////////////////////////////////
+var egret;
+(function (egret) {
+    var web;
+    (function (web) {
+        /**
+         * @private
          * WebGLRenderTarget类
          * 一个WebGL渲染目标，拥有一个frame buffer和texture
          */
@@ -5720,7 +5851,9 @@ var egret;
             p.pushBuffer = function (buffer) {
                 this.$bufferStack.push(buffer);
                 if (buffer != this.currentBuffer) {
-                    // this.currentBuffer.$drawWebGL();
+                    if (this.currentBuffer) {
+                        this.currentBuffer.$drawWebGL();
+                    }
                     this.activateBuffer(buffer);
                 }
                 this.currentBuffer = buffer;
@@ -5738,7 +5871,7 @@ var egret;
                 var lastBuffer = this.$bufferStack[this.$bufferStack.length - 1];
                 // 重新绑定
                 if (buffer != lastBuffer) {
-                    // buffer.$drawWebGL();
+                    buffer.$drawWebGL();
                     this.activateBuffer(lastBuffer);
                 }
                 this.currentBuffer = lastBuffer;
@@ -6183,7 +6316,6 @@ var egret;
                     0, 1
                 ];
                 this.defaultMeshIndices = [0, 1, 2, 0, 2, 3];
-                this.drawData = [];
                 this.$drawCalls = 0;
                 this.$computeDrawCall = false;
                 this.globalMatrix = new egret.Matrix();
@@ -6196,6 +6328,7 @@ var egret;
                 // TODO 抽像WebGLState类用于管理webgl状态，包括stencil，blend，colorMask等等
                 this.stencilState = false;
                 this.initVertexArrayObjects();
+                this.drawCmdManager = new web.WebGLDrawCmdManager();
                 this.setGlobalCompositeOperation("source-over");
                 // 如果是第一个加入的buffer，说明是舞台buffer
                 this.root = this.context.$bufferStack.length == 0;
@@ -6566,12 +6699,7 @@ var egret;
                 }
                 else {
                     var count = meshIndices ? meshIndices.length / 3 : 2;
-                    if (this.drawData.length > 0 && this.drawData[this.drawData.length - 1].type == 0 /* TEXTURE */ && webGLTexture == this.drawData[this.drawData.length - 1].texture && !this.drawData[this.drawData.length - 1].filter) {
-                        this.drawData[this.drawData.length - 1].count += count;
-                    }
-                    else {
-                        this.drawData.push({ type: 0 /* TEXTURE */, texture: webGLTexture, count: count });
-                    }
+                    this.drawCmdManager.pushDrawTexture(webGLTexture, count);
                     this.cacheArrays(sourceX, sourceY, sourceWidth, sourceHeight, destX, destY, destWidth, destHeight, textureWidth, textureHeight, meshUVs, meshVertices, meshIndices);
                 }
                 if (!this.hasMesh) {
@@ -6702,7 +6830,7 @@ var egret;
                     this.transform(1, 0, 0, -1, 0, output.$getHeight() + 2 * offsetY + (destY - offsetY - gOffsetY) * 2);
                     this.cacheArrays(-offsetX, -offsetY, output.$getWidth() + 2 * offsetX, output.$getHeight() + 2 * offsetY, destX - offsetX - gOffsetX, destY - offsetY - gOffsetY, output.$getWidth() + 2 * offsetX, output.$getHeight() + 2 * offsetY, output.$getWidth(), output.$getHeight());
                     this.restoreTransform();
-                    this.drawData.push({ type: 0 /* TEXTURE */, texture: output["rootRenderTarget"].texture, filter: filter, count: 2 });
+                    this.drawCmdManager.pushDrawTexture(output["rootRenderTarget"].texture, 2, filter);
                 }
                 else {
                     if (filter.type == "blur") {
@@ -6711,7 +6839,7 @@ var egret;
                     }
                     this.cacheArrays(sourceX - offsetX, sourceY - offsetY, sourceWidth + 2 * offsetX, sourceHeight + 2 * offsetY, destX - offsetX - gOffsetX, destY - offsetY - gOffsetY, destWidth + 2 * offsetX, destHeight + 2 * offsetY, textureWidth, textureHeight, meshUVs, meshVertices, meshIndices);
                     var uv = this.getUv(sourceX, sourceY, sourceWidth, sourceHeight, textureWidth, textureHeight);
-                    this.drawData.push({ type: 0 /* TEXTURE */, texture: webGLTexture, filter: filter, count: meshIndices ? meshIndices.length / 3 : 2, uv: uv });
+                    this.drawCmdManager.pushDrawTexture(webGLTexture, meshIndices ? meshIndices.length / 3 : 2, filter, uv);
                 }
                 if (output) {
                     // 确保完全绘制完成后才能释放output
@@ -6808,10 +6936,7 @@ var egret;
                     this.transform(1, 0, 0, -1, 0, result.$getHeight() + (destY + offsetY) * 2);
                     this.cacheArrays(0, 0, result.$getWidth(), result.$getHeight(), destX + offsetX, destY + offsetY, result.$getWidth(), result.$getHeight(), result.$getWidth(), result.$getHeight());
                     this.restoreTransform();
-                    this.drawData.push({ type: 0 /* TEXTURE */, texture: result.rootRenderTarget.texture, count: 0 });
-                    // this.currentBatchSize++;
-                    // this.drawData[this.drawData.length - 1].count++;
-                    this.drawData[this.drawData.length - 1].count += 2;
+                    this.drawCmdManager.pushDrawTexture(result.rootRenderTarget.texture);
                 }
                 output.clearFilters();
                 output.filter = null;
@@ -6829,17 +6954,9 @@ var egret;
                 // if (this.currentBatchSize >= this.size - 1) {
                 if (this.vertexIndex >= this.vertexMaxSize - 1) {
                     this.$drawWebGL();
-                    this.drawData.push({ type: 1 /* RECT */, count: 0 });
                 }
-                else if (this.drawData.length > 0 && this.drawData[this.drawData.length - 1].type == 1 /* RECT */) {
-                }
-                else {
-                    this.drawData.push({ type: 1 /* RECT */, count: 0 });
-                }
+                this.drawCmdManager.pushDrawRect();
                 this.cacheArrays(0, 0, width, height, x, y, width, height, width, height);
-                // this.currentBatchSize++;
-                // this.drawData[this.drawData.length - 1].count++;
-                this.drawData[this.drawData.length - 1].count += 2;
             };
             p.cacheArrays = function (sourceX, sourceY, sourceWidth, sourceHeight, destX, destY, destWidth, destHeight, textureSourceWidth, textureSourceHeight, meshUVs, meshVertices, meshIndices) {
                 // 如果后三个值缺省，默认为构成矩形的顶点
@@ -6921,7 +7038,7 @@ var egret;
                 return uv;
             };
             p.$drawWebGL = function () {
-                if (this.drawData.length == 0 || this.context.contextLost) {
+                if (this.drawCmdManager.drawData.length == 0 || this.context.contextLost) {
                     return;
                 }
                 // 上传顶点数组
@@ -6933,11 +7050,11 @@ var egret;
                 if (this.hasMesh) {
                     this.context.uploadIndicesArray(this.indicesForMesh);
                 }
-                var length = this.drawData.length;
+                var length = this.drawCmdManager.drawData.length;
                 var offset = 0;
                 // this.shaderStarted = false;
                 for (var i = 0; i < length; i++) {
-                    var data = this.drawData[i];
+                    var data = this.drawCmdManager.drawData[i];
                     offset = this.context.drawData(data, offset);
                     // 计算draw call
                     if (data.type != 4 /* BLEND */) {
@@ -6952,7 +7069,8 @@ var egret;
                 }
                 // 清空数据
                 this.hasMesh = false;
-                this.drawData.length = 0;
+                this.drawCmdManager.clear();
+                // this.drawData.length = 0;
                 this.vertexIndex = 0;
                 this.indexIndex = 0;
             };
@@ -6975,56 +7093,21 @@ var egret;
                 this._globalAlpha = value;
             };
             p.setGlobalCompositeOperation = function (value) {
-                var len = this.drawData.length;
-                // 有无遍历到有效绘图操作
-                var drawState = false;
-                for (var i = len - 1; i >= 0; i--) {
-                    var data = this.drawData[i];
-                    if (data) {
-                        if (data.type != 4 /* BLEND */ && data.type != 2 /* PUSH_MASK */ && data.type != 3 /* POP_MASK */) {
-                            drawState = true;
-                        }
-                        // 如果与上一次blend操作之间无有效绘图，上一次操作无效
-                        if (!drawState && data.type == 4 /* BLEND */) {
-                            this.drawData.splice(i, 1);
-                            continue;
-                        }
-                        // 如果与上一次blend操作重复，本次操作无效
-                        if (data.type == 4 /* BLEND */) {
-                            if (data.value == value) {
-                                return;
-                            }
-                            else {
-                                break;
-                            }
-                        }
-                    }
-                }
-                this.drawData.push({ type: 4 /* BLEND */, value: value });
+                this.drawCmdManager.pushSetBlend(value);
             };
             p.pushMask = function (mask) {
                 // TODO mask count
                 this.$stencilList.push(mask);
-                // if (this.currentBatchSize >= this.size - 1) {
                 if (this.vertexIndex >= this.vertexMaxSize - 1) {
                     this.$drawWebGL();
-                    this.drawData.push({ type: 2 /* PUSH_MASK */, pushMask: mask, count: 0 });
                 }
-                else {
-                    this.drawData.push({ type: 2 /* PUSH_MASK */, pushMask: mask, count: 0 });
-                }
-                this.drawMask(mask);
+                this.drawMask(mask, true);
             };
             p.popMask = function () {
                 // TODO mask count
                 var mask = this.$stencilList.pop();
-                // if (this.currentBatchSize >= this.size - 1) {
                 if (this.vertexIndex >= this.vertexMaxSize - 1) {
                     this.$drawWebGL();
-                    this.drawData.push({ type: 3 /* POP_MASK */, popMask: mask, count: 0 });
-                }
-                else {
-                    this.drawData.push({ type: 3 /* POP_MASK */, popMask: mask, count: 0 });
                 }
                 this.drawMask(mask);
             };
@@ -7032,7 +7115,7 @@ var egret;
              * @private
              * draw masks with default shader
              **/
-            p.drawMask = function (mask) {
+            p.drawMask = function (mask, push) {
                 if (this.context.contextLost) {
                     return;
                 }
@@ -7041,16 +7124,12 @@ var egret;
                     for (var i = 0; i < length; i++) {
                         var item = mask[i];
                         this.cacheArrays(0, 0, item.width, item.height, item.minX, item.minY, item.width, item.height, item.width, item.height);
-                        // this.currentBatchSize++;
-                        // this.drawData[this.drawData.length - 1].count++;
-                        this.drawData[this.drawData.length - 1].count += 2;
+                        push ? this.drawCmdManager.pushPushMask() : this.drawCmdManager.pushPopMask();
                     }
                 }
                 else {
                     this.cacheArrays(0, 0, mask.width, mask.height, mask.x, mask.y, mask.width, mask.height, mask.width, mask.height);
-                    // this.currentBatchSize++;
-                    // this.drawData[this.drawData.length - 1].count++;
-                    this.drawData[this.drawData.length - 1].count += 2;
+                    push ? this.drawCmdManager.pushPushMask() : this.drawCmdManager.pushPopMask();
                 }
             };
             /**

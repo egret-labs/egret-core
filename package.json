@@ -275,6 +275,10 @@
             "platform": "web"
           },
           {
+            "path": "web/rendering/webgl/WebGLDrawCmdManager.ts",
+            "platform": "web"
+          },
+          {
             "path": "web/rendering/webgl/WebGLRenderTarget.ts",
             "platform": "web"
           },
