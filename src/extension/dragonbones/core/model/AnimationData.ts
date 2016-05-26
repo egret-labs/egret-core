@@ -88,7 +88,13 @@ module dragonBones {
 		private _slotTimelineList:Array<SlotTimeline>;
 		public get slotTimelineList():Array<SlotTimeline>{
 			return this._slotTimelineList;
-		}
+        }
+
+        private _ffdTimelineList: Array<FFDTimeline>;
+        public get ffdTimelineList(): Array<FFDTimeline>
+        {
+            return this._ffdTimelineList;
+        }
 		
 		/**
 		 * 创建一个AnimationData实例
@@ -104,6 +110,7 @@ module dragonBones {
 			
 			this._timelineList = [];
 			this._slotTimelineList = [];
+			this._ffdTimelineList = [];
 		}
 
 		/**
@@ -175,6 +182,16 @@ module dragonBones {
 
 			if(this._slotTimelineList.indexOf(timeline) < 0){
 				this._slotTimelineList[this._slotTimelineList.length] = timeline;
+			}
+		}
+
+		public addFFDTimeline(timeline: FFDTimeline): void {
+			if (!timeline) {
+				throw new Error();
+			}
+
+			if (this._ffdTimelineList.indexOf(timeline) < 0) {
+				this._ffdTimelineList[this._ffdTimelineList.length] = timeline;
 			}
 		}
 	}

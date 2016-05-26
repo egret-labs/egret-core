@@ -1,4 +1,4 @@
-//////////////////////////////////////////////////////////////////////////////////////
+﻿//////////////////////////////////////////////////////////////////////////////////////
 //
 //  Copyright (c) 2014-2015, Egret Technology Inc.
 //  All rights reserved.
@@ -31,59 +31,35 @@
 module dragonBones {
 
 	/**
-	 * @class dragonBones.DisplayData
+	 * @class dragonBones.BoneData
 	 * @classdesc
-	 * 显示对象的数据，目前支持图片和子骨架
+	 * 网格数据
 	 */
-	export class DisplayData{
-		/**
-		 * 子骨架类型
-		 */
-		public static ARMATURE:string = "armature";
-		/**
-		 * 图片类型
-		 */
-        public static IMAGE: string = "image";
-		/**
-		 * 网格类型
-		 */
-        public static MESH: string = "mesh";
-		/**
-		 * 显示对象的名字
-		 * @member {string} dragonBones.DisplayData#name
-		 */
-		public name:string;
-		/**
-		 * 显示对象的类型，枚举型，目前支持图片IMAGE和子骨架ARMATURE
-		 * @member {string} dragonBones.DisplayData#type
-		 */
-		public type:string;
-		/**
-		 * 变换矩阵Transform表示位移，旋转，缩放，三种属性
-		 * @member {dragonBones.DBTransform} dragonBones.DisplayData#transform
-		 */
-		public transform:DBTransform;
-		/**
-		 * 注册点，旋转中心
-		 * @member {dragonBones.Point} dragonBones.DisplayData#pivot
-		 */
-		public pivot:Point;
+    export class MeshData extends DisplayData {
+        public skinned: boolean = false;
+        public numVertex: number = 0;
+        public numTriangle: number = 0;
+        public triangles: Array<number> = [];
+        public vertices: Array<VertexData> = [];
+        public vertexBones: Array<VertexBoneData> = [];
+        public bones: Array<BoneData> = [];
+        public inverseBindPose: Array<Matrix> = [];
+        public slotPose: Matrix = new Matrix();
+        public constructor() {
+            super();
+        }
 
 		/**
-		 * 初始化变换矩阵为单位矩阵
-		 * 注册点为{0，0}点
+		 *释放资源
 		 */
-		public constructor(){
-			this.transform = new DBTransform();
-			this.pivot = new Point();
-		}
+        public dispose(): void {
+            super.dispose();
 
-		/**
-		 * 释放资源
-		 */
-		public dispose():void{
-			this.transform = null;
-			this.pivot = null;
-		}
-	}
+            this.triangles.length = 0;
+            this.vertices.length = 0;
+            this.vertexBones.length = 0;
+            this.bones.length = 0;
+            this.inverseBindPose.length = 0;
+        }
+    }
 }

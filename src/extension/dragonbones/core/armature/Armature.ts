@@ -285,6 +285,21 @@ module dragonBones {
 						bone.rotationIK = bone.global.rotation;
 					}
 				}
+				/*if(this._i != 0)
+				{
+					this._ikList[this._i-1].compute();
+					for (j = 0, jLen = this._boneIKList[this._i].length; j < jLen; j++) {
+						bone = this._boneIKList[this._i][j];
+						bone.adjustGlobalTransformMatrixByIK();
+					}
+				}else{
+					for (j = 0, jLen = this._boneIKList[this._i].length; j < jLen; j++)
+					{
+						bone = this._boneIKList[this._i][j];
+						bone._update(this._isFading);
+						bone.rotationIK = bone.global.rotation;
+					}
+				}*/
 			}
 			
 			this._i = this._slotList.length;
@@ -570,7 +585,7 @@ module dragonBones {
 			if(ifNeedSortBoneList){
 				this.sortBoneList();
 			}
-			this._animation._updateAnimationStates();
+            this._animation._updateTimelineStates = true;
 		}
 		
 		private sortBoneList():void{

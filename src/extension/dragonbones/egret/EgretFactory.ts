@@ -75,13 +75,66 @@ module dragonBones {
             return bitmap;
         }
 
+        /** @private */
         public _generateFastArmature():FastArmature {
             var armature:FastArmature = new FastArmature(new egret.DisplayObjectContainer());
             return armature;
         }
+        
+        /** @private */
         public _generateFastSlot():FastSlot {
             var slot: FastSlot = new EgretFastSlot(new egret.Bitmap());
             return slot;
         }
+        
+        /** @private */
+        public _generateMesh(textureAtlas: EgretTextureAtlas, fullName: string, meshData: MeshData, slot:Slot): any {
+
+            if (egret.Capabilities.renderMode == "webgl") { 
+                var mesh:egret.Mesh = new egret.Mesh();
+                var meshNode = mesh.$renderNode as egret.sys.MeshNode;
+                mesh.texture = textureAtlas.getTexture(fullName);
+                
+                var i = 0, iD = 0, l = 0;
+                for (i = 0, l = meshData.numVertex; i < l; i++)
+                {
+                    iD = i * 2;
+                    const dbVertexData:VertexData = meshData.vertices[i];
+                    meshNode.uvs[iD] = dbVertexData.u;
+                    meshNode.uvs[iD + 1] = dbVertexData.v;
+                    meshNode.vertices[iD] = dbVertexData.x;
+                    meshNode.vertices[iD + 1] = dbVertexData.y;
+                }
+                
+                for (i = 0, l = meshData.triangles.length; i < l; i++)
+                {
+                    meshNode.indices[i] = meshData.triangles[i];
+                }
+                
+                slot.isMeshEnabled = true;
+                
+                return mesh;
+            }
+            
+            var bitmap:egret.Bitmap = new egret.Bitmap();
+            bitmap.texture = textureAtlas.getTexture(fullName);
+            
+            var subTextureFrame: Rectangle = (textureAtlas).getFrame(fullName);
+            var pivotX = 0, pivotY = 0;
+            if(subTextureFrame != null)
+            {
+                pivotX = subTextureFrame.width/2;
+                pivotY = subTextureFrame.height/2;
+            }
+            else
+            {
+                pivotX = bitmap.width/2;
+                pivotY = bitmap.height/2;
+            }
+            
+            bitmap.anchorOffsetX = pivotX;
+            bitmap.anchorOffsetY = pivotY;
+            return bitmap;
+		}
     }
 }
