@@ -172,6 +172,7 @@ module dragonBones {
 		private _armature:Armature;
 		private _timelineStateList:Array<TimelineState>;
 		private _slotTimelineStateList:Array<SlotTimelineState>;
+        private _ffdTimelineStateList:Array<FFDTimelineState>;
 		private _boneMasks:Array<string>;
 		
 		private _isPlaying:boolean;
@@ -208,6 +209,7 @@ module dragonBones {
 		public constructor(){ 
 			this._timelineStateList =[];
 			this._slotTimelineStateList=[];
+			this._ffdTimelineStateList=[];
 			this._boneMasks = [];
 		}
 		
@@ -234,6 +236,12 @@ module dragonBones {
 				SlotTimelineState._returnObject(this._slotTimelineStateList[i])
 			}
 			this._slotTimelineStateList.length = 0;
+			
+			i = this._ffdTimelineStateList.length;
+			while(i --){
+				FFDTimelineState._returnObject(this._ffdTimelineStateList[i])
+			}
+			this._ffdTimelineStateList.length = 0;
 		}
 		
 //骨架装配
@@ -330,7 +338,8 @@ module dragonBones {
 		 */
 		public _updateTimelineStates():void{
 			var timelineState:TimelineState;
-			var slotTimelineState:SlotTimelineState;
+            var slotTimelineState: SlotTimelineState;
+            var ffdTimelineState: FFDTimelineState;
 			var i:number = this._timelineStateList.length;
 			var len:number;
 			while(i --){
@@ -374,8 +383,67 @@ module dragonBones {
 			{
 				var slotTimeline:SlotTimeline = this._clip.slotTimelineList[i];
 				this.addSlotTimelineState(slotTimeline.name);
+            }
+
+            this._updateFFDTimeline();
+        }
+        
+		/**
+		 * @private
+		 */
+        public _updateFFDTimeline(): void {
+            var i = 0, l = 0;
+            var ffdTimelineState: FFDTimelineState;
+            var slot: Slot;
+			var timelines:any = {};
+
+            l = this._ffdTimelineStateList.length;
+            for (i = 0; i < l; ++i) {
+                ffdTimelineState = this._ffdTimelineStateList[i];
+                slot = this._armature.getSlot(ffdTimelineState.name);
+                if (!slot || slot.displayIndex != ffdTimelineState.displayIndex) {
+                    this._ffdTimelineStateList.splice(i, 1);
+                    FFDTimelineState._returnObject(timelineState);
+                }
+				else
+				{ 
+					timelines[ffdTimelineState.name] = ffdTimelineState;
+				}
+            }
+            
+			if (this._clip.ffdTimelineList) {
+				l = this._clip.ffdTimelineList.length;
+				for (i = 0; i < l; ++i) {
+					var ffdTimeline: FFDTimeline = this._clip.ffdTimelineList[i];
+					//TODO:换肤 原始 display 匹配
+					slot = this._armature.getSlot(ffdTimeline.name);
+					if (!timelines[ffdTimeline.name] && slot && slot.displayList.length > 0 && slot.displayIndex >= 0 && slot.displayIndex == ffdTimeline.displayIndex) {
+						/*for each(var eachState:FFDTimelineState in _ffdTimelineStateList)
+						{
+						if(eachState.name == timeline.name)
+						{
+						return;
+						}
+						}*/
+
+						var timelineState: FFDTimelineState = FFDTimelineState._borrowObject();
+						timelineState._fadeIn(slot, this, ffdTimeline);
+						this._ffdTimelineStateList.push(timelineState);
+						timelines[ffdTimeline.name] = timelineState;
+					}
+				}
 			}
-		}
+			
+			var slots = this._armature.getSlots(false);
+			for (i = 0, l = slots.length; i < l; ++i)
+			{
+				slot = slots[i];
+				if (slot._meshData && !timelines[slot.name])
+				{
+					slot._updateFFD(null, 0);
+				}
+			}
+        }
 		
 		private addTimelineState(timelineName:string):void{
 			var bone:Bone = this._armature.getBone(timelineName);
@@ -714,6 +782,12 @@ module dragonBones {
 				slotTimeline._update(progress);
 				this._isComplete = timeline._isComplete && this._isComplete;
 			}
+
+            for (i = 0, len = this._ffdTimelineStateList.length; i < len; i++) {
+                var ffdTimeline: FFDTimelineState = this._ffdTimelineStateList[i];
+                ffdTimeline._update(progress);
+                this._isComplete = ffdTimeline._isComplete && this._isComplete;
+            }
 			//update main timeline
 			if(this._currentTime != currentTime){
 				if(this._currentPlayTimes != currentPlayTimes)    //check loop complete

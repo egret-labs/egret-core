@@ -1,4 +1,4 @@
-//////////////////////////////////////////////////////////////////////////////////////
+﻿//////////////////////////////////////////////////////////////////////////////////////
 //
 //  Copyright (c) 2014-2015, Egret Technology Inc.
 //  All rights reserved.
@@ -27,63 +27,17 @@
 //
 //////////////////////////////////////////////////////////////////////////////////////
 
-
 module dragonBones {
-
 	/**
-	 * @class dragonBones.DisplayData
-	 * @classdesc
-	 * 显示对象的数据，目前支持图片和子骨架
+	 * @private
 	 */
-	export class DisplayData{
-		/**
-		 * 子骨架类型
-		 */
-		public static ARMATURE:string = "armature";
-		/**
-		 * 图片类型
-		 */
-        public static IMAGE: string = "image";
-		/**
-		 * 网格类型
-		 */
-        public static MESH: string = "mesh";
-		/**
-		 * 显示对象的名字
-		 * @member {string} dragonBones.DisplayData#name
-		 */
-		public name:string;
-		/**
-		 * 显示对象的类型，枚举型，目前支持图片IMAGE和子骨架ARMATURE
-		 * @member {string} dragonBones.DisplayData#type
-		 */
-		public type:string;
-		/**
-		 * 变换矩阵Transform表示位移，旋转，缩放，三种属性
-		 * @member {dragonBones.DBTransform} dragonBones.DisplayData#transform
-		 */
-		public transform:DBTransform;
-		/**
-		 * 注册点，旋转中心
-		 * @member {dragonBones.Point} dragonBones.DisplayData#pivot
-		 */
-		public pivot:Point;
-
-		/**
-		 * 初始化变换矩阵为单位矩阵
-		 * 注册点为{0，0}点
-		 */
-		public constructor(){
-			this.transform = new DBTransform();
-			this.pivot = new Point();
-		}
-
-		/**
-		 * 释放资源
-		 */
-		public dispose():void{
-			this.transform = null;
-			this.pivot = null;
-		}
-	}
+    export class FFDFrame extends Frame {
+        public tweenEasing:number;
+        public offset: number;
+        public vertices: Array<number>;
+        
+        public constructor() {
+            super();
+        }
+    }
 }

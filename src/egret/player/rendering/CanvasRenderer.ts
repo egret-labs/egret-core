@@ -311,6 +311,8 @@ module egret {
                 context.restore();
                 return calls;
             }
+            
+            //todo 若显示对象是容器，同时子项有混合模式，则需要先绘制背景到displayBuffer并清除背景区域
 
             //绘制显示对象自身，若有scrollRect，应用clip
             var displayBuffer = this.createRenderBuffer(region.width, region.height);

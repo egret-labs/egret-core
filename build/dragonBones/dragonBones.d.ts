@@ -115,11 +115,15 @@ declare module dragonBones {
         private _isPlaying;
         private _timeScale;
         /** @private */
+        _animationStateCount: number;
+        /** @private */
+        _updateTimelineStates: boolean;
+        /** @private */
+        _updateFFDTimelineStates: boolean;
+        /** @private */
         _lastAnimationState: AnimationState;
         /** @private */
         _isFading: boolean;
-        /** @private */
-        _animationStateCount: number;
         /**
          * 创建一个新的Animation实例并赋给传入的Armature实例
          * @param armature {Armature} 骨架实例
@@ -179,10 +183,18 @@ declare module dragonBones {
          * @returns {boolean}.
          */
         hasAnimation(animationName: string): boolean;
-        /** @private */
+        /**
+         * @private
+         */
         _advanceTime(passedTime: number): void;
-        /** @private */
-        _updateAnimationStates(): void;
+        /**
+         * @private
+         */
+        private updateTimelineStates();
+        /**
+         * @private
+         */
+        private updateFFDTimelineStates();
         private addState(animationState);
         private removeState(animationState);
         /**
@@ -344,6 +356,7 @@ declare module dragonBones {
         private _armature;
         private _timelineStateList;
         private _slotTimelineStateList;
+        private _ffdTimelineStateList;
         private _boneMasks;
         private _isPlaying;
         private _time;
@@ -402,6 +415,10 @@ declare module dragonBones {
          * Update timeline state based on mixing transforms and clip.
          */
         _updateTimelineStates(): void;
+        /**
+         * @private
+         */
+        _updateFFDTimeline(): void;
         private addTimelineState(timelineName);
         private removeTimelineState(timelineState);
         private addSlotTimelineState(timelineName);
@@ -498,6 +515,51 @@ declare module dragonBones {
     }
 }
 declare module dragonBones {
+    /** @private */
+    class FFDTimelineState {
+        private static _pool;
+        /** @private */
+        static _borrowObject(): FFDTimelineState;
+        /** @private */
+        static _returnObject(timeline: FFDTimelineState): void;
+        /** @private */
+        static _clear(): void;
+        /** @private */
+        skin: string;
+        name: string;
+        displayIndex: number;
+        _isComplete: boolean;
+        _animationState: AnimationState;
+        private _totalTime;
+        private _currentTime;
+        private _currentFrameIndex;
+        private _currentFramePosition;
+        private _currentFrameDuration;
+        private _tweenEasing;
+        private _tweenCurve;
+        private _tweenVertices;
+        private _offset;
+        private _durationVertices;
+        private _updateVertices;
+        private _rawAnimationScale;
+        private _updateMode;
+        private _slot;
+        private _timelineData;
+        constructor();
+        private clear();
+        /** @private */
+        _fadeIn(slot: Slot, animationState: AnimationState, timelineData: FFDTimeline): void;
+        /** @private */
+        _fadeOut(): void;
+        /** @private */
+        _update(progress: number): void;
+        private updateMultipleFrame(progress);
+        private updateToNextFrame(currentPlayTimes?);
+        private updateTween();
+        private updateSingleFrame();
+    }
+}
+declare module dragonBones {
     /**
      * @class dragonBones.IAnimatable
      * @classdesc
@@ -526,15 +588,7 @@ declare module dragonBones {
     }
 }
 declare module dragonBones {
-    /**
-     * @class dragonBones.SlotTimelineState
-     * @classdesc
-     * SlotTimelineState 负责计算 Slot 的时间轴动画。
-     * SlotTimelineState 实例隶属于 AnimationState. AnimationState在创建时会为每个包含动作的 Slot生成一个 SlotTimelineState 实例.
-     * @see dragonBones.Animation
-     * @see dragonBones.AnimationState
-     * @see dragonBones.Slot
-     */
+    /** @private */
     class SlotTimelineState {
         private static HALF_PI;
         private static DOUBLE_PI;
@@ -1130,6 +1184,8 @@ declare module dragonBones {
          */
         concat(m: Matrix): void;
         copyFrom(m: Matrix): void;
+        /**@private*/
+        transformPoint(x: number, y: number, result: Point, delta?: Boolean): void;
     }
 }
 declare module dragonBones {
@@ -1615,6 +1671,10 @@ declare module dragonBones {
        </pre>
      */
     class Slot extends DBObject {
+        /**
+         * @private
+         */
+        isMeshEnabled: boolean;
         /** @private Need to keep the reference of DisplayData. When slot switch displayObject, it need to restore the display obect's origional pivot. */
         _displayDataList: Array<DisplayData>;
         /** @private */
@@ -1636,7 +1696,15 @@ declare module dragonBones {
         _blendMode: string;
         _isColorChanged: boolean;
         _needUpdate: boolean;
-        _timelineStateList: Array<SlotTimelineState>;
+        /** @private */
+        protected _ffdChanged: boolean;
+        /** @private */
+        protected _ffdVertices: Array<number>;
+        /** @private */
+        protected _meshBones: Array<Bone>;
+        /** @private */
+        _meshData: MeshData;
+        displayIndex: number;
         constructor();
         /**
          * 通过传入 SlotData 初始化Slot
@@ -1647,15 +1715,11 @@ declare module dragonBones {
          * @inheritDoc
          */
         dispose(): void;
-        private sortState(state1, state2);
-        /** @private */
-        _addState(timelineState: SlotTimelineState): void;
-        /** @private */
-        _removeState(timelineState: SlotTimelineState): void;
         /** @private */
         setArmature(value: Armature): void;
         /** @private */
         _update(): void;
+        private isMeshUpdate();
         _calculateRelativeParentTransform(): void;
         private updateChildArmatureAnimation();
         /** @private */
@@ -1736,6 +1800,14 @@ declare module dragonBones {
         _updateDisplayVisible(value: boolean): void;
         /**
          * @private
+         */
+        protected _ffdOffset: number;
+        /**
+         * @private
+         */
+        _updateFFD(vertices: Array<number>, offset: number): void;
+        /**
+         * @private
          * Updates the color of the display object.
          * @param a
          * @param r
@@ -1757,6 +1829,10 @@ declare module dragonBones {
         _arriveAtFrame(frame: Frame, timelineState: SlotTimelineState, animationState: AnimationState, isCross: boolean): void;
         _updateGlobal(): ParentTransformObject;
         _resetToOrigin(): void;
+        /**
+         * @private
+         */
+        _updateMesh(): void;
     }
 }
 declare module dragonBones {
@@ -2799,6 +2875,10 @@ declare module dragonBones {
          */
         getTextureDisplay(textureName: string, textureAtlasName?: string, pivotX?: number, pivotY?: number): any;
         /**
+         * @private
+         */
+        getMeshDisplay(meshData: MeshData, slot: Slot, textureAtlasName?: string): any;
+        /**
          * 构建骨架
          * 一般情况下dragonBonesData和textureAtlas是一对一的，通过相同的key对应。
          * @param armatureName 骨架的名字
@@ -2889,6 +2969,10 @@ declare module dragonBones {
          * @returns {any}
          */
         _generateDisplay(textureAtlas: any, fullName: string, pivotX: number, pivotY: number): any;
+        /**
+         * @private
+         */
+        _generateMesh(textureAtlas: any, fullName: string, meshData: MeshData, slot: Slot): any;
     }
     class BuildArmatureDataPackage {
         dragonBonesDataName: string;
@@ -4017,6 +4101,8 @@ declare module dragonBones {
         timelineList: Array<TransformTimeline>;
         private _slotTimelineList;
         slotTimelineList: Array<SlotTimeline>;
+        private _ffdTimelineList;
+        ffdTimelineList: Array<FFDTimeline>;
         /**
          * 创建一个AnimationData实例
          */
@@ -4038,6 +4124,7 @@ declare module dragonBones {
         addTimeline(timeline: TransformTimeline): void;
         getSlotTimeline(timelineName: string): SlotTimeline;
         addSlotTimeline(timeline: SlotTimeline): void;
+        addFFDTimeline(timeline: FFDTimeline): void;
     }
 }
 declare module dragonBones {
@@ -4277,6 +4364,10 @@ declare module dragonBones {
          */
         static IMAGE: string;
         /**
+         * 网格类型
+         */
+        static MESH: string;
+        /**
          * 显示对象的名字
          * @member {string} dragonBones.DisplayData#name
          */
@@ -4432,6 +4523,30 @@ declare module dragonBones {
     }
 }
 declare module dragonBones {
+    /**
+     * @private
+     */
+    class FFDFrame extends Frame {
+        tweenEasing: number;
+        offset: number;
+        vertices: Array<number>;
+        constructor();
+    }
+}
+declare module dragonBones {
+    /**
+     * @private
+     */
+    class FFDTimeline extends Timeline {
+        name: string;
+        skin: string;
+        displayIndex: number;
+        offset: number;
+        constructor();
+        dispose(): void;
+    }
+}
+declare module dragonBones {
     class IKData {
         name: string;
         target: string;
@@ -4440,6 +4555,29 @@ declare module dragonBones {
         chain: number;
         bendPositive: boolean;
         constructora(): void;
+        dispose(): void;
+    }
+}
+declare module dragonBones {
+    /**
+     * @class dragonBones.BoneData
+     * @classdesc
+     * 网格数据
+     */
+    class MeshData extends DisplayData {
+        skinned: boolean;
+        numVertex: number;
+        numTriangle: number;
+        triangles: Array<number>;
+        vertices: Array<VertexData>;
+        vertexBones: Array<VertexBoneData>;
+        bones: Array<BoneData>;
+        inverseBindPose: Array<Matrix>;
+        slotPose: Matrix;
+        constructor();
+        /**
+         *释放资源
+         */
         dispose(): void;
     }
 }
@@ -4473,6 +4611,10 @@ declare module dragonBones {
          * @member {string} dragonBones.SkinData#name
          */
         name: string;
+        /**
+         * @private
+         */
+        hasMesh: boolean;
         private _slotDataList;
         /**
          * 构造函数，实例化一个SkinData类
@@ -4778,6 +4920,27 @@ declare module dragonBones {
 }
 declare module dragonBones {
     /**
+     * @private
+     */
+    class VertexBoneData {
+        indices: Array<number>;
+        weights: Array<number>;
+        vertices: Array<Point>;
+        constructor();
+    }
+}
+declare module dragonBones {
+    /**
+     * @private
+     */
+    class VertexData extends Point {
+        u: number;
+        v: number;
+        constructor();
+    }
+}
+declare module dragonBones {
+    /**
      *@class dragonBones.DataParser
      * @classdesc
      * 老版本数据解析
@@ -4861,6 +5024,12 @@ declare module dragonBones {
          * @returns {any}返回纹理集数据，存放TexutrueData的字典类型
          */
         static parseTextureAtlasData(rawData: any, scale?: number): any;
+        private static _rawBones;
+        private static _armatureData;
+        private static _skinData;
+        private static _skinSlotData;
+        private static _meshData;
+        private static _displayIndex;
         /**
          * 解析DragonBones的数据，xml或者json，该数据包含了骨骼，皮肤，动画的数据
          * @param rawDataToParse DragonBones的数据，xml或者json格式
@@ -4874,12 +5043,15 @@ declare module dragonBones {
         private static parseSlotData(slotObject);
         private static parseSlotDisplayData(slotObject);
         private static parseDisplayData(displayObject);
+        private static parseMeshData(meshObject);
         /** @private */
         private static parseAnimationData(animationObject, frameRate);
         private static parseTransformTimeline(timelineObject, duration, frameRate);
         private static parseSlotTimeline(timelineObject, duration, frameRate);
+        private static parseFFDTimeline(timelineObject, duration, frameRate);
         private static parseTransformFrame(frameObject, frameRate);
         private static parseSlotFrame(frameObject, frameRate);
+        private static parseFFDFrame(frameObject, frameRate);
         private static parseTimeline(timelineObject, outputTimeline);
         private static parseFrame(frameObject, outputFrame, frameRate?);
         private static parseTransform(transformObject, transform, pivot?);
@@ -5458,8 +5630,12 @@ declare module dragonBones {
         _generateSlot(): Slot;
         /** @private */
         _generateDisplay(textureAtlas: EgretTextureAtlas, fullName: string, pivotX: number, pivotY: number): any;
+        /** @private */
         _generateFastArmature(): FastArmature;
+        /** @private */
         _generateFastSlot(): FastSlot;
+        /** @private */
+        _generateMesh(textureAtlas: EgretTextureAtlas, fullName: string, meshData: MeshData, slot: Slot): any;
     }
 }
 declare module dragonBones {
@@ -5590,7 +5766,10 @@ declare module dragonBones {
         _updateDisplayColor(aOffset: number, rOffset: number, gOffset: number, bOffset: number, aMultiplier: number, rMultiplier: number, gMultiplier: number, bMultiplier: number, colorChange?: boolean): void;
         /** @private */
         _updateDisplayBlendMode(value: string): void;
+        /** @private */
         _calculateRelativeParentTransform(): void;
+        /** @private */
+        _updateMesh(): void;
     }
 }
 declare module dragonBones {

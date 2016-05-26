@@ -5332,11 +5332,12 @@ var egret;
                     "void main(void) {\n" +
                     "vec4 texColor = texture2D(uSampler, vTextureCoord);\n" +
                     "vec4 locColor = texColor * matrix;\n" +
-                    "if(texColor.a != 0.0){\n" +
                     "locColor += colorAdd;\n" +
-                    "}\n" +
                     "if(locColor.a <= 0.0){\n" +
                     "discard;\n" +
+                    "}\n" +
+                    "if(locColor.a > 1.0){\n" +
+                    "locColor.a = 1.0;\n" +
                     "}\n" +
                     "gl_FragColor = vColor*vec4(locColor.rgb*locColor.a,locColor.a);\n" +
                     "}";
