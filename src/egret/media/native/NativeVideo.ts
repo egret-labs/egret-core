@@ -76,7 +76,6 @@ module egret.native {
             this.loading = true;
             this.loaded = false;
             var video = new __global.Video(url);
-            this.originVideo = video;
             video['setVideoRect'](0, 0, 1, 1);
             video['setKeepRatio'](false);
             video.addEventListener("canplaythrough", onCanPlay);
@@ -91,7 +90,11 @@ module egret.native {
             function onPlaying():void{
                 video['setVideoRect'](0, 0, 1, 1);
                 video.pause();
+                if(self._fullscreen){
+                    video.fullScreen = true;
+                }
                 video.currentTime = 0;
+                self.originVideo = video;
                 self.loaded = true;
                 self.loading = false;
                 removeListeners();
@@ -179,7 +182,7 @@ module egret.native {
          * @inheritDoc
          */
         public close(){
-            if(this.loaded){
+            if(this.originVideo){
                 this.originVideo['destroy']();
             }
             this.loaded = false;
@@ -219,18 +222,23 @@ module egret.native {
                 this.$invalidateContentBounds();
             },this);
         }
-        private _fullscreen: boolean = true;
+        private _fullscreen:boolean = true;
         /**
          * @inheritDoc
          */
         public set fullscreen(value:boolean){
             this._fullscreen = value;
-            this.setVideoSize();
+            if(this.originVideo){
+                this.originVideo['fullScreen'] = value;
+            }
         }
         /**
          * @inheritDoc
          */
         public get fullscreen():boolean{
+            if(this.originVideo){
+                return this.originVideo['fullScreen'] ;
+            }
             return this._fullscreen;
         }
         /**
@@ -397,16 +405,11 @@ module egret.native {
          */
         private setVideoSize():void{
             var video = this.originVideo;
-            if(video){
-                if(this.fullscreen){
-                    video['setFullScreen'](true);
+            if(video && !this.fullscreen){
+                if(!this.firstPlay){
+                    video['setVideoRect'](this.x, this.y, this.widthSet, this.heightSet);
                 }else{
-                    video['setFullScreen'](false);
-                    if(!this.firstPlay){
-                        video['setVideoRect'](this.x, this.y, this.widthSet, this.heightSet);
-                    }else{
-                        video['setVideoRect'](this.x, this.y,0, 0);
-                    }
+                    video['setVideoRect'](this.x, this.y,0, 0);
                 }
             }
         }
