@@ -293,6 +293,7 @@ module egret {
             strokePath && strokePath.drawRect(x, y, width, height);
             this.extendBoundsByPoint(x + width, y + height);
             this.updatePosition(x, y);
+            this.$renderNode.dirtyRender = true;
         }
 
         /**
@@ -339,6 +340,7 @@ module egret {
             this.extendBoundsByPoint(x, y);
             this.extendBoundsByPoint(right, bottom);
             this.updatePosition(right, ybw);
+            this.$renderNode.dirtyRender = true;
         }
 
         /**
@@ -370,6 +372,7 @@ module egret {
             this.extendBoundsByPoint(x - radius, y - radius);
             this.extendBoundsByPoint(x + radius, y + radius);
             this.updatePosition(x + radius, y);
+            this.$renderNode.dirtyRender = true;
         }
 
 
@@ -406,6 +409,7 @@ module egret {
 
             this.extendBoundsByPoint(x + width, y + height);
             this.updatePosition(x, y);
+            this.$renderNode.dirtyRender = true;
         }
 
         /**
@@ -434,6 +438,7 @@ module egret {
             this.includeLastPosition = false;
             this.lastX = x;
             this.lastY = y;
+            this.$renderNode.dirtyRender = true;
         }
 
         /**
@@ -460,6 +465,7 @@ module egret {
             fillPath && fillPath.lineTo(x, y);
             strokePath && strokePath.lineTo(x, y);
             this.updatePosition(x, y);
+            this.$renderNode.dirtyRender = true;
         }
 
         /**
@@ -498,6 +504,7 @@ module egret {
             this.extendBoundsByPoint(controlX, controlY);
             this.extendBoundsByPoint(anchorX, anchorY);
             this.updatePosition(anchorX, anchorY);
+            this.$renderNode.dirtyRender = true;
         }
 
         /**
@@ -540,6 +547,7 @@ module egret {
             this.extendBoundsByPoint(controlX2, controlY2);
             this.extendBoundsByPoint(anchorX, anchorY);
             this.updatePosition(anchorX, anchorY);
+            this.$renderNode.dirtyRender = true;
         }
 
         /**
@@ -593,6 +601,7 @@ module egret {
             var endX = x + egret.$cos(endAngle) * radius;
             var endY = y + egret.$sin(endAngle) * radius;
             this.updatePosition(endX, endY);
+            this.$renderNode.dirtyRender = true;
         }
 
         /**
@@ -664,6 +673,7 @@ module egret {
             this.minY = Infinity;
             this.maxX = -Infinity;
             this.maxY = -Infinity;
+            this.$renderNode.dirtyRender = true;
         }
 
         /**
