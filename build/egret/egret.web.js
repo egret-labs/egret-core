@@ -5681,7 +5681,8 @@ var egret;
         var WebGLVertexArrayObject = (function () {
             function WebGLVertexArrayObject() {
                 this.size = 2000;
-                this.vertexMaxSize = 2000 * 4;
+                this.vertexMaxSize = this.size * 4;
+                this.indicesMaxSize = this.size * 6;
                 this.vertSize = 5;
                 this.vertices = null;
                 this.indices = null;
@@ -5701,7 +5702,7 @@ var egret;
                 ];
                 this.defaultMeshIndices = [0, 1, 2, 0, 2, 3];
                 var numVerts = this.vertexMaxSize * this.vertSize;
-                var numIndices = this.vertexMaxSize * 3 / 2;
+                var numIndices = this.indicesMaxSize;
                 this.vertices = new Float32Array(numVerts);
                 this.indices = new Uint16Array(numIndices);
                 this.indicesForMesh = new Uint16Array(numIndices);
@@ -5718,9 +5719,10 @@ var egret;
             /**
              * 是否达到最大缓存数量
              */
-            p.reachMaxSize = function () {
-                // TODO 此处的4*4应该为下次绘制实际要绘制的顶点数，并且应该同时检查index
-                return this.vertexIndex >= this.vertexMaxSize - 4 * 4;
+            p.reachMaxSize = function (vertexCount, indexCount) {
+                if (vertexCount === void 0) { vertexCount = 4; }
+                if (indexCount === void 0) { indexCount = 6; }
+                return this.vertexIndex > this.vertexMaxSize - vertexCount || this.indexIndex > this.indicesMaxSize - indexCount;
             };
             /**
              * 获取缓存完成的顶点数组
@@ -6342,8 +6344,15 @@ var egret;
                 if (this.contextLost || !texture || !buffer) {
                     return;
                 }
-                if (this.vao.reachMaxSize()) {
-                    this.$drawWebGL();
+                if (meshVertices && meshIndices) {
+                    if (this.vao.reachMaxSize(meshVertices.length / 2, meshIndices.length)) {
+                        this.$drawWebGL();
+                    }
+                }
+                else {
+                    if (this.vao.reachMaxSize()) {
+                        this.$drawWebGL();
+                    }
                 }
                 if (meshUVs) {
                     this.vao.changeToMeshIndices();

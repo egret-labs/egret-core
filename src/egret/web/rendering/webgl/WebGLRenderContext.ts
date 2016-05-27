@@ -513,9 +513,16 @@ module egret.web {
                 return;
             }
 
-            if (this.vao.reachMaxSize()) {
-                this.$drawWebGL();
+            if(meshVertices && meshIndices) {
+                if (this.vao.reachMaxSize(meshVertices.length / 2, meshIndices.length)) {
+                    this.$drawWebGL();
+                }
+            } else {
+                if (this.vao.reachMaxSize()) {
+                    this.$drawWebGL();
+                }
             }
+
 
             if(meshUVs) {
                 this.vao.changeToMeshIndices();

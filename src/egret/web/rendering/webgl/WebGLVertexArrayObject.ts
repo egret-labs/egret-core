@@ -36,7 +36,8 @@ module egret.web {
     export class WebGLVertexArrayObject {
 
         private size:number = 2000;
-        private vertexMaxSize:number = 2000 * 4;
+        private vertexMaxSize:number = this.size * 4;
+        private indicesMaxSize:number = this.size * 6;
         private vertSize:number = 5;
 
         private vertices:Float32Array = null;
@@ -50,7 +51,7 @@ module egret.web {
 
         public constructor() {
             var numVerts = this.vertexMaxSize * this.vertSize;
-            var numIndices = this.vertexMaxSize * 3 / 2;
+            var numIndices = this.indicesMaxSize;
 
             this.vertices = new Float32Array(numVerts);
             this.indices = new Uint16Array(numIndices);
@@ -69,9 +70,8 @@ module egret.web {
         /**
          * 是否达到最大缓存数量
          */
-        public reachMaxSize():boolean {
-            // TODO 此处的4*4应该为下次绘制实际要绘制的顶点数，并且应该同时检查index
-            return this.vertexIndex >= this.vertexMaxSize - 4 * 4;
+        public reachMaxSize(vertexCount:number = 4, indexCount:number = 6):boolean {
+            return this.vertexIndex > this.vertexMaxSize - vertexCount || this.indexIndex > this.indicesMaxSize - indexCount;
         }
 
         /**
