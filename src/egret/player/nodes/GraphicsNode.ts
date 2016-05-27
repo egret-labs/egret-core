@@ -59,7 +59,6 @@ module egret.sys {
             else {
                 this.drawData.push(path);
             }
-            this.dirtyRender = true;
             return path;
         }
 
@@ -102,7 +101,6 @@ module egret.sys {
             else {
                 this.drawData.push(path);
             }
-            this.dirtyRender = true;
             return path;
         }
 
@@ -131,7 +129,6 @@ module egret.sys {
             path.joints = joints;
             path.miterLimit = miterLimit;
             this.drawData.push(path);
-            this.dirtyRender = true;
             return path;
         }
 
@@ -140,7 +137,6 @@ module egret.sys {
          */
         public clear():void {
             this.drawData.length = 0;
-            this.dirtyRender = true;
         }
 
         /**
@@ -172,8 +168,6 @@ module egret.sys {
          * 暂时调用lineStyle,beginFill,beginGradientFill标记,实际应该draw时候标记在Path2D
          */
         public dirtyRender:boolean = true;
-        // public $canvasRenderer;
-        // public $canvasRenderBuffer;
         public $texture;
         public $textureWidth;
         public $textureHeight;
