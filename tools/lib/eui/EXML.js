@@ -29,6 +29,7 @@
 /// <reference path="../types.d.ts" />
 var __global = global;
 var xml = require("../xml/index");
+var utils = require("../utils");
 var config = require("./parser/EXMLConfig");
 egret.XML = xml;
 /**
@@ -177,6 +178,9 @@ function getClassNameById(id, ns) {
 }
 function getDtsInfoFromExml(exmlFile) {
     var xml = egret.XML.parse(require("../FileUtil").read(exmlFile));
+    if(!xml) {
+        utils.exit(2002, exmlFile);
+    }
     var className = config.EXMLConfig.getInstance().getClassNameById(xml.localName, xml.namespace);
     var extendName = "";
     if (xml["$class"]) {

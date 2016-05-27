@@ -381,12 +381,10 @@ module eui {
                     rect = egret.$TempRectangle;
                 }
                 rect.setTo(0,0,thumbWidth,thumbHeight);
-                var thumbPosX = thumb.x - rect.x;
-                var thumbPosY = thumb.y - rect.y;
                 switch (this._direction) {
                     case Direction.LTR:
                         rect.width = clipWidth;
-                        thumb.x = thumbPosX;
+                        thumb.x = rect.x;
                         break;
                     case Direction.RTL:
                         rect.width = clipWidth;
@@ -395,7 +393,7 @@ module eui {
                         break;
                     case Direction.TTB:
                         rect.height = clipHeight;
-                        thumb.y = thumbPosY;
+                        thumb.y = rect.y;
                         break;
                     case Direction.BTT:
                         rect.height = clipHeight;

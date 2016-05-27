@@ -119,6 +119,14 @@ module dragonBones {
 			return textureAtlasData;
 		}
 
+
+        private static _rawBones: Array<BoneData> = [];
+        private static _armatureData: ArmatureData = null;
+        private static _skinData: SkinData = null;
+        private static _skinSlotData: SlotData = null;
+        private static _meshData: MeshData = null;
+        private static _displayIndex: number = 0;
+
 		/**
 		 * 解析DragonBones的数据，xml或者json，该数据包含了骨骼，皮肤，动画的数据
 		 * @param rawDataToParse DragonBones的数据，xml或者json格式
@@ -166,7 +174,8 @@ module dragonBones {
 		
 		private static parseArmatureData(armatureDataToParse:any, frameRate:number):ArmatureData{
 			var outputArmatureData:ArmatureData = new ArmatureData();
-			outputArmatureData.name = armatureDataToParse[ConstValues.A_NAME];
+            outputArmatureData.name = armatureDataToParse[ConstValues.A_NAME];
+            DataParser._armatureData = outputArmatureData;
             var actions = armatureDataToParse[ConstValues.A_DEFAULT_ACTIONS];
 			if (actions && actions.length == 1)
 			{
@@ -182,6 +191,7 @@ module dragonBones {
             var i:number;
             var len:number;
 
+            DataParser._rawBones.length = 0;
             for(i = 0, len = boneList.length; i < len; i++) 
             {
                 var boneObject:any = boneList[i];
@@ -196,6 +206,8 @@ module dragonBones {
                     outputArmatureData.addIKData(DataParser.parseIKData(ikObject));
                 }
             }
+
+            outputArmatureData.sortBoneDataList();
             
 			var slotList:any = armatureDataToParse[ConstValues.SLOT];
 			for(i = 0, len = slotList.length; i < len; i++) 
@@ -213,7 +225,6 @@ module dragonBones {
             {
                 DBDataUtil.transformArmatureData(outputArmatureData);
             }
-			outputArmatureData.sortBoneDataList();
 
             var animationList:any = armatureDataToParse[ConstValues.ANIMATION];
             for(i = 0, len = animationList.length; i < len; i++) 
@@ -230,7 +241,8 @@ module dragonBones {
 		
 		//把bone的初始transform解析并返回
 		private static parseBoneData(boneObject:any):BoneData{
-			var boneData:BoneData = new BoneData();
+            var boneData: BoneData = new BoneData();
+            DataParser._rawBones.push(boneData);
 			boneData.name = boneObject[ConstValues.A_NAME];
 			boneData.parent = boneObject[ConstValues.A_PARENT];
 			boneData.length = Number(boneObject[ConstValues.A_LENGTH]) || 0;
@@ -267,7 +279,8 @@ module dragonBones {
 		}
         
 		private static parseSkinData(skinObject:any):SkinData{
-			var skinData:SkinData = new SkinData();
+            var skinData: SkinData = new SkinData();
+            DataParser._skinData = skinData;
 			skinData.name = skinObject[ConstValues.A_NAME];
 
             var slotList:any = skinObject[ConstValues.SLOT];
@@ -299,14 +312,17 @@ module dragonBones {
 			var slotData:SlotData = new SlotData();
 			slotData.name = slotObject[ConstValues.A_NAME];
 			slotData.parent = slotObject[ConstValues.A_PARENT];
-			slotData.zOrder = DataParser.getNumber(slotObject,ConstValues.A_Z_ORDER,0)||0;
+            slotData.zOrder = DataParser.getNumber(slotObject, ConstValues.A_Z_ORDER, 0) || 0;
+            DataParser._skinSlotData = slotData;
+            DataParser._displayIndex = 0;
             var displayList:any = slotObject[ConstValues.DISPLAY];
             if(displayList)
             {
             	for(var i:number = 0, len:number = displayList.length; i < len; i++) 
 	            {
 	                var displayObject:any = displayList[i];
-	                slotData.addDisplayData(DataParser.parseDisplayData(displayObject));
+                    slotData.addDisplayData(DataParser.parseDisplayData(displayObject));
+                    DataParser._displayIndex++;
 	            }
             }
 			
@@ -315,17 +331,135 @@ module dragonBones {
 		
 		private static parseDisplayData(displayObject:any):DisplayData{
 			var displayData:DisplayData = new DisplayData();
-			displayData.name = displayObject[ConstValues.A_NAME];
-			displayData.type = displayObject[ConstValues.A_TYPE];
-			DataParser.parseTransform(displayObject[ConstValues.TRANSFORM], displayData.transform, displayData.pivot);
-			displayData.pivot.x = NaN;
-			displayData.pivot.y = NaN;
-			if(DataParser.tempDragonBonesData!=null){
-				DataParser.tempDragonBonesData.addDisplayData(displayData);
+			
+			if (displayObject[ConstValues.A_TYPE] == "mesh")
+			{
+				displayData = DataParser.parseMeshData(displayObject);
+			}
+			else
+			{
+				displayData.name = displayObject[ConstValues.A_NAME];
+				displayData.type = displayObject[ConstValues.A_TYPE];
+				DataParser.parseTransform(displayObject[ConstValues.TRANSFORM], displayData.transform, displayData.pivot);
+				displayData.pivot.x = NaN;
+				displayData.pivot.y = NaN;
+				if(DataParser.tempDragonBonesData!=null){
+					DataParser.tempDragonBonesData.addDisplayData(displayData);
+				}
 			}
 			
 			return displayData;
-		}
+        }
+
+        private static parseMeshData(meshObject: any): MeshData
+        {
+            var meshData = new MeshData();
+            meshData.name = meshObject[ConstValues.A_NAME];
+            meshData.type = meshObject[ConstValues.A_TYPE];
+            DataParser.parseTransform(meshObject[ConstValues.TRANSFORM], meshData.transform, meshData.pivot);
+            meshData.pivot.x = NaN;
+            meshData.pivot.y = NaN;
+
+            const rawUVs: number[] = meshObject.uvs;
+            const rawTriangles: number[] = meshObject.triangles;
+            const rawWeights: number[] = meshObject.weights;
+            const rawVertices: number[] = meshObject.vertices;
+            const rawBonePose: number[] = meshObject.bonePose;
+
+            if (meshObject.slotPose) {
+                meshData.slotPose.a = meshObject.slotPose[0];
+                meshData.slotPose.b = meshObject.slotPose[1];
+                meshData.slotPose.c = meshObject.slotPose[2];
+                meshData.slotPose.d = meshObject.slotPose[3];
+                meshData.slotPose.tx = meshObject.slotPose[4];
+                meshData.slotPose.ty = meshObject.slotPose[5];
+            }
+
+            meshData.skinned = rawWeights && rawWeights.length > 0;
+            meshData.numVertex = rawUVs.length / 2;
+            meshData.numTriangle = rawTriangles.length / 3;
+            meshData.vertices.length = meshData.numVertex;
+            meshData.triangles.length = meshData.numTriangle * 3;
+
+            var l = 0;
+            var i = 0;
+            var iW = 0;
+            var boneIndex = 0;
+            var boneMatrix: Matrix = null;
+            var boneData: BoneData = null;
+            var inverseBindPose: Matrix[] = []; // _armatureData.boneDataList.length
+
+            DataParser._skinData.hasMesh = true;
+
+            if (meshData.skinned) {
+                meshData.vertexBones.length = meshData.numVertex;
+                if (rawBonePose) {
+                    for (i = 0, l = rawBonePose.length; i < l; i += 7) {
+                        boneIndex = DataParser._armatureData.boneDataList.indexOf(DataParser._rawBones[rawBonePose[i]]);
+                        boneMatrix = new Matrix();
+                        boneMatrix.a = rawBonePose[i + 1];
+                        boneMatrix.b = rawBonePose[i + 2];
+                        boneMatrix.c = rawBonePose[i + 3];
+                        boneMatrix.d = rawBonePose[i + 4];
+                        boneMatrix.tx = rawBonePose[i + 5];
+                        boneMatrix.ty = rawBonePose[i + 6];
+                        boneMatrix.invert();
+                        inverseBindPose[boneIndex] = boneMatrix;
+                    }
+                }
+            }
+
+            for (i = 0, l = rawUVs.length; i < l; i += 2) {
+                const iN = i + 1;
+                const vertexIndex = i * 0.5;
+                const vertexData = meshData.vertices[vertexIndex] = new VertexData();
+                vertexData.u = Number(rawUVs[i]);
+                vertexData.v = Number(rawUVs[iN]);
+                vertexData.x = Number(rawVertices[i]);
+                vertexData.y = Number(rawVertices[iN]);
+                if (meshData.skinned) {
+                    const vertexBoneData = meshData.vertexBones[vertexIndex] = new VertexBoneData();
+                    meshData.slotPose.transformPoint(vertexData.x, vertexData.y, vertexData);
+
+                    for (var j = iW + 1, lJ = iW + 1 + rawWeights[iW] * 2; j < lJ; j += 2) {
+                        boneData = DataParser._rawBones[rawWeights[j]];
+                        boneIndex = meshData.bones.indexOf(boneData);
+                        if (boneIndex < 0) {
+                            boneIndex = meshData.bones.length;
+                            meshData.bones[boneIndex] = boneData;
+                        }
+
+                        const vertexBonePoint = new Point(vertexData.x, vertexData.y);
+                        vertexBoneData.indices.push(boneIndex);
+                        vertexBoneData.weights.push(rawWeights[j + 1]);
+                        vertexBoneData.vertices.push(vertexBonePoint);
+
+                        if (meshData.inverseBindPose.length <= boneIndex) {
+                            meshData.inverseBindPose.length = boneIndex + 1;
+                        }
+
+                        boneMatrix = meshData.inverseBindPose[boneIndex];
+                        if (!boneMatrix) {
+                            boneMatrix = inverseBindPose[DataParser._armatureData.boneDataList.indexOf(boneData)];
+                            meshData.inverseBindPose[boneIndex] = boneMatrix;
+                        }
+
+                        if (boneMatrix) {
+                            boneMatrix.transformPoint(vertexBonePoint.x, vertexBonePoint.y, vertexBonePoint);
+                        }
+
+                        iW = j + 2;
+                    }
+                }
+            }
+
+            for (i = 0, l = rawTriangles.length; i < l; ++i) {
+                meshData.triangles[i] = rawTriangles[i];
+            }
+
+            return meshData;
+			
+        }
 		
 		/** @private */
 		private static parseAnimationData(animationObject:any, frameRate:number):AnimationData{
@@ -391,6 +525,20 @@ module dragonBones {
 					}
 				}
 			}
+			
+			var ffdTimelineObjectList: Array<any> = animationObject["ffd"];
+			if (ffdTimelineObjectList) {
+				for (i = 0, len = ffdTimelineObjectList.length; i < len; i++) {
+					var ffdTimelineObject: any = ffdTimelineObjectList[i];
+					if (ffdTimelineObject) {
+						var ffdTimeline: FFDTimeline = DataParser.parseFFDTimeline(ffdTimelineObject, animationData.duration, frameRate);
+						if (ffdTimeline.frameList.length > 0) {
+							lastFrameDuration = Math.min(lastFrameDuration, ffdTimeline.frameList[ffdTimeline.frameList.length - 1].duration);
+							animationData.addFFDTimeline(ffdTimeline);
+						}
+					}
+				}
+			}
 
 			if(animationData.frameList.length > 0){
 				lastFrameDuration = Math.min(lastFrameDuration, animationData.frameList[animationData.frameList.length - 1].duration);
@@ -441,7 +589,58 @@ module dragonBones {
 			DataParser.parseTimeline(timelineObject, outputTimeline);
 
 			return outputTimeline;
-		}
+        }
+
+        private static parseFFDTimeline(timelineObject: any, duration: number, frameRate: number): FFDTimeline
+		{
+            var timeline = new FFDTimeline();
+
+            timeline.skin = timelineObject[ConstValues.SKIN];
+            timeline.name = timelineObject[ConstValues.SLOT]; // timelineObject[ConstValues.A_NAME];
+			
+            var skinData: SkinData = DataParser._armatureData.getSkinData(timeline.skin);
+            var slotData: SlotData = skinData.getSlotData(timeline.name);
+            var meshData: MeshData = slotData.getDisplayData(timelineObject[ConstValues.A_NAME]) as MeshData;
+            timeline.displayIndex = slotData.displayDataList.indexOf(meshData); // timelineObject[ConstValues.A_DISPLAY_INDEX];
+			
+            timeline.scale = DataParser.getNumber(timelineObject, ConstValues.A_SCALE, 1) || 0;
+            timeline.offset = DataParser.getNumber(timelineObject, ConstValues.A_OFFSET, 0) || 0;
+            timeline.duration = duration;
+
+            var helpPoint: Point = new Point();
+            var helpPointB: Point = new Point();
+            const frameObjectList = timelineObject[ConstValues.FRAME];
+            for (var i = 0, len = frameObjectList.length; i < len; i++) {
+                var frameObject: any = frameObjectList[i];
+                var frame: FFDFrame = DataParser.parseFFDFrame(frameObject, frameRate);
+                if (meshData.skinned) {
+                    var vertices: number[] = [];
+                    for (var iF = 0, lF = meshData.vertices.length; iF < lF; ++iF) {
+                        const vertexBoneData: VertexBoneData = meshData.vertexBones[iF];
+						if (iF * 2 < frame.offset || iF * 2 - frame.offset >= frame.vertices.length) {
+							meshData.slotPose.transformPoint(0, 0, helpPoint, true);
+						} else {
+							meshData.slotPose.transformPoint(frame.vertices[iF * 2 - frame.offset], frame.vertices[iF * 2 + 1 - frame.offset], helpPoint, true);
+						}
+						
+                        for (var iB = 0, lB = vertexBoneData.indices.length; iB < lB; ++iB) {
+                            var boneIndex = vertexBoneData.indices[iB];
+                            meshData.inverseBindPose[boneIndex].transformPoint(helpPoint.x, helpPoint.y, helpPointB, true);
+                            vertices.push(helpPointB.x, helpPointB.y);
+                        }
+                    }
+                    
+					frame.offset = 0;
+                    frame.vertices = vertices;
+                }
+
+                timeline.addFrame(frame);
+            }
+
+            DataParser.parseTimeline(timelineObject, timeline);
+
+            return timeline;
+        }
 
 		private static parseTransformFrame(frameObject:any, frameRate:number):TransformFrame{
 			var outputFrame:TransformFrame = new TransformFrame();
@@ -492,7 +691,27 @@ module dragonBones {
 			}
 
 			return outputFrame;
-		}
+        }
+
+        private static parseFFDFrame(frameObject: any, frameRate: number): FFDFrame{
+            var frame: FFDFrame = new FFDFrame();
+            DataParser.parseFrame(frameObject, frame, frameRate);
+
+            frame.tweenEasing = DataParser.getNumber(frameObject, ConstValues.A_TWEEN_EASING, 10);
+            frame.offset = frameObject[ConstValues.A_OFFSET] || 0;
+
+            var arr: number[] = frameObject.vertices;
+            var vertices: number[]  = [];
+            if (arr) {
+                for (var i = 0, len = arr.length; i < len; i++) {
+                    vertices.push(Number(arr[i]));
+                }
+            }
+
+            frame.vertices = vertices;
+
+            return frame;
+        }
 
 		private static parseTimeline(timelineObject:any, outputTimeline:Timeline):void{
 			var position:number = 0;

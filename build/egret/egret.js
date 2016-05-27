@@ -1617,6 +1617,7 @@ var egret;
         p.$onAddToStage = function (stage, nestLevel) {
             this.$stage = stage;
             this.$nestLevel = nestLevel;
+            this.$hasAddToStage = true;
             egret.Sprite.$EVENT_ADD_TO_STAGE_LIST.push(this);
         };
         /**
@@ -4871,9 +4872,11 @@ var egret;
                 var list = DisplayObjectContainer.$EVENT_REMOVE_FROM_STAGE_LIST;
                 while (list.length > 0) {
                     var childAddToStage = list.shift();
-                    if (notifyListeners) {
+                    if (notifyListeners && childAddToStage.$hasAddToStage) {
+                        childAddToStage.$hasAddToStage = false;
                         childAddToStage.dispatchEventWith(egret.Event.REMOVED_FROM_STAGE);
                     }
+                    childAddToStage.$hasAddToStage = false;
                     childAddToStage.$stage = null;
                 }
             }
@@ -5546,7 +5549,9 @@ var egret;
             color = +color || 0;
             alpha = +alpha || 0;
             this.fillPath = this.$renderNode.beginFill(color, alpha, this.strokePath);
-            this.fillPath.moveTo(this.lastX, this.lastY);
+            if (this.$renderNode.drawData.length > 1) {
+                this.fillPath.moveTo(this.lastX, this.lastY);
+            }
         };
         /**
          * @language en_US
@@ -5577,7 +5582,9 @@ var egret;
         p.beginGradientFill = function (type, colors, alphas, ratios, matrix) {
             if (matrix === void 0) { matrix = null; }
             this.fillPath = this.$renderNode.beginGradientFill(type, colors, alphas, ratios, matrix, this.strokePath);
-            this.fillPath.moveTo(this.lastX, this.lastY);
+            if (this.$renderNode.drawData.length > 1) {
+                this.fillPath.moveTo(this.lastX, this.lastY);
+            }
         };
         /**
          * @language en_US
@@ -5642,7 +5649,9 @@ var egret;
                 miterLimit = +miterLimit || 0;
                 this.setStrokeWidth(thickness);
                 this.strokePath = this.$renderNode.lineStyle(thickness, color, alpha, caps, joints, miterLimit);
-                this.strokePath.moveTo(this.lastX, this.lastY);
+                if (this.$renderNode.drawData.length > 1) {
+                    this.strokePath.moveTo(this.lastX, this.lastY);
+                }
             }
         };
         /**
@@ -6213,6 +6222,118 @@ var egret;
     }());
     egret.JointStyle = JointStyle;
     egret.registerClass(JointStyle,'egret.JointStyle');
+})(egret || (egret = {}));
+//////////////////////////////////////////////////////////////////////////////////////
+//
+//  Copyright (c) 2014-2015, Egret Technology Inc.
+//  All rights reserved.
+//  Redistribution and use in source and binary forms, with or without
+//  modification, are permitted provided that the following conditions are met:
+//
+//     * Redistributions of source code must retain the above copyright
+//       notice, this list of conditions and the following disclaimer.
+//     * Redistributions in binary form must reproduce the above copyright
+//       notice, this list of conditions and the following disclaimer in the
+//       documentation and/or other materials provided with the distribution.
+//     * Neither the name of the Egret nor the
+//       names of its contributors may be used to endorse or promote products
+//       derived from this software without specific prior written permission.
+//
+//  THIS SOFTWARE IS PROVIDED BY EGRET AND CONTRIBUTORS "AS IS" AND ANY EXPRESS
+//  OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES
+//  OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED.
+//  IN NO EVENT SHALL EGRET AND CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT,
+//  INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT
+//  LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES;LOSS OF USE, DATA,
+//  OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF
+//  LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING
+//  NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE,
+//  EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+//
+//////////////////////////////////////////////////////////////////////////////////////
+var egret;
+(function (egret) {
+    /**
+     * @private
+     */
+    var Mesh = (function (_super) {
+        __extends(Mesh, _super);
+        function Mesh(value) {
+            _super.call(this, value);
+            /**
+             * @private
+             */
+            this._verticesDirty = true;
+            this._bounds = new egret.Rectangle();
+            this.$renderNode = new egret.sys.MeshNode();
+        }
+        var d = __define,c=Mesh,p=c.prototype;
+        /**
+         * @private
+         */
+        p.$render = function () {
+            var values = this.$Bitmap;
+            var image = values[1 /* image */];
+            if (!image) {
+                return;
+            }
+            var scale = egret.$TextureScaleFactor;
+            var node = this.$renderNode;
+            node.smoothing = values[10 /* smoothing */];
+            node.image = image;
+            node.imageWidth = values[13 /* sourceWidth */];
+            node.imageHeight = values[14 /* sourceHeight */];
+            var destW = !isNaN(values[11 /* explicitBitmapWidth */]) ? values[11 /* explicitBitmapWidth */] : values[8 /* textureWidth */];
+            var destH = !isNaN(values[12 /* explicitBitmapHeight */]) ? values[12 /* explicitBitmapHeight */] : values[9 /* textureHeight */];
+            var tsX = destW / values[8 /* textureWidth */];
+            var tsY = destH / values[9 /* textureHeight */];
+            var bitmapWidth = values[4 /* bitmapWidth */];
+            var bitmapHeight = values[5 /* bitmapHeight */];
+            node.drawMesh(values[2 /* bitmapX */], values[3 /* bitmapY */], bitmapWidth, bitmapHeight, values[6 /* offsetX */] * tsX, values[7 /* offsetY */] * tsY, tsX * bitmapWidth, tsY * bitmapHeight);
+        };
+        /**
+         * @private
+         */
+        p.$updateVertices = function () {
+            this._verticesDirty = true;
+            this.$invalidateContentBounds();
+        };
+        /**
+         * @private
+         */
+        p.$measureContentBounds = function (bounds) {
+            if (this._verticesDirty) {
+                this._verticesDirty = false;
+                var node = this.$renderNode;
+                var vertices = node.vertices;
+                if (vertices.length) {
+                    this._bounds.setTo(Number.MAX_VALUE, Number.MAX_VALUE, Number.MIN_VALUE, Number.MIN_VALUE);
+                    for (var i = 0, l = vertices.length; i < l; i += 2) {
+                        var x = vertices[i];
+                        var y = vertices[i + 1];
+                        if (this._bounds.x > x)
+                            this._bounds.x = x;
+                        if (this._bounds.width < x)
+                            this._bounds.width = x;
+                        if (this._bounds.y > y)
+                            this._bounds.y = y;
+                        if (this._bounds.height < y)
+                            this._bounds.height = y;
+                    }
+                    this._bounds.width -= this._bounds.x;
+                    this._bounds.height -= this._bounds.y;
+                }
+                else {
+                    this._bounds.setTo(0, 0, 0, 0);
+                }
+            }
+            bounds.copyFrom(this._bounds);
+            node.bounds.copyFrom(this._bounds);
+        };
+        return Mesh;
+    }(egret.Bitmap));
+    egret.Mesh = Mesh;
+    egret.registerClass(Mesh,'egret.Mesh');
 })(egret || (egret = {}));
 //////////////////////////////////////////////////////////////////////////////////////
 //
@@ -11692,7 +11813,8 @@ var egret;
     locale_strings[1040] = "hitTestPoint can not detect crossOrigin images! Please check if the display object has crossOrigin elements.";
     locale_strings[1041] = "egret.MainContext.runtimeType is deprecated, please use egret.Capabilities.runtimeType replace";
     locale_strings[1042] = "The parameters passed in the region needs is an integer in drawToTexture method. Otherwise, some browsers will draw abnormal.";
-    locale_strings[1042] = "Compile errors in {0}, the attribute name: {1}, the attribute value: {2}.";
+    locale_strings[1046] = "BitmapText no corresponding characters: {0}, please check the configuration file";
+    locale_strings[1047] = "egret.localStorage.setItem save failed,key={0}&value={1}";
     //gui  3000-3099
     locale_strings[3000] = "Theme configuration file failed to load: {0}";
     locale_strings[3001] = "Cannot find the skin name which is configured in Theme: {0}";
@@ -11833,7 +11955,8 @@ var egret;
     locale_strings[1040] = "hitTestPoint 不能对跨域图片进行检测! 请检查该显示对象内是否含有跨域元素";
     locale_strings[1041] = "egret.MainContext.runtimeType 已废弃,请使用egret.Capabilities.runtimeType 代替";
     locale_strings[1042] = "drawToTexture方法传入的区域各个参数需要为整数,否则某些浏览器绘制会出现异常";
-    locale_strings[1043] = "{0} 中存在编译错误，属性名 : {1}，属性值 : {2}";
+    locale_strings[1046] = "BitmapText 找不到对应字符:{0}，请检查配置文件";
+    locale_strings[1047] = "egret.localStorage.setItem保存失败,key={0}&value={1}";
     //gui  3000-3099
     locale_strings[3000] = "主题配置文件加载失败: {0}";
     locale_strings[3001] = "找不到主题中所配置的皮肤类名: {0}";
@@ -15038,6 +15161,86 @@ var egret;
     (function (sys) {
         /**
          * @private
+         * Mesh 渲染节点
+         */
+        var MeshNode = (function (_super) {
+            __extends(MeshNode, _super);
+            function MeshNode() {
+                _super.call(this);
+                /**
+                 * 要绘制的位图
+                 */
+                this.image = null;
+                /**
+                 * 控制在缩放时是否对位图进行平滑处理。
+                 */
+                this.smoothing = true;
+                /**
+                 * 顶点索引。
+                 */
+                this.bounds = new egret.Rectangle();
+                this.type = 7 /* MeshNode */;
+                this.vertices = [];
+                this.uvs = [];
+                this.indices = [];
+            }
+            var d = __define,c=MeshNode,p=c.prototype;
+            ;
+            /**
+             * 绘制一次位图
+             */
+            p.drawMesh = function (sourceX, sourceY, sourceW, sourceH, drawX, drawY, drawW, drawH) {
+                this.drawData.push(sourceX, sourceY, sourceW, sourceH, drawX, drawY, drawW, drawH);
+                this.renderCount++;
+            };
+            /**
+             * 在显示对象的$render()方法被调用前，自动清空自身的drawData数据。
+             */
+            p.cleanBeforeRender = function () {
+                _super.prototype.cleanBeforeRender.call(this);
+                this.image = null;
+                this.matrix = null;
+            };
+            return MeshNode;
+        }(sys.RenderNode));
+        sys.MeshNode = MeshNode;
+        egret.registerClass(MeshNode,'egret.sys.MeshNode');
+    })(sys = egret.sys || (egret.sys = {}));
+})(egret || (egret = {}));
+//////////////////////////////////////////////////////////////////////////////////////
+//
+//  Copyright (c) 2014-2015, Egret Technology Inc.
+//  All rights reserved.
+//  Redistribution and use in source and binary forms, with or without
+//  modification, are permitted provided that the following conditions are met:
+//
+//     * Redistributions of source code must retain the above copyright
+//       notice, this list of conditions and the following disclaimer.
+//     * Redistributions in binary form must reproduce the above copyright
+//       notice, this list of conditions and the following disclaimer in the
+//       documentation and/or other materials provided with the distribution.
+//     * Neither the name of the Egret nor the
+//       names of its contributors may be used to endorse or promote products
+//       derived from this software without specific prior written permission.
+//
+//  THIS SOFTWARE IS PROVIDED BY EGRET AND CONTRIBUTORS "AS IS" AND ANY EXPRESS
+//  OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES
+//  OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED.
+//  IN NO EVENT SHALL EGRET AND CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT,
+//  INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT
+//  LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES;LOSS OF USE, DATA,
+//  OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF
+//  LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING
+//  NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE,
+//  EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+//
+//////////////////////////////////////////////////////////////////////////////////////
+var egret;
+(function (egret) {
+    var sys;
+    (function (sys) {
+        /**
+         * @private
          * 位图渲染节点
          */
         var SetAlphaNode = (function (_super) {
@@ -15981,6 +16184,7 @@ var egret;
                 context.restore();
                 return calls;
             }
+            //todo 若显示对象是容器，同时子项有混合模式，则需要先绘制背景到displayBuffer并清除背景区域
             //绘制显示对象自身，若有scrollRect，应用clip
             var displayBuffer = this.createRenderBuffer(region.width, region.height);
             var displayContext = displayBuffer.context;
@@ -17287,7 +17491,7 @@ var egret;
                             xPos += emptyWidth;
                         }
                         else {
-                            egret.$warn(1011, character);
+                            egret.$warn(1046, character);
                         }
                         continue;
                     }
@@ -17408,7 +17612,7 @@ var egret;
                             textureHeight = emptyHeight;
                         }
                         else {
-                            egret.$warn(1011, character);
+                            egret.$warn(1046, character);
                             if (isFirstChar) {
                                 isFirstChar = false;
                             }

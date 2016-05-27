@@ -253,6 +253,21 @@ module dragonBones {
 							bone.rotationIK = bone.global.rotation;
 						}
 					}
+					/*if(i != 0)
+					{
+						this._ikList[i-1].compute();
+						for (j = 0, jLen = this._boneIKList[i].length; j < jLen; j++) {
+							bone = this._boneIKList[i][j];
+							bone.adjustGlobalTransformMatrixByIK();
+						}
+					}else{
+						for (j = 0, jLen = this._boneIKList[i].length; j < jLen; j++)
+						{
+							bone = this._boneIKList[i][j];
+							bone.update();
+							bone.rotationIK = bone.global.rotation;
+						}
+					}*/
                 }
 				
 				i = this.slotList.length;
@@ -305,7 +320,7 @@ module dragonBones {
             // Modify Fast mode by duanchunlei
             var animationCacheManager: AnimationCacheManager = this._armatureData._cacheManager;
             if (animationCacheManager) {
-                animationCacheManager.bindCacheUserArmature(this);
+                //animationCacheManager.bindCacheUserArmature(this);
                 this.enableCache = true;
                 return animationCacheManager;
             }

@@ -123,17 +123,23 @@ module dragonBones {
 		private _animationStateList:Array<AnimationState>;
 		private _animationDataList:Array<AnimationData>;
 		private _animationList:Array<string>;
-		private _isPlaying:boolean;
-		private _timeScale:number;
+        private _isPlaying: boolean;
+        private _timeScale: number;
+        
+        /** @private */
+        public _animationStateCount: number = 0;
+		
+        /** @private */
+        public _updateTimelineStates: boolean = false;
+		
+        /** @private */
+        public _updateFFDTimelineStates: boolean = false;
 
 		/** @private */
 		public _lastAnimationState:AnimationState;
 
 		/** @private */
 		public _isFading:boolean;
-
-		/** @private */
-		public _animationStateCount:number = 0;
 
         /**
 		 * 创建一个新的Animation实例并赋给传入的Armature实例
@@ -401,11 +407,22 @@ module dragonBones {
 			return false;
 		}
 		
-		/** @private */
+		/**
+		 * @private
+		 */
 		public _advanceTime(passedTime:number):void{
 			if(!this._isPlaying){
 				return;
-			}
+            }
+
+            if (this._updateTimelineStates) {
+                this._updateTimelineStates = false;
+                this.updateTimelineStates();
+            }
+            else if (this._updateFFDTimelineStates) {
+                this._updateFFDTimelineStates = false;
+                this.updateFFDTimelineStates();
+            }
 			
 			var isFading:boolean = false;
 			
@@ -424,14 +441,25 @@ module dragonBones {
 			this._isFading = isFading;
 		}
 		
-		/** @private */
-		//当动画播放过程中Bonelist改变时触发
-		public _updateAnimationStates():void{
+		/**
+		 * @private
+		 */
+        private updateTimelineStates(): void{
 			var i:number = this._animationStateList.length;
-			while(i --){
+            while (i--) {
 				this._animationStateList[i]._updateTimelineStates();
 			}
-		}
+        }
+        
+		/**
+		 * @private
+		 */
+        private updateFFDTimelineStates(): void{
+            var i: number = this._animationStateList.length;
+            while (i--) {
+                this._animationStateList[i]._updateFFDTimeline();
+            }
+        }
 		
 		private addState(animationState:AnimationState):void{
 			if(this._animationStateList.indexOf(animationState) < 0){

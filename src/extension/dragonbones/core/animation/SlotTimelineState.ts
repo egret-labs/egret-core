@@ -30,15 +30,7 @@
 
 module dragonBones {
 
-	/**
-     * @class dragonBones.SlotTimelineState
-     * @classdesc
-     * SlotTimelineState 负责计算 Slot 的时间轴动画。
-     * SlotTimelineState 实例隶属于 AnimationState. AnimationState在创建时会为每个包含动作的 Slot生成一个 SlotTimelineState 实例.
-     * @see dragonBones.Animation
-     * @see dragonBones.AnimationState
-     * @see dragonBones.Slot
-     */
+    /** @private */
 	export class SlotTimelineState{
 		private static HALF_PI:number = Math.PI * 0.5;
 		private static DOUBLE_PI:number = Math.PI * 2;
@@ -115,7 +107,6 @@ module dragonBones {
 		
 		private clear():void{
 			if(this._slot){
-				this._slot._removeState(this);
 				this._slot = null;
 			}
 			this._armature = null;
@@ -159,8 +150,6 @@ module dragonBones {
 					this._updateMode = -1;
 					break;
 			}
-			
-			this._slot._addState(this);
 		}
 		
 		/** @private */

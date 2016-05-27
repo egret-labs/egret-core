@@ -1,4 +1,4 @@
-//////////////////////////////////////////////////////////////////////////////////////
+﻿//////////////////////////////////////////////////////////////////////////////////////
 //
 //  Copyright (c) 2014-2015, Egret Technology Inc.
 //  All rights reserved.
@@ -27,21 +27,17 @@
 //
 //////////////////////////////////////////////////////////////////////////////////////
 
-module egret.web {
-
-    /**
-     * @private
-     */
-    export class PrimitiveShader extends EgretShader {
-        public fragmentSrc:string =
-            "precision lowp float;\n" +
-            "varying vec2 vTextureCoord;\n" +
-            "varying vec4 vColor;\n" +
-
-            "void main(void) {\n" +
-                "gl_FragColor = vColor;\n" +
-            "}";
-
+module dragonBones {
+	/**
+	 * @private
+	 */
+    export class FFDFrame extends Frame {
+        public tweenEasing:number;
+        public offset: number;
+        public vertices: Array<number>;
+        
+        public constructor() {
+            super();
+        }
     }
-
 }

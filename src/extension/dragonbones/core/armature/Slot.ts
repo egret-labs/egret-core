@@ -102,6 +102,10 @@ module dragonBones {
        </pre>
      */
 	export class Slot extends DBObject{
+        /**
+         * @private
+         */
+        public isMeshEnabled: boolean = false;
 		/** @private Need to keep the reference of DisplayData. When slot switch displayObject, it need to restore the display obect's origional pivot. */
 		public _displayDataList:Array<DisplayData>;
 		/** @private */
@@ -129,13 +133,25 @@ module dragonBones {
 		public _blendMode:string;
 		public _isColorChanged:boolean;
 		public _needUpdate:boolean;
-		public _timelineStateList:Array<SlotTimelineState>
+
+        /** @private */
+        protected _ffdChanged: boolean = false;
+        /** @private */
+        protected _ffdVertices: Array<number> = null;
+        /** @private */
+        protected _meshBones: Array<Bone> = null;
+        /** @private */
+        public _meshData: MeshData = null;
+
+        public get displayIndex(): number
+        {
+            return this._currentDisplayIndex;
+        }
 
 		public constructor(){
 			super();
 			
 			this._displayList = [];
-			this._timelineStateList = [];
 			this._currentDisplayIndex = -1;
 			
 			this._originZOrder = 0;
@@ -182,26 +198,6 @@ module dragonBones {
 			//_childArmature = null;
 		}
 
-		private sortState(state1:SlotTimelineState, state2:SlotTimelineState):number{
-			return state1._animationState.layer < state2._animationState.layer?-1:1;
-		}
-
-		/** @private */
-		public _addState(timelineState:SlotTimelineState):void{
-			if(this._timelineStateList.indexOf(timelineState) < 0){
-				this._timelineStateList.push(timelineState);
-				this._timelineStateList.sort(this.sortState);
-			}
-		}
-
-		/** @private */
-		public _removeState(timelineState:SlotTimelineState):void{
-			var index:number = this._timelineStateList.indexOf(timelineState);
-			if(index >= 0){
-				this._timelineStateList.splice(index, 1);
-			}
-		}
-
 //骨架装配
 		/** @private */
 		public setArmature(value:Armature):void{
@@ -225,18 +221,36 @@ module dragonBones {
 //动画
 		/** @private */
 		public _update():void{
-			if(this._parent._needUpdate <= 0 && !this._needUpdate){
-				return;
-			}
+            if (this._parent._needUpdate > 0 || this._needUpdate || this._ffdChanged || this.isMeshUpdate()) {
 
-            var result:ParentTransformObject = this._updateGlobal();
-            if(result)
-            {
-                result.release();
+                var result: ParentTransformObject = this._updateGlobal();
+                if (result) {
+                    result.release();
+                }
+
+                this._updateTransform();
+
+                if (this._meshData) {
+                    this._updateMesh();
+                }
+
+                this._needUpdate = false;
             }
-            this._updateTransform();
-			this._needUpdate = false;
-		}
+        }
+
+        private isMeshUpdate(): boolean
+		{
+            if (this._meshData && this._meshBones.length) {
+                for (var i = 0, l = this._meshBones.length; i < l; ++i) {
+                    const bone = this._meshBones[i];
+                    if (bone._needUpdate > 0) {
+                        return true;
+                    }
+                }
+            }
+
+            return false;
+        }
 
         public _calculateRelativeParentTransform():void
         {
@@ -289,7 +303,8 @@ module dragonBones {
 				if(this._isShowDisplay){
 					this._isShowDisplay = false;
 					this._removeDisplayFromContainer();
-					this.updateChildArmatureAnimation();
+                    this.updateChildArmatureAnimation();
+                    this._armature.animation._updateFFDTimelineStates = true;
 				}
 			}
 			else if (this._displayList.length > 0){
@@ -310,7 +325,8 @@ module dragonBones {
 					){
 						this._origin.copy(this._displayDataList[this._currentDisplayIndex].transform);
 					}
-					this._needUpdate = true;
+                    this._needUpdate = true;
+                    this._armature.animation._updateFFDTimelineStates = true;
 				}
 				else if(!this._isShowDisplay){
 					this._isShowDisplay = true;
@@ -318,10 +334,44 @@ module dragonBones {
 						this._armature._slotsZOrderChanged = true;
 						this._addDisplayToContainer(this._armature.display);
 					}
-					this.updateChildArmatureAnimation();
+                    this.updateChildArmatureAnimation();
+                    this._armature.animation._updateFFDTimelineStates = true;
 				}
 
-			}
+            }
+            
+            // update _ffdVertices length
+            if (this._currentDisplayIndex >= 0 && this._armature.animation._updateFFDTimelineStates) {
+                var displayData = this._displayDataList[this._currentDisplayIndex];
+                if (displayData.type == DisplayData.MESH) {
+                    this._meshData = displayData as MeshData;
+                } else {
+                    this._meshData = null;
+                }
+                
+                if (this._meshData) {
+                    if (this._meshBones) {
+                        this._meshBones.length = this._meshData.bones.length;
+                    }
+                    else {
+                        this._meshBones = [];
+                    }
+
+                    for (var i = 0, l = this._meshData.bones.length; i < l; ++i) {
+                        const boneData = this._meshData.bones[i];
+                        this._meshBones[i] = this._armature.getBone(boneData.name);
+                    }
+                }
+                else {
+                    if (this._ffdVertices) {
+                        this._ffdVertices.length = 0;
+                    }
+
+                    if (this._meshBones) {
+                        this._meshBones.length = 0;
+                    }
+                }
+            }
 		}
 		
 		/** @private 
@@ -550,7 +600,21 @@ module dragonBones {
 			 * this._parent.visible && this._visible && value;
 			 */
 			throw new Error(egret.getString(4001));
-		}
+        }
+
+		/**
+		 * @private
+		 */
+        protected _ffdOffset = 0;
+
+		/**
+		 * @private
+		 */
+        public _updateFFD(vertices: Array<number>, offset: number): void {
+            this._ffdChanged = true;
+            this._ffdVertices = vertices;
+            this._ffdOffset = offset;
+        }
 		
 		/**
 		 * @private
@@ -644,6 +708,12 @@ module dragonBones {
 		{
 			this._changeDisplay(this._originDisplayIndex);
 			this._updateDisplayColor(0, 0, 0, 0, 1, 1, 1, 1, true);
-		}
+        }
+
+		/**
+		 * @private
+		 */
+        public _updateMesh(): void {
+        }
 	}
 }

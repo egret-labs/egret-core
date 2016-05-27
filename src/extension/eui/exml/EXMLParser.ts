@@ -887,18 +887,18 @@ module eui.sys {
                     case "number":
                         if (value.indexOf("#") == 0) {
                             if(DEBUG && isNaN(<any>value.substring(1))) {
-                                egret.$warn(1043, this.currentClassName, key, value);
+                                egret.$warn(2021, this.currentClassName, key, value);
                             }
                             value = "0x" + value.substring(1);                            
                         }
                         else if (value.indexOf("%") != -1) {
                             if(DEBUG && isNaN(<any>value.substr(0, value.length - 1))) {
-                                egret.$warn(1043, this.currentClassName, key, value);
+                                egret.$warn(2021, this.currentClassName, key, value);
                             }
                             value = (parseFloat(value.substr(0, value.length - 1))).toString();                            
                         }
                         else if(DEBUG && isNaN(<any>value)) {
-                            egret.$warn(1043, this.currentClassName, key, value);
+                            egret.$warn(2021, this.currentClassName, key, value);
                         }
                         break;
                     case "boolean":

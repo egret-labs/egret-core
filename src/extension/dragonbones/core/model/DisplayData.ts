@@ -43,7 +43,11 @@ module dragonBones {
 		/**
 		 * 图片类型
 		 */
-		public static IMAGE:string = "image";
+        public static IMAGE: string = "image";
+		/**
+		 * 网格类型
+		 */
+        public static MESH: string = "mesh";
 		/**
 		 * 显示对象的名字
 		 * @member {string} dragonBones.DisplayData#name

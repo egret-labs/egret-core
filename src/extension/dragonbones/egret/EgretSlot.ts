@@ -103,7 +103,7 @@ module dragonBones {
 
         /** @private */
         public _updateTransform():void{
-            if(this._egretDisplay) {
+            if (this._egretDisplay && (!this._meshData || !this._meshData.skinned || !this.isMeshEnabled)) {
                 this._egretDisplay.$setMatrix(<egret.Matrix><any>this._globalTransformMatrix, false);
             }
         }
@@ -142,8 +142,8 @@ module dragonBones {
             }
         }
 
-        public _calculateRelativeParentTransform():void
-        {
+        /** @private */
+        public _calculateRelativeParentTransform():void{
             this._global.scaleX = this._origin.scaleX * this._offset.scaleX;
             this._global.scaleY = this._origin.scaleY * this._offset.scaleY;
             this._global.skewX = this._origin.skewX + this._offset.skewX;
@@ -159,6 +159,94 @@ module dragonBones {
                 this._global.skewX -= 1.57;
                 this._global.skewY -= 1.57;
             }
+        }
+        
+        /** @private */
+        public _updateMesh():void{
+			if (!this._meshData || !this.isMeshEnabled)
+			{
+				return;
+            }
+            
+            const mesh = this._egretDisplay as egret.Mesh;
+            const meshNode = mesh.$renderNode as egret.sys.MeshNode;
+            
+			var i = 0, iD = 0, l = 0;
+            var xG = 0, yG = 0;
+			if (this._meshData.skinned)
+			{
+				const bones = this._armature.getBones(false);
+				var iF = 0;
+				for (i = 0, l = this._meshData.numVertex; i < l; i++)
+				{
+					const vertexBoneData:VertexBoneData = this._meshData.vertexBones[i];
+					var j = 0;
+					var xL = 0;
+					var yL = 0;
+                    iD = i * 2;
+
+                    xG = 0;
+                    yG = 0;
+					
+                    for (var iB = 0, lB = vertexBoneData.indices.length; iB < lB; ++iB)
+                    {
+                        var boneIndex = vertexBoneData.indices[iB];
+						const bone:Bone = this._meshBones[boneIndex];
+						const matrix:Matrix = bone._globalTransformMatrix;
+						const point:Point = vertexBoneData.vertices[j];
+						const weight:number = Number(vertexBoneData.weights[j]);
+						
+						if (!this._ffdVertices || iF < this._ffdOffset || iF >= this._ffdVertices.length)
+						{
+							xL = point.x;
+							yL = point.y;
+						}
+						else
+						{
+							xL = point.x + this._ffdVertices[iF];
+							yL = point.y + this._ffdVertices[iF + 1];
+						}
+						
+						xG += (matrix.a * xL + matrix.c * yL + matrix.tx) * weight;
+						yG += (matrix.b * xL + matrix.d * yL + matrix.ty) * weight;
+						
+						j++;
+						iF += 2;
+                    }
+                    
+                    meshNode.vertices[iD] = xG;
+                    meshNode.vertices[iD + 1] = yG;
+                }
+                
+                mesh.$updateVertices();
+                mesh.$invalidateTransform();
+			}
+			else if (this._ffdChanged)
+			{
+				this._ffdChanged = false;
+				for (i = 0, l = this._meshData.numVertex; i < l; ++i)
+				{
+					const vertexData:VertexData = this._meshData.vertices[i];
+					iD = i * 2;
+					if (!this._ffdVertices || iD < this._ffdOffset || iD >= this._ffdVertices.length)
+					{
+						xG = vertexData.x;
+						yG = vertexData.y;
+					}
+					else
+					{
+						xG = Number(vertexData.x) + this._ffdVertices[iD - this._ffdOffset];
+						yG = Number(vertexData.y) + this._ffdVertices[iD - this._ffdOffset + 1];
+					}
+
+                    meshNode.vertices[iD] = xG;
+                    meshNode.vertices[iD + 1] = yG;
+                }
+                
+                mesh.$updateVertices();
+                mesh.$invalidateTransform();
+			}
+			
         }
     }
 }

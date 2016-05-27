@@ -30,7 +30,7 @@ module egret.web {
     /**
      * @private
      */
-    export class BlurShader extends EgretShader {
+    export class BlurShader extends TextureShader {
         public fragmentSrc =
             "precision mediump float;"+
 
@@ -39,33 +39,70 @@ module egret.web {
 
             "varying vec2 vTextureCoord;"+
 
+            "uniform vec4 uBounds;"+
+
             "void main()"+
             "{"+
                 "gl_FragColor = vec4(0.0);"+
-                "vec2 uv = (vTextureCoord + vec2(-0.028 * blur.x, -0.028 * blur.y));if(uv.x >= 0.0 && uv.x <= 1.0 && uv.y >= 0.0 && uv.y <= 1.0) gl_FragColor += texture2D(uSampler, (vTextureCoord + vec2(-0.028 * blur.x, -0.028 * blur.y))) * 0.0044299121055113265;" +
-                "uv = (vTextureCoord + vec2(-0.024 * blur.x, -0.024 * blur.y));if(uv.x >= 0.0 && uv.x <= 1.0 && uv.y >= 0.0 && uv.y <= 1.0) gl_FragColor += texture2D(uSampler, (vTextureCoord + vec2(-0.024 * blur.x, -0.024 * blur.y))) * 0.00895781211794;" +
-                "uv = (vTextureCoord + vec2(-0.020 * blur.x, -0.020 * blur.y));if(uv.x >= 0.0 && uv.x <= 1.0 && uv.y >= 0.0 && uv.y <= 1.0) gl_FragColor += texture2D(uSampler, (vTextureCoord + vec2(-0.020 * blur.x, -0.020 * blur.y))) * 0.0215963866053;" +
-                "uv = (vTextureCoord + vec2(-0.016 * blur.x, -0.016 * blur.y));if(uv.x >= 0.0 && uv.x <= 1.0 && uv.y >= 0.0 && uv.y <= 1.0) gl_FragColor += texture2D(uSampler, (vTextureCoord + vec2(-0.016 * blur.x, -0.016 * blur.y))) * 0.0443683338718;" +
-                "uv = (vTextureCoord + vec2(-0.012 * blur.x, -0.012 * blur.y));if(uv.x >= 0.0 && uv.x <= 1.0 && uv.y >= 0.0 && uv.y <= 1.0) gl_FragColor += texture2D(uSampler, (vTextureCoord + vec2(-0.012 * blur.x, -0.012 * blur.y))) * 0.0776744219933;" +
-                "uv = (vTextureCoord + vec2(-0.008 * blur.x, -0.008 * blur.y));if(uv.x >= 0.0 && uv.x <= 1.0 && uv.y >= 0.0 && uv.y <= 1.0) gl_FragColor += texture2D(uSampler, (vTextureCoord + vec2(-0.008 * blur.x, -0.008 * blur.y))) * 0.115876621105;" +
-                "uv = (vTextureCoord + vec2(-0.004 * blur.x, -0.004 * blur.y));if(uv.x >= 0.0 && uv.x <= 1.0 && uv.y >= 0.0 && uv.y <= 1.0) gl_FragColor += texture2D(uSampler, (vTextureCoord + vec2(-0.004 * blur.x, -0.004 * blur.y))) * 0.147308056121;" +
-                "uv = (vTextureCoord);if(uv.x >= 0.0 && uv.x <= 1.0 && uv.y >= 0.0 && uv.y <= 1.0) gl_FragColor += texture2D(uSampler, vTextureCoord) * 0.159576912161;" +
-                "uv = (vTextureCoord + vec2(0.004 * blur.x, 0.004 * blur.y));if(uv.x >= 0.0 && uv.x <= 1.0 && uv.y >= 0.0 && uv.y <= 1.0) gl_FragColor += texture2D(uSampler, (vTextureCoord + vec2( 0.004 * blur.x,  0.004 * blur.y))) * 0.147308056121;" +
-                "uv = (vTextureCoord + vec2(0.008 * blur.x, 0.008 * blur.y));if(uv.x >= 0.0 && uv.x <= 1.0 && uv.y >= 0.0 && uv.y <= 1.0) gl_FragColor += texture2D(uSampler, (vTextureCoord + vec2( 0.008 * blur.x,  0.008 * blur.y))) * 0.115876621105;" +
-                "uv = (vTextureCoord + vec2(0.012 * blur.x, 0.012 * blur.y));if(uv.x >= 0.0 && uv.x <= 1.0 && uv.y >= 0.0 && uv.y <= 1.0) gl_FragColor += texture2D(uSampler, (vTextureCoord + vec2( 0.012 * blur.x,  0.012 * blur.y))) * 0.0776744219933;" +
-                "uv = (vTextureCoord + vec2(0.016 * blur.x, 0.016 * blur.y));if(uv.x >= 0.0 && uv.x <= 1.0 && uv.y >= 0.0 && uv.y <= 1.0) gl_FragColor += texture2D(uSampler, (vTextureCoord + vec2( 0.016 * blur.x,  0.016 * blur.y))) * 0.0443683338718;" +
-                "uv = (vTextureCoord + vec2(0.020 * blur.x, 0.020 * blur.y));if(uv.x >= 0.0 && uv.x <= 1.0 && uv.y >= 0.0 && uv.y <= 1.0) gl_FragColor += texture2D(uSampler, (vTextureCoord + vec2( 0.020 * blur.x,  0.020 * blur.y))) * 0.0215963866053;" +
-                "uv = (vTextureCoord + vec2(0.024 * blur.x, 0.024 * blur.y));if(uv.x >= 0.0 && uv.x <= 1.0 && uv.y >= 0.0 && uv.y <= 1.0) gl_FragColor += texture2D(uSampler, (vTextureCoord + vec2( 0.024 * blur.x,  0.024 * blur.y))) * 0.00895781211794;" +
-                "uv = (vTextureCoord + vec2(0.028 * blur.x, 0.028 * blur.y));if(uv.x >= 0.0 && uv.x <= 1.0 && uv.y >= 0.0 && uv.y <= 1.0) gl_FragColor += texture2D(uSampler, (vTextureCoord + vec2( 0.028 * blur.x,  0.028 * blur.y))) * 0.0044299121055113265;" +
+                "vec2 uv = (vTextureCoord + vec2(-0.028 * blur.x, -0.028 * blur.y));if(uv.x >= uBounds[0] && uv.x <= uBounds[2] && uv.y >= uBounds[1] && uv.y <= uBounds[3]) gl_FragColor += texture2D(uSampler, (vTextureCoord + vec2(-0.028 * blur.x, -0.028 * blur.y))) * 0.0044299121055113265;" +
+                "uv = (vTextureCoord + vec2(-0.024 * blur.x, -0.024 * blur.y));if(uv.x >= uBounds[0] && uv.x <= uBounds[2] && uv.y >= uBounds[1] && uv.y <= uBounds[3]) gl_FragColor += texture2D(uSampler, (vTextureCoord + vec2(-0.024 * blur.x, -0.024 * blur.y))) * 0.00895781211794;" +
+                "uv = (vTextureCoord + vec2(-0.020 * blur.x, -0.020 * blur.y));if(uv.x >= uBounds[0] && uv.x <= uBounds[2] && uv.y >= uBounds[1] && uv.y <= uBounds[3]) gl_FragColor += texture2D(uSampler, (vTextureCoord + vec2(-0.020 * blur.x, -0.020 * blur.y))) * 0.0215963866053;" +
+                "uv = (vTextureCoord + vec2(-0.016 * blur.x, -0.016 * blur.y));if(uv.x >= uBounds[0] && uv.x <= uBounds[2] && uv.y >= uBounds[1] && uv.y <= uBounds[3]) gl_FragColor += texture2D(uSampler, (vTextureCoord + vec2(-0.016 * blur.x, -0.016 * blur.y))) * 0.0443683338718;" +
+                "uv = (vTextureCoord + vec2(-0.012 * blur.x, -0.012 * blur.y));if(uv.x >= uBounds[0] && uv.x <= uBounds[2] && uv.y >= uBounds[1] && uv.y <= uBounds[3]) gl_FragColor += texture2D(uSampler, (vTextureCoord + vec2(-0.012 * blur.x, -0.012 * blur.y))) * 0.0776744219933;" +
+                "uv = (vTextureCoord + vec2(-0.008 * blur.x, -0.008 * blur.y));if(uv.x >= uBounds[0] && uv.x <= uBounds[2] && uv.y >= uBounds[1] && uv.y <= uBounds[3]) gl_FragColor += texture2D(uSampler, (vTextureCoord + vec2(-0.008 * blur.x, -0.008 * blur.y))) * 0.115876621105;" +
+                "uv = (vTextureCoord + vec2(-0.004 * blur.x, -0.004 * blur.y));if(uv.x >= uBounds[0] && uv.x <= uBounds[2] && uv.y >= uBounds[1] && uv.y <= uBounds[3]) gl_FragColor += texture2D(uSampler, (vTextureCoord + vec2(-0.004 * blur.x, -0.004 * blur.y))) * 0.147308056121;" +
+                "uv = (vTextureCoord);if(uv.x >= uBounds[0] && uv.x <= uBounds[2] && uv.y >= uBounds[1] && uv.y <= uBounds[3]) gl_FragColor += texture2D(uSampler, vTextureCoord) * 0.159576912161;" +
+                "uv = (vTextureCoord + vec2(0.004 * blur.x, 0.004 * blur.y));if(uv.x >= uBounds[0] && uv.x <= uBounds[2] && uv.y >= uBounds[1] && uv.y <= uBounds[3]) gl_FragColor += texture2D(uSampler, (vTextureCoord + vec2( 0.004 * blur.x,  0.004 * blur.y))) * 0.147308056121;" +
+                "uv = (vTextureCoord + vec2(0.008 * blur.x, 0.008 * blur.y));if(uv.x >= uBounds[0] && uv.x <= uBounds[2] && uv.y >= uBounds[1] && uv.y <= uBounds[3]) gl_FragColor += texture2D(uSampler, (vTextureCoord + vec2( 0.008 * blur.x,  0.008 * blur.y))) * 0.115876621105;" +
+                "uv = (vTextureCoord + vec2(0.012 * blur.x, 0.012 * blur.y));if(uv.x >= uBounds[0] && uv.x <= uBounds[2] && uv.y >= uBounds[1] && uv.y <= uBounds[3]) gl_FragColor += texture2D(uSampler, (vTextureCoord + vec2( 0.012 * blur.x,  0.012 * blur.y))) * 0.0776744219933;" +
+                "uv = (vTextureCoord + vec2(0.016 * blur.x, 0.016 * blur.y));if(uv.x >= uBounds[0] && uv.x <= uBounds[2] && uv.y >= uBounds[1] && uv.y <= uBounds[3]) gl_FragColor += texture2D(uSampler, (vTextureCoord + vec2( 0.016 * blur.x,  0.016 * blur.y))) * 0.0443683338718;" +
+                "uv = (vTextureCoord + vec2(0.020 * blur.x, 0.020 * blur.y));if(uv.x >= uBounds[0] && uv.x <= uBounds[2] && uv.y >= uBounds[1] && uv.y <= uBounds[3]) gl_FragColor += texture2D(uSampler, (vTextureCoord + vec2( 0.020 * blur.x,  0.020 * blur.y))) * 0.0215963866053;" +
+                "uv = (vTextureCoord + vec2(0.024 * blur.x, 0.024 * blur.y));if(uv.x >= uBounds[0] && uv.x <= uBounds[2] && uv.y >= uBounds[1] && uv.y <= uBounds[3]) gl_FragColor += texture2D(uSampler, (vTextureCoord + vec2( 0.024 * blur.x,  0.024 * blur.y))) * 0.00895781211794;" +
+                "uv = (vTextureCoord + vec2(0.028 * blur.x, 0.028 * blur.y));if(uv.x >= uBounds[0] && uv.x <= uBounds[2] && uv.y >= uBounds[1] && uv.y <= uBounds[3]) gl_FragColor += texture2D(uSampler, (vTextureCoord + vec2( 0.028 * blur.x,  0.028 * blur.y))) * 0.0044299121055113265;" +
             "}";
 
         public uniforms = {
-            blur: {type: '2f', value: {x: 2, y: 2}}
+            projectionVector: {type: '2f', value: {x: 0, y: 0}, dirty: true},
+            blur: {type: '2f', value: {x: 2, y: 2}, dirty: true},
+            uBounds: {type: '4f', value: {x: 0, y: 0, z: 1, w: 1}, dirty: true}
         };
 
-        constructor(gl:WebGLRenderingContext) {
-            super(gl);
-            this.init();
+        public setBlur(blurX:number, blurY:number):void {
+            var uniform = this.uniforms.blur;
+
+            if(uniform.value.x != blurX || uniform.value.y != blurY) {
+                uniform.value.x = blurX;
+                uniform.value.y = blurY;
+
+                uniform.dirty = true;
+            }
+        }
+
+        /**
+         * 设置模糊滤镜需要传入的uv坐标
+         */
+        public setUv(uv:any):void {
+            var uniform = this.uniforms.uBounds;
+
+            if(uv) {
+                if(uniform.value.x != uv[0] || uniform.value.y != uv[1] || uniform.value.z != uv[2] || uniform.value.w != uv[3]) {
+                    uniform.value.x = uv[0];
+                    uniform.value.y = uv[1];
+                    uniform.value.z = uv[2];
+                    uniform.value.w = uv[3];
+
+                    uniform.dirty = true;
+                }
+            } else {
+                if(uniform.value.x != 0 || uniform.value.y != 0 || uniform.value.z != 1 || uniform.value.w != 1) {
+                    uniform.value.x = 0;
+                    uniform.value.y = 0;
+                    uniform.value.z = 1;
+                    uniform.value.w = 1;
+
+                    uniform.dirty = true;
+                }
+            }
         }
     }
 }

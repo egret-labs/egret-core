@@ -62,14 +62,16 @@ var localsMessages = {
         2: "Can not find Egret Engine, please open Egret Launcher and press the \"Reset\" button.",
         3: "Egret Engine default version: {0}\nEgret Engine current version: {1}\nYou can upgrade your project via egret upgrade",
         4: "Egret Engine current version: {0}",
-        5: "Error! The egretProperties.json is not a valid json."
+        5: "Error! The egretProperties.json is not a valid json.",
+        6: "Egret path : {0}"
     },
     zh: {
         1: "找不到 Egret Engine {0} 请打开引擎面板并添加对应版本的引擎",
         2: "找不到默认引擎，请尝试打开引擎面板并点击“重置引擎”按钮",
         3: "您的默认引擎版本为 {0}\n当前项目使用版本为 {1}\n您可以执行 egret upgrade 命令升级项目",
         4: "您正在使用的引擎版本为 {0}",
-        5: "错误！！ egretProperties.json 不是有效的 json 文件"
+        5: "错误！！ egretProperties.json 不是有效的 json 文件",
+        6: "Egret安装路径 : {0}"
     }
 }
 
@@ -95,6 +97,13 @@ function entry() {
     var projectVersion = getProjectVersion();
     var defaultVersion = getDefaultEngineInfo();
 
+    if (args.command == "info") {
+        console.log(tr(4, defaultVersion.version));
+        var root = getEgretRoot();
+        console.log(tr(6, root))
+        return;
+    }
+    
     if (requestVersion || (projectVersion && !(args.command in commandsToSkip))) {
         requestVersion = requestVersion || projectVersion;
 
@@ -124,8 +133,35 @@ function entry() {
     }
 }
 
+function getEgretRoot() {
+    var path = require("path");
+    var obj = _getEnv();
+    var egretRoot: string;
+    var globalpath = module['paths'].concat();
+    var existsFlag = false;
+    for (var i = 0; i < globalpath.length; i++) {
+        var prefix = globalpath[i];
+        var url = file.joinPath(prefix, '../');
+        if (file.exists(file.joinPath(url,'tools/bin/egret'))) {
+            existsFlag = true;
+            break;
+        }
+        url = prefix;
+        if (file.exists(file.joinPath(url, 'tools/bin/egret'))) {
+            existsFlag = true;
+            break;
+        }
+    }
+    if (!existsFlag) {
+        throw new Error("can't find Egret");
+    }
+    egretRoot = url;
+    return file.escapePath(file.joinPath(egretRoot, '/'));
+}
 
-
+function _getEnv() {
+    return process.env;
+}
 
 function printVersions() {
     if (!engines) {

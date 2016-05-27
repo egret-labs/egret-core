@@ -1030,6 +1030,11 @@ declare module egret {
         $hasAnyFlags(flags: number): boolean;
         /**
          * @private
+         * 是否添加到舞台上，防止重复发送 removed_from_stage 消息
+         */
+        $hasAddToStage: boolean;
+        /**
+         * @private
          * 标记矩阵失效
          */
         private invalidateMatrix();
@@ -3493,6 +3498,31 @@ declare module egret {
          * @platform Web,Native
          */
         static ROUND: string;
+    }
+}
+declare module egret {
+    /**
+     * @private
+     */
+    class Mesh extends Bitmap {
+        constructor(value?: BitmapData | Texture);
+        /**
+         * @private
+         */
+        $render(): void;
+        /**
+         * @private
+         */
+        private _verticesDirty;
+        private _bounds;
+        /**
+         * @private
+         */
+        $updateVertices(): void;
+        /**
+         * @private
+         */
+        $measureContentBounds(bounds: Rectangle): void;
     }
 }
 declare module egret {
@@ -9816,6 +9846,10 @@ declare module egret.sys {
          * 设置透明度节点
          */
         SetAlphaNode = 6,
+        /**
+         * Mesh 节点
+         */
+        MeshNode = 7,
     }
     /**
      * @private
@@ -9989,6 +10023,59 @@ declare module egret.sys {
          */
         cleanBeforeRender(): void;
         $getRenderCount(): number;
+    }
+}
+declare module egret.sys {
+    /**
+     * @private
+     * Mesh 渲染节点
+     */
+    class MeshNode extends RenderNode {
+        constructor();
+        /**
+         * 要绘制的位图
+         */
+        image: BitmapData;
+        /**
+         * 控制在缩放时是否对位图进行平滑处理。
+         */
+        smoothing: boolean;
+        /**
+         * 图片宽度。WebGL渲染使用
+         */
+        imageWidth: number;
+        /**
+         * 图片高度。WebGL渲染使用
+         */
+        imageHeight: number;
+        /**
+         * 相对偏移矩阵。
+         */
+        matrix: egret.Matrix;
+        /**
+         * UV 坐标。
+         */
+        uvs: number[];
+        /**
+         * 顶点坐标。
+         */
+        vertices: number[];
+        /**
+         * 顶点索引。
+         */
+        indices: number[];
+        /**
+         * 顶点索引。
+         */
+        bounds: Rectangle;
+        /**
+         * 绘制一次位图
+         */
+        drawMesh(sourceX: number, sourceY: number, sourceW: number, sourceH: number, drawX: number, drawY: number, drawW: number, drawH: number): void;
+        /**
+         * 在显示对象的$render()方法被调用前，自动清空自身的drawData数据。
+         */
+        cleanBeforeRender(): void;
     }
 }
 declare module egret.sys {
