@@ -3270,10 +3270,7 @@ var egret;
                  * @inheritDoc
                  */
                 this.src = "";
-                /**
-                 * @inheritDoc
-                 */
-                this.fullscreen = true;
+                this._fullscreen = true;
                 this._bitmapData = null;
                 /**
                  * @inheritDoc
@@ -3317,7 +3314,6 @@ var egret;
                 this.loading = true;
                 this.loaded = false;
                 var video = new __global.Video(url);
-                this.originVideo = video;
                 video['setVideoRect'](0, 0, 1, 1);
                 video['setKeepRatio'](false);
                 video.addEventListener("canplaythrough", onCanPlay);
@@ -3332,7 +3328,11 @@ var egret;
                 function onPlaying() {
                     video['setVideoRect'](0, 0, 1, 1);
                     video.pause();
+                    if (self._fullscreen) {
+                        video.fullScreen = true;
+                    }
                     video.currentTime = 0;
+                    self.originVideo = video;
                     self.loaded = true;
                     self.loading = false;
                     removeListeners();
@@ -3412,13 +3412,14 @@ var egret;
              * @inheritDoc
              */
             p.close = function () {
-                if (this.loaded) {
+                if (this.originVideo) {
                     this.originVideo['destroy']();
                 }
                 this.loaded = false;
                 this.loading = false;
                 this.originVideo = null;
                 this.loop = false;
+                this.src = null;
             };
             d(p, "poster"
                 /**
@@ -3440,6 +3441,26 @@ var egret;
                         _this.markDirty();
                         _this.$invalidateContentBounds();
                     }, this);
+                }
+            );
+            d(p, "fullscreen"
+                /**
+                 * @inheritDoc
+                 */
+                ,function () {
+                    if (this.originVideo) {
+                        return this.originVideo['fullScreen'];
+                    }
+                    return this._fullscreen;
+                }
+                /**
+                 * @inheritDoc
+                 */
+                ,function (value) {
+                    this._fullscreen = value;
+                    if (this.originVideo) {
+                        this.originVideo['fullScreen'] = value;
+                    }
                 }
             );
             d(p, "volume"
@@ -3519,8 +3540,8 @@ var egret;
              */
             p.$onRemoveFromStage = function () {
                 this.isAddToStage = false;
-                this.stopPlay();
                 if (this.originVideo) {
+                    this.stopPlay();
                     this.originVideo["setVideoVisible"](false);
                 }
                 _super.prototype.$onRemoveFromStage.call(this);
@@ -3596,18 +3617,12 @@ var egret;
              */
             p.setVideoSize = function () {
                 var video = this.originVideo;
-                if (video) {
-                    if (this.fullscreen) {
-                        video['setFullScreen'](true);
+                if (video && !this.fullscreen) {
+                    if (!this.firstPlay) {
+                        video['setVideoRect'](this.x, this.y, this.widthSet, this.heightSet);
                     }
                     else {
-                        video['setFullScreen'](false);
-                        if (!this.firstPlay) {
-                            video['setVideoRect'](this.x, this.y, this.widthSet, this.heightSet);
-                        }
-                        else {
-                            video['setVideoRect'](this.x, this.y, 0, 0);
-                        }
+                        video['setVideoRect'](this.x, this.y, 0, 0);
                     }
                 }
             };
