@@ -63,10 +63,9 @@ module egret.web {
 
             //绘制显示对象
             this.drawDisplayObject(displayObject, webglBuffer, dirtyList, matrix, null, null, root);
-            webglBuffer.$drawWebGL();
+            webglBuffer.context.$drawWebGL();
             var drawCall = webglBuffer.$drawCalls;
             webglBuffer.onRenderFinish();
-
 
             webglBuffer.context.popBuffer();
 
@@ -144,7 +143,7 @@ module egret.web {
                         m = node.renderMatrix;
                         buffer.setTransform(m.a, m.b, m.c, m.d, m.tx + matrix.tx, m.ty + matrix.ty);
                     }
-                    buffer.setGlobalAlpha(renderAlpha);
+                    buffer.context.setGlobalAlpha(renderAlpha);
                     this.renderNode(node, buffer);
                     node.needRedraw = false;
                 }
@@ -169,10 +168,10 @@ module egret.web {
                     }
                     else {
                         if (child["isFPS"]) {
-                            buffer.$drawWebGL();
+                            buffer.context.$drawWebGL();
                             buffer.$computeDrawCall = false;
                             this.drawDisplayObject(child, buffer, dirtyList, matrix, child.$displayList, clipRegion, root);
-                            buffer.$drawWebGL();
+                            buffer.context.$drawWebGL();
                             buffer.$computeDrawCall = true;
                         }
                         else {
@@ -292,29 +291,29 @@ module egret.web {
                 if (scrollRect) {
                     var m = displayMatrix;
                     buffer.setTransform(m.a, m.b, m.c, m.d, m.tx - region.minX, m.ty - region.minY);
-                    buffer.pushMask(scrollRect);
+                    buffer.context.pushMask(scrollRect);
                 }
                 var offsetM = Matrix.create().setTo(1, 0, 0, 1, 0, 0);
                 //绘制显示对象
                 if (hasBlendMode) {
-                    buffer.setGlobalCompositeOperation(compositeOp);
+                    buffer.context.setGlobalCompositeOperation(compositeOp);
                 }
                 if (scrollRect) {
                     var m = displayMatrix;
                     displayBuffer.setTransform(m.a, m.b, m.c, m.d, m.tx - region.minX, m.ty - region.minY);
-                    displayBuffer.pushMask(scrollRect);
+                    displayBuffer.context.pushMask(scrollRect);
                 }
                 drawCalls += this.drawDisplayObject(displayObject, buffer, dirtyList, offsetM,
                     displayObject.$displayList, region, null);
                 Matrix.release(offsetM);
                 if (scrollRect) {
-                    displayBuffer.popMask();
+                    displayBuffer.context.popMask();
                 }
                 if (hasBlendMode) {
-                    buffer.setGlobalCompositeOperation(defaultCompositeOp);
+                    buffer.context.setGlobalCompositeOperation(defaultCompositeOp);
                 }
                 if (scrollRect) {
-                    buffer.popMask();
+                    buffer.context.popMask();
                 }
                 sys.Region.release(region);
                 Matrix.release(displayMatrix);
@@ -336,7 +335,7 @@ module egret.web {
                     //webgl暂时无法添加,因为会有边界像素没有被擦除
                     //var maskRenderNode = mask.$getRenderNode();
                     //if (maskRenderNode && maskRenderNode.$getRenderCount() == 1 || mask.$displayList) {
-                    //    displayBuffer.setGlobalCompositeOperation("destination-in");
+                    //    displayBuffer.context.setGlobalCompositeOperation("destination-in");
                     //    drawCalls += this.drawDisplayObject(mask, displayBuffer, dirtyList, offsetM,
                     //        mask.$displayList, region, root);
                     //}
@@ -349,28 +348,28 @@ module egret.web {
                     var calls = this.drawDisplayObject(mask, maskBuffer, dirtyList, offsetM,
                         mask.$displayList, region, root);
 
-                    maskBuffer.$drawWebGL();
+                    maskBuffer.context.$drawWebGL();
                     maskBuffer.onRenderFinish();
                     maskBuffer.context.popBuffer();
 
                     if (calls > 0) {
                         drawCalls += calls;
-                        displayBuffer.setGlobalCompositeOperation("destination-in");
+                        displayBuffer.context.setGlobalCompositeOperation("destination-in");
                         displayBuffer.setTransform(1, 0, 0, -1, 0, maskBuffer.height);
-                        displayBuffer.setGlobalAlpha(1);
+                        displayBuffer.context.setGlobalAlpha(1);
                         var maskBufferWidth = maskBuffer.width;
                         var maskBufferHeight = maskBuffer.height;
-                        displayBuffer.drawTexture(<WebGLTexture><any>maskBuffer.rootRenderTarget.texture, 0, 0, maskBufferWidth, maskBufferHeight,
+                        displayBuffer.context.drawTexture(<WebGLTexture><any>maskBuffer.rootRenderTarget.texture, 0, 0, maskBufferWidth, maskBufferHeight,
                             0, 0, maskBufferWidth, maskBufferHeight, maskBufferWidth, maskBufferHeight);
-                        displayBuffer.setGlobalCompositeOperation("source-over");
+                        displayBuffer.context.setGlobalCompositeOperation("source-over");
                     }
                     renderBufferPool.push(maskBuffer);
                     //}
                 }
                 Matrix.release(offsetM);
 
-                displayBuffer.setGlobalCompositeOperation(defaultCompositeOp);
-                displayBuffer.$drawWebGL();
+                displayBuffer.context.setGlobalCompositeOperation(defaultCompositeOp);
+                displayBuffer.context.$drawWebGL();
                 displayBuffer.onRenderFinish();
                 displayBuffer.context.popBuffer();
 
@@ -378,30 +377,30 @@ module egret.web {
                 if (drawCalls > 0) {
                     drawCalls++;
                     if (hasBlendMode) {
-                        buffer.setGlobalCompositeOperation(compositeOp);
+                        buffer.context.setGlobalCompositeOperation(compositeOp);
                     }
                     if (scrollRect) {
                         var m = displayMatrix;
                         displayBuffer.setTransform(m.a, m.b, m.c, m.d, m.tx - region.minX, m.ty - region.minY);
-                        displayBuffer.pushMask(scrollRect);
+                        displayBuffer.context.pushMask(scrollRect);
                     }
-                    buffer.setGlobalAlpha(1);
+                    buffer.context.setGlobalAlpha(1);
                     buffer.setTransform(1, 0, 0, -1, region.minX + matrix.tx, region.minY + matrix.ty + displayBuffer.height);
                     var displayBufferWidth = displayBuffer.width;
                     var displayBufferHeight = displayBuffer.height;
-                    buffer.drawTexture(<WebGLTexture><any>displayBuffer.rootRenderTarget.texture, 0, 0, displayBufferWidth, displayBufferHeight,
+                    buffer.context.drawTexture(<WebGLTexture><any>displayBuffer.rootRenderTarget.texture, 0, 0, displayBufferWidth, displayBufferHeight,
                         0, 0, displayBufferWidth, displayBufferHeight, displayBufferWidth, displayBufferHeight);
                     if (scrollRect) {
-                        displayBuffer.popMask();
+                        displayBuffer.context.popMask();
                     }
                     if (hasBlendMode) {
-                        buffer.setGlobalCompositeOperation(defaultCompositeOp);
+                        buffer.context.setGlobalCompositeOperation(defaultCompositeOp);
                     }
                 }
 
                 // 最后执行绘制，因为有可能displayBuffer中的texture被更改
                 // 未来可以省略此次绘制
-                buffer.$drawWebGL();
+                buffer.context.$drawWebGL();
 
                 renderBufferPool.push(displayBuffer);
                 sys.Region.release(region);
@@ -462,10 +461,10 @@ module egret.web {
 
             //绘制显示对象自身
             buffer.setTransform(m.a, m.b, m.c, m.d, m.tx + matrix.tx, m.ty + matrix.ty);
-            buffer.pushMask(scrollRect);
+            buffer.context.pushMask(scrollRect);
             drawCalls += this.drawDisplayObject(displayObject, buffer, dirtyList, matrix, displayObject.$displayList, region, root);
             buffer.setTransform(m.a, m.b, m.c, m.d, m.tx + matrix.tx, m.ty + matrix.ty);
-            buffer.popMask();
+            buffer.context.popMask();
 
             sys.Region.release(region);
             Matrix.release(m);
@@ -487,7 +486,7 @@ module egret.web {
 
             webglBuffer.setTransform(matrix.a, matrix.b, matrix.c, matrix.d, matrix.tx, matrix.ty);
             this.renderNode(node, buffer, forHitTest);
-            webglBuffer.$drawWebGL();
+            webglBuffer.context.$drawWebGL();
             webglBuffer.onRenderFinish();
 
             //popRenderTARGET
@@ -515,7 +514,7 @@ module egret.web {
                     buffer.setTransform(node.drawData[0], node.drawData[1], node.drawData[2], node.drawData[3], node.drawData[4], node.drawData[5]);
                     break;
                 case sys.RenderNodeType.SetAlphaNode:
-                    buffer.setGlobalAlpha(node.drawData[0]);
+                    buffer.context.setGlobalAlpha(node.drawData[0]);
                     break;
                 case sys.RenderNodeType.MeshNode:
                     this.renderMesh(<sys.MeshNode>node, buffer);
@@ -539,14 +538,14 @@ module egret.web {
                 buffer.transform(m.a, m.b, m.c, m.d, m.tx, m.ty);
             }
             if(blendMode) {
-                buffer.setGlobalCompositeOperation(blendModes[blendMode]);
+                buffer.context.setGlobalCompositeOperation(blendModes[blendMode]);
             }
             while (pos < length) {
-                buffer.drawImage(image, data[pos++], data[pos++], data[pos++], data[pos++],
+                buffer.context.drawImage(image, data[pos++], data[pos++], data[pos++], data[pos++],
                     data[pos++], data[pos++], data[pos++], data[pos++], node.imageWidth, node.imageHeight);
             }
             if(blendMode) {
-                buffer.setGlobalCompositeOperation(defaultCompositeOp);
+                buffer.context.setGlobalCompositeOperation(defaultCompositeOp);
             }
             if (m) {
                 buffer.restoreTransform();
@@ -568,7 +567,7 @@ module egret.web {
                 buffer.transform(m.a, m.b, m.c, m.d, m.tx, m.ty);
             }
             while (pos < length) {
-                buffer.drawMesh(image, data[pos++], data[pos++], data[pos++], data[pos++],
+                buffer.context.drawMesh(image, data[pos++], data[pos++], data[pos++], data[pos++],
                     data[pos++], data[pos++], data[pos++], data[pos++], node.imageWidth, node.imageHeight, node.uvs, node.vertices, node.indices, node.bounds);
             }
             if (m) {
@@ -627,7 +626,7 @@ module egret.web {
                 node.$textureHeight = surface.height;
             }
 
-            buffer.drawTexture(node.$texture, 0, 0, width, height, 0, 0, width, height, node.$textureWidth, node.$textureHeight);
+            buffer.context.drawTexture(node.$texture, 0, 0, width, height, 0, 0, width, height, node.$textureWidth, node.$textureHeight);
 
             if (node.x || node.y) {
                 if (node.dirtyRender) {
@@ -668,7 +667,7 @@ module egret.web {
                 this.canvasRenderer["renderGraphics"](node, this.canvasRenderBuffer.context, true);
                 WebGLUtils.deleteWebGLTexture(surface);
                 var texture = buffer.context.getWebGLTexture(<BitmapData><any>surface);
-                buffer.drawTexture(texture, 0, 0, width, height, 0, 0, width, height, surface.width, surface.height);
+                buffer.context.drawTexture(texture, 0, 0, width, height, 0, 0, width, height, surface.width, surface.height);
             } else {
                 if (node.dirtyRender) {
                     this.canvasRenderer["renderGraphics"](node, this.canvasRenderBuffer.context);
@@ -686,7 +685,7 @@ module egret.web {
                     node.$textureWidth = surface.width;
                     node.$textureHeight = surface.height;
                 }
-                buffer.drawTexture(node.$texture, 0, 0, width, height, 0, 0, width, height, node.$textureWidth, node.$textureHeight);
+                buffer.context.drawTexture(node.$texture, 0, 0, width, height, 0, 0, width, height, node.$textureWidth, node.$textureHeight);
             }
 
 
@@ -714,7 +713,7 @@ module egret.web {
         private createRenderBuffer(width: number, height: number): WebGLRenderBuffer {
             var buffer = renderBufferPool.pop();
             if (buffer) {
-                buffer.resize(width, height, true);
+                buffer.resize(width, height);
             }
             else {
                 buffer = new WebGLRenderBuffer(width, height);
