@@ -1704,6 +1704,7 @@ declare module dragonBones {
         protected _meshBones: Array<Bone>;
         /** @private */
         _meshData: MeshData;
+        /** @private */
         displayIndex: number;
         constructor();
         /**
@@ -4364,6 +4365,7 @@ declare module dragonBones {
          */
         static IMAGE: string;
         /**
+         * @private
          * 网格类型
          */
         static MESH: string;
@@ -4560,6 +4562,7 @@ declare module dragonBones {
 }
 declare module dragonBones {
     /**
+     * @private
      * @class dragonBones.BoneData
      * @classdesc
      * 网格数据

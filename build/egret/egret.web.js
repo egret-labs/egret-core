@@ -7090,6 +7090,7 @@ var egret;
              * @param offsetY 矩形要加上的偏移量y
              */
             p.beginClip = function (regions, offsetX, offsetY) {
+                this.context.pushBuffer(this);
                 // dirtyRegionPolicy hack
                 if (this._dirtyRegionPolicy) {
                     this.rootRenderTarget.useFrameBuffer = true;
@@ -7109,6 +7110,7 @@ var egret;
                     regions[0].width == this.rootRenderTarget.width && regions[0].height == this.rootRenderTarget.height) {
                     this.maskPushed = false;
                     this.rootRenderTarget.useFrameBuffer && this.context.clear();
+                    this.context.popBuffer();
                     return;
                 }
                 // 擦除脏矩形区域
@@ -7126,14 +7128,17 @@ var egret;
                 else {
                     this.maskPushed = false;
                 }
+                this.context.popBuffer();
             };
             /**
              * 取消上一次设置的clip。
              */
             p.endClip = function () {
                 if (this.maskPushed) {
+                    this.context.pushBuffer(this);
                     this.setTransform(1, 0, 0, 1, this.offsetX, this.offsetY);
                     this.context.popMask();
+                    this.context.popBuffer();
                 }
             };
             /**
