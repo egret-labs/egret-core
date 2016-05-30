@@ -78,7 +78,7 @@ module egret.web {
         /**
          * 绘制命令管理器
          */
-        private drawCmdManager:WebGLDrawCmdManager;
+        public drawCmdManager:WebGLDrawCmdManager;
 
         /**
          * render buffer 堆栈
@@ -728,7 +728,9 @@ module egret.web {
                     this.setBlendMode(data.value);
                     break;
                 case DRAWABLE_TYPE.RESIZE_TARGET:
-                    // resize target
+                    // if(data.width != data.buffer.rootRenderTarget.width || data.height != data.buffer.rootRenderTarget.height) {
+                        data.buffer.rootRenderTarget.resize(data.width, data.height);
+                    // }
                     break;
                 case DRAWABLE_TYPE.CLEAR_COLOR:
                     if(this.currentBuffer) {
@@ -739,6 +741,9 @@ module egret.web {
                     }
                     break;
                 case DRAWABLE_TYPE.ACT_BUFFER:
+                    // if(data.buffer.$getWidth() != data.width || data.buffer.$getHeight() != data.height) {
+                    //     data.buffer.rootRenderTarget.resize(data.width, data.height);
+                    // }
                     this.activateBuffer(data.buffer);
                     break;
                 default:

@@ -147,7 +147,7 @@ module egret.web {
         /*
          * 压入resize render target命令
          */
-        public pushResize(buffer:WebGLRenderBuffer, width:number, height) {
+        public pushResize(buffer:WebGLRenderBuffer, width:number, height:number) {
             this.drawData.push({type:DRAWABLE_TYPE.RESIZE_TARGET, buffer: buffer, width: width, height: height});
         }
 
@@ -162,7 +162,7 @@ module egret.web {
          * 压入激活buffer命令
          */
         public pushActivateBuffer(buffer) {
-            this.drawData.push({type:DRAWABLE_TYPE.ACT_BUFFER, buffer:buffer});
+            this.drawData.push({type:DRAWABLE_TYPE.ACT_BUFFER, buffer:buffer, width: buffer.$getWidth(), height: buffer.$getHeight()});
         }
 
         /**

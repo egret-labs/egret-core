@@ -5647,7 +5647,7 @@ var egret;
              * 压入激活buffer命令
              */
             p.pushActivateBuffer = function (buffer) {
-                this.drawData.push({ type: 7 /* ACT_BUFFER */, buffer: buffer });
+                this.drawData.push({ type: 7 /* ACT_BUFFER */, buffer: buffer, width: buffer.$getWidth(), height: buffer.$getHeight() });
             };
             /**
              * 清空命令数组
@@ -6544,7 +6544,9 @@ var egret;
                         this.setBlendMode(data.value);
                         break;
                     case 5 /* RESIZE_TARGET */:
-                        // resize target
+                        // if(data.width != data.buffer.rootRenderTarget.width || data.height != data.buffer.rootRenderTarget.height) {
+                        data.buffer.rootRenderTarget.resize(data.width, data.height);
+                        // }
                         break;
                     case 6 /* CLEAR_COLOR */:
                         if (this.currentBuffer) {
@@ -6555,6 +6557,9 @@ var egret;
                         }
                         break;
                     case 7 /* ACT_BUFFER */:
+                        // if(data.buffer.$getWidth() != data.width || data.buffer.$getHeight() != data.height) {
+                        //     data.buffer.rootRenderTarget.resize(data.width, data.height);
+                        // }
                         this.activateBuffer(data.buffer);
                         break;
                     default:
@@ -7074,6 +7079,7 @@ var egret;
              * @param useMaxSize 若传入true，则将改变后的尺寸与已有尺寸对比，保留较大的尺寸。
              */
             p.resize = function (width, height, useMaxSize) {
+                this.context.pushBuffer(this);
                 width = width || 1;
                 height = height || 1;
                 // render target 尺寸重置
@@ -7084,12 +7090,14 @@ var egret;
                 if (this.root) {
                     this.context.resize(width, height, useMaxSize);
                 }
-                this.rootRenderTarget.clear(true);
+                // this.rootRenderTarget.clear(true);
+                this.context.clear();
                 // 由于resize与clear造成的frameBuffer绑定，这里重置绑定
-                var lastBuffer = this.context.currentBuffer;
-                if (lastBuffer) {
-                    lastBuffer.rootRenderTarget.activate();
-                }
+                // var lastBuffer = this.context.currentBuffer;
+                // if(lastBuffer) {
+                //     lastBuffer.rootRenderTarget.activate();
+                // }
+                this.context.popBuffer();
             };
             /**
              * 改变渲染缓冲为指定大小，但保留原始图像数据
