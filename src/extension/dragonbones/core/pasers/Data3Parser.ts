@@ -398,9 +398,17 @@ module dragonBones {
                         clearFrame = true;
                         Data3Parser._currentAnimationData.frameList.length = 0;
                     }
+					
                     if (animationFrame) {
                         animationFrame.duration = position;
                     }
+					else if (position != 0)
+					{
+                    	animationFrame = new Frame();
+                    	animationFrame.bone = outputTimeline.name;
+						animationFrame.duration = position;
+                    	Data3Parser._currentAnimationData.addFrame(animationFrame);
+					}
 
                     position = 0;
                     animationFrame = new Frame();

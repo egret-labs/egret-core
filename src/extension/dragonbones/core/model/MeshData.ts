@@ -1,4 +1,4 @@
-//////////////////////////////////////////////////////////////////////////////////////
+﻿//////////////////////////////////////////////////////////////////////////////////////
 //
 //  Copyright (c) 2014-2015, Egret Technology Inc.
 //  All rights reserved.
@@ -27,21 +27,40 @@
 //
 //////////////////////////////////////////////////////////////////////////////////////
 
-module egret.web {
 
-    /**
+module dragonBones {
+
+	/**
      * @private
-     */
-    export class PrimitiveShader extends EgretShader {
-        public fragmentSrc:string =
-            "precision lowp float;\n" +
-            "varying vec2 vTextureCoord;\n" +
-            "varying vec4 vColor;\n" +
+	 * @class dragonBones.BoneData
+	 * @classdesc
+	 * 网格数据
+	 */
+    export class MeshData extends DisplayData {
+        public skinned: boolean = false;
+        public numVertex: number = 0;
+        public numTriangle: number = 0;
+        public triangles: Array<number> = [];
+        public vertices: Array<VertexData> = [];
+        public vertexBones: Array<VertexBoneData> = [];
+        public bones: Array<BoneData> = [];
+        public inverseBindPose: Array<Matrix> = [];
+        public slotPose: Matrix = new Matrix();
+        public constructor() {
+            super();
+        }
 
-            "void main(void) {\n" +
-                "gl_FragColor = vColor;\n" +
-            "}";
+		/**
+		 *释放资源
+		 */
+        public dispose(): void {
+            super.dispose();
 
+            this.triangles.length = 0;
+            this.vertices.length = 0;
+            this.vertexBones.length = 0;
+            this.bones.length = 0;
+            this.inverseBindPose.length = 0;
+        }
     }
-
 }

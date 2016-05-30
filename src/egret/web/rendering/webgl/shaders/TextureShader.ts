@@ -32,15 +32,26 @@ module egret.web {
     /**
      * @private
      */
-    export class PrimitiveShader extends EgretShader {
+    export class TextureShader extends EgretShader {
+
         public fragmentSrc:string =
             "precision lowp float;\n" +
             "varying vec2 vTextureCoord;\n" +
             "varying vec4 vColor;\n" +
+            "uniform sampler2D uSampler;\n" +
 
             "void main(void) {\n" +
-                "gl_FragColor = vColor;\n" +
+                "gl_FragColor = texture2D(uSampler, vTextureCoord) * vColor;\n" +
             "}";
+
+        // webGL 默认上链接材质缓存，可以不手动上传uSampler属性
+        // private uSampler:WebGLUniformLocation;
+
+        // public init():void {
+            // super.init();
+
+            // this.uSampler = gl.getUniformLocation(program, "uSampler");
+        // }
 
     }
 

@@ -297,6 +297,60 @@ module dragonBones {
 			
 			return this._generateDisplay(targetTextureAtlas, textureName, pivotX, pivotY);
 		}
+		/**
+		 * @private
+		 */
+		public getMeshDisplay(meshData:MeshData, slot:Slot, textureAtlasName:string = null):any
+		{
+			var targetTextureAtlas:any;
+			var textureAtlasArr:Array<any>;
+			var i:number;
+			var len:number;
+			var textureName:string = meshData.name;
+			if(textureAtlasName)
+			{
+				textureAtlasArr = this.textureAtlasDic[textureAtlasName];
+				if (textureAtlasArr)
+				{
+					for (i = 0, len = textureAtlasArr.length; i < len; i++)
+					{
+						targetTextureAtlas = textureAtlasArr[i];
+						if (targetTextureAtlas.getRegion(textureName))
+						{
+							break;
+						}
+						targetTextureAtlas = null;
+					}
+				}
+			}
+			else{
+				for (textureAtlasName in this.textureAtlasDic){
+					textureAtlasArr = this.textureAtlasDic[textureAtlasName];
+					if (textureAtlasArr)
+					{
+						for (i = 0, len = textureAtlasArr.length; i < len; i++)
+						{
+							targetTextureAtlas = textureAtlasArr[i];
+							if (targetTextureAtlas.getRegion(textureName))
+							{
+								break;
+							}
+							targetTextureAtlas = null;
+						}
+						if (targetTextureAtlas != null)
+						{
+							break;
+						}
+					}
+				}
+			}
+			
+			if(!targetTextureAtlas){
+				return null;
+			}
+			
+			return this._generateMesh(targetTextureAtlas, textureName, meshData, slot);
+		}
 
 		/**
 		 * 构建骨架
@@ -550,6 +604,10 @@ module dragonBones {
                             displayList[l] = childArmature;
 							break;
 						
+						case DisplayData.MESH:
+							displayList[l] = this.getMeshDisplay(displayData as MeshData, slot, textureAtlasName);
+							break;
+						
 						case DisplayData.IMAGE:
 						default:
 							displayList[l] = this.getTextureDisplay(displayData.name, textureAtlasName, displayData.pivot.x, displayData.pivot.y);
@@ -631,6 +689,7 @@ module dragonBones {
 							break;
 						
 						case DisplayData.IMAGE:
+						case DisplayData.MESH:
                             slotDisplayDataList[l] = [displayData, this.getTextureData(displayData.name, textureAtlasName)];
                             displayList[l] = slot._rawDisplay;
                             break;
@@ -741,6 +800,13 @@ module dragonBones {
 			return null;
 		}
 		
+		/**
+		 * @private
+		 */
+		public _generateMesh(textureAtlas:any, fullName:string, meshData:MeshData, slot:Slot):any
+		{
+			return null;
+		}
 	}
 
 	export class BuildArmatureDataPackage{

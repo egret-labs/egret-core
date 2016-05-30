@@ -47,6 +47,7 @@ module egret {
     locale_strings[1044] = "The current version of the Runtime does not support video playback, please use the latest version";
     locale_strings[1045] = "The resource url is not found";
     locale_strings[1046] = "BitmapText no corresponding characters: {0}, please check the configuration file";
+    locale_strings[1047] = "egret.localStorage.setItem save failed,key={0}&value={1}";
 
     //gui  3000-3099
     locale_strings[3000] = "Theme configuration file failed to load: {0}";

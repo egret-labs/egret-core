@@ -30,7 +30,7 @@ module egret.web {
     /**
      * @private
      */
-    export class ColorTransformShader extends EgretShader {
+    export class ColorTransformShader extends TextureShader {
         public fragmentSrc =
             "precision mediump float;\n" +
             "varying vec2 vTextureCoord;\n" +
@@ -43,23 +43,86 @@ module egret.web {
             "void main(void) {\n" +
                 "vec4 texColor = texture2D(uSampler, vTextureCoord);\n" +
                 "vec4 locColor = texColor * matrix;\n" +
-                "if(texColor.a != 0.0){\n" +
-                    "locColor += colorAdd;\n" +
+                "locColor += colorAdd;\n" +
+                "if(locColor.a <= 0.0){\n" +
+                    "discard;\n" +
+                "}\n" +
+                "if(locColor.a > 1.0){\n" +
+                    "locColor.a = 1.0;\n" +
                 "}\n" +
                 "gl_FragColor = vColor*vec4(locColor.rgb*locColor.a,locColor.a);\n" +
             "}";
 
         public uniforms = {
+            projectionVector: {type: '2f', value: {x: 0, y: 0}, dirty: true},
             matrix: {type: 'mat4', value: [1, 0, 0, 0,
                 0, 1, 0, 0,
                 0, 0, 1, 0,
-                0, 0, 0, 1]},
-            colorAdd: {type: '4f', value: {x: 0, y: 0, z: 0, w: 0}}
+                0, 0, 0, 1], dirty: true},
+            colorAdd: {type: '4f', value: {x: 0, y: 0, z: 0, w: 0}, dirty: true}
         };
 
-        constructor(gl:WebGLRenderingContext) {
-            super(gl);
-            this.init();
+        public setMatrix(matrix:any):void {
+            var uniform = this.uniforms.matrix;
+
+            if(uniform.value[0] != matrix[0] ||
+                uniform.value[0] != matrix[0] ||
+                uniform.value[1] != matrix[1] ||
+                uniform.value[2] != matrix[2] ||
+                uniform.value[3] != matrix[3] ||
+
+                uniform.value[4] != matrix[5] ||
+                uniform.value[5] != matrix[6] ||
+                uniform.value[6] != matrix[7] ||
+                uniform.value[7] != matrix[8] ||
+
+                uniform.value[8] != matrix[10] ||
+                uniform.value[9] != matrix[11] ||
+                uniform.value[10] != matrix[12] ||
+                uniform.value[11] != matrix[13] ||
+
+                uniform.value[12] != matrix[15] ||
+                uniform.value[13] != matrix[16] ||
+                uniform.value[14] != matrix[17] ||
+                uniform.value[15] != matrix[18]) {
+
+                uniform.value[0] = matrix[0];
+                uniform.value[1] = matrix[1];
+                uniform.value[2] = matrix[2];
+                uniform.value[3] = matrix[3];
+
+                uniform.value[4] = matrix[5];
+                uniform.value[5] = matrix[6];
+                uniform.value[6] = matrix[7];
+                uniform.value[7] = matrix[8];
+
+                uniform.value[8] = matrix[10];
+                uniform.value[9] = matrix[11];
+                uniform.value[10] = matrix[12];
+                uniform.value[11] = matrix[13];
+
+                uniform.value[12] = matrix[15];
+                uniform.value[13] = matrix[16];
+                uniform.value[14] = matrix[17];
+                uniform.value[15] = matrix[18];
+
+                uniform.dirty = true;
+            }
+
+            var uniform2 = this.uniforms.colorAdd;
+
+            if(uniform2.value.x != matrix[4] / 255.0 ||
+                uniform2.value.y != matrix[9] / 255.0 ||
+                uniform2.value.z != matrix[14] / 255.0 ||
+                uniform2.value.w != matrix[19] / 255.0) {
+
+                uniform2.value.x = matrix[4] / 255.0;
+                uniform2.value.y = matrix[9] / 255.0;
+                uniform2.value.z = matrix[14] / 255.0;
+                uniform2.value.w = matrix[19] / 255.0;
+
+                uniform2.dirty = true;
+            }
         }
     }
 }

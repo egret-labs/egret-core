@@ -259,6 +259,10 @@
             "platform": "web"
           },
           {
+            "path": "web/rendering/webgl/shaders/TextureShader.ts",
+            "platform": "web"
+          },
+          {
             "path": "web/rendering/webgl/shaders/PrimitiveShader.ts",
             "platform": "web"
           },
@@ -272,6 +276,14 @@
           },
           {
             "path": "web/rendering/webgl/WebGLShaderManager.ts",
+            "platform": "web"
+          },
+          {
+            "path": "web/rendering/webgl/WebGLDrawCmdManager.ts",
+            "platform": "web"
+          },
+          {
+            "path": "web/rendering/webgl/WebGLVertexArrayObject.ts",
             "platform": "web"
           },
           {

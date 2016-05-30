@@ -164,5 +164,16 @@ module dragonBones {
             this.c = m.c;
             this.d = m.d;
         }
+		/**@private*/
+        public transformPoint(x: number, y: number, result: Point, delta: Boolean = false): void
+        {
+            result.x = this.a * x + this.c * y;
+            result.y = this.b * x + this.d * y;
+
+            if (!delta) {
+                result.x += this.tx;
+                result.y += this.ty;
+            }
+        }
     }
 }
