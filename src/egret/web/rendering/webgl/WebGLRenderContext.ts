@@ -103,7 +103,7 @@ module egret.web {
                     this.$drawWebGL();
                 }
 
-                this.activateBuffer(buffer);
+                this.drawCmdManager.pushActivateBuffer(buffer);
             }
 
             this.currentBuffer = buffer;
@@ -128,7 +128,7 @@ module egret.web {
             if(buffer != lastBuffer) {
                 this.$drawWebGL();
 
-                this.activateBuffer(lastBuffer);
+                this.drawCmdManager.pushActivateBuffer(lastBuffer);
             }
 
             this.currentBuffer = lastBuffer;
@@ -737,6 +737,9 @@ module egret.web {
                             target.clear();
                         }
                     }
+                    break;
+                case DRAWABLE_TYPE.ACT_BUFFER:
+                    this.activateBuffer(data.buffer);
                     break;
                 default:
                     break;

@@ -5644,6 +5644,12 @@ var egret;
                 this.drawData.push({ type: 6 /* CLEAR_COLOR */ });
             };
             /**
+             * 压入激活buffer命令
+             */
+            p.pushActivateBuffer = function (buffer) {
+                this.drawData.push({ type: 7 /* ACT_BUFFER */, buffer: buffer });
+            };
+            /**
              * 清空命令数组
              */
             p.clear = function () {
@@ -6067,7 +6073,7 @@ var egret;
                     if (this.currentBuffer) {
                         this.$drawWebGL();
                     }
-                    this.activateBuffer(buffer);
+                    this.drawCmdManager.pushActivateBuffer(buffer);
                 }
                 this.currentBuffer = buffer;
             };
@@ -6085,7 +6091,7 @@ var egret;
                 // 重新绑定
                 if (buffer != lastBuffer) {
                     this.$drawWebGL();
-                    this.activateBuffer(lastBuffer);
+                    this.drawCmdManager.pushActivateBuffer(lastBuffer);
                 }
                 this.currentBuffer = lastBuffer;
             };
@@ -6547,6 +6553,9 @@ var egret;
                                 target.clear();
                             }
                         }
+                        break;
+                    case 7 /* ACT_BUFFER */:
+                        this.activateBuffer(data.buffer);
                         break;
                     default:
                         break;

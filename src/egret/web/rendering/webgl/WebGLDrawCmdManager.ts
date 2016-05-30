@@ -39,7 +39,8 @@ module egret.web {
         POP_MASK,
         BLEND,
         RESIZE_TARGET,
-        CLEAR_COLOR
+        CLEAR_COLOR,
+        ACT_BUFFER
     }
 
     /**
@@ -155,6 +156,13 @@ module egret.web {
          */
         public pushClearColor() {
             this.drawData.push({type:DRAWABLE_TYPE.CLEAR_COLOR});
+        }
+
+        /**
+         * 压入激活buffer命令
+         */
+        public pushActivateBuffer(buffer) {
+            this.drawData.push({type:DRAWABLE_TYPE.ACT_BUFFER, buffer:buffer});
         }
 
         /**
