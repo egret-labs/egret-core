@@ -53,7 +53,7 @@ module egret.native {
             super();
             this.$renderNode = new sys.BitmapNode();
             if (!__global.Video) {
-                egret.$error(1043);
+                egret.$error(1044);
             }
             this.src = url;
             if(url){
@@ -451,6 +451,6 @@ module egret.native {
     if (__global.Video) {
         egret.Video = NativeVideo;
     }else{
-        egret.$error(1043);
+        egret.$error(1044);
     }
 }
