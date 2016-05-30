@@ -451,6 +451,6 @@ module egret.native {
     if (__global.Video) {
         egret.Video = NativeVideo;
     }else{
-        egret.$error(1044);
+        egret.$warn(1044);
     }
 }
