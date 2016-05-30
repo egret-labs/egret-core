@@ -6053,7 +6053,7 @@ var egret;
                 this.$bufferStack.push(buffer);
                 if (buffer != this.currentBuffer) {
                     if (this.currentBuffer) {
-                        // this.$drawWebGL();
+                        this.$drawWebGL();
                     }
                     this.activateBuffer(buffer);
                 }
@@ -6072,7 +6072,7 @@ var egret;
                 var lastBuffer = this.$bufferStack[this.$bufferStack.length - 1];
                 // 重新绑定
                 if (buffer != lastBuffer) {
-                    // this.$drawWebGL();
+                    this.$drawWebGL();
                     this.activateBuffer(lastBuffer);
                 }
                 this.currentBuffer = lastBuffer;
@@ -7182,8 +7182,7 @@ var egret;
              * @param height 高度
              */
             p.drawFrameBufferToSurface = function (sourceX, sourceY, sourceWidth, sourceHeight, destX, destY, destWidth, destHeight, clear) {
-                if (clear === void 0) { clear = false;}
-                this.context.$drawWebGL();
+                if (clear === void 0) { clear = false; }
                 this.rootRenderTarget.useFrameBuffer = false;
                 this.rootRenderTarget.activate();
                 this.context.disableStencilTest(); // 切换frameBuffer注意要禁用STENCIL_TEST
@@ -7204,7 +7203,6 @@ var egret;
              */
             p.drawSurfaceToFrameBuffer = function (sourceX, sourceY, sourceWidth, sourceHeight, destX, destY, destWidth, destHeight, clear) {
                 if (clear === void 0) { clear = false; }
-                this.context.$drawWebGL();
                 this.rootRenderTarget.useFrameBuffer = true;
                 this.rootRenderTarget.activate();
                 this.context.disableStencilTest(); // 切换frameBuffer注意要禁用STENCIL_TEST
