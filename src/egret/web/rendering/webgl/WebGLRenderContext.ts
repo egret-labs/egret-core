@@ -397,18 +397,6 @@ module egret.web {
         }
 
         /**
-         * 清除颜色缓存
-         */
-        public clear():void {
-            if(this.currentBuffer) {
-                var target = this.currentBuffer.rootRenderTarget;
-                if(target.width != 0 || target.height != 0) {
-                    target.clear();
-                }
-            }
-        }
-
-        /**
          * 清除矩形区域
          */
         public clearRect(x:number, y:number, width:number, height:number):void {
@@ -634,6 +622,13 @@ module egret.web {
         }
 
         /**
+         * 清除颜色缓存
+         */
+        public clear():void {
+            this.drawCmdManager.pushClearColor();
+        }
+
+        /**
          * 执行目前缓存在命令列表里的命令并清空
          */
         public $drawWebGL() {
@@ -731,6 +726,17 @@ module egret.web {
                     break;
                 case DRAWABLE_TYPE.BLEND:
                     this.setBlendMode(data.value);
+                    break;
+                case DRAWABLE_TYPE.RESIZE_TARGET:
+                    // resize target
+                    break;
+                case DRAWABLE_TYPE.CLEAR_COLOR:
+                    if(this.currentBuffer) {
+                        var target = this.currentBuffer.rootRenderTarget;
+                        if(target.width != 0 || target.height != 0) {
+                            target.clear();
+                        }
+                    }
                     break;
                 default:
                     break;

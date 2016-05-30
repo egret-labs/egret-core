@@ -5629,6 +5629,18 @@ var egret;
                 }
                 this.drawData.push({ type: 4 /* BLEND */, value: value });
             };
+            /*
+             * 压入resize render target命令
+             */
+            p.pushResize = function (buffer, width, height) {
+                this.drawData.push({ type: 5 /* RESIZE_TARGET */, buffer: buffer, width: width, height: height });
+            };
+            /*
+             * 压入clear color命令
+             */
+            p.pushClearColor = function () {
+                this.drawData.push({ type: 6 /* CLEAR_COLOR */ });
+            };
             /**
              * 清空命令数组
              */
@@ -6258,17 +6270,6 @@ var egret;
                 return _bitmapData.webGLTexture[this.glID];
             };
             /**
-             * 清除颜色缓存
-             */
-            p.clear = function () {
-                if (this.currentBuffer) {
-                    var target = this.currentBuffer.rootRenderTarget;
-                    if (target.width != 0 || target.height != 0) {
-                        target.clear();
-                    }
-                }
-            };
-            /**
              * 清除矩形区域
              */
             p.clearRect = function (x, y, width, height) {
@@ -6444,6 +6445,12 @@ var egret;
                 }
             };
             /**
+             * 清除颜色缓存
+             */
+            p.clear = function () {
+                this.drawCmdManager.pushClearColor();
+            };
+            /**
              * 执行目前缓存在命令列表里的命令并清空
              */
             p.$drawWebGL = function () {
@@ -6527,6 +6534,17 @@ var egret;
                         break;
                     case 4 /* BLEND */:
                         this.setBlendMode(data.value);
+                        break;
+                    case 5 /* RESIZE_TARGET */:
+                        // resize target
+                        break;
+                    case 6 /* CLEAR_COLOR */:
+                        if (this.currentBuffer) {
+                            var target = this.currentBuffer.rootRenderTarget;
+                            if (target.width != 0 || target.height != 0) {
+                                target.clear();
+                            }
+                        }
                         break;
                     default:
                         break;

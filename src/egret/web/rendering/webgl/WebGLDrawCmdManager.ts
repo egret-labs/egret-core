@@ -37,7 +37,9 @@ module egret.web {
         RECT,
         PUSH_MASK,
         POP_MASK,
-        BLEND
+        BLEND,
+        RESIZE_TARGET,
+        CLEAR_COLOR
     }
 
     /**
@@ -139,6 +141,20 @@ module egret.web {
             }
 
             this.drawData.push({type:DRAWABLE_TYPE.BLEND, value: value});
+        }
+
+        /*
+         * 压入resize render target命令
+         */
+        public pushResize(buffer:WebGLRenderBuffer, width:number, height) {
+            this.drawData.push({type:DRAWABLE_TYPE.RESIZE_TARGET, buffer: buffer, width: width, height: height});
+        }
+
+        /*
+         * 压入clear color命令
+         */
+        public pushClearColor() {
+            this.drawData.push({type:DRAWABLE_TYPE.CLEAR_COLOR});
         }
 
         /**
