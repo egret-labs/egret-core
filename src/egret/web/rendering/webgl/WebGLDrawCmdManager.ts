@@ -28,6 +28,7 @@
 //////////////////////////////////////////////////////////////////////////////////////
 module egret.web {
     /**
+     * @private
      * draw类型，所有的绘图操作都会缓存在drawData中，每个drawData都是一个drawable对象
      * $renderWebGL方法依据drawable对象的类型，调用不同的绘制方法
      * TODO 提供drawable类型接口并且创建对象池？
