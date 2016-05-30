@@ -143,6 +143,7 @@ module dragonBones {
         /** @private */
         public _meshData: MeshData = null;
 
+        /** @private */
         public get displayIndex(): number
         {
             return this._currentDisplayIndex;

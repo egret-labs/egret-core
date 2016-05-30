@@ -45,6 +45,7 @@ module dragonBones {
 		 */
         public static IMAGE: string = "image";
 		/**
+		 * @private
 		 * 网格类型
 		 */
         public static MESH: string = "mesh";

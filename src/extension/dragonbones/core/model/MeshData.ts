@@ -31,6 +31,7 @@
 module dragonBones {
 
 	/**
+     * @private
 	 * @class dragonBones.BoneData
 	 * @classdesc
 	 * 网格数据
