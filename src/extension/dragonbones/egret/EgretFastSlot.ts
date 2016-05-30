@@ -102,9 +102,13 @@ module dragonBones {
         }
 
         /** @private */
-        public _addDisplayToContainer(container:any, index:number = -1):void{
-            var egretContainer:egret.DisplayObjectContainer = <egret.DisplayObjectContainer><any> container;
-            if(this._egretDisplay && egretContainer){
+        public _addDisplayToContainer(container: any, index: number = -1): void {
+            var egretContainer: egret.DisplayObjectContainer = <egret.DisplayObjectContainer><any>container;
+            if (!this._egretDisplay) {
+                this._egretDisplay = this._rawDisplay;
+            }
+
+            if (this._egretDisplay && egretContainer){
                 if (index < 0){
                     egretContainer.addChild(this._egretDisplay);
                 }

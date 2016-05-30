@@ -466,11 +466,7 @@ module dragonBones {
 			var i:number = this.slotList.length;
 			while(i --){
 				var slot:FastSlot = this.slotList[i];
-				if ((slot._frameCache && (<SlotFrameCache><any> (slot._frameCache)).displayIndex >= 0)
-					||(!slot._frameCache && slot.displayIndex >= 0))
-				{
-					slot._addDisplayToContainer(this._display);
-				}
+				slot._addDisplayToContainer(this._display);
 			}
 			
 			this._slotsZOrderChanged = false;
