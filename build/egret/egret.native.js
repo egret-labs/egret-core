@@ -3232,6 +3232,477 @@ var egret;
 //////////////////////////////////////////////////////////////////////////////////////
 var egret;
 (function (egret) {
+    var native;
+    (function (native) {
+        /**
+         * @private
+         * @inheritDoc
+         */
+        var NativeVideo = (function (_super) {
+            __extends(NativeVideo, _super);
+            /**
+             * @private
+             * @inheritDoc
+             */
+            function NativeVideo(url) {
+                _super.call(this);
+                /**
+                 * @private
+                 */
+                this.loaded = false;
+                /**
+                 * @private
+                 */
+                this.loading = false;
+                /**
+                 * @private
+                 * */
+                this.loop = false;
+                /**
+                 * @private
+                 * */
+                this.isPlayed = false;
+                /**
+                 * @private
+                 * */
+                this.firstPlay = true;
+                /**
+                 * @inheritDoc
+                 */
+                this.src = "";
+                this._fullscreen = true;
+                this._bitmapData = null;
+                /**
+                 * @inheritDoc
+                 */
+                this.paused = false;
+                /**
+                 * @private
+                 */
+                this.isAddToStage = false;
+                /**
+                 * @private
+                 */
+                this.heightSet = 0;
+                /**
+                 * @private
+                 */
+                this.widthSet = 0;
+                this.$renderNode = new egret.sys.BitmapNode();
+                if (!__global.Video) {
+                    egret.$error(1043);
+                }
+                this.src = url;
+                if (url) {
+                    this.load();
+                }
+            }
+            var d = __define,c=NativeVideo,p=c.prototype;
+            /**
+             * @inheritDoc
+             */
+            p.load = function (url) {
+                url = url || this.src;
+                this.src = url;
+                if (DEBUG && !url) {
+                    egret.$error(3002);
+                    return;
+                }
+                if (this.loading) {
+                    return;
+                }
+                this.loading = true;
+                this.loaded = false;
+                var video = new __global.Video(url);
+                video['setVideoRect'](0, 0, 1, 1);
+                video['setKeepRatio'](false);
+                video.addEventListener("canplaythrough", onCanPlay);
+                video.addEventListener("error", onVideoError);
+                video.addEventListener("playing", onPlaying);
+                video.load();
+                var self = this;
+                function onCanPlay() {
+                    video['setVideoRect'](0, 0, 1, 1);
+                    video.play();
+                }
+                function onPlaying() {
+                    video['setVideoRect'](0, 0, 1, 1);
+                    video.pause();
+                    if (self._fullscreen) {
+                        video.fullScreen = true;
+                    }
+                    video.currentTime = 0;
+                    self.originVideo = video;
+                    self.loaded = true;
+                    self.loading = false;
+                    removeListeners();
+                    self.dispatchEventWith(egret.Event.COMPLETE);
+                    video.addEventListener('pause', function () {
+                        self.paused = true;
+                    });
+                    video.addEventListener('playing', function () {
+                        self.paused = false;
+                    });
+                    video.addEventListener('ended', function () {
+                        self.dispatchEventWith(egret.Event.ENDED);
+                        if (self.loop) {
+                            self.play(0, true);
+                        }
+                    });
+                }
+                function onVideoError() {
+                    removeListeners();
+                    self.dispatchEventWith(egret.IOErrorEvent.IO_ERROR);
+                }
+                function removeListeners() {
+                    video.removeEventListener("canplaythrough", onCanPlay);
+                    video.removeEventListener("error", onVideoError);
+                    video.removeEventListener("playing", onPlaying);
+                }
+            };
+            /**
+             * @inheritDoc
+             */
+            p.play = function (startTime, loop) {
+                var _this = this;
+                if (loop === void 0) { loop = false; }
+                this.loop = loop;
+                if (!this.loaded) {
+                    this.load();
+                    this.once(egret.Event.COMPLETE, function (e) { return _this.play(startTime, loop); }, this);
+                    return;
+                }
+                var haveStartTime = false;
+                if (startTime != undefined) {
+                    this.originVideo.currentTime = startTime || 0;
+                    haveStartTime = true;
+                }
+                this.startPlay(haveStartTime);
+            };
+            /**
+             * @private
+             * */
+            p.startPlay = function (haveStartTime) {
+                if (haveStartTime === void 0) { haveStartTime = false; }
+                if (!this.isAddToStage || !this.loaded) {
+                    return;
+                }
+                this.firstPlay = false;
+                this.setVideoSize();
+                this.isPlayed = true;
+                if (!haveStartTime && this.paused && this.position != 0) {
+                    this.originVideo['resume']();
+                }
+                else {
+                    this.originVideo.play();
+                }
+                egret.startTick(this.markDirty, this);
+            };
+            /**
+             * @private
+             * */
+            p.stopPlay = function () {
+                egret.stopTick(this.markDirty, this);
+                if (this.isPlayed) {
+                    this.isPlayed = false;
+                    this.originVideo.pause();
+                }
+            };
+            /**
+             * @inheritDoc
+             */
+            p.close = function () {
+                if (this.originVideo) {
+                    this.originVideo['destroy']();
+                }
+                this.loaded = false;
+                this.loading = false;
+                this.originVideo = null;
+                this.loop = false;
+                this.src = null;
+            };
+            d(p, "poster"
+                /**
+                 * @inheritDoc
+                 */
+                ,function () {
+                    return this.posterUrl;
+                }
+                /**
+                 * @inheritDoc
+                 */
+                ,function (value) {
+                    var _this = this;
+                    this.posterUrl = value;
+                    var loader = new native.NativeImageLoader();
+                    loader.load(value);
+                    loader.addEventListener(egret.Event.COMPLETE, function () {
+                        _this.posterData = loader.data;
+                        _this.markDirty();
+                        _this.$invalidateContentBounds();
+                    }, this);
+                }
+            );
+            d(p, "fullscreen"
+                /**
+                 * @inheritDoc
+                 */
+                ,function () {
+                    if (this.originVideo) {
+                        return this.originVideo['fullScreen'];
+                    }
+                    return this._fullscreen;
+                }
+                /**
+                 * @inheritDoc
+                 */
+                ,function (value) {
+                    this._fullscreen = value;
+                    if (this.originVideo) {
+                        this.originVideo['fullScreen'] = value;
+                    }
+                }
+            );
+            d(p, "volume"
+                /**
+                 * @inheritDoc
+                 */
+                ,function () {
+                    if (!this.loaded)
+                        return 0;
+                    return this.originVideo.volume;
+                }
+                /**
+                 * @inheritDoc
+                 */
+                ,function (value) {
+                    if (!this.loaded)
+                        return;
+                    this.originVideo.volume = value;
+                }
+            );
+            d(p, "position"
+                /**
+                 * @inheritDoc
+                 */
+                ,function () {
+                    return this.originVideo.currentTime;
+                }
+                /**
+                 * @inheritDoc
+                 */
+                ,function (value) {
+                    if (this.loaded) {
+                        this.originVideo.currentTime = value;
+                    }
+                }
+            );
+            /**
+             * @inheritDoc
+             */
+            p.pause = function () {
+                this.originVideo.pause();
+            };
+            d(p, "bitmapData"
+                /**
+                 * @inheritDoc
+                 */
+                ,function () {
+                    return this._bitmapData;
+                }
+            );
+            d(p, "length"
+                /**
+                 * @inheritDoc
+                 */
+                ,function () {
+                    if (this.loaded) {
+                        return this.originVideo.duration;
+                    }
+                    throw new Error("Video not loaded!");
+                    //return 0;
+                }
+            );
+            /**
+             * @inheritDoc
+             */
+            p.$onAddToStage = function (stage, nestLevel) {
+                this.isAddToStage = true;
+                if (this.originVideo) {
+                    this.originVideo["setVideoVisible"](true);
+                }
+                this.$invalidate();
+                this.$invalidateContentBounds();
+                _super.prototype.$onAddToStage.call(this, stage, nestLevel);
+            };
+            /**
+             * @inheritDoc
+             */
+            p.$onRemoveFromStage = function () {
+                this.isAddToStage = false;
+                if (this.originVideo) {
+                    this.stopPlay();
+                    this.originVideo["setVideoVisible"](false);
+                }
+                _super.prototype.$onRemoveFromStage.call(this);
+            };
+            /**
+             * @private
+             */
+            p.getPlayWidth = function () {
+                if (!isNaN(this.widthSet)) {
+                    return this.widthSet;
+                }
+                if (this.bitmapData) {
+                    return this.bitmapData.width;
+                }
+                if (this.posterData) {
+                    return this.posterData.width;
+                }
+                return NaN;
+            };
+            /**
+             * @private
+             */
+            p.getPlayHeight = function () {
+                if (!isNaN(this.heightSet)) {
+                    return this.heightSet;
+                }
+                if (this.bitmapData) {
+                    return this.bitmapData.height;
+                }
+                if (this.posterData) {
+                    return this.posterData.height;
+                }
+                return NaN;
+            };
+            /**
+             * @private
+             */
+            p.$setHeight = function (value) {
+                this.heightSet = +value || 0;
+                this.setVideoSize();
+                this.$invalidate();
+                this.$invalidateContentBounds();
+                return _super.prototype.$setHeight.call(this, value);
+            };
+            /**
+             * @private
+             */
+            p.$setWidth = function (value) {
+                this.widthSet = +value || 0;
+                this.setVideoSize();
+                this.$invalidate();
+                this.$invalidateContentBounds();
+                return _super.prototype.$setWidth.call(this, value);
+            };
+            /**
+             * @inheritDoc
+             */
+            p.$setX = function (value) {
+                var result = _super.prototype.$setX.call(this, value);
+                this.setVideoSize();
+                return result;
+            };
+            /**
+             * @inheritDoc
+             */
+            p.$setY = function (value) {
+                var result = _super.prototype.$setY.call(this, value);
+                this.setVideoSize();
+                return result;
+            };
+            /**
+             * @private
+             */
+            p.setVideoSize = function () {
+                var video = this.originVideo;
+                if (video && !this.fullscreen) {
+                    if (!this.firstPlay) {
+                        video['setVideoRect'](this.x, this.y, this.widthSet, this.heightSet);
+                    }
+                    else {
+                        video['setVideoRect'](this.x, this.y, 0, 0);
+                    }
+                }
+            };
+            /**
+             * @private
+             */
+            p.$measureContentBounds = function (bounds) {
+                var posterData = this.posterData;
+                if (posterData) {
+                    bounds.setTo(0, 0, this.getPlayWidth(), this.getPlayHeight());
+                }
+                else {
+                    bounds.setEmpty();
+                }
+            };
+            /**
+             * @private
+             */
+            p.$render = function () {
+                var node = this.$renderNode;
+                var posterData = this.posterData;
+                var width = this.getPlayWidth();
+                var height = this.getPlayHeight();
+                if (width <= 0 || height <= 0) {
+                    return;
+                }
+                if (!this.isPlayed && posterData) {
+                    node.image = posterData;
+                    node.drawImage(0, 0, posterData.width, posterData.height, 0, 0, width, height);
+                }
+                else if (this.isPlayed) {
+                    this.setVideoSize();
+                }
+            };
+            p.markDirty = function () {
+                this.$invalidate();
+                return true;
+            };
+            return NativeVideo;
+        }(egret.DisplayObject));
+        native.NativeVideo = NativeVideo;
+        egret.registerClass(NativeVideo,'egret.native.NativeVideo',["egret.Video"]);
+        if (__global.Video) {
+            egret.Video = NativeVideo;
+        }
+        else {
+            egret.$error(1043);
+        }
+    })(native = egret.native || (egret.native = {}));
+})(egret || (egret = {}));
+//////////////////////////////////////////////////////////////////////////////////////
+//
+//  Copyright (c) 2014-2015, Egret Technology Inc.
+//  All rights reserved.
+//  Redistribution and use in source and binary forms, with or without
+//  modification, are permitted provided that the following conditions are met:
+//
+//     * Redistributions of source code must retain the above copyright
+//       notice, this list of conditions and the following disclaimer.
+//     * Redistributions in binary form must reproduce the above copyright
+//       notice, this list of conditions and the following disclaimer in the
+//       documentation and/or other materials provided with the distribution.
+//     * Neither the name of the Egret nor the
+//       names of its contributors may be used to endorse or promote products
+//       derived from this software without specific prior written permission.
+//
+//  THIS SOFTWARE IS PROVIDED BY EGRET AND CONTRIBUTORS "AS IS" AND ANY EXPRESS
+//  OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES
+//  OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED.
+//  IN NO EVENT SHALL EGRET AND CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT,
+//  INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT
+//  LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES;LOSS OF USE, DATA,
+//  OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF
+//  LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING
+//  NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE,
+//  EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+//
+//////////////////////////////////////////////////////////////////////////////////////
+var egret;
+(function (egret) {
     var localStorage;
     (function (localStorage) {
         var native;

@@ -29,60 +29,6 @@
 var dragonBones;
 (function (dragonBones) {
     /**
-     * @class dragonBones.DragonBones
-     * @classdesc
-     * DragonBones
-     */
-    var DragonBones = (function () {
-        function DragonBones() {
-        }
-        var d = __define,c=DragonBones,p=c.prototype;
-        /**
-         * DragonBones当前数据格式版本
-         */
-        DragonBones.DATA_VERSION = "4.0";
-        DragonBones.DATA_VERSION_4_5 = "4.5";
-        /**
-         *
-         */
-        DragonBones.PARENT_COORDINATE_DATA_VERSION = "3.0";
-        DragonBones.VERSION = "4.5.10";
-        return DragonBones;
-    }());
-    dragonBones.DragonBones = DragonBones;
-    egret.registerClass(DragonBones,'dragonBones.DragonBones');
-})(dragonBones || (dragonBones = {}));
-//////////////////////////////////////////////////////////////////////////////////////
-//
-//  Copyright (c) 2014-2015, Egret Technology Inc.
-//  All rights reserved.
-//  Redistribution and use in source and binary forms, with or without
-//  modification, are permitted provided that the following conditions are met:
-//
-//     * Redistributions of source code must retain the above copyright
-//       notice, this list of conditions and the following disclaimer.
-//     * Redistributions in binary form must reproduce the above copyright
-//       notice, this list of conditions and the following disclaimer in the
-//       documentation and/or other materials provided with the distribution.
-//     * Neither the name of the Egret nor the
-//       names of its contributors may be used to endorse or promote products
-//       derived from this software without specific prior written permission.
-//
-//  THIS SOFTWARE IS PROVIDED BY EGRET AND CONTRIBUTORS "AS IS" AND ANY EXPRESS
-//  OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES
-//  OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED.
-//  IN NO EVENT SHALL EGRET AND CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT,
-//  INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT
-//  LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES;LOSS OF USE, DATA,
-//  OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF
-//  LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING
-//  NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE,
-//  EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
-//
-//////////////////////////////////////////////////////////////////////////////////////
-var dragonBones;
-(function (dragonBones) {
-    /**
      * @class dragonBones.Animation
      * @classdesc
      * Animation实例隶属于Armature,用于控制Armature的动画播放。
@@ -166,10 +112,6 @@ var dragonBones;
         function Animation(armature) {
             /** @private */
             this._animationStateCount = 0;
-            /** @private */
-            this._updateTimelineStates = false;
-            /** @private */
-            this._updateFFDTimelineStates = false;
             this._armature = armature;
             this._animationList = [];
             this._animationStateList = [];
@@ -397,20 +339,10 @@ var dragonBones;
             }
             return false;
         };
-        /**
-         * @private
-         */
+        /** @private */
         p._advanceTime = function (passedTime) {
             if (!this._isPlaying) {
                 return;
-            }
-            if (this._updateTimelineStates) {
-                this._updateTimelineStates = false;
-                this.updateTimelineStates();
-            }
-            else if (this._updateFFDTimelineStates) {
-                this._updateFFDTimelineStates = false;
-                this.updateFFDTimelineStates();
             }
             var isFading = false;
             passedTime *= this._timeScale;
@@ -426,22 +358,12 @@ var dragonBones;
             }
             this._isFading = isFading;
         };
-        /**
-         * @private
-         */
-        p.updateTimelineStates = function () {
+        /** @private */
+        //当动画播放过程中Bonelist改变时触发
+        p._updateAnimationStates = function () {
             var i = this._animationStateList.length;
             while (i--) {
                 this._animationStateList[i]._updateTimelineStates();
-            }
-        };
-        /**
-         * @private
-         */
-        p.updateFFDTimelineStates = function () {
-            var i = this._animationStateList.length;
-            while (i--) {
-                this._animationStateList[i]._updateFFDTimeline();
             }
         };
         p.addState = function (animationState) {
@@ -687,7 +609,6 @@ var dragonBones;
             this._playTimes = 0;
             this._timelineStateList = [];
             this._slotTimelineStateList = [];
-            this._ffdTimelineStateList = [];
             this._boneMasks = [];
         }
         var d = __define,c=AnimationState,p=c.prototype;
@@ -731,11 +652,6 @@ var dragonBones;
                 dragonBones.SlotTimelineState._returnObject(this._slotTimelineStateList[i]);
             }
             this._slotTimelineStateList.length = 0;
-            i = this._ffdTimelineStateList.length;
-            while (i--) {
-                dragonBones.FFDTimelineState._returnObject(this._ffdTimelineStateList[i]);
-            }
-            this._ffdTimelineStateList.length = 0;
         };
         //骨架装配
         /**
@@ -823,7 +739,6 @@ var dragonBones;
         p._updateTimelineStates = function () {
             var timelineState;
             var slotTimelineState;
-            var ffdTimelineState;
             var i = this._timelineStateList.length;
             var len;
             while (i--) {
@@ -861,56 +776,6 @@ var dragonBones;
             for (i = 0, len = this._clip.slotTimelineList.length; i < len; i++) {
                 var slotTimeline = this._clip.slotTimelineList[i];
                 this.addSlotTimelineState(slotTimeline.name);
-            }
-            this._updateFFDTimeline();
-        };
-        /**
-         * @private
-         */
-        p._updateFFDTimeline = function () {
-            var i = 0, l = 0;
-            var ffdTimelineState;
-            var slot;
-            var timelines = {};
-            l = this._ffdTimelineStateList.length;
-            for (i = 0; i < l; ++i) {
-                ffdTimelineState = this._ffdTimelineStateList[i];
-                slot = this._armature.getSlot(ffdTimelineState.name);
-                if (!slot || slot.displayIndex != ffdTimelineState.displayIndex) {
-                    this._ffdTimelineStateList.splice(i, 1);
-                    dragonBones.FFDTimelineState._returnObject(timelineState);
-                }
-                else {
-                    timelines[ffdTimelineState.name] = ffdTimelineState;
-                }
-            }
-            if (this._clip.ffdTimelineList) {
-                l = this._clip.ffdTimelineList.length;
-                for (i = 0; i < l; ++i) {
-                    var ffdTimeline = this._clip.ffdTimelineList[i];
-                    //TODO:换肤 原始 display 匹配
-                    slot = this._armature.getSlot(ffdTimeline.name);
-                    if (!timelines[ffdTimeline.name] && slot && slot.displayList.length > 0 && slot.displayIndex >= 0 && slot.displayIndex == ffdTimeline.displayIndex) {
-                        /*for each(var eachState:FFDTimelineState in _ffdTimelineStateList)
-                        {
-                        if(eachState.name == timeline.name)
-                        {
-                        return;
-                        }
-                        }*/
-                        var timelineState = dragonBones.FFDTimelineState._borrowObject();
-                        timelineState._fadeIn(slot, this, ffdTimeline);
-                        this._ffdTimelineStateList.push(timelineState);
-                        timelines[ffdTimeline.name] = timelineState;
-                    }
-                }
-            }
-            var slots = this._armature.getSlots(false);
-            for (i = 0, l = slots.length; i < l; ++i) {
-                slot = slots[i];
-                if (slot._meshData && !timelines[slot.name]) {
-                    slot._updateFFD(null, 0);
-                }
             }
         };
         p.addTimelineState = function (timelineName) {
@@ -1201,11 +1066,6 @@ var dragonBones;
                 var slotTimeline = this._slotTimelineStateList[i];
                 slotTimeline._update(progress);
                 this._isComplete = timeline._isComplete && this._isComplete;
-            }
-            for (i = 0, len = this._ffdTimelineStateList.length; i < len; i++) {
-                var ffdTimeline = this._ffdTimelineStateList[i];
-                ffdTimeline._update(progress);
-                this._isComplete = ffdTimeline._isComplete && this._isComplete;
             }
             //update main timeline
             if (this._currentTime != currentTime) {
@@ -1513,332 +1373,6 @@ var dragonBones;
 //  EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 //
 //////////////////////////////////////////////////////////////////////////////////////
-var dragonBones;
-(function (dragonBones) {
-    /** @private */
-    var FFDTimelineState = (function () {
-        function FFDTimelineState() {
-            /** @private */
-            this.skin = null;
-            this.name = null;
-            this.displayIndex = 0;
-            this._isComplete = false;
-            this._animationState = null;
-            this._totalTime = 0;
-            this._currentTime = 0;
-            this._currentFrameIndex = 0;
-            this._currentFramePosition = 0;
-            this._currentFrameDuration = 0;
-            this._tweenEasing = NaN;
-            this._tweenCurve = null;
-            this._tweenVertices = false;
-            this._offset = 0;
-            this._durationVertices = [];
-            this._updateVertices = [];
-            this._rawAnimationScale = 1;
-            this._updateMode = 0;
-            this._slot = null;
-            this._timelineData = null;
-        }
-        var d = __define,c=FFDTimelineState,p=c.prototype;
-        /** @private */
-        FFDTimelineState._borrowObject = function () {
-            if (FFDTimelineState._pool.length == 0) {
-                return new FFDTimelineState();
-            }
-            return FFDTimelineState._pool.pop();
-        };
-        /** @private */
-        FFDTimelineState._returnObject = function (timeline) {
-            if (FFDTimelineState._pool.indexOf(timeline) < 0) {
-                FFDTimelineState._pool[FFDTimelineState._pool.length] = timeline;
-            }
-            timeline.clear();
-        };
-        /** @private */
-        FFDTimelineState._clear = function () {
-            var i = FFDTimelineState._pool.length;
-            while (i--) {
-                FFDTimelineState._pool[i].clear();
-            }
-            FFDTimelineState._pool.length = 0;
-        };
-        p.clear = function () {
-            this._slot = null;
-            this._animationState = null;
-            this._timelineData = null;
-        };
-        //动画开始结束
-        /** @private */
-        p._fadeIn = function (slot, animationState, timelineData) {
-            this._slot = slot;
-            this._animationState = animationState;
-            this._timelineData = timelineData;
-            this.name = timelineData.name;
-            this.skin = timelineData.skin;
-            this.displayIndex = timelineData.displayIndex;
-            this._totalTime = this._timelineData.duration;
-            this._rawAnimationScale = this._animationState.clip.scale;
-            this._isComplete = false;
-            this._currentFrameIndex = -1;
-            this._currentTime = -1;
-            this._tweenEasing = NaN;
-            switch (this._timelineData.frameList.length) {
-                case 0:
-                    this._updateMode = 0;
-                    break;
-                case 1:
-                    this._updateMode = 1;
-                    break;
-                default:
-                    this._updateMode = -1;
-                    break;
-            }
-        };
-        /** @private */
-        p._fadeOut = function () {
-        };
-        //动画进行中
-        /** @private */
-        p._update = function (progress) {
-            if (this._updateMode == -1) {
-                this.updateMultipleFrame(progress);
-            }
-            else if (this._updateMode == 1) {
-                this._updateMode = 0;
-                this.updateSingleFrame();
-            }
-        };
-        p.updateMultipleFrame = function (progress) {
-            var currentPlayTimes = 0;
-            progress /= this._timelineData.scale;
-            progress += this._timelineData.offset;
-            var currentTime = this._totalTime * progress;
-            var playTimes = this._animationState.playTimes;
-            if (playTimes == 0) {
-                this._isComplete = false;
-                currentPlayTimes = Math.ceil(Math.abs(currentTime) / this._totalTime) || 1;
-                if (currentTime >= 0) {
-                    currentTime -= Math.floor(currentTime / this._totalTime) * this._totalTime;
-                }
-                else {
-                    currentTime -= Math.ceil(currentTime / this._totalTime) * this._totalTime;
-                }
-                if (currentTime < 0) {
-                    currentTime += this._totalTime;
-                }
-            }
-            else {
-                var totalTimes = playTimes * this._totalTime;
-                if (currentTime >= totalTimes) {
-                    currentTime = totalTimes;
-                    this._isComplete = true;
-                }
-                else if (currentTime <= -totalTimes) {
-                    currentTime = -totalTimes;
-                    this._isComplete = true;
-                }
-                else {
-                    this._isComplete = false;
-                }
-                if (currentTime < 0) {
-                    currentTime += totalTimes;
-                }
-                currentPlayTimes = Math.ceil(currentTime / this._totalTime) || 1;
-                if (this._isComplete) {
-                    currentTime = this._totalTime;
-                }
-                else {
-                    if (currentTime >= 0) {
-                        currentTime -= Math.floor(currentTime / this._totalTime) * this._totalTime;
-                    }
-                    else {
-                        currentTime -= Math.ceil(currentTime / this._totalTime) * this._totalTime;
-                    }
-                }
-            }
-            if (this._currentTime != currentTime) {
-                this._currentTime = currentTime;
-                var frameList = this._timelineData.frameList;
-                var prevFrame;
-                var currentFrame;
-                for (var i = 0, l = this._timelineData.frameList.length; i < l; ++i) {
-                    if (this._currentFrameIndex < 0) {
-                        this._currentFrameIndex = 0;
-                    }
-                    else if (this._currentTime < this._currentFramePosition || this._currentTime >= this._currentFramePosition + this._currentFrameDuration) {
-                        this._currentFrameIndex++;
-                        if (this._currentFrameIndex >= frameList.length) {
-                            if (this._isComplete) {
-                                this._currentFrameIndex--;
-                                break;
-                            }
-                            else {
-                                this._currentFrameIndex = 0;
-                            }
-                        }
-                    }
-                    else {
-                        break;
-                    }
-                    currentFrame = (frameList[this._currentFrameIndex]);
-                    this._currentFrameDuration = currentFrame.duration;
-                    this._currentFramePosition = currentFrame.position;
-                    prevFrame = currentFrame;
-                }
-                if (currentFrame) {
-                    this.updateToNextFrame(currentPlayTimes);
-                }
-                if (this._tweenEasing == this._tweenEasing) {
-                    this.updateTween();
-                }
-            }
-        };
-        p.updateToNextFrame = function (currentPlayTimes) {
-            if (currentPlayTimes === void 0) { currentPlayTimes = 0; }
-            var nextFrameIndex = this._currentFrameIndex + 1;
-            if (nextFrameIndex >= this._timelineData.frameList.length) {
-                nextFrameIndex = 0;
-            }
-            var currentFrame = (this._timelineData.frameList[this._currentFrameIndex]);
-            var nextFrame = (this._timelineData.frameList[nextFrameIndex]);
-            var tweenEnabled = false;
-            if (nextFrameIndex == 0 &&
-                (!this._animationState.lastFrameAutoTween ||
-                    (this._animationState.playTimes &&
-                        this._animationState.currentPlayTimes >= this._animationState.playTimes &&
-                        ((this._currentFramePosition + this._currentFrameDuration) / this._totalTime + currentPlayTimes - this._timelineData.offset) * this._timelineData.scale > 0.999999))) {
-                this._tweenEasing = NaN;
-                tweenEnabled = false;
-            }
-            else if (this._animationState.autoTween) {
-                this._tweenEasing = this._animationState.clip.tweenEasing;
-                if (isNaN(this._tweenEasing)) {
-                    this._tweenEasing = currentFrame.tweenEasing;
-                    this._tweenCurve = currentFrame.curve;
-                    if (isNaN(this._tweenEasing) && this._tweenCurve == null) {
-                        tweenEnabled = false;
-                    }
-                    else {
-                        if (this._tweenEasing == 10) {
-                            this._tweenEasing = 0;
-                        }
-                        //_tweenEasing [-1, 0) 0 (0, 1] (1, 2]
-                        tweenEnabled = true;
-                    }
-                }
-                else {
-                    //_tweenEasing [-1, 0) 0 (0, 1] (1, 2]
-                    tweenEnabled = true;
-                }
-            }
-            else {
-                this._tweenEasing = currentFrame.tweenEasing;
-                this._tweenCurve = currentFrame.curve;
-                if ((isNaN(this._tweenEasing) || this._tweenEasing == 10) && this._tweenCurve == null) {
-                    this._tweenEasing = NaN;
-                    tweenEnabled = false;
-                }
-                else {
-                    //_tweenEasing [-1, 0) 0 (0, 1] (1, 2]
-                    tweenEnabled = true;
-                }
-            }
-            if (tweenEnabled) {
-                this._offset = currentFrame.offset < nextFrame.offset ? currentFrame.offset : nextFrame.offset;
-                var end = currentFrame.offset + currentFrame.vertices.length > nextFrame.offset + nextFrame.vertices.length ?
-                    currentFrame.offset + currentFrame.vertices.length :
-                    nextFrame.offset + nextFrame.vertices.length;
-                this._durationVertices.length = end - this._offset;
-                var curVertex;
-                var nextVertex;
-                this._tweenVertices = false;
-                for (var i = this._offset; i < end; i++) {
-                    curVertex = 0;
-                    nextVertex = 0;
-                    if (currentFrame.offset <= i && currentFrame.vertices.length + currentFrame.offset > i) {
-                        curVertex = Number(currentFrame.vertices[i - currentFrame.offset]);
-                    }
-                    if (nextFrame.offset <= i && nextFrame.vertices.length + nextFrame.offset > i) {
-                        nextVertex = Number(nextFrame.vertices[i - nextFrame.offset]);
-                    }
-                    this._durationVertices[i - this._offset] = nextVertex - curVertex;
-                    if (this._durationVertices[i - this._offset] != 0) {
-                        this._tweenVertices = true;
-                    }
-                }
-            }
-            else {
-                this._tweenVertices = false;
-                this._slot._updateFFD(currentFrame.vertices, currentFrame.offset);
-            }
-        };
-        p.updateTween = function () {
-            var currentFrame = this._timelineData.frameList[this._currentFrameIndex];
-            if (this._tweenVertices && this._animationState.displayControl) {
-                var progress = (this._currentTime - this._currentFramePosition) / this._currentFrameDuration;
-                if (this._tweenCurve != null) {
-                    progress = this._tweenCurve.getValueByProgress(progress);
-                }
-                if (this._tweenEasing) {
-                    progress = dragonBones.MathUtil.getEaseValue(progress, this._tweenEasing);
-                }
-                var end = this._offset + this._durationVertices.length;
-                this._updateVertices.length = this._durationVertices.length;
-                var curVertex;
-                for (var i = this._offset; i < end; i++) {
-                    curVertex = 0;
-                    if (currentFrame.offset <= i && currentFrame.vertices.length + currentFrame.offset > i) {
-                        curVertex = Number(currentFrame.vertices[i - currentFrame.offset]);
-                    }
-                    this._updateVertices[i - this._offset] = curVertex + this._durationVertices[i - this._offset] * progress;
-                }
-                this._slot._updateFFD(this._updateVertices, this._offset);
-            }
-        };
-        p.updateSingleFrame = function () {
-            var currentFrame = this._timelineData.frameList[0];
-            this._isComplete = true;
-            this._tweenEasing = NaN;
-            this._tweenVertices = false;
-            if (this._animationState.displayControl) {
-                this._slot._updateFFD(currentFrame.vertices, currentFrame.offset);
-            }
-        };
-        FFDTimelineState._pool = [];
-        return FFDTimelineState;
-    }());
-    dragonBones.FFDTimelineState = FFDTimelineState;
-    egret.registerClass(FFDTimelineState,'dragonBones.FFDTimelineState');
-})(dragonBones || (dragonBones = {}));
-//////////////////////////////////////////////////////////////////////////////////////
-//
-//  Copyright (c) 2014-2015, Egret Technology Inc.
-//  All rights reserved.
-//  Redistribution and use in source and binary forms, with or without
-//  modification, are permitted provided that the following conditions are met:
-//
-//     * Redistributions of source code must retain the above copyright
-//       notice, this list of conditions and the following disclaimer.
-//     * Redistributions in binary form must reproduce the above copyright
-//       notice, this list of conditions and the following disclaimer in the
-//       documentation and/or other materials provided with the distribution.
-//     * Neither the name of the Egret nor the
-//       names of its contributors may be used to endorse or promote products
-//       derived from this software without specific prior written permission.
-//
-//  THIS SOFTWARE IS PROVIDED BY EGRET AND CONTRIBUTORS "AS IS" AND ANY EXPRESS
-//  OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES
-//  OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED.
-//  IN NO EVENT SHALL EGRET AND CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT,
-//  INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT
-//  LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES;LOSS OF USE, DATA,
-//  OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF
-//  LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING
-//  NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE,
-//  EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
-//
-//////////////////////////////////////////////////////////////////////////////////////
 //////////////////////////////////////////////////////////////////////////////////////
 //
 //  Copyright (c) 2014-2015, Egret Technology Inc.
@@ -1897,7 +1431,15 @@ var dragonBones;
 //////////////////////////////////////////////////////////////////////////////////////
 var dragonBones;
 (function (dragonBones) {
-    /** @private */
+    /**
+     * @class dragonBones.SlotTimelineState
+     * @classdesc
+     * SlotTimelineState 负责计算 Slot 的时间轴动画。
+     * SlotTimelineState 实例隶属于 AnimationState. AnimationState在创建时会为每个包含动作的 Slot生成一个 SlotTimelineState 实例.
+     * @see dragonBones.Animation
+     * @see dragonBones.AnimationState
+     * @see dragonBones.Slot
+     */
     var SlotTimelineState = (function () {
         function SlotTimelineState() {
             this._totalTime = 0; //duration
@@ -1934,6 +1476,7 @@ var dragonBones;
         };
         p.clear = function () {
             if (this._slot) {
+                this._slot._removeState(this);
                 this._slot = null;
             }
             this._armature = null;
@@ -1970,6 +1513,7 @@ var dragonBones;
                     this._updateMode = -1;
                     break;
             }
+            this._slot._addState(this);
         };
         /** @private */
         p._fadeOut = function () {
@@ -3237,22 +2781,16 @@ var dragonBones;
             var j;
             var jLen;
             for (this._i = 0; this._i < len; this._i++) {
-                for (j = 0, jLen = this._boneIKList[this._i].length; j < jLen; j++) {
-                    bone = this._boneIKList[this._i][j];
-                    if (bone.isIKConstraint) {
-                        var ikCon = this._ikList[this._i - 1];
-                        if (ikCon.bones[0].name == bone.name) {
-                            bone._update(this._isFading);
-                            bone.rotationIK = bone.global.rotation;
-                            if (ikCon.bones.length > 1) {
-                                ikCon.bones[1]._update(this._isFading);
-                                ikCon.bones[1].rotationIK = ikCon.bones[1].global.rotation;
-                            }
-                            ikCon.compute();
-                        }
+                if (this._i != 0) {
+                    this._ikList[this._i - 1].compute();
+                    for (j = 0, jLen = this._boneIKList[this._i].length; j < jLen; j++) {
+                        bone = this._boneIKList[this._i][j];
                         bone.adjustGlobalTransformMatrixByIK();
                     }
-                    else {
+                }
+                else {
+                    for (j = 0, jLen = this._boneIKList[this._i].length; j < jLen; j++) {
+                        bone = this._boneIKList[this._i][j];
                         bone._update(this._isFading);
                         bone.rotationIK = bone.global.rotation;
                     }
@@ -3512,7 +3050,7 @@ var dragonBones;
             if (ifNeedSortBoneList) {
                 this.sortBoneList();
             }
-            this._animation._updateTimelineStates = true;
+            this._animation._updateAnimationStates();
         };
         p.sortBoneList = function () {
             var i = this._boneList.length;
@@ -3762,16 +3300,6 @@ var dragonBones;
             this.b = m.b;
             this.c = m.c;
             this.d = m.d;
-        };
-        /**@private*/
-        p.transformPoint = function (x, y, result, delta) {
-            if (delta === void 0) { delta = false; }
-            result.x = this.a * x + this.c * y;
-            result.y = this.b * x + this.d * y;
-            if (!delta) {
-                result.x += this.tx;
-                result.y += this.ty;
-            }
         };
         return Matrix;
     }());
@@ -5152,24 +4680,9 @@ var dragonBones;
         __extends(Slot, _super);
         function Slot() {
             _super.call(this);
-            /**
-             * @private
-             */
-            this.isMeshEnabled = false;
             this._currentDisplayIndex = 0;
-            /** @private */
-            this._ffdChanged = false;
-            /** @private */
-            this._ffdVertices = null;
-            /** @private */
-            this._meshBones = null;
-            /** @private */
-            this._meshData = null;
-            /**
-             * @private
-             */
-            this._ffdOffset = 0;
             this._displayList = [];
+            this._timelineStateList = [];
             this._currentDisplayIndex = -1;
             this._originZOrder = 0;
             this._tweenZOrder = 0;
@@ -5183,12 +4696,6 @@ var dragonBones;
             this.inheritScale = true;
         }
         var d = __define,c=Slot,p=c.prototype;
-        d(p, "displayIndex"
-            /** @private */
-            ,function () {
-                return this._currentDisplayIndex;
-            }
-        );
         /**
          * 通过传入 SlotData 初始化Slot
          * @param slotData
@@ -5215,6 +4722,23 @@ var dragonBones;
             this._currentDisplay = null;
             //_childArmature = null;
         };
+        p.sortState = function (state1, state2) {
+            return state1._animationState.layer < state2._animationState.layer ? -1 : 1;
+        };
+        /** @private */
+        p._addState = function (timelineState) {
+            if (this._timelineStateList.indexOf(timelineState) < 0) {
+                this._timelineStateList.push(timelineState);
+                this._timelineStateList.sort(this.sortState);
+            }
+        };
+        /** @private */
+        p._removeState = function (timelineState) {
+            var index = this._timelineStateList.indexOf(timelineState);
+            if (index >= 0) {
+                this._timelineStateList.splice(index, 1);
+            }
+        };
         //骨架装配
         /** @private */
         p.setArmature = function (value) {
@@ -5237,28 +4761,15 @@ var dragonBones;
         //动画
         /** @private */
         p._update = function () {
-            if (this._parent._needUpdate > 0 || this._needUpdate || this._ffdChanged || this.isMeshUpdate()) {
-                var result = this._updateGlobal();
-                if (result) {
-                    result.release();
-                }
-                this._updateTransform();
-                if (this._meshData) {
-                    this._updateMesh();
-                }
-                this._needUpdate = false;
+            if (this._parent._needUpdate <= 0 && !this._needUpdate) {
+                return;
             }
-        };
-        p.isMeshUpdate = function () {
-            if (this._meshData && this._meshBones.length) {
-                for (var i = 0, l = this._meshBones.length; i < l; ++i) {
-                    var bone = this._meshBones[i];
-                    if (bone._needUpdate > 0) {
-                        return true;
-                    }
-                }
+            var result = this._updateGlobal();
+            if (result) {
+                result.release();
             }
-            return false;
+            this._updateTransform();
+            this._needUpdate = false;
         };
         p._calculateRelativeParentTransform = function () {
             this._global.scaleX = this._origin.scaleX * this._offset.scaleX;
@@ -5304,7 +4815,6 @@ var dragonBones;
                     this._isShowDisplay = false;
                     this._removeDisplayFromContainer();
                     this.updateChildArmatureAnimation();
-                    this._armature.animation._updateFFDTimelineStates = true;
                 }
             }
             else if (this._displayList.length > 0) {
@@ -5323,7 +4833,6 @@ var dragonBones;
                         this._origin.copy(this._displayDataList[this._currentDisplayIndex].transform);
                     }
                     this._needUpdate = true;
-                    this._armature.animation._updateFFDTimelineStates = true;
                 }
                 else if (!this._isShowDisplay) {
                     this._isShowDisplay = true;
@@ -5332,37 +4841,6 @@ var dragonBones;
                         this._addDisplayToContainer(this._armature.display);
                     }
                     this.updateChildArmatureAnimation();
-                    this._armature.animation._updateFFDTimelineStates = true;
-                }
-            }
-            // update _ffdVertices length
-            if (this._currentDisplayIndex >= 0 && this._armature.animation._updateFFDTimelineStates) {
-                var displayData = this._displayDataList[this._currentDisplayIndex];
-                if (displayData.type == dragonBones.DisplayData.MESH) {
-                    this._meshData = displayData;
-                }
-                else {
-                    this._meshData = null;
-                }
-                if (this._meshData) {
-                    if (this._meshBones) {
-                        this._meshBones.length = this._meshData.bones.length;
-                    }
-                    else {
-                        this._meshBones = [];
-                    }
-                    for (var i = 0, l = this._meshData.bones.length; i < l; ++i) {
-                        var boneData = this._meshData.bones[i];
-                        this._meshBones[i] = this._armature.getBone(boneData.name);
-                    }
-                }
-                else {
-                    if (this._ffdVertices) {
-                        this._ffdVertices.length = 0;
-                    }
-                    if (this._meshBones) {
-                        this._meshBones.length = 0;
-                    }
                 }
             }
         };
@@ -5584,14 +5062,6 @@ var dragonBones;
         };
         /**
          * @private
-         */
-        p._updateFFD = function (vertices, offset) {
-            this._ffdChanged = true;
-            this._ffdVertices = vertices;
-            this._ffdOffset = offset;
-        };
-        /**
-         * @private
          * Updates the color of the display object.
          * @param a
          * @param r
@@ -5663,11 +5133,6 @@ var dragonBones;
         p._resetToOrigin = function () {
             this._changeDisplay(this._originDisplayIndex);
             this._updateDisplayColor(0, 0, 0, 0, 1, 1, 1, 1, true);
-        };
-        /**
-         * @private
-         */
-        p._updateMesh = function () {
         };
         return Slot;
     }(dragonBones.DBObject));
@@ -6678,6 +6143,60 @@ var dragonBones;
 var dragonBones;
 (function (dragonBones) {
     /**
+     * @class dragonBones.DragonBones
+     * @classdesc
+     * DragonBones
+     */
+    var DragonBones = (function () {
+        function DragonBones() {
+        }
+        var d = __define,c=DragonBones,p=c.prototype;
+        /**
+         * DragonBones当前数据格式版本
+         */
+        DragonBones.DATA_VERSION = "4.0";
+        DragonBones.DATA_VERSION_4_5 = "4.5";
+        /**
+         *
+         */
+        DragonBones.PARENT_COORDINATE_DATA_VERSION = "3.0";
+        DragonBones.VERSION = "4.5.10";
+        return DragonBones;
+    }());
+    dragonBones.DragonBones = DragonBones;
+    egret.registerClass(DragonBones,'dragonBones.DragonBones');
+})(dragonBones || (dragonBones = {}));
+//////////////////////////////////////////////////////////////////////////////////////
+//
+//  Copyright (c) 2014-2015, Egret Technology Inc.
+//  All rights reserved.
+//  Redistribution and use in source and binary forms, with or without
+//  modification, are permitted provided that the following conditions are met:
+//
+//     * Redistributions of source code must retain the above copyright
+//       notice, this list of conditions and the following disclaimer.
+//     * Redistributions in binary form must reproduce the above copyright
+//       notice, this list of conditions and the following disclaimer in the
+//       documentation and/or other materials provided with the distribution.
+//     * Neither the name of the Egret nor the
+//       names of its contributors may be used to endorse or promote products
+//       derived from this software without specific prior written permission.
+//
+//  THIS SOFTWARE IS PROVIDED BY EGRET AND CONTRIBUTORS "AS IS" AND ANY EXPRESS
+//  OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES
+//  OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED.
+//  IN NO EVENT SHALL EGRET AND CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT,
+//  INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT
+//  LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES;LOSS OF USE, DATA,
+//  OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF
+//  LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING
+//  NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE,
+//  EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+//
+//////////////////////////////////////////////////////////////////////////////////////
+var dragonBones;
+(function (dragonBones) {
+    /**
      * @class dragonBones.Event
      * @classdesc
      * 事件
@@ -7537,50 +7056,6 @@ var dragonBones;
             return this._generateDisplay(targetTextureAtlas, textureName, pivotX, pivotY);
         };
         /**
-         * @private
-         */
-        p.getMeshDisplay = function (meshData, slot, textureAtlasName) {
-            if (textureAtlasName === void 0) { textureAtlasName = null; }
-            var targetTextureAtlas;
-            var textureAtlasArr;
-            var i;
-            var len;
-            var textureName = meshData.name;
-            if (textureAtlasName) {
-                textureAtlasArr = this.textureAtlasDic[textureAtlasName];
-                if (textureAtlasArr) {
-                    for (i = 0, len = textureAtlasArr.length; i < len; i++) {
-                        targetTextureAtlas = textureAtlasArr[i];
-                        if (targetTextureAtlas.getRegion(textureName)) {
-                            break;
-                        }
-                        targetTextureAtlas = null;
-                    }
-                }
-            }
-            else {
-                for (textureAtlasName in this.textureAtlasDic) {
-                    textureAtlasArr = this.textureAtlasDic[textureAtlasName];
-                    if (textureAtlasArr) {
-                        for (i = 0, len = textureAtlasArr.length; i < len; i++) {
-                            targetTextureAtlas = textureAtlasArr[i];
-                            if (targetTextureAtlas.getRegion(textureName)) {
-                                break;
-                            }
-                            targetTextureAtlas = null;
-                        }
-                        if (targetTextureAtlas != null) {
-                            break;
-                        }
-                    }
-                }
-            }
-            if (!targetTextureAtlas) {
-                return null;
-            }
-            return this._generateMesh(targetTextureAtlas, textureName, meshData, slot);
-        };
-        /**
          * 构建骨架
          * 一般情况下dragonBonesData和textureAtlas是一对一的，通过相同的key对应。
          * @param armatureName 骨架的名字
@@ -7811,9 +7286,6 @@ var dragonBones;
                             var childArmature = this.buildArmatureUsingArmatureDataFromTextureAtlas(armature.__dragonBonesData, armature.__dragonBonesData.getArmatureDataByName(displayData.name), textureAtlasName, skinName);
                             displayList[l] = childArmature;
                             break;
-                        case dragonBones.DisplayData.MESH:
-                            displayList[l] = this.getMeshDisplay(displayData, slot, textureAtlasName);
-                            break;
                         case dragonBones.DisplayData.IMAGE:
                         default:
                             displayList[l] = this.getTextureDisplay(displayData.name, textureAtlasName, displayData.pivot.x, displayData.pivot.y);
@@ -7867,7 +7339,6 @@ var dragonBones;
             var slotData;
             var slot;
             for (var i = 0; i < slotDataList.length; i++) {
-                slotDisplayDataList.length = 0;
                 displayList.length = 0;
                 slotData = slotDataList[i];
                 slot = this._generateFastSlot();
@@ -7883,7 +7354,6 @@ var dragonBones;
                             slot.hasChildArmature = true;
                             break;
                         case dragonBones.DisplayData.IMAGE:
-                        case dragonBones.DisplayData.MESH:
                             slotDisplayDataList[l] = [displayData, this.getTextureData(displayData.name, textureAtlasName)];
                             displayList[l] = slot._rawDisplay;
                             break;
@@ -7979,12 +7449,6 @@ var dragonBones;
         p._generateDisplay = function (textureAtlas, fullName, pivotX, pivotY) {
             return null;
         };
-        /**
-         * @private
-         */
-        p._generateMesh = function (textureAtlas, fullName, meshData, slot) {
-            return null;
-        };
         BaseFactory._helpMatrix = new dragonBones.Matrix();
         return BaseFactory;
     }(dragonBones.EventDispatcher));
@@ -7998,1841 +7462,6 @@ var dragonBones;
     }());
     dragonBones.BuildArmatureDataPackage = BuildArmatureDataPackage;
     egret.registerClass(BuildArmatureDataPackage,'dragonBones.BuildArmatureDataPackage');
-})(dragonBones || (dragonBones = {}));
-//////////////////////////////////////////////////////////////////////////////////////
-//
-//  Copyright (c) 2014-2015, Egret Technology Inc.
-//  All rights reserved.
-//  Redistribution and use in source and binary forms, with or without
-//  modification, are permitted provided that the following conditions are met:
-//
-//     * Redistributions of source code must retain the above copyright
-//       notice, this list of conditions and the following disclaimer.
-//     * Redistributions in binary form must reproduce the above copyright
-//       notice, this list of conditions and the following disclaimer in the
-//       documentation and/or other materials provided with the distribution.
-//     * Neither the name of the Egret nor the
-//       names of its contributors may be used to endorse or promote products
-//       derived from this software without specific prior written permission.
-//
-//  THIS SOFTWARE IS PROVIDED BY EGRET AND CONTRIBUTORS "AS IS" AND ANY EXPRESS
-//  OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES
-//  OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED.
-//  IN NO EVENT SHALL EGRET AND CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT,
-//  INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT
-//  LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES;LOSS OF USE, DATA,
-//  OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF
-//  LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING
-//  NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE,
-//  EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
-//
-//////////////////////////////////////////////////////////////////////////////////////
-var dragonBones;
-(function (dragonBones) {
-    /**
-     * @class dragonBones.FastArmature
-     * @classdesc
-     * FastArmature 是 DragonBones 高效率的骨骼动画系统。他能缓存动画数据，大大减少动画播放的计算
-     * 不支持动态添加Bone和Slot，换装请通过更换Slot的dispaly或子骨架childArmature来实现
-     * @extends dragonBones.EventDispatcher
-     * @see dragonBones.ArmatureData
-     *
-     * @example
-       <pre>
-        //获取动画数据
-        var skeletonData = RES.getRes("skeleton");
-        //获取纹理集数据
-        var textureData = RES.getRes("textureConfig");
-        //获取纹理集图片
-        var texture = RES.getRes("texture");
-      
-        //创建一个工厂，用来创建Armature
-        var factory:dragonBones.EgretFactory = new dragonBones.EgretFactory();
-        //把动画数据添加到工厂里
-        factory.addSkeletonData(dragonBones.DataParser.parseDragonBonesData(skeletonData));
-        //把纹理集数据和图片添加到工厂里
-        factory.addTextureAtlas(new dragonBones.EgretTextureAtlas(texture, textureData));
-      
-        //获取Armature的名字，dragonBones4.0的数据可以包含多个骨架，这里取第一个Armature
-        var armatureName:string = skeletonData.armature[0].name;
-        //从工厂里创建出Armature
-        var armature:dragonBones.FastArmature = factory.buildFastArmature(armatureName);
-        //获取装载Armature的容器
-        var armatureDisplay = armature.display;
-        //把它添加到舞台上
-        this.addChild(armatureDisplay);
-        
-        //以60fps的帧率开启动画缓存，缓存所有的动画数据
-        var animationCachManager:dragonBones.AnimationCacheManager = armature.enableAnimationCache(60);
-      
-       //取得这个Armature动画列表中的第一个动画的名字
-        var curAnimationName = armature.animation.animationList[0];
-        //播放这个动画，gotoAndPlay各个参数说明
-        //第一个参数 animationName {string} 指定播放动画的名称.
-        //第二个参数 fadeInTime {number} 动画淡入时间 (>= 0), 默认值：-1 意味着使用动画数据中的淡入时间.
-        //第三个参数 duration {number} 动画播放时间。默认值：-1 意味着使用动画数据中的播放时间.
-        //第四个参数 layTimes {number} 动画播放次数(0:循环播放, >=1:播放次数, NaN:使用动画数据中的播放时间), 默认值：NaN
-        armature.animation.gotoAndPlay(curAnimationName,0.3,-1,0);
-      
-        //把Armature添加到心跳时钟里
-        dragonBones.WorldClock.clock.add(armature);
-        //心跳时钟开启
-        egret.Ticker.getInstance().register(function (advancedTime) {
-            dragonBones.WorldClock.clock.advanceTime(advancedTime / 1000);
-        }, this);
-       </pre>
-     */
-    var FastArmature = (function (_super) {
-        __extends(FastArmature, _super);
-        function FastArmature(display) {
-            _super.call(this);
-            /**
-             * 保证CacheManager是独占的前提下可以开启，开启后有助于性能提高
-             */
-            this.isCacheManagerExclusive = false;
-            this._cacheFrameIndex = -1;
-            this._boneIKList = [];
-            this._enableEventDispatch = true;
-            /** @private*/
-            this._useCache = true;
-            /** @private*/
-            this._isFrameCached = false;
-            this._display = display;
-            this._animation = new dragonBones.FastAnimation(this);
-            this._slotsZOrderChanged = false;
-            this._armatureData = null;
-            this.boneList = [];
-            this._boneDic = {};
-            this.slotList = [];
-            this._slotDic = {};
-            this.slotHasChildArmatureList = [];
-            this._eventList = [];
-            this._ikList = [];
-            this._delayDispose = false;
-            this._lockDispose = false;
-        }
-        var d = __define,c=FastArmature,p=c.prototype;
-        /**
-         * Cleans up any resources used by this instance.
-         */
-        p.dispose = function () {
-            this._delayDispose = true;
-            if (!this._animation || this._lockDispose) {
-                return;
-            }
-            this.userData = null;
-            this._animation.dispose();
-            var i = this.slotList.length;
-            while (i--) {
-                this.slotList[i].dispose();
-            }
-            i = this.boneList.length;
-            while (i--) {
-                this.boneList[i].dispose();
-            }
-            i = this._ikList.length;
-            while (i--) {
-                this._ikList[i].dispose();
-            }
-            this.slotList.length = 0;
-            this.boneList.length = 0;
-            this._armatureData = null;
-            this._animation = null;
-            this.slotList = null;
-            this.boneList = null;
-            this._eventList = null;
-            this._ikList = null;
-        };
-        /**
-         * Update the animation using this method typically in an ENTERFRAME Event or with a Timer.
-         * @param The amount of second to move the playhead ahead.
-         */
-        p.advanceTime = function (passedTime) {
-            this._lockDispose = true;
-            this._isFrameCached = false;
-            this._animation.advanceTime(passedTime);
-            var bone;
-            var slot;
-            var i = 0;
-            var len = this._boneIKList.length;
-            var j;
-            var jLen;
-            if (this._isFrameCached) {
-                if (!this._useCache) {
-                    this._useCache = true;
-                }
-                i = this.slotList.length;
-                while (i--) {
-                    slot = this.slotList[i];
-                    slot.updateByCache(this._cacheFrameIndex);
-                }
-            }
-            else {
-                if (this._useCache) {
-                    this._useCache = false;
-                }
-                for (i = 0; i < len; i++) {
-                    for (j = 0, jLen = this._boneIKList[i].length; j < jLen; j++) {
-                        bone = this._boneIKList[i][j];
-                        if (bone.isIKConstraint) {
-                            var ikCon = this._ikList[i - 1];
-                            if (ikCon.bones[0].name == bone.name) {
-                                bone.update();
-                                bone.rotationIK = bone.global.rotation;
-                                if (ikCon.bones.length > 1) {
-                                    ikCon.bones[1].update();
-                                    ikCon.bones[1].rotationIK = ikCon.bones[1].global.rotation;
-                                }
-                                ikCon.compute();
-                            }
-                            bone.adjustGlobalTransformMatrixByIK();
-                        }
-                        else {
-                            bone.update();
-                            bone.rotationIK = bone.global.rotation;
-                        }
-                    }
-                }
-                i = this.slotList.length;
-                while (i--) {
-                    slot = this.slotList[i];
-                    slot._update();
-                }
-            }
-            i = this.slotHasChildArmatureList.length;
-            while (i--) {
-                slot = this.slotHasChildArmatureList[i];
-                var childArmature = slot.childArmature;
-                if (childArmature) {
-                    childArmature.advanceTime(passedTime);
-                }
-            }
-            if (this._slotsZOrderChanged) {
-                this.updateSlotsZOrder();
-            }
-            // Modify Fast mode by duanchunlei
-            if (!this._isFrameCached) {
-                var animationCache = this._animation.animationState.animationCache;
-                if (animationCache) {
-                    animationCache.addFrame(this._cacheFrameIndex, this);
-                }
-            }
-            while (this._eventList.length > 0) {
-                this.dispatchEvent(this._eventList.shift());
-            }
-            this._lockDispose = false;
-            if (this._delayDispose) {
-                this.dispose();
-            }
-        };
-        /**
-         * 开启动画缓存
-         * @param  {number} 帧速率，每秒缓存多少次数据，越大越流畅,若值小于零会被设置为动画数据中的默认帧率
-         * @param  {Array<any>} 需要缓存的动画列表，如果为null，则全部动画都缓存
-         * @param  {boolean} 动画是否是循环动画，仅在3.0以下的数据格式使用，如果动画不是循环动画请设置为false，默认为true。
-         * @return {AnimationCacheManager}  返回缓存管理器，可以绑定到其他armature以减少内存
-         */
-        p.enableAnimationCache = function (frameRate, animationList, loop) {
-            if (animationList === void 0) { animationList = null; }
-            if (loop === void 0) { loop = true; }
-            // Modify Fast mode by duanchunlei
-            var animationCacheManager = this._armatureData._cacheManager;
-            if (animationCacheManager) {
-                //animationCacheManager.bindCacheUserArmature(this);
-                this.enableCache = true;
-                return animationCacheManager;
-            }
-            this._armatureData._cacheManager = animationCacheManager = dragonBones.AnimationCacheManager.initWithArmatureData(this.armatureData, frameRate);
-            /*if(animationList){
-                var length:number = animationList.length;
-                for(var i:number = 0;i < length;i++){
-                    var animationName:string = animationList[i];
-                    animationCacheManager.initAnimationCache(animationName);
-                }
-            }*/
-            //else{
-            animationCacheManager.initAllAnimationCache();
-            //}
-            //animationCacheManager.setCacheGeneratorArmature(this);
-            //animationCacheManager.generateAllAnimationCache(loop);
-            //animationCacheManager.bindCacheUserArmature(this);
-            this.enableCache = true;
-            return animationCacheManager;
-        };
-        /**
-         * 获取指定名称的 Bone
-         * @param boneName {string} Bone名称
-         * @returns {FastBone}
-         */
-        p.getBone = function (boneName) {
-            return this._boneDic[boneName];
-        };
-        /**
-         * 获取指定名称的 Slot
-         * @param slotName {string} Slot名称
-         * @returns {FastSlot}
-         */
-        p.getSlot = function (slotName) {
-            return this._slotDic[slotName];
-        };
-        /**
-         * 获取包含指定显示对象的 Bone
-         * @param display {any} 显示对象实例
-         * @returns {FastBone}
-         */
-        p.getBoneByDisplay = function (display) {
-            var slot = this.getSlotByDisplay(display);
-            return slot ? slot.parent : null;
-        };
-        /**
-         * 获取包含指定显示对象的 Slot
-         * @param displayObj {any} 显示对象实例
-         * @returns {FastSlot}
-         */
-        p.getSlotByDisplay = function (displayObj) {
-            if (displayObj) {
-                for (var i = 0, len = this.slotList.length; i < len; i++) {
-                    if (this.slotList[i].display == displayObj) {
-                        return this.slotList[i];
-                    }
-                }
-            }
-            return null;
-        };
-        /**
-         * 获取骨架包含的所有插槽
-         * @param returnCopy {boolean} 是否返回拷贝。默认：true
-         * @returns {FastSlot[]}
-         */
-        p.getSlots = function (returnCopy) {
-            if (returnCopy === void 0) { returnCopy = true; }
-            return returnCopy ? this.slotList.concat() : this.slotList;
-        };
-        p._updateBonesByCache = function () {
-            var i = this.boneList.length;
-            var bone;
-            while (i--) {
-                bone = this.boneList[i];
-                bone.update();
-            }
-        };
-        /**
-         * 在骨架中为指定名称的 FastBone 添加一个子 FastBone.
-         * 和Armature不同,FastArmature的这个方法不能在运行时动态添加骨骼
-         * @param bone {FastBone} FastBone 实例
-         * @param parentName {string} 父骨头名称 默认：null
-         */
-        p.addBone = function (bone, parentName) {
-            if (parentName === void 0) { parentName = null; }
-            var parentBone;
-            if (parentName) {
-                parentBone = this.getBone(parentName);
-                parentBone.boneList.push(bone);
-            }
-            bone.armature = this;
-            bone.parentBoneData = parentBone;
-            this.boneList.unshift(bone);
-            this._boneDic[bone.name] = bone;
-        };
-        /**
-         * 为指定名称的 FastBone 添加一个子 FastSlot.
-         * 和Armature不同,FastArmature的这个方法不能在运行时动态添加插槽
-         * @param slot {FastSlot} FastSlot 实例
-         * @param boneName {string}
-         * @see dragonBones.Bone
-         */
-        p.addSlot = function (slot, parentBoneName) {
-            var bone = this.getBone(parentBoneName);
-            if (bone) {
-                slot.armature = this;
-                slot.setParent(bone);
-                bone.slotList.push(slot);
-                slot._addDisplayToContainer(this.display);
-                this.slotList.push(slot);
-                this._slotDic[slot.name] = slot;
-                if (slot.hasChildArmature) {
-                    this.slotHasChildArmatureList.push(slot);
-                }
-            }
-            else {
-                throw new Error();
-            }
-        };
-        /**
-         * 按照显示层级为所有 Slot 排序
-         */
-        p.updateSlotsZOrder = function () {
-            this.slotList.sort(this.sortSlot);
-            var i = this.slotList.length;
-            while (i--) {
-                var slot = this.slotList[i];
-                if ((slot._frameCache && (slot._frameCache).displayIndex >= 0)
-                    || (!slot._frameCache && slot.displayIndex >= 0)) {
-                    slot._addDisplayToContainer(this._display);
-                }
-            }
-            this._slotsZOrderChanged = false;
-        };
-        p.sortBoneList = function () {
-            var i = this.boneList.length;
-            if (i == 0) {
-                return;
-            }
-            var helpArray = [];
-            while (i--) {
-                var level = 0;
-                var bone = this.boneList[i];
-                var boneParent = bone;
-                while (boneParent) {
-                    level++;
-                    boneParent = boneParent.parent;
-                }
-                helpArray[i] = [level, bone];
-            }
-            helpArray.sort(dragonBones.ArmatureData.sortBoneDataHelpArrayDescending);
-            i = helpArray.length;
-            while (i--) {
-                this.boneList[i] = helpArray[i][1];
-            }
-            helpArray.length = 0;
-        };
-        /** @private When AnimationState enter a key frame, call this func*/
-        p.arriveAtFrame = function (frame, animationState) {
-            if (frame.event && this.hasEventListener(dragonBones.FrameEvent.ANIMATION_FRAME_EVENT)) {
-                var frameEvent = new dragonBones.FrameEvent(dragonBones.FrameEvent.ANIMATION_FRAME_EVENT);
-                frameEvent.animationState = animationState;
-                frameEvent.frameLabel = frame.event;
-                frameEvent.bone = frame.bone ? this.getBone(frame.bone) : null;
-                this._addEvent(frameEvent);
-            }
-            if (frame.action) {
-                this.animation.gotoAndPlay(frame.action);
-            }
-        };
-        p.invalidUpdate = function (boneName) {
-            if (boneName === void 0) { boneName = null; }
-            if (boneName) {
-                var bone = this.getBone(boneName);
-                if (bone) {
-                    bone.invalidUpdate();
-                }
-            }
-            else {
-                var i = this.boneList.length;
-                while (i--) {
-                    this.boneList[i].invalidUpdate();
-                }
-            }
-        };
-        p.resetAnimation = function () {
-            this.animation.animationState._resetTimelineStateList();
-            var length = this.boneList.length;
-            for (var i = 0; i < length; i++) {
-                var boneItem = this.boneList[i];
-                boneItem._timelineState = null;
-            }
-            this.animation.stop();
-        };
-        p.sortSlot = function (slot1, slot2) {
-            return slot1.zOrder < slot2.zOrder ? 1 : -1;
-        };
-        /**
-         * 获取FastAnimation实例
-         * @returns {any} FastAnimation实例
-         */
-        p.getAnimation = function () {
-            return this._animation;
-        };
-        d(p, "armatureData"
-            /**
-             * ArmatureData.
-             * @see dragonBones.ArmatureData.
-             */
-            ,function () {
-                return this._armatureData;
-            }
-        );
-        d(p, "animation"
-            /**
-             * An Animation instance
-             * @see dragonBones.Animation
-             */
-            ,function () {
-                return this._animation;
-            }
-        );
-        d(p, "display"
-            /**
-             * Armature's display object. It's instance type depends on render engine. For example "flash.display.DisplayObject" or "startling.display.DisplayObject"
-             */
-            ,function () {
-                return this._display;
-            }
-        );
-        d(p, "enableCache"
-            ,function () {
-                return this._enableCache;
-            }
-            ,function (value) {
-                this._enableCache = value;
-            }
-        );
-        d(p, "enableEventDispatch"
-            ,function () {
-                return this._enableEventDispatch;
-            }
-            ,function (value) {
-                this._enableEventDispatch = value;
-            }
-        );
-        p._addEvent = function (event) {
-            if (this._enableEventDispatch) {
-                this._eventList.push(event);
-            }
-        };
-        p.getIKs = function (returnCopy) {
-            if (returnCopy === void 0) { returnCopy = true; }
-            return returnCopy ? this._ikList.concat() : this._ikList;
-        };
-        p.buildIK = function () {
-            var ikConstraintData;
-            this._ikList.length = 0;
-            for (var i = 0, len = this._armatureData.ikDataList.length; i < len; i++) {
-                ikConstraintData = this._armatureData.ikDataList[i];
-                this._ikList.push(new dragonBones.FastIKConstraint(ikConstraintData, this));
-            }
-        };
-        p.updateBoneCache = function () {
-            this.boneList.reverse();
-            var temp = {};
-            var ikConstraintsCount = this._ikList.length;
-            var arrayCount = ikConstraintsCount + 1;
-            var i;
-            var len;
-            var j;
-            var jLen;
-            var bone;
-            var currentBone;
-            this._boneIKList = [];
-            while (this._boneIKList.length < arrayCount) {
-                this._boneIKList[this._boneIKList.length] = [];
-            }
-            temp[this.boneList[0].name] = 0;
-            for (i = 0, len = this._ikList.length; i < len; i++) {
-                temp[this._ikList[i].bones[0].name] = i + 1;
-            }
-            next: for (i = 0, len = this.boneList.length; i < len; i++) {
-                bone = this.boneList[i];
-                currentBone = bone;
-                while (currentBone) {
-                    if (currentBone.parent == null) {
-                        temp[currentBone.name] = 0;
-                    }
-                    if (temp.hasOwnProperty(currentBone.name)) {
-                        this._boneIKList[temp[currentBone.name]].push(bone);
-                        continue next;
-                    }
-                    currentBone = currentBone.parent;
-                }
-            }
-        };
-        p.getIKTargetData = function (bone) {
-            var target = [];
-            var ik;
-            for (var i = 0, len = this._ikList.length; i < len; i++) {
-                ik = this._ikList[i];
-                if (bone.name == ik.target.name) {
-                    target.push(ik);
-                }
-            }
-            return target;
-        };
-        return FastArmature;
-    }(dragonBones.EventDispatcher));
-    dragonBones.FastArmature = FastArmature;
-    egret.registerClass(FastArmature,'dragonBones.FastArmature',["dragonBones.ICacheableArmature","dragonBones.IArmature","dragonBones.IAnimatable"]);
-})(dragonBones || (dragonBones = {}));
-//////////////////////////////////////////////////////////////////////////////////////
-//
-//  Copyright (c) 2014-2015, Egret Technology Inc.
-//  All rights reserved.
-//  Redistribution and use in source and binary forms, with or without
-//  modification, are permitted provided that the following conditions are met:
-//
-//     * Redistributions of source code must retain the above copyright
-//       notice, this list of conditions and the following disclaimer.
-//     * Redistributions in binary form must reproduce the above copyright
-//       notice, this list of conditions and the following disclaimer in the
-//       documentation and/or other materials provided with the distribution.
-//     * Neither the name of the Egret nor the
-//       names of its contributors may be used to endorse or promote products
-//       derived from this software without specific prior written permission.
-//
-//  THIS SOFTWARE IS PROVIDED BY EGRET AND CONTRIBUTORS "AS IS" AND ANY EXPRESS
-//  OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES
-//  OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED.
-//  IN NO EVENT SHALL EGRET AND CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT,
-//  INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT
-//  LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES;LOSS OF USE, DATA,
-//  OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF
-//  LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING
-//  NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE,
-//  EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
-//
-//////////////////////////////////////////////////////////////////////////////////////
-var dragonBones;
-(function (dragonBones) {
-    /**
-     * @class dragonBones.FastDBObject
-     * @classdesc
-     * FastDBObject 是 FastBone 和 FastSlot 的基类
-     * @see dragonBones.FastBone
-     * @see dragonBones.FastSlot
-     */
-    var FastDBObject = (function () {
-        function FastDBObject() {
-            this._globalTransformMatrixBackup = this._globalTransformMatrix = new dragonBones.Matrix();
-            this._globalBackup = this._global = new dragonBones.DBTransform();
-            this._origin = new dragonBones.DBTransform();
-            this._visible = true;
-            this.armature = null;
-            this._parent = null;
-            this.userData = null;
-            this.inheritRotation = true;
-            this.inheritScale = true;
-            this.inheritTranslation = true;
-        }
-        var d = __define,c=FastDBObject,p=c.prototype;
-        /** @private */
-        p.updateByCache = function (frameIndex) {
-            this._global = this._frameCache.globalTransform;
-            this._globalTransformMatrix = this._frameCache.globalTransformMatrix;
-        };
-        /** @private */
-        p.switchTransformToBackup = function () {
-            /*if(!this._globalBackup){
-                this._globalBackup = new DBTransform();
-                this._globalTransformMatrixBackup = new Matrix();
-            }
-            this._global = this._globalBackup;
-            this._globalTransformMatrix = this._globalTransformMatrixBackup;*/
-        };
-        /** @private */
-        p.setParent = function (value) {
-            this._parent = value;
-        };
-        /**
-         * Cleans up any resources used by this DBObject instance.
-         */
-        p.dispose = function () {
-            this.userData = null;
-            this._globalTransformMatrix = null;
-            this._global = null;
-            this._origin = null;
-            this.armature = null;
-            this._parent = null;
-        };
-        p._calculateParentTransform = function () {
-            if (this.parent && (this.inheritTranslation || this.inheritRotation || this.inheritScale)) {
-                var parentGlobalTransform = this._parent._global;
-                var parentGlobalTransformMatrix = this._parent._globalTransformMatrix;
-                /*
-                if(	!this.inheritTranslation && (parentGlobalTransform.x != 0 || parentGlobalTransform.y != 0) ||
-                    !this.inheritRotation && (parentGlobalTransform.skewX != 0 || parentGlobalTransform.skewY != 0) ||
-                    !this.inheritScale && (parentGlobalTransform.scaleX != 1 || parentGlobalTransform.scaleY != 1)){
-                    parentGlobalTransform = FastDBObject._tempParentGlobalTransform;
-                    parentGlobalTransform.copy(this._parent._global);
-                    if(!this.inheritTranslation){
-                        parentGlobalTransform.x = 0;
-                        parentGlobalTransform.y = 0;
-                    }
-                    if(!this.inheritScale){
-                        parentGlobalTransform.scaleX = 1;
-                        parentGlobalTransform.scaleY = 1;
-                    }
-                    if(!this.inheritRotation){
-                        parentGlobalTransform.skewX = 0;
-                        parentGlobalTransform.skewY = 0;
-                    }
-                    
-                    parentGlobalTransformMatrix = DBObject._tempParentGlobalTransformMatrix;
-                    TransformUtil.transformToMatrix(parentGlobalTransform, parentGlobalTransformMatrix);
-                }
-                */
-                return dragonBones.ParentTransformObject.create().setTo(parentGlobalTransform, parentGlobalTransformMatrix);
-            }
-            dragonBones.TransformUtil.transformToMatrix(this._global, this._globalTransformMatrix);
-            return null;
-        };
-        p._updateGlobal = function () {
-            this._calculateRelativeParentTransform();
-            var output = this._calculateParentTransform();
-            if (output != null) {
-                //计算父骨头绝对坐标
-                var parentMatrix = output.parentGlobalTransformMatrix;
-                var parentGlobalTransform = output.parentGlobalTransform;
-                //计算绝对坐标
-                var x = this._global.x;
-                var y = this._global.y;
-                this._global.x = parentMatrix.a * x + parentMatrix.c * y + parentMatrix.tx;
-                this._global.y = parentMatrix.d * y + parentMatrix.b * x + parentMatrix.ty;
-                if (this.inheritRotation) {
-                    this._global.skewX += parentGlobalTransform.skewX;
-                    this._global.skewY += parentGlobalTransform.skewY;
-                }
-                if (this.inheritScale) {
-                    this._global.scaleX *= parentGlobalTransform.scaleX;
-                    this._global.scaleY *= parentGlobalTransform.scaleY;
-                }
-            }
-            dragonBones.TransformUtil.transformToMatrix(this._global, this._globalTransformMatrix);
-            return output;
-        };
-        p._calculateRelativeParentTransform = function () {
-        };
-        d(p, "name"
-            ,function () {
-                return this._name;
-            }
-            ,function (value) {
-                this._name = value;
-            }
-        );
-        d(p, "global"
-            /**
-             * This DBObject instance global transform instance.
-             * @see dragonBones.DBTransform
-             */
-            ,function () {
-                return this._global;
-            }
-        );
-        d(p, "globalTransformMatrix"
-            ,function () {
-                return this._globalTransformMatrix;
-            }
-        );
-        d(p, "origin"
-            /**
-             * This DBObject instance related to parent transform instance.
-             * @see dragonBones.DBTransform
-             */
-            ,function () {
-                return this._origin;
-            }
-        );
-        d(p, "parent"
-            /**
-             * Indicates the Bone instance that directly contains this DBObject instance if any.
-             */
-            ,function () {
-                return this._parent;
-            }
-        );
-        d(p, "visible"
-            ,function () {
-                return this._visible;
-            }
-            ,function (value) {
-                this._visible = value;
-            }
-        );
-        d(p, "frameCache",undefined
-            ,function (cache) {
-                this._frameCache = cache;
-            }
-        );
-        FastDBObject._tempParentGlobalTransform = new dragonBones.DBTransform();
-        return FastDBObject;
-    }());
-    dragonBones.FastDBObject = FastDBObject;
-    egret.registerClass(FastDBObject,'dragonBones.FastDBObject');
-})(dragonBones || (dragonBones = {}));
-//////////////////////////////////////////////////////////////////////////////////////
-//
-//  Copyright (c) 2014-2015, Egret Technology Inc.
-//  All rights reserved.
-//  Redistribution and use in source and binary forms, with or without
-//  modification, are permitted provided that the following conditions are met:
-//
-//     * Redistributions of source code must retain the above copyright
-//       notice, this list of conditions and the following disclaimer.
-//     * Redistributions in binary form must reproduce the above copyright
-//       notice, this list of conditions and the following disclaimer in the
-//       documentation and/or other materials provided with the distribution.
-//     * Neither the name of the Egret nor the
-//       names of its contributors may be used to endorse or promote products
-//       derived from this software without specific prior written permission.
-//
-//  THIS SOFTWARE IS PROVIDED BY EGRET AND CONTRIBUTORS "AS IS" AND ANY EXPRESS
-//  OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES
-//  OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED.
-//  IN NO EVENT SHALL EGRET AND CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT,
-//  INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT
-//  LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES;LOSS OF USE, DATA,
-//  OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF
-//  LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING
-//  NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE,
-//  EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
-//
-//////////////////////////////////////////////////////////////////////////////////////
-var dragonBones;
-(function (dragonBones) {
-    /**
-     * @class dragonBones.FastBone
-     * @classdesc
-     * FastBone 实例代表 FastArmature 中的一个骨头。一个FastArmature实例可以由很多 FastBone组成。
-     * FastBone 在骨骼动画体系中是最重要的逻辑单元之一，负责动画中的平移旋转缩放的实现
-     * 和Bone相比，FastBone不能动态添加子骨骼和子插槽
-     * @extends dragonBones.FastDBObject
-     * @see dragonBones.FastArmature
-     * @see dragonBones.FastSlot
-     * @see dragonBones.BoneData
-     */
-    var FastBone = (function (_super) {
-        __extends(FastBone, _super);
-        function FastBone() {
-            _super.call(this);
-            this.slotList = [];
-            this.boneList = [];
-            /** @private */
-            this._needUpdate = 0;
-            this.isIKConstraint = false;
-            this.childrenBones = [];
-            this._needUpdate = 2;
-            this._tweenPivot = new dragonBones.Point();
-        }
-        var d = __define,c=FastBone,p=c.prototype;
-        FastBone.initWithBoneData = function (boneData) {
-            var outputBone = new FastBone();
-            outputBone.name = boneData.name;
-            outputBone.length = boneData.length;
-            outputBone.inheritRotation = boneData.inheritRotation;
-            outputBone.inheritScale = boneData.inheritScale;
-            outputBone.origin.copy(boneData.transform);
-            return outputBone;
-        };
-        /**
-         * 获取当前骨头包含的所有 FastBone 实例
-         * @param returnCopy {boolean} 是否返回拷贝。默认：true
-         * @returns {FastBone[]}
-         */
-        p.getBones = function (returnCopy) {
-            if (returnCopy === void 0) { returnCopy = true; }
-            return returnCopy ? this.boneList.concat() : this.boneList;
-        };
-        /**
-         * 获取当前骨头包含的所有 FastSlot 实例
-         * @param returnCopy {boolean} 是否返回拷贝。默认：true
-         * @returns {FastSlot[]}
-         */
-        p.getSlots = function (returnCopy) {
-            if (returnCopy === void 0) { returnCopy = true; }
-            return returnCopy ? this.slotList.concat() : this.slotList;
-        };
-        /**
-         * @inheritDoc
-         */
-        p.dispose = function () {
-            _super.prototype.dispose.call(this);
-            this._timelineState = null;
-            this._tweenPivot = null;
-        };
-        //动画
-        /**
-         * 在下一帧强制更新当前 Bone 实例及其包含的所有 Slot 的动画。
-         */
-        p.invalidUpdate = function () {
-            this._needUpdate = 2;
-            this.operationInvalidUpdate(this);
-            var i;
-            var len;
-            for (i = 0, len = this.childrenBones.length; i < len; i++) {
-                if (this.childrenBones[i]._needUpdate != 2) {
-                    this.operationInvalidUpdate(this.childrenBones[i]);
-                    this.childrenBones[i].invalidUpdate();
-                }
-            }
-        };
-        p.operationInvalidUpdate = function (bone) {
-            var arr = this.armature.getIKTargetData(bone);
-            var i;
-            var len;
-            var j;
-            var jLen;
-            var ik;
-            var bo;
-            for (i = 0, len = arr.length; i < len; i++) {
-                ik = arr[i];
-                for (j = 0, jLen = ik.bones.length; j < jLen; j++) {
-                    bo = ik.bones[j];
-                    if (bo._needUpdate != 2) {
-                        bo.invalidUpdate();
-                    }
-                }
-            }
-        };
-        p._calculateRelativeParentTransform = function () {
-            this._global.copy(this._origin);
-            if (this._timelineState) {
-                this._global.add(this._timelineState._transform);
-            }
-        };
-        /** @private */
-        p.updateByCache = function (frameIndex) {
-            _super.prototype.updateByCache.call(this, frameIndex);
-            this._global = this._frameCache.globalTransform;
-            this._globalTransformMatrix = this._frameCache.globalTransformMatrix;
-        };
-        /** @private */
-        p.update = function (needUpdate) {
-            if (needUpdate === void 0) { needUpdate = false; }
-            this._needUpdate--;
-            if (needUpdate || this._needUpdate > 0 || (this._parent && this._parent._needUpdate > 0)) {
-                this._needUpdate = 1;
-            }
-            else {
-                return;
-            }
-            this.updataLocalTransform();
-            this.updateGlobalTransform();
-        };
-        p.updataLocalTransform = function () {
-            this.blendingTimeline();
-            this._calculateRelativeParentTransform();
-        };
-        p.updateGlobalTransform = function () {
-            //计算global
-            var result = this._updateGlobal();
-            if (result) {
-                result.release();
-            }
-        };
-        p._updateGlobal = function () {
-            if (!this.armature._skewEnable) {
-                return _super.prototype._updateGlobal.call(this);
-            }
-            //this._calculateRelativeParentTransform();
-            var output = this._calculateParentTransform();
-            if (output != null && output.parentGlobalTransformMatrix && output.parentGlobalTransform) {
-                //计算父骨头绝对坐标
-                var parentMatrix = output.parentGlobalTransformMatrix;
-                var parentGlobalTransform = output.parentGlobalTransform;
-                var scaleXF = this._global.scaleX * parentGlobalTransform.scaleX > 0;
-                var scaleYF = this._global.scaleY * parentGlobalTransform.scaleY > 0;
-                var relativeRotation = this._global.rotation;
-                var relativeScaleX = this._global.scaleX;
-                var relativeScaleY = this._global.scaleY;
-                var parentRotation = this.parentBoneRotation;
-                this._localTransform = this._global;
-                if (this.inheritScale && !this.inheritRotation) {
-                    if (parentRotation != 0) {
-                        this._localTransform = this._localTransform.clone();
-                        this._localTransform.rotation -= parentRotation;
-                    }
-                }
-                dragonBones.TransformUtil.transformToMatrix(this._localTransform, this._globalTransformMatrix);
-                this._globalTransformMatrix.concat(parentMatrix);
-                if (this.inheritScale) {
-                    dragonBones.TransformUtil.matrixToTransform(this._globalTransformMatrix, this._global, scaleXF, scaleYF);
-                }
-                else {
-                    dragonBones.TransformUtil.matrixToTransformPosition(this._globalTransformMatrix, this._global);
-                    this._global.scaleX = this._localTransform.scaleX;
-                    this._global.scaleY = this._localTransform.scaleY;
-                    this._global.rotation = this._localTransform.rotation + (this.inheritRotation ? parentRotation : 0);
-                    dragonBones.TransformUtil.transformToMatrix(this._global, this._globalTransformMatrix);
-                }
-            }
-            return output;
-        };
-        p.adjustGlobalTransformMatrixByIK = function () {
-            if (!this.parent) {
-                return;
-            }
-            this.updataLocalTransform();
-            this._global.rotation = this.rotationIK - this.parentBoneRotation;
-            this.updateGlobalTransform();
-            //this.global.rotation = this.rotationIK;
-            //TransformUtil.transformToMatrix(this.global, this._globalTransformMatrix);
-        };
-        /** @private */
-        p._hideSlots = function () {
-            var length = this.slotList.length;
-            for (var i = 0; i < length; i++) {
-                var childSlot = this.slotList[i];
-                childSlot.hideSlots();
-            }
-        };
-        p.blendingTimeline = function () {
-            if (this._timelineState) {
-                this._tweenPivot.x = this._timelineState._pivot.x;
-                this._tweenPivot.y = this._timelineState._pivot.y;
-            }
-        };
-        /** @private When bone timeline enter a key frame, call this func*/
-        p.arriveAtFrame = function (frame, animationState) {
-            var childSlot;
-            if (frame.event && this.armature.hasEventListener(dragonBones.FrameEvent.BONE_FRAME_EVENT)) {
-                var frameEvent = new dragonBones.FrameEvent(dragonBones.FrameEvent.BONE_FRAME_EVENT);
-                frameEvent.bone = this;
-                frameEvent.animationState = animationState;
-                frameEvent.frameLabel = frame.event;
-                this.armature._addEvent(frameEvent);
-            }
-        };
-        d(p, "childArmature"
-            /**
-             * 不推荐的API,建议使用 slot.childArmature 替代
-             */
-            ,function () {
-                var s = this.slot;
-                if (s) {
-                    return s.childArmature;
-                }
-                return null;
-            }
-        );
-        d(p, "display"
-            /**
-             * 不推荐的API,建议使用 slot.display 替代
-             */
-            ,function () {
-                var s = this.slot;
-                if (s) {
-                    return s.display;
-                }
-                return null;
-            }
-            ,function (value) {
-                var s = this.slot;
-                if (s) {
-                    s.display = value;
-                }
-            }
-        );
-        d(p, "visible",undefined
-            /** @private */
-            ,function (value) {
-                if (this._visible != value) {
-                    this._visible = value;
-                    for (var i = 0, len = this.armature.slotList.length; i < len; i++) {
-                        if (this.armature.slotList[i].parent == this) {
-                            this.armature.slotList[i]._updateDisplayVisible(this._visible);
-                        }
-                    }
-                }
-            }
-        );
-        d(p, "slot"
-            /**
-             * 返回当前 FastBone 实例包含的第一个 FastSlot 实例
-             * @member {FastSlot} dragonBones.FastBone#slot
-             */
-            ,function () {
-                return this.slotList.length > 0 ? this.slotList[0] : null;
-            }
-        );
-        d(p, "parentBoneRotation"
-            ,function () {
-                return this.parent ? this.parent.rotationIK : 0;
-            }
-        );
-        d(p, "parentBoneData",undefined
-            ,function (value) {
-                if (this._parent != value) {
-                    if (this._parent != null) {
-                        var index = this._parent.childrenBones.indexOf(this);
-                        if (index >= 0) {
-                            this._parent.childrenBones.splice(index, 1);
-                        }
-                    }
-                    this.setParent(value);
-                    if (this._parent != null) {
-                        var indexs = this._parent.childrenBones.indexOf(this);
-                        if (indexs < 0) {
-                            this._parent.childrenBones.push(this);
-                        }
-                    }
-                }
-            }
-        );
-        return FastBone;
-    }(dragonBones.FastDBObject));
-    dragonBones.FastBone = FastBone;
-    egret.registerClass(FastBone,'dragonBones.FastBone');
-})(dragonBones || (dragonBones = {}));
-//////////////////////////////////////////////////////////////////////////////////////
-//////////////////////////////////////////////////////////////////////////////////////
-//
-//  Copyright (c) 2014-2015, Egret Technology Inc.
-//  All rights reserved.
-//  Redistribution and use in source and binary forms, with or without
-//  modification, are permitted provided that the following conditions are met:
-//
-//     * Redistributions of source code must retain the above copyright
-//       notice, this list of conditions and the following disclaimer.
-//     * Redistributions in binary form must reproduce the above copyright
-//       notice, this list of conditions and the following disclaimer in the
-//       documentation and/or other materials provided with the distribution.
-//     * Neither the name of the Egret nor the
-//       names of its contributors may be used to endorse or promote products
-//       derived from this software without specific prior written permission.
-//
-//  THIS SOFTWARE IS PROVIDED BY EGRET AND CONTRIBUTORS "AS IS" AND ANY EXPRESS
-//  OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES
-//  OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED.
-//  IN NO EVENT SHALL EGRET AND CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT,
-//  INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT
-//  LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES;LOSS OF USE, DATA,
-//  OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF
-//  LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING
-//  NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE,
-//  EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
-//
-//////////////////////////////////////////////////////////////////////////////////////
-var dragonBones;
-(function (dragonBones) {
-    var FastIKConstraint = (function () {
-        function FastIKConstraint(data, armatureData) {
-            this.animationCacheBend = 0;
-            this.animationCacheWeight = -1;
-            this.ikdata = data;
-            this.armature = armatureData;
-            this.weight = data.weight;
-            this.bendDirection = (data.bendPositive ? 1 : -1);
-            this.bones = [];
-            var bone;
-            if (data.chain) {
-                bone = armatureData.getBone(data.bones).parent;
-                bone.isIKConstraint = true;
-                this.bones.push(bone);
-            }
-            bone = armatureData.getBone(data.bones);
-            bone.isIKConstraint = true;
-            this.bones.push(bone);
-            this.target = armatureData.getBone(data.target);
-        }
-        var d = __define,c=FastIKConstraint,p=c.prototype;
-        p.dispose = function () {
-        };
-        p.compute = function () {
-            switch (this.bones.length) {
-                case 1:
-                    var weig1 = this.animationCacheWeight >= 0 ? this.animationCacheWeight : this.weight;
-                    this.compute1(this.bones[0], this.target, weig1);
-                    break;
-                case 2:
-                    var bend = this.animationCacheBend != 0 ? this.animationCacheBend : this.bendDirection;
-                    var weig = this.animationCacheWeight >= 0 ? this.animationCacheWeight : this.weight;
-                    var tt = this.compute2(this.bones[0], this.bones[1], this.target.global.x, this.target.global.y, bend, weig);
-                    this.bones[0].rotationIK = this.bones[0].origin.rotation + (tt.x - this.bones[0].origin.rotation) * weig + this.bones[0].parent.rotationIK;
-                    this.bones[1].rotationIK = this.bones[1].origin.rotation + (tt.y - this.bones[1].origin.rotation) * weig + this.bones[0].rotationIK;
-                    break;
-            }
-        };
-        p.compute1 = function (bone, target, weightA) {
-            var parentRotation = (!bone.inheritRotation || bone.parent == null) ? 0 : bone.parent.global.rotation;
-            var rotation = bone.global.rotation;
-            var rotationIK = Math.atan2(target.global.y - bone.global.y, target.global.x - bone.global.x);
-            bone.rotationIK = rotation + (rotationIK - rotation) * weightA;
-        };
-        p.compute2 = function (parent, child, targetX, targetY, bendDirection, weightA) {
-            if (weightA == 0) {
-                return new dragonBones.Point(parent.global.rotation, child.global.rotation);
-            }
-            var tt = new dragonBones.Point();
-            var p1 = new dragonBones.Point(parent.global.x, parent.global.y);
-            var p2 = new dragonBones.Point(child.global.x, child.global.y);
-            var matrix = new dragonBones.Matrix();
-            dragonBones.TransformUtil.transformToMatrix(parent.parent.global, matrix);
-            matrix.invert();
-            var targetPoint = dragonBones.TransformUtil.applyMatrixToPoint(new dragonBones.Point(targetX, targetY), matrix, true);
-            targetX = targetPoint.x;
-            targetY = targetPoint.y;
-            p1 = dragonBones.TransformUtil.applyMatrixToPoint(p1, matrix, true);
-            p2 = dragonBones.TransformUtil.applyMatrixToPoint(p2, matrix, true);
-            var psx = parent.origin.scaleX;
-            var psy = parent.origin.scaleY;
-            var csx = child.origin.scaleX;
-            var childX = p2.x - p1.x;
-            var childY = p2.y - p1.y;
-            var len1 = Math.sqrt(childX * childX + childY * childY);
-            var parentAngle;
-            var childAngle;
-            var sign = 1;
-            var offset1 = 0;
-            var offset2 = 0;
-            if (psx < 0) {
-                psx = -psx;
-                offset1 = Math.PI;
-                sign = -1;
-            }
-            else {
-                offset1 = 0;
-                sign = 1;
-            }
-            if (psy < 0) {
-                psy = -psy;
-                sign = -sign;
-            }
-            if (csx < 0) {
-                csx = -csx;
-                offset2 = Math.PI;
-            }
-            else {
-                offset2 = 0;
-            }
-            bendDirection = sign * bendDirection;
-            outer: if (Math.abs(psx - psy) <= 0.001) {
-                var childlength = child.length;
-                var len2 = childlength * csx;
-                targetX = targetX - p1.x;
-                targetY = targetY - p1.y;
-                var cosDenom = 2 * len1 * len2;
-                var cos = (targetX * targetX + targetY * targetY - len1 * len1 - len2 * len2) / cosDenom;
-                if (cos < -1)
-                    cos = -1;
-                else if (cos > 1)
-                    cos = 1;
-                childAngle = Math.acos(cos) * bendDirection;
-                var adjacent = len1 + len2 * cos;
-                var opposite = len2 * Math.sin(childAngle);
-                parentAngle = Math.atan2(targetY * adjacent - targetX * opposite, targetX * adjacent + targetY * opposite);
-            }
-            else {
-                var l1 = len1;
-                var tx = targetX - p1.x;
-                var ty = targetY - p1.y;
-                var l2 = child.length * child.origin.scaleX;
-                var a = psx * l2;
-                var b = psy * l2;
-                var ta = Math.atan2(ty, tx);
-                var aa = a * a;
-                var bb = b * b;
-                var ll = l1 * l1;
-                var dd = tx * tx + ty * ty;
-                var c0 = bb * ll + aa * dd - aa * bb;
-                var c1 = -2 * bb * l1;
-                var c2 = bb - aa;
-                var d = c1 * c1 - 4 * c2 * c0;
-                if (d >= 0) {
-                    var q = Math.sqrt(d);
-                    if (c1 < 0) {
-                        q = -q;
-                    }
-                    q = -(c1 + q) / 2;
-                    var r0 = q / c2;
-                    var r1 = c0 / q;
-                    var r = Math.abs(r0) < Math.abs(r1) ? r0 : r1;
-                    if (r * r <= dd) {
-                        var y1 = Math.sqrt(dd - r * r) * bendDirection;
-                        parentAngle = ta - Math.atan2(y1, r);
-                        childAngle = Math.atan2(y1 / psy, (r - l1) / psx);
-                        break outer;
-                    }
-                }
-                var minAngle = 0;
-                var minDist = Number.MAX_VALUE;
-                var minX = 0;
-                var minY = 0;
-                var maxAngle = 0;
-                var maxDist = 0;
-                var maxX = 0;
-                var maxY = 0;
-                var x2 = l1 + a;
-                var dist = x2 * x2;
-                if (dist > maxDist) {
-                    maxAngle = 0;
-                    maxDist = dist;
-                    maxX = x2;
-                }
-                x2 = l1 - a;
-                dist = x2 * x2;
-                if (dist < minDist) {
-                    minAngle = Math.PI;
-                    minDist = dist;
-                    minX = x2;
-                }
-                var angle1 = Math.acos(-a * l1 / (aa - bb));
-                x2 = a * Math.cos(angle1) + l1;
-                var y2 = b * Math.sin(angle1);
-                dist = x2 * x2 + y2 * y2;
-                if (dist < minDist) {
-                    minAngle = angle1;
-                    minDist = dist;
-                    minX = x2;
-                    minY = y2;
-                }
-                if (dist > maxDist) {
-                    maxAngle = angle1;
-                    maxDist = dist;
-                    maxX = x2;
-                    maxY = y2;
-                }
-                if (dd <= (minDist + maxDist) / 2) {
-                    parentAngle = ta - Math.atan2(minY * bendDirection, minX);
-                    childAngle = minAngle * bendDirection;
-                }
-                else {
-                    parentAngle = ta - Math.atan2(maxY * bendDirection, maxX);
-                    childAngle = maxAngle * bendDirection;
-                }
-            }
-            var cx = child.origin.x;
-            var cy = child.origin.y * psy;
-            var initalRotation = Math.atan2(cy, cx) * sign;
-            tt.x = parentAngle - initalRotation + offset1;
-            tt.y = (childAngle + initalRotation) * sign + offset2;
-            this.normalize(tt.x);
-            this.normalize(tt.y);
-            return tt;
-        };
-        p.normalize = function (rotation) {
-            if (rotation > Math.PI) {
-                rotation -= Math.PI * 2;
-            }
-            else if (rotation < -Math.PI) {
-                rotation += Math.PI * 2;
-            }
-        };
-        return FastIKConstraint;
-    }());
-    dragonBones.FastIKConstraint = FastIKConstraint;
-    egret.registerClass(FastIKConstraint,'dragonBones.FastIKConstraint');
-})(dragonBones || (dragonBones = {}));
-//////////////////////////////////////////////////////////////////////////////////////
-//
-//  Copyright (c) 2014-2015, Egret Technology Inc.
-//  All rights reserved.
-//  Redistribution and use in source and binary forms, with or without
-//  modification, are permitted provided that the following conditions are met:
-//
-//     * Redistributions of source code must retain the above copyright
-//       notice, this list of conditions and the following disclaimer.
-//     * Redistributions in binary form must reproduce the above copyright
-//       notice, this list of conditions and the following disclaimer in the
-//       documentation and/or other materials provided with the distribution.
-//     * Neither the name of the Egret nor the
-//       names of its contributors may be used to endorse or promote products
-//       derived from this software without specific prior written permission.
-//
-//  THIS SOFTWARE IS PROVIDED BY EGRET AND CONTRIBUTORS "AS IS" AND ANY EXPRESS
-//  OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES
-//  OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED.
-//  IN NO EVENT SHALL EGRET AND CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT,
-//  INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT
-//  LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES;LOSS OF USE, DATA,
-//  OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF
-//  LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING
-//  NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE,
-//  EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
-//
-//////////////////////////////////////////////////////////////////////////////////////
-var dragonBones;
-(function (dragonBones) {
-    /**
-     * @class dragonBones.FastSlot
-     * @classdesc
-     * FastSlot 实例是骨头上的一个插槽，是显示图片的容器。
-     * 一个 FastBone 上可以有多个FastSlot，每个FastSlot中同一时间都会有一张图片用于显示，不同的FastSlot中的图片可以同时显示。
-     * 每个 FastSlot 中可以包含多张图片，同一个 FastSlot 中的不同图片不能同时显示，但是可以在动画进行的过程中切换，用于实现帧动画。
-     * @extends dragonBones.DBObject
-     * @see dragonBones.FastArmature
-     * @see dragonBones.FastBone
-     * @see dragonBones.SlotData
-     */
-    var FastSlot = (function (_super) {
-        __extends(FastSlot, _super);
-        function FastSlot(rawDisplay) {
-            _super.call(this);
-            this.hasChildArmature = false;
-            // modify display index change 
-            this._displayIndex = -1;
-            this._rawDisplay = null;
-            this._display = null;
-            this._childArmature = null;
-            this._displayList = [];
-            this._displayDataList = [];
-            this._cacheTimeline = null;
-            this.hasChildArmature = false;
-            this.inheritRotation = true;
-            this.inheritScale = true;
-            this._originZOrder = 0;
-            this._tweenZOrder = 0;
-            this._offsetZOrder = 0;
-            this._colorTransform = new dragonBones.ColorTransform();
-            this._isColorChanged = false;
-            this._rawDisplay = rawDisplay;
-        }
-        var d = __define,c=FastSlot,p=c.prototype;
-        /**
-         * 通过传入 SlotData 初始化FastSlot
-         * @param slotData
-         */
-        p.initWithSlotData = function (slotData) {
-            this.name = slotData.name;
-            this.blendMode = slotData.blendMode;
-            this._defaultGotoAndPlay = slotData.gotoAndPlay;
-            this._originZOrder = slotData.zOrder;
-            this._originDisplayIndex = slotData.displayIndex;
-        };
-        /**
-         * @inheritDoc
-         */
-        p.dispose = function () {
-            if (!this._displayList) {
-                return;
-            }
-            _super.prototype.dispose.call(this);
-            this._rawDisplay = null;
-            this._display = null;
-            this._childArmature = null;
-            this._displayDataList = null;
-            this._displayList = null;
-        };
-        //动画
-        /** @private */
-        p.updateByCache = function (frameIndex) {
-            //var cacheTimeline = this.armature.animation.animationState.animationCache.slotTimelineCacheDic[this.name] as SlotTimelineCache;
-            var frameCache = this._cacheTimeline.frameCacheList[frameIndex];
-            var cacheDisplayIndex = (frameCache).displayIndex;
-            if (cacheDisplayIndex != this._displayIndex) {
-                //this.displayIndex = cacheDisplayIndex;
-                this._displayIndex = cacheDisplayIndex;
-                this.changeDisplay();
-            }
-            if (this._displayIndex < 0) {
-                return;
-            }
-            if (this._frameCache && frameCache.globalTransform == this._frameCache.globalTransform) {
-                this._frameCache = frameCache;
-            }
-            else {
-                this._frameCache = frameCache;
-                _super.prototype.updateByCache.call(this, frameIndex);
-                this._updateTransform();
-            }
-            //颜色
-            var cacheColor = (this._frameCache).colorTransform;
-            var cacheColorChanged = cacheColor != null;
-            if (this._isColorChanged != cacheColorChanged ||
-                (this._isColorChanged && cacheColorChanged && !dragonBones.ColorTransformUtil.isEqual(this._colorTransform, cacheColor))) {
-                cacheColor = cacheColor || dragonBones.ColorTransformUtil.originalColor;
-                this._updateDisplayColor(cacheColor.alphaOffset, cacheColor.redOffset, cacheColor.greenOffset, cacheColor.blueOffset, cacheColor.alphaMultiplier, cacheColor.redMultiplier, cacheColor.greenMultiplier, cacheColor.blueMultiplier, cacheColorChanged);
-            }
-            var gotoAndPlay = (this._frameCache).gotoAndPlay;
-            if (this._gotoAndPlay != gotoAndPlay) {
-                this._gotoAndPlay = gotoAndPlay;
-                this.updateChildArmatureAnimation();
-            }
-        };
-        /** @private */
-        p._update = function (needUpdate) {
-            if (needUpdate === void 0) { needUpdate = false; }
-            if (this._parent && (this._parent._needUpdate > 0 || needUpdate)) {
-                if (this._global != this._globalBackup) {
-                    this._global = this._globalBackup;
-                    this._globalTransformMatrix = this._globalTransformMatrixBackup;
-                }
-                var result = this._updateGlobal();
-                if (result) {
-                    result.release();
-                }
-                this._updateTransform();
-            }
-        };
-        p._calculateRelativeParentTransform = function () {
-            this._global.copy(this._origin);
-            this._global.x += this._parent._tweenPivot.x;
-            this._global.y += this._parent._tweenPivot.y;
-        };
-        p.updateChildArmatureAnimation = function () {
-            if (this.childArmature) {
-                if (this._displayIndex >= 0) {
-                    var curAnimation = this._gotoAndPlay;
-                    if (curAnimation == null) {
-                        curAnimation = this._defaultGotoAndPlay;
-                        if (curAnimation == null) {
-                            this.childArmature.armatureData.defaultAnimation;
-                        }
-                    }
-                    if (curAnimation == null) {
-                        if (this.armature && this.armature.animation.lastAnimationState) {
-                            curAnimation = this.armature.animation.lastAnimationState.name;
-                        }
-                    }
-                    if (curAnimation && this.childArmature.animation.hasAnimation(curAnimation)) {
-                        this.childArmature.animation.gotoAndPlay(curAnimation);
-                    }
-                    else {
-                        this.childArmature.animation.play();
-                    }
-                }
-                else {
-                    this.childArmature.animation.stop();
-                    this.childArmature.animation._lastAnimationState = null;
-                }
-            }
-        };
-        // modify changeDisplay
-        /** @private */
-        p.changeDisplay = function () {
-            var prevDisplay = this._display;
-            var prevChildArmature = this._childArmature;
-            if (this._displayIndex < 0 || this._displayIndex >= this._displayList.length) {
-                this._display = this._rawDisplay;
-            }
-            else {
-                this._display = this._displayList[this._displayIndex];
-            }
-            if (this._display instanceof dragonBones.FastArmature) {
-                this._childArmature = this._display;
-                this._display = this._display.display;
-            }
-            else {
-                this._childArmature = null;
-                if (!this._display) {
-                    this._display = this._rawDisplay;
-                }
-            }
-            if (this._childArmature != prevChildArmature) {
-                if (this._childArmature) {
-                    this._childArmature.animation.play();
-                }
-                else {
-                }
-            }
-            if (this._display != prevDisplay) {
-                this._updateDisplay(this._display);
-                if (this.armature) {
-                    if (prevDisplay) {
-                        this._replaceDisplay(prevDisplay);
-                    }
-                    else {
-                        this._addDisplay();
-                    }
-                }
-            }
-            if (this._display == this._rawDisplay) {
-                this._updateFrame();
-            }
-            if (this._display != prevDisplay) {
-                this._updateDisplayBlendMode(this._blendMode);
-                //this._updateVisible();
-                this._updateDisplayColor(this._colorTransform.alphaOffset, this._colorTransform.redOffset, this._colorTransform.greenOffset, this._colorTransform.blueOffset, this._colorTransform.alphaMultiplier, this._colorTransform.redMultiplier, this._colorTransform.greenMultiplier, this._colorTransform.blueMultiplier);
-            }
-            if (this._displayIndex >= 0 && this._displayIndex < this._displayDataList.length) {
-                this._origin.copy(this._displayDataList[this._displayIndex][0].transform);
-            }
-            if (this.armature && !this.armature._isFrameCached) {
-                this._update(true);
-            }
-        };
-        d(p, "visible",undefined
-            /** @private */
-            ,function (value) {
-                if (this._visible != value) {
-                    this._visible = value;
-                    this._updateDisplayVisible(this._visible);
-                }
-            }
-        );
-        d(p, "displayIndex"
-            ,function () {
-                return this._displayIndex;
-            }
-            ,function (value) {
-                if (this._displayIndex == value) {
-                    return;
-                }
-                this._displayIndex = value;
-                this.changeDisplay();
-            }
-        );
-        d(p, "display"
-            /**
-             * 当前的显示对象(可能是 display 或者 子骨架)
-             * @member {any} dragonBones.FastSlot#display
-             */
-            ,function () {
-                return this._display;
-            }
-            ,function (value) {
-                var displayListLength = this._displayList.length;
-                if (this._displayIndex >= displayListLength) {
-                    if (displayListLength == 0) {
-                        this._displayList[0] = value;
-                    }
-                    else {
-                        this._displayList[displayListLength - 1] = value;
-                    }
-                }
-                else {
-                    this._displayList[this._displayIndex] = value;
-                }
-                if (this._displayIndex >= 0) {
-                    this.changeDisplay();
-                }
-            }
-        );
-        d(p, "childArmature"
-            /**
-             * 当前的子骨架
-             * @member {FastArmature} dragonBones.Slot#childArmature
-             */
-            ,function () {
-                return this._childArmature;
-            }
-            ,function (value) {
-                if (this._childArmature == value) {
-                    return;
-                }
-                this.display = value;
-            }
-        );
-        d(p, "displayDataList"
-            /** @private */
-            ,function () {
-                return this._displayDataList;
-            }
-            /** @private */
-            ,function (value) {
-                if (this._displayDataList != value) {
-                    if (value && value.length) {
-                        this._displayDataList.length = value.length;
-                        for (var i = 0, l = this._displayDataList.length; i < l; ++i) {
-                            this._displayDataList[i] = value[i];
-                        }
-                    }
-                    else {
-                        this._displayDataList.length = 0;
-                    }
-                }
-            }
-        );
-        d(p, "displayList"
-            /**
-             * 显示对象列表(包含 display 或者 子骨架)
-             * @member {any[]} dragonBones.FastSlot#displayList
-             */
-            ,function () {
-                return this._displayList;
-            }
-            ,function (value) {
-                if (this._displayList != value) {
-                    if (value && value.length) {
-                        this._displayList.length = value.length;
-                        for (var i = 0, l = this._displayList.length; i < l; ++i) {
-                            this._displayList[i] = value[i];
-                        }
-                    }
-                    else {
-                        this._displayList.length = 0;
-                    }
-                }
-                this.changeDisplay();
-            }
-        );
-        d(p, "zOrder"
-            /**
-             * 显示顺序。(支持小数用于实现动态插入slot)
-             * @member {number} dragonBones.FastSlot#zOrder
-             */
-            ,function () {
-                return this._originZOrder + this._tweenZOrder + this._offsetZOrder;
-            }
-            ,function (value) {
-                if (this.zOrder != value) {
-                    this._offsetZOrder = value - this._originZOrder - this._tweenZOrder;
-                    if (this.armature) {
-                        this.armature._slotsZOrderChanged = true;
-                    }
-                }
-            }
-        );
-        d(p, "blendMode"
-            /**
-             * 混合模式
-             * @member {string} dragonBones.FastSlot#blendMode
-             */
-            ,function () {
-                return this._blendMode;
-            }
-            ,function (value) {
-                if (this._blendMode != value) {
-                    this._blendMode = value;
-                    this._updateDisplayBlendMode(this._blendMode);
-                }
-            }
-        );
-        d(p, "gotoAndPlay"
-            ,function () {
-                return this._gotoAndPlay;
-            }
-            /**
-             * 播放子骨架动画
-             * @member {string} dragonBones.FastSlot#gotoAndPlay
-             */
-            ,function (value) {
-                if (this._gotoAndPlay != value) {
-                    this._gotoAndPlay = value;
-                    this.updateChildArmatureAnimation();
-                }
-            }
-        );
-        d(p, "colorTransform"
-            ,function () {
-                return this._colorTransform;
-            }
-        );
-        d(p, "colorChanged"
-            ,function () {
-                return this._isColorChanged;
-            }
-        );
-        //Abstract method
-        /** @private */
-        p._updateDisplay = function (value) {
-            throw new Error("Abstract method needs to be implemented in subclass!");
-        };
-        /** @private */
-        p._addDisplay = function () {
-            throw new Error("Abstract method needs to be implemented in subclass!");
-        };
-        /** @private */
-        p._replaceDisplay = function (prevDisplay) {
-            throw new Error("Abstract method needs to be implemented in subclass!");
-        };
-        /** @private */
-        p._removeDisplay = function () {
-            throw new Error("Abstract method needs to be implemented in subclass!");
-        };
-        /** @private */
-        p._getDisplayIndex = function () {
-            throw new Error("Abstract method needs to be implemented in subclass!");
-        };
-        /**
-         * @private
-         * Adds the original display object to another display object.
-         * @param container
-         * @param index
-         */
-        p._addDisplayToContainer = function (container, index) {
-            if (index === void 0) { index = -1; }
-            throw new Error("Abstract method needs to be implemented in subclass!");
-        };
-        /**
-         * @private
-         * remove the original display object from its parent.
-         */
-        p._removeDisplayFromContainer = function () {
-            throw new Error("Abstract method needs to be implemented in subclass!");
-        };
-        /**
-         * @private
-         * Updates the transform of the slot.
-         */
-        p._updateTransform = function () {
-            throw new Error("Abstract method needs to be implemented in subclass!");
-        };
-        /**
-         * @private
-         * Updates the frame of the slot.
-         */
-        p._updateFrame = function () {
-            throw new Error("Abstract method needs to be implemented in subclass!");
-        };
-        /**
-         * @private
-         */
-        p._updateDisplayVisible = function (value) {
-            /**
-             * bone.visible && slot.visible && updateVisible
-             * this._parent.visible && this._visible && value;
-             */
-            throw new Error("Abstract method needs to be implemented in subclass!");
-        };
-        /**
-         * @private
-         * Updates the color of the display object.
-         * @param a
-         * @param r
-         * @param g
-         * @param b
-         * @param aM
-         * @param rM
-         * @param gM
-         * @param bM
-         */
-        p._updateDisplayColor = function (aOffset, rOffset, gOffset, bOffset, aMultiplier, rMultiplier, gMultiplier, bMultiplier, colorChanged) {
-            if (colorChanged === void 0) { colorChanged = false; }
-            this._colorTransform.alphaOffset = aOffset;
-            this._colorTransform.redOffset = rOffset;
-            this._colorTransform.greenOffset = gOffset;
-            this._colorTransform.blueOffset = bOffset;
-            this._colorTransform.alphaMultiplier = aMultiplier;
-            this._colorTransform.redMultiplier = rMultiplier;
-            this._colorTransform.greenMultiplier = gMultiplier;
-            this._colorTransform.blueMultiplier = bMultiplier;
-            this._isColorChanged = colorChanged;
-        };
-        /**
-         * @private
-         * Update the blend mode of the display object.
-         * @param value The blend mode to use.
-         */
-        p._updateDisplayBlendMode = function (value) {
-            throw new Error("Abstract method needs to be implemented in subclass!");
-        };
-        /** @private When slot timeline enter a key frame, call this func*/
-        p._arriveAtFrame = function (frame, animationState) {
-            var slotFrame = frame;
-            this.displayIndex = slotFrame.displayIndex;
-            this._updateDisplayVisible(slotFrame.visible);
-            if (this._displayIndex >= 0) {
-                if (!isNaN(slotFrame.zOrder) && slotFrame.zOrder != this._tweenZOrder) {
-                    this._tweenZOrder = slotFrame.zOrder;
-                    this.armature._slotsZOrderChanged = true;
-                }
-            }
-            //[TODO]currently there is only gotoAndPlay belongs to frame action. In future, there will be more.  
-            //后续会扩展更多的action，目前只有gotoAndPlay的含义
-            if (frame.action) {
-                var targetArmature = this.childArmature;
-                if (targetArmature) {
-                    targetArmature.getAnimation().gotoAndPlay(frame.action);
-                }
-            }
-            else if (slotFrame.gotoAndPlay) {
-                this.gotoAndPlay = slotFrame.gotoAndPlay;
-            }
-        };
-        /** @private */
-        p.hideSlots = function () {
-            this.displayIndex = -1;
-            /*if (this._frameCache) {
-                this._frameCache.clear();
-            }*/
-        };
-        p._updateGlobal = function () {
-            this._calculateRelativeParentTransform();
-            dragonBones.TransformUtil.transformToMatrix(this._global, this._globalTransformMatrix);
-            var output = this._calculateParentTransform();
-            if (output) {
-                this._globalTransformMatrix.concat(output.parentGlobalTransformMatrix);
-                dragonBones.TransformUtil.matrixToTransform(this._globalTransformMatrix, this._global, this._global.scaleX * output.parentGlobalTransform.scaleX >= 0, this._global.scaleY * output.parentGlobalTransform.scaleY >= 0);
-            }
-            return output;
-        };
-        p._resetToOrigin = function () {
-            this.displayIndex = this._originDisplayIndex;
-            this._updateDisplayColor(0, 0, 0, 0, 1, 1, 1, 1, true);
-        };
-        return FastSlot;
-    }(dragonBones.FastDBObject));
-    dragonBones.FastSlot = FastSlot;
-    egret.registerClass(FastSlot,'dragonBones.FastSlot',["dragonBones.ISlotCacheGenerator","dragonBones.ICacheUser"]);
 })(dragonBones || (dragonBones = {}));
 //////////////////////////////////////////////////////////////////////////////////////
 //
@@ -11386,6 +9015,1835 @@ var dragonBones;
 var dragonBones;
 (function (dragonBones) {
     /**
+     * @class dragonBones.FastArmature
+     * @classdesc
+     * FastArmature 是 DragonBones 高效率的骨骼动画系统。他能缓存动画数据，大大减少动画播放的计算
+     * 不支持动态添加Bone和Slot，换装请通过更换Slot的dispaly或子骨架childArmature来实现
+     * @extends dragonBones.EventDispatcher
+     * @see dragonBones.ArmatureData
+     *
+     * @example
+       <pre>
+        //获取动画数据
+        var skeletonData = RES.getRes("skeleton");
+        //获取纹理集数据
+        var textureData = RES.getRes("textureConfig");
+        //获取纹理集图片
+        var texture = RES.getRes("texture");
+      
+        //创建一个工厂，用来创建Armature
+        var factory:dragonBones.EgretFactory = new dragonBones.EgretFactory();
+        //把动画数据添加到工厂里
+        factory.addSkeletonData(dragonBones.DataParser.parseDragonBonesData(skeletonData));
+        //把纹理集数据和图片添加到工厂里
+        factory.addTextureAtlas(new dragonBones.EgretTextureAtlas(texture, textureData));
+      
+        //获取Armature的名字，dragonBones4.0的数据可以包含多个骨架，这里取第一个Armature
+        var armatureName:string = skeletonData.armature[0].name;
+        //从工厂里创建出Armature
+        var armature:dragonBones.FastArmature = factory.buildFastArmature(armatureName);
+        //获取装载Armature的容器
+        var armatureDisplay = armature.display;
+        //把它添加到舞台上
+        this.addChild(armatureDisplay);
+        
+        //以60fps的帧率开启动画缓存，缓存所有的动画数据
+        var animationCachManager:dragonBones.AnimationCacheManager = armature.enableAnimationCache(60);
+      
+       //取得这个Armature动画列表中的第一个动画的名字
+        var curAnimationName = armature.animation.animationList[0];
+        //播放这个动画，gotoAndPlay各个参数说明
+        //第一个参数 animationName {string} 指定播放动画的名称.
+        //第二个参数 fadeInTime {number} 动画淡入时间 (>= 0), 默认值：-1 意味着使用动画数据中的淡入时间.
+        //第三个参数 duration {number} 动画播放时间。默认值：-1 意味着使用动画数据中的播放时间.
+        //第四个参数 layTimes {number} 动画播放次数(0:循环播放, >=1:播放次数, NaN:使用动画数据中的播放时间), 默认值：NaN
+        armature.animation.gotoAndPlay(curAnimationName,0.3,-1,0);
+      
+        //把Armature添加到心跳时钟里
+        dragonBones.WorldClock.clock.add(armature);
+        //心跳时钟开启
+        egret.Ticker.getInstance().register(function (advancedTime) {
+            dragonBones.WorldClock.clock.advanceTime(advancedTime / 1000);
+        }, this);
+       </pre>
+     */
+    var FastArmature = (function (_super) {
+        __extends(FastArmature, _super);
+        function FastArmature(display) {
+            _super.call(this);
+            /**
+             * 保证CacheManager是独占的前提下可以开启，开启后有助于性能提高
+             */
+            this.isCacheManagerExclusive = false;
+            this._cacheFrameIndex = -1;
+            this._boneIKList = [];
+            this._enableEventDispatch = true;
+            /** @private*/
+            this._useCache = true;
+            /** @private*/
+            this._isFrameCached = false;
+            this._display = display;
+            this._animation = new dragonBones.FastAnimation(this);
+            this._slotsZOrderChanged = false;
+            this._armatureData = null;
+            this.boneList = [];
+            this._boneDic = {};
+            this.slotList = [];
+            this._slotDic = {};
+            this.slotHasChildArmatureList = [];
+            this._eventList = [];
+            this._ikList = [];
+            this._delayDispose = false;
+            this._lockDispose = false;
+        }
+        var d = __define,c=FastArmature,p=c.prototype;
+        /**
+         * Cleans up any resources used by this instance.
+         */
+        p.dispose = function () {
+            this._delayDispose = true;
+            if (!this._animation || this._lockDispose) {
+                return;
+            }
+            this.userData = null;
+            this._animation.dispose();
+            var i = this.slotList.length;
+            while (i--) {
+                this.slotList[i].dispose();
+            }
+            i = this.boneList.length;
+            while (i--) {
+                this.boneList[i].dispose();
+            }
+            i = this._ikList.length;
+            while (i--) {
+                this._ikList[i].dispose();
+            }
+            this.slotList.length = 0;
+            this.boneList.length = 0;
+            this._armatureData = null;
+            this._animation = null;
+            this.slotList = null;
+            this.boneList = null;
+            this._eventList = null;
+            this._ikList = null;
+        };
+        /**
+         * Update the animation using this method typically in an ENTERFRAME Event or with a Timer.
+         * @param The amount of second to move the playhead ahead.
+         */
+        p.advanceTime = function (passedTime) {
+            this._lockDispose = true;
+            this._isFrameCached = false;
+            this._animation.advanceTime(passedTime);
+            var bone;
+            var slot;
+            var i = 0;
+            var len = this._boneIKList.length;
+            var j;
+            var jLen;
+            if (this._isFrameCached) {
+                if (!this._useCache) {
+                    this._useCache = true;
+                }
+                i = this.slotList.length;
+                while (i--) {
+                    slot = this.slotList[i];
+                    slot.updateByCache(this._cacheFrameIndex);
+                }
+            }
+            else {
+                if (this._useCache) {
+                    this._useCache = false;
+                }
+                for (i = 0; i < len; i++) {
+                    if (i != 0) {
+                        this._ikList[i - 1].compute();
+                        for (j = 0, jLen = this._boneIKList[i].length; j < jLen; j++) {
+                            bone = this._boneIKList[i][j];
+                            bone.adjustGlobalTransformMatrixByIK();
+                        }
+                    }
+                    else {
+                        for (j = 0, jLen = this._boneIKList[i].length; j < jLen; j++) {
+                            bone = this._boneIKList[i][j];
+                            bone.update();
+                            bone.rotationIK = bone.global.rotation;
+                        }
+                    }
+                }
+                i = this.slotList.length;
+                while (i--) {
+                    slot = this.slotList[i];
+                    slot._update();
+                }
+            }
+            i = this.slotHasChildArmatureList.length;
+            while (i--) {
+                slot = this.slotHasChildArmatureList[i];
+                var childArmature = slot.childArmature;
+                if (childArmature) {
+                    childArmature.advanceTime(passedTime);
+                }
+            }
+            if (this._slotsZOrderChanged) {
+                this.updateSlotsZOrder();
+            }
+            // Modify Fast mode by duanchunlei
+            if (!this._isFrameCached) {
+                var animationCache = this._animation.animationState.animationCache;
+                if (animationCache) {
+                    animationCache.addFrame(this._cacheFrameIndex, this);
+                }
+            }
+            while (this._eventList.length > 0) {
+                this.dispatchEvent(this._eventList.shift());
+            }
+            this._lockDispose = false;
+            if (this._delayDispose) {
+                this.dispose();
+            }
+        };
+        /**
+         * 开启动画缓存
+         * @param  {number} 帧速率，每秒缓存多少次数据，越大越流畅,若值小于零会被设置为动画数据中的默认帧率
+         * @param  {Array<any>} 需要缓存的动画列表，如果为null，则全部动画都缓存
+         * @param  {boolean} 动画是否是循环动画，仅在3.0以下的数据格式使用，如果动画不是循环动画请设置为false，默认为true。
+         * @return {AnimationCacheManager}  返回缓存管理器，可以绑定到其他armature以减少内存
+         */
+        p.enableAnimationCache = function (frameRate, animationList, loop) {
+            if (animationList === void 0) { animationList = null; }
+            if (loop === void 0) { loop = true; }
+            // Modify Fast mode by duanchunlei
+            var animationCacheManager = this._armatureData._cacheManager;
+            if (animationCacheManager) {
+                animationCacheManager.bindCacheUserArmature(this);
+                this.enableCache = true;
+                return animationCacheManager;
+            }
+            this._armatureData._cacheManager = animationCacheManager = dragonBones.AnimationCacheManager.initWithArmatureData(this.armatureData, frameRate);
+            /*if(animationList){
+                var length:number = animationList.length;
+                for(var i:number = 0;i < length;i++){
+                    var animationName:string = animationList[i];
+                    animationCacheManager.initAnimationCache(animationName);
+                }
+            }*/
+            //else{
+            animationCacheManager.initAllAnimationCache();
+            //}
+            //animationCacheManager.setCacheGeneratorArmature(this);
+            //animationCacheManager.generateAllAnimationCache(loop);
+            //animationCacheManager.bindCacheUserArmature(this);
+            this.enableCache = true;
+            return animationCacheManager;
+        };
+        /**
+         * 获取指定名称的 Bone
+         * @param boneName {string} Bone名称
+         * @returns {FastBone}
+         */
+        p.getBone = function (boneName) {
+            return this._boneDic[boneName];
+        };
+        /**
+         * 获取指定名称的 Slot
+         * @param slotName {string} Slot名称
+         * @returns {FastSlot}
+         */
+        p.getSlot = function (slotName) {
+            return this._slotDic[slotName];
+        };
+        /**
+         * 获取包含指定显示对象的 Bone
+         * @param display {any} 显示对象实例
+         * @returns {FastBone}
+         */
+        p.getBoneByDisplay = function (display) {
+            var slot = this.getSlotByDisplay(display);
+            return slot ? slot.parent : null;
+        };
+        /**
+         * 获取包含指定显示对象的 Slot
+         * @param displayObj {any} 显示对象实例
+         * @returns {FastSlot}
+         */
+        p.getSlotByDisplay = function (displayObj) {
+            if (displayObj) {
+                for (var i = 0, len = this.slotList.length; i < len; i++) {
+                    if (this.slotList[i].display == displayObj) {
+                        return this.slotList[i];
+                    }
+                }
+            }
+            return null;
+        };
+        /**
+         * 获取骨架包含的所有插槽
+         * @param returnCopy {boolean} 是否返回拷贝。默认：true
+         * @returns {FastSlot[]}
+         */
+        p.getSlots = function (returnCopy) {
+            if (returnCopy === void 0) { returnCopy = true; }
+            return returnCopy ? this.slotList.concat() : this.slotList;
+        };
+        p._updateBonesByCache = function () {
+            var i = this.boneList.length;
+            var bone;
+            while (i--) {
+                bone = this.boneList[i];
+                bone.update();
+            }
+        };
+        /**
+         * 在骨架中为指定名称的 FastBone 添加一个子 FastBone.
+         * 和Armature不同,FastArmature的这个方法不能在运行时动态添加骨骼
+         * @param bone {FastBone} FastBone 实例
+         * @param parentName {string} 父骨头名称 默认：null
+         */
+        p.addBone = function (bone, parentName) {
+            if (parentName === void 0) { parentName = null; }
+            var parentBone;
+            if (parentName) {
+                parentBone = this.getBone(parentName);
+                parentBone.boneList.push(bone);
+            }
+            bone.armature = this;
+            bone.parentBoneData = parentBone;
+            this.boneList.unshift(bone);
+            this._boneDic[bone.name] = bone;
+        };
+        /**
+         * 为指定名称的 FastBone 添加一个子 FastSlot.
+         * 和Armature不同,FastArmature的这个方法不能在运行时动态添加插槽
+         * @param slot {FastSlot} FastSlot 实例
+         * @param boneName {string}
+         * @see dragonBones.Bone
+         */
+        p.addSlot = function (slot, parentBoneName) {
+            var bone = this.getBone(parentBoneName);
+            if (bone) {
+                slot.armature = this;
+                slot.setParent(bone);
+                bone.slotList.push(slot);
+                slot._addDisplayToContainer(this.display);
+                this.slotList.push(slot);
+                this._slotDic[slot.name] = slot;
+                if (slot.hasChildArmature) {
+                    this.slotHasChildArmatureList.push(slot);
+                }
+            }
+            else {
+                throw new Error();
+            }
+        };
+        /**
+         * 按照显示层级为所有 Slot 排序
+         */
+        p.updateSlotsZOrder = function () {
+            this.slotList.sort(this.sortSlot);
+            var i = this.slotList.length;
+            while (i--) {
+                var slot = this.slotList[i];
+                if ((slot._frameCache && (slot._frameCache).displayIndex >= 0)
+                    || (!slot._frameCache && slot.displayIndex >= 0)) {
+                    slot._addDisplayToContainer(this._display);
+                }
+            }
+            this._slotsZOrderChanged = false;
+        };
+        p.sortBoneList = function () {
+            var i = this.boneList.length;
+            if (i == 0) {
+                return;
+            }
+            var helpArray = [];
+            while (i--) {
+                var level = 0;
+                var bone = this.boneList[i];
+                var boneParent = bone;
+                while (boneParent) {
+                    level++;
+                    boneParent = boneParent.parent;
+                }
+                helpArray[i] = [level, bone];
+            }
+            helpArray.sort(dragonBones.ArmatureData.sortBoneDataHelpArrayDescending);
+            i = helpArray.length;
+            while (i--) {
+                this.boneList[i] = helpArray[i][1];
+            }
+            helpArray.length = 0;
+        };
+        /** @private When AnimationState enter a key frame, call this func*/
+        p.arriveAtFrame = function (frame, animationState) {
+            if (frame.event && this.hasEventListener(dragonBones.FrameEvent.ANIMATION_FRAME_EVENT)) {
+                var frameEvent = new dragonBones.FrameEvent(dragonBones.FrameEvent.ANIMATION_FRAME_EVENT);
+                frameEvent.animationState = animationState;
+                frameEvent.frameLabel = frame.event;
+                frameEvent.bone = frame.bone ? this.getBone(frame.bone) : null;
+                this._addEvent(frameEvent);
+            }
+            if (frame.action) {
+                this.animation.gotoAndPlay(frame.action);
+            }
+        };
+        p.invalidUpdate = function (boneName) {
+            if (boneName === void 0) { boneName = null; }
+            if (boneName) {
+                var bone = this.getBone(boneName);
+                if (bone) {
+                    bone.invalidUpdate();
+                }
+            }
+            else {
+                var i = this.boneList.length;
+                while (i--) {
+                    this.boneList[i].invalidUpdate();
+                }
+            }
+        };
+        p.resetAnimation = function () {
+            this.animation.animationState._resetTimelineStateList();
+            var length = this.boneList.length;
+            for (var i = 0; i < length; i++) {
+                var boneItem = this.boneList[i];
+                boneItem._timelineState = null;
+            }
+            this.animation.stop();
+        };
+        p.sortSlot = function (slot1, slot2) {
+            return slot1.zOrder < slot2.zOrder ? 1 : -1;
+        };
+        /**
+         * 获取FastAnimation实例
+         * @returns {any} FastAnimation实例
+         */
+        p.getAnimation = function () {
+            return this._animation;
+        };
+        d(p, "armatureData"
+            /**
+             * ArmatureData.
+             * @see dragonBones.ArmatureData.
+             */
+            ,function () {
+                return this._armatureData;
+            }
+        );
+        d(p, "animation"
+            /**
+             * An Animation instance
+             * @see dragonBones.Animation
+             */
+            ,function () {
+                return this._animation;
+            }
+        );
+        d(p, "display"
+            /**
+             * Armature's display object. It's instance type depends on render engine. For example "flash.display.DisplayObject" or "startling.display.DisplayObject"
+             */
+            ,function () {
+                return this._display;
+            }
+        );
+        d(p, "enableCache"
+            ,function () {
+                return this._enableCache;
+            }
+            ,function (value) {
+                this._enableCache = value;
+            }
+        );
+        d(p, "enableEventDispatch"
+            ,function () {
+                return this._enableEventDispatch;
+            }
+            ,function (value) {
+                this._enableEventDispatch = value;
+            }
+        );
+        p._addEvent = function (event) {
+            if (this._enableEventDispatch) {
+                this._eventList.push(event);
+            }
+        };
+        p.getIKs = function (returnCopy) {
+            if (returnCopy === void 0) { returnCopy = true; }
+            return returnCopy ? this._ikList.concat() : this._ikList;
+        };
+        p.buildIK = function () {
+            var ikConstraintData;
+            this._ikList.length = 0;
+            for (var i = 0, len = this._armatureData.ikDataList.length; i < len; i++) {
+                ikConstraintData = this._armatureData.ikDataList[i];
+                this._ikList.push(new dragonBones.FastIKConstraint(ikConstraintData, this));
+            }
+        };
+        p.updateBoneCache = function () {
+            this.boneList.reverse();
+            var temp = {};
+            var ikConstraintsCount = this._ikList.length;
+            var arrayCount = ikConstraintsCount + 1;
+            var i;
+            var len;
+            var j;
+            var jLen;
+            var bone;
+            var currentBone;
+            this._boneIKList = [];
+            while (this._boneIKList.length < arrayCount) {
+                this._boneIKList[this._boneIKList.length] = [];
+            }
+            temp[this.boneList[0].name] = 0;
+            for (i = 0, len = this._ikList.length; i < len; i++) {
+                temp[this._ikList[i].bones[0].name] = i + 1;
+            }
+            next: for (i = 0, len = this.boneList.length; i < len; i++) {
+                bone = this.boneList[i];
+                currentBone = bone;
+                while (currentBone) {
+                    if (currentBone.parent == null) {
+                        temp[currentBone.name] = 0;
+                    }
+                    if (temp.hasOwnProperty(currentBone.name)) {
+                        this._boneIKList[temp[currentBone.name]].push(bone);
+                        continue next;
+                    }
+                    currentBone = currentBone.parent;
+                }
+            }
+        };
+        p.getIKTargetData = function (bone) {
+            var target = [];
+            var ik;
+            for (var i = 0, len = this._ikList.length; i < len; i++) {
+                ik = this._ikList[i];
+                if (bone.name == ik.target.name) {
+                    target.push(ik);
+                }
+            }
+            return target;
+        };
+        return FastArmature;
+    }(dragonBones.EventDispatcher));
+    dragonBones.FastArmature = FastArmature;
+    egret.registerClass(FastArmature,'dragonBones.FastArmature',["dragonBones.ICacheableArmature","dragonBones.IArmature","dragonBones.IAnimatable"]);
+})(dragonBones || (dragonBones = {}));
+//////////////////////////////////////////////////////////////////////////////////////
+//
+//  Copyright (c) 2014-2015, Egret Technology Inc.
+//  All rights reserved.
+//  Redistribution and use in source and binary forms, with or without
+//  modification, are permitted provided that the following conditions are met:
+//
+//     * Redistributions of source code must retain the above copyright
+//       notice, this list of conditions and the following disclaimer.
+//     * Redistributions in binary form must reproduce the above copyright
+//       notice, this list of conditions and the following disclaimer in the
+//       documentation and/or other materials provided with the distribution.
+//     * Neither the name of the Egret nor the
+//       names of its contributors may be used to endorse or promote products
+//       derived from this software without specific prior written permission.
+//
+//  THIS SOFTWARE IS PROVIDED BY EGRET AND CONTRIBUTORS "AS IS" AND ANY EXPRESS
+//  OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES
+//  OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED.
+//  IN NO EVENT SHALL EGRET AND CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT,
+//  INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT
+//  LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES;LOSS OF USE, DATA,
+//  OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF
+//  LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING
+//  NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE,
+//  EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+//
+//////////////////////////////////////////////////////////////////////////////////////
+var dragonBones;
+(function (dragonBones) {
+    /**
+     * @class dragonBones.FastDBObject
+     * @classdesc
+     * FastDBObject 是 FastBone 和 FastSlot 的基类
+     * @see dragonBones.FastBone
+     * @see dragonBones.FastSlot
+     */
+    var FastDBObject = (function () {
+        function FastDBObject() {
+            this._globalTransformMatrixBackup = this._globalTransformMatrix = new dragonBones.Matrix();
+            this._globalBackup = this._global = new dragonBones.DBTransform();
+            this._origin = new dragonBones.DBTransform();
+            this._visible = true;
+            this.armature = null;
+            this._parent = null;
+            this.userData = null;
+            this.inheritRotation = true;
+            this.inheritScale = true;
+            this.inheritTranslation = true;
+        }
+        var d = __define,c=FastDBObject,p=c.prototype;
+        /** @private */
+        p.updateByCache = function (frameIndex) {
+            this._global = this._frameCache.globalTransform;
+            this._globalTransformMatrix = this._frameCache.globalTransformMatrix;
+        };
+        /** @private */
+        p.switchTransformToBackup = function () {
+            /*if(!this._globalBackup){
+                this._globalBackup = new DBTransform();
+                this._globalTransformMatrixBackup = new Matrix();
+            }
+            this._global = this._globalBackup;
+            this._globalTransformMatrix = this._globalTransformMatrixBackup;*/
+        };
+        /** @private */
+        p.setParent = function (value) {
+            this._parent = value;
+        };
+        /**
+         * Cleans up any resources used by this DBObject instance.
+         */
+        p.dispose = function () {
+            this.userData = null;
+            this._globalTransformMatrix = null;
+            this._global = null;
+            this._origin = null;
+            this.armature = null;
+            this._parent = null;
+        };
+        p._calculateParentTransform = function () {
+            if (this.parent && (this.inheritTranslation || this.inheritRotation || this.inheritScale)) {
+                var parentGlobalTransform = this._parent._global;
+                var parentGlobalTransformMatrix = this._parent._globalTransformMatrix;
+                /*
+                if(	!this.inheritTranslation && (parentGlobalTransform.x != 0 || parentGlobalTransform.y != 0) ||
+                    !this.inheritRotation && (parentGlobalTransform.skewX != 0 || parentGlobalTransform.skewY != 0) ||
+                    !this.inheritScale && (parentGlobalTransform.scaleX != 1 || parentGlobalTransform.scaleY != 1)){
+                    parentGlobalTransform = FastDBObject._tempParentGlobalTransform;
+                    parentGlobalTransform.copy(this._parent._global);
+                    if(!this.inheritTranslation){
+                        parentGlobalTransform.x = 0;
+                        parentGlobalTransform.y = 0;
+                    }
+                    if(!this.inheritScale){
+                        parentGlobalTransform.scaleX = 1;
+                        parentGlobalTransform.scaleY = 1;
+                    }
+                    if(!this.inheritRotation){
+                        parentGlobalTransform.skewX = 0;
+                        parentGlobalTransform.skewY = 0;
+                    }
+                    
+                    parentGlobalTransformMatrix = DBObject._tempParentGlobalTransformMatrix;
+                    TransformUtil.transformToMatrix(parentGlobalTransform, parentGlobalTransformMatrix);
+                }
+                */
+                return dragonBones.ParentTransformObject.create().setTo(parentGlobalTransform, parentGlobalTransformMatrix);
+            }
+            dragonBones.TransformUtil.transformToMatrix(this._global, this._globalTransformMatrix);
+            return null;
+        };
+        p._updateGlobal = function () {
+            this._calculateRelativeParentTransform();
+            var output = this._calculateParentTransform();
+            if (output != null) {
+                //计算父骨头绝对坐标
+                var parentMatrix = output.parentGlobalTransformMatrix;
+                var parentGlobalTransform = output.parentGlobalTransform;
+                //计算绝对坐标
+                var x = this._global.x;
+                var y = this._global.y;
+                this._global.x = parentMatrix.a * x + parentMatrix.c * y + parentMatrix.tx;
+                this._global.y = parentMatrix.d * y + parentMatrix.b * x + parentMatrix.ty;
+                if (this.inheritRotation) {
+                    this._global.skewX += parentGlobalTransform.skewX;
+                    this._global.skewY += parentGlobalTransform.skewY;
+                }
+                if (this.inheritScale) {
+                    this._global.scaleX *= parentGlobalTransform.scaleX;
+                    this._global.scaleY *= parentGlobalTransform.scaleY;
+                }
+            }
+            dragonBones.TransformUtil.transformToMatrix(this._global, this._globalTransformMatrix);
+            return output;
+        };
+        p._calculateRelativeParentTransform = function () {
+        };
+        d(p, "name"
+            ,function () {
+                return this._name;
+            }
+            ,function (value) {
+                this._name = value;
+            }
+        );
+        d(p, "global"
+            /**
+             * This DBObject instance global transform instance.
+             * @see dragonBones.DBTransform
+             */
+            ,function () {
+                return this._global;
+            }
+        );
+        d(p, "globalTransformMatrix"
+            ,function () {
+                return this._globalTransformMatrix;
+            }
+        );
+        d(p, "origin"
+            /**
+             * This DBObject instance related to parent transform instance.
+             * @see dragonBones.DBTransform
+             */
+            ,function () {
+                return this._origin;
+            }
+        );
+        d(p, "parent"
+            /**
+             * Indicates the Bone instance that directly contains this DBObject instance if any.
+             */
+            ,function () {
+                return this._parent;
+            }
+        );
+        d(p, "visible"
+            ,function () {
+                return this._visible;
+            }
+            ,function (value) {
+                this._visible = value;
+            }
+        );
+        d(p, "frameCache",undefined
+            ,function (cache) {
+                this._frameCache = cache;
+            }
+        );
+        FastDBObject._tempParentGlobalTransform = new dragonBones.DBTransform();
+        return FastDBObject;
+    }());
+    dragonBones.FastDBObject = FastDBObject;
+    egret.registerClass(FastDBObject,'dragonBones.FastDBObject');
+})(dragonBones || (dragonBones = {}));
+//////////////////////////////////////////////////////////////////////////////////////
+//
+//  Copyright (c) 2014-2015, Egret Technology Inc.
+//  All rights reserved.
+//  Redistribution and use in source and binary forms, with or without
+//  modification, are permitted provided that the following conditions are met:
+//
+//     * Redistributions of source code must retain the above copyright
+//       notice, this list of conditions and the following disclaimer.
+//     * Redistributions in binary form must reproduce the above copyright
+//       notice, this list of conditions and the following disclaimer in the
+//       documentation and/or other materials provided with the distribution.
+//     * Neither the name of the Egret nor the
+//       names of its contributors may be used to endorse or promote products
+//       derived from this software without specific prior written permission.
+//
+//  THIS SOFTWARE IS PROVIDED BY EGRET AND CONTRIBUTORS "AS IS" AND ANY EXPRESS
+//  OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES
+//  OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED.
+//  IN NO EVENT SHALL EGRET AND CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT,
+//  INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT
+//  LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES;LOSS OF USE, DATA,
+//  OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF
+//  LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING
+//  NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE,
+//  EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+//
+//////////////////////////////////////////////////////////////////////////////////////
+var dragonBones;
+(function (dragonBones) {
+    /**
+     * @class dragonBones.FastBone
+     * @classdesc
+     * FastBone 实例代表 FastArmature 中的一个骨头。一个FastArmature实例可以由很多 FastBone组成。
+     * FastBone 在骨骼动画体系中是最重要的逻辑单元之一，负责动画中的平移旋转缩放的实现
+     * 和Bone相比，FastBone不能动态添加子骨骼和子插槽
+     * @extends dragonBones.FastDBObject
+     * @see dragonBones.FastArmature
+     * @see dragonBones.FastSlot
+     * @see dragonBones.BoneData
+     */
+    var FastBone = (function (_super) {
+        __extends(FastBone, _super);
+        function FastBone() {
+            _super.call(this);
+            this.slotList = [];
+            this.boneList = [];
+            /** @private */
+            this._needUpdate = 0;
+            this.isIKConstraint = false;
+            this.childrenBones = [];
+            this._needUpdate = 2;
+            this._tweenPivot = new dragonBones.Point();
+        }
+        var d = __define,c=FastBone,p=c.prototype;
+        FastBone.initWithBoneData = function (boneData) {
+            var outputBone = new FastBone();
+            outputBone.name = boneData.name;
+            outputBone.length = boneData.length;
+            outputBone.inheritRotation = boneData.inheritRotation;
+            outputBone.inheritScale = boneData.inheritScale;
+            outputBone.origin.copy(boneData.transform);
+            return outputBone;
+        };
+        /**
+         * 获取当前骨头包含的所有 FastBone 实例
+         * @param returnCopy {boolean} 是否返回拷贝。默认：true
+         * @returns {FastBone[]}
+         */
+        p.getBones = function (returnCopy) {
+            if (returnCopy === void 0) { returnCopy = true; }
+            return returnCopy ? this.boneList.concat() : this.boneList;
+        };
+        /**
+         * 获取当前骨头包含的所有 FastSlot 实例
+         * @param returnCopy {boolean} 是否返回拷贝。默认：true
+         * @returns {FastSlot[]}
+         */
+        p.getSlots = function (returnCopy) {
+            if (returnCopy === void 0) { returnCopy = true; }
+            return returnCopy ? this.slotList.concat() : this.slotList;
+        };
+        /**
+         * @inheritDoc
+         */
+        p.dispose = function () {
+            _super.prototype.dispose.call(this);
+            this._timelineState = null;
+            this._tweenPivot = null;
+        };
+        //动画
+        /**
+         * 在下一帧强制更新当前 Bone 实例及其包含的所有 Slot 的动画。
+         */
+        p.invalidUpdate = function () {
+            this._needUpdate = 2;
+            this.operationInvalidUpdate(this);
+            var i;
+            var len;
+            for (i = 0, len = this.childrenBones.length; i < len; i++) {
+                if (this.childrenBones[i]._needUpdate != 2) {
+                    this.operationInvalidUpdate(this.childrenBones[i]);
+                    this.childrenBones[i].invalidUpdate();
+                }
+            }
+        };
+        p.operationInvalidUpdate = function (bone) {
+            var arr = this.armature.getIKTargetData(bone);
+            var i;
+            var len;
+            var j;
+            var jLen;
+            var ik;
+            var bo;
+            for (i = 0, len = arr.length; i < len; i++) {
+                ik = arr[i];
+                for (j = 0, jLen = ik.bones.length; j < jLen; j++) {
+                    bo = ik.bones[j];
+                    if (bo._needUpdate != 2) {
+                        bo.invalidUpdate();
+                    }
+                }
+            }
+        };
+        p._calculateRelativeParentTransform = function () {
+            this._global.copy(this._origin);
+            if (this._timelineState) {
+                this._global.add(this._timelineState._transform);
+            }
+        };
+        /** @private */
+        p.updateByCache = function (frameIndex) {
+            _super.prototype.updateByCache.call(this, frameIndex);
+            this._global = this._frameCache.globalTransform;
+            this._globalTransformMatrix = this._frameCache.globalTransformMatrix;
+        };
+        /** @private */
+        p.update = function (needUpdate) {
+            if (needUpdate === void 0) { needUpdate = false; }
+            this._needUpdate--;
+            if (needUpdate || this._needUpdate > 0 || (this._parent && this._parent._needUpdate > 0)) {
+                this._needUpdate = 1;
+            }
+            else {
+                return;
+            }
+            this.updataLocalTransform();
+            this.updateGlobalTransform();
+        };
+        p.updataLocalTransform = function () {
+            this.blendingTimeline();
+            this._calculateRelativeParentTransform();
+        };
+        p.updateGlobalTransform = function () {
+            //计算global
+            var result = this._updateGlobal();
+            if (result) {
+                result.release();
+            }
+        };
+        p._updateGlobal = function () {
+            if (!this.armature._skewEnable) {
+                return _super.prototype._updateGlobal.call(this);
+            }
+            //this._calculateRelativeParentTransform();
+            var output = this._calculateParentTransform();
+            if (output != null && output.parentGlobalTransformMatrix && output.parentGlobalTransform) {
+                //计算父骨头绝对坐标
+                var parentMatrix = output.parentGlobalTransformMatrix;
+                var parentGlobalTransform = output.parentGlobalTransform;
+                var scaleXF = this._global.scaleX * parentGlobalTransform.scaleX > 0;
+                var scaleYF = this._global.scaleY * parentGlobalTransform.scaleY > 0;
+                var relativeRotation = this._global.rotation;
+                var relativeScaleX = this._global.scaleX;
+                var relativeScaleY = this._global.scaleY;
+                var parentRotation = this.parentBoneRotation;
+                this._localTransform = this._global;
+                if (this.inheritScale && !this.inheritRotation) {
+                    if (parentRotation != 0) {
+                        this._localTransform = this._localTransform.clone();
+                        this._localTransform.rotation -= parentRotation;
+                    }
+                }
+                dragonBones.TransformUtil.transformToMatrix(this._localTransform, this._globalTransformMatrix);
+                this._globalTransformMatrix.concat(parentMatrix);
+                if (this.inheritScale) {
+                    dragonBones.TransformUtil.matrixToTransform(this._globalTransformMatrix, this._global, scaleXF, scaleYF);
+                }
+                else {
+                    dragonBones.TransformUtil.matrixToTransformPosition(this._globalTransformMatrix, this._global);
+                    this._global.scaleX = this._localTransform.scaleX;
+                    this._global.scaleY = this._localTransform.scaleY;
+                    this._global.rotation = this._localTransform.rotation + (this.inheritRotation ? parentRotation : 0);
+                    dragonBones.TransformUtil.transformToMatrix(this._global, this._globalTransformMatrix);
+                }
+            }
+            return output;
+        };
+        p.adjustGlobalTransformMatrixByIK = function () {
+            if (!this.parent) {
+                return;
+            }
+            this.updataLocalTransform();
+            this._global.rotation = this.rotationIK - this.parentBoneRotation;
+            this.updateGlobalTransform();
+            //this.global.rotation = this.rotationIK;
+            //TransformUtil.transformToMatrix(this.global, this._globalTransformMatrix);
+        };
+        /** @private */
+        p._hideSlots = function () {
+            var length = this.slotList.length;
+            for (var i = 0; i < length; i++) {
+                var childSlot = this.slotList[i];
+                childSlot.hideSlots();
+            }
+        };
+        p.blendingTimeline = function () {
+            if (this._timelineState) {
+                this._tweenPivot.x = this._timelineState._pivot.x;
+                this._tweenPivot.y = this._timelineState._pivot.y;
+            }
+        };
+        /** @private When bone timeline enter a key frame, call this func*/
+        p.arriveAtFrame = function (frame, animationState) {
+            var childSlot;
+            if (frame.event && this.armature.hasEventListener(dragonBones.FrameEvent.BONE_FRAME_EVENT)) {
+                var frameEvent = new dragonBones.FrameEvent(dragonBones.FrameEvent.BONE_FRAME_EVENT);
+                frameEvent.bone = this;
+                frameEvent.animationState = animationState;
+                frameEvent.frameLabel = frame.event;
+                this.armature._addEvent(frameEvent);
+            }
+        };
+        d(p, "childArmature"
+            /**
+             * 不推荐的API,建议使用 slot.childArmature 替代
+             */
+            ,function () {
+                var s = this.slot;
+                if (s) {
+                    return s.childArmature;
+                }
+                return null;
+            }
+        );
+        d(p, "display"
+            /**
+             * 不推荐的API,建议使用 slot.display 替代
+             */
+            ,function () {
+                var s = this.slot;
+                if (s) {
+                    return s.display;
+                }
+                return null;
+            }
+            ,function (value) {
+                var s = this.slot;
+                if (s) {
+                    s.display = value;
+                }
+            }
+        );
+        d(p, "visible",undefined
+            /** @private */
+            ,function (value) {
+                if (this._visible != value) {
+                    this._visible = value;
+                    for (var i = 0, len = this.armature.slotList.length; i < len; i++) {
+                        if (this.armature.slotList[i].parent == this) {
+                            this.armature.slotList[i]._updateDisplayVisible(this._visible);
+                        }
+                    }
+                }
+            }
+        );
+        d(p, "slot"
+            /**
+             * 返回当前 FastBone 实例包含的第一个 FastSlot 实例
+             * @member {FastSlot} dragonBones.FastBone#slot
+             */
+            ,function () {
+                return this.slotList.length > 0 ? this.slotList[0] : null;
+            }
+        );
+        d(p, "parentBoneRotation"
+            ,function () {
+                return this.parent ? this.parent.rotationIK : 0;
+            }
+        );
+        d(p, "parentBoneData",undefined
+            ,function (value) {
+                if (this._parent != value) {
+                    if (this._parent != null) {
+                        var index = this._parent.childrenBones.indexOf(this);
+                        if (index >= 0) {
+                            this._parent.childrenBones.splice(index, 1);
+                        }
+                    }
+                    this.setParent(value);
+                    if (this._parent != null) {
+                        var indexs = this._parent.childrenBones.indexOf(this);
+                        if (indexs < 0) {
+                            this._parent.childrenBones.push(this);
+                        }
+                    }
+                }
+            }
+        );
+        return FastBone;
+    }(dragonBones.FastDBObject));
+    dragonBones.FastBone = FastBone;
+    egret.registerClass(FastBone,'dragonBones.FastBone');
+})(dragonBones || (dragonBones = {}));
+//////////////////////////////////////////////////////////////////////////////////////
+//////////////////////////////////////////////////////////////////////////////////////
+//
+//  Copyright (c) 2014-2015, Egret Technology Inc.
+//  All rights reserved.
+//  Redistribution and use in source and binary forms, with or without
+//  modification, are permitted provided that the following conditions are met:
+//
+//     * Redistributions of source code must retain the above copyright
+//       notice, this list of conditions and the following disclaimer.
+//     * Redistributions in binary form must reproduce the above copyright
+//       notice, this list of conditions and the following disclaimer in the
+//       documentation and/or other materials provided with the distribution.
+//     * Neither the name of the Egret nor the
+//       names of its contributors may be used to endorse or promote products
+//       derived from this software without specific prior written permission.
+//
+//  THIS SOFTWARE IS PROVIDED BY EGRET AND CONTRIBUTORS "AS IS" AND ANY EXPRESS
+//  OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES
+//  OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED.
+//  IN NO EVENT SHALL EGRET AND CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT,
+//  INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT
+//  LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES;LOSS OF USE, DATA,
+//  OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF
+//  LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING
+//  NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE,
+//  EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+//
+//////////////////////////////////////////////////////////////////////////////////////
+var dragonBones;
+(function (dragonBones) {
+    var FastIKConstraint = (function () {
+        function FastIKConstraint(data, armatureData) {
+            this.animationCacheBend = 0;
+            this.animationCacheWeight = -1;
+            this.ikdata = data;
+            this.armature = armatureData;
+            this.weight = data.weight;
+            this.bendDirection = (data.bendPositive ? 1 : -1);
+            this.bones = [];
+            var bone;
+            if (data.chain) {
+                bone = armatureData.getBone(data.bones).parent;
+                bone.isIKConstraint = true;
+                this.bones.push(bone);
+            }
+            bone = armatureData.getBone(data.bones);
+            bone.isIKConstraint = true;
+            this.bones.push(bone);
+            this.target = armatureData.getBone(data.target);
+        }
+        var d = __define,c=FastIKConstraint,p=c.prototype;
+        p.dispose = function () {
+        };
+        p.compute = function () {
+            switch (this.bones.length) {
+                case 1:
+                    var weig1 = this.animationCacheWeight >= 0 ? this.animationCacheWeight : this.weight;
+                    this.compute1(this.bones[0], this.target, weig1);
+                    break;
+                case 2:
+                    var bend = this.animationCacheBend != 0 ? this.animationCacheBend : this.bendDirection;
+                    var weig = this.animationCacheWeight >= 0 ? this.animationCacheWeight : this.weight;
+                    var tt = this.compute2(this.bones[0], this.bones[1], this.target.global.x, this.target.global.y, bend, weig);
+                    this.bones[0].rotationIK = this.bones[0].origin.rotation + (tt.x - this.bones[0].origin.rotation) * weig + this.bones[0].parent.rotationIK;
+                    this.bones[1].rotationIK = this.bones[1].origin.rotation + (tt.y - this.bones[1].origin.rotation) * weig + this.bones[0].rotationIK;
+                    break;
+            }
+        };
+        p.compute1 = function (bone, target, weightA) {
+            var parentRotation = (!bone.inheritRotation || bone.parent == null) ? 0 : bone.parent.global.rotation;
+            var rotation = bone.global.rotation;
+            var rotationIK = Math.atan2(target.global.y - bone.global.y, target.global.x - bone.global.x);
+            bone.rotationIK = rotation + (rotationIK - rotation) * weightA;
+        };
+        p.compute2 = function (parent, child, targetX, targetY, bendDirection, weightA) {
+            if (weightA == 0) {
+                return new dragonBones.Point(parent.global.rotation, child.global.rotation);
+            }
+            var tt = new dragonBones.Point();
+            var p1 = new dragonBones.Point(parent.global.x, parent.global.y);
+            var p2 = new dragonBones.Point(child.global.x, child.global.y);
+            var matrix = new dragonBones.Matrix();
+            dragonBones.TransformUtil.transformToMatrix(parent.parent.global, matrix);
+            matrix.invert();
+            var targetPoint = dragonBones.TransformUtil.applyMatrixToPoint(new dragonBones.Point(targetX, targetY), matrix, true);
+            targetX = targetPoint.x;
+            targetY = targetPoint.y;
+            p1 = dragonBones.TransformUtil.applyMatrixToPoint(p1, matrix, true);
+            p2 = dragonBones.TransformUtil.applyMatrixToPoint(p2, matrix, true);
+            var psx = parent.origin.scaleX;
+            var psy = parent.origin.scaleY;
+            var csx = child.origin.scaleX;
+            var childX = p2.x - p1.x;
+            var childY = p2.y - p1.y;
+            var len1 = Math.sqrt(childX * childX + childY * childY);
+            var parentAngle;
+            var childAngle;
+            var sign = 1;
+            var offset1 = 0;
+            var offset2 = 0;
+            if (psx < 0) {
+                psx = -psx;
+                offset1 = Math.PI;
+                sign = -1;
+            }
+            else {
+                offset1 = 0;
+                sign = 1;
+            }
+            if (psy < 0) {
+                psy = -psy;
+                sign = -sign;
+            }
+            if (csx < 0) {
+                csx = -csx;
+                offset2 = Math.PI;
+            }
+            else {
+                offset2 = 0;
+            }
+            bendDirection = sign * bendDirection;
+            outer: if (Math.abs(psx - psy) <= 0.001) {
+                var childlength = child.length;
+                var len2 = childlength * csx;
+                targetX = targetX - p1.x;
+                targetY = targetY - p1.y;
+                var cosDenom = 2 * len1 * len2;
+                var cos = (targetX * targetX + targetY * targetY - len1 * len1 - len2 * len2) / cosDenom;
+                if (cos < -1)
+                    cos = -1;
+                else if (cos > 1)
+                    cos = 1;
+                childAngle = Math.acos(cos) * bendDirection;
+                var adjacent = len1 + len2 * cos;
+                var opposite = len2 * Math.sin(childAngle);
+                parentAngle = Math.atan2(targetY * adjacent - targetX * opposite, targetX * adjacent + targetY * opposite);
+            }
+            else {
+                var l1 = len1;
+                var tx = targetX - p1.x;
+                var ty = targetY - p1.y;
+                var l2 = child.length * child.origin.scaleX;
+                var a = psx * l2;
+                var b = psy * l2;
+                var ta = Math.atan2(ty, tx);
+                var aa = a * a;
+                var bb = b * b;
+                var ll = l1 * l1;
+                var dd = tx * tx + ty * ty;
+                var c0 = bb * ll + aa * dd - aa * bb;
+                var c1 = -2 * bb * l1;
+                var c2 = bb - aa;
+                var d = c1 * c1 - 4 * c2 * c0;
+                if (d >= 0) {
+                    var q = Math.sqrt(d);
+                    if (c1 < 0) {
+                        q = -q;
+                    }
+                    q = -(c1 + q) / 2;
+                    var r0 = q / c2;
+                    var r1 = c0 / q;
+                    var r = Math.abs(r0) < Math.abs(r1) ? r0 : r1;
+                    if (r * r <= dd) {
+                        var y1 = Math.sqrt(dd - r * r) * bendDirection;
+                        parentAngle = ta - Math.atan2(y1, r);
+                        childAngle = Math.atan2(y1 / psy, (r - l1) / psx);
+                        break outer;
+                    }
+                }
+                var minAngle = 0;
+                var minDist = Number.MAX_VALUE;
+                var minX = 0;
+                var minY = 0;
+                var maxAngle = 0;
+                var maxDist = 0;
+                var maxX = 0;
+                var maxY = 0;
+                var x2 = l1 + a;
+                var dist = x2 * x2;
+                if (dist > maxDist) {
+                    maxAngle = 0;
+                    maxDist = dist;
+                    maxX = x2;
+                }
+                x2 = l1 - a;
+                dist = x2 * x2;
+                if (dist < minDist) {
+                    minAngle = Math.PI;
+                    minDist = dist;
+                    minX = x2;
+                }
+                var angle1 = Math.acos(-a * l1 / (aa - bb));
+                x2 = a * Math.cos(angle1) + l1;
+                var y2 = b * Math.sin(angle1);
+                dist = x2 * x2 + y2 * y2;
+                if (dist < minDist) {
+                    minAngle = angle1;
+                    minDist = dist;
+                    minX = x2;
+                    minY = y2;
+                }
+                if (dist > maxDist) {
+                    maxAngle = angle1;
+                    maxDist = dist;
+                    maxX = x2;
+                    maxY = y2;
+                }
+                if (dd <= (minDist + maxDist) / 2) {
+                    parentAngle = ta - Math.atan2(minY * bendDirection, minX);
+                    childAngle = minAngle * bendDirection;
+                }
+                else {
+                    parentAngle = ta - Math.atan2(maxY * bendDirection, maxX);
+                    childAngle = maxAngle * bendDirection;
+                }
+            }
+            var cx = child.origin.x;
+            var cy = child.origin.y * psy;
+            var initalRotation = Math.atan2(cy, cx) * sign;
+            tt.x = parentAngle - initalRotation + offset1;
+            tt.y = (childAngle + initalRotation) * sign + offset2;
+            this.normalize(tt.x);
+            this.normalize(tt.y);
+            return tt;
+        };
+        p.normalize = function (rotation) {
+            if (rotation > Math.PI) {
+                rotation -= Math.PI * 2;
+            }
+            else if (rotation < -Math.PI) {
+                rotation += Math.PI * 2;
+            }
+        };
+        return FastIKConstraint;
+    }());
+    dragonBones.FastIKConstraint = FastIKConstraint;
+    egret.registerClass(FastIKConstraint,'dragonBones.FastIKConstraint');
+})(dragonBones || (dragonBones = {}));
+//////////////////////////////////////////////////////////////////////////////////////
+//
+//  Copyright (c) 2014-2015, Egret Technology Inc.
+//  All rights reserved.
+//  Redistribution and use in source and binary forms, with or without
+//  modification, are permitted provided that the following conditions are met:
+//
+//     * Redistributions of source code must retain the above copyright
+//       notice, this list of conditions and the following disclaimer.
+//     * Redistributions in binary form must reproduce the above copyright
+//       notice, this list of conditions and the following disclaimer in the
+//       documentation and/or other materials provided with the distribution.
+//     * Neither the name of the Egret nor the
+//       names of its contributors may be used to endorse or promote products
+//       derived from this software without specific prior written permission.
+//
+//  THIS SOFTWARE IS PROVIDED BY EGRET AND CONTRIBUTORS "AS IS" AND ANY EXPRESS
+//  OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES
+//  OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED.
+//  IN NO EVENT SHALL EGRET AND CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT,
+//  INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT
+//  LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES;LOSS OF USE, DATA,
+//  OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF
+//  LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING
+//  NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE,
+//  EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+//
+//////////////////////////////////////////////////////////////////////////////////////
+var dragonBones;
+(function (dragonBones) {
+    /**
+     * @class dragonBones.FastSlot
+     * @classdesc
+     * FastSlot 实例是骨头上的一个插槽，是显示图片的容器。
+     * 一个 FastBone 上可以有多个FastSlot，每个FastSlot中同一时间都会有一张图片用于显示，不同的FastSlot中的图片可以同时显示。
+     * 每个 FastSlot 中可以包含多张图片，同一个 FastSlot 中的不同图片不能同时显示，但是可以在动画进行的过程中切换，用于实现帧动画。
+     * @extends dragonBones.DBObject
+     * @see dragonBones.FastArmature
+     * @see dragonBones.FastBone
+     * @see dragonBones.SlotData
+     */
+    var FastSlot = (function (_super) {
+        __extends(FastSlot, _super);
+        function FastSlot(rawDisplay) {
+            _super.call(this);
+            this.hasChildArmature = false;
+            // modify display index change 
+            this._displayIndex = -1;
+            this._rawDisplay = null;
+            this._display = null;
+            this._childArmature = null;
+            this._displayList = [];
+            this._displayDataList = [];
+            this._cacheTimeline = null;
+            this.hasChildArmature = false;
+            this.inheritRotation = true;
+            this.inheritScale = true;
+            this._originZOrder = 0;
+            this._tweenZOrder = 0;
+            this._offsetZOrder = 0;
+            this._colorTransform = new dragonBones.ColorTransform();
+            this._isColorChanged = false;
+            this._rawDisplay = rawDisplay;
+        }
+        var d = __define,c=FastSlot,p=c.prototype;
+        /**
+         * 通过传入 SlotData 初始化FastSlot
+         * @param slotData
+         */
+        p.initWithSlotData = function (slotData) {
+            this.name = slotData.name;
+            this.blendMode = slotData.blendMode;
+            this._defaultGotoAndPlay = slotData.gotoAndPlay;
+            this._originZOrder = slotData.zOrder;
+            this._originDisplayIndex = slotData.displayIndex;
+        };
+        /**
+         * @inheritDoc
+         */
+        p.dispose = function () {
+            if (!this._displayList) {
+                return;
+            }
+            _super.prototype.dispose.call(this);
+            this._rawDisplay = null;
+            this._display = null;
+            this._childArmature = null;
+            this._displayDataList = null;
+            this._displayList = null;
+        };
+        //动画
+        /** @private */
+        p.updateByCache = function (frameIndex) {
+            //var cacheTimeline = this.armature.animation.animationState.animationCache.slotTimelineCacheDic[this.name] as SlotTimelineCache;
+            var frameCache = this._cacheTimeline.frameCacheList[frameIndex];
+            var cacheDisplayIndex = (frameCache).displayIndex;
+            if (cacheDisplayIndex != this._displayIndex) {
+                //this.displayIndex = cacheDisplayIndex;
+                this._displayIndex = cacheDisplayIndex;
+                this.changeDisplay();
+            }
+            if (this._displayIndex < 0) {
+                return;
+            }
+            if (this._frameCache && frameCache.globalTransform == this._frameCache.globalTransform) {
+                this._frameCache = frameCache;
+            }
+            else {
+                this._frameCache = frameCache;
+                _super.prototype.updateByCache.call(this, frameIndex);
+                this._updateTransform();
+            }
+            //颜色
+            var cacheColor = (this._frameCache).colorTransform;
+            var cacheColorChanged = cacheColor != null;
+            if (this._isColorChanged != cacheColorChanged ||
+                (this._isColorChanged && cacheColorChanged && !dragonBones.ColorTransformUtil.isEqual(this._colorTransform, cacheColor))) {
+                cacheColor = cacheColor || dragonBones.ColorTransformUtil.originalColor;
+                this._updateDisplayColor(cacheColor.alphaOffset, cacheColor.redOffset, cacheColor.greenOffset, cacheColor.blueOffset, cacheColor.alphaMultiplier, cacheColor.redMultiplier, cacheColor.greenMultiplier, cacheColor.blueMultiplier, cacheColorChanged);
+            }
+            var gotoAndPlay = (this._frameCache).gotoAndPlay;
+            if (this._gotoAndPlay != gotoAndPlay) {
+                this._gotoAndPlay = gotoAndPlay;
+                this.updateChildArmatureAnimation();
+            }
+        };
+        /** @private */
+        p._update = function (needUpdate) {
+            if (needUpdate === void 0) { needUpdate = false; }
+            if (this._parent && (this._parent._needUpdate > 0 || needUpdate)) {
+                if (this._global != this._globalBackup) {
+                    this._global = this._globalBackup;
+                    this._globalTransformMatrix = this._globalTransformMatrixBackup;
+                }
+                var result = this._updateGlobal();
+                if (result) {
+                    result.release();
+                }
+                this._updateTransform();
+            }
+        };
+        p._calculateRelativeParentTransform = function () {
+            this._global.copy(this._origin);
+            this._global.x += this._parent._tweenPivot.x;
+            this._global.y += this._parent._tweenPivot.y;
+        };
+        p.updateChildArmatureAnimation = function () {
+            if (this.childArmature) {
+                if (this._displayIndex >= 0) {
+                    var curAnimation = this._gotoAndPlay;
+                    if (curAnimation == null) {
+                        curAnimation = this._defaultGotoAndPlay;
+                        if (curAnimation == null) {
+                            this.childArmature.armatureData.defaultAnimation;
+                        }
+                    }
+                    if (curAnimation == null) {
+                        if (this.armature && this.armature.animation.lastAnimationState) {
+                            curAnimation = this.armature.animation.lastAnimationState.name;
+                        }
+                    }
+                    if (curAnimation && this.childArmature.animation.hasAnimation(curAnimation)) {
+                        this.childArmature.animation.gotoAndPlay(curAnimation);
+                    }
+                    else {
+                        this.childArmature.animation.play();
+                    }
+                }
+                else {
+                    this.childArmature.animation.stop();
+                    this.childArmature.animation._lastAnimationState = null;
+                }
+            }
+        };
+        // modify changeDisplay
+        /** @private */
+        p.changeDisplay = function () {
+            var prevDisplay = this._display;
+            var prevChildArmature = this._childArmature;
+            if (this._displayIndex < 0 || this._displayIndex >= this._displayList.length) {
+                this._display = this._rawDisplay;
+            }
+            else {
+                this._display = this._displayList[this._displayIndex];
+            }
+            if (this._display instanceof dragonBones.FastArmature) {
+                this._childArmature = this._display;
+                this._display = this._display.display;
+            }
+            else {
+                this._childArmature = null;
+                if (!this._display) {
+                    this._display = this._rawDisplay;
+                }
+            }
+            if (this._childArmature != prevChildArmature) {
+                if (this._childArmature) {
+                    this._childArmature.animation.play();
+                }
+                else {
+                }
+            }
+            if (this._display != prevDisplay) {
+                this._updateDisplay(this._display);
+                if (this.armature) {
+                    if (prevDisplay) {
+                        this._replaceDisplay(prevDisplay);
+                    }
+                    else {
+                        this._addDisplay();
+                    }
+                }
+            }
+            if (this._display == this._rawDisplay) {
+                this._updateFrame();
+            }
+            if (this._display != prevDisplay) {
+                this._updateDisplayBlendMode(this._blendMode);
+                //this._updateVisible();
+                this._updateDisplayColor(this._colorTransform.alphaOffset, this._colorTransform.redOffset, this._colorTransform.greenOffset, this._colorTransform.blueOffset, this._colorTransform.alphaMultiplier, this._colorTransform.redMultiplier, this._colorTransform.greenMultiplier, this._colorTransform.blueMultiplier);
+            }
+            if (this._displayIndex >= 0) {
+                this._origin.copy(this._displayDataList[this._displayIndex][0].transform);
+            }
+            if (this.armature && !this.armature._isFrameCached) {
+                this._update(true);
+            }
+        };
+        d(p, "visible",undefined
+            /** @private */
+            ,function (value) {
+                if (this._visible != value) {
+                    this._visible = value;
+                    this._updateDisplayVisible(this._visible);
+                }
+            }
+        );
+        d(p, "displayIndex"
+            ,function () {
+                return this._displayIndex;
+            }
+            ,function (value) {
+                if (this._displayIndex == value) {
+                    return;
+                }
+                this._displayIndex = value;
+                this.changeDisplay();
+            }
+        );
+        d(p, "display"
+            /**
+             * 当前的显示对象(可能是 display 或者 子骨架)
+             * @member {any} dragonBones.FastSlot#display
+             */
+            ,function () {
+                return this._display;
+            }
+            ,function (value) {
+                var displayListLength = this._displayList.length;
+                if (this._displayIndex >= displayListLength) {
+                    if (displayListLength == 0) {
+                        this._displayList[0] = value;
+                    }
+                    else {
+                        this._displayList[displayListLength - 1] = value;
+                    }
+                }
+                else {
+                    this._displayList[this._displayIndex] = value;
+                }
+                if (this._displayIndex >= 0) {
+                    this.changeDisplay();
+                }
+            }
+        );
+        d(p, "childArmature"
+            /**
+             * 当前的子骨架
+             * @member {FastArmature} dragonBones.Slot#childArmature
+             */
+            ,function () {
+                return this._childArmature;
+            }
+            ,function (value) {
+                if (this._childArmature == value) {
+                    return;
+                }
+                this.display = value;
+            }
+        );
+        d(p, "displayDataList"
+            /** @private */
+            ,function () {
+                return this._displayDataList;
+            }
+            /** @private */
+            ,function (value) {
+                if (this._displayDataList != value) {
+                    if (value && value.length) {
+                        this._displayDataList.length = value.length;
+                        for (var i = 0, l = this._displayDataList.length; i < l; ++i) {
+                            this._displayDataList[i] = value[i];
+                        }
+                    }
+                    else {
+                        this._displayDataList.length = 0;
+                    }
+                }
+            }
+        );
+        d(p, "displayList"
+            /**
+             * 显示对象列表(包含 display 或者 子骨架)
+             * @member {any[]} dragonBones.FastSlot#displayList
+             */
+            ,function () {
+                return this._displayList;
+            }
+            ,function (value) {
+                if (this._displayList != value) {
+                    if (value && value.length) {
+                        this._displayList.length = value.length;
+                        for (var i = 0, l = this._displayList.length; i < l; ++i) {
+                            this._displayList[i] = value[i];
+                        }
+                    }
+                    else {
+                        this._displayList.length = 0;
+                    }
+                }
+                this.changeDisplay();
+            }
+        );
+        d(p, "zOrder"
+            /**
+             * 显示顺序。(支持小数用于实现动态插入slot)
+             * @member {number} dragonBones.FastSlot#zOrder
+             */
+            ,function () {
+                return this._originZOrder + this._tweenZOrder + this._offsetZOrder;
+            }
+            ,function (value) {
+                if (this.zOrder != value) {
+                    this._offsetZOrder = value - this._originZOrder - this._tweenZOrder;
+                    if (this.armature) {
+                        this.armature._slotsZOrderChanged = true;
+                    }
+                }
+            }
+        );
+        d(p, "blendMode"
+            /**
+             * 混合模式
+             * @member {string} dragonBones.FastSlot#blendMode
+             */
+            ,function () {
+                return this._blendMode;
+            }
+            ,function (value) {
+                if (this._blendMode != value) {
+                    this._blendMode = value;
+                    this._updateDisplayBlendMode(this._blendMode);
+                }
+            }
+        );
+        d(p, "gotoAndPlay"
+            ,function () {
+                return this._gotoAndPlay;
+            }
+            /**
+             * 播放子骨架动画
+             * @member {string} dragonBones.FastSlot#gotoAndPlay
+             */
+            ,function (value) {
+                if (this._gotoAndPlay != value) {
+                    this._gotoAndPlay = value;
+                    this.updateChildArmatureAnimation();
+                }
+            }
+        );
+        d(p, "colorTransform"
+            ,function () {
+                return this._colorTransform;
+            }
+        );
+        d(p, "colorChanged"
+            ,function () {
+                return this._isColorChanged;
+            }
+        );
+        //Abstract method
+        /** @private */
+        p._updateDisplay = function (value) {
+            throw new Error("Abstract method needs to be implemented in subclass!");
+        };
+        /** @private */
+        p._addDisplay = function () {
+            throw new Error("Abstract method needs to be implemented in subclass!");
+        };
+        /** @private */
+        p._replaceDisplay = function (prevDisplay) {
+            throw new Error("Abstract method needs to be implemented in subclass!");
+        };
+        /** @private */
+        p._removeDisplay = function () {
+            throw new Error("Abstract method needs to be implemented in subclass!");
+        };
+        /** @private */
+        p._getDisplayIndex = function () {
+            throw new Error("Abstract method needs to be implemented in subclass!");
+        };
+        /**
+         * @private
+         * Adds the original display object to another display object.
+         * @param container
+         * @param index
+         */
+        p._addDisplayToContainer = function (container, index) {
+            if (index === void 0) { index = -1; }
+            throw new Error("Abstract method needs to be implemented in subclass!");
+        };
+        /**
+         * @private
+         * remove the original display object from its parent.
+         */
+        p._removeDisplayFromContainer = function () {
+            throw new Error("Abstract method needs to be implemented in subclass!");
+        };
+        /**
+         * @private
+         * Updates the transform of the slot.
+         */
+        p._updateTransform = function () {
+            throw new Error("Abstract method needs to be implemented in subclass!");
+        };
+        /**
+         * @private
+         * Updates the frame of the slot.
+         */
+        p._updateFrame = function () {
+            throw new Error("Abstract method needs to be implemented in subclass!");
+        };
+        /**
+         * @private
+         */
+        p._updateDisplayVisible = function (value) {
+            /**
+             * bone.visible && slot.visible && updateVisible
+             * this._parent.visible && this._visible && value;
+             */
+            throw new Error("Abstract method needs to be implemented in subclass!");
+        };
+        /**
+         * @private
+         * Updates the color of the display object.
+         * @param a
+         * @param r
+         * @param g
+         * @param b
+         * @param aM
+         * @param rM
+         * @param gM
+         * @param bM
+         */
+        p._updateDisplayColor = function (aOffset, rOffset, gOffset, bOffset, aMultiplier, rMultiplier, gMultiplier, bMultiplier, colorChanged) {
+            if (colorChanged === void 0) { colorChanged = false; }
+            this._colorTransform.alphaOffset = aOffset;
+            this._colorTransform.redOffset = rOffset;
+            this._colorTransform.greenOffset = gOffset;
+            this._colorTransform.blueOffset = bOffset;
+            this._colorTransform.alphaMultiplier = aMultiplier;
+            this._colorTransform.redMultiplier = rMultiplier;
+            this._colorTransform.greenMultiplier = gMultiplier;
+            this._colorTransform.blueMultiplier = bMultiplier;
+            this._isColorChanged = colorChanged;
+        };
+        /**
+         * @private
+         * Update the blend mode of the display object.
+         * @param value The blend mode to use.
+         */
+        p._updateDisplayBlendMode = function (value) {
+            throw new Error("Abstract method needs to be implemented in subclass!");
+        };
+        /** @private When slot timeline enter a key frame, call this func*/
+        p._arriveAtFrame = function (frame, animationState) {
+            var slotFrame = frame;
+            this.displayIndex = slotFrame.displayIndex;
+            this._updateDisplayVisible(slotFrame.visible);
+            if (this._displayIndex >= 0) {
+                if (!isNaN(slotFrame.zOrder) && slotFrame.zOrder != this._tweenZOrder) {
+                    this._tweenZOrder = slotFrame.zOrder;
+                    this.armature._slotsZOrderChanged = true;
+                }
+            }
+            //[TODO]currently there is only gotoAndPlay belongs to frame action. In future, there will be more.  
+            //后续会扩展更多的action，目前只有gotoAndPlay的含义
+            if (frame.action) {
+                var targetArmature = this.childArmature;
+                if (targetArmature) {
+                    targetArmature.getAnimation().gotoAndPlay(frame.action);
+                }
+            }
+            else if (slotFrame.gotoAndPlay) {
+                this.gotoAndPlay = slotFrame.gotoAndPlay;
+            }
+        };
+        /** @private */
+        p.hideSlots = function () {
+            this.displayIndex = -1;
+            /*if (this._frameCache) {
+                this._frameCache.clear();
+            }*/
+        };
+        p._updateGlobal = function () {
+            this._calculateRelativeParentTransform();
+            dragonBones.TransformUtil.transformToMatrix(this._global, this._globalTransformMatrix);
+            var output = this._calculateParentTransform();
+            if (output) {
+                this._globalTransformMatrix.concat(output.parentGlobalTransformMatrix);
+                dragonBones.TransformUtil.matrixToTransform(this._globalTransformMatrix, this._global, this._global.scaleX * output.parentGlobalTransform.scaleX >= 0, this._global.scaleY * output.parentGlobalTransform.scaleY >= 0);
+            }
+            return output;
+        };
+        p._resetToOrigin = function () {
+            this.displayIndex = this._originDisplayIndex;
+            this._updateDisplayColor(0, 0, 0, 0, 1, 1, 1, 1, true);
+        };
+        return FastSlot;
+    }(dragonBones.FastDBObject));
+    dragonBones.FastSlot = FastSlot;
+    egret.registerClass(FastSlot,'dragonBones.FastSlot',["dragonBones.ISlotCacheGenerator","dragonBones.ICacheUser"]);
+})(dragonBones || (dragonBones = {}));
+//////////////////////////////////////////////////////////////////////////////////////
+//
+//  Copyright (c) 2014-2015, Egret Technology Inc.
+//  All rights reserved.
+//  Redistribution and use in source and binary forms, with or without
+//  modification, are permitted provided that the following conditions are met:
+//
+//     * Redistributions of source code must retain the above copyright
+//       notice, this list of conditions and the following disclaimer.
+//     * Redistributions in binary form must reproduce the above copyright
+//       notice, this list of conditions and the following disclaimer in the
+//       documentation and/or other materials provided with the distribution.
+//     * Neither the name of the Egret nor the
+//       names of its contributors may be used to endorse or promote products
+//       derived from this software without specific prior written permission.
+//
+//  THIS SOFTWARE IS PROVIDED BY EGRET AND CONTRIBUTORS "AS IS" AND ANY EXPRESS
+//  OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES
+//  OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED.
+//  IN NO EVENT SHALL EGRET AND CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT,
+//  INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT
+//  LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES;LOSS OF USE, DATA,
+//  OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF
+//  LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING
+//  NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE,
+//  EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+//
+//////////////////////////////////////////////////////////////////////////////////////
+var dragonBones;
+(function (dragonBones) {
+    /**
      * @class dragonBones.Point
      * @classdesc
      * Point 对象表示二维坐标系统中的某个位置，其中 x 表示水平轴，y 表示垂直轴。
@@ -11630,7 +11088,6 @@ var dragonBones;
             this.hideSlotTimelineNameMap = [];
             this._timelineList = [];
             this._slotTimelineList = [];
-            this._ffdTimelineList = [];
         }
         var d = __define,c=AnimationData,p=c.prototype;
         d(p, "timelineList"
@@ -11645,11 +11102,6 @@ var dragonBones;
         d(p, "slotTimelineList"
             ,function () {
                 return this._slotTimelineList;
-            }
-        );
-        d(p, "ffdTimelineList"
-            ,function () {
-                return this._ffdTimelineList;
             }
         );
         /**
@@ -11712,14 +11164,6 @@ var dragonBones;
             }
             if (this._slotTimelineList.indexOf(timeline) < 0) {
                 this._slotTimelineList[this._slotTimelineList.length] = timeline;
-            }
-        };
-        p.addFFDTimeline = function (timeline) {
-            if (!timeline) {
-                throw new Error();
-            }
-            if (this._ffdTimelineList.indexOf(timeline) < 0) {
-                this._ffdTimelineList[this._ffdTimelineList.length] = timeline;
             }
         };
         return AnimationData;
@@ -12314,11 +11758,6 @@ var dragonBones;
          * 图片类型
          */
         DisplayData.IMAGE = "image";
-        /**
-         * @private
-         * 网格类型
-         */
-        DisplayData.MESH = "mesh";
         return DisplayData;
     }());
     dragonBones.DisplayData = DisplayData;
@@ -12573,98 +12012,6 @@ var dragonBones;
 //////////////////////////////////////////////////////////////////////////////////////
 var dragonBones;
 (function (dragonBones) {
-    /**
-     * @private
-     */
-    var FFDFrame = (function (_super) {
-        __extends(FFDFrame, _super);
-        function FFDFrame() {
-            _super.call(this);
-        }
-        var d = __define,c=FFDFrame,p=c.prototype;
-        return FFDFrame;
-    }(dragonBones.Frame));
-    dragonBones.FFDFrame = FFDFrame;
-    egret.registerClass(FFDFrame,'dragonBones.FFDFrame');
-})(dragonBones || (dragonBones = {}));
-//////////////////////////////////////////////////////////////////////////////////////
-//
-//  Copyright (c) 2014-2015, Egret Technology Inc.
-//  All rights reserved.
-//  Redistribution and use in source and binary forms, with or without
-//  modification, are permitted provided that the following conditions are met:
-//
-//     * Redistributions of source code must retain the above copyright
-//       notice, this list of conditions and the following disclaimer.
-//     * Redistributions in binary form must reproduce the above copyright
-//       notice, this list of conditions and the following disclaimer in the
-//       documentation and/or other materials provided with the distribution.
-//     * Neither the name of the Egret nor the
-//       names of its contributors may be used to endorse or promote products
-//       derived from this software without specific prior written permission.
-//
-//  THIS SOFTWARE IS PROVIDED BY EGRET AND CONTRIBUTORS "AS IS" AND ANY EXPRESS
-//  OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES
-//  OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED.
-//  IN NO EVENT SHALL EGRET AND CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT,
-//  INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT
-//  LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES;LOSS OF USE, DATA,
-//  OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF
-//  LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING
-//  NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE,
-//  EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
-//
-//////////////////////////////////////////////////////////////////////////////////////
-var dragonBones;
-(function (dragonBones) {
-    /**
-     * @private
-     */
-    var FFDTimeline = (function (_super) {
-        __extends(FFDTimeline, _super);
-        function FFDTimeline() {
-            _super.call(this);
-            this.offset = 0;
-        }
-        var d = __define,c=FFDTimeline,p=c.prototype;
-        p.dispose = function () {
-            _super.prototype.dispose.call(this);
-        };
-        return FFDTimeline;
-    }(dragonBones.Timeline));
-    dragonBones.FFDTimeline = FFDTimeline;
-    egret.registerClass(FFDTimeline,'dragonBones.FFDTimeline');
-})(dragonBones || (dragonBones = {}));
-//////////////////////////////////////////////////////////////////////////////////////
-//
-//  Copyright (c) 2014-2015, Egret Technology Inc.
-//  All rights reserved.
-//  Redistribution and use in source and binary forms, with or without
-//  modification, are permitted provided that the following conditions are met:
-//
-//     * Redistributions of source code must retain the above copyright
-//       notice, this list of conditions and the following disclaimer.
-//     * Redistributions in binary form must reproduce the above copyright
-//       notice, this list of conditions and the following disclaimer in the
-//       documentation and/or other materials provided with the distribution.
-//     * Neither the name of the Egret nor the
-//       names of its contributors may be used to endorse or promote products
-//       derived from this software without specific prior written permission.
-//
-//  THIS SOFTWARE IS PROVIDED BY EGRET AND CONTRIBUTORS "AS IS" AND ANY EXPRESS
-//  OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES
-//  OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED.
-//  IN NO EVENT SHALL EGRET AND CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT,
-//  INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT
-//  LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES;LOSS OF USE, DATA,
-//  OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF
-//  LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING
-//  NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE,
-//  EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
-//
-//////////////////////////////////////////////////////////////////////////////////////
-var dragonBones;
-(function (dragonBones) {
     var IKData = (function () {
         function IKData() {
         }
@@ -12677,73 +12024,6 @@ var dragonBones;
     }());
     dragonBones.IKData = IKData;
     egret.registerClass(IKData,'dragonBones.IKData');
-})(dragonBones || (dragonBones = {}));
-//////////////////////////////////////////////////////////////////////////////////////
-//
-//  Copyright (c) 2014-2015, Egret Technology Inc.
-//  All rights reserved.
-//  Redistribution and use in source and binary forms, with or without
-//  modification, are permitted provided that the following conditions are met:
-//
-//     * Redistributions of source code must retain the above copyright
-//       notice, this list of conditions and the following disclaimer.
-//     * Redistributions in binary form must reproduce the above copyright
-//       notice, this list of conditions and the following disclaimer in the
-//       documentation and/or other materials provided with the distribution.
-//     * Neither the name of the Egret nor the
-//       names of its contributors may be used to endorse or promote products
-//       derived from this software without specific prior written permission.
-//
-//  THIS SOFTWARE IS PROVIDED BY EGRET AND CONTRIBUTORS "AS IS" AND ANY EXPRESS
-//  OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES
-//  OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED.
-//  IN NO EVENT SHALL EGRET AND CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT,
-//  INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT
-//  LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES;LOSS OF USE, DATA,
-//  OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF
-//  LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING
-//  NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE,
-//  EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
-//
-//////////////////////////////////////////////////////////////////////////////////////
-var dragonBones;
-(function (dragonBones) {
-    /**
-     * @private
-     * @class dragonBones.BoneData
-     * @classdesc
-     * 网格数据
-     */
-    var MeshData = (function (_super) {
-        __extends(MeshData, _super);
-        function MeshData() {
-            _super.call(this);
-            this.skinned = false;
-            this.numVertex = 0;
-            this.numTriangle = 0;
-            this.triangles = [];
-            this.vertices = [];
-            this.vertexBones = [];
-            this.bones = [];
-            this.inverseBindPose = [];
-            this.slotPose = new dragonBones.Matrix();
-        }
-        var d = __define,c=MeshData,p=c.prototype;
-        /**
-         *释放资源
-         */
-        p.dispose = function () {
-            _super.prototype.dispose.call(this);
-            this.triangles.length = 0;
-            this.vertices.length = 0;
-            this.vertexBones.length = 0;
-            this.bones.length = 0;
-            this.inverseBindPose.length = 0;
-        };
-        return MeshData;
-    }(dragonBones.DisplayData));
-    dragonBones.MeshData = MeshData;
-    egret.registerClass(MeshData,'dragonBones.MeshData');
 })(dragonBones || (dragonBones = {}));
 //////////////////////////////////////////////////////////////////////////////////////
 //
@@ -12856,10 +12136,6 @@ var dragonBones;
          * 构造函数，实例化一个SkinData类
          */
         function SkinData() {
-            /**
-             * @private
-             */
-            this.hasMesh = false;
             this._slotDataList = [];
         }
         var d = __define,c=SkinData,p=c.prototype;
@@ -13311,97 +12587,6 @@ var dragonBones;
 var dragonBones;
 (function (dragonBones) {
     /**
-     * @private
-     */
-    var VertexBoneData = (function () {
-        function VertexBoneData() {
-            this.indices = [];
-            this.weights = [];
-            this.vertices = [];
-        }
-        var d = __define,c=VertexBoneData,p=c.prototype;
-        return VertexBoneData;
-    }());
-    dragonBones.VertexBoneData = VertexBoneData;
-    egret.registerClass(VertexBoneData,'dragonBones.VertexBoneData');
-})(dragonBones || (dragonBones = {}));
-//////////////////////////////////////////////////////////////////////////////////////
-//
-//  Copyright (c) 2014-2015, Egret Technology Inc.
-//  All rights reserved.
-//  Redistribution and use in source and binary forms, with or without
-//  modification, are permitted provided that the following conditions are met:
-//
-//     * Redistributions of source code must retain the above copyright
-//       notice, this list of conditions and the following disclaimer.
-//     * Redistributions in binary form must reproduce the above copyright
-//       notice, this list of conditions and the following disclaimer in the
-//       documentation and/or other materials provided with the distribution.
-//     * Neither the name of the Egret nor the
-//       names of its contributors may be used to endorse or promote products
-//       derived from this software without specific prior written permission.
-//
-//  THIS SOFTWARE IS PROVIDED BY EGRET AND CONTRIBUTORS "AS IS" AND ANY EXPRESS
-//  OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES
-//  OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED.
-//  IN NO EVENT SHALL EGRET AND CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT,
-//  INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT
-//  LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES;LOSS OF USE, DATA,
-//  OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF
-//  LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING
-//  NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE,
-//  EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
-//
-//////////////////////////////////////////////////////////////////////////////////////
-var dragonBones;
-(function (dragonBones) {
-    /**
-     * @private
-     */
-    var VertexData = (function (_super) {
-        __extends(VertexData, _super);
-        function VertexData() {
-            _super.call(this);
-            this.u = 0;
-            this.v = 0;
-        }
-        var d = __define,c=VertexData,p=c.prototype;
-        return VertexData;
-    }(dragonBones.Point));
-    dragonBones.VertexData = VertexData;
-    egret.registerClass(VertexData,'dragonBones.VertexData');
-})(dragonBones || (dragonBones = {}));
-//////////////////////////////////////////////////////////////////////////////////////
-//
-//  Copyright (c) 2014-2015, Egret Technology Inc.
-//  All rights reserved.
-//  Redistribution and use in source and binary forms, with or without
-//  modification, are permitted provided that the following conditions are met:
-//
-//     * Redistributions of source code must retain the above copyright
-//       notice, this list of conditions and the following disclaimer.
-//     * Redistributions in binary form must reproduce the above copyright
-//       notice, this list of conditions and the following disclaimer in the
-//       documentation and/or other materials provided with the distribution.
-//     * Neither the name of the Egret nor the
-//       names of its contributors may be used to endorse or promote products
-//       derived from this software without specific prior written permission.
-//
-//  THIS SOFTWARE IS PROVIDED BY EGRET AND CONTRIBUTORS "AS IS" AND ANY EXPRESS
-//  OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES
-//  OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED.
-//  IN NO EVENT SHALL EGRET AND CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT,
-//  INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT
-//  LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES;LOSS OF USE, DATA,
-//  OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF
-//  LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING
-//  NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE,
-//  EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
-//
-//////////////////////////////////////////////////////////////////////////////////////
-var dragonBones;
-(function (dragonBones) {
-    /**
      *@class dragonBones.DataParser
      * @classdesc
      * 老版本数据解析
@@ -13692,12 +12877,6 @@ var dragonBones;
                     if (animationFrame) {
                         animationFrame.duration = position;
                     }
-                    else if (position != 0) {
-                        animationFrame = new dragonBones.Frame();
-                        animationFrame.bone = outputTimeline.name;
-                        animationFrame.duration = position;
-                        Data3Parser._currentAnimationData.addFrame(animationFrame);
-                    }
                     position = 0;
                     animationFrame = new dragonBones.Frame();
                     animationFrame.bone = outputTimeline.name;
@@ -13977,7 +13156,6 @@ var dragonBones;
         DataParser.parseArmatureData = function (armatureDataToParse, frameRate) {
             var outputArmatureData = new dragonBones.ArmatureData();
             outputArmatureData.name = armatureDataToParse[dragonBones.ConstValues.A_NAME];
-            DataParser._armatureData = outputArmatureData;
             var actions = armatureDataToParse[dragonBones.ConstValues.A_DEFAULT_ACTIONS];
             if (actions && actions.length == 1) {
                 outputArmatureData.defaultAnimation = actions[0][dragonBones.ConstValues.A_GOTOANDPLAY];
@@ -13990,7 +13168,6 @@ var dragonBones;
             var boneList = armatureDataToParse[dragonBones.ConstValues.BONE];
             var i;
             var len;
-            DataParser._rawBones.length = 0;
             for (i = 0, len = boneList.length; i < len; i++) {
                 var boneObject = boneList[i];
                 outputArmatureData.addBoneData(DataParser.parseBoneData(boneObject));
@@ -14002,7 +13179,6 @@ var dragonBones;
                     outputArmatureData.addIKData(DataParser.parseIKData(ikObject));
                 }
             }
-            outputArmatureData.sortBoneDataList();
             var slotList = armatureDataToParse[dragonBones.ConstValues.SLOT];
             for (i = 0, len = slotList.length; i < len; i++) {
                 var slotObject = slotList[i];
@@ -14016,6 +13192,7 @@ var dragonBones;
             if (DataParser.tempDragonBonesData.isGlobal) {
                 dragonBones.DBDataUtil.transformArmatureData(outputArmatureData);
             }
+            outputArmatureData.sortBoneDataList();
             var animationList = armatureDataToParse[dragonBones.ConstValues.ANIMATION];
             for (i = 0, len = animationList.length; i < len; i++) {
                 var animationObject = animationList[i];
@@ -14029,7 +13206,6 @@ var dragonBones;
         //把bone的初始transform解析并返回
         DataParser.parseBoneData = function (boneObject) {
             var boneData = new dragonBones.BoneData();
-            DataParser._rawBones.push(boneData);
             boneData.name = boneObject[dragonBones.ConstValues.A_NAME];
             boneData.parent = boneObject[dragonBones.ConstValues.A_PARENT];
             boneData.length = Number(boneObject[dragonBones.ConstValues.A_LENGTH]) || 0;
@@ -14063,7 +13239,6 @@ var dragonBones;
         };
         DataParser.parseSkinData = function (skinObject) {
             var skinData = new dragonBones.SkinData();
-            DataParser._skinData = skinData;
             skinData.name = skinObject[dragonBones.ConstValues.A_NAME];
             var slotList = skinObject[dragonBones.ConstValues.SLOT];
             for (var i = 0, len = slotList.length; i < len; i++) {
@@ -14090,126 +13265,26 @@ var dragonBones;
             slotData.name = slotObject[dragonBones.ConstValues.A_NAME];
             slotData.parent = slotObject[dragonBones.ConstValues.A_PARENT];
             slotData.zOrder = DataParser.getNumber(slotObject, dragonBones.ConstValues.A_Z_ORDER, 0) || 0;
-            DataParser._skinSlotData = slotData;
-            DataParser._displayIndex = 0;
             var displayList = slotObject[dragonBones.ConstValues.DISPLAY];
             if (displayList) {
                 for (var i = 0, len = displayList.length; i < len; i++) {
                     var displayObject = displayList[i];
                     slotData.addDisplayData(DataParser.parseDisplayData(displayObject));
-                    DataParser._displayIndex++;
                 }
             }
             return slotData;
         };
         DataParser.parseDisplayData = function (displayObject) {
             var displayData = new dragonBones.DisplayData();
-            if (displayObject[dragonBones.ConstValues.A_TYPE] == "mesh") {
-                displayData = DataParser.parseMeshData(displayObject);
-            }
-            else {
-                displayData.name = displayObject[dragonBones.ConstValues.A_NAME];
-                displayData.type = displayObject[dragonBones.ConstValues.A_TYPE];
-                DataParser.parseTransform(displayObject[dragonBones.ConstValues.TRANSFORM], displayData.transform, displayData.pivot);
-                displayData.pivot.x = NaN;
-                displayData.pivot.y = NaN;
-                if (DataParser.tempDragonBonesData != null) {
-                    DataParser.tempDragonBonesData.addDisplayData(displayData);
-                }
+            displayData.name = displayObject[dragonBones.ConstValues.A_NAME];
+            displayData.type = displayObject[dragonBones.ConstValues.A_TYPE];
+            DataParser.parseTransform(displayObject[dragonBones.ConstValues.TRANSFORM], displayData.transform, displayData.pivot);
+            displayData.pivot.x = NaN;
+            displayData.pivot.y = NaN;
+            if (DataParser.tempDragonBonesData != null) {
+                DataParser.tempDragonBonesData.addDisplayData(displayData);
             }
             return displayData;
-        };
-        DataParser.parseMeshData = function (meshObject) {
-            var meshData = new dragonBones.MeshData();
-            meshData.name = meshObject[dragonBones.ConstValues.A_NAME];
-            meshData.type = meshObject[dragonBones.ConstValues.A_TYPE];
-            DataParser.parseTransform(meshObject[dragonBones.ConstValues.TRANSFORM], meshData.transform, meshData.pivot);
-            meshData.pivot.x = NaN;
-            meshData.pivot.y = NaN;
-            var rawUVs = meshObject.uvs;
-            var rawTriangles = meshObject.triangles;
-            var rawWeights = meshObject.weights;
-            var rawVertices = meshObject.vertices;
-            var rawBonePose = meshObject.bonePose;
-            if (meshObject.slotPose) {
-                meshData.slotPose.a = meshObject.slotPose[0];
-                meshData.slotPose.b = meshObject.slotPose[1];
-                meshData.slotPose.c = meshObject.slotPose[2];
-                meshData.slotPose.d = meshObject.slotPose[3];
-                meshData.slotPose.tx = meshObject.slotPose[4];
-                meshData.slotPose.ty = meshObject.slotPose[5];
-            }
-            meshData.skinned = rawWeights && rawWeights.length > 0;
-            meshData.numVertex = rawUVs.length / 2;
-            meshData.numTriangle = rawTriangles.length / 3;
-            meshData.vertices.length = meshData.numVertex;
-            meshData.triangles.length = meshData.numTriangle * 3;
-            var l = 0;
-            var i = 0;
-            var iW = 0;
-            var boneIndex = 0;
-            var boneMatrix = null;
-            var boneData = null;
-            var inverseBindPose = []; // _armatureData.boneDataList.length
-            DataParser._skinData.hasMesh = true;
-            if (meshData.skinned) {
-                meshData.vertexBones.length = meshData.numVertex;
-                if (rawBonePose) {
-                    for (i = 0, l = rawBonePose.length; i < l; i += 7) {
-                        boneIndex = DataParser._armatureData.boneDataList.indexOf(DataParser._rawBones[rawBonePose[i]]);
-                        boneMatrix = new dragonBones.Matrix();
-                        boneMatrix.a = rawBonePose[i + 1];
-                        boneMatrix.b = rawBonePose[i + 2];
-                        boneMatrix.c = rawBonePose[i + 3];
-                        boneMatrix.d = rawBonePose[i + 4];
-                        boneMatrix.tx = rawBonePose[i + 5];
-                        boneMatrix.ty = rawBonePose[i + 6];
-                        boneMatrix.invert();
-                        inverseBindPose[boneIndex] = boneMatrix;
-                    }
-                }
-            }
-            for (i = 0, l = rawUVs.length; i < l; i += 2) {
-                var iN = i + 1;
-                var vertexIndex = i * 0.5;
-                var vertexData = meshData.vertices[vertexIndex] = new dragonBones.VertexData();
-                vertexData.u = Number(rawUVs[i]);
-                vertexData.v = Number(rawUVs[iN]);
-                vertexData.x = Number(rawVertices[i]);
-                vertexData.y = Number(rawVertices[iN]);
-                if (meshData.skinned) {
-                    var vertexBoneData = meshData.vertexBones[vertexIndex] = new dragonBones.VertexBoneData();
-                    meshData.slotPose.transformPoint(vertexData.x, vertexData.y, vertexData);
-                    for (var j = iW + 1, lJ = iW + 1 + rawWeights[iW] * 2; j < lJ; j += 2) {
-                        boneData = DataParser._rawBones[rawWeights[j]];
-                        boneIndex = meshData.bones.indexOf(boneData);
-                        if (boneIndex < 0) {
-                            boneIndex = meshData.bones.length;
-                            meshData.bones[boneIndex] = boneData;
-                        }
-                        var vertexBonePoint = new dragonBones.Point(vertexData.x, vertexData.y);
-                        vertexBoneData.indices.push(boneIndex);
-                        vertexBoneData.weights.push(rawWeights[j + 1]);
-                        vertexBoneData.vertices.push(vertexBonePoint);
-                        if (meshData.inverseBindPose.length <= boneIndex) {
-                            meshData.inverseBindPose.length = boneIndex + 1;
-                        }
-                        boneMatrix = meshData.inverseBindPose[boneIndex];
-                        if (!boneMatrix) {
-                            boneMatrix = inverseBindPose[DataParser._armatureData.boneDataList.indexOf(boneData)];
-                            meshData.inverseBindPose[boneIndex] = boneMatrix;
-                        }
-                        if (boneMatrix) {
-                            boneMatrix.transformPoint(vertexBonePoint.x, vertexBonePoint.y, vertexBonePoint);
-                        }
-                        iW = j + 2;
-                    }
-                }
-            }
-            for (i = 0, l = rawTriangles.length; i < l; ++i) {
-                meshData.triangles[i] = rawTriangles[i];
-            }
-            return meshData;
         };
         /** @private */
         DataParser.parseAnimationData = function (animationObject, frameRate) {
@@ -14263,19 +13338,6 @@ var dragonBones;
                     }
                 }
             }
-            var ffdTimelineObjectList = animationObject["ffd"];
-            if (ffdTimelineObjectList) {
-                for (i = 0, len = ffdTimelineObjectList.length; i < len; i++) {
-                    var ffdTimelineObject = ffdTimelineObjectList[i];
-                    if (ffdTimelineObject) {
-                        var ffdTimeline = DataParser.parseFFDTimeline(ffdTimelineObject, animationData.duration, frameRate);
-                        if (ffdTimeline.frameList.length > 0) {
-                            lastFrameDuration = Math.min(lastFrameDuration, ffdTimeline.frameList[ffdTimeline.frameList.length - 1].duration);
-                            animationData.addFFDTimeline(ffdTimeline);
-                        }
-                    }
-                }
-            }
             if (animationData.frameList.length > 0) {
                 lastFrameDuration = Math.min(lastFrameDuration, animationData.frameList[animationData.frameList.length - 1].duration);
             }
@@ -14315,47 +13377,6 @@ var dragonBones;
             DataParser.parseTimeline(timelineObject, outputTimeline);
             return outputTimeline;
         };
-        DataParser.parseFFDTimeline = function (timelineObject, duration, frameRate) {
-            var timeline = new dragonBones.FFDTimeline();
-            timeline.skin = timelineObject[dragonBones.ConstValues.SKIN];
-            timeline.name = timelineObject[dragonBones.ConstValues.SLOT]; // timelineObject[ConstValues.A_NAME];
-            var skinData = DataParser._armatureData.getSkinData(timeline.skin);
-            var slotData = skinData.getSlotData(timeline.name);
-            var meshData = slotData.getDisplayData(timelineObject[dragonBones.ConstValues.A_NAME]);
-            timeline.displayIndex = slotData.displayDataList.indexOf(meshData); // timelineObject[ConstValues.A_DISPLAY_INDEX];
-            timeline.scale = DataParser.getNumber(timelineObject, dragonBones.ConstValues.A_SCALE, 1) || 0;
-            timeline.offset = DataParser.getNumber(timelineObject, dragonBones.ConstValues.A_OFFSET, 0) || 0;
-            timeline.duration = duration;
-            var helpPoint = new dragonBones.Point();
-            var helpPointB = new dragonBones.Point();
-            var frameObjectList = timelineObject[dragonBones.ConstValues.FRAME];
-            for (var i = 0, len = frameObjectList.length; i < len; i++) {
-                var frameObject = frameObjectList[i];
-                var frame = DataParser.parseFFDFrame(frameObject, frameRate);
-                if (meshData.skinned) {
-                    var vertices = [];
-                    for (var iF = 0, lF = meshData.vertices.length; iF < lF; ++iF) {
-                        var vertexBoneData = meshData.vertexBones[iF];
-                        if (iF * 2 < frame.offset || iF * 2 - frame.offset >= frame.vertices.length) {
-                            meshData.slotPose.transformPoint(0, 0, helpPoint, true);
-                        }
-                        else {
-                            meshData.slotPose.transformPoint(frame.vertices[iF * 2 - frame.offset], frame.vertices[iF * 2 + 1 - frame.offset], helpPoint, true);
-                        }
-                        for (var iB = 0, lB = vertexBoneData.indices.length; iB < lB; ++iB) {
-                            var boneIndex = vertexBoneData.indices[iB];
-                            meshData.inverseBindPose[boneIndex].transformPoint(helpPoint.x, helpPoint.y, helpPointB, true);
-                            vertices.push(helpPointB.x, helpPointB.y);
-                        }
-                    }
-                    frame.offset = 0;
-                    frame.vertices = vertices;
-                }
-                timeline.addFrame(frame);
-            }
-            DataParser.parseTimeline(timelineObject, timeline);
-            return timeline;
-        };
         DataParser.parseTransformFrame = function (frameObject, frameRate) {
             var outputFrame = new dragonBones.TransformFrame();
             DataParser.parseFrame(frameObject, outputFrame, frameRate);
@@ -14392,21 +13413,6 @@ var dragonBones;
                 DataParser.parseColorTransform(colorTransformObject, outputFrame.color);
             }
             return outputFrame;
-        };
-        DataParser.parseFFDFrame = function (frameObject, frameRate) {
-            var frame = new dragonBones.FFDFrame();
-            DataParser.parseFrame(frameObject, frame, frameRate);
-            frame.tweenEasing = DataParser.getNumber(frameObject, dragonBones.ConstValues.A_TWEEN_EASING, 10);
-            frame.offset = frameObject[dragonBones.ConstValues.A_OFFSET] || 0;
-            var arr = frameObject.vertices;
-            var vertices = [];
-            if (arr) {
-                for (var i = 0, len = arr.length; i < len; i++) {
-                    vertices.push(Number(arr[i]));
-                }
-            }
-            frame.vertices = vertices;
-            return frame;
         };
         DataParser.parseTimeline = function (timelineObject, outputTimeline) {
             var position = 0;
@@ -14497,12 +13503,6 @@ var dragonBones;
             }
             return defaultValue;
         };
-        DataParser._rawBones = [];
-        DataParser._armatureData = null;
-        DataParser._skinData = null;
-        DataParser._skinSlotData = null;
-        DataParser._meshData = null;
-        DataParser._displayIndex = 0;
         return DataParser;
     }());
     dragonBones.DataParser = DataParser;
@@ -15749,52 +14749,13 @@ var dragonBones;
             bitmap.anchorOffsetY = pivotY;
             return bitmap;
         };
-        /** @private */
         p._generateFastArmature = function () {
             var armature = new dragonBones.FastArmature(new egret.DisplayObjectContainer());
             return armature;
         };
-        /** @private */
         p._generateFastSlot = function () {
             var slot = new dragonBones.EgretFastSlot(new egret.Bitmap());
             return slot;
-        };
-        /** @private */
-        p._generateMesh = function (textureAtlas, fullName, meshData, slot) {
-            if (egret.Capabilities.renderMode == "webgl") {
-                var mesh = new egret.Mesh();
-                var meshNode = mesh.$renderNode;
-                mesh.texture = textureAtlas.getTexture(fullName);
-                var i = 0, iD = 0, l = 0;
-                for (i = 0, l = meshData.numVertex; i < l; i++) {
-                    iD = i * 2;
-                    var dbVertexData = meshData.vertices[i];
-                    meshNode.uvs[iD] = dbVertexData.u;
-                    meshNode.uvs[iD + 1] = dbVertexData.v;
-                    meshNode.vertices[iD] = dbVertexData.x;
-                    meshNode.vertices[iD + 1] = dbVertexData.y;
-                }
-                for (i = 0, l = meshData.triangles.length; i < l; i++) {
-                    meshNode.indices[i] = meshData.triangles[i];
-                }
-                slot.isMeshEnabled = true;
-                return mesh;
-            }
-            var bitmap = new egret.Bitmap();
-            bitmap.texture = textureAtlas.getTexture(fullName);
-            var subTextureFrame = (textureAtlas).getFrame(fullName);
-            var pivotX = 0, pivotY = 0;
-            if (subTextureFrame != null) {
-                pivotX = subTextureFrame.width / 2;
-                pivotY = subTextureFrame.height / 2;
-            }
-            else {
-                pivotX = bitmap.width / 2;
-                pivotY = bitmap.height / 2;
-            }
-            bitmap.anchorOffsetX = pivotX;
-            bitmap.anchorOffsetY = pivotY;
-            return bitmap;
         };
         return EgretFactory;
     }(dragonBones.BaseFactory));
@@ -16159,7 +15120,7 @@ var dragonBones;
         };
         /** @private */
         p._updateTransform = function () {
-            if (this._egretDisplay && (!this._meshData || !this._meshData.skinned || !this.isMeshEnabled)) {
+            if (this._egretDisplay) {
                 this._egretDisplay.$setMatrix(this._globalTransformMatrix, false);
             }
         };
@@ -16183,7 +15144,6 @@ var dragonBones;
                 this._egretDisplay.blendMode = value;
             }
         };
-        /** @private */
         p._calculateRelativeParentTransform = function () {
             this._global.scaleX = this._origin.scaleX * this._offset.scaleX;
             this._global.scaleY = this._origin.scaleY * this._offset.scaleY;
@@ -16197,71 +15157,6 @@ var dragonBones;
                 dragonBones.EgretTextureAtlas.rotatedDic[this._displayDataList[this._currentDisplayIndex].name] == 1) {
                 this._global.skewX -= 1.57;
                 this._global.skewY -= 1.57;
-            }
-        };
-        /** @private */
-        p._updateMesh = function () {
-            if (!this._meshData || !this.isMeshEnabled) {
-                return;
-            }
-            var mesh = this._egretDisplay;
-            var meshNode = mesh.$renderNode;
-            var i = 0, iD = 0, l = 0;
-            var xG = 0, yG = 0;
-            if (this._meshData.skinned) {
-                var bones = this._armature.getBones(false);
-                var iF = 0;
-                for (i = 0, l = this._meshData.numVertex; i < l; i++) {
-                    var vertexBoneData = this._meshData.vertexBones[i];
-                    var j = 0;
-                    var xL = 0;
-                    var yL = 0;
-                    iD = i * 2;
-                    xG = 0;
-                    yG = 0;
-                    for (var iB = 0, lB = vertexBoneData.indices.length; iB < lB; ++iB) {
-                        var boneIndex = vertexBoneData.indices[iB];
-                        var bone = this._meshBones[boneIndex];
-                        var matrix = bone._globalTransformMatrix;
-                        var point = vertexBoneData.vertices[j];
-                        var weight = Number(vertexBoneData.weights[j]);
-                        if (!this._ffdVertices || iF < this._ffdOffset || iF >= this._ffdVertices.length) {
-                            xL = point.x;
-                            yL = point.y;
-                        }
-                        else {
-                            xL = point.x + this._ffdVertices[iF];
-                            yL = point.y + this._ffdVertices[iF + 1];
-                        }
-                        xG += (matrix.a * xL + matrix.c * yL + matrix.tx) * weight;
-                        yG += (matrix.b * xL + matrix.d * yL + matrix.ty) * weight;
-                        j++;
-                        iF += 2;
-                    }
-                    meshNode.vertices[iD] = xG;
-                    meshNode.vertices[iD + 1] = yG;
-                }
-                mesh.$updateVertices();
-                mesh.$invalidateTransform();
-            }
-            else if (this._ffdChanged) {
-                this._ffdChanged = false;
-                for (i = 0, l = this._meshData.numVertex; i < l; ++i) {
-                    var vertexData = this._meshData.vertices[i];
-                    iD = i * 2;
-                    if (!this._ffdVertices || iD < this._ffdOffset || iD >= this._ffdVertices.length) {
-                        xG = vertexData.x;
-                        yG = vertexData.y;
-                    }
-                    else {
-                        xG = Number(vertexData.x) + this._ffdVertices[iD - this._ffdOffset];
-                        yG = Number(vertexData.y) + this._ffdVertices[iD - this._ffdOffset + 1];
-                    }
-                    meshNode.vertices[iD] = xG;
-                    meshNode.vertices[iD + 1] = yG;
-                }
-                mesh.$updateVertices();
-                mesh.$invalidateTransform();
             }
         };
         return EgretSlot;

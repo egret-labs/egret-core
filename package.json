@@ -89,6 +89,10 @@
           {
             "path": "media/native/NaSoundChannel.ts",
             "platform": "native"
+          },          
+          {
+            "path": "media/native/NativeVideo.ts",
+            "platform": "native"
           },
           {
             "path": "native/NativeGetOption.ts",
