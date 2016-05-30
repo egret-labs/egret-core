@@ -3290,7 +3290,7 @@ var egret;
                 this.widthSet = 0;
                 this.$renderNode = new egret.sys.BitmapNode();
                 if (!__global.Video) {
-                    egret.$error(1043);
+                    egret.$error(1044);
                 }
                 this.src = url;
                 if (url) {
@@ -3669,7 +3669,7 @@ var egret;
             egret.Video = NativeVideo;
         }
         else {
-            egret.$error(1043);
+            egret.$warn(1044);
         }
     })(native = egret.native || (egret.native = {}));
 })(egret || (egret = {}));
