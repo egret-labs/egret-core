@@ -109,7 +109,7 @@ module egret.web {
             video.style.left = "0px";
             video.height = 1;
             video.width = 1;
-            window.setTimeout(() => video.pause(), 16);
+            window.setTimeout(() => video.pause(), 170);
             this.video = video;
         }
 
@@ -405,7 +405,7 @@ module egret.web {
             this.video.removeEventListener("canplay", this.onVideoLoaded);
             var video = this.video;
             this.loaded = true;
-            video.pause();
+            //video.pause();
             if (this.posterData) {
                 this.posterData.width = this.getPlayWidth();
                 this.posterData.height = this.getPlayHeight();

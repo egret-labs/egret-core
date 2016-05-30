@@ -5184,6 +5184,7 @@ var dragonBones;
         }
         var d = __define,c=Slot,p=c.prototype;
         d(p, "displayIndex"
+            /** @private */
             ,function () {
                 return this._currentDisplayIndex;
             }
@@ -12314,6 +12315,7 @@ var dragonBones;
          */
         DisplayData.IMAGE = "image";
         /**
+         * @private
          * 网格类型
          */
         DisplayData.MESH = "mesh";
@@ -12707,6 +12709,7 @@ var dragonBones;
 var dragonBones;
 (function (dragonBones) {
     /**
+     * @private
      * @class dragonBones.BoneData
      * @classdesc
      * 网格数据
