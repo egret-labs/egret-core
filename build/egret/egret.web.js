@@ -5583,20 +5583,22 @@ var egret;
             /**
              * 压入pushMask指令
              */
-            p.pushPushMask = function () {
-                if (this.drawData.length == 0 || this.drawData[this.drawData.length - 1].type != 2 /* PUSH_MASK */) {
-                    this.drawData.push({ type: 2 /* PUSH_MASK */, count: 0 });
-                }
-                this.drawData[this.drawData.length - 1].count += 2;
+            p.pushPushMask = function (count) {
+                if (count === void 0) { count = 1; }
+                // if(this.drawData.length == 0 || this.drawData[this.drawData.length - 1].type != DRAWABLE_TYPE.PUSH_MASK) {
+                this.drawData.push({ type: 2 /* PUSH_MASK */, count: 0 });
+                // }
+                this.drawData[this.drawData.length - 1].count += count * 2;
             };
             /**
              * 压入popMask指令
              */
-            p.pushPopMask = function () {
-                if (this.drawData.length == 0 || this.drawData[this.drawData.length - 1].type != 3 /* POP_MASK */) {
-                    this.drawData.push({ type: 3 /* POP_MASK */, count: 0 });
-                }
-                this.drawData[this.drawData.length - 1].count += 2;
+            p.pushPopMask = function (count) {
+                if (count === void 0) { count = 1; }
+                // if(this.drawData.length == 0 || this.drawData[this.drawData.length - 1].type != DRAWABLE_TYPE.POP_MASK) {
+                this.drawData.push({ type: 3 /* POP_MASK */, count: 0 });
+                // }
+                this.drawData[this.drawData.length - 1].count += count * 2;
             };
             /**
              * 压入混色指令
