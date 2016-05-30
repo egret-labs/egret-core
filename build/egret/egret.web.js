@@ -5583,20 +5583,22 @@ var egret;
             /**
              * 压入pushMask指令
              */
-            p.pushPushMask = function () {
-                if (this.drawData.length == 0 || this.drawData[this.drawData.length - 1].type != 2 /* PUSH_MASK */) {
-                    this.drawData.push({ type: 2 /* PUSH_MASK */, count: 0 });
-                }
-                this.drawData[this.drawData.length - 1].count += 2;
+            p.pushPushMask = function (count) {
+                if (count === void 0) { count = 1; }
+                // if(this.drawData.length == 0 || this.drawData[this.drawData.length - 1].type != DRAWABLE_TYPE.PUSH_MASK) {
+                this.drawData.push({ type: 2 /* PUSH_MASK */, count: 0 });
+                // }
+                this.drawData[this.drawData.length - 1].count += count * 2;
             };
             /**
              * 压入popMask指令
              */
-            p.pushPopMask = function () {
-                if (this.drawData.length == 0 || this.drawData[this.drawData.length - 1].type != 3 /* POP_MASK */) {
-                    this.drawData.push({ type: 3 /* POP_MASK */, count: 0 });
-                }
-                this.drawData[this.drawData.length - 1].count += 2;
+            p.pushPopMask = function (count) {
+                if (count === void 0) { count = 1; }
+                // if(this.drawData.length == 0 || this.drawData[this.drawData.length - 1].type != DRAWABLE_TYPE.POP_MASK) {
+                this.drawData.push({ type: 3 /* POP_MASK */, count: 0 });
+                // }
+                this.drawData[this.drawData.length - 1].count += count * 2;
             };
             /**
              * 压入混色指令
@@ -6408,15 +6410,15 @@ var egret;
                 }
                 var length = mask.length;
                 if (length) {
+                    this.drawCmdManager.pushPushMask(length);
                     for (var i = 0; i < length; i++) {
                         var item = mask[i];
                         this.vao.cacheArrays(buffer.globalMatrix, buffer._globalAlpha, 0, 0, item.width, item.height, item.minX, item.minY, item.width, item.height, item.width, item.height);
-                        this.drawCmdManager.pushPushMask();
                     }
                 }
                 else {
-                    this.vao.cacheArrays(buffer.globalMatrix, buffer._globalAlpha, 0, 0, mask.width, mask.height, mask.x, mask.y, mask.width, mask.height, mask.width, mask.height);
                     this.drawCmdManager.pushPushMask();
+                    this.vao.cacheArrays(buffer.globalMatrix, buffer._globalAlpha, 0, 0, mask.width, mask.height, mask.x, mask.y, mask.width, mask.height, mask.width, mask.height);
                 }
             };
             /**
@@ -6433,15 +6435,15 @@ var egret;
                 }
                 var length = mask.length;
                 if (length) {
+                    this.drawCmdManager.pushPopMask(length);
                     for (var i = 0; i < length; i++) {
                         var item = mask[i];
                         this.vao.cacheArrays(buffer.globalMatrix, buffer._globalAlpha, 0, 0, item.width, item.height, item.minX, item.minY, item.width, item.height, item.width, item.height);
-                        this.drawCmdManager.pushPopMask();
                     }
                 }
                 else {
-                    this.vao.cacheArrays(buffer.globalMatrix, buffer._globalAlpha, 0, 0, mask.width, mask.height, mask.x, mask.y, mask.width, mask.height, mask.width, mask.height);
                     this.drawCmdManager.pushPopMask();
+                    this.vao.cacheArrays(buffer.globalMatrix, buffer._globalAlpha, 0, 0, mask.width, mask.height, mask.x, mask.y, mask.width, mask.height, mask.width, mask.height);
                 }
             };
             /**
@@ -7106,6 +7108,7 @@ var egret;
              * @param offsetY 矩形要加上的偏移量y
              */
             p.beginClip = function (regions, offsetX, offsetY) {
+                this.context.pushBuffer(this);
                 // dirtyRegionPolicy hack
                 if (this._dirtyRegionPolicy) {
                     this.rootRenderTarget.useFrameBuffer = true;
@@ -7125,6 +7128,7 @@ var egret;
                     regions[0].width == this.rootRenderTarget.width && regions[0].height == this.rootRenderTarget.height) {
                     this.maskPushed = false;
                     this.rootRenderTarget.useFrameBuffer && this.context.clear();
+                    this.context.popBuffer();
                     return;
                 }
                 // 擦除脏矩形区域
@@ -7142,14 +7146,17 @@ var egret;
                 else {
                     this.maskPushed = false;
                 }
+                this.context.popBuffer();
             };
             /**
              * 取消上一次设置的clip。
              */
             p.endClip = function () {
                 if (this.maskPushed) {
+                    this.context.pushBuffer(this);
                     this.setTransform(1, 0, 0, 1, this.offsetX, this.offsetY);
                     this.context.popMask();
+                    this.context.popBuffer();
                 }
             };
             /**

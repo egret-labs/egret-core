@@ -91,21 +91,21 @@ module egret.web {
         /**
          * 压入pushMask指令
          */
-        public pushPushMask():void {
-            if(this.drawData.length == 0 || this.drawData[this.drawData.length - 1].type != DRAWABLE_TYPE.PUSH_MASK) {
-                this.drawData.push({type: DRAWABLE_TYPE.PUSH_MASK, count: 0});
-            }
-            this.drawData[this.drawData.length - 1].count += 2;
+        public pushPushMask(count:number = 1):void {
+            // if(this.drawData.length == 0 || this.drawData[this.drawData.length - 1].type != DRAWABLE_TYPE.PUSH_MASK) {
+            this.drawData.push({type: DRAWABLE_TYPE.PUSH_MASK, count: 0});
+            // }
+            this.drawData[this.drawData.length - 1].count += count * 2;
         }
 
         /**
          * 压入popMask指令
          */
-        public pushPopMask():void {
-            if(this.drawData.length == 0 || this.drawData[this.drawData.length - 1].type != DRAWABLE_TYPE.POP_MASK) {
-                this.drawData.push({type: DRAWABLE_TYPE.POP_MASK, count: 0});
-            }
-            this.drawData[this.drawData.length - 1].count += 2;
+        public pushPopMask(count:number = 1):void {
+            // if(this.drawData.length == 0 || this.drawData[this.drawData.length - 1].type != DRAWABLE_TYPE.POP_MASK) {
+            this.drawData.push({type: DRAWABLE_TYPE.POP_MASK, count: 0});
+            // }
+            this.drawData[this.drawData.length - 1].count += count * 2;
         }
 
         /**
