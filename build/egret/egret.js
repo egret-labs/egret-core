@@ -5685,6 +5685,7 @@ var egret;
             strokePath && strokePath.drawRect(x, y, width, height);
             this.extendBoundsByPoint(x + width, y + height);
             this.updatePosition(x, y);
+            this.$renderNode.dirtyRender = true;
         };
         /**
          * @language en_US
@@ -5729,6 +5730,7 @@ var egret;
             this.extendBoundsByPoint(x, y);
             this.extendBoundsByPoint(right, bottom);
             this.updatePosition(right, ybw);
+            this.$renderNode.dirtyRender = true;
         };
         /**
          * @language en_US
@@ -5759,6 +5761,7 @@ var egret;
             this.extendBoundsByPoint(x - radius, y - radius);
             this.extendBoundsByPoint(x + radius, y + radius);
             this.updatePosition(x + radius, y);
+            this.$renderNode.dirtyRender = true;
         };
         /**
          * @language en_US
@@ -5791,6 +5794,7 @@ var egret;
             strokePath && strokePath.drawEllipse(x, y, width, height);
             this.extendBoundsByPoint(x + width, y + height);
             this.updatePosition(x, y);
+            this.$renderNode.dirtyRender = true;
         };
         /**
          * @language en_US
@@ -5818,6 +5822,7 @@ var egret;
             this.includeLastPosition = false;
             this.lastX = x;
             this.lastY = y;
+            this.$renderNode.dirtyRender = true;
         };
         /**
          * @language en_US
@@ -5843,6 +5848,7 @@ var egret;
             fillPath && fillPath.lineTo(x, y);
             strokePath && strokePath.lineTo(x, y);
             this.updatePosition(x, y);
+            this.$renderNode.dirtyRender = true;
         };
         /**
          * @language en_US
@@ -5880,6 +5886,7 @@ var egret;
             this.extendBoundsByPoint(controlX, controlY);
             this.extendBoundsByPoint(anchorX, anchorY);
             this.updatePosition(anchorX, anchorY);
+            this.$renderNode.dirtyRender = true;
         };
         /**
          * @language en_US
@@ -5920,6 +5927,7 @@ var egret;
             this.extendBoundsByPoint(controlX2, controlY2);
             this.extendBoundsByPoint(anchorX, anchorY);
             this.updatePosition(anchorX, anchorY);
+            this.$renderNode.dirtyRender = true;
         };
         /**
          * @language en_US
@@ -5971,6 +5979,7 @@ var egret;
             var endX = x + egret.$cos(endAngle) * radius;
             var endY = y + egret.$sin(endAngle) * radius;
             this.updatePosition(endX, endY);
+            this.$renderNode.dirtyRender = true;
         };
         /**
          * @private
@@ -6038,6 +6047,7 @@ var egret;
             this.minY = Infinity;
             this.maxX = -Infinity;
             this.maxY = -Infinity;
+            this.$renderNode.dirtyRender = true;
         };
         /**
          * @private
@@ -14966,7 +14976,6 @@ var egret;
                 else {
                     this.drawData.push(path);
                 }
-                this.dirtyRender = true;
                 return path;
             };
             /**
@@ -15007,7 +15016,6 @@ var egret;
                 else {
                     this.drawData.push(path);
                 }
-                this.dirtyRender = true;
                 return path;
             };
             /**
@@ -15036,7 +15044,6 @@ var egret;
                 path.joints = joints;
                 path.miterLimit = miterLimit;
                 this.drawData.push(path);
-                this.dirtyRender = true;
                 return path;
             };
             /**
@@ -15044,7 +15051,6 @@ var egret;
              */
             p.clear = function () {
                 this.drawData.length = 0;
-                this.dirtyRender = true;
             };
             /**
              * 覆盖父类方法，不自动清空缓存的绘图数据，改为手动调用clear()方法清空。
@@ -18856,17 +18862,17 @@ var egret;
         d(p, "wordWrap"
             /**
              * @language en_US
-             * A Boolean value that indicates whether the text field has word wrap. If the value of wordWrap is true, the text
-             * field has word wrap; if the value is false, the text field does not have word wrap.
-             * @default true
+             * A Boolean value that indicates whether the text field word wrap. If the value is true, then the text field by word wrap;
+             * if the value is false, the text field by newline characters.
+             * @default false
              * @version Egret 2.4
              * @platform Web,Native
              */
             /**
              * @language zh_CN
-             * 一个布尔值，表示文本字段是否自动换行。如果 wordWrap 的值为 true，则该文本字段自动换行；
-             * 如果值为 false，则该文本字段不自动换行,如果同时显式设置过宽度，超出宽度的部分将被截断。
-             * @default true
+             * 一个布尔值，表示文本字段是否按单词换行。如果值为 true，则该文本字段按单词换行；
+             * 如果值为 false，则该文本字段按字符换行。
+             * @default false
              * @version Egret 2.4
              * @platform Web,Native
              */
