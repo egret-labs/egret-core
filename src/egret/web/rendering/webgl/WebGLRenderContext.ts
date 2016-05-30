@@ -592,15 +592,15 @@ module egret.web {
 
             var length = mask.length;
             if (length) {
+                this.drawCmdManager.pushPushMask(length);
                 for (var i = 0; i < length; i++) {
                     var item:sys.Region = mask[i];
                     this.vao.cacheArrays(buffer.globalMatrix, buffer._globalAlpha, 0, 0, item.width, item.height, item.minX, item.minY, item.width, item.height, item.width, item.height);
-                    this.drawCmdManager.pushPushMask();
                 }
             }
             else {
-                this.vao.cacheArrays(buffer.globalMatrix, buffer._globalAlpha, 0, 0, mask.width, mask.height, mask.x, mask.y, mask.width, mask.height, mask.width, mask.height);
                 this.drawCmdManager.pushPushMask();
+                this.vao.cacheArrays(buffer.globalMatrix, buffer._globalAlpha, 0, 0, mask.width, mask.height, mask.x, mask.y, mask.width, mask.height, mask.width, mask.height);
             }
         }
 
@@ -621,15 +621,15 @@ module egret.web {
 
             var length = mask.length;
             if (length) {
+                this.drawCmdManager.pushPopMask(length);
                 for (var i = 0; i < length; i++) {
                     var item:sys.Region = mask[i];
                     this.vao.cacheArrays(buffer.globalMatrix, buffer._globalAlpha, 0, 0, item.width, item.height, item.minX, item.minY, item.width, item.height, item.width, item.height);
-                    this.drawCmdManager.pushPopMask();
                 }
             }
             else {
-                this.vao.cacheArrays(buffer.globalMatrix, buffer._globalAlpha, 0, 0, mask.width, mask.height, mask.x, mask.y, mask.width, mask.height, mask.width, mask.height);
                 this.drawCmdManager.pushPopMask();
+                this.vao.cacheArrays(buffer.globalMatrix, buffer._globalAlpha, 0, 0, mask.width, mask.height, mask.x, mask.y, mask.width, mask.height, mask.width, mask.height);
             }
         }
 
