@@ -99,7 +99,7 @@ module egret.native {
          * @private
          * */
         private loadEnd(){
-            var video = new __global.Video(this.src,this.cache);
+            var video = new __global.Video(this.src);
             video['setVideoRect'](0, 0, 1, 1);
             video['setKeepRatio'](false);
             video.addEventListener("canplaythrough", onCanPlay);
