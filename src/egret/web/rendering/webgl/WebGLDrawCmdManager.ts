@@ -162,6 +162,34 @@ module egret.web {
          * 压入激活buffer命令
          */
         public pushActivateBuffer(buffer) {
+            var len = this.drawData.length;
+            // 有无遍历到有效绘图操作
+            var drawState = false;
+            for(var i = len - 1; i >= 0; i--) {
+                var data = this.drawData[i];
+
+                if(data){
+                    if(data.type != DRAWABLE_TYPE.BLEND && data.type != DRAWABLE_TYPE.ACT_BUFFER) {
+                        drawState = true;
+                    }
+
+                    // 如果与上一次buffer操作之间无有效绘图，上一次操作无效
+                    if(!drawState && data.type == DRAWABLE_TYPE.ACT_BUFFER) {
+                        this.drawData.splice(i, 1);
+                        continue;
+                    }
+
+                    // 如果与上一次buffer操作重复，本次操作无效
+                    if(data.type == DRAWABLE_TYPE.ACT_BUFFER) {
+                        if(data.buffer == buffer) {
+                            return;
+                        } else {
+                            break;
+                        }
+                    }
+                }
+            }
+
             this.drawData.push({type:DRAWABLE_TYPE.ACT_BUFFER, buffer:buffer, width: buffer.$getWidth(), height: buffer.$getHeight()});
         }
 

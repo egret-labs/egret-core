@@ -5647,6 +5647,31 @@ var egret;
              * 压入激活buffer命令
              */
             p.pushActivateBuffer = function (buffer) {
+                var len = this.drawData.length;
+                // 有无遍历到有效绘图操作
+                var drawState = false;
+                for (var i = len - 1; i >= 0; i--) {
+                    var data = this.drawData[i];
+                    if (data) {
+                        if (data.type != 4 /* BLEND */ && data.type != 7 /* ACT_BUFFER */) {
+                            drawState = true;
+                        }
+                        // 如果与上一次buffer操作之间无有效绘图，上一次操作无效
+                        if (!drawState && data.type == 7 /* ACT_BUFFER */) {
+                            this.drawData.splice(i, 1);
+                            continue;
+                        }
+                        // 如果与上一次buffer操作重复，本次操作无效
+                        if (data.type == 7 /* ACT_BUFFER */) {
+                            if (data.buffer == buffer) {
+                                return;
+                            }
+                            else {
+                                break;
+                            }
+                        }
+                    }
+                }
                 this.drawData.push({ type: 7 /* ACT_BUFFER */, buffer: buffer, width: buffer.$getWidth(), height: buffer.$getHeight() });
             };
             /**
@@ -6457,9 +6482,6 @@ var egret;
             p.clear = function () {
                 this.drawCmdManager.pushClearColor();
             };
-            /**
-             * 执行目前缓存在命令列表里的命令并清空
-             */
             p.$drawWebGL = function () {
                 if (this.drawCmdManager.drawData.length == 0 || this.contextLost) {
                     return;
@@ -6471,14 +6493,16 @@ var egret;
                 }
                 var length = this.drawCmdManager.drawData.length;
                 var offset = 0;
-                var currentBuffer = this.currentBuffer;
                 for (var i = 0; i < length; i++) {
                     var data = this.drawCmdManager.drawData[i];
                     offset = this.drawData(data, offset);
                     // 计算draw call
+                    if (data.type == 7 /* ACT_BUFFER */) {
+                        this.activatedBuffer = data.buffer;
+                    }
                     if (data.type == 0 /* TEXTURE */ || data.type == 1 /* RECT */ || data.type == 2 /* PUSH_MASK */ || data.type == 3 /* POP_MASK */) {
-                        if (currentBuffer && currentBuffer.$computeDrawCall) {
-                            currentBuffer.$drawCalls++;
+                        if (this.activatedBuffer && this.activatedBuffer.$computeDrawCall) {
+                            this.activatedBuffer.$drawCalls++;
                         }
                     }
                 }

@@ -631,6 +631,7 @@ module egret.web {
         /**
          * 执行目前缓存在命令列表里的命令并清空
          */
+        private activatedBuffer:WebGLRenderBuffer;
         public $drawWebGL() {
             if (this.drawCmdManager.drawData.length == 0 || this.contextLost) {
                 return;
@@ -645,14 +646,16 @@ module egret.web {
 
             var length = this.drawCmdManager.drawData.length;
             var offset = 0;
-            var currentBuffer = this.currentBuffer;
             for (var i = 0; i < length; i++) {
                 var data = this.drawCmdManager.drawData[i];
                 offset = this.drawData(data, offset);
                 // 计算draw call
+                if(data.type == DRAWABLE_TYPE.ACT_BUFFER) {
+                    this.activatedBuffer = data.buffer;
+                }
                 if(data.type == DRAWABLE_TYPE.TEXTURE || data.type == DRAWABLE_TYPE.RECT || data.type == DRAWABLE_TYPE.PUSH_MASK || data.type == DRAWABLE_TYPE.POP_MASK) {
-                    if (currentBuffer && currentBuffer.$computeDrawCall) {
-                        currentBuffer.$drawCalls++;
+                    if (this.activatedBuffer && this.activatedBuffer.$computeDrawCall) {
+                        this.activatedBuffer.$drawCalls++;
                     }
                 }
             }
