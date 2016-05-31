@@ -100,7 +100,7 @@ module egret.web {
             if(buffer != this.currentBuffer) {
 
                 if(this.currentBuffer) {
-                    this.$drawWebGL();
+                    // this.$drawWebGL();
                 }
 
                 this.drawCmdManager.pushActivateBuffer(buffer);
@@ -126,7 +126,7 @@ module egret.web {
 
             // 重新绑定
             if(buffer != lastBuffer) {
-                this.$drawWebGL();
+                // this.$drawWebGL();
 
                 this.drawCmdManager.pushActivateBuffer(lastBuffer);
             }
@@ -650,7 +650,7 @@ module egret.web {
                 var data = this.drawCmdManager.drawData[i];
                 offset = this.drawData(data, offset);
                 // 计算draw call
-                if(data.type != DRAWABLE_TYPE.BLEND) {
+                if(data.type == DRAWABLE_TYPE.TEXTURE || data.type == DRAWABLE_TYPE.RECT || data.type == DRAWABLE_TYPE.PUSH_MASK || data.type == DRAWABLE_TYPE.POP_MASK) {
                     if (currentBuffer && currentBuffer.$computeDrawCall) {
                         currentBuffer.$drawCalls++;
                     }
@@ -728,9 +728,9 @@ module egret.web {
                     this.setBlendMode(data.value);
                     break;
                 case DRAWABLE_TYPE.RESIZE_TARGET:
-                    // if(data.width != data.buffer.rootRenderTarget.width || data.height != data.buffer.rootRenderTarget.height) {
+                    if(data.width != data.buffer.rootRenderTarget.width || data.height != data.buffer.rootRenderTarget.height) {
                         data.buffer.rootRenderTarget.resize(data.width, data.height);
-                    // }
+                    }
                     break;
                 case DRAWABLE_TYPE.CLEAR_COLOR:
                     if(this.currentBuffer) {
@@ -741,9 +741,9 @@ module egret.web {
                     }
                     break;
                 case DRAWABLE_TYPE.ACT_BUFFER:
-                    // if(data.buffer.$getWidth() != data.width || data.buffer.$getHeight() != data.height) {
-                    //     data.buffer.rootRenderTarget.resize(data.width, data.height);
-                    // }
+                    if(data.buffer.$getWidth() != data.width || data.buffer.$getHeight() != data.height) {
+                        data.buffer.rootRenderTarget.resize(data.width, data.height);
+                    }
                     this.activateBuffer(data.buffer);
                     break;
                 default:
@@ -983,7 +983,17 @@ module egret.web {
                 buffer.transform(1, 0, 0, -1, 0, output.$getHeight() + 2 * offsetY + (destY - offsetY - gOffsetY) * 2);
                 this.vao.cacheArrays(buffer.globalMatrix, buffer._globalAlpha, -offsetX, -offsetY, output.$getWidth() + 2 * offsetX, output.$getHeight() + 2 * offsetY, destX - offsetX - gOffsetX, destY - offsetY - gOffsetY, output.$getWidth() + 2 * offsetX, output.$getHeight() + 2 * offsetY, output.$getWidth(), output.$getHeight());
                 buffer.restoreTransform();
-                this.drawCmdManager.pushDrawTexture(output["rootRenderTarget"].texture, 2, filter);
+
+                var filterData = {type: "", matrix: null, blurX: 0, blurY: 0};
+                if(filter.type == "colorTransform") {
+                    filterData.type = "colorTransform";
+                    filterData.matrix = filter.matrix;
+                } else if(filter.type == "blur") {
+                    filterData.type = "blur";
+                    filterData.blurX = filter.blurX;
+                    filterData.blurY = filter.blurY;
+                }
+                this.drawCmdManager.pushDrawTexture(output["rootRenderTarget"].texture, 2, filterData);
             } else {
                 if (filter.type == "blur") {
                     offsetX = filter.blurX * 0.028 * realWidth;
@@ -991,15 +1001,24 @@ module egret.web {
                 }
                 this.vao.cacheArrays(buffer.globalMatrix, buffer._globalAlpha, sourceX - offsetX, sourceY - offsetY, sourceWidth + 2 * offsetX, sourceHeight + 2 * offsetY, destX - offsetX - gOffsetX, destY - offsetY - gOffsetY, destWidth + 2 * offsetX, destHeight + 2 * offsetY, textureWidth, textureHeight, meshUVs, meshVertices, meshIndices);
                 var uv = this.getUv(sourceX, sourceY, sourceWidth, sourceHeight, textureWidth, textureHeight);
-                this.drawCmdManager.pushDrawTexture(webGLTexture, meshIndices ? meshIndices.length / 3 : 2, filter, uv);
+                var filterData = {type: "", matrix: null, blurX: 0, blurY: 0};
+                if(filter.type == "colorTransform") {
+                    filterData.type = "colorTransform";
+                    filterData.matrix = filter.matrix;
+                } else if(filter.type == "blur") {
+                    filterData.type = "blur";
+                    filterData.blurX = filter.blurX;
+                    filterData.blurY = filter.blurY;
+                }
+                this.drawCmdManager.pushDrawTexture(webGLTexture, meshIndices ? meshIndices.length / 3 : 2, filterData, uv);
             }
 
             if(output) {
                 // 确保完全绘制完成后才能释放output
-                this.$drawWebGL();
+                // this.$drawWebGL();
 
-                output.clearFilters();
-                output.filter = null;
+                // output.clearFilters();
+                // output.filter = null;
                 WebGLRenderBuffer.release(output);
             }
         }
@@ -1040,7 +1059,7 @@ module egret.web {
             if(filter) {
                 output.popFilters();
             }
-            output.context.$drawWebGL();
+            // output.context.$drawWebGL();
             this.popBuffer();
             if(input["rootRenderTarget"] && release) { // 如果输入的是buffer,回收
                 input.clearFilters();
