@@ -3335,7 +3335,7 @@ var egret;
              * @private
              * */
             p.loadEnd = function () {
-                var video = new __global.Video(this.src);
+                var video = new __global.Video(this.src, this.cache);
                 video['setVideoRect'](0, 0, 1, 1);
                 video['setKeepRatio'](false);
                 video.addEventListener("canplaythrough", onCanPlay);
