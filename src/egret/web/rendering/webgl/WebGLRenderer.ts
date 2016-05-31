@@ -626,7 +626,9 @@ module egret.web {
                 node.$textureHeight = surface.height;
             }
 
-            buffer.context.drawTexture(node.$texture, 0, 0, width, height, 0, 0, width, height, node.$textureWidth, node.$textureHeight);
+            var textureWidth = node.$textureWidth;
+            var textureHeight = node.$textureHeight;
+            buffer.context.drawTexture(node.$texture, 0, 0, textureWidth, textureHeight, 0, 0, textureWidth, textureHeight, textureWidth, textureHeight);
 
             if (node.x || node.y) {
                 if (node.dirtyRender) {
@@ -685,9 +687,10 @@ module egret.web {
                     node.$textureWidth = surface.width;
                     node.$textureHeight = surface.height;
                 }
-                buffer.context.drawTexture(node.$texture, 0, 0, width, height, 0, 0, width, height, node.$textureWidth, node.$textureHeight);
+                var textureWidth = node.$textureWidth;
+                var textureHeight = node.$textureHeight;
+                buffer.context.drawTexture(node.$texture, 0, 0, textureWidth, textureHeight, 0, 0, textureWidth, textureHeight, textureWidth, textureHeight);
             }
-
 
             if (node.x || node.y) {
                 if (node.dirtyRender || forHitTest) {
@@ -695,7 +698,9 @@ module egret.web {
                 }
                 buffer.transform(1, 0, 0, 1, -node.x, -node.y);
             }
-            node.dirtyRender = false;
+            if(!forHitTest) {
+                node.dirtyRender = false;
+            }
         }
 
         private renderGroup(groupNode: sys.GroupNode, buffer: WebGLRenderBuffer): void {
