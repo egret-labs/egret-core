@@ -6543,9 +6543,7 @@ var egret;
                         this.setBlendMode(data.value);
                         break;
                     case 5 /* RESIZE_TARGET */:
-                        if (data.width != data.buffer.rootRenderTarget.width || data.height != data.buffer.rootRenderTarget.height) {
-                            data.buffer.rootRenderTarget.resize(data.width, data.height);
-                        }
+                        data.buffer.rootRenderTarget.resize(data.width, data.height);
                         break;
                     case 6 /* CLEAR_COLOR */:
                         if (this.currentBuffer) {
@@ -6556,9 +6554,6 @@ var egret;
                         }
                         break;
                     case 7 /* ACT_BUFFER */:
-                        if (data.buffer.$getWidth() != data.width || data.buffer.$getHeight() != data.height) {
-                            data.buffer.rootRenderTarget.resize(data.width, data.height);
-                        }
                         this.activateBuffer(data.buffer);
                         break;
                     default:
@@ -6841,8 +6836,8 @@ var egret;
                 // output.context.$drawWebGL();
                 this.popBuffer();
                 if (input["rootRenderTarget"] && release) {
-                    input.clearFilters();
-                    input.filter = null;
+                    // input.clearFilters();
+                    // input.filter = null;
                     web.WebGLRenderBuffer.release(input);
                 }
             };
@@ -6874,7 +6869,7 @@ var egret;
                 output = web.WebGLRenderBuffer.create(input.$getWidth(), input.$getHeight());
                 this.drawToRenderTarget(this.colorMatrixFilter, input, output, 0, 0, input.$getWidth(), input.$getHeight(), 0, 0, output.$getWidth(), output.$getHeight(), input.$getWidth(), input.$getHeight(), false);
                 draw.call(this, output, distanceX - offsetX, distanceY - offsetY);
-                this.$drawWebGL();
+                // this.$drawWebGL();
                 // 应用blurX
                 this.blurFilter.blurX = filter.blurX;
                 this.blurFilter.blurY = 0;
@@ -6883,7 +6878,7 @@ var egret;
                 output = web.WebGLRenderBuffer.create(input.$getWidth() + offsetX * 2, input.$getHeight());
                 this.drawToRenderTarget(this.blurFilter, input, output, 0, 0, input.$getWidth(), input.$getHeight(), offsetX, 0, input.$getWidth(), input.$getHeight(), input.$getWidth(), input.$getHeight());
                 draw.call(this, output, distanceX - offsetX, distanceY - offsetY);
-                this.$drawWebGL();
+                // this.$drawWebGL();
                 // 应用blurY
                 this.blurFilter.blurX = 0;
                 this.blurFilter.blurY = filter.blurY;
@@ -6892,14 +6887,14 @@ var egret;
                 output = web.WebGLRenderBuffer.create(input.$getWidth(), input.$getHeight() + offsetY * 2);
                 this.drawToRenderTarget(this.blurFilter, input, output, 0, 0, input.$getWidth(), input.$getHeight(), 0, offsetY, input.$getWidth(), input.$getHeight(), input.$getWidth(), input.$getHeight());
                 draw.call(this, output, distanceX - offsetX, distanceY - offsetY);
-                this.$drawWebGL();
+                // this.$drawWebGL();
                 // 根据光强绘制光
                 this.setGlobalCompositeOperation("lighter-in");
                 for (var j = 0; j < filter.quality; j++) {
                     draw.call(this, output, distanceX - offsetX, distanceY - offsetY);
                 }
                 this.setGlobalCompositeOperation("source-over");
-                this.$drawWebGL();
+                // this.$drawWebGL();
                 var buffer = this.currentBuffer;
                 function draw(result, offsetX, offsetY) {
                     buffer.saveTransform();
@@ -6908,8 +6903,8 @@ var egret;
                     buffer.restoreTransform();
                     this.drawCmdManager.pushDrawTexture(result.rootRenderTarget.texture);
                 }
-                output.clearFilters();
-                output.filter = null;
+                // output.clearFilters();
+                // output.filter = null;
                 web.WebGLRenderBuffer.release(output);
             };
             WebGLRenderContext.initBlendMode = function () {
@@ -6998,7 +6993,10 @@ var egret;
                 // 获取webglRenderContext
                 this.context = web.WebGLRenderContext.getInstance(width, height);
                 // buffer 对应的 render target
-                this.rootRenderTarget = new web.WebGLRenderTarget(this.context.context, width, height);
+                this.rootRenderTarget = new web.WebGLRenderTarget(this.context.context, 3, 3);
+                if (width && height) {
+                    this.resize(width, height);
+                }
                 // 如果是第一个加入的buffer，说明是舞台buffer
                 this.root = this.context.$bufferStack.length == 0;
                 // 如果是用于舞台渲染的renderBuffer，则默认添加renderTarget到renderContext中，而且是第一个
@@ -7022,9 +7020,6 @@ var egret;
             };
             p.popFilters = function () {
                 this.filters.pop();
-            };
-            p.clearFilters = function () {
-                this.filters.length = 0;
             };
             p.getFilters = function () {
                 var filters = [];
@@ -7103,8 +7098,8 @@ var egret;
                 height = height || 1;
                 // render target 尺寸重置
                 if (width != this.rootRenderTarget.width || height != this.rootRenderTarget.height) {
-                    // this.rootRenderTarget.resize(width, height);
                     this.context.drawCmdManager.pushResize(this, width, height);
+                    // 同步更改宽高
                     this.rootRenderTarget.width = width;
                     this.rootRenderTarget.height = height;
                 }
@@ -7112,13 +7107,7 @@ var egret;
                 if (this.root) {
                     this.context.resize(width, height, useMaxSize);
                 }
-                // this.rootRenderTarget.clear(true);
                 this.context.clear();
-                // 由于resize与clear造成的frameBuffer绑定，这里重置绑定
-                // var lastBuffer = this.context.currentBuffer;
-                // if(lastBuffer) {
-                //     lastBuffer.rootRenderTarget.activate();
-                // }
                 this.context.popBuffer();
             };
             /**
@@ -7656,8 +7645,8 @@ var egret;
                         maskBuffer.setTransform(1, 0, 0, 1, -region.minX, -region.minY);
                         offsetM = egret.Matrix.create().setTo(1, 0, 0, 1, -region.minX, -region.minY);
                         var calls = this.drawDisplayObject(mask, maskBuffer, dirtyList, offsetM, mask.$displayList, region, root);
-                        maskBuffer.context.$drawWebGL();
-                        maskBuffer.onRenderFinish();
+                        // maskBuffer.context.$drawWebGL();
+                        // maskBuffer.onRenderFinish();
                         maskBuffer.context.popBuffer();
                         if (calls > 0) {
                             drawCalls += calls;
@@ -7673,8 +7662,8 @@ var egret;
                     }
                     egret.Matrix.release(offsetM);
                     displayBuffer.context.setGlobalCompositeOperation(defaultCompositeOp);
-                    displayBuffer.context.$drawWebGL();
-                    displayBuffer.onRenderFinish();
+                    // displayBuffer.context.$drawWebGL();
+                    // displayBuffer.onRenderFinish();
                     displayBuffer.context.popBuffer();
                     //绘制结果到屏幕
                     if (drawCalls > 0) {
@@ -7701,7 +7690,7 @@ var egret;
                     }
                     // 最后执行绘制，因为有可能displayBuffer中的texture被更改
                     // 未来可以省略此次绘制
-                    buffer.context.$drawWebGL();
+                    // buffer.context.$drawWebGL();
                     renderBufferPool.push(displayBuffer);
                     egret.sys.Region.release(region);
                     egret.Matrix.release(displayMatrix);

@@ -61,7 +61,10 @@ module egret.web {
             // 获取webglRenderContext
             this.context = WebGLRenderContext.getInstance(width, height);
             // buffer 对应的 render target
-            this.rootRenderTarget = new WebGLRenderTarget(this.context.context, width, height);
+            this.rootRenderTarget = new WebGLRenderTarget(this.context.context, 3, 3);
+            if(width && height) {
+                this.resize(width, height);
+            }
 
             // 如果是第一个加入的buffer，说明是舞台buffer
             this.root = this.context.$bufferStack.length == 0;
@@ -88,9 +91,6 @@ module egret.web {
         }
         public popFilters() {
             this.filters.pop();
-        }
-        public clearFilters() {
-            this.filters.length = 0;
         }
         public getFilters() {
             var filters = [];
@@ -183,8 +183,8 @@ module egret.web {
 
             // render target 尺寸重置
             if(width != this.rootRenderTarget.width || height != this.rootRenderTarget.height) {
-                // this.rootRenderTarget.resize(width, height);
                 this.context.drawCmdManager.pushResize(this, width, height);
+                // 同步更改宽高
                 this.rootRenderTarget.width = width;
                 this.rootRenderTarget.height = height;
             }
@@ -194,14 +194,7 @@ module egret.web {
                 this.context.resize(width, height, useMaxSize);
             }
 
-            // this.rootRenderTarget.clear(true);
             this.context.clear();
-
-            // 由于resize与clear造成的frameBuffer绑定，这里重置绑定
-            // var lastBuffer = this.context.currentBuffer;
-            // if(lastBuffer) {
-            //     lastBuffer.rootRenderTarget.activate();
-            // }
 
             this.context.popBuffer();
         }
