@@ -5661,15 +5661,6 @@ var egret;
                             this.drawData.splice(i, 1);
                             continue;
                         }
-                        // 如果与上一次buffer操作重复，本次操作无效
-                        if (data.type == 7 /* ACT_BUFFER */) {
-                            if (data.buffer == buffer) {
-                                return;
-                            }
-                            else {
-                                break;
-                            }
-                        }
                     }
                 }
                 this.drawData.push({ type: 7 /* ACT_BUFFER */, buffer: buffer, width: buffer.$getWidth(), height: buffer.$getHeight() });
