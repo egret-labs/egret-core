@@ -1241,8 +1241,9 @@ var egret;
             /**
              * @inheritDoc
              */
-            function WebVideo(url) {
+            function WebVideo(url, cache) {
                 var _this = this;
+                if (cache === void 0) { cache = true; }
                 _super.call(this);
                 /**
                  * @private
@@ -1300,8 +1301,9 @@ var egret;
             /**
              * @inheritDoc
              */
-            p.load = function (url) {
+            p.load = function (url, cache) {
                 var _this = this;
+                if (cache === void 0) { cache = true; }
                 url = url || this.src;
                 this.src = url;
                 if (DEBUG && !url) {

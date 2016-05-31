@@ -3244,7 +3244,8 @@ var egret;
              * @private
              * @inheritDoc
              */
-            function NativeVideo(url) {
+            function NativeVideo(url, cache) {
+                if (cache === void 0) { cache = true; }
                 _super.call(this);
                 /**
                  * @private
@@ -3289,21 +3290,21 @@ var egret;
                  */
                 this.widthSet = 0;
                 this.$renderNode = new egret.sys.BitmapNode();
+                this.cache = cache;
                 if (!__global.Video) {
                     egret.$error(1044);
                 }
                 this.src = url;
                 if (url) {
-                    this.load();
+                    this.load(url, cache);
                 }
             }
             var d = __define,c=NativeVideo,p=c.prototype;
             /**
              * @inheritDoc
              */
-            p.load = function (url) {
-                url = url || this.src;
-                this.src = url;
+            p.load = function (url, cache) {
+                if (cache === void 0) { cache = true; }
                 if (DEBUG && !url) {
                     egret.$error(3002);
                     return;
@@ -3311,9 +3312,30 @@ var egret;
                 if (this.loading) {
                     return;
                 }
+                url = url || this.src;
+                this.src = url;
                 this.loading = true;
                 this.loaded = false;
-                var video = new __global.Video(url);
+                if (cache && !egret_native.isFileExists(url)) {
+                    var self = this;
+                    var promise = egret.PromiseObject.create();
+                    promise.onSuccessFunc = function () {
+                        self.loadEnd();
+                    };
+                    promise.onErrorFunc = function () {
+                        self.dispatchEventWith(egret.IOErrorEvent.IO_ERROR);
+                    };
+                    egret_native.download(url, url, promise);
+                }
+                else {
+                    this.loadEnd();
+                }
+            };
+            /**
+             * @private
+             * */
+            p.loadEnd = function () {
+                var video = new __global.Video(this.src);
                 video['setVideoRect'](0, 0, 1, 1);
                 video['setKeepRatio'](false);
                 video.addEventListener("canplaythrough", onCanPlay);

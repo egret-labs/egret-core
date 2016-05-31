@@ -47,25 +47,28 @@ module egret.native {
         private loading:boolean = false;
         /**
          * @private
+         */
+        private cache:boolean;
+        /**
+         * @private
          * @inheritDoc
          */
-        constructor(url?:string) {
+        constructor(url?:string,cache:boolean=true) {
             super();
             this.$renderNode = new sys.BitmapNode();
+            this.cache = cache;
             if (!__global.Video) {
                 egret.$error(1044);
             }
             this.src = url;
             if(url){
-                this.load();
+                this.load(url,cache);
             }
         }
         /**
          * @inheritDoc
          */
-        public load(url?:string):void {
-            url = url || this.src;
-            this.src = url;
+        public load(url?:string,cache:boolean=true):void {
             if (DEBUG && !url) {
                 egret.$error(3002);
                 return;
@@ -73,9 +76,30 @@ module egret.native {
             if(this.loading){
                 return;
             }
+            url = url || this.src;
+            this.src = url;
             this.loading = true;
             this.loaded = false;
-            var video = new __global.Video(url);
+
+            if(cache && !egret_native.isFileExists(url)){
+                var self = this;
+                var promise = egret.PromiseObject.create();
+                promise.onSuccessFunc = function () {
+                    self.loadEnd();
+                };
+                promise.onErrorFunc = function () {
+                    self.dispatchEventWith(IOErrorEvent.IO_ERROR);
+                };
+                egret_native.download(url, url, promise);
+            }else{
+                this.loadEnd();
+            }
+        }
+        /**
+         * @private
+         * */
+        private loadEnd(){
+            var video = new __global.Video(this.src);
             video['setVideoRect'](0, 0, 1, 1);
             video['setKeepRatio'](false);
             video.addEventListener("canplaythrough", onCanPlay);
