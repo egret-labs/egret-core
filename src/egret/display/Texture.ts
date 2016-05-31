@@ -324,6 +324,9 @@ module egret {
          */
         public dispose():void {
             if (this._bitmapData) {
+                if(Capabilities.runtimeType == RuntimeType.WEB && Capabilities.renderMode == "webgl") {
+                    egret.WebGLUtils.deleteWebGLTexture(this._bitmapData);
+                }
                 if (this._bitmapData.dispose) {
                     this._bitmapData.dispose();
                 }

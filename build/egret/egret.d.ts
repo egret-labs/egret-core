@@ -14688,3 +14688,17 @@ declare module egret {
      */
     function toColorString(value: number): string;
 }
+declare module egret {
+    /**
+     * @private
+     */
+    class WebGLUtils {
+        static compileProgram(gl: WebGLRenderingContext, vertexSrc: string, fragmentSrc: string): WebGLProgram;
+        static compileFragmentShader(gl: WebGLRenderingContext, shaderSrc: string): WebGLShader;
+        static compileVertexShader(gl: WebGLRenderingContext, shaderSrc: string): WebGLShader;
+        private static _compileShader(gl, shaderSrc, shaderType);
+        private static canUseWebGL;
+        static checkCanUseWebGL(): boolean;
+        static deleteWebGLTexture(bitmapData: any): void;
+    }
+}

@@ -6711,6 +6711,9 @@ var egret;
          */
         p.dispose = function () {
             if (this._bitmapData) {
+                if (egret.Capabilities.runtimeType == egret.RuntimeType.WEB && egret.Capabilities.renderMode == "webgl") {
+                    egret.WebGLUtils.deleteWebGLTexture(this._bitmapData);
+                }
                 if (this._bitmapData.dispose) {
                     this._bitmapData.dispose();
                 }
@@ -23204,4 +23207,100 @@ var egret;
         return "#" + color;
     }
     egret.toColorString = toColorString;
+})(egret || (egret = {}));
+//////////////////////////////////////////////////////////////////////////////////////
+//
+//  Copyright (c) 2014-2015, Egret Technology Inc.
+//  All rights reserved.
+//  Redistribution and use in source and binary forms, with or without
+//  modification, are permitted provided that the following conditions are met:
+//
+//     * Redistributions of source code must retain the above copyright
+//       notice, this list of conditions and the following disclaimer.
+//     * Redistributions in binary form must reproduce the above copyright
+//       notice, this list of conditions and the following disclaimer in the
+//       documentation and/or other materials provided with the distribution.
+//     * Neither the name of the Egret nor the
+//       names of its contributors may be used to endorse or promote products
+//       derived from this software without specific prior written permission.
+//
+//  THIS SOFTWARE IS PROVIDED BY EGRET AND CONTRIBUTORS "AS IS" AND ANY EXPRESS
+//  OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES
+//  OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED.
+//  IN NO EVENT SHALL EGRET AND CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT,
+//  INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT
+//  LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES;LOSS OF USE, DATA,
+//  OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF
+//  LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING
+//  NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE,
+//  EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+//
+//////////////////////////////////////////////////////////////////////////////////////
+var egret;
+(function (egret) {
+    /**
+     * @private
+     */
+    var WebGLUtils = (function () {
+        function WebGLUtils() {
+        }
+        var d = __define,c=WebGLUtils,p=c.prototype;
+        WebGLUtils.compileProgram = function (gl, vertexSrc, fragmentSrc) {
+            var fragmentShader = WebGLUtils.compileFragmentShader(gl, fragmentSrc);
+            var vertexShader = WebGLUtils.compileVertexShader(gl, vertexSrc);
+            var shaderProgram = gl.createProgram();
+            gl.attachShader(shaderProgram, vertexShader);
+            gl.attachShader(shaderProgram, fragmentShader);
+            gl.linkProgram(shaderProgram);
+            if (!gl.getProgramParameter(shaderProgram, gl.LINK_STATUS)) {
+                egret.$warn(1020);
+            }
+            return shaderProgram;
+        };
+        WebGLUtils.compileFragmentShader = function (gl, shaderSrc) {
+            return WebGLUtils._compileShader(gl, shaderSrc, gl.FRAGMENT_SHADER);
+        };
+        WebGLUtils.compileVertexShader = function (gl, shaderSrc) {
+            return WebGLUtils._compileShader(gl, shaderSrc, gl.VERTEX_SHADER);
+        };
+        WebGLUtils._compileShader = function (gl, shaderSrc, shaderType) {
+            var shader = gl.createShader(shaderType);
+            gl.shaderSource(shader, shaderSrc);
+            gl.compileShader(shader);
+            if (!gl.getShaderParameter(shader, gl.COMPILE_STATUS)) {
+                //egret.info(gl.getShaderInfoLog(shader));
+                return null;
+            }
+            return shader;
+        };
+        WebGLUtils.checkCanUseWebGL = function () {
+            if (WebGLUtils.canUseWebGL == undefined) {
+                try {
+                    var canvas = document.createElement("canvas");
+                    WebGLUtils.canUseWebGL = !!window["WebGLRenderingContext"]
+                        && !!(canvas.getContext("webgl") || canvas.getContext("experimental-webgl"));
+                }
+                catch (e) {
+                    WebGLUtils.canUseWebGL = false;
+                }
+            }
+            return WebGLUtils.canUseWebGL;
+        };
+        WebGLUtils.deleteWebGLTexture = function (bitmapData) {
+            if (bitmapData) {
+                var webGLTexture = bitmapData.webGLTexture;
+                if (webGLTexture) {
+                    for (var key in webGLTexture) {
+                        var glTexture = webGLTexture[key];
+                        var gl = glTexture.glContext;
+                        gl.deleteTexture(glTexture);
+                    }
+                }
+                bitmapData.webGLTexture = null;
+            }
+        };
+        return WebGLUtils;
+    }());
+    egret.WebGLUtils = WebGLUtils;
+    egret.registerClass(WebGLUtils,'egret.WebGLUtils');
 })(egret || (egret = {}));
