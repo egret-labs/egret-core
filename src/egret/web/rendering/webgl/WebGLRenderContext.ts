@@ -633,7 +633,7 @@ module egret.web {
          */
         private activatedBuffer:WebGLRenderBuffer;
         public $drawWebGL() {
-            if (this.drawCmdManager.drawData.length == 0 || this.contextLost) {
+            if (this.drawCmdManager.drawDataLen == 0 || this.contextLost) {
                 return;
             }
 
@@ -644,7 +644,7 @@ module egret.web {
                 this.uploadIndicesArray(this.vao.getMeshIndices());
             }
 
-            var length = this.drawCmdManager.drawData.length;
+            var length = this.drawCmdManager.drawDataLen;
             var offset = 0;
             for (var i = 0; i < length; i++) {
                 var data = this.drawCmdManager.drawData[i];

@@ -5444,35 +5444,6 @@ var egret;
     var web;
     (function (web) {
         /**
-         * 绘制指令的对象池
-         */
-        var renderCmdPool = [];
-        /**
-         * 绘制指令
-         */
-        var RenderCMD = (function () {
-            function RenderCMD() {
-            }
-            var d = __define,c=RenderCMD,p=c.prototype;
-            RenderCMD.create = function () {
-                return renderCmdPool.pop() || new RenderCMD();
-            };
-            RenderCMD.release = function (renderCMD) {
-                renderCMD.type = 0;
-                renderCMD.count = 0;
-                renderCMD.texture = null;
-                renderCMD.filter = null;
-                renderCMD.uv = null;
-                renderCMD.value = "";
-                renderCMD.buffer = null;
-                renderCMD.width = 0;
-                renderCMD.height = 0;
-                renderCmdPool.push(renderCMD);
-            };
-            return RenderCMD;
-        }());
-        egret.registerClass(RenderCMD,'RenderCMD');
-        /**
          * @private
          * 绘制指令管理器
          * 用来维护drawData数组
@@ -5483,19 +5454,21 @@ var egret;
                  * 用于缓存绘制命令的数组
                  */
                 this.drawData = [];
+                this.drawDataLen = 0;
             }
             var d = __define,c=WebGLDrawCmdManager,p=c.prototype;
             /**
              * 压入绘制矩形指令
              */
             p.pushDrawRect = function () {
-                if (this.drawData.length == 0 || this.drawData[this.drawData.length - 1].type != 1 /* RECT */) {
-                    var data = RenderCMD.create();
+                if (this.drawDataLen == 0 || this.drawData[this.drawDataLen - 1].type != 1 /* RECT */) {
+                    var data = this.drawData[this.drawDataLen] || {};
                     data.type = 1 /* RECT */;
                     data.count = 0;
-                    this.drawData.push(data);
+                    this.drawData[this.drawDataLen] = data;
+                    this.drawDataLen++;
                 }
-                this.drawData[this.drawData.length - 1].count += 2;
+                this.drawData[this.drawDataLen - 1].count += 2;
             };
             /**
              * 压入绘制texture指令
@@ -5504,23 +5477,25 @@ var egret;
                 if (count === void 0) { count = 2; }
                 if (filter) {
                     // 目前有滤镜的情况下不会合并绘制
-                    var data = RenderCMD.create();
+                    var data = this.drawData[this.drawDataLen] || {};
                     data.type = 0 /* TEXTURE */;
                     data.texture = texture;
                     data.filter = filter;
                     data.count = count;
                     data.uv = uv;
-                    this.drawData.push(data);
+                    this.drawData[this.drawDataLen] = data;
+                    this.drawDataLen++;
                 }
                 else {
-                    if (this.drawData.length == 0 || this.drawData[this.drawData.length - 1].type != 0 /* TEXTURE */ || texture != this.drawData[this.drawData.length - 1].texture || this.drawData[this.drawData.length - 1].filter) {
-                        var data = RenderCMD.create();
+                    if (this.drawDataLen == 0 || this.drawData[this.drawDataLen - 1].type != 0 /* TEXTURE */ || texture != this.drawData[this.drawDataLen - 1].texture || this.drawData[this.drawDataLen - 1].filter) {
+                        var data = this.drawData[this.drawDataLen] || {};
                         data.type = 0 /* TEXTURE */;
                         data.texture = texture;
                         data.count = 0;
-                        this.drawData.push(data);
+                        this.drawData[this.drawDataLen] = data;
+                        this.drawDataLen++;
                     }
-                    this.drawData[this.drawData.length - 1].count += count;
+                    this.drawData[this.drawDataLen - 1].count += count;
                 }
             };
             /**
@@ -5528,26 +5503,28 @@ var egret;
              */
             p.pushPushMask = function (count) {
                 if (count === void 0) { count = 1; }
-                var data = RenderCMD.create();
+                var data = this.drawData[this.drawDataLen] || {};
                 data.type = 2 /* PUSH_MASK */;
                 data.count = count * 2;
-                this.drawData.push(data);
+                this.drawData[this.drawDataLen] = data;
+                this.drawDataLen++;
             };
             /**
              * 压入popMask指令
              */
             p.pushPopMask = function (count) {
                 if (count === void 0) { count = 1; }
-                var data = RenderCMD.create();
+                var data = this.drawData[this.drawDataLen] || {};
                 data.type = 3 /* POP_MASK */;
                 data.count = count * 2;
-                this.drawData.push(data);
+                this.drawData[this.drawDataLen] = data;
+                this.drawDataLen++;
             };
             /**
              * 压入混色指令
              */
             p.pushSetBlend = function (value) {
-                var len = this.drawData.length;
+                var len = this.drawDataLen;
                 // 有无遍历到有效绘图操作
                 var drawState = false;
                 for (var i = len - 1; i >= 0; i--) {
@@ -5559,6 +5536,7 @@ var egret;
                         // 如果与上一次blend操作之间无有效绘图，上一次操作无效
                         if (!drawState && data.type == 4 /* BLEND */) {
                             this.drawData.splice(i, 1);
+                            this.drawDataLen--;
                             continue;
                         }
                         // 如果与上一次blend操作重复，本次操作无效
@@ -5572,35 +5550,38 @@ var egret;
                         }
                     }
                 }
-                var _data = RenderCMD.create();
+                var _data = this.drawData[this.drawDataLen] || {};
                 _data.type = 4 /* BLEND */;
                 _data.value = value;
-                this.drawData.push(_data);
+                this.drawData[this.drawDataLen] = _data;
+                this.drawDataLen++;
             };
             /*
              * 压入resize render target命令
              */
             p.pushResize = function (buffer, width, height) {
-                var data = RenderCMD.create();
+                var data = this.drawData[this.drawDataLen] || {};
                 data.type = 5 /* RESIZE_TARGET */;
                 data.buffer = buffer;
                 data.width = width;
                 data.height = height;
-                this.drawData.push(data);
+                this.drawData[this.drawDataLen] = data;
+                this.drawDataLen++;
             };
             /*
              * 压入clear color命令
              */
             p.pushClearColor = function () {
-                var data = RenderCMD.create();
+                var data = this.drawData[this.drawDataLen] || {};
                 data.type = 6 /* CLEAR_COLOR */;
-                this.drawData.push(data);
+                this.drawData[this.drawDataLen] = data;
+                this.drawDataLen++;
             };
             /**
              * 压入激活buffer命令
              */
             p.pushActivateBuffer = function (buffer) {
-                var len = this.drawData.length;
+                var len = this.drawDataLen;
                 // 有无遍历到有效绘图操作
                 var drawState = false;
                 for (var i = len - 1; i >= 0; i--) {
@@ -5612,26 +5593,36 @@ var egret;
                         // 如果与上一次buffer操作之间无有效绘图，上一次操作无效
                         if (!drawState && data.type == 7 /* ACT_BUFFER */) {
                             this.drawData.splice(i, 1);
+                            this.drawDataLen--;
                             continue;
                         }
                     }
                 }
-                var _data = RenderCMD.create();
+                var _data = this.drawData[this.drawDataLen] || {};
                 _data.type = 7 /* ACT_BUFFER */;
                 _data.buffer = buffer;
                 _data.width = buffer.$getWidth();
                 _data.height = buffer.$getHeight();
-                this.drawData.push(_data);
+                this.drawData[this.drawDataLen] = _data;
+                this.drawDataLen++;
             };
             /**
              * 清空命令数组
              */
             p.clear = function () {
-                for (var i = 0; i < this.drawData.length; i++) {
+                for (var i = 0; i < this.drawDataLen; i++) {
                     var data = this.drawData[i];
-                    RenderCMD.release(data);
+                    data.type = 0;
+                    data.count = 0;
+                    data.texture = null;
+                    data.filter = null;
+                    data.uv = null;
+                    data.value = "";
+                    data.buffer = null;
+                    data.width = 0;
+                    data.height = 0;
                 }
-                this.drawData.length = 0;
+                this.drawDataLen = 0;
             };
             return WebGLDrawCmdManager;
         }());
@@ -6436,7 +6427,7 @@ var egret;
                 this.drawCmdManager.pushClearColor();
             };
             p.$drawWebGL = function () {
-                if (this.drawCmdManager.drawData.length == 0 || this.contextLost) {
+                if (this.drawCmdManager.drawDataLen == 0 || this.contextLost) {
                     return;
                 }
                 this.uploadVerticesArray(this.vao.getVertices());
@@ -6444,7 +6435,7 @@ var egret;
                 if (this.vao.isMesh()) {
                     this.uploadIndicesArray(this.vao.getMeshIndices());
                 }
-                var length = this.drawCmdManager.drawData.length;
+                var length = this.drawCmdManager.drawDataLen;
                 var offset = 0;
                 for (var i = 0; i < length; i++) {
                     var data = this.drawCmdManager.drawData[i];
