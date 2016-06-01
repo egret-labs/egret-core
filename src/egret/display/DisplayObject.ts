@@ -1685,6 +1685,8 @@ module egret {
 
         public set filters(value:Array<Filter>) {
             this.$invalidateContentBounds();
+            //需要通知子项
+            this.$invalidate(true);
             var filters:Array<Filter> = this.$DisplayObject[Keys.filters];
             if(filters && filters.length) {
                 var length:number = filters.length;

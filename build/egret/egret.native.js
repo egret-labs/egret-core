@@ -4150,7 +4150,12 @@ var egret;
                     self.urlData.type = self._method;
                     //写入POST数据
                     if (self._method == egret.HttpMethod.POST && data) {
-                        self.urlData.data = data.toString();
+                        if (data instanceof ArrayBuffer) {
+                            self.urlData.data = data;
+                        }
+                        else {
+                            self.urlData.data = data.toString();
+                        }
                     }
                     else {
                         delete self.urlData["data"];
