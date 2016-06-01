@@ -30,7 +30,6 @@ module egret.web {
     /**
      * draw类型，所有的绘图操作都会缓存在drawData中，每个drawData都是一个drawable对象
      * $renderWebGL方法依据drawable对象的类型，调用不同的绘制方法
-     * TODO 提供drawable类型接口并且创建对象池？
      */
     export const enum DRAWABLE_TYPE {
         TEXTURE,
@@ -41,6 +40,43 @@ module egret.web {
         RESIZE_TARGET,
         CLEAR_COLOR,
         ACT_BUFFER
+    }
+
+    /**
+     * 绘制指令的对象池
+     */
+    var renderCmdPool = [];
+
+    /**
+     * 绘制指令
+     */
+    class RenderCMD {
+        public type;
+        public count;
+        public texture;
+        public filter;
+        public uv;
+        public value;
+        public buffer;
+        public width;
+        public height;
+
+        public static create():RenderCMD {
+            return renderCmdPool.pop() || new RenderCMD();
+        }
+
+        public static release(renderCMD:RenderCMD) {
+            renderCMD.type = 0;
+            renderCMD.count = 0;
+            renderCMD.texture = null;
+            renderCMD.filter = null;
+            renderCMD.uv = null;
+            renderCMD.value = "";
+            renderCMD.buffer = null;
+            renderCMD.width = 0;
+            renderCMD.height = 0;
+            renderCmdPool.push(renderCMD);
+        }
     }
 
     /**
@@ -64,7 +100,10 @@ module egret.web {
          */
         public pushDrawRect():void {
             if(this.drawData.length == 0 || this.drawData[this.drawData.length - 1].type != DRAWABLE_TYPE.RECT) {
-                this.drawData.push({type: DRAWABLE_TYPE.RECT, count: 0});
+                var data = RenderCMD.create();
+                data.type = DRAWABLE_TYPE.RECT;
+                data.count = 0;
+                this.drawData.push(data);
             }
             this.drawData[this.drawData.length - 1].count += 2;
         }
@@ -74,14 +113,22 @@ module egret.web {
          */
         public pushDrawTexture(texture:any, count:number = 2, filter?:any, uv?:any):void {
             if(filter) {
-
                 // 目前有滤镜的情况下不会合并绘制
-                this.drawData.push({type: DRAWABLE_TYPE.TEXTURE, texture: texture, filter: filter, count: count, uv: uv});
-
+                var data = RenderCMD.create();
+                data.type = DRAWABLE_TYPE.TEXTURE;
+                data.texture = texture;
+                data.filter = filter;
+                data.count = count;
+                data.uv = uv;
+                this.drawData.push(data);
             } else {
 
                 if (this.drawData.length == 0 || this.drawData[this.drawData.length - 1].type != DRAWABLE_TYPE.TEXTURE || texture != this.drawData[this.drawData.length - 1].texture || this.drawData[this.drawData.length - 1].filter) {
-                    this.drawData.push({type: DRAWABLE_TYPE.TEXTURE, texture: texture, count: 0});
+                    var data = RenderCMD.create();
+                    data.type = DRAWABLE_TYPE.TEXTURE;
+                    data.texture = texture;
+                    data.count = 0;
+                    this.drawData.push(data);
                 }
                 this.drawData[this.drawData.length - 1].count += count;
 
@@ -93,20 +140,20 @@ module egret.web {
          * 压入pushMask指令
          */
         public pushPushMask(count:number = 1):void {
-            // if(this.drawData.length == 0 || this.drawData[this.drawData.length - 1].type != DRAWABLE_TYPE.PUSH_MASK) {
-            this.drawData.push({type: DRAWABLE_TYPE.PUSH_MASK, count: 0});
-            // }
-            this.drawData[this.drawData.length - 1].count += count * 2;
+            var data = RenderCMD.create();
+            data.type = DRAWABLE_TYPE.PUSH_MASK;
+            data.count = count * 2;
+            this.drawData.push(data);
         }
 
         /**
          * 压入popMask指令
          */
         public pushPopMask(count:number = 1):void {
-            // if(this.drawData.length == 0 || this.drawData[this.drawData.length - 1].type != DRAWABLE_TYPE.POP_MASK) {
-            this.drawData.push({type: DRAWABLE_TYPE.POP_MASK, count: 0});
-            // }
-            this.drawData[this.drawData.length - 1].count += count * 2;
+            var data = RenderCMD.create();
+            data.type = DRAWABLE_TYPE.POP_MASK;
+            data.count = count * 2;
+            this.drawData.push(data);
         }
 
         /**
@@ -120,7 +167,7 @@ module egret.web {
                 var data = this.drawData[i];
 
                 if(data){
-                    if(data.type != DRAWABLE_TYPE.BLEND && data.type != DRAWABLE_TYPE.PUSH_MASK && data.type != DRAWABLE_TYPE.POP_MASK) {
+                    if(data.type == DRAWABLE_TYPE.TEXTURE || data.type == DRAWABLE_TYPE.RECT) {
                         drawState = true;
                     }
 
@@ -141,21 +188,31 @@ module egret.web {
                 }
             }
 
-            this.drawData.push({type:DRAWABLE_TYPE.BLEND, value: value});
+            var _data = RenderCMD.create();
+            _data.type = DRAWABLE_TYPE.BLEND;
+            _data.value = value;
+            this.drawData.push(_data);
         }
 
         /*
          * 压入resize render target命令
          */
         public pushResize(buffer:WebGLRenderBuffer, width:number, height:number) {
-            this.drawData.push({type:DRAWABLE_TYPE.RESIZE_TARGET, buffer: buffer, width: width, height: height});
+            var data = RenderCMD.create();
+            data.type = DRAWABLE_TYPE.RESIZE_TARGET;
+            data.buffer = buffer;
+            data.width = width;
+            data.height = height;
+            this.drawData.push(data);
         }
 
         /*
          * 压入clear color命令
          */
         public pushClearColor() {
-            this.drawData.push({type:DRAWABLE_TYPE.CLEAR_COLOR});
+            var data = RenderCMD.create();
+            data.type = DRAWABLE_TYPE.CLEAR_COLOR;
+            this.drawData.push(data);
         }
 
         /**
@@ -190,13 +247,24 @@ module egret.web {
                 }
             }
 
-            this.drawData.push({type:DRAWABLE_TYPE.ACT_BUFFER, buffer:buffer, width: buffer.$getWidth(), height: buffer.$getHeight()});
+            var _data = RenderCMD.create();
+            _data.type = DRAWABLE_TYPE.ACT_BUFFER;
+            _data.buffer = buffer;
+            _data.width = buffer.$getWidth();
+            _data.height = buffer.$getHeight();
+            this.drawData.push(_data);
         }
 
         /**
          * 清空命令数组
          */
         public clear():void {
+            for(var i = 0; i < this.drawData.length; i++) {
+                var data = this.drawData[i];
+
+                RenderCMD.release(data);
+            }
+
             this.drawData.length = 0;
         }
 

@@ -5542,6 +5542,32 @@ var egret;
 (function (egret) {
     var web;
     (function (web) {
+        var renderCmdPool = [];
+        var RenderCMD = (function () {
+            function RenderCMD() {
+            }
+            var d = __define,c=RenderCMD,p=c.prototype;
+            p.clear = function () {
+                this.type = 0;
+                this.count = 0;
+                this.texture = null;
+                this.filter = null;
+                this.uv = null;
+                this.value = "";
+                this.buffer = null;
+                this.width = 0;
+                this.height = 0;
+            };
+            RenderCMD.create = function () {
+                return renderCmdPool.pop() || new RenderCMD();
+            };
+            RenderCMD.release = function (renderCMD) {
+                renderCMD.clear();
+                renderCmdPool.push(renderCMD);
+            };
+            return RenderCMD;
+        }());
+        egret.registerClass(RenderCMD,'RenderCMD');
         /**
          * @private
          * 绘制指令管理器
@@ -5560,7 +5586,10 @@ var egret;
              */
             p.pushDrawRect = function () {
                 if (this.drawData.length == 0 || this.drawData[this.drawData.length - 1].type != 1 /* RECT */) {
-                    this.drawData.push({ type: 1 /* RECT */, count: 0 });
+                    var data = RenderCMD.create();
+                    data.type = 1 /* RECT */;
+                    data.count = 0;
+                    this.drawData.push(data);
                 }
                 this.drawData[this.drawData.length - 1].count += 2;
             };
@@ -5571,11 +5600,21 @@ var egret;
                 if (count === void 0) { count = 2; }
                 if (filter) {
                     // 目前有滤镜的情况下不会合并绘制
-                    this.drawData.push({ type: 0 /* TEXTURE */, texture: texture, filter: filter, count: count, uv: uv });
+                    var data = RenderCMD.create();
+                    data.type = 0 /* TEXTURE */;
+                    data.texture = texture;
+                    data.filter = filter;
+                    data.count = count;
+                    data.uv = uv;
+                    this.drawData.push(data);
                 }
                 else {
                     if (this.drawData.length == 0 || this.drawData[this.drawData.length - 1].type != 0 /* TEXTURE */ || texture != this.drawData[this.drawData.length - 1].texture || this.drawData[this.drawData.length - 1].filter) {
-                        this.drawData.push({ type: 0 /* TEXTURE */, texture: texture, count: 0 });
+                        var data = RenderCMD.create();
+                        data.type = 0 /* TEXTURE */;
+                        data.texture = texture;
+                        data.count = 0;
+                        this.drawData.push(data);
                     }
                     this.drawData[this.drawData.length - 1].count += count;
                 }
@@ -5585,20 +5624,20 @@ var egret;
              */
             p.pushPushMask = function (count) {
                 if (count === void 0) { count = 1; }
-                // if(this.drawData.length == 0 || this.drawData[this.drawData.length - 1].type != DRAWABLE_TYPE.PUSH_MASK) {
-                this.drawData.push({ type: 2 /* PUSH_MASK */, count: 0 });
-                // }
-                this.drawData[this.drawData.length - 1].count += count * 2;
+                var data = RenderCMD.create();
+                data.type = 2 /* PUSH_MASK */;
+                data.count = count * 2;
+                this.drawData.push(data);
             };
             /**
              * 压入popMask指令
              */
             p.pushPopMask = function (count) {
                 if (count === void 0) { count = 1; }
-                // if(this.drawData.length == 0 || this.drawData[this.drawData.length - 1].type != DRAWABLE_TYPE.POP_MASK) {
-                this.drawData.push({ type: 3 /* POP_MASK */, count: 0 });
-                // }
-                this.drawData[this.drawData.length - 1].count += count * 2;
+                var data = RenderCMD.create();
+                data.type = 3 /* POP_MASK */;
+                data.count = count * 2;
+                this.drawData.push(data);
             };
             /**
              * 压入混色指令
@@ -5610,7 +5649,7 @@ var egret;
                 for (var i = len - 1; i >= 0; i--) {
                     var data = this.drawData[i];
                     if (data) {
-                        if (data.type != 4 /* BLEND */ && data.type != 2 /* PUSH_MASK */ && data.type != 3 /* POP_MASK */) {
+                        if (data.type == 0 /* TEXTURE */ || data.type == 1 /* RECT */) {
                             drawState = true;
                         }
                         // 如果与上一次blend操作之间无有效绘图，上一次操作无效
@@ -5629,19 +5668,29 @@ var egret;
                         }
                     }
                 }
-                this.drawData.push({ type: 4 /* BLEND */, value: value });
+                var _data = RenderCMD.create();
+                _data.type = 4 /* BLEND */;
+                _data.value = value;
+                this.drawData.push(_data);
             };
             /*
              * 压入resize render target命令
              */
             p.pushResize = function (buffer, width, height) {
-                this.drawData.push({ type: 5 /* RESIZE_TARGET */, buffer: buffer, width: width, height: height });
+                var data = RenderCMD.create();
+                data.type = 5 /* RESIZE_TARGET */;
+                data.buffer = buffer;
+                data.width = width;
+                data.height = height;
+                this.drawData.push(data);
             };
             /*
              * 压入clear color命令
              */
             p.pushClearColor = function () {
-                this.drawData.push({ type: 6 /* CLEAR_COLOR */ });
+                var data = RenderCMD.create();
+                data.type = 6 /* CLEAR_COLOR */;
+                this.drawData.push(data);
             };
             /**
              * 压入激活buffer命令
@@ -5663,12 +5712,21 @@ var egret;
                         }
                     }
                 }
-                this.drawData.push({ type: 7 /* ACT_BUFFER */, buffer: buffer, width: buffer.$getWidth(), height: buffer.$getHeight() });
+                var _data = RenderCMD.create();
+                _data.type = 7 /* ACT_BUFFER */;
+                _data.buffer = buffer;
+                _data.width = buffer.$getWidth();
+                _data.height = buffer.$getHeight();
+                this.drawData.push(_data);
             };
             /**
              * 清空命令数组
              */
             p.clear = function () {
+                for (var i = 0; i < this.drawData.length; i++) {
+                    var data = this.drawData[i];
+                    RenderCMD.release(data);
+                }
                 this.drawData.length = 0;
             };
             return WebGLDrawCmdManager;
