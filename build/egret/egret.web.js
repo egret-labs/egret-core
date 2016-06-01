@@ -5443,27 +5443,30 @@ var egret;
 (function (egret) {
     var web;
     (function (web) {
+        /**
+         * 绘制指令的对象池
+         */
         var renderCmdPool = [];
+        /**
+         * 绘制指令
+         */
         var RenderCMD = (function () {
             function RenderCMD() {
             }
             var d = __define,c=RenderCMD,p=c.prototype;
-            p.clear = function () {
-                this.type = 0;
-                this.count = 0;
-                this.texture = null;
-                this.filter = null;
-                this.uv = null;
-                this.value = "";
-                this.buffer = null;
-                this.width = 0;
-                this.height = 0;
-            };
             RenderCMD.create = function () {
                 return renderCmdPool.pop() || new RenderCMD();
             };
             RenderCMD.release = function (renderCMD) {
-                renderCMD.clear();
+                renderCMD.type = 0;
+                renderCMD.count = 0;
+                renderCMD.texture = null;
+                renderCMD.filter = null;
+                renderCMD.uv = null;
+                renderCMD.value = "";
+                renderCMD.buffer = null;
+                renderCMD.width = 0;
+                renderCMD.height = 0;
                 renderCmdPool.push(renderCMD);
             };
             return RenderCMD;
@@ -6520,8 +6523,8 @@ var egret;
                         data.buffer.rootRenderTarget.resize(data.width, data.height);
                         break;
                     case 6 /* CLEAR_COLOR */:
-                        if (this.currentBuffer) {
-                            var target = this.currentBuffer.rootRenderTarget;
+                        if (this.activatedBuffer) {
+                            var target = this.activatedBuffer.rootRenderTarget;
                             if (target.width != 0 || target.height != 0) {
                                 target.clear();
                             }
@@ -6562,7 +6565,7 @@ var egret;
             p.drawPushMaskElements = function (data, offset) {
                 var gl = this.context;
                 var size = data.count * 3;
-                var buffer = this.currentBuffer;
+                var buffer = this.activatedBuffer;
                 if (buffer) {
                     if (buffer.stencilHandleCount == 0) {
                         buffer.enableStencil();
@@ -6587,7 +6590,7 @@ var egret;
             p.drawPopMaskElements = function (data, offset) {
                 var gl = this.context;
                 var size = data.count * 3;
-                var buffer = this.currentBuffer;
+                var buffer = this.activatedBuffer;
                 if (buffer) {
                     buffer.stencilHandleCount--;
                     if (buffer.stencilHandleCount == 0) {

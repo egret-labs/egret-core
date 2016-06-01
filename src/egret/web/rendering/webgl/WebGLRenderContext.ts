@@ -734,8 +734,8 @@ module egret.web {
                     data.buffer.rootRenderTarget.resize(data.width, data.height);
                     break;
                 case DRAWABLE_TYPE.CLEAR_COLOR:
-                    if(this.currentBuffer) {
-                        var target = this.currentBuffer.rootRenderTarget;
+                    if(this.activatedBuffer) {
+                        var target = this.activatedBuffer.rootRenderTarget;
                         if(target.width != 0 || target.height != 0) {
                             target.clear();
                         }
@@ -782,7 +782,7 @@ module egret.web {
 
             var size = data.count * 3;
 
-            var buffer = this.currentBuffer;
+            var buffer = this.activatedBuffer;
             if(buffer) {
                 if(buffer.stencilHandleCount == 0) {
                     buffer.enableStencil();
@@ -815,7 +815,7 @@ module egret.web {
 
             var size = data.count * 3;
 
-            var buffer = this.currentBuffer;
+            var buffer = this.activatedBuffer;
             if(buffer) {
                 buffer.stencilHandleCount--;
 
