@@ -2729,6 +2729,8 @@ var egret;
             }
             ,function (value) {
                 this.$invalidateContentBounds();
+                //需要通知子项
+                this.$invalidate(true);
                 var filters = this.$DisplayObject[20 /* filters */];
                 if (filters && filters.length) {
                     var length = filters.length;
