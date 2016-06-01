@@ -348,8 +348,8 @@ module egret.web {
                     var calls = this.drawDisplayObject(mask, maskBuffer, dirtyList, offsetM,
                         mask.$displayList, region, root);
 
-                    maskBuffer.context.$drawWebGL();
-                    maskBuffer.onRenderFinish();
+                    // maskBuffer.context.$drawWebGL();
+                    // maskBuffer.onRenderFinish();
                     maskBuffer.context.popBuffer();
 
                     if (calls > 0) {
@@ -369,8 +369,8 @@ module egret.web {
                 Matrix.release(offsetM);
 
                 displayBuffer.context.setGlobalCompositeOperation(defaultCompositeOp);
-                displayBuffer.context.$drawWebGL();
-                displayBuffer.onRenderFinish();
+                // displayBuffer.context.$drawWebGL();
+                // displayBuffer.onRenderFinish();
                 displayBuffer.context.popBuffer();
 
                 //绘制结果到屏幕
@@ -400,7 +400,7 @@ module egret.web {
 
                 // 最后执行绘制，因为有可能displayBuffer中的texture被更改
                 // 未来可以省略此次绘制
-                buffer.context.$drawWebGL();
+                // buffer.context.$drawWebGL();
 
                 renderBufferPool.push(displayBuffer);
                 sys.Region.release(region);
