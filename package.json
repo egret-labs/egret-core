@@ -1,6 +1,6 @@
 {
   "name": "egret",
-  "version": "3.1.0",
+  "version": "3.1.1",
   "private": true,
   "author": "egret-labs",
   "scripts": {
@@ -88,6 +88,10 @@
           },
           {
             "path": "media/native/NaSoundChannel.ts",
+            "platform": "native"
+          },          
+          {
+            "path": "media/native/NativeVideo.ts",
             "platform": "native"
           },
           {
@@ -244,10 +248,6 @@
           },
           {
             "path": "utils/web/WebLogger.ts",
-            "platform": "web"
-          },
-          {
-            "path": "web/rendering/webgl/WebGLUtils.ts",
             "platform": "web"
           },
           {

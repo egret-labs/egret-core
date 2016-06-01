@@ -8366,10 +8366,7 @@ var dragonBones;
             var i = this.slotList.length;
             while (i--) {
                 var slot = this.slotList[i];
-                if ((slot._frameCache && (slot._frameCache).displayIndex >= 0)
-                    || (!slot._frameCache && slot.displayIndex >= 0)) {
-                    slot._addDisplayToContainer(this._display);
-                }
+                slot._addDisplayToContainer(this._display);
             }
             this._slotsZOrderChanged = false;
         };
@@ -15896,6 +15893,9 @@ var dragonBones;
         p._addDisplayToContainer = function (container, index) {
             if (index === void 0) { index = -1; }
             var egretContainer = container;
+            if (!this._egretDisplay) {
+                this._egretDisplay = this._rawDisplay;
+            }
             if (this._egretDisplay && egretContainer) {
                 if (index < 0) {
                     egretContainer.addChild(this._egretDisplay);
