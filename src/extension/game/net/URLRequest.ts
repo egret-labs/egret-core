@@ -33,7 +33,7 @@ module egret {
     /**
      * @language en_US
      * The URLRequest class captures all of the information in a single HTTP request.
-     * @see http://docs.egret-labs.org/post/manual/net/createconnect.html Build communication request
+     * @see http://edn.egret.com/cn/index.php/article/index/id/601 Build communication request
      * @version Egret 2.4
      * @platform Web,Native
      * @includeExample extension/game/net/URLRequest.ts
@@ -41,7 +41,7 @@ module egret {
     /**
      * @language zh_CN
      * URLRequest 类可捕获单个 HTTP 请求中的所有信息。
-     * @see http://docs.egret-labs.org/post/manual/net/createconnect.html 构建通信请求
+     * @see http://edn.egret.com/cn/index.php/article/index/id/601 构建通信请求
      * @version Egret 2.4
      * @platform Web,Native
      * @includeExample extension/game/net/URLRequest.ts

@@ -92,23 +92,7 @@ module egret {
         public static quartOut = ScrollEase.getPowOut(4);
 
     }
-
 	/**
-     * @language en_US
-     * ScrollTween is the animation easing class of Egret
-     * @see http://docs.egret-labs.org/post/manual/anim/tween.html Tween缓动动画
-     * @version Egret 2.4
-     * @platform Web,Native
-     * @includeExample egret/tween/ScrollTween.ts
-     * @private
-	 */
-	/**
-     * @language zh_CN
-     * Tween是Egret的动画缓动类
-     * @see http://docs.egret-labs.org/post/manual/anim/tween.html ScrollTween ease animation
-     * @version Egret 2.4
-     * @platform Web,Native
-     * @includeExample egret/tween/ScrollTween.ts
      * @private
 	 */
     export class ScrollTween extends EventDispatcher {

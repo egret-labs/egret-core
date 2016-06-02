@@ -47,7 +47,7 @@ module egret {
      * @language en_US
      * The Graphics class contains a set of methods for creating vector shape. Display objects that support drawing include Sprite and Shape objects. Each class in these classes includes the graphics attribute that is a Graphics object.
      * The following auxiliary functions are provided for ease of use: drawRect(), drawRoundRect(), drawCircle(), and drawEllipse().
-     * @see http://docs.egret-labs.org/post/manual/graphics/drawrect.html  Draw Rectangle
+     * @see http://edn.egret.com/cn/docs/page/136 Draw Rectangle
      * @version Egret 2.4
      * @platform Web,Native
      * @includeExample egret/display/Graphics.ts
@@ -56,7 +56,7 @@ module egret {
      * @language zh_CN
      * Graphics 类包含一组可用来创建矢量形状的方法。支持绘制的显示对象包括 Sprite 和 Shape 对象。这些类中的每一个类都包括 graphics 属性，该属性是一个 Graphics 对象。
      * 以下是为便于使用而提供的一些辅助函数：drawRect()、drawRoundRect()、drawCircle() 和 drawEllipse()。
-     * @see http://docs.egret-labs.org/post/manual/graphics/drawrect.html  绘制矩形
+     * @see http://edn.egret.com/cn/docs/page/136 绘制矩形
      * @version Egret 2.4
      * @platform Web,Native
      * @includeExample egret/display/Graphics.ts

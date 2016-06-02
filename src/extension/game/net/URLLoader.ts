@@ -35,7 +35,7 @@ module egret {
      * UThe URLLoader class downloads data from a URL as text, binary data, or URL-encoded variables.  It is useful for downloading text files, XML, or other information to be used in a dynamic, data-driven application.
      * A URLLoader object downloads all of the data from a URL before making it available to code in the applications. It sends out notifications about the progress of the download,
      * which you can monitor through bytesLoaded and bytesTotal properties, as well as through dispatched events.
-     * @see http://docs.egret-labs.org/post/manual/net/createconnect.html Build communication request
+     * @see http://edn.egret.com/cn/index.php/article/index/id/601 Build communication request
      * @event egret.Event.COMPLETE Dispatched when the net request is complete.
      * @event egret.IOErrorEvent.IO_ERROR io error. 
      * @version Egret 2.4
@@ -47,7 +47,7 @@ module egret {
      * URLLoader 类以文本、二进制数据或 URL 编码变量的形式从 URL 下载数据。在下载文本文件、XML 或其他用于动态数据驱动应用程序的信息时，它很有用。
      * URLLoader 对象会先从 URL 中下载所有数据，然后才将数据用于应用程序中的代码。它会发出有关下载进度的通知，
      * 通过 bytesLoaded 和 bytesTotal 属性以及已调度的事件，可以监视下载进度。
-     * @see http://docs.egret-labs.org/post/manual/net/createconnect.html 构建通信请求
+     * @see http://edn.egret.com/cn/index.php/article/index/id/601 构建通信请求
      * @event egret.Event.COMPLETE 加载完成后调度。 
      * @event egret.IOErrorEvent.IO_ERROR 加载错误后调度。 
      * @version Egret 2.4
