@@ -67,6 +67,10 @@
             "platform": "native"
           },
           {
+            "path": "native/NativeFps.ts",
+            "platform": "native"
+          },
+          {
             "path": "native/NativeGetOption.ts",
             "platform": "native"
           },
@@ -212,6 +216,10 @@
           },
           {
             "path": "web/WebCapability.ts",
+            "platform": "web"
+          },
+          {
+            "path": "web/WebFps.ts",
             "platform": "web"
           },
           {

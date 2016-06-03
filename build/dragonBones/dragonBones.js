@@ -29,60 +29,6 @@
 var dragonBones;
 (function (dragonBones) {
     /**
-     * @class dragonBones.DragonBones
-     * @classdesc
-     * DragonBones
-     */
-    var DragonBones = (function () {
-        function DragonBones() {
-        }
-        var d = __define,c=DragonBones,p=c.prototype;
-        /**
-         * DragonBones当前数据格式版本
-         */
-        DragonBones.DATA_VERSION = "4.0";
-        DragonBones.DATA_VERSION_4_5 = "4.5";
-        /**
-         *
-         */
-        DragonBones.PARENT_COORDINATE_DATA_VERSION = "3.0";
-        DragonBones.VERSION = "4.5.10";
-        return DragonBones;
-    }());
-    dragonBones.DragonBones = DragonBones;
-    egret.registerClass(DragonBones,'dragonBones.DragonBones');
-})(dragonBones || (dragonBones = {}));
-//////////////////////////////////////////////////////////////////////////////////////
-//
-//  Copyright (c) 2014-2015, Egret Technology Inc.
-//  All rights reserved.
-//  Redistribution and use in source and binary forms, with or without
-//  modification, are permitted provided that the following conditions are met:
-//
-//     * Redistributions of source code must retain the above copyright
-//       notice, this list of conditions and the following disclaimer.
-//     * Redistributions in binary form must reproduce the above copyright
-//       notice, this list of conditions and the following disclaimer in the
-//       documentation and/or other materials provided with the distribution.
-//     * Neither the name of the Egret nor the
-//       names of its contributors may be used to endorse or promote products
-//       derived from this software without specific prior written permission.
-//
-//  THIS SOFTWARE IS PROVIDED BY EGRET AND CONTRIBUTORS "AS IS" AND ANY EXPRESS
-//  OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES
-//  OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED.
-//  IN NO EVENT SHALL EGRET AND CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT,
-//  INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT
-//  LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES;LOSS OF USE, DATA,
-//  OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF
-//  LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING
-//  NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE,
-//  EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
-//
-//////////////////////////////////////////////////////////////////////////////////////
-var dragonBones;
-(function (dragonBones) {
-    /**
      * @class dragonBones.Animation
      * @classdesc
      * Animation实例隶属于Armature,用于控制Armature的动画播放。
@@ -6678,6 +6624,60 @@ var dragonBones;
 var dragonBones;
 (function (dragonBones) {
     /**
+     * @class dragonBones.DragonBones
+     * @classdesc
+     * DragonBones
+     */
+    var DragonBones = (function () {
+        function DragonBones() {
+        }
+        var d = __define,c=DragonBones,p=c.prototype;
+        /**
+         * DragonBones当前数据格式版本
+         */
+        DragonBones.DATA_VERSION = "4.0";
+        DragonBones.DATA_VERSION_4_5 = "4.5";
+        /**
+         *
+         */
+        DragonBones.PARENT_COORDINATE_DATA_VERSION = "3.0";
+        DragonBones.VERSION = "4.5.10";
+        return DragonBones;
+    }());
+    dragonBones.DragonBones = DragonBones;
+    egret.registerClass(DragonBones,'dragonBones.DragonBones');
+})(dragonBones || (dragonBones = {}));
+//////////////////////////////////////////////////////////////////////////////////////
+//
+//  Copyright (c) 2014-2015, Egret Technology Inc.
+//  All rights reserved.
+//  Redistribution and use in source and binary forms, with or without
+//  modification, are permitted provided that the following conditions are met:
+//
+//     * Redistributions of source code must retain the above copyright
+//       notice, this list of conditions and the following disclaimer.
+//     * Redistributions in binary form must reproduce the above copyright
+//       notice, this list of conditions and the following disclaimer in the
+//       documentation and/or other materials provided with the distribution.
+//     * Neither the name of the Egret nor the
+//       names of its contributors may be used to endorse or promote products
+//       derived from this software without specific prior written permission.
+//
+//  THIS SOFTWARE IS PROVIDED BY EGRET AND CONTRIBUTORS "AS IS" AND ANY EXPRESS
+//  OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES
+//  OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED.
+//  IN NO EVENT SHALL EGRET AND CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT,
+//  INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT
+//  LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES;LOSS OF USE, DATA,
+//  OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF
+//  LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING
+//  NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE,
+//  EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+//
+//////////////////////////////////////////////////////////////////////////////////////
+var dragonBones;
+(function (dragonBones) {
+    /**
      * @class dragonBones.Event
      * @classdesc
      * 事件
@@ -7998,6 +7998,1527 @@ var dragonBones;
     }());
     dragonBones.BuildArmatureDataPackage = BuildArmatureDataPackage;
     egret.registerClass(BuildArmatureDataPackage,'dragonBones.BuildArmatureDataPackage');
+})(dragonBones || (dragonBones = {}));
+//////////////////////////////////////////////////////////////////////////////////////
+//
+//  Copyright (c) 2014-2015, Egret Technology Inc.
+//  All rights reserved.
+//  Redistribution and use in source and binary forms, with or without
+//  modification, are permitted provided that the following conditions are met:
+//
+//     * Redistributions of source code must retain the above copyright
+//       notice, this list of conditions and the following disclaimer.
+//     * Redistributions in binary form must reproduce the above copyright
+//       notice, this list of conditions and the following disclaimer in the
+//       documentation and/or other materials provided with the distribution.
+//     * Neither the name of the Egret nor the
+//       names of its contributors may be used to endorse or promote products
+//       derived from this software without specific prior written permission.
+//
+//  THIS SOFTWARE IS PROVIDED BY EGRET AND CONTRIBUTORS "AS IS" AND ANY EXPRESS
+//  OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES
+//  OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED.
+//  IN NO EVENT SHALL EGRET AND CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT,
+//  INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT
+//  LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES;LOSS OF USE, DATA,
+//  OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF
+//  LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING
+//  NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE,
+//  EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+//
+//////////////////////////////////////////////////////////////////////////////////////
+var dragonBones;
+(function (dragonBones) {
+    /**
+     * @class dragonBones.FastAnimation
+     * @classdesc
+     * FastAnimation实例隶属于FastArmature,用于控制FastArmature的动画播放。
+     * 和Animation相比，FastAnimation为了优化性能，不支持动画融合，在开启缓存的情况下，不支持无极的平滑补间
+     * @see dragonBones.FastBone
+     * @see dragonBones.FastArmature
+     * @see dragonBones.FastAnimationState
+     * @see dragonBones.AnimationData.
+     *
+     * @example
+       <pre>
+        //获取动画数据
+        var skeletonData = RES.getRes("skeleton");
+        //获取纹理集数据
+        var textureData = RES.getRes("textureConfig");
+        //获取纹理集图片
+        var texture = RES.getRes("texture");
+      
+        //创建一个工厂，用来创建Armature
+        var factory:dragonBones.EgretFactory = new dragonBones.EgretFactory();
+        //把动画数据添加到工厂里
+        factory.addSkeletonData(dragonBones.DataParser.parseDragonBonesData(skeletonData));
+        //把纹理集数据和图片添加到工厂里
+        factory.addTextureAtlas(new dragonBones.EgretTextureAtlas(texture, textureData));
+      
+        //获取Armature的名字，dragonBones4.0的数据可以包含多个骨架，这里取第一个Armature
+        var armatureName:string = skeletonData.armature[0].name;
+        //从工厂里创建出Armature
+        var armature:dragonBones.FastArmature = factory.buildFastArmature(armatureName);
+        //获取装载Armature的容器
+        var armatureDisplay = armature.display;
+        //把它添加到舞台上
+        this.addChild(armatureDisplay);
+        
+        //以60fps的帧率开启动画缓存，缓存所有的动画数据
+        var animationCachManager:dragonBones.AnimationCacheManager = armature.enableAnimationCache(60);
+      
+       //取得这个Armature动画列表中的第一个动画的名字
+        var curAnimationName = armature.animation.animationList[0];
+        //播放这个动画，gotoAndPlay各个参数说明
+        //第一个参数 animationName {string} 指定播放动画的名称.
+        //第二个参数 fadeInTime {number} 动画淡入时间 (>= 0), 默认值：-1 意味着使用动画数据中的淡入时间.
+        //第三个参数 duration {number} 动画播放时间。默认值：-1 意味着使用动画数据中的播放时间.
+        //第四个参数 layTimes {number} 动画播放次数(0:循环播放, >=1:播放次数, NaN:使用动画数据中的播放时间), 默认值：NaN
+        armature.animation.gotoAndPlay(curAnimationName,0.3,-1,0);
+      
+        //把Armature添加到心跳时钟里
+        dragonBones.WorldClock.clock.add(armature);
+        //心跳时钟开启
+        egret.Ticker.getInstance().register(function (advancedTime) {
+            dragonBones.WorldClock.clock.advanceTime(advancedTime / 1000);
+        }, this);
+       </pre>
+     */
+    var FastAnimation = (function () {
+        /**
+         * 创建一个新的FastAnimation实例并赋给传入的FastArmature实例
+         * @param armature {FastArmature} 骨架实例
+         */
+        function FastAnimation(armature) {
+            /**
+             * 当前正在运行的动画实例.
+             * @member {FastAnimationState} dragonBones.FastAnimation#animationState
+             */
+            this.animationState = new dragonBones.FastAnimationState();
+            this._armature = armature;
+            this.animationState._armature = armature;
+            this.animationList = [];
+            this._animationDataObj = {};
+            this._isPlaying = false;
+            this._timeScale = 1;
+        }
+        var d = __define,c=FastAnimation,p=c.prototype;
+        /**
+         * Qualifies all resources used by this Animation instance for garbage collection.
+         */
+        p.dispose = function () {
+            if (!this._armature) {
+                return;
+            }
+            this._armature = null;
+            this._animationDataList = null;
+            this.animationList = null;
+            this.animationState = null;
+        };
+        /**
+         * 开始播放指定名称的动画。
+         * 要播放的动画将经过指定时间的淡入过程，然后开始播放，同时之前播放的动画会经过相同时间的淡出过程。
+         * @param animationName {string} 指定播放动画的名称.
+         * @param fadeInTime {number} 动画淡入时间 (>= 0), 默认值：-1 意味着使用动画数据中的淡入时间.
+         * @param duration {number} 动画播放时间。默认值：-1 意味着使用动画数据中的播放时间.
+         * @param playTimes {number} 动画播放次数(0:循环播放, >=1:播放次数, NaN:使用动画数据中的播放时间), 默认值：NaN
+         * @see dragonBones.FastAnimationState.
+         */
+        p.gotoAndPlay = function (animationName, fadeInTime, duration, playTimes) {
+            if (fadeInTime === void 0) { fadeInTime = -1; }
+            if (duration === void 0) { duration = -1; }
+            if (playTimes === void 0) { playTimes = NaN; }
+            if (!this._animationDataList) {
+                return null;
+            }
+            var animationData = this._animationDataObj[animationName];
+            if (!animationData) {
+                return null;
+            }
+            // Modify Fast mode by duanchunlei
+            if (this._armature.enableCache) {
+                this.animationCacheManager = this._armature._armatureData._cacheManager;
+                var animationCache = this.animationCacheManager.getAnimationCache(animationName);
+                animationCache.frameNum = Math.ceil(animationData.duration * 0.001 * this.animationCacheManager.frameRate / animationData.scale);
+                this.animationState.animationCache = animationCache;
+                i = this._armature.slotList.length;
+                while (i--) {
+                    var slot = this._armature.slotList[i];
+                    slot._cacheTimeline = animationCache.slotTimelineCacheDic[slot.name];
+                }
+            }
+            this._isPlaying = true;
+            //fadeInTime = fadeInTime < 0 ? (animationData.fadeTime < 0 ? 0.3 : animationData.fadeTime) : fadeInTime;
+            fadeInTime = 0;
+            var durationScale;
+            if (duration < 0) {
+                durationScale = animationData.scale < 0 ? 1 : animationData.scale;
+            }
+            else {
+                durationScale = duration * 1000 / animationData.duration;
+            }
+            playTimes = isNaN(playTimes) ? animationData.playTimes : playTimes;
+            //播放新动画
+            this.animationState._fadeIn(animationData, playTimes, 1 / durationScale, fadeInTime);
+            var i = this._armature.slotHasChildArmatureList.length;
+            while (i--) {
+                var slot = this._armature.slotHasChildArmatureList[i];
+                var childArmature = slot.childArmature;
+                if (childArmature) {
+                    childArmature.getAnimation().gotoAndPlay(animationName);
+                }
+            }
+            return this.animationState;
+        };
+        /**
+         * 播放指定名称的动画并停止于某个时间点
+         * @param animationName {string} 指定播放的动画名称.
+         * @param time {number} 动画停止的绝对时间
+         * @param normalizedTime {number} 动画停止的相对动画总时间的系数，这个参数和time参数是互斥的（例如 0.2：动画停止总时间的20%位置） 默认值：-1 意味着使用绝对时间。
+         * @param fadeInTime {number} 动画淡入时间 (>= 0), 默认值：0
+         * @param duration {number} 动画播放时间。默认值：-1 意味着使用动画数据中的播放时间.
+         * @see dragonBones.FastAnimationState.
+         */
+        p.gotoAndStop = function (animationName, time, normalizedTime, fadeInTime, duration) {
+            if (normalizedTime === void 0) { normalizedTime = -1; }
+            if (fadeInTime === void 0) { fadeInTime = 0; }
+            if (duration === void 0) { duration = -1; }
+            if (this.animationState.name != animationName) {
+                this.gotoAndPlay(animationName, fadeInTime, duration);
+            }
+            if (normalizedTime >= 0) {
+                this.animationState.setCurrentTime(this.animationState.totalTime * normalizedTime);
+            }
+            else {
+                this.animationState.setCurrentTime(time);
+            }
+            this.animationState.stop();
+            return this.animationState;
+        };
+        /**
+         * 从当前位置继续播放动画
+         */
+        p.play = function () {
+            if (!this._animationDataList) {
+                return;
+            }
+            if (!this.animationState.name) {
+                this.gotoAndPlay(this._animationDataList[0].name);
+            }
+            else if (!this._isPlaying) {
+                this._isPlaying = true;
+            }
+            else {
+                this.gotoAndPlay(this.animationState.name);
+            }
+        };
+        /**
+         * 暂停动画播放
+         */
+        p.stop = function () {
+            this._isPlaying = false;
+        };
+        /** @private */
+        p.advanceTime = function (passedTime) {
+            if (!this._isPlaying) {
+                return;
+            }
+            this.animationState._advanceTime(passedTime * this._timeScale);
+        };
+        /**
+         * check if contains a AnimationData by name.
+         * @return Boolean.
+         * @see dragonBones.AnimationData.
+         */
+        p.hasAnimation = function (animationName) {
+            return this._animationDataObj[animationName] != null;
+        };
+        d(p, "timeScale"
+            /**
+             * 时间缩放倍数
+             * @member {number} dragonBones.FastAnimation#timeScale
+             */
+            ,function () {
+                return this._timeScale;
+            }
+            ,function (value) {
+                if (isNaN(value) || value < 0) {
+                    value = 1;
+                }
+                this._timeScale = value;
+            }
+        );
+        d(p, "animationDataList"
+            /**
+             * 包含的所有动画数据列表
+             * @member {AnimationData[]} dragonBones.FastAnimation#animationDataList
+             * @see dragonBones.AnimationData.
+             */
+            ,function () {
+                return this._animationDataList;
+            }
+            ,function (value) {
+                this._animationDataList = value;
+                this.animationList.length = 0;
+                var length = this._animationDataList.length;
+                for (var i = 0; i < length; i++) {
+                    var animationData = this._animationDataList[i];
+                    this.animationList.push(animationData.name);
+                    this._animationDataObj[animationData.name] = animationData;
+                }
+            }
+        );
+        d(p, "movementList"
+            /**
+             * Unrecommended API. Recommend use animationList.
+             */
+            ,function () {
+                return this.animationList;
+            }
+        );
+        d(p, "movementID"
+            /**
+             * Unrecommended API. Recommend use lastAnimationName.
+             */
+            ,function () {
+                return this.lastAnimationName;
+            }
+        );
+        /**
+         * 是否正在播放
+         * @member {boolean} dragonBones.FastAnimation#isPlaying
+         */
+        p.isPlaying = function () {
+            return this._isPlaying && !this.isComplete;
+        };
+        d(p, "isComplete"
+            /**
+             * 是否播放完成.
+             * @member {boolean} dragonBones.FastAnimation#isComplete
+             */
+            ,function () {
+                return this.animationState.isComplete;
+            }
+        );
+        d(p, "lastAnimationState"
+            /**
+             * 当前播放动画的实例.
+             * @member {FastAnimationState} dragonBones.FastAnimation#lastAnimationState
+             */
+            ,function () {
+                return this.animationState;
+            }
+        );
+        d(p, "lastAnimationName"
+            /**
+             * 当前播放动画的名字.
+             * @member {string} dragonBones.FastAnimation#lastAnimationName
+             */
+            ,function () {
+                return this.animationState ? this.animationState.name : null;
+            }
+        );
+        return FastAnimation;
+    }());
+    dragonBones.FastAnimation = FastAnimation;
+    egret.registerClass(FastAnimation,'dragonBones.FastAnimation');
+})(dragonBones || (dragonBones = {}));
+//////////////////////////////////////////////////////////////////////////////////////
+//
+//  Copyright (c) 2014-2015, Egret Technology Inc.
+//  All rights reserved.
+//  Redistribution and use in source and binary forms, with or without
+//  modification, are permitted provided that the following conditions are met:
+//
+//     * Redistributions of source code must retain the above copyright
+//       notice, this list of conditions and the following disclaimer.
+//     * Redistributions in binary form must reproduce the above copyright
+//       notice, this list of conditions and the following disclaimer in the
+//       documentation and/or other materials provided with the distribution.
+//     * Neither the name of the Egret nor the
+//       names of its contributors may be used to endorse or promote products
+//       derived from this software without specific prior written permission.
+//
+//  THIS SOFTWARE IS PROVIDED BY EGRET AND CONTRIBUTORS "AS IS" AND ANY EXPRESS
+//  OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES
+//  OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED.
+//  IN NO EVENT SHALL EGRET AND CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT,
+//  INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT
+//  LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES;LOSS OF USE, DATA,
+//  OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF
+//  LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING
+//  NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE,
+//  EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+//
+//////////////////////////////////////////////////////////////////////////////////////
+var dragonBones;
+(function (dragonBones) {
+    /**
+     * @class dragonBones.FastAnimationState
+     * @classdesc
+     * FastAnimationState 实例代表播放的动画， 可以对单个动画的播放进行最细致的调节。
+     * @see dragonBones.Animation
+     * @see dragonBones.AnimationData
+     * @example
+       <pre>
+        //获取动画数据
+        var skeletonData = RES.getRes("skeleton");
+        //获取纹理集数据
+        var textureData = RES.getRes("textureConfig");
+        //获取纹理集图片
+        var texture = RES.getRes("texture");
+      
+        //创建一个工厂，用来创建Armature
+        var factory:dragonBones.EgretFactory = new dragonBones.EgretFactory();
+        //把动画数据添加到工厂里
+        factory.addSkeletonData(dragonBones.DataParser.parseDragonBonesData(skeletonData));
+        //把纹理集数据和图片添加到工厂里
+        factory.addTextureAtlas(new dragonBones.EgretTextureAtlas(texture, textureData));
+      
+        //获取Armature的名字，dragonBones4.0的数据可以包含多个骨架，这里取第一个Armature
+        var armatureName:string = skeletonData.armature[0].name;
+        //从工厂里创建出Armature
+        var armature:dragonBones.FastArmature = factory.buildFastArmature(armatureName);
+        //获取装载Armature的容器
+        var armatureDisplay = armature.display;
+        //把它添加到舞台上
+        this.addChild(armatureDisplay);
+        
+        //以60fps的帧率开启动画缓存，缓存所有的动画数据
+        var animationCachManager:dragonBones.AnimationCacheManager = armature.enableAnimationCache(60);
+      
+       //取得这个Armature动画列表中的第一个动画的名字
+        var curAnimationName = armature.animation.animationList[0];
+        //播放这个动画，gotoAndPlay各个参数说明
+        //第一个参数 animationName {string} 指定播放动画的名称.
+        //第二个参数 fadeInTime {number} 动画淡入时间 (>= 0), 默认值：-1 意味着使用动画数据中的淡入时间.
+        //第三个参数 duration {number} 动画播放时间。默认值：-1 意味着使用动画数据中的播放时间.
+        //第四个参数 layTimes {number} 动画播放次数(0:循环播放, >=1:播放次数, NaN:使用动画数据中的播放时间), 默认值：NaN
+        armature.animation.gotoAndPlay(curAnimationName,0.3,-1,0);
+      
+        //把Armature添加到心跳时钟里
+        dragonBones.WorldClock.clock.add(armature);
+        //心跳时钟开启
+        egret.Ticker.getInstance().register(function (advancedTime) {
+            dragonBones.WorldClock.clock.advanceTime(advancedTime / 1000);
+        }, this);
+       </pre>
+     */
+    var FastAnimationState = (function () {
+        function FastAnimationState() {
+            this._boneTimelineStateList = [];
+            this._slotTimelineStateList = [];
+            this._currentFrameIndex = 0;
+            this._currentFramePosition = 0;
+            this._currentFrameDuration = 0;
+            this._currentPlayTimes = 0;
+            this._totalTime = 0; //毫秒
+            this._currentTime = 0;
+            this._lastTime = 0;
+            this._playTimes = 0;
+            this._fading = false;
+        }
+        var d = __define,c=FastAnimationState,p=c.prototype;
+        p.dispose = function () {
+            this._resetTimelineStateList();
+            this._armature = null;
+        };
+        /**
+         * 播放当前动画。如果动画已经播放完毕, 将不会继续播放.
+         * @returns {FastAnimationState} 动画播放状态实例
+         */
+        p.play = function () {
+            this._isPlaying = true;
+            return this;
+        };
+        /**
+         * 暂停当前动画的播放。
+         * @returns {AnimationState} 动画播放状态实例
+         */
+        p.stop = function () {
+            this._isPlaying = false;
+            return this;
+        };
+        p.setCurrentTime = function (value) {
+            if (value < 0 || isNaN(value)) {
+                value = 0;
+            }
+            this._time = value;
+            this._currentTime = this._time * 1000;
+            return this;
+        };
+        p._resetTimelineStateList = function () {
+            var i = this._boneTimelineStateList.length;
+            while (i--) {
+                dragonBones.FastBoneTimelineState.returnObject(this._boneTimelineStateList[i]);
+            }
+            this._boneTimelineStateList.length = 0;
+            i = this._slotTimelineStateList.length;
+            while (i--) {
+                dragonBones.FastSlotTimelineState.returnObject(this._slotTimelineStateList[i]);
+            }
+            this._slotTimelineStateList.length = 0;
+            this.name = null;
+        };
+        /** @private */
+        p._fadeIn = function (aniData, playTimes, timeScale, fadeTotalTime) {
+            this.animationData = aniData;
+            this.name = this.animationData.name;
+            this._totalTime = this.animationData.duration;
+            this.autoTween = aniData.autoTween;
+            this.setTimeScale(timeScale);
+            this.setPlayTimes(playTimes);
+            //reset
+            this._isComplete = false;
+            this._currentFrameIndex = -1;
+            this._currentPlayTimes = -1;
+            if (Math.round(this._totalTime * this.animationData.frameRate * 0.001) < 2) {
+                this._currentTime = this._totalTime;
+            }
+            else {
+                this._currentTime = -1;
+            }
+            this._fadeTotalTime = fadeTotalTime * this._timeScale;
+            this._fading = this._fadeTotalTime > 0;
+            //default
+            this._isPlaying = true;
+            if (this._armature.enableCache && this.animationCache && this._fading && this._boneTimelineStateList) {
+                this.updateTransformTimeline(this._progress);
+            }
+            this._time = 0;
+            this._progress = 0;
+            this._updateTimelineStateList();
+            this.hideBones();
+            return;
+        };
+        /**
+         * @private
+         * Update timeline state based on mixing transforms and clip.
+         */
+        p._updateTimelineStateList = function () {
+            this._resetTimelineStateList();
+            var timelineName;
+            var length = this.animationData.timelineList.length;
+            for (var i = 0; i < length; i++) {
+                var boneTimeline = this.animationData.timelineList[i];
+                timelineName = boneTimeline.name;
+                var bone = this._armature.getBone(timelineName);
+                if (bone) {
+                    var boneTimelineState = dragonBones.FastBoneTimelineState.borrowObject();
+                    boneTimelineState.fadeIn(bone, this, boneTimeline);
+                    this._boneTimelineStateList.push(boneTimelineState);
+                }
+            }
+            var length1 = this.animationData.slotTimelineList.length;
+            for (var i1 = 0; i1 < length1; i1++) {
+                var slotTimeline = this.animationData.slotTimelineList[i1];
+                timelineName = slotTimeline.name;
+                var slot = this._armature.getSlot(timelineName);
+                if (slot && slot.displayList.length > 0) {
+                    var slotTimelineState = dragonBones.FastSlotTimelineState.borrowObject();
+                    slotTimelineState.fadeIn(slot, this, slotTimeline);
+                    this._slotTimelineStateList.push(slotTimelineState);
+                }
+            }
+        };
+        /** @private */
+        p._advanceTime = function (passedTime) {
+            passedTime *= this._timeScale;
+            if (this._fading) {
+                //计算progress
+                this._time += passedTime;
+                this._progress = this._time / this._fadeTotalTime;
+                if (this._progress >= 1) {
+                    this._progress = 0;
+                    this._time = 0;
+                    this._fading = false;
+                }
+            }
+            if (this._fading) {
+                //update boneTimelie
+                var length = this._boneTimelineStateList.length;
+                for (var i = 0; i < length; i++) {
+                    var timeline = this._boneTimelineStateList[i];
+                    timeline.updateFade(this._progress);
+                }
+                //update slotTimelie
+                var length1 = this._slotTimelineStateList.length;
+                for (var i1 = 0; i1 < length1; i1++) {
+                    var slotTimeline = this._slotTimelineStateList[i1];
+                    slotTimeline.updateFade(this._progress);
+                }
+            }
+            else {
+                this.advanceTimelinesTime(passedTime);
+            }
+        };
+        p.advanceTimelinesTime = function (passedTime) {
+            if (this._isPlaying) {
+                this._time += passedTime;
+            }
+            //计算是否已经播放完成isThisComplete
+            var startFlg = false;
+            var loopCompleteFlg = false;
+            var completeFlg = false;
+            var isThisComplete = false;
+            var currentPlayTimes = 0;
+            var currentTime = this._time * 1000;
+            if (this._playTimes == 0 ||
+                currentTime < this._playTimes * this._totalTime) {
+                isThisComplete = false;
+                this._progress = currentTime / this._totalTime;
+                currentPlayTimes = Math.ceil(this._progress) || 1;
+                this._progress -= Math.floor(this._progress);
+                currentTime %= this._totalTime;
+            }
+            else {
+                currentPlayTimes = this._playTimes;
+                currentTime = this._totalTime;
+                isThisComplete = true;
+                this._progress = 1;
+            }
+            this._isComplete = isThisComplete;
+            //if (this.isUseCache()) {
+            if (this.animationCache) {
+                var frameIndex = Math.floor(this._progress * (this.animationCache.frameNum - 1));
+                this._armature._cacheFrameIndex = frameIndex;
+                this._armature._isFrameCached = this.animationCache._cahceList[frameIndex];
+                if (this._armature._isFrameCached) {
+                }
+                else {
+                    this.updateTransformTimeline(this._progress);
+                }
+            }
+            else {
+                this.updateTransformTimeline(this._progress);
+            }
+            //update main timeline
+            if (this._currentTime != currentTime) {
+                if (this._currentPlayTimes != currentPlayTimes) {
+                    if (this._currentPlayTimes > 0 && currentPlayTimes > 1) {
+                        loopCompleteFlg = true;
+                    }
+                    this._currentPlayTimes = currentPlayTimes;
+                }
+                if (this._currentTime < 0) {
+                    startFlg = true;
+                }
+                if (this._isComplete) {
+                    completeFlg = true;
+                }
+                this._lastTime = this._currentTime;
+                this._currentTime = currentTime;
+                this.updateMainTimeline(isThisComplete);
+            }
+            //抛事件
+            var event;
+            if (startFlg) {
+                if (this._armature.hasEventListener(dragonBones.AnimationEvent.START)) {
+                    event = new dragonBones.AnimationEvent(dragonBones.AnimationEvent.START);
+                    event.animationState = this;
+                    this._armature._addEvent(event);
+                }
+            }
+            if (completeFlg) {
+                if (this._armature.hasEventListener(dragonBones.AnimationEvent.COMPLETE)) {
+                    event = new dragonBones.AnimationEvent(dragonBones.AnimationEvent.COMPLETE);
+                    event.animationState = this;
+                    this._armature._addEvent(event);
+                }
+            }
+            else if (loopCompleteFlg) {
+                if (this._armature.hasEventListener(dragonBones.AnimationEvent.LOOP_COMPLETE)) {
+                    event = new dragonBones.AnimationEvent(dragonBones.AnimationEvent.LOOP_COMPLETE);
+                    event.animationState = this;
+                    this._armature._addEvent(event);
+                }
+            }
+        };
+        p.updateTransformTimeline = function (progress) {
+            var i = this._boneTimelineStateList.length;
+            var boneTimeline;
+            var slotTimeline;
+            if (this._isComplete) {
+                //update boneTimelie
+                while (i--) {
+                    boneTimeline = this._boneTimelineStateList[i];
+                    boneTimeline.update(progress);
+                    this._isComplete = boneTimeline._isComplete && this._isComplete;
+                }
+                i = this._slotTimelineStateList.length;
+                //update slotTimelie
+                while (i--) {
+                    slotTimeline = this._slotTimelineStateList[i];
+                    slotTimeline.update(progress);
+                    this._isComplete = slotTimeline._isComplete && this._isComplete;
+                }
+            }
+            else {
+                //update boneTimelie
+                while (i--) {
+                    boneTimeline = this._boneTimelineStateList[i];
+                    boneTimeline.update(progress);
+                }
+                i = this._slotTimelineStateList.length;
+                //update slotTimelie
+                while (i--) {
+                    slotTimeline = this._slotTimelineStateList[i];
+                    slotTimeline.update(progress);
+                }
+            }
+        };
+        p.updateMainTimeline = function (isThisComplete) {
+            var frameList = this.animationData._frameList;
+            if (frameList.length > 0) {
+                var prevFrame;
+                var currentFrame;
+                for (var i = 0, l = frameList.length; i < l; ++i) {
+                    if (this._currentFrameIndex < 0) {
+                        this._currentFrameIndex = 0;
+                    }
+                    else if (this._currentTime < this._currentFramePosition || this._currentTime >= this._currentFramePosition + this._currentFrameDuration || this._currentTime < this._lastTime) {
+                        this._lastTime = this._currentTime;
+                        this._currentFrameIndex++;
+                        if (this._currentFrameIndex >= frameList.length) {
+                            if (isThisComplete) {
+                                this._currentFrameIndex--;
+                                break;
+                            }
+                            else {
+                                this._currentFrameIndex = 0;
+                            }
+                        }
+                    }
+                    else {
+                        break;
+                    }
+                    currentFrame = frameList[this._currentFrameIndex];
+                    if (prevFrame) {
+                        this._armature.arriveAtFrame(prevFrame, this);
+                    }
+                    this._currentFrameDuration = currentFrame.duration;
+                    this._currentFramePosition = currentFrame.position;
+                    prevFrame = currentFrame;
+                }
+                if (currentFrame) {
+                    this._armature.arriveAtFrame(currentFrame, this);
+                }
+            }
+        };
+        p.setTimeScale = function (value) {
+            if (isNaN(value) || value == Infinity) {
+                value = 1;
+            }
+            this._timeScale = value;
+            return this;
+        };
+        p.setPlayTimes = function (value) {
+            if (value === void 0) { value = 0; }
+            //如果动画只有一帧  播放一次就可以
+            if (Math.round(this._totalTime * 0.001 * this.animationData.frameRate) < 2) {
+                this._playTimes = 1;
+            }
+            else {
+                this._playTimes = value;
+            }
+            return this;
+        };
+        d(p, "playTimes"
+            /**
+             * 播放次数 (0:循环播放， >0:播放次数)
+             * @member {number} dragonBones.FastAnimationState#playTimes
+             */
+            ,function () {
+                return this._playTimes;
+            }
+        );
+        d(p, "currentPlayTimes"
+            /**
+             * 当前播放次数
+             * @member {number} dragonBones.FastAnimationState#currentPlayTimes
+             */
+            ,function () {
+                return this._currentPlayTimes < 0 ? 0 : this._currentPlayTimes;
+            }
+        );
+        d(p, "isComplete"
+            /**
+             * 是否播放完成
+             * @member {boolean} dragonBones.FastAnimationState#isComplete
+             */
+            ,function () {
+                return this._isComplete;
+            }
+        );
+        d(p, "isPlaying"
+            /**
+             * 是否正在播放
+             * @member {boolean} dragonBones.FastAnimationState#isPlaying
+             */
+            ,function () {
+                return (this._isPlaying && !this._isComplete);
+            }
+        );
+        d(p, "totalTime"
+            /**
+             * 动画总时长（单位：秒）
+             * @member {number} dragonBones.FastAnimationState#totalTime
+             */
+            ,function () {
+                return this._totalTime * 0.001;
+            }
+        );
+        d(p, "currentTime"
+            /**
+             * 动画当前播放时间（单位：秒）
+             * @member {number} dragonBones.FastAnimationState#currentTime
+             */
+            ,function () {
+                return this._currentTime < 0 ? 0 : this._currentTime * 0.001;
+            }
+        );
+        /**
+         * 是否使用缓存
+         * @member {boolean} dragonBones.FastAnimationState#isUseCache
+         */
+        p.isUseCache = function () {
+            return this._armature.enableCache && this.animationCache && !this._fading;
+        };
+        p.hideBones = function () {
+            var length = this.animationData.hideTimelineNameMap.length;
+            for (var i = 0; i < length; i++) {
+                var timelineName = this.animationData.hideTimelineNameMap[i];
+                var bone = this._armature.getBone(timelineName);
+                if (bone) {
+                    bone._hideSlots();
+                }
+            }
+            var slotTimelineName;
+            for (i = 0, length = this.animationData.hideSlotTimelineNameMap.length; i < length; i++) {
+                slotTimelineName = this.animationData.hideSlotTimelineNameMap[i];
+                var slot = this._armature.getSlot(slotTimelineName);
+                if (slot) {
+                    slot._resetToOrigin();
+                }
+            }
+        };
+        d(p, "progress"
+            /**
+             * 动画播放进度
+             * @member {number} dragonBones.FastAnimationState#progress
+             */
+            ,function () {
+                return this._progress;
+            }
+        );
+        return FastAnimationState;
+    }());
+    dragonBones.FastAnimationState = FastAnimationState;
+    egret.registerClass(FastAnimationState,'dragonBones.FastAnimationState',["dragonBones.IAnimationState"]);
+})(dragonBones || (dragonBones = {}));
+//////////////////////////////////////////////////////////////////////////////////////
+//
+//  Copyright (c) 2014-2015, Egret Technology Inc.
+//  All rights reserved.
+//  Redistribution and use in source and binary forms, with or without
+//  modification, are permitted provided that the following conditions are met:
+//
+//     * Redistributions of source code must retain the above copyright
+//       notice, this list of conditions and the following disclaimer.
+//     * Redistributions in binary form must reproduce the above copyright
+//       notice, this list of conditions and the following disclaimer in the
+//       documentation and/or other materials provided with the distribution.
+//     * Neither the name of the Egret nor the
+//       names of its contributors may be used to endorse or promote products
+//       derived from this software without specific prior written permission.
+//
+//  THIS SOFTWARE IS PROVIDED BY EGRET AND CONTRIBUTORS "AS IS" AND ANY EXPRESS
+//  OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES
+//  OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED.
+//  IN NO EVENT SHALL EGRET AND CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT,
+//  INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT
+//  LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES;LOSS OF USE, DATA,
+//  OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF
+//  LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING
+//  NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE,
+//  EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+//
+//////////////////////////////////////////////////////////////////////////////////////
+var dragonBones;
+(function (dragonBones) {
+    /**
+     * @class dragonBones.FastBoneTimelineState
+     * @classdesc
+     * FastBoneTimelineState 负责计算 Bone 的时间轴动画。
+     * FastBoneTimelineState 实例隶属于 FastAnimationState. FastAnimationState在创建时会为每个包含动作的 FastBone生成一个 FastBoneTimelineState 实例.
+     * @see dragonBones.FastAnimation
+     * @see dragonBones.FastAnimationState
+     * @see dragonBones.FastBone
+     */
+    var FastBoneTimelineState = (function () {
+        function FastBoneTimelineState() {
+            this._totalTime = 0; //duration
+            this._currentTime = 0;
+            this._lastTime = 0;
+            this._currentFrameIndex = 0;
+            this._currentFramePosition = 0;
+            this._currentFrameDuration = 0;
+            this._updateMode = 0;
+            this._transform = new dragonBones.DBTransform();
+            this._durationTransform = new dragonBones.DBTransform();
+            this._transformToFadein = new dragonBones.DBTransform();
+            this._pivot = new dragonBones.Point();
+            this._durationPivot = new dragonBones.Point();
+        }
+        var d = __define,c=FastBoneTimelineState,p=c.prototype;
+        /** @private */
+        FastBoneTimelineState.borrowObject = function () {
+            if (FastBoneTimelineState._pool.length == 0) {
+                return new FastBoneTimelineState();
+            }
+            return FastBoneTimelineState._pool.pop();
+        };
+        /** @private */
+        FastBoneTimelineState.returnObject = function (timeline) {
+            if (FastBoneTimelineState._pool.indexOf(timeline) < 0) {
+                FastBoneTimelineState._pool[FastBoneTimelineState._pool.length] = timeline;
+            }
+            timeline.clear();
+        };
+        /** @private */
+        FastBoneTimelineState.clear = function () {
+            var i = FastBoneTimelineState._pool.length;
+            while (i--) {
+                FastBoneTimelineState._pool[i].clear();
+            }
+            FastBoneTimelineState._pool.length = 0;
+        };
+        p.clear = function () {
+            if (this._bone) {
+                this._bone._timelineState = null;
+                this._bone = null;
+            }
+            this._animationState = null;
+            this._timelineData = null;
+            this._originPivot = null;
+        };
+        /** @private */
+        p.fadeIn = function (bone, animationState, timelineData) {
+            this._bone = bone;
+            this._animationState = animationState;
+            this._timelineData = timelineData;
+            this.name = timelineData.name;
+            this._totalTime = this._timelineData.duration;
+            this._isComplete = false;
+            this._tweenTransform = false;
+            this._currentFrameIndex = -1;
+            this._currentTime = -1;
+            this._tweenEasing = NaN;
+            this._durationPivot.x = 0;
+            this._durationPivot.y = 0;
+            this._pivot.x = 0;
+            this._pivot.y = 0;
+            this._originPivot = this._timelineData.originPivot;
+            switch (this._timelineData.frameList.length) {
+                case 0:
+                    this._updateMode = 0;
+                    break;
+                case 1:
+                    this._updateMode = 1;
+                    break;
+                default:
+                    this._updateMode = -1;
+                    break;
+            }
+            if (animationState._fadeTotalTime > 0) {
+                var pivotToFadein;
+                if (this._bone._timelineState) {
+                    this._transformToFadein.copy(this._bone._timelineState._transform);
+                }
+                else {
+                    this._transformToFadein = new dragonBones.DBTransform();
+                }
+                var firstFrame = (this._timelineData.frameList[0]);
+                this._durationTransform.copy(firstFrame.transform);
+                this._durationTransform.minus(this._transformToFadein);
+            }
+            this._bone._timelineState = this;
+        };
+        /** @private */
+        p.updateFade = function (progress) {
+            this._transform.x = this._transformToFadein.x + this._durationTransform.x * progress;
+            this._transform.y = this._transformToFadein.y + this._durationTransform.y * progress;
+            this._transform.scaleX = this._transformToFadein.scaleX * (1 + (this._durationTransform.scaleX - 1) * progress);
+            this._transform.scaleY = this._transformToFadein.scaleX * (1 + (this._durationTransform.scaleY - 1) * progress);
+            this._transform.rotation = this._transformToFadein.rotation + this._durationTransform.rotation * progress;
+            this._bone.invalidUpdate();
+        };
+        /** @private */
+        p.update = function (progress) {
+            if (this._updateMode == 1) {
+                this._updateMode = 0;
+                this.updateSingleFrame();
+            }
+            else if (this._updateMode == -1) {
+                this.updateMultipleFrame(progress);
+            }
+        };
+        p.updateSingleFrame = function () {
+            var currentFrame = (this._timelineData.frameList[0]);
+            this._bone.arriveAtFrame(currentFrame, this._animationState);
+            this._isComplete = true;
+            this._tweenEasing = NaN;
+            this._tweenTransform = false;
+            this._pivot.x = this._originPivot.x + currentFrame.pivot.x;
+            this._pivot.y = this._originPivot.y + currentFrame.pivot.y;
+            this._transform.copy(currentFrame.transform);
+            this._bone.invalidUpdate();
+        };
+        p.updateMultipleFrame = function (progress) {
+            var currentPlayTimes = 0;
+            progress /= this._timelineData.scale;
+            progress += this._timelineData.offset;
+            var currentTime = this._totalTime * progress;
+            var playTimes = this._animationState.playTimes;
+            if (playTimes == 0) {
+                this._isComplete = false;
+                currentPlayTimes = Math.ceil(Math.abs(currentTime) / this._totalTime) || 1;
+                currentTime -= Math.floor(currentTime / this._totalTime) * this._totalTime;
+                if (currentTime < 0) {
+                    currentTime += this._totalTime;
+                }
+            }
+            else {
+                var totalTimes = playTimes * this._totalTime;
+                if (currentTime >= totalTimes) {
+                    currentTime = totalTimes;
+                    this._isComplete = true;
+                }
+                else if (currentTime <= -totalTimes) {
+                    currentTime = -totalTimes;
+                    this._isComplete = true;
+                }
+                else {
+                    this._isComplete = false;
+                }
+                if (currentTime < 0) {
+                    currentTime += totalTimes;
+                }
+                currentPlayTimes = Math.ceil(currentTime / this._totalTime) || 1;
+                if (this._isComplete) {
+                    currentTime = this._totalTime;
+                }
+                else {
+                    currentTime -= Math.floor(currentTime / this._totalTime) * this._totalTime;
+                }
+            }
+            if (this._currentTime != currentTime) {
+                this._lastTime = this._currentTime;
+                this._currentTime = currentTime;
+                var frameList = this._timelineData.frameList;
+                var prevFrame;
+                var currentFrame;
+                for (var i = 0, l = this._timelineData.frameList.length; i < l; ++i) {
+                    if (this._currentFrameIndex < 0) {
+                        this._currentFrameIndex = 0;
+                    }
+                    else if (this._currentTime < this._currentFramePosition || this._currentTime >= this._currentFramePosition + this._currentFrameDuration || this._currentTime < this._lastTime) {
+                        this._currentFrameIndex++;
+                        this._lastTime = this._currentTime;
+                        if (this._currentFrameIndex >= frameList.length) {
+                            if (this._isComplete) {
+                                this._currentFrameIndex--;
+                                break;
+                            }
+                            else {
+                                this._currentFrameIndex = 0;
+                            }
+                        }
+                    }
+                    else {
+                        break;
+                    }
+                    currentFrame = (frameList[this._currentFrameIndex]);
+                    if (prevFrame) {
+                        this._bone.arriveAtFrame(prevFrame, this._animationState);
+                    }
+                    this._currentFrameDuration = currentFrame.duration;
+                    this._currentFramePosition = currentFrame.position;
+                    prevFrame = currentFrame;
+                }
+                if (currentFrame) {
+                    this._bone.arriveAtFrame(currentFrame, this._animationState);
+                    this.updateToNextFrame(currentPlayTimes);
+                }
+                if (this._tweenTransform) {
+                    this.updateTween();
+                }
+            }
+        };
+        p.updateToNextFrame = function (currentPlayTimes) {
+            if (currentPlayTimes === void 0) { currentPlayTimes = 0; }
+            var nextFrameIndex = this._currentFrameIndex + 1;
+            if (nextFrameIndex >= this._timelineData.frameList.length) {
+                nextFrameIndex = 0;
+            }
+            var currentFrame = (this._timelineData.frameList[this._currentFrameIndex]);
+            var nextFrame = (this._timelineData.frameList[nextFrameIndex]);
+            var tweenEnabled = false;
+            if (nextFrameIndex == 0 && (this._animationState.playTimes &&
+                this._animationState.currentPlayTimes >= this._animationState.playTimes &&
+                ((this._currentFramePosition + this._currentFrameDuration) / this._totalTime + currentPlayTimes - this._timelineData.offset) * this._timelineData.scale > 0.999999)) {
+                this._tweenEasing = NaN;
+                tweenEnabled = false;
+            }
+            else if (this._animationState.autoTween) {
+                this._tweenEasing = this._animationState.animationData.tweenEasing;
+                if (isNaN(this._tweenEasing)) {
+                    this._tweenEasing = currentFrame.tweenEasing;
+                    this._tweenCurve = currentFrame.curve;
+                    if (isNaN(this._tweenEasing) && this._tweenCurve == null) {
+                        tweenEnabled = false;
+                    }
+                    else {
+                        if (this._tweenEasing == 10) {
+                            this._tweenEasing = 0;
+                        }
+                        //_tweenEasing [-1, 0) 0 (0, 1] (1, 2]
+                        tweenEnabled = true;
+                    }
+                }
+                else {
+                    //_tweenEasing [-1, 0) 0 (0, 1] (1, 2]
+                    tweenEnabled = true;
+                }
+            }
+            else {
+                this._tweenEasing = currentFrame.tweenEasing;
+                this._tweenCurve = currentFrame.curve;
+                if ((isNaN(this._tweenEasing) || this._tweenEasing == 10) && this._tweenCurve == null) {
+                    this._tweenEasing = NaN;
+                    tweenEnabled = false;
+                }
+                else {
+                    //_tweenEasing [-1, 0) 0 (0, 1] (1, 2]
+                    tweenEnabled = true;
+                }
+            }
+            if (tweenEnabled) {
+                //transform
+                this._durationTransform.x = nextFrame.transform.x - currentFrame.transform.x;
+                this._durationTransform.y = nextFrame.transform.y - currentFrame.transform.y;
+                this._durationTransform.skewX = nextFrame.transform.skewX - currentFrame.transform.skewX;
+                this._durationTransform.skewY = nextFrame.transform.skewY - currentFrame.transform.skewY;
+                this._durationTransform.scaleX = nextFrame.transform.scaleX - currentFrame.transform.scaleX + nextFrame.scaleOffset.x;
+                this._durationTransform.scaleY = nextFrame.transform.scaleY - currentFrame.transform.scaleY + nextFrame.scaleOffset.y;
+                this._durationPivot.x = nextFrame.pivot.x - currentFrame.pivot.x;
+                this._durationPivot.y = nextFrame.pivot.y - currentFrame.pivot.y;
+                this._durationTransform.normalizeRotation();
+                if (nextFrameIndex == 0) {
+                    this._durationTransform.skewX = dragonBones.TransformUtil.formatRadian(this._durationTransform.skewX);
+                    this._durationTransform.skewY = dragonBones.TransformUtil.formatRadian(this._durationTransform.skewY);
+                }
+                if (this._durationTransform.x ||
+                    this._durationTransform.y ||
+                    this._durationTransform.skewX ||
+                    this._durationTransform.skewY ||
+                    this._durationTransform.scaleX != 1 ||
+                    this._durationTransform.scaleY != 1 ||
+                    this._durationPivot.x ||
+                    this._durationPivot.y) {
+                    this._tweenTransform = true;
+                }
+                else {
+                    this._tweenTransform = false;
+                }
+            }
+            else {
+                this._tweenTransform = false;
+            }
+            if (!this._tweenTransform) {
+                this._transform.copy(currentFrame.transform);
+                this._pivot.x = this._originPivot.x + currentFrame.pivot.x;
+                this._pivot.y = this._originPivot.y + currentFrame.pivot.y;
+                this._bone.invalidUpdate();
+            }
+        };
+        p.updateTween = function () {
+            var progress = (this._currentTime - this._currentFramePosition) / this._currentFrameDuration;
+            if (this._tweenCurve) {
+                progress = this._tweenCurve.getValueByProgress(progress);
+            }
+            else if (this._tweenEasing) {
+                progress = dragonBones.MathUtil.getEaseValue(progress, this._tweenEasing);
+            }
+            var currentFrame = (this._timelineData.frameList[this._currentFrameIndex]);
+            var currentTransform = currentFrame.transform;
+            var currentPivot = currentFrame.pivot;
+            //normal blending
+            this._transform.x = currentTransform.x + this._durationTransform.x * progress;
+            this._transform.y = currentTransform.y + this._durationTransform.y * progress;
+            this._transform.skewX = currentTransform.skewX + this._durationTransform.skewX * progress;
+            this._transform.skewY = currentTransform.skewY + this._durationTransform.skewY * progress;
+            this._transform.scaleX = currentTransform.scaleX + this._durationTransform.scaleX * progress;
+            this._transform.scaleY = currentTransform.scaleY + this._durationTransform.scaleY * progress;
+            this._pivot.x = currentPivot.x + this._durationPivot.x * progress;
+            this._pivot.y = currentPivot.y + this._durationPivot.y * progress;
+            this._bone.invalidUpdate();
+        };
+        FastBoneTimelineState._pool = [];
+        return FastBoneTimelineState;
+    }());
+    dragonBones.FastBoneTimelineState = FastBoneTimelineState;
+    egret.registerClass(FastBoneTimelineState,'dragonBones.FastBoneTimelineState');
+})(dragonBones || (dragonBones = {}));
+//////////////////////////////////////////////////////////////////////////////////////
+//
+//  Copyright (c) 2014-2015, Egret Technology Inc.
+//  All rights reserved.
+//  Redistribution and use in source and binary forms, with or without
+//  modification, are permitted provided that the following conditions are met:
+//
+//     * Redistributions of source code must retain the above copyright
+//       notice, this list of conditions and the following disclaimer.
+//     * Redistributions in binary form must reproduce the above copyright
+//       notice, this list of conditions and the following disclaimer in the
+//       documentation and/or other materials provided with the distribution.
+//     * Neither the name of the Egret nor the
+//       names of its contributors may be used to endorse or promote products
+//       derived from this software without specific prior written permission.
+//
+//  THIS SOFTWARE IS PROVIDED BY EGRET AND CONTRIBUTORS "AS IS" AND ANY EXPRESS
+//  OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES
+//  OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED.
+//  IN NO EVENT SHALL EGRET AND CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT,
+//  INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT
+//  LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES;LOSS OF USE, DATA,
+//  OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF
+//  LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING
+//  NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE,
+//  EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+//
+//////////////////////////////////////////////////////////////////////////////////////
+var dragonBones;
+(function (dragonBones) {
+    /**
+     * @class dragonBones.FastSlotTimelineState
+     * @classdesc
+     * FastSlotTimelineState 负责计算 Slot 的时间轴动画。
+     * FastSlotTimelineState 实例隶属于 FastAnimationState. FastAnimationState在创建时会为每个包含动作的 Slot生成一个 FastSlotTimelineState 实例.
+     * @see dragonBones.FastAnimation
+     * @see dragonBones.FastAnimationState
+     * @see dragonBones.FastSlot
+     */
+    var FastSlotTimelineState = (function () {
+        function FastSlotTimelineState() {
+            this._totalTime = 0; //duration
+            this._currentTime = 0;
+            this._currentFrameIndex = 0;
+            this._currentFramePosition = 0;
+            this._currentFrameDuration = 0;
+            //-1: frameLength>1, 0:frameLength==0, 1:frameLength==1
+            this._updateMode = 0;
+            this._durationColor = new dragonBones.ColorTransform();
+        }
+        var d = __define,c=FastSlotTimelineState,p=c.prototype;
+        /** @private */
+        FastSlotTimelineState.borrowObject = function () {
+            if (FastSlotTimelineState._pool.length == 0) {
+                return new FastSlotTimelineState();
+            }
+            return FastSlotTimelineState._pool.pop();
+        };
+        /** @private */
+        FastSlotTimelineState.returnObject = function (timeline) {
+            if (FastSlotTimelineState._pool.indexOf(timeline) < 0) {
+                FastSlotTimelineState._pool[FastSlotTimelineState._pool.length] = timeline;
+            }
+            timeline.clear();
+        };
+        /** @private */
+        FastSlotTimelineState.clear = function () {
+            var i = FastSlotTimelineState._pool.length;
+            while (i--) {
+                FastSlotTimelineState._pool[i].clear();
+            }
+            FastSlotTimelineState._pool.length = 0;
+        };
+        p.clear = function () {
+            this._slot = null;
+            this._armature = null;
+            this._animation = null;
+            this._animationState = null;
+            this._timelineData = null;
+        };
+        //动画开始结束
+        /** @private */
+        p.fadeIn = function (slot, animationState, timelineData) {
+            this._slot = slot;
+            this._armature = this._slot.armature;
+            this._animation = this._armature.animation;
+            this._animationState = animationState;
+            this._timelineData = timelineData;
+            this.name = timelineData.name;
+            this._totalTime = this._timelineData.duration;
+            this._isComplete = false;
+            this._blendEnabled = false;
+            this._tweenColor = false;
+            this._currentFrameIndex = -1;
+            this._currentTime = -1;
+            this._tweenEasing = NaN;
+            this._weight = 1;
+            switch (this._timelineData.frameList.length) {
+                case 0:
+                    this._updateMode = 0;
+                    break;
+                case 1:
+                    this._updateMode = 1;
+                    break;
+                default:
+                    this._updateMode = -1;
+                    break;
+            }
+        };
+        //动画进行中
+        /** @private */
+        p.updateFade = function (progress) {
+        };
+        /** @private */
+        p.update = function (progress) {
+            if (this._updateMode == -1) {
+                this.updateMultipleFrame(progress);
+            }
+            else if (this._updateMode == 1) {
+                this._updateMode = 0;
+                this.updateSingleFrame();
+            }
+        };
+        p.updateMultipleFrame = function (progress) {
+            var currentPlayTimes = 0;
+            progress /= this._timelineData.scale;
+            progress += this._timelineData.offset;
+            var currentTime = this._totalTime * progress;
+            var playTimes = this._animationState.playTimes;
+            if (playTimes == 0) {
+                this._isComplete = false;
+                currentPlayTimes = Math.ceil(Math.abs(currentTime) / this._totalTime) || 1;
+                currentTime -= Math.floor(currentTime / this._totalTime) * this._totalTime;
+                if (currentTime < 0) {
+                    currentTime += this._totalTime;
+                }
+            }
+            else {
+                var totalTimes = playTimes * this._totalTime;
+                if (currentTime >= totalTimes) {
+                    currentTime = totalTimes;
+                    this._isComplete = true;
+                }
+                else if (currentTime <= -totalTimes) {
+                    currentTime = -totalTimes;
+                    this._isComplete = true;
+                }
+                else {
+                    this._isComplete = false;
+                }
+                if (currentTime < 0) {
+                    currentTime += totalTimes;
+                }
+                currentPlayTimes = Math.ceil(currentTime / this._totalTime) || 1;
+                if (this._isComplete) {
+                    currentTime = this._totalTime;
+                }
+                else {
+                    currentTime -= Math.floor(currentTime / this._totalTime) * this._totalTime;
+                }
+            }
+            if (this._currentTime != currentTime) {
+                this._currentTime = currentTime;
+                var frameList = this._timelineData.frameList;
+                var prevFrame;
+                var currentFrame;
+                for (var i = 0, l = this._timelineData.frameList.length; i < l; ++i) {
+                    if (this._currentFrameIndex < 0) {
+                        this._currentFrameIndex = 0;
+                    }
+                    else if (this._currentTime < this._currentFramePosition || this._currentTime >= this._currentFramePosition + this._currentFrameDuration) {
+                        this._currentFrameIndex++;
+                        if (this._currentFrameIndex >= frameList.length) {
+                            if (this._isComplete) {
+                                this._currentFrameIndex--;
+                                break;
+                            }
+                            else {
+                                this._currentFrameIndex = 0;
+                            }
+                        }
+                    }
+                    else {
+                        break;
+                    }
+                    currentFrame = (frameList[this._currentFrameIndex]);
+                    if (prevFrame) {
+                        this._slot._arriveAtFrame(prevFrame, this._animationState);
+                    }
+                    this._currentFrameDuration = currentFrame.duration;
+                    this._currentFramePosition = currentFrame.position;
+                    prevFrame = currentFrame;
+                }
+                if (currentFrame) {
+                    this._slot._arriveAtFrame(currentFrame, this._animationState);
+                    this._blendEnabled = currentFrame.displayIndex >= 0;
+                    if (this._blendEnabled) {
+                        this.updateToNextFrame(currentPlayTimes);
+                    }
+                    else {
+                        this._tweenEasing = NaN;
+                        this._tweenColor = false;
+                    }
+                }
+                if (this._blendEnabled) {
+                    this.updateTween();
+                }
+            }
+        };
+        p.updateToNextFrame = function (currentPlayTimes) {
+            if (currentPlayTimes === void 0) { currentPlayTimes = 0; }
+            var nextFrameIndex = this._currentFrameIndex + 1;
+            if (nextFrameIndex >= this._timelineData.frameList.length) {
+                nextFrameIndex = 0;
+            }
+            var currentFrame = (this._timelineData.frameList[this._currentFrameIndex]);
+            var nextFrame = (this._timelineData.frameList[nextFrameIndex]);
+            var tweenEnabled = false;
+            if (nextFrameIndex == 0 &&
+                (this._animationState.playTimes &&
+                    this._animationState.currentPlayTimes >= this._animationState.playTimes &&
+                    ((this._currentFramePosition + this._currentFrameDuration) / this._totalTime + currentPlayTimes - this._timelineData.offset) * this._timelineData.scale > 0.999999)) {
+                this._tweenEasing = NaN;
+                tweenEnabled = false;
+            }
+            else if (currentFrame.displayIndex < 0 || nextFrame.displayIndex < 0) {
+                this._tweenEasing = NaN;
+                tweenEnabled = false;
+            }
+            else if (this._animationState.autoTween) {
+                this._tweenEasing = this._animationState.animationData.tweenEasing;
+                if (isNaN(this._tweenEasing)) {
+                    this._tweenEasing = currentFrame.tweenEasing;
+                    this._tweenCurve = currentFrame.curve;
+                    if (isNaN(this._tweenEasing) && this._tweenCurve == null) {
+                        tweenEnabled = false;
+                    }
+                    else {
+                        if (this._tweenEasing == 10) {
+                            this._tweenEasing = 0;
+                        }
+                        //_tweenEasing [-1, 0) 0 (0, 1] (1, 2]
+                        tweenEnabled = true;
+                    }
+                }
+                else {
+                    //_tweenEasing [-1, 0) 0 (0, 1] (1, 2]
+                    tweenEnabled = true;
+                }
+            }
+            else {
+                this._tweenEasing = currentFrame.tweenEasing;
+                this._tweenCurve = currentFrame.curve;
+                if ((isNaN(this._tweenEasing) || this._tweenEasing == 10) && this._tweenCurve == null) {
+                    this._tweenEasing = NaN;
+                    tweenEnabled = false;
+                }
+                else {
+                    //_tweenEasing [-1, 0) 0 (0, 1] (1, 2]
+                    tweenEnabled = true;
+                }
+            }
+            if (tweenEnabled) {
+                if (currentFrame.color || nextFrame.color) {
+                    dragonBones.ColorTransformUtil.minus(nextFrame.color || dragonBones.ColorTransformUtil.originalColor, currentFrame.color || dragonBones.ColorTransformUtil.originalColor, this._durationColor);
+                    this._tweenColor = this._durationColor.alphaOffset != 0 ||
+                        this._durationColor.redOffset != 0 ||
+                        this._durationColor.greenOffset != 0 ||
+                        this._durationColor.blueOffset != 0 ||
+                        this._durationColor.alphaMultiplier != 0 ||
+                        this._durationColor.redMultiplier != 0 ||
+                        this._durationColor.greenMultiplier != 0 ||
+                        this._durationColor.blueMultiplier != 0;
+                }
+                else {
+                    this._tweenColor = false;
+                }
+            }
+            else {
+                this._tweenColor = false;
+            }
+            if (!this._tweenColor) {
+                var targetColor;
+                var colorChanged;
+                if (currentFrame.color) {
+                    targetColor = currentFrame.color;
+                    colorChanged = true;
+                }
+                else {
+                    targetColor = dragonBones.ColorTransformUtil.originalColor;
+                    colorChanged = false;
+                }
+                if ((this._slot._isColorChanged || colorChanged)) {
+                    if (!dragonBones.ColorTransformUtil.isEqual(this._slot._colorTransform, targetColor)) {
+                        this._slot._updateDisplayColor(targetColor.alphaOffset, targetColor.redOffset, targetColor.greenOffset, targetColor.blueOffset, targetColor.alphaMultiplier, targetColor.redMultiplier, targetColor.greenMultiplier, targetColor.blueMultiplier, colorChanged);
+                    }
+                }
+            }
+        };
+        p.updateTween = function () {
+            var currentFrame = (this._timelineData.frameList[this._currentFrameIndex]);
+            if (this._tweenColor) {
+                var progress = (this._currentTime - this._currentFramePosition) / this._currentFrameDuration;
+                if (this._tweenCurve != null) {
+                    progress = this._tweenCurve.getValueByProgress(progress);
+                }
+                else if (this._tweenEasing) {
+                    progress = dragonBones.MathUtil.getEaseValue(progress, this._tweenEasing);
+                }
+                if (currentFrame.color) {
+                    this._slot._updateDisplayColor(currentFrame.color.alphaOffset + this._durationColor.alphaOffset * progress, currentFrame.color.redOffset + this._durationColor.redOffset * progress, currentFrame.color.greenOffset + this._durationColor.greenOffset * progress, currentFrame.color.blueOffset + this._durationColor.blueOffset * progress, currentFrame.color.alphaMultiplier + this._durationColor.alphaMultiplier * progress, currentFrame.color.redMultiplier + this._durationColor.redMultiplier * progress, currentFrame.color.greenMultiplier + this._durationColor.greenMultiplier * progress, currentFrame.color.blueMultiplier + this._durationColor.blueMultiplier * progress, true);
+                }
+                else {
+                    this._slot._updateDisplayColor(this._durationColor.alphaOffset * progress, this._durationColor.redOffset * progress, this._durationColor.greenOffset * progress, this._durationColor.blueOffset * progress, this._durationColor.alphaMultiplier * progress + 1, this._durationColor.redMultiplier * progress + 1, this._durationColor.greenMultiplier * progress + 1, this._durationColor.blueMultiplier * progress + 1, true);
+                }
+            }
+        };
+        p.updateSingleFrame = function () {
+            var currentFrame = (this._timelineData.frameList[0]);
+            this._slot._arriveAtFrame(currentFrame, this._animationState);
+            this._isComplete = true;
+            this._tweenEasing = NaN;
+            this._tweenColor = false;
+            this._blendEnabled = currentFrame.displayIndex >= 0;
+            if (this._blendEnabled) {
+                var targetColor;
+                var colorChanged;
+                if (currentFrame.color) {
+                    targetColor = currentFrame.color;
+                    colorChanged = true;
+                }
+                else {
+                    targetColor = dragonBones.ColorTransformUtil.originalColor;
+                    colorChanged = false;
+                }
+                if ((this._slot._isColorChanged || colorChanged)) {
+                    if (!dragonBones.ColorTransformUtil.isEqual(this._slot._colorTransform, targetColor)) {
+                        this._slot._updateDisplayColor(targetColor.alphaOffset, targetColor.redOffset, targetColor.greenOffset, targetColor.blueOffset, targetColor.alphaMultiplier, targetColor.redMultiplier, targetColor.greenMultiplier, targetColor.blueMultiplier, colorChanged);
+                    }
+                }
+            }
+        };
+        FastSlotTimelineState.HALF_PI = Math.PI * 0.5;
+        FastSlotTimelineState.DOUBLE_PI = Math.PI * 2;
+        FastSlotTimelineState._pool = [];
+        return FastSlotTimelineState;
+    }());
+    dragonBones.FastSlotTimelineState = FastSlotTimelineState;
+    egret.registerClass(FastSlotTimelineState,'dragonBones.FastSlotTimelineState');
 })(dragonBones || (dragonBones = {}));
 //////////////////////////////////////////////////////////////////////////////////////
 //
@@ -9830,1527 +11351,6 @@ var dragonBones;
     }(dragonBones.FastDBObject));
     dragonBones.FastSlot = FastSlot;
     egret.registerClass(FastSlot,'dragonBones.FastSlot',["dragonBones.ISlotCacheGenerator","dragonBones.ICacheUser"]);
-})(dragonBones || (dragonBones = {}));
-//////////////////////////////////////////////////////////////////////////////////////
-//
-//  Copyright (c) 2014-2015, Egret Technology Inc.
-//  All rights reserved.
-//  Redistribution and use in source and binary forms, with or without
-//  modification, are permitted provided that the following conditions are met:
-//
-//     * Redistributions of source code must retain the above copyright
-//       notice, this list of conditions and the following disclaimer.
-//     * Redistributions in binary form must reproduce the above copyright
-//       notice, this list of conditions and the following disclaimer in the
-//       documentation and/or other materials provided with the distribution.
-//     * Neither the name of the Egret nor the
-//       names of its contributors may be used to endorse or promote products
-//       derived from this software without specific prior written permission.
-//
-//  THIS SOFTWARE IS PROVIDED BY EGRET AND CONTRIBUTORS "AS IS" AND ANY EXPRESS
-//  OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES
-//  OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED.
-//  IN NO EVENT SHALL EGRET AND CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT,
-//  INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT
-//  LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES;LOSS OF USE, DATA,
-//  OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF
-//  LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING
-//  NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE,
-//  EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
-//
-//////////////////////////////////////////////////////////////////////////////////////
-var dragonBones;
-(function (dragonBones) {
-    /**
-     * @class dragonBones.FastAnimation
-     * @classdesc
-     * FastAnimation实例隶属于FastArmature,用于控制FastArmature的动画播放。
-     * 和Animation相比，FastAnimation为了优化性能，不支持动画融合，在开启缓存的情况下，不支持无极的平滑补间
-     * @see dragonBones.FastBone
-     * @see dragonBones.FastArmature
-     * @see dragonBones.FastAnimationState
-     * @see dragonBones.AnimationData.
-     *
-     * @example
-       <pre>
-        //获取动画数据
-        var skeletonData = RES.getRes("skeleton");
-        //获取纹理集数据
-        var textureData = RES.getRes("textureConfig");
-        //获取纹理集图片
-        var texture = RES.getRes("texture");
-      
-        //创建一个工厂，用来创建Armature
-        var factory:dragonBones.EgretFactory = new dragonBones.EgretFactory();
-        //把动画数据添加到工厂里
-        factory.addSkeletonData(dragonBones.DataParser.parseDragonBonesData(skeletonData));
-        //把纹理集数据和图片添加到工厂里
-        factory.addTextureAtlas(new dragonBones.EgretTextureAtlas(texture, textureData));
-      
-        //获取Armature的名字，dragonBones4.0的数据可以包含多个骨架，这里取第一个Armature
-        var armatureName:string = skeletonData.armature[0].name;
-        //从工厂里创建出Armature
-        var armature:dragonBones.FastArmature = factory.buildFastArmature(armatureName);
-        //获取装载Armature的容器
-        var armatureDisplay = armature.display;
-        //把它添加到舞台上
-        this.addChild(armatureDisplay);
-        
-        //以60fps的帧率开启动画缓存，缓存所有的动画数据
-        var animationCachManager:dragonBones.AnimationCacheManager = armature.enableAnimationCache(60);
-      
-       //取得这个Armature动画列表中的第一个动画的名字
-        var curAnimationName = armature.animation.animationList[0];
-        //播放这个动画，gotoAndPlay各个参数说明
-        //第一个参数 animationName {string} 指定播放动画的名称.
-        //第二个参数 fadeInTime {number} 动画淡入时间 (>= 0), 默认值：-1 意味着使用动画数据中的淡入时间.
-        //第三个参数 duration {number} 动画播放时间。默认值：-1 意味着使用动画数据中的播放时间.
-        //第四个参数 layTimes {number} 动画播放次数(0:循环播放, >=1:播放次数, NaN:使用动画数据中的播放时间), 默认值：NaN
-        armature.animation.gotoAndPlay(curAnimationName,0.3,-1,0);
-      
-        //把Armature添加到心跳时钟里
-        dragonBones.WorldClock.clock.add(armature);
-        //心跳时钟开启
-        egret.Ticker.getInstance().register(function (advancedTime) {
-            dragonBones.WorldClock.clock.advanceTime(advancedTime / 1000);
-        }, this);
-       </pre>
-     */
-    var FastAnimation = (function () {
-        /**
-         * 创建一个新的FastAnimation实例并赋给传入的FastArmature实例
-         * @param armature {FastArmature} 骨架实例
-         */
-        function FastAnimation(armature) {
-            /**
-             * 当前正在运行的动画实例.
-             * @member {FastAnimationState} dragonBones.FastAnimation#animationState
-             */
-            this.animationState = new dragonBones.FastAnimationState();
-            this._armature = armature;
-            this.animationState._armature = armature;
-            this.animationList = [];
-            this._animationDataObj = {};
-            this._isPlaying = false;
-            this._timeScale = 1;
-        }
-        var d = __define,c=FastAnimation,p=c.prototype;
-        /**
-         * Qualifies all resources used by this Animation instance for garbage collection.
-         */
-        p.dispose = function () {
-            if (!this._armature) {
-                return;
-            }
-            this._armature = null;
-            this._animationDataList = null;
-            this.animationList = null;
-            this.animationState = null;
-        };
-        /**
-         * 开始播放指定名称的动画。
-         * 要播放的动画将经过指定时间的淡入过程，然后开始播放，同时之前播放的动画会经过相同时间的淡出过程。
-         * @param animationName {string} 指定播放动画的名称.
-         * @param fadeInTime {number} 动画淡入时间 (>= 0), 默认值：-1 意味着使用动画数据中的淡入时间.
-         * @param duration {number} 动画播放时间。默认值：-1 意味着使用动画数据中的播放时间.
-         * @param playTimes {number} 动画播放次数(0:循环播放, >=1:播放次数, NaN:使用动画数据中的播放时间), 默认值：NaN
-         * @see dragonBones.FastAnimationState.
-         */
-        p.gotoAndPlay = function (animationName, fadeInTime, duration, playTimes) {
-            if (fadeInTime === void 0) { fadeInTime = -1; }
-            if (duration === void 0) { duration = -1; }
-            if (playTimes === void 0) { playTimes = NaN; }
-            if (!this._animationDataList) {
-                return null;
-            }
-            var animationData = this._animationDataObj[animationName];
-            if (!animationData) {
-                return null;
-            }
-            // Modify Fast mode by duanchunlei
-            if (this._armature.enableCache) {
-                this.animationCacheManager = this._armature._armatureData._cacheManager;
-                var animationCache = this.animationCacheManager.getAnimationCache(animationName);
-                animationCache.frameNum = Math.ceil(animationData.duration * 0.001 * this.animationCacheManager.frameRate / animationData.scale);
-                this.animationState.animationCache = animationCache;
-                i = this._armature.slotList.length;
-                while (i--) {
-                    var slot = this._armature.slotList[i];
-                    slot._cacheTimeline = animationCache.slotTimelineCacheDic[slot.name];
-                }
-            }
-            this._isPlaying = true;
-            //fadeInTime = fadeInTime < 0 ? (animationData.fadeTime < 0 ? 0.3 : animationData.fadeTime) : fadeInTime;
-            fadeInTime = 0;
-            var durationScale;
-            if (duration < 0) {
-                durationScale = animationData.scale < 0 ? 1 : animationData.scale;
-            }
-            else {
-                durationScale = duration * 1000 / animationData.duration;
-            }
-            playTimes = isNaN(playTimes) ? animationData.playTimes : playTimes;
-            //播放新动画
-            this.animationState._fadeIn(animationData, playTimes, 1 / durationScale, fadeInTime);
-            var i = this._armature.slotHasChildArmatureList.length;
-            while (i--) {
-                var slot = this._armature.slotHasChildArmatureList[i];
-                var childArmature = slot.childArmature;
-                if (childArmature) {
-                    childArmature.getAnimation().gotoAndPlay(animationName);
-                }
-            }
-            return this.animationState;
-        };
-        /**
-         * 播放指定名称的动画并停止于某个时间点
-         * @param animationName {string} 指定播放的动画名称.
-         * @param time {number} 动画停止的绝对时间
-         * @param normalizedTime {number} 动画停止的相对动画总时间的系数，这个参数和time参数是互斥的（例如 0.2：动画停止总时间的20%位置） 默认值：-1 意味着使用绝对时间。
-         * @param fadeInTime {number} 动画淡入时间 (>= 0), 默认值：0
-         * @param duration {number} 动画播放时间。默认值：-1 意味着使用动画数据中的播放时间.
-         * @see dragonBones.FastAnimationState.
-         */
-        p.gotoAndStop = function (animationName, time, normalizedTime, fadeInTime, duration) {
-            if (normalizedTime === void 0) { normalizedTime = -1; }
-            if (fadeInTime === void 0) { fadeInTime = 0; }
-            if (duration === void 0) { duration = -1; }
-            if (this.animationState.name != animationName) {
-                this.gotoAndPlay(animationName, fadeInTime, duration);
-            }
-            if (normalizedTime >= 0) {
-                this.animationState.setCurrentTime(this.animationState.totalTime * normalizedTime);
-            }
-            else {
-                this.animationState.setCurrentTime(time);
-            }
-            this.animationState.stop();
-            return this.animationState;
-        };
-        /**
-         * 从当前位置继续播放动画
-         */
-        p.play = function () {
-            if (!this._animationDataList) {
-                return;
-            }
-            if (!this.animationState.name) {
-                this.gotoAndPlay(this._animationDataList[0].name);
-            }
-            else if (!this._isPlaying) {
-                this._isPlaying = true;
-            }
-            else {
-                this.gotoAndPlay(this.animationState.name);
-            }
-        };
-        /**
-         * 暂停动画播放
-         */
-        p.stop = function () {
-            this._isPlaying = false;
-        };
-        /** @private */
-        p.advanceTime = function (passedTime) {
-            if (!this._isPlaying) {
-                return;
-            }
-            this.animationState._advanceTime(passedTime * this._timeScale);
-        };
-        /**
-         * check if contains a AnimationData by name.
-         * @return Boolean.
-         * @see dragonBones.AnimationData.
-         */
-        p.hasAnimation = function (animationName) {
-            return this._animationDataObj[animationName] != null;
-        };
-        d(p, "timeScale"
-            /**
-             * 时间缩放倍数
-             * @member {number} dragonBones.FastAnimation#timeScale
-             */
-            ,function () {
-                return this._timeScale;
-            }
-            ,function (value) {
-                if (isNaN(value) || value < 0) {
-                    value = 1;
-                }
-                this._timeScale = value;
-            }
-        );
-        d(p, "animationDataList"
-            /**
-             * 包含的所有动画数据列表
-             * @member {AnimationData[]} dragonBones.FastAnimation#animationDataList
-             * @see dragonBones.AnimationData.
-             */
-            ,function () {
-                return this._animationDataList;
-            }
-            ,function (value) {
-                this._animationDataList = value;
-                this.animationList.length = 0;
-                var length = this._animationDataList.length;
-                for (var i = 0; i < length; i++) {
-                    var animationData = this._animationDataList[i];
-                    this.animationList.push(animationData.name);
-                    this._animationDataObj[animationData.name] = animationData;
-                }
-            }
-        );
-        d(p, "movementList"
-            /**
-             * Unrecommended API. Recommend use animationList.
-             */
-            ,function () {
-                return this.animationList;
-            }
-        );
-        d(p, "movementID"
-            /**
-             * Unrecommended API. Recommend use lastAnimationName.
-             */
-            ,function () {
-                return this.lastAnimationName;
-            }
-        );
-        /**
-         * 是否正在播放
-         * @member {boolean} dragonBones.FastAnimation#isPlaying
-         */
-        p.isPlaying = function () {
-            return this._isPlaying && !this.isComplete;
-        };
-        d(p, "isComplete"
-            /**
-             * 是否播放完成.
-             * @member {boolean} dragonBones.FastAnimation#isComplete
-             */
-            ,function () {
-                return this.animationState.isComplete;
-            }
-        );
-        d(p, "lastAnimationState"
-            /**
-             * 当前播放动画的实例.
-             * @member {FastAnimationState} dragonBones.FastAnimation#lastAnimationState
-             */
-            ,function () {
-                return this.animationState;
-            }
-        );
-        d(p, "lastAnimationName"
-            /**
-             * 当前播放动画的名字.
-             * @member {string} dragonBones.FastAnimation#lastAnimationName
-             */
-            ,function () {
-                return this.animationState ? this.animationState.name : null;
-            }
-        );
-        return FastAnimation;
-    }());
-    dragonBones.FastAnimation = FastAnimation;
-    egret.registerClass(FastAnimation,'dragonBones.FastAnimation');
-})(dragonBones || (dragonBones = {}));
-//////////////////////////////////////////////////////////////////////////////////////
-//
-//  Copyright (c) 2014-2015, Egret Technology Inc.
-//  All rights reserved.
-//  Redistribution and use in source and binary forms, with or without
-//  modification, are permitted provided that the following conditions are met:
-//
-//     * Redistributions of source code must retain the above copyright
-//       notice, this list of conditions and the following disclaimer.
-//     * Redistributions in binary form must reproduce the above copyright
-//       notice, this list of conditions and the following disclaimer in the
-//       documentation and/or other materials provided with the distribution.
-//     * Neither the name of the Egret nor the
-//       names of its contributors may be used to endorse or promote products
-//       derived from this software without specific prior written permission.
-//
-//  THIS SOFTWARE IS PROVIDED BY EGRET AND CONTRIBUTORS "AS IS" AND ANY EXPRESS
-//  OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES
-//  OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED.
-//  IN NO EVENT SHALL EGRET AND CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT,
-//  INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT
-//  LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES;LOSS OF USE, DATA,
-//  OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF
-//  LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING
-//  NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE,
-//  EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
-//
-//////////////////////////////////////////////////////////////////////////////////////
-var dragonBones;
-(function (dragonBones) {
-    /**
-     * @class dragonBones.FastAnimationState
-     * @classdesc
-     * FastAnimationState 实例代表播放的动画， 可以对单个动画的播放进行最细致的调节。
-     * @see dragonBones.Animation
-     * @see dragonBones.AnimationData
-     * @example
-       <pre>
-        //获取动画数据
-        var skeletonData = RES.getRes("skeleton");
-        //获取纹理集数据
-        var textureData = RES.getRes("textureConfig");
-        //获取纹理集图片
-        var texture = RES.getRes("texture");
-      
-        //创建一个工厂，用来创建Armature
-        var factory:dragonBones.EgretFactory = new dragonBones.EgretFactory();
-        //把动画数据添加到工厂里
-        factory.addSkeletonData(dragonBones.DataParser.parseDragonBonesData(skeletonData));
-        //把纹理集数据和图片添加到工厂里
-        factory.addTextureAtlas(new dragonBones.EgretTextureAtlas(texture, textureData));
-      
-        //获取Armature的名字，dragonBones4.0的数据可以包含多个骨架，这里取第一个Armature
-        var armatureName:string = skeletonData.armature[0].name;
-        //从工厂里创建出Armature
-        var armature:dragonBones.FastArmature = factory.buildFastArmature(armatureName);
-        //获取装载Armature的容器
-        var armatureDisplay = armature.display;
-        //把它添加到舞台上
-        this.addChild(armatureDisplay);
-        
-        //以60fps的帧率开启动画缓存，缓存所有的动画数据
-        var animationCachManager:dragonBones.AnimationCacheManager = armature.enableAnimationCache(60);
-      
-       //取得这个Armature动画列表中的第一个动画的名字
-        var curAnimationName = armature.animation.animationList[0];
-        //播放这个动画，gotoAndPlay各个参数说明
-        //第一个参数 animationName {string} 指定播放动画的名称.
-        //第二个参数 fadeInTime {number} 动画淡入时间 (>= 0), 默认值：-1 意味着使用动画数据中的淡入时间.
-        //第三个参数 duration {number} 动画播放时间。默认值：-1 意味着使用动画数据中的播放时间.
-        //第四个参数 layTimes {number} 动画播放次数(0:循环播放, >=1:播放次数, NaN:使用动画数据中的播放时间), 默认值：NaN
-        armature.animation.gotoAndPlay(curAnimationName,0.3,-1,0);
-      
-        //把Armature添加到心跳时钟里
-        dragonBones.WorldClock.clock.add(armature);
-        //心跳时钟开启
-        egret.Ticker.getInstance().register(function (advancedTime) {
-            dragonBones.WorldClock.clock.advanceTime(advancedTime / 1000);
-        }, this);
-       </pre>
-     */
-    var FastAnimationState = (function () {
-        function FastAnimationState() {
-            this._boneTimelineStateList = [];
-            this._slotTimelineStateList = [];
-            this._currentFrameIndex = 0;
-            this._currentFramePosition = 0;
-            this._currentFrameDuration = 0;
-            this._currentPlayTimes = 0;
-            this._totalTime = 0; //毫秒
-            this._currentTime = 0;
-            this._lastTime = 0;
-            this._playTimes = 0;
-            this._fading = false;
-        }
-        var d = __define,c=FastAnimationState,p=c.prototype;
-        p.dispose = function () {
-            this._resetTimelineStateList();
-            this._armature = null;
-        };
-        /**
-         * 播放当前动画。如果动画已经播放完毕, 将不会继续播放.
-         * @returns {FastAnimationState} 动画播放状态实例
-         */
-        p.play = function () {
-            this._isPlaying = true;
-            return this;
-        };
-        /**
-         * 暂停当前动画的播放。
-         * @returns {AnimationState} 动画播放状态实例
-         */
-        p.stop = function () {
-            this._isPlaying = false;
-            return this;
-        };
-        p.setCurrentTime = function (value) {
-            if (value < 0 || isNaN(value)) {
-                value = 0;
-            }
-            this._time = value;
-            this._currentTime = this._time * 1000;
-            return this;
-        };
-        p._resetTimelineStateList = function () {
-            var i = this._boneTimelineStateList.length;
-            while (i--) {
-                dragonBones.FastBoneTimelineState.returnObject(this._boneTimelineStateList[i]);
-            }
-            this._boneTimelineStateList.length = 0;
-            i = this._slotTimelineStateList.length;
-            while (i--) {
-                dragonBones.FastSlotTimelineState.returnObject(this._slotTimelineStateList[i]);
-            }
-            this._slotTimelineStateList.length = 0;
-            this.name = null;
-        };
-        /** @private */
-        p._fadeIn = function (aniData, playTimes, timeScale, fadeTotalTime) {
-            this.animationData = aniData;
-            this.name = this.animationData.name;
-            this._totalTime = this.animationData.duration;
-            this.autoTween = aniData.autoTween;
-            this.setTimeScale(timeScale);
-            this.setPlayTimes(playTimes);
-            //reset
-            this._isComplete = false;
-            this._currentFrameIndex = -1;
-            this._currentPlayTimes = -1;
-            if (Math.round(this._totalTime * this.animationData.frameRate * 0.001) < 2) {
-                this._currentTime = this._totalTime;
-            }
-            else {
-                this._currentTime = -1;
-            }
-            this._fadeTotalTime = fadeTotalTime * this._timeScale;
-            this._fading = this._fadeTotalTime > 0;
-            //default
-            this._isPlaying = true;
-            if (this._armature.enableCache && this.animationCache && this._fading && this._boneTimelineStateList) {
-                this.updateTransformTimeline(this._progress);
-            }
-            this._time = 0;
-            this._progress = 0;
-            this._updateTimelineStateList();
-            this.hideBones();
-            return;
-        };
-        /**
-         * @private
-         * Update timeline state based on mixing transforms and clip.
-         */
-        p._updateTimelineStateList = function () {
-            this._resetTimelineStateList();
-            var timelineName;
-            var length = this.animationData.timelineList.length;
-            for (var i = 0; i < length; i++) {
-                var boneTimeline = this.animationData.timelineList[i];
-                timelineName = boneTimeline.name;
-                var bone = this._armature.getBone(timelineName);
-                if (bone) {
-                    var boneTimelineState = dragonBones.FastBoneTimelineState.borrowObject();
-                    boneTimelineState.fadeIn(bone, this, boneTimeline);
-                    this._boneTimelineStateList.push(boneTimelineState);
-                }
-            }
-            var length1 = this.animationData.slotTimelineList.length;
-            for (var i1 = 0; i1 < length1; i1++) {
-                var slotTimeline = this.animationData.slotTimelineList[i1];
-                timelineName = slotTimeline.name;
-                var slot = this._armature.getSlot(timelineName);
-                if (slot && slot.displayList.length > 0) {
-                    var slotTimelineState = dragonBones.FastSlotTimelineState.borrowObject();
-                    slotTimelineState.fadeIn(slot, this, slotTimeline);
-                    this._slotTimelineStateList.push(slotTimelineState);
-                }
-            }
-        };
-        /** @private */
-        p._advanceTime = function (passedTime) {
-            passedTime *= this._timeScale;
-            if (this._fading) {
-                //计算progress
-                this._time += passedTime;
-                this._progress = this._time / this._fadeTotalTime;
-                if (this._progress >= 1) {
-                    this._progress = 0;
-                    this._time = 0;
-                    this._fading = false;
-                }
-            }
-            if (this._fading) {
-                //update boneTimelie
-                var length = this._boneTimelineStateList.length;
-                for (var i = 0; i < length; i++) {
-                    var timeline = this._boneTimelineStateList[i];
-                    timeline.updateFade(this._progress);
-                }
-                //update slotTimelie
-                var length1 = this._slotTimelineStateList.length;
-                for (var i1 = 0; i1 < length1; i1++) {
-                    var slotTimeline = this._slotTimelineStateList[i1];
-                    slotTimeline.updateFade(this._progress);
-                }
-            }
-            else {
-                this.advanceTimelinesTime(passedTime);
-            }
-        };
-        p.advanceTimelinesTime = function (passedTime) {
-            if (this._isPlaying) {
-                this._time += passedTime;
-            }
-            //计算是否已经播放完成isThisComplete
-            var startFlg = false;
-            var loopCompleteFlg = false;
-            var completeFlg = false;
-            var isThisComplete = false;
-            var currentPlayTimes = 0;
-            var currentTime = this._time * 1000;
-            if (this._playTimes == 0 ||
-                currentTime < this._playTimes * this._totalTime) {
-                isThisComplete = false;
-                this._progress = currentTime / this._totalTime;
-                currentPlayTimes = Math.ceil(this._progress) || 1;
-                this._progress -= Math.floor(this._progress);
-                currentTime %= this._totalTime;
-            }
-            else {
-                currentPlayTimes = this._playTimes;
-                currentTime = this._totalTime;
-                isThisComplete = true;
-                this._progress = 1;
-            }
-            this._isComplete = isThisComplete;
-            //if (this.isUseCache()) {
-            if (this.animationCache) {
-                var frameIndex = Math.floor(this._progress * (this.animationCache.frameNum - 1));
-                this._armature._cacheFrameIndex = frameIndex;
-                this._armature._isFrameCached = this.animationCache._cahceList[frameIndex];
-                if (this._armature._isFrameCached) {
-                }
-                else {
-                    this.updateTransformTimeline(this._progress);
-                }
-            }
-            else {
-                this.updateTransformTimeline(this._progress);
-            }
-            //update main timeline
-            if (this._currentTime != currentTime) {
-                if (this._currentPlayTimes != currentPlayTimes) {
-                    if (this._currentPlayTimes > 0 && currentPlayTimes > 1) {
-                        loopCompleteFlg = true;
-                    }
-                    this._currentPlayTimes = currentPlayTimes;
-                }
-                if (this._currentTime < 0) {
-                    startFlg = true;
-                }
-                if (this._isComplete) {
-                    completeFlg = true;
-                }
-                this._lastTime = this._currentTime;
-                this._currentTime = currentTime;
-                this.updateMainTimeline(isThisComplete);
-            }
-            //抛事件
-            var event;
-            if (startFlg) {
-                if (this._armature.hasEventListener(dragonBones.AnimationEvent.START)) {
-                    event = new dragonBones.AnimationEvent(dragonBones.AnimationEvent.START);
-                    event.animationState = this;
-                    this._armature._addEvent(event);
-                }
-            }
-            if (completeFlg) {
-                if (this._armature.hasEventListener(dragonBones.AnimationEvent.COMPLETE)) {
-                    event = new dragonBones.AnimationEvent(dragonBones.AnimationEvent.COMPLETE);
-                    event.animationState = this;
-                    this._armature._addEvent(event);
-                }
-            }
-            else if (loopCompleteFlg) {
-                if (this._armature.hasEventListener(dragonBones.AnimationEvent.LOOP_COMPLETE)) {
-                    event = new dragonBones.AnimationEvent(dragonBones.AnimationEvent.LOOP_COMPLETE);
-                    event.animationState = this;
-                    this._armature._addEvent(event);
-                }
-            }
-        };
-        p.updateTransformTimeline = function (progress) {
-            var i = this._boneTimelineStateList.length;
-            var boneTimeline;
-            var slotTimeline;
-            if (this._isComplete) {
-                //update boneTimelie
-                while (i--) {
-                    boneTimeline = this._boneTimelineStateList[i];
-                    boneTimeline.update(progress);
-                    this._isComplete = boneTimeline._isComplete && this._isComplete;
-                }
-                i = this._slotTimelineStateList.length;
-                //update slotTimelie
-                while (i--) {
-                    slotTimeline = this._slotTimelineStateList[i];
-                    slotTimeline.update(progress);
-                    this._isComplete = slotTimeline._isComplete && this._isComplete;
-                }
-            }
-            else {
-                //update boneTimelie
-                while (i--) {
-                    boneTimeline = this._boneTimelineStateList[i];
-                    boneTimeline.update(progress);
-                }
-                i = this._slotTimelineStateList.length;
-                //update slotTimelie
-                while (i--) {
-                    slotTimeline = this._slotTimelineStateList[i];
-                    slotTimeline.update(progress);
-                }
-            }
-        };
-        p.updateMainTimeline = function (isThisComplete) {
-            var frameList = this.animationData._frameList;
-            if (frameList.length > 0) {
-                var prevFrame;
-                var currentFrame;
-                for (var i = 0, l = frameList.length; i < l; ++i) {
-                    if (this._currentFrameIndex < 0) {
-                        this._currentFrameIndex = 0;
-                    }
-                    else if (this._currentTime < this._currentFramePosition || this._currentTime >= this._currentFramePosition + this._currentFrameDuration || this._currentTime < this._lastTime) {
-                        this._lastTime = this._currentTime;
-                        this._currentFrameIndex++;
-                        if (this._currentFrameIndex >= frameList.length) {
-                            if (isThisComplete) {
-                                this._currentFrameIndex--;
-                                break;
-                            }
-                            else {
-                                this._currentFrameIndex = 0;
-                            }
-                        }
-                    }
-                    else {
-                        break;
-                    }
-                    currentFrame = frameList[this._currentFrameIndex];
-                    if (prevFrame) {
-                        this._armature.arriveAtFrame(prevFrame, this);
-                    }
-                    this._currentFrameDuration = currentFrame.duration;
-                    this._currentFramePosition = currentFrame.position;
-                    prevFrame = currentFrame;
-                }
-                if (currentFrame) {
-                    this._armature.arriveAtFrame(currentFrame, this);
-                }
-            }
-        };
-        p.setTimeScale = function (value) {
-            if (isNaN(value) || value == Infinity) {
-                value = 1;
-            }
-            this._timeScale = value;
-            return this;
-        };
-        p.setPlayTimes = function (value) {
-            if (value === void 0) { value = 0; }
-            //如果动画只有一帧  播放一次就可以
-            if (Math.round(this._totalTime * 0.001 * this.animationData.frameRate) < 2) {
-                this._playTimes = 1;
-            }
-            else {
-                this._playTimes = value;
-            }
-            return this;
-        };
-        d(p, "playTimes"
-            /**
-             * 播放次数 (0:循环播放， >0:播放次数)
-             * @member {number} dragonBones.FastAnimationState#playTimes
-             */
-            ,function () {
-                return this._playTimes;
-            }
-        );
-        d(p, "currentPlayTimes"
-            /**
-             * 当前播放次数
-             * @member {number} dragonBones.FastAnimationState#currentPlayTimes
-             */
-            ,function () {
-                return this._currentPlayTimes < 0 ? 0 : this._currentPlayTimes;
-            }
-        );
-        d(p, "isComplete"
-            /**
-             * 是否播放完成
-             * @member {boolean} dragonBones.FastAnimationState#isComplete
-             */
-            ,function () {
-                return this._isComplete;
-            }
-        );
-        d(p, "isPlaying"
-            /**
-             * 是否正在播放
-             * @member {boolean} dragonBones.FastAnimationState#isPlaying
-             */
-            ,function () {
-                return (this._isPlaying && !this._isComplete);
-            }
-        );
-        d(p, "totalTime"
-            /**
-             * 动画总时长（单位：秒）
-             * @member {number} dragonBones.FastAnimationState#totalTime
-             */
-            ,function () {
-                return this._totalTime * 0.001;
-            }
-        );
-        d(p, "currentTime"
-            /**
-             * 动画当前播放时间（单位：秒）
-             * @member {number} dragonBones.FastAnimationState#currentTime
-             */
-            ,function () {
-                return this._currentTime < 0 ? 0 : this._currentTime * 0.001;
-            }
-        );
-        /**
-         * 是否使用缓存
-         * @member {boolean} dragonBones.FastAnimationState#isUseCache
-         */
-        p.isUseCache = function () {
-            return this._armature.enableCache && this.animationCache && !this._fading;
-        };
-        p.hideBones = function () {
-            var length = this.animationData.hideTimelineNameMap.length;
-            for (var i = 0; i < length; i++) {
-                var timelineName = this.animationData.hideTimelineNameMap[i];
-                var bone = this._armature.getBone(timelineName);
-                if (bone) {
-                    bone._hideSlots();
-                }
-            }
-            var slotTimelineName;
-            for (i = 0, length = this.animationData.hideSlotTimelineNameMap.length; i < length; i++) {
-                slotTimelineName = this.animationData.hideSlotTimelineNameMap[i];
-                var slot = this._armature.getSlot(slotTimelineName);
-                if (slot) {
-                    slot._resetToOrigin();
-                }
-            }
-        };
-        d(p, "progress"
-            /**
-             * 动画播放进度
-             * @member {number} dragonBones.FastAnimationState#progress
-             */
-            ,function () {
-                return this._progress;
-            }
-        );
-        return FastAnimationState;
-    }());
-    dragonBones.FastAnimationState = FastAnimationState;
-    egret.registerClass(FastAnimationState,'dragonBones.FastAnimationState',["dragonBones.IAnimationState"]);
-})(dragonBones || (dragonBones = {}));
-//////////////////////////////////////////////////////////////////////////////////////
-//
-//  Copyright (c) 2014-2015, Egret Technology Inc.
-//  All rights reserved.
-//  Redistribution and use in source and binary forms, with or without
-//  modification, are permitted provided that the following conditions are met:
-//
-//     * Redistributions of source code must retain the above copyright
-//       notice, this list of conditions and the following disclaimer.
-//     * Redistributions in binary form must reproduce the above copyright
-//       notice, this list of conditions and the following disclaimer in the
-//       documentation and/or other materials provided with the distribution.
-//     * Neither the name of the Egret nor the
-//       names of its contributors may be used to endorse or promote products
-//       derived from this software without specific prior written permission.
-//
-//  THIS SOFTWARE IS PROVIDED BY EGRET AND CONTRIBUTORS "AS IS" AND ANY EXPRESS
-//  OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES
-//  OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED.
-//  IN NO EVENT SHALL EGRET AND CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT,
-//  INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT
-//  LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES;LOSS OF USE, DATA,
-//  OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF
-//  LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING
-//  NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE,
-//  EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
-//
-//////////////////////////////////////////////////////////////////////////////////////
-var dragonBones;
-(function (dragonBones) {
-    /**
-     * @class dragonBones.FastBoneTimelineState
-     * @classdesc
-     * FastBoneTimelineState 负责计算 Bone 的时间轴动画。
-     * FastBoneTimelineState 实例隶属于 FastAnimationState. FastAnimationState在创建时会为每个包含动作的 FastBone生成一个 FastBoneTimelineState 实例.
-     * @see dragonBones.FastAnimation
-     * @see dragonBones.FastAnimationState
-     * @see dragonBones.FastBone
-     */
-    var FastBoneTimelineState = (function () {
-        function FastBoneTimelineState() {
-            this._totalTime = 0; //duration
-            this._currentTime = 0;
-            this._lastTime = 0;
-            this._currentFrameIndex = 0;
-            this._currentFramePosition = 0;
-            this._currentFrameDuration = 0;
-            this._updateMode = 0;
-            this._transform = new dragonBones.DBTransform();
-            this._durationTransform = new dragonBones.DBTransform();
-            this._transformToFadein = new dragonBones.DBTransform();
-            this._pivot = new dragonBones.Point();
-            this._durationPivot = new dragonBones.Point();
-        }
-        var d = __define,c=FastBoneTimelineState,p=c.prototype;
-        /** @private */
-        FastBoneTimelineState.borrowObject = function () {
-            if (FastBoneTimelineState._pool.length == 0) {
-                return new FastBoneTimelineState();
-            }
-            return FastBoneTimelineState._pool.pop();
-        };
-        /** @private */
-        FastBoneTimelineState.returnObject = function (timeline) {
-            if (FastBoneTimelineState._pool.indexOf(timeline) < 0) {
-                FastBoneTimelineState._pool[FastBoneTimelineState._pool.length] = timeline;
-            }
-            timeline.clear();
-        };
-        /** @private */
-        FastBoneTimelineState.clear = function () {
-            var i = FastBoneTimelineState._pool.length;
-            while (i--) {
-                FastBoneTimelineState._pool[i].clear();
-            }
-            FastBoneTimelineState._pool.length = 0;
-        };
-        p.clear = function () {
-            if (this._bone) {
-                this._bone._timelineState = null;
-                this._bone = null;
-            }
-            this._animationState = null;
-            this._timelineData = null;
-            this._originPivot = null;
-        };
-        /** @private */
-        p.fadeIn = function (bone, animationState, timelineData) {
-            this._bone = bone;
-            this._animationState = animationState;
-            this._timelineData = timelineData;
-            this.name = timelineData.name;
-            this._totalTime = this._timelineData.duration;
-            this._isComplete = false;
-            this._tweenTransform = false;
-            this._currentFrameIndex = -1;
-            this._currentTime = -1;
-            this._tweenEasing = NaN;
-            this._durationPivot.x = 0;
-            this._durationPivot.y = 0;
-            this._pivot.x = 0;
-            this._pivot.y = 0;
-            this._originPivot = this._timelineData.originPivot;
-            switch (this._timelineData.frameList.length) {
-                case 0:
-                    this._updateMode = 0;
-                    break;
-                case 1:
-                    this._updateMode = 1;
-                    break;
-                default:
-                    this._updateMode = -1;
-                    break;
-            }
-            if (animationState._fadeTotalTime > 0) {
-                var pivotToFadein;
-                if (this._bone._timelineState) {
-                    this._transformToFadein.copy(this._bone._timelineState._transform);
-                }
-                else {
-                    this._transformToFadein = new dragonBones.DBTransform();
-                }
-                var firstFrame = (this._timelineData.frameList[0]);
-                this._durationTransform.copy(firstFrame.transform);
-                this._durationTransform.minus(this._transformToFadein);
-            }
-            this._bone._timelineState = this;
-        };
-        /** @private */
-        p.updateFade = function (progress) {
-            this._transform.x = this._transformToFadein.x + this._durationTransform.x * progress;
-            this._transform.y = this._transformToFadein.y + this._durationTransform.y * progress;
-            this._transform.scaleX = this._transformToFadein.scaleX * (1 + (this._durationTransform.scaleX - 1) * progress);
-            this._transform.scaleY = this._transformToFadein.scaleX * (1 + (this._durationTransform.scaleY - 1) * progress);
-            this._transform.rotation = this._transformToFadein.rotation + this._durationTransform.rotation * progress;
-            this._bone.invalidUpdate();
-        };
-        /** @private */
-        p.update = function (progress) {
-            if (this._updateMode == 1) {
-                this._updateMode = 0;
-                this.updateSingleFrame();
-            }
-            else if (this._updateMode == -1) {
-                this.updateMultipleFrame(progress);
-            }
-        };
-        p.updateSingleFrame = function () {
-            var currentFrame = (this._timelineData.frameList[0]);
-            this._bone.arriveAtFrame(currentFrame, this._animationState);
-            this._isComplete = true;
-            this._tweenEasing = NaN;
-            this._tweenTransform = false;
-            this._pivot.x = this._originPivot.x + currentFrame.pivot.x;
-            this._pivot.y = this._originPivot.y + currentFrame.pivot.y;
-            this._transform.copy(currentFrame.transform);
-            this._bone.invalidUpdate();
-        };
-        p.updateMultipleFrame = function (progress) {
-            var currentPlayTimes = 0;
-            progress /= this._timelineData.scale;
-            progress += this._timelineData.offset;
-            var currentTime = this._totalTime * progress;
-            var playTimes = this._animationState.playTimes;
-            if (playTimes == 0) {
-                this._isComplete = false;
-                currentPlayTimes = Math.ceil(Math.abs(currentTime) / this._totalTime) || 1;
-                currentTime -= Math.floor(currentTime / this._totalTime) * this._totalTime;
-                if (currentTime < 0) {
-                    currentTime += this._totalTime;
-                }
-            }
-            else {
-                var totalTimes = playTimes * this._totalTime;
-                if (currentTime >= totalTimes) {
-                    currentTime = totalTimes;
-                    this._isComplete = true;
-                }
-                else if (currentTime <= -totalTimes) {
-                    currentTime = -totalTimes;
-                    this._isComplete = true;
-                }
-                else {
-                    this._isComplete = false;
-                }
-                if (currentTime < 0) {
-                    currentTime += totalTimes;
-                }
-                currentPlayTimes = Math.ceil(currentTime / this._totalTime) || 1;
-                if (this._isComplete) {
-                    currentTime = this._totalTime;
-                }
-                else {
-                    currentTime -= Math.floor(currentTime / this._totalTime) * this._totalTime;
-                }
-            }
-            if (this._currentTime != currentTime) {
-                this._lastTime = this._currentTime;
-                this._currentTime = currentTime;
-                var frameList = this._timelineData.frameList;
-                var prevFrame;
-                var currentFrame;
-                for (var i = 0, l = this._timelineData.frameList.length; i < l; ++i) {
-                    if (this._currentFrameIndex < 0) {
-                        this._currentFrameIndex = 0;
-                    }
-                    else if (this._currentTime < this._currentFramePosition || this._currentTime >= this._currentFramePosition + this._currentFrameDuration || this._currentTime < this._lastTime) {
-                        this._currentFrameIndex++;
-                        this._lastTime = this._currentTime;
-                        if (this._currentFrameIndex >= frameList.length) {
-                            if (this._isComplete) {
-                                this._currentFrameIndex--;
-                                break;
-                            }
-                            else {
-                                this._currentFrameIndex = 0;
-                            }
-                        }
-                    }
-                    else {
-                        break;
-                    }
-                    currentFrame = (frameList[this._currentFrameIndex]);
-                    if (prevFrame) {
-                        this._bone.arriveAtFrame(prevFrame, this._animationState);
-                    }
-                    this._currentFrameDuration = currentFrame.duration;
-                    this._currentFramePosition = currentFrame.position;
-                    prevFrame = currentFrame;
-                }
-                if (currentFrame) {
-                    this._bone.arriveAtFrame(currentFrame, this._animationState);
-                    this.updateToNextFrame(currentPlayTimes);
-                }
-                if (this._tweenTransform) {
-                    this.updateTween();
-                }
-            }
-        };
-        p.updateToNextFrame = function (currentPlayTimes) {
-            if (currentPlayTimes === void 0) { currentPlayTimes = 0; }
-            var nextFrameIndex = this._currentFrameIndex + 1;
-            if (nextFrameIndex >= this._timelineData.frameList.length) {
-                nextFrameIndex = 0;
-            }
-            var currentFrame = (this._timelineData.frameList[this._currentFrameIndex]);
-            var nextFrame = (this._timelineData.frameList[nextFrameIndex]);
-            var tweenEnabled = false;
-            if (nextFrameIndex == 0 && (this._animationState.playTimes &&
-                this._animationState.currentPlayTimes >= this._animationState.playTimes &&
-                ((this._currentFramePosition + this._currentFrameDuration) / this._totalTime + currentPlayTimes - this._timelineData.offset) * this._timelineData.scale > 0.999999)) {
-                this._tweenEasing = NaN;
-                tweenEnabled = false;
-            }
-            else if (this._animationState.autoTween) {
-                this._tweenEasing = this._animationState.animationData.tweenEasing;
-                if (isNaN(this._tweenEasing)) {
-                    this._tweenEasing = currentFrame.tweenEasing;
-                    this._tweenCurve = currentFrame.curve;
-                    if (isNaN(this._tweenEasing) && this._tweenCurve == null) {
-                        tweenEnabled = false;
-                    }
-                    else {
-                        if (this._tweenEasing == 10) {
-                            this._tweenEasing = 0;
-                        }
-                        //_tweenEasing [-1, 0) 0 (0, 1] (1, 2]
-                        tweenEnabled = true;
-                    }
-                }
-                else {
-                    //_tweenEasing [-1, 0) 0 (0, 1] (1, 2]
-                    tweenEnabled = true;
-                }
-            }
-            else {
-                this._tweenEasing = currentFrame.tweenEasing;
-                this._tweenCurve = currentFrame.curve;
-                if ((isNaN(this._tweenEasing) || this._tweenEasing == 10) && this._tweenCurve == null) {
-                    this._tweenEasing = NaN;
-                    tweenEnabled = false;
-                }
-                else {
-                    //_tweenEasing [-1, 0) 0 (0, 1] (1, 2]
-                    tweenEnabled = true;
-                }
-            }
-            if (tweenEnabled) {
-                //transform
-                this._durationTransform.x = nextFrame.transform.x - currentFrame.transform.x;
-                this._durationTransform.y = nextFrame.transform.y - currentFrame.transform.y;
-                this._durationTransform.skewX = nextFrame.transform.skewX - currentFrame.transform.skewX;
-                this._durationTransform.skewY = nextFrame.transform.skewY - currentFrame.transform.skewY;
-                this._durationTransform.scaleX = nextFrame.transform.scaleX - currentFrame.transform.scaleX + nextFrame.scaleOffset.x;
-                this._durationTransform.scaleY = nextFrame.transform.scaleY - currentFrame.transform.scaleY + nextFrame.scaleOffset.y;
-                this._durationPivot.x = nextFrame.pivot.x - currentFrame.pivot.x;
-                this._durationPivot.y = nextFrame.pivot.y - currentFrame.pivot.y;
-                this._durationTransform.normalizeRotation();
-                if (nextFrameIndex == 0) {
-                    this._durationTransform.skewX = dragonBones.TransformUtil.formatRadian(this._durationTransform.skewX);
-                    this._durationTransform.skewY = dragonBones.TransformUtil.formatRadian(this._durationTransform.skewY);
-                }
-                if (this._durationTransform.x ||
-                    this._durationTransform.y ||
-                    this._durationTransform.skewX ||
-                    this._durationTransform.skewY ||
-                    this._durationTransform.scaleX != 1 ||
-                    this._durationTransform.scaleY != 1 ||
-                    this._durationPivot.x ||
-                    this._durationPivot.y) {
-                    this._tweenTransform = true;
-                }
-                else {
-                    this._tweenTransform = false;
-                }
-            }
-            else {
-                this._tweenTransform = false;
-            }
-            if (!this._tweenTransform) {
-                this._transform.copy(currentFrame.transform);
-                this._pivot.x = this._originPivot.x + currentFrame.pivot.x;
-                this._pivot.y = this._originPivot.y + currentFrame.pivot.y;
-                this._bone.invalidUpdate();
-            }
-        };
-        p.updateTween = function () {
-            var progress = (this._currentTime - this._currentFramePosition) / this._currentFrameDuration;
-            if (this._tweenCurve) {
-                progress = this._tweenCurve.getValueByProgress(progress);
-            }
-            else if (this._tweenEasing) {
-                progress = dragonBones.MathUtil.getEaseValue(progress, this._tweenEasing);
-            }
-            var currentFrame = (this._timelineData.frameList[this._currentFrameIndex]);
-            var currentTransform = currentFrame.transform;
-            var currentPivot = currentFrame.pivot;
-            //normal blending
-            this._transform.x = currentTransform.x + this._durationTransform.x * progress;
-            this._transform.y = currentTransform.y + this._durationTransform.y * progress;
-            this._transform.skewX = currentTransform.skewX + this._durationTransform.skewX * progress;
-            this._transform.skewY = currentTransform.skewY + this._durationTransform.skewY * progress;
-            this._transform.scaleX = currentTransform.scaleX + this._durationTransform.scaleX * progress;
-            this._transform.scaleY = currentTransform.scaleY + this._durationTransform.scaleY * progress;
-            this._pivot.x = currentPivot.x + this._durationPivot.x * progress;
-            this._pivot.y = currentPivot.y + this._durationPivot.y * progress;
-            this._bone.invalidUpdate();
-        };
-        FastBoneTimelineState._pool = [];
-        return FastBoneTimelineState;
-    }());
-    dragonBones.FastBoneTimelineState = FastBoneTimelineState;
-    egret.registerClass(FastBoneTimelineState,'dragonBones.FastBoneTimelineState');
-})(dragonBones || (dragonBones = {}));
-//////////////////////////////////////////////////////////////////////////////////////
-//
-//  Copyright (c) 2014-2015, Egret Technology Inc.
-//  All rights reserved.
-//  Redistribution and use in source and binary forms, with or without
-//  modification, are permitted provided that the following conditions are met:
-//
-//     * Redistributions of source code must retain the above copyright
-//       notice, this list of conditions and the following disclaimer.
-//     * Redistributions in binary form must reproduce the above copyright
-//       notice, this list of conditions and the following disclaimer in the
-//       documentation and/or other materials provided with the distribution.
-//     * Neither the name of the Egret nor the
-//       names of its contributors may be used to endorse or promote products
-//       derived from this software without specific prior written permission.
-//
-//  THIS SOFTWARE IS PROVIDED BY EGRET AND CONTRIBUTORS "AS IS" AND ANY EXPRESS
-//  OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES
-//  OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED.
-//  IN NO EVENT SHALL EGRET AND CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT,
-//  INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT
-//  LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES;LOSS OF USE, DATA,
-//  OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF
-//  LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING
-//  NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE,
-//  EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
-//
-//////////////////////////////////////////////////////////////////////////////////////
-var dragonBones;
-(function (dragonBones) {
-    /**
-     * @class dragonBones.FastSlotTimelineState
-     * @classdesc
-     * FastSlotTimelineState 负责计算 Slot 的时间轴动画。
-     * FastSlotTimelineState 实例隶属于 FastAnimationState. FastAnimationState在创建时会为每个包含动作的 Slot生成一个 FastSlotTimelineState 实例.
-     * @see dragonBones.FastAnimation
-     * @see dragonBones.FastAnimationState
-     * @see dragonBones.FastSlot
-     */
-    var FastSlotTimelineState = (function () {
-        function FastSlotTimelineState() {
-            this._totalTime = 0; //duration
-            this._currentTime = 0;
-            this._currentFrameIndex = 0;
-            this._currentFramePosition = 0;
-            this._currentFrameDuration = 0;
-            //-1: frameLength>1, 0:frameLength==0, 1:frameLength==1
-            this._updateMode = 0;
-            this._durationColor = new dragonBones.ColorTransform();
-        }
-        var d = __define,c=FastSlotTimelineState,p=c.prototype;
-        /** @private */
-        FastSlotTimelineState.borrowObject = function () {
-            if (FastSlotTimelineState._pool.length == 0) {
-                return new FastSlotTimelineState();
-            }
-            return FastSlotTimelineState._pool.pop();
-        };
-        /** @private */
-        FastSlotTimelineState.returnObject = function (timeline) {
-            if (FastSlotTimelineState._pool.indexOf(timeline) < 0) {
-                FastSlotTimelineState._pool[FastSlotTimelineState._pool.length] = timeline;
-            }
-            timeline.clear();
-        };
-        /** @private */
-        FastSlotTimelineState.clear = function () {
-            var i = FastSlotTimelineState._pool.length;
-            while (i--) {
-                FastSlotTimelineState._pool[i].clear();
-            }
-            FastSlotTimelineState._pool.length = 0;
-        };
-        p.clear = function () {
-            this._slot = null;
-            this._armature = null;
-            this._animation = null;
-            this._animationState = null;
-            this._timelineData = null;
-        };
-        //动画开始结束
-        /** @private */
-        p.fadeIn = function (slot, animationState, timelineData) {
-            this._slot = slot;
-            this._armature = this._slot.armature;
-            this._animation = this._armature.animation;
-            this._animationState = animationState;
-            this._timelineData = timelineData;
-            this.name = timelineData.name;
-            this._totalTime = this._timelineData.duration;
-            this._isComplete = false;
-            this._blendEnabled = false;
-            this._tweenColor = false;
-            this._currentFrameIndex = -1;
-            this._currentTime = -1;
-            this._tweenEasing = NaN;
-            this._weight = 1;
-            switch (this._timelineData.frameList.length) {
-                case 0:
-                    this._updateMode = 0;
-                    break;
-                case 1:
-                    this._updateMode = 1;
-                    break;
-                default:
-                    this._updateMode = -1;
-                    break;
-            }
-        };
-        //动画进行中
-        /** @private */
-        p.updateFade = function (progress) {
-        };
-        /** @private */
-        p.update = function (progress) {
-            if (this._updateMode == -1) {
-                this.updateMultipleFrame(progress);
-            }
-            else if (this._updateMode == 1) {
-                this._updateMode = 0;
-                this.updateSingleFrame();
-            }
-        };
-        p.updateMultipleFrame = function (progress) {
-            var currentPlayTimes = 0;
-            progress /= this._timelineData.scale;
-            progress += this._timelineData.offset;
-            var currentTime = this._totalTime * progress;
-            var playTimes = this._animationState.playTimes;
-            if (playTimes == 0) {
-                this._isComplete = false;
-                currentPlayTimes = Math.ceil(Math.abs(currentTime) / this._totalTime) || 1;
-                currentTime -= Math.floor(currentTime / this._totalTime) * this._totalTime;
-                if (currentTime < 0) {
-                    currentTime += this._totalTime;
-                }
-            }
-            else {
-                var totalTimes = playTimes * this._totalTime;
-                if (currentTime >= totalTimes) {
-                    currentTime = totalTimes;
-                    this._isComplete = true;
-                }
-                else if (currentTime <= -totalTimes) {
-                    currentTime = -totalTimes;
-                    this._isComplete = true;
-                }
-                else {
-                    this._isComplete = false;
-                }
-                if (currentTime < 0) {
-                    currentTime += totalTimes;
-                }
-                currentPlayTimes = Math.ceil(currentTime / this._totalTime) || 1;
-                if (this._isComplete) {
-                    currentTime = this._totalTime;
-                }
-                else {
-                    currentTime -= Math.floor(currentTime / this._totalTime) * this._totalTime;
-                }
-            }
-            if (this._currentTime != currentTime) {
-                this._currentTime = currentTime;
-                var frameList = this._timelineData.frameList;
-                var prevFrame;
-                var currentFrame;
-                for (var i = 0, l = this._timelineData.frameList.length; i < l; ++i) {
-                    if (this._currentFrameIndex < 0) {
-                        this._currentFrameIndex = 0;
-                    }
-                    else if (this._currentTime < this._currentFramePosition || this._currentTime >= this._currentFramePosition + this._currentFrameDuration) {
-                        this._currentFrameIndex++;
-                        if (this._currentFrameIndex >= frameList.length) {
-                            if (this._isComplete) {
-                                this._currentFrameIndex--;
-                                break;
-                            }
-                            else {
-                                this._currentFrameIndex = 0;
-                            }
-                        }
-                    }
-                    else {
-                        break;
-                    }
-                    currentFrame = (frameList[this._currentFrameIndex]);
-                    if (prevFrame) {
-                        this._slot._arriveAtFrame(prevFrame, this._animationState);
-                    }
-                    this._currentFrameDuration = currentFrame.duration;
-                    this._currentFramePosition = currentFrame.position;
-                    prevFrame = currentFrame;
-                }
-                if (currentFrame) {
-                    this._slot._arriveAtFrame(currentFrame, this._animationState);
-                    this._blendEnabled = currentFrame.displayIndex >= 0;
-                    if (this._blendEnabled) {
-                        this.updateToNextFrame(currentPlayTimes);
-                    }
-                    else {
-                        this._tweenEasing = NaN;
-                        this._tweenColor = false;
-                    }
-                }
-                if (this._blendEnabled) {
-                    this.updateTween();
-                }
-            }
-        };
-        p.updateToNextFrame = function (currentPlayTimes) {
-            if (currentPlayTimes === void 0) { currentPlayTimes = 0; }
-            var nextFrameIndex = this._currentFrameIndex + 1;
-            if (nextFrameIndex >= this._timelineData.frameList.length) {
-                nextFrameIndex = 0;
-            }
-            var currentFrame = (this._timelineData.frameList[this._currentFrameIndex]);
-            var nextFrame = (this._timelineData.frameList[nextFrameIndex]);
-            var tweenEnabled = false;
-            if (nextFrameIndex == 0 &&
-                (this._animationState.playTimes &&
-                    this._animationState.currentPlayTimes >= this._animationState.playTimes &&
-                    ((this._currentFramePosition + this._currentFrameDuration) / this._totalTime + currentPlayTimes - this._timelineData.offset) * this._timelineData.scale > 0.999999)) {
-                this._tweenEasing = NaN;
-                tweenEnabled = false;
-            }
-            else if (currentFrame.displayIndex < 0 || nextFrame.displayIndex < 0) {
-                this._tweenEasing = NaN;
-                tweenEnabled = false;
-            }
-            else if (this._animationState.autoTween) {
-                this._tweenEasing = this._animationState.animationData.tweenEasing;
-                if (isNaN(this._tweenEasing)) {
-                    this._tweenEasing = currentFrame.tweenEasing;
-                    this._tweenCurve = currentFrame.curve;
-                    if (isNaN(this._tweenEasing) && this._tweenCurve == null) {
-                        tweenEnabled = false;
-                    }
-                    else {
-                        if (this._tweenEasing == 10) {
-                            this._tweenEasing = 0;
-                        }
-                        //_tweenEasing [-1, 0) 0 (0, 1] (1, 2]
-                        tweenEnabled = true;
-                    }
-                }
-                else {
-                    //_tweenEasing [-1, 0) 0 (0, 1] (1, 2]
-                    tweenEnabled = true;
-                }
-            }
-            else {
-                this._tweenEasing = currentFrame.tweenEasing;
-                this._tweenCurve = currentFrame.curve;
-                if ((isNaN(this._tweenEasing) || this._tweenEasing == 10) && this._tweenCurve == null) {
-                    this._tweenEasing = NaN;
-                    tweenEnabled = false;
-                }
-                else {
-                    //_tweenEasing [-1, 0) 0 (0, 1] (1, 2]
-                    tweenEnabled = true;
-                }
-            }
-            if (tweenEnabled) {
-                if (currentFrame.color || nextFrame.color) {
-                    dragonBones.ColorTransformUtil.minus(nextFrame.color || dragonBones.ColorTransformUtil.originalColor, currentFrame.color || dragonBones.ColorTransformUtil.originalColor, this._durationColor);
-                    this._tweenColor = this._durationColor.alphaOffset != 0 ||
-                        this._durationColor.redOffset != 0 ||
-                        this._durationColor.greenOffset != 0 ||
-                        this._durationColor.blueOffset != 0 ||
-                        this._durationColor.alphaMultiplier != 0 ||
-                        this._durationColor.redMultiplier != 0 ||
-                        this._durationColor.greenMultiplier != 0 ||
-                        this._durationColor.blueMultiplier != 0;
-                }
-                else {
-                    this._tweenColor = false;
-                }
-            }
-            else {
-                this._tweenColor = false;
-            }
-            if (!this._tweenColor) {
-                var targetColor;
-                var colorChanged;
-                if (currentFrame.color) {
-                    targetColor = currentFrame.color;
-                    colorChanged = true;
-                }
-                else {
-                    targetColor = dragonBones.ColorTransformUtil.originalColor;
-                    colorChanged = false;
-                }
-                if ((this._slot._isColorChanged || colorChanged)) {
-                    if (!dragonBones.ColorTransformUtil.isEqual(this._slot._colorTransform, targetColor)) {
-                        this._slot._updateDisplayColor(targetColor.alphaOffset, targetColor.redOffset, targetColor.greenOffset, targetColor.blueOffset, targetColor.alphaMultiplier, targetColor.redMultiplier, targetColor.greenMultiplier, targetColor.blueMultiplier, colorChanged);
-                    }
-                }
-            }
-        };
-        p.updateTween = function () {
-            var currentFrame = (this._timelineData.frameList[this._currentFrameIndex]);
-            if (this._tweenColor) {
-                var progress = (this._currentTime - this._currentFramePosition) / this._currentFrameDuration;
-                if (this._tweenCurve != null) {
-                    progress = this._tweenCurve.getValueByProgress(progress);
-                }
-                else if (this._tweenEasing) {
-                    progress = dragonBones.MathUtil.getEaseValue(progress, this._tweenEasing);
-                }
-                if (currentFrame.color) {
-                    this._slot._updateDisplayColor(currentFrame.color.alphaOffset + this._durationColor.alphaOffset * progress, currentFrame.color.redOffset + this._durationColor.redOffset * progress, currentFrame.color.greenOffset + this._durationColor.greenOffset * progress, currentFrame.color.blueOffset + this._durationColor.blueOffset * progress, currentFrame.color.alphaMultiplier + this._durationColor.alphaMultiplier * progress, currentFrame.color.redMultiplier + this._durationColor.redMultiplier * progress, currentFrame.color.greenMultiplier + this._durationColor.greenMultiplier * progress, currentFrame.color.blueMultiplier + this._durationColor.blueMultiplier * progress, true);
-                }
-                else {
-                    this._slot._updateDisplayColor(this._durationColor.alphaOffset * progress, this._durationColor.redOffset * progress, this._durationColor.greenOffset * progress, this._durationColor.blueOffset * progress, this._durationColor.alphaMultiplier * progress + 1, this._durationColor.redMultiplier * progress + 1, this._durationColor.greenMultiplier * progress + 1, this._durationColor.blueMultiplier * progress + 1, true);
-                }
-            }
-        };
-        p.updateSingleFrame = function () {
-            var currentFrame = (this._timelineData.frameList[0]);
-            this._slot._arriveAtFrame(currentFrame, this._animationState);
-            this._isComplete = true;
-            this._tweenEasing = NaN;
-            this._tweenColor = false;
-            this._blendEnabled = currentFrame.displayIndex >= 0;
-            if (this._blendEnabled) {
-                var targetColor;
-                var colorChanged;
-                if (currentFrame.color) {
-                    targetColor = currentFrame.color;
-                    colorChanged = true;
-                }
-                else {
-                    targetColor = dragonBones.ColorTransformUtil.originalColor;
-                    colorChanged = false;
-                }
-                if ((this._slot._isColorChanged || colorChanged)) {
-                    if (!dragonBones.ColorTransformUtil.isEqual(this._slot._colorTransform, targetColor)) {
-                        this._slot._updateDisplayColor(targetColor.alphaOffset, targetColor.redOffset, targetColor.greenOffset, targetColor.blueOffset, targetColor.alphaMultiplier, targetColor.redMultiplier, targetColor.greenMultiplier, targetColor.blueMultiplier, colorChanged);
-                    }
-                }
-            }
-        };
-        FastSlotTimelineState.HALF_PI = Math.PI * 0.5;
-        FastSlotTimelineState.DOUBLE_PI = Math.PI * 2;
-        FastSlotTimelineState._pool = [];
-        return FastSlotTimelineState;
-    }());
-    dragonBones.FastSlotTimelineState = FastSlotTimelineState;
-    egret.registerClass(FastSlotTimelineState,'dragonBones.FastSlotTimelineState');
 })(dragonBones || (dragonBones = {}));
 //////////////////////////////////////////////////////////////////////////////////////
 //

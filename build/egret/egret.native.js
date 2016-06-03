@@ -2464,6 +2464,32 @@ var egret;
         egret.updateAllScreens = updateAllScreens;
     })(native = egret.native || (egret.native = {}));
 })(egret || (egret = {}));
+var egret;
+(function (egret) {
+    var native;
+    (function (native) {
+        var NativeFps = (function (_super) {
+            __extends(NativeFps, _super);
+            function NativeFps(stage, showFPS, showLog, logFilter, styles) {
+                _super.call(this);
+            }
+            var d = __define,c=NativeFps,p=c.prototype;
+            p.update = function (drawCalls, dirtyRatio) {
+                var args = [];
+                for (var _i = 2; _i < arguments.length; _i++) {
+                    args[_i - 2] = arguments[_i];
+                }
+            };
+            ;
+            p.updateInfo = function (info) {
+            };
+            return NativeFps;
+        }(egret.DisplayObject));
+        native.NativeFps = NativeFps;
+        egret.registerClass(NativeFps,'egret.native.NativeFps',["egret.FPSDisplay"]);
+        egret.FPSDisplay = NativeFps;
+    })(native = egret.native || (egret.native = {}));
+})(egret || (egret = {}));
 //////////////////////////////////////////////////////////////////////////////////////
 //
 //  Copyright (c) 2014-2015, Egret Technology Inc.
