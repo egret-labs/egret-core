@@ -9036,7 +9036,7 @@ declare module egret {
         /**
          * 更新FPS信息
          */
-        update(drawCalls: number, dirtyRatio: number, ...args: any[]): void;
+        update(datas: FPSData): void;
         /**
          * 插入一条日志信息
          */
@@ -9045,6 +9045,14 @@ declare module egret {
     var FPSDisplay: {
         new (stage: Stage, showFPS: boolean, showLog: boolean, logFilter: string, styles: Object): FPSDisplay;
     };
+}
+interface FPSData extends Object {
+    fps: number;
+    draw: number;
+    dirty: number;
+    costTicker: number;
+    costDirty: number;
+    costRender: number;
 }
 declare module egret.sys {
     /**
@@ -14715,5 +14723,27 @@ declare module egret {
         private static canUseWebGL;
         static checkCanUseWebGL(): boolean;
         static deleteWebGLTexture(bitmapData: any): void;
+    }
+}
+declare module egret.web {
+    class WebFps2 extends egret.DisplayObject implements egret.FPSDisplay {
+        private fontColor;
+        private fontSize;
+        private container;
+        private fps;
+        private log;
+        constructor(stage: Stage, showFPS: boolean, showLog: boolean, logFilter: string, styles: Object);
+        private fpsHeight;
+        private divDraw;
+        private divConst;
+        private addFps();
+        private addLog();
+        private fpsMin;
+        private fpsMax;
+        private arrFps;
+        private arrCost;
+        update(datas: FPSData): void;
+        private arrLog;
+        updateInfo(info: string): void;
     }
 }

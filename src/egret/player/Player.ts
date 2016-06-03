@@ -480,7 +480,7 @@ module egret.sys {
             this.touchEnabled = false;
             this.styles = styles;
             //this.createDisplay();
-            this.fpsDisplay = new FPSDisplay(this.stage,showFPS,showLog,logFilter,styles);
+            this.fpsDisplay = new FPSDisplay(stage,showFPS,showLog,logFilter,styles);
             this.addChild(this.fpsDisplay);
             try {
                 var logFilterRegExp = logFilter ? new RegExp(logFilter) : null;
@@ -533,9 +533,18 @@ module egret.sys {
                 var lastCostDirty = Math.round(this.costDirty / this.totalTick);
                 var lastCostRender = Math.round(this.costRender / this.totalTick);
                 var lastCostTicker = Math.round(this.costTicker / this.totalTick);
-
-                var text = "FPS: " + lastFPS + "\nDraw: " + lastDrawCalls + "," + lastDirtyRatio + "%\nCost: " + lastCostTicker + "," + lastCostDirty + "," + lastCostRender;
-                console.log(text)
+                this.fpsDisplay.update(
+                    {
+                        fps:lastFPS,
+                        draw:lastDrawCalls,
+                        dirty:lastDirtyRatio,
+                        costTicker:lastCostTicker,
+                        costDirty:lastCostDirty,
+                        costRender:lastCostRender
+                    }
+                )
+                //var text = "FPS: " + lastFPS + "\nDraw: " + lastDrawCalls + "," + lastDirtyRatio + "%\nCost: " + lastCostTicker + "," + lastCostDirty + "," + lastCostRender;
+                //console.log(text)
                 //if (this.textField.text != text) {
                 //    this.textField.text = text;
                 //    this.updateLayout();
@@ -549,7 +558,18 @@ module egret.sys {
                 this.costTicker = 0;
             }
         };
-
+        FPSImpl.prototype.updateInfo = function (info) {
+            if(!info){
+                return;
+            }
+            if (!this.showLog) {
+                return;
+            }
+            if (!this.filter(info)) {
+                return;
+            }
+            this.fpsDisplay.updateInfo(info);
+        }
         //FPSImpl.prototype.updateInfo = function (info) {
         //    if (!this.showLog) {
         //        return;

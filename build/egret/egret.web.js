@@ -3970,82 +3970,138 @@ var egret;
 })(egret || (egret = {}));
 var egret;
 (function (egret) {
-    var web;
-    (function (web) {
+    var native;
+    (function (native) {
         var WebFps = (function (_super) {
             __extends(WebFps, _super);
             function WebFps(stage, showFPS, showLog, logFilter, styles) {
                 _super.call(this);
-                console.log('webFps', showFPS, showLog, logFilter, styles);
+                this.arrFps = [];
+                this.arrCost = [];
+                this.arrLog = [];
                 if (showFPS || showLog) {
-                    this.fontColor = styles['textColor'].replace("0x", "#");
-                    var size = parseInt(styles['size']);
-                    if (egret.Capabilities.isMobile) {
-                        size -= 2;
-                    }
-                    this.fontSize = size + 'px';
-                    var all = document.createElement('div');
-                    all.style.position = 'absolute';
-                    all.style.background = "rgba(0,0,0," + styles['bgAlpha'] + ")";
-                    all.style.top = styles['x'] + 'px';
-                    all.style.left = styles['y'] + 'px';
-                    document.body.appendChild(all);
-                    var container = document.createElement('div');
-                    container.style.color = this.fontColor;
-                    container.style.fontSize = this.fontSize;
-                    container.style.lineHeight = this.fontSize;
-                    //container.style.display = 'inline-block';
-                    container.style.margin = '4px 4px 4px 4px';
-                    this.container = container;
-                    all.appendChild(container);
+                    this._stage = stage;
+                    this.showFps = showFPS;
+                    this.showLog = showLog;
+                    this.fontColor = styles["textColor"] === undefined ? 0xffffff : parseInt(styles['textColor']);
+                    this.fontSize = styles["size"] === undefined ? 24 : parseInt(styles['size']);
+                    this.bgAlpha = styles["bgAlpha"] || 0.9;
+                    this.shape = new egret.Shape();
+                    this.addChild(this.shape);
                     if (showFPS)
-                        this.showFps();
+                        this.addFps();
                     if (showLog)
-                        this.showLog();
+                        this.addLog();
                 }
             }
             var d = __define,c=WebFps,p=c.prototype;
-            p.showFps = function () {
-                console.log('showFps');
-                var fps = document.createElement('div');
-                fps.style.paddingBottom = '2px';
-                this.fps = fps;
-                this.container.appendChild(fps);
-                fps.innerHTML = "56 FPS " + egret.Capabilities.renderMode + "<br/>min 23 max 58 avg 44";
-                var left = document.createElement('div');
-                left.style['float'] = 'left';
-                left.innerHTML = "Obj<br/>Draw<br/>Dirty<br/>Cost";
-                this.container.appendChild(left);
-                var right = document.createElement('div');
-                right.style['float'] = 'left';
-                right.style.paddingLeft = '20px';
-                right.innerHTML = "1261<br/>4<br/>25%<br/>";
-                var cost = document.createElement('div');
-                cost.innerHTML = '<font  style="color:#18fefe">12<font/> <font  style="color:#ffff00">26<font/> <font  style="color:#ff0000">25<font/>';
-                right.appendChild(cost);
-                this.container.appendChild(right);
+            p.addFps = function () {
+                var container = new egret.DisplayObjectContainer();
+                this.addChild(container);
+                container.x = container.y = 4;
+                var fps = new egret.TextField();
+                var left = new egret.TextField();
+                var draw = new egret.TextField();
+                var cost = new egret.TextField();
+                fps.lineSpacing = left.lineSpacing = draw.lineSpacing = cost.lineSpacing = 2;
+                fps.size = left.size = draw.size = cost.size = this.fontSize;
+                fps.textColor = left.textColor = draw.textColor = cost.textColor = this.fontColor;
+                fps.text = "0 FPS " + egret.Capabilities.renderMode;
+                left.text = "Draw\nDirty\nCost";
+                draw.text = '0\n0%\n';
+                cost.textFlow = [
+                    { text: "0 ", style: { "textColor": 0x18fefe } },
+                    { text: "0 ", style: { "textColor": 0xffff00 } },
+                    { text: "0 ", style: { "textColor": 0xff0000 } },
+                ];
+                draw.x = cost.x = left.width + 20;
+                left.y = draw.y = fps.height + 2;
+                cost.y = draw.height + 2;
+                container.addChild(fps);
+                container.addChild(left);
+                container.addChild(draw);
+                container.addChild(cost);
+                this.textFps = fps;
+                this.textDraw = draw;
+                this.textCost = cost;
+                this.fpsHeight = container.height;
+                this.updateLayout();
             };
-            p.showLog = function () {
-                console.log('showLog');
-                var log = document.createElement('div');
-                log.style.color = this.fontColor;
-                log.style.fontSize = this.fontSize;
-            };
-            p.update = function (drawCalls, dirtyRatio) {
-                var args = [];
-                for (var _i = 2; _i < arguments.length; _i++) {
-                    args[_i - 2] = arguments[_i];
+            p.addLog = function () {
+                var text = new egret.TextField();
+                text.size = this.fontSize;
+                text.textColor = this.fontColor;
+                text.x = 4;
+                if (this.showFps) {
+                    text.y = this.fpsHeight + 4;
                 }
+                this.addChild(text);
+                this.textLog = text;
+                this.updateLayout();
+            };
+            p.update = function (datas) {
+                var fpsMin = this.fpsMin;
+                var fpsMax = this.fpsMax;
+                this.arrFps.push(datas.fps);
+                this.arrCost.push([datas.costTicker, datas.costDirty, datas.costRender]);
+                var fpsTotal = 0;
+                var lenFps = this.arrFps.length;
+                if (lenFps == 1) {
+                    fpsMin = fpsMax = datas.fps;
+                }
+                if (lenFps > 110) {
+                    lenFps = 100;
+                    this.arrFps.shift();
+                }
+                for (var i = 0; i < lenFps; i++) {
+                    var num = this.arrFps[i];
+                    fpsTotal += num;
+                    if (num < fpsMin)
+                        fpsMin = num;
+                    else if (num > fpsMax)
+                        fpsMax = num;
+                }
+                var fpsAvg = Math.floor(fpsTotal / lenFps);
+                this.textFps.text = datas.fps + " FPS " + egret.Capabilities.renderMode;
+                this.textDraw.text = datas.draw + "\n" + datas.dirty + "%";
+                this.textCost.textFlow = [
+                    { text: datas.costTicker + " ", style: { "textColor": 0x18fefe } },
+                    { text: datas.costDirty + " ", style: { "textColor": 0xffff00 } },
+                    { text: datas.costRender + " ", style: { "textColor": 0xff0000 } },
+                ];
+                this.updateLayout();
             };
             ;
             p.updateInfo = function (info) {
+                this.arrLog.push(info);
+                this.textLog.text = this.arrLog.join('\n');
+                if (this._stage.stageHeight > 0) {
+                    if (this.textLog.textWidth > this._stage.stageWidth - 20) {
+                        this.textLog.width = this._stage.stageWidth - 20;
+                    }
+                    while (this.textLog.textHeight > this._stage.stageHeight - this.fpsHeight - 20) {
+                        this.arrLog.shift();
+                        this.textLog.text = this.arrLog.join("\n");
+                    }
+                }
+                this.updateLayout();
+            };
+            p.updateLayout = function () {
+                if (egret.Capabilities.runtimeType == egret.RuntimeType.NATIVE) {
+                    return;
+                }
+                var g = this.shape.$graphics;
+                g.clear();
+                g.beginFill(0x000000, this.bgAlpha);
+                g.drawRect(0, 0, this.width + 8, this.height + 8);
+                g.endFill();
             };
             return WebFps;
-        }(egret.DisplayObject));
-        web.WebFps = WebFps;
-        egret.registerClass(WebFps,'egret.web.WebFps',["egret.FPSDisplay"]);
+        }(egret.DisplayObjectContainer));
+        native.WebFps = WebFps;
+        egret.registerClass(WebFps,'egret.native.WebFps',["egret.FPSDisplay"]);
         egret.FPSDisplay = WebFps;
-    })(web = egret.web || (egret.web = {}));
+    })(native = egret.native || (egret.native = {}));
 })(egret || (egret = {}));
 //////////////////////////////////////////////////////////////////////////////////////
 //
