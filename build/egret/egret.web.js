@@ -2271,6 +2271,12 @@ var egret;
             p.$show = function () {
                 if (!this.htmlInput.isCurrentStageText(this)) {
                     this.inputElement = this.htmlInput.getInputElement(this);
+                    if (!this.$textfield.multiline) {
+                        this.inputElement.type = this.$textfield.inputType;
+                    }
+                    else {
+                        this.inputElement.type = "text";
+                    }
                     this.inputDiv = this.htmlInput._inputDIV;
                 }
                 else {
