@@ -3039,8 +3039,8 @@ var egret;
                 for (var i = 0; i < length; i++) {
                     var filter = filters[i];
                     if (filter.type == "blur") {
-                        var offsetX = filter.blurX * 0.028 * bounds.width;
-                        var offsetY = filter.blurY * 0.028 * bounds.width;
+                        var offsetX = filter.blurX;
+                        var offsetY = filter.blurY;
                         x -= offsetX;
                         y -= offsetY;
                         w += offsetX * 2;

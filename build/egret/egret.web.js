@@ -5126,29 +5126,28 @@ var egret;
                     "uniform sampler2D uSampler;" +
                     "varying vec2 vTextureCoord;" +
                     "uniform vec4 uBounds;" +
+                    "uniform vec2 uTextureSize;" +
                     "void main()" +
                     "{" +
-                    "gl_FragColor = vec4(0.0);" +
-                    "vec2 uv = (vTextureCoord + vec2(-0.028 * blur.x, -0.028 * blur.y));if(uv.x >= uBounds[0] && uv.x <= uBounds[2] && uv.y >= uBounds[1] && uv.y <= uBounds[3]) gl_FragColor += texture2D(uSampler, (vTextureCoord + vec2(-0.028 * blur.x, -0.028 * blur.y))) * 0.0044299121055113265;" +
-                    "uv = (vTextureCoord + vec2(-0.024 * blur.x, -0.024 * blur.y));if(uv.x >= uBounds[0] && uv.x <= uBounds[2] && uv.y >= uBounds[1] && uv.y <= uBounds[3]) gl_FragColor += texture2D(uSampler, (vTextureCoord + vec2(-0.024 * blur.x, -0.024 * blur.y))) * 0.00895781211794;" +
-                    "uv = (vTextureCoord + vec2(-0.020 * blur.x, -0.020 * blur.y));if(uv.x >= uBounds[0] && uv.x <= uBounds[2] && uv.y >= uBounds[1] && uv.y <= uBounds[3]) gl_FragColor += texture2D(uSampler, (vTextureCoord + vec2(-0.020 * blur.x, -0.020 * blur.y))) * 0.0215963866053;" +
-                    "uv = (vTextureCoord + vec2(-0.016 * blur.x, -0.016 * blur.y));if(uv.x >= uBounds[0] && uv.x <= uBounds[2] && uv.y >= uBounds[1] && uv.y <= uBounds[3]) gl_FragColor += texture2D(uSampler, (vTextureCoord + vec2(-0.016 * blur.x, -0.016 * blur.y))) * 0.0443683338718;" +
-                    "uv = (vTextureCoord + vec2(-0.012 * blur.x, -0.012 * blur.y));if(uv.x >= uBounds[0] && uv.x <= uBounds[2] && uv.y >= uBounds[1] && uv.y <= uBounds[3]) gl_FragColor += texture2D(uSampler, (vTextureCoord + vec2(-0.012 * blur.x, -0.012 * blur.y))) * 0.0776744219933;" +
-                    "uv = (vTextureCoord + vec2(-0.008 * blur.x, -0.008 * blur.y));if(uv.x >= uBounds[0] && uv.x <= uBounds[2] && uv.y >= uBounds[1] && uv.y <= uBounds[3]) gl_FragColor += texture2D(uSampler, (vTextureCoord + vec2(-0.008 * blur.x, -0.008 * blur.y))) * 0.115876621105;" +
-                    "uv = (vTextureCoord + vec2(-0.004 * blur.x, -0.004 * blur.y));if(uv.x >= uBounds[0] && uv.x <= uBounds[2] && uv.y >= uBounds[1] && uv.y <= uBounds[3]) gl_FragColor += texture2D(uSampler, (vTextureCoord + vec2(-0.004 * blur.x, -0.004 * blur.y))) * 0.147308056121;" +
-                    "uv = (vTextureCoord);if(uv.x >= uBounds[0] && uv.x <= uBounds[2] && uv.y >= uBounds[1] && uv.y <= uBounds[3]) gl_FragColor += texture2D(uSampler, vTextureCoord) * 0.159576912161;" +
-                    "uv = (vTextureCoord + vec2(0.004 * blur.x, 0.004 * blur.y));if(uv.x >= uBounds[0] && uv.x <= uBounds[2] && uv.y >= uBounds[1] && uv.y <= uBounds[3]) gl_FragColor += texture2D(uSampler, (vTextureCoord + vec2( 0.004 * blur.x,  0.004 * blur.y))) * 0.147308056121;" +
-                    "uv = (vTextureCoord + vec2(0.008 * blur.x, 0.008 * blur.y));if(uv.x >= uBounds[0] && uv.x <= uBounds[2] && uv.y >= uBounds[1] && uv.y <= uBounds[3]) gl_FragColor += texture2D(uSampler, (vTextureCoord + vec2( 0.008 * blur.x,  0.008 * blur.y))) * 0.115876621105;" +
-                    "uv = (vTextureCoord + vec2(0.012 * blur.x, 0.012 * blur.y));if(uv.x >= uBounds[0] && uv.x <= uBounds[2] && uv.y >= uBounds[1] && uv.y <= uBounds[3]) gl_FragColor += texture2D(uSampler, (vTextureCoord + vec2( 0.012 * blur.x,  0.012 * blur.y))) * 0.0776744219933;" +
-                    "uv = (vTextureCoord + vec2(0.016 * blur.x, 0.016 * blur.y));if(uv.x >= uBounds[0] && uv.x <= uBounds[2] && uv.y >= uBounds[1] && uv.y <= uBounds[3]) gl_FragColor += texture2D(uSampler, (vTextureCoord + vec2( 0.016 * blur.x,  0.016 * blur.y))) * 0.0443683338718;" +
-                    "uv = (vTextureCoord + vec2(0.020 * blur.x, 0.020 * blur.y));if(uv.x >= uBounds[0] && uv.x <= uBounds[2] && uv.y >= uBounds[1] && uv.y <= uBounds[3]) gl_FragColor += texture2D(uSampler, (vTextureCoord + vec2( 0.020 * blur.x,  0.020 * blur.y))) * 0.0215963866053;" +
-                    "uv = (vTextureCoord + vec2(0.024 * blur.x, 0.024 * blur.y));if(uv.x >= uBounds[0] && uv.x <= uBounds[2] && uv.y >= uBounds[1] && uv.y <= uBounds[3]) gl_FragColor += texture2D(uSampler, (vTextureCoord + vec2( 0.024 * blur.x,  0.024 * blur.y))) * 0.00895781211794;" +
-                    "uv = (vTextureCoord + vec2(0.028 * blur.x, 0.028 * blur.y));if(uv.x >= uBounds[0] && uv.x <= uBounds[2] && uv.y >= uBounds[1] && uv.y <= uBounds[3]) gl_FragColor += texture2D(uSampler, (vTextureCoord + vec2( 0.028 * blur.x,  0.028 * blur.y))) * 0.0044299121055113265;" +
+                    "const int sampleRadius = 5;" +
+                    "const int samples = sampleRadius * 2 + 1;" +
+                    "vec4 color = vec4(0, 0, 0, 0);" +
+                    "vec2 uv = vec2(0.0, 0.0);" +
+                    "for (int i = -sampleRadius; i <= sampleRadius; i++) {" +
+                    "uv.x = vTextureCoord.x + float(i) * blur.x / float(sampleRadius) / uTextureSize.x;" +
+                    "uv.y = vTextureCoord.y + float(i) * blur.y / float(sampleRadius) / uTextureSize.y;" +
+                    "if(uv.x >= uBounds[0] && uv.x <= uBounds[2] && uv.y >= uBounds[1] && uv.y <= uBounds[3]) {" +
+                    "color += texture2D(uSampler, uv);" +
+                    "}" +
+                    '}' +
+                    "color /= float(samples);" +
+                    "gl_FragColor = color;" +
                     "}";
                 this.uniforms = {
                     projectionVector: { type: '2f', value: { x: 0, y: 0 }, dirty: true },
                     blur: { type: '2f', value: { x: 2, y: 2 }, dirty: true },
-                    uBounds: { type: '4f', value: { x: 0, y: 0, z: 1, w: 1 }, dirty: true }
+                    uBounds: { type: '4f', value: { x: 0, y: 0, z: 1, w: 1 }, dirty: true },
+                    uTextureSize: { type: '2f', value: { x: 100, y: 100 }, dirty: true }
                 };
             }
             var d = __define,c=BlurShader,p=c.prototype;
@@ -5182,6 +5181,17 @@ var egret;
                         uniform.value.w = 1;
                         uniform.dirty = true;
                     }
+                }
+            };
+            /**
+             * 设置采样材质的尺寸
+             */
+            p.setTextureSize = function (width, height) {
+                var uniform = this.uniforms.uTextureSize;
+                if (width != uniform.value.x || height != uniform.value.y) {
+                    uniform.value.x = width;
+                    uniform.value.y = height;
+                    uniform.dirty = true;
                 }
             };
             return BlurShader;
@@ -6483,6 +6493,7 @@ var egret;
                             shader = this.shaderManager.blurShader;
                             shader.setBlur(filter.blurX, filter.blurY);
                             shader.setUv(data.uv);
+                            shader.setTextureSize(filter.textureWidth, filter.textureHeight);
                         }
                         else {
                             shader = this.shaderManager.defaultShader;
@@ -6646,12 +6657,12 @@ var egret;
                         var distanceX = 0;
                         var distanceY = 0;
                         if (filter.type == "blur") {
-                            offsetX = filter.blurX * 0.028 * input.$getWidth();
-                            offsetY = filter.blurY * 0.028 * input.$getHeight();
+                            offsetX = filter.blurX; // * 0.028 * input.$getWidth();
+                            offsetY = filter.blurY; // * 0.028 * input.$getHeight();
                         }
                         if (filter.type == "glow") {
-                            offsetX = filter.blurX * 0.028 * input.$getWidth();
-                            offsetY = filter.blurY * 0.028 * input.$getHeight();
+                            offsetX = filter.blurX; // * 0.028 * input.$getWidth();
+                            offsetY = filter.blurY; // * 0.028 * input.$getHeight();
                             // 计算glow滤镜需要的尺寸还需要加上偏移量，此处把glow放置在滤镜队列前面会造成影子被剪切
                             var distance = filter.distance || 0;
                             var angle = filter.angle || 0;
@@ -6682,14 +6693,14 @@ var egret;
                     var offsetY = 0;
                     if (output) {
                         input = output;
-                        offsetX = this.blurFilter.blurX * 0.028 * input.$getWidth();
-                        offsetY = this.blurFilter.blurY * 0.028 * input.$getHeight();
+                        offsetX = this.blurFilter.blurX; // * 0.028 * input.$getWidth();
+                        offsetY = this.blurFilter.blurY; // * 0.028 * input.$getHeight();
                         output = web.WebGLRenderBuffer.create(input.$getWidth() + offsetX * 2, input.$getHeight() + offsetY * 2);
                         this.drawToRenderTarget(this.blurFilter, input, output, 0, 0, input.$getWidth(), input.$getHeight(), (output.$getWidth() - input.$getWidth()) / 2, (output.$getHeight() - input.$getHeight()) / 2, input.$getWidth(), input.$getHeight(), input.$getWidth(), input.$getHeight());
                     }
                     else {
-                        offsetX = this.blurFilter.blurX * 0.028 * realWidth;
-                        offsetY = this.blurFilter.blurY * 0.028 * realHeight;
+                        offsetX = this.blurFilter.blurX; // * 0.028 * realWidth;
+                        offsetY = this.blurFilter.blurY; // * 0.028 * realHeight;
                         gOffsetX += _offsetX;
                         gOffsetY += _offsetY;
                         output = web.WebGLRenderBuffer.create(realWidth + offsetX * 2, realHeight + offsetY * 2);
@@ -6726,15 +6737,15 @@ var egret;
                             this.blurFilter.blurY = filter.blurY;
                         }
                         filter = this.blurFilter;
-                        offsetX = this.blurFilter.blurX * 0.028 * output.$getWidth();
-                        offsetY = this.blurFilter.blurY * 0.028 * output.$getHeight();
+                        offsetX = this.blurFilter.blurX; // * 0.028 * output.$getWidth();
+                        offsetY = this.blurFilter.blurY; // * 0.028 * output.$getHeight();
                     }
                     var buffer = this.currentBuffer;
                     buffer.saveTransform();
                     buffer.transform(1, 0, 0, -1, 0, output.$getHeight() + 2 * offsetY + (destY - offsetY - gOffsetY) * 2);
                     this.vao.cacheArrays(buffer.globalMatrix, buffer._globalAlpha, -offsetX, -offsetY, output.$getWidth() + 2 * offsetX, output.$getHeight() + 2 * offsetY, destX - offsetX - gOffsetX, destY - offsetY - gOffsetY, output.$getWidth() + 2 * offsetX, output.$getHeight() + 2 * offsetY, output.$getWidth(), output.$getHeight());
                     buffer.restoreTransform();
-                    var filterData = { type: "", matrix: null, blurX: 0, blurY: 0 };
+                    var filterData = { type: "", matrix: null, blurX: 0, blurY: 0, textureWidth: 0, textureHeight: 0 };
                     if (filter.type == "colorTransform") {
                         filterData.type = "colorTransform";
                         filterData.matrix = filter.matrix;
@@ -6743,17 +6754,19 @@ var egret;
                         filterData.type = "blur";
                         filterData.blurX = filter.blurX;
                         filterData.blurY = filter.blurY;
+                        filterData.textureWidth = output.$getWidth();
+                        filterData.textureHeight = output.$getHeight();
                     }
                     this.drawCmdManager.pushDrawTexture(output["rootRenderTarget"].texture, 2, filterData);
                 }
                 else {
                     if (filter.type == "blur") {
-                        offsetX = filter.blurX * 0.028 * realWidth;
-                        offsetY = filter.blurY * 0.028 * realHeight;
+                        offsetX = filter.blurX; // * 0.028 * realWidth;
+                        offsetY = filter.blurY; // * 0.028 * realHeight;
                     }
                     this.vao.cacheArrays(buffer.globalMatrix, buffer._globalAlpha, sourceX - offsetX, sourceY - offsetY, sourceWidth + 2 * offsetX, sourceHeight + 2 * offsetY, destX - offsetX - gOffsetX, destY - offsetY - gOffsetY, destWidth + 2 * offsetX, destHeight + 2 * offsetY, textureWidth, textureHeight, meshUVs, meshVertices, meshIndices);
                     var uv = this.getUv(sourceX, sourceY, sourceWidth, sourceHeight, textureWidth, textureHeight);
-                    var filterData = { type: "", matrix: null, blurX: 0, blurY: 0 };
+                    var filterData = { type: "", matrix: null, blurX: 0, blurY: 0, textureWidth: 0, textureHeight: 0 };
                     if (filter.type == "colorTransform") {
                         filterData.type = "colorTransform";
                         filterData.matrix = filter.matrix;
@@ -6762,6 +6775,8 @@ var egret;
                         filterData.type = "blur";
                         filterData.blurX = filter.blurX;
                         filterData.blurY = filter.blurY;
+                        filterData.textureWidth = textureWidth;
+                        filterData.textureHeight = textureHeight;
                     }
                     this.drawCmdManager.pushDrawTexture(webGLTexture, meshIndices ? meshIndices.length / 3 : 2, filterData, uv);
                 }
@@ -6848,7 +6863,7 @@ var egret;
                 this.blurFilter.blurX = filter.blurX;
                 this.blurFilter.blurY = 0;
                 input = output;
-                offsetX += filter.blurX * 0.028 * input.$getWidth();
+                offsetX += filter.blurX; // * 0.028 * input.$getWidth();
                 output = web.WebGLRenderBuffer.create(input.$getWidth() + offsetX * 2, input.$getHeight());
                 this.drawToRenderTarget(this.blurFilter, input, output, 0, 0, input.$getWidth(), input.$getHeight(), offsetX, 0, input.$getWidth(), input.$getHeight(), input.$getWidth(), input.$getHeight());
                 draw.call(this, output, distanceX - offsetX, distanceY - offsetY);
@@ -6857,7 +6872,7 @@ var egret;
                 this.blurFilter.blurX = 0;
                 this.blurFilter.blurY = filter.blurY;
                 input = output;
-                offsetY += filter.blurY * 0.028 * input.$getHeight();
+                offsetY += filter.blurY; // * 0.028 * input.$getHeight();
                 output = web.WebGLRenderBuffer.create(input.$getWidth(), input.$getHeight() + offsetY * 2);
                 this.drawToRenderTarget(this.blurFilter, input, output, 0, 0, input.$getWidth(), input.$getHeight(), 0, offsetY, input.$getWidth(), input.$getHeight(), input.$getWidth(), input.$getHeight());
                 draw.call(this, output, distanceX - offsetX, distanceY - offsetY);
@@ -7386,11 +7401,6 @@ var egret;
                 }
                 else {
                     node = displayObject.$getRenderNode();
-                    var filters = displayObject.$getFilters();
-                    if (filters && filters.length > 0) {
-                        buffer.pushFilters(filters);
-                        filterPushed = true;
-                    }
                 }
                 if (node) {
                     if (dirtyList) {
@@ -7444,7 +7454,11 @@ var egret;
                         if (!child.$visible || child.$alpha <= 0 || child.$maskedObject) {
                             continue;
                         }
-                        if ((child.$blendMode !== 0 ||
+                        var filters = child.$getFilters();
+                        if (filters && filters.length > 0) {
+                            drawCalls += this.drawWithFilter(child, buffer, dirtyList, matrix, clipRegion, root);
+                        }
+                        else if ((child.$blendMode !== 0 ||
                             (child.$mask && (child.$mask.$parentDisplayList || root)))) {
                             drawCalls += this.drawWithClip(child, buffer, dirtyList, matrix, clipRegion, root);
                         }
@@ -7465,9 +7479,48 @@ var egret;
                         }
                     }
                 }
-                if (filterPushed) {
-                    buffer.popFilters();
+                // if(filterPushed) {
+                //     buffer.popFilters();
+                // }
+                return drawCalls;
+            };
+            /**
+             * @private
+             */
+            p.drawWithFilter = function (displayObject, buffer, dirtyList, matrix, clipRegion, root) {
+                var drawCalls = 0;
+                // 获取显示对象的链接矩阵
+                var displayMatrix = egret.Matrix.create();
+                displayMatrix.copyFrom(displayObject.$getConcatenatedMatrix());
+                // 获取显示对象的矩形区域
+                var region;
+                region = egret.sys.Region.create();
+                var bounds = displayObject.$getOriginalBounds();
+                region.updateRegion(bounds, displayMatrix);
+                // 为显示对象创建一个新的buffer
+                var displayBuffer = this.createRenderBuffer(region.width, region.height);
+                displayBuffer.context.pushBuffer(displayBuffer);
+                displayBuffer.setTransform(1, 0, 0, 1, -region.minX, -region.minY);
+                var offsetM = egret.Matrix.create().setTo(1, 0, 0, 1, -region.minX, -region.minY);
+                drawCalls += this.drawDisplayObject(displayObject, displayBuffer, dirtyList, offsetM, displayObject.$displayList, region, root);
+                egret.Matrix.release(offsetM);
+                displayBuffer.context.popBuffer();
+                //绘制结果到屏幕
+                if (drawCalls > 0) {
+                    drawCalls++;
+                    buffer.context.setGlobalAlpha(1);
+                    buffer.setTransform(1, 0, 0, -1, region.minX + matrix.tx, region.minY + matrix.ty + displayBuffer.height);
+                    var displayBufferWidth = displayBuffer.width;
+                    var displayBufferHeight = displayBuffer.height;
+                    // 绘制结果的时候，应用滤镜
+                    // buffer.context.drawTexture(<WebGLTexture><any>displayBuffer.rootRenderTarget.texture, 0, 0, displayBufferWidth, displayBufferHeight,
+                    //     0, 0, displayBufferWidth, displayBufferHeight, displayBufferWidth, displayBufferHeight);
+                    var filters = displayObject.$getFilters();
+                    buffer.context.drawTextureWidthFilter(filters, displayBuffer.rootRenderTarget.texture, 0, 0, displayBufferWidth, displayBufferHeight, 0, 0, displayBufferWidth, displayBufferHeight, displayBufferWidth, displayBufferHeight, displayBufferWidth, displayBufferHeight, 0, 0);
                 }
+                renderBufferPool.push(displayBuffer);
+                egret.sys.Region.release(region);
+                egret.Matrix.release(displayMatrix);
                 return drawCalls;
             };
             /**
@@ -7576,13 +7629,13 @@ var egret;
                     }
                     if (scrollRect) {
                         var m = displayMatrix;
-                        displayBuffer.setTransform(m.a, m.b, m.c, m.d, m.tx - region.minX, m.ty - region.minY);
-                        displayBuffer.context.pushMask(scrollRect);
+                        buffer.setTransform(m.a, m.b, m.c, m.d, m.tx - region.minX, m.ty - region.minY);
+                        buffer.context.pushMask(scrollRect);
                     }
                     drawCalls += this.drawDisplayObject(displayObject, buffer, dirtyList, offsetM, displayObject.$displayList, region, null);
                     egret.Matrix.release(offsetM);
                     if (scrollRect) {
-                        displayBuffer.context.popMask();
+                        buffer.context.popMask();
                     }
                     if (hasBlendMode) {
                         buffer.context.setGlobalCompositeOperation(defaultCompositeOp);

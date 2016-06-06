@@ -2001,9 +2001,9 @@ module egret {
             region.updateRegion(renderBounds, matrix);
             return true;
         }
-        
+
         private static boundsForUpdate = new egret.Rectangle();
-        
+
         /**
          * @private
          */
@@ -2020,10 +2020,10 @@ module egret {
                 for(var i:number = 0 ; i < length ; i++) {
                     var filter:Filter = filters[i];
                     if(filter.type == "blur") {
-                        var offsetX = (<BlurFilter>filter).blurX * 0.028 * bounds.width;
-                        var offsetY = (<BlurFilter>filter).blurY * 0.028 * bounds.width;
+                        var offsetX = (<BlurFilter>filter).blurX;
+                        var offsetY = (<BlurFilter>filter).blurY;
                         x -= offsetX;
-                        y -= offsetY;    
+                        y -= offsetY;
                         w += offsetX * 2;
                         h += offsetY * 2;
                     }
