@@ -7386,11 +7386,6 @@ var egret;
                 }
                 else {
                     node = displayObject.$getRenderNode();
-                    var filters = displayObject.$getFilters();
-                    if (filters && filters.length > 0) {
-                        buffer.pushFilters(filters);
-                        filterPushed = true;
-                    }
                 }
                 if (node) {
                     if (dirtyList) {
@@ -7444,7 +7439,11 @@ var egret;
                         if (!child.$visible || child.$alpha <= 0 || child.$maskedObject) {
                             continue;
                         }
-                        if ((child.$blendMode !== 0 ||
+                        var filters = child.$getFilters();
+                        if (filters && filters.length > 0) {
+                            drawCalls += this.drawWithFilter(child, buffer, dirtyList, matrix, clipRegion, root);
+                        }
+                        else if ((child.$blendMode !== 0 ||
                             (child.$mask && (child.$mask.$parentDisplayList || root)))) {
                             drawCalls += this.drawWithClip(child, buffer, dirtyList, matrix, clipRegion, root);
                         }
@@ -7465,9 +7464,49 @@ var egret;
                         }
                     }
                 }
-                if (filterPushed) {
-                    buffer.popFilters();
+                // if(filterPushed) {
+                //     buffer.popFilters();
+                // }
+                return drawCalls;
+            };
+            /**
+             * @private
+             */
+            p.drawWithFilter = function (displayObject, buffer, dirtyList, matrix, clipRegion, root) {
+                var drawCalls = 0;
+                // 获取显示对象的链接矩阵
+                var displayMatrix = egret.Matrix.create();
+                displayMatrix.copyFrom(displayObject.$getConcatenatedMatrix());
+                // 获取显示对象的矩形区域
+                var region;
+                region = egret.sys.Region.create();
+                var bounds = displayObject.$getOriginalBounds();
+                region.updateRegion(bounds, displayMatrix);
+                // 为显示对象创建一个新的buffer
+                console.log(region)
+                var displayBuffer = this.createRenderBuffer(region.width, region.height);
+                displayBuffer.context.pushBuffer(displayBuffer);
+                displayBuffer.setTransform(1, 0, 0, 1, -region.minX, -region.minY);
+                var offsetM = egret.Matrix.create().setTo(1, 0, 0, 1, -region.minX, -region.minY);
+                drawCalls += this.drawDisplayObject(displayObject, displayBuffer, dirtyList, offsetM, displayObject.$displayList, region, root);
+                egret.Matrix.release(offsetM);
+                displayBuffer.context.popBuffer();
+                //绘制结果到屏幕
+                if (drawCalls > 0) {
+                    drawCalls++;
+                    buffer.context.setGlobalAlpha(1);
+                    buffer.setTransform(1, 0, 0, -1, region.minX + matrix.tx, region.minY + matrix.ty + displayBuffer.height);
+                    var displayBufferWidth = displayBuffer.width;
+                    var displayBufferHeight = displayBuffer.height;
+                    // 绘制结果的时候，应用滤镜
+                    // buffer.context.drawTexture(<WebGLTexture><any>displayBuffer.rootRenderTarget.texture, 0, 0, displayBufferWidth, displayBufferHeight,
+                    //     0, 0, displayBufferWidth, displayBufferHeight, displayBufferWidth, displayBufferHeight);
+                    var filters = displayObject.$getFilters();
+                    buffer.context.drawTextureWidthFilter(filters, displayBuffer.rootRenderTarget.texture, 0, 0, displayBufferWidth, displayBufferHeight, 0, 0, displayBufferWidth, displayBufferHeight, displayBufferWidth, displayBufferHeight, displayBufferWidth, displayBufferHeight, 0, 0);
                 }
+                renderBufferPool.push(displayBuffer);
+                egret.sys.Region.release(region);
+                egret.Matrix.release(displayMatrix);
                 return drawCalls;
             };
             /**
@@ -7576,13 +7615,13 @@ var egret;
                     }
                     if (scrollRect) {
                         var m = displayMatrix;
-                        displayBuffer.setTransform(m.a, m.b, m.c, m.d, m.tx - region.minX, m.ty - region.minY);
-                        displayBuffer.context.pushMask(scrollRect);
+                        buffer.setTransform(m.a, m.b, m.c, m.d, m.tx - region.minX, m.ty - region.minY);
+                        buffer.context.pushMask(scrollRect);
                     }
                     drawCalls += this.drawDisplayObject(displayObject, buffer, dirtyList, offsetM, displayObject.$displayList, region, null);
                     egret.Matrix.release(offsetM);
                     if (scrollRect) {
-                        displayBuffer.context.popMask();
+                        buffer.context.popMask();
                     }
                     if (hasBlendMode) {
                         buffer.context.setGlobalCompositeOperation(defaultCompositeOp);
@@ -7882,7 +7921,7 @@ var egret;
             p.renderGraphics = function (node, buffer, forHitTest) {
                 var width = node.width;
                 var height = node.height;
-                if (width <= 0 || height <= 0) {
+                if (width <= 0 || height <= 0 || !width || !height || node.drawData.length == 0) {
                     return;
                 }
                 if (!this.canvasRenderBuffer || !this.canvasRenderBuffer.context) {

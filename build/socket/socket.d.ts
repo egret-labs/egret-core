@@ -108,7 +108,7 @@ declare module egret {
      * @event egret.ProgressEvent.SOCKET_DATA Receiving server data。
      * @event egret.Event.CLOSE Dispatched when the server closes the connection.
      * @event egret.ProgressEvent Dispatched when an IO error causes a send or load operation to fail.
-     * @see http://edn.egret.com/cn/index.php/article/index/id/164 WebSocket
+     * @see http://edn.egret.com/cn/docs/page/602 WebSocket
      * @version Egret 2.4
      * @platform Web,Native
      * @includeExample extension/socket/WebSocket.ts
@@ -122,7 +122,7 @@ declare module egret {
      * @event egret.ProgressEvent.SOCKET_DATA 接收服务器数据。
      * @event egret.Event.CLOSE 在服务器关闭连接时调度。
      * @event egret.IOErrorEvent.IO_ERROR 在出现输入/输出错误并导致发送或加载操作失败时调度。。
-     * @see http://edn.egret.com/cn/index.php/article/index/id/164 WebSocket
+     * @see http://edn.egret.com/cn/docs/page/602 WebSocket
      * @version Egret 2.4
      * @platform Web,Native
      * @includeExample extension/socket/WebSocket.ts

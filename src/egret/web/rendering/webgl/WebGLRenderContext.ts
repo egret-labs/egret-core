@@ -859,7 +859,7 @@ module egret.web {
          * realWidth与realHeight为实际mesh宽高
          * offsetX与offsetY为绘制mesh时的偏移量，向左为正值
          */
-        private drawTextureWidthFilter(filters:any, webGLTexture:WebGLTexture,
+        public drawTextureWidthFilter(filters:any, webGLTexture:WebGLTexture,
                             sourceX:number, sourceY:number, sourceWidth:number, sourceHeight:number,
                             destX:number, destY:number, destWidth:number, destHeight:number, textureWidth:number, textureHeight:number,
                             realWidth:number, realHeight:number, _offsetX:number, _offsetY:number,
