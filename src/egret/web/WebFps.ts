@@ -1,5 +1,7 @@
 module egret.web {
     export class WebFps extends egret.DisplayObject implements egret.FPSDisplay {
+        private panelX:number;
+        private panelY:number;
         private fontColor:string;
         private fontSize:number;
         private container;
@@ -11,11 +13,13 @@ module egret.web {
         constructor(stage:Stage, showFPS:boolean, showLog:boolean, logFilter:string, styles:Object) {
             super();
             if (showFPS || showLog) {
-                if(egret.Capabilities.renderMode == 'canvas'){
+                if (egret.Capabilities.renderMode == 'canvas') {
                     this.renderMode = "Canvas";
-                }else{
+                } else {
                     this.renderMode = "WebGL";
                 }
+                this.panelX = styles["x"] === undefined ? 0 : parseInt(styles['x']);
+                this.panelY = styles["y"] === undefined ? 0 : parseInt(styles['y']);
                 this.fontColor = styles["textColor"] === undefined ? '#ffffff' : styles['textColor'].replace("0x", "#");
                 this.fontSize = styles["size"] === undefined ? 12 : parseInt(styles['size']);
                 if (egret.Capabilities.isMobile) {
@@ -24,10 +28,10 @@ module egret.web {
                 var all = document.createElement('div');
                 all.style.position = 'absolute';
                 all.style.background = `rgba(0,0,0,${styles['bgAlpha']})`;
-                all.style.top = styles['x'] + 'px';
-                all.style.left = styles['y'] + 'px';
+                all.style.top = this.panelX + 'px';
+                all.style.left = this.panelY + 'px';
                 document.body.appendChild(all);
-                if(!showLog){
+                if (!showLog) {
                     all.onclick = this.switchPanelType.bind(this);
                 }
 
@@ -43,19 +47,20 @@ module egret.web {
                 if (showLog) this.addLog();
             }
         }
+
         private switchPanelType() {
             this.showPanle = !this.showPanle;
-            console.log('面板状态:',this.showPanle);
-            if(this.showPanle){
+            console.log('面板状态:', this.showPanle);
+            if (this.showPanle) {
                 this.container.appendChild(this.canvasFps);
                 this.container.appendChild(this.divDatas);
                 this.container.appendChild(this.canvasCost);
-            }else{
+            } else {
                 this.container.removeChild(this.canvasFps);
                 this.container.removeChild(this.divDatas);
                 this.container.removeChild(this.canvasCost);
             }
-            this.update(null,true);
+            this.update(null, true);
         }
 
         private fpsHeight:number;
@@ -129,7 +134,7 @@ module egret.web {
 
         private addLog() {
             var log = document.createElement('div');
-            log.style.maxWidth = document.body.clientWidth - 8 + 'px';
+            log.style.maxWidth = document.body.clientWidth - 8 - this.panelX + 'px';
             log.style.wordWrap = "break-word";
             this.log = log;
             this.container.appendChild(log);
@@ -139,8 +144,9 @@ module egret.web {
         private arrCost:number[][] = [];
         private lastNumDraw;
         private lastNumDirty;
-        public update(datas:FPSData,showLastData = false) {
-            if(!showLastData){
+
+        public update(datas:FPSData, showLastData = false) {
+            if (!showLastData) {
                 var numFps = datas.fps;
                 var numCostTicker = datas.costTicker;
                 var numCostDirty = datas.costDirty;
@@ -149,11 +155,11 @@ module egret.web {
                 this.lastNumDirty = datas.dirty;
                 this.arrFps.push(numFps);
                 this.arrCost.push([numCostTicker, numCostDirty, numCostRender]);
-            }else{
-                numFps = this.arrFps[this.arrFps.length-1];
-                numCostTicker = this.arrCost[this.arrCost.length-1][0];
-                numCostDirty = this.arrCost[this.arrCost.length-1][1];
-                numCostRender = this.arrCost[this.arrCost.length-1][2];
+            } else {
+                numFps = this.arrFps[this.arrFps.length - 1];
+                numCostTicker = this.arrCost[this.arrCost.length - 1][0];
+                numCostDirty = this.arrCost[this.arrCost.length - 1][1];
+                numCostRender = this.arrCost[this.arrCost.length - 1][2];
             }
 
             var fpsTotal = 0;
@@ -209,7 +215,7 @@ module egret.web {
 
             var fpsAvg = Math.floor(fpsTotal / lenFps);
             var fpsOutput = `${numFps} FPS ${this.renderMode}`;
-            if(this.showPanle){
+            if (this.showPanle) {
                 fpsOutput += `<br/>min${fpsMin} max${fpsMax} avg${fpsAvg}`;
                 this.divDraw.innerHTML = `${this.lastNumDraw}<br/>${this.lastNumDirty}%<br/>`;
                 this.divCost.innerHTML = `<font  style="color:#18fefe">${numCostTicker}<font/> <font  style="color:#ffff00">${numCostDirty}<font/> <font  style="color:#ff0000">${numCostRender}<font/>`
@@ -222,7 +228,7 @@ module egret.web {
         public updateInfo(info:string) {
             this.arrLog.push(info);
             this.log.innerHTML = this.arrLog.join('<br/>')
-            while (document.body.clientHeight < (this.log.offsetHeight + this.fpsHeight + this.fontSize * 2)) {
+            while (document.body.clientHeight < (this.log.offsetHeight + this.fpsHeight + this.panelY +this.fontSize * 2)) {
                 this.arrLog.shift();
                 this.log.innerHTML = this.arrLog.join('<br/>');
             }

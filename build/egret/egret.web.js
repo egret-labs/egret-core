@@ -3995,6 +3995,8 @@ var egret;
                     else {
                         this.renderMode = "WebGL";
                     }
+                    this.panelX = styles["x"] === undefined ? 0 : parseInt(styles['x']);
+                    this.panelY = styles["y"] === undefined ? 0 : parseInt(styles['y']);
                     this.fontColor = styles["textColor"] === undefined ? '#ffffff' : styles['textColor'].replace("0x", "#");
                     this.fontSize = styles["size"] === undefined ? 12 : parseInt(styles['size']);
                     if (egret.Capabilities.isMobile) {
@@ -4072,7 +4074,6 @@ var egret;
                 this.divCost = cost;
                 cost.innerHTML = "<font  style=\"color:" + this.cost1Color + "\">0<font/> <font  style=\"color:" + this.cost2Color + "\">0<font/> <font  style=\"color:" + this.cost3Color + "\">0<font/>";
                 right.appendChild(cost);
-                this.fpsHeight = this.container.offsetHeight;
                 var canvas = document.createElement('canvas');
                 this.canvasCost = canvas;
                 this.container.appendChild(canvas);
@@ -4085,10 +4086,11 @@ var egret;
                 context.fillStyle = "#000000";
                 context.fillRect(this.WIDTH_COST, 0, 1, this.HEIGHT);
                 context.fillRect(this.WIDTH_COST * 2 + 1, 0, 1, this.HEIGHT);
+                this.fpsHeight = this.container.offsetHeight;
             };
             p.addLog = function () {
                 var log = document.createElement('div');
-                log.style.maxWidth = document.body.clientWidth - 8 + 'px';
+                log.style.maxWidth = document.body.clientWidth - 8 - this.panelX + 'px';
                 log.style.wordWrap = "break-word";
                 this.log = log;
                 this.container.appendChild(log);
@@ -4181,7 +4183,7 @@ var egret;
             p.updateInfo = function (info) {
                 this.arrLog.push(info);
                 this.log.innerHTML = this.arrLog.join('<br/>');
-                while (document.body.clientHeight < (this.log.offsetHeight + this.fpsHeight + this.fontSize * 2)) {
+                while (document.body.clientHeight < (this.log.offsetHeight + this.fpsHeight + this.panelY + this.fontSize * 2)) {
                     this.arrLog.shift();
                     this.log.innerHTML = this.arrLog.join('<br/>');
                 }
