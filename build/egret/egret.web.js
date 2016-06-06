@@ -7882,7 +7882,7 @@ var egret;
             p.renderGraphics = function (node, buffer, forHitTest) {
                 var width = node.width;
                 var height = node.height;
-                if (width <= 0 || height <= 0) {
+                if (width <= 0 || height <= 0 || !width || !height || node.drawData.length == 0) {
                     return;
                 }
                 if (!this.canvasRenderBuffer || !this.canvasRenderBuffer.context) {

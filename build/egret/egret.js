@@ -2715,14 +2715,16 @@ var egret;
             /**
              * @language en_US
              * An indexed array that contains each filter object currently associated with the display object.
-             * @version Egret 3.1
-             * @platform Web,Native
+             * Note: Currently only the next support WebGL, Canvas rendering and native are not supported.
+             * @version Egret 3.1.0
+             * @platform Web
              */
             /**
              * @language zh_CN
              * 包含当前与显示对象关联的每个滤镜对象的索引数组。
-             * @version Egret 3.1
-             * @platform Web,Native
+             * 注意 : 目前只有 WebGL 下支持，Canvs 渲染以及 native 均不支持。
+             * @version Egret 3.1.0
+             * @platform Web
              */
             ,function () {
                 return this.$DisplayObject[20 /* filters */];
@@ -4215,6 +4217,7 @@ var egret;
      * @version Egret 2.4
      * @platform Web,Native
      * @includeExample egret/display/BlendMode.ts
+     * @see http://edn.egret.com/cn/docs/page/108 显示容器的概念与实现
      */
     /**
      * @language zh_CN
@@ -4223,6 +4226,7 @@ var egret;
      * @version Egret 2.4
      * @platform Web,Native
      * @includeExample egret/display/BlendMode.ts
+     * @see http://edn.egret.com/cn/docs/page/108 显示容器的概念与实现
      */
     var BlendMode = (function () {
         function BlendMode() {
@@ -7801,6 +7805,7 @@ var egret;
      * @version Egret 2.4
      * @platform Web,Native
      * @includeExample egret/events/Event.ts
+     * @see http://edn.egret.com/cn/docs/page/798 取消触摸事件
      */
     /**
      * @language zh_CN
@@ -7814,6 +7819,7 @@ var egret;
      * @version Egret 2.4
      * @platform Web,Native
      * @includeExample egret/events/Event.ts
+     * @see http://edn.egret.com/cn/docs/page/798 取消触摸事件
      */
     var Event = (function (_super) {
         __extends(Event, _super);
@@ -8662,6 +8668,7 @@ var egret;
      * @version Egret 2.4
      * @platform Web,Native
      * @includeExample egret/sensor/Geolocation.ts
+     * @see http://edn.egret.com/cn/docs/page/662 获取位置信息
      */
     /**
      * @language zh_CN
@@ -8669,6 +8676,7 @@ var egret;
      * @version Egret 2.4
      * @platform Web,Native
      * @includeExample egret/sensor/Geolocation.ts
+     * @see http://edn.egret.com/cn/docs/page/662 获取位置信息
      */
     var GeolocationEvent = (function (_super) {
         __extends(GeolocationEvent, _super);
@@ -10587,6 +10595,7 @@ var egret;
      * You can produce blurs that range from a softly unfocused look to a Gaussian blur, a hazy appearance like viewing an image through semi-opaque glass.
      * @version Egret 3.0.1
      * @platform Web
+     * @see http://edn.egret.com/cn/docs/page/947#模糊滤镜 模糊滤镜
      */
     /**
      * @language zh_CN
@@ -10594,6 +10603,7 @@ var egret;
      * 您可以生成一些模糊效果，范围从创建一个柔化的、未聚焦的外观到高斯模糊（就像通过半透明玻璃查看图像一样的朦胧的外观）。
      * @version Egret 3.1.0
      * @platform Web
+     * @see http://edn.egret.com/cn/docs/page/947#模糊滤镜 模糊滤镜
      */
     var BlurFilter = (function (_super) {
         __extends(BlurFilter, _super);
@@ -10705,6 +10715,7 @@ var egret;
      * It allows saturation changes, hue rotation, luminance to alpha, and various other effects.
      * @version Egret 3.1.0
      * @platform Web
+     * @see http://edn.egret.com/cn/docs/page/947 颜色矩阵滤镜
      */
     /**
      * @language zh_CN
@@ -10712,6 +10723,7 @@ var egret;
      * 该类允许饱和度更改、色相旋转、亮度为 Alpha 以及各种其他效果。
      * @version Egret 3.1.0
      * @platform Web
+     * @see http://edn.egret.com/cn/docs/page/947 颜色矩阵滤镜
      */
     var ColorMatrixFilter = (function (_super) {
         __extends(ColorMatrixFilter, _super);
