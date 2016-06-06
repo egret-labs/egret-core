@@ -6350,27 +6350,29 @@ var egret;
                 if (meshUVs) {
                     this.vao.changeToMeshIndices();
                 }
-                var filters = buffer.getFilters();
+                // var filters = buffer.getFilters();
                 var transform = buffer.globalMatrix;
                 var alpha = buffer._globalAlpha;
-                if (filters.length > 0) {
-                    var width = destWidth;
-                    var height = destHeight;
-                    var offsetX = 0;
-                    var offsetY = 0;
-                    if (bounds) {
-                        width = bounds.width;
-                        height = bounds.height;
-                        offsetX = -bounds.x;
-                        offsetY = -bounds.y;
-                    }
-                    this.drawTextureWidthFilter(filters, texture, sourceX, sourceY, sourceWidth, sourceHeight, destX, destY, destWidth, destHeight, textureWidth, textureHeight, width, height, offsetX, offsetY, meshUVs, meshVertices, meshIndices); // 后参数用于draw mesh
-                }
-                else {
-                    var count = meshIndices ? meshIndices.length / 3 : 2;
-                    this.drawCmdManager.pushDrawTexture(texture, count);
-                    this.vao.cacheArrays(transform, alpha, sourceX, sourceY, sourceWidth, sourceHeight, destX, destY, destWidth, destHeight, textureWidth, textureHeight, meshUVs, meshVertices, meshIndices);
-                }
+                // if(filters.length > 0) {
+                //     var width = destWidth;
+                //     var height = destHeight;
+                //     var offsetX = 0;
+                //     var offsetY = 0;
+                //     if(bounds) {
+                //         width = bounds.width;
+                //         height = bounds.height;
+                //         offsetX = -bounds.x;
+                //         offsetY = -bounds.y;
+                //     }
+                //     this.drawTextureWidthFilter(filters, texture,
+                //         sourceX, sourceY, sourceWidth, sourceHeight,
+                //         destX, destY, destWidth, destHeight, textureWidth, textureHeight,
+                //         width, height, offsetX, offsetY, meshUVs, meshVertices, meshIndices);// 后参数用于draw mesh
+                // } else {
+                var count = meshIndices ? meshIndices.length / 3 : 2;
+                this.drawCmdManager.pushDrawTexture(texture, count);
+                this.vao.cacheArrays(transform, alpha, sourceX, sourceY, sourceWidth, sourceHeight, destX, destY, destWidth, destHeight, textureWidth, textureHeight, meshUVs, meshVertices, meshIndices);
+                // }
             };
             /**
              * 绘制矩形（仅用于遮罩擦除等）
@@ -6637,6 +6639,19 @@ var egret;
              */
             p.drawTextureWidthFilter = function (filters, webGLTexture, sourceX, sourceY, sourceWidth, sourceHeight, destX, destY, destWidth, destHeight, textureWidth, textureHeight, realWidth, realHeight, _offsetX, _offsetY, meshUVs, meshVertices, meshIndices) {
                 var buffer = this.currentBuffer;
+                if (this.contextLost || !webGLTexture || !buffer) {
+                    return;
+                }
+                if (meshVertices && meshIndices) {
+                    if (this.vao.reachMaxSize(meshVertices.length / 2, meshIndices.length)) {
+                        this.$drawWebGL();
+                    }
+                }
+                else {
+                    if (this.vao.reachMaxSize()) {
+                        this.$drawWebGL();
+                    }
+                }
                 var len = filters.length;
                 var gOffsetX = 0;
                 var gOffsetY = 0;
@@ -6710,16 +6725,16 @@ var egret;
                     gOffsetY += offsetY;
                 }
                 // 如果是发光滤镜，绘制光晕
-                if (filter.type == "glow") {
-                    if (!output) {
-                        gOffsetX += _offsetX;
-                        gOffsetY += _offsetY;
-                        output = web.WebGLRenderBuffer.create(realWidth, realHeight);
-                        this.drawToRenderTarget(null, webGLTexture, output, sourceX, sourceY, sourceWidth, sourceHeight, _offsetX, _offsetY, destWidth, destHeight, textureWidth, textureHeight, true, meshUVs, meshVertices, meshIndices);
-                    }
-                    // 会调用$drawWebGL
-                    this.drawGlow(filter, output, destX - gOffsetX, destY - gOffsetY);
-                }
+                // if(filter.type == "glow") {
+                //     if(!output) {
+                //         gOffsetX += _offsetX;
+                //         gOffsetY += _offsetY;
+                //         output = WebGLRenderBuffer.create(realWidth, realHeight);
+                //         this.drawToRenderTarget(null, webGLTexture, output, sourceX, sourceY, sourceWidth, sourceHeight, _offsetX, _offsetY, destWidth, destHeight, textureWidth, textureHeight, true, meshUVs, meshVertices, meshIndices);
+                //     }
+                //     // 会调用$drawWebGL
+                //     this.drawGlow(filter, output, destX - gOffsetX, destY - gOffsetY);
+                // }
                 // 绘制output结果到舞台
                 var offsetX = 0;
                 var offsetY = 0;
@@ -6810,18 +6825,32 @@ var egret;
                 this.pushBuffer(output);
                 output.context.setGlobalAlpha(1);
                 output.setTransform(1, 0, 0, 1, 0, 0);
-                if (filter) {
-                    output.pushFilters([filter]);
-                }
+                var texture;
                 if (input["rootRenderTarget"]) {
-                    output.context.drawImage(input.rootRenderTarget, sourceX, sourceY, sourceWidth, sourceHeight, destX, destY, destWidth, destHeight, textureWidth, textureHeight);
+                    // 如果是render target
+                    texture = input.rootRenderTarget.texture;
+                    output.transform(1, 0, 0, -1, 0, destHeight + destY * 2); // 翻转
                 }
                 else {
-                    output.context.drawTexture(input, sourceX, sourceY, sourceWidth, sourceHeight, destX, destY, destWidth, destHeight, textureWidth, textureHeight, meshUVs, meshVertices, meshIndices);
+                    texture = input;
                 }
                 if (filter) {
-                    output.popFilters();
+                    output.context.drawTextureWidthFilter([filter], texture, sourceX, sourceY, sourceWidth, sourceHeight, destX, destY, destWidth, destHeight, textureWidth, textureHeight, destWidth, destHeight, 0, 0);
                 }
+                else {
+                    output.context.drawTexture(texture, sourceX, sourceY, sourceWidth, sourceHeight, destX, destY, destWidth, destHeight, textureWidth, textureHeight, meshUVs, meshVertices, meshIndices);
+                }
+                // if(filter) {
+                //     output.pushFilters([filter]);
+                // }
+                // if(input["rootRenderTarget"]) {
+                //     output.context.drawImage(<BitmapData><any>input.rootRenderTarget, sourceX, sourceY, sourceWidth, sourceHeight, destX, destY, destWidth, destHeight, textureWidth, textureHeight);
+                // } else {
+                //     output.context.drawTexture(<WebGLTexture><any>input, sourceX, sourceY, sourceWidth, sourceHeight, destX, destY, destWidth, destHeight, textureWidth, textureHeight, meshUVs, meshVertices, meshIndices);
+                // }
+                // if(filter) {
+                //     output.popFilters();
+                // }
                 // output.context.$drawWebGL();
                 this.popBuffer();
                 if (input["rootRenderTarget"] && release) {
@@ -6831,6 +6860,7 @@ var egret;
                 }
             };
             p.drawGlow = function (filter, input, destX, destY) {
+                var buffer = this.currentBuffer;
                 if (!this.colorMatrixFilter) {
                     this.colorMatrixFilter = new egret.ColorMatrixFilter();
                 }
@@ -6884,7 +6914,6 @@ var egret;
                 }
                 this.setGlobalCompositeOperation("source-over");
                 // this.$drawWebGL();
-                var buffer = this.currentBuffer;
                 function draw(result, offsetX, offsetY) {
                     buffer.saveTransform();
                     buffer.transform(1, 0, 0, -1, 0, result.$getHeight() + (destY + offsetY) * 2);
@@ -6963,7 +6992,28 @@ var egret;
          */
         var WebGLRenderBuffer = (function () {
             function WebGLRenderBuffer(width, height) {
-                this.filters = [];
+                // private filters = [];
+                // public pushFilters(filters) {
+                //     this.filters.push(filters);
+                // }
+                // public popFilters() {
+                //     this.filters.pop();
+                // }
+                // public getFilters() {
+                //     var filters = [];
+                //     for(var i = 0; i < this.filters.length; i++) {
+                //         var _filters = this.filters[i];
+                //         if(_filters) {
+                //             for(var j = 0; j < _filters.length; j++) {
+                //                 var filter = _filters[j];
+                //                 if(filter && filter.type != "glow") {// 暂时屏蔽掉发光滤镜
+                //                     filters.push(filter);
+                //                 }
+                //             }
+                //         }
+                //     }
+                //     return filters;
+                // }
                 this._globalAlpha = 1;
                 /**
                  * stencil state
@@ -7004,27 +7054,6 @@ var egret;
                 }
             }
             var d = __define,c=WebGLRenderBuffer,p=c.prototype;
-            p.pushFilters = function (filters) {
-                this.filters.push(filters);
-            };
-            p.popFilters = function () {
-                this.filters.pop();
-            };
-            p.getFilters = function () {
-                var filters = [];
-                for (var i = 0; i < this.filters.length; i++) {
-                    var _filters = this.filters[i];
-                    if (_filters) {
-                        for (var j = 0; j < _filters.length; j++) {
-                            var filter = _filters[j];
-                            if (filter && filter.type != "glow") {
-                                filters.push(filter);
-                            }
-                        }
-                    }
-                }
-                return filters;
-            };
             p.enableStencil = function () {
                 if (!this.stencilState) {
                     this.context.enableStencilTest();

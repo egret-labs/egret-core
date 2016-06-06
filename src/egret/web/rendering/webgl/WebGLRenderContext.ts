@@ -516,32 +516,32 @@ module egret.web {
                 this.vao.changeToMeshIndices();
             }
 
-            var filters = buffer.getFilters();
+            // var filters = buffer.getFilters();
             var transform = buffer.globalMatrix;
             var alpha = buffer._globalAlpha;
-            if(filters.length > 0) {
-                var width = destWidth;
-                var height = destHeight;
-                var offsetX = 0;
-                var offsetY = 0;
-                if(bounds) {
-                    width = bounds.width;
-                    height = bounds.height;
-                    offsetX = -bounds.x;
-                    offsetY = -bounds.y;
-                }
-                this.drawTextureWidthFilter(filters, texture,
-                    sourceX, sourceY, sourceWidth, sourceHeight,
-                    destX, destY, destWidth, destHeight, textureWidth, textureHeight,
-                    width, height, offsetX, offsetY, meshUVs, meshVertices, meshIndices);// 后参数用于draw mesh
-            } else {
+            // if(filters.length > 0) {
+            //     var width = destWidth;
+            //     var height = destHeight;
+            //     var offsetX = 0;
+            //     var offsetY = 0;
+            //     if(bounds) {
+            //         width = bounds.width;
+            //         height = bounds.height;
+            //         offsetX = -bounds.x;
+            //         offsetY = -bounds.y;
+            //     }
+            //     this.drawTextureWidthFilter(filters, texture,
+            //         sourceX, sourceY, sourceWidth, sourceHeight,
+            //         destX, destY, destWidth, destHeight, textureWidth, textureHeight,
+            //         width, height, offsetX, offsetY, meshUVs, meshVertices, meshIndices);// 后参数用于draw mesh
+            // } else {
 
                 var count = meshIndices ? meshIndices.length / 3 : 2;
                 this.drawCmdManager.pushDrawTexture(texture, count);
 
                 this.vao.cacheArrays(transform, alpha, sourceX, sourceY, sourceWidth, sourceHeight, destX, destY, destWidth, destHeight, textureWidth, textureHeight,
                     meshUVs, meshVertices, meshIndices);
-            }
+            // }
 
         }
 
@@ -866,6 +866,21 @@ module egret.web {
                             realWidth:number, realHeight:number, _offsetX:number, _offsetY:number,
                             meshUVs?:number[], meshVertices?:number[], meshIndices?:number[]) {
             var buffer = this.currentBuffer;
+
+            if (this.contextLost || !webGLTexture || !buffer) {
+                return;
+            }
+
+            if(meshVertices && meshIndices) {
+                if (this.vao.reachMaxSize(meshVertices.length / 2, meshIndices.length)) {
+                    this.$drawWebGL();
+                }
+            } else {
+                if (this.vao.reachMaxSize()) {
+                    this.$drawWebGL();
+                }
+            }
+
             var len = filters.length;
 
             var gOffsetX = 0;
@@ -946,16 +961,16 @@ module egret.web {
             }
 
             // 如果是发光滤镜，绘制光晕
-            if(filter.type == "glow") {
-                if(!output) {
-                    gOffsetX += _offsetX;
-                    gOffsetY += _offsetY;
-                    output = WebGLRenderBuffer.create(realWidth, realHeight);
-                    this.drawToRenderTarget(null, webGLTexture, output, sourceX, sourceY, sourceWidth, sourceHeight, _offsetX, _offsetY, destWidth, destHeight, textureWidth, textureHeight, true, meshUVs, meshVertices, meshIndices);
-                }
-                // 会调用$drawWebGL
-                this.drawGlow(filter, output, destX - gOffsetX, destY - gOffsetY);
-            }
+            // if(filter.type == "glow") {
+            //     if(!output) {
+            //         gOffsetX += _offsetX;
+            //         gOffsetY += _offsetY;
+            //         output = WebGLRenderBuffer.create(realWidth, realHeight);
+            //         this.drawToRenderTarget(null, webGLTexture, output, sourceX, sourceY, sourceWidth, sourceHeight, _offsetX, _offsetY, destWidth, destHeight, textureWidth, textureHeight, true, meshUVs, meshVertices, meshIndices);
+            //     }
+            //     // 会调用$drawWebGL
+            //     this.drawGlow(filter, output, destX - gOffsetX, destY - gOffsetY);
+            // }
 
             // 绘制output结果到舞台
             var offsetX = 0;
@@ -1051,17 +1066,33 @@ module egret.web {
             this.pushBuffer(output);
             output.context.setGlobalAlpha(1);
             output.setTransform(1, 0, 0, 1, 0, 0);
-            if(filter) {
-                output.pushFilters([filter]);
-            }
+
+            var texture:WebGLTexture;
             if(input["rootRenderTarget"]) {
-                output.context.drawImage(<BitmapData><any>input.rootRenderTarget, sourceX, sourceY, sourceWidth, sourceHeight, destX, destY, destWidth, destHeight, textureWidth, textureHeight);
+                // 如果是render target
+                texture = <WebGLTexture><any>input.rootRenderTarget.texture;
+                output.transform(1, 0, 0, -1, 0, destHeight + destY * 2);// 翻转
             } else {
-                output.context.drawTexture(<WebGLTexture><any>input, sourceX, sourceY, sourceWidth, sourceHeight, destX, destY, destWidth, destHeight, textureWidth, textureHeight, meshUVs, meshVertices, meshIndices);
+                texture = <WebGLTexture><any>input;
             }
+
             if(filter) {
-                output.popFilters();
+                output.context.drawTextureWidthFilter([filter], texture, sourceX, sourceY, sourceWidth, sourceHeight, destX, destY, destWidth, destHeight, textureWidth, textureHeight, destWidth, destHeight, 0, 0);
+            } else {
+                output.context.drawTexture(texture, sourceX, sourceY, sourceWidth, sourceHeight, destX, destY, destWidth, destHeight, textureWidth, textureHeight, meshUVs, meshVertices, meshIndices);
             }
+
+            // if(filter) {
+            //     output.pushFilters([filter]);
+            // }
+            // if(input["rootRenderTarget"]) {
+            //     output.context.drawImage(<BitmapData><any>input.rootRenderTarget, sourceX, sourceY, sourceWidth, sourceHeight, destX, destY, destWidth, destHeight, textureWidth, textureHeight);
+            // } else {
+            //     output.context.drawTexture(<WebGLTexture><any>input, sourceX, sourceY, sourceWidth, sourceHeight, destX, destY, destWidth, destHeight, textureWidth, textureHeight, meshUVs, meshVertices, meshIndices);
+            // }
+            // if(filter) {
+            //     output.popFilters();
+            // }
             // output.context.$drawWebGL();
             this.popBuffer();
             if(input["rootRenderTarget"] && release) { // 如果输入的是buffer,回收
@@ -1074,6 +1105,8 @@ module egret.web {
         private colorMatrixFilter = null;
         private blurFilter = null;
         private drawGlow(filter, input:WebGLRenderBuffer, destX, destY) {
+            var buffer = this.currentBuffer;
+
             if(!this.colorMatrixFilter) {
                 this.colorMatrixFilter = new ColorMatrixFilter();
             }
@@ -1133,7 +1166,6 @@ module egret.web {
             this.setGlobalCompositeOperation("source-over");
             // this.$drawWebGL();
 
-            var buffer = this.currentBuffer;
             function draw(result, offsetX, offsetY) {
                 buffer.saveTransform();
                 buffer.transform(1, 0, 0, -1, 0, result.$getHeight() + (destY + offsetY) * 2);

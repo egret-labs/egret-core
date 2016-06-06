@@ -85,28 +85,28 @@ module egret.web {
             }
         }
 
-        private filters = [];
-        public pushFilters(filters) {
-            this.filters.push(filters);
-        }
-        public popFilters() {
-            this.filters.pop();
-        }
-        public getFilters() {
-            var filters = [];
-            for(var i = 0; i < this.filters.length; i++) {
-                var _filters = this.filters[i];
-                if(_filters) {
-                    for(var j = 0; j < _filters.length; j++) {
-                        var filter = _filters[j];
-                        if(filter && filter.type != "glow") {// 暂时屏蔽掉发光滤镜
-                            filters.push(filter);
-                        }
-                    }
-                }
-            }
-            return filters;
-        }
+        // private filters = [];
+        // public pushFilters(filters) {
+        //     this.filters.push(filters);
+        // }
+        // public popFilters() {
+        //     this.filters.pop();
+        // }
+        // public getFilters() {
+        //     var filters = [];
+        //     for(var i = 0; i < this.filters.length; i++) {
+        //         var _filters = this.filters[i];
+        //         if(_filters) {
+        //             for(var j = 0; j < _filters.length; j++) {
+        //                 var filter = _filters[j];
+        //                 if(filter && filter.type != "glow") {// 暂时屏蔽掉发光滤镜
+        //                     filters.push(filter);
+        //                 }
+        //             }
+        //         }
+        //     }
+        //     return filters;
+        // }
 
         public _globalAlpha:number = 1;
         /**
