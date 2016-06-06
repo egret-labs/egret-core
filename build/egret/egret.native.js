@@ -2499,6 +2499,10 @@ var egret;
                 var left = new egret.TextField();
                 var draw = new egret.TextField();
                 var cost = new egret.TextField();
+                container.addChild(fps);
+                container.addChild(left);
+                container.addChild(draw);
+                container.addChild(cost);
                 fps.lineSpacing = left.lineSpacing = draw.lineSpacing = cost.lineSpacing = 2;
                 fps.size = left.size = draw.size = cost.size = this.fontSize;
                 fps.textColor = left.textColor = draw.textColor = cost.textColor = this.fontColor;
@@ -2508,15 +2512,11 @@ var egret;
                 cost.textFlow = [
                     { text: "0 ", style: { "textColor": 0x18fefe } },
                     { text: "0 ", style: { "textColor": 0xffff00 } },
-                    { text: "0 ", style: { "textColor": 0xff0000 } },
+                    { text: "0 ", style: { "textColor": 0xff0000 } }
                 ];
                 draw.x = cost.x = left.width + 20;
                 left.y = draw.y = fps.height + 2;
                 cost.y = draw.height + 2;
-                container.addChild(fps);
-                container.addChild(left);
-                container.addChild(draw);
-                container.addChild(cost);
                 this.textFps = fps;
                 this.textDraw = draw;
                 this.textCost = cost;
@@ -2563,7 +2563,7 @@ var egret;
                 this.textCost.textFlow = [
                     { text: datas.costTicker + " ", style: { "textColor": 0x18fefe } },
                     { text: datas.costDirty + " ", style: { "textColor": 0xffff00 } },
-                    { text: datas.costRender + " ", style: { "textColor": 0xff0000 } },
+                    { text: datas.costRender + " ", style: { "textColor": 0xff0000 } }
                 ];
                 this.updateLayout();
             };
@@ -2593,7 +2593,7 @@ var egret;
                 g.endFill();
             };
             return NativeFps;
-        }(egret.DisplayObjectContainer));
+        }(egret.Sprite));
         native.NativeFps = NativeFps;
         egret.registerClass(NativeFps,'egret.native.NativeFps',["egret.FPSDisplay"]);
         egret.FPSDisplay = NativeFps;

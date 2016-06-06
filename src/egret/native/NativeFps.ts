@@ -29,7 +29,6 @@ module egret.native {
                 if (showLog) this.addLog();
             }
         }
-
         private addFps() {
             var container = new egret.DisplayObjectContainer();
             this.addChild(container);

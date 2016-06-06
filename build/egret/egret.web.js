@@ -3970,24 +3970,52 @@ var egret;
 })(egret || (egret = {}));
 var egret;
 (function (egret) {
-    var native;
-    (function (native) {
+    var web;
+    (function (web) {
         var WebFps = (function (_super) {
             __extends(WebFps, _super);
             function WebFps(stage, showFPS, showLog, logFilter, styles) {
                 _super.call(this);
+                this.showPanle = true;
+                this.WIDTH = 101;
+                this.HEIGHT = 20;
+                this.bgCanvasColor = "#18304b";
+                this.fpsFrontColor = "#18fefe";
+                this.WIDTH_COST = 33;
+                this.cost1Color = "#18fefe";
+                this.cost2Color = "#ffff00";
+                this.cost3Color = "#ff0000";
                 this.arrFps = [];
                 this.arrCost = [];
                 this.arrLog = [];
                 if (showFPS || showLog) {
-                    this._stage = stage;
-                    this.showFps = showFPS;
-                    this.showLog = showLog;
-                    this.fontColor = styles["textColor"] === undefined ? 0xffffff : parseInt(styles['textColor']);
-                    this.fontSize = styles["size"] === undefined ? 24 : parseInt(styles['size']);
-                    this.bgAlpha = styles["bgAlpha"] || 0.9;
-                    this.shape = new egret.Shape();
-                    this.addChild(this.shape);
+                    if (egret.Capabilities.renderMode == 'canvas') {
+                        this.renderMode = "Canvas";
+                    }
+                    else {
+                        this.renderMode = "WebGL";
+                    }
+                    this.fontColor = styles["textColor"] === undefined ? '#ffffff' : styles['textColor'].replace("0x", "#");
+                    this.fontSize = styles["size"] === undefined ? 12 : parseInt(styles['size']);
+                    if (egret.Capabilities.isMobile) {
+                        this.fontSize -= 2;
+                    }
+                    var all = document.createElement('div');
+                    all.style.position = 'absolute';
+                    all.style.background = "rgba(0,0,0," + styles['bgAlpha'] + ")";
+                    all.style.top = styles['x'] + 'px';
+                    all.style.left = styles['y'] + 'px';
+                    document.body.appendChild(all);
+                    if (!showLog) {
+                        all.onclick = this.switchPanelType.bind(this);
+                    }
+                    var container = document.createElement('div');
+                    container.style.color = this.fontColor;
+                    container.style.fontSize = this.fontSize + 'px';
+                    container.style.lineHeight = this.fontSize + 'px';
+                    container.style.margin = '4px 4px 4px 4px';
+                    this.container = container;
+                    all.appendChild(container);
                     if (showFPS)
                         this.addFps();
                     if (showLog)
@@ -3995,64 +4023,102 @@ var egret;
                 }
             }
             var d = __define,c=WebFps,p=c.prototype;
+            p.switchPanelType = function () {
+                this.showPanle = !this.showPanle;
+                console.log('面板状态:', this.showPanle);
+                if (this.showPanle) {
+                    this.container.appendChild(this.canvasFps);
+                    this.container.appendChild(this.divDatas);
+                    this.container.appendChild(this.canvasCost);
+                }
+                else {
+                    this.container.removeChild(this.canvasFps);
+                    this.container.removeChild(this.divDatas);
+                    this.container.removeChild(this.canvasCost);
+                }
+                this.update(null, true);
+            };
             p.addFps = function () {
-                var container = new egret.DisplayObjectContainer();
-                this.addChild(container);
-                container.x = container.y = 4;
-                var fps = new egret.TextField();
-                var left = new egret.TextField();
-                var draw = new egret.TextField();
-                var cost = new egret.TextField();
-                fps.lineSpacing = left.lineSpacing = draw.lineSpacing = cost.lineSpacing = 2;
-                fps.size = left.size = draw.size = cost.size = this.fontSize;
-                fps.textColor = left.textColor = draw.textColor = cost.textColor = this.fontColor;
-                fps.text = "0 FPS " + egret.Capabilities.renderMode;
-                left.text = "Draw\nDirty\nCost";
-                draw.text = '0\n0%\n';
-                cost.textFlow = [
-                    { text: "0 ", style: { "textColor": 0x18fefe } },
-                    { text: "0 ", style: { "textColor": 0xffff00 } },
-                    { text: "0 ", style: { "textColor": 0xff0000 } },
-                ];
-                draw.x = cost.x = left.width + 20;
-                left.y = draw.y = fps.height + 2;
-                cost.y = draw.height + 2;
-                container.addChild(fps);
-                container.addChild(left);
-                container.addChild(draw);
-                container.addChild(cost);
-                this.textFps = fps;
-                this.textDraw = draw;
-                this.textCost = cost;
-                this.fpsHeight = container.height;
-                this.updateLayout();
+                var fps = document.createElement('div');
+                fps.style.paddingBottom = '2px';
+                this.fps = fps;
+                this.container.appendChild(fps);
+                fps.innerHTML = "0 FPS " + this.renderMode + "<br/>min0 max0 avg0";
+                var canvas = document.createElement('canvas');
+                this.container.appendChild(canvas);
+                canvas.width = this.WIDTH;
+                canvas.height = this.HEIGHT;
+                this.canvasFps = canvas;
+                var context = canvas.getContext('2d');
+                this.contextFps = context;
+                context.fillStyle = this.bgCanvasColor;
+                context.fillRect(0, 0, this.WIDTH, this.HEIGHT);
+                var divDatas = document.createElement('div');
+                this.divDatas = divDatas;
+                this.container.appendChild(divDatas);
+                var left = document.createElement('div');
+                left.style['float'] = 'left';
+                left.innerHTML = "Draw<br/>Dirty<br/>Cost";
+                divDatas.appendChild(left);
+                var right = document.createElement('div');
+                right.style['float'] = 'left';
+                right.style.paddingLeft = '20px';
+                divDatas.appendChild(right);
+                var draw = document.createElement('div');
+                this.divDraw = draw;
+                draw.innerHTML = "0<br/>0<br/>";
+                right.appendChild(draw);
+                var cost = document.createElement('div');
+                this.divCost = cost;
+                cost.innerHTML = "<font  style=\"color:" + this.cost1Color + "\">0<font/> <font  style=\"color:" + this.cost2Color + "\">0<font/> <font  style=\"color:" + this.cost3Color + "\">0<font/>";
+                right.appendChild(cost);
+                this.fpsHeight = this.container.offsetHeight;
+                var canvas = document.createElement('canvas');
+                this.canvasCost = canvas;
+                this.container.appendChild(canvas);
+                canvas.width = this.WIDTH;
+                canvas.height = this.HEIGHT;
+                var context = canvas.getContext('2d');
+                this.contextCost = context;
+                context.fillStyle = this.bgCanvasColor;
+                context.fillRect(0, 0, this.WIDTH, this.HEIGHT);
+                context.fillStyle = "#000000";
+                context.fillRect(this.WIDTH_COST, 0, 1, this.HEIGHT);
+                context.fillRect(this.WIDTH_COST * 2 + 1, 0, 1, this.HEIGHT);
             };
             p.addLog = function () {
-                var text = new egret.TextField();
-                text.size = this.fontSize;
-                text.textColor = this.fontColor;
-                text.x = 4;
-                if (this.showFps) {
-                    text.y = this.fpsHeight + 4;
-                }
-                this.addChild(text);
-                this.textLog = text;
-                this.updateLayout();
+                var log = document.createElement('div');
+                log.style.maxWidth = document.body.clientWidth - 8 + 'px';
+                log.style.wordWrap = "break-word";
+                this.log = log;
+                this.container.appendChild(log);
             };
-            p.update = function (datas) {
-                var fpsMin = this.fpsMin;
-                var fpsMax = this.fpsMax;
-                this.arrFps.push(datas.fps);
-                this.arrCost.push([datas.costTicker, datas.costDirty, datas.costRender]);
+            p.update = function (datas, showLastData) {
+                if (showLastData === void 0) { showLastData = false; }
+                if (!showLastData) {
+                    var numFps = datas.fps;
+                    var numCostTicker = datas.costTicker;
+                    var numCostDirty = datas.costDirty;
+                    var numCostRender = datas.costRender;
+                    this.lastNumDraw = datas.draw;
+                    this.lastNumDirty = datas.dirty;
+                    this.arrFps.push(numFps);
+                    this.arrCost.push([numCostTicker, numCostDirty, numCostRender]);
+                }
+                else {
+                    numFps = this.arrFps[this.arrFps.length - 1];
+                    numCostTicker = this.arrCost[this.arrCost.length - 1][0];
+                    numCostDirty = this.arrCost[this.arrCost.length - 1][1];
+                    numCostRender = this.arrCost[this.arrCost.length - 1][2];
+                }
                 var fpsTotal = 0;
                 var lenFps = this.arrFps.length;
-                if (lenFps == 1) {
-                    fpsMin = fpsMax = datas.fps;
-                }
-                if (lenFps > 110) {
+                if (lenFps > 101) {
                     lenFps = 100;
                     this.arrFps.shift();
                 }
+                var fpsMin = this.arrFps[0];
+                var fpsMax = this.arrFps[0];
                 for (var i = 0; i < lenFps; i++) {
                     var num = this.arrFps[i];
                     fpsTotal += num;
@@ -4061,47 +4127,71 @@ var egret;
                     else if (num > fpsMax)
                         fpsMax = num;
                 }
+                var WIDTH = this.WIDTH;
+                var HEIGHT = this.HEIGHT;
+                var context = this.contextFps;
+                context.drawImage(this.canvasFps, 1, 0, WIDTH - 1, HEIGHT, 0, 0, WIDTH - 1, HEIGHT);
+                context.fillStyle = this.bgCanvasColor;
+                context.fillRect(WIDTH - 1, 0, 1, HEIGHT);
+                var lastHeight = Math.floor(numFps / 60 * 20);
+                if (lastHeight < 1)
+                    lastHeight = 1;
+                context.fillStyle = this.fpsFrontColor;
+                context.fillRect(WIDTH - 1, 20 - lastHeight, 1, lastHeight);
+                var WIDTH_COST = this.WIDTH_COST;
+                var context = this.contextCost;
+                context.drawImage(this.canvasCost, 1, 0, WIDTH_COST - 1, HEIGHT, 0, 0, WIDTH_COST - 1, HEIGHT);
+                context.drawImage(this.canvasCost, WIDTH_COST + 2, 0, WIDTH_COST - 1, HEIGHT, WIDTH_COST + 1, 0, WIDTH_COST - 1, HEIGHT);
+                context.drawImage(this.canvasCost, WIDTH_COST * 2 + 3, 0, WIDTH_COST - 1, HEIGHT, WIDTH_COST * 2 + 2, 0, WIDTH_COST - 1, HEIGHT);
+                var c1Height = Math.floor(numCostTicker);
+                if (c1Height < 1)
+                    c1Height = 1;
+                else if (c1Height > 20)
+                    c1Height = 20;
+                var c2Height = Math.floor(numCostDirty);
+                if (c2Height < 1)
+                    c2Height = 1;
+                else if (c2Height > 20)
+                    c2Height = 20;
+                var c3Height = Math.floor(numCostRender / 40 * 20);
+                if (c3Height < 1)
+                    c3Height = 1;
+                else if (c3Height > 20)
+                    c3Height = 20;
+                context.fillStyle = this.bgCanvasColor;
+                context.fillRect(WIDTH_COST - 1, 0, 1, HEIGHT);
+                context.fillRect(WIDTH_COST * 2, 0, 1, HEIGHT);
+                context.fillRect(WIDTH_COST * 3 + 1, 0, 1, HEIGHT);
+                context.fillStyle = this.cost1Color;
+                context.fillRect(WIDTH_COST - 1, 20 - c1Height, 1, c1Height);
+                context.fillStyle = this.cost2Color;
+                context.fillRect(WIDTH_COST * 2, 20 - c2Height, 1, c2Height);
+                context.fillStyle = this.cost3Color;
+                context.fillRect(WIDTH_COST * 3 + 1, 20 - c3Height, 1, c3Height);
                 var fpsAvg = Math.floor(fpsTotal / lenFps);
-                this.textFps.text = datas.fps + " FPS " + egret.Capabilities.renderMode;
-                this.textDraw.text = datas.draw + "\n" + datas.dirty + "%";
-                this.textCost.textFlow = [
-                    { text: datas.costTicker + " ", style: { "textColor": 0x18fefe } },
-                    { text: datas.costDirty + " ", style: { "textColor": 0xffff00 } },
-                    { text: datas.costRender + " ", style: { "textColor": 0xff0000 } },
-                ];
-                this.updateLayout();
+                var fpsOutput = numFps + " FPS " + this.renderMode;
+                if (this.showPanle) {
+                    fpsOutput += "<br/>min" + fpsMin + " max" + fpsMax + " avg" + fpsAvg;
+                    this.divDraw.innerHTML = this.lastNumDraw + "<br/>" + this.lastNumDirty + "%<br/>";
+                    this.divCost.innerHTML = "<font  style=\"color:#18fefe\">" + numCostTicker + "<font/> <font  style=\"color:#ffff00\">" + numCostDirty + "<font/> <font  style=\"color:#ff0000\">" + numCostRender + "<font/>";
+                }
+                this.fps.innerHTML = fpsOutput;
             };
             ;
             p.updateInfo = function (info) {
                 this.arrLog.push(info);
-                this.textLog.text = this.arrLog.join('\n');
-                if (this._stage.stageHeight > 0) {
-                    if (this.textLog.textWidth > this._stage.stageWidth - 20) {
-                        this.textLog.width = this._stage.stageWidth - 20;
-                    }
-                    while (this.textLog.textHeight > this._stage.stageHeight - this.fpsHeight - 20) {
-                        this.arrLog.shift();
-                        this.textLog.text = this.arrLog.join("\n");
-                    }
+                this.log.innerHTML = this.arrLog.join('<br/>');
+                while (document.body.clientHeight < (this.log.offsetHeight + this.fpsHeight + this.fontSize * 2)) {
+                    this.arrLog.shift();
+                    this.log.innerHTML = this.arrLog.join('<br/>');
                 }
-                this.updateLayout();
-            };
-            p.updateLayout = function () {
-                if (egret.Capabilities.runtimeType == egret.RuntimeType.NATIVE) {
-                    return;
-                }
-                var g = this.shape.$graphics;
-                g.clear();
-                g.beginFill(0x000000, this.bgAlpha);
-                g.drawRect(0, 0, this.width + 8, this.height + 8);
-                g.endFill();
             };
             return WebFps;
-        }(egret.DisplayObjectContainer));
-        native.WebFps = WebFps;
-        egret.registerClass(WebFps,'egret.native.WebFps',["egret.FPSDisplay"]);
+        }(egret.DisplayObject));
+        web.WebFps = WebFps;
+        egret.registerClass(WebFps,'egret.web.WebFps',["egret.FPSDisplay"]);
         egret.FPSDisplay = WebFps;
-    })(native = egret.native || (egret.native = {}));
+    })(web = egret.web || (egret.web = {}));
 })(egret || (egret = {}));
 //////////////////////////////////////////////////////////////////////////////////////
 //
