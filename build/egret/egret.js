@@ -2715,14 +2715,16 @@ var egret;
             /**
              * @language en_US
              * An indexed array that contains each filter object currently associated with the display object.
-             * @version Egret 3.1
-             * @platform Web,Native
+             * Note: Currently only the next support WebGL, Canvas rendering and native are not supported.
+             * @version Egret 3.1.0
+             * @platform Web
              */
             /**
              * @language zh_CN
              * 包含当前与显示对象关联的每个滤镜对象的索引数组。
-             * @version Egret 3.1
-             * @platform Web,Native
+             * 注意 : 目前只有 WebGL 下支持，Canvs 渲染以及 native 均不支持。
+             * @version Egret 3.1.0
+             * @platform Web
              */
             ,function () {
                 return this.$DisplayObject[20 /* filters */];
@@ -3037,8 +3039,8 @@ var egret;
                 for (var i = 0; i < length; i++) {
                     var filter = filters[i];
                     if (filter.type == "blur") {
-                        var offsetX = filter.blurX * 0.028 * bounds.width;
-                        var offsetY = filter.blurY * 0.028 * bounds.width;
+                        var offsetX = filter.blurX;
+                        var offsetY = filter.blurY;
                         x -= offsetX;
                         y -= offsetY;
                         w += offsetX * 2;
@@ -4215,6 +4217,7 @@ var egret;
      * @version Egret 2.4
      * @platform Web,Native
      * @includeExample egret/display/BlendMode.ts
+     * @see http://edn.egret.com/cn/docs/page/108 显示容器的概念与实现
      */
     /**
      * @language zh_CN
@@ -4223,6 +4226,7 @@ var egret;
      * @version Egret 2.4
      * @platform Web,Native
      * @includeExample egret/display/BlendMode.ts
+     * @see http://edn.egret.com/cn/docs/page/108 显示容器的概念与实现
      */
     var BlendMode = (function () {
         function BlendMode() {
@@ -6923,6 +6927,8 @@ var egret;
             egret.Matrix.release(matrix);
             //设置纹理参数
             this.$initData(0, 0, width, height, 0, 0, width, height, width, height);
+            //防止RenderTexture渲染破坏脏标记
+            displayObject.$propagateFlagsDown(128 /* InvalidRenderNodes */);
             return true;
         };
         p.getPixel32 = function (x, y) {
@@ -7799,6 +7805,7 @@ var egret;
      * @version Egret 2.4
      * @platform Web,Native
      * @includeExample egret/events/Event.ts
+     * @see http://edn.egret.com/cn/docs/page/798 取消触摸事件
      */
     /**
      * @language zh_CN
@@ -7812,6 +7819,7 @@ var egret;
      * @version Egret 2.4
      * @platform Web,Native
      * @includeExample egret/events/Event.ts
+     * @see http://edn.egret.com/cn/docs/page/798 取消触摸事件
      */
     var Event = (function (_super) {
         __extends(Event, _super);
@@ -8660,6 +8668,7 @@ var egret;
      * @version Egret 2.4
      * @platform Web,Native
      * @includeExample egret/sensor/Geolocation.ts
+     * @see http://edn.egret.com/cn/docs/page/662 获取位置信息
      */
     /**
      * @language zh_CN
@@ -8667,6 +8676,7 @@ var egret;
      * @version Egret 2.4
      * @platform Web,Native
      * @includeExample egret/sensor/Geolocation.ts
+     * @see http://edn.egret.com/cn/docs/page/662 获取位置信息
      */
     var GeolocationEvent = (function (_super) {
         __extends(GeolocationEvent, _super);
@@ -10585,6 +10595,7 @@ var egret;
      * You can produce blurs that range from a softly unfocused look to a Gaussian blur, a hazy appearance like viewing an image through semi-opaque glass.
      * @version Egret 3.0.1
      * @platform Web
+     * @see http://edn.egret.com/cn/docs/page/947#模糊滤镜 模糊滤镜
      */
     /**
      * @language zh_CN
@@ -10592,6 +10603,7 @@ var egret;
      * 您可以生成一些模糊效果，范围从创建一个柔化的、未聚焦的外观到高斯模糊（就像通过半透明玻璃查看图像一样的朦胧的外观）。
      * @version Egret 3.1.0
      * @platform Web
+     * @see http://edn.egret.com/cn/docs/page/947#模糊滤镜 模糊滤镜
      */
     var BlurFilter = (function (_super) {
         __extends(BlurFilter, _super);
@@ -10703,6 +10715,7 @@ var egret;
      * It allows saturation changes, hue rotation, luminance to alpha, and various other effects.
      * @version Egret 3.1.0
      * @platform Web
+     * @see http://edn.egret.com/cn/docs/page/947 颜色矩阵滤镜
      */
     /**
      * @language zh_CN
@@ -10710,6 +10723,7 @@ var egret;
      * 该类允许饱和度更改、色相旋转、亮度为 Alpha 以及各种其他效果。
      * @version Egret 3.1.0
      * @platform Web
+     * @see http://edn.egret.com/cn/docs/page/947 颜色矩阵滤镜
      */
     var ColorMatrixFilter = (function (_super) {
         __extends(ColorMatrixFilter, _super);
@@ -18613,7 +18627,8 @@ var egret;
                 33: false,
                 34: 0xffffff,
                 35: null,
-                36: null //restrictNot
+                36: null,
+                37: egret.TextFieldInputType.TEXT //inputType
             };
         }
         var d = __define,c=TextField,p=c.prototype;
@@ -18988,6 +19003,30 @@ var egret;
             }
             return false;
         };
+        d(p, "inputType"
+            /**
+             * @version Egret 3.1.2
+             * @platform Web,Native
+             */
+            ,function () {
+                return this.$TextField[37 /* inputType */];
+            }
+            /**
+             * @language en_US
+             * Type of the text field.
+             * Any one of the following TextFieldType constants: TextFieldType.DYNAMIC (specifies the dynamic text field that users can not edit), or TextFieldType.INPUT (specifies the dynamic text field that users can edit).
+             * @default egret.TextFieldType.DYNAMIC
+             */
+            /**
+             * @language zh_CN
+             * 文本字段的类型。
+             * 以下 TextFieldType 常量中的任一个：TextFieldType.DYNAMIC（指定用户无法编辑的动态文本字段），或 TextFieldType.INPUT（指定用户可以编辑的输入文本字段）。
+             * @default egret.TextFieldType.DYNAMIC
+             */
+            ,function (value) {
+                this.$TextField[37 /* inputType */] = value;
+            }
+        );
         d(p, "text"
             /**
              * @version Egret 2.4
@@ -20179,6 +20218,96 @@ var egret;
         egret.$markReadOnly(TextField, "textWidth");
         egret.$markReadOnly(TextField, "textHeight");
     }
+})(egret || (egret = {}));
+//////////////////////////////////////////////////////////////////////////////////////
+//
+//  Copyright (c) 2014-2015, Egret Technology Inc.
+//  All rights reserved.
+//  Redistribution and use in source and binary forms, with or without
+//  modification, are permitted provided that the following conditions are met:
+//
+//     * Redistributions of source code must retain the above copyright
+//       notice, this list of conditions and the following disclaimer.
+//     * Redistributions in binary form must reproduce the above copyright
+//       notice, this list of conditions and the following disclaimer in the
+//       documentation and/or other materials provided with the distribution.
+//     * Neither the name of the Egret nor the
+//       names of its contributors may be used to endorse or promote products
+//       derived from this software without specific prior written permission.
+//
+//  THIS SOFTWARE IS PROVIDED BY EGRET AND CONTRIBUTORS "AS IS" AND ANY EXPRESS
+//  OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES
+//  OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED.
+//  IN NO EVENT SHALL EGRET AND CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT,
+//  INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT
+//  LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES;LOSS OF USE, DATA,
+//  OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF
+//  LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING
+//  NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE,
+//  EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+//
+//////////////////////////////////////////////////////////////////////////////////////
+var egret;
+(function (egret) {
+    /**
+     * @language en_US
+     * TextFieldInputType class is an enumeration of constant value used in setting the inputType property of the TextField class.
+     * @version Egret 3.1.2
+     * @platform Web,Native
+     */
+    /**
+     * @language zh_CN
+     * TextFieldInputType 类是在设置 TextField 类的 inputType 属性时使用的常数值的枚举。
+     * @version Egret 3.1.2
+     * @platform Web,Native
+     */
+    var TextFieldInputType = (function () {
+        function TextFieldInputType() {
+        }
+        var d = __define,c=TextFieldInputType,p=c.prototype;
+        /**
+         * @language en_US
+         * The default
+         * @version Egret 3.1.2
+         * @platform Web,Native
+         */
+        /**
+         * @language zh_CN
+         * 默认 input 类型
+         * @version Egret 3.1.2
+         * @platform Web,Native
+         */
+        TextFieldInputType.TEXT = "text";
+        /**
+         * @language en_US
+         * Telephone Number Inputs
+         * @version Egret 3.1.2
+         * @platform Web,Native
+         */
+        /**
+         * @language zh_CN
+         * 电话号码 input 类型
+         * @version Egret 3.1.2
+         * @platform Web,Native
+         */
+        TextFieldInputType.TEL = "tel";
+        /**
+         * @language en_US
+         * Password Inputs
+         * @version Egret 3.1.2
+         * @platform Web,Native
+         */
+        /**
+         * @language zh_CN
+         * password 类型
+         * @version Egret 3.1.2
+         * @platform Web,Native
+         */
+        TextFieldInputType.PASSWORD = "password";
+        return TextFieldInputType;
+    }());
+    egret.TextFieldInputType = TextFieldInputType;
+    egret.registerClass(TextFieldInputType,'egret.TextFieldInputType');
 })(egret || (egret = {}));
 //////////////////////////////////////////////////////////////////////////////////////
 //
