@@ -179,7 +179,11 @@ module egret.sys {
         /**
          * @private
          */
-        restrictNot
+        restrictNot,
+        /**
+         * @private
+         */
+        inputType
     }
 }
 
@@ -289,7 +293,8 @@ module egret {
                 33: false,              //background
                 34: 0xffffff,              //backgroundColor
                 35: null,           //restrictAnd
-                36: null           //restrictNot
+                36: null,           //restrictNot
+                37: TextFieldInputType.TEXT            //inputType
             };
         }
 
@@ -703,6 +708,30 @@ module egret {
          */
         public get type():string {
             return this.$TextField[sys.TextKeys.type];
+        }
+        
+        /**
+         * @language en_US
+         * Type of the text field.
+         * Any one of the following TextFieldType constants: TextFieldType.DYNAMIC (specifies the dynamic text field that users can not edit), or TextFieldType.INPUT (specifies the dynamic text field that users can edit).
+         * @default egret.TextFieldType.DYNAMIC
+         */
+        /**
+         * @language zh_CN
+         * 文本字段的类型。
+         * 以下 TextFieldType 常量中的任一个：TextFieldType.DYNAMIC（指定用户无法编辑的动态文本字段），或 TextFieldType.INPUT（指定用户可以编辑的输入文本字段）。
+         * @default egret.TextFieldType.DYNAMIC
+         */
+        public set inputType(value:string) {
+            this.$TextField[sys.TextKeys.inputType] = value;
+        }
+
+        /**
+         * @version Egret 3.1.2
+         * @platform Web,Native
+         */
+        public get inputType():string {
+            return this.$TextField[sys.TextKeys.inputType];
         }
 
         /**

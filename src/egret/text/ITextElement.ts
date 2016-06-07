@@ -66,12 +66,14 @@ module egret {
          * text color
          * @version Egret 2.4
          * @platform Web,Native
+         * @see http://edn.egret.com/cn/docs/page/146 多种样式混合文本的基本结构
          */
         /**
          * @language zh_CN
          * 颜色值
          * @version Egret 2.4
          * @platform Web,Native
+         * @see http://edn.egret.com/cn/docs/page/146 多种样式混合文本的基本结构
          */
         textColor?:number;
         /**

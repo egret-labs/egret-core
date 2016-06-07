@@ -4674,11 +4674,30 @@ var egret;
                 egret_native.EGT_deleteBackward = function () {
                 };
                 var textfield = this.$textfield;
-                var inputMode = textfield.multiline ? 0 : 6;
+                var values = textfield.$TextField;
+                var inputType = values[37 /* inputType */];
+                var inputMode = values[30 /* multiline */] ? 0 : 6;
                 var inputFlag = -1; //textfield.displayAsPassword ? 0 : -1;
+                if (inputType == egret.TextFieldInputType.PASSWORD) {
+                    inputFlag = 0;
+                }
+                else if (inputType == egret.TextFieldInputType.TEL) {
+                    inputMode = 3;
+                }
                 var returnType = 1;
-                var maxLength = textfield.maxChars <= 0 ? -1 : textfield.maxChars;
-                egret_native.TextInputOp.setKeybordOpen(true, JSON.stringify({ "inputMode": inputMode, "inputFlag": inputFlag, "returnType": returnType, "maxLength": maxLength }));
+                var maxLength = values[21 /* maxChars */] <= 0 ? -1 : values[21 /* maxChars */];
+                egret_native.TextInputOp.setKeybordOpen(true, JSON.stringify({
+                    "inputMode": inputMode,
+                    "inputFlag": inputFlag,
+                    "returnType": returnType,
+                    "maxLength": maxLength,
+                    "x": textfield.x,
+                    "y": textfield.y,
+                    "width": textfield.width,
+                    "height": textfield.height,
+                    "font_size": values[0 /* fontSize */],
+                    "font_color": values[2 /* textColor */]
+                }));
             };
             /**
              * @private

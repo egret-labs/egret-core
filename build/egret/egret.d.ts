@@ -1734,14 +1734,16 @@ declare module egret {
         /**
          * @language en_US
          * An indexed array that contains each filter object currently associated with the display object.
-         * @version Egret 3.1
-         * @platform Web,Native
+         * Note: Currently only the next support WebGL, Canvas rendering and native are not supported.
+         * @version Egret 3.1.0
+         * @platform Web
          */
         /**
          * @language zh_CN
          * 包含当前与显示对象关联的每个滤镜对象的索引数组。
-         * @version Egret 3.1
-         * @platform Web,Native
+         * 注意 : 目前只有 WebGL 下支持，Canvs 渲染以及 native 均不支持。
+         * @version Egret 3.1.0
+         * @platform Web
          */
         filters: Array<Filter>;
         /**
@@ -2389,6 +2391,7 @@ declare module egret {
      * @version Egret 2.4
      * @platform Web,Native
      * @includeExample egret/display/BlendMode.ts
+     * @see http://edn.egret.com/cn/docs/page/108 显示容器的概念与实现
      */
     /**
      * @language zh_CN
@@ -2397,6 +2400,7 @@ declare module egret {
      * @version Egret 2.4
      * @platform Web,Native
      * @includeExample egret/display/BlendMode.ts
+     * @see http://edn.egret.com/cn/docs/page/108 显示容器的概念与实现
      */
     class BlendMode {
         /**
@@ -4339,6 +4343,7 @@ declare module egret {
      * @version Egret 2.4
      * @platform Web,Native
      * @includeExample egret/events/Event.ts
+     * @see http://edn.egret.com/cn/docs/page/798 取消触摸事件
      */
     /**
      * @language zh_CN
@@ -4352,6 +4357,7 @@ declare module egret {
      * @version Egret 2.4
      * @platform Web,Native
      * @includeExample egret/events/Event.ts
+     * @see http://edn.egret.com/cn/docs/page/798 取消触摸事件
      */
     class Event extends HashObject {
         /**
@@ -5094,6 +5100,7 @@ declare module egret {
      * @version Egret 2.4
      * @platform Web,Native
      * @includeExample egret/sensor/Geolocation.ts
+     * @see http://edn.egret.com/cn/docs/page/662 获取位置信息
      */
     /**
      * @language zh_CN
@@ -5101,6 +5108,7 @@ declare module egret {
      * @version Egret 2.4
      * @platform Web,Native
      * @includeExample egret/sensor/Geolocation.ts
+     * @see http://edn.egret.com/cn/docs/page/662 获取位置信息
      */
     class GeolocationEvent extends Event {
         /**
@@ -6890,6 +6898,7 @@ declare module egret {
      * You can produce blurs that range from a softly unfocused look to a Gaussian blur, a hazy appearance like viewing an image through semi-opaque glass.
      * @version Egret 3.0.1
      * @platform Web
+     * @see http://edn.egret.com/cn/docs/page/947#模糊滤镜 模糊滤镜
      */
     /**
      * @language zh_CN
@@ -6897,6 +6906,7 @@ declare module egret {
      * 您可以生成一些模糊效果，范围从创建一个柔化的、未聚焦的外观到高斯模糊（就像通过半透明玻璃查看图像一样的朦胧的外观）。
      * @version Egret 3.1.0
      * @platform Web
+     * @see http://edn.egret.com/cn/docs/page/947#模糊滤镜 模糊滤镜
      */
     class BlurFilter extends Filter {
         /**
@@ -6949,6 +6959,7 @@ declare module egret {
      * It allows saturation changes, hue rotation, luminance to alpha, and various other effects.
      * @version Egret 3.1.0
      * @platform Web
+     * @see http://edn.egret.com/cn/docs/page/947 颜色矩阵滤镜
      */
     /**
      * @language zh_CN
@@ -6956,6 +6967,7 @@ declare module egret {
      * 该类允许饱和度更改、色相旋转、亮度为 Alpha 以及各种其他效果。
      * @version Egret 3.1.0
      * @platform Web
+     * @see http://edn.egret.com/cn/docs/page/947 颜色矩阵滤镜
      */
     class ColorMatrixFilter extends Filter {
         /**
@@ -7969,7 +7981,7 @@ declare module egret {
      * @language zh_CN
      * Video 允许您在应用程序中使用视频。使用 Video 类可以创建 Video 对象、将外部视频文件加载到该对象并播放该文件。<br/>
      * 注意: 在大多数移动设备中，视频是强制全屏播放的，所以你可以直接调用 play() 方法全屏播放视频，不用将它绘制在Stage中。
-     * @see http://edn.egret.com/cn/index.php/article/index/id/657 视频系统
+     * @see http://edn.egret.com/cn/docs/page/657 视频系统
      *
      * @param url 要播放的视频的URL，如果url不为空，Video会立即加载这个视频
      *
@@ -8735,6 +8747,7 @@ declare module egret {
      * @version Egret 2.4
      * @platform Web,Native
      * @includeExample egret/net/ImageLoaderExample.ts
+     * @see http://edn.egret.com/cn/docs/page/590 加载位图文件
      */
     /**
      * @language zh_CN
@@ -8745,6 +8758,7 @@ declare module egret {
      * @version Egret 2.4
      * @platform Web,Native
      * @includeExample egret/net/ImageLoaderExample.ts
+     * @see http://edn.egret.com/cn/docs/page/590 加载位图文件
      */
     interface ImageLoader extends EventDispatcher {
         /**
@@ -10504,6 +10518,7 @@ declare module egret {
      * @version Egret 2.4
      * @platform Web,Native
      * @includeExample egret/sensor/DeviceOrientation.ts
+     * @see http://edn.egret.com/cn/docs/page/661 获取设备旋转角度
      */
     /**
      * @language zh_CN
@@ -10512,6 +10527,7 @@ declare module egret {
      * @version Egret 2.4
      * @platform Web,Native
      * @includeExample egret/sensor/DeviceOrientation.ts
+     * @see http://edn.egret.com/cn/docs/page/661 获取设备旋转角度
      */
     interface DeviceOrientation extends EventDispatcher {
         /**
@@ -11764,12 +11780,14 @@ declare module egret {
          * text color
          * @version Egret 2.4
          * @platform Web,Native
+         * @see http://edn.egret.com/cn/docs/page/146 多种样式混合文本的基本结构
          */
         /**
          * @language zh_CN
          * 颜色值
          * @version Egret 2.4
          * @platform Web,Native
+         * @see http://edn.egret.com/cn/docs/page/146 多种样式混合文本的基本结构
          */
         textColor?: number;
         /**
@@ -12210,6 +12228,10 @@ declare module egret.sys {
          * @private
          */
         restrictNot = 36,
+        /**
+         * @private
+         */
+        inputType = 37,
     }
 }
 declare module egret {
@@ -12445,6 +12467,23 @@ declare module egret {
          * @param value
          */
         $setType(value: string): boolean;
+        /**
+         * @version Egret 3.1.2
+         * @platform Web,Native
+         */
+        /**
+         * @language en_US
+         * Type of the text field.
+         * Any one of the following TextFieldType constants: TextFieldType.DYNAMIC (specifies the dynamic text field that users can not edit), or TextFieldType.INPUT (specifies the dynamic text field that users can edit).
+         * @default egret.TextFieldType.DYNAMIC
+         */
+        /**
+         * @language zh_CN
+         * 文本字段的类型。
+         * 以下 TextFieldType 常量中的任一个：TextFieldType.DYNAMIC（指定用户无法编辑的动态文本字段），或 TextFieldType.INPUT（指定用户可以编辑的输入文本字段）。
+         * @default egret.TextFieldType.DYNAMIC
+         */
+        inputType: string;
         /**
          * @version Egret 2.4
          * @platform Web,Native
@@ -12929,6 +12968,61 @@ declare module egret {
         private addEvent();
         private removeEvent();
         private onTapHandler(e);
+    }
+}
+declare module egret {
+    /**
+     * @language en_US
+     * TextFieldInputType class is an enumeration of constant value used in setting the inputType property of the TextField class.
+     * @version Egret 3.1.2
+     * @platform Web,Native
+     */
+    /**
+     * @language zh_CN
+     * TextFieldInputType 类是在设置 TextField 类的 inputType 属性时使用的常数值的枚举。
+     * @version Egret 3.1.2
+     * @platform Web,Native
+     */
+    class TextFieldInputType {
+        /**
+         * @language en_US
+         * The default
+         * @version Egret 3.1.2
+         * @platform Web,Native
+         */
+        /**
+         * @language zh_CN
+         * 默认 input 类型
+         * @version Egret 3.1.2
+         * @platform Web,Native
+         */
+        static TEXT: string;
+        /**
+         * @language en_US
+         * Telephone Number Inputs
+         * @version Egret 3.1.2
+         * @platform Web,Native
+         */
+        /**
+         * @language zh_CN
+         * 电话号码 input 类型
+         * @version Egret 3.1.2
+         * @platform Web,Native
+         */
+        static TEL: string;
+        /**
+         * @language en_US
+         * Password Inputs
+         * @version Egret 3.1.2
+         * @platform Web,Native
+         */
+        /**
+         * @language zh_CN
+         * password 类型
+         * @version Egret 3.1.2
+         * @platform Web,Native
+         */
+        static PASSWORD: string;
     }
 }
 declare module egret {

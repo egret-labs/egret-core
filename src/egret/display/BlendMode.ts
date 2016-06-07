@@ -43,6 +43,7 @@ module egret {
      * @version Egret 2.4
      * @platform Web,Native
      * @includeExample egret/display/BlendMode.ts
+     * @see http://edn.egret.com/cn/docs/page/108 显示容器的概念与实现
      */
     /**
      * @language zh_CN
@@ -51,6 +52,7 @@ module egret {
      * @version Egret 2.4
      * @platform Web,Native
      * @includeExample egret/display/BlendMode.ts
+     * @see http://edn.egret.com/cn/docs/page/108 显示容器的概念与实现
      */
     export class BlendMode {
         /**
