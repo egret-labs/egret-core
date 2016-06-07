@@ -14725,25 +14725,3 @@ declare module egret {
         static deleteWebGLTexture(bitmapData: any): void;
     }
 }
-declare module egret.web {
-    class WebFps2 extends egret.DisplayObject implements egret.FPSDisplay {
-        private fontColor;
-        private fontSize;
-        private container;
-        private fps;
-        private log;
-        constructor(stage: Stage, showFPS: boolean, showLog: boolean, logFilter: string, styles: Object);
-        private fpsHeight;
-        private divDraw;
-        private divConst;
-        private addFps();
-        private addLog();
-        private fpsMin;
-        private fpsMax;
-        private arrFps;
-        private arrCost;
-        update(datas: FPSData): void;
-        private arrLog;
-        updateInfo(info: string): void;
-    }
-}
