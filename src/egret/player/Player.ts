@@ -479,7 +479,6 @@ module egret.sys {
             this.touchChildren = false;
             this.touchEnabled = false;
             this.styles = styles;
-            //this.createDisplay();
             this.fpsDisplay = new FPSDisplay(stage,showFPS,showLog,logFilter,styles);
             this.addChild(this.fpsDisplay);
             try {
@@ -494,27 +493,6 @@ module egret.sys {
                 return !logFilter || message.indexOf(logFilter) == 0;
             }
         }
-
-        //FPSImpl.prototype.createDisplay = function () {
-        //    this.shape = new egret.Shape();
-        //    this.addChild(this.shape);
-        //    var textField = new egret.TextField();
-        //    textField.size = this.styles["size"] === undefined ? 24 : parseInt(this.styles["size"]);
-        //    this.addChild(textField);
-        //    this.textField = textField;
-        //    textField.textColor = this.styles["textColor"] === undefined ? 0x00c200 : parseInt(this.styles["textColor"]);
-        //    textField.fontFamily = "monospace";
-        //    textField.x = 10;
-        //    textField.y = 10;
-        //    var textField = new egret.TextField();
-        //    this.infoText = textField;
-        //    this.addChild(textField);
-        //    textField.textColor = this.styles["textColor"] === undefined ? 0x00c200 : parseInt(this.styles["textColor"]);
-        //    textField.fontFamily = "monospace";
-        //    textField.x = 10;
-        //    textField.size = this.styles["size"] === undefined ? 12 : this.styles["size"] / 2;
-        //    textField.y = 10;
-        //};
         FPSImpl.prototype.update = function (drawCalls, dirtyRatio, costDirty, costRender, costTicker) {
             var current = egret.getTimer();
             this.totalTime += current - this.lastTime;
@@ -543,12 +521,6 @@ module egret.sys {
                         costRender:lastCostRender
                     }
                 )
-                //var text = "FPS: " + lastFPS + "\nDraw: " + lastDrawCalls + "," + lastDirtyRatio + "%\nCost: " + lastCostTicker + "," + lastCostDirty + "," + lastCostRender;
-                //console.log(text)
-                //if (this.textField.text != text) {
-                //    this.textField.text = text;
-                //    this.updateLayout();
-                //}
                 this.totalTick = 0;
                 this.totalTime = this.totalTime % 500;
                 this.drawCalls = 0;
@@ -570,43 +542,6 @@ module egret.sys {
             }
             this.fpsDisplay.updateInfo(info);
         }
-        //FPSImpl.prototype.updateInfo = function (info) {
-        //    if (!this.showLog) {
-        //        return;
-        //    }
-        //    if (!this.filter(info)) {
-        //        return;
-        //    }
-        //    var lines = this.infoLines;
-        //    if (info) {
-        //        lines.push(info);
-        //    }
-        //    this.infoText.width = NaN;
-        //    this.infoText.text = lines.join("\n");
-        //    if (this._stage.stageHeight > 0) {
-        //        if (this.infoText.textWidth > this._stage.stageWidth - 20) {
-        //            this.infoText.width = this._stage.stageWidth - 20;
-        //        }
-        //        while (this.infoText.textHeight > this._stage.stageHeight - 20) {
-        //            lines.shift();
-        //            this.infoText.text = lines.join("\n");
-        //        }
-        //    }
-        //    this.updateLayout();
-        //};
-        //FPSImpl.prototype.updateLayout = function () {
-        //    if (this.showFPS) {
-        //        this.infoText.y = this.textField.height + 20;
-        //    }
-        //    if (egret.Capabilities.runtimeType == RuntimeType.NATIVE) {
-        //        return;
-        //    }
-        //    var g = this.shape.$graphics;
-        //    g.clear();
-        //    g.beginFill(0x444444, this.styles["bgAlpha"] || 0.9);
-        //    g.drawRect(0, 0, Math.max(160, this.width + 20), this.height + 20);
-        //    g.endFill();
-        //};
         return <FPS><any>FPSImpl;
     })(egret.Sprite);
 

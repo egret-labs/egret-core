@@ -204,7 +204,7 @@ module egret.web {
             var lenFps = this.arrFps.length;
 
             if (lenFps > 101) {
-                lenFps = 100;
+                lenFps = 101;
                 this.arrFps.shift();
             }
             var fpsMin = this.arrFps[0];
