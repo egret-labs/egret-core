@@ -4341,7 +4341,6 @@ var egret;
                 this.container = container;
                 this.canvas = canvas;
                 this.stage = stage;
-                this.stage = stage;
                 this.player = player;
                 this.webTouchHandler = webTouch;
                 this.webInput = webInput;
