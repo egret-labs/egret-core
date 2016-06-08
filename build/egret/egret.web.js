@@ -4024,7 +4024,6 @@ var egret;
                 this.arrCost = [];
                 this.arrLog = [];
                 if (showFPS || showLog) {
-                    this.showLog = showLog;
                     if (egret.Capabilities.renderMode == 'canvas') {
                         this.renderMode = "Canvas";
                     }
@@ -4052,9 +4051,6 @@ var egret;
                     container.style.margin = '4px 4px 4px 4px';
                     this.container = container;
                     all.appendChild(container);
-                    if (!showLog) {
-                        container.onclick = this.switchPanelType.bind(this);
-                    }
                     if (showFPS)
                         this.addFps();
                     if (showLog)
@@ -4062,26 +4058,9 @@ var egret;
                 }
             }
             var d = __define,c=WebFps,p=c.prototype;
-            p.switchPanelType = function () {
-                this.showPanle = !this.showPanle;
-                if (this.showPanle) {
-                    this.containerFps.appendChild(this.canvasFps);
-                    this.containerFps.appendChild(this.divDatas);
-                    this.containerFps.appendChild(this.canvasCost);
-                }
-                else {
-                    this.containerFps.removeChild(this.canvasFps);
-                    this.containerFps.removeChild(this.divDatas);
-                    this.containerFps.removeChild(this.canvasCost);
-                }
-                this.update(null, true);
-            };
             p.addFps = function () {
                 var div = document.createElement('div');
                 div.style.display = 'inline-block';
-                if (!this.showLog) {
-                    div.style.pointerEvents = 'auto';
-                }
                 this.containerFps = div;
                 this.container.appendChild(div);
                 var fps = document.createElement('div');
