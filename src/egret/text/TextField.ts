@@ -1763,6 +1763,10 @@ module egret {
 
             for (var i:number = 0, text2ArrLength:number = text2Arr.length; i < text2ArrLength; i++) {
                 var element:egret.ITextElement = text2Arr[i];
+                //可能设置为没有文本，忽略绘制
+                if(!element.text) {
+                    continue;
+                }
                 element.style = element.style || <egret.ITextStyle>{};
 
                 var text:string = element.text.toString();

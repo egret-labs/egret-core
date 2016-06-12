@@ -19909,6 +19909,10 @@ var egret;
             var lineElement;
             for (var i = 0, text2ArrLength = text2Arr.length; i < text2ArrLength; i++) {
                 var element = text2Arr[i];
+                //可能设置为没有文本，忽略绘制
+                if (!element.text) {
+                    continue;
+                }
                 element.style = element.style || {};
                 var text = element.text.toString();
                 var textArr = text.split(/(?:\r\n|\r|\n)/);
