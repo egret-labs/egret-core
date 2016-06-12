@@ -33,7 +33,6 @@ module egret.web {
         private fontColor:string;
         private fontSize:number;
         private container;
-        private showLog;
         private fps;
         private log;
         private showPanle:boolean = true;
@@ -42,7 +41,6 @@ module egret.web {
         constructor(stage:Stage, showFPS:boolean, showLog:boolean, logFilter:string, styles:Object) {
             super();
             if (showFPS || showLog) {
-                this.showLog = showLog;
                 if (egret.Capabilities.renderMode == 'canvas') {
                     this.renderMode = "Canvas";
                 } else {
@@ -70,27 +68,10 @@ module egret.web {
                 container.style.margin = '4px 4px 4px 4px';
                 this.container = container;
                 all.appendChild(container);
-                if (!showLog) {
-                    container.onclick = this.switchPanelType.bind(this);
-                }
 
                 if (showFPS) this.addFps();
                 if (showLog) this.addLog();
             }
-        }
-
-        private switchPanelType() {
-            this.showPanle = !this.showPanle;
-            if (this.showPanle) {
-                this.containerFps.appendChild(this.canvasFps);
-                this.containerFps.appendChild(this.divDatas);
-                this.containerFps.appendChild(this.canvasCost);
-            } else {
-                this.containerFps.removeChild(this.canvasFps);
-                this.containerFps.removeChild(this.divDatas);
-                this.containerFps.removeChild(this.canvasCost);
-            }
-            this.update(null, true);
         }
 
         private containerFps;
@@ -114,9 +95,6 @@ module egret.web {
         private addFps() {
             var div = document.createElement('div');
             div.style.display = 'inline-block';
-            if(!this.showLog){
-                div.style.pointerEvents = 'auto';
-            }
             this.containerFps = div;
             this.container.appendChild(div);
             var fps = document.createElement('div');
