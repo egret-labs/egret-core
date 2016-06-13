@@ -242,14 +242,16 @@ module egret.web {
 
             this.context.pushBuffer(this);
 
-            // dirtyRegionPolicy hack
-            if(this._dirtyRegionPolicy) {
-                this.rootRenderTarget.useFrameBuffer = true;
-                this.rootRenderTarget.activate();
-            } else {
-                this.rootRenderTarget.useFrameBuffer = false;
-                this.rootRenderTarget.activate();
-                this.context.clear();
+            if(this.root) {
+                // dirtyRegionPolicy hack
+                if(this._dirtyRegionPolicy) {
+                    this.rootRenderTarget.useFrameBuffer = true;
+                    this.rootRenderTarget.activate();
+                } else {
+                    this.rootRenderTarget.useFrameBuffer = false;
+                    this.rootRenderTarget.activate();
+                    this.context.clear();
+                }
             }
 
             offsetX = +offsetX || 0;
