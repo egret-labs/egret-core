@@ -7377,13 +7377,17 @@ var egret;
              * @param offsetY 原始图像数据在改变后缓冲区的绘制起始位置y
              */
             p.resizeTo = function (width, height, offsetX, offsetY) {
-                // TODO 这里用于cacheAsBitmap的实现
-                // var oldSurface = this.surface;
-                // var oldWidth = oldSurface.width;
-                // var oldHeight = oldSurface.height;
-                // this.context.resizeTo(width, height, offsetX, offsetY);
-                // renderTexture resize, copy color data
-                // this.drawFrameBufferToSurface(0, 0, oldWidth, oldHeight, offsetX, offsetY, oldWidth, oldHeight, true);
+                this.context.pushBuffer(this);
+                var oldWidth = this.rootRenderTarget.width;
+                var oldHeight = this.rootRenderTarget.height;
+                var tempBuffer = WebGLRenderBuffer.create(oldWidth, oldHeight);
+                this.context.pushBuffer(tempBuffer);
+                this.context.drawImage(this.rootRenderTarget, 0, 0, oldWidth, oldHeight, 0, 0, oldWidth, oldHeight, oldWidth, oldHeight);
+                this.context.popBuffer();
+                this.resize(width, height);
+                this.context.drawImage(tempBuffer.rootRenderTarget, 0, 0, oldWidth, oldHeight, offsetX, offsetY, oldWidth, oldHeight, oldWidth, oldHeight);
+                WebGLRenderBuffer.release(tempBuffer);
+                this.context.popBuffer();
             };
             p.setDirtyRegionPolicy = function (state) {
                 this.dirtyRegionPolicy = (state == "on");

@@ -209,15 +209,20 @@ module egret.web {
          * @param offsetY 原始图像数据在改变后缓冲区的绘制起始位置y
          */
         public resizeTo(width:number, height:number, offsetX:number, offsetY:number):void {
-            // TODO 这里用于cacheAsBitmap的实现
+            this.context.pushBuffer(this);
 
-            // var oldSurface = this.surface;
-            // var oldWidth = oldSurface.width;
-            // var oldHeight = oldSurface.height;
-            // this.context.resizeTo(width, height, offsetX, offsetY);
-            // renderTexture resize, copy color data
-            // this.drawFrameBufferToSurface(0, 0, oldWidth, oldHeight, offsetX, offsetY, oldWidth, oldHeight, true);
+            var oldWidth = this.rootRenderTarget.width;
+            var oldHeight = this.rootRenderTarget.height;
+            var tempBuffer:WebGLRenderBuffer = WebGLRenderBuffer.create(oldWidth, oldHeight);
+            this.context.pushBuffer(tempBuffer);
+            this.context.drawImage(<BitmapData><any>this.rootRenderTarget, 0, 0, oldWidth, oldHeight, 0, 0, oldWidth, oldHeight, oldWidth, oldHeight);
+            this.context.popBuffer();
 
+            this.resize(width, height);
+
+            this.context.drawImage(<BitmapData><any>tempBuffer.rootRenderTarget, 0, 0, oldWidth, oldHeight, offsetX, offsetY, oldWidth, oldHeight, oldWidth, oldHeight);
+            WebGLRenderBuffer.release(tempBuffer);
+            this.context.popBuffer();
         }
 
         // dirtyRegionPolicy hack
