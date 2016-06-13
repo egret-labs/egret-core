@@ -5490,14 +5490,16 @@ var egret;
                     "void main(void) {\n" +
                     "vec4 texColor = texture2D(uSampler, vTextureCoord);\n" +
                     "vec4 locColor = texColor * matrix;\n" +
+                    "vec4 transformColor = vec4(1.0, 1.0, 1.0, 1.0) * matrix;\n" +
                     "locColor += colorAdd;\n" +
+                    "transformColor += colorAdd;\n" +
                     "if(locColor.a <= 0.0){\n" +
                     "discard;\n" +
                     "}\n" +
-                    "if(locColor.a > 1.0){\n" +
-                    "locColor.a = 1.0;\n" +
+                    "if(transformColor.a > 1.0){\n" +
+                    "transformColor.a = 1.0;\n" +
                     "}\n" +
-                    "gl_FragColor = vColor*vec4(locColor.rgb*locColor.a,locColor.a);\n" +
+                    "gl_FragColor = vColor*vec4(locColor.rgb*transformColor.a,locColor.a);\n" +
                     "}";
                 this.uniforms = {
                     projectionVector: { type: '2f', value: { x: 0, y: 0 }, dirty: true },
@@ -7377,13 +7379,17 @@ var egret;
              * @param offsetY 原始图像数据在改变后缓冲区的绘制起始位置y
              */
             p.resizeTo = function (width, height, offsetX, offsetY) {
-                // TODO 这里用于cacheAsBitmap的实现
-                // var oldSurface = this.surface;
-                // var oldWidth = oldSurface.width;
-                // var oldHeight = oldSurface.height;
-                // this.context.resizeTo(width, height, offsetX, offsetY);
-                // renderTexture resize, copy color data
-                // this.drawFrameBufferToSurface(0, 0, oldWidth, oldHeight, offsetX, offsetY, oldWidth, oldHeight, true);
+                this.context.pushBuffer(this);
+                var oldWidth = this.rootRenderTarget.width;
+                var oldHeight = this.rootRenderTarget.height;
+                var tempBuffer = WebGLRenderBuffer.create(oldWidth, oldHeight);
+                this.context.pushBuffer(tempBuffer);
+                this.context.drawImage(this.rootRenderTarget, 0, 0, oldWidth, oldHeight, 0, 0, oldWidth, oldHeight, oldWidth, oldHeight);
+                this.context.popBuffer();
+                this.resize(width, height);
+                this.context.drawImage(tempBuffer.rootRenderTarget, 0, 0, oldWidth, oldHeight, offsetX, offsetY, oldWidth, oldHeight, oldWidth, oldHeight);
+                WebGLRenderBuffer.release(tempBuffer);
+                this.context.popBuffer();
             };
             p.setDirtyRegionPolicy = function (state) {
                 this.dirtyRegionPolicy = (state == "on");
@@ -7396,15 +7402,17 @@ var egret;
              */
             p.beginClip = function (regions, offsetX, offsetY) {
                 this.context.pushBuffer(this);
-                // dirtyRegionPolicy hack
-                if (this._dirtyRegionPolicy) {
-                    this.rootRenderTarget.useFrameBuffer = true;
-                    this.rootRenderTarget.activate();
-                }
-                else {
-                    this.rootRenderTarget.useFrameBuffer = false;
-                    this.rootRenderTarget.activate();
-                    this.context.clear();
+                if (this.root) {
+                    // dirtyRegionPolicy hack
+                    if (this._dirtyRegionPolicy) {
+                        this.rootRenderTarget.useFrameBuffer = true;
+                        this.rootRenderTarget.activate();
+                    }
+                    else {
+                        this.rootRenderTarget.useFrameBuffer = false;
+                        this.rootRenderTarget.activate();
+                        this.context.clear();
+                    }
                 }
                 offsetX = +offsetX || 0;
                 offsetY = +offsetY || 0;

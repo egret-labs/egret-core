@@ -11521,7 +11521,7 @@ declare module egret {
         static CENTER: string;
         /**
          * @language en_US
-         * Horizontal alignment with both edges
+         * Horizontal alignment with both edges.
          * Note: TextFiled does not support this alignment method.
          * @constant egret.HorizontalAlign.JUSTIFY
          * @version Egret 2.4
@@ -11529,7 +11529,7 @@ declare module egret {
          */
         /**
          * @language zh_CN
-         * 水平两端对齐
+         * 水平两端对齐。
          * 注意：TextFiled不支持此对齐方式。
          * @constant egret.HorizontalAlign.JUSTIFY
          * @version Egret 2.4
@@ -12473,15 +12473,13 @@ declare module egret {
          */
         /**
          * @language en_US
-         * Type of the text field.
-         * Any one of the following TextFieldType constants: TextFieldType.DYNAMIC (specifies the dynamic text field that users can not edit), or TextFieldType.INPUT (specifies the dynamic text field that users can edit).
-         * @default egret.TextFieldType.DYNAMIC
+         * Pop-up keyboard type.
+         * Any of a TextFieldInputType constants.
          */
         /**
          * @language zh_CN
-         * 文本字段的类型。
-         * 以下 TextFieldType 常量中的任一个：TextFieldType.DYNAMIC（指定用户无法编辑的动态文本字段），或 TextFieldType.INPUT（指定用户可以编辑的输入文本字段）。
-         * @default egret.TextFieldType.DYNAMIC
+         * 弹出键盘的类型。
+         * TextFieldInputType 常量中的任一个。
          */
         inputType: string;
         /**
