@@ -46,6 +46,7 @@ module egret {
      * @version Egret 2.4
      * @platform Web,Native
      * @includeExample egret/events/Event.ts
+     * @see http://edn.egret.com/cn/docs/page/798 取消触摸事件
      */
     /**
      * @language zh_CN
@@ -59,6 +60,7 @@ module egret {
      * @version Egret 2.4
      * @platform Web,Native
      * @includeExample egret/events/Event.ts
+     * @see http://edn.egret.com/cn/docs/page/798 取消触摸事件
      */
     export class Event extends HashObject {
         /**

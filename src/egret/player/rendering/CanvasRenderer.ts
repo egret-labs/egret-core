@@ -332,7 +332,7 @@ module egret {
             //绘制遮罩
             if (mask) {
                 //如果只有一次绘制或是已经被cache直接绘制到displayContext
-                if (maskRenderNode && maskRenderNode.$getRenderCount() == 1 || mask.$displayList) {
+                if (Capabilities.$runtimeType == RuntimeType.WEB && maskRenderNode && maskRenderNode.$getRenderCount() == 1 || mask.$displayList) {
                     displayContext.globalCompositeOperation = "destination-in";
                     drawCalls += this.drawDisplayObject(mask, displayContext, dirtyList, offsetM,
                         mask.$displayList, region, root);

@@ -33,6 +33,7 @@ module egret {
      * It allows saturation changes, hue rotation, luminance to alpha, and various other effects.
      * @version Egret 3.1.0
      * @platform Web
+     * @see http://edn.egret.com/cn/docs/page/947 颜色矩阵滤镜
      */
     /**
      * @language zh_CN
@@ -40,6 +41,7 @@ module egret {
      * 该类允许饱和度更改、色相旋转、亮度为 Alpha 以及各种其他效果。
      * @version Egret 3.1.0
      * @platform Web
+     * @see http://edn.egret.com/cn/docs/page/947 颜色矩阵滤镜
      */
     export class ColorMatrixFilter extends Filter {
         /**

@@ -1734,14 +1734,16 @@ declare module egret {
         /**
          * @language en_US
          * An indexed array that contains each filter object currently associated with the display object.
-         * @version Egret 3.1
-         * @platform Web,Native
+         * Note: Currently only the next support WebGL, Canvas rendering and native are not supported.
+         * @version Egret 3.1.0
+         * @platform Web
          */
         /**
          * @language zh_CN
          * 包含当前与显示对象关联的每个滤镜对象的索引数组。
-         * @version Egret 3.1
-         * @platform Web,Native
+         * 注意 : 目前只有 WebGL 下支持，Canvs 渲染以及 native 均不支持。
+         * @version Egret 3.1.0
+         * @platform Web
          */
         filters: Array<Filter>;
         /**
@@ -2324,7 +2326,7 @@ declare module egret {
      * @language en_US
      * The BitmapFillMode class defines the image fill mode of Bitmap.
      * The BitmapFillMode class defines a pattern enumeration for adjusting size. These patterns determine how Bitmap fill the size designated by the layout system.
-     * @see http://docs.egret-labs.org/post/manual/bitmap/bitmapfillmode.html Texture filling way
+     * @see http://edn.egret.com/cn/docs/page/134 Texture filling way
      * @version Egret 2.4
      * @platform Web,Native
      * @includeExample egret/display/BitmapFillMode.ts
@@ -2333,7 +2335,7 @@ declare module egret {
      * @language zh_CN
      * BitmapFillMode 类定义Bitmap的图像填充方式。
      * BitmapFillMode 类定义了调整大小模式的一个枚举，这些模式确定 Bitmap 如何填充由布局系统指定的尺寸。
-     * @see http://docs.egret-labs.org/post/manual/bitmap/bitmapfillmode.html 纹理的填充方式
+     * @see http://edn.egret.com/cn/docs/page/134 纹理的填充方式
      * @version Egret 2.4
      * @platform Web,Native
      * @includeExample egret/display/BitmapFillMode.ts
@@ -2389,6 +2391,7 @@ declare module egret {
      * @version Egret 2.4
      * @platform Web,Native
      * @includeExample egret/display/BlendMode.ts
+     * @see http://edn.egret.com/cn/docs/page/108 显示容器的概念与实现
      */
     /**
      * @language zh_CN
@@ -2397,6 +2400,7 @@ declare module egret {
      * @version Egret 2.4
      * @platform Web,Native
      * @includeExample egret/display/BlendMode.ts
+     * @see http://edn.egret.com/cn/docs/page/108 显示容器的概念与实现
      */
     class BlendMode {
         /**
@@ -3027,7 +3031,7 @@ declare module egret {
      * @language en_US
      * The Graphics class contains a set of methods for creating vector shape. Display objects that support drawing include Sprite and Shape objects. Each class in these classes includes the graphics attribute that is a Graphics object.
      * The following auxiliary functions are provided for ease of use: drawRect(), drawRoundRect(), drawCircle(), and drawEllipse().
-     * @see http://docs.egret-labs.org/post/manual/graphics/drawrect.html  Draw Rectangle
+     * @see http://edn.egret.com/cn/docs/page/136 Draw Rectangle
      * @version Egret 2.4
      * @platform Web,Native
      * @includeExample egret/display/Graphics.ts
@@ -3036,7 +3040,7 @@ declare module egret {
      * @language zh_CN
      * Graphics 类包含一组可用来创建矢量形状的方法。支持绘制的显示对象包括 Sprite 和 Shape 对象。这些类中的每一个类都包括 graphics 属性，该属性是一个 Graphics 对象。
      * 以下是为便于使用而提供的一些辅助函数：drawRect()、drawRoundRect()、drawCircle() 和 drawEllipse()。
-     * @see http://docs.egret-labs.org/post/manual/graphics/drawrect.html  绘制矩形
+     * @see http://edn.egret.com/cn/docs/page/136 绘制矩形
      * @version Egret 2.4
      * @platform Web,Native
      * @includeExample egret/display/Graphics.ts
@@ -3556,8 +3560,8 @@ declare module egret {
      * In HTML5, resource is an HTMLElement object
      * In OpenGL / WebGL, resource is a texture ID obtained after the GPU is submitted
      * The Texture class encapsulates the details implemented on the underlayer. Developers just need to focus on interfaces
-     * @see http://docs.egret-labs.org/post/manual/bitmap/textures.html The use of texture packs
-     * @see http://docs.egret-labs.org/post/manual/loader/getres.html Several ways of access to resources
+     * @see http://edn.egret.com/cn/docs/page/135 The use of texture packs
+     * @see http://edn.egret.com/cn/docs/page/123 Several ways of access to resources
      * @version Egret 2.4
      * @platform Web,Native
      * @includeExample egret/display/Texture.ts
@@ -3568,8 +3572,8 @@ declare module egret {
      * 在HTML5中，资源是一个HTMLElement对象
      * 在OpenGL / WebGL中，资源是一个提交GPU后获取的纹理id
      * Texture类封装了这些底层实现的细节，开发者只需要关心接口即可
-     * @see http://docs.egret-labs.org/post/manual/bitmap/textures.html 纹理集的使用
-     * @see http://docs.egret-labs.org/post/manual/loader/getres.html 获取资源的几种方式
+     * @see http://edn.egret.com/cn/docs/page/135 纹理集的使用
+     * @see http://edn.egret.com/cn/docs/page/123 获取资源的几种方式
      * @version Egret 2.4
      * @platform Web,Native
      * @includeExample egret/display/Texture.ts
@@ -3944,7 +3948,7 @@ declare module egret {
      * On WebGL / OpenGL, this operation can significantly improve performance.
      * At the same time, SpriteSheet can carry out material integration easily to reduce the number of HTTP requests
      * For specification of the SpriteSheet format, see the document https://github.com/egret-labs/egret-core/wiki/Egret-SpriteSheet-Specification
-     * @see http://docs.egret-labs.org/post/manual/bitmap/textures.html The use of texture packs
+     * @see http://edn.egret.com/cn/docs/page/135 The use of texture packs
      * @version Egret 2.4
      * @platform Web,Native
      * @includeExample egret/display/SpriteSheet.ts
@@ -3956,7 +3960,7 @@ declare module egret {
      * 在WebGL / OpenGL上，这种做法可以显著提升性能
      * 同时，SpriteSheet可以很方便的进行素材整合，降低HTTP请求数量
      * SpriteSheet 格式的具体规范可以参见此文档  https://github.com/egret-labs/egret-core/wiki/Egret-SpriteSheet-Specification
-     * @see http://docs.egret-labs.org/post/manual/bitmap/textures.html 纹理集的使用
+     * @see http://edn.egret.com/cn/docs/page/135 纹理集的使用
      * @version Egret 2.4
      * @platform Web,Native
      * @includeExample egret/display/SpriteSheet.ts
@@ -4339,6 +4343,7 @@ declare module egret {
      * @version Egret 2.4
      * @platform Web,Native
      * @includeExample egret/events/Event.ts
+     * @see http://edn.egret.com/cn/docs/page/798 取消触摸事件
      */
     /**
      * @language zh_CN
@@ -4352,6 +4357,7 @@ declare module egret {
      * @version Egret 2.4
      * @platform Web,Native
      * @includeExample egret/events/Event.ts
+     * @see http://edn.egret.com/cn/docs/page/798 取消触摸事件
      */
     class Event extends HashObject {
         /**
@@ -5094,6 +5100,7 @@ declare module egret {
      * @version Egret 2.4
      * @platform Web,Native
      * @includeExample egret/sensor/Geolocation.ts
+     * @see http://edn.egret.com/cn/docs/page/662 获取位置信息
      */
     /**
      * @language zh_CN
@@ -5101,6 +5108,7 @@ declare module egret {
      * @version Egret 2.4
      * @platform Web,Native
      * @includeExample egret/sensor/Geolocation.ts
+     * @see http://edn.egret.com/cn/docs/page/662 获取位置信息
      */
     class GeolocationEvent extends Event {
         /**
@@ -6791,7 +6799,7 @@ declare module egret {
     /**
      * @language en_US
      * h5 and native interaction.
-     * @see http://edn.egret.com/cn/index.php?g=&m=article&a=index&id=167&terms1_id=25&terms2_id=39 Android between language communication within the project
+     * @see http://edn.egret.com/cn/article/index/id/714 Egret basic skills to communicate with Native
      * @version Egret 2.4
      * @platform Web,Native
      * @includeExample egret/external/ExternalInterface.ts
@@ -6799,7 +6807,7 @@ declare module egret {
     /**
      * @language zh_CN
      * h5与native交互。
-     * @see http://edn.egret.com/cn/index.php?g=&m=article&a=index&id=167&terms1_id=25&terms2_id=39 Android项目内的语言间通讯
+     * @see http://edn.egret.com/cn/article/index/id/714 Egret 与 Native 通信基本技巧
      * @version Egret 2.4
      * @platform Web,Native
      * @includeExample egret/external/ExternalInterface.ts
@@ -6890,6 +6898,7 @@ declare module egret {
      * You can produce blurs that range from a softly unfocused look to a Gaussian blur, a hazy appearance like viewing an image through semi-opaque glass.
      * @version Egret 3.0.1
      * @platform Web
+     * @see http://edn.egret.com/cn/docs/page/947#模糊滤镜 模糊滤镜
      */
     /**
      * @language zh_CN
@@ -6897,6 +6906,7 @@ declare module egret {
      * 您可以生成一些模糊效果，范围从创建一个柔化的、未聚焦的外观到高斯模糊（就像通过半透明玻璃查看图像一样的朦胧的外观）。
      * @version Egret 3.1.0
      * @platform Web
+     * @see http://edn.egret.com/cn/docs/page/947#模糊滤镜 模糊滤镜
      */
     class BlurFilter extends Filter {
         /**
@@ -6949,6 +6959,7 @@ declare module egret {
      * It allows saturation changes, hue rotation, luminance to alpha, and various other effects.
      * @version Egret 3.1.0
      * @platform Web
+     * @see http://edn.egret.com/cn/docs/page/947 颜色矩阵滤镜
      */
     /**
      * @language zh_CN
@@ -6956,6 +6967,7 @@ declare module egret {
      * 该类允许饱和度更改、色相旋转、亮度为 Alpha 以及各种其他效果。
      * @version Egret 3.1.0
      * @platform Web
+     * @see http://edn.egret.com/cn/docs/page/947 颜色矩阵滤镜
      */
     class ColorMatrixFilter extends Filter {
         /**
@@ -7969,7 +7981,7 @@ declare module egret {
      * @language zh_CN
      * Video 允许您在应用程序中使用视频。使用 Video 类可以创建 Video 对象、将外部视频文件加载到该对象并播放该文件。<br/>
      * 注意: 在大多数移动设备中，视频是强制全屏播放的，所以你可以直接调用 play() 方法全屏播放视频，不用将它绘制在Stage中。
-     * @see http://edn.egret.com/cn/index.php/article/index/id/657 视频系统
+     * @see http://edn.egret.com/cn/docs/page/657 视频系统
      *
      * @param url 要播放的视频的URL，如果url不为空，Video会立即加载这个视频
      *
@@ -8735,6 +8747,7 @@ declare module egret {
      * @version Egret 2.4
      * @platform Web,Native
      * @includeExample egret/net/ImageLoaderExample.ts
+     * @see http://edn.egret.com/cn/docs/page/590 加载位图文件
      */
     /**
      * @language zh_CN
@@ -8745,6 +8758,7 @@ declare module egret {
      * @version Egret 2.4
      * @platform Web,Native
      * @includeExample egret/net/ImageLoaderExample.ts
+     * @see http://edn.egret.com/cn/docs/page/590 加载位图文件
      */
     interface ImageLoader extends EventDispatcher {
         /**
@@ -9030,6 +9044,29 @@ declare module egret {
      * 刷新屏幕显示
      */
     function updateAllScreens(): void;
+}
+declare module egret {
+    interface FPSDisplay extends DisplayObject {
+        /**
+         * 更新FPS信息
+         */
+        update(datas: FPSData): void;
+        /**
+         * 插入一条日志信息
+         */
+        updateInfo(info: string): void;
+    }
+    var FPSDisplay: {
+        new (stage: Stage, showFPS: boolean, showLog: boolean, logFilter: string, styles: Object): FPSDisplay;
+    };
+}
+interface FPSData extends Object {
+    fps: number;
+    draw: number;
+    dirty: number;
+    costTicker: number;
+    costDirty: number;
+    costRender: number;
 }
 declare module egret.sys {
     var $TempStage: egret.Stage;
@@ -10481,6 +10518,7 @@ declare module egret {
      * @version Egret 2.4
      * @platform Web,Native
      * @includeExample egret/sensor/DeviceOrientation.ts
+     * @see http://edn.egret.com/cn/docs/page/661 获取设备旋转角度
      */
     /**
      * @language zh_CN
@@ -10489,6 +10527,7 @@ declare module egret {
      * @version Egret 2.4
      * @platform Web,Native
      * @includeExample egret/sensor/DeviceOrientation.ts
+     * @see http://edn.egret.com/cn/docs/page/661 获取设备旋转角度
      */
     interface DeviceOrientation extends EventDispatcher {
         /**
@@ -11482,7 +11521,7 @@ declare module egret {
         static CENTER: string;
         /**
          * @language en_US
-         * Horizontal alignment with both edges
+         * Horizontal alignment with both edges.
          * Note: TextFiled does not support this alignment method.
          * @constant egret.HorizontalAlign.JUSTIFY
          * @version Egret 2.4
@@ -11490,7 +11529,7 @@ declare module egret {
          */
         /**
          * @language zh_CN
-         * 水平两端对齐
+         * 水平两端对齐。
          * 注意：TextFiled不支持此对齐方式。
          * @constant egret.HorizontalAlign.JUSTIFY
          * @version Egret 2.4
@@ -11522,7 +11561,7 @@ declare module egret {
     /**
      * @language en_US
      * Convert the text in html format to the object that can be assigned to the egret.TextField#textFlow property
-     * @see http://docs.egret-labs.org/jkdoc/manual-text-multiformat.html Text mixed in a variety of style
+     * @see http://edn.egret.com/cn/docs/page/146 Text mixed in a variety of style
      * @version Egret 2.4
      * @platform Web,Native
      * @includeExample egret/text/HtmlTextParser.ts
@@ -11530,7 +11569,7 @@ declare module egret {
     /**
      * @language zh_CN
      * 将html格式文本转换为可赋值给 egret.TextField#textFlow 属性的对象
-     * @see http://docs.egret-labs.org/jkdoc/manual-text-multiformat.html 多种样式文本混合
+     * @see http://edn.egret.com/cn/docs/page/146 多种样式文本混合
      * @version Egret 2.4
      * @platform Web,Native
      * @includeExample egret/text/HtmlTextParser.ts
@@ -11640,12 +11679,14 @@ declare module egret {
          * text color
          * @version Egret 2.4
          * @platform Web,Native
+         * @see http://edn.egret.com/cn/docs/page/146 多种样式混合文本的基本结构
          */
         /**
          * @language zh_CN
          * 颜色值
          * @version Egret 2.4
          * @platform Web,Native
+         * @see http://edn.egret.com/cn/docs/page/146 多种样式混合文本的基本结构
          */
         textColor?: number;
         /**
@@ -11769,14 +11810,14 @@ declare module egret {
     /**
      * @language en_US
      * Used to build the basic structure of text with a variety of mixed styles, mainly for setting textFlow property
-     * @see http://docs.egret-labs.org/jkdoc/manual-text-multiformat.html Text mixed in a variety of style
+     * @see http://edn.egret.com/cn/docs/page/146 Text mixed in a variety of style
      * @version Egret 2.4
      * @platform Web,Native
      */
     /**
      * @language zh_CN
      * 用于建立多种样式混合文本的基本结构，主要用于设置 textFlow 属性
-     * @see http://docs.egret-labs.org/jkdoc/manual-text-multiformat.html 多种样式文本混合
+     * @see http://edn.egret.com/cn/docs/page/146 多种样式文本混合
      * @version Egret 2.4
      * @platform Web,Native
      */
@@ -12187,6 +12228,10 @@ declare module egret.sys {
          * @private
          */
         restrictNot = 36,
+        /**
+         * @private
+         */
+        inputType = 37,
     }
 }
 declare module egret {
@@ -12194,7 +12239,7 @@ declare module egret {
      * @language en_US
      * TextField is the text rendering class of egret. It conducts rendering by using the browser / device API. Due to different ways of font rendering in different browsers / devices, there may be differences in the rendering
      * If developers expect  no differences among all platforms, please use BitmapText
-     * @see http://docs.egret-labs.org/post/manual/text/createtext.html Create Text
+     * @see http://edn.egret.com/cn/docs/page/141 Create Text
      *
      * @event egret.Event.CHANGE Dispatched when entering text user input。
      * @event egret.FocusEvent.FOCUS_IN Dispatched after the focus to enter text.
@@ -12207,7 +12252,7 @@ declare module egret {
      * @language zh_CN
      * TextField是egret的文本渲染类，采用浏览器/设备的API进行渲染，在不同的浏览器/设备中由于字体渲染方式不一，可能会有渲染差异
      * 如果开发者希望所有平台完全无差异，请使用BitmapText
-     * @see http://docs.egret-labs.org/post/manual/text/createtext.html 创建文本
+     * @see http://edn.egret.com/cn/docs/page/141 创建文本
      *
      * @event egret.Event.CHANGE 输入文本有用户输入时调度。
      * @event egret.FocusEvent.FOCUS_IN 聚焦输入文本后调度。
@@ -12422,6 +12467,21 @@ declare module egret {
          * @param value
          */
         $setType(value: string): boolean;
+        /**
+         * @version Egret 3.1.2
+         * @platform Web,Native
+         */
+        /**
+         * @language en_US
+         * Pop-up keyboard type.
+         * Any of a TextFieldInputType constants.
+         */
+        /**
+         * @language zh_CN
+         * 弹出键盘的类型。
+         * TextFieldInputType 常量中的任一个。
+         */
+        inputType: string;
         /**
          * @version Egret 2.4
          * @platform Web,Native
@@ -12906,6 +12966,61 @@ declare module egret {
         private addEvent();
         private removeEvent();
         private onTapHandler(e);
+    }
+}
+declare module egret {
+    /**
+     * @language en_US
+     * TextFieldInputType class is an enumeration of constant value used in setting the inputType property of the TextField class.
+     * @version Egret 3.1.2
+     * @platform Web,Native
+     */
+    /**
+     * @language zh_CN
+     * TextFieldInputType 类是在设置 TextField 类的 inputType 属性时使用的常数值的枚举。
+     * @version Egret 3.1.2
+     * @platform Web,Native
+     */
+    class TextFieldInputType {
+        /**
+         * @language en_US
+         * The default
+         * @version Egret 3.1.2
+         * @platform Web,Native
+         */
+        /**
+         * @language zh_CN
+         * 默认 input 类型
+         * @version Egret 3.1.2
+         * @platform Web,Native
+         */
+        static TEXT: string;
+        /**
+         * @language en_US
+         * Telephone Number Inputs
+         * @version Egret 3.1.2
+         * @platform Web,Native
+         */
+        /**
+         * @language zh_CN
+         * 电话号码 input 类型
+         * @version Egret 3.1.2
+         * @platform Web,Native
+         */
+        static TEL: string;
+        /**
+         * @language en_US
+         * Password Inputs
+         * @version Egret 3.1.2
+         * @platform Web,Native
+         */
+        /**
+         * @language zh_CN
+         * password 类型
+         * @version Egret 3.1.2
+         * @platform Web,Native
+         */
+        static PASSWORD: string;
     }
 }
 declare module egret {
@@ -14687,4 +14802,18 @@ declare module egret {
      * @includeExample egret/utils/toColorString.ts
      */
     function toColorString(value: number): string;
+}
+declare module egret {
+    /**
+     * @private
+     */
+    class WebGLUtils {
+        static compileProgram(gl: WebGLRenderingContext, vertexSrc: string, fragmentSrc: string): WebGLProgram;
+        static compileFragmentShader(gl: WebGLRenderingContext, shaderSrc: string): WebGLShader;
+        static compileVertexShader(gl: WebGLRenderingContext, shaderSrc: string): WebGLShader;
+        private static _compileShader(gl, shaderSrc, shaderType);
+        private static canUseWebGL;
+        static checkCanUseWebGL(): boolean;
+        static deleteWebGLTexture(bitmapData: any): void;
+    }
 }

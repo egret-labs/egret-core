@@ -2715,20 +2715,24 @@ var egret;
             /**
              * @language en_US
              * An indexed array that contains each filter object currently associated with the display object.
-             * @version Egret 3.1
-             * @platform Web,Native
+             * Note: Currently only the next support WebGL, Canvas rendering and native are not supported.
+             * @version Egret 3.1.0
+             * @platform Web
              */
             /**
              * @language zh_CN
              * 包含当前与显示对象关联的每个滤镜对象的索引数组。
-             * @version Egret 3.1
-             * @platform Web,Native
+             * 注意 : 目前只有 WebGL 下支持，Canvs 渲染以及 native 均不支持。
+             * @version Egret 3.1.0
+             * @platform Web
              */
             ,function () {
                 return this.$DisplayObject[20 /* filters */];
             }
             ,function (value) {
                 this.$invalidateContentBounds();
+                //需要通知子项
+                this.$invalidate(true);
                 var filters = this.$DisplayObject[20 /* filters */];
                 if (filters && filters.length) {
                     var length = filters.length;
@@ -3035,8 +3039,8 @@ var egret;
                 for (var i = 0; i < length; i++) {
                     var filter = filters[i];
                     if (filter.type == "blur") {
-                        var offsetX = filter.blurX * 0.028 * bounds.width;
-                        var offsetY = filter.blurY * 0.028 * bounds.width;
+                        var offsetX = filter.blurX;
+                        var offsetY = filter.blurY;
                         x -= offsetX;
                         y -= offsetY;
                         w += offsetX * 2;
@@ -4109,7 +4113,7 @@ var egret;
      * @language en_US
      * The BitmapFillMode class defines the image fill mode of Bitmap.
      * The BitmapFillMode class defines a pattern enumeration for adjusting size. These patterns determine how Bitmap fill the size designated by the layout system.
-     * @see http://docs.egret-labs.org/post/manual/bitmap/bitmapfillmode.html Texture filling way
+     * @see http://edn.egret.com/cn/docs/page/134 Texture filling way
      * @version Egret 2.4
      * @platform Web,Native
      * @includeExample egret/display/BitmapFillMode.ts
@@ -4118,7 +4122,7 @@ var egret;
      * @language zh_CN
      * BitmapFillMode 类定义Bitmap的图像填充方式。
      * BitmapFillMode 类定义了调整大小模式的一个枚举，这些模式确定 Bitmap 如何填充由布局系统指定的尺寸。
-     * @see http://docs.egret-labs.org/post/manual/bitmap/bitmapfillmode.html 纹理的填充方式
+     * @see http://edn.egret.com/cn/docs/page/134 纹理的填充方式
      * @version Egret 2.4
      * @platform Web,Native
      * @includeExample egret/display/BitmapFillMode.ts
@@ -4213,6 +4217,7 @@ var egret;
      * @version Egret 2.4
      * @platform Web,Native
      * @includeExample egret/display/BlendMode.ts
+     * @see http://edn.egret.com/cn/docs/page/108 显示容器的概念与实现
      */
     /**
      * @language zh_CN
@@ -4221,6 +4226,7 @@ var egret;
      * @version Egret 2.4
      * @platform Web,Native
      * @includeExample egret/display/BlendMode.ts
+     * @see http://edn.egret.com/cn/docs/page/108 显示容器的概念与实现
      */
     var BlendMode = (function () {
         function BlendMode() {
@@ -5426,7 +5432,7 @@ var egret;
      * @language en_US
      * The Graphics class contains a set of methods for creating vector shape. Display objects that support drawing include Sprite and Shape objects. Each class in these classes includes the graphics attribute that is a Graphics object.
      * The following auxiliary functions are provided for ease of use: drawRect(), drawRoundRect(), drawCircle(), and drawEllipse().
-     * @see http://docs.egret-labs.org/post/manual/graphics/drawrect.html  Draw Rectangle
+     * @see http://edn.egret.com/cn/docs/page/136 Draw Rectangle
      * @version Egret 2.4
      * @platform Web,Native
      * @includeExample egret/display/Graphics.ts
@@ -5435,7 +5441,7 @@ var egret;
      * @language zh_CN
      * Graphics 类包含一组可用来创建矢量形状的方法。支持绘制的显示对象包括 Sprite 和 Shape 对象。这些类中的每一个类都包括 graphics 属性，该属性是一个 Graphics 对象。
      * 以下是为便于使用而提供的一些辅助函数：drawRect()、drawRoundRect()、drawCircle() 和 drawEllipse()。
-     * @see http://docs.egret-labs.org/post/manual/graphics/drawrect.html  绘制矩形
+     * @see http://edn.egret.com/cn/docs/page/136 绘制矩形
      * @version Egret 2.4
      * @platform Web,Native
      * @includeExample egret/display/Graphics.ts
@@ -6440,8 +6446,8 @@ var egret;
      * In HTML5, resource is an HTMLElement object
      * In OpenGL / WebGL, resource is a texture ID obtained after the GPU is submitted
      * The Texture class encapsulates the details implemented on the underlayer. Developers just need to focus on interfaces
-     * @see http://docs.egret-labs.org/post/manual/bitmap/textures.html The use of texture packs
-     * @see http://docs.egret-labs.org/post/manual/loader/getres.html Several ways of access to resources
+     * @see http://edn.egret.com/cn/docs/page/135 The use of texture packs
+     * @see http://edn.egret.com/cn/docs/page/123 Several ways of access to resources
      * @version Egret 2.4
      * @platform Web,Native
      * @includeExample egret/display/Texture.ts
@@ -6452,8 +6458,8 @@ var egret;
      * 在HTML5中，资源是一个HTMLElement对象
      * 在OpenGL / WebGL中，资源是一个提交GPU后获取的纹理id
      * Texture类封装了这些底层实现的细节，开发者只需要关心接口即可
-     * @see http://docs.egret-labs.org/post/manual/bitmap/textures.html 纹理集的使用
-     * @see http://docs.egret-labs.org/post/manual/loader/getres.html 获取资源的几种方式
+     * @see http://edn.egret.com/cn/docs/page/135 纹理集的使用
+     * @see http://edn.egret.com/cn/docs/page/123 获取资源的几种方式
      * @version Egret 2.4
      * @platform Web,Native
      * @includeExample egret/display/Texture.ts
@@ -6711,6 +6717,9 @@ var egret;
          */
         p.dispose = function () {
             if (this._bitmapData) {
+                if (egret.Capabilities.runtimeType == egret.RuntimeType.WEB && egret.Capabilities.renderMode == "webgl") {
+                    egret.WebGLUtils.deleteWebGLTexture(this._bitmapData);
+                }
                 if (this._bitmapData.dispose) {
                     this._bitmapData.dispose();
                 }
@@ -6918,6 +6927,8 @@ var egret;
             egret.Matrix.release(matrix);
             //设置纹理参数
             this.$initData(0, 0, width, height, 0, 0, width, height, width, height);
+            //防止RenderTexture渲染破坏脏标记
+            displayObject.$propagateFlagsDown(128 /* InvalidRenderNodes */);
             return true;
         };
         p.getPixel32 = function (x, y) {
@@ -7220,7 +7231,7 @@ var egret;
      * On WebGL / OpenGL, this operation can significantly improve performance.
      * At the same time, SpriteSheet can carry out material integration easily to reduce the number of HTTP requests
      * For specification of the SpriteSheet format, see the document https://github.com/egret-labs/egret-core/wiki/Egret-SpriteSheet-Specification
-     * @see http://docs.egret-labs.org/post/manual/bitmap/textures.html The use of texture packs
+     * @see http://edn.egret.com/cn/docs/page/135 The use of texture packs
      * @version Egret 2.4
      * @platform Web,Native
      * @includeExample egret/display/SpriteSheet.ts
@@ -7232,7 +7243,7 @@ var egret;
      * 在WebGL / OpenGL上，这种做法可以显著提升性能
      * 同时，SpriteSheet可以很方便的进行素材整合，降低HTTP请求数量
      * SpriteSheet 格式的具体规范可以参见此文档  https://github.com/egret-labs/egret-core/wiki/Egret-SpriteSheet-Specification
-     * @see http://docs.egret-labs.org/post/manual/bitmap/textures.html 纹理集的使用
+     * @see http://edn.egret.com/cn/docs/page/135 纹理集的使用
      * @version Egret 2.4
      * @platform Web,Native
      * @includeExample egret/display/SpriteSheet.ts
@@ -7794,6 +7805,7 @@ var egret;
      * @version Egret 2.4
      * @platform Web,Native
      * @includeExample egret/events/Event.ts
+     * @see http://edn.egret.com/cn/docs/page/798 取消触摸事件
      */
     /**
      * @language zh_CN
@@ -7807,6 +7819,7 @@ var egret;
      * @version Egret 2.4
      * @platform Web,Native
      * @includeExample egret/events/Event.ts
+     * @see http://edn.egret.com/cn/docs/page/798 取消触摸事件
      */
     var Event = (function (_super) {
         __extends(Event, _super);
@@ -8655,6 +8668,7 @@ var egret;
      * @version Egret 2.4
      * @platform Web,Native
      * @includeExample egret/sensor/Geolocation.ts
+     * @see http://edn.egret.com/cn/docs/page/662 获取位置信息
      */
     /**
      * @language zh_CN
@@ -8662,6 +8676,7 @@ var egret;
      * @version Egret 2.4
      * @platform Web,Native
      * @includeExample egret/sensor/Geolocation.ts
+     * @see http://edn.egret.com/cn/docs/page/662 获取位置信息
      */
     var GeolocationEvent = (function (_super) {
         __extends(GeolocationEvent, _super);
@@ -10580,6 +10595,7 @@ var egret;
      * You can produce blurs that range from a softly unfocused look to a Gaussian blur, a hazy appearance like viewing an image through semi-opaque glass.
      * @version Egret 3.0.1
      * @platform Web
+     * @see http://edn.egret.com/cn/docs/page/947#模糊滤镜 模糊滤镜
      */
     /**
      * @language zh_CN
@@ -10587,6 +10603,7 @@ var egret;
      * 您可以生成一些模糊效果，范围从创建一个柔化的、未聚焦的外观到高斯模糊（就像通过半透明玻璃查看图像一样的朦胧的外观）。
      * @version Egret 3.1.0
      * @platform Web
+     * @see http://edn.egret.com/cn/docs/page/947#模糊滤镜 模糊滤镜
      */
     var BlurFilter = (function (_super) {
         __extends(BlurFilter, _super);
@@ -10698,6 +10715,7 @@ var egret;
      * It allows saturation changes, hue rotation, luminance to alpha, and various other effects.
      * @version Egret 3.1.0
      * @platform Web
+     * @see http://edn.egret.com/cn/docs/page/947 颜色矩阵滤镜
      */
     /**
      * @language zh_CN
@@ -10705,6 +10723,7 @@ var egret;
      * 该类允许饱和度更改、色相旋转、亮度为 Alpha 以及各种其他效果。
      * @version Egret 3.1.0
      * @platform Web
+     * @see http://edn.egret.com/cn/docs/page/947 颜色矩阵滤镜
      */
     var ColorMatrixFilter = (function (_super) {
         __extends(ColorMatrixFilter, _super);
@@ -13136,6 +13155,9 @@ var egret;
 var egret;
 (function (egret) {
 })(egret || (egret = {}));
+var egret;
+(function (egret) {
+})(egret || (egret = {}));
 //////////////////////////////////////////////////////////////////////////////////////
 //
 //  Copyright (c) 2014-2015, Egret Technology Inc.
@@ -13494,7 +13516,8 @@ var egret;
                 this.touchChildren = false;
                 this.touchEnabled = false;
                 this.styles = styles;
-                this.createDisplay();
+                this.fpsDisplay = new egret.FPSDisplay(stage, showFPS, showLog, logFilter, styles);
+                this.addChild(this.fpsDisplay);
                 try {
                     var logFilterRegExp = logFilter ? new RegExp(logFilter) : null;
                 }
@@ -13507,26 +13530,6 @@ var egret;
                     return !logFilter || message.indexOf(logFilter) == 0;
                 };
             }
-            FPSImpl.prototype.createDisplay = function () {
-                this.shape = new egret.Shape();
-                this.addChild(this.shape);
-                var textField = new egret.TextField();
-                textField.size = this.styles["size"] === undefined ? 24 : parseInt(this.styles["size"]);
-                this.addChild(textField);
-                this.textField = textField;
-                textField.textColor = this.styles["textColor"] === undefined ? 0x00c200 : parseInt(this.styles["textColor"]);
-                textField.fontFamily = "monospace";
-                textField.x = 10;
-                textField.y = 10;
-                var textField = new egret.TextField();
-                this.infoText = textField;
-                this.addChild(textField);
-                textField.textColor = this.styles["textColor"] === undefined ? 0x00c200 : parseInt(this.styles["textColor"]);
-                textField.fontFamily = "monospace";
-                textField.x = 10;
-                textField.size = this.styles["size"] === undefined ? 12 : this.styles["size"] / 2;
-                textField.y = 10;
-            };
             FPSImpl.prototype.update = function (drawCalls, dirtyRatio, costDirty, costRender, costTicker) {
                 var current = egret.getTimer();
                 this.totalTime += current - this.lastTime;
@@ -13544,11 +13547,14 @@ var egret;
                     var lastCostDirty = Math.round(this.costDirty / this.totalTick);
                     var lastCostRender = Math.round(this.costRender / this.totalTick);
                     var lastCostTicker = Math.round(this.costTicker / this.totalTick);
-                    var text = "FPS: " + lastFPS + "\nDraw: " + lastDrawCalls + "," + lastDirtyRatio + "%\nCost: " + lastCostTicker + "," + lastCostDirty + "," + lastCostRender;
-                    if (this.textField.text != text) {
-                        this.textField.text = text;
-                        this.updateLayout();
-                    }
+                    this.fpsDisplay.update({
+                        fps: lastFPS,
+                        draw: lastDrawCalls,
+                        dirty: lastDirtyRatio,
+                        costTicker: lastCostTicker,
+                        costDirty: lastCostDirty,
+                        costRender: lastCostRender
+                    });
                     this.totalTick = 0;
                     this.totalTime = this.totalTime % 500;
                     this.drawCalls = 0;
@@ -13558,45 +13564,17 @@ var egret;
                     this.costTicker = 0;
                 }
             };
-            /**
-             * 插入一条日志信息
-             */
             FPSImpl.prototype.updateInfo = function (info) {
+                if (!info) {
+                    return;
+                }
                 if (!this.showLog) {
                     return;
                 }
                 if (!this.filter(info)) {
                     return;
                 }
-                var lines = this.infoLines;
-                if (info) {
-                    lines.push(info);
-                }
-                this.infoText.width = NaN;
-                this.infoText.text = lines.join("\n");
-                if (this._stage.stageHeight > 0) {
-                    if (this.infoText.textWidth > this._stage.stageWidth - 20) {
-                        this.infoText.width = this._stage.stageWidth - 20;
-                    }
-                    while (this.infoText.textHeight > this._stage.stageHeight - 20) {
-                        lines.shift();
-                        this.infoText.text = lines.join("\n");
-                    }
-                }
-                this.updateLayout();
-            };
-            FPSImpl.prototype.updateLayout = function () {
-                if (this.showFPS) {
-                    this.infoText.y = this.textField.height + 20;
-                }
-                if (egret.Capabilities.runtimeType == egret.RuntimeType.NATIVE) {
-                    return;
-                }
-                var g = this.shape.$graphics;
-                g.clear();
-                g.beginFill(0x444444, this.styles["bgAlpha"] || 0.9);
-                g.drawRect(0, 0, Math.max(160, this.width + 20), this.height + 20);
-                g.endFill();
+                this.fpsDisplay.updateInfo(info);
             };
             return FPSImpl;
         })(egret.Sprite);
@@ -16212,7 +16190,7 @@ var egret;
             //绘制遮罩
             if (mask) {
                 //如果只有一次绘制或是已经被cache直接绘制到displayContext
-                if (maskRenderNode && maskRenderNode.$getRenderCount() == 1 || mask.$displayList) {
+                if (egret.Capabilities.$runtimeType == egret.RuntimeType.WEB && maskRenderNode && maskRenderNode.$getRenderCount() == 1 || mask.$displayList) {
                     displayContext.globalCompositeOperation = "destination-in";
                     drawCalls += this.drawDisplayObject(mask, displayContext, dirtyList, offsetM, mask.$displayList, region, root);
                 }
@@ -17816,7 +17794,7 @@ var egret;
         HorizontalAlign.CENTER = "center";
         /**
          * @language en_US
-         * Horizontal alignment with both edges
+         * Horizontal alignment with both edges.
          * Note: TextFiled does not support this alignment method.
          * @constant egret.HorizontalAlign.JUSTIFY
          * @version Egret 2.4
@@ -17824,7 +17802,7 @@ var egret;
          */
         /**
          * @language zh_CN
-         * 水平两端对齐
+         * 水平两端对齐。
          * 注意：TextFiled不支持此对齐方式。
          * @constant egret.HorizontalAlign.JUSTIFY
          * @version Egret 2.4
@@ -17888,7 +17866,7 @@ var egret;
     /**
      * @language en_US
      * Convert the text in html format to the object that can be assigned to the egret.TextField#textFlow property
-     * @see http://docs.egret-labs.org/jkdoc/manual-text-multiformat.html Text mixed in a variety of style
+     * @see http://edn.egret.com/cn/docs/page/146 Text mixed in a variety of style
      * @version Egret 2.4
      * @platform Web,Native
      * @includeExample egret/text/HtmlTextParser.ts
@@ -17896,7 +17874,7 @@ var egret;
     /**
      * @language zh_CN
      * 将html格式文本转换为可赋值给 egret.TextField#textFlow 属性的对象
-     * @see http://docs.egret-labs.org/jkdoc/manual-text-multiformat.html 多种样式文本混合
+     * @see http://edn.egret.com/cn/docs/page/146 多种样式文本混合
      * @version Egret 2.4
      * @platform Web,Native
      * @includeExample egret/text/HtmlTextParser.ts
@@ -18489,7 +18467,7 @@ var egret;
      * @language en_US
      * TextField is the text rendering class of egret. It conducts rendering by using the browser / device API. Due to different ways of font rendering in different browsers / devices, there may be differences in the rendering
      * If developers expect  no differences among all platforms, please use BitmapText
-     * @see http://docs.egret-labs.org/post/manual/text/createtext.html Create Text
+     * @see http://edn.egret.com/cn/docs/page/141 Create Text
      *
      * @event egret.Event.CHANGE Dispatched when entering text user input。
      * @event egret.FocusEvent.FOCUS_IN Dispatched after the focus to enter text.
@@ -18502,7 +18480,7 @@ var egret;
      * @language zh_CN
      * TextField是egret的文本渲染类，采用浏览器/设备的API进行渲染，在不同的浏览器/设备中由于字体渲染方式不一，可能会有渲染差异
      * 如果开发者希望所有平台完全无差异，请使用BitmapText
-     * @see http://docs.egret-labs.org/post/manual/text/createtext.html 创建文本
+     * @see http://edn.egret.com/cn/docs/page/141 创建文本
      *
      * @event egret.Event.CHANGE 输入文本有用户输入时调度。
      * @event egret.FocusEvent.FOCUS_IN 聚焦输入文本后调度。
@@ -18585,7 +18563,8 @@ var egret;
                 33: false,
                 34: 0xffffff,
                 35: null,
-                36: null //restrictNot
+                36: null,
+                37: egret.TextFieldInputType.TEXT //inputType
             };
         }
         var d = __define,c=TextField,p=c.prototype;
@@ -18960,6 +18939,28 @@ var egret;
             }
             return false;
         };
+        d(p, "inputType"
+            /**
+             * @version Egret 3.1.2
+             * @platform Web,Native
+             */
+            ,function () {
+                return this.$TextField[37 /* inputType */];
+            }
+            /**
+             * @language en_US
+             * Pop-up keyboard type.
+             * Any of a TextFieldInputType constants.
+             */
+            /**
+             * @language zh_CN
+             * 弹出键盘的类型。
+             * TextFieldInputType 常量中的任一个。
+             */
+            ,function (value) {
+                this.$TextField[37 /* inputType */] = value;
+            }
+        );
         d(p, "text"
             /**
              * @version Egret 2.4
@@ -19906,6 +19907,10 @@ var egret;
             var lineElement;
             for (var i = 0, text2ArrLength = text2Arr.length; i < text2ArrLength; i++) {
                 var element = text2Arr[i];
+                //可能设置为没有文本，忽略绘制
+                if (!element.text) {
+                    continue;
+                }
                 element.style = element.style || {};
                 var text = element.text.toString();
                 var textArr = text.split(/(?:\r\n|\r|\n)/);
@@ -20151,6 +20156,96 @@ var egret;
         egret.$markReadOnly(TextField, "textWidth");
         egret.$markReadOnly(TextField, "textHeight");
     }
+})(egret || (egret = {}));
+//////////////////////////////////////////////////////////////////////////////////////
+//
+//  Copyright (c) 2014-2015, Egret Technology Inc.
+//  All rights reserved.
+//  Redistribution and use in source and binary forms, with or without
+//  modification, are permitted provided that the following conditions are met:
+//
+//     * Redistributions of source code must retain the above copyright
+//       notice, this list of conditions and the following disclaimer.
+//     * Redistributions in binary form must reproduce the above copyright
+//       notice, this list of conditions and the following disclaimer in the
+//       documentation and/or other materials provided with the distribution.
+//     * Neither the name of the Egret nor the
+//       names of its contributors may be used to endorse or promote products
+//       derived from this software without specific prior written permission.
+//
+//  THIS SOFTWARE IS PROVIDED BY EGRET AND CONTRIBUTORS "AS IS" AND ANY EXPRESS
+//  OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES
+//  OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED.
+//  IN NO EVENT SHALL EGRET AND CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT,
+//  INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT
+//  LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES;LOSS OF USE, DATA,
+//  OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF
+//  LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING
+//  NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE,
+//  EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+//
+//////////////////////////////////////////////////////////////////////////////////////
+var egret;
+(function (egret) {
+    /**
+     * @language en_US
+     * TextFieldInputType class is an enumeration of constant value used in setting the inputType property of the TextField class.
+     * @version Egret 3.1.2
+     * @platform Web,Native
+     */
+    /**
+     * @language zh_CN
+     * TextFieldInputType 类是在设置 TextField 类的 inputType 属性时使用的常数值的枚举。
+     * @version Egret 3.1.2
+     * @platform Web,Native
+     */
+    var TextFieldInputType = (function () {
+        function TextFieldInputType() {
+        }
+        var d = __define,c=TextFieldInputType,p=c.prototype;
+        /**
+         * @language en_US
+         * The default
+         * @version Egret 3.1.2
+         * @platform Web,Native
+         */
+        /**
+         * @language zh_CN
+         * 默认 input 类型
+         * @version Egret 3.1.2
+         * @platform Web,Native
+         */
+        TextFieldInputType.TEXT = "text";
+        /**
+         * @language en_US
+         * Telephone Number Inputs
+         * @version Egret 3.1.2
+         * @platform Web,Native
+         */
+        /**
+         * @language zh_CN
+         * 电话号码 input 类型
+         * @version Egret 3.1.2
+         * @platform Web,Native
+         */
+        TextFieldInputType.TEL = "tel";
+        /**
+         * @language en_US
+         * Password Inputs
+         * @version Egret 3.1.2
+         * @platform Web,Native
+         */
+        /**
+         * @language zh_CN
+         * password 类型
+         * @version Egret 3.1.2
+         * @platform Web,Native
+         */
+        TextFieldInputType.PASSWORD = "password";
+        return TextFieldInputType;
+    }());
+    egret.TextFieldInputType = TextFieldInputType;
+    egret.registerClass(TextFieldInputType,'egret.TextFieldInputType');
 })(egret || (egret = {}));
 //////////////////////////////////////////////////////////////////////////////////////
 //
@@ -23204,4 +23299,100 @@ var egret;
         return "#" + color;
     }
     egret.toColorString = toColorString;
+})(egret || (egret = {}));
+//////////////////////////////////////////////////////////////////////////////////////
+//
+//  Copyright (c) 2014-2015, Egret Technology Inc.
+//  All rights reserved.
+//  Redistribution and use in source and binary forms, with or without
+//  modification, are permitted provided that the following conditions are met:
+//
+//     * Redistributions of source code must retain the above copyright
+//       notice, this list of conditions and the following disclaimer.
+//     * Redistributions in binary form must reproduce the above copyright
+//       notice, this list of conditions and the following disclaimer in the
+//       documentation and/or other materials provided with the distribution.
+//     * Neither the name of the Egret nor the
+//       names of its contributors may be used to endorse or promote products
+//       derived from this software without specific prior written permission.
+//
+//  THIS SOFTWARE IS PROVIDED BY EGRET AND CONTRIBUTORS "AS IS" AND ANY EXPRESS
+//  OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES
+//  OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED.
+//  IN NO EVENT SHALL EGRET AND CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT,
+//  INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT
+//  LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES;LOSS OF USE, DATA,
+//  OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF
+//  LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING
+//  NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE,
+//  EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+//
+//////////////////////////////////////////////////////////////////////////////////////
+var egret;
+(function (egret) {
+    /**
+     * @private
+     */
+    var WebGLUtils = (function () {
+        function WebGLUtils() {
+        }
+        var d = __define,c=WebGLUtils,p=c.prototype;
+        WebGLUtils.compileProgram = function (gl, vertexSrc, fragmentSrc) {
+            var fragmentShader = WebGLUtils.compileFragmentShader(gl, fragmentSrc);
+            var vertexShader = WebGLUtils.compileVertexShader(gl, vertexSrc);
+            var shaderProgram = gl.createProgram();
+            gl.attachShader(shaderProgram, vertexShader);
+            gl.attachShader(shaderProgram, fragmentShader);
+            gl.linkProgram(shaderProgram);
+            if (!gl.getProgramParameter(shaderProgram, gl.LINK_STATUS)) {
+                egret.$warn(1020);
+            }
+            return shaderProgram;
+        };
+        WebGLUtils.compileFragmentShader = function (gl, shaderSrc) {
+            return WebGLUtils._compileShader(gl, shaderSrc, gl.FRAGMENT_SHADER);
+        };
+        WebGLUtils.compileVertexShader = function (gl, shaderSrc) {
+            return WebGLUtils._compileShader(gl, shaderSrc, gl.VERTEX_SHADER);
+        };
+        WebGLUtils._compileShader = function (gl, shaderSrc, shaderType) {
+            var shader = gl.createShader(shaderType);
+            gl.shaderSource(shader, shaderSrc);
+            gl.compileShader(shader);
+            if (!gl.getShaderParameter(shader, gl.COMPILE_STATUS)) {
+                //egret.info(gl.getShaderInfoLog(shader));
+                return null;
+            }
+            return shader;
+        };
+        WebGLUtils.checkCanUseWebGL = function () {
+            if (WebGLUtils.canUseWebGL == undefined) {
+                try {
+                    var canvas = document.createElement("canvas");
+                    WebGLUtils.canUseWebGL = !!window["WebGLRenderingContext"]
+                        && !!(canvas.getContext("webgl") || canvas.getContext("experimental-webgl"));
+                }
+                catch (e) {
+                    WebGLUtils.canUseWebGL = false;
+                }
+            }
+            return WebGLUtils.canUseWebGL;
+        };
+        WebGLUtils.deleteWebGLTexture = function (bitmapData) {
+            if (bitmapData) {
+                var webGLTexture = bitmapData.webGLTexture;
+                if (webGLTexture) {
+                    for (var key in webGLTexture) {
+                        var glTexture = webGLTexture[key];
+                        var gl = glTexture.glContext;
+                        gl.deleteTexture(glTexture);
+                    }
+                }
+                bitmapData.webGLTexture = null;
+            }
+        };
+        return WebGLUtils;
+    }());
+    egret.WebGLUtils = WebGLUtils;
+    egret.registerClass(WebGLUtils,'egret.WebGLUtils');
 })(egret || (egret = {}));

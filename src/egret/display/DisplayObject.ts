@@ -1670,14 +1670,16 @@ module egret {
         /**
          * @language en_US
          * An indexed array that contains each filter object currently associated with the display object.
-         * @version Egret 3.1
-         * @platform Web,Native
+         * Note: Currently only the next support WebGL, Canvas rendering and native are not supported.
+         * @version Egret 3.1.0
+         * @platform Web
          */
         /**
          * @language zh_CN
          * 包含当前与显示对象关联的每个滤镜对象的索引数组。
-         * @version Egret 3.1
-         * @platform Web,Native
+         * 注意 : 目前只有 WebGL 下支持，Canvs 渲染以及 native 均不支持。
+         * @version Egret 3.1.0
+         * @platform Web
          */
         public get filters():Array<Filter> {
             return this.$DisplayObject[Keys.filters];
@@ -1685,6 +1687,8 @@ module egret {
 
         public set filters(value:Array<Filter>) {
             this.$invalidateContentBounds();
+            //需要通知子项
+            this.$invalidate(true);
             var filters:Array<Filter> = this.$DisplayObject[Keys.filters];
             if(filters && filters.length) {
                 var length:number = filters.length;
@@ -1997,9 +2001,9 @@ module egret {
             region.updateRegion(renderBounds, matrix);
             return true;
         }
-        
+
         private static boundsForUpdate = new egret.Rectangle();
-        
+
         /**
          * @private
          */
@@ -2016,10 +2020,10 @@ module egret {
                 for(var i:number = 0 ; i < length ; i++) {
                     var filter:Filter = filters[i];
                     if(filter.type == "blur") {
-                        var offsetX = (<BlurFilter>filter).blurX * 0.028 * bounds.width;
-                        var offsetY = (<BlurFilter>filter).blurY * 0.028 * bounds.width;
+                        var offsetX = (<BlurFilter>filter).blurX;
+                        var offsetY = (<BlurFilter>filter).blurY;
                         x -= offsetX;
-                        y -= offsetY;    
+                        y -= offsetY;
                         w += offsetX * 2;
                         h += offsetY * 2;
                     }

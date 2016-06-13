@@ -32,7 +32,7 @@ module egret {
 	/**
      * @language en_US
 	 * The URLLoaderDataFormat class provides values that specify how downloaded data is received.
-     * @see http://docs.egret-labs.org/post/manual/net/netformat.html Read different data format
+     * @see http://edn.egret.com/cn/docs/page/600 Read different data format
      * @version Egret 2.4
      * @platform Web,Native
 	 * @includeExample extension/game/net/URLLoaderDataFormat.ts
@@ -40,7 +40,7 @@ module egret {
 	/**
      * @language zh_CN
 	 * URLLoaderDataFormat 类提供了一些用于指定如何接收已下载数据的值。
-     * @see http://docs.egret-labs.org/post/manual/net/netformat.html 读取不同数据格式
+     * @see http://edn.egret.com/cn/docs/page/600 读取不同数据格式
      * @version Egret 2.4
      * @platform Web,Native
 	 * @includeExample extension/game/net/URLLoaderDataFormat.ts

@@ -10,6 +10,7 @@ module egret {
      * @version Egret 2.4
      * @platform Web,Native
      * @includeExample egret/sensor/DeviceOrientation.ts
+     * @see http://edn.egret.com/cn/docs/page/661 获取设备旋转角度
      */
     /**
      * @language zh_CN
@@ -18,6 +19,7 @@ module egret {
      * @version Egret 2.4
      * @platform Web,Native
      * @includeExample egret/sensor/DeviceOrientation.ts
+     * @see http://edn.egret.com/cn/docs/page/661 获取设备旋转角度
      */
     export interface DeviceOrientation extends EventDispatcher {
         /**

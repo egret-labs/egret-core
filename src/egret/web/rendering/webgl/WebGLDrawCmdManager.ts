@@ -31,14 +31,16 @@ module egret.web {
      * @private
      * draw类型，所有的绘图操作都会缓存在drawData中，每个drawData都是一个drawable对象
      * $renderWebGL方法依据drawable对象的类型，调用不同的绘制方法
-     * TODO 提供drawable类型接口并且创建对象池？
      */
     export const enum DRAWABLE_TYPE {
         TEXTURE,
         RECT,
         PUSH_MASK,
         POP_MASK,
-        BLEND
+        BLEND,
+        RESIZE_TARGET,
+        CLEAR_COLOR,
+        ACT_BUFFER
     }
 
     /**
@@ -53,6 +55,8 @@ module egret.web {
          */
         public drawData = [];
 
+        public drawDataLen = 0;
+
         public constructor() {
 
         }
@@ -61,10 +65,14 @@ module egret.web {
          * 压入绘制矩形指令
          */
         public pushDrawRect():void {
-            if(this.drawData.length == 0 || this.drawData[this.drawData.length - 1].type != DRAWABLE_TYPE.RECT) {
-                this.drawData.push({type: DRAWABLE_TYPE.RECT, count: 0});
+            if(this.drawDataLen == 0 || this.drawData[this.drawDataLen - 1].type != DRAWABLE_TYPE.RECT) {
+                var data = this.drawData[this.drawDataLen] || {};
+                data.type = DRAWABLE_TYPE.RECT;
+                data.count = 0;
+                this.drawData[this.drawDataLen] = data;
+                this.drawDataLen++;
             }
-            this.drawData[this.drawData.length - 1].count += 2;
+            this.drawData[this.drawDataLen - 1].count += 2;
         }
 
         /**
@@ -72,16 +80,26 @@ module egret.web {
          */
         public pushDrawTexture(texture:any, count:number = 2, filter?:any, uv?:any):void {
             if(filter) {
-
                 // 目前有滤镜的情况下不会合并绘制
-                this.drawData.push({type: DRAWABLE_TYPE.TEXTURE, texture: texture, filter: filter, count: count, uv: uv});
-
+                var data = this.drawData[this.drawDataLen] || {};
+                data.type = DRAWABLE_TYPE.TEXTURE;
+                data.texture = texture;
+                data.filter = filter;
+                data.count = count;
+                data.uv = uv;
+                this.drawData[this.drawDataLen] = data;
+                this.drawDataLen++;
             } else {
 
-                if (this.drawData.length == 0 || this.drawData[this.drawData.length - 1].type != DRAWABLE_TYPE.TEXTURE || texture != this.drawData[this.drawData.length - 1].texture || this.drawData[this.drawData.length - 1].filter) {
-                    this.drawData.push({type: DRAWABLE_TYPE.TEXTURE, texture: texture, count: 0});
+                if (this.drawDataLen == 0 || this.drawData[this.drawDataLen - 1].type != DRAWABLE_TYPE.TEXTURE || texture != this.drawData[this.drawDataLen - 1].texture || this.drawData[this.drawDataLen - 1].filter) {
+                    var data = this.drawData[this.drawDataLen] || {};
+                    data.type = DRAWABLE_TYPE.TEXTURE;
+                    data.texture = texture;
+                    data.count = 0;
+                    this.drawData[this.drawDataLen] = data;
+                    this.drawDataLen++;
                 }
-                this.drawData[this.drawData.length - 1].count += count;
+                this.drawData[this.drawDataLen - 1].count += count;
 
             }
 
@@ -91,40 +109,43 @@ module egret.web {
          * 压入pushMask指令
          */
         public pushPushMask(count:number = 1):void {
-            // if(this.drawData.length == 0 || this.drawData[this.drawData.length - 1].type != DRAWABLE_TYPE.PUSH_MASK) {
-            this.drawData.push({type: DRAWABLE_TYPE.PUSH_MASK, count: 0});
-            // }
-            this.drawData[this.drawData.length - 1].count += count * 2;
+            var data = this.drawData[this.drawDataLen] || {};
+            data.type = DRAWABLE_TYPE.PUSH_MASK;
+            data.count = count * 2;
+            this.drawData[this.drawDataLen] = data;
+            this.drawDataLen++;
         }
 
         /**
          * 压入popMask指令
          */
         public pushPopMask(count:number = 1):void {
-            // if(this.drawData.length == 0 || this.drawData[this.drawData.length - 1].type != DRAWABLE_TYPE.POP_MASK) {
-            this.drawData.push({type: DRAWABLE_TYPE.POP_MASK, count: 0});
-            // }
-            this.drawData[this.drawData.length - 1].count += count * 2;
+            var data = this.drawData[this.drawDataLen] || {};
+            data.type = DRAWABLE_TYPE.POP_MASK;
+            data.count = count * 2;
+            this.drawData[this.drawDataLen] = data;
+            this.drawDataLen++;
         }
 
         /**
          * 压入混色指令
          */
         public pushSetBlend(value:string):void {
-            var len = this.drawData.length;
+            var len = this.drawDataLen;
             // 有无遍历到有效绘图操作
             var drawState = false;
             for(var i = len - 1; i >= 0; i--) {
                 var data = this.drawData[i];
 
                 if(data){
-                    if(data.type != DRAWABLE_TYPE.BLEND && data.type != DRAWABLE_TYPE.PUSH_MASK && data.type != DRAWABLE_TYPE.POP_MASK) {
+                    if(data.type == DRAWABLE_TYPE.TEXTURE || data.type == DRAWABLE_TYPE.RECT) {
                         drawState = true;
                     }
 
                     // 如果与上一次blend操作之间无有效绘图，上一次操作无效
                     if(!drawState && data.type == DRAWABLE_TYPE.BLEND) {
                         this.drawData.splice(i, 1);
+                        this.drawDataLen--;
                         continue;
                     }
 
@@ -139,14 +160,97 @@ module egret.web {
                 }
             }
 
-            this.drawData.push({type:DRAWABLE_TYPE.BLEND, value: value});
+            var _data = this.drawData[this.drawDataLen] || {};
+            _data.type = DRAWABLE_TYPE.BLEND;
+            _data.value = value;
+            this.drawData[this.drawDataLen] = _data;
+            this.drawDataLen++;
+        }
+
+        /*
+         * 压入resize render target命令
+         */
+        public pushResize(buffer:WebGLRenderBuffer, width:number, height:number) {
+            var data = this.drawData[this.drawDataLen] || {};
+            data.type = DRAWABLE_TYPE.RESIZE_TARGET;
+            data.buffer = buffer;
+            data.width = width;
+            data.height = height;
+            this.drawData[this.drawDataLen] = data;
+            this.drawDataLen++;
+        }
+
+        /*
+         * 压入clear color命令
+         */
+        public pushClearColor() {
+            var data = this.drawData[this.drawDataLen] || {};
+            data.type = DRAWABLE_TYPE.CLEAR_COLOR;
+            this.drawData[this.drawDataLen] = data;
+            this.drawDataLen++;
+        }
+
+        /**
+         * 压入激活buffer命令
+         */
+        public pushActivateBuffer(buffer) {
+            var len = this.drawDataLen;
+            // 有无遍历到有效绘图操作
+            var drawState = false;
+            for(var i = len - 1; i >= 0; i--) {
+                var data = this.drawData[i];
+
+                if(data){
+                    if(data.type != DRAWABLE_TYPE.BLEND && data.type != DRAWABLE_TYPE.ACT_BUFFER) {
+                        drawState = true;
+                    }
+
+                    // 如果与上一次buffer操作之间无有效绘图，上一次操作无效
+                    if(!drawState && data.type == DRAWABLE_TYPE.ACT_BUFFER) {
+                        this.drawData.splice(i, 1);
+                        this.drawDataLen--;
+                        continue;
+                    }
+
+                    // 如果与上一次buffer操作重复，本次操作无效
+                    // if(data.type == DRAWABLE_TYPE.ACT_BUFFER) {
+                    //     if(data.buffer == buffer) {
+                    //         return;
+                    //     } else {
+                    //         break;
+                    //     }
+                    // }
+                }
+            }
+
+            var _data = this.drawData[this.drawDataLen] || {};
+            _data.type = DRAWABLE_TYPE.ACT_BUFFER;
+            _data.buffer = buffer;
+            _data.width = buffer.$getWidth();
+            _data.height = buffer.$getHeight();
+            this.drawData[this.drawDataLen] = _data;
+            this.drawDataLen++;
         }
 
         /**
          * 清空命令数组
          */
         public clear():void {
-            this.drawData.length = 0;
+            for(var i = 0; i < this.drawDataLen; i++) {
+                var data = this.drawData[i];
+
+                data.type = 0;
+                data.count = 0;
+                data.texture = null;
+                data.filter = null;
+                data.uv = null;
+                data.value = "";
+                data.buffer = null;
+                data.width = 0;
+                data.height = 0;
+            }
+
+            this.drawDataLen = 0;
         }
 
     }

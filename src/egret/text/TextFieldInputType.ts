@@ -1,3 +1,4 @@
+
 //////////////////////////////////////////////////////////////////////////////////////
 //
 //  Copyright (c) 2014-2015, Egret Technology Inc.
@@ -28,53 +29,61 @@
 //////////////////////////////////////////////////////////////////////////////////////
 
 module egret {
-    /**
+
+	/**
      * @language en_US
-     * h5 and native interaction.
-     * @see http://edn.egret.com/cn/article/index/id/714 Egret basic skills to communicate with Native
-     * @version Egret 2.4
+     * TextFieldInputType class is an enumeration of constant value used in setting the inputType property of the TextField class.
+     * @version Egret 3.1.2
      * @platform Web,Native
-     * @includeExample egret/external/ExternalInterface.ts
-     */
-    /**
+	 */
+	/**
      * @language zh_CN
-     * h5与native交互。
-     * @see http://edn.egret.com/cn/article/index/id/714 Egret 与 Native 通信基本技巧
-     * @version Egret 2.4
+     * TextFieldInputType 类是在设置 TextField 类的 inputType 属性时使用的常数值的枚举。
+     * @version Egret 3.1.2
      * @platform Web,Native
-     * @includeExample egret/external/ExternalInterface.ts
-     */
-    export interface ExternalInterface {
+	 */
+    export class TextFieldInputType {
 
+		/**
+         * @language en_US
+         * The default
+         * @version Egret 3.1.2
+         * @platform Web,Native
+		 */
+		/**
+         * @language zh_CN
+         * 默认 input 类型
+         * @version Egret 3.1.2
+         * @platform Web,Native
+		 */
+        public static TEXT:string = "text";
+
+		/**
+         * @language en_US
+         * Telephone Number Inputs
+         * @version Egret 3.1.2
+         * @platform Web,Native
+		 */
+		/**
+         * @language zh_CN
+         * 电话号码 input 类型
+         * @version Egret 3.1.2
+         * @platform Web,Native
+		 */
+        public static TEL:string = "tel";
+        
+        /**
+         * @language en_US
+         * Password Inputs
+         * @version Egret 3.1.2
+         * @platform Web,Native
+		 */
+		/**
+         * @language zh_CN
+         * password 类型
+         * @version Egret 3.1.2
+         * @platform Web,Native
+		 */
+        public static PASSWORD:string = "password";
     }
-
-    export var ExternalInterface: {
-        /**
-         * @language en_US
-         * Call functionName, and the value passed to the native.
-         * @version Egret 2.4
-         * @platform Web,Native
-         */
-        /**
-         * @language zh_CN
-         * 调用 functionName，并将value传入到native中。
-         * @version Egret 2.4
-         * @platform Web,Native
-         */
-        call(functionName:string, value:string):void;
-
-        /**
-         * @language en_US
-         * FunctionName callback listener, you need to have to call functionName this field in native rather than such a call.
-         * @version Egret 2.4
-         * @platform Web,Native
-         */
-        /**
-         * @language zh_CN
-         * 监听 functionName 回调，需要在native中有调用 functionName 这个字段，而不是 此类的call。
-         * @version Egret 2.4
-         * @platform Web,Native
-         */
-        addCallback(functionName:string, listener:(value)=>void):void
-    };
 }
