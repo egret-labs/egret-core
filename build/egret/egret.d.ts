@@ -12473,15 +12473,13 @@ declare module egret {
          */
         /**
          * @language en_US
-         * Type of the text field.
-         * Any one of the following TextFieldType constants: TextFieldType.DYNAMIC (specifies the dynamic text field that users can not edit), or TextFieldType.INPUT (specifies the dynamic text field that users can edit).
-         * @default egret.TextFieldType.DYNAMIC
+         * Pop-up keyboard type.
+         * Any of a TextFieldInputType constants.
          */
         /**
          * @language zh_CN
-         * 文本字段的类型。
-         * 以下 TextFieldType 常量中的任一个：TextFieldType.DYNAMIC（指定用户无法编辑的动态文本字段），或 TextFieldType.INPUT（指定用户可以编辑的输入文本字段）。
-         * @default egret.TextFieldType.DYNAMIC
+         * 弹出键盘的类型。
+         * TextFieldInputType 常量中的任一个。
          */
         inputType: string;
         /**
