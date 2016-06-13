@@ -42,10 +42,16 @@ module egret {
          */
         updateInfo(info:string):void;
     }
+    /**
+     * @private
+     */
     export var FPSDisplay:{
         new (stage:Stage, showFPS:boolean, showLog:boolean, logFilter:string,styles:Object): FPSDisplay
     };
 }
+/**
+ * @private
+ */
 interface FPSData extends Object{
     fps:number;
     draw:number;
