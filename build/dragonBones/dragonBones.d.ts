@@ -9,7 +9,7 @@ declare module dragonBones {
          * DragonBones当前数据格式版本
          */
         static DATA_VERSION: string;
-        static DATA_VERSION_4_5: string;
+        static DATA_VERSION_4_0: string;
         /**
          *
          */

@@ -9046,6 +9046,9 @@ declare module egret {
     function updateAllScreens(): void;
 }
 declare module egret {
+    /**
+     * @private
+     */
     interface FPSDisplay extends DisplayObject {
         /**
          * 更新FPS信息
@@ -9056,10 +9059,16 @@ declare module egret {
          */
         updateInfo(info: string): void;
     }
+    /**
+     * @private
+     */
     var FPSDisplay: {
         new (stage: Stage, showFPS: boolean, showLog: boolean, logFilter: string, styles: Object): FPSDisplay;
     };
 }
+/**
+ * @private
+ */
 interface FPSData extends Object {
     fps: number;
     draw: number;
