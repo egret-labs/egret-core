@@ -76,7 +76,7 @@ module egret.web {
                 this.surface = this.context.surface;
             } else {
                 // 由于创建renderTarget造成的frameBuffer绑定，这里重置绑定
-                var lastBuffer = this.context.currentBuffer;
+                var lastBuffer = this.context.activatedBuffer;
                 if(lastBuffer) {
                     lastBuffer.rootRenderTarget.activate();
                 }

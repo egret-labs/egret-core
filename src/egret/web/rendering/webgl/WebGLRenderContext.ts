@@ -88,7 +88,7 @@ module egret.web {
         /**
          * 当前绑定的render buffer
          */
-        public currentBuffer:WebGLRenderBuffer;
+        private currentBuffer:WebGLRenderBuffer;
 
         /**
          * 推入一个RenderBuffer并绑定
@@ -631,7 +631,7 @@ module egret.web {
         /**
          * 执行目前缓存在命令列表里的命令并清空
          */
-        private activatedBuffer:WebGLRenderBuffer;
+        public activatedBuffer:WebGLRenderBuffer;
         public $drawWebGL() {
             if (this.drawCmdManager.drawDataLen == 0 || this.contextLost) {
                 return;
