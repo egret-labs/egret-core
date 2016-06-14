@@ -7387,6 +7387,7 @@ var egret;
                 this.context.drawImage(this.rootRenderTarget, 0, 0, oldWidth, oldHeight, 0, 0, oldWidth, oldHeight, oldWidth, oldHeight);
                 this.context.popBuffer();
                 this.resize(width, height);
+                this.setTransform(1, 0, 0, 1, 0, 0);
                 this.context.drawImage(tempBuffer.rootRenderTarget, 0, 0, oldWidth, oldHeight, offsetX, offsetY, oldWidth, oldHeight, oldWidth, oldHeight);
                 WebGLRenderBuffer.release(tempBuffer);
                 this.context.popBuffer();
