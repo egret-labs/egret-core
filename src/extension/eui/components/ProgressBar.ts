@@ -253,6 +253,8 @@ module eui {
         public set direction(value:string) {
             if (this._direction == value)
                 return;
+            if(this.thumb) this.thumb.x = this.thumbInitX;
+            if(this.thumb) this.thumb.y = this.thumbInitY;
             this._direction = value;
             this.invalidateDisplayList();
         }
@@ -317,8 +319,14 @@ module eui {
             this.animationValue = Math.min(values[sys.RangeKeys.maximum], Math.max(values[sys.RangeKeys.minimum], value));
             this.invalidateDisplayList();
         }
-
-
+        /**
+         * @private
+         */
+        private thumbInitX = 0;
+        /**
+         * @private
+         */
+        private thumbInitY = 0;
         /**
          * @inheritDoc
          *
@@ -329,6 +337,8 @@ module eui {
         protected partAdded(partName:string, instance:any):void {
             super.partAdded(partName, instance);
             if (instance === this.thumb) {
+                if(this.thumb.x) this.thumbInitX = this.thumb.x;
+                if(this.thumb.y) this.thumbInitY = this.thumb.y;
                 this.thumb.addEventListener(egret.Event.RESIZE, this.onThumbResize, this);
             }
         }
@@ -383,44 +393,26 @@ module eui {
                 rect.setTo(0,0,thumbWidth,thumbHeight);
                 var thumbPosX = thumb.x - rect.x;
                 var thumbPosY = thumb.y - rect.y;
-                switch (this._direction) {
-                    case Direction.LTR:
-                        rect.width = clipWidth;
-                        if (!thumb.left && !thumb.right) {
-                            thumb.x = rect.x;
-                        } else {
-                            thumb.x = thumbPosX;
-                        }
-                        break;
-                    case Direction.RTL:
-                        rect.width = clipWidth;
-                        rect.x = thumbWidth - clipWidth;
-                        thumb.x = rect.x;
-                        if (thumb.left) {
-                            thumb.x += thumb.left;
-                        }else if (thumb.right) {
-                            thumb.x -= thumb.right;
-                        }
-                        break;
-                    case Direction.TTB:
-                        rect.height = clipHeight;
-                        if(!thumb.top && !thumb.bottom){
-                            thumb.y = rect.y;
-                        }else{
-                            thumb.y = thumbPosY;
-                        }
-                        break;
-                    case Direction.BTT:
-                        rect.height = clipHeight;
-                        rect.y = thumbHeight - clipHeight;
-                        thumb.y = rect.y;
-                        if(thumb.top){
-                            thumb.y += thumb.top;
-                        }else if(thumb.bottom){
-                            thumb.y -= thumb.bottom;
-                        }
-                        break;
-                }
+                 switch (this._direction) {
+                     case eui.Direction.LTR:
+                         rect.width = clipWidth;
+                         thumb.x = thumbPosX;
+                         break;
+                     case eui.Direction.RTL:
+                         rect.width = clipWidth;
+                         rect.x = thumbWidth - clipWidth;
+                         thumb.x = rect.x;
+                         break;
+                     case eui.Direction.TTB:
+                         rect.height = clipHeight;
+                         thumb.y = thumbPosY;
+                         break;
+                     case eui.Direction.BTT:
+                         rect.height = clipHeight;
+                         rect.y = thumbHeight - clipHeight;
+                         thumb.y = rect.y;
+                         break;
+                 }
                 thumb.scrollRect = rect;
             }
             if (this.labelDisplay) {
