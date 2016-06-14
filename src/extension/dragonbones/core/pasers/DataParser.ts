@@ -140,7 +140,7 @@ module dragonBones {
 			var version:string = rawDataToParse[ConstValues.A_VERSION];
             version = version.toString();
             if( version.toString() != DragonBones.DATA_VERSION &&
-                version.toString() != DragonBones.DATA_VERSION_4_5 &&
+                version.toString() != DragonBones.DATA_VERSION_4_0 &&
                 version.toString() != DragonBones.PARENT_COORDINATE_DATA_VERSION &&
 				version.toString() != "2.3")
             {

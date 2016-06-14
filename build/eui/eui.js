@@ -13287,10 +13287,10 @@ var eui;
                 if (!outX && !outY) {
                     return;
                 }
-                if (outX && values[1 /* scrollPolicyH */] == 'off') {
+                if (!outY && outX && values[1 /* scrollPolicyH */] == 'off') {
                     return;
                 }
-                if (outY && values[0 /* scrollPolicyV */] == 'off') {
+                if (!outX && outY && values[0 /* scrollPolicyV */] == 'off') {
                     return;
                 }
                 values[12 /* touchCancle */] = true;

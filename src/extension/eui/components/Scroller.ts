@@ -640,10 +640,10 @@ module eui {
                 if(!outX && !outY){
                     return;
                 }
-                if(outX && values[Keys.scrollPolicyH] == 'off'){
+                if(!outY && outX && values[Keys.scrollPolicyH] == 'off'){
                     return;
                 }
-                if(outY && values[Keys.scrollPolicyV] == 'off') {
+                if(!outX && outY && values[Keys.scrollPolicyV] == 'off') {
                     return;
                 }
 

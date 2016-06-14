@@ -106,11 +106,9 @@ module egret {
                 } else {
                     this._bounds.setTo(0, 0, 0, 0);
                 }
+                node.bounds.copyFrom(this._bounds);
             }
-
             bounds.copyFrom(this._bounds);
-
-            node.bounds.copyFrom(this._bounds);
         }
     }
 }
