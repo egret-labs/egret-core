@@ -133,7 +133,7 @@ function exmlFilter(f) {
     return /\.exml$/.test(f) && (f.indexOf(egret.args.releaseRootDir) < 0);
 }
 function themeFilter(f) {
-    return (f.indexOf('.thm.json') > 0) && (f.indexOf(egret.args.releaseDir) < 0);
+    return (f.indexOf('.thm.json') > 0) && (f.indexOf(egret.args.releaseRootDir) < 0);
 }
 function getExmlDtsPath() {
     return file.joinPath(egret.args.projectDir, "libs", "exml.e.d.ts");
