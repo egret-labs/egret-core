@@ -16186,13 +16186,16 @@ var eui;
          */
         p.onConfigLoaded = function (str) {
             if (str) {
-                try {
-                    var data = JSON.parse(str);
-                }
-                catch (e) {
-                    if (DEBUG) {
+                if (DEBUG) {
+                    try {
+                        var data = JSON.parse(str);
+                    }
+                    catch (e) {
                         egret.$error(3000);
                     }
+                }
+                else {
+                    var data = JSON.parse(str);
                 }
             }
             else if (DEBUG) {
@@ -17964,13 +17967,16 @@ var eui;
                         egret.$error(1003, "text");
                     }
                 }
-                try {
-                    var xmlData = egret.XML.parse(text);
-                }
-                catch (e) {
-                    if (DEBUG) {
+                if (DEBUG) {
+                    try {
+                        var xmlData = egret.XML.parse(text);
+                    }
+                    catch (e) {
                         egret.$error(2002, text + "\n" + e.message);
                     }
+                }
+                else {
+                    var xmlData = egret.XML.parse(text);
                 }
                 var className = "";
                 var hasClass = false;
@@ -17984,14 +17990,17 @@ var eui;
                 }
                 var exClass = this.parseClass(xmlData, className);
                 var code = exClass.toCode();
-                try {
-                    var clazz = eval(code);
-                }
-                catch (e) {
-                    if (DEBUG) {
-                        egret.log(code);
+                if (DEBUG) {
+                    try {
+                        var clazz = eval(code);
                     }
-                    return null;
+                    catch (e) {
+                        egret.log(code);
+                        return null;
+                    }
+                }
+                else {
+                    var clazz = eval(code);
                 }
                 if (hasClass && clazz) {
                     egret.registerClass(clazz, className);
@@ -19508,12 +19517,17 @@ var eui;
             if (!clazz) {
                 return null;
             }
-            try {
-                var instance = new clazz();
+            if (DEBUG) {
+                try {
+                    var instance = new clazz();
+                }
+                catch (e) {
+                    egret.error(e);
+                    return null;
+                }
             }
-            catch (e) {
-                egret.error(e);
-                return null;
+            else {
+                var instance = new clazz();
             }
             return instance;
         }
