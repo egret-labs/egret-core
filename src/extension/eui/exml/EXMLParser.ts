@@ -160,14 +160,17 @@ module eui.sys {
                     egret.$error(1003, "text");
                 }
             }
-            try {
-                var xmlData = egret.XML.parse(text);
-            }
-            catch (e) {
-                if (DEBUG) {
+            if(DEBUG){
+                try {
+                    var xmlData = egret.XML.parse(text);
+                }
+                catch (e) {
                     egret.$error(2002, text + "\n" + e.message);
                 }
+            }else{
+                var xmlData = egret.XML.parse(text);
             }
+
             var className:string = "";
             var hasClass:boolean = false;
             if (xmlData.attributes["class"]) {
@@ -180,15 +183,19 @@ module eui.sys {
             }
             var exClass = this.parseClass(xmlData, className);
             var code = exClass.toCode();
-            try {
+
+            if(DEBUG){
+                try {
+                    var clazz = eval(code);
+                }
+                catch (e) {
+                    egret.log(code);
+                    return null;
+                }
+            }else{
                 var clazz = eval(code);
             }
-            catch (e) {
-                if (DEBUG) {
-                    egret.log(code);
-                }
-                return null;
-            }
+
             if (hasClass && clazz) {
                 egret.registerClass(clazz, className);
                 var paths = className.split(".");
