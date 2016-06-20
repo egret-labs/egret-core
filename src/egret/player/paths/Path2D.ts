@@ -50,7 +50,7 @@ module egret.sys {
      * @private
      * 2D路径命令
      */
-    export const enum PathCommand{
+    export const enum PathCommand {
         MoveTo = 1,
         LineTo,
         CurveTo,
@@ -66,20 +66,20 @@ module egret.sys {
         /**
          * 路径类型
          */
-        public type:number = 0;
+        public type: number = 0;
 
-        $commands:number[] = [];
-        $data:number[] = [];
+        $commands: number[] = [];
+        $data: number[] = [];
 
-        private commandPosition:number = 0;
-        private dataPosition:number = 0;
+        private commandPosition: number = 0;
+        private dataPosition: number = 0;
 
         /**
          * 将当前绘图位置移动到 (x, y)。如果缺少任何一个参数，则此方法将失败，并且当前绘图位置不改变。
          * @param x 一个表示相对于父显示对象注册点的水平位置的数字（以像素为单位）。
          * @param y 一个表示相对于父显示对象注册点的垂直位置的数字（以像素为单位）。
          */
-        public moveTo(x:number, y:number) {
+        public moveTo(x: number, y: number) {
             this.$commands[this.commandPosition++] = PathCommand.MoveTo;
             var pos = this.dataPosition;
             this.$data[pos++] = x;
@@ -92,7 +92,7 @@ module egret.sys {
          * @param x 一个表示相对于父显示对象注册点的水平位置的数字（以像素为单位）。
          * @param y 一个表示相对于父显示对象注册点的垂直位置的数字（以像素为单位）。
          */
-        public lineTo(x:number, y:number) {
+        public lineTo(x: number, y: number) {
             this.$commands[this.commandPosition++] = PathCommand.LineTo;
             var pos = this.dataPosition;
             this.$data[pos++] = x;
@@ -109,7 +109,7 @@ module egret.sys {
          * @param anchorX 一个数字，指定下一个锚点相对于父显示对象注册点的水平位置。
          * @param anchorY 一个数字，指定下一个锚点相对于父显示对象注册点的垂直位置。
          */
-        public curveTo(controlX:number, controlY:number, anchorX:number, anchorY:number) {
+        public curveTo(controlX: number, controlY: number, anchorX: number, anchorY: number) {
             this.$commands[this.commandPosition++] = PathCommand.CurveTo;
             var pos = this.dataPosition;
             this.$data[pos++] = controlX;
@@ -128,8 +128,8 @@ module egret.sys {
          * @param anchorX 指定锚点相对于父显示对象的注册点的水平位置。
          * @param anchorY 指定锚点相对于父显示对象的注册点的垂直位置。
          */
-        public cubicCurveTo(controlX1:number, controlY1:number, controlX2:number,
-                            controlY2:number, anchorX:number, anchorY:number) {
+        public cubicCurveTo(controlX1: number, controlY1: number, controlX2: number,
+            controlY2: number, anchorX: number, anchorY: number) {
             this.$commands[this.commandPosition++] = PathCommand.CubicCurveTo;
             var pos = this.dataPosition;
             this.$data[pos++] = controlX1;
@@ -148,7 +148,7 @@ module egret.sys {
          * @param width 矩形的宽度（以像素为单位）。
          * @param height 矩形的高度（以像素为单位）。
          */
-        public drawRect(x:number, y:number, width:number, height:number) {
+        public drawRect(x: number, y: number, width: number, height: number) {
             var x2 = x + width;
             var y2 = y + height;
             this.moveTo(x, y);
@@ -167,7 +167,7 @@ module egret.sys {
          * @param ellipseWidth 用于绘制圆角的椭圆的宽度（以像素为单位）。
          * @param ellipseHeight 用于绘制圆角的椭圆的高度（以像素为单位）。 （可选）如果未指定值，则默认值与为 ellipseWidth 参数提供的值相匹配。
          */
-        public drawRoundRect(x:number, y:number, width:number, height:number, ellipseWidth:number, ellipseHeight?:number):void {
+        public drawRoundRect(x: number, y: number, width: number, height: number, ellipseWidth: number, ellipseHeight?: number): void {
             var radiusX = (ellipseWidth * 0.5) | 0;
             var radiusY = ellipseHeight ? (ellipseHeight * 0.5) | 0 : radiusX;
 
@@ -221,7 +221,7 @@ module egret.sys {
          * @param y 相对于父显示对象注册点的圆心的 y 位置（以像素为单位）。
          * @param radius 圆的半径（以像素为单位）。
          */
-        public drawCircle(x:number, y:number, radius:number):void {
+        public drawCircle(x: number, y: number, radius: number): void {
             this.arcToBezier(x, y, radius, radius, 0, Math.PI * 2);
         }
 
@@ -232,7 +232,7 @@ module egret.sys {
          * @param width 矩形的宽度（以像素为单位）。
          * @param height 矩形的高度（以像素为单位）。
          */
-        public drawEllipse(x:number, y:number, width:number, height:number):void {
+        public drawEllipse(x: number, y: number, width: number, height: number): void {
             var radiusX = width * 0.5;
             var radiusY = height * 0.5;
             // 移动x和y到椭圆的中心.
@@ -252,7 +252,7 @@ module egret.sys {
          * 注意，必须在0~2π之间。
          * @param anticlockwise 如果为 true，逆时针绘制圆弧，反之，顺时针绘制。
          */
-        public drawArc(x:number, y:number, radius:number, startAngle:number, endAngle:number, anticlockwise:boolean) {
+        public drawArc(x: number, y: number, radius: number, startAngle: number, endAngle: number, anticlockwise: boolean) {
             if (anticlockwise) {
                 if (endAngle >= startAngle) {
                     endAngle -= Math.PI * 2;
@@ -279,7 +279,7 @@ module egret.sys {
          * @param anticlockwise 如果为 true，逆时针绘制圆弧，反之，顺时针绘制。
          * 注意：如果为true，endAngle必须小于startAngle，反之必须大于。
          */
-        private arcToBezier(x:number, y:number, radiusX:number, radiusY:number, startAngle:number, endAngle:number, anticlockwise?:boolean):void {
+        private arcToBezier(x: number, y: number, radiusX: number, radiusY: number, startAngle: number, endAngle: number, anticlockwise?: boolean): void {
             var halfPI = Math.PI * 0.5;
             var start = startAngle;
             var end = start;
@@ -295,19 +295,22 @@ module egret.sys {
                     end = endAngle;
                 }
             }
-
             var currentX = x + Math.cos(start) * radiusX;
             var currentY = y + Math.sin(start) * radiusY;
             this.moveTo(currentX, currentY);
+            var u = Math.cos(start);
+            var v = Math.sin(start);
             for (var i = 0; i < 4; i++) {
                 var addAngle = end - start;
                 var a = 4 * Math.tan(addAngle / 4) / 3;
-                var x1 = currentX - a * (currentY - y);
-                var y1 = currentY + a * (currentX - x);
-                currentX = x + Math.cos(end) * radiusX;
-                currentY = y + Math.sin(end) * radiusY;
-                var x2 = currentX + a * (currentY - y);
-                var y2 = currentY - a * (currentX - x);
+                var x1 = currentX - v * a * radiusX;
+                var y1 = currentY + u * a * radiusY;
+                u = Math.cos(end);
+                v = Math.sin(end);
+                currentX = x + u * radiusX;
+                currentY = y + v * radiusY;
+                var x2 = currentX + v * a * radiusX;
+                var y2 = currentY - u * a * radiusY;
                 this.cubicCurveTo(x1, y1, x2, y2, currentX, currentY);
                 if (end === endAngle) {
                     break;
@@ -327,7 +330,5 @@ module egret.sys {
                 }
             }
         }
-
-
     }
 }

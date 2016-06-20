@@ -15733,15 +15733,19 @@ var egret;
                 var currentX = x + Math.cos(start) * radiusX;
                 var currentY = y + Math.sin(start) * radiusY;
                 this.moveTo(currentX, currentY);
+                var u = Math.cos(start);
+                var v = Math.sin(start);
                 for (var i = 0; i < 4; i++) {
                     var addAngle = end - start;
                     var a = 4 * Math.tan(addAngle / 4) / 3;
-                    var x1 = currentX - a * (currentY - y);
-                    var y1 = currentY + a * (currentX - x);
-                    currentX = x + Math.cos(end) * radiusX;
-                    currentY = y + Math.sin(end) * radiusY;
-                    var x2 = currentX + a * (currentY - y);
-                    var y2 = currentY - a * (currentX - x);
+                    var x1 = currentX - v * a * radiusX;
+                    var y1 = currentY + u * a * radiusY;
+                    u = Math.cos(end);
+                    v = Math.sin(end);
+                    currentX = x + u * radiusX;
+                    currentY = y + v * radiusY;
+                    var x2 = currentX + v * a * radiusX;
+                    var y2 = currentY - u * a * radiusY;
                     this.cubicCurveTo(x1, y1, x2, y2, currentX, currentY);
                     if (end === endAngle) {
                         break;
