@@ -5938,17 +5938,6 @@ var egret;
                 this.vertexIndex = 0;
                 this.indexIndex = 0;
                 this.hasMesh = false;
-                /**
-                 * 默认构成矩形
-                 */
-                this.defaultMeshVertices = [0, 0, 1, 0, 1, 1, 0, 1];
-                this.defaultMeshUvs = [
-                    0, 0,
-                    1, 0,
-                    1, 1,
-                    0, 1
-                ];
-                this.defaultMeshIndices = [0, 1, 2, 0, 2, 3];
                 var numVerts = this.vertexMaxSize * this.vertSize;
                 var numIndices = this.indicesMaxSize;
                 this.vertices = new Float32Array(numVerts);
@@ -6007,17 +5996,20 @@ var egret;
                 return this.hasMesh;
             };
             /**
+             * 默认构成矩形
+             */
+            // private defaultMeshVertices = [0, 0, 1, 0, 1, 1, 0, 1];
+            // private defaultMeshUvs = [
+            //     0, 0,
+            //     1, 0,
+            //     1, 1,
+            //     0, 1
+            // ];
+            // private defaultMeshIndices = [0, 1, 2, 0, 2, 3];
+            /**
              * 缓存一组顶点
              */
             p.cacheArrays = function (transform, alpha, sourceX, sourceY, sourceWidth, sourceHeight, destX, destY, destWidth, destHeight, textureSourceWidth, textureSourceHeight, meshUVs, meshVertices, meshIndices) {
-                // 如果后三个值缺省，默认为构成矩形的顶点
-                if (!meshVertices) {
-                    this.defaultMeshVertices[2] = this.defaultMeshVertices[4] = sourceWidth;
-                    this.defaultMeshVertices[5] = this.defaultMeshVertices[7] = sourceHeight;
-                }
-                meshVertices = meshVertices || this.defaultMeshVertices;
-                meshUVs = meshUVs || this.defaultMeshUvs;
-                meshIndices = meshIndices || this.defaultMeshIndices;
                 //计算出绘制矩阵，之后把矩阵还原回之前的
                 var locWorldTransform = transform;
                 var originalA = locWorldTransform.a;
@@ -6044,35 +6036,93 @@ var egret;
                 locWorldTransform.d = originalD;
                 locWorldTransform.tx = originalTx;
                 locWorldTransform.ty = originalTy;
-                // 计算索引位置与赋值
-                var vertices = this.vertices;
-                var index = this.vertexIndex * this.vertSize;
-                // 缓存顶点数组
-                var i = 0, iD = 0, l = 0;
-                var u = 0, v = 0, x = 0, y = 0;
-                for (i = 0, l = meshUVs.length; i < l; i += 2) {
-                    iD = i * 5 / 2;
-                    x = meshVertices[i];
-                    y = meshVertices[i + 1];
-                    u = meshUVs[i];
-                    v = meshUVs[i + 1];
-                    // xy
-                    vertices[index + iD + 0] = a * x + c * y + tx;
-                    vertices[index + iD + 1] = b * x + d * y + ty;
-                    // uv
-                    vertices[index + iD + 2] = (sourceX + u * sourceWidth) / textureSourceWidth;
-                    vertices[index + iD + 3] = (sourceY + v * sourceHeight) / textureSourceHeight;
-                    // alpha
-                    vertices[index + iD + 4] = alpha;
-                }
-                // 缓存索引数组
-                if (this.hasMesh) {
-                    for (var i = 0, l = meshIndices.length; i < l; ++i) {
-                        this.indicesForMesh[this.indexIndex + i] = meshIndices[i] + this.vertexIndex;
+                if (meshVertices) {
+                    // 计算索引位置与赋值
+                    var vertices = this.vertices;
+                    var index = this.vertexIndex * this.vertSize;
+                    // 缓存顶点数组
+                    var i = 0, iD = 0, l = 0;
+                    var u = 0, v = 0, x = 0, y = 0;
+                    for (i = 0, l = meshUVs.length; i < l; i += 2) {
+                        iD = i * 5 / 2;
+                        x = meshVertices[i];
+                        y = meshVertices[i + 1];
+                        u = meshUVs[i];
+                        v = meshUVs[i + 1];
+                        // xy
+                        vertices[index + iD + 0] = a * x + c * y + tx;
+                        vertices[index + iD + 1] = b * x + d * y + ty;
+                        // uv
+                        vertices[index + iD + 2] = (sourceX + u * sourceWidth) / textureSourceWidth;
+                        vertices[index + iD + 3] = (sourceY + v * sourceHeight) / textureSourceHeight;
+                        // alpha
+                        vertices[index + iD + 4] = alpha;
                     }
+                    // 缓存索引数组
+                    if (this.hasMesh) {
+                        for (var i = 0, l = meshIndices.length; i < l; ++i) {
+                            this.indicesForMesh[this.indexIndex + i] = meshIndices[i] + this.vertexIndex;
+                        }
+                    }
+                    this.vertexIndex += meshUVs.length / 2;
+                    this.indexIndex += meshIndices.length;
                 }
-                this.vertexIndex += meshUVs.length / 2;
-                this.indexIndex += meshIndices.length;
+                else {
+                    var width = textureSourceWidth;
+                    var height = textureSourceHeight;
+                    var w = sourceWidth;
+                    var h = sourceHeight;
+                    sourceX = sourceX / width;
+                    sourceY = sourceY / height;
+                    sourceWidth = sourceWidth / width;
+                    sourceHeight = sourceHeight / height;
+                    var vertices = this.vertices;
+                    var index = this.vertexIndex * this.vertSize;
+                    // xy
+                    vertices[index++] = tx;
+                    vertices[index++] = ty;
+                    // uv
+                    vertices[index++] = sourceX;
+                    vertices[index++] = sourceY;
+                    // alpha
+                    vertices[index++] = alpha;
+                    // xy
+                    vertices[index++] = a * w + tx;
+                    vertices[index++] = b * w + ty;
+                    // uv
+                    vertices[index++] = sourceWidth + sourceX;
+                    vertices[index++] = sourceY;
+                    // alpha
+                    vertices[index++] = alpha;
+                    // xy
+                    vertices[index++] = a * w + c * h + tx;
+                    vertices[index++] = d * h + b * w + ty;
+                    // uv
+                    vertices[index++] = sourceWidth + sourceX;
+                    vertices[index++] = sourceHeight + sourceY;
+                    // alpha
+                    vertices[index++] = alpha;
+                    // xy
+                    vertices[index++] = c * h + tx;
+                    vertices[index++] = d * h + ty;
+                    // uv
+                    vertices[index++] = sourceX;
+                    vertices[index++] = sourceHeight + sourceY;
+                    // alpha
+                    vertices[index++] = alpha;
+                    // 缓存索引数组
+                    if (this.hasMesh) {
+                        var indicesForMesh = this.indicesForMesh;
+                        indicesForMesh[this.indexIndex + 0] = 0 + this.vertexIndex;
+                        indicesForMesh[this.indexIndex + 1] = 1 + this.vertexIndex;
+                        indicesForMesh[this.indexIndex + 2] = 2 + this.vertexIndex;
+                        indicesForMesh[this.indexIndex + 3] = 0 + this.vertexIndex;
+                        indicesForMesh[this.indexIndex + 4] = 2 + this.vertexIndex;
+                        indicesForMesh[this.indexIndex + 5] = 3 + this.vertexIndex;
+                    }
+                    this.vertexIndex += 4;
+                    this.indexIndex += 6;
+                }
             };
             p.clear = function () {
                 this.hasMesh = false;
