@@ -3803,13 +3803,13 @@ var egret;
                 egret.sys.systemRenderer = new web.WebGLRenderer();
                 //屏蔽掉cacheAsBitmap,webgl模式不能有太多的RenderContext
                 //DisplayObject.prototype.$setHasDisplayList = function(){};
-                egret.Capabilities.renderMode = "webgl";
+                egret.Capabilities.$renderMode = "webgl";
             }
             else {
                 egret.sys.hitTestBuffer = new web.CanvasRenderBuffer(3, 3);
                 egret.sys.RenderBuffer = web.CanvasRenderBuffer;
                 egret.sys.systemRenderer = new egret.CanvasRenderer();
-                egret.Capabilities.renderMode = "canvas";
+                egret.Capabilities.$renderMode = "canvas";
             }
         }
         /**
@@ -4426,6 +4426,8 @@ var egret;
                 }
                 var screenWidth = shouldRotate ? screenRect.height : screenRect.width;
                 var screenHeight = shouldRotate ? screenRect.width : screenRect.height;
+                egret.Capabilities.$boundingClientWidth = screenWidth;
+                egret.Capabilities.$boundingClientHeight = screenHeight;
                 var stageSize = egret.sys.screenAdapter.calculateStageSize(this.stage.$scaleMode, screenWidth, screenHeight, option.contentWidth, option.contentHeight);
                 var stageWidth = stageSize.stageWidth;
                 var stageHeight = stageSize.stageHeight;

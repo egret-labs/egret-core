@@ -186,6 +186,8 @@ module egret.web {
             }
             var screenWidth = shouldRotate ? screenRect.height : screenRect.width;
             var screenHeight = shouldRotate ? screenRect.width : screenRect.height;
+            Capabilities.$boundingClientWidth = screenWidth;
+            Capabilities.$boundingClientHeight = screenHeight;
             var stageSize = egret.sys.screenAdapter.calculateStageSize(this.stage.$scaleMode,
                 screenWidth, screenHeight, option.contentWidth, option.contentHeight);
             var stageWidth = stageSize.stageWidth;
