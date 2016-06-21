@@ -4,6 +4,7 @@
  */
 var file = require('../lib/FileUtil');
 var FileUtil = require('../lib/FileUtil');
+var utils = require('../lib/utils');
 var ZipCommand = (function () {
     function ZipCommand(versionFile) {
         this.versionFile = versionFile;
@@ -31,14 +32,18 @@ var ZipCommand = (function () {
         var cp_exec1 = require('child_process').exec;
         var build = cp_exec1(cmd);
         build.stdout.on("data", function (data) {
-            //console.log(data);
+            //console.log('data',data);
         });
         build.stderr.on("data", function (data) {
-            //console.log(data);
+            //console.log('err',data);
         });
+
         var self = this;
         build.on("exit", function (result) {
             if (result == 0) {
+                if(!FileUtil.isFile(self.outputFile)){
+                    console.error(utils.tr(1420))
+                }
                 //结束
                 file.remove(_this.sourcePath);
                 var releasePath = egret.args.releaseDir;

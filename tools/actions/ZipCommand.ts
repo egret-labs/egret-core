@@ -6,6 +6,7 @@
 import file = require('../lib/FileUtil');
 import project = require('../actions/Project');
 import FileUtil = require('../lib/FileUtil');
+import utils = require('../lib/utils');
 
 class ZipCommand implements egret.Command {
     private outputFile:string;
@@ -53,9 +54,13 @@ class ZipCommand implements egret.Command {
         });
 
 
+
         var self = this;
         build.on("exit", (result)=> {
             if (result == 0) {
+                if(!FileUtil.isFile(self.outputFile)){
+                    console.error(utils.tr(1420))
+                }
                 //结束
                 file.remove(this.sourcePath);
 
