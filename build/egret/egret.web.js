@@ -1287,7 +1287,9 @@ var egret;
                     video.width = video.videoWidth;
                     video.height = video.videoHeight;
                     _this.$invalidateContentBounds();
-                    _this.dispatchEventWith(egret.Event.COMPLETE);
+                    window.setTimeout(function () {
+                        _this.dispatchEventWith(egret.Event.COMPLETE);
+                    }, 200);
                 };
                 this.$renderNode = new egret.sys.BitmapNode();
                 this.src = url;
@@ -1309,9 +1311,15 @@ var egret;
                 }
                 if (this.video && this.video.src == url)
                     return;
-                var video = document.createElement("video");
-                video.controls = null;
-                video.src = url; //
+                if (!this.video || egret.Capabilities.isMobile) {
+                    var video = document.createElement("video");
+                    this.video = video;
+                    video.controls = null;
+                }
+                else {
+                    video = this.video;
+                }
+                video.src = url;
                 video.setAttribute("autoplay", "autoplay");
                 video.setAttribute("webkit-playsinline", "true");
                 video.addEventListener("canplay", this.onVideoLoaded);
@@ -1326,7 +1334,6 @@ var egret;
                 video.height = 1;
                 video.width = 1;
                 window.setTimeout(function () { return video.pause(); }, 170);
-                this.video = video;
             };
             /**
              * @inheritDoc
