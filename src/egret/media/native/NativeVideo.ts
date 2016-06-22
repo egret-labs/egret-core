@@ -79,7 +79,7 @@ module egret.native {
                 return;
             }
             url = url || this.src;
-            this.src = url;
+            url = url.replace(/\//, "");
             this.loading = true;
             this.loaded = false;
 
@@ -90,6 +90,7 @@ module egret.native {
                     self.loadEnd();
                 };
                 promise.onErrorFunc = function () {
+                    egret.$warn(1048);
                     self.dispatchEventWith(IOErrorEvent.IO_ERROR);
                 };
                 egret_native.download(url, url, promise);

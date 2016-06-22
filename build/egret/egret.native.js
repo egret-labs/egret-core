@@ -3442,7 +3442,7 @@ var egret;
                     return;
                 }
                 url = url || this.src;
-                this.src = url;
+                url = url.replace(/\//, "");
                 this.loading = true;
                 this.loaded = false;
                 if (cache && !egret_native.isFileExists(url)) {
@@ -3452,6 +3452,7 @@ var egret;
                         self.loadEnd();
                     };
                     promise.onErrorFunc = function () {
+                        egret.$warn(1048);
                         self.dispatchEventWith(egret.IOErrorEvent.IO_ERROR);
                     };
                     egret_native.download(url, url, promise);
