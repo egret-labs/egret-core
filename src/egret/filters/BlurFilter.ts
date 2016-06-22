@@ -33,6 +33,7 @@ module egret {
      * You can produce blurs that range from a softly unfocused look to a Gaussian blur, a hazy appearance like viewing an image through semi-opaque glass. 
      * @version Egret 3.0.1
      * @platform Web
+     * @see http://edn.egret.com/cn/docs/page/947#模糊滤镜 模糊滤镜
      */
     /**
      * @language zh_CN
@@ -40,6 +41,7 @@ module egret {
      * 您可以生成一些模糊效果，范围从创建一个柔化的、未聚焦的外观到高斯模糊（就像通过半透明玻璃查看图像一样的朦胧的外观）。
      * @version Egret 3.1.0
      * @platform Web
+     * @see http://edn.egret.com/cn/docs/page/947#模糊滤镜 模糊滤镜
      */
     export class BlurFilter extends Filter {
         /**

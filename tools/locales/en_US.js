@@ -90,6 +90,7 @@ locale_strings[1416] = "You can modify the JAVA_HOME environment variable to mod
 locale_strings[1417] = "Successful detection ";
 locale_strings[1418] = "WebP format fail : {0}";
 locale_strings[1419] = "Format WebP : {0} / {1}";
+locale_strings[1420] = "Invalid path, there may be special characters in the path";
 //startserver
 locale_strings[1501] = "Unable to start the server, please check the authority or whether the port is occupied";
 //create_app

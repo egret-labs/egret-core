@@ -1,6 +1,6 @@
 {
   "name": "egret",
-  "version": "3.1.1",
+  "version": "3.1.2",
   "private": true,
   "author": "egret-labs",
   "scripts": {
@@ -64,6 +64,10 @@
           },
           {
             "path": "native/EgretNative.ts",
+            "platform": "native"
+          },
+          {
+            "path": "native/NativeFps.ts",
             "platform": "native"
           },
           {
@@ -215,6 +219,10 @@
             "platform": "web"
           },
           {
+            "path": "web/WebFps.ts",
+            "platform": "web"
+          },
+          {
             "path": "web/WebGetOption.ts",
             "platform": "web"
           },
@@ -248,10 +256,6 @@
           },
           {
             "path": "utils/web/WebLogger.ts",
-            "platform": "web"
-          },
-          {
-            "path": "web/rendering/webgl/WebGLUtils.ts",
             "platform": "web"
           },
           {

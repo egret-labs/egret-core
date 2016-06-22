@@ -29,52 +29,34 @@
 
 module egret {
     /**
-     * @language en_US
-     * h5 and native interaction.
-     * @see http://edn.egret.com/cn/article/index/id/714 Egret basic skills to communicate with Native
-     * @version Egret 2.4
-     * @platform Web,Native
-     * @includeExample egret/external/ExternalInterface.ts
+     * @private
      */
-    /**
-     * @language zh_CN
-     * h5与native交互。
-     * @see http://edn.egret.com/cn/article/index/id/714 Egret 与 Native 通信基本技巧
-     * @version Egret 2.4
-     * @platform Web,Native
-     * @includeExample egret/external/ExternalInterface.ts
-     */
-    export interface ExternalInterface {
+    export interface FPSDisplay extends DisplayObject {
+        /**
+         * 更新FPS信息
+         */
+        update(datas:FPSData):void;
 
+        /**
+         * 插入一条日志信息
+         */
+        updateInfo(info:string):void;
     }
-
-    export var ExternalInterface: {
-        /**
-         * @language en_US
-         * Call functionName, and the value passed to the native.
-         * @version Egret 2.4
-         * @platform Web,Native
-         */
-        /**
-         * @language zh_CN
-         * 调用 functionName，并将value传入到native中。
-         * @version Egret 2.4
-         * @platform Web,Native
-         */
-        call(functionName:string, value:string):void;
-
-        /**
-         * @language en_US
-         * FunctionName callback listener, you need to have to call functionName this field in native rather than such a call.
-         * @version Egret 2.4
-         * @platform Web,Native
-         */
-        /**
-         * @language zh_CN
-         * 监听 functionName 回调，需要在native中有调用 functionName 这个字段，而不是 此类的call。
-         * @version Egret 2.4
-         * @platform Web,Native
-         */
-        addCallback(functionName:string, listener:(value)=>void):void
+    /**
+     * @private
+     */
+    export var FPSDisplay:{
+        new (stage:Stage, showFPS:boolean, showLog:boolean, logFilter:string,styles:Object): FPSDisplay
     };
+}
+/**
+ * @private
+ */
+interface FPSData extends Object{
+    fps:number;
+    draw:number;
+    dirty:number;
+    costTicker:number;
+    costDirty:number;
+    costRender:number;
 }

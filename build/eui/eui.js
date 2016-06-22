@@ -4745,6 +4745,7 @@ var eui;
      * group (Give the instance of Group to <code>viewport</code> property of Scroller component).
      * The scroller component can adds a scrolling touch operation for the Group.
      *
+     * @see http://edn.egret.com/cn/article/index/id/608 Simple container
      * @defaultProperty elementsContent
      * @includeExample  extension/eui/components/GroupExample.ts
      * @version Egret 2.4
@@ -4756,7 +4757,7 @@ var eui;
      * Group 是自动布局的容器基类。如果包含的子项内容太大需要滚动显示，可以在在 Group 外部包裹一层 Scroller 组件
      * (将 Group 实例赋值给 Scroller 组件的 viewport 属性)。Scroller 会为 Group 添加滚动的触摸操作功能，并显示垂直或水平的滚动条。
      *
-     * @see http://edn.egret.com/cn/index.php/article/index/id/608 简单容器
+     * @see http://edn.egret.com/cn/article/index/id/608 简单容器
      * @defaultProperty elementsContent
      * @includeExample  extension/eui/components/GroupExample.ts
      * @version Egret 2.4
@@ -5410,6 +5411,8 @@ var eui;
      * to hold data items as children.
      *
      * @see eui.Group
+     * @see http://edn.egret.com/cn/article/index/id/527 Data container
+     * @see http://edn.egret.com/cn/article/index/id/528 Array collection
      * @defaultProperty dataProvider
      * @includeExample  extension/eui/components/DataGroupExample.ts
      * @version Egret 2.4
@@ -5422,8 +5425,8 @@ var eui;
      * 尽管此容器可以包含可视元素，但它通常仅用于包含作为子项的数据项目。
      *
      * @see eui.Group
-     * @see http://edn.egret.com/cn/index.php/article/index/id/527 数据容器
-     * @see http://edn.egret.com/cn/index.php/article/index/id/528 数组集合
+     * @see http://edn.egret.com/cn/article/index/id/527 数据容器
+     * @see http://edn.egret.com/cn/article/index/id/528 数组集合
      * @defaultProperty dataProvider
      * @includeExample  extension/eui/components/DataGroupExample.ts
      * @version Egret 2.4
@@ -5778,7 +5781,7 @@ var eui;
                         var indexToRenderer = this.$indexToRenderer;
                         var keys = Object.keys(indexToRenderer);
                         var length = keys.length;
-                        for (var i = 0; i < length; i++) {
+                        for (var i = length - 1; i >= 0; i--) {
                             var index = +keys[i];
                             this.freeRendererByIndex(index);
                         }
@@ -11364,6 +11367,14 @@ var eui;
              * @private
              */
             this.animationValue = 0;
+            /**
+             * @private
+             */
+            this.thumbInitX = 0;
+            /**
+             * @private
+             */
+            this.thumbInitY = 0;
             this.animation = new eui.sys.Animation(this.animationUpdateHandler, this);
         }
         var d = __define,c=ProgressBar,p=c.prototype;
@@ -11492,6 +11503,10 @@ var eui;
             ,function (value) {
                 if (this._direction == value)
                     return;
+                if (this.thumb)
+                    this.thumb.x = this.thumbInitX;
+                if (this.thumb)
+                    this.thumb.y = this.thumbInitY;
                 this._direction = value;
                 this.invalidateDisplayList();
             }
@@ -11549,6 +11564,10 @@ var eui;
         p.partAdded = function (partName, instance) {
             _super.prototype.partAdded.call(this, partName, instance);
             if (instance === this.thumb) {
+                if (this.thumb.x)
+                    this.thumbInitX = this.thumb.x;
+                if (this.thumb.y)
+                    this.thumbInitY = this.thumb.y;
                 this.thumb.addEventListener(egret.Event.RESIZE, this.onThumbResize, this);
             }
         };
@@ -11597,10 +11616,12 @@ var eui;
                     rect = egret.$TempRectangle;
                 }
                 rect.setTo(0, 0, thumbWidth, thumbHeight);
+                var thumbPosX = thumb.x - rect.x;
+                var thumbPosY = thumb.y - rect.y;
                 switch (this._direction) {
                     case eui.Direction.LTR:
                         rect.width = clipWidth;
-                        thumb.x = rect.x;
+                        thumb.x = thumbPosX;
                         break;
                     case eui.Direction.RTL:
                         rect.width = clipWidth;
@@ -11609,7 +11630,7 @@ var eui;
                         break;
                     case eui.Direction.TTB:
                         rect.height = clipHeight;
-                        thumb.y = rect.y;
+                        thumb.y = thumbPosY;
                         break;
                     case eui.Direction.BTT:
                         rect.height = clipHeight;
@@ -13260,10 +13281,10 @@ var eui;
                 if (!outX && !outY) {
                     return;
                 }
-                if (outX && values[1 /* scrollPolicyH */] == 'off') {
+                if (!outY && outX && values[1 /* scrollPolicyH */] == 'off') {
                     return;
                 }
-                if (outY && values[0 /* scrollPolicyV */] == 'off') {
+                if (!outX && outY && values[0 /* scrollPolicyV */] == 'off') {
                     return;
                 }
                 values[12 /* touchCancle */] = true;
@@ -16165,13 +16186,16 @@ var eui;
          */
         p.onConfigLoaded = function (str) {
             if (str) {
-                try {
-                    var data = JSON.parse(str);
-                }
-                catch (e) {
-                    if (DEBUG) {
+                if (DEBUG) {
+                    try {
+                        var data = JSON.parse(str);
+                    }
+                    catch (e) {
                         egret.$error(3000);
                     }
+                }
+                else {
+                    var data = JSON.parse(str);
                 }
             }
             else if (DEBUG) {
@@ -17943,13 +17967,16 @@ var eui;
                         egret.$error(1003, "text");
                     }
                 }
-                try {
-                    var xmlData = egret.XML.parse(text);
-                }
-                catch (e) {
-                    if (DEBUG) {
+                if (DEBUG) {
+                    try {
+                        var xmlData = egret.XML.parse(text);
+                    }
+                    catch (e) {
                         egret.$error(2002, text + "\n" + e.message);
                     }
+                }
+                else {
+                    var xmlData = egret.XML.parse(text);
                 }
                 var className = "";
                 var hasClass = false;
@@ -17963,14 +17990,17 @@ var eui;
                 }
                 var exClass = this.parseClass(xmlData, className);
                 var code = exClass.toCode();
-                try {
-                    var clazz = eval(code);
-                }
-                catch (e) {
-                    if (DEBUG) {
-                        egret.log(code);
+                if (DEBUG) {
+                    try {
+                        var clazz = eval(code);
                     }
-                    return null;
+                    catch (e) {
+                        egret.log(code);
+                        return null;
+                    }
+                }
+                else {
+                    var clazz = eval(code);
                 }
                 if (hasClass && clazz) {
                     egret.registerClass(clazz, className);
@@ -19487,12 +19517,17 @@ var eui;
             if (!clazz) {
                 return null;
             }
-            try {
-                var instance = new clazz();
+            if (DEBUG) {
+                try {
+                    var instance = new clazz();
+                }
+                catch (e) {
+                    egret.error(e);
+                    return null;
+                }
             }
-            catch (e) {
-                egret.error(e);
-                return null;
+            else {
+                var instance = new clazz();
             }
             return instance;
         }

@@ -34,7 +34,7 @@ module egret {
      * @language en_US
      * The URLVariables class allows you to transfer variables between an application and a server.
      * Use URLVariables objects with methods of the URLLoader class and the data property of the URLRequest class.
-     * @see http://docs.egret-labs.org/post/manual/net/senddata.html Send the request with parameters
+     * @see http://edn.egret.com/cn/docs/page/598 Send the request with parameters
      * @version Egret 2.4
      * @platform Web,Native
      * @includeExample extension/game/net/URLVariables.ts
@@ -43,7 +43,7 @@ module egret {
      * @language zh_CN
      * 使用 URLVariables 类可以在应用程序和服务器之间传输变量。
      * 将 URLVariables 对象与 URLLoader 类的方法、URLRequest 类的 data 属性一起使用。
-     * @see http://docs.egret-labs.org/post/manual/net/senddata.html 发送带参数的请求
+     * @see http://edn.egret.com/cn/docs/page/598 发送带参数的请求
      * @version Egret 2.4
      * @platform Web,Native
      * @includeExample extension/game/net/URLVariables.ts

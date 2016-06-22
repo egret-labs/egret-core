@@ -100,11 +100,11 @@ module egret.web {
             }
             else {
                 node = displayObject.$getRenderNode();
-                var filters = displayObject.$getFilters();
-                if(filters && filters.length > 0) {
-                    buffer.pushFilters(filters);
-                    filterPushed = true;
-                }
+                // var filters = displayObject.$getFilters();
+                // if(filters && filters.length > 0) {
+                //     buffer.pushFilters(filters);
+                //     filterPushed = true;
+                // }
             }
 
             if (node) {
@@ -159,7 +159,11 @@ module egret.web {
                     if (!child.$visible || child.$alpha <= 0 || child.$maskedObject) {
                         continue;
                     }
-                    if ((child.$blendMode !== 0 ||
+                    var filters = child.$getFilters();
+                    if(filters && filters.length > 0) {
+                        drawCalls += this.drawWithFilter(child, buffer, dirtyList, matrix, clipRegion, root);
+                    }
+                    else if ((child.$blendMode !== 0 ||
                         (child.$mask && (child.$mask.$parentDisplayList || root)))) {//若遮罩不在显示列表中，放弃绘制遮罩。
                         drawCalls += this.drawWithClip(child, buffer, dirtyList, matrix, clipRegion, root);
                     }
@@ -182,9 +186,63 @@ module egret.web {
                 }
             }
 
-            if(filterPushed) {
-                buffer.popFilters();
+            // if(filterPushed) {
+            //     buffer.popFilters();
+            // }
+
+            return drawCalls;
+        }
+
+        /**
+         * @private
+         */
+        private drawWithFilter(displayObject: DisplayObject, buffer: WebGLRenderBuffer, dirtyList: egret.sys.Region[],
+            matrix: Matrix, clipRegion: sys.Region, root: DisplayObject):number {
+            var drawCalls = 0;
+
+            // 获取显示对象的链接矩阵
+            var displayMatrix = Matrix.create();
+            displayMatrix.copyFrom(displayObject.$getConcatenatedMatrix());
+
+            // 获取显示对象的矩形区域
+            var region: sys.Region;
+            region = sys.Region.create();
+            var bounds = displayObject.$getOriginalBounds();
+            region.updateRegion(bounds, displayMatrix);
+
+            // 为显示对象创建一个新的buffer
+            var displayBuffer = this.createRenderBuffer(region.width, region.height);
+            displayBuffer.context.pushBuffer(displayBuffer);
+            displayBuffer.setTransform(1, 0, 0, 1, -region.minX, -region.minY);
+            var offsetM = Matrix.create().setTo(1, 0, 0, 1, -region.minX, -region.minY);
+
+            drawCalls += this.drawDisplayObject(displayObject, displayBuffer, dirtyList, offsetM,
+                displayObject.$displayList, region, root);
+
+            Matrix.release(offsetM);
+            displayBuffer.context.popBuffer();
+
+            //绘制结果到屏幕
+            if (drawCalls > 0) {
+                drawCalls++;
+
+                buffer.context.setGlobalAlpha(1);
+                buffer.setTransform(1, 0, 0, -1, region.minX + matrix.tx, region.minY + matrix.ty + displayBuffer.height);
+                var displayBufferWidth = displayBuffer.width;
+                var displayBufferHeight = displayBuffer.height;
+                // 绘制结果的时候，应用滤镜
+                // buffer.context.drawTexture(<WebGLTexture><any>displayBuffer.rootRenderTarget.texture, 0, 0, displayBufferWidth, displayBufferHeight,
+                //     0, 0, displayBufferWidth, displayBufferHeight, displayBufferWidth, displayBufferHeight);
+                var filters = displayObject.$getFilters();
+                buffer.context.drawTextureWidthFilter(filters, <WebGLTexture><any>displayBuffer.rootRenderTarget.texture, 0, 0, displayBufferWidth, displayBufferHeight,
+                    0, 0, displayBufferWidth, displayBufferHeight, displayBufferWidth, displayBufferHeight,
+                    displayBufferWidth, displayBufferHeight, 0, 0);
+
             }
+
+            renderBufferPool.push(displayBuffer);
+            sys.Region.release(region);
+            Matrix.release(displayMatrix);
 
             return drawCalls;
         }
@@ -300,14 +358,14 @@ module egret.web {
                 }
                 if (scrollRect) {
                     var m = displayMatrix;
-                    displayBuffer.setTransform(m.a, m.b, m.c, m.d, m.tx - region.minX, m.ty - region.minY);
-                    displayBuffer.context.pushMask(scrollRect);
+                    buffer.setTransform(m.a, m.b, m.c, m.d, m.tx - region.minX, m.ty - region.minY);
+                    buffer.context.pushMask(scrollRect);
                 }
                 drawCalls += this.drawDisplayObject(displayObject, buffer, dirtyList, offsetM,
                     displayObject.$displayList, region, null);
                 Matrix.release(offsetM);
                 if (scrollRect) {
-                    displayBuffer.context.popMask();
+                    buffer.context.popMask();
                 }
                 if (hasBlendMode) {
                     buffer.context.setGlobalCompositeOperation(defaultCompositeOp);
@@ -348,8 +406,8 @@ module egret.web {
                     var calls = this.drawDisplayObject(mask, maskBuffer, dirtyList, offsetM,
                         mask.$displayList, region, root);
 
-                    maskBuffer.context.$drawWebGL();
-                    maskBuffer.onRenderFinish();
+                    // maskBuffer.context.$drawWebGL();
+                    // maskBuffer.onRenderFinish();
                     maskBuffer.context.popBuffer();
 
                     if (calls > 0) {
@@ -369,8 +427,8 @@ module egret.web {
                 Matrix.release(offsetM);
 
                 displayBuffer.context.setGlobalCompositeOperation(defaultCompositeOp);
-                displayBuffer.context.$drawWebGL();
-                displayBuffer.onRenderFinish();
+                // displayBuffer.context.$drawWebGL();
+                // displayBuffer.onRenderFinish();
                 displayBuffer.context.popBuffer();
 
                 //绘制结果到屏幕
@@ -400,7 +458,7 @@ module egret.web {
 
                 // 最后执行绘制，因为有可能displayBuffer中的texture被更改
                 // 未来可以省略此次绘制
-                buffer.context.$drawWebGL();
+                // buffer.context.$drawWebGL();
 
                 renderBufferPool.push(displayBuffer);
                 sys.Region.release(region);
@@ -645,7 +703,7 @@ module egret.web {
         private renderGraphics(node: sys.GraphicsNode, buffer: WebGLRenderBuffer, forHitTest?: boolean): void {
             var width = node.width;
             var height = node.height;
-            if (width <= 0 || height <= 0) {
+            if (width <= 0 || height <= 0 || !width || !height || node.drawData.length == 0) {
                 return;
             }
             if (!this.canvasRenderBuffer || !this.canvasRenderBuffer.context) {

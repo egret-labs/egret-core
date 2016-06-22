@@ -108,6 +108,9 @@ module egret {
 
             //设置纹理参数
             this.$initData(0, 0, width, height, 0, 0, width, height, width, height);
+            
+            //防止RenderTexture渲染破坏脏标记
+            displayObject.$propagateFlagsDown(sys.DisplayObjectFlags.InvalidRenderNodes);
             return true;
         }
 

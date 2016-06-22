@@ -38,8 +38,8 @@ module dragonBones {
 		/**
 		 * DragonBones当前数据格式版本
 		 */
-		public static DATA_VERSION:string = "4.0";
-		public static DATA_VERSION_4_5:string = "4.5";
+		public static DATA_VERSION:string = "4.5";
+		public static DATA_VERSION_4_0:string = "4.0";
 		/**
 		 *
 		 */

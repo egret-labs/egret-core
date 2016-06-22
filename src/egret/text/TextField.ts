@@ -179,7 +179,11 @@ module egret.sys {
         /**
          * @private
          */
-        restrictNot
+        restrictNot,
+        /**
+         * @private
+         */
+        inputType
     }
 }
 
@@ -204,7 +208,7 @@ module egret {
      * @language en_US
      * TextField is the text rendering class of egret. It conducts rendering by using the browser / device API. Due to different ways of font rendering in different browsers / devices, there may be differences in the rendering
      * If developers expect  no differences among all platforms, please use BitmapText
-     * @see http://docs.egret-labs.org/post/manual/text/createtext.html Create Text
+     * @see http://edn.egret.com/cn/docs/page/141 Create Text
      *
      * @event egret.Event.CHANGE Dispatched when entering text user input。
      * @event egret.FocusEvent.FOCUS_IN Dispatched after the focus to enter text.
@@ -217,7 +221,7 @@ module egret {
      * @language zh_CN
      * TextField是egret的文本渲染类，采用浏览器/设备的API进行渲染，在不同的浏览器/设备中由于字体渲染方式不一，可能会有渲染差异
      * 如果开发者希望所有平台完全无差异，请使用BitmapText
-     * @see http://docs.egret-labs.org/post/manual/text/createtext.html 创建文本
+     * @see http://edn.egret.com/cn/docs/page/141 创建文本
      *
      * @event egret.Event.CHANGE 输入文本有用户输入时调度。
      * @event egret.FocusEvent.FOCUS_IN 聚焦输入文本后调度。
@@ -289,7 +293,8 @@ module egret {
                 33: false,              //background
                 34: 0xffffff,              //backgroundColor
                 35: null,           //restrictAnd
-                36: null           //restrictNot
+                36: null,           //restrictNot
+                37: TextFieldInputType.TEXT            //inputType
             };
         }
 
@@ -703,6 +708,28 @@ module egret {
          */
         public get type():string {
             return this.$TextField[sys.TextKeys.type];
+        }
+        
+        /**
+         * @language en_US
+         * Pop-up keyboard type.
+         * Any of a TextFieldInputType constants.
+         */
+        /**
+         * @language zh_CN
+         * 弹出键盘的类型。
+         * TextFieldInputType 常量中的任一个。
+         */
+        public set inputType(value:string) {
+            this.$TextField[sys.TextKeys.inputType] = value;
+        }
+
+        /**
+         * @version Egret 3.1.2
+         * @platform Web,Native
+         */
+        public get inputType():string {
+            return this.$TextField[sys.TextKeys.inputType];
         }
 
         /**
@@ -1734,6 +1761,10 @@ module egret {
 
             for (var i:number = 0, text2ArrLength:number = text2Arr.length; i < text2ArrLength; i++) {
                 var element:egret.ITextElement = text2Arr[i];
+                //可能设置为没有文本，忽略绘制
+                if(!element.text) {
+                    continue;
+                }
                 element.style = element.style || <egret.ITextStyle>{};
 
                 var text:string = element.text.toString();

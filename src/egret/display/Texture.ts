@@ -36,8 +36,8 @@ module egret {
      * In HTML5, resource is an HTMLElement object
      * In OpenGL / WebGL, resource is a texture ID obtained after the GPU is submitted
      * The Texture class encapsulates the details implemented on the underlayer. Developers just need to focus on interfaces
-     * @see http://docs.egret-labs.org/post/manual/bitmap/textures.html The use of texture packs
-     * @see http://docs.egret-labs.org/post/manual/loader/getres.html Several ways of access to resources
+     * @see http://edn.egret.com/cn/docs/page/135 The use of texture packs
+     * @see http://edn.egret.com/cn/docs/page/123 Several ways of access to resources
      * @version Egret 2.4
      * @platform Web,Native
      * @includeExample egret/display/Texture.ts
@@ -48,8 +48,8 @@ module egret {
      * 在HTML5中，资源是一个HTMLElement对象
      * 在OpenGL / WebGL中，资源是一个提交GPU后获取的纹理id
      * Texture类封装了这些底层实现的细节，开发者只需要关心接口即可
-     * @see http://docs.egret-labs.org/post/manual/bitmap/textures.html 纹理集的使用
-     * @see http://docs.egret-labs.org/post/manual/loader/getres.html 获取资源的几种方式
+     * @see http://edn.egret.com/cn/docs/page/135 纹理集的使用
+     * @see http://edn.egret.com/cn/docs/page/123 获取资源的几种方式
      * @version Egret 2.4
      * @platform Web,Native
      * @includeExample egret/display/Texture.ts
@@ -324,6 +324,9 @@ module egret {
          */
         public dispose():void {
             if (this._bitmapData) {
+                if(Capabilities.runtimeType == RuntimeType.WEB && Capabilities.renderMode == "webgl") {
+                    egret.WebGLUtils.deleteWebGLTexture(this._bitmapData);
+                }
                 if (this._bitmapData.dispose) {
                     this._bitmapData.dispose();
                 }
