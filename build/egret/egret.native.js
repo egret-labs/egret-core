@@ -3478,7 +3478,7 @@ var egret;
                 }
                 function onPlaying() {
                     video['setVideoRect'](0, 0, 1, 1);
-                    window.setTimeout(function () {
+                    __global.setTimeout(function () {
                         video.pause();
                         if (self._fullscreen) {
                             video.fullScreen = true;

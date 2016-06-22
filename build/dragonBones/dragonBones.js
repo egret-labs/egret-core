@@ -6635,8 +6635,8 @@ var dragonBones;
         /**
          * DragonBones当前数据格式版本
          */
-        DragonBones.DATA_VERSION = "4.0";
-        DragonBones.DATA_VERSION_4_5 = "4.5";
+        DragonBones.DATA_VERSION = "4.5";
+        DragonBones.DATA_VERSION_4_0 = "4.0";
         /**
          *
          */
@@ -13948,7 +13948,7 @@ var dragonBones;
             var version = rawDataToParse[dragonBones.ConstValues.A_VERSION];
             version = version.toString();
             if (version.toString() != dragonBones.DragonBones.DATA_VERSION &&
-                version.toString() != dragonBones.DragonBones.DATA_VERSION_4_5 &&
+                version.toString() != dragonBones.DragonBones.DATA_VERSION_4_0 &&
                 version.toString() != dragonBones.DragonBones.PARENT_COORDINATE_DATA_VERSION &&
                 version.toString() != "2.3") {
                 throw new Error(egret.getString(4003));

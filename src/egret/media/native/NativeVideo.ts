@@ -117,7 +117,7 @@ module egret.native {
             }
             function onPlaying():void {
                 video['setVideoRect'](0, 0, 1, 1);
-                window.setTimeout(() => {
+                __global.setTimeout(() => {
                     video.pause();
                     if (self._fullscreen) {
                         video.fullScreen = true;
