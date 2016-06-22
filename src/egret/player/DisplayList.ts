@@ -261,7 +261,8 @@ module egret.sys {
                 }
                 var buffer = this.renderBuffer;
                 buffer.beginClip(this.dirtyList, this.offsetX, this.offsetY);
-                var drawCalls = systemRenderer.render(this.root, buffer, this.offsetMatrix, this.dirtyList);
+                var dirtyList = this.$dirtyRegionPolicy == egret.DirtyRegionPolicy.OFF ? null : this.dirtyList;
+                var drawCalls = systemRenderer.render(this.root, buffer, this.offsetMatrix, dirtyList);
                 buffer.endClip();
                 var surface = buffer.surface;
                 var renderNode = <BitmapNode>this.$renderNode;
@@ -317,8 +318,11 @@ module egret.sys {
             }
         }
 
+        private $dirtyRegionPolicy:string = egret.DirtyRegionPolicy.ON;
+
         public setDirtyRegionPolicy(policy:string):void {
             //todo 这里还可以做更多优化
+            this.$dirtyRegionPolicy = policy;
             this.dirtyRegion.setDirtyRegionPolicy(policy);
             this.renderBuffer.setDirtyRegionPolicy(policy);
         }

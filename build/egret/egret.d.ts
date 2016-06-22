@@ -9017,6 +9017,7 @@ declare module egret.sys {
          * 改变画布的尺寸，由于画布尺寸修改会清空原始画布。所以这里将原始画布绘制到一个新画布上，再与原始画布交换。
          */
         changeSurfaceSize(): void;
+        private $dirtyRegionPolicy;
         setDirtyRegionPolicy(policy: string): void;
     }
 }

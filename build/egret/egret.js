@@ -12916,6 +12916,7 @@ var egret;
                  * @private
                  */
                 this.sizeChanged = false;
+                this.$dirtyRegionPolicy = egret.DirtyRegionPolicy.ON;
                 this.root = root;
                 this.dirtyRegion = new sys.DirtyRegion(root);
                 this.isStage = (root instanceof egret.Stage);
@@ -13066,7 +13067,8 @@ var egret;
                     }
                     var buffer = this.renderBuffer;
                     buffer.beginClip(this.dirtyList, this.offsetX, this.offsetY);
-                    var drawCalls = sys.systemRenderer.render(this.root, buffer, this.offsetMatrix, this.dirtyList);
+                    var dirtyList = this.$dirtyRegionPolicy == egret.DirtyRegionPolicy.OFF ? null : this.dirtyList;
+                    var drawCalls = sys.systemRenderer.render(this.root, buffer, this.offsetMatrix, dirtyList);
                     buffer.endClip();
                     var surface = buffer.surface;
                     var renderNode = this.$renderNode;
@@ -13115,6 +13117,7 @@ var egret;
             };
             p.setDirtyRegionPolicy = function (policy) {
                 //todo 这里还可以做更多优化
+                this.$dirtyRegionPolicy = policy;
                 this.dirtyRegion.setDirtyRegionPolicy(policy);
                 this.renderBuffer.setDirtyRegionPolicy(policy);
             };
