@@ -3478,28 +3478,30 @@ var egret;
                 }
                 function onPlaying() {
                     video['setVideoRect'](0, 0, 1, 1);
-                    video.pause();
-                    if (self._fullscreen) {
-                        video.fullScreen = true;
-                    }
-                    video.currentTime = 0;
-                    self.originVideo = video;
-                    self.loaded = true;
-                    self.loading = false;
-                    removeListeners();
-                    self.dispatchEventWith(egret.Event.COMPLETE);
-                    video.addEventListener('pause', function () {
-                        self.paused = true;
-                    });
-                    video.addEventListener('playing', function () {
-                        self.paused = false;
-                    });
-                    video.addEventListener('ended', function () {
-                        self.dispatchEventWith(egret.Event.ENDED);
-                        if (self.loop) {
-                            self.play(0, true);
+                    window.setTimeout(function () {
+                        video.pause();
+                        if (self._fullscreen) {
+                            video.fullScreen = true;
                         }
-                    });
+                        video.currentTime = 0;
+                        self.originVideo = video;
+                        self.loaded = true;
+                        self.loading = false;
+                        removeListeners();
+                        self.dispatchEventWith(egret.Event.COMPLETE);
+                        video.addEventListener('pause', function () {
+                            self.paused = true;
+                        });
+                        video.addEventListener('playing', function () {
+                            self.paused = false;
+                        });
+                        video.addEventListener('ended', function () {
+                            self.dispatchEventWith(egret.Event.ENDED);
+                            if (self.loop) {
+                                self.play(0, true);
+                            }
+                        });
+                    }, 1);
                 }
                 function onVideoError() {
                     removeListeners();
