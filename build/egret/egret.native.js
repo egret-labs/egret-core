@@ -3442,7 +3442,9 @@ var egret;
                     return;
                 }
                 url = url || this.src;
-                url = url.replace(/\//, "");
+                if (url.indexOf('/') == 0) {
+                    url = url.slice(1, url.length);
+                }
                 this.loading = true;
                 this.loaded = false;
                 if (cache && !egret_native.isFileExists(url)) {
