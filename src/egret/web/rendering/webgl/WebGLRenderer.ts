@@ -212,6 +212,7 @@ module egret.web {
             region.updateRegion(bounds, displayMatrix);
 
             // 为显示对象创建一个新的buffer
+            // todo 这里应该计算 region.x region.y
             var displayBuffer = this.createRenderBuffer(region.width, region.height);
             displayBuffer.context.pushBuffer(displayBuffer);
             displayBuffer.setTransform(1, 0, 0, 1, -region.minX, -region.minY);

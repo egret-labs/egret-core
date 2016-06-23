@@ -7019,16 +7019,15 @@ var egret;
                     gOffsetY += offsetY;
                 }
                 // 如果是发光滤镜，绘制光晕
-                // if(filter.type == "glow") {
-                //     if(!output) {
-                //         gOffsetX += _offsetX;
-                //         gOffsetY += _offsetY;
-                //         output = WebGLRenderBuffer.create(realWidth, realHeight);
-                //         this.drawToRenderTarget(null, webGLTexture, output, sourceX, sourceY, sourceWidth, sourceHeight, _offsetX, _offsetY, destWidth, destHeight, textureWidth, textureHeight, true, meshUVs, meshVertices, meshIndices);
-                //     }
-                //     // 会调用$drawWebGL
-                //     this.drawGlow(filter, output, destX - gOffsetX, destY - gOffsetY);
-                // }
+                if (filter.type == "glow") {
+                    if (!output) {
+                        gOffsetX += _offsetX;
+                        gOffsetY += _offsetY;
+                        output = web.WebGLRenderBuffer.create(realWidth, realHeight);
+                        this.drawToRenderTarget(null, webGLTexture, output, sourceX, sourceY, sourceWidth, sourceHeight, _offsetX, _offsetY, destWidth, destHeight, textureWidth, textureHeight, true, meshUVs, meshVertices, meshIndices);
+                    }
+                    this.drawGlow(filter, output, destX - gOffsetX, destY - gOffsetY);
+                }
                 // 绘制output结果到舞台
                 var offsetX = 0;
                 var offsetY = 0;
@@ -7177,12 +7176,11 @@ var egret;
                     0, 0, 0, 0, filter.$red,
                     0, 0, 0, 0, filter.$green,
                     0, 0, 0, 0, filter.$blue,
-                    0, 0, 0, 0, filter.alpha,
+                    0, 0, 0, filter.alpha, 0,
                 ];
                 output = web.WebGLRenderBuffer.create(input.$getWidth(), input.$getHeight());
                 this.drawToRenderTarget(this.colorMatrixFilter, input, output, 0, 0, input.$getWidth(), input.$getHeight(), 0, 0, output.$getWidth(), output.$getHeight(), input.$getWidth(), input.$getHeight(), false);
-                draw.call(this, output, distanceX - offsetX, distanceY - offsetY);
-                // this.$drawWebGL();
+                this.drawImage(output.rootRenderTarget, 0, 0, output.$getWidth(), output.$getHeight(), distanceX - offsetX + destX, distanceY - offsetY + destY, output.$getWidth(), output.$getHeight(), output.$getWidth(), output.$getHeight());
                 // 应用blurX
                 this.blurFilter.blurX = filter.blurX;
                 this.blurFilter.blurY = 0;
@@ -7190,8 +7188,7 @@ var egret;
                 offsetX += filter.blurX; // * 0.028 * input.$getWidth();
                 output = web.WebGLRenderBuffer.create(input.$getWidth() + offsetX * 2, input.$getHeight());
                 this.drawToRenderTarget(this.blurFilter, input, output, 0, 0, input.$getWidth(), input.$getHeight(), offsetX, 0, input.$getWidth(), input.$getHeight(), input.$getWidth(), input.$getHeight());
-                draw.call(this, output, distanceX - offsetX, distanceY - offsetY);
-                // this.$drawWebGL();
+                this.drawImage(output.rootRenderTarget, 0, 0, output.$getWidth(), output.$getHeight(), distanceX - offsetX + destX, distanceY - offsetY + destY, output.$getWidth(), output.$getHeight(), output.$getWidth(), output.$getHeight());
                 // 应用blurY
                 this.blurFilter.blurX = 0;
                 this.blurFilter.blurY = filter.blurY;
@@ -7199,24 +7196,13 @@ var egret;
                 offsetY += filter.blurY; // * 0.028 * input.$getHeight();
                 output = web.WebGLRenderBuffer.create(input.$getWidth(), input.$getHeight() + offsetY * 2);
                 this.drawToRenderTarget(this.blurFilter, input, output, 0, 0, input.$getWidth(), input.$getHeight(), 0, offsetY, input.$getWidth(), input.$getHeight(), input.$getWidth(), input.$getHeight());
-                draw.call(this, output, distanceX - offsetX, distanceY - offsetY);
-                // this.$drawWebGL();
-                // 根据光强绘制光
+                this.drawImage(output.rootRenderTarget, 0, 0, output.$getWidth(), output.$getHeight(), distanceX - offsetX + destX, distanceY - offsetY + destY, output.$getWidth(), output.$getHeight(), output.$getWidth(), output.$getHeight());
+                // // 根据光强绘制光
                 this.setGlobalCompositeOperation("lighter-in");
                 for (var j = 0; j < filter.quality; j++) {
-                    draw.call(this, output, distanceX - offsetX, distanceY - offsetY);
+                    this.drawImage(output.rootRenderTarget, 0, 0, output.$getWidth(), output.$getHeight(), distanceX - offsetX + destX, distanceY - offsetY + destY, output.$getWidth(), output.$getHeight(), output.$getWidth(), output.$getHeight());
                 }
                 this.setGlobalCompositeOperation("source-over");
-                // this.$drawWebGL();
-                function draw(result, offsetX, offsetY) {
-                    buffer.saveTransform();
-                    buffer.transform(1, 0, 0, -1, 0, result.$getHeight() + (destY + offsetY) * 2);
-                    this.vao.cacheArrays(buffer.globalMatrix, buffer.globalAlpha, 0, 0, result.$getWidth(), result.$getHeight(), destX + offsetX, destY + offsetY, result.$getWidth(), result.$getHeight(), result.$getWidth(), result.$getHeight());
-                    buffer.restoreTransform();
-                    this.drawCmdManager.pushDrawTexture(result.rootRenderTarget.texture);
-                }
-                // output.clearFilters();
-                // output.filter = null;
                 web.WebGLRenderBuffer.release(output);
             };
             WebGLRenderContext.initBlendMode = function () {
