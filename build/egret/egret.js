@@ -12918,6 +12918,7 @@ var egret;
                  * @private
                  */
                 this.sizeChanged = false;
+                this.$dirtyRegionPolicy = egret.DirtyRegionPolicy.ON;
                 this.root = root;
                 this.dirtyRegion = new sys.DirtyRegion(root);
                 this.isStage = (root instanceof egret.Stage);
@@ -13068,7 +13069,8 @@ var egret;
                     }
                     var buffer = this.renderBuffer;
                     buffer.beginClip(this.dirtyList, this.offsetX, this.offsetY);
-                    var drawCalls = sys.systemRenderer.render(this.root, buffer, this.offsetMatrix, this.dirtyList);
+                    var dirtyList = this.$dirtyRegionPolicy == egret.DirtyRegionPolicy.OFF ? null : this.dirtyList;
+                    var drawCalls = sys.systemRenderer.render(this.root, buffer, this.offsetMatrix, dirtyList);
                     buffer.endClip();
                     var surface = buffer.surface;
                     var renderNode = this.$renderNode;
@@ -13117,6 +13119,7 @@ var egret;
             };
             p.setDirtyRegionPolicy = function (policy) {
                 //todo 这里还可以做更多优化
+                this.$dirtyRegionPolicy = policy;
                 this.dirtyRegion.setDirtyRegionPolicy(policy);
                 this.renderBuffer.setDirtyRegionPolicy(policy);
             };
@@ -14565,16 +14568,16 @@ var egret;
              */
             p.updateStageSize = function (stageWidth, stageHeight) {
                 var stage = this.stage;
-                if (stageWidth !== stage.$stageWidth || stageHeight !== stage.$stageHeight) {
-                    stage.$stageWidth = stageWidth;
-                    stage.$stageHeight = stageHeight;
-                    this.screenDisplayList.setClipRect(stageWidth, stageHeight);
-                    if (this.stageDisplayList) {
-                        this.stageDisplayList.setClipRect(stageWidth, stageHeight);
-                    }
-                    stage.dispatchEventWith(egret.Event.RESIZE);
-                    stage.$invalidate(true);
+                //if (stageWidth !== stage.$stageWidth || stageHeight !== stage.$stageHeight) {
+                stage.$stageWidth = stageWidth;
+                stage.$stageHeight = stageHeight;
+                this.screenDisplayList.setClipRect(stageWidth, stageHeight);
+                if (this.stageDisplayList) {
+                    this.stageDisplayList.setClipRect(stageWidth, stageHeight);
                 }
+                stage.dispatchEventWith(egret.Event.RESIZE);
+                stage.$invalidate(true);
+                //}
             };
             return Player;
         }(egret.HashObject));
@@ -16831,6 +16834,25 @@ var egret;
                 return Capabilities.$runtimeType;
             }
         );
+        d(Capabilities, "supportVersion"
+            /***
+             * @language en_US
+             * version of the native support.
+             * @type {string}
+             * @version Egret 2.5
+             * @platform Web,Native
+             */
+            /***
+             * @language zh_CN
+             * native support 的版本号。
+             * @type {string}
+             * @version Egret 2.5
+             * @platform Web,Native
+             */
+            ,function () {
+                return Capabilities.$supportVersion;
+            }
+        );
         /**
          * 设置系统信息
          */
@@ -16849,9 +16871,70 @@ var egret;
                 }
                 Capabilities.$os = osType;
                 var version = arr[2].substring(1, arr[2].length);
-                Capabilities.supportVersion = version;
+                Capabilities.$supportVersion = version;
             }
         };
+        d(Capabilities, "renderMode"
+            /***
+             * @language en_US
+             * current render mode.
+             * @type {string}
+             * @version Egret 3.0.7
+             * @platform Web,Native
+             */
+            /***
+             * @language zh_CN
+             * 当前渲染模式。
+             * @type {string}
+             * @version Egret 3.0.7
+             * @platform Web,Native
+             */
+            ,function () {
+                return Capabilities.$renderMode;
+            }
+        );
+        d(Capabilities, "boundingClientWidth"
+            /***
+             * @language en_US
+             * Clients border width.
+             * The value before the document class initialization is always 0.
+             * This value will change after the distribution Event.RESIZE and StageOrientationEvent.ORIENTATION_CHANGE.
+             * @version Egret 3.1.3
+             * @platform Web,Native
+             */
+            /***
+             * @language zh_CN
+             * 客户端边界宽度。
+             * 该值在文档类初始化之前始终是0。
+             * 该值在派发 Event.RESIZE 以及 StageOrientationEvent.ORIENTATION_CHANGE 之后会发生改变。
+             * @version Egret 3.1.3
+             * @platform Web,Native
+             */
+            ,function () {
+                return Capabilities.$boundingClientWidth;
+            }
+        );
+        d(Capabilities, "boundingClientHeight"
+            /***
+             * @language en_US
+             * Clients border height.
+             * The value before the document class initialization is always 0.
+             * This value will change after the distribution Event.RESIZE and StageOrientationEvent.ORIENTATION_CHANGE.
+             * @version Egret 3.1.3
+             * @platform Web,Native
+             */
+            /***
+             * @language zh_CN
+             * 客户端边界高度。
+             * 该值在文档类初始化之前始终是0。
+             * 该值在派发 Event.RESIZE 以及 StageOrientationEvent.ORIENTATION_CHANGE 之后会发生改变。
+             * @version Egret 3.1.3
+             * @platform Web,Native
+             */
+            ,function () {
+                return Capabilities.$boundingClientHeight;
+            }
+        );
         /**
          * @private
          */
@@ -16864,36 +16947,10 @@ var egret;
          * @private
          */
         Capabilities.$runtimeType = "Unknown";
-        /***
-         * @language en_US
-         * version of the native support
-         * @type {string}
-         * @version Egret 2.5
-         * @platform Web,Native
-         */
-        /***
-         * @language zh_CN
-         * native support 的版本号
-         * @type {string}
-         * @version Egret 2.5
-         * @platform Web,Native
-         */
-        Capabilities.supportVersion = "Unknown";
-        /***
-         * @language en_US
-         * current render mode
-         * @type {string}
-         * @version Egret 3.0.7
-         * @platform Web,Native
-         */
-        /***
-         * @language zh_CN
-         * 当前渲染模式
-         * @type {string}
-         * @version Egret 3.0.7
-         * @platform Web,Native
-         */
-        Capabilities.renderMode = "Unknown";
+        Capabilities.$supportVersion = "Unknown";
+        Capabilities.$renderMode = "Unknown";
+        Capabilities.$boundingClientWidth = 0;
+        Capabilities.$boundingClientHeight = 0;
         return Capabilities;
     }());
     egret.Capabilities = Capabilities;
@@ -16902,6 +16959,11 @@ var egret;
         egret.$markReadOnly(Capabilities, "language", false);
         egret.$markReadOnly(Capabilities, "isMobile", false);
         egret.$markReadOnly(Capabilities, "os", false);
+        egret.$markReadOnly(Capabilities, "runtimeType", false);
+        egret.$markReadOnly(Capabilities, "supportVersion", false);
+        egret.$markReadOnly(Capabilities, "renderMode", false);
+        egret.$markReadOnly(Capabilities, "boundingClientWidth", false);
+        egret.$markReadOnly(Capabilities, "boundingClientHeight", false);
     }
 })(egret || (egret = {}));
 var testDeviceType = function () {
