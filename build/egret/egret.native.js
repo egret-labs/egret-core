@@ -3425,7 +3425,6 @@ var egret;
                 if (!__global.Video) {
                     egret.$error(1044);
                 }
-                this.src = url;
                 if (url) {
                     this.load(url, cache);
                 }
@@ -3443,10 +3442,10 @@ var egret;
                 if (this.loading) {
                     return;
                 }
-                url = url || this.src;
                 if (url.indexOf('/') == 0) {
                     url = url.slice(1, url.length);
                 }
+                this.src = url;
                 this.loading = true;
                 this.loaded = false;
                 if (cache && !egret_native.isFileExists(url)) {
