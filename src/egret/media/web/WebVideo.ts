@@ -72,7 +72,7 @@ module egret.web {
         /**
          * @inheritDoc
          */
-        constructor(url?:string) {
+        constructor(url?:string,cache:boolean=true) {
             super();
             this.$renderNode = new sys.BitmapNode();
             this.src = url;
@@ -85,7 +85,7 @@ module egret.web {
         /**
          * @inheritDoc
          */
-        public load(url?:string) {
+        public load(url?:string,cache:boolean=true) {
             url = url || this.src;
             this.src = url;
             if (DEBUG && !url) {
