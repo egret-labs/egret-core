@@ -57,17 +57,18 @@ module egret.web {
         public render(displayObject: DisplayObject, buffer: sys.RenderBuffer, matrix: Matrix, dirtyList?: egret.sys.Region[], forRenderTexture?: boolean): number {
             this.nestLevel++;
             var webglBuffer: WebGLRenderBuffer = <WebGLRenderBuffer>buffer;
+            var webglBufferContext: WebGLRenderContext = webglBuffer.context;
             var root: DisplayObject = forRenderTexture ? displayObject : null;
 
-            webglBuffer.context.pushBuffer(webglBuffer);
+            webglBufferContext.pushBuffer(webglBuffer);
 
             //绘制显示对象
             this.drawDisplayObject(displayObject, webglBuffer, dirtyList, matrix, null, null, root);
-            webglBuffer.context.$drawWebGL();
+            webglBufferContext.$drawWebGL();
             var drawCall = webglBuffer.$drawCalls;
             webglBuffer.onRenderFinish();
 
-            webglBuffer.context.popBuffer();
+            webglBufferContext.popBuffer();
 
             this.nestLevel--;
             if (this.nestLevel === 0) {
@@ -143,7 +144,7 @@ module egret.web {
                         m = node.renderMatrix;
                         buffer.setTransform(m.a, m.b, m.c, m.d, m.tx + matrix.tx, m.ty + matrix.ty);
                     }
-                    buffer.context.setGlobalAlpha(renderAlpha);
+                    buffer.globalAlpha = renderAlpha;
                     this.renderNode(node, buffer);
                     node.needRedraw = false;
                 }
@@ -226,7 +227,7 @@ module egret.web {
             if (drawCalls > 0) {
                 drawCalls++;
 
-                buffer.context.setGlobalAlpha(1);
+                buffer.globalAlpha = 1;
                 buffer.setTransform(1, 0, 0, -1, region.minX + matrix.tx, region.minY + matrix.ty + displayBuffer.height);
                 var displayBufferWidth = displayBuffer.width;
                 var displayBufferHeight = displayBuffer.height;
@@ -414,7 +415,7 @@ module egret.web {
                         drawCalls += calls;
                         displayBuffer.context.setGlobalCompositeOperation("destination-in");
                         displayBuffer.setTransform(1, 0, 0, -1, 0, maskBuffer.height);
-                        displayBuffer.context.setGlobalAlpha(1);
+                        displayBuffer.globalAlpha = 1;
                         var maskBufferWidth = maskBuffer.width;
                         var maskBufferHeight = maskBuffer.height;
                         displayBuffer.context.drawTexture(<WebGLTexture><any>maskBuffer.rootRenderTarget.texture, 0, 0, maskBufferWidth, maskBufferHeight,
@@ -442,7 +443,7 @@ module egret.web {
                         displayBuffer.setTransform(m.a, m.b, m.c, m.d, m.tx - region.minX, m.ty - region.minY);
                         displayBuffer.context.pushMask(scrollRect);
                     }
-                    buffer.context.setGlobalAlpha(1);
+                    buffer.globalAlpha = 1;
                     buffer.setTransform(1, 0, 0, -1, region.minX + matrix.tx, region.minY + matrix.ty + displayBuffer.height);
                     var displayBufferWidth = displayBuffer.width;
                     var displayBufferHeight = displayBuffer.height;
@@ -572,7 +573,7 @@ module egret.web {
                     buffer.setTransform(node.drawData[0], node.drawData[1], node.drawData[2], node.drawData[3], node.drawData[4], node.drawData[5]);
                     break;
                 case sys.RenderNodeType.SetAlphaNode:
-                    buffer.context.setGlobalAlpha(node.drawData[0]);
+                    buffer.globalAlpha = node.drawData[0];
                     break;
                 case sys.RenderNodeType.MeshNode:
                     this.renderMesh(<sys.MeshNode>node, buffer);

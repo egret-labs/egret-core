@@ -102,13 +102,13 @@ module egret.web {
             sys.systemRenderer = new WebGLRenderer();
             //屏蔽掉cacheAsBitmap,webgl模式不能有太多的RenderContext
             //DisplayObject.prototype.$setHasDisplayList = function(){};
-            Capabilities.renderMode = "webgl";
+            Capabilities.$renderMode = "webgl";
         }
         else {
             sys.hitTestBuffer = new CanvasRenderBuffer(3, 3);            
             sys.RenderBuffer = web.CanvasRenderBuffer;
             sys.systemRenderer = new CanvasRenderer();
-            Capabilities.renderMode = "canvas";
+            Capabilities.$renderMode = "canvas";
         }
     }
 

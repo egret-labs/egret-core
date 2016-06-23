@@ -410,19 +410,6 @@ module egret.web {
         }
 
         /**
-         * 设置alpha
-         */
-        public setGlobalAlpha(value:number) {
-            var buffer = this.currentBuffer;
-
-            if(!buffer) {
-                return;
-            }
-
-            buffer._globalAlpha = value;
-        }
-
-        /**
          * 设置混色
          */
         public setGlobalCompositeOperation(value:string) {
@@ -518,7 +505,7 @@ module egret.web {
 
             // var filters = buffer.getFilters();
             var transform = buffer.globalMatrix;
-            var alpha = buffer._globalAlpha;
+            var alpha = buffer.globalAlpha;
             // if(filters.length > 0) {
             //     var width = destWidth;
             //     var height = destHeight;
@@ -560,7 +547,7 @@ module egret.web {
 
             this.drawCmdManager.pushDrawRect();
 
-            this.vao.cacheArrays(buffer.globalMatrix, buffer._globalAlpha, 0, 0, width, height, x, y, width, height, width, height);
+            this.vao.cacheArrays(buffer.globalMatrix, buffer.globalAlpha, 0, 0, width, height, x, y, width, height, width, height);
         }
 
         /**
@@ -583,12 +570,12 @@ module egret.web {
                 this.drawCmdManager.pushPushMask(length);
                 for (var i = 0; i < length; i++) {
                     var item:sys.Region = mask[i];
-                    this.vao.cacheArrays(buffer.globalMatrix, buffer._globalAlpha, 0, 0, item.width, item.height, item.minX, item.minY, item.width, item.height, item.width, item.height);
+                    this.vao.cacheArrays(buffer.globalMatrix, buffer.globalAlpha, 0, 0, item.width, item.height, item.minX, item.minY, item.width, item.height, item.width, item.height);
                 }
             }
             else {
                 this.drawCmdManager.pushPushMask();
-                this.vao.cacheArrays(buffer.globalMatrix, buffer._globalAlpha, 0, 0, mask.width, mask.height, mask.x, mask.y, mask.width, mask.height, mask.width, mask.height);
+                this.vao.cacheArrays(buffer.globalMatrix, buffer.globalAlpha, 0, 0, mask.width, mask.height, mask.x, mask.y, mask.width, mask.height, mask.width, mask.height);
             }
         }
 
@@ -612,12 +599,12 @@ module egret.web {
                 this.drawCmdManager.pushPopMask(length);
                 for (var i = 0; i < length; i++) {
                     var item:sys.Region = mask[i];
-                    this.vao.cacheArrays(buffer.globalMatrix, buffer._globalAlpha, 0, 0, item.width, item.height, item.minX, item.minY, item.width, item.height, item.width, item.height);
+                    this.vao.cacheArrays(buffer.globalMatrix, buffer.globalAlpha, 0, 0, item.width, item.height, item.minX, item.minY, item.width, item.height, item.width, item.height);
                 }
             }
             else {
                 this.drawCmdManager.pushPopMask();
-                this.vao.cacheArrays(buffer.globalMatrix, buffer._globalAlpha, 0, 0, mask.width, mask.height, mask.x, mask.y, mask.width, mask.height, mask.width, mask.height);
+                this.vao.cacheArrays(buffer.globalMatrix, buffer.globalAlpha, 0, 0, mask.width, mask.height, mask.x, mask.y, mask.width, mask.height, mask.width, mask.height);
             }
         }
 
@@ -995,7 +982,7 @@ module egret.web {
                 var buffer = this.currentBuffer;
                 buffer.saveTransform();
                 buffer.transform(1, 0, 0, -1, 0, output.$getHeight() + 2 * offsetY + (destY - offsetY - gOffsetY) * 2);
-                this.vao.cacheArrays(buffer.globalMatrix, buffer._globalAlpha, -offsetX, -offsetY, output.$getWidth() + 2 * offsetX, output.$getHeight() + 2 * offsetY, destX - offsetX - gOffsetX, destY - offsetY - gOffsetY, output.$getWidth() + 2 * offsetX, output.$getHeight() + 2 * offsetY, output.$getWidth(), output.$getHeight());
+                this.vao.cacheArrays(buffer.globalMatrix, buffer.globalAlpha, -offsetX, -offsetY, output.$getWidth() + 2 * offsetX, output.$getHeight() + 2 * offsetY, destX - offsetX - gOffsetX, destY - offsetY - gOffsetY, output.$getWidth() + 2 * offsetX, output.$getHeight() + 2 * offsetY, output.$getWidth(), output.$getHeight());
                 buffer.restoreTransform();
 
                 var filterData = {type: "", matrix: null, blurX: 0, blurY: 0, textureWidth: 0, textureHeight: 0};
@@ -1015,7 +1002,7 @@ module egret.web {
                     offsetX = filter.blurX;// * 0.028 * realWidth;
                     offsetY = filter.blurY;// * 0.028 * realHeight;
                 }
-                this.vao.cacheArrays(buffer.globalMatrix, buffer._globalAlpha, sourceX - offsetX, sourceY - offsetY, sourceWidth + 2 * offsetX, sourceHeight + 2 * offsetY, destX - offsetX - gOffsetX, destY - offsetY - gOffsetY, destWidth + 2 * offsetX, destHeight + 2 * offsetY, textureWidth, textureHeight, meshUVs, meshVertices, meshIndices);
+                this.vao.cacheArrays(buffer.globalMatrix, buffer.globalAlpha, sourceX - offsetX, sourceY - offsetY, sourceWidth + 2 * offsetX, sourceHeight + 2 * offsetY, destX - offsetX - gOffsetX, destY - offsetY - gOffsetY, destWidth + 2 * offsetX, destHeight + 2 * offsetY, textureWidth, textureHeight, meshUVs, meshVertices, meshIndices);
                 var uv = this.getUv(sourceX, sourceY, sourceWidth, sourceHeight, textureWidth, textureHeight);
                 var filterData = {type: "", matrix: null, blurX: 0, blurY: 0, textureWidth: 0, textureHeight: 0};
                 if(filter.type == "colorTransform") {
@@ -1064,7 +1051,7 @@ module egret.web {
                             destX:number, destY:number, destWidth:number, destHeight:number, textureWidth:number, textureHeight:number, release:boolean = true,
                             meshUVs?:number[], meshVertices?:number[], meshIndices?:number[]) {
             this.pushBuffer(output);
-            output.context.setGlobalAlpha(1);
+            output.globalAlpha = 1;
             output.setTransform(1, 0, 0, 1, 0, 0);
 
             var texture:WebGLTexture;
@@ -1169,7 +1156,7 @@ module egret.web {
             function draw(result, offsetX, offsetY) {
                 buffer.saveTransform();
                 buffer.transform(1, 0, 0, -1, 0, result.$getHeight() + (destY + offsetY) * 2);
-                this.vao.cacheArrays(buffer.globalMatrix, buffer._globalAlpha, 0, 0, result.$getWidth(), result.$getHeight(), destX + offsetX, destY + offsetY, result.$getWidth(), result.$getHeight(), result.$getWidth(), result.$getHeight());
+                this.vao.cacheArrays(buffer.globalMatrix, buffer.globalAlpha, 0, 0, result.$getWidth(), result.$getHeight(), destX + offsetX, destY + offsetY, result.$getWidth(), result.$getHeight(), result.$getWidth(), result.$getHeight());
                 buffer.restoreTransform();
                 this.drawCmdManager.pushDrawTexture(result.rootRenderTarget.texture);
             }
