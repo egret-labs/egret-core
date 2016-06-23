@@ -168,7 +168,7 @@ module egret.native {
         public play(startTime?:number, loop:boolean = false) {
             this.loop = loop;
             if (!this.loaded) {
-                this.load();
+                this.load(this.src);
                 this.once(egret.Event.COMPLETE, e=>this.play(startTime, loop), this)
                 return;
             }

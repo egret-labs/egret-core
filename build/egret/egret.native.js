@@ -3525,7 +3525,7 @@ var egret;
                 if (loop === void 0) { loop = false; }
                 this.loop = loop;
                 if (!this.loaded) {
-                    this.load();
+                    this.load(this.src);
                     this.once(egret.Event.COMPLETE, function (e) { return _this.play(startTime, loop); }, this);
                     return;
                 }
