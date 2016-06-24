@@ -39,6 +39,8 @@ Document & API
 
 Release Notes
 --------------------
+[Egret 3.1.3 Release Notes 2016-6-27](/docs/en/3.1.3_ReleaseNotes.md)
+
 [Egret 3.1.2 Release Notes 2016-6-13](/docs/en/3.1.2_ReleaseNotes.md)
 
 [Egret 3.1.1 Release Notes 2016-5-30](/docs/en/3.1.1_ReleaseNotes.md)
@@ -145,6 +147,8 @@ Egret Engine 3.0 包含了白鹭时代研发的遵循HTML5标准的2D引擎及�
 
 发布说明
 --------------------
+[Egret 3.1.3 Release Notes 2016-6-27](/docs/cn/3.1.3_ReleaseNotes.md)
+
 [Egret 3.1.2 Release Notes 2016-6-13](/docs/cn/3.1.2_ReleaseNotes.md)
 
 [Egret 3.1.1 Release Notes 2016-5-30](/docs/cn/3.1.1_ReleaseNotes.md)
