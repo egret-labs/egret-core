@@ -17,11 +17,13 @@ var cp_exec = require('child_process').exec;
 import copyNative = require("../actions/CopyNativeFiles");
 
 class CreateAppCommand implements egret.Command {
-    executeRes : number = 0;
+    executeRes:number = 0;
+
     execute():number {
         this.run();
         return this.executeRes;
     }
+
     private run() {
         var option = egret.args;
 
@@ -35,30 +37,30 @@ class CreateAppCommand implements egret.Command {
         var template_path = option.nativeTemplatePath;
         var arg_h5_path = option.fileName;
 
-        if(!arg_app_name){
+        if (!arg_app_name) {
             globals.exit(1610);
         }
-        if(file.exists(arg_app_name)){
+        if (file.exists(arg_app_name)) {
             globals.exit(1611);
         }
-        if(!template_path || !arg_h5_path){
+        if (!template_path || !arg_h5_path) {
             globals.exit(1601);
         }
         //判断项目合法性
         var isEgretProject = false;
         var egretPropertiesPath = file.joinPath(arg_h5_path, "egretProperties.json");
-        if(file.exists(egretPropertiesPath)){
+        if (file.exists(egretPropertiesPath)) {
             isEgretProject = true;
         }
-        if(isEgretProject){
+        if (isEgretProject) {
             var properties = JSON.parse(file.read(egretPropertiesPath));
             if (properties["egret_version"]) {
                 isEgretProject = true;
-            }else{
+            } else {
                 isEgretProject = false;
             }
         }
-        if(!isEgretProject){
+        if (!isEgretProject) {
             globals.exit(1602);
         }
 
@@ -74,7 +76,11 @@ class CreateAppCommand implements egret.Command {
         var platform = "";
 
         if (file.exists(file.joinPath(template_path, "proj.android"))) {//android
-            platform = "android";
+            if (file.isFile(file.joinPath(file.joinPath(template_path, "proj.android"), "build.gradle"))) {
+                platform = "android_as";
+            } else {
+                platform = "android";
+            }
         }
         else if (file.exists(file.joinPath(template_path, "proj.ios"))) {//ios
             platform = "ios";
@@ -117,17 +123,22 @@ class CreateAppCommand implements egret.Command {
         if (app_data["template"]["zip"]) {
             this.run_unzip(app_path, template_path, app_data);
         } else {
-            app_data["template"]["source"].forEach(function(source) {
+            app_data["template"]["source"].forEach(function (source) {
                 file.copy(file.joinPath(template_path, source), file.joinPath(app_path, source));
             });
             this.rename_app(app_path, app_data);
+
+            if (file.isFile(file.joinPath(file.joinPath(app_path, "proj.android"), "build.gradle"))) {
+                this.modifyAndroidStudioSupport(app_path);
+                this.modifyLocalProperties(app_path);
+            }
         }
     }
 
     private rename_app(app_path, app_data) {
         // replace keyword in content
         globals.log(1608);
-        app_data["rename_tree"]["content"].forEach(function(content) {
+        app_data["rename_tree"]["content"].forEach(function (content) {
             var target_path = file.joinPath(app_path, content);
             var c = file.read(target_path);
             c = c.replace(new RegExp(app_data["template_name"], "g"), file.basename(app_path));
@@ -136,7 +147,7 @@ class CreateAppCommand implements egret.Command {
 
         // rename keyword in project name
         globals.log(1609);
-        app_data["rename_tree"]["file_name"].forEach(function(f) {
+        app_data["rename_tree"]["file_name"].forEach(function (f) {
             var str = file.joinPath(app_path, f);
             var offset = app_data["template_name"].length;
             var index = str.lastIndexOf(app_data["template_name"]);
@@ -146,6 +157,120 @@ class CreateAppCommand implements egret.Command {
             }
         });
     }
+
+    private getBuildToolVersion(buildToolDir) {
+        var propertiesFile = file.joinPath(buildToolDir, "source.properties");
+        if (file.isFile(propertiesFile)) {
+            var fileContent = file.read(propertiesFile, true);
+
+            var lines = fileContent.split("\n");
+            var index = -1;
+            var version = "";
+            for (var i = 0; i < lines.length; i++) {
+                index = lines[i].indexOf("Revision");
+                if (index != -1) {
+                    version = lines[i].substring(lines[i].indexOf("=") + 1);
+                    index = version.indexOf("\r");
+                    if (index != -1) {
+                        version = version.substring(0, index);
+                    }
+                    // console.log(version+":"+version.length+"; "+version.indexOf("\r")+" ; c = "+version.charCodeAt(version.length-1));
+                    break;
+                }
+            }
+
+            //console.log(propertiesFile + " : "+version);
+            return version;
+        } else {
+            console.error("找不到 source.properties 文件。buildToolDir ： " + buildToolDir);
+        }
+        return "undefined";
+    }
+
+    private androidHomeWarnning = "请设置环境变量 ANDROID_HOME ，值为 Android SDK 的根目录。";
+
+    private getAndroidBuildToolValue() {
+        // check ANDROID_HOME
+        var android_home = process.env.ANDROID_HOME
+        if (!android_home) {
+            console.error(this.androidHomeWarnning);
+            globals.exit(1610);
+        }
+
+        //get Android build tool version
+        var buildToolsPath = file.joinPath(android_home, "build-tools");
+        if (!file.isDirectory(buildToolsPath)) {
+            console.error("找不到 build_tools 文件夹。android_hom ： " + android_home);
+            globals.exit(1611);
+        }
+
+        var files = file.getDirectoryListing(buildToolsPath, false);
+        var length = files.length;
+
+        var buildToolVersion = "undefined";
+        var resultVersion = buildToolVersion;
+
+        var versionValue = 0.0;
+        var tempVersion = 0.0;
+        for (var i = 0; i < length; i++) {
+            if (files[i].charAt(0) == ".") {
+                continue;
+            }
+            var path = files[i];
+            if (file.isDirectory(path)) {
+                buildToolVersion = this.getBuildToolVersion(path);
+                if ("undefined" != buildToolVersion) {
+                    versionValue = parseFloat(buildToolVersion);
+                    if (versionValue > tempVersion) {
+                        tempVersion = versionValue;
+                        resultVersion = buildToolVersion;
+                    }
+                }
+            }
+        }
+        //console.log("buildToolVersion = "+resultVersion);
+        return resultVersion;
+    };
+
+    private modifyAndroidStudioSupport(app_path) {
+        var buildToolVersion = this.getAndroidBuildToolValue();
+        //console.log("app_path:" + app_path);
+        var buildGradleFile = file.joinPath(file.joinPath(file.joinPath(app_path, "proj.android"), "app"), "build.gradle");
+        if (file.isFile(buildGradleFile)) {
+            var c = file.read(buildGradleFile);
+            c = c.replace(new RegExp("EGT_BUILD_TOOLS_VERSION", "g"), buildToolVersion);
+            file.save(buildGradleFile, c);
+        } else {
+            console.error("找不到 build.gradle 文件。app_path ： " + file.getAbsolutePath(app_path));
+            globals.exit(1611);
+        }
+
+    };
+
+    private modifyLocalProperties(app_path) {
+
+        var android_home = process.env.ANDROID_HOME
+        if (!android_home) {
+            console.error(this.androidHomeWarnning);
+            globals.exit(1612);
+        }
+
+        if (-1 != android_home.indexOf("\\")) {
+            android_home = android_home.split("\\").join("\\\\");
+        }
+
+        var localPropertiesFile = file.joinPath(file.joinPath(app_path, "proj.android"), "local.properties");
+        if (file.isFile(localPropertiesFile)) {
+            var c = file.read(localPropertiesFile);
+            c = c.replace(new RegExp("EGT_ANDROID_SDK_DIR", "g"), android_home);
+            file.save(localPropertiesFile, c);
+        } else {
+            console.error("找不到 local.properties 文件。app_path ： " + file.getAbsolutePath(app_path));
+            globals.exit(1613);
+        }
+
+    };
+
     private run_unzip(app_path, template_path, app_data) {
         var template_zip_path = file.joinPath(template_path, app_data["template"]["zip"]);
         var cmd = "unzip -q " + globals.addQuotes(template_zip_path) + " -d " + globals.addQuotes(app_path);
@@ -153,10 +278,10 @@ class CreateAppCommand implements egret.Command {
         this.executeRes = DontExitCode;
         var self = this;
         var build = cp_exec(cmd);
-        build.stderr.on("data", function(data) {
+        build.stderr.on("data", function (data) {
             globals.log(data);
         });
-        build.on("exit", function(result) {
+        build.on("exit", function (result) {
             if (result == 0) {
                 self.rename_app(app_path, app_data);
             } else {

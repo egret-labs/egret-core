@@ -10,7 +10,7 @@ var globals = require("../core/globals");
 //platform android还是ios
 function copyFilesToNative(projectPath, nativePath, platform, ignorePathList) {
     var url;
-    if (platform == "android") {
+    if (platform == "android" || platform == "android_as") {
         url = path.join(nativePath, "proj.android/assets/egret-game");
     }
     else if (platform == "ios") {
@@ -42,6 +42,9 @@ function copyFilesToNative(projectPath, nativePath, platform, ignorePathList) {
     }
 
     //5、修改native入口文件
+    if (platform == "android_as") {
+
+    }else
     if (platform == "android") {
 
     }

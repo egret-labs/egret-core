@@ -100,14 +100,14 @@ exports.getIgnorePath = function(){
 };
 
 function hasNativeUrl() {
-    if (getProjectUrl("android") == null && getProjectUrl("ios") == null) {
+    if (getProjectUrl("android") == null && getProjectUrl("ios") == null && getProjectUrl("android_as") == null ) {
         return false;
     }
     return true;
 }
 
 function getProjectUrl(platform) {
-    if (platform == "android" || platform == "ios") {
+    if (platform == "android" || platform == "ios" || platform=="android_as") {
         if (projectConfig && projectConfig.native && projectConfig.native[platform + "_path"]  && projectConfig.native[platform + "_path"] != "") {
             var support_path = projectConfig.native[platform + "_path"];
             return path.join(projectName, support_path);
@@ -129,7 +129,7 @@ function getSaveUrl(platform) {
 function getProjectAssetsUrl(platform) {
     var url = getProjectUrl(platform);
     if (url != null) {
-        if (platform == "android") {
+        if (platform == "android" || platform == "android_as" ) {
             return path.join(url, "proj.android/assets/egret-game");
         }
         else if (platform == "ios") {
