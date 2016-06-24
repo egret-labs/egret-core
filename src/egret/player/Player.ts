@@ -259,7 +259,7 @@ module egret.sys {
          */
         public updateStageSize(stageWidth:number, stageHeight:number):void {
             var stage = this.stage;
-            if (stageWidth !== stage.$stageWidth || stageHeight !== stage.$stageHeight) {
+            //if (stageWidth !== stage.$stageWidth || stageHeight !== stage.$stageHeight) {
                 stage.$stageWidth = stageWidth;
                 stage.$stageHeight = stageHeight;
                 this.screenDisplayList.setClipRect(stageWidth, stageHeight);
@@ -268,7 +268,7 @@ module egret.sys {
                 }
                 stage.dispatchEventWith(Event.RESIZE);
                 stage.$invalidate(true);
-            }
+            //}
         }
 
 

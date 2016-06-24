@@ -2294,6 +2294,8 @@ var egret;
                 var option = this.playerOption;
                 var screenWidth = egret_native.EGTView.getFrameWidth();
                 var screenHeight = egret_native.EGTView.getFrameHeight();
+                egret.Capabilities.$boundingClientWidth = screenWidth;
+                egret.Capabilities.$boundingClientHeight = screenHeight;
                 var stageSize = egret.sys.screenAdapter.calculateStageSize(this.$stage.$scaleMode, screenWidth, screenHeight, option.contentWidth, option.contentHeight);
                 var stageWidth = stageSize.stageWidth;
                 var stageHeight = stageSize.stageHeight;
@@ -2418,7 +2420,7 @@ var egret;
                 egret.sys.RenderBuffer = native.NativeRenderTextureRenderBuffer;
             }
             egret.sys.systemRenderer = new egret.CanvasRenderer();
-            egret.Capabilities.renderMode = "canvas";
+            egret.Capabilities.$renderMode = "canvas";
         }
         function updateAllScreens() {
             var length = playerList.length;
@@ -3373,7 +3375,8 @@ var egret;
              * @private
              * @inheritDoc
              */
-            function NativeVideo(url) {
+            function NativeVideo(url, cache) {
+                if (cache === void 0) { cache = true; }
                 _super.call(this);
                 /**
                  * @private
@@ -3418,21 +3421,20 @@ var egret;
                  */
                 this.widthSet = 0;
                 this.$renderNode = new egret.sys.BitmapNode();
+                this.cache = cache;
                 if (!__global.Video) {
                     egret.$error(1044);
                 }
-                this.src = url;
                 if (url) {
-                    this.load();
+                    this.load(url, cache);
                 }
             }
             var d = __define,c=NativeVideo,p=c.prototype;
             /**
              * @inheritDoc
              */
-            p.load = function (url) {
-                url = url || this.src;
-                this.src = url;
+            p.load = function (url, cache) {
+                if (cache === void 0) { cache = true; }
                 if (DEBUG && !url) {
                     egret.$error(3002);
                     return;
@@ -3440,9 +3442,33 @@ var egret;
                 if (this.loading) {
                     return;
                 }
+                if (url.indexOf('/') == 0) {
+                    url = url.slice(1, url.length);
+                }
+                this.src = url;
                 this.loading = true;
                 this.loaded = false;
-                var video = new __global.Video(url);
+                if (cache && !egret_native.isFileExists(url)) {
+                    var self = this;
+                    var promise = egret.PromiseObject.create();
+                    promise.onSuccessFunc = function () {
+                        self.loadEnd();
+                    };
+                    promise.onErrorFunc = function () {
+                        egret.$warn(1048);
+                        self.dispatchEventWith(egret.IOErrorEvent.IO_ERROR);
+                    };
+                    egret_native.download(url, url, promise);
+                }
+                else {
+                    this.loadEnd();
+                }
+            };
+            /**
+             * @private
+             * */
+            p.loadEnd = function () {
+                var video = new __global.Video(this.src);
                 video['setVideoRect'](0, 0, 1, 1);
                 video['setKeepRatio'](false);
                 video.addEventListener("canplaythrough", onCanPlay);
@@ -3456,28 +3482,30 @@ var egret;
                 }
                 function onPlaying() {
                     video['setVideoRect'](0, 0, 1, 1);
-                    video.pause();
-                    if (self._fullscreen) {
-                        video.fullScreen = true;
-                    }
-                    video.currentTime = 0;
-                    self.originVideo = video;
-                    self.loaded = true;
-                    self.loading = false;
-                    removeListeners();
-                    self.dispatchEventWith(egret.Event.COMPLETE);
-                    video.addEventListener('pause', function () {
-                        self.paused = true;
-                    });
-                    video.addEventListener('playing', function () {
-                        self.paused = false;
-                    });
-                    video.addEventListener('ended', function () {
-                        self.dispatchEventWith(egret.Event.ENDED);
-                        if (self.loop) {
-                            self.play(0, true);
+                    __global.setTimeout(function () {
+                        video.pause();
+                        if (self._fullscreen) {
+                            video.fullScreen = true;
                         }
-                    });
+                        video.currentTime = 0;
+                        self.originVideo = video;
+                        self.loaded = true;
+                        self.loading = false;
+                        removeListeners();
+                        self.dispatchEventWith(egret.Event.COMPLETE);
+                        video.addEventListener('pause', function () {
+                            self.paused = true;
+                        });
+                        video.addEventListener('playing', function () {
+                            self.paused = false;
+                        });
+                        video.addEventListener('ended', function () {
+                            self.dispatchEventWith(egret.Event.ENDED);
+                            if (self.loop) {
+                                self.play(0, true);
+                            }
+                        });
+                    }, 1);
                 }
                 function onVideoError() {
                     removeListeners();
@@ -3497,12 +3525,12 @@ var egret;
                 if (loop === void 0) { loop = false; }
                 this.loop = loop;
                 if (!this.loaded) {
-                    this.load();
+                    this.load(this.src);
                     this.once(egret.Event.COMPLETE, function (e) { return _this.play(startTime, loop); }, this);
                     return;
                 }
                 var haveStartTime = false;
-                if (startTime != undefined) {
+                if (startTime != undefined && startTime != this.originVideo.currentTime) {
                     this.originVideo.currentTime = startTime || 0;
                     haveStartTime = true;
                 }

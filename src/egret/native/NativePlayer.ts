@@ -105,6 +105,8 @@ module egret.native {
             var option = this.playerOption;
             var screenWidth:number = egret_native.EGTView.getFrameWidth();
             var screenHeight:number = egret_native.EGTView.getFrameHeight();
+            Capabilities.$boundingClientWidth = screenWidth;
+            Capabilities.$boundingClientHeight = screenHeight;
             var stageSize:sys.StageDisplaySize = egret.sys.screenAdapter.calculateStageSize(this.$stage.$scaleMode,
                 screenWidth, screenHeight, option.contentWidth, option.contentHeight);
             var stageWidth:number = stageSize.stageWidth;

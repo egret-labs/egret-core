@@ -76,7 +76,7 @@ module egret.web {
                 this.surface = this.context.surface;
             } else {
                 // 由于创建renderTarget造成的frameBuffer绑定，这里重置绑定
-                var lastBuffer = this.context.currentBuffer;
+                var lastBuffer = this.context.activatedBuffer;
                 if(lastBuffer) {
                     lastBuffer.rootRenderTarget.activate();
                 }
@@ -108,7 +108,7 @@ module egret.web {
         //     return filters;
         // }
 
-        public _globalAlpha:number = 1;
+        public globalAlpha:number = 1;
         /**
          * stencil state
          * 模版开关状态
@@ -220,6 +220,7 @@ module egret.web {
 
             this.resize(width, height);
 
+            this.setTransform(1, 0, 0, 1, 0, 0);
             this.context.drawImage(<BitmapData><any>tempBuffer.rootRenderTarget, 0, 0, oldWidth, oldHeight, offsetX, offsetY, oldWidth, oldHeight, oldWidth, oldHeight);
             WebGLRenderBuffer.release(tempBuffer);
             this.context.popBuffer();
@@ -365,7 +366,7 @@ module egret.web {
             this.context.disableStencilTest();// 切换frameBuffer注意要禁用STENCIL_TEST
 
             this.setTransform(1, 0, 0, 1, 0, 0);
-            this.context.setGlobalAlpha(1);
+            this.globalAlpha = 1;
             this.context.setGlobalCompositeOperation("source-over");
             clear && this.context.clear();
             this.context.drawImage(<BitmapData><any>this.rootRenderTarget, sourceX, sourceY, sourceWidth, sourceHeight, destX, destY, destWidth, destHeight, sourceWidth, sourceHeight);
@@ -390,7 +391,7 @@ module egret.web {
             this.context.disableStencilTest();// 切换frameBuffer注意要禁用STENCIL_TEST
 
             this.setTransform(1, 0, 0, 1, 0, 0);
-            this.context.setGlobalAlpha(1);
+            this.globalAlpha = 1;
             this.context.setGlobalCompositeOperation("source-over");
             clear && this.context.clear();
             this.context.drawImage(<BitmapData><any>this.context.surface, sourceX, sourceY, sourceWidth, sourceHeight, destX, destY, destWidth, destHeight, sourceWidth, sourceHeight);
@@ -416,23 +417,62 @@ module egret.web {
         public savedGlobalMatrix:Matrix = new Matrix();
 
         public setTransform(a:number, b:number, c:number, d:number, tx:number, ty:number):void {
-            this.globalMatrix.setTo(a, b, c, d, tx, ty);
+            // this.globalMatrix.setTo(a, b, c, d, tx, ty);
+            var matrix = this.globalMatrix;
+            matrix.a = a;
+            matrix.b = b;
+            matrix.c = c;
+            matrix.d = d;
+            matrix.tx = tx;
+            matrix.ty = ty;
         }
 
         public transform(a:number, b:number, c:number, d:number, tx:number, ty:number):void {
-            this.globalMatrix.append(a, b, c, d, tx, ty);
+            // this.globalMatrix.append(a, b, c, d, tx, ty);
+            var matrix = this.globalMatrix;
+            var a1 = matrix.a;
+            var b1 = matrix.b;
+            var c1 = matrix.c;
+            var d1 = matrix.d;
+            if (a != 1 || b != 0 || c != 0 || d != 1) {
+                matrix.a = a * a1 + b * c1;
+                matrix.b = a * b1 + b * d1;
+                matrix.c = c * a1 + d * c1;
+                matrix.d = c * b1 + d * d1;
+            }
+            matrix.tx = tx * a1 + ty * c1 + matrix.tx;
+            matrix.ty = tx * b1 + ty * d1 + matrix.ty;
         }
 
         public translate(dx:number, dy:number):void {
-            this.globalMatrix.translate(dx, dy);
+            // this.globalMatrix.translate(dx, dy);
+            var matrix = this.globalMatrix;
+            matrix.tx += dx;
+            matrix.ty += dy;
         }
 
         public saveTransform():void {
-            this.savedGlobalMatrix.copyFrom(this.globalMatrix);
+            // this.savedGlobalMatrix.copyFrom(this.globalMatrix);
+            var matrix = this.globalMatrix;
+            var sMatrix = this.savedGlobalMatrix;
+            sMatrix.a = matrix.a;
+            sMatrix.b = matrix.b;
+            sMatrix.c = matrix.c;
+            sMatrix.d = matrix.d;
+            sMatrix.tx = matrix.tx;
+            sMatrix.ty = matrix.ty;
         }
 
         public restoreTransform():void {
-            this.globalMatrix.copyFrom(this.savedGlobalMatrix);
+            // this.globalMatrix.copyFrom(this.savedGlobalMatrix);
+            var matrix = this.globalMatrix;
+            var sMatrix = this.savedGlobalMatrix;
+            matrix.a = sMatrix.a;
+            matrix.b = sMatrix.b;
+            matrix.c = sMatrix.c;
+            matrix.d = sMatrix.d;
+            matrix.tx = sMatrix.tx;
+            matrix.ty = sMatrix.ty;
         }
 
         /**

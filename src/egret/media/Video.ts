@@ -60,11 +60,11 @@ module egret {
      * @includeExample egret/media/Video.ts
      */
     export interface Video extends DisplayObject {
-
         /**
          * @language en_US
          * Initiates loading of an external video file from the specified URL.
          * @param url Audio file URL
+         * * @param cache Should cache the video，only  used in Native
          * @version Egret 2.4
          * @platform Web,Native
          */
@@ -72,10 +72,11 @@ module egret {
          * @language zh_CN
          * 启动从指定 URL 加载外部视频文件的过程。
          * @param url 需要加载的视频文件URL
+         * @param cache 是否需要缓存到本地，只在 Native 上使用
          * @version Egret 2.4
          * @platform Web,Native
          */
-        load(url:string): void;
+        load(url:string,cache?:boolean): void;
 
         /**
          * @language en_US
@@ -249,6 +250,6 @@ module egret {
      * @copy egret.Video
      */
     export var Video:{
-        new (url?:string): Video
+        new (url?:string,cache?:boolean): Video
     };
 }

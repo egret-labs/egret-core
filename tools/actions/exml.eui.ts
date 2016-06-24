@@ -154,7 +154,7 @@ function exmlFilter(f: string) {
     return /\.exml$/.test(f) && (f.indexOf(egret.args.releaseRootDir) < 0)
 }
 function themeFilter(f: string) {
-    return (f.indexOf('.thm.json') > 0) && (f.indexOf(egret.args.releaseDir) < 0)
+    return (f.indexOf('.thm.json') > 0) && (f.indexOf(egret.args.releaseRootDir) < 0)
 }
 
 export interface SettingData {

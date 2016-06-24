@@ -51,6 +51,7 @@ module egret {
     locale_strings[1045] = "没有设置要加载的资源地址";
     locale_strings[1046] = "BitmapText 找不到对应字符:{0}，请检查配置文件";
     locale_strings[1047] = "egret.localStorage.setItem保存失败,key={0}&value={1}";
+    locale_strings[1048] = "视频加载失败";
 
     //gui  3000-3099
     locale_strings[3000] = "主题配置文件加载失败: {0}";

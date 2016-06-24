@@ -72,7 +72,7 @@ module egret.web {
         /**
          * @inheritDoc
          */
-        constructor(url?:string) {
+        constructor(url?:string,cache:boolean=true) {
             super();
             this.$renderNode = new sys.BitmapNode();
             this.src = url;
@@ -85,7 +85,7 @@ module egret.web {
         /**
          * @inheritDoc
          */
-        public load(url?:string) {
+        public load(url?:string,cache:boolean=true) {
             url = url || this.src;
             this.src = url;
             if (DEBUG && !url) {
@@ -93,9 +93,14 @@ module egret.web {
             }
             if (this.video && this.video.src == url)
                 return;
-            var video = document.createElement("video");
-            video.controls = null;
-            video.src = url;//
+            if(!this.video || egret.Capabilities.isMobile){
+                var video = document.createElement("video");
+                this.video = video;
+                video.controls = null;
+            }else{
+                video = this.video;
+            }
+            video.src = url;
             video.setAttribute("autoplay", "autoplay");
             video.setAttribute("webkit-playsinline", "true");
             video.addEventListener("canplay", this.onVideoLoaded);
@@ -110,7 +115,6 @@ module egret.web {
             video.height = 1;
             video.width = 1;
             window.setTimeout(() => video.pause(), 170);
-            this.video = video;
         }
 
         private isPlayed:boolean = false;
@@ -413,7 +417,9 @@ module egret.web {
             video.width = video.videoWidth;
             video.height = video.videoHeight;
             this.$invalidateContentBounds();
-            this.dispatchEventWith(egret.Event.COMPLETE);
+            window.setTimeout(() => {
+                this.dispatchEventWith(egret.Event.COMPLETE);
+            }, 200);
         };
 
         /**
