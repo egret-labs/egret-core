@@ -171,14 +171,16 @@ module egret.native {
             }
             var returnType = 1;
             var maxLength = values[sys.TextKeys.maxChars] <= 0 ? -1 : values[sys.TextKeys.maxChars];
+            var node = textfield.$getRenderNode();
+            var matrix = node.renderMatrix;
             egret_native.TextInputOp.setKeybordOpen(true, JSON.stringify({
                 "inputMode": inputMode,
                 "inputFlag": inputFlag,
                 "returnType": returnType,
                 "maxLength": maxLength,
                 
-                "x": textfield.x,
-                "y": textfield.y,
+                "x": matrix.tx,
+                "y": matrix.ty,
                 "width": textfield.width,
                 "height": textfield.height,
                 "font_size": values[sys.TextKeys.fontSize],
