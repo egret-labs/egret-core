@@ -68,7 +68,6 @@ var CreateAppCommand = (function () {
             }else{
                 platform = "android";
             }
-
         }
         else if (file.exists(file.joinPath(template_path, "proj.ios"))) {
             platform = "ios";
@@ -179,7 +178,7 @@ var androidHomeWarnning = "请设置环境变量 ANDROID_HOME ，值为 Android 
         //get Android build tool version
        var buildToolsPath = file.joinPath(android_home,"build-tools");
         if(!file.isDirectory(buildToolsPath)){
-            console.error("找不到 build_tools 文件夹。android_hom ： "+android_hom);
+            console.error("找不到 build_tools 文件夹。android_hom ： "+android_home);
             globals.exit(1611);
         }
 
@@ -207,14 +206,14 @@ var androidHomeWarnning = "请设置环境变量 ANDROID_HOME ，值为 Android 
                 }
             }
         }
-        console.log("buildToolVersion = "+resultVersion);
+        //console.log("buildToolVersion = "+resultVersion);
         return resultVersion;
     };
 
     CreateAppCommand.prototype.modifyAndroidStudioSupport = function (app_path) {
        
         var buildToolVersion = this.getAndroidBuildToolValue();
-        console.log("app_path:"+app_path);
+        //console.log("app_path:"+app_path);
         var buildGradleFile = file.joinPath(file.joinPath(file.joinPath(app_path,"proj.android"),"app") , "build.gradle" );
         if(file.isFile(buildGradleFile)){
             var c = file.read(buildGradleFile);

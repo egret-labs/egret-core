@@ -19,7 +19,7 @@ var ChangeEntranceCommand = (function () {
         this.versionFile = versionFile;
     };
     ChangeEntranceCommand.prototype.init = function (url, platform) {
-        console.log("ChangeEntranceCommand.prototype.init url = "+url+"; platform = "+platform);
+        //console.log("ChangeEntranceCommand.prototype.init url = "+url+"; platform = "+platform);
         switch (platform) {
             case "android":
                 //判断入口文件是否存在
@@ -75,15 +75,15 @@ var ChangeEntranceCommand = (function () {
                     }
                 }
                 var javaSrcPath = FileUtil.joinPath(url,"app", "src","main","java");
-                console.log(" javaSrcPath = "+javaSrcPath);
+                //console.log(" javaSrcPath = "+javaSrcPath);
                 if (FileUtil.exists(FileUtil.joinPath(javaSrcPath, javaName + ".java"))) {
                     this.platformPath = FileUtil.joinPath(javaSrcPath, javaName + ".java");
-                     console.log(" platformPath 1= "+this.platformPath);
+                     //console.log(" platformPath 1= "+this.platformPath);
                     this.platformContent = FileUtil.read(this.platformPath);
                 }
                 else if (FileUtil.exists(FileUtil.joinPath(javaSrcPath, filePath, javaName + ".java"))) {
                     this.platformPath = FileUtil.joinPath(javaSrcPath, filePath, javaName + ".java");
-                    console.log(" platformPath 2= "+this.platformPath);
+                    //console.log(" platformPath 2= "+this.platformPath);
                     this.platformContent = FileUtil.read(this.platformPath);
                 }
                 else {
@@ -117,7 +117,7 @@ var ChangeEntranceCommand = (function () {
         }
     };
     ChangeEntranceCommand.prototype.changePublish = function (url, platform, versionFile) {
-        console.log("ChangeEntranceCommand.prototype.changePublish url = "+url+"; platform = "+platform+"; versionFile = "+versionFile);
+        //console.log("ChangeEntranceCommand.prototype.changePublish url = "+url+"; platform = "+platform+"; versionFile = "+versionFile);
         this.init(url, platform);
         if (this.platformContent) {
             this.changeLoaderUrl(0, platform);
@@ -134,7 +134,7 @@ var ChangeEntranceCommand = (function () {
         }
     };
     ChangeEntranceCommand.prototype.changeBuild = function (url, platform) {
-        console.log(" ChangeEntranceCommand.prototype.changeBuild  url = "+url+"; platform = "+platform);
+        //console.log(" ChangeEntranceCommand.prototype.changeBuild  url = "+url+"; platform = "+platform);
         this.init(url, platform);
         if (this.platformContent) {
             this.changeLoaderUrl(2, platform);
@@ -142,7 +142,7 @@ var ChangeEntranceCommand = (function () {
         }
     };
     ChangeEntranceCommand.prototype.changeLoaderUrl = function (code, platform) {
-        console.log(" ChangeEntranceCommand.prototype.changeLoaderUrl  code = "+code+"; platform = "+platform);
+        //console.log(" ChangeEntranceCommand.prototype.changeLoaderUrl  code = "+code+"; platform = "+platform);
         switch (platform) {
             case "android":
             case "android_as":
