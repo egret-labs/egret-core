@@ -173,7 +173,7 @@ module egret.native {
                 return;
             }
             var haveStartTime = false;
-            if (startTime != undefined) {
+            if (startTime != undefined && startTime != this.originVideo.currentTime) {
                 this.originVideo.currentTime = startTime || 0;
                 haveStartTime = true;
             }
