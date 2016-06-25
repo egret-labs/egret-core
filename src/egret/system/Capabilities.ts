@@ -214,19 +214,23 @@ module egret {
 
         /***
          * @language en_US
-         * version of the native support
+         * version of the native support.
          * @type {string}
          * @version Egret 2.5
          * @platform Web,Native
          */
         /***
          * @language zh_CN
-         * native support 的版本号
+         * native support 的版本号。
          * @type {string}
          * @version Egret 2.5
          * @platform Web,Native
          */
-        public static supportVersion:string = "Unknown";
+        public static get supportVersion():string {
+            return Capabilities.$supportVersion;
+        }
+
+        static $supportVersion:string = "Unknown";
 
         /**
          * 设置系统信息
@@ -246,15 +250,84 @@ module egret {
                 }
                 Capabilities.$os = osType;
                 var version = arr[2].substring(1,arr[2].length);
-                Capabilities.supportVersion = version;
+                Capabilities.$supportVersion = version;
             }
         }
+
+        /***
+         * @language en_US
+         * current render mode.
+         * @type {string}
+         * @version Egret 3.0.7
+         * @platform Web,Native
+         */
+        /***
+         * @language zh_CN
+         * 当前渲染模式。
+         * @type {string}
+         * @version Egret 3.0.7
+         * @platform Web,Native
+         */
+        public static get renderMode():string {
+            return Capabilities.$renderMode;
+        }
+
+        static $renderMode:string = "Unknown";
+
+        /***
+         * @language en_US
+         * Clients border width.
+         * The value before the document class initialization is always 0.
+         * This value will change after the distribution Event.RESIZE and StageOrientationEvent.ORIENTATION_CHANGE.
+         * @version Egret 3.1.3
+         * @platform Web,Native
+         */
+        /***
+         * @language zh_CN
+         * 客户端边界宽度。
+         * 该值在文档类初始化之前始终是0。
+         * 该值在派发 Event.RESIZE 以及 StageOrientationEvent.ORIENTATION_CHANGE 之后会发生改变。
+         * @version Egret 3.1.3
+         * @platform Web,Native
+         */
+        public static get boundingClientWidth():number{
+            return Capabilities.$boundingClientWidth;
+        }
+
+        static $boundingClientWidth:number = 0;
+
+        /***
+         * @language en_US
+         * Clients border height.
+         * The value before the document class initialization is always 0.
+         * This value will change after the distribution Event.RESIZE and StageOrientationEvent.ORIENTATION_CHANGE.
+         * @version Egret 3.1.3
+         * @platform Web,Native
+         */
+        /***
+         * @language zh_CN
+         * 客户端边界高度。
+         * 该值在文档类初始化之前始终是0。
+         * 该值在派发 Event.RESIZE 以及 StageOrientationEvent.ORIENTATION_CHANGE 之后会发生改变。
+         * @version Egret 3.1.3
+         * @platform Web,Native
+         */
+        public static get boundingClientHeight():number{
+            return Capabilities.$boundingClientHeight;
+        }
+
+        static $boundingClientHeight:number = 0;
     }
 
     if (DEBUG) {
         egret.$markReadOnly(Capabilities, "language", false);
         egret.$markReadOnly(Capabilities, "isMobile", false);
         egret.$markReadOnly(Capabilities, "os", false);
+        egret.$markReadOnly(Capabilities, "runtimeType", false);
+        egret.$markReadOnly(Capabilities, "supportVersion", false);
+        egret.$markReadOnly(Capabilities, "renderMode", false);
+        egret.$markReadOnly(Capabilities, "boundingClientWidth", false);
+        egret.$markReadOnly(Capabilities, "boundingClientHeight", false);
     }
 
 }

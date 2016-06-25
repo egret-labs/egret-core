@@ -47,8 +47,7 @@ module eui {
             super();
             this.touchChildren = false;
             this.$graphics = new egret.Graphics();
-            this.$graphics.$renderContext.$targetDisplay = this;
-            this.$renderRegion = new egret.sys.Region();
+            this.$graphics.$setTarget(this);
             this.width = width;
             this.height = height;
             this.fillColor = fillColor;
@@ -68,12 +67,6 @@ module eui {
             if (this.$graphics) {
                 bounds.setTo(0, 0, this.width, this.height);
             }
-        }
-        /**
-         * @private
-         */
-        $render(context: egret.sys.RenderContext): void {
-            this.$graphics.$render(context);
         }
 
         private $fillColor: number = 0x000000;

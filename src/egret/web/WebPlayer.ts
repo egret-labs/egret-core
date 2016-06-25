@@ -33,14 +33,14 @@ module egret.web {
      */
     export class WebPlayer extends egret.HashObject implements egret.sys.Screen {
 
-        public constructor(container:HTMLDivElement) {
+        public constructor(container:HTMLDivElement, options:{renderMode?:string;screenAdapter?:sys.IScreenAdapter}) {
             super();
-            this.init(container);
+            this.init(container, options);
             this.initOrientation();
         }
 
-        private init(container:HTMLDivElement):void {
-            var option = this.readOption(container);
+        private init(container:HTMLDivElement, options:{renderMode?:string;screenAdapter?:sys.IScreenAdapter}):void {
+            var option = this.readOption(container, options);
             var stage = new egret.Stage();
             stage.$screen = this;
             stage.$scaleMode = option.scaleMode;
@@ -49,12 +49,12 @@ module egret.web {
             stage.frameRate = option.frameRate;
             stage.textureScaleFactor = option.textureScaleFactor;
 
-            var surface = egret.sys.surfaceFactory.create();
-            var canvas = <HTMLCanvasElement><any>surface;
+            var buffer = new sys.RenderBuffer();
+            var canvas = <HTMLCanvasElement>buffer.surface;
             this.attachCanvas(container, canvas);
 
             var webTouch = new WebTouchHandler(stage, canvas);
-            var player = new egret.sys.Player(surface.renderContext, stage, option.entryClassName);
+            var player = new egret.sys.Player(buffer, stage, option.entryClassName);
             var webHide = new egret.web.WebHideHandler(stage);
             var webInput = new HTMLInput();
 
@@ -90,7 +90,7 @@ module egret.web {
         /**
          * 读取初始化参数
          */
-        private readOption(container:HTMLDivElement):PlayerOption {
+        private readOption(container:HTMLDivElement, options:{renderMode?:string;screenAdapter?:sys.IScreenAdapter}):PlayerOption {
             var option:PlayerOption = {};
             option.entryClassName = container.getAttribute("data-entry-class");
             option.scaleMode = container.getAttribute("data-scale-mode") || egret.StageScaleMode.NO_SCALE;
@@ -101,7 +101,12 @@ module egret.web {
             option.maxTouches = +container.getAttribute("data-multi-fingered") || 2;
             option.textureScaleFactor = +container.getAttribute("texture-scale-factor") || 1;
 
-            option.showPaintRect = container.getAttribute("data-show-paint-rect") == "true";
+            if(options.renderMode == "webgl") {
+                option.showPaintRect = false;
+            }
+            else {
+                option.showPaintRect = container.getAttribute("data-show-paint-rect") == "true";
+            }
             option.showFPS = container.getAttribute("data-show-fps") == "true";
 
             var styleStr = container.getAttribute("data-show-fps-style") || "";
@@ -125,7 +130,7 @@ module egret.web {
         private attachCanvas(container:HTMLElement, canvas:HTMLCanvasElement):void {
 
             var style = canvas.style;
-            style.cursor = "default";
+            style.cursor = "inherit";
             style.position = "absolute";
             style.top = "0";
             style.bottom = "0";
@@ -155,7 +160,7 @@ module egret.web {
          * @private
          * 舞台引用
          */
-        private stage:Stage;
+        public stage:Stage;
 
         private webTouchHandler:WebTouchHandler;
         private player:egret.sys.Player;
@@ -181,6 +186,8 @@ module egret.web {
             }
             var screenWidth = shouldRotate ? screenRect.height : screenRect.width;
             var screenHeight = shouldRotate ? screenRect.width : screenRect.height;
+            Capabilities.$boundingClientWidth = screenWidth;
+            Capabilities.$boundingClientHeight = screenHeight;
             var stageSize = egret.sys.screenAdapter.calculateStageSize(this.stage.$scaleMode,
                 screenWidth, screenHeight, option.contentWidth, option.contentHeight);
             var stageWidth = stageSize.stageWidth;

@@ -196,7 +196,8 @@ module dragonBones {
 			
 			return displayData;
 		}
-		
+
+        private static _currentAnimationData: AnimationData = null;
 		/** @private */
 		private static parseAnimationData(animationObject:any, frameRate:number):AnimationData{
 			var animationData:AnimationData = new AnimationData();
@@ -212,6 +213,8 @@ module dragonBones {
 			animationData.tweenEasing = Data3Parser.getNumber(animationObject, ConstValues.A_TWEEN_EASING, NaN);
 			animationData.autoTween = Data3Parser.getBoolean(animationObject, ConstValues.A_AUTO_TWEEN, true);
 
+            Data3Parser._currentAnimationData = animationData;
+
             var frameObjectList:Array<any> = animationObject[ConstValues.FRAME];
 			var i:number = 0;
 			var len:number = 0;
@@ -219,9 +222,11 @@ module dragonBones {
 			{
 				for(i = 0,len = frameObjectList.length; i< len; i++)
 				{
-					var frameObject:any = frameObjectList[i];
-					var frame:Frame = Data3Parser.parseTransformFrame(frameObject, null, frameRate);
-					animationData.addFrame(frame);
+                    var frameObject: any = frameObjectList[i];
+                    //var frame:Frame = DataParser.parseTransformFrame(frameObject, frameRate);
+                    var frame: Frame = new Frame();
+                    Data3Parser.parseFrame(frameObject, frame, frameRate);
+                    animationData.addFrame(frame);
 				}
 			}
             
@@ -239,7 +244,7 @@ module dragonBones {
 				for(i = 0,len = timelineObjectList.length; i < len; i++) {
 					var timelineObject:any = timelineObjectList[i];
 					var timeline:TransformTimeline = Data3Parser.parseTransformTimeline(timelineObject, animationData.duration, frameRate);
-					timeline = Data3Parser.parseTransformTimeline(timelineObject, animationData.duration, frameRate);
+					//timeline = Data3Parser.parseTransformTimeline(timelineObject, animationData.duration, frameRate);
 					lastFrameDuration = Math.min(lastFrameDuration, timeline.frameList[timeline.frameList.length - 1].duration);
 					animationData.addTimeline(timeline);
 					var slotTimeline:SlotTimeline = Data3Parser.parseSlotTimeline(timelineObject, animationData.duration, frameRate);
@@ -363,6 +368,10 @@ module dragonBones {
             outputTimeline.originPivot.x = Data3Parser.getNumber(timelineObject, ConstValues.A_PIVOT_X, 0) || 0;
             outputTimeline.originPivot.y = Data3Parser.getNumber(timelineObject, ConstValues.A_PIVOT_Y, 0) || 0;
 			outputTimeline.duration = duration;
+            //
+            var clearFrame = false;
+            var position = 0;
+            var animationFrame: Frame = null;
 
             var frameList:any = timelineObject[ConstValues.FRAME];
             var nextFrameObject:any;
@@ -383,10 +392,41 @@ module dragonBones {
                 }
                 var frame:TransformFrame = Data3Parser.parseTransformFrame(frameObject, nextFrameObject, frameRate);
                 outputTimeline.addFrame(frame);
+
+                if (frame.event || frame.sound) {
+                    if (!clearFrame) {
+                        clearFrame = true;
+                        Data3Parser._currentAnimationData.frameList.length = 0;
+                    }
+					
+                    if (animationFrame) {
+                        animationFrame.duration = position;
+                    }
+					else if (position != 0)
+					{
+                    	animationFrame = new Frame();
+                    	animationFrame.bone = outputTimeline.name;
+						animationFrame.duration = position;
+                    	Data3Parser._currentAnimationData.addFrame(animationFrame);
+					}
+
+                    position = 0;
+                    animationFrame = new Frame();
+                    animationFrame.bone = outputTimeline.name;
+                    Data3Parser.parseFrame(frameObject, animationFrame, frameRate);
+                    Data3Parser._currentAnimationData.addFrame(animationFrame);
+                }
+
+                position += frame.duration;
             }
 
             Data3Parser.parseTimeline(timelineObject, outputTimeline);
-			
+
+            if (animationFrame) {
+                //animationFrame.duration = position;
+                Data3Parser.parseTimeline(null, Data3Parser._currentAnimationData);
+            }
+
 			return outputTimeline;
 		}
 		

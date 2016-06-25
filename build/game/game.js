@@ -114,7 +114,7 @@ var egret;
             return new FrameLabel(this._name, this._frame, this._end);
         };
         return FrameLabel;
-    })(egret.EventDispatcher);
+    }(egret.EventDispatcher));
     egret.FrameLabel = FrameLabel;
     egret.registerClass(FrameLabel,'egret.FrameLabel');
 })(egret || (egret = {}));
@@ -249,7 +249,7 @@ var egret;
              */
             this.lastTime = 0;
             this.$smoothing = egret.Bitmap.defaultSmoothing;
-            this.$renderRegion = new egret.sys.Region();
+            this.$renderNode = new egret.sys.BitmapNode();
             this.setMovieClipData(movieClipData);
         }
         var d = __define,c=MovieClip,p=c.prototype;
@@ -322,17 +322,20 @@ var egret;
         /**
          * @private
          */
-        p.$render = function (context) {
+        p.$render = function () {
             var texture = this.$bitmapData;
             if (texture) {
-                context.imageSmoothingEnabled = this.$smoothing;
                 var offsetX = Math.round(this.offsetPoint.x);
                 var offsetY = Math.round(this.offsetPoint.y);
                 var bitmapWidth = texture._bitmapWidth;
                 var bitmapHeight = texture._bitmapHeight;
+                var textureWidth = texture.$getTextureWidth();
+                var textureHeight = texture.$getTextureHeight();
                 var destW = Math.round(texture.$getScaleBitmapWidth());
                 var destH = Math.round(texture.$getScaleBitmapHeight());
-                context.drawImage(texture._bitmapData, texture._bitmapX, texture._bitmapY, bitmapWidth, bitmapHeight, offsetX, offsetY, destW, destH);
+                var sourceWidth = texture._sourceWidth;
+                var sourceHeight = texture._sourceHeight;
+                egret.Bitmap.$drawImage(this.$renderNode, texture._bitmapData, texture._bitmapX, texture._bitmapY, bitmapWidth, bitmapHeight, offsetX, offsetY, textureWidth, textureHeight, destW, destH, sourceWidth, sourceHeight, null, egret.BitmapFillMode.SCALE, this.$smoothing);
             }
         };
         /**
@@ -794,7 +797,7 @@ var egret;
             }
         };
         return MovieClip;
-    })(egret.DisplayObject);
+    }(egret.DisplayObject));
     egret.MovieClip = MovieClip;
     egret.registerClass(MovieClip,'egret.MovieClip');
 })(egret || (egret = {}));
@@ -1068,7 +1071,7 @@ var egret;
             }
         };
         return MovieClipData;
-    })(egret.HashObject);
+    }(egret.HashObject));
     egret.MovieClipData = MovieClipData;
     egret.registerClass(MovieClipData,'egret.MovieClipData');
 })(egret || (egret = {}));
@@ -1104,7 +1107,7 @@ var egret;
 (function (egret) {
     /**
      * @classdesc 使用 MovieClipDataFactory 类，可以生成 MovieClipData 对象用于创建MovieClip
-     * @see http://docs.egret-labs.org/post/manual/displaycon/movieclip.html MovieClip序列帧动画
+     * @see http://edn.egret.com/cn/docs/page/596 MovieClip序列帧动画
      * @version Egret 2.4
      * @platform Web,Native
      */
@@ -1238,7 +1241,7 @@ var egret;
             this.$spriteSheet = value ? new egret.SpriteSheet(value) : null;
         };
         return MovieClipDataFactory;
-    })(egret.EventDispatcher);
+    }(egret.EventDispatcher));
     egret.MovieClipDataFactory = MovieClipDataFactory;
     egret.registerClass(MovieClipDataFactory,'egret.MovieClipDataFactory');
 })(egret || (egret = {}));
@@ -1367,7 +1370,7 @@ var egret;
          */
         MovieClipEvent.FRAME_LABEL = "frame_label";
         return MovieClipEvent;
-    })(egret.Event);
+    }(egret.Event));
     egret.MovieClipEvent = MovieClipEvent;
     egret.registerClass(MovieClipEvent,'egret.MovieClipEvent');
 })(egret || (egret = {}));
@@ -1460,25 +1463,10 @@ var egret;
          */
         ScrollEase.quartOut = ScrollEase.getPowOut(4);
         return ScrollEase;
-    })();
+    }());
     egret.ScrollEase = ScrollEase;
     egret.registerClass(ScrollEase,'egret.ScrollEase');
     /**
-     * @language en_US
-     * ScrollTween is the animation easing class of Egret
-     * @see http://docs.egret-labs.org/post/manual/anim/tween.html Tween缓动动画
-     * @version Egret 2.4
-     * @platform Web,Native
-     * @includeExample egret/tween/ScrollTween.ts
-     * @private
-     */
-    /**
-     * @language zh_CN
-     * Tween是Egret的动画缓动类
-     * @see http://docs.egret-labs.org/post/manual/anim/tween.html ScrollTween ease animation
-     * @version Egret 2.4
-     * @platform Web,Native
-     * @includeExample egret/tween/ScrollTween.ts
      * @private
      */
     var ScrollTween = (function (_super) {
@@ -2025,7 +2013,7 @@ var egret;
         ScrollTween._inited = false;
         ScrollTween._lastTime = 0;
         return ScrollTween;
-    })(egret.EventDispatcher);
+    }(egret.EventDispatcher));
     egret.ScrollTween = ScrollTween;
     egret.registerClass(ScrollTween,'egret.ScrollTween');
 })(egret || (egret = {}));
@@ -3000,7 +2988,7 @@ var egret;
          */
         ScrollView.weight = [1, 1.33, 1.66, 2, 2.33];
         return ScrollView;
-    })(egret.DisplayObjectContainer);
+    }(egret.DisplayObjectContainer));
     egret.ScrollView = ScrollView;
     egret.registerClass(ScrollView,'egret.ScrollView');
 })(egret || (egret = {}));
@@ -3112,7 +3100,7 @@ var egret;
         }
         var d = __define,c=ScrollViewProperties,p=c.prototype;
         return ScrollViewProperties;
-    })();
+    }());
     egret.ScrollViewProperties = ScrollViewProperties;
     egret.registerClass(ScrollViewProperties,'egret.ScrollViewProperties');
 })(egret || (egret = {}));
@@ -3197,7 +3185,7 @@ var egret;
      * UThe URLLoader class downloads data from a URL as text, binary data, or URL-encoded variables.  It is useful for downloading text files, XML, or other information to be used in a dynamic, data-driven application.
      * A URLLoader object downloads all of the data from a URL before making it available to code in the applications. It sends out notifications about the progress of the download,
      * which you can monitor through bytesLoaded and bytesTotal properties, as well as through dispatched events.
-     * @see http://docs.egret-labs.org/post/manual/net/createconnect.html Build communication request
+     * @see http://edn.egret.com/cn/docs/page/601 Build communication request
      * @event egret.Event.COMPLETE Dispatched when the net request is complete.
      * @event egret.IOErrorEvent.IO_ERROR io error.
      * @version Egret 2.4
@@ -3209,7 +3197,7 @@ var egret;
      * URLLoader 类以文本、二进制数据或 URL 编码变量的形式从 URL 下载数据。在下载文本文件、XML 或其他用于动态数据驱动应用程序的信息时，它很有用。
      * URLLoader 对象会先从 URL 中下载所有数据，然后才将数据用于应用程序中的代码。它会发出有关下载进度的通知，
      * 通过 bytesLoaded 和 bytesTotal 属性以及已调度的事件，可以监视下载进度。
-     * @see http://docs.egret-labs.org/post/manual/net/createconnect.html 构建通信请求
+     * @see http://edn.egret.com/cn/docs/page/601 构建通信请求
      * @event egret.Event.COMPLETE 加载完成后调度。
      * @event egret.IOErrorEvent.IO_ERROR 加载错误后调度。
      * @version Egret 2.4
@@ -3325,7 +3313,7 @@ var egret;
             this.data = null;
         };
         return URLLoader;
-    })(egret.EventDispatcher);
+    }(egret.EventDispatcher));
     egret.URLLoader = URLLoader;
     egret.registerClass(URLLoader,'egret.URLLoader');
 })(egret || (egret = {}));
@@ -3362,7 +3350,7 @@ var egret;
     /**
      * @language en_US
      * The URLLoaderDataFormat class provides values that specify how downloaded data is received.
-     * @see http://docs.egret-labs.org/post/manual/net/netformat.html Read different data format
+     * @see http://edn.egret.com/cn/docs/page/600 Read different data format
      * @version Egret 2.4
      * @platform Web,Native
      * @includeExample extension/game/net/URLLoaderDataFormat.ts
@@ -3370,7 +3358,7 @@ var egret;
     /**
      * @language zh_CN
      * URLLoaderDataFormat 类提供了一些用于指定如何接收已下载数据的值。
-     * @see http://docs.egret-labs.org/post/manual/net/netformat.html 读取不同数据格式
+     * @see http://edn.egret.com/cn/docs/page/600 读取不同数据格式
      * @version Egret 2.4
      * @platform Web,Native
      * @includeExample extension/game/net/URLLoaderDataFormat.ts
@@ -3445,7 +3433,7 @@ var egret;
          */
         URLLoaderDataFormat.SOUND = "sound";
         return URLLoaderDataFormat;
-    })();
+    }());
     egret.URLLoaderDataFormat = URLLoaderDataFormat;
     egret.registerClass(URLLoaderDataFormat,'egret.URLLoaderDataFormat');
 })(egret || (egret = {}));
@@ -3482,7 +3470,7 @@ var egret;
     /**
      * @language en_US
      * The URLRequest class captures all of the information in a single HTTP request.
-     * @see http://docs.egret-labs.org/post/manual/net/createconnect.html Build communication request
+     * @see http://edn.egret.com/cn/index.php/article/index/id/601 Build communication request
      * @version Egret 2.4
      * @platform Web,Native
      * @includeExample extension/game/net/URLRequest.ts
@@ -3490,7 +3478,7 @@ var egret;
     /**
      * @language zh_CN
      * URLRequest 类可捕获单个 HTTP 请求中的所有信息。
-     * @see http://docs.egret-labs.org/post/manual/net/createconnect.html 构建通信请求
+     * @see http://edn.egret.com/cn/index.php/article/index/id/601 构建通信请求
      * @version Egret 2.4
      * @platform Web,Native
      * @includeExample extension/game/net/URLRequest.ts
@@ -3519,6 +3507,9 @@ var egret;
              * An object contains data to be transmitted with the URL request.
              * This property is used in conjunction with the method property.  When the value of method is GET, the value of data is appended to the value of URLRequest.url, using HTTP query-string syntax.
              * When the method value is POST (or any value other than GET), the value of data is transmitted in the body of the HTTP request.
+             * The URLRequest API offers binary POST support and support for URL-encoded variables, as well as support for strings. The data object can be a ArrayBuffer, URLVariables, or String object.
+             * The way in which the data is used depends on the type of object used:
+             * If the object is a ArrayBuffer object, the binary data of the ArrayBuffer object is used as POST data. For GET, data of ArrayBuffer type is not supported.
              * If the object is a URLVariables object and the method is POST, then the variables are encoded using x-www-form-urlencoded format and the resulting string is used as POST data.
              * If the object is a URLVariables object and the method is GET, the URLVariables object will define variables to be sent with the URLRequest object.
              * Otherwise, the object is converted into a string, and the string is used as the POST or GET data.
@@ -3530,8 +3521,9 @@ var egret;
              * 一个对象，它包含将随 URL 请求一起传输的数据。
              * 该属性与 method 属性配合使用。当 method 值为 GET 时，将使用 HTTP 查询字符串语法将 data 值追加到 URLRequest.url 值。
              * 当 method 值为 POST（或 GET 之外的任何值）时，将在 HTTP 请求体中传输 data 值。
-             * URLRequest API 支持二进制 POST，并支持 URL 编码变量和字符串。该数据对象可以是 ByteArray、URLVariables 或 String 对象。
+             * URLRequest API 支持二进制 POST，并支持 URL 编码变量和字符串。该数据对象可以是 ArrayBuffer、URLVariables 或 String 对象。
              * 该数据的使用方式取决于所用对象的类型：
+             * 如果该对象为 ArrayBuffer 对象，则 ArrayBuffer 对象的二进制数据用作 POST 数据。对于 GET，不支持 ArrayBuffer 类型的数据。
              * 如果该对象是 URLVariables 对象，并且该方法是 POST，则使用 x-www-form-urlencoded 格式对变量进行编码，并且生成的字符串会用作 POST 数据。
              * 如果该对象是 URLVariables 对象，并且该方法是 GET，则 URLVariables 对象将定义要随 URLRequest 对象一起发送的变量。
              * 否则，该对象会转换为字符串，并且该字符串会用作 POST 或 GET 数据。
@@ -3586,7 +3578,7 @@ var egret;
         }
         var d = __define,c=URLRequest,p=c.prototype;
         return URLRequest;
-    })(egret.HashObject);
+    }(egret.HashObject));
     egret.URLRequest = URLRequest;
     egret.registerClass(URLRequest,'egret.URLRequest');
 })(egret || (egret = {}));
@@ -3681,7 +3673,7 @@ var egret;
         }
         var d = __define,c=URLRequestHeader,p=c.prototype;
         return URLRequestHeader;
-    })();
+    }());
     egret.URLRequestHeader = URLRequestHeader;
     egret.registerClass(URLRequestHeader,'egret.URLRequestHeader');
 })(egret || (egret = {}));
@@ -3719,7 +3711,7 @@ var egret;
      * @language en_US
      * The URLRequestMethod class provides values that specify whether the
      * URLRequest object should use the POST method or the GET method when sending data to a server.
-     * @see http://docs.egret-labs.org/post/manual/net/postget.html POST与GET
+     * @see http://edn.egret.com/cn/docs/page/599 POST与GET
      * @version Egret 2.4
      * @platform Web,Native
      * @includeExample extension/game/net/URLRequestMethod.ts
@@ -3728,7 +3720,7 @@ var egret;
      * @language zh_CN
      * URLRequestMethod 类提供了一些值，这些值可指定在将数据发送到服务器时，
      * URLRequest 对象应使用 POST 方法还是 GET 方法。
-     * @see http://docs.egret-labs.org/post/manual/net/postget.html POST与GET
+     * @see http://edn.egret.com/cn/docs/page/599 POST与GET
      * @version Egret 2.4
      * @platform Web,Native
      * @includeExample extension/game/net/URLRequestMethod.ts
@@ -3764,7 +3756,7 @@ var egret;
          */
         URLRequestMethod.POST = "post";
         return URLRequestMethod;
-    })();
+    }());
     egret.URLRequestMethod = URLRequestMethod;
     egret.registerClass(URLRequestMethod,'egret.URLRequestMethod');
 })(egret || (egret = {}));
@@ -3802,7 +3794,7 @@ var egret;
      * @language en_US
      * The URLVariables class allows you to transfer variables between an application and a server.
      * Use URLVariables objects with methods of the URLLoader class and the data property of the URLRequest class.
-     * @see http://docs.egret-labs.org/post/manual/net/senddata.html Send the request with parameters
+     * @see http://edn.egret.com/cn/docs/page/598 Send the request with parameters
      * @version Egret 2.4
      * @platform Web,Native
      * @includeExample extension/game/net/URLVariables.ts
@@ -3811,7 +3803,7 @@ var egret;
      * @language zh_CN
      * 使用 URLVariables 类可以在应用程序和服务器之间传输变量。
      * 将 URLVariables 对象与 URLLoader 类的方法、URLRequest 类的 data 属性一起使用。
-     * @see http://docs.egret-labs.org/post/manual/net/senddata.html 发送带参数的请求
+     * @see http://edn.egret.com/cn/docs/page/598 发送带参数的请求
      * @version Egret 2.4
      * @platform Web,Native
      * @includeExample extension/game/net/URLVariables.ts
@@ -3942,7 +3934,7 @@ var egret;
             return value.map(function (v) { return encodeURIComponent(key) + "=" + encodeURIComponent(v); }).join("&");
         };
         return URLVariables;
-    })(egret.HashObject);
+    }(egret.HashObject));
     egret.URLVariables = URLVariables;
     egret.registerClass(URLVariables,'egret.URLVariables');
 })(egret || (egret = {}));
@@ -4100,7 +4092,7 @@ var egret;
             return Ticker.instance;
         };
         return Ticker;
-    })(egret.EventDispatcher);
+    }(egret.EventDispatcher));
     egret.Ticker = Ticker;
     egret.registerClass(Ticker,'egret.Ticker');
 })(egret || (egret = {}));
@@ -4250,7 +4242,7 @@ var egret;
          */
         MainContext.RUNTIME_NATIVE = "runtimeNative";
         return MainContext;
-    })(egret.EventDispatcher);
+    }(egret.EventDispatcher));
     egret.MainContext = MainContext;
     egret.registerClass(MainContext,'egret.MainContext');
 })(egret || (egret = {}));
@@ -4464,7 +4456,7 @@ var egret;
          */
         Recycler._callBackList = [];
         return Recycler;
-    })(egret.HashObject);
+    }(egret.HashObject));
     egret.Recycler = Recycler;
     egret.registerClass(Recycler,'egret.Recycler');
     Recycler.$init();
@@ -4667,11 +4659,12 @@ var egret;
         var dt = timeStamp - lastTime;
         lastTime = timeStamp;
         for (var key in setTimeoutCache) {
-            var data = setTimeoutCache[key];
+            var key2 = key;
+            var data = setTimeoutCache[key2];
             data.delay -= dt;
             if (data.delay <= 0) {
                 data.listener.apply(data.thisObject, data.params);
-                clearTimeout(key);
+                clearTimeout(key2);
             }
         }
         return false;

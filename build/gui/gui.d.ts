@@ -4885,7 +4885,6 @@ declare module egret.gui {
          */
         $graphics: Graphics;
         graphics: Graphics;
-        $render(context: egret.sys.RenderContext): void;
         $hitTest(stageX: number, stageY: number): DisplayObject;
         /**
          * @private
@@ -6416,7 +6415,7 @@ declare module egret.gui {
         /**
          * @private
          */
-        $render(context: sys.RenderContext): void;
+        $render(): void;
         /**
          * @private
          */

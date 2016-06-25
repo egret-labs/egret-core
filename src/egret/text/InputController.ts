@@ -174,6 +174,10 @@ module egret {
         private onMouseDownHandler(event:TouchEvent) {
             event.stopPropagation();
 
+            this.$onFocus();
+        }
+        
+        $onFocus():void {
             var self = this;
             if (!this._text.visible) {
                 return;
@@ -188,7 +192,7 @@ module egret {
             //强制更新输入框位置
             this.stageText.$show();
         }
-
+        
         //未点中文本
         private onStageDownHandler(event:TouchEvent) {
             this.stageText.$hide();

@@ -37,7 +37,7 @@ module egret {
      * On WebGL / OpenGL, this operation can significantly improve performance.
      * At the same time, SpriteSheet can carry out material integration easily to reduce the number of HTTP requests
      * For specification of the SpriteSheet format, see the document https://github.com/egret-labs/egret-core/wiki/Egret-SpriteSheet-Specification
-     * @see http://docs.egret-labs.org/post/manual/bitmap/textures.html The use of texture packs
+     * @see http://edn.egret.com/cn/docs/page/135 The use of texture packs
      * @version Egret 2.4
      * @platform Web,Native
      * @includeExample egret/display/SpriteSheet.ts
@@ -49,7 +49,7 @@ module egret {
      * 在WebGL / OpenGL上，这种做法可以显著提升性能
      * 同时，SpriteSheet可以很方便的进行素材整合，降低HTTP请求数量
      * SpriteSheet 格式的具体规范可以参见此文档  https://github.com/egret-labs/egret-core/wiki/Egret-SpriteSheet-Specification
-     * @see http://docs.egret-labs.org/post/manual/bitmap/textures.html 纹理集的使用
+     * @see http://edn.egret.com/cn/docs/page/135 纹理集的使用
      * @version Egret 2.4
      * @platform Web,Native
      * @includeExample egret/display/SpriteSheet.ts
@@ -72,7 +72,7 @@ module egret {
          */
         public constructor(texture:Texture) {
             super();
-            this.texture = texture;
+            this.$texture = texture;
 
             this._bitmapX = texture._bitmapX - texture._offsetX;
             this._bitmapY = texture._bitmapY - texture._offsetY;
@@ -92,7 +92,7 @@ module egret {
          * @private
          * 共享的位图数据
          */
-        private texture:Texture;
+        $texture:Texture;
         /**
          * @private
          * 纹理缓存字典
@@ -159,8 +159,8 @@ module egret {
                 textureHeight = offsetY + bitmapHeight;
             }
             var texture:Texture = new egret.Texture();
-            texture._bitmapData = this.texture._bitmapData;
-            texture.$initData(this._bitmapX + bitmapX, this._bitmapY + bitmapY, bitmapWidth, bitmapHeight, offsetX, offsetY, textureWidth, textureHeight, this.texture._sourceWidth, this.texture._sourceHeight);
+            texture._bitmapData = this.$texture._bitmapData;
+            texture.$initData(this._bitmapX + bitmapX, this._bitmapY + bitmapY, bitmapWidth, bitmapHeight, offsetX, offsetY, textureWidth, textureHeight, this.$texture._sourceWidth, this.$texture._sourceHeight);
 
             this._textureMap[name] = texture;
             return texture;
@@ -179,8 +179,8 @@ module egret {
          * @platform Web,Native
          */
         public dispose():void {
-            if (this.texture) {
-                this.texture.dispose();
+            if (this.$texture) {
+                this.$texture.dispose();
             }
         }
     }

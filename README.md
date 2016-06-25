@@ -1,6 +1,6 @@
 Egret Engine
 ================================================
-Current Version: v3.0.3
+Current Version: v3.1.2
 
 
 Developed by Egret Technology, Egret Engine 3.0 includes a newly built 3D engine and a 2D engine created based on HTML5. With its robust cross-platform operability and commitment to solving the performance and fragmentation problems of HTML5 APP and games, Egret Engine 3.0 will perfectly meet developers’ needs. We appreciate every suggestion and please send it to Egret team if you have any.
@@ -39,6 +39,22 @@ Document & API
 
 Release Notes
 --------------------
+[Egret 3.1.2 Release Notes 2016-6-13](/docs/en/3.1.2_ReleaseNotes.md)
+
+[Egret 3.1.1 Release Notes 2016-5-30](/docs/en/3.1.1_ReleaseNotes.md)
+
+[Egret 3.1.0 Release Notes 2016-5-16](/docs/en/3.1.0_ReleaseNotes.md)
+
+[Egret 3.0.8 Release Notes 2016-5-3](/docs/en/3.0.8_ReleaseNotes.md)
+
+[Egret 3.0.7 Release Notes 2016-4-18](/docs/en/3.0.7_ReleaseNotes.md)
+
+[Egret 3.0.6 Release Notes 2016-4-5](/docs/en/3.0.6_ReleaseNotes.md)
+
+[Egret 3.0.5 Release Notes 2016-3-21](/docs/en/3.0.5_ReleaseNotes.md)
+
+[Egret 3.0.4 Release Notes 2016-3-7](/docs/en/3.0.4_ReleaseNotes.md)
+
 [Egret 3.0.3 Release Notes 2016-2-21](/docs/en/3.0.3_ReleaseNotes.md)
 
 [Egret 3.0.2 Release Notes 2016-1-25](/docs/en/3.0.2_ReleaseNotes.md)
@@ -109,8 +125,8 @@ Egret Engine 3.0 包含了白鹭时代研发的遵循HTML5标准的2D引擎及�
 
 文档与教程
 -------------------------
-* 访问 Egret 的 [文档](http://edn.egret.com/cn/index.php/list/index/id/19)
-* 访问 [这里](http://edn.egret.com/cn/index.php/apidoc/) 获取 API 文档
+* 访问 Egret 的 [文档](http://edn.egret.com/cn/docs/)
+* 访问 [这里](http://edn.egret.com/cn/apidoc/) 获取 API 文档
 * 访问 [这里](https://github.com/egret-team/egret-examples) 获取示例项目
 
 第三方库
@@ -129,6 +145,22 @@ Egret Engine 3.0 包含了白鹭时代研发的遵循HTML5标准的2D引擎及�
 
 发布说明
 --------------------
+[Egret 3.1.2 Release Notes 2016-6-13](/docs/cn/3.1.2_ReleaseNotes.md)
+
+[Egret 3.1.1 Release Notes 2016-5-30](/docs/cn/3.1.1_ReleaseNotes.md)
+
+[Egret 3.1.0 Release Notes 2016-5-16](/docs/cn/3.1.0_ReleaseNotes.md)
+
+[Egret 3.0.8 Release Notes 2016-5-3](/docs/cn/3.0.8_ReleaseNotes.md)
+
+[Egret 3.0.7 Release Notes 2016-4-18](/docs/cn/3.0.7_ReleaseNotes.md)
+
+[Egret 3.0.6 Release Notes 2016-4-5](/docs/cn/3.0.6_ReleaseNotes.md)
+
+[Egret 3.0.5 Release Notes 2016-3-21](/docs/cn/3.0.5_ReleaseNotes.md)
+
+[Egret 3.0.4 Release Notes 2016-3-7](/docs/cn/3.0.4_ReleaseNotes.md)
+
 [Egret 3.0.3 Release Notes 2016-2-21](/docs/cn/3.0.3_ReleaseNotes.md)
 
 [Egret 3.0.2 Release Notes 2016-1-25](/docs/cn/3.0.2_ReleaseNotes.md)
@@ -221,4 +253,5 @@ Egret Engine 3.0 包含了白鹭时代研发的遵循HTML5标准的2D引擎及�
   * 1群：141578440 (2000 members capacity / Full)
   * 2群：397297607 (1000 members capacity / Full)
   * 3群：399919028 (1000 members capacity / Full)
-  * 4群：125237513 (1000 members capacity / avaliable)
+  * 4群：125237513 (1000 members capacity / Full)
+  * 5群：481169576 (1000 members capacity / avaliable)

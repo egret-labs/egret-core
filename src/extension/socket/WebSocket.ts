@@ -36,7 +36,7 @@ module egret {
      * @event egret.ProgressEvent.SOCKET_DATA Receiving server data。
      * @event egret.Event.CLOSE Dispatched when the server closes the connection.
      * @event egret.ProgressEvent Dispatched when an IO error causes a send or load operation to fail.
-     * @see http://edn.egret.com/cn/index.php/article/index/id/164 WebSocket
+     * @see http://edn.egret.com/cn/docs/page/602 WebSocket
      * @version Egret 2.4
      * @platform Web,Native
      * @includeExample extension/socket/WebSocket.ts
@@ -50,7 +50,7 @@ module egret {
      * @event egret.ProgressEvent.SOCKET_DATA 接收服务器数据。
      * @event egret.Event.CLOSE 在服务器关闭连接时调度。
      * @event egret.IOErrorEvent.IO_ERROR 在出现输入/输出错误并导致发送或加载操作失败时调度。。
-     * @see http://edn.egret.com/cn/index.php/article/index/id/164 WebSocket
+     * @see http://edn.egret.com/cn/docs/page/602 WebSocket
      * @version Egret 2.4
      * @platform Web,Native
      * @includeExample extension/socket/WebSocket.ts
@@ -125,6 +125,8 @@ module egret {
             this.socket = new egret.ISocket();
             this.socket.addCallBacks(this.onConnect, this.onClose, this.onSocketData, this.onError, this);
         }
+        
+        private connectCount:number = 0;
 
         /**
          * @language en_US
@@ -143,6 +145,7 @@ module egret {
          * @platform Web,Native
          */
         public connect(host:string, port:number):void {
+            this.connectCount++;
             this.socket.connect(host, port);
         }
 
@@ -151,6 +154,7 @@ module egret {
          * @param url 全地址。如ws://echo.websocket.org:80
          */
         public connectByUrl(url:string):void {
+            this.connectCount++;
             this.socket.connectByUrl(url);
         }
 
@@ -175,8 +179,11 @@ module egret {
          * 
          */
         private onConnect():void {
-            this._connected = true;
-            this.dispatchEventWith(egret.Event.CONNECT);
+            this.connectCount--;
+            if(this.connectCount == 0 ) {
+                this._connected = true;
+                this.dispatchEventWith(egret.Event.CONNECT);
+            }
         }
 
         /**

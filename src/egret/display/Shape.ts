@@ -64,8 +64,7 @@ module egret {
         public constructor() {
             super();
             this.$graphics = new Graphics();
-            this.$graphics.$renderContext.$targetDisplay = this;
-            this.$renderRegion = new sys.Region();
+            this.$graphics.$setTarget(this);
         }
 
         /**
@@ -104,12 +103,6 @@ module egret {
             return target;
         }
 
-        /**
-         * @private
-         */
-        $render(context:sys.RenderContext):void {
-            this.$graphics.$render(context);
-        }
     }
 
     if (DEBUG) {

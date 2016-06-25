@@ -39,6 +39,7 @@ module egret {
      * @version Egret 2.4
      * @platform Web,Native
      * @includeExample egret/net/ImageLoaderExample.ts
+     * @see http://edn.egret.com/cn/docs/page/590 加载位图文件
      */
     /**
      * @language zh_CN
@@ -49,6 +50,7 @@ module egret {
      * @version Egret 2.4
      * @platform Web,Native
      * @includeExample egret/net/ImageLoaderExample.ts
+     * @see http://edn.egret.com/cn/docs/page/590 加载位图文件
      */
     export interface ImageLoader extends EventDispatcher {
         /**

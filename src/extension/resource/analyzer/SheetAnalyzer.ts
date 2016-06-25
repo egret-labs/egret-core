@@ -137,6 +137,13 @@ module RES {
          */
         public getRelativePath(url:string, file:string):string {
             url = url.split("\\").join("/");
+
+            var params = url.match(/#.*|\?.*/);
+            var paramUrl = "";
+            if (params) {
+                paramUrl = params[0];
+            }
+
             var index:number = url.lastIndexOf("/");
             if (index != -1) {
                 url = url.substring(0, index + 1) + file;
@@ -144,7 +151,7 @@ module RES {
             else {
                 url = file;
             }
-            return url;
+            return url + paramUrl;
         }
 
         protected parseSpriteSheet(texture:egret.Texture, data:any, name:string):egret.SpriteSheet  {

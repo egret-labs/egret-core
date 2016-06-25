@@ -95,6 +95,7 @@ module egret {
     locale_strings[1417] = "检测成功";
     locale_strings[1418] = "WebP格式转换失败 : {0}";
     locale_strings[1419] = "转换WebP格式 : {0} / {1}";
+    locale_strings[1420] = "打包失败，请检查路径中是否有中文或特殊的字符";
     //startserver
     locale_strings[1501] = "无法启动服务器，请检查权限或端口是否被占用";
     //create_app
@@ -193,7 +194,7 @@ module egret {
                           + "或者当前文件中有立即执行的代码使用了依赖于当前文件的类。";
     locale_strings[10019] = "没有找到打包 App 所需要的项目文件，这些文件没有包含在 Github 中，请前往 http://www.egret.com 下载 Egret 安装包，如果您已经安装 Egret 安装包，请联系我们的工作人员";
     locale_strings[10020] = "编译服务异常退出";
-    locale_strings[10021] = "文件夹操作出现问题，请重新执行命令。由于操作系统刷新问题，请勿在操作文件后立马执行脚本。如果多次重试还不能解决，请联系我们，QQ群：{color_green}481169576{color_normal}";
+    locale_strings[10021] = "文件夹操作出现问题，请注意以下事项:\n1、请查看 template/runtime/native_require.js 是否为空，若为空请重新创建一个新的项目并将文件替换掉。\n2、不要在桌面创建native工程，都放到同一个其他盘去，比如 e 盘。\n由于操作系统刷新问题，请勿在操作文件后立马执行脚本。请重新执行命令，如果多次重试还不能解决，请联系我们，QQ群：{color_green}481169576{color_normal}";
 
     locale_strings[12000] = "创建一个全新的 Egret 项目";
     locale_strings[12001] = "选择一个项目模板";

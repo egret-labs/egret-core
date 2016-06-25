@@ -88,6 +88,16 @@ module egret.web {
             super();
         }
 
+        public get length():number {
+            if (this.originAudio) {
+                return this.originAudio.duration;
+            }
+
+            throw new Error ("sound not loaded!");
+
+            //return 0;
+        }
+
         /**
          * @inheritDoc
          */

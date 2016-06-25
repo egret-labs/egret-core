@@ -89,8 +89,11 @@ module dragonBones {
 		/**
 		 *是否有旋转
 		 */
-		public rotated:boolean;
-
+        public rotated: boolean;
+		/**
+		 * @private
+		 */
+        public textureAtlas: ITextureAtlas;
 		/**
 		 *创建一个 TextureData 实例
 		 * @param region 区域

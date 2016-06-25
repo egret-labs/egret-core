@@ -1,6 +1,6 @@
 {
   "name": "egret",
-  "version": "3.0.3",
+  "version": "3.1.2",
   "private": true,
   "author": "egret-labs",
   "scripts": {
@@ -12,7 +12,7 @@
   "i18n": "cn",
   "egret": {
     "registerClass": "egret",
-    "typeScriptVersion": "1.7",
+    "typeScriptVersion": "1.8",
     "modules": [
       {
         "name": "egret",
@@ -27,19 +27,35 @@
             "debug": false
           },
           {
-            "path": "native/NativeRenderContext.ts",
+            "path": "text/native/NativeTextMeasurer.ts",
             "platform": "native"
           },
           {
-            "path": "native/NativeSurface.ts",
+            "path": "native/rendering/rendertexture/NativeRenderTextureRenderContext.ts",
+            "platform": "native"
+          },
+          {
+            "path": "native/rendering/rendertexture/NativeRenderTexture.ts",
+            "platform": "native"
+          },
+          {
+            "path": "native/rendering/rendertexture/NativeRenderTextureRenderBuffer.ts",
+            "platform": "native"
+          },
+          {
+            "path": "native/rendering/canvas/NativeCanvasRenderContext.ts",
+            "platform": "native"
+          },
+          {
+            "path": "native/rendering/canvas/NativeCanvas.ts",
+            "platform": "native"
+          },
+          {
+            "path": "native/rendering/canvas/NativeCanvasRenderBuffer.ts",
             "platform": "native"
           },
           {
             "path": "native/NativeTexture.ts",
-            "platform": "native"
-          },
-          {
-            "path": "native/OpenGLFactory.ts",
             "platform": "native"
           },
           {
@@ -48,6 +64,10 @@
           },
           {
             "path": "native/EgretNative.ts",
+            "platform": "native"
+          },
+          {
+            "path": "native/NativeFps.ts",
             "platform": "native"
           },
           {
@@ -72,6 +92,10 @@
           },
           {
             "path": "media/native/NaSoundChannel.ts",
+            "platform": "native"
+          },          
+          {
+            "path": "media/native/NativeVideo.ts",
             "platform": "native"
           },
           {
@@ -113,6 +137,10 @@
           {
             "path": "native/NativeXML.ts",
             "platform": "native"
+          },
+          {
+            "path": "web/WebBitmapData.ts",
+            "platform": "web"
           },
           {
             "path": "external/web/WebExternalInterface.ts",
@@ -163,7 +191,11 @@
             "platform": "web"
           },
           {
-            "path": "web/CanvasFactory.ts",
+            "path": "text/web/WebTextMeasurer.ts",
+            "platform": "web"
+          },
+          {
+            "path": "web/rendering/CanvasRenderBuffer.ts",
             "platform": "web"
           },
           {
@@ -183,11 +215,11 @@
             "platform": "web"
           },
           {
-            "path": "web/WebBitmapData.ts",
+            "path": "web/WebCapability.ts",
             "platform": "web"
           },
           {
-            "path": "web/WebCapability.ts",
+            "path": "web/WebFps.ts",
             "platform": "web"
           },
           {
@@ -225,8 +257,55 @@
           {
             "path": "utils/web/WebLogger.ts",
             "platform": "web"
+          },
+          {
+            "path": "web/rendering/webgl/shaders/EgretShader.ts",
+            "platform": "web"
+          },
+          {
+            "path": "web/rendering/webgl/shaders/TextureShader.ts",
+            "platform": "web"
+          },
+          {
+            "path": "web/rendering/webgl/shaders/PrimitiveShader.ts",
+            "platform": "web"
+          },
+          {
+            "path": "web/rendering/webgl/shaders/BlurShader.ts",
+            "platform": "web"
+          },
+          {
+            "path": "web/rendering/webgl/shaders/ColorTransformShader.ts",
+            "platform": "web"
+          },
+          {
+            "path": "web/rendering/webgl/WebGLShaderManager.ts",
+            "platform": "web"
+          },
+          {
+            "path": "web/rendering/webgl/WebGLDrawCmdManager.ts",
+            "platform": "web"
+          },
+          {
+            "path": "web/rendering/webgl/WebGLVertexArrayObject.ts",
+            "platform": "web"
+          },
+          {
+            "path": "web/rendering/webgl/WebGLRenderTarget.ts",
+            "platform": "web"
+          },
+          {
+            "path": "web/rendering/webgl/WebGLRenderContext.ts",
+            "platform": "web"
+          },
+          {
+            "path": "web/rendering/webgl/WebGLRenderBuffer.ts",
+            "platform": "web"
+          },
+          {
+            "path": "web/rendering/webgl/WebGLRenderer.ts",
+            "platform": "web"
           }
-
         ],
         "root": "src/egret",
         "dependencies": [ ]
@@ -276,7 +355,7 @@
         "dependencies": [ "egret" ]
       },
       {
-        "name": "dragonbones",
+        "name": "dragonBones",
         "description": "dragonbones",
         "files": [ ],
         "root": "src/extension/dragonbones",
@@ -312,6 +391,8 @@
         "language": "TypeScript",
         "tag": "game,app,TypeScript",
         "description": "创建一个空项目,仅添加 Egret 相关模块引用",
+        "defaultWidth":640,
+        "defaultHeight":1136,
         "modules": [ "egret" ]
       },
       {
@@ -320,6 +401,8 @@
         "language": "TypeScript",
         "tag": "game,TypeScript",
         "description": "创建一个Egret 游戏项目",
+        "defaultWidth":640,
+        "defaultHeight":1136,
         "modules": [ "egret", "game", "tween", "res" ]
       },
       {
@@ -328,6 +411,8 @@
         "language": "TypeScript",
         "tag": "game,app,TypeScript",
         "description": "使用 eui 扩展库创建友好的交互界面",
+        "defaultWidth":640,
+        "defaultHeight":1136,
         "modules": [ "egret", "eui", "res" ]
       },
       {
@@ -335,7 +420,9 @@
         "displayName": "Egret GUI 项目",
         "language": "TypeScript",
         "tag": "game,app,TypeScript",
-        "description": "创建一个Egret GUI 项目",
+        "description": "创建一个Egret GUI 项目(建议创建eui项目，它更易于使用，可以为您提高创建界面的效率及性能)",
+        "defaultWidth":640,
+        "defaultHeight":1136,
         "modules": [ "egret", "game", "res", "gui" ]
       }
     ],

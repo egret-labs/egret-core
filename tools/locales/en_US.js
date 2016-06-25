@@ -90,6 +90,7 @@ locale_strings[1416] = "You can modify the JAVA_HOME environment variable to mod
 locale_strings[1417] = "Successful detection ";
 locale_strings[1418] = "WebP format fail : {0}";
 locale_strings[1419] = "Format WebP : {0} / {1}";
+locale_strings[1420] = "Invalid path, there may be special characters in the path";
 //startserver
 locale_strings[1501] = "Unable to start the server, please check the authority or whether the port is occupied";
 //create_app
@@ -105,7 +106,7 @@ locale_strings[1609] = "> rename project name ...";
 locale_strings[1610] = "Project name is missing. Example:{color_green}egret create_app [app_name] -f [h5_game_path] -t [template_path] {color_normal}";
 locale_strings[1611] = "The project is exist, please use another name.Example:{color_green}egret create_app [app_name] -f [h5_game_path] -t [template_path] {color_normal}";
 //upgrade
-locale_strings[1701] = "Project version is lower than egret version, please implement egret upgrade {your_project} command to upgrade your project, \n do not add braces {} in the commands";
+locale_strings[1701] = "Project version is lower than egret version, please implement egret upgrade {your_project} command or click the upgrade menu in Wing to upgrade your project, \n do not add braces {} in the commands";
 locale_strings[1702] = "Upgrade successful";
 locale_strings[1703] = "\n After the first step to upgrade is completed, {color_red} press {color_underline}https://github.com/egret-labs/egret-core/wiki/Egret_Upgrade/upgrade/index.html{color_red} to complete the remaining steps to upgrade {color_normal}\n";
 locale_strings[1704] = "Updating to {0}";

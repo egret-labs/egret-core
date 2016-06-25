@@ -160,14 +160,17 @@ module eui.sys {
                     egret.$error(1003, "text");
                 }
             }
-            try {
-                var xmlData = egret.XML.parse(text);
-            }
-            catch (e) {
-                if (DEBUG) {
+            if(DEBUG){
+                try {
+                    var xmlData = egret.XML.parse(text);
+                }
+                catch (e) {
                     egret.$error(2002, text + "\n" + e.message);
                 }
+            }else{
+                var xmlData = egret.XML.parse(text);
             }
+
             var className:string = "";
             var hasClass:boolean = false;
             if (xmlData.attributes["class"]) {
@@ -180,15 +183,19 @@ module eui.sys {
             }
             var exClass = this.parseClass(xmlData, className);
             var code = exClass.toCode();
-            try {
+
+            if(DEBUG){
+                try {
+                    var clazz = eval(code);
+                }
+                catch (e) {
+                    egret.log(code);
+                    return null;
+                }
+            }else{
                 var clazz = eval(code);
             }
-            catch (e) {
-                if (DEBUG) {
-                    egret.log(code);
-                }
-                return null;
-            }
+
             if (hasClass && clazz) {
                 egret.registerClass(clazz, className);
                 var paths = className.split(".");
@@ -885,10 +892,21 @@ module eui.sys {
                         }
                         break;
                     case "number":
-                        if (value.indexOf("#") == 0)
-                            value = "0x" + value.substring(1);
-                        else if (value.indexOf("%") != -1)
-                            value = (parseFloat(value.substr(0, value.length - 1))).toString();
+                        if (value.indexOf("#") == 0) {
+                            if(DEBUG && isNaN(<any>value.substring(1))) {
+                                egret.$warn(2021, this.currentClassName, key, value);
+                            }
+                            value = "0x" + value.substring(1);                            
+                        }
+                        else if (value.indexOf("%") != -1) {
+                            if(DEBUG && isNaN(<any>value.substr(0, value.length - 1))) {
+                                egret.$warn(2021, this.currentClassName, key, value);
+                            }
+                            value = (parseFloat(value.substr(0, value.length - 1))).toString();                            
+                        }
+                        else if(DEBUG && isNaN(<any>value)) {
+                            egret.$warn(2021, this.currentClassName, key, value);
+                        }
                         break;
                     case "boolean":
                         value = (value == "false" || !value) ? "false" : "true";

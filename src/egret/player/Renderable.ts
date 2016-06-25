@@ -33,37 +33,15 @@ module egret.sys {
      * @private
      */
     export interface Renderable extends HashObject{
-
         /**
-         * @private
-         * 是否需要重绘的标志
+         * 获取渲染节点
          */
-        $isDirty:boolean;
-        /**
-         * @private
-         * 在舞台上的透明度
-         */
-        $renderAlpha:number;
-        /**
-         * @private
-         * 在舞台上的矩阵对象
-         */
-        $renderMatrix:Matrix;
-        /**
-         * @private
-         * 在屏幕上的显示区域
-         */
-        $renderRegion:Region;
-
+        $getRenderNode():RenderNode;
         /**
          * @private
          * 更新对象在舞台上的显示区域和透明度,返回显示区域是否发生改变。
+         * 注意：此方法必须在$getRenderNode()被调用之后执行。
          */
         $update():boolean;
-        /**
-         * @private
-         * 执行绘制
-         */
-        $render(context:RenderContext):void;
     }
 }

@@ -136,7 +136,7 @@ module egret {
         constructor(movieClipData?:MovieClipData) {
             super();
             this.$smoothing = Bitmap.defaultSmoothing;
-            this.$renderRegion = new sys.Region();
+            this.$renderNode = new sys.BitmapNode();
 
             this.setMovieClipData(movieClipData);
         }
@@ -218,20 +218,22 @@ module egret {
         /**
          * @private
          */
-        $render(context:sys.RenderContext):void {
+        $render():void {
             var texture = this.$bitmapData;
             if (texture) {
-                context.imageSmoothingEnabled = this.$smoothing;
-
                 var offsetX:number = Math.round(this.offsetPoint.x);
                 var offsetY:number = Math.round(this.offsetPoint.y);
                 var bitmapWidth:number = texture._bitmapWidth;
                 var bitmapHeight:number = texture._bitmapHeight;
+                var textureWidth:number = texture.$getTextureWidth();
+                var textureHeight:number = texture.$getTextureHeight();
                 var destW:number = Math.round(texture.$getScaleBitmapWidth());
                 var destH:number = Math.round(texture.$getScaleBitmapHeight());
+                var sourceWidth:number = texture._sourceWidth;
+                var sourceHeight:number = texture._sourceHeight;
 
-                context.drawImage(texture._bitmapData, texture._bitmapX, texture._bitmapY,
-                    bitmapWidth, bitmapHeight, offsetX, offsetY, destW, destH);
+                Bitmap.$drawImage(<sys.BitmapNode>this.$renderNode, texture._bitmapData, texture._bitmapX, texture._bitmapY,
+                    bitmapWidth, bitmapHeight, offsetX, offsetY, textureWidth, textureHeight, destW, destH, sourceWidth, sourceHeight, null, egret.BitmapFillMode.SCALE, this.$smoothing);
             }
         }
 
@@ -308,7 +310,7 @@ module egret {
         private getFrameStartEnd(labelName: string): void {
             var frameLabels = this.frameLabels;
             if(frameLabels){
-                var outputFramelabel:FrameLabel = null;         
+                var outputFramelabel:FrameLabel = null;
                 for (var i = 0; i < frameLabels.length; i++) {
                     outputFramelabel = frameLabels[i];
                     if(labelName == outputFramelabel.name){

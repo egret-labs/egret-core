@@ -41,7 +41,13 @@ module dragonBones {
 		 * 皮肤数据的名字
 		 * @member {string} dragonBones.SkinData#name
 		 */
-		public name:string;
+        public name: string;
+        
+		/**
+		 * @private
+		 */
+        public hasMesh: boolean = false;
+
 		private _slotDataList:Array<SlotData>;
 
 		/**

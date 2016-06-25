@@ -129,6 +129,13 @@ module egret.web {
 
         }
 
+        public get length():number {
+
+            throw new Error ("qq sound not supported!");
+
+            //return 0;
+        }
+
         /**
          * @inheritDoc
          */

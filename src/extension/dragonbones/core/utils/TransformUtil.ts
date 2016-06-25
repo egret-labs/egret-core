@@ -132,6 +132,27 @@ module dragonBones {
 
         }
 
+		private static _helpMatrix:Matrix = new Matrix();
+        /** @private */
+		public static applyMatrixToPoint(targetPoint:Point, matrix:Matrix, returnNewPoint:Boolean = false):Point
+		{
+			this._helpMatrix.tx = targetPoint.x;
+			this._helpMatrix.ty = targetPoint.y;
+
+			this._helpMatrix.concat(matrix);
+
+			if(returnNewPoint)
+			{
+				return new Point(this._helpMatrix.tx, this._helpMatrix.ty);
+			}
+			else
+			{
+				targetPoint.x = this._helpMatrix.tx;
+				targetPoint.y = this._helpMatrix.ty;
+				return targetPoint;
+			}
+		}
+
         /**
          * 标准化弧度值，把弧度制换算到[-PI，PI]之间
          * @param radian 输入一个弧度值

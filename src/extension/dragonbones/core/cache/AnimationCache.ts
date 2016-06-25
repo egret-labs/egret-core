@@ -91,6 +91,10 @@ module dragonBones {
 //		public var boneTimelineCacheDic:Object = {};
 		public slotTimelineCacheDic:any = {};
 		public frameNum:number = 0;
+        
+        // Modify Fast mode by duanchunlei
+        public _cahceList: Array<boolean> = [];
+
 		public constructor(){
 		}
 		
@@ -98,22 +102,24 @@ module dragonBones {
 			var output:AnimationCache = new AnimationCache();
 			output.name = animationData.name;
 			
-			var boneTimelineList:Array<TransformTimeline> = animationData.timelineList;
+			//var boneTimelineList:Array<TransformTimeline> = animationData.timelineList;
 			var boneName:string;
 			var boneData:BoneData;
 			var slotData:SlotData;
 			var slotTimelineCache:SlotTimelineCache;
-			var slotName:string;
-			
-			for(var i:number = 0, length:number = boneTimelineList.length; i < length; i++){
-				boneName = boneTimelineList[i].name;
+            var slotName: string;
+
+            
+
+            for (var i: number = 0, length: number = armatureData.boneDataList.length; i < length; i++){
+                boneName = armatureData.boneDataList[i].name;
 				for (var j:number = 0, jlen:number = armatureData.slotDataList.length; j < jlen; j++){
 					slotData = armatureData.slotDataList[j];
 					slotName = slotData.name;
 					if (slotData.parent == boneName){
 						if (output.slotTimelineCacheDic[slotName] == null){
 							slotTimelineCache = new SlotTimelineCache();
-							slotTimelineCache.name = slotName;
+                            slotTimelineCache.name = slotName;
 							output.slotTimelineCacheList.push(slotTimelineCache);
 							output.slotTimelineCacheDic[slotName] = slotTimelineCache;
 						}
@@ -158,10 +164,10 @@ module dragonBones {
 			for(var name in slotDic){
 				(this.slotTimelineCacheDic[name]).bindCacheUser(slotDic[name]);
 			}
-		}
-		
-		public addFrame():void{
-			this.frameNum++;
+        }
+
+        public addFrame(frameIndex: number, armature: FastArmature): void{
+			//this.frameNum++;
 //			var boneTimelineCache:BoneTimelineCache;
 //			for(var i:int = 0, length:int = boneTimelineCacheList.length; i < length; i++)
 //			{
@@ -171,9 +177,10 @@ module dragonBones {
 			
 			var slotTimelineCache:SlotTimelineCache;
 			for(var i:number = 0, length:number = this.slotTimelineCacheList.length; i < length; i++){
-				slotTimelineCache = this.slotTimelineCacheList[i];
-				slotTimelineCache.addFrame();
-			}
+                slotTimelineCache = this.slotTimelineCacheList[i];
+				slotTimelineCache.addFrame(frameIndex, armature);
+            }
+            this._cahceList[frameIndex] = true;
 		}
 			
 		

@@ -52,7 +52,14 @@ module egret.sys {
      */
     export class DirtyRegion {
 
-        public displayList:DisplayList;
+        public constructor(root:DisplayObject) {
+            this.root = root;
+        }
+
+        /**
+         * @private
+         */
+        private root:DisplayObject;
         /**
          * @private
          */
@@ -96,11 +103,7 @@ module egret.sys {
          */
         public addRegion(target:Region):boolean {
             var minX = target.minX, minY = target.minY, maxX = target.maxX, maxY = target.maxY;
-            if (DEBUG) {
-                if (isF(minX) || isF(minY) || isF(maxX) || isF(maxY)) {
-                    log("addRegion error:", minX, minY, maxX, maxY);
-                }
-            }
+
             if (this.hasClipRect) {
                 if (minX < 0) {
                     minX = 0;
@@ -152,11 +155,11 @@ module egret.sys {
                 this.clipRectChanged = true;//阻止所有的addRegion()
                 this.clear();
                 var region:Region = Region.create();
-                if(this.hasClipRect){
+                if (this.hasClipRect) {
                     dirtyList.push(region.setTo(0, 0, this.clipWidth, this.clipHeight));
                 }
-                else{
-                    var bounds = this.displayList.root.$getOriginalBounds();
+                else {
+                    var bounds = this.root.$getOriginalBounds();
                     dirtyList.push(region.setTo(bounds.x, bounds.y, bounds.width, bounds.height));
                 }
             }
@@ -168,6 +171,12 @@ module egret.sys {
             }
             else {
                 while (this.mergeDirtyList(dirtyList)) {
+                }
+            }
+            var numDirty = this.dirtyList.length;
+            if (numDirty > 0) {
+                for (var i = 0; i < numDirty; i++) {
+                    this.dirtyList[i].intValues();
                 }
             }
             return this.dirtyList;
@@ -218,6 +227,8 @@ module egret.sys {
         public setDirtyRegionPolicy(policy:string):void {
             this.$dirtyRegionPolicy = policy;
         }
+
+
     }
 
 }

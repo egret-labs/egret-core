@@ -117,51 +117,59 @@ class Main extends egret.DisplayObjectContainer {
      * Create a game scene
      */
     private createGameScene():void {
-        var sky:egret.Bitmap = this.createBitmapByName("bgImage");
+        var sky:egret.Bitmap = this.createBitmapByName("bg_jpg");
         this.addChild(sky);
         var stageW:number = this.stage.stageWidth;
         var stageH:number = this.stage.stageHeight;
         sky.width = stageW;
         sky.height = stageH;
 
-        var topMask:egret.Shape = new egret.Shape();
+        var topMask = new egret.Shape();
         topMask.graphics.beginFill(0x000000, 0.5);
-        topMask.graphics.drawRect(0, 0, stageW, stageH);
+        topMask.graphics.drawRect(0, 0, stageW, 172);
         topMask.graphics.endFill();
-        topMask.width = stageW;
-        topMask.height = stageH;
+        topMask.y = 33;
         this.addChild(topMask);
 
-        var icon:egret.Bitmap = this.createBitmapByName("egretIcon");
+        var icon:egret.Bitmap = this.createBitmapByName("egret_icon_png");
         this.addChild(icon);
-        icon.scaleX = 0.55;
-        icon.scaleY = 0.55;
-        icon.anchorOffsetX = icon.width / 2;
-        icon.anchorOffsetY = icon.height / 2;
-        icon.x = stageW / 2;
-        icon.y = stageH / 2 - 60;
+        icon.x = 26;
+        icon.y = 33;
 
-        var colorLabel:egret.TextField = new egret.TextField();
+        var line = new egret.Shape();
+        line.graphics.lineStyle(2,0xffffff);
+        line.graphics.moveTo(0,0);
+        line.graphics.lineTo(0,117);
+        line.graphics.endFill();
+        line.x = 172;
+        line.y = 61;
+        this.addChild(line);
+
+
+        var colorLabel = new egret.TextField();
         colorLabel.textColor = 0xffffff;
+        colorLabel.width = stageW - 172;
         colorLabel.textAlign = "center";
         colorLabel.text = "Hello Egret";
-        colorLabel.size = 20;
-        colorLabel.x = stageW - colorLabel.width >> 1;
-        colorLabel.y = (stageH - colorLabel.height >> 1) + 50;
+        colorLabel.size = 24;
+        colorLabel.x = 172;
+        colorLabel.y = 80;
         this.addChild(colorLabel);
 
-        var textfield:egret.TextField = new egret.TextField();
+        var textfield = new egret.TextField();
         this.addChild(textfield);
         textfield.alpha = 0;
-        textfield.width = stageW;
+        textfield.width = stageW - 172;
         textfield.textAlign = egret.HorizontalAlign.CENTER;
-        textfield.x = 0;
-        textfield.y = stageH / 2 + 100;
+        textfield.size = 24;
+        textfield.textColor = 0xffffff;
+        textfield.x = 172;
+        textfield.y = 135;
         this.textfield = textfield;
 
         //根据name关键字，异步获取一个json配置文件，name属性请参考resources/resource.json配置文件的内容。
         // Get asynchronously a json configuration file according to name keyword. As for the property of name please refer to the configuration file of resources/resource.json.
-        RES.getResAsync("description", this.startAnimation, this)
+        RES.getResAsync("description_json", this.startAnimation, this)
     }
 
     /**
@@ -169,7 +177,7 @@ class Main extends egret.DisplayObjectContainer {
      * Create a Bitmap object according to name keyword.As for the property of name please refer to the configuration file of resources/resource.json.
      */
     private createBitmapByName(name:string):egret.Bitmap {
-        var result:egret.Bitmap = new egret.Bitmap();
+        var result = new egret.Bitmap();
         var texture:egret.Texture = RES.getRes(name);
         result.texture = texture;
         return result;
@@ -182,14 +190,14 @@ class Main extends egret.DisplayObjectContainer {
     private startAnimation(result:Array<any>):void {
         var self:any = this;
 
-        var parser:egret.HtmlTextParser = new egret.HtmlTextParser();
+        var parser = new egret.HtmlTextParser();
         var textflowArr:Array<Array<egret.ITextElement>> = [];
         for (var i:number = 0; i < result.length; i++) {
             textflowArr.push(parser.parser(result[i]));
         }
 
-        var textfield:egret.TextField = self.textfield;
-        var count:number = -1;
+        var textfield = self.textfield;
+        var count = -1;
         var change:Function = function () {
             count++;
             if (count >= textflowArr.length) {

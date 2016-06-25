@@ -30,15 +30,17 @@
 
 module egret.web {
 
+    var sharedCanvas;
+    var sharedContext;
+
     /**
      * @private
      */
-    function convertImageToCanvas(texture:egret.Texture, rect?:egret.Rectangle):egret.sys.Surface {
-        var surface = sys.surfaceFactory.create(true);
-        if (!surface) {
-            return null;
+    function convertImageToCanvas(texture: egret.Texture, rect?: egret.Rectangle): HTMLCanvasElement {
+        if(!sharedCanvas) {
+            sharedCanvas = document.createElement("canvas");
+            sharedContext = sharedCanvas.getContext("2d");
         }
-
         var w = texture.$getTextureWidth();
         var h = texture.$getTextureHeight();
         if (rect == null) {
@@ -56,33 +58,29 @@ module egret.web {
 
         var iWidth = rect.width;
         var iHeight = rect.height;
-        surface.width = iWidth;
-        surface.height = iHeight;
+        var surface = sharedCanvas;
         surface["style"]["width"] = iWidth + "px";
         surface["style"]["height"] = iHeight + "px";
+        sharedCanvas.width = iWidth;
+        sharedCanvas.height = iHeight;
 
         var bitmapData = texture;
-        surface.renderContext.imageSmoothingEnabled = false;
-        var offsetX:number = Math.round(bitmapData._offsetX);
-        var offsetY:number = Math.round(bitmapData._offsetY);
-        var bitmapWidth:number = bitmapData._bitmapWidth;
-        var bitmapHeight:number = bitmapData._bitmapHeight;
-        surface.renderContext.drawImage(bitmapData._bitmapData, bitmapData._bitmapX + rect.x / $TextureScaleFactor, bitmapData._bitmapY + rect.y / $TextureScaleFactor,
+        var offsetX: number = Math.round(bitmapData._offsetX);
+        var offsetY: number = Math.round(bitmapData._offsetY);
+        var bitmapWidth: number = bitmapData._bitmapWidth;
+        var bitmapHeight: number = bitmapData._bitmapHeight;
+        sharedContext.drawImage(bitmapData._bitmapData, bitmapData._bitmapX + rect.x / $TextureScaleFactor, bitmapData._bitmapY + rect.y / $TextureScaleFactor,
             bitmapWidth * rect.width / w, bitmapHeight * rect.height / h, offsetX, offsetY, rect.width, rect.height);
-
         return surface;
     }
 
     /**
      * @private
      */
-    function toDataURL(type:string, rect?:egret.Rectangle):string {
+    function toDataURL(type: string, rect?: egret.Rectangle): string {
         try {
             var surface = convertImageToCanvas(this, rect);
             var result = surface.toDataURL(type);
-
-            sys.surfaceFactory.release(surface);
-
             return result;
         }
         catch (e) {
@@ -91,7 +89,7 @@ module egret.web {
         return null;
     }
 
-    function saveToFile(type:string, filePath:string, rect?:egret.Rectangle):void {
+    function saveToFile(type: string, filePath: string, rect?: egret.Rectangle): void {
         var base64 = toDataURL.call(this, type, rect);
         if (base64 == null) {
             return;
@@ -107,18 +105,40 @@ module egret.web {
         aLink.dispatchEvent(evt);
     }
 
-    function getPixel32(x:number, y:number):number[] {
-        if (this._bitmapData && this._bitmapData.getContext) {
-            var result:any = this._bitmapData.getContext("2d").getImageData(x - this._offsetX, y - this._offsetY, 1, 1);
-            return result.data;
+    function getPixel32(x: number, y: number): number[] {
+        var buffer = <CanvasRenderBuffer><any>sys.hitTestBuffer;
+        buffer.resize(3, 3);
+        var context: any = buffer.context;
+        if (!context.translate) {//webgl
+            context = buffer;
         }
-
-        var surface = convertImageToCanvas(this, new egret.Rectangle(x - 1, y - 1, 3, 3));
-        result = surface.renderContext.getImageData(1, 1, 1, 1);
-        return result.data;
+        context.translate(1 - x, 1 - y);
+        var width = this._bitmapWidth;
+        var height = this._bitmapHeight;
+        var scale = $TextureScaleFactor;
+        context.drawImage(this._bitmapData, this._bitmapX, this._bitmapY, width, this._bitmapHeight,
+            this._offsetX, this._offsetY, width * scale, height * scale);
+        if (context.$drawWebGL) {//webgl
+            context.$drawWebGL();
+        }
+        try {
+            var data = buffer.getPixel(1, 1);
+        }
+        catch (e) {
+            console.log(this);
+            throw new Error(sys.tr(1039));
+        }
+        return data;
     }
 
     Texture.prototype.toDataURL = toDataURL;
     Texture.prototype.saveToFile = saveToFile;
     Texture.prototype.getPixel32 = getPixel32;
+
+    //销毁掉webgl纹理
+    var originDispose = Texture.prototype.dispose;
+    Texture.prototype.dispose = function () {
+        WebGLUtils.deleteWebGLTexture(this._bitmapData);
+        originDispose.call(this);
+    }
 }

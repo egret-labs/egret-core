@@ -30,11 +30,6 @@
 /**
  * @private
  */
-interface AudioBuffer {
-}
-/**
- * @private
- */
 interface AudioBufferSourceNodeEgret {
     buffer:any;
     context:any;
@@ -167,6 +162,18 @@ module egret.web {
         private _arrayBuffer:ArrayBuffer;
         private audioBuffer:AudioBuffer;
 
+
+        public get length():number {
+            if (this.audioBuffer) {
+                return this.audioBuffer.duration;
+            }
+
+            throw new Error ("sound not loaded!");
+
+            //return 0;
+        }
+
+
         /**
          * @inheritDoc
          */
@@ -182,7 +189,6 @@ module egret.web {
             var request = new XMLHttpRequest();
             request.open("GET", url, true);
             request.responseType = "arraybuffer";
-            console.log("loadWebAudio");
             request.onload = function () {
                 self._arrayBuffer = request.response;
 

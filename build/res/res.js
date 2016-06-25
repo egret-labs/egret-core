@@ -234,7 +234,7 @@ var RES;
          */
         ResourceItem.TYPE_SOUND = "sound";
         return ResourceItem;
-    })();
+    }());
     RES.ResourceItem = ResourceItem;
     egret.registerClass(ResourceItem,'RES.ResourceItem');
 })(RES || (RES = {}));
@@ -471,7 +471,7 @@ var RES;
             return resItem;
         };
         return ResourceConfig;
-    })();
+    }());
     RES.ResourceConfig = ResourceConfig;
     egret.registerClass(ResourceConfig,'RES.ResourceConfig');
 })(RES || (RES = {}));
@@ -749,7 +749,7 @@ var RES;
             }
         };
         return ResourceLoader;
-    })(egret.EventDispatcher);
+    }(egret.EventDispatcher));
     RES.ResourceLoader = ResourceLoader;
     egret.registerClass(ResourceLoader,'RES.ResourceLoader');
 })(RES || (RES = {}));
@@ -979,7 +979,7 @@ var RES;
          */
         ResourceEvent.GROUP_LOAD_ERROR = "groupLoadError";
         return ResourceEvent;
-    })(egret.Event);
+    }(egret.Event));
     RES.ResourceEvent = ResourceEvent;
     egret.registerClass(ResourceEvent,'RES.ResourceEvent');
 })(RES || (RES = {}));
@@ -1084,7 +1084,7 @@ var RES;
             return "";
         };
         return AnalyzerBase;
-    })(egret.HashObject);
+    }(egret.HashObject));
     RES.AnalyzerBase = AnalyzerBase;
     egret.registerClass(AnalyzerBase,'RES.AnalyzerBase');
 })(RES || (RES = {}));
@@ -1222,7 +1222,7 @@ var RES;
         p.onResourceDestroy = function (resource) {
         };
         return BinAnalyzer;
-    })(RES.AnalyzerBase);
+    }(RES.AnalyzerBase));
     RES.BinAnalyzer = BinAnalyzer;
     egret.registerClass(BinAnalyzer,'RES.BinAnalyzer');
 })(RES || (RES = {}));
@@ -1366,7 +1366,7 @@ var RES;
             texture.dispose();
         };
         return ImageAnalyzer;
-    })(RES.AnalyzerBase);
+    }(RES.AnalyzerBase));
     RES.ImageAnalyzer = ImageAnalyzer;
     egret.registerClass(ImageAnalyzer,'RES.ImageAnalyzer');
 })(RES || (RES = {}));
@@ -1411,7 +1411,7 @@ var RES;
         }
         var d = __define,c=TextAnalyzer,p=c.prototype;
         return TextAnalyzer;
-    })(RES.BinAnalyzer);
+    }(RES.BinAnalyzer));
     RES.TextAnalyzer = TextAnalyzer;
     egret.registerClass(TextAnalyzer,'RES.TextAnalyzer');
 })(RES || (RES = {}));
@@ -1472,7 +1472,7 @@ var RES;
             }
         };
         return JsonAnalyzer;
-    })(RES.BinAnalyzer);
+    }(RES.BinAnalyzer));
     RES.JsonAnalyzer = JsonAnalyzer;
     egret.registerClass(JsonAnalyzer,'RES.JsonAnalyzer');
 })(RES || (RES = {}));
@@ -1611,6 +1611,11 @@ var RES;
          */
         p.getRelativePath = function (url, file) {
             url = url.split("\\").join("/");
+            var params = url.match(/#.*|\?.*/);
+            var paramUrl = "";
+            if (params) {
+                paramUrl = params[0];
+            }
             var index = url.lastIndexOf("/");
             if (index != -1) {
                 url = url.substring(0, index + 1) + file;
@@ -1618,7 +1623,7 @@ var RES;
             else {
                 url = file;
             }
-            return url;
+            return url + paramUrl;
         };
         p.parseSpriteSheet = function (texture, data, name) {
             var frames = data.frames;
@@ -1681,7 +1686,7 @@ var RES;
             }
         };
         return SheetAnalyzer;
-    })(RES.BinAnalyzer);
+    }(RES.BinAnalyzer));
     RES.SheetAnalyzer = SheetAnalyzer;
     egret.registerClass(SheetAnalyzer,'RES.SheetAnalyzer');
 })(RES || (RES = {}));
@@ -1780,7 +1785,7 @@ var RES;
             }
         };
         return FontAnalyzer;
-    })(RES.SheetAnalyzer);
+    }(RES.SheetAnalyzer));
     RES.FontAnalyzer = FontAnalyzer;
     egret.registerClass(FontAnalyzer,'RES.FontAnalyzer');
 })(RES || (RES = {}));
@@ -1901,7 +1906,7 @@ var RES;
             return false;
         };
         return SoundAnalyzer;
-    })(RES.AnalyzerBase);
+    }(RES.AnalyzerBase));
     RES.SoundAnalyzer = SoundAnalyzer;
     egret.registerClass(SoundAnalyzer,'RES.SoundAnalyzer');
 })(RES || (RES = {}));
@@ -1962,7 +1967,7 @@ var RES;
             }
         };
         return XMLAnalyzer;
-    })(RES.BinAnalyzer);
+    }(RES.BinAnalyzer));
     RES.XMLAnalyzer = XMLAnalyzer;
     egret.registerClass(XMLAnalyzer,'RES.XMLAnalyzer');
 })(RES || (RES = {}));
@@ -2105,7 +2110,7 @@ var RES;
                 */
             };
             return Html5VersionController;
-        })(egret.EventDispatcher);
+        }(egret.EventDispatcher));
         web.Html5VersionController = Html5VersionController;
         egret.registerClass(Html5VersionController,'RES.web.Html5VersionController',["RES.VersionController","RES.IVersionController"]);
         if (egret.Capabilities.runtimeType == egret.RuntimeType.WEB) {
@@ -2243,7 +2248,7 @@ var RES;
                 return null;
             };
             return NativeVersionController;
-        })();
+        }());
         native.NativeVersionController = NativeVersionController;
         egret.registerClass(NativeVersionController,'RES.native.NativeVersionController',["RES.VersionController","RES.IVersionController"]);
         if (egret.Capabilities.runtimeType == egret.RuntimeType.NATIVE) {
@@ -2500,7 +2505,7 @@ var RES;
     RES.hasRes = hasRes;
     /**
      * @language en_US
-     * Run time dynamic analysis of a configuration file.
+     * parse a configuration file at run time，it will not clean the exist data.
      * @param data Configuration file data, please refer to the resource.json configuration file format. JSON object can be introduced into the corresponding.
      * @param folder Path prefix for load.
      * @see #setMaxRetryTimes
@@ -2509,7 +2514,7 @@ var RES;
      */
     /**
      * @language zh_CN
-     * 运行时动态解析一个配置文件。
+     * 运行时动态解析一个配置文件,此操作不会清空之前已存在的配置。
      * @param data 配置文件数据，请参考 resource.json 的配置文件格式。传入对应的 json 对象即可。
      * @param folder 加载项的路径前缀。
      * @see #setMaxRetryTimes
@@ -3271,7 +3276,7 @@ var RES;
          */
         Resource.GROUP_CONFIG = "RES__CONFIG";
         return Resource;
-    })(egret.EventDispatcher);
+    }(egret.EventDispatcher));
     egret.registerClass(Resource,'Resource');
     /**
      * Resource单例
@@ -3454,7 +3459,7 @@ var RES;
             return loader;
         };
         return AnimationAnalyzer;
-    })(RES.BinAnalyzer);
+    }(RES.BinAnalyzer));
     RES.AnimationAnalyzer = AnimationAnalyzer;
     egret.registerClass(AnimationAnalyzer,'RES.AnimationAnalyzer');
 })(RES || (RES = {}));

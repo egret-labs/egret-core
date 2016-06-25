@@ -239,13 +239,18 @@ module eui.sys {
         if (!clazz) {
             return null;
         }
-        try {
+        if(DEBUG){
+            try {
+                var instance = new clazz();
+            }
+            catch (e) {
+                egret.error(e);
+                return null;
+            }
+        }else{
             var instance = new clazz();
         }
-        catch (e) {
-            egret.error(e);
-            return null;
-        }
+
         return instance;
     }
 

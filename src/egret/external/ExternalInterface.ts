@@ -31,7 +31,7 @@ module egret {
     /**
      * @language en_US
      * h5 and native interaction.
-     * @see http://edn.egret.com/cn/index.php?g=&m=article&a=index&id=167&terms1_id=25&terms2_id=39 Android between language communication within the project
+     * @see http://edn.egret.com/cn/article/index/id/714 Egret basic skills to communicate with Native
      * @version Egret 2.4
      * @platform Web,Native
      * @includeExample egret/external/ExternalInterface.ts
@@ -39,7 +39,7 @@ module egret {
     /**
      * @language zh_CN
      * h5与native交互。
-     * @see http://edn.egret.com/cn/index.php?g=&m=article&a=index&id=167&terms1_id=25&terms2_id=39 Android项目内的语言间通讯
+     * @see http://edn.egret.com/cn/article/index/id/714 Egret 与 Native 通信基本技巧
      * @version Egret 2.4
      * @platform Web,Native
      * @includeExample egret/external/ExternalInterface.ts

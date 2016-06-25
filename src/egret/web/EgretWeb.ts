@@ -51,28 +51,64 @@ module egret.web {
 
     /**
      * @private
-     * 网页加载完成，实例化页面中定义的Egretsys标签
+     * 网页加载完成，实例化页面中定义的Egret标签
      */
-    function runEgret():void {
+    function runEgret(options?:{renderMode?:string;screenAdapter?:sys.IScreenAdapter}):void {
         if (isRunning) {
             return;
         }
         isRunning = true;
-
+        if (!options) {
+            options = {};
+        }
+        setRenderMode(options.renderMode);
         var ticker = egret.sys.$ticker;
         startTicker(ticker);
-        var surfaceFactory = new CanvasFactory();
-        sys.surfaceFactory = surfaceFactory;
-        if (!egret.sys.screenAdapter) {
-            egret.sys.screenAdapter = new egret.sys.ScreenAdapter();
+        if (options.screenAdapter) {
+            egret.sys.screenAdapter = options.screenAdapter;
+        }
+        else if (!egret.sys.screenAdapter) {
+            egret.sys.screenAdapter = new egret.sys.DefaultScreenAdapter();
         }
 
         var list = document.querySelectorAll(".egret-player");
         var length = list.length;
         for (var i = 0; i < length; i++) {
             var container = <HTMLDivElement>list[i];
-            var player = new WebPlayer(container);
+            var player = new WebPlayer(container, options);
             container["egret-player"] = player;
+            //webgl模式关闭脏矩形
+            //if(options.renderMode == "webgl") {
+            //    player.stage.dirtyRegionPolicy = DirtyRegionPolicy.OFF;
+            //    egret.sys.DisplayList.prototype.setDirtyRegionPolicy = function () {
+            //    };
+            //}
+        }
+        // TODO hitTestBuffer创建目前必须在主buffer创建之后
+        if (Capabilities.renderMode == "webgl") {
+            sys.hitTestBuffer = new WebGLRenderBuffer(3, 3);
+        }
+        else {
+        }
+    }
+
+    /**
+     * 设置渲染模式。"auto","webgl","canvas"
+     * @param renderMode
+     */
+    function setRenderMode(renderMode:string):void {
+        if (renderMode == "webgl" && WebGLUtils.checkCanUseWebGL()) {
+            sys.RenderBuffer = web.WebGLRenderBuffer;
+            sys.systemRenderer = new WebGLRenderer();
+            //屏蔽掉cacheAsBitmap,webgl模式不能有太多的RenderContext
+            //DisplayObject.prototype.$setHasDisplayList = function(){};
+            Capabilities.$renderMode = "webgl";
+        }
+        else {
+            sys.hitTestBuffer = new CanvasRenderBuffer(3, 3);            
+            sys.RenderBuffer = web.CanvasRenderBuffer;
+            sys.systemRenderer = new CanvasRenderer();
+            Capabilities.$renderMode = "canvas";
         }
     }
 
@@ -105,26 +141,6 @@ module egret.web {
     window["isNaN"] = function (value:number):boolean {
         value = +value;
         return value !== value;
-    };
-
-    var originCanvas2DFill = CanvasRenderingContext2D.prototype.fill;
-    CanvasRenderingContext2D.prototype.fill = function () {
-        var style = this.fillStyle;
-        if (!(typeof style == "string")) {
-            var matrix:egret.Matrix = style["matrix"];
-            if (matrix) {
-                this.save();
-                this.transform(matrix.a, matrix.b, matrix.c, matrix.d, matrix.tx, matrix.ty);
-                originCanvas2DFill.call(this);
-                this.restore();
-            }
-            else {
-                originCanvas2DFill.call(this);
-            }
-        }
-        else {
-            originCanvas2DFill.call(this);
-        }
     };
 
     egret.runEgret = runEgret;

@@ -50,19 +50,35 @@ module egret.web {
          * @private
          * 本次请求返回的数据，数据类型根据responseType设置的值确定。
          */
+
         public get response():any {
             if (!this._xhr) {
                 return null;
             }
+            
             if (this._xhr.response != undefined) {
                 return this._xhr.response;
             }
-            if (this._xhr.responseXML) {
+
+            if (this._responseType == "text") {
+                return this._xhr.responseText;
+            }
+
+            if (this._responseType == "arraybuffer" && /msie 9.0/i.test(navigator.userAgent)){
+                var w:any = window;
+                return w.convertResponseBodyToText(this._xhr.responseBody);
+            }
+
+            if (this._responseType == "document") {
+                return this._xhr.responseXML;
+            }
+
+            /*if (this._xhr.responseXML) {
                 return this._xhr.responseXML;
             }
             if (this._xhr.responseText != undefined) {
                 return this._xhr.responseText;
-            }
+            }*/
             return null;
         }
 

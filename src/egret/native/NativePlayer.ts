@@ -61,7 +61,7 @@ module egret.native {
             //设置帧频到native
             stage.frameRate = option.frameRate;
 
-            if(!egret_native.Canvas) {
+            if(!egret.native.$supportCanvas) {
                 stage.addEventListener(egret.Event.ENTER_FRAME, function (){
                     if($currentSurface) {
                         $currentSurface.end();
@@ -69,13 +69,13 @@ module egret.native {
                 }, this);
             }
 
-            var surface:NativeSurface = <NativeSurface>egret.sys.surfaceFactory.create();
-            surface.$isRoot = true;
+            var buffer = new sys.RenderBuffer();
+            var canvas = <NativeCanvas>buffer.surface;
+            canvas.$isRoot = true;
 
             var touch = new NativeTouchHandler(stage);
-            var player = new egret.sys.Player(surface.renderContext, stage, option.entryClassName);
+            var player = new egret.sys.Player(buffer, stage, option.entryClassName);
             new NativeHideHandler(stage);
-            //var nativeInput = new NativeInput();
 
             player.showPaintRect(option.showPaintRect);
             if (option.showFPS || option.showLog) {
@@ -105,6 +105,8 @@ module egret.native {
             var option = this.playerOption;
             var screenWidth:number = egret_native.EGTView.getFrameWidth();
             var screenHeight:number = egret_native.EGTView.getFrameHeight();
+            Capabilities.$boundingClientWidth = screenWidth;
+            Capabilities.$boundingClientHeight = screenHeight;
             var stageSize:sys.StageDisplaySize = egret.sys.screenAdapter.calculateStageSize(this.$stage.$scaleMode,
                 screenWidth, screenHeight, option.contentWidth, option.contentHeight);
             var stageWidth:number = stageSize.stageWidth;
@@ -119,11 +121,6 @@ module egret.native {
             egret_native.EGTView.setDesignSize(stageWidth, stageHeight);
 
             this.player.updateStageSize(stageWidth, stageHeight);
-
-            //var scalex = displayWidth / stageWidth,
-            //    scaley = displayHeight / stageHeight;
-            //this.webTouchHandler.updateScaleMode(scalex, scaley, rotation);
-            //this.webInput.$updateSize();
         }
 
         public setContentSize(width:number, height:number):void {

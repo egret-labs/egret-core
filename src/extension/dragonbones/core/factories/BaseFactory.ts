@@ -84,12 +84,8 @@ module dragonBones {
 		
 		/** @private */
 		public textureAtlasDic:any = {};
-		public constructor(self:BaseFactory){
+		public constructor(){
 			super();
-			
-			if(self != this){ 
-				throw new Error(egret.getString(4001));
-			}
 		}
 		
 		/**
@@ -301,6 +297,60 @@ module dragonBones {
 			
 			return this._generateDisplay(targetTextureAtlas, textureName, pivotX, pivotY);
 		}
+		/**
+		 * @private
+		 */
+		public getMeshDisplay(meshData:MeshData, slot:Slot, textureAtlasName:string = null):any
+		{
+			var targetTextureAtlas:any;
+			var textureAtlasArr:Array<any>;
+			var i:number;
+			var len:number;
+			var textureName:string = meshData.name;
+			if(textureAtlasName)
+			{
+				textureAtlasArr = this.textureAtlasDic[textureAtlasName];
+				if (textureAtlasArr)
+				{
+					for (i = 0, len = textureAtlasArr.length; i < len; i++)
+					{
+						targetTextureAtlas = textureAtlasArr[i];
+						if (targetTextureAtlas.getRegion(textureName))
+						{
+							break;
+						}
+						targetTextureAtlas = null;
+					}
+				}
+			}
+			else{
+				for (textureAtlasName in this.textureAtlasDic){
+					textureAtlasArr = this.textureAtlasDic[textureAtlasName];
+					if (textureAtlasArr)
+					{
+						for (i = 0, len = textureAtlasArr.length; i < len; i++)
+						{
+							targetTextureAtlas = textureAtlasArr[i];
+							if (targetTextureAtlas.getRegion(textureName))
+							{
+								break;
+							}
+							targetTextureAtlas = null;
+						}
+						if (targetTextureAtlas != null)
+						{
+							break;
+						}
+					}
+				}
+			}
+			
+			if(!targetTextureAtlas){
+				return null;
+			}
+			
+			return this._generateMesh(targetTextureAtlas, textureName, meshData, slot);
+		}
 
 		/**
 		 * 构建骨架
@@ -371,6 +421,8 @@ module dragonBones {
 			outputArmature.animation.animationDataList = armatureData.animationDataList;
 			
 			this._buildBones(outputArmature);
+            outputArmature.buildIK();
+			outputArmature.updateBoneCache();
 			this._buildSlots(outputArmature, skinName, textureAtlasName);
 			
 			outputArmature.advanceTime(0);
@@ -394,8 +446,10 @@ module dragonBones {
 			outputArmature.animation.animationDataList = armatureData.animationDataList;
 			
 			this._buildFastBones(outputArmature);
-			this._buildFastSlots(outputArmature, skinName, textureAtlasName);
-			
+            outputArmature.buildIK();
+			outputArmature.updateBoneCache();
+            this._buildFastSlots(outputArmature, skinName, textureAtlasName);
+            outputArmature.updateSlotsZOrder();
 			outputArmature.advanceTime(0);
 			
 			return outputArmature;
@@ -550,6 +604,10 @@ module dragonBones {
                             displayList[l] = childArmature;
 							break;
 						
+						case DisplayData.MESH:
+							displayList[l] = this.getMeshDisplay(displayData as MeshData, slot, textureAtlasName);
+							break;
+						
 						case DisplayData.IMAGE:
 						default:
 							displayList[l] = this.getTextureDisplay(displayData.name, textureAtlasName, displayData.pivot.x, displayData.pivot.y);
@@ -606,32 +664,40 @@ module dragonBones {
 			}
 			armature.armatureData.setSkinData(skinName);
 			
-			var displayList:Array<any> = [];
-			var slotDataList:Array<SlotData> = armature.armatureData.slotDataList;
+            var slotDataList: Array<SlotData> = armature.armatureData.slotDataList;
+            var slotDisplayDataList: Array<[DisplayData, TextureData]> = [];
+            var displayList: Array<any> = [];
 			var slotData:SlotData;
 			var slot:FastSlot;
 			for(var i:number = 0; i < slotDataList.length; i++){
+				slotDisplayDataList.length = 0;
 				displayList.length = 0;
 				slotData = slotDataList[i];
 				slot = this._generateFastSlot();
 				slot.initWithSlotData(slotData);
 				
-				
-				var l:number = slotData.displayDataList.length;
+				var l: number = slotData.displayDataList.length;
 				while(l--){
 					var displayData:DisplayData = slotData.displayDataList[l];
 					
 					switch(displayData.type){
 						case DisplayData.ARMATURE:
 							var childArmature:FastArmature = this.buildFastArmatureUsingArmatureDataFromTextureAtlas(armature.__dragonBonesData, armature.__dragonBonesData.getArmatureDataByName(displayData.name), textureAtlasName, skinName);
-							displayList[l] = childArmature;
+                            slotDisplayDataList[l] = [displayData, null];
+                            displayList[l] = childArmature;
 							slot.hasChildArmature = true;
 							break;
 						
 						case DisplayData.IMAGE:
-						default:
-							displayList[l] = this.getTextureDisplay(displayData.name,textureAtlasName, displayData.pivot.x, displayData.pivot.y);
-							break;
+						case DisplayData.MESH:
+                            slotDisplayDataList[l] = [displayData, this.getTextureData(displayData.name, textureAtlasName)];
+                            displayList[l] = slot._rawDisplay;
+                            break;
+
+                        default:
+                            slotDisplayDataList[l] = [displayData, null];
+                            displayList[l] = null;
+                            break;
 						
 					}
 				}
@@ -658,11 +724,32 @@ module dragonBones {
 					}
 				}
 				//==================================================
-				slot.initDisplayList(displayList.concat());
-				armature.addSlot(slot, slotData.parent);
-				slot._changeDisplayIndex(slotData.displayIndex);
+
+                armature.addSlot(slot, slotData.parent);
+                slot.displayDataList = slotDisplayDataList;
+                slot.displayList = displayList;
+                slot.displayIndex = slotData.displayIndex;
 			}
-		}
+        }
+
+        private getTextureData(textureName: string, textureAtlasName: string): TextureData {
+            var textureData: TextureData = null;
+            var textureAtlasData: EgretTextureAtlas = null;
+            var textureAtlasDataList: Array<EgretTextureAtlas> = this.textureAtlasDic[textureAtlasName];
+            if (textureAtlasDataList) {
+                for (var i in textureAtlasDataList)
+                {
+                    textureAtlasData = textureAtlasDataList[i];
+                    textureData = textureAtlasData.getTextureData(textureName);
+                    if (textureData) {
+                        textureData.textureAtlas = textureAtlasData;
+                        break;
+                    }
+                }
+            }
+
+			return textureData;
+        }
 
 		/**
 		 * @private
@@ -713,6 +800,13 @@ module dragonBones {
 			return null;
 		}
 		
+		/**
+		 * @private
+		 */
+		public _generateMesh(textureAtlas:any, fullName:string, meshData:MeshData, slot:Slot):any
+		{
+			return null;
+		}
 	}
 
 	export class BuildArmatureDataPackage{

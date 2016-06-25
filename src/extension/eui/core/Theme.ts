@@ -148,6 +148,7 @@ module eui {
             this.initialized = !configURL;
             if (stage) {
                 this.$stage = stage;
+                EXML.$stage = stage;
                 stage.registerImplementation("eui.Theme", this);
             }
             this.$configURL = configURL;
@@ -179,13 +180,15 @@ module eui {
          */
         private onConfigLoaded(str:string):void {
             if(str) {
-                try {
-                    var data = JSON.parse(str);
-                }
-                catch (e) {
-                    if (DEBUG) {
+                if(DEBUG){
+                    try {
+                        var data = JSON.parse(str);
+                    }
+                    catch (e) {
                         egret.$error(3000);
                     }
+                }else{
+                    var data = JSON.parse(str);
                 }
             }
             else if (DEBUG) {

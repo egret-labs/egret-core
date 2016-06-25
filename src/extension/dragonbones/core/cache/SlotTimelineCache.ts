@@ -85,17 +85,25 @@ module dragonBones {
 		public constructor(){
 			super();
 		}
-		
-		public addFrame():void{
-			var cache:SlotFrameCache = new SlotFrameCache();
-			cache.globalTransform.copy(this.cacheGenerator.global);
-			cache.globalTransformMatrix.copyFrom(this.cacheGenerator.globalTransformMatrix);
-			if(this.cacheGenerator.colorChanged){
-				cache.colorTransform =  ColorTransformUtil.cloneColor(this.cacheGenerator.colorTransform);
+
+        public addFrame(frameIndex: number, armature: FastArmature): void{
+            var cache: SlotFrameCache = new SlotFrameCache();
+            var slot: FastSlot = armature.getSlot(this.name);
+            if (slot.global != slot._globalBackup) {
+                cache.globalTransform = slot.global;
+                cache.globalTransformMatrix = slot.globalTransformMatrix;
+            }
+            else {
+                cache.globalTransform.copy(slot.global);
+                cache.globalTransformMatrix.copyFrom(slot.globalTransformMatrix);
+            }
+            
+            if (slot.colorChanged){
+                cache.colorTransform = ColorTransformUtil.cloneColor(slot.colorTransform);
 			}
-			cache.displayIndex = this.cacheGenerator.displayIndex;
-            cache.gotoAndPlay = this.cacheGenerator.gotoAndPlay;
-			this.frameCacheList.push(cache);
+            cache.displayIndex = slot.displayIndex;
+            cache.gotoAndPlay = slot.gotoAndPlay;
+            this.frameCacheList[frameIndex] = cache;
 		}
 	}
 }

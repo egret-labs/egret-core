@@ -59,6 +59,8 @@ module eui {
      * to hold data items as children.
      *
      * @see eui.Group
+     * @see http://edn.egret.com/cn/article/index/id/527 Data container
+     * @see http://edn.egret.com/cn/article/index/id/528 Array collection
      * @defaultProperty dataProvider
      * @includeExample  extension/eui/components/DataGroupExample.ts
      * @version Egret 2.4
@@ -71,8 +73,8 @@ module eui {
      * 尽管此容器可以包含可视元素，但它通常仅用于包含作为子项的数据项目。
      *
      * @see eui.Group
-     * @see http://edn.egret.com/cn/index.php/article/index/id/527 数据容器
-     * @see http://edn.egret.com/cn/index.php/article/index/id/528 数组集合 	 
+     * @see http://edn.egret.com/cn/article/index/id/527 数据容器
+     * @see http://edn.egret.com/cn/article/index/id/528 数组集合
      * @defaultProperty dataProvider
      * @includeExample  extension/eui/components/DataGroupExample.ts
      * @version Egret 2.4
@@ -216,6 +218,7 @@ module eui {
         public getElementAt(index:number):egret.DisplayObject {
             return this.$indexToRenderer[index];
         }
+
         /**
          * @inheritDoc
          *
@@ -315,7 +318,7 @@ module eui {
                 return null;
             }
             if (values[Keys.itemRendererSkinName]) {
-                this.setItemRenderSkinName(renderer,values[Keys.itemRendererSkinName]);
+                this.setItemRenderSkinName(renderer, values[Keys.itemRendererSkinName]);
             }
             this.addChild(renderer);
             return renderer;
@@ -325,10 +328,10 @@ module eui {
          * @private
          * 设置项呈示器的默认皮肤
          */
-        private setItemRenderSkinName(renderer:IItemRenderer,skinName:any):void {
+        private setItemRenderSkinName(renderer:IItemRenderer, skinName:any):void {
             if (renderer && renderer instanceof Component) {
                 var comp:Component = <Component> <any>renderer;
-                if (!comp.$Component[sys.ComponentKeys.skinNameExplicitlySet]){
+                if (!comp.$Component[sys.ComponentKeys.skinNameExplicitlySet]) {
                     comp.skinName = skinName;
                     comp.$Component[sys.ComponentKeys.skinNameExplicitlySet] = false;
                 }
@@ -444,7 +447,7 @@ module eui {
                         var indexToRenderer = this.$indexToRenderer;
                         var keys = Object.keys(indexToRenderer);
                         var length = keys.length;
-                        for (var i = 0; i < length; i++) {
+                        for (var i = length - 1; i >= 0; i--) {
                             var index = +keys[i];
                             this.freeRendererByIndex(index);
                         }
@@ -818,7 +821,7 @@ module eui {
                 var length = keys.length;
                 for (var i = 0; i < length; i++) {
                     var index = keys[i];
-                    this.setItemRenderSkinName(indexToRenderer[index],skinName);
+                    this.setItemRenderSkinName(indexToRenderer[index], skinName);
                 }
                 var freeRenderers = values[Keys.freeRenderers];
                 var keys = Object.keys(freeRenderers);
@@ -828,7 +831,7 @@ module eui {
                     var list:IItemRenderer[] = freeRenderers[hashCode];
                     var length = list.length;
                     for (var i = 0; i < length; i++) {
-                        this.setItemRenderSkinName(list[i],skinName);
+                        this.setItemRenderSkinName(list[i], skinName);
                     }
                 }
             }

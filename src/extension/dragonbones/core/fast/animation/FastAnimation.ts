@@ -127,7 +127,7 @@ module dragonBones {
 		public dispose():void{
 			if(!this._armature){
 				return;
-			}
+            }
 			
 			this._armature = null;
 			this._animationDataList = null;
@@ -151,9 +151,25 @@ module dragonBones {
 			var animationData:AnimationData = this._animationDataObj[animationName];
 			if (!animationData){
 				return null;
-			}
+            }
+            
+            // Modify Fast mode by duanchunlei
+            if (this._armature.enableCache) {
+                this.animationCacheManager = this._armature._armatureData._cacheManager;
+                var animationCache = this.animationCacheManager.getAnimationCache(animationName);
+                animationCache.frameNum = Math.ceil(animationData.duration * 0.001 * this.animationCacheManager.frameRate / animationData.scale);
+                this.animationState.animationCache = animationCache;
+
+                i = this._armature.slotList.length;
+                while (i--) {
+                    var slot: FastSlot = this._armature.slotList[i];
+                    slot._cacheTimeline = animationCache.slotTimelineCacheDic[slot.name] as SlotTimelineCache;
+                }
+            }
+
 			this._isPlaying = true;
-			fadeInTime = fadeInTime < 0?(animationData.fadeTime < 0?0.3:animationData.fadeTime):fadeInTime;
+            //fadeInTime = fadeInTime < 0 ? (animationData.fadeTime < 0 ? 0.3 : animationData.fadeTime) : fadeInTime;
+            fadeInTime = 0;
 			var durationScale:number;
 			if(duration < 0){
 				durationScale = animationData.scale < 0?1:animationData.scale;
@@ -166,19 +182,17 @@ module dragonBones {
 			//播放新动画
 			
 			this.animationState._fadeIn(animationData, playTimes, 1 / durationScale, fadeInTime);
-			
-			if(this._armature.enableCache && this.animationCacheManager){
-				this.animationState.animationCache = this.animationCacheManager.getAnimationCache(animationName);
-			}
-			
+
+
 			var i:number = this._armature.slotHasChildArmatureList.length;
 			while(i--){
 				var slot:FastSlot = this._armature.slotHasChildArmatureList[i];
 				var childArmature:FastArmature = slot.childArmature;
 				if(childArmature){
 					childArmature.getAnimation().gotoAndPlay(animationName);
-				}
-			}
+                }
+            }
+
 			return this.animationState;
 		}
 

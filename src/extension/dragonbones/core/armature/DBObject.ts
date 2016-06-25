@@ -203,6 +203,7 @@ module dragonBones {
                 */
                 return ParentTransformObject.create().setTo(parentGlobalTransform, parentGlobalTransformMatrix);
             }
+            TransformUtil.transformToMatrix(this._global, this._globalTransformMatrix);
             return null;
         }
 

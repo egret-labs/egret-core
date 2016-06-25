@@ -166,11 +166,11 @@ module dragonBones {
 //			{
 //				cacheUser.frameCache = boneFrameCacheDic[cacheUser.name];
 //			}
-			for( var k in armature._slotDic)
+			/*for( var k in armature._slotDic)
 			{
 				cacheUser = armature._slotDic[k];
 				cacheUser.frameCache = this.slotFrameCacheDic[cacheUser.name];
-			}
+			}*/
 			/*
 			var length:number = armature._slotDic.length;
 			for(var i:number = 0;i < length;i++){
@@ -281,7 +281,7 @@ module dragonBones {
 			do{
 				lastProgress = animationState.progress;
 				this.cacheGeneratorArmature.advanceTime(passTime);
-				animationCache.addFrame();
+				//animationCache.addFrame();
 			}while (animationState.progress >= lastProgress && animationState.progress < 1);
 
 			this.cacheGeneratorArmature.enableEventDispatch = tempEnableEventDispatch;

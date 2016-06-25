@@ -68,7 +68,7 @@ var egret;
      * @event egret.ProgressEvent.SOCKET_DATA Receiving server data。
      * @event egret.Event.CLOSE Dispatched when the server closes the connection.
      * @event egret.ProgressEvent Dispatched when an IO error causes a send or load operation to fail.
-     * @see http://edn.egret.com/cn/index.php/article/index/id/164 WebSocket
+     * @see http://edn.egret.com/cn/docs/page/602 WebSocket
      * @version Egret 2.4
      * @platform Web,Native
      * @includeExample extension/socket/WebSocket.ts
@@ -82,7 +82,7 @@ var egret;
      * @event egret.ProgressEvent.SOCKET_DATA 接收服务器数据。
      * @event egret.Event.CLOSE 在服务器关闭连接时调度。
      * @event egret.IOErrorEvent.IO_ERROR 在出现输入/输出错误并导致发送或加载操作失败时调度。。
-     * @see http://edn.egret.com/cn/index.php/article/index/id/164 WebSocket
+     * @see http://edn.egret.com/cn/docs/page/602 WebSocket
      * @version Egret 2.4
      * @platform Web,Native
      * @includeExample extension/socket/WebSocket.ts
@@ -119,6 +119,7 @@ var egret;
              * @private
              */
             this._connected = false;
+            this.connectCount = 0;
             /**
              * @private
              */
@@ -155,6 +156,7 @@ var egret;
          * @platform Web,Native
          */
         p.connect = function (host, port) {
+            this.connectCount++;
             this.socket.connect(host, port);
         };
         /**
@@ -162,6 +164,7 @@ var egret;
          * @param url 全地址。如ws://echo.websocket.org:80
          */
         p.connectByUrl = function (url) {
+            this.connectCount++;
             this.socket.connectByUrl(url);
         };
         /**
@@ -184,8 +187,11 @@ var egret;
          *
          */
         p.onConnect = function () {
-            this._connected = true;
-            this.dispatchEventWith(egret.Event.CONNECT);
+            this.connectCount--;
+            if (this.connectCount == 0) {
+                this._connected = true;
+                this.dispatchEventWith(egret.Event.CONNECT);
+            }
         };
         /**
          * @private
@@ -439,7 +445,7 @@ var egret;
          */
         WebSocket.TYPE_BINARY = "webSocketTypeBinary";
         return WebSocket;
-    })(egret.EventDispatcher);
+    }(egret.EventDispatcher));
     egret.WebSocket = WebSocket;
     egret.registerClass(WebSocket,'egret.WebSocket');
 })(egret || (egret = {}));
@@ -533,7 +539,7 @@ var egret;
                 this.socket.close();
             };
             return NativeSocket;
-        })();
+        }());
         native.NativeSocket = NativeSocket;
         egret.registerClass(NativeSocket,'egret.native.NativeSocket',["egret.ISocket"]);
         if (egret.Capabilities.runtimeType == egret.RuntimeType.NATIVE) {
@@ -636,7 +642,7 @@ var egret;
                 this.socket.close();
             };
             return HTML5WebSocket;
-        })();
+        }());
         web.HTML5WebSocket = HTML5WebSocket;
         egret.registerClass(HTML5WebSocket,'egret.web.HTML5WebSocket',["egret.ISocket"]);
         if (egret.Capabilities.runtimeType == egret.RuntimeType.WEB) {
