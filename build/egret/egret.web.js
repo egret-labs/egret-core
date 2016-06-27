@@ -7651,8 +7651,8 @@ var egret;
              */
             WebGLRenderBuffer.create = function (width, height) {
                 var buffer = renderBufferPool.pop();
-                width = Math.min(width, 1024);
-                height = Math.min(height, 1024);
+                // width = Math.min(width, 1024);
+                // height = Math.min(height, 1024);
                 if (buffer) {
                     buffer.resize(width, height);
                 }
