@@ -1,6 +1,5 @@
 {
-	"egret.Bitmap":
-	{
+	"egret.Bitmap":{
 		"bitmapData":"egret.BitmapData",
 		"fillMode":"string",
 		"pixelHitTest":"boolean",
@@ -9,37 +8,35 @@
 		"super":"egret.DisplayObject",
 		"texture":"egret.Texture"
 	},
-	"egret.BitmapFont":
-	{
+	"egret.BitmapFont":{
 		"super":"egret.SpriteSheet"
 	},
-	"egret.BitmapText":
-	{
+	"egret.BitmapText":{
 		"font":"Object",
 		"letterSpacing":"number",
 		"lineSpacing":"number",
+		"smoothing":"boolean",
 		"super":"egret.DisplayObject",
 		"text":"string",
 		"textAlign":"string",
 		"verticalAlign":"string"
 	},
-	"egret.BlurFilter":
-	{
+	"egret.BlurFilter":{
 		"blurX":"number",
+		"blurY":"number",
 		"super":"egret.Filter"
 	},
-	"egret.ColorMatrixFilter":
-	{
+	"egret.ColorMatrixFilter":{
 		"matrix":"Array",
 		"super":"egret.Filter"
 	},
-	"egret.DisplayObject":
-	{
+	"egret.DisplayObject":{
 		"alpha":"number",
 		"anchorOffsetX":"number",
 		"anchorOffsetY":"number",
 		"blendMode":"string",
 		"cacheAsBitmap":"boolean",
+		"filters":"Array",
 		"height":"number",
 		"implements":["sys.Renderable"],
 		"mask":"any",
@@ -58,41 +55,33 @@
 		"x":"number",
 		"y":"number"
 	},
-	"egret.DisplayObjectContainer":
-	{
+	"egret.DisplayObjectContainer":{
 		"super":"egret.DisplayObject",
 		"touchChildren":"boolean"
 	},
-	"egret.DropShadowFilter":
-	{
+	"egret.DropShadowFilter":{
 		"distance":"number",
 		"super":"egret.GlowFilter"
 	},
-	"egret.EventDispatcher":
-	{
+	"egret.EventDispatcher":{
 		"implements":["egret.IEventDispatcher"],
 		"super":"egret.HashObject"
 	},
-	"egret.Filter":
-	{
+	"egret.Filter":{
 		"super":"egret.HashObject",
 		"type":"string"
 	},
-	"egret.GlowFilter":
-	{
+	"egret.GlowFilter":{
 		"color":"number",
 		"super":"egret.Filter"
 	},
-	"egret.Graphics":
-	{
+	"egret.Graphics":{
 		"super":"egret.HashObject"
 	},
-	"egret.HashObject":
-	{
+	"egret.HashObject":{
 		"implements":["egret.IHashObject"]
 	},
-	"egret.Matrix":
-	{
+	"egret.Matrix":{
 		"a":"number",
 		"b":"number",
 		"c":"number",
@@ -101,14 +90,15 @@
 		"tx":"number",
 		"ty":"number"
 	},
-	"egret.Point":
-	{
+	"egret.Mesh":{
+		"super":"egret.Bitmap"
+	},
+	"egret.Point":{
 		"super":"egret.HashObject",
 		"x":"number",
 		"y":"number"
 	},
-	"egret.Rectangle":
-	{
+	"egret.Rectangle":{
 		"bottom":"number",
 		"bottomRight":"egret.Point",
 		"height":"number",
@@ -121,24 +111,19 @@
 		"x":"number",
 		"y":"number"
 	},
-	"egret.RenderTexture":
-	{
+	"egret.RenderTexture":{
 		"super":"egret.Texture"
 	},
-	"egret.Shape":
-	{
+	"egret.Shape":{
 		"super":"egret.DisplayObject"
 	},
-	"egret.Sprite":
-	{
+	"egret.Sprite":{
 		"super":"egret.DisplayObjectContainer"
 	},
-	"egret.SpriteSheet":
-	{
+	"egret.SpriteSheet":{
 		"super":"egret.HashObject"
 	},
-	"egret.TextField":
-	{
+	"egret.TextField":{
 		"background":"boolean",
 		"backgroundColor":"number",
 		"bold":"boolean",
@@ -146,6 +131,7 @@
 		"borderColor":"number",
 		"displayAsPassword":"boolean",
 		"fontFamily":"string",
+		"inputType":"string",
 		"italic":"boolean",
 		"lineSpacing":"number",
 		"maxChars":"number",
@@ -164,33 +150,31 @@
 		"verticalAlign":"string",
 		"wordWrap":"boolean"
 	},
-	"egret.Texture":
-	{
+	"egret.Texture":{
 		"super":"egret.HashObject"
 	},
-	"eui.AddItems":
-	{
+	"eui.AddItems":{
 		"implements":["eui.IOverride"],
 		"position":"number",
 		"propertyName":"string",
 		"relativeTo":"string",
 		"target":"string"
 	},
-	"eui.ArrayCollection":
-	{
+	"eui.ArrayCollection":{
 		"implements":["eui.ICollection"],
 		"source":"Array",
 		"super":"egret.EventDispatcher"
 	},
-	"eui.BasicLayout":
-	{
+	"eui.BasicLayout":{
 		"super":"eui.LayoutBase"
 	},
-	"eui.BitmapLabel":
-	{
+	"eui.BitmapLabel":{
 		"bottom":"number",
 		"horizontalCenter":"number",
-		"implements":["eui.UIComponent","eui.IDisplayText"],
+		"implements":[
+			"eui.UIComponent",
+			"eui.IDisplayText"
+		],
 		"includeInLayout":"boolean",
 		"left":"number",
 		"maxHeight":"number",
@@ -204,20 +188,17 @@
 		"top":"number",
 		"verticalCenter":"number"
 	},
-	"eui.Button":
-	{
+	"eui.Button":{
 		"icon":"any",
 		"iconDisplay":"eui.Image",
 		"label":"string",
 		"labelDisplay":"eui.IDisplayText",
 		"super":"eui.Component"
 	},
-	"eui.CheckBox":
-	{
+	"eui.CheckBox":{
 		"super":"eui.ToggleButton"
 	},
-	"eui.Component":
-	{
+	"eui.Component":{
 		"bottom":"number",
 		"currentState":"string",
 		"enabled":"boolean",
@@ -238,8 +219,7 @@
 		"top":"number",
 		"verticalCenter":"number"
 	},
-	"eui.DataGroup":
-	{
+	"eui.DataGroup":{
 		"dataProvider":"eui.ICollection",
 		"itemRenderer":"any",
 		"itemRendererFunction":"Function",
@@ -247,11 +227,13 @@
 		"super":"eui.Group",
 		"useVirtualLayout":"boolean"
 	},
-	"eui.EditableText":
-	{
+	"eui.EditableText":{
 		"bottom":"number",
 		"horizontalCenter":"number",
-		"implements":["eui.UIComponent","eui.IDisplayText"],
+		"implements":[
+			"eui.UIComponent",
+			"eui.IDisplayText"
+		],
 		"includeInLayout":"boolean",
 		"left":"number",
 		"maxHeight":"number",
@@ -267,8 +249,7 @@
 		"top":"number",
 		"verticalCenter":"number"
 	},
-	"eui.Group":
-	{
+	"eui.Group":{
 		"bottom":"number",
 		"currentState":"string",
 		"elementsContent":"Array",
@@ -293,20 +274,16 @@
 		"touchThrough":"boolean",
 		"verticalCenter":"number"
 	},
-	"eui.HScrollBar":
-	{
+	"eui.HScrollBar":{
 		"super":"eui.ScrollBarBase"
 	},
-	"eui.HSlider":
-	{
+	"eui.HSlider":{
 		"super":"eui.SliderBase"
 	},
-	"eui.HorizontalLayout":
-	{
+	"eui.HorizontalLayout":{
 		"super":"eui.LinearLayoutBase"
 	},
-	"eui.Image":
-	{
+	"eui.Image":{
 		"bottom":"number",
 		"horizontalCenter":"number",
 		"implements":["eui.UIComponent"],
@@ -324,19 +301,20 @@
 		"top":"number",
 		"verticalCenter":"number"
 	},
-	"eui.ItemRenderer":
-	{
+	"eui.ItemRenderer":{
 		"data":"any",
 		"implements":["eui.IItemRenderer"],
 		"itemIndex":"number",
 		"selected":"boolean",
 		"super":"eui.Component"
 	},
-	"eui.Label":
-	{
+	"eui.Label":{
 		"bottom":"number",
 		"horizontalCenter":"number",
-		"implements":["eui.UIComponent","eui.IDisplayText"],
+		"implements":[
+			"eui.UIComponent",
+			"eui.IDisplayText"
+		],
 		"includeInLayout":"boolean",
 		"left":"number",
 		"maxHeight":"number",
@@ -350,14 +328,12 @@
 		"top":"number",
 		"verticalCenter":"number"
 	},
-	"eui.LayoutBase":
-	{
+	"eui.LayoutBase":{
 		"super":"egret.EventDispatcher",
 		"target":"eui.Group",
 		"useVirtualLayout":"boolean"
 	},
-	"eui.LinearLayoutBase":
-	{
+	"eui.LinearLayoutBase":{
 		"gap":"number",
 		"horizontalAlign":"string",
 		"paddingBottom":"number",
@@ -367,22 +343,19 @@
 		"super":"eui.LayoutBase",
 		"verticalAlign":"string"
 	},
-	"eui.List":
-	{
+	"eui.List":{
 		"allowMultipleSelection":"boolean",
 		"selectedIndices":"Array",
 		"selectedItems":"Array",
 		"super":"eui.ListBase"
 	},
-	"eui.ListBase":
-	{
+	"eui.ListBase":{
 		"requireSelection":"boolean",
 		"selectedIndex":"number",
 		"selectedItem":"any",
 		"super":"eui.DataGroup"
 	},
-	"eui.Panel":
-	{
+	"eui.Panel":{
 		"closeButton":"eui.Button",
 		"elementsContent":"Array",
 		"moveArea":"egret.DisplayObject",
@@ -390,8 +363,7 @@
 		"title":"string",
 		"titleDisplay":"eui.IDisplayText"
 	},
-	"eui.ProgressBar":
-	{
+	"eui.ProgressBar":{
 		"direction":"string",
 		"labelDisplay":"eui.Label",
 		"labelFunction":"Function",
@@ -399,30 +371,26 @@
 		"super":"eui.Range",
 		"thumb":"eui.UIComponent"
 	},
-	"eui.RadioButton":
-	{
+	"eui.RadioButton":{
 		"group":"eui.RadioButtonGroup",
 		"groupName":"string",
 		"super":"eui.ToggleButton",
 		"value":"any"
 	},
-	"eui.RadioButtonGroup":
-	{
+	"eui.RadioButtonGroup":{
 		"enabled":"boolean",
 		"selectedValue":"any",
 		"selection":"eui.RadioButton",
 		"super":"egret.EventDispatcher"
 	},
-	"eui.Range":
-	{
+	"eui.Range":{
 		"maximum":"number",
 		"minimum":"number",
 		"snapInterval":"number",
 		"super":"eui.Component",
 		"value":"number"
 	},
-	"eui.Rect":
-	{
+	"eui.Rect":{
 		"ellipseHeight":"number",
 		"ellipseWidth":"number",
 		"fillAlpha":"number",
@@ -432,14 +400,13 @@
 		"strokeWeight":"number",
 		"super":"eui.Component"
 	},
-	"eui.ScrollBarBase":
-	{
+	"eui.ScrollBarBase":{
+		"autoVisibility":"boolean",
 		"super":"eui.Component",
 		"thumb":"eui.UIComponent",
 		"viewport":"eui.IViewport"
 	},
-	"eui.Scroller":
-	{
+	"eui.Scroller":{
 		"bounces":"boolean",
 		"horizontalScrollBar":"eui.HScrollBar",
 		"scrollPolicyH":"string",
@@ -449,15 +416,16 @@
 		"verticalScrollBar":"eui.VScrollBar",
 		"viewport":"eui.IViewport"
 	},
-	"eui.SetProperty":
-	{
+	"eui.SetProperty":{
 		"implements":["eui.IOverride"],
 		"name":"string",
 		"target":"string",
 		"value":"any"
 	},
-	"eui.Skin":
-	{
+	"eui.SetStateProperty":{
+		"implements":["eui.IOverride"]
+	},
+	"eui.Skin":{
 		"currentState":"string",
 		"elementsContent":"Array",
 		"height":"number",
@@ -471,8 +439,7 @@
 		"super":"egret.EventDispatcher",
 		"width":"number"
 	},
-	"eui.SliderBase":
-	{
+	"eui.SliderBase":{
 		"liveDragging":"boolean",
 		"pendingValue":"number",
 		"slideDuration":"number",
@@ -481,19 +448,16 @@
 		"track":"eui.UIComponent",
 		"trackHighlight":"egret.DisplayObject"
 	},
-	"eui.State":
-	{
+	"eui.State":{
 		"name":"string",
 		"overrides":"Array",
 		"stateGroups":"Array",
 		"super":"egret.HashObject"
 	},
-	"eui.TabBar":
-	{
+	"eui.TabBar":{
 		"super":"eui.ListBase"
 	},
-	"eui.TextInput":
-	{
+	"eui.TextInput":{
 		"displayAsPassword":"boolean",
 		"maxChars":"number",
 		"prompt":"string",
@@ -504,8 +468,7 @@
 		"textColor":"number",
 		"textDisplay":"eui.EditableText"
 	},
-	"eui.TileLayout":
-	{
+	"eui.TileLayout":{
 		"columnAlign":"string",
 		"columnWidth":"number",
 		"horizontalAlign":"string",
@@ -523,82 +486,126 @@
 		"verticalAlign":"string",
 		"verticalGap":"number"
 	},
-	"eui.ToggleButton":
-	{
+	"eui.ToggleButton":{
 		"selected":"boolean",
 		"super":"eui.Button"
 	},
-	"eui.ToggleSwitch":
-	{
+	"eui.ToggleSwitch":{
 		"super":"eui.ToggleButton"
 	},
-	"eui.VScrollBar":
-	{
+	"eui.VScrollBar":{
 		"super":"eui.ScrollBarBase"
 	},
-	"eui.VSlider":
-	{
+	"eui.VSlider":{
 		"super":"eui.SliderBase"
 	},
-	"eui.VerticalLayout":
-	{
+	"eui.VerticalLayout":{
 		"super":"eui.LinearLayoutBase"
 	},
-	"eui.ViewStack":
-	{
+	"eui.ViewStack":{
 		"implements":["eui.ICollection"],
 		"selectedChild":"egret.DisplayObject",
 		"selectedIndex":"number",
 		"super":"eui.Group"
 	},
-	"eumn":
-	{
-		"egret.Bitmap":
-		{
+	"eumn":{
+		"egret.Bitmap":{
 			"fillMode":"egret.BitmapFillMode"
 		},
-		"egret.BitmapFillMode":["repeat","scale","clip"],
-		"egret.BlendMode":["normal","add","erase"],
-		"egret.DisplayObject":
-		{
+		"egret.BitmapFillMode":[
+			"repeat",
+			"scale",
+			"clip"
+		],
+		"egret.BlendMode":[
+			"normal",
+			"add",
+			"erase"
+		],
+		"egret.DisplayObject":{
 			"blendMode":"egret.BlendMode"
 		},
-		"egret.HorizontalAlign":["left","right","center","justify","contentJustify"],
-		"egret.TextField":
-		{
+		"egret.HorizontalAlign":[
+			"left",
+			"right",
+			"center",
+			"justify",
+			"contentJustify"
+		],
+		"egret.TextField":{
+			"inputType":"egret.TextFieldInputType",
 			"textAlign":"text_textAlign",
+			"type":"egret.TextFieldType",
 			"verticalAlign":"text_verticalAlign"
 		},
-		"egret.TextFieldType":["dynamic","input"],
-		"egret.VerticalAlign":["top","bottom","middle","justify","contentJustify"],
-		"eui.ColumnAlign":["left","justifyUsingGap","justifyUsingWidth"],
-		"eui.Direction":["ltr","rtl","ttb","btt"],
-		"eui.LinearLayoutBase":
-		{
+		"egret.TextFieldInputType":[
+			"text",
+			"tel",
+			"password"
+		],
+		"egret.TextFieldType":[
+			"dynamic",
+			"input"
+		],
+		"egret.VerticalAlign":[
+			"top",
+			"bottom",
+			"middle",
+			"justify",
+			"contentJustify"
+		],
+		"eui.ColumnAlign":[
+			"left",
+			"justifyUsingGap",
+			"justifyUsingWidth"
+		],
+		"eui.Direction":[
+			"ltr",
+			"rtl",
+			"ttb",
+			"btt"
+		],
+		"eui.LinearLayoutBase":{
 			"horizontalAlign":"egret.HorizontalAlign",
 			"verticalAlign":"egret.VerticalAlign"
 		},
-		"eui.ProgressBar":
-		{
+		"eui.ProgressBar":{
 			"direction":"eui.Direction"
 		},
-		"eui.RowAlign":["top","justifyUsingGap","justifyUsingHeight"],
-		"eui.ScrollPolicy":["auto","off","on"],
-		"eui.Scroller":
-		{
+		"eui.RowAlign":[
+			"top",
+			"justifyUsingGap",
+			"justifyUsingHeight"
+		],
+		"eui.ScrollPolicy":[
+			"auto",
+			"off",
+			"on"
+		],
+		"eui.Scroller":{
 			"scrollPolicyH":"eui.ScrollPolicy",
 			"scrollPolicyV":"eui.ScrollPolicy"
 		},
-		"eui.TileLayout":
-		{
+		"eui.TileLayout":{
 			"columnAlign":"eui.ColumnAlign",
 			"horizontalAlign":"egret.HorizontalAlign",
 			"orientation":"eui.TileOrientation",
 			"rowAlign":"eui.RowAlign",
 			"verticalAlign":"egret.VerticalAlign"
 		},
-		"eui.TileOrientation":["rows","columns"],
-		"text_textAlign":["left","right","center"],
-		"text_verticalAlign":["top","bottom","middle"]
+		"eui.TileOrientation":[
+			"rows",
+			"columns"
+		],
+		"text_textAlign":[
+			"left",
+			"right",
+			"center"
+		],
+		"text_verticalAlign":[
+			"top",
+			"bottom",
+			"middle"
+		]
 	}
 }

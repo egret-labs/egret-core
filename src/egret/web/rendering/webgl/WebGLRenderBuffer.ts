@@ -480,8 +480,8 @@ module egret.web {
          */
         public static create(width:number, height:number):WebGLRenderBuffer {
             var buffer = renderBufferPool.pop();
-            width = Math.min(width, 1024);
-            height = Math.min(height, 1024);
+            // width = Math.min(width, 1024);
+            // height = Math.min(height, 1024);
             if (buffer) {
                 buffer.resize(width, height);
             }
