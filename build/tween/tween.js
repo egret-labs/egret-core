@@ -1340,6 +1340,8 @@ var egret;
          */
         p.set = function (props, target) {
             if (target === void 0) { target = null; }
+            //更新当前数据，保证缓动流畅性
+            this._appendQueueProps(props);
             return this._addAction({ f: this._set, o: this, p: [props, target ? target : this._target] });
         };
         /**

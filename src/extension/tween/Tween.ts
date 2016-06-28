@@ -761,6 +761,8 @@ module egret {
          * @platform Web,Native
          */
         public set(props:any, target = null):Tween {
+            //更新当前数据，保证缓动流畅性
+            this._appendQueueProps(props);
             return this._addAction({f: this._set, o: this, p: [props, target ? target : this._target]});
         }
 
