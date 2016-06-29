@@ -9,7 +9,7 @@ var CopyNativeFiles = (function () {
         var options = egret.args;
         //拷贝项目到native工程中
         var cpFiles = new CopyFilesCommand();
-        if (platform == "android") {
+        if (platform == "android" || platform == "android_as" ) {
             var url2 = FileUtil.joinPath(nativePath, "proj.android/assets", "egret-game");
         }
         else if (platform == "ios") {
@@ -41,6 +41,15 @@ var CopyNativeFiles = (function () {
         if (versionFile === void 0) { versionFile = null; }
         var config = egret.args.properties;
         var nativePath;
+        if (nativePath = config.getNativePath("android_as")) {
+            var url1 = FileUtil.joinPath(nativePath, "proj.android");
+            var url2 = FileUtil.joinPath(nativePath, "proj.android/assets", "egret-game");
+            CopyNativeFiles.copyProjectFiles("android_as", nativePath, isDebug);
+            //修改java文件
+            var entrance = new ChangeEntranceCMD();
+            entrance.initCommand(url1, "android_as", versionFile);
+            entrance.execute();
+        }
         if (nativePath = config.getNativePath("android")) {
             var url1 = FileUtil.joinPath(nativePath, "proj.android");
             var url2 = FileUtil.joinPath(nativePath, "proj.android/assets", "egret-game");

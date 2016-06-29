@@ -168,12 +168,12 @@ module egret.native {
         public play(startTime?:number, loop:boolean = false) {
             this.loop = loop;
             if (!this.loaded) {
-                this.load();
+                this.load(this.src);
                 this.once(egret.Event.COMPLETE, e=>this.play(startTime, loop), this)
                 return;
             }
             var haveStartTime = false;
-            if (startTime != undefined) {
+            if (startTime != undefined && startTime != this.originVideo.currentTime) {
                 this.originVideo.currentTime = startTime || 0;
                 haveStartTime = true;
             }

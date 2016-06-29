@@ -96,6 +96,7 @@
     <xs:attribute name="font" type="xs:string"/>
     <xs:attribute name="letterSpacing" type="xs:decimal"/>
     <xs:attribute name="lineSpacing" type="xs:decimal"/>
+    <xs:attribute name="smoothing" type="xs:boolean"/>
     <xs:attribute name="text" type="xs:string"/>
     <xs:attribute name="textAlign" type="xs:string"/>
     <xs:attribute name="verticalAlign" type="xs:string"/>
@@ -122,6 +123,7 @@
       <xs:element name="font" type="Object"/>
       <xs:element name="letterSpacing" type="number"/>
       <xs:element name="lineSpacing" type="number"/>
+      <xs:element name="smoothing" type="boolean"/>
       <xs:element name="text" type="string"/>
       <xs:element name="textAlign" type="string"/>
       <xs:element name="verticalAlign" type="string"/>
@@ -139,11 +141,13 @@
   <xs:attributeGroup name="egret.BlurFilter">
     <xs:attributeGroup ref="egret.Filter"/>
     <xs:attribute name="blurX" type="xs:decimal"/>
+    <xs:attribute name="blurY" type="xs:decimal"/>
   </xs:attributeGroup>
   <xs:group name="BlurFilter_attributeElement">
     <xs:choice>
       <xs:group ref="Filter_attributeElement"/>
       <xs:element name="blurX" type="number"/>
+      <xs:element name="blurY" type="number"/>
     </xs:choice>
   </xs:group>
   <xs:element name="BlurFilter">
@@ -196,6 +200,7 @@
     <xs:attribute name="cacheAsBitmap" type="xs:boolean"/>
     <xs:attribute name="class" type="xs:string"/>
     <xs:attribute name="excludeFrom" type="xs:string"/>
+    <xs:attribute name="filters" type="xs:string"/>
     <xs:attribute name="height" type="xs:string"/>
     <xs:attribute name="includeIn" type="xs:string"/>
     <xs:attribute name="locked" type="xs:boolean"/>
@@ -234,6 +239,7 @@
       <xs:element name="cacheAsBitmap" type="boolean"/>
       <xs:element name="class" type="string"/>
       <xs:element name="excludeFrom" type="string"/>
+      <xs:element name="filters" type="Array_any"/>
       <xs:element name="height" type="number"/>
       <xs:element name="includeIn" type="string"/>
       <xs:element name="locked" type="boolean"/>
@@ -418,6 +424,23 @@
       <xs:attributeGroup ref="egret.Matrix"/>
     </xs:complexType>
   </xs:element>
+  <xs:attributeGroup name="egret.Mesh">
+    <xs:attributeGroup ref="egret.Bitmap"/>
+  </xs:attributeGroup>
+  <xs:group name="Mesh_attributeElement">
+    <xs:choice>
+      <xs:group ref="Bitmap_attributeElement"/>
+    </xs:choice>
+  </xs:group>
+  <xs:element name="Mesh">
+    <xs:complexType>
+      <xs:choice minOccurs="0" maxOccurs="unbounded">
+        <xs:any namespace="##other"/>
+        <xs:group ref="Mesh_attributeElement"/>
+      </xs:choice>
+      <xs:attributeGroup ref="egret.Mesh"/>
+    </xs:complexType>
+  </xs:element>
   <xs:attributeGroup name="egret.Point">
     <xs:attributeGroup ref="egret.HashObject"/>
     <xs:attribute name="x" type="xs:decimal"/>
@@ -552,11 +575,24 @@
       <xs:attributeGroup ref="egret.SpriteSheet"/>
     </xs:complexType>
   </xs:element>
+  <xs:simpleType name="egret.TextFieldInputType">
+    <xs:restriction base="xs:string">
+      <xs:enumeration value="text"/>
+      <xs:enumeration value="tel"/>
+      <xs:enumeration value="password"/>
+    </xs:restriction>
+  </xs:simpleType>
   <xs:simpleType name="text_textAlign">
     <xs:restriction base="xs:string">
       <xs:enumeration value="left"/>
       <xs:enumeration value="right"/>
       <xs:enumeration value="center"/>
+    </xs:restriction>
+  </xs:simpleType>
+  <xs:simpleType name="egret.TextFieldType">
+    <xs:restriction base="xs:string">
+      <xs:enumeration value="dynamic"/>
+      <xs:enumeration value="input"/>
     </xs:restriction>
   </xs:simpleType>
   <xs:simpleType name="text_verticalAlign">
@@ -575,6 +611,7 @@
     <xs:attribute name="borderColor" type="xs:string"/>
     <xs:attribute name="displayAsPassword" type="xs:boolean"/>
     <xs:attribute name="fontFamily" type="xs:string"/>
+    <xs:attribute name="inputType" type="egret.TextFieldInputType"/>
     <xs:attribute name="italic" type="xs:boolean"/>
     <xs:attribute name="lineSpacing" type="xs:decimal"/>
     <xs:attribute name="maxChars" type="xs:decimal"/>
@@ -588,7 +625,7 @@
     <xs:attribute name="textAlign" type="text_textAlign"/>
     <xs:attribute name="textColor" type="xs:string"/>
     <xs:attribute name="textFlow" type="xs:string"/>
-    <xs:attribute name="type" type="xs:string"/>
+    <xs:attribute name="type" type="egret.TextFieldType"/>
     <xs:attribute name="verticalAlign" type="text_verticalAlign"/>
     <xs:attribute name="wordWrap" type="xs:boolean"/>
   </xs:attributeGroup>
@@ -602,6 +639,7 @@
       <xs:element name="borderColor" type="number"/>
       <xs:element name="displayAsPassword" type="boolean"/>
       <xs:element name="fontFamily" type="string"/>
+      <xs:element name="inputType" type="string"/>
       <xs:element name="italic" type="boolean"/>
       <xs:element name="lineSpacing" type="number"/>
       <xs:element name="maxChars" type="number"/>
@@ -995,6 +1033,7 @@
       <xs:element ref="Label"/>
       <xs:element ref="List"/>
       <xs:element ref="ListBase"/>
+      <xs:element ref="Mesh"/>
       <xs:element ref="Panel"/>
       <xs:element ref="ProgressBar"/>
       <xs:element ref="RadioButton"/>
@@ -1604,6 +1643,7 @@
   </xs:element>
   <xs:attributeGroup name="eui.ScrollBarBase">
     <xs:attributeGroup ref="eui.Component"/>
+    <xs:attribute name="autoVisibility" type="xs:boolean"/>
     <xs:attribute name="thumb" type="xs:string"/>
     <xs:attribute name="viewport" type="xs:string"/>
   </xs:attributeGroup>
@@ -1623,6 +1663,7 @@
   <xs:group name="ScrollBarBase_attributeElement">
     <xs:choice>
       <xs:group ref="Component_attributeElement"/>
+      <xs:element name="autoVisibility" type="boolean"/>
       <xs:element name="thumb" type="eui.UIComponent"/>
       <xs:element name="viewport" type="eui.IViewport"/>
     </xs:choice>
@@ -1711,6 +1752,9 @@
       </xs:choice>
       <xs:attributeGroup ref="eui.SetProperty"/>
     </xs:complexType>
+  </xs:element>
+  <xs:element name="SetStateProperty">
+    <xs:complexType/>
   </xs:element>
   <xs:attributeGroup name="eui.Skin">
     <xs:attributeGroup ref="egret.EventDispatcher"/>

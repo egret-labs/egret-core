@@ -3525,12 +3525,12 @@ var egret;
                 if (loop === void 0) { loop = false; }
                 this.loop = loop;
                 if (!this.loaded) {
-                    this.load();
+                    this.load(this.src);
                     this.once(egret.Event.COMPLETE, function (e) { return _this.play(startTime, loop); }, this);
                     return;
                 }
                 var haveStartTime = false;
-                if (startTime != undefined) {
+                if (startTime != undefined && startTime != this.originVideo.currentTime) {
                     this.originVideo.currentTime = startTime || 0;
                     haveStartTime = true;
                 }
@@ -4714,13 +4714,15 @@ var egret;
                 }
                 var returnType = 1;
                 var maxLength = values[21 /* maxChars */] <= 0 ? -1 : values[21 /* maxChars */];
+                var node = textfield.$getRenderNode();
+                var matrix = node.renderMatrix;
                 egret_native.TextInputOp.setKeybordOpen(true, JSON.stringify({
                     "inputMode": inputMode,
                     "inputFlag": inputFlag,
                     "returnType": returnType,
                     "maxLength": maxLength,
-                    "x": textfield.x,
-                    "y": textfield.y,
+                    "x": matrix.tx,
+                    "y": matrix.ty,
                     "width": textfield.width,
                     "height": textfield.height,
                     "font_size": values[0 /* fontSize */],
