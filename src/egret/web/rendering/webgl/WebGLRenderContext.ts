@@ -820,25 +820,18 @@ module egret.web {
             }
         }
 
-        /////滤镜相关方法
         /**
          * 应用滤镜绘制给定的render target
          * 此方法不会导致input被释放，所以如果需要释放input，需要调用此方法后手动调用release
          */
-        public drawTargetWidthFilter(filters:Filter[], input:WebGLRenderBuffer):void {
-            if (this.contextLost) {
-                return;
-            }
-
-            if (this.vao.reachMaxSize()) {
-                this.$drawWebGL();
-            }
-
+        public drawTargetWidthFilters(filters:Filter[], input:WebGLRenderBuffer):void {
             var originInput = input,
             filtersLen:number = filters.length,
             output:WebGLRenderBuffer,
             gOffsetX:number = 0,// x轴累计偏移量
             gOffsetY:number = 0;// y轴累计偏移量
+
+            // 应用前面的滤镜
             if(filtersLen > 1) {
                 for(var i = 0; i < filtersLen - 1; i++) {
                     var filter = filters[i];
@@ -865,7 +858,9 @@ module egret.web {
                         offsetY += Math.abs(distanceY);
                     }
                     output = WebGLRenderBuffer.create(input.$getWidth() + offsetX * 2, input.$getHeight() + offsetY * 2);
-                    this.drawToRenderTarget(filter, input, output, (output.$getWidth() - input.$getWidth()) / 2, (output.$getHeight() - input.$getHeight()) / 2);
+                    output.setTransform(1, 0, 0, 1, (output.$getWidth() - input.$getWidth()) / 2, (output.$getHeight() - input.$getHeight()) / 2);
+                    output.globalAlpha = 1;
+                    this.drawToRenderTarget(filter, input, output, 0, 0);
                     if(input != originInput) {
                         WebGLRenderBuffer.release(input);
                     }
@@ -876,9 +871,49 @@ module egret.web {
                 }
             }
 
-            // todo 这一部分可以移到drawToRenderTarget中
-            // 处理最后的滤镜
+            // 应用最后一个滤镜并绘制到当前场景中
             var filter = filters[filtersLen - 1];
+            this.drawToRenderTarget(filter, input, this.currentBuffer, gOffsetX, gOffsetY);
+
+            // 释放掉用于交换的buffer
+            if(input != originInput) {
+                WebGLRenderBuffer.release(input);
+            }
+        }
+
+        private getUv(sourceX, sourceY, sourceWidth, sourceHeight, textureSourceWidth, textureSourceHeight) {
+            var uv = [
+                0, 0,
+                1, 1
+            ];
+            for (var i = 0, l = uv.length; i < l; i += 2) {
+                var u = uv[i];
+                var v = uv[i + 1];
+                // uv
+                uv[i] = (sourceX + u * sourceWidth) / textureSourceWidth;
+                uv[i + 1] = (sourceY + v * sourceHeight) / textureSourceHeight;
+            }
+            return uv;
+        }
+
+        /**
+         * 向一个renderTarget中绘制
+         * */
+        private drawToRenderTarget(filter:Filter, input:WebGLRenderBuffer, output:WebGLRenderBuffer, offsetX:number, offsetY:number):void {
+            if (this.contextLost) {
+                return;
+            }
+
+            if (this.vao.reachMaxSize()) {
+                this.$drawWebGL();
+            }
+
+            this.pushBuffer(output);
+
+            var originInput = input,
+            temp:WebGLRenderBuffer,
+            gOffsetX:number = offsetX,// x轴累计偏移量
+            gOffsetY:number = offsetY;// y轴累计偏移量
 
             // 模糊滤镜实现为blurX与blurY的叠加
             if (filter.type == "blur") {
@@ -890,12 +925,14 @@ module egret.web {
                     this.blurFilter.blurY = 0;
                     var offsetX:number = this.blurFilter.blurX;
                     var offsetY:number = this.blurFilter.blurY;
-                    output = WebGLRenderBuffer.create(input.$getWidth() + offsetX * 2, input.$getHeight() + offsetY * 2);
-                    this.drawToRenderTarget(this.blurFilter, input, output, (output.$getWidth() - input.$getWidth()) / 2, (output.$getHeight() - input.$getHeight()) / 2);
+                    temp = WebGLRenderBuffer.create(input.$getWidth() + offsetX * 2, input.$getHeight() + offsetY * 2);
+                    temp.setTransform(1, 0, 0, 1, (temp.$getWidth() - input.$getWidth()) / 2, (temp.$getHeight() - input.$getHeight()) / 2);
+                    temp.globalAlpha = 1;
+                    this.drawToRenderTarget(this.blurFilter, input, temp, 0, 0);
                     if(input != originInput) {
                         WebGLRenderBuffer.release(input);
                     }
-                    input = output;
+                    input = temp;
                     gOffsetX += offsetX;
                     gOffsetY += offsetY;
                 }
@@ -925,11 +962,10 @@ module egret.web {
                 offsetX = this.blurFilter.blurX;
                 offsetY = this.blurFilter.blurY;
             }
-            var buffer = this.currentBuffer;
-            buffer.saveTransform();
-            buffer.transform(1, 0, 0, -1, 0, input.$getHeight() + 2 * offsetY + (- offsetY - gOffsetY) * 2);
-            this.vao.cacheArrays(buffer.globalMatrix, buffer.globalAlpha, -offsetX, -offsetY, input.$getWidth() + 2 * offsetX, input.$getHeight() + 2 * offsetY, - offsetX - gOffsetX, - offsetY - gOffsetY, input.$getWidth() + 2 * offsetX, input.$getHeight() + 2 * offsetY, input.$getWidth(), input.$getHeight());
-            buffer.restoreTransform();
+            output.saveTransform();
+            output.transform(1, 0, 0, -1, 0, input.$getHeight() + 2 * offsetY + (- offsetY - gOffsetY) * 2);
+            this.vao.cacheArrays(output.globalMatrix, output.globalAlpha, -offsetX, -offsetY, input.$getWidth() + 2 * offsetX, input.$getHeight() + 2 * offsetY, - offsetX - gOffsetX, - offsetY - gOffsetY, input.$getWidth() + 2 * offsetX, input.$getHeight() + 2 * offsetY, input.$getWidth(), input.$getHeight());
+            output.restoreTransform();
 
             var filterData = {type: "", matrix: null, blurX: 0, blurY: 0, textureWidth: 0, textureHeight: 0};
             if(filter.type == "colorTransform") {
@@ -948,37 +984,12 @@ module egret.web {
             if(input != originInput) {
                 WebGLRenderBuffer.release(input);
             }
-        }
 
-        private getUv(sourceX, sourceY, sourceWidth, sourceHeight, textureSourceWidth, textureSourceHeight) {
-            var uv = [
-                0, 0,
-                1, 1
-            ];
-            for (var i = 0, l = uv.length; i < l; i += 2) {
-                var u = uv[i];
-                var v = uv[i + 1];
-                // uv
-                uv[i] = (sourceX + u * sourceWidth) / textureSourceWidth;
-                uv[i + 1] = (sourceY + v * sourceHeight) / textureSourceHeight;
-            }
-            return uv;
-        }
-
-        /**
-         * 向一个renderTarget中绘制
-         * */
-        private drawToRenderTarget(filter:Filter, input:WebGLRenderBuffer, output:WebGLRenderBuffer, offsetX:number, offsetY:number):void {
-            output.setTransform(1, 0, 0, 1, offsetX, offsetY);
-            output.globalAlpha = 1;
-            this.pushBuffer(output);
-            output.context.drawTargetWidthFilter([filter], input);
             this.popBuffer();
         }
 
         private colorMatrixFilter = null;
         private blurFilter = null;
-        
         /**
          * 绘制glow
          * */
@@ -1012,6 +1023,8 @@ module egret.web {
                 0, 0, 0, filter.alpha, 0,
             ];
             output = web.WebGLRenderBuffer.create(input.$getWidth(), input.$getHeight());
+            output.setTransform(1, 0, 0, 1, 0, 0);
+            output.globalAlpha = 1;
             this.drawToRenderTarget(this.colorMatrixFilter, input, output, 0, 0);
             this.drawImage(output.rootRenderTarget, 0, 0, output.$getWidth(), output.$getHeight(), distanceX - offsetX + destX, distanceY - offsetY + destY, output.$getWidth(), output.$getHeight(), output.$getWidth(), output.$getHeight());
 
@@ -1021,7 +1034,9 @@ module egret.web {
             input = output;
             offsetX += filter.blurX;
             output = web.WebGLRenderBuffer.create(input.$getWidth() + offsetX * 2, input.$getHeight());
-            this.drawToRenderTarget(this.blurFilter, input, output, offsetX, 0);
+            output.setTransform(1, 0, 0, 1, offsetX, 0);
+            output.globalAlpha = 1;
+            this.drawToRenderTarget(this.blurFilter, input, output, 0, 0);
             WebGLRenderBuffer.release(input);
             this.drawImage(output.rootRenderTarget, 0, 0, output.$getWidth(), output.$getHeight(), distanceX - offsetX + destX, distanceY - offsetY + destY, output.$getWidth(), output.$getHeight(), output.$getWidth(), output.$getHeight());
 
@@ -1031,7 +1046,9 @@ module egret.web {
             input = output;
             offsetY += filter.blurY;
             output = web.WebGLRenderBuffer.create(input.$getWidth(), input.$getHeight() + offsetY * 2);
-            this.drawToRenderTarget(this.blurFilter, input, output, 0, offsetY);
+            output.setTransform(1, 0, 0, 1, 0, offsetY);
+            output.globalAlpha = 1;
+            this.drawToRenderTarget(this.blurFilter, input, output, 0, 0);
             WebGLRenderBuffer.release(input);
             this.drawImage(output.rootRenderTarget, 0, 0, output.$getWidth(), output.$getHeight(), distanceX - offsetX + destX, distanceY - offsetY + destY, output.$getWidth(), output.$getHeight(), output.$getWidth(), output.$getHeight());
 
@@ -1044,8 +1061,6 @@ module egret.web {
 
             WebGLRenderBuffer.release(output);
         }
-
-        /////
 
         public static blendModesForGL:any = null;
 

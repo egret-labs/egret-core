@@ -231,7 +231,7 @@ module egret.web {
                 buffer.setTransform(1, 0, 0, 1, region.minX + matrix.tx, region.minY + matrix.ty);
                 // 绘制结果的时候，应用滤镜
                 var filters = displayObject.$getFilters();
-                buffer.context.drawTargetWidthFilter(filters, displayBuffer);
+                buffer.context.drawTargetWidthFilters(filters, displayBuffer);
             }
 
             renderBufferPool.push(displayBuffer);
