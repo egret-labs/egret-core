@@ -227,19 +227,11 @@ module egret.web {
             //绘制结果到屏幕
             if (drawCalls > 0) {
                 drawCalls++;
-
                 buffer.globalAlpha = 1;
-                buffer.setTransform(1, 0, 0, -1, region.minX + matrix.tx, region.minY + matrix.ty + displayBuffer.height);
-                var displayBufferWidth = displayBuffer.width;
-                var displayBufferHeight = displayBuffer.height;
+                buffer.setTransform(1, 0, 0, 1, region.minX + matrix.tx, region.minY + matrix.ty);
                 // 绘制结果的时候，应用滤镜
-                // buffer.context.drawTexture(<WebGLTexture><any>displayBuffer.rootRenderTarget.texture, 0, 0, displayBufferWidth, displayBufferHeight,
-                //     0, 0, displayBufferWidth, displayBufferHeight, displayBufferWidth, displayBufferHeight);
                 var filters = displayObject.$getFilters();
-                buffer.context.drawTextureWidthFilter(filters, <WebGLTexture><any>displayBuffer.rootRenderTarget.texture, 0, 0, displayBufferWidth, displayBufferHeight,
-                    0, 0, displayBufferWidth, displayBufferHeight, displayBufferWidth, displayBufferHeight,
-                    displayBufferWidth, displayBufferHeight, 0, 0);
-
+                buffer.context.drawTargetWidthFilter(filters, displayBuffer);
             }
 
             renderBufferPool.push(displayBuffer);

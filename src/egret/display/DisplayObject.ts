@@ -2038,7 +2038,7 @@ module egret {
                         var angle:number = (<DropShadowFilter>filter).angle || 0;
                         var distanceX = 0;
                         var distanceY = 0;
-                        if (distance != 0 && angle != 0) {
+                        if (distance != 0) {
                             //todo 缓存这个数据
                             distanceX = Math.ceil(distance * egret.NumberUtils.cos(angle));
                             distanceY = Math.ceil(distance * egret.NumberUtils.sin(angle));

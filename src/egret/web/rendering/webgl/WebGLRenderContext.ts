@@ -498,38 +498,18 @@ module egret.web {
                 }
             }
 
-
             if(meshUVs) {
                 this.vao.changeToMeshIndices();
             }
 
-            // var filters = buffer.getFilters();
             var transform = buffer.globalMatrix;
             var alpha = buffer.globalAlpha;
-            // if(filters.length > 0) {
-            //     var width = destWidth;
-            //     var height = destHeight;
-            //     var offsetX = 0;
-            //     var offsetY = 0;
-            //     if(bounds) {
-            //         width = bounds.width;
-            //         height = bounds.height;
-            //         offsetX = -bounds.x;
-            //         offsetY = -bounds.y;
-            //     }
-            //     this.drawTextureWidthFilter(filters, texture,
-            //         sourceX, sourceY, sourceWidth, sourceHeight,
-            //         destX, destY, destWidth, destHeight, textureWidth, textureHeight,
-            //         width, height, offsetX, offsetY, meshUVs, meshVertices, meshIndices);// 后参数用于draw mesh
-            // } else {
 
-                var count = meshIndices ? meshIndices.length / 3 : 2;
-                this.drawCmdManager.pushDrawTexture(texture, count);
+            var count = meshIndices ? meshIndices.length / 3 : 2;
+            this.drawCmdManager.pushDrawTexture(texture, count);
 
-                this.vao.cacheArrays(transform, alpha, sourceX, sourceY, sourceWidth, sourceHeight, destX, destY, destWidth, destHeight, textureWidth, textureHeight,
-                    meshUVs, meshVertices, meshIndices);
-            // }
-
+            this.vao.cacheArrays(transform, alpha, sourceX, sourceY, sourceWidth, sourceHeight, destX, destY, destWidth, destHeight, textureWidth, textureHeight,
+                meshUVs, meshVertices, meshIndices);
         }
 
         /**
@@ -842,49 +822,25 @@ module egret.web {
 
         /////滤镜相关方法
         /**
-         * 绘制材质并应用滤镜
-         * 这里为drawMesh新增四个参数：realWidth, realHeight, offsetX, offsetY
-         * realWidth与realHeight为实际mesh宽高
-         * offsetX与offsetY为绘制mesh时的偏移量，向左为正值
+         * 应用滤镜绘制给定的render target
+         * 此方法不会导致input被释放，所以如果需要释放input，需要调用此方法后手动调用release
          */
-        public drawTextureWidthFilter(filters:any, webGLTexture:WebGLTexture,
-                            sourceX:number, sourceY:number, sourceWidth:number, sourceHeight:number,
-                            destX:number, destY:number, destWidth:number, destHeight:number, textureWidth:number, textureHeight:number,
-                            realWidth:number, realHeight:number, _offsetX:number, _offsetY:number,
-                            meshUVs?:number[], meshVertices?:number[], meshIndices?:number[]) {
-            var buffer = this.currentBuffer;
-
-            if (this.contextLost || !webGLTexture || !buffer) {
+        public drawTargetWidthFilter(filters:Filter[], input:WebGLRenderBuffer):void {
+            if (this.contextLost) {
                 return;
             }
 
-            if(meshVertices && meshIndices) {
-                if (this.vao.reachMaxSize(meshVertices.length / 2, meshIndices.length)) {
-                    this.$drawWebGL();
-                }
-            } else {
-                if (this.vao.reachMaxSize()) {
-                    this.$drawWebGL();
-                }
+            if (this.vao.reachMaxSize()) {
+                this.$drawWebGL();
             }
 
-            var len = filters.length;
-
-            var gOffsetX = 0;
-            var gOffsetY = 0;
-
-            // 递归执行滤镜
-            var input = null;
-            var output = null;
-            if(len > 1) {
-                // TODO 可省略
-                input = WebGLRenderBuffer.create(realWidth, realHeight);
-                gOffsetX += _offsetX;
-                gOffsetY += _offsetY;
-                this.drawToRenderTarget(null, webGLTexture, input, sourceX, sourceY, sourceWidth, sourceHeight, _offsetX, _offsetY, destWidth, destHeight, textureWidth, textureHeight, true,
-                    meshUVs, meshVertices, meshIndices);
-
-                for(var i = 0; i < len - 1; i++) {
+            var originInput = input,
+            filtersLen:number = filters.length,
+            output:WebGLRenderBuffer,
+            gOffsetX:number = 0,// x轴累计偏移量
+            gOffsetY:number = 0;// y轴累计偏移量
+            if(filtersLen > 1) {
+                for(var i = 0; i < filtersLen - 1; i++) {
                     var filter = filters[i];
                     // 要为模糊发光等改变尺寸的滤镜创建一个大一些的画布
                     var offsetX = 0;
@@ -892,16 +848,16 @@ module egret.web {
                     var distanceX:number = 0;
                     var distanceY:number = 0;
                     if(filter.type == "blur") {
-                        offsetX = filter.blurX;// * 0.028 * input.$getWidth();
-                        offsetY = filter.blurY;// * 0.028 * input.$getHeight();
+                        offsetX += (<BlurFilter>filter).blurX;
+                        offsetY += (<BlurFilter>filter).blurY;
                     }
                     if(filter.type == "glow") {
-                        offsetX = filter.blurX;// * 0.028 * input.$getWidth();
-                        offsetY = filter.blurY;// * 0.028 * input.$getHeight();
-                        // 计算glow滤镜需要的尺寸还需要加上偏移量，此处把glow放置在滤镜队列前面会造成影子被剪切
-                        var distance:number = filter.distance || 0;
-                        var angle:number = filter.angle || 0;
-                        if (distance != 0 && angle != 0) {
+                        offsetX += (<GlowFilter>filter).blurX;
+                        offsetY += (<GlowFilter>filter).blurY;
+                        // 计算dropShadow滤镜需要的尺寸还需要加上偏移量
+                        var distance:number = (<DropShadowFilter>filter).distance || 0;
+                        var angle:number = (<DropShadowFilter>filter).angle || 0;
+                        if (distance != 0) {
                             distanceX = Math.ceil(distance * egret.NumberUtils.cos(angle));
                             distanceY = Math.ceil(distance * egret.NumberUtils.sin(angle));
                         }
@@ -909,7 +865,10 @@ module egret.web {
                         offsetY += Math.abs(distanceY);
                     }
                     output = WebGLRenderBuffer.create(input.$getWidth() + offsetX * 2, input.$getHeight() + offsetY * 2);
-                    this.drawToRenderTarget(filter, input, output, 0, 0, input.$getWidth(), input.$getHeight(), (output.$getWidth() - input.$getWidth()) / 2, (output.$getHeight() - input.$getHeight()) / 2, input.$getWidth(), input.$getHeight(), input.$getWidth(), input.$getHeight());
+                    this.drawToRenderTarget(filter, input, output, (output.$getWidth() - input.$getWidth()) / 2, (output.$getHeight() - input.$getHeight()) / 2);
+                    if(input != originInput) {
+                        WebGLRenderBuffer.release(input);
+                    }
                     input = output;
 
                     gOffsetX += offsetX;
@@ -917,113 +876,77 @@ module egret.web {
                 }
             }
 
-            // 应用最后的滤镜
-            var filter = filters[len - 1];
+            // todo 这一部分可以移到drawToRenderTarget中
+            // 处理最后的滤镜
+            var filter = filters[filtersLen - 1];
 
-            // 实现为blurX与blurY的叠加
-            if (filter.type == "blur" && filter.blurX != 0 && filter.blurY != 0) {
-                if (!this.blurFilter) {
-                    this.blurFilter = new egret.BlurFilter(2, 2);
-                }
-                this.blurFilter.blurX = filter.blurX;
-                this.blurFilter.blurY = 0;
-                var offsetX = 0;
-                var offsetY = 0;
-                if(output) {
-                    input = output;
-                    offsetX = this.blurFilter.blurX;// * 0.028 * input.$getWidth();
-                    offsetY = this.blurFilter.blurY;// * 0.028 * input.$getHeight();
+            // 模糊滤镜实现为blurX与blurY的叠加
+            if (filter.type == "blur") {
+                if((<BlurFilter>filter).blurX != 0 && (<BlurFilter>filter).blurY != 0) {
+                    if (!this.blurFilter) {
+                        this.blurFilter = new egret.BlurFilter(2, 2);
+                    }
+                    this.blurFilter.blurX = (<BlurFilter>filter).blurX;
+                    this.blurFilter.blurY = 0;
+                    var offsetX:number = this.blurFilter.blurX;
+                    var offsetY:number = this.blurFilter.blurY;
                     output = WebGLRenderBuffer.create(input.$getWidth() + offsetX * 2, input.$getHeight() + offsetY * 2);
-                    this.drawToRenderTarget(this.blurFilter, input, output, 0, 0, input.$getWidth(), input.$getHeight(), (output.$getWidth() - input.$getWidth()) / 2, (output.$getHeight() - input.$getHeight()) / 2, input.$getWidth(), input.$getHeight(), input.$getWidth(), input.$getHeight());
-                } else {
-                    offsetX = this.blurFilter.blurX;// * 0.028 * realWidth;
-                    offsetY = this.blurFilter.blurY;// * 0.028 * realHeight;
-                    gOffsetX += _offsetX;
-                    gOffsetY += _offsetY;
-                    output = WebGLRenderBuffer.create(realWidth + offsetX * 2, realHeight + offsetY * 2);
-                    this.drawToRenderTarget(this.blurFilter, webGLTexture, output, sourceX, sourceY, sourceWidth, sourceHeight, offsetX + _offsetX, offsetY + _offsetY, destWidth, destHeight, textureWidth, textureHeight, true, meshUVs, meshVertices, meshIndices);
+                    this.drawToRenderTarget(this.blurFilter, input, output, (output.$getWidth() - input.$getWidth()) / 2, (output.$getHeight() - input.$getHeight()) / 2);
+                    if(input != originInput) {
+                        WebGLRenderBuffer.release(input);
+                    }
+                    input = output;
+                    gOffsetX += offsetX;
+                    gOffsetY += offsetY;
                 }
-                gOffsetX += offsetX;
-                gOffsetY += offsetY;
             }
 
             // 如果是发光滤镜，绘制光晕
             if(filter.type == "glow") {
-                if(!output) {
-                    gOffsetX += _offsetX;
-                    gOffsetY += _offsetY;
-                    output = WebGLRenderBuffer.create(realWidth, realHeight);
-                    this.drawToRenderTarget(null, webGLTexture, output, sourceX, sourceY, sourceWidth, sourceHeight, _offsetX, _offsetY, destWidth, destHeight, textureWidth, textureHeight, true, meshUVs, meshVertices, meshIndices);
-                }
-                this.drawGlow(filter, output, destX - gOffsetX, destY - gOffsetY);
+                this.drawGlow(<GlowFilter>filter, input, -gOffsetX, -gOffsetY);
             }
 
-            // 绘制output结果到舞台
-            var offsetX = 0;
-            var offsetY = 0;
-            if(output) {
-                if (filter.type == "blur"){
-                    if (!this.blurFilter) {
-                        this.blurFilter = new egret.BlurFilter(2, 2);
-                    }
-                    if(filter.blurX == 0 || filter.blurY == 0) {
-                        this.blurFilter.blurX = filter.blurX;
-                        this.blurFilter.blurY = filter.blurY;
-                    } else {
-                        this.blurFilter.blurX = 0;
-                        this.blurFilter.blurY = filter.blurY;
-                    }
-                    filter = this.blurFilter;
+            // 绘制input结果到舞台
+            var offsetX:number = 0;
+            var offsetY:number = 0;
+            if (filter.type == "blur"){
+                if (!this.blurFilter) {
+                    this.blurFilter = new egret.BlurFilter(2, 2);
+                }
+                if((<BlurFilter>filter).blurX == 0 || (<BlurFilter>filter).blurY == 0) {
+                    this.blurFilter.blurX = (<BlurFilter>filter).blurX;
+                    this.blurFilter.blurY = (<BlurFilter>filter).blurY;
+                } else {
+                    this.blurFilter.blurX = 0;
+                    this.blurFilter.blurY = (<BlurFilter>filter).blurY;
+                }
+                filter = this.blurFilter;
 
-                    offsetX = this.blurFilter.blurX;// * 0.028 * output.$getWidth();
-                    offsetY = this.blurFilter.blurY;// * 0.028 * output.$getHeight();
-                }
-                var buffer = this.currentBuffer;
-                buffer.saveTransform();
-                buffer.transform(1, 0, 0, -1, 0, output.$getHeight() + 2 * offsetY + (destY - offsetY - gOffsetY) * 2);
-                this.vao.cacheArrays(buffer.globalMatrix, buffer.globalAlpha, -offsetX, -offsetY, output.$getWidth() + 2 * offsetX, output.$getHeight() + 2 * offsetY, destX - offsetX - gOffsetX, destY - offsetY - gOffsetY, output.$getWidth() + 2 * offsetX, output.$getHeight() + 2 * offsetY, output.$getWidth(), output.$getHeight());
-                buffer.restoreTransform();
-
-                var filterData = {type: "", matrix: null, blurX: 0, blurY: 0, textureWidth: 0, textureHeight: 0};
-                if(filter.type == "colorTransform") {
-                    filterData.type = "colorTransform";
-                    filterData.matrix = filter.matrix;
-                } else if(filter.type == "blur") {
-                    filterData.type = "blur";
-                    filterData.blurX = filter.blurX;
-                    filterData.blurY = filter.blurY;
-                    filterData.textureWidth = output.$getWidth();
-                    filterData.textureHeight = output.$getHeight();
-                }
-                this.drawCmdManager.pushDrawTexture(output["rootRenderTarget"].texture, 2, filterData);
-            } else {
-                if (filter.type == "blur") {
-                    offsetX = filter.blurX;// * 0.028 * realWidth;
-                    offsetY = filter.blurY;// * 0.028 * realHeight;
-                }
-                this.vao.cacheArrays(buffer.globalMatrix, buffer.globalAlpha, sourceX - offsetX, sourceY - offsetY, sourceWidth + 2 * offsetX, sourceHeight + 2 * offsetY, destX - offsetX - gOffsetX, destY - offsetY - gOffsetY, destWidth + 2 * offsetX, destHeight + 2 * offsetY, textureWidth, textureHeight, meshUVs, meshVertices, meshIndices);
-                var uv = this.getUv(sourceX, sourceY, sourceWidth, sourceHeight, textureWidth, textureHeight);
-                var filterData = {type: "", matrix: null, blurX: 0, blurY: 0, textureWidth: 0, textureHeight: 0};
-                if(filter.type == "colorTransform") {
-                    filterData.type = "colorTransform";
-                    filterData.matrix = filter.matrix;
-                } else if(filter.type == "blur") {
-                    filterData.type = "blur";
-                    filterData.blurX = filter.blurX;
-                    filterData.blurY = filter.blurY;
-                    filterData.textureWidth = textureWidth;
-                    filterData.textureHeight = textureHeight;
-                }
-                this.drawCmdManager.pushDrawTexture(webGLTexture, meshIndices ? meshIndices.length / 3 : 2, filterData, uv);
+                offsetX = this.blurFilter.blurX;
+                offsetY = this.blurFilter.blurY;
             }
+            var buffer = this.currentBuffer;
+            buffer.saveTransform();
+            buffer.transform(1, 0, 0, -1, 0, input.$getHeight() + 2 * offsetY + (- offsetY - gOffsetY) * 2);
+            this.vao.cacheArrays(buffer.globalMatrix, buffer.globalAlpha, -offsetX, -offsetY, input.$getWidth() + 2 * offsetX, input.$getHeight() + 2 * offsetY, - offsetX - gOffsetX, - offsetY - gOffsetY, input.$getWidth() + 2 * offsetX, input.$getHeight() + 2 * offsetY, input.$getWidth(), input.$getHeight());
+            buffer.restoreTransform();
 
-            if(output) {
-                // 确保完全绘制完成后才能释放output
-                // this.$drawWebGL();
+            var filterData = {type: "", matrix: null, blurX: 0, blurY: 0, textureWidth: 0, textureHeight: 0};
+            if(filter.type == "colorTransform") {
+                filterData.type = "colorTransform";
+                filterData.matrix = (<ColorMatrixFilter>filter).matrix;
+            } else if(filter.type == "blur") {
+                filterData.type = "blur";
+                filterData.blurX = (<BlurFilter>filter).blurX;
+                filterData.blurY = (<BlurFilter>filter).blurY;
+                filterData.textureWidth = input.$getWidth();
+                filterData.textureHeight = input.$getHeight();
+            }
+            this.drawCmdManager.pushDrawTexture(input["rootRenderTarget"].texture, 2, filterData);
 
-                // output.clearFilters();
-                // output.filter = null;
-                WebGLRenderBuffer.release(output);
+            // 释放掉input
+            if(input != originInput) {
+                WebGLRenderBuffer.release(input);
             }
         }
 
@@ -1045,52 +968,21 @@ module egret.web {
         /**
          * 向一个renderTarget中绘制
          * */
-        private drawToRenderTarget(filter:Filter, input:any, output:WebGLRenderBuffer,
-                            sourceX:number, sourceY:number, sourceWidth:number, sourceHeight:number,
-                            destX:number, destY:number, destWidth:number, destHeight:number, textureWidth:number, textureHeight:number, release:boolean = true,
-                            meshUVs?:number[], meshVertices?:number[], meshIndices?:number[]) {
-            this.pushBuffer(output);
+        private drawToRenderTarget(filter:Filter, input:WebGLRenderBuffer, output:WebGLRenderBuffer, offsetX:number, offsetY:number):void {
+            output.setTransform(1, 0, 0, 1, offsetX, offsetY);
             output.globalAlpha = 1;
-            output.setTransform(1, 0, 0, 1, 0, 0);
-
-            var texture:WebGLTexture;
-            if(input["rootRenderTarget"]) {
-                // 如果是render target
-                texture = <WebGLTexture><any>input.rootRenderTarget.texture;
-                output.transform(1, 0, 0, -1, 0, destHeight + destY * 2);// 翻转
-            } else {
-                texture = <WebGLTexture><any>input;
-            }
-
-            if(filter) {
-                output.context.drawTextureWidthFilter([filter], texture, sourceX, sourceY, sourceWidth, sourceHeight, destX, destY, destWidth, destHeight, textureWidth, textureHeight, destWidth, destHeight, 0, 0);
-            } else {
-                output.context.drawTexture(texture, sourceX, sourceY, sourceWidth, sourceHeight, destX, destY, destWidth, destHeight, textureWidth, textureHeight, meshUVs, meshVertices, meshIndices);
-            }
-
-            // if(filter) {
-            //     output.pushFilters([filter]);
-            // }
-            // if(input["rootRenderTarget"]) {
-            //     output.context.drawImage(<BitmapData><any>input.rootRenderTarget, sourceX, sourceY, sourceWidth, sourceHeight, destX, destY, destWidth, destHeight, textureWidth, textureHeight);
-            // } else {
-            //     output.context.drawTexture(<WebGLTexture><any>input, sourceX, sourceY, sourceWidth, sourceHeight, destX, destY, destWidth, destHeight, textureWidth, textureHeight, meshUVs, meshVertices, meshIndices);
-            // }
-            // if(filter) {
-            //     output.popFilters();
-            // }
-            // output.context.$drawWebGL();
+            this.pushBuffer(output);
+            output.context.drawTargetWidthFilter([filter], input);
             this.popBuffer();
-            if(input["rootRenderTarget"] && release) { // 如果输入的是buffer,回收
-                // input.clearFilters();
-                // input.filter = null;
-                WebGLRenderBuffer.release(input);
-            }
         }
 
         private colorMatrixFilter = null;
         private blurFilter = null;
-        private drawGlow(filter, input:WebGLRenderBuffer, destX, destY) {
+        
+        /**
+         * 绘制glow
+         * */
+        private drawGlow(filter:GlowFilter | DropShadowFilter, input:WebGLRenderBuffer, destX:number, destY:number):void {
             var buffer = this.currentBuffer;
 
             if(!this.colorMatrixFilter) {
@@ -1103,11 +995,11 @@ module egret.web {
             var output = null;
             var offsetX = 0;
             var offsetY = 0;
-            var distance:number = filter.distance || 0;
-            var angle:number = filter.angle || 0;
+            var distance:number = (<DropShadowFilter>filter).distance || 0;
+            var angle:number = (<DropShadowFilter>filter).angle || 0;
             var distanceX:number = 0;
             var distanceY:number = 0;
-            if (distance != 0 && angle != 0) {
+            if (distance != 0) {
                 distanceX = Math.ceil(distance * egret.NumberUtils.cos(angle));
                 distanceY = Math.ceil(distance * egret.NumberUtils.sin(angle));
             }
@@ -1120,28 +1012,30 @@ module egret.web {
                 0, 0, 0, filter.alpha, 0,
             ];
             output = web.WebGLRenderBuffer.create(input.$getWidth(), input.$getHeight());
-            this.drawToRenderTarget(this.colorMatrixFilter, input, output, 0, 0, input.$getWidth(), input.$getHeight(), 0, 0, output.$getWidth(), output.$getHeight(), input.$getWidth(), input.$getHeight(), false);
+            this.drawToRenderTarget(this.colorMatrixFilter, input, output, 0, 0);
             this.drawImage(output.rootRenderTarget, 0, 0, output.$getWidth(), output.$getHeight(), distanceX - offsetX + destX, distanceY - offsetY + destY, output.$getWidth(), output.$getHeight(), output.$getWidth(), output.$getHeight());
 
             // 应用blurX
             this.blurFilter.blurX = filter.blurX;
             this.blurFilter.blurY = 0;
             input = output;
-            offsetX += filter.blurX; // * 0.028 * input.$getWidth();
+            offsetX += filter.blurX;
             output = web.WebGLRenderBuffer.create(input.$getWidth() + offsetX * 2, input.$getHeight());
-            this.drawToRenderTarget(this.blurFilter, input, output, 0, 0, input.$getWidth(), input.$getHeight(), offsetX, 0, input.$getWidth(), input.$getHeight(), input.$getWidth(), input.$getHeight());
+            this.drawToRenderTarget(this.blurFilter, input, output, offsetX, 0);
+            WebGLRenderBuffer.release(input);
             this.drawImage(output.rootRenderTarget, 0, 0, output.$getWidth(), output.$getHeight(), distanceX - offsetX + destX, distanceY - offsetY + destY, output.$getWidth(), output.$getHeight(), output.$getWidth(), output.$getHeight());
 
             // 应用blurY
             this.blurFilter.blurX = 0;
             this.blurFilter.blurY = filter.blurY;
             input = output;
-            offsetY += filter.blurY; // * 0.028 * input.$getHeight();
+            offsetY += filter.blurY;
             output = web.WebGLRenderBuffer.create(input.$getWidth(), input.$getHeight() + offsetY * 2);
-            this.drawToRenderTarget(this.blurFilter, input, output, 0, 0, input.$getWidth(), input.$getHeight(), 0, offsetY, input.$getWidth(), input.$getHeight(), input.$getWidth(), input.$getHeight());
+            this.drawToRenderTarget(this.blurFilter, input, output, 0, offsetY);
+            WebGLRenderBuffer.release(input);
             this.drawImage(output.rootRenderTarget, 0, 0, output.$getWidth(), output.$getHeight(), distanceX - offsetX + destX, distanceY - offsetY + destY, output.$getWidth(), output.$getHeight(), output.$getWidth(), output.$getHeight());
 
-            // // 根据光强绘制光
+            // 根据光强绘制光
             this.setGlobalCompositeOperation("lighter-in");
             for (var j = 0; j < filter.quality; j++) {
                 this.drawImage(output.rootRenderTarget, 0, 0, output.$getWidth(), output.$getHeight(), distanceX - offsetX + destX, distanceY - offsetY + destY, output.$getWidth(), output.$getHeight(), output.$getWidth(), output.$getHeight());
