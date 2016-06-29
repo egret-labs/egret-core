@@ -29,7 +29,7 @@ Platforms:
 
 Tools
 -------------------------
-* [Egret Wing](http://www.egret.com/egretwing) , Egret IDE.
+* [Egret Wing](http://www.egret.com/products/wing.html) , Egret IDE.
 
 Document & API
 -------------------------
@@ -137,11 +137,11 @@ Egret Engine 3.0 包含了白鹭时代研发的遵循HTML5标准的2D引擎及�
 
 工具
 -------------------------
-* [Egret Wing](http://www.egret.com/products-wing) , Egret IDE
-* [TS Conversion](http://www.egret.com/products-conversion) ,AS3到TS的代码转换工具
-* [Res Depot](http://www.egret.com/products-others#res-depot) ,RES资源模块配置文件管理工具
-* [Texture Merger](http://www.egret.com/products-others#texture-merger) ,SpriteSheet工具
-* [更多工具](http://www.egret.com/features)
+* [Egret Wing](http://www.egret.com/products/wing.html) , Egret IDE
+* [TS Conversion](http://www.egret.com/products/conversion.html) ,AS3到TS的代码转换工具
+* [Res Depot](http://www.egret.com/products/others.html#res-depot) ,RES资源模块配置文件管理工具
+* [Texture Merger](http://www.egret.com/products/others.html#egret-texture) ,SpriteSheet工具
+* [更多工具](http://www.egret.com/products)
 
 
 
