@@ -6825,6 +6825,7 @@ var egret;
                         break;
                     case 5 /* RESIZE_TARGET */:
                         data.buffer.rootRenderTarget.resize(data.width, data.height);
+                        this.onResize(data.width, data.height);
                         break;
                     case 6 /* CLEAR_COLOR */:
                         if (this.activatedBuffer) {

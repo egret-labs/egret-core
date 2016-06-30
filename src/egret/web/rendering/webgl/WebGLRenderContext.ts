@@ -720,6 +720,7 @@ module egret.web {
                     break;
                 case DRAWABLE_TYPE.RESIZE_TARGET:
                     data.buffer.rootRenderTarget.resize(data.width, data.height);
+                    this.onResize(data.width, data.height);
                     break;
                 case DRAWABLE_TYPE.CLEAR_COLOR:
                     if(this.activatedBuffer) {
