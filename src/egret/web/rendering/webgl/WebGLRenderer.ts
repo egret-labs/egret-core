@@ -651,7 +651,7 @@ module egret.web {
                 this.canvasRenderer = new CanvasRenderer();
                 this.canvasRenderBuffer = new CanvasRenderBuffer(width, height);
             }
-            else {
+            else if (node.dirtyRender) {
                 this.canvasRenderBuffer.resize(width, height);
             }
 
@@ -666,9 +666,9 @@ module egret.web {
                 buffer.transform(1, 0, 0, 1, node.x, node.y);
             }
 
-            var surface = this.canvasRenderBuffer.surface;
 
             if (node.dirtyRender) {
+                var surface = this.canvasRenderBuffer.surface;
                 this.canvasRenderer["renderText"](node, this.canvasRenderBuffer.context);
 
                 // 拷贝canvas到texture
@@ -711,7 +711,7 @@ module egret.web {
                 this.canvasRenderer = new CanvasRenderer();
                 this.canvasRenderBuffer = new CanvasRenderBuffer(width, height);
             }
-            else {
+            else if (node.dirtyRender || forHitTest) {
                 this.canvasRenderBuffer.resize(width, height);
             }
             if (!this.canvasRenderBuffer.context) {
