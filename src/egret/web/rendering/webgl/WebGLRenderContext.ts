@@ -857,8 +857,12 @@ module egret.web {
                         offsetX += Math.abs(distanceX);
                         offsetY += Math.abs(distanceY);
                     }
-                    output = WebGLRenderBuffer.create(input.$getWidth() + offsetX * 2, input.$getHeight() + offsetY * 2);
-                    output.setTransform(1, 0, 0, 1, (output.$getWidth() - input.$getWidth()) / 2, (output.$getHeight() - input.$getHeight()) / 2);
+                    var oldWidth:number = input.rootRenderTarget.width;
+                    var oldHeight:number = input.rootRenderTarget.height;
+                    output = WebGLRenderBuffer.create(oldWidth + offsetX * 2, oldHeight + offsetY * 2);
+                    var width:number = output.rootRenderTarget.width;
+                    var height:number = output.rootRenderTarget.height;
+                    output.setTransform(1, 0, 0, 1, (width - oldWidth) / 2, (height - oldHeight) / 2);
                     output.globalAlpha = 1;
                     this.drawToRenderTarget(filter, input, output, 0, 0);
                     if(input != originInput) {
@@ -925,8 +929,12 @@ module egret.web {
                     this.blurFilter.blurY = 0;
                     var offsetX:number = this.blurFilter.blurX;
                     var offsetY:number = this.blurFilter.blurY;
-                    temp = WebGLRenderBuffer.create(input.$getWidth() + offsetX * 2, input.$getHeight() + offsetY * 2);
-                    temp.setTransform(1, 0, 0, 1, (temp.$getWidth() - input.$getWidth()) / 2, (temp.$getHeight() - input.$getHeight()) / 2);
+                    var oldWidth:number = input.rootRenderTarget.width;
+                    var oldHeight:number = input.rootRenderTarget.height;
+                    temp = WebGLRenderBuffer.create(oldWidth + offsetX * 2, oldHeight + offsetY * 2);
+                    var width:number = temp.rootRenderTarget.width;
+                    var height:number = temp.rootRenderTarget.height;
+                    temp.setTransform(1, 0, 0, 1, (width - oldWidth) / 2, (height - oldHeight) / 2);
                     temp.globalAlpha = 1;
                     this.drawToRenderTarget(this.blurFilter, input, temp, 0, 0);
                     if(input != originInput) {
@@ -946,6 +954,8 @@ module egret.web {
             // 绘制input结果到舞台
             var offsetX:number = 0;
             var offsetY:number = 0;
+            var width:number = input.rootRenderTarget.width;
+            var height:number = input.rootRenderTarget.height;
             if (filter.type == "blur"){
                 if (!this.blurFilter) {
                     this.blurFilter = new egret.BlurFilter(2, 2);
@@ -963,8 +973,8 @@ module egret.web {
                 offsetY = this.blurFilter.blurY;
             }
             output.saveTransform();
-            output.transform(1, 0, 0, -1, 0, input.$getHeight() + 2 * offsetY + (- offsetY - gOffsetY) * 2);
-            this.vao.cacheArrays(output.globalMatrix, output.globalAlpha, -offsetX, -offsetY, input.$getWidth() + 2 * offsetX, input.$getHeight() + 2 * offsetY, - offsetX - gOffsetX, - offsetY - gOffsetY, input.$getWidth() + 2 * offsetX, input.$getHeight() + 2 * offsetY, input.$getWidth(), input.$getHeight());
+            output.transform(1, 0, 0, -1, 0, height + 2 * offsetY + (- offsetY - gOffsetY) * 2);
+            this.vao.cacheArrays(output.globalMatrix, output.globalAlpha, -offsetX, -offsetY, width + 2 * offsetX, height + 2 * offsetY, - offsetX - gOffsetX, - offsetY - gOffsetY, width + 2 * offsetX, height + 2 * offsetY, width, height);
             output.restoreTransform();
 
             var filterData = {type: "", matrix: null, blurX: 0, blurY: 0, textureWidth: 0, textureHeight: 0};
@@ -975,8 +985,8 @@ module egret.web {
                 filterData.type = "blur";
                 filterData.blurX = (<BlurFilter>filter).blurX;
                 filterData.blurY = (<BlurFilter>filter).blurY;
-                filterData.textureWidth = input.$getWidth();
-                filterData.textureHeight = input.$getHeight();
+                filterData.textureWidth = width;
+                filterData.textureHeight = height;
             }
             this.drawCmdManager.pushDrawTexture(input["rootRenderTarget"].texture, 2, filterData);
 
@@ -1003,7 +1013,7 @@ module egret.web {
                 this.blurFilter = new BlurFilter(2, 2);
             }
 
-            var output = null;
+            var output:WebGLRenderBuffer;
             var offsetX = 0;
             var offsetY = 0;
             var distance:number = (<DropShadowFilter>filter).distance || 0;
@@ -1015,6 +1025,9 @@ module egret.web {
                 distanceY = Math.ceil(distance * egret.NumberUtils.sin(angle));
             }
 
+            var width:number = 0;
+            var height:number = 0;
+
             //绘制纯色图
             this.colorMatrixFilter.matrix = [
                 0, 0, 0, 0, filter.$red,
@@ -1022,40 +1035,46 @@ module egret.web {
                 0, 0, 0, 0, filter.$blue,
                 0, 0, 0, filter.alpha, 0,
             ];
-            output = web.WebGLRenderBuffer.create(input.$getWidth(), input.$getHeight());
+            width = input.rootRenderTarget.width;
+            height = input.rootRenderTarget.height;
+            output = web.WebGLRenderBuffer.create(width, height);
             output.setTransform(1, 0, 0, 1, 0, 0);
             output.globalAlpha = 1;
             this.drawToRenderTarget(this.colorMatrixFilter, input, output, 0, 0);
-            this.drawImage(output.rootRenderTarget, 0, 0, output.$getWidth(), output.$getHeight(), distanceX - offsetX + destX, distanceY - offsetY + destY, output.$getWidth(), output.$getHeight(), output.$getWidth(), output.$getHeight());
+            this.drawImage(<BitmapData><any>output.rootRenderTarget, 0, 0, width, height, distanceX - offsetX + destX, distanceY - offsetY + destY, width, height, width, height);
 
             // 应用blurX
             this.blurFilter.blurX = filter.blurX;
             this.blurFilter.blurY = 0;
             input = output;
             offsetX += filter.blurX;
-            output = web.WebGLRenderBuffer.create(input.$getWidth() + offsetX * 2, input.$getHeight());
+            output = web.WebGLRenderBuffer.create(width + offsetX * 2, height);
+            width = output.rootRenderTarget.width;
+            height = output.rootRenderTarget.height;
             output.setTransform(1, 0, 0, 1, offsetX, 0);
             output.globalAlpha = 1;
             this.drawToRenderTarget(this.blurFilter, input, output, 0, 0);
             WebGLRenderBuffer.release(input);
-            this.drawImage(output.rootRenderTarget, 0, 0, output.$getWidth(), output.$getHeight(), distanceX - offsetX + destX, distanceY - offsetY + destY, output.$getWidth(), output.$getHeight(), output.$getWidth(), output.$getHeight());
+            this.drawImage(<BitmapData><any>output.rootRenderTarget, 0, 0, width, height, distanceX - offsetX + destX, distanceY - offsetY + destY, width, height, width, height);
 
             // 应用blurY
             this.blurFilter.blurX = 0;
             this.blurFilter.blurY = filter.blurY;
             input = output;
             offsetY += filter.blurY;
-            output = web.WebGLRenderBuffer.create(input.$getWidth(), input.$getHeight() + offsetY * 2);
+            output = web.WebGLRenderBuffer.create(width, height + offsetY * 2);
+            width = output.rootRenderTarget.width;
+            height = output.rootRenderTarget.height;
             output.setTransform(1, 0, 0, 1, 0, offsetY);
             output.globalAlpha = 1;
             this.drawToRenderTarget(this.blurFilter, input, output, 0, 0);
             WebGLRenderBuffer.release(input);
-            this.drawImage(output.rootRenderTarget, 0, 0, output.$getWidth(), output.$getHeight(), distanceX - offsetX + destX, distanceY - offsetY + destY, output.$getWidth(), output.$getHeight(), output.$getWidth(), output.$getHeight());
+            this.drawImage(<BitmapData><any>output.rootRenderTarget, 0, 0, width, height, distanceX - offsetX + destX, distanceY - offsetY + destY, width, height, width, height);
 
             // 根据光强绘制光
             this.setGlobalCompositeOperation("lighter-in");
             for (var j = 0; j < filter.quality; j++) {
-                this.drawImage(output.rootRenderTarget, 0, 0, output.$getWidth(), output.$getHeight(), distanceX - offsetX + destX, distanceY - offsetY + destY, output.$getWidth(), output.$getHeight(), output.$getWidth(), output.$getHeight());
+                this.drawImage(<BitmapData><any>output.rootRenderTarget, 0, 0, width, height, distanceX - offsetX + destX, distanceY - offsetY + destY, width, height, width, height);
             }
             this.setGlobalCompositeOperation("source-over");
 

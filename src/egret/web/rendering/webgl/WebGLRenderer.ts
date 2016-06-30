@@ -393,15 +393,11 @@ module egret.web {
                     //}
                     //else {
                     var maskBuffer = this.createRenderBuffer(region.width, region.height);
-                    // var maskContext = maskBuffer.context;
                     maskBuffer.context.pushBuffer(maskBuffer);
                     maskBuffer.setTransform(1, 0, 0, 1, -region.minX, -region.minY);
                     offsetM = Matrix.create().setTo(1, 0, 0, 1, -region.minX, -region.minY);
                     var calls = this.drawDisplayObject(mask, maskBuffer, dirtyList, offsetM,
                         mask.$displayList, region, root);
-
-                    // maskBuffer.context.$drawWebGL();
-                    // maskBuffer.onRenderFinish();
                     maskBuffer.context.popBuffer();
 
                     if (calls > 0) {
@@ -409,9 +405,9 @@ module egret.web {
                         displayBuffer.context.setGlobalCompositeOperation("destination-in");
                         displayBuffer.setTransform(1, 0, 0, -1, 0, maskBuffer.height);
                         displayBuffer.globalAlpha = 1;
-                        var maskBufferWidth = maskBuffer.width;
-                        var maskBufferHeight = maskBuffer.height;
-                        displayBuffer.context.drawTexture(<WebGLTexture><any>maskBuffer.rootRenderTarget.texture, 0, 0, maskBufferWidth, maskBufferHeight,
+                        var maskBufferWidth = maskBuffer.rootRenderTarget.width;
+                        var maskBufferHeight = maskBuffer.rootRenderTarget.height;
+                        displayBuffer.context.drawTexture(maskBuffer.rootRenderTarget.texture, 0, 0, maskBufferWidth, maskBufferHeight,
                             0, 0, maskBufferWidth, maskBufferHeight, maskBufferWidth, maskBufferHeight);
                         displayBuffer.context.setGlobalCompositeOperation("source-over");
                     }
@@ -421,8 +417,6 @@ module egret.web {
                 Matrix.release(offsetM);
 
                 displayBuffer.context.setGlobalCompositeOperation(defaultCompositeOp);
-                // displayBuffer.context.$drawWebGL();
-                // displayBuffer.onRenderFinish();
                 displayBuffer.context.popBuffer();
 
                 //绘制结果到屏幕
@@ -438,9 +432,9 @@ module egret.web {
                     }
                     buffer.globalAlpha = 1;
                     buffer.setTransform(1, 0, 0, -1, region.minX + matrix.tx, region.minY + matrix.ty + displayBuffer.height);
-                    var displayBufferWidth = displayBuffer.width;
-                    var displayBufferHeight = displayBuffer.height;
-                    buffer.context.drawTexture(<WebGLTexture><any>displayBuffer.rootRenderTarget.texture, 0, 0, displayBufferWidth, displayBufferHeight,
+                    var displayBufferWidth = displayBuffer.rootRenderTarget.width;
+                    var displayBufferHeight = displayBuffer.rootRenderTarget.height;
+                    buffer.context.drawTexture(displayBuffer.rootRenderTarget.texture, 0, 0, displayBufferWidth, displayBufferHeight,
                         0, 0, displayBufferWidth, displayBufferHeight, displayBufferWidth, displayBufferHeight);
                     if (scrollRect) {
                         displayBuffer.context.popMask();
@@ -449,10 +443,6 @@ module egret.web {
                         buffer.context.setGlobalCompositeOperation(defaultCompositeOp);
                     }
                 }
-
-                // 最后执行绘制，因为有可能displayBuffer中的texture被更改
-                // 未来可以省略此次绘制
-                // buffer.context.$drawWebGL();
 
                 renderBufferPool.push(displayBuffer);
                 sys.Region.release(region);

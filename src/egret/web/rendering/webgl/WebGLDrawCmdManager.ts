@@ -193,7 +193,7 @@ module egret.web {
         /**
          * 压入激活buffer命令
          */
-        public pushActivateBuffer(buffer) {
+        public pushActivateBuffer(buffer:WebGLRenderBuffer) {
             var len = this.drawDataLen;
             // 有无遍历到有效绘图操作
             var drawState = false;
@@ -226,8 +226,8 @@ module egret.web {
             var _data = this.drawData[this.drawDataLen] || {};
             _data.type = DRAWABLE_TYPE.ACT_BUFFER;
             _data.buffer = buffer;
-            _data.width = buffer.$getWidth();
-            _data.height = buffer.$getHeight();
+            _data.width = buffer.rootRenderTarget.width;
+            _data.height = buffer.rootRenderTarget.height;
             this.drawData[this.drawDataLen] = _data;
             this.drawDataLen++;
         }
