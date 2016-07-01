@@ -189,6 +189,10 @@ module eui {
         }
 
         /**
+         * @private
+         */
+        private availableWidth = NaN;
+        /**
          * @copy eui.UIComponent#measure
          *
          * @version Egret 2.4
@@ -199,19 +203,18 @@ module eui {
             var values = this.$UIComponent;
             var textValues = this.$TextField;
             var oldWidth = textValues[egret.sys.TextKeys.textFieldWidth];
-            var availableWidth = NaN;
             if (!isNaN(this._widthConstraint)) {
-                availableWidth = this._widthConstraint;
+                this.availableWidth = this._widthConstraint;
                 this._widthConstraint = NaN;
             }
             else if (!isNaN(values[sys.UIKeys.explicitWidth])) {
-                availableWidth = values[sys.UIKeys.explicitWidth];
+                this.availableWidth = values[sys.UIKeys.explicitWidth];
             }
             else if (values[sys.UIKeys.maxWidth] != 100000) {
-                availableWidth = values[sys.UIKeys.maxWidth];
+                this.availableWidth = values[sys.UIKeys.maxWidth];
             }
 
-            super.$setWidth(availableWidth);
+            super.$setWidth(this.availableWidth);
             this.setMeasuredSize(this.textWidth, this.textHeight);
             super.$setWidth(oldWidth);
         }
