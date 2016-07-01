@@ -4,6 +4,6 @@
              source="button_up_png"
              source.down="button_down_png"/>
     <e:Label id="labelDisplay" top="8" bottom="8" left="8" right="8"
-             size="20" fontFamily="Tahoma 'Microsoft Yahei'"
+             size="20" fontFamily="Tahoma"
              textColor="0xFFFFFF" text="{data}" verticalAlign="middle" textAlign="center"/>
 </e:Skin>
