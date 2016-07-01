@@ -1508,9 +1508,9 @@ module egret {
             this.$TextField[sys.TextKeys.textLinesChanged] = true;
         }
 
-        $update(bounds?:Rectangle):boolean {
+        $update(dirtyRegionPolicy:string, bounds?:Rectangle):boolean {
             var tmpBounds = this.$getRenderBounds();
-            var result = super.$update(tmpBounds);
+            var result = super.$update(dirtyRegionPolicy, tmpBounds);
             Rectangle.release(tmpBounds);
             return result;
         }

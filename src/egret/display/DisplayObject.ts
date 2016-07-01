@@ -1971,34 +1971,47 @@ module egret {
          * @private
          * 更新对象在舞台上的显示区域,返回显示区域是否发生改变。
          */
-        $update(bounds?:Rectangle):boolean {
-            //todo 计算滤镜占用区域
+        $update(dirtyRegionPolicy:string, bounds?:Rectangle):boolean {
             this.$removeFlagsUp(sys.DisplayObjectFlags.Dirty);
             var node = this.$renderNode;
+            node.renderAlpha = this.$getConcatenatedAlpha();
             //必须在访问moved属性前调用以下两个方法，因为moved属性在以下两个方法内重置。
             var concatenatedMatrix = this.$getConcatenatedMatrix();
-            var renderBounds = bounds || this.$getContentBounds();
-            node.renderAlpha = this.$getConcatenatedAlpha();
-            node.renderVisible = this.$getConcatenatedVisible();
-            var displayList = this.$displayList || this.$parentDisplayList;
-            var region = node.renderRegion;
-            if (!displayList) {
-                region.setTo(0, 0, 0, 0);
+            if(dirtyRegionPolicy == DirtyRegionPolicy.OFF) {
+                var displayList = this.$displayList || this.$parentDisplayList;
+                if (!displayList) {
+                    return false;
+                }
+                var matrix = node.renderMatrix;
+                matrix.copyFrom(concatenatedMatrix);
+                var root = displayList.root;
+                if (root !== this.$stage) {
+                    this.$getConcatenatedMatrixAt(root, matrix);
+                }
+            }
+            else {
+                var renderBounds = bounds || this.$getContentBounds();
+                node.renderVisible = this.$getConcatenatedVisible();
+                var displayList = this.$displayList || this.$parentDisplayList;
+                var region = node.renderRegion;
+                if (!displayList) {
+                    region.setTo(0, 0, 0, 0);
+                    node.moved = false;
+                    return false;
+                }
+                if (!node.moved) {
+                    return false;
+                }
                 node.moved = false;
-                return false;
+                var matrix = node.renderMatrix;
+                matrix.copyFrom(concatenatedMatrix);
+                var root = displayList.root;
+                if (root !== this.$stage) {
+                    this.$getConcatenatedMatrixAt(root, matrix);
+                }
+                renderBounds = this.$measureFiltersBounds(renderBounds);
+                region.updateRegion(renderBounds, matrix);
             }
-            if (!node.moved) {
-                return false;
-            }
-            node.moved = false;
-            var matrix = node.renderMatrix;
-            matrix.copyFrom(concatenatedMatrix);
-            var root = displayList.root;
-            if (root !== this.$stage) {
-                this.$getConcatenatedMatrixAt(root, matrix);
-            }
-            renderBounds = this.$measureFiltersBounds(renderBounds);
-            region.updateRegion(renderBounds, matrix);
             return true;
         }
 

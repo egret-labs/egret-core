@@ -2993,34 +2993,47 @@ var egret;
          * @private
          * 更新对象在舞台上的显示区域,返回显示区域是否发生改变。
          */
-        p.$update = function (bounds) {
-            //todo 计算滤镜占用区域
+        p.$update = function (dirtyRegionPolicy, bounds) {
             this.$removeFlagsUp(768 /* Dirty */);
             var node = this.$renderNode;
+            node.renderAlpha = this.$getConcatenatedAlpha();
             //必须在访问moved属性前调用以下两个方法，因为moved属性在以下两个方法内重置。
             var concatenatedMatrix = this.$getConcatenatedMatrix();
-            var renderBounds = bounds || this.$getContentBounds();
-            node.renderAlpha = this.$getConcatenatedAlpha();
-            node.renderVisible = this.$getConcatenatedVisible();
-            var displayList = this.$displayList || this.$parentDisplayList;
-            var region = node.renderRegion;
-            if (!displayList) {
-                region.setTo(0, 0, 0, 0);
+            if (dirtyRegionPolicy == egret.DirtyRegionPolicy.OFF) {
+                var displayList = this.$displayList || this.$parentDisplayList;
+                if (!displayList) {
+                    return false;
+                }
+                var matrix = node.renderMatrix;
+                matrix.copyFrom(concatenatedMatrix);
+                var root = displayList.root;
+                if (root !== this.$stage) {
+                    this.$getConcatenatedMatrixAt(root, matrix);
+                }
+            }
+            else {
+                var renderBounds = bounds || this.$getContentBounds();
+                node.renderVisible = this.$getConcatenatedVisible();
+                var displayList = this.$displayList || this.$parentDisplayList;
+                var region = node.renderRegion;
+                if (!displayList) {
+                    region.setTo(0, 0, 0, 0);
+                    node.moved = false;
+                    return false;
+                }
+                if (!node.moved) {
+                    return false;
+                }
                 node.moved = false;
-                return false;
+                var matrix = node.renderMatrix;
+                matrix.copyFrom(concatenatedMatrix);
+                var root = displayList.root;
+                if (root !== this.$stage) {
+                    this.$getConcatenatedMatrixAt(root, matrix);
+                }
+                renderBounds = this.$measureFiltersBounds(renderBounds);
+                region.updateRegion(renderBounds, matrix);
             }
-            if (!node.moved) {
-                return false;
-            }
-            node.moved = false;
-            var matrix = node.renderMatrix;
-            matrix.copyFrom(concatenatedMatrix);
-            var root = displayList.root;
-            if (root !== this.$stage) {
-                this.$getConcatenatedMatrixAt(root, matrix);
-            }
-            renderBounds = this.$measureFiltersBounds(renderBounds);
-            region.updateRegion(renderBounds, matrix);
             return true;
         };
         /**
@@ -12950,7 +12963,7 @@ var egret;
              * @private
              * 更新对象在舞台上的显示区域和透明度,返回显示区域是否发生改变。
              */
-            p.$update = function () {
+            p.$update = function (dirtyRegionPolicy) {
                 var target = this.root;
                 //当cache对象的显示列表已经加入dirtyList，对象又取消cache的时候，root为空
                 if (target == null) {
@@ -12961,28 +12974,45 @@ var egret;
                 //这里不需要更新node.renderAlpha。因为alpha已经写入到缓存的内部
                 //必须在访问moved属性前调用以下两个方法，因为moved属性在以下两个方法内重置。
                 var concatenatedMatrix = target.$getConcatenatedMatrix();
-                var bounds = target.$getOriginalBounds();
-                var displayList = target.$parentDisplayList;
-                var region = node.renderRegion;
-                if (this.needUpdateRegions) {
-                    this.updateDirtyRegions();
+                if (dirtyRegionPolicy == egret.DirtyRegionPolicy.OFF) {
+                    var displayList = target.$parentDisplayList;
+                    if (this.needUpdateRegions) {
+                        this.updateDirtyRegions();
+                    }
+                    if (!displayList) {
+                        return false;
+                    }
+                    var matrix = node.renderMatrix;
+                    matrix.copyFrom(concatenatedMatrix);
+                    var root = displayList.root;
+                    if (root !== target.$stage) {
+                        target.$getConcatenatedMatrixAt(root, matrix);
+                    }
                 }
-                if (!displayList) {
-                    region.setTo(0, 0, 0, 0);
+                else {
+                    var bounds = target.$getOriginalBounds();
+                    var displayList = target.$parentDisplayList;
+                    var region = node.renderRegion;
+                    if (this.needUpdateRegions) {
+                        this.updateDirtyRegions();
+                    }
+                    if (!displayList) {
+                        region.setTo(0, 0, 0, 0);
+                        node.moved = false;
+                        return false;
+                    }
+                    if (!node.moved) {
+                        return false;
+                    }
                     node.moved = false;
-                    return false;
+                    var matrix = node.renderMatrix;
+                    matrix.copyFrom(concatenatedMatrix);
+                    var root = displayList.root;
+                    if (root !== target.$stage) {
+                        target.$getConcatenatedMatrixAt(root, matrix);
+                    }
+                    region.updateRegion(bounds, matrix);
                 }
-                if (!node.moved) {
-                    return false;
-                }
-                node.moved = false;
-                var matrix = node.renderMatrix;
-                matrix.copyFrom(concatenatedMatrix);
-                var root = displayList.root;
-                if (root !== target.$stage) {
-                    target.$getConcatenatedMatrixAt(root, matrix);
-                }
-                region.updateRegion(bounds, matrix);
                 return true;
             };
             /**
@@ -13034,7 +13064,7 @@ var egret;
                                 node.needRedraw = true;
                             }
                         }
-                        var moved = display.$update();
+                        var moved = display.$update(this.$dirtyRegionPolicy);
                         if (node.renderAlpha > 0 && node.renderVisible && (moved || !node.needRedraw)) {
                             if (dirtyRegion.addRegion(node.renderRegion)) {
                                 node.needRedraw = true;
@@ -13045,7 +13075,7 @@ var egret;
                         if (dirtyRegion.addRegion(node.renderRegion)) {
                             node.needRedraw = true;
                         }
-                        var moved = display.$update();
+                        var moved = display.$update(this.$dirtyRegionPolicy);
                         if (moved || !node.needRedraw) {
                             if (dirtyRegion.addRegion(node.renderRegion)) {
                                 node.needRedraw = true;
@@ -19788,9 +19818,9 @@ var egret;
             this.$invalidateContentBounds();
             this.$TextField[18 /* textLinesChanged */] = true;
         };
-        p.$update = function (bounds) {
+        p.$update = function (dirtyRegionPolicy, bounds) {
             var tmpBounds = this.$getRenderBounds();
-            var result = _super.prototype.$update.call(this, tmpBounds);
+            var result = _super.prototype.$update.call(this, dirtyRegionPolicy, tmpBounds);
             egret.Rectangle.release(tmpBounds);
             return result;
         };

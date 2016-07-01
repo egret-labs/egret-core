@@ -1894,7 +1894,7 @@ declare module egret {
          * @private
          * 更新对象在舞台上的显示区域,返回显示区域是否发生改变。
          */
-        $update(bounds?: Rectangle): boolean;
+        $update(dirtyRegionPolicy: string, bounds?: Rectangle): boolean;
         private static boundsForUpdate;
         /**
          * @private
@@ -8946,7 +8946,7 @@ declare module egret.sys {
          * @private
          * 更新对象在舞台上的显示区域和透明度,返回显示区域是否发生改变。
          */
-        $update(): boolean;
+        $update(dirtyRegionPolicy: string): boolean;
         /**
          * @private
          */
@@ -9460,7 +9460,7 @@ declare module egret.sys {
          * 更新对象在舞台上的显示区域和透明度,返回显示区域是否发生改变。
          * 注意：此方法必须在$getRenderNode()被调用之后执行。
          */
-        $update(): boolean;
+        $update(dirtyRegionPolicy: string, bounds?: Rectangle): boolean;
     }
 }
 declare module egret.sys {
@@ -12907,7 +12907,7 @@ declare module egret {
          * 不能重写$invalidateContentBounds，因为内部graphics调用clear时会触发$invalidateContentBounds这狗方法，从而导致死循环。
          */
         $invalidateTextField(): void;
-        $update(bounds?: Rectangle): boolean;
+        $update(dirtyRegionPolicy: string, bounds?: Rectangle): boolean;
         $getRenderBounds(): Rectangle;
         /**
          * @private

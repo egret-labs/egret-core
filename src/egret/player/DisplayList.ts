@@ -86,7 +86,7 @@ module egret.sys {
          * @private
          * 更新对象在舞台上的显示区域和透明度,返回显示区域是否发生改变。
          */
-        $update():boolean {
+        $update(dirtyRegionPolicy:string):boolean {
             var target = this.root;
             //当cache对象的显示列表已经加入dirtyList，对象又取消cache的时候，root为空
             if (target == null) {
@@ -98,29 +98,46 @@ module egret.sys {
 
             //必须在访问moved属性前调用以下两个方法，因为moved属性在以下两个方法内重置。
             var concatenatedMatrix = target.$getConcatenatedMatrix();
-            var bounds = target.$getOriginalBounds();
-            var displayList = target.$parentDisplayList;
-            var region = node.renderRegion;
-            if (this.needUpdateRegions) {
-                this.updateDirtyRegions();
+            if(dirtyRegionPolicy == DirtyRegionPolicy.OFF) {
+                var displayList = target.$parentDisplayList;
+                if (this.needUpdateRegions) {
+                    this.updateDirtyRegions();
+                }
+                if (!displayList) {
+                    return false;
+                }
+                var matrix = node.renderMatrix;
+                matrix.copyFrom(concatenatedMatrix);
+                var root = displayList.root;
+                if (root !== target.$stage) {
+                    target.$getConcatenatedMatrixAt(root, matrix);
+                }
             }
-            if (!displayList) {
-                region.setTo(0, 0, 0, 0);
-                node.moved = false;
-                return false;
-            }
+            else {
+                var bounds = target.$getOriginalBounds();
+                var displayList = target.$parentDisplayList;
+                var region = node.renderRegion;
+                if (this.needUpdateRegions) {
+                    this.updateDirtyRegions();
+                }
+                if (!displayList) {
+                    region.setTo(0, 0, 0, 0);
+                    node.moved = false;
+                    return false;
+                }
 
-            if (!node.moved) {
-                return false;
+                if (!node.moved) {
+                    return false;
+                }
+                node.moved = false;
+                var matrix = node.renderMatrix;
+                matrix.copyFrom(concatenatedMatrix);
+                var root = displayList.root;
+                if (root !== target.$stage) {
+                    target.$getConcatenatedMatrixAt(root, matrix);
+                }
+                region.updateRegion(bounds, matrix);
             }
-            node.moved = false;
-            var matrix = node.renderMatrix;
-            matrix.copyFrom(concatenatedMatrix);
-            var root = displayList.root;
-            if (root !== target.$stage) {
-                target.$getConcatenatedMatrixAt(root, matrix);
-            }
-            region.updateRegion(bounds, matrix);
             return true;
         }
 
@@ -225,7 +242,7 @@ module egret.sys {
                             node.needRedraw = true;
                         }
                     }
-                    var moved = display.$update();
+                    var moved = display.$update(this.$dirtyRegionPolicy);
                     if (node.renderAlpha > 0 && node.renderVisible && (moved || !node.needRedraw)) {//若不判断needRedraw,从0设置为1的情况将会不显示
                         if (dirtyRegion.addRegion(node.renderRegion)) {
                             node.needRedraw = true;
@@ -236,7 +253,7 @@ module egret.sys {
                     if (dirtyRegion.addRegion(node.renderRegion)) {
                         node.needRedraw = true;
                     }
-                    var moved = display.$update();
+                    var moved = display.$update(this.$dirtyRegionPolicy);
                     if (moved || !node.needRedraw) {//若不判断needRedraw,从0设置为1的情况将会不显示
                         if (dirtyRegion.addRegion(node.renderRegion)) {
                             node.needRedraw = true;
