@@ -7298,7 +7298,7 @@ var egret;
                 else if (filter.type == "glow") {
                     filterData.type = "glow";
                     filterData.distance = filter.distance || 0;
-                    filterData.angle = filter.angle / 180 * 2 * Math.PI || 0;
+                    filterData.angle = filter.angle ? filter.angle / 180 * Math.PI : 0;
                     filterData.$red = filter.$red / 255;
                     filterData.$green = filter.$green / 255;
                     filterData.$blue = filter.$blue / 255;

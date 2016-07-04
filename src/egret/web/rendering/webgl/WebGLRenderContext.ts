@@ -1004,7 +1004,7 @@ module egret.web {
             } else if(filter.type == "glow") {
                 filterData.type = "glow";
                 filterData.distance = (<DropShadowFilter>filter).distance || 0;
-                filterData.angle = (<DropShadowFilter>filter).angle / 180 * 2 * Math.PI || 0;
+                filterData.angle = (<DropShadowFilter>filter).angle ? (<DropShadowFilter>filter).angle / 180 * Math.PI : 0;
                 filterData.$red = (<GlowFilter>filter).$red / 255;
                 filterData.$green = (<GlowFilter>filter).$green / 255;
                 filterData.$blue = (<GlowFilter>filter).$blue / 255;
