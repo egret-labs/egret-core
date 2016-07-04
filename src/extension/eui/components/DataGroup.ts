@@ -300,6 +300,7 @@ module eui {
             if (freeRenderers[hashCode] && freeRenderers[hashCode].length > 0) {
                 renderer = freeRenderers[hashCode].pop();
                 renderer.visible = true;
+                this.invalidateDisplayList();
                 return renderer;
             }
             values[Keys.createNewRendererFlag] = true;
