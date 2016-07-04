@@ -49,17 +49,20 @@ module egret.web {
         public primitiveShader:PrimitiveShader = null;
         public colorTransformShader:ColorTransformShader = null;
         public blurShader:BlurShader = null;
+        public glowShader:GlowShader = null;
 
         public setContext(gl:any) {
             this.gl = gl;
             this.primitiveShader = new PrimitiveShader(gl);
             this.defaultShader = new TextureShader(gl);
             this.colorTransformShader = new ColorTransformShader(gl);
+            this.glowShader = new GlowShader(gl);
             this.blurShader = new BlurShader(gl);
             this.primitiveShader.init();
             this.defaultShader.init();
             this.colorTransformShader.init();
             this.blurShader.init();
+            this.glowShader.init();
         }
 
         public activateShader(shader, stride:number) {

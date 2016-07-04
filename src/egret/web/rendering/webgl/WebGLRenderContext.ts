@@ -659,7 +659,16 @@ module egret.web {
                         shader.setBlur(filter.blurX, filter.blurY);
                         shader.setUv(data.uv);
                         shader.setTextureSize(filter.textureWidth, filter.textureHeight);
-                    } else {
+                    }
+                    else if (filter && filter.type == "glow") {
+                        shader = this.shaderManager.glowShader;
+                        // shader.setBlur(filter.blurX, filter.blurY);
+                        // shader.setOffset(0, 0);
+                        // shader.setColor(filter.$blue, filter.$green, filter.$red);
+                        // shader.setStrength(filter.strength);
+                        shader.setTextureSize(filter.textureWidth, filter.textureHeight);
+                    }
+                    else {
                         shader = this.shaderManager.defaultShader;
                     }
                     shader.setProjection(this.projectionX, this.projectionY);
@@ -948,7 +957,7 @@ module egret.web {
 
             // 如果是发光滤镜，绘制光晕
             if(filter.type == "glow") {
-                this.drawGlow(<GlowFilter>filter, input, -gOffsetX, -gOffsetY);
+                // this.drawGlow(<GlowFilter>filter, input, -gOffsetX, -gOffsetY);
             }
 
             // 绘制input结果到舞台
@@ -977,7 +986,7 @@ module egret.web {
             this.vao.cacheArrays(output.globalMatrix, output.globalAlpha, -offsetX, -offsetY, width + 2 * offsetX, height + 2 * offsetY, - offsetX - gOffsetX, - offsetY - gOffsetY, width + 2 * offsetX, height + 2 * offsetY, width, height);
             output.restoreTransform();
 
-            var filterData = {type: "", matrix: null, blurX: 0, blurY: 0, textureWidth: 0, textureHeight: 0};
+            var filterData = {type: "", strength: 0, $red: 0, $green: 0, $blue: 0, matrix: null, blurX: 0, blurY: 0, textureWidth: 0, textureHeight: 0};
             if(filter.type == "colorTransform") {
                 filterData.type = "colorTransform";
                 filterData.matrix = (<ColorMatrixFilter>filter).matrix;
@@ -985,6 +994,16 @@ module egret.web {
                 filterData.type = "blur";
                 filterData.blurX = (<BlurFilter>filter).blurX;
                 filterData.blurY = (<BlurFilter>filter).blurY;
+                filterData.textureWidth = width;
+                filterData.textureHeight = height;
+            } else if(filter.type == "glow") {
+                filterData.type = "glow";
+                filterData.blurX = (<GlowFilter>filter).blurX;
+                filterData.blurY = (<GlowFilter>filter).blurY;
+                filterData.strength = (<GlowFilter>filter).strength;
+                filterData.$red = 1;
+                filterData.$green = 0;
+                filterData.$blue = 0;
                 filterData.textureWidth = width;
                 filterData.textureHeight = height;
             }
