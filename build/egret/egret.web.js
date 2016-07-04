@@ -5651,87 +5651,137 @@ var egret;
                 //     "}";
                 this.fragmentSrc = [
                     'precision mediump float;',
-                    // 'varying vec2 v_TexCoord;',
+                    // 'varying vec2 vTextureCoord;',
                     'varying vec2 vTextureCoord;',
                     // 'varying vec4 vColor;',
                     'uniform sampler2D uSampler;',
                     'uniform float distance;',
-                    'uniform float outerStrength;',
-                    'uniform float innerStrength;',
-                    'uniform vec4 glowColor;',
-                    'uniform vec2 uTextureSize;',
-                    'vec2 px = vec2(1.0 / uTextureSize.x, 1.0 / uTextureSize.y);',
+                    'uniform float angle;',
+                    'uniform vec4 color;',
+                    'uniform float alpha;',
+                    'uniform float blurX;',
+                    'uniform float blurY;',
+                    // 'uniform vec4 quality;',
+                    'uniform float strength;',
+                    'uniform float inner;',
+                    'uniform float knockout;',
+                    "uniform vec2 uTextureSize;" +
+                        'vec2 px = vec2(1.0 / uTextureSize.x, 1.0 / uTextureSize.y);',
                     'void main(void) {',
-                    'vec2 v_TexCoord = vTextureCoord;',
-                    'const float quality = 8.0;',
-                    'const float PI = 3.14159265358979323846264;',
-                    'vec4 ownColor = texture2D(uSampler, v_TexCoord);',
+                    'const float samplingTimes = 8.0;',
+                    'const float halfSamplingTimes = 4.0;',
+                    'const float totalSamplingTimes = 8.0 * 8.0;',
+                    'vec4 ownColor = texture2D(uSampler, vTextureCoord);',
                     'vec4 curColor;',
                     'float totalAlpha = 0.0;',
                     'float maxTotalAlpha = 0.0;',
-                    'float cosAngle;',
-                    'float sinAngle;',
-                    'float curDistance = 0.0;',
-                    'for (float angle = 0.0; angle <= PI * 2.0; angle += PI * 2.0 / quality) {',
-                    'cosAngle = cos(angle);',
-                    'sinAngle = sin(angle);',
-                    'for (float d = 1.0; d <= quality; d++) {',
-                    'curDistance = float(d) * distance / 10.0;',
-                    'curColor = texture2D(uSampler, vec2(v_TexCoord.x + cosAngle * curDistance * px.x, v_TexCoord.y + sinAngle * curDistance * px.y));',
-                    'totalAlpha += (distance - curDistance) * curColor.a;',
-                    'maxTotalAlpha += (distance - curDistance);',
+                    'float curDistanceX = 0.0;',
+                    'float curDistanceY = 0.0;',
+                    'float offsetX = distance * cos(angle) * px.x;',
+                    'float offsetY = distance * sin(angle) * px.y;',
+                    'float xw = 0.0;',
+                    'float yw = 0.0;',
+                    'float w = 0.0;',
+                    'vec2 vec2FilterOff = vec2(blurX * px.x / halfSamplingTimes, blurY * px.y / halfSamplingTimes);',
+                    'for (float i = 1.0; i <= samplingTimes; i++) {',
+                    'for (float j = 1.0; j <= samplingTimes; j++) {',
+                    'curDistanceX = (i - halfSamplingTimes) * vec2FilterOff.x;',
+                    'curDistanceY = (j - halfSamplingTimes) * vec2FilterOff.y;',
+                    'xw = 1.0 - abs(i - halfSamplingTimes) / halfSamplingTimes;',
+                    'yw = 1.0 - abs(j - halfSamplingTimes) / halfSamplingTimes;',
+                    'w = xw * xw + yw * yw;',
+                    'curColor = texture2D(uSampler, vec2(vTextureCoord.x + curDistanceX - offsetX, vTextureCoord.y + curDistanceY - offsetY));',
+                    'totalAlpha += w * curColor.a;',
+                    'maxTotalAlpha += w;',
                     '}',
                     '}',
-                    'maxTotalAlpha = max(maxTotalAlpha, 0.0001);',
                     'ownColor.a = max(ownColor.a, 0.0001);',
-                    'ownColor.rgb = ownColor.rgb / ownColor.a;',
-                    'float outerGlowAlpha = (totalAlpha / maxTotalAlpha)  * outerStrength * (1. - ownColor.a);',
-                    'float innerGlowAlpha = ((maxTotalAlpha - totalAlpha) / maxTotalAlpha) * innerStrength * ownColor.a;',
+                    'ownColor.rgb = ownColor.rgb / ownColor.a * knockout;',
+                    'float outerGlowAlpha = (totalAlpha / maxTotalAlpha)  * strength * alpha * (1. - inner) * (1. - ownColor.a);',
+                    'float innerGlowAlpha = ((maxTotalAlpha - totalAlpha) / maxTotalAlpha) * strength * alpha * inner * ownColor.a;',
                     'float resultAlpha = (ownColor.a + outerGlowAlpha);',
-                    'gl_FragColor = vec4(mix(mix(ownColor.rgb, glowColor.rgb, innerGlowAlpha / ownColor.a), glowColor.rgb, outerGlowAlpha / resultAlpha) * resultAlpha, resultAlpha);',
+                    'gl_FragColor = vec4(mix(mix(ownColor.rgb, color.rgb, innerGlowAlpha / ownColor.a), color.rgb, outerGlowAlpha / resultAlpha) * resultAlpha, resultAlpha);',
                     '}',
                 ].join("\n");
                 this.uniforms = {
                     projectionVector: { type: '2f', value: { x: 0, y: 0 }, dirty: true },
                     distance: { type: '1f', value: 15, dirty: true },
-                    outerStrength: { type: '1f', value: 1, dirty: true },
-                    innerStrength: { type: '1f', value: 1, dirty: true },
-                    glowColor: { type: '4f', value: { x: 1, y: 0, z: 0, w: 0 }, dirty: true },
+                    angle: { type: '1f', value: 1, dirty: true },
+                    color: { type: '4f', value: { x: 1, y: 0, z: 0, w: 0 }, dirty: true },
+                    alpha: { type: '1f', value: 1, dirty: true },
+                    blurX: { type: '1f', value: 1, dirty: true },
+                    blurY: { type: '1f', value: 1, dirty: true },
+                    strength: { type: '1f', value: 1, dirty: true },
+                    inner: { type: '1f', value: 1, dirty: true },
+                    knockout: { type: '1f', value: 1, dirty: true },
                     uTextureSize: { type: '2f', value: { x: 100, y: 100 }, dirty: true }
                 };
             }
             var d = __define,c=GlowShader,p=c.prototype;
-            p.setBlur = function (blurX, blurY) {
-                // var uniform = this.uniforms.blur;
-                // if(uniform.value.x != blurX || uniform.value.y != blurY) {
-                //     uniform.value.x = blurX;
-                //     uniform.value.y = blurY;
-                //     uniform.dirty = true;
-                // }
+            p.setDistance = function (distance) {
+                var uniform = this.uniforms.distance;
+                if (uniform.value != distance) {
+                    uniform.value = distance;
+                    uniform.dirty = true;
+                }
             };
-            p.setOffset = function (offsetX, offsetY) {
-                // var uniform = this.uniforms.offset;
-                // if(uniform.value.x != offsetX || uniform.value.y != offsetY) {
-                //     uniform.value.x = offsetX;
-                //     uniform.value.y = offsetY;
-                //     uniform.dirty = true;
-                // }
-            };
-            p.setStrength = function (strength) {
-                // var uniform = this.uniforms.u_strength;
-                // if(uniform.value != strength) {
-                //     uniform.value = strength;
-                //     uniform.dirty = true;
-                // }
+            p.setAngle = function (angle) {
+                var uniform = this.uniforms.angle;
+                if (uniform.value != angle) {
+                    uniform.value = angle;
+                    uniform.dirty = true;
+                }
             };
             p.setColor = function (red, green, blue) {
-                // var uniform = this.uniforms.u_color;
-                // if(uniform.value.x != red || uniform.value.y != green || uniform.value.z != blue) {
-                //     uniform.value.x = red;
-                //     uniform.value.y = green;
-                //     uniform.value.z = blue;
-                //     uniform.dirty = true;
-                // }
+                var uniform = this.uniforms.color;
+                if (uniform.value.x != red || uniform.value.y != green || uniform.value.z != blue) {
+                    uniform.value.x = red;
+                    uniform.value.y = green;
+                    uniform.value.z = blue;
+                    uniform.dirty = true;
+                }
+            };
+            p.setAlpha = function (alpha) {
+                var uniform = this.uniforms.alpha;
+                if (uniform.value != alpha) {
+                    uniform.value = alpha;
+                    uniform.dirty = true;
+                }
+            };
+            p.setBlurX = function (blurX) {
+                var uniform = this.uniforms.blurX;
+                if (uniform.value != blurX) {
+                    uniform.value = blurX;
+                    uniform.dirty = true;
+                }
+            };
+            p.setBlurY = function (blurY) {
+                var uniform = this.uniforms.blurY;
+                if (uniform.value != blurY) {
+                    uniform.value = blurY;
+                    uniform.dirty = true;
+                }
+            };
+            p.setStrength = function (strength) {
+                var uniform = this.uniforms.strength;
+                if (uniform.value != strength) {
+                    uniform.value = strength;
+                    uniform.dirty = true;
+                }
+            };
+            p.setInner = function (inner) {
+                var uniform = this.uniforms.inner;
+                if (uniform.value != inner) {
+                    uniform.value = inner;
+                    uniform.dirty = true;
+                }
+            };
+            p.setKnockout = function (knockout) {
+                var uniform = this.uniforms.knockout;
+                if (uniform.value != knockout) {
+                    uniform.value = knockout;
+                    uniform.dirty = true;
+                }
             };
             /**
              * 设置采样材质的尺寸
@@ -6951,10 +7001,15 @@ var egret;
                         }
                         else if (filter && filter.type == "glow") {
                             shader = this.shaderManager.glowShader;
-                            // shader.setBlur(filter.blurX, filter.blurY);
-                            // shader.setOffset(0, 0);
-                            // shader.setColor(filter.$blue, filter.$green, filter.$red);
-                            // shader.setStrength(filter.strength);
+                            shader.setDistance(filter.distance);
+                            shader.setAngle(filter.angle);
+                            shader.setColor(filter.$red, filter.$green, filter.$blue);
+                            shader.setAlpha(filter.alpha);
+                            shader.setBlurX(filter.blurX);
+                            shader.setBlurY(filter.blurY);
+                            shader.setStrength(filter.strength);
+                            shader.setInner(filter.inner);
+                            shader.setKnockout(filter.knockout);
                             shader.setTextureSize(filter.textureWidth, filter.textureHeight);
                         }
                         else {
@@ -7228,7 +7283,7 @@ var egret;
                 output.transform(1, 0, 0, -1, 0, height + 2 * offsetY + (-offsetY - gOffsetY) * 2);
                 this.vao.cacheArrays(output.globalMatrix, output.globalAlpha, -offsetX, -offsetY, width + 2 * offsetX, height + 2 * offsetY, -offsetX - gOffsetX, -offsetY - gOffsetY, width + 2 * offsetX, height + 2 * offsetY, width, height);
                 output.restoreTransform();
-                var filterData = { type: "", strength: 0, $red: 0, $green: 0, $blue: 0, matrix: null, blurX: 0, blurY: 0, textureWidth: 0, textureHeight: 0 };
+                var filterData = { type: "", distance: 0, angle: 0, alpha: 0, strength: 0, $red: 0, $green: 0, $blue: 0, matrix: null, blurX: 0, blurY: 0, inner: 0, knockout: 0, textureWidth: 0, textureHeight: 0 };
                 if (filter.type == "colorTransform") {
                     filterData.type = "colorTransform";
                     filterData.matrix = filter.matrix;
@@ -7242,12 +7297,17 @@ var egret;
                 }
                 else if (filter.type == "glow") {
                     filterData.type = "glow";
+                    filterData.distance = filter.distance || 0;
+                    filterData.angle = filter.angle / 180 * 2 * Math.PI || 0;
+                    filterData.$red = filter.$red / 255;
+                    filterData.$green = filter.$green / 255;
+                    filterData.$blue = filter.$blue / 255;
+                    filterData.alpha = filter.alpha;
                     filterData.blurX = filter.blurX;
                     filterData.blurY = filter.blurY;
                     filterData.strength = filter.strength;
-                    filterData.$red = 1;
-                    filterData.$green = 0;
-                    filterData.$blue = 0;
+                    filterData.inner = filter.inner ? 1 : 0;
+                    filterData.knockout = filter.knockout ? 0 : 1;
                     filterData.textureWidth = width;
                     filterData.textureHeight = height;
                 }

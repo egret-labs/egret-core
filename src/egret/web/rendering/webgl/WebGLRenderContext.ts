@@ -662,10 +662,15 @@ module egret.web {
                     }
                     else if (filter && filter.type == "glow") {
                         shader = this.shaderManager.glowShader;
-                        // shader.setBlur(filter.blurX, filter.blurY);
-                        // shader.setOffset(0, 0);
-                        // shader.setColor(filter.$blue, filter.$green, filter.$red);
-                        // shader.setStrength(filter.strength);
+                        shader.setDistance(filter.distance);
+                        shader.setAngle(filter.angle);
+                        shader.setColor(filter.$red, filter.$green, filter.$blue);
+                        shader.setAlpha(filter.alpha);
+                        shader.setBlurX(filter.blurX);
+                        shader.setBlurY(filter.blurY);
+                        shader.setStrength(filter.strength);
+                        shader.setInner(filter.inner);
+                        shader.setKnockout(filter.knockout);
                         shader.setTextureSize(filter.textureWidth, filter.textureHeight);
                     }
                     else {
@@ -986,7 +991,7 @@ module egret.web {
             this.vao.cacheArrays(output.globalMatrix, output.globalAlpha, -offsetX, -offsetY, width + 2 * offsetX, height + 2 * offsetY, - offsetX - gOffsetX, - offsetY - gOffsetY, width + 2 * offsetX, height + 2 * offsetY, width, height);
             output.restoreTransform();
 
-            var filterData = {type: "", strength: 0, $red: 0, $green: 0, $blue: 0, matrix: null, blurX: 0, blurY: 0, textureWidth: 0, textureHeight: 0};
+            var filterData = {type: "", distance: 0, angle: 0, alpha: 0, strength: 0, $red: 0, $green: 0, $blue: 0, matrix: null, blurX: 0, blurY: 0, inner: 0, knockout: 0, textureWidth: 0, textureHeight: 0};
             if(filter.type == "colorTransform") {
                 filterData.type = "colorTransform";
                 filterData.matrix = (<ColorMatrixFilter>filter).matrix;
@@ -998,12 +1003,18 @@ module egret.web {
                 filterData.textureHeight = height;
             } else if(filter.type == "glow") {
                 filterData.type = "glow";
+                filterData.distance = (<DropShadowFilter>filter).distance || 0;
+                filterData.angle = (<DropShadowFilter>filter).angle / 180 * 2 * Math.PI || 0;
+                filterData.$red = (<GlowFilter>filter).$red / 255;
+                filterData.$green = (<GlowFilter>filter).$green / 255;
+                filterData.$blue = (<GlowFilter>filter).$blue / 255;
+                filterData.alpha = (<GlowFilter>filter).alpha;
                 filterData.blurX = (<GlowFilter>filter).blurX;
                 filterData.blurY = (<GlowFilter>filter).blurY;
                 filterData.strength = (<GlowFilter>filter).strength;
-                filterData.$red = 1;
-                filterData.$green = 0;
-                filterData.$blue = 0;
+                filterData.inner = (<GlowFilter>filter).inner ? 1 : 0;
+                filterData.knockout = (<GlowFilter>filter).knockout ? 0 : 1;
+                
                 filterData.textureWidth = width;
                 filterData.textureHeight = height;
             }
