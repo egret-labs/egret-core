@@ -64,13 +64,125 @@ module egret {
          * @version Egret 2.4
          * @platform Web,Native
          */
-        constructor(public color:number = 0xFF0000, public alpha:number = 1.0, public blurX:number = 6.0, public blurY:number = 6.0, public strength:number = 2, public quality:number = 1, public inner:boolean = false, public knockout:boolean = false) {
+        constructor(color:number = 0xFF0000, alpha:number = 1.0, blurX:number = 6.0, blurY:number = 6.0, strength:number = 2, quality:number = 1, inner:boolean = false, knockout:boolean = false) {
             super();
             this.type = "glow";
 
-            this.$blue = color & 0x0000FF;
-            this.$green = (color & 0x00ff00) >> 8;
-            this.$red = color >> 16;
+            this.color = color;
+            this.alpha = alpha;
+            this.blurX = blurX;
+            this.blurY = blurY;
+            this.strength = strength;
+            this.quality = quality;
+            this.inner = inner;
+            this.knockout = knockout;
+        }
+
+        private $color:number;
+        public get color():number {
+            return this.$color;
+        }
+
+        public set color(value:number) {
+            if(this.$color == value) {
+                return;
+            }
+            this.$color = value;
+            this.$blue = value & 0x0000FF;
+            this.$green = (value & 0x00ff00) >> 8;
+            this.$red = value >> 16;
+            this.invalidate();
+        }
+
+        private $alpha:number;
+        public get alpha():number {
+            return this.$alpha;
+        }
+
+        public set alpha(value:number) {
+            if(this.$alpha == value) {
+                return;
+            }
+            this.$alpha = value;
+            this.invalidate();
+        }
+
+        private $blurX:number;
+        public get blurX():number {
+            return this.$blurX;
+        }
+
+        public set blurX(value:number) {
+            if(this.$blurX == value) {
+                return;
+            }
+            this.$blurX = value;
+            this.invalidate();
+        }
+
+        private $blurY:number;
+        public get blurY():number {
+            return this.$blurY;
+        }
+
+        public set blurY(value:number) {
+            if(this.$blurY == value) {
+                return;
+            }
+            this.$blurY = value;
+            this.invalidate();
+        }
+
+        private $strength:number;
+        public get strength():number {
+            return this.$strength;
+        }
+
+        public set strength(value:number) {
+            if(this.$strength == value) {
+                return;
+            }
+            this.$strength = value;
+            this.invalidate();
+        }
+
+        private $quality:number;
+        public get quality():number {
+            return this.$quality;
+        }
+
+        public set quality(value:number) {
+            if(this.$quality == value) {
+                return;
+            }
+            this.$quality = value;
+            this.invalidate();
+        }
+
+        private $inner:boolean;
+        public get inner():boolean {
+            return this.$inner;
+        }
+
+        public set inner(value:boolean) {
+            if(this.$inner == value) {
+                return;
+            }
+            this.$inner = value;
+            this.invalidate();
+        }
+
+        private $knockout:boolean;
+        public get knockout():boolean {
+            return this.$knockout;
+        }
+
+        public set knockout(value:boolean) {
+            if(this.$knockout == value) {
+                return;
+            }
+            this.$knockout = value;
+            this.invalidate();
         }
     }
 }

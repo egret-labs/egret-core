@@ -10860,6 +10860,7 @@ var egret;
             if (inner === void 0) { inner = false; }
             if (knockout === void 0) { knockout = false; }
             _super.call(this);
+            this.type = "glow";
             this.color = color;
             this.alpha = alpha;
             this.blurX = blurX;
@@ -10868,12 +10869,107 @@ var egret;
             this.quality = quality;
             this.inner = inner;
             this.knockout = knockout;
-            this.type = "glow";
-            this.$blue = color & 0x0000FF;
-            this.$green = (color & 0x00ff00) >> 8;
-            this.$red = color >> 16;
         }
         var d = __define,c=GlowFilter,p=c.prototype;
+        d(p, "color"
+            ,function () {
+                return this.$color;
+            }
+            ,function (value) {
+                if (this.$color == value) {
+                    return;
+                }
+                this.$color = value;
+                this.$blue = value & 0x0000FF;
+                this.$green = (value & 0x00ff00) >> 8;
+                this.$red = value >> 16;
+                this.invalidate();
+            }
+        );
+        d(p, "alpha"
+            ,function () {
+                return this.$alpha;
+            }
+            ,function (value) {
+                if (this.$alpha == value) {
+                    return;
+                }
+                this.$alpha = value;
+                this.invalidate();
+            }
+        );
+        d(p, "blurX"
+            ,function () {
+                return this.$blurX;
+            }
+            ,function (value) {
+                if (this.$blurX == value) {
+                    return;
+                }
+                this.$blurX = value;
+                this.invalidate();
+            }
+        );
+        d(p, "blurY"
+            ,function () {
+                return this.$blurY;
+            }
+            ,function (value) {
+                if (this.$blurY == value) {
+                    return;
+                }
+                this.$blurY = value;
+                this.invalidate();
+            }
+        );
+        d(p, "strength"
+            ,function () {
+                return this.$strength;
+            }
+            ,function (value) {
+                if (this.$strength == value) {
+                    return;
+                }
+                this.$strength = value;
+                this.invalidate();
+            }
+        );
+        d(p, "quality"
+            ,function () {
+                return this.$quality;
+            }
+            ,function (value) {
+                if (this.$quality == value) {
+                    return;
+                }
+                this.$quality = value;
+                this.invalidate();
+            }
+        );
+        d(p, "inner"
+            ,function () {
+                return this.$inner;
+            }
+            ,function (value) {
+                if (this.$inner == value) {
+                    return;
+                }
+                this.$inner = value;
+                this.invalidate();
+            }
+        );
+        d(p, "knockout"
+            ,function () {
+                return this.$knockout;
+            }
+            ,function (value) {
+                if (this.$knockout == value) {
+                    return;
+                }
+                this.$knockout = value;
+                this.invalidate();
+            }
+        );
         return GlowFilter;
     }(egret.Filter));
     egret.GlowFilter = GlowFilter;
@@ -10953,6 +11049,30 @@ var egret;
             this.angle = angle;
         }
         var d = __define,c=DropShadowFilter,p=c.prototype;
+        d(p, "distance"
+            ,function () {
+                return this.$distance;
+            }
+            ,function (value) {
+                if (this.$distance == value) {
+                    return;
+                }
+                this.$distance = value;
+                this.invalidate();
+            }
+        );
+        d(p, "angle"
+            ,function () {
+                return this.$angle;
+            }
+            ,function (value) {
+                if (this.$angle == value) {
+                    return;
+                }
+                this.$angle = value;
+                this.invalidate();
+            }
+        );
         return DropShadowFilter;
     }(egret.GlowFilter));
     egret.DropShadowFilter = DropShadowFilter;

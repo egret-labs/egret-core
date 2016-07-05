@@ -7025,14 +7025,6 @@ declare module egret {
      * @platform Web,Native
      */
     class GlowFilter extends Filter {
-        color: number;
-        alpha: number;
-        blurX: number;
-        blurY: number;
-        strength: number;
-        quality: number;
-        inner: boolean;
-        knockout: boolean;
         /**
          * @private
          */
@@ -7060,6 +7052,22 @@ declare module egret {
          * @platform Web,Native
          */
         constructor(color?: number, alpha?: number, blurX?: number, blurY?: number, strength?: number, quality?: number, inner?: boolean, knockout?: boolean);
+        private $color;
+        color: number;
+        private $alpha;
+        alpha: number;
+        private $blurX;
+        blurX: number;
+        private $blurY;
+        blurY: number;
+        private $strength;
+        strength: number;
+        private $quality;
+        quality: number;
+        private $inner;
+        inner: boolean;
+        private $knockout;
+        knockout: boolean;
     }
 }
 declare module egret {
@@ -7073,8 +7081,6 @@ declare module egret {
      * @platform Web,Native
      */
     class DropShadowFilter extends GlowFilter {
-        distance: number;
-        angle: number;
         /**
          * 初始化 DropShadowFilter 对象
          * @method egret.GlowFilter#constructor
@@ -7092,6 +7098,10 @@ declare module egret {
          * @platform Web,Native
          */
         constructor(distance?: number, angle?: number, color?: number, alpha?: number, blurX?: number, blurY?: number, strength?: number, quality?: number, inner?: boolean, knockout?: boolean, hideObject?: boolean);
+        private $distance;
+        distance: number;
+        private $angle;
+        angle: number;
     }
 }
 declare module egret {
