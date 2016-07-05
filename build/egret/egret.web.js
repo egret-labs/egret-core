@@ -5690,7 +5690,7 @@ var egret;
                     'xw = 1.0 - abs(i - halfSamplingTimes) / halfSamplingTimes;',
                     'yw = 1.0 - abs(j - halfSamplingTimes) / halfSamplingTimes;',
                     'w = xw * xw + yw * yw;',
-                    'curColor = texture2D(uSampler, vec2(vTextureCoord.x + curDistanceX - offsetX, vTextureCoord.y + curDistanceY - offsetY));',
+                    'curColor = texture2D(uSampler, vec2(vTextureCoord.x + curDistanceX - offsetX, vTextureCoord.y + curDistanceY + offsetY));',
                     'totalAlpha += w * curColor.a;',
                     'maxTotalAlpha += w;',
                     '}',
