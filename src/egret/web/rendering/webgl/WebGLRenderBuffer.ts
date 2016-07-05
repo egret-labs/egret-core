@@ -156,20 +156,6 @@ module egret.web {
         }
 
         /**
-         * @private
-         **/
-        public $getWidth():number {
-            return this.rootRenderTarget.width;
-        }
-
-        /**
-         * @private
-         **/
-        public $getHeight():number {
-            return this.rootRenderTarget.height;
-        }
-
-        /**
          * 改变渲染缓冲的大小并清空缓冲区
          * @param width 改变后的宽
          * @param height 改变后的高

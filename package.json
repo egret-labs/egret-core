@@ -279,6 +279,10 @@
             "platform": "web"
           },
           {
+            "path": "web/rendering/webgl/shaders/GlowShader.ts",
+            "platform": "web"
+          },
+          {
             "path": "web/rendering/webgl/WebGLShaderManager.ts",
             "platform": "web"
           },

@@ -2051,24 +2051,24 @@ module egret {
                         var angle:number = (<DropShadowFilter>filter).angle || 0;
                         var distanceX = 0;
                         var distanceY = 0;
-                        if (distance != 0 && angle != 0) {
+                        if (distance != 0) {
                             //todo 缓存这个数据
                             distanceX = Math.ceil(distance * egret.NumberUtils.cos(angle));
                             distanceY = Math.ceil(distance * egret.NumberUtils.sin(angle));
                             if(distanceX > 0) {
-                                x += distanceX;
+                                // x += distanceX;
                                 w += distanceX;
                             }
                             else if(distanceX < 0) {
-                                x -= distanceX;
+                                x += distanceX;
                                 w -= distanceX;
                             }
                             if(distanceY > 0) {
-                                y += distanceY;
+                                // y += distanceY;
                                 h += distanceY;
                             }
                             else if(distanceY < 0) {
-                                y -= distanceY;
+                                y += distanceY;
                                 h -= distanceY;
                             }
                         }

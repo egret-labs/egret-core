@@ -7025,14 +7025,6 @@ declare module egret {
      * @platform Web,Native
      */
     class GlowFilter extends Filter {
-        color: number;
-        alpha: number;
-        blurX: number;
-        blurY: number;
-        strength: number;
-        quality: number;
-        inner: boolean;
-        knockout: boolean;
         /**
          * @private
          */
@@ -7053,13 +7045,29 @@ declare module egret {
          * @param blurX {number} 水平模糊量。有效值为 0 到 255（浮点）。
          * @param blurY {number} 垂直模糊量。有效值为 0 到 255（浮点）。
          * @param strength {number} 印记或跨页的强度。该值越高，压印的颜色越深，而且发光与背景之间的对比度也越强。有效值为 0 到 255。
-         * @param quality {number} 应用滤镜的次数。
-         * @param inner {boolean} 指定发光是否为内侧发光。值 true 指定发光是内侧发光。值 false 指定发光是外侧发光（对象外缘周围的发光）。暂未实现。
-         * @param knockout {number} 指定对象是否具有挖空效果。值为 true 将使对象的填充变为透明，并显示文档的背景颜色。暂未实现。
+         * @param quality {number} 应用滤镜的次数。暂未实现。
+         * @param inner {boolean} 指定发光是否为内侧发光。值 true 指定发光是内侧发光。值 false 指定发光是外侧发光（对象外缘周围的发光）。
+         * @param knockout {number} 指定对象是否具有挖空效果。值为 true 将使对象的填充变为透明，并显示文档的背景颜色。
          * @version Egret 2.4
          * @platform Web,Native
          */
         constructor(color?: number, alpha?: number, blurX?: number, blurY?: number, strength?: number, quality?: number, inner?: boolean, knockout?: boolean);
+        private $color;
+        color: number;
+        private $alpha;
+        alpha: number;
+        private $blurX;
+        blurX: number;
+        private $blurY;
+        blurY: number;
+        private $strength;
+        strength: number;
+        private $quality;
+        quality: number;
+        private $inner;
+        inner: boolean;
+        private $knockout;
+        knockout: boolean;
     }
 }
 declare module egret {
@@ -7073,8 +7081,6 @@ declare module egret {
      * @platform Web,Native
      */
     class DropShadowFilter extends GlowFilter {
-        distance: number;
-        angle: number;
         /**
          * 初始化 DropShadowFilter 对象
          * @method egret.GlowFilter#constructor
@@ -7084,14 +7090,18 @@ declare module egret {
          * @param alpha {number} 颜色的 Alpha 透明度值。有效值为 0 到 1。例如，0.25 设置透明度值为 25%。
          * @param blurX {number} 水平模糊量。有效值为 0 到 255（浮点）。
          * @param blurY {number} 垂直模糊量。有效值为 0 到 255（浮点）。
-         * @param strength {number} 印记或跨页的强度。该值越高，压印的颜色越深，而且发光与背景之间的对比度也越强。有效值为 0 到 255。暂未实现。
-         * @param quality {number} 应用滤镜的次数。
-         * @param inner {boolean} 指定发光是否为内侧发光。值 true 指定发光是内侧发光。值 false 指定发光是外侧发光（对象外缘周围的发光）。暂未实现。
-         * @param knockout {number} 指定对象是否具有挖空效果。值为 true 将使对象的填充变为透明，并显示文档的背景颜色。暂未实现。
+         * @param strength {number} 印记或跨页的强度。该值越高，压印的颜色越深，而且发光与背景之间的对比度也越强。有效值为 0 到 255。
+         * @param quality {number} 应用滤镜的次数。暂未实现。
+         * @param inner {boolean} 指定发光是否为内侧发光。值 true 指定发光是内侧发光。值 false 指定发光是外侧发光（对象外缘周围的发光）。
+         * @param knockout {number} 指定对象是否具有挖空效果。值为 true 将使对象的填充变为透明，并显示文档的背景颜色。
          * @version Egret 2.4
          * @platform Web,Native
          */
         constructor(distance?: number, angle?: number, color?: number, alpha?: number, blurX?: number, blurY?: number, strength?: number, quality?: number, inner?: boolean, knockout?: boolean, hideObject?: boolean);
+        private $distance;
+        distance: number;
+        private $angle;
+        angle: number;
     }
 }
 declare module egret {
