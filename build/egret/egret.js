@@ -17152,6 +17152,15 @@ var egret;
         };
         /**
          * @private
+         */
+        p.getConfig = function (name, key) {
+            if (!this.charList[name]) {
+                return 0;
+            }
+            return this.charList[name][key];
+        };
+        /**
+         * @private
          *
          * @returns
          */
@@ -17204,6 +17213,7 @@ var egret;
                 c["h"] = this.getConfigByKey(charText, "height");
                 c["offX"] = this.getConfigByKey(charText, "xoffset");
                 c["offY"] = this.getConfigByKey(charText, "yoffset");
+                c["xadvance"] = this.getConfigByKey(charText, "xadvance");
             }
             return chars;
         };
@@ -17623,7 +17633,7 @@ var egret;
                     node.imageWidth = texture._sourceWidth;
                     node.imageHeight = texture._sourceHeight;
                     node.drawImage(texture._bitmapX, texture._bitmapY, bitmapWidth, bitmapHeight, xPos + texture._offsetX, yPos + texture._offsetY, texture.$getScaleBitmapWidth(), texture.$getScaleBitmapHeight());
-                    xPos += texture.$getTextureWidth() + values[4 /* letterSpacing */];
+                    xPos += bitmapFont.getConfig(character, "xadvance") || (texture.$getTextureWidth() + values[4 /* letterSpacing */]);
                 }
                 yPos += lineHeight + values[3 /* lineSpacing */];
             }
@@ -17762,11 +17772,23 @@ var egret;
                         line = line.substring(j);
                         len = line.length;
                         j = 0;
-                        xPos = texureWidth;
+                        //最后一个字符要计算纹理宽度，而不是xadvance
+                        if (j == len - 1) {
+                            xPos = texureWidth;
+                        }
+                        else {
+                            xPos = bitmapFont.getConfig(character, "xadvance") || texureWidth;
+                        }
                         lineHeight = textureHeight;
                         continue;
                     }
-                    xPos += texureWidth;
+                    //最后一个字符要计算纹理宽度，而不是xadvance
+                    if (j == len - 1) {
+                        xPos += texureWidth;
+                    }
+                    else {
+                        xPos += bitmapFont.getConfig(character, "xadvance") || texureWidth;
+                    }
                     lineHeight = Math.max(textureHeight, lineHeight);
                 }
                 if (textFieldHeight && i > 0 && textHeight > textFieldHeight) {

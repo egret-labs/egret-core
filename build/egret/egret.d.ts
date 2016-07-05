@@ -11180,6 +11180,10 @@ declare module egret {
         /**
          * @private
          */
+        getConfig(name: string, key: string): number;
+        /**
+         * @private
+         */
         private firstCharHeight;
         /**
          * @private

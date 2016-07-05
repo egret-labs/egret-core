@@ -115,6 +115,16 @@ module egret {
         /**
          * @private
          */
+        public getConfig(name:string, key:string):number {
+            if(!this.charList[name]) {
+                return 0;
+            }
+            return this.charList[name][key];
+        }
+
+        /**
+         * @private
+         */
         private firstCharHeight:number = 0;
 
         /**
@@ -173,6 +183,7 @@ module egret {
                 c["h"] = this.getConfigByKey(charText, "height");
                 c["offX"] = this.getConfigByKey(charText, "xoffset");
                 c["offY"] = this.getConfigByKey(charText, "yoffset");
+                c["xadvance"] = this.getConfigByKey(charText, "xadvance");
             }
             return chars;
         }

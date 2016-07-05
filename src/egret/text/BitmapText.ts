@@ -497,7 +497,7 @@ module egret {
                         bitmapWidth, bitmapHeight, xPos + texture._offsetX, yPos + texture._offsetY,
                         texture.$getScaleBitmapWidth(), texture.$getScaleBitmapHeight());
 
-                    xPos += texture.$getTextureWidth() + values[sys.BitmapTextKeys.letterSpacing];
+                    xPos += bitmapFont.getConfig(character, "xadvance") || (texture.$getTextureWidth() + values[sys.BitmapTextKeys.letterSpacing]);
                 }
                 yPos += lineHeight + values[sys.BitmapTextKeys.lineSpacing];
             }
@@ -669,11 +669,23 @@ module egret {
                         line = line.substring(j);
                         len = line.length;
                         j = 0;
-                        xPos = texureWidth;
+                        //最后一个字符要计算纹理宽度，而不是xadvance
+                        if(j == len - 1) {
+                            xPos = texureWidth;
+                        }
+                        else {
+                            xPos = bitmapFont.getConfig(character, "xadvance") || texureWidth;
+                        }
                         lineHeight = textureHeight;
                         continue;
                     }
-                    xPos += texureWidth;
+                    //最后一个字符要计算纹理宽度，而不是xadvance
+                    if(j == len - 1) {
+                        xPos += texureWidth;
+                    }
+                    else {
+                        xPos += bitmapFont.getConfig(character, "xadvance") || texureWidth;
+                    }
                     lineHeight = Math.max(textureHeight, lineHeight);
                 }
                 if (textFieldHeight && i > 0 && textHeight > textFieldHeight) {
