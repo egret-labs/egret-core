@@ -128,8 +128,10 @@ module egret.web {
                 'float innerGlowAlpha = ((maxTotalAlpha - totalAlpha) / maxTotalAlpha) * strength * alpha * inner * ownColor.a;',
 
                 'ownColor.a = max(ownColor.a * knockout, 0.0001);',
-                'float resultAlpha = (ownColor.a + outerGlowAlpha);',
-                'gl_FragColor = vec4(mix(mix(ownColor.rgb, color.rgb, innerGlowAlpha / ownColor.a), color.rgb, outerGlowAlpha / resultAlpha) * resultAlpha, resultAlpha);',
+                'vec3 mix1 = mix(ownColor.rgb, color.rgb, innerGlowAlpha / (innerGlowAlpha + ownColor.a));',
+                'vec3 mix2 = mix(mix1, color.rgb, outerGlowAlpha / (innerGlowAlpha + ownColor.a + outerGlowAlpha));',
+                'float resultAlpha = min(ownColor.a + outerGlowAlpha + innerGlowAlpha, 1.);',
+                'gl_FragColor = vec4(mix2 * resultAlpha, resultAlpha);',
             '}',
         ].join("\n");
 
