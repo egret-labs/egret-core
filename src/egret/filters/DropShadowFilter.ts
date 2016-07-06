@@ -54,11 +54,11 @@ module egret {
          * @version Egret 2.4
          * @platform Web,Native
          */
-        constructor(distance:number = 4.0, angle:number = 45, color:number = 0, alpha:number = 1.0, blurX:number = 4.0, blurY:number = 4.0, strength:number = 1.0, quality:number = 1, inner:boolean = false, knockout:boolean = false, hideObject:boolean = false) {
+        constructor(distance:number = 4.0, angle:number = 45, color:number = 0, alpha:number = 1.0, blurX:number = 4.0, blurY:number = 4.0, strength:number = 1.0, quality:number = 1, inner:boolean = false, knockout:boolean = false) {
             super(color, alpha, blurX, blurY, strength, quality, inner, knockout);
 
-            this.distance = distance;
-            this.angle = angle;
+            this.$distance = distance;
+            this.$angle = angle;
         }
 
         private $distance:number;

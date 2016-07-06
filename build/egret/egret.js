@@ -10874,14 +10874,17 @@ var egret;
             if (knockout === void 0) { knockout = false; }
             _super.call(this);
             this.type = "glow";
-            this.color = color;
-            this.alpha = alpha;
-            this.blurX = blurX;
-            this.blurY = blurY;
-            this.strength = strength;
-            this.quality = quality;
-            this.inner = inner;
-            this.knockout = knockout;
+            this.$color = color;
+            this.$blue = color & 0x0000FF;
+            this.$green = (color & 0x00ff00) >> 8;
+            this.$red = color >> 16;
+            this.$alpha = alpha;
+            this.$blurX = blurX;
+            this.$blurY = blurY;
+            this.$strength = strength;
+            this.$quality = quality;
+            this.$inner = inner;
+            this.$knockout = knockout;
         }
         var d = __define,c=GlowFilter,p=c.prototype;
         d(p, "color"
@@ -11045,7 +11048,7 @@ var egret;
          * @version Egret 2.4
          * @platform Web,Native
          */
-        function DropShadowFilter(distance, angle, color, alpha, blurX, blurY, strength, quality, inner, knockout, hideObject) {
+        function DropShadowFilter(distance, angle, color, alpha, blurX, blurY, strength, quality, inner, knockout) {
             if (distance === void 0) { distance = 4.0; }
             if (angle === void 0) { angle = 45; }
             if (color === void 0) { color = 0; }
@@ -11056,10 +11059,9 @@ var egret;
             if (quality === void 0) { quality = 1; }
             if (inner === void 0) { inner = false; }
             if (knockout === void 0) { knockout = false; }
-            if (hideObject === void 0) { hideObject = false; }
             _super.call(this, color, alpha, blurX, blurY, strength, quality, inner, knockout);
-            this.distance = distance;
-            this.angle = angle;
+            this.$distance = distance;
+            this.$angle = angle;
         }
         var d = __define,c=DropShadowFilter,p=c.prototype;
         d(p, "distance"

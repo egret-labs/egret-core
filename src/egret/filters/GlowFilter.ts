@@ -68,14 +68,17 @@ module egret {
             super();
             this.type = "glow";
 
-            this.color = color;
-            this.alpha = alpha;
-            this.blurX = blurX;
-            this.blurY = blurY;
-            this.strength = strength;
-            this.quality = quality;
-            this.inner = inner;
-            this.knockout = knockout;
+            this.$color = color;
+            this.$blue = color & 0x0000FF;
+            this.$green = (color & 0x00ff00) >> 8;
+            this.$red = color >> 16;
+            this.$alpha = alpha;
+            this.$blurX = blurX;
+            this.$blurY = blurY;
+            this.$strength = strength;
+            this.$quality = quality;
+            this.$inner = inner;
+            this.$knockout = knockout;
         }
 
         private $color:number;

@@ -7097,7 +7097,7 @@ declare module egret {
          * @version Egret 2.4
          * @platform Web,Native
          */
-        constructor(distance?: number, angle?: number, color?: number, alpha?: number, blurX?: number, blurY?: number, strength?: number, quality?: number, inner?: boolean, knockout?: boolean, hideObject?: boolean);
+        constructor(distance?: number, angle?: number, color?: number, alpha?: number, blurX?: number, blurY?: number, strength?: number, quality?: number, inner?: boolean, knockout?: boolean);
         private $distance;
         distance: number;
         private $angle;
