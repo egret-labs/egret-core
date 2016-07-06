@@ -13195,7 +13195,7 @@ var eui;
             var uiValues = viewport.$UIComponent;
             switch (values[1 /* scrollPolicyH */]) {
                 case "auto":
-                    if (viewport.contentWidth > uiValues[10 /* width */]) {
+                    if (viewport.contentWidth > uiValues[10 /* width */] || viewport.scrollH !== 0) {
                         hCanScroll = true;
                     }
                     else {
@@ -13213,7 +13213,7 @@ var eui;
             var vCanScroll;
             switch (values[0 /* scrollPolicyV */]) {
                 case "auto":
-                    if (viewport.contentHeight > uiValues[11 /* height */]) {
+                    if (viewport.contentHeight > uiValues[11 /* height */] || viewport.scrollV !== 0) {
                         vCanScroll = true;
                     }
                     else {

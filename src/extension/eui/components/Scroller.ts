@@ -364,6 +364,7 @@ module eui {
             values[Keys.scrollPolicyH] = value;
             this.checkScrollPolicy();
         }
+
         /**
          * @language en_US
          * Stop the scroller animation
@@ -497,6 +498,7 @@ module eui {
                 this.addChildAt(viewport, 0);
             }
         }
+
         /**
          * @private
          * @param event
@@ -509,6 +511,7 @@ module eui {
             }
             this.onTouchBegin(event);
         }
+
         /**
          * @private
          * @param event
@@ -519,6 +522,7 @@ module eui {
                 this.onTouchEnd(event);
             }
         }
+
         /**
          * @private
          * @param event
@@ -543,7 +547,7 @@ module eui {
             var uiValues = viewport.$UIComponent;
             switch (values[Keys.scrollPolicyH]) {
                 case "auto":
-                    if (viewport.contentWidth > uiValues[sys.UIKeys.width]) {
+                    if (viewport.contentWidth > uiValues[sys.UIKeys.width] || viewport.scrollH !== 0) {
                         hCanScroll = true;
                     }
                     else {
@@ -562,7 +566,7 @@ module eui {
             var vCanScroll:boolean;
             switch (values[Keys.scrollPolicyV]) {
                 case "auto":
-                    if (viewport.contentHeight > uiValues[sys.UIKeys.height]) {
+                    if (viewport.contentHeight > uiValues[sys.UIKeys.height] || viewport.scrollV !== 0) {
                         vCanScroll = true;
                     }
                     else {
@@ -585,6 +589,7 @@ module eui {
          * 记录按下的对象，touchCancle时使用
          */
         private downTarget:egret.DisplayObject;
+
         /**
          * @private
          *
@@ -612,7 +617,7 @@ module eui {
             var stage = this.$stage;
             this.addEventListener(egret.TouchEvent.TOUCH_MOVE, this.onTouchMove, this);
             stage.addEventListener(egret.TouchEvent.TOUCH_END, this.onTouchEnd, this, true);
-            this.addEventListener(egret.TouchEvent.TOUCH_CANCEL,this.onTouchCancel,this);
+            this.addEventListener(egret.TouchEvent.TOUCH_CANCEL, this.onTouchCancel, this);
             this.addEventListener(egret.Event.REMOVED_FROM_STAGE, this.onRemoveListeners, this);
         }
 
@@ -627,23 +632,23 @@ module eui {
             }
             var values = this.$Scroller;
             if (!values[Keys.touchMoved]) {
-                if(Math.abs(values[Keys.touchStartX] - event.$stageX) < Scroller.scrollThreshold){
+                if (Math.abs(values[Keys.touchStartX] - event.$stageX) < Scroller.scrollThreshold) {
                     var outX = false;
-                }else{
+                } else {
                     outX = true;
                 }
-                if(Math.abs(values[Keys.touchStartY] - event.$stageY) < Scroller.scrollThreshold){
+                if (Math.abs(values[Keys.touchStartY] - event.$stageY) < Scroller.scrollThreshold) {
                     var outY = false;
-                }else{
+                } else {
                     outY = true;
                 }
-                if(!outX && !outY){
+                if (!outX && !outY) {
                     return;
                 }
-                if(!outY && outX && values[Keys.scrollPolicyH] == 'off'){
+                if (!outY && outX && values[Keys.scrollPolicyH] == 'off') {
                     return;
                 }
-                if(!outX && outY && values[Keys.scrollPolicyV] == 'off') {
+                if (!outX && outY && values[Keys.scrollPolicyV] == 'off') {
                     return;
                 }
 
@@ -677,15 +682,17 @@ module eui {
                 values[Keys.touchScrollV].update(event.$stageY, viewport.contentHeight - uiValues[sys.UIKeys.height], viewport.scrollV);
             }
         }
+
         /**
          * @private
          * @param event
          */
-        private onTouchCancel(event:egret.TouchEvent):void{
-            if(!this.$Scroller[Keys.touchMoved]){
+        private onTouchCancel(event:egret.TouchEvent):void {
+            if (!this.$Scroller[Keys.touchMoved]) {
                 this.onRemoveListeners();
             }
         }
+
         /**
          * @private
          * @param event
@@ -734,6 +741,7 @@ module eui {
                 values[Keys.touchScrollV].finish(viewport.scrollV, viewport.contentHeight - uiValues[sys.UIKeys.height]);
             }
         }
+
         /**
          * @private
          */
@@ -742,7 +750,7 @@ module eui {
             this.removeEventListener(egret.TouchEvent.TOUCH_MOVE, this.onTouchMove, this);
             stage.removeEventListener(egret.TouchEvent.TOUCH_END, this.onTouchEnd, this, true);
             stage.removeEventListener(egret.TouchEvent.TOUCH_MOVE, this.onTouchMove, this);
-            this.removeEventListener(egret.TouchEvent.TOUCH_CANCEL,this.onTouchCancel, true);
+            this.removeEventListener(egret.TouchEvent.TOUCH_CANCEL, this.onTouchCancel, true);
             this.removeEventListener(egret.Event.REMOVED_FROM_STAGE, this.onRemoveListeners, this);
         }
 
