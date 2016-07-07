@@ -215,20 +215,20 @@ module egret.web {
                 video.addEventListener("mozfullscreenchange", this.screenChanged);
                 video.addEventListener("webkitfullscreenchange", this.screenChanged);
 
-                video.addEventListener("webkitfullscreenerror", this.screenError);
+                video.addEventListener("mozfullscreenerror", this.screenError);
                 video.addEventListener("webkitfullscreenerror", this.screenError);
             }
             else {
                 video.removeEventListener("mozfullscreenchange", this.screenChanged);
                 video.removeEventListener("webkitfullscreenchange", this.screenChanged);
 
-                video.removeEventListener("webkitfullscreenerror", this.screenError);
+                video.removeEventListener("mozfullscreenerror", this.screenError);
                 video.removeEventListener("webkitfullscreenerror", this.screenError);
             }
         }
 
         private screenError():void {
-            egret.$error(3003);
+            egret.$error(3014);
         }
 
         private screenChanged = (e):void => {

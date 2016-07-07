@@ -36,15 +36,15 @@ module egret.web {
         /**
          * @private
          */
-        static QQ_AUDIO:number = 1;
+        static QQ_AUDIO: number = 1;
         /**
          * @private
          */
-        static WEB_AUDIO:number = 2;
+        static WEB_AUDIO: number = 2;
         /**
          * @private
          */
-        static HTML5_AUDIO:number = 3;
+        static HTML5_AUDIO: number = 3;
     }
 
     /**
@@ -54,15 +54,15 @@ module egret.web {
         /**
          * @private
          */
-        static WPHONE:number = 1;
+        static WPHONE: number = 1;
         /**
          * @private
          */
-        static IOS:number = 2;
+        static IOS: number = 2;
         /**
          * @private
          */
-        static ADNROID:number = 3;
+        static ADNROID: number = 3;
     }
 
     /**
@@ -71,26 +71,24 @@ module egret.web {
      */
     export class Html5Capatibility extends HashObject {
         //当前浏览器版本是否支持blob
-        public static _canUseBlob:boolean = false;
+        public static _canUseBlob: boolean = false;
 
         //当前浏览器版本是否支持webaudio
-        public static _audioType:number = 0;
+        public static _audioType: number = 0;
         /**
          * @private
          */
         public static _AudioClass;
 
-        public static _audioMustLoad:boolean = false;
+        /**
+         * @private
+         */
+        public static _QQRootPath: string = "";
 
         /**
          * @private
          */
-        public static _QQRootPath:string = "";
-
-        /**
-         * @private
-         */
-        public static _System_OS:number = 0;
+        public static _System_OS: number = 0;
         /**
          * @private
          */
@@ -101,44 +99,44 @@ module egret.web {
         /**
          * @private
          */
-        private static ua:string = "";
+        private static ua: string = "";
 
         /**
          * @private
          * 
          */
-        public static _init():void {
-            var ua:string = navigator.userAgent.toLowerCase();
+        public static $init(): void {
+            var ua: string = navigator.userAgent.toLowerCase();
             Html5Capatibility.ua = ua;
 
             egret.Capabilities.$isMobile = (ua.indexOf('mobile') != -1 || ua.indexOf('android') != -1);
 
 
             Html5Capatibility._canUseBlob = false;
-
-            Html5Capatibility._audioType = AudioType.HTML5_AUDIO;
-            Html5Capatibility._AudioClass = egret.web.HtmlSound;
-            Html5Capatibility._audioMustLoad = true;
-
+            var checkAudioType;
+            var audioType = Html5Capatibility._audioType;
+            if (audioType == 1 || audioType == 2 || audioType == 3) {
+                checkAudioType = false;
+                Html5Capatibility.setAudioType(audioType);
+            }
+            else {
+                checkAudioType = true;
+                Html5Capatibility.setAudioType(AudioType.HTML5_AUDIO);
+            }
 
             if (ua.indexOf("windows phone") >= 0) {//wphone windows
                 Html5Capatibility._System_OS = SystemOSType.WPHONE;
-                Html5Capatibility._audioMustLoad = false;
 
                 egret.Capabilities.$os = "Windows Phone";
             }
             else if (ua.indexOf("android") >= 0) {//android
                 Html5Capatibility._System_OS = SystemOSType.ADNROID;
-                if (ua.indexOf("ucbrowser") >= 0) {
-                    Html5Capatibility._audioMustLoad = false;
-                }
-                
+
                 egret.Capabilities.$os = "Android";
 
                 Html5Capatibility._System_OS = SystemOSType.ADNROID;
                 if (window.hasOwnProperty("QZAppExternal") && ua.indexOf("qzone") >= 0) {
-                    Html5Capatibility._audioType = AudioType.QQ_AUDIO;
-                    Html5Capatibility._AudioClass = egret.web.QQSound;
+                    Html5Capatibility.setAudioType(AudioType.QQ_AUDIO);
 
                     var bases = document.getElementsByTagName('base');
                     if (bases && bases.length > 0) {
@@ -163,15 +161,14 @@ module egret.web {
                 if (Html5Capatibility.getIOSVersion() >= 7) {
                     Html5Capatibility._canUseBlob = true;
 
-                    Html5Capatibility._AudioClass = egret.web.WebAudioSound;
-                    Html5Capatibility._audioType = AudioType.WEB_AUDIO;
+                    Html5Capatibility.setAudioType(AudioType.WEB_AUDIO);
                 }
             }
-            else{
-                if(ua.indexOf("windows nt")!= -1){
+            else {
+                if (ua.indexOf("windows nt") != -1) {
                     egret.Capabilities.$os = "Windows PC";
                 }
-                else if(ua.indexOf("mac os")!= -1){
+                else if (ua.indexOf("mac os") != -1) {
                     egret.Capabilities.$os = "Mac OS";
                 }
             }
@@ -184,11 +181,25 @@ module egret.web {
 
             var canUseWebAudio = window["AudioContext"] || window["webkitAudioContext"] || window["mozAudioContext"];
             if (!canUseWebAudio && Html5Capatibility._audioType == AudioType.WEB_AUDIO) {
-                Html5Capatibility._audioType = AudioType.HTML5_AUDIO;
-                Html5Capatibility._AudioClass = egret.web.HtmlSound;
+                Html5Capatibility.setAudioType(AudioType.HTML5_AUDIO);
             }
 
             egret.Sound = Html5Capatibility._AudioClass;
+        }
+
+        private static setAudioType(type: number): void {
+            Html5Capatibility._audioType = type;
+            switch (type) {
+                case AudioType.QQ_AUDIO:
+                    Html5Capatibility._AudioClass = egret.web.QQSound;
+                    break;
+                case AudioType.WEB_AUDIO:
+                    Html5Capatibility._AudioClass = egret.web.WebAudioSound;
+                    break;
+                case AudioType.HTML5_AUDIO:
+                    Html5Capatibility._AudioClass = egret.web.HtmlSound;
+                    break;
+            }
         }
 
         /**
@@ -196,7 +207,7 @@ module egret.web {
          * 获取ios版本
          * @returns {string}
          */
-        private static getIOSVersion():number {
+        private static getIOSVersion(): number {
             var value = Html5Capatibility.ua.toLowerCase().match(/cpu [^\d]*\d.*like mac os x/)[0];
             return parseInt(value.match(/\d(_\d)*/)[0]) || 0;
         }
@@ -215,19 +226,17 @@ module egret.web {
         }
     }
 
-    Html5Capatibility._init();
-
 
     /**
      * @private
      */
-    var currentPrefix:string = null;
+    var currentPrefix: string = null;
 
     /**
      * @private
      */
-    export function getPrefixStyleName(name:string, element?:any):string {
-        var header:string = "";
+    export function getPrefixStyleName(name: string, element?: any): string {
+        var header: string = "";
 
         if (element != null) {
             header = getPrefix(name, element);
@@ -250,15 +259,15 @@ module egret.web {
     /**
      * @private
      */
-    export function getPrefix(name:string, element:any):string {
+    export function getPrefix(name: string, element: any): string {
         if (name in element) {
             return "";
         }
 
         name = name.charAt(0).toUpperCase() + name.substring(1, name.length);
-        var transArr:Array<string> = ["webkit", "ms", "Moz", "O"];
-        for (var i:number = 0; i < transArr.length; i++) {
-            var tempStyle:string = transArr[i] + name;
+        var transArr: Array<string> = ["webkit", "ms", "Moz", "O"];
+        for (var i: number = 0; i < transArr.length; i++) {
+            var tempStyle: string = transArr[i] + name;
 
             if (tempStyle in element) {
                 return transArr[i];
