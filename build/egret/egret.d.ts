@@ -7106,14 +7106,6 @@ declare module egret {
 }
 declare module egret {
     /**
-     * @private
-     */
-    var $cos: (angle: number) => number;
-    /**
-     * @private
-     */
-    var $sin: (angle: number) => number;
-    /**
      * @language en_US
      * The Matrix class represents a transformation matrix that determines how to map points from one coordinate space to
      * another. You can perform various graphical transformations on a display object by setting the properties of a Matrix

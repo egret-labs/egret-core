@@ -5995,8 +5995,8 @@ var egret;
             else {
                 this.arcBounds(x, y, radius, startAngle, endAngle);
             }
-            var endX = x + egret.$cos(endAngle) * radius;
-            var endY = y + egret.$sin(endAngle) * radius;
+            var endX = x + Math.cos(endAngle) * radius;
+            var endY = y + Math.sin(endAngle) * radius;
             this.updatePosition(endX, endY);
             this.$renderNode.dirtyRender = true;
         };
@@ -11124,54 +11124,8 @@ var egret;
 var egret;
 (function (egret) {
     var PI = Math.PI;
-    var HalfPI = PI / 2;
-    var PacPI = PI + HalfPI;
     var TwoPI = PI * 2;
-    var DEG_TO_RAD = Math.PI / 180;
-    /**
-     * @private
-     */
-    function cos(angle) {
-        switch (angle) {
-            case HalfPI:
-            case -PacPI:
-                return 0;
-            case PI:
-            case -PI:
-                return -1;
-            case PacPI:
-            case -HalfPI:
-                return 0;
-            default:
-                return Math.cos(angle);
-        }
-    }
-    /**
-     * @private
-     */
-    function sin(angle) {
-        switch (angle) {
-            case HalfPI:
-            case -PacPI:
-                return 1;
-            case PI:
-            case -PI:
-                return 0;
-            case PacPI:
-            case -HalfPI:
-                return -1;
-            default:
-                return Math.sin(angle);
-        }
-    }
-    /**
-     * @private
-     */
-    egret.$cos = cos;
-    /**
-     * @private
-     */
-    egret.$sin = sin;
+    var DEG_TO_RAD = PI / 180;
     var matrixPool = [];
     /**
      * @language en_US
@@ -11439,8 +11393,9 @@ var egret;
         p.rotate = function (angle) {
             angle = +angle;
             if (angle !== 0) {
-                var u = cos(angle);
-                var v = sin(angle);
+                angle = angle / DEG_TO_RAD;
+                var u = egret.NumberUtils.cos(angle);
+                var v = egret.NumberUtils.sin(angle);
                 var ta = this.a;
                 var tb = this.b;
                 var tc = this.c;
@@ -11884,15 +11839,17 @@ var egret;
                 this.d = scaleY;
                 return;
             }
-            var u = cos(skewX);
-            var v = sin(skewX);
+            skewX = skewX / DEG_TO_RAD;
+            skewY = skewY / DEG_TO_RAD;
+            var u = egret.NumberUtils.cos(skewX);
+            var v = egret.NumberUtils.sin(skewX);
             if (skewX == skewY) {
                 this.a = u * scaleX;
                 this.b = v * scaleX;
             }
             else {
-                this.a = cos(skewY) * scaleX;
-                this.b = sin(skewY) * scaleX;
+                this.a = egret.NumberUtils.cos(skewY) * scaleX;
+                this.b = egret.NumberUtils.sin(skewY) * scaleX;
             }
             this.c = -v * scaleY;
             this.d = u * scaleY;
@@ -22334,6 +22291,9 @@ var egret;
             var valueFloor = Math.floor(value);
             var valueCeil = valueFloor + 1;
             var resultFloor = NumberUtils.sinInt(valueFloor);
+            if (valueFloor == value) {
+                return resultFloor;
+            }
             var resultCeil = NumberUtils.sinInt(valueCeil);
             return (value - valueFloor) * resultCeil + (valueCeil - value) * resultFloor;
         };
@@ -22348,16 +22308,7 @@ var egret;
             if (value < 0) {
                 value += 360;
             }
-            if (value < 90) {
-                return egret_sin_map[value];
-            }
-            if (value < 180) {
-                return egret_cos_map[value - 90];
-            }
-            if (value < 270) {
-                return -egret_sin_map[value - 180];
-            }
-            return -egret_cos_map[value - 270];
+            return egret_sin_map[value];
         };
         /**
          * @language en_US
@@ -22379,6 +22330,9 @@ var egret;
             var valueFloor = Math.floor(value);
             var valueCeil = valueFloor + 1;
             var resultFloor = NumberUtils.cosInt(valueFloor);
+            if (valueFloor == value) {
+                return resultFloor;
+            }
             var resultCeil = NumberUtils.cosInt(valueCeil);
             return (value - valueFloor) * resultCeil + (valueCeil - value) * resultFloor;
         };
@@ -22393,16 +22347,7 @@ var egret;
             if (value < 0) {
                 value += 360;
             }
-            if (value < 90) {
-                return egret_cos_map[value];
-            }
-            if (value < 180) {
-                return -egret_sin_map[value - 90];
-            }
-            if (value < 270) {
-                return -egret_cos_map[value - 180];
-            }
-            return egret_sin_map[value - 270];
+            return egret_cos_map[value];
         };
         return NumberUtils;
     }());
@@ -22412,10 +22357,16 @@ var egret;
 var egret_sin_map = {};
 var egret_cos_map = {};
 var DEG_TO_RAD = Math.PI / 180;
-for (var NumberUtils_i = 0; NumberUtils_i <= 90; NumberUtils_i++) {
+for (var NumberUtils_i = 0; NumberUtils_i < 360; NumberUtils_i++) {
     egret_sin_map[NumberUtils_i] = Math.sin(NumberUtils_i * DEG_TO_RAD);
     egret_cos_map[NumberUtils_i] = Math.cos(NumberUtils_i * DEG_TO_RAD);
 }
+egret_sin_map[90] = 1;
+egret_cos_map[90] = 0;
+egret_sin_map[180] = 0;
+egret_cos_map[180] = -1;
+egret_sin_map[270] = -1;
+egret_cos_map[270] = 0;
 //对未提供bind的浏览器实现bind机制
 if (!Function.prototype.bind) {
     Function.prototype.bind = function (oThis) {
