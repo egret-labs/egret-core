@@ -3119,7 +3119,12 @@ var egret;
                     download();
                 }
                 else {
-                    onLoadComplete();
+                    if (__global.setTimeout) {
+                        __global.setTimeout(onLoadComplete, 0);
+                    }
+                    else {
+                        egret.$callAsync(onLoadComplete, self);
+                    }
                 }
                 function download() {
                     var promise = egret.PromiseObject.create();
