@@ -8017,7 +8017,6 @@ declare module egret {
          * Play back the video.
          * @param startTime The initial position in seconds at which playback should start, (default = 0)
          * @param loop Defines should play the video again when the video is ended. (default = false)
-         * @param fullscreen Defines should play the video in fullscreen mode. (default = false)
          * @version Egret 2.4
          * @platform Web,Native
          */
@@ -8026,7 +8025,6 @@ declare module egret {
          * 播放该视频
          * @param startTime 应开始播放的初始位置（以秒为单位），默认值是视频上次结束的位置
          * @param loop 是否需要循环播放，默认值是 false
-         * @param fullscreen 是否需要全屏播放，默认值是 false
          * @version Egret 2.4
          * @platform Web,Native
          */
@@ -9038,6 +9036,7 @@ declare module egret {
      */
     function runEgret(options?: {
         renderMode?: string;
+        audioType?: number;
         screenAdapter?: sys.IScreenAdapter;
     }): void;
     /**
