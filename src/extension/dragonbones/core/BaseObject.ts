@@ -48,9 +48,15 @@ namespace dragonBones {
         /**
          * @language zh_CN
          * 设置每种对象池的最大缓存数量。
+         * @param objectConstructor 对象类。
+         * @param maxCount 最大缓存数量。 (设置为 0 则不缓存)
          * @version DragonBones 4.5
          */
         public static setMaxCount(objectConstructor: typeof BaseObject, maxCount: number): void {
+            if (maxCount < 0 || maxCount != maxCount) {
+                maxCount = 0;
+            }
+
             if (objectConstructor) {
                 const classType = String(objectConstructor);
 
@@ -77,7 +83,8 @@ namespace dragonBones {
         }
         /**
          * @language zh_CN
-         * 清除所有对象池缓存的对象。
+         * 清除对象池缓存的对象。
+         * @param objectConstructor 对象类。 (不设置则清除所有缓存)
          * @version DragonBones 4.5
          */
         public static clearPool(objectConstructor: typeof BaseObject = null): void {
@@ -96,6 +103,7 @@ namespace dragonBones {
         /**
          * @language zh_CN
          * 从对象池中创建指定对象。
+         * @param objectConstructor 对象类。
          * @version DragonBones 4.5
          */
         public static borrowObject<T extends BaseObject>(objectConstructor: { new (): T; }): T {

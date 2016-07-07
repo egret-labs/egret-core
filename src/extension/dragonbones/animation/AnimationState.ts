@@ -1,6 +1,10 @@
 namespace dragonBones {
     /**
-     *
+     * @language zh_CN
+     * 动画状态，播放动画时产生，可以对单个动画的播放进行更细致的控制和调节。
+     * @see dragonBones.animation.Animation
+     * @see dragonBones.objects.AnimationData
+     * @version DragonBones 3.0
      */
     export class AnimationState extends BaseObject {
         /**
@@ -526,8 +530,8 @@ namespace dragonBones {
         /**
          * @language zh_CN
          * 淡出动画。
-         * @param fadeTotalTime 淡出时间。 (以秒为单位)
-         * @param pausePlayhead 淡出时是否暂停动画。 [<code>true</code>: 暂停, <code>false</code>: 不暂停] (默认: <code>true</code>)
+         * @param fadeOutTime 淡出时间。 (以秒为单位)
+         * @param pausePlayhead 淡出时是否暂停动画。 [true: 暂停, false: 不暂停] (默认: true)
          * @version DragonBones 3.0
          */
         public fadeOut(fadeOutTime: number, pausePlayhead: boolean = true): void {
