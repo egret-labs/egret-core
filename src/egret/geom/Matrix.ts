@@ -31,57 +31,8 @@
 module egret {
 
     var PI = Math.PI;
-    var HalfPI = PI / 2;
-    var PacPI = PI + HalfPI;
     var TwoPI = PI * 2;
-    var DEG_TO_RAD:number = Math.PI / 180;
-    /**
-     * @private
-     */
-    function cos(angle:number):number {
-        switch (angle) {
-            case HalfPI:
-            case -PacPI:
-                return 0;
-            case PI:
-            case -PI:
-                return -1;
-            case PacPI:
-            case -HalfPI:
-                return 0;
-            default:
-                return Math.cos(angle);
-        }
-    }
-
-    /**
-     * @private
-     */
-    function sin(angle:number):number {
-        switch (angle) {
-            case HalfPI:
-            case -PacPI:
-                return 1;
-            case PI:
-            case -PI:
-                return 0;
-            case PacPI:
-            case -HalfPI:
-                return -1;
-            default:
-                return Math.sin(angle);
-        }
-    }
-
-    /**
-     * @private
-     */
-    export var $cos:(angle:number)=>number = cos;
-    /**
-     * @private
-     */
-    export var $sin:(angle:number)=>number = sin;
-
+    var DEG_TO_RAD:number = PI / 180;
 
     var matrixPool:Matrix[] = [];
     /**
@@ -447,8 +398,9 @@ module egret {
         public rotate(angle:number):void {
             angle = +angle;
             if (angle !== 0) {
-                var u = cos(angle);
-                var v = sin(angle);
+                angle = angle / DEG_TO_RAD;
+                var u = egret.NumberUtils.cos(angle);
+                var v = egret.NumberUtils.sin(angle);
                 var ta = this.a;
                 var tb = this.b;
                 var tc = this.c;
@@ -910,15 +862,16 @@ module egret {
                 this.d = scaleY;
                 return;
             }
-
-            var u = cos(skewX);
-            var v = sin(skewX);
+            skewX = skewX / DEG_TO_RAD;
+            skewY = skewY / DEG_TO_RAD;
+            var u = egret.NumberUtils.cos(skewX);
+            var v = egret.NumberUtils.sin(skewX);
             if (skewX == skewY) {
                 this.a = u * scaleX;
                 this.b = v * scaleX;
             } else {
-                this.a = cos(skewY) * scaleX;
-                this.b = sin(skewY) * scaleX;
+                this.a = egret.NumberUtils.cos(skewY) * scaleX;
+                this.b = egret.NumberUtils.sin(skewY) * scaleX;
             }
             this.c = -v * scaleY;
             this.d = u * scaleY;

@@ -76,6 +76,9 @@ module egret {
             var valueFloor:number = Math.floor(value);
             var valueCeil:number = valueFloor + 1;
             var resultFloor:number = NumberUtils.sinInt(valueFloor);
+            if (valueFloor == value) {
+                return resultFloor;
+            }
             var resultCeil:number = NumberUtils.sinInt(valueCeil);
 
             return (value - valueFloor) * resultCeil + (valueCeil - value) * resultFloor;
@@ -93,16 +96,7 @@ module egret {
             if (value < 0) {
                 value += 360;
             }
-            if (value < 90) {
-                return egret_sin_map[value];
-            }
-            if (value < 180) {
-                return egret_cos_map[value - 90];
-            }
-            if (value < 270) {
-                return -egret_sin_map[value - 180];
-            }
-            return -egret_cos_map[value - 270];
+            return egret_sin_map[value];
         }
 
         /**
@@ -125,6 +119,9 @@ module egret {
             var valueFloor:number = Math.floor(value);
             var valueCeil:number = valueFloor + 1;
             var resultFloor:number = NumberUtils.cosInt(valueFloor);
+            if (valueFloor == value) {
+                return resultFloor;
+            }
             var resultCeil:number = NumberUtils.cosInt(valueCeil);
 
             return (value - valueFloor) * resultCeil + (valueCeil - value) * resultFloor;
@@ -142,16 +139,7 @@ module egret {
             if (value < 0) {
                 value += 360;
             }
-            if (value < 90) {
-                return egret_cos_map[value];
-            }
-            if (value < 180) {
-                return -egret_sin_map[value - 90];
-            }
-            if (value < 270) {
-                return -egret_cos_map[value - 180];
-            }
-            return egret_sin_map[value - 270];
+            return egret_cos_map[value];
         }
 
     }
@@ -162,10 +150,16 @@ var egret_cos_map = {};
 
 var DEG_TO_RAD:number = Math.PI / 180;
 
-for (var NumberUtils_i = 0; NumberUtils_i <= 90; NumberUtils_i++) {
+for (var NumberUtils_i = 0; NumberUtils_i < 360; NumberUtils_i++) {
     egret_sin_map[NumberUtils_i] = Math.sin(NumberUtils_i * DEG_TO_RAD);
     egret_cos_map[NumberUtils_i] = Math.cos(NumberUtils_i * DEG_TO_RAD);
 }
+egret_sin_map[90] = 1;
+egret_cos_map[90] = 0;
+egret_sin_map[180] = 0;
+egret_cos_map[180] = -1;
+egret_sin_map[270] = -1;
+egret_cos_map[270] = 0;
 
 //对未提供bind的浏览器实现bind机制
 if (!Function.prototype.bind) {

@@ -598,8 +598,8 @@ module egret {
             else {
                 this.arcBounds(x, y, radius, startAngle, endAngle);
             }
-            var endX = x + egret.$cos(endAngle) * radius;
-            var endY = y + egret.$sin(endAngle) * radius;
+            var endX = x + Math.cos(endAngle) * radius;
+            var endY = y + Math.sin(endAngle) * radius;
             this.updatePosition(endX, endY);
             this.$renderNode.dirtyRender = true;
         }
