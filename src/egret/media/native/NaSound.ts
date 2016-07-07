@@ -111,7 +111,12 @@ module egret.native {
                 download();
             }
             else {
-                onLoadComplete();
+                if(__global.setTimeout) {
+                    __global.setTimeout(onLoadComplete, 0);
+                }
+                else {
+                    $callAsync(onLoadComplete, self);
+                }
             }
 
             function download() {
