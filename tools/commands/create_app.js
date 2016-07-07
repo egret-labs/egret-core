@@ -12,6 +12,7 @@ var copyNative = require("../actions/CopyNativeFiles");
 var CreateAppCommand = (function () {
     function CreateAppCommand() {
         this.executeRes = 0;
+        this.androidHomeWarnning = "请设置环境变量 ANDROID_HOME ，值为 Android SDK 的根目录。";
     }
     CreateAppCommand.prototype.execute = function () {
         this.run();
@@ -63,9 +64,10 @@ var CreateAppCommand = (function () {
         }
         var platform = "";
         if (file.exists(file.joinPath(template_path, "proj.android"))) {
-            if(file.isFile(file.joinPath(file.joinPath(template_path, "proj.android"),"build.gradle"))){
+            if (file.isFile(file.joinPath(file.joinPath(template_path, "proj.android"), "build.gradle"))) {
                 platform = "android_as";
-            }else{
+            }
+            else {
                 platform = "android";
             }
         }
@@ -106,8 +108,7 @@ var CreateAppCommand = (function () {
                 file.copy(file.joinPath(template_path, source), file.joinPath(app_path, source));
             });
             this.rename_app(app_path, app_data);
-
-            if(file.isFile(  file.joinPath(file.joinPath(app_path,"proj.android"),"build.gradle")) ){
+            if (file.isFile(file.joinPath(file.joinPath(app_path, "proj.android"), "build.gradle"))) {
                 this.modifyAndroidStudioSupport(app_path);
                 this.modifyLocalProperties(app_path);
             }
@@ -134,60 +135,50 @@ var CreateAppCommand = (function () {
             }
         });
     };
-
-    ////////////////////
     CreateAppCommand.prototype.getBuildToolVersion = function (buildToolDir) {
-        var propertiesFile = file.joinPath(buildToolDir ,"source.properties" );
-        //console.log("       >>> check source.properties = "+propertiesFile);
-        if(file.isFile(propertiesFile)){
-            var fileContent = file.read(propertiesFile , true);
-
+        var propertiesFile = file.joinPath(buildToolDir, "source.properties");
+        if (file.isFile(propertiesFile)) {
+            var fileContent = file.read(propertiesFile, true);
             var lines = fileContent.split("\n");
             var index = -1;
             var version = "";
-            for(var i = 0 ; i<lines.length ; i++){
+            for (var i = 0; i < lines.length; i++) {
                 index = lines[i].indexOf("Revision");
-                if(index != -1){
-                    version = lines[i].substring(lines[i].indexOf("=")+1 );
+                if (index != -1) {
+                    version = lines[i].substring(lines[i].indexOf("=") + 1);
                     index = version.indexOf("\r");
-                    if(index != -1 ){
-                        version = version.substring(0,index);
+                    if (index != -1) {
+                        version = version.substring(0, index);
                     }
-                  // console.log(version+":"+version.length+"; "+version.indexOf("\r")+" ; c = "+version.charCodeAt(version.length-1));
+                    // console.log(version+":"+version.length+"; "+version.indexOf("\r")+" ; c = "+version.charCodeAt(version.length-1));
                     break;
                 }
             }
-
-           //console.log(propertiesFile + " : "+version);
+            //console.log(propertiesFile + " : "+version);
             return version;
-        }else{
-            console.error("找不到 source.properties 文件。buildToolDir ： "+buildToolDir);
+        }
+        else {
+            console.error("找不到 source.properties 文件。buildToolDir ： " + buildToolDir);
         }
         return "undefined";
-    }
-
-var androidHomeWarnning = "请设置环境变量 ANDROID_HOME ，值为 Android SDK 的根目录。";
+    };
     CreateAppCommand.prototype.getAndroidBuildToolValue = function () {
         // check ANDROID_HOME
-        var android_home = process.env.ANDROID_HOME
-        if(!android_home){
-            console.error(androidHomeWarnning);
+        var android_home = process.env.ANDROID_HOME;
+        if (!android_home) {
+            console.error(this.androidHomeWarnning);
             globals.exit(1610);
         }
-
         //get Android build tool version
-       var buildToolsPath = file.joinPath(android_home,"build-tools");
-        if(!file.isDirectory(buildToolsPath)){
-            console.error("找不到 build_tools 文件夹。android_hom ： "+android_home);
+        var buildToolsPath = file.joinPath(android_home, "build-tools");
+        if (!file.isDirectory(buildToolsPath)) {
+            console.error("找不到 build_tools 文件夹。android_hom ： " + android_home);
             globals.exit(1611);
         }
-
-        var files = file.getDirectoryListing(buildToolsPath,false);
+        var files = file.getDirectoryListing(buildToolsPath, false);
         var length = files.length;
-
         var buildToolVersion = "undefined";
         var resultVersion = buildToolVersion;
-
         var versionValue = 0.0;
         var tempVersion = 0.0;
         for (var i = 0; i < length; i++) {
@@ -196,71 +187,65 @@ var androidHomeWarnning = "请设置环境变量 ANDROID_HOME ，值为 Android 
             }
             var path = files[i];
             if (file.isDirectory(path)) {
-                buildToolVersion=this.getBuildToolVersion(path);
+                buildToolVersion = this.getBuildToolVersion(path);
                 if ("undefined" != buildToolVersion) {
                     versionValue = parseFloat(buildToolVersion);
-                   if(versionValue > tempVersion){
+                    if (versionValue > tempVersion) {
                         tempVersion = versionValue;
                         resultVersion = buildToolVersion;
-                   }
+                    }
                 }
             }
         }
         //console.log("buildToolVersion = "+resultVersion);
         return resultVersion;
     };
-    
+    ;
     CreateAppCommand.prototype.getAndroidSDKAPILevel = function (platformDir) {
-        var propertiesFile = file.joinPath(platformDir ,"source.properties" );
+        var propertiesFile = file.joinPath(platformDir, "source.properties");
         //console.log("       >>> check source.properties = "+propertiesFile);
-        if(file.isFile(propertiesFile)){
-            var fileContent = file.read(propertiesFile , true);
-
+        if (file.isFile(propertiesFile)) {
+            var fileContent = file.read(propertiesFile, true);
             var lines = fileContent.split("\n");
             var index = -1;
             var version = "";
-            for(var i = 0 ; i<lines.length ; i++){
+            for (var i = 0; i < lines.length; i++) {
                 index = lines[i].indexOf("AndroidVersion.ApiLevel");
-                if(index != -1){
-                    version = lines[i].substring(lines[i].indexOf("=")+1 );
+                if (index != -1) {
+                    version = lines[i].substring(lines[i].indexOf("=") + 1);
                     index = version.indexOf("\r");
-                    if(index != -1 ){
-                        version = version.substring(0,index);
+                    if (index != -1) {
+                        version = version.substring(0, index);
                     }
-                  // console.log(version+":"+version.length+"; "+version.indexOf("\r")+" ; c = "+version.charCodeAt(version.length-1));
+                    // console.log(version+":"+version.length+"; "+version.indexOf("\r")+" ; c = "+version.charCodeAt(version.length-1));
                     break;
                 }
             }
-
-           //console.log(propertiesFile + " : "+version);
+            //console.log(propertiesFile + " : "+version);
             return version;
-        }else{
-            console.error("找不到 source.properties 文件。buildToolDir ： "+buildToolDir);
+        }
+        else {
+            console.error("找不到 source.properties 文件。platformDir ： " + platformDir);
         }
         return "undefined";
-    }
-    
+    };
     CreateAppCommand.prototype.getAndroidSDKAPILevelValue = function () {
         // check ANDROID_HOME
-        var android_home = process.env.ANDROID_HOME
-        if(!android_home){
-            console.error(androidHomeWarnning);
+        var android_home = process.env.ANDROID_HOME;
+        if (!android_home) {
+            console.error(this.androidHomeWarnning);
             globals.exit(1610);
         }
-
         //get Android build tool version
-       var platformsPath = file.joinPath(android_home,"platforms");
-        if(!file.isDirectory(platformsPath)){
-            console.error("找不到 platforms 文件夹。android_hom ： "+android_home);
+        var platformsPath = file.joinPath(android_home, "platforms");
+        if (!file.isDirectory(platformsPath)) {
+            console.error("找不到 platforms 文件夹。android_hom ： " + android_home);
             globals.exit(1611);
         }
-
-        var files = file.getDirectoryListing(platformsPath,false);
+        var files = file.getDirectoryListing(platformsPath, false);
         var length = files.length;
-
         var platformVersion = "undefined";
         var resultVersion = platformVersion;
-
         var versionValue = 0.0;
         var tempVersion = 0.0;
         for (var i = 0; i < length; i++) {
@@ -269,68 +254,58 @@ var androidHomeWarnning = "请设置环境变量 ANDROID_HOME ，值为 Android 
             }
             var path = files[i];
             if (file.isDirectory(path)) {
-                platformVersion=this.getAndroidSDKAPILevel(path);
+                platformVersion = this.getAndroidSDKAPILevel(path);
                 if ("undefined" != platformVersion) {
                     versionValue = parseInt(platformVersion);
-                   if(versionValue > tempVersion){
+                    if (versionValue > tempVersion) {
                         tempVersion = versionValue;
                         resultVersion = platformVersion;
-                   }
+                    }
                 }
             }
         }
         //console.log("buildToolVersion = "+resultVersion);
         return resultVersion;
     };
-
+    ;
     CreateAppCommand.prototype.modifyAndroidStudioSupport = function (app_path) {
-       
         var buildToolVersion = this.getAndroidBuildToolValue();
-        
         var platformVersion = this.getAndroidSDKAPILevelValue();
-        //console.log("app_path:"+app_path);
-        var buildGradleFile = file.joinPath(file.joinPath(file.joinPath(app_path,"proj.android"),"app") , "build.gradle" );
-        if(file.isFile(buildGradleFile)){
+        //console.log("app_path:" + app_path);
+        var buildGradleFile = file.joinPath(file.joinPath(file.joinPath(app_path, "proj.android"), "app"), "build.gradle");
+        if (file.isFile(buildGradleFile)) {
             var c = file.read(buildGradleFile);
             c = c.replace(new RegExp("EGT_BUILD_TOOLS_VERSION", "g"), buildToolVersion);
-
             c = c.replace(new RegExp("EGT_ANDROID_SDK", "g"), platformVersion);
-            
             file.save(buildGradleFile, c);
-        }else{
-             console.error("找不到 build.gradle 文件。app_path ： "+ file.getAbsolutePath(app_path));
+        }
+        else {
+            console.error("找不到 build.gradle 文件。app_path ： " + file.getAbsolutePath(app_path));
             globals.exit(1611);
         }
-        
     };
-
-
+    ;
     CreateAppCommand.prototype.modifyLocalProperties = function (app_path) {
-       
-        var android_home = process.env.ANDROID_HOME
-        if(!android_home){
-            console.error(androidHomeWarnning);
+        var android_home = process.env.ANDROID_HOME;
+        if (!android_home) {
+            console.error(this.androidHomeWarnning);
             globals.exit(1612);
         }
-
-        if(-1 != android_home.indexOf("\\")){
+        if (-1 != android_home.indexOf("\\")) {
             android_home = android_home.split("\\").join("\\\\");
         }
-
-        var localPropertiesFile = file.joinPath(file.joinPath(app_path,"proj.android"),"local.properties");
-        if(file.isFile(localPropertiesFile)){
+        var localPropertiesFile = file.joinPath(file.joinPath(app_path, "proj.android"), "local.properties");
+        if (file.isFile(localPropertiesFile)) {
             var c = file.read(localPropertiesFile);
             c = c.replace(new RegExp("EGT_ANDROID_SDK_DIR", "g"), android_home);
             file.save(localPropertiesFile, c);
-        }else{
-             console.error("找不到 local.properties 文件。app_path ： "+ file.getAbsolutePath(app_path));
+        }
+        else {
+            console.error("找不到 local.properties 文件。app_path ： " + file.getAbsolutePath(app_path));
             globals.exit(1613);
         }
-        
     };
-
-    /////////////////////////////////////////////////////////////
-
+    ;
     CreateAppCommand.prototype.run_unzip = function (app_path, template_path, app_data) {
         var template_zip_path = file.joinPath(template_path, app_data["template"]["zip"]);
         var cmd = "unzip -q " + globals.addQuotes(template_zip_path) + " -d " + globals.addQuotes(app_path);
@@ -359,7 +334,7 @@ var androidHomeWarnning = "请设置环境变量 ANDROID_HOME ，值为 Android 
         }
     };
     return CreateAppCommand;
-})();
+}());
 module.exports = CreateAppCommand;
 
 //# sourceMappingURL=create_app.js.map

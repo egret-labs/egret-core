@@ -73,7 +73,7 @@ var GenerateVersionCommand = (function () {
         return 0;
     };
     return GenerateVersionCommand;
-})();
+}());
 module.exports = GenerateVersionCommand;
 
 //# sourceMappingURL=GenerateVersionCommand.js.map

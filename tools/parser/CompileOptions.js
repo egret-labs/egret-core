@@ -199,7 +199,7 @@ var CompileOptions = (function () {
         return json;
     };
     return CompileOptions;
-})();
+}());
 module.exports = CompileOptions;
 
 //# sourceMappingURL=CompileOptions.js.map

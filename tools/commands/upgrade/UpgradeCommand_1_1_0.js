@@ -68,7 +68,7 @@ var UpgradeCommand_1_1_0 = (function () {
         globals.log(1703);
     };
     return UpgradeCommand_1_1_0;
-})();
+}());
 module.exports = UpgradeCommand_1_1_0;
 
 //# sourceMappingURL=UpgradeCommand_1_1_0.js.map

@@ -42,7 +42,7 @@ var Create = (function () {
         }
     };
     return Create;
-})();
+}());
 function parseProjectInfoFromTemplate(project) {
     if (!project.modules || !project.modules.length) {
         var templates = egret.manifest.templates.filter(function (t) { return t.name == project.type; });

@@ -16220,6 +16220,10 @@ var eui;
             if (!data.exmls || data.exmls.length == 0) {
                 this.onLoaded();
             }
+            else if (data.exmls[0]['gjs']) {
+                data.exmls.forEach(function (exml) { return EXML.$parseURLContentAsJs(exml.path, exml.gjs, exml.className); });
+                this.onLoaded();
+            }
             else if (data.exmls[0]['content']) {
                 data.exmls.forEach(function (exml) { return EXML.$parseURLContent(exml.path, exml.content); });
                 this.onLoaded();
@@ -17961,9 +17965,43 @@ var eui;
             var d = __define,c=EXMLParser,p=c.prototype;
             /**
              * @private
+             * 将已有javascript代码注册
+             * @param codeText 执行的javascript代码
+             * @param classStr 类名
+             */
+            p.$parseCode = function (codeText, classStr) {
+                //传入的是编译后的js字符串
+                var className = classStr ? classStr : "$exmlClass" + innerClassCount++;
+                var clazz = eval(codeText);
+                var hasClass = true;
+                if (hasClass && clazz) {
+                    egret.registerClass(clazz, className);
+                    var paths = className.split(".");
+                    var length = paths.length;
+                    var definition = __global;
+                    for (var i = 0; i < length - 1; i++) {
+                        var path = paths[i];
+                        definition = definition[path] || (definition[path] = {});
+                    }
+                    if (definition[paths[length - 1]]) {
+                        if (DEBUG && !parsedClasses[className]) {
+                            egret.$warn(2101, className, codeText);
+                        }
+                    }
+                    else {
+                        if (DEBUG) {
+                            parsedClasses[className] = true;
+                        }
+                        definition[paths[length - 1]] = clazz;
+                    }
+                }
+                return clazz;
+            };
+            /**
+             * @private
              * 编译指定的XML对象为JavaScript代码。
              * @param xmlData 要编译的EXML文件内容
-             * @param className 要编译成的完整类名，包括模块名。
+             *
              */
             p.parse = function (text) {
                 if (DEBUG) {
@@ -17982,8 +18020,8 @@ var eui;
                 else {
                     var xmlData = egret.XML.parse(text);
                 }
-                var className = "";
                 var hasClass = false;
+                var className = "";
                 if (xmlData.attributes["class"]) {
                     className = xmlData.attributes["class"];
                     delete xmlData.attributes["class"];
@@ -19702,6 +19740,29 @@ var EXML;
         });
         callBack && callBack.call(thisObject, clazzes, urls);
     }
+    /**
+     * @private
+     * @param url
+     * @param text
+     */
+    function $parseURLContentAsJs(url, text, className) {
+        if (text) {
+            var clazz = parser.$parseCode(text, className);
+        }
+        if (url) {
+            parsedClasses[url] = clazz;
+            var list = callBackMap[url];
+            delete callBackMap[url];
+            var length = list ? list.length : 0;
+            for (var i = 0; i < length; i++) {
+                var arr = list[i];
+                if (arr[0] && arr[1])
+                    arr[0].call(arr[1], clazz, url);
+            }
+        }
+        return clazz;
+    }
+    EXML.$parseURLContentAsJs = $parseURLContentAsJs;
     /**
      * @private
      */

@@ -53,7 +53,7 @@ var CompileProject = (function () {
         return compileResult;
     };
     return CompileProject;
-})();
+}());
 function GetJavaScriptFileNames(tsFiles, root, prefix) {
     var files = [];
     tsFiles.forEach(function (f) {

@@ -1290,7 +1290,7 @@ var EXMLParser = (function () {
         return className;
     };
     return EXMLParser;
-})();
+}());
 exports.EXMLParser = EXMLParser;
 if (DEBUG) {
     /**

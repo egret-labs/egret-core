@@ -256,7 +256,7 @@ var UpgradeCommand_2_4_3 = (function () {
             return raw;
     };
     return UpgradeCommand_2_4_3;
-})();
+}());
 module.exports = UpgradeCommand_2_4_3;
 
 //# sourceMappingURL=UpgradeCommand_2_4_3.js.map

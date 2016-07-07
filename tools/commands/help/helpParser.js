@@ -26,14 +26,14 @@ var HelpDefParserKey = (function () {
     HelpDefParserKey.TYPE = "type";
     HelpDefParserKey.ENUM_LIST = "enum-list";
     return HelpDefParserKey;
-})();
+}());
 var CfgParaType = (function () {
     function CfgParaType() {
     }
     CfgParaType.STRING = "string";
     CfgParaType.ENUM = "enum";
     return CfgParaType;
-})();
+}());
 var DetailBody = (function () {
     function DetailBody(word, desc) {
         this.word = word;
@@ -44,7 +44,7 @@ var DetailBody = (function () {
         return this.word + getRepeatString(space, iGapSpace - this.word.length) + this.desc;
     };
     return DetailBody;
-})();
+}());
 /// 获得 已考虑可选项标记的范式单词   Form Word Consider Optional
 function getFwco(sWord, bOptional) {
     return bOptional ? "[" + sWord + "]" : sWord;

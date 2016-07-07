@@ -37,7 +37,7 @@ var UpgradeCommand_1_0_4 = (function () {
         projectConfig.native.path_ignore = [];
     };
     return UpgradeCommand_1_0_4;
-})();
+}());
 module.exports = UpgradeCommand_1_0_4;
 
 //# sourceMappingURL=UpgradeCommand_1_0_4.js.map

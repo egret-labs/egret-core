@@ -90,7 +90,7 @@ locale_strings[1416] = "You can modify the JAVA_HOME environment variable to mod
 locale_strings[1417] = "Successful detection ";
 locale_strings[1418] = "WebP format fail : {0}";
 locale_strings[1419] = "Format WebP : {0} / {1}";
-locale_strings[1420] = "Invalid path, there may be special characters in the path";
+locale_strings[1420] = "Zip package filed, there may be special characters in the path";
 //startserver
 locale_strings[1501] = "Unable to start the server, please check the authority or whether the port is occupied";
 //create_app
@@ -106,7 +106,7 @@ locale_strings[1609] = "> rename project name ...";
 locale_strings[1610] = "Project name is missing. Example:{color_green}egret create_app [app_name] -f [h5_game_path] -t [template_path] {color_normal}";
 locale_strings[1611] = "The project is exist, please use another name.Example:{color_green}egret create_app [app_name] -f [h5_game_path] -t [template_path] {color_normal}";
 //upgrade
-locale_strings[1701] = "Project version is lower than egret version, please implement egret upgrade {your_project} command or click the upgrade menu in Wing to upgrade your project, \n do not add braces {} in the commands";
+locale_strings[1701] = "Project version is lower than egret version, please implement egret upgrade {your_project} command to upgrade your project, \n do not add braces {} in the commands";
 locale_strings[1702] = "Upgrade successful";
 locale_strings[1703] = "\n After the first step to upgrade is completed, {color_red} press {color_underline}https://github.com/egret-labs/egret-core/wiki/Egret_Upgrade/upgrade/index.html{color_red} to complete the remaining steps to upgrade {color_normal}\n";
 locale_strings[1704] = "Updating to {0}";
@@ -151,6 +151,7 @@ locale_strings[2017] = "{0}: error namespace prefix missing on the node: {1}";
 locale_strings[2018] = "{0}: error format error of 'skinName' property value on the node: {1}";
 locale_strings[2019] = "{0}: error the container’s child item must be visible nodes: {1}";
 locale_strings[2020] = "{0}: error error for child nodes in w: Declarations, the includeIn and excludeFrom properties are not allowed to use \n {1}";
+locale_strings[2101] = "{0}: warning class defination already exist \n {1}";
 locale_strings[2102] = "{0}: warning no child node can be found on the property code \n {1}";
 locale_strings[2103] = "{0}: warning the same property '{1}' on the node is assigned multiple times \n {2}";
 locale_strings[8001] = "please input value of the command option {color_green} {0} {color_normal},and it must be one of these: {color_green}[{1}]{color_normal}";
@@ -177,8 +178,7 @@ locale_strings[10015] = "{color_red}\"{0}\" is not a valid Egret project folder{
     "\n\t\t--resource\t\t//resource folder" +
     "\n\t\t--src\t\t\t//source code folder" +
     "\n\t\t--egretProperties.json\t//project configuration file" +
-    "\n\t\t--index.html\t\t//launcher file"
-;
+    "\n\t\t--index.html\t\t//launcher file";
 locale_strings[10016] = "Please visit {0} if no browser open it automatically";
 locale_strings[10017] = "Egret project is created, you can execute \"Egret run\" to run the project";
 locale_strings[10018] = "Found circular dependency when try to sort the TypeScript files. "
@@ -249,5 +249,4 @@ var helpModule;
     };
     global["helpModule"] = global["helpModule"] || helpModule;
 })(helpModule || (helpModule = {}));
-
 //# sourceMappingURL=en_US.js.map

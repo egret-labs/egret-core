@@ -29,11 +29,11 @@ function buildChanges(exmls) {
     };
     if (!exmls || exmls.length == 0)
         return state;
-    if (egret.args.exmlGenJs) {
-        exmls.forEach(function (exmlFile) {
-            parse(exmlFile);
-        });
-    }
+    // if(egret.args.exmlGenJs){
+    //     exmls.forEach(exmlFile=>{
+    //         parse(exmlFile);
+    //     });
+    // }
     return state;
 }
 exports.buildChanges = buildChanges;
@@ -96,7 +96,19 @@ function updateSetting(merge) {
     themeDatas.forEach(function (thm) { return thm.exmls = []; });
     exmls.forEach(function (e) {
         var epath = e.path;
-        var exmlEl = merge ? { path: e.path, content: e.content } : epath;
+        var exmlEl = null;
+        if (merge) {
+            var ret = parseRaw(file.joinPath(egret.args.projectDir, e.path));
+            if (egret.args.exmlGenJs) {
+                exmlEl = { path: e.path, content: e.content, gjs: ret.text, className: ret.className };
+            }
+            else {
+                exmlEl = { path: e.path, content: e.content };
+            }
+        }
+        else {
+            exmlEl = epath;
+        }
         themeDatas.forEach(function (thm, i) {
             if (epath in oldEXMLS) {
                 var thmPath = themes[i];
@@ -165,7 +177,7 @@ function generateExmlDTS() {
             //var className = p.substring(srcPath.length, p.length - 5);
             var className = ret.className;
             //className = className.split("/").join(".");
-            if(className != "eui.Skin") {
+            if (className != "eui.Skin") {
                 var index = className.lastIndexOf(".");
                 if (index == -1) {
                     if (ret.extendName == "") {
@@ -197,6 +209,11 @@ var module_template = "var {module};\n" +
     "(function ({module}) {\n" +
     "{definition}\n" +
     "})({module} || ({module} = {}));";
+function parseRaw(exmlPath) {
+    var xmlString = file.read(exmlPath, true);
+    var classText = parser.parse(xmlString);
+    return { text: classText, className: parser.className };
+}
 function parse(exmlPath) {
     var xmlString = file.read(exmlPath, true);
     var classText = parser.parse(xmlString);
@@ -233,13 +250,14 @@ function parse(exmlPath) {
     else {
         jstext = classText;
     }
-    var relativeEXMLPath = file.getRelativePath(egret.args.projectDir, exmlPath);
-    var relativeTSPath = relativeEXMLPath.substring(0, relativeEXMLPath.lastIndexOf(".")).concat(".ts");
-    var tspath = file.joinPath(egret.args.srcDir, "gen", relativeTSPath);
+    // var relativeEXMLPath = file.getRelativePath(egret.args.projectDir,exmlPath);
+    // var relativeTSPath = relativeEXMLPath.substring(0,relativeEXMLPath.lastIndexOf(".")).concat(".ts");
+    // var tspath = file.joinPath(egret.args.srcDir,"gen",relativeTSPath);
     //console.log(tspath);
     //var jspath = exmlPath.substring(0,exmlPath.lastIndexOf(".")).concat(".ts");
     //file.save(jspath,jstext);
-    file.save(tspath, jstext);
+    // file.save(tspath,jstext);
+    return jstext;
 }
 
 //# sourceMappingURL=exml.eui.js.map

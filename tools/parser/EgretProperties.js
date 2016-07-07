@@ -17,7 +17,7 @@ var EgretProperties = (function () {
             this.properties = JSON.parse(file.read(file.joinPath(this.projectRoot, "egretProperties.json")));
             for (var key in this.properties["modules"]) {
                 //兼容小写
-                if(this.properties["modules"][key]["name"] == "dragonbones" && !this.properties["modules"][key]["path"]) {
+                if (this.properties["modules"][key]["name"] == "dragonbones" && !this.properties["modules"][key]["path"]) {
                     this.properties["modules"][key]["name"] = "dragonBones";
                 }
                 this.modulesConfig[this.properties["modules"][key]["name"]] = this.properties["modules"][key];
@@ -219,7 +219,7 @@ var EgretProperties = (function () {
         return ["resource"];
     };
     return EgretProperties;
-})();
+}());
 var config = config || new EgretProperties();
 module.exports = config;
 

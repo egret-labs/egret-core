@@ -1,7 +1,6 @@
 /// <reference path="../lib/types.d.ts" />
 var utils = require('../lib/utils');
 var FileUtil = require('../lib/FileUtil');
-var exml = require("../actions/exml");
 var CompileProject = require('../actions/CompileProject');
 var GenerateVersion = require('../actions/GenerateVersionCommand');
 var ZipCMD = require("../actions/ZipCommand");
@@ -49,7 +48,7 @@ var Publish = (function () {
         //生成 all.manifest 并拷贝资源
         (new GenerateVersion).execute();
         //拷贝资源后还原default.thm.json bug修复 by yanjiaqi
-        // if (exml.updateSetting) {
+        // if(exml.updateSetting){
         //     exml.updateSetting();
         // }
         if (egret.args.runtime == "native") {
@@ -91,7 +90,7 @@ var Publish = (function () {
         return DontExitCode;
     };
     return Publish;
-})();
+}());
 module.exports = Publish;
 
 //# sourceMappingURL=publish.js.map

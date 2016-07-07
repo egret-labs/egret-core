@@ -9,7 +9,7 @@ var CopyNativeFiles = (function () {
         var options = egret.args;
         //拷贝项目到native工程中
         var cpFiles = new CopyFilesCommand();
-        if (platform == "android" || platform == "android_as" ) {
+        if (platform == "android" || platform == "android_as") {
             var url2 = FileUtil.joinPath(nativePath, "proj.android/assets", "egret-game");
         }
         else if (platform == "ios") {
@@ -70,7 +70,7 @@ var CopyNativeFiles = (function () {
         }
     };
     return CopyNativeFiles;
-})();
+}());
 module.exports = CopyNativeFiles;
 
 //# sourceMappingURL=CopyNativeFiles.js.map

@@ -26,7 +26,7 @@ var Create = (function () {
         return DontExitCode;
     };
     return Create;
-})();
+}());
 function compileTemplate(project) {
     var options = egret.args;
     var moduleScripts = [];

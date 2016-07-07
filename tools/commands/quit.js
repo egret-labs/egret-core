@@ -12,7 +12,7 @@ var Quit = (function () {
         return DontExitCode;
     };
     return Quit;
-})();
+}());
 module.exports = Quit;
 
 //# sourceMappingURL=quit.js.map

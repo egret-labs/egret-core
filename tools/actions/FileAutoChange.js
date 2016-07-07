@@ -108,7 +108,7 @@ var FileAutoChangeCommand = (function () {
         });
         var requirePath = FileUtil.joinPath(options.templateDir, "runtime", "native_require.js");
         var requireContent = FileUtil.read(requirePath);
-        if(requireContent == "") {
+        if (requireContent == "") {
             globals.exit(10021);
         }
         var reg = /\/\/----auto game_file_list start----[\s\S]*\/\/----auto game_file_list end----/;
@@ -197,7 +197,7 @@ var FileAutoChangeCommand = (function () {
         return optionStr;
     };
     return FileAutoChangeCommand;
-})();
+}());
 module.exports = FileAutoChangeCommand;
 
 //# sourceMappingURL=FileAutoChange.js.map

@@ -24,7 +24,7 @@ var CompileTemplate = (function () {
         autoChange.refreshNativeRequire(index, true);
     };
     return CompileTemplate;
-})();
+}());
 module.exports = CompileTemplate;
 
 //# sourceMappingURL=CompileTemplate.js.map

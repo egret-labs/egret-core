@@ -128,7 +128,7 @@ var UpgradeCommand = (function () {
         //globals.exit(1702);
     };
     return UpgradeCommand;
-})();
+}());
 module.exports = UpgradeCommand;
 
 //# sourceMappingURL=upgrade.js.map

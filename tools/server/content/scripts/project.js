@@ -101,7 +101,7 @@ var egret;
                 }
             };
             return Project;
-        })();
+        }());
         portal.Project = Project;
     })(portal = egret.portal || (egret.portal = {}));
 })(egret || (egret = {}));

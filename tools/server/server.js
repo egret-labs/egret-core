@@ -78,7 +78,7 @@ var ServerConsole = (function (_super) {
         this.emit('log', params);
     };
     return ServerConsole;
-})(events.EventEmitter);
+}(events.EventEmitter));
 function getLocalIPAddress() {
     var os = require('os');
     var ifaces = os.networkInterfaces();

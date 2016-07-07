@@ -148,7 +148,7 @@ var Project = (function () {
         this.changes = [];
     };
     return Project;
-})();
+}());
 module.exports = Project;
 
 //# sourceMappingURL=project.js.map

@@ -44,7 +44,7 @@ var Component = (function () {
         }
     }
     return Component;
-})();
+}());
 //end by yanjiaqi
 /**
  * @private
@@ -265,7 +265,7 @@ var EXMLConfig = (function () {
     //added by yanjiaqi 2015.10.21
     EXMLConfig.__instance = null;
     return EXMLConfig;
-})();
+}());
 exports.EXMLConfig = EXMLConfig;
 
 //# sourceMappingURL=EXMLConfig.js.map

@@ -26,56 +26,27 @@
 //  EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 //
 //////////////////////////////////////////////////////////////////////////////////////
-/// <reference path="./lib/types.d.ts" />
-global.DEBUG = true;
-global.egret = global.egret || {};
-global.registerClass = "egret";
-global.DontExitCode = -0xF000;
-//require('./locales/zh_CN');
-require('./globals');
-require("./lib/core/globals.js");
-var Parser = require("./parser/Parser");
-var earlyParams = require("./parser/ParseEarlyVersionParams");
-var utils = require('./lib/utils');
-function executeCommandLine(args) {
-    var options = Parser.parseCommandLine(args);
-    egret.args = options;
-    earlyParams.parse(options, args);
-    var exitcode = entry.executeOption(options);
-    entry.exit(exitcode);
-}
-exports.executeCommandLine = executeCommandLine;
-var Entry = (function () {
-    function Entry() {
+var egret;
+(function (egret) {
+    /**
+     * @private
+     */
+    function _getString() {
+        return "";
     }
-    Entry.prototype.executeOption = function (options) {
-        var self = this;
-        options.command = options.command || "help";
-        try {
-            var command = require("./commands/" + options.command);
-        }
-        catch (e) {
-            console.log(utils.tr(10002, options.command));
-            return 10002;
-        }
-        //添加异步命令的支持 异步命令不会在return后强制退出 默认返回DontExitCode
-        var commandInstance = new command();
-        if (commandInstance.isAsync) {
-            commandInstance.execute();
-            return DontExitCode;
-        }
-        else {
-            var exitCode = commandInstance.execute();
-            return exitCode;
-        }
-    };
-    Entry.prototype.exit = function (exitCode) {
-        if (DontExitCode == exitCode)
-            return;
-        utils.exit(exitCode);
-    };
-    return Entry;
-}());
-var entry = new Entry();
-
-//# sourceMappingURL=Entry.js.map
+    egret.getString = _getString;
+    function _error(code) {
+        throw new Error("#" + code); //使用这种方式报错能够终止后续代码继续运行
+    }
+    egret.$error = _error;
+    function _warn() {
+    }
+    egret.$warn = _warn;
+    function _markReadOnly() {
+    }
+    egret.$markReadOnly = _markReadOnly;
+    function markCannotUse() {
+    }
+    egret.$markCannotUse = markCannotUse;
+})(egret || (egret = {}));
+//# sourceMappingURL=Defines.release.js.map

@@ -70,7 +70,7 @@ var CodeBase = (function () {
         return str;
     };
     return CodeBase;
-})();
+}());
 exports.CodeBase = CodeBase;
 /**
  * @private
@@ -231,7 +231,7 @@ var EXClass = (function (_super) {
         return returnStr;
     };
     return EXClass;
-})(CodeBase);
+}(CodeBase));
 exports.EXClass = EXClass;
 /**
  * @private
@@ -367,7 +367,7 @@ var EXCodeBlock = (function (_super) {
         return this.lines.join("\n");
     };
     return EXCodeBlock;
-})(CodeBase);
+}(CodeBase));
 exports.EXCodeBlock = EXCodeBlock;
 /**
  * @private
@@ -428,7 +428,7 @@ var EXFunction = (function (_super) {
         return returnStr;
     };
     return EXFunction;
-})(CodeBase);
+}(CodeBase));
 exports.EXFunction = EXFunction;
 /**
  * @private
@@ -456,7 +456,7 @@ var EXVariable = (function (_super) {
         return "this." + this.name + " = " + this.defaultValue + ";";
     };
     return EXVariable;
-})(CodeBase);
+}(CodeBase));
 exports.EXVariable = EXVariable;
 /**
  * @private
@@ -529,7 +529,7 @@ var EXState = (function (_super) {
         return returnStr;
     };
     return EXState;
-})(CodeBase);
+}(CodeBase));
 exports.EXState = EXState;
 /**
  * @private
@@ -556,7 +556,7 @@ var EXAddItems = (function (_super) {
         return returnStr;
     };
     return EXAddItems;
-})(CodeBase);
+}(CodeBase));
 exports.EXAddItems = EXAddItems;
 /**
  * @private
@@ -581,7 +581,7 @@ var EXSetProperty = (function (_super) {
         return "new " + SET_PROPERTY + "(\"" + this.target + "\",\"" + this.name + "\"," + this.value + ")";
     };
     return EXSetProperty;
-})(CodeBase);
+}(CodeBase));
 exports.EXSetProperty = EXSetProperty;
 /**
  * @private
@@ -607,7 +607,7 @@ var EXBinding = (function (_super) {
         return BINDING_PROPERTY + "(this, [\"" + chain + "\"], this." + this.target + ",\"" + this.property + "\");";
     };
     return EXBinding;
-})(CodeBase);
+}(CodeBase));
 exports.EXBinding = EXBinding;
 //} 
 

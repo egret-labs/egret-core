@@ -12258,9 +12258,18 @@ declare module eui.sys {
         private delayAssignmentDic;
         /**
          * @private
+         * 将已有javascript代码注册
+         * @param codeText 执行的javascript代码
+         * @param classStr 类名
+         */
+        $parseCode(codeText: string, classStr: string): {
+            new (): any;
+        };
+        /**
+         * @private
          * 编译指定的XML对象为JavaScript代码。
          * @param xmlData 要编译的EXML文件内容
-         * @param className 要编译成的完整类名，包括模块名。
+         *
          */
         parse(text: string): {
             new (): any;
@@ -12542,6 +12551,12 @@ declare module EXML {
      * @private
      */
     function $loadAll(urls: string[], callBack?: (clazz: any[], url: string[]) => void, thisObject?: any, useCache?: boolean): void;
+    /**
+     * @private
+     * @param url
+     * @param text
+     */
+    function $parseURLContentAsJs(url: string, text: string, className: string): any;
     /**
      * @private
      */
