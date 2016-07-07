@@ -3563,29 +3563,31 @@ var egret;
              * @private
              *
              */
-            Html5Capatibility._init = function () {
+            Html5Capatibility.$init = function () {
                 var ua = navigator.userAgent.toLowerCase();
                 Html5Capatibility.ua = ua;
                 egret.Capabilities.$isMobile = (ua.indexOf('mobile') != -1 || ua.indexOf('android') != -1);
                 Html5Capatibility._canUseBlob = false;
-                Html5Capatibility._audioType = AudioType.HTML5_AUDIO;
-                Html5Capatibility._AudioClass = egret.web.HtmlSound;
-                Html5Capatibility._audioMustLoad = true;
+                var checkAudioType;
+                var audioType = Html5Capatibility._audioType;
+                if (audioType == 1 || audioType == 2 || audioType == 3) {
+                    checkAudioType = false;
+                    Html5Capatibility.setAudioType(audioType);
+                }
+                else {
+                    checkAudioType = true;
+                    Html5Capatibility.setAudioType(AudioType.HTML5_AUDIO);
+                }
                 if (ua.indexOf("windows phone") >= 0) {
                     Html5Capatibility._System_OS = SystemOSType.WPHONE;
-                    Html5Capatibility._audioMustLoad = false;
                     egret.Capabilities.$os = "Windows Phone";
                 }
                 else if (ua.indexOf("android") >= 0) {
                     Html5Capatibility._System_OS = SystemOSType.ADNROID;
-                    if (ua.indexOf("ucbrowser") >= 0) {
-                        Html5Capatibility._audioMustLoad = false;
-                    }
                     egret.Capabilities.$os = "Android";
                     Html5Capatibility._System_OS = SystemOSType.ADNROID;
                     if (window.hasOwnProperty("QZAppExternal") && ua.indexOf("qzone") >= 0) {
-                        Html5Capatibility._audioType = AudioType.QQ_AUDIO;
-                        Html5Capatibility._AudioClass = egret.web.QQSound;
+                        Html5Capatibility.setAudioType(AudioType.QQ_AUDIO);
                         var bases = document.getElementsByTagName('base');
                         if (bases && bases.length > 0) {
                             Html5Capatibility._QQRootPath = bases[0]["baseURI"];
@@ -3606,8 +3608,7 @@ var egret;
                     Html5Capatibility._System_OS = SystemOSType.IOS;
                     if (Html5Capatibility.getIOSVersion() >= 7) {
                         Html5Capatibility._canUseBlob = true;
-                        Html5Capatibility._AudioClass = egret.web.WebAudioSound;
-                        Html5Capatibility._audioType = AudioType.WEB_AUDIO;
+                        Html5Capatibility.setAudioType(AudioType.WEB_AUDIO);
                     }
                 }
                 else {
@@ -3624,10 +3625,23 @@ var egret;
                 }
                 var canUseWebAudio = window["AudioContext"] || window["webkitAudioContext"] || window["mozAudioContext"];
                 if (!canUseWebAudio && Html5Capatibility._audioType == AudioType.WEB_AUDIO) {
-                    Html5Capatibility._audioType = AudioType.HTML5_AUDIO;
-                    Html5Capatibility._AudioClass = egret.web.HtmlSound;
+                    Html5Capatibility.setAudioType(AudioType.HTML5_AUDIO);
                 }
                 egret.Sound = Html5Capatibility._AudioClass;
+            };
+            Html5Capatibility.setAudioType = function (type) {
+                Html5Capatibility._audioType = type;
+                switch (type) {
+                    case AudioType.QQ_AUDIO:
+                        Html5Capatibility._AudioClass = egret.web.QQSound;
+                        break;
+                    case AudioType.WEB_AUDIO:
+                        Html5Capatibility._AudioClass = egret.web.WebAudioSound;
+                        break;
+                    case AudioType.HTML5_AUDIO:
+                        Html5Capatibility._AudioClass = egret.web.HtmlSound;
+                        break;
+                }
             };
             /**
              * @private
@@ -3654,7 +3668,6 @@ var egret;
             Html5Capatibility._canUseBlob = false;
             //当前浏览器版本是否支持webaudio
             Html5Capatibility._audioType = 0;
-            Html5Capatibility._audioMustLoad = false;
             /**
              * @private
              */
@@ -3671,7 +3684,6 @@ var egret;
         }(egret.HashObject));
         web.Html5Capatibility = Html5Capatibility;
         egret.registerClass(Html5Capatibility,'egret.web.Html5Capatibility');
-        Html5Capatibility._init();
         /**
          * @private
          */
@@ -3779,6 +3791,8 @@ var egret;
             if (!options) {
                 options = {};
             }
+            web.Html5Capatibility._audioType = options.audioType;
+            web.Html5Capatibility.$init();
             setRenderMode(options.renderMode);
             var ticker = egret.sys.$ticker;
             startTicker(ticker);
