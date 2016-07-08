@@ -107,7 +107,7 @@ namespace dragonBones {
          * @param x 横坐标。
          * @param y 纵坐标。
          * @param result 应用转换之后的坐标。
-         * @params delta 是否忽略 tx，ty 对坐标的转换。 (默认: false)
+         * @params delta 是否忽略 tx，ty 对坐标的转换。
          * @version DragonBones 3.0
          */
         public transformPoint(x: number, y: number, result: { x: number, y: number }, delta: boolean = false): void {

@@ -321,15 +321,15 @@ namespace dragonBones {
             }
         }
         /**
-         * 不推荐使用
-         * @see #dragonBones.BaseFactory.parseDragonBonesData()
+         * @deprecated
+         * @see dragonBones.BaseFactory#parseDragonBonesData()
          */
         public static parseDragonBonesData(rawData: any): DragonBonesData {
             return ObjectDataParser.getInstance().parseDragonBonesData(rawData);
         }
         /**
-         * 不推荐使用
-         * @see #dragonBones.BaseFactory.parsetTextureAtlasData()
+         * @deprecated
+         * @see dragonBones.BaseFactory#parsetTextureAtlasData()
          */
         public static parseTextureAtlasData(rawData: any, scale: number = 1): any {
             let textureAtlasData: any = {};

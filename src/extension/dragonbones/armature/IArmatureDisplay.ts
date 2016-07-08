@@ -21,14 +21,16 @@ namespace dragonBones {
         dispose(): void;
         /**
          * @language zh_CN
-         * 获取使用这个显示容器的骨架。 (只读)
+         * 获取使用这个显示容器的骨架。
+         * @readOnly
          * @see dragonBones.Armature
          * @version DragonBones 4.5
          */
         armature: Armature;
         /**
          * @language zh_CN
-         * 获取使用骨架的动画控制器。 (只读)
+         * 获取使用骨架的动画控制器。
+         * @readOnly
          * @see dragonBones.Animation
          * @version DragonBones 4.5
          */

@@ -374,8 +374,8 @@ namespace dragonBones {
         /**
          * @language zh_CN
          * 更新骨骼和插槽的变换。 (当骨骼没有动画状态或动画状态播放完成时，骨骼将不在更新)
-         * @param boneName 指定的骨骼名称。 (默认: null, 所有骨骼)
-         * @param updateSlotDisplay 是否更新插槽的显示对象。 (默认: false, 不更新)
+         * @param boneName 指定的骨骼名称，如果未设置，将更新所有骨骼。
+         * @param updateSlotDisplay 是否更新插槽的显示对象。
          * @see dragonBones.Bone
          * @see dragonBones.Slot
          * @version DragonBones 3.0
@@ -411,7 +411,7 @@ namespace dragonBones {
          * @language zh_CN
          * 获取指定名称的插槽。
          * @param name 插槽的名称。
-         * @return 插槽。
+         * @returns 插槽。
          * @see dragonBones.Slot
          * @version DragonBones 3.0
          */
@@ -429,7 +429,7 @@ namespace dragonBones {
          * @language zh_CN
          * 通过显示对象获取插槽。
          * @param display 显示对象。
-         * @return 包含这个显示对象的插槽。
+         * @returns 包含这个显示对象的插槽。
          * @see dragonBones.Slot
          * @version DragonBones 3.0
          */
@@ -481,7 +481,7 @@ namespace dragonBones {
          * @language zh_CN
          * 获取指定名称的骨骼。
          * @param name 骨骼的名称。
-         * @return 骨骼。
+         * @returns 骨骼。
          * @see dragonBones.Bone
          * @version DragonBones 3.0
          */
@@ -499,7 +499,7 @@ namespace dragonBones {
          * @language zh_CN
          * 通过显示对象获取骨骼。
          * @param display 显示对象。
-         * @return 包含这个显示对象的骨骼。
+         * @returns 包含这个显示对象的骨骼。
          * @see dragonBones.Bone
          * @version DragonBones 3.0
          */
@@ -512,7 +512,7 @@ namespace dragonBones {
          * @language zh_CN
          * 将一个指定的骨骼添加到骨架中。
          * @param value 需要添加的骨骼。
-         * @param parentName 需要添加到父骨骼的名称，如果未指定名称则添加到骨架根部。 (默认: null)
+         * @param parentName 需要添加到父骨骼的名称，如果未设置，则添加到骨架根部。
          * @see dragonBones.Bone
          * @version DragonBones 3.0
          */
@@ -635,7 +635,7 @@ namespace dragonBones {
          * @language zh_CN
          * 开启动画缓存。
          * @param frameRate 动画缓存的帧率
-         * @see dragonBones.Armature#cacheFrameRate
+         * @see #cacheFrameRate
          * @version DragonBones 4.5
          */
         public enableAnimationCache(frameRate: number): void {
@@ -645,7 +645,7 @@ namespace dragonBones {
          * @language zh_CN
          * 是否包含指定类型的事件。
          * @param type 事件类型。
-         * @return  [true: 包含, false: 不包含]
+         * @returns  [true: 包含, false: 不包含]
          * @version DragonBones 3.0
          */
         public hasEventListener(type: string): void {
@@ -673,8 +673,8 @@ namespace dragonBones {
         }
 
         /**
-         * 不推荐使用
-         * @see dragonBones.Armature#cacheFrameRate
+         * @deprecated
+         * @see #cacheFrameRate
          */
         public enableCache: boolean = false;
     }

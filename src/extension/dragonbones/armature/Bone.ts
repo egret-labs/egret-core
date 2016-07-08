@@ -27,37 +27,37 @@ namespace dragonBones {
 
         /**
          * @language zh_CN
-         * 是否继承父骨骼的平移。 [true: 继承, false: 不继承] (默认: true)
+         * 是否继承父骨骼的平移。 [true: 继承, false: 不继承]
          * @version DragonBones 3.0
          */
         public inheritTranslation: boolean;
         /**
          * @language zh_CN
-         * 是否继承父骨骼的旋转。 [true: 继承, false: 不继承] (默认: true)
+         * 是否继承父骨骼的旋转。 [true: 继承, false: 不继承]
          * @version DragonBones 3.0
          */
         public inheritRotation: boolean;
         /**
          * @language zh_CN
-         * 是否继承父骨骼的缩放。 [true: 继承, false: 不继承] (默认: true)
+         * 是否继承父骨骼的缩放。 [true: 继承, false: 不继承]
          * @version DragonBones 4.5
          */
         public inheritScale: boolean;
         /**
          * @language zh_CN
-         * IK 约束时骨骼方向是否为顺时针方向。 [true: 顺时针, false: 逆时针]  (默认: true)
+         * IK 约束时骨骼方向是否为顺时针方向。 [true: 顺时针, false: 逆时针]
          * @version DragonBones 4.5
          */
         public ikBendPositive: boolean;
         /**
          * @language zh_CN
-         * IK 约束的权重。 (默认: 1)
+         * IK 约束的权重。
          * @version DragonBones 4.5
          */
         public ikWeight: number;
         /**
          * @language zh_CN
-         * 骨骼长度。 (默认: 0)
+         * 骨骼长度。
          * @version DragonBones 4.5
          */
         public length: number;
@@ -437,7 +437,7 @@ namespace dragonBones {
         /**
          * @language zh_CN
          * 是否包含某个指定的骨骼或插槽。
-         * @return [true: 包含，false: 不包含]
+         * @returns [true: 包含，false: 不包含]
          * @see dragonBones.TransformObject
          * @version DragonBones 3.0
          */
@@ -516,7 +516,8 @@ namespace dragonBones {
         }
         /**
          * @language zh_CN
-         * 控制此骨骼所有插槽的显示。 (默认: true)
+         * 控制此骨骼所有插槽的显示。
+         * @default true
          * @see dragonBones.Slot
          * @version DragonBones 3.0
          */
@@ -539,7 +540,7 @@ namespace dragonBones {
         }
 
         /**
-         * 不推荐使用
+         * @deprecated
          * @see dragonBones.Armature#getSlot()
          */
         public get slot(): Slot {

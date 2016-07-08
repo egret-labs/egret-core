@@ -13,13 +13,15 @@ namespace dragonBones {
     export abstract class Slot extends TransformObject {
         /**
          * @language zh_CN
-         * 子骨架是否继承父骨架的动画。 [true: 继承, false: 不继承] (默认: true，仅在显示对象中包含子骨架时有效)
+         * 子骨架是否继承父骨架的动画。 [true: 继承, false: 不继承]
+         * @default true
          * @version DragonBones 4.5
          */
         public inheritAnimation: boolean;
         /**
          * @language zh_CN
-         * 显示对象受到控制的对象，应设置为动画状态的名称或组名称。 (默认: null，受所有的动画状态控制)
+         * 显示对象受到控制的对象，应设置为动画状态的名称或组名称，设置为 null 则表示受所有的动画状态控制。
+         * @default null
          * @see dragonBones.AnimationState#displayControl
          * @see dragonBones.AnimationState#name
          * @see dragonBones.AnimationState#group
@@ -647,15 +649,15 @@ namespace dragonBones {
         }
 
         /**
-         * 不推荐使用
-         * @see dragonBones.Slot#display
+         * @deprecated
+         * @see #display
          */
         public getDisplay(): any {
             return this._display;
         }
         /**
-         * 不推荐使用
-         * @see dragonBones.Slot#display
+         * @deprecated
+         * @see #display
          */
         public setDisplay(value: any) {
             this.display = value;

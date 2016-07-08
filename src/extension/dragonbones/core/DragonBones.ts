@@ -83,7 +83,7 @@ namespace dragonBones {
         public static SECOND_TO_MILLISECOND: number = 1000;
         public static NO_TWEEN: number = 100;
 
-        public static VERSION: string = "4.5.10";
+        public static VERSION: string = "4.7";
 
         public constructor() { }
     }

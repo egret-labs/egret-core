@@ -29,11 +29,12 @@ namespace dragonBones {
         public time: number = new Date().getTime() / DragonBones.SECOND_TO_MILLISECOND;
         /**
          * @language zh_CN
-         * 时间流逝的速度，用于实现动画的变速播放。 
-         * [0: 停止播放, (0~1): 慢速播放, 1: 正常播放, (1~N): 快速播放] (默认: 1)
+         * 时间流逝的速度，用于实现动画的变速播放。 [0: 停止播放, (0~1): 慢速播放, 1: 正常播放, (1~N): 快速播放]
+         * @default 1
          * @version DragonBones 3.0
          */
         public timeScale: number = 1;
+
         private _animatebles: Array<IAnimateble> = [];
         /**
          * @language zh_CN
@@ -101,7 +102,7 @@ namespace dragonBones {
         /** 
          * 是否包含指定的 IAnimatable 实例
          * @param value 指定的 IAnimatable 实例。
-         * @return  [true: 包含，false: 不包含]。
+         * @returns  [true: 包含，false: 不包含]。
          * @version DragonBones 3.0
          */
         public contains(value: IAnimateble): boolean {

@@ -7,7 +7,8 @@ namespace dragonBones {
     export abstract class TextureAtlasData extends BaseObject {
         /**
          * @language zh_CN
-         * 是否开启共享搜索。 [true: 开启, false: 不开启] (默认: false)
+         * 是否开启共享搜索。 [true: 开启, false: 不开启]
+         * @default false
          * @version DragonBones 4.5
          */
         public autoSearch: boolean;

@@ -14,8 +14,9 @@ namespace dragonBones {
 
         /**
          * @language zh_CN
-         * 是否更新显示对象的变换属性。 (默认: false)
-         * 为了更好的性能, 并不会更新 display 的变换属性 (x, y, rotation, scaleX, scaleX), 如果需要正确访问这些属性, 则需要设置为 true
+         * 是否更新显示对象的变换属性。
+         * 为了更好的性能, 并不会更新 display 的变换属性 (x, y, rotation, scaleX, scaleX), 如果需要正确访问这些属性, 则需要设置为 true 。
+         * @default false
          * @version DragonBones 3.0
          */
         public transformUpdateEnabled: boolean;

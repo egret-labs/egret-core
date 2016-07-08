@@ -1,5 +1,15 @@
 namespace dragonBones {
+    /**
+     * @language zh_CN
+     * Egret 工厂。
+     * @version DragonBones 3.0
+     */
     export class EgretFactory extends BaseFactory {
+        /**
+         * @language zh_CN
+         * 创建一个工厂。
+         * @version DragonBones 3.0
+         */
         public constructor() {
             super();
 
@@ -92,9 +102,9 @@ namespace dragonBones {
          * @language zh_CN
          * 创建一个指定名称的骨架，并使用骨架的显示容器来更新骨架动画。
          * @param armatureName 骨架数据名称。
-         * @param dragonBonesName 龙骨数据名称，如果不提供此名称，将检索所有的龙骨数据，如果多个数据中包含同名的骨架数据，可能无法创建出准确的骨架。 (默认: null)
-         * @param skinName 皮肤名称。 (默认: null)
-         * @return 骨架的显示容器。
+         * @param dragonBonesName 龙骨数据名称，如果未设置，将检索所有的龙骨数据，如果多个数据中包含同名的骨架数据，可能无法创建出准确的骨架。
+         * @param skinName 皮肤名称，如果未设置，则使用默认皮肤。
+         * @returns 骨架的显示容器。
          * @see dragonBones.IArmatureDisplayContainer
          * @version DragonBones 4.5
          */
@@ -117,49 +127,49 @@ namespace dragonBones {
         }
 
         /**
-         * 不推荐使用
+         * @deprecated
          * @see dragonBones.BaseFactory#addDragonBonesData()
          */
         public addSkeletonData(dragonBonesData: DragonBonesData, dragonBonesName: string = null): void {
             this.addDragonBonesData(dragonBonesData, dragonBonesName);
         }
         /**
-         * 不推荐使用
+         * @deprecated
          * @see dragonBones.BaseFactory#getDragonBonesData()
          */
         public getSkeletonData(dragonBonesName: string) {
             return this.getDragonBonesData(dragonBonesName);
         }
         /**
-         * 不推荐使用
+         * @deprecated
          * @see dragonBones.BaseFactory#removeSkeletonData()
          */
         public removeSkeletonData(dragonBonesName: string): void {
             this.removeSkeletonData(dragonBonesName);
         }
         /**
-         * 不推荐使用
+         * @deprecated
          * @see dragonBones.BaseFactory#addTextureAtlasData()
          */
         public addTextureAtlas(textureAtlasData: TextureAtlasData, dragonBonesName: string = null): void {
             this.addTextureAtlasData(textureAtlasData, dragonBonesName);
         }
         /**
-         * 不推荐使用
+         * @deprecated
          * @see dragonBones.BaseFactory#getTextureAtlasData()
          */
         public getTextureAtlas(dragonBonesName: string) {
             return this.getTextureAtlasData(dragonBonesName);
         }
         /**
-         * 不推荐使用
+         * @deprecated
          * @see dragonBones.BaseFactory#removeTextureAtlasData()
          */
         public removeTextureAtlas(dragonBonesName: string): void {
             this.removeTextureAtlasData(dragonBonesName);
         }
         /**
-         * 不推荐使用
+         * @deprecated
          * @see dragonBones.BaseFactory#buildArmature()
          */
         public buildFastArmature(armatureName: string, dragonBonesName: string = null, skinName: string = null): FastArmature {

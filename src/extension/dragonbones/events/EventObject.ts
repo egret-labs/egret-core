@@ -17,7 +17,7 @@ namespace dragonBones {
          * @language zh_CN
          * 是否包含指定类型的事件。
          * @param type 事件类型。
-         * @return  [true: 包含, false: 不包含]
+         * @returns  [true: 包含, false: 不包含]
          * @version DragonBones 4.5
          */
         hasEvent(type: string): boolean;

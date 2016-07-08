@@ -210,47 +210,47 @@ namespace dragonBones {
     }
 
     /**
-     * 不推荐使用
+     * @deprecated
      * @see dragonBones.Armature
      */
     export type FastArmature = Armature;
     /**
-     * 不推荐使用
+     * @deprecated
      * @see dragonBones.Bone
      */
     export type FastBone = Bone;
     /**
-     * 不推荐使用
+     * @deprecated
      * @see dragonBones.Slot
      */
     export type FastSlot = Slot;
     /**
-     * 不推荐使用
+     * @deprecated
      * @see dragonBones.Animation
      */
     export type FastAnimation = Animation;
     /**
-     * 不推荐使用
+     * @deprecated
      * @see dragonBones.AnimationState
      */
     export type FastAnimationState = AnimationState;
     /**
-     * 不推荐使用
+     * @deprecated
      * @see dragonBones.EgretEvent
      */
     export class AnimationEvent extends EgretEvent { }
     /**
-     * 不推荐使用
+     * @deprecated
      * @see dragonBones.EgretEvent
      */
     export class FrameEvent extends EgretEvent { }
     /**
-     * 不推荐使用
+     * @deprecated
      * @see dragonBones.EgretEvent
      */
     export class SoundEvent extends EgretEvent { }
     /**
-     * 不推荐使用
+     * @deprecated
      * @see dragonBones.EgretTextureAtlasData
      */
     export class EgretTextureAtlas extends EgretTextureAtlasData {
@@ -275,18 +275,18 @@ namespace dragonBones {
         }
     }
     /**
-     * 不推荐使用
+     * @deprecated
      * @see dragonBones.EgretTextureAtlasData
      */
     export class EgretSheetAtlas extends EgretTextureAtlas {
     }
     /**
-     * 不推荐使用
+     * @deprecated
      * @see dragonBones.EgretFactory#soundEventManater
      */
     export class SoundEventManager {
         /**
-         * 不推荐使用
+         * @deprecated
          * @see dragonBones.EgretFactory#soundEventManater
          */
         public static getInstance(): EgretArmatureDisplay {

@@ -77,7 +77,8 @@ namespace dragonBones {
 
         /**
          * @language zh_CN
-         * 动画的播放速度。 [(-N~0): 倒转播放, 0: 停止播放, (0~1): 慢速播放, 1: 正常播放, (1~N): 快速播放] (默认: 1)
+         * 动画的播放速度。 [(-N~0): 倒转播放, 0: 停止播放, (0~1): 慢速播放, 1: 正常播放, (1~N): 快速播放]
+         * @default 1
          * @version DragonBones 3.0
          */
         public timeScale: number;
@@ -308,7 +309,7 @@ namespace dragonBones {
         /**
          * @language zh_CN
          * 暂停播放动画。
-         * @param animationName 动画状态的名称。 (默认: null, 如果指定名称则只暂停该动画状态)
+         * @param animationName 动画状态的名称，如果未设置，则暂停所有动画状态。
          * @see dragonBones.AnimationState
          * @version DragonBones 3.0
          */
@@ -325,9 +326,9 @@ namespace dragonBones {
         /**
          * @language zh_CN
          * 播放动画。
-         * @param animationName 动画数据的名称。 (如果不指定动画名称，则播放默认动画，或将暂停状态切换为播放状态，或重新播放上一个正在播放的动画)
-         * @param playTimes 动画需要播放的次数。 [-1: 使用动画数据默认值, 0: 无限循环播放, [1~N]: 循环播放 N 次] (仅在指定动画名称时生效)
-         * @return 返回控制这个动画数据的动画状态。
+         * @param animationName 动画数据的名称，如果未设置，则播放默认动画，或将暂停状态切换为播放状态，或重新播放上一个正在播放的动画。 
+         * @param playTimes 动画需要播放的次数。 [-1: 使用动画数据默认值, 0: 无限循环播放, [1~N]: 循环播放 N 次]
+         * @returns 返回控制这个动画数据的动画状态。
          * @see dragonBones.AnimationState
          * @version DragonBones 3.0
          */
@@ -338,12 +339,12 @@ namespace dragonBones {
             } else if (!this._lastAnimationState) {
                 const defaultAnimation = this._armature.armatureData.defaultAnimation;
                 if (defaultAnimation) {
-                    animationState = this.fadeIn(defaultAnimation.name, 0, -1, 0, null, AnimationFadeOutMode.All);
+                    animationState = this.fadeIn(defaultAnimation.name, 0, playTimes, 0, null, AnimationFadeOutMode.All);
                 }
             } else if (!this._isPlaying) {
                 this._isPlaying = true;
             } else {
-                animationState = this.fadeIn(this._lastAnimationState.name, 0, -1, 0, null, AnimationFadeOutMode.All);
+                animationState = this.fadeIn(this._lastAnimationState.name, 0, playTimes, 0, null, AnimationFadeOutMode.All);
             }
 
             return animationState;
@@ -352,16 +353,16 @@ namespace dragonBones {
          * @language zh_CN
          * 淡入播放指定名称的动画。
          * @param animationName 动画数据的名称。
-         * @param playTimes 循环播放的次数。 [-1: 使用数据默认值, 0: 无限循环播放, [1~N]: 循环播放 N 次] (默认: -1)
-         * @param fadeInTime 淡入的时间。 [-1: 使用数据默认值, [0~N]: N 秒淡入完毕] (以秒为单位, 默认: -1)
-         * @param layer 混合的图层，图层高会优先获取混合权重。 (默认: 0)
-         * @param group 混合的组，用于给动画状态编组，方便混合淡出控制。 (默认: null)
-         * @param fadeOutMode 淡出的模式。 (默认: <code>AnimationFadeOutMode.SameLayerAndGroup</code>)
-         * @param additiveBlending 以叠加的形式混合。 (默认: false)
-         * @param displayControl 是否对显示对象属性可控。 (默认: true)
-         * @param pauseFadeOut 暂停需要淡出的动画。 (默认: true)
-         * @param pauseFadeIn 暂停需要淡入的动画，直到淡入结束才开始播放。 (默认: true)
-         * @return 返回控制这个动画数据的动画状态。
+         * @param playTimes 循环播放的次数。 [-1: 使用数据默认值, 0: 无限循环播放, [1~N]: 循环播放 N 次]
+         * @param fadeInTime 淡入的时间。 [-1: 使用数据默认值, [0~N]: N 秒淡入完毕] (以秒为单位)
+         * @param layer 混合的图层，图层高会优先获取混合权重。
+         * @param group 混合的组，用于给动画状态编组，方便混合淡出控制。
+         * @param fadeOutMode 淡出的模式。
+         * @param additiveBlending 以叠加的形式混合。
+         * @param displayControl 是否对显示对象属性可控。
+         * @param pauseFadeOut 暂停需要淡出的动画。
+         * @param pauseFadeIn 暂停需要淡入的动画，直到淡入结束才开始播放。
+         * @returns 返回控制这个动画数据的动画状态。
          * @see dragonBones.AnimationFadeOutMode
          * @see dragonBones.AnimationState
          * @version DragonBones 4.5
@@ -438,9 +439,9 @@ namespace dragonBones {
          * @language zh_CN
          * 指定名称的动画从指定时间开始播放。
          * @param animationName 动画数据的名称。
-         * @param time 指定时间。 (以秒为单位，默认: 0)
-         * @param playTimes 动画循环播放的次数。 [-1: 使用动画数据默认值, 0: 无限循环播放, [1~N]: 循环播放 N 次] (默认: -1)
-         * @return 返回控制这个动画数据的动画状态。
+         * @param time 指定时间。 (以秒为单位)
+         * @param playTimes 动画循环播放的次数。 [-1: 使用动画数据默认值, 0: 无限循环播放, [1~N]: 循环播放 N 次]
+         * @returns 返回控制这个动画数据的动画状态。
          * @see dragonBones.AnimationState
          * @version DragonBones 4.5
          */
@@ -453,9 +454,9 @@ namespace dragonBones {
          * @language zh_CN
          * 指定名称的动画从指定帧开始播放。
          * @param animationName 动画数据的名称。
-         * @param time 指定帧。 (默认: 0)
-         * @param playTimes 动画循环播放的次数。[-1: 使用动画数据默认值, 0: 无限循环播放, [1~N]: 循环播放 N 次] (默认: -1)
-         * @return 返回控制这个动画数据的动画状态。
+         * @param frame 指定帧。
+         * @param playTimes 动画循环播放的次数。[-1: 使用动画数据默认值, 0: 无限循环播放, [1~N]: 循环播放 N 次]
+         * @returns 返回控制这个动画数据的动画状态。
          * @see dragonBones.AnimationState
          * @version DragonBones 4.5
          */
@@ -471,9 +472,9 @@ namespace dragonBones {
          * @language zh_CN
          * 指定名称的动画从指定进度开始播放。
          * @param animationName 动画数据的名称。
-         * @param time 进度。 [0~1] (默认: 0)
-         * @param playTimes 动画循环播放的次数。[-1: 使用动画数据默认值, 0: 无限循环播放, [1~N]: 循环播放 N 次] (默认: -1)
-         * @return 返回控制这个动画数据的动画状态。
+         * @param progress 进度。 [0~1]
+         * @param playTimes 动画循环播放的次数。[-1: 使用动画数据默认值, 0: 无限循环播放, [1~N]: 循环播放 N 次]
+         * @returns 返回控制这个动画数据的动画状态。
          * @see dragonBones.AnimationState
          * @version DragonBones 4.5
          */
@@ -489,8 +490,8 @@ namespace dragonBones {
          * @language zh_CN
          * 播放指定名称的动画到指定的时间并停止。
          * @param animationName 动画数据的名称。
-         * @param time 指定的时间。 (以秒为单位，默认: 0)
-         * @return 返回控制这个动画数据的动画状态。
+         * @param time 指定的时间。
+         * @returns 返回控制这个动画数据的动画状态。
          * @see dragonBones.AnimationState
          * @version DragonBones 4.5
          */
@@ -506,8 +507,8 @@ namespace dragonBones {
          * @language zh_CN
          * 播放指定名称的动画到指定的帧并停止。
          * @param animationName 动画数据的名称。
-         * @param time 帧。 (默认: 0)
-         * @return 返回控制这个动画数据的动画状态。
+         * @param frame 帧。
+         * @returns 返回控制这个动画数据的动画状态。
          * @see dragonBones.AnimationState
          * @version DragonBones 4.5
          */
@@ -523,8 +524,8 @@ namespace dragonBones {
          * @language zh_CN
          * 播放指定名称的动画到指定的进度并停止。
          * @param animationName 动画数据的名称。
-         * @param time 指定的进度。 [0~1] (默认: 0)
-         * @return 返回控制这个动画数据的动画状态。
+         * @param progress 指定的进度。 [0~1]
+         * @returns 返回控制这个动画数据的动画状态。
          * @see dragonBones.AnimationState
          * @version DragonBones 4.5
          */
@@ -648,12 +649,13 @@ namespace dragonBones {
         }
 
         /**
-         * 不推荐使用
-         * @see dragonBones.Animation#play()
-         * @see dragonBones.Animation#fadeIn()
-         * @see dragonBones.Animation#gotoAndPlayByTime()
-         * @see dragonBones.Animation#gotoAndPlayByFrame()
-         * @see dragonBones.Animation#gotoAndPlayByProgress()
+         * @language zh_CN
+         * @deprecated
+         * @see #play()
+         * @see #fadeIn()
+         * @see #gotoAndPlayByTime()
+         * @see #gotoAndPlayByFrame()
+         * @see #gotoAndPlayByProgress()
          */
         public gotoAndPlay(
             animationName: string, fadeInTime: number = -1, duration: number = -1, playTimes: number = -1,
@@ -668,26 +670,29 @@ namespace dragonBones {
             return animationState;
         }
         /**
-         * 不推荐使用
-         * @see dragonBones.Animation#gotoAndStopByTime()
-         * @see dragonBones.Animation#gotoAndStopByFrame()
-         * @see dragonBones.Animation#gotoAndStopByProgress()
+         * @language zh_CN
+         * @deprecated
+         * @see #gotoAndStopByTime()
+         * @see #gotoAndStopByFrame()
+         * @see #gotoAndStopByProgress()
          */
         public gotoAndStop(animationName: string, time: number = 0): AnimationState {
             return this.gotoAndStopByTime(animationName, time);
         }
         /**
-         * 不推荐使用
-         * @see dragonBones.Animation#animationNames
-         * @see dragonBones.Animation#animations
+         * @language zh_CN
+         * @deprecated
+         * @see #animationNames
+         * @see #animations
          */
         public get animationList(): Array<string> {
             return this._animationNames;
         }
         /**
-         * 不推荐使用
-         * @see dragonBones.Animation#animationNames
-         * @see dragonBones.Animation#animations
+         * @language zh_CN
+         * @deprecated
+         * @see #animationNames
+         * @see #animations
          */
         public get animationDataList(): Array<AnimationData> {
             const list: AnimationData[] = [];
