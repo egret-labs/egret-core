@@ -33,3 +33,5 @@ src/tsc_config_temp.txt
 /tsconfig.json
 /index.html
 /src/tests
+
+.wing/settings.json

@@ -53,7 +53,7 @@ module egret.web {
      * @private
      * 网页加载完成，实例化页面中定义的Egret标签
      */
-    function runEgret(options?:{renderMode?:string;screenAdapter?:sys.IScreenAdapter}):void {
+    function runEgret(options?:{renderMode?:string;audioType?:number;screenAdapter?:sys.IScreenAdapter}):void {
         if (isRunning) {
             return;
         }
@@ -61,6 +61,8 @@ module egret.web {
         if (!options) {
             options = {};
         }
+        Html5Capatibility._audioType = options.audioType;
+        Html5Capatibility.$init();
         setRenderMode(options.renderMode);
         var ticker = egret.sys.$ticker;
         startTicker(ticker);
