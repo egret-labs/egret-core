@@ -108,9 +108,9 @@ namespace dragonBones {
          * @see dragonBones.IArmatureDisplayContainer
          * @version DragonBones 4.5
          */
-        public buildArmatureDisplay<T extends EgretArmatureDisplay>(armatureName: string, dragonBonesName: string = null, skinName: string = null): T {
+        public buildArmatureDisplay(armatureName: string, dragonBonesName: string = null, skinName: string = null): EgretArmatureDisplay {
             const armature = this.buildArmature(armatureName, dragonBonesName, skinName);
-            const armatureDisplay = armature ? <T>armature._display : null;
+            const armatureDisplay = armature ? <EgretArmatureDisplay>armature._display : null;
             if (armatureDisplay) {
                 armatureDisplay.advanceTimeBySelf(true);
             }

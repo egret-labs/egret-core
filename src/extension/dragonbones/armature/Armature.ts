@@ -527,7 +527,7 @@ namespace dragonBones {
         /**
          * @language zh_CN
          * 将一个指定的骨骼从骨架中移除。
-         * @param value 需要移除的骨骼
+         * @param value 需要移除的骨骼。
          * @see dragonBones.Bone
          * @version DragonBones 3.0
          */
@@ -542,6 +542,7 @@ namespace dragonBones {
         /**
          * @language zh_CN
          * 替换骨架的主贴图，根据渲染引擎的不同，提供不同的贴图数据。
+         * @param texture 用来替换的贴图，根据渲染平台的不同，类型会有所不同，一般是 Texture 类型。
          * @version DragonBones 4.5
          */
         public replaceTexture(texture: any): void {

@@ -245,16 +245,8 @@ namespace dragonBones {
                             }
 
                             if (rawDisplayData && replacedDisplayData) {
-                                pivotX += replacedDisplayData.transform.x - rawDisplayData.transform.x;
-                                pivotY += replacedDisplayData.transform.y - rawDisplayData.transform.y;
-                            }
-
-                            if (currentTextureData.rotated) {
-                                width = currentTextureData.region.height;
-                                height = currentTextureData.region.width;
-                            } else {
-                                height = currentTextureData.region.height;
-                                width = currentTextureData.region.width;
+                                pivotX += rawDisplayData.transform.x - replacedDisplayData.transform.x;
+                                pivotY += rawDisplayData.transform.y - replacedDisplayData.transform.y;
                             }
 
                             frameDisplay.$setBitmapData(texture);
