@@ -98,13 +98,20 @@ namespace dragonBones {
          */
         public static SOUND_EVENT: string = EventObject.SOUND_EVENT;
         /**
+         * @deprecated
          * @see dragonBones.EventObject.FRAME_EVENT
          */
         public static ANIMATION_FRAME_EVENT: string = EventObject.FRAME_EVENT;
         /**
+         * @deprecated
          * @see dragonBones.EventObject.FRAME_EVENT
          */
         public static BONE_FRAME_EVENT: string = EventObject.FRAME_EVENT;
+        /**
+         * @deprecated
+         * @see dragonBones.EventObject.FRAME_EVENT
+         */
+        public static MOVEMENT_FRAME_EVENT: string = EventObject.FRAME_EVENT;
     }
 
     /**
