@@ -48,7 +48,7 @@ var Help = (function () {
         return result;
     };
     return Help;
-}());
+})();
 module.exports = Help;
 
 //# sourceMappingURL=help.js.map

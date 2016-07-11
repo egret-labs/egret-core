@@ -157,7 +157,6 @@ module egret {
     locale_strings[2018] = "{0}: error 节点上'skinName'属性值的格式错误:{1}";
     locale_strings[2019] = "{0}: error 容器的子项必须是可视节点:{1}";
     locale_strings[2020] = "{0}: error 在w:Declarations内的子节点，不允许使用includeIn和excludeFrom属性\n{1}";
-    locale_strings[2101] = "{0}: warning 已存在相同的类定义\n{1}";
     locale_strings[2102] = "{0}: warning 在属性节点上找不到任何子节点\n{1}";
     locale_strings[2103] = "{0}: warning 节点上的同一个属性'{1}'被多次赋值\n{2}";
 

@@ -93,6 +93,7 @@ var egret;
     locale_strings[1418] = "WebP格式转换失败 : {0}";
     locale_strings[1419] = "转换WebP格式 : {0} / {1}";
     locale_strings[1420] = "打包失败，请检查路径中是否有中文或特殊的字符";
+
     //startserver
     locale_strings[1501] = "无法启动服务器，请检查权限或端口是否被占用";
     //create_app
@@ -108,7 +109,7 @@ var egret;
     locale_strings[1610] = "缺少项目名称 例:{color_green}egret create_app [app_name] -f [h5_game_path] -t [template_path] {color_normal}";
     locale_strings[1611] = "项目已存在,请重新输入 例:{color_green}egret create_app [app_name] -f [h5_game_path] -t [template_path] {color_normal}";
     //upgrade
-    locale_strings[1701] = "项目版本低于 egret 版本，请执行 egret upgrade {your_project} 命令升级您的项目，\n命令中请不要加上大括号{}";
+    locale_strings[1701] = "项目版本低于 egret 版本，请执行 egret upgrade {your_project} 命令或点击wing中的升级菜单升级您的项目，\n命令中请不要加上大括号{}";
     locale_strings[1702] = "项目升级成功";
     locale_strings[1703] = "\n升级第一步完成，{color_red}请按 {color_underline}https://github.com/egret-labs/egret-core/wiki/Egret_Upgrade/upgrade/index.html{color_red} 完成剩余升级步骤{color_normal}\n";
     locale_strings[1704] = "正在更新到{0}";
@@ -153,7 +154,6 @@ var egret;
     locale_strings[2018] = "{0}: error 节点上'skinName'属性值的格式错误:{1}";
     locale_strings[2019] = "{0}: error 容器的子项必须是可视节点:{1}";
     locale_strings[2020] = "{0}: error 在w:Declarations内的子节点，不允许使用includeIn和excludeFrom属性\n{1}";
-    locale_strings[2101] = "{0}: warning 已存在相同的类定义\n{1}";
     locale_strings[2102] = "{0}: warning 在属性节点上找不到任何子节点\n{1}";
     locale_strings[2103] = "{0}: warning 节点上的同一个属性'{1}'被多次赋值\n{2}";
     locale_strings[8001] = "请输入命令行选项{color_green} {0} {color_normal}的参数,并确认是以下值之一: {color_green}[{1}]{color_normal}";
@@ -180,7 +180,8 @@ var egret;
         "\n\t\t--resource\t\t//资源目录" +
         "\n\t\t--src\t\t\t//源代码目录" +
         "\n\t\t--egretProperties.json\t//项目配置文件" +
-        "\n\t\t--index.html\t\t//启动文件";
+        "\n\t\t--index.html\t\t//启动文件"
+    ;
     locale_strings[10016] = "如果浏览器没有启动，请手动打开URL: {0}";
     locale_strings[10017] = "项目创建成功，您可以执行 egret startserver 来运行刚刚创建的应用";
     locale_strings[10018] = "试图进行文件加载顺序排序时发现循环依赖，比如类的 static 属性直接实例化了一个继承自当前类的类，"

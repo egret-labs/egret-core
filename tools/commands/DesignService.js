@@ -8,7 +8,7 @@ var DesignService = (function () {
         return DontExitCode;
     };
     return DesignService;
-}());
+})();
 module.exports = DesignService;
 
 //# sourceMappingURL=DesignService.js.map

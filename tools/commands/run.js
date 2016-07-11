@@ -2,7 +2,7 @@
 var utils = require('../lib/utils');
 var fileUtil = require('../lib/FileUtil');
 var watch = require("../lib/watch");
-var path = require("path");
+var path = require('path');
 var Build = require('./build');
 var server = require('../server/server');
 var FileUtil = require('../lib/FileUtil');
@@ -11,7 +11,7 @@ var Run = (function () {
     function Run() {
         var _this = this;
         this.serverStarted = false;
-        this.initVersion = ""; //初始化的 egret 版本，如果版本变化了，关掉当前的进程
+        this.initVersion = "";
         this.onBuildFinish = function (exitCode) {
             if (_this.serverStarted)
                 return;
@@ -67,50 +67,48 @@ var Run = (function () {
                 .on("removed", function (f) { return _this.sendBuildCMD(f, "removed"); })
                 .on("changed", function (f) { return _this.sendBuildCMD(f, "modified"); });
         });
-        /*//监听build文件夹的变化
-        watch.createMonitor(path.join(egret.root,'build'), { persistent: true, interval: 2007, filter: function (f, stat) {
-            return true;
-        } }, function (m) {
-            m.on("created", (f) => this.shutDown(f, "added"))
-                .on("removed", (f) => this.shutDown(f, "removed"))
-                .on("changed", (f) => this.shutDown(f, "modified"));
-        });*/
+        //watch.createMonitor(path.join(egret.root,'build'), { persistent: true, interval: 2007, filter: function (f, stat) {
+        //    return true;
+        //} }, function (m) {
+        //    m.on("created", function (f) { return _this.shutDown(f, "added"); })
+        //        .on("removed", function (f) { return _this.shutDown(f, "removed"); })
+        //        .on("changed", function (f) { return _this.shutDown(f, "modified"); });
+        //});
         watch.createMonitor(path.dirname(dir), { persistent: true, interval: 2007, filter: function (f, stat) {
-                if (path.basename(f) == "egretProperties.json") {
-                    this.initVersion = this.getVersion(f);
-                    return true;
-                }
-                else {
-                    return false;
-                }
-            } }, function (m) {
-            var _this = this;
+            if(path.basename(f)=="egretProperties.json"){
+                _this.initVersion = _this.getVersion(f);
+                return true;
+            }else{
+                return false;
+            }
+        } }, function (m) {
             m.on("created", function (f) { return _this.shutDown(f, "added"); })
                 .on("removed", function (f) { return _this.shutDown(f, "removed"); })
                 .on("changed", function (f) { return _this.shutDown(f, "modified"); });
         });
     };
     Run.prototype.shutDown = function (file, type) {
+        var _this = this;
         file = FileUtil.escapePath(file);
         var isShutdown = false;
-        if (path.basename(file) == 'egretProperties.json') {
-            var nowVersion = this.getVersion(file);
-            if (this.initVersion != nowVersion) {
+        if(path.basename(file) == 'egretProperties.json'){
+            var nowVersion = _this.getVersion(file);
+            if(_this.initVersion != nowVersion){
                 isShutdown = true;
             }
-        }
-        else {
+        }else{
             isShutdown = true;
         }
-        if (isShutdown) {
+        if(isShutdown){
             service.execCommand({
                 path: egret.args.projectDir,
                 command: "shutdown",
                 option: egret.args
             }, function () { return process.exit(0); }, true);
         }
-    };
+    }
     Run.prototype.sendBuildCMD = function (file, type) {
+        var _this = this;
         file = FileUtil.escapePath(file);
         egret.args[type] = [file];
         service.execCommand({ command: "build", path: egret.args.projectDir, option: egret.args }, function (cmd) {
@@ -125,11 +123,11 @@ var Run = (function () {
     };
     Run.prototype.getVersion = function (filePath) {
         var jsstr = fileUtil.read(filePath);
-        var js = JSON.parse(jsstr);
+        var js  = JSON.parse(jsstr);
         return js["egret_version"];
-    };
+    }
     return Run;
-}());
+})();
 module.exports = Run;
 
 //# sourceMappingURL=run.js.map

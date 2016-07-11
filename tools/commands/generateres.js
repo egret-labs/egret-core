@@ -22,7 +22,7 @@ var GenerateResource = (function () {
         return 0;
     };
     return GenerateResource;
-}());
+})();
 var resourceExtensions = {
     png: true,
     jpg: true,

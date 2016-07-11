@@ -42,7 +42,7 @@ var UpgradeCommand_1_5_1 = (function () {
         file.save(item, content);
     };
     return UpgradeCommand_1_5_1;
-}());
+})();
 module.exports = UpgradeCommand_1_5_1;
 
 //# sourceMappingURL=UpgradeCommand_1_5_1.js.map

@@ -39,7 +39,7 @@ var ServiceSocket = (function (_super) {
         this.emit("message", data);
     };
     return ServiceSocket;
-}(events.EventEmitter));
+})(events.EventEmitter);
 var LarkMessageBody = (function () {
     function LarkMessageBody() {
     }
@@ -69,7 +69,7 @@ var LarkMessageBody = (function () {
     };
     LarkMessageBody.LARKHEADER = "LARK-MSG";
     return LarkMessageBody;
-}());
+})();
 module.exports = ServiceSocket;
 
 //# sourceMappingURL=ServiceSocket.js.map
