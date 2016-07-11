@@ -20,7 +20,7 @@ var NativeProject = (function () {
     NativeProject.copyNativeTemplate = copyNativeTemplate;
     NativeProject.copyOutputToNative = copyOutputToNative;
     return NativeProject;
-}());
+})();
 function copyOutputToNative(platform) {
     var platformFolders = getPlatformFolders(platform);
     var templateDatas = platformFolders.map(function (t) { return getNativeTemplateData(t); });

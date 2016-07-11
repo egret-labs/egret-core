@@ -33,11 +33,11 @@ export function buildChanges(exmls: string[]): egret.TaskResult {
     };
     if (!exmls || exmls.length == 0)
         return state;
-    // if(egret.args.exmlGenJs){
-    //     exmls.forEach(exmlFile=>{
-    //         parse(exmlFile);
-    //     });
-    // }
+    if(egret.args.exmlGenJs){
+        exmls.forEach(exmlFile=>{
+            parse(exmlFile);
+        });
+    }
     return state;
 }
 
@@ -107,18 +107,7 @@ export function updateSetting(merge = false) {
 
     exmls.forEach(e=> {
         var epath = e.path;
-        var exmlEl = null;
-        if(merge){
-            let ret = parseRaw(file.joinPath(egret.args.projectDir,e.path));
-            if(egret.args.exmlGenJs){
-                exmlEl = { path: e.path, content: e.content, gjs:ret.text, className:ret.className};
-            }else{
-                exmlEl = { path: e.path, content: e.content};
-            }
-        }else{
-            exmlEl = epath;
-        }
-        
+        var exmlEl = merge ? { path: e.path, content: e.content } : epath;
         themeDatas.forEach((thm, i) => {
             if (epath in oldEXMLS) {
                 var thmPath = themes[i];
@@ -248,12 +237,6 @@ var module_template = "var {module};\n"+
     "{definition}\n" +
     "})({module} || ({module} = {}));";
 
-function parseRaw(exmlPath:string):{text:string,className:string}{
-    var xmlString = file.read(exmlPath,true);
-    var classText = parser.parse(xmlString);
-    return {text:classText,className:parser.className};
-}
-
 function parse(exmlPath:string){
     var xmlString = file.read(exmlPath,true);
     var classText = parser.parse(xmlString);
@@ -292,12 +275,11 @@ function parse(exmlPath:string){
     }else{
         jstext = classText;
     }
-    // var relativeEXMLPath = file.getRelativePath(egret.args.projectDir,exmlPath);
-    // var relativeTSPath = relativeEXMLPath.substring(0,relativeEXMLPath.lastIndexOf(".")).concat(".ts");
-    // var tspath = file.joinPath(egret.args.srcDir,"gen",relativeTSPath);
+    var relativeEXMLPath = file.getRelativePath(egret.args.projectDir,exmlPath);
+    var relativeTSPath = relativeEXMLPath.substring(0,relativeEXMLPath.lastIndexOf(".")).concat(".ts");
+    var tspath = file.joinPath(egret.args.srcDir,"gen",relativeTSPath);
     //console.log(tspath);
     //var jspath = exmlPath.substring(0,exmlPath.lastIndexOf(".")).concat(".ts");
     //file.save(jspath,jstext);
-    // file.save(tspath,jstext);
-    return jstext;
+    file.save(tspath,jstext);
 }

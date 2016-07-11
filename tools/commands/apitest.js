@@ -67,7 +67,7 @@ var APItestCommand = (function () {
         utils.open(filePath);
     };
     return APItestCommand;
-}());
+})();
 module.exports = APItestCommand;
 
 //# sourceMappingURL=apitest.js.map

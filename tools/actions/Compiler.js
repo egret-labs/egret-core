@@ -54,7 +54,7 @@ var Compiler = (function () {
         return compileResult;
     };
     return Compiler;
-}());
+})();
 tsclark.Compiler.exit = function (exitCode) {
     if (exitCode != 0)
         console.log(utils.tr(10003, exitCode));

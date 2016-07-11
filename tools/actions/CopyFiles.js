@@ -11,8 +11,8 @@ var CopyFiles = (function () {
         var exitsModules = [];
         var moduleDir = FileUtil.joinPath(options.libsDir, 'modules');
         var list = FileUtil.getDirectoryListing(moduleDir);
-        for (var i = 0; i < list.length; i++) {
-            if (FileUtil.isDirectory(list[i])) {
+        for(var i = 0 ; i < list.length ; i++) {
+            if(FileUtil.isDirectory(list[i])) {
                 exitsModules.push(FileUtil.getRelativePath(moduleDir, list[i]));
             }
         }
@@ -33,13 +33,13 @@ var CopyFiles = (function () {
                 FileUtil.copy(moduleBin, targetFile);
             }
             var index = exitsModules.indexOf(moduleName);
-            if (index != -1) {
+            if(index != -1) {
                 exitsModules.splice(index, 1);
             }
         }
         var length = exitsModules.length;
-        if (length > 0) {
-            for (var i = 0; i < exitsModules.length; i++) {
+        if(length > 0) {
+            for(var i = 0 ; i < exitsModules.length ; i++) {
                 FileUtil.remove(FileUtil.joinPath(moduleDir, exitsModules[i]));
             }
         }
@@ -109,7 +109,7 @@ var CopyFiles = (function () {
         }
     };
     return CopyFiles;
-}());
+})();
 module.exports = CopyFiles;
 
 //# sourceMappingURL=CopyFiles.js.map

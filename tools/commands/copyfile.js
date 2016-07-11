@@ -55,7 +55,7 @@ var CopyFilesCommand = (function () {
         });
     };
     return CopyFilesCommand;
-}());
+})();
 module.exports = CopyFilesCommand;
 
 //# sourceMappingURL=copyfile.js.map

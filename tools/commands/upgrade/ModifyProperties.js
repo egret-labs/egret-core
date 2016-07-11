@@ -53,7 +53,7 @@ var ModifyProperties = (function () {
         return false;
     };
     return ModifyProperties;
-}());
+})();
 var egretProjectConfig = egretProjectConfig || new ModifyProperties();
 module.exports = egretProjectConfig;
 

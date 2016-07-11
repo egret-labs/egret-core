@@ -4739,8 +4739,8 @@ var egret;
              *
              */
             p.$hide = function () {
-                this.dispatchEvent(new egret.Event("blur"));
                 egret_native.TextInputOp.setKeybordOpen(false);
+                this.dispatchEvent(new egret.Event("blur"));
             };
             p.$resetStageText = function () {
             };

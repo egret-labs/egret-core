@@ -33,7 +33,7 @@ var UpgradeCommand_2_5_1 = (function () {
         }
     };
     return UpgradeCommand_2_5_1;
-}());
+})();
 module.exports = UpgradeCommand_2_5_1;
 
 //# sourceMappingURL=UpgradeCommand_2_5_1.js.map

@@ -28,6 +28,9 @@
 //////////////////////////////////////////////////////////////////////////////////////
 
 declare module egret{
+    /**
+    * @private
+    */
     export class Utils {
         static unzip();
         static unzipBase64AsArray(input, bytes);
@@ -35,12 +38,21 @@ declare module egret{
     }
 }
 
+/**
+* @private
+*/
 declare module egret.Codec{
+    /**
+    * @private
+    */
     export class Base64 {
         static decodeAsArray(input, bytes);
     }
 }
 
+/**
+* @private
+*/
 declare class Zlib{
 
     static Inflate(obj):void;

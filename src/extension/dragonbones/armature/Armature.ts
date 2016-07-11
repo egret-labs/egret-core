@@ -675,6 +675,13 @@ namespace dragonBones {
 
         /**
          * @deprecated
+         * @see #display
+         */
+        public getDisplay(): any {
+            return this._display;
+        }
+        /**
+         * @deprecated
          * @see #cacheFrameRate
          */
         public enableCache: boolean = false;
