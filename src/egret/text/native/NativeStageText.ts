@@ -193,8 +193,8 @@ module egret.native {
          * 
          */
         public $hide(): void {
-            this.dispatchEvent(new egret.Event("blur"));
             egret_native.TextInputOp.setKeybordOpen(false);
+            this.dispatchEvent(new egret.Event("blur"));
         }
 
         $resetStageText(): void {

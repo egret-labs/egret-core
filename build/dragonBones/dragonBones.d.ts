@@ -1,5843 +1,4106 @@
-declare module dragonBones {
+declare namespace dragonBones {
     /**
-     * @class dragonBones.DragonBones
-     * @classdesc
-     * DragonBones
+     * @language zh_CN
+     * 基础对象。
+     * @version DragonBones 4.5
      */
-    class DragonBones {
+    abstract class BaseObject {
         /**
-         * DragonBones当前数据格式版本
+         * @private
          */
-        static DATA_VERSION: string;
-        static DATA_VERSION_4_0: string;
+        private static _hashCode;
         /**
-         *
+         * @private
          */
-        static PARENT_COORDINATE_DATA_VERSION: string;
-        static VERSION: string;
+        private static _defaultMaxCount;
+        /**
+         * @private
+         */
+        private static _maxCountMap;
+        /**
+         * @private
+         */
+        private static _poolsMap;
+        /**
+         * @private
+         */
+        private static _returnObject(object);
+        /**
+         * @private
+         */
+        static toString(): string;
+        /**
+         * @language zh_CN
+         * 设置每种对象池的最大缓存数量。
+         * @param objectConstructor 对象类。
+         * @param maxCount 最大缓存数量。 (设置为 0 则不缓存)
+         * @version DragonBones 4.5
+         */
+        static setMaxCount(objectConstructor: typeof BaseObject, maxCount: number): void;
+        /**
+         * @language zh_CN
+         * 清除对象池缓存的对象。
+         * @param objectConstructor 对象类。 (不设置则清除所有缓存)
+         * @version DragonBones 4.5
+         */
+        static clearPool(objectConstructor?: typeof BaseObject): void;
+        /**
+         * @language zh_CN
+         * 从对象池中创建指定对象。
+         * @param objectConstructor 对象类。
+         * @version DragonBones 4.5
+         */
+        static borrowObject<T extends BaseObject>(objectConstructor: {
+            new (): T;
+        }): T;
+        /**
+         * @language zh_CN
+         * 对象的唯一标识。
+         * @version DragonBones 4.5
+         */
+        hashCode: number;
+        /**
+         * @private
+         */
         constructor();
+        /**
+         * @private
+         */
+        protected abstract _onClear(): void;
+        /**
+         * @language zh_CN
+         * 清除数据并返还对象池。
+         * @version DragonBones 4.5
+         */
+        returnToPool(): void;
     }
 }
-declare module dragonBones {
+declare namespace dragonBones {
     /**
-     * @class dragonBones.Animation
-     * @classdesc
-     * Animation实例隶属于Armature,用于控制Armature的动画播放。
-     * @see dragonBones.Bone
-     * @see dragonBones.Armature
-     * @see dragonBones.AnimationState
-     * @see dragonBones.AnimationData
-     *
-     * @example
-       <pre>
-       //获取动画数据
-        var skeletonData = RES.getRes("skeleton");
-        //获取纹理集数据
-        var textureData = RES.getRes("textureConfig");
-        //获取纹理集图片
-        var texture = RES.getRes("texture");
-
-        //创建一个工厂，用来创建Armature
-        var factory:dragonBones.EgretFactory = new dragonBones.EgretFactory();
-        //把动画数据添加到工厂里
-        factory.addSkeletonData(dragonBones.DataParser.parseDragonBonesData(skeletonData));
-        //把纹理集数据和图片添加到工厂里
-        factory.addTextureAtlas(new dragonBones.EgretTextureAtlas(texture, textureData));
-
-        //获取Armature的名字，dragonBones4.0的数据可以包含多个骨架，这里取第一个Armature
-        var armatureName:string = skeletonData.armature[0].name;
-        //从工厂里创建出Armature
-        var armature:dragonBones.Armature = factory.buildArmature(armatureName);
-        //获取装载Armature的容器
-        var armatureDisplay = armature.display;
-        armatureDisplay.x = 200;
-        armatureDisplay.y = 500;
-        //把它添加到舞台上
-        this.addChild(armatureDisplay);
-
-
-        
-        //取得这个Armature动画列表中的第一个动画的名字
-        var curAnimationName:string = armature.animation.animationList[0];
-
-        var animation:dragonBones.Animation = armature.animation;
-
-        //gotoAndPlay的用法：动画播放，播放一遍
-        animation.gotoAndPlay(curAnimationName,0,-1,1);
-
-        //gotoAndStop的用法：
-        //curAnimationName = armature.animation.animationList[1];
-        //动画停在第二个动画的第0.2秒的位置
-        //animation.gotoAndStop(curAnimationName,0.2);
-        //动画停在第二个动画的一半的位置，如果第三个参数大于0，会忽略第二个参数
-        //animation.gotoAndStop(curAnimationName,0, 0.5);
-        //继续播放
-        //animation.play();
-        //暂停播放
-        //animation.stop();
-
-        //动画融合
-        //animation.gotoAndPlay(curAnimationName,0,-1,0,0,"group1");
-
-        //var animationState:dragonBones.AnimationState = armature.animation.getState(curAnimationName);
-        //animationState.addBoneMask("neck",true);
-        //播放第二个动画， 放到group "Squat"里
-        //curAnimationName = armature.animation.animationList[1];
-        //armature.animation.gotoAndPlay(curAnimationName,0,-1,0,0,"group2",dragonBones.Animation.SAME_GROUP);
-        //animationState = armature.animation.getState(curAnimationName);
-        //animationState.addBoneMask("hip",true);//“hip”是骨架的根骨骼的名字
-        //animationState.removeBoneMask("neck",true);
-        //把Armature添加到心跳时钟里
-        dragonBones.WorldClock.clock.add(armature);
-        //心跳时钟开启
-        egret.Ticker.getInstance().register(function (advancedTime) {
-            dragonBones.WorldClock.clock.advanceTime(advancedTime / 1000);
-        }, this);
-       </pre>
+     * @language zh_CN
+     * 动画混合时，使用的淡出方式。
+     * @see dragonBones.Animation#fadeIn()
+     * @version DragonBones 4.5
      */
-    class Animation {
-        static NONE: string;
-        static SAME_LAYER: string;
-        static SAME_GROUP: string;
-        static SAME_LAYER_AND_GROUP: string;
-        static ALL: string;
+    const enum AnimationFadeOutMode {
         /**
-         * 标记是否开启自动补间。
-         * 设置为 true时，Animation会根据动画数据的内容，在关键帧之间自动补间。设置为false时，所有动画均不补间
-         * 默认值：true。
-         * @member {boolean} dragonBones.Animation#tweenEnabled
+         * @language zh_CN
+         * 不淡出动画
+         * @version DragonBones 4.5
          */
-        tweenEnabled: boolean;
-        private _armature;
-        private _animationStateList;
-        private _animationDataList;
-        private _animationList;
-        private _isPlaying;
-        private _timeScale;
-        /** @private */
-        _animationStateCount: number;
-        /** @private */
-        _updateTimelineStates: boolean;
-        /** @private */
-        _updateFFDTimelineStates: boolean;
-        /** @private */
-        _lastAnimationState: AnimationState;
-        /** @private */
-        _isFading: boolean;
+        None = 0,
         /**
-         * 创建一个新的Animation实例并赋给传入的Armature实例
-         * @param armature {Armature} 骨架实例
+        * @language zh_CN
+         * 淡出同层的动画
+         * @version DragonBones 4.5
          */
-        constructor(armature: Armature);
+        SameLayer = 1,
         /**
-         * 回收Animation实例用到的所有资源
+         * @language zh_CN
+         * 淡出同组的动画
+         * @version DragonBones 4.5
          */
-        dispose(): void;
-        _resetAnimationStateList(): void;
+        SameGroup = 2,
         /**
-         * 开始播放指定名称的动画。
-         * 要播放的动画将经过指定时间的淡入过程，然后开始播放，同时之前播放的动画会经过相同时间的淡出过程。
-         * @param animationName {string} 指定播放动画的名称.
-         * @param fadeInTime {number} 动画淡入时间 (>= 0), 默认值：-1 意味着使用动画数据中的淡入时间.
-         * @param duration {number} 动画播放时间。默认值：-1 意味着使用动画数据中的播放时间.
-         * @param playTimes {number} 动画播放次数(0:循环播放, >=1:播放次数, NaN:使用动画数据中的播放时间), 默认值：NaN
-         * @param layer {number} 动画所处的层
-         * @param group {string} 动画所处的组
-         * @param fadeOutMode {string} 动画淡出模式 (none, sameLayer, sameGroup, sameLayerAndGroup, all).默认值：sameLayerAndGroup
-         * @param pauseFadeOut {boolean} 动画淡出时暂停播放
-         * @param pauseFadeIn {boolean} 动画淡入时暂停播放
-         * @returns {AnimationState} 动画播放状态实例
-         * @see dragonBones.AnimationState.
+         * @language zh_CN
+         * 淡出同层并且同组的动画
+         * @version DragonBones 4.5
          */
-        gotoAndPlay(animationName: string, fadeInTime?: number, duration?: number, playTimes?: number, layer?: number, group?: string, fadeOutMode?: string, pauseFadeOut?: boolean, pauseFadeIn?: boolean): AnimationState;
+        SameLayerAndGroup = 3,
         /**
-         * 播放指定名称的动画并停止于某个时间点
-         * @param animationName {string} 指定播放的动画名称.
-         * @param time {number} 动画停止的绝对时间
-         * @param normalizedTime {number} 动画停止的相对动画总时间的系数，这个参数和time参数是互斥的（例如 0.2：动画停止总时间的20%位置） 默认值：-1 意味着使用绝对时间。
-         * @param fadeInTime {number} 动画淡入时间 (>= 0), 默认值：0
-         * @param duration {number} 动画播放时间。默认值：-1 意味着使用动画数据中的播放时间.
-         * @param layer {string} 动画所处的层
-         * @param group {string} 动画所处的组
-         * @param fadeOutMode {string} 动画淡出模式 (none, sameLayer, sameGroup, sameLayerAndGroup, all).默认值：sameLayerAndGroup
-         * @returns {AnimationState} 动画播放状态实例
-         * @see dragonBones.AnimationState.
+         * @language zh_CN
+         * 淡出所有动画
+         * @version DragonBones 4.5
          */
-        gotoAndStop(animationName: string, time: number, normalizedTime?: number, fadeInTime?: number, duration?: number, layer?: number, group?: string, fadeOutMode?: string): AnimationState;
+        All = 4,
+    }
+    /**
+     * @language zh_CN
+     * 播放动画组件接口。 (Armature 和 WordClock 都实现了该接口)
+     * 任何实现了此接口的实例都可以加到 WorldClock 时钟中，由时钟统一控制动画的播放。
+     * @see dragonBones.WorldClock
+     * @see dragonBones.Armature
+     * @version DragonBones 3.0
+     */
+    interface IAnimateble {
         /**
-         * 从当前位置继续播放动画
-         */
-        play(): void;
+        * @language zh_CN
+        * 更新一个指定的时间。
+        * @param passedTime 前进的时间。 (以秒为单位)
+        * @version DragonBones 3.0
+        */
+        advanceTime(passedTime: Number): void;
+    }
+    /**
+     * @language zh_CN
+     * 动画控制器，用来播放动画数据，管理动画状态。
+     * @see dragonBones.AnimationData
+     * @see dragonBones.AnimationState
+     * @version DragonBones 3.0
+     */
+    class Animation extends BaseObject {
         /**
-         * 暂停动画播放
+         * @private
          */
-        stop(): void;
+        protected static _sortAnimationState(a: AnimationState, b: AnimationState): number;
         /**
-         * 获得指定名称的 AnimationState 实例.
-         * @returns {AnimationState} AnimationState 实例.
-         * @see dragonBones..AnimationState.
+         * @private
          */
-        getState(name: string, layer?: number): AnimationState;
+        static toString(): string;
         /**
-         * 检查是否包含指定名称的动画.
-         * @returns {boolean}.
+         * @language zh_CN
+         * 动画的播放速度。 [(-N~0): 倒转播放, 0: 停止播放, (0~1): 慢速播放, 1: 正常播放, (1~N): 快速播放]
+         * @default 1
+         * @version DragonBones 3.0
          */
-        hasAnimation(animationName: string): boolean;
+        timeScale: number;
+        /**
+         * @private Armature Slot
+         */
+        _animationStateDirty: boolean;
+        /**
+         * @private Armature Slot
+         */
+        _timelineStateDirty: boolean;
+        /**
+         * @private Factory
+         */
+        _armature: Armature;
+        /**
+         * @private
+         */
+        protected _isPlaying: boolean;
+        /**
+         * @private
+         */
+        protected _time: number;
+        /**
+         * @private
+         */
+        protected _lastAnimationState: AnimationState;
+        /**
+         * @private
+         */
+        protected _animations: Map<AnimationData>;
+        /**
+         * @private
+         */
+        protected _animationNames: Array<string>;
+        /**
+         * @private
+         */
+        protected _animationStates: Array<AnimationState>;
+        /**
+         * @private
+         */
+        constructor();
+        /**
+         * @inheritDoc
+         */
+        protected _onClear(): void;
+        /**
+         * @private
+         */
+        protected _fadeOut(fadeOutTime: number, layer: number, group: string, fadeOutMode: AnimationFadeOutMode, pauseFadeOut: boolean): void;
+        /**
+         * @private
+         */
+        _updateFFDTimelineStates(): void;
         /**
          * @private
          */
         _advanceTime(passedTime: number): void;
         /**
-         * @private
+         * @language zh_CN
+         * 清除所有正在播放的动画状态。
+         * @version DragonBones 4.5
          */
-        private updateTimelineStates();
+        reset(): void;
         /**
-         * @private
-         */
-        private updateFFDTimelineStates();
-        private addState(animationState);
-        private removeState(animationState);
-        /**
-        * 不推荐的API.推荐使用 animationList.
-        */
-        movementList: Array<string>;
-        /**
-        * 不推荐的API.推荐使用 lastAnimationName.
-        */
-        movementID: string;
-        /**
-         * 最近播放的 AnimationState 实例。
-         * @member {AnimationState} dragonBones.Animation#lastAnimationState
+         * @language zh_CN
+         * 暂停播放动画。
+         * @param animationName 动画状态的名称，如果未设置，则暂停所有动画状态。
          * @see dragonBones.AnimationState
+         * @version DragonBones 3.0
          */
-        lastAnimationState: AnimationState;
+        stop(animationName?: string): void;
         /**
-         * 最近播放的动画名称.
-         * @member {string} dragonBones.Animation#lastAnimationName
+         * @language zh_CN
+         * 播放动画。
+         * @param animationName 动画数据的名称，如果未设置，则播放默认动画，或将暂停状态切换为播放状态，或重新播放上一个正在播放的动画。
+         * @param playTimes 动画需要播放的次数。 [-1: 使用动画数据默认值, 0: 无限循环播放, [1~N]: 循环播放 N 次]
+         * @returns 返回控制这个动画数据的动画状态。
+         * @see dragonBones.AnimationState
+         * @version DragonBones 3.0
          */
-        lastAnimationName: string;
+        play(animationName?: string, playTimes?: number): AnimationState;
         /**
-         * 所有动画名称列表.
-         * @member {string[]} dragonBones.Animation#animationList
+         * @language zh_CN
+         * 淡入播放指定名称的动画。
+         * @param animationName 动画数据的名称。
+         * @param playTimes 循环播放的次数。 [-1: 使用数据默认值, 0: 无限循环播放, [1~N]: 循环播放 N 次]
+         * @param fadeInTime 淡入的时间。 [-1: 使用数据默认值, [0~N]: N 秒淡入完毕] (以秒为单位)
+         * @param layer 混合的图层，图层高会优先获取混合权重。
+         * @param group 混合的组，用于给动画状态编组，方便混合淡出控制。
+         * @param fadeOutMode 淡出的模式。
+         * @param additiveBlending 以叠加的形式混合。
+         * @param displayControl 是否对显示对象属性可控。
+         * @param pauseFadeOut 暂停需要淡出的动画。
+         * @param pauseFadeIn 暂停需要淡入的动画，直到淡入结束才开始播放。
+         * @returns 返回控制这个动画数据的动画状态。
+         * @see dragonBones.AnimationFadeOutMode
+         * @see dragonBones.AnimationState
+         * @version DragonBones 4.5
          */
-        animationList: Array<string>;
+        fadeIn(animationName: string, fadeInTime?: number, playTimes?: number, layer?: number, group?: string, fadeOutMode?: AnimationFadeOutMode, additiveBlending?: boolean, displayControl?: boolean, pauseFadeOut?: boolean, pauseFadeIn?: boolean): AnimationState;
         /**
-         * 是否正在播放
-         * @member {boolean} dragonBones.Animation#isPlaying
+         * @language zh_CN
+         * 指定名称的动画从指定时间开始播放。
+         * @param animationName 动画数据的名称。
+         * @param time 指定时间。 (以秒为单位)
+         * @param playTimes 动画循环播放的次数。 [-1: 使用动画数据默认值, 0: 无限循环播放, [1~N]: 循环播放 N 次]
+         * @returns 返回控制这个动画数据的动画状态。
+         * @see dragonBones.AnimationState
+         * @version DragonBones 4.5
+         */
+        gotoAndPlayByTime(animationName: string, time?: number, playTimes?: number): AnimationState;
+        /**
+         * @language zh_CN
+         * 指定名称的动画从指定帧开始播放。
+         * @param animationName 动画数据的名称。
+         * @param frame 指定帧。
+         * @param playTimes 动画循环播放的次数。[-1: 使用动画数据默认值, 0: 无限循环播放, [1~N]: 循环播放 N 次]
+         * @returns 返回控制这个动画数据的动画状态。
+         * @see dragonBones.AnimationState
+         * @version DragonBones 4.5
+         */
+        gotoAndPlayByFrame(animationName: string, frame?: number, playTimes?: number): AnimationState;
+        /**
+         * @language zh_CN
+         * 指定名称的动画从指定进度开始播放。
+         * @param animationName 动画数据的名称。
+         * @param progress 进度。 [0~1]
+         * @param playTimes 动画循环播放的次数。[-1: 使用动画数据默认值, 0: 无限循环播放, [1~N]: 循环播放 N 次]
+         * @returns 返回控制这个动画数据的动画状态。
+         * @see dragonBones.AnimationState
+         * @version DragonBones 4.5
+         */
+        gotoAndPlayByProgress(animationName: string, progress?: number, playTimes?: number): AnimationState;
+        /**
+         * @language zh_CN
+         * 播放指定名称的动画到指定的时间并停止。
+         * @param animationName 动画数据的名称。
+         * @param time 指定的时间。
+         * @returns 返回控制这个动画数据的动画状态。
+         * @see dragonBones.AnimationState
+         * @version DragonBones 4.5
+         */
+        gotoAndStopByTime(animationName: string, time?: number): AnimationState;
+        /**
+         * @language zh_CN
+         * 播放指定名称的动画到指定的帧并停止。
+         * @param animationName 动画数据的名称。
+         * @param frame 帧。
+         * @returns 返回控制这个动画数据的动画状态。
+         * @see dragonBones.AnimationState
+         * @version DragonBones 4.5
+         */
+        gotoAndStopByFrame(animationName: string, frame?: number): AnimationState;
+        /**
+         * @language zh_CN
+         * 播放指定名称的动画到指定的进度并停止。
+         * @param animationName 动画数据的名称。
+         * @param progress 指定的进度。 [0~1]
+         * @returns 返回控制这个动画数据的动画状态。
+         * @see dragonBones.AnimationState
+         * @version DragonBones 4.5
+         */
+        gotoAndStopByProgress(animationName: string, progress?: number): AnimationState;
+        /**
+         * @language zh_CN
+         * 获取指定名称的动画状态。
+         * @param animationName 动画状态的名称。
+         * @see dragonBones.AnimationState
+         * @version DragonBones 3.0
+         */
+        getState(animationName: string): AnimationState;
+        /**
+         * @language zh_CN
+         * 是否包含指定名称的动画数据。
+         * @param animationName 动画数据的名称。
+         * @see dragonBones.AnimationData
+         * @version DragonBones 3.0
+         */
+        hasAnimation(animationName: string): boolean;
+        /**
+         * @language zh_CN
+         * 动画是否处于播放状态。
+         * @version DragonBones 3.0
          */
         isPlaying: boolean;
         /**
-         * 最近播放的动画是否播放完成.
-         * @member {boolean} dragonBones.Animation#isComplete
+         * @language zh_CN
+         * 所有动画状态是否均已播放完毕。
+         * @see dragonBones.AnimationState
+         * @version DragonBones 3.0
          */
-        isComplete: boolean;
+        isCompleted: boolean;
         /**
-         * 时间缩放倍数
-         * @member {number} dragonBones.Animation#timeScale
+         * @language zh_CN
+         * 上一个正在播放的动画状态的名称。
+         * @see #lastAnimationState
+         * @version DragonBones 3.0
          */
-        timeScale: number;
+        lastAnimationName: string;
         /**
-         * 包含的所有动画数据列表
-         * @member {AnimationData[]} dragonBones.Animation#animationDataList
-         * @see dragonBones.AnimationData.
+         * @language zh_CN
+         * 上一个正在播放的动画状态。
+         * @see dragonBones.AnimationState
+         * @version DragonBones 3.0
+         */
+        lastAnimationState: AnimationState;
+        /**
+         * @language zh_CN
+         * 所有动画数据名称。
+         * @see #animations
+         * @version DragonBones 4.5
+         */
+        animationNames: Array<string>;
+        /**
+         * @language zh_CN
+         * 所有的动画数据。
+         * @see dragonBones.objects.AnimationData
+         * @version DragonBones 4.5
+         */
+        animations: Map<AnimationData>;
+        /**
+         * @language zh_CN
+         * @deprecated
+         * @see #play()
+         * @see #fadeIn()
+         * @see #gotoAndPlayByTime()
+         * @see #gotoAndPlayByFrame()
+         * @see #gotoAndPlayByProgress()
+         */
+        gotoAndPlay(animationName: string, fadeInTime?: number, duration?: number, playTimes?: number, layer?: number, group?: string, fadeOutMode?: AnimationFadeOutMode, pauseFadeOut?: boolean, pauseFadeIn?: boolean): AnimationState;
+        /**
+         * @language zh_CN
+         * @deprecated
+         * @see #gotoAndStopByTime()
+         * @see #gotoAndStopByFrame()
+         * @see #gotoAndStopByProgress()
+         */
+        gotoAndStop(animationName: string, time?: number): AnimationState;
+        /**
+         * @language zh_CN
+         * @deprecated
+         * @see #animationNames
+         * @see #animations
+         */
+        animationList: Array<string>;
+        /**
+         * @language zh_CN
+         * @deprecated
+         * @see #animationNames
+         * @see #animations
          */
         animationDataList: Array<AnimationData>;
     }
 }
-declare module dragonBones {
+declare namespace dragonBones {
     /**
-     * @class dragonBones.AnimationState
-     * @classdesc
-     * AnimationState 实例由 Animation 实例播放动画时产生， 可以对单个动画的播放进行最细致的调节。
-     * @see dragonBones.Animation
-     * @see dragonBones.AnimationData
-     *
-     * @example
-       <pre>
-        //获取动画数据
-        var skeletonData = RES.getRes("skeleton");
-        //获取纹理集数据
-        var textureData = RES.getRes("textureConfig");
-        //获取纹理集图片
-        var texture = RES.getRes("texture");
-      
-        //创建一个工厂，用来创建Armature
-        var factory:dragonBones.EgretFactory = new dragonBones.EgretFactory();
-        //把动画数据添加到工厂里
-        factory.addSkeletonData(dragonBones.DataParser.parseDragonBonesData(skeletonData));
-        //把纹理集数据和图片添加到工厂里
-        factory.addTextureAtlas(new dragonBones.EgretTextureAtlas(texture, textureData));
-      
-        //获取Armature的名字，dragonBones4.0的数据可以包含多个骨架，这里取第一个Armature
-        var armatureName:string = skeletonData.armature[0].name;
-        //从工厂里创建出Armature
-        var armature:dragonBones.Armature = factory.buildArmature(armatureName);
-        //获取装载Armature的容器
-        var armatureDisplay = armature.display;
-        armatureDisplay.x = 200;
-        armatureDisplay.y = 500;
-        //把它添加到舞台上
-        this.addChild(armatureDisplay);
-      
-        //取得这个Armature动画列表中的第一个动画的名字
-        var curAnimationName:string = armature.animation.animationList[0];
-        //播放这个动画
-        armature.animation.gotoAndPlay(curAnimationName,0.3,-1,0);
-      
-        //获取animationState可以对动画进行更多控制；
-        var animationState:dragonBones.AnimationState = armature.animation.getState(curAnimationName);
-      
-        //下面的代码实现人物的脖子和头动，但是其他部位不动
-        animationState.addBoneMask("neck",true);
-        //下面的代码实现人物的身体动，但是脖子和头不动
-        //animationState.addBoneMask("hip",true);//“hip”是骨架的根骨骼的名字
-        //animationState.removeBoneMask("neck",true);
-        //下面的代码实现动画幅度减小的效果
-        //animationState.weight = 0.5;
-      
-        //把Armature添加到心跳时钟里
-        dragonBones.WorldClock.clock.add(armature);
-        //心跳时钟开启
-        egret.Ticker.getInstance().register(function (advancedTime) {
-           dragonBones.WorldClock.clock.advanceTime(advancedTime / 1000);
-        }, this);
-       </pre>
+     * @language zh_CN
+     * 动画状态，播放动画时产生，可以对单个动画的播放进行更细致的控制和调节。
+     * @see dragonBones.animation.Animation
+     * @see dragonBones.objects.AnimationData
+     * @version DragonBones 3.0
      */
-    class AnimationState {
-        private static _pool;
-        /** @private */
-        static _borrowObject(): AnimationState;
-        /** @private */
-        static _returnObject(animationState: AnimationState): void;
-        /** @private */
-        static _clear(): void;
+    class AnimationState extends BaseObject {
         /**
-         * 标记是否控制display的切换。
-         * 设置为 true时，该 AnimationState 会控制display的切换
-         * 默认值：true。
-         * @member {boolean} dragonBones.AnimationState#displayControl
-         * @see dragonBones.Bone#displayController
-         * @see dragonBones.Bone#display
+         * @private
+         */
+        static toString(): string;
+        /**
+         * @language zh_CN
+         * 是否对插槽的颜色，显示序列索引，深度排序，行为等拥有控制的权限。
+         * @see dragonBones.Slot#displayController
+         * @version DragonBones 3.0
          */
         displayControl: boolean;
+        /**
+         * @language zh_CN
+         * 是否以叠加的方式混合动画。
+         * @version DragonBones 3.0
+         */
         additiveBlending: boolean;
         /**
-         * 标记动画播放完毕时是否自动淡出。
-         * 默认值：true。
-         * @member {boolean} dragonBones.AnimationState#autoFadeOut
+         * @language zh_CN
+         * 需要播放的次数。 [0: 无限循环播放, [1~N]: 循环播放 N 次]
+         * @version DragonBones 3.0
          */
-        autoFadeOut: boolean;
+        playTimes: number;
         /**
-         * 淡出时间。
-         * @member {number} dragonBones.AnimationState#fadeOutTime
+         * @language zh_CN
+         * 播放速度。 [(-N~0): 倒转播放, 0: 停止播放, (0~1): 慢速播放, 1: 正常播放, (1~N): 快速播放]
+         * @default 1
+         * @version DragonBones 3.0
          */
-        fadeOutTime: number;
+        timeScale: number;
         /**
-         * 动画权重(0~1)。
-         * 默认值：1。
-         * @member {number} dragonBones.AnimationState#weight
+         * @language zh_CN
+         * 进行动画混合时的权重。
+         * @default 1
+         * @version DragonBones 3.0
          */
         weight: number;
         /**
-         * 是否自动补间。
-         * @member {boolean} dragonBones.AnimationState#autoTween
+         * @language zh_CN
+         * 自动淡出时需要的时间，当设置一个大于等于 0 的值，动画状态将会在播放完成后自动淡出。 (以秒为单位)
+         * @default -1
+         * @version DragonBones 3.0
          */
-        autoTween: boolean;
-        /**
-         * 动画循环播放时，从最后一帧到第一帧是否自动补间。
-         * 默认值：true
-         * @member {boolean} dragonBones.AnimationState#lastFrameAutoTween
-         */
-        lastFrameAutoTween: boolean;
-        /** @private */
-        _layer: number;
-        /** @private */
-        _group: string;
-        private _armature;
-        private _timelineStateList;
-        private _slotTimelineStateList;
-        private _ffdTimelineStateList;
-        private _boneMasks;
-        private _isPlaying;
-        private _time;
-        private _currentFrameIndex;
-        private _currentFramePosition;
-        private _currentFrameDuration;
-        private _pausePlayheadInFade;
-        private _isFadeOut;
-        private _fadeTotalWeight;
-        private _fadeWeight;
-        private _fadeCurrentTime;
-        private _fadeBeginTime;
-        private _name;
-        private _clip;
-        private _isComplete;
-        private _currentPlayTimes;
-        private _totalTime;
-        private _currentTime;
-        private _lastTime;
-        private _fadeState;
-        private _fadeTotalTime;
-        private _timeScale;
-        private _playTimes;
-        constructor();
-        private clear();
-        _resetTimelineStateList(): void;
-        /**
-         * 检查指定名称的骨头是否在遮罩中。只有在遮罩中的骨头动画才会被播放
-         * @param boneName {string} dragonBones.AnimationState#containsBoneMask
-         * @returns {boolean}
-         */
-        containsBoneMask(boneName: string): boolean;
-        /**
-         * 将一个骨头加入遮罩。只有加入遮罩的骨头的动画才会被播放，如果没有骨头加入遮罩，则所有骨头的动画都会播放。通过这个API可以实现只播放角色的一部分.
-         * @param boneName {string} 骨头名称.
-         * @param ifInvolveChildBones {boolean} 是否影响子骨头。默认值：true.
-         * @returns {AnimationState} 动画播放状态实例
-         */
-        addBoneMask(boneName: string, ifInvolveChildBones?: boolean): AnimationState;
-        /**
-         * 将一个指定名称的骨头从遮罩中移除.
-         * @param boneName {string} 骨头名称.
-         * @param ifInvolveChildBones {boolean} 是否影响子骨头。默认值：true.
-         * @returns {AnimationState} 动画播放状态实例
-         */
-        removeBoneMask(boneName: string, ifInvolveChildBones?: boolean): AnimationState;
-        /**
-         * 清空骨头遮罩.
-         * @returns {AnimationState} 动画播放状态实例
-         */
-        removeAllMixingTransform(): AnimationState;
-        private addBoneToBoneMask(boneName);
-        private removeBoneFromBoneMask(boneName);
+        autoFadeOutTime: number;
         /**
          * @private
-         * Update timeline state based on mixing transforms and clip.
+         */
+        fadeTotalTime: number;
+        /**
+         * @private Animation
+         */
+        _isFadeOutComplete: boolean;
+        /**
+         * @private Animation
+         */
+        _layer: number;
+        /**
+         * @private TimelineState
+         */
+        _position: number;
+        /**
+         * @private TimelineState
+         */
+        _duration: number;
+        /**
+         * @private TimelineState
+         */
+        _clipDutation: number;
+        /**
+         * @private Animation, TimelineState
+         */
+        _weightResult: number;
+        /**
+         * @private Animation, TimelineState
+         */
+        _fadeProgress: number;
+        /**
+         * @private Animation TimelineState
+         */
+        _group: string;
+        /**
+         * @private TimelineState
+         */
+        _timeline: AnimationTimelineState;
+        /**
+         * @private
+         */
+        private _isPlaying;
+        /**
+         * @private
+         */
+        private _isPausePlayhead;
+        /**
+         * @private
+         */
+        private _isFadeOut;
+        /**
+         * @private
+         */
+        private _currentPlayTimes;
+        /**
+         * @private
+         */
+        private _fadeTime;
+        /**
+         * @private
+         */
+        private _time;
+        /**
+         * @private
+         */
+        private _name;
+        /**
+         * @private
+         */
+        private _armature;
+        /**
+         * @private
+         */
+        private _animationData;
+        /**
+         * @private
+         */
+        private _boneMask;
+        /**
+         * @private
+         */
+        private _boneTimelines;
+        /**
+         * @private
+         */
+        private _slotTimelines;
+        /**
+         * @private
+         */
+        private _ffdTimelines;
+        /**
+         * @private
+         */
+        constructor();
+        /**
+         * @inheritDoc
+         */
+        protected _onClear(): void;
+        /**
+         * @private
+         */
+        private _advanceFadeTime(passedTime);
+        /**
+         * @private
+         */
+        _isDisabled(slot: Slot): boolean;
+        /**
+         * @private
+         */
+        _fadeIn(armature: Armature, clip: AnimationData, animationName: string, playTimes: number, position: number, duration: number, time: number, timeScale: number, fadeInTime: number, pausePlayhead: boolean): void;
+        /**
+         * @private
          */
         _updateTimelineStates(): void;
         /**
          * @private
          */
-        _updateFFDTimeline(): void;
-        private addTimelineState(timelineName);
-        private removeTimelineState(timelineState);
-        private addSlotTimelineState(timelineName);
-        private removeSlotTimelineState(timelineState);
-        /**
-         * 播放当前动画。如果动画已经播放完毕, 将不会继续播放.
-         * @returns {AnimationState} 动画播放状态实例
-         */
-        play(): AnimationState;
-        /**
-         * 暂停当前动画的播放。
-         * @returns {AnimationState} 动画播放状态实例
-         */
-        stop(): AnimationState;
-        /** @private */
-        _fadeIn(armature: Armature, clip: AnimationData, fadeTotalTime: number, timeScale: number, playTimes: number, pausePlayhead: boolean): AnimationState;
-        /**
-         * 淡出当前动画
-         * @param fadeTotalTime {number} 淡出时间
-         * @param pausePlayhead {boolean} 淡出时动画是否暂停。
-         */
-        fadeOut(fadeTotalTime: number, pausePlayhead: boolean): AnimationState;
-        /** @private */
-        _advanceTime(passedTime: number): boolean;
-        private advanceFadeTime(passedTime);
-        private advanceTimelinesTime(passedTime);
-        private updateMainTimeline(isThisComplete);
-        private hideBones();
-        setAdditiveBlending(value: boolean): AnimationState;
-        setAutoFadeOut(value: boolean, fadeOutTime?: number): AnimationState;
-        setWeight(value: number): AnimationState;
-        setFrameTween(autoTween: boolean, lastFrameAutoTween: boolean): AnimationState;
-        setCurrentTime(value: number): AnimationState;
-        setTimeScale(value: number): AnimationState;
-        setPlayTimes(value?: number): AnimationState;
-        /**
-         * 动画的名字
-         * @member {string} dragonBones.AnimationState#name
-         */
-        name: string;
-        /**
-         * 动画所在的层
-         * @member {number} dragonBones.AnimationState#layer
-         */
-        layer: number;
-        /**
-         * 动画所在的组
-         * @member {string} dragonBones.AnimationState#group
-         */
-        group: string;
-        /**
-         * 动画包含的动画数据
-         * @member {AnimationData} dragonBones.AnimationState#clip
-         */
-        clip: AnimationData;
-        /**
-         * 是否播放完成
-         * @member {boolean} dragonBones.AnimationState#isComplete
-         */
-        isComplete: boolean;
-        /**
-         * 是否正在播放
-         * @member {boolean} dragonBones.AnimationState#isPlaying
-         */
-        isPlaying: boolean;
-        /**
-         * 当前播放次数
-         * @member {number} dragonBones.AnimationState#currentPlayTimes
-         */
-        currentPlayTimes: number;
-        /**
-         * 动画总时长（单位：秒）
-         * @member {number} dragonBones.AnimationState#totalTime
-         */
-        totalTime: number;
-        /**
-         * 动画当前播放时间（单位：秒）
-         * @member {number} dragonBones.AnimationState#currentTime
-         */
-        currentTime: number;
-        fadeWeight: number;
-        fadeState: number;
-        fadeTotalTime: number;
-        /**
-         * 时间缩放系数。用于调节动画播放速度
-         * @member {number} dragonBones.AnimationState#timeScale
-         */
-        timeScale: number;
-        /**
-         * 播放次数 (0:循环播放， >0:播放次数)
-         * @member {number} dragonBones.AnimationState#playTimes
-         */
-        playTimes: number;
-    }
-}
-declare module dragonBones {
-    /** @private */
-    class FFDTimelineState {
-        private static _pool;
-        /** @private */
-        static _borrowObject(): FFDTimelineState;
-        /** @private */
-        static _returnObject(timeline: FFDTimelineState): void;
-        /** @private */
-        static _clear(): void;
-        /** @private */
-        skin: string;
-        name: string;
-        displayIndex: number;
-        _isComplete: boolean;
-        _animationState: AnimationState;
-        private _totalTime;
-        private _currentTime;
-        private _currentFrameIndex;
-        private _currentFramePosition;
-        private _currentFrameDuration;
-        private _tweenEasing;
-        private _tweenCurve;
-        private _tweenVertices;
-        private _offset;
-        private _durationVertices;
-        private _updateVertices;
-        private _rawAnimationScale;
-        private _updateMode;
-        private _slot;
-        private _timelineData;
-        constructor();
-        private clear();
-        /** @private */
-        _fadeIn(slot: Slot, animationState: AnimationState, timelineData: FFDTimeline): void;
-        /** @private */
-        _fadeOut(): void;
-        /** @private */
-        _update(progress: number): void;
-        private updateMultipleFrame(progress);
-        private updateToNextFrame(currentPlayTimes?);
-        private updateTween();
-        private updateSingleFrame();
-    }
-}
-declare module dragonBones {
-    /**
-     * @class dragonBones.IAnimatable
-     * @classdesc
-     * 可播放动画组件接口，Armature 和 WordClock都实现了该接口
-     * 实现该接口的实例可以加到WorldClock时钟中统一由时钟控制动画的播放
-     * @see dragonBones.WorldClock
-     * @see dragonBones.Armature
-     */
-    interface IAnimatable {
-        /**
-         * 使用这个方法更新动画状态。一般来说，这个方法需要在 ENTERFRAME 事件的响应函数中被调用
-         * @param passedTime 动画向前播放的时间（单位：秒）
-         */
-        advanceTime(passedTime: number): void;
-    }
-}
-declare module dragonBones {
-    /**
-     * @class dragonBones.IAnimationState
-     * @classdesc
-     * 动画状态接口，目前只在动画缓存管理器中生成动画数据时使用
-     * @see dragonBones.AnimationCacheManager
-     */
-    interface IAnimationState {
-        progress: number;
-    }
-}
-declare module dragonBones {
-    /** @private */
-    class SlotTimelineState {
-        private static HALF_PI;
-        private static DOUBLE_PI;
-        private static _pool;
-        /** @private */
-        static _borrowObject(): SlotTimelineState;
-        /** @private */
-        static _returnObject(timeline: SlotTimelineState): void;
-        /** @private */
-        static _clear(): void;
-        name: string;
-        /** @private */
-        _weight: number;
-        /** @private */
-        _blendEnabled: boolean;
-        /** @private */
-        _isComplete: boolean;
-        /** @private */
-        _animationState: AnimationState;
-        private _totalTime;
-        private _currentTime;
-        private _currentFrameIndex;
-        private _currentFramePosition;
-        private _currentFrameDuration;
-        private _tweenEasing;
-        private _tweenCurve;
-        private _tweenColor;
-        private _rawAnimationScale;
-        private _updateMode;
-        private _armature;
-        private _animation;
-        private _slot;
-        private _timelineData;
-        private _durationColor;
-        constructor();
-        private clear();
-        /** @private */
-        _fadeIn(slot: Slot, animationState: AnimationState, timelineData: SlotTimeline): void;
-        /** @private */
-        _fadeOut(): void;
-        /** @private */
-        _update(progress: number): void;
-        private updateMultipleFrame(progress);
-        private updateToNextFrame(currentPlayTimes?);
-        private updateTween();
-        private updateSingleFrame();
-    }
-}
-declare module dragonBones {
-    /**
-     * @class dragonBones.TimelineState
-     * @classdesc
-     * TimelineState 负责计算 Bone 的时间轴动画。
-     * TimelineState 实例隶属于 AnimationState. AnimationState在创建时会为每个包含动作的 Bone生成一个 TimelineState 实例.
-     * @see dragonBones.Animation
-     * @see dragonBones.AnimationState
-     * @see dragonBones.Bone
-     */
-    class TimelineState {
-        private static HALF_PI;
-        private static DOUBLE_PI;
-        private static _pool;
-        /** @private */
-        static _borrowObject(): TimelineState;
-        /** @private */
-        static _returnObject(timeline: TimelineState): void;
-        /** @private */
-        static _clear(): void;
-        name: string;
-        /** @private */
-        _weight: number;
-        /** @private */
-        _transform: DBTransform;
-        /** @private */
-        _pivot: Point;
-        /** @private */
-        _isComplete: boolean;
-        /** @private */
-        _animationState: AnimationState;
-        private _totalTime;
-        private _currentTime;
-        private _lastTime;
-        private _currentFrameIndex;
-        private _currentFramePosition;
-        private _currentFrameDuration;
-        private _tweenEasing;
-        private _tweenTransform;
-        private _tweenScale;
-        private _tweenColor;
-        private _tweenCurve;
-        private _rawAnimationScale;
-        private _updateMode;
-        private _armature;
-        private _animation;
-        private _bone;
-        private _timelineData;
-        private _originTransform;
-        private _originPivot;
-        private _durationTransform;
-        private _durationPivot;
-        private _durationColor;
-        constructor();
-        private clear();
-        /** @private */
-        _fadeIn(bone: Bone, animationState: AnimationState, timelineData: TransformTimeline): void;
-        /** @private */
-        _fadeOut(): void;
-        /** @private */
-        _update(progress: number): void;
-        private updateMultipleFrame(progress);
-        private updateToNextFrame(currentPlayTimes?);
-        private updateTween();
-        private updateSingleFrame();
-    }
-}
-declare module dragonBones {
-    /**
-     * @class dragonBones.WorldClock
-     * @classdesc
-     * WorldClock 提供时钟的支持，为控制每个加入时钟的 IAnimatable 对象正确的播放动画。
-     * 一般来说，每当 Armature 被创建出来后，只需要将之加入 WorldClock,之后只需要控制 WorldClock 的前进，就可以实现所有 Armature 的动画前进了
-     * @see dragonBones.IAnimatable
-     * @see dragonBones.Armature
-     */
-    class WorldClock implements IAnimatable {
-        /**
-         * 可以直接使用的全局静态时钟实例.
-         * @type dragonBones.WorldClock
-         */
-        static clock: WorldClock;
-        private _animatableList;
-        private _time;
-        time: number;
-        private _timeScale;
-        private _animatable;
-        private _length;
-        private _currentIndex;
-        private _i;
-        /**
-         * 时间缩放系数。用于实现动画的变速播放
-         * @member {number} dragonBones.WorldClock#timeScale
-         */
-        timeScale: number;
-        /**
-         * 创建一个新的 WorldClock 实例。
-         * 一般来说，不需要单独创建 WorldClock 的实例，可以直接使用 WorldClock.clock 静态实例就可以了。
-         * @param time {number} 开始时间
-         * @param timeScale {number} 时间缩放系数
-         */
-        constructor(time?: number, timeScale?: number);
-        /**
-         * 检查是否包含指定的 IAnimatable 实例
-         * @param animatable {IAnimatable} IAnimatable 实例
-         * @returns {boolean}
-         */
-        contains(animatable: IAnimatable): boolean;
-        /**
-         * 将一个 IAnimatable 实例加入到时钟
-         * @param animatable {IAnimatable} IAnimatable 实例
-         */
-        add(animatable: IAnimatable): void;
-        /**
-         * 将一个 IAnimatable 实例从时钟中移除
-         * @param animatable {IAnimatable} IAnimatable 实例
-         */
-        remove(animatable: IAnimatable): void;
-        /**
-         * 从时钟中移除所有的 IAnimatable 实例.
-         */
-        clear(): void;
-        /**
-         * 更新所有包含的 IAnimatable 实例，将他们的动画向前播放指定的时间。一般来说，这个方法需要在 ENTERFRAME 事件的响应函数中被调用
-         * @param passedTime {number} 前进的时间，默认值为-1，DragonBones会自动为你计算当前帧与上一帧的时间差
-         */
-        advanceTime(passedTime?: number): void;
-    }
-}
-declare module dragonBones {
-    /**
-     * @class dragonBones.EventDispatcher
-     * @classdesc
-     * 事件派发者
-     */
-    class EventDispatcher extends egret.EventDispatcher {
-        constructor(target?: egret.IEventDispatcher);
-    }
-}
-declare module dragonBones {
-    /**
-     *
-     *
-     * @example
-       <pre>
-        private exampleEvent():void
-        {
-            //获取动画数据
-            var skeletonData = RES.getRes("skeleton");
-            //获取纹理集数据
-            var textureData = RES.getRes("textureConfig");
-            //获取纹理集图片
-            var texture = RES.getRes("texture");
-
-            //创建一个工厂，用来创建Armature
-            var factory:dragonBones.EgretFactory = new dragonBones.EgretFactory();
-            //把动画数据添加到工厂里
-            factory.addSkeletonData(dragonBones.DataParser.parseDragonBonesData(skeletonData));
-            //把纹理集数据和图片添加到工厂里
-            factory.addTextureAtlas(new dragonBones.EgretTextureAtlas(texture, textureData));
-
-            //获取Armature的名字，dragonBones4.0的数据可以包含多个骨架，这里取第一个Armature
-            var armatureName:string = skeletonData.armature[0].name;
-            //从工厂里创建出Armature
-            var armature:dragonBones.Armature = factory.buildArmature(armatureName);
-            //获取装载Armature的容器
-            var armatureDisplay = armature.display;
-            armatureDisplay.x = 200;
-            armatureDisplay.y = 400;
-            //把它添加到舞台上
-            this.addChild(armatureDisplay);
-
-            //监听事件时间轴上的事件
-            armature.addEventListener(dragonBones.FrameEvent.ANIMATION_FRAME_EVENT, this.onFrameEvent,this);
-            //监听骨骼时间轴上的事件
-            armature.addEventListener(dragonBones.FrameEvent.BONE_FRAME_EVENT, this.onFrameEvent,this);
-            //监听动画完成事件
-            armature.addEventListener(dragonBones.AnimationEvent.COMPLETE, this.onAnimationEvent,this);
-            //监听动画开始事件
-            armature.addEventListener(dragonBones.AnimationEvent.START, this.onAnimationEvent,this);
-            //监听循环动画，播放完一遍的事件
-            armature.addEventListener(dragonBones.AnimationEvent.LOOP_COMPLETE, this.onAnimationEvent,this);
-            //监听声音事件
-            var soundManager:dragonBones.SoundEventManager = dragonBones.SoundEventManager.getInstance();
-            soundManager.addEventListener(dragonBones.SoundEvent.SOUND, this.onSoundEvent,this);
-
-            //取得这个Armature动画列表中的第一个动画的名字
-            var curAnimationName = armature.animation.animationList[0];
-            //播放一遍动画
-            armature.animation.gotoAndPlay(curAnimationName,0,-1,1);
-
-            //把Armature添加到心跳时钟里
-            dragonBones.WorldClock.clock.add(armature);
-            //心跳时钟开启
-            egret.Ticker.getInstance().register(function (advancedTime) {
-                dragonBones.WorldClock.clock.advanceTime(advancedTime / 1000);
-            }, this);
-        }
-        private onFrameEvent(evt: dragonBones.FrameEvent):void
-        {
-            //打印出事件的类型，和事件的帧标签
-            console.log(evt.type, evt.frameLabel);
-        }
-
-        private onAnimationEvent(evt: dragonBones.AnimationEvent):void
-        {
-            switch(evt.type)
-            {
-                case dragonBones.AnimationEvent.START:
-                     break;
-                case dragonBones.AnimationEvent.LOOP_COMPLETE:
-                     break;
-                case dragonBones.AnimationEvent.COMPLETE:
-                     //动画完成后销毁这个armature
-                     this.removeChild(evt.armature.display);
-                     dragonBones.WorldClock.clock.remove(evt.armature);
-                     evt.armature.dispose();
-                     break;
-            }
-        }
-
-        private onSoundEvent(evt: dragonBones.SoundEvent):void
-        {
-            //播放声音
-            var flySound:egret.Sound = RES.getRes(evt.sound);
-            console.log("soundEvent",evt.sound);
-        }
-
-       </pre>
-     */
-    class SoundEventManager extends EventDispatcher {
-        private static _instance;
-        static getInstance(): SoundEventManager;
-        constructor();
-    }
-}
-declare module dragonBones {
-    /**
-     * @class dragonBones.Armature
-     * @classdesc
-     * Armature 是 DragonBones 骨骼动画系统的核心。他包含需要加到场景的显示对象，所有的骨骼逻辑和动画系统
-     * A Armature instance is the core of the skeleton animation system. It contains the object to display, all sub-bones and the object animation(s).
-     * @extends dragonBones.EventDispatcher
-     * @see dragonBones.ArmatureData
-     * @example
-     * <pre>
-        //获取动画数据
-        var skeletonData = RES.getRes("skeleton");
-        //获取纹理集数据
-        var textureData = RES.getRes("textureConfig");
-        //获取纹理集图片
-        var texture = RES.getRes("texture");
-
-        //创建一个工厂，用来创建Armature
-        var factory:dragonBones.EgretFactory = new dragonBones.EgretFactory();
-        //把动画数据添加到工厂里
-        factory.addSkeletonData(dragonBones.DataParser.parseDragonBonesData(skeletonData));
-        //把纹理集数据和图片添加到工厂里
-        factory.addTextureAtlas(new dragonBones.EgretTextureAtlas(texture, textureData));
-        //获取Armature的名字，dragonBones4.0的数据可以包含多个骨架，这里取第一个Armature
-        var armatureName:string = skeletonData.armature[0].name;
-        //从工厂里创建出Armature
-        var armature:dragonBones.Armature = factory.buildArmature(armatureName);
-        //获取装载Armature的容器
-        var armatureDisplay = armature.display;
-        //把它添加到舞台上
-        this.addChild(armatureDisplay);
-        //取得这个Armature动画列表中的第一个动画的名字
-        var curAnimationName = armature.animation.animationList[0];
-        //播放这个动画，gotoAndPlay参数说明,具体详见Animation类
-        //第一个参数 animationName {string} 指定播放动画的名称.
-        //第二个参数 fadeInTime {number} 动画淡入时间 (>= 0), 默认值：-1 意味着使用动画数据中的淡入时间.
-        //第三个参数 duration {number} 动画播放时间。默认值：-1 意味着使用动画数据中的播放时间.
-        //第四个参数 layTimes {number} 动画播放次数(0:循环播放, >=1:播放次数, NaN:使用动画数据中的播放时间), 默认值：NaN
-        armature.animation.gotoAndPlay(curAnimationName,0.3,-1,0);
-
-        //把Armature添加到心跳时钟里
-        dragonBones.WorldClock.clock.add(armature);
-        //心跳时钟开启
-        egret.Ticker.getInstance().register(function (advancedTime) {
-            dragonBones.WorldClock.clock.advanceTime(advancedTime / 1000);
-        }, this);
-       </pre>
-     */
-    class Armature extends EventDispatcher implements IAnimatable {
-        __dragonBonesData: DragonBonesData;
-        /**
-         * The instance dispatch sound event.
-         */
-        private static _soundManager;
-        /**
-         * 骨架名。
-         * 骨架名一般等于 ArmatureData 的名字
-         * 默认值：true。
-         * @member {string} dragonBones.Armature#name
-         */
-        name: string;
-        /**
-         * 存储额外的用户数据。
-         * @member {any} dragonBones.Armature#userData
-         */
-        userData: any;
-        /** @private Set it to true when slot's zorder changed*/
-        _slotsZOrderChanged: boolean;
-        /** @private Store event needed to dispatch in current frame. When advanceTime execute complete, dispath them.*/
-        _eventList: Array<Event>;
-        /** @private Store slots based on slots' zOrder*/
-        _slotList: Array<Slot>;
-        /** @private Store bones based on bones' hierarchy (From root to leaf)*/
-        _boneList: Array<Bone>;
-        private _boneIKList;
-        /** @private ik*/
-        _ikList: Array<IKConstraint>;
-        /** @private data version 4.5 and upper*/
-        _skewEnable: boolean;
-        private _delayDispose;
-        private _lockDispose;
-        /** @private */
-        _armatureData: ArmatureData;
-        /**
-         * 骨架数据。
-         * @member {ArmatureData} dragonBones.Armature#armatureData
-         */
-        armatureData: ArmatureData;
-        /** @private */
-        _display: any;
-        /**
-         * 骨架显示对象。骨架创建出来后，需要把该显示对象加到场景中才能显示骨架。
-         * 使用根据不同的渲染引擎，显示对象的类型可能不同。
-         * @member {any} dragonBones.Armature#display
-         */
-        display: any;
-        /**
-         * 不推荐的API,使用 display 属性代替。
-         */
-        getDisplay(): any;
-        /** @private */
-        _animation: Animation;
-        /**
-         * 骨架的动画实例。
-         * @member {Animation} dragonBones.Armature#animation
-         */
-        animation: Animation;
-        private _isFading;
-        private _i;
-        private _len;
-        private _tmpBone;
-        private _childArmature;
-        private _tmpSlot;
-        constructor(display: any);
-        /**
-         * 清理骨架实例
-         */
-        dispose(): void;
-        /**
-         * 在下一帧强制更新指定名称的 Bone 及其包含的所有 Slot 的动画。
-         * @param boneName {string} 骨头名。 默认值：null，相当于更新所有骨头。
-         */
-        invalidUpdate(boneName?: string): void;
-        /**
-         * 使用这个方法更新动画状态。一般来说，这个方法需要在 ENTERFRAME 事件的响应函数中被调用
-         * @param passedTime 动画向前播放的时间（单位：秒）
-         */
-        advanceTime(passedTime: number): void;
-        resetAnimation(): void;
-        /**
-         * 获取骨架包含的所有插槽
-         * @param returnCopy {boolean} 是否返回拷贝。默认：true
-         * @returns {Slot[]}
-         */
-        getSlots(returnCopy?: boolean): Array<Slot>;
-        /**
-         * 获取指定名称的 Slot
-         * @param slotName {string} Slot名称
-         * @returns {Slot}
-         */
-        getSlot(slotName: string): Slot;
-        /**
-         * 获取包含指定显示对象的 Slot
-         * @param displayObj {any} 显示对象实例
-         * @returns {Slot}
-         */
-        getSlotByDisplay(displayObj: any): Slot;
-        /**
-         * 为指定名称的 Bone 添加一个子 Slot
-         * @param slot {Slot} Slot 实例
-         * @param boneName {string}
-         * @see dragonBones.Bone
-         */
-        addSlot(slot: Slot, boneName: string): void;
-        /**
-         * 移除指定的Slot
-         * @param slot {Slot} Slot 实例
-         */
-        removeSlot(slot: Slot): void;
-        /**
-         * 移除指定名称的Slot
-         * @param slotName {string} Slot 名称
-         * @returns {Slot} 被成功移除的 Slot 实例
-         */
-        removeSlotByName(slotName: string): Slot;
-        /**
-         * 获取骨架包含的所有Bone
-         * @param returnCopy {boolean} 是否返回拷贝。默认：true
-         * @returns {Bone[]}
-         */
-        getBones(returnCopy?: boolean): Array<Bone>;
-        /**
-         * 获取指定名称的 Bone
-         * @param boneName {string} Bone名称
-         * @returns {Bone}
-         */
-        getBone(boneName: string): Bone;
-        /**
-         * 获取包含指定显示对象的 Bone
-         * @param display {any} 显示对象实例
-         * @returns {Bone}
-         */
-        getBoneByDisplay(display: any): Bone;
-        /**
-         * 在骨架中为指定名称的 Bone 添加一个子 Bone
-         * @param bone {Bone} Bone 实例
-         * @param parentName {string} 父骨头名称 默认：null
-         * @param updateLater {boolean} 是否延迟更新 默认：false，当需要一次添加很多Bone时，开启延迟更新能够提高效率
-         */
-        addBone(bone: Bone, parentName?: string, updateLater?: boolean): void;
-        /**
-         * 移除指定的 Bone
-         * @param bone {Bone} Bone 实例
-         * @param updateLater {boolean} 是否延迟更新 默认：false，当需要一次移除很多Bone时，开启延迟更新能够提高效率
-         */
-        removeBone(bone: Bone, updateLater?: boolean): void;
-        /**
-         * 移除指定名称的 Bone
-         * @param boneName {string} Bone 名称
-         * @returns {Bone} 被成功移除的 Bone 实例
-         */
-        removeBoneByName(boneName: string): Bone;
-        /** @private */
-        _addBoneToBoneList(bone: Bone): void;
-        /** @private */
-        _removeBoneFromBoneList(bone: Bone): void;
-        /** @private */
-        _addSlotToSlotList(slot: Slot): void;
-        /** @private */
-        _removeSlotFromSlotList(slot: Slot): void;
-        /**
-         * 按照显示层级为所有 Slot 排序
-         */
-        updateSlotsZOrder(): void;
-        _updateAnimationAfterBoneListChanged(ifNeedSortBoneList?: boolean): void;
-        private sortBoneList();
-        /** @private When AnimationState enter a key frame, call this func*/
-        _arriveAtFrame(frame: Frame, timelineState: TimelineState, animationState: AnimationState, isCross: boolean): void;
-        private sortSlot(slot1, slot2);
-        /**
-         * 获取Animation实例
-         * @returns {any} Animation实例
-         */
-        getAnimation(): any;
-        getIKs(returnCopy?: boolean): Array<IKConstraint>;
-        buildIK(): void;
-        updateBoneCache(): void;
-        getIKTargetData(bone: Bone): Array<IKConstraint>;
-    }
-}
-declare module dragonBones {
-    /**
-     * @class dragonBones.Matrix
-     * @classdesc
-     * Matrix 类表示一个转换矩阵，它确定如何将点从一个坐标空间映射到另一个坐标空间。您可以对一个显示对象执行不同的图形转换，方法是设置 Matrix 对象的属性，将该 Matrix 对象应用于 Transform 对象的 matrix 属性，然后应用该 Transform 对象作为显示对象的 transform 属性。这些转换函数包括平移（x 和 y 重新定位）、旋转、缩放和倾斜。
-     * 这些转换类型统称为仿射转换。仿射转换在转换时保持线条笔直，因此平行线保持平行。
-     * 转换矩阵对象为具有如下内容的 3 x 3 的矩阵：
-     *  a  c  tx
-     *  b  d  ty
-     *  u  v  w
-     * 在传统的转换矩阵中，u、v 和 w 属性具有其他功能。Matrix 类只能在二维空间中操作，因此始终假定属性值 u 和 v 为 0.0，属性值 w 为 1.0。矩阵的有效值如下：
-     *  a  c  tx
-     *  b  d  ty
-     *  0  0  1
-     * 您可以获取和设置 Matrix 对象的全部六个其他属性的值：a、b、c、d、tx 和 ty。
-     * Matrix 类支持四种主要类型的转换：平移、缩放、旋转和倾斜。您可以使用特定的方法来设置这些转换的其中三个，如下表中所述：
-     * 转换	              矩阵值                      说明
-     * 平移（置换）	                            将图像 tx 像素向右移动，将 ty 像素向下移动。
-     *                   1  0  tx
-     *                   0  1  ty
-     *                   0  0  1
-     * 缩放                                     将每个像素的位置乘以 x 轴的 sx 和 y 轴的 sy，从而调整图像的大小。
-     *                   Sx  0  0
-     *                   0  Sy  0
-     *                   0  0   1
-     * 旋转                                     将图像旋转一个以弧度为单位的角度 q。
-     *                   cos(q)  -sin(q)  0
-     *                   sin(q)  cos(q)   0
-     *                   0         0      1
-     * 倾斜或剪切                               以平行于 x 轴或 y 轴的方向逐渐滑动图像。Matrix 对象的 b 属性表示斜角沿 y 轴的正切；Matrix 对象的 c 属性表示斜角沿 x 轴的正切。
-     *                  0        tan(skewX) 0
-     *                  tan(skewY)  0       0
-     *                   0          0       1
-     * 每个转换函数都将更改当前矩阵的属性，所以您可以有效地合并多个转换。为此，请先调用多个转换函数，再将矩阵应用于其显示对象目标（通过使用该显示对象的 transform 属性）。
-     */
-    class Matrix {
-        /**
-         * 缩放或旋转图像时影响像素沿 x 轴定位的值。
-         * @member {number} dragonBones.Matrix#a
-         */
-        a: number;
-        /**
-         * 旋转或倾斜图像时影响像素沿 y 轴定位的值。
-         * @member {number} dragonBones.Matrix#b
-         */
-        b: number;
-        /**
-         *旋转或倾斜图像时影响像素沿 x 轴定位的值。
-         * @member {number} dragonBones.Matrix#c
-         */
-        c: number;
-        /**
-         *缩放或旋转图像时影响像素沿 y 轴定位的值。
-         * @member {number} dragonBones.Matrix#d
-         */
-        d: number;
-        /**
-         *沿 x 轴平移每个点的距离。
-         * @member {number} dragonBones.Matrix#tx
-         */
-        tx: number;
-        /**
-         *沿 y 轴平移每个点的距离。
-         * @member {number} dragonBones.Matrix#ty
-         */
-        ty: number;
-        /**
-         *构造函数，实例化一个Matrix，默认为是一个单位矩阵
-         */
-        constructor();
-        /**
-         *执行原始矩阵的逆转换。逆矩阵和单位矩阵相乘会得到的单位矩阵
-         */
-        invert(): void;
-        /**
-         *将某个矩阵与当前矩阵相乘，从而将这两个矩阵的几何效果有效地结合在一起。
-         * 右乘，其几何意义是将两次几何变换变成一次
-         * @param m
-         */
-        concat(m: Matrix): void;
-        copyFrom(m: Matrix): void;
-        /**@private*/
-        transformPoint(x: number, y: number, result: Point, delta?: Boolean): void;
-    }
-}
-declare module dragonBones {
-    /**
-     * @class dragonBones.DBTransform
-     * @classdesc
-     * Dragonbones中使用的transform
-     * 可以表示位移，旋转，缩放三种属性
-     */
-    class DBTransform {
-        /**
-         * x坐标值
-         * @member {number} dragonBones.DBTransform#x
-         */
-        x: number;
-        /**
-         * y坐标值
-         * @member {number} dragonBones.DBTransform#y
-         */
-        y: number;
-        /**
-         * x方向的斜切，一般和skewY一起变化，可以表示旋转
-         * @member {number} dragonBones.DBTransform#skewX
-         */
-        skewX: number;
-        /**
-         * y方向的斜切，一般和skewX一起变化，可以表示旋转
-         * @member {number} dragonBones.DBTransform#skewY
-         */
-        skewY: number;
-        /**
-         * x方向的缩放
-         * @member {number} dragonBones.DBTransform#scaleX
-         */
-        scaleX: number;
-        /**
-         * y方向的缩放
-         * @member {number} dragonBones.DBTransform#scaleY
-         */
-        scaleY: number;
-        /**
-         * 旋转，用弧度表示
-         * @member {number} dragonBones.DBTransform#rotation
-         */
-        rotation: number;
-        /**
-         * 创建一个 DBTransform 实例.
-         */
-        constructor();
-        /**
-         * 拷贝传入的transfrom实例的所有属性
-         * @param node
-         */
-        copy(transform: DBTransform): void;
-        /**
-         * transform加法
-         * @param node
-         */
-        add(transform: DBTransform): void;
-        /**
-         * transform减法
-         * @param node
-         */
-        minus(transform: DBTransform): void;
-        normalizeRotation(): void;
-        clone(): DBTransform;
-        /**
-         * 把DBTransform的所有属性转成用String类型表示
-         * @return 一个字符串包含有DBTransform的所有属性
-         */
-        toString(): string;
-    }
-}
-declare module dragonBones {
-    /**
-     * @class dragonBones.DBObject
-     * @classdesc
-     * DBObject 是 Bone 和 Slot 的基类
-     * @see dragonBones.Bone
-     * @see dragonBones.Slot
-     */
-    class DBObject {
-        name: string;
-        /**
-         * 存储额外的用户数据。
-         * @member {any} dragonBones.DBObject#userData
-         */
-        userData: any;
-        /**
-         * 是否继承父亲的旋转属性。
-         * @member {boolean} dragonBones.DBObject#inheritRotation
-         */
-        inheritRotation: boolean;
-        /**
-         * 是否继承父亲的缩放属性。
-         * @member {boolean} dragonBones.DBObject#inheritScale
-         */
-        inheritScale: boolean;
-        /**
-         * 是否继承父亲的平移属性。
-         * @member {boolean} dragonBones.DBObject#inheritTranslation
-         */
-        inheritTranslation: boolean;
-        /** @private */
-        _global: DBTransform;
-        /** @private */
-        _globalTransformMatrix: Matrix;
-        static _tempParentGlobalTransformMatrix: Matrix;
-        static _tempParentGlobalTransform: DBTransform;
-        /**
-         * 相对世界坐标的 DBTransform 实例。
-         * @member {DBTransform} dragonBones.DBObject#global
-         */
-        global: DBTransform;
-        /** @private */
-        _origin: DBTransform;
-        /**
-         * 骨架数据中的原始的相对父亲的 DBTransform 实例。
-         * @member {DBTransform} dragonBones.DBObject#origin
-         */
-        origin: DBTransform;
-        /** @private */
-        _offset: DBTransform;
-        /**
-         * 用于运行时动态调整的 DBTransform 实例。
-         * @member {DBTransform} dragonBones.DBObject#offset
-         */
-        offset: DBTransform;
-        /** @private */
-        _visible: boolean;
-        /** @private */
-        _armature: Armature;
-        /**
-         * The armature this DBObject instance belongs to.
-         */
-        armature: Armature;
-        /** @private */
-        _setArmature(value: Armature): void;
-        /** @private */
-        _parent: Bone;
-        /**
-         * Indicates the Bone instance that directly contains this DBObject instance if any.
-         */
-        parent: Bone;
-        /** @private */
-        _setParent(value: Bone): void;
-        constructor();
-        /**
-         * 清理使用的资源用于垃圾回收
-         */
-        dispose(): void;
-        _calculateRelativeParentTransform(): void;
-        _calculateParentTransform(): ParentTransformObject;
-        _updateGlobal(): ParentTransformObject;
-    }
-}
-declare module dragonBones {
-    /**
-     * @class dragonBones.Bone
-     * @classdesc
-     * Bone 实例代表 Armature 中的一个骨头。一个Armature实例可以由很多 Bone组成。
-     * Bone 在骨骼动画体系中是最重要的逻辑单元之一，负责动画中的平移旋转缩放的实现
-     * @extends dragonBones.DBObject
-     * @see dragonBones.Armature
-     * @see dragonBones.Slot
-     * @see dragonBones.BoneData
-     *
-     * @example
-       <pre>
-        //获取动画数据 本例使用Knight例子.
-        //资源下载地址http://dragonbones.github.io/download_forwarding.html?download_url=downloads/dragonbonesdemos_v2.4.zip
-        var skeletonData = RES.getRes("skeleton");
-        //获取纹理集数据
-        var textureData = RES.getRes("textureConfig");
-        //获取纹理集图片
-        var texture = RES.getRes("texture");
-        //这个资源需要自己准备
-        var horseHat = RES.getRes("horseHat");
-        //创建一个工厂，用来创建Armature
-        var factory:dragonBones.EgretFactory = new dragonBones.EgretFactory();
-        //把动画数据添加到工厂里
-        factory.addSkeletonData(dragonBones.DataParser.parseDragonBonesData(skeletonData));
-        //把纹理集数据和图片添加到工厂里
-        factory.addTextureAtlas(new dragonBones.EgretTextureAtlas(texture, textureData));
-
-        //获取Armature的名字，dragonBones4.0的数据可以包含多个骨架，这里取第一个Armature
-        var armatureName:string = skeletonData.armature[1].name;
-        //从工厂里创建出Armature
-        var armature:dragonBones.Armature = factory.buildArmature(armatureName);
-        //获取装载Armature的容器
-        var armatureDisplay = armature.display;
-        //把它添加到舞台上
-        armatureDisplay.x = 200;
-        armatureDisplay.y = 300;
-        this.addChild(armatureDisplay);
-
-        //以下四句代码，实现给骨骼添加slot的功能
-        //1.获取马头的骨骼
-        var horseHead:dragonBones.Bone = armature.getBone("horseHead");
-        //2.创建一个slot
-        var horseHatSlot:dragonBones.EgretSlot = new dragonBones.EgretSlot();
-        //3.给这个slot赋一个图片
-        horseHatSlot.display = new egret.Bitmap(horseHat);
-        //4.把这个slot添加到骨骼上
-        horseHead.addSlot(horseHatSlot);
-
-        //以下3句代码，实现了子骨骼的获取和播放子骨架的动画
-        //1.获取包含子骨架的骨骼
-        var weaponBone:dragonBones.Bone = armature.getBone("armOutside");
-        //2.获取骨骼上的子骨架
-        var childArmature:dragonBones.Armature = weaponBone.childArmature;
-        //3.播放子骨架的动画
-        childArmature.animation.gotoAndPlay("attack_sword_1",0,-1,0);
-
-
-        //取得这个Armature动画列表中的第一个动画的名字
-        var curAnimationName = armature.animation.animationList[0];
-        armature.animation.gotoAndPlay(curAnimationName,0.3,-1,0);
-
-        //把Armature添加到心跳时钟里
-        dragonBones.WorldClock.clock.add(armature);
-        //心跳时钟开启
-        egret.Ticker.getInstance().register(function (advancedTime) {
-            dragonBones.WorldClock.clock.advanceTime(advancedTime / 1000);
-        }, this);
-       </pre>
-     */
-    class Bone extends DBObject {
-        /**
-         * The instance dispatch sound event.
-         */
-        private static _soundManager;
-        static initWithBoneData(boneData: BoneData): Bone;
-        /**
-         * display控制者的名字，该名字对应一个 AnimationState 实例。
-         * 当动画中有多个 AnimationState 存在时，我们可以通过指定 displayController 实现只有某个 AnimationState 能够控制 display 的切换。
-         * 默认值：null。意味着所有 AnimationState 都能控制display的切换
-         * @member {string} dragonBones.Bone#displayController
-         * @see dragonBones.AnimationState.
-         */
-        displayController: string;
-        /**
-         * 标记是否将offset中的平移分量作用到子骨头
-         * 默认值：true
-         * @member {true} dragonBones.Bone#applyOffsetTranslationToChild
-         * @see dragonBones.Bone#offset
-         */
-        applyOffsetTranslationToChild: boolean;
-        /**
-         * 标记是否将offset中的旋转分量作用到子骨头
-         * 默认值：true
-         * @member {true} dragonBones.Bone#applyOffsetRotationToChild
-         * @see dragonBones.Bone#offset
-         */
-        applyOffsetRotationToChild: boolean;
-        /**
-         * 标记是否将offset中的缩放分量作用到子骨头
-         * 默认值：true
-         * @member {true} dragonBones.Bone#applyOffsetScaleToChild
-         * @see dragonBones.Bone#offset
-         */
-        applyOffsetScaleToChild: boolean;
-        rotationIK: number;
-        length: number;
-        isIKConstraint: boolean;
-        childrenBones: Array<Bone>;
-        /** @private */
-        _boneList: Array<Bone>;
-        /** @private */
-        _slotList: Array<Slot>;
-        /** @private */
-        _timelineStateList: Array<TimelineState>;
-        /** @private */
-        _tween: DBTransform;
-        /** @private */
-        _tweenPivot: Point;
-        /** @private */
-        _needUpdate: number;
-        /** @private */
-        _isColorChanged: boolean;
-        /** @private */
-        _globalTransformForChild: DBTransform;
-        /** @private */
-        _globalTransformMatrixForChild: Matrix;
-        /** @private */
-        _localTransform: DBTransform;
-        private _tempGlobalTransformForChild;
-        private _tempGlobalTransformMatrixForChild;
-        constructor();
-        /**
-         * @inheritDoc
-         */
-        dispose(): void;
-        /**
-         * 检查是否包含指定的 Bone 或者 Slot
-         * @param child {DBObject} Bone 实例 或者 Slot 实例
-         * @returns {boolean}
-         */
-        contains(child: DBObject): boolean;
-        /**
-         * 添加指定的 Bone 实例做为当前 Bone 实例的子骨头
-         * @param childBone {Bone} 需要添加的 Bone 实例
-         * @param updateLater {boolean} 是否延迟更新。默认false。当需要一次性添加很多 Bone 时，开启延迟更新能够提高效率
-         */
-        addChildBone(childBone: Bone, updateLater?: boolean): void;
-        /**
-         * 从当前 Bone 实例中移除指定的子骨头
-         * @param childBone {Bone} 需要移除的 Bone 实例
-         * @param updateLater {boolean} 是否延迟更新。默认false。当需要一次性移除很多 Bone 时，开启延迟更新能够提高效率
-         */
-        removeChildBone(childBone: Bone, updateLater?: boolean): void;
-        /**
-         * 向当前 Bone 实例中添加指定的 Slot 实例
-         * @param childSlot {Slot} 需要添加的 Slot 实例
-         */
-        addSlot(childSlot: Slot): void;
-        /**
-         * 从当前 Bone 实例中移除指定的 Slot 实例
-         * @param childSlot {Slot} 需要移除的 Slot 实例
-         */
-        removeSlot(childSlot: Slot): void;
-        /** @private */
-        _setArmature(value: Armature): void;
-        /**
-         * 获取当前骨头包含的所有 Bone 实例
-         * @param returnCopy {boolean} 是否返回拷贝。默认：true
-         * @returns {Bone[]}
-         */
-        getBones(returnCopy?: boolean): Array<Bone>;
-        /**
-         * 获取当前骨头包含的所有 Slot 实例
-         * @param returnCopy {boolean} 是否返回拷贝。默认：true
-         * @returns {Slot[]}
-         */
-        getSlots(returnCopy?: boolean): Array<Slot>;
-        /**
-         * 在下一帧强制更新当前 Bone 实例及其包含的所有 Slot 的动画。
-         */
-        invalidUpdate(): void;
-        private operationInvalidUpdate(bone);
-        _calculateRelativeParentTransform(): void;
-        /** @private */
-        _update(needUpdate?: boolean): void;
-        private updataLocalTransform();
-        private updateGlobalTransform();
-        /** @private */
-        _updateColor(aOffset: number, rOffset: number, gOffset: number, bOffset: number, aMultiplier: number, rMultiplier: number, gMultiplier: number, bMultiplier: number, colorChanged: boolean): void;
-        adjustGlobalTransformMatrixByIK(): void;
-        /** @private */
-        _hideSlots(): void;
-        /** @private When bone timeline enter a key frame, call this func*/
-        _arriveAtFrame(frame: Frame, timelineState: TimelineState, animationState: AnimationState, isCross: boolean): void;
-        _updateGlobal(): ParentTransformObject;
-        /** @private */
-        _addState(timelineState: TimelineState): void;
-        /** @private */
-        _removeState(timelineState: TimelineState): void;
-        /** @private */
-        _removeAllStates(): void;
-        private blendingTimeline();
-        private sortState(state1, state2);
-        /**
-         * 不推荐的API,建议使用 slot.childArmature 替代
-         */
-        childArmature: Armature;
-        /**
-         * 不推荐的API,建议使用 slot.display 替代
-         */
-        display: any;
-        /**
-         * 不推荐的API,建议使用 offset 替代
-         */
-        node: DBTransform;
-        /** @private */
-        visible: boolean;
-        /**
-         * 返回当前 Bone 实例包含的第一个 Slot 实例
-         * @member {Slot} dragonBones.Bone#slot
-         */
-        slot: Slot;
-        parentBoneRotation: number;
-    }
-}
-declare module dragonBones {
-    /**
-     * @class dragonBones.ITextureAltas
-     * @classdesc
-     * 纹理集的接口
-     */
-    interface IArmature extends IAnimatable {
-        getAnimation(): any;
-        resetAnimation(): void;
-    }
-}
-declare module dragonBones {
-    class IKConstraint {
-        private ikdata;
-        private armature;
-        bones: Array<Bone>;
-        target: Bone;
-        bendDirection: number;
-        weight: number;
-        animationCacheBend: number;
-        animationCacheWeight: number;
-        constructor(data: IKData, armatureData: Armature);
-        dispose(): void;
-        compute(): void;
-        compute1(bone: Bone, target: Bone, weightA: number): void;
-        compute2(parent: Bone, child: Bone, targetX: number, targetY: number, bendDirection: number, weightA: number): Point;
-        private normalize(rotation);
-    }
-}
-declare module dragonBones {
-    /**
-     * @class dragonBones.Slot
-     * @classdesc
-     * Slot 实例是骨头上的一个插槽，是显示图片的容器。
-     * 一个 Bone 上可以有多个Slot，每个Slot中同一时间都会有一张图片用于显示，不同的Slot中的图片可以同时显示。
-     * 每个 Slot 中可以包含多张图片，同一个 Slot 中的不同图片不能同时显示，但是可以在动画进行的过程中切换，用于实现帧动画。
-     * @extends dragonBones.DBObject
-     * @see dragonBones.Armature
-     * @see dragonBones.Bone
-     * @see dragonBones.SlotData
-     *
-     * @example
-       <pre>
-        //获取动画数据 本例使用Knight例子.
-        //资源下载地址http://dragonbones.github.io/download_forwarding.html?download_url=downloads/dragonbonesdemos_v2.4.zip
-        var skeletonData = RES.getRes("skeleton");
-        //获取纹理集数据
-        var textureData = RES.getRes("textureConfig");
-        //获取纹理集图片
-        var texture = RES.getRes("texture");
-        //这个资源需要自己准备
-        var horseHat = RES.getRes("horseHat");
-        //创建一个工厂，用来创建Armature
-        var factory:dragonBones.EgretFactory = new dragonBones.EgretFactory();
-        //把动画数据添加到工厂里
-        factory.addSkeletonData(dragonBones.DataParser.parseDragonBonesData(skeletonData));
-        //把纹理集数据和图片添加到工厂里
-        factory.addTextureAtlas(new dragonBones.EgretTextureAtlas(texture, textureData));
-
-        //获取Armature的名字，dragonBones4.0的数据可以包含多个骨架，这里取第一个Armature
-        var armatureName:string = skeletonData.armature[1].name;
-        //从工厂里创建出Armature
-        var armature:dragonBones.Armature = factory.buildArmature(armatureName);
-        //获取装载Armature的容器
-        var armatureDisplay = armature.display;
-        //把它添加到舞台上
-        armatureDisplay.x = 200;
-        armatureDisplay.y = 300;
-        this.addChild(armatureDisplay);
-
-        //以下四句代码，实现给骨骼添加slot的功能
-        //1.获取马头的骨骼
-        var horseHead:dragonBones.Bone = armature.getBone("horseHead");
-        //2.创建一个slot
-        var horseHatSlot:dragonBones.EgretSlot = new dragonBones.EgretSlot();
-        //3.给这个slot赋一个图片
-        horseHatSlot.display = new egret.Bitmap(horseHat);
-        //4.把这个slot添加到骨骼上
-        horseHead.addSlot(horseHatSlot);
-
-        //以下3句代码，实现了子骨骼的获取和播放子骨架的动画
-        //1.获取包含子骨架的骨骼
-        var weaponBone:dragonBones.Bone = armature.getBone("armOutside");
-        //2.获取骨骼上的子骨架
-        var childArmature:dragonBones.Armature = weaponBone.childArmature;
-        //3.播放子骨架的动画
-        childArmature.animation.gotoAndPlay("attack_sword_1",0,-1,0);
-
-
-        //取得这个Armature动画列表中的第一个动画的名字
-        var curAnimationName = armature.animation.animationList[0];
-        armature.animation.gotoAndPlay(curAnimationName,0.3,-1,0);
-
-        //把Armature添加到心跳时钟里
-        dragonBones.WorldClock.clock.add(armature);
-        //心跳时钟开启
-        egret.Ticker.getInstance().register(function (advancedTime) {
-            dragonBones.WorldClock.clock.advanceTime(advancedTime / 1000);
-        }, this);
-       </pre>
-     */
-    class Slot extends DBObject {
+        _updateFFDTimelineStates(): void;
         /**
          * @private
          */
-        isMeshEnabled: boolean;
-        /** @private Need to keep the reference of DisplayData. When slot switch displayObject, it need to restore the display obect's origional pivot. */
-        _displayDataList: Array<DisplayData>;
-        /** @private */
-        _originZOrder: number;
-        /** @private */
-        _tweenZOrder: number;
-        /** @private */
-        _offsetZOrder: number;
-        /** @private */
-        _originDisplayIndex: number;
-        /** @private */
-        _gotoAndPlay: string;
-        _defaultGotoAndPlay: string;
-        _displayList: Array<any>;
-        _currentDisplayIndex: number;
-        _colorTransform: ColorTransform;
-        _currentDisplay: any;
-        _isShowDisplay: boolean;
-        _blendMode: string;
-        _isColorChanged: boolean;
-        _needUpdate: boolean;
-        /** @private */
-        protected _ffdChanged: boolean;
-        /** @private */
-        protected _ffdVertices: Array<number>;
-        /** @private */
-        protected _meshBones: Array<Bone>;
-        /** @private */
-        _meshData: MeshData;
-        /** @private */
-        displayIndex: number;
-        constructor();
-        /**
-         * 通过传入 SlotData 初始化Slot
-         * @param slotData
-         */
-        initWithSlotData(slotData: SlotData): void;
-        /**
-         * @inheritDoc
-         */
-        dispose(): void;
-        /** @private */
-        setArmature(value: Armature): void;
-        /** @private */
-        _update(): void;
-        private isMeshUpdate();
-        _calculateRelativeParentTransform(): void;
-        private updateChildArmatureAnimation();
-        /** @private */
-        _changeDisplay(displayIndex?: number): void;
-        /** @private
-         * Updates the display of the slot.
-         */
-        _updateSlotDisplay(): void;
-        /** @private */
-        visible: boolean;
-        /**
-         * 显示对象列表(包含 display 或者 子骨架)
-         * @member {any[]} dragonBones.Slot#displayList
-         */
-        displayList: Array<any>;
-        /**
-         * 当前的显示对象(可能是 display 或者 子骨架)
-         * @member {any} dragonBones.Slot#display
-         */
-        display: any;
-        /**
-         * 不推荐的 API. 使用 display 属性代替
-         */
-        getDisplay(): any;
-        /**
-         * Unrecommended API. Please use .display = instead.
-         * @returns {any}
-         */
-        setDisplay(value: any): void;
-        /**
-         * 当前的子骨架
-         * @member {Armature} dragonBones.Slot#childArmature
-         */
-        childArmature: Armature;
-        /**
-         * 显示顺序。(支持小数用于实现动态插入slot)
-         * @member {number} dragonBones.Slot#zOrder
-         */
-        zOrder: number;
-        /**
-         * 混合模式
-         * @member {string} dragonBones.Slot#blendMode
-         */
-        blendMode: string;
-        /**
-         * 播放子骨架的动画
-         * @member {string} dragonBones.Slot#gotoAndPlay
-         */
-        gotoAndPlay: string;
-        /**
-         * @private
-         */
-        _updateDisplay(value: any): void;
-        /**
-         * @private
-         */
-        _getDisplayIndex(): number;
-        /**
-         * @private
-         * Adds the original display object to another display object.
-         * @param container
-         * @param index
-         */
-        _addDisplayToContainer(container: any, index?: number): void;
-        /**
-         * @private
-         * remove the original display object from its parent.
-         */
-        _removeDisplayFromContainer(): void;
-        /**
-         * @private
-         * Updates the transform of the slot.
-         */
-        _updateTransform(): void;
-        /**
-         * @private
-         */
-        _updateDisplayVisible(value: boolean): void;
-        /**
-         * @private
-         */
-        protected _ffdOffset: number;
-        /**
-         * @private
-         */
-        _updateFFD(vertices: Array<number>, offset: number): void;
-        /**
-         * @private
-         * Updates the color of the display object.
-         * @param a
-         * @param r
-         * @param g
-         * @param b
-         * @param aM
-         * @param rM
-         * @param gM
-         * @param bM
-         */
-        _updateDisplayColor(aOffset: number, rOffset: number, gOffset: number, bOffset: number, aMultiplier: number, rMultiplier: number, gMultiplier: number, bMultiplier: number, colorChanged?: boolean): void;
-        /**
-         * @private
-         * Update the blend mode of the display object.
-         * @param value The blend mode to use.
-         */
-        _updateDisplayBlendMode(value: string): void;
-        /** @private When bone timeline enter a key frame, call this func*/
-        _arriveAtFrame(frame: Frame, timelineState: SlotTimelineState, animationState: AnimationState, isCross: boolean): void;
-        _updateGlobal(): ParentTransformObject;
-        _resetToOrigin(): void;
-        /**
-         * @private
-         */
-        _updateMesh(): void;
-    }
-}
-declare module dragonBones {
-    /**
-     * @class dragonBones.AnimationCache
-     * @classdesc
-     * AnimationCache 实例是动画缓存的实体，包含一个动画的所有缓存数据。
-     * 每个Slot的缓存数据存在各个SlotTimelineCache中。
-     * 一般来说 AnimationCache 不需要开发者直接操控，而是由AnimationCacheManager代为管理。
-     * @see dragonBones.AnimationCacheManager
-     * @see dragonBones.TimelineCache
-     * @see dragonBones.SlotTimelineCache
-     * @see dragonBones.SlotFrameCache
-     * @example
-       <pre>
-        //获取动画数据
-        var skeletonData = RES.getRes("skeleton");
-        //获取纹理集数据
-        var textureData = RES.getRes("textureConfig");
-        //获取纹理集图片
-        var texture = RES.getRes("texture");
-      
-        //创建一个工厂，用来创建Armature
-        var factory:dragonBones.EgretFactory = new dragonBones.EgretFactory();
-        //把动画数据添加到工厂里
-        factory.addSkeletonData(dragonBones.DataParser.parseDragonBonesData(skeletonData));
-        //把纹理集数据和图片添加到工厂里
-        factory.addTextureAtlas(new dragonBones.EgretTextureAtlas(texture, textureData));
-      
-        //获取Armature的名字，dragonBones4.0的数据可以包含多个骨架，这里取第一个Armature
-        var armatureName:string = skeletonData.armature[0].name;
-        //从工厂里创建出Armature
-        var armature:dragonBones.FastArmature = factory.buildFastArmature(armatureName);
-        //获取装载Armature的容器
-        var armatureDisplay = armature.display;
-        //把它添加到舞台上
-        this.addChild(armatureDisplay);
-        
-        //以60fps的帧率开启动画缓存，缓存所有的动画数据
-        var animationCachManager:dragonBones.AnimationCacheManager = armature.enableAnimationCache(60);
-      
-        //取得这个Armature动画列表中的第一个动画的名字
-        var curAnimationName = armature.animation.animationList[0];
-        //播放这个动画，gotoAndPlay各个参数说明
-        //第一个参数 animationName {string} 指定播放动画的名称.
-        //第二个参数 fadeInTime {number} 动画淡入时间 (>= 0), 默认值：-1 意味着使用动画数据中的淡入时间.
-        //第三个参数 duration {number} 动画播放时间。默认值：-1 意味着使用动画数据中的播放时间.
-        //第四个参数 layTimes {number} 动画播放次数(0:循环播放, >=1:播放次数, NaN:使用动画数据中的播放时间), 默认值：NaN
-        armature.animation.gotoAndPlay(curAnimationName,0.3,-1,0);
-      
-        //把Armature添加到心跳时钟里
-        dragonBones.WorldClock.clock.add(armature);
-        //心跳时钟开启
-        egret.Ticker.getInstance().register(function (advancedTime) {
-            dragonBones.WorldClock.clock.advanceTime(advancedTime / 1000);
-        }, this);
-        </pre>
-     */
-    class AnimationCache {
-        name: string;
-        slotTimelineCacheList: Array<SlotTimelineCache>;
-        slotTimelineCacheDic: any;
-        frameNum: number;
-        _cahceList: Array<boolean>;
-        constructor();
-        static initWithAnimationData(animationData: AnimationData, armatureData: ArmatureData): AnimationCache;
-        initSlotTimelineCacheDic(slotCacheGeneratorDic: any, slotFrameCacheDic: any): void;
-        bindCacheUserSlotDic(slotDic: any): void;
-        addFrame(frameIndex: number, armature: FastArmature): void;
-        update(progress: number): void;
-    }
-}
-declare module dragonBones {
-    /**
-     * @class dragonBones.AnimationCacheManager
-     * @classdesc
-     * AnimationCacheManager 实例是动画缓存管理器，他可以为一个或多个同类型的Armature生成动画缓存数据，从而提高动画运行效率。
-     * 目前AnimationCacheManager只支持对FastArmatrue生成缓存，以后会扩展为对任何实现ICacheableArmature接口的Armature生成缓存。
-     * @see dragonBones.ICacheableArmature
-     * @see dragonBones.FastArmature
-     * @see dragonBones.AnimationCache
-     * @see dragonBones.FrameCache
-     * @example
-       <pre>
-        //获取动画数据
-        var skeletonData = RES.getRes("skeleton");
-        //获取纹理集数据
-        var textureData = RES.getRes("textureConfig");
-        //获取纹理集图片
-        var texture = RES.getRes("texture");
-      
-        //创建一个工厂，用来创建Armature
-        var factory:dragonBones.EgretFactory = new dragonBones.EgretFactory();
-        //把动画数据添加到工厂里
-        factory.addSkeletonData(dragonBones.DataParser.parseDragonBonesData(skeletonData));
-        //把纹理集数据和图片添加到工厂里
-        factory.addTextureAtlas(new dragonBones.EgretTextureAtlas(texture, textureData));
-      
-        //获取Armature的名字，dragonBones4.0的数据可以包含多个骨架，这里取第一个Armature
-        var armatureName:string = skeletonData.armature[0].name;
-        //从工厂里创建出Armature
-        var armature:dragonBones.FastArmature = factory.buildFastArmature(armatureName);
-        //获取装载Armature的容器
-        var armatureDisplay = armature.display;
-        //把它添加到舞台上
-        this.addChild(armatureDisplay);
-        
-        //以60fps的帧率开启动画缓存，缓存所有的动画数据
-        var animationCachManager:dragonBones.AnimationCacheManager = armature.enableAnimationCache(60);
-      
-       //取得这个Armature动画列表中的第一个动画的名字
-        var curAnimationName = armature.animation.animationList[0];
-        //播放这个动画，gotoAndPlay各个参数说明
-        //第一个参数 animationName {string} 指定播放动画的名称.
-        //第二个参数 fadeInTime {number} 动画淡入时间 (>= 0), 默认值：-1 意味着使用动画数据中的淡入时间.
-        //第三个参数 duration {number} 动画播放时间。默认值：-1 意味着使用动画数据中的播放时间.
-        //第四个参数 layTimes {number} 动画播放次数(0:循环播放, >=1:播放次数, NaN:使用动画数据中的播放时间), 默认值：NaN
-        armature.animation.gotoAndPlay(curAnimationName,0.3,-1,0);
-      
-        //把Armature添加到心跳时钟里
-        dragonBones.WorldClock.clock.add(armature);
-        //心跳时钟开启
-        egret.Ticker.getInstance().register(function (advancedTime) {
-            dragonBones.WorldClock.clock.advanceTime(advancedTime / 1000);
-        }, this);
-       </pre>
-     */
-    class AnimationCacheManager {
-        cacheGeneratorArmature: ICacheableArmature;
-        armatureData: ArmatureData;
-        frameRate: number;
-        animationCacheDic: any;
-        slotFrameCacheDic: any;
-        constructor();
-        /**
-         * 通过ArmatrueData创建并初始化AnimationCacheManager。
-         * AnimationCacheManager的创建需要依赖ArmatrueData。
-         * @param armatureData {ArmatureData} 骨架数据实例。
-         * @param frameRate {number} 帧频。帧频决定生成数据缓存的采样率。
-         * @see dragonBones.ArmatureData.
-         */
-        static initWithArmatureData(armatureData: ArmatureData, frameRate?: number): AnimationCacheManager;
-        /**
-         * 为所有动画初始化AnimationCache实例。在生成动画缓存之前需要调用这个API生成相应的AnimationCache实例
-         * @see dragonBones.AnimationCache.
-         */
-        initAllAnimationCache(): void;
-        /**
-         * 指定动画名，初始化AnimationCache实例。在生成动画缓存之前需要调用这个API生成相应的AnimationCache实例
-         * @param animationName {string} 动画名。
-         * @see dragonBones.AnimationCache.
-         */
-        initAnimationCache(animationName: string): void;
-        /**
-         * 绑定Armature列表做为动画缓存的使用者。
-         * 在为Armature生成动画缓存之前，需要将其绑定为动画缓存的使用者
-         * @param armatures {Array<any>} 骨架列表。
-         * @see dragonBones.ICacheableArmature.
-         */
-        bindCacheUserArmatures(armatures: Array<any>): void;
-        /**
-         * 绑定制定Armature做为动画缓存的使用者。
-         * 在为Armature生成动画缓存之前，需要将其绑定为动画缓存的使用者
-         * @param armatures {FastArmature} 要绑定为缓存使用者的骨架对象。
-         * @see dragonBones.ICacheableArmature.
-         */
-        bindCacheUserArmature(armature: FastArmature): void;
-        /**
-         * 设置指定的Armature做为动画缓存的生成器。（同一个Armature可以既是缓存使用者，也是缓存生成器）
-         * 在为Armature生成动画缓存之前，需要设置动画缓存的生成器
-         * @param armatures {FastArmature} 要设置为缓存生成器的骨架对象。
-         * @see dragonBones.ICacheableArmature.
-         */
-        setCacheGeneratorArmature(armature: FastArmature): void;
-        /**
-         * 生成所有动画缓存数据。生成之后，所有绑定CacheUser的Armature就都能够使用这些缓存了。
-         * 在为调用这个API生成动画缓存之前，需要：
-         * 1.调用API initAllAnimationCache 初始化AnimationCache实例
-         * 2.调用API setCacheGeneratorArmature 设置动画缓存的生成器,
-         * 3.调用API bindCacheUserArmatures 绑定动画缓存的使用者
-         * @param loop {boolean} 要生成缓存的动画是否需要循环播放。如果该动画在播放时只需要播放一次，则设置为false。如果需要播放大于一次，则设置为true。
-         * @see dragonBones.AnimationCache
-         */
-        generateAllAnimationCache(loop: boolean): void;
-        /**
-         * 生成指定动画缓存数据。生成之后，所有绑定CacheUser的Armature就都能够使用这些缓存了。
-         * 在为调用这个API生成动画缓存之前，需要：
-         * 1.调用API initAnimationCache 初始化AnimationCache实例
-         * 2.调用API setCacheGeneratorArmature 设置动画缓存的生成器,
-         * 3.调用API bindCacheUserArmatures 绑定动画缓存的使用者
-         * @param animationName {string} 要生成缓存的动画名。
-         * @param loop {boolean} 要生成缓存的动画是否需要循环播放。如果该动画在播放时只需要播放一次，则设置为false。如果需要播放大于一次，则设置为true。
-         * @see dragonBones.AnimationCache
-         */
-        generateAnimationCache(animationName: string, loop: boolean): void;
-        /**
-         * 将缓存生成器骨架重置，生成动画缓存后调用。
-         * @see dragonBones.ICacheableArmature
-         */
-        resetCacheGeneratorArmature(): void;
-        /**
-         * 获取制定名称的AnimationCache实例。
-         * @param animationName {string} 动画名。
-         * @see dragonBones.AnimationCache
-         */
-        getAnimationCache(animationName: string): AnimationCache;
-    }
-}
-declare module dragonBones {
-    /**
-     *
-     * @example
-       <pre>
-        //获取动画数据
-        var skeletonData = RES.getRes("skeleton");
-        //获取纹理集数据
-        var textureData = RES.getRes("textureConfig");
-        //获取纹理集图片
-        var texture = RES.getRes("texture");
-      
-        //创建一个工厂，用来创建Armature
-        var factory:dragonBones.EgretFactory = new dragonBones.EgretFactory();
-        //把动画数据添加到工厂里
-        factory.addSkeletonData(dragonBones.DataParser.parseDragonBonesData(skeletonData));
-        //把纹理集数据和图片添加到工厂里
-        factory.addTextureAtlas(new dragonBones.EgretTextureAtlas(texture, textureData));
-      
-        //获取Armature的名字，dragonBones4.0的数据可以包含多个骨架，这里取第一个Armature
-        var armatureName:string = skeletonData.armature[0].name;
-        //从工厂里创建出Armature
-        var armature:dragonBones.FastArmature = factory.buildFastArmature(armatureName);
-        //获取装载Armature的容器
-        var armatureDisplay = armature.display;
-        //把它添加到舞台上
-        this.addChild(armatureDisplay);
-        
-        //以60fps的帧率开启动画缓存，缓存所有的动画数据
-        var animationCachManager:dragonBones.AnimationCacheManager = armature.enableAnimationCache(60);
-      
-       //取得这个Armature动画列表中的第一个动画的名字
-        var curAnimationName = armature.animation.animationList[0];
-        //播放这个动画，gotoAndPlay各个参数说明
-        //第一个参数 animationName {string} 指定播放动画的名称.
-        //第二个参数 fadeInTime {number} 动画淡入时间 (>= 0), 默认值：-1 意味着使用动画数据中的淡入时间.
-        //第三个参数 duration {number} 动画播放时间。默认值：-1 意味着使用动画数据中的播放时间.
-        //第四个参数 layTimes {number} 动画播放次数(0:循环播放, >=1:播放次数, NaN:使用动画数据中的播放时间), 默认值：NaN
-        armature.animation.gotoAndPlay(curAnimationName,0.3,-1,0);
-      
-        //把Armature添加到心跳时钟里
-        dragonBones.WorldClock.clock.add(armature);
-        //心跳时钟开启
-        egret.Ticker.getInstance().register(function (advancedTime) {
-            dragonBones.WorldClock.clock.advanceTime(advancedTime / 1000);
-        }, this);
-       </pre>
-     */
-    class FrameCache {
-        private static ORIGIN_TRAMSFORM;
-        private static ORIGIN_MATRIX;
-        globalTransform: DBTransform;
-        globalTransformMatrix: Matrix;
-        constructor();
-        copy(frameCache: FrameCache): void;
-        clear(): void;
-    }
-}
-declare module dragonBones {
-    /**
-     * @class dragonBones.ICacheUser
-     * @classdesc
-     * ICacheUser 接口定义了可以使用帧缓存的接口。
-     * 目前只有FastSlot实现了该接口。
-     * @see dragonBones.FastSlot
-     * @see dragonBones.ISlotCacheGenerator
-     */
-    interface ICacheUser {
-        name: string;
-        frameCache: FrameCache;
-    }
-}
-declare module dragonBones {
-    /**
-     * @class dragonBones.ICacheableArmature
-     * @classdesc
-     * ICacheableArmature 接口定义了可以使用缓存的Armature的接口。
-     * 目前只有FastArmature实现了该接口。
-     * @see dragonBones.FastArmature
-     * @see dragonBones.IArmature
-     */
-    interface ICacheableArmature extends IArmature {
-        enableCache: boolean;
-        enableEventDispatch: boolean;
-    }
-}
-declare module dragonBones {
-    /**
-     * @class dragonBones.ISlotCacheGenerator
-     * @classdesc
-     * ICacheUser 接口定义了可以生成Slot帧缓存的接口。
-     * 目前只有FastSlot实现了该接口。
-     * @see dragonBones.FastSlot
-     * @see dragonBones.ICacheUser
-     */
-    interface ISlotCacheGenerator extends ICacheUser {
-        global: DBTransform;
-        globalTransformMatrix: Matrix;
-        colorChanged: boolean;
-        colorTransform: ColorTransform;
-        displayIndex: number;
-        gotoAndPlay: string;
-    }
-}
-declare module dragonBones {
-    /**
-     * @class dragonBones.SlotFrameCache
-     * @classdesc
-     * SlotFrameCache 存储了Slot的帧缓存数据。
-     * @see dragonBones.FastSlot
-     * @see dragonBones.ICacheUser
-     * @example
-       <pre>
-        //获取动画数据
-        var skeletonData = RES.getRes("skeleton");
-        //获取纹理集数据
-        var textureData = RES.getRes("textureConfig");
-        //获取纹理集图片
-        var texture = RES.getRes("texture");
-      
-        //创建一个工厂，用来创建Armature
-        var factory:dragonBones.EgretFactory = new dragonBones.EgretFactory();
-        //把动画数据添加到工厂里
-        factory.addSkeletonData(dragonBones.DataParser.parseDragonBonesData(skeletonData));
-        //把纹理集数据和图片添加到工厂里
-        factory.addTextureAtlas(new dragonBones.EgretTextureAtlas(texture, textureData));
-      
-        //获取Armature的名字，dragonBones4.0的数据可以包含多个骨架，这里取第一个Armature
-        var armatureName:string = skeletonData.armature[0].name;
-        //从工厂里创建出Armature
-        var armature:dragonBones.FastArmature = factory.buildFastArmature(armatureName);
-        //获取装载Armature的容器
-        var armatureDisplay = armature.display;
-        //把它添加到舞台上
-        this.addChild(armatureDisplay);
-        
-        //以60fps的帧率开启动画缓存，缓存所有的动画数据
-        var animationCachManager:dragonBones.AnimationCacheManager = armature.enableAnimationCache(60);
-      
-       //取得这个Armature动画列表中的第一个动画的名字
-        var curAnimationName = armature.animation.animationList[0];
-        //播放这个动画，gotoAndPlay各个参数说明
-        //第一个参数 animationName {string} 指定播放动画的名称.
-        //第二个参数 fadeInTime {number} 动画淡入时间 (>= 0), 默认值：-1 意味着使用动画数据中的淡入时间.
-        //第三个参数 duration {number} 动画播放时间。默认值：-1 意味着使用动画数据中的播放时间.
-        //第四个参数 layTimes {number} 动画播放次数(0:循环播放, >=1:播放次数, NaN:使用动画数据中的播放时间), 默认值：NaN
-        armature.animation.gotoAndPlay(curAnimationName,0.3,-1,0);
-      
-        //把Armature添加到心跳时钟里
-        dragonBones.WorldClock.clock.add(armature);
-        //心跳时钟开启
-        egret.Ticker.getInstance().register(function (advancedTime) {
-            dragonBones.WorldClock.clock.advanceTime(advancedTime / 1000);
-        }, this);
-       </pre>
-     */
-    class SlotFrameCache extends FrameCache {
-        colorTransform: ColorTransform;
-        displayIndex: number;
-        gotoAndPlay: string;
-        constructor();
-        copy(frameCache: FrameCache): void;
-        clear(): void;
-    }
-}
-declare module dragonBones {
-    /**
-     * @class dragonBones.TimelineCache
-     * @classdesc
-     * TimelineCache 是时间轴缓存基类存。
-     * @see dragonBones.SlotTimelineCache
-     * @see dragonBones.FrameCache
-     * @see dragonBones.ICacheUser
-     * @example
-       <pre>
-        //获取动画数据
-        var skeletonData = RES.getRes("skeleton");
-        //获取纹理集数据
-        var textureData = RES.getRes("textureConfig");
-        //获取纹理集图片
-        var texture = RES.getRes("texture");
-      
-        //创建一个工厂，用来创建Armature
-        var factory:dragonBones.EgretFactory = new dragonBones.EgretFactory();
-        //把动画数据添加到工厂里
-        factory.addSkeletonData(dragonBones.DataParser.parseDragonBonesData(skeletonData));
-        //把纹理集数据和图片添加到工厂里
-        factory.addTextureAtlas(new dragonBones.EgretTextureAtlas(texture, textureData));
-      
-        //获取Armature的名字，dragonBones4.0的数据可以包含多个骨架，这里取第一个Armature
-        var armatureName:string = skeletonData.armature[0].name;
-        //从工厂里创建出Armature
-        var armature:dragonBones.FastArmature = factory.buildFastArmature(armatureName);
-        //获取装载Armature的容器
-        var armatureDisplay = armature.display;
-        //把它添加到舞台上
-        this.addChild(armatureDisplay);
-        
-        //以60fps的帧率开启动画缓存，缓存所有的动画数据
-        var animationCachManager:dragonBones.AnimationCacheManager = armature.enableAnimationCache(60);
-      
-       //取得这个Armature动画列表中的第一个动画的名字
-        var curAnimationName = armature.animation.animationList[0];
-        //播放这个动画，gotoAndPlay各个参数说明
-        //第一个参数 animationName {string} 指定播放动画的名称.
-        //第二个参数 fadeInTime {number} 动画淡入时间 (>= 0), 默认值：-1 意味着使用动画数据中的淡入时间.
-        //第三个参数 duration {number} 动画播放时间。默认值：-1 意味着使用动画数据中的播放时间.
-        //第四个参数 layTimes {number} 动画播放次数(0:循环播放, >=1:播放次数, NaN:使用动画数据中的播放时间), 默认值：NaN
-        armature.animation.gotoAndPlay(curAnimationName,0.3,-1,0);
-      
-        //把Armature添加到心跳时钟里
-        dragonBones.WorldClock.clock.add(armature);
-        //心跳时钟开启
-        egret.Ticker.getInstance().register(function (advancedTime) {
-            dragonBones.WorldClock.clock.advanceTime(advancedTime / 1000);
-        }, this);
-       </pre>
-     */
-    class TimelineCache {
-        name: string;
-        frameCacheList: Array<FrameCache>;
-        currentFrameCache: FrameCache;
-        constructor();
-        addFrame(frameIndex: number, armature: FastArmature): void;
-        update(frameIndex?: number): void;
-        bindCacheUser(cacheUser: ICacheUser): void;
-    }
-}
-declare module dragonBones {
-    /**
-     * @class dragonBones.SlotTimelineCache
-     * @classdesc
-     * SlotTimelineCache 存储了Slot的时间轴缓存数据。
-     * @see dragonBones.TimelineCache
-     * @see dragonBones.SlotFrameCache
-     * @example
-       <pre>
-        //获取动画数据
-        var skeletonData = RES.getRes("skeleton");
-        //获取纹理集数据
-        var textureData = RES.getRes("textureConfig");
-        //获取纹理集图片
-        var texture = RES.getRes("texture");
-      
-        //创建一个工厂，用来创建Armature
-        var factory:dragonBones.EgretFactory = new dragonBones.EgretFactory();
-        //把动画数据添加到工厂里
-        factory.addSkeletonData(dragonBones.DataParser.parseDragonBonesData(skeletonData));
-        //把纹理集数据和图片添加到工厂里
-        factory.addTextureAtlas(new dragonBones.EgretTextureAtlas(texture, textureData));
-      
-        //获取Armature的名字，dragonBones4.0的数据可以包含多个骨架，这里取第一个Armature
-        var armatureName:string = skeletonData.armature[0].name;
-        //从工厂里创建出Armature
-        var armature:dragonBones.FastArmature = factory.buildFastArmature(armatureName);
-        //获取装载Armature的容器
-        var armatureDisplay = armature.display;
-        //把它添加到舞台上
-        this.addChild(armatureDisplay);
-        
-        //以60fps的帧率开启动画缓存，缓存所有的动画数据
-        var animationCachManager:dragonBones.AnimationCacheManager = armature.enableAnimationCache(60);
-      
-       //取得这个Armature动画列表中的第一个动画的名字
-        var curAnimationName = armature.animation.animationList[0];
-        //播放这个动画，gotoAndPlay各个参数说明
-        //第一个参数 animationName {string} 指定播放动画的名称.
-        //第二个参数 fadeInTime {number} 动画淡入时间 (>= 0), 默认值：-1 意味着使用动画数据中的淡入时间.
-        //第三个参数 duration {number} 动画播放时间。默认值：-1 意味着使用动画数据中的播放时间.
-        //第四个参数 layTimes {number} 动画播放次数(0:循环播放, >=1:播放次数, NaN:使用动画数据中的播放时间), 默认值：NaN
-        armature.animation.gotoAndPlay(curAnimationName,0.3,-1,0);
-      
-        //把Armature添加到心跳时钟里
-        dragonBones.WorldClock.clock.add(armature);
-        //心跳时钟开启
-        egret.Ticker.getInstance().register(function (advancedTime) {
-            dragonBones.WorldClock.clock.advanceTime(advancedTime / 1000);
-        }, this);
-       </pre>
-     */
-    class SlotTimelineCache extends TimelineCache {
-        cacheGenerator: ISlotCacheGenerator;
-        constructor();
-        addFrame(frameIndex: number, armature: FastArmature): void;
-    }
-}
-declare module dragonBones {
-    /**
-     * @class dragonBones.Event
-     * @classdesc
-     * 事件
-     */
-    class Event extends egret.Event {
-        /**
-         * 创建一个Event实例
-         * @param type 事件的类型
-         */
-        constructor(type: string, bubbles?: boolean, cancelable?: boolean);
-    }
-}
-declare module dragonBones {
-    /**
-     * @class dragonBones.AnimationEvent
-     * @extends dragonBones.Event
-     * @classdesc
-     * 动画事件
-     *
-     * @example
-       <pre>
-        private exampleEvent():void
-        {
-            //获取动画数据
-            var skeletonData = RES.getRes("skeleton");
-            //获取纹理集数据
-            var textureData = RES.getRes("textureConfig");
-            //获取纹理集图片
-            var texture = RES.getRes("texture");
-
-            //创建一个工厂，用来创建Armature
-            var factory:dragonBones.EgretFactory = new dragonBones.EgretFactory();
-            //把动画数据添加到工厂里
-            factory.addSkeletonData(dragonBones.DataParser.parseDragonBonesData(skeletonData));
-            //把纹理集数据和图片添加到工厂里
-            factory.addTextureAtlas(new dragonBones.EgretTextureAtlas(texture, textureData));
-
-            //获取Armature的名字，dragonBones4.0的数据可以包含多个骨架，这里取第一个Armature
-            var armatureName:string = skeletonData.armature[0].name;
-            //从工厂里创建出Armature
-            var armature:dragonBones.Armature = factory.buildArmature(armatureName);
-            //获取装载Armature的容器
-            var armatureDisplay = armature.display;
-            armatureDisplay.x = 200;
-            armatureDisplay.y = 400;
-            //把它添加到舞台上
-            this.addChild(armatureDisplay);
-
-            //监听事件时间轴上的事件
-            armature.addEventListener(dragonBones.FrameEvent.ANIMATION_FRAME_EVENT, this.onFrameEvent,this);
-            //监听骨骼时间轴上的事件
-            armature.addEventListener(dragonBones.FrameEvent.BONE_FRAME_EVENT, this.onFrameEvent,this);
-            //监听动画完成事件
-            armature.addEventListener(dragonBones.AnimationEvent.COMPLETE, this.onAnimationEvent,this);
-            //监听动画开始事件
-            armature.addEventListener(dragonBones.AnimationEvent.START, this.onAnimationEvent,this);
-            //监听循环动画，播放完一遍的事件
-            armature.addEventListener(dragonBones.AnimationEvent.LOOP_COMPLETE, this.onAnimationEvent,this);
-            //监听声音事件
-            var soundManager:dragonBones.SoundEventManager = dragonBones.SoundEventManager.getInstance();
-            soundManager.addEventListener(dragonBones.SoundEvent.SOUND, this.onSoundEvent,this);
-
-            //取得这个Armature动画列表中的第一个动画的名字
-            var curAnimationName = armature.animation.animationList[0];
-            //播放一遍动画
-            armature.animation.gotoAndPlay(curAnimationName,0,-1,1);
-
-            //把Armature添加到心跳时钟里
-            dragonBones.WorldClock.clock.add(armature);
-            //心跳时钟开启
-            egret.Ticker.getInstance().register(function (advancedTime) {
-                dragonBones.WorldClock.clock.advanceTime(advancedTime / 1000);
-            }, this);
-        }
-        private onFrameEvent(evt: dragonBones.FrameEvent):void
-        {
-            //打印出事件的类型，和事件的帧标签
-            console.log(evt.type, evt.frameLabel);
-        }
-
-        private onAnimationEvent(evt: dragonBones.AnimationEvent):void
-        {
-            switch(evt.type)
-            {
-                case dragonBones.AnimationEvent.START:
-                     break;
-                case dragonBones.AnimationEvent.LOOP_COMPLETE:
-                     break;
-                case dragonBones.AnimationEvent.COMPLETE:
-                     //动画完成后销毁这个armature
-                     this.removeChild(evt.armature.display);
-                     dragonBones.WorldClock.clock.remove(evt.armature);
-                     evt.armature.dispose();
-                     break;
-            }
-        }
-
-        private onSoundEvent(evt: dragonBones.SoundEvent):void
-        {
-            //播放声音
-            var flySound:egret.Sound = RES.getRes(evt.sound);
-            console.log("soundEvent",evt.sound);
-        }
-
-       </pre>
-     */
-    class AnimationEvent extends Event {
-        /**
-         * 不推荐使用.
-         */
-        static MOVEMENT_CHANGE: string;
-        /**
-         * 当动画缓入的时候派发
-         */
-        static FADE_IN: string;
-        /**
-         * 当动画缓出的时候派发
-         */
-        static FADE_OUT: string;
-        /**
-         * 当动画开始播放时派发
-         */
-        static START: string;
-        /**
-         * 当动画停止时派发
-         */
-        static COMPLETE: string;
-        /**
-         * 当动画播放完一轮后派发
-         */
-        static LOOP_COMPLETE: string;
-        /**
-         * 当动画缓入完成时派发
-         */
-        static FADE_IN_COMPLETE: string;
-        /**
-         * 当动画缓出结束后派发
-         */
-        static FADE_OUT_COMPLETE: string;
-        /**
-         * 不推荐的API.
-         * @member {string} dragonBones.AnimationEvent#movementID
-         */
-        movementID: string;
-        /**
-         * animationState 的实例.
-         * @member {dragonBones.AnimationState} dragonBones.AnimationEvent#animationState
-         */
-        animationState: any;
-        /**
-         * 配发出事件的骨架
-         * @member {dragonBones.Armature} dragonBones.AnimationEvent#armature
-         */
-        armature: Armature;
-        /**
-         * 获取动画的名字
-         * @returns {string}
-         * @member {string} dragonBones.AnimationEvent#animationName
-         */
-        animationName: string;
-        /**
-         * 创建一个新的 AnimationEvent 的实例
-         * @param type 事件的类型
-         * @param cancelable
-         */
-        constructor(type: string, cancelable?: boolean);
-    }
-}
-declare module dragonBones {
-    /**
-     * @class dragonBones.ArmatureEvent
-     * @extends dragonBones.Event
-     * @classdesc
-     * 骨架事件
-     */
-    class ArmatureEvent extends Event {
-        /**
-         * 当zOrder成功更新后派发
-         */
-        static Z_ORDER_UPDATED: string;
-        /**
-         * 创建一个 ArmatureEvent 的实例
-         * @param type 事件类型
-         */
-        constructor(type: string);
-    }
-}
-declare module dragonBones {
-    /**
-     * @class dragonBones.FrameEvent
-     * @extends dragonBones.Event
-     * @classdesc
-     * 帧事件
-     *
-     * @example
-     * <pre>
-     *  private exampleEvent():void
-        {
-            //获取动画数据
-            var skeletonData = RES.getRes("skeleton");
-            //获取纹理集数据
-            var textureData = RES.getRes("textureConfig");
-            //获取纹理集图片
-            var texture = RES.getRes("texture");
-
-            //创建一个工厂，用来创建Armature
-            var factory:dragonBones.EgretFactory = new dragonBones.EgretFactory();
-            //把动画数据添加到工厂里
-            factory.addSkeletonData(dragonBones.DataParser.parseDragonBonesData(skeletonData));
-            //把纹理集数据和图片添加到工厂里
-            factory.addTextureAtlas(new dragonBones.EgretTextureAtlas(texture, textureData));
-
-            //获取Armature的名字，dragonBones4.0的数据可以包含多个骨架，这里取第一个Armature
-            var armatureName:string = skeletonData.armature[0].name;
-            //从工厂里创建出Armature
-            var armature:dragonBones.Armature = factory.buildArmature(armatureName);
-            //获取装载Armature的容器
-            var armatureDisplay = armature.display;
-            armatureDisplay.x = 200;
-            armatureDisplay.y = 400;
-            //把它添加到舞台上
-            this.addChild(armatureDisplay);
-
-            //监听事件时间轴上的事件
-            armature.addEventListener(dragonBones.FrameEvent.ANIMATION_FRAME_EVENT, this.onFrameEvent,this);
-            //监听骨骼时间轴上的事件
-            armature.addEventListener(dragonBones.FrameEvent.BONE_FRAME_EVENT, this.onFrameEvent,this);
-            //监听动画完成事件
-            armature.addEventListener(dragonBones.AnimationEvent.COMPLETE, this.onAnimationEvent,this);
-            //监听动画开始事件
-            armature.addEventListener(dragonBones.AnimationEvent.START, this.onAnimationEvent,this);
-            //监听循环动画，播放完一遍的事件
-            armature.addEventListener(dragonBones.AnimationEvent.LOOP_COMPLETE, this.onAnimationEvent,this);
-            //监听声音事件
-            var soundManager:dragonBones.SoundEventManager = dragonBones.SoundEventManager.getInstance();
-            soundManager.addEventListener(dragonBones.SoundEvent.SOUND, this.onSoundEvent,this);
-
-            //取得这个Armature动画列表中的第一个动画的名字
-            var curAnimationName = armature.animation.animationList[0];
-            //播放一遍动画
-            armature.animation.gotoAndPlay(curAnimationName,0,-1,1);
-
-            //把Armature添加到心跳时钟里
-            dragonBones.WorldClock.clock.add(armature);
-            //心跳时钟开启
-            egret.Ticker.getInstance().register(function (advancedTime) {
-                dragonBones.WorldClock.clock.advanceTime(advancedTime / 1000);
-            }, this);
-        }
-        private onFrameEvent(evt: dragonBones.FrameEvent):void
-        {
-            //打印出事件的类型，和事件的帧标签
-            console.log(evt.type, evt.frameLabel);
-        }
-
-        private onAnimationEvent(evt: dragonBones.AnimationEvent):void
-        {
-            switch(evt.type)
-            {
-                case dragonBones.AnimationEvent.START:
-                     break;
-                case dragonBones.AnimationEvent.LOOP_COMPLETE:
-                     break;
-                case dragonBones.AnimationEvent.COMPLETE:
-                     //动画完成后销毁这个armature
-                     this.removeChild(evt.armature.display);
-                     dragonBones.WorldClock.clock.remove(evt.armature);
-                     evt.armature.dispose();
-                     break;
-            }
-        }
-
-        private onSoundEvent(evt: dragonBones.SoundEvent):void
-        {
-            //播放声音
-            var flySound:egret.Sound = RES.getRes(evt.sound);
-            console.log("soundEvent",evt.sound);
-        }
-
-     * </pre>
-     */
-    class FrameEvent extends Event {
-        static MOVEMENT_FRAME_EVENT: string;
-        /**
-         * 当动画播放到一个关键帧时派发
-         */
-        static ANIMATION_FRAME_EVENT: string;
-        /**
-         *
-         */
-        static BONE_FRAME_EVENT: string;
-        /**
-         * 当前的帧标签
-         * @member {string} dragonBones.FrameEvent#frameLabel
-         */
-        frameLabel: string;
-        bone: any;
-        /**
-         * 派发这个事件的骨架
-         * @member {dragonBones.Armature} dragonBones.FrameEvent#armature
-         */
-        armature: Armature;
-        /**
-         * animationState的实例
-         * @member {dragonBones.AnimationState} dragonBones.FrameEvent#animationState
-         */
-        animationState: any;
-        /**
-         * 创建一个新的 FrameEvent 实例
-         * @param type 事件类型
-         * @param cancelable
-         */
-        constructor(type: string, cancelable?: boolean);
-    }
-}
-declare module dragonBones {
-    /**
-     * @class dragonBones.SoundEvent
-     * @extends dragonBones.Event
-     * @classdesc
-     * 声音事件
-     *
-     * @example
-       <pre>
-        private exampleEvent():void
-        {
-            //获取动画数据
-            var skeletonData = RES.getRes("skeleton");
-            //获取纹理集数据
-            var textureData = RES.getRes("textureConfig");
-            //获取纹理集图片
-            var texture = RES.getRes("texture");
-
-            //创建一个工厂，用来创建Armature
-            var factory:dragonBones.EgretFactory = new dragonBones.EgretFactory();
-            //把动画数据添加到工厂里
-            factory.addSkeletonData(dragonBones.DataParser.parseDragonBonesData(skeletonData));
-            //把纹理集数据和图片添加到工厂里
-            factory.addTextureAtlas(new dragonBones.EgretTextureAtlas(texture, textureData));
-
-            //获取Armature的名字，dragonBones4.0的数据可以包含多个骨架，这里取第一个Armature
-            var armatureName:string = skeletonData.armature[0].name;
-            //从工厂里创建出Armature
-            var armature:dragonBones.Armature = factory.buildArmature(armatureName);
-            //获取装载Armature的容器
-            var armatureDisplay = armature.display;
-            armatureDisplay.x = 200;
-            armatureDisplay.y = 400;
-            //把它添加到舞台上
-            this.addChild(armatureDisplay);
-
-            //监听事件时间轴上的事件
-            armature.addEventListener(dragonBones.FrameEvent.ANIMATION_FRAME_EVENT, this.onFrameEvent,this);
-            //监听骨骼时间轴上的事件
-            armature.addEventListener(dragonBones.FrameEvent.BONE_FRAME_EVENT, this.onFrameEvent,this);
-            //监听动画完成事件
-            armature.addEventListener(dragonBones.AnimationEvent.COMPLETE, this.onAnimationEvent,this);
-            //监听动画开始事件
-            armature.addEventListener(dragonBones.AnimationEvent.START, this.onAnimationEvent,this);
-            //监听循环动画，播放完一遍的事件
-            armature.addEventListener(dragonBones.AnimationEvent.LOOP_COMPLETE, this.onAnimationEvent,this);
-            //监听声音事件
-            var soundManager:dragonBones.SoundEventManager = dragonBones.SoundEventManager.getInstance();
-            soundManager.addEventListener(dragonBones.SoundEvent.SOUND, this.onSoundEvent,this);
-
-            //取得这个Armature动画列表中的第一个动画的名字
-            var curAnimationName = armature.animation.animationList[0];
-            //播放一遍动画
-            armature.animation.gotoAndPlay(curAnimationName,0,-1,1);
-
-            //把Armature添加到心跳时钟里
-            dragonBones.WorldClock.clock.add(armature);
-            //心跳时钟开启
-            egret.Ticker.getInstance().register(function (advancedTime) {
-                dragonBones.WorldClock.clock.advanceTime(advancedTime / 1000);
-            }, this);
-        }
-        private onFrameEvent(evt: dragonBones.FrameEvent):void
-        {
-            //打印出事件的类型，和事件的帧标签
-            console.log(evt.type, evt.frameLabel);
-        }
-
-        private onAnimationEvent(evt: dragonBones.AnimationEvent):void
-        {
-            switch(evt.type)
-            {
-                case dragonBones.AnimationEvent.START:
-                     break;
-                case dragonBones.AnimationEvent.LOOP_COMPLETE:
-                     break;
-                case dragonBones.AnimationEvent.COMPLETE:
-                     //动画完成后销毁这个armature
-                     this.removeChild(evt.armature.display);
-                     dragonBones.WorldClock.clock.remove(evt.armature);
-                     evt.armature.dispose();
-                     break;
-            }
-        }
-
-        private onSoundEvent(evt: dragonBones.SoundEvent):void
-        {
-            //播放声音
-            var flySound:egret.Sound = RES.getRes(evt.sound);
-            console.log("soundEvent",evt.sound);
-        }
-
-       </pre>
-     */
-    class SoundEvent extends Event {
-        /**
-         * Dispatched when the animation of the animation enter a frame containing sound labels.
-         */
-        static SOUND: string;
-        /**
-         * The armature that is the target of this event.
-         */
-        armature: Armature;
-        animationState: AnimationState;
-        sound: string;
-        /**
-         * Creates a new SoundEvent instance.
-         * @param type
-         * @param cancelable
-         */
-        constructor(type: string, cancelable?: boolean);
-    }
-}
-declare module dragonBones {
-    /**
-     * @class dragonBones.BaseFactory
-     * @classdesc
-     * 工厂的基类
-     * @extends dragonBones.EventDispatcher
-     *
-     * @example
-       <pre>
-         //获取动画数据
-         var skeletonData = RES.getRes("skeleton");
-         //获取纹理集数据
-         var textureData = RES.getRes("textureConfig");
-         //获取纹理集图片
-         var texture = RES.getRes("texture");
-      
-         //创建一个工厂，用来创建Armature
-         var factory:dragonBones.EgretFactory = new dragonBones.EgretFactory();
-         //把动画数据添加到工厂里
-         factory.addSkeletonData(dragonBones.DataParser.parseDragonBonesData(skeletonData));
-         //把纹理集数据和图片添加到工厂里
-         factory.addTextureAtlas(new dragonBones.EgretTextureAtlas(texture, textureData));
-         //获取Armature的名字，dragonBones4.0的数据可以包含多个骨架，这里取第一个Armature
-         var armatureName:string = skeletonData.armature[0].name;
-         //从工厂里创建出Armature
-         var armature:dragonBones.Armature = factory.buildArmature(armatureName);
-         //获取装载Armature的容器
-         var armatureDisplay = armature.display;
-         //把它添加到舞台上
-         this.addChild(armatureDisplay);
-         //取得这个Armature动画列表中的第一个动画的名字
-         var curAnimationName = armature.animation.animationList[0];
-         //播放这个动画，gotoAndPlay参数说明,具体详见Animation类
-         //第一个参数 animationName {string} 指定播放动画的名称.
-         //第二个参数 fadeInTime {number} 动画淡入时间 (>= 0), 默认值：-1 意味着使用动画数据中的淡入时间.
-         //第三个参数 duration {number} 动画播放时间。默认值：-1 意味着使用动画数据中的播放时间.
-         //第四个参数 layTimes {number} 动画播放次数(0:循环播放, >=1:播放次数, NaN:使用动画数据中的播放时间), 默认值：NaN
-         armature.animation.gotoAndPlay(curAnimationName,0.3,-1,0);
-      
-         //把Armature添加到心跳时钟里
-         dragonBones.WorldClock.clock.add(armature);
-         //心跳时钟开启
-         egret.Ticker.getInstance().register(function (advancedTime) {
-             dragonBones.WorldClock.clock.advanceTime(advancedTime / 1000);
-         }, this);
-       </pre>
-     */
-    class BaseFactory extends EventDispatcher {
-        static _helpMatrix: Matrix;
-        /** @private */
-        dragonBonesDataDic: any;
-        /** @private */
-        textureAtlasDic: any;
-        constructor();
-        /**
-         * 释放资源
-         * @param  disposeData {boolean} (optional) 是否释放所有内部的引用
-         */
-        dispose(disposeData?: boolean): void;
-        /**
-         * 根据名字获取一个DragonBonesData
-         * @param name {string} 想要获取的DragonBonesData的名字
-         * @returns {dragonBones.DragonBonesData} 返回指定名字的DragonBonesData（如果存在的话）
-         */
-        getDragonBonesData(name: string): DragonBonesData;
-        /**
-         * 根据名字获取一个DragonBonesData（不推荐使用）
-         * 建议使用方法getDragonBonesData来代替这个方法
-         */
-        getSkeletonData(name: string): DragonBonesData;
-        /**
-         * 添加一个DragonBonesData实例
-         * @param data {dragonBones.DragonBonesData} 一个DragonBonesData实例
-         * @param name {string} (optional) DragonBonesData的名字
-         */
-        addDragonBonesData(data: DragonBonesData, name?: string): void;
-        /**
-         * 添加一个DragonBonesData实例（不推荐使用）
-         * 建议使用方法addDragonBonesData来代替
-         */
-        addSkeletonData(data: DragonBonesData, name?: string): void;
-        /**
-         * 根据名字移除一个DragonBonesData实例.
-         * @param name {string} 想要移除的DragonBonesData的名字
-         */
-        removeDragonBonesData(name: string): void;
-        /**
-         * 根据名字移除一个DragonBonesData实例.（不推荐使用）
-         * 建议使用方法removeDragonBonesData代替
-         */
-        removeSkeletonData(name: string): void;
-        /**
-         * 根据名字获取纹理集TextureAtlas
-         * @param name {string} 需要获取的纹理集TextureAtlas的名字
-         * @returns {any} 纹理集TextureAtlas
-         */
-        getTextureAtlas(name: string): any;
-        /**
-         * 添加一个纹理集
-         * @param textureAtlas {any} 需要被添加的纹理集
-         * @param name {string} (optional) 需要被添加的纹理集的名字
-         */
-        addTextureAtlas(textureAtlas: any, name?: string): void;
-        /**
-         * 移除指定名字的纹理集
-         * @param name {string} 需要移除的纹理集的名字
-         */
-        removeTextureAtlas(name: string): void;
-        /**
-         * 获取TextureDisplay
-         * @param textureName {string} 纹理的名字
-         * @param textureAtlasName {string} 纹理集的名字
-         * @param pivotX {number} 轴点的x坐标
-         * @param pivotY {number} 轴点的y坐标
-         * @returns {any} 返回的TextureDisplay
-         */
-        getTextureDisplay(textureName: string, textureAtlasName?: string, pivotX?: number, pivotY?: number): any;
-        /**
-         * @private
-         */
-        getMeshDisplay(meshData: MeshData, slot: Slot, textureAtlasName?: string): any;
-        /**
-         * 构建骨架
-         * 一般情况下dragonBonesData和textureAtlas是一对一的，通过相同的key对应。
-         * @param armatureName 骨架的名字
-         * @param fromDragonBonesDataName 骨架数据的名字 可选参数
-         * @param fromTextureAtlasName 纹理集的名字 可选参数
-         * @param skinName 皮肤的名字 可选参数
-         * @returns {*}
-         */
-        buildArmature(armatureName: string, fromDragonBonesDataName?: string, fromTextureAtlasName?: string, skinName?: string): Armature;
-        /**
-         * 构建fast骨架
-         * 一般情况下dragonBonesData和textureAtlas是一对一的，通过相同的key对应。
-         * @param armatureName 骨架的名字
-         * @param fromDragonBonesDataName 骨架数据的名字 可选参数
-         * @param fromTextureAtlasName 纹理集的名字 可选参数
-         * @param skinName 皮肤的名字 可选参数
-         * @returns {*}
-         */
-        buildFastArmature(armatureName: string, fromDragonBonesDataName?: string, fromTextureAtlasName?: string, skinName?: string): FastArmature;
-        /**
-         * 用dragonBones数据，骨架数据，纹理集数据来构建骨架
-         * @param dragonBonesData dragonBones数据
-         * @param armatureData 骨架数据
-         * @param textureAtlas 纹理集
-         * @param skinName 皮肤名称 可选参数
-         * @returns {Armature}
-         */
-        buildArmatureUsingArmatureDataFromTextureAtlas(dragonBonesData: DragonBonesData, armatureData: ArmatureData, textureAtlasName: string, skinName?: string): Armature;
-        /**
-         * 用dragonBones数据，骨架数据，纹理集数据来构建骨架
-         * @param dragonBonesData dragonBones数据
-         * @param armatureData 骨架数据
-         * @param textureAtlas 纹理集
-         * @param skinName 皮肤名称 可选参数
-         * @returns {Armature}
-         */
-        buildFastArmatureUsingArmatureDataFromTextureAtlas(dragonBonesData: DragonBonesData, armatureData: ArmatureData, textureAtlasName: string, skinName?: string): FastArmature;
-        /**
-         * 拷贝动画到骨架中
-         * 暂时不支持ifRemoveOriginalAnimationList为false的情况
-         * @param toArmature  拷贝到的那个骨架
-         * @param fromArmatreName 从哪个骨架里拷贝，骨架的名字
-         * @param fromDragonBonesDataName 从哪个DragonBones数据中拷贝，Dragonbones数据的名字
-         * @param ifRemoveOriginalAnimationList 是否移除原骨架里的动画，暂时不支持为false的情况
-         * @returns {boolean}
-         */
-        copyAnimationsToArmature(toArmature: Armature, fromArmatreName: string, fromDragonBonesDataName?: string, ifRemoveOriginalAnimationList?: boolean): boolean;
-        private fillBuildArmatureDataPackageArmatureInfo(armatureName, dragonBonesDataName, outputBuildArmatureDataPackage);
-        private fillBuildArmatureDataPackageTextureInfo(fromTextureAtlasName, outputBuildArmatureDataPackage);
-        private findFirstDragonBonesData();
-        private findFirstTextureAtlas();
-        _buildBones(armature: Armature): void;
-        _buildSlots(armature: Armature, skinName: string, textureAtlasName: string): void;
-        _buildFastBones(armature: FastArmature): void;
-        _buildFastSlots(armature: FastArmature, skinName: string, textureAtlasName: string): void;
-        private getTextureData(textureName, textureAtlasName);
-        /**
-         * @private
-         * Generates an Armature instance.
-         * @returns {dragonBones.Armature} Armature An Armature instance.
-         */
-        _generateArmature(): Armature;
-        /**
-         * @private
-         * Generates an Slot instance.
-         * @returns {dragonBones.Slot} Slot An Slot instance.
-         */
-        _generateSlot(): Slot;
-        /**
-         * @private
-         * Generates an Armature instance.
-         * @returns {dragonBones.Armature} Armature An Armature instance.
-         */
-        _generateFastArmature(): FastArmature;
-        /**
-         * @private
-         * Generates an Slot instance.
-         * @returns {dragonBones.Slot} Slot An Slot instance.
-         */
-        _generateFastSlot(): FastSlot;
-        /**
-         * @private
-         * Generates a DisplayObject
-         * @param textureAtlas {any} The TextureAtlas.
-         * @param fullName {string} A qualified name.
-         * @param pivotX {number} A pivot x based value.
-         * @param pivotY {number} A pivot y based value.
-         * @returns {any}
-         */
-        _generateDisplay(textureAtlas: any, fullName: string, pivotX: number, pivotY: number): any;
-        /**
-         * @private
-         */
-        _generateMesh(textureAtlas: any, fullName: string, meshData: MeshData, slot: Slot): any;
-    }
-    class BuildArmatureDataPackage {
-        dragonBonesDataName: string;
-        dragonBonesData: DragonBonesData;
-        armatureData: ArmatureData;
-        textureAtlas: any;
-    }
-}
-declare module dragonBones {
-    /**
-     * @class dragonBones.FastArmature
-     * @classdesc
-     * FastArmature 是 DragonBones 高效率的骨骼动画系统。他能缓存动画数据，大大减少动画播放的计算
-     * 不支持动态添加Bone和Slot，换装请通过更换Slot的dispaly或子骨架childArmature来实现
-     * @extends dragonBones.EventDispatcher
-     * @see dragonBones.ArmatureData
-     *
-     * @example
-       <pre>
-        //获取动画数据
-        var skeletonData = RES.getRes("skeleton");
-        //获取纹理集数据
-        var textureData = RES.getRes("textureConfig");
-        //获取纹理集图片
-        var texture = RES.getRes("texture");
-      
-        //创建一个工厂，用来创建Armature
-        var factory:dragonBones.EgretFactory = new dragonBones.EgretFactory();
-        //把动画数据添加到工厂里
-        factory.addSkeletonData(dragonBones.DataParser.parseDragonBonesData(skeletonData));
-        //把纹理集数据和图片添加到工厂里
-        factory.addTextureAtlas(new dragonBones.EgretTextureAtlas(texture, textureData));
-      
-        //获取Armature的名字，dragonBones4.0的数据可以包含多个骨架，这里取第一个Armature
-        var armatureName:string = skeletonData.armature[0].name;
-        //从工厂里创建出Armature
-        var armature:dragonBones.FastArmature = factory.buildFastArmature(armatureName);
-        //获取装载Armature的容器
-        var armatureDisplay = armature.display;
-        //把它添加到舞台上
-        this.addChild(armatureDisplay);
-        
-        //以60fps的帧率开启动画缓存，缓存所有的动画数据
-        var animationCachManager:dragonBones.AnimationCacheManager = armature.enableAnimationCache(60);
-      
-       //取得这个Armature动画列表中的第一个动画的名字
-        var curAnimationName = armature.animation.animationList[0];
-        //播放这个动画，gotoAndPlay各个参数说明
-        //第一个参数 animationName {string} 指定播放动画的名称.
-        //第二个参数 fadeInTime {number} 动画淡入时间 (>= 0), 默认值：-1 意味着使用动画数据中的淡入时间.
-        //第三个参数 duration {number} 动画播放时间。默认值：-1 意味着使用动画数据中的播放时间.
-        //第四个参数 layTimes {number} 动画播放次数(0:循环播放, >=1:播放次数, NaN:使用动画数据中的播放时间), 默认值：NaN
-        armature.animation.gotoAndPlay(curAnimationName,0.3,-1,0);
-      
-        //把Armature添加到心跳时钟里
-        dragonBones.WorldClock.clock.add(armature);
-        //心跳时钟开启
-        egret.Ticker.getInstance().register(function (advancedTime) {
-            dragonBones.WorldClock.clock.advanceTime(advancedTime / 1000);
-        }, this);
-       </pre>
-     */
-    class FastArmature extends EventDispatcher implements ICacheableArmature {
-        /**
-         * The name should be same with ArmatureData's name
-         */
-        name: string;
-        /**
-         * An object that can contain any user extra data.
-         */
-        userData: any;
-        private _enableCache;
-        /**
-         * 保证CacheManager是独占的前提下可以开启，开启后有助于性能提高
-         */
-        isCacheManagerExclusive: boolean;
-        _cacheFrameIndex: number;
-        /** @private */
-        _animation: FastAnimation;
-        /** @private */
-        _display: any;
-        /** @private Store bones based on bones' hierarchy (From root to leaf)*/
-        boneList: Array<FastBone>;
-        _boneDic: any;
-        private _boneIKList;
-        /** @private ik*/
-        _ikList: Array<FastIKConstraint>;
-        /** @private Store slots based on slots' zOrder*/
-        slotList: Array<FastSlot>;
-        _slotDic: any;
-        /** @private data version 4.5 and upper*/
-        _skewEnable: boolean;
-        slotHasChildArmatureList: Array<FastSlot>;
-        _enableEventDispatch: boolean;
-        __dragonBonesData: DragonBonesData;
-        _armatureData: ArmatureData;
-        _slotsZOrderChanged: boolean;
-        _eventList: Array<any>;
-        private _delayDispose;
-        private _lockDispose;
-        /** @private*/
-        _useCache: boolean;
-        /** @private*/
-        _isFrameCached: boolean;
-        constructor(display: any);
-        /**
-         * Cleans up any resources used by this instance.
-         */
-        dispose(): void;
-        /**
-         * Update the animation using this method typically in an ENTERFRAME Event or with a Timer.
-         * @param The amount of second to move the playhead ahead.
-         */
-        advanceTime(passedTime: number): void;
-        /**
-         * 开启动画缓存
-         * @param  {number} 帧速率，每秒缓存多少次数据，越大越流畅,若值小于零会被设置为动画数据中的默认帧率
-         * @param  {Array<any>} 需要缓存的动画列表，如果为null，则全部动画都缓存
-         * @param  {boolean} 动画是否是循环动画，仅在3.0以下的数据格式使用，如果动画不是循环动画请设置为false，默认为true。
-         * @return {AnimationCacheManager}  返回缓存管理器，可以绑定到其他armature以减少内存
-         */
-        enableAnimationCache(frameRate: number, animationList?: Array<any>, loop?: boolean): AnimationCacheManager;
-        /**
-         * 获取指定名称的 Bone
-         * @param boneName {string} Bone名称
-         * @returns {FastBone}
-         */
-        getBone(boneName: string): FastBone;
-        /**
-         * 获取指定名称的 Slot
-         * @param slotName {string} Slot名称
-         * @returns {FastSlot}
-         */
-        getSlot(slotName: string): FastSlot;
-        /**
-         * 获取包含指定显示对象的 Bone
-         * @param display {any} 显示对象实例
-         * @returns {FastBone}
-         */
-        getBoneByDisplay(display: any): FastBone;
-        /**
-         * 获取包含指定显示对象的 Slot
-         * @param displayObj {any} 显示对象实例
-         * @returns {FastSlot}
-         */
-        getSlotByDisplay(displayObj: any): FastSlot;
-        /**
-         * 获取骨架包含的所有插槽
-         * @param returnCopy {boolean} 是否返回拷贝。默认：true
-         * @returns {FastSlot[]}
-         */
-        getSlots(returnCopy?: boolean): Array<FastSlot>;
-        _updateBonesByCache(): void;
-        /**
-         * 在骨架中为指定名称的 FastBone 添加一个子 FastBone.
-         * 和Armature不同,FastArmature的这个方法不能在运行时动态添加骨骼
-         * @param bone {FastBone} FastBone 实例
-         * @param parentName {string} 父骨头名称 默认：null
-         */
-        addBone(bone: FastBone, parentName?: string): void;
-        /**
-         * 为指定名称的 FastBone 添加一个子 FastSlot.
-         * 和Armature不同,FastArmature的这个方法不能在运行时动态添加插槽
-         * @param slot {FastSlot} FastSlot 实例
-         * @param boneName {string}
-         * @see dragonBones.Bone
-         */
-        addSlot(slot: FastSlot, parentBoneName: string): void;
-        /**
-         * 按照显示层级为所有 Slot 排序
-         */
-        updateSlotsZOrder(): void;
-        private sortBoneList();
-        /** @private When AnimationState enter a key frame, call this func*/
-        arriveAtFrame(frame: Frame, animationState: FastAnimationState): void;
-        invalidUpdate(boneName?: string): void;
-        resetAnimation(): void;
-        private sortSlot(slot1, slot2);
-        /**
-         * 获取FastAnimation实例
-         * @returns {any} FastAnimation实例
-         */
-        getAnimation(): any;
-        /**
-         * ArmatureData.
-         * @see dragonBones.ArmatureData.
-         */
-        armatureData: ArmatureData;
-        /**
-         * An Animation instance
-         * @see dragonBones.Animation
-         */
-        animation: FastAnimation;
-        /**
-         * Armature's display object. It's instance type depends on render engine. For example "flash.display.DisplayObject" or "startling.display.DisplayObject"
-         */
-        display: any;
-        enableCache: boolean;
-        enableEventDispatch: boolean;
-        _addEvent(event: Event): void;
-        getIKs(returnCopy?: boolean): Array<FastIKConstraint>;
-        buildIK(): void;
-        updateBoneCache(): void;
-        getIKTargetData(bone: FastBone): Array<FastIKConstraint>;
-    }
-}
-declare module dragonBones {
-    /**
-     * @class dragonBones.FastDBObject
-     * @classdesc
-     * FastDBObject 是 FastBone 和 FastSlot 的基类
-     * @see dragonBones.FastBone
-     * @see dragonBones.FastSlot
-     */
-    class FastDBObject {
-        private _name;
-        /**
-         * An object that can contain any user extra data.
-         */
-        userData: any;
-        /**
-         *
-         */
-        inheritRotation: boolean;
-        /**
-         *
-         */
-        inheritScale: boolean;
-        /**
-         *
-         */
-        inheritTranslation: boolean;
-        /** @private */
-        _global: DBTransform;
-        /** @private */
-        _globalTransformMatrix: Matrix;
-        /** @private */
-        _globalBackup: DBTransform;
-        /** @private */
-        _globalTransformMatrixBackup: Matrix;
-        static _tempParentGlobalTransform: DBTransform;
-        _frameCache: FrameCache;
-        /** @private */
-        updateByCache(frameIndex: number): void;
-        /** @private */
-        switchTransformToBackup(): void;
-        /**
-         * The armature this DBObject instance belongs to.
-         */
-        armature: FastArmature;
-        /** @private */
-        _origin: DBTransform;
-        /** @private */
-        _visible: boolean;
-        /** @private */
-        _parent: FastBone;
-        /** @private */
-        setParent(value: FastBone): void;
-        constructor();
-        /**
-         * Cleans up any resources used by this DBObject instance.
-         */
-        dispose(): void;
-        _calculateParentTransform(): ParentTransformObject;
-        _updateGlobal(): ParentTransformObject;
-        _calculateRelativeParentTransform(): void;
-        name: string;
-        /**
-         * This DBObject instance global transform instance.
-         * @see dragonBones.DBTransform
-         */
-        global: DBTransform;
-        globalTransformMatrix: Matrix;
-        /**
-         * This DBObject instance related to parent transform instance.
-         * @see dragonBones.DBTransform
-         */
-        origin: DBTransform;
-        /**
-         * Indicates the Bone instance that directly contains this DBObject instance if any.
-         */
-        parent: FastBone;
-        visible: boolean;
-        frameCache: FrameCache;
-    }
-}
-declare module dragonBones {
-    /**
-     * @class dragonBones.FastBone
-     * @classdesc
-     * FastBone 实例代表 FastArmature 中的一个骨头。一个FastArmature实例可以由很多 FastBone组成。
-     * FastBone 在骨骼动画体系中是最重要的逻辑单元之一，负责动画中的平移旋转缩放的实现
-     * 和Bone相比，FastBone不能动态添加子骨骼和子插槽
-     * @extends dragonBones.FastDBObject
-     * @see dragonBones.FastArmature
-     * @see dragonBones.FastSlot
-     * @see dragonBones.BoneData
-     */
-    class FastBone extends FastDBObject {
-        static initWithBoneData(boneData: BoneData): FastBone;
-        slotList: Array<FastSlot>;
-        boneList: Array<FastBone>;
-        /** @private */
-        _timelineState: FastBoneTimelineState;
-        /** @private */
-        _localTransform: DBTransform;
-        /** @private */
-        _needUpdate: number;
-        _tweenPivot: Point;
-        rotationIK: number;
-        length: number;
-        isIKConstraint: boolean;
-        childrenBones: Array<FastBone>;
-        constructor();
-        /**
-         * 获取当前骨头包含的所有 FastBone 实例
-         * @param returnCopy {boolean} 是否返回拷贝。默认：true
-         * @returns {FastBone[]}
-         */
-        getBones(returnCopy?: boolean): Array<FastBone>;
-        /**
-         * 获取当前骨头包含的所有 FastSlot 实例
-         * @param returnCopy {boolean} 是否返回拷贝。默认：true
-         * @returns {FastSlot[]}
-         */
-        getSlots(returnCopy?: boolean): Array<FastSlot>;
-        /**
-         * @inheritDoc
-         */
-        dispose(): void;
-        /**
-         * 在下一帧强制更新当前 Bone 实例及其包含的所有 Slot 的动画。
-         */
-        invalidUpdate(): void;
-        private operationInvalidUpdate(bone);
-        _calculateRelativeParentTransform(): void;
-        /** @private */
-        updateByCache(frameIndex: number): void;
-        /** @private */
-        update(needUpdate?: boolean): void;
-        private updataLocalTransform();
-        private updateGlobalTransform();
-        _updateGlobal(): ParentTransformObject;
-        adjustGlobalTransformMatrixByIK(): void;
-        /** @private */
-        _hideSlots(): void;
-        private blendingTimeline();
-        /** @private When bone timeline enter a key frame, call this func*/
-        arriveAtFrame(frame: Frame, animationState: FastAnimationState): void;
-        /**
-         * 不推荐的API,建议使用 slot.childArmature 替代
-         */
-        childArmature: any;
-        /**
-         * 不推荐的API,建议使用 slot.display 替代
-         */
-        display: any;
-        /** @private */
-        visible: boolean;
-        /**
-         * 返回当前 FastBone 实例包含的第一个 FastSlot 实例
-         * @member {FastSlot} dragonBones.FastBone#slot
-         */
-        slot: FastSlot;
-        parentBoneRotation: number;
-        parentBoneData: FastBone;
-    }
-}
-declare module dragonBones {
-    class FastIKConstraint {
-        private ikdata;
-        private armature;
-        bones: Array<FastBone>;
-        target: FastBone;
-        bendDirection: number;
-        weight: number;
-        animationCacheBend: number;
-        animationCacheWeight: number;
-        constructor(data: IKData, armatureData: FastArmature);
-        dispose(): void;
-        compute(): void;
-        compute1(bone: FastBone, target: FastBone, weightA: number): void;
-        compute2(parent: FastBone, child: FastBone, targetX: number, targetY: number, bendDirection: number, weightA: number): Point;
-        private normalize(rotation);
-    }
-}
-declare module dragonBones {
-    /**
-     * @class dragonBones.FastSlot
-     * @classdesc
-     * FastSlot 实例是骨头上的一个插槽，是显示图片的容器。
-     * 一个 FastBone 上可以有多个FastSlot，每个FastSlot中同一时间都会有一张图片用于显示，不同的FastSlot中的图片可以同时显示。
-     * 每个 FastSlot 中可以包含多张图片，同一个 FastSlot 中的不同图片不能同时显示，但是可以在动画进行的过程中切换，用于实现帧动画。
-     * @extends dragonBones.DBObject
-     * @see dragonBones.FastArmature
-     * @see dragonBones.FastBone
-     * @see dragonBones.SlotData
-     */
-    class FastSlot extends FastDBObject implements ISlotCacheGenerator {
-        /** @private Need to keep the reference of DisplayData. When slot switch displayObject, it need to restore the display obect's origional pivot. */
-        /** @private */
-        _originZOrder: number;
-        /** @private */
-        _tweenZOrder: number;
-        /** @private */
-        _offsetZOrder: number;
-        /** @private */
-        _originDisplayIndex: number;
-        /** @private */
-        _gotoAndPlay: string;
-        _defaultGotoAndPlay: string;
-        hasChildArmature: boolean;
-        _isColorChanged: boolean;
-        _colorTransform: ColorTransform;
-        _blendMode: string;
-        _displayIndex: number;
-        _rawDisplay: any;
-        _display: any;
-        _childArmature: FastArmature;
-        _displayList: Array<any>;
-        _displayDataList: Array<[DisplayData, TextureData]>;
-        _cacheTimeline: SlotTimelineCache;
-        constructor(rawDisplay: any);
-        /**
-         * 通过传入 SlotData 初始化FastSlot
-         * @param slotData
-         */
-        initWithSlotData(slotData: SlotData): void;
-        /**
-         * @inheritDoc
-         */
-        dispose(): void;
-        /** @private */
-        updateByCache(frameIndex: number): void;
-        /** @private */
-        _update(needUpdate?: boolean): void;
-        _calculateRelativeParentTransform(): void;
-        updateChildArmatureAnimation(): void;
-        /** @private */
-        changeDisplay(): void;
-        /** @private */
-        visible: boolean;
-        displayIndex: number;
-        /**
-         * 当前的显示对象(可能是 display 或者 子骨架)
-         * @member {any} dragonBones.FastSlot#display
-         */
-        display: any;
-        /**
-         * 当前的子骨架
-         * @member {FastArmature} dragonBones.Slot#childArmature
-         */
-        childArmature: any;
-        /** @private */
-        /** @private */
-        displayDataList: Array<[DisplayData, TextureData]>;
-        /**
-         * 显示对象列表(包含 display 或者 子骨架)
-         * @member {any[]} dragonBones.FastSlot#displayList
-         */
-        displayList: Array<any>;
-        /**
-         * 显示顺序。(支持小数用于实现动态插入slot)
-         * @member {number} dragonBones.FastSlot#zOrder
-         */
-        zOrder: number;
-        /**
-         * 混合模式
-         * @member {string} dragonBones.FastSlot#blendMode
-         */
-        blendMode: string;
-        /**
-         * 播放子骨架动画
-         * @member {string} dragonBones.FastSlot#gotoAndPlay
-         */
-        gotoAndPlay: string;
-        colorTransform: ColorTransform;
-        colorChanged: boolean;
-        /** @private */
-        _updateDisplay(value: any): void;
-        /** @private */
-        _addDisplay(): void;
-        /** @private */
-        _replaceDisplay(prevDisplay: any): void;
-        /** @private */
-        _removeDisplay(): void;
-        /** @private */
-        _getDisplayIndex(): number;
-        /**
-         * @private
-         * Adds the original display object to another display object.
-         * @param container
-         * @param index
-         */
-        _addDisplayToContainer(container: any, index?: number): void;
-        /**
-         * @private
-         * remove the original display object from its parent.
-         */
-        _removeDisplayFromContainer(): void;
-        /**
-         * @private
-         * Updates the transform of the slot.
-         */
-        _updateTransform(): void;
-        /**
-         * @private
-         * Updates the frame of the slot.
-         */
-        _updateFrame(): void;
-        /**
-         * @private
-         */
-        _updateDisplayVisible(value: boolean): void;
-        /**
-         * @private
-         * Updates the color of the display object.
-         * @param a
-         * @param r
-         * @param g
-         * @param b
-         * @param aM
-         * @param rM
-         * @param gM
-         * @param bM
-         */
-        _updateDisplayColor(aOffset: number, rOffset: number, gOffset: number, bOffset: number, aMultiplier: number, rMultiplier: number, gMultiplier: number, bMultiplier: number, colorChanged?: boolean): void;
-        /**
-         * @private
-         * Update the blend mode of the display object.
-         * @param value The blend mode to use.
-         */
-        _updateDisplayBlendMode(value: string): void;
-        /** @private When slot timeline enter a key frame, call this func*/
-        _arriveAtFrame(frame: Frame, animationState: FastAnimationState): void;
-        /** @private */
-        hideSlots(): void;
-        _updateGlobal(): any;
-        _resetToOrigin(): void;
-    }
-}
-declare module dragonBones {
-    /**
-     * @class dragonBones.FastAnimation
-     * @classdesc
-     * FastAnimation实例隶属于FastArmature,用于控制FastArmature的动画播放。
-     * 和Animation相比，FastAnimation为了优化性能，不支持动画融合，在开启缓存的情况下，不支持无极的平滑补间
-     * @see dragonBones.FastBone
-     * @see dragonBones.FastArmature
-     * @see dragonBones.FastAnimationState
-     * @see dragonBones.AnimationData.
-     *
-     * @example
-       <pre>
-        //获取动画数据
-        var skeletonData = RES.getRes("skeleton");
-        //获取纹理集数据
-        var textureData = RES.getRes("textureConfig");
-        //获取纹理集图片
-        var texture = RES.getRes("texture");
-      
-        //创建一个工厂，用来创建Armature
-        var factory:dragonBones.EgretFactory = new dragonBones.EgretFactory();
-        //把动画数据添加到工厂里
-        factory.addSkeletonData(dragonBones.DataParser.parseDragonBonesData(skeletonData));
-        //把纹理集数据和图片添加到工厂里
-        factory.addTextureAtlas(new dragonBones.EgretTextureAtlas(texture, textureData));
-      
-        //获取Armature的名字，dragonBones4.0的数据可以包含多个骨架，这里取第一个Armature
-        var armatureName:string = skeletonData.armature[0].name;
-        //从工厂里创建出Armature
-        var armature:dragonBones.FastArmature = factory.buildFastArmature(armatureName);
-        //获取装载Armature的容器
-        var armatureDisplay = armature.display;
-        //把它添加到舞台上
-        this.addChild(armatureDisplay);
-        
-        //以60fps的帧率开启动画缓存，缓存所有的动画数据
-        var animationCachManager:dragonBones.AnimationCacheManager = armature.enableAnimationCache(60);
-      
-       //取得这个Armature动画列表中的第一个动画的名字
-        var curAnimationName = armature.animation.animationList[0];
-        //播放这个动画，gotoAndPlay各个参数说明
-        //第一个参数 animationName {string} 指定播放动画的名称.
-        //第二个参数 fadeInTime {number} 动画淡入时间 (>= 0), 默认值：-1 意味着使用动画数据中的淡入时间.
-        //第三个参数 duration {number} 动画播放时间。默认值：-1 意味着使用动画数据中的播放时间.
-        //第四个参数 layTimes {number} 动画播放次数(0:循环播放, >=1:播放次数, NaN:使用动画数据中的播放时间), 默认值：NaN
-        armature.animation.gotoAndPlay(curAnimationName,0.3,-1,0);
-      
-        //把Armature添加到心跳时钟里
-        dragonBones.WorldClock.clock.add(armature);
-        //心跳时钟开启
-        egret.Ticker.getInstance().register(function (advancedTime) {
-            dragonBones.WorldClock.clock.advanceTime(advancedTime / 1000);
-        }, this);
-       </pre>
-     */
-    class FastAnimation {
-        /**
-         * 所有动画名称列表.
-         * @member {string[]} dragonBones.FastAnimation#animationList
-         */
-        animationList: Array<string>;
-        /**
-         * 当前正在运行的动画实例.
-         * @member {FastAnimationState} dragonBones.FastAnimation#animationState
-         */
-        animationState: FastAnimationState;
-        /**
-         * 动画缓存管理器.
-         * @member {AnimationCacheManager} dragonBones.FastAnimation#animationCacheManager
-         */
-        animationCacheManager: AnimationCacheManager;
-        private _armature;
-        private _animationDataList;
-        private _animationDataObj;
-        private _isPlaying;
-        private _timeScale;
-        /**
-         * 创建一个新的FastAnimation实例并赋给传入的FastArmature实例
-         * @param armature {FastArmature} 骨架实例
-         */
-        constructor(armature: FastArmature);
-        /**
-         * Qualifies all resources used by this Animation instance for garbage collection.
-         */
-        dispose(): void;
-        /**
-         * 开始播放指定名称的动画。
-         * 要播放的动画将经过指定时间的淡入过程，然后开始播放，同时之前播放的动画会经过相同时间的淡出过程。
-         * @param animationName {string} 指定播放动画的名称.
-         * @param fadeInTime {number} 动画淡入时间 (>= 0), 默认值：-1 意味着使用动画数据中的淡入时间.
-         * @param duration {number} 动画播放时间。默认值：-1 意味着使用动画数据中的播放时间.
-         * @param playTimes {number} 动画播放次数(0:循环播放, >=1:播放次数, NaN:使用动画数据中的播放时间), 默认值：NaN
-         * @see dragonBones.FastAnimationState.
-         */
-        gotoAndPlay(animationName: string, fadeInTime?: number, duration?: number, playTimes?: number): FastAnimationState;
-        /**
-         * 播放指定名称的动画并停止于某个时间点
-         * @param animationName {string} 指定播放的动画名称.
-         * @param time {number} 动画停止的绝对时间
-         * @param normalizedTime {number} 动画停止的相对动画总时间的系数，这个参数和time参数是互斥的（例如 0.2：动画停止总时间的20%位置） 默认值：-1 意味着使用绝对时间。
-         * @param fadeInTime {number} 动画淡入时间 (>= 0), 默认值：0
-         * @param duration {number} 动画播放时间。默认值：-1 意味着使用动画数据中的播放时间.
-         * @see dragonBones.FastAnimationState.
-         */
-        gotoAndStop(animationName: string, time: number, normalizedTime?: number, fadeInTime?: number, duration?: number): FastAnimationState;
-        /**
-         * 从当前位置继续播放动画
+        _advanceTime(passedTime: number, weightLeft: number, index: number): void;
+        /**
+         * @language zh_CN
+         * 继续播放。
+         * @version DragonBones 3.0
          */
         play(): void;
         /**
-         * 暂停动画播放
+         * @language zh_CN
+         * 暂停播放。
+         * @version DragonBones 3.0
          */
         stop(): void;
-        /** @private */
-        advanceTime(passedTime: number): void;
         /**
-         * check if contains a AnimationData by name.
-         * @return Boolean.
-         * @see dragonBones.AnimationData.
+         * @language zh_CN
+         * 淡出动画。
+         * @param fadeOutTime 淡出时间。 (以秒为单位)
+         * @param pausePlayhead 淡出时是否暂停动画。 [true: 暂停, false: 不暂停]
+         * @version DragonBones 3.0
          */
-        hasAnimation(animationName: string): boolean;
+        fadeOut(fadeOutTime: number, pausePlayhead?: boolean): void;
         /**
-         * 时间缩放倍数
-         * @member {number} dragonBones.FastAnimation#timeScale
+         * @language zh_CN
+         * 是否包含指定的骨骼遮罩。
+         * @param name 指定的骨骼名称。
+         * @version DragonBones 3.0
          */
-        timeScale: number;
+        containsBoneMask(name: string): boolean;
         /**
-         * 包含的所有动画数据列表
-         * @member {AnimationData[]} dragonBones.FastAnimation#animationDataList
-         * @see dragonBones.AnimationData.
+         * @language zh_CN
+         * 添加指定的骨骼遮罩。
+         * @param boneName 指定的骨骼名称。
+         * @param recursive 是否为该骨骼的子骨骼添加遮罩。
+         * @version DragonBones 3.0
          */
-        animationDataList: Array<AnimationData>;
+        addBoneMask(name: string, recursive?: boolean): void;
         /**
-         * Unrecommended API. Recommend use animationList.
+         * @language zh_CN
+         * 删除指定的骨骼遮罩。
+         * @param boneName 指定的骨骼名称。
+         * @param recursive 是否删除该骨骼的子骨骼遮罩。
+         * @version DragonBones 3.0
          */
-        movementList: Array<string>;
+        removeBoneMask(name: string, recursive?: boolean): void;
         /**
-         * Unrecommended API. Recommend use lastAnimationName.
+         * @language zh_CN
+         * 删除所有骨骼遮罩。
+         * @version DragonBones 3.0
          */
-        movementID: string;
+        removeAllBoneMask(): void;
         /**
-         * 是否正在播放
-         * @member {boolean} dragonBones.FastAnimation#isPlaying
+         * @language zh_CN
+         * 动画图层。
+         * @see dragonBones.animation.Animation#fadeIn()
+         * @version DragonBones 3.0
          */
-        isPlaying(): boolean;
+        layer: number;
         /**
-         * 是否播放完成.
-         * @member {boolean} dragonBones.FastAnimation#isComplete
+         * @language zh_CN
+         * 动画组。
+         * @see dragonBones.animation.Animation#fadeIn()
+         * @version DragonBones 3.0
          */
-        isComplete: boolean;
+        group: string;
         /**
-         * 当前播放动画的实例.
-         * @member {FastAnimationState} dragonBones.FastAnimation#lastAnimationState
+         * @language zh_CN
+         * 动画名称。
+         * @see dragonBones.objects.AnimationData#name
+         * @version DragonBones 3.0
          */
-        lastAnimationState: FastAnimationState;
-        /**
-         * 当前播放动画的名字.
-         * @member {string} dragonBones.FastAnimation#lastAnimationName
-         */
-        lastAnimationName: string;
-    }
-}
-declare module dragonBones {
-    /**
-     * @class dragonBones.FastAnimationState
-     * @classdesc
-     * FastAnimationState 实例代表播放的动画， 可以对单个动画的播放进行最细致的调节。
-     * @see dragonBones.Animation
-     * @see dragonBones.AnimationData
-     * @example
-       <pre>
-        //获取动画数据
-        var skeletonData = RES.getRes("skeleton");
-        //获取纹理集数据
-        var textureData = RES.getRes("textureConfig");
-        //获取纹理集图片
-        var texture = RES.getRes("texture");
-      
-        //创建一个工厂，用来创建Armature
-        var factory:dragonBones.EgretFactory = new dragonBones.EgretFactory();
-        //把动画数据添加到工厂里
-        factory.addSkeletonData(dragonBones.DataParser.parseDragonBonesData(skeletonData));
-        //把纹理集数据和图片添加到工厂里
-        factory.addTextureAtlas(new dragonBones.EgretTextureAtlas(texture, textureData));
-      
-        //获取Armature的名字，dragonBones4.0的数据可以包含多个骨架，这里取第一个Armature
-        var armatureName:string = skeletonData.armature[0].name;
-        //从工厂里创建出Armature
-        var armature:dragonBones.FastArmature = factory.buildFastArmature(armatureName);
-        //获取装载Armature的容器
-        var armatureDisplay = armature.display;
-        //把它添加到舞台上
-        this.addChild(armatureDisplay);
-        
-        //以60fps的帧率开启动画缓存，缓存所有的动画数据
-        var animationCachManager:dragonBones.AnimationCacheManager = armature.enableAnimationCache(60);
-      
-       //取得这个Armature动画列表中的第一个动画的名字
-        var curAnimationName = armature.animation.animationList[0];
-        //播放这个动画，gotoAndPlay各个参数说明
-        //第一个参数 animationName {string} 指定播放动画的名称.
-        //第二个参数 fadeInTime {number} 动画淡入时间 (>= 0), 默认值：-1 意味着使用动画数据中的淡入时间.
-        //第三个参数 duration {number} 动画播放时间。默认值：-1 意味着使用动画数据中的播放时间.
-        //第四个参数 layTimes {number} 动画播放次数(0:循环播放, >=1:播放次数, NaN:使用动画数据中的播放时间), 默认值：NaN
-        armature.animation.gotoAndPlay(curAnimationName,0.3,-1,0);
-      
-        //把Armature添加到心跳时钟里
-        dragonBones.WorldClock.clock.add(armature);
-        //心跳时钟开启
-        egret.Ticker.getInstance().register(function (advancedTime) {
-            dragonBones.WorldClock.clock.advanceTime(advancedTime / 1000);
-        }, this);
-       </pre>
-     */
-    class FastAnimationState implements IAnimationState {
-        animationCache: AnimationCache;
-        /**
-         * 是否自动补间。
-         * @member {boolean} dragonBones.AnimationState#autoTween
-         */
-        autoTween: boolean;
-        _progress: number;
-        _armature: FastArmature;
-        private _boneTimelineStateList;
-        private _slotTimelineStateList;
-        animationData: AnimationData;
         name: string;
-        private _time;
-        private _currentFrameIndex;
-        private _currentFramePosition;
-        private _currentFrameDuration;
-        private _currentPlayTimes;
-        private _totalTime;
-        private _currentTime;
-        private _lastTime;
-        private _isComplete;
-        private _isPlaying;
-        private _timeScale;
-        private _playTimes;
-        _fading: boolean;
-        _fadeTotalTime: number;
-        constructor();
-        dispose(): void;
         /**
-         * 播放当前动画。如果动画已经播放完毕, 将不会继续播放.
-         * @returns {FastAnimationState} 动画播放状态实例
+         * @language zh_CN
+         * 动画数据。
+         * @see dragonBones.objects.AnimationData
+         * @version DragonBones 3.0
          */
-        play(): FastAnimationState;
+        clip: AnimationData;
         /**
-         * 暂停当前动画的播放。
-         * @returns {AnimationState} 动画播放状态实例
+         * @language zh_CN
+         * 动画数据。
+         * @see dragonBones.objects.AnimationData
+         * @version DragonBones 3.0
          */
-        stop(): FastAnimationState;
-        setCurrentTime(value: number): FastAnimationState;
-        _resetTimelineStateList(): void;
-        /** @private */
-        _fadeIn(aniData: AnimationData, playTimes: number, timeScale: number, fadeTotalTime: number): void;
+        animationData: AnimationData;
         /**
-         * @private
-         * Update timeline state based on mixing transforms and clip.
+         * @language zh_CN
+         * 是否播放完毕。
+         * @version DragonBones 3.0
          */
-        _updateTimelineStateList(): void;
-        /** @private */
-        _advanceTime(passedTime: number): void;
-        private advanceTimelinesTime(passedTime);
-        private updateTransformTimeline(progress);
-        private updateMainTimeline(isThisComplete);
-        private setTimeScale(value);
-        private setPlayTimes(value?);
+        isCompleted: Boolean;
         /**
-         * 播放次数 (0:循环播放， >0:播放次数)
-         * @member {number} dragonBones.FastAnimationState#playTimes
+         * @language zh_CN
+         * 是否正在播放。
+         * @version DragonBones 3.0
          */
-        playTimes: number;
+        isPlaying: Boolean;
         /**
-         * 当前播放次数
-         * @member {number} dragonBones.FastAnimationState#currentPlayTimes
+         * @language zh_CN
+         * 当前动画的播放次数。
+         * @version DragonBones 3.0
          */
         currentPlayTimes: number;
         /**
-         * 是否播放完成
-         * @member {boolean} dragonBones.FastAnimationState#isComplete
-         */
-        isComplete: boolean;
-        /**
-         * 是否正在播放
-         * @member {boolean} dragonBones.FastAnimationState#isPlaying
-         */
-        isPlaying: boolean;
-        /**
-         * 动画总时长（单位：秒）
-         * @member {number} dragonBones.FastAnimationState#totalTime
+         * @language zh_CN
+         * 当前动画的总时间。 (以秒为单位)
+         * @version DragonBones 3.0
          */
         totalTime: number;
         /**
-         * 动画当前播放时间（单位：秒）
-         * @member {number} dragonBones.FastAnimationState#currentTime
+         * @language zh_CN
+         * 当前动画的播放时间。 (以秒为单位)
+         * @version DragonBones 3.0
          */
         currentTime: number;
         /**
-         * 是否使用缓存
-         * @member {boolean} dragonBones.FastAnimationState#isUseCache
-         */
-        isUseCache(): boolean;
-        private hideBones();
-        /**
-         * 动画播放进度
-         * @member {number} dragonBones.FastAnimationState#progress
-         */
-        progress: number;
-    }
-}
-declare module dragonBones {
-    /**
-     * @class dragonBones.FastBoneTimelineState
-     * @classdesc
-     * FastBoneTimelineState 负责计算 Bone 的时间轴动画。
-     * FastBoneTimelineState 实例隶属于 FastAnimationState. FastAnimationState在创建时会为每个包含动作的 FastBone生成一个 FastBoneTimelineState 实例.
-     * @see dragonBones.FastAnimation
-     * @see dragonBones.FastAnimationState
-     * @see dragonBones.FastBone
-     */
-    class FastBoneTimelineState {
-        private static _pool;
-        /** @private */
-        static borrowObject(): FastBoneTimelineState;
-        /** @private */
-        static returnObject(timeline: FastBoneTimelineState): void;
-        /** @private */
-        static clear(): void;
-        name: string;
-        private _totalTime;
-        private _currentTime;
-        private _lastTime;
-        private _currentFrameIndex;
-        private _currentFramePosition;
-        private _currentFrameDuration;
-        private _bone;
-        private _timelineData;
-        private _durationTransform;
-        private _tweenTransform;
-        private _tweenEasing;
-        private _tweenCurve;
-        private _updateMode;
-        private _transformToFadein;
-        /** @private */
-        _animationState: FastAnimationState;
-        /** @private */
-        _isComplete: boolean;
-        /** @private */
-        _transform: DBTransform;
-        _durationPivot: Point;
-        _originPivot: Point;
-        _pivot: Point;
-        constructor();
-        private clear();
-        /** @private */
-        fadeIn(bone: FastBone, animationState: FastAnimationState, timelineData: TransformTimeline): void;
-        /** @private */
-        updateFade(progress: number): void;
-        /** @private */
-        update(progress: number): void;
-        private updateSingleFrame();
-        private updateMultipleFrame(progress);
-        private updateToNextFrame(currentPlayTimes?);
-        private updateTween();
-    }
-}
-declare module dragonBones {
-    /**
-     * @class dragonBones.FastSlotTimelineState
-     * @classdesc
-     * FastSlotTimelineState 负责计算 Slot 的时间轴动画。
-     * FastSlotTimelineState 实例隶属于 FastAnimationState. FastAnimationState在创建时会为每个包含动作的 Slot生成一个 FastSlotTimelineState 实例.
-     * @see dragonBones.FastAnimation
-     * @see dragonBones.FastAnimationState
-     * @see dragonBones.FastSlot
-     */
-    class FastSlotTimelineState {
-        private static HALF_PI;
-        private static DOUBLE_PI;
-        private static _pool;
-        /** @private */
-        static borrowObject(): FastSlotTimelineState;
-        /** @private */
-        static returnObject(timeline: FastSlotTimelineState): void;
-        /** @private */
-        static clear(): void;
-        name: string;
-        /** @private */
-        _weight: number;
-        /** @private */
-        _blendEnabled: boolean;
-        /** @private */
-        _isComplete: boolean;
-        /** @private */
-        _animationState: FastAnimationState;
-        private _totalTime;
-        private _currentTime;
-        private _currentFrameIndex;
-        private _currentFramePosition;
-        private _currentFrameDuration;
-        private _tweenEasing;
-        private _tweenCurve;
-        private _tweenColor;
-        private _colorChanged;
-        private _updateMode;
-        private _armature;
-        private _animation;
-        private _slot;
-        private _timelineData;
-        private _durationColor;
-        constructor();
-        private clear();
-        /** @private */
-        fadeIn(slot: FastSlot, animationState: FastAnimationState, timelineData: SlotTimeline): void;
-        /** @private */
-        updateFade(progress: number): void;
-        /** @private */
-        update(progress: number): void;
-        private updateMultipleFrame(progress);
-        private updateToNextFrame(currentPlayTimes?);
-        private updateTween();
-        private updateSingleFrame();
-    }
-}
-declare module dragonBones {
-    /**
-     * @class dragonBones.Point
-     * @classdesc
-     * Point 对象表示二维坐标系统中的某个位置，其中 x 表示水平轴，y 表示垂直轴。
-     * 下面的代码在 (0,0) 处创建一个点：
-     *   var myPoint:Point = new Point();
-     */
-    class Point {
-        /**
-         *该点的水平坐标。
-         * @member {number} dragonBones.Point#x
-         */
-        x: number;
-        /**
-         *该点的垂直坐标。
-         * @member {number} dragonBones.Point#y
-         */
-        y: number;
-        /**
-         *创建一个新点。
-         * @param x 该点的水平坐标。
-         * @param y 该点的垂直坐标。
-         */
-        constructor(x?: number, y?: number);
-        /**
-         *返回包含 x 和 y 坐标的值的字符串。
-         * @returns {string}
-         */
-        toString(): string;
-    }
-}
-declare module dragonBones {
-    /**
-     * @class dragonBones
-     * @classdesc
-     * Rectangle 对象是按其位置（由它左上角的点 (x, y) 确定）以及宽度和高度定义的区域。
-     * Rectangle 类的 x、y、width 和 height 属性相互独立；更改一个属性的值不会影响其他属性。
-     */
-    class Rectangle {
-        /**
-         * 矩形左上角的 x 坐标。
-         * @member {number} dragonBones.Rectangle#x
-         */
-        x: number;
-        /**
-         * 矩形左上角的 y 坐标。
-         * @member {number} dragonBones.Rectangle#y
-         */
-        y: number;
-        /**
-         * 矩形的宽度（以像素为单位）
-         * @member {number} dragonBones.Rectangle#width
-         */
-        width: number;
-        /**
-         * 矩形的高度（以像素为单位）。
-         * @member {number} dragonBones.Rectangle#height
-         */
-        height: number;
-        /**
-         *创建一个新 Rectangle 对象，其左上角由 x 和 y 参数指定，并具有指定的 width 和 height 参数。
-         * @param x 矩形左上角的 x 坐标。
-         * @param y 矩形左上角的 y 坐标。
-         * @param width 矩形的宽度（以像素为单位）
-         * @param height 矩形的高度（以像素为单位）。
-         */
-        constructor(x?: number, y?: number, width?: number, height?: number);
-    }
-}
-declare module dragonBones {
-    /**
-     * @class dragonBones.Timeline
-     * @classdesc
-     * 保存时间轴相关的数据，包括关键帧，持续时间，时间缩放
-     */
-    class Timeline {
-        /**
-         * 持续时间，单位是帧
-         * @member {number} dragonBones.Timeline#duration
-         */
-        duration: number;
-        /**
-         * 时间缩放，设置为2，时间放慢一倍，设置为0.5，时间加快一倍，默认为1
-         * @member {number} dragonBones.Timeline#scale
-         */
-        scale: number;
-        _frameList: Array<Frame>;
-        /**
-         * 初始化数据duration为0，scale为1
-         */
-        constructor();
-        dispose(): void;
-        /**
-         * 添加一个关键帧数据
-         * @param frame 关键帧数据
-         * @see extension.dragonbones.model.Frame
-         */
-        addFrame(frame: Frame): void;
-        /**
-         * 获取关键帧列表
-         * @returns {Array<Frame>}
-         */
-        frameList: Array<Frame>;
-    }
-}
-declare module dragonBones {
-    /**
-     * @class dragonbones.AnimationData
-     * @extends dragonbones.Timeline
-     * @classdesc
-     * 保存动画数据
-     */
-    class AnimationData extends Timeline {
-        /**
-         * 动画的名字
-         * @member {string} dragonBones.AnimationData#name
-         */
-        name: string;
-        /**
-         * 动画的帧率，表示每一秒钟播放多少帧
-         * @member {number} dragonBones.AnimationData#frameRate
-         */
-        frameRate: number;
-        /**
-         * 动画过渡时间，表示从其他动画过渡到这个动画需要的时间
-         * @member {number} dragonBones.AnimationData#fadeTime
-         */
-        fadeTime: number;
-        /**
-         * 	播放次数 0为一直播放，默认为0
-         * @member {number} dragonBones.AnimationData#playTimes
-         */
-        playTimes: number;
-        /**
-         * 动画的缓动参数，取值范围是[-1,2],其中[-1, 0)表示缓进，(0, 1]表示缓出(1, 2]表示缓进缓出，0表示不缓动，线性渐变
-         * 这个参数会被帧数据中的tweenEasing覆盖
-         * @member {number} dragonBones.AnimationData#tweenEasing
-         */
-        tweenEasing: number;
-        /**
-         * 是否开启缓动，默认是true，就是开启缓动
-         * @member {boolean} dragonBones.AnimationData#autoTween
+         * @deprecated
          */
         autoTween: boolean;
+    }
+}
+declare namespace dragonBones {
+    /**
+     * @private
+     */
+    const enum TweenType {
+        None = 0,
+        Once = 1,
+        Always = 2,
+    }
+    /**
+     * @private
+     */
+    abstract class TimelineState<T extends FrameData<T>, M extends TimelineData<T>> extends BaseObject {
+        _isCompleted: boolean;
+        _currentPlayTimes: number;
+        _currentTime: number;
+        _timeline: M;
+        protected _isReverse: boolean;
+        protected _hasAsynchronyTimeline: boolean;
+        protected _keyFrameCount: number;
+        protected _frameCount: number;
+        protected _position: number;
+        protected _duration: number;
+        protected _clipDutation: number;
+        protected _timeScale: number;
+        protected _timeOffset: number;
+        protected _timeToFrameSccale: number;
+        protected _currentFrame: T;
+        protected _armature: Armature;
+        protected _animationState: AnimationState;
+        constructor();
         /**
-         * 最后一帧持续的帧数
-         * @member {number} dragonBones.AnimationData#lastFrameDuration
+         * @inheritDoc
          */
-        lastFrameDuration: number;
-        hideTimelineNameMap: Array<string>;
-        hideSlotTimelineNameMap: Array<string>;
-        private _timelineList;
+        protected _onClear(): void;
+        protected _onFadeIn(): void;
+        protected _onUpdateFrame(isUpdate: boolean): void;
+        protected _onArriveAtFrame(isUpdate: boolean): void;
+        protected _onCrossFrame(frame: T): void;
+        protected _setCurrentTime(value: number): boolean;
+        setCurrentTime(value: number): void;
+        fadeIn(armature: Armature, animationState: AnimationState, timelineData: M, time: number): void;
+        fadeOut(): void;
+        update(time: number): void;
+    }
+    /**
+     * @private
+     */
+    abstract class TweenTimelineState<T extends TweenFrameData<T>, M extends TimelineData<T>> extends TimelineState<T, M> {
+        static _getEasingValue(progress: number, easing: number): number;
+        static _getCurveEasingValue(progress: number, sampling: Array<number>): number;
+        protected _tweenProgress: number;
+        protected _tweenEasing: number;
+        protected _curve: Array<number>;
+        constructor();
         /**
-         * 时间轴列表
-         * @returns {Array<TransformTimeline>}
+         * @inheritDoc
          */
-        timelineList: Array<TransformTimeline>;
-        private _slotTimelineList;
-        slotTimelineList: Array<SlotTimeline>;
-        private _ffdTimelineList;
-        ffdTimelineList: Array<FFDTimeline>;
+        protected _onClear(): void;
+        protected _onArriveAtFrame(isUpdate: boolean): void;
+        protected _onUpdateFrame(isUpdate: boolean): void;
+        protected _updateExtensionKeyFrame(current: ExtensionFrameData, next: ExtensionFrameData, result: ExtensionFrameData): number;
+    }
+}
+declare namespace dragonBones {
+    /**
+     * @private
+     */
+    class AnimationTimelineState extends TimelineState<AnimationFrameData, AnimationData> {
         /**
-         * 创建一个AnimationData实例
+         * @private
+         */
+        static toString(): string;
+        private _isStarted;
+        constructor();
+        /**
+         * @inheritDoc
+         */
+        protected _onClear(): void;
+        update(time: number): void;
+    }
+    /**
+     * @private
+     */
+    class BoneTimelineState extends TweenTimelineState<BoneFrameData, BoneTimelineData> {
+        /**
+         * @private
+         */
+        static toString(): string;
+        bone: Bone;
+        private _tweenTransform;
+        private _tweenRotate;
+        private _tweenScale;
+        private _boneTransform;
+        private _originTransform;
+        private _transform;
+        private _currentTransform;
+        private _durationTransform;
+        constructor();
+        /**
+         * @inheritDoc
+         */
+        protected _onClear(): void;
+        protected _onFadeIn(): void;
+        protected _onArriveAtFrame(isUpdate: boolean): void;
+        protected _onUpdateFrame(isUpdate: boolean): void;
+        fadeOut(): void;
+        update(time: number): void;
+    }
+    /**
+     * @private
+     */
+    class SlotTimelineState extends TweenTimelineState<SlotFrameData, SlotTimelineData> {
+        /**
+         * @private
+         */
+        static toString(): string;
+        slot: Slot;
+        private _colorDirty;
+        private _tweenColor;
+        private _slotColor;
+        private _color;
+        private _durationColor;
+        constructor();
+        /**
+         * @inheritDoc
+         */
+        protected _onClear(): void;
+        protected _onFadeIn(): void;
+        protected _onArriveAtFrame(isUpdate: boolean): void;
+        protected _onUpdateFrame(isUpdate: boolean): void;
+        fadeOut(): void;
+        update(time: number): void;
+    }
+    /**
+     * @private
+     */
+    class FFDTimelineState extends TweenTimelineState<ExtensionFrameData, FFDTimelineData> {
+        /**
+         * @private
+         */
+        static toString(): string;
+        slot: Slot;
+        private _tweenFFD;
+        private _slotFFDVertices;
+        private _durationFFDFrame;
+        private _ffdVertices;
+        constructor();
+        /**
+         * @inheritDoc
+         */
+        protected _onClear(): void;
+        protected _onFadeIn(): void;
+        protected _onArriveAtFrame(isUpdate: boolean): void;
+        protected _onUpdateFrame(isUpdate: boolean): void;
+        update(time: number): void;
+    }
+}
+declare namespace dragonBones {
+    /**
+     * @language zh_CN
+     * WorldClock 提供时钟的支持，为每个加入到时钟的 IAnimatable 对象更新时间。
+     * @see dragonBones.IAnimatable
+     * @see dragonBones.Armature
+     * @version DragonBones 3.0
+     */
+    class WorldClock implements IAnimateble {
+        private static _clock;
+        /**
+         * @language zh_CN
+         * 一个可以直接使用的全局静态 WorldClock 实例.
+         * @version DragonBones 3.0
+         */
+        static clock: WorldClock;
+        /**
+         * @language zh_CN
+         * 当前的时间。 (以秒为单位)
+         * @version DragonBones 3.0
+         */
+        time: number;
+        /**
+         * @language zh_CN
+         * 时间流逝的速度，用于实现动画的变速播放。 [0: 停止播放, (0~1): 慢速播放, 1: 正常播放, (1~N): 快速播放]
+         * @default 1
+         * @version DragonBones 3.0
+         */
+        timeScale: number;
+        private _animatebles;
+        /**
+         * @language zh_CN
+         * 创建一个新的 WorldClock 实例。
+         * 通常并不需要单独创建 WorldClock 的实例，可以直接使用 WorldClock.clock 静态实例。
+         * (创建更多独立的 WorldClock 可以更灵活的为需要更新的 IAnimateble 实例分组，实现不同组不同速度的动画播放)
+         * @version DragonBones 3.0
          */
         constructor();
         /**
-         * 释放资源
+         * @language zh_CN
+         * 为所有的 IAnimatable 实例向前播放一个指定的时间。 (通常这个方法需要在 ENTER_FRAME 事件的响应函数中被调用)
+         * @param passedTime 前进的时间。 (以秒为单位，当设置为 -1 时将自动计算当前帧与上一帧的时间差)
+         * @version DragonBones 3.0
          */
-        dispose(): void;
+        advanceTime(passedTime: number): void;
         /**
-         * 根据时间轴的名字获取时间轴数据
-         * @param timelineName 时间轴的名字
-         * @returns {*} 时间轴数据
+         * 是否包含指定的 IAnimatable 实例
+         * @param value 指定的 IAnimatable 实例。
+         * @returns  [true: 包含，false: 不包含]。
+         * @version DragonBones 3.0
          */
-        getTimeline(timelineName: string): TransformTimeline;
+        contains(value: IAnimateble): boolean;
         /**
-         * 添加一个时间轴数据
-         * @param timeline 需要被添加的时间轴数据
+         * @language zh_CN
+         * 添加指定的 IAnimatable 实例。
+         * @param value IAnimatable 实例。
+         * @version DragonBones 3.0
          */
-        addTimeline(timeline: TransformTimeline): void;
-        getSlotTimeline(timelineName: string): SlotTimeline;
-        addSlotTimeline(timeline: SlotTimeline): void;
-        addFFDTimeline(timeline: FFDTimeline): void;
+        add(value: IAnimateble): void;
+        /**
+         * @language zh_CN
+         * 移除指定的 IAnimatable 实例。
+         * @param value IAnimatable 实例。
+         * @version DragonBones 3.0
+         */
+        remove(value: IAnimateble): void;
+        /**
+         * @language zh_CN
+         * 清除所有的 IAnimatable 实例。
+         * @version DragonBones 3.0
+         */
+        clear(): void;
     }
 }
-declare module dragonBones {
+declare namespace dragonBones {
     /**
-     * @class dragonBones.ArmatureData
-     * @classdesc
-     * armature数据 一个armature数据包含一个角色的骨骼，皮肤，动画的数据
-     * @see  dragonBones.BoneData
-     * @see  dragonBones.SkinData
-     * @see  dragonBones.AnimationData
+     * @language zh_CN
+     * 骨架，是骨骼动画系统的核心，由显示容器、骨骼、插槽、动画、事件系统构成。
+     * @see dragonBones.ArmatureData
+     * @see dragonBones.Bone
+     * @see dragonBones.Slot
+     * @see dragonBones.Animation
+     * @see dragonBones.IArmatureDisplayContainer
+     * @version DragonBones 3.0
      */
-    class ArmatureData {
+    class Armature extends BaseObject implements IAnimateble {
         /**
-         * armature数据的名字
-         * @member {string} dragonBones.ArmatureData#name
+         * @private
          */
-        name: string;
-        private _boneDataList;
-        private _ikDataList;
-        private _skinDataList;
-        private _slotDataList;
-        private _animationDataList;
-        _cacheManager: AnimationCacheManager;
+        static _soundEventManager: IEventDispatcher;
         /**
-         * 默认动画
-         * @member {string} dragonBones.ArmatureData#defaultAnimation
+         * @private
          */
-        defaultAnimation: string;
+        static toString(): string;
         /**
-         * 帧率
-         * @member {number} dragonBones.ArmatureData#frameRate
+         * @language zh_CN
+         * 可以用于存储临时数据。
+         * @version DragonBones 3.0
          */
-        frameRate: number;
-        static sortBoneDataHelpArray(object1: any, object2: any): number;
-        static sortBoneDataHelpArrayDescending(object1: any, object2: any): number;
+        userData: any;
         /**
-         * 创建一个ArmatureData实例
+         * @private
+         */
+        _bonesDirty: boolean;
+        /**
+         * @private
+         */
+        _cacheFrameIndex: number;
+        /**
+         * @private
+         */
+        _delayAdvanceTime: number;
+        /**
+         * @private
+         */
+        _armatureData: ArmatureData;
+        /**
+         * @private
+         */
+        _skinData: SkinData;
+        /**
+         * @private
+         */
+        _animation: Animation;
+        /**
+         * @private
+         */
+        _display: IArmatureDisplay;
+        /**
+         * @private
+         */
+        _parent: Slot;
+        /**
+         * @private
+         */
+        _action: ActionData;
+        /**
+         * @private
+         */
+        _replacedTexture: any;
+        /**
+         * @private
+         */
+        private _delayDispose;
+        /**
+         * @private
+         */
+        private _lockDispose;
+        /**
+         * @private
+         */
+        private _lockActionAndEvent;
+        /**
+         * @private
+         */
+        private _slotsDirty;
+        /**
+         * @private Store bones based on bones' hierarchy (From root to leaf)
+         */
+        private _bones;
+        /**
+         * @private Store slots based on slots' zOrder (From low to high)
+         */
+        private _slots;
+        /**
+         * @private
+         */
+        private _events;
+        /**
+         * @private
          */
         constructor();
-        setSkinData(skinName: String): void;
         /**
-         * 释放资源
+         * @inheritDoc
+         */
+        protected _onClear(): void;
+        /**
+         * @private
+         */
+        private _sortBones();
+        /**
+         * @private
+         */
+        private _sortSlots();
+        /**
+         * @private
+         */
+        _addBoneToBoneList(value: Bone): void;
+        /**
+         * @private
+         */
+        _removeBoneFromBoneList(value: Bone): void;
+        /**
+         * @private
+         */
+        _addSlotToSlotList(value: Slot): void;
+        /**
+         * @private
+         */
+        _removeSlotFromSlotList(value: Slot): void;
+        /**
+         * @private
+         */
+        _bufferEvent(value: EventObject, type: string): void;
+        /**
+         * dispose
          */
         dispose(): void;
         /**
-         * 根据骨骼的名字获取到骨骼数据
-         * @param boneName 骨骼的名字
-         * @returns {*} 骨骼数据
+         * @language zh_CN
+         * 更新骨架和动画。 (可以使用时钟实例或显示容器来更新)
+         * @param passedTime 两帧之前的时间间隔。 (以秒为单位)
+         * @see dragonBones.animation.IAnimateble
+         * @see dragonBones.animation.WorldClock
+         * @see dragonBones.core.IArmatureDisplayContainer
+         * @version DragonBones 3.0
          */
-        getBoneData(boneName: string): BoneData;
-        getIKData(ikName: string): IKData;
-        getSlotData(slotName: string): SlotData;
+        advanceTime(passedTime: number): void;
         /**
-         * 根据皮肤的名字获取到皮肤数据
-         * @param skinName  皮肤的名字
-         * @returns {*}  皮肤数据
+         * @language zh_CN
+         * 更新骨骼和插槽的变换。 (当骨骼没有动画状态或动画状态播放完成时，骨骼将不在更新)
+         * @param boneName 指定的骨骼名称，如果未设置，将更新所有骨骼。
+         * @param updateSlotDisplay 是否更新插槽的显示对象。
+         * @see dragonBones.Bone
+         * @see dragonBones.Slot
+         * @version DragonBones 3.0
          */
-        getSkinData(skinName: string): SkinData;
+        invalidUpdate(boneName?: string, updateSlotDisplay?: boolean): void;
         /**
-         * 根据动画的名字获取动画数据
-         * @param animationName 动画的名字
-         * @returns {*} 动画数据
+         * @language zh_CN
+         * 获取指定名称的插槽。
+         * @param name 插槽的名称。
+         * @returns 插槽。
+         * @see dragonBones.Slot
+         * @version DragonBones 3.0
          */
-        getAnimationData(animationName: string): AnimationData;
+        getSlot(name: string): Slot;
         /**
-         *添加一个骨骼数据
-         * @param boneData
+         * @language zh_CN
+         * 通过显示对象获取插槽。
+         * @param display 显示对象。
+         * @returns 包含这个显示对象的插槽。
+         * @see dragonBones.Slot
+         * @version DragonBones 3.0
          */
-        addBoneData(boneData: BoneData): void;
-        addIKData(ikData: IKData): void;
-        addSlotData(slotData: SlotData): void;
+        getSlotByDisplay(display: any): Slot;
         /**
-         * 添加一个皮肤数据
-         * @param skinData
+         * @language zh_CN
+         * 将一个指定的插槽添加到骨架中。
+         * @param value 需要添加的插槽。
+         * @param parentName 需要添加到的父骨骼名称。
+         * @see dragonBones.Slot
+         * @version DragonBones 3.0
          */
-        addSkinData(skinData: SkinData): void;
+        addSlot(value: Slot, parentName: string): void;
         /**
-         * 添加一个动画数据
-         * @param animationData
+         * @language zh_CN
+         * 将一个指定的插槽从骨架中移除。
+         * @param value 需要移除的插槽
+         * @see dragonBones.Slot
+         * @version DragonBones 3.0
          */
-        addAnimationData(animationData: AnimationData): void;
+        removeSlot(value: Slot): void;
         /**
-         * 对骨骼按照骨骼数的层级关系排序
+         * @language zh_CN
+         * 获取指定名称的骨骼。
+         * @param name 骨骼的名称。
+         * @returns 骨骼。
+         * @see dragonBones.Bone
+         * @version DragonBones 3.0
          */
-        sortBoneDataList(): void;
+        getBone(name: string): Bone;
         /**
-         * 获取骨骼数据列表
-         * @returns {Array<BoneData>}
+         * @language zh_CN
+         * 通过显示对象获取骨骼。
+         * @param display 显示对象。
+         * @returns 包含这个显示对象的骨骼。
+         * @see dragonBones.Bone
+         * @version DragonBones 3.0
          */
-        boneDataList: Array<BoneData>;
-        ikDataList: Array<IKData>;
-        slotDataList: Array<SlotData>;
+        getBoneByDisplay(display: any): Bone;
         /**
-         * 获取皮肤数据列表
-         * @returns {Array<SkinData>}
+         * @language zh_CN
+         * 将一个指定的骨骼添加到骨架中。
+         * @param value 需要添加的骨骼。
+         * @param parentName 需要添加到父骨骼的名称，如果未设置，则添加到骨架根部。
+         * @see dragonBones.Bone
+         * @version DragonBones 3.0
          */
-        skinDataList: Array<SkinData>;
+        addBone(value: Bone, parentName?: string): void;
         /**
-         * 获得动画数据列表
-         * @returns {Array<AnimationData>}
+         * @language zh_CN
+         * 将一个指定的骨骼从骨架中移除。
+         * @param value 需要移除的骨骼。
+         * @see dragonBones.Bone
+         * @version DragonBones 3.0
          */
-        animationDataList: Array<AnimationData>;
-    }
-}
-declare module dragonBones {
-    /**
-     * @class dragonBones.BoneData
-     * @classdesc
-     * 骨骼数据
-     */
-    class BoneData {
+        removeBone(value: Bone): void;
         /**
-         * 骨骼的名字
-         * @member {string} dragonBones.BoneData#name
+         * @language zh_CN
+         * 替换骨架的主贴图，根据渲染引擎的不同，提供不同的贴图数据。
+         * @param texture 用来替换的贴图，根据渲染平台的不同，类型会有所不同，一般是 Texture 类型。
+         * @version DragonBones 4.5
+         */
+        replaceTexture(texture: any): void;
+        /**
+         * @language zh_CN
+         * 获取所有骨骼。
+         * @see dragonBones.Bone
+         * @version DragonBones 3.0
+         */
+        getBones(): Array<Bone>;
+        /**
+         * @language zh_CN
+         * 获取所有插槽。
+         * @see dragonBones.Slot
+         * @version DragonBones 3.0
+         */
+        getSlots(): Array<Slot>;
+        /**
+         * @language zh_CN
+         * 骨架名称。
+         * @see dragonBones.ArmatureData#name
+         * @version DragonBones 3.0
          */
         name: string;
         /**
-         * 父骨骼的名字
-         * @member {string} dragonBones.BoneData#parent
+         * @language zh_CN
+         * 获取骨架数据。
+         * @see dragonBones.ArmatureData
+         * @version DragonBones 4.5
          */
-        parent: string;
+        armatureData: ArmatureData;
         /**
-         * 长度，目前没什么用，默认值为0
-         * @member {number} dragonBones.BoneData#length
+         * @language zh_CN
+         * 获取显示容器，插槽的显示对象都会以此显示容器为父级，根据渲染平台的不同，类型会不同，通常是 DisplayObjectContainer 类型。
+         * @version DragonBones 3.0
          */
-        length: number;
+        display: any;
         /**
-         * 绝对的transform
-         * @member {dragonBones.DBTransform} dragonBones.BoneData#global
+         * @language zh_CN
+         * 获取父插槽。 (当此骨架是某个骨架的子骨架时，可以通过此属性向上查找从属关系)
+         * @see dragonBones.Slot
+         * @version DragonBones 4.5
          */
-        global: DBTransform;
+        parent: Slot;
         /**
-         * 相对的transform
-         * @member {dragonBones.DBTransform} dragonBones.BoneData#transform
+         * @language zh_CN
+         * 获得动画控制器。
+         * @see dragonBones.Animation
+         * @version DragonBones 3.0
          */
-        transform: DBTransform;
+        animation: Animation;
         /**
-         * 是否继承父骨骼的缩放属性
-         * @member {boolean} dragonBones.BoneData#inheritScale
+         * @language zh_CN
+         * 动画缓存的帧率，当设置一个大于 0 的帧率时，将会开启动画缓存。
+         * 通过将动画数据缓存在内存中来提高运行性能，会有一定的内存开销。
+         * 帧率不宜设置的过高，通常跟动画的帧率相当且低于程序运行的帧率。
+         * 开启动画缓存后，某些功能将会失效，比如 Bone 和 Slot 的 offset 属性等。
+         * @see dragonBones.DragonBonesData#frameRate
+         * @see dragonBones.ArmatureData#frameRate
+         * @version DragonBones 4.5
          */
-        inheritScale: boolean;
+        cacheFrameRate: number;
         /**
-         * 是否继承父骨骼的旋转属性
-         * @member {boolean} dragonBones.BoneData#inheritRotation
+         * @language zh_CN
+         * 开启动画缓存。
+         * @param frameRate 动画缓存的帧率
+         * @see #cacheFrameRate
+         * @version DragonBones 4.5
+         */
+        enableAnimationCache(frameRate: number): void;
+        /**
+         * @language zh_CN
+         * 是否包含指定类型的事件。
+         * @param type 事件类型。
+         * @returns  [true: 包含, false: 不包含]
+         * @version DragonBones 3.0
+         */
+        hasEventListener(type: string): void;
+        /**
+         * @language zh_CN
+         * 添加事件。
+         * @param type 事件类型。
+         * @param listener 事件回调。
+         * @version DragonBones 3.0
+         */
+        addEventListener(type: string, listener: Function, target: any): void;
+        /**
+         * @language zh_CN
+         * 移除事件。
+         * @param type 事件类型。
+         * @param listener 事件回调。
+         * @version DragonBones 3.0
+         */
+        removeEventListener(type: string, listener: Function, target: any): void;
+        /**
+         * @deprecated
+         * @see #display
+         */
+        getDisplay(): any;
+        /**
+         * @deprecated
+         * @see #cacheFrameRate
+         */
+        enableCache: boolean;
+    }
+}
+declare namespace dragonBones {
+    /**
+     * @language zh_CN
+     * 基础变换对象。
+     * @version DragonBones 4.5
+     */
+    abstract class TransformObject extends BaseObject {
+        /**
+         * @language zh_CN
+         * 可以用于存储临时数据。
+         * @version DragonBones 3.0
+         */
+        userData: any;
+        /**
+         * @language zh_CN
+         * 对象的名称。
+         * @version DragonBones 3.0
+         */
+        name: string;
+        /**
+         * @language zh_CN
+         * 相对于骨架坐标系的矩阵。
+         * @version DragonBones 3.0
+         */
+        globalTransformMatrix: Matrix;
+        /**
+         * @language zh_CN
+         * 相对于骨架坐标系的变换。
+         * @see dragonBones.Transform
+         * @version DragonBones 3.0
+         */
+        global: Transform;
+        /**
+         * @language zh_CN
+         * 相对于骨架或父骨骼坐标系的绑定变换。
+         * @see dragonBones.Transform
+         * @version DragonBones 3.0
+         */
+        origin: Transform;
+        /**
+         * @language zh_CN
+         * 相对于骨架或父骨骼坐标系的偏移变换。
+         * @see dragonBones.Transform
+         * @version DragonBones 3.0
+         */
+        offset: Transform;
+        /**
+         * @private
+         */
+        _armature: Armature;
+        /**
+         * @private
+         */
+        _parent: Bone;
+        /**
+         * @private
+         */
+        protected _globalTransformMatrix: Matrix;
+        /**
+         * @private
+         */
+        constructor();
+        /**
+         * @inheritDoc
+         */
+        protected _onClear(): void;
+        /**
+         * @private
+         */
+        _setArmature(value: Armature): void;
+        /**
+         * @private
+         */
+        _setParent(value: Bone): void;
+        /**
+         * @language zh_CN
+         * 所属的骨架。
+         * @see dragonBones.Armature
+         * @version DragonBones 3.0
+         */
+        armature: Armature;
+        /**
+         * @language zh_CN
+         * 所属的父骨骼。
+         * @see dragonBones.Bone
+         * @version DragonBones 3.0
+         */
+        parent: Bone;
+    }
+}
+declare namespace dragonBones {
+    /**
+     * @private
+     */
+    const enum BoneTransformDirty {
+        None = 0,
+        Self = 1,
+        All = 2,
+    }
+    /**
+     * @language zh_CN
+     * 骨骼，一个骨架中可以包含多个骨骼，骨骼以树状结构组成骨架。
+     * 骨骼在骨骼动画体系中是最重要的逻辑单元之一，负责动画中的平移旋转缩放的实现。
+     * @see dragonBones.BoneData
+     * @see dragonBones.Armature
+     * @see dragonBones.Slot
+     * @version DragonBones 3.0
+     */
+    class Bone extends TransformObject {
+        /**
+         * @private
+         */
+        static toString(): string;
+        /**
+         * @language zh_CN
+         * 是否继承父骨骼的平移。 [true: 继承, false: 不继承]
+         * @version DragonBones 3.0
+         */
+        inheritTranslation: boolean;
+        /**
+         * @language zh_CN
+         * 是否继承父骨骼的旋转。 [true: 继承, false: 不继承]
+         * @version DragonBones 3.0
          */
         inheritRotation: boolean;
         /**
-         * 初始化各个属性
+         * @language zh_CN
+         * 是否继承父骨骼的缩放。 [true: 继承, false: 不继承]
+         * @version DragonBones 4.5
          */
-        constructor();
+        inheritScale: boolean;
         /**
-         *释放资源
+         * @language zh_CN
+         * IK 约束时骨骼方向是否为顺时针方向。 [true: 顺时针, false: 逆时针]
+         * @version DragonBones 4.5
          */
-        dispose(): void;
-    }
-}
-declare module dragonBones {
-    /**
-     * @class dragonBones.ColorTransform
-     * @classdesc
-     * 表示颜色的transform
-     */
-    class ColorTransform {
+        ikBendPositive: boolean;
         /**
-         * 透明度增幅，计算时用乘法
-         * @member {number} dragonBones.ColorTransform#alphaMultiplier
+         * @language zh_CN
+         * IK 约束的权重。
+         * @version DragonBones 4.5
          */
-        alphaMultiplier: number;
+        ikWeight: number;
         /**
-         * 透明度偏移，计算时用加法
-         * @member {number} dragonBones.ColorTransform#alphaOffset
+         * @language zh_CN
+         * 骨骼长度。
+         * @version DragonBones 4.5
          */
-        alphaOffset: number;
-        /**
-         * 蓝色值增幅，计算时用乘法
-         * @member {number} dragonBones.ColorTransform#buleMultiplier
-         */
-        blueMultiplier: number;
-        /**
-         *蓝色值偏移，计算时用加法
-         * @member {number} dragonBones.ColorTransform#buleOffset
-         */
-        blueOffset: number;
-        /**
-         *绿色值增幅，计算时用乘法
-         * @member {number} dragonBones.ColorTransform#greenMultiplier
-         */
-        greenMultiplier: number;
-        /**
-         *绿色值偏移，计算时用加法
-         * @member {number} dragonBones.ColorTransform#greenOffset
-         */
-        greenOffset: number;
-        /**
-         *红色值增幅，计算时用乘法
-         * @member {number} dragonBones.ColorTransform#redMultiplier
-         */
-        redMultiplier: number;
-        /**
-         *红色值偏移，计算时用加法
-         * @member {number} dragonBones.ColorTransform#redOffset
-         */
-        redOffset: number;
-        constructor();
-    }
-}
-declare module dragonBones {
-    class CurveData {
-        private static SamplingTimes;
-        private static SamplingStep;
-        private _dataChanged;
-        private _pointList;
-        sampling: Array<Point>;
-        constructor();
-        getValueByProgress(progress: number): number;
-        refreshSampling(): void;
-        private bezierCurve(t, outputPoint);
-        pointList: Array<any>;
-        isCurve(): boolean;
-        point1: Point;
-        point2: Point;
-    }
-}
-declare module dragonBones {
-    /**
-     * @class dragonBones.DisplayData
-     * @classdesc
-     * 显示对象的数据，目前支持图片和子骨架
-     */
-    class DisplayData {
-        /**
-         * 子骨架类型
-         */
-        static ARMATURE: string;
-        /**
-         * 图片类型
-         */
-        static IMAGE: string;
+        length: number;
         /**
          * @private
-         * 网格类型
          */
-        static MESH: string;
+        _transformDirty: BoneTransformDirty;
         /**
-         * 显示对象的名字
-         * @member {string} dragonBones.DisplayData#name
+         * @private
          */
-        name: string;
+        _blendIndex: number;
         /**
-         * 显示对象的类型，枚举型，目前支持图片IMAGE和子骨架ARMATURE
-         * @member {string} dragonBones.DisplayData#type
+         * @private
+         */
+        _cacheFrames: Array<Matrix>;
+        /**
+         * @private
+         */
+        _animationPose: Transform;
+        /**
+         * @private
+         */
+        private _visible;
+        /**
+         * @private
+         */
+        private _ikChain;
+        /**
+         * @private
+         */
+        private _ikChainIndex;
+        /**
+         * @private
+         */
+        private _ik;
+        /**
+         * @private
+         */
+        private _bones;
+        /**
+         * @private
+         */
+        private _slots;
+        /**
+         * @private
+         */
+        constructor();
+        /**
+         * @inheritDoc
+         */
+        protected _onClear(): void;
+        /**
+         * @private
+         */
+        private _updateGlobalTransformMatrix();
+        /**
+         * @private
+         */
+        private _computeIKA();
+        /**
+         * @private
+         */
+        private _computeIKB();
+        /**
+         * @inheritDoc
+         */
+        _setArmature(value: Armature): void;
+        /**
+         * @private
+         */
+        _setIK(value: Bone, chain: number, chainIndex: number): void;
+        /**
+         * @private
+         */
+        _update(cacheFrameIndex: number): void;
+        /**
+         * @language zh_CN
+         * 下一帧更新变换。 (当骨骼没有动画状态或动画状态播放完成时，骨骼将不在更新)
+         * @version DragonBones 3.0
+         */
+        invalidUpdate(): void;
+        /**
+         * @language zh_CN
+         * 是否包含某个指定的骨骼或插槽。
+         * @returns [true: 包含，false: 不包含]
+         * @see dragonBones.TransformObject
+         * @version DragonBones 3.0
+         */
+        contains(child: TransformObject): boolean;
+        /**
+         * @language zh_CN
+         * 所有的子骨骼。
+         * @version DragonBones 3.0
+         */
+        getBones(): Array<Bone>;
+        /**
+         * @language zh_CN
+         * 所有的插槽。
+         * @see dragonBones.Slot
+         * @version DragonBones 3.0
+         */
+        getSlots(): Array<Slot>;
+        /**
+         * @private
+         */
+        ikChain: number;
+        /**
+         * @private
+         */
+        ikChainIndex: number;
+        /**
+         * @language zh_CN
+         * 当前的 IK 约束目标。
+         * @version DragonBones 4.5
+         */
+        ik: Bone;
+        /**
+         * @language zh_CN
+         * 控制此骨骼所有插槽的显示。
+         * @default true
+         * @see dragonBones.Slot
+         * @version DragonBones 3.0
+         */
+        visible: boolean;
+        /**
+         * @deprecated
+         * @see dragonBones.Armature#getSlot()
+         */
+        slot: Slot;
+    }
+}
+declare namespace dragonBones {
+    /**
+     * @language zh_CN
+     * 骨架显示容器和事件的接口。
+     * @see dragonBones.Armature#display
+     * @version DragonBones 4.5
+     */
+    interface IArmatureDisplay extends IEventDispatcher {
+        /**
+         * @language zh_CN
+         * 由显示容器来更新骨架和动画。
+         * @param on 开启或关闭显示容器对骨架与动画的更新。
+         * @version DragonBones 4.5
+         */
+        advanceTimeBySelf(on: boolean): void;
+        /**
+         * @language zh_CN
+         * 释放显示对象和骨架。 (骨架会回收到内存池)
+         * @version DragonBones 4.5
+         */
+        dispose(): void;
+        /**
+         * @language zh_CN
+         * 获取使用这个显示容器的骨架。
+         * @readOnly
+         * @see dragonBones.Armature
+         * @version DragonBones 4.5
+         */
+        armature: Armature;
+        /**
+         * @language zh_CN
+         * 获取使用骨架的动画控制器。
+         * @readOnly
+         * @see dragonBones.Animation
+         * @version DragonBones 4.5
+         */
+        animation: Animation;
+    }
+}
+declare namespace dragonBones {
+    /**
+     * @language zh_CN
+     * 插槽，附着在骨骼上，控制显示对象的显示状态和属性。
+     * 一个骨骼上可以包含多个插槽。
+     * 一个插槽中可以包含多个显示对象，同一时间只能显示其中的一个显示对象，但可以在动画播放的过程中切换显示对象实现帧动画。
+     * 显示对象可以是普通的图片纹理，也可以是子骨架的显示容器，网格显示对象，还可以是自定义的其他显示对象。
+     * @see dragonBones.Armature
+     * @see dragonBones.Bone
+     * @see dragonBones.SlotData
+     * @version DragonBones 3.0
+     */
+    abstract class Slot extends TransformObject {
+        /**
+         * @language zh_CN
+         * 子骨架是否继承父骨架的动画。 [true: 继承, false: 不继承]
+         * @default true
+         * @version DragonBones 4.5
+         */
+        inheritAnimation: boolean;
+        /**
+         * @language zh_CN
+         * 显示对象受到控制的对象，应设置为动画状态的名称或组名称，设置为 null 则表示受所有的动画状态控制。
+         * @default null
+         * @see dragonBones.AnimationState#displayControl
+         * @see dragonBones.AnimationState#name
+         * @see dragonBones.AnimationState#group
+         * @version DragonBones 4.5
+         */
+        displayController: string;
+        /**
+         * @private
+         */
+        _colorDirty: boolean;
+        /**
+         * @private
+         */
+        _ffdDirty: boolean;
+        /**
+         * @private
+         */
+        _blendIndex: number;
+        /**
+         * @private
+         */
+        _zOrder: number;
+        /**
+         * @private
+         */
+        _displayDataSet: SlotDisplayDataSet;
+        /**
+         * @private
+         */
+        _meshData: MeshData;
+        /**
+         * @private
+         */
+        _cacheFrames: Array<Matrix>;
+        /**
+         * @private
+         */
+        _rawDisplay: any;
+        /**
+         * @private
+         */
+        _meshDisplay: any;
+        /**
+         * @private
+         */
+        _colorTransform: ColorTransform;
+        /**
+         * @private
+         */
+        _ffdVertices: Array<number>;
+        /**
+         * @private
+         */
+        _replacedDisplayDataSet: Array<DisplayData>;
+        /**
+         * @private
+         */
+        protected _displayDirty: boolean;
+        /**
+         * @private
+         */
+        protected _blendModeDirty: boolean;
+        /**
+         * @private
+         */
+        protected _originDirty: boolean;
+        /**
+         * @private
+         */
+        protected _transformDirty: boolean;
+        /**
+         * @private
+         */
+        protected _displayIndex: number;
+        /**
+         * @private
+         */
+        protected _blendMode: BlendMode;
+        /**
+         * @private
+         */
+        protected _display: any;
+        /**
+         * @private
+         */
+        protected _childArmature: Armature;
+        /**
+         * @private
+         */
+        protected _localMatrix: Matrix;
+        /**
+         * @private
+         */
+        protected _displayList: Array<any | Armature>;
+        /**
+         * @private
+         */
+        protected _meshBones: Array<Bone>;
+        /**
+         * @private
+         */
+        constructor();
+        /**
+         * @inheritDoc
+         */
+        protected _onClear(): void;
+        /**
+         * @private
+         */
+        protected abstract _onUpdateDisplay(): void;
+        /**
+         * @private
+         */
+        protected abstract _initDisplay(value: any): void;
+        /**
+         * @private
+         */
+        protected abstract _addDisplay(): void;
+        /**
+         * @private
+         */
+        protected abstract _replaceDisplay(value: any): void;
+        /**
+         * @private
+         */
+        protected abstract _removeDisplay(): void;
+        /**
+         * @private
+         */
+        protected abstract _disposeDisplay(value: any): void;
+        /**
+         * @private Bone
+         */
+        abstract _updateVisible(): void;
+        /**
+         * @private
+         */
+        protected abstract _updateBlendMode(): void;
+        /**
+         * @private
+         */
+        protected abstract _updateColor(): void;
+        /**
+         * @private
+         */
+        protected abstract _updateFilters(): void;
+        /**
+         * @private
+         */
+        protected abstract _updateFrame(): void;
+        /**
+         * @private
+         */
+        protected abstract _updateMesh(): void;
+        /**
+         * @private
+         */
+        protected abstract _updateTransform(): void;
+        /**
+         * @private
+         */
+        private _isMeshBonesUpdate();
+        /**
+         * @private
+         */
+        protected _updateDisplay(): void;
+        /**
+         * @private
+         */
+        protected _updateLocalTransformMatrix(): void;
+        /**
+         * @private
+         */
+        protected _updateGlobalTransformMatrix(): void;
+        /**
+         * @inheritDoc
+         */
+        _setArmature(value: Armature): void;
+        /**
+         * @private Armature
+         */
+        _updateMeshData(isTimelineUpdate: Boolean): void;
+        /**
+         * @private Armature
+         */
+        _update(cacheFrameIndex: number): void;
+        /**
+         * @private Factory
+         */
+        _setDisplayList(value: Array<any>): Boolean;
+        /**
+         * @private Factory
+         */
+        _setDisplayIndex(value: number): boolean;
+        /**
+         * @private Factory
+         */
+        _setBlendMode(value: BlendMode): boolean;
+        /**
+         * @private Factory
+         */
+        _setColor(value: ColorTransform): boolean;
+        /**
+         * @language zh_CN
+         * 在下一帧更新显示对象的状态。
+         * @version DragonBones 4.5
+         */
+        invalidUpdate(): void;
+        /**
+         * @private
+         */
+        rawDisplay: any;
+        /**
+         * @private
+         */
+        MeshDisplay: any;
+        /**
+         * @language zh_CN
+         * 此时显示的显示对象在显示列表中的索引。
+         * @version DragonBones 4.5
+         */
+        displayIndex: number;
+        /**
+         * @language zh_CN
+         * 包含显示对象或子骨架的显示列表。
+         * @version DragonBones 3.0
+         */
+        displayList: Array<any>;
+        /**
+         * @language zh_CN
+         * 此时显示的显示对象。
+         * @version DragonBones 3.0
+         */
+        display: any;
+        /**
+         * @language zh_CN
+         * 此时显示的子骨架。
+         * @see dragonBones.Armature
+         * @version DragonBones 3.0
+         */
+        childArmature: Armature;
+        /**
+         * @deprecated
+         * @see #display
+         */
+        getDisplay(): any;
+        /**
+         * @deprecated
+         * @see #display
+         */
+        setDisplay(value: any): void;
+    }
+}
+declare namespace dragonBones {
+    /**
+     * @private
+     */
+    const enum ArmatureType {
+        Armature = 0,
+        MovieClip = 1,
+        Stage = 2,
+    }
+    /**
+     * @private
+     */
+    const enum DisplayType {
+        Image = 0,
+        Armature = 1,
+        Mesh = 2,
+    }
+    /**
+     * @private
+     */
+    const enum ExtensionType {
+        FFD = 0,
+        AdjustColor = 10,
+        BevelFilter = 11,
+        BlurFilter = 12,
+        DropShadowFilter = 13,
+        GlowFilter = 14,
+        GradientBevelFilter = 15,
+        GradientGlowFilter = 16,
+    }
+    /**
+     * @private
+     */
+    const enum EventType {
+        Frame = 0,
+        Sound = 1,
+    }
+    /**
+     * @private
+     */
+    const enum ActionType {
+        Play = 0,
+        Stop = 1,
+        GotoAndPlay = 2,
+        GotoAndStop = 3,
+        FadeIn = 4,
+        FadeOut = 5,
+    }
+    /**
+     * @private
+     */
+    const enum BlendMode {
+        Normal = 0,
+        Add = 1,
+        Alpha = 2,
+        Darken = 3,
+        Difference = 4,
+        Erase = 5,
+        HardLight = 6,
+        Invert = 7,
+        Layer = 8,
+        Lighten = 9,
+        Multiply = 10,
+        Overlay = 11,
+        Screen = 12,
+        Subtract = 13,
+    }
+    /**
+     * @private
+     */
+    interface Map<T> {
+        [key: string]: T;
+    }
+    /**
+     * DragonBones
+     */
+    class DragonBones {
+        static PI_D: number;
+        static PI_H: number;
+        static PI_Q: number;
+        static ANGLE_TO_RADIAN: number;
+        static RADIAN_TO_ANGLE: number;
+        static SECOND_TO_MILLISECOND: number;
+        static NO_TWEEN: number;
+        static VERSION: string;
+        constructor();
+    }
+}
+declare namespace dragonBones {
+    /**
+     * @language zh_CN
+     * 事件接口。
+     * @version DragonBones 4.5
+     */
+    interface IEventDispatcher {
+        /**
+         * @private
+         */
+        _onClear(): void;
+        /**
+         * @private
+         */
+        _dispatchEvent(eventObject: EventObject): void;
+        /**
+         * @language zh_CN
+         * 是否包含指定类型的事件。
+         * @param type 事件类型。
+         * @returns  [true: 包含, false: 不包含]
+         * @version DragonBones 4.5
+         */
+        hasEvent(type: string): boolean;
+        /**
+         * @language zh_CN
+         * 添加事件。
+         * @param type 事件类型。
+         * @param listener 事件回调。
+         * @version DragonBones 4.5
+         */
+        addEvent(type: string, listener: Function, target: any): void;
+        /**
+         * @language zh_CN
+         * 移除事件。
+         * @param type 事件类型。
+         * @param listener 事件回调。
+         * @version DragonBones 4.5
+         */
+        removeEvent(type: string, listener: Function, target: any): void;
+    }
+    /**
+     * @language zh_CN
+     * 事件数据。
+     * @version DragonBones 4.5
+     */
+    class EventObject extends BaseObject {
+        /**
+         * @language zh_CN
+         * 动画开始。
+         * @version DragonBones 4.5
+         */
+        static START: string;
+        /**
+         * @language zh_CN
+         * 动画循环播放一次完成。
+         * @version DragonBones 4.5
+         */
+        static LOOP_COMPLETE: string;
+        /**
+         * @language zh_CN
+         * 动画播放完成。
+         * @version DragonBones 4.5
+         */
+        static COMPLETE: string;
+        /**
+         * @language zh_CN
+         * 动画淡入开始。
+         * @version DragonBones 4.5
+         */
+        static FADE_IN: string;
+        /**
+         * @language zh_CN
+         * 动画淡入完成。
+         * @version DragonBones 4.5
+         */
+        static FADE_IN_COMPLETE: string;
+        /**
+         * @language zh_CN
+         * 动画淡出开始。
+         * @version DragonBones 4.5
+         */
+        static FADE_OUT: string;
+        /**
+         * @language zh_CN
+         * 动画淡出完成。
+         * @version DragonBones 4.5
+         */
+        static FADE_OUT_COMPLETE: string;
+        /**
+         * @language zh_CN
+         * 动画帧事件。
+         * @version DragonBones 4.5
+         */
+        static FRAME_EVENT: string;
+        /**
+         * @language zh_CN
+         * 动画声音事件。
+         * @version DragonBones 4.5
+         */
+        static SOUND_EVENT: string;
+        /**
+         * @private
+         */
+        static toString(): string;
+        /**
+         * @language zh_CN
+         * 事件类型。
+         * @version DragonBones 4.5
          */
         type: string;
         /**
-         * 变换矩阵Transform表示位移，旋转，缩放，三种属性
-         * @member {dragonBones.DBTransform} dragonBones.DisplayData#transform
-         */
-        transform: DBTransform;
-        /**
-         * 注册点，旋转中心
-         * @member {dragonBones.Point} dragonBones.DisplayData#pivot
-         */
-        pivot: Point;
-        /**
-         * 初始化变换矩阵为单位矩阵
-         * 注册点为{0，0}点
-         */
-        constructor();
-        /**
-         * 释放资源
-         */
-        dispose(): void;
-    }
-}
-declare module dragonBones {
-    /**
-     * @class dragonBones.DragonBonesData
-     * @classdesc
-     * DragonBones的数据，包含了骨架数据和显示对象数据
-     */
-    class DragonBonesData {
-        /**
-         * DrabonBones数据的名字
-         * @member {string} dragonBones.DragonBonesData#name
+         * @language zh_CN
+         * 事件名称。 (帧标签的名称或声音的名称)
+         * @version DragonBones 4.5
          */
         name: string;
         /**
-         * 数据的类型，是否是全局数据
-         * @member {boolean} dragonBones.DragonBonesData#isGlobal
+         * @language zh_CN
+         * 扩展的数据
+         * @version DragonBones 4.5
          */
-        isGlobal: boolean;
+        data: any;
         /**
-         * 数据版本
+         * @language zh_CN
+         * 发出事件的骨架
+         * @version DragonBones 4.5
          */
-        version: number;
-        private _armatureDataList;
-        private _displayDataDictionary;
+        armature: Armature;
         /**
-         * 构造函数，实例化一个DragonBonesData类
+         * @language zh_CN
+         * 发出事件的骨骼
+         * @version DragonBones 4.5
+         */
+        bone: Bone;
+        /**
+         * @language zh_CN
+         * 发出事件的插槽
+         * @version DragonBones 4.5
+         */
+        slot: Slot;
+        /**
+         * @language zh_CN
+         * 发出事件的动画状态
+         * @version DragonBones 4.5
+         */
+        animationState: AnimationState;
+        /**
+         * @language zh_CN
+         * 用户数据
+         * @version DragonBones 4.5
+         */
+        userData: any;
+        /**
+         * @private
          */
         constructor();
         /**
-         * 释放资源
+         * @inheritDoc
+         */
+        protected _onClear(): void;
+    }
+}
+declare namespace dragonBones {
+    /**
+     * @language zh_CN
+     * 贴图集数据。
+     * @version DragonBones 3.0
+     */
+    abstract class TextureAtlasData extends BaseObject {
+        /**
+         * @language zh_CN
+         * 是否开启共享搜索。 [true: 开启, false: 不开启]
+         * @default false
+         * @version DragonBones 4.5
+         */
+        autoSearch: boolean;
+        /**
+         * @language zh_CN
+         * 贴图集缩放系数。
+         * @version DragonBones 3.0
+         */
+        scale: number;
+        /**
+         * @language zh_CN
+         * 贴图集名称。
+         * @version DragonBones 3.0
+         */
+        name: string;
+        /**
+         * @language zh_CN
+         * 贴图集图片路径。
+         * @version DragonBones 3.0
+         */
+        imagePath: string;
+        /**
+         * @private
+         */
+        textures: Map<TextureData>;
+        /**
+         * @private
+         */
+        constructor();
+        /**
+         * @inheritDoc
+         */
+        protected _onClear(): void;
+        /**
+         * @private
+         */
+        abstract generateTextureData(): TextureData;
+        /**
+         * @private
+         */
+        addTextureData(value: TextureData): void;
+        /**
+         * @private
+         */
+        getTextureData(name: string): TextureData;
+    }
+    /**
+     * @private
+     */
+    abstract class TextureData extends BaseObject {
+        static generateRectangle(): Rectangle;
+        rotated: boolean;
+        name: string;
+        frame: Rectangle;
+        parent: TextureAtlasData;
+        region: Rectangle;
+        constructor();
+        /**
+         * @inheritDoc
+         */
+        protected _onClear(): void;
+    }
+}
+declare namespace dragonBones {
+    /**
+     * @language zh_CN
+     * Egret 贴图集数据。
+     * @version DragonBones 3.0
+     */
+    class EgretTextureAtlasData extends TextureAtlasData {
+        /**
+         * @private
+         */
+        static toString(): string;
+        /**
+         * @language zh_CN
+         * Egret 贴图。
+         * @version DragonBones 3.0
+         */
+        texture: egret.Texture;
+        /**
+         * @private
+         */
+        constructor();
+        /**
+         * @inheritDoc
+         */
+        protected _onClear(): void;
+        /**
+         * @private
+         */
+        generateTextureData(): TextureData;
+    }
+    /**
+     * @private
+     */
+    class EgretTextureData extends TextureData {
+        static toString(): string;
+        texture: egret.Texture;
+        constructor();
+        /**
+         * @inheritDoc
+         */
+        protected _onClear(): void;
+    }
+}
+declare namespace dragonBones {
+    /**
+     * @language zh_CN
+     * Egret 事件。
+     * @version DragonBones 4.5
+     */
+    class EgretEvent extends egret.Event {
+        /**
+         * @language zh_CN
+         * 事件对象。
+         * @version DragonBones 4.5
+         */
+        eventObject: EventObject;
+        /**
+         * @private
+         */
+        constructor(type: string, bubbles?: boolean, cancelable?: boolean, data?: any);
+        /**
+         * @see dragonBones.EventObject#name
+         */
+        frameLabel: string;
+        /**
+         * @see dragonBones.EventObject#name
+         */
+        sound: string;
+        /**
+         * @see dragonBones.EventObject#animationState
+         */
+        animationName: string;
+        /**
+         * @see dragonBones.EventObject#armature
+         */
+        armature: Armature;
+        /**
+         * @see dragonBones.EventObject#bone
+         */
+        bone: Bone;
+        /**
+         * @see dragonBones.EventObject#slot
+         */
+        slot: Slot;
+        /**
+         * @see dragonBones.EventObject#animationState
+         */
+        animationState: AnimationState;
+        /**
+         * @see dragonBones.EventObject.START
+         */
+        static START: string;
+        /**
+         * @see dragonBones.EventObject.LOOP_COMPLETE
+         */
+        static LOOP_COMPLETE: string;
+        /**
+         * @see dragonBones.EventObject.COMPLETE
+         */
+        static COMPLETE: string;
+        /**
+         * @see dragonBones.EventObject.FADE_IN
+         */
+        static FADE_IN: string;
+        /**
+         * @see dragonBones.EventObject.FADE_IN_COMPLETE
+         */
+        static FADE_IN_COMPLETE: string;
+        /**
+         * @see dragonBones.EventObject.FADE_OUT
+         */
+        static FADE_OUT: string;
+        /**
+         * @see dragonBones.EventObject.FADE_OUT_COMPLETE
+         */
+        static FADE_OUT_COMPLETE: string;
+        /**
+         * @see dragonBones.EventObject.FRAME_EVENT
+         */
+        static FRAME_EVENT: string;
+        /**
+         * @see dragonBones.EventObject.SOUND_EVENT
+         */
+        static SOUND_EVENT: string;
+        /**
+         * @deprecated
+         * @see dragonBones.EventObject.FRAME_EVENT
+         */
+        static ANIMATION_FRAME_EVENT: string;
+        /**
+         * @deprecated
+         * @see dragonBones.EventObject.FRAME_EVENT
+         */
+        static BONE_FRAME_EVENT: string;
+        /**
+         * @deprecated
+         * @see dragonBones.EventObject.FRAME_EVENT
+         */
+        static MOVEMENT_FRAME_EVENT: string;
+    }
+    /**
+     * @inheritDoc
+     */
+    class EgretArmatureDisplay extends egret.DisplayObjectContainer implements IArmatureDisplay {
+        /**
+         * @private
+         */
+        _armature: Armature;
+        /**
+         * @private
+         */
+        protected _passedTime: number;
+        private _time;
+        /**
+         * @private
+         */
+        constructor();
+        /**
+         * @private
+         */
+        private _advanceTimeHandler(time);
+        /**
+         * @inheritDoc
+         */
+        _onClear(): void;
+        /**
+         * @inheritDoc
+         */
+        _dispatchEvent(eventObject: EventObject): void;
+        /**
+         * @inheritDoc
+         */
+        hasEvent(type: string): boolean;
+        /**
+         * @inheritDoc
+         */
+        addEvent(type: string, listener: Function, target: any): void;
+        /**
+         * @inheritDoc
+         */
+        removeEvent(type: string, listener: Function, target: any): void;
+        /**
+         * @inheritDoc
+         */
+        advanceTimeBySelf(on: Boolean): void;
+        /**
+         * @inheritDoc
          */
         dispose(): void;
         /**
-         * 获取所有的骨架数据
-         * @returns {Array<ArmatureData>}
+         * @inheritDoc
          */
-        armatureDataList: Array<ArmatureData>;
+        armature: Armature;
         /**
-         * 通过骨架的名字获取骨架的数据
-         * @param armatureName 想要获取的骨架的名字
-         * @returns {*} 骨架数据 ArmatureData
+         * @inheritDoc
          */
-        getArmatureDataByName(armatureName: string): ArmatureData;
+        animation: Animation;
+    }
+    /**
+     * @deprecated
+     * @see dragonBones.Armature
+     */
+    type FastArmature = Armature;
+    /**
+     * @deprecated
+     * @see dragonBones.Bone
+     */
+    type FastBone = Bone;
+    /**
+     * @deprecated
+     * @see dragonBones.Slot
+     */
+    type FastSlot = Slot;
+    /**
+     * @deprecated
+     * @see dragonBones.Animation
+     */
+    type FastAnimation = Animation;
+    /**
+     * @deprecated
+     * @see dragonBones.AnimationState
+     */
+    type FastAnimationState = AnimationState;
+    /**
+     * @deprecated
+     * @see dragonBones.EgretEvent
+     */
+    class AnimationEvent extends EgretEvent {
+    }
+    /**
+     * @deprecated
+     * @see dragonBones.EgretEvent
+     */
+    class FrameEvent extends EgretEvent {
+    }
+    /**
+     * @deprecated
+     * @see dragonBones.EgretEvent
+     */
+    class SoundEvent extends EgretEvent {
+    }
+    /**
+     * @deprecated
+     * @see dragonBones.EgretTextureAtlasData
+     */
+    class EgretTextureAtlas extends EgretTextureAtlasData {
         /**
-         * 添加一个骨架数据
-         * @param armatureData
+         * @private
          */
-        addArmatureData(armatureData: ArmatureData): void;
+        static toString(): string;
+        constructor(texture: egret.Texture, rawData: any, scale?: number);
+        dispose(): void;
+    }
+    /**
+     * @deprecated
+     * @see dragonBones.EgretTextureAtlasData
+     */
+    class EgretSheetAtlas extends EgretTextureAtlas {
+    }
+    /**
+     * @deprecated
+     * @see dragonBones.EgretFactory#soundEventManater
+     */
+    class SoundEventManager {
         /**
-         * 移除一个骨架数据
-         * @param armatureData
+         * @deprecated
+         * @see dragonBones.EgretFactory#soundEventManater
          */
-        removeArmatureData(armatureData: ArmatureData): void;
-        /**
-         * 根据骨架的名字，移除该骨架的数据
-         * @param armatureName 想要移除的骨架的名字
-         */
-        removeArmatureDataByName(armatureName: string): void;
-        /**
-         * 根据名字获取显示对象数据
-         * @param name 想要获取的显示对象数据的名字
-         * @returns {any} 显示对象数据 DisplayData
-         */
-        getDisplayDataByName(name: string): DisplayData;
-        /**
-         *添加一个显示对象数据
-         * @param displayData 需要被添加的显示对象数据
-         */
-        addDisplayData(displayData: DisplayData): void;
-        /**
-         *根据显示对象的名字移除该显示对象数据
-         * @param name 显示对象的名字
-         */
-        removeDisplayDataByName(name: string): void;
-        /**
-         *移除所有的显示对象数据
-         */
-        removeAllDisplayData(): void;
+        static getInstance(): EgretArmatureDisplay;
     }
 }
-declare module dragonBones {
+declare namespace dragonBones {
     /**
-     * @class dragonBones.Frame
-     * @classdesc
-     *关键帧数据
+     * @private
      */
-    class Frame {
+    class ColorTransform {
+        alphaMultiplier: number;
+        redMultiplier: number;
+        greenMultiplier: number;
+        blueMultiplier: number;
+        alphaOffset: number;
+        redOffset: number;
+        greenOffset: number;
+        blueOffset: number;
+        constructor(alphaMultiplier?: number, redMultiplier?: number, greenMultiplier?: number, blueMultiplier?: number, alphaOffset?: number, redOffset?: number, greenOffset?: number, blueOffset?: number);
+        copyFrom(value: ColorTransform): void;
+        identity(): void;
+    }
+}
+declare namespace dragonBones {
+    /**
+     * @private
+     */
+    type BuildArmaturePackage = {
+        dataName?: string;
+        data?: DragonBonesData;
+        armature?: ArmatureData;
+        skin?: SkinData;
+    };
+    /**
+     * @language zh_CN
+     * 生成骨架的基础工厂。
+     * @see dragonBones.DragonBonesData
+     * @see dragonBones.TextureAtlasData
+     * @see dragonBones.ArmatureData
+     * @see dragonBones.Armature
+     * @version DragonBones 3.0
+     */
+    abstract class BaseFactory {
         /**
-         *位置
-         * @member {number} dragonBones.Frame#position
+         * @language zh_CN
+         * 是否开启共享搜索。 [true: 开启, false: 不开启]
+         * 如果开启，创建一个骨架时，可以从多个龙骨数据中寻找骨架数据，或贴图集数据中寻找贴图数据。 (通常在有共享导出的数据时开启)
+         * @see dragonBones.objects.DragonBonesData#autoSearch
+         * @see dragonBones.objects.TextureAtlasData#autoSearch
+         * @version DragonBones 4.5
+         */
+        autoSearch: boolean;
+        /**
+         * @private
+         */
+        protected _objectDataParser: ObjectDataParser;
+        /**
+         * @private
+         */
+        protected _dragonBonesDataMap: Map<DragonBonesData>;
+        /**
+         * @private
+         */
+        protected _textureAtlasDataMap: Map<Array<TextureAtlasData>>;
+        /**
+         * @private
+         */
+        constructor();
+        /**
+         * @private
+         */
+        protected _getTextureData(dragonBonesName: string, textureName: string): TextureData;
+        /**
+         * @private
+         */
+        protected _fillBuildArmaturePackage(dragonBonesName: string, armatureName: string, skinName: string, dataPackage: BuildArmaturePackage): boolean;
+        /**
+         * @private
+         */
+        protected _buildBones(dataPackage: BuildArmaturePackage, armature: Armature): void;
+        /**
+         * @private
+         */
+        protected _buildSlots(dataPackage: BuildArmaturePackage, armature: Armature): void;
+        /**
+         * @private
+         */
+        protected _replaceSlotDisplay(dataPackage: BuildArmaturePackage, displayData: DisplayData, slot: Slot, displayIndex: number): void;
+        /**
+         * @private
+         */
+        protected abstract _generateTextureAtlasData(textureAtlasData: TextureAtlasData, textureAtlas: any): TextureAtlasData;
+        /**
+         * @private
+         */
+        protected abstract _generateArmature(dataPackage: BuildArmaturePackage): Armature;
+        /**
+         * @private
+         */
+        protected abstract _generateSlot(dataPackage: BuildArmaturePackage, slotDisplayDataSet: SlotDisplayDataSet): Slot;
+        /**
+         * @language zh_CN
+         * 解析并添加龙骨数据。
+         * @param rawData 需要解析的原始数据。 (JSON)
+         * @param dragonBonesName 为数据提供一个名称，以便可以通过这个名称来获取数据，状态，则使用数据中的名称。
+         * @returns DragonBonesData
+         * @see #getDragonBonesData()
+         * @see #addDragonBonesData()
+         * @see #removeDragonBonesData()
+         * @see dragonBones.DragonBonesData
+         * @version DragonBones 4.5
+         */
+        parseDragonBonesData(rawData: any, dragonBonesName?: string): DragonBonesData;
+        /**
+         * @language zh_CN
+         * 解析并添加贴图集数据。
+         * @param rawData 需要解析的原始数据。 (JSON)
+         * @param textureAtlas 贴图集数据。 (BitmapData 或 ATF 或 DisplayObject)
+         * @param name 为数据指定一个名称，以便可以通过这个名称来访问数据，如果未设置，则使用数据中的名称。
+         * @param scale 为贴图集设置一个缩放值。
+         * @returns 贴图集数据
+         * @see #getTextureAtlasData()
+         * @see #addTextureAtlasData()
+         * @see #removeTextureAtlasData()
+         * @see dragonBones.TextureAtlasData
+         * @version DragonBones 4.5
+         */
+        parseTextureAtlasData(rawData: any, textureAtlas: Object, name?: string, scale?: number): TextureAtlasData;
+        /**
+         * @language zh_CN
+         * 获取指定名称的龙骨数据。
+         * @param name 数据名称。
+         * @returns DragonBonesData
+         * @see #parseDragonBonesData()
+         * @see #addDragonBonesData()
+         * @see #removeDragonBonesData()
+         * @see dragonBones.objects.DragonBonesData
+         * @version DragonBones 3.0
+         */
+        getDragonBonesData(name: string): DragonBonesData;
+        /**
+         * @language zh_CN
+         * 添加龙骨数据。
+         * @param data 龙骨数据。
+         * @param dragonBonesName 为数据指定一个名称，以便可以通过这个名称来访问数据，如果未设置，则使用数据中的名称。
+         * @see #parseDragonBonesData()
+         * @see #getDragonBonesData()
+         * @see #removeDragonBonesData()
+         * @see dragonBones.objects.DragonBonesData
+         * @version DragonBones 3.0
+         */
+        addDragonBonesData(data: DragonBonesData, dragonBonesName?: string): void;
+        /**
+         * @language zh_CN
+         * 移除龙骨数据。
+         * @param dragonBonesName 数据名称。
+         * @param disposeData 是否释放数据。 [false: 不释放, true: 释放]
+         * @see #parseDragonBonesData()
+         * @see #getDragonBonesData()
+         * @see #addDragonBonesData()
+         * @see dragonBones.objects.DragonBonesData
+         * @version DragonBones 3.0
+         */
+        removeDragonBonesData(dragonBonesName: string, disposeData?: boolean): void;
+        /**
+         * @language zh_CN
+         * 获取指定名称的贴图集数据列表。
+         * @param dragonBonesName 数据名称。
+         * @returns 贴图集数据列表。
+         * @see #parseTextureAtlasData()
+         * @see #addTextureAtlasData()
+         * @see #removeTextureAtlasData()
+         * @see dragonBones.textures.TextureAtlasData
+         * @version DragonBones 3.0
+         */
+        getTextureAtlasData(dragonBonesName: string): Array<TextureAtlasData>;
+        /**
+         * @language zh_CN
+         * 添加贴图集数据。
+         * @param data 贴图集数据。
+         * @param dragonBonesName 为数据指定一个名称，以便可以通过这个名称来访问数据，如果未设置，则使用数据中的名称。
+         * @see #parseTextureAtlasData()
+         * @see #getTextureAtlasData()
+         * @see #removeTextureAtlasData()
+         * @see dragonBones.textures.TextureAtlasData
+         * @version DragonBones 3.0
+         */
+        addTextureAtlasData(data: TextureAtlasData, dragonBonesName?: string): void;
+        /**
+         * @language zh_CN
+         * 移除贴图集数据。
+         * @param dragonBonesName 数据名称。
+         * @param disposeData 是否释放数据。 [false: 不释放, true: 释放]
+         * @see #parseTextureAtlasData()
+         * @see #getTextureAtlasData()
+         * @see #addTextureAtlasData()
+         * @see dragonBones.textures.TextureAtlasData
+         * @version DragonBones 3.0
+         */
+        removeTextureAtlasData(dragonBonesName: string, disposeData?: boolean): void;
+        /**
+         * @language zh_CN
+         * 清除所有的数据。
+         * @param disposeData 是否释放数据。 [false: 不释放, true: 释放]
+         * @version DragonBones 4.5
+         */
+        clear(disposeData?: Boolean): void;
+        /**
+         * @language zh_CN
+         * 创建一个指定名称的骨架。
+         * @param armatureName 骨架数据名称。
+         * @param dragonBonesName 龙骨数据名称，如果未设置，将检索所有的龙骨数据，当多个龙骨数据中包含同名的骨架数据时，可能无法创建出准确的骨架。 (默认: null)
+         * @param skinName 皮肤名称，如果未设置，则使用默认皮肤。
+         * @returns 骨架
+         * @see dragonBones.Armature
+         * @version DragonBones 3.0
+         */
+        buildArmature(armatureName: string, dragonBonesName?: string, skinName?: string): Armature;
+        /**
+         * @language zh_CN
+         * 将指定骨架的动画替换成其他骨架的动画。 (通常这些骨架应该具有相同的骨架结构)
+         * @param toArmature 指定的骨架。
+         * @param fromArmatreName 其他骨架的名称。
+         * @param fromSkinName 其他骨架的皮肤名称，如果未设置，则使用默认皮肤。
+         * @param fromDragonBonesDataName 其他骨架属于的龙骨数据名称，如果未设置，则检索所有龙骨数据寻找其他骨架。
+         * @param ifRemoveOriginalAnimationList 是否移除原有的动画。 [true: 移除, false: 不移除]
+         * @returns 是否替换成功。 [true: 成功, false: 不成功]
+         * @see dragonBones.Armature
+         * @version DragonBones 4.5
+         */
+        copyAnimationsToArmature(toArmature: Armature, fromArmatreName: string, fromSkinName?: string, fromDragonBonesDataName?: string, ifRemoveOriginalAnimationList?: boolean): boolean;
+        /**
+         * @language zh_CN
+         * 将指定插槽的显示对象替换为指定资源创造出的显示对象。
+         * @param dragonBonesName 指定的龙骨数据名称。
+         * @param armatureName 指定的骨架名称。
+         * @param slotName 指定的插槽名称。
+         * @param displayName 指定的显示对象名称。
+         * @param slot 指定的插槽实例。
+         * @param displayIndex 要替换的显示对象的索引，如果未设置，则替换当前正在显示的显示对象。
+         * @version DragonBones 4.5
+         */
+        replaceSlotDisplay(dragonBonesName: string, armatureName: string, slotName: string, displayName: string, slot: Slot, displayIndex?: number): void;
+        /**
+         * @language zh_CN
+         * 将指定插槽的显示对象列表替换为指定资源创造出的显示对象列表。
+         * @param dragonBonesName 指定的 DragonBonesData 名称。
+         * @param armatureName 指定的骨架名称。
+         * @param slotName 指定的插槽名称。
+         * @param slot 指定的插槽实例。
+         * @version DragonBones 4.5
+         */
+        replaceSlotDisplayList(dragonBonesName: string, armatureName: string, slotName: string, slot: Slot): void;
+    }
+}
+declare namespace dragonBones {
+    /**
+     * @language zh_CN
+     * Egret 工厂。
+     * @version DragonBones 3.0
+     */
+    class EgretFactory extends BaseFactory {
+        /**
+         * @language zh_CN
+         * 创建一个工厂。
+         * @version DragonBones 3.0
+         */
+        constructor();
+        /**
+         * @private
+         */
+        protected _generateTextureAtlasData(textureAtlasData: TextureAtlasData, textureAtlas: any): TextureAtlasData;
+        /**
+         * @private
+         */
+        protected _generateArmature(dataPackage: BuildArmaturePackage): Armature;
+        /**
+         * @private
+         */
+        protected _generateSlot(dataPackage: BuildArmaturePackage, slotDisplayDataSet: SlotDisplayDataSet): Slot;
+        /**
+         * @language zh_CN
+         * 创建一个指定名称的骨架，并使用骨架的显示容器来更新骨架动画。
+         * @param armatureName 骨架数据名称。
+         * @param dragonBonesName 龙骨数据名称，如果未设置，将检索所有的龙骨数据，如果多个数据中包含同名的骨架数据，可能无法创建出准确的骨架。
+         * @param skinName 皮肤名称，如果未设置，则使用默认皮肤。
+         * @returns 骨架的显示容器。
+         * @see dragonBones.IArmatureDisplayContainer
+         * @version DragonBones 4.5
+         */
+        buildArmatureDisplay(armatureName: string, dragonBonesName?: string, skinName?: string): EgretArmatureDisplay;
+        /**
+         * @language zh_CN
+         * 获取全局声音事件管理器。
+         * @version DragonBones 4.5
+         */
+        soundEventManater: EgretArmatureDisplay;
+        /**
+         * @deprecated
+         * @see dragonBones.BaseFactory#addDragonBonesData()
+         */
+        addSkeletonData(dragonBonesData: DragonBonesData, dragonBonesName?: string): void;
+        /**
+         * @deprecated
+         * @see dragonBones.BaseFactory#getDragonBonesData()
+         */
+        getSkeletonData(dragonBonesName: string): DragonBonesData;
+        /**
+         * @deprecated
+         * @see dragonBones.BaseFactory#removeSkeletonData()
+         */
+        removeSkeletonData(dragonBonesName: string): void;
+        /**
+         * @deprecated
+         * @see dragonBones.BaseFactory#addTextureAtlasData()
+         */
+        addTextureAtlas(textureAtlasData: TextureAtlasData, dragonBonesName?: string): void;
+        /**
+         * @deprecated
+         * @see dragonBones.BaseFactory#getTextureAtlasData()
+         */
+        getTextureAtlas(dragonBonesName: string): TextureAtlasData[];
+        /**
+         * @deprecated
+         * @see dragonBones.BaseFactory#removeTextureAtlasData()
+         */
+        removeTextureAtlas(dragonBonesName: string): void;
+        /**
+         * @deprecated
+         * @see dragonBones.BaseFactory#buildArmature()
+         */
+        buildFastArmature(armatureName: string, dragonBonesName?: string, skinName?: string): FastArmature;
+    }
+}
+declare namespace dragonBones {
+    /**
+     * @language zh_CN
+     * Egret 插槽。
+     * @version DragonBones 3.0
+     */
+    class EgretSlot extends Slot {
+        /**
+         * @private
+         */
+        static toString(): string;
+        /**
+         * @language zh_CN
+         * 是否更新显示对象的变换属性。
+         * 为了更好的性能, 并不会更新 display 的变换属性 (x, y, rotation, scaleX, scaleX), 如果需要正确访问这些属性, 则需要设置为 true 。
+         * @default false
+         * @version DragonBones 3.0
+         */
+        transformUpdateEnabled: boolean;
+        private _renderDisplay;
+        private _colorFilter;
+        /**
+         * @language zh_CN
+         * 创建一个空的插槽。
+         * @version DragonBones 3.0
+         */
+        constructor();
+        /**
+         * @inheritDoc
+         */
+        protected _onClear(): void;
+        /**
+         * @private
+         */
+        protected _onUpdateDisplay(): void;
+        /**
+         * @private
+         */
+        protected _initDisplay(value: Object): void;
+        /**
+         * @private
+         */
+        protected _addDisplay(): void;
+        /**
+         * @private
+         */
+        protected _replaceDisplay(value: Object): void;
+        /**
+         * @private
+         */
+        protected _removeDisplay(): void;
+        /**
+         * @private
+         */
+        protected _disposeDisplay(value: Object): void;
+        /**
+         * @private
+         */
+        _updateVisible(): void;
+        /**
+         * @private
+         */
+        private static BLEND_MODE_LIST;
+        /**
+         * @private
+         */
+        protected _updateBlendMode(): void;
+        /**
+         * @private
+         */
+        protected _updateColor(): void;
+        /**
+         * @private
+         */
+        protected _updateFilters(): void;
+        /**
+         * @private
+         */
+        protected _updateFrame(): void;
+        /**
+         * @private
+         */
+        protected _updateMesh(): void;
+        /**
+         * @private
+         */
+        protected _updateTransform(): void;
+    }
+}
+declare namespace dragonBones {
+    /**
+     * @language zh_CN
+     * 2D 矩阵。
+     * @version DragonBones 3.0
+     */
+    class Matrix {
+        a: number;
+        b: number;
+        c: number;
+        d: number;
+        tx: number;
+        ty: number;
+        constructor(a?: number, b?: number, c?: number, d?: number, tx?: number, ty?: number);
+        /**
+         * @language zh_CN
+         * 复制矩阵。
+         * @param value 需要复制的矩阵。
+         * @version DragonBones 3.0
+         */
+        copyFrom(value: Matrix): void;
+        /**
+         * @language zh_CN
+         * 转换为恒等矩阵。
+         * @version DragonBones 3.0
+         */
+        identity(): void;
+        /**
+         * @language zh_CN
+         * 将当前矩阵与另一个矩阵相乘。
+         * @param value 需要相乘的矩阵。
+         * @version DragonBones 3.0
+         */
+        concat(value: Matrix): void;
+        /**
+         * @language zh_CN
+         * 转换为逆矩阵。
+         * @version DragonBones 3.0
+         */
+        invert(): void;
+        /**
+         * @language zh_CN
+         * 将矩阵转换应用于指定点。
+         * @param x 横坐标。
+         * @param y 纵坐标。
+         * @param result 应用转换之后的坐标。
+         * @params delta 是否忽略 tx，ty 对坐标的转换。
+         * @version DragonBones 3.0
+         */
+        transformPoint(x: number, y: number, result: {
+            x: number;
+            y: number;
+        }, delta?: boolean): void;
+    }
+}
+declare namespace dragonBones {
+    /**
+     * @private
+     */
+    class Point {
+        x: number;
+        y: number;
+        constructor(x?: number, y?: number);
+        copyFrom(value: Point): void;
+        clear(): void;
+    }
+}
+declare namespace dragonBones {
+    /**
+     * @private
+     */
+    class Rectangle {
+        x: number;
+        y: number;
+        width: number;
+        height: number;
+        constructor(x?: number, y?: number, width?: number, height?: number);
+        copyFrom(value: Rectangle): void;
+        clear(): void;
+    }
+}
+declare namespace dragonBones {
+    /**
+     * @language zh_CN
+     * 2D 变换。
+     * @version DragonBones 3.0
+     */
+    class Transform {
+        /**
+         * @language zh_CN
+         * 水平位移。
+         * @version DragonBones 3.0
+         */
+        x: number;
+        /**
+         * @language zh_CN
+         * 垂直位移。
+         * @version DragonBones 3.0
+         */
+        y: number;
+        /**
+         * @language zh_CN
+         * 水平倾斜。 (以弧度为单位)
+         * @version DragonBones 3.0
+         */
+        skewX: number;
+        /**
+         * @language zh_CN
+         * 垂直倾斜。 (以弧度为单位)
+         * @version DragonBones 3.0
+         */
+        skewY: number;
+        /**
+         * @language zh_CN
+         * 水平缩放。
+         * @version DragonBones 3.0
+         */
+        scaleX: number;
+        /**
+         * @language zh_CN
+         * 垂直缩放。
+         * @version DragonBones 3.0
+         */
+        scaleY: number;
+        /**
+         * @private
+         */
+        static normalizeRadian(value: number): number;
+        /**
+         * @private
+         */
+        constructor(
+            /**
+             * @language zh_CN
+             * 水平位移。
+             * @version DragonBones 3.0
+             */
+            x?: number, 
+            /**
+             * @language zh_CN
+             * 垂直位移。
+             * @version DragonBones 3.0
+             */
+            y?: number, 
+            /**
+             * @language zh_CN
+             * 水平倾斜。 (以弧度为单位)
+             * @version DragonBones 3.0
+             */
+            skewX?: number, 
+            /**
+             * @language zh_CN
+             * 垂直倾斜。 (以弧度为单位)
+             * @version DragonBones 3.0
+             */
+            skewY?: number, 
+            /**
+             * @language zh_CN
+             * 水平缩放。
+             * @version DragonBones 3.0
+             */
+            scaleX?: number, 
+            /**
+             * @language zh_CN
+             * 垂直缩放。
+             * @version DragonBones 3.0
+             */
+            scaleY?: number);
+        /**
+         * @private
+         */
+        toString(): string;
+        /**
+         * @private
+         */
+        copyFrom(value: Transform): Transform;
+        /**
+         * @private
+         */
+        clone(): Transform;
+        /**
+         * @private
+         */
+        identity(): Transform;
+        /**
+         * @private
+         */
+        add(value: Transform): Transform;
+        /**
+         * @private
+         */
+        minus(value: Transform): Transform;
+        /**
+         * @private
+         */
+        fromMatrix(matrix: Matrix): Transform;
+        /**
+         * @language zh_CN
+         * 转换为矩阵。
+         * @param 矩阵。
+         * @version DragonBones 3.0
+         */
+        toMatrix(matrix: Matrix): void;
+        /**
+         * @language zh_CN
+         * 旋转。 (以弧度为单位)
+         * @version DragonBones 3.0
+         */
+        rotation: number;
+    }
+}
+declare namespace dragonBones {
+    /**
+     * @private
+     */
+    abstract class TimelineData<T extends FrameData<T>> extends BaseObject {
+        /**
+         * @private
+         */
+        scale: number;
+        /**
+         * @private
+         */
+        offset: number;
+        /**
+         * @private
+         */
+        frames: Array<T>;
+        constructor();
+        /**
+         * @inheritDoc
+         */
+        protected _onClear(): void;
+    }
+    /**
+     * @private
+     */
+    class BoneTimelineData extends TimelineData<BoneFrameData> {
+        static cacheFrame(cacheFrames: Array<Matrix>, cacheFrameIndex: number, globalTransformMatrix: Matrix): Matrix;
+        static toString(): string;
+        bone: BoneData;
+        originTransform: Transform;
+        cachedFrames: Array<Matrix>;
+        constructor();
+        /**
+         * @inheritDoc
+         */
+        protected _onClear(): void;
+        cacheFrames(cacheFrameCount: number): void;
+    }
+    /**
+     * @private
+     */
+    class SlotTimelineData extends TimelineData<SlotFrameData> {
+        static cacheFrame(cacheFrames: Array<Matrix>, cacheFrameIndex: number, globalTransformMatrix: Matrix): Matrix;
+        static toString(): string;
+        slot: SlotData;
+        cachedFrames: Array<Matrix>;
+        constructor();
+        /**
+         * @inheritDoc
+         */
+        protected _onClear(): void;
+        cacheFrames(cacheFrameCount: number): void;
+    }
+    /**
+     * @private
+     */
+    class FFDTimelineData extends TimelineData<ExtensionFrameData> {
+        static toString(): string;
+        displayIndex: number;
+        skin: SkinData;
+        slot: SlotDisplayDataSet;
+        constructor();
+        /**
+         * @inheritDoc
+         */
+        protected _onClear(): void;
+    }
+}
+declare namespace dragonBones {
+    /**
+     * @language zh_CN
+     * 动画数据。
+     * @version DragonBones 3.0
+     */
+    class AnimationData extends TimelineData<AnimationFrameData> {
+        /**
+         * @private
+         */
+        static toString(): string;
+        /**
+         * @private
+         */
+        hasAsynchronyTimeline: boolean;
+        /**
+         * @private
+         */
+        hasBoneTimelineEvent: boolean;
+        /**
+         * @language zh_CN
+         * 持续的帧数。
+         * @version DragonBones 3.0
+         */
+        frameCount: number;
+        /**
+         * @language zh_CN
+         * 循环播放的次数。 [0: 无限循环播放, [1~N]: 循环播放 N 次]
+         * @version DragonBones 3.0
+         */
+        playTimes: number;
+        /**
+         * @language zh_CN
+         * 开始的时间。 (以秒为单位)
+         * @version DragonBones 3.0
          */
         position: number;
         /**
-         *持续时间
-         * @member {number} dragonBones.Frame#duration
+         * @language zh_CN
+         * 持续的时间。 (以秒为单位)
+         * @version DragonBones 3.0
          */
         duration: number;
         /**
-         *帧标签
-         * @member {string} dragonBones.Frame#action
+         * @language zh_CN
+         * 淡入混合的时间。 (以秒为单位)
+         * @version DragonBones 3.0
          */
-        action: string;
+        fadeInTime: number;
         /**
-         *帧事件
-         * @member {string} dragonBones.Frame#event
+         * @private
          */
-        event: string;
+        cacheTimeToFrameScale: number;
         /**
-         *帧声音
-         * @member {string} dragonBones.Frame#sound
+         * @language zh_CN
+         * 数据名称。
+         * @version DragonBones 3.0
          */
-        sound: string;
-        /** @private */
-        bone: string;
-        curve: CurveData;
-        /**
-         *构造函数
-         */
-        constructor();
-        /**
-         *释放资源
-         */
-        dispose(): void;
-    }
-}
-declare module dragonBones {
-    /**
-     * @private
-     */
-    class FFDFrame extends Frame {
-        tweenEasing: number;
-        offset: number;
-        vertices: Array<number>;
-        constructor();
-    }
-}
-declare module dragonBones {
-    /**
-     * @private
-     */
-    class FFDTimeline extends Timeline {
         name: string;
-        skin: string;
-        displayIndex: number;
-        offset: number;
+        /**
+         * @private
+         */
+        animation: AnimationData;
+        /**
+         * @private
+         */
+        boneTimelines: Map<BoneTimelineData>;
+        /**
+         * @private
+         */
+        slotTimelines: Map<SlotTimelineData>;
+        /**
+         * @private
+         */
+        ffdTimelines: Map<Map<Map<FFDTimelineData>>>;
+        /**
+         * @private
+         */
+        cachedFrames: Array<boolean>;
+        /**
+         * @private
+         */
         constructor();
-        dispose(): void;
+        /**
+         * @inheritDoc
+         */
+        protected _onClear(): void;
+        /**
+         * @private
+         */
+        cacheFrames(value: number): void;
+        /**
+         * @private
+         */
+        addBoneTimeline(value: BoneTimelineData): void;
+        /**
+         * @private
+         */
+        addSlotTimeline(value: SlotTimelineData): void;
+        /**
+         * @private
+         */
+        addFFDTimeline(value: FFDTimelineData): void;
+        /**
+         * @private
+         */
+        getBoneTimeline(name: string): BoneTimelineData;
+        /**
+         * @private
+         */
+        getSlotTimeline(name: string): SlotTimelineData;
+        /**
+         * @private
+         */
+        getFFDTimeline(skinName: string, slotName: string, displayIndex: number): FFDTimelineData;
     }
 }
-declare module dragonBones {
-    class IKData {
+declare namespace dragonBones {
+    /**
+     * @language zh_CN
+     * 骨架数据。
+     * @see dragonBones.Armature
+     * @version DragonBones 3.0
+     */
+    class ArmatureData extends BaseObject {
+        private static _onSortSlots(a, b);
+        /**
+         * @private
+         */
+        static toString(): string;
+        /**
+         * @language zh_CN
+         * 动画帧率。
+         * @version DragonBones 3.0
+         */
+        frameRate: number;
+        /**
+         * @private
+         */
+        cacheFrameRate: number;
+        /**
+         * @language zh_CN
+         * 骨架类型。
+         * @see dragonBones.ArmatureType
+         * @version DragonBones 3.0
+         */
+        type: ArmatureType;
+        /**
+         * @language zh_CN
+         * 数据名称。
+         * @version DragonBones 3.0
+         */
         name: string;
-        target: string;
-        weight: number;
-        bones: string;
-        chain: number;
+        /**
+         * @language zh_CN
+         * 所有的骨骼数据。
+         * @see dragonBones.BoneData
+         * @version DragonBones 3.0
+         */
+        bones: Map<BoneData>;
+        /**
+         * @language zh_CN
+         * 所有的插槽数据。
+         * @see dragonBones.SlotData
+         * @version DragonBones 3.0
+         */
+        slots: Map<SlotData>;
+        /**
+         * @language zh_CN
+         * 所有的皮肤数据。
+         * @see dragonBones.SkinData
+         * @version DragonBones 3.0
+         */
+        skins: Map<SkinData>;
+        /**
+         * @language zh_CN
+         * 所有的动画数据。
+         * @see dragonBones.AnimationData
+         * @version DragonBones 3.0
+         */
+        animations: Map<AnimationData>;
+        private _boneDirty;
+        private _slotDirty;
+        private _defaultSkin;
+        private _defaultAnimation;
+        private _sortedBones;
+        private _sortedSlots;
+        private _bonesChildren;
+        /**
+         * @private
+         */
+        constructor();
+        /**
+         * @inheritDoc
+         */
+        protected _onClear(): void;
+        private _sortBones();
+        private _sortSlots();
+        /**
+         * @private
+         */
+        cacheFrames(value: number): void;
+        /**
+         * @private
+         */
+        addBone(value: BoneData, parentName: string): void;
+        /**
+         * @private
+         */
+        addSlot(value: SlotData): void;
+        /**
+         * @private
+         */
+        addSkin(value: SkinData): void;
+        /**
+         * @private
+         */
+        addAnimation(value: AnimationData): void;
+        /**
+         * @language zh_CN
+         * 获取指定名称的骨骼数据。
+         * @param name 骨骼数据名称。
+         * @see dragonBones.BoneData
+         * @version DragonBones 3.0
+         */
+        getBone(name: string): BoneData;
+        /**
+         * @language zh_CN
+         * 获取指定名称的插槽数据。
+         * @param name 插槽数据名称。
+         * @see dragonBones.SlotData
+         * @version DragonBones 3.0
+         */
+        getSlot(name: string): SlotData;
+        /**
+         * @language zh_CN
+         * 获取指定名称的皮肤数据。
+         * @param name 皮肤数据名称。
+         * @see dragonBones.SkinData
+         * @version DragonBones 3.0
+         */
+        getSkin(name: string): SkinData;
+        /**
+         * @language zh_CN
+         * 获取指定名称的动画数据。
+         * @param name 动画数据名称。
+         * @see dragonBones.AnimationData
+         * @version DragonBones 3.0
+         */
+        getAnimation(name: string): AnimationData;
+        /**
+         * @private
+         */
+        sortedBones: Array<BoneData>;
+        /**
+         * @private
+         */
+        sortedSlots: Array<SlotData>;
+        /**
+         * @language zh_CN
+         * 获取默认的皮肤数据。
+         * @see dragonBones.SkinData
+         * @version DragonBones 4.5
+         */
+        defaultSkin: SkinData;
+        /**
+         * @language zh_CN
+         * 获取默认的动画数据。
+         * @see dragonBones.AnimationData
+         * @version DragonBones 4.5
+         */
+        defaultAnimation: AnimationData;
+    }
+    /**
+     * @language zh_CN
+     * 骨骼数据。
+     * @see dragonBones.Bone
+     * @version DragonBones 3.0
+     */
+    class BoneData extends BaseObject {
+        /**
+         * @private
+         */
+        static toString(): string;
+        /**
+         * @private
+         */
+        inheritTranslation: boolean;
+        /**
+         * @private
+         */
+        inheritRotation: boolean;
+        /**
+         * @private
+         */
+        inheritScale: boolean;
+        /**
+         * @private
+         */
         bendPositive: boolean;
-        constructora(): void;
-        dispose(): void;
+        /**
+         * @private
+         */
+        chain: number;
+        /**
+         * @private
+         */
+        chainIndex: number;
+        /**
+         * @private
+         */
+        weight: number;
+        /**
+         * @private
+         */
+        length: number;
+        /**
+         * @language zh_CN
+         * 数据名称。
+         * @version DragonBones 3.0
+         */
+        name: string;
+        /**
+         * @language zh_CN
+         * 所属的父骨骼数据。
+         * @version DragonBones 3.0
+         */
+        parent: BoneData;
+        /**
+         * @private
+         */
+        ik: BoneData;
+        /**
+         * @private
+         */
+        transform: Transform;
+        /**
+         * @private
+         */
+        constructor();
+        /**
+         * @inheritDoc
+         */
+        protected _onClear(): void;
     }
-}
-declare module dragonBones {
+    /**
+     * @language zh_CN
+     * 插槽数据。
+     * @see dragonBones.Slot
+     * @version DragonBones 3.0
+     */
+    class SlotData extends BaseObject {
+        /**
+         * @private
+         */
+        static DEFAULT_COLOR: ColorTransform;
+        /**
+         * @private
+         */
+        static generateColor(): ColorTransform;
+        /**
+         * @private
+         */
+        static toString(): string;
+        /**
+         * @private
+         */
+        displayIndex: number;
+        /**
+         * @private
+         */
+        zOrder: number;
+        /**
+         * @private
+         */
+        blendMode: BlendMode;
+        /**
+         * @language zh_CN
+         * 数据名称。
+         * @version DragonBones 3.0
+         */
+        name: string;
+        /**
+         * @language zh_CN
+         * 所属的父骨骼数据。
+         * @see dragonBones.BoneData
+         * @version DragonBones 3.0
+         */
+        parent: BoneData;
+        /**
+         * @private
+         */
+        color: ColorTransform;
+        /**
+         * @private
+         */
+        constructor();
+        /**
+         * @inheritDoc
+         */
+        protected _onClear(): void;
+    }
+    /**
+     * @language zh_CN
+     * 皮肤数据。
+     * @version DragonBones 3.0
+     */
+    class SkinData extends BaseObject {
+        /**
+         * @private
+         */
+        static toString(): string;
+        /**
+         * @language zh_CN
+         * 数据名称。
+         * @version DragonBones 3.0
+         */
+        name: string;
+        /**
+         * @private
+         */
+        slots: Map<SlotDisplayDataSet>;
+        /**
+         * @private
+         */
+        constructor();
+        /**
+         * @inheritDoc
+         */
+        protected _onClear(): void;
+        /**
+         * @private
+         */
+        addSlot(value: SlotDisplayDataSet): void;
+        /**
+         * @private
+         */
+        getSlot(name: string): SlotDisplayDataSet;
+    }
     /**
      * @private
-     * @class dragonBones.BoneData
-     * @classdesc
-     * 网格数据
      */
-    class MeshData extends DisplayData {
+    class SlotDisplayDataSet extends BaseObject {
+        static toString(): string;
+        slot: SlotData;
+        displays: Array<DisplayData>;
+        constructor();
+        /**
+         * @inheritDoc
+         */
+        protected _onClear(): void;
+    }
+    /**
+     * @private
+     */
+    class DisplayData extends BaseObject {
+        static toString(): string;
+        isRelativePivot: boolean;
+        type: DisplayType;
+        name: string;
+        textureData: TextureData;
+        armatureData: ArmatureData;
+        meshData: MeshData;
+        pivot: Point;
+        transform: Transform;
+        constructor();
+        /**
+         * @inheritDoc
+         */
+        protected _onClear(): void;
+    }
+    /**
+     * @private
+     */
+    class MeshData extends BaseObject {
+        static toString(): string;
         skinned: boolean;
-        numVertex: number;
-        numTriangle: number;
-        triangles: Array<number>;
-        vertices: Array<VertexData>;
-        vertexBones: Array<VertexBoneData>;
+        slotPose: Matrix;
+        uvs: Array<number>;
+        vertices: Array<number>;
+        vertexIndices: Array<number>;
+        boneIndices: Array<Array<number>>;
+        weights: Array<Array<number>>;
+        boneVertices: Array<Array<number>>;
         bones: Array<BoneData>;
         inverseBindPose: Array<Matrix>;
-        slotPose: Matrix;
         constructor();
         /**
-         *释放资源
+         * @inheritDoc
          */
-        dispose(): void;
+        protected _onClear(): void;
     }
 }
-declare module dragonBones {
+declare namespace dragonBones {
     /**
-     * optimized by freem-trg
-     * Intermediate class for store the results of the parent transformation
+     * @language zh_CN
+     * 龙骨数据，包含多个骨架数据。
+     * @see dragonBones.ArmatureData
+     * @version DragonBones 3.0
      */
-    class ParentTransformObject {
-        parentGlobalTransform: DBTransform;
-        parentGlobalTransformMatrix: Matrix;
-        private static _pool;
-        private static _poolSize;
-        constructor();
-        setTo(parentGlobalTransform: DBTransform, parentGlobalTransformMatrix: Matrix): ParentTransformObject;
-        release(): void;
-        static create(): ParentTransformObject;
-        static dispose(parentTransformObject: ParentTransformObject): void;
-    }
-}
-declare module dragonBones {
-    /**
-     * @class dragonBones.SkinData
-     * @classdesc
-     * 皮肤数据，皮肤是由一些插槽组成，每个插槽都有一个骨骼控制，骨骼的运动带动插槽的运动形成动画，
-     * 插槽里可以放置显示对象，目前支持的显示对象有图片和子骨架两种
-     */
-    class SkinData {
-        /**
-         * 皮肤数据的名字
-         * @member {string} dragonBones.SkinData#name
-         */
-        name: string;
+    class DragonBonesData extends BaseObject {
         /**
          * @private
          */
-        hasMesh: boolean;
-        private _slotDataList;
+        static toString(): string;
         /**
-         * 构造函数，实例化一个SkinData类
+         * @language zh_CN
+         * 是否开启共享搜索。 [true: 开启, false: 不开启]
+         * @default false
+         * @see dragonBones.objects.ArmatureData
+         * @version DragonBones 4.5
          */
-        constructor();
+        autoSearch: boolean;
         /**
-         * 释放资源
+         * @language zh_CN
+         * 动画帧频。
+         * @version DragonBones 3.0
          */
-        dispose(): void;
+        frameRate: number;
         /**
-         * 根据插槽的名字获取插槽数据
-         * @param slotName 想要获取的插槽的名字
-         * @returns {*} 返回的插槽数据
-         */
-        getSlotData(slotName: string): SlotData;
-        /**
-         * 添加一个插槽数据
-         * @param slotData
-         */
-        addSlotData(slotData: SlotData): void;
-        /**
-         * 获取所有的插槽数据
-         * @returns {Array<SlotData>}
-         */
-        slotDataList: Array<SlotData>;
-    }
-}
-declare module dragonBones {
-    /**
-     * @class dragonBones.SlotData
-     * @classdesc
-     * 插槽数据，插槽是由骨骼控制的，可以装入显示对象的容器，显示对象可以是图片或者子骨架
-     * 插槽可插入一个或者多个显示对象，但是同一时刻只能显示一个显示对象
-     * 插槽支持关键帧动画，如果有多个显示对象，可以指定哪一帧显示哪一个显示对象
-     */
-    class SlotData {
-        /**
-         * 插槽数据的名字
-         * @member {string} dragonBones.SlotData#name
+         * @language zh_CN
+         * 数据名称。
+         * @version DragonBones 3.0
          */
         name: string;
         /**
-         * 绑定的骨骼的名字，一个插槽仅受一个骨骼控制
-         * @member {string} dragonBones.SlotData#parent
+         * @language zh_CN
+         * 所有的骨架数据。
+         * @see dragonBones.objects.ArmatureData
+         * @version DragonBones 3.0
          */
-        parent: string;
+        armatures: Map<ArmatureData>;
+        private _armatureNames;
         /**
-         * z轴排序，z轴是垂直于屏幕的轴，zOrder约小，越靠里
-         * 所以如果有重叠，zOrder大的插槽会挡住zOrder小的插槽
-         * @member {number} dragonBones.SlotData#zOrder
-         */
-        zOrder: number;
-        /**
-         * 混合模式
-         * @member {string} dragonBones.SlotData#blendMode
-         */
-        blendMode: string;
-        /**
-         * 初始的显示图片的序号
-         * @member {string} dragonBones.SlotData#displayIndex
-         */
-        displayIndex: number;
-        private _displayDataList;
-        gotoAndPlay: string;
-        /**
-         * 构造函数，实例化一个SlotData类
+         * @private
          */
         constructor();
         /**
-         * 释放资源
+         * @inheritDoc
          */
-        dispose(): void;
+        protected _onClear(): void;
         /**
-         * 添加一个显示对象数据
-         * @param displayData
+         * @language zh_CN
+         * 获取指定名称的骨架。
+         * @param name 骨架数据骨架名称。
+         * @see dragonBones.ArmatureData
+         * @version DragonBones 3.0
          */
-        addDisplayData(displayData: DisplayData): void;
+        getArmature(name: string): ArmatureData;
         /**
-         * 根据显示对象的名字获取显示对象数据
-         * @param displayName 想要获取的显示对象的名字
-         * @returns {*} 返回显示对象昂数据，如果没有返回null
+         * @private
          */
-        getDisplayData(displayName: string): DisplayData;
+        addArmature(value: ArmatureData): void;
         /**
-         * 获取所有的显示对象
-         * @returns {Array<DisplayData>}
+         * @language zh_CN
+         * 所有的骨架数据名称。
+         * @see #armatures
+         * @version DragonBones 3.0
          */
-        displayDataList: Array<DisplayData>;
+        armatureNames: Array<string>;
     }
 }
-declare module dragonBones {
+declare namespace dragonBones {
     /**
-     * @class dragonBones.SlotFrame
-     * @extends dragonBones.Frame
-     * @classdesc
-     * 插槽的关键帧数据，包含
-     * 插槽的显示序号，可见度，zOrder，colorTransform数据
+     * @private
      */
-    class SlotFrame extends Frame {
-        /**
-         * NaN:no tween, 10:auto tween, [-1, 0):ease in, 0:line easing, (0, 1]:ease out, (1, 2]:ease in out
-         * 缓动值，
-         * 当值为NaN时，没有缓动
-         * 当值为10时，为自动
-         * 当值为[-1,0)时，为缓进
-         * 当值为0时，为线性缓动
-         * 当值为(0, 1]时，为缓出
-         * 当值为(1, 2]时，为缓进缓出
-         * @member {number} dragonBones.TransformFrame#tweenEasing
-         */
-        tweenEasing: number;
-        /**
-         *绑定到该插槽的显示序号，当插槽有多个显示对象时，指定显示哪一个显示对象
-         * @member {number} dragonBones.SlotFrame#displayIndex
-         */
-        displayIndex: number;
-        /**
-         *是否可见
-         * @member {boolean} dragonBones.SlotFrame#visible
-         */
-        visible: boolean;
-        /**
-         *绑定到该插槽的zOrder值
-         * @member {number} dragonBones.SlotFrame#zOrder
-         */
-        zOrder: number;
-        /**
-         *绑定到插槽的颜色transform，颜色的transform可以表示颜色在红蓝绿透明四个通道的变化
-         * @member {dragonBones.ColorTransform} dragonBones.SlotFrame#color
-         */
-        color: ColorTransform;
-        /**
-         * 播放子骨架的的动画
-         * @member {string} dragonBones.SlotFrame#gotoAndPlay
-         */
-        gotoAndPlay: string;
-        /**
-         *构造函数，实例化一个SlotFrame
-         */
+    class ActionData extends BaseObject {
+        static toString(): string;
+        type: ActionType;
+        data: Array<any>;
+        bone: BoneData;
+        slot: SlotData;
         constructor();
-        /**
-         *释放资源
-         */
-        dispose(): void;
+        protected _onClear(): void;
     }
-}
-declare module dragonBones {
     /**
-     * @class dragonBones.SlotTimeline
-     * @extends dragonBones.Timeline
-     * @classdesc
-     * 插槽的时间轴数据，包含一个和多个关键帧数据
+     * @private
      */
-    class SlotTimeline extends Timeline {
-        /**
-         *时间轴的名称
-         * @member {string} dragonBones.SlotTimeline#name
-         */
+    class EventData extends BaseObject {
+        static toString(): string;
+        type: EventType;
         name: string;
-        /**
-         * 是否有动画
-         * @member {boolean} dragonBones.SlotTimeline#transformed
-         */
-        transformed: boolean;
-        /**
-         * 偏移量
-         * @member {number} dragonBones.SlotTimeline#offset
-         */
-        offset: number;
-        /**
-         * 构造函数，实例化一个SlotTimeline
-         */
+        data: any;
+        bone: BoneData;
+        slot: SlotData;
+        constructor();
+        protected _onClear(): void;
+    }
+    /**
+     * @private
+     */
+    abstract class FrameData<T> extends BaseObject {
+        position: number;
+        duration: number;
+        prev: T;
+        next: T;
+        actions: Array<ActionData>;
+        events: Array<EventData>;
         constructor();
         /**
-         * 释放资源
+         * @inheritDoc
          */
-        dispose(): void;
+        protected _onClear(): void;
     }
-}
-declare module dragonBones {
     /**
-     * @class dragonBones.TransformFrame
-     * @extends dragonBones.Frame
-     * @classdesc
-     * 骨骼的关键帧数据，包含骨骼的缓动，旋转，transform数据和
-     * 插槽的显示序号，可见度，zOrder，colorTransform数据
+     * @private
      */
-    class TransformFrame extends Frame {
-        /**
-         * NaN:no tween, 10:auto tween, [-1, 0):ease in, 0:line easing, (0, 1]:ease out, (1, 2]:ease in out
-         * 缓动值，
-         * 当值为NaN时，没有缓动
-         * 当值为10时，为自动
-         * 当值为[-1,0)时，为缓进
-         * 当值为0时，为线性缓动
-         * 当值为(0, 1]时，为缓出
-         * 当值为(1, 2]时，为缓进缓出
-         * @member {number} dragonBones.TransformFrame#tweenEasing
-         */
+    abstract class TweenFrameData<T> extends FrameData<T> {
+        static samplingCurve(curve: Array<number>, frameCount: number): Array<number>;
         tweenEasing: number;
+        curve: Array<number>;
+        constructor();
         /**
-         * 旋转几圈
-         * @member {number} dragonBones.TransformFrame#tweenRotate
+         * @inheritDoc
          */
-        tweenRotate: number;
+        protected _onClear(): void;
+    }
+    /**
+     * @private
+     */
+    class AnimationFrameData extends FrameData<AnimationFrameData> {
+        static toString(): string;
+        constructor();
         /**
-         * 补间是否对Scale起作用
-         * @member {boolean} dragonBones.TransformFrame#tweenScale
+         * @inheritDoc
          */
+        protected _onClear(): void;
+    }
+    /**
+     * @private
+     */
+    class BoneFrameData extends TweenFrameData<BoneFrameData> {
+        static toString(): string;
         tweenScale: boolean;
+        tweenRotate: number;
+        parent: BoneData;
+        transform: Transform;
+        constructor();
         /**
-         *绑定到该骨骼的插槽的显示序号，当插槽有多个显示对象时，指定显示哪一个显示对象
-         * @member {number} dragonBones.TransformFrame#displayIndex
+         * @inheritDoc
          */
+        protected _onClear(): void;
+    }
+    /**
+     * @private
+     */
+    class SlotFrameData extends TweenFrameData<SlotFrameData> {
+        static DEFAULT_COLOR: ColorTransform;
+        static generateColor(): ColorTransform;
+        static toString(): string;
         displayIndex: number;
-        /**
-         *是否可见
-         * @member {boolean} dragonBones.TransformFrame#visible
-         */
-        visible: boolean;
-        /**
-         *绑定到该骨骼的插槽的zOrder值
-         * @member {number} dragonBones.TransformFrame#zOrder
-         */
         zOrder: number;
-        /**
-         *全局的transform
-         * @member {dragonBones.DBTransform} dragonBones.TransformFrame#global
-         */
-        global: DBTransform;
-        /**
-         *骨骼的transform，transform可以表示位移，旋转，缩放三种属性
-         * @member {dragonBones.DBTransform} dragonBones.TransformFrame#transform
-         */
-        transform: DBTransform;
-        /**
-         *注册点，骨骼的旋转中心
-         * @member {dragonBones.Point} dragonBones.TransformFrame#pivot
-         */
-        pivot: Point;
-        /**
-         *绑定到骨骼的插槽的颜色transform，颜色的transform可以表示颜色在红蓝绿透明四个通道的变化
-         * @member {dragonBones.ColorTransform} dragonBones.TransformFrame#color
-         */
         color: ColorTransform;
-        /**
-         *缩放的偏移
-         * @member {dragonBones.Point} dragonBones.TransformFrame#scaleOffset
-         */
-        scaleOffset: Point;
-        /**
-         *构造函数，实例化一个TransformFrame
-         */
         constructor();
         /**
-         *释放资源
+         * @inheritDoc
          */
-        dispose(): void;
+        protected _onClear(): void;
     }
-}
-declare module dragonBones {
-    /**
-     * @class dragonBones.TransformTimeline
-     * @extends dragonBones.Timeline
-     * @classdesc
-     * 骨骼的时间轴数据，包含一个和多个关键帧数据
-     */
-    class TransformTimeline extends Timeline {
-        /**
-         *时间轴的名称
-         * @member {string} dragonBones.TransformTimeline#name
-         */
-        name: string;
-        /**
-         * 是否有动画
-         * @member {boolean} dragonBones.TransformTimeline#transformed
-         */
-        transformed: boolean;
-        /**
-         * 第一帧的Transform
-         * @member {dragonBones.DBTransform} dragonBones.TransformTimeline#originTransform
-         */
-        originTransform: DBTransform;
-        /**
-         * 第一帧的骨头的轴点
-         * @member {dragonBones.Point} dragonBones.TransformTimeline#originPivot
-         */
-        originPivot: Point;
-        /**
-         * 偏移量
-         * @member {number} dragonBones.TransformTimeline#offset
-         */
-        offset: number;
-        /**
-         * 构造函数，实例化一个TransformTimeline
-         */
-        constructor();
-        /**
-         * 释放资源
-         */
-        dispose(): void;
-    }
-}
-declare module dragonBones {
     /**
      * @private
      */
-    class VertexBoneData {
-        indices: Array<number>;
-        weights: Array<number>;
-        vertices: Array<Point>;
+    class ExtensionFrameData extends TweenFrameData<ExtensionFrameData> {
+        static toString(): string;
+        type: ExtensionType;
+        tweens: Array<number>;
+        keys: Array<number>;
         constructor();
+        /**
+         * @inheritDoc
+         */
+        protected _onClear(): void;
     }
 }
-declare module dragonBones {
+declare namespace dragonBones {
     /**
      * @private
      */
-    class VertexData extends Point {
-        u: number;
-        v: number;
+    abstract class DataParser {
+        protected static DATA_VERSION_2_3: string;
+        protected static DATA_VERSION_3_0: string;
+        protected static DATA_VERSION_4_0: string;
+        protected static DATA_VERSION: string;
+        protected static TEXTURE_ATLAS: string;
+        protected static SUB_TEXTURE: string;
+        protected static FORMAT: string;
+        protected static IMAGE_PATH: string;
+        protected static WIDTH: string;
+        protected static HEIGHT: string;
+        protected static ROTATED: string;
+        protected static FRAME_X: string;
+        protected static FRAME_Y: string;
+        protected static FRAME_WIDTH: string;
+        protected static FRAME_HEIGHT: string;
+        protected static DRADON_BONES: string;
+        protected static ARMATURE: string;
+        protected static BONE: string;
+        protected static IK: string;
+        protected static SLOT: string;
+        protected static SKIN: string;
+        protected static DISPLAY: string;
+        protected static ANIMATION: string;
+        protected static FFD: string;
+        protected static FRAME: string;
+        protected static PIVOT: string;
+        protected static TRANSFORM: string;
+        protected static COLOR: string;
+        protected static FILTER: string;
+        protected static VERSION: string;
+        protected static IS_GLOBAL: string;
+        protected static FRAME_RATE: string;
+        protected static TYPE: string;
+        protected static NAME: string;
+        protected static PARENT: string;
+        protected static LENGTH: string;
+        protected static DATA: string;
+        protected static DISPLAY_INDEX: string;
+        protected static Z_ORDER: string;
+        protected static BLEND_MODE: string;
+        protected static INHERIT_TRANSLATION: string;
+        protected static INHERIT_ROTATION: string;
+        protected static INHERIT_SCALE: string;
+        protected static TARGET: string;
+        protected static BEND_POSITIVE: string;
+        protected static CHAIN: string;
+        protected static WEIGHT: string;
+        protected static FADE_IN_TIME: string;
+        protected static PLAY_TIMES: string;
+        protected static SCALE: string;
+        protected static OFFSET: string;
+        protected static POSITION: string;
+        protected static DURATION: string;
+        protected static TWEEN_EASING: string;
+        protected static TWEEN_ROTATE: string;
+        protected static TWEEN_SCALE: string;
+        protected static CURVE: string;
+        protected static EVENT: string;
+        protected static SOUND: string;
+        protected static ACTION: string;
+        protected static ACTIONS: string;
+        protected static X: string;
+        protected static Y: string;
+        protected static SKEW_X: string;
+        protected static SKEW_Y: string;
+        protected static SCALE_X: string;
+        protected static SCALE_Y: string;
+        protected static ALPHA_OFFSET: string;
+        protected static RED_OFFSET: string;
+        protected static GREEN_OFFSET: string;
+        protected static BLUE_OFFSET: string;
+        protected static ALPHA_MULTIPLIER: string;
+        protected static RED_MULTIPLIER: string;
+        protected static GREEN_MULTIPLIER: string;
+        protected static BLUE_MULTIPLIER: string;
+        protected static UVS: string;
+        protected static VERTICES: string;
+        protected static TRIANGLES: string;
+        protected static WEIGHTS: string;
+        protected static SLOT_POSE: string;
+        protected static BONE_POSE: string;
+        protected static TWEEN: string;
+        protected static KEY: string;
+        protected static COLOR_TRANSFORM: string;
+        protected static TIMELINE: string;
+        protected static PIVOT_X: string;
+        protected static PIVOT_Y: string;
+        protected static LOOP: string;
+        protected static AUTO_TWEEN: string;
+        protected static HIDE: string;
+        protected static RECTANGLE: string;
+        protected static ELLIPSE: string;
+        protected static _getArmatureType(value: string): ArmatureType;
+        protected static _getDisplayType(value: string): DisplayType;
+        protected static _getBlendMode(value: string): BlendMode;
+        protected static _getActionType(value: string): ActionType;
+        protected _data: DragonBonesData;
+        protected _armature: ArmatureData;
+        protected _skin: SkinData;
+        protected _slotDisplayDataSet: SlotDisplayDataSet;
+        protected _mesh: MeshData;
+        protected _animation: AnimationData;
+        protected _timeline: any;
+        protected _isParentCooriinate: boolean;
+        protected _isAutoTween: boolean;
+        protected _animationTweenEasing: number;
+        protected _armatureScale: number;
+        protected _helpPoint: Point;
+        protected _helpTransform: Transform;
+        protected _helpMatrix: Matrix;
+        protected _rawBones: Array<BoneData>;
         constructor();
-    }
-}
-declare module dragonBones {
-    /**
-     *@class dragonBones.DataParser
-     * @classdesc
-     * 老版本数据解析
-     */
-    class Data3Parser {
-        private static tempDragonBonesData;
-        static parseDragonBonesData(rawDataToParse: any): DragonBonesData;
-        private static parseArmatureData(armatureDataToParse, frameRate);
-        private static parseBoneData(boneObject);
-        private static parseSkinData(skinObject);
-        private static parseSkinSlotData(slotObject);
-        private static parseSlotData(slotObject);
-        private static parseDisplayData(displayObject);
-        private static _currentAnimationData;
-        /** @private */
-        private static parseAnimationData(animationObject, frameRate);
-        private static parseSlotTimeline(timelineObject, duration, frameRate);
-        private static parseSlotFrame(frameObject, frameRate);
-        private static parseTransformTimeline(timelineObject, duration, frameRate);
-        private static parseTransformFrame(frameObject, nextFrameObject, frameRate);
-        private static parseTimeline(timelineObject, outputTimeline);
-        private static parseFrame(frameObject, outputFrame, frameRate?);
-        private static parseTransform(transformObject, transform, pivot?);
-        private static parseColorTransform(colorTransformObject, colorTransform);
-        private static getBoolean(data, key, defaultValue);
-        private static getNumber(data, key, defaultValue);
-    }
-}
-declare module dragonBones {
-    /**
-     *@class dragonBones.DataParser
-     * @classdesc
-     * 数据解析
-     *
-     * @example
-       <pre>
-         //获取动画数据
-         var skeletonData = RES.getRes("skeleton");
-         //获取纹理集数据
-         var textureData = RES.getRes("textureConfig");
-         //获取纹理集图片
-         var texture = RES.getRes("texture");
-      
-         //创建一个工厂，用来创建Armature
-         var factory:dragonBones.EgretFactory = new dragonBones.EgretFactory();
-         //把动画数据添加到工厂里
-         factory.addSkeletonData(dragonBones.DataParser.parseDragonBonesData(skeletonData));
-         //把纹理集数据和图片添加到工厂里
-         factory.addTextureAtlas(new dragonBones.EgretTextureAtlas(texture, textureData));
-         //获取Armature的名字，dragonBones4.0的数据可以包含多个骨架，这里取第一个Armature
-         var armatureName:string = skeletonData.armature[0].name;
-         //从工厂里创建出Armature
-         var armature:dragonBones.Armature = factory.buildArmature(armatureName);
-         //获取装载Armature的容器
-         var armatureDisplay = armature.display;
-         //把它添加到舞台上
-         this.addChild(armatureDisplay);
-         //取得这个Armature动画列表中的第一个动画的名字
-         var curAnimationName = armature.animation.animationList[0];
-         //播放这个动画，gotoAndPlay参数说明,具体详见Animation类
-         //第一个参数 animationName {string} 指定播放动画的名称.
-         //第二个参数 fadeInTime {number} 动画淡入时间 (>= 0), 默认值：-1 意味着使用动画数据中的淡入时间.
-         //第三个参数 duration {number} 动画播放时间。默认值：-1 意味着使用动画数据中的播放时间.
-         //第四个参数 layTimes {number} 动画播放次数(0:循环播放, >=1:播放次数, NaN:使用动画数据中的播放时间), 默认值：NaN
-         armature.animation.gotoAndPlay(curAnimationName,0.3,-1,0);
-      
-         //把Armature添加到心跳时钟里
-         dragonBones.WorldClock.clock.add(armature);
-         //心跳时钟开启
-         egret.Ticker.getInstance().register(function (advancedTime) {
-             dragonBones.WorldClock.clock.advanceTime(advancedTime / 1000);
-         }, this);
-       </pre>
-     */
-    class DataParser {
-        private static tempDragonBonesData;
         /**
-         *解析纹理集数据
-         * @param rawData纹理集数据xml或者json
-         * @param scale纹理资源的缩放，默认为1，不缩放
-         * @returns {any}返回纹理集数据，存放TexutrueData的字典类型
+         * @private
+         */
+        abstract parseDragonBonesData(rawData: any, scale: number): DragonBonesData;
+        /**
+         * @private
+         */
+        abstract parseTextureAtlasData(rawData: any, textureAtlasData: TextureAtlasData, scale: number): void;
+        private _getTimelineFrameMatrix(animation, timeline, position, transform);
+        protected _globalToLocal(armature: ArmatureData): void;
+        /**
+         * @deprecated
+         * @see dragonBones.BaseFactory#parseDragonBonesData()
+         */
+        static parseDragonBonesData(rawData: any): DragonBonesData;
+        /**
+         * @deprecated
+         * @see dragonBones.BaseFactory#parsetTextureAtlasData()
          */
         static parseTextureAtlasData(rawData: any, scale?: number): any;
-        private static _rawBones;
-        private static _armatureData;
-        private static _skinData;
-        private static _skinSlotData;
-        private static _meshData;
-        private static _displayIndex;
-        /**
-         * 解析DragonBones的数据，xml或者json，该数据包含了骨骼，皮肤，动画的数据
-         * @param rawDataToParse DragonBones的数据，xml或者json格式
-         * @returns {DragonBonesData} 返回DragonBones引擎使用的数据格式
-         */
-        static parseDragonBonesData(rawDataToParse: any): DragonBonesData;
-        private static parseArmatureData(armatureDataToParse, frameRate);
-        private static parseBoneData(boneObject);
-        private static parseIKData(ikObject);
-        private static parseSkinData(skinObject);
-        private static parseSlotData(slotObject);
-        private static parseSlotDisplayData(slotObject);
-        private static parseDisplayData(displayObject);
-        private static parseMeshData(meshObject);
-        /** @private */
-        private static parseAnimationData(animationObject, frameRate);
-        private static parseTransformTimeline(timelineObject, duration, frameRate);
-        private static parseSlotTimeline(timelineObject, duration, frameRate);
-        private static parseFFDTimeline(timelineObject, duration, frameRate);
-        private static parseTransformFrame(frameObject, frameRate);
-        private static parseSlotFrame(frameObject, frameRate);
-        private static parseFFDFrame(frameObject, frameRate);
-        private static parseTimeline(timelineObject, outputTimeline);
-        private static parseFrame(frameObject, outputFrame, frameRate?);
-        private static parseTransform(transformObject, transform, pivot?);
-        private static parseColorTransform(colorTransformObject, colorTransform);
-        private static getBoolean(data, key, defaultValue);
-        private static getNumber(data, key, defaultValue);
     }
 }
-declare module dragonBones {
+declare namespace dragonBones {
     /**
-     * @class dragonBones.ITextureAltas
-     * @classdesc
-     * 纹理集的接口
+     * @private
      */
-    interface ITextureAtlas {
-        /**
-         * 这个ITextureAtlas的名字
-         */
-        name: string;
-        /**
-         * 释放资源
-         */
-        dispose(): void;
-        /**
-         * 获得纹理集TextureAltas中的由name指定的资源的那块矩形区域
-         * @param name 资源的名字
-         * @return Rectangle 资源的矩形区域
-         */
-        getRegion(name: string): Rectangle;
-    }
-}
-declare module dragonBones {
-    /**
-     * @class dragonBones.TextureData
-     * @classdesc
-     * 纹理数据
-     *
-     * @example
-     * <pre>
-     *   //获取动画数据
-     *   var skeletonData = RES.getRes("skeleton");
-     *   //获取纹理集数据
-     *   var textureData = RES.getRes("textureConfig");
-     *   //获取纹理集图片
-     *   var texture = RES.getRes("texture");
-     *
-     *   //创建一个工厂，用来创建Armature
-     *   var factory:dragonBones.EgretFactory = new dragonBones.EgretFactory();
-     *   //把动画数据添加到工厂里
-     *   factory.addSkeletonData(dragonBones.DataParser.parseDragonBonesData(skeletonData));
-     *   //把纹理集数据和图片添加到工厂里
-     *   factory.addTextureAtlas(new dragonBones.EgretTextureAtlas(texture, textureData));
-     *   //获取Armature的名字，dragonBones4.0的数据可以包含多个骨架，这里取第一个Armature
-     *   var armatureName:string = skeletonData.armature[0].name;
-     *   //从工厂里创建出Armature
-     *   var armature:dragonBones.Armature = factory.buildArmature(armatureName);
-     *   //获取装载Armature的容器
-     *   var armatureDisplay = armature.display;
-     *   //把它添加到舞台上
-     *   this.addChild(armatureDisplay);
-     *   //取得这个Armature动画列表中的第一个动画的名字
-     *   var curAnimationName = armature.animation.animationList[0];
-     *   //播放这个动画，gotoAndPlay参数说明,具体详见Animation类
-     *   //第一个参数 animationName {string} 指定播放动画的名称.
-     *   //第二个参数 fadeInTime {number} 动画淡入时间 (>= 0), 默认值：-1 意味着使用动画数据中的淡入时间.
-     *   //第三个参数 duration {number} 动画播放时间。默认值：-1 意味着使用动画数据中的播放时间.
-     *   //第四个参数 layTimes {number} 动画播放次数(0:循环播放, >=1:播放次数, NaN:使用动画数据中的播放时间), 默认值：NaN
-     *   armature.animation.gotoAndPlay(curAnimationName,0.3,-1,0);
-     *
-     *   //把Armature添加到心跳时钟里
-     *   dragonBones.WorldClock.clock.add(armature);
-     *   //心跳时钟开启
-     *   egret.Ticker.getInstance().register(function (advancedTime) {
-     *       dragonBones.WorldClock.clock.advanceTime(advancedTime / 1000);
-     *   }, this);
-     * </pre>
-     */
-    class TextureData {
-        /**
-         * 区域
-         * @member {dragonBones.Rectangle} dragonBones.TextureData#region
-         */
-        region: Rectangle;
-        /**
-         * 帧的区域
-         * @member {dragonBones.Rectangle} dragonBones.TextureData#frame
-         */
-        frame: Rectangle;
-        /**
-         *是否有旋转
-         */
-        rotated: boolean;
+    class ObjectDataParser extends DataParser {
         /**
          * @private
          */
-        textureAtlas: ITextureAtlas;
-        /**
-         *创建一个 TextureData 实例
-         * @param region 区域
-         * @param frame 帧的区域
-         * @param rotated
-         */
-        constructor(region: Rectangle, frame: Rectangle, rotated: boolean);
-    }
-}
-declare module dragonBones {
-    class ColorTransformUtil {
-        static originalColor: ColorTransform;
-        static cloneColor(color: ColorTransform): ColorTransform;
-        static isEqual(color1: ColorTransform, color2: ColorTransform): boolean;
-        static minus(color1: ColorTransform, color2: ColorTransform, outputColor: ColorTransform): void;
-        constructor();
-    }
-}
-declare module dragonBones {
-    /**
-     * @class dragonBones.ConstValues
-     * @classdesc
-     *定义了常用的常量
-     */
-    class ConstValues {
-        /**
-         * 角度转换为弧度
-         */
-        static ANGLE_TO_RADIAN: number;
-        /**
-         * 弧度转换为角度
-         */
-        static RADIAN_TO_ANGLE: number;
-        /**
-         *龙骨
-         */
-        static DRAGON_BONES: string;
-        /**
-         * 骨架
-         */
-        static ARMATURE: string;
-        /**
-         *皮肤
-         */
-        static SKIN: string;
-        /**
-         * 骨骼
-         */
-        static BONE: string;
-        /**
-         * ik
-         */
-        static IK: string;
-        /**
-         * 插槽
-         */
-        static SLOT: string;
-        /**
-         * 显示对象
-         */
-        static DISPLAY: string;
-        /**
-         * 动画
-         */
-        static ANIMATION: string;
-        /**
-         * 时间轴
-         */
-        static TIMELINE: string;
-        /**
-         * 帧
-         */
-        static FRAME: string;
-        /**
-         * 变换
-         */
-        static TRANSFORM: string;
-        /**
-         * 颜色变换
-         */
-        static COLOR_TRANSFORM: string;
-        static COLOR: string;
-        /**
-         * 矩形
-         */
-        static RECTANGLE: string;
-        /**
-         * 椭圆
-         */
-        static ELLIPSE: string;
-        /**
-         * 纹理集
-         */
-        static TEXTURE_ATLAS: string;
-        /**
-         * 子纹理
-         */
-        static SUB_TEXTURE: string;
-        /**
-         * 旋转
-         */
-        static A_ROTATED: string;
-        /**
-         * 帧的x坐标
-         */
-        static A_FRAME_X: string;
-        /**
-         * 帧的y坐标
-         */
-        static A_FRAME_Y: string;
-        /**
-         * 帧的宽度
-         */
-        static A_FRAME_WIDTH: string;
-        /**
-         * 帧的高度
-         */
-        static A_FRAME_HEIGHT: string;
-        /**
-         * 版本
-         */
-        static A_VERSION: string;
-        /**
-         * 图片路径
-         */
-        static A_IMAGE_PATH: string;
-        /**
-         * 帧速率
-         */
-        static A_FRAME_RATE: string;
-        /**
-         * 名字
-         */
-        static A_NAME: string;
-        /**
-         * 是否是全局
-         */
-        static A_IS_GLOBAL: string;
-        /**
-         * 父亲
-         */
-        static A_PARENT: string;
-        /**
-         * 长度
-         */
-        static A_LENGTH: string;
-        /**
-         * 类型
-         */
-        static A_TYPE: string;
-        /**
-         * 缓入事件
-         */
-        static A_FADE_IN_TIME: string;
-        /**
-         * 持续时长
-         */
-        static A_DURATION: string;
-        /**
-         * 缩放
-         */
-        static A_SCALE: string;
-        /**
-         * 偏移
-         */
-        static A_OFFSET: string;
-        /**
-         * 循环
-         */
-        static A_LOOP: string;
-        static A_PLAY_TIMES: string;
-        /**
-         * 事件
-         */
-        static A_EVENT: string;
-        /**
-         * 事件参数
-         */
-        static A_EVENT_PARAMETERS: string;
-        /**
-         * 声音
-         */
-        static A_SOUND: string;
-        /**
-         * 动作
-         */
-        static A_ACTION: string;
-        /**
-         * 隐藏
-         */
-        static A_HIDE: string;
-        /**
-         * 自动补间
-         */
-        static A_AUTO_TWEEN: string;
-        /**
-         * 补间缓动
-         */
-        static A_TWEEN_EASING: string;
-        /**
-         * 补间旋转
-         */
-        static A_TWEEN_ROTATE: string;
-        /**
-         * 补间缩放
-         */
-        static A_TWEEN_SCALE: string;
-        /**
-         * 显示对象序号
-         */
-        static A_DISPLAY_INDEX: string;
-        /**
-         * z轴
-         */
-        static A_Z_ORDER: string;
-        /**
-         * 混合模式
-         */
-        static A_BLENDMODE: string;
-        /**
-         * 宽度
-         */
-        static A_WIDTH: string;
-        /**
-         * 高度
-         */
-        static A_HEIGHT: string;
-        /**
-         * 继承缩放
-         */
-        static A_INHERIT_SCALE: string;
-        /**
-         * 继承旋转
-         */
-        static A_INHERIT_ROTATION: string;
-        /**
-         * x轴
-         */
-        static A_X: string;
-        /**
-         * y轴
-         */
-        static A_Y: string;
-        /**
-         * x方向斜切
-         */
-        static A_SKEW_X: string;
-        /**
-         * y方向斜切
-         */
-        static A_SKEW_Y: string;
-        /**
-         * x方向缩放
-         */
-        static A_SCALE_X: string;
-        /**
-         * y方向缩放
-         */
-        static A_SCALE_Y: string;
-        /**
-         * 轴点的x坐标
-         */
-        static A_PIVOT_X: string;
-        /**
-         * 轴点的y坐标
-         */
-        static A_PIVOT_Y: string;
-        /**
-         * 透明度的偏移
-         */
-        static A_ALPHA_OFFSET: string;
-        /**
-         * 红色的偏移
-         */
-        static A_RED_OFFSET: string;
-        /**
-         * 绿色的偏移
-         */
-        static A_GREEN_OFFSET: string;
-        /**
-         * 蓝色的偏移
-         */
-        static A_BLUE_OFFSET: string;
-        /**
-         * 透明度的倍数
-         */
-        static A_ALPHA_MULTIPLIER: string;
-        /**
-         * 红色的倍数
-         */
-        static A_RED_MULTIPLIER: string;
-        /**
-         * 绿色的倍数
-         */
-        static A_GREEN_MULTIPLIER: string;
-        /**
-         * 蓝色的倍数
-         */
-        static A_BLUE_MULTIPLIER: string;
-        /**
-         * 动画曲线
-         */
-        static A_CURVE: string;
-        /**
-         * x方向缩放的偏移
-         */
-        static A_SCALE_X_OFFSET: string;
-        /**
-         * y方向的偏移
-         */
-        static A_SCALE_Y_OFFSET: string;
-        /**
-         * 缩放模式
-         */
-        static A_SCALE_MODE: string;
-        /**
-         * 旋转修正
-         */
-        static A_FIXED_ROTATION: string;
-        /**
-         * 默认动作
-         */
-        static A_DEFAULT_ACTIONS: string;
-        /**
-         * 动作
-         */
-        static A_ACTIONS: string;
-        /**
-         * 播放子骨架的动画
-         */
-        static A_GOTOANDPLAY: string;
-        static A_TARGET: string;
-        static A_WEIGHT: string;
-        static A_BONES: string;
-        static A_BENDPOSITIVE: string;
-        static A_CHAIN: string;
-    }
-}
-declare module dragonBones {
-    /**
-     * @class dragonBones.DBDataUtil
-     * @classdesc
-     * DragonBons的数据工具类，提供一些对数据处理的静态方法
-     */
-    class DBDataUtil {
-        /**
-         * 把ArmatureData的绝对数据转成成相对数据
-         * @param armatureData
-         */
-        static transformArmatureData(armatureData: ArmatureData): void;
-        /**
-         * 转换骨架数据中的动画数据
-         * 把动画数据中的绝对的数据转换成相对的数据
-         * @param armatureData
-         */
-        static transformArmatureDataAnimations(armatureData: ArmatureData): void;
-        /**
-         *
-         * @param animationData
-         * @param armatureData
-         */
-        static transformRelativeAnimationData(animationData: AnimationData, armatureData: ArmatureData): void;
-        /**
-         * 把动画数据中的绝对的数据转换成相对的数据
-         * @param animationData 动画数据
-         * @param armatureData 骨架数据
-         * @param isGlobalData 是否是绝对数据
-         */
-        static transformAnimationData(animationData: AnimationData, armatureData: ArmatureData, isGlobalData: boolean): void;
-        private static setFrameTransform(animationData, armatureData, boneData, frame);
-        private static getTimelineTransform(timeline, position, retult, isGlobal);
-        /**
-         * 添加进隐藏的时间轴
-         * @param animationData
-         * @param armatureData
-         */
-        static addHideTimeline(animationData: AnimationData, armatureData: ArmatureData, addHideSlot?: boolean): void;
-    }
-}
-declare module dragonBones {
-    /**
-     * @class dragonBones.MathUtil
-     * @classdesc
-     * 内部使用的有关数学计算的工具类
-     */
-    class MathUtil {
-        /** @private */
-        static getEaseValue(value: number, easing: number): number;
-        /**
-         * 角度转换为弧度
-         */
-        static ANGLE_TO_RADIAN: number;
-        /**
-         * 弧度转换为角度
-         */
-        static RADIAN_TO_ANGLE: number;
-        static isNumber(value: any): boolean;
-        /**
-         * 得到对应角度值的sin近似值
-         * @param value {number} 角度值
-         * @returns {number} sin值
-         */
-        static sin(value: number): number;
-        private static sinInt(value);
-        /**
-         * 得到对应角度值的cos近似值
-         * @param value {number} 角度值
-         * @returns {number} cos值
-         */
-        static cos(value: number): number;
-    }
-}
-declare var db_sin_map: {};
-declare module dragonBones {
-    /**
-     * @class dragonBones.TransformUtils
-     * @classdesc
-     * 提供了一些常用的转换的静态方法
-     */
-    class TransformUtil {
-        private static HALF_PI;
-        private static DOUBLE_PI;
-        private static _helpTransformMatrix;
-        private static _helpParentTransformMatrix;
-        private static tmpSkewXArray;
-        private static tmpSkewYArray;
-        private static ACCURACY;
-        private static isEqual(n1, n2);
-        /**
-         * 全局坐标系转成成局部坐标系
-         * @param transform 全局坐标系下的变换
-         * @param parent 父亲的坐标变换
-         */
-        static globalToLocal(transform: DBTransform, parent: DBTransform): void;
-        /**
-         *把transform数据转成成矩阵数据
-         * @param transform 需要转换的transform数据
-         * @param matrix 转换后的矩阵数据
-         * @param keepScale 是否保持缩放
-         */
-        static transformToMatrix(transform: DBTransform, matrix: Matrix): void;
-        /**
-         *把 矩阵数据转成成transform数据
-         * @param matrix 需要转换的矩阵数据
-         * @param transform 转换后的transform数据
-         * @param scaleXF x方向的缩放
-         * @param scaleYF y方向的缩放
-         */
-        static matrixToTransform(matrix: Matrix, transform: DBTransform, scaleXF: boolean, scaleYF: boolean): void;
-        private static _helpMatrix;
-        /** @private */
-        static applyMatrixToPoint(targetPoint: Point, matrix: Matrix, returnNewPoint?: Boolean): Point;
-        /**
-         * 标准化弧度值，把弧度制换算到[-PI，PI]之间
-         * @param radian 输入一个弧度值
-         * @returns {number} 输出标准化后的弧度制
-         */
-        static formatRadian(radian: number): number;
-        /**
-         *  确保角度在-180到180之间
-         */
-        static normalizeRotation(rotation: number): number;
-        static matrixToTransformPosition(matrix: Matrix, transform: DBTransform): void;
-        static matrixToTransformScale(matrix: Matrix, transform: DBTransform, scaleXF: boolean, scaleYF: boolean): void;
-        static matrixToTransformRotation(matrix: Matrix, transform: DBTransform, scaleX: number, scaleY: number): void;
-    }
-}
-declare module dragonBones {
-    /**
-     * @class dragonBones.EgretFactory
-     * @extends dragonBones.BaseFactory
-     * @classdesc
-     * Egret引擎中DragonBones工厂的基类实现
-     */
-    class EgretFactory extends BaseFactory {
-        constructor();
-        /** @private */
-        _generateArmature(): Armature;
-        /** @private */
-        _generateSlot(): Slot;
-        /** @private */
-        _generateDisplay(textureAtlas: EgretTextureAtlas, fullName: string, pivotX: number, pivotY: number): any;
-        /** @private */
-        _generateFastArmature(): FastArmature;
-        /** @private */
-        _generateFastSlot(): FastSlot;
-        /** @private */
-        _generateMesh(textureAtlas: EgretTextureAtlas, fullName: string, meshData: MeshData, slot: Slot): any;
-    }
-}
-declare module dragonBones {
-    /**
-     * @class dragonBones.EgretSlot
-     * @extends dragonBones.Slot
-     * @classdesc
-     * egret引擎使用的插槽
-     */
-    class EgretFastSlot extends FastSlot {
-        private _egretDisplay;
-        /**
-         * 创建一个新的 EgretSlot 实例
-         */
-        constructor(rawDisplay: any);
-        /**
-         * 释放资源
-         */
-        dispose(): void;
-        /** @private */
-        _updateDisplay(value: any): void;
-        /** @private */
-        _addDisplay(): void;
-        /** @private */
-        _replaceDisplay(prevDisplay: any): void;
-        /** @private */
-        _removeDisplay(): void;
-        /** @private */
-        _getDisplayIndex(): number;
-        /** @private */
-        _addDisplayToContainer(container: any, index?: number): void;
-        /** @private */
-        _removeDisplayFromContainer(): void;
-        /** @private */
-        _updateTransform(): void;
-        /** @private */
-        _updateDisplayVisible(value: boolean): void;
-        /** @private */
-        _updateDisplayColor(aOffset: number, rOffset: number, gOffset: number, bOffset: number, aMultiplier: number, rMultiplier: number, gMultiplier: number, bMultiplier: number, colorChanged?: boolean): void;
-        /** @private */
-        _updateFrame(): void;
-        /** @private */
-        _updateDisplayBlendMode(value: string): void;
-    }
-}
-declare module dragonBones {
-    /**
-     * @class dragonBones.EgretSheetAtlas
-     * @implements dragonBones.ITextureAtlas
-     * @classdesc
-     * Egret 引擎使用的sheet纹理集
-     */
-    class EgretSheetAtlas implements ITextureAtlas {
-        texture: egret.Texture;
-        private textureData;
-        private static Region;
-        /**
-         * 纹理集的名称
-         * @member {string} dragonBones.EgretSheetAtlas#name
-         */
-        name: string;
-        /**
-         * 纹理集的缩放
-         * @member {number} dragonBones.EgretSheetAtlas#scale
-         */
-        scale: number;
-        /**
-         * spriteSheet
-         * @member {egret.SpriteSheet} dragonBones.EgretSheetAtlas#spriteSheet
-         */
-        spriteSheet: egret.SpriteSheet;
-        private _textureDatas;
-        /**
-         * 创建一个新的EgretSheetAltas 实例
-         * @param texture 纹理
-         * @param textureData 纹理数据
-         * @param scale 缩放
-         */
-        constructor(texture: egret.Texture, textureData: any, scale?: number);
-        /**
-         *通过纹理的名字来获取纹理
-         * @param fullName 纹理的名字
-         * @returns {egret.Texture} 获取到的纹理
-         */
-        getTexture(fullName: string): egret.Texture;
-        /**
-         *释放资源
-         */
-        dispose(): void;
-        /**
-         * 根据子纹理的名字获取子纹理的矩形区域
-         * @param subTextureName 子纹理的名字
-         * @returns {*} 获取到的矩形区域
-         */
-        getRegion(subTextureName: string): Rectangle;
-    }
-}
-declare module dragonBones {
-    /**
-     * @class dragonBones.EgretSlot
-     * @extends dragonBones.Slot
-     * @classdesc
-     * egret引擎使用的插槽
-     */
-    class EgretSlot extends Slot {
-        private _egretDisplay;
-        /**
-         * 创建一个新的 EgretSlot 实例
-         */
-        constructor();
-        /**
-         * 释放资源
-         */
-        dispose(): void;
-        /** @private */
-        _updateDisplay(value: any): void;
-        /** @private */
-        _getDisplayIndex(): number;
-        /** @private */
-        _addDisplayToContainer(container: any, index?: number): void;
-        /** @private */
-        _removeDisplayFromContainer(): void;
-        /** @private */
-        _updateTransform(): void;
-        /** @private */
-        _updateDisplayVisible(value: boolean): void;
-        /** @private */
-        _updateDisplayColor(aOffset: number, rOffset: number, gOffset: number, bOffset: number, aMultiplier: number, rMultiplier: number, gMultiplier: number, bMultiplier: number, colorChange?: boolean): void;
-        /** @private */
-        _updateDisplayBlendMode(value: string): void;
-        /** @private */
-        _calculateRelativeParentTransform(): void;
-        /** @private */
-        _updateMesh(): void;
-    }
-}
-declare module dragonBones {
-    /**
-     * @class dragonBones.EgretTextureAtlas
-     * @implements dragonBones.ITextureAtlas
-     * @classdesc
-     * egret引擎使用的纹理集
-     */
-    class EgretTextureAtlas implements ITextureAtlas {
-        texture: egret.Texture;
-        private textureAtlasRawData;
-        /**
-         * 名字
-         * @member {string} dragonBones.EgretTextureAtlas#name
-         */
-        name: string;
-        /**
-         * 缩放
-         * @member {number} dragonBones.EgretTextureAtlas#scale
-         */
-        scale: number;
-        /**
-         * spriteSheet
-         * @member {egert.SpriteSheet} dragonBones.EgretTextureAtlas#spriteSheet
-         */
-        spriteSheet: egret.SpriteSheet;
-        private _textureDatas;
-        static rotatedDic: any;
-        /**
-         * 创建一个新的EgretTextureAtlas实例
-         * @param texture 纹理集
-         * @param textureAtlasRawData 纹理集数据
-         * @param scale 缩放
-         */
-        constructor(texture: egret.Texture, textureAtlasRawData: any, scale?: number);
-        /**
-         * 根据名字获取纹理
-         * @param fullName 纹理的名字
-         * @returns {egret.Texture} 获取到的纹理
-         */
-        getTexture(fullName: string): egret.Texture;
-        /**
-         * 释放资源
-         */
-        dispose(): void;
-        /**
-         * 根据子纹理的名字获取子纹理所在的实际矩形区域
-         * @param subTextureName 子纹理的名字
-         * @returns {*} 子纹理所在的矩形区域
-         */
-        getRegion(subTextureName: string): Rectangle;
-        /**
-         * 根据子纹理的名字获取子纹理所在的真实矩形区域
-         * @param subTextureName 子纹理的名字
-         * @returns {*} 子纹理所在的矩形区域
-         */
-        getFrame(subTextureName: string): Rectangle;
+        protected static _getBoolean(rawData: any, key: string, defaultValue: boolean): boolean;
         /**
          * @private
-         * 根据子纹理的名字获取子纹理数据
-         * @param subTextureName 子纹理的名字
-         * @returns {dragonBone.TextureData} 子纹理数据
          */
-        getTextureData(subTextureName: string): TextureData;
-        private parseData(textureAtlasRawData);
+        protected static _getNumber(rawData: any, key: string, defaultValue: number): number;
+        /**
+         * @private
+         */
+        protected static _getString(rawData: any, key: string, defaultValue: string): string;
+        /**
+         * @private
+         */
+        protected static _getParameter(rawData: Array<any>, index: number, defaultValue: any): any;
+        /**
+         * @private
+         */
+        constructor();
+        /**
+         * @private
+         */
+        protected _parseArmature(rawData: any): ArmatureData;
+        /**
+         * @private
+         */
+        protected _parseBone(rawData: any): BoneData;
+        /**
+         * @private
+         */
+        protected _parseIK(rawData: any): void;
+        /**
+         * @private
+         */
+        protected _parseSlot(rawData: any): SlotData;
+        /**
+         * @private
+         */
+        protected _parseSkin(rawData: any): SkinData;
+        /**
+         * @private
+         */
+        protected _parseSlotDisplaySet(rawData: any): SlotDisplayDataSet;
+        /**
+         * @private
+         */
+        protected _parseDisplay(rawData: any): DisplayData;
+        /**
+         * @private
+         */
+        protected _parseMesh(rawData: any): MeshData;
+        /**
+         * @private
+         */
+        protected _parseAnimation(rawData: any): AnimationData;
+        /**
+         * @private
+         */
+        protected _parseBoneTimeline(rawData: any): BoneTimelineData;
+        /**
+         * @private
+         */
+        protected _parseSlotTimeline(rawData: any): SlotTimelineData;
+        /**
+         * @private
+         */
+        protected _parseFFDTimeline(rawData: any): FFDTimelineData;
+        /**
+         * @private
+         */
+        protected _parseAnimationFrame(rawData: any, frameStart: number, frameCount: number): AnimationFrameData;
+        /**
+         * @private
+         */
+        protected _parseBoneFrame(rawData: Object, frameStart: number, frameCount: number): BoneFrameData;
+        /**
+         * @private
+         */
+        protected _parseSlotFrame(rawData: any, frameStart: number, frameCount: number): SlotFrameData;
+        /**
+         * @private
+         */
+        protected _parseFFDFrame(rawData: any, frameStart: number, frameCount: number): ExtensionFrameData;
+        /**
+         * @private
+         */
+        protected _parseTweenFrame<T extends TweenFrameData<T>>(rawData: any, frame: T, frameStart: number, frameCount: number): void;
+        /**
+         * @private
+         */
+        protected _parseFrame<T extends FrameData<T>>(rawData: any, frame: T, frameStart: number, frameCount: number): void;
+        /**
+         * @private
+         */
+        protected _parseTimeline<T extends FrameData<T>>(rawData: Object, timeline: TimelineData<T>, frameParser: (rawData: any, frameStart: number, frameCount: number) => T): void;
+        /**
+         * @private
+         */
+        protected _parseActionData(rawData: any, actions: Array<ActionData>, bone: BoneData, slot: SlotData): void;
+        /**
+         * @private
+         */
+        protected _parseEventData(rawData: any, events: Array<EventData>, bone: BoneData, slot: SlotData): void;
+        /**
+         * @private
+         */
+        protected _parseTransform(rawData: Object, transform: Transform): void;
+        /**
+         * @private
+         */
+        protected _parseColorTransform(rawData: Object, color: ColorTransform): void;
+        /**
+         * @inheritDoc
+         */
+        parseDragonBonesData(rawData: any, scale?: number): DragonBonesData;
+        /**
+         * @inheritDoc
+         */
+        parseTextureAtlasData(rawData: any, textureAtlasData: TextureAtlasData, scale?: number): TextureAtlasData;
+        /**
+         * @private
+         */
+        private static _instance;
+        /**
+         * @private
+         */
+        static getInstance(): ObjectDataParser;
     }
 }
