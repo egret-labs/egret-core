@@ -675,7 +675,7 @@ namespace dragonBones {
             let x = 0;
             let y = 0;
             for (let i = 0, l = this._mesh.vertices.length; i < l; i += 2) {
-                if (i < offset || i - offset >= rawVertices.length) {
+                if (!rawVertices || i < offset || i - offset >= rawVertices.length) {
                     x = 0;
                     y = 0;
                 } else {
@@ -922,7 +922,7 @@ namespace dragonBones {
                 this._isParentCooriinate = version == ObjectDataParser.DATA_VERSION_2_3 || version == ObjectDataParser.DATA_VERSION_3_0;
                 this._armatureScale = scale;
 
-                if (version == ObjectDataParser.DATA_VERSION || this._isParentCooriinate) {
+                if (version == ObjectDataParser.DATA_VERSION || version == ObjectDataParser.DATA_VERSION_4_0 || this._isParentCooriinate) {
                     const data = BaseObject.borrowObject(DragonBonesData);
                     data.name = ObjectDataParser._getString(rawData, ObjectDataParser.NAME, null);
                     data.frameRate = ObjectDataParser._getNumber(rawData, ObjectDataParser.FRAME_RATE, 24);
