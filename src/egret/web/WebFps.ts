@@ -27,6 +27,9 @@
 //
 //////////////////////////////////////////////////////////////////////////////////////
 module egret.web {
+    /**
+     * @private
+     */
     export class WebFps extends egret.DisplayObject implements egret.FPSDisplay {
         private panelX:number;
         private panelY:number;

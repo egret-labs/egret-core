@@ -27,6 +27,9 @@
 //
 //////////////////////////////////////////////////////////////////////////////////////
 module egret.native {
+    /**
+     * @private
+     */
     export class NativeFps extends egret.Sprite implements egret.FPSDisplay {
         private panelX:number;
         private panelY:number;
