@@ -60,6 +60,7 @@
 		"touchChildren":"boolean"
 	},
 	"egret.DropShadowFilter":{
+		"angle":"number",
 		"distance":"number",
 		"super":"egret.GlowFilter"
 	},
@@ -72,7 +73,14 @@
 		"type":"string"
 	},
 	"egret.GlowFilter":{
+		"alpha":"number",
+		"blurX":"number",
+		"blurY":"number",
 		"color":"number",
+		"inner":"boolean",
+		"knockout":"boolean",
+		"quality":"number",
+		"strength":"number",
 		"super":"egret.Filter"
 	},
 	"egret.Graphics":{
