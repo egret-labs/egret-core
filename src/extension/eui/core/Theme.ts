@@ -94,6 +94,36 @@ module eui {
          * @platform Web,Native
          */
         content?: string;
+        /**
+         * @language en_US
+         * EXML file content.
+         * @version Egret 2.4
+         * @version eui 1.0
+         * @platform Web,Native
+         */
+        /**
+         * @language zh_CN
+         * 生成的js文本内容
+         * @version Egret 2.4
+         * @version eui 1.0
+         * @platform Web,Native
+         */
+        gjs?: string;
+        /**
+         * @language en_US
+         * EXML file content.
+         * @version Egret 2.4
+         * @version eui 1.0
+         * @platform Web,Native
+         */
+        /**
+         * @language zh_CN
+         * 类名
+         * @version Egret 2.4
+         * @version eui 1.0
+         * @platform Web,Native
+         */
+        className?:string;
     }
 
     /**
@@ -210,6 +240,10 @@ module eui {
             }
 
             if (!data.exmls || data.exmls.length == 0) {
+                this.onLoaded();
+            }
+            else if (data.exmls[0]['gjs']) {
+                data.exmls.forEach((exml) => EXML.$parseURLContentAsJs((<EXMLFile>exml).path, (<EXMLFile>exml).gjs, (<EXMLFile>exml).className));
                 this.onLoaded();
             }
             // In release version, exml content is packaged in the theme file

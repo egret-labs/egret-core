@@ -199,6 +199,28 @@ module EXML {
 
     /**
      * @private
+     * @param url
+     * @param text
+     */
+    export function $parseURLContentAsJs(url:string,text:string,className:string):any{
+        if (text) {
+            var clazz = parser.$parseCode(text,className);
+        }
+        if (url) {
+            parsedClasses[url] = clazz;
+            var list:any[] = callBackMap[url];
+            delete callBackMap[url];
+            var length = list ? list.length : 0;
+            for (var i = 0; i < length; i++) {
+                var arr = list[i];
+                if (arr[0] && arr[1])
+                    arr[0].call(arr[1], clazz, url);
+            }
+        }
+        return clazz;
+    }
+    /**
+     * @private
      */
     export function $parseURLContent(url:string, text:string):any {
         if (text) {

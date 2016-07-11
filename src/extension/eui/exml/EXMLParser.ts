@@ -150,9 +150,44 @@ module eui.sys {
 
         /**
          * @private
+         * 将已有javascript代码注册
+         * @param codeText 执行的javascript代码
+         * @param classStr 类名
+         */
+        public $parseCode(codeText:string,classStr:string):{new():any}{
+            //传入的是编译后的js字符串
+            var className = classStr ? classStr : "$exmlClass" + innerClassCount++;
+            var clazz = eval(codeText);
+            var hasClass = true;
+
+            if (hasClass && clazz) {
+                egret.registerClass(clazz, className);
+                var paths = className.split(".");
+                var length = paths.length;
+                var definition = __global;
+                for (var i = 0; i < length - 1; i++) {
+                    var path = paths[i];
+                    definition = definition[path] || (definition[path] = {});
+                }
+                if (definition[paths[length - 1]]) {
+                    if (DEBUG && !parsedClasses[className]) {
+                        egret.$warn(2101, className, codeText);
+                    }
+                }
+                else {
+                    if (DEBUG) {
+                        parsedClasses[className] = true;
+                    }
+                    definition[paths[length - 1]] = clazz;
+                }
+            }
+            return clazz;
+        }
+        /**
+         * @private
          * 编译指定的XML对象为JavaScript代码。
          * @param xmlData 要编译的EXML文件内容
-         * @param className 要编译成的完整类名，包括模块名。
+         *
          */
         public parse(text:string):{new():any} {
             if (DEBUG) {
@@ -160,19 +195,20 @@ module eui.sys {
                     egret.$error(1003, "text");
                 }
             }
-            if(DEBUG){
+
+            if (DEBUG) {
                 try {
                     var xmlData = egret.XML.parse(text);
                 }
                 catch (e) {
                     egret.$error(2002, text + "\n" + e.message);
                 }
-            }else{
+            } else {
                 var xmlData = egret.XML.parse(text);
             }
 
-            var className:string = "";
             var hasClass:boolean = false;
+            var className:string = "";
             if (xmlData.attributes["class"]) {
                 className = xmlData.attributes["class"];
                 delete xmlData.attributes["class"];
@@ -184,7 +220,7 @@ module eui.sys {
             var exClass = this.parseClass(xmlData, className);
             var code = exClass.toCode();
 
-            if(DEBUG){
+            if (DEBUG) {
                 try {
                     var clazz = eval(code);
                 }
@@ -192,7 +228,7 @@ module eui.sys {
                     egret.log(code);
                     return null;
                 }
-            }else{
+            } else {
                 var clazz = eval(code);
             }
 

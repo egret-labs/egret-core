@@ -1,140 +1,179 @@
-//////////////////////////////////////////////////////////////////////////////////////
-//
-//  Copyright (c) 2014-2015, Egret Technology Inc.
-//  All rights reserved.
-//  Redistribution and use in source and binary forms, with or without
-//  modification, are permitted provided that the following conditions are met:
-//
-//     * Redistributions of source code must retain the above copyright
-//       notice, this list of conditions and the following disclaimer.
-//     * Redistributions in binary form must reproduce the above copyright
-//       notice, this list of conditions and the following disclaimer in the
-//       documentation and/or other materials provided with the distribution.
-//     * Neither the name of the Egret nor the
-//       names of its contributors may be used to endorse or promote products
-//       derived from this software without specific prior written permission.
-//
-//  THIS SOFTWARE IS PROVIDED BY EGRET AND CONTRIBUTORS "AS IS" AND ANY EXPRESS
-//  OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES
-//  OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED.
-//  IN NO EVENT SHALL EGRET AND CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT,
-//  INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT
-//  LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES;LOSS OF USE, DATA,
-//  OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF
-//  LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING
-//  NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE,
-//  EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
-//
-//////////////////////////////////////////////////////////////////////////////////////
-
-
-module dragonBones {
+namespace dragonBones {
     /**
-     * @class dragonBones.EgretFactory
-     * @extends dragonBones.BaseFactory
-     * @classdesc
-     * Egret引擎中DragonBones工厂的基类实现
+     * @language zh_CN
+     * Egret 工厂。
+     * @version DragonBones 3.0
      */
     export class EgretFactory extends BaseFactory {
-        constructor() {
+        /**
+         * @language zh_CN
+         * 创建一个工厂。
+         * @version DragonBones 3.0
+         */
+        public constructor() {
             super();
-        }
 
-        /** @private */
-        public _generateArmature():Armature {
-            var armature:Armature = new Armature(new egret.DisplayObjectContainer());
+            if (!Armature._soundEventManager) {
+                Armature._soundEventManager = new EgretArmatureDisplay();
+            }
+        }
+        /**
+         * @private
+         */
+        protected _generateTextureAtlasData(textureAtlasData: TextureAtlasData, textureAtlas: any): TextureAtlasData {
+            if (textureAtlasData) {
+                (<EgretTextureAtlasData>textureAtlasData).texture = <egret.Texture>textureAtlas;
+            } else {
+                textureAtlasData = BaseObject.borrowObject(EgretTextureAtlasData);
+            }
+
+            return textureAtlasData;
+        }
+        /**
+         * @private
+         */
+        protected _generateArmature(dataPackage: BuildArmaturePackage): Armature {
+            const armature = BaseObject.borrowObject(Armature);
+            const armatureDisplayContainer = new EgretArmatureDisplay();
+
+            armature._armatureData = dataPackage.armature;
+            armature._skinData = dataPackage.skin;
+            armature._animation = BaseObject.borrowObject(Animation);
+            armature._display = armatureDisplayContainer;
+
+            armatureDisplayContainer._armature = armature;
+            armature._animation._armature = armature;
+
+            armature.animation.animations = dataPackage.armature.animations;
+
             return armature;
         }
+        /**
+         * @private
+         */
+        protected _generateSlot(dataPackage: BuildArmaturePackage, slotDisplayDataSet: SlotDisplayDataSet): Slot {
+            const slot = BaseObject.borrowObject(EgretSlot);
+            const slotData = slotDisplayDataSet.slot;
+            const displayList = [];
 
-        /** @private */
-        public _generateSlot():Slot {
-            var slot:Slot = new EgretSlot();
+            slot.name = slotData.name;
+            slot._rawDisplay = new egret.Bitmap();
+            slot._meshDisplay = new egret.Mesh();
+
+            for (let i = 0, l = slotDisplayDataSet.displays.length; i < l; ++i) {
+                const displayData = slotDisplayDataSet.displays[i];
+                switch (displayData.type) {
+                    case DisplayType.Image:
+                        if (!displayData.textureData) {
+                            displayData.textureData = this._getTextureData(dataPackage.dataName, displayData.name);
+                        }
+
+                        displayList.push(slot._rawDisplay);
+                        break;
+
+                    case DisplayType.Mesh:
+                        if (!displayData.textureData) {
+                            displayData.textureData = this._getTextureData(dataPackage.dataName, displayData.name);
+                        }
+
+                        displayList.push(egret.Capabilities.renderMode == "webgl" ? slot._meshDisplay : slot._rawDisplay);
+                        break;
+
+                    case DisplayType.Armature:
+                        const childArmature = this.buildArmature(displayData.name, dataPackage.dataName);
+                        if (childArmature) {
+                            childArmature.animation.play();
+                        }
+
+                        displayList.push(childArmature);
+                        break;
+
+                    default:
+                        displayList.push(null);
+                        break;
+                }
+            }
+
+            slot._setDisplayList(displayList);
+
             return slot;
         }
-
-        /** @private */
-        public _generateDisplay(textureAtlas:EgretTextureAtlas, fullName:string, pivotX:number, pivotY:number):any {
-            var bitmap:egret.Bitmap = new egret.Bitmap();
-            bitmap.texture = textureAtlas.getTexture(fullName);
-            if(isNaN(pivotX)||isNaN(pivotY))
-            {
-                var subTextureFrame:Rectangle = (textureAtlas).getFrame(fullName);
-                if(subTextureFrame != null)
-                {
-                    pivotX = subTextureFrame.width/2;
-                    pivotY = subTextureFrame.height/2;
-                }
-                else
-                {
-                    pivotX = bitmap.width/2;
-                    pivotY = bitmap.height/2;
-                }
+        /**
+         * @language zh_CN
+         * 创建一个指定名称的骨架，并使用骨架的显示容器来更新骨架动画。
+         * @param armatureName 骨架数据名称。
+         * @param dragonBonesName 龙骨数据名称，如果未设置，将检索所有的龙骨数据，如果多个数据中包含同名的骨架数据，可能无法创建出准确的骨架。
+         * @param skinName 皮肤名称，如果未设置，则使用默认皮肤。
+         * @returns 骨架的显示容器。
+         * @see dragonBones.IArmatureDisplayContainer
+         * @version DragonBones 4.5
+         */
+        public buildArmatureDisplay(armatureName: string, dragonBonesName: string = null, skinName: string = null): EgretArmatureDisplay {
+            const armature = this.buildArmature(armatureName, dragonBonesName, skinName);
+            const armatureDisplay = armature ? <EgretArmatureDisplay>armature._display : null;
+            if (armatureDisplay) {
+                armatureDisplay.advanceTimeBySelf(true);
             }
-            bitmap.anchorOffsetX = pivotX;
-            bitmap.anchorOffsetY = pivotY;
-            return bitmap;
+
+            return armatureDisplay;
+        }
+        /**
+         * @language zh_CN
+         * 获取全局声音事件管理器。
+         * @version DragonBones 4.5
+         */
+        public get soundEventManater(): EgretArmatureDisplay {
+            return <EgretArmatureDisplay>Armature._soundEventManager;
         }
 
-        /** @private */
-        public _generateFastArmature():FastArmature {
-            var armature:FastArmature = new FastArmature(new egret.DisplayObjectContainer());
-            return armature;
+        /**
+         * @deprecated
+         * @see dragonBones.BaseFactory#addDragonBonesData()
+         */
+        public addSkeletonData(dragonBonesData: DragonBonesData, dragonBonesName: string = null): void {
+            this.addDragonBonesData(dragonBonesData, dragonBonesName);
         }
-        
-        /** @private */
-        public _generateFastSlot():FastSlot {
-            var slot: FastSlot = new EgretFastSlot(new egret.Bitmap());
-            return slot;
+        /**
+         * @deprecated
+         * @see dragonBones.BaseFactory#getDragonBonesData()
+         */
+        public getSkeletonData(dragonBonesName: string) {
+            return this.getDragonBonesData(dragonBonesName);
         }
-        
-        /** @private */
-        public _generateMesh(textureAtlas: EgretTextureAtlas, fullName: string, meshData: MeshData, slot:Slot): any {
-
-            if (egret.Capabilities.renderMode == "webgl") { 
-                var mesh:egret.Mesh = new egret.Mesh();
-                var meshNode = mesh.$renderNode as egret.sys.MeshNode;
-                mesh.texture = textureAtlas.getTexture(fullName);
-                
-                var i = 0, iD = 0, l = 0;
-                for (i = 0, l = meshData.numVertex; i < l; i++)
-                {
-                    iD = i * 2;
-                    const dbVertexData:VertexData = meshData.vertices[i];
-                    meshNode.uvs[iD] = dbVertexData.u;
-                    meshNode.uvs[iD + 1] = dbVertexData.v;
-                    meshNode.vertices[iD] = dbVertexData.x;
-                    meshNode.vertices[iD + 1] = dbVertexData.y;
-                }
-                
-                for (i = 0, l = meshData.triangles.length; i < l; i++)
-                {
-                    meshNode.indices[i] = meshData.triangles[i];
-                }
-                
-                slot.isMeshEnabled = true;
-                
-                return mesh;
-            }
-            
-            var bitmap:egret.Bitmap = new egret.Bitmap();
-            bitmap.texture = textureAtlas.getTexture(fullName);
-            
-            var subTextureFrame: Rectangle = (textureAtlas).getFrame(fullName);
-            var pivotX = 0, pivotY = 0;
-            if(subTextureFrame != null)
-            {
-                pivotX = subTextureFrame.width/2;
-                pivotY = subTextureFrame.height/2;
-            }
-            else
-            {
-                pivotX = bitmap.width/2;
-                pivotY = bitmap.height/2;
-            }
-            
-            bitmap.anchorOffsetX = pivotX;
-            bitmap.anchorOffsetY = pivotY;
-            return bitmap;
-		}
+        /**
+         * @deprecated
+         * @see dragonBones.BaseFactory#removeSkeletonData()
+         */
+        public removeSkeletonData(dragonBonesName: string): void {
+            this.removeSkeletonData(dragonBonesName);
+        }
+        /**
+         * @deprecated
+         * @see dragonBones.BaseFactory#addTextureAtlasData()
+         */
+        public addTextureAtlas(textureAtlasData: TextureAtlasData, dragonBonesName: string = null): void {
+            this.addTextureAtlasData(textureAtlasData, dragonBonesName);
+        }
+        /**
+         * @deprecated
+         * @see dragonBones.BaseFactory#getTextureAtlasData()
+         */
+        public getTextureAtlas(dragonBonesName: string) {
+            return this.getTextureAtlasData(dragonBonesName);
+        }
+        /**
+         * @deprecated
+         * @see dragonBones.BaseFactory#removeTextureAtlasData()
+         */
+        public removeTextureAtlas(dragonBonesName: string): void {
+            this.removeTextureAtlasData(dragonBonesName);
+        }
+        /**
+         * @deprecated
+         * @see dragonBones.BaseFactory#buildArmature()
+         */
+        public buildFastArmature(armatureName: string, dragonBonesName: string = null, skinName: string = null): FastArmature {
+            return this.buildArmature(armatureName, dragonBonesName, skinName);
+        }
     }
 }

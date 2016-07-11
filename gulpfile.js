@@ -13,7 +13,8 @@ gulp.task('build-tools', function () {
         .pipe(ts({
             //typescript:tsc,
             target:"ES5",
-            module:"commonjs"
+            module:"commonjs",
+            noImplicitUseStrict:true
         }));
     return tsResult.js.pipe(sourcemaps.write(".")).pipe(gulp.dest('tools'));
 });
