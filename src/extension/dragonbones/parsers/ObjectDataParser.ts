@@ -675,7 +675,7 @@ namespace dragonBones {
             let x = 0;
             let y = 0;
             for (let i = 0, l = this._mesh.vertices.length; i < l; i += 2) {
-                if (i < offset || i - offset >= rawVertices.length) {
+                if (!rawVertices || i < offset || i - offset >= rawVertices.length) {
                     x = 0;
                     y = 0;
                 } else {
