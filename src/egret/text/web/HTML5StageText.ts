@@ -326,7 +326,7 @@ module egret.web {
             var textfield:egret.TextField = this.$textfield;
             if (textfield.multiline) {
                 var textheight = TextFieldUtils.$getTextHeight(textfield);
-                if (textfield.height <= textfield.size || textfield.height < textheight) {
+                if (textfield.height <= textfield.size) {
                     this.setElementStyle("height", (textfield.size) * this._gscaleY + "px");
 
                     this.setElementStyle("padding", "0px");
