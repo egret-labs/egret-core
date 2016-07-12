@@ -254,7 +254,7 @@ namespace dragonBones {
                             frameDisplay.$setAnchorOffsetY(pivotY);
                         }
 
-                        this._updateVisible();
+                        // this._updateVisible();
 
                         return;
                     }
@@ -264,7 +264,7 @@ namespace dragonBones {
             frameDisplay.$setBitmapData(null);
             frameDisplay.$setAnchorOffsetX(0);
             frameDisplay.$setAnchorOffsetY(0);
-            frameDisplay.visible = false;
+            //frameDisplay.visible = false;
         }
         /**
          * @private
