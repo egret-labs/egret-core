@@ -2498,6 +2498,9 @@ var egret;
 (function (egret) {
     var native;
     (function (native) {
+        /**
+         * @private
+         */
         var NativeFps = (function (_super) {
             __extends(NativeFps, _super);
             function NativeFps(stage, showFPS, showLog, logFilter, styles) {

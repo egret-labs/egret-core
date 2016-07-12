@@ -11045,10 +11045,11 @@ var egret;
          * @param quality {number} 应用滤镜的次数。暂未实现。
          * @param inner {boolean} 指定发光是否为内侧发光。值 true 指定发光是内侧发光。值 false 指定发光是外侧发光（对象外缘周围的发光）。
          * @param knockout {number} 指定对象是否具有挖空效果。值为 true 将使对象的填充变为透明，并显示文档的背景颜色。
+         * @param hideObject {number} 表示是否隐藏对象。如果值为 true，则表示没有绘制对象本身，只有阴影是可见的。默认值为 false（显示对象）。
          * @version Egret 2.4
          * @platform Web,Native
          */
-        function DropShadowFilter(distance, angle, color, alpha, blurX, blurY, strength, quality, inner, knockout) {
+        function DropShadowFilter(distance, angle, color, alpha, blurX, blurY, strength, quality, inner, knockout, hideObject) {
             if (distance === void 0) { distance = 4.0; }
             if (angle === void 0) { angle = 45; }
             if (color === void 0) { color = 0; }
@@ -11059,9 +11060,11 @@ var egret;
             if (quality === void 0) { quality = 1; }
             if (inner === void 0) { inner = false; }
             if (knockout === void 0) { knockout = false; }
+            if (hideObject === void 0) { hideObject = false; }
             _super.call(this, color, alpha, blurX, blurY, strength, quality, inner, knockout);
             this.$distance = distance;
             this.$angle = angle;
+            this.$hideObject = hideObject;
         }
         var d = __define,c=DropShadowFilter,p=c.prototype;
         d(p, "distance"
@@ -11085,6 +11088,18 @@ var egret;
                     return;
                 }
                 this.$angle = value;
+                this.invalidate();
+            }
+        );
+        d(p, "hideObject"
+            ,function () {
+                return this.$hideObject;
+            }
+            ,function (value) {
+                if (this.$hideObject == value) {
+                    return;
+                }
+                this.$hideObject = value;
                 this.invalidate();
             }
         );

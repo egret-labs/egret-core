@@ -671,6 +671,7 @@ module egret.web {
                         shader.setStrength(filter.strength);
                         shader.setInner(filter.inner);
                         shader.setKnockout(filter.knockout);
+                        shader.setHideObject(filter.hideObject);
                         shader.setTextureSize(filter.textureWidth, filter.textureHeight);
                     }
                     else {
@@ -945,7 +946,7 @@ module egret.web {
             this.vao.cacheArrays(output.globalMatrix, output.globalAlpha, 0, 0, width, height, 0, 0, width, height, width, height);
             output.restoreTransform();
 
-            var filterData = {type: "", distance: 0, angle: 0, alpha: 0, strength: 0, $red: 0, $green: 0, $blue: 0, matrix: null, blurX: 0, blurY: 0, inner: 0, knockout: 0, textureWidth: 0, textureHeight: 0};
+            var filterData = {type: "", hideObject: 0, distance: 0, angle: 0, alpha: 0, strength: 0, $red: 0, $green: 0, $blue: 0, matrix: null, blurX: 0, blurY: 0, inner: 0, knockout: 0, textureWidth: 0, textureHeight: 0};
             if(filter.type == "colorTransform") {
                 filterData.type = "colorTransform";
                 filterData.matrix = (<ColorMatrixFilter>filter).matrix;
@@ -968,6 +969,7 @@ module egret.web {
                 filterData.strength = (<GlowFilter>filter).strength;
                 filterData.inner = (<GlowFilter>filter).inner ? 1 : 0;
                 filterData.knockout = (<GlowFilter>filter).knockout ? 0 : 1;
+                filterData.hideObject = (<DropShadowFilter>filter).hideObject ? 1 : 0;
                 
                 filterData.textureWidth = width;
                 filterData.textureHeight = height;

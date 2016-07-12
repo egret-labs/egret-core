@@ -31,49 +31,10 @@ module egret.web {
      * @private
      */
     export class GlowShader extends TextureShader {
-        // public fragmentSrc =
-        //     "precision mediump float;"+
-
-        //     "uniform sampler2D uSampler;"+
-
-        //     "varying vec2 vTextureCoord;"+
-
-        //     "uniform vec2 uTextureSize;"+
-        //     "uniform vec4 u_color;"+
-        //     "uniform float u_strength;"+
-        //     "uniform float blur;"+
-        //     "uniform float offset;"+
-
-        //     "void main()"+
-        //     "{"+
-        //         "float u_textW = uTextureSize.x;"+
-        //         "float u_textH = uTextureSize.y;"+
-        //         "float u_blurX = blur.x;"+
-        //         "float u_blurY = blur.y;"+
-        //         "float u_offsetX = offset.x;"+
-        //         "float u_offsetY = offset.y;"+
-        //         "const float c_IterationTime = 10.0;"+
-        //         "float floatIterationTotalTime = c_IterationTime * c_IterationTime;"+
-        //         "vec4 vec4Color = vec4(0.0,0.0,0.0,0.0);"+
-        //         "vec2 vec2FilterDir = vec2(-(u_offsetX)/u_textW,-(u_offsetY)/u_textH);"+
-        //         "vec2 vec2FilterOff = vec2(u_blurX/u_textW/c_IterationTime * 2.0,u_blurY/u_textH/c_IterationTime * 2.0);"+
-        //         "float maxNum = u_blurX * u_blurY;"+
-        //         "vec2 vec2Off = vec2(0.0,0.0);"+
-        //         "float floatOff = c_IterationTime/2.0;"+
-        //         "for(float i = 0.0;i<=c_IterationTime; ++i){"+
-        //             "for(float j = 0.0;j<=c_IterationTime; ++j){"+
-        //                 "vec2Off = vec2(vec2FilterOff.x * (i - floatOff),vec2FilterOff.y * (j - floatOff));"+
-        //                 "vec4Color += texture2D(uSampler, vTextureCoord + vec2FilterDir + vec2Off)/floatIterationTotalTime;"+
-        //             "}"+
-        //         "}"+
-        //         "gl_FragColor = vec4(u_color.rgb,vec4Color.a * u_strength);"+
-        //     "}";
 
         public fragmentSrc = [
             'precision mediump float;',
-            // 'varying vec2 vTextureCoord;',
             'varying vec2 vTextureCoord;',
-            // 'varying vec4 vColor;',
 
             'uniform sampler2D uSampler;',
 
@@ -87,6 +48,7 @@ module egret.web {
             'uniform float strength;',
             'uniform float inner;',
             'uniform float knockout;',
+            'uniform float hideObject;',
 
             "uniform vec2 uTextureSize;"+
             'vec2 px = vec2(1.0 / uTextureSize.x, 1.0 / uTextureSize.y);',
@@ -124,10 +86,10 @@ module egret.web {
                 'ownColor.a = max(ownColor.a, 0.0001);',
                 'ownColor.rgb = ownColor.rgb / ownColor.a;',
 
-                'float outerGlowAlpha = (totalAlpha / maxTotalAlpha)  * strength * alpha * (1. - inner) * (1. - ownColor.a);',
+                'float outerGlowAlpha = (totalAlpha / maxTotalAlpha) * strength * alpha * (1. - inner) * max(min(hideObject, knockout), 1. - ownColor.a);',
                 'float innerGlowAlpha = ((maxTotalAlpha - totalAlpha) / maxTotalAlpha) * strength * alpha * inner * ownColor.a;',
 
-                'ownColor.a = max(ownColor.a * knockout, 0.0001);',
+                'ownColor.a = max(ownColor.a * knockout * (1. - hideObject), 0.0001);',
                 'vec3 mix1 = mix(ownColor.rgb, color.rgb, innerGlowAlpha / (innerGlowAlpha + ownColor.a));',
                 'vec3 mix2 = mix(mix1, color.rgb, outerGlowAlpha / (innerGlowAlpha + ownColor.a + outerGlowAlpha));',
                 'float resultAlpha = min(ownColor.a + outerGlowAlpha + innerGlowAlpha, 1.);',
@@ -147,6 +109,7 @@ module egret.web {
             strength: {type: '1f', value: 1, dirty: true},
             inner: {type: '1f', value: 1, dirty: true},
             knockout: {type: '1f', value: 1, dirty: true},
+            hideObject: {type: '1f', value: 0, dirty: true},
             
             uTextureSize: {type: '2f', value: {x: 100, y: 100}, dirty: true}
         };
@@ -238,6 +201,16 @@ module egret.web {
 
             if(uniform.value != knockout) {
                 uniform.value = knockout;
+
+                uniform.dirty = true;
+            }
+        }
+
+        public setHideObject(hideObject:number):void {
+            var uniform = this.uniforms.hideObject;
+
+            if(uniform.value != hideObject) {
+                uniform.value = hideObject;
 
                 uniform.dirty = true;
             }

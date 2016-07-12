@@ -4029,6 +4029,9 @@ var egret;
 (function (egret) {
     var web;
     (function (web) {
+        /**
+         * @private
+         */
         var WebFps = (function (_super) {
             __extends(WebFps, _super);
             function WebFps(stage, showFPS, showLog, logFilter, styles) {
@@ -5630,44 +5633,9 @@ var egret;
             __extends(GlowShader, _super);
             function GlowShader() {
                 _super.apply(this, arguments);
-                // public fragmentSrc =
-                //     "precision mediump float;"+
-                //     "uniform sampler2D uSampler;"+
-                //     "varying vec2 vTextureCoord;"+
-                //     "uniform vec2 uTextureSize;"+
-                //     "uniform vec4 u_color;"+
-                //     "uniform float u_strength;"+
-                //     "uniform float blur;"+
-                //     "uniform float offset;"+
-                //     "void main()"+
-                //     "{"+
-                //         "float u_textW = uTextureSize.x;"+
-                //         "float u_textH = uTextureSize.y;"+
-                //         "float u_blurX = blur.x;"+
-                //         "float u_blurY = blur.y;"+
-                //         "float u_offsetX = offset.x;"+
-                //         "float u_offsetY = offset.y;"+
-                //         "const float c_IterationTime = 10.0;"+
-                //         "float floatIterationTotalTime = c_IterationTime * c_IterationTime;"+
-                //         "vec4 vec4Color = vec4(0.0,0.0,0.0,0.0);"+
-                //         "vec2 vec2FilterDir = vec2(-(u_offsetX)/u_textW,-(u_offsetY)/u_textH);"+
-                //         "vec2 vec2FilterOff = vec2(u_blurX/u_textW/c_IterationTime * 2.0,u_blurY/u_textH/c_IterationTime * 2.0);"+
-                //         "float maxNum = u_blurX * u_blurY;"+
-                //         "vec2 vec2Off = vec2(0.0,0.0);"+
-                //         "float floatOff = c_IterationTime/2.0;"+
-                //         "for(float i = 0.0;i<=c_IterationTime; ++i){"+
-                //             "for(float j = 0.0;j<=c_IterationTime; ++j){"+
-                //                 "vec2Off = vec2(vec2FilterOff.x * (i - floatOff),vec2FilterOff.y * (j - floatOff));"+
-                //                 "vec4Color += texture2D(uSampler, vTextureCoord + vec2FilterDir + vec2Off)/floatIterationTotalTime;"+
-                //             "}"+
-                //         "}"+
-                //         "gl_FragColor = vec4(u_color.rgb,vec4Color.a * u_strength);"+
-                //     "}";
                 this.fragmentSrc = [
                     'precision mediump float;',
-                    // 'varying vec2 vTextureCoord;',
                     'varying vec2 vTextureCoord;',
-                    // 'varying vec4 vColor;',
                     'uniform sampler2D uSampler;',
                     'uniform float distance;',
                     'uniform float angle;',
@@ -5679,6 +5647,7 @@ var egret;
                     'uniform float strength;',
                     'uniform float inner;',
                     'uniform float knockout;',
+                    'uniform float hideObject;',
                     "uniform vec2 uTextureSize;" +
                         'vec2 px = vec2(1.0 / uTextureSize.x, 1.0 / uTextureSize.y);',
                     'void main(void) {',
@@ -5709,9 +5678,9 @@ var egret;
                     '}',
                     'ownColor.a = max(ownColor.a, 0.0001);',
                     'ownColor.rgb = ownColor.rgb / ownColor.a;',
-                    'float outerGlowAlpha = (totalAlpha / maxTotalAlpha)  * strength * alpha * (1. - inner) * (1. - ownColor.a);',
+                    'float outerGlowAlpha = (totalAlpha / maxTotalAlpha) * strength * alpha * (1. - inner) * max(min(hideObject, knockout), 1. - ownColor.a);',
                     'float innerGlowAlpha = ((maxTotalAlpha - totalAlpha) / maxTotalAlpha) * strength * alpha * inner * ownColor.a;',
-                    'ownColor.a = max(ownColor.a * knockout, 0.0001);',
+                    'ownColor.a = max(ownColor.a * knockout * (1. - hideObject), 0.0001);',
                     'vec3 mix1 = mix(ownColor.rgb, color.rgb, innerGlowAlpha / (innerGlowAlpha + ownColor.a));',
                     'vec3 mix2 = mix(mix1, color.rgb, outerGlowAlpha / (innerGlowAlpha + ownColor.a + outerGlowAlpha));',
                     'float resultAlpha = min(ownColor.a + outerGlowAlpha + innerGlowAlpha, 1.);',
@@ -5729,6 +5698,7 @@ var egret;
                     strength: { type: '1f', value: 1, dirty: true },
                     inner: { type: '1f', value: 1, dirty: true },
                     knockout: { type: '1f', value: 1, dirty: true },
+                    hideObject: { type: '1f', value: 0, dirty: true },
                     uTextureSize: { type: '2f', value: { x: 100, y: 100 }, dirty: true }
                 };
             }
@@ -5795,6 +5765,13 @@ var egret;
                 var uniform = this.uniforms.knockout;
                 if (uniform.value != knockout) {
                     uniform.value = knockout;
+                    uniform.dirty = true;
+                }
+            };
+            p.setHideObject = function (hideObject) {
+                var uniform = this.uniforms.hideObject;
+                if (uniform.value != hideObject) {
+                    uniform.value = hideObject;
                     uniform.dirty = true;
                 }
             };
@@ -7025,6 +7002,7 @@ var egret;
                             shader.setStrength(filter.strength);
                             shader.setInner(filter.inner);
                             shader.setKnockout(filter.knockout);
+                            shader.setHideObject(filter.hideObject);
                             shader.setTextureSize(filter.textureWidth, filter.textureHeight);
                         }
                         else {
@@ -7258,7 +7236,7 @@ var egret;
                 output.transform(1, 0, 0, -1, 0, height);
                 this.vao.cacheArrays(output.globalMatrix, output.globalAlpha, 0, 0, width, height, 0, 0, width, height, width, height);
                 output.restoreTransform();
-                var filterData = { type: "", distance: 0, angle: 0, alpha: 0, strength: 0, $red: 0, $green: 0, $blue: 0, matrix: null, blurX: 0, blurY: 0, inner: 0, knockout: 0, textureWidth: 0, textureHeight: 0 };
+                var filterData = { type: "", hideObject: 0, distance: 0, angle: 0, alpha: 0, strength: 0, $red: 0, $green: 0, $blue: 0, matrix: null, blurX: 0, blurY: 0, inner: 0, knockout: 0, textureWidth: 0, textureHeight: 0 };
                 if (filter.type == "colorTransform") {
                     filterData.type = "colorTransform";
                     filterData.matrix = filter.matrix;
@@ -7283,6 +7261,7 @@ var egret;
                     filterData.strength = filter.strength;
                     filterData.inner = filter.inner ? 1 : 0;
                     filterData.knockout = filter.knockout ? 0 : 1;
+                    filterData.hideObject = filter.hideObject ? 1 : 0;
                     filterData.textureWidth = width;
                     filterData.textureHeight = height;
                 }

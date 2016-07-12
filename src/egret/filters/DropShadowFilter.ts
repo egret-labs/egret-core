@@ -51,14 +51,16 @@ module egret {
          * @param quality {number} 应用滤镜的次数。暂未实现。
          * @param inner {boolean} 指定发光是否为内侧发光。值 true 指定发光是内侧发光。值 false 指定发光是外侧发光（对象外缘周围的发光）。
          * @param knockout {number} 指定对象是否具有挖空效果。值为 true 将使对象的填充变为透明，并显示文档的背景颜色。
+         * @param hideObject {number} 表示是否隐藏对象。如果值为 true，则表示没有绘制对象本身，只有阴影是可见的。默认值为 false（显示对象）。
          * @version Egret 2.4
          * @platform Web,Native
          */
-        constructor(distance:number = 4.0, angle:number = 45, color:number = 0, alpha:number = 1.0, blurX:number = 4.0, blurY:number = 4.0, strength:number = 1.0, quality:number = 1, inner:boolean = false, knockout:boolean = false) {
+        constructor(distance:number = 4.0, angle:number = 45, color:number = 0, alpha:number = 1.0, blurX:number = 4.0, blurY:number = 4.0, strength:number = 1.0, quality:number = 1, inner:boolean = false, knockout:boolean = false, hideObject:boolean = false) {
             super(color, alpha, blurX, blurY, strength, quality, inner, knockout);
 
             this.$distance = distance;
             this.$angle = angle;
+            this.$hideObject = hideObject;
         }
 
         private $distance:number;
@@ -84,6 +86,19 @@ module egret {
                 return;
             }
             this.$angle = value;
+            this.invalidate();
+        }
+
+        private $hideObject:boolean;
+        public get hideObject():boolean {
+            return this.$hideObject;
+        }
+
+        public set hideObject(value:boolean) {
+            if(this.$hideObject == value) {
+                return;
+            }
+            this.$hideObject = value;
             this.invalidate();
         }
     }
