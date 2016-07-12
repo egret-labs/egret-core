@@ -61,6 +61,15 @@ namespace dragonBones {
         public get animationState(): AnimationState {
             return this.eventObject.animationState;
         }
+
+        /**
+         * @deprecated
+         * @see #animationName
+         */
+        public get movementID(): string {
+            return this.animationName;
+        }
+
         /**
          * @see dragonBones.EventObject.START
          */
