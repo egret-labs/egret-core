@@ -196,6 +196,8 @@
   <xs:attributeGroup name="egret.DisplayObject">
     <xs:attributeGroup ref="egret.EventDispatcher"/>
     <xs:attribute name="alpha" type="xs:decimal"/>
+    <xs:attribute name="anchorOffsetX" type="xs:decimal"/>
+    <xs:attribute name="anchorOffsetY" type="xs:decimal"/>
     <xs:attribute name="blendMode" type="egret.BlendMode"/>
     <xs:attribute name="cacheAsBitmap" type="xs:boolean"/>
     <xs:attribute name="class" type="xs:string"/>
@@ -235,6 +237,8 @@
     <xs:choice>
       <xs:group ref="EventDispatcher_attributeElement"/>
       <xs:element name="alpha" type="number"/>
+      <xs:element name="anchorOffsetX" type="number"/>
+      <xs:element name="anchorOffsetY" type="number"/>
       <xs:element name="blendMode" type="string"/>
       <xs:element name="cacheAsBitmap" type="boolean"/>
       <xs:element name="class" type="string"/>
@@ -289,11 +293,13 @@
   </xs:element>
   <xs:attributeGroup name="egret.DropShadowFilter">
     <xs:attributeGroup ref="egret.GlowFilter"/>
+    <xs:attribute name="angle" type="xs:decimal"/>
     <xs:attribute name="distance" type="xs:decimal"/>
   </xs:attributeGroup>
   <xs:group name="DropShadowFilter_attributeElement">
     <xs:choice>
       <xs:group ref="GlowFilter_attributeElement"/>
+      <xs:element name="angle" type="number"/>
       <xs:element name="distance" type="number"/>
     </xs:choice>
   </xs:group>
@@ -344,12 +350,26 @@
   </xs:element>
   <xs:attributeGroup name="egret.GlowFilter">
     <xs:attributeGroup ref="egret.Filter"/>
+    <xs:attribute name="alpha" type="xs:decimal"/>
+    <xs:attribute name="blurX" type="xs:decimal"/>
+    <xs:attribute name="blurY" type="xs:decimal"/>
     <xs:attribute name="color" type="xs:string"/>
+    <xs:attribute name="inner" type="xs:boolean"/>
+    <xs:attribute name="knockout" type="xs:boolean"/>
+    <xs:attribute name="quality" type="xs:decimal"/>
+    <xs:attribute name="strength" type="xs:decimal"/>
   </xs:attributeGroup>
   <xs:group name="GlowFilter_attributeElement">
     <xs:choice>
       <xs:group ref="Filter_attributeElement"/>
+      <xs:element name="alpha" type="number"/>
+      <xs:element name="blurX" type="number"/>
+      <xs:element name="blurY" type="number"/>
       <xs:element name="color" type="number"/>
+      <xs:element name="inner" type="boolean"/>
+      <xs:element name="knockout" type="boolean"/>
+      <xs:element name="quality" type="number"/>
+      <xs:element name="strength" type="number"/>
     </xs:choice>
   </xs:group>
   <xs:element name="GlowFilter">
