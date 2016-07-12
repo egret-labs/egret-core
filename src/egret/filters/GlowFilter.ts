@@ -33,8 +33,7 @@ module egret {
      * @classdesc
      * 使用 GlowFilter 类可以对显示对象应用发光效果。在投影滤镜的 distance 和 angle 属性设置为 0 时，发光滤镜与投影滤镜极为相似。
      * @extends egret.Filter
-     * @private
-     * @version Egret 2.4
+     * @version Egret 3.1.4
      * @platform Web,Native
      */
     export class GlowFilter extends Filter {
@@ -51,6 +50,22 @@ module egret {
          */
         public $blue:number;
         /**
+         * @language en_US
+         * Initializes a new GlowFilter instance.
+         * @method egret.GlowFilter#constructor
+         * @param color {number} The color of the glow. Valid values are in the hexadecimal format 0xRRGGBB. The default value is 0xFF0000.
+         * @param alpha {number} The alpha transparency value for the color. Valid values are 0 to 1. For example, .25 sets a transparency value of 25%. The default value is 1.
+         * @param blurX {number} The amount of horizontal blur. Valid values are 0 to 255 (floating point).
+         * @param blurY {number} The amount of vertical blur. Valid values are 0 to 255 (floating point). 
+         * @param strength {number} The strength of the imprint or spread. The higher the value, the more color is imprinted and the stronger the contrast between the glow and the background. Valid values are 0 to 255.
+         * @param quality {number} The number of times to apply the filter.
+         * @param inner {boolean} Specifies whether the glow is an inner glow. The value true indicates an inner glow. The default is false, an outer glow (a glow around the outer edges of the object).
+         * @param knockout {number} Specifies whether the object has a knockout effect. A value of true makes the object's fill transparent and reveals the background color of the document. The default value is false (no knockout effect).
+         * @version Egret 3.1.4
+         * @platform Web
+         */
+        /**
+         * @language zh_CN
          * 初始化 GlowFilter 对象
          * @method egret.GlowFilter#constructor
          * @param color {number} 光晕颜色，采用十六进制格式 0xRRGGBB。默认值为 0xFF0000。
@@ -61,8 +76,8 @@ module egret {
          * @param quality {number} 应用滤镜的次数。暂未实现。
          * @param inner {boolean} 指定发光是否为内侧发光。值 true 指定发光是内侧发光。值 false 指定发光是外侧发光（对象外缘周围的发光）。
          * @param knockout {number} 指定对象是否具有挖空效果。值为 true 将使对象的填充变为透明，并显示文档的背景颜色。
-         * @version Egret 2.4
-         * @platform Web,Native
+         * @version Egret 3.1.4
+         * @platform Web
          */
         constructor(color:number = 0xFF0000, alpha:number = 1.0, blurX:number = 6.0, blurY:number = 6.0, strength:number = 2, quality:number = 1, inner:boolean = false, knockout:boolean = false) {
             super();
@@ -81,7 +96,23 @@ module egret {
             this.$knockout = knockout;
         }
 
+        /**
+         * @private
+         */
         private $color:number;
+
+        /**
+         * @language en_US
+         * The color of the glow.
+         * @version Egret 3.1.4
+         * @platform Web
+         */
+        /**
+         * @language zh_CN
+         * 光晕颜色。
+         * @version Egret 3.1.4
+         * @platform Web
+         */
         public get color():number {
             return this.$color;
         }
@@ -97,7 +128,23 @@ module egret {
             this.invalidate();
         }
 
+        /**
+         * @private
+         */
         private $alpha:number;
+
+        /**
+         * @language en_US
+         * The alpha transparency value for the color.
+         * @version Egret 3.1.4
+         * @platform Web
+         */
+        /**
+         * @language zh_CN
+         * 颜色的 Alpha 透明度值。
+         * @version Egret 3.1.4
+         * @platform Web
+         */
         public get alpha():number {
             return this.$alpha;
         }
@@ -110,7 +157,23 @@ module egret {
             this.invalidate();
         }
 
+        /**
+         * @private
+         */
         private $blurX:number;
+
+        /**
+         * @language en_US
+         * The amount of horizontal blur.
+         * @version Egret 3.1.4
+         * @platform Web
+         */
+        /**
+         * @language zh_CN
+         * 水平模糊量。
+         * @version Egret 3.1.4
+         * @platform Web
+         */
         public get blurX():number {
             return this.$blurX;
         }
@@ -123,7 +186,23 @@ module egret {
             this.invalidate();
         }
 
+        /**
+         * @private
+         */
         private $blurY:number;
+
+        /**
+         * @language en_US
+         * The amount of vertical blur.
+         * @version Egret 3.1.4
+         * @platform Web
+         */
+        /**
+         * @language zh_CN
+         * 垂直模糊量。
+         * @version Egret 3.1.4
+         * @platform Web
+         */
         public get blurY():number {
             return this.$blurY;
         }
@@ -136,7 +215,23 @@ module egret {
             this.invalidate();
         }
 
+        /**
+         * @private
+         */
         private $strength:number;
+
+        /**
+         * @language en_US
+         * The strength of the imprint or spread.
+         * @version Egret 3.1.4
+         * @platform Web
+         */
+        /**
+         * @language zh_CN
+         * 印记或跨页的强度。
+         * @version Egret 3.1.4
+         * @platform Web
+         */
         public get strength():number {
             return this.$strength;
         }
@@ -149,7 +244,23 @@ module egret {
             this.invalidate();
         }
 
+        /**
+         * @private
+         */
         private $quality:number;
+
+        /**
+         * @language en_US
+         * The number of times to apply the filter.
+         * @version Egret 3.1.4
+         * @platform Web
+         */
+        /**
+         * @language zh_CN
+         * 应用滤镜的次数。
+         * @version Egret 3.1.4
+         * @platform Web
+         */
         public get quality():number {
             return this.$quality;
         }
@@ -162,7 +273,23 @@ module egret {
             this.invalidate();
         }
 
+        /**
+         * @private
+         */
         private $inner:boolean;
+
+        /**
+         * @language en_US
+         * Specifies whether the glow is an inner glow.
+         * @version Egret 3.1.4
+         * @platform Web
+         */
+        /**
+         * @language zh_CN
+         * 指定发光是否为内侧发光。
+         * @version Egret 3.1.4
+         * @platform Web
+         */
         public get inner():boolean {
             return this.$inner;
         }
@@ -175,7 +302,23 @@ module egret {
             this.invalidate();
         }
 
+        /**
+         * @private
+         */
         private $knockout:boolean;
+
+        /**
+         * @language en_US
+         * Specifies whether the object has a knockout effect.
+         * @version Egret 3.1.4
+         * @platform Web
+         */
+        /**
+         * @language zh_CN
+         * 指定对象是否具有挖空效果。
+         * @version Egret 3.1.4
+         * @platform Web
+         */
         public get knockout():boolean {
             return this.$knockout;
         }

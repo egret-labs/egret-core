@@ -33,14 +33,31 @@ module egret {
      * @classdesc
      * 可使用 DropShadowFilter 类向显示对象添加投影。
      * @extends egret.GlowFilter
-     * @private
-     * @version Egret 2.4
+     * @version Egret 3.1.4
      * @platform Web,Native
      */
     export class DropShadowFilter extends GlowFilter {
         /**
+         * @language en_US
+         * Initializes a new DropShadowFilter instance.
+         * @method egret.DropShadowFilter#constructor
+         * @param distance {number} The offset distance of the bevel. Valid values are in pixels (floating point).
+         * @param angle {number} The angle of the bevel. Valid values are from 0 to 360°.
+         * @param color {number} The color of the glow. Valid values are in the hexadecimal format 0xRRGGBB. The default value is 0xFF0000.
+         * @param alpha {number} The alpha transparency value for the color. Valid values are 0 to 1. For example, .25 sets a transparency value of 25%. The default value is 1.
+         * @param blurX {number} The amount of horizontal blur. Valid values are 0 to 255 (floating point).
+         * @param blurY {number} The amount of vertical blur. Valid values are 0 to 255 (floating point). 
+         * @param strength {number} The strength of the imprint or spread. The higher the value, the more color is imprinted and the stronger the contrast between the glow and the background. Valid values are 0 to 255.
+         * @param quality {number} The number of times to apply the filter.
+         * @param inner {boolean} Specifies whether the glow is an inner glow. The value true indicates an inner glow. The default is false, an outer glow (a glow around the outer edges of the object).
+         * @param knockout {number} Specifies whether the object has a knockout effect. A value of true makes the object's fill transparent and reveals the background color of the document. The default value is false (no knockout effect).
+         * @version Egret 3.1.4
+         * @platform Web
+         */
+        /**
+         * @language zh_CN
          * 初始化 DropShadowFilter 对象
-         * @method egret.GlowFilter#constructor
+         * @method egret.DropShadowFilter#constructor
          * @param distance {number} 阴影的偏移距离，以像素为单位。
          * @param angle {number} 阴影的角度，0 到 360 度（浮点）。
          * @param color {number} 光晕颜色，采用十六进制格式 0xRRGGBB。默认值为 0xFF0000。
@@ -51,8 +68,8 @@ module egret {
          * @param quality {number} 应用滤镜的次数。暂未实现。
          * @param inner {boolean} 指定发光是否为内侧发光。值 true 指定发光是内侧发光。值 false 指定发光是外侧发光（对象外缘周围的发光）。
          * @param knockout {number} 指定对象是否具有挖空效果。值为 true 将使对象的填充变为透明，并显示文档的背景颜色。
-         * @version Egret 2.4
-         * @platform Web,Native
+         * @version Egret 3.1.4
+         * @platform Web
          */
         constructor(distance:number = 4.0, angle:number = 45, color:number = 0, alpha:number = 1.0, blurX:number = 4.0, blurY:number = 4.0, strength:number = 1.0, quality:number = 1, inner:boolean = false, knockout:boolean = false) {
             super(color, alpha, blurX, blurY, strength, quality, inner, knockout);
@@ -61,7 +78,23 @@ module egret {
             this.$angle = angle;
         }
 
+        /**
+         * @private
+         */
         private $distance:number;
+
+        /**
+         * @language en_US
+         * The offset distance of the bevel.
+         * @version Egret 3.1.4
+         * @platform Web
+         */
+        /**
+         * @language zh_CN
+         * 阴影的偏移距离，以像素为单位。
+         * @version Egret 3.1.4
+         * @platform Web
+         */
         public get distance():number {
             return this.$distance;
         }
@@ -74,7 +107,23 @@ module egret {
             this.invalidate();
         }
 
+        /**
+         * @private
+         */
         private $angle:number;
+
+        /**
+         * @language en_US
+         * The angle of the bevel.
+         * @version Egret 3.1.4
+         * @platform Web
+         */
+        /**
+         * @language zh_CN
+         * 阴影的角度。
+         * @version Egret 3.1.4
+         * @platform Web
+         */
         public get angle():number {
             return this.$angle;
         }
