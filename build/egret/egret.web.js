@@ -298,7 +298,7 @@ var egret;
                 startTime = +startTime || 0;
                 loops = +loops || 0;
                 if (DEBUG && this.loaded == false) {
-                    egret.$error(3001);
+                    egret.$error(1049);
                 }
                 var audio = HtmlSound.$pop(this.url);
                 if (audio == null) {
@@ -624,7 +624,7 @@ var egret;
                 startTime = +startTime || 0;
                 loops = +loops || 0;
                 if (DEBUG && this.loaded == false) {
-                    egret.$error(3001);
+                    egret.$error(1049);
                 }
                 var channel = new web.QQSoundChannel();
                 channel.$url = this.url;
@@ -981,7 +981,7 @@ var egret;
                 startTime = +startTime || 0;
                 loops = +loops || 0;
                 if (DEBUG && this.loaded == false) {
-                    egret.$error(3001);
+                    egret.$error(1049);
                 }
                 var channel = new web.WebAudioSoundChannel();
                 channel.$url = this.url;
@@ -4029,6 +4029,9 @@ var egret;
 (function (egret) {
     var web;
     (function (web) {
+        /**
+         * @private
+         */
         var WebFps = (function (_super) {
             __extends(WebFps, _super);
             function WebFps(stage, showFPS, showLog, logFilter, styles) {

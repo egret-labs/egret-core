@@ -2498,6 +2498,9 @@ var egret;
 (function (egret) {
     var native;
     (function (native) {
+        /**
+         * @private
+         */
         var NativeFps = (function (_super) {
             __extends(NativeFps, _super);
             function NativeFps(stage, showFPS, showLog, logFilter, styles) {
@@ -2819,7 +2822,7 @@ var egret;
                 startTime = +startTime || 0;
                 loops = +loops || 0;
                 if (DEBUG && this.loaded == false) {
-                    egret.$error(3001);
+                    egret.$error(1049);
                 }
                 var audio = NativeSound.$pop(this.url);
                 if (audio == null) {
@@ -3159,7 +3162,7 @@ var egret;
                 startTime = +startTime || 0;
                 loops = +loops || 0;
                 if (DEBUG && this.loaded == false) {
-                    egret.$error(3001);
+                    egret.$error(1049);
                 }
                 var channel = new native.NaSoundChannel();
                 channel.$url = this.url;

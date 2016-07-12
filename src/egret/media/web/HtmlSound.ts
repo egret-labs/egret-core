@@ -154,7 +154,7 @@ module egret.web {
             loops = +loops || 0;
 
             if (DEBUG && this.loaded == false) {
-                egret.$error(3001);
+                egret.$error(1049);
             }
 
             var audio = HtmlSound.$pop(this.url);

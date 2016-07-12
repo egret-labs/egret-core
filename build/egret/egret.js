@@ -11940,6 +11940,7 @@ var egret;
     locale_strings[1046] = "BitmapText no corresponding characters: {0}, please check the configuration file";
     locale_strings[1047] = "egret.localStorage.setItem save failed,key={0}&value={1}";
     locale_strings[1048] = "Video loading failed";
+    locale_strings[1049] = "In the absence of sound is not allowed to play after loading";
     //gui  3000-3099
     locale_strings[3000] = "Theme configuration file failed to load: {0}";
     locale_strings[3001] = "Cannot find the skin name which is configured in Theme: {0}";
@@ -12086,6 +12087,7 @@ var egret;
     locale_strings[1046] = "BitmapText 找不到对应字符:{0}，请检查配置文件";
     locale_strings[1047] = "egret.localStorage.setItem保存失败,key={0}&value={1}";
     locale_strings[1048] = "视频加载失败";
+    locale_strings[1049] = "声音在没有加载完之前不允许播放";
     //gui  3000-3099
     locale_strings[3000] = "主题配置文件加载失败: {0}";
     locale_strings[3001] = "找不到主题中所配置的皮肤类名: {0}";

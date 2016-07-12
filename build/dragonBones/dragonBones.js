@@ -8146,7 +8146,7 @@ var dragonBones;
             var x = 0;
             var y = 0;
             for (var i = 0, l = this._mesh.vertices.length; i < l; i += 2) {
-                if (i < offset || i - offset >= rawVertices.length) {
+                if (!rawVertices || i < offset || i - offset >= rawVertices.length) {
                     x = 0;
                     y = 0;
                 }
@@ -8372,7 +8372,7 @@ var dragonBones;
                 var version = ObjectDataParser._getString(rawData, ObjectDataParser.VERSION, null);
                 this._isParentCooriinate = version == ObjectDataParser.DATA_VERSION_2_3 || version == ObjectDataParser.DATA_VERSION_3_0;
                 this._armatureScale = scale;
-                if (version == ObjectDataParser.DATA_VERSION || this._isParentCooriinate) {
+                if (version == ObjectDataParser.DATA_VERSION || version == ObjectDataParser.DATA_VERSION_4_0 || this._isParentCooriinate) {
                     var data = dragonBones.BaseObject.borrowObject(dragonBones.DragonBonesData);
                     data.name = ObjectDataParser._getString(rawData, ObjectDataParser.NAME, null);
                     data.frameRate = ObjectDataParser._getNumber(rawData, ObjectDataParser.FRAME_RATE, 24);
