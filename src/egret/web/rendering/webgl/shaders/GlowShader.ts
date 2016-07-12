@@ -53,6 +53,11 @@ module egret.web {
             "uniform vec2 uTextureSize;"+
             'vec2 px = vec2(1.0 / uTextureSize.x, 1.0 / uTextureSize.y);',
 
+            'float random(vec3 scale, float seed)',
+            '{',
+                'return fract(sin(dot(gl_FragCoord.xyz + seed, scale)) * 43758.5453 + seed);',
+            '}',
+
             'void main(void) {',
                 // TODO 自动调节采样次数？
                 'const float linearSamplingTimes = 8.0;',
@@ -69,9 +74,10 @@ module egret.web {
                 'const float PI = 3.14159265358979323846264;',
                 'float cosAngle;',
                 'float sinAngle;',
-                'for (float a = 1.0; a <= PI * 2.0; a += PI * 2.0 / circleSamplingTimes) {',
-                    'cosAngle = cos(a);',
-                    'sinAngle = sin(a);',
+                'float offset = PI * 2.0 / circleSamplingTimes * random(vec3(12.9898, 78.233, 151.7182), 0.0);',
+                'for (float a = 0.0; a <= PI * 2.0; a += PI * 2.0 / circleSamplingTimes) {',
+                    'cosAngle = cos(a + offset);',
+                    'sinAngle = sin(a + offset);',
                     'for (float i = 1.0; i <= linearSamplingTimes; i++) {',
                         'curDistanceX = i * blurX * cosAngle * px.x / linearSamplingTimes;',
                         'curDistanceY = i * blurY * sinAngle * px.y / linearSamplingTimes;',

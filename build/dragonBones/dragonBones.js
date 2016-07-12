@@ -4374,6 +4374,15 @@ var dragonBones;
                 return this.eventObject.animationState;
             }
         );
+        d(p, "movementID"
+            /**
+             * @deprecated
+             * @see #animationName
+             */
+            ,function () {
+                return this.animationName;
+            }
+        );
         /**
          * @see dragonBones.EventObject.START
          */
@@ -5579,7 +5588,7 @@ var dragonBones;
                             frameDisplay.$setAnchorOffsetX(pivotX);
                             frameDisplay.$setAnchorOffsetY(pivotY);
                         }
-                        this._updateVisible();
+                        // this._updateVisible();
                         return;
                     }
                 }
@@ -5587,7 +5596,7 @@ var dragonBones;
             frameDisplay.$setBitmapData(null);
             frameDisplay.$setAnchorOffsetX(0);
             frameDisplay.$setAnchorOffsetY(0);
-            frameDisplay.visible = false;
+            //frameDisplay.visible = false;
         };
         /**
          * @private

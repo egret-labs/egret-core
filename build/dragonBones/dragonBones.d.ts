@@ -2276,6 +2276,11 @@ declare namespace dragonBones {
          */
         animationState: AnimationState;
         /**
+         * @deprecated
+         * @see #animationName
+         */
+        movementID: string;
+        /**
          * @see dragonBones.EventObject.START
          */
         static START: string;
