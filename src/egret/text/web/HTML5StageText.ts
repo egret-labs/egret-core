@@ -332,6 +332,12 @@ module egret.web {
                     this.setElementStyle("padding", "0px");
                     this.setElementStyle("lineHeight", (textfield.size) * this._gscaleY + "px");
                 }
+                else if(textfield.height < textheight) {
+                    this.setElementStyle("height", (textfield.height) * this._gscaleY + "px");
+
+                    this.setElementStyle("padding", "0px");
+                    this.setElementStyle("lineHeight", (textfield.size + textfield.lineSpacing) * this._gscaleY + "px");
+                }
                 else {
                     this.setElementStyle("height", (textheight + textfield.lineSpacing) * this._gscaleY + "px");
 
