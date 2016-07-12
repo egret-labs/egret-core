@@ -657,7 +657,6 @@ module egret.web {
                     else if (filter && filter.type == "blur") {
                         shader = this.shaderManager.blurShader;
                         shader.setBlur(filter.blurX, filter.blurY);
-                        shader.setUv(data.uv);
                         shader.setTextureSize(filter.textureWidth, filter.textureHeight);
                     }
                     else if (filter && filter.type == "glow") {
@@ -872,21 +871,6 @@ module egret.web {
             }
         }
 
-        private getUv(sourceX, sourceY, sourceWidth, sourceHeight, textureSourceWidth, textureSourceHeight) {
-            var uv = [
-                0, 0,
-                1, 1
-            ];
-            for (var i = 0, l = uv.length; i < l; i += 2) {
-                var u = uv[i];
-                var v = uv[i + 1];
-                // uv
-                uv[i] = (sourceX + u * sourceWidth) / textureSourceWidth;
-                uv[i + 1] = (sourceY + v * sourceHeight) / textureSourceHeight;
-            }
-            return uv;
-        }
-
         /**
          * 向一个renderTarget中绘制
          * */
@@ -902,18 +886,20 @@ module egret.web {
             this.pushBuffer(output);
 
             var originInput = input,
-            temp:WebGLRenderBuffer;
+            temp:WebGLRenderBuffer,
+            width:number = input.rootRenderTarget.width,
+            height:number = input.rootRenderTarget.height;
 
             // 模糊滤镜实现为blurX与blurY的叠加
             if (filter.type == "blur") {
+                if (!this.blurFilter) {
+                    this.blurFilter = new egret.BlurFilter(2, 2);
+                }
+
                 if((<BlurFilter>filter).blurX != 0 && (<BlurFilter>filter).blurY != 0) {
-                    if (!this.blurFilter) {
-                        this.blurFilter = new egret.BlurFilter(2, 2);
-                    }
                     this.blurFilter.blurX = (<BlurFilter>filter).blurX;
                     this.blurFilter.blurY = 0;
-                    var width:number = input.rootRenderTarget.width;
-                    var height:number = input.rootRenderTarget.height;
+                    
                     temp = WebGLRenderBuffer.create(width, height);
                     temp.setTransform(1, 0, 0, 1, 0, 0);
                     temp.globalAlpha = 1;
@@ -923,15 +909,7 @@ module egret.web {
                     }
                     input = temp;
                 }
-            }
-
-            // 绘制input结果到舞台
-            var width:number = input.rootRenderTarget.width;
-            var height:number = input.rootRenderTarget.height;
-            if (filter.type == "blur"){
-                if (!this.blurFilter) {
-                    this.blurFilter = new egret.BlurFilter(2, 2);
-                }
+                
                 if((<BlurFilter>filter).blurX == 0 || (<BlurFilter>filter).blurY == 0) {
                     this.blurFilter.blurX = (<BlurFilter>filter).blurX;
                     this.blurFilter.blurY = (<BlurFilter>filter).blurY;
@@ -939,8 +917,11 @@ module egret.web {
                     this.blurFilter.blurX = 0;
                     this.blurFilter.blurY = (<BlurFilter>filter).blurY;
                 }
+                
                 filter = this.blurFilter;
             }
+
+            // 绘制input结果到舞台
             output.saveTransform();
             output.transform(1, 0, 0, -1, 0, height);
             this.vao.cacheArrays(output.globalMatrix, output.globalAlpha, 0, 0, width, height, 0, 0, width, height, width, height);

@@ -39,7 +39,6 @@ module egret.web {
 
             "varying vec2 vTextureCoord;"+
 
-            "uniform vec4 uBounds;"+
             "uniform vec2 uTextureSize;"+
 
             "void main()"+
@@ -52,9 +51,7 @@ module egret.web {
                 "for (int i = -sampleRadius; i <= sampleRadius; i++) {"+
                     "uv.x = vTextureCoord.x + float(i) * blur.x / float(sampleRadius) / uTextureSize.x;"+
                     "uv.y = vTextureCoord.y + float(i) * blur.y / float(sampleRadius) / uTextureSize.y;"+
-                    "if(uv.x >= uBounds[0] && uv.x <= uBounds[2] && uv.y >= uBounds[1] && uv.y <= uBounds[3]) {"+
-                        "color += texture2D(uSampler, uv);"+
-                    "}"+
+                    "color += texture2D(uSampler, uv);"+
                 '}'+
 
                 "color /= float(samples);"+
@@ -64,7 +61,6 @@ module egret.web {
         public uniforms = {
             projectionVector: {type: '2f', value: {x: 0, y: 0}, dirty: true},
             blur: {type: '2f', value: {x: 2, y: 2}, dirty: true},
-            uBounds: {type: '4f', value: {x: 0, y: 0, z: 1, w: 1}, dirty: true},
             uTextureSize: {type: '2f', value: {x: 100, y: 100}, dirty: true}
         };
 
@@ -76,33 +72,6 @@ module egret.web {
                 uniform.value.y = blurY;
 
                 uniform.dirty = true;
-            }
-        }
-
-        /**
-         * 设置模糊滤镜需要传入的uv坐标
-         */
-        public setUv(uv:any):void {
-            var uniform = this.uniforms.uBounds;
-
-            if(uv) {
-                if(uniform.value.x != uv[0] || uniform.value.y != uv[1] || uniform.value.z != uv[2] || uniform.value.w != uv[3]) {
-                    uniform.value.x = uv[0];
-                    uniform.value.y = uv[1];
-                    uniform.value.z = uv[2];
-                    uniform.value.w = uv[3];
-
-                    uniform.dirty = true;
-                }
-            } else {
-                if(uniform.value.x != 0 || uniform.value.y != 0 || uniform.value.z != 1 || uniform.value.w != 1) {
-                    uniform.value.x = 0;
-                    uniform.value.y = 0;
-                    uniform.value.z = 1;
-                    uniform.value.w = 1;
-
-                    uniform.dirty = true;
-                }
             }
         }
 

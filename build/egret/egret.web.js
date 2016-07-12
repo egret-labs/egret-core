@@ -5394,7 +5394,6 @@ var egret;
                     "uniform vec2 blur;" +
                     "uniform sampler2D uSampler;" +
                     "varying vec2 vTextureCoord;" +
-                    "uniform vec4 uBounds;" +
                     "uniform vec2 uTextureSize;" +
                     "void main()" +
                     "{" +
@@ -5405,9 +5404,7 @@ var egret;
                     "for (int i = -sampleRadius; i <= sampleRadius; i++) {" +
                     "uv.x = vTextureCoord.x + float(i) * blur.x / float(sampleRadius) / uTextureSize.x;" +
                     "uv.y = vTextureCoord.y + float(i) * blur.y / float(sampleRadius) / uTextureSize.y;" +
-                    "if(uv.x >= uBounds[0] && uv.x <= uBounds[2] && uv.y >= uBounds[1] && uv.y <= uBounds[3]) {" +
                     "color += texture2D(uSampler, uv);" +
-                    "}" +
                     '}' +
                     "color /= float(samples);" +
                     "gl_FragColor = color;" +
@@ -5415,7 +5412,6 @@ var egret;
                 this.uniforms = {
                     projectionVector: { type: '2f', value: { x: 0, y: 0 }, dirty: true },
                     blur: { type: '2f', value: { x: 2, y: 2 }, dirty: true },
-                    uBounds: { type: '4f', value: { x: 0, y: 0, z: 1, w: 1 }, dirty: true },
                     uTextureSize: { type: '2f', value: { x: 100, y: 100 }, dirty: true }
                 };
             }
@@ -5426,30 +5422,6 @@ var egret;
                     uniform.value.x = blurX;
                     uniform.value.y = blurY;
                     uniform.dirty = true;
-                }
-            };
-            /**
-             * 设置模糊滤镜需要传入的uv坐标
-             */
-            p.setUv = function (uv) {
-                var uniform = this.uniforms.uBounds;
-                if (uv) {
-                    if (uniform.value.x != uv[0] || uniform.value.y != uv[1] || uniform.value.z != uv[2] || uniform.value.w != uv[3]) {
-                        uniform.value.x = uv[0];
-                        uniform.value.y = uv[1];
-                        uniform.value.z = uv[2];
-                        uniform.value.w = uv[3];
-                        uniform.dirty = true;
-                    }
-                }
-                else {
-                    if (uniform.value.x != 0 || uniform.value.y != 0 || uniform.value.z != 1 || uniform.value.w != 1) {
-                        uniform.value.x = 0;
-                        uniform.value.y = 0;
-                        uniform.value.z = 1;
-                        uniform.value.w = 1;
-                        uniform.dirty = true;
-                    }
                 }
             };
             /**
@@ -6993,7 +6965,6 @@ var egret;
                         else if (filter && filter.type == "blur") {
                             shader = this.shaderManager.blurShader;
                             shader.setBlur(filter.blurX, filter.blurY);
-                            shader.setUv(data.uv);
                             shader.setTextureSize(filter.textureWidth, filter.textureHeight);
                         }
                         else if (filter && filter.type == "glow") {
@@ -7174,20 +7145,6 @@ var egret;
                     web.WebGLRenderBuffer.release(input);
                 }
             };
-            p.getUv = function (sourceX, sourceY, sourceWidth, sourceHeight, textureSourceWidth, textureSourceHeight) {
-                var uv = [
-                    0, 0,
-                    1, 1
-                ];
-                for (var i = 0, l = uv.length; i < l; i += 2) {
-                    var u = uv[i];
-                    var v = uv[i + 1];
-                    // uv
-                    uv[i] = (sourceX + u * sourceWidth) / textureSourceWidth;
-                    uv[i + 1] = (sourceY + v * sourceHeight) / textureSourceHeight;
-                }
-                return uv;
-            };
             /**
              * 向一个renderTarget中绘制
              * */
@@ -7199,17 +7156,15 @@ var egret;
                     this.$drawWebGL();
                 }
                 this.pushBuffer(output);
-                var originInput = input, temp;
+                var originInput = input, temp, width = input.rootRenderTarget.width, height = input.rootRenderTarget.height;
                 // 模糊滤镜实现为blurX与blurY的叠加
                 if (filter.type == "blur") {
+                    if (!this.blurFilter) {
+                        this.blurFilter = new egret.BlurFilter(2, 2);
+                    }
                     if (filter.blurX != 0 && filter.blurY != 0) {
-                        if (!this.blurFilter) {
-                            this.blurFilter = new egret.BlurFilter(2, 2);
-                        }
                         this.blurFilter.blurX = filter.blurX;
                         this.blurFilter.blurY = 0;
-                        var width = input.rootRenderTarget.width;
-                        var height = input.rootRenderTarget.height;
                         temp = web.WebGLRenderBuffer.create(width, height);
                         temp.setTransform(1, 0, 0, 1, 0, 0);
                         temp.globalAlpha = 1;
@@ -7218,14 +7173,6 @@ var egret;
                             web.WebGLRenderBuffer.release(input);
                         }
                         input = temp;
-                    }
-                }
-                // 绘制input结果到舞台
-                var width = input.rootRenderTarget.width;
-                var height = input.rootRenderTarget.height;
-                if (filter.type == "blur") {
-                    if (!this.blurFilter) {
-                        this.blurFilter = new egret.BlurFilter(2, 2);
                     }
                     if (filter.blurX == 0 || filter.blurY == 0) {
                         this.blurFilter.blurX = filter.blurX;
@@ -7237,6 +7184,7 @@ var egret;
                     }
                     filter = this.blurFilter;
                 }
+                // 绘制input结果到舞台
                 output.saveTransform();
                 output.transform(1, 0, 0, -1, 0, height);
                 this.vao.cacheArrays(output.globalMatrix, output.globalAlpha, 0, 0, width, height, 0, 0, width, height, width, height);
