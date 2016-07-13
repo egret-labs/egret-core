@@ -298,7 +298,7 @@ var egret;
                 startTime = +startTime || 0;
                 loops = +loops || 0;
                 if (DEBUG && this.loaded == false) {
-                    egret.$error(3001);
+                    egret.$error(1049);
                 }
                 var audio = HtmlSound.$pop(this.url);
                 if (audio == null) {
@@ -624,7 +624,7 @@ var egret;
                 startTime = +startTime || 0;
                 loops = +loops || 0;
                 if (DEBUG && this.loaded == false) {
-                    egret.$error(3001);
+                    egret.$error(1049);
                 }
                 var channel = new web.QQSoundChannel();
                 channel.$url = this.url;
@@ -981,7 +981,7 @@ var egret;
                 startTime = +startTime || 0;
                 loops = +loops || 0;
                 if (DEBUG && this.loaded == false) {
-                    egret.$error(3001);
+                    egret.$error(1049);
                 }
                 var channel = new web.WebAudioSoundChannel();
                 channel.$url = this.url;
@@ -2422,10 +2422,15 @@ var egret;
                 var textfield = this.$textfield;
                 if (textfield.multiline) {
                     var textheight = egret.TextFieldUtils.$getTextHeight(textfield);
-                    if (textfield.height <= textfield.size || textfield.height < textheight) {
+                    if (textfield.height <= textfield.size) {
                         this.setElementStyle("height", (textfield.size) * this._gscaleY + "px");
                         this.setElementStyle("padding", "0px");
                         this.setElementStyle("lineHeight", (textfield.size) * this._gscaleY + "px");
+                    }
+                    else if (textfield.height < textheight) {
+                        this.setElementStyle("height", (textfield.height) * this._gscaleY + "px");
+                        this.setElementStyle("padding", "0px");
+                        this.setElementStyle("lineHeight", (textfield.size + textfield.lineSpacing) * this._gscaleY + "px");
                     }
                     else {
                         this.setElementStyle("height", (textheight + textfield.lineSpacing) * this._gscaleY + "px");

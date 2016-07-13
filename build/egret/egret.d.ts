@@ -7020,8 +7020,7 @@ declare module egret {
      * @classdesc
      * 使用 GlowFilter 类可以对显示对象应用发光效果。在投影滤镜的 distance 和 angle 属性设置为 0 时，发光滤镜与投影滤镜极为相似。
      * @extends egret.Filter
-     * @private
-     * @version Egret 2.4
+     * @version Egret 3.1.4
      * @platform Web,Native
      */
     class GlowFilter extends Filter {
@@ -7038,6 +7037,22 @@ declare module egret {
          */
         $blue: number;
         /**
+         * @language en_US
+         * Initializes a new GlowFilter instance.
+         * @method egret.GlowFilter#constructor
+         * @param color {number} The color of the glow. Valid values are in the hexadecimal format 0xRRGGBB. The default value is 0xFF0000.
+         * @param alpha {number} The alpha transparency value for the color. Valid values are 0 to 1. For example, .25 sets a transparency value of 25%. The default value is 1.
+         * @param blurX {number} The amount of horizontal blur. Valid values are 0 to 255 (floating point).
+         * @param blurY {number} The amount of vertical blur. Valid values are 0 to 255 (floating point).
+         * @param strength {number} The strength of the imprint or spread. The higher the value, the more color is imprinted and the stronger the contrast between the glow and the background. Valid values are 0 to 255.
+         * @param quality {number} The number of times to apply the filter.
+         * @param inner {boolean} Specifies whether the glow is an inner glow. The value true indicates an inner glow. The default is false, an outer glow (a glow around the outer edges of the object).
+         * @param knockout {number} Specifies whether the object has a knockout effect. A value of true makes the object's fill transparent and reveals the background color of the document. The default value is false (no knockout effect).
+         * @version Egret 3.1.4
+         * @platform Web
+         */
+        /**
+         * @language zh_CN
          * 初始化 GlowFilter 对象
          * @method egret.GlowFilter#constructor
          * @param color {number} 光晕颜色，采用十六进制格式 0xRRGGBB。默认值为 0xFF0000。
@@ -7048,25 +7063,145 @@ declare module egret {
          * @param quality {number} 应用滤镜的次数。暂未实现。
          * @param inner {boolean} 指定发光是否为内侧发光。值 true 指定发光是内侧发光。值 false 指定发光是外侧发光（对象外缘周围的发光）。
          * @param knockout {number} 指定对象是否具有挖空效果。值为 true 将使对象的填充变为透明，并显示文档的背景颜色。
-         * @version Egret 2.4
-         * @platform Web,Native
+         * @version Egret 3.1.4
+         * @platform Web
          */
         constructor(color?: number, alpha?: number, blurX?: number, blurY?: number, strength?: number, quality?: number, inner?: boolean, knockout?: boolean);
+        /**
+         * @private
+         */
         private $color;
+        /**
+         * @language en_US
+         * The color of the glow.
+         * @version Egret 3.1.4
+         * @platform Web
+         */
+        /**
+         * @language zh_CN
+         * 光晕颜色。
+         * @version Egret 3.1.4
+         * @platform Web
+         */
         color: number;
+        /**
+         * @private
+         */
         private $alpha;
+        /**
+         * @language en_US
+         * The alpha transparency value for the color.
+         * @version Egret 3.1.4
+         * @platform Web
+         */
+        /**
+         * @language zh_CN
+         * 颜色的 Alpha 透明度值。
+         * @version Egret 3.1.4
+         * @platform Web
+         */
         alpha: number;
+        /**
+         * @private
+         */
         private $blurX;
+        /**
+         * @language en_US
+         * The amount of horizontal blur.
+         * @version Egret 3.1.4
+         * @platform Web
+         */
+        /**
+         * @language zh_CN
+         * 水平模糊量。
+         * @version Egret 3.1.4
+         * @platform Web
+         */
         blurX: number;
+        /**
+         * @private
+         */
         private $blurY;
+        /**
+         * @language en_US
+         * The amount of vertical blur.
+         * @version Egret 3.1.4
+         * @platform Web
+         */
+        /**
+         * @language zh_CN
+         * 垂直模糊量。
+         * @version Egret 3.1.4
+         * @platform Web
+         */
         blurY: number;
+        /**
+         * @private
+         */
         private $strength;
+        /**
+         * @language en_US
+         * The strength of the imprint or spread.
+         * @version Egret 3.1.4
+         * @platform Web
+         */
+        /**
+         * @language zh_CN
+         * 印记或跨页的强度。
+         * @version Egret 3.1.4
+         * @platform Web
+         */
         strength: number;
+        /**
+         * @private
+         */
         private $quality;
+        /**
+         * @language en_US
+         * The number of times to apply the filter.
+         * @version Egret 3.1.4
+         * @platform Web
+         */
+        /**
+         * @language zh_CN
+         * 应用滤镜的次数。
+         * @version Egret 3.1.4
+         * @platform Web
+         */
         quality: number;
+        /**
+         * @private
+         */
         private $inner;
+        /**
+         * @language en_US
+         * Specifies whether the glow is an inner glow.
+         * @version Egret 3.1.4
+         * @platform Web
+         */
+        /**
+         * @language zh_CN
+         * 指定发光是否为内侧发光。
+         * @version Egret 3.1.4
+         * @platform Web
+         */
         inner: boolean;
+        /**
+         * @private
+         */
         private $knockout;
+        /**
+         * @language en_US
+         * Specifies whether the object has a knockout effect.
+         * @version Egret 3.1.4
+         * @platform Web
+         */
+        /**
+         * @language zh_CN
+         * 指定对象是否具有挖空效果。
+         * @version Egret 3.1.4
+         * @platform Web
+         */
         knockout: boolean;
     }
 }
@@ -7076,14 +7211,32 @@ declare module egret {
      * @classdesc
      * 可使用 DropShadowFilter 类向显示对象添加投影。
      * @extends egret.GlowFilter
-     * @private
-     * @version Egret 2.4
+     * @version Egret 3.1.4
      * @platform Web,Native
      */
     class DropShadowFilter extends GlowFilter {
         /**
+         * @language en_US
+         * Initializes a new DropShadowFilter instance.
+         * @method egret.DropShadowFilter#constructor
+         * @param distance {number} The offset distance of the bevel. Valid values are in pixels (floating point).
+         * @param angle {number} The angle of the bevel. Valid values are from 0 to 360°.
+         * @param color {number} The color of the glow. Valid values are in the hexadecimal format 0xRRGGBB. The default value is 0xFF0000.
+         * @param alpha {number} The alpha transparency value for the color. Valid values are 0 to 1. For example, .25 sets a transparency value of 25%. The default value is 1.
+         * @param blurX {number} The amount of horizontal blur. Valid values are 0 to 255 (floating point).
+         * @param blurY {number} The amount of vertical blur. Valid values are 0 to 255 (floating point).
+         * @param strength {number} The strength of the imprint or spread. The higher the value, the more color is imprinted and the stronger the contrast between the glow and the background. Valid values are 0 to 255.
+         * @param quality {number} The number of times to apply the filter.
+         * @param inner {boolean} Specifies whether the glow is an inner glow. The value true indicates an inner glow. The default is false, an outer glow (a glow around the outer edges of the object).
+         * @param knockout {number} Specifies whether the object has a knockout effect. A value of true makes the object's fill transparent and reveals the background color of the document. The default value is false (no knockout effect).
+         * @param hideObject {number} Indicates whether or not the object is hidden. The value true indicates that the object itself is not drawn; only the shadow is visible. The default is false, meaning that the object is shown.
+         * @version Egret 3.1.4
+         * @platform Web
+         */
+        /**
+         * @language zh_CN
          * 初始化 DropShadowFilter 对象
-         * @method egret.GlowFilter#constructor
+         * @method egret.DropShadowFilter#constructor
          * @param distance {number} 阴影的偏移距离，以像素为单位。
          * @param angle {number} 阴影的角度，0 到 360 度（浮点）。
          * @param color {number} 光晕颜色，采用十六进制格式 0xRRGGBB。默认值为 0xFF0000。
@@ -7095,15 +7248,60 @@ declare module egret {
          * @param inner {boolean} 指定发光是否为内侧发光。值 true 指定发光是内侧发光。值 false 指定发光是外侧发光（对象外缘周围的发光）。
          * @param knockout {number} 指定对象是否具有挖空效果。值为 true 将使对象的填充变为透明，并显示文档的背景颜色。
          * @param hideObject {number} 表示是否隐藏对象。如果值为 true，则表示没有绘制对象本身，只有阴影是可见的。默认值为 false（显示对象）。
-         * @version Egret 2.4
-         * @platform Web,Native
+         * @version Egret 3.1.4
+         * @platform Web
          */
         constructor(distance?: number, angle?: number, color?: number, alpha?: number, blurX?: number, blurY?: number, strength?: number, quality?: number, inner?: boolean, knockout?: boolean, hideObject?: boolean);
+        /**
+         * @private
+         */
         private $distance;
+        /**
+         * @language en_US
+         * The offset distance of the bevel.
+         * @version Egret 3.1.4
+         * @platform Web
+         */
+        /**
+         * @language zh_CN
+         * 阴影的偏移距离，以像素为单位。
+         * @version Egret 3.1.4
+         * @platform Web
+         */
         distance: number;
+        /**
+         * @private
+         */
         private $angle;
+        /**
+         * @language en_US
+         * The angle of the bevel.
+         * @version Egret 3.1.4
+         * @platform Web
+         */
+        /**
+         * @language zh_CN
+         * 阴影的角度。
+         * @version Egret 3.1.4
+         * @platform Web
+         */
         angle: number;
+        /**
+         * @private
+         */
         private $hideObject;
+        /**
+         * @language en_US
+         * Indicates whether or not the object is hidden.
+         * @version Egret 3.1.4
+         * @platform Web
+         */
+        /**
+         * @language zh_CN
+         * 表示是否隐藏对象。
+         * @version Egret 3.1.4
+         * @platform Web
+         */
         hideObject: boolean;
     }
 }

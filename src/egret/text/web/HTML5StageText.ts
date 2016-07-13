@@ -326,11 +326,17 @@ module egret.web {
             var textfield:egret.TextField = this.$textfield;
             if (textfield.multiline) {
                 var textheight = TextFieldUtils.$getTextHeight(textfield);
-                if (textfield.height <= textfield.size || textfield.height < textheight) {
+                if (textfield.height <= textfield.size) {
                     this.setElementStyle("height", (textfield.size) * this._gscaleY + "px");
 
                     this.setElementStyle("padding", "0px");
                     this.setElementStyle("lineHeight", (textfield.size) * this._gscaleY + "px");
+                }
+                else if(textfield.height < textheight) {
+                    this.setElementStyle("height", (textfield.height) * this._gscaleY + "px");
+
+                    this.setElementStyle("padding", "0px");
+                    this.setElementStyle("lineHeight", (textfield.size + textfield.lineSpacing) * this._gscaleY + "px");
                 }
                 else {
                     this.setElementStyle("height", (textheight + textfield.lineSpacing) * this._gscaleY + "px");
