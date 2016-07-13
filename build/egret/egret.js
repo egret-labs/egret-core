@@ -10623,20 +10623,30 @@ var egret;
         /**
          * @language en_US
          * Initializes a BlurFilter object.
+         * @param blurX {number} The amount of horizontal blur. Valid values are 0 to 255 (floating point).
+         * @param blurY {number} The amount of vertical blur. Valid values are 0 to 255 (floating point).
+         * @param quality {number} The number of times to apply the filter.
          * @version Egret 3.1.0
          * @platform Web
          */
         /**
          * @language zh_CN
          * 创建一个 BlurFilter 对象。
+         * @param blurX {number} 水平模糊量。有效值为 0 到 255（浮点）。
+         * @param blurY {number} 垂直模糊量。有效值为 0 到 255（浮点）。
+         * @param quality {number} 应用滤镜的次数。暂未实现。
          * @version Egret 3.1.0
          * @platform Web
          */
-        function BlurFilter(blurX, blurY) {
+        function BlurFilter(blurX, blurY, quality) {
+            if (blurX === void 0) { blurX = 4; }
+            if (blurY === void 0) { blurY = 4; }
+            if (quality === void 0) { quality = 1; }
             _super.call(this);
             this.type = "blur";
-            this.blurX = blurX;
-            this.blurY = blurY;
+            this.$blurX = blurX;
+            this.$blurY = blurY;
+            this.$quality = quality;
         }
         var d = __define,c=BlurFilter,p=c.prototype;
         d(p, "blurX"
@@ -10792,6 +10802,7 @@ var egret;
             }
             ,function (value) {
                 this.setMatrix(value);
+                this.invalidate();
             }
         );
         /**
@@ -10799,9 +10810,8 @@ var egret;
          */
         p.setMatrix = function (value) {
             for (var i = 0; i < 20; i++) {
-                this.$matrix[i] = (value && value[i]) || 0;
+                this.$matrix[i] = (value && value[i]) || ((i == 0 || i == 6 || i == 12 || i == 18) ? 1 : 0);
             }
-            this.invalidate();
         };
         return ColorMatrixFilter;
     }(egret.Filter));

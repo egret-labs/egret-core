@@ -96,6 +96,7 @@ module egret {
 
         public set matrix(value:Array<number>) {
             this.setMatrix(value);
+            this.invalidate();
         }
 
         /**
@@ -103,9 +104,8 @@ module egret {
          */
         private setMatrix(value:Array<number>):void {
             for (var i = 0; i < 20; i++) {
-                this.$matrix[i] = (value && value[i]) || 0;
-            }
-            this.invalidate();
+                this.$matrix[i] = (value && value[i]) || ( (i == 0 || i == 6 || i == 12 || i == 18) ? 1 : 0 );
+            } 
         }
     }
 }
