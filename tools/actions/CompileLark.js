@@ -2,6 +2,7 @@
 var utils = require('../lib/utils');
 var Compiler = require('./Compiler');
 var FileUtil = require('../lib/FileUtil');
+var path = require('path');
 var ANY = 'any';
 var CompileLark = (function () {
     function CompileLark() {
@@ -22,7 +23,7 @@ var CompileLark = (function () {
             { name: "debug", declaration: true },
             { name: "release", minify: true }
         ];
-        utils.clean(outputDir);
+        utils.clean(outputDir,FileUtil.escapePath(path.join(outputDir,"egret3d")));
         for (var i = 0; i < manifest.modules.length; i++) {
             var m = manifest.modules[i];
             preduceSwanModule(m);
