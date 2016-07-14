@@ -417,7 +417,7 @@
         "description": "使用 eui 扩展库创建友好的交互界面",
         "defaultWidth":640,
         "defaultHeight":1136,
-        "modules": [ "egret", "eui", "res" ]
+        "modules": [ "egret", "eui", "res" ,"tween"]
       },
       {
         "name": "gui",
