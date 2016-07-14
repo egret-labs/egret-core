@@ -104,7 +104,10 @@ var UpgradeCommand = (function () {
                     path: egret.args.projectDir,
                     command: "shutdown",
                     option: egret.args
-                }, function () { return globals.exit(1702); }, true);
+                }, function () {
+                    globals.log(1702);
+                    return globals.exit(0);
+                }, true);
             }
         });
         //for (var i = 0; i < this.upgradeConfigArr.length; i++) {
