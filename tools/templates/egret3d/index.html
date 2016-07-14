@@ -1,0 +1,71 @@
+<!DOCTYPE HTML>
+<html>
+<head>
+    <meta charset="utf-8">
+    <title>Egret</title>
+    <meta id="viewport" name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    
+    <style>
+        html, body {
+            -ms-touch-action: none;
+            background: #ffffff;
+            padding: 0;
+            border: 0;
+            margin: 0;
+            height: 100%;
+        }
+    </style>
+
+    <!--这个标签为通过egret提供的第三方库的方式生成的 javascript 文件。删除 modules_files 标签后，库文件加载列表将不会变化，请谨慎操作！-->
+    <!--modules_files_start-->
+	<script egret="lib" src="libs/modules/egret/egret.js" src-release="libs/modules/egret/egret.min.js"></script>
+	<script egret="lib" src="libs/modules/egret/egret.web.js" src-release="libs/modules/egret/egret.web.min.js"></script>
+	<script egret="lib" src="libs/modules/egret3d/egret3d.js" src-release="libs/modules/egret3d/egret3d.min.js"></script>
+	<!--modules_files_end-->
+	
+    <!--这个标签为不通过egret提供的第三方库的方式使用的 javascript 文件，请将这些文件放在libs下，但不要放在modules下面。-->
+    <!--other_libs_files_start-->
+    <!--other_libs_files_end-->
+
+    <!--这个标签会被替换为项目中所有的 javascript 文件。删除 game_files 标签后，项目文件加载列表将不会变化，请谨慎操作！-->
+    <!--game_files_start-->
+	<script egret="game" src="bin-debug/LoadingUI.js"></script>
+	<script egret="game" src="bin-debug/Main.js"></script>
+	<!--game_files_end-->
+    <script>
+    window.addEventListener("touchmove", function (event) { event.preventDefault(); }, false);
+    if (typeof window.devicePixelRatio != 'undefined' && window.devicePixelRatio > 2) {
+        var meta = document.getElementById("viewport");
+        meta.setAttribute('content', 'width=device-width, initial-scale=' + (2 / window.devicePixelRatio) + ', user-scalable=no');
+    }
+    </script>
+</head>
+<body>
+
+    <div style="margin: auto;width: 100%;height: 100%;" class="egret-player" 
+        data-entry-class="Main"
+        data-orientation="auto"
+        data-scale-mode="noScale"
+        data-frame-rate="30"
+        data-content-width="640"
+        data-content-height="960"
+        data-show-paint-rect="false"
+        data-multi-fingered="2"
+        data-show-fps="false" data-show-log="false"
+        data-log-filter="" data-show-fps-style="x:0,y:0,size:30,textColor:0x00c200,bgAlpha:0.9">
+    	
+    	<div id="loadingCon" style="position:absolute;width:100%;height:100%;background:#ffffff">
+    		<img id="loadingIcon" width="72" height="72" src="resource/logo.png" style="position:absolute;top:50%;left:50%;margin-top:-116px;margin-left:-36px" />
+    	    <div id='descCon'  width="100" height="50" style="position:absolute;top:50%;left:50%;margin-top:-36px;margin-left:-50px"></div>
+    	</div>
+        
+    </div>
+    <script>
+        setTimeout( function () {
+			egret.runEgret();
+		},300);
+    </script>
+    
+</body>
+</html>
