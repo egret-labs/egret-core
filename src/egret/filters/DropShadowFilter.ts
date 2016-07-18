@@ -84,7 +84,7 @@ module egret {
         /**
          * @private
          */
-        private $distance:number;
+        public $distance:number;
 
         /**
          * @language en_US
@@ -113,7 +113,7 @@ module egret {
         /**
          * @private
          */
-        private $angle:number;
+        public $angle:number;
 
         /**
          * @language en_US
@@ -142,7 +142,7 @@ module egret {
         /**
          * @private
          */
-        private $hideObject:boolean;
+        public $hideObject:boolean;
 
         /**
          * @language en_US

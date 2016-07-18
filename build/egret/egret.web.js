@@ -5404,11 +5404,13 @@ var egret;
                     "{" +
                     "const int sampleRadius = 5;" +
                     "const int samples = sampleRadius * 2 + 1;" +
+                    "vec2 blurUv = blur / uTextureSize;" +
                     "vec4 color = vec4(0, 0, 0, 0);" +
                     "vec2 uv = vec2(0.0, 0.0);" +
+                    "blurUv /= float(sampleRadius);" +
                     "for (int i = -sampleRadius; i <= sampleRadius; i++) {" +
-                    "uv.x = vTextureCoord.x + float(i) * blur.x / float(sampleRadius) / uTextureSize.x;" +
-                    "uv.y = vTextureCoord.y + float(i) * blur.y / float(sampleRadius) / uTextureSize.y;" +
+                    "uv.x = vTextureCoord.x + float(i) * blurUv.x;" +
+                    "uv.y = vTextureCoord.y + float(i) * blurUv.y;" +
                     "color += texture2D(uSampler, uv);" +
                     '}' +
                     "color /= float(samples);" +
@@ -5943,7 +5945,7 @@ var egret;
             /**
              * 压入绘制texture指令
              */
-            p.pushDrawTexture = function (texture, count, filter, uv) {
+            p.pushDrawTexture = function (texture, count, filter, textureWidth, textureHeight) {
                 if (count === void 0) { count = 2; }
                 if (filter) {
                     // 目前有滤镜的情况下不会合并绘制
@@ -5952,7 +5954,8 @@ var egret;
                     data.texture = texture;
                     data.filter = filter;
                     data.count = count;
-                    data.uv = uv;
+                    data.textureWidth = textureWidth;
+                    data.textureHeight = textureHeight;
                     this.drawData[this.drawDataLen] = data;
                     this.drawDataLen++;
                 }
@@ -6531,7 +6534,6 @@ var egret;
                 this.shaderManager = null;
                 this.contextLost = false;
                 this.vertSize = 5;
-                this.colorMatrixFilter = null;
                 this.blurFilter = null;
                 this.surface = createCanvas(width, height);
                 this.initWebGL();
@@ -6963,28 +6965,30 @@ var egret;
                     case 0 /* TEXTURE */:
                         var filter = data.filter;
                         var shader;
-                        if (filter && filter.type == "colorTransform") {
-                            shader = this.shaderManager.colorTransformShader;
-                            shader.setMatrix(filter.matrix);
-                        }
-                        else if (filter && filter.type == "blur") {
-                            shader = this.shaderManager.blurShader;
-                            shader.setBlur(filter.blurX, filter.blurY);
-                            shader.setTextureSize(filter.textureWidth, filter.textureHeight);
-                        }
-                        else if (filter && filter.type == "glow") {
-                            shader = this.shaderManager.glowShader;
-                            shader.setDistance(filter.distance);
-                            shader.setAngle(filter.angle);
-                            shader.setColor(filter.$red, filter.$green, filter.$blue);
-                            shader.setAlpha(filter.alpha);
-                            shader.setBlurX(filter.blurX);
-                            shader.setBlurY(filter.blurY);
-                            shader.setStrength(filter.strength);
-                            shader.setInner(filter.inner);
-                            shader.setKnockout(filter.knockout);
-                            shader.setHideObject(filter.hideObject);
-                            shader.setTextureSize(filter.textureWidth, filter.textureHeight);
+                        if (filter) {
+                            if (filter.type == "colorTransform") {
+                                shader = this.shaderManager.colorTransformShader;
+                                shader.setMatrix(filter.$matrix);
+                            }
+                            else if (filter.type == "blur") {
+                                shader = this.shaderManager.blurShader;
+                                shader.setBlur(filter.$blurX, filter.$blurY);
+                                shader.setTextureSize(data.textureWidth, data.textureHeight);
+                            }
+                            else if (filter.type == "glow") {
+                                shader = this.shaderManager.glowShader;
+                                shader.setDistance(filter.$distance || 0);
+                                shader.setAngle(filter.$angle ? filter.$angle / 180 * Math.PI : 0);
+                                shader.setColor(filter.$red / 255, filter.$green / 255, filter.$blue / 255);
+                                shader.setAlpha(filter.$alpha);
+                                shader.setBlurX(filter.$blurX);
+                                shader.setBlurY(filter.$blurY);
+                                shader.setStrength(filter.$strength);
+                                shader.setInner(filter.$inner ? 1 : 0);
+                                shader.setKnockout(filter.$knockout ? 0 : 1);
+                                shader.setHideObject(filter.$hideObject ? 1 : 0);
+                                shader.setTextureSize(data.textureWidth, data.textureHeight);
+                            }
                         }
                         else {
                             shader = this.shaderManager.defaultShader;
@@ -6995,21 +6999,21 @@ var egret;
                         offset += this.drawTextureElements(data, offset);
                         break;
                     case 1 /* RECT */:
-                        shader = this.shaderManager.primitiveShader;
+                        var shader = this.shaderManager.primitiveShader;
                         shader.setProjection(this.projectionX, this.projectionY);
                         this.shaderManager.activateShader(shader, this.vertSize * 4);
                         shader.syncUniforms();
                         offset += this.drawRectElements(data, offset);
                         break;
                     case 2 /* PUSH_MASK */:
-                        shader = this.shaderManager.primitiveShader;
+                        var shader = this.shaderManager.primitiveShader;
                         shader.setProjection(this.projectionX, this.projectionY);
                         this.shaderManager.activateShader(shader, this.vertSize * 4);
                         shader.syncUniforms();
                         offset += this.drawPushMaskElements(data, offset);
                         break;
                     case 3 /* POP_MASK */:
-                        shader = this.shaderManager.primitiveShader;
+                        var shader = this.shaderManager.primitiveShader;
                         shader.setProjection(this.projectionX, this.projectionY);
                         this.shaderManager.activateShader(shader, this.vertSize * 4);
                         shader.syncUniforms();
@@ -7194,36 +7198,16 @@ var egret;
                 output.transform(1, 0, 0, -1, 0, height);
                 this.vao.cacheArrays(output.globalMatrix, output.globalAlpha, 0, 0, width, height, 0, 0, width, height, width, height);
                 output.restoreTransform();
-                var filterData = { type: "", hideObject: 0, distance: 0, angle: 0, alpha: 0, strength: 0, $red: 0, $green: 0, $blue: 0, matrix: null, blurX: 0, blurY: 0, inner: 0, knockout: 0, textureWidth: 0, textureHeight: 0 };
-                if (filter.type == "colorTransform") {
-                    filterData.type = "colorTransform";
-                    filterData.matrix = filter.matrix;
+                var filterData;
+                if (filter.type == "blur") {
+                    // 实现blurx与blurY分开处理，会借用公用filter
+                    // 为了允许公用filter的存在，这里拷贝filter到对象中
+                    filterData = { type: "blur", $blurX: filter.$blurX, $blurY: filter.$blurY };
                 }
-                else if (filter.type == "blur") {
-                    filterData.type = "blur";
-                    filterData.blurX = filter.blurX;
-                    filterData.blurY = filter.blurY;
-                    filterData.textureWidth = width;
-                    filterData.textureHeight = height;
+                else {
+                    filterData = filter;
                 }
-                else if (filter.type == "glow") {
-                    filterData.type = "glow";
-                    filterData.distance = filter.distance || 0;
-                    filterData.angle = filter.angle ? filter.angle / 180 * Math.PI : 0;
-                    filterData.$red = filter.$red / 255;
-                    filterData.$green = filter.$green / 255;
-                    filterData.$blue = filter.$blue / 255;
-                    filterData.alpha = filter.alpha;
-                    filterData.blurX = filter.blurX;
-                    filterData.blurY = filter.blurY;
-                    filterData.strength = filter.strength;
-                    filterData.inner = filter.inner ? 1 : 0;
-                    filterData.knockout = filter.knockout ? 0 : 1;
-                    filterData.hideObject = filter.hideObject ? 1 : 0;
-                    filterData.textureWidth = width;
-                    filterData.textureHeight = height;
-                }
-                this.drawCmdManager.pushDrawTexture(input["rootRenderTarget"].texture, 2, filterData);
+                this.drawCmdManager.pushDrawTexture(input["rootRenderTarget"].texture, 2, filterData, width, height);
                 // 释放掉input
                 if (input != originInput) {
                     web.WebGLRenderBuffer.release(input);

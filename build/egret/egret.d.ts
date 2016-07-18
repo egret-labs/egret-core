@@ -6928,7 +6928,10 @@ declare module egret {
          * @platform Web
          */
         constructor(blurX?: number, blurY?: number, quality?: number);
-        private $quality;
+        /**
+         * @private
+         */
+        $quality: number;
         /**
          * @language en_US
          * The amount of horizontal blur.
@@ -6942,7 +6945,10 @@ declare module egret {
          * @platform Web
          */
         blurX: number;
-        private $blurX;
+        /**
+         * @private
+         */
+        $blurX: number;
         /**
          * @language en_US
          * The amount of vertical blur.
@@ -6956,7 +6962,10 @@ declare module egret {
          * @platform Web
          */
         blurY: number;
-        private $blurY;
+        /**
+         * @private
+         */
+        $blurY: number;
     }
 }
 declare module egret {
@@ -7077,7 +7086,7 @@ declare module egret {
         /**
          * @private
          */
-        private $color;
+        $color: number;
         /**
          * @language en_US
          * The color of the glow.
@@ -7094,7 +7103,7 @@ declare module egret {
         /**
          * @private
          */
-        private $alpha;
+        $alpha: number;
         /**
          * @language en_US
          * The alpha transparency value for the color.
@@ -7111,7 +7120,7 @@ declare module egret {
         /**
          * @private
          */
-        private $blurX;
+        $blurX: number;
         /**
          * @language en_US
          * The amount of horizontal blur.
@@ -7128,7 +7137,7 @@ declare module egret {
         /**
          * @private
          */
-        private $blurY;
+        $blurY: number;
         /**
          * @language en_US
          * The amount of vertical blur.
@@ -7145,7 +7154,7 @@ declare module egret {
         /**
          * @private
          */
-        private $strength;
+        $strength: number;
         /**
          * @language en_US
          * The strength of the imprint or spread.
@@ -7162,7 +7171,7 @@ declare module egret {
         /**
          * @private
          */
-        private $quality;
+        $quality: number;
         /**
          * @language en_US
          * The number of times to apply the filter.
@@ -7179,7 +7188,7 @@ declare module egret {
         /**
          * @private
          */
-        private $inner;
+        $inner: boolean;
         /**
          * @language en_US
          * Specifies whether the glow is an inner glow.
@@ -7196,7 +7205,7 @@ declare module egret {
         /**
          * @private
          */
-        private $knockout;
+        $knockout: boolean;
         /**
          * @language en_US
          * Specifies whether the object has a knockout effect.
@@ -7262,7 +7271,7 @@ declare module egret {
         /**
          * @private
          */
-        private $distance;
+        $distance: number;
         /**
          * @language en_US
          * The offset distance of the bevel.
@@ -7279,7 +7288,7 @@ declare module egret {
         /**
          * @private
          */
-        private $angle;
+        $angle: number;
         /**
          * @language en_US
          * The angle of the bevel.
@@ -7296,7 +7305,7 @@ declare module egret {
         /**
          * @private
          */
-        private $hideObject;
+        $hideObject: boolean;
         /**
          * @language en_US
          * Indicates whether or not the object is hidden.

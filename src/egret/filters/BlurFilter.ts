@@ -70,7 +70,10 @@ module egret {
             this.$quality = quality;
         }
 
-        private $quality:number;
+        /**
+         * @private
+         */
+        public $quality:number;
         
         /**
          * @language en_US
@@ -96,7 +99,10 @@ module egret {
             this.invalidate();
         }
         
-        private $blurX:number;
+        /**
+         * @private
+         */
+        public $blurX:number;
         
         /**
          * @language en_US
@@ -122,6 +128,9 @@ module egret {
             this.invalidate();
         }
         
-        private $blurY:number;
+        /**
+         * @private
+         */
+        public $blurY:number;
     }
 }
