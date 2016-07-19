@@ -101,11 +101,6 @@ module egret.web {
             }
             else {
                 node = displayObject.$getRenderNode();
-                // var filters = displayObject.$getFilters();
-                // if(filters && filters.length > 0) {
-                //     buffer.pushFilters(filters);
-                //     filterPushed = true;
-                // }
             }
 
             if (node) {
@@ -186,10 +181,6 @@ module egret.web {
                     }
                 }
             }
-
-            // if(filterPushed) {
-            //     buffer.popFilters();
-            // }
 
             return drawCalls;
         }

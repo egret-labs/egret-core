@@ -649,31 +649,30 @@ module egret.web {
                 case DRAWABLE_TYPE.TEXTURE:
 
                     var filter = data.filter;
-                    var shader;
-                    if (filter && filter.type == "colorTransform") {
-                        shader = this.shaderManager.colorTransformShader;
-                        shader.setMatrix(filter.matrix);
-                    }
-                    else if (filter && filter.type == "blur") {
-                        shader = this.shaderManager.blurShader;
-                        shader.setBlur(filter.blurX, filter.blurY);
-                        shader.setUv(data.uv);
-                        shader.setTextureSize(filter.textureWidth, filter.textureHeight);
-                    }
-                    else if (filter && filter.type == "glow") {
-                        shader = this.shaderManager.glowShader;
-                        shader.setDistance(filter.distance);
-                        shader.setAngle(filter.angle);
-                        shader.setColor(filter.$red, filter.$green, filter.$blue);
-                        shader.setAlpha(filter.alpha);
-                        shader.setBlurX(filter.blurX);
-                        shader.setBlurY(filter.blurY);
-                        shader.setStrength(filter.strength);
-                        shader.setInner(filter.inner);
-                        shader.setKnockout(filter.knockout);
-                        shader.setTextureSize(filter.textureWidth, filter.textureHeight);
-                    }
-                    else {
+                    var shader:any;
+                    if (filter) {
+                        if(filter.type == "colorTransform") {
+                            shader = this.shaderManager.colorTransformShader;
+                            (<ColorTransformShader>shader).setMatrix(filter.$matrix);
+                        } else if (filter.type == "blur") {
+                            shader = this.shaderManager.blurShader;
+                            (<BlurShader>shader).setBlur(filter.$blurX, filter.$blurY);
+                            (<BlurShader>shader).setTextureSize(data.textureWidth, data.textureHeight);
+                        } else if (filter.type == "glow") {
+                            shader = this.shaderManager.glowShader;
+                            (<GlowShader>shader).setDistance(filter.$distance || 0);
+                            (<GlowShader>shader).setAngle(filter.$angle ? filter.$angle / 180 * Math.PI : 0);
+                            (<GlowShader>shader).setColor(filter.$red / 255, filter.$green / 255, filter.$blue / 255);
+                            (<GlowShader>shader).setAlpha(filter.$alpha);
+                            (<GlowShader>shader).setBlurX(filter.$blurX);
+                            (<GlowShader>shader).setBlurY(filter.$blurY);
+                            (<GlowShader>shader).setStrength(filter.$strength);
+                            (<GlowShader>shader).setInner(filter.$inner ? 1 : 0);
+                            (<GlowShader>shader).setKnockout(filter.$knockout ? 0 : 1);
+                            (<GlowShader>shader).setHideObject(filter.$hideObject ? 1 : 0);
+                            (<GlowShader>shader).setTextureSize(data.textureWidth, data.textureHeight);
+                        }
+                    } else {
                         shader = this.shaderManager.defaultShader;
                     }
                     shader.setProjection(this.projectionX, this.projectionY);
@@ -684,7 +683,7 @@ module egret.web {
                     break;
                 case DRAWABLE_TYPE.RECT:
 
-                    shader = this.shaderManager.primitiveShader;
+                    var shader:any = this.shaderManager.primitiveShader;
                     shader.setProjection(this.projectionX, this.projectionY);
                     this.shaderManager.activateShader(shader, this.vertSize * 4);
                     shader.syncUniforms();
@@ -693,7 +692,7 @@ module egret.web {
                     break;
                 case DRAWABLE_TYPE.PUSH_MASK:
 
-                    shader = this.shaderManager.primitiveShader;
+                    var shader:any = this.shaderManager.primitiveShader;
                     shader.setProjection(this.projectionX, this.projectionY);
                     this.shaderManager.activateShader(shader, this.vertSize * 4);
                     shader.syncUniforms();
@@ -702,7 +701,7 @@ module egret.web {
                     break;
                 case DRAWABLE_TYPE.POP_MASK:
 
-                    shader = this.shaderManager.primitiveShader;
+                    var shader:any = this.shaderManager.primitiveShader;
                     shader.setProjection(this.projectionX, this.projectionY);
                     this.shaderManager.activateShader(shader, this.vertSize * 4);
                     shader.syncUniforms();
@@ -871,21 +870,6 @@ module egret.web {
             }
         }
 
-        private getUv(sourceX, sourceY, sourceWidth, sourceHeight, textureSourceWidth, textureSourceHeight) {
-            var uv = [
-                0, 0,
-                1, 1
-            ];
-            for (var i = 0, l = uv.length; i < l; i += 2) {
-                var u = uv[i];
-                var v = uv[i + 1];
-                // uv
-                uv[i] = (sourceX + u * sourceWidth) / textureSourceWidth;
-                uv[i + 1] = (sourceY + v * sourceHeight) / textureSourceHeight;
-            }
-            return uv;
-        }
-
         /**
          * 向一个renderTarget中绘制
          * */
@@ -901,18 +885,20 @@ module egret.web {
             this.pushBuffer(output);
 
             var originInput = input,
-            temp:WebGLRenderBuffer;
+            temp:WebGLRenderBuffer,
+            width:number = input.rootRenderTarget.width,
+            height:number = input.rootRenderTarget.height;
 
             // 模糊滤镜实现为blurX与blurY的叠加
             if (filter.type == "blur") {
+                if (!this.blurFilter) {
+                    this.blurFilter = new egret.BlurFilter(2, 2);
+                }
+
                 if((<BlurFilter>filter).blurX != 0 && (<BlurFilter>filter).blurY != 0) {
-                    if (!this.blurFilter) {
-                        this.blurFilter = new egret.BlurFilter(2, 2);
-                    }
                     this.blurFilter.blurX = (<BlurFilter>filter).blurX;
                     this.blurFilter.blurY = 0;
-                    var width:number = input.rootRenderTarget.width;
-                    var height:number = input.rootRenderTarget.height;
+                    
                     temp = WebGLRenderBuffer.create(width, height);
                     temp.setTransform(1, 0, 0, 1, 0, 0);
                     temp.globalAlpha = 1;
@@ -921,58 +907,32 @@ module egret.web {
                         WebGLRenderBuffer.release(input);
                     }
                     input = temp;
+
+                    this.blurFilter.blurX = 0;
+                    this.blurFilter.blurY = (<BlurFilter>filter).blurY;
+                } else {
+                    this.blurFilter.blurX = (<BlurFilter>filter).blurX;
+                    this.blurFilter.blurY = (<BlurFilter>filter).blurY;
                 }
+                
+                filter = this.blurFilter;
             }
 
             // 绘制input结果到舞台
-            var width:number = input.rootRenderTarget.width;
-            var height:number = input.rootRenderTarget.height;
-            if (filter.type == "blur"){
-                if (!this.blurFilter) {
-                    this.blurFilter = new egret.BlurFilter(2, 2);
-                }
-                if((<BlurFilter>filter).blurX == 0 || (<BlurFilter>filter).blurY == 0) {
-                    this.blurFilter.blurX = (<BlurFilter>filter).blurX;
-                    this.blurFilter.blurY = (<BlurFilter>filter).blurY;
-                } else {
-                    this.blurFilter.blurX = 0;
-                    this.blurFilter.blurY = (<BlurFilter>filter).blurY;
-                }
-                filter = this.blurFilter;
-            }
             output.saveTransform();
             output.transform(1, 0, 0, -1, 0, height);
             this.vao.cacheArrays(output.globalMatrix, output.globalAlpha, 0, 0, width, height, 0, 0, width, height, width, height);
             output.restoreTransform();
 
-            var filterData = {type: "", distance: 0, angle: 0, alpha: 0, strength: 0, $red: 0, $green: 0, $blue: 0, matrix: null, blurX: 0, blurY: 0, inner: 0, knockout: 0, textureWidth: 0, textureHeight: 0};
-            if(filter.type == "colorTransform") {
-                filterData.type = "colorTransform";
-                filterData.matrix = (<ColorMatrixFilter>filter).matrix;
-            } else if(filter.type == "blur") {
-                filterData.type = "blur";
-                filterData.blurX = (<BlurFilter>filter).blurX;
-                filterData.blurY = (<BlurFilter>filter).blurY;
-                filterData.textureWidth = width;
-                filterData.textureHeight = height;
-            } else if(filter.type == "glow") {
-                filterData.type = "glow";
-                filterData.distance = (<DropShadowFilter>filter).distance || 0;
-                filterData.angle = (<DropShadowFilter>filter).angle ? (<DropShadowFilter>filter).angle / 180 * Math.PI : 0;
-                filterData.$red = (<GlowFilter>filter).$red / 255;
-                filterData.$green = (<GlowFilter>filter).$green / 255;
-                filterData.$blue = (<GlowFilter>filter).$blue / 255;
-                filterData.alpha = (<GlowFilter>filter).alpha;
-                filterData.blurX = (<GlowFilter>filter).blurX;
-                filterData.blurY = (<GlowFilter>filter).blurY;
-                filterData.strength = (<GlowFilter>filter).strength;
-                filterData.inner = (<GlowFilter>filter).inner ? 1 : 0;
-                filterData.knockout = (<GlowFilter>filter).knockout ? 0 : 1;
-                
-                filterData.textureWidth = width;
-                filterData.textureHeight = height;
+            var filterData:any;
+            if(filter.type == "blur") {
+                // 实现blurx与blurY分开处理，会借用公用filter
+                // 为了允许公用filter的存在，这里拷贝filter到对象中
+                filterData = {type: "blur", $blurX: (<BlurFilter>filter).$blurX, $blurY: (<BlurFilter>filter).$blurY};
+            } else {
+                filterData = filter;
             }
-            this.drawCmdManager.pushDrawTexture(input["rootRenderTarget"].texture, 2, filterData);
+            this.drawCmdManager.pushDrawTexture(input["rootRenderTarget"].texture, 2, filterData, width, height);
 
             // 释放掉input
             if(input != originInput) {
@@ -982,7 +942,6 @@ module egret.web {
             this.popBuffer();
         }
 
-        private colorMatrixFilter = null;
         private blurFilter = null;
 
         public static blendModesForGL:any = null;

@@ -78,7 +78,7 @@ module egret.web {
         /**
          * 压入绘制texture指令
          */
-        public pushDrawTexture(texture:any, count:number = 2, filter?:any, uv?:any):void {
+        public pushDrawTexture(texture:any, count:number = 2, filter?:any, textureWidth?:number, textureHeight?:number):void {
             if(filter) {
                 // 目前有滤镜的情况下不会合并绘制
                 var data = this.drawData[this.drawDataLen] || {};
@@ -86,7 +86,8 @@ module egret.web {
                 data.texture = texture;
                 data.filter = filter;
                 data.count = count;
-                data.uv = uv;
+                data.textureWidth = textureWidth;
+                data.textureHeight = textureHeight;
                 this.drawData[this.drawDataLen] = data;
                 this.drawDataLen++;
             } else {

@@ -47,21 +47,33 @@ module egret {
         /**
          * @language en_US
          * Initializes a BlurFilter object.
+         * @param blurX {number} The amount of horizontal blur. Valid values are 0 to 255 (floating point).
+         * @param blurY {number} The amount of vertical blur. Valid values are 0 to 255 (floating point). 
+         * @param quality {number} The number of times to apply the filter.
          * @version Egret 3.1.0
          * @platform Web
          */
         /**
          * @language zh_CN
          * 创建一个 BlurFilter 对象。
+         * @param blurX {number} 水平模糊量。有效值为 0 到 255（浮点）。
+         * @param blurY {number} 垂直模糊量。有效值为 0 到 255（浮点）。
+         * @param quality {number} 应用滤镜的次数。暂未实现。
          * @version Egret 3.1.0
          * @platform Web
          */
-        constructor(blurX:number, blurY:number) {
+        constructor(blurX:number = 4, blurY:number = 4, quality:number = 1) {
             super();
             this.type = "blur";
-            this.blurX = blurX;
-            this.blurY = blurY;
+            this.$blurX = blurX;
+            this.$blurY = blurY;
+            this.$quality = quality;
         }
+
+        /**
+         * @private
+         */
+        public $quality:number;
         
         /**
          * @language en_US
@@ -87,7 +99,10 @@ module egret {
             this.invalidate();
         }
         
-        private $blurX:number;
+        /**
+         * @private
+         */
+        public $blurX:number;
         
         /**
          * @language en_US
@@ -113,6 +128,9 @@ module egret {
             this.invalidate();
         }
         
-        private $blurY:number;
+        /**
+         * @private
+         */
+        public $blurY:number;
     }
 }
