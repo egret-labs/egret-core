@@ -907,13 +907,11 @@ module egret.web {
                         WebGLRenderBuffer.release(input);
                     }
                     input = temp;
-                }
-                
-                if((<BlurFilter>filter).blurX == 0 || (<BlurFilter>filter).blurY == 0) {
-                    this.blurFilter.blurX = (<BlurFilter>filter).blurX;
+
+                    this.blurFilter.blurX = 0;
                     this.blurFilter.blurY = (<BlurFilter>filter).blurY;
                 } else {
-                    this.blurFilter.blurX = 0;
+                    this.blurFilter.blurX = (<BlurFilter>filter).blurX;
                     this.blurFilter.blurY = (<BlurFilter>filter).blurY;
                 }
                 

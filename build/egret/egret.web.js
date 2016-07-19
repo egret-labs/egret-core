@@ -7184,13 +7184,11 @@ var egret;
                             web.WebGLRenderBuffer.release(input);
                         }
                         input = temp;
-                    }
-                    if (filter.blurX == 0 || filter.blurY == 0) {
-                        this.blurFilter.blurX = filter.blurX;
+                        this.blurFilter.blurX = 0;
                         this.blurFilter.blurY = filter.blurY;
                     }
                     else {
-                        this.blurFilter.blurX = 0;
+                        this.blurFilter.blurX = filter.blurX;
                         this.blurFilter.blurY = filter.blurY;
                     }
                     filter = this.blurFilter;
@@ -7282,28 +7280,6 @@ var egret;
          */
         var WebGLRenderBuffer = (function () {
             function WebGLRenderBuffer(width, height) {
-                // private filters = [];
-                // public pushFilters(filters) {
-                //     this.filters.push(filters);
-                // }
-                // public popFilters() {
-                //     this.filters.pop();
-                // }
-                // public getFilters() {
-                //     var filters = [];
-                //     for(var i = 0; i < this.filters.length; i++) {
-                //         var _filters = this.filters[i];
-                //         if(_filters) {
-                //             for(var j = 0; j < _filters.length; j++) {
-                //                 var filter = _filters[j];
-                //                 if(filter && filter.type != "glow") {// 暂时屏蔽掉发光滤镜
-                //                     filters.push(filter);
-                //                 }
-                //             }
-                //         }
-                //     }
-                //     return filters;
-                // }
                 this.globalAlpha = 1;
                 /**
                  * stencil state
@@ -7833,9 +7809,6 @@ var egret;
                         }
                     }
                 }
-                // if(filterPushed) {
-                //     buffer.popFilters();
-                // }
                 return drawCalls;
             };
             /**
