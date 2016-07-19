@@ -193,6 +193,7 @@ module egret {
          * @private
          */
         $setText(value:string):boolean {
+            value = String(value);
             var values = this.$BitmapText;
             if (value == values[sys.BitmapTextKeys.text])
                 return false;
