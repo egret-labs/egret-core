@@ -48,7 +48,7 @@ module egret.sys {
      */
     export function $popSoundChannel(channel:SoundChannel):boolean {
         var index:number = usingChannel.indexOf(channel);
-        if (index < 0) {
+        if (index >= 0) {
             usingChannel.splice(index, 1);
             return true;
         }
