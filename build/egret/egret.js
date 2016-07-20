@@ -3590,6 +3590,7 @@ var egret;
                 this.$refreshImageData();
             }
             else {
+                egret.Texture.$removeDisplayObject(this, oldBitmapData);
                 this.setImageData(null, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0);
                 this.$invalidateContentBounds();
                 return true;
