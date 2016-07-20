@@ -1686,10 +1686,14 @@ module egret {
         }
 
         public set filters(value:Array<Filter>) {
+            var filters:Array<Filter> = this.$DisplayObject[Keys.filters];
+            if(!filters && !value) {
+                this.$DisplayObject[Keys.filters] = value;
+                return;
+            }
             this.$invalidateContentBounds();
             //需要通知子项
             this.$invalidate(true);
-            var filters:Array<Filter> = this.$DisplayObject[Keys.filters];
             if(filters && filters.length) {
                 var length:number = filters.length;
                 for(var i:number = 0 ; i < length ; i++) {

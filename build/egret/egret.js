@@ -2730,10 +2730,14 @@ var egret;
                 return this.$DisplayObject[20 /* filters */];
             }
             ,function (value) {
+                var filters = this.$DisplayObject[20 /* filters */];
+                if (!filters && !value) {
+                    this.$DisplayObject[20 /* filters */] = value;
+                    return;
+                }
                 this.$invalidateContentBounds();
                 //需要通知子项
                 this.$invalidate(true);
-                var filters = this.$DisplayObject[20 /* filters */];
                 if (filters && filters.length) {
                     var length = filters.length;
                     for (var i = 0; i < length; i++) {
