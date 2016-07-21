@@ -29,7 +29,7 @@ class CompileLark {
         ];
 
 
-        utils.clean(outputDir,FileUtil.escapePath(path.join(outputDir,"egret3d")));
+        utils.clean(outputDir,FileUtil.escapePath(path.join(outputDir,"egret3d")),FileUtil.escapePath(path.join(outputDir,"nest")));
 
         for (var i = 0; i < manifest.modules.length; i++) {
             var m = manifest.modules[i];
