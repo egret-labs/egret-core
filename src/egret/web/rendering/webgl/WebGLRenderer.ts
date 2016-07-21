@@ -140,11 +140,18 @@ module egret.web {
                         buffer.setTransform(m.a, m.b, m.c, m.d, m.tx + matrix.tx, m.ty + matrix.ty);
                     }
                     buffer.globalAlpha = renderAlpha;
-                    // TODO 这里纪录buffer的colorTransformFilter
-                    // buffer.context.$filter = 
-                    this.renderNode(node, buffer);
-                    // TODO 这里清除buffer的colorTransformFilter
-                    // buffer.context.$filter = null;
+
+                    var filters = displayObject.$getFilters();// TODO 此处调用轻微影响效率
+                    if(filters && filters.length == 1 && filters[0].type == "colorTransform" && !displayObject.$children) {
+                        // 这里纪录buffer的colorTransformFilter
+                        buffer.context.$filter = <ColorMatrixFilter>filters[0];
+                        this.renderNode(node, buffer);
+                        // 这里清除buffer的colorTransformFilter
+                        buffer.context.$filter = null;
+                    } else {
+                        this.renderNode(node, buffer);
+                    }
+                    
                     node.needRedraw = false;
                 }
             }
@@ -160,7 +167,7 @@ module egret.web {
                         continue;
                     }
                     var filters = child.$getFilters();
-                    if(filters && filters.length > 0) {// TODO 这里判断 (filter.length != 1 || filter[0].type != "colorTransform" || child.$children)
+                    if(filters && filters.length > 0 && !(filters.length == 1 && filters[0].type == "colorTransform" && !child.$children) ) {
                         drawCalls += this.drawWithFilter(child, buffer, dirtyList, matrix, clipRegion, root);
                     }
                     else if ((child.$blendMode !== 0 ||

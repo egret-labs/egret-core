@@ -6851,7 +6851,8 @@ var egret;
                 var transform = buffer.globalMatrix;
                 var alpha = buffer.globalAlpha;
                 var count = meshIndices ? meshIndices.length / 3 : 2;
-                this.drawCmdManager.pushDrawTexture(texture, count);
+                // 应用$filter，因为只可能是colorMatrixFilter，最后两个参数可不传
+                this.drawCmdManager.pushDrawTexture(texture, count, this.$filter);
                 this.vao.cacheArrays(transform, alpha, sourceX, sourceY, sourceWidth, sourceHeight, destX, destY, destWidth, destHeight, textureWidth, textureHeight, meshUVs, meshVertices, meshIndices);
             };
             /**
@@ -7769,7 +7770,17 @@ var egret;
                             buffer.setTransform(m.a, m.b, m.c, m.d, m.tx + matrix.tx, m.ty + matrix.ty);
                         }
                         buffer.globalAlpha = renderAlpha;
-                        this.renderNode(node, buffer);
+                        var filters = displayObject.$getFilters(); // TODO 此处调用轻微影响效率
+                        if (filters && filters.length == 1 && filters[0].type == "colorTransform" && !displayObject.$children) {
+                            // 这里纪录buffer的colorTransformFilter
+                            buffer.context.$filter = filters[0];
+                            this.renderNode(node, buffer);
+                            // 这里清除buffer的colorTransformFilter
+                            buffer.context.$filter = null;
+                        }
+                        else {
+                            this.renderNode(node, buffer);
+                        }
                         node.needRedraw = false;
                     }
                 }
@@ -7785,7 +7796,7 @@ var egret;
                             continue;
                         }
                         var filters = child.$getFilters();
-                        if (filters && filters.length > 0) {
+                        if (filters && filters.length > 0 && !(filters.length == 1 && filters[0].type == "colorTransform" && !child.$children)) {
                             drawCalls += this.drawWithFilter(child, buffer, dirtyList, matrix, clipRegion, root);
                         }
                         else if ((child.$blendMode !== 0 ||
