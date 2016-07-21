@@ -74,16 +74,13 @@ namespace dragonBones {
                     const animateble = this._animatebles[i];
                     if (animateble) {
                         animateble.advanceTime(passedTime);
-
-                        if (r > 0) {
-                            this._animatebles[i - r] = animateble;
-                        }
                     } else {
                         r++;
                     }
                 }
 
                 if (r > 0) {
+                    r = 0;
                     l = this._animatebles.length;
 
                     for (; i < l; ++i) {
@@ -117,6 +114,10 @@ namespace dragonBones {
         public add(value: IAnimateble): void {
             if (value && this._animatebles.indexOf(value) < 0) {
                 this._animatebles.push(value);
+
+                if (DragonBones.DEBUG && value instanceof Armature) {
+                    DragonBones.addArmature(value);
+                }
             }
         }
         /**
@@ -129,6 +130,9 @@ namespace dragonBones {
             let index = this._animatebles.indexOf(value);
             if (index >= 0) {
                 this._animatebles[index] = null;
+                if (DragonBones.DEBUG && value instanceof Armature) {
+                    DragonBones.removeArmature(value);
+                }
             }
         }
         /**
