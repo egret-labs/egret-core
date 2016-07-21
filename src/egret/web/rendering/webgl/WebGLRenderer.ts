@@ -191,6 +191,15 @@ module egret.web {
         private drawWithFilter(displayObject: DisplayObject, buffer: WebGLRenderBuffer, dirtyList: egret.sys.Region[],
             matrix: Matrix, clipRegion: sys.Region, root: DisplayObject):number {
             var drawCalls = 0;
+            var filters = displayObject.$getFilters();
+
+            if(filters.length == 1 && filters[0].type == "colorTransform" && !displayObject.$children) {
+                buffer.context.$filter = <ColorMatrixFilter>filters[0];
+                drawCalls += this.drawDisplayObject(displayObject, buffer, dirtyList, matrix,
+                                displayObject.$displayList, clipRegion, root);
+                buffer.context.$filter = null;
+                return drawCalls;
+            }
 
             // 获取显示对象的链接矩阵
             var displayMatrix = Matrix.create();
@@ -221,7 +230,6 @@ module egret.web {
                 buffer.globalAlpha = 1;
                 buffer.setTransform(1, 0, 0, 1, region.minX + matrix.tx, region.minY + matrix.ty);
                 // 绘制结果的时候，应用滤镜
-                var filters = displayObject.$getFilters();
                 buffer.context.drawTargetWidthFilters(filters, displayBuffer);
             }
 

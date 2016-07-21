@@ -6847,7 +6847,8 @@ var egret;
                 var transform = buffer.globalMatrix;
                 var alpha = buffer.globalAlpha;
                 var count = meshIndices ? meshIndices.length / 3 : 2;
-                this.drawCmdManager.pushDrawTexture(texture, count);
+                // 应用$filter，因为只可能是colorMatrixFilter，最后两个参数可不传
+                this.drawCmdManager.pushDrawTexture(texture, count, this.$filter);
                 this.vao.cacheArrays(transform, alpha, sourceX, sourceY, sourceWidth, sourceHeight, destX, destY, destWidth, destHeight, textureWidth, textureHeight, meshUVs, meshVertices, meshIndices);
             };
             /**
@@ -7812,6 +7813,13 @@ var egret;
              */
             p.drawWithFilter = function (displayObject, buffer, dirtyList, matrix, clipRegion, root) {
                 var drawCalls = 0;
+                var filters = displayObject.$getFilters();
+                if (filters.length == 1 && filters[0].type == "colorTransform" && !displayObject.$children) {
+                    buffer.context.$filter = filters[0];
+                    drawCalls += this.drawDisplayObject(displayObject, buffer, dirtyList, matrix, displayObject.$displayList, clipRegion, root);
+                    buffer.context.$filter = null;
+                    return drawCalls;
+                }
                 // 获取显示对象的链接矩阵
                 var displayMatrix = egret.Matrix.create();
                 displayMatrix.copyFrom(displayObject.$getConcatenatedMatrix());
@@ -7835,7 +7843,6 @@ var egret;
                     buffer.globalAlpha = 1;
                     buffer.setTransform(1, 0, 0, 1, region.minX + matrix.tx, region.minY + matrix.ty);
                     // 绘制结果的时候，应用滤镜
-                    var filters = displayObject.$getFilters();
                     buffer.context.drawTargetWidthFilters(filters, displayBuffer);
                 }
                 renderBufferPool.push(displayBuffer);
