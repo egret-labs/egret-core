@@ -103,9 +103,15 @@ module egret {
          * @private
          */
         private setMatrix(value:Array<number>):void {
-            for (var i = 0; i < 20; i++) {
-                this.$matrix[i] = (value && value[i]) || ( (i == 0 || i == 6 || i == 12 || i == 18) ? 1 : 0 );
-            } 
+            if(value) {
+                for (var i = 0; i < 20; i++) {
+                    this.$matrix[i] = value[i];
+                } 
+            } else {
+                for (var i = 0; i < 20; i++) {
+                    this.$matrix[i] = (i == 0 || i == 6 || i == 12 || i == 18) ? 1 : 0;
+                } 
+            }
         }
     }
 }

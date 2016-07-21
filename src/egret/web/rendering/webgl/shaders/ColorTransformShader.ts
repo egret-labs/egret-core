@@ -43,16 +43,12 @@ module egret.web {
             "void main(void) {\n" +
                 "vec4 texColor = texture2D(uSampler, vTextureCoord);\n" +
                 "vec4 locColor = texColor * matrix;\n" +
-                "vec4 transformColor = vec4(1.0, 1.0, 1.0, 1.0) * matrix;\n" +
                 "locColor += colorAdd;\n" +
-                "transformColor += colorAdd;\n" +
                 "if(locColor.a <= 0.0){\n" +
                     "discard;\n" +
                 "}\n" +
-                "if(transformColor.a > 1.0){\n" +
-                    "transformColor.a = 1.0;\n" +
-                "}\n" +
-                "gl_FragColor = vColor*vec4(locColor.rgb*transformColor.a,locColor.a);\n" +
+                "locColor = clamp(locColor, 0., 1.);" +
+                "gl_FragColor = vColor * vec4(locColor.rgb * locColor.a, locColor.a);\n" +
             "}";
 
         public uniforms = {
