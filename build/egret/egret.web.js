@@ -7770,17 +7770,7 @@ var egret;
                             buffer.setTransform(m.a, m.b, m.c, m.d, m.tx + matrix.tx, m.ty + matrix.ty);
                         }
                         buffer.globalAlpha = renderAlpha;
-                        var filters = displayObject.$getFilters(); // TODO 此处调用轻微影响效率
-                        if (filters && filters.length == 1 && filters[0].type == "colorTransform" && !displayObject.$children) {
-                            // 这里纪录buffer的colorTransformFilter
-                            buffer.context.$filter = filters[0];
-                            this.renderNode(node, buffer);
-                            // 这里清除buffer的colorTransformFilter
-                            buffer.context.$filter = null;
-                        }
-                        else {
-                            this.renderNode(node, buffer);
-                        }
+                        this.renderNode(node, buffer);
                         node.needRedraw = false;
                     }
                 }
@@ -7796,7 +7786,7 @@ var egret;
                             continue;
                         }
                         var filters = child.$getFilters();
-                        if (filters && filters.length > 0 && !(filters.length == 1 && filters[0].type == "colorTransform" && !child.$children)) {
+                        if (filters && filters.length > 0) {
                             drawCalls += this.drawWithFilter(child, buffer, dirtyList, matrix, clipRegion, root);
                         }
                         else if ((child.$blendMode !== 0 ||
@@ -7827,6 +7817,13 @@ var egret;
              */
             p.drawWithFilter = function (displayObject, buffer, dirtyList, matrix, clipRegion, root) {
                 var drawCalls = 0;
+                var filters = displayObject.$getFilters();
+                if (filters.length == 1 && filters[0].type == "colorTransform" && !displayObject.$children) {
+                    buffer.context.$filter = filters[0];
+                    drawCalls += this.drawDisplayObject(displayObject, buffer, dirtyList, matrix, displayObject.$displayList, clipRegion, root);
+                    buffer.context.$filter = null;
+                    return drawCalls;
+                }
                 // 获取显示对象的链接矩阵
                 var displayMatrix = egret.Matrix.create();
                 displayMatrix.copyFrom(displayObject.$getConcatenatedMatrix());
@@ -7850,7 +7847,6 @@ var egret;
                     buffer.globalAlpha = 1;
                     buffer.setTransform(1, 0, 0, 1, region.minX + matrix.tx, region.minY + matrix.ty);
                     // 绘制结果的时候，应用滤镜
-                    var filters = displayObject.$getFilters();
                     buffer.context.drawTargetWidthFilters(filters, displayBuffer);
                 }
                 renderBufferPool.push(displayBuffer);
