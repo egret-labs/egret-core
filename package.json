@@ -428,6 +428,16 @@
         "defaultWidth":640,
         "defaultHeight":1136,
         "modules": [ "egret", "game", "res", "gui" ]
+      },
+      {
+        "name": "egret3d",
+        "displayName": "Egret 3D 项目",
+        "language": "TypeScript",
+        "tag": "game,app,TypeScript",
+        "description": "创建一个Egret 3D 项目",
+        "defaultWidth":640,
+        "defaultHeight":960,
+        "modules": [ "egret", "egret3d"]
       }
     ],
     "scaleModes": [
