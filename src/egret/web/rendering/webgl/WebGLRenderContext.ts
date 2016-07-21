@@ -506,7 +506,8 @@ module egret.web {
             var alpha = buffer.globalAlpha;
 
             var count = meshIndices ? meshIndices.length / 3 : 2;
-            this.drawCmdManager.pushDrawTexture(texture, count);
+            // 应用$filter，因为只可能是colorMatrixFilter，最后两个参数可不传
+            this.drawCmdManager.pushDrawTexture(texture, count, this.$filter);
 
             this.vao.cacheArrays(transform, alpha, sourceX, sourceY, sourceWidth, sourceHeight, destX, destY, destWidth, destHeight, textureWidth, textureHeight,
                 meshUVs, meshVertices, meshIndices);
@@ -833,6 +834,11 @@ module egret.web {
                 gl.blendFunc(blendModeWebGL[0], blendModeWebGL[1]);
             }
         }
+
+        // 记录一个colorTransformFilter
+        // 这是一个优化，实现物体在只有一个变色滤镜的情况下，以最简单方式渲染
+        // 在$filter有值的情况下，drawImage要注意应用此filter
+        public $filter:ColorMatrixFilter;
 
         /**
          * 应用滤镜绘制给定的render target
