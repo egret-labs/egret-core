@@ -1,5 +1,12 @@
 namespace dragonBones {
     /**
+     * @private
+     */
+    export type EventStringType =
+        string | 'start' | 'loopComplete' | 'complete' |
+        'fadeIn' | 'fadeInComplete' | 'fadeOut' | 'fadeOutComplete' |
+        'frameEvent' | 'soundEvent';
+    /**
      * @language zh_CN
      * 事件接口。
      * @version DragonBones 4.5
@@ -20,7 +27,7 @@ namespace dragonBones {
          * @returns  [true: 包含, false: 不包含]
          * @version DragonBones 4.5
          */
-        hasEvent(type: string): boolean;
+        hasEvent(type: EventStringType): boolean;
         /**
          * @language zh_CN
          * 添加事件。
@@ -28,7 +35,7 @@ namespace dragonBones {
          * @param listener 事件回调。
          * @version DragonBones 4.5
          */
-        addEvent(type: string, listener: Function, target: any): void;
+        addEvent(type: EventStringType, listener: Function, target: any): void;
         /**
          * @language zh_CN
          * 移除事件。
@@ -36,7 +43,7 @@ namespace dragonBones {
          * @param listener 事件回调。
          * @version DragonBones 4.5
          */
-        removeEvent(type: string, listener: Function, target: any): void;
+        removeEvent(type: EventStringType, listener: Function, target: any): void;
     }
     /**
      * @language zh_CN
@@ -110,7 +117,7 @@ namespace dragonBones {
          * 事件类型。
          * @version DragonBones 4.5
          */
-        public type: string;
+        public type: EventStringType;
         /**
          * @language zh_CN
          * 事件名称。 (帧标签的名称或声音的名称)
@@ -171,6 +178,13 @@ namespace dragonBones {
             this.slot = null;
             this.animationState = null;
             this.userData = null;
+        }
+
+        /**
+         * @see #animationState
+         */
+        public get animationName(): string {
+            return this.animationState.name;
         }
     }
 }

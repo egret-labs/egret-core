@@ -55,6 +55,13 @@ namespace dragonBones {
             }
         }
         /**
+         * @deprecated
+         * @see dragonBones.BaseFactory#removeDragonBonesData()
+         */
+        public dispose(): void {
+            this.returnToPool();
+        }
+        /**
          * @private
          */
         public abstract generateTextureData(): TextureData;

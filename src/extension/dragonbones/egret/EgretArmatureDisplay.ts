@@ -16,7 +16,7 @@ namespace dragonBones {
         /**
          * @private
          */
-        public constructor(type: string, bubbles?: boolean, cancelable?: boolean, data?: any) {
+        public constructor(type: EventStringType, bubbles?: boolean, cancelable?: boolean, data?: any) {
             super(type, bubbles, cancelable, data);
         }
         /**
@@ -32,7 +32,7 @@ namespace dragonBones {
             return this.eventObject.name;
         }
         /**
-         * @see dragonBones.EventObject#animationState
+         * @see dragonBones.EventObject#animationName
          */
         public get animationName(): string {
             return this.eventObject.animationState.name;
@@ -127,31 +127,29 @@ namespace dragonBones {
      * @inheritDoc
      */
     export class EgretArmatureDisplay extends egret.DisplayObjectContainer implements IArmatureDisplay {
+        private static _clock: WorldClock = null;
+        private static _clockHandler(time: number): boolean {
+            const passedTime = time - EgretArmatureDisplay._clock.time;
+            EgretArmatureDisplay._clock.advanceTime(passedTime * 0.001);
+            EgretArmatureDisplay._clock.time = time;
+            return false;
+        }
         /**
          * @private
          */
         public _armature: Armature;
-        /**
-         * @private
-         */
-        protected _passedTime: number;
 
-        private _time: number;
         /**
          * @private
          */
         public constructor() {
             super();
-        }
-        /**
-         * @private
-         */
-        private _advanceTimeHandler(time: number): boolean {
-            this._passedTime = time - this._time;
-            this._armature.advanceTime(this._passedTime * 0.001);
-            this._time = time;
 
-            return false;
+            if (!EgretArmatureDisplay._clock) {
+                EgretArmatureDisplay._clock = new WorldClock();
+                EgretArmatureDisplay._clock.time = egret.getTimer();
+                egret.startTick(EgretArmatureDisplay._clockHandler, EgretArmatureDisplay);
+            }
         }
         /**
          * @inheritDoc
@@ -160,10 +158,6 @@ namespace dragonBones {
             this.advanceTimeBySelf(false);
 
             this._armature = null;
-
-            this._passedTime = 0;
-
-            this._time = 0;
         }
         /**
          * @inheritDoc
@@ -177,19 +171,25 @@ namespace dragonBones {
         /**
          * @inheritDoc
          */
-        public hasEvent(type: string): boolean {
+        public advanceTime(passedTime: number): void {
+            this._armature.advanceTime(passedTime);
+        }
+        /**
+         * @inheritDoc
+         */
+        public hasEvent(type: EventStringType): boolean {
             return this.hasEventListener(type);
         }
         /**
          * @inheritDoc
          */
-        public addEvent(type: string, listener: Function, target: any): void {
+        public addEvent(type: EventStringType, listener: (event: EgretEvent) => void, target: any): void {
             this.addEventListener(type, listener, target);
         }
         /**
          * @inheritDoc
          */
-        public removeEvent(type: string, listener: Function, target: any): void {
+        public removeEvent(type: EventStringType, listener: (event: EgretEvent) => void, target: any): void {
             this.removeEventListener(type, listener, target);
         }
         /**
@@ -197,10 +197,9 @@ namespace dragonBones {
          */
         public advanceTimeBySelf(on: Boolean): void {
             if (on) {
-                this._time = egret.getTimer();
-                egret.startTick(this._advanceTimeHandler, this);
+                EgretArmatureDisplay._clock.add(this._armature);
             } else {
-                egret.stopTick(this._advanceTimeHandler, this);
+                EgretArmatureDisplay._clock.remove(this._armature);
             }
         }
         /**
@@ -285,10 +284,6 @@ namespace dragonBones {
             this.texture = texture;
             ObjectDataParser.getInstance().parseTextureAtlasData(rawData, this, scale);
         }
-
-        public dispose(): void {
-            this.returnToPool();
-        }
     }
     /**
      * @deprecated
@@ -308,5 +303,12 @@ namespace dragonBones {
         public static getInstance(): EgretArmatureDisplay {
             return <EgretArmatureDisplay>Armature._soundEventManager;
         }
+    }
+    /**
+     * @deprecated
+     * @see dragonBones.Armature#cacheFrameRate
+     * @see dragonBones.Armature#enableAnimationCache()
+     */
+    export class AnimationCacheManager {
     }
 }

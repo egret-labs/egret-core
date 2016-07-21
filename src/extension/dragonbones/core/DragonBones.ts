@@ -75,16 +75,72 @@ namespace dragonBones {
      * DragonBones
      */
     export class DragonBones {
+        /**
+         * @private
+         */
         public static PI_D: number = Math.PI * 2;
+        /**
+         * @private
+         */
         public static PI_H: number = Math.PI / 2;
+        /**
+         * @private
+         */
         public static PI_Q: number = Math.PI / 4;
+        /**
+         * @private
+         */
         public static ANGLE_TO_RADIAN: number = Math.PI / 180;
+        /**
+         * @private
+         */
         public static RADIAN_TO_ANGLE: number = 180 / Math.PI;
+        /**
+         * @private
+         */
         public static SECOND_TO_MILLISECOND: number = 1000;
+        /**
+         * @private
+         */
         public static NO_TWEEN: number = 100;
 
-        public static VERSION: string = "4.7";
-
+        public static VERSION: string = "4.7.1";
+        /**
+         * @private
+         */
+        public static DEBUG: boolean = true;
+        /**
+         * @private
+         */
+        public static _armatures: Array<Armature> = [];
+        /**
+         * @private
+         */
         public constructor() { }
+        /**
+         * @private
+         */
+        public static hasArmature(value: Armature): boolean {
+            return DragonBones._armatures.indexOf(value) >= 0;
+        }
+        /**
+         * @private
+         */
+        public static addArmature(value: Armature): void {
+            if (value && DragonBones._armatures.indexOf(value) < 0) {
+                DragonBones._armatures.push(value);
+            }
+        }
+        /**
+         * @private
+         */
+        public static removeArmature(value: Armature): void {
+            if (value) {
+                const index = DragonBones._armatures.indexOf(value);
+                if (index >= 0) {
+                    DragonBones._armatures.splice(index, 1);
+                }
+            }
+        }
     }
 }

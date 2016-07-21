@@ -18,14 +18,14 @@ namespace dragonBones {
 
         protected _isReverse: boolean;
         protected _hasAsynchronyTimeline: boolean;
+        protected _frameRate: number;
         protected _keyFrameCount: number;
         protected _frameCount: number;
         protected _position: number;
         protected _duration: number;
-        protected _clipDutation: number;
+        protected _animationDutation: number;
         protected _timeScale: number;
         protected _timeOffset: number;
-        protected _timeToFrameSccale: number;
         protected _currentFrame: T;
         protected _armature: Armature;
         protected _animationState: AnimationState;
@@ -44,14 +44,14 @@ namespace dragonBones {
 
             this._isReverse = false;
             this._hasAsynchronyTimeline = false;
+            this._frameRate = 0;
             this._keyFrameCount = 0;
             this._frameCount = 0;
             this._position = 0;
             this._duration = 0;
-            this._clipDutation = 0;
+            this._animationDutation = 0;
             this._timeScale = 1;
             this._timeOffset = 0;
-            this._timeToFrameSccale = 0;
             this._currentFrame = null;
             this._armature = null;
             this._animationState = null;
@@ -62,64 +62,6 @@ namespace dragonBones {
         protected _onArriveAtFrame(isUpdate: boolean): void { }
 
         protected _onCrossFrame(frame: T): void {
-            const actions = frame.actions;
-            for (let i = 0, l = actions.length; i < l; ++i) {
-                const actionData = actions[i];
-                if (actionData.slot) {
-                    const slot = this._armature.getSlot(actionData.slot.name);
-                    if (slot) {
-                        const childArmature = slot.childArmature;
-                        if (childArmature) {
-                            childArmature._action = actionData;
-                        }
-                    }
-                } else if (actionData.bone) {
-                    const slots = this._armature.getSlots();
-                    for (let i = 0, l = slots.length; i < l; ++i) {
-                        const eachChildArmature = slots[i].childArmature;
-                        if (eachChildArmature) {
-                            eachChildArmature._action = actionData;
-                        }
-                    }
-                } else {
-                    this._armature._action = actionData;
-                }
-            }
-
-            const eventDispatcher = this._armature._display;
-            const events = frame.events;
-            for (let i = 0, l = events.length; i < l; ++i) {
-                const eventData = events[i];
-
-                let eventType = "";
-                switch (eventData.type) {
-                    case EventType.Frame:
-                        eventType = EventObject.FRAME_EVENT;
-                        break;
-
-                    case EventType.Sound:
-                        eventType = EventObject.SOUND_EVENT;
-                        break;
-                }
-
-                if (eventDispatcher.hasEvent(eventType)) {
-                    const eventObject = BaseObject.borrowObject(EventObject);
-                    eventObject.animationState = this._animationState;
-
-                    if (eventData.bone) {
-                        eventObject.bone = this._armature.getBone(eventData.bone.name);
-                    }
-
-                    if (eventData.slot) {
-                        eventObject.slot = this._armature.getSlot(eventData.slot.name);
-                    }
-
-                    eventObject.name = eventData.name;
-                    eventObject.data = eventData.data;
-
-                    this._armature._bufferEvent(eventObject, eventType);
-                }
-            }
         }
 
         protected _setCurrentTime(value: number): boolean {
@@ -131,7 +73,7 @@ namespace dragonBones {
 
                 value *= this._timeScale;
                 if (this._timeOffset != 0) {
-                    value += this._timeOffset * this._clipDutation;
+                    value += this._timeOffset * this._animationDutation;
                 }
 
                 if (playTimes > 0 && (value >= totalTimes || value <= -totalTimes)) {
@@ -194,7 +136,7 @@ namespace dragonBones {
                     break;
 
                 default:
-                    this._currentFrame = this._timeline.frames[Math.floor(this._currentTime * this._timeToFrameSccale)];
+                    this._currentFrame = this._timeline.frames[Math.floor(this._currentTime * this._frameRate)];
                     this._onArriveAtFrame(false);
                     this._onUpdateFrame(false);
                     break;
@@ -210,15 +152,15 @@ namespace dragonBones {
 
             const isMainTimeline = <any>this == this._animationState._timeline;
 
-            this._hasAsynchronyTimeline = isMainTimeline || this._animationState.clip.hasAsynchronyTimeline;
+            this._hasAsynchronyTimeline = isMainTimeline || this._animationState.animationData.hasAsynchronyTimeline;
+            this._frameRate = this._armature.armatureData.frameRate;
             this._keyFrameCount = this._timeline.frames.length;
-            this._frameCount = this._animationState.clip.frameCount;
+            this._frameCount = this._animationState.animationData.frameCount;
             this._position = this._animationState._position;
             this._duration = this._animationState._duration;
-            this._clipDutation = this._animationState._clipDutation;
+            this._animationDutation = this._animationState.animationData.duration;
             this._timeScale = isMainTimeline ? 1 : (1 / this._timeline.scale);
             this._timeOffset = isMainTimeline ? 0 : this._timeline.offset;
-            this._timeToFrameSccale = this._frameCount / this._clipDutation;
 
             this._onFadeIn();
 
@@ -232,32 +174,30 @@ namespace dragonBones {
             const prevTime = this._currentTime;
 
             if (!this._isCompleted && this._setCurrentTime(time) && this._keyFrameCount) {
-                const currentFrameIndex = this._keyFrameCount > 1 ? Math.floor(this._currentTime * this._timeToFrameSccale) : 0;
+                const currentFrameIndex = this._keyFrameCount > 1 ? Math.floor(this._currentTime * this._frameRate) : 0;
                 const currentFrame = this._timeline.frames[currentFrameIndex];
+
                 if (this._currentFrame != currentFrame) {
                     if (this._keyFrameCount > 1) {
                         let crossedFrame = this._currentFrame;
                         this._currentFrame = currentFrame;
 
+                        if (!crossedFrame) {
+                            const prevFrameIndex = Math.floor(prevTime * this._frameRate);
+                            crossedFrame = this._timeline.frames[prevFrameIndex];
+                            if (!this._isReverse && prevTime <= crossedFrame.position) {
+                                crossedFrame = crossedFrame.prev;
+                            }
+                        }
+
                         if (this._isReverse) {
                             while (crossedFrame != currentFrame) {
-                                if (!crossedFrame) {
-                                    const prevFrameIndex = Math.floor(prevTime * this._timeToFrameSccale);
-                                    crossedFrame = this._timeline.frames[prevFrameIndex];
-                                }
-
                                 this._onCrossFrame(crossedFrame);
                                 crossedFrame = crossedFrame.prev;
                             }
                         } else {
                             while (crossedFrame != currentFrame) {
-                                if (crossedFrame) {
-                                    crossedFrame = crossedFrame.next;
-                                } else {
-                                    const prevFrameIndex = Math.floor(prevTime * this._timeToFrameSccale);
-                                    crossedFrame = this._timeline.frames[prevFrameIndex];
-                                }
-
+                                crossedFrame = crossedFrame.next;
                                 this._onCrossFrame(crossedFrame);
                             }
                         }
