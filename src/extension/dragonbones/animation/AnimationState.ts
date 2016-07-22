@@ -75,10 +75,6 @@ namespace dragonBones {
          */
         public _duration: number;
         /**
-         * @private TimelineState
-         */
-        public _clipDutation: number;
-        /**
          * @private Animation, TimelineState
          */
         public _weightResult: number;
@@ -168,7 +164,6 @@ namespace dragonBones {
             this._layer = 0;
             this._position = 0;
             this._duration = 0;
-            this._clipDutation = 0;
             this._weightResult = 0;
             this._fadeProgress = 0;
             this._group = null;
@@ -304,7 +299,6 @@ namespace dragonBones {
 
             this._position = position;
             this._duration = duration;
-            this._clipDutation = this._animationData.duration;
             this._time = time;
             this._isPausePlayhead = pausePlayhead;
             if (this.fadeTotalTime == 0) {
@@ -471,45 +465,55 @@ namespace dragonBones {
                     time = this._timeline._currentTime;
                 }
 
+                let isUpdatesTimeline = true;
+                let isUpdatesBoneTimeline = true;
+
                 if (this._fadeProgress >= 1 && index == 0 && this._armature.cacheFrameRate > 0) {
                     const cacheFrameIndex = Math.floor(this._timeline._currentTime * this._animationData.cacheTimeToFrameScale);
-                    this._armature._cacheFrameIndex = cacheFrameIndex;
+                    if (this._armature._cacheFrameIndex == cacheFrameIndex) {
+                        isUpdatesTimeline = false;
+                        isUpdatesBoneTimeline = false;
+                    } else {
+                        this._armature._cacheFrameIndex = cacheFrameIndex;
 
-                    if (this._armature._animation._animationStateDirty) {
-                        this._armature._animation._animationStateDirty = false;
+                        if (this._armature._animation._animationStateDirty) {
+                            this._armature._animation._animationStateDirty = false;
 
-                        for (let i = 0, l = this._boneTimelines.length; i < l; ++i) {
-                            const boneTimeline = this._boneTimelines[i];
-                            boneTimeline.bone._cacheFrames = (<BoneTimelineData>boneTimeline._timeline).cachedFrames;
+                            for (let i = 0, l = this._boneTimelines.length; i < l; ++i) {
+                                const boneTimeline = this._boneTimelines[i];
+                                boneTimeline.bone._cacheFrames = (<BoneTimelineData>boneTimeline._timeline).cachedFrames;
+                            }
+
+                            for (let i = 0, l = this._slotTimelines.length; i < l; ++i) {
+                                const slotTimeline = this._slotTimelines[i];
+                                slotTimeline.slot._cacheFrames = (<SlotTimelineData>slotTimeline._timeline).cachedFrames;
+                            }
                         }
 
-                        for (let i = 0, l = this._slotTimelines.length; i < l; ++i) {
-                            const slotTimeline = this._slotTimelines[i];
-                            slotTimeline.slot._cacheFrames = (<SlotTimelineData>slotTimeline._timeline).cachedFrames;
-                        }
-                    }
-
-                    if (!this._animationData.cachedFrames[cacheFrameIndex] || this._animationData.hasBoneTimelineEvent) {
-                        this._animationData.cachedFrames[cacheFrameIndex] = true;
-
-                        for (let i = 0, l = this._boneTimelines.length; i < l; ++i) {
-                            this._boneTimelines[i].update(time);
+                        if (this._animationData.cachedFrames[cacheFrameIndex]) {
+                            isUpdatesBoneTimeline = false;
+                        } else {
+                            this._animationData.cachedFrames[cacheFrameIndex] = true;
                         }
                     }
                 } else {
                     this._armature._cacheFrameIndex = -1;
+                }
 
-                    for (let i = 0, l = this._boneTimelines.length; i < l; ++i) {
-                        this._boneTimelines[i].update(time);
+                if (isUpdatesTimeline) {
+                    if (isUpdatesBoneTimeline) {
+                        for (let i = 0, l = this._boneTimelines.length; i < l; ++i) {
+                            this._boneTimelines[i].update(time);
+                        }
                     }
-                }
 
-                for (let i = 0, l = this._slotTimelines.length; i < l; ++i) {
-                    this._slotTimelines[i].update(time);
-                }
+                    for (let i = 0, l = this._slotTimelines.length; i < l; ++i) {
+                        this._slotTimelines[i].update(time);
+                    }
 
-                for (let i = 0, l = this._ffdTimelines.length; i < l; ++i) {
-                    this._ffdTimelines[i].update(time);
+                    for (let i = 0, l = this._ffdTimelines.length; i < l; ++i) {
+                        this._ffdTimelines[i].update(time);
+                    }
                 }
             }
         }
@@ -690,15 +694,6 @@ namespace dragonBones {
          * @see dragonBones.objects.AnimationData
          * @version DragonBones 3.0
          */
-        public get clip(): AnimationData {
-            return this._animationData;
-        }
-        /**
-         * @language zh_CN
-         * 动画数据。
-         * @see dragonBones.objects.AnimationData
-         * @version DragonBones 3.0
-         */
         public get animationData(): AnimationData {
             return this._animationData;
         }
@@ -777,5 +772,14 @@ namespace dragonBones {
          * @deprecated
          */
         public autoTween: boolean = false;
+
+        /**
+         * @deprecated
+         * @see #animationData
+         * @version DragonBones 3.0
+         */
+        public get clip(): AnimationData {
+            return this._animationData;
+        }
     }
 }

@@ -40,6 +40,10 @@ namespace dragonBones {
          */
         public name: string;
         /**
+         * @private
+         */
+        public parent: DragonBonesData = null;
+        /**
          * @language zh_CN
          * 所有的骨骼数据。
          * @see dragonBones.BoneData
@@ -67,6 +71,10 @@ namespace dragonBones {
          * @version DragonBones 3.0
          */
         public animations: Map<AnimationData> = {};
+        /**
+         * @private
+         */
+        public actions: Array<ActionData> = [];
 
         private _boneDirty: boolean;
         private _slotDirty: boolean;
@@ -89,6 +97,7 @@ namespace dragonBones {
             this.cacheFrameRate = 0;
             this.type = ArmatureType.Armature;
             this.name = null;
+            this.parent = null;
 
             for (let i in this.bones) {
                 this.bones[i].returnToPool();
@@ -108,6 +117,14 @@ namespace dragonBones {
             for (let i in this.animations) {
                 this.animations[i].returnToPool();
                 delete this.animations[i];
+            }
+
+            if (this.actions.length) {
+                for (let i = 0, l = this.actions.length; i < l; ++i) {
+                    this.actions[i].returnToPool();
+                }
+
+                this.actions.length = 0;
             }
 
             this._boneDirty = false;
@@ -265,7 +282,6 @@ namespace dragonBones {
         public getBone(name: string): BoneData {
             return this.bones[name];
         }
-
         /**
          * @language zh_CN
          * 获取指定名称的插槽数据。
@@ -276,7 +292,6 @@ namespace dragonBones {
         public getSlot(name: string): SlotData {
             return this.slots[name];
         }
-
         /**
          * @language zh_CN
          * 获取指定名称的皮肤数据。
@@ -287,7 +302,6 @@ namespace dragonBones {
         public getSkin(name: string): SkinData {
             return name ? this.skins[name] : this._defaultSkin;
         }
-
         /**
          * @language zh_CN
          * 获取指定名称的动画数据。
@@ -485,6 +499,10 @@ namespace dragonBones {
         /**
          * @private
          */
+        public actions: Array<ActionData> = [];
+        /**
+         * @private
+         */
         public constructor() {
             super();
         }
@@ -498,6 +516,14 @@ namespace dragonBones {
             this.name = null;
             this.parent = null;
             this.color = null;
+
+            if (this.actions.length) {
+                for (let i = 0, l = this.actions.length; i < l; ++i) {
+                    this.actions[i].returnToPool();
+                }
+
+                this.actions.length = 0;
+            }
         }
     }
     /**
@@ -546,7 +572,7 @@ namespace dragonBones {
             if (value && value.slot && !this.slots[value.slot.name]) {
                 this.slots[value.slot.name] = value;
             } else {
-                //throw new Error();
+                throw new Error();
             }
         }
         /**

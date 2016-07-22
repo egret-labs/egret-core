@@ -17,10 +17,6 @@ namespace dragonBones {
          */
         public hasAsynchronyTimeline: boolean;
         /**
-         * @private
-         */
-        public hasBoneTimelineEvent: boolean;
-        /**
          * @language zh_CN
          * 持续的帧数。
          * @version DragonBones 3.0
@@ -135,7 +131,7 @@ namespace dragonBones {
 
             const cacheFrameCount = Math.max(Math.floor(this.frameCount * this.scale * value), 1);
 
-            this.cacheTimeToFrameScale = cacheFrameCount / (this.duration + 0.000001);
+            this.cacheTimeToFrameScale = cacheFrameCount / (this.duration + 0.000001); //
             this.cachedFrames.length = 0;
             this.cachedFrames.length = cacheFrameCount;
 

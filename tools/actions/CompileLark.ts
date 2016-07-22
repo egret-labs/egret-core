@@ -4,7 +4,7 @@ import utils = require('../lib/utils');
 import Compiler = require('./Compiler');
 import FileUtil = require('../lib/FileUtil');
 import tsclark = require("../lib/typescript/tsclark");
-
+import path = require('path');
 
 var ANY = 'any';
 
@@ -29,7 +29,7 @@ class CompileLark {
         ];
 
 
-        utils.clean(outputDir);
+        utils.clean(outputDir,FileUtil.escapePath(path.join(outputDir,"egret3d")),FileUtil.escapePath(path.join(outputDir,"nest")));
 
         for (var i = 0; i < manifest.modules.length; i++) {
             var m = manifest.modules[i];

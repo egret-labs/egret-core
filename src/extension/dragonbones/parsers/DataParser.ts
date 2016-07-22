@@ -10,7 +10,7 @@ namespace dragonBones {
 
         protected static TEXTURE_ATLAS: string = "TextureAtlas";
         protected static SUB_TEXTURE: string = "SubTexture";
-        protected static FORMAT: string = "format";;
+        protected static FORMAT: string = "format";
         protected static IMAGE_PATH: string = "imagePath";
         protected static WIDTH: string = "width";
         protected static HEIGHT: string = "height";
@@ -69,6 +69,7 @@ namespace dragonBones {
         protected static SOUND: string = "sound";
         protected static ACTION: string = "action";
         protected static ACTIONS: string = "actions";
+        protected static DEFAULT_ACTIONS: string = "defaultActions";
 
         protected static X: string = "x";
         protected static Y: string = "y";
@@ -240,8 +241,8 @@ namespace dragonBones {
          */
         public abstract parseTextureAtlasData(rawData: any, textureAtlasData: TextureAtlasData, scale: number): void;
 
-        private _getTimelineFrameMatrix(animation: AnimationData, timeline: BoneTimelineData, position: number, transform: Transform): void {
-            const frameIndex = Math.floor(position * animation.frameCount / animation.duration);
+        private _getTimelineFrameMatrix(animation: AnimationData, timeline: BoneTimelineData, position: number, transform: Transform): void { // Support 2.x ~ 3.x data.
+            const frameIndex = Math.floor(position * animation.frameCount / animation.duration); // uint()
             if (timeline.frames.length == 1 || frameIndex >= timeline.frames.length) {
                 transform.copyFrom(timeline.frames[0].transform);
             } else {
@@ -271,7 +272,82 @@ namespace dragonBones {
             }
         }
 
-        protected _globalToLocal(armature: ArmatureData): void {
+        protected _mergeFrameToAnimationTimeline<T extends FrameData<T>>(frame: T, actions: Array<ActionData>, events: Array<EventData>): void {
+            const frameStart = Math.floor(frame.position * this._armature.frameRate); // uint()
+            const frames = this._animation.frames;
+
+            if (frames.length == 0) {
+                const startFrame = BaseObject.borrowObject(AnimationFrameData); // Add start frame.
+                startFrame.position = 0;
+
+                if (this._animation.frameCount > 1) {
+                    frames.length = this._animation.frameCount + 1; // One more count for zero duration frame.
+
+                    const endFrame = BaseObject.borrowObject(AnimationFrameData); // Add end frame to keep animation timeline has two different frames atleast.
+                    endFrame.position = this._animation.frameCount / this._armature.frameRate;
+                        
+                    frames[0] = startFrame;
+                    frames[this._animation.frameCount] = endFrame;
+                }
+            }
+
+            let insertedFrame: AnimationFrameData = null;
+            const replacedFrame = frames[frameStart];
+
+            if (replacedFrame && (frameStart == 0 || frames[frameStart - 1] == replacedFrame.prev)) { // Key frame.
+                insertedFrame = replacedFrame;
+            } else {
+                insertedFrame = BaseObject.borrowObject(AnimationFrameData); // Create frame.
+                insertedFrame.position = frameStart / this._armature.frameRate;
+                frames[frameStart] = insertedFrame;
+
+                for (let i = frameStart + 1, l = frames.length; i < l; ++i) { // Clear replaced frame.
+                    if (replacedFrame && frames[i] == replacedFrame) {
+                        frames[i] = null;
+                    }
+                }
+            }
+
+            if (actions) { // Merge actions.
+                for (let i = 0, l = actions.length; i < l; ++i) {
+                    insertedFrame.actions.push(actions[i]);
+                }
+            }
+
+            if (events) { // Merge events.
+                for (let i = 0, l = events.length; i < l; ++i) {
+                    insertedFrame.events.push(events[i]);
+                }
+            }
+
+            // Modify frame link and duration.
+            let prevFrame: AnimationFrameData = null;
+            let nextFrame: AnimationFrameData = null;
+            for (let i = 0, l = frames.length; i < l; ++i) {
+                const currentFrame = frames[i];
+                if (currentFrame && nextFrame != currentFrame) {
+                    nextFrame = currentFrame;
+
+                    if (prevFrame) {
+                        nextFrame.prev = prevFrame;
+                        prevFrame.next = nextFrame;
+                        prevFrame.duration = nextFrame.position - prevFrame.position;
+                    }
+
+                    prevFrame = nextFrame;
+                } else {
+                    frames[i] = prevFrame;
+                }
+            }
+
+            nextFrame.duration = this._animation.duration - nextFrame.position;
+
+            nextFrame = frames[0];
+            prevFrame.next = nextFrame;
+            nextFrame.prev = prevFrame;
+        }
+
+        protected _globalToLocal(armature: ArmatureData): void { // Support 2.x ~ 3.x data.
             const bones = armature.sortedBones.reverse();
             for (let i = 0, l = bones.length; i < l; ++i) {
                 const bone = bones[i];

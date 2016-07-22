@@ -1,6 +1,6 @@
 //////////////////////////////////////////////////////////////////////////////////////
 //
-//  Copyright (c) 2014-2015, Egret Technology Inc.
+//  Copyright (c) 2014-present, Egret Technology.
 //  All rights reserved.
 //  Redistribution and use in source and binary forms, with or without
 //  modification, are permitted provided that the following conditions are met:
@@ -51,6 +51,7 @@ module egret {
          * @param quality {number} The number of times to apply the filter.
          * @param inner {boolean} Specifies whether the glow is an inner glow. The value true indicates an inner glow. The default is false, an outer glow (a glow around the outer edges of the object).
          * @param knockout {number} Specifies whether the object has a knockout effect. A value of true makes the object's fill transparent and reveals the background color of the document. The default value is false (no knockout effect).
+         * @param hideObject {number} Indicates whether or not the object is hidden. The value true indicates that the object itself is not drawn; only the shadow is visible. The default is false, meaning that the object is shown.
          * @version Egret 3.1.4
          * @platform Web
          */
@@ -68,20 +69,22 @@ module egret {
          * @param quality {number} 应用滤镜的次数。暂未实现。
          * @param inner {boolean} 指定发光是否为内侧发光。值 true 指定发光是内侧发光。值 false 指定发光是外侧发光（对象外缘周围的发光）。
          * @param knockout {number} 指定对象是否具有挖空效果。值为 true 将使对象的填充变为透明，并显示文档的背景颜色。
+         * @param hideObject {number} 表示是否隐藏对象。如果值为 true，则表示没有绘制对象本身，只有阴影是可见的。默认值为 false（显示对象）。
          * @version Egret 3.1.4
          * @platform Web
          */
-        constructor(distance:number = 4.0, angle:number = 45, color:number = 0, alpha:number = 1.0, blurX:number = 4.0, blurY:number = 4.0, strength:number = 1.0, quality:number = 1, inner:boolean = false, knockout:boolean = false) {
+        constructor(distance:number = 4.0, angle:number = 45, color:number = 0, alpha:number = 1.0, blurX:number = 4.0, blurY:number = 4.0, strength:number = 1.0, quality:number = 1, inner:boolean = false, knockout:boolean = false, hideObject:boolean = false) {
             super(color, alpha, blurX, blurY, strength, quality, inner, knockout);
 
             this.$distance = distance;
             this.$angle = angle;
+            this.$hideObject = hideObject;
         }
 
         /**
          * @private
          */
-        private $distance:number;
+        public $distance:number;
 
         /**
          * @language en_US
@@ -110,7 +113,7 @@ module egret {
         /**
          * @private
          */
-        private $angle:number;
+        public $angle:number;
 
         /**
          * @language en_US
@@ -133,6 +136,35 @@ module egret {
                 return;
             }
             this.$angle = value;
+            this.invalidate();
+        }
+
+        /**
+         * @private
+         */
+        public $hideObject:boolean;
+
+        /**
+         * @language en_US
+         * Indicates whether or not the object is hidden.
+         * @version Egret 3.1.4
+         * @platform Web
+         */
+        /**
+         * @language zh_CN
+         * 表示是否隐藏对象。
+         * @version Egret 3.1.4
+         * @platform Web
+         */
+        public get hideObject():boolean {
+            return this.$hideObject;
+        }
+
+        public set hideObject(value:boolean) {
+            if(this.$hideObject == value) {
+                return;
+            }
+            this.$hideObject = value;
             this.invalidate();
         }
     }

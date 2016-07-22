@@ -52,7 +52,7 @@ namespace dragonBones {
         * @param passedTime 前进的时间。 (以秒为单位)
         * @version DragonBones 3.0
         */
-        advanceTime(passedTime: Number): void;
+        advanceTime(passedTime: number): void;
     }
     /**
      * @language zh_CN
@@ -429,9 +429,7 @@ namespace dragonBones {
                 }
             }
 
-            if (fadeInTime == 0) {
-                this._armature._delayAdvanceTime = 0;
-            }
+            this._armature.advanceTime(0);
 
             return this._lastAnimationState;
         }
@@ -498,6 +496,7 @@ namespace dragonBones {
         public gotoAndStopByTime(animationName: string, time: number = 0): AnimationState {
             const animationState = this.gotoAndPlayByTime(animationName, time, 1);
             if (animationState) {
+                this._isPlaying = false;
                 animationState.stop();
             }
 
@@ -515,6 +514,7 @@ namespace dragonBones {
         public gotoAndStopByFrame(animationName: string, frame: number = 0): AnimationState {
             const animationState = this.gotoAndPlayByFrame(animationName, frame, 1);
             if (animationState) {
+                this._isPlaying = false;
                 animationState.stop();
             }
 
@@ -532,6 +532,7 @@ namespace dragonBones {
         public gotoAndStopByProgress(animationName: string, progress: number = 0): AnimationState {
             const animationState = this.gotoAndPlayByProgress(animationName, progress, 1);
             if (animationState) {
+                this._isPlaying = false;
                 animationState.stop();
             }
 

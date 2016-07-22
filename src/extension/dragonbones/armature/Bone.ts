@@ -143,7 +143,7 @@ namespace dragonBones {
          */
         private _updateGlobalTransformMatrix(): void {
             if (this._parent) {
-                const parentRotation = this._parent.global.skewY; // Only inherit skew y
+                const parentRotation = this._parent.global.skewY; // Only inherit skew y.
                 const parentMatrix = this._parent.globalTransformMatrix;
 
                 if (this.inheritScale) {
@@ -254,6 +254,10 @@ namespace dragonBones {
             parentGlobal.skewX += ikRadianA;
             parentGlobal.skewY += ikRadianA;
             parentGlobal.toMatrix(this._parent.globalTransformMatrix);
+            this._parent._transformDirty = BoneTransformDirty.Self;
+
+            this.global.x = parentGlobal.x + Math.cos(parentGlobal.skewY) * lP;
+            this.global.y = parentGlobal.y + Math.sin(parentGlobal.skewY) * lP;
 
             const ikRadianB =
                 (
@@ -263,8 +267,7 @@ namespace dragonBones {
 
             this.global.skewX += ikRadianB;
             this.global.skewY += ikRadianB;
-            this.global.x = parentGlobal.x + Math.cos(parentGlobal.skewY) * lP;
-            this.global.y = parentGlobal.y + Math.sin(parentGlobal.skewY) * lP;
+
             this.global.toMatrix(this.globalTransformMatrix);
         }
         /**
@@ -365,13 +368,12 @@ namespace dragonBones {
             if (cacheFrameIndex >= 0) {
                 const cacheFrame = this._cacheFrames[cacheFrameIndex];
 
-                if (this.globalTransformMatrix == cacheFrame) // Same cache.
-                {
+                if (this.globalTransformMatrix == cacheFrame) { // Same cache.
                     this._transformDirty = BoneTransformDirty.None;
                 } else if (cacheFrame) { // Has been Cached.
                     this._transformDirty = BoneTransformDirty.All; // For update children and ik children.
                     this.globalTransformMatrix = cacheFrame;
-                } else if (
+                } else if ( // Dirty.
                     this._transformDirty == BoneTransformDirty.All ||
                     (this._parent && this._parent._transformDirty != BoneTransformDirty.None) ||
                     (this._ik && this.ikWeight > 0 && this._ik._transformDirty != BoneTransformDirty.None)
@@ -381,13 +383,13 @@ namespace dragonBones {
                 } else if (this.globalTransformMatrix != this._globalTransformMatrix) { // Same cache but not cached yet.
                     this._transformDirty = BoneTransformDirty.None;
                     this._cacheFrames[cacheFrameIndex] = this.globalTransformMatrix;
-                } else {
+                } else { // Dirty.
                     this._transformDirty = BoneTransformDirty.Self;
                     this.globalTransformMatrix = this._globalTransformMatrix;
                 }
             } else if (
                 this._transformDirty == BoneTransformDirty.All ||
-                (this._parent && this._parent._transformDirty) ||
+                (this._parent && this._parent._transformDirty != BoneTransformDirty.None) ||
                 (this._ik && this.ikWeight > 0 && this._ik._transformDirty != BoneTransformDirty.None)
             ) {
                 this._transformDirty = BoneTransformDirty.All; // For update children and ik children.

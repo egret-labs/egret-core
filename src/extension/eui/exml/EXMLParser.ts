@@ -1,6 +1,6 @@
 //////////////////////////////////////////////////////////////////////////////////////
 //
-//  Copyright (c) 2014-2015, Egret Technology Inc.
+//  Copyright (c) 2014-present, Egret Technology.
 //  All rights reserved.
 //  Redistribution and use in source and binary forms, with or without
 //  modification, are permitted provided that the following conditions are met:
@@ -154,7 +154,7 @@ module eui.sys {
          * @param codeText 执行的javascript代码
          * @param classStr 类名
          */
-        public $parseCode(codeText:string,classStr:string):{new():any}{
+        public $parseCode(codeText:string, classStr:string):{new():any} {
             //传入的是编译后的js字符串
             var className = classStr ? classStr : "$exmlClass" + innerClassCount++;
             var clazz = eval(codeText);
@@ -183,6 +183,7 @@ module eui.sys {
             }
             return clazz;
         }
+
         /**
          * @private
          * 编译指定的XML对象为JavaScript代码。
@@ -899,15 +900,18 @@ module eui.sys {
                 if (firstKey != HOST_COMPONENT && this.skinParts.indexOf(firstKey) == -1) {
                     value = HOST_COMPONENT + "." + value;
                 }
-                if(!haveState){
-                    this.bindings.push(new EXBinding(node.attributes["id"], key, value));
+                if (!haveState) {
+                    if (node != this.currentXML) {
+                        this.bindings.push(new EXBinding("this." + node.attributes["id"], key, value));
+                    } else {
+                        this.bindings.push(new EXBinding("this", key, value));
+                    }
                     value = "";
-                }else{
-                    if(stateCallBack){
+                } else {
+                    if (stateCallBack) {
                         stateCallBack(true);
                     }
                 }
-
             }
             else if (type == RECTANGLE) {
                 if (DEBUG) {
@@ -929,18 +933,18 @@ module eui.sys {
                         break;
                     case "number":
                         if (value.indexOf("#") == 0) {
-                            if(DEBUG && isNaN(<any>value.substring(1))) {
+                            if (DEBUG && isNaN(<any>value.substring(1))) {
                                 egret.$warn(2021, this.currentClassName, key, value);
                             }
-                            value = "0x" + value.substring(1);                            
+                            value = "0x" + value.substring(1);
                         }
                         else if (value.indexOf("%") != -1) {
-                            if(DEBUG && isNaN(<any>value.substr(0, value.length - 1))) {
+                            if (DEBUG && isNaN(<any>value.substr(0, value.length - 1))) {
                                 egret.$warn(2021, this.currentClassName, key, value);
                             }
-                            value = (parseFloat(value.substr(0, value.length - 1))).toString();                            
+                            value = (parseFloat(value.substr(0, value.length - 1))).toString();
                         }
-                        else if(DEBUG && isNaN(<any>value)) {
+                        else if (DEBUG && isNaN(<any>value)) {
                             egret.$warn(2021, this.currentClassName, key, value);
                         }
                         break;
@@ -1349,7 +1353,7 @@ module eui.sys {
                             var key = name.substring(0, index);
                             key = this.formatKey(key, value);
                             var isBinding:boolean = false;
-                            var value = this.formatValue(key, value, node, true,function(vl){
+                            var value = this.formatValue(key, value, node, true, function (vl) {
                                 isBinding = vl;
                             });
                             if (!value) {
@@ -1361,10 +1365,10 @@ module eui.sys {
                             if (l > 0) {
                                 for (var j = 0; j < l; j++) {
                                     state = states[j];
-                                    if(!isBinding){
+                                    if (!isBinding) {
                                         state.addOverride(new EXSetProperty(id, key, value));
-                                    }else{
-                                        state.addOverride(new EXSetStateProperty(id, key, "\""+value+"\""));
+                                    } else {
+                                        state.addOverride(new EXSetStateProperty(id, key, "\"" + value + "\""));
                                     }
                                 }
                             }

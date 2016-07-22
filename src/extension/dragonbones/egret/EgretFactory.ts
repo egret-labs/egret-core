@@ -20,9 +20,9 @@ namespace dragonBones {
         /**
          * @private
          */
-        protected _generateTextureAtlasData(textureAtlasData: TextureAtlasData, textureAtlas: any): TextureAtlasData {
+        protected _generateTextureAtlasData(textureAtlasData: EgretTextureAtlasData, textureAtlas: egret.Texture): EgretTextureAtlasData {
             if (textureAtlasData) {
-                (<EgretTextureAtlasData>textureAtlasData).texture = <egret.Texture>textureAtlas;
+                textureAtlasData.texture = textureAtlas;
             } else {
                 textureAtlasData = BaseObject.borrowObject(EgretTextureAtlasData);
             }
@@ -58,7 +58,6 @@ namespace dragonBones {
 
             slot.name = slotData.name;
             slot._rawDisplay = new egret.Bitmap();
-            slot._meshDisplay = new egret.Mesh();
 
             for (let i = 0, l = slotDisplayDataSet.displays.length; i < l; ++i) {
                 const displayData = slotDisplayDataSet.displays[i];
@@ -76,13 +75,26 @@ namespace dragonBones {
                             displayData.textureData = this._getTextureData(dataPackage.dataName, displayData.name);
                         }
 
-                        displayList.push(egret.Capabilities.renderMode == "webgl" ? slot._meshDisplay : slot._rawDisplay);
+                        if (egret.Capabilities.renderMode == "webgl") {
+                            if (!slot._meshDisplay) {
+                                slot._meshDisplay = new egret.Mesh();
+                            }
+
+                            displayList.push(slot._meshDisplay);
+                        } else {
+                            displayList.push(slot._rawDisplay);
+                        }
                         break;
 
                     case DisplayType.Armature:
                         const childArmature = this.buildArmature(displayData.name, dataPackage.dataName);
                         if (childArmature) {
-                            childArmature.animation.play();
+                            if (slotData.actions.length > 0) {
+                                childArmature._action = slotData.actions[slotData.actions.length - 1];
+                                childArmature.advanceTime(0);
+                            } else {
+                                childArmature.animation.play();
+                            }
                         }
 
                         displayList.push(childArmature);
@@ -119,6 +131,21 @@ namespace dragonBones {
         }
         /**
          * @language zh_CN
+         * 获取带有指定贴图的显示对象。
+         * @param textureName 指定的贴图名称。
+         * @param dragonBonesName 指定的龙骨数据名称，如果未设置，将检索所有的龙骨数据。
+         * @version DragonBones 3.0
+         */
+        public getTextureDisplay(textureName: string, dragonBonesName: string = null): egret.Bitmap {
+            const textureData = <EgretTextureData>this._getTextureData(dragonBonesName, textureName);
+            if (textureData) {
+                return new egret.Bitmap(textureData.texture);
+            }
+
+            return null;
+        }
+        /**
+         * @language zh_CN
          * 获取全局声音事件管理器。
          * @version DragonBones 4.5
          */
@@ -145,7 +172,7 @@ namespace dragonBones {
          * @see dragonBones.BaseFactory#removeSkeletonData()
          */
         public removeSkeletonData(dragonBonesName: string): void {
-            this.removeSkeletonData(dragonBonesName);
+            this.removeDragonBonesData(dragonBonesName);
         }
         /**
          * @deprecated

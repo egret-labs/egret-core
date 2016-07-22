@@ -5,25 +5,11 @@ namespace dragonBones {
      * @version DragonBones 4.5
      */
     export abstract class BaseObject {
-        /**
-         * @private
-         */
         private static _hashCode: number = 0;
-        /**
-         * @private
-         */
         private static _defaultMaxCount: number = 5000;
-        /**
-         * @private
-         */
         private static _maxCountMap: Map<number> = {};
-        /**
-         * @private
-         */
         private static _poolsMap: Map<Array<BaseObject>> = {};
-        /**
-         * @private
-         */
+        
         private static _returnObject(object: BaseObject): void {
             const objectConstructor = <typeof BaseObject>object.constructor;
             const classType = String(objectConstructor);

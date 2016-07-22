@@ -3,9 +3,6 @@ namespace dragonBones {
      * @private
      */
     export class AnimationTimelineState extends TimelineState<AnimationFrameData, AnimationData> {
-        /**
-         * @private
-         */
         public static toString(): string {
             return "[Class dragonBones.AnimationTimelineState]";
         }
@@ -22,6 +19,67 @@ namespace dragonBones {
             super._onClear();
 
             this._isStarted = false;
+        }
+
+        protected _onCrossFrame(frame: AnimationFrameData): void {
+            const actions = frame.actions;
+            for (let i = 0, l = actions.length; i < l; ++i) {
+                const actionData = actions[i];
+                if (actionData.slot) {
+                    const slot = this._armature.getSlot(actionData.slot.name);
+                    if (slot) {
+                        const childArmature = slot.childArmature;
+                        if (childArmature) {
+                            childArmature._action = actionData;
+                        }
+                    }
+                } else if (actionData.bone) {
+                    const slots = this._armature.getSlots();
+                    for (let i = 0, l = slots.length; i < l; ++i) {
+                        const eachChildArmature = slots[i].childArmature;
+                        if (eachChildArmature) {
+                            eachChildArmature._action = actionData;
+                        }
+                    }
+                } else {
+                    this._armature._action = actionData;
+                }
+            }
+
+            const eventDispatcher = this._armature._display;
+            const events = frame.events;
+            for (let i = 0, l = events.length; i < l; ++i) {
+                const eventData = events[i];
+
+                let eventType = "";
+                switch (eventData.type) {
+                    case EventType.Frame:
+                        eventType = EventObject.FRAME_EVENT;
+                        break;
+
+                    case EventType.Sound:
+                        eventType = EventObject.SOUND_EVENT;
+                        break;
+                }
+
+                if (eventDispatcher.hasEvent(eventType)) {
+                    const eventObject = BaseObject.borrowObject(EventObject);
+                    eventObject.animationState = this._animationState;
+
+                    if (eventData.bone) {
+                        eventObject.bone = this._armature.getBone(eventData.bone.name);
+                    }
+
+                    if (eventData.slot) {
+                        eventObject.slot = this._armature.getSlot(eventData.slot.name);
+                    }
+
+                    eventObject.name = eventData.name;
+                    eventObject.data = eventData.data;
+
+                    this._armature._bufferEvent(eventObject, eventType);
+                }
+            }
         }
 
         public update(time: number): void {
@@ -55,9 +113,6 @@ namespace dragonBones {
      * @private
      */
     export class BoneTimelineState extends TweenTimelineState<BoneFrameData, BoneTimelineData> {
-        /**
-         * @private
-         */
         public static toString(): string {
             return "[Class dragonBones.BoneTimelineState]";
         }
@@ -256,9 +311,6 @@ namespace dragonBones {
      * @private
      */
     export class SlotTimelineState extends TweenTimelineState<SlotFrameData, SlotTimelineData> {
-        /**
-         * @private
-         */
         public static toString(): string {
             return "[Class dragonBones.SlotTimelineState]";
         }
@@ -285,22 +337,8 @@ namespace dragonBones {
             this._colorDirty = false;
             this._tweenColor = TweenType.None;
             this._slotColor = null;
-            this._color.alphaMultiplier = 1;
-            this._color.redMultiplier = 1;
-            this._color.greenMultiplier = 1;
-            this._color.blueMultiplier = 1;
-            this._color.alphaOffset = 0;
-            this._color.redOffset = 0;
-            this._color.greenOffset = 0;
-            this._color.blueOffset = 0;
-            this._durationColor.alphaMultiplier = 1;
-            this._durationColor.redMultiplier = 1;
-            this._durationColor.greenMultiplier = 1;
-            this._durationColor.blueMultiplier = 1;
-            this._durationColor.alphaOffset = 0;
-            this._durationColor.redOffset = 0;
-            this._durationColor.greenOffset = 0;
-            this._durationColor.blueOffset = 0;
+            this._color.identity();
+            this._durationColor.identity();
         }
 
         protected _onFadeIn(): void {
@@ -421,6 +459,7 @@ namespace dragonBones {
         public update(time: number): void {
             super.update(time);
 
+            // Fade animation.
             if (this._tweenColor != TweenType.None || this._colorDirty) {
                 const weight = this._animationState._weightResult;
                 if (weight > 0) {
@@ -457,9 +496,6 @@ namespace dragonBones {
      * @private
      */
     export class FFDTimelineState extends TweenTimelineState<ExtensionFrameData, FFDTimelineData> {
-        /**
-         * @private
-         */
         public static toString(): string {
             return "[Class dragonBones.FFDTimelineState]";
         }
@@ -552,6 +588,7 @@ namespace dragonBones {
         public update(time: number): void {
             super.update(time);
 
+            // Blend animation.
             const weight = this._animationState._weightResult;
             if (weight > 0) {
                 if (this.slot._blendIndex == 0) {

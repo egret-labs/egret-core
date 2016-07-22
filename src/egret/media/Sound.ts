@@ -1,6 +1,6 @@
 //////////////////////////////////////////////////////////////////////////////////////
 //
-//  Copyright (c) 2014-2015, Egret Technology Inc.
+//  Copyright (c) 2014-present, Egret Technology.
 //  All rights reserved.
 //  Redistribution and use in source and binary forms, with or without
 //  modification, are permitted provided that the following conditions are met:
@@ -48,7 +48,7 @@ module egret.sys {
      */
     export function $popSoundChannel(channel:SoundChannel):boolean {
         var index:number = usingChannel.indexOf(channel);
-        if (index < 0) {
+        if (index >= 0) {
             usingChannel.splice(index, 1);
             return true;
         }

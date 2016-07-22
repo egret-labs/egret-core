@@ -1,6 +1,6 @@
 //////////////////////////////////////////////////////////////////////////////////////
 //
-//  Copyright (c) 2014-2015, Egret Technology Inc.
+//  Copyright (c) 2014-present, Egret Technology.
 //  All rights reserved.
 //  Redistribution and use in source and binary forms, with or without
 //  modification, are permitted provided that the following conditions are met:
@@ -96,16 +96,22 @@ module egret {
 
         public set matrix(value:Array<number>) {
             this.setMatrix(value);
+            this.invalidate();
         }
 
         /**
          * @private
          */
         private setMatrix(value:Array<number>):void {
-            for (var i = 0; i < 20; i++) {
-                this.$matrix[i] = (value && value[i]) || 0;
+            if(value) {
+                for (var i = 0; i < 20; i++) {
+                    this.$matrix[i] = value[i];
+                } 
+            } else {
+                for (var i = 0; i < 20; i++) {
+                    this.$matrix[i] = (i == 0 || i == 6 || i == 12 || i == 18) ? 1 : 0;
+                } 
             }
-            this.invalidate();
         }
     }
 }

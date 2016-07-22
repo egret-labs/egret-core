@@ -80,7 +80,10 @@ class UpgradeCommand implements egret.Command {
                     path: egret.args.projectDir,
                     command: "shutdown",
                     option: egret.args
-                }, () => globals.exit(1702), true);
+                }, () => {
+                    globals.log(1702);
+                    return globals.exit(0);
+                }, true);
             }
         });
 

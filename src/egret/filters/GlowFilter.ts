@@ -1,6 +1,6 @@
 //////////////////////////////////////////////////////////////////////////////////////
 //
-//  Copyright (c) 2014-2015, Egret Technology Inc.
+//  Copyright (c) 2014-present, Egret Technology.
 //  All rights reserved.
 //  Redistribution and use in source and binary forms, with or without
 //  modification, are permitted provided that the following conditions are met:
@@ -99,7 +99,7 @@ module egret {
         /**
          * @private
          */
-        private $color:number;
+        public $color:number;
 
         /**
          * @language en_US
@@ -131,7 +131,7 @@ module egret {
         /**
          * @private
          */
-        private $alpha:number;
+        public $alpha:number;
 
         /**
          * @language en_US
@@ -160,7 +160,7 @@ module egret {
         /**
          * @private
          */
-        private $blurX:number;
+        public $blurX:number;
 
         /**
          * @language en_US
@@ -189,7 +189,7 @@ module egret {
         /**
          * @private
          */
-        private $blurY:number;
+        public $blurY:number;
 
         /**
          * @language en_US
@@ -218,7 +218,7 @@ module egret {
         /**
          * @private
          */
-        private $strength:number;
+        public $strength:number;
 
         /**
          * @language en_US
@@ -247,7 +247,7 @@ module egret {
         /**
          * @private
          */
-        private $quality:number;
+        public $quality:number;
 
         /**
          * @language en_US
@@ -276,7 +276,7 @@ module egret {
         /**
          * @private
          */
-        private $inner:boolean;
+        public $inner:boolean;
 
         /**
          * @language en_US
@@ -305,7 +305,7 @@ module egret {
         /**
          * @private
          */
-        private $knockout:boolean;
+        public $knockout:boolean;
 
         /**
          * @language en_US

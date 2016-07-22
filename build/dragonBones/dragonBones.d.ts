@@ -5,25 +5,10 @@ declare namespace dragonBones {
      * @version DragonBones 4.5
      */
     abstract class BaseObject {
-        /**
-         * @private
-         */
         private static _hashCode;
-        /**
-         * @private
-         */
         private static _defaultMaxCount;
-        /**
-         * @private
-         */
         private static _maxCountMap;
-        /**
-         * @private
-         */
         private static _poolsMap;
-        /**
-         * @private
-         */
         private static _returnObject(object);
         /**
          * @private
@@ -129,7 +114,7 @@ declare namespace dragonBones {
         * @param passedTime 前进的时间。 (以秒为单位)
         * @version DragonBones 3.0
         */
-        advanceTime(passedTime: Number): void;
+        advanceTime(passedTime: number): void;
     }
     /**
      * @language zh_CN
@@ -481,10 +466,6 @@ declare namespace dragonBones {
          */
         _duration: number;
         /**
-         * @private TimelineState
-         */
-        _clipDutation: number;
-        /**
          * @private Animation, TimelineState
          */
         _weightResult: number;
@@ -660,13 +641,6 @@ declare namespace dragonBones {
          * @see dragonBones.objects.AnimationData
          * @version DragonBones 3.0
          */
-        clip: AnimationData;
-        /**
-         * @language zh_CN
-         * 动画数据。
-         * @see dragonBones.objects.AnimationData
-         * @version DragonBones 3.0
-         */
         animationData: AnimationData;
         /**
          * @language zh_CN
@@ -702,6 +676,12 @@ declare namespace dragonBones {
          * @deprecated
          */
         autoTween: boolean;
+        /**
+         * @deprecated
+         * @see #animationData
+         * @version DragonBones 3.0
+         */
+        clip: AnimationData;
     }
 }
 declare namespace dragonBones {
@@ -723,14 +703,14 @@ declare namespace dragonBones {
         _timeline: M;
         protected _isReverse: boolean;
         protected _hasAsynchronyTimeline: boolean;
+        protected _frameRate: number;
         protected _keyFrameCount: number;
         protected _frameCount: number;
         protected _position: number;
         protected _duration: number;
-        protected _clipDutation: number;
+        protected _animationDutation: number;
         protected _timeScale: number;
         protected _timeOffset: number;
-        protected _timeToFrameSccale: number;
         protected _currentFrame: T;
         protected _armature: Armature;
         protected _animationState: AnimationState;
@@ -773,9 +753,6 @@ declare namespace dragonBones {
      * @private
      */
     class AnimationTimelineState extends TimelineState<AnimationFrameData, AnimationData> {
-        /**
-         * @private
-         */
         static toString(): string;
         private _isStarted;
         constructor();
@@ -783,15 +760,13 @@ declare namespace dragonBones {
          * @inheritDoc
          */
         protected _onClear(): void;
+        protected _onCrossFrame(frame: AnimationFrameData): void;
         update(time: number): void;
     }
     /**
      * @private
      */
     class BoneTimelineState extends TweenTimelineState<BoneFrameData, BoneTimelineData> {
-        /**
-         * @private
-         */
         static toString(): string;
         bone: Bone;
         private _tweenTransform;
@@ -817,9 +792,6 @@ declare namespace dragonBones {
      * @private
      */
     class SlotTimelineState extends TweenTimelineState<SlotFrameData, SlotTimelineData> {
-        /**
-         * @private
-         */
         static toString(): string;
         slot: Slot;
         private _colorDirty;
@@ -842,9 +814,6 @@ declare namespace dragonBones {
      * @private
      */
     class FFDTimelineState extends TweenTimelineState<ExtensionFrameData, FFDTimelineData> {
-        /**
-         * @private
-         */
         static toString(): string;
         slot: Slot;
         private _tweenFFD;
@@ -973,10 +942,6 @@ declare namespace dragonBones {
         /**
          * @private
          */
-        _delayAdvanceTime: number;
-        /**
-         * @private
-         */
         _armatureData: ArmatureData;
         /**
          * @private
@@ -1010,10 +975,6 @@ declare namespace dragonBones {
          * @private
          */
         private _lockDispose;
-        /**
-         * @private
-         */
-        private _lockActionAndEvent;
         /**
          * @private
          */
@@ -1067,7 +1028,9 @@ declare namespace dragonBones {
          */
         _bufferEvent(value: EventObject, type: string): void;
         /**
-         * dispose
+         * @language zh_CN
+         * 释放骨架。 (会回收到内存池)
+         * @version DragonBones 3.0
          */
         dispose(): void;
         /**
@@ -1197,10 +1160,17 @@ declare namespace dragonBones {
         armatureData: ArmatureData;
         /**
          * @language zh_CN
+         * 获得动画控制器。
+         * @see dragonBones.Animation
+         * @version DragonBones 3.0
+         */
+        animation: Animation;
+        /**
+         * @language zh_CN
          * 获取显示容器，插槽的显示对象都会以此显示容器为父级，根据渲染平台的不同，类型会不同，通常是 DisplayObjectContainer 类型。
          * @version DragonBones 3.0
          */
-        display: any;
+        display: IArmatureDisplay | any;
         /**
          * @language zh_CN
          * 获取父插槽。 (当此骨架是某个骨架的子骨架时，可以通过此属性向上查找从属关系)
@@ -1208,13 +1178,6 @@ declare namespace dragonBones {
          * @version DragonBones 4.5
          */
         parent: Slot;
-        /**
-         * @language zh_CN
-         * 获得动画控制器。
-         * @see dragonBones.Animation
-         * @version DragonBones 3.0
-         */
-        animation: Animation;
         /**
          * @language zh_CN
          * 动画缓存的帧率，当设置一个大于 0 的帧率时，将会开启动画缓存。
@@ -1241,7 +1204,7 @@ declare namespace dragonBones {
          * @returns  [true: 包含, false: 不包含]
          * @version DragonBones 3.0
          */
-        hasEventListener(type: string): void;
+        hasEventListener(type: EventStringType): void;
         /**
          * @language zh_CN
          * 添加事件。
@@ -1249,7 +1212,7 @@ declare namespace dragonBones {
          * @param listener 事件回调。
          * @version DragonBones 3.0
          */
-        addEventListener(type: string, listener: Function, target: any): void;
+        addEventListener(type: EventStringType, listener: Function, target: any): void;
         /**
          * @language zh_CN
          * 移除事件。
@@ -1257,7 +1220,7 @@ declare namespace dragonBones {
          * @param listener 事件回调。
          * @version DragonBones 3.0
          */
-        removeEventListener(type: string, listener: Function, target: any): void;
+        removeEventListener(type: EventStringType, listener: Function, target: any): void;
         /**
          * @deprecated
          * @see #display
@@ -1940,18 +1903,66 @@ declare namespace dragonBones {
      * DragonBones
      */
     class DragonBones {
+        /**
+         * @private
+         */
         static PI_D: number;
+        /**
+         * @private
+         */
         static PI_H: number;
+        /**
+         * @private
+         */
         static PI_Q: number;
+        /**
+         * @private
+         */
         static ANGLE_TO_RADIAN: number;
+        /**
+         * @private
+         */
         static RADIAN_TO_ANGLE: number;
+        /**
+         * @private
+         */
         static SECOND_TO_MILLISECOND: number;
+        /**
+         * @private
+         */
         static NO_TWEEN: number;
         static VERSION: string;
+        /**
+         * @private
+         */
+        static DEBUG: boolean;
+        /**
+         * @private
+         */
+        static _armatures: Array<Armature>;
+        /**
+         * @private
+         */
         constructor();
+        /**
+         * @private
+         */
+        static hasArmature(value: Armature): boolean;
+        /**
+         * @private
+         */
+        static addArmature(value: Armature): void;
+        /**
+         * @private
+         */
+        static removeArmature(value: Armature): void;
     }
 }
 declare namespace dragonBones {
+    /**
+     * @private
+     */
+    type EventStringType = string | 'start' | 'loopComplete' | 'complete' | 'fadeIn' | 'fadeInComplete' | 'fadeOut' | 'fadeOutComplete' | 'frameEvent' | 'soundEvent';
     /**
      * @language zh_CN
      * 事件接口。
@@ -1973,7 +1984,7 @@ declare namespace dragonBones {
          * @returns  [true: 包含, false: 不包含]
          * @version DragonBones 4.5
          */
-        hasEvent(type: string): boolean;
+        hasEvent(type: EventStringType): boolean;
         /**
          * @language zh_CN
          * 添加事件。
@@ -1981,7 +1992,7 @@ declare namespace dragonBones {
          * @param listener 事件回调。
          * @version DragonBones 4.5
          */
-        addEvent(type: string, listener: Function, target: any): void;
+        addEvent(type: EventStringType, listener: Function, target: any): void;
         /**
          * @language zh_CN
          * 移除事件。
@@ -1989,7 +2000,7 @@ declare namespace dragonBones {
          * @param listener 事件回调。
          * @version DragonBones 4.5
          */
-        removeEvent(type: string, listener: Function, target: any): void;
+        removeEvent(type: EventStringType, listener: Function, target: any): void;
     }
     /**
      * @language zh_CN
@@ -2060,7 +2071,7 @@ declare namespace dragonBones {
          * 事件类型。
          * @version DragonBones 4.5
          */
-        type: string;
+        type: EventStringType;
         /**
          * @language zh_CN
          * 事件名称。 (帧标签的名称或声音的名称)
@@ -2111,6 +2122,10 @@ declare namespace dragonBones {
          * @inheritDoc
          */
         protected _onClear(): void;
+        /**
+         * @see #animationState
+         */
+        animationName: string;
     }
 }
 declare namespace dragonBones {
@@ -2157,6 +2172,11 @@ declare namespace dragonBones {
          * @inheritDoc
          */
         protected _onClear(): void;
+        /**
+         * @deprecated
+         * @see dragonBones.BaseFactory#removeDragonBonesData()
+         */
+        dispose(): void;
         /**
          * @private
          */
@@ -2246,7 +2266,7 @@ declare namespace dragonBones {
         /**
          * @private
          */
-        constructor(type: string, bubbles?: boolean, cancelable?: boolean, data?: any);
+        constructor(type: EventStringType, bubbles?: boolean, cancelable?: boolean, data?: any);
         /**
          * @see dragonBones.EventObject#name
          */
@@ -2256,7 +2276,7 @@ declare namespace dragonBones {
          */
         sound: string;
         /**
-         * @see dragonBones.EventObject#animationState
+         * @see dragonBones.EventObject#animationName
          */
         animationName: string;
         /**
@@ -2336,6 +2356,8 @@ declare namespace dragonBones {
      * @inheritDoc
      */
     class EgretArmatureDisplay extends egret.DisplayObjectContainer implements IArmatureDisplay {
+        private static _clock;
+        private static _clockHandler(time);
         /**
          * @private
          */
@@ -2343,16 +2365,7 @@ declare namespace dragonBones {
         /**
          * @private
          */
-        protected _passedTime: number;
-        private _time;
-        /**
-         * @private
-         */
         constructor();
-        /**
-         * @private
-         */
-        private _advanceTimeHandler(time);
         /**
          * @inheritDoc
          */
@@ -2364,15 +2377,19 @@ declare namespace dragonBones {
         /**
          * @inheritDoc
          */
-        hasEvent(type: string): boolean;
+        advanceTime(passedTime: number): void;
         /**
          * @inheritDoc
          */
-        addEvent(type: string, listener: Function, target: any): void;
+        hasEvent(type: EventStringType): boolean;
         /**
          * @inheritDoc
          */
-        removeEvent(type: string, listener: Function, target: any): void;
+        addEvent(type: EventStringType, listener: (event: EgretEvent) => void, target: any): void;
+        /**
+         * @inheritDoc
+         */
+        removeEvent(type: EventStringType, listener: (event: EgretEvent) => void, target: any): void;
         /**
          * @inheritDoc
          */
@@ -2443,7 +2460,6 @@ declare namespace dragonBones {
          */
         static toString(): string;
         constructor(texture: egret.Texture, rawData: any, scale?: number);
-        dispose(): void;
     }
     /**
      * @deprecated
@@ -2461,6 +2477,13 @@ declare namespace dragonBones {
          * @see dragonBones.EgretFactory#soundEventManater
          */
         static getInstance(): EgretArmatureDisplay;
+    }
+    /**
+     * @deprecated
+     * @see dragonBones.Armature#cacheFrameRate
+     * @see dragonBones.Armature#enableAnimationCache()
+     */
+    class AnimationCacheManager {
     }
 }
 declare namespace dragonBones {
@@ -2682,7 +2705,7 @@ declare namespace dragonBones {
          * @param toArmature 指定的骨架。
          * @param fromArmatreName 其他骨架的名称。
          * @param fromSkinName 其他骨架的皮肤名称，如果未设置，则使用默认皮肤。
-         * @param fromDragonBonesDataName 其他骨架属于的龙骨数据名称，如果未设置，则检索所有龙骨数据寻找其他骨架。
+         * @param fromDragonBonesDataName 其他骨架属于的龙骨数据名称，如果未设置，则检索所有的龙骨数据。
          * @param ifRemoveOriginalAnimationList 是否移除原有的动画。 [true: 移除, false: 不移除]
          * @returns 是否替换成功。 [true: 成功, false: 不成功]
          * @see dragonBones.Armature
@@ -2711,6 +2734,11 @@ declare namespace dragonBones {
          * @version DragonBones 4.5
          */
         replaceSlotDisplayList(dragonBonesName: string, armatureName: string, slotName: string, slot: Slot): void;
+        /**
+         * @deprecated
+         * @see #clear()
+         */
+        dispose(): void;
     }
 }
 declare namespace dragonBones {
@@ -2729,7 +2757,7 @@ declare namespace dragonBones {
         /**
          * @private
          */
-        protected _generateTextureAtlasData(textureAtlasData: TextureAtlasData, textureAtlas: any): TextureAtlasData;
+        protected _generateTextureAtlasData(textureAtlasData: EgretTextureAtlasData, textureAtlas: egret.Texture): EgretTextureAtlasData;
         /**
          * @private
          */
@@ -2749,6 +2777,14 @@ declare namespace dragonBones {
          * @version DragonBones 4.5
          */
         buildArmatureDisplay(armatureName: string, dragonBonesName?: string, skinName?: string): EgretArmatureDisplay;
+        /**
+         * @language zh_CN
+         * 获取带有指定贴图的显示对象。
+         * @param textureName 指定的贴图名称。
+         * @param dragonBonesName 指定的龙骨数据名称，如果未设置，将检索所有的龙骨数据。
+         * @version DragonBones 3.0
+         */
+        getTextureDisplay(textureName: string, dragonBonesName?: string): egret.Bitmap;
         /**
          * @language zh_CN
          * 获取全局声音事件管理器。
@@ -3177,10 +3213,6 @@ declare namespace dragonBones {
          */
         hasAsynchronyTimeline: boolean;
         /**
-         * @private
-         */
-        hasBoneTimelineEvent: boolean;
-        /**
          * @language zh_CN
          * 持续的帧数。
          * @version DragonBones 3.0
@@ -3315,6 +3347,10 @@ declare namespace dragonBones {
          */
         name: string;
         /**
+         * @private
+         */
+        parent: DragonBonesData;
+        /**
          * @language zh_CN
          * 所有的骨骼数据。
          * @see dragonBones.BoneData
@@ -3342,6 +3378,10 @@ declare namespace dragonBones {
          * @version DragonBones 3.0
          */
         animations: Map<AnimationData>;
+        /**
+         * @private
+         */
+        actions: Array<ActionData>;
         private _boneDirty;
         private _slotDirty;
         private _defaultSkin;
@@ -3557,6 +3597,10 @@ declare namespace dragonBones {
         /**
          * @private
          */
+        actions: Array<ActionData>;
+        /**
+         * @private
+         */
         constructor();
         /**
          * @inheritDoc
@@ -3721,6 +3765,11 @@ declare namespace dragonBones {
          * @version DragonBones 3.0
          */
         armatureNames: Array<string>;
+        /**
+         * @deprecated
+         * @see dragonBones.BaseFactory#removeDragonBonesData()
+         */
+        dispose(): void;
     }
 }
 declare namespace dragonBones {
@@ -3757,8 +3806,6 @@ declare namespace dragonBones {
         duration: number;
         prev: T;
         next: T;
-        actions: Array<ActionData>;
-        events: Array<EventData>;
         constructor();
         /**
          * @inheritDoc
@@ -3783,6 +3830,8 @@ declare namespace dragonBones {
      */
     class AnimationFrameData extends FrameData<AnimationFrameData> {
         static toString(): string;
+        actions: Array<ActionData>;
+        events: Array<EventData>;
         constructor();
         /**
          * @inheritDoc
@@ -3796,7 +3845,6 @@ declare namespace dragonBones {
         static toString(): string;
         tweenScale: boolean;
         tweenRotate: number;
-        parent: BoneData;
         transform: Transform;
         constructor();
         /**
@@ -3901,6 +3949,7 @@ declare namespace dragonBones {
         protected static SOUND: string;
         protected static ACTION: string;
         protected static ACTIONS: string;
+        protected static DEFAULT_ACTIONS: string;
         protected static X: string;
         protected static Y: string;
         protected static SKEW_X: string;
@@ -3961,6 +4010,7 @@ declare namespace dragonBones {
          */
         abstract parseTextureAtlasData(rawData: any, textureAtlasData: TextureAtlasData, scale: number): void;
         private _getTimelineFrameMatrix(animation, timeline, position, transform);
+        protected _mergeFrameToAnimationTimeline<T extends FrameData<T>>(frame: T, actions: Array<ActionData>, events: Array<EventData>): void;
         protected _globalToLocal(armature: ArmatureData): void;
         /**
          * @deprecated
@@ -4100,11 +4150,12 @@ declare namespace dragonBones {
          */
         parseTextureAtlasData(rawData: any, textureAtlasData: TextureAtlasData, scale?: number): TextureAtlasData;
         /**
-         * @private
+         * @deprecated
          */
         private static _instance;
         /**
-         * @private
+         * @deprecated
+         * @see dragonBones.BaseFactory#parseDragonBonesData()
          */
         static getInstance(): ObjectDataParser;
     }

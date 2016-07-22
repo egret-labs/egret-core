@@ -58,9 +58,6 @@ namespace dragonBones {
         public prev: T;
         public next: T;
 
-        public actions: Array<ActionData> = [];
-        public events: Array<EventData> = [];
-
         public constructor() {
             super();
         }
@@ -72,22 +69,6 @@ namespace dragonBones {
             this.duration = 0;
             this.prev = null;
             this.next = null;
-
-            if (this.actions.length) {
-                for (let i = 0, l = this.actions.length; i < l; ++i) {
-                    this.actions[i].returnToPool();
-                }
-
-                this.actions.length = 0;
-            }
-
-            if (this.events.length) {
-                for (let i = 0, l = this.events.length; i < l; ++i) {
-                    this.events[i].returnToPool();
-                }
-
-                this.events.length = 0;
-            }
         }
     }
     /**
@@ -161,6 +142,9 @@ namespace dragonBones {
             return "[Class dragonBones.AnimationFrameData]";
         }
 
+        public actions: Array<ActionData> = [];
+        public events: Array<EventData> = [];
+
         public constructor() {
             super();
         }
@@ -169,6 +153,22 @@ namespace dragonBones {
          */
         protected _onClear(): void {
             super._onClear();
+
+            if (this.actions.length) {
+                for (let i = 0, l = this.actions.length; i < l; ++i) {
+                    this.actions[i].returnToPool();
+                }
+
+                this.actions.length = 0;
+            }
+
+            if (this.events.length) {
+                for (let i = 0, l = this.events.length; i < l; ++i) {
+                    this.events[i].returnToPool();
+                }
+
+                this.events.length = 0;
+            }
         }
     }
     /**
@@ -181,7 +181,6 @@ namespace dragonBones {
 
         public tweenScale: boolean;
         public tweenRotate: number;
-        public parent: BoneData;
         public transform: Transform = new Transform();
 
         public constructor() {
@@ -195,7 +194,6 @@ namespace dragonBones {
 
             this.tweenScale = false;
             this.tweenRotate = 0;
-            this.parent = null;
             this.transform.identity();
         }
     }

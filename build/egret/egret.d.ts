@@ -6912,16 +6912,26 @@ declare module egret {
         /**
          * @language en_US
          * Initializes a BlurFilter object.
+         * @param blurX {number} The amount of horizontal blur. Valid values are 0 to 255 (floating point).
+         * @param blurY {number} The amount of vertical blur. Valid values are 0 to 255 (floating point).
+         * @param quality {number} The number of times to apply the filter.
          * @version Egret 3.1.0
          * @platform Web
          */
         /**
          * @language zh_CN
          * 创建一个 BlurFilter 对象。
+         * @param blurX {number} 水平模糊量。有效值为 0 到 255（浮点）。
+         * @param blurY {number} 垂直模糊量。有效值为 0 到 255（浮点）。
+         * @param quality {number} 应用滤镜的次数。暂未实现。
          * @version Egret 3.1.0
          * @platform Web
          */
-        constructor(blurX: number, blurY: number);
+        constructor(blurX?: number, blurY?: number, quality?: number);
+        /**
+         * @private
+         */
+        $quality: number;
         /**
          * @language en_US
          * The amount of horizontal blur.
@@ -6935,7 +6945,10 @@ declare module egret {
          * @platform Web
          */
         blurX: number;
-        private $blurX;
+        /**
+         * @private
+         */
+        $blurX: number;
         /**
          * @language en_US
          * The amount of vertical blur.
@@ -6949,7 +6962,10 @@ declare module egret {
          * @platform Web
          */
         blurY: number;
-        private $blurY;
+        /**
+         * @private
+         */
+        $blurY: number;
     }
 }
 declare module egret {
@@ -7070,7 +7086,7 @@ declare module egret {
         /**
          * @private
          */
-        private $color;
+        $color: number;
         /**
          * @language en_US
          * The color of the glow.
@@ -7087,7 +7103,7 @@ declare module egret {
         /**
          * @private
          */
-        private $alpha;
+        $alpha: number;
         /**
          * @language en_US
          * The alpha transparency value for the color.
@@ -7104,7 +7120,7 @@ declare module egret {
         /**
          * @private
          */
-        private $blurX;
+        $blurX: number;
         /**
          * @language en_US
          * The amount of horizontal blur.
@@ -7121,7 +7137,7 @@ declare module egret {
         /**
          * @private
          */
-        private $blurY;
+        $blurY: number;
         /**
          * @language en_US
          * The amount of vertical blur.
@@ -7138,7 +7154,7 @@ declare module egret {
         /**
          * @private
          */
-        private $strength;
+        $strength: number;
         /**
          * @language en_US
          * The strength of the imprint or spread.
@@ -7155,7 +7171,7 @@ declare module egret {
         /**
          * @private
          */
-        private $quality;
+        $quality: number;
         /**
          * @language en_US
          * The number of times to apply the filter.
@@ -7172,7 +7188,7 @@ declare module egret {
         /**
          * @private
          */
-        private $inner;
+        $inner: boolean;
         /**
          * @language en_US
          * Specifies whether the glow is an inner glow.
@@ -7189,7 +7205,7 @@ declare module egret {
         /**
          * @private
          */
-        private $knockout;
+        $knockout: boolean;
         /**
          * @language en_US
          * Specifies whether the object has a knockout effect.
@@ -7229,6 +7245,7 @@ declare module egret {
          * @param quality {number} The number of times to apply the filter.
          * @param inner {boolean} Specifies whether the glow is an inner glow. The value true indicates an inner glow. The default is false, an outer glow (a glow around the outer edges of the object).
          * @param knockout {number} Specifies whether the object has a knockout effect. A value of true makes the object's fill transparent and reveals the background color of the document. The default value is false (no knockout effect).
+         * @param hideObject {number} Indicates whether or not the object is hidden. The value true indicates that the object itself is not drawn; only the shadow is visible. The default is false, meaning that the object is shown.
          * @version Egret 3.1.4
          * @platform Web
          */
@@ -7246,14 +7263,15 @@ declare module egret {
          * @param quality {number} 应用滤镜的次数。暂未实现。
          * @param inner {boolean} 指定发光是否为内侧发光。值 true 指定发光是内侧发光。值 false 指定发光是外侧发光（对象外缘周围的发光）。
          * @param knockout {number} 指定对象是否具有挖空效果。值为 true 将使对象的填充变为透明，并显示文档的背景颜色。
+         * @param hideObject {number} 表示是否隐藏对象。如果值为 true，则表示没有绘制对象本身，只有阴影是可见的。默认值为 false（显示对象）。
          * @version Egret 3.1.4
          * @platform Web
          */
-        constructor(distance?: number, angle?: number, color?: number, alpha?: number, blurX?: number, blurY?: number, strength?: number, quality?: number, inner?: boolean, knockout?: boolean);
+        constructor(distance?: number, angle?: number, color?: number, alpha?: number, blurX?: number, blurY?: number, strength?: number, quality?: number, inner?: boolean, knockout?: boolean, hideObject?: boolean);
         /**
          * @private
          */
-        private $distance;
+        $distance: number;
         /**
          * @language en_US
          * The offset distance of the bevel.
@@ -7270,7 +7288,7 @@ declare module egret {
         /**
          * @private
          */
-        private $angle;
+        $angle: number;
         /**
          * @language en_US
          * The angle of the bevel.
@@ -7284,6 +7302,23 @@ declare module egret {
          * @platform Web
          */
         angle: number;
+        /**
+         * @private
+         */
+        $hideObject: boolean;
+        /**
+         * @language en_US
+         * Indicates whether or not the object is hidden.
+         * @version Egret 3.1.4
+         * @platform Web
+         */
+        /**
+         * @language zh_CN
+         * 表示是否隐藏对象。
+         * @version Egret 3.1.4
+         * @platform Web
+         */
+        hideObject: boolean;
     }
 }
 declare module egret {

@@ -1,6 +1,6 @@
 //////////////////////////////////////////////////////////////////////////////////////
 //
-//  Copyright (c) 2014-2015, Egret Technology Inc.
+//  Copyright (c) 2014-present, Egret Technology.
 //  All rights reserved.
 //  Redistribution and use in source and binary forms, with or without
 //  modification, are permitted provided that the following conditions are met:
@@ -84,29 +84,6 @@ module egret.web {
                 this.surface = this.rootRenderTarget;
             }
         }
-
-        // private filters = [];
-        // public pushFilters(filters) {
-        //     this.filters.push(filters);
-        // }
-        // public popFilters() {
-        //     this.filters.pop();
-        // }
-        // public getFilters() {
-        //     var filters = [];
-        //     for(var i = 0; i < this.filters.length; i++) {
-        //         var _filters = this.filters[i];
-        //         if(_filters) {
-        //             for(var j = 0; j < _filters.length; j++) {
-        //                 var filter = _filters[j];
-        //                 if(filter && filter.type != "glow") {// 暂时屏蔽掉发光滤镜
-        //                     filters.push(filter);
-        //                 }
-        //             }
-        //         }
-        //     }
-        //     return filters;
-        // }
 
         public globalAlpha:number = 1;
         /**
