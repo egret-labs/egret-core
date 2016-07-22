@@ -42204,6 +42204,14 @@ var ts;
             files: [],
             messages: formatedMessages
         };
+        if (commandLine.options.locale) {
+            if (!isJSONSupported()) {
+                reportDiagnostic(createCompilerDiagnostic(Diagnostics.The_current_host_does_not_support_the_0_option, "--locale"));
+                result.exitStatus = ExitStatus.DiagnosticsPresent_OutputsSkipped;
+                return result;
+            }
+            validateLocaleAndSetLanguage(commandLine.options.locale, commandLine.errors);
+        }
         // If there are any errors due to command line parsing and/or
         // setting up localization, report them and quit.
         if (commandLine.errors.length > 0) {
