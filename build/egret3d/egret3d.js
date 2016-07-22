@@ -8,6 +8,30 @@ var egret3d;
     /**
      * @private
      */
+    var FPSInfo = (function () {
+        function FPSInfo() {
+            this.averageFPS = 0;
+            this.averageDelay = 0;
+            this.delayNumber = 0;
+            this.countFrame = 30;
+        }
+        FPSInfo.prototype.update = function (time, delay) {
+            this.delayNumber += delay - 1;
+            if (this.countFrame-- == 0) {
+                this.countFrame = 30;
+                this.averageDelay = Math.floor(this.delayNumber / this.countFrame);
+                this.averageFPS = Math.floor(1000 / this.averageDelay);
+                this.averageFPS = Math.min(this.averageFPS, 60);
+                this.delayNumber = 0;
+            }
+            return " " + this.averageFPS.toString() + " fps/" + this.averageDelay.toString() + " delay";
+        };
+        FPSInfo.fps = 16.6666; //ms 
+        return FPSInfo;
+    }());
+    /**
+     * @private
+     */
     var Egret3DState = (function () {
         function Egret3DState() {
         }
@@ -16,21 +40,31 @@ var egret3d;
             Egret3DState._info = document.createElement("div");
             Egret3DState._time = document.createElement("div");
             Egret3DState._dataInfo = document.createElement("div");
-            Egret3DState._objectInfo = document.createElement("div");
+            //font-size: 100px; text-align: center; color: #9e9e9e; 
+            Egret3DState._info.style.fontSize = "14px";
+            Egret3DState._info.style.backgroundColor = "rgba(158,158,158,0.3)";
+            Egret3DState._info.style.width = "200px";
+            Egret3DState._info.style.fontFamily = "Corbel";
+            Egret3DState._dataInfo.style.fontFamily = "12px";
+            Egret3DState._dataInfo.style.fontSize = "12px";
+            Egret3DState._dataInfo.style.backgroundColor = "rgba(158,158,158,0.3)";
+            Egret3DState._dataInfo.style.width = "200px";
+            Egret3DState._dataInfo.style.fontFamily = "Corbel";
+            Egret3DState._info.onselect = null;
+            Egret3DState._time.onselect = null;
+            Egret3DState._dataInfo.onselect = null;
             document.body.appendChild(Egret3DState._info);
             document.body.appendChild(Egret3DState._time);
             document.body.appendChild(Egret3DState._dataInfo);
-            document.body.appendChild(Egret3DState._objectInfo);
             Egret3DState._info.style.color = "lightblue";
             Egret3DState._time.style.color = "lightblue";
             Egret3DState._dataInfo.style.color = "lightblue";
-            Egret3DState._objectInfo.style.color = "lightblue";
-            Egret3DState._info.innerText = "Egret3D Debug State";
+            Egret3DState._info.innerText = " Egret3D Graphics ";
         };
         Egret3DState.showTime = function (time, delay) {
             if (!Egret3DState.use)
                 Egret3DState.initState();
-            Egret3DState._time.innerText = time.toString() + "/" + delay.toString();
+            Egret3DState._time.innerText = Egret3DState.fpsInfo.update(time, delay);
         };
         Egret3DState.showDataInfo = function () {
             var data = [];
@@ -39,13 +73,19 @@ var egret3d;
             }
             if (!Egret3DState.use)
                 Egret3DState.initState();
-            Egret3DState._dataInfo.innerText = "";
+            // Egret3DState._dataInfo.innerText = "";
             var d;
             for (d in data) {
-                Egret3DState._dataInfo.innerText += data[d].toString() + "/r/t";
+                if (data[d])
+                    this.info += data[d].toString() + "\r\t";
             }
         };
+        Egret3DState.show = function () {
+            Egret3DState._dataInfo.innerText = this.info;
+            this.info = " ";
+        };
         Egret3DState.use = false;
+        Egret3DState.fpsInfo = new FPSInfo();
         return Egret3DState;
     }());
     egret3d.Egret3DState = Egret3DState;
@@ -1986,9 +2026,6 @@ var egret3d;
         */
         function Matrix4_4(datas) {
             if (datas === void 0) { datas = null; }
-            this.result = new Float32Array(16);
-            this.m = new Float32Array(16);
-            this.oRawData = new Float32Array(16);
             if (datas) {
                 this.rawData = datas;
             }
@@ -2035,7 +2072,7 @@ var egret3d;
         * @platform Web,Native
         */
         Matrix4_4.prototype.multiply = function (mat4) {
-            var a = this.rawData, b = mat4.rawData, r = this.result;
+            var a = this.rawData, b = mat4.rawData, r = Matrix4_4.helpMatrix;
             r[0] = a[0] * b[0] + a[1] * b[4] + a[2] * b[8] + a[3] * b[12];
             r[1] = a[0] * b[1] + a[1] * b[5] + a[2] * b[9] + a[3] * b[13];
             r[2] = a[0] * b[2] + a[1] * b[6] + a[2] * b[10] + a[3] * b[14];
@@ -2660,17 +2697,21 @@ var egret3d;
         * @version Egret 3.0
         * @platform Web,Native
         */
-        Matrix4_4.prototype.decompose = function (orientationStyle) {
+        Matrix4_4.prototype.decompose = function (orientationStyle, target) {
             if (orientationStyle === void 0) { orientationStyle = "eulerAngles"; }
+            if (target === void 0) { target = null; }
             var q = egret3d.MathUtil.CALCULATION_QUATERNION;
-            var vec = [];
-            var m = this.clone();
-            var mr = m.rawData;
-            var pos = new egret3d.Vector3D(mr[12], mr[13], mr[14]);
+            var vec = target ? target : [new egret3d.Vector3D(), new egret3d.Vector3D(), new egret3d.Vector3D()];
+            this.copyRawDataTo(Matrix4_4.helpMatrix.rawData);
+            var mr = Matrix4_4.helpMatrix.rawData;
+            var pos = vec[0];
+            pos.x = mr[12];
+            pos.y = mr[13];
+            pos.z = mr[14];
             mr[12] = 0;
             mr[13] = 0;
             mr[14] = 0;
-            var scale = new egret3d.Vector3D();
+            var scale = vec[2];
             scale.x = Math.sqrt(mr[0] * mr[0] + mr[1] * mr[1] + mr[2] * mr[2]);
             scale.y = Math.sqrt(mr[4] * mr[4] + mr[5] * mr[5] + mr[6] * mr[6]);
             scale.z = Math.sqrt(mr[8] * mr[8] + mr[9] * mr[9] + mr[10] * mr[10]);
@@ -2685,7 +2726,7 @@ var egret3d;
             mr[8] /= scale.z;
             mr[9] /= scale.z;
             mr[10] /= scale.z;
-            var rot = new egret3d.Vector3D();
+            var rot = vec[1];
             switch (orientationStyle) {
                 case egret3d.Orientation3D.AXIS_ANGLE:
                     rot.w = Math.acos((mr[0] + mr[5] + mr[10] - 1) / 2);
@@ -3047,21 +3088,21 @@ var egret3d;
         * @platform Web,Native
         */
         Matrix4_4.prototype.transpose = function () {
-            for (var i = 0; i < this.oRawData.length; i++) {
-                this.oRawData[i] = this.rawData[i];
+            for (var i = 0; i < Matrix4_4.helpMatrix.rawData.length; i++) {
+                Matrix4_4.helpMatrix.rawData[i] = this.rawData[i];
             }
-            this.rawData[1] = this.oRawData[4];
-            this.rawData[2] = this.oRawData[8];
-            this.rawData[3] = this.oRawData[12];
-            this.rawData[4] = this.oRawData[1];
-            this.rawData[6] = this.oRawData[9];
-            this.rawData[7] = this.oRawData[13];
-            this.rawData[8] = this.oRawData[2];
-            this.rawData[9] = this.oRawData[6];
-            this.rawData[11] = this.oRawData[14];
-            this.rawData[12] = this.oRawData[3];
-            this.rawData[13] = this.oRawData[7];
-            this.rawData[14] = this.oRawData[11];
+            this.rawData[1] = Matrix4_4.helpMatrix.rawData[4];
+            this.rawData[2] = Matrix4_4.helpMatrix.rawData[8];
+            this.rawData[3] = Matrix4_4.helpMatrix.rawData[12];
+            this.rawData[4] = Matrix4_4.helpMatrix.rawData[1];
+            this.rawData[6] = Matrix4_4.helpMatrix.rawData[9];
+            this.rawData[7] = Matrix4_4.helpMatrix.rawData[13];
+            this.rawData[8] = Matrix4_4.helpMatrix.rawData[2];
+            this.rawData[9] = Matrix4_4.helpMatrix.rawData[6];
+            this.rawData[11] = Matrix4_4.helpMatrix.rawData[14];
+            this.rawData[12] = Matrix4_4.helpMatrix.rawData[3];
+            this.rawData[13] = Matrix4_4.helpMatrix.rawData[7];
+            this.rawData[14] = Matrix4_4.helpMatrix.rawData[11];
         };
         /**
         * @language zh_CN
@@ -3180,6 +3221,7 @@ var egret3d;
             ///t(m1 - m0) + m0
             this.copyFrom(m1).sub(m0).mult(t).add(m0);
         };
+        Matrix4_4.helpMatrix = new Matrix4_4();
         return Matrix4_4;
     }());
     egret3d.Matrix4_4 = Matrix4_4;
@@ -3759,19 +3801,19 @@ var egret3d;
         * 计算摄像机的射线
         * @param width 视口宽
         * @param height 视口高
-        * @param viewMat 相机视图矩阵
+        * @param modleMat 相机世界矩阵
         * @param projMat 相机投影矩阵
         * @param x 鼠标x
         * @param y 鼠标y
         * @version Egret 3.0
         * @platform Web,Native
         */
-        Ray.prototype.CalculateAndTransformRay = function (width, height, viewMat, projMat, x, y) {
+        Ray.prototype.CalculateAndTransformRay = function (width, height, modleMat, projMat, x, y) {
             this.reset();
             this.dir.x = (2.0 * x / width - 1.0) / projMat.rawData[0];
             this.dir.y = (-2.0 * y / height + 1.0) / projMat.rawData[5];
             this.dir.z = 1.0;
-            this.invViewMat.copyFrom(viewMat);
+            this.invViewMat.copyFrom(modleMat);
             this.origin.copyFrom(this.invViewMat.transformVector(this.origin));
             this.dir.copyFrom(this.invViewMat.deltaTransformVector(this.dir));
             this.dir.normalize();
@@ -4456,6 +4498,7 @@ var egret3d;
             }
             else {
                 this._box0.copyVertex(this);
+                this._box0.owner = this.owner;
             }
             this._box0.calculateTransform();
             this._box0.updateAABB();
@@ -4464,6 +4507,7 @@ var egret3d;
             }
             else {
                 this._box1.copyVertex(this);
+                this._box1.owner = target.owner;
             }
             this._box1.calculateTransform();
             this._box1.updateAABB();
@@ -4679,6 +4723,14 @@ var egret3d;
         return BezierCurve;
     }());
     egret3d.BezierCurve = BezierCurve;
+    /**
+    * @private
+    * @language zh_CN
+    * @class egret3d.BezierData
+    * @classdesc
+    * @version Egret 3.0
+    * @platform Web,Native
+    */
     var BezierData = (function () {
         function BezierData() {
             this.posPoints = [];
@@ -4701,9 +4753,15 @@ var egret3d;
         BezierData.prototype.scaleBy = function (value) {
             if (this.posPoints.length == 0)
                 return;
-            for (var i = 0, count = BezierData.SegCount * 2; i < count; i++) {
-                this.posPoints[i].y *= value;
-                this.ctrlPoints[i].y *= value;
+            if (this.posPoints) {
+                for (var i = 0, count = this.posPoints.length; i < count; i++) {
+                    this.posPoints[i].y *= value;
+                }
+            }
+            if (this.ctrlPoints) {
+                for (var i = 0, count = this.ctrlPoints.length; i < count; i++) {
+                    this.ctrlPoints[i].y *= value;
+                }
             }
         };
         //public compress(): Float32Array {
@@ -7262,14 +7320,10 @@ var egret3d;
             "diffuse_fragment": "uniform sampler2D diffuseTexture; \n" +
                 "vec4 diffuseColor ; \n" +
                 "void main() { \n" +
-                "if( diffuseColor.w == 0.0 ){ \n" +
-                "discard; \n" +
-                "} \n" +
                 "diffuseColor = texture2D(diffuseTexture , uv_0 ); \n" +
                 "if( diffuseColor.w <= materialSource.cutAlpha ){ \n" +
                 "discard; \n" +
-                "}else \n" +
-                "diffuseColor.xyz *= diffuseColor.w ; \n" +
+                "} \n" +
                 "} \n",
             "diffuse_vertex": "attribute vec3 attribute_normal; \n" +
                 "attribute vec4 attribute_color; \n" +
@@ -7324,10 +7378,10 @@ var egret3d;
                 "vec4 ambientColor; \n" +
                 "vec4 light ; \n" +
                 "void main() { \n" +
-                "diffuseColor.xyz = materialSource.diffuse.xyz * diffuseColor.xyz ; \n" +
-                "outColor.xyz = light.xyz * diffuseColor.xyz * materialSource.diffuse ; \n" +
-                "outColor.w = materialSource.alpha * diffuseColor.w ; \n" +
-                "gl_FragColor = outColor * varying_color; \n" +
+                "outColor.xyz = light.xyz * diffuseColor.xyz * materialSource.diffuse * varying_color.xyz; \n" +
+                "outColor.w = materialSource.alpha * diffuseColor.w * varying_color.w; \n" +
+                "outColor.xyz *= outColor.w; \n" +
+                "gl_FragColor = outColor; \n" +
                 "} \n",
             "end_vs": "vec4 endPosition ; \n" +
                 "uniform float uniform_materialSource[20]; \n" +
@@ -7543,21 +7597,37 @@ var egret3d;
                 "} \n",
             "lightMapSpecularPower_fs": "uniform sampler2D lightTexture ; \n" +
                 "varying vec2 varying_uv1 ; \n" +
+                "vec4 decode_hdr( vec4 data ){ \n" +
+                "vec4 res = data ; \n" +
+                "res.xyz *= pow(2.0,data.w * 256.0 - 128.0); \n" +
+                "return res ; \n" +
+                "} \n" +
                 "void main(void){ \n" +
-                "vec3 lightmap = texture2D( lightTexture , varying_uv1 ).xyz * 1.5; \n" +
-                "diffuseColor.xyz *= lightmap ; \n" +
-                "specularColor.xyz *= lightmap; \n" +
+                "vec4 lightmap = texture2D( lightTexture , varying_uv1 ); \n" +
+                "lightmap.xyz = decode_hdr(lightmap).xyz; \n" +
+                "lightmap.xyz = pow( 1.0 * lightmap.xyz, vec3(0.80)) ; \n" +
+                "diffuseColor.xyz *= lightmap.xyz ; \n" +
+                "specularColor.xyz *= lightmap.xyz ; \n" +
                 "} \n",
             "lightMap_fs": "uniform sampler2D lightTexture ; \n" +
                 "varying vec2 varying_uv1 ; \n" +
+                "vec4 decode_hdr( vec4 data ){ \n" +
+                "vec4 res = data ; \n" +
+                "res.xyz *= pow(2.0,data.w * 256.0 - 128.0); \n" +
+                "return res ; \n" +
+                "} \n" +
                 "void main(void){ \n" +
-                "vec3 lightmap = texture2D( lightTexture , varying_uv1 ).xyz * 1.5; \n" +
-                "diffuseColor.xyz *= lightmap ; \n" +
+                "vec4 lightmap = texture2D( lightTexture , varying_uv1 ); \n" +
+                "lightmap.xyz = decode_hdr(lightmap).xyz; \n" +
+                "lightmap.xyz = pow( 1.0 * lightmap.xyz, vec3(0.80)) ; \n" +
+                "diffuseColor.xyz *= lightmap.xyz ; \n" +
                 "} \n",
             "lineFog": "struct Fog{ \n" +
                 "vec3 fogColor  ; \n" +
                 "float globalDensity ; \n" +
-                "vec3 distance ; \n" +
+                "float fogStartDistance ; \n" +
+                "float fogFarDistance ; \n" +
+                "float fogAlpha ; \n" +
                 "}; \n" +
                 "varying vec4 varying_pos; \n" +
                 "uniform float uniform_globalFog[7]; \n" +
@@ -7565,11 +7635,12 @@ var egret3d;
                 "Fog fog; \n" +
                 "fog.fogColor = vec3(uniform_globalFog[0],uniform_globalFog[1],uniform_globalFog[2]); \n" +
                 "fog.globalDensity = uniform_globalFog[3]; \n" +
-                "fog.distance = vec2(uniform_globalFog[4], uniform_globalFog[5]); \n" +
-                "float dist = abs( varying_ViewPose.z ); \n" +
-                "float fogFactor = ( fog.distance.y - dist) / (fog.distance.y - fog.distance.x); \n" +
-                "fogFactor = clamp( fogFactor, 0.0, 1.0 ); \n" +
-                "diffuseColor.xyz = mix( fog.fogColor, diffuseColor.xyz, fogFactor ); \n" +
+                "fog.fogStartDistance = uniform_globalFog[4] ; \n" +
+                "fog.fogFarDistance = uniform_globalFog[5] ; \n" +
+                "fog.fogAlpha = uniform_globalFog[6] ; \n" +
+                "float d = varying_pos.z ; \n" +
+                "float distFog = max( 0.0 , d -  fog.fogStartDistance ) ; \n" +
+                "diffuseColor.xyz = mix( diffuseColor.xyz,fog.fogColor, clamp(distFog/fog.fogFarDistance,0.0,1.0) * fog.fogAlpha ) ; \n" +
                 "} \n",
             "matCapPass_vs": "varying vec2 capCoord ; \n" +
                 "void main(void){ \n" +
@@ -7672,6 +7743,7 @@ var egret3d;
                 "normal.xyz = tbn( normalTex.xyz , normal.xyz , normalize(varying_ViewPose.xyz) , uv_0 ) ; \n" +
                 "} \n",
             "particle_bezier": "vec2 bzData[20]; \n" +
+                "const float Tiny = 0.0001; \n" +
                 "void dcpBezier(float bezierData[22], float tTotal) \n" +
                 "{ \n" +
                 "float timeNow = 0.0; \n" +
@@ -7702,7 +7774,7 @@ var egret3d;
                 "t0 = bzData[i].x; \n" +
                 "t1 = bzData[i + 1].x; \n" +
                 "deltaTime = t1 - t0; \n" +
-                "if(deltaTime > 0.0001) \n" +
+                "if(deltaTime > Tiny) \n" +
                 "{ \n" +
                 "a_deltaTime = 0.5 * (v1 - v0); \n" +
                 "if(tCurrent >= t1){ \n" +
@@ -7734,7 +7806,7 @@ var egret3d;
                 "t0 = bzData[i].x; \n" +
                 "t1 = bzData[i + 1].x; \n" +
                 "deltaTime = t1 - t0; \n" +
-                "if(deltaTime > 0.0001) \n" +
+                "if(deltaTime > Tiny) \n" +
                 "{ \n" +
                 "if(tCurrent <= t1){ \n" +
                 "v = (y1 - y0) / deltaTime; \n" +
@@ -7785,13 +7857,14 @@ var egret3d;
                 "} \n" +
                 "float len = nextSegment - startSegment ; \n" +
                 "float ws = ( progress - startSegment ) / len ; \n" +
-                "vec4 color = mix(vec4(unpack_color(startColor).xyz,startAlpha / 256.0),vec4(unpack_color(nextColor).xyz, nextAlpha / 256.0),ws) ; \n" +
-                "diffuseColor *= color; \n" +
+                "globalColor = mix(vec4(unpack_color(startColor).xyz,startAlpha / 256.0),vec4(unpack_color(nextColor).xyz, nextAlpha / 256.0),ws) ; \n" +
+                "globalColor.w = clamp(globalColor.w,0.0,1.0); \n" +
                 "} \n",
             "particle_color_vs": "float particle(  ParticleData curParticle ){ \n" +
                 "} \n",
             "particle_diffuse_fragment": "uniform sampler2D diffuseTexture; \n" +
                 "vec4 diffuseColor ; \n" +
+                "vec4 globalColor = vec4(1.0, 1.0, 1.0, 1.0); \n" +
                 "void calcUVCoord(){ \n" +
                 "} \n" +
                 "void main() { \n" +
@@ -7802,8 +7875,7 @@ var egret3d;
                 "diffuseColor = texture2D(diffuseTexture , uv_0 ); \n" +
                 "if( diffuseColor.w <= materialSource.cutAlpha ){ \n" +
                 "discard; \n" +
-                "}else \n" +
-                "diffuseColor.xyz *= diffuseColor.w ; \n" +
+                "} \n" +
                 "} \n",
             "particle_end": "float particle( ParticleData curParticle ){ \n" +
                 "return 1.0 ; \n" +
@@ -7888,31 +7960,14 @@ var egret3d;
                 "gl_Position = uniform_ProjectionMatrix * outPosition ; \n" +
                 "} \n" +
                 "	 \n",
-            "particle_end_fs": "vec4 diffuseColor ; \n" +
-                "uniform float uniform_particleFsData[3]; \n" +
-                "varying float varying_posZ; \n" +
-                "void fadeOutParticleByZ(float scaleFrom, float scaleTo){ \n" +
-                "float threshold = uniform_particleFsData[0] * scaleFrom; \n" +
-                "if(varying_posZ < threshold) \n" +
-                "return; \n" +
-                "threshold = uniform_particleFsData[0] * scaleTo; \n" +
-                "if(varying_posZ > threshold){ \n" +
-                "discard; \n" +
-                "} \n" +
-                "float fadeAlpha = (threshold - varying_posZ) / threshold; \n" +
-                "fadeAlpha = clamp(fadeAlpha, 0.0, 1.0); \n" +
-                "outColor.w *= fadeAlpha; \n" +
-                "if( diffuseColor.w <= materialSource.cutAlpha ){ \n" +
-                "discard; \n" +
-                "} \n" +
-                "} \n" +
+            "particle_end_fs": "uniform float uniform_particleFsData[3]; \n" +
                 "void main() { \n" +
-                "outColor.xyz = diffuseColor.xyz * materialSource.diffuse ; \n" +
-                "outColor.w = materialSource.alpha * diffuseColor.w ; \n" +
-                "if(uniform_particleFsData[2] > TrueOrFalse){ \n" +
-                "outColor.xyz *= outColor.w * varying_color.w; \n" +
-                "} \n" +
-                "gl_FragColor = outColor * varying_color; \n" +
+                "float blendMode = uniform_particleFsData[2]; \n" +
+                "outColor.xyz = diffuseColor.xyz * materialSource.diffuse * varying_color.xyz * globalColor.xyz; \n" +
+                "outColor.w = materialSource.alpha * diffuseColor.w * varying_color.w * globalColor.w; \n" +
+                "outColor.xyz *= outColor.w; \n" +
+                "outColor = clamp(outColor, 0.0, 1.0); \n" +
+                "gl_FragColor = outColor; \n" +
                 "} \n",
             "particle_end_vs": "float particle( ParticleData curParticle ){ \n" +
                 "return 1.0 ; \n" +
@@ -7936,7 +7991,7 @@ var egret3d;
                 "vec3 temp = distanceXYZ * distanceXYZ; \n" +
                 "float distanceCurrent = sqrt(temp.x + temp.y + temp.z); \n" +
                 "float distanceLimit = velocityLimitVec2.x; \n" +
-                "if(distanceLimit < 0.0001){ \n" +
+                "if(distanceLimit < Tiny){ \n" +
                 "return vec3(0.0); \n" +
                 "} \n" +
                 "if(distanceCurrent > distanceLimit){ \n" +
@@ -7948,10 +8003,10 @@ var egret3d;
                 "mat4 getRenderModeMatrix(mat4 cameraMatrix, mat4 modelMatrix){ \n" +
                 "return cameraMatrix; \n" +
                 "} \n" +
-                "void updateStretchedBillBoard(vec4 startPos, vec4 newPos){ \n" +
+                "float updateStretchedBillBoard(vec4 startPos, vec4 newPos){ \n" +
+                "return 1.0; \n" +
                 "} \n" +
                 "void main(void) { \n" +
-                "vec4 emitterBirthPos; \n" +
                 "if(discard_particle > TrueOrFalse){ \n" +
                 "outPosition = vec4(0.0,0.0,0.0,0.0); \n" +
                 "}else{ \n" +
@@ -7988,14 +8043,16 @@ var egret3d;
                 "velocityMultiVec3.y -= 4.9 * currentTime * currentTime * particleStateData.gravity; \n" +
                 "vec3 origPosition = position_emitter; \n" +
                 "position_emitter += velocityMultiVec3; \n" +
-                "updateStretchedBillBoard(vec4(origPosition, 1.0), vec4(position_emitter, 1.0)); \n" +
+                "float dirEnable = updateStretchedBillBoard(vec4(origPosition, 1.0), vec4(position_emitter, 1.0)); \n" +
+                "if(dirEnable > TrueOrFalse){ \n" +
                 "mat4 billboardMatrix = getRenderModeMatrix(uniform_cameraMatrix, modelMatrix); \n" +
                 "outPosition = billboardMatrix * localPosition; \n" +
                 "outPosition.xyz += position_emitter.xyz; \n" +
                 "outPosition = uniform_ViewMatrix * outPosition; \n" +
-                "emitterBirthPos = uniform_ViewMatrix * vec4(position_emitter, 1.0); \n" +
+                "}else{ \n" +
+                "outPosition = vec4(0.0,0.0,0.0,0.0); \n" +
                 "} \n" +
-                "varying_posZ = emitterBirthPos.z; \n" +
+                "} \n" +
                 "gl_Position = uniform_ProjectionMatrix * outPosition ; \n" +
                 "} \n" +
                 "	 \n",
@@ -8045,20 +8102,20 @@ var egret3d;
                 "vec4(0.0, 0.0, 1.0, 1.0)); \n" +
                 "return matrix; \n" +
                 "} \n" +
-                "void updateStretchedBillBoard(vec4 startPos, vec4 newPos){ \n" +
-                "localPosition.x *= particleStateData.lengthScale; \n" +
-                "mat4 temp = uniform_ProjectionMatrix * uniform_ViewMatrix; \n" +
+                "float updateStretchedBillBoard(vec4 startPos, vec4 newPos){ \n" +
+                "vec3 dirVector = newPos.xyz - startPos.xyz; \n" +
+                "float lengthScale = particleStateData.lengthScale; \n" +
+                "float speedScale = dirVector.x * dirVector.x + dirVector.y * dirVector.y + dirVector.z * dirVector.z; \n" +
+                "speedScale = sqrt(speedScale) * 0.01 / currentTime; \n" +
+                "localPosition.x *= particleStateData.lengthScale + speedScale * particleStateData.speedScale; \n" +
+                "mat4 temp = uniform_ViewMatrix; \n" +
                 "startPos = temp * startPos; \n" +
                 "newPos = temp * newPos; \n" +
-                "vec3 dirVector = newPos.xyz - startPos.xyz; \n" +
-                "if(dirVector.x == 0.0 && dirVector.y == 0.0 && dirVector.z == 0.0){ \n" +
-                "dirVector = attribute_offsetPosition; \n" +
-                "} \n" +
-                "if(dirVector.x == 0.0 && dirVector.y == 0.0 && dirVector.z == 0.0){ \n" +
-                "return; \n" +
-                "} \n" +
                 "float scaleBefore = dirVector.x * dirVector.x + dirVector.y * dirVector.y + dirVector.z * dirVector.z; \n" +
                 "scaleBefore = sqrt(scaleBefore); \n" +
+                "if(scaleBefore < Tiny){ \n" +
+                "return 0.0; \n" +
+                "} \n" +
                 "float scaleAfter = dirVector.x * dirVector.x + dirVector.y * dirVector.y; \n" +
                 "scaleAfter = sqrt(scaleAfter); \n" +
                 "scaleAfter = scaleAfter / scaleBefore; \n" +
@@ -8077,6 +8134,7 @@ var egret3d;
                 "float angle = acos(acosValue) + added; \n" +
                 "temp = buildRotMat4(vec3(0.0, 0.0, angle)); \n" +
                 "localPosition = temp * localPosition; \n" +
+                "return 1.0; \n" +
                 "} \n",
             "particle_rotationConst": "attribute float attribute_rotationZ ; \n" +
                 "float particle(  ParticleData curParticle ){ \n" +
@@ -8116,13 +8174,13 @@ var egret3d;
                 "frame = floor(frame); \n" +
                 "vec2 ret = vec2(0.0); \n" +
                 "ret.x = (1.0 / tileX) * mod(frame, tileX); \n" +
-                "ret.y = frame / tileY; \n" +
+                "ret.y = frame / tileX; \n" +
                 "ret.y = floor(ret.y); \n" +
                 "ret.y = (1.0 / tileY) * ret.y; \n" +
                 "return ret; \n" +
                 "} \n" +
                 "void calcUVCoord() { \n" +
-                "vec2 rectUV = vec2(1.0 / uniform_textureSheet[1], 1.0 / uniform_textureSheet[0]); \n" +
+                "vec2 rectUV = vec2(1.0 / uniform_textureSheet[0], 1.0 / uniform_textureSheet[1]); \n" +
                 "uv_0.xy *= rectUV; \n" +
                 "float frame = varying_textureSheetData.x + varying_textureSheetData.y; \n" +
                 "frame = clamp(frame, uniform_textureSheet[3], uniform_textureSheet[4]); \n" +
@@ -8136,13 +8194,13 @@ var egret3d;
                 "frame = floor(frame); \n" +
                 "vec2 ret = vec2(0.0); \n" +
                 "ret.x = (1.0 / tileX) * mod(frame, tileX); \n" +
-                "ret.y = frame / tileY; \n" +
+                "ret.y = frame / tileX; \n" +
                 "ret.y = floor(ret.y); \n" +
                 "ret.y = (1.0 / tileY) * ret.y; \n" +
                 "return ret; \n" +
                 "} \n" +
                 "void calcUVCoord() { \n" +
-                "vec2 rectUV = vec2(1.0 / uniform_textureSheet[1], 1.0 / uniform_textureSheet[0]); \n" +
+                "vec2 rectUV = vec2(1.0 / uniform_textureSheet[0], 1.0 / uniform_textureSheet[1]); \n" +
                 "uv_0.xy *= rectUV; \n" +
                 "float frame = varying_textureSheetData.x + varying_textureSheetData.y; \n" +
                 "float currentTime = varying_particleData.x * uniform_textureSheet[2]; \n" +
@@ -8161,13 +8219,13 @@ var egret3d;
                 "frame = floor(frame); \n" +
                 "vec2 ret = vec2(0.0); \n" +
                 "ret.x = (1.0 / tileX) * mod(frame, tileX); \n" +
-                "ret.y = frame / tileY; \n" +
+                "ret.y = frame / tileX; \n" +
                 "ret.y = floor(ret.y); \n" +
                 "ret.y = (1.0 / tileY) * ret.y; \n" +
                 "return ret; \n" +
                 "} \n" +
                 "void calcUVCoord() { \n" +
-                "vec2 rectUV = vec2(1.0 / uniform_textureSheet[1], 1.0 / uniform_textureSheet[0]); \n" +
+                "vec2 rectUV = vec2(1.0 / uniform_textureSheet[0], 1.0 / uniform_textureSheet[1]); \n" +
                 "uv_0.xy *= rectUV; \n" +
                 "float frame = varying_textureSheetData.x + varying_textureSheetData.y; \n" +
                 "float currentTime = varying_particleData.x * uniform_textureSheet[2]; \n" +
@@ -8185,10 +8243,8 @@ var egret3d;
                 "varying_textureSheetData = attribute_textureSheetData; \n" +
                 "} \n" +
                 "	 \n",
-            "particle_time_fs": "const float TrueOrFalse = 0.55555; \n" +
-                "varying vec3 varying_particleData; \n" +
+            "particle_time_fs": "varying vec3 varying_particleData; \n" +
                 "void main(void) { \n" +
-                "light = vec4(1.0,1.0,1.0,1.0); \n" +
                 "} \n",
             "particle_time_vs": "attribute vec3 attribute_time ; \n" +
                 "float currentTime = 0.0; \n" +
@@ -8427,7 +8483,8 @@ var egret3d;
                 "const float PI = 3.1415926 ; \n" +
                 "float currentTime = 0.0; \n" +
                 "float totalTime = 0.0; \n" +
-                "const float TrueOrFalse = 0.55555; \n" +
+                "const float TrueOrFalse = 0.5; \n" +
+                "const float Tiny = 0.0001; \n" +
                 "vec4 localPosition = vec4(0.0,0.0,0.0,1.0); \n" +
                 "vec3 velocityBaseVec3 = vec3(0.0,0.0,0.0); \n" +
                 "vec3 velocityOverVec3 = vec3(0.0,0.0,0.0); \n" +
@@ -8438,7 +8495,6 @@ var egret3d;
                 "vec3 followTargetScale = vec3(1.0,1.0,1.0); \n" +
                 "vec4 followTargetRotation = vec4(0.0,0.0,0.0,0.0); \n" +
                 "varying vec3 varyingViewDir ; \n" +
-                "varying float varying_posZ; \n" +
                 "float discard_particle = 0.0; \n" +
                 "ParticleStateData particleStateData; \n" +
                 "void e_discard(){ \n" +
@@ -8730,7 +8786,6 @@ var egret3d;
                 "void main() { \n" +
                 "uv_0.xy += vec2(uvRoll[0],uvRoll[1]); \n" +
                 "diffuseColor = texture2D(diffuseTexture , uv_0 ); \n" +
-                "diffuseColor.xyz = clamp(diffuseColor.xyz / diffuseColor.w,0.0,1.0); \n" +
                 "} \n",
             "uvSpriteSheet_fs": "uniform float uvSpriteSheet[4] ; \n" +
                 "uniform sampler2D diffuseTexture; \n" +
@@ -8802,6 +8857,7 @@ var egret3d;
             "wave_fs": "uniform sampler2D diffuseTexture; \n" +
                 "uniform vec3 uniform_eyepos; \n" +
                 "uniform vec4 waveFSData[2]; \n" +
+                "uniform mat4 uniform_NormalMatrix; \n" +
                 "vec4 diffuseColor ; \n" +
                 "void main(void){ \n" +
                 "vec3 ViewDir = (mat3(uniform_NormalMatrix)*(uniform_eyepos.xyz - varying_ViewPose.xyz)) ; \n" +
@@ -8846,9 +8902,9 @@ var egret3d;
                 "wa.wave_xyz_speed_0 = vec3(waveVSData[2]) ; \n" +
                 "wa.wave_xyz_speed_1 = vec3(waveVSData[3]) ; \n" +
                 "float tempTime = mod( time , 1000000.0 ); \n" +
-                "vec3 newPose1 = calcWave2(tempTime,e_position,40.0, 500.0, 20.0,vec3(1.0,0.0,1.0)); \n" +
-                "newPose1 += calcWave2(tempTime,e_position,15.0, 50.0, 20.0,vec3(1.0,0.0,-0.5)); \n" +
-                "newPose1 += calcWave2(tempTime,e_position,15.0, 50.0, 20.0,vec3(1.0,0.0,-0.5)); \n" +
+                "vec3 newPose1 = calcWave2(tempTime,e_position,60.0, 500.0, 20.0,vec3(1.0,0.0,1.0)); \n" +
+                "newPose1 += calcWave2(tempTime,e_position,130.0, 50.0, 20.0,vec3(1.0,0.0,-0.5)); \n" +
+                "newPose1 += calcWave2(tempTime,e_position,90.0, 80.0, 20.0,vec3(1.0,0.0,-1.5)); \n" +
                 "e_position = newPose1 ; \n" +
                 "mat3 normalMatrix = mat3(uniform_NormalMatrix); \n" +
                 "varying_eyeNormal = normalize(-attribute_normal); \n" +
@@ -10037,7 +10093,7 @@ var egret3d;
             propertyData.isLoop = true;
             propertyData.timePosition = 0;
             this._propertyArray.push(propertyData);
-            for (var i = 0; i < keyFrames.length - 1; i++) {
+            for (var i = 0; i < keyFrames.length; i++) {
                 if (keyFrames[i].end.x > this._totalTime) {
                     this._totalTime = keyFrames[i].end.x;
                     keyFrames[i].cacheCurveData();
@@ -10257,6 +10313,7 @@ var egret3d;
         PropertyAnim.prototype.clone = function () {
             var pro = new PropertyAnim();
             pro._propertyArray = this._propertyArray;
+            pro._totalTime = this._totalTime;
             return pro;
         };
         return PropertyAnim;
@@ -10457,6 +10514,18 @@ var egret3d;
 })(egret3d || (egret3d = {}));
 var egret3d;
 (function (egret3d) {
+    /**
+    * @language zh_CN
+    * @class egret3d.SkeletonPose
+    * @classdesc
+    * SkeletonPose 类为单帧骨架动画数据，若干个SkeletonPose组合成SkeletonAnimationClip， 做为骨骼骨架序列数据
+    *
+    * @version Egret 3.0
+    * @platform Web,Native
+    * @includeExample animation/skeletonAnimation/SkeletonPose.ts
+    * @version Egret 3.0
+    * @platform Web,Native
+    */
     var SkeletonPose = (function () {
         function SkeletonPose() {
             /**
@@ -10466,26 +10535,6 @@ var egret3d;
             * @platform Web,Native
             */
             this.joints = [];
-            ///**
-            //* @language zh_CN
-            //* GPU所需的骨骼缓存数据
-            //* @version Egret 3.0
-            //* @platform Web,Native
-            //*/
-            //public cacheData: Float32Array;
-            ///**
-            //* @language zh_CN
-            //* GPU所需的骨骼缓存数据是否有效
-            //* @version Egret 3.0
-            //* @platform Web,Native
-            //*/
-            //public cacheDataValid: boolean;
-            this._temp_q0 = new egret3d.Quaternion();
-            this._temp_q1 = new egret3d.Quaternion();
-            this._temp_q2 = new egret3d.Quaternion();
-            this._temp_v0 = new egret3d.Vector3D();
-            this._temp_v1 = new egret3d.Vector3D();
-            this._temp_v2 = new egret3d.Vector3D();
         }
         /**
         * @language zh_CN
@@ -10528,23 +10577,23 @@ var egret3d;
                 joint.worldMatrixValid = jointA.worldMatrixValid;
                 if (joint.worldMatrixValid) {
                     //pos rot scale
-                    var decomposeA = jointA.worldMatrix.decompose(egret3d.Orientation3D.QUATERNION);
-                    var decomposeB = jointB.worldMatrix.decompose(egret3d.Orientation3D.QUATERNION);
+                    var decomposeA = jointA.worldMatrix.decompose(egret3d.Orientation3D.QUATERNION, SkeletonPose._temp_matrixDecomposeA);
+                    var decomposeB = jointB.worldMatrix.decompose(egret3d.Orientation3D.QUATERNION, SkeletonPose._temp_matrixDecomposeB);
                     //pos;
-                    this._temp_v0.lerp(decomposeA[0], decomposeB[0], t);
+                    SkeletonPose._temp_v0.lerp(decomposeA[0], decomposeB[0], t);
                     //rot;
-                    this._temp_q1.x = decomposeA[1].x;
-                    this._temp_q1.y = decomposeA[1].y;
-                    this._temp_q1.z = decomposeA[1].z;
-                    this._temp_q1.w = decomposeA[1].w;
-                    this._temp_q2.x = decomposeB[1].x;
-                    this._temp_q2.y = decomposeB[1].y;
-                    this._temp_q2.z = decomposeB[1].z;
-                    this._temp_q2.w = decomposeB[1].w;
-                    this._temp_q0.lerp(this._temp_q1, this._temp_q2, t);
+                    SkeletonPose._temp_q1.x = decomposeA[1].x;
+                    SkeletonPose._temp_q1.y = decomposeA[1].y;
+                    SkeletonPose._temp_q1.z = decomposeA[1].z;
+                    SkeletonPose._temp_q1.w = decomposeA[1].w;
+                    SkeletonPose._temp_q2.x = decomposeB[1].x;
+                    SkeletonPose._temp_q2.y = decomposeB[1].y;
+                    SkeletonPose._temp_q2.z = decomposeB[1].z;
+                    SkeletonPose._temp_q2.w = decomposeB[1].w;
+                    SkeletonPose._temp_q0.lerp(SkeletonPose._temp_q1, SkeletonPose._temp_q2, t);
                     //scale;
-                    this._temp_v1.lerp(decomposeA[2], decomposeB[2], t);
-                    joint.worldMatrix.makeTransform(this._temp_v0, this._temp_v1, this._temp_q0);
+                    SkeletonPose._temp_v1.lerp(decomposeA[2], decomposeB[2], t);
+                    joint.worldMatrix.makeTransform(SkeletonPose._temp_v0, SkeletonPose._temp_v1, SkeletonPose._temp_q0);
                 }
                 this.joints.push(joint);
             }
@@ -10584,22 +10633,21 @@ var egret3d;
         * @version Egret 3.0
         * @platform Web,Native
         */
-        SkeletonPose.prototype.updateGPUCacheData = function (skeleton, skeletonMatrixData) {
-            var jointMatrix = new egret3d.Matrix4_4();
+        SkeletonPose.prototype.updateGPUCacheData = function (skeleton, skeletonMatrixData, offset) {
             for (var i = 0; i < skeleton.joints.length; ++i) {
                 for (var j = 0; j < this.joints.length; ++j) {
                     if (skeleton.joints[i].name != this.joints[j].name)
                         continue;
-                    jointMatrix.copyFrom(skeleton.joints[i].inverseMatrix);
-                    jointMatrix.append(this.joints[j].worldMatrix);
-                    var test = jointMatrix.decompose(egret3d.Orientation3D.QUATERNION);
+                    SkeletonPose._temp_jointMatrix.copyFrom(skeleton.joints[i].inverseMatrix);
+                    SkeletonPose._temp_jointMatrix.append(this.joints[j].worldMatrix);
+                    var test = SkeletonPose._temp_jointMatrix.decompose(egret3d.Orientation3D.QUATERNION, SkeletonPose._temp_matrixDecomposeA);
                     skeletonMatrixData[i * 8 + 0] = test[1].x;
                     skeletonMatrixData[i * 8 + 1] = test[1].y;
                     skeletonMatrixData[i * 8 + 2] = test[1].z;
                     skeletonMatrixData[i * 8 + 3] = test[1].w;
-                    skeletonMatrixData[i * 8 + 4] = test[0].x;
-                    skeletonMatrixData[i * 8 + 5] = test[0].y;
-                    skeletonMatrixData[i * 8 + 6] = test[0].z;
+                    skeletonMatrixData[i * 8 + 4] = test[0].x - offset.x;
+                    skeletonMatrixData[i * 8 + 5] = test[0].y - offset.y;
+                    skeletonMatrixData[i * 8 + 6] = test[0].z - offset.z;
                     skeletonMatrixData[i * 8 + 7] = 1;
                     break;
                 }
@@ -10630,6 +10678,8 @@ var egret3d;
         * @platform Web,Native
         */
         SkeletonPose.prototype.findJointIndex = function (name) {
+            if ("" == name)
+                return -1;
             for (var i = 0; i < this.joints.length; i++) {
                 if (this.joints[i].name == name)
                     return i;
@@ -10649,6 +10699,15 @@ var egret3d;
                 this.joints[i].worldMatrixValid = false;
             }
         };
+        SkeletonPose._temp_v0 = new egret3d.Vector3D();
+        SkeletonPose._temp_v1 = new egret3d.Vector3D();
+        SkeletonPose._temp_v2 = new egret3d.Vector3D();
+        SkeletonPose._temp_q0 = new egret3d.Quaternion();
+        SkeletonPose._temp_q1 = new egret3d.Quaternion();
+        SkeletonPose._temp_q2 = new egret3d.Quaternion();
+        SkeletonPose._temp_jointMatrix = new egret3d.Matrix4_4();
+        SkeletonPose._temp_matrixDecomposeA = [new egret3d.Vector3D(), new egret3d.Vector3D(), new egret3d.Vector3D()];
+        SkeletonPose._temp_matrixDecomposeB = [new egret3d.Vector3D(), new egret3d.Vector3D(), new egret3d.Vector3D()];
         return SkeletonPose;
     }());
     egret3d.SkeletonPose = SkeletonPose;
@@ -10665,7 +10724,97 @@ var egret3d;
             */
             this.poseArray = [];
             this.animationName = "";
+            //�����ݽ�������;
+            this.sampling = 0;
+            this.boneCount = 0;
+            this.frameDataOffset = 0;
+            this.sourceData = null;
+            this._frameCount = 0;
+            this._timeLength = 0;
+            this._skeletonPose = null;
+            this._temp_scale = new egret3d.Vector3D();
+            this._temp_translation = new egret3d.Vector3D();
+            this._temp_orientation = new egret3d.Quaternion();
         }
+        Object.defineProperty(SkeletonAnimationClip.prototype, "currentSkeletonPose", {
+            get: function () {
+                return this._skeletonPose;
+            },
+            enumerable: true,
+            configurable: true
+        });
+        Object.defineProperty(SkeletonAnimationClip.prototype, "frameCount", {
+            get: function () {
+                if (this.poseArray.length > 0) {
+                    return this.poseArray.length;
+                }
+                return this._frameCount;
+            },
+            enumerable: true,
+            configurable: true
+        });
+        SkeletonAnimationClip.prototype.findJointIndex = function (name) {
+            if (!this._skeletonPose) {
+                if (this.poseArray.length <= 0) {
+                    return -1;
+                }
+                return this.poseArray[0].findJointIndex(name);
+            }
+            return this._skeletonPose.findJointIndex(name);
+        };
+        SkeletonAnimationClip.prototype.addSkeletonPose = function (skeletonPose) {
+            this.poseArray.push(skeletonPose);
+        };
+        SkeletonAnimationClip.prototype.buildInitialSkeleton = function (boneNameArray, parentBoneNameArray, frameCount) {
+            if (this._skeletonPose) {
+                return;
+            }
+            this._frameCount = frameCount;
+            this._skeletonPose = new egret3d.SkeletonPose();
+            for (var j = 0; j < this.boneCount; j++) {
+                var jointPose = new egret3d.Joint(boneNameArray[j]);
+                jointPose.parent = parentBoneNameArray[j];
+                jointPose.parentIndex = this._skeletonPose.findJointIndex(jointPose.parent);
+                this._skeletonPose.joints.push(jointPose);
+            }
+            this.sourceData.position = this.frameDataOffset + (40 * this.boneCount + 4) * (this.frameCount - 1);
+            this._timeLength = this.sourceData.readInt() / 60 / 80 * 1000;
+        };
+        SkeletonAnimationClip.prototype.getSkeletonPose = function (index) {
+            if (this.poseArray.length > 0) {
+                return this.poseArray[index];
+            }
+            //Test;
+            if (index < 0 || index >= this.frameCount * 2) {
+                return null;
+            }
+            //Test;
+            index = Math.floor(index / 2);
+            return this.readSkeletonPose(index, this._skeletonPose);
+        };
+        SkeletonAnimationClip.prototype.readSkeletonPose = function (index, skeletonPose) {
+            this.sourceData.position = this.frameDataOffset + (40 * this.boneCount + 4) * index; //ÿ֡������Ҫ40 * ������ + 4�ֽ�;
+            skeletonPose.frameTime = this.sourceData.readInt() / 60 / 80 * 1000;
+            for (var j = 0; j < this.boneCount; j++) {
+                //��ȡ��ת��Ԫ������;
+                this._temp_orientation.x = this.sourceData.readFloat();
+                this._temp_orientation.y = this.sourceData.readFloat();
+                this._temp_orientation.z = this.sourceData.readFloat();
+                this._temp_orientation.w = this.sourceData.readFloat();
+                //��ȡ���ŷ���;
+                this._temp_scale.x = this.sourceData.readFloat();
+                this._temp_scale.y = this.sourceData.readFloat();
+                this._temp_scale.z = this.sourceData.readFloat();
+                //��ȡƽ�Ʒ���;
+                this._temp_translation.x = this.sourceData.readFloat();
+                this._temp_translation.y = this.sourceData.readFloat();
+                this._temp_translation.z = this.sourceData.readFloat();
+                skeletonPose.joints[j].worldMatrixValid = false;
+                skeletonPose.joints[j].buildLocalMatrix(this._temp_scale, this._temp_orientation, this._temp_translation);
+            }
+            skeletonPose.calculateJointWorldMatrix();
+            return skeletonPose;
+        };
         Object.defineProperty(SkeletonAnimationClip.prototype, "timeLength", {
             /**
             * @language zh_CN
@@ -10674,10 +10823,10 @@ var egret3d;
             * @platform Web,Native
             */
             get: function () {
-                if (this.poseArray.length <= 0) {
-                    return 0;
+                if (this.poseArray.length > 0) {
+                    return this.poseArray[this.poseArray.length - 1].frameTime;
                 }
-                return this.poseArray[this.poseArray.length - 1].frameTime;
+                return this._timeLength;
             },
             enumerable: true,
             configurable: true
@@ -10690,10 +10839,10 @@ var egret3d;
             * @platform Web,Native
             */
             get: function () {
-                if (this.poseArray.length <= 0) {
-                    return 0;
+                if (this.poseArray.length > 0) {
+                    return this.poseArray[0].joints.length;
                 }
-                return this.poseArray[0].joints.length;
+                return this.boneCount;
             },
             enumerable: true,
             configurable: true
@@ -10708,6 +10857,16 @@ var egret3d;
             var skeletonAnimationClip = new SkeletonAnimationClip();
             skeletonAnimationClip.animationName = this.animationName;
             skeletonAnimationClip.poseArray = this.poseArray;
+            skeletonAnimationClip.sampling = this.sampling;
+            skeletonAnimationClip.boneCount = this.boneCount;
+            skeletonAnimationClip.frameCount = this.frameCount;
+            skeletonAnimationClip.frameDataOffset = this.frameDataOffset;
+            skeletonAnimationClip.sourceData = this.sourceData;
+            skeletonAnimationClip._timeLength = this._timeLength;
+            skeletonAnimationClip._skeletonPose = this._skeletonPose;
+            if (this._skeletonPose) {
+                skeletonAnimationClip._skeletonPose = this._skeletonPose.clone();
+            }
             return skeletonAnimationClip;
         };
         return SkeletonAnimationClip;
@@ -10816,36 +10975,42 @@ var egret3d;
         * @platform Web,Native
         */
         SkeletonAnimationState.prototype.addAnimationClip = function (animationClip) {
-            if (!this._skeletonAnimationClip) {
-                this._skeletonAnimationClip = new egret3d.SkeletonAnimationClip();
+            if (animationClip.sourceData) {
+                this._skeletonAnimationClip = animationClip;
+                this._timeLength = this._skeletonAnimationClip.timeLength;
             }
             else {
-                this._skeletonAnimationClip.poseArray = [];
-            }
-            if (animationClip.poseArray.length < 2) {
-                this._skeletonAnimationClip.poseArray = animationClip.poseArray;
-            }
-            else {
-                var skeletonPoseA = animationClip.poseArray[0];
-                var skeletonPoseB = animationClip.poseArray[1];
-                var nCount = Math.round((skeletonPoseB.frameTime - skeletonPoseA.frameTime) / egret3d.SkeletonAnimation.fps);
-                if (nCount <= 1) {
+                if (!this._skeletonAnimationClip) {
+                    this._skeletonAnimationClip = new egret3d.SkeletonAnimationClip();
+                }
+                else {
+                    this._skeletonAnimationClip.poseArray = [];
+                }
+                if (animationClip.poseArray.length < 2) {
                     this._skeletonAnimationClip.poseArray = animationClip.poseArray;
                 }
                 else {
-                    for (var i = 1; i < animationClip.poseArray.length; ++i) {
-                        skeletonPoseA = animationClip.poseArray[i - 1];
-                        skeletonPoseB = animationClip.poseArray[i];
-                        for (var j = 0; j < nCount; j++) {
-                            var skeletonPose = new egret3d.SkeletonPose();
-                            skeletonPose.lerp(skeletonPoseA, skeletonPoseB, j / nCount);
-                            this._skeletonAnimationClip.poseArray.push(skeletonPose);
-                        }
+                    var skeletonPoseA = animationClip.poseArray[0];
+                    var skeletonPoseB = animationClip.poseArray[1];
+                    var nCount = Math.round((skeletonPoseB.frameTime - skeletonPoseA.frameTime) / egret3d.SkeletonAnimation.fps);
+                    if (nCount <= 1) {
+                        this._skeletonAnimationClip.poseArray = animationClip.poseArray;
                     }
-                    this._skeletonAnimationClip.poseArray.push(animationClip.poseArray[animationClip.poseArray.length - 1].clone());
+                    else {
+                        for (var i = 1; i < animationClip.poseArray.length; ++i) {
+                            skeletonPoseA = animationClip.poseArray[i - 1];
+                            skeletonPoseB = animationClip.poseArray[i];
+                            for (var j = 0; j < nCount; j++) {
+                                var skeletonPose = new egret3d.SkeletonPose();
+                                skeletonPose.lerp(skeletonPoseA, skeletonPoseB, j / nCount);
+                                this._skeletonAnimationClip.poseArray.push(skeletonPose);
+                            }
+                        }
+                        this._skeletonAnimationClip.poseArray.push(animationClip.poseArray[animationClip.poseArray.length - 1].clone());
+                    }
                 }
+                this._timeLength = this._skeletonAnimationClip.poseArray[this._skeletonAnimationClip.poseArray.length - 1].frameTime;
             }
-            this._timeLength = this._skeletonAnimationClip.poseArray[this._skeletonAnimationClip.poseArray.length - 1].frameTime;
         };
         Object.defineProperty(SkeletonAnimationState.prototype, "timePosition", {
             /**
@@ -10879,12 +11044,18 @@ var egret3d;
                         this._timePosition = 0;
                         if (this.name == this._skeletonAnimation.currentAnimName) {
                             this._skeletonAnimation.stop();
+                            this._skeletonAnimation.event3D.target = this._skeletonAnimation;
+                            this._skeletonAnimation.event3D.eventType = egret3d.SkeletonAnimationEvent3D.EVENT_PLAY_COMPLETE;
+                            this._skeletonAnimation.dispatchEvent(this._skeletonAnimation.event3D);
                         }
                     }
                     else if (this._timePosition > this._timeLength) {
                         this._timePosition = this._timeLength;
                         if (this.name == this._skeletonAnimation.currentAnimName) {
                             this._skeletonAnimation.stop();
+                            this._skeletonAnimation.event3D.target = this._skeletonAnimation;
+                            this._skeletonAnimation.event3D.eventType = egret3d.SkeletonAnimationEvent3D.EVENT_PLAY_COMPLETE;
+                            this._skeletonAnimation.dispatchEvent(this._skeletonAnimation.event3D);
                         }
                     }
                 }
@@ -10900,7 +11071,7 @@ var egret3d;
             * @platform Web,Native
             */
             get: function () {
-                return this._skeletonAnimationClip.poseArray[this.currentFrameIndex];
+                return this._skeletonAnimationClip.getSkeletonPose(this.currentFrameIndex);
             },
             enumerable: true,
             configurable: true
@@ -10929,7 +11100,7 @@ var egret3d;
                 if (!this._skeletonAnimationClip) {
                     return 0;
                 }
-                return this._skeletonAnimationClip.poseArray.length;
+                return this._skeletonAnimationClip.frameCount;
             },
             enumerable: true,
             configurable: true
@@ -10941,7 +11112,7 @@ var egret3d;
         * @platform Web,Native
         */
         SkeletonAnimationState.prototype.getSkeletonPose = function (index) {
-            return this._skeletonAnimationClip.poseArray[index];
+            return this._skeletonAnimationClip.getSkeletonPose(index);
         };
         /**
         * @language zh_CN
@@ -11009,6 +11180,10 @@ var egret3d;
             this._currentFrame = 0;
             this._changeFrameTime = 0;
             this._oldFrameIndex = 0;
+            this._movePosIndex = -1;
+            this._movePosObject3D = null;
+            this._movePosition = new egret3d.Vector3D();
+            this._resetMovePos = true;
             this._isPlay = false;
             this._skeleton = skeleton;
             this._skeletonMatrixData = new Float32Array(this._skeleton.jointNum * 8);
@@ -11093,6 +11268,12 @@ var egret3d;
             if (speed === void 0) { speed = 1; }
             if (reset === void 0) { reset = true; }
             if (prewarm === void 0) { prewarm = true; }
+            if (this._animStates.length <= 0) {
+                return;
+            }
+            if (!animName) {
+                animName = this._animStates[0].name;
+            }
             var playSkeletonAnimationState = null;
             for (var i = 0; i < this._animStates.length; i++) {
                 if (this._animStates[i].name == animName) {
@@ -11109,8 +11290,14 @@ var egret3d;
             if (reset) {
                 this._animTime = playSkeletonAnimationState.timePosition = 0;
             }
+            this._changeFrameTime = playSkeletonAnimationState.timePosition;
+            this._oldFrameIndex = Math.floor(this._changeFrameTime / SkeletonAnimation.fps);
             this.speed = speed;
             this._isPlay = true;
+            this._resetMovePos = true;
+            if (this._movePosIndex != -1) {
+                this._movePosition.copyFrom(playSkeletonAnimationState.getSkeletonPose(0).joints[this._movePosIndex].worldMatrix.position);
+            }
         };
         /**
         * @language zh_CN
@@ -11163,10 +11350,10 @@ var egret3d;
                     this.event3D.data = (this._oldFrameIndex + 1 + i) % mainState.frameNum;
                 }
                 this.dispatchEvent(this.event3D);
-                if (this.event3D.data == (mainState.frameNum - 1)) {
-                    this.event3D.eventType = egret3d.SkeletonAnimationEvent3D.EVENT_PLAY_COMPLETE;
-                    this.dispatchEvent(this.event3D);
-                }
+                //if (this.event3D.data == (mainState.frameNum - 1)) {
+                //    this.event3D.eventType = SkeletonAnimationEvent3D.EVENT_PLAY_COMPLETE;
+                //    this.dispatchEvent(this.event3D);
+                //}
                 this._changeFrameTime += (delayTime > 0) ? -SkeletonAnimation.fps : SkeletonAnimation.fps;
             }
             this._oldFrameIndex = this.event3D.data;
@@ -11293,15 +11480,16 @@ var egret3d;
                         else {
                             animationState.weight = Math.min(1, animationState.weight + blendSpeed);
                         }
-                        animationState.timePosition += delay;
                     }
+                    this._blendList[this._blendList.length - 1].timePosition += delay;
                 }
                 this._animTime = this._blendList[this._blendList.length - 1].timePosition;
                 var animationStateA = this._blendList[0];
                 var currentSkeletonA = animationStateA.currentSkeletonPose;
                 if (this._blendList.length <= 1) {
-                    currentSkeletonA.updateGPUCacheData(this._skeleton, this._skeletonMatrixData);
                     this.updateBindList(currentSkeletonA);
+                    this.updateMovePos(currentSkeletonA);
+                    currentSkeletonA.updateGPUCacheData(this._skeleton, this._skeletonMatrixData, this._movePosition);
                 }
                 else {
                     var animationStateB = this._blendList[1];
@@ -11312,8 +11500,9 @@ var egret3d;
                     this._blendSkeleton.lerp(currentSkeletonA, currentSkeletonB, animationStateB.weight);
                     this._blendSkeleton.resetWorldMatrix();
                     this._blendSkeleton.calculateJointWorldMatrix();
-                    this._blendSkeleton.updateGPUCacheData(this._skeleton, this._skeletonMatrixData);
                     this.updateBindList(this._blendSkeleton);
+                    this.updateMovePos(this._blendSkeleton);
+                    this._blendSkeleton.updateGPUCacheData(this._skeleton, this._skeletonMatrixData, this._movePosition);
                 }
             },
             enumerable: true,
@@ -11412,7 +11601,7 @@ var egret3d;
         * @platform Web,Native
         */
         SkeletonAnimation.prototype.bindToJointPose = function (jointName, object3D) {
-            var jointIndex = this._animStates[0].skeletonAnimationClip.poseArray[0].findJointIndex(jointName);
+            var jointIndex = this._animStates[0].skeletonAnimationClip.findJointIndex(jointName);
             if (jointIndex < 0) {
                 return false;
             }
@@ -11425,6 +11614,16 @@ var egret3d;
                 this._bindList[jointIndex] = list;
             }
             list.push(object3D);
+            return true;
+        };
+        SkeletonAnimation.prototype.setMovePosJointName = function (jointName, target) {
+            var jointIndex = this._animStates[0].skeletonAnimationClip.findJointIndex(jointName);
+            if (jointIndex < 0) {
+                return false;
+            }
+            this._movePosIndex = jointIndex;
+            this._movePosObject3D = target;
+            this._resetMovePos = true;
             return true;
         };
         SkeletonAnimation.prototype.updateBindList = function (skeletonPose) {
@@ -11452,6 +11651,24 @@ var egret3d;
                     object3D.y = jointPose.worldMatrix.position.y;
                     object3D.z = jointPose.worldMatrix.position.z;
                 }
+            }
+        };
+        SkeletonAnimation.prototype.updateMovePos = function (skeletonPose) {
+            var jointPose = null;
+            if (this._movePosIndex != -1) {
+                jointPose = skeletonPose.joints[this._movePosIndex];
+                if (this._resetMovePos) {
+                    this._resetMovePos = false;
+                }
+                else if (this._movePosObject3D) {
+                    this._movePosition.x = jointPose.worldMatrix.position.x - this._movePosition.x;
+                    this._movePosition.y = 0;
+                    this._movePosition.z = jointPose.worldMatrix.position.z - this._movePosition.z;
+                    this._movePosObject3D.orientation.transformVector(this._movePosition, this._movePosition);
+                    this._movePosObject3D.x -= this._movePosition.x;
+                    this._movePosObject3D.z -= this._movePosition.z;
+                }
+                this._movePosition.copyFrom(jointPose.worldMatrix.position);
             }
         };
         /**
@@ -13582,15 +13799,28 @@ var egret3d;
         * 用于设置显卡的相关参数
         */
         Context3DProxy.prototype.register = function () {
-            var ext = Context3DProxy.gl.getExtension('WEBGL_compressed_texture_s3tc');
-            var OES_texture_float_linear = Context3DProxy.gl.getExtension("OES_texture_float_linear");
-            var OES_texture_float = Context3DProxy.gl.getExtension("OES_texture_float");
-            var OES_texture_half_float = Context3DProxy.gl.getExtension("OES_texture_half_float");
-            var OES_texture_half_float_linear = Context3DProxy.gl.getExtension("OES_texture_half_float_linear");
-            var OES_standard_derivatives = Context3DProxy.gl.getExtension("OES_standard_derivatives");
-            var GL_OES_standard_derivatives = Context3DProxy.gl.getExtension("GL_OES_standard_derivatives");
-            var WEBGL_draw_buffers = Context3DProxy.gl.getExtension("WEBGL_draw_buffers");
-            var WEBGL_depth_texture = Context3DProxy.gl.getExtension("WEBGL_depth_texture");
+            var extension;
+            extension = Context3DProxy.gl.getExtension('WEBGL_depth_texture') || Context3DProxy.gl.getExtension('MOZ_WEBGL_depth_texture') || Context3DProxy.gl.getExtension('WEBKIT_WEBGL_depth_texture');
+            extension = Context3DProxy.gl.getExtension('EXT_texture_filter_anisotropic') || Context3DProxy.gl.getExtension('MOZ_EXT_texture_filter_anisotropic') || Context3DProxy.gl.getExtension('WEBKIT_EXT_texture_filter_anisotropic');
+            extension = Context3DProxy.gl.getExtension('WEBGL_compressed_texture_s3tc') || Context3DProxy.gl.getExtension('MOZ_WEBGL_compressed_texture_s3tc') || Context3DProxy.gl.getExtension('WEBKIT_WEBGL_compressed_texture_s3tc');
+            extension = Context3DProxy.gl.getExtension('WEBGL_compressed_texture_pvrtc') || Context3DProxy.gl.getExtension('WEBKIT_WEBGL_compressed_texture_pvrtc');
+            extension = Context3DProxy.gl.getExtension('WEBGL_compressed_texture_etc1');
+            extension = Context3DProxy.gl.getExtension('OES_element_index_uint');
+            extension = Context3DProxy.gl.getExtension('WEBGL_compressed_texture_s3tc');
+            extension = Context3DProxy.gl.getExtension("OES_texture_float_linear");
+            extension = Context3DProxy.gl.getExtension("OES_texture_float");
+            extension = Context3DProxy.gl.getExtension("OES_texture_half_float");
+            extension = Context3DProxy.gl.getExtension("OES_texture_half_float_linear");
+            extension = Context3DProxy.gl.getExtension("OES_standard_derivatives");
+            extension = Context3DProxy.gl.getExtension("GL_OES_standard_derivatives");
+            extension = Context3DProxy.gl.getExtension("WEBGL_draw_buffers");
+            extension = Context3DProxy.gl.getExtension("WEBGL_depth_texture");
+            extension = Context3DProxy.gl.getExtension("WEBGL_lose_context");
+            //WEBGL_color_buffer_float
+            //EXT_color_buffer_half_float
+            //EXT_texture_filter_anisotropic
+            //EXT_frag_depth
+            //EXT_shader_texture_lod
             egret3d.ContextConfig.BLEND = Context3DProxy.gl.BLEND;
             egret3d.DrawMode.TRIANGLES = Context3DProxy.gl.TRIANGLES;
             egret3d.DrawMode.POINTS = Context3DProxy.gl.POINTS;
@@ -13622,11 +13852,11 @@ var egret3d;
             egret3d.ContextConfig.CULL_FACE = Context3DProxy.gl.CULL_FACE;
             egret3d.ContextConfig.BLEND = Context3DProxy.gl.BLEND;
             egret3d.ContextConfig.LEQUAL = Context3DProxy.gl.LEQUAL;
-            if (ext) {
-                egret3d.ContextConfig.ColorFormat_DXT1_RGB = ext.COMPRESSED_RGB_S3TC_DXT1_EXT;
-                egret3d.ContextConfig.ColorFormat_DXT1_RGBA = ext.COMPRESSED_RGBA_S3TC_DXT1_EXT;
-                egret3d.ContextConfig.ColorFormat_DXT3_RGBA = ext.COMPRESSED_RGBA_S3TC_DXT3_EXT;
-                egret3d.ContextConfig.ColorFormat_DXT5_RGBA = ext.COMPRESSED_RGBA_S3TC_DXT5_EXT;
+            if (extension) {
+                egret3d.ContextConfig.ColorFormat_DXT1_RGB = extension.COMPRESSED_RGB_S3TC_DXT1_EXT;
+                egret3d.ContextConfig.ColorFormat_DXT1_RGBA = extension.COMPRESSED_RGBA_S3TC_DXT1_EXT;
+                egret3d.ContextConfig.ColorFormat_DXT3_RGBA = extension.COMPRESSED_RGBA_S3TC_DXT3_EXT;
+                egret3d.ContextConfig.ColorFormat_DXT5_RGBA = extension.COMPRESSED_RGBA_S3TC_DXT5_EXT;
             }
             egret3d.ContextSamplerType.TEXTURE_0 = Context3DProxy.gl.TEXTURE0;
             egret3d.ContextSamplerType.TEXTURE_1 = Context3DProxy.gl.TEXTURE1;
@@ -13725,6 +13955,8 @@ var egret3d;
             Context3DProxy.gl.bufferData(Context3DProxy.gl.ARRAY_BUFFER, vertexDataArray, dawType);
             var vb = new egret3d.VertexBuffer3D(vertexBuffer);
             vb.arrayBuffer = vertexDataArray;
+            // vertexData.splice(0, vertexData.length);
+            //vertexData.splice(0, vertexData.length);
             return vb;
         };
         /**
@@ -13738,20 +13970,6 @@ var egret3d;
             Context3DProxy.gl.bindBuffer(Context3DProxy.gl.ARRAY_BUFFER, vertexBuffer3D.buffer);
             Context3DProxy.gl.bufferData(Context3DProxy.gl.ARRAY_BUFFER, vertexBuffer3D.arrayBuffer, Context3DProxy.gl.DYNAMIC_DRAW);
         };
-        /// public upLoadTextureData(mipLevel: number, texture: Texture2D , data:any ) {
-        ///     /// 启用二维纹理
-        ///     ///Context3DProxy.gl.enable( Context3DProxy.gl.TEXTURE );
-        ///     Context3DProxy.gl.bindTexture(Context3DProxy.gl.TEXTURE_2D, texture.texture2D);
-        ///     ///if (typeof (data) == HTMLImageElement) {
-        ///     /// Context3DProxy.gl.texImage2D(Context3DProxy.gl.TEXTURE_2D, mipLevel, Context3DProxy.gl.RGBA, Context3DProxy.gl.RGBA, Context3DProxy.gl.UNSIGNED_BYTE, data);
-        ///     ///}
-        ///     Context3DProxy.gl.texImage2D(Context3DProxy.gl.TEXTURE_2D, mipLevel, Context3DProxy.gl.RGBA, 128, 128, 0, Context3DProxy.gl.RGBA, Context3DProxy.gl.UNSIGNED_BYTE, data ) ;
-        ///
-        ///     Context3DProxy.gl.texParameteri(Context3DProxy.gl.TEXTURE_2D, Context3DProxy.gl.TEXTURE_MIN_FILTER, Context3DProxy.gl.NEAREST);
-        ///     Context3DProxy.gl.texParameteri(Context3DProxy.gl.TEXTURE_2D, Context3DProxy.gl.TEXTURE_MAG_FILTER, Context3DProxy.gl.NEAREST);
-        ///     Context3DProxy.gl.texParameteri(Context3DProxy.gl.TEXTURE_2D, Context3DProxy.gl.TEXTURE_WRAP_S, Context3DProxy.gl.REPEAT);
-        ///     Context3DProxy.gl.texParameteri(Context3DProxy.gl.TEXTURE_2D, Context3DProxy.gl.TEXTURE_WRAP_T, Context3DProxy.gl.REPEAT);
-        /// }
         /**
         * @language zh_CN
         * 设置2D纹理状态 来确定贴图的采样方式
@@ -13762,11 +13980,8 @@ var egret3d;
         * @version Egret 3.0
         * @platform Web,Native
         */
-        Context3DProxy.prototype.setTexture2DSamplerState = function (min_filter, mag_filter, wrap_u_filter, wrap_v_filter) {
-            Context3DProxy.gl.texParameteri(Context3DProxy.gl.TEXTURE_2D, Context3DProxy.gl.TEXTURE_MIN_FILTER, min_filter);
-            Context3DProxy.gl.texParameteri(Context3DProxy.gl.TEXTURE_2D, Context3DProxy.gl.TEXTURE_MAG_FILTER, mag_filter);
-            Context3DProxy.gl.texParameteri(Context3DProxy.gl.TEXTURE_2D, Context3DProxy.gl.TEXTURE_WRAP_S, wrap_u_filter);
-            Context3DProxy.gl.texParameteri(Context3DProxy.gl.TEXTURE_2D, Context3DProxy.gl.TEXTURE_WRAP_T, wrap_v_filter);
+        Context3DProxy.prototype.texParameteri = function (target, pname, param) {
+            Context3DProxy.gl.texParameteri(target, pname, param);
         };
         /**
         * @language zh_CN
@@ -13777,29 +13992,20 @@ var egret3d;
         * @platform Web,Native
         */
         Context3DProxy.prototype.upLoadTextureData = function (mipLevel, texture) {
-            Context3DProxy.gl.bindTexture(Context3DProxy.gl.TEXTURE_2D, texture.texture);
-            Context3DProxy.gl.pixelStorei(Context3DProxy.gl.UNPACK_PREMULTIPLY_ALPHA_WEBGL, 0);
-            if (texture.internalFormat == egret3d.InternalFormat.ImageData) {
-                Context3DProxy.gl.texImage2D(Context3DProxy.gl.TEXTURE_2D, 0, Context3DProxy.gl.RGBA, Context3DProxy.gl.RGBA, Context3DProxy.gl.UNSIGNED_BYTE, texture.imageData);
+            Context3DProxy.gl.bindTexture(Context3DProxy.gl.TEXTURE_2D, texture.texture2D.textureBuffer);
+            if (texture.texture2D.internalFormat == egret3d.InternalFormat.ImageData) {
+                Context3DProxy.gl.texImage2D(Context3DProxy.gl.TEXTURE_2D, 0, Context3DProxy.gl.RGBA, Context3DProxy.gl.RGBA, texture.texture2D.dataFormat, texture.texture2D.imageData);
+                delete texture.texture2D.imageData;
             }
-            else if (texture.internalFormat == egret3d.InternalFormat.CompressData) {
-                this.upLoadCompressedTexture2D(mipLevel, texture);
+            else if (texture.texture2D.internalFormat == egret3d.InternalFormat.CompressData) {
+                this.upLoadCompressedTexture2D(mipLevel, texture.texture2D);
             }
-            else if (texture.internalFormat == egret3d.InternalFormat.PixelArray) {
-                Context3DProxy.gl.texImage2D(Context3DProxy.gl.TEXTURE_2D, mipLevel, texture.colorFormat, texture.mimapData[mipLevel].width, texture.mimapData[mipLevel].height, texture.border, texture.colorFormat, Context3DProxy.gl.UNSIGNED_BYTE, texture.mimapData[mipLevel].data);
+            else if (texture.texture2D.internalFormat == egret3d.InternalFormat.PixelArray) {
+                Context3DProxy.gl.texImage2D(Context3DProxy.gl.TEXTURE_2D, mipLevel, texture.texture2D.colorFormat, texture.texture2D.mimapData[mipLevel].width, texture.texture2D.mimapData[mipLevel].height, texture.texture2D.border, texture.texture2D.colorFormat, texture.texture2D.dataFormat, texture.texture2D.mimapData[mipLevel].data);
             }
-            //Context3DProxy.gl.UNPACK_PREMULTIPLY_ALPHA_WEBGL
-            //Context3DProxy.gl.pixelStorei(Context3DProxy.gl.UNPACK_PREMULTIPLY_ALPHA_WEBGL, 1);
             if (texture.useMipmap)
                 Context3DProxy.gl.generateMipmap(Context3DProxy.gl.TEXTURE_2D);
-            var min_filter = (texture.smooth && texture.useMipmap) ? Context3DProxy.gl.LINEAR_MIPMAP_LINEAR : Context3DProxy.gl.LINEAR;
-            var mag_filter = texture.smooth ? Context3DProxy.gl.LINEAR : Context3DProxy.gl.LINEAR;
-            var wrap_u_filter = true ? Context3DProxy.gl.REPEAT : Context3DProxy.gl.CLAMP_TO_EDGE;
-            var wrap_v_filter = true ? Context3DProxy.gl.REPEAT : Context3DProxy.gl.CLAMP_TO_EDGE;
-            Context3DProxy.gl.texParameteri(Context3DProxy.gl.TEXTURE_2D, Context3DProxy.gl.TEXTURE_MIN_FILTER, min_filter);
-            Context3DProxy.gl.texParameteri(Context3DProxy.gl.TEXTURE_2D, Context3DProxy.gl.TEXTURE_MAG_FILTER, mag_filter);
-            Context3DProxy.gl.texParameteri(Context3DProxy.gl.TEXTURE_2D, Context3DProxy.gl.TEXTURE_WRAP_S, wrap_u_filter);
-            Context3DProxy.gl.texParameteri(Context3DProxy.gl.TEXTURE_2D, Context3DProxy.gl.TEXTURE_WRAP_T, wrap_v_filter);
+            //texture.activeState( this );
         };
         /**
         * @language zh_CN
@@ -13820,7 +14026,7 @@ var egret3d;
         */
         Context3DProxy.prototype.creatTexture2D = function () {
             var texture = new egret3d.Texture2D();
-            texture.texture = Context3DProxy.gl.createTexture();
+            texture.textureBuffer = Context3DProxy.gl.createTexture();
             return texture;
         };
         /**
@@ -13896,7 +14102,7 @@ var egret3d;
             var rttframeBuffer = Context3DProxy.gl.createFramebuffer();
             var texture2D = this.creatTexture2D();
             var depthRenderbuffer = Context3DProxy.gl.createRenderbuffer();
-            Context3DProxy.gl.bindTexture(Context3DProxy.gl.TEXTURE_2D, texture2D.texture);
+            Context3DProxy.gl.bindTexture(Context3DProxy.gl.TEXTURE_2D, texture2D.textureBuffer);
             var float = new Float32Array(32 * 32 * 4);
             for (var i = 0; i < 32 * 32; i++) {
                 float[i] = 1.0;
@@ -13924,7 +14130,7 @@ var egret3d;
             Context3DProxy.gl.texParameteri(Context3DProxy.gl.TEXTURE_2D, Context3DProxy.gl.TEXTURE_WRAP_T, Context3DProxy.gl.CLAMP_TO_EDGE);
             //Context3DProxy.gl.generateMipmap(Context3DProxy.gl.TEXTURE_2D);  
             Context3DProxy.gl.bindFramebuffer(Context3DProxy.gl.FRAMEBUFFER, rttframeBuffer);
-            Context3DProxy.gl.framebufferTexture2D(Context3DProxy.gl.FRAMEBUFFER, Context3DProxy.gl.COLOR_ATTACHMENT0, Context3DProxy.gl.TEXTURE_2D, texture2D.texture, 0);
+            Context3DProxy.gl.framebufferTexture2D(Context3DProxy.gl.FRAMEBUFFER, Context3DProxy.gl.COLOR_ATTACHMENT0, Context3DProxy.gl.TEXTURE_2D, texture2D.textureBuffer, 0);
             ///配置渲染缓冲 
             Context3DProxy.gl.bindRenderbuffer(Context3DProxy.gl.RENDERBUFFER, depthRenderbuffer);
             Context3DProxy.gl.renderbufferStorage(Context3DProxy.gl.RENDERBUFFER, Context3DProxy.gl.DEPTH_COMPONENT16, width, height);
@@ -13956,7 +14162,7 @@ var egret3d;
             Context3DProxy.gl.bindFramebuffer(Context3DProxy.gl.FRAMEBUFFER, texture.frameBuffer);
             Context3DProxy.gl.clearColor(0, 0, 0, 1);
             Context3DProxy.gl.clear(Context3DProxy.gl.COLOR_BUFFER_BIT | Context3DProxy.gl.DEPTH_BUFFER_BIT);
-            Context3DProxy.gl.framebufferTexture2D(Context3DProxy.gl.FRAMEBUFFER, Context3DProxy.gl.COLOR_ATTACHMENT0, Context3DProxy.gl.TEXTURE_2D, texture.texture, 0);
+            Context3DProxy.gl.framebufferTexture2D(Context3DProxy.gl.FRAMEBUFFER, Context3DProxy.gl.COLOR_ATTACHMENT0, Context3DProxy.gl.TEXTURE_2D, texture.textureBuffer, 0);
             Context3DProxy.gl.framebufferRenderbuffer(Context3DProxy.gl.FRAMEBUFFER, Context3DProxy.gl.DEPTH_ATTACHMENT, Context3DProxy.gl.RENDERBUFFER, texture.renderbuffer);
         };
         /**
@@ -14377,9 +14583,8 @@ var egret3d;
         * @platform Web,Native
         */
         Context3DProxy.prototype.enableBlend = function () {
-            if (this.BLEND)
-                return;
-            this.BLEND = true;
+            //if (this.BLEND) return;
+            //this.BLEND = true;
             Context3DProxy.gl.enable(egret3d.ContextConfig.BLEND);
         };
         /**
@@ -14389,9 +14594,8 @@ var egret3d;
         * @platform Web,Native
         */
         Context3DProxy.prototype.disableBlend = function () {
-            if (!this.BLEND)
-                return;
-            this.BLEND = false;
+            //if (!this.BLEND) return;
+            //this.BLEND = false;
             Context3DProxy.gl.disable(egret3d.ContextConfig.BLEND);
         };
         ///**
@@ -14552,7 +14756,7 @@ var egret3d;
         */
         Context3DProxy.prototype.setTexture2DAt = function (samplerIndex, uniLocation, index, texture) {
             Context3DProxy.gl.activeTexture(samplerIndex);
-            Context3DProxy.gl.bindTexture(Context3DProxy.gl.TEXTURE_2D, texture.texture);
+            Context3DProxy.gl.bindTexture(Context3DProxy.gl.TEXTURE_2D, texture.textureBuffer);
             Context3DProxy.gl.uniform1i(uniLocation, index);
         };
         Context3DProxy.prototype.disableTexture2DAt = function (samplerIndex, uniLocation, index) {
@@ -14861,22 +15065,10 @@ var egret3d;
         * @platform Web,Native
          */
         function Texture2D() {
-            /**
-             * @language zh_CN
-             * 是否使用mipmap
-             */
-            this.useMipmap = true;
-            /**
-            * @language zh_CN
-            * 是否自动模糊
-           * @version Egret 3.0
-           * @platform Web,Native
-            */
-            this.smooth = true;
             this.border = 0;
-            this.useMipmap = true;
             this.imageData = null;
             this.colorFormat = egret3d.ContextConfig.ColorFormat_RGBA8888;
+            this.dataFormat = egret3d.Context3DProxy.gl.UNSIGNED_BYTE;
             this.internalFormat = egret3d.InternalFormat.PixelArray;
             this.mimapData = new Array();
         }
@@ -15091,6 +15283,13 @@ var egret3d;
             * @platform Web,Native
             */
             this.layer = 0x00000000;
+            /**
+            * @language zh_CN
+            * 渲染层级分类标签
+            * @version Egret 3.0
+            * @platform Web,Native
+            */
+            this.tag = new egret3d.Tag();
             /**
             * @language zh_CN
             * 父亲节点
@@ -16121,6 +16320,12 @@ var egret3d;
         * @platform Web,Native
         */
         Object3D.prototype.addChild = function (child) {
+            if (child.parent) {
+                throw Error("This object is already the other child object.");
+            }
+            if (this.childs.indexOf(child) >= 0) {
+                throw Error("The same child object has been added.");
+            }
             this.childs.push(child);
             Object3D.renderListChange = true;
             child.parent = this;
@@ -16515,6 +16720,13 @@ var egret3d;
         function IRender() {
             _super.call(this);
             /**
+           * @language zh_CN
+           * 对象类型。</p>
+           * @version Egret 3.0
+           * @platform Web,Native
+           */
+            this.type = "";
+            /**
             * @private
             * @version Egret 3.0
             * @platform Web,Native
@@ -16535,6 +16747,19 @@ var egret3d;
             */
             this.animation = null;
         }
+        Object.defineProperty(IRender.prototype, "drawOrder", {
+            /**
+            * @language zh_CN
+            * 渲染排序的参数，数值越大，先渲染</p>
+            * @version Egret 3.0
+            * @platform Web,Native
+            */
+            get: function () {
+                return 0;
+            },
+            enumerable: true,
+            configurable: true
+        });
         IRender.prototype.update = function (time, delay, camera) {
             _super.prototype.update.call(this, time, delay, camera);
         };
@@ -16599,6 +16824,7 @@ var egret3d;
         function Mesh(geometry, material, animation) {
             if (animation === void 0) { animation = null; }
             _super.call(this);
+            this.type = "mesh";
             this.geometry = geometry;
             if (animation) {
                 this.animation = animation;
@@ -17876,8 +18102,13 @@ var egret3d;
         */
         function EntityCollect() {
             _super.call(this);
-            this._normalRenderItems = [];
-            this._alphaRenderItems = [];
+            this.softRenderItems = {};
+            this.numberVertex = 0;
+            this.numberFace = 0;
+            this.numberDraw = 0;
+            this.numberSkin = 0;
+            this.numberAnimation = 0;
+            this.numberParticle = 0;
         }
         EntityCollect.prototype.applyRender = function (child, camera) {
             if (!child.visible) {
@@ -17902,25 +18133,32 @@ var egret3d;
                     return;
                 }
             }
-            if (renderItem.material != null && renderItem.material.materialData.alphaBlending) {
-                //layer.alphaObjects.push(renderItem);
-                this._alphaRenderItems.push(renderItem);
-            }
-            else {
-                this._normalRenderItems.push(renderItem);
+            if (renderItem.material) {
+                if (renderItem.tag.name == "normalObject" && renderItem.material.materialData.alphaBlending) {
+                    this.softRenderItems["alphaObject"].push(renderItem);
+                }
+                else {
+                    for (var i = 0; i < egret3d.Layer.layerNumber; i++) {
+                        if (renderItem.tag.name == egret3d.Layer.layerType[i]) {
+                            this.softRenderItems[egret3d.Layer.layerType[i]].push(renderItem);
+                        }
+                    }
+                }
+                if (egret3d.Egret3DEngine.debug) {
+                    this.numberFace += renderItem.geometry.faceCount;
+                    this.numberVertex += renderItem.geometry.vertexCount;
+                    this.numberDraw += 1;
+                    if (renderItem.animation)
+                        this.numberSkin += 1;
+                    if (renderItem.proAnimation)
+                        this.numberAnimation += 1;
+                    if (renderItem.type == "particleEmit")
+                        this.numberParticle += 1;
+                }
             }
             if (renderItem.enablePick) {
                 this.mousePickList.push(renderItem);
             }
-            //var layer: Layer = this.findLayer(renderItem);
-            //var tag: Tag = this.findTag(renderItem);
-            //if (renderItem.material != null && renderItem.material.materialData.alphaBlending) {
-            //    //layer.alphaObjects.push(renderItem);
-            //    this._alphaRenderItems.push(renderItem);
-            //}
-            //else {
-            //    this._normalRenderItems.push(renderItem);
-            //}
         };
         /**
         * @language zh_CN
@@ -17931,38 +18169,31 @@ var egret3d;
         */
         EntityCollect.prototype.update = function (camera) {
             _super.prototype.update.call(this, camera);
-            this._normalRenderItems.length = 0;
-            this._alphaRenderItems.length = 0;
+            this.numberFace = 0;
+            this.numberVertex = 0;
+            this.numberDraw = 0;
+            this.numberSkin = 0;
+            this.numberAnimation = 0;
+            this.numberParticle = 0;
+            this.clearLayerList();
             this.renderList.length = 0;
             this.mousePickList.length = 0;
-            this.clearLayerList();
             if (this.rootScene.quad) {
                 var box = camera.frustum.box;
                 var quadList = this.rootScene.quad.getNodesByAABB(box.min.x, box.min.z, box.max.x, box.max.z);
-                //var time3: number = new Date().getTime();
                 this.appendQuadList(quadList, camera);
             }
             else {
                 this.applyRender(this.rootScene.root, camera);
             }
-            for (var i = 0; i < this._normalRenderItems.length; ++i) {
-                this.renderList.push(this._normalRenderItems[i]);
+            var listLen;
+            for (var j = 0; j < egret3d.Layer.layerType.length; j++) {
+                listLen = this.softRenderItems[egret3d.Layer.layerType[j]].length;
+                this.softRenderItems[egret3d.Layer.layerType[j]].sort(this.sortByOrder);
+                for (var i = 0; i < listLen; i++) {
+                    this.renderList.push(this.softRenderItems[egret3d.Layer.layerType[j]][i]);
+                }
             }
-            for (var i = 0; i < this._alphaRenderItems.length; ++i) {
-                this.renderList.push(this._alphaRenderItems[i]);
-            }
-            //for (var i: number = 0; i < this._layerTags.length; ++i) {
-            //    this._layerTags[i].clearDepth = true;
-            //    for (var j: number = 0; j < this._layerTags[i].layers.length; ++j) {
-            //        for (var k: number = 0; k < this._layerTags[i].layers[j].objects.length; ++k) {
-            //            this.renderList.push(this._layerTags[i].layers[j].objects[k]);
-            //        }
-            //        this._layerTags[i].layers[j].alphaObjects.sort((a: Object3D, b: Object3D) => this.sort(a, b, camera));
-            //        for (var k: number = 0; k < this._layerTags[i].layers[j].alphaObjects.length; ++k) {
-            //            this.renderList.push(this._layerTags[i].layers[j].alphaObjects[k]);
-            //        }
-            //    }
-            //}
         };
         /**
         * @language zh_CN
@@ -18002,12 +18233,13 @@ var egret3d;
         //    return this._tags[0];
         //}
         EntityCollect.prototype.clearLayerList = function () {
-            //for (var i: number = 0; i < this._tags.length; ++i) {
-            //    for (var j: number = 0; j < this._tags[i].layers.length; ++j) {
-            //        this._tags[i].layers[j].objects.length = 0;
-            //        this._tags[i].layers[j].alphaObjects.length = 0;
-            //    }
-            //}
+            for (var i = 0; i < egret3d.Layer.layerType.length; i++) {
+                if (!this.softRenderItems[egret3d.Layer.layerType[i]]) {
+                    this.softRenderItems[egret3d.Layer.layerType[i]] = [];
+                }
+                else
+                    this.softRenderItems[egret3d.Layer.layerType[i]].length = 0;
+            }
         };
         EntityCollect.prototype.sort = function (a, b, camera) {
             var dis_0 = egret3d.Vector3D.distance(a.globalPosition, camera.position);
@@ -18019,6 +18251,9 @@ var egret3d;
                 return 1;
             }
             return 0;
+        };
+        EntityCollect.prototype.sortByOrder = function (a, b) {
+            return b.drawOrder - a.drawOrder;
         };
         return EntityCollect;
     }(egret3d.CollectBase));
@@ -18046,6 +18281,10 @@ var egret3d;
         function Frustum() {
             this._vtxNum = 8;
             this._planeNum = 6;
+            /**
+            * @private
+            **/
+            this._tempVector = new egret3d.Vector3D();
             this._vertex = new Array();
             for (var i = 0; i < this._vtxNum; ++i) {
                 this._vertex.push(new egret3d.Vector3D());
@@ -18120,7 +18359,7 @@ var egret3d;
             this.makeFrustum(camera.fieldOfView, camera.aspectRatio, camera.near, camera.far);
             /// 摄像机变化之后的顶点也变化;
             var vtx = new Array();
-            var mat = new egret3d.Matrix4_4();
+            var mat = egret3d.Matrix4_4.helpMatrix;
             mat.copyFrom(camera.modelMatrix);
             ///mat.invert(); /// 眼睛的世界矩阵;
             this._curVer = vtx;
@@ -18217,15 +18456,15 @@ var egret3d;
         * @platform Web,Native
         */
         Frustum.prototype.inBox = function (box) {
-            var v = new Array();
             var dis = 0;
-            var temp = new egret3d.Vector3D();
-            for (var i = 0; i < this._plane.length; ++i) {
+            var planeCount = this._plane.length;
+            for (var i = 0; i < planeCount; ++i) {
                 var incount = box.vexData.length / 3;
-                for (var j = 0; j < box.vexData.length; j += 3) {
-                    temp.setTo(box.vexData[j], box.vexData[j + 1], box.vexData[j + 2]);
-                    temp.copyFrom(box.transform.transformVector(temp));
-                    dis = this._plane[i].distance(temp);
+                var vexDataLength = box.vexData.length;
+                for (var j = 0; j < vexDataLength; j += 3) {
+                    this._tempVector.setTo(box.vexData[j], box.vexData[j + 1], box.vexData[j + 2]);
+                    this._tempVector.copyFrom(box.transform.transformVector(this._tempVector));
+                    dis = this._plane[i].distance(this._tempVector);
                     if (dis > 0) {
                         incount--;
                     }
@@ -18242,6 +18481,7 @@ var egret3d;
 })(egret3d || (egret3d = {}));
 var egret3d;
 (function (egret3d) {
+    //export enum layerTypes { gui, effect, alphaObject, normalObject };
     /**
     * @private
     * @class egret3d.Layer
@@ -18254,17 +18494,11 @@ var egret3d;
     */
     var Layer = (function () {
         function Layer() {
-            /**
-            * @language zh_CN
-            * 是否清理深度
-            */
-            this.clearDepth = false;
-            /**
-            * @language zh_CN
-            * 层级清理深度状态
-            */
-            this.cleanState = true;
         }
+        Layer.layerType = ["normalObject", "normalAlphaObject", "alphaObject", "effect", "gui"];
+        //  public static layerType: string[] = ["gui", "effect", "alphaObject", "normalObject"];
+        Layer.layerTypeThan = [3, 2, 1, 0];
+        Layer.layerNumber = 5;
         return Layer;
     }());
     egret3d.Layer = Layer;
@@ -18285,21 +18519,7 @@ var egret3d;
     */
     var Tag = (function () {
         function Tag() {
-            /**
-           * @language zh_CN
-           * 没有alpha的对象列表
-           */
-            this.objects = new Array();
-            /**
-             * @language zh_CN
-             * layer 列表
-             */
-            this.layers = new Array();
-            /**
-            * @language zh_CN
-            * 有alpha的对象列表
-            */
-            this.alphaObjects = new Array();
+            this.name = "normalObject";
             this.clearDepth = false;
         }
         return Tag;
@@ -18659,6 +18879,19 @@ var egret3d;
             enumerable: true,
             configurable: true
         });
+        Object.defineProperty(Geometry.prototype, "faceCount", {
+            /**
+            * @language zh_CN
+            * 获取模型面数
+            * @version Egret 3.0
+            * @platform Web,Native
+            */
+            get: function () {
+                return this.indexData.length / 3;
+            },
+            enumerable: true,
+            configurable: true
+        });
         /**
         * @language zh_CN
         * @private
@@ -18790,10 +19023,11 @@ var egret3d;
         * @version Egret 3.0
         * @platform Web,Native
         */
-        Geometry.prototype.upload = function (context3DProxy) {
+        Geometry.prototype.upload = function (context3DProxy, drawType) {
+            if (drawType === void 0) { drawType = egret3d.Context3DProxy.gl.STATIC_DRAW; }
             if (!this.sharedIndexBuffer && !this.sharedVertexBuffer) {
                 this.sharedIndexBuffer = context3DProxy.creatIndexBuffer(this.indexData);
-                this.sharedVertexBuffer = context3DProxy.creatVertexBuffer(this.verticesData);
+                this.sharedVertexBuffer = context3DProxy.creatVertexBuffer(this.verticesData, drawType);
             }
             else {
                 this.sharedVertexBuffer.arrayBuffer.set(this.verticesData);
@@ -21622,19 +21856,466 @@ var egret3d;
 var egret3d;
 (function (egret3d) {
     /**
-     * @private
+     * @language zh_CN
+     * @class egret3d.URLLoader
+     * @classdesc
+     * URLLoader类
+     * 用于加载和解析各类3d资源.
+     * DDS, TGA, jpg, png等格式的贴图文件.
+     * ESM, EAM, ECA等egret3d独有的模型文件,动作文件,相机动画文件
+     * @includeExample loader/URLLoader.ts
+     * @see egret3d.EventDispatcher
+     *
+     * @version Egret 3.0
+     * @platform Web,Native
      */
-    var DDS = (function () {
-        function DDS() {
-            this.mipmaps = new Array();
-            this.width = 0;
-            this.height = 0;
-            this.format = null;
-            this.mipmapCount = 1;
+    var URLLoader = (function (_super) {
+        __extends(URLLoader, _super);
+        /**
+         * @language zh_CN
+         * 构造函数
+         * @param url 加载数据的地址.如果参数不为空的话.将直接开始加载
+         * @param dataformat 以什么方式进行加载.如果为空的话.将通过目标文件的后缀名判断,
+         * 如果为空且文件后缀不为内置支持的集中文件类型的话.将以文本格式进行加载解析
+         * @version Egret 3.0
+         * @platform Web,Native
+         */
+        function URLLoader(url, dataformat) {
+            if (url === void 0) { url = null; }
+            if (dataformat === void 0) { dataformat = null; }
+            _super.call(this);
+            this._event = new egret3d.LoaderEvent3D();
+            /**
+             * @language zh_CN
+             * 控制以哪种方式接收加载的数据.
+             * 如果未赋值则通过加载文件的后缀名来判断加载的类型以解析.
+             * 如果未赋值且加载的类型并非为内置支持的文件类型.将以文本格式进行加载
+             * @version Egret 3.0
+             * @platform Web,Native
+             */
+            this._dataformat = null;
+            /**
+            * @language zh_CN
+            * 加载的地址
+            * @version Egret 3.0
+            * @platform Web,Native
+            */
+            this.url = "";
+            /**
+            * @language zh_CN
+            * 加载的地址的上级目录，为了方便获取资源
+            * @version Egret 3.0
+            * @platform Web,Native
+            */
+            this.parentUrl = "";
+            /**
+            * @language zh_CN
+            * 当前加载资源的名字
+            * @version Egret 3.0
+            * @platform Web,Native
+            */
+            this.resourceName = "";
+            /**
+            * @language zh_CN
+            * 加载的数据.
+            * @version Egret 3.0
+            * @platform Web,Native
+            */
+            this.data = null;
+            if (url) {
+                if (dataformat) {
+                    this.dataformat = dataformat;
+                }
+                this.load(url);
+            }
         }
-        return DDS;
+        /**
+         * @language en_US
+         */
+        /**
+         * @language zh_CN
+         * 加载目标地址的数据
+         * @param url 数据地址
+         * @version Egret 3.0
+         * @platform Web,Native
+         */
+        URLLoader.prototype.load = function (url) {
+            var _this = this;
+            this.data = null;
+            this.url = url;
+            if (null == this._dataformat) {
+                this._dataformat = URLLoader.DATAFORMAT_TEXT;
+                var endPos = this.url.lastIndexOf(".");
+                var startPos = this.url.lastIndexOf("/");
+                if (this.url.length >= 4)
+                    switch (this.url.substr(this.url.length - 4, 4).toLowerCase()) {
+                        case ".dds":
+                            this._dataformat = URLLoader.DATAFORMAT_DDS;
+                            break;
+                        case ".tga":
+                            this._dataformat = URLLoader.DATAFORMAT_TGA;
+                            break;
+                        case ".bmp":
+                            this._dataformat = URLLoader.DATAFORMAT_BITMAP;
+                            break;
+                        case ".png":
+                            this._dataformat = URLLoader.DATAFORMAT_BITMAP;
+                            break;
+                        case ".jpg":
+                            this._dataformat = URLLoader.DATAFORMAT_BITMAP;
+                            break;
+                        case ".hdr":
+                            this._dataformat = URLLoader.DATAFORMAT_HDR;
+                            break;
+                        case "glsl":
+                            this._dataformat = URLLoader.DATAFORMAT_TEXT;
+                            break;
+                        case ".pvr":
+                            this._dataformat = URLLoader.DATAFORMAT_PVR;
+                            break;
+                        case ".esm":
+                            this._dataformat = URLLoader.DATAFORMAT_ESM;
+                            break;
+                        case ".eam":
+                            this._dataformat = URLLoader.DATAFORMAT_EAM;
+                            break;
+                        case ".eca":
+                            this._dataformat = URLLoader.DATAFORMAT_ECA;
+                            break;
+                        case ".epa":
+                            this._dataformat = URLLoader.DATAFORMAT_EPA;
+                            break;
+                    }
+            }
+            if (this._xhr == null) {
+                this._xhr = this.getXHR();
+            }
+            if (this._xhr == null) {
+                alert("Your browser does not support XMLHTTP.");
+                return;
+            }
+            if (this._xhr.readyState > 0) {
+                this._xhr.abort();
+            }
+            this._xhr.open("GET", this.url, true);
+            this._xhr.addEventListener("progress", function (e) { return _this.onProgress(e); }, false);
+            this._xhr.addEventListener("readystatechange", function (e) { return _this.onReadyStateChange(e); }, false);
+            this._xhr.addEventListener("error", function (e) { return _this.onError(e); }, false);
+            if (this.dataformat == URLLoader.DATAFORMAT_BITMAP) {
+                this._xhr.responseType = "blob";
+            }
+            else if (this.dataformat != URLLoader.DATAFORMAT_TEXT) {
+                this._xhr.responseType = "arraybuffer";
+            }
+            this._xhr.send();
+        };
+        Object.defineProperty(URLLoader.prototype, "dataformat", {
+            /**
+             * @language zh_CN
+             * 控制以哪种方式接收加载的数据.
+             * 如果未赋值则通过加载文件的后缀名来判断加载的类型以解析.
+             * 如果未赋值且加载的类型并非为内置支持的文件类型.将以文本格式进行加载
+             * @returns string
+             * @version Egret 3.0
+             * @platform Web,Native
+             */
+            get: function () {
+                return this._dataformat;
+            },
+            /**
+             * @language zh_CN
+             * 控制以哪种方式接收加载的数据.
+             * 如果未赋值则通过加载文件的后缀名来判断加载的类型以解析.
+             * 如果未赋值且加载的类型并非为内置支持的文件类型.将以文本格式进行加载
+             * @param value
+             * @version Egret 3.0
+             * @platform Web,Native
+             */
+            set: function (value) {
+                this._dataformat = value;
+            },
+            enumerable: true,
+            configurable: true
+        });
+        Object.defineProperty(URLLoader.prototype, "bytesLoaded", {
+            /**
+            * @language zh_CN
+            * 已经获取到的字节数
+            * @version Egret 3.0
+            * @platform Web,Native
+            */
+            get: function () {
+                return this._progressEvent ? this._progressEvent.loaded : 0;
+            },
+            enumerable: true,
+            configurable: true
+        });
+        Object.defineProperty(URLLoader.prototype, "bytesTotal", {
+            /**
+            * @language zh_CN
+            * 需要获取的总字节数
+            * @version Egret 3.0
+            * @platform Web,Native
+            */
+            get: function () {
+                return this._progressEvent ? this._progressEvent.total : 0;
+            },
+            enumerable: true,
+            configurable: true
+        });
+        URLLoader.prototype.onReadyStateChange = function (event) {
+            if (this._xhr.readyState == 4) {
+                if (this._xhr.status >= 400 /*|| this._xhr.status == 0*/) {
+                    console.log(this.url, "load fail");
+                }
+                else {
+                    this.loadComplete();
+                }
+            }
+        };
+        URLLoader.prototype.loadComplete = function () {
+            var _this = this;
+            switch (this.dataformat) {
+                case URLLoader.DATAFORMAT_BINARY:
+                    this.data = new egret3d.ByteArray(this._xhr.response);
+                    break;
+                case URLLoader.DATAFORMAT_SOUND:
+                    this.data = this._xhr.responseBody;
+                    break;
+                case URLLoader.DATAFORMAT_TEXT:
+                    this.data = this._xhr.responseText;
+                    break;
+                case URLLoader.DATAFORMAT_BITMAP:
+                    var img = document.createElement("img");
+                    if (window['createObjectURL'] != undefined) {
+                        img.src = window['createObjectURL'](this._xhr.response);
+                    }
+                    else if (window['URL'] != undefined) {
+                        img.src = window['URL'].createObjectURL(this._xhr.response);
+                    }
+                    else if (window['webkitURL'] != undefined) {
+                        img.src = window['webkitURL'].createObjectURL(this._xhr.response);
+                    }
+                    img.onload = function () { return _this.onLoad(img); };
+                    return;
+                case URLLoader.DATAFORMAT_DDS:
+                    this.data = egret3d.DDSParser.parse(this._xhr.response);
+                    break;
+                case URLLoader.DATAFORMAT_TGA:
+                    this.data = egret3d.TGAParser.parse(this._xhr.response);
+                    break;
+                case URLLoader.DATAFORMAT_HDR:
+                    this.data = egret3d.HDRParser.parse(this._xhr.response);
+                    break;
+                case URLLoader.DATAFORMAT_ESM:
+                    this.data = egret3d.ESMParser.parse(this._xhr.response);
+                    break;
+                case URLLoader.DATAFORMAT_EAM:
+                    this.data = egret3d.EAMParser.parse(this._xhr.response);
+                    break;
+                case URLLoader.DATAFORMAT_ECA:
+                    this.data = egret3d.ECAParser.parse(this._xhr.response);
+                    break;
+                case URLLoader.DATAFORMAT_EPA:
+                    this.data = egret3d.EPAParser.parse(this._xhr.response);
+                    break;
+                case URLLoader.DATAFORMAT_PVR:
+                    //var pvr:PVR = PVRParser.parse(this._xhr.response);
+                    //this._data = pvr;
+                    break;
+                default:
+                    this.data = this._xhr.responseText;
+            }
+            this.doLoadComplete();
+        };
+        URLLoader.prototype.onProgress = function (event) {
+            this._event.eventType = egret3d.LoaderEvent3D.LOADER_PROGRESS;
+            this._event.target = this;
+            this._event.loader = this;
+            this._progressEvent = event;
+            this.dispatchEvent(this._event);
+        };
+        URLLoader.prototype.onError = function (event) {
+            this._event.eventType = egret3d.LoaderEvent3D.LOADER_ERROR;
+            this._event.target = this;
+            this._event.loader = this;
+            this.dispatchEvent(this._event);
+            console.log("load error", event);
+        };
+        URLLoader.prototype.getXHR = function () {
+            var xhr = null;
+            if (window["XMLHttpRequest"]) {
+                xhr = new window["XMLHttpRequest"]();
+            }
+            else {
+                xhr = new ActiveXObject("MSXML2.XMLHTTP");
+            }
+            return xhr;
+        };
+        URLLoader.prototype.onLoad = function (img) {
+            this.data = new egret3d.ImageTexture(img);
+            this.doLoadComplete();
+        };
+        URLLoader.prototype.doLoadComplete = function () {
+            this.resourceName = egret3d.StringUtil.getURLName(this.url);
+            this._event.eventType = egret3d.LoaderEvent3D.LOADER_COMPLETE;
+            this._event.target = this;
+            this._event.loader = this;
+            this._event.data = this.data;
+            this.dispatchEvent(this._event);
+        };
+        /**
+         * @language zh_CN
+         * 以二进制方式接收加载的数据
+         * @version Egret 3.0
+         * @platform Web,Native
+         */
+        URLLoader.DATAFORMAT_BINARY = "binary";
+        /**
+         * @language zh_CN
+         * 以文本的方式接收加载的数据
+         * 默认方式
+         * @version Egret 3.0
+         * @platform Web,Native
+         */
+        URLLoader.DATAFORMAT_TEXT = "text";
+        /**
+         * @language zh_CN
+         * 以音频的方式接收加载的数据
+         * @version Egret 3.0
+         * @platform Web,Native
+         */
+        URLLoader.DATAFORMAT_SOUND = "sound";
+        /**
+         * @language zh_CN
+         * 以图像的方式接收加载的数据
+         * 支持jpg.png.等格式
+         * @version Egret 3.0
+         * @platform Web,Native
+         */
+        URLLoader.DATAFORMAT_BITMAP = "bitmap";
+        /**
+         * @language zh_CN
+         * 以DDS的方式接收加载的数据
+         * @version Egret 3.0
+         * @platform Web,Native
+         */
+        URLLoader.DATAFORMAT_DDS = "dds";
+        /**
+         * @language zh_CN
+         * 以TGA的方式接收加载的数据
+         * @version Egret 3.0
+         * @platform Web,Native
+         */
+        URLLoader.DATAFORMAT_TGA = "tga";
+        /**
+         * @language zh_CN
+         * 以ESM格式接收加载的数据
+         * Egret3D独有的格式 模型+蒙皮
+         * @version Egret 3.0
+         * @platform Web,Native
+         */
+        URLLoader.DATAFORMAT_ESM = "esm";
+        /**
+         * @language zh_CN
+         * 以EAM格式接收加载的数据
+         * Egret3D独有的格式 动作文件
+         * @version Egret 3.0
+         * @platform Web,Native
+         */
+        URLLoader.DATAFORMAT_EAM = "eam";
+        /**
+         * @language zh_CN
+         * 以ECA格式接收加载的数据
+         * Egret3D独有的格式 相机动画文件
+         * @version Egret 3.0
+         * @platform Web,Native
+         */
+        URLLoader.DATAFORMAT_ECA = "eca";
+        /**
+         * @language zh_CN
+         * 以EPA格式接收加载的数据
+         * Egret3D独有的格式 属性动画文件
+         * @version Egret 3.0
+         * @platform Web,Native
+         */
+        URLLoader.DATAFORMAT_EPA = "epa";
+        /**
+         * @private
+         * @language zh_CN
+         * 以pvr格式接收加载的数据
+         * @version Egret 3.0
+         * @platform Web,Native
+         */
+        URLLoader.DATAFORMAT_PVR = "pvr";
+        /**
+        * @private
+        * @language zh_CN
+        * 以pvr格式接收加载的数据
+        * @version Egret 3.0
+        * @platform Web,Native
+        */
+        URLLoader.DATAFORMAT_HDR = "hdr";
+        return URLLoader;
+    }(egret3d.EventDispatcher));
+    egret3d.URLLoader = URLLoader;
+})(egret3d || (egret3d = {}));
+var egret3d;
+(function (egret3d) {
+    /**
+    * @private
+    */
+    var AssetEvent = (function () {
+        function AssetEvent() {
+        }
+        return AssetEvent;
     }());
-    egret3d.DDS = DDS;
+    egret3d.AssetEvent = AssetEvent;
+    /**
+    * @private
+    */
+    var AssetManager = (function () {
+        function AssetManager() {
+            this._loaderDict = {};
+        }
+        AssetManager.prototype.findAsset = function (url) {
+            return this._loaderDict[url];
+        };
+        AssetManager.prototype.dispatchTask = function (url, dataformat) {
+            if (dataformat === void 0) { dataformat = null; }
+            if (!this._loaderDict[url]) {
+                var loader = new egret3d.URLLoader(url, dataformat);
+                loader.addEventListener(egret3d.LoaderEvent3D.LOADER_COMPLETE, this.onComplete, this);
+                this._loaderDict[url] = loader;
+            }
+            return this._loaderDict[url];
+        };
+        AssetManager.prototype.dispatchEvent = function (loader, callback, thisObject, param) {
+            var assetEvent = new AssetEvent();
+            assetEvent.callback = callback;
+            assetEvent.thisObject = thisObject;
+            assetEvent.param = param;
+            var assetEventList = loader["assetEventList"];
+            if (!assetEventList) {
+                assetEventList = new Array();
+                loader["assetEventList"] = assetEventList;
+            }
+            assetEventList.push(assetEvent);
+        };
+        AssetManager.prototype.onComplete = function (e) {
+            e.loader.removeEventListener(egret3d.LoaderEvent3D.LOADER_COMPLETE, this.onComplete, this);
+            var assetEventList = e.loader["assetEventList"];
+            if (assetEventList) {
+                for (var i = 0; i < assetEventList.length; ++i) {
+                    var assetEvent = assetEventList[i];
+                    assetEvent.callback.call(assetEvent.thisObject, e.loader, assetEvent.param);
+                }
+                assetEventList.length = 0;
+            }
+        };
+        return AssetManager;
+    }());
+    egret3d.AssetManager = AssetManager;
 })(egret3d || (egret3d = {}));
 var egret3d;
 (function (egret3d) {
@@ -21672,7 +22353,6 @@ var egret3d;
          */
         DDSParser.parse = function (buffer, loadMipmaps) {
             if (loadMipmaps === void 0) { loadMipmaps = true; }
-            var dds = new egret3d.DDS();
             var headerLengthInt = 31; // The header length in 32 bit ints
             var off_magic = 0;
             var DDS_MAGIC = 0x20534444;
@@ -21714,18 +22394,23 @@ var egret3d;
             var blockBytes;
             var fourCC = header[off_pfFourCC];
             var isRGBAUncompressed = false;
+            var mipmapCount = 1;
+            var format;
+            var isCubemap;
+            var width;
+            var height;
             switch (fourCC) {
                 case FOURCC_DXT1:
                     blockBytes = 8;
-                    dds.format = DDSFormat.RGB_S3TC_DXT1_FORMAT;
+                    format = DDSFormat.RGB_S3TC_DXT1_FORMAT;
                     break;
                 case FOURCC_DXT3:
                     blockBytes = 16;
-                    dds.format = DDSFormat.RGBA_S3TC_DXT3_FORMAT;
+                    format = DDSFormat.RGBA_S3TC_DXT3_FORMAT;
                     break;
                 case FOURCC_DXT5:
                     blockBytes = 16;
-                    dds.format = DDSFormat.RGBA_S3TC_DXT5_FORMAT;
+                    format = DDSFormat.RGBA_S3TC_DXT5_FORMAT;
                     break;
                 default:
                     if (header[off_RGBBitCount] == 32
@@ -21735,35 +22420,36 @@ var egret3d;
                         && header[off_ABitMask] & 0xff000000) {
                         isRGBAUncompressed = true;
                         blockBytes = 64;
-                        dds.format = RGBA_FORMAT;
+                        format = RGBA_FORMAT;
                     }
                     else {
                         console.error('DDSParser.parse: Unsupported FourCC code ', DDSParser.int32ToFourCC(fourCC));
                         return null;
                     }
             }
-            dds.mipmapCount = 1;
             if ((header[off_flags] & DDSD_MIPMAPCOUNT) && loadMipmaps !== false) {
-                dds.mipmapCount = Math.max(1, header[off_mipmapCount]);
+                mipmapCount = Math.max(1, header[off_mipmapCount]);
             }
-            dds.isCubemap = header[off_caps2] & DDSCAPS2_CUBEMAP ? true : false;
-            dds.width = header[off_width];
-            dds.height = header[off_height];
+            isCubemap = header[off_caps2] & DDSCAPS2_CUBEMAP ? true : false;
+            width = header[off_width];
+            height = header[off_height];
             var dataOffset = header[off_size] + 4;
             // Extract mipmaps buffers
-            var width = dds.width;
-            var height = dds.height;
-            var faces = dds.isCubemap ? 6 : 1;
+            var faces = isCubemap ? 6 : 1;
+            var mipmaps = new Array();
             //是否软解DXT;
             var useSoftwareSolution = false;
-            if (dds.format == DDSFormat.RGB_S3TC_DXT1_FORMAT && egret3d.ContextConfig.ColorFormat_DXT1_RGB == 0)
+            if (format == DDSFormat.RGB_S3TC_DXT1_FORMAT && egret3d.ContextConfig.ColorFormat_DXT1_RGB == 0)
                 useSoftwareSolution = true;
-            else if (dds.format == DDSFormat.RGBA_S3TC_DXT3_FORMAT && egret3d.ContextConfig.ColorFormat_DXT3_RGBA == 0)
+            else if (format == DDSFormat.RGBA_S3TC_DXT3_FORMAT && egret3d.ContextConfig.ColorFormat_DXT3_RGBA == 0)
                 useSoftwareSolution = true;
-            else if (dds.format == DDSFormat.RGBA_S3TC_DXT5_FORMAT && egret3d.ContextConfig.ColorFormat_DXT5_RGBA == 0)
+            else if (format == DDSFormat.RGBA_S3TC_DXT5_FORMAT && egret3d.ContextConfig.ColorFormat_DXT5_RGBA == 0)
                 useSoftwareSolution = true;
+            var texture = new egret3d.MimapTexture();
+            texture.width = width;
+            texture.height = height;
             for (var face = 0; face < faces; face++) {
-                for (var i = 0; i < dds.mipmapCount; i++) {
+                for (var i = 0; i < mipmapCount; i++) {
                     var byteArray;
                     if (isRGBAUncompressed) {
                         byteArray = DDSParser.loadARGBMip(buffer, dataOffset, width, height);
@@ -21773,19 +22459,18 @@ var egret3d;
                         var dataLength = Math.max(4, width) / 4 * Math.max(4, height) / 4 * blockBytes;
                         byteArray = new Uint8Array(buffer, dataOffset, dataLength);
                         if (useSoftwareSolution) {
-                            byteArray = DDSParser.softSolutionDXT(width, height, dds.format, byteArray);
+                            byteArray = DDSParser.softSolutionDXT(width, height, format, byteArray);
                         }
                     }
                     var mipmap = new egret3d.MipmapData(byteArray, width, height);
-                    dds.mipmaps.push(mipmap);
+                    mipmaps.push(mipmap);
                     dataOffset += dataLength;
                     width = Math.max(width * 0.5, 1);
                     height = Math.max(height * 0.5, 1);
                 }
-                width = dds.width;
-                height = dds.height;
+                width = width;
+                height = height;
             }
-            var texture = new egret3d.DDSTexture();
             if (useSoftwareSolution) {
                 texture.internalFormat = egret3d.InternalFormat.PixelArray;
                 texture.colorFormat = egret3d.ContextConfig.ColorFormat_RGBA8888;
@@ -21799,7 +22484,7 @@ var egret3d;
                 else if (FOURCC_DXT5 == fourCC)
                     texture.colorFormat = egret3d.ContextConfig.ColorFormat_DXT5_RGBA;
             }
-            texture.mimapData = dds.mipmaps;
+            texture.mimapData = mipmaps;
             return texture;
         };
         DDSParser.loadARGBMip = function (buffer, dataOffset, width, height) {
@@ -22327,21 +23012,6 @@ var egret3d;
 (function (egret3d) {
     /**
      * @private
-     */
-    var TGA = (function () {
-        function TGA(data, width, height) {
-            this.data = data;
-            this.width = width;
-            this.height = height;
-        }
-        return TGA;
-    }());
-    egret3d.TGA = TGA;
-})(egret3d || (egret3d = {}));
-var egret3d;
-(function (egret3d) {
-    /**
-     * @private
      * @language zh_CN
      * @class egret3d.TGAParser
      * @classdesc
@@ -22357,7 +23027,7 @@ var egret3d;
         /**
          * @language zh_CN
          * @param buffer 二进制流
-         * @returns TGATexture
+         * @returns MimapTexture
          */
         TGAParser.parse = function (buffer) {
             var TGA_TYPE_NO_DATA = 0, TGA_TYPE_INDEXED = 1, TGA_TYPE_RGB = 2, TGA_TYPE_GREY = 3, TGA_TYPE_RLE_INDEXED = 9, TGA_TYPE_RLE_RGB = 10, TGA_TYPE_RLE_GREY = 11, TGA_ORIGIN_MASK = 0x30, TGA_ORIGIN_SHIFT = 0x04, TGA_ORIGIN_BL = 0x00, TGA_ORIGIN_BR = 0x01, TGA_ORIGIN_UL = 0x02, TGA_ORIGIN_UR = 0x03;
@@ -22655,7 +23325,9 @@ var egret3d;
             }
             var result = tgaParse(use_rle, use_pal, header, offset, content);
             var rgbaData = getTgaRGBA(header.width, header.height, result.pixel_data, result.palettes);
-            var texture = new egret3d.TGATexture();
+            var texture = new egret3d.MimapTexture();
+            texture.width = header.width;
+            texture.height = header.height;
             texture.internalFormat = egret3d.InternalFormat.PixelArray;
             texture.colorFormat = egret3d.ContextConfig.ColorFormat_RGBA8888;
             texture.mimapData = [new egret3d.MipmapData(rgbaData, header.width, header.height)];
@@ -22664,6 +23336,183 @@ var egret3d;
         return TGAParser;
     }());
     egret3d.TGAParser = TGAParser;
+})(egret3d || (egret3d = {}));
+var egret3d;
+(function (egret3d) {
+    var HDRParser = (function () {
+        function HDRParser() {
+        }
+        //http://croquetweak.blogspot.co.uk/2014/08/deconstructing-floats-frexp-and-ldexp.html
+        HDRParser.ldexp = function (mantissa, exponent) {
+            return exponent > 1023 // avoid multiplying by infinity
+                ? mantissa * Math.pow(2, 1023) * Math.pow(2, exponent - 1023)
+                : exponent < -1074 // avoid multiplying by zero
+                    ? mantissa * Math.pow(2, -1074) * Math.pow(2, exponent + 1074)
+                    : mantissa * Math.pow(2, exponent);
+        };
+        HDRParser.readPixelsRawRLE = function (buffer, data, offset, fileOffset, scanline_width, num_scanlines) {
+            var rgbe = new Array(4);
+            var scanline_buffer = null;
+            var ptr;
+            var ptr_end;
+            var count;
+            var buf = new Array(2);
+            var bufferLength = buffer.length;
+            function readBuf(buf) {
+                var bytesRead = 0;
+                do {
+                    buf[bytesRead++] = buffer[fileOffset];
+                } while (++fileOffset < bufferLength && bytesRead < buf.length);
+                return bytesRead;
+            }
+            function readBufOffset(buf, offset, length) {
+                var bytesRead = 0;
+                do {
+                    buf[offset + bytesRead++] = buffer[fileOffset];
+                } while (++fileOffset < bufferLength && bytesRead < length);
+                return bytesRead;
+            }
+            function readPixelsRaw(buffer, data, offset, numpixels) {
+                var numExpected = 4 * numpixels;
+                var numRead = readBufOffset(data, offset, numExpected);
+                if (numRead < numExpected) {
+                    throw new Error('Error reading raw pixels: got ' + numRead + ' bytes, expected ' + numExpected);
+                }
+            }
+            while (num_scanlines > 0) {
+                if (readBuf(rgbe) < rgbe.length) {
+                    throw new Error("Error reading bytes: expected " + rgbe.length);
+                }
+                if ((rgbe[0] != 2) || (rgbe[1] != 2) || ((rgbe[2] & 0x80) != 0)) {
+                    //this file is not run length encoded
+                    data[offset++] = rgbe[0];
+                    data[offset++] = rgbe[1];
+                    data[offset++] = rgbe[2];
+                    data[offset++] = rgbe[3];
+                    readPixelsRaw(buffer, data, offset, scanline_width * num_scanlines - 1);
+                    return;
+                }
+                if ((((rgbe[2] & 0xFF) << 8) | (rgbe[3] & 0xFF)) != scanline_width) {
+                    throw new Error("Wrong scanline width " + (((rgbe[2] & 0xFF) << 8) | (rgbe[3] & 0xFF)) + ", expected " + scanline_width);
+                }
+                if (scanline_buffer == null) {
+                    scanline_buffer = new Array(4 * scanline_width);
+                }
+                ptr = 0;
+                /* read each of the four channels for the scanline into the buffer */
+                for (var i = 0; i < 4; i++) {
+                    ptr_end = (i + 1) * scanline_width;
+                    while (ptr < ptr_end) {
+                        if (readBuf(buf) < buf.length) {
+                            throw new Error("Error reading 2-byte buffer");
+                        }
+                        if ((buf[0] & 0xFF) > 128) {
+                            /* a run of the same value */
+                            count = (buf[0] & 0xFF) - 128;
+                            if ((count == 0) || (count > ptr_end - ptr)) {
+                                throw new Error("Bad scanline data");
+                            }
+                            while (count-- > 0)
+                                scanline_buffer[ptr++] = buf[1];
+                        }
+                        else {
+                            /* a non-run */
+                            count = buf[0] & 0xFF;
+                            if ((count == 0) || (count > ptr_end - ptr)) {
+                                throw new Error("Bad scanline data");
+                            }
+                            scanline_buffer[ptr++] = buf[1];
+                            if (--count > 0) {
+                                if (readBufOffset(scanline_buffer, ptr, count) < count) {
+                                    throw new Error("Error reading non-run data");
+                                }
+                                ptr += count;
+                            }
+                        }
+                    }
+                }
+                /* copy byte data to output */
+                for (var i = 0; i < scanline_width; i++) {
+                    data[offset + 0] = scanline_buffer[i];
+                    data[offset + 1] = scanline_buffer[i + scanline_width];
+                    data[offset + 2] = scanline_buffer[i + 2 * scanline_width];
+                    data[offset + 3] = scanline_buffer[i + 3 * scanline_width];
+                    offset += 4;
+                }
+                num_scanlines--;
+            }
+        };
+        //Returns data as floats and flipped along Y by default
+        HDRParser.parse = function (buffer) {
+            if (buffer instanceof ArrayBuffer) {
+                buffer = new Uint8Array(buffer);
+            }
+            var fileOffset = 0;
+            var bufferLength = buffer.length;
+            var NEW_LINE = 10;
+            function readLine() {
+                var buf = "";
+                do {
+                    var b = buffer[fileOffset];
+                    if (b == NEW_LINE) {
+                        ++fileOffset;
+                        break;
+                    }
+                    buf += String.fromCharCode(b);
+                } while (++fileOffset < bufferLength);
+                return buf;
+            }
+            var width = 0;
+            var height = 0;
+            var exposure = 1;
+            var gamma = 1;
+            var rle = false;
+            for (var i = 0; i < 20; i++) {
+                var line = readLine();
+                var match;
+                if (match = line.match(HDRParser.radiancePattern)) {
+                }
+                else if (match = line.match(HDRParser.formatPattern)) {
+                    rle = true;
+                }
+                else if (match = line.match(HDRParser.exposurePattern)) {
+                    exposure = Number(match[1]);
+                }
+                else if (match = line.match(HDRParser.commentPattern)) {
+                }
+                else if (match = line.match(HDRParser.widthHeightPattern)) {
+                    height = Number(match[1]);
+                    width = Number(match[2]);
+                    break;
+                }
+            }
+            if (!rle) {
+                throw new Error("File is not run length encoded!");
+            }
+            var data = new Uint8Array(width * height * 4);
+            var scanline_width = width;
+            var num_scanlines = height;
+            this.readPixelsRawRLE(buffer, data, 0, fileOffset, scanline_width, num_scanlines);
+            var mipmapCount = 1;
+            var mipmap = new egret3d.MipmapData(data, width, height);
+            var texture = new egret3d.MimapTexture();
+            texture.internalFormat = egret3d.InternalFormat.PixelArray;
+            texture.colorFormat = egret3d.ContextConfig.ColorFormat_RGBA8888;
+            texture.mimapData = [mipmap];
+            texture.useMipmap = false;
+            texture.width = width;
+            texture.height = height;
+            return texture;
+        };
+        HDRParser.radiancePattern = "#\\?RADIANCE";
+        HDRParser.commentPattern = "#.*";
+        HDRParser.gammaPattern = "GAMMA=";
+        HDRParser.exposurePattern = "EXPOSURE=\\s*([0-9]*[.][0-9]*)";
+        HDRParser.formatPattern = "FORMAT=32-bit_rle_rgbe";
+        HDRParser.widthHeightPattern = "-Y ([0-9]+) \\+X ([0-9]+)";
+        return HDRParser;
+    }());
+    egret3d.HDRParser = HDRParser;
 })(egret3d || (egret3d = {}));
 var egret3d;
 (function (egret3d) {
@@ -22744,7 +23593,7 @@ var egret3d;
                     skeletonPose.joints.push(jointPose);
                 }
                 skeletonPose.calculateJointWorldMatrix();
-                skeletonAnimationClip.poseArray.push(skeletonPose);
+                skeletonAnimationClip.addSkeletonPose(skeletonPose);
             }
             return skeletonAnimationClip;
         };
@@ -22767,35 +23616,45 @@ var egret3d;
             var frameCount = bytes.readInt();
             //读取数量;
             var nCount = bytes.readInt();
-            var orientation = new egret3d.Quaternion();
-            var scale = new egret3d.Vector3D();
-            var translation = new egret3d.Vector3D();
-            for (var i = 0; i < nCount; i++) {
-                var skeletonPose = new egret3d.SkeletonPose();
-                //读取该帧时刻;
-                skeletonPose.frameTime = bytes.readInt() / 60 / 80 * 1000;
-                for (var j = 0; j < boneCount; j++) {
-                    var jointPose = new egret3d.Joint(boneNameArray[j]);
-                    jointPose.parent = parentBoneNameArray[j];
-                    jointPose.parentIndex = skeletonPose.findJointIndex(jointPose.parent);
-                    //读取旋转四元数分量;
-                    orientation.x = bytes.readFloat();
-                    orientation.y = bytes.readFloat();
-                    orientation.z = bytes.readFloat();
-                    orientation.w = bytes.readFloat();
-                    //读取缩放分量;
-                    scale.x = bytes.readFloat();
-                    scale.y = bytes.readFloat();
-                    scale.z = bytes.readFloat();
-                    //读取平移分量;
-                    translation.x = bytes.readFloat();
-                    translation.y = bytes.readFloat();
-                    translation.z = bytes.readFloat();
-                    jointPose.buildLocalMatrix(scale, orientation, translation);
-                    skeletonPose.joints.push(jointPose);
+            //流数据;
+            if (boneCount * frameCount >= 10000 && false) {
+                skeletonAnimationClip.sampling = sampling;
+                skeletonAnimationClip.boneCount = boneCount;
+                skeletonAnimationClip.frameDataOffset = bytes.position;
+                skeletonAnimationClip.sourceData = bytes;
+                skeletonAnimationClip.buildInitialSkeleton(boneNameArray, parentBoneNameArray, nCount);
+            }
+            else {
+                var orientation = new egret3d.Quaternion();
+                var scale = new egret3d.Vector3D();
+                var translation = new egret3d.Vector3D();
+                for (var i = 0; i < nCount; i++) {
+                    var skeletonPose = new egret3d.SkeletonPose();
+                    //读取该帧时刻;
+                    skeletonPose.frameTime = bytes.readInt() / 60 / 80 * 1000;
+                    for (var j = 0; j < boneCount; j++) {
+                        var jointPose = new egret3d.Joint(boneNameArray[j]);
+                        jointPose.parent = parentBoneNameArray[j];
+                        jointPose.parentIndex = skeletonPose.findJointIndex(jointPose.parent);
+                        //读取旋转四元数分量;
+                        orientation.x = bytes.readFloat();
+                        orientation.y = bytes.readFloat();
+                        orientation.z = bytes.readFloat();
+                        orientation.w = bytes.readFloat();
+                        //读取缩放分量;
+                        scale.x = bytes.readFloat();
+                        scale.y = bytes.readFloat();
+                        scale.z = bytes.readFloat();
+                        //读取平移分量;
+                        translation.x = bytes.readFloat();
+                        translation.y = bytes.readFloat();
+                        translation.z = bytes.readFloat();
+                        jointPose.buildLocalMatrix(scale, orientation, translation);
+                        skeletonPose.joints.push(jointPose);
+                    }
+                    skeletonPose.calculateJointWorldMatrix();
+                    skeletonAnimationClip.addSkeletonPose(skeletonPose);
                 }
-                skeletonPose.calculateJointWorldMatrix();
-                skeletonAnimationClip.poseArray.push(skeletonPose);
             }
             return skeletonAnimationClip;
         };
@@ -23500,19 +24359,28 @@ var egret3d;
             this._pathRoot = "";
             this._path = "";
             this._mapXmlParser = null;
-            this._loaderDict = {};
+            this._textures = {};
             this._taskCount = 0;
             this._event = new egret3d.LoaderEvent3D();
-            this.lightGroup = new egret3d.LightGroup();
             this.huds = new Array();
-            this.textures = {};
             this.taskTotal = 0;
             this.taskCurrent = 0;
+            this.lightDict = {};
             this.container = new egret3d.Object3D();
             if (name) {
                 this.load(name, mapConfig, path);
             }
         }
+        /**
+        * @language zh_CN
+        * 查找贴图
+        * @param name 贴图名字
+        * @version Egret 3.0
+        * @platform Web,Native
+        */
+        MapLoader.prototype.findTexture = function (name) {
+            return this._textures[name];
+        };
         /**
         * @language zh_CN
         * 加载场景
@@ -23528,23 +24396,21 @@ var egret3d;
             this._pathRoot = path + name + "/";
             this._path = this._pathRoot + mapConfig;
             this.taskTotal++;
-            var load = this.findLoader(this._path);
-            if (!load) {
-                load = this.createLoader(this._path);
-                load.addEventListener(egret3d.LoaderEvent3D.LOADER_COMPLETE, this.onXmlLoad, this);
+            var load = MapLoader._assetMgr.dispatchTask(this._path);
+            if (load.data) {
+                this.parseXML(load.data);
             }
             else {
-                if (load.data) {
-                    this.parseXML(load.data);
-                }
+                this.addTask(load);
+                MapLoader._assetMgr.dispatchEvent(load, this.onXmlLoad, this, null);
             }
         };
-        MapLoader.prototype.addLoader = function (loader) {
-            this._loaderDict[loader.url] = loader;
-        };
-        MapLoader.prototype.findLoader = function (path) {
-            return this._loaderDict[path];
-        };
+        //private static addLoader(loader: URLLoader) {
+        //    MapLoader._loaderDict[loader.url] = loader;
+        //}
+        //private static findLoader(path: string): URLLoader {
+        //    return MapLoader._loaderDict[path];
+        //}
         MapLoader.prototype.parseXML = function (xml) {
             var xmlDoc = egret3d.XMLParser.parse(xml);
             this._mapXmlParser = new egret3d.MapXmlParser(xmlDoc);
@@ -23564,20 +24430,13 @@ var egret3d;
                     case "Mesh":
                         if (mapNodeData.path) {
                             var path = this._pathRoot + mapNodeData.path;
-                            var esmload = this.findLoader(path);
-                            if (!esmload) {
-                                esmload = this.createLoader(path);
-                                var nodeDatas = [];
-                                nodeDatas.push(mapNodeData);
-                                esmload["esmnodeData"] = nodeDatas;
-                                esmload.addEventListener(egret3d.LoaderEvent3D.LOADER_COMPLETE, this.onEsmLoad, this);
+                            var esmload = MapLoader._assetMgr.dispatchTask(path);
+                            if (esmload.data) {
+                                this.processMesh(mapNodeData, new egret3d.Mesh(esmload.data, new egret3d.TextureMaterial()));
                             }
                             else {
-                                var nodeDatas = esmload["esmnodeData"];
-                                nodeDatas.push(mapNodeData);
-                                if (esmload.data) {
-                                    this.processMesh(mapNodeData, new egret3d.Mesh(esmload.data, new egret3d.TextureMaterial()));
-                                }
+                                this.addTask(esmload);
+                                MapLoader._assetMgr.dispatchEvent(esmload, this.onEsmLoad, this, mapNodeData);
                             }
                         }
                         else if (mapNodeData.geometry) {
@@ -23587,44 +24446,32 @@ var egret3d;
                     case "Terrain":
                         if (mapNodeData.path) {
                             var path = this._pathRoot + mapNodeData.path;
-                            var heightImgload = this.findLoader(path);
-                            if (!heightImgload) {
-                                heightImgload = this.createLoader(path);
-                                var nodeDatas = [];
-                                nodeDatas.push(mapNodeData);
-                                heightImgload["heightNodeDatas"] = nodeDatas;
-                                heightImgload.addEventListener(egret3d.LoaderEvent3D.LOADER_COMPLETE, this.onHeightTextureLoad, this);
+                            var heightImgload = MapLoader._assetMgr.dispatchTask(path);
+                            if (heightImgload.data) {
+                                var geo = mapNodeData.geometry;
+                                var envHeightGeometry = new egret3d.ElevationGeometry(heightImgload.data, geo.width, geo.height, geo.depth, geo.segmentsW, geo.segmentsH);
+                                var mesh = new egret3d.Mesh(envHeightGeometry, new egret3d.TextureMaterial(heightImgload.data));
+                                this.processHeightMesh(mapNodeData, mesh);
                             }
                             else {
-                                var nodeDatas = heightImgload["heightNodeDatas"];
-                                nodeDatas.push(mapNodeData);
-                                var geo = mapNodeData.geometry;
-                                if (heightImgload.data) {
-                                    var envHeightGeometry = new egret3d.ElevationGeometry(heightImgload.data, geo.width, geo.height, geo.depth, geo.segmentsW, geo.segmentsH);
-                                    var mesh = new egret3d.Mesh(envHeightGeometry, new egret3d.TextureMaterial(heightImgload.data));
-                                    this.processHeightMesh(mapNodeData, mesh);
-                                }
+                                this.addTask(heightImgload);
+                                MapLoader._assetMgr.dispatchEvent(heightImgload, this.onHeightImg, this, mapNodeData);
                             }
                         }
                         break;
                     case "ParticleEmitter":
                         if (mapNodeData.path) {
                             var path = this._pathRoot + mapNodeData.path;
-                            var load = this.findLoader(path);
-                            if (!load) {
-                                load = this.createLoader(path);
-                                var nodeDatas = [];
-                                nodeDatas.push(mapNodeData);
-                                load["particleNodeDatas"] = nodeDatas;
-                                load.addEventListener(egret3d.LoaderEvent3D.LOADER_COMPLETE, this.onParticleXML, this);
-                            }
-                            else {
-                                var nodeDatas = load["particleNodeDatas"];
-                                nodeDatas.push(mapNodeData);
-                                var particleData = load["particleData"];
+                            var load = MapLoader._assetMgr.dispatchTask(path);
+                            if (load.data) {
+                                var particleData = load["ParticleData"];
                                 if (particleData) {
                                     this.processParticle(particleData, mapNodeData);
                                 }
+                            }
+                            else {
+                                this.addTask(heightImgload);
+                                MapLoader._assetMgr.dispatchEvent(load, this.onParticleXML, this, mapNodeData);
                             }
                         }
                         break;
@@ -23633,13 +24480,13 @@ var egret3d;
             for (var i = 0; i < this._mapXmlParser.textures.length; ++i) {
                 var data = this._mapXmlParser.textures[i];
                 var path = this._pathRoot + data.path;
-                var textureLoad = this.findLoader(path);
-                if (!textureLoad) {
-                    textureLoad = this.createLoader(path);
-                    textureLoad["name"] = data.name;
-                    textureLoad.addEventListener(egret3d.LoaderEvent3D.LOADER_COMPLETE, this.onTexture, this);
+                var textureLoad = MapLoader._assetMgr.dispatchTask(path);
+                if (textureLoad.data) {
+                    this._textures[data.name] = textureLoad.data;
                 }
                 else {
+                    this.addTask(textureLoad);
+                    MapLoader._assetMgr.dispatchEvent(textureLoad, this.onTexture, this, data.name);
                 }
             }
             for (var i = 0; i < this._mapXmlParser.hudList.length; ++i) {
@@ -23666,91 +24513,116 @@ var egret3d;
                     continue;
                 }
                 var path = this._pathRoot + hudData.texture;
-                var hudLoad = this.findLoader(path);
-                if (!hudLoad) {
-                    hudLoad = this.createLoader(path);
-                    var hudDatas = [];
-                    hudDatas.push(hudData);
-                    hudLoad["hudDatas"] = hudDatas;
-                    hudLoad.addEventListener(egret3d.LoaderEvent3D.LOADER_COMPLETE, this.onHudLoad, this);
+                var hudLoad = MapLoader._assetMgr.dispatchTask(path);
+                if (hudLoad.data) {
+                    hud.diffuseTexture = hudLoad.data;
                 }
                 else {
-                    var hudDatas = hudLoad["hudDatas"];
-                    hudDatas.push(hudData);
-                    if (hudLoad.data) {
-                        hud.diffuseTexture = hudLoad.data;
-                    }
+                    this.addTask(hudLoad);
+                    MapLoader._assetMgr.dispatchEvent(hudLoad, this.onHudTexture, this, hudData);
                 }
             }
         };
-        MapLoader.prototype.onParticleXML = function (e) {
-            var nodeDatas = e.loader["particleNodeDatas"];
-            var text = e.loader.data;
-            var particleData = new egret3d.ParticleXmlParser().parse(text);
-            e.loader["particleData"] = particleData;
-            for (var i = 0; i < nodeDatas.length; ++i) {
-                this.processParticle(particleData, nodeDatas[i]);
+        MapLoader.prototype.onParticleXML = function (load, mapNodeData) {
+            var particleData = load["ParticleData"];
+            if (!particleData) {
+                particleData = new egret3d.ParticleXmlParser().parse(load.data);
+                load["ParticleData"] = particleData;
+                particleData.fileUrl = load.url;
+                particleData.fileName = load.fileName;
             }
-            this.processTask(e.loader);
+            this.processParticle(particleData, mapNodeData);
+            this.processTask(load);
         };
         MapLoader.prototype.processParticle = function (particleData, nodeData) {
-            var geo = null;
-            if (nodeData.geometry) {
-                geo = egret3d.GeometryUtil.createGemetryForType(nodeData.geometry.type, nodeData.geometry);
+            if (!particleData.shape.meshFile) {
+                if (nodeData.geometry) {
+                    particleData.shape.geometry = egret3d.GeometryUtil.createGemetryForType(nodeData.geometry.type, nodeData.geometry);
+                }
+                this.processParticleGeometry(particleData, nodeData);
             }
+            else {
+                var path = this._pathRoot + particleData.shape.meshFile;
+                var load = MapLoader._assetMgr.dispatchTask(path);
+                if (load.data) {
+                    particleData.shape.geometry = load.data;
+                    this.processParticleGeometry(particleData, nodeData);
+                }
+                else {
+                    var parData = {};
+                    parData.particle = particleData;
+                    parData.nodeData = nodeData;
+                    this.addTask(load);
+                    MapLoader._assetMgr.dispatchEvent(load, this.onParticleEsmLoad, this, parData);
+                }
+            }
+            return null;
+        };
+        MapLoader.prototype.processParticleGeometry = function (particleData, nodeData) {
             particleData.materialData = this._mapXmlParser.matDict[nodeData.materialIDs[0]];
-            var particleNode = new egret3d.ParticleEmitter(particleData, geo, new egret3d.TextureMaterial());
+            var particleNode = new egret3d.ParticleEmitter(particleData, new egret3d.TextureMaterial());
             nodeData.x *= egret3d.ParticleData.SCALE_VALUE;
             nodeData.y *= egret3d.ParticleData.SCALE_VALUE;
             nodeData.z *= egret3d.ParticleData.SCALE_VALUE;
             nodeData.object3d.position.scaleBy(egret3d.ParticleData.SCALE_VALUE);
-            nodeData.object3d.position = nodeData.object3d.position;
-            particleNode.name = nodeData.object3d.name;
-            particleNode.position = nodeData.object3d.position;
-            particleNode.orientation = nodeData.object3d.orientation;
-            particleNode.scale = nodeData.object3d.scale;
-            nodeData.object3d.swapObject(particleNode);
-            nodeData.object3d = particleNode;
+            this.processObject3d(nodeData, particleNode);
             particleNode.play();
             this.processMat(nodeData);
-            return particleNode;
         };
-        MapLoader.prototype.onXmlLoad = function (e) {
-            this.parseXML(e.loader.data);
-            this.processTask(e.loader);
+        MapLoader.prototype.processObject3d = function (nodeData, object3d) {
+            object3d.name = nodeData.object3d.name;
+            object3d.visible = nodeData.object3d.visible;
+            object3d.position = nodeData.object3d.position;
+            object3d.orientation = nodeData.object3d.orientation;
+            object3d.scale = nodeData.object3d.scale;
+            nodeData.object3d.swapObject(object3d);
+            nodeData.object3d = object3d;
         };
-        MapLoader.prototype.onTexture = function (e) {
-            var textureLoad = e.loader;
-            this.textures[textureLoad["name"]] = textureLoad.data;
-            this.processTask(textureLoad);
+        MapLoader.prototype.onXmlLoad = function (loader) {
+            this.parseXML(loader.data);
+            this.processTask(loader);
         };
-        MapLoader.prototype.onHudLoad = function (e) {
-            var hudDatas = e.loader["hudDatas"];
-            for (var i = 0; i < hudDatas.length; ++i) {
-                var hudData = hudDatas[i];
-                hudData.hud.diffuseTexture = e.loader.data;
-            }
-            this.processTask(e.loader);
+        MapLoader.prototype.onHeightImg = function (load, mapNodeData) {
+            var geometry = mapNodeData.geometry;
+            var envHeightGeometry = new egret3d.ElevationGeometry(load.data, geometry.width, geometry.height, geometry.depth, geometry.segmentsW, geometry.segmentsH);
+            var mesh = new egret3d.Mesh(envHeightGeometry, new egret3d.TextureMaterial(load.data));
+            this.processHeightMesh(mapNodeData, mesh);
+            this.doLoadEpa(mapNodeData);
+            this.processTask(load);
+        };
+        MapLoader.prototype.onTexture = function (load, name) {
+            this._textures[name] = load.data;
+            this.processTask(load);
+        };
+        MapLoader.prototype.onHudTexture = function (load, hudData) {
+            hudData.hud.diffuseTexture = load.data;
+            this.processTask(load);
+        };
+        MapLoader.prototype.onMaterialTexture = function (load, textureData) {
+            var mesh = null;
+            var mat = null;
+            var mapNodeData = textureData.mapNodeData;
+            mesh = mapNodeData.object3d;
+            mat = mesh.getMaterial(textureData.matID);
+            mat[textureData.type] = load.data;
+            this.processTask(load);
+        };
+        MapLoader.prototype.onMethodTexture = function (load, methodData) {
+            methodData.method[methodData.textureName] = load.data;
+            this.processTask(load);
         };
         MapLoader.prototype.doLoadEpa = function (mapNodeData) {
             if (mapNodeData.propertyAnims) {
                 for (var j = 0; j < mapNodeData.propertyAnims.length; ++j) {
                     var propertyAnimsData = mapNodeData.propertyAnims[j];
                     var path = this._pathRoot + propertyAnimsData["path"];
-                    var epaload = this.findLoader(path);
-                    if (!epaload) {
-                        epaload = this.createLoader(path);
-                        var nodeDatas = [];
-                        nodeDatas.push(mapNodeData);
-                        epaload["epanodeData"] = nodeDatas;
-                        epaload.addEventListener(egret3d.LoaderEvent3D.LOADER_COMPLETE, this.onEpaLoad, this);
+                    var epaload = MapLoader._assetMgr.dispatchTask(path);
+                    if (epaload.data) {
+                        this.processEpa(mapNodeData, epaload.data);
                     }
                     else {
-                        var nodeDatas = epaload["epanodeData"];
-                        nodeDatas.push(mapNodeData);
-                        if (epaload.data) {
-                            this.processEpa(mapNodeData, epaload.data);
-                        }
+                        this.addTask(epaload);
+                        MapLoader._assetMgr.dispatchEvent(epaload, this.onEpaLoad, this, mapNodeData);
                     }
                 }
             }
@@ -23763,144 +24635,70 @@ var egret3d;
                 }
             }
         };
-        MapLoader.prototype.onHeightTextureLoad = function (e) {
-            var heightImgload = e.loader;
-            var nodeDatas = heightImgload["heightNodeDatas"];
-            for (var i = 0; i < nodeDatas.length; ++i) {
-                var mapNodeData = nodeDatas[i];
-                var geometry = mapNodeData.geometry;
-                var envHeightGeometry = new egret3d.ElevationGeometry(heightImgload.data, geometry.width, geometry.height, geometry.depth, geometry.segmentsW, geometry.segmentsH);
-                var mesh = new egret3d.Mesh(envHeightGeometry, new egret3d.TextureMaterial(heightImgload.data));
-                this.processHeightMesh(mapNodeData, mesh);
-                this.doLoadEpa(mapNodeData);
-            }
-            this.processTask(heightImgload);
-        };
         MapLoader.prototype.processHeightMesh = function (mapNodeData, mesh) {
-            mesh.name = mapNodeData.object3d.name;
-            mesh.position = mapNodeData.object3d.position;
-            mesh.orientation = mapNodeData.object3d.orientation;
-            mesh.scale = mapNodeData.object3d.scale;
-            mapNodeData.object3d.swapObject(mesh);
-            mapNodeData.object3d = mesh;
+            this.processObject3d(mapNodeData, mesh);
             this.processMat(mapNodeData);
         };
         MapLoader.prototype.processMesh = function (mapNodeData, mesh) {
-            mesh.name = mapNodeData.object3d.name;
-            mesh.position = mapNodeData.object3d.position;
-            mesh.orientation = mapNodeData.object3d.orientation;
-            mesh.scale = mapNodeData.object3d.scale;
-            mapNodeData.object3d.swapObject(mesh);
-            mapNodeData.object3d = mesh;
+            this.processObject3d(mapNodeData, mesh);
             this.processMat(mapNodeData);
             for (var j = 0; j < mapNodeData.skinClips.length; j++) {
                 var eamData = mapNodeData.skinClips[j];
                 var path = this._pathRoot + eamData["path"];
-                var load = this.findLoader(path);
-                if (!load) {
-                    load = this.createLoader(path);
-                    load["name"] = eamData["name"];
-                    var eamnodeDatas = [];
-                    eamnodeDatas.push(mapNodeData);
-                    load["eamnodeData"] = eamnodeDatas;
-                    load["mesh"] = mesh;
-                    load.addEventListener(egret3d.LoaderEvent3D.LOADER_COMPLETE, this.onEamLoad, this);
+                var load = MapLoader._assetMgr.dispatchTask(path);
+                if (load.data) {
+                    var clip = load.data;
+                    mesh.animation.skeletonAnimationController.addSkeletonAnimationClip(clip.clone());
                 }
                 else {
-                    var eamnodeDatas = load["eamnodeData"];
-                    eamnodeDatas.push(mapNodeData);
-                    if (load.data) {
-                        var clip = load.data;
-                        mesh.animation.skeletonAnimationController.addSkeletonAnimationClip(clip.clone());
-                    }
+                    var loadData = {};
+                    loadData.eamData = eamData;
+                    loadData.mapNodeData = mapNodeData;
+                    this.addTask(load);
+                    MapLoader._assetMgr.dispatchEvent(load, this.onEamLoad, this, loadData);
                 }
             }
         };
-        MapLoader.prototype.onEsmLoad = function (e) {
-            var nodeDatas = e.loader["esmnodeData"];
-            var mesh = new egret3d.Mesh(e.loader.data, new egret3d.TextureMaterial());
-            var cloneMesh = mesh;
-            for (var i = 0; i < nodeDatas.length; ++i) {
-                var mapNodeData = nodeDatas[i];
-                if (cloneMesh) {
-                    this.processMesh(mapNodeData, cloneMesh);
-                    this.doLoadEpa(mapNodeData);
-                    if (i == nodeDatas.length - 1) {
-                        break;
-                    }
-                    cloneMesh = mesh.clone();
-                }
+        MapLoader.prototype.onEsmLoad = function (load, mapNodeData) {
+            if (mapNodeData) {
+                var mesh = new egret3d.Mesh(load.data, new egret3d.TextureMaterial());
+                this.processMesh(mapNodeData, mesh);
+                this.doLoadEpa(mapNodeData);
             }
-            this.processTask(e.loader);
+            this.processTask(load);
         };
-        MapLoader.prototype.onEamLoad = function (e) {
-            var nodeDatas = e.loader["eamnodeData"];
-            var clip = e.loader.data;
-            clip.animationName = e.loader["name"];
-            var cloneClip = clip;
-            for (var i = 0; i < nodeDatas.length; ++i) {
-                var mapNodeData = nodeDatas[i];
-                var mesh = mapNodeData.object3d;
-                if (cloneClip) {
-                    mesh.animation.skeletonAnimationController.addSkeletonAnimationClip(cloneClip);
-                    if (i == nodeDatas.length - 1) {
-                        break;
-                    }
-                    cloneClip = clip.clone();
-                }
-            }
+        MapLoader.prototype.onParticleEsmLoad = function (load, parData) {
+            var particle = parData.particle;
+            var nodeData = parData.nodeData;
+            particle.shape.geometry = load.data;
+            this.processParticleGeometry(particle, nodeData);
+            this.processTask(load);
+        };
+        MapLoader.prototype.onEamLoad = function (load, loadData) {
+            var clip = load.data;
+            clip.animationName = loadData.eamData.name;
+            var mesh = loadData.mapNodeData.object3d;
+            mesh.animation.skeletonAnimationController.addSkeletonAnimationClip(clip.clone());
             if (this.autoPlayAnimation) {
                 mesh.animation.play(clip.animationName, 1.0, false, false);
             }
-            this.processTask(e.loader);
-        };
-        MapLoader.prototype.onEpaLoad = function (e) {
-            var nodeDatas = e.loader["epanodeData"];
-            var pa = e.loader.data;
-            var clonePa = pa;
-            for (var i = 0; i < nodeDatas.length; ++i) {
-                var mapNodeData = nodeDatas[i];
-                if (clonePa) {
-                    this.processEpa(mapNodeData, clonePa);
-                    if (i == nodeDatas.length - 1) {
-                        break;
-                    }
-                    clonePa = pa.clone();
-                }
-            }
-            this.processTask(e.loader);
-        };
-        MapLoader.prototype.onImgLoad = function (e) {
-            var load = e.loader;
-            var textureDatas = load["textureDatas"];
-            var textureData = {};
-            var mesh = null;
-            var mat = null;
-            for (var i = 0; i < textureDatas.length; ++i) {
-                textureData = textureDatas[i];
-                var mapNodeData = textureData.mapNodeData;
-                mesh = mapNodeData.object3d;
-                mat = mesh.getMaterial(textureData.matID);
-                mat[textureData.type] = load.data;
-            }
             this.processTask(load);
         };
-        MapLoader.prototype.onImgMethodLoad = function (e) {
-            var load = e.loader;
-            var methodDatas = load["methodDatas"];
-            var methodData = {};
-            for (var i = 0; i < methodDatas.length; ++i) {
-                methodData = methodDatas[i];
-                methodData.method[methodData.textureName] = load.data;
-            }
+        MapLoader.prototype.onEpaLoad = function (load, mapNodeData) {
+            var pa = load.data;
+            var clonePa = pa.clone();
+            this.processEpa(mapNodeData, clonePa);
             this.processTask(load);
         };
-        MapLoader.prototype.createLoader = function (path) {
-            var load = new egret3d.URLLoader(path);
-            this.addLoader(load);
+        //private createLoader(path: string): URLLoader {
+        //    var load: URLLoader = new URLLoader(path);
+        //    MapLoader.addLoader(load);
+        //    this._taskCount++;
+        //    //console.log("+++" + load.url + "+++" + this._taskCount);
+        //    return load;
+        //}
+        MapLoader.prototype.addTask = function (load) {
             this._taskCount++;
-            //console.log("+++" + load.url + "+++" + this._taskCount);
-            return load;
         };
         MapLoader.prototype.processTask = function (load) {
             this._taskCount--;
@@ -23912,6 +24710,7 @@ var egret3d;
             this.dispatchEvent(this._event);
             //console.log("---" + load.url + "---" + this._taskCount);
             if (this._taskCount <= 0) {
+                var subEmitters = [];
                 for (var i = 0; i < this._mapXmlParser.nodeList.length; i++) {
                     var mapNodeData = this._mapXmlParser.nodeList[i];
                     if (mapNodeData.object3d instanceof egret3d.ParticleEmitter) {
@@ -23919,10 +24718,18 @@ var egret3d;
                         for (var j = 0; j < mapNodeData.childs.length; ++j) {
                             var childData = mapNodeData.childs[j];
                             var childPatEmitter = this.container.findObject3D(childData.name);
+                            subEmitters.push(childPatEmitter);
                             if (childPatEmitter instanceof egret3d.ParticleEmitter) {
                                 patEmitter.addSubEmitter(Number(egret3d.ParticleDataSubEmitterPhase[childData.phase]), childPatEmitter);
                             }
                         }
+                    }
+                }
+                var tempEmitter;
+                for (var i = 0; i < subEmitters.length; i++) {
+                    tempEmitter = subEmitters[i];
+                    if (tempEmitter && tempEmitter.parent) {
+                        tempEmitter.parent.removeChild(tempEmitter);
                     }
                 }
                 this._event.eventType = egret3d.LoaderEvent3D.LOADER_COMPLETE;
@@ -23935,53 +24742,35 @@ var egret3d;
                 this.dispatchEvent(this._event);
             }
         };
-        MapLoader.prototype.addImaTask = function (name, type, matID, mapNodeData) {
+        MapLoader.prototype.addImaTask = function (name, type, matID, mapNodeData, material) {
             var load = null;
             var path = this._pathRoot + name;
-            var load = this.findLoader(path);
-            if (!load) {
-                load = this.createLoader(path);
-                var textureDatas = [];
-                var textureData = {};
-                textureData.type = type;
-                textureData.matID = matID;
-                textureData.mapNodeData = mapNodeData;
-                textureDatas.push(textureData);
-                load["textureDatas"] = textureDatas;
-                load.addEventListener(egret3d.LoaderEvent3D.LOADER_COMPLETE, this.onImgLoad, this);
+            var load = MapLoader._assetMgr.dispatchTask(path);
+            if (load.data) {
+                material[type] = load.data;
             }
             else {
-                var textureDatas = load["textureDatas"];
                 var textureData = {};
                 textureData.type = type;
                 textureData.matID = matID;
                 textureData.mapNodeData = mapNodeData;
-                textureDatas.push(textureData);
+                this.addTask(load);
+                MapLoader._assetMgr.dispatchEvent(load, this.onMaterialTexture, this, textureData);
             }
             return load;
         };
         MapLoader.prototype.addMethodImgTask = function (name, method, textureName) {
             var path = this._pathRoot + name;
-            var load = this.findLoader(path);
-            if (!load) {
-                load = this.createLoader(path);
-                var methodDatas = [];
-                var methodData = {};
-                methodData.method = method;
-                methodData.textureName = textureName;
-                methodDatas.push(methodData);
-                load["methodDatas"] = methodDatas;
-                load.addEventListener(egret3d.LoaderEvent3D.LOADER_COMPLETE, this.onImgMethodLoad, this);
+            var load = MapLoader._assetMgr.dispatchTask(path);
+            if (load.data) {
+                method[textureName] = load.data;
             }
             else {
-                var methodDatas = load["methodDatas"];
                 var methodData = {};
                 methodData.method = method;
                 methodData.textureName = textureName;
-                methodDatas.push(methodData);
-                if (load.data) {
-                    methodData.method[methodData.textureName] = load.data;
-                }
+                this.addTask(load);
+                MapLoader._assetMgr.dispatchEvent(load, this.onMethodTexture, this, methodData);
             }
             return load;
         };
@@ -23999,22 +24788,13 @@ var egret3d;
                 }
                 var load = null;
                 if (matData.diffuseTextureName != "") {
-                    load = this.addImaTask(matData.diffuseTextureName, "diffuseTexture", i, mapNodeData);
-                    if (load.data) {
-                        material.diffuseTexture = load.data;
-                    }
+                    load = this.addImaTask(matData.diffuseTextureName, "diffuseTexture", i, mapNodeData, material);
                 }
                 if (matData.normalTextureName != "") {
-                    load = this.addImaTask(matData.normalTextureName, "normalTexture", i, mapNodeData);
-                    if (load.data) {
-                        material.normalTexture = load.data;
-                    }
+                    load = this.addImaTask(matData.normalTextureName, "normalTexture", i, mapNodeData, material);
                 }
                 if (matData.specularTextureName != "") {
-                    load = this.addImaTask(matData.specularTextureName, "specularTexture", i, mapNodeData);
-                    if (load.data) {
-                        material.specularTexture = load.data;
-                    }
+                    load = this.addImaTask(matData.specularTextureName, "specularTexture", i, mapNodeData, material);
                 }
                 material.diffuseColor = matData.diffuseColor;
                 material.ambientColor = matData.ambientColor;
@@ -24032,11 +24812,23 @@ var egret3d;
                 material.blendMode = matData.blendMode;
                 material.cutAlpha = matData.cutAlpha;
                 material.uvRectangle.copy(matData.uvRectangle);
+                var lightGroup = new egret3d.LightGroup();
+                for (var j = 0; j < matData.lightIds.length; ++j) {
+                    var light = this.lightDict[matData.lightIds[j]];
+                    if (light) {
+                        lightGroup.addLight(light);
+                    }
+                }
+                if (lightGroup.lightNum > 0) {
+                    material.lightGroup = lightGroup;
+                }
                 this.processMethod(material, matData);
             }
-            if (typeof mesh != "ParticleEmitter") {
-                mesh.lightGroup = this.lightGroup;
-            }
+            //if (typeof mesh != "ParticleEmitter") {
+            //    if (this.lightGroup.lightNum > 0) {
+            //        mesh.lightGroup = this.lightGroup;
+            //    }
+            //}
         };
         MapLoader.prototype.processMethod = function (material, matData) {
             var load = null;
@@ -24097,7 +24889,7 @@ var egret3d;
                         textureData = method.texturesData[i];
                         load = this.addMethodImgTask(textureData.path, terrainARGBMethod, textureData.attributeName);
                         if (i != 0) {
-                            terrainARGBMethod.setUVTitling(i - 1, textureData.uvTitlingX, textureData.uvTitlingY);
+                            terrainARGBMethod.setUVTitling(i - 1, Number(textureData.uvTitlingX), Number(textureData.uvTitlingY));
                         }
                     }
                 }
@@ -24136,26 +24928,27 @@ var egret3d;
                 mapLightData = this._mapXmlParser.lightDict[key];
                 if (mapLightData.type == egret3d.LightType.directlight && this._mapXmlParser.directLight) {
                     var dirLight = new egret3d.DirectLight(mapLightData.direction);
-                    dirLight.lightId = Number(mapLightData.id);
+                    dirLight.lightId = mapLightData.id;
                     dirLight.diffuse = mapLightData.diffuseColor;
                     dirLight.ambient = mapLightData.ambientColor;
                     dirLight.halfIntensity = mapLightData.halfIntensity;
                     dirLight.intensity = mapLightData.intensity;
-                    this.lightGroup.addLight(dirLight);
+                    this.lightDict[mapLightData.id] = dirLight;
                 }
                 else if (mapLightData.type == egret3d.LightType.pointlight && this._mapXmlParser.pointLight) {
                     var pLight = new egret3d.PointLight(0);
-                    pLight.lightId = Number(mapLightData.id);
+                    pLight.lightId = mapLightData.id;
                     pLight.position = mapLightData.position;
                     pLight.ambient = mapLightData.ambientColor;
                     pLight.diffuse = mapLightData.diffuseColor;
                     pLight.radius = mapLightData.radius;
                     pLight.falloff = mapLightData.falloff;
                     pLight.intensity = mapLightData.intensity;
-                    this.lightGroup.addLight(pLight);
+                    this.lightDict[mapLightData.id] = pLight;
                 }
             }
         };
+        MapLoader._assetMgr = new egret3d.AssetManager();
         return MapLoader;
     }(egret3d.EventDispatcher));
     egret3d.MapLoader = MapLoader;
@@ -24209,6 +25002,7 @@ var egret3d;
              * @platform Web,Native
              */
             this.billboard = false;
+            this.visible = true;
             /**
              * @language zh_CN
              * 坐标x
@@ -24375,6 +25169,7 @@ var egret3d;
                     mapNodeData.object3d = new egret3d.Object3D();
                 }
                 mapNodeData.object3d.name = mapNodeData.name;
+                mapNodeData.object3d.visible = mapNodeData.visible;
                 mapNodeData.object3d.position = new egret3d.Vector3D(mapNodeData.x, mapNodeData.y, mapNodeData.z);
                 mapNodeData.object3d.orientation = new egret3d.Quaternion(mapNodeData.rx, mapNodeData.ry, mapNodeData.rz, mapNodeData.rw);
                 mapNodeData.object3d.scale = new egret3d.Vector3D(mapNodeData.sx, mapNodeData.sy, mapNodeData.sz);
@@ -24390,7 +25185,7 @@ var egret3d;
             var count = 0;
             for (i = 0, count = node.childNodes.length; i < count; i++) {
                 item = node.childNodes[i];
-                if (item.nodeName == "#text")
+                if (this.nodeFilter(item))
                     continue;
                 var data = {};
                 for (var j = 0; j < item.attributes.length; ++j) {
@@ -24413,7 +25208,7 @@ var egret3d;
             for (var i = 0, count = node.childNodes.length; i < count; i++) {
                 item = node.childNodes[i];
                 nodeName = item.nodeName;
-                if (nodeName == "#text")
+                if (this.nodeFilter(item))
                     continue;
                 method = new egret3d.MatMethodData();
                 method.type = nodeName;
@@ -24435,7 +25230,7 @@ var egret3d;
                 }
                 for (var j = 0; j < item.childNodes.length; ++j) {
                     var textureItem = item.childNodes[j];
-                    if (textureItem.nodeName == "#text") {
+                    if (this.nodeFilter(textureItem)) {
                         continue;
                     }
                     var textureData = {};
@@ -24464,7 +25259,7 @@ var egret3d;
             for (var i = 0, count = node.childNodes.length; i < count; i++) {
                 item = node.childNodes[i];
                 nodeName = item.nodeName;
-                if (nodeName == "#text") {
+                if (this.nodeFilter(item)) {
                     continue;
                 }
                 if (nodeName == "methods") {
@@ -24477,6 +25272,14 @@ var egret3d;
                 }
                 else if (nodeName == "blendMode") {
                     data[item.nodeName] = egret3d.BlendMode[item.textContent];
+                }
+                else if (nodeName == "lightIds") {
+                    if (item.textContent) {
+                        var splits = item.textContent.split(",");
+                        for (var j = 0; j < splits.length; ++j) {
+                            data.lightIds.push(Number(splits[j]));
+                        }
+                    }
                 }
                 else {
                     var v = typeof data[item.nodeName];
@@ -24516,6 +25319,9 @@ var egret3d;
                 if (v == "number") {
                     data[attr.name] = Number(attr.value);
                 }
+                else if (v == "boolean") {
+                    data[attr.name] = (attr.value == "true") ? true : false;
+                }
                 else {
                     data[attr.name] = attr.value;
                 }
@@ -24527,7 +25333,7 @@ var egret3d;
             for (i = 0, count = node.childNodes.length; i < count; i++) {
                 item = node.childNodes[i];
                 nodeName = item.nodeName;
-                if (nodeName == "#text") {
+                if (this.nodeFilter(item)) {
                     continue;
                 }
                 if (nodeName == "pos") {
@@ -24638,18 +25444,23 @@ var egret3d;
                 item = environment[i];
                 for (var ii = 0; ii < item.childNodes.length; ++ii) {
                     item0 = item.childNodes[ii];
-                    if (item0.nodeName == "#text")
+                    if (this.nodeFilter(item0))
                         continue;
                     if (item0.nodeName == "light") {
                         var lightData = new egret3d.MapLightData();
                         for (var iii = 0; iii < item0.attributes.length; ++iii) {
                             attr = item0.attributes[iii];
-                            lightData[attr.name] = attr.value;
+                            if (attr.name == "id") {
+                                lightData[attr.name] = Number(attr.value);
+                            }
+                            else {
+                                lightData[attr.name] = attr.value;
+                            }
                         }
                         this.lightDict[lightData.id] = lightData;
                         for (var iii = 0; iii < item0.childNodes.length; ++iii) {
                             item1 = item0.childNodes[iii];
-                            if (item1.nodeName == "#text") {
+                            if (this.nodeFilter(item1)) {
                                 continue;
                             }
                             if (item1.nodeName == "direction") {
@@ -24695,7 +25506,7 @@ var egret3d;
             for (i = 0, count = node.childNodes.length; i < count; i++) {
                 item = node.childNodes[i];
                 nodeName = item.nodeName;
-                if (nodeName == "#text") {
+                if (this.nodeFilter(item)) {
                     continue;
                 }
                 for (var j = 0; j < item.attributes.length; ++j) {
@@ -24756,6 +25567,9 @@ var egret3d;
             if (data.path) {
                 this.taskDict[data.path] = 0;
             }
+        };
+        MapXmlParser.prototype.nodeFilter = function (node) {
+            return node.nodeName == "#text" || node.nodeName == "#comment";
         };
         return MapXmlParser;
     }());
@@ -25000,6 +25814,7 @@ var egret3d;
              * @platform Web,Native
              */
             this.methods = [];
+            this.lightIds = [];
             /**
              * @language zh_CN
              * 材质球uv区域
@@ -25025,7 +25840,7 @@ var egret3d;
     */
     var MapLightData = (function () {
         function MapLightData() {
-            this.id = "";
+            this.id = 0;
             /**
              * @language zh_CN
              * 灯光类型
@@ -25204,401 +26019,6 @@ var egret3d;
         return ParserUtils;
     }(egret3d.EventDispatcher));
     egret3d.ParserUtils = ParserUtils;
-})(egret3d || (egret3d = {}));
-var egret3d;
-(function (egret3d) {
-    /**
-     * @language zh_CN
-     * @class egret3d.URLLoader
-     * @classdesc
-     * URLLoader类
-     * 用于加载和解析各类3d资源.
-     * DDS, TGA, jpg, png等格式的贴图文件.
-     * ESM, EAM, ECA等egret3d独有的模型文件,动作文件,相机动画文件
-     * @includeExample loader/URLLoader.ts
-     * @see egret3d.EventDispatcher
-     *
-     * @version Egret 3.0
-     * @platform Web,Native
-     */
-    var URLLoader = (function (_super) {
-        __extends(URLLoader, _super);
-        /**
-         * @language zh_CN
-         * 构造函数
-         * @param url 加载数据的地址.如果参数不为空的话.将直接开始加载
-         * @param dataformat 以什么方式进行加载.如果为空的话.将通过目标文件的后缀名判断,
-         * 如果为空且文件后缀不为内置支持的集中文件类型的话.将以文本格式进行加载解析
-         * @version Egret 3.0
-         * @platform Web,Native
-         */
-        function URLLoader(url, dataformat) {
-            if (url === void 0) { url = null; }
-            if (dataformat === void 0) { dataformat = null; }
-            _super.call(this);
-            this._event = new egret3d.LoaderEvent3D();
-            /**
-             * @language zh_CN
-             * 控制以哪种方式接收加载的数据.
-             * 如果未赋值则通过加载文件的后缀名来判断加载的类型以解析.
-             * 如果未赋值且加载的类型并非为内置支持的文件类型.将以文本格式进行加载
-             * @version Egret 3.0
-             * @platform Web,Native
-             */
-            this._dataformat = null;
-            /**
-            * @language zh_CN
-            * 加载的地址
-            * @version Egret 3.0
-            * @platform Web,Native
-            */
-            this.url = "";
-            /**
-            * @language zh_CN
-            * 加载的地址的上级目录，为了方便获取资源
-            * @version Egret 3.0
-            * @platform Web,Native
-            */
-            this.parentUrl = "";
-            /**
-            * @language zh_CN
-            * 当前加载资源的名字
-            * @version Egret 3.0
-            * @platform Web,Native
-            */
-            this.resourceName = "";
-            /**
-            * @language zh_CN
-            * 加载的数据.
-            * @version Egret 3.0
-            * @platform Web,Native
-            */
-            this.data = null;
-            if (url) {
-                if (dataformat) {
-                    this.dataformat = dataformat;
-                }
-                this.load(url);
-            }
-        }
-        /**
-         * @language en_US
-         */
-        /**
-         * @language zh_CN
-         * 加载目标地址的数据
-         * @param url 数据地址
-         * @version Egret 3.0
-         * @platform Web,Native
-         */
-        URLLoader.prototype.load = function (url) {
-            var _this = this;
-            this.data = null;
-            this.url = url;
-            if (null == this._dataformat) {
-                this._dataformat = URLLoader.DATAFORMAT_TEXT;
-                var endPos = this.url.lastIndexOf(".");
-                var startPos = this.url.lastIndexOf("/");
-                if (this.url.length >= 4)
-                    switch (this.url.substr(this.url.length - 4, 4).toLowerCase()) {
-                        case ".dds":
-                            this._dataformat = URLLoader.DATAFORMAT_DDS;
-                            break;
-                        case ".tga":
-                            this._dataformat = URLLoader.DATAFORMAT_TGA;
-                            break;
-                        case ".bmp":
-                            this._dataformat = URLLoader.DATAFORMAT_BITMAP;
-                            break;
-                        case ".png":
-                            this._dataformat = URLLoader.DATAFORMAT_BITMAP;
-                            break;
-                        case ".jpg":
-                            this._dataformat = URLLoader.DATAFORMAT_BITMAP;
-                            break;
-                        case "glsl":
-                            this._dataformat = URLLoader.DATAFORMAT_TEXT;
-                            break;
-                        case ".pvr":
-                            this._dataformat = URLLoader.DATAFORMAT_PVR;
-                            break;
-                        case ".esm":
-                            this._dataformat = URLLoader.DATAFORMAT_ESM;
-                            break;
-                        case ".eam":
-                            this._dataformat = URLLoader.DATAFORMAT_EAM;
-                            break;
-                        case ".eca":
-                            this._dataformat = URLLoader.DATAFORMAT_ECA;
-                            break;
-                        case ".epa":
-                            this._dataformat = URLLoader.DATAFORMAT_EPA;
-                            break;
-                    }
-            }
-            if (this._xhr == null) {
-                this._xhr = this.getXHR();
-            }
-            if (this._xhr == null) {
-                alert("Your browser does not support XMLHTTP.");
-                return;
-            }
-            if (this._xhr.readyState > 0) {
-                this._xhr.abort();
-            }
-            this._xhr.open("GET", this.url, true);
-            this._xhr.addEventListener("progress", function (e) { return _this.onProgress(e); }, false);
-            this._xhr.addEventListener("readystatechange", function (e) { return _this.onReadyStateChange(e); }, false);
-            this._xhr.addEventListener("error", function (e) { return _this.onError(e); }, false);
-            if (this.dataformat == URLLoader.DATAFORMAT_BITMAP) {
-                this._xhr.responseType = "blob";
-            }
-            else if (this.dataformat != URLLoader.DATAFORMAT_TEXT) {
-                this._xhr.responseType = "arraybuffer";
-            }
-            this._xhr.send();
-        };
-        Object.defineProperty(URLLoader.prototype, "dataformat", {
-            /**
-             * @language zh_CN
-             * 控制以哪种方式接收加载的数据.
-             * 如果未赋值则通过加载文件的后缀名来判断加载的类型以解析.
-             * 如果未赋值且加载的类型并非为内置支持的文件类型.将以文本格式进行加载
-             * @returns string
-             * @version Egret 3.0
-             * @platform Web,Native
-             */
-            get: function () {
-                return this._dataformat;
-            },
-            /**
-             * @language zh_CN
-             * 控制以哪种方式接收加载的数据.
-             * 如果未赋值则通过加载文件的后缀名来判断加载的类型以解析.
-             * 如果未赋值且加载的类型并非为内置支持的文件类型.将以文本格式进行加载
-             * @param value
-             * @version Egret 3.0
-             * @platform Web,Native
-             */
-            set: function (value) {
-                this._dataformat = value;
-            },
-            enumerable: true,
-            configurable: true
-        });
-        Object.defineProperty(URLLoader.prototype, "bytesLoaded", {
-            /**
-            * @language zh_CN
-            * 已经获取到的字节数
-            * @version Egret 3.0
-            * @platform Web,Native
-            */
-            get: function () {
-                return this._progressEvent ? this._progressEvent.loaded : 0;
-            },
-            enumerable: true,
-            configurable: true
-        });
-        Object.defineProperty(URLLoader.prototype, "bytesTotal", {
-            /**
-            * @language zh_CN
-            * 需要获取的总字节数
-            * @version Egret 3.0
-            * @platform Web,Native
-            */
-            get: function () {
-                return this._progressEvent ? this._progressEvent.total : 0;
-            },
-            enumerable: true,
-            configurable: true
-        });
-        URLLoader.prototype.onReadyStateChange = function (event) {
-            if (this._xhr.readyState == 4) {
-                if (this._xhr.status >= 400 /*|| this._xhr.status == 0*/) {
-                    console.log(this.url, "load fail");
-                }
-                else {
-                    this.loadComplete();
-                }
-            }
-        };
-        URLLoader.prototype.loadComplete = function () {
-            var _this = this;
-            switch (this.dataformat) {
-                case URLLoader.DATAFORMAT_BINARY:
-                    this.data = new egret3d.ByteArray(this._xhr.response);
-                    break;
-                case URLLoader.DATAFORMAT_SOUND:
-                    this.data = this._xhr.responseBody;
-                    break;
-                case URLLoader.DATAFORMAT_TEXT:
-                    this.data = this._xhr.responseText;
-                    break;
-                case URLLoader.DATAFORMAT_BITMAP:
-                    var img = document.createElement("img");
-                    if (window['createObjectURL'] != undefined) {
-                        img.src = window['createObjectURL'](this._xhr.response);
-                    }
-                    else if (window['URL'] != undefined) {
-                        img.src = window['URL'].createObjectURL(this._xhr.response);
-                    }
-                    else if (window['webkitURL'] != undefined) {
-                        img.src = window['webkitURL'].createObjectURL(this._xhr.response);
-                    }
-                    img.onload = function () { return _this.onLoad(img); };
-                    return;
-                case URLLoader.DATAFORMAT_DDS:
-                    this.data = egret3d.DDSParser.parse(this._xhr.response);
-                    break;
-                case URLLoader.DATAFORMAT_TGA:
-                    this.data = egret3d.TGAParser.parse(this._xhr.response);
-                    break;
-                case URLLoader.DATAFORMAT_ESM:
-                    var geomtry = egret3d.ESMParser.parse(this._xhr.response);
-                    this.data = geomtry;
-                    break;
-                case URLLoader.DATAFORMAT_EAM:
-                    var skeletonAnimationClip = egret3d.EAMParser.parse(this._xhr.response);
-                    this.data = skeletonAnimationClip;
-                    break;
-                case URLLoader.DATAFORMAT_ECA:
-                    var cameraAnimationController = egret3d.ECAParser.parse(this._xhr.response);
-                    this.data = cameraAnimationController;
-                    break;
-                case URLLoader.DATAFORMAT_EPA:
-                    this.data = egret3d.EPAParser.parse(this._xhr.response);
-                    break;
-                case URLLoader.DATAFORMAT_PVR:
-                    //var pvr:PVR = PVRParser.parse(this._xhr.response);
-                    //this._data = pvr;
-                    break;
-                default:
-                    this.data = this._xhr.responseText;
-            }
-            this.doLoadComplete();
-        };
-        URLLoader.prototype.onProgress = function (event) {
-            this._event.eventType = egret3d.LoaderEvent3D.LOADER_PROGRESS;
-            this._event.target = this;
-            this._event.loader = this;
-            this._progressEvent = event;
-            this.dispatchEvent(this._event);
-        };
-        URLLoader.prototype.onError = function (event) {
-            this._event.eventType = egret3d.LoaderEvent3D.LOADER_ERROR;
-            this._event.target = this;
-            this._event.loader = this;
-            this.dispatchEvent(this._event);
-            console.log("load error", event);
-        };
-        URLLoader.prototype.getXHR = function () {
-            var xhr = null;
-            if (window["XMLHttpRequest"]) {
-                xhr = new window["XMLHttpRequest"]();
-            }
-            else {
-                xhr = new ActiveXObject("MSXML2.XMLHTTP");
-            }
-            return xhr;
-        };
-        URLLoader.prototype.onLoad = function (img) {
-            this.data = new egret3d.ImageTexture(img);
-            this.doLoadComplete();
-        };
-        URLLoader.prototype.doLoadComplete = function () {
-            this.resourceName = egret3d.StringUtil.getURLName(this.url);
-            this._event.eventType = egret3d.LoaderEvent3D.LOADER_COMPLETE;
-            this._event.target = this;
-            this._event.loader = this;
-            this.dispatchEvent(this._event);
-        };
-        /**
-         * @language zh_CN
-         * 以二进制方式接收加载的数据
-         * @version Egret 3.0
-         * @platform Web,Native
-         */
-        URLLoader.DATAFORMAT_BINARY = "binary";
-        /**
-         * @language zh_CN
-         * 以文本的方式接收加载的数据
-         * 默认方式
-         * @version Egret 3.0
-         * @platform Web,Native
-         */
-        URLLoader.DATAFORMAT_TEXT = "text";
-        /**
-         * @language zh_CN
-         * 以音频的方式接收加载的数据
-         * @version Egret 3.0
-         * @platform Web,Native
-         */
-        URLLoader.DATAFORMAT_SOUND = "sound";
-        /**
-         * @language zh_CN
-         * 以图像的方式接收加载的数据
-         * 支持jpg.png.等格式
-         * @version Egret 3.0
-         * @platform Web,Native
-         */
-        URLLoader.DATAFORMAT_BITMAP = "bitmap";
-        /**
-         * @language zh_CN
-         * 以DDS的方式接收加载的数据
-         * @version Egret 3.0
-         * @platform Web,Native
-         */
-        URLLoader.DATAFORMAT_DDS = "dds";
-        /**
-         * @language zh_CN
-         * 以TGA的方式接收加载的数据
-         * @version Egret 3.0
-         * @platform Web,Native
-         */
-        URLLoader.DATAFORMAT_TGA = "tga";
-        /**
-         * @language zh_CN
-         * 以ESM格式接收加载的数据
-         * Egret3D独有的格式 模型+蒙皮
-         * @version Egret 3.0
-         * @platform Web,Native
-         */
-        URLLoader.DATAFORMAT_ESM = "esm";
-        /**
-         * @language zh_CN
-         * 以EAM格式接收加载的数据
-         * Egret3D独有的格式 动作文件
-         * @version Egret 3.0
-         * @platform Web,Native
-         */
-        URLLoader.DATAFORMAT_EAM = "eam";
-        /**
-         * @language zh_CN
-         * 以ECA格式接收加载的数据
-         * Egret3D独有的格式 相机动画文件
-         * @version Egret 3.0
-         * @platform Web,Native
-         */
-        URLLoader.DATAFORMAT_ECA = "eca";
-        /**
-         * @language zh_CN
-         * 以EPA格式接收加载的数据
-         * Egret3D独有的格式 属性动画文件
-         * @version Egret 3.0
-         * @platform Web,Native
-         */
-        URLLoader.DATAFORMAT_EPA = "epa";
-        /**
-         * @private
-         * @language zh_CN
-         * 以pvr格式接收加载的数据
-         * @version Egret 3.0
-         * @platform Web,Native
-         */
-        URLLoader.DATAFORMAT_PVR = "pvr";
-        return URLLoader;
-    }(egret3d.EventDispatcher));
-    egret3d.URLLoader = URLLoader;
 })(egret3d || (egret3d = {}));
 var egret3d;
 (function (egret3d) {
@@ -26028,6 +26448,166 @@ var egret3d;
         return FogMethod;
     }(egret3d.MethodBase));
     egret3d.FogMethod = FogMethod;
+})(egret3d || (egret3d = {}));
+var egret3d;
+(function (egret3d) {
+    /**
+    * @class egret3d.FogMethod
+    * @classdesc
+    * Exponential Height Fog渲染方法。
+    * 实现3种fog类型： line、exp、exp height
+    * @version Egret 3.0
+    * @platform Web,Native
+    */
+    var LineFogMethod = (function (_super) {
+        __extends(LineFogMethod, _super);
+        /**
+        * @language zh_CN
+        * 创建一个雾的渲染方法
+        * @param fogType 雾的类型 line/exp/expHeightFog
+        * @version Egret 3.0
+        * @platform Web,Native
+        */
+        function LineFogMethod() {
+            _super.call(this);
+            this.uniform_globalFog = new Float32Array(7);
+            this._fogColor = 0x0000cc;
+            this._fogStartDistance = 1000;
+            this._fogFarDistance = 40000;
+            this._fogAlpha = 0.6;
+            this.vsShaderList[egret3d.ShaderPhaseType.local_vertex] = this.vsShaderList[egret3d.ShaderPhaseType.local_vertex] || [];
+            this.vsShaderList[egret3d.ShaderPhaseType.local_vertex].push("vertexPos_vs");
+            this.fsShaderList[egret3d.ShaderPhaseType.multi_end_fragment] = this.fsShaderList[egret3d.ShaderPhaseType.multi_end_fragment] || [];
+            this.fsShaderList[egret3d.ShaderPhaseType.multi_end_fragment].push("lineFog");
+            //0.5, 0.6, 0.7
+            this.uniform_globalFog[0] = 0.5;
+            this.uniform_globalFog[1] = 0.6;
+            this.uniform_globalFog[2] = 0.7;
+            this.uniform_globalFog[3] = 1.0;
+            this.uniform_globalFog[4] = this._fogStartDistance;
+            this.uniform_globalFog[5] = this._fogFarDistance;
+            this.uniform_globalFog[6] = this._fogAlpha;
+        }
+        Object.defineProperty(LineFogMethod.prototype, "fogColor", {
+            /**
+            * @language zh_CN
+            * 获取雾颜色
+            * @returns 雾颜色 rgb  0xffffff
+            * @version Egret 3.0
+            * @platform Web,Native
+            */
+            get: function () {
+                return this.fogColor;
+            },
+            /**
+            * @language zh_CN
+            * 设置雾颜色
+            * @param value 雾颜色 rgb  0xffffff
+            * @version Egret 3.0
+            * @platform Web,Native
+            */
+            set: function (value) {
+                this._fogColor = value;
+                this.uniform_globalFog[0] = (this._fogColor >> 16 & 0xff) / 255.0;
+                this.uniform_globalFog[1] = (this._fogColor >> 8 & 0xff) / 255.0;
+                this.uniform_globalFog[2] = (this._fogColor & 0xff) / 255.0;
+            },
+            enumerable: true,
+            configurable: true
+        });
+        Object.defineProperty(LineFogMethod.prototype, "fogStartDistance", {
+            /**
+            * @language zh_CN
+            * 获取雾的开始距离
+            * @returns number 雾的开始距离
+            * @version Egret 3.0
+            * @platform Web,Native
+            */
+            get: function () {
+                return this._fogStartDistance;
+            },
+            /**
+            * @language zh_CN
+            * 设置雾的开始距离
+            * @param value 雾的开始距离
+            * @version Egret 3.0
+            * @platform Web,Native
+            */
+            set: function (value) {
+                this._fogStartDistance = value;
+                this.uniform_globalFog[4] = value;
+            },
+            enumerable: true,
+            configurable: true
+        });
+        Object.defineProperty(LineFogMethod.prototype, "fogFarDistance", {
+            get: function () {
+                return this._fogFarDistance;
+            },
+            set: function (value) {
+                this._fogFarDistance = value;
+                this.uniform_globalFog[5] = value;
+            },
+            enumerable: true,
+            configurable: true
+        });
+        Object.defineProperty(LineFogMethod.prototype, "fogAlpha", {
+            /**
+            * @language zh_CN
+            * 获取雾的Alpha值
+            * @returns number 雾的Alpha值
+            * @version Egret 3.0
+            * @platform Web,Native
+            */
+            get: function () {
+                return this._fogAlpha;
+            },
+            /**
+            * @language zh_CN
+            * 设置雾的Alpha值
+            * @param value 雾的Alpha值
+            * @version Egret 3.0
+            * @platform Web,Native
+            */
+            set: function (value) {
+                this._fogAlpha = value;
+                this.uniform_globalFog[6] = value;
+            },
+            enumerable: true,
+            configurable: true
+        });
+        /**
+        * @private
+        * @language zh_CN
+        * @param time
+        * @param delay
+        * @param usage
+        * @param materialData
+        * @param geometry
+        * @param context3DProxy
+        * @param modeltransform
+        * @param modeltransform
+        * @param camera3D
+        */
+        LineFogMethod.prototype.upload = function (time, delay, usage, geometry, context3DProxy, modeltransform, camera3D) {
+            usage["uniform_globalFog"] = context3DProxy.getUniformLocation(usage.program3D, "uniform_globalFog");
+        };
+        /**
+         * @language zh_CN
+         * @private
+         */
+        LineFogMethod.prototype.activeState = function (time, delay, usage, geometry, context3DProxy, modeltransform, camera3D) {
+            context3DProxy.uniform1fv(usage["uniform_globalFog"], this.uniform_globalFog);
+        };
+        /**
+         * @language zh_CN
+         * @private
+         */
+        LineFogMethod.prototype.dispose = function () {
+        };
+        return LineFogMethod;
+    }(egret3d.MethodBase));
+    egret3d.LineFogMethod = LineFogMethod;
 })(egret3d || (egret3d = {}));
 var egret3d;
 (function (egret3d) {
@@ -26590,6 +27170,7 @@ var egret3d;
                 this.texture = texture;
                 if (this.materialData.lightTexture != this.texture) {
                     this.materialData.lightTexture = this.texture;
+                    this.materialData.lightTexture.useMipmap = false;
                     this.materialData.textureChange = true;
                 }
             },
@@ -26752,6 +27333,80 @@ var egret3d;
         return AlphaMaskMethod;
     }(egret3d.MethodBase));
     egret3d.AlphaMaskMethod = AlphaMaskMethod;
+})(egret3d || (egret3d = {}));
+var egret3d;
+(function (egret3d) {
+    /**
+    * @class egret3d.AOMapMethod
+    * @classdesc
+    * AO贴图渲染方法。
+    * 使用渲染好的AO贴图进行渲染，增加渲染表现效果。
+    * @version Egret 3.0
+    * @platform Web,Native
+    */
+    var AOMapMethod = (function (_super) {
+        __extends(AOMapMethod, _super);
+        /**
+        * @language zh_CN
+        * 创建AO贴图方法
+        * @param texture AO贴图
+        * @version Egret 3.0
+        * @platform Web,Native
+        */
+        function AOMapMethod(texture) {
+            _super.call(this);
+            this.aoPower = 1.0;
+            this.fsShaderList[egret3d.ShaderPhaseType.shadow_fragment] = this.fsShaderList[egret3d.ShaderPhaseType.shadow_fragment] || [];
+            this.fsShaderList[egret3d.ShaderPhaseType.shadow_fragment].push("AOMap_fs");
+            this.lightTexture = texture;
+        }
+        Object.defineProperty(AOMapMethod.prototype, "lightTexture", {
+            /**
+            * @language zh_CN
+            * 设置AO贴图
+            * @param texture AO贴图
+            * @version Egret 3.0
+            * @platform Web,Native
+            */
+            set: function (texture) {
+                this.texture = texture;
+                this.materialData.aoTexture = this.texture;
+                this.materialData.textureChange = true;
+            },
+            enumerable: true,
+            configurable: true
+        });
+        /**
+        * @private
+        * @language zh_CN
+        * @param time
+        * @param delay
+        * @param usage
+        * @param materialData
+        * @param geometry
+        * @param context3DProxy
+        * @param modeltransform
+        * @param modeltransform
+        * @param camera3D
+        */
+        AOMapMethod.prototype.upload = function (time, delay, usage, geometry, context3DProxy, modeltransform, camera3D) {
+            usage["aoPower"] = context3DProxy.getUniformLocation(usage.program3D, "aoPower");
+        };
+        /**
+        * @private
+        */
+        AOMapMethod.prototype.activeState = function (time, delay, usage, geometry, context3DProxy, modeltransform, camera3D) {
+            context3DProxy.uniform1f(usage["aoPower"], this.aoPower);
+        };
+        /**
+        * @language zh_CN
+        * @private
+        */
+        AOMapMethod.prototype.dispose = function () {
+        };
+        return AOMapMethod;
+    }(egret3d.MethodBase));
+    egret3d.AOMapMethod = AOMapMethod;
 })(egret3d || (egret3d = {}));
 var egret3d;
 (function (egret3d) {
@@ -27778,6 +28433,14 @@ var egret3d;
             this.drawMode = egret3d.DrawMode.TRIANGLES;
             /**
             * @language zh_CN
+            * 渲染模式。
+            * @default DrawMode.TRIANGLES
+            * @version Egret 3.0
+            * @platform Web,Native
+            */
+            this.useMipmap = true;
+            /**
+            * @language zh_CN
             * 法线贴图。
             * @default CheckerboardTexture.texture
             * @version Egret 3.0
@@ -27911,6 +28574,14 @@ var egret3d;
             * @platform Web,Native
             */
             this.depthTest = true;
+            /**
+            * @language zh_CN
+            * 深度测试模式
+            * @default true
+            * @version Egret 3.0
+            * @platform Web,Native
+            */
+            this.depthMode = 0;
             /**
             * @language zh_CN
             * 是否平滑 。
@@ -28082,6 +28753,14 @@ var egret3d;
             this.textureChange = false;
             /**
             * @language zh_CN
+            * 纹理状态需要更新。
+            * @default false
+            * @version Egret 3.0
+            * @platform Web,Native
+            */
+            this.textureStateChage = true;
+            /**
+            * @language zh_CN
             * cullFrontOrBack。
             * @default Egret3DDrive.BACK
             * @version Egret 3.0
@@ -28093,6 +28772,7 @@ var egret3d;
              * @language zh_CN
              */
             this.materialSourceData = new Float32Array(20); //20
+            this.materialSourceData2 = new Float32Array(20); //20
             /**
              * @language zh_CN
              */
@@ -28547,6 +29227,7 @@ var egret3d;
             for (var index in this._passUsage.sampler2DList) {
                 sampler2D = this._passUsage.sampler2DList[index];
                 sampler2D.uniformIndex = context3DProxy.getUniformLocation(this._passUsage.program3D, sampler2D.varName);
+                sampler2D.texture = this._materialData[sampler2D.varName];
             }
             var sampler3D;
             for (var index in this._passUsage.sampler3DList) {
@@ -28599,6 +29280,8 @@ var egret3d;
                 context3DProxy.disableDepth();
                 context3DProxy.depthFunc(egret3d.ContextConfig.LEQUAL);
             }
+            //Context3DProxy.gl.clearColor(0.0,0.0,0.0,1.0);
+            //Context3DProxy.gl.stencilOp(Context3DProxy.gl.BACK, Context3DProxy.gl.KEEP, Context3DProxy.gl.KEEP);
             context3DProxy.setCulling(this._materialData.cullFrontOrBack);
             if (this._materialData.bothside) {
                 context3DProxy.disableCullFace();
@@ -28625,14 +29308,12 @@ var egret3d;
                 }
                 sampler2D.texture.upload(context3DProxy);
                 context3DProxy.setTexture2DAt(sampler2D.activeTextureIndex, sampler2D.uniformIndex, sampler2D.index, sampler2D.texture.texture2D);
-                if (this._materialData.materialDataNeedChange) {
-                    var min_filter = (this._materialData.smooth && sampler2D.texture.texture2D.useMipmap) ? egret3d.Context3DProxy.gl.LINEAR_MIPMAP_LINEAR : egret3d.Context3DProxy.gl.LINEAR;
-                    var mag_filter = this._materialData.smooth ? egret3d.Context3DProxy.gl.LINEAR : egret3d.Context3DProxy.gl.LINEAR;
-                    var wrap_u_filter = this._materialData.repeat ? egret3d.Context3DProxy.gl.REPEAT : egret3d.Context3DProxy.gl.CLAMP_TO_EDGE;
-                    var wrap_v_filter = this._materialData.repeat ? egret3d.Context3DProxy.gl.REPEAT : egret3d.Context3DProxy.gl.CLAMP_TO_EDGE;
-                    context3DProxy.setTexture2DSamplerState(min_filter, mag_filter, wrap_u_filter, wrap_v_filter);
-                    this._materialData.materialDataNeedChange = false;
-                }
+                if (sampler2D.texture.useMipmap)
+                    sampler2D.texture.useMipmap = this._materialData.useMipmap;
+                sampler2D.texture.repeat = this._materialData.repeat;
+                sampler2D.texture.smooth = this._materialData.smooth;
+                sampler2D.texture.activeState(context3DProxy);
+                this._materialData.textureStateChage = false;
             }
             var sampler3D;
             for (var index in this._passUsage.sampler3DList) {
@@ -29105,17 +29786,16 @@ var egret3d;
             enumerable: true,
             configurable: true
         });
-        Object.defineProperty(MaterialBase.prototype, "diffuseTexture", {
+        Object.defineProperty(MaterialBase.prototype, "depth", {
             /**
             * @language zh_CN
-            * 返回材质 diffuseTexture。
-            * 返回材质球的漫反射贴图。
-            * @returns ITexture 漫反射贴图
+            * 返回深度测试
+            * @param texture ITexture
             * @version Egret 3.0
             * @platform Web,Native
             */
             get: function () {
-                return this.materialData.diffuseTexture;
+                return this.materialData.depthTest;
             },
             ///**
             // * @language zh_CN
@@ -29146,6 +29826,55 @@ var egret3d;
             ////public get shadowMapTexture(): ITexture {
             ////    return this.materialData.shadowMapTexture;
             ////}
+            /**
+             * @language zh_CN
+             * 设置是否开启深度测试
+             * @param texture ITexture
+             * @version Egret 3.0
+             * @platform Web,Native
+             */
+            set: function (v) {
+                this.materialData.depthTest = v;
+            },
+            enumerable: true,
+            configurable: true
+        });
+        Object.defineProperty(MaterialBase.prototype, "depthMode", {
+            /**
+            * @language zh_CN
+            * 返回深度测试方式
+            * @param texture ITexture
+            * @version Egret 3.0
+            * @platform Web,Native
+            */
+            get: function () {
+                return this.materialData.depthMode;
+            },
+            /**
+             * @language zh_CN
+             * 设置是否开启深度测试方式
+             * @param v 模式
+             * @version Egret 3.0
+             * @platform Web,Native
+             */
+            set: function (v) {
+                this.materialData.depthMode = v;
+            },
+            enumerable: true,
+            configurable: true
+        });
+        Object.defineProperty(MaterialBase.prototype, "diffuseTexture", {
+            /**
+            * @language zh_CN
+            * 返回材质 diffuseTexture。
+            * 返回材质球的漫反射贴图。
+            * @returns ITexture 漫反射贴图
+            * @version Egret 3.0
+            * @platform Web,Native
+            */
+            get: function () {
+                return this.materialData.diffuseTexture;
+            },
             /**
              * @language zh_CN
              * 设置材质 diffuseTexture 。
@@ -29430,6 +30159,34 @@ var egret3d;
             set: function (value) {
                 if (this.materialData.alpha != value) {
                     this.materialData.alpha = value;
+                    this.materialData.materialDataNeedChange = true;
+                }
+            },
+            enumerable: true,
+            configurable: true
+        });
+        Object.defineProperty(MaterialBase.prototype, "alphaBlending", {
+            /**
+             * @language zh_CN
+             * 返回 alphaBlending 颜色
+             * @returns {Number}
+             * @version Egret 3.0
+             * @platform Web,Native
+             */
+            get: function () {
+                return this.materialData.alphaBlending;
+            },
+            /**
+           * @language zh_CN
+           * 设置材质 的alphaBlending 值。
+           * 设置 材质球的的alpha是否进行深度排序
+           * @param value {Number}
+           * @version Egret 3.0
+           * @platform Web,Native
+           */
+            set: function (value) {
+                if (this.materialData.alphaBlending != value) {
+                    this.materialData.alphaBlending = value;
                     this.materialData.materialDataNeedChange = true;
                 }
             },
@@ -29736,6 +30493,7 @@ var egret3d;
              */
             set: function (val) {
                 this.materialData.smooth = val;
+                this.materialData.textureStateChage = true;
             },
             enumerable: true,
             configurable: true
@@ -29762,12 +30520,14 @@ var egret3d;
              */
             set: function (val) {
                 this.materialData.repeat = val;
+                this.materialData.textureStateChage = true;
             },
             enumerable: true,
             configurable: true
         });
         Object.defineProperty(MaterialBase.prototype, "bothside", {
             /**
+    
             * @language zh_CN
             * 返回材质 bothside 值。
            * 返回是否显示双面的开关。
@@ -29787,6 +30547,7 @@ var egret3d;
             * @platform Web,Native
             */
             set: function (val) {
+                this.materialData.textureStateChage = true;
                 this.materialData.bothside = val;
             },
             enumerable: true,
@@ -29811,6 +30572,7 @@ var egret3d;
            * @platform Web,Native
            */
             set: function (value) {
+                this.materialData.textureStateChage = true;
                 this.materialData.cullFrontOrBack = value;
             },
             enumerable: true,
@@ -29826,6 +30588,7 @@ var egret3d;
              * @platform Web,Native
              */
             set: function (value) {
+                this.materialData.textureStateChage = true;
                 this.materialData.blendMode = value;
                 switch (value) {
                     //his.materialData.blend_src = ContextConfig.SRC_ALPHA; 透明
@@ -29878,7 +30641,7 @@ var egret3d;
                     return;
                 }
                 this.materialData.specularLevel = value;
-                this.materialData.materialDataNeedChange = true;
+                this.materialData.textureStateChage = true;
             },
             enumerable: true,
             configurable: true
@@ -30561,19 +31324,12 @@ var egret3d;
                         pos.y = Math.random() * this.height - this.height * 0.5;
                     }
                     else if (this.coneType == egret3d.ParticleConeShapeType.Base) {
-                        pos.y = this.height * 0.5;
-                        var random = Math.random();
-                        if (random > 0.5) {
-                            pos.y *= -1;
-                        }
+                        pos.y = -this.height * 0.5;
                         pos.x *= random;
                         pos.z *= random;
                     }
                     else if (this.coneType == egret3d.ParticleConeShapeType.BaseShell) {
-                        pos.y = this.height * 0.5;
-                        if (Math.random() > 0.5) {
-                            pos.y *= -1;
-                        }
+                        pos.y = -this.height * 0.5;
                     }
                     values.push(pos);
                 }
@@ -30592,7 +31348,18 @@ var egret3d;
                 for (var i = 0; i < num; i++) {
                     pos = new egret3d.Vector3D();
                     angle = Math.random() * 2 * Math.PI;
-                    pos.y = Math.random() * this.height - this.height * 0.5;
+                    if (this.coneType == egret3d.ParticleConeShapeType.Base) {
+                        pos.y = -this.height * 0.5;
+                    }
+                    else if (this.coneType == egret3d.ParticleConeShapeType.BaseShell) {
+                        pos.y = -this.height * 0.5;
+                    }
+                    else if (this.coneType == egret3d.ParticleConeShapeType.Volume) {
+                        pos.y = Math.random() * this.height - this.height * 0.5;
+                    }
+                    else if (this.coneType == egret3d.ParticleConeShapeType.VolumeShell) {
+                        pos.y = Math.random() * this.height - this.height * 0.5;
+                    }
                     targetR = Math.abs(pos.y - this.origPoint.y); //点到原点的y距离
                     if (this.radiusBottom < this.radiusTop) {
                         targetR = radiusT_B * (this.height / 2 + pos.y) / this.height;
@@ -30604,10 +31371,10 @@ var egret3d;
                     }
                     pos.x = Math.sin(angle) * targetR;
                     pos.z = Math.cos(angle) * targetR;
-                    if (this.coneType == egret3d.ParticleConeShapeType.Volume) {
+                    if (this.coneType == egret3d.ParticleConeShapeType.Volume || this.coneType == egret3d.ParticleConeShapeType.Base) {
                         var random = Math.random();
                         pos.x *= random;
-                        pos.y *= random;
+                        pos.z *= random;
                     }
                     values.push(pos);
                 }
@@ -30810,8 +31577,8 @@ var egret3d;
             var radio = new egret3d.Vector3D(0, 0, 0);
             for (var i = 0; i < num; i++) {
                 x = Math.random() * 2 * r - r;
-                y = Math.abs(Math.random() * 2 * r - r);
-                z = Math.random() * 2 * r - r;
+                y = Math.random() * 2 * r - r;
+                z = Math.abs(Math.random() * 2 * r - r);
                 pos = new egret3d.Vector3D(x, y, z);
                 if (egret3d.Vector3D.distance(radio, pos) > r) {
                     i--;
@@ -30885,6 +31652,166 @@ var egret3d;
         };
         return CircleValueShape;
     }(ValueShape));
+    /**
+     * @private
+     */
+    var Mesh3DValueShape = (function (_super) {
+        __extends(Mesh3DValueShape, _super);
+        function Mesh3DValueShape() {
+            _super.apply(this, arguments);
+            this.valueType = ValueType.vec3;
+            this.normalList = [];
+            this.type = egret3d.ParticleMeshShapeType.Edge;
+        }
+        /**
+        * @language zh_CN
+        * @param num
+        * @param parameters [width, height, depth]
+        * @returns Vector3D[]
+        */
+        Mesh3DValueShape.prototype.calculate = function (num) {
+            var values = [];
+            if (this.type == egret3d.ParticleMeshShapeType.Edge) {
+                this.edgePosition(values, num);
+            }
+            else if (this.type == egret3d.ParticleMeshShapeType.Triangle) {
+                this.trianglePosition(values, num);
+            }
+            else if (this.type == egret3d.ParticleMeshShapeType.Vertex) {
+                this.vertexPosition(values, num);
+            }
+            return values;
+        };
+        Mesh3DValueShape.prototype.edgePosition = function (values, num) {
+            var val;
+            var normal;
+            var triangleCount = this.geometry.indexData.length / 3;
+            var vc1;
+            var vc2;
+            var random;
+            var xyz = [];
+            for (var i = 0; i < num; i++) {
+                val = new egret3d.Vector3D();
+                values.push(val);
+                var index0 = 3 * Math.floor(triangleCount * Math.random()); //第n个三角形
+                var index1 = index0 + 1;
+                var index2 = index0 + 2;
+                //获取三角形的三个顶点
+                xyz.length = 0;
+                this.geometry.getVertexForIndex(index0 + 0, egret3d.VertexFormat.VF_POSITION, xyz);
+                Mesh3DValueShape.vct1.setTo(xyz[0], xyz[1], xyz[2]);
+                xyz.length = 0;
+                this.geometry.getVertexForIndex(index0 + 1, egret3d.VertexFormat.VF_POSITION, xyz);
+                Mesh3DValueShape.vct2.setTo(xyz[0], xyz[1], xyz[2]);
+                xyz.length = 0;
+                this.geometry.getVertexForIndex(index0 + 2, egret3d.VertexFormat.VF_POSITION, xyz);
+                Mesh3DValueShape.vct3.setTo(xyz[0], xyz[1], xyz[2]);
+                normal = this.calcNormal(Mesh3DValueShape.vct1, Mesh3DValueShape.vct2, Mesh3DValueShape.vct3);
+                this.normalList.push(normal);
+                //在三角形上获得一条边
+                random = Math.random();
+                if (random < 0.333) {
+                    vc1 = Mesh3DValueShape.vct1;
+                    vc2 = Mesh3DValueShape.vct2;
+                }
+                else if (random < 0.666) {
+                    vc1 = Mesh3DValueShape.vct2;
+                    vc2 = Mesh3DValueShape.vct3;
+                }
+                else {
+                    vc1 = Mesh3DValueShape.vct3;
+                    vc2 = Mesh3DValueShape.vct1;
+                }
+                //在这条直线上随机一个位置
+                vc1.lerp(vc1, vc2, Math.random());
+                val.copyFrom(vc1);
+            }
+        };
+        Mesh3DValueShape.prototype.trianglePosition = function (values, num) {
+            var val;
+            var normal;
+            var triangleCount = this.geometry.indexData.length / 3;
+            var vc1 = new egret3d.Vector3D();
+            var vc2 = new egret3d.Vector3D();
+            var random;
+            var xyz = [];
+            for (var i = 0; i < num; i++) {
+                val = new egret3d.Vector3D();
+                values.push(val);
+                var index0 = 3 * Math.floor(triangleCount * Math.random()); //第n个三角形
+                var index1 = index0 + 1;
+                var index2 = index0 + 2;
+                //获取三角形的三个顶点
+                xyz.length = 0;
+                this.geometry.getVertexForIndex(index0 + 0, egret3d.VertexFormat.VF_POSITION, xyz);
+                Mesh3DValueShape.vct1.setTo(xyz[0], xyz[1], xyz[2]);
+                xyz.length = 0;
+                this.geometry.getVertexForIndex(index0 + 1, egret3d.VertexFormat.VF_POSITION, xyz);
+                Mesh3DValueShape.vct2.setTo(xyz[0], xyz[1], xyz[2]);
+                xyz.length = 0;
+                this.geometry.getVertexForIndex(index0 + 2, egret3d.VertexFormat.VF_POSITION, xyz);
+                Mesh3DValueShape.vct3.setTo(xyz[0], xyz[1], xyz[2]);
+                normal = this.calcNormal(Mesh3DValueShape.vct1, Mesh3DValueShape.vct2, Mesh3DValueShape.vct3);
+                this.normalList.push(normal);
+                //在两条边上分别随机一个位置
+                vc1.lerp(Mesh3DValueShape.vct1, Mesh3DValueShape.vct2, Math.random());
+                vc2.lerp(Mesh3DValueShape.vct2, Mesh3DValueShape.vct3, Math.random());
+                //连接两个随机位置的线段，之间随机一个位置
+                val.lerp(vc1, vc2, Math.random());
+            }
+        };
+        Mesh3DValueShape.prototype.vertexPosition = function (values, num) {
+            var val;
+            var normal;
+            var triangleCount = this.geometry.indexData.length / 3;
+            var random;
+            var xyz = [];
+            for (var i = 0; i < num; i++) {
+                val = new egret3d.Vector3D();
+                values.push(val);
+                var index0 = 3 * Math.floor(triangleCount * Math.random()); //第n个三角形
+                var index1 = index0 + 1;
+                var index2 = index0 + 2;
+                //获取三角形的三个顶点
+                xyz.length = 0;
+                this.geometry.getVertexForIndex(index0 + 0, egret3d.VertexFormat.VF_POSITION, xyz);
+                Mesh3DValueShape.vct1.setTo(xyz[0], xyz[1], xyz[2]);
+                xyz.length = 0;
+                this.geometry.getVertexForIndex(index0 + 1, egret3d.VertexFormat.VF_POSITION, xyz);
+                Mesh3DValueShape.vct2.setTo(xyz[0], xyz[1], xyz[2]);
+                xyz.length = 0;
+                this.geometry.getVertexForIndex(index0 + 2, egret3d.VertexFormat.VF_POSITION, xyz);
+                Mesh3DValueShape.vct3.setTo(xyz[0], xyz[1], xyz[2]);
+                normal = this.calcNormal(Mesh3DValueShape.vct1, Mesh3DValueShape.vct2, Mesh3DValueShape.vct3);
+                this.normalList.push(normal);
+                //在三角形上获得一条边
+                random = Math.random();
+                if (random < 0.333) {
+                    val.copyFrom(Mesh3DValueShape.vct1);
+                }
+                else if (random < 0.666) {
+                    val.copyFrom(Mesh3DValueShape.vct2);
+                }
+                else {
+                    val.copyFrom(Mesh3DValueShape.vct3);
+                }
+            }
+        };
+        Mesh3DValueShape.prototype.calcNormal = function (pt0, pt1, pt2) {
+            Mesh3DValueShape.crsVector1.setTo(pt1.x - pt0.x, pt1.y - pt0.y, pt1.z - pt0.z);
+            Mesh3DValueShape.crsVector2.setTo(pt2.x - pt0.x, pt2.y - pt0.y, pt2.z - pt0.z);
+            this.normal = Mesh3DValueShape.crsVector1.crossProduct(Mesh3DValueShape.crsVector2);
+            this.normal.normalize();
+            return this.normal;
+        };
+        Mesh3DValueShape.vct1 = new egret3d.Vector3D();
+        Mesh3DValueShape.vct2 = new egret3d.Vector3D();
+        Mesh3DValueShape.vct3 = new egret3d.Vector3D();
+        Mesh3DValueShape.crsVector1 = new egret3d.Vector3D();
+        Mesh3DValueShape.crsVector2 = new egret3d.Vector3D();
+        return Mesh3DValueShape;
+    }(ValueShape));
+    egret3d.Mesh3DValueShape = Mesh3DValueShape;
     /**
     * @private
     * 贝塞尔曲线, 以Y为平面, parameters = [p0, p1, p2, p3]
@@ -31056,21 +31983,23 @@ var egret3d;
                 else {
                     lifeTime = lifeArray[i];
                 }
+                maxLife = Math.max(maxLife, lifeTime);
                 for (var j = 0; j < vertices; ++j) {
                     index = i * vertices + j;
                     index = index * geometry.vertexAttLength + this.attribute_time.offsetIndex;
                     geometry.verticesData[index + 0] = bornTime; //出生时间
                     geometry.verticesData[index + 1] = lifeTime; //单次生命周期时间
                     geometry.verticesData[index + 2] = i; //下标
-                    maxLife = Math.max(maxLife, lifeTime);
                 }
             }
             var loopTime = maxLife;
             if (bornTime > maxLife) {
                 loopTime = bornTime;
             }
-            //粒子一个完整的周期为最后一个粒子走完周期
+            //对于每个面片而言，取摩的时间（周期）
             this._animationState.loopTime = loopTime;
+            //最后一个面片消失的时间
+            this._animationState.circleTime = this._animationState.emitter.data.life.delay + lifeTime + bornTime;
         };
         /**
         * private
@@ -31270,6 +32199,12 @@ var egret3d;
                 coneShape.coneType = node.coneType;
                 this._positions = coneShape;
             }
+            else if (node.type == egret3d.ParticleDataShapeType.Mesh) {
+                var meshShape = new egret3d.Mesh3DValueShape();
+                meshShape.geometry = node.geometry;
+                meshShape.type = node.meshType;
+                this._positions = meshShape;
+            }
         };
         Object.defineProperty(ParticlePosition.prototype, "offsetIndex", {
             /**
@@ -31297,6 +32232,10 @@ var egret3d;
             this._animationState = this.state;
             var posArray = this._positions.calculate(count);
             var directionArray = this._animationState.directionArray = [];
+            var meshNormalArray;
+            if (this._node.type == egret3d.ParticleDataShapeType.Mesh) {
+                meshNormalArray = this._positions.normalList;
+            }
             var vertices = geometry.vertexCount / count;
             var index = 0;
             var data = this._animationState.emitter.data;
@@ -31327,6 +32266,9 @@ var egret3d;
                     }
                     else if (this._node.type == egret3d.ParticleDataShapeType.Cone) {
                         dir = coneShape.getDirection(recordPos, dir);
+                    }
+                    else if (this._node.type == egret3d.ParticleDataShapeType.Mesh) {
+                        dir.copyFrom(meshNormalArray[i]);
                     }
                 }
                 dir.normalize();
@@ -31397,6 +32339,7 @@ var egret3d;
             var particleIndex = 0;
             var timeIndex;
             var bornTime;
+            var renderMode = this._animationState.emitter.data.property.renderMode;
             for (var i = 0; i < count; ++i) {
                 //
                 if (this._node.type == egret3d.ParticleValueType.OneBezier || this._node.type == egret3d.ParticleValueType.TwoBezier) {
@@ -31415,7 +32358,12 @@ var egret3d;
                     rot = rotationArray[i];
                 }
                 this.rotationMat.identity();
-                this.rotationMat.rotation(0, 0, rot);
+                if (renderMode == egret3d.ParticleRenderModeType.VerticalBillboard || renderMode == egret3d.ParticleRenderModeType.HorizontalBillboard) {
+                    this.rotationMat.rotation(0, rot, 0);
+                }
+                else {
+                    this.rotationMat.rotation(0, 0, rot);
+                }
                 for (var j = 0; j < vertices; ++j) {
                     index = i * vertices + j;
                     index = index * geometry.vertexAttLength;
@@ -31571,6 +32519,7 @@ var egret3d;
                 clr1.r /= 256;
                 clr1.g /= 256;
                 clr1.b /= 256;
+                this.processTintColor(clr1, this._node.tintColor);
                 for (var j = 0; j < vertices; ++j) {
                     index = i * vertices + j;
                     index = index * geometry.vertexAttLength + vertexColorOffset;
@@ -31580,6 +32529,16 @@ var egret3d;
                     geometry.verticesData[index + 3] = clr1.a;
                 }
             }
+        };
+        /**
+        * @private
+        * 加成tintColor色
+        */
+        ParticleStartColor.prototype.processTintColor = function (src, tintColor) {
+            src.a *= tintColor.a / 128;
+            src.r *= tintColor.r / 128;
+            src.g *= tintColor.g / 128;
+            src.b *= tintColor.b / 128;
         };
         /**
         * @private
@@ -31704,14 +32663,15 @@ var egret3d;
             var changed = false;
             var timeOffsetIndex = this.particleAnimationState.emitter.timeNode.offsetIndex;
             var particleTime = animTime * 0.001 - this.particleAnimationState.emitter.data.life.delay;
+            var verticesData = geometry.sharedVertexBuffer ? geometry.sharedVertexBuffer.arrayBuffer : geometry.verticesData;
             //没有跟随对象，使用自己
             var followTarget = this.particleAnimationState.followTarget || this.particleAnimationState.emitter;
             for (var i = 0; i < this.count; ++i) {
                 particleIndex = i * vertices;
                 this.timeIndex = particleIndex * geometry.vertexAttLength + timeOffsetIndex;
-                this.bornTime = geometry.verticesData[this.timeIndex + 0]; //出生时间
-                this.life = geometry.verticesData[this.timeIndex + 1]; //单次生命周期时间
-                //this.id = geometry.verticesData[this.timeIndex + 2];                //下标(i)
+                this.bornTime = verticesData[this.timeIndex + 0]; //出生时间
+                this.life = verticesData[this.timeIndex + 1]; //单次生命周期时间
+                //this.id = verticesData[this.timeIndex + 2];                //下标(i)
                 var curCircleIndex = -1;
                 if (particleTime >= this.bornTime) {
                     //粒子超时了，并且不需要继续循环
@@ -31726,37 +32686,37 @@ var egret3d;
                             index = particleIndex + j;
                             index = index * geometry.vertexAttLength + this.attribute_followPosition.offsetIndex;
                             if (true) {
-                                geometry.verticesData[index + 0] = followTarget.globalPosition.x;
-                                geometry.verticesData[index + 1] = followTarget.globalPosition.y;
-                                geometry.verticesData[index + 2] = followTarget.globalPosition.z;
+                                verticesData[index + 0] = followTarget.globalPosition.x;
+                                verticesData[index + 1] = followTarget.globalPosition.y;
+                                verticesData[index + 2] = followTarget.globalPosition.z;
                             }
                             //rotation
                             index = particleIndex + j;
                             index = index * geometry.vertexAttLength + this.attribute_followRotation.offsetIndex;
                             if (this._followRotation) {
-                                geometry.verticesData[index + 0] = followTarget.globalOrientation.x;
-                                geometry.verticesData[index + 1] = followTarget.globalOrientation.y;
-                                geometry.verticesData[index + 2] = followTarget.globalOrientation.z;
-                                geometry.verticesData[index + 3] = followTarget.globalOrientation.w;
+                                verticesData[index + 0] = followTarget.globalOrientation.x;
+                                verticesData[index + 1] = followTarget.globalOrientation.y;
+                                verticesData[index + 2] = followTarget.globalOrientation.z;
+                                verticesData[index + 3] = followTarget.globalOrientation.w;
                             }
                             else {
-                                geometry.verticesData[index + 0] = 0;
-                                geometry.verticesData[index + 1] = 0;
-                                geometry.verticesData[index + 2] = 0;
-                                geometry.verticesData[index + 3] = 0;
+                                verticesData[index + 0] = 0;
+                                verticesData[index + 1] = 0;
+                                verticesData[index + 2] = 0;
+                                verticesData[index + 3] = 0;
                             }
                             //scale
                             index = particleIndex + j;
                             index = index * geometry.vertexAttLength + this.attribute_followScale.offsetIndex;
                             if (this._followScale) {
-                                geometry.verticesData[index + 0] = followTarget.globalScaleX;
-                                geometry.verticesData[index + 1] = followTarget.globalScaleY;
-                                geometry.verticesData[index + 2] = followTarget.globalScaleZ;
+                                verticesData[index + 0] = followTarget.globalScaleX;
+                                verticesData[index + 1] = followTarget.globalScaleY;
+                                verticesData[index + 2] = followTarget.globalScaleZ;
                             }
                             else {
-                                geometry.verticesData[index + 0] = 0;
-                                geometry.verticesData[index + 1] = 0;
-                                geometry.verticesData[index + 2] = 0;
+                                verticesData[index + 0] = 0;
+                                verticesData[index + 1] = 0;
+                                verticesData[index + 2] = 0;
                             }
                         }
                     }
@@ -32955,15 +33915,15 @@ var egret3d;
                 }
                 else {
                     if (this._sheetData.randomRow) {
-                        frameStart = Math.floor(this._sheetData.tileX * Math.random()) * this._sheetData.tileY;
+                        frameStart = Math.floor(this._sheetData.tileY * Math.random()) * this._sheetData.tileX;
                     }
                     else {
-                        frameStart = this._sheetData.row * this._sheetData.tileY;
+                        frameStart = this._sheetData.row * this._sheetData.tileX;
                     }
                 }
                 //frame const
-                if (this._sheetData.frameType == egret3d.ParticleValueType.Const || egret3d.ParticleValueType.RandomConst) {
-                    var frameConst = (this._sheetData.max - this._sheetData.min) * Math.random() + this._sheetData.min;
+                if (this._sheetData.frameType == egret3d.ParticleValueType.Const || this._sheetData.frameType == egret3d.ParticleValueType.RandomConst) {
+                    frameConst = (this._sheetData.max - this._sheetData.min) * Math.random() + this._sheetData.min;
                     frameConst = Math.floor(frameConst);
                 }
                 else {
@@ -33078,6 +34038,7 @@ var egret3d;
             this.count = 0;
             this.position = new egret3d.Vector3D();
             this._added = false;
+            this._orientation = new egret3d.Quaternion();
             this._birthPhase = new ParticleSubEmitterNodePhase(egret3d.ParticleDataSubEmitterPhase.BIRTH);
             this._collisionPhase = new ParticleSubEmitterNodePhase(egret3d.ParticleDataSubEmitterPhase.COLLISION);
             this._deathPhase = new ParticleSubEmitterNodePhase(egret3d.ParticleDataSubEmitterPhase.DEATH);
@@ -33161,14 +34122,15 @@ var egret3d;
             var positionOffsetIndex = this._animationState.emitter.positionNode.offsetIndex;
             var timeOffsetIndex = this._animationState.emitter.timeNode.offsetIndex;
             var particleTime = animTime * 0.001 - this._animationState.emitter.data.life.delay;
+            var verticesData = geometry.sharedVertexBuffer ? geometry.sharedVertexBuffer.arrayBuffer : geometry.verticesData;
             //没有跟随对象，使用自己
             var followTarget = this._animationState.followTarget || this._animationState.emitter;
             for (var i = 0; i < this.count; ++i) {
                 particleIndex = i * vertices;
                 this.timeIndex = particleIndex * geometry.vertexAttLength + timeOffsetIndex;
-                this.bornTime = geometry.verticesData[this.timeIndex + 0]; //出生时间
-                this.life = geometry.verticesData[this.timeIndex + 1]; //单次生命周期时间
-                //this.id = geometry.verticesData[this.timeIndex + 2];                //下标(i)
+                this.bornTime = verticesData[this.timeIndex + 0]; //出生时间
+                this.life = verticesData[this.timeIndex + 1]; //单次生命周期时间
+                //this.id = array32[this.timeIndex + 2];                //下标(i)
                 var curCircleIndex = -1;
                 if (particleTime >= this.bornTime) {
                     //粒子超时了，并且不需要继续循环
@@ -33179,32 +34141,34 @@ var egret3d;
                         index = particleIndex * geometry.vertexAttLength + positionOffsetIndex;
                         this._lifeCircles[i] = curCircleIndex;
                         //position
-                        this.position.x = geometry.verticesData[index + 0];
-                        this.position.y = geometry.verticesData[index + 1];
-                        this.position.z = geometry.verticesData[index + 2];
+                        this.position.x = verticesData[index + 0];
+                        this.position.y = verticesData[index + 1];
+                        this.position.z = verticesData[index + 2];
                         this.emitParticleAtPhase(this._birthPhase, this.position);
                     }
                 }
             }
         };
         ParticleSubEmitterNode.prototype.emitParticleAtPhase = function (phase, pos) {
-            var bakEmiter;
+            var bakEmitter;
             var bakEmitters = phase.playing.getKeys();
             var playingArr;
             var recycleArr;
             var newParticle;
+            this._orientation.copyFrom(this._parent.orientation);
+            this._orientation.w *= -1;
             for (var i = 0, count = bakEmitters.length; i < count; i++) {
-                bakEmiter = bakEmitters[i];
-                recycleArr = phase.recycle.getValueByKey(bakEmiter);
-                playingArr = phase.playing.getValueByKey(bakEmiter);
+                bakEmitter = bakEmitters[i];
+                recycleArr = phase.recycle.getValueByKey(bakEmitter);
+                playingArr = phase.playing.getValueByKey(bakEmitter);
                 newParticle = recycleArr.shift();
                 if (newParticle == null) {
-                    newParticle = new egret3d.ParticleEmitter(bakEmiter.data, null, bakEmiter.material);
+                    newParticle = new egret3d.ParticleEmitter(bakEmitter.data, bakEmitter.material);
                 }
                 playingArr.push(newParticle);
                 newParticle.play();
-                pos.add(bakEmiter.globalPosition);
                 newParticle.position = pos;
+                newParticle.orientation = this._orientation;
                 this._parent.addChild(newParticle);
             }
         };
@@ -33308,11 +34272,18 @@ var egret3d;
             this.fragment_shaders = {};
             /**
             * @language zh_CN
-            * 粒子走完一轮所需要的总时间
+            * 对于每个面片而言周期时间
             * @version Egret 3.0
             * @platform Web,Native
             */
             this.loopTime = 0;
+            /**
+            * @language zh_CN
+            * 粒子走完一轮所需要的总时间(秒)
+            * @version Egret 3.0
+            * @platform Web,Native
+            */
+            this.circleTime = 0;
             /**
             * @language zh_CN
             * 是否反转 1.0是反转 0.0是不反转
@@ -33491,7 +34462,7 @@ var egret3d;
             context3DProxy.uniform1fv(usage["uniform_particleState"].uniformIndex, this._particleProperty);
             this._particleFsData[0] = camera3D.far;
             this._particleFsData[1] = camera3D.near;
-            this._particleFsData[2] = (this._emitter.material && this._emitter.material.materialData.blendMode == egret3d.BlendMode.ALPHA) ? 1 : 0;
+            this._particleFsData[2] = this._emitter.material.materialData.blendMode;
             context3DProxy.uniform1fv(usage["uniform_particleFsData"].uniformIndex, this._particleFsData);
             for (var i = 0; i < this.animNodes.length; i++) {
                 this.animNodes[i].activeState(time, animTime, delay, animDelay, usage, geometry, context3DProxy);
@@ -33742,19 +34713,6 @@ var egret3d;
     * @version Egret 3.0
     * @platform Web,Native
     */
-    (function (ParticleGeometryType) {
-        ParticleGeometryType[ParticleGeometryType["External"] = 0] = "External";
-        ParticleGeometryType[ParticleGeometryType["Plane"] = 1] = "Plane";
-        ParticleGeometryType[ParticleGeometryType["Cube"] = 2] = "Cube";
-        ParticleGeometryType[ParticleGeometryType["Sphere"] = 3] = "Sphere";
-    })(egret3d.ParticleGeometryType || (egret3d.ParticleGeometryType = {}));
-    var ParticleGeometryType = egret3d.ParticleGeometryType;
-    /**
-    * @language zh_CN
-    * 粒子的几何形状
-    * @version Egret 3.0
-    * @platform Web,Native
-    */
     (function (ParticleRenderModeType) {
         ParticleRenderModeType[ParticleRenderModeType["Billboard"] = 0] = "Billboard";
         ParticleRenderModeType[ParticleRenderModeType["StretchedBillboard"] = 1] = "StretchedBillboard";
@@ -33788,8 +34746,21 @@ var egret3d;
         ParticleDataShapeType[ParticleDataShapeType["Sphere"] = 2] = "Sphere";
         ParticleDataShapeType[ParticleDataShapeType["HemiSphere"] = 3] = "HemiSphere";
         ParticleDataShapeType[ParticleDataShapeType["Cone"] = 4] = "Cone";
+        ParticleDataShapeType[ParticleDataShapeType["Mesh"] = 5] = "Mesh";
     })(egret3d.ParticleDataShapeType || (egret3d.ParticleDataShapeType = {}));
     var ParticleDataShapeType = egret3d.ParticleDataShapeType;
+    /**
+    * @language zh_CN
+    * 外置模型发射器类型
+    * @version Egret 3.0
+    * @platform Web,Native
+    */
+    (function (ParticleMeshShapeType) {
+        ParticleMeshShapeType[ParticleMeshShapeType["Vertex"] = 0] = "Vertex";
+        ParticleMeshShapeType[ParticleMeshShapeType["Triangle"] = 1] = "Triangle";
+        ParticleMeshShapeType[ParticleMeshShapeType["Edge"] = 2] = "Edge";
+    })(egret3d.ParticleMeshShapeType || (egret3d.ParticleMeshShapeType = {}));
+    var ParticleMeshShapeType = egret3d.ParticleMeshShapeType;
     /**
     * @language zh_CN
     * 圆筒发射器类型
@@ -33865,10 +34836,6 @@ var egret3d;
             //
             this.geometry.planeW *= value;
             this.geometry.planeH *= value;
-            this.geometry.cubeW *= value;
-            this.geometry.cubeH *= value;
-            this.geometry.cubeD *= value;
-            this.geometry.sphereRadius *= value;
             //
             this.moveSpeed.max *= value;
             this.moveSpeed.min *= value;
@@ -33923,6 +34890,8 @@ var egret3d;
             this.colorType = ParticleBirthColorType.Const;
             this.colorConst1 = new egret3d.Color(255, 255, 255, 255);
             this.colorConst2 = new egret3d.Color(255, 255, 255, 255);
+            //颜色矫正
+            this.tintColor = new egret3d.Color(128, 128, 128, 128);
             //重力
             this.gravity = 0;
             //是否预热
@@ -33930,6 +34899,7 @@ var egret3d;
             this.rotation = new egret3d.Vector3D(0, 0, 0, 1);
             this.scale = new egret3d.Vector3D(1, 1, 1, 1);
             this.position = new egret3d.Vector3D(0, 0, 0, 1);
+            this.sortingFudge = 0;
             //render mode
             this.renderMode = ParticleRenderModeType.Billboard;
             this.cameraScale = 0.0;
@@ -34015,6 +34985,12 @@ var egret3d;
             this.loop = true;
         }
         ParticleDataLife.prototype.validate = function () {
+            if (this.max <= 0) {
+                this.max = 1;
+            }
+            if (this.min > this.max) {
+                this.min = this.max;
+            }
             //life
             if (this.type == ParticleValueType.Const) {
                 this.min = this.max;
@@ -34068,6 +35044,8 @@ var egret3d;
             this.coneRadiusBottom = 2;
             this.coneRadiusTop = 4;
             this.coneType = ParticleConeShapeType.Volume;
+            //mesh类型发射器的类型
+            this.meshType = ParticleMeshShapeType.Vertex;
         }
         ParticleDataShape.prototype.validate = function () {
             if (this.type == ParticleDataShapeType.Cube) {
@@ -34130,8 +35108,8 @@ var egret3d;
             _super.call(this, ParticleDataNodeType.ScaleBirth);
             //初始缩放值
             this.type = ParticleValueType.Const;
-            this.max = 0;
-            this.min = 0;
+            this.max = 1;
+            this.min = 1;
         }
         ParticleDataScaleBirth.prototype.validate = function () {
             if (this.type == ParticleValueType.Const) {
@@ -34163,48 +35141,15 @@ var egret3d;
         function ParticleDataGeometry() {
             _super.call(this, ParticleDataNodeType.Geometry);
             //粒子模型
-            this.type = ParticleGeometryType.Plane;
             this.planeW = 10;
             this.planeH = 10;
-            this.cubeW = 10;
-            this.cubeH = 10;
-            this.cubeD = 10;
-            this.sphereRadius = 10;
-            this.sphereSegW = 6;
-            this.sphereSegH = 6;
         }
         ParticleDataGeometry.prototype.validate = function () {
-            if (this.type == ParticleGeometryType.External)
-                return;
-            if (this.type == ParticleGeometryType.Plane) {
-                if (this.planeW < 0) {
-                    this.planeW = 10;
-                }
-                if (this.planeH < 0) {
-                    this.planeH = 10;
-                }
+            if (this.planeW < 0) {
+                this.planeW = 10;
             }
-            else if (this.type == ParticleGeometryType.Cube) {
-                if (this.cubeW < 0) {
-                    this.cubeW = 10;
-                }
-                if (this.cubeH < 0) {
-                    this.cubeH = 10;
-                }
-                if (this.cubeD < 0) {
-                    this.cubeD = 10;
-                }
-            }
-            else if (this.type == ParticleGeometryType.Sphere) {
-                if (this.sphereRadius < 0) {
-                    this.sphereRadius = 10;
-                }
-                if (this.sphereSegW < 0) {
-                    this.sphereSegW = 4;
-                }
-                if (this.sphereSegH < 0) {
-                    this.sphereSegH = 4;
-                }
+            if (this.planeH < 0) {
+                this.planeH = 10;
             }
         };
         return ParticleDataGeometry;
@@ -34750,7 +35695,9 @@ var egret3d;
             var colorConst2 = this.getNode(node, "colorConst2");
             var gradients1 = this.getNode(node, "colorGradients1");
             var gradients2 = this.getNode(node, "colorGradients2");
-            this.parseColorProperty(property, colorConst1, colorConst2, gradients1, gradients2);
+            //tint color
+            var tintColor = this.getNode(node, "tintColor");
+            this.parseColorProperty(property, colorConst1, colorConst2, gradients1, gradients2, tintColor);
             //gravity
             property.gravity = Number(this.getNode(node, "gravity").textContent);
             //transform
@@ -34779,12 +35726,22 @@ var egret3d;
             if (speedScale) {
                 property.speedScale = Number(speedScale.textContent);
             }
+            //meshFile
+            var meshFile = this.getNode(render, "meshFile");
+            if (meshFile) {
+                property.meshFile = meshFile.textContent;
+            }
+            //fudge
+            var sortingFudge = this.getNode(node, "sortingFudge");
+            if (sortingFudge) {
+                property.sortingFudge = Number(sortingFudge.textContent);
+            }
         };
         /**
          * @private
          * 解析颜色属性
          */
-        ParticleXmlParser.prototype.parseColorProperty = function (property, c1, c2, cg1, cg2) {
+        ParticleXmlParser.prototype.parseColorProperty = function (property, c1, c2, cg1, cg2, tintColor) {
             if (c1) {
                 property.colorConst1 = egret3d.Color.createColor(Number(c1.textContent));
             }
@@ -34798,6 +35755,9 @@ var egret3d;
             if (cg2) {
                 var itemList = this.getNodeList(cg2, "item");
                 property.colorGradients2 = this.parseGradientsColor(itemList, property.colorGradients2);
+            }
+            if (tintColor) {
+                property.tintColor = egret3d.Color.createColor(Number(tintColor.textContent));
             }
         };
         /**
@@ -34817,7 +35777,7 @@ var egret3d;
             if (bursts) {
                 emission.bursts = [];
                 var itemList = this.getNodeList(bursts, "item");
-                for (i = 0, count = itemList.length; i < count; i++) {
+                for (i = 0, count = itemList ? itemList.length : 0; i < count; i++) {
                     item = itemList[i];
                     pt = new egret3d.Point();
                     emission.bursts.push(pt);
@@ -34898,6 +35858,16 @@ var egret3d;
                     shape.coneType = egret3d.ParticleConeShapeType[value];
                 }
             });
+            //meshType
+            var meshType = this.getNode(node, "meshType");
+            if (meshType) {
+                shape.meshType = egret3d.ParticleMeshShapeType[meshType.textContent];
+            }
+            //meshFile
+            var meshFile = this.getNode(node, "meshFile");
+            if (meshFile) {
+                shape.meshFile = meshFile.textContent;
+            }
         };
         /**
          * @private
@@ -34929,7 +35899,6 @@ var egret3d;
          */
         ParticleXmlParser.prototype.parseGeometry = function (node) {
             var geometry = this._particleData.geometry;
-            geometry.type = egret3d.ParticleGeometryType[this.getNode(node, "type").textContent];
             var plane = this.getNode(node, "plane");
             this.eachAttr(plane, function (label, value) {
                 if (label == "width") {
@@ -34937,30 +35906,6 @@ var egret3d;
                 }
                 else if (label == "height") {
                     geometry.planeH = Number(value);
-                }
-            });
-            var cube = this.getNode(node, "cube");
-            this.eachAttr(cube, function (label, value) {
-                if (label == "width") {
-                    geometry.cubeW = Number(value);
-                }
-                else if (label == "height") {
-                    geometry.cubeH = Number(value);
-                }
-                else if (label == "depth") {
-                    geometry.cubeD = Number(value);
-                }
-            });
-            var sphere = this.getNode(node, "sphere");
-            this.eachAttr(sphere, function (label, value) {
-                if (label == "radius") {
-                    geometry.sphereRadius = Number(value);
-                }
-                else if (label == "segmentW") {
-                    geometry.sphereSegW = Number(value);
-                }
-                else if (label == "segmentH") {
-                    geometry.sphereSegH = Number(value);
                 }
             });
         };
@@ -35102,7 +36047,7 @@ var egret3d;
             var pt;
             var color;
             var time;
-            for (i = 0, count = itemList.length; i < count; i++) {
+            for (i = 0, count = itemList ? itemList.length : 0; i < count; i++) {
                 item = itemList[i];
                 this.eachAttr(item, function (label, value) {
                     if (label == "time") {
@@ -35120,7 +36065,7 @@ var egret3d;
             sortTimes.sort(function (a, b) {
                 return a - b;
             });
-            for (i = 0, count = dst.times.length; i < count; i++) {
+            for (i = 0, count = dst ? dst.times.length : 0; i < count; i++) {
                 var index = sortTimes.indexOf(dst.times[i]);
                 dst.colors[i] = sortColors[index];
             }
@@ -35141,7 +36086,7 @@ var egret3d;
             var i = 0;
             var count = 0;
             var pt;
-            for (i = 0, count = posList.length; i < count; i++) {
+            for (i = 0, count = posList ? posList.length : 0; i < count; i++) {
                 item = posList[i];
                 pt = new egret3d.Point();
                 bzData.posPoints.push(pt);
@@ -35154,7 +36099,7 @@ var egret3d;
                     }
                 });
             }
-            for (i = 0, count = ctrlList.length; i < count; i++) {
+            for (i = 0, count = ctrlList ? ctrlList.length : 0; i < count; i++) {
                 item = ctrlList[i];
                 pt = new egret3d.Point();
                 bzData.ctrlPoints.push(pt);
@@ -35241,20 +36186,34 @@ var egret3d;
         * @version Egret 3.0
         * @platform Web,Native
         */
-        function ParticleEmitter(data, geo, material) {
-            if (geo === void 0) { geo = null; }
+        function ParticleEmitter(data, material) {
             if (material === void 0) { material = null; }
             _super.call(this, null, material);
             this._isEmitterDirty = true;
             this._userNodes = [];
+            this.tag.name = "effect";
+            this.type = "particleEmit";
             this._data = data;
-            this._externalGeometry = geo;
+            this._externalGeometry = data.property.geometry;
             this.animation = this.particleAnimation = new egret3d.ParticleAnimation(this);
             this.animation.particleAnimationController = this.particleAnimation;
             this._particleState = this.particleAnimation.particleAnimationState;
             this.particleAnimation.emit = this;
             this.buildParticle();
         }
+        Object.defineProperty(ParticleEmitter.prototype, "drawOrder", {
+            /**
+            * @language zh_CN
+            * 渲染排序的参数，数值越大，先渲染</p>
+            * @version Egret 3.0
+            * @platform Web,Native
+            */
+            get: function () {
+                return this._data.property.sortingFudge;
+            },
+            enumerable: true,
+            configurable: true
+        });
         /**
         * @private
         * 添加子发射器
@@ -35275,10 +36234,10 @@ var egret3d;
         */
         ParticleEmitter.prototype.buildParticle = function () {
             if (this._externalGeometry == null) {
-                this.particleGeometryShape = this.createShape();
+                this._geometryShape = this.createPlane();
             }
             else {
-                this.particleGeometryShape = this._externalGeometry;
+                this._geometryShape = this._externalGeometry;
             }
             this.initialize();
             this.initBoudBox(this._data.property.bounds);
@@ -35291,35 +36250,27 @@ var egret3d;
         * @version Egret 3.0
         * @platform Web,Native
         */
-        ParticleEmitter.prototype.createShape = function () {
+        ParticleEmitter.prototype.createPlane = function () {
             var geo;
             var geomData = this._data.geometry;
-            if (geomData.type == egret3d.ParticleGeometryType.Plane) {
-                var defaultAxis = egret3d.Vector3D.Z_AXIS;
-                if (this._data.property.renderMode == egret3d.ParticleRenderModeType.VerticalBillboard) {
-                    defaultAxis = egret3d.Vector3D.Y_AXIS;
-                }
-                else if (this._data.property.renderMode == egret3d.ParticleRenderModeType.HorizontalBillboard) {
-                    defaultAxis = egret3d.Vector3D.Y_AXIS;
-                }
-                else {
-                    defaultAxis = egret3d.Vector3D.Z_AXIS;
-                }
-                var wCenter = true;
-                var hCenter = true;
-                if (this._data.property.renderMode == egret3d.ParticleRenderModeType.StretchedBillboard) {
-                    //需要偏移一半位置
-                    wCenter = false;
-                    hCenter = true;
-                }
-                geo = new egret3d.PlaneGeometry(geomData.planeW, geomData.planeH, 1, 1, 1, 1, defaultAxis, wCenter, hCenter);
+            var defaultAxis = egret3d.Vector3D.Z_AXIS;
+            if (this._data.property.renderMode == egret3d.ParticleRenderModeType.VerticalBillboard) {
+                defaultAxis = egret3d.Vector3D.Y_AXIS;
             }
-            else if (geomData.type == egret3d.ParticleGeometryType.Cube) {
-                geo = new egret3d.CubeGeometry(geomData.cubeW, geomData.cubeH, geomData.cubeD);
+            else if (this._data.property.renderMode == egret3d.ParticleRenderModeType.HorizontalBillboard) {
+                defaultAxis = egret3d.Vector3D.Y_AXIS;
             }
-            else if (geomData.type == egret3d.ParticleGeometryType.Sphere) {
-                geo = new egret3d.SphereGeometry(geomData.sphereRadius, geomData.sphereSegW, geomData.sphereSegH);
+            else {
+                defaultAxis = egret3d.Vector3D.Z_AXIS;
             }
+            var wCenter = true;
+            var hCenter = true;
+            if (this._data.property.renderMode == egret3d.ParticleRenderModeType.StretchedBillboard) {
+                //需要偏移一半位置
+                wCenter = false;
+                hCenter = true;
+            }
+            geo = new egret3d.PlaneGeometry(geomData.planeW, geomData.planeH, 1, 1, 1, 1, defaultAxis, wCenter, hCenter);
             return geo;
         };
         Object.defineProperty(ParticleEmitter.prototype, "data", {
@@ -35441,7 +36392,7 @@ var egret3d;
             var count = this._data.property.particleCount;
             this.geometry = new egret3d.Geometry();
             this.geometry.buildDefaultSubGeometry();
-            this.geometry.subGeometrys[0].count = count * this.particleGeometryShape.indexData.length;
+            this.geometry.subGeometrys[0].count = count * this._geometryShape.indexData.length;
             //根据 模型形状初始化 
             var vertexIndex = 0;
             var vertexArray = new Array();
@@ -35453,13 +36404,13 @@ var egret3d;
             this.initEndNode();
             this.geometry.verticesData = new Array();
             for (var i = 0; i < count; ++i) {
-                for (var j = 0; j < this.particleGeometryShape.vertexCount; ++j) {
+                for (var j = 0; j < this._geometryShape.vertexCount; ++j) {
                     for (var k = 0; k < this.geometry.vertexAttLength; ++k) {
                         this.geometry.verticesData.push(0);
                     }
-                    vertexIndex = i * this.particleGeometryShape.vertexCount + j;
+                    vertexIndex = i * this._geometryShape.vertexCount + j;
                     vertexArray.length = 0;
-                    this.particleGeometryShape.getVertexForIndex(j, this.geometry.vertexFormat, vertexArray);
+                    this._geometryShape.getVertexForIndex(j, this.geometry.vertexFormat, vertexArray);
                     for (var k = 0; k < vertexArray.length; ++k) {
                         this.geometry.verticesData[vertexIndex * this.geometry.vertexAttLength + k] = vertexArray[k];
                     }
@@ -35467,8 +36418,8 @@ var egret3d;
             }
             this.geometry.indexData = new Array();
             for (var i = 0; i < count; ++i) {
-                for (var j = 0; j < this.particleGeometryShape.indexData.length; ++j) {
-                    this.geometry.indexData[i * this.particleGeometryShape.indexData.length + j] = this.particleGeometryShape.indexData[j] + i * this.particleGeometryShape.vertexCount;
+                for (var j = 0; j < this._geometryShape.indexData.length; ++j) {
+                    this.geometry.indexData[i * this._geometryShape.indexData.length + j] = this._geometryShape.indexData[j] + i * this._geometryShape.vertexCount;
                 }
             }
             //最后根据节点功能，填充模型
@@ -35662,7 +36613,7 @@ var egret3d;
             * @platform Web,Native
             */
             get: function () {
-                return this.animation.animTime / this._particleState.loopTime;
+                return this.animation.animTime / (this._particleState.circleTime * 1000);
             },
             enumerable: true,
             configurable: true
@@ -35833,6 +36784,29 @@ var egret3d;
             * @platform Web,Native
             */
             this.smooth = true;
+            /**
+            * @language zh_CN
+            * 贴图采样方式
+            * @version Egret 3.0
+            * @platform Web,Native
+            */
+            this.repeat = false;
+            /**
+             * @language zh_CN
+             * 是否预乘alpha
+             */
+            this.premultiply_alpha = 0;
+            this.filp_y = 0;
+            /**
+            * @private
+            * @language zh_CN
+            * 上传贴图数据给GPU
+            * @param context3D
+            * @version Egret 3.0
+            * @platform Web,Native
+            */
+            this.hasMipmap = false;
+            this.ready = false;
         }
         /**
         * @language zh_CN
@@ -35852,6 +36826,48 @@ var egret3d;
         * @platform Web,Native
         */
         ITexture.prototype.uploadForcing = function (context3D) {
+        };
+        ITexture.prototype.activeState = function (context3D) {
+            if (this.ready)
+                return;
+            this.ready = true;
+            if (!this.premultiply_alpha) {
+                egret3d.Context3DProxy.gl.pixelStorei(egret3d.Context3DProxy.gl.UNPACK_PREMULTIPLY_ALPHA_WEBGL, 0);
+            }
+            if (this.useMipmap && !this.hasMipmap) {
+                egret3d.Context3DProxy.gl.generateMipmap(egret3d.Context3DProxy.gl.TEXTURE_2D);
+                this.hasMipmap = true;
+            }
+            if (this.smooth) {
+                if (this.hasMipmap) {
+                    context3D.texParameteri(egret3d.Context3DProxy.gl.TEXTURE_2D, egret3d.Context3DProxy.gl.TEXTURE_MIN_FILTER, egret3d.Context3DProxy.gl.LINEAR_MIPMAP_LINEAR);
+                    context3D.texParameteri(egret3d.Context3DProxy.gl.TEXTURE_2D, egret3d.Context3DProxy.gl.TEXTURE_MAG_FILTER, egret3d.Context3DProxy.gl.LINEAR);
+                }
+                else {
+                    context3D.texParameteri(egret3d.Context3DProxy.gl.TEXTURE_2D, egret3d.Context3DProxy.gl.TEXTURE_MIN_FILTER, egret3d.Context3DProxy.gl.LINEAR);
+                    context3D.texParameteri(egret3d.Context3DProxy.gl.TEXTURE_2D, egret3d.Context3DProxy.gl.TEXTURE_MAG_FILTER, egret3d.Context3DProxy.gl.LINEAR);
+                }
+            }
+            else {
+                //if (this.useMipmap) {
+                //    context3D.texParameteri(Context3DProxy.gl.TEXTURE_2D, Context3DProxy.gl.TEXTURE_MIN_FILTER, Context3DProxy.gl.NEAREST_MIPMAP_NEAREST);
+                //    context3D.texParameteri(Context3DProxy.gl.TEXTURE_2D, Context3DProxy.gl.TEXTURE_MAG_FILTER, Context3DProxy.gl.NEAREST_MIPMAP_NEAREST);
+                //}
+                //else {
+                context3D.texParameteri(egret3d.Context3DProxy.gl.TEXTURE_2D, egret3d.Context3DProxy.gl.TEXTURE_MIN_FILTER, egret3d.Context3DProxy.gl.NEAREST);
+                context3D.texParameteri(egret3d.Context3DProxy.gl.TEXTURE_2D, egret3d.Context3DProxy.gl.TEXTURE_MAG_FILTER, egret3d.Context3DProxy.gl.NEAREST);
+            }
+            if (this.repeat) {
+                context3D.texParameteri(egret3d.Context3DProxy.gl.TEXTURE_2D, egret3d.Context3DProxy.gl.TEXTURE_WRAP_S, egret3d.Context3DProxy.gl.REPEAT);
+                context3D.texParameteri(egret3d.Context3DProxy.gl.TEXTURE_2D, egret3d.Context3DProxy.gl.TEXTURE_WRAP_T, egret3d.Context3DProxy.gl.REPEAT);
+            }
+            else {
+                context3D.texParameteri(egret3d.Context3DProxy.gl.TEXTURE_2D, egret3d.Context3DProxy.gl.TEXTURE_WRAP_S, egret3d.Context3DProxy.gl.CLAMP_TO_EDGE);
+                context3D.texParameteri(egret3d.Context3DProxy.gl.TEXTURE_2D, egret3d.Context3DProxy.gl.TEXTURE_WRAP_T, egret3d.Context3DProxy.gl.CLAMP_TO_EDGE);
+            }
+            if (this.filp_y) {
+                egret3d.Context3DProxy.gl.pixelStorei(egret3d.Context3DProxy.gl.UNPACK_FLIP_Y_WEBGL, this.filp_y);
+            }
         };
         return ITexture;
     }());
@@ -35916,10 +36932,8 @@ var egret3d;
                 this.texture2D = context3D.creatTexture2D();
                 this.texture2D.internalFormat = egret3d.InternalFormat.ImageData;
                 this.texture2D.imageData = this.imageData;
-                this.texture2D.useMipmap = this.useMipmap;
-                this.texture2D.smooth = this.smooth;
                 this.texture2D.colorFormat = egret3d.ContextConfig.ColorFormat_RGBA8888;
-                context3D.upLoadTextureData(0, this.texture2D);
+                context3D.upLoadTextureData(0, this);
             }
         };
         /**
@@ -35931,115 +36945,11 @@ var egret3d;
         * @platform Web,Native
         */
         ImageTexture.prototype.uploadForcing = function (context3D) {
-            context3D.upLoadTextureData(0, this.texture2D);
+            context3D.upLoadTextureData(0, this);
         };
         return ImageTexture;
     }(egret3d.ITexture));
     egret3d.ImageTexture = ImageTexture;
-})(egret3d || (egret3d = {}));
-var egret3d;
-(function (egret3d) {
-    /**
-    * @class egret3d.TGATexture
-    * @classdesc
-    * DDS 贴图模式对象
-    * @version Egret 3.0
-    * @platform Web,Native
-    */
-    var DDSTexture = (function (_super) {
-        __extends(DDSTexture, _super);
-        /**
-        * @language zh_CN
-        * 构造函数
-        * @version Egret 3.0
-        * @platform Web,Native
-        */
-        function DDSTexture() {
-            _super.call(this);
-            this.smooth = true;
-        }
-        DDSTexture.prototype.upload = function (context3D) {
-            if (!this.texture2D) {
-                this.texture2D = context3D.creatTexture2D();
-                this.texture2D.smooth = this.smooth;
-                this.texture2D.internalFormat = this.internalFormat;
-                this.texture2D.colorFormat = this.colorFormat;
-                this.texture2D.mimapData = this.mimapData;
-                if (this.mimapData && this.mimapData.length > 0) {
-                    for (var i = 0; i < this.mimapData.length; i++) {
-                        context3D.upLoadTextureData(i, this.texture2D);
-                    }
-                }
-                else {
-                    context3D.upLoadTextureData(0, this.texture2D);
-                }
-            }
-        };
-        DDSTexture.prototype.uploadForcing = function (context3D) {
-            context3D.upLoadTextureData(0, this.texture2D);
-        };
-        return DDSTexture;
-    }(egret3d.ITexture));
-    egret3d.DDSTexture = DDSTexture;
-})(egret3d || (egret3d = {}));
-var egret3d;
-(function (egret3d) {
-    /**
-    * @class egret3d.TGATexture
-    * @classdesc
-    * TGA 贴图模式对象
-    * @version Egret 3.0
-    * @platform Web,Native
-    */
-    var TGATexture = (function (_super) {
-        __extends(TGATexture, _super);
-        /**
-        * @language zh_CN
-        * 构造函数
-        * @version Egret 3.0
-        * @platform Web,Native
-        */
-        function TGATexture() {
-            _super.call(this);
-        }
-        /**
-        * @language zh_CN
-        * 上传贴图数据给GPU
-        * @param context3D
-        * @version Egret 3.0
-        * @platform Web,Native
-        */
-        TGATexture.prototype.upload = function (context3D) {
-            if (!this.texture2D) {
-                this.texture2D = context3D.creatTexture2D();
-                this.texture2D.internalFormat = this.internalFormat;
-                this.texture2D.colorFormat = this.colorFormat;
-                this.texture2D.mimapData = this.mimapData;
-                this.texture2D.smooth = this.smooth;
-                this.useMipmap = true;
-                if (this.mimapData && this.mimapData.length > 0) {
-                    for (var i = 0; i < this.mimapData.length; i++) {
-                        context3D.upLoadTextureData(i, this.texture2D);
-                    }
-                }
-                else {
-                    context3D.upLoadTextureData(0, this.texture2D);
-                }
-            }
-        };
-        /**
-        * @language zh_CN
-        * 强制上传贴图数据给GPU，强制要求贴图更新。
-        * @param context3D
-        * @version Egret 3.0
-        * @platform Web,Native
-        */
-        TGATexture.prototype.uploadForcing = function (context3D) {
-            context3D.upLoadTextureData(0, this.texture2D);
-        };
-        return TGATexture;
-    }(egret3d.ITexture));
-    egret3d.TGATexture = TGATexture;
 })(egret3d || (egret3d = {}));
 var egret3d;
 (function (egret3d) {
@@ -36058,6 +36968,50 @@ var egret3d;
         return PVRTexture;
     }(egret3d.ITexture));
     egret3d.PVRTexture = PVRTexture;
+})(egret3d || (egret3d = {}));
+var egret3d;
+(function (egret3d) {
+    /**
+    * @class egret3d.MimapTexture
+    * @classdesc
+    * MimapTexture 贴图对象
+    * @version Egret 3.0
+    * @platform Web,Native
+    */
+    var MimapTexture = (function (_super) {
+        __extends(MimapTexture, _super);
+        /**
+        * @language zh_CN
+        * 构造函数
+        * @version Egret 3.0
+        * @platform Web,Native
+        */
+        function MimapTexture() {
+            _super.call(this);
+            this.smooth = true;
+        }
+        MimapTexture.prototype.upload = function (context3D) {
+            if (!this.texture2D) {
+                this.texture2D = context3D.creatTexture2D();
+                this.texture2D.internalFormat = this.internalFormat;
+                this.texture2D.colorFormat = this.colorFormat;
+                this.texture2D.mimapData = this.mimapData;
+                if (this.mimapData && this.mimapData.length > 0) {
+                    for (var i = 0; i < this.mimapData.length; i++) {
+                        context3D.upLoadTextureData(i, this);
+                    }
+                }
+                else {
+                    context3D.upLoadTextureData(0, this);
+                }
+            }
+        };
+        MimapTexture.prototype.uploadForcing = function (context3D) {
+            context3D.upLoadTextureData(0, this);
+        };
+        return MimapTexture;
+    }(egret3d.ITexture));
+    egret3d.MimapTexture = MimapTexture;
 })(egret3d || (egret3d = {}));
 var egret3d;
 (function (egret3d) {
@@ -36241,18 +37195,17 @@ var egret3d;
                 this.texture2D = context3D.creatTexture2D();
                 this.texture2D.border = 0;
                 this.texture2D.internalFormat = egret3d.InternalFormat.PixelArray;
-                this.texture2D.colorFormat = egret3d.ContextConfig.ColorFormat_RGBA8888;
-                this.texture2D.smooth = this.smooth;
-                this.texture2D.useMipmap = this.useMipmap;
+                this.texture2D.colorFormat = egret3d.Context3DProxy.gl.RGBA;
                 this.texture2D.mimapData = new Array();
                 this.texture2D.mimapData.push(new egret3d.MipmapData(this._pixelArray, this.width, this.height));
-                this.texture2D.useMipmap = false;
-                context3D.upLoadTextureData(0, this.texture2D);
+                this.useMipmap = false;
+                this.texture2D.dataFormat = egret3d.Context3DProxy.gl.FLOAT;
+                context3D.upLoadTextureData(0, this);
             }
         };
         CheckerboardTexture.prototype.buildCheckerboard = function () {
             if (!this._pixelArray) {
-                this._pixelArray = new Uint8Array(this.width * this.height * 4);
+                this._pixelArray = new Float32Array(this.width * this.height * 4);
                 var colors = [egret3d.Color.black(), egret3d.Color.white()];
                 var colorIndex = 0;
                 var blockSize = 4;
@@ -36267,10 +37220,10 @@ var egret3d;
                             colors[1] = tmp;
                             colorIndex = 0;
                         }
-                        this._pixelArray[(y * (this.width * 4) + x * 4) + 0] = colors[colorIndex].r;
-                        this._pixelArray[(y * (this.width * 4) + x * 4) + 1] = colors[colorIndex].g;
-                        this._pixelArray[(y * (this.width * 4) + x * 4) + 2] = colors[colorIndex].b;
-                        this._pixelArray[(y * (this.width * 4) + x * 4) + 3] = colors[colorIndex].a;
+                        this._pixelArray[(y * (this.width * 4) + x * 4) + 0] = x * y / (32 * 32);
+                        this._pixelArray[(y * (this.width * 4) + x * 4) + 1] = x * y / (32 * 32);
+                        this._pixelArray[(y * (this.width * 4) + x * 4) + 2] = x * y / (32 * 32);
+                        this._pixelArray[(y * (this.width * 4) + x * 4) + 3] = x * y / (32 * 32);
                     }
                 }
             }
@@ -36394,7 +37347,7 @@ var egret3d;
                 this.texture2D = context3D.creatTexture2D();
                 this.context.drawImage(this.video, 0, 0, this.width, this.height);
                 egret3d.Context3DProxy.gl.pixelStorei(egret3d.Context3DProxy.gl.UNPACK_ALIGNMENT, 1);
-                egret3d.Context3DProxy.gl.bindTexture(egret3d.Context3DProxy.gl.TEXTURE_2D, this.texture2D.texture);
+                egret3d.Context3DProxy.gl.bindTexture(egret3d.Context3DProxy.gl.TEXTURE_2D, this.texture2D.textureBuffer);
                 egret3d.Context3DProxy.gl.texImage2D(egret3d.Context3DProxy.gl.TEXTURE_2D, 0, egret3d.Context3DProxy.gl.RGB, egret3d.Context3DProxy.gl.RGB, egret3d.Context3DProxy.gl.UNSIGNED_BYTE, this.tmpCanvas);
                 egret3d.Context3DProxy.gl.texParameteri(egret3d.Context3DProxy.gl.TEXTURE_2D, egret3d.Context3DProxy.gl.TEXTURE_MIN_FILTER, egret3d.Context3DProxy.gl.LINEAR);
                 egret3d.Context3DProxy.gl.texParameteri(egret3d.Context3DProxy.gl.TEXTURE_2D, egret3d.Context3DProxy.gl.TEXTURE_MAG_FILTER, egret3d.Context3DProxy.gl.LINEAR);
@@ -36404,7 +37357,7 @@ var egret3d;
             if (this.canUpdataTexture) {
                 this.context.drawImage(this.video, 0, 0, this.width, this.height);
                 egret3d.Context3DProxy.gl.pixelStorei(egret3d.Context3DProxy.gl.UNPACK_ALIGNMENT, 1);
-                egret3d.Context3DProxy.gl.bindTexture(egret3d.Context3DProxy.gl.TEXTURE_2D, this.texture2D.texture);
+                egret3d.Context3DProxy.gl.bindTexture(egret3d.Context3DProxy.gl.TEXTURE_2D, this.texture2D.textureBuffer);
                 egret3d.Context3DProxy.gl.texImage2D(egret3d.Context3DProxy.gl.TEXTURE_2D, 0, egret3d.Context3DProxy.gl.RGB, egret3d.Context3DProxy.gl.RGB, egret3d.Context3DProxy.gl.UNSIGNED_BYTE, this.tmpCanvas);
                 egret3d.Context3DProxy.gl.texParameteri(egret3d.Context3DProxy.gl.TEXTURE_2D, egret3d.Context3DProxy.gl.TEXTURE_MIN_FILTER, egret3d.Context3DProxy.gl.LINEAR);
                 egret3d.Context3DProxy.gl.texParameteri(egret3d.Context3DProxy.gl.TEXTURE_2D, egret3d.Context3DProxy.gl.TEXTURE_MAG_FILTER, egret3d.Context3DProxy.gl.LINEAR);
@@ -36484,7 +37437,7 @@ var egret3d;
 })(egret3d || (egret3d = {}));
 //////////////////////////////////////////////////////////////////////////////////////
 //
-//  Copyright (c) 2014-present, Egret Technology.
+//  Copyright (c) 2014-2015, Egret Technology Inc.
 //  All rights reserved.
 //  Redistribution and use in source and binary forms, with or without
 //  modification, are permitted provided that the following conditions are met:
@@ -36936,6 +37889,20 @@ var egret3d;
              bytes[i] = this.data.getUint8(this.position++);
              }*/
             return this.decodeUTF8(bytes);
+        };
+        /**
+        * 读取一行字符串
+        * @returns 由指定长度的 UTF-8 字节组成的字符串
+        */
+        ByteArray.prototype.readLine = function () {
+            var length = 0;
+            for (var i = this.position; i < this.length; ++i) {
+                if (this.data.getUint8(i) == 0x0A) {
+                    length = i - this.position + 1;
+                    break;
+                }
+            }
+            return this.readUTFBytes(length);
         };
         //public readStandardString(length:number):string {
         //    if (!this.validate(length)) return null;
@@ -41785,6 +42752,7 @@ var egret3d;
             this._position = new egret3d.Vector3D();
             this._transformComponents = [];
             this._changeTexture = false;
+            this._textureStage = false;
             this._vertexFormat = egret3d.VertexFormat.VF_POSITION | egret3d.VertexFormat.VF_UV0;
             this._uv_scale = new Float32Array(2);
             /**
@@ -42208,6 +43176,10 @@ var egret3d;
                 }
                 sampler2D.texture.upload(contextProxy);
                 contextProxy.setTexture2DAt(sampler2D.activeTextureIndex, sampler2D.uniformIndex, sampler2D.index, sampler2D.texture.texture2D);
+                if (this._textureStage) {
+                    sampler2D.texture.activeState(contextProxy);
+                    this._textureStage = false;
+                }
             }
             if (this._passUsage.uniform_ViewProjectionMatrix) {
                 contextProxy.uniformMatrix4fv(this._passUsage.uniform_ViewProjectionMatrix.uniformIndex, false, this.transformMatrix.rawData);
@@ -42282,6 +43254,8 @@ var egret3d;
         */
         function View3D(x, y, width, height, camera) {
             if (camera === void 0) { camera = null; }
+            //public stage: Stage = new Stage();
+            //protected _QuadPool: QuadPool = new QuadPool();
             this._viewPort = new egret3d.Rectangle();
             this._scene = new egret3d.Scene3D();
             this._scissorRect = new egret3d.Rectangle();
@@ -42654,6 +43628,19 @@ var egret3d;
         View3D.prototype.update = function (time, delay) {
             this._camera.viewPort = this._viewPort;
             this._entityCollect.update(this._camera);
+            if (egret3d.Egret3DEngine.debug) {
+                egret3d.Egret3DState.showDataInfo("drawCall : " + this._entityCollect.numberDraw.toString());
+                egret3d.Egret3DState.showDataInfo("vertex : " + this._entityCollect.numberVertex.toString());
+                egret3d.Egret3DState.showDataInfo("tris : " + this._entityCollect.numberFace.toString());
+                egret3d.Egret3DState.showDataInfo("skin : " + this._entityCollect.numberSkin.toString());
+                egret3d.Egret3DState.showDataInfo("proAnim : " + this._entityCollect.numberAnimation.toString());
+                egret3d.Egret3DState.showDataInfo("particleEmiter : " + this._entityCollect.numberParticle.toString());
+                var len;
+                for (var i = 0; i < egret3d.Layer.layerType.length; i++) {
+                    len = egret3d.Layer.layerType[i] + " layer: " + this._entityCollect.softRenderItems[egret3d.Layer.layerType[i]].length.toString();
+                    egret3d.Egret3DState.showDataInfo(len);
+                }
+            }
             //------------------
             this.updateObject3D(this._scene.root, time, delay);
             //this._numberEntity = this._entityCollect.renderList.length;
@@ -42932,6 +43919,7 @@ var egret3d;
             this.sizeDiry = true;
             this._time = 0;
             this._delay = 0;
+            this._renderer = 0;
             this._timeDate = null;
             /**
             * @language zh_CN
@@ -43150,6 +44138,12 @@ var egret3d;
             for (var i = 0; i < this._view3DS.length; i++) {
                 this._view3DS[i].update(this._time, this._delay);
             }
+            if (egret3d.Egret3DEngine.debug) {
+                this._renderer = (new Date().getTime() - this._time);
+                egret3d.Egret3DState.showTime(this._time, this._delay);
+                egret3d.Egret3DState.showDataInfo("renderer: " + this._renderer.toString() + " ms");
+                egret3d.Egret3DState.show();
+            }
             requestAnimationFrame(function (delay) { return _this.update(delay); });
         };
         /**
@@ -43173,6 +44167,113 @@ var egret3d;
         return Egret3DCanvas;
     }(egret3d.EventDispatcher));
     egret3d.Egret3DCanvas = Egret3DCanvas;
+})(egret3d || (egret3d = {}));
+var egret3d;
+(function (egret3d) {
+    /**
+     * @private
+     * @class egret3D.Egret3DEngine
+     * @classdesc
+     * 引擎库文件加载
+     * 引擎库前期加载设置，开发中加载未压缩的编译引擎
+     */
+    var Egret3DEngine = (function () {
+        function Egret3DEngine() {
+        }
+        Egret3DEngine.getXHR = function () {
+            var xhr = null;
+            if (window["XMLHttpRequest"]) {
+                xhr = new window["XMLHttpRequest"]();
+            }
+            else {
+                xhr = new ActiveXObject("MSXML2.XMLHTTP");
+            }
+            return xhr;
+        };
+        /**
+         * @language zh_CN
+         * 请求读取
+         * @event complete 读取完成响应回调
+         */
+        Egret3DEngine.preload = function (complete) {
+            this._complete = complete;
+            if (this._xhr == null) {
+                this._xhr = this.getXHR();
+            }
+            if (this._xhr == null) {
+                alert("Your browser does not support XMLHTTP.");
+                return;
+            }
+            if (this._xhr.readyState > 0) {
+                this._xhr.abort();
+            }
+            this._xhr.open("GET", this._libUrl + "?" + Math.random() * 100000, true);
+            this._xhr.addEventListener("progress", function (e) { return Egret3DEngine.onProgress(e); }, false);
+            this._xhr.addEventListener("readystatechange", function (e) { return Egret3DEngine.onReadyStateChange(e); }, false);
+            this._xhr.addEventListener("error", function (e) { return Egret3DEngine.onError(e); }, false);
+            this._xhr.responseType = "text";
+            this._xhr.send();
+        };
+        Egret3DEngine.onReadyStateChange = function (event) {
+            if (this._xhr.readyState == 4) {
+                if (this._xhr.status >= 400 || this._xhr.status == 0) {
+                    console.log(this._libUrl, "load fail");
+                }
+                else {
+                    this.loadComplete();
+                }
+            }
+        };
+        Egret3DEngine.loadComplete = function () {
+            var libTex = this._xhr.responseText;
+            this.applyClass(libTex);
+        };
+        Egret3DEngine.onProgress = function (event) {
+            var e = event.loaded.toString() + event.total;
+            console.log("progress event```" + e);
+        };
+        Egret3DEngine.onError = function (event) {
+            console.log("load error", event);
+        };
+        Egret3DEngine.applyClass = function (source) {
+            var obj = eval("(" + source + ")");
+            for (var i = 0; i < obj.files.length; ++i) {
+                Egret3DEngine.importList[i] = "/js/Egret3D/";
+                Egret3DEngine.importList[i] += obj.files[i];
+                Egret3DEngine.importList[i] = Egret3DEngine.importList[i].replace(".ts", ".js");
+            }
+            Egret3DEngine.onTsconfig();
+            Egret3DEngine.startLoadScript(null);
+        };
+        Egret3DEngine.addImportScript = function (path) {
+            Egret3DEngine.importList.push(path);
+        };
+        Egret3DEngine.startLoadScript = function (e) {
+            var _this = this;
+            if (this.importList.length > 0) {
+                var egret3DScript = document.createElement("script");
+                egret3DScript.src = this.importList.shift();
+                egret3DScript.onload = function (e) { return _this.startLoadScript(e); };
+                egret3DScript.onerror = function (e) { return _this.loadScriptError(e); };
+                document.head.appendChild(egret3DScript);
+            }
+            else {
+                console.log("all complete");
+                this._complete();
+            }
+        };
+        Egret3DEngine.loadScriptError = function (e) {
+            var error = "load Script Error \r\n no file:" + e.srcElement.src;
+            alert(error);
+            this.startLoadScript(null);
+        };
+        Egret3DEngine.debug = true;
+        Egret3DEngine.djs = "";
+        Egret3DEngine.importList = new Array();
+        Egret3DEngine._libUrl = "/Egret3D/tsconfig.json";
+        return Egret3DEngine;
+    }());
+    egret3d.Egret3DEngine = Egret3DEngine;
 })(egret3d || (egret3d = {}));
 var egret3d;
 (function (egret3d) {

@@ -1311,7 +1311,7 @@ module egret {
          */
         $cacheAsBitmapChanged():void {
             var parentCache = this.$displayList || this.$parentDisplayList;
-            if (this.$renderNode) {
+            if (this.$renderNode && parentCache) {
                 parentCache.markDirty(this);
             }
             this.$propagateFlagsDown(sys.DisplayObjectFlags.InvalidConcatenatedMatrix |
