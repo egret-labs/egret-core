@@ -273,7 +273,7 @@ namespace dragonBones {
                 transform.scaleX = frame.transform.scaleX + transform.scaleX * tweenProgress;
                 transform.scaleY = frame.transform.scaleY + transform.scaleY * tweenProgress;
             }
-            
+
             transform.add(timeline.originTransform);
         }
 
@@ -431,14 +431,15 @@ namespace dragonBones {
          * @see dragonBones.BaseFactory#parsetTextureAtlasData()
          */
         public static parseTextureAtlasData(rawData: any, scale: number = 1): any {
-            let textureAtlasData: any = {};
-            let subTextureFrame: Rectangle = null;
+            const textureAtlasData: any = {};
 
-            let subTextureList: any = rawData[DataParser.SUB_TEXTURE];
+            const subTextureList: any = rawData[DataParser.SUB_TEXTURE];
             for (let i = 0, len = subTextureList.length; i < len; i++) {
-                let subTextureObject = subTextureList[i];
-                let subTextureName = subTextureObject[DataParser.NAME];
-                let subTextureRegion = new Rectangle();
+                const subTextureObject = subTextureList[i];
+                const subTextureName = subTextureObject[DataParser.NAME];
+                const subTextureRegion = new Rectangle();
+                let subTextureFrame: Rectangle = null;
+
                 subTextureRegion.x = subTextureObject[DataParser.X] / scale;
                 subTextureRegion.y = subTextureObject[DataParser.Y] / scale;
                 subTextureRegion.width = subTextureObject[DataParser.WIDTH] / scale;
@@ -450,8 +451,6 @@ namespace dragonBones {
                     subTextureFrame.y = subTextureObject[DataParser.FRAME_Y] / scale;
                     subTextureFrame.width = subTextureObject[DataParser.FRAME_WIDTH] / scale;
                     subTextureFrame.height = subTextureObject[DataParser.FRAME_HEIGHT] / scale;
-                } else {
-                    subTextureFrame = null;
                 }
 
                 textureAtlasData[subTextureName] = { region: subTextureRegion, frame: subTextureFrame, rotated: false };

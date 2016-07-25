@@ -93,69 +93,73 @@ namespace dragonBones {
          * @inheritDoc
          */
         protected _onClear(): void {
-            this.frameRate = 0;
-            this.cacheFrameRate = 0;
-            this.type = ArmatureType.Armature;
-            this.name = null;
-            this.parent = null;
+            const self = this;
 
-            for (let i in this.bones) {
-                this.bones[i].returnToPool();
-                delete this.bones[i];
+            self.frameRate = 0;
+            self.cacheFrameRate = 0;
+            self.type = ArmatureType.Armature;
+            self.name = null;
+            self.parent = null;
+
+            for (let i in self.bones) {
+                self.bones[i].returnToPool();
+                delete self.bones[i];
             }
 
-            for (let i in this.slots) {
-                this.slots[i].returnToPool();
-                delete this.slots[i];
+            for (let i in self.slots) {
+                self.slots[i].returnToPool();
+                delete self.slots[i];
             }
 
-            for (let i in this.skins) {
-                this.skins[i].returnToPool();
-                delete this.skins[i];
+            for (let i in self.skins) {
+                self.skins[i].returnToPool();
+                delete self.skins[i];
             }
 
-            for (let i in this.animations) {
-                this.animations[i].returnToPool();
-                delete this.animations[i];
+            for (let i in self.animations) {
+                self.animations[i].returnToPool();
+                delete self.animations[i];
             }
 
-            if (this.actions.length) {
-                for (let i = 0, l = this.actions.length; i < l; ++i) {
-                    this.actions[i].returnToPool();
+            if (self.actions.length) {
+                for (let i = 0, l = self.actions.length; i < l; ++i) {
+                    self.actions[i].returnToPool();
                 }
 
-                this.actions.length = 0;
+                self.actions.length = 0;
             }
 
-            this._boneDirty = false;
-            this._slotDirty = false;
-            this._defaultSkin = null;
-            this._defaultAnimation = null;
+            self._boneDirty = false;
+            self._slotDirty = false;
+            self._defaultSkin = null;
+            self._defaultAnimation = null;
 
-            if (this._sortedBones.length) {
-                this._sortedBones.length = 0;
+            if (self._sortedBones.length) {
+                self._sortedBones.length = 0;
             }
 
-            if (this._sortedSlots.length) {
-                this._sortedSlots.length = 0;
+            if (self._sortedSlots.length) {
+                self._sortedSlots.length = 0;
             }
 
-            for (let i in this._bonesChildren) {
-                delete this._bonesChildren[i];
+            for (let i in self._bonesChildren) {
+                delete self._bonesChildren[i];
             }
         }
 
         private _sortBones(): void {
-            const total = this._sortedBones.length;
+            const self = this;
+
+            const total = self._sortedBones.length;
             if (!total) {
                 return;
             }
 
-            const sortHelper = this._sortedBones.concat();
+            const sortHelper = self._sortedBones.concat();
             let index = 0;
             let count = 0;
 
-            this._sortedBones.length = 0;
+            self._sortedBones.length = 0;
 
             while (count < total) {
                 const bone = sortHelper[index++];
@@ -163,22 +167,22 @@ namespace dragonBones {
                     index = 0;
                 }
 
-                if (this._sortedBones.indexOf(bone) >= 0) {
+                if (self._sortedBones.indexOf(bone) >= 0) {
                     continue;
                 }
 
-                if (bone.parent && this._sortedBones.indexOf(bone.parent) < 0) {
+                if (bone.parent && self._sortedBones.indexOf(bone.parent) < 0) {
                     continue;
                 }
 
-                if (bone.ik && this._sortedBones.indexOf(bone.ik) < 0) {
+                if (bone.ik && self._sortedBones.indexOf(bone.ik) < 0) {
                     continue;
                 }
 
                 if (bone.ik && bone.chain > 0 && bone.chainIndex == bone.chain) {
-                    this._sortedBones.splice(this._sortedBones.indexOf(bone.parent) + 1, 0, bone);
+                    self._sortedBones.splice(self._sortedBones.indexOf(bone.parent) + 1, 0, bone);
                 } else {
-                    this._sortedBones.push(bone);
+                    self._sortedBones.push(bone);
                 }
 
                 count++;
@@ -192,43 +196,47 @@ namespace dragonBones {
          * @private
          */
         public cacheFrames(value: number): void {
-            if (this.cacheFrameRate == value) {
+            const self = this;
+
+            if (self.cacheFrameRate == value) {
                 return;
             }
 
-            this.cacheFrameRate = value;
+            self.cacheFrameRate = value;
 
-            const frameScale = this.cacheFrameRate / this.frameRate;
-            for (let i in this.animations) {
-                this.animations[i].cacheFrames(frameScale);
+            const frameScale = self.cacheFrameRate / self.frameRate;
+            for (let i in self.animations) {
+                self.animations[i].cacheFrames(frameScale);
             }
         }
         /**
          * @private
          */
         public addBone(value: BoneData, parentName: string): void {
-            if (value && value.name && !this.bones[value.name]) {
+            const self = this;
+
+            if (value && value.name && !self.bones[value.name]) {
                 if (parentName) {
-                    const parent = this.getBone(parentName);
+                    const parent = self.getBone(parentName);
                     if (parent) {
                         value.parent = parent;
                     } else {
-                        (this._bonesChildren[parentName] = this._bonesChildren[parentName] || []).push(value);
+                        (self._bonesChildren[parentName] = self._bonesChildren[parentName] || []).push(value);
                     }
                 }
 
-                const children = this._bonesChildren[value.name];
+                const children = self._bonesChildren[value.name];
                 if (children) {
                     for (let i = 0, l = children.length; i < l; ++i) {
                         children[i].parent = value;
                     }
 
-                    delete this._bonesChildren[value.name];
+                    delete self._bonesChildren[value.name];
                 }
 
-                this.bones[value.name] = value;
-                this._sortedBones.push(value);
-                this._boneDirty = true;
+                self.bones[value.name] = value;
+                self._sortedBones.push(value);
+                self._boneDirty = true;
             } else {
                 throw new Error();
             }
@@ -429,18 +437,20 @@ namespace dragonBones {
          * @inheritDoc
          */
         protected _onClear(): void {
-            this.inheritTranslation = false;
-            this.inheritRotation = false;
-            this.inheritScale = false;
-            this.bendPositive = false;
-            this.chain = 0;
-            this.chainIndex = 0;
-            this.weight = 0;
-            this.length = 0;
-            this.name = null;
-            this.parent = null;
-            this.ik = null;
-            this.transform.identity();
+            const self = this;
+
+            self.inheritTranslation = false;
+            self.inheritRotation = false;
+            self.inheritScale = false;
+            self.bendPositive = false;
+            self.chain = 0;
+            self.chainIndex = 0;
+            self.weight = 0;
+            self.length = 0;
+            self.name = null;
+            self.parent = null;
+            self.ik = null;
+            self.transform.identity();
         }
     }
     /**
@@ -510,19 +520,21 @@ namespace dragonBones {
          * @inheritDoc
          */
         protected _onClear(): void {
-            this.displayIndex = 0;
-            this.zOrder = 0;
-            this.blendMode = BlendMode.Normal;
-            this.name = null;
-            this.parent = null;
-            this.color = null;
+            const self = this;
 
-            if (this.actions.length) {
-                for (let i = 0, l = this.actions.length; i < l; ++i) {
-                    this.actions[i].returnToPool();
+            self.displayIndex = 0;
+            self.zOrder = 0;
+            self.blendMode = BlendMode.Normal;
+            self.name = null;
+            self.parent = null;
+            self.color = null;
+
+            if (self.actions.length) {
+                for (let i = 0, l = self.actions.length; i < l; ++i) {
+                    self.actions[i].returnToPool();
                 }
 
-                this.actions.length = 0;
+                self.actions.length = 0;
             }
         }
     }
@@ -558,11 +570,13 @@ namespace dragonBones {
          * @inheritDoc
          */
         protected _onClear(): void {
-            this.name = null;
+            const self = this;
 
-            for (let i in this.slots) {
-                this.slots[i].returnToPool();
-                delete this.slots[i];
+            self.name = null;
+
+            for (let i in self.slots) {
+                self.slots[i].returnToPool();
+                delete self.slots[i];
             }
         }
         /**
@@ -600,6 +614,8 @@ namespace dragonBones {
          * @inheritDoc
          */
         protected _onClear(): void {
+            const self = this;
+            
             this.slot = null;
 
             if (this.displays.length) {
@@ -635,19 +651,21 @@ namespace dragonBones {
          * @inheritDoc
          */
         protected _onClear(): void {
-            this.isRelativePivot = false;
-            this.type = DisplayType.Image;
-            this.name = null;
-            this.textureData = null;
-            this.armatureData = null;
+            const self = this;
+            
+            self.isRelativePivot = false;
+            self.type = DisplayType.Image;
+            self.name = null;
+            self.textureData = null;
+            self.armatureData = null;
 
-            if (this.meshData) {
-                this.meshData.returnToPool();
-                this.meshData = null;
+            if (self.meshData) {
+                self.meshData.returnToPool();
+                self.meshData = null;
             }
 
-            this.pivot.clear();
-            this.transform.identity();
+            self.pivot.clear();
+            self.transform.identity();
         }
     }
     /**
@@ -679,39 +697,41 @@ namespace dragonBones {
          * @inheritDoc
          */
         protected _onClear(): void {
-            this.skinned = false;
-            this.slotPose.identity();
+            const self = this;
 
-            if (this.uvs.length) {
-                this.uvs.length = 0;
+            self.skinned = false;
+            self.slotPose.identity();
+
+            if (self.uvs.length) {
+                self.uvs.length = 0;
             }
 
-            if (this.vertices.length) {
-                this.vertices.length = 0;
+            if (self.vertices.length) {
+                self.vertices.length = 0;
             }
 
-            if (this.vertexIndices.length) {
-                this.vertexIndices.length = 0;
+            if (self.vertexIndices.length) {
+                self.vertexIndices.length = 0;
             }
 
-            if (this.boneIndices.length) {
-                this.boneIndices.length = 0;
+            if (self.boneIndices.length) {
+                self.boneIndices.length = 0;
             }
 
-            if (this.weights.length) {
-                this.weights.length = 0;
+            if (self.weights.length) {
+                self.weights.length = 0;
             }
 
-            if (this.boneVertices.length) {
-                this.boneVertices.length = 0;
+            if (self.boneVertices.length) {
+                self.boneVertices.length = 0;
             }
 
-            if (this.bones.length) {
-                this.bones.length = 0;
+            if (self.bones.length) {
+                self.bones.length = 0;
             }
 
-            if (this.inverseBindPose.length) {
-                this.inverseBindPose.length = 0;
+            if (self.inverseBindPose.length) {
+                self.inverseBindPose.length = 0;
             }
         }
     }

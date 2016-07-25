@@ -17,10 +17,12 @@ namespace dragonBones {
         }
 
         protected _onClear(): void {
-            this.type = ActionType.Play;
-            this.data = null;
-            this.bone = null;
-            this.slot = null;
+            const self = this;
+
+            self.type = ActionType.Play;
+            self.data = null;
+            self.bone = null;
+            self.slot = null;
         }
     }
     /**
@@ -42,11 +44,13 @@ namespace dragonBones {
         }
 
         protected _onClear(): void {
-            this.type = EventType.Frame;
-            this.name = null;
-            this.data = null;
-            this.bone = null;
-            this.slot = null;
+            const self = this;
+
+            self.type = EventType.Frame;
+            self.name = null;
+            self.data = null;
+            self.bone = null;
+            self.slot = null;
         }
     }
     /**
@@ -65,10 +69,12 @@ namespace dragonBones {
          * @inheritDoc
          */
         protected _onClear(): void {
-            this.position = 0;
-            this.duration = 0;
-            this.prev = null;
-            this.next = null;
+            const self = this;
+
+            self.position = 0;
+            self.duration = 0;
+            self.prev = null;
+            self.next = null;
         }
     }
     /**
@@ -152,22 +158,24 @@ namespace dragonBones {
          * @inheritDoc
          */
         protected _onClear(): void {
+            const self = this;
+
             super._onClear();
 
-            if (this.actions.length) {
-                for (let i = 0, l = this.actions.length; i < l; ++i) {
-                    this.actions[i].returnToPool();
+            if (self.actions.length) {
+                for (let i = 0, l = self.actions.length; i < l; ++i) {
+                    self.actions[i].returnToPool();
                 }
 
-                this.actions.length = 0;
+                self.actions.length = 0;
             }
 
-            if (this.events.length) {
-                for (let i = 0, l = this.events.length; i < l; ++i) {
-                    this.events[i].returnToPool();
+            if (self.events.length) {
+                for (let i = 0, l = self.events.length; i < l; ++i) {
+                    self.events[i].returnToPool();
                 }
 
-                this.events.length = 0;
+                self.events.length = 0;
             }
         }
     }
@@ -190,11 +198,13 @@ namespace dragonBones {
          * @inheritDoc
          */
         protected _onClear(): void {
+            const self = this;
+
             super._onClear();
 
-            this.tweenScale = false;
-            this.tweenRotate = 0;
-            this.transform.identity();
+            self.tweenScale = false;
+            self.tweenRotate = 0;
+            self.transform.identity();
         }
     }
     /**
@@ -220,11 +230,13 @@ namespace dragonBones {
          * @inheritDoc
          */
         protected _onClear(): void {
+            const self = this;
+
             super._onClear();
 
-            this.displayIndex = 0;
-            this.zOrder = 0;
-            this.color = null;
+            self.displayIndex = 0;
+            self.zOrder = 0;
+            self.color = null;
         }
     }
     /**
@@ -246,16 +258,18 @@ namespace dragonBones {
          * @inheritDoc
          */
         protected _onClear(): void {
+            const self = this;
+
             super._onClear();
 
-            this.type = ExtensionType.FFD;
+            self.type = ExtensionType.FFD;
 
-            if (this.tweens.length) {
-                this.tweens.length = 0;
+            if (self.tweens.length) {
+                self.tweens.length = 0;
             }
 
-            if (this.keys.length) {
-                this.keys.length = 0;
+            if (self.keys.length) {
+                self.keys.length = 0;
             }
         }
     }

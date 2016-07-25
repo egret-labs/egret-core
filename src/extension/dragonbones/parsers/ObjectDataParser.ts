@@ -129,7 +129,6 @@ namespace dragonBones {
             }
 
             if (
-                (ObjectDataParser.ACTION in rawData) ||
                 (ObjectDataParser.ACTIONS in rawData) ||
                 (ObjectDataParser.DEFAULT_ACTIONS in rawData)
             ) {
@@ -213,7 +212,6 @@ namespace dragonBones {
             }
 
             if (
-                (ObjectDataParser.ACTION in rawData) ||
                 (ObjectDataParser.ACTIONS in rawData) ||
                 (ObjectDataParser.DEFAULT_ACTIONS in rawData)
             ) {
@@ -621,8 +619,7 @@ namespace dragonBones {
 
             if (
                 (ObjectDataParser.ACTION in rawData) ||
-                (ObjectDataParser.ACTIONS in rawData) ||
-                (ObjectDataParser.DEFAULT_ACTIONS in rawData)
+                (ObjectDataParser.ACTIONS in rawData)
             ) {
                 this._parseActionData(rawData, frame.actions, null, null);
             }
@@ -661,8 +658,7 @@ namespace dragonBones {
 
             if (
                 (ObjectDataParser.ACTION in rawData) ||
-                (ObjectDataParser.ACTIONS in rawData) ||
-                (ObjectDataParser.DEFAULT_ACTIONS in rawData)
+                (ObjectDataParser.ACTIONS in rawData)
             ) {
                 const slot = this._armature.getSlot(bone.name);
                 const actions: Array<ActionData> = [];
@@ -701,7 +697,10 @@ namespace dragonBones {
                 if (ObjectDataParser._getBoolean(rawData, ObjectDataParser.HIDE, false)) {
                     frame.displayIndex = -1;
                 }
-            } else if (ObjectDataParser.ACTION in rawData) {
+            } else if (
+                (ObjectDataParser.ACTION in rawData) ||
+                (ObjectDataParser.ACTIONS in rawData)
+            ) {
                 const slot = (<SlotTimelineData>this._timeline).slot;
                 const actions: Array<ActionData> = [];
                 this._parseActionData(rawData, actions, slot.parent, slot);

@@ -2,8 +2,8 @@ namespace dragonBones {
     /**
      * @language zh_CN
      * 动画状态，播放动画时产生，可以对单个动画的播放进行更细致的控制和调节。
-     * @see dragonBones.animation.Animation
-     * @see dragonBones.objects.AnimationData
+     * @see dragonBones.Animation
+     * @see dragonBones.AnimationData
      * @version DragonBones 3.0
      */
     export class AnimationState extends BaseObject {
@@ -152,113 +152,117 @@ namespace dragonBones {
          * @inheritDoc
          */
         protected _onClear(): void {
-            this.displayControl = true;
-            this.additiveBlending = false;
-            this.playTimes = 1;
-            this.timeScale = 1;
-            this.weight = 1;
-            this.autoFadeOutTime = -1;
-            this.fadeTotalTime = 0;
+            const self = this;
 
-            this._isFadeOutComplete = false;
-            this._layer = 0;
-            this._position = 0;
-            this._duration = 0;
-            this._weightResult = 0;
-            this._fadeProgress = 0;
-            this._group = null;
+            self.displayControl = true;
+            self.additiveBlending = false;
+            self.playTimes = 1;
+            self.timeScale = 1;
+            self.weight = 1;
+            self.autoFadeOutTime = -1;
+            self.fadeTotalTime = 0;
 
-            if (this._timeline) {
-                this._timeline.returnToPool();
-                this._timeline = null;
+            self._isFadeOutComplete = false;
+            self._layer = 0;
+            self._position = 0;
+            self._duration = 0;
+            self._weightResult = 0;
+            self._fadeProgress = 0;
+            self._group = null;
+
+            if (self._timeline) {
+                self._timeline.returnToPool();
+                self._timeline = null;
             }
 
-            this._isPlaying = true;
-            this._isPausePlayhead = false;
-            this._isFadeOut = false;
-            this._currentPlayTimes = 0;
-            this._fadeTime = 0;
-            this._time = 0;
-            this._name = null;
-            this._armature = null;
-            this._animationData = null;
+            self._isPlaying = true;
+            self._isPausePlayhead = false;
+            self._isFadeOut = false;
+            self._currentPlayTimes = 0;
+            self._fadeTime = 0;
+            self._time = 0;
+            self._name = null;
+            self._armature = null;
+            self._animationData = null;
 
-            if (this._boneMask.length) {
-                this._boneMask.length = 0;
+            if (self._boneMask.length) {
+                self._boneMask.length = 0;
             }
 
-            for (let i = 0, l = this._boneTimelines.length; i < l; ++i) {
-                this._boneTimelines[i].returnToPool();
+            for (let i = 0, l = self._boneTimelines.length; i < l; ++i) {
+                self._boneTimelines[i].returnToPool();
             }
 
-            for (let i = 0, l = this._slotTimelines.length; i < l; ++i) {
-                this._slotTimelines[i].returnToPool();
+            for (let i = 0, l = self._slotTimelines.length; i < l; ++i) {
+                self._slotTimelines[i].returnToPool();
             }
 
-            for (let i = 0, l = this._ffdTimelines.length; i < l; ++i) {
-                this._ffdTimelines[i].returnToPool();
+            for (let i = 0, l = self._ffdTimelines.length; i < l; ++i) {
+                self._ffdTimelines[i].returnToPool();
             }
 
-            this._boneTimelines.length = 0;
-            this._slotTimelines.length = 0;
-            this._ffdTimelines.length = 0;
+            self._boneTimelines.length = 0;
+            self._slotTimelines.length = 0;
+            self._ffdTimelines.length = 0;
         }
         /**
          * @private
          */
         private _advanceFadeTime(passedTime: number): void {
+            const self = this;
+
             if (passedTime < 0) {
                 passedTime = -passedTime;
             }
 
-            this._fadeTime += passedTime;
+            self._fadeTime += passedTime;
 
             let fadeProgress = 0;
-            if (this._fadeTime >= this.fadeTotalTime) { // Fade complete.
-                fadeProgress = this._isFadeOut ? 0 : 1;
-            } else if (this._fadeTime > 0) { // Fading.
-                fadeProgress = this._isFadeOut ? (1 - this._fadeTime / this.fadeTotalTime) : (this._fadeTime / this.fadeTotalTime);
+            if (self._fadeTime >= self.fadeTotalTime) { // Fade complete.
+                fadeProgress = self._isFadeOut ? 0 : 1;
+            } else if (self._fadeTime > 0) { // Fading.
+                fadeProgress = self._isFadeOut ? (1 - self._fadeTime / self.fadeTotalTime) : (self._fadeTime / self.fadeTotalTime);
             } else { // Before fade.
-                fadeProgress = this._isFadeOut ? 1 : 0;
+                fadeProgress = self._isFadeOut ? 1 : 0;
             }
 
-            if (this._fadeProgress != fadeProgress) {
-                this._fadeProgress = fadeProgress;
+            if (self._fadeProgress != fadeProgress) {
+                self._fadeProgress = fadeProgress;
 
-                const eventDispatcher = this._armature._display;
+                const eventDispatcher = self._armature._display;
 
-                if (this._fadeTime <= passedTime) {
-                    if (this._isFadeOut) {
+                if (self._fadeTime <= passedTime) {
+                    if (self._isFadeOut) {
                         if (eventDispatcher.hasEvent(EventObject.FADE_OUT)) {
                             const event = BaseObject.borrowObject(EventObject);
                             event.animationState = this;
-                            this._armature._bufferEvent(event, EventObject.FADE_OUT);
+                            self._armature._bufferEvent(event, EventObject.FADE_OUT);
                         }
                     } else {
                         if (eventDispatcher.hasEvent(EventObject.FADE_IN)) {
                             const event = BaseObject.borrowObject(EventObject);
                             event.animationState = this;
-                            this._armature._bufferEvent(event, EventObject.FADE_IN);
+                            self._armature._bufferEvent(event, EventObject.FADE_IN);
                         }
                     }
                 }
 
-                if (this._fadeTime >= this.fadeTotalTime) {
-                    if (this._isFadeOut) {
-                        this._isFadeOutComplete = true;
+                if (self._fadeTime >= self.fadeTotalTime) {
+                    if (self._isFadeOut) {
+                        self._isFadeOutComplete = true;
 
                         if (eventDispatcher.hasEvent(EventObject.FADE_OUT_COMPLETE)) {
                             const event = BaseObject.borrowObject(EventObject);
                             event.animationState = this;
-                            this._armature._bufferEvent(event, EventObject.FADE_OUT_COMPLETE);
+                            self._armature._bufferEvent(event, EventObject.FADE_OUT_COMPLETE);
                         }
                     } else {
-                        this._isPausePlayhead = false;
+                        self._isPausePlayhead = false;
 
                         if (eventDispatcher.hasEvent(EventObject.FADE_IN_COMPLETE)) {
                             const event = BaseObject.borrowObject(EventObject);
                             event.animationState = this;
-                            this._armature._bufferEvent(event, EventObject.FADE_IN_COMPLETE);
+                            self._armature._bufferEvent(event, EventObject.FADE_IN_COMPLETE);
                         }
                     }
                 }
@@ -289,59 +293,63 @@ namespace dragonBones {
             playTimes: number, position: number, duration: number, time: number, timeScale: number, fadeInTime: number,
             pausePlayhead: boolean
         ): void {
-            this._armature = armature;
-            this._animationData = clip;
-            this._name = animationName;
+            const self = this;
 
-            this.playTimes = playTimes;
-            this.timeScale = timeScale;
-            this.fadeTotalTime = fadeInTime;
+            self._armature = armature;
+            self._animationData = clip;
+            self._name = animationName;
 
-            this._position = position;
-            this._duration = duration;
-            this._time = time;
-            this._isPausePlayhead = pausePlayhead;
-            if (this.fadeTotalTime == 0) {
-                this._fadeProgress = 0.999999;
+            self.playTimes = playTimes;
+            self.timeScale = timeScale;
+            self.fadeTotalTime = fadeInTime;
+
+            self._position = position;
+            self._duration = duration;
+            self._time = time;
+            self._isPausePlayhead = pausePlayhead;
+            if (self.fadeTotalTime == 0) {
+                self._fadeProgress = 0.999999;
             }
 
-            this._timeline = BaseObject.borrowObject(AnimationTimelineState);
-            this._timeline.fadeIn(this._armature, this, this._animationData, this._time);
+            self._timeline = BaseObject.borrowObject(AnimationTimelineState);
+            self._timeline.fadeIn(self._armature, self, self._animationData, self._time);
 
-            this._updateTimelineStates();
+            self._updateTimelineStates();
         }
         /**
          * @private
          */
         public _updateTimelineStates(): void {
-            let time = this._time;
-            if (!this._animationData.hasAsynchronyTimeline) {
-                time = this._timeline._currentTime;
+            const self = this;
+
+            let time = self._time;
+            if (!self._animationData.hasAsynchronyTimeline) {
+                time = self._timeline._currentTime;
             }
 
             const boneTimelineStates: Map<BoneTimelineState> = {};
             const slotTimelineStates: Map<SlotTimelineState> = {};
 
-            for (let i = 0, l = this._boneTimelines.length; i < l; ++i) {
-                const boneTimelineState = this._boneTimelines[i];
+            for (let i = 0, l = self._boneTimelines.length; i < l; ++i) {
+                const boneTimelineState = self._boneTimelines[i];
                 boneTimelineStates[boneTimelineState.bone.name] = boneTimelineState;
             }
 
-            const bones = this._armature.getBones();
+            const bones = self._armature.getBones();
             for (let i = 0, l = bones.length; i < l; ++i) {
                 const bone = bones[i];
                 const boneTimelineName = bone.name;
-                const boneTimelineData = this._animationData.getBoneTimeline(boneTimelineName);
+                const boneTimelineData = self._animationData.getBoneTimeline(boneTimelineName);
 
-                if (boneTimelineData && this.containsBoneMask(boneTimelineName)) {
+                if (boneTimelineData && self.containsBoneMask(boneTimelineName)) {
                     let boneTimelineState = boneTimelineStates[boneTimelineName];
                     if (boneTimelineState) {
                         delete boneTimelineStates[boneTimelineName];
                     } else {
                         boneTimelineState = BaseObject.borrowObject(BoneTimelineState);
                         boneTimelineState.bone = bone;
-                        boneTimelineState.fadeIn(this._armature, this, boneTimelineData, time);
-                        this._boneTimelines.push(boneTimelineState);
+                        boneTimelineState.fadeIn(self._armature, this, boneTimelineData, time);
+                        self._boneTimelines.push(boneTimelineState);
                     }
                 }
             }
@@ -349,77 +357,79 @@ namespace dragonBones {
             for (let i in boneTimelineStates) {
                 const boneTimelineState = boneTimelineStates[i];
                 boneTimelineState.bone.invalidUpdate();
-                this._boneTimelines.splice(this._boneTimelines.indexOf(boneTimelineState), 1);
+                self._boneTimelines.splice(self._boneTimelines.indexOf(boneTimelineState), 1);
                 boneTimelineState.returnToPool();
             }
 
             //
-            for (let i = 0, l = this._slotTimelines.length; i < l; ++i) {
-                const slotTimelineState = this._slotTimelines[i];
+            for (let i = 0, l = self._slotTimelines.length; i < l; ++i) {
+                const slotTimelineState = self._slotTimelines[i];
                 slotTimelineStates[slotTimelineState.slot.name] = slotTimelineState;
             }
 
-            const slots = this._armature.getSlots();
+            const slots = self._armature.getSlots();
             for (let i = 0, l = slots.length; i < l; ++i) {
                 const slot = slots[i];
                 const slotTimelineName = slot.name;
                 const parentTimelineName = slot.parent.name;
-                const slotTimelineData = this._animationData.getSlotTimeline(slotTimelineName);
+                const slotTimelineData = self._animationData.getSlotTimeline(slotTimelineName);
 
-                if (slotTimelineData && this.containsBoneMask(parentTimelineName) && !this._isFadeOut) {
+                if (slotTimelineData && self.containsBoneMask(parentTimelineName) && !self._isFadeOut) {
                     let slotTimelineState = slotTimelineStates[slotTimelineName];
                     if (slotTimelineState) {
                         delete slotTimelineStates[slotTimelineName];
                     } else {
                         slotTimelineState = BaseObject.borrowObject(SlotTimelineState);
                         slotTimelineState.slot = slot;
-                        slotTimelineState.fadeIn(this._armature, this, slotTimelineData, time);
-                        this._slotTimelines.push(slotTimelineState);
+                        slotTimelineState.fadeIn(self._armature, this, slotTimelineData, time);
+                        self._slotTimelines.push(slotTimelineState);
                     }
                 }
             }
 
             for (let i in slotTimelineStates) {
                 const slotTimelineState = slotTimelineStates[i];
-                this._slotTimelines.splice(this._slotTimelines.indexOf(slotTimelineState), 1);
+                self._slotTimelines.splice(self._slotTimelines.indexOf(slotTimelineState), 1);
                 slotTimelineState.returnToPool();
             }
 
-            this._updateFFDTimelineStates();
+            self._updateFFDTimelineStates();
         }
         /**
          * @private
          */
         public _updateFFDTimelineStates(): void {
-            let time = this._time;
-            if (!this._animationData.hasAsynchronyTimeline) {
-                time = this._timeline._currentTime;
+            const self = this;
+
+            let time = self._time;
+            if (!self._animationData.hasAsynchronyTimeline) {
+                time = self._timeline._currentTime;
             }
 
             const ffdTimelineStates: Map<FFDTimelineState> = {};
 
-            for (let i = 0, l = this._ffdTimelines.length; i < l; ++i) {
-                const ffdTimelineState = this._ffdTimelines[i];
+            for (let i = 0, l = self._ffdTimelines.length; i < l; ++i) {
+                const ffdTimelineState = self._ffdTimelines[i];
                 ffdTimelineStates[ffdTimelineState.slot.name] = ffdTimelineState;
             }
 
-            const slots = this._armature.getSlots();
+            const slots = self._armature.getSlots();
             for (let i = 0, l = slots.length; i < l; ++i) {
                 const slot = slots[i];
                 const slotTimelineName = slot.name;
                 const parentTimelineName = slot.parent.name;
 
                 if (slot._meshData) {
-                    const ffdTimelineData = this._animationData.getFFDTimeline(this._armature._skinData.name, slotTimelineName, slot.displayIndex);
-                    if (ffdTimelineData && this.containsBoneMask(parentTimelineName)) { // && !_isFadeOut
+                    const ffdTimelineData = self._animationData.getFFDTimeline(self._armature._skinData.name, slotTimelineName, slot.displayIndex);
+                    if (ffdTimelineData && self.containsBoneMask(parentTimelineName)) { // && !_isFadeOut
                         let ffdTimelineState = ffdTimelineStates[slotTimelineName];
                         if (ffdTimelineState) {
                             delete ffdTimelineStates[slotTimelineName];
                         } else {
                             ffdTimelineState = BaseObject.borrowObject(FFDTimelineState);
                             ffdTimelineState.slot = slot;
-                            ffdTimelineState.fadeIn(this._armature, this, ffdTimelineData, time);
-                            this._ffdTimelines.push(ffdTimelineState);
+                            ffdTimelineState.fadeIn(self._armature, this, ffdTimelineData, time);
+                            self._ffdTimelines.push(ffdTimelineState);
                         }
                     } else {
                         for (let iF = 0, lF = slot._ffdVertices.length; iF < lF; ++iF) {
@@ -434,7 +444,7 @@ namespace dragonBones {
             for (let i in ffdTimelineStates) {
                 const ffdTimelineState = ffdTimelineStates[i];
                 ffdTimelineState.slot._ffdDirty = true;
-                this._ffdTimelines.splice(this._ffdTimelines.indexOf(ffdTimelineState), 1);
+                self._ffdTimelines.splice(self._ffdTimelines.indexOf(ffdTimelineState), 1);
                 ffdTimelineState.returnToPool();
             }
         }
@@ -442,79 +452,86 @@ namespace dragonBones {
          * @private
          */
         public _advanceTime(passedTime: number, weightLeft: number, index: number): void {
-            if (passedTime != 0) {
-                this._advanceFadeTime(passedTime);
+            const self = this;
+
+            if (passedTime != 0) { // Fading.
+                self._advanceFadeTime(passedTime);
             }
 
-            passedTime *= this.timeScale;
-
-            if (passedTime != 0 && this._isPlaying && !this._isPausePlayhead) {
-                this._time += passedTime;
-                this._timeline.update(this._time);
-
-                if (this.autoFadeOutTime >= 0 && this._fadeProgress >= 1 && this._timeline._isCompleted) {
-                    this.fadeOut(this.autoFadeOutTime);
-                }
+            // Update time.
+            passedTime *= self.timeScale;
+            if (passedTime != 0 && self._isPlaying && !self._isPausePlayhead) {
+                self._time += passedTime;
             }
 
-            this._weightResult = this.weight * this._fadeProgress * weightLeft;
+            // Blend weight.
+            self._weightResult = self.weight * self._fadeProgress * weightLeft;
 
-            if (this._weightResult != 0) {
-                let time = this._time;
-                if (!this._animationData.hasAsynchronyTimeline) {
-                    time = this._timeline._currentTime;
-                }
-
+            if (self._weightResult != 0) {
+                const isCacheEnabled = self._fadeProgress >= 1 && index == 0 && self._armature.cacheFrameRate > 0;
+                const cacheTimeToFrameScale = self._animationData.cacheTimeToFrameScale;
                 let isUpdatesTimeline = true;
                 let isUpdatesBoneTimeline = true;
+                let time = isCacheEnabled ? (Math.floor(self._time * cacheTimeToFrameScale) / cacheTimeToFrameScale) : self._time; // Cache time internval.
 
-                if (this._fadeProgress >= 1 && index == 0 && this._armature.cacheFrameRate > 0) {
-                    const cacheFrameIndex = Math.floor(this._timeline._currentTime * this._animationData.cacheTimeToFrameScale);
-                    if (this._armature._cacheFrameIndex == cacheFrameIndex) {
+                // Update main timeline.                
+                self._timeline.update(time);
+                if (!self._animationData.hasAsynchronyTimeline) {
+                    time = self._timeline._currentTime;
+                }
+
+                if (isCacheEnabled) {
+                    const cacheFrameIndex = Math.floor(self._timeline._currentTime * cacheTimeToFrameScale);
+
+                    if (self._armature._cacheFrameIndex == cacheFrameIndex) { // Same cache.
                         isUpdatesTimeline = false;
                         isUpdatesBoneTimeline = false;
                     } else {
-                        this._armature._cacheFrameIndex = cacheFrameIndex;
+                        self._armature._cacheFrameIndex = cacheFrameIndex;
 
-                        if (this._armature._animation._animationStateDirty) {
-                            this._armature._animation._animationStateDirty = false;
+                        if (self._armature._animation._animationStateDirty) { // Update _cacheFrames.
+                            self._armature._animation._animationStateDirty = false;
 
-                            for (let i = 0, l = this._boneTimelines.length; i < l; ++i) {
-                                const boneTimeline = this._boneTimelines[i];
+                            for (let i = 0, l = self._boneTimelines.length; i < l; ++i) {
+                                const boneTimeline = self._boneTimelines[i];
                                 boneTimeline.bone._cacheFrames = (<BoneTimelineData>boneTimeline._timeline).cachedFrames;
                             }
 
-                            for (let i = 0, l = this._slotTimelines.length; i < l; ++i) {
-                                const slotTimeline = this._slotTimelines[i];
+                            for (let i = 0, l = self._slotTimelines.length; i < l; ++i) {
+                                const slotTimeline = self._slotTimelines[i];
                                 slotTimeline.slot._cacheFrames = (<SlotTimelineData>slotTimeline._timeline).cachedFrames;
                             }
                         }
 
-                        if (this._animationData.cachedFrames[cacheFrameIndex]) {
+                        if (self._animationData.cachedFrames[cacheFrameIndex]) { // Cached.
                             isUpdatesBoneTimeline = false;
-                        } else {
-                            this._animationData.cachedFrames[cacheFrameIndex] = true;
+                        } else { // Cache.
+                            self._animationData.cachedFrames[cacheFrameIndex] = true;
                         }
                     }
                 } else {
-                    this._armature._cacheFrameIndex = -1;
+                    self._armature._cacheFrameIndex = -1;
                 }
 
                 if (isUpdatesTimeline) {
                     if (isUpdatesBoneTimeline) {
-                        for (let i = 0, l = this._boneTimelines.length; i < l; ++i) {
-                            this._boneTimelines[i].update(time);
+                        for (let i = 0, l = self._boneTimelines.length; i < l; ++i) {
+                            self._boneTimelines[i].update(time);
                         }
                     }
 
-                    for (let i = 0, l = this._slotTimelines.length; i < l; ++i) {
-                        this._slotTimelines[i].update(time);
+                    for (let i = 0, l = self._slotTimelines.length; i < l; ++i) {
+                        self._slotTimelines[i].update(time);
                     }
 
-                    for (let i = 0, l = this._ffdTimelines.length; i < l; ++i) {
-                        this._ffdTimelines[i].update(time);
+                    for (let i = 0, l = self._ffdTimelines.length; i < l; ++i) {
+                        self._ffdTimelines[i].update(time);
                     }
                 }
+            }
+
+            if (self.autoFadeOutTime >= 0 && self._fadeProgress >= 1 && self._timeline._isCompleted) {
+                self.fadeOut(self.autoFadeOutTime);
             }
         }
         /**
@@ -542,36 +559,38 @@ namespace dragonBones {
          * @version DragonBones 3.0
          */
         public fadeOut(fadeOutTime: number, pausePlayhead: boolean = true): void {
+            const self = this;
+
             if (fadeOutTime < 0 || fadeOutTime != fadeOutTime) {
                 fadeOutTime = 0;
             }
 
-            this._isPausePlayhead = pausePlayhead;
+            self._isPausePlayhead = pausePlayhead;
 
-            if (this._isFadeOut) {
-                if (fadeOutTime > fadeOutTime - this._fadeTime) {
+            if (self._isFadeOut) {
+                if (fadeOutTime > fadeOutTime - self._fadeTime) {
                     // If the animation is already in fade out, the new fade out will be ignored.
                     return;
                 }
             } else {
-                this._isFadeOut = true;
+                self._isFadeOut = true;
 
-                if (fadeOutTime == 0 || this._fadeProgress <= 0) {
-                    this._fadeProgress = 0.000001;
+                if (fadeOutTime == 0 || self._fadeProgress <= 0) {
+                    self._fadeProgress = 0.000001;
                 }
 
-                for (let i = 0, l = this._boneTimelines.length; i < l; ++i) {
-                    this._boneTimelines[i].fadeOut();
+                for (let i = 0, l = self._boneTimelines.length; i < l; ++i) {
+                    self._boneTimelines[i].fadeOut();
                 }
 
-                for (let i = 0, l = this._slotTimelines.length; i < l; ++i) {
-                    this._slotTimelines[i].fadeOut();
+                for (let i = 0, l = self._slotTimelines.length; i < l; ++i) {
+                    self._slotTimelines[i].fadeOut();
                 }
             }
 
-            this.displayControl = false;
-            this.fadeTotalTime = this._fadeProgress > 0.000001 ? fadeOutTime / this._fadeProgress : 0;
-            this._fadeTime = this.fadeTotalTime * (1 - this._fadeProgress);
+            self.displayControl = false;
+            self.fadeTotalTime = self._fadeProgress > 0.000001 ? fadeOutTime / self._fadeProgress : 0;
+            self._fadeTime = self.fadeTotalTime * (1 - self._fadeProgress);
         }
         /**
          * @language zh_CN
@@ -590,34 +609,36 @@ namespace dragonBones {
          * @version DragonBones 3.0
          */
         public addBoneMask(name: string, recursive: boolean = true): void {
-            const currentBone = this._armature.getBone(name);
+            const self = this;
+
+            const currentBone = self._armature.getBone(name);
             if (!currentBone) {
                 return;
             }
 
             if (
-                this._boneMask.indexOf(name) < 0 &&
-                this._animationData.getBoneTimeline(name)
+                self._boneMask.indexOf(name) < 0 &&
+                self._animationData.getBoneTimeline(name)
             ) { // Add mixing
-                this._boneMask.push(name);
+                self._boneMask.push(name);
             }
 
             if (recursive) {
-                const bones = this._armature.getBones();
+                const bones = self._armature.getBones();
                 for (let i = 0, l = bones.length; i < l; ++i) {
                     const bone = bones[i];
                     const boneName = bone.name;
                     if (
-                        this._boneMask.indexOf(boneName) < 0 &&
-                        this._animationData.getBoneTimeline(boneName) &&
+                        self._boneMask.indexOf(boneName) < 0 &&
+                        self._animationData.getBoneTimeline(boneName) &&
                         currentBone.contains(bone)
                     ) { // Add recursive mixing.
-                        this._boneMask.push(boneName)
+                        self._boneMask.push(boneName)
                     }
                 }
             }
 
-            this._updateTimelineStates();
+            self._updateTimelineStates();
         }
         /**
          * @language zh_CN
@@ -627,30 +648,32 @@ namespace dragonBones {
          * @version DragonBones 3.0
          */
         public removeBoneMask(name: string, recursive: boolean = true): void {
-            const index = this._boneMask.indexOf(name);
+            const self = this;
+
+            const index = self._boneMask.indexOf(name);
             if (index >= 0) { // Remove mixing
-                this._boneMask.splice(index, 1);
+                self._boneMask.splice(index, 1);
             }
 
             if (recursive) {
-                const currentBone = this._armature.getBone(name);
+                const currentBone = self._armature.getBone(name);
                 if (currentBone) {
-                    const bones = this._armature.getBones();
+                    const bones = self._armature.getBones();
                     for (let i = 0, l = bones.length; i < l; ++i) {
                         const bone = bones[i];
                         const boneName = bone.name;
-                        const index = this._boneMask.indexOf(boneName);
+                        const index = self._boneMask.indexOf(boneName);
                         if (
                             index >= 0 &&
                             currentBone.contains(bone)
                         ) { // Remove recursive mixing.
-                            this._boneMask.splice(index, 1);
+                            self._boneMask.splice(index, 1);
                         }
                     }
                 }
             }
 
-            this._updateTimelineStates();
+            self._updateTimelineStates();
         }
         /**
          * @language zh_CN
@@ -664,7 +687,7 @@ namespace dragonBones {
         /**
          * @language zh_CN
          * 动画图层。
-         * @see dragonBones.animation.Animation#fadeIn()
+         * @see dragonBones.Animation#fadeIn()
          * @version DragonBones 3.0
          */
         public get layer(): number {
@@ -673,7 +696,7 @@ namespace dragonBones {
         /**
          * @language zh_CN
          * 动画组。
-         * @see dragonBones.animation.Animation#fadeIn()
+         * @see dragonBones.Animation#fadeIn()
          * @version DragonBones 3.0
          */
         public get group(): string {
@@ -682,7 +705,7 @@ namespace dragonBones {
         /**
          * @language zh_CN
          * 动画名称。
-         * @see dragonBones.objects.AnimationData#name
+         * @see dragonBones.AnimationData#name
          * @version DragonBones 3.0
          */
         public get name(): string {
@@ -691,7 +714,7 @@ namespace dragonBones {
         /**
          * @language zh_CN
          * 动画数据。
-         * @see dragonBones.objects.AnimationData
+         * @see dragonBones.AnimationData
          * @version DragonBones 3.0
          */
         public get animationData(): AnimationData {
@@ -741,29 +764,31 @@ namespace dragonBones {
             return this._timeline._currentTime;
         }
         public set currentTime(value: number) {
+            const self = this;
+
             if (value < 0 || value != value) {
                 value = 0;
             }
 
-            this._time = value;
-            this._timeline.setCurrentTime(this._time);
+            self._time = value;
+            self._timeline.setCurrentTime(self._time);
 
-            if (this._weightResult != 0) {
-                let time = this._time;
-                if (!this._animationData.hasAsynchronyTimeline) {
-                    time = this._timeline._currentTime;
+            if (self._weightResult != 0) {
+                let time = self._time;
+                if (!self._animationData.hasAsynchronyTimeline) {
+                    time = self._timeline._currentTime;
                 }
 
-                for (let i = 0, l = this._boneTimelines.length; i < l; ++i) {
-                    this._boneTimelines[i].setCurrentTime(time);
+                for (let i = 0, l = self._boneTimelines.length; i < l; ++i) {
+                    self._boneTimelines[i].setCurrentTime(time);
                 }
 
-                for (let i = 0, l = this._slotTimelines.length; i < l; ++i) {
-                    this._slotTimelines[i].setCurrentTime(time);
+                for (let i = 0, l = self._slotTimelines.length; i < l; ++i) {
+                    self._slotTimelines[i].setCurrentTime(time);
                 }
 
-                for (let i = 0, l = this._ffdTimelines.length; i < l; ++i) {
-                    this._ffdTimelines[i].setCurrentTime(time);
+                for (let i = 0, l = self._ffdTimelines.length; i < l; ++i) {
+                    self._ffdTimelines[i].setCurrentTime(time);
                 }
             }
         }
