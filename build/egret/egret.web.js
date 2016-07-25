@@ -7814,10 +7814,23 @@ var egret;
             p.drawWithFilter = function (displayObject, buffer, dirtyList, matrix, clipRegion, root) {
                 var drawCalls = 0;
                 var filters = displayObject.$getFilters();
+                var hasBlendMode = (displayObject.$blendMode !== 0);
+                if (hasBlendMode) {
+                    var compositeOp = blendModes[displayObject.$blendMode];
+                    if (!compositeOp) {
+                        compositeOp = defaultCompositeOp;
+                    }
+                }
                 if (filters.length == 1 && filters[0].type == "colorTransform" && !displayObject.$children) {
+                    if (hasBlendMode) {
+                        buffer.context.setGlobalCompositeOperation(compositeOp);
+                    }
                     buffer.context.$filter = filters[0];
                     drawCalls += this.drawDisplayObject(displayObject, buffer, dirtyList, matrix, displayObject.$displayList, clipRegion, root);
                     buffer.context.$filter = null;
+                    if (hasBlendMode) {
+                        buffer.context.setGlobalCompositeOperation(defaultCompositeOp);
+                    }
                     return drawCalls;
                 }
                 // 获取显示对象的链接矩阵
@@ -7839,11 +7852,17 @@ var egret;
                 displayBuffer.context.popBuffer();
                 //绘制结果到屏幕
                 if (drawCalls > 0) {
+                    if (hasBlendMode) {
+                        buffer.context.setGlobalCompositeOperation(compositeOp);
+                    }
                     drawCalls++;
                     buffer.globalAlpha = 1;
                     buffer.setTransform(1, 0, 0, 1, region.minX + matrix.tx, region.minY + matrix.ty);
                     // 绘制结果的时候，应用滤镜
                     buffer.context.drawTargetWidthFilters(filters, displayBuffer);
+                    if (hasBlendMode) {
+                        buffer.context.setGlobalCompositeOperation(defaultCompositeOp);
+                    }
                 }
                 renderBufferPool.push(displayBuffer);
                 egret.sys.Region.release(region);

@@ -7553,16 +7553,20 @@ var dragonBones;
                     tweenProgress = (position - frame.position) / frame.duration;
                     tweenProgress = dragonBones.TweenTimelineState._getCurveEasingValue(tweenProgress, frame.curve);
                 }
-                transform.copyFrom(frame.next.transform);
-                transform.minus(frame.transform);
+                transform.x = frame.next.transform.x - frame.transform.x;
+                transform.y = frame.next.transform.y - frame.transform.y;
+                transform.skewX = dragonBones.Transform.normalizeRadian(frame.next.transform.skewX - frame.transform.skewX);
+                transform.skewY = dragonBones.Transform.normalizeRadian(frame.next.transform.skewY - frame.transform.skewY);
+                transform.scaleX = frame.next.transform.scaleX - frame.transform.scaleX;
+                transform.scaleY = frame.next.transform.scaleY - frame.transform.scaleY;
                 transform.x = frame.transform.x + transform.x * tweenProgress;
                 transform.y = frame.transform.y + transform.y * tweenProgress;
                 transform.skewX = frame.transform.skewX + transform.skewX * tweenProgress;
                 transform.skewY = frame.transform.skewY + transform.skewY * tweenProgress;
                 transform.scaleX = frame.transform.scaleX + transform.scaleX * tweenProgress;
                 transform.scaleY = frame.transform.scaleY + transform.scaleY * tweenProgress;
-                transform.add(timeline.originTransform);
             }
+            transform.add(timeline.originTransform);
         };
         p._mergeFrameToAnimationTimeline = function (frame, actions, events) {
             var frameStart = Math.floor(frame.position * this._armature.frameRate); // uint()
@@ -7627,35 +7631,49 @@ var dragonBones;
             nextFrame.prev = prevFrame;
         };
         p._globalToLocal = function (armature) {
-            var bones = armature.sortedBones.reverse();
+            var keyFrames = [];
+            var bones = armature.sortedBones.concat().reverse();
             for (var i = 0, l = bones.length; i < l; ++i) {
                 var bone = bones[i];
                 if (bone.parent) {
                     bone.parent.transform.toMatrix(this._helpMatrix);
+                    this._helpMatrix.invert();
                     this._helpMatrix.transformPoint(bone.transform.x, bone.transform.y, bone.transform);
-                    bone.transform.rotation += bone.transform.rotation - bone.parent.transform.rotation;
+                    bone.transform.rotation -= bone.parent.transform.rotation;
                 }
-            }
-            for (var i in armature.animations) {
-                var animation = armature.animations[i];
-                var timelines = animation.boneTimelines;
-                for (var i_4 in timelines) {
-                    var timeline = timelines[i_4];
-                    if (timeline.bone.parent) {
-                        var parentTimeline = animation.getBoneTimeline(timeline.bone.parent.name);
-                        for (var i_5 = 0, l = timeline.frames.length; i_5 < l; ++i_5) {
-                            var frame = timeline.frames[i_5];
+                for (var i_4 in armature.animations) {
+                    var animation = armature.animations[i_4];
+                    var timeline = animation.getBoneTimeline(bone.name);
+                    if (!timeline) {
+                        continue;
+                    }
+                    var parentTimeline = timeline.bone.parent ? animation.getBoneTimeline(timeline.bone.parent.name) : null;
+                    keyFrames.length = 0;
+                    for (var i_5 = 0, l_3 = timeline.frames.length; i_5 < l_3; ++i_5) {
+                        var frame = timeline.frames[i_5];
+                        if (keyFrames.indexOf(frame) >= 0) {
+                            continue;
+                        }
+                        keyFrames.push(frame);
+                        if (parentTimeline) {
                             this._getTimelineFrameMatrix(animation, parentTimeline, frame.position, this._helpTransform);
                             frame.transform.add(timeline.originTransform);
                             this._helpTransform.toMatrix(this._helpMatrix);
+                            this._helpMatrix.invert();
                             this._helpMatrix.transformPoint(frame.transform.x, frame.transform.y, frame.transform);
-                            frame.transform.rotation += frame.transform.rotation - this._helpTransform.rotation;
+                            frame.transform.rotation -= this._helpTransform.rotation;
+                        }
+                        else {
+                            frame.transform.add(timeline.originTransform);
                         }
                     }
-                    this._helpTransform.copyFrom(timeline.originTransform);
-                    for (var i_6 = 0, l = timeline.frames.length; i_6 < l; ++i_6) {
+                    keyFrames.length = 0;
+                    for (var i_6 = 0, l_4 = timeline.frames.length; i_6 < l_4; ++i_6) {
                         var frame = timeline.frames[i_6];
-                        frame.transform.add(this._helpTransform);
+                        if (keyFrames.indexOf(frame) >= 0) {
+                            continue;
+                        }
+                        keyFrames.push(frame);
                         frame.transform.minus(timeline.bone.transform);
                         if (i_6 == 0) {
                             timeline.originTransform.copyFrom(frame.transform);
