@@ -70,31 +70,31 @@ declare namespace dragonBones {
     const enum AnimationFadeOutMode {
         /**
          * @language zh_CN
-         * 不淡出动画
+         * 不淡出动画。
          * @version DragonBones 4.5
          */
         None = 0,
         /**
         * @language zh_CN
-         * 淡出同层的动画
+         * 淡出同层的动画。
          * @version DragonBones 4.5
          */
         SameLayer = 1,
         /**
          * @language zh_CN
-         * 淡出同组的动画
+         * 淡出同组的动画。
          * @version DragonBones 4.5
          */
         SameGroup = 2,
         /**
          * @language zh_CN
-         * 淡出同层并且同组的动画
+         * 淡出同层并且同组的动画。
          * @version DragonBones 4.5
          */
         SameLayerAndGroup = 3,
         /**
          * @language zh_CN
-         * 淡出所有动画
+         * 淡出所有动画。
          * @version DragonBones 4.5
          */
         All = 4,
@@ -242,7 +242,7 @@ declare namespace dragonBones {
          * @language zh_CN
          * 指定名称的动画从指定时间开始播放。
          * @param animationName 动画数据的名称。
-         * @param time 指定时间。 (以秒为单位)
+         * @param time 时间。 (以秒为单位)
          * @param playTimes 动画循环播放的次数。 [-1: 使用动画数据默认值, 0: 无限循环播放, [1~N]: 循环播放 N 次]
          * @returns 返回控制这个动画数据的动画状态。
          * @see dragonBones.AnimationState
@@ -253,7 +253,7 @@ declare namespace dragonBones {
          * @language zh_CN
          * 指定名称的动画从指定帧开始播放。
          * @param animationName 动画数据的名称。
-         * @param frame 指定帧。
+         * @param frame 帧。
          * @param playTimes 动画循环播放的次数。[-1: 使用动画数据默认值, 0: 无限循环播放, [1~N]: 循环播放 N 次]
          * @returns 返回控制这个动画数据的动画状态。
          * @see dragonBones.AnimationState
@@ -275,7 +275,7 @@ declare namespace dragonBones {
          * @language zh_CN
          * 播放指定名称的动画到指定的时间并停止。
          * @param animationName 动画数据的名称。
-         * @param time 指定的时间。
+         * @param time 时间。 (以秒为单位)
          * @returns 返回控制这个动画数据的动画状态。
          * @see dragonBones.AnimationState
          * @version DragonBones 4.5
@@ -295,7 +295,7 @@ declare namespace dragonBones {
          * @language zh_CN
          * 播放指定名称的动画到指定的进度并停止。
          * @param animationName 动画数据的名称。
-         * @param progress 指定的进度。 [0~1]
+         * @param progress 进度。 [0~1]
          * @returns 返回控制这个动画数据的动画状态。
          * @see dragonBones.AnimationState
          * @version DragonBones 4.5
@@ -354,12 +354,11 @@ declare namespace dragonBones {
         /**
          * @language zh_CN
          * 所有的动画数据。
-         * @see dragonBones.objects.AnimationData
+         * @see dragonBones.AnimationData
          * @version DragonBones 4.5
          */
         animations: Map<AnimationData>;
         /**
-         * @language zh_CN
          * @deprecated
          * @see #play()
          * @see #fadeIn()
@@ -369,7 +368,6 @@ declare namespace dragonBones {
          */
         gotoAndPlay(animationName: string, fadeInTime?: number, duration?: number, playTimes?: number, layer?: number, group?: string, fadeOutMode?: AnimationFadeOutMode, pauseFadeOut?: boolean, pauseFadeIn?: boolean): AnimationState;
         /**
-         * @language zh_CN
          * @deprecated
          * @see #gotoAndStopByTime()
          * @see #gotoAndStopByFrame()
@@ -377,7 +375,6 @@ declare namespace dragonBones {
          */
         gotoAndStop(animationName: string, time?: number): AnimationState;
         /**
-         * @language zh_CN
          * @deprecated
          * @see #animationNames
          * @see #animations
@@ -396,8 +393,8 @@ declare namespace dragonBones {
     /**
      * @language zh_CN
      * 动画状态，播放动画时产生，可以对单个动画的播放进行更细致的控制和调节。
-     * @see dragonBones.animation.Animation
-     * @see dragonBones.objects.AnimationData
+     * @see dragonBones.Animation
+     * @see dragonBones.AnimationData
      * @version DragonBones 3.0
      */
     class AnimationState extends BaseObject {
@@ -617,28 +614,28 @@ declare namespace dragonBones {
         /**
          * @language zh_CN
          * 动画图层。
-         * @see dragonBones.animation.Animation#fadeIn()
+         * @see dragonBones.Animation#fadeIn()
          * @version DragonBones 3.0
          */
         layer: number;
         /**
          * @language zh_CN
          * 动画组。
-         * @see dragonBones.animation.Animation#fadeIn()
+         * @see dragonBones.Animation#fadeIn()
          * @version DragonBones 3.0
          */
         group: string;
         /**
          * @language zh_CN
          * 动画名称。
-         * @see dragonBones.objects.AnimationData#name
+         * @see dragonBones.AnimationData#name
          * @version DragonBones 3.0
          */
         name: string;
         /**
          * @language zh_CN
          * 动画数据。
-         * @see dragonBones.objects.AnimationData
+         * @see dragonBones.AnimationData
          * @version DragonBones 3.0
          */
         animationData: AnimationData;
@@ -1037,9 +1034,9 @@ declare namespace dragonBones {
          * @language zh_CN
          * 更新骨架和动画。 (可以使用时钟实例或显示容器来更新)
          * @param passedTime 两帧之前的时间间隔。 (以秒为单位)
-         * @see dragonBones.animation.IAnimateble
-         * @see dragonBones.animation.WorldClock
-         * @see dragonBones.core.IArmatureDisplayContainer
+         * @see dragonBones.IAnimateble
+         * @see dragonBones.WorldClock
+         * @see dragonBones.IArmatureDisplay
          * @version DragonBones 3.0
          */
         advanceTime(passedTime: number): void;
@@ -2080,37 +2077,37 @@ declare namespace dragonBones {
         name: string;
         /**
          * @language zh_CN
-         * 扩展的数据
+         * 扩展的数据。
          * @version DragonBones 4.5
          */
         data: any;
         /**
          * @language zh_CN
-         * 发出事件的骨架
+         * 发出事件的骨架。
          * @version DragonBones 4.5
          */
         armature: Armature;
         /**
          * @language zh_CN
-         * 发出事件的骨骼
+         * 发出事件的骨骼。
          * @version DragonBones 4.5
          */
         bone: Bone;
         /**
          * @language zh_CN
-         * 发出事件的插槽
+         * 发出事件的插槽。
          * @version DragonBones 4.5
          */
         slot: Slot;
         /**
          * @language zh_CN
-         * 发出事件的动画状态
+         * 发出事件的动画状态。
          * @version DragonBones 4.5
          */
         animationState: AnimationState;
         /**
          * @language zh_CN
-         * 用户数据
+         * 用户数据。
          * @version DragonBones 4.5
          */
         userData: any;
@@ -2528,8 +2525,8 @@ declare namespace dragonBones {
          * @language zh_CN
          * 是否开启共享搜索。 [true: 开启, false: 不开启]
          * 如果开启，创建一个骨架时，可以从多个龙骨数据中寻找骨架数据，或贴图集数据中寻找贴图数据。 (通常在有共享导出的数据时开启)
-         * @see dragonBones.objects.DragonBonesData#autoSearch
-         * @see dragonBones.objects.TextureAtlasData#autoSearch
+         * @see dragonBones.DragonBonesData#autoSearch
+         * @see dragonBones.TextureAtlasData#autoSearch
          * @version DragonBones 4.5
          */
         autoSearch: boolean;
@@ -2598,7 +2595,7 @@ declare namespace dragonBones {
          * @language zh_CN
          * 解析并添加贴图集数据。
          * @param rawData 需要解析的原始数据。 (JSON)
-         * @param textureAtlas 贴图集数据。 (BitmapData 或 ATF 或 DisplayObject)
+         * @param textureAtlas 贴图集数据。 (JSON)
          * @param name 为数据指定一个名称，以便可以通过这个名称来访问数据，如果未设置，则使用数据中的名称。
          * @param scale 为贴图集设置一个缩放值。
          * @returns 贴图集数据
@@ -2617,7 +2614,7 @@ declare namespace dragonBones {
          * @see #parseDragonBonesData()
          * @see #addDragonBonesData()
          * @see #removeDragonBonesData()
-         * @see dragonBones.objects.DragonBonesData
+         * @see dragonBones.DragonBonesData
          * @version DragonBones 3.0
          */
         getDragonBonesData(name: string): DragonBonesData;
@@ -2629,7 +2626,7 @@ declare namespace dragonBones {
          * @see #parseDragonBonesData()
          * @see #getDragonBonesData()
          * @see #removeDragonBonesData()
-         * @see dragonBones.objects.DragonBonesData
+         * @see dragonBones.DragonBonesData
          * @version DragonBones 3.0
          */
         addDragonBonesData(data: DragonBonesData, dragonBonesName?: string): void;
@@ -2641,7 +2638,7 @@ declare namespace dragonBones {
          * @see #parseDragonBonesData()
          * @see #getDragonBonesData()
          * @see #addDragonBonesData()
-         * @see dragonBones.objects.DragonBonesData
+         * @see dragonBones.DragonBonesData
          * @version DragonBones 3.0
          */
         removeDragonBonesData(dragonBonesName: string, disposeData?: boolean): void;
@@ -2692,7 +2689,7 @@ declare namespace dragonBones {
          * @language zh_CN
          * 创建一个指定名称的骨架。
          * @param armatureName 骨架数据名称。
-         * @param dragonBonesName 龙骨数据名称，如果未设置，将检索所有的龙骨数据，当多个龙骨数据中包含同名的骨架数据时，可能无法创建出准确的骨架。 (默认: null)
+         * @param dragonBonesName 龙骨数据名称，如果未设置，将检索所有的龙骨数据，当多个龙骨数据中包含同名的骨架数据时，可能无法创建出准确的骨架。
          * @param skinName 皮肤名称，如果未设置，则使用默认皮肤。
          * @returns 骨架
          * @see dragonBones.Armature
@@ -3714,7 +3711,7 @@ declare namespace dragonBones {
          * @language zh_CN
          * 是否开启共享搜索。 [true: 开启, false: 不开启]
          * @default false
-         * @see dragonBones.objects.ArmatureData
+         * @see dragonBones.ArmatureData
          * @version DragonBones 4.5
          */
         autoSearch: boolean;
@@ -3733,7 +3730,7 @@ declare namespace dragonBones {
         /**
          * @language zh_CN
          * 所有的骨架数据。
-         * @see dragonBones.objects.ArmatureData
+         * @see dragonBones.ArmatureData
          * @version DragonBones 3.0
          */
         armatures: Map<ArmatureData>;

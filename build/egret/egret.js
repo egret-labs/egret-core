@@ -1451,28 +1451,28 @@ var egret;
              */
             this.$renderNode = null;
             this.$displayFlags = 2032 /* InitFlags */;
-            this.$DisplayObject = {
-                0: 1,
-                1: 1,
-                2: 0,
-                3: 0,
-                4: 0,
-                5: "",
-                6: new egret.Matrix(),
-                7: new egret.Matrix(),
-                8: new egret.Matrix(),
-                9: new egret.Rectangle(),
-                10: new egret.Rectangle(),
-                11: false,
-                12: 0,
-                13: 0,
-                14: NaN,
-                15: NaN,
-                16: 0,
-                17: 0,
-                18: 0,
-                19: null //filters
-            };
+            this.$DisplayObject = [
+                1,
+                1,
+                0,
+                0,
+                0,
+                "",
+                new egret.Matrix(),
+                new egret.Matrix(),
+                new egret.Matrix(),
+                new egret.Rectangle(),
+                new egret.Rectangle(),
+                false,
+                0,
+                0,
+                NaN,
+                NaN,
+                0,
+                0,
+                0,
+                null //filters
+            ];
         }
         var d = __define,c=DisplayObject,p=c.prototype;
         /**
@@ -1551,11 +1551,12 @@ var egret;
          * 标记这个显示对象在父级容器的位置发生了改变。
          */
         p.invalidatePosition = function () {
-            this.$invalidateTransform();
-            this.$propagateFlagsDown(16 /* InvalidConcatenatedMatrix */ |
+            var self = this;
+            self.$invalidateTransform();
+            self.$propagateFlagsDown(16 /* InvalidConcatenatedMatrix */ |
                 32 /* InvalidInvertedConcatenatedMatrix */);
-            if (this.$parent) {
-                this.$parent.$propagateFlagsUp(4 /* InvalidBounds */);
+            if (self.$parent) {
+                self.$parent.$propagateFlagsUp(4 /* InvalidBounds */);
             }
         };
         d(p, "name"
@@ -1702,7 +1703,8 @@ var egret;
          */
         p.$setMatrix = function (matrix, useProperties) {
             if (useProperties === void 0) { useProperties = true; }
-            var values = this.$DisplayObject;
+            var self = this;
+            var values = self.$DisplayObject;
             var m = values[6 /* matrix */];
             if (m.equals(matrix)) {
                 return false;
@@ -1717,8 +1719,8 @@ var egret;
                 values[17 /* skewYdeg */] = clampRotation(values[3 /* skewY */] * 180 / Math.PI);
                 values[4 /* rotation */] = clampRotation(values[3 /* skewY */] * 180 / Math.PI);
             }
-            this.$removeFlags(8 /* InvalidMatrix */);
-            this.invalidatePosition();
+            self.$removeFlags(8 /* InvalidMatrix */);
+            self.invalidatePosition();
             return true;
         };
         /**
@@ -2967,13 +2969,14 @@ var egret;
          * 通常用于矩阵改变或从显示列表添加和移除时。若自身的显示内容已经改变需要重绘，应该调用$invalidate()。
          */
         p.$invalidateTransform = function () {
-            if (this.$hasFlags(512 /* DirtyChildren */)) {
+            var self = this;
+            if (self.$hasFlags(512 /* DirtyChildren */)) {
                 return;
             }
-            this.$setFlags(512 /* DirtyChildren */);
-            var displayList = this.$displayList;
-            if ((displayList || this.$renderNode) && this.$parentDisplayList) {
-                this.$parentDisplayList.markDirty(displayList || this);
+            self.$setFlags(512 /* DirtyChildren */);
+            var displayList = self.$displayList;
+            if ((displayList || self.$renderNode) && self.$parentDisplayList) {
+                self.$parentDisplayList.markDirty(displayList || self);
             }
         };
         /**
@@ -2998,27 +3001,28 @@ var egret;
          * 更新对象在舞台上的显示区域,返回显示区域是否发生改变。
          */
         p.$update = function (dirtyRegionPolicy, bounds) {
-            this.$removeFlagsUp(768 /* Dirty */);
-            var node = this.$renderNode;
-            node.renderAlpha = this.$getConcatenatedAlpha();
+            var self = this;
+            self.$removeFlagsUp(768 /* Dirty */);
+            var node = self.$renderNode;
+            node.renderAlpha = self.$getConcatenatedAlpha();
             //必须在访问moved属性前调用以下两个方法，因为moved属性在以下两个方法内重置。
-            var concatenatedMatrix = this.$getConcatenatedMatrix();
+            var concatenatedMatrix = self.$getConcatenatedMatrix();
             if (dirtyRegionPolicy == egret.DirtyRegionPolicy.OFF) {
-                var displayList = this.$displayList || this.$parentDisplayList;
+                var displayList = self.$displayList || self.$parentDisplayList;
                 if (!displayList) {
                     return false;
                 }
                 var matrix = node.renderMatrix;
                 matrix.copyFrom(concatenatedMatrix);
                 var root = displayList.root;
-                if (root !== this.$stage) {
-                    this.$getConcatenatedMatrixAt(root, matrix);
+                if (root !== self.$stage) {
+                    self.$getConcatenatedMatrixAt(root, matrix);
                 }
             }
             else {
-                var renderBounds = bounds || this.$getContentBounds();
-                node.renderVisible = this.$getConcatenatedVisible();
-                var displayList = this.$displayList || this.$parentDisplayList;
+                var renderBounds = bounds || self.$getContentBounds();
+                node.renderVisible = self.$getConcatenatedVisible();
+                var displayList = self.$displayList || self.$parentDisplayList;
                 var region = node.renderRegion;
                 if (!displayList) {
                     region.setTo(0, 0, 0, 0);
@@ -3032,10 +3036,10 @@ var egret;
                 var matrix = node.renderMatrix;
                 matrix.copyFrom(concatenatedMatrix);
                 var root = displayList.root;
-                if (root !== this.$stage) {
-                    this.$getConcatenatedMatrixAt(root, matrix);
+                if (root !== self.$stage) {
+                    self.$getConcatenatedMatrixAt(root, matrix);
                 }
-                renderBounds = this.$measureFiltersBounds(renderBounds);
+                renderBounds = self.$measureFiltersBounds(renderBounds);
                 region.updateRegion(renderBounds, matrix);
             }
             return true;
@@ -4575,7 +4579,8 @@ var egret;
             }
             this.$setFlags(flags);
             var children = this.$children;
-            for (var i = 0; i < children.length; i++) {
+            var length = children.length;
+            for (var i = 0; i < length; i++) {
                 children[i].$propagateFlagsDown(flags);
             }
         };
@@ -6402,30 +6407,24 @@ var egret;
     /**
      * OrientationMode 类为舞台初始旋转模式提供值。
      */
-    var OrientationMode = (function () {
-        function OrientationMode() {
-        }
-        var d = __define,c=OrientationMode,p=c.prototype;
+    egret.OrientationMode = {
         /**
          * 适配屏幕
          */
-        OrientationMode.AUTO = "auto";
+        AUTO: "auto",
         /**
          * 默认竖屏
          */
-        OrientationMode.PORTRAIT = "portrait";
+        PORTRAIT: "portrait",
         /**
          * 默认横屏，舞台顺时针旋转90度
          */
-        OrientationMode.LANDSCAPE = "landscape";
+        LANDSCAPE: "landscape",
         /**
          * 默认横屏，舞台逆时针旋转90度
          */
-        OrientationMode.LANDSCAPE_FLIPPED = "landscapeFlipped";
-        return OrientationMode;
-    }());
-    egret.OrientationMode = OrientationMode;
-    egret.registerClass(OrientationMode,'egret.OrientationMode');
+        LANDSCAPE_FLIPPED: "landscapeFlipped"
+    };
 })(egret || (egret = {}));
 //////////////////////////////////////////////////////////////////////////////////////
 //
