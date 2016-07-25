@@ -3533,7 +3533,7 @@ declare module egret {
     /**
      * OrientationMode 类为舞台初始旋转模式提供值。
      */
-    var OrientationMode: {
+    const OrientationMode: {
         AUTO: string;
         PORTRAIT: string;
         LANDSCAPE: string;

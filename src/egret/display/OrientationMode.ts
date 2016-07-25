@@ -32,7 +32,7 @@ module egret {
     /**
      * OrientationMode 类为舞台初始旋转模式提供值。
      */
-    export var OrientationMode = {
+    export const OrientationMode = {
 
         /**
          * 适配屏幕
