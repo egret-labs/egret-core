@@ -259,8 +259,12 @@ namespace dragonBones {
                     tweenProgress = TweenTimelineState._getCurveEasingValue(tweenProgress, frame.curve);
                 }
 
-                transform.copyFrom(frame.next.transform);
-                transform.minus(frame.transform);
+                transform.x = frame.next.transform.x - frame.transform.x;
+                transform.y = frame.next.transform.y - frame.transform.y;
+                transform.skewX = Transform.normalizeRadian(frame.next.transform.skewX - frame.transform.skewX);
+                transform.skewY = Transform.normalizeRadian(frame.next.transform.skewY - frame.transform.skewY);
+                transform.scaleX = frame.next.transform.scaleX - frame.transform.scaleX;
+                transform.scaleY = frame.next.transform.scaleY - frame.transform.scaleY;
 
                 transform.x = frame.transform.x + transform.x * tweenProgress;
                 transform.y = frame.transform.y + transform.y * tweenProgress;
@@ -268,8 +272,9 @@ namespace dragonBones {
                 transform.skewY = frame.transform.skewY + transform.skewY * tweenProgress;
                 transform.scaleX = frame.transform.scaleX + transform.scaleX * tweenProgress;
                 transform.scaleY = frame.transform.scaleY + transform.scaleY * tweenProgress;
-                transform.add(timeline.originTransform);
             }
+            
+            transform.add(timeline.originTransform);
         }
 
         protected _mergeFrameToAnimationTimeline<T extends FrameData<T>>(frame: T, actions: Array<ActionData>, events: Array<EventData>): void {
@@ -285,7 +290,7 @@ namespace dragonBones {
 
                     const endFrame = BaseObject.borrowObject(AnimationFrameData); // Add end frame to keep animation timeline has two different frames atleast.
                     endFrame.position = this._animation.frameCount / this._armature.frameRate;
-                        
+
                     frames[0] = startFrame;
                     frames[this._animation.frameCount] = endFrame;
                 }
@@ -348,42 +353,60 @@ namespace dragonBones {
         }
 
         protected _globalToLocal(armature: ArmatureData): void { // Support 2.x ~ 3.x data.
-            const bones = armature.sortedBones.reverse();
+            const keyFrames: Array<BoneFrameData> = [];
+            const bones = armature.sortedBones.concat().reverse();
+
             for (let i = 0, l = bones.length; i < l; ++i) {
                 const bone = bones[i];
 
                 if (bone.parent) {
                     bone.parent.transform.toMatrix(this._helpMatrix);
+                    this._helpMatrix.invert();
                     this._helpMatrix.transformPoint(bone.transform.x, bone.transform.y, bone.transform);
-                    bone.transform.rotation += bone.transform.rotation - bone.parent.transform.rotation;
+                    bone.transform.rotation -= bone.parent.transform.rotation;
                 }
-            }
 
-            for (let i in armature.animations) {
-                const animation = armature.animations[i];
-                const timelines = animation.boneTimelines;
+                for (let i in armature.animations) {
+                    const animation = armature.animations[i];
+                    const timeline = animation.getBoneTimeline(bone.name);
 
-                for (let i in timelines) {
-                    const timeline = timelines[i];
-
-                    if (timeline.bone.parent) {
-                        const parentTimeline = animation.getBoneTimeline(timeline.bone.parent.name);
-
-                        for (let i = 0, l = timeline.frames.length; i < l; ++i) {
-                            const frame = timeline.frames[i];
-                            this._getTimelineFrameMatrix(animation, parentTimeline, frame.position, this._helpTransform);
-                            frame.transform.add(timeline.originTransform);
-                            this._helpTransform.toMatrix(this._helpMatrix);
-                            this._helpMatrix.transformPoint(frame.transform.x, frame.transform.y, frame.transform);
-                            frame.transform.rotation += frame.transform.rotation - this._helpTransform.rotation;
-                        }
+                    if (!timeline) {
+                        continue;
                     }
 
-                    this._helpTransform.copyFrom(timeline.originTransform);
+                    const parentTimeline = timeline.bone.parent ? animation.getBoneTimeline(timeline.bone.parent.name) : null;
+                    keyFrames.length = 0;
 
                     for (let i = 0, l = timeline.frames.length; i < l; ++i) {
                         const frame = timeline.frames[i];
-                        frame.transform.add(this._helpTransform);
+
+                        if (keyFrames.indexOf(frame) >= 0) {
+                            continue;
+                        }
+                        keyFrames.push(frame);
+
+                        if (parentTimeline) {
+                            this._getTimelineFrameMatrix(animation, parentTimeline, frame.position, this._helpTransform);
+                            frame.transform.add(timeline.originTransform);
+                            this._helpTransform.toMatrix(this._helpMatrix);
+                            this._helpMatrix.invert();
+                            this._helpMatrix.transformPoint(frame.transform.x, frame.transform.y, frame.transform);
+                            frame.transform.rotation -= this._helpTransform.rotation;
+                        } else {
+                            frame.transform.add(timeline.originTransform);
+                        }
+                    }
+
+                    keyFrames.length = 0;
+
+                    for (let i = 0, l = timeline.frames.length; i < l; ++i) {
+                        const frame = timeline.frames[i];
+
+                        if (keyFrames.indexOf(frame) >= 0) {
+                            continue;
+                        }
+                        keyFrames.push(frame);
+
                         frame.transform.minus(timeline.bone.transform);
 
                         if (i == 0) {
