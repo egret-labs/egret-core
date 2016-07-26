@@ -438,7 +438,7 @@ module eui.sys {
          */
         private containsState(node:egret.XML):boolean {
             var attributes = node.attributes;
-            if (attributes["includeIn"]) {
+            if (attributes["includeIn"] || attributes["excludeFrom"]) {
                 return true;
             }
             var keys = Object.keys(attributes);
