@@ -41,8 +41,10 @@ module egret.web {
 
             "void main(void) {\n" +
                 "vec4 texColor = texture2D(uSampler, vTextureCoord);\n" +
-                // 抵消预乘的alpha通道
-                "texColor = vec4(texColor.rgb / texColor.a, texColor.a);\n" +
+                "if(texColor.a > 0.) {" +
+                    // 抵消预乘的alpha通道
+                    "texColor = vec4(texColor.rgb / texColor.a, texColor.a);\n" +
+                "}" +
                 "vec4 locColor = clamp(texColor * matrix + colorAdd, 0., 1.);\n" +
                 "gl_FragColor = vColor * vec4(locColor.rgb * locColor.a, locColor.a);\n" +
             "}";
