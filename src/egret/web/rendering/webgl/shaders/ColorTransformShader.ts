@@ -35,19 +35,15 @@ module egret.web {
             "precision mediump float;\n" +
             "varying vec2 vTextureCoord;\n" +
             "varying vec4 vColor;\n" +
-            "uniform float invert;\n" +
             "uniform mat4 matrix;\n" +
             "uniform vec4 colorAdd;\n" +
             "uniform sampler2D uSampler;\n" +
 
             "void main(void) {\n" +
                 "vec4 texColor = texture2D(uSampler, vTextureCoord);\n" +
-                "vec4 locColor = texColor * matrix;\n" +
-                "locColor += colorAdd;\n" +
-                "if(locColor.a <= 0.0){\n" +
-                    "discard;\n" +
-                "}\n" +
-                "locColor = clamp(locColor, 0., 1.);" +
+                // 抵消预乘的alpha通道
+                "texColor = vec4(texColor.rgb / texColor.a, texColor.a);\n" +
+                "vec4 locColor = clamp(texColor * matrix + colorAdd, 0., 1.);\n" +
                 "gl_FragColor = vColor * vec4(locColor.rgb * locColor.a, locColor.a);\n" +
             "}";
 
