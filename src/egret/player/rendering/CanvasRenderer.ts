@@ -227,7 +227,13 @@ module egret {
                     } else if(filter.type == "blur") {
                         blurFilter(imageData.data, displayBuffer.surface.width, displayBuffer.surface.height, (<BlurFilter>filter).$blurX, (<BlurFilter>filter).$blurY);
                     } else if(filter.type == "glow") {
-                        // TODO glow滤镜实现
+                        // TODO glow滤镜实现 kickout hideObject
+                        var r = (<GlowFilter>filter).$red;
+                        var g = (<GlowFilter>filter).$green;
+                        var b = (<GlowFilter>filter).$blue;
+                        var a = (<GlowFilter>filter).$alpha;
+                        dropShadowFilter(imageData.data, displayBuffer.surface.width, displayBuffer.surface.height, [r, g, b, a], (<GlowFilter>filter).$blurX, (<GlowFilter>filter).$blurY,
+                            (<DropShadowFilter>filter).$angle || 0, (<DropShadowFilter>filter).$distance || 0, (<GlowFilter>filter).$strength);
                     }
                 }  
                 displayContext.putImageData(imageData, 0, 0);
@@ -831,10 +837,10 @@ module egret {
             var g = buffer[p + 1];
             var b = buffer[p + 2];
             var a = buffer[p + 3];
-            buffer[p + 0] = r0 * r + r1 * g + r2 * b + r3 * a + r4;
-            buffer[p + 1] = g0 * r + g1 * g + g2 * b + g3 * a + g4;
-            buffer[p + 2] = b0 * r + b1 * g + b2 * b + b3 * a + b4;
-            buffer[p + 3] = a0 * r + a1 * g + a2 * b + a3 * a + a4;
+            buffer[p + 0] = (r0 * r + r1 * g + r2 * b + r3 * a + r4) * a / 255;
+            buffer[p + 1] = (g0 * r + g1 * g + g2 * b + g3 * a + g4) * a / 255;
+            buffer[p + 2] = (b0 * r + b1 * g + b2 * b + b3 * a + b4) * a / 255;
+            buffer[p + 3] = (a0 * r + a1 * g + a2 * b + a3 * a + a4);
         }
     }
 
@@ -941,4 +947,79 @@ module egret {
             }
         }
     }
+
+    function glowFilter(buffer, w, h, color, blurX, blurY, strength) {
+        dropShadowFilter(buffer, w, h, color, blurX, blurY, 0, 0, strength)
+    }
+
+    function dropShadowFilter(buffer, w, h, color, blurX, blurY, angle, distance, strength) {
+        var tmp = alphaFilter(buffer, color);
+        panFilter(tmp, w, h, angle, distance);
+        blurFilter(tmp, w, h, blurX, blurY);
+        scaleAlphaChannel(tmp, strength);
+        compositeSourceOver(tmp, buffer);
+        buffer.set(tmp);
+    }
+
+    function alphaFilter(buffer, color) {
+        if (!color) {
+            color = [0, 0, 0, 0];
+        }
+        var plane = new Uint8ClampedArray(buffer);
+        for (var ptr = 0, end = plane.length; ptr < end; ptr += 4) {
+            var alpha = plane[ptr + 3];
+            plane[ptr + 0] = color[0] * alpha;
+            plane[ptr + 1] = color[1] * alpha;
+            plane[ptr + 2] = color[2] * alpha;
+        }
+        return plane;
+    }
+
+    function panFilter(buffer, w, h, angle, distance) {
+        var dy = (Math.sin(angle) * distance) | 0;
+        var dx = (Math.cos(angle) * distance) | 0;
+        var oldBuffer = new Int32Array(buffer.buffer);
+        var newBuffer = new Int32Array(oldBuffer.length);
+        for (var oy = 0; oy < h; oy++) {
+            var ny = oy + dy;
+            if (ny < 0 || ny > h) {
+            continue;
+            }
+            for (var ox = 0; ox < w; ox++) {
+            var nx = ox + dx;
+            if (nx < 0 || nx > w) {
+                continue;
+            }
+            newBuffer[ny * w + nx] = oldBuffer[oy * w + ox];
+            }
+        }
+        oldBuffer.set(newBuffer);
+    }
+
+    function scaleAlphaChannel(buffer, value) {
+        for (var ptr = 0, end = buffer.length; ptr < end; ptr += 4) {
+            buffer[ptr + 3] *= value;
+        }
+    }
+
+    function compositeSourceOver(dst, src) {
+        for (var ptr = 0, end = dst.length; ptr < end; ptr += 4) {
+            var Dr = dst[ptr + 0];
+            var Dg = dst[ptr + 1];
+            var Db = dst[ptr + 2];
+            var Da = dst[ptr + 3] / 255;
+
+            var Sr = src[ptr + 0];
+            var Sg = src[ptr + 1];
+            var Sb = src[ptr + 2];
+            var Sa = src[ptr + 3] / 255;
+
+            dst[ptr + 0] = Sr + Dr * (1 - Sa);
+            dst[ptr + 1] = Sg + Dg * (1 - Sa);
+            dst[ptr + 2] = Sb + Db * (1 - Sa);
+            dst[ptr + 3] = (Sa + Da * (1 - Sa)) * 255;
+        }
+    }
+
+
 }
