@@ -3533,24 +3533,12 @@ declare module egret {
     /**
      * OrientationMode 类为舞台初始旋转模式提供值。
      */
-    class OrientationMode {
-        /**
-         * 适配屏幕
-         */
-        static AUTO: string;
-        /**
-         * 默认竖屏
-         */
-        static PORTRAIT: string;
-        /**
-         * 默认横屏，舞台顺时针旋转90度
-         */
-        static LANDSCAPE: string;
-        /**
-         * 默认横屏，舞台逆时针旋转90度
-         */
-        static LANDSCAPE_FLIPPED: string;
-    }
+    const OrientationMode: {
+        AUTO: string;
+        PORTRAIT: string;
+        LANDSCAPE: string;
+        LANDSCAPE_FLIPPED: string;
+    };
 }
 declare module egret {
     var $TextureScaleFactor: number;

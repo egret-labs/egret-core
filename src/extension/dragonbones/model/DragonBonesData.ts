@@ -17,7 +17,7 @@ namespace dragonBones {
          * @language zh_CN
          * 是否开启共享搜索。 [true: 开启, false: 不开启]
          * @default false
-         * @see dragonBones.objects.ArmatureData
+         * @see dragonBones.ArmatureData
          * @version DragonBones 4.5
          */
         public autoSearch: boolean;
@@ -36,7 +36,7 @@ namespace dragonBones {
         /**
          * @language zh_CN
          * 所有的骨架数据。
-         * @see dragonBones.objects.ArmatureData
+         * @see dragonBones.ArmatureData
          * @version DragonBones 3.0
          */
         public armatures: Map<ArmatureData> = {};
@@ -52,17 +52,19 @@ namespace dragonBones {
          * @inheritDoc
          */
         protected _onClear(): void {
-            this.autoSearch = false;
-            this.frameRate = 0;
-            this.name = null;
+            const self = this;
 
-            for (let i in this.armatures) {
-                this.armatures[i].returnToPool();
-                delete this.armatures[i];
+            self.autoSearch = false;
+            self.frameRate = 0;
+            self.name = null;
+
+            for (let i in self.armatures) {
+                self.armatures[i].returnToPool();
+                delete self.armatures[i];
             }
 
-            if (this._armatureNames.length) {
-                this._armatureNames.length = 0;
+            if (self._armatureNames.length) {
+                self._armatureNames.length = 0;
             }
         }
         /**

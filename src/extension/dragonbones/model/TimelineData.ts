@@ -23,20 +23,22 @@ namespace dragonBones {
          * @inheritDoc
          */
         protected _onClear(): void {
-            this.scale = 1;
-            this.offset = 0;
+            const self = this;
 
-            if (this.frames.length) {
+            self.scale = 1;
+            self.offset = 0;
+
+            if (self.frames.length) {
                 let prevFrame: T = null;
-                for (let i = 0, l = this.frames.length; i < l; ++i) { // Find key frame data.
-                    const frame: T = this.frames[i];
+                for (let i = 0, l = self.frames.length; i < l; ++i) { // Find key frame data.
+                    const frame: T = self.frames[i];
                     if (prevFrame && frame != prevFrame) {
                         prevFrame.returnToPool();
                     }
                     prevFrame = frame;
                 }
 
-                this.frames.length = 0;
+                self.frames.length = 0;
             }
         }
     }
@@ -66,13 +68,15 @@ namespace dragonBones {
          * @inheritDoc
          */
         protected _onClear(): void {
+            const self = this;
+
             super._onClear();
 
-            this.bone = null;
-            this.originTransform.identity();
+            self.bone = null;
+            self.originTransform.identity();
 
-            if (this.cachedFrames.length) {
-                this.cachedFrames.length = 0;
+            if (self.cachedFrames.length) {
+                self.cachedFrames.length = 0;
             }
         }
 
@@ -105,12 +109,14 @@ namespace dragonBones {
          * @inheritDoc
          */
         protected _onClear(): void {
+            const self = this;
+
             super._onClear();
 
-            this.slot = null;
+            self.slot = null;
 
-            if (this.cachedFrames.length) {
-                this.cachedFrames.length = 0;
+            if (self.cachedFrames.length) {
+                self.cachedFrames.length = 0;
             }
         }
 
@@ -138,11 +144,13 @@ namespace dragonBones {
          * @inheritDoc
          */
         protected _onClear(): void {
+            const self = this;
+
             super._onClear();
 
-            this.displayIndex = 0;
-            this.skin = null;
-            this.slot = null;
+            self.displayIndex = 0;
+            self.skin = null;
+            self.slot = null;
         }
     }
 }

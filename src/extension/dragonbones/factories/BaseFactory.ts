@@ -18,8 +18,8 @@ namespace dragonBones {
          * @language zh_CN
          * 是否开启共享搜索。 [true: 开启, false: 不开启]
          * 如果开启，创建一个骨架时，可以从多个龙骨数据中寻找骨架数据，或贴图集数据中寻找贴图数据。 (通常在有共享导出的数据时开启)
-         * @see dragonBones.objects.DragonBonesData#autoSearch
-         * @see dragonBones.objects.TextureAtlasData#autoSearch
+         * @see dragonBones.DragonBonesData#autoSearch
+         * @see dragonBones.TextureAtlasData#autoSearch
          * @version DragonBones 4.5
          */
         public autoSearch: boolean = false;
@@ -258,7 +258,7 @@ namespace dragonBones {
          * @language zh_CN
          * 解析并添加贴图集数据。
          * @param rawData 需要解析的原始数据。 (JSON)
-         * @param textureAtlas 贴图集数据。 (BitmapData 或 ATF 或 DisplayObject)
+         * @param textureAtlas 贴图集数据。 (JSON)
          * @param name 为数据指定一个名称，以便可以通过这个名称来访问数据，如果未设置，则使用数据中的名称。
          * @param scale 为贴图集设置一个缩放值。
          * @returns 贴图集数据
@@ -284,7 +284,7 @@ namespace dragonBones {
          * @see #parseDragonBonesData()
          * @see #addDragonBonesData()
          * @see #removeDragonBonesData()
-         * @see dragonBones.objects.DragonBonesData
+         * @see dragonBones.DragonBonesData
          * @version DragonBones 3.0
          */
         public getDragonBonesData(name: string): DragonBonesData {
@@ -298,7 +298,7 @@ namespace dragonBones {
          * @see #parseDragonBonesData()
          * @see #getDragonBonesData()
          * @see #removeDragonBonesData()
-         * @see dragonBones.objects.DragonBonesData
+         * @see dragonBones.DragonBonesData
          * @version DragonBones 3.0
          */
         public addDragonBonesData(data: DragonBonesData, dragonBonesName: string = null): void {
@@ -325,7 +325,7 @@ namespace dragonBones {
          * @see #parseDragonBonesData()
          * @see #getDragonBonesData()
          * @see #addDragonBonesData()
-         * @see dragonBones.objects.DragonBonesData
+         * @see dragonBones.DragonBonesData
          * @version DragonBones 3.0
          */
         public removeDragonBonesData(dragonBonesName: string, disposeData: boolean = true): void {
@@ -336,8 +336,8 @@ namespace dragonBones {
                     if (DragonBones.DEBUG) {
                         for (let i = 0, l = DragonBones._armatures.length; i < l; ++i) {
                             const armature = DragonBones._armatures[i];
-                            if (armature._armatureData.parent == dragonBonesData) {
-                                throw new Error("ArmatureData : " + armature._armatureData.name + " DragonBonesData: " + dragonBonesName);
+                            if (armature.armatureData.parent == dragonBonesData) {
+                                throw new Error("ArmatureData: " + armature.armatureData.name + " DragonBonesData: " + dragonBonesName);
                             }
                         }
                     }
@@ -418,30 +418,32 @@ namespace dragonBones {
          * @version DragonBones 4.5
          */
         public clear(disposeData: Boolean = true): void {
-            for (let i in this._dragonBonesDataMap) {
+            const self = this;
+
+            for (let i in self._dragonBonesDataMap) {
                 if (disposeData) {
-                    this._dragonBonesDataMap[i].returnToPool();
+                    self._dragonBonesDataMap[i].returnToPool();
                 }
 
-                delete this._dragonBonesDataMap[i];
+                delete self._dragonBonesDataMap[i];
             }
 
-            for (let i in this._textureAtlasDataMap) {
+            for (let i in self._textureAtlasDataMap) {
                 if (disposeData) {
-                    const textureAtlasDataList = this._textureAtlasDataMap[i];
+                    const textureAtlasDataList = self._textureAtlasDataMap[i];
                     for (let i = 0, l = textureAtlasDataList.length; i < l; ++i) {
                         textureAtlasDataList[i].returnToPool();
                     }
                 }
 
-                delete this._textureAtlasDataMap[i];
+                delete self._textureAtlasDataMap[i];
             }
         }
         /**
          * @language zh_CN
          * 创建一个指定名称的骨架。
          * @param armatureName 骨架数据名称。
-         * @param dragonBonesName 龙骨数据名称，如果未设置，将检索所有的龙骨数据，当多个龙骨数据中包含同名的骨架数据时，可能无法创建出准确的骨架。 (默认: null)
+         * @param dragonBonesName 龙骨数据名称，如果未设置，将检索所有的龙骨数据，当多个龙骨数据中包含同名的骨架数据时，可能无法创建出准确的骨架。
          * @param skinName 皮肤名称，如果未设置，则使用默认皮肤。
          * @returns 骨架
          * @see dragonBones.Armature
@@ -565,7 +567,6 @@ namespace dragonBones {
                 const slotDisplayDataSet = dataPackage.skin.getSlot(slotName);
                 if (slotDisplayDataSet) {
                     let displayIndex = 0;
-
                     for (let i = 0, l = slotDisplayDataSet.displays.length; i < l; ++i) {
                         const displayData = slotDisplayDataSet.displays[i];
                         this._replaceSlotDisplay(dataPackage, displayData, slot, displayIndex++);

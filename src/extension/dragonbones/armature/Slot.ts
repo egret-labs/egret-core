@@ -130,14 +130,16 @@ namespace dragonBones {
          * @inheritDoc
          */
         protected _onClear(): void {
+            const self = this;
+
             super._onClear();
 
             const disposeDisplayList: Array<any> = [];
 
-            for (let i = 0, l = this._displayList.length; i < l; ++i) {
-                const eachDisplay = this._displayList[i];
+            for (let i = 0, l = self._displayList.length; i < l; ++i) {
+                const eachDisplay = self._displayList[i];
                 if (
-                    eachDisplay != this._rawDisplay && eachDisplay != this._meshDisplay &&
+                    eachDisplay != self._rawDisplay && eachDisplay != self._meshDisplay &&
                     disposeDisplayList.indexOf(eachDisplay) < 0
                 ) {
                     disposeDisplayList.push(eachDisplay);
@@ -149,56 +151,56 @@ namespace dragonBones {
                 if (eachDisplay instanceof Armature) {
                     (<Armature>eachDisplay).returnToPool();
                 } else {
-                    this._disposeDisplay(eachDisplay);
+                    self._disposeDisplay(eachDisplay);
                 }
             }
 
-            if (this._meshDisplay && this._meshDisplay != this._rawDisplay) { // May be _meshDisplay and _rawDisplay is the same one.
-                this._disposeDisplay(this._meshDisplay);
+            if (self._meshDisplay && self._meshDisplay != self._rawDisplay) { // May be _meshDisplay and _rawDisplay is the same one.
+                self._disposeDisplay(self._meshDisplay);
             }
 
-            if (this._rawDisplay) {
-                this._disposeDisplay(this._rawDisplay);
+            if (self._rawDisplay) {
+                self._disposeDisplay(self._rawDisplay);
             }
 
-            this.inheritAnimation = true;
-            this.displayController = null;
+            self.inheritAnimation = true;
+            self.displayController = null;
 
-            this._colorDirty = false;
-            this._ffdDirty = false;
-            this._blendIndex = 0;
-            this._zOrder = 0;
-            this._displayDataSet = null;
-            this._meshData = null;
-            this._cacheFrames = null;
-            this._rawDisplay = null;
-            this._meshDisplay = null;
-            this._colorTransform.identity();
+            self._colorDirty = false;
+            self._ffdDirty = false;
+            self._blendIndex = 0;
+            self._zOrder = 0;
+            self._displayDataSet = null;
+            self._meshData = null;
+            self._cacheFrames = null;
+            self._rawDisplay = null;
+            self._meshDisplay = null;
+            self._colorTransform.identity();
 
-            if (this._ffdVertices.length) {
-                this._ffdVertices.length = 0;
+            if (self._ffdVertices.length) {
+                self._ffdVertices.length = 0;
             }
 
-            if (this._replacedDisplayDataSet.length) {
-                this._replacedDisplayDataSet.length = 0;
+            if (self._replacedDisplayDataSet.length) {
+                self._replacedDisplayDataSet.length = 0;
             }
 
-            this._displayDirty = false;
-            this._blendModeDirty = false;
-            this._originDirty = false;
-            this._transformDirty = false;
-            this._displayIndex = 0;
-            this._blendMode = BlendMode.Normal;
-            this._display = null;
-            this._childArmature = null;
-            this._localMatrix.identity();
+            self._displayDirty = false;
+            self._blendModeDirty = false;
+            self._originDirty = false;
+            self._transformDirty = false;
+            self._displayIndex = 0;
+            self._blendMode = BlendMode.Normal;
+            self._display = null;
+            self._childArmature = null;
+            self._localMatrix.identity();
 
-            if (this._displayList.length) {
-                this._displayList.length = 0;
+            if (self._displayList.length) {
+                self._displayList.length = 0;
             }
 
-            if (this._meshBones.length) {
-                this._meshBones.length = 0;
+            if (self._meshBones.length) {
+                self._meshBones.length = 0;
             }
         }
 
@@ -271,71 +273,78 @@ namespace dragonBones {
          * @private
          */
         protected _updateDisplay(): void {
-            const prevDisplay = this._display || this._rawDisplay;
-            const prevChildArmature = this._childArmature;
+            const self = this;
 
-            if (this._displayIndex >= 0 && this._displayIndex < this._displayList.length) {
-                this._display = this._displayList[this._displayIndex];
-                if (this._display instanceof Armature) {
-                    this._childArmature = <Armature>this._display;
-                    this._display = this._childArmature._display;
+            const prevDisplay = self._display || self._rawDisplay;
+            const prevChildArmature = self._childArmature;
+
+            if (self._displayIndex >= 0 && self._displayIndex < self._displayList.length) {
+                self._display = self._displayList[self._displayIndex];
+                if (self._display instanceof Armature) {
+                    self._childArmature = <Armature>self._display;
+                    self._display = self._childArmature._display;
                 } else {
-                    this._childArmature = null;
+                    self._childArmature = null;
                 }
             } else {
-                this._display = null;
-                this._childArmature = null;
+                self._display = null;
+                self._childArmature = null;
             }
 
-            const currentDisplay = this._display || this._rawDisplay;
+            const currentDisplay = self._display || self._rawDisplay;
 
             if (currentDisplay != prevDisplay) {
-                this._onUpdateDisplay();
+                self._onUpdateDisplay();
 
                 if (prevDisplay) {
-                    this._replaceDisplay(prevDisplay);
+                    self._replaceDisplay(prevDisplay);
                 } else {
-                    this._addDisplay();
+                    self._addDisplay();
                 }
 
-                this._blendModeDirty = true;
-                this._colorDirty = true;
+                self._blendModeDirty = true;
+                self._colorDirty = true;
             }
 
             // Update origin.
-            if (this._displayDataSet && this._displayIndex >= 0 && this._displayIndex < this._displayDataSet.displays.length) {
-                this.origin.copyFrom(this._displayDataSet.displays[this._displayIndex].transform);
-                this._originDirty = true;
+            if (self._displayDataSet && self._displayIndex >= 0 && self._displayIndex < self._displayDataSet.displays.length) {
+                self.origin.copyFrom(self._displayDataSet.displays[self._displayIndex].transform);
+                self._originDirty = true;
             }
 
             // Update meshData.
-            this._updateMeshData(false);
+            self._updateMeshData(false);
 
             // Update frame.
-            if (currentDisplay == this._rawDisplay || currentDisplay == this._meshDisplay) {
-                this._updateFrame();
+            if (currentDisplay == self._rawDisplay || currentDisplay == self._meshDisplay) {
+                self._updateFrame();
             }
 
             // Update child armature.
-            if (this._childArmature != prevChildArmature) {
+            if (self._childArmature != prevChildArmature) {
                 if (prevChildArmature) {
                     prevChildArmature._parent = null; // Update child armature parent.
-                    if (this.inheritAnimation) {
+                    if (self.inheritAnimation) {
                         prevChildArmature.animation.reset();
                     }
                 }
 
-                if (this._childArmature) {
-                    this._childArmature._parent = this; // Update child armature parent.
-                    if (this.inheritAnimation) {
+                if (self._childArmature) {
+                    self._childArmature._parent = this; // Update child armature parent.
+                    if (self.inheritAnimation) {
 
                         // Set child armature frameRate.
-                        const cacheFrameRate = this._armature.cacheFrameRate;
+                        const cacheFrameRate = self._armature.cacheFrameRate;
                         if (cacheFrameRate) {
-                            this._childArmature.cacheFrameRate = cacheFrameRate;
+                            self._childArmature.cacheFrameRate = cacheFrameRate;
                         }
 
-                        this._childArmature.animation.play();
+                        const slotData = self._armature.armatureData.getSlot(self.name);
+                        if (slotData.actions.length > 0) {
+                            self._childArmature._action = slotData.actions[slotData.actions.length - 1];
+                        } else {
+                            self._childArmature.animation.play();
+                        }
                     }
                 }
             }
@@ -344,83 +353,91 @@ namespace dragonBones {
          * @private
          */
         protected _updateLocalTransformMatrix(): void {
-            this.global.copyFrom(this.origin).add(this.offset).toMatrix(this._localMatrix);
+            const self = this;
+
+            self.global.copyFrom(self.origin).add(self.offset).toMatrix(self._localMatrix);
         }
         /**
          * @private
          */
         protected _updateGlobalTransformMatrix(): void {
-            this.globalTransformMatrix.copyFrom(this._localMatrix);
-            this.globalTransformMatrix.concat(this._parent.globalTransformMatrix);
-            this.global.fromMatrix(this.globalTransformMatrix);
+            const self = this;
+
+            self.globalTransformMatrix.copyFrom(self._localMatrix);
+            self.globalTransformMatrix.concat(self._parent.globalTransformMatrix);
+            self.global.fromMatrix(self.globalTransformMatrix);
         }
         /**
          * @inheritDoc
          */
         public _setArmature(value: Armature): void {
-            if (this._armature == value) {
+            const self = this;
+
+            if (self._armature == value) {
                 return;
             }
 
-            if (this._armature) {
-                this._armature._removeSlotFromSlotList(this);
+            if (self._armature) {
+                self._armature._removeSlotFromSlotList(this);
             }
 
-            this._armature = value;
+            self._armature = value;
 
-            this._onUpdateDisplay();
+            self._onUpdateDisplay();
 
-            if (this._armature) {
-                this._armature._addSlotToSlotList(this);
-                this._addDisplay();
+            if (self._armature) {
+                self._armature._addSlotToSlotList(this);
+                self._addDisplay();
             } else {
-                this._removeDisplay();
+                self._removeDisplay();
             }
         }
         /**
          * @private Armature
          */
         public _updateMeshData(isTimelineUpdate: Boolean): void {
-            const prevMeshData = this._meshData;
+            const self = this;
 
-            if (this._display == this._meshDisplay && this._displayDataSet && this._displayIndex >= 0 && this._displayIndex < this._displayDataSet.displays.length) {
-                this._meshData = this._displayDataSet.displays[this._displayIndex].meshData;
+            const prevMeshData = self._meshData;
+
+            if (self._display == self._meshDisplay && self._displayDataSet && self._displayIndex >= 0 && self._displayIndex < self._displayDataSet.displays.length) {
+                self._meshData = self._displayDataSet.displays[self._displayIndex].meshData;
             } else {
-                this._meshData = null;
+                self._meshData = null;
             }
 
-            if (this._meshData != prevMeshData) {
-                if (this._meshData) {
-                    if (this._meshData.skinned) {
-                        this._meshBones.length = this._meshData.bones.length;
+            if (self._meshData != prevMeshData) {
+                if (self._meshData) {
+                    if (self._meshData.skinned) {
+                        self._meshBones.length = self._meshData.bones.length;
 
-                        for (let i = 0, l = this._meshBones.length; i < l; ++i) {
-                            this._meshBones[i] = this._armature.getBone(this._meshData.bones[i].name);
+                        for (let i = 0, l = self._meshBones.length; i < l; ++i) {
+                            self._meshBones[i] = self._armature.getBone(self._meshData.bones[i].name);
                         }
 
                         let ffdVerticesCount = 0;
-                        for (let i = 0, l = this._meshData.boneIndices.length; i < l; ++i) {
-                            ffdVerticesCount += this._meshData.boneIndices[i].length;
+                        for (let i = 0, l = self._meshData.boneIndices.length; i < l; ++i) {
+                            ffdVerticesCount += self._meshData.boneIndices[i].length;
                         }
 
-                        this._ffdVertices.length = ffdVerticesCount * 2;
+                        self._ffdVertices.length = ffdVerticesCount * 2;
                     } else {
-                        this._meshBones.length = 0;
-                        this._ffdVertices.length = this._meshData.vertices.length;
+                        self._meshBones.length = 0;
+                        self._ffdVertices.length = self._meshData.vertices.length;
                     }
 
-                    for (let i = 0, l = this._ffdVertices.length; i < l; ++i) {
-                        this._ffdVertices[i] = 0;
+                    for (let i = 0, l = self._ffdVertices.length; i < l; ++i) {
+                        self._ffdVertices[i] = 0;
                     }
 
-                    this._ffdDirty = true;
+                    self._ffdDirty = true;
                 } else {
-                    this._meshBones.length = 0;
-                    this._ffdVertices.length = 0;
+                    self._meshBones.length = 0;
+                    self._ffdVertices.length = 0;
                 }
 
                 if (isTimelineUpdate) {
-                    this._armature.animation._updateFFDTimelineStates();
+                    self._armature.animation._updateFFDTimelineStates();
                 }
             }
         }
@@ -429,79 +446,81 @@ namespace dragonBones {
          * @private Armature
          */
         public _update(cacheFrameIndex: number): void {
-            this._blendIndex = 0;
+            const self = this;
 
-            if (this._displayDirty) {
-                this._displayDirty = false;
-                this._updateDisplay();
+            self._blendIndex = 0;
+
+            if (self._displayDirty) {
+                self._displayDirty = false;
+                self._updateDisplay();
             }
 
-            if (!this._display) {
+            if (!self._display) {
                 return;
             }
 
-            if (this._blendModeDirty) {
-                this._blendModeDirty = false;
-                this._updateBlendMode();
+            if (self._blendModeDirty) {
+                self._blendModeDirty = false;
+                self._updateBlendMode();
             }
 
-            if (this._colorDirty) {
-                this._colorDirty = false;
-                this._updateColor();
+            if (self._colorDirty) {
+                self._colorDirty = false;
+                self._updateColor();
             }
 
-            if (this._meshData) {
-                if (this._ffdDirty || (this._meshData.skinned && this._isMeshBonesUpdate())) {
-                    this._ffdDirty = false;
+            if (self._meshData) {
+                if (self._ffdDirty || (self._meshData.skinned && self._isMeshBonesUpdate())) {
+                    self._ffdDirty = false;
 
-                    this._updateMesh();
+                    self._updateMesh();
                 }
 
-                if (this._meshData.skinned) {
+                if (self._meshData.skinned) {
                     return;
                 }
             }
 
-            if (this._originDirty) {
-                this._originDirty = false;
-                this._transformDirty = true;
-                this._updateLocalTransformMatrix();
+            if (self._originDirty) {
+                self._originDirty = false;
+                self._transformDirty = true;
+                self._updateLocalTransformMatrix();
             }
 
             if (cacheFrameIndex >= 0) {
-                const cacheFrame = this._cacheFrames[cacheFrameIndex];
-                if (this.globalTransformMatrix == cacheFrame) { // Same cache.
-                    this._transformDirty = false;
+                const cacheFrame = self._cacheFrames[cacheFrameIndex];
+                if (self.globalTransformMatrix == cacheFrame) { // Same cache.
+                    self._transformDirty = false;
                 } else if (cacheFrame) { // Has been Cached.
-                    this._transformDirty = true;
-                    this.globalTransformMatrix = cacheFrame;
-                } else if (this._transformDirty || this._parent._transformDirty != BoneTransformDirty.None) { // Dirty.
-                    this._transformDirty = true;
-                    this.globalTransformMatrix = this._globalTransformMatrix;
-                } else if (this.globalTransformMatrix != this._globalTransformMatrix) { // Same cache but not cached yet.
-                    this._transformDirty = false;
-                    this._cacheFrames[cacheFrameIndex] = this.globalTransformMatrix;
+                    self._transformDirty = true;
+                    self.globalTransformMatrix = cacheFrame;
+                } else if (self._transformDirty || self._parent._transformDirty != BoneTransformDirty.None) { // Dirty.
+                    self._transformDirty = true;
+                    self.globalTransformMatrix = self._globalTransformMatrix;
+                } else if (self.globalTransformMatrix != self._globalTransformMatrix) { // Same cache but not cached yet.
+                    self._transformDirty = false;
+                    self._cacheFrames[cacheFrameIndex] = self.globalTransformMatrix;
                 } else { // Dirty.
-                    this._transformDirty = true;
-                    this.globalTransformMatrix = this._globalTransformMatrix;
+                    self._transformDirty = true;
+                    self.globalTransformMatrix = self._globalTransformMatrix;
                 }
-            } else if (this._transformDirty || this._parent._transformDirty != BoneTransformDirty.None) { // Dirty.
-                this._transformDirty = true;
-                this.globalTransformMatrix = this._globalTransformMatrix;
+            } else if (self._transformDirty || self._parent._transformDirty != BoneTransformDirty.None) { // Dirty.
+                self._transformDirty = true;
+                self.globalTransformMatrix = self._globalTransformMatrix;
             }
 
-            if (this._transformDirty) {
-                this._transformDirty = false;
+            if (self._transformDirty) {
+                self._transformDirty = false;
 
-                if (this.globalTransformMatrix == this._globalTransformMatrix) {
-                    this._updateGlobalTransformMatrix();
+                if (self.globalTransformMatrix == self._globalTransformMatrix) {
+                    self._updateGlobalTransformMatrix();
 
                     if (cacheFrameIndex >= 0) {
-                        this.globalTransformMatrix = SlotTimelineData.cacheFrame(this._cacheFrames, cacheFrameIndex, this._globalTransformMatrix);
+                        self.globalTransformMatrix = SlotTimelineData.cacheFrame(self._cacheFrames, cacheFrameIndex, self._globalTransformMatrix);
                     }
                 }
 
-                this._updateTransform();
+                self._updateTransform();
             }
         }
 
@@ -509,33 +528,35 @@ namespace dragonBones {
          * @private Factory
          */
         public _setDisplayList(value: Array<any>): Boolean {
+            const self = this;
+
             if (value && value.length) {
-                if (this._displayList.length != value.length) {
-                    this._displayList.length = value.length;
+                if (self._displayList.length != value.length) {
+                    self._displayList.length = value.length;
                 }
 
-                for (let i = 0, l = this._displayList.length; i < l; ++i) { // Retain input render displays.
+                for (let i = 0, l = self._displayList.length; i < l; ++i) { // Retain input render displays.
                     const eachDisplay = value[i];
                     if (
-                        eachDisplay && eachDisplay != this._rawDisplay && eachDisplay != this._meshDisplay && !(eachDisplay instanceof Armature) &&
-                        this._displayList.indexOf(eachDisplay) < 0
+                        eachDisplay && eachDisplay != self._rawDisplay && eachDisplay != self._meshDisplay && !(eachDisplay instanceof Armature) &&
+                        self._displayList.indexOf(eachDisplay) < 0
                     ) {
-                        this._initDisplay(eachDisplay);
+                        self._initDisplay(eachDisplay);
                     }
 
-                    this._displayList[i] = eachDisplay;
+                    self._displayList[i] = eachDisplay;
                 }
-            } else if (this._displayList.length) {
-                this._displayList.length = 0;
+            } else if (self._displayList.length) {
+                self._displayList.length = 0;
             }
 
-            if (this._displayIndex >= 0 && this._displayIndex < this._displayList.length) {
-                this._displayDirty = this._display != this._displayList[this._displayIndex];
+            if (self._displayIndex >= 0 && self._displayIndex < self._displayList.length) {
+                self._displayDirty = self._display != self._displayList[self._displayIndex];
             } else {
-                this._displayDirty = this._display != null;
+                self._displayDirty = self._display != null;
             }
 
-            return this._displayDirty;
+            return self._displayDirty;
         }
         /**
          * @private Factory
@@ -614,19 +635,21 @@ namespace dragonBones {
             return this._displayList.concat();
         }
         public set displayList(value: Array<any>) {
-            const backupDisplayList = this._displayList.concat(); // Copy.
+            const self = this;
+
+            const backupDisplayList = self._displayList.concat(); // Copy.
             const disposeDisplayList = [];
 
-            if (this._setDisplayList(value)) {
-                this._update(-1);
+            if (self._setDisplayList(value)) {
+                self._update(-1);
             }
 
             // Release replaced render displays.
             for (let i = 0, l = backupDisplayList.length; i < l; ++i) {
                 let eachDisplay = backupDisplayList[i];
                 if (
-                    eachDisplay != this._rawDisplay && eachDisplay != this._meshDisplay &&
-                    this._displayList.indexOf(eachDisplay) < 0 &&
+                    eachDisplay != self._rawDisplay && eachDisplay != self._meshDisplay &&
+                    self._displayList.indexOf(eachDisplay) < 0 &&
                     disposeDisplayList.indexOf(eachDisplay) < 0
                 ) {
                     disposeDisplayList.push(eachDisplay);
@@ -638,7 +661,7 @@ namespace dragonBones {
                 if (eachDisplay instanceof Armature) {
                     <Armature>(eachDisplay).returnToPool();
                 } else {
-                    this._disposeDisplay(eachDisplay);
+                    self._disposeDisplay(eachDisplay);
                 }
             }
         }
@@ -651,25 +674,27 @@ namespace dragonBones {
             return this._display;
         }
         public set display(value: any) {
-            if (this._display == value) {
+            const self = this;
+
+            if (self._display == value) {
                 return;
             }
 
-            const displayListLength = this._displayList.length;
-            if (this._displayIndex < 0 && displayListLength == 0) {  // Emprty.
-                this._displayIndex = 0;
+            const displayListLength = self._displayList.length;
+            if (self._displayIndex < 0 && displayListLength == 0) {  // Emprty.
+                self._displayIndex = 0;
             }
 
-            if (this._displayIndex < 0) {
+            if (self._displayIndex < 0) {
                 return;
             } else {
-                const replaceDisplayList = this.displayList; // Copy.
-                if (displayListLength <= this._displayIndex) {
-                    replaceDisplayList.length = this._displayIndex + 1;
+                const replaceDisplayList = self.displayList; // Copy.
+                if (displayListLength <= self._displayIndex) {
+                    replaceDisplayList.length = self._displayIndex + 1;
                 }
 
-                replaceDisplayList[this._displayIndex] = value;
-                this.displayList = replaceDisplayList;
+                replaceDisplayList[self._displayIndex] = value;
+                self.displayList = replaceDisplayList;
             }
         }
         /**

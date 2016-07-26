@@ -126,37 +126,37 @@ namespace dragonBones {
         public name: string;
         /**
          * @language zh_CN
-         * 扩展的数据
+         * 扩展的数据。
          * @version DragonBones 4.5
          */
         public data: any;
         /**
          * @language zh_CN
-         * 发出事件的骨架
+         * 发出事件的骨架。
          * @version DragonBones 4.5
          */
         public armature: Armature;
         /**
          * @language zh_CN
-         * 发出事件的骨骼
+         * 发出事件的骨骼。
          * @version DragonBones 4.5
          */
         public bone: Bone;
         /**
          * @language zh_CN
-         * 发出事件的插槽
+         * 发出事件的插槽。
          * @version DragonBones 4.5
          */
         public slot: Slot;
         /**
          * @language zh_CN
-         * 发出事件的动画状态
+         * 发出事件的动画状态。
          * @version DragonBones 4.5
          */
         public animationState: AnimationState;
         /**
          * @language zh_CN
-         * 用户数据
+         * 用户数据。
          * @version DragonBones 4.5
          */
         public userData: any;

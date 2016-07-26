@@ -66,12 +66,14 @@ namespace dragonBones {
          * @private
          */
         public copyFrom(value: Transform): Transform {
-            this.x = value.x;
-            this.y = value.y;
-            this.skewX = value.skewX;
-            this.skewY = value.skewY;
-            this.scaleX = value.scaleX;
-            this.scaleY = value.scaleY;
+            const self = this;
+
+            self.x = value.x;
+            self.y = value.y;
+            self.skewX = value.skewX;
+            self.skewY = value.skewY;
+            self.scaleX = value.scaleX;
+            self.scaleY = value.scaleY;
 
             return this;
         }
@@ -88,8 +90,10 @@ namespace dragonBones {
          * @private
          */
         public identity(): Transform {
-            this.x = this.y = this.skewX = this.skewY = 0;
-            this.scaleX = this.scaleY = 1;
+            const self = this;
+
+            self.x = self.y = self.skewX = self.skewY = 0;
+            self.scaleX = self.scaleY = 1;
 
             return this;
         }
@@ -97,12 +101,14 @@ namespace dragonBones {
          * @private
          */
         public add(value: Transform): Transform {
-            this.x += value.x;
-            this.y += value.y;
-            this.skewX += value.skewX;
-            this.skewY += value.skewY;
-            this.scaleX *= value.scaleX;
-            this.scaleY *= value.scaleY;
+            const self = this;
+
+            self.x += value.x;
+            self.y += value.y;
+            self.skewX += value.skewX;
+            self.skewY += value.skewY;
+            self.scaleX *= value.scaleX;
+            self.scaleY *= value.scaleY;
 
             return this;
         }
@@ -110,12 +116,14 @@ namespace dragonBones {
          * @private
          */
         public minus(value: Transform): Transform {
-            this.x -= value.x;
-            this.y -= value.y;
-            this.skewX = Transform.normalizeRadian(this.skewX - value.skewX);
-            this.skewY = Transform.normalizeRadian(this.skewY - value.skewY);
-            this.scaleX /= value.scaleX;
-            this.scaleY /= value.scaleY;
+            const self = this;
+
+            self.x -= value.x;
+            self.y -= value.y;
+            self.skewX = Transform.normalizeRadian(self.skewX - value.skewX);
+            self.skewY = Transform.normalizeRadian(self.skewY - value.skewY);
+            self.scaleX /= value.scaleX;
+            self.scaleY /= value.scaleY;
 
             return this;
         }
@@ -123,29 +131,31 @@ namespace dragonBones {
          * @private
          */
         public fromMatrix(matrix: Matrix): Transform {
+            const self = this;
+
             const PI_Q = Math.PI * 0.25;
 
-            const backupScaleX = this.scaleX, backupScaleY = this.scaleY;
+            const backupScaleX = self.scaleX, backupScaleY = self.scaleY;
 
-            this.x = matrix.tx;
-            this.y = matrix.ty;
+            self.x = matrix.tx;
+            self.y = matrix.ty;
 
-            this.skewX = Math.atan(-matrix.c / matrix.d);
-            this.skewY = Math.atan(matrix.b / matrix.a);
-            if (this.skewX != this.skewX) this.skewX = 0;
-            if (this.skewY != this.skewY) this.skewY = 0;
+            self.skewX = Math.atan(-matrix.c / matrix.d);
+            self.skewY = Math.atan(matrix.b / matrix.a);
+            if (self.skewX != self.skewX) self.skewX = 0;
+            if (self.skewY != self.skewY) self.skewY = 0;
 
-            this.scaleY = (this.skewX > -PI_Q && this.skewX < PI_Q) ? matrix.d / Math.cos(this.skewX) : -matrix.c / Math.sin(this.skewX);
-            this.scaleX = (this.skewY > -PI_Q && this.skewY < PI_Q) ? matrix.a / Math.cos(this.skewY) : matrix.b / Math.sin(this.skewY);
+            self.scaleY = (self.skewX > -PI_Q && self.skewX < PI_Q) ? matrix.d / Math.cos(self.skewX) : -matrix.c / Math.sin(self.skewX);
+            self.scaleX = (self.skewY > -PI_Q && self.skewY < PI_Q) ? matrix.a / Math.cos(self.skewY) : matrix.b / Math.sin(self.skewY);
 
-            if (backupScaleX >= 0 && this.scaleX < 0) {
-                this.scaleX = -this.scaleX;
-                this.skewY = this.skewY - Math.PI;
+            if (backupScaleX >= 0 && self.scaleX < 0) {
+                self.scaleX = -self.scaleX;
+                self.skewY = self.skewY - Math.PI;
             }
 
-            if (backupScaleY >= 0 && this.scaleY < 0) {
-                this.scaleY = -this.scaleY;
-                this.skewX = this.skewX - Math.PI;
+            if (backupScaleY >= 0 && self.scaleY < 0) {
+                self.scaleY = -self.scaleY;
+                self.skewX = self.skewX - Math.PI;
             }
 
             return this;
@@ -157,12 +167,14 @@ namespace dragonBones {
          * @version DragonBones 3.0
          */
         public toMatrix(matrix: Matrix): void {
-            matrix.a = this.scaleX * Math.cos(this.skewY);
-            matrix.b = this.scaleX * Math.sin(this.skewY);
-            matrix.c = -this.scaleY * Math.sin(this.skewX);
-            matrix.d = this.scaleY * Math.cos(this.skewX);
-            matrix.tx = this.x;
-            matrix.ty = this.y;
+            const self = this;
+
+            matrix.a = self.scaleX * Math.cos(self.skewY);
+            matrix.b = self.scaleX * Math.sin(self.skewY);
+            matrix.c = -self.scaleY * Math.sin(self.skewX);
+            matrix.d = self.scaleY * Math.cos(self.skewX);
+            matrix.tx = self.x;
+            matrix.ty = self.y;
         }
         /**
          * @language zh_CN

@@ -47,11 +47,11 @@ module egret {
         /**
          * @private
          */
-        static $EVENT_ADD_TO_STAGE_LIST:DisplayObject[] = [];
+        static $EVENT_ADD_TO_STAGE_LIST: DisplayObject[] = [];
         /**
          * @private
          */
-        static $EVENT_REMOVE_FROM_STAGE_LIST:DisplayObject[] = [];
+        static $EVENT_REMOVE_FROM_STAGE_LIST: DisplayObject[] = [];
 
         /**
          * @language en_US
@@ -73,13 +73,14 @@ module egret {
         /**
          * @private
          */
-        $propagateFlagsDown(flags:sys.DisplayObjectFlags) {
+        $propagateFlagsDown(flags: sys.DisplayObjectFlags) {
             if (this.$hasFlags(flags)) {
                 return;
             }
             this.$setFlags(flags);
             var children = this.$children;
-            for (var i = 0; i < children.length; i++) {
+            let length = children.length
+            for (var i = 0; i < length; i++) {
                 children[i].$propagateFlagsDown(flags);
             }
         }
@@ -96,7 +97,7 @@ module egret {
          * @version Egret 2.4
          * @platform Web,Native
          */
-        public get numChildren():number {
+        public get numChildren(): number {
             return this.$children.length;
         }
 
@@ -122,8 +123,8 @@ module egret {
          * @version Egret 2.4
          * @platform Web,Native
          */
-        public addChild(child:DisplayObject):DisplayObject {
-            var index:number = this.$children.length;
+        public addChild(child: DisplayObject): DisplayObject {
+            var index: number = this.$children.length;
 
             if (child.$parent == this)
                 index--;
@@ -156,7 +157,7 @@ module egret {
          * @version Egret 2.4
          * @platform Web,Native
          */
-        public addChildAt(child:DisplayObject, index:number):DisplayObject {
+        public addChildAt(child: DisplayObject, index: number): DisplayObject {
             index = +index | 0;
             if (index < 0 || index >= this.$children.length) {
                 index = this.$children.length;
@@ -170,7 +171,7 @@ module egret {
         /**
          * @private
          */
-        $doAddChild(child:DisplayObject, index:number, notifyListeners:boolean = true):DisplayObject {
+        $doAddChild(child: DisplayObject, index: number, notifyListeners: boolean = true): DisplayObject {
             if (DEBUG) {
                 if (child == this) {
                     $error(1005);
@@ -180,7 +181,7 @@ module egret {
                 }
             }
 
-            var host:DisplayObjectContainer = child.$parent;
+            var host: DisplayObjectContainer = child.$parent;
             if (host == this) {
                 this.doSetChildIndex(child, index);
                 return child;
@@ -192,7 +193,7 @@ module egret {
 
             this.$children.splice(index, 0, child);
             child.$setParent(this);
-            var stage:Stage = this.$stage;
+            var stage: Stage = this.$stage;
             if (stage) {//当前容器在舞台
                 child.$onAddToStage(stage, this.$nestLevel + 1);
             }
@@ -235,7 +236,7 @@ module egret {
          * @version Egret 2.4
          * @platform Web,Native
          */
-        public contains(child:DisplayObject):boolean {
+        public contains(child: DisplayObject): boolean {
             while (child) {
                 if (child == this) {
                     return true;
@@ -263,7 +264,7 @@ module egret {
          * @version Egret 2.4
          * @platform Web,Native
          */
-        public getChildAt(index:number):DisplayObject {
+        public getChildAt(index: number): DisplayObject {
             index = +index | 0;
             if (index >= 0 && index < this.$children.length) {
                 return this.$children[index];
@@ -290,7 +291,7 @@ module egret {
          * @version Egret 2.4
          * @platform Web,Native
          */
-        public getChildIndex(child:egret.DisplayObject):number {
+        public getChildIndex(child: egret.DisplayObject): number {
             return this.$children.indexOf(child);
         }
 
@@ -318,10 +319,10 @@ module egret {
          * @version Egret 2.4
          * @platform Web,Native
          */
-        public getChildByName(name:string):DisplayObject {
+        public getChildByName(name: string): DisplayObject {
             var children = this.$children;
             var length = children.length;
-            var displayObject:DisplayObject;
+            var displayObject: DisplayObject;
             for (var i = 0; i < length; i++) {
                 displayObject = children[i];
                 if (displayObject.name == name) {
@@ -353,7 +354,7 @@ module egret {
          * @version Egret 2.4
          * @platform Web,Native
          */
-        public removeChild(child:DisplayObject):DisplayObject {
+        public removeChild(child: DisplayObject): DisplayObject {
             var index = this.$children.indexOf(child);
             if (index >= 0) {
                 return this.$doRemoveChild(index);
@@ -385,7 +386,7 @@ module egret {
          * @version Egret 2.4
          * @platform Web,Native
          */
-        public removeChildAt(index:number):DisplayObject {
+        public removeChildAt(index: number): DisplayObject {
             index = +index | 0;
             if (index >= 0 && index < this.$children.length) {
                 return this.$doRemoveChild(index);
@@ -399,10 +400,10 @@ module egret {
         /**
          * @private
          */
-        $doRemoveChild(index:number, notifyListeners:boolean = true):DisplayObject {
+        $doRemoveChild(index: number, notifyListeners: boolean = true): DisplayObject {
             index = +index | 0;
             var children = this.$children;
-            var child:DisplayObject = children[index];
+            var child: DisplayObject = children[index];
             this.$childRemoved(child, index);
             if (notifyListeners) {
                 child.dispatchEventWith(Event.REMOVED, true);
@@ -450,7 +451,7 @@ module egret {
          * @version Egret 2.4
          * @platform Web,Native
          */
-        public setChildIndex(child:DisplayObject, index:number):void {
+        public setChildIndex(child: DisplayObject, index: number): void {
             index = +index | 0;
             if (index < 0 || index >= this.$children.length) {
                 index = this.$children.length - 1;
@@ -461,7 +462,7 @@ module egret {
         /**
          * @private
          */
-        private doSetChildIndex(child:DisplayObject, index:number):void {
+        private doSetChildIndex(child: DisplayObject, index: number): void {
             var lastIndex = this.$children.indexOf(child);
             if (lastIndex < 0) {
                 DEBUG && $error(1006);
@@ -498,7 +499,7 @@ module egret {
          * @version Egret 2.4
          * @platform Web,Native
          */
-        public swapChildrenAt(index1:number, index2:number):void {
+        public swapChildrenAt(index1: number, index2: number): void {
             index1 = +index1 | 0;
             index2 = +index2 | 0;
             if (index1 >= 0 && index1 < this.$children.length && index2 >= 0 && index2 < this.$children.length) {
@@ -529,7 +530,7 @@ module egret {
          * @version Egret 2.4
          * @platform Web,Native
          */
-        public swapChildren(child1:DisplayObject, child2:DisplayObject):void {
+        public swapChildren(child1: DisplayObject, child2: DisplayObject): void {
             var index1 = this.$children.indexOf(child1);
             var index2 = this.$children.indexOf(child2);
             if (index1 == -1 || index2 == -1) {
@@ -543,7 +544,7 @@ module egret {
         /**
          * @private
          */
-        private doSwapChildrenAt(index1:number, index2:number):void {
+        private doSwapChildrenAt(index1: number, index2: number): void {
             if (index1 > index2) {
                 var temp = index2;
                 index2 = index1;
@@ -552,9 +553,9 @@ module egret {
             else if (index1 == index2) {
                 return;
             }
-            var list:Array<DisplayObject> = this.$children;
-            var child1:DisplayObject = list[index1];
-            var child2:DisplayObject = list[index2];
+            var list: Array<DisplayObject> = this.$children;
+            var child1: DisplayObject = list[index1];
+            var child2: DisplayObject = list[index2];
             this.$childRemoved(child1, index1);
             this.$childRemoved(child2, index2);
             list[index1] = child2;
@@ -583,9 +584,9 @@ module egret {
          * @version Egret 2.4
          * @platform Web,Native
          */
-        public removeChildren():void {
+        public removeChildren(): void {
             var children = this.$children;
-            for (var i:number = children.length - 1; i >= 0; i--) {
+            for (var i: number = children.length - 1; i >= 0; i--) {
                 this.$doRemoveChild(i);
             }
         }
@@ -595,7 +596,7 @@ module egret {
          * 一个子项被添加到容器内，此方法不仅在操作addChild()时会被回调，在操作setChildIndex()或swapChildren时也会回调。
          * 当子项索引发生改变时，会先触发$childRemoved()方法，然后触发$childAdded()方法。
          */
-        $childAdded(child:DisplayObject, index:number):void {
+        $childAdded(child: DisplayObject, index: number): void {
 
         }
 
@@ -604,20 +605,20 @@ module egret {
          * 一个子项从容器内移除，此方法不仅在操作removeChild()时会被回调，在操作setChildIndex()或swapChildren时也会回调。
          * 当子项索引发生改变时，会先触发$childRemoved()方法，然后触发$childAdded()方法。
          */
-        $childRemoved(child:DisplayObject, index:number):void {
+        $childRemoved(child: DisplayObject, index: number): void {
 
         }
 
         /**
          * @private
          */
-        $onAddToStage(stage:Stage, nestLevel:number):void {
+        $onAddToStage(stage: Stage, nestLevel: number): void {
             super.$onAddToStage(stage, nestLevel);
             var children = this.$children;
             var length = children.length;
             nestLevel++;
             for (var i = 0; i < length; i++) {
-                var child:DisplayObject = this.$children[i];
+                var child: DisplayObject = this.$children[i];
                 child.$onAddToStage(stage, nestLevel);
             }
         }
@@ -626,12 +627,12 @@ module egret {
          * @private
          *
          */
-        $onRemoveFromStage():void {
+        $onRemoveFromStage(): void {
             super.$onRemoveFromStage();
             var children = this.$children;
             var length = children.length;
             for (var i = 0; i < length; i++) {
-                var child:DisplayObject = children[i];
+                var child: DisplayObject = children[i];
                 child.$onRemoveFromStage();
             }
         }
@@ -640,14 +641,14 @@ module egret {
         /**
          * @private
          */
-        $measureChildBounds(bounds:Rectangle):void {
+        $measureChildBounds(bounds: Rectangle): void {
             var children = this.$children;
             var length = children.length;
             if (length == 0) {
                 return;
             }
             var xMin = 0, xMax = 0, yMin = 0, yMax = 0;
-            var found:boolean = false;
+            var found: boolean = false;
             for (var i = -1; i < length; i++) {
                 var childBounds = i == -1 ? bounds : children[i].$getTransformedBounds(this, $TempRectangle);
                 if (childBounds.isEmpty()) {
@@ -670,7 +671,7 @@ module egret {
             bounds.setTo(xMin, yMin, xMax - xMin, yMax - yMin);
         }
 
-        $touchChildren:boolean = true;
+        $touchChildren: boolean = true;
 
         /**
          * @language en_US
@@ -687,7 +688,7 @@ module egret {
          * @version Egret 2.4
          * @platform Web,Native
          */
-        public get touchChildren():boolean {
+        public get touchChildren(): boolean {
             return this.$getTouchChildren();
         }
 
@@ -696,18 +697,18 @@ module egret {
          *
          * @returns
          */
-        $getTouchChildren():boolean {
+        $getTouchChildren(): boolean {
             return this.$touchChildren;
         }
 
-        public set touchChildren(value:boolean) {
+        public set touchChildren(value: boolean) {
             this.$setTouchChildren(!!value);
         }
 
         /**
          * @private
          */
-        $setTouchChildren(value:boolean):boolean {
+        $setTouchChildren(value: boolean): boolean {
             if (this.$touchChildren == value) {
                 return false;
             }
@@ -720,7 +721,7 @@ module egret {
          * 标记此显示对象需要重绘。此方法会触发自身的cacheAsBitmap重绘。如果只是矩阵改变，自身显示内容并不改变，应该调用$invalidateTransform().
          * @param notiryChildren 是否标记子项也需要重绘。传入false或不传入，将只标记自身需要重绘。通常只有alpha属性改变会需要通知子项重绘。
          */
-        $invalidate(notifyChildren?:boolean):void {
+        $invalidate(notifyChildren?: boolean): void {
             super.$invalidate(notifyChildren);
             if (!notifyChildren) {
                 return;
@@ -739,7 +740,7 @@ module egret {
          * 标记自身以及所有子项在父级中变换叠加的显示内容失效。此方法不会触发自身的cacheAsBitmap重绘。
          * 通常用于矩阵改变或从显示列表添加和移除时。若自身的显示内容已经改变需要重绘，应该调用$invalidate()。
          */
-        $invalidateTransform():void {
+        $invalidateTransform(): void {
             this.markChildDirty(this, this.$parentDisplayList);
         }
 
@@ -747,7 +748,7 @@ module egret {
          * @private
          * 标记所有子项失效,若遇到cacheAsBitmap的节点,直接停止继续遍历其子项.
          */
-        private markChildDirty(child:DisplayObject, parentCache:egret.sys.DisplayList):void {
+        private markChildDirty(child: DisplayObject, parentCache: egret.sys.DisplayList): void {
             if (child.$hasFlags(sys.DisplayObjectFlags.DirtyChildren)) {
                 return;
             }
@@ -770,7 +771,7 @@ module egret {
         /**
          * @private
          */
-        $cacheAsBitmapChanged():void {
+        $cacheAsBitmapChanged(): void {
             super.$cacheAsBitmapChanged();
             var cacheRoot = this.$displayList || this.$parentDisplayList;
             var children = this.$children;
@@ -782,7 +783,7 @@ module egret {
         /**
          * @private
          */
-        private assignParentDisplayList(child:DisplayObject, parentCache:egret.sys.DisplayList, newParent:egret.sys.DisplayList):void {
+        private assignParentDisplayList(child: DisplayObject, parentCache: egret.sys.DisplayList, newParent: egret.sys.DisplayList): void {
             child.$parentDisplayList = newParent;
             child.$setFlags(sys.DisplayObjectFlags.DirtyChildren);
             var displayList = child.$displayList;
@@ -803,7 +804,7 @@ module egret {
         /**
          * @private
          */
-        $hitTest(stageX:number, stageY:number):DisplayObject {
+        $hitTest(stageX: number, stageY: number): DisplayObject {
             if (!this.$visible) {
                 return null;
             }
@@ -853,7 +854,7 @@ module egret {
          * @private
          * 子项有可能会被cache而导致标记失效。重写此方法,以便在赋值时对子项深度遍历标记脏区域
          */
-        $setAlpha(value:number):boolean {
+        $setAlpha(value: number): boolean {
             value = +value || 0;
             if (value == this.$alpha) {
                 return false;
@@ -869,13 +870,13 @@ module egret {
          * @private
          * 标记所有子项失效,与markChildDirty不同,此方法无视子项是否启用cacheAsBitmap,必须遍历完所有子项.通常只有alpha属性改变需要采用这种操作.
          */
-        private $invalidateAllChildren():void {
+        private $invalidateAllChildren(): void {
             var children = this.$children;
             if (children) {
                 for (var i = children.length - 1; i >= 0; i--) {
                     var child = children[i];
                     child.$invalidate();
-                    if((<DisplayObjectContainer>child).$children) {
+                    if ((<DisplayObjectContainer>child).$children) {
                         (<DisplayObjectContainer>child).$invalidateAllChildren();
                     }
                 }

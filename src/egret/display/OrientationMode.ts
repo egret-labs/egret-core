@@ -32,23 +32,23 @@ module egret {
     /**
      * OrientationMode 类为舞台初始旋转模式提供值。
      */
-    export class OrientationMode {
+    export const OrientationMode = {
 
         /**
          * 适配屏幕
          */
-        public static AUTO = "auto";
+        AUTO: "auto",
         /**
          * 默认竖屏
          */
-        public static PORTRAIT = "portrait";
+        PORTRAIT: "portrait",
         /**
          * 默认横屏，舞台顺时针旋转90度
          */
-        public static LANDSCAPE = "landscape";
+        LANDSCAPE: "landscape",
         /**
          * 默认横屏，舞台逆时针旋转90度
          */
-        public static LANDSCAPE_FLIPPED = "landscapeFlipped";
+        LANDSCAPE_FLIPPED: "landscapeFlipped"
     }
 }

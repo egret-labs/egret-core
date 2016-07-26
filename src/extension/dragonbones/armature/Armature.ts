@@ -97,53 +97,55 @@ namespace dragonBones {
          * @inheritDoc
          */
         protected _onClear(): void {
-            this.userData = null;
+            const self = this;
 
-            this._bonesDirty = false;
-            this._cacheFrameIndex = -1;
-            this._armatureData = null;
-            this._skinData = null;
+            self.userData = null;
 
-            if (this._animation) {
-                this._animation.returnToPool();
-                this._animation = null;
+            self._bonesDirty = false;
+            self._cacheFrameIndex = -1;
+            self._armatureData = null;
+            self._skinData = null;
+
+            if (self._animation) {
+                self._animation.returnToPool();
+                self._animation = null;
             }
 
-            if (this._display) {
-                this._display._onClear();
-                this._display = null;
+            if (self._display) {
+                self._display._onClear();
+                self._display = null;
             }
 
-            this._parent = null;
-            this._action = null;
-            this._replacedTexture = null;
+            self._parent = null;
+            self._action = null;
+            self._replacedTexture = null;
 
-            this._delayDispose = false;
-            this._lockDispose = false;
-            this._slotsDirty = false;
+            self._delayDispose = false;
+            self._lockDispose = false;
+            self._slotsDirty = false;
 
-            if (this._bones.length) {
-                for (let i = 0, l = this._bones.length; i < l; ++i) {
-                    this._bones[i].returnToPool();
+            if (self._bones.length) {
+                for (let i = 0, l = self._bones.length; i < l; ++i) {
+                    self._bones[i].returnToPool();
                 }
 
-                this._bones.length = 0;
+                self._bones.length = 0;
             }
 
-            if (this._slots.length) {
-                for (let i = 0, l = this._slots.length; i < l; ++i) {
-                    this._slots[i].returnToPool();
+            if (self._slots.length) {
+                for (let i = 0, l = self._slots.length; i < l; ++i) {
+                    self._slots[i].returnToPool();
                 }
 
-                this._slots.length = 0;
+                self._slots.length = 0;
             }
 
-            if (this._events.length) {
-                for (let i = 0, l = this._events.length; i < l; ++i) {
-                    this._events[i].returnToPool();
+            if (self._events.length) {
+                for (let i = 0, l = self._events.length; i < l; ++i) {
+                    self._events[i].returnToPool();
                 }
 
-                this._events.length = 0;
+                self._events.length = 0;
             }
         }
         /**
@@ -258,39 +260,41 @@ namespace dragonBones {
          * @language zh_CN
          * 更新骨架和动画。 (可以使用时钟实例或显示容器来更新)
          * @param passedTime 两帧之前的时间间隔。 (以秒为单位)
-         * @see dragonBones.animation.IAnimateble
-         * @see dragonBones.animation.WorldClock
-         * @see dragonBones.core.IArmatureDisplayContainer
+         * @see dragonBones.IAnimateble
+         * @see dragonBones.WorldClock
+         * @see dragonBones.IArmatureDisplay
          * @version DragonBones 3.0
          */
         public advanceTime(passedTime: number): void {
-            if (!this._lockDispose) {
-                this._lockDispose = true;
+            const self = this;
 
-                const scaledPassedTime = passedTime * this._animation.timeScale;
+            if (!self._lockDispose) {
+                self._lockDispose = true;
+
+                const scaledPassedTime = passedTime * self._animation.timeScale;
 
                 // Animations.
-                this._animation._advanceTime(scaledPassedTime);
+                self._animation._advanceTime(scaledPassedTime);
 
                 // Bones and slots.
-                if (this._bonesDirty) {
-                    this._bonesDirty = false;
-                    this._sortBones();
+                if (self._bonesDirty) {
+                    self._bonesDirty = false;
+                    self._sortBones();
                 }
 
-                if (this._slotsDirty) {
-                    this._slotsDirty = false;
-                    this._sortSlots();
+                if (self._slotsDirty) {
+                    self._slotsDirty = false;
+                    self._sortSlots();
                 }
 
-                for (let i = 0, l = this._bones.length; i < l; ++i) {
-                    this._bones[i]._update(this._cacheFrameIndex);
+                for (let i = 0, l = self._bones.length; i < l; ++i) {
+                    self._bones[i]._update(self._cacheFrameIndex);
                 }
 
-                for (let i = 0, l = this._slots.length; i < l; ++i) {
-                    const slot = this._slots[i];
+                for (let i = 0, l = self._slots.length; i < l; ++i) {
+                    const slot = self._slots[i];
 
-                    slot._update(this._cacheFrameIndex);
+                    slot._update(self._cacheFrameIndex);
 
                     const childArmature = slot.childArmature;
                     if (childArmature) {
@@ -303,26 +307,26 @@ namespace dragonBones {
                 }
 
                 // Actions and events.
-                if (this._action) {
-                    switch (this._action.type) {
+                if (self._action) {
+                    switch (self._action.type) {
                         case ActionType.Play:
-                            this._animation.play(this._action.data[0], this._action.data[1]);
+                            self._animation.play(self._action.data[0], self._action.data[1]);
                             break;
 
                         case ActionType.Stop:
-                            this._animation.stop(this._action.data[0]);
+                            self._animation.stop(self._action.data[0]);
                             break;
 
                         case ActionType.GotoAndPlay:
-                            this._animation.gotoAndPlayByTime(this._action.data[0], this._action.data[1], this._action.data[2]);
+                            self._animation.gotoAndPlayByTime(self._action.data[0], self._action.data[1], self._action.data[2]);
                             break;
 
                         case ActionType.GotoAndStop:
-                            this._animation.gotoAndStopByTime(this._action.data[0], this._action.data[1]);
+                            self._animation.gotoAndStopByTime(self._action.data[0], self._action.data[1]);
                             break;
 
                         case ActionType.FadeIn:
-                            this._animation.fadeIn(this._action.data[0], this._action.data[1], this._action.data[2]);
+                            self._animation.fadeIn(self._action.data[0], self._action.data[1], self._action.data[2]);
                             break;
 
                         case ActionType.FadeOut:
@@ -330,29 +334,29 @@ namespace dragonBones {
                             break;
                     }
 
-                    this._action = null;
+                    self._action = null;
                 }
 
-                if (this._events.length > 0) {
-                    for (let i = 0, l = this._events.length; i < l; ++i) {
-                        const event = this._events[i];
+                if (self._events.length > 0) {
+                    for (let i = 0, l = self._events.length; i < l; ++i) {
+                        const event = self._events[i];
                         if (Armature._soundEventManager && event.type == EventObject.SOUND_EVENT) {
                             Armature._soundEventManager._dispatchEvent(event);
                         } else {
-                            this._display._dispatchEvent(event);
+                            self._display._dispatchEvent(event);
                         }
 
                         event.returnToPool();
                     }
 
-                    this._events.length = 0;
+                    self._events.length = 0;
                 }
 
-                this._lockDispose = false;
+                self._lockDispose = false;
             }
 
-            if (this._delayDispose) {
-                this.returnToPool();
+            if (self._delayDispose) {
+                self.returnToPool();
             }
         }
         /**

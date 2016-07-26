@@ -44,14 +44,16 @@ namespace dragonBones {
          * @inheritDoc
          */
         protected _onClear(): void {
-            this.autoSearch = false;
-            this.scale = 1;
-            this.name = null;
-            this.imagePath = null;
+            const self = this;
 
-            for (let i in this.textures) {
-                this.textures[i].returnToPool();
-                delete this.textures[i];
+            self.autoSearch = false;
+            self.scale = 1;
+            self.name = null;
+            self.imagePath = null;
+
+            for (let i in self.textures) {
+                self.textures[i].returnToPool();
+                delete self.textures[i];
             }
         }
         /**
@@ -104,11 +106,13 @@ namespace dragonBones {
          * @inheritDoc
          */
         protected _onClear(): void {
-            this.rotated = false;
-            this.name = null;
-            this.frame = null;
-            this.parent = null;
-            this.region.clear();
+            const self = this;
+
+            self.rotated = false;
+            self.name = null;
+            self.frame = null;
+            self.parent = null;
+            self.region.clear();
         }
     }
 }

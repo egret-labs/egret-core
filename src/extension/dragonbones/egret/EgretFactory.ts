@@ -91,7 +91,6 @@ namespace dragonBones {
                         if (childArmature) {
                             if (slotData.actions.length > 0) {
                                 childArmature._action = slotData.actions[slotData.actions.length - 1];
-                                childArmature.advanceTime(0);
                             } else {
                                 childArmature.animation.play();
                             }

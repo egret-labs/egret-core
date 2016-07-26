@@ -52,26 +52,28 @@ namespace dragonBones {
          * @version DragonBones 3.0
          */
         public advanceTime(passedTime: number): void {
+            const self = this;
+
             if (passedTime != passedTime) {
                 passedTime = 0;
             }
 
             if (passedTime < 0) {
-                passedTime = new Date().getTime() / DragonBones.SECOND_TO_MILLISECOND - this.time;
+                passedTime = new Date().getTime() / DragonBones.SECOND_TO_MILLISECOND - self.time;
             }
 
-            passedTime *= this.timeScale;
+            passedTime *= self.timeScale;
 
             if (passedTime < 0) {
-                this.time -= passedTime;
+                self.time -= passedTime;
             } else {
-                this.time += passedTime;
+                self.time += passedTime;
             }
 
             if (passedTime) {
-                let i = 0, r = 0, l = this._animatebles.length;
+                let i = 0, r = 0, l = self._animatebles.length;
                 for (; i < l; ++i) {
-                    const animateble = this._animatebles[i];
+                    const animateble = self._animatebles[i];
                     if (animateble) {
                         animateble.advanceTime(passedTime);
                     } else {
@@ -81,18 +83,18 @@ namespace dragonBones {
 
                 if (r > 0) {
                     r = 0;
-                    l = this._animatebles.length;
+                    l = self._animatebles.length;
 
                     for (; i < l; ++i) {
-                        const animateble = this._animatebles[i];
+                        const animateble = self._animatebles[i];
                         if (animateble) {
-                            this._animatebles[i - r] = animateble;
+                            self._animatebles[i - r] = animateble;
                         } else {
                             r++;
                         }
                     }
 
-                    this._animatebles.length -= r;
+                    self._animatebles.length -= r;
                 }
             }
         }
