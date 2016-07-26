@@ -833,14 +833,22 @@ module egret {
         var b0 = matrix[10], b1 = matrix[11], b2 = matrix[12], b3 = matrix[13], b4 = matrix[14];
         var a0 = matrix[15], a1 = matrix[16], a2 = matrix[17], a3 = matrix[18], a4 = matrix[19];
         for (var p = 0, e = w * h * 4; p < e; p += 4) {
+            var a = buffer[p + 3];
             var r = buffer[p + 0];
             var g = buffer[p + 1];
             var b = buffer[p + 2];
-            var a = buffer[p + 3];
-            buffer[p + 0] = (r0 * r + r1 * g + r2 * b + r3 * a + r4) * a / 255;
-            buffer[p + 1] = (g0 * r + g1 * g + g2 * b + g3 * a + g4) * a / 255;
-            buffer[p + 2] = (b0 * r + b1 * g + b2 * b + b3 * a + b4) * a / 255;
-            buffer[p + 3] = (a0 * r + a1 * g + a2 * b + a3 * a + a4);
+
+            if(a > 0) {
+                // 抵消预乘的alpha通道
+                r /= a;
+                g /= a;
+                b /= a;
+            }
+
+            a = buffer[p + 3] = a0 * r + a1 * g + a2 * b + a3 * a + a4;
+            buffer[p + 0] = (r0 * r + r1 * g + r2 * b + r3 * a + r4) * a;
+            buffer[p + 1] = (g0 * r + g1 * g + g2 * b + g3 * a + g4) * a;
+            buffer[p + 2] = (b0 * r + b1 * g + b2 * b + b3 * a + b4) * a;
         }
     }
 
