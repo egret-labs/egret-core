@@ -82,7 +82,7 @@ class Run implements egret.Command {
                 .on("removed", (f) => this.shutDown(f, "removed"))
                 .on("changed", (f) => this.shutDown(f, "modified"));
         });*/
-        watch.createMonitor(path.dirname(dir), { persistent: true, interval: 2007, filter: function (f, stat) {
+        watch.createMonitor(path.dirname(dir), { persistent: true, interval: 2007, filter: (f, stat)=>{
             if(path.basename(f)=="egretProperties.json"){
                 this.initVersion = this.getVersion(f);
                 return true;

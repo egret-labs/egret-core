@@ -77,7 +77,7 @@ var Run = (function () {
         });*/
         watch.createMonitor(path.dirname(dir), { persistent: true, interval: 2007, filter: function (f, stat) {
                 if (path.basename(f) == "egretProperties.json") {
-                    this.initVersion = this.getVersion(f);
+                    _this.initVersion = _this.getVersion(f);
                     return true;
                 }
                 else {
@@ -155,3 +155,5 @@ var Run = (function () {
     return Run;
 }());
 module.exports = Run;
+
+//# sourceMappingURL=run.js.map
