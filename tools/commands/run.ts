@@ -2,7 +2,7 @@
 /// <reference path="../lib/types.d.ts" />
 
 import utils = require('../lib/utils');
-import fileUtil = require('../lib/FileUtil');
+// import fileUtil = require('../lib/FileUtil');
 import watch = require("../lib/watch");
 import path = require("path");
 import Build = require('./build');
@@ -44,16 +44,16 @@ class Run implements egret.Command {
             egret.args.host = addresses[0];
         }
         this.serverStarted = true;
-        server.startServer(egret.args, egret.args.startUrl);
+        server.startServer(egret.args, this.wrapByParams(egret.args.startUrl));
         if (egret.args.serverOnly) {
-            console.log("Url:" + egret.args.startUrl);
+            console.log("Url:" + this.wrapByParams(egret.args.startUrl));
         }else{
             console.log('\n');
             console.log("    " + utils.tr(10013, ''));
             console.log('\n');
-            console.log('        ' + egret.args.startUrl);
+            console.log('        ' + this.wrapByParams(egret.args.startUrl));
             for (var i = 1; i < addresses.length; i++) {
-                console.log('        ' + egret.args.getStartURL(addresses[i]));
+                console.log('        ' + this.wrapByParams(egret.args.getStartURL(addresses[i])));
             }
             console.log('\n');
         }
@@ -128,10 +128,38 @@ class Run implements egret.Command {
         });
     }
     private getVersion(filePath):string{
-        var jsstr = fileUtil.read(filePath);
+        var jsstr = FileUtil.read(filePath);
         var js  = JSON.parse(jsstr);
         return js["egret_version"];
     }
+
+    __tempP:string;
+    private wrapByParams(url:string):string{
+        if(!this.__tempP){
+            this.__tempP = this.genParams();
+        }
+        return url+this.__tempP;
+    }
+
+    private genParams():string{
+        var ret:string = "";
+        var propertyFilePath = FileUtil.joinPath(egret.args.projectDir,"egretProperties.json");
+        if(FileUtil.exists(propertyFilePath)){
+            var urlParams = JSON.parse(FileUtil.read(propertyFilePath)).urlParams;
+            if(urlParams){
+                var hasParams:boolean = false;
+                for(let key in urlParams){
+                    hasParams = true;
+                    ret += key+"="+urlParams[key]+"&";
+                }
+                if(hasParams){
+                    ret = "?"+ret.substr(0,ret.length -1);
+                }
+            }
+        }
+        return ret;
+    }
+
 }
 
 
