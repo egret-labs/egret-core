@@ -3909,6 +3909,10 @@ var egret;
             }
             return this;
         };
+        Bitmap.$drawImage = function (node, image, bitmapX, bitmapY, bitmapWidth, bitmapHeight, offsetX, offsetY, textureWidth, textureHeight, destW, destH, sourceWidth, sourceHeight, scale9Grid, fillMode, smoothing) {
+            console.warn('deprecated method : Bitmap.$drawImage,use egret.sys.BitmapNode.$drawImage instead of it');
+            egret.sys.BitmapNode.$updateTextureData.call(this, arguments);
+        };
         /**
          * @language en_US
          * The default value of whether or not is smoothed when scaled.

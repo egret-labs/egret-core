@@ -590,14 +590,14 @@ module egret {
             return this;
         }
 
-        // static $drawImage(node: sys.BitmapNode, image: any,
-        //     bitmapX: number, bitmapY: number, bitmapWidth: number, bitmapHeight: number, offsetX: number, offsetY: number,
-        //     textureWidth: number, textureHeight: number, destW: number, destH: number, sourceWidth: number, sourceHeight: number,
-        //     scale9Grid: egret.Rectangle, fillMode: string, smoothing: boolean): void {
-        //     console.warn('deprecated method : Bitmap.$drawImage,use egret.sys.BitmapNode.$drawImage instead of it');
-        //     sys.BitmapNode.updateTextureData.call(this, arguments);
+        static $drawImage(node: sys.BitmapNode, image: any,
+            bitmapX: number, bitmapY: number, bitmapWidth: number, bitmapHeight: number, offsetX: number, offsetY: number,
+            textureWidth: number, textureHeight: number, destW: number, destH: number, sourceWidth: number, sourceHeight: number,
+            scale9Grid: egret.Rectangle, fillMode: string, smoothing: boolean): void {
+            console.warn('deprecated method : Bitmap.$drawImage,use egret.sys.BitmapNode.$drawImage instead of it');
+            sys.BitmapNode.$updateTextureData.call(this, arguments);
 
-        // }
+        }
 
     }
 
