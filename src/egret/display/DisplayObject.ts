@@ -238,28 +238,28 @@ module egret {
         public constructor() {
             super();
             this.$displayFlags = sys.DisplayObjectFlags.InitFlags;
-            this.$DisplayObject = [
-                1,                //scaleX,
-                1,                //scaleY,
-                0,                //skewX,
-                0,                //skewY,
-                0,                //rotation
-                "",               //name
-                new Matrix(),     //matrix,
-                new Matrix(),     //concatenatedMatrix,
-                new Matrix(),     //invertedConcatenatedMatrix,
-                new Rectangle(),  //bounds,
-                new Rectangle(), //contentBounds
-                false,           //cacheAsBitmap
-                0,               //anchorOffsetX,
-                0,               //anchorOffsetY,
-                NaN,             //explicitWidth,
-                NaN,             //explicitHeight,
-                0,               //skewXdeg,
-                0,               //skewYdeg,
-                0,               //concatenatedAlpha,
-                null             //filters
-            ];
+            this.$DisplayObject = {
+                0:1,                //scaleX,
+                1:1,                //scaleY,
+                2:0,                //skewX,
+                3:0,                //skewY,
+                4:0,                //rotation
+                5:"",               //name
+                6:new Matrix(),     //matrix,
+                7:new Matrix(),     //concatenatedMatrix,
+                8:new Matrix(),     //invertedConcatenatedMatrix,
+                9:new Rectangle(),  //bounds,
+                10:new Rectangle(), //contentBounds
+                11:false,           //cacheAsBitmap
+                12:0,               //anchorOffsetX,
+                13:0,               //anchorOffsetY,
+                14:NaN,             //explicitWidth,
+                15:NaN,             //explicitHeight,
+                16:0,               //skewXdeg,
+                17:0,               //skewYdeg,
+                18:0,               //concatenatedAlpha,
+                19:null             //filters
+            };
         }
 
         /**
