@@ -96,6 +96,7 @@ module egret.native {
             sys.RenderBuffer = NativeRenderTextureRenderBuffer;
         }
         sys.systemRenderer = new CanvasRenderer();
+        sys.canvasRenderer = sys.systemRenderer;
         Capabilities.$renderMode = "canvas";
     }
 

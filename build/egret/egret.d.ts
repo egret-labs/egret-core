@@ -9866,7 +9866,15 @@ declare module egret {
     }
 }
 declare module egret.sys {
+    /**
+     * @private
+     */
     var systemRenderer: SystemRenderer;
+    /**
+     * @private
+     * 用于碰撞检测绘制
+     */
+    var canvasRenderer: SystemRenderer;
     /**
      * @private
      * 显示渲染器接口

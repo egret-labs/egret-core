@@ -3247,7 +3247,7 @@ var egret;
                     var matrix = egret.Matrix.create();
                     matrix.identity();
                     matrix.translate(1 - localX, 1 - localY);
-                    egret.sys.systemRenderer.render(this, buffer, matrix, null, true);
+                    egret.sys.canvasRenderer.render(this, buffer, matrix, null, true);
                     egret.Matrix.release(matrix);
                     try {
                         data = buffer.getPixel(1, 1);
@@ -3894,7 +3894,7 @@ var egret;
                 var matrix = egret.Matrix.create();
                 matrix.identity();
                 matrix.translate(1 - localX, 1 - localY);
-                egret.sys.systemRenderer.drawNodeToBuffer(node, buffer, matrix, true);
+                egret.sys.canvasRenderer.drawNodeToBuffer(node, buffer, matrix, true);
                 egret.Matrix.release(matrix);
                 try {
                     data = buffer.getPixel(1, 1);
@@ -6151,7 +6151,7 @@ var egret;
             var matrix = egret.Matrix.create();
             matrix.identity();
             matrix.translate(1 - localX, 1 - localY);
-            egret.sys.systemRenderer.drawNodeToBuffer(node, buffer, matrix, true);
+            egret.sys.canvasRenderer.drawNodeToBuffer(node, buffer, matrix, true);
             egret.Matrix.release(matrix);
             try {
                 var data = buffer.getPixel(1, 1);
