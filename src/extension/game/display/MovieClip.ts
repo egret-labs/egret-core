@@ -232,7 +232,7 @@ module egret {
                 var sourceWidth:number = texture._sourceWidth;
                 var sourceHeight:number = texture._sourceHeight;
 
-                Bitmap.$drawImage(<sys.BitmapNode>this.$renderNode, texture._bitmapData, texture._bitmapX, texture._bitmapY,
+                sys.BitmapNode.$updateTextureData(<sys.BitmapNode>this.$renderNode, texture._bitmapData, texture._bitmapX, texture._bitmapY,
                     bitmapWidth, bitmapHeight, offsetX, offsetY, textureWidth, textureHeight, destW, destH, sourceWidth, sourceHeight, null, egret.BitmapFillMode.SCALE, this.$smoothing);
             }
         }

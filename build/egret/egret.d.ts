@@ -2254,15 +2254,6 @@ declare module egret {
          * @private
          */
         private hitTestPixel(stageX, stageY);
-        /**
-         * @private
-         */
-        static $drawImage(node: sys.BitmapNode, image: any, bitmapX: number, bitmapY: number, bitmapWidth: number, bitmapHeight: number, offsetX: number, offsetY: number, textureWidth: number, textureHeight: number, destW: number, destH: number, sourceWidth: number, sourceHeight: number, scale9Grid: egret.Rectangle, fillMode: string, smoothing: boolean): void;
-        /**
-         * @private
-         * 绘制九宫格位图
-         */
-        private static drawScale9GridImage(node, scale9Grid, bitmapX, bitmapY, bitmapWidth, bitmapHeight, offsetX, offsetY, textureWidth, textureHeight, destW, destH);
     }
 }
 declare module egret {
@@ -10199,6 +10190,16 @@ declare module egret.sys {
          * 在显示对象的$render()方法被调用前，自动清空自身的drawData数据。
          */
         cleanBeforeRender(): void;
+        static $updateTextureData(node: sys.BitmapNode, image: any, bitmapX: number, bitmapY: number, bitmapWidth: number, bitmapHeight: number, offsetX: number, offsetY: number, textureWidth: number, textureHeight: number, destW: number, destH: number, sourceWidth: number, sourceHeight: number, scale9Grid: egret.Rectangle, fillMode: string, smoothing: boolean): void;
+        /**
+         * @private
+         * 绘制九宫格位图
+         */
+        private static $updateTextureDataWithScale9Grid(node, scale9Grid, bitmapX, bitmapY, bitmapWidth, bitmapHeight, offsetX, offsetY, textureWidth, textureHeight, destW, destH);
+        /**
+  * @private
+  */
+        private static drawClipImage(node, scale, bitmapX, bitmapY, scaledBitmapW, scaledBitmapH, offsetX, offsetY, destW, destH, startX?, startY?);
     }
 }
 declare module egret.sys {
