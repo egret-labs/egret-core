@@ -8134,9 +8134,6 @@ var egret;
                     case 4 /* GroupNode */:
                         this.renderGroup(node, buffer);
                         break;
-                    case 5 /* SetTransformNode */:
-                        buffer.setTransform(node.drawData[0], node.drawData[1], node.drawData[2], node.drawData[3], node.drawData[4], node.drawData[5]);
-                        break;
                     case 6 /* SetAlphaNode */:
                         buffer.globalAlpha = node.drawData[0];
                         break;

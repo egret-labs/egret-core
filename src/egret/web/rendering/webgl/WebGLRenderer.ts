@@ -91,8 +91,8 @@ module egret.web {
         private drawDisplayObject(displayObject: DisplayObject, buffer: WebGLRenderBuffer, dirtyList: egret.sys.Region[],
             matrix: Matrix, displayList: sys.DisplayList, clipRegion: sys.Region, root: DisplayObject): number {
             var drawCalls = 0;
-            var node:sys.RenderNode;
-            var filterPushed:boolean = false;
+            var node: sys.RenderNode;
+            var filterPushed: boolean = false;
             if (displayList && !root) {
                 if (displayList.isDirty) {
                     drawCalls += displayList.drawToSurface();
@@ -156,7 +156,7 @@ module egret.web {
                         continue;
                     }
                     var filters = child.$getFilters();
-                    if(filters && filters.length > 0) {
+                    if (filters && filters.length > 0) {
                         drawCalls += this.drawWithFilter(child, buffer, dirtyList, matrix, clipRegion, root);
                     }
                     else if ((child.$blendMode !== 0 ||
@@ -189,7 +189,7 @@ module egret.web {
          * @private
          */
         private drawWithFilter(displayObject: DisplayObject, buffer: WebGLRenderBuffer, dirtyList: egret.sys.Region[],
-            matrix: Matrix, clipRegion: sys.Region, root: DisplayObject):number {
+            matrix: Matrix, clipRegion: sys.Region, root: DisplayObject): number {
             var drawCalls = 0;
             var filters = displayObject.$getFilters();
             var hasBlendMode = (displayObject.$blendMode !== 0);
@@ -200,14 +200,14 @@ module egret.web {
                 }
             }
 
-            if(filters.length == 1 && filters[0].type == "colorTransform" && !displayObject.$children) {
+            if (filters.length == 1 && filters[0].type == "colorTransform" && !displayObject.$children) {
                 if (hasBlendMode) {
                     buffer.context.setGlobalCompositeOperation(compositeOp);
                 }
 
                 buffer.context.$filter = <ColorMatrixFilter>filters[0];
                 drawCalls += this.drawDisplayObject(displayObject, buffer, dirtyList, matrix,
-                                displayObject.$displayList, clipRegion, root);
+                    displayObject.$displayList, clipRegion, root);
                 buffer.context.$filter = null;
 
                 if (hasBlendMode) {
@@ -283,12 +283,12 @@ module egret.web {
             var scrollRect = displayObject.$scrollRect ? displayObject.$scrollRect : displayObject.$maskRect;
             var mask = displayObject.$mask;
             var mask = displayObject.$mask;
-            if(mask) {
+            if (mask) {
                 var maskRenderNode = mask.$getRenderNode();
-                if(maskRenderNode) {
+                if (maskRenderNode) {
                     var maskRenderMatrix = maskRenderNode.renderMatrix;
                     //遮罩scaleX或scaleY为0，放弃绘制
-                    if((maskRenderMatrix.a == 0 && maskRenderMatrix.b == 0) || (maskRenderMatrix.c == 0 && maskRenderMatrix.d == 0)) {
+                    if ((maskRenderMatrix.a == 0 && maskRenderMatrix.b == 0) || (maskRenderMatrix.c == 0 && maskRenderMatrix.d == 0)) {
                         return drawCalls;
                     }
                 }
@@ -489,7 +489,7 @@ module egret.web {
             }
             var m = Matrix.create();
             m.copyFrom(displayObject.$getConcatenatedMatrix());
-            if(root) {
+            if (root) {
                 displayObject.$getConcatenatedMatrixAt(root, m);
             }
             else if (displayObject.$parentDisplayList) {
@@ -577,9 +577,6 @@ module egret.web {
                 case sys.RenderNodeType.GroupNode:
                     this.renderGroup(<sys.GroupNode>node, buffer);
                     break;
-                case sys.RenderNodeType.SetTransformNode:
-                    buffer.setTransform(node.drawData[0], node.drawData[1], node.drawData[2], node.drawData[3], node.drawData[4], node.drawData[5]);
-                    break;
                 case sys.RenderNodeType.SetAlphaNode:
                     buffer.globalAlpha = node.drawData[0];
                     break;
@@ -604,14 +601,14 @@ module egret.web {
                 buffer.saveTransform();
                 buffer.transform(m.a, m.b, m.c, m.d, m.tx, m.ty);
             }
-            if(blendMode) {
+            if (blendMode) {
                 buffer.context.setGlobalCompositeOperation(blendModes[blendMode]);
             }
             while (pos < length) {
                 buffer.context.drawImage(image, data[pos++], data[pos++], data[pos++], data[pos++],
                     data[pos++], data[pos++], data[pos++], data[pos++], node.imageWidth, node.imageHeight);
             }
-            if(blendMode) {
+            if (blendMode) {
                 buffer.context.setGlobalCompositeOperation(defaultCompositeOp);
             }
             if (m) {
@@ -622,7 +619,7 @@ module egret.web {
         /**
          * @private
          */
-        private renderMesh(node:sys.MeshNode, buffer:WebGLRenderBuffer):void {
+        private renderMesh(node: sys.MeshNode, buffer: WebGLRenderBuffer): void {
             var image = node.image;
             //buffer.imageSmoothingEnabled = node.smoothing;
             var data = node.drawData;
@@ -732,7 +729,7 @@ module egret.web {
                 buffer.transform(1, 0, 0, 1, node.x, node.y);
             }
             var surface = this.canvasRenderBuffer.surface;
-            if(forHitTest) {
+            if (forHitTest) {
                 this.canvasRenderer["renderGraphics"](node, this.canvasRenderBuffer.context, true);
                 WebGLUtils.deleteWebGLTexture(surface);
                 var texture = buffer.context.getWebGLTexture(<BitmapData><any>surface);
@@ -742,7 +739,7 @@ module egret.web {
                     this.canvasRenderer["renderGraphics"](node, this.canvasRenderBuffer.context);
 
                     // 拷贝canvas到texture
-                    var texture:WebGLTexture = node.$texture;
+                    var texture: WebGLTexture = node.$texture;
                     if (!texture) {
                         texture = buffer.context.createTexture(<BitmapData><any>surface);
                         node.$texture = texture;
@@ -765,7 +762,7 @@ module egret.web {
                 }
                 buffer.transform(1, 0, 0, 1, -node.x, -node.y);
             }
-            if(!forHitTest) {
+            if (!forHitTest) {
                 node.dirtyRender = false;
             }
         }

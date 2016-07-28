@@ -10357,19 +10357,6 @@ declare module egret.sys {
 declare module egret.sys {
     /**
      * @private
-     * 位图渲染节点
-     */
-    class SetTransformNode extends RenderNode {
-        constructor();
-        /**
-         * 绘制一次位图
-         */
-        setTransform(a: number, b: number, c: number, d: number, tx: number, ty: number): void;
-    }
-}
-declare module egret.sys {
-    /**
-     * @private
      * 文本格式
      */
     interface TextFormat {
