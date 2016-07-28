@@ -2894,13 +2894,7 @@ var egret;
          * @private
          */
         function createContext() {
-            if (egret.Capabilities.renderMode == "canvas") {
-                context = egret.sys.hitTestBuffer.context;
-            }
-            else {
-                var canvas = document.createElement("canvas");
-                context = canvas.getContext("2d");
-            }
+            context = egret.sys.hitTestBuffer.context;
             context.textAlign = "left";
             context.textBaseline = "middle";
         }
@@ -3814,12 +3808,7 @@ var egret;
                 var player = new web.WebPlayer(container, options);
                 container["egret-player"] = player;
             }
-            // TODO hitTestBuffer创建目前必须在主buffer创建之后
-            if (egret.Capabilities.renderMode == "webgl") {
-                egret.sys.hitTestBuffer = new web.WebGLRenderBuffer(3, 3);
-            }
-            else {
-            }
+            egret.sys.hitTestBuffer = new web.CanvasRenderBuffer(3, 3);
         }
         /**
          * 设置渲染模式。"auto","webgl","canvas"
@@ -3829,14 +3818,13 @@ var egret;
             if (renderMode == "webgl" && egret.WebGLUtils.checkCanUseWebGL()) {
                 egret.sys.RenderBuffer = web.WebGLRenderBuffer;
                 egret.sys.systemRenderer = new web.WebGLRenderer();
-                //屏蔽掉cacheAsBitmap,webgl模式不能有太多的RenderContext
-                //DisplayObject.prototype.$setHasDisplayList = function(){};
+                egret.sys.canvasRenderer = new egret.CanvasRenderer();
                 egret.Capabilities.$renderMode = "webgl";
             }
             else {
-                egret.sys.hitTestBuffer = new web.CanvasRenderBuffer(3, 3);
                 egret.sys.RenderBuffer = web.CanvasRenderBuffer;
                 egret.sys.systemRenderer = new egret.CanvasRenderer();
+                egret.sys.canvasRenderer = egret.sys.systemRenderer;
                 egret.Capabilities.$renderMode = "canvas";
             }
         }
@@ -4617,17 +4605,11 @@ var egret;
             var buffer = egret.sys.hitTestBuffer;
             buffer.resize(3, 3);
             var context = buffer.context;
-            if (!context.translate) {
-                context = buffer;
-            }
             context.translate(1 - x, 1 - y);
             var width = this._bitmapWidth;
             var height = this._bitmapHeight;
             var scale = egret.$TextureScaleFactor;
             context.drawImage(this._bitmapData, this._bitmapX, this._bitmapY, width, this._bitmapHeight, this._offsetX, this._offsetY, width * scale, height * scale);
-            if (context.$drawWebGL) {
-                context.$drawWebGL();
-            }
             try {
                 var data = buffer.getPixel(1, 1);
             }

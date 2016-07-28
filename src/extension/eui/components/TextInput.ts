@@ -10,7 +10,8 @@ module eui.sys {
         maxWidth,
         maxHeight,
         text,
-        restrict
+        restrict,
+        inputType
     }
 }
 module eui {
@@ -47,7 +48,8 @@ module eui {
                 4: null,          //maxWidth
                 5: null,          //maxHeight
                 6: "",            //text
-                7: null           //restrict
+                7: null,          //restrict
+                8:egret.TextFieldInputType.TEXT //inputType
             }
         }
 
@@ -127,7 +129,7 @@ module eui {
          * @version eui 1.0
          * @platform Web,Native
          */
-        public get displayAsPassword():boolean {
+        public get displayAsPassword(): boolean {
             if (this.textDisplay) {
                 return this.textDisplay.displayAsPassword;
             }
@@ -142,13 +144,43 @@ module eui {
          * @version eui 1.0
          * @platform Web,Native
          */
-        public set displayAsPassword(value:boolean) {
+        public set displayAsPassword(value: boolean) {
             this.$TextInput[sys.TextInputKeys.displayAsPassword] = value;
             if (this.textDisplay) {
                 this.textDisplay.displayAsPassword = value;
             }
             this.invalidateProperties();
         }
+        /**
+         * @copy egret.TextField#inputType
+         *
+         * @version Egret 3.1.6
+         * @version eui 1.0
+         * @platform Web,Native
+         */
+        public set inputType(value: string) {
+            console.log('set inputType')
+            this.$TextInput[sys.TextInputKeys.inputType] = value;
+            if (this.textDisplay) {
+                this.textDisplay.inputType = value;
+            }
+            this.invalidateProperties();
+        }
+        /**
+         * @copy egret.TextField#inputType
+         *
+         * @version Egret 3.1.6
+         * @version eui 1.0
+         * @platform Web,Native
+         */
+        public get inputType(): string {
+            console.log('get inputType')
+            if (this.textDisplay) {
+                return this.textDisplay.inputType;
+            }
+            return this.$TextInput[sys.TextInputKeys.inputType];
+        }
+
 
         /**
          * @copy egret.TextField#textColor
@@ -449,6 +481,9 @@ module eui {
             if (values[sys.TextInputKeys.restrict]) {
                 this.textDisplay.restrict = values[sys.TextInputKeys.restrict];
             }
+            if (values[sys.TextInputKeys.inputType]) {
+                this.textDisplay.inputType = values[sys.TextInputKeys.inputType];
+            }
         }
         /**
          * @private
@@ -462,6 +497,7 @@ module eui {
             values[sys.TextInputKeys.maxHeight] = this.textDisplay.maxHeight;
             values[sys.TextInputKeys.text] = this.textDisplay.text;
             values[sys.TextInputKeys.restrict] = this.textDisplay.restrict;
+            values[sys.TextInputKeys.inputType] = this.textDisplay.inputType;
         }
     }
 }

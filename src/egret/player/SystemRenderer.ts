@@ -29,8 +29,15 @@
 
 module egret.sys {
 
+    /**
+     * @private
+     */
     export var systemRenderer:SystemRenderer;
-
+    /**
+     * @private
+     * 用于碰撞检测绘制
+     */
+    export var canvasRenderer:SystemRenderer;
     /**
      * @private
      * 显示渲染器接口

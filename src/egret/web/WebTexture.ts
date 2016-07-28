@@ -109,18 +109,12 @@ module egret.web {
         var buffer = <CanvasRenderBuffer><any>sys.hitTestBuffer;
         buffer.resize(3, 3);
         var context: any = buffer.context;
-        if (!context.translate) {//webgl
-            context = buffer;
-        }
         context.translate(1 - x, 1 - y);
         var width = this._bitmapWidth;
         var height = this._bitmapHeight;
         var scale = $TextureScaleFactor;
         context.drawImage(this._bitmapData, this._bitmapX, this._bitmapY, width, this._bitmapHeight,
             this._offsetX, this._offsetY, width * scale, height * scale);
-        if (context.$drawWebGL) {//webgl
-            context.$drawWebGL();
-        }
         try {
             var data = buffer.getPixel(1, 1);
         }

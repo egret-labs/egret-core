@@ -76,13 +76,7 @@ module egret.web {
      * @private
      */
     function createContext():void {
-        if(Capabilities.renderMode == "canvas") {
-            context = sys.hitTestBuffer.context;
-        }
-        else {
-            var canvas = document.createElement("canvas");
-            context = canvas.getContext("2d");
-        }
+        context = sys.hitTestBuffer.context;
         context.textAlign = "left";
         context.textBaseline = "middle";
     }

@@ -220,7 +220,9 @@ module egret {
                 this.$refreshImageData();
             }
             else {
-                Texture.$removeDisplayObject(this, oldBitmapData);
+                if(oldBitmapData) {
+                    Texture.$removeDisplayObject(this, oldBitmapData);
+                }
                 this.setImageData(null, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0);
                 this.$invalidateContentBounds();
                 return true;
@@ -571,7 +573,7 @@ module egret {
                 var matrix = Matrix.create();
                 matrix.identity();
                 matrix.translate(1 - localX, 1 - localY);
-                sys.systemRenderer.drawNodeToBuffer(node, buffer, matrix, true);
+                sys.canvasRenderer.drawNodeToBuffer(node, buffer, matrix, true);
                 Matrix.release(matrix);
 
                 try {

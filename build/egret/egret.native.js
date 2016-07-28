@@ -2420,6 +2420,7 @@ var egret;
                 egret.sys.RenderBuffer = native.NativeRenderTextureRenderBuffer;
             }
             egret.sys.systemRenderer = new egret.CanvasRenderer();
+            egret.sys.canvasRenderer = egret.sys.systemRenderer;
             egret.Capabilities.$renderMode = "canvas";
         }
         function updateAllScreens() {
