@@ -17009,20 +17009,14 @@ var egret;
         var b0 = matrix[10], b1 = matrix[11], b2 = matrix[12], b3 = matrix[13], b4 = matrix[14];
         var a0 = matrix[15], a1 = matrix[16], a2 = matrix[17], a3 = matrix[18], a4 = matrix[19];
         for (var p = 0, e = w * h * 4; p < e; p += 4) {
-            var a = buffer[p + 3];
             var r = buffer[p + 0];
             var g = buffer[p + 1];
             var b = buffer[p + 2];
-            if (a > 0) {
-                // 抵消预乘的alpha通道
-                r /= a;
-                g /= a;
-                b /= a;
-            }
-            a = buffer[p + 3] = a0 * r + a1 * g + a2 * b + a3 * a + a4;
-            buffer[p + 0] = (r0 * r + r1 * g + r2 * b + r3 * a + r4) * a;
-            buffer[p + 1] = (g0 * r + g1 * g + g2 * b + g3 * a + g4) * a;
-            buffer[p + 2] = (b0 * r + b1 * g + b2 * b + b3 * a + b4) * a;
+            var a = buffer[p + 3];
+            buffer[p + 0] = r0 * r + r1 * g + r2 * b + r3 * a + r4;
+            buffer[p + 1] = g0 * r + g1 * g + g2 * b + g3 * a + g4;
+            buffer[p + 2] = b0 * r + b1 * g + b2 * b + b3 * a + b4;
+            buffer[p + 3] = a0 * r + a1 * g + a2 * b + a3 * a + a4;
         }
     }
     /**
@@ -17042,13 +17036,14 @@ var egret;
         var windowSize = windowLength * 4;
         for (var y = 0; y < h; y++) {
             var pLineStart = y * lineSize;
-            var rs = 0, gs = 0, bs = 0, as = 0, alpha = 0;
+            var rs = 0, gs = 0, bs = 0, as = 0, alpha = 0, alpha2 = 0;
             // Fill window
             for (var ptr = pLineStart, end = ptr + windowSize; ptr < end; ptr += 4) {
-                rs += buffer[ptr + 0];
-                gs += buffer[ptr + 1];
-                bs += buffer[ptr + 2];
-                as += buffer[ptr + 3];
+                alpha = buffer[ptr + 3];
+                rs += buffer[ptr + 0] * alpha;
+                gs += buffer[ptr + 1] * alpha;
+                bs += buffer[ptr + 2] * alpha;
+                as += alpha;
             }
             // Slide window
             for (var ptr = pLineStart + blurX * 4, end = ptr + (w - blurX * 2) * 4, linePtr = blurX * 4, lastPtr = pLineStart, nextPtr = ptr + (blurX + 1) * 4; ptr < end; ptr += 4, linePtr += 4, nextPtr += 4, lastPtr += 4) {
@@ -17056,10 +17051,12 @@ var egret;
                 lineBuffer[linePtr + 1] = gs / windowLength;
                 lineBuffer[linePtr + 2] = bs / windowLength;
                 lineBuffer[linePtr + 3] = as / windowLength;
-                rs += buffer[nextPtr + 0] - buffer[lastPtr + 0];
-                gs += buffer[nextPtr + 1] - buffer[lastPtr + 1];
-                bs += buffer[nextPtr + 2] - buffer[lastPtr + 2];
-                as += buffer[nextPtr + 3] - buffer[lastPtr + 3];
+                alpha = buffer[nextPtr + 3];
+                alpha2 = buffer[lastPtr + 3];
+                rs += buffer[nextPtr + 0] * alpha - buffer[lastPtr + 0] * alpha2;
+                gs += buffer[nextPtr + 1] * alpha - buffer[lastPtr + 1] * alpha2;
+                bs += buffer[nextPtr + 2] * alpha - buffer[lastPtr + 2] * alpha2;
+                as += alpha - alpha2;
             }
             // Copy line
             buffer.set(lineBuffer, pLineStart);
@@ -17074,13 +17071,14 @@ var egret;
         var windowLength = (blurY * 2) + 1;
         for (var x = 0; x < w; x++) {
             var pColumnStart = x * 4;
-            var rs = 0, gs = 0, bs = 0, as = 0, alpha = 0;
+            var rs = 0, gs = 0, bs = 0, as = 0, alpha = 0, alpha2 = 0;
             // Fill window
             for (var ptr = pColumnStart, end = ptr + windowLength * stride; ptr < end; ptr += stride) {
-                rs += buffer[ptr + 0];
-                gs += buffer[ptr + 1];
-                bs += buffer[ptr + 2];
-                as += buffer[ptr + 3];
+                alpha = buffer[ptr + 3];
+                rs += buffer[ptr + 0] * alpha;
+                gs += buffer[ptr + 1] * alpha;
+                bs += buffer[ptr + 2] * alpha;
+                as += alpha;
             }
             // Slide window
             for (var ptr = pColumnStart + blurY * stride, end = ptr + (h - blurY) * stride, columnPtr = blurY * 4, lastPtr = pColumnStart, nextPtr = ptr + ((blurY + 1) * stride); ptr < end; ptr += stride, columnPtr += 4, nextPtr += stride, lastPtr += stride) {
@@ -17088,10 +17086,12 @@ var egret;
                 columnBuffer[columnPtr + 1] = gs / windowLength;
                 columnBuffer[columnPtr + 2] = bs / windowLength;
                 columnBuffer[columnPtr + 3] = as / windowLength;
-                rs += buffer[nextPtr + 0] - buffer[lastPtr + 0];
-                gs += buffer[nextPtr + 1] - buffer[lastPtr + 1];
-                bs += buffer[nextPtr + 2] - buffer[lastPtr + 2];
-                as += buffer[nextPtr + 3] - buffer[lastPtr + 3];
+                alpha = buffer[nextPtr + 3];
+                alpha2 = buffer[lastPtr + 3];
+                rs += buffer[nextPtr + 0] * alpha - buffer[lastPtr + 0] * alpha2;
+                gs += buffer[nextPtr + 1] * alpha - buffer[lastPtr + 1] * alpha2;
+                bs += buffer[nextPtr + 2] * alpha - buffer[lastPtr + 2] * alpha2;
+                as += alpha - alpha2;
             }
             var wordBuffer = new Uint32Array(buffer.buffer);
             var wordColumn = new Uint32Array(columnBuffer.buffer);
