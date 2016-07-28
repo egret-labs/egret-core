@@ -154,4 +154,4 @@ function getServiceURL(params) {
 }
 /// <reference path="../lib/types.d.ts" />
 
-//# sourceMappingURL=index.js.map
+//# sourceMappingURL=../service/index.js.map

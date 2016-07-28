@@ -94,4 +94,4 @@ var Publish = (function () {
 })();
 module.exports = Publish;
 
-//# sourceMappingURL=publish.js.map
+//# sourceMappingURL=../commands/publish.js.map

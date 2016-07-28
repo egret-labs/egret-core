@@ -9,27 +9,31 @@ import path = require('path');
 var ANY = 'any';
 
 class CompileLark {
-    private compiler:Compiler;
-    private dtsFiles:[string,string[]][] = [];
+    private compiler: Compiler;
+    private dtsFiles: [string, string[]][] = [];
 
-    public make():number {
+    public make(): number {
         var self = this;
         var code = 0;
         var options = egret.args;
         var manifest = egret.manifest;
-        var penddings:egret.EgretModule[] = [];
-        var currentPlatform:string, currentConfig:string;
+        var penddings: egret.EgretModule[] = [];
+        var currentPlatform: string, currentConfig: string;
         global.registerClass = manifest.registerClass;
         var outputDir = this.getModuleOutputPath();
         this.compiler = new Compiler();
         global.registerClass = manifest.registerClass;
-        var configurations:egret.CompileConfiguration[] = [
-            {name: "debug", declaration: true},
-            {name: "release", minify: true}
+        var configurations: egret.CompileConfiguration[] = [
+            { name: "debug", declaration: true },
+            { name: "release", minify: true }
         ];
 
-
-        utils.clean(outputDir,FileUtil.escapePath(path.join(outputDir,"egret3d")),FileUtil.escapePath(path.join(outputDir,"nest")));
+        let excludeList = [
+            FileUtil.escapePath(path.join(outputDir, "egret3d")),
+            FileUtil.escapePath(path.join(outputDir, "nest")),
+            FileUtil.escapePath(path.join(outputDir, "dragonBones"))
+        ];
+        utils.clean(outputDir, excludeList);
 
         for (var i = 0; i < manifest.modules.length; i++) {
             var m = manifest.modules[i];
@@ -53,7 +57,7 @@ class CompileLark {
         return code;
     }
 
-    private buildModule(m:egret.EgretModule, platform:egret.TargetPlatform, configuration:egret.CompileConfiguration) {
+    private buildModule(m: egret.EgretModule, platform: egret.TargetPlatform, configuration: egret.CompileConfiguration) {
         var name = m.name;
         var fileName = name;
         var options = egret.args;
@@ -64,20 +68,20 @@ class CompileLark {
         if (configuration.minify) {
             fileName += ".min";
         }
-        var depends = m.dependencies.map(name=> this.getModuleOutputPath(name, name + '.d.ts'));
+        var depends = m.dependencies.map(name => this.getModuleOutputPath(name, name + '.d.ts'));
 
         if (platform.name != ANY) {
             depends.push(this.getModuleOutputPath(m.name, name + '.d.ts'));
         }
 
-        var outDir = this.getModuleOutputPath(null,null,m.outFile);
+        var outDir = this.getModuleOutputPath(null, null, m.outFile);
         var declareFile = this.getModuleOutputPath(m.name, fileName + ".d.ts", m.outFile);
         var singleFile = this.getModuleOutputPath(m.name, fileName + ".js", m.outFile);
         var moduleRoot = FileUtil.joinPath(larkRoot, m.root);
-        var tss:string[] = [];
-        m.files.forEach(file=> {
-            var path:string = null;
-            var sourcePlatform:string = null, sourceConfig:string = null;
+        var tss: string[] = [];
+        m.files.forEach(file => {
+            var path: string = null;
+            var sourcePlatform: string = null, sourceConfig: string = null;
             if (typeof (file) == 'string') {
                 path = <string>file;
             }
@@ -98,9 +102,9 @@ class CompileLark {
             return 0;
         tss = depends.concat(tss);
         var dts = platform.declaration && configuration.declaration;
-        var result = this.compiler.compile({args: options, def: dts, out: singleFile, files: tss, outDir: null});
+        var result = this.compiler.compile({ args: options, def: dts, out: singleFile, files: tss, outDir: null });
         if (result.exitStatus != 0) {
-            result.messages.forEach(m=> console.log(m));
+            result.messages.forEach(m => console.log(m));
             return result.exitStatus;
         }
         if (dts) {
@@ -121,10 +125,10 @@ class CompileLark {
     }
 
     private hideInternalMethods() {
-return;
-        var tempDts:string[] = [];
+        return;
+        var tempDts: string[] = [];
         global.ignoreDollar = true;
-        this.dtsFiles.forEach(d=> {
+        this.dtsFiles.forEach(d => {
             var dts = d[0], depends = d[1];
             var tempDtsName = dts.replace(/\.d\.ts/, 'd.ts');
             var singleFile = dts.replace(/\.d\.ts/, 'd.js');
@@ -138,18 +142,18 @@ return;
                 outDir: null
             });
             if (result.messages && result.messages.length) {
-                result.messages.forEach(m=> console.log(m));
+                result.messages.forEach(m => console.log(m));
             }
             FileUtil.remove(singleFile);
             FileUtil.remove(tempDtsName);
             tempDts.push(tempDtsName.replace(/\.ts$/, '.d.ts'));
         });
 
-        this.dtsFiles.forEach(d=> {
+        this.dtsFiles.forEach(d => {
             FileUtil.remove(d[0]);
         });
 
-        tempDts.forEach(d=> {
+        tempDts.forEach(d => {
             var dts = d.replace(/d\.d\.ts$/, '.d.ts');
             FileUtil.copy(d, dts);
             FileUtil.remove(d);
@@ -161,20 +165,20 @@ return;
 }
 
 
-function testPlatform(value, array:Array<any>) {
+function testPlatform(value, array: Array<any>) {
     return (value == ANY && (array == null || array.length == 0)) || (array && array.indexOf(value) >= 0);
 }
 
-function testConfig(value, array:Array<any>) {
+function testConfig(value, array: Array<any>) {
     return value == ANY || array == null || array.indexOf(value) >= 0;
 }
 
-function listModuleFiles(m:egret.EgretModule) {
+function listModuleFiles(m: egret.EgretModule) {
     var tsFiles = [];
     if (m.noOtherTs !== true)
         tsFiles = FileUtil.search(FileUtil.joinPath(egret.root, m.root), "ts");
     var specFiles = {};
-    m.files.forEach((f,i)=> {
+    m.files.forEach((f, i) => {
         var fileName = typeof (f) == 'string' ? <string>f : (<egret.ManifestSourceFile>f).path;
         fileName = FileUtil.joinPath(m.root, fileName);
         fileName = FileUtil.joinPath(egret.root, fileName);
@@ -184,7 +188,7 @@ function listModuleFiles(m:egret.EgretModule) {
             m.files[i] = fileName;
         specFiles[fileName] = true;
     });
-    tsFiles.forEach(f=> {
+    tsFiles.forEach(f => {
         if (!specFiles[f])
             m.files.push(f);
     });

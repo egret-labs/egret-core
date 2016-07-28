@@ -62,4 +62,4 @@ tsclark.Compiler.exit = function (exitCode) {
 };
 module.exports = Compiler;
 
-//# sourceMappingURL=Compiler.js.map
+//# sourceMappingURL=../actions/Compiler.js.map

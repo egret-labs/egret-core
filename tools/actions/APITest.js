@@ -344,4 +344,4 @@ var APITestAction = (function () {
 })();
 module.exports = APITestAction;
 
-//# sourceMappingURL=APITest.js.map
+//# sourceMappingURL=../actions/APITest.js.map

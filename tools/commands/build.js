@@ -12,7 +12,6 @@ var timeBuildStart = (new Date()).getTime();
 var Build = (function () {
     function Build() {
     }
-
     Build.prototype.execute = function (callback) {
         callback = callback || defaultBuildCallback;
         //如果APITest未通过继续执行APITest
@@ -83,13 +82,10 @@ var Build = (function () {
             path: egret.args.projectDir,
             command: "build",
             option: egret.args
-        }, function (cmd) {
-            return onGotBuildCommandResult(cmd, callback);
-        }, true);
+        }, function (cmd) { return onGotBuildCommandResult(cmd, callback); }, true);
         return DontExitCode;
     };
     Build.prototype.buildLib = function (packageJson) {
-
         var options = egret.args;
         var libFiles = FileUtil.search(FileUtil.joinPath(options.projectDir, "libs"), "d.ts");
         var outDir = "bin";
@@ -114,16 +110,16 @@ var Build = (function () {
             //解决根目录没文件编译异常问题
             var tmpFilePath = FileUtil.joinPath(options.projectDir, module.root, "tmp.ts");
             var hasTmpTsFile = false;
-            if(!FileUtil.exists(tmpFilePath)) {
+            if (!FileUtil.exists(tmpFilePath)) {
                 hasTmpTsFile = true;
                 FileUtil.save(tmpFilePath, "");
             }
-            else if(FileUtil.read(tmpFilePath) == "") {
+            else if (FileUtil.read(tmpFilePath) == "") {
                 hasTmpTsFile = true;
             }
-            options['compilerOptions'] = {target: 1};//ES5
+            options['compilerOptions'] = { target: 1 }; //ES5
             var compileFiles = libFiles.concat(files);
-            if(hasTmpTsFile) {
+            if (hasTmpTsFile) {
                 compileFiles.push(tmpFilePath);
             }
             //编译js文件到临时目录
@@ -142,7 +138,7 @@ var Build = (function () {
                 files: compileFiles,
                 outDir: null
             });
-            if(hasTmpTsFile) {
+            if (hasTmpTsFile) {
                 FileUtil.remove(tmpFilePath);
             }
             var str = "";
@@ -185,14 +181,10 @@ var Build = (function () {
 })();
 function onGotBuildCommandResult(cmd, callback) {
     if (cmd.messages) {
-        cmd.messages.forEach(function (m) {
-            return console.log(m);
-        });
+        cmd.messages.forEach(function (m) { return console.log(m); });
     }
     if (!cmd.exitCode && egret.args.platform) {
-        setTimeout(function () {
-            return callback(0);
-        }, 500);
+        setTimeout(function () { return callback(0); }, 500);
     }
     else
         callback(cmd.exitCode || 0);
@@ -205,4 +197,4 @@ function defaultBuildCallback(code) {
 }
 module.exports = Build;
 
-//# sourceMappingURL=build.js.map
+//# sourceMappingURL=../commands/build.js.map

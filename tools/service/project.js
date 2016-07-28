@@ -151,4 +151,4 @@ var Project = (function () {
 })();
 module.exports = Project;
 
-//# sourceMappingURL=project.js.map
+//# sourceMappingURL=../service/project.js.map

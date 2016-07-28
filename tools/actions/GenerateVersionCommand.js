@@ -76,4 +76,4 @@ var GenerateVersionCommand = (function () {
 })();
 module.exports = GenerateVersionCommand;
 
-//# sourceMappingURL=GenerateVersionCommand.js.map
+//# sourceMappingURL=../actions/GenerateVersionCommand.js.map

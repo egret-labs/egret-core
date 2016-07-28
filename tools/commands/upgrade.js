@@ -134,4 +134,4 @@ var UpgradeCommand = (function () {
 })();
 module.exports = UpgradeCommand;
 
-//# sourceMappingURL=upgrade.js.map
+//# sourceMappingURL=../commands/upgrade.js.map

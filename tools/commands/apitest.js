@@ -70,4 +70,4 @@ var APItestCommand = (function () {
 })();
 module.exports = APItestCommand;
 
-//# sourceMappingURL=apitest.js.map
+//# sourceMappingURL=../commands/apitest.js.map

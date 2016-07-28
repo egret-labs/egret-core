@@ -23,7 +23,12 @@ var CompileLark = (function () {
             { name: "debug", declaration: true },
             { name: "release", minify: true }
         ];
-        utils.clean(outputDir,FileUtil.escapePath(path.join(outputDir,"egret3d")),FileUtil.escapePath(path.join(outputDir,"nest")));
+        var excludeList = [
+            FileUtil.escapePath(path.join(outputDir, "egret3d")),
+            FileUtil.escapePath(path.join(outputDir, "nest")),
+            FileUtil.escapePath(path.join(outputDir, "dragonBones"))
+        ];
+        utils.clean(outputDir, excludeList);
         for (var i = 0; i < manifest.modules.length; i++) {
             var m = manifest.modules[i];
             preduceSwanModule(m);
@@ -262,4 +267,4 @@ function changeDefine(content, current, change) {
 }
 module.exports = CompileLark;
 
-//# sourceMappingURL=CompileLark.js.map
+//# sourceMappingURL=../actions/CompileLark.js.map

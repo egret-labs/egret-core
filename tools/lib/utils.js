@@ -207,11 +207,7 @@ function minify(sourceFile, output) {
     file.save(output, result.code);
 }
 exports.minify = minify;
-function clean(path) {
-    var excludes = [];
-    for (var _i = 1; _i < arguments.length; _i++) {
-        excludes[_i - 1] = arguments[_i];
-    }
+function clean(path, excludes) {
     var fileList = file.getDirectoryListing(path);
     var length = fileList.length;
     for (var i = 0; i < length; i++) {
@@ -293,4 +289,4 @@ function addIndents(times, text) {
 }
 exports.addIndents = addIndents;
 
-//# sourceMappingURL=utils.js.map
+//# sourceMappingURL=../lib/utils.js.map

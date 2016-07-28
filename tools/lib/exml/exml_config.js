@@ -567,4 +567,4 @@ var Component = (function () {
 var exmlConfig;
 module.exports = EXMLConfig;
 
-//# sourceMappingURL=exml_config.js.map
+//# sourceMappingURL=../../lib/exml/exml_config.js.map

@@ -88,7 +88,7 @@ function entry() {
     if (args.command == "info") {
         console.log(tr(4, defaultVersion.version));
         var root = getEgretRoot();
-        console.log(tr(6, root))
+        console.log(tr(6, root));
         return;
     }
     if (requestVersion || (projectVersion && !(args.command in commandsToSkip))) {

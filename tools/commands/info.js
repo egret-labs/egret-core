@@ -11,4 +11,4 @@ var info = (function () {
 })();
 module.exports = info;
 
-//# sourceMappingURL=info.js.map
+//# sourceMappingURL=../commands/info.js.map

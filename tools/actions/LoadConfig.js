@@ -48,4 +48,4 @@ function loadTsConfig(url, options) {
 }
 exports.loadTsConfig = loadTsConfig;
 
-//# sourceMappingURL=LoadConfig.js.map
+//# sourceMappingURL=../actions/LoadConfig.js.map

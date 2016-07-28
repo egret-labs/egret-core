@@ -147,4 +147,4 @@ var doT;
 })(doT || (doT = {}));
 module.exports = doT;
 
-//# sourceMappingURL=doT.js.map
+//# sourceMappingURL=../lib/doT.js.map

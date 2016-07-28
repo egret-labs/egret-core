@@ -61,4 +61,4 @@ locale_strings[1706] = "total {0} API conflicts,please edit your project then re
 //info
 locale_strings[1] = "Error when compile project";
 
-//# sourceMappingURL=en.js.map
+//# sourceMappingURL=../locales/en.js.map

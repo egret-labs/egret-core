@@ -43,4 +43,4 @@ var Clean = (function () {
 })();
 module.exports = Clean;
 
-//# sourceMappingURL=clean.js.map
+//# sourceMappingURL=../commands/clean.js.map

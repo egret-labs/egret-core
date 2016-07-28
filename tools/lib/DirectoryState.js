@@ -72,4 +72,4 @@ function updateMTime(filePath, states) {
     return states;
 }
 
-//# sourceMappingURL=DirectoryState.js.map
+//# sourceMappingURL=../lib/DirectoryState.js.map

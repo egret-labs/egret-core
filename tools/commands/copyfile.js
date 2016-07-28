@@ -58,4 +58,4 @@ var CopyFilesCommand = (function () {
 })();
 module.exports = CopyFilesCommand;
 
-//# sourceMappingURL=copyfile.js.map
+//# sourceMappingURL=../commands/copyfile.js.map

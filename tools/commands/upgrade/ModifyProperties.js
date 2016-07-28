@@ -57,4 +57,4 @@ var ModifyProperties = (function () {
 var egretProjectConfig = egretProjectConfig || new ModifyProperties();
 module.exports = egretProjectConfig;
 
-//# sourceMappingURL=ModifyProperties.js.map
+//# sourceMappingURL=../../commands/upgrade/ModifyProperties.js.map

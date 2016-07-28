@@ -5,6 +5,7 @@ var egret;
 (function (egret) {
     var portal;
     (function (portal) {
+        portal.project;
         var Project = (function () {
             function Project() {
                 var _this = this;
@@ -122,4 +123,4 @@ function showLoading() {
     });
 }
 
-//# sourceMappingURL=project.js.map
+//# sourceMappingURL=../../../server/content/scripts/project.js.map

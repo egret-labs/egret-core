@@ -165,7 +165,7 @@ function generateExmlDTS() {
             //var className = p.substring(srcPath.length, p.length - 5);
             var className = ret.className;
             //className = className.split("/").join(".");
-            if(className != "eui.Skin") {
+            if (className != "eui.Skin") {
                 var index = className.lastIndexOf(".");
                 if (index == -1) {
                     if (ret.extendName == "") {
@@ -242,4 +242,4 @@ function parse(exmlPath) {
     file.save(tspath, jstext);
 }
 
-//# sourceMappingURL=exml.eui.js.map
+//# sourceMappingURL=../actions/exml.eui.js.map

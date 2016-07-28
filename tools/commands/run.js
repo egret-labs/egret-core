@@ -153,7 +153,7 @@ var Run = (function () {
         return ret;
     };
     return Run;
-}());
+})();
 module.exports = Run;
 
-//# sourceMappingURL=run.js.map
+//# sourceMappingURL=../commands/run.js.map

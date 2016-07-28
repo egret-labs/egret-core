@@ -214,7 +214,7 @@ export function minify(sourceFile: string, output: string) {
     file.save(output, result.code);
 }
 
-export function clean(path: string,...excludes:string[]) {
+export function clean(path: string,excludes:string[]) {
     var fileList = file.getDirectoryListing(path);
     var length = fileList.length;
     for (var i = 0; i < length; i++)

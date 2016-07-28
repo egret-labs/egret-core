@@ -7,8 +7,8 @@ function normalize(project) {
     project.scaleMode = project.scaleMode || "showAll";
     project.orientationMode = project.orientationMode || "auto";
     project.frameRate = project.frameRate || 30;
-    project.contentWidth = project.contentWidth || 640;
-    project.contentHeight = project.contentHeight || 1136;
+    project.contentWidth = project.contentWidth || 480;
+    project.contentHeight = project.contentHeight || 800;
     project.moduleScripts = project.moduleScripts || [];
     project.showLog = project.showLog || false;
     project.logFilter = project.logFilter || "";
@@ -140,4 +140,4 @@ function parseProjectInfo(html) {
 }
 exports.parseProjectInfo = parseProjectInfo;
 
-//# sourceMappingURL=Project.js.map
+//# sourceMappingURL=../actions/Project.js.map

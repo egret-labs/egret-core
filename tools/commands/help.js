@@ -51,4 +51,4 @@ var Help = (function () {
 })();
 module.exports = Help;
 
-//# sourceMappingURL=help.js.map
+//# sourceMappingURL=../commands/help.js.map

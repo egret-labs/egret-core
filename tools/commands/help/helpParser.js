@@ -173,4 +173,4 @@ var help;
 })(help || (help = {}));
 module.exports = help;
 
-//# sourceMappingURL=helpParser.js.map
+//# sourceMappingURL=../../commands/help/helpParser.js.map

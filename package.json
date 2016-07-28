@@ -358,13 +358,7 @@
         "root": "src/extension/tween",
         "dependencies": [ "egret" ]
       },
-      {
-        "name": "dragonBones",
-        "description": "dragonbones",
-        "files": [ ],
-        "root": "src/extension/dragonbones",
-        "dependencies": [ "egret" ]
-      },
+   
       {
         "name": "socket",
         "description": "Web Socket",

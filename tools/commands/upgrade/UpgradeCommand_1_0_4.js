@@ -40,4 +40,4 @@ var UpgradeCommand_1_0_4 = (function () {
 })();
 module.exports = UpgradeCommand_1_0_4;
 
-//# sourceMappingURL=UpgradeCommand_1_0_4.js.map
+//# sourceMappingURL=../../commands/upgrade/UpgradeCommand_1_0_4.js.map

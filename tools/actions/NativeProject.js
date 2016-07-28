@@ -107,4 +107,4 @@ function exec(command, params, callback) {
 }
 module.exports = NativeProject;
 
-//# sourceMappingURL=NativeProject.js.map
+//# sourceMappingURL=../actions/NativeProject.js.map
