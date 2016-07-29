@@ -536,7 +536,7 @@ module egret {
          * @private
          * 设置矩阵
          */
-        $setMatrix(matrix: Matrix, useProperties: boolean = true): boolean {
+        $setMatrix(matrix: Matrix, needUpdateProperties: boolean = true): boolean {
             let self = this;
             var values = self.$DisplayObject;
             var m = values[Keys.matrix];
@@ -545,7 +545,7 @@ module egret {
             }
 
             m.copyFrom(matrix);
-            if (useProperties) {
+            if (needUpdateProperties) {
                 values[Keys.scaleX] = m.$getScaleX();
                 values[Keys.scaleY] = m.$getScaleY();
                 values[Keys.skewX] = matrix.$getSkewX();
