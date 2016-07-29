@@ -4735,7 +4735,9 @@ var egret;
                     "width": textfield.width,
                     "height": textfield.height,
                     "font_size": values[0 /* fontSize */],
-                    "font_color": values[2 /* textColor */]
+                    "font_color": values[2 /* textColor */],
+                    "textAlign": values[9 /* textAlign */],
+                    "verticalAlign": values[10 /* verticalAlign */]
                 }));
             };
             /**

@@ -184,7 +184,9 @@ module egret.native {
                 "width": textfield.width,
                 "height": textfield.height,
                 "font_size": values[sys.TextKeys.fontSize],
-                "font_color": values[sys.TextKeys.textColor]
+                "font_color": values[sys.TextKeys.textColor],
+                "textAlign": values[sys.TextKeys.textAlign],
+                "verticalAlign": values[sys.TextKeys.verticalAlign]
             }));
         }
 
