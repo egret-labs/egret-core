@@ -244,6 +244,35 @@ module egret {
             this.$screen.updateScreenSize();
         }
 
+        $align:string = egret.StageAlign.CENTER;
+        /**
+         * @language zh_CN
+         * 一个 StageAlign 类中指定要使用哪种對齊模式的值。以下是有效值：<br/>
+         * <ul>
+         * <li>StageAlign.BOTTOM -- 指定「舞台」與底部對齊。</li>
+         * <li>StageAlign.BOTTOM_LEFT -- 指定「舞台」與左下角對齊。</li>
+         * <li>StageAlign.BOTTOM_RIGHT -- 指定「舞台」與右下角對齊。</li>
+         * <li>StageAlign.CENTER -- 指定「舞台」與中間對齊。</li>
+         * <li>StageAlign.LEFT -- 指定「舞台」與左側對齊。</li>
+         * <li>StageAlign.RIGHT -- 指定「舞台」與右側對齊。</li>
+         * <li>StageAlign.TOP -- 指定「舞台」與頂端對齊。</li>
+         * <li>StageAlign.TOP_LEFT -- 指定「舞台」與左上角對齊。</li>
+         * <li>StageAlign.TOP_RIGHT -- 指定「舞台」與右上角對齊。</li>
+         * </ul>
+         * @default egret.StageAlign.CENTER
+         */
+        public get align():string {
+            return this.$align;
+        }
+
+        public set align(value:string) {
+            if (this.$align == value) {
+                return;
+            }
+            this.$align = value;
+            this.$screen.updateScreenSize();
+        }
+
         $orientation:string = egret.OrientationMode.AUTO;
         public set orientation(value:string) {
             if (this.$orientation == value) {
