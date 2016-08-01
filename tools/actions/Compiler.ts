@@ -43,7 +43,7 @@ class Compiler {
             parsedCmd.options.sourceMap = args.sourceMap;
             parsedCmd.options.removeComments = args.removeComments;
             parsedCmd.options.declaration = args.declaration;
-            parsedCmd.options.out = args.out;
+            parsedCmd.options.out = out;
         }
         else{
             //console.log("args.compilerOptions:",parsedCmd.options.outDir)
