@@ -1160,7 +1160,7 @@ declare module egret {
          * @private
          * 设置矩阵
          */
-        $setMatrix(matrix: Matrix, useProperties?: boolean): boolean;
+        $setMatrix(matrix: Matrix, needUpdateProperties?: boolean): boolean;
         /**
          * @private
          * 获得这个显示对象以及它所有父级对象的连接矩阵。

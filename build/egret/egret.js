@@ -1701,8 +1701,8 @@ var egret;
          * @private
          * 设置矩阵
          */
-        p.$setMatrix = function (matrix, useProperties) {
-            if (useProperties === void 0) { useProperties = true; }
+        p.$setMatrix = function (matrix, needUpdateProperties) {
+            if (needUpdateProperties === void 0) { needUpdateProperties = true; }
             var self = this;
             var values = self.$DisplayObject;
             var m = values[6 /* matrix */];
@@ -1710,7 +1710,7 @@ var egret;
                 return false;
             }
             m.copyFrom(matrix);
-            if (useProperties) {
+            if (needUpdateProperties) {
                 values[0 /* scaleX */] = m.$getScaleX();
                 values[1 /* scaleY */] = m.$getScaleY();
                 values[2 /* skewX */] = matrix.$getSkewX();

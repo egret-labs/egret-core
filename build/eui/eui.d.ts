@@ -73,6 +73,7 @@ declare module eui {
          * @platform Web,Native
          */
         static bindHandler(host: any, chain: string[], handler: (value: any) => void, thisObject: any): Watcher;
+        static $bindProperties(host: any, templates: any[], chainIndex: number[], target: any, prop: string): Watcher;
     }
 }
 declare module eui {
@@ -12132,7 +12133,7 @@ declare module eui.sys {
         /**
          * @private
          */
-        constructor(target: string, property: string, expression: string);
+        constructor(target: string, property: string, templates: string[], chainIndex: number[]);
         /**
          * @private
          * 目标实例名
@@ -12145,9 +12146,14 @@ declare module eui.sys {
         property: string;
         /**
          * @private
-         * 绑定表达式
+         * 绑定的模板列表
          */
-        expression: string;
+        templates: string[];
+        /**
+         * @private
+         * chainIndex是一个索引列表，每个索引指向templates中的一个值，该值是代表属性链。
+         */
+        chainIndex: number[];
         /**
          * @private
          *
@@ -12162,7 +12168,7 @@ declare module eui.sys {
         /**
          * @private
          */
-        constructor(target: string, property: string, expression: string);
+        constructor(target: string, property: string, templates: string[], chainIndex: number[]);
         /**
          * @private
          * 目标实例名
@@ -12175,9 +12181,14 @@ declare module eui.sys {
         property: string;
         /**
          * @private
-         * 绑定表达式
+         * 绑定的模板列表
          */
-        expression: string;
+        templates: string[];
+        /**
+         * @private
+         * chainIndex是一个索引列表，每个索引指向templates中的一个值，该值是代表属性链。
+         */
+        chainIndex: number[];
         /**
          * @private
          *
@@ -12384,12 +12395,13 @@ declare module eui.sys {
          * @private
          * 格式化值
          */
-        private formatValue(key, value, node, haveState?, stateCallBack?);
+        private formatValue(key, value, node);
         /**
          * @private
          * 格式化字符串
          */
         private formatString(value);
+        private formatBinding(key, value, node);
         /**
          * @private
          /**
@@ -14990,17 +15002,22 @@ declare module eui {
          * @version eui 1.0
          * @platform Web,Native
          */
-        constructor(host: any, chain: string[], target: any, prop: string);
+        constructor(host: any, templates: any[], chainIndex: number[], target: any, prop: string);
         /**
          * 皮肤对象
          * @private
          */
         private host;
         /**
-         * 绑定链
          * @private
+         * 绑定的模板列表
          */
-        private chain;
+        templates: any[];
+        /**
+         * @private
+         * chainIndex是一个索引列表，每个索引指向templates中的一个值，该值是代表属性链。
+         */
+        chainIndex: number[];
         /**
          * 要绑定的对象
          * @private

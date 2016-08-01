@@ -28,6 +28,19 @@
 //////////////////////////////////////////////////////////////////////////////////////
 var eui;
 (function (eui) {
+    function joinValues(templates) {
+        var first = templates[0];
+        var value = first instanceof eui.Watcher ? first.getValue() : first;
+        var length = templates.length;
+        for (var i = 1; i < length; i++) {
+            var item = templates[i];
+            if (item instanceof eui.Watcher) {
+                item = item.getValue();
+            }
+            value += item;
+        }
+        return value;
+    }
     /**
      * @language en_US
      * The Binding class defines utility methods for performing data binding.
@@ -119,6 +132,26 @@ var eui;
             if (watcher) {
                 handler.call(thisObject, watcher.getValue());
             }
+            return watcher;
+        };
+        Binding.$bindProperties = function (host, templates, chainIndex, target, prop) {
+            if (templates.length == 1) {
+                return Binding.bindProperty(host, templates[0].split("."), target, prop);
+            }
+            var assign = function () {
+                target[prop] = joinValues(templates);
+            };
+            var length = chainIndex.length;
+            for (var i = 0; i < length; i++) {
+                var index = chainIndex[i];
+                var chain = templates[index].split(".");
+                var watcher = eui.Watcher.watch(host, chain, null, null);
+                if (watcher) {
+                    templates[index] = watcher;
+                    watcher.setHandler(assign, null);
+                }
+            }
+            assign();
             return watcher;
         };
         return Binding;
@@ -17310,7 +17343,7 @@ var eui;
         var ADD_ITEMS = "eui.AddItems";
         var SET_PROPERTY = "eui.SetProperty";
         var SET_STATEPROPERTY = "eui.SetStateProperty";
-        var BINDING_PROPERTY = "eui.Binding.bindProperty";
+        var BINDING_PROPERTIES = "eui.Binding.$bindProperties";
         /**
          * @private
          * 代码生成工具基类
@@ -17881,11 +17914,12 @@ var eui;
             /**
              * @private
              */
-            function EXSetStateProperty(target, property, expression) {
+            function EXSetStateProperty(target, property, templates, chainIndex) {
                 _super.call(this);
                 this.target = target;
                 this.property = property;
-                this.expression = expression;
+                this.templates = templates;
+                this.chainIndex = chainIndex;
             }
             var d = __define,c=EXSetStateProperty,p=c.prototype;
             /**
@@ -17894,8 +17928,10 @@ var eui;
              * @returns
              */
             p.toCode = function () {
-                var chain = this.expression.split(".").join("\",\"");
-                return "new " + SET_STATEPROPERTY + "(this, [" + chain + "], this." + this.target + ",\"" + this.property + "\")";
+                var expression = this.templates.join(",");
+                var chain = this.chainIndex.join(",");
+                return "new " + SET_STATEPROPERTY + "(this, [" + expression + "]," + "[" + chain + "]," +
+                    this.target + ",\"" + this.property + "\")";
             };
             return EXSetStateProperty;
         }(CodeBase));
@@ -17909,11 +17945,12 @@ var eui;
             /**
              * @private
              */
-            function EXBinding(target, property, expression) {
+            function EXBinding(target, property, templates, chainIndex) {
                 _super.call(this);
                 this.target = target;
                 this.property = property;
-                this.expression = expression;
+                this.templates = templates;
+                this.chainIndex = chainIndex;
             }
             var d = __define,c=EXBinding,p=c.prototype;
             /**
@@ -17922,8 +17959,10 @@ var eui;
              * @returns
              */
             p.toCode = function () {
-                var chain = this.expression.split(".").join("\",\"");
-                return BINDING_PROPERTY + "(this, [\"" + chain + "\"]," + this.target + ",\"" + this.property + "\")";
+                var expression = this.templates.join(",");
+                var chain = this.chainIndex.join(",");
+                return BINDING_PROPERTIES + "(this, [" + expression + "]," + "[" + chain + "]," +
+                    this.target + ",\"" + this.property + "\")";
             };
             return EXBinding;
         }(CodeBase));
@@ -17978,6 +18017,7 @@ var eui;
         var basicTypes = [TYPE_ARRAY, "boolean", "string", "number"];
         var wingKeys = ["id", "locked", "includeIn", "excludeFrom"];
         var htmlEntities = [["<", "&lt;"], [">", "&gt;"], ["&", "&amp;"], ["\"", "&quot;"], ["'", "&apos;"]];
+        var jsKeyWords = ["null", "NaN", "undefined", "true", "false"];
         /**
          * @private
          */
@@ -18685,9 +18725,7 @@ var eui;
              * @private
              * 格式化值
              */
-            p.formatValue = function (key, value, node, haveState, stateCallBack) {
-                if (haveState === void 0) { haveState = false; }
-                if (stateCallBack === void 0) { stateCallBack = null; }
+            p.formatValue = function (key, value, node) {
                 if (!value) {
                     value = "";
                 }
@@ -18698,30 +18736,15 @@ var eui;
                 if (DEBUG && !type) {
                     egret.$error(2005, this.currentClassName, key, toXMLString(node));
                 }
-                if (value.charAt(0) == "{" && value.charAt(value.length - 1) == "}") {
-                    value = value.substr(1, value.length - 2).trim();
-                    if (value.indexOf("this.") == 0) {
-                        value = value.substring(5);
-                    }
+                var bindingValue = this.formatBinding(key, value, node);
+                if (bindingValue) {
                     this.checkIdForState(node);
-                    var firstKey = value.split(".")[0];
-                    if (firstKey != HOST_COMPONENT && this.skinParts.indexOf(firstKey) == -1) {
-                        value = HOST_COMPONENT + "." + value;
+                    var target = "this";
+                    if (node !== this.currentXML) {
+                        target += "." + node.attributes["id"];
                     }
-                    if (!haveState) {
-                        if (node != this.currentXML) {
-                            this.bindings.push(new sys.EXBinding("this." + node.attributes["id"], key, value));
-                        }
-                        else {
-                            this.bindings.push(new sys.EXBinding("this", key, value));
-                        }
-                        value = "";
-                    }
-                    else {
-                        if (stateCallBack) {
-                            stateCallBack(true);
-                        }
-                    }
+                    this.bindings.push(new sys.EXBinding(target, key, bindingValue.templates, bindingValue.chainIndex));
+                    value = "";
                 }
                 else if (type == RECTANGLE) {
                     if (DEBUG) {
@@ -18785,6 +18808,45 @@ var eui;
                 value = value.split("\"").join("\\\"");
                 value = "\"" + value + "\"";
                 return value;
+            };
+            p.formatBinding = function (key, value, node) {
+                if (!value) {
+                    return null;
+                }
+                value = value.trim();
+                if (value.charAt(0) != "{" || value.charAt(value.length - 1) != "}") {
+                    return null;
+                }
+                value = value.substring(1, value.length - 1).trim();
+                var templates = value.split("+");
+                var chainIndex = [];
+                var length = templates.length;
+                for (var i = 0; i < length; i++) {
+                    var item = templates[i].trim();
+                    if (!item) {
+                        templates.splice(i, 1);
+                        i--;
+                        length--;
+                        continue;
+                    }
+                    var first = item.charAt(0);
+                    if (first == "'" || first == "\"" || first >= "0" && first <= "9") {
+                        continue;
+                    }
+                    if (item.indexOf(".") == -1 && jsKeyWords.indexOf(item) != -1) {
+                        continue;
+                    }
+                    if (item.indexOf("this.") == 0) {
+                        item = item.substring(5);
+                    }
+                    var firstKey = item.split(".")[0];
+                    if (firstKey != HOST_COMPONENT && this.skinParts.indexOf(firstKey) == -1) {
+                        item = HOST_COMPONENT + "." + item;
+                    }
+                    templates[i] = "\"" + item + "\"";
+                    chainIndex.push(i);
+                }
+                return { templates: templates, chainIndex: chainIndex };
             };
             /**
              * @private
@@ -19134,12 +19196,12 @@ var eui;
                             if (index != -1) {
                                 var key = name.substring(0, index);
                                 key = this.formatKey(key, value);
-                                var isBinding = false;
-                                var value = this.formatValue(key, value, node, true, function (vl) {
-                                    isBinding = vl;
-                                });
-                                if (!value) {
-                                    continue;
+                                var bindingValue = this.formatBinding(key, value, node);
+                                if (!bindingValue) {
+                                    var value = this.formatValue(key, value, node);
+                                    if (!value) {
+                                        continue;
+                                    }
                                 }
                                 stateName = name.substr(index + 1);
                                 states = this.getStateByName(stateName, node);
@@ -19147,11 +19209,11 @@ var eui;
                                 if (l > 0) {
                                     for (var j = 0; j < l; j++) {
                                         state = states[j];
-                                        if (!isBinding) {
-                                            state.addOverride(new sys.EXSetProperty(id, key, value));
+                                        if (bindingValue) {
+                                            state.addOverride(new sys.EXSetStateProperty(id, key, bindingValue.templates, bindingValue.chainIndex));
                                         }
                                         else {
-                                            state.addOverride(new sys.EXSetStateProperty(id, key, "\"" + value + "\""));
+                                            state.addOverride(new sys.EXSetProperty(id, key, value));
                                         }
                                     }
                                 }
@@ -24433,9 +24495,10 @@ var eui;
          * @version eui 1.0
          * @platform Web,Native
          */
-        function SetStateProperty(host, chain, target, prop) {
+        function SetStateProperty(host, templates, chainIndex, target, prop) {
             this.host = host;
-            this.chain = chain;
+            this.templates = templates;
+            this.chainIndex = chainIndex;
             this.target = target;
             this.prop = prop;
         }
@@ -24458,11 +24521,7 @@ var eui;
             if (nextOldValue) {
                 this.oldValue = nextOldValue;
             }
-            var chain = [];
-            for (var i = 0, len = this.chain.length; i < len; i++) {
-                chain[i] = this.chain[i];
-            }
-            eui.Binding.bindProperty(this.host, chain, this.target, this.prop);
+            eui.Binding.$bindProperties(this.host, this.templates.concat(), this.chainIndex.concat(), this.target, this.prop);
         };
         /**
          * @inheritDoc

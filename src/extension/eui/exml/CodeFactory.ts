@@ -33,7 +33,7 @@ module eui.sys {
     var ADD_ITEMS = "eui.AddItems";
     var SET_PROPERTY = "eui.SetProperty";
     var SET_STATEPROPERTY = "eui.SetStateProperty";
-    var BINDING_PROPERTY = "eui.Binding.bindProperty";
+    var BINDING_PROPERTIES = "eui.Binding.$bindProperties";
 
     /**
      * @private
@@ -199,8 +199,8 @@ module eui.sys {
             var length = innerClasses.length;
             for (var i = 0; i < length; i++) {
                 var clazz = innerClasses[i];
-                clazz.indent = indent+1;
-                returnStr += indent1Str+"var "+clazz.className+" = "+clazz.toCode()+"\n\n";
+                clazz.indent = indent + 1;
+                returnStr += indent1Str + "var " + clazz.className + " = " + clazz.toCode() + "\n\n";
             }
 
             returnStr += indent1Str + "function " + this.className + "() {\n";
@@ -677,12 +677,14 @@ module eui.sys {
         /**
          * @private
          */
-        public constructor(target:string, property:string, expression:string) {
+        public constructor(target:string, property:string, templates:string[], chainIndex:number[]) {
             super();
             this.target = target;
             this.property = property;
-            this.expression = expression;
+            this.templates = templates;
+            this.chainIndex = chainIndex;
         }
+
         /**
          * @private
          * 目标实例名
@@ -696,17 +698,26 @@ module eui.sys {
 
         /**
          * @private
-         * 绑定表达式
+         * 绑定的模板列表
          */
-        public expression:string;
+        public templates:string[];
+
+        /**
+         * @private
+         * chainIndex是一个索引列表，每个索引指向templates中的一个值，该值是代表属性链。
+         */
+        public chainIndex:number[];
+
         /**
          * @private
          *
          * @returns
          */
         public toCode():string {
-            var chain = this.expression.split(".").join("\",\"");
-            return "new " + SET_STATEPROPERTY + "(this, ["+chain+"], this."+this.target+",\""+this.property+"\")";
+            var expression = this.templates.join(",");
+            var chain = this.chainIndex.join(",");
+            return "new " + SET_STATEPROPERTY + "(this, [" + expression + "]," + "[" + chain + "]," +
+                this.target + ",\"" + this.property + "\")";
         }
     }
     /**
@@ -717,11 +728,12 @@ module eui.sys {
         /**
          * @private
          */
-        public constructor(target:string,property:string,expression:string){
+        public constructor(target:string, property:string, templates:string[], chainIndex:number[]) {
             super();
             this.target = target;
             this.property = property;
-            this.expression = expression;
+            this.templates = templates;
+            this.chainIndex = chainIndex;
         }
 
         /**
@@ -736,9 +748,16 @@ module eui.sys {
         public property:string;
         /**
          * @private
-         * 绑定表达式
+         * 绑定的模板列表
          */
-        public expression:string;
+        public templates:string[];
+
+        /**
+         * @private
+         * chainIndex是一个索引列表，每个索引指向templates中的一个值，该值是代表属性链。
+         */
+        public chainIndex:number[];
+
 
         /**
          * @private
@@ -746,8 +765,10 @@ module eui.sys {
          * @returns
          */
         public toCode():string {
-            var chain = this.expression.split(".").join("\",\"");
-            return BINDING_PROPERTY+"(this, [\""+chain+"\"],"+this.target+",\""+this.property+"\")";
+            var expression = this.templates.join(",");
+            var chain = this.chainIndex.join(",");
+            return BINDING_PROPERTIES + "(this, [" + expression + "]," + "[" + chain + "]," +
+                this.target + ",\"" + this.property + "\")";
         }
     }
 }

@@ -51,6 +51,7 @@ module eui.sys {
     var basicTypes:string[] = [TYPE_ARRAY, "boolean", "string", "number"];
     var wingKeys:string[] = ["id", "locked", "includeIn", "excludeFrom"];
     var htmlEntities:string[][] = [["<", "&lt;"], [">", "&gt;"], ["&", "&amp;"], ["\"", "&quot;"], ["'", "&apos;"]];
+    var jsKeyWords:string[] = ["null", "NaN", "undefined", "true", "false"];
 
     /**
      * @private
@@ -879,7 +880,7 @@ module eui.sys {
          * @private
          * 格式化值
          */
-        private formatValue(key:string, value:string, node:egret.XML, haveState:boolean = false, stateCallBack:Function = null):string {
+        private formatValue(key:string, value:string, node:egret.XML):string {
             if (!value) {
                 value = "";
             }
@@ -890,28 +891,15 @@ module eui.sys {
             if (DEBUG && !type) {
                 egret.$error(2005, this.currentClassName, key, toXMLString(node));
             }
-            if (value.charAt(0) == "{" && value.charAt(value.length - 1) == "}") {
-                value = value.substr(1, value.length - 2).trim();
-                if (value.indexOf("this.") == 0) {
-                    value = value.substring(5);
-                }
+            var bindingValue = this.formatBinding(key, value, node);
+            if (bindingValue) {
                 this.checkIdForState(node);
-                var firstKey = value.split(".")[0];
-                if (firstKey != HOST_COMPONENT && this.skinParts.indexOf(firstKey) == -1) {
-                    value = HOST_COMPONENT + "." + value;
+                var target = "this";
+                if (node !== this.currentXML) {
+                    target += "." + node.attributes["id"];
                 }
-                if (!haveState) {
-                    if (node != this.currentXML) {
-                        this.bindings.push(new EXBinding("this." + node.attributes["id"], key, value));
-                    } else {
-                        this.bindings.push(new EXBinding("this", key, value));
-                    }
-                    value = "";
-                } else {
-                    if (stateCallBack) {
-                        stateCallBack(true);
-                    }
-                }
+                this.bindings.push(new EXBinding(target, key, bindingValue.templates, bindingValue.chainIndex));
+                value = "";
             }
             else if (type == RECTANGLE) {
                 if (DEBUG) {
@@ -978,6 +966,48 @@ module eui.sys {
             value = "\"" + value + "\"";
             return value;
         }
+
+        private formatBinding(key:string, value:string, node:egret.XML):{templates:string[],chainIndex:number[]} {
+            if (!value) {
+                return null;
+            }
+            value = value.trim();
+            if (value.charAt(0) != "{" || value.charAt(value.length - 1) != "}") {
+                return null;
+
+            }
+            value = value.substring(1, value.length - 1).trim();
+            var templates = value.split("+");
+            var chainIndex:number[] = [];
+            var length = templates.length;
+            for (var i = 0; i < length; i++) {
+                var item = templates[i].trim();
+                if (!item) {
+                    templates.splice(i, 1);
+                    i--;
+                    length--;
+                    continue;
+                }
+                var first = item.charAt(0);
+                if (first == "'" || first == "\"" || first >= "0" && first <= "9") {
+                    continue;
+                }
+                if (item.indexOf(".") == -1 && jsKeyWords.indexOf(item) != -1) {
+                    continue;
+                }
+                if (item.indexOf("this.") == 0) {
+                    item = item.substring(5);
+                }
+                var firstKey = item.split(".")[0];
+                if (firstKey != HOST_COMPONENT && this.skinParts.indexOf(firstKey) == -1) {
+                    item = HOST_COMPONENT + "." + item;
+                }
+                templates[i] = "\"" + item + "\"";
+                chainIndex.push(i);
+            }
+            return {templates: templates, chainIndex: chainIndex};
+        }
+
 
         /**
          * @private
@@ -1352,23 +1382,24 @@ module eui.sys {
                         if (index != -1) {
                             var key = name.substring(0, index);
                             key = this.formatKey(key, value);
-                            var isBinding:boolean = false;
-                            var value = this.formatValue(key, value, node, true, function (vl) {
-                                isBinding = vl;
-                            });
-                            if (!value) {
-                                continue;
+                            var bindingValue = this.formatBinding(key, value, node);
+                            if (!bindingValue) {
+                                var value = this.formatValue(key, value, node);
+                                if (!value) {
+                                    continue;
+                                }
                             }
+
                             stateName = name.substr(index + 1);
                             states = this.getStateByName(stateName, node);
                             var l = states.length;
                             if (l > 0) {
                                 for (var j = 0; j < l; j++) {
                                     state = states[j];
-                                    if (!isBinding) {
-                                        state.addOverride(new EXSetProperty(id, key, value));
+                                    if (bindingValue) {
+                                        state.addOverride(new EXSetStateProperty(id, key, bindingValue.templates, bindingValue.chainIndex));
                                     } else {
-                                        state.addOverride(new EXSetStateProperty(id, key, "\"" + value + "\""));
+                                        state.addOverride(new EXSetProperty(id, key, value));
                                     }
                                 }
                             }
