@@ -17038,25 +17038,49 @@ var egret;
             var pLineStart = y * lineSize;
             var rs = 0, gs = 0, bs = 0, as = 0, alpha = 0, alpha2 = 0;
             // Fill window
-            for (var ptr = pLineStart, end = ptr + windowSize; ptr < end; ptr += 4) {
-                alpha = buffer[ptr + 3];
-                rs += buffer[ptr + 0] * alpha;
-                gs += buffer[ptr + 1] * alpha;
-                bs += buffer[ptr + 2] * alpha;
+            for (var ptr = -blurX * 4, end = blurX * 4 + 4; ptr < end; ptr += 4) {
+                var key = pLineStart + ptr;
+                if (key < pLineStart || key >= pLineStart + lineSize) {
+                    continue;
+                }
+                alpha = buffer[key + 3];
+                rs += buffer[key + 0] * alpha;
+                gs += buffer[key + 1] * alpha;
+                bs += buffer[key + 2] * alpha;
                 as += alpha;
             }
             // Slide window
-            for (var ptr = pLineStart + blurX * 4, end = ptr + (w - blurX * 2) * 4, linePtr = blurX * 4, lastPtr = pLineStart, nextPtr = ptr + (blurX + 1) * 4; ptr < end; ptr += 4, linePtr += 4, nextPtr += 4, lastPtr += 4) {
-                lineBuffer[linePtr + 0] = rs / windowLength;
-                lineBuffer[linePtr + 1] = gs / windowLength;
-                lineBuffer[linePtr + 2] = bs / windowLength;
+            for (var ptr = pLineStart, end = pLineStart + lineSize, linePtr = 0, lastPtr = ptr - blurX * 4, nextPtr = ptr + (blurX + 1) * 4; ptr < end; ptr += 4, linePtr += 4, nextPtr += 4, lastPtr += 4) {
+                lineBuffer[linePtr + 0] = rs / as;
+                lineBuffer[linePtr + 1] = gs / as;
+                lineBuffer[linePtr + 2] = bs / as;
                 lineBuffer[linePtr + 3] = as / windowLength;
                 alpha = buffer[nextPtr + 3];
                 alpha2 = buffer[lastPtr + 3];
-                rs += buffer[nextPtr + 0] * alpha - buffer[lastPtr + 0] * alpha2;
-                gs += buffer[nextPtr + 1] * alpha - buffer[lastPtr + 1] * alpha2;
-                bs += buffer[nextPtr + 2] * alpha - buffer[lastPtr + 2] * alpha2;
-                as += alpha - alpha2;
+                if (alpha || alpha == 0) {
+                    if (alpha2 || alpha2 == 0) {
+                        rs += buffer[nextPtr + 0] * alpha - buffer[lastPtr + 0] * alpha2;
+                        gs += buffer[nextPtr + 1] * alpha - buffer[lastPtr + 1] * alpha2;
+                        bs += buffer[nextPtr + 2] * alpha - buffer[lastPtr + 2] * alpha2;
+                        as += alpha - alpha2;
+                    }
+                    else {
+                        rs += buffer[nextPtr + 0] * alpha;
+                        gs += buffer[nextPtr + 1] * alpha;
+                        bs += buffer[nextPtr + 2] * alpha;
+                        as += alpha;
+                    }
+                }
+                else {
+                    if (alpha2 || alpha2 == 0) {
+                        rs += -buffer[lastPtr + 0] * alpha2;
+                        gs += -buffer[lastPtr + 1] * alpha2;
+                        bs += -buffer[lastPtr + 2] * alpha2;
+                        as += -alpha2;
+                    }
+                    else {
+                    }
+                }
             }
             // Copy line
             buffer.set(lineBuffer, pLineStart);
@@ -17073,31 +17097,56 @@ var egret;
             var pColumnStart = x * 4;
             var rs = 0, gs = 0, bs = 0, as = 0, alpha = 0, alpha2 = 0;
             // Fill window
-            for (var ptr = pColumnStart, end = ptr + windowLength * stride; ptr < end; ptr += stride) {
-                alpha = buffer[ptr + 3];
-                rs += buffer[ptr + 0] * alpha;
-                gs += buffer[ptr + 1] * alpha;
-                bs += buffer[ptr + 2] * alpha;
+            for (var ptr = -blurY * stride, end = blurY * stride + stride; ptr < end; ptr += stride) {
+                var key = pColumnStart + ptr;
+                if (key < pColumnStart || key >= pColumnStart + h * stride) {
+                    continue;
+                }
+                alpha = buffer[key + 3];
+                rs += buffer[key + 0] * alpha;
+                gs += buffer[key + 1] * alpha;
+                bs += buffer[key + 2] * alpha;
                 as += alpha;
             }
             // Slide window
-            for (var ptr = pColumnStart + blurY * stride, end = ptr + (h - blurY) * stride, columnPtr = blurY * 4, lastPtr = pColumnStart, nextPtr = ptr + ((blurY + 1) * stride); ptr < end; ptr += stride, columnPtr += 4, nextPtr += stride, lastPtr += stride) {
-                columnBuffer[columnPtr + 0] = rs / windowLength;
-                columnBuffer[columnPtr + 1] = gs / windowLength;
-                columnBuffer[columnPtr + 2] = bs / windowLength;
+            for (var ptr = pColumnStart, end = pColumnStart + h * stride, columnPtr = 0, lastPtr = pColumnStart - blurY * stride, nextPtr = pColumnStart + ((blurY + 1) * stride); ptr < end; ptr += stride, columnPtr += 4, nextPtr += stride, lastPtr += stride) {
+                columnBuffer[columnPtr + 0] = rs / as;
+                columnBuffer[columnPtr + 1] = gs / as;
+                columnBuffer[columnPtr + 2] = bs / as;
                 columnBuffer[columnPtr + 3] = as / windowLength;
                 alpha = buffer[nextPtr + 3];
                 alpha2 = buffer[lastPtr + 3];
-                rs += buffer[nextPtr + 0] * alpha - buffer[lastPtr + 0] * alpha2;
-                gs += buffer[nextPtr + 1] * alpha - buffer[lastPtr + 1] * alpha2;
-                bs += buffer[nextPtr + 2] * alpha - buffer[lastPtr + 2] * alpha2;
-                as += alpha - alpha2;
+                if (alpha || alpha == 0) {
+                    if (alpha2 || alpha2 == 0) {
+                        rs += buffer[nextPtr + 0] * alpha - buffer[lastPtr + 0] * alpha2;
+                        gs += buffer[nextPtr + 1] * alpha - buffer[lastPtr + 1] * alpha2;
+                        bs += buffer[nextPtr + 2] * alpha - buffer[lastPtr + 2] * alpha2;
+                        as += alpha - alpha2;
+                    }
+                    else {
+                        rs += buffer[nextPtr + 0] * alpha;
+                        gs += buffer[nextPtr + 1] * alpha;
+                        bs += buffer[nextPtr + 2] * alpha;
+                        as += alpha;
+                    }
+                }
+                else {
+                    if (alpha2 || alpha2 == 0) {
+                        rs += -buffer[lastPtr + 0] * alpha2;
+                        gs += -buffer[lastPtr + 1] * alpha2;
+                        bs += -buffer[lastPtr + 2] * alpha2;
+                        as += -alpha2;
+                    }
+                    else {
+                    }
+                }
             }
-            var wordBuffer = new Uint32Array(buffer.buffer);
-            var wordColumn = new Uint32Array(columnBuffer.buffer);
             // Copy column
-            for (var i = x, end = i + h * w, j = 0; i < end; i += w, j++) {
-                wordBuffer[i] = wordColumn[j];
+            for (var i = x * 4, end = i + h * stride, j = 0; i < end; i += stride, j += 4) {
+                buffer[i + 0] = columnBuffer[j + 0];
+                buffer[i + 1] = columnBuffer[j + 1];
+                buffer[i + 2] = columnBuffer[j + 2];
+                buffer[i + 3] = columnBuffer[j + 3];
             }
         }
     }
