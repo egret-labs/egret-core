@@ -117,8 +117,6 @@ module egret {
          */
         webGLTexture: any;
 
-        isDispose:boolean = false;
-
         constructor(source) {
             super();
             this.source = source;
@@ -127,7 +125,6 @@ module egret {
         }
 
         public $dispose(): void {
-            this.isDispose = true;
             if (Capabilities.runtimeType == RuntimeType.WEB && Capabilities.renderMode == "webgl" && this.webGLTexture) {
                 egret.WebGLUtils.deleteWebGLTexture(this.webGLTexture);
                 this.webGLTexture = null;

@@ -6524,14 +6524,6 @@ var egret;
                 this.drawCmdManager = new web.WebGLDrawCmdManager();
                 this.vao = new web.WebGLVertexArrayObject();
                 this.setGlobalCompositeOperation("source-over");
-                // var o = Texture.prototype._setBitmapData;
-                // var self = this;
-                // Texture.prototype._setBitmapData = function (value) {
-                //     var texture = self.createTexture(value);
-                //     (<any>texture).width = value.width;
-                //     (<any>texture).height = value.height;
-                //     o.call(this, texture);
-                // }
             }
             var d = __define,c=WebGLRenderContext,p=c.prototype;
             WebGLRenderContext.getInstance = function (width, height) {

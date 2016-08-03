@@ -116,9 +116,5 @@ module egret.sys {
         public $getRenderCount():number {
             return this.renderCount;
         }
-
-        public clean():void {
-            
-        }
     }
 }

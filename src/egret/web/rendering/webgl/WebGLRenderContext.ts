@@ -193,15 +193,6 @@ module egret.web {
             this.vao = new WebGLVertexArrayObject();
 
             this.setGlobalCompositeOperation("source-over");
-
-            // var o = Texture.prototype._setBitmapData;
-            // var self = this;
-            // Texture.prototype._setBitmapData = function (value) {
-            //     var texture = self.createTexture(value);
-            //     (<any>texture).width = value.width;
-            //     (<any>texture).height = value.height;
-            //     o.call(this, texture);
-            // }
         }
 
         /**

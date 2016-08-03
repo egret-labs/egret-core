@@ -112,8 +112,10 @@ module egret.sys {
         public $textureWidth;
         public $textureHeight;
 
+        /**
+         * 清除非绘制的缓存数据
+         */
         public clean():void {
-            super.clean();
             if(this.$texture) {
                 WebGLUtils.deleteWebGLTexture(this.$texture);
                 this.$texture = null;

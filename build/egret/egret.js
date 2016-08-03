@@ -3655,12 +3655,7 @@ var egret;
          */
         p.setImageData = function (image, bitmapX, bitmapY, bitmapWidth, bitmapHeight, offsetX, offsetY, textureWidth, textureHeight, sourceWidth, sourceHeight) {
             var values = this.$Bitmap;
-            if (image && image.isDispose) {
-                values[1 /* image */] = null;
-            }
-            else {
-                values[1 /* image */] = image;
-            }
+            values[1 /* image */] = image;
             values[2 /* bitmapX */] = bitmapX;
             values[3 /* bitmapY */] = bitmapY;
             values[4 /* bitmapWidth */] = bitmapWidth;
@@ -3998,14 +3993,12 @@ var egret;
         __extends(BitmapData, _super);
         function BitmapData(source) {
             _super.call(this);
-            this.isDispose = false;
             this.source = source;
             this.width = source.width;
             this.height = source.height;
         }
         var d = __define,c=BitmapData,p=c.prototype;
         p.$dispose = function () {
-            this.isDispose = true;
             if (egret.Capabilities.runtimeType == egret.RuntimeType.WEB && egret.Capabilities.renderMode == "webgl" && this.webGLTexture) {
                 egret.WebGLUtils.deleteWebGLTexture(this.webGLTexture);
                 this.webGLTexture = null;
@@ -15112,8 +15105,6 @@ var egret;
             p.$getRenderCount = function () {
                 return this.renderCount;
             };
-            p.clean = function () {
-            };
             return RenderNode;
         }());
         sys.RenderNode = RenderNode;
@@ -15486,8 +15477,10 @@ var egret;
              */
             p.cleanBeforeRender = function () {
             };
+            /**
+             * 清除非绘制的缓存数据
+             */
             p.clean = function () {
-                _super.prototype.clean.call(this);
                 if (this.$texture) {
                     egret.WebGLUtils.deleteWebGLTexture(this.$texture);
                     this.$texture = null;
@@ -15826,8 +15819,10 @@ var egret;
             p.cleanBeforeRender = function () {
                 _super.prototype.cleanBeforeRender.call(this);
             };
+            /**
+             * 清除非绘制的缓存数据
+             */
             p.clean = function () {
-                _super.prototype.clean.call(this);
                 if (this.$texture) {
                     egret.WebGLUtils.deleteWebGLTexture(this.$texture);
                     this.$texture = null;
@@ -16755,6 +16750,9 @@ var egret;
          */
         p.renderBitmap = function (node, context) {
             var image = node.image;
+            if (!image.source) {
+                return;
+            }
             if (context.$imageSmoothingEnabled != node.smoothing) {
                 context.imageSmoothingEnabled = node.smoothing;
                 context.$imageSmoothingEnabled = node.smoothing;

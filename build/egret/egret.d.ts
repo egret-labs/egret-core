@@ -2343,7 +2343,6 @@ declare module egret {
          * @platform Web,Native
          */
         webGLTexture: any;
-        isDispose: boolean;
         constructor(source: any);
         $dispose(): void;
     }
@@ -10198,7 +10197,6 @@ declare module egret.sys {
          */
         cleanBeforeRender(): void;
         $getRenderCount(): number;
-        clean(): void;
     }
 }
 declare module egret.sys {
@@ -10319,6 +10317,9 @@ declare module egret.sys {
         $texture: any;
         $textureWidth: any;
         $textureHeight: any;
+        /**
+         * 清除非绘制的缓存数据
+         */
         clean(): void;
     }
 }
@@ -10506,6 +10507,9 @@ declare module egret.sys {
         $texture: any;
         $textureWidth: any;
         $textureHeight: any;
+        /**
+         * 清除非绘制的缓存数据
+         */
         clean(): void;
     }
 }
