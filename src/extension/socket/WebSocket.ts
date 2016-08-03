@@ -191,6 +191,7 @@ module egret {
          * 
          */
         private onClose():void {
+            this.connectCount--;
             this._connected = false;
             this.dispatchEventWith(egret.Event.CLOSE);
         }
