@@ -8,7 +8,7 @@ class InternalCompile implements egret.Command {
     execute(): number {
 
         var options = egret.args;
-        options.releaseDir = path.join(egret.args.projectDir, options.fileName)
+        options.releaseDir = path.resolve(egret.args.projectDir, options.fileName)
         options.minify = true;
         options.publish = true;
         var compileProject = new CompileProject();
