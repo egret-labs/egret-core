@@ -230,7 +230,7 @@ module egret.web {
                 bitmapData.setAttribute("bitmapSrc", virtualUrl);
 
                 var texture:Texture = new Texture();
-                texture._setBitmapData(bitmapData);
+                texture._setBitmapData(new egret.BitmapData(bitmapData));
 
                 loader.data = texture;
 

@@ -1160,7 +1160,7 @@ declare module egret {
          * @private
          * 设置矩阵
          */
-        $setMatrix(matrix: Matrix, useProperties?: boolean): boolean;
+        $setMatrix(matrix: Matrix, needUpdateProperties?: boolean): boolean;
         /**
          * @private
          * 获得这个显示对象以及它所有父级对象的连接矩阵。
@@ -2269,6 +2269,7 @@ declare module egret {
      * @see egret.Bitmap
      * @version Egret 2.4
      * @platform Web,Native
+     * @private
      */
     /**
      * @language zh_CN
@@ -2279,8 +2280,9 @@ declare module egret {
      * @see egret.Bitmap
      * @version Egret 2.4
      * @platform Web,Native
+     * @private
      */
-    interface BitmapData extends HashObject {
+    class BitmapData extends HashObject {
         /**
          * @language en_US
          * The width of the bitmap image in pixels.
@@ -2311,6 +2313,39 @@ declare module egret {
          * @platform Web,Native
          */
         height: number;
+        /**
+         * @language en_US
+         * Original bitmap image.
+         * @readOnly
+         * @version Egret 2.4
+         * @platform Web,Native
+         */
+        /**
+         * @language zh_CN
+         * 原始位图图像。
+         * @readOnly
+         * @version Egret 2.4
+         * @platform Web,Native
+         */
+        source: any;
+        /**
+         * @language en_US
+         * WebGL texture.
+         * @readOnly
+         * @version Egret 2.4
+         * @platform Web,Native
+         */
+        /**
+         * @language zh_CN
+         * WebGL纹理。
+         * @readOnly
+         * @version Egret 2.4
+         * @platform Web,Native
+         */
+        webGLTexture: any;
+        isDispose: boolean;
+        constructor(source: any);
+        $dispose(): void;
     }
 }
 declare module egret {
@@ -3434,6 +3469,10 @@ declare module egret {
          *
          */
         $hitTest(stageX: number, stageY: number): DisplayObject;
+        /**
+         * @private
+         */
+        $onRemoveFromStage(): void;
     }
 }
 declare module egret {
@@ -3653,7 +3692,7 @@ declare module egret {
         /**
          * @private
          */
-        _bitmapData: any;
+        _bitmapData: BitmapData;
         /**
          * @language en_US
          * The BitmapData object being referenced.
@@ -3672,7 +3711,7 @@ declare module egret {
          *
          * @param value
          */
-        _setBitmapData(value: any): void;
+        _setBitmapData(value: BitmapData): void;
         /**
          * @private
          * 设置Texture数据
@@ -3863,6 +3902,10 @@ declare module egret {
          */
         $measureContentBounds(bounds: Rectangle): void;
         $hitTest(stageX: number, stageY: number): DisplayObject;
+        /**
+         * @private
+         */
+        $onRemoveFromStage(): void;
     }
 }
 declare module egret {
@@ -3916,6 +3959,10 @@ declare module egret {
          * @private
          */
         $measureContentBounds(bounds: Rectangle): void;
+        /**
+         * @private
+         */
+        $onRemoveFromStage(): void;
     }
 }
 declare module egret {
@@ -9205,6 +9252,7 @@ declare module egret.sys {
          * 绘制根节点显示对象到目标画布，返回draw的次数。
          */
         drawToSurface(): number;
+        private bitmapData;
         /**
          * @private
          */
@@ -10150,6 +10198,7 @@ declare module egret.sys {
          */
         cleanBeforeRender(): void;
         $getRenderCount(): number;
+        clean(): void;
     }
 }
 declare module egret.sys {
@@ -10270,6 +10319,7 @@ declare module egret.sys {
         $texture: any;
         $textureWidth: any;
         $textureHeight: any;
+        clean(): void;
     }
 }
 declare module egret.sys {
@@ -10456,6 +10506,7 @@ declare module egret.sys {
         $texture: any;
         $textureWidth: any;
         $textureHeight: any;
+        clean(): void;
     }
 }
 declare module egret.sys {

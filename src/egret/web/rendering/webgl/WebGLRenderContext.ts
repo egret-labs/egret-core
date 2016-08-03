@@ -193,6 +193,15 @@ module egret.web {
             this.vao = new WebGLVertexArrayObject();
 
             this.setGlobalCompositeOperation("source-over");
+
+            // var o = Texture.prototype._setBitmapData;
+            // var self = this;
+            // Texture.prototype._setBitmapData = function (value) {
+            //     var texture = self.createTexture(value);
+            //     (<any>texture).width = value.width;
+            //     (<any>texture).height = value.height;
+            //     o.call(this, texture);
+            // }
         }
 
         /**
@@ -385,15 +394,14 @@ module egret.web {
          * 如果有缓存的texture返回缓存的texture，如果没有则创建并缓存texture
          */
         public getWebGLTexture(bitmapData:BitmapData):WebGLTexture {
-            var _bitmapData:any = bitmapData;
-            if (!_bitmapData.webGLTexture) {
-                _bitmapData.webGLTexture = {};
+            if (!bitmapData.webGLTexture) {
+                bitmapData.webGLTexture = this.createTexture(bitmapData.source);
+                //todo
+                if(bitmapData.webGLTexture) {
+                    bitmapData.source = null;
+                }
             }
-            if (!_bitmapData.webGLTexture[this.glID]) {
-                var texture = this.createTexture(_bitmapData);
-                _bitmapData.webGLTexture[this.glID] = texture;
-            }
-            return _bitmapData.webGLTexture[this.glID];
+            return bitmapData.webGLTexture;
         }
 
         /**
@@ -429,11 +437,13 @@ module egret.web {
             }
 
             var texture:WebGLTexture;
-            if(image["texture"]) {
+            if(image.source && image.source["texture"]) {
                 // 如果是render target
-                texture = image["texture"];
+                texture = image.source["texture"];
                 buffer.saveTransform();
                 buffer.transform(1, 0, 0, -1, 0, destHeight + destY * 2);// 翻转
+            } else if(!image.source && !image.webGLTexture) {
+                return;
             } else {
                 texture = this.getWebGLTexture(image);
             }
@@ -447,7 +457,7 @@ module egret.web {
                 destX, destY, destWidth, destHeight,
                 imageSourceWidth, imageSourceHeight);
 
-            if(image["texture"]) {
+            if(image.source && image.source["texture"]) {
                 buffer.restoreTransform();
             }
         }
@@ -464,6 +474,10 @@ module egret.web {
             if (this.contextLost || !image) {
                 return;
             }
+
+            if(!image.source && !image.webGLTexture) {
+                return;
+            } 
 
             var texture = this.getWebGLTexture(image);
             if (!texture) {

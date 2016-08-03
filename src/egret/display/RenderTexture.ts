@@ -50,7 +50,7 @@ module egret {
         constructor() {
             super();
             this.renderBuffer = new sys.RenderBuffer();
-            this._setBitmapData(this.renderBuffer.surface)
+            this._setBitmapData(new egret.BitmapData(this.renderBuffer.surface));
         }
 
         private renderBuffer:sys.RenderBuffer;
@@ -95,6 +95,8 @@ module egret {
                 return false;
             }
             renderBuffer.resize(width, height);
+            this._bitmapData.width = width;
+            this._bitmapData.height = height;
 
             var matrix = Matrix.create();
             matrix.identity();

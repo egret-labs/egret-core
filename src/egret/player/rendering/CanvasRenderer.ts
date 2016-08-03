@@ -530,7 +530,7 @@ module egret {
             var drawCalls:number = 0;
             while (pos < length) {
                 drawCalls++;
-                context.drawImage(<HTMLImageElement><any>image, data[pos++], data[pos++], data[pos++], data[pos++], data[pos++], data[pos++], data[pos++], data[pos++]);
+                context.drawImage(image.source, data[pos++], data[pos++], data[pos++], data[pos++], data[pos++], data[pos++], data[pos++], data[pos++]);
             }
             if (saved) {
                 if((<any>context).restoreTransform) {//for native

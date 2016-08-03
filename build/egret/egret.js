@@ -1701,8 +1701,8 @@ var egret;
          * @private
          * 设置矩阵
          */
-        p.$setMatrix = function (matrix, useProperties) {
-            if (useProperties === void 0) { useProperties = true; }
+        p.$setMatrix = function (matrix, needUpdateProperties) {
+            if (needUpdateProperties === void 0) { needUpdateProperties = true; }
             var self = this;
             var values = self.$DisplayObject;
             var m = values[6 /* matrix */];
@@ -1710,7 +1710,7 @@ var egret;
                 return false;
             }
             m.copyFrom(matrix);
-            if (useProperties) {
+            if (needUpdateProperties) {
                 values[0 /* scaleX */] = m.$getScaleX();
                 values[1 /* scaleY */] = m.$getScaleY();
                 values[2 /* skewX */] = matrix.$getSkewX();
@@ -3655,7 +3655,12 @@ var egret;
          */
         p.setImageData = function (image, bitmapX, bitmapY, bitmapWidth, bitmapHeight, offsetX, offsetY, textureWidth, textureHeight, sourceWidth, sourceHeight) {
             var values = this.$Bitmap;
-            values[1 /* image */] = image;
+            if (image && image.isDispose) {
+                values[1 /* image */] = null;
+            }
+            else {
+                values[1 /* image */] = image;
+            }
             values[2 /* bitmapX */] = bitmapX;
             values[3 /* bitmapY */] = bitmapY;
             values[4 /* bitmapWidth */] = bitmapWidth;
@@ -3963,6 +3968,59 @@ var egret;
 //  EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 //
 //////////////////////////////////////////////////////////////////////////////////////
+var egret;
+(function (egret) {
+    /**
+     * @language en_US
+     * A BitmapData object contains an array of pixel data. This data can represent either a fully opaque bitmap or a
+     * transparent bitmap that contains alpha channel data. Either type of BitmapData object is stored as a buffer of 32-bit
+     * integers. Each 32-bit integer determines the properties of a single pixel in the bitmap.<br/>
+     * Each 32-bit integer is a combination of four 8-bit channel values (from 0 to 255) that describe the alpha transparency
+     * and the red, green, and blue (ARGB) values of the pixel. (For ARGB values, the most significant byte represents the
+     * alpha channel value, followed by red, green, and blue.)
+     * @see egret.Bitmap
+     * @version Egret 2.4
+     * @platform Web,Native
+     * @private
+     */
+    /**
+     * @language zh_CN
+     * BitmapData 对象是一个包含像素数据的数组。此数据可以表示完全不透明的位图，或表示包含 Alpha 通道数据的透明位图。
+     * 以上任一类型的 BitmapData 对象都作为 32 位整数的缓冲区进行存储。每个 32 位整数确定位图中单个像素的属性。<br/>
+     * 每个 32 位整数都是四个 8 位通道值（从 0 到 255）的组合，这些值描述像素的 Alpha 透明度以及红色、绿色、蓝色 (ARGB) 值。
+     * （对于 ARGB 值，最高有效字节代表 Alpha 通道值，其后的有效字节分别代表红色、绿色和蓝色通道值。）
+     * @see egret.Bitmap
+     * @version Egret 2.4
+     * @platform Web,Native
+     * @private
+     */
+    var BitmapData = (function (_super) {
+        __extends(BitmapData, _super);
+        function BitmapData(source) {
+            _super.call(this);
+            this.isDispose = false;
+            this.source = source;
+            this.width = source.width;
+            this.height = source.height;
+        }
+        var d = __define,c=BitmapData,p=c.prototype;
+        p.$dispose = function () {
+            this.isDispose = true;
+            if (egret.Capabilities.runtimeType == egret.RuntimeType.WEB && egret.Capabilities.renderMode == "webgl" && this.webGLTexture) {
+                egret.WebGLUtils.deleteWebGLTexture(this.webGLTexture);
+                this.webGLTexture = null;
+            }
+            //native
+            if (this.source && this.source.dispose) {
+                this.source.dispose();
+            }
+            this.source = null;
+        };
+        return BitmapData;
+    }(egret.HashObject));
+    egret.BitmapData = BitmapData;
+    egret.registerClass(BitmapData,'egret.BitmapData');
+})(egret || (egret = {}));
 //////////////////////////////////////////////////////////////////////////////////////
 //
 //  Copyright (c) 2014-present, Egret Technology.
@@ -6024,6 +6082,14 @@ var egret;
             }
             return target;
         };
+        /**
+         * @private
+         */
+        p.$onRemoveFromStage = function () {
+            if (this.$renderNode) {
+                this.$renderNode.clean();
+            }
+        };
         return Graphics;
     }(egret.HashObject));
     egret.Graphics = Graphics;
@@ -6594,15 +6660,9 @@ var egret;
          */
         p.dispose = function () {
             if (this._bitmapData) {
-                if (egret.Capabilities.runtimeType == egret.RuntimeType.WEB && egret.Capabilities.renderMode == "webgl") {
-                    egret.WebGLUtils.deleteWebGLTexture(this._bitmapData);
-                }
-                if (this._bitmapData.dispose) {
-                    this._bitmapData.dispose();
-                }
-                Texture.$dispose(this);
-                //console.log("dispose Texture");
+                this._bitmapData.$dispose();
                 this._bitmapData = null;
+                Texture.$dispose(this);
             }
         };
         Texture.$addDisplayObject = function (displayObject, bitmapData) {
@@ -6751,7 +6811,7 @@ var egret;
         function RenderTexture() {
             _super.call(this);
             this.renderBuffer = new egret.sys.RenderBuffer();
-            this._setBitmapData(this.renderBuffer.surface);
+            this._setBitmapData(new egret.BitmapData(this.renderBuffer.surface));
         }
         var d = __define,c=RenderTexture,p=c.prototype;
         /**
@@ -6793,6 +6853,8 @@ var egret;
                 return false;
             }
             renderBuffer.resize(width, height);
+            this._bitmapData.width = width;
+            this._bitmapData.height = height;
             var matrix = egret.Matrix.create();
             matrix.identity();
             //应用裁切
@@ -6923,6 +6985,15 @@ var egret;
                 target = this.$graphics.$hitTest(stageX, stageY);
             }
             return target;
+        };
+        /**
+         * @private
+         */
+        p.$onRemoveFromStage = function () {
+            _super.prototype.$onRemoveFromStage.call(this);
+            if (this.$graphics) {
+                this.$graphics.$onRemoveFromStage();
+            }
         };
         return Shape;
     }(egret.DisplayObject));
@@ -7065,6 +7136,15 @@ var egret;
          */
         p.$measureContentBounds = function (bounds) {
             this.$graphics.$measureContentBounds(bounds);
+        };
+        /**
+         * @private
+         */
+        p.$onRemoveFromStage = function () {
+            _super.prototype.$onRemoveFromStage.call(this);
+            if (this.$graphics) {
+                this.$graphics.$onRemoveFromStage();
+            }
         };
         return Sprite;
     }(egret.DisplayObjectContainer));
@@ -13244,15 +13324,25 @@ var egret;
                     var dirtyList = this.$dirtyRegionPolicy == egret.DirtyRegionPolicy.OFF ? null : this.dirtyList;
                     var drawCalls = sys.systemRenderer.render(this.root, buffer, this.offsetMatrix, dirtyList);
                     buffer.endClip();
-                    var surface = buffer.surface;
-                    var renderNode = this.$renderNode;
-                    renderNode.drawData.length = 0;
-                    renderNode.image = surface;
-                    var width = surface.width;
-                    var height = surface.height;
-                    renderNode.imageWidth = width;
-                    renderNode.imageHeight = height;
-                    renderNode.drawImage(0, 0, width, height, -this.offsetX, -this.offsetY, width, height);
+                    if (!this.isStage) {
+                        var surface = buffer.surface;
+                        var renderNode = this.$renderNode;
+                        renderNode.drawData.length = 0;
+                        var width = surface.width;
+                        var height = surface.height;
+                        if (!this.bitmapData) {
+                            this.bitmapData = new egret.BitmapData(surface);
+                        }
+                        else {
+                            this.bitmapData.source = surface;
+                            this.bitmapData.width = width;
+                            this.bitmapData.height = height;
+                        }
+                        renderNode.image = this.bitmapData;
+                        renderNode.imageWidth = width;
+                        renderNode.imageHeight = height;
+                        renderNode.drawImage(0, 0, width, height, -this.offsetX, -this.offsetY, width, height);
+                    }
                 }
                 this.dirtyList = null;
                 this.dirtyRegion.clear();
@@ -15022,6 +15112,8 @@ var egret;
             p.$getRenderCount = function () {
                 return this.renderCount;
             };
+            p.clean = function () {
+            };
             return RenderNode;
         }());
         sys.RenderNode = RenderNode;
@@ -15394,6 +15486,14 @@ var egret;
              */
             p.cleanBeforeRender = function () {
             };
+            p.clean = function () {
+                _super.prototype.clean.call(this);
+                if (this.$texture) {
+                    egret.WebGLUtils.deleteWebGLTexture(this.$texture);
+                    this.$texture = null;
+                    this.dirtyRender = true;
+                }
+            };
             return GraphicsNode;
         }(sys.RenderNode));
         sys.GraphicsNode = GraphicsNode;
@@ -15725,6 +15825,14 @@ var egret;
              */
             p.cleanBeforeRender = function () {
                 _super.prototype.cleanBeforeRender.call(this);
+            };
+            p.clean = function () {
+                _super.prototype.clean.call(this);
+                if (this.$texture) {
+                    egret.WebGLUtils.deleteWebGLTexture(this.$texture);
+                    this.$texture = null;
+                    this.dirtyRender = true;
+                }
             };
             return TextNode;
         }(sys.RenderNode));
@@ -16673,7 +16781,7 @@ var egret;
             var drawCalls = 0;
             while (pos < length) {
                 drawCalls++;
-                context.drawImage(image, data[pos++], data[pos++], data[pos++], data[pos++], data[pos++], data[pos++], data[pos++], data[pos++]);
+                context.drawImage(image.source, data[pos++], data[pos++], data[pos++], data[pos++], data[pos++], data[pos++], data[pos++], data[pos++]);
             }
             if (saved) {
                 if (context.restoreTransform) {
@@ -20040,6 +20148,9 @@ var egret;
             this.removeEvent();
             if (this.$TextField[24 /* type */] == egret.TextFieldType.INPUT) {
                 this.inputUtils._removeStageText();
+            }
+            if (this.textNode) {
+                this.textNode.clean();
             }
         };
         /**
@@ -23751,15 +23862,10 @@ var egret;
         };
         WebGLUtils.deleteWebGLTexture = function (bitmapData) {
             if (bitmapData) {
-                var webGLTexture = bitmapData.webGLTexture;
-                if (webGLTexture) {
-                    for (var key in webGLTexture) {
-                        var glTexture = webGLTexture[key];
-                        var gl = glTexture.glContext;
-                        gl.deleteTexture(glTexture);
-                    }
+                var gl = bitmapData.glContext;
+                if (gl) {
+                    gl.deleteTexture(bitmapData);
                 }
-                bitmapData.webGLTexture = null;
             }
         };
         return WebGLUtils;

@@ -790,5 +790,14 @@ module egret {
             }
             return target;
         }
+
+        /**
+         * @private
+         */
+        public $onRemoveFromStage():void {
+            if(this.$renderNode) {
+                this.$renderNode.clean();
+            }
+        }
     }
 }

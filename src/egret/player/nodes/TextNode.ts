@@ -111,5 +111,14 @@ module egret.sys {
         public $texture;
         public $textureWidth;
         public $textureHeight;
+
+        public clean():void {
+            super.clean();
+            if(this.$texture) {
+                WebGLUtils.deleteWebGLTexture(this.$texture);
+                this.$texture = null;
+                this.dirtyRender = true;
+            }
+        }
     }
 }

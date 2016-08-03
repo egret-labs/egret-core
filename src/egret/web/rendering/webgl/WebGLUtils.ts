@@ -31,11 +31,11 @@ module egret {
      * @private
      */
     export class WebGLUtils {
-        public static compileProgram(gl:WebGLRenderingContext, vertexSrc:string, fragmentSrc:string):WebGLProgram {
-            var fragmentShader:WebGLShader = WebGLUtils.compileFragmentShader(gl, fragmentSrc);
-            var vertexShader:WebGLShader = WebGLUtils.compileVertexShader(gl, vertexSrc);
+        public static compileProgram(gl: WebGLRenderingContext, vertexSrc: string, fragmentSrc: string): WebGLProgram {
+            var fragmentShader: WebGLShader = WebGLUtils.compileFragmentShader(gl, fragmentSrc);
+            var vertexShader: WebGLShader = WebGLUtils.compileVertexShader(gl, vertexSrc);
 
-            var shaderProgram:WebGLProgram = gl.createProgram();
+            var shaderProgram: WebGLProgram = gl.createProgram();
             gl.attachShader(shaderProgram, vertexShader);
             gl.attachShader(shaderProgram, fragmentShader);
             gl.linkProgram(shaderProgram);
@@ -46,16 +46,16 @@ module egret {
             return shaderProgram;
         }
 
-        public static compileFragmentShader(gl:WebGLRenderingContext, shaderSrc:string):WebGLShader {
+        public static compileFragmentShader(gl: WebGLRenderingContext, shaderSrc: string): WebGLShader {
             return WebGLUtils._compileShader(gl, shaderSrc, gl.FRAGMENT_SHADER);
         }
 
-        public static compileVertexShader(gl:WebGLRenderingContext, shaderSrc:string):WebGLShader {
+        public static compileVertexShader(gl: WebGLRenderingContext, shaderSrc: string): WebGLShader {
             return WebGLUtils._compileShader(gl, shaderSrc, gl.VERTEX_SHADER);
         }
 
-        private static _compileShader(gl:WebGLRenderingContext, shaderSrc:string, shaderType:number):WebGLShader {
-            var shader:WebGLShader = gl.createShader(shaderType);
+        private static _compileShader(gl: WebGLRenderingContext, shaderSrc: string, shaderType: number): WebGLShader {
+            var shader: WebGLShader = gl.createShader(shaderType);
             gl.shaderSource(shader, shaderSrc);
             gl.compileShader(shader);
 
@@ -66,9 +66,9 @@ module egret {
             return shader;
         }
 
-        private static canUseWebGL:boolean;
+        private static canUseWebGL: boolean;
 
-        public static checkCanUseWebGL():boolean {
+        public static checkCanUseWebGL(): boolean {
             if (WebGLUtils.canUseWebGL == undefined) {
                 try {
                     var canvas = document.createElement("canvas");
@@ -82,17 +82,12 @@ module egret {
             return WebGLUtils.canUseWebGL;
         }
 
-        public static deleteWebGLTexture(bitmapData):void {
+        public static deleteWebGLTexture(bitmapData): void {
             if (bitmapData) {
-                var webGLTexture = bitmapData.webGLTexture;
-                if (webGLTexture) {
-                    for (var key in webGLTexture) {
-                        var glTexture = webGLTexture[key];
-                        var gl = glTexture.glContext;
-                        gl.deleteTexture(glTexture);
-                    }
+                var gl = bitmapData.glContext;
+                if (gl) {
+                    gl.deleteTexture(bitmapData);
                 }
-                bitmapData.webGLTexture = null;
             }
         }
     }

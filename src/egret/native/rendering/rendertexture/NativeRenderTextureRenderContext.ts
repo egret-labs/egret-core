@@ -732,8 +732,8 @@ module egret.native {
         public drawImage(image:BitmapData, offsetX:number, offsetY:number, width?:number, height?:number,
                          surfaceOffsetX?:number, surfaceOffsetY?:number, surfaceImageWidth?:number, surfaceImageHeight?:number):void {
             var bitmapData;
-            if ((<NativeRenderTexture>image).$nativeRenderTexture) {
-                bitmapData = (<NativeRenderTexture>image).$nativeRenderTexture;
+            if ((<NativeRenderTexture><any>image).$nativeRenderTexture) {
+                bitmapData = (<NativeRenderTexture><any>image).$nativeRenderTexture;
             }
             else {
                 bitmapData = image;

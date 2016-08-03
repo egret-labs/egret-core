@@ -103,6 +103,15 @@ module egret {
             return target;
         }
 
+        /**
+         * @private
+         */
+        public $onRemoveFromStage():void {
+            super.$onRemoveFromStage();
+            if(this.$graphics) {
+                this.$graphics.$onRemoveFromStage();
+            }
+        }
     }
 
     if (DEBUG) {

@@ -287,7 +287,12 @@ module egret {
         private setImageData(image: BitmapData, bitmapX: number, bitmapY: number, bitmapWidth: number, bitmapHeight: number,
             offsetX: number, offsetY: number, textureWidth: number, textureHeight: number, sourceWidth: number, sourceHeight: number): void {
             var values = this.$Bitmap;
-            values[sys.BitmapKeys.image] = image;
+            if(image && image.isDispose) {
+                values[sys.BitmapKeys.image] = null;
+            }
+            else {
+                values[sys.BitmapKeys.image] = image;
+            }
             values[sys.BitmapKeys.bitmapX] = bitmapX;
             values[sys.BitmapKeys.bitmapY] = bitmapY;
             values[sys.BitmapKeys.bitmapWidth] = bitmapWidth;

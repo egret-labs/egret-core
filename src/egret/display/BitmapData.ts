@@ -40,6 +40,7 @@ module egret {
      * @see egret.Bitmap
      * @version Egret 2.4
      * @platform Web,Native
+     * @private
      */
     /**
      * @language zh_CN
@@ -50,8 +51,9 @@ module egret {
      * @see egret.Bitmap
      * @version Egret 2.4
      * @platform Web,Native
+     * @private
      */
-    export interface BitmapData extends HashObject {
+    export class BitmapData extends HashObject {
         /**
          * @language en_US
          * The width of the bitmap image in pixels.
@@ -82,5 +84,59 @@ module egret {
          * @platform Web,Native
          */
         height: number;
+
+        /**
+         * @language en_US
+         * Original bitmap image.
+         * @readOnly
+         * @version Egret 2.4
+         * @platform Web,Native
+         */
+        /**
+         * @language zh_CN
+         * 原始位图图像。
+         * @readOnly
+         * @version Egret 2.4
+         * @platform Web,Native
+         */
+        source: any;
+
+        /**
+         * @language en_US
+         * WebGL texture.
+         * @readOnly
+         * @version Egret 2.4
+         * @platform Web,Native
+         */
+        /**
+         * @language zh_CN
+         * WebGL纹理。
+         * @readOnly
+         * @version Egret 2.4
+         * @platform Web,Native
+         */
+        webGLTexture: any;
+
+        isDispose:boolean = false;
+
+        constructor(source) {
+            super();
+            this.source = source;
+            this.width = source.width;
+            this.height = source.height;
+        }
+
+        public $dispose(): void {
+            this.isDispose = true;
+            if (Capabilities.runtimeType == RuntimeType.WEB && Capabilities.renderMode == "webgl" && this.webGLTexture) {
+                egret.WebGLUtils.deleteWebGLTexture(this.webGLTexture);
+                this.webGLTexture = null;
+            }
+            //native
+            if(this.source && this.source.dispose) {
+                this.source.dispose();
+            }
+            this.source = null;
+        }
     }
 }

@@ -281,15 +281,26 @@ module egret.sys {
                 var dirtyList = this.$dirtyRegionPolicy == egret.DirtyRegionPolicy.OFF ? null : this.dirtyList;
                 var drawCalls = systemRenderer.render(this.root, buffer, this.offsetMatrix, dirtyList);
                 buffer.endClip();
-                var surface = buffer.surface;
-                var renderNode = <BitmapNode>this.$renderNode;
-                renderNode.drawData.length = 0;
-                renderNode.image = <any>surface;
-                var width = surface.width;
-                var height = surface.height;
-                renderNode.imageWidth = width;
-                renderNode.imageHeight = height;
-                renderNode.drawImage(0, 0, width, height, -this.offsetX, -this.offsetY, width, height);
+
+                if (!this.isStage) {//对非舞台画布要保存渲染节点。
+                    var surface = buffer.surface;
+                    var renderNode = <BitmapNode>this.$renderNode;
+                    renderNode.drawData.length = 0;
+                    var width = surface.width;
+                    var height = surface.height;
+                    if(!this.bitmapData) {
+                        this.bitmapData = new egret.BitmapData(surface);
+                    }
+                    else {
+                        this.bitmapData.source = surface;
+                        this.bitmapData.width = width;
+                        this.bitmapData.height = height;
+                    }
+                    renderNode.image = this.bitmapData;
+                    renderNode.imageWidth = width;
+                    renderNode.imageHeight = height;
+                    renderNode.drawImage(0, 0, width, height, -this.offsetX, -this.offsetY, width, height);
+                }
             }
 
             this.dirtyList = null;
@@ -297,6 +308,8 @@ module egret.sys {
             this.isDirty = false;
             return drawCalls;
         }
+
+        private bitmapData;
 
 
         /**
