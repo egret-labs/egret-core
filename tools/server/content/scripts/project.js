@@ -72,7 +72,7 @@ var egret;
             };
             Project.prototype.cancel = function () {
                 $.get('', { cancel: true }, function () { });
-                egret.setTimeout(function () { return window.close(); }, 20);
+                window.setTimeout(function () { return window.close(); }, 20);
             };
             Project.prototype.close = function () {
                 window.close();

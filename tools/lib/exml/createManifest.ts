@@ -257,7 +257,7 @@ function sortFileList(list, srcPath) {
 
     var paths = [];
     //把所有引用关系都合并到pathInfoList里，并把类名替换为对应文件路径。
-    for (var path in pathInfoList) {
+    for (let path in pathInfoList) {
         paths.push(path);
         var list = pathInfoList[path];
         var classList = pathToClassNames[path];
