@@ -149,7 +149,7 @@ module eui {
          * @version eui 1.0
          * @platform Web,Native
          */
-        left:number;
+        left:number|string;
 
         /**
          * @language en_US
@@ -172,7 +172,7 @@ module eui {
          * @version eui 1.0
          * @platform Web,Native
          */
-        right:number;
+        right:number|string;
 
         /**
          * @language en_US
@@ -195,7 +195,7 @@ module eui {
          * @version eui 1.0
          * @platform Web,Native
          */
-        top:number;
+        top:number|string;
 
         /**
          * @language en_US
@@ -218,7 +218,7 @@ module eui {
          * @version eui 1.0
          * @platform Web,Native
          */
-        bottom:number;
+        bottom:number|string;
 
         /**
          * @language en_US
@@ -241,7 +241,7 @@ module eui {
          * @version eui 1.0
          * @platform Web,Native
          */
-        horizontalCenter:number;
+        horizontalCenter:number|string;
 
         /**
          * @language en_US
@@ -264,7 +264,7 @@ module eui {
          * @version eui 1.0
          * @platform Web,Native
          */
-        verticalCenter:number;
+        verticalCenter:number|string;
 
         /**
          * @language en_US
@@ -997,12 +997,18 @@ module eui.sys {
          * @private
          * 距父级容器离左边距离
          */
-        public get left():number {
+        public get left():number|string {
             return this.$UIComponent[UIKeys.left];
         }
 
-        public set left(value:number) {
-            value = +value;
+        public set left(value:number|string) {
+            if(!value||typeof value=="number"){
+                value = +value;
+            }
+            else{
+                value = value.toString().trim();
+            }
+
             var values = this.$UIComponent;
             if (values[UIKeys.left] === value)
                 return;
@@ -1014,12 +1020,17 @@ module eui.sys {
          * @private
          * 距父级容器右边距离
          */
-        public get right():number {
+        public get right():number|string {
             return this.$UIComponent[UIKeys.right];
         }
 
-        public set right(value:number) {
-            value = +value;
+        public set right(value:number|string) {
+            if(!value||typeof value=="number"){
+                value = +value;
+            }
+            else{
+                value = value.toString().trim();
+            }
             var values = this.$UIComponent;
             if (values[UIKeys.right] === value)
                 return;
@@ -1031,12 +1042,17 @@ module eui.sys {
          * @private
          * 距父级容器顶部距离
          */
-        public get top():number {
+        public get top():number|string {
             return this.$UIComponent[UIKeys.top];
         }
 
-        public set top(value:number) {
-            value = +value;
+        public set top(value:number|string) {
+            if(!value||typeof value=="number"){
+                value = +value;
+            }
+            else{
+                value = value.toString().trim();
+            }
             var values = this.$UIComponent;
             if (values[UIKeys.top] === value)
                 return;
@@ -1048,12 +1064,17 @@ module eui.sys {
          * @private
          * 距父级容器底部距离
          */
-        public get bottom():number {
+        public get bottom():number|string {
             return this.$UIComponent[UIKeys.bottom];
         }
 
-        public set bottom(value:number) {
-            value = +value;
+        public set bottom(value:number|string) {
+            if(!value||typeof value=="number"){
+                value = +value;
+            }
+            else{
+                value = value.toString().trim();
+            }
             var values = this.$UIComponent;
             if (values[UIKeys.bottom] == value)
                 return;
@@ -1066,12 +1087,17 @@ module eui.sys {
          * @private
          * 在父级容器中距水平中心位置的距离
          */
-        public get horizontalCenter():number {
+        public get horizontalCenter():number|string {
             return this.$UIComponent[UIKeys.horizontalCenter];
         }
 
-        public set horizontalCenter(value:number) {
-            value = +value;
+        public set horizontalCenter(value:number|string) {
+            if(!value||typeof value=="number"){
+                value = +value;
+            }
+            else{
+                value = value.toString().trim();
+            }
             var values = this.$UIComponent;
             if (values[UIKeys.horizontalCenter] === value)
                 return;
@@ -1083,12 +1109,17 @@ module eui.sys {
          * @private
          * 在父级容器中距竖直中心位置的距离
          */
-        public get verticalCenter():number {
+        public get verticalCenter():number|string {
             return this.$UIComponent[UIKeys.verticalCenter];
         }
 
-        public set verticalCenter(value:number) {
-            value = +value;
+        public set verticalCenter(value:number|string) {
+            if(!value||typeof value=="number"){
+                value = +value;
+            }
+            else{
+                value = value.toString().trim();
+            }
             var values = this.$UIComponent;
             if (values[UIKeys.verticalCenter] === value)
                 return;

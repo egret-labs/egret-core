@@ -1876,7 +1876,12 @@ var eui;
                     return this.$UIComponent[0 /* left */];
                 }
                 ,function (value) {
-                    value = +value;
+                    if (!value || typeof value == "number") {
+                        value = +value;
+                    }
+                    else {
+                        value = value.toString().trim();
+                    }
                     var values = this.$UIComponent;
                     if (values[0 /* left */] === value)
                         return;
@@ -1893,7 +1898,12 @@ var eui;
                     return this.$UIComponent[1 /* right */];
                 }
                 ,function (value) {
-                    value = +value;
+                    if (!value || typeof value == "number") {
+                        value = +value;
+                    }
+                    else {
+                        value = value.toString().trim();
+                    }
                     var values = this.$UIComponent;
                     if (values[1 /* right */] === value)
                         return;
@@ -1910,7 +1920,12 @@ var eui;
                     return this.$UIComponent[2 /* top */];
                 }
                 ,function (value) {
-                    value = +value;
+                    if (!value || typeof value == "number") {
+                        value = +value;
+                    }
+                    else {
+                        value = value.toString().trim();
+                    }
                     var values = this.$UIComponent;
                     if (values[2 /* top */] === value)
                         return;
@@ -1927,7 +1942,12 @@ var eui;
                     return this.$UIComponent[3 /* bottom */];
                 }
                 ,function (value) {
-                    value = +value;
+                    if (!value || typeof value == "number") {
+                        value = +value;
+                    }
+                    else {
+                        value = value.toString().trim();
+                    }
                     var values = this.$UIComponent;
                     if (values[3 /* bottom */] == value)
                         return;
@@ -1944,7 +1964,12 @@ var eui;
                     return this.$UIComponent[4 /* horizontalCenter */];
                 }
                 ,function (value) {
-                    value = +value;
+                    if (!value || typeof value == "number") {
+                        value = +value;
+                    }
+                    else {
+                        value = value.toString().trim();
+                    }
                     var values = this.$UIComponent;
                     if (values[4 /* horizontalCenter */] === value)
                         return;
@@ -1961,7 +1986,12 @@ var eui;
                     return this.$UIComponent[5 /* verticalCenter */];
                 }
                 ,function (value) {
-                    value = +value;
+                    if (!value || typeof value == "number") {
+                        value = +value;
+                    }
+                    else {
+                        value = value.toString().trim();
+                    }
                     var values = this.$UIComponent;
                     if (values[5 /* verticalCenter */] === value)
                         return;
@@ -20530,6 +20560,24 @@ var eui;
         var UIComponentClass = "eui.UIComponent";
         /**
          * @private
+         * @param value 要格式化的相对值
+         * @param total 在此值方向上的总长度
+         */
+        function formatRelative(value, total) {
+            if (!value || typeof value == "number") {
+                return value;
+            }
+            var str = value;
+            var index = str.indexOf("%");
+            if (index == -1) {
+                return +str;
+            }
+            var percent = +str.substring(0, index);
+            return percent * 0.01 * total;
+        }
+        sys.formatRelative = formatRelative;
+        /**
+         * @private
          * 一个工具方法，使用BasicLayout规则测量目标对象。
          */
         function measure(target) {
@@ -20546,12 +20594,12 @@ var eui;
                     continue;
                 }
                 var values = layoutElement.$UIComponent;
-                var hCenter = values[4 /* horizontalCenter */];
-                var vCenter = values[5 /* verticalCenter */];
-                var left = values[0 /* left */];
-                var right = values[1 /* right */];
-                var top = values[2 /* top */];
-                var bottom = values[3 /* bottom */];
+                var hCenter = +values[4 /* horizontalCenter */];
+                var vCenter = +values[5 /* verticalCenter */];
+                var left = +values[0 /* left */];
+                var right = +values[1 /* right */];
+                var top = +values[2 /* top */];
+                var bottom = +values[3 /* bottom */];
                 var extX;
                 var extY;
                 layoutElement.getPreferredBounds(bounds);
@@ -20606,12 +20654,12 @@ var eui;
                     continue;
                 }
                 var values = layoutElement.$UIComponent;
-                var hCenter = values[4 /* horizontalCenter */];
-                var vCenter = values[5 /* verticalCenter */];
-                var left = values[0 /* left */];
-                var right = values[1 /* right */];
-                var top = values[2 /* top */];
-                var bottom = values[3 /* bottom */];
+                var hCenter = formatRelative(values[4 /* horizontalCenter */], unscaledWidth);
+                var vCenter = formatRelative(values[5 /* verticalCenter */], unscaledHeight);
+                var left = formatRelative(values[0 /* left */], unscaledWidth);
+                var right = formatRelative(values[1 /* right */], unscaledWidth);
+                var top = formatRelative(values[2 /* top */], unscaledHeight);
+                var bottom = formatRelative(values[3 /* bottom */], unscaledHeight);
                 var percentWidth = values[6 /* percentWidth */];
                 var percentHeight = values[7 /* percentHeight */];
                 var childWidth = NaN;

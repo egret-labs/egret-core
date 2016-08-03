@@ -266,7 +266,7 @@ module eui {
          * @version eui 1.0
          * @platform Web,Native
          */
-        public left:number;
+        public left:number|string;
 
         /**
          * @copy eui.UIComponent#right
@@ -275,7 +275,7 @@ module eui {
          * @version eui 1.0
          * @platform Web,Native
          */
-        public right:number;
+        public right:number|string;
 
         /**
          * @copy eui.UIComponent#top
@@ -284,7 +284,7 @@ module eui {
          * @version eui 1.0
          * @platform Web,Native
          */
-        public top:number;
+        public top:number|string;
 
         /**
          * @copy eui.UIComponent#bottom
@@ -293,7 +293,7 @@ module eui {
          * @version eui 1.0
          * @platform Web,Native
          */
-        public bottom:number;
+        public bottom:number|string;
 
         /**
          * @copy eui.UIComponent#horizontalCenter
@@ -302,7 +302,7 @@ module eui {
          * @version eui 1.0
          * @platform Web,Native
          */
-        public horizontalCenter:number;
+        public horizontalCenter:number|string;
 
         /**
          * @copy eui.UIComponent#verticalCenter
@@ -311,7 +311,7 @@ module eui {
          * @version eui 1.0
          * @platform Web,Native
          */
-        public verticalCenter:number;
+        public verticalCenter:number|string;
 
         /**
          * @copy eui.UIComponent#percentWidth
