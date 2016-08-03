@@ -137,6 +137,7 @@ module egret.sys {
          */
         public clear():void {
             this.drawData.length = 0;
+            this.dirtyRender = true;
         }
 
         /**

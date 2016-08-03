@@ -5936,7 +5936,6 @@ var egret;
             this.minY = Infinity;
             this.maxX = -Infinity;
             this.maxY = -Infinity;
-            this.$renderNode.dirtyRender = true;
         };
         /**
          * @private
@@ -15388,6 +15387,7 @@ var egret;
              */
             p.clear = function () {
                 this.drawData.length = 0;
+                this.dirtyRender = true;
             };
             /**
              * 覆盖父类方法，不自动清空缓存的绘图数据，改为手动调用clear()方法清空。
