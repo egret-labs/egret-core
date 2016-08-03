@@ -316,7 +316,7 @@
       },
       {
         "name": "game",
-        "description": "Egret Game Extension",
+        "description": "game 游戏库",
         "files": [
           {
             "path": "net/native/NativeNetContext.ts",
@@ -334,7 +334,7 @@
       },
       {
         "name": "gui",
-        "description": "Egret UI Framework",
+        "description": "gui 界面制作库",
         "files": [],
         "root": "src/extension/gui",
         "dependencies": [
@@ -344,7 +344,7 @@
       },
       {
         "name": "res",
-        "description": "Egret Resource Loader",
+        "description": "res 资源加载库",
         "files": [],
         "root": "src/extension/resource",
         "dependencies": [
@@ -354,7 +354,7 @@
       },
       {
         "name": "eui",
-        "description": "Egret UI",
+        "description": "eui 界面制作库",
         "files": [],
         "root": "src/extension/eui",
         "dependencies": [
@@ -363,7 +363,7 @@
       },
       {
         "name": "tween",
-        "description": "Egret Tween",
+        "description": "tween 缓动动画库",
         "files": [],
         "root": "src/extension/tween",
         "dependencies": [
@@ -372,7 +372,7 @@
       },
       {
         "name": "socket",
-        "description": "Web Socket",
+        "description": "socket 网络通讯库",
         "files": [],
         "root": "src/extension/socket",
         "dependencies": [
