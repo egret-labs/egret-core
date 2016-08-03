@@ -1,10 +1,16 @@
 /// <reference path="../lib/types.d.ts" />
+var CompileProject = require('../actions/CompileProject');
+var path = require('path');
 var InternalCompile = (function () {
     function InternalCompile() {
     }
     InternalCompile.prototype.execute = function () {
-        console.log("当前Egret版本：" + egret.version);
-        console.log('Egret安装路径：' + egret.root);
+        var options = egret.args;
+        options.releaseDir = path.join(egret.args.projectDir, options.fileName);
+        options.minify = true;
+        options.publish = true;
+        var compileProject = new CompileProject();
+        var result = compileProject.compile(options);
         return 0;
     };
     return InternalCompile;

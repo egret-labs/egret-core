@@ -1,11 +1,20 @@
 /// <reference path="../lib/types.d.ts" />
 
+import CompileProject = require('../actions/CompileProject');
+import FileUtil = require('../lib/FileUtil');
+import path = require('path');
 
 class InternalCompile implements egret.Command {
     execute(): number {
-        console.log("当前Egret版本：" + egret.version);
-        console.log('Egret安装路径：' + egret.root);
+
+        var options = egret.args;
+        options.releaseDir = path.join(egret.args.projectDir, options.fileName)
+        options.minify = true;
+        options.publish = true;
+        var compileProject = new CompileProject();
+        var result = compileProject.compile(options);
         return 0;
+
     }
 }
 
