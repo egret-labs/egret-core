@@ -13760,7 +13760,7 @@ var egret;
                         costRender: lastCostRender
                     });
                     this.totalTick = 0;
-                    this.totalTime = this.totalTime % 500;
+                    this.totalTime = this.totalTime % 1000;
                     this.drawCalls = 0;
                     this.dirtyRatio = 0;
                     this.costDirty = 0;
@@ -14576,14 +14576,7 @@ var egret;
                  * 全局帧率
                  */
                 this.$frameRate = 30;
-                /**
-                 * @private
-                 */
-                this.frameInterval = 2000;
-                /**
-                 * @private
-                 */
-                this.lastCount = 2000;
+                this.lastTimeStamp = 0;
                 /**
                  * @private
                  * ticker 花销的时间
@@ -14593,6 +14586,8 @@ var egret;
                     egret.$error(1008, "egret.sys.SystemTicker");
                 }
                 sys.$START_TIME = Date.now();
+                this.frameDeltaTime = 1000 / this.$frameRate;
+                this.lastCount = this.frameInterval = Math.round(60000 / this.$frameRate);
             }
             var d = __define,c=SystemTicker,p=c.prototype;
             /**
@@ -14691,6 +14686,7 @@ var egret;
                     egret_native.setFrameRate(value);
                     value = 60;
                 }
+                this.frameDeltaTime = 1000 / value;
                 //这里用60*1000来避免浮点数计算不准确的问题。
                 this.lastCount = this.frameInterval = Math.round(60000 / value);
                 return true;
@@ -14711,15 +14707,22 @@ var egret;
                         requestRenderingFlag = true;
                     }
                 }
-                this.lastCount -= 1000;
                 var t2 = egret.getTimer();
-                if (this.lastCount > 0) {
-                    if (requestRenderingFlag) {
-                        this.render(false, this.costEnterFrame + t2 - t1);
-                    }
-                    return;
+                var deltaTime = timeStamp - this.lastTimeStamp;
+                if (deltaTime >= this.frameDeltaTime) {
+                    this.lastCount = this.frameInterval;
                 }
-                this.lastCount += this.frameInterval;
+                else {
+                    this.lastCount -= 1000;
+                    if (this.lastCount > 0) {
+                        if (requestRenderingFlag) {
+                            this.render(false, this.costEnterFrame + t2 - t1);
+                        }
+                        return;
+                    }
+                    this.lastCount += this.frameInterval;
+                }
+                this.lastTimeStamp = timeStamp;
                 this.render(true, this.costEnterFrame + t2 - t1);
                 var t3 = egret.getTimer();
                 this.broadcastEnterFrame();
@@ -22624,6 +22627,10 @@ var egret;
              * @private
              */
             this.lastCount = 1000;
+            /**
+             * @private
+             */
+            this.lastTimeStamp = 0;
             this.delay = delay;
             this.repeatCount = +repeatCount | 0;
         }
@@ -22725,6 +22732,7 @@ var egret;
             if (this._running)
                 return;
             this.lastCount = this.updateInterval;
+            this.lastTimeStamp = egret.getTimer();
             egret.sys.$ticker.$startTick(this.$update, this);
             this._running = true;
         };
@@ -22752,11 +22760,18 @@ var egret;
          * Ticker以60FPS频率刷新此方法
          */
         p.$update = function (timeStamp) {
-            this.lastCount -= 1000;
-            if (this.lastCount > 0) {
-                return false;
+            var deltaTime = timeStamp - this.lastTimeStamp;
+            if (deltaTime >= this._delay) {
+                this.lastCount = this.updateInterval;
             }
-            this.lastCount += this.updateInterval;
+            else {
+                this.lastCount -= 1000;
+                if (this.lastCount > 0) {
+                    return false;
+                }
+                this.lastCount += this.updateInterval;
+            }
+            this.lastTimeStamp = timeStamp;
             this._currentCount++;
             var complete = (this.repeatCount > 0 && this._currentCount >= this.repeatCount);
             egret.TimerEvent.dispatchTimerEvent(this, egret.TimerEvent.TIMER);

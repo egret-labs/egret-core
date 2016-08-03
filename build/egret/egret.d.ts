@@ -9964,6 +9964,8 @@ declare module egret.sys {
          * @private
          */
         private frameInterval;
+        private frameDeltaTime;
+        private lastTimeStamp;
         /**
          * @private
          * 设置全局帧率
@@ -14515,6 +14517,10 @@ declare module egret {
          * @private
          */
         private lastCount;
+        /**
+         * @private
+         */
+        private lastTimeStamp;
         /**
          * @private
          * Ticker以60FPS频率刷新此方法
