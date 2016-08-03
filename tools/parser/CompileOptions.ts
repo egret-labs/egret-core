@@ -12,6 +12,8 @@ class CompileOptions implements egret.ToolArgs {
     platform: string;
     projectDir: string;
     properties: egret.EgretPropertiesClass;
+    compilerOptions: ts.CompilerOptions;
+    tsconfigError: string[];//tsconfig 配置文件的错误信息
 
     get dirName(): string {
         return FileUtil.getFileName(this.projectDir);
@@ -103,7 +105,7 @@ class CompileOptions implements egret.ToolArgs {
         return url;
     }
 
-    
+
     egretVersion: string;
     publish: boolean;
     sourceMap: boolean;
@@ -133,7 +135,7 @@ class CompileOptions implements egret.ToolArgs {
     nativeTemplatePath: string;
     all: boolean;
     template: string;
-    exmlGenJs:boolean;
+    exmlGenJs: boolean;
 
     private _tmpDir = null;
     private _tmpProj: egret.ILarkProject;
@@ -150,15 +152,15 @@ class CompileOptions implements egret.ToolArgs {
         return this._tmpDir;
     }
 
-    getProject(empty = false):egret.ILarkProject {
+    getProject(empty = false): egret.ILarkProject {
         if (this._tmpProj == null) {
             var tmpFile = FileUtil.joinPath(this.getTmpDir(), "proj.json");
             if (empty || !FileUtil.exists(tmpFile))
                 this._tmpProj = {
                     port: this._port || 3000,
                     type: this.type,
-                    platforms: (this.platforms || []).map(p=> { return { name: p } }),
-                    modules: (this.modules || []).map(m=> { return { name: m } }),
+                    platforms: (this.platforms || []).map(p => { return { name: p } }),
+                    modules: (this.modules || []).map(m => { return { name: m } }),
                     contentHeight: this.contentHeight,
                     contentWidth: this.contentWidth,
                     scaleMode: this.scaleMode,
@@ -175,8 +177,7 @@ class CompileOptions implements egret.ToolArgs {
 
     static parse(option: egret.ToolArgs) {
         var it = new CompileOptions();
-        for (var p in option)
-        {
+        for (var p in option) {
             it[p] = option[p];
         }
         return it;
