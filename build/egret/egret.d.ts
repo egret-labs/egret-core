@@ -1042,7 +1042,7 @@ declare module egret {
          * @private
          * 标记这个显示对象在父级容器的位置发生了改变。
          */
-        private invalidatePosition();
+        $invalidatePosition(): void;
         /**
          * @private
          * 能够含有子项的类将子项列表存储在这个属性里。

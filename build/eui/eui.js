@@ -2111,32 +2111,6 @@ var eui;
                 this.invalidateParentLayout();
                 return true;
             };
-            /**
-             * @private
-             *
-             * @param value
-             * @returns
-             */
-            p.$setScaleX = function (value) {
-                var change = this.$super.$setScaleX.call(this, value);
-                if (change) {
-                    this.invalidateParentLayout();
-                }
-                return change;
-            };
-            /**
-             * @private
-             *
-             * @param value
-             * @returns
-             */
-            p.$setScaleY = function (value) {
-                var change = this.$super.$setScaleY.call(this, value);
-                if (change) {
-                    this.invalidateParentLayout();
-                }
-                return change;
-            };
             d(p, "minWidth"
                 /**
                  * @private
@@ -2247,6 +2221,13 @@ var eui;
             };
             /**
              * @private
+             */
+            p.$$invalidatePosition = function () {
+                this.$super.$invalidatePosition.call(this);
+                this.invalidateParentLayout();
+            };
+            /**
+             * @private
              *
              * @param value
              * @returns
@@ -2254,7 +2235,6 @@ var eui;
             p.$setX = function (value) {
                 var change = this.$super.$setX.call(this, value);
                 if (change) {
-                    this.invalidateParentLayout();
                     this.invalidateProperties();
                 }
                 return change;
@@ -2268,7 +2248,6 @@ var eui;
             p.$setY = function (value) {
                 var change = this.$super.$setY.call(this, value);
                 if (change) {
-                    this.invalidateParentLayout();
                     this.invalidateProperties();
                 }
                 return change;
@@ -2473,7 +2452,7 @@ var eui;
                     values[28 /* layoutHeightExplicitlySet */] = true;
                     height = Math.max(minHeight, Math.min(maxHeight, layoutHeight));
                 }
-                var matrix = this.$getMatrix();
+                var matrix = this.getAnchorMatrix();
                 if (isDeltaIdentity(matrix)) {
                     this.setActualSize(width, height);
                     return;
@@ -2491,7 +2470,7 @@ var eui;
              */
             p.setLayoutBoundsPosition = function (x, y) {
                 var matrix = this.$getMatrix();
-                if (!isDeltaIdentity(matrix)) {
+                if (!isDeltaIdentity(matrix) || this.anchorOffsetX != 0 || this.anchorOffsetY != 0) {
                     var bounds = egret.$TempRectangle;
                     this.getLayoutBounds(bounds);
                     x += this.$getX() - bounds.x;
@@ -2572,7 +2551,7 @@ var eui;
              */
             p.applyMatrix = function (bounds, w, h) {
                 var bounds = bounds.setTo(0, 0, w, h);
-                var matrix = this.$getMatrix();
+                var matrix = this.getAnchorMatrix();
                 if (isDeltaIdentity(matrix)) {
                     bounds.x += matrix.tx;
                     bounds.y += matrix.ty;
@@ -2580,6 +2559,20 @@ var eui;
                 else {
                     matrix.$transformBounds(bounds);
                 }
+            };
+            /**
+             * @private
+             */
+            p.getAnchorMatrix = function () {
+                var matrix = this.$getMatrix();
+                var offsetX = this.anchorOffsetX;
+                var offsetY = this.anchorOffsetY;
+                if (offsetX != 0 || offsetY != 0) {
+                    var tempM = egret.$TempMatrix;
+                    matrix.$preMultiplyInto(tempM.setTo(1, 0, 0, 1, -offsetX, -offsetY), tempM);
+                    return tempM;
+                }
+                return matrix;
             };
             return UIComponentImpl;
         }(egret.DisplayObject));
@@ -20575,7 +20568,6 @@ var eui;
             var percent = +str.substring(0, index);
             return percent * 0.01 * total;
         }
-        sys.formatRelative = formatRelative;
         /**
          * @private
          * 一个工具方法，使用BasicLayout规则测量目标对象。

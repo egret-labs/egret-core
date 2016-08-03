@@ -880,7 +880,7 @@ module eui.sys {
             this.$includeInLayout = true;
             //if egret
             this.$touchEnabled = true;
-             //endif*/
+            //endif*/
         }
 
 
@@ -1002,10 +1002,10 @@ module eui.sys {
         }
 
         public set left(value:number|string) {
-            if(!value||typeof value=="number"){
+            if (!value || typeof value == "number") {
                 value = +value;
             }
-            else{
+            else {
                 value = value.toString().trim();
             }
 
@@ -1025,10 +1025,10 @@ module eui.sys {
         }
 
         public set right(value:number|string) {
-            if(!value||typeof value=="number"){
+            if (!value || typeof value == "number") {
                 value = +value;
             }
-            else{
+            else {
                 value = value.toString().trim();
             }
             var values = this.$UIComponent;
@@ -1047,10 +1047,10 @@ module eui.sys {
         }
 
         public set top(value:number|string) {
-            if(!value||typeof value=="number"){
+            if (!value || typeof value == "number") {
                 value = +value;
             }
-            else{
+            else {
                 value = value.toString().trim();
             }
             var values = this.$UIComponent;
@@ -1069,10 +1069,10 @@ module eui.sys {
         }
 
         public set bottom(value:number|string) {
-            if(!value||typeof value=="number"){
+            if (!value || typeof value == "number") {
                 value = +value;
             }
-            else{
+            else {
                 value = value.toString().trim();
             }
             var values = this.$UIComponent;
@@ -1092,10 +1092,10 @@ module eui.sys {
         }
 
         public set horizontalCenter(value:number|string) {
-            if(!value||typeof value=="number"){
+            if (!value || typeof value == "number") {
                 value = +value;
             }
-            else{
+            else {
                 value = value.toString().trim();
             }
             var values = this.$UIComponent;
@@ -1114,10 +1114,10 @@ module eui.sys {
         }
 
         public set verticalCenter(value:number|string) {
-            if(!value||typeof value=="number"){
+            if (!value || typeof value == "number") {
                 value = +value;
             }
-            else{
+            else {
                 value = value.toString().trim();
             }
             var values = this.$UIComponent;
@@ -1247,34 +1247,6 @@ module eui.sys {
 
         /**
          * @private
-         *
-         * @param value
-         * @returns
-         */
-        $setScaleX(value:number):boolean {
-            var change = this.$super.$setScaleX.call(this, value);
-            if (change) {
-                this.invalidateParentLayout();
-            }
-            return change;
-        }
-
-        /**
-         * @private
-         *
-         * @param value
-         * @returns
-         */
-        $setScaleY(value:number):boolean {
-            var change = this.$super.$setScaleY.call(this, value);
-            if (change) {
-                this.invalidateParentLayout();
-            }
-            return change;
-        }
-
-        /**
-         * @private
          * 组件的最小宽度,此属性设置为大于maxWidth的值时无效。同时影响测量和自动布局的尺寸。
          */
         public get minWidth():number {
@@ -1387,6 +1359,14 @@ module eui.sys {
 
         /**
          * @private
+         */
+        $$invalidatePosition():void {
+            this.$super.$invalidatePosition.call(this);
+            this.invalidateParentLayout();
+        }
+
+        /**
+         * @private
          *
          * @param value
          * @returns
@@ -1394,7 +1374,6 @@ module eui.sys {
         $setX(value:number):boolean {
             var change = this.$super.$setX.call(this, value);
             if (change) {
-                this.invalidateParentLayout();
                 this.invalidateProperties();
             }
             return change;
@@ -1409,7 +1388,6 @@ module eui.sys {
         $setY(value:number):boolean {
             var change = this.$super.$setY.call(this, value);
             if (change) {
-                this.invalidateParentLayout();
                 this.invalidateProperties();
             }
             return change;
@@ -1627,7 +1605,7 @@ module eui.sys {
                 values[sys.UIKeys.layoutHeightExplicitlySet] = true;
                 height = Math.max(minHeight, Math.min(maxHeight, layoutHeight));
             }
-            var matrix = this.$getMatrix();
+            var matrix = this.getAnchorMatrix();
             if (isDeltaIdentity(matrix)) {
                 this.setActualSize(width, height);
                 return;
@@ -1650,7 +1628,7 @@ module eui.sys {
          */
         public setLayoutBoundsPosition(x:number, y:number):void {
             var matrix = this.$getMatrix();
-            if (!isDeltaIdentity(matrix)) {
+            if (!isDeltaIdentity(matrix) || this.anchorOffsetX != 0 || this.anchorOffsetY != 0) {
                 var bounds = egret.$TempRectangle;
                 this.getLayoutBounds(bounds);
                 x += this.$getX() - bounds.x;
@@ -1738,7 +1716,8 @@ module eui.sys {
          */
         private applyMatrix(bounds:egret.Rectangle, w:number, h:number):void {
             var bounds = bounds.setTo(0, 0, w, h);
-            var matrix = this.$getMatrix();
+            var matrix = this.getAnchorMatrix();
+
             if (isDeltaIdentity(matrix)) {
                 bounds.x += matrix.tx;
                 bounds.y += matrix.ty;
@@ -1746,6 +1725,22 @@ module eui.sys {
             else {
                 matrix.$transformBounds(bounds);
             }
+        }
+
+
+        /**
+         * @private
+         */
+        private getAnchorMatrix():egret.Matrix {
+            var matrix = this.$getMatrix();
+            var offsetX = this.anchorOffsetX;
+            var offsetY = this.anchorOffsetY;
+            if (offsetX != 0 || offsetY != 0) {
+                var tempM = egret.$TempMatrix;
+                matrix.$preMultiplyInto(tempM.setTo(1, 0, 0, 1, -offsetX, -offsetY), tempM);
+                return tempM;
+            }
+            return matrix;
         }
     }
 

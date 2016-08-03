@@ -1669,20 +1669,6 @@ declare module eui.sys {
         $setHeight(value: number): boolean;
         /**
          * @private
-         *
-         * @param value
-         * @returns
-         */
-        $setScaleX(value: number): boolean;
-        /**
-         * @private
-         *
-         * @param value
-         * @returns
-         */
-        $setScaleY(value: number): boolean;
-        /**
-         * @private
          * 组件的最小宽度,此属性设置为大于maxWidth的值时无效。同时影响测量和自动布局的尺寸。
          */
         minWidth: number;
@@ -1714,6 +1700,10 @@ declare module eui.sys {
          * 不会影响显式标记尺寸属性
          */
         private setActualSize(w, h);
+        /**
+         * @private
+         */
+        $$invalidatePosition(): void;
         /**
          * @private
          *
@@ -1822,6 +1812,10 @@ declare module eui.sys {
          * @param h
          */
         private applyMatrix(bounds, w, h);
+        /**
+         * @private
+         */
+        private getAnchorMatrix();
     }
     /**
      * @private
@@ -12958,12 +12952,6 @@ declare module eui {
     }
 }
 declare module eui.sys {
-    /**
-     * @private
-     * @param value 要格式化的相对值
-     * @param total 在此值方向上的总长度
-     */
-    function formatRelative(value: number | string, total: number): number;
     /**
      * @private
      * 一个工具方法，使用BasicLayout规则测量目标对象。

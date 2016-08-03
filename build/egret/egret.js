@@ -1544,13 +1544,13 @@ var egret;
          */
         p.invalidateMatrix = function () {
             this.$setFlags(8 /* InvalidMatrix */);
-            this.invalidatePosition();
+            this.$invalidatePosition();
         };
         /**
          * @private
          * 标记这个显示对象在父级容器的位置发生了改变。
          */
-        p.invalidatePosition = function () {
+        p.$invalidatePosition = function () {
             var self = this;
             self.$invalidateTransform();
             self.$propagateFlagsDown(16 /* InvalidConcatenatedMatrix */ |
@@ -1720,7 +1720,7 @@ var egret;
                 values[4 /* rotation */] = clampRotation(values[3 /* skewY */] * 180 / Math.PI);
             }
             self.$removeFlags(8 /* InvalidMatrix */);
-            self.invalidatePosition();
+            self.$invalidatePosition();
             return true;
         };
         /**
@@ -1815,7 +1815,7 @@ var egret;
                 return false;
             }
             m.tx = value;
-            this.invalidatePosition();
+            this.$invalidatePosition();
             return true;
         };
         d(p, "y"
@@ -1865,7 +1865,7 @@ var egret;
                 return false;
             }
             m.ty = value;
-            this.invalidatePosition();
+            this.$invalidatePosition();
             return true;
         };
         d(p, "scaleX"
@@ -2264,7 +2264,7 @@ var egret;
                 return false;
             }
             this.$DisplayObject[12 /* anchorOffsetX */] = value;
-            this.invalidatePosition();
+            this.$invalidatePosition();
             return true;
         };
         d(p, "anchorOffsetY"
@@ -2307,7 +2307,7 @@ var egret;
                 return false;
             }
             this.$DisplayObject[13 /* anchorOffsetY */] = value;
-            this.invalidatePosition();
+            this.$invalidatePosition();
             return true;
         };
         d(p, "visible"
@@ -2592,7 +2592,7 @@ var egret;
             else {
                 this.$scrollRect = null;
             }
-            this.invalidatePosition();
+            this.$invalidatePosition();
             return true;
         };
         d(p, "blendMode"
@@ -2710,7 +2710,7 @@ var egret;
             else {
                 this.$maskRect = null;
             }
-            this.invalidatePosition();
+            this.$invalidatePosition();
             return true;
         };
         d(p, "filters"
