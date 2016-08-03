@@ -26,7 +26,7 @@ var Create = (function () {
         return DontExitCode;
     };
     return Create;
-})();
+}());
 function compileTemplate(project) {
     var options = egret.args;
     var moduleScripts = [];
@@ -61,5 +61,3 @@ function updateEgretProperties(modules) {
     FileUtil.save(propFile, JSON.stringify(props, null, "  "));
 }
 module.exports = Create;
-
-//# sourceMappingURL=../actions/Create.js.map

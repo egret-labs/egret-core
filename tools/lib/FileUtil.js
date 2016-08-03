@@ -453,5 +453,3 @@ function getAbsolutePath(path) {
     return joinPath(egret.args.projectDir, path);
 }
 exports.getAbsolutePath = getAbsolutePath;
-
-//# sourceMappingURL=../lib/FileUtil.js.map

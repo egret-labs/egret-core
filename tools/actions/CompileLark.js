@@ -150,7 +150,7 @@ var CompileLark = (function () {
         global.ignoreDollar = false;
     };
     return CompileLark;
-})();
+}());
 function testPlatform(value, array) {
     return (value == ANY && (array == null || array.length == 0)) || (array && array.indexOf(value) >= 0);
 }
@@ -266,5 +266,3 @@ function changeDefine(content, current, change) {
     return content;
 }
 module.exports = CompileLark;
-
-//# sourceMappingURL=../actions/CompileLark.js.map

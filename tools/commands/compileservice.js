@@ -241,7 +241,5 @@ var AutoCompileCommand = (function () {
         return false;
     };
     return AutoCompileCommand;
-})();
+}());
 module.exports = AutoCompileCommand;
-
-//# sourceMappingURL=../commands/compileservice.js.map

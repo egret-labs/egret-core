@@ -24,5 +24,3 @@ function convertBuild(args, rawArgs) {
     if (args['buildEngine'])
         args.command = 'clean';
 }
-
-//# sourceMappingURL=../parser/ParseEarlyVersionParams.js.map

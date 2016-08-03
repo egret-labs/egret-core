@@ -93,5 +93,3 @@ function toString() {
 }
 ;
 //export = { parse: parse };
-
-//# sourceMappingURL=../../../lib/eui/parser/index.js.map

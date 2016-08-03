@@ -241,5 +241,3 @@ function parse(exmlPath) {
     //file.save(jspath,jstext);
     file.save(tspath, jstext);
 }
-
-//# sourceMappingURL=../actions/exml.eui.js.map

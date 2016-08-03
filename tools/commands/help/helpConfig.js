@@ -244,5 +244,3 @@ var helpModule1;
     };
 })(helpModule1 || (helpModule1 = {}));
 module.exports = helpModule1;
-
-//# sourceMappingURL=../../commands/help/helpConfig.js.map

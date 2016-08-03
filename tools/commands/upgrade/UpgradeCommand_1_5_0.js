@@ -48,7 +48,5 @@ var UpgradeCommand_1_5_0 = (function () {
         open("https://github.com/egret-labs/egret-core/blob/master/docs/1.5.0_ReleaseNotes.md");
     };
     return UpgradeCommand_1_5_0;
-})();
+}());
 module.exports = UpgradeCommand_1_5_0;
-
-//# sourceMappingURL=../../commands/upgrade/UpgradeCommand_1_5_0.js.map

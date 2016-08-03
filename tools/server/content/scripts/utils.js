@@ -82,9 +82,7 @@ var egret;
                 return value.map(function (v) { return encodeURIComponent(key) + "=" + encodeURIComponent(v); }).join("&");
             };
             return Http;
-        })();
+        }());
         portal.Http = Http;
     })(portal = egret.portal || (egret.portal = {}));
 })(egret || (egret = {}));
-
-//# sourceMappingURL=../../../server/content/scripts/utils.js.map

@@ -236,7 +236,7 @@ var AutoLogger = (function () {
         return saveContent;
     };
     return AutoLogger;
-})();
+}());
 var APITestAction = (function () {
     function APITestAction() {
     }
@@ -341,7 +341,5 @@ var APITestAction = (function () {
         }
     };
     return APITestAction;
-})();
+}());
 module.exports = APITestAction;
-
-//# sourceMappingURL=../actions/APITest.js.map

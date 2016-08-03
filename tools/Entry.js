@@ -75,7 +75,5 @@ var Entry = (function () {
         utils.exit(exitCode);
     };
     return Entry;
-})();
+}());
 var entry = new Entry();
-
-//# sourceMappingURL=Entry.js.map

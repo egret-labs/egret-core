@@ -539,7 +539,7 @@ var EXMLConfig = (function () {
      */
     EXMLConfig.W = "http://ns.egret-labs.org/wing";
     return EXMLConfig;
-})();
+}());
 var Component = (function () {
     /**
      * 构造函数
@@ -563,8 +563,6 @@ var Component = (function () {
         }
     }
     return Component;
-})();
+}());
 var exmlConfig;
 module.exports = EXMLConfig;
-
-//# sourceMappingURL=../../lib/exml/exml_config.js.map

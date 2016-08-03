@@ -178,7 +178,7 @@ var Build = (function () {
         }
     };
     return Build;
-})();
+}());
 function onGotBuildCommandResult(cmd, callback) {
     if (cmd.messages) {
         cmd.messages.forEach(function (m) { return console.log(m); });
@@ -196,5 +196,3 @@ function defaultBuildCallback(code) {
     utils.exit(code);
 }
 module.exports = Build;
-
-//# sourceMappingURL=../commands/build.js.map

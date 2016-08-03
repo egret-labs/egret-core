@@ -27,8 +27,7 @@
 var __extends = (this && this.__extends) || function (d, b) {
     for (var p in b) if (b.hasOwnProperty(p)) d[p] = b[p];
     function __() { this.constructor = d; }
-    __.prototype = b.prototype;
-    d.prototype = new __();
+    d.prototype = b === null ? Object.create(b) : (__.prototype = b.prototype, new __());
 };
 /// <reference path="../types.d.ts" />
 /// <reference path="exml_config.ts"/>
@@ -1241,7 +1240,7 @@ var EXMLCompiler = (function () {
      */
     EXMLCompiler.wingKeys = ["$id", "$locked", "$includeIn", "$excludeFrom", "id", "locked", "includeIn", "excludeFrom"];
     return EXMLCompiler;
-})();
+}());
 //=================代码生成工具类===================
 var CodeBase = (function () {
     function CodeBase() {
@@ -1264,7 +1263,7 @@ var CodeBase = (function () {
         return str;
     };
     return CodeBase;
-})();
+}());
 var CpArguments = (function (_super) {
     __extends(CpArguments, _super);
     function CpArguments(name, type) {
@@ -1280,7 +1279,7 @@ var CpArguments = (function (_super) {
         return this.name + ":" + this.type;
     };
     return CpArguments;
-})(CodeBase);
+}(CodeBase));
 var CpClass = (function (_super) {
     __extends(CpClass, _super);
     function CpClass() {
@@ -1583,7 +1582,7 @@ var CpClass = (function (_super) {
         return returnStr;
     };
     return CpClass;
-})(CodeBase);
+}(CodeBase));
 var CpCodeBlock = (function (_super) {
     __extends(CpCodeBlock, _super);
     function CpCodeBlock() {
@@ -1713,7 +1712,7 @@ var CpCodeBlock = (function (_super) {
         return this.lines.join("\n");
     };
     return CpCodeBlock;
-})(CodeBase);
+}(CodeBase));
 var CpFunction = (function (_super) {
     __extends(CpFunction, _super);
     function CpFunction() {
@@ -1796,7 +1795,7 @@ var CpFunction = (function (_super) {
         return returnStr;
     };
     return CpFunction;
-})(CodeBase);
+}(CodeBase));
 var CpNotation = (function (_super) {
     __extends(CpNotation, _super);
     function CpNotation(notation) {
@@ -1819,7 +1818,7 @@ var CpNotation = (function (_super) {
         return returnStr;
     };
     return CpNotation;
-})(CodeBase);
+}(CodeBase));
 //=================常量定义===================
 var CpVariable = (function (_super) {
     __extends(CpVariable, _super);
@@ -1868,7 +1867,7 @@ var CpVariable = (function (_super) {
             this.name + ":" + this.type + valueStr + ";";
     };
     return CpVariable;
-})(CodeBase);
+}(CodeBase));
 var CpState = (function (_super) {
     __extends(CpState, _super);
     function CpState(name, stateGroups) {
@@ -1919,7 +1918,7 @@ var CpState = (function (_super) {
         return returnStr;
     };
     return CpState;
-})(CodeBase);
+}(CodeBase));
 var CpAddItems = (function (_super) {
     __extends(CpAddItems, _super);
     function CpAddItems(target, propertyName, position, relativeTo) {
@@ -1935,7 +1934,7 @@ var CpAddItems = (function (_super) {
         return returnStr;
     };
     return CpAddItems;
-})(CodeBase);
+}(CodeBase));
 var CpSetProperty = (function (_super) {
     __extends(CpSetProperty, _super);
     function CpSetProperty(target, name, value) {
@@ -1949,7 +1948,7 @@ var CpSetProperty = (function (_super) {
         return "new egret.gui.SetProperty(\"" + this.target + "\",\"" + this.name + "\"," + this.value + ")";
     };
     return CpSetProperty;
-})(CodeBase);
+}(CodeBase));
 var CpSetStyle = (function (_super) {
     __extends(CpSetStyle, _super);
     function CpSetStyle(target, name, value) {
@@ -1963,7 +1962,7 @@ var CpSetStyle = (function (_super) {
         return "new egret.gui.SetStyle(\"" + this.target + "\",\"" + this.name + "\"," + this.value + ")";
     };
     return CpSetStyle;
-})(CodeBase);
+}(CodeBase));
 var DataType = (function () {
     function DataType() {
     }
@@ -1975,7 +1974,7 @@ var DataType = (function () {
     DataType.DT_OBJECT = "Object";
     DataType.DT_FUNCTION = "Function";
     return DataType;
-})();
+}());
 var KeyWords = (function () {
     function KeyWords() {
     }
@@ -1992,7 +1991,7 @@ var KeyWords = (function () {
     KeyWords.KW_RETURN = "return";
     KeyWords.KW_EXPORT = "export";
     return KeyWords;
-})();
+}());
 var Modifiers = (function () {
     function Modifiers() {
     }
@@ -2000,6 +1999,4 @@ var Modifiers = (function () {
     Modifiers.M_PRIVATE = "private";
     Modifiers.M_STATIC = "static";
     return Modifiers;
-})();
-
-//# sourceMappingURL=../../lib/exml/exmlc.js.map
+}());

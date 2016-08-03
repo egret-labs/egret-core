@@ -219,8 +219,6 @@ var EgretProperties = (function () {
         return ["resource"];
     };
     return EgretProperties;
-})();
+}());
 var config = config || new EgretProperties();
 module.exports = config;
-
-//# sourceMappingURL=../parser/EgretProperties.js.map

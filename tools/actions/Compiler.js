@@ -56,12 +56,10 @@ var Compiler = (function () {
         return compileResult;
     };
     return Compiler;
-})();
+}());
 tsclark.Compiler.exit = function (exitCode) {
     if (exitCode != 0)
         console.log(utils.tr(10003, exitCode));
     return exitCode;
 };
 module.exports = Compiler;
-
-//# sourceMappingURL=Compiler.js.map

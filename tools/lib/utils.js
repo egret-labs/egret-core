@@ -288,5 +288,3 @@ function addIndents(times, text) {
     return text.replace(new RegExp("\\n", "ig"), '\n' + added);
 }
 exports.addIndents = addIndents;
-
-//# sourceMappingURL=../lib/utils.js.map

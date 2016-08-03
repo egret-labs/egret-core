@@ -70,7 +70,5 @@ var CopyNativeFiles = (function () {
         }
     };
     return CopyNativeFiles;
-})();
+}());
 module.exports = CopyNativeFiles;
-
-//# sourceMappingURL=../actions/CopyNativeFiles.js.map

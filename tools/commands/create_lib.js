@@ -24,7 +24,5 @@ var CreateLib = (function () {
         return 0;
     };
     return CreateLib;
-})();
+}());
 module.exports = CreateLib;
-
-//# sourceMappingURL=../commands/create_lib.js.map

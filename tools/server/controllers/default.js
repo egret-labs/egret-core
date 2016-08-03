@@ -96,5 +96,3 @@ function getUserProjectContentFullName(req) {
     return fullpath;
 }
 module.exports = exportObject;
-
-//# sourceMappingURL=../../server/controllers/default.js.map

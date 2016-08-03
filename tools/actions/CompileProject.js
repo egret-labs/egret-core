@@ -53,7 +53,7 @@ var CompileProject = (function () {
         return compileResult;
     };
     return CompileProject;
-})();
+}());
 function GetJavaScriptFileNames(tsFiles, root, prefix) {
     var files = [];
     tsFiles.forEach(function (f) {
@@ -71,5 +71,3 @@ function GetJavaScriptFileNames(tsFiles, root, prefix) {
     return files;
 }
 module.exports = CompileProject;
-
-//# sourceMappingURL=../actions/CompileProject.js.map

@@ -2,8 +2,7 @@
 var __extends = (this && this.__extends) || function (d, b) {
     for (var p in b) if (b.hasOwnProperty(p)) d[p] = b[p];
     function __() { this.constructor = d; }
-    __.prototype = b.prototype;
-    d.prototype = new __();
+    d.prototype = b === null ? Object.create(b) : (__.prototype = b.prototype, new __());
 };
 var events = require("events");
 var ServiceSocket = (function (_super) {
@@ -40,7 +39,7 @@ var ServiceSocket = (function (_super) {
         this.emit("message", data);
     };
     return ServiceSocket;
-})(events.EventEmitter);
+}(events.EventEmitter));
 var LarkMessageBody = (function () {
     function LarkMessageBody() {
     }
@@ -70,7 +69,5 @@ var LarkMessageBody = (function () {
     };
     LarkMessageBody.LARKHEADER = "LARK-MSG";
     return LarkMessageBody;
-})();
+}());
 module.exports = ServiceSocket;
-
-//# sourceMappingURL=../service/ServiceSocket.js.map
