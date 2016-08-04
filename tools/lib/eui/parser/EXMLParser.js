@@ -32,11 +32,6 @@ var cdfctry = require("./CodeFactory");
 var cfg = require("./EXMLConfig");
 var XMLParser = require("./index.js");
 var DEBUG = false;
-/**
- * @private
- * EXML配置管理器实例
- */
-exports.exmlConfig;
 var exmlParserPool = [];
 var parsedClasses = {};
 var innerClassCount = 1;
@@ -1295,7 +1290,7 @@ var EXMLParser = (function () {
         return className;
     };
     return EXMLParser;
-})();
+}());
 exports.EXMLParser = EXMLParser;
 if (DEBUG) {
     /**
@@ -1385,5 +1380,3 @@ if (DEBUG) {
     }
 }
 //} 
-
-//# sourceMappingURL=../../../lib/eui/parser/EXMLParser.js.map

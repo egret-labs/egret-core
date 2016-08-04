@@ -44,7 +44,5 @@ var ParseConfigCommand = (function () {
         this.requireTxt = this.requireTxt.replace('"' + replaceName + '"', result);
     };
     return ParseConfigCommand;
-})();
+}());
 module.exports = ParseConfigCommand;
-
-//# sourceMappingURL=../actions/ParseConfig.js.map

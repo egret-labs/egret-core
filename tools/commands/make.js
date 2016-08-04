@@ -9,7 +9,5 @@ var MakeCommand = (function () {
         return compiler.make();
     };
     return MakeCommand;
-})();
+}());
 module.exports = MakeCommand;
-
-//# sourceMappingURL=../commands/make.js.map

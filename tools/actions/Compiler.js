@@ -25,13 +25,15 @@ var Compiler = (function () {
             errors: []
         };
         if (out) {
-            parsedCmd.options = {
-                target: 1,
-                sourceMap: args.sourceMap,
-                removeComments: args.removeComments,
-                declaration: args.declaration,
-                out: out
-            };
+            if (args.compilerOptions) {
+                parsedCmd.options = args.compilerOptions;
+            }
+            //make 使用引擎的配置,必须用下面的参数
+            parsedCmd.options.target = 1;
+            parsedCmd.options.sourceMap = args.sourceMap;
+            parsedCmd.options.removeComments = args.removeComments;
+            parsedCmd.options.declaration = args.declaration;
+            parsedCmd.options.out = out;
         }
         else {
             //console.log("args.compilerOptions:",parsedCmd.options.outDir)
@@ -54,12 +56,10 @@ var Compiler = (function () {
         return compileResult;
     };
     return Compiler;
-})();
+}());
 tsclark.Compiler.exit = function (exitCode) {
     if (exitCode != 0)
         console.log(utils.tr(10003, exitCode));
     return exitCode;
 };
 module.exports = Compiler;
-
-//# sourceMappingURL=../actions/Compiler.js.map

@@ -248,5 +248,3 @@ var helpModule;
     };
     global["helpModule"] = global["helpModule"] || helpModule;
 })(helpModule || (helpModule = {}));
-
-//# sourceMappingURL=../locales/en_US.js.map

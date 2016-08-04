@@ -25,7 +25,5 @@ var UpgradeCommand_1_0_5 = (function () {
         file.save(releasePath, txt);
     };
     return UpgradeCommand_1_0_5;
-})();
+}());
 module.exports = UpgradeCommand_1_0_5;
-
-//# sourceMappingURL=../../commands/upgrade/UpgradeCommand_1_0_5.js.map

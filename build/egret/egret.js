@@ -1544,13 +1544,13 @@ var egret;
          */
         p.invalidateMatrix = function () {
             this.$setFlags(8 /* InvalidMatrix */);
-            this.invalidatePosition();
+            this.$invalidatePosition();
         };
         /**
          * @private
          * 标记这个显示对象在父级容器的位置发生了改变。
          */
-        p.invalidatePosition = function () {
+        p.$invalidatePosition = function () {
             var self = this;
             self.$invalidateTransform();
             self.$propagateFlagsDown(16 /* InvalidConcatenatedMatrix */ |
@@ -1720,7 +1720,7 @@ var egret;
                 values[4 /* rotation */] = clampRotation(values[3 /* skewY */] * 180 / Math.PI);
             }
             self.$removeFlags(8 /* InvalidMatrix */);
-            self.invalidatePosition();
+            self.$invalidatePosition();
             return true;
         };
         /**
@@ -1815,7 +1815,7 @@ var egret;
                 return false;
             }
             m.tx = value;
-            this.invalidatePosition();
+            this.$invalidatePosition();
             return true;
         };
         d(p, "y"
@@ -1865,7 +1865,7 @@ var egret;
                 return false;
             }
             m.ty = value;
-            this.invalidatePosition();
+            this.$invalidatePosition();
             return true;
         };
         d(p, "scaleX"
@@ -2264,7 +2264,7 @@ var egret;
                 return false;
             }
             this.$DisplayObject[12 /* anchorOffsetX */] = value;
-            this.invalidatePosition();
+            this.$invalidatePosition();
             return true;
         };
         d(p, "anchorOffsetY"
@@ -2307,7 +2307,7 @@ var egret;
                 return false;
             }
             this.$DisplayObject[13 /* anchorOffsetY */] = value;
-            this.invalidatePosition();
+            this.$invalidatePosition();
             return true;
         };
         d(p, "visible"
@@ -2592,7 +2592,7 @@ var egret;
             else {
                 this.$scrollRect = null;
             }
-            this.invalidatePosition();
+            this.$invalidatePosition();
             return true;
         };
         d(p, "blendMode"
@@ -2710,7 +2710,7 @@ var egret;
             else {
                 this.$maskRect = null;
             }
-            this.invalidatePosition();
+            this.$invalidatePosition();
             return true;
         };
         d(p, "filters"
@@ -5987,7 +5987,6 @@ var egret;
             this.minY = Infinity;
             this.maxX = -Infinity;
             this.maxY = -Infinity;
-            this.$renderNode.dirtyRender = true;
         };
         /**
          * @private
@@ -13844,7 +13843,7 @@ var egret;
                         costRender: lastCostRender
                     });
                     this.totalTick = 0;
-                    this.totalTime = this.totalTime % 500;
+                    this.totalTime = this.totalTime % 1000;
                     this.drawCalls = 0;
                     this.dirtyRatio = 0;
                     this.costDirty = 0;
@@ -14660,14 +14659,7 @@ var egret;
                  * 全局帧率
                  */
                 this.$frameRate = 30;
-                /**
-                 * @private
-                 */
-                this.frameInterval = 2000;
-                /**
-                 * @private
-                 */
-                this.lastCount = 2000;
+                this.lastTimeStamp = 0;
                 /**
                  * @private
                  * ticker 花销的时间
@@ -14677,6 +14669,8 @@ var egret;
                     egret.$error(1008, "egret.sys.SystemTicker");
                 }
                 sys.$START_TIME = Date.now();
+                this.frameDeltaTime = 1000 / this.$frameRate;
+                this.lastCount = this.frameInterval = Math.round(60000 / this.$frameRate);
             }
             var d = __define,c=SystemTicker,p=c.prototype;
             /**
@@ -14775,6 +14769,7 @@ var egret;
                     egret_native.setFrameRate(value);
                     value = 60;
                 }
+                this.frameDeltaTime = 1000 / value;
                 //这里用60*1000来避免浮点数计算不准确的问题。
                 this.lastCount = this.frameInterval = Math.round(60000 / value);
                 return true;
@@ -14795,15 +14790,22 @@ var egret;
                         requestRenderingFlag = true;
                     }
                 }
-                this.lastCount -= 1000;
                 var t2 = egret.getTimer();
-                if (this.lastCount > 0) {
-                    if (requestRenderingFlag) {
-                        this.render(false, this.costEnterFrame + t2 - t1);
-                    }
-                    return;
+                var deltaTime = timeStamp - this.lastTimeStamp;
+                if (deltaTime >= this.frameDeltaTime) {
+                    this.lastCount = this.frameInterval;
                 }
-                this.lastCount += this.frameInterval;
+                else {
+                    this.lastCount -= 1000;
+                    if (this.lastCount > 0) {
+                        if (requestRenderingFlag) {
+                            this.render(false, this.costEnterFrame + t2 - t1);
+                        }
+                        return;
+                    }
+                    this.lastCount += this.frameInterval;
+                }
+                this.lastTimeStamp = timeStamp;
                 this.render(true, this.costEnterFrame + t2 - t1);
                 var t3 = egret.getTimer();
                 this.broadcastEnterFrame();
@@ -15471,6 +15473,7 @@ var egret;
              */
             p.clear = function () {
                 this.drawData.length = 0;
+                this.dirtyRender = true;
             };
             /**
              * 覆盖父类方法，不自动清空缓存的绘图数据，改为手动调用clear()方法清空。
@@ -22733,6 +22736,10 @@ var egret;
              * @private
              */
             this.lastCount = 1000;
+            /**
+             * @private
+             */
+            this.lastTimeStamp = 0;
             this.delay = delay;
             this.repeatCount = +repeatCount | 0;
         }
@@ -22834,6 +22841,7 @@ var egret;
             if (this._running)
                 return;
             this.lastCount = this.updateInterval;
+            this.lastTimeStamp = egret.getTimer();
             egret.sys.$ticker.$startTick(this.$update, this);
             this._running = true;
         };
@@ -22861,11 +22869,18 @@ var egret;
          * Ticker以60FPS频率刷新此方法
          */
         p.$update = function (timeStamp) {
-            this.lastCount -= 1000;
-            if (this.lastCount > 0) {
-                return false;
+            var deltaTime = timeStamp - this.lastTimeStamp;
+            if (deltaTime >= this._delay) {
+                this.lastCount = this.updateInterval;
             }
-            this.lastCount += this.updateInterval;
+            else {
+                this.lastCount -= 1000;
+                if (this.lastCount > 0) {
+                    return false;
+                }
+                this.lastCount += this.updateInterval;
+            }
+            this.lastTimeStamp = timeStamp;
             this._currentCount++;
             var complete = (this.repeatCount > 0 && this._currentCount >= this.repeatCount);
             egret.TimerEvent.dispatchTimerEvent(this, egret.TimerEvent.TIMER);

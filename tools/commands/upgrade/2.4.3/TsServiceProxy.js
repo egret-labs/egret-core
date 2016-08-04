@@ -459,7 +459,7 @@ var TsServiceProxy = (function () {
         return null;
     };
     return TsServiceProxy;
-})();
+}());
 exports.TsServiceProxy = TsServiceProxy;
 /**
  * Host
@@ -579,7 +579,7 @@ var Host = (function () {
     Host.prototype.getDefaultLibFileName = function () { return Host.defaultLibFileName; };
     Host.defaultLibFileName = 'default';
     return Host;
-})();
+}());
 var CancellationToken = (function () {
     function CancellationToken(cancellationToken) {
         this.cancellationToken = cancellationToken;
@@ -589,7 +589,7 @@ var CancellationToken = (function () {
     };
     CancellationToken.None = new CancellationToken(null);
     return CancellationToken;
-})();
+}());
 /**
  * 一个代码实体类
  */
@@ -637,7 +637,7 @@ var ScriptInfo = (function () {
         return TSS.collapseTextChangeRangesAcrossMultipleVersions(entries.map(function (e) { return e.textChangeRange; }));
     };
     return ScriptInfo;
-})();
+}());
 var ScriptSnapshot = (function () {
     function ScriptSnapshot(scriptInfo) {
         this.scriptInfo = scriptInfo;
@@ -658,6 +658,4 @@ var ScriptSnapshot = (function () {
         return this.scriptInfo.getTextChangeRangeBetweenVersions(oldShim.version, this.version);
     };
     return ScriptSnapshot;
-})();
-
-//# sourceMappingURL=../../../commands/upgrade/2.4.3/TsServiceProxy.js.map
+}());

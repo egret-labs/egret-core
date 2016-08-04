@@ -34,14 +34,16 @@ class Compiler {
             options: {},
             errors: []
         };
-        if(out){//make 使用引擎的配置
-            parsedCmd.options={
-                target:1,
-                sourceMap: args.sourceMap,
-                removeComments: args.removeComments,
-                declaration: args.declaration,
-                out:out
+        if(out){
+            if (args.compilerOptions) {
+                parsedCmd.options = args.compilerOptions;
             }
+            //make 使用引擎的配置,必须用下面的参数
+            parsedCmd.options.target = 1;
+            parsedCmd.options.sourceMap = args.sourceMap;
+            parsedCmd.options.removeComments = args.removeComments;
+            parsedCmd.options.declaration = args.declaration;
+            parsedCmd.options.out = out;
         }
         else{
             //console.log("args.compilerOptions:",parsedCmd.options.outDir)
@@ -56,7 +58,7 @@ class Compiler {
         parsedCmd.options.allowUnreachableCode = true;
         //var compileResult = tsclark.Compiler.executeWithOption(args, files, out, outDir);
         var compileResult = tsclark.Compiler.executeWithOption(parsedCmd);
-        
+
         args.declaration = defTemp;
         if (compileResult.messages) {
             compileResult.messages.forEach(m=> console.log(m));

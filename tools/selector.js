@@ -521,5 +521,3 @@ function getLanguage() {
     }
 }
 entry();
-
-//# sourceMappingURL=selector.js.map

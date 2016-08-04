@@ -85,7 +85,7 @@ module egret.portal {
         }
         cancel() {
             $.get('', { cancel: true }, function () {});
-            setTimeout(() => window.close(), 20);
+            window.setTimeout(() => window.close(), 20);
         }
 
         close() {

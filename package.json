@@ -93,7 +93,7 @@
           {
             "path": "media/native/NaSoundChannel.ts",
             "platform": "native"
-          },          
+          },
           {
             "path": "media/native/NativeVideo.ts",
             "platform": "native"
@@ -312,11 +312,11 @@
           }
         ],
         "root": "src/egret",
-        "dependencies": [ ]
+        "dependencies": []
       },
       {
         "name": "game",
-        "description": "Egret Game Extension",
+        "description": "game 游戏库",
         "files": [
           {
             "path": "net/native/NativeNetContext.ts",
@@ -328,43 +328,56 @@
           }
         ],
         "root": "src/extension/game",
-        "dependencies": [ "egret" ]
+        "dependencies": [
+          "egret"
+        ]
       },
       {
         "name": "gui",
-        "description": "Egret UI Framework",
-        "files": [ ],
+        "description": "gui 界面制作库",
+        "files": [],
         "root": "src/extension/gui",
-        "dependencies": [ "egret", "game" ]
+        "dependencies": [
+          "egret",
+          "game"
+        ]
       },
       {
         "name": "res",
-        "description": "Egret Resource Loader",
-        "files": [ ],
+        "description": "res 资源加载库",
+        "files": [],
         "root": "src/extension/resource",
-        "dependencies": [ "egret", "game" ]
+        "dependencies": [
+          "egret",
+          "game"
+        ]
       },
       {
         "name": "eui",
-        "description": "Egret UI",
-        "files": [ ],
+        "description": "eui 界面制作库",
+        "files": [],
         "root": "src/extension/eui",
-        "dependencies": [ "egret" ]
+        "dependencies": [
+          "egret"
+        ]
       },
       {
         "name": "tween",
-        "description": "Egret Tween",
-        "files": [ ],
+        "description": "tween 缓动动画库",
+        "files": [],
         "root": "src/extension/tween",
-        "dependencies": [ "egret" ]
+        "dependencies": [
+          "egret"
+        ]
       },
-   
       {
         "name": "socket",
-        "description": "Web Socket",
-        "files": [ ],
+        "description": "socket 网络通讯库",
+        "files": [],
         "root": "src/extension/socket",
-        "dependencies": [ "egret" ]
+        "dependencies": [
+          "egret"
+        ]
       }
     ],
     "platforms": [
@@ -389,9 +402,11 @@
         "language": "TypeScript",
         "tag": "game,app,TypeScript",
         "description": "创建一个空项目,仅添加 Egret 相关模块引用",
-        "defaultWidth":640,
-        "defaultHeight":1136,
-        "modules": [ "egret" ]
+        "defaultWidth": 640,
+        "defaultHeight": 1136,
+        "modules": [
+          "egret"
+        ]
       },
       {
         "name": "game",
@@ -399,9 +414,14 @@
         "language": "TypeScript",
         "tag": "game,TypeScript",
         "description": "创建一个Egret 游戏项目",
-        "defaultWidth":640,
-        "defaultHeight":1136,
-        "modules": [ "egret", "game", "tween", "res" ]
+        "defaultWidth": 640,
+        "defaultHeight": 1136,
+        "modules": [
+          "egret",
+          "game",
+          "tween",
+          "res"
+        ]
       },
       {
         "name": "eui",
@@ -409,9 +429,14 @@
         "language": "TypeScript",
         "tag": "game,app,TypeScript",
         "description": "使用 eui 扩展库创建友好的交互界面",
-        "defaultWidth":640,
-        "defaultHeight":1136,
-        "modules": [ "egret", "eui", "res" ,"tween"]
+        "defaultWidth": 640,
+        "defaultHeight": 1136,
+        "modules": [
+          "egret",
+          "eui",
+          "res",
+          "tween"
+        ]
       },
       {
         "name": "gui",
@@ -419,9 +444,14 @@
         "language": "TypeScript",
         "tag": "game,app,TypeScript",
         "description": "创建一个Egret GUI 项目(建议创建eui项目，它更易于使用，可以为您提高创建界面的效率及性能)",
-        "defaultWidth":640,
-        "defaultHeight":1136,
-        "modules": [ "egret", "game", "res", "gui" ]
+        "defaultWidth": 640,
+        "defaultHeight": 1136,
+        "modules": [
+          "egret",
+          "game",
+          "res",
+          "gui"
+        ]
       },
       {
         "name": "egret3d",
@@ -429,9 +459,12 @@
         "language": "TypeScript",
         "tag": "game,app,TypeScript",
         "description": "创建一个Egret 3D 项目",
-        "defaultWidth":640,
-        "defaultHeight":960,
-        "modules": [ "egret", "egret3d"]
+        "defaultWidth": 640,
+        "defaultHeight": 960,
+        "modules": [
+          "egret",
+          "egret3d"
+        ]
       }
     ],
     "scaleModes": [
@@ -486,5 +519,6 @@
         "description": "强制旋转应用程序至横屏状态。此模式下，当屏幕高度大于屏幕宽度时，会自动将应用程序逆时针旋转90°。"
       }
     ]
-  }
+  },
+  "dependencies": {}
 }

@@ -198,6 +198,7 @@ var egret;
          *
          */
         p.onClose = function () {
+            this.connectCount--;
             this._connected = false;
             this.dispatchEventWith(egret.Event.CLOSE);
         };

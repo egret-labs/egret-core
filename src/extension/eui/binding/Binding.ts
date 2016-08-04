@@ -29,6 +29,20 @@
 
 module eui {
 
+    function joinValues(templates:any[]):any {
+        var first = templates[0];
+        var value = first instanceof Watcher ? first.getValue() : first;
+        var length = templates.length;
+        for (var i = 1; i < length; i++) {
+            var item = templates[i];
+            if (item instanceof Watcher) {
+                item = item.getValue();
+            }
+            value += item;
+        }
+        return value;
+    }
+
     /**
      * @language en_US
      * The Binding class defines utility methods for performing data binding.
@@ -119,6 +133,30 @@ module eui {
             if (watcher) {
                 handler.call(thisObject, watcher.getValue());
             }
+            return watcher;
+        }
+
+
+        static $bindProperties(host:any, templates:any[], chainIndex:number[], target:any, prop:string):Watcher {
+            if (templates.length == 1) {
+                return Binding.bindProperty(host, templates[0].split("."), target, prop);
+            }
+
+            var assign = function ():void {
+                target[prop] = joinValues(templates);
+            };
+            var length = chainIndex.length;
+            for (var i = 0; i < length; i++) {
+                var index = chainIndex[i];
+                var chain = templates[index].split(".");
+                var watcher = Watcher.watch(host, chain, null, null);
+                if (watcher) {
+                    templates[index] = watcher;
+                    watcher.setHandler(assign, null);
+                }
+            }
+
+            assign();
             return watcher;
         }
     }

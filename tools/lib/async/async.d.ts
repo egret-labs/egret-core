@@ -138,7 +138,6 @@ interface Async {
     retry<T>(opts: number, task: (callback : AsyncResultCallback<T>, results: any) => void, callback: (error: Error, results: any) => void): void;
     retry<T>(opts: { times: number, interval: number }, task: (callback: AsyncResultCallback<T>, results : any) => void, callback: (error: Error, results: any) => void): void;
     iterator(tasks: Function[]): Function;
-    apply(fn: Function, ...arguments: any[]): AsyncFunction<any>;
     nextTick(callback: Function): void;
     setImmediate(callback: Function): void;
 
@@ -153,8 +152,6 @@ interface Async {
     constant(...values: any[]): Function;
     asyncify(fn: Function): Function;
     wrapSync(fn: Function): Function;
-    log(fn: Function, ...arguments: any[]): void;
-    dir(fn: Function, ...arguments: any[]): void;
     noConflict(): Async;
 }
 

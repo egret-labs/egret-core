@@ -1,4 +1,3 @@
-/// <reference path="../types.d.ts" />
 declare module ts {
     interface Map<T> {
         [index: string]: T;

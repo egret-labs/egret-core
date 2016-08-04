@@ -3,6 +3,7 @@ var utils = require('../lib/utils');
 var file = require('../lib/FileUtil');
 var CompileOptions = require("./CompileOptions");
 var properties = require("./EgretProperties");
+var path = require("path");
 exports.optionDeclarations = [
     {
         name: "action",
@@ -174,18 +175,11 @@ function parseCommandLine(commandLine) {
             }
         }
         //create_app命令不强制设置projectDir属性
-        if (options.projectDir == null && options.command == "create_app") {
-        }
-        else {
-            if (options.projectDir == null)
+        if (options.command != "create_app") {
+            if (!options.projectDir)
                 options.projectDir = process.cwd();
             else {
-                var absPath = file.joinPath(process.cwd(), options.projectDir);
-                if (file.isDirectory(absPath)) {
-                    options.projectDir = absPath;
-                }
-                else if (file.isDirectory(options.projectDir)) {
-                }
+                options.projectDir = path.resolve(process.cwd(), options.projectDir);
             }
             options.projectDir = file.joinPath(options.projectDir, "/");
             properties.init(options.projectDir);
@@ -226,5 +220,3 @@ function parseJSON(json) {
     return options;
 }
 exports.parseJSON = parseJSON;
-
-//# sourceMappingURL=../parser/Parser.js.map

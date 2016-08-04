@@ -162,9 +162,9 @@ var Build = (function () {
             }
             else {
                 for (var j = 0; j < result.files.length; j++) {
-                    var file = result.files[j];
-                    if (file.indexOf(".ts") != -1) {
-                        str += FileUtil.read(FileUtil.joinPath(options.projectDir, outDir, module.name, "tmp", file.replace(module.root + "/", "").replace(".ts", ".js")));
+                    var file_1 = result.files[j];
+                    if (file_1.indexOf(".ts") != -1) {
+                        str += FileUtil.read(FileUtil.joinPath(options.projectDir, outDir, module.name, "tmp", file_1.replace(module.root + "/", "").replace(".ts", ".js")));
                         str += "\n";
                     }
                 }
@@ -178,7 +178,7 @@ var Build = (function () {
         }
     };
     return Build;
-})();
+}());
 function onGotBuildCommandResult(cmd, callback) {
     if (cmd.messages) {
         cmd.messages.forEach(function (m) { return console.log(m); });
@@ -196,5 +196,3 @@ function defaultBuildCallback(code) {
     utils.exit(code);
 }
 module.exports = Build;
-
-//# sourceMappingURL=../commands/build.js.map

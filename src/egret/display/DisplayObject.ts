@@ -353,14 +353,14 @@ module egret {
          */
         private invalidateMatrix(): void {
             this.$setFlags(sys.DisplayObjectFlags.InvalidMatrix);
-            this.invalidatePosition();
+            this.$invalidatePosition();
         }
 
         /**
          * @private
          * 标记这个显示对象在父级容器的位置发生了改变。
          */
-        private invalidatePosition(): void {
+        $invalidatePosition(): void {
             let self = this;
             self.$invalidateTransform();
             self.$propagateFlagsDown(sys.DisplayObjectFlags.InvalidConcatenatedMatrix |
@@ -555,7 +555,7 @@ module egret {
                 values[Keys.rotation] = clampRotation(values[Keys.skewY] * 180 / Math.PI);
             }
             self.$removeFlags(sys.DisplayObjectFlags.InvalidMatrix);
-            self.invalidatePosition();
+            self.$invalidatePosition();
 
             return true;
         }
@@ -659,7 +659,7 @@ module egret {
                 return false;
             }
             m.tx = value;
-            this.invalidatePosition();
+            this.$invalidatePosition();
             return true;
         }
 
@@ -711,7 +711,7 @@ module egret {
                 return false;
             }
             m.ty = value;
-            this.invalidatePosition();
+            this.$invalidatePosition();
             return true;
         }
 
@@ -1141,7 +1141,7 @@ module egret {
                 return false;
             }
             this.$DisplayObject[Keys.anchorOffsetX] = value;
-            this.invalidatePosition();
+            this.$invalidatePosition();
             return true;
         }
 
@@ -1186,7 +1186,7 @@ module egret {
                 return false;
             }
             this.$DisplayObject[Keys.anchorOffsetY] = value;
-            this.invalidatePosition();
+            this.$invalidatePosition();
             return true;
         }
 
@@ -1521,7 +1521,7 @@ module egret {
             else {
                 this.$scrollRect = null;
             }
-            this.invalidatePosition();
+            this.$invalidatePosition();
 
             return true;
         }
@@ -1664,7 +1664,7 @@ module egret {
             else {
                 this.$maskRect = null;
             }
-            this.invalidatePosition();
+            this.$invalidatePosition();
 
             return true;
         }

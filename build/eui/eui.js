@@ -28,6 +28,19 @@
 //////////////////////////////////////////////////////////////////////////////////////
 var eui;
 (function (eui) {
+    function joinValues(templates) {
+        var first = templates[0];
+        var value = first instanceof eui.Watcher ? first.getValue() : first;
+        var length = templates.length;
+        for (var i = 1; i < length; i++) {
+            var item = templates[i];
+            if (item instanceof eui.Watcher) {
+                item = item.getValue();
+            }
+            value += item;
+        }
+        return value;
+    }
     /**
      * @language en_US
      * The Binding class defines utility methods for performing data binding.
@@ -119,6 +132,26 @@ var eui;
             if (watcher) {
                 handler.call(thisObject, watcher.getValue());
             }
+            return watcher;
+        };
+        Binding.$bindProperties = function (host, templates, chainIndex, target, prop) {
+            if (templates.length == 1) {
+                return Binding.bindProperty(host, templates[0].split("."), target, prop);
+            }
+            var assign = function () {
+                target[prop] = joinValues(templates);
+            };
+            var length = chainIndex.length;
+            for (var i = 0; i < length; i++) {
+                var index = chainIndex[i];
+                var chain = templates[index].split(".");
+                var watcher = eui.Watcher.watch(host, chain, null, null);
+                if (watcher) {
+                    templates[index] = watcher;
+                    watcher.setHandler(assign, null);
+                }
+            }
+            assign();
             return watcher;
         };
         return Binding;
@@ -1843,7 +1876,12 @@ var eui;
                     return this.$UIComponent[0 /* left */];
                 }
                 ,function (value) {
-                    value = +value;
+                    if (!value || typeof value == "number") {
+                        value = +value;
+                    }
+                    else {
+                        value = value.toString().trim();
+                    }
                     var values = this.$UIComponent;
                     if (values[0 /* left */] === value)
                         return;
@@ -1860,7 +1898,12 @@ var eui;
                     return this.$UIComponent[1 /* right */];
                 }
                 ,function (value) {
-                    value = +value;
+                    if (!value || typeof value == "number") {
+                        value = +value;
+                    }
+                    else {
+                        value = value.toString().trim();
+                    }
                     var values = this.$UIComponent;
                     if (values[1 /* right */] === value)
                         return;
@@ -1877,7 +1920,12 @@ var eui;
                     return this.$UIComponent[2 /* top */];
                 }
                 ,function (value) {
-                    value = +value;
+                    if (!value || typeof value == "number") {
+                        value = +value;
+                    }
+                    else {
+                        value = value.toString().trim();
+                    }
                     var values = this.$UIComponent;
                     if (values[2 /* top */] === value)
                         return;
@@ -1894,7 +1942,12 @@ var eui;
                     return this.$UIComponent[3 /* bottom */];
                 }
                 ,function (value) {
-                    value = +value;
+                    if (!value || typeof value == "number") {
+                        value = +value;
+                    }
+                    else {
+                        value = value.toString().trim();
+                    }
                     var values = this.$UIComponent;
                     if (values[3 /* bottom */] == value)
                         return;
@@ -1911,7 +1964,12 @@ var eui;
                     return this.$UIComponent[4 /* horizontalCenter */];
                 }
                 ,function (value) {
-                    value = +value;
+                    if (!value || typeof value == "number") {
+                        value = +value;
+                    }
+                    else {
+                        value = value.toString().trim();
+                    }
                     var values = this.$UIComponent;
                     if (values[4 /* horizontalCenter */] === value)
                         return;
@@ -1928,7 +1986,12 @@ var eui;
                     return this.$UIComponent[5 /* verticalCenter */];
                 }
                 ,function (value) {
-                    value = +value;
+                    if (!value || typeof value == "number") {
+                        value = +value;
+                    }
+                    else {
+                        value = value.toString().trim();
+                    }
                     var values = this.$UIComponent;
                     if (values[5 /* verticalCenter */] === value)
                         return;
@@ -2048,32 +2111,6 @@ var eui;
                 this.invalidateParentLayout();
                 return true;
             };
-            /**
-             * @private
-             *
-             * @param value
-             * @returns
-             */
-            p.$setScaleX = function (value) {
-                var change = this.$super.$setScaleX.call(this, value);
-                if (change) {
-                    this.invalidateParentLayout();
-                }
-                return change;
-            };
-            /**
-             * @private
-             *
-             * @param value
-             * @returns
-             */
-            p.$setScaleY = function (value) {
-                var change = this.$super.$setScaleY.call(this, value);
-                if (change) {
-                    this.invalidateParentLayout();
-                }
-                return change;
-            };
             d(p, "minWidth"
                 /**
                  * @private
@@ -2184,6 +2221,13 @@ var eui;
             };
             /**
              * @private
+             */
+            p.$$invalidatePosition = function () {
+                this.$super.$invalidatePosition.call(this);
+                this.invalidateParentLayout();
+            };
+            /**
+             * @private
              *
              * @param value
              * @returns
@@ -2191,7 +2235,6 @@ var eui;
             p.$setX = function (value) {
                 var change = this.$super.$setX.call(this, value);
                 if (change) {
-                    this.invalidateParentLayout();
                     this.invalidateProperties();
                 }
                 return change;
@@ -2205,7 +2248,6 @@ var eui;
             p.$setY = function (value) {
                 var change = this.$super.$setY.call(this, value);
                 if (change) {
-                    this.invalidateParentLayout();
                     this.invalidateProperties();
                 }
                 return change;
@@ -2410,7 +2452,7 @@ var eui;
                     values[28 /* layoutHeightExplicitlySet */] = true;
                     height = Math.max(minHeight, Math.min(maxHeight, layoutHeight));
                 }
-                var matrix = this.$getMatrix();
+                var matrix = this.getAnchorMatrix();
                 if (isDeltaIdentity(matrix)) {
                     this.setActualSize(width, height);
                     return;
@@ -2428,7 +2470,7 @@ var eui;
              */
             p.setLayoutBoundsPosition = function (x, y) {
                 var matrix = this.$getMatrix();
-                if (!isDeltaIdentity(matrix)) {
+                if (!isDeltaIdentity(matrix) || this.anchorOffsetX != 0 || this.anchorOffsetY != 0) {
                     var bounds = egret.$TempRectangle;
                     this.getLayoutBounds(bounds);
                     x += this.$getX() - bounds.x;
@@ -2509,7 +2551,7 @@ var eui;
              */
             p.applyMatrix = function (bounds, w, h) {
                 var bounds = bounds.setTo(0, 0, w, h);
-                var matrix = this.$getMatrix();
+                var matrix = this.getAnchorMatrix();
                 if (isDeltaIdentity(matrix)) {
                     bounds.x += matrix.tx;
                     bounds.y += matrix.ty;
@@ -2517,6 +2559,20 @@ var eui;
                 else {
                     matrix.$transformBounds(bounds);
                 }
+            };
+            /**
+             * @private
+             */
+            p.getAnchorMatrix = function () {
+                var matrix = this.$getMatrix();
+                var offsetX = this.anchorOffsetX;
+                var offsetY = this.anchorOffsetY;
+                if (offsetX != 0 || offsetY != 0) {
+                    var tempM = egret.$TempMatrix;
+                    matrix.$preMultiplyInto(tempM.setTo(1, 0, 0, 1, -offsetX, -offsetY), tempM);
+                    return tempM;
+                }
+                return matrix;
             };
             return UIComponentImpl;
         }(egret.DisplayObject));
@@ -2577,6 +2633,12 @@ var eui;
             mixin(descendant, UIComponentImpl);
             var prototype = descendant.prototype;
             prototype.$super = base.prototype;
+            eui.registerProperty(descendant, "left", "any");
+            eui.registerProperty(descendant, "right", "any");
+            eui.registerProperty(descendant, "top", "any");
+            eui.registerProperty(descendant, "bottom", "any");
+            eui.registerProperty(descendant, "horizontalCenter", "any");
+            eui.registerProperty(descendant, "verticalCenter", "any");
             if (isContainer) {
                 prototype.$childAdded = function (child, index) {
                     this.invalidateSize();
@@ -17310,7 +17372,7 @@ var eui;
         var ADD_ITEMS = "eui.AddItems";
         var SET_PROPERTY = "eui.SetProperty";
         var SET_STATEPROPERTY = "eui.SetStateProperty";
-        var BINDING_PROPERTY = "eui.Binding.bindProperty";
+        var BINDING_PROPERTIES = "eui.Binding.$bindProperties";
         /**
          * @private
          * 代码生成工具基类
@@ -17881,11 +17943,12 @@ var eui;
             /**
              * @private
              */
-            function EXSetStateProperty(target, property, expression) {
+            function EXSetStateProperty(target, property, templates, chainIndex) {
                 _super.call(this);
                 this.target = target;
                 this.property = property;
-                this.expression = expression;
+                this.templates = templates;
+                this.chainIndex = chainIndex;
             }
             var d = __define,c=EXSetStateProperty,p=c.prototype;
             /**
@@ -17894,8 +17957,10 @@ var eui;
              * @returns
              */
             p.toCode = function () {
-                var chain = this.expression.split(".").join("\",\"");
-                return "new " + SET_STATEPROPERTY + "(this, [" + chain + "], this." + this.target + ",\"" + this.property + "\")";
+                var expression = this.templates.join(",");
+                var chain = this.chainIndex.join(",");
+                return "new " + SET_STATEPROPERTY + "(this, [" + expression + "]," + "[" + chain + "]," +
+                    this.target + ",\"" + this.property + "\")";
             };
             return EXSetStateProperty;
         }(CodeBase));
@@ -17909,11 +17974,12 @@ var eui;
             /**
              * @private
              */
-            function EXBinding(target, property, expression) {
+            function EXBinding(target, property, templates, chainIndex) {
                 _super.call(this);
                 this.target = target;
                 this.property = property;
-                this.expression = expression;
+                this.templates = templates;
+                this.chainIndex = chainIndex;
             }
             var d = __define,c=EXBinding,p=c.prototype;
             /**
@@ -17922,8 +17988,10 @@ var eui;
              * @returns
              */
             p.toCode = function () {
-                var chain = this.expression.split(".").join("\",\"");
-                return BINDING_PROPERTY + "(this, [\"" + chain + "\"]," + this.target + ",\"" + this.property + "\")";
+                var expression = this.templates.join(",");
+                var chain = this.chainIndex.join(",");
+                return BINDING_PROPERTIES + "(this, [" + expression + "]," + "[" + chain + "]," +
+                    this.target + ",\"" + this.property + "\")";
             };
             return EXBinding;
         }(CodeBase));
@@ -17978,6 +18046,7 @@ var eui;
         var basicTypes = [TYPE_ARRAY, "boolean", "string", "number"];
         var wingKeys = ["id", "locked", "includeIn", "excludeFrom"];
         var htmlEntities = [["<", "&lt;"], [">", "&gt;"], ["&", "&amp;"], ["\"", "&quot;"], ["'", "&apos;"]];
+        var jsKeyWords = ["null", "NaN", "undefined", "true", "false"];
         /**
          * @private
          */
@@ -18685,9 +18754,7 @@ var eui;
              * @private
              * 格式化值
              */
-            p.formatValue = function (key, value, node, haveState, stateCallBack) {
-                if (haveState === void 0) { haveState = false; }
-                if (stateCallBack === void 0) { stateCallBack = null; }
+            p.formatValue = function (key, value, node) {
                 if (!value) {
                     value = "";
                 }
@@ -18698,30 +18765,15 @@ var eui;
                 if (DEBUG && !type) {
                     egret.$error(2005, this.currentClassName, key, toXMLString(node));
                 }
-                if (value.charAt(0) == "{" && value.charAt(value.length - 1) == "}") {
-                    value = value.substr(1, value.length - 2).trim();
-                    if (value.indexOf("this.") == 0) {
-                        value = value.substring(5);
-                    }
+                var bindingValue = this.formatBinding(key, value, node);
+                if (bindingValue) {
                     this.checkIdForState(node);
-                    var firstKey = value.split(".")[0];
-                    if (firstKey != HOST_COMPONENT && this.skinParts.indexOf(firstKey) == -1) {
-                        value = HOST_COMPONENT + "." + value;
+                    var target = "this";
+                    if (node !== this.currentXML) {
+                        target += "." + node.attributes["id"];
                     }
-                    if (!haveState) {
-                        if (node != this.currentXML) {
-                            this.bindings.push(new sys.EXBinding("this." + node.attributes["id"], key, value));
-                        }
-                        else {
-                            this.bindings.push(new sys.EXBinding("this", key, value));
-                        }
-                        value = "";
-                    }
-                    else {
-                        if (stateCallBack) {
-                            stateCallBack(true);
-                        }
-                    }
+                    this.bindings.push(new sys.EXBinding(target, key, bindingValue.templates, bindingValue.chainIndex));
+                    value = "";
                 }
                 else if (type == RECTANGLE) {
                     if (DEBUG) {
@@ -18785,6 +18837,45 @@ var eui;
                 value = value.split("\"").join("\\\"");
                 value = "\"" + value + "\"";
                 return value;
+            };
+            p.formatBinding = function (key, value, node) {
+                if (!value) {
+                    return null;
+                }
+                value = value.trim();
+                if (value.charAt(0) != "{" || value.charAt(value.length - 1) != "}") {
+                    return null;
+                }
+                value = value.substring(1, value.length - 1).trim();
+                var templates = value.split("+");
+                var chainIndex = [];
+                var length = templates.length;
+                for (var i = 0; i < length; i++) {
+                    var item = templates[i].trim();
+                    if (!item) {
+                        templates.splice(i, 1);
+                        i--;
+                        length--;
+                        continue;
+                    }
+                    var first = item.charAt(0);
+                    if (first == "'" || first == "\"" || first >= "0" && first <= "9") {
+                        continue;
+                    }
+                    if (item.indexOf(".") == -1 && jsKeyWords.indexOf(item) != -1) {
+                        continue;
+                    }
+                    if (item.indexOf("this.") == 0) {
+                        item = item.substring(5);
+                    }
+                    var firstKey = item.split(".")[0];
+                    if (firstKey != HOST_COMPONENT && this.skinParts.indexOf(firstKey) == -1) {
+                        item = HOST_COMPONENT + "." + item;
+                    }
+                    templates[i] = "\"" + item + "\"";
+                    chainIndex.push(i);
+                }
+                return { templates: templates, chainIndex: chainIndex };
             };
             /**
              * @private
@@ -19134,12 +19225,12 @@ var eui;
                             if (index != -1) {
                                 var key = name.substring(0, index);
                                 key = this.formatKey(key, value);
-                                var isBinding = false;
-                                var value = this.formatValue(key, value, node, true, function (vl) {
-                                    isBinding = vl;
-                                });
-                                if (!value) {
-                                    continue;
+                                var bindingValue = this.formatBinding(key, value, node);
+                                if (!bindingValue) {
+                                    var value = this.formatValue(key, value, node);
+                                    if (!value) {
+                                        continue;
+                                    }
                                 }
                                 stateName = name.substr(index + 1);
                                 states = this.getStateByName(stateName, node);
@@ -19147,11 +19238,11 @@ var eui;
                                 if (l > 0) {
                                     for (var j = 0; j < l; j++) {
                                         state = states[j];
-                                        if (!isBinding) {
-                                            state.addOverride(new sys.EXSetProperty(id, key, value));
+                                        if (bindingValue) {
+                                            state.addOverride(new sys.EXSetStateProperty(id, key, bindingValue.templates, bindingValue.chainIndex));
                                         }
                                         else {
-                                            state.addOverride(new sys.EXSetStateProperty(id, key, "\"" + value + "\""));
+                                            state.addOverride(new sys.EXSetProperty(id, key, value));
                                         }
                                     }
                                 }
@@ -20468,6 +20559,23 @@ var eui;
         var UIComponentClass = "eui.UIComponent";
         /**
          * @private
+         * @param value 要格式化的相对值
+         * @param total 在此值方向上的总长度
+         */
+        function formatRelative(value, total) {
+            if (!value || typeof value == "number") {
+                return value;
+            }
+            var str = value;
+            var index = str.indexOf("%");
+            if (index == -1) {
+                return +str;
+            }
+            var percent = +str.substring(0, index);
+            return percent * 0.01 * total;
+        }
+        /**
+         * @private
          * 一个工具方法，使用BasicLayout规则测量目标对象。
          */
         function measure(target) {
@@ -20484,12 +20592,12 @@ var eui;
                     continue;
                 }
                 var values = layoutElement.$UIComponent;
-                var hCenter = values[4 /* horizontalCenter */];
-                var vCenter = values[5 /* verticalCenter */];
-                var left = values[0 /* left */];
-                var right = values[1 /* right */];
-                var top = values[2 /* top */];
-                var bottom = values[3 /* bottom */];
+                var hCenter = +values[4 /* horizontalCenter */];
+                var vCenter = +values[5 /* verticalCenter */];
+                var left = +values[0 /* left */];
+                var right = +values[1 /* right */];
+                var top = +values[2 /* top */];
+                var bottom = +values[3 /* bottom */];
                 var extX;
                 var extY;
                 layoutElement.getPreferredBounds(bounds);
@@ -20544,12 +20652,12 @@ var eui;
                     continue;
                 }
                 var values = layoutElement.$UIComponent;
-                var hCenter = values[4 /* horizontalCenter */];
-                var vCenter = values[5 /* verticalCenter */];
-                var left = values[0 /* left */];
-                var right = values[1 /* right */];
-                var top = values[2 /* top */];
-                var bottom = values[3 /* bottom */];
+                var hCenter = formatRelative(values[4 /* horizontalCenter */], unscaledWidth * 0.5);
+                var vCenter = formatRelative(values[5 /* verticalCenter */], unscaledHeight * 0.5);
+                var left = formatRelative(values[0 /* left */], unscaledWidth);
+                var right = formatRelative(values[1 /* right */], unscaledWidth);
+                var top = formatRelative(values[2 /* top */], unscaledHeight);
+                var bottom = formatRelative(values[3 /* bottom */], unscaledHeight);
                 var percentWidth = values[6 /* percentWidth */];
                 var percentHeight = values[7 /* percentHeight */];
                 var childWidth = NaN;
@@ -24433,9 +24541,10 @@ var eui;
          * @version eui 1.0
          * @platform Web,Native
          */
-        function SetStateProperty(host, chain, target, prop) {
+        function SetStateProperty(host, templates, chainIndex, target, prop) {
             this.host = host;
-            this.chain = chain;
+            this.templates = templates;
+            this.chainIndex = chainIndex;
             this.target = target;
             this.prop = prop;
         }
@@ -24458,11 +24567,7 @@ var eui;
             if (nextOldValue) {
                 this.oldValue = nextOldValue;
             }
-            var chain = [];
-            for (var i = 0, len = this.chain.length; i < len; i++) {
-                chain[i] = this.chain[i];
-            }
-            eui.Binding.bindProperty(this.host, chain, this.target, this.prop);
+            eui.Binding.$bindProperties(this.host, this.templates.concat(), this.chainIndex.concat(), this.target, this.prop);
         };
         /**
          * @inheritDoc

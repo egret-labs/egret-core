@@ -40,7 +40,5 @@ var Clean = (function () {
         return DontExitCode;
     };
     return Clean;
-})();
+}());
 module.exports = Clean;
-
-//# sourceMappingURL=../commands/clean.js.map

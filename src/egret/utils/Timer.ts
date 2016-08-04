@@ -203,6 +203,7 @@ module egret {
             if(this._running)
                 return;
             this.lastCount = this.updateInterval;
+            this.lastTimeStamp = getTimer();
             sys.$ticker.$startTick(this.$update,this);
             this._running = true;
         }
@@ -235,23 +236,34 @@ module egret {
          * @private
          */
         private lastCount:number = 1000;
+        /**
+         * @private
+         */
+        private lastTimeStamp:number = 0;
 
         /**
          * @private
          * Ticker以60FPS频率刷新此方法
          */
         $update(timeStamp:number):boolean {
-            this.lastCount -= 1000;
-            if(this.lastCount>0){
-                return false;
+            let deltaTime = timeStamp - this.lastTimeStamp;
+            if (deltaTime >= this._delay) {
+                this.lastCount = this.updateInterval;
             }
-            this.lastCount += this.updateInterval;
+            else {
+                this.lastCount -= 1000;
+                if (this.lastCount > 0) {
+                    return false;
+                }
+                this.lastCount += this.updateInterval;
+            }
+            this.lastTimeStamp = timeStamp;
             this._currentCount++;
-            var complete = (this.repeatCount > 0 && this._currentCount >= this.repeatCount);
-            TimerEvent.dispatchTimerEvent(this,TimerEvent.TIMER);
+            let complete = (this.repeatCount > 0 && this._currentCount >= this.repeatCount);
+            TimerEvent.dispatchTimerEvent(this, TimerEvent.TIMER);
             if (complete) {
                 this.stop();
-                TimerEvent.dispatchTimerEvent(this,TimerEvent.TIMER_COMPLETE);
+                TimerEvent.dispatchTimerEvent(this, TimerEvent.TIMER_COMPLETE);
             }
             return false;
         }

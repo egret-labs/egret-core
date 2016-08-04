@@ -1,0 +1,16 @@
+{
+    "compilerOptions": {
+        "module": "commonjs",
+        "target": "es5",
+        "noImplicitAny": false,
+        "sourceMap": false,
+        "noImplicitUseStrict": true,
+        "allowUnreachableCode": true
+    },
+    "exclude": [
+        "node_modules",
+        "templates",
+        "lib/typescript",
+        "lib/core/typescript"
+    ]
+}

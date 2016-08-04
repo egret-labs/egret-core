@@ -8,7 +8,5 @@ var Service = (function () {
         return DontExitCode;
     };
     return Service;
-})();
+}());
 module.exports = Service;
-
-//# sourceMappingURL=../commands/service.js.map

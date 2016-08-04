@@ -20,7 +20,7 @@ var NativeProject = (function () {
     NativeProject.copyNativeTemplate = copyNativeTemplate;
     NativeProject.copyOutputToNative = copyOutputToNative;
     return NativeProject;
-})();
+}());
 function copyOutputToNative(platform) {
     var platformFolders = getPlatformFolders(platform);
     var templateDatas = platformFolders.map(function (t) { return getNativeTemplateData(t); });
@@ -106,5 +106,3 @@ function exec(command, params, callback) {
     cdvProcess.on("error", function (ee) { return console.log("error when build", ee); });
 }
 module.exports = NativeProject;
-
-//# sourceMappingURL=../actions/NativeProject.js.map

@@ -29,8 +29,7 @@
 var __extends = (this && this.__extends) || function (d, b) {
     for (var p in b) if (b.hasOwnProperty(p)) d[p] = b[p];
     function __() { this.constructor = d; }
-    __.prototype = b.prototype;
-    d.prototype = new __();
+    d.prototype = b === null ? Object.create(b) : (__.prototype = b.prototype, new __());
 };
 //运行在node中的每一个文件本身都是module
 //module euiparser {
@@ -71,7 +70,7 @@ var CodeBase = (function () {
         return str;
     };
     return CodeBase;
-})();
+}());
 exports.CodeBase = CodeBase;
 /**
  * @private
@@ -232,7 +231,7 @@ var EXClass = (function (_super) {
         return returnStr;
     };
     return EXClass;
-})(CodeBase);
+}(CodeBase));
 exports.EXClass = EXClass;
 /**
  * @private
@@ -368,7 +367,7 @@ var EXCodeBlock = (function (_super) {
         return this.lines.join("\n");
     };
     return EXCodeBlock;
-})(CodeBase);
+}(CodeBase));
 exports.EXCodeBlock = EXCodeBlock;
 /**
  * @private
@@ -429,7 +428,7 @@ var EXFunction = (function (_super) {
         return returnStr;
     };
     return EXFunction;
-})(CodeBase);
+}(CodeBase));
 exports.EXFunction = EXFunction;
 /**
  * @private
@@ -457,7 +456,7 @@ var EXVariable = (function (_super) {
         return "this." + this.name + " = " + this.defaultValue + ";";
     };
     return EXVariable;
-})(CodeBase);
+}(CodeBase));
 exports.EXVariable = EXVariable;
 /**
  * @private
@@ -530,7 +529,7 @@ var EXState = (function (_super) {
         return returnStr;
     };
     return EXState;
-})(CodeBase);
+}(CodeBase));
 exports.EXState = EXState;
 /**
  * @private
@@ -557,7 +556,7 @@ var EXAddItems = (function (_super) {
         return returnStr;
     };
     return EXAddItems;
-})(CodeBase);
+}(CodeBase));
 exports.EXAddItems = EXAddItems;
 /**
  * @private
@@ -582,7 +581,7 @@ var EXSetProperty = (function (_super) {
         return "new " + SET_PROPERTY + "(\"" + this.target + "\",\"" + this.name + "\"," + this.value + ")";
     };
     return EXSetProperty;
-})(CodeBase);
+}(CodeBase));
 exports.EXSetProperty = EXSetProperty;
 /**
  * @private
@@ -608,8 +607,6 @@ var EXBinding = (function (_super) {
         return BINDING_PROPERTY + "(this, [\"" + chain + "\"], this." + this.target + ",\"" + this.property + "\");";
     };
     return EXBinding;
-})(CodeBase);
+}(CodeBase));
 exports.EXBinding = EXBinding;
 //} 
-
-//# sourceMappingURL=../../../lib/eui/parser/CodeFactory.js.map

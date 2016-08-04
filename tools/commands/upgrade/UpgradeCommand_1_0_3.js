@@ -149,7 +149,5 @@ var UpgradeCommand_1_0_3 = (function () {
         file.save(item, content);
     };
     return UpgradeCommand_1_0_3;
-})();
+}());
 module.exports = UpgradeCommand_1_0_3;
-
-//# sourceMappingURL=../../commands/upgrade/UpgradeCommand_1_0_3.js.map

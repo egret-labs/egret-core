@@ -671,7 +671,6 @@ module egret {
             this.minY = Infinity;
             this.maxX = -Infinity;
             this.maxY = -Infinity;
-            this.$renderNode.dirtyRender = true;
         }
 
         /**

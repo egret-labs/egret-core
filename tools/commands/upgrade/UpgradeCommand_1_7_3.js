@@ -44,7 +44,5 @@ var UpgradeCommand_1_7_3 = (function () {
         }
     };
     return UpgradeCommand_1_7_3;
-})();
+}());
 module.exports = UpgradeCommand_1_7_3;
-
-//# sourceMappingURL=../../commands/upgrade/UpgradeCommand_1_7_3.js.map

@@ -148,7 +148,5 @@ var ChangeEntranceCommand = (function () {
         }
     };
     return ChangeEntranceCommand;
-})();
+}());
 module.exports = ChangeEntranceCommand;
-
-//# sourceMappingURL=../actions/ChangeEntranceCommand.js.map

@@ -109,7 +109,5 @@ var CopyFiles = (function () {
         }
     };
     return CopyFiles;
-})();
+}());
 module.exports = CopyFiles;
-
-//# sourceMappingURL=../actions/CopyFiles.js.map

@@ -57,6 +57,8 @@ module egret.sys {
                 $error(1008, "egret.sys.SystemTicker");
             }
             $START_TIME = Date.now();
+            this.frameDeltaTime = 1000 / this.$frameRate;
+            this.lastCount = this.frameInterval = Math.round(60000 / this.$frameRate);
         }
 
         /**
@@ -164,7 +166,9 @@ module egret.sys {
         /**
          * @private
          */
-        private frameInterval:number = 2000;
+        private frameInterval:number;
+        private frameDeltaTime:number;
+        private lastTimeStamp:number = 0;
 
         /**
          * @private
@@ -187,6 +191,7 @@ module egret.sys {
                 egret_native.setFrameRate(value);
                 value = 60;
             }
+            this.frameDeltaTime = 1000 / value;
             //这里用60*1000来避免浮点数计算不准确的问题。
             this.lastCount = this.frameInterval = Math.round(60000 / value);
             return true;
@@ -195,7 +200,7 @@ module egret.sys {
         /**
          * @private
          */
-        private lastCount:number = 2000;
+        private lastCount:number;
         /**
          * @private
          * ticker 花销的时间
@@ -219,16 +224,23 @@ module egret.sys {
                     requestRenderingFlag = true;
                 }
             }
-            this.lastCount -= 1000;
             var t2 = egret.getTimer();
-            if (this.lastCount > 0) {
-                if (requestRenderingFlag) {
-                    this.render(false, this.costEnterFrame+t2-t1);
-                }
-                return;
+            let deltaTime = timeStamp - this.lastTimeStamp;
+            if (deltaTime >= this.frameDeltaTime) {
+                this.lastCount = this.frameInterval;
             }
-            this.lastCount += this.frameInterval;
-            this.render(true, this.costEnterFrame+t2-t1);
+            else {
+                this.lastCount -= 1000;
+                if (this.lastCount > 0) {
+                    if (requestRenderingFlag) {
+                        this.render(false, this.costEnterFrame + t2 - t1);
+                    }
+                    return;
+                }
+                this.lastCount += this.frameInterval;
+            }
+            this.lastTimeStamp = timeStamp;
+            this.render(true, this.costEnterFrame + t2 - t1);
             var t3 = egret.getTimer();
             this.broadcastEnterFrame();
             var t4 = egret.getTimer();

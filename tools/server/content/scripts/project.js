@@ -5,7 +5,6 @@ var egret;
 (function (egret) {
     var portal;
     (function (portal) {
-        portal.project;
         var Project = (function () {
             function Project() {
                 var _this = this;
@@ -73,7 +72,7 @@ var egret;
             };
             Project.prototype.cancel = function () {
                 $.get('', { cancel: true }, function () { });
-                egret.setTimeout(function () { return window.close(); }, 20);
+                window.setTimeout(function () { return window.close(); }, 20);
             };
             Project.prototype.close = function () {
                 window.close();
@@ -102,7 +101,7 @@ var egret;
                 }
             };
             return Project;
-        })();
+        }());
         portal.Project = Project;
     })(portal = egret.portal || (egret.portal = {}));
 })(egret || (egret = {}));
@@ -122,5 +121,3 @@ function showLoading() {
         complete: showLoading
     });
 }
-
-//# sourceMappingURL=../../../server/content/scripts/project.js.map
