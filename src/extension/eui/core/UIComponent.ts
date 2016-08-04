@@ -1801,6 +1801,12 @@ module eui.sys {
         var prototype = descendant.prototype;
         prototype.$super = base.prototype;
 
+        registerProperty(descendant, "left", "any");
+        registerProperty(descendant, "right", "any");
+        registerProperty(descendant, "top", "any");
+        registerProperty(descendant, "bottom", "any");
+        registerProperty(descendant, "horizontalCenter", "any");
+        registerProperty(descendant, "verticalCenter", "any");
         if (isContainer) {
             prototype.$childAdded = function (child:egret.DisplayObject, index:number):void {
                 this.invalidateSize();

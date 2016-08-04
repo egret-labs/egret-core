@@ -2633,6 +2633,12 @@ var eui;
             mixin(descendant, UIComponentImpl);
             var prototype = descendant.prototype;
             prototype.$super = base.prototype;
+            eui.registerProperty(descendant, "left", "any");
+            eui.registerProperty(descendant, "right", "any");
+            eui.registerProperty(descendant, "top", "any");
+            eui.registerProperty(descendant, "bottom", "any");
+            eui.registerProperty(descendant, "horizontalCenter", "any");
+            eui.registerProperty(descendant, "verticalCenter", "any");
             if (isContainer) {
                 prototype.$childAdded = function (child, index) {
                     this.invalidateSize();
@@ -20646,8 +20652,8 @@ var eui;
                     continue;
                 }
                 var values = layoutElement.$UIComponent;
-                var hCenter = formatRelative(values[4 /* horizontalCenter */], unscaledWidth);
-                var vCenter = formatRelative(values[5 /* verticalCenter */], unscaledHeight);
+                var hCenter = formatRelative(values[4 /* horizontalCenter */], unscaledWidth * 0.5);
+                var vCenter = formatRelative(values[5 /* verticalCenter */], unscaledHeight * 0.5);
                 var left = formatRelative(values[0 /* left */], unscaledWidth);
                 var right = formatRelative(values[1 /* right */], unscaledWidth);
                 var top = formatRelative(values[2 /* top */], unscaledHeight);

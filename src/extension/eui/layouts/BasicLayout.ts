@@ -248,8 +248,8 @@ module eui.sys {
             }
 
             var values = layoutElement.$UIComponent;
-            var hCenter = formatRelative(values[sys.UIKeys.horizontalCenter], unscaledWidth);
-            var vCenter = formatRelative(values[sys.UIKeys.verticalCenter], unscaledHeight);
+            var hCenter = formatRelative(values[sys.UIKeys.horizontalCenter], unscaledWidth*0.5);
+            var vCenter = formatRelative(values[sys.UIKeys.verticalCenter], unscaledHeight*0.5);
             var left = formatRelative(values[sys.UIKeys.left], unscaledWidth);
             var right = formatRelative(values[sys.UIKeys.right], unscaledWidth);
             var top = formatRelative(values[sys.UIKeys.top], unscaledHeight);
