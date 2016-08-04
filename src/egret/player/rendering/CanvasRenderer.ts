@@ -503,7 +503,7 @@ module egret {
          */
         private renderBitmap(node:sys.BitmapNode, context:CanvasRenderingContext2D):number {
             var image = node.image;
-            if(!image.source) {
+            if(!image || !image.source) {
                 return;
             }
             if (context.$imageSmoothingEnabled != node.smoothing) {

@@ -16750,7 +16750,7 @@ var egret;
          */
         p.renderBitmap = function (node, context) {
             var image = node.image;
-            if (!image.source) {
+            if (!image || !image.source) {
                 return;
             }
             if (context.$imageSmoothingEnabled != node.smoothing) {
