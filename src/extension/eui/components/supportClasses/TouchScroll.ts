@@ -334,7 +334,7 @@ module eui.sys {
             if (hsp < 0) {
                 hspTo = 0;
             }
-            if (maxHsp && hsp > maxHsp) {
+            if (maxHsp >-1 && hsp > maxHsp) {
                 hspTo = maxHsp;
             }
             this.throwTo(hspTo, 300);
