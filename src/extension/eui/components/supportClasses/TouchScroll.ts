@@ -188,6 +188,7 @@ module eui.sys {
         public isStarted():boolean {
             return this.started;
         }
+
         /**
          * @private
          * 开始记录位移变化。注意：当使用完毕后，必须调用 finish() 方法结束记录，否则该对象将无法被回收。
@@ -208,7 +209,7 @@ module eui.sys {
          * 更新当前移动到的位置
          * @param touchPoint 当前触摸位置，以像素为单位，通常是stageX或stageY。
          */
-        public update(touchPoint:number, maxScrollValue:number,scrollValue):void {
+        public update(touchPoint:number, maxScrollValue:number, scrollValue):void {
             maxScrollValue = Math.max(maxScrollValue, 0);
             this.currentPosition = touchPoint;
             this.maxScrollPos = maxScrollValue;
@@ -216,19 +217,19 @@ module eui.sys {
             var scrollPos = disMove + scrollValue;
             this.offsetPoint = touchPoint;
             if (scrollPos < 0) {
-                if(!this.$bounces) {
+                if (!this.$bounces) {
                     scrollPos = 0;
                 }
                 else {
-                    scrollPos -= disMove*0.5;
+                    scrollPos -= disMove * 0.5;
                 }
             }
             if (scrollPos > maxScrollValue) {
-                if(!this.$bounces) {
+                if (!this.$bounces) {
                     scrollPos = maxScrollValue;
                 }
                 else {
-                    scrollPos -= disMove*0.5;
+                    scrollPos -= disMove * 0.5;
                 }
             }
             this.currentScrollPos = scrollPos;
@@ -286,11 +287,11 @@ module eui.sys {
             }
             if (duration > 0) {
                 //如果取消了回弹,保证动画之后不会超出边界
-                if(!this.$bounces) {
-                    if(posTo < 0) {
+                if (!this.$bounces) {
+                    if (posTo < 0) {
                         posTo = 0;
                     }
-                    else if(posTo > maxScrollPos) {
+                    else if (posTo > maxScrollPos) {
                         posTo = maxScrollPos;
                     }
                 }
@@ -321,7 +322,6 @@ module eui.sys {
             }
             return true;
         }
-
         /**
          * @private
          *
@@ -334,7 +334,7 @@ module eui.sys {
             if (hsp < 0) {
                 hspTo = 0;
             }
-            if (maxHsp >-1 && hsp > maxHsp) {
+            if (hsp > maxHsp) {
                 hspTo = maxHsp;
             }
             this.throwTo(hspTo, 300);

@@ -14403,7 +14403,7 @@ var eui;
                 if (hsp < 0) {
                     hspTo = 0;
                 }
-                if (maxHsp > -1 && hsp > maxHsp) {
+                if (hsp > maxHsp) {
                     hspTo = maxHsp;
                 }
                 this.throwTo(hspTo, 300);
