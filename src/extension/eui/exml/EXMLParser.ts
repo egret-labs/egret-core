@@ -1396,7 +1396,11 @@ module eui.sys {
                             if (l > 0) {
                                 for (var j = 0; j < l; j++) {
                                     state = states[j];
+
                                     if (bindingValue) {
+                                        if (node !== this.currentXML) {
+                                            id = "this." + id;
+                                        }
                                         state.addOverride(new EXSetStateProperty(id, key, bindingValue.templates, bindingValue.chainIndex));
                                     } else {
                                         state.addOverride(new EXSetProperty(id, key, value));
