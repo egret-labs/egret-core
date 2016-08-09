@@ -1,6 +1,6 @@
 {
   "name": "egret",
-  "version": "3.1.5",
+  "version": "3.1.6",
   "private": true,
   "author": "egret-labs",
   "scripts": {
@@ -16,7 +16,7 @@
     "modules": [
       {
         "name": "egret",
-        "description": "Egret 核心库",
+        "description": "egret 核心库",
         "files": [
           {
             "path": "../Defines.debug.ts",
@@ -377,6 +377,14 @@
         "root": "src/extension/socket",
         "dependencies": [
           "egret"
+        ]
+      },
+      {
+        "name": "dragonBones",
+        "description": "dragonbones 龙骨动画库",
+        "files": [],
+        "root": "",
+        "dependencies": [
         ]
       }
     ],

@@ -679,6 +679,11 @@ module eui.sys {
          */
         public constructor(target:string, property:string, templates:string[], chainIndex:number[]) {
             super();
+            if (target) {
+                target = "this." + target;
+            } else {
+                target = "this";
+            }
             this.target = target;
             this.property = property;
             this.templates = templates;
