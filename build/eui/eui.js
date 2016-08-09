@@ -17945,6 +17945,12 @@ var eui;
              */
             function EXSetStateProperty(target, property, templates, chainIndex) {
                 _super.call(this);
+                if (target) {
+                    target = "this." + target;
+                }
+                else {
+                    target = "this";
+                }
                 this.target = target;
                 this.property = property;
                 this.templates = templates;
@@ -19239,9 +19245,6 @@ var eui;
                                     for (var j = 0; j < l; j++) {
                                         state = states[j];
                                         if (bindingValue) {
-                                            if (node !== this.currentXML) {
-                                                id = "this." + id;
-                                            }
                                             state.addOverride(new sys.EXSetStateProperty(id, key, bindingValue.templates, bindingValue.chainIndex));
                                         }
                                         else {
