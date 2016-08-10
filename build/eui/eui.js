@@ -12742,21 +12742,21 @@ var eui;
             if (this.$strokeWeight > 0) {
                 g.beginFill(this.$fillColor, 0);
                 g.lineStyle(this.$strokeWeight, this.$strokeColor, this.$strokeAlpha, true, "normal", "square", "miter");
-                if (this.$ellipseWidth == 0) {
+                if (this.$ellipseWidth == 0 && this.$ellipseHeight == 0) {
                     g.drawRect(this.$strokeWeight / 2, this.$strokeWeight / 2, unscaledWidth - this.$strokeWeight, unscaledHeight - this.$strokeWeight);
                 }
                 else {
-                    g.drawRoundRect(this.$strokeWeight / 2, this.$strokeWeight / 2, unscaledWidth - this.$strokeWeight, unscaledHeight - this.$strokeWeight, this.$ellipseWidth, 0);
+                    g.drawRoundRect(this.$strokeWeight / 2, this.$strokeWeight / 2, unscaledWidth - this.$strokeWeight, unscaledHeight - this.$strokeWeight, this.$ellipseWidth, this.$ellipseHeight);
                 }
                 g.endFill();
             }
             g.beginFill(this.$fillColor, this.$fillAlpha);
             g.lineStyle(this.$strokeWeight, this.$strokeColor, 0, true, "normal", "square", "miter");
-            if (this.$ellipseWidth == 0) {
+            if (this.$ellipseWidth == 0 && this.$ellipseHeight == 0) {
                 g.drawRect(this.$strokeWeight, this.$strokeWeight, unscaledWidth - this.$strokeWeight * 2, unscaledHeight - this.$strokeWeight * 2);
             }
             else {
-                g.drawRoundRect(this.$strokeWeight, this.$strokeWeight, unscaledWidth - this.$strokeWeight * 2, unscaledHeight - this.$strokeWeight * 2, this.$ellipseWidth, 0);
+                g.drawRoundRect(this.$strokeWeight, this.$strokeWeight, unscaledWidth - this.$strokeWeight * 2, unscaledHeight - this.$strokeWeight * 2, this.$ellipseWidth, this.$ellipseHeight);
             }
             g.endFill();
             this.$invalidateContentBounds();
