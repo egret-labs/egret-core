@@ -371,8 +371,6 @@ module egret.web {
             return texture;
         }
 
-        private pvrtcExt;
-
         private createTextureFromCompressedData(data, width, height, levels, internalFormat): WebGLTexture {
             return null;
         }
