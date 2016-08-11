@@ -43,7 +43,7 @@ module eui {
      * @platform Web,Native
      */
     export class Rect extends Component {
-        constructor(width?: number, height?: number, fillColor?: number) {
+        constructor(width?:number, height?:number, fillColor?:number) {
             super();
             this.touchChildren = false;
             this.$graphics = new egret.Graphics();
@@ -52,24 +52,26 @@ module eui {
             this.height = height;
             this.fillColor = fillColor;
         }
+
         /**
          * @private
          */
-        $graphics: egret.Graphics;
+        $graphics:egret.Graphics;
 
-        public get graphics(): egret.Graphics {
+        public get graphics():egret.Graphics {
             return this.$graphics;
         }
+
         /**
          * @private
          */
-        $measureContentBounds(bounds: egret.Rectangle): void {
+        $measureContentBounds(bounds:egret.Rectangle):void {
             if (this.$graphics) {
                 bounds.setTo(0, 0, this.width, this.height);
             }
         }
 
-        private $fillColor: number = 0x000000;
+        private $fillColor:number = 0x000000;
         /**
          * @language en_US
          * Fill color
@@ -84,18 +86,18 @@ module eui {
          * @version eui 1.0
          * @platform Web,Native
          */
-        public get fillColor(): number {
+        public get fillColor():number {
             return this.$fillColor;
         }
 
-        public set fillColor(value: number) {
+        public set fillColor(value:number) {
             if (value == undefined || this.$fillColor == value)
                 return;
             this.$fillColor = value;
             this.invalidateDisplayList();
         }
 
-        private $fillAlpha: number = 1;
+        private $fillAlpha:number = 1;
         /**
          * @language en_US
          * Fill alpha
@@ -110,18 +112,18 @@ module eui {
          * @version eui 1.0
          * @platform Web,Native
          */
-        public get fillAlpha(): number {
+        public get fillAlpha():number {
             return this.$fillAlpha;
         }
 
-        public set fillAlpha(value: number) {
+        public set fillAlpha(value:number) {
             if (this.$fillAlpha == value)
                 return;
             this.$fillAlpha = value;
             this.invalidateDisplayList();
         }
 
-        private $strokeColor: number = 0x444444;
+        private $strokeColor:number = 0x444444;
         /**
          * @language en_US
          * The line's color inside the rect border. Caution: when the strokeWeight is 0, a line is not drawn
@@ -136,17 +138,18 @@ module eui {
          * @version eui 1.0
          * @platform Web,Native
          */
-        public get strokeColor(): number {
+        public get strokeColor():number {
             return this.$strokeColor;
         }
 
-        public set strokeColor(value: number) {
+        public set strokeColor(value:number) {
             if (this.$strokeColor == value)
                 return;
             this.$strokeColor = value;
             this.invalidateDisplayList();
         }
-        private $strokeAlpha: number = 1;
+
+        private $strokeAlpha:number = 1;
         /**
          * @language en_US
          * The line's alpha inside the rect border. Caution: when the strokeWeight is 0, a line is not drawn
@@ -161,18 +164,18 @@ module eui {
          * @version eui 1.0
          * @platform Web,Native
          */
-        public get strokeAlpha(): number {
+        public get strokeAlpha():number {
             return this.$strokeAlpha;
         }
 
-        public set strokeAlpha(value: number) {
+        public set strokeAlpha(value:number) {
             if (this.$strokeAlpha == value)
                 return;
             this.$strokeAlpha = value;
             this.invalidateDisplayList();
         }
 
-        private $strokeWeight: number = 0;
+        private $strokeWeight:number = 0;
         /**
          * @language en_US
          * The line's thickness inside the rect border. Caution: when the strokeWeight is 0, a line is not drawn
@@ -187,18 +190,18 @@ module eui {
          * @version eui 1.0
          * @platform Web,Native
          */
-        public get strokeWeight(): number {
+        public get strokeWeight():number {
             return this.$strokeWeight;
         }
 
-        public set strokeWeight(value: number) {
+        public set strokeWeight(value:number) {
             if (this.$strokeWeight == value)
                 return;
             this.$strokeWeight = value;
             this.invalidateDisplayList();
         }
 
-        private $ellipseWidth: number = 0;
+        private $ellipseWidth:number = 0;
         /**
          * @language en_US
          * Width used to draw an ellipse with rounded corners (in pixels).
@@ -213,17 +216,18 @@ module eui {
          * @version eui 1.0
          * @platform Web,Native
          */
-        public get ellipseWidth(): number {
+        public get ellipseWidth():number {
             return this.$ellipseWidth;
         }
-        public set ellipseWidth(value: number) {
+
+        public set ellipseWidth(value:number) {
             if (this.$ellipseWidth == value)
                 return;
             this.$ellipseWidth = value;
             this.invalidateDisplayList();
         }
 
-        private $ellipseHeight: number = 0;
+        private $ellipseHeight:number = 0;
         /**
          * @language en_US
          * Height used to draw an ellipse with rounded corners (in pixels). If no value is specified, the default value matches the value of the ellipseWidth parameter.
@@ -238,15 +242,17 @@ module eui {
          * @version eui 1.0
          * @platform Web,Native
          */
-        public get ellipseHeight(): number {
+        public get ellipseHeight():number {
             return this.$ellipseHeight;
         }
-        public set ellipseHeight(value: number) {
+
+        public set ellipseHeight(value:number) {
             if (this.$ellipseHeight == value)
                 return;
             this.$ellipseHeight = value;
             this.invalidateDisplayList();
         }
+
         /**
          * @copy eui.UIComponent#updateDisplayList
          *
@@ -254,25 +260,25 @@ module eui {
          * @version eui 1.0
          * @platform Web,Native
          */
-        protected updateDisplayList(unscaledWidth: number, unscaledHeight: number): void {
+        protected updateDisplayList(unscaledWidth:number, unscaledHeight:number):void {
             var g = this.graphics;
             g.clear();
             if (this.$strokeWeight > 0) {
                 g.beginFill(this.$fillColor, 0);
                 g.lineStyle(this.$strokeWeight, this.$strokeColor, this.$strokeAlpha, true, "normal", "square", "miter");
-                if (this.$ellipseWidth == 0) {
+                if (this.$ellipseWidth == 0 && this.$ellipseHeight == 0) {
                     g.drawRect(this.$strokeWeight / 2, this.$strokeWeight / 2, unscaledWidth - this.$strokeWeight, unscaledHeight - this.$strokeWeight);
                 } else {
-                    g.drawRoundRect(this.$strokeWeight / 2, this.$strokeWeight / 2, unscaledWidth - this.$strokeWeight, unscaledHeight - this.$strokeWeight, this.$ellipseWidth, 0);
+                    g.drawRoundRect(this.$strokeWeight / 2, this.$strokeWeight / 2, unscaledWidth - this.$strokeWeight, unscaledHeight - this.$strokeWeight, this.$ellipseWidth, this.$ellipseHeight);
                 }
                 g.endFill();
             }
             g.beginFill(this.$fillColor, this.$fillAlpha);
             g.lineStyle(this.$strokeWeight, this.$strokeColor, 0, true, "normal", "square", "miter");
-            if (this.$ellipseWidth == 0) {
+            if (this.$ellipseWidth == 0 && this.$ellipseHeight == 0) {
                 g.drawRect(this.$strokeWeight, this.$strokeWeight, unscaledWidth - this.$strokeWeight * 2, unscaledHeight - this.$strokeWeight * 2);
             } else {
-                g.drawRoundRect(this.$strokeWeight, this.$strokeWeight, unscaledWidth - this.$strokeWeight * 2, unscaledHeight - this.$strokeWeight * 2, this.$ellipseWidth, 0);
+                g.drawRoundRect(this.$strokeWeight, this.$strokeWeight, unscaledWidth - this.$strokeWeight * 2, unscaledHeight - this.$strokeWeight * 2, this.$ellipseWidth, this.$ellipseHeight);
             }
             g.endFill();
             this.$invalidateContentBounds();

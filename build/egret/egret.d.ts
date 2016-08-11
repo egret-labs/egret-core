@@ -10738,6 +10738,10 @@ declare module egret {
          * 绘制一个显示对象
          */
         private drawDisplayObject(displayObject, context, dirtyList, matrix, displayList, clipRegion, root);
+        /**
+         * @private
+         */
+        private drawWithFilter(displayObject, context, dirtyList, matrix, clipRegion, root);
         private renderingMask;
         /**
          * @private
