@@ -16451,6 +16451,28 @@ var egret;
          * @private
          */
         p.drawWithFilter = function (displayObject, context, dirtyList, matrix, clipRegion, root) {
+            if (egret.Capabilities.runtimeType == egret.RuntimeType.NATIVE) {
+                var drawCalls = 0;
+                var filters = displayObject.$getFilters();
+                // 获取显示对象的链接矩阵
+                var displayMatrix = egret.Matrix.create();
+                displayMatrix.copyFrom(displayObject.$getConcatenatedMatrix());
+                // 获取显示对象的矩形区域
+                var region;
+                region = egret.sys.Region.create();
+                var bounds = displayObject.$getOriginalBounds();
+                region.updateRegion(bounds, displayMatrix);
+                var filter = filters[0]; // 这里暂时只处理了第一个filter！
+                egret_native.Graphics.setGlobalShader(filter);
+                // TODO 这里存在重复计算？
+                var offsetM = egret.Matrix.create().copyFrom(displayMatrix);
+                offsetM.translate(-region.minX, -region.minY);
+                drawCalls += this.drawDisplayObject(displayObject, context, dirtyList, offsetM, displayObject.$displayList, region, root);
+                egret.Matrix.release(offsetM);
+                egret.Matrix.release(displayMatrix);
+                egret_native.Graphics.setGlobalShader(null);
+                return drawCalls;
+            }
             var drawCalls = 0;
             var filters = displayObject.$getFilters();
             var filtersLen = filters.length;
