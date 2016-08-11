@@ -3993,6 +3993,19 @@ var egret;
         __extends(BitmapData, _super);
         function BitmapData(source) {
             _super.call(this);
+            /**
+             * @language en_US
+             * Texture format.
+             * @version Egret 2.4
+             * @platform Web,Native
+             */
+            /**
+             * @language zh_CN
+             * 纹理格式。
+             * @version Egret 2.4
+             * @platform Web,Native
+             */
+            this.format = "image";
             this.source = source;
             this.width = source.width;
             this.height = source.height;

@@ -88,14 +88,12 @@ module egret {
         /**
          * @language en_US
          * Original bitmap image.
-         * @readOnly
          * @version Egret 2.4
          * @platform Web,Native
          */
         /**
          * @language zh_CN
          * 原始位图图像。
-         * @readOnly
          * @version Egret 2.4
          * @platform Web,Native
          */
@@ -104,18 +102,30 @@ module egret {
         /**
          * @language en_US
          * WebGL texture.
-         * @readOnly
          * @version Egret 2.4
          * @platform Web,Native
          */
         /**
          * @language zh_CN
          * WebGL纹理。
-         * @readOnly
          * @version Egret 2.4
          * @platform Web,Native
          */
         webGLTexture: any;
+
+        /**
+         * @language en_US
+         * Texture format.
+         * @version Egret 2.4
+         * @platform Web,Native
+         */
+        /**
+         * @language zh_CN
+         * 纹理格式。
+         * @version Egret 2.4
+         * @platform Web,Native
+         */
+        format:string = "image";
 
         constructor(source) {
             super();

@@ -6722,6 +6722,9 @@ var egret;
                 gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_WRAP_T, gl.CLAMP_TO_EDGE);
                 return texture;
             };
+            p.createTextureFromCompressedData = function (data, width, height, levels, internalFormat) {
+                return null;
+            };
             /**
              * 更新材质的bitmapData
              */
@@ -6736,7 +6739,12 @@ var egret;
              */
             p.getWebGLTexture = function (bitmapData) {
                 if (!bitmapData.webGLTexture) {
-                    bitmapData.webGLTexture = this.createTexture(bitmapData.source);
+                    if (bitmapData.format == "image") {
+                        bitmapData.webGLTexture = this.createTexture(bitmapData.source);
+                    }
+                    else if (bitmapData.format == "pvr") {
+                        bitmapData.webGLTexture = this.createTextureFromCompressedData(bitmapData.source.pvrtcData, bitmapData.width, bitmapData.height, bitmapData.source.mipmapsCount, bitmapData.source.format);
+                    }
                     //todo
                     if (bitmapData.webGLTexture) {
                         bitmapData.source = null;
