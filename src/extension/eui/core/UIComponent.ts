@@ -1360,7 +1360,7 @@ module eui.sys {
         /**
          * @private
          */
-        $$invalidatePosition():void {
+        $invalidatePosition():void {
             this.$super.$invalidatePosition.call(this);
             this.invalidateParentLayout();
         }

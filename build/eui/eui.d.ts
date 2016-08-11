@@ -1703,7 +1703,7 @@ declare module eui.sys {
         /**
          * @private
          */
-        $$invalidatePosition(): void;
+        $invalidatePosition(): void;
         /**
          * @private
          *

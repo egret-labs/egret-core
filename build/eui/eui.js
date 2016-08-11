@@ -2222,7 +2222,7 @@ var eui;
             /**
              * @private
              */
-            p.$$invalidatePosition = function () {
+            p.$invalidatePosition = function () {
                 this.$super.$invalidatePosition.call(this);
                 this.invalidateParentLayout();
             };
