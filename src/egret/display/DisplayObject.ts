@@ -351,7 +351,7 @@ module egret {
          * @private
          * 标记矩阵失效
          */
-        private invalidateMatrix(): void {
+        $invalidateMatrix(): void {
             this.$setFlags(sys.DisplayObjectFlags.InvalidMatrix);
             this.$invalidatePosition();
         }
@@ -760,7 +760,7 @@ module egret {
                 return false;
             }
             values[Keys.scaleX] = value;
-            this.invalidateMatrix();
+            this.$invalidateMatrix();
             return true;
         }
 
@@ -806,7 +806,7 @@ module egret {
                 return false;
             }
             this.$DisplayObject[Keys.scaleY] = value;
-            this.invalidateMatrix();
+            this.$invalidateMatrix();
             return true;
         }
 
@@ -858,7 +858,7 @@ module egret {
             values[Keys.skewX] += angle;
             values[Keys.skewY] += angle;
             values[Keys.rotation] = value;
-            this.invalidateMatrix();
+            this.$invalidateMatrix();
 
             return true;
         }
@@ -895,7 +895,7 @@ module egret {
             value = value / 180 * Math.PI;
 
             values[Keys.skewX] = value;
-            this.invalidateMatrix();
+            this.$invalidateMatrix();
 
             return true;
         }
@@ -932,7 +932,7 @@ module egret {
             value = value / 180 * Math.PI;
 
             values[Keys.skewY] = value;
-            this.invalidateMatrix();
+            this.$invalidateMatrix();
 
             return true;
         }
@@ -1002,7 +1002,7 @@ module egret {
             //     values[Keys.scaleY] = bounds.height / baseHeight;
             //     values[Keys.scaleX] = value / baseWidth;
             // }
-            this.invalidateMatrix();
+            this.$invalidateMatrix();
 
             return true;
         }
@@ -1072,7 +1072,7 @@ module egret {
             //     values[Keys.scaleY] = value / baseHeight;
             //     values[Keys.scaleX] = bounds.width / baseWidth;
             // }
-            this.invalidateMatrix();
+            this.$invalidateMatrix();
 
             return true;
         }

@@ -1360,9 +1360,33 @@ module eui.sys {
         /**
          * @private
          */
-        $invalidatePosition():void {
-            this.$super.$invalidatePosition.call(this);
+        $invalidateMatrix():void {
+            this.$super.$invalidateMatrix.call(this);
             this.invalidateParentLayout();
+        }
+        /**
+         * @private
+         */
+        $setMatrix(matrix: egret.Matrix, needUpdateProperties: boolean = true): boolean {
+            this.$super.$setMatrix.call(this,matrix,needUpdateProperties);
+            this.invalidateParentLayout();
+            return true;
+        }
+        /**
+         * @private
+         */
+        $setAnchorOffsetX(value: number): boolean {
+            this.$super.$setAnchorOffsetX.call(this,value);
+            this.invalidateParentLayout();
+            return true;
+        }
+        /**
+         * @private
+         */
+        $setAnchorOffsetY(value: number): boolean {
+            this.$super.$setAnchorOffsetY.call(this,value);
+            this.invalidateParentLayout();
+            return true;
         }
 
         /**
