@@ -887,7 +887,7 @@ declare module eui {
          * @version eui 1.0
          * @platform Web,Native
          */
-        left: number;
+        left: number | string;
         /**
          * @language en_US
          * The horizontal distance in pixels from the right edge of the component to the
@@ -909,7 +909,7 @@ declare module eui {
          * @version eui 1.0
          * @platform Web,Native
          */
-        right: number;
+        right: number | string;
         /**
          * @language en_US
          * The vertical distance in pixels from the top edge of the component to the
@@ -931,7 +931,7 @@ declare module eui {
          * @version eui 1.0
          * @platform Web,Native
          */
-        top: number;
+        top: number | string;
         /**
          * @language en_US
          * The vertical distance in pixels from the bottom edge of the component to the
@@ -953,7 +953,7 @@ declare module eui {
          * @version eui 1.0
          * @platform Web,Native
          */
-        bottom: number;
+        bottom: number | string;
         /**
          * @language en_US
          * The horizontal distance in pixels from the center of the component to the
@@ -975,7 +975,7 @@ declare module eui {
          * @version eui 1.0
          * @platform Web,Native
          */
-        horizontalCenter: number;
+        horizontalCenter: number | string;
         /**
          * @language en_US
          * The vertical distance in pixels from the center of the component to the
@@ -997,7 +997,7 @@ declare module eui {
          * @version eui 1.0
          * @platform Web,Native
          */
-        verticalCenter: number;
+        verticalCenter: number | string;
         /**
          * @language en_US
          * Specifies the width of a component as a percentage
@@ -1594,32 +1594,32 @@ declare module eui.sys {
          * @private
          * 距父级容器离左边距离
          */
-        left: number;
+        left: number | string;
         /**
          * @private
          * 距父级容器右边距离
          */
-        right: number;
+        right: number | string;
         /**
          * @private
          * 距父级容器顶部距离
          */
-        top: number;
+        top: number | string;
         /**
          * @private
          * 距父级容器底部距离
          */
-        bottom: number;
+        bottom: number | string;
         /**
          * @private
          * 在父级容器中距水平中心位置的距离
          */
-        horizontalCenter: number;
+        horizontalCenter: number | string;
         /**
          * @private
          * 在父级容器中距竖直中心位置的距离
          */
-        verticalCenter: number;
+        verticalCenter: number | string;
         /**
          * @private
          * 相对父级容器宽度的百分比
@@ -1669,20 +1669,6 @@ declare module eui.sys {
         $setHeight(value: number): boolean;
         /**
          * @private
-         *
-         * @param value
-         * @returns
-         */
-        $setScaleX(value: number): boolean;
-        /**
-         * @private
-         *
-         * @param value
-         * @returns
-         */
-        $setScaleY(value: number): boolean;
-        /**
-         * @private
          * 组件的最小宽度,此属性设置为大于maxWidth的值时无效。同时影响测量和自动布局的尺寸。
          */
         minWidth: number;
@@ -1714,6 +1700,22 @@ declare module eui.sys {
          * 不会影响显式标记尺寸属性
          */
         private setActualSize(w, h);
+        /**
+         * @private
+         */
+        $invalidateMatrix(): void;
+        /**
+         * @private
+         */
+        $setMatrix(matrix: egret.Matrix, needUpdateProperties?: boolean): boolean;
+        /**
+         * @private
+         */
+        $setAnchorOffsetX(value: number): boolean;
+        /**
+         * @private
+         */
+        $setAnchorOffsetY(value: number): boolean;
         /**
          * @private
          *
@@ -1822,6 +1824,10 @@ declare module eui.sys {
          * @param h
          */
         private applyMatrix(bounds, w, h);
+        /**
+         * @private
+         */
+        private getAnchorMatrix();
     }
     /**
      * @private
@@ -1975,7 +1981,7 @@ declare module eui {
          * @version eui 1.0
          * @platform Web,Native
          */
-        left: number;
+        left: number | string;
         /**
          * @copy eui.UIComponent#right
          *
@@ -1983,7 +1989,7 @@ declare module eui {
          * @version eui 1.0
          * @platform Web,Native
          */
-        right: number;
+        right: number | string;
         /**
          * @copy eui.UIComponent#top
          *
@@ -1991,7 +1997,7 @@ declare module eui {
          * @version eui 1.0
          * @platform Web,Native
          */
-        top: number;
+        top: number | string;
         /**
          * @copy eui.UIComponent#bottom
          *
@@ -1999,7 +2005,7 @@ declare module eui {
          * @version eui 1.0
          * @platform Web,Native
          */
-        bottom: number;
+        bottom: number | string;
         /**
          * @copy eui.UIComponent#horizontalCenter
          *
@@ -2007,7 +2013,7 @@ declare module eui {
          * @version eui 1.0
          * @platform Web,Native
          */
-        horizontalCenter: number;
+        horizontalCenter: number | string;
         /**
          * @copy eui.UIComponent#verticalCenter
          *
@@ -2015,7 +2021,7 @@ declare module eui {
          * @version eui 1.0
          * @platform Web,Native
          */
-        verticalCenter: number;
+        verticalCenter: number | string;
         /**
          * @copy eui.UIComponent#percentWidth
          *
@@ -2619,7 +2625,7 @@ declare module eui {
          * @version eui 1.0
          * @platform Web,Native
          */
-        left: number;
+        left: number | string;
         /**
          * @inheritDoc
          *
@@ -2627,7 +2633,7 @@ declare module eui {
          * @version eui 1.0
          * @platform Web,Native
          */
-        right: number;
+        right: number | string;
         /**
          * @inheritDoc
          *
@@ -2635,7 +2641,7 @@ declare module eui {
          * @version eui 1.0
          * @platform Web,Native
          */
-        top: number;
+        top: number | string;
         /**
          * @inheritDoc
          *
@@ -2643,7 +2649,7 @@ declare module eui {
          * @version eui 1.0
          * @platform Web,Native
          */
-        bottom: number;
+        bottom: number | string;
         /**
          * @inheritDoc
          *
@@ -2651,7 +2657,7 @@ declare module eui {
          * @version eui 1.0
          * @platform Web,Native
          */
-        horizontalCenter: number;
+        horizontalCenter: number | string;
         /**
          * @inheritDoc
          *
@@ -2659,7 +2665,7 @@ declare module eui {
          * @version eui 1.0
          * @platform Web,Native
          */
-        verticalCenter: number;
+        verticalCenter: number | string;
         /**
          * @inheritDoc
          *
@@ -3751,7 +3757,7 @@ declare module eui {
          * @version eui 1.0
          * @platform Web,Native
          */
-        left: number;
+        left: number | string;
         /**
          * @inheritDoc
          *
@@ -3759,7 +3765,7 @@ declare module eui {
          * @version eui 1.0
          * @platform Web,Native
          */
-        right: number;
+        right: number | string;
         /**
          * @inheritDoc
          *
@@ -3767,7 +3773,7 @@ declare module eui {
          * @version eui 1.0
          * @platform Web,Native
          */
-        top: number;
+        top: number | string;
         /**
          * @inheritDoc
          *
@@ -3775,7 +3781,7 @@ declare module eui {
          * @version eui 1.0
          * @platform Web,Native
          */
-        bottom: number;
+        bottom: number | string;
         /**
          * @inheritDoc
          *
@@ -3783,7 +3789,7 @@ declare module eui {
          * @version eui 1.0
          * @platform Web,Native
          */
-        horizontalCenter: number;
+        horizontalCenter: number | string;
         /**
          * @inheritDoc
          *
@@ -3791,7 +3797,7 @@ declare module eui {
          * @version eui 1.0
          * @platform Web,Native
          */
-        verticalCenter: number;
+        verticalCenter: number | string;
         /**
          * @inheritDoc
          *
@@ -4688,7 +4694,7 @@ declare module eui {
          * @version eui 1.0
          * @platform Web,Native
          */
-        left: number;
+        left: number | string;
         /**
          * @inheritDoc
          *
@@ -4696,7 +4702,7 @@ declare module eui {
          * @version eui 1.0
          * @platform Web,Native
          */
-        right: number;
+        right: number | string;
         /**
          * @inheritDoc
          *
@@ -4704,7 +4710,7 @@ declare module eui {
          * @version eui 1.0
          * @platform Web,Native
          */
-        top: number;
+        top: number | string;
         /**
          * @inheritDoc
          *
@@ -4712,7 +4718,7 @@ declare module eui {
          * @version eui 1.0
          * @platform Web,Native
          */
-        bottom: number;
+        bottom: number | string;
         /**
          * @inheritDoc
          *
@@ -4720,7 +4726,7 @@ declare module eui {
          * @version eui 1.0
          * @platform Web,Native
          */
-        horizontalCenter: number;
+        horizontalCenter: number | string;
         /**
          * @inheritDoc
          *
@@ -4728,7 +4734,7 @@ declare module eui {
          * @version eui 1.0
          * @platform Web,Native
          */
-        verticalCenter: number;
+        verticalCenter: number | string;
         /**
          * @inheritDoc
          *
@@ -6117,7 +6123,7 @@ declare module eui {
          * @version eui 1.0
          * @platform Web,Native
          */
-        left: number;
+        left: number | string;
         /**
          * @copy eui.UIComponent#right
          *
@@ -6125,7 +6131,7 @@ declare module eui {
          * @version eui 1.0
          * @platform Web,Native
          */
-        right: number;
+        right: number | string;
         /**
          * @copy eui.UIComponent#top
          *
@@ -6133,7 +6139,7 @@ declare module eui {
          * @version eui 1.0
          * @platform Web,Native
          */
-        top: number;
+        top: number | string;
         /**
          * @copy eui.UIComponent#bottom
          *
@@ -6141,7 +6147,7 @@ declare module eui {
          * @version eui 1.0
          * @platform Web,Native
          */
-        bottom: number;
+        bottom: number | string;
         /**
          * @copy eui.UIComponent#horizontalCenter
          *
@@ -6149,7 +6155,7 @@ declare module eui {
          * @version eui 1.0
          * @platform Web,Native
          */
-        horizontalCenter: number;
+        horizontalCenter: number | string;
         /**
          * @copy eui.UIComponent#verticalCenter
          *
@@ -6157,7 +6163,7 @@ declare module eui {
          * @version eui 1.0
          * @platform Web,Native
          */
-        verticalCenter: number;
+        verticalCenter: number | string;
         /**
          * @copy eui.UIComponent#percentWidth
          *
@@ -6667,7 +6673,7 @@ declare module eui {
          * @version eui 1.0
          * @platform Web,Native
          */
-        left: number;
+        left: number | string;
         /**
          * @copy eui.UIComponent#right
          *
@@ -6675,7 +6681,7 @@ declare module eui {
          * @version eui 1.0
          * @platform Web,Native
          */
-        right: number;
+        right: number | string;
         /**
          * @copy eui.UIComponent#top
          *
@@ -6683,7 +6689,7 @@ declare module eui {
          * @version eui 1.0
          * @platform Web,Native
          */
-        top: number;
+        top: number | string;
         /**
          * @copy eui.UIComponent#bottom
          *
@@ -6691,7 +6697,7 @@ declare module eui {
          * @version eui 1.0
          * @platform Web,Native
          */
-        bottom: number;
+        bottom: number | string;
         /**
          * @copy eui.UIComponent#horizontalCenter
          *
@@ -6699,7 +6705,7 @@ declare module eui {
          * @version eui 1.0
          * @platform Web,Native
          */
-        horizontalCenter: number;
+        horizontalCenter: number | string;
         /**
          * @copy eui.UIComponent#verticalCenter
          *
@@ -6707,7 +6713,7 @@ declare module eui {
          * @version eui 1.0
          * @platform Web,Native
          */
-        verticalCenter: number;
+        verticalCenter: number | string;
         /**
          * @copy eui.UIComponent#percentWidth
          *
@@ -9404,6 +9410,244 @@ declare module eui {
         private commitCurrentState;
     }
 }
+declare module eui.sys {
+    /**
+     * @private
+     * 数值缓动工具类
+     */
+    class Animation {
+        /**
+         * @private
+         */
+        constructor(updateFunction: (animation: Animation) => void, thisObject: any);
+        /**
+         * @private
+         * 此动画的缓动行为。设置为null意味着不使用缓动，默认值为 sineInOut
+         */
+        easerFunction: (fraction: number) => number;
+        /**
+         * @private
+         */
+        private thisObject;
+        /**
+         * @private
+         * 是否正在播放动画，不包括延迟等待和暂停的阶段
+         */
+        isPlaying: boolean;
+        /**
+         * @private
+         * 动画持续时间,单位毫秒，默认值500
+         */
+        duration: number;
+        /**
+         * @private
+         * 动画到当前时间对应的值。
+         */
+        currentValue: number;
+        /**
+         * @private
+         * 起始值
+         */
+        from: number;
+        /**
+         * @private
+         * 终点值。
+         */
+        to: number;
+        /**
+         * @private
+         * 动画启动时刻
+         */
+        private startTime;
+        /**
+         * @private
+         * 动画播放结束时的回调函数
+         */
+        endFunction: (animation: Animation) => void;
+        /**
+         * @private
+         * 动画更新时的回调函数
+         */
+        updateFunction: Function;
+        /**
+         * @private
+         * 开始正向播放动画,无论何时调用都重新从零时刻开始，若设置了延迟会首先进行等待。
+         */
+        play(): void;
+        /**
+         * @private
+         * 开始播放动画
+         */
+        private start();
+        /**
+         * @private
+         * 停止播放动画
+         */
+        stop(): void;
+        /**
+         * @private
+         * 计算当前值并返回动画是否结束
+         */
+        private doInterval(currentTime);
+    }
+}
+declare module eui {
+    /**
+     * @language en_US
+     * Default instance of interface <code>IThemeAdapter</code>.
+     * @version Egret 2.4
+     * @version eui 1.0
+     * @platform Web,Native
+     */
+    /**
+     * @language zh_CN
+     * 默认的IThemeAdapter接口实现。
+     * @version Egret 2.4
+     * @version eui 1.0
+     * @platform Web,Native
+     */
+    class DefaultThemeAdapter implements IThemeAdapter {
+        /**
+         * 解析主题
+         * @param url 待解析的主题url
+         * @param compFunc 解析完成回调函数，示例：compFunc(e:egret.Event):void;
+         * @param errorFunc 解析失败回调函数，示例：errorFunc():void;
+         * @param thisObject 回调的this引用
+         */
+        getTheme(url: string, compFunc: Function, errorFunc: Function, thisObject: any): void;
+    }
+}
+declare module eui.sys {
+    /**
+     * @private
+     * 一个工具类,用于容器的滚屏拖动操作，计算在一段时间持续滚动后释放，应该继续滚动到的值和缓动时间。
+     * 使用此工具类，您需要创建一个 ScrollThrown 实例,并在滚动发生时调用start()方法，然后在触摸移动过程中调用update()更新当前舞台坐标。
+     * 内部将会启动一个计时器定时根据当前位置计算出速度值，并缓存下来最后4个值。当停止滚动时，再调用finish()方法，
+     * 将立即停止记录位移，并将计算出的最终结果存储到 Thrown.scrollTo 和 Thrown.duration 属性上。
+     */
+    class TouchScroll {
+        /**
+         * @private
+         * 创建一个 TouchScroll 实例
+         * @param updateFunction 滚动位置更新回调函数
+         */
+        constructor(updateFunction: (scrollPos: number) => void, endFunction: () => void, target: egret.IEventDispatcher);
+        /**
+         * @private
+         * 当前容器滚动外界可调节的系列
+         */
+        $scrollFactor: number;
+        /**
+         * @private
+         */
+        private target;
+        /**
+         * @private
+         */
+        private updateFunction;
+        /**
+         * @private
+         */
+        private endFunction;
+        /**
+         * @private
+         */
+        private previousTime;
+        /**
+         * @private
+         */
+        private velocity;
+        /**
+         * @private
+         */
+        private previousVelocity;
+        /**
+         * @private
+         */
+        private currentPosition;
+        /**
+         * @private
+         */
+        private previousPosition;
+        /**
+         * @private
+         */
+        private currentScrollPos;
+        /**
+         * @private
+         */
+        private maxScrollPos;
+        /**
+         * @private
+         * 触摸按下时的偏移量
+         */
+        private offsetPoint;
+        /**
+         * @private
+         * 停止触摸时继续滚动的动画实例
+         */
+        private animation;
+        $bounces: boolean;
+        /**
+         * @private
+         * 正在播放缓动动画的标志。
+         */
+        isPlaying(): boolean;
+        /**
+         * @private
+         * 如果正在执行缓动滚屏，停止缓动。
+         */
+        stop(): void;
+        private started;
+        /**
+         * @private
+         * true表示已经调用过start方法。
+         */
+        isStarted(): boolean;
+        /**
+         * @private
+         * 开始记录位移变化。注意：当使用完毕后，必须调用 finish() 方法结束记录，否则该对象将无法被回收。
+         * @param touchPoint 起始触摸位置，以像素为单位，通常是stageX或stageY。
+         */
+        start(touchPoint: number): void;
+        /**
+         * @private
+         * 更新当前移动到的位置
+         * @param touchPoint 当前触摸位置，以像素为单位，通常是stageX或stageY。
+         */
+        update(touchPoint: number, maxScrollValue: number, scrollValue: any): void;
+        /**
+         * @private
+         * 停止记录位移变化，并计算出目标值和继续缓动的时间。
+         * @param currentScrollPos 容器当前的滚动值。
+         * @param maxScrollPos 容器可以滚动的最大值。当目标值不在 0~maxValue之间时，将会应用更大的摩擦力，从而影响缓动时间的长度。
+         */
+        finish(currentScrollPos: number, maxScrollPos: number): void;
+        /**
+         * @private
+         *
+         * @param timeStamp
+         * @returns
+         */
+        private onTick(timeStamp);
+        /**
+         * @private
+         *
+         * @param animation
+         */
+        private finishScrolling(animation?);
+        /**
+         * @private
+         * 缓动到水平滚动位置
+         */
+        private throwTo(hspTo, duration?);
+        /**
+         * @private
+         * 更新水平滚动位置
+         */
+        private onScrollingUpdate(animation);
+    }
+}
 declare module eui {
     /**
      * @language en_US
@@ -9851,116 +10095,6 @@ declare module eui {
 declare module eui {
     /**
      * @language en_US
-     * The VScrollBar (vertical scrollbar) control lets you control
-     * the portion of data that is displayed when there is too much data
-     * to fit vertically in a display area.
-     *
-     * <p>Although you can use the VScrollBar control as a stand-alone control,
-     * you usually combine it as part of another group of components to
-     * provide scrolling functionality.</p>
-     *
-     * @version Egret 2.4
-     * @version eui 1.0
-     * @platform Web,Native
-     * @includeExample  extension/eui/components/VScrollBarExample.ts
-     */
-    /**
-     * @language zh_CN
-     * VScrollBar（垂直 ScrollBar）控件可以在因数据太多而不能在显示区域中以垂直方向完全显示时控制显示的数据部分。
-     * <p>虽然 VScrollBar 控件可以单独使用，但通常将它与其他组件一起使用来提供滚动功能。</p>
-     *
-     * @version Egret 2.4
-     * @version eui 1.0
-     * @platform Web,Native
-     * @includeExample  extension/eui/components/VScrollBarExample.ts
-     */
-    class VScrollBar extends ScrollBarBase {
-        /**
-         * @inheritDoc
-         *
-         * @version Egret 2.4
-         * @version eui 1.0
-         * @platform Web,Native
-         */
-        protected updateDisplayList(unscaledWidth: number, unscaledHeight: number): void;
-        /**
-         * @inheritDoc
-         *
-         * @version Egret 2.4
-         * @version eui 1.0
-         * @platform Web,Native
-         */
-        protected onPropertyChanged(event: eui.PropertyEvent): void;
-    }
-}
-declare module eui {
-    /**
-     * @language en_US
-     * The VSlider (vertical slider) control lets users select a value
-     * by moving a slider thumb between the end points of the slider track.
-     * The current value of the slider is determined by the relative location of the thumb between
-     * the end points of the slider, corresponding to the slider's minimum and maximum values.
-     *
-     * @version Egret 2.4
-     * @version eui 1.0
-     * @platform Web,Native
-     * @includeExample  extension/eui/components/VSliderExample.ts
-     */
-    /**
-     * @language zh_CN
-     * 使用 VSlider（垂直滑块）控件，用户可通过在滑块轨道的端点之间移动滑块来选择值。
-     * 滑块的当前值由滑块端点（对应于滑块的最小值和最大值）之间滑块的相对位置确定。
-     *
-     * @version Egret 2.4
-     * @version eui 1.0
-     * @platform Web,Native
-     * @includeExample  extension/eui/components/VSliderExample.ts
-     */
-    class VSlider extends SliderBase {
-        /**
-         * @language en_US
-         * Constructor.
-         *
-         * @version Egret 2.4
-         * @version eui 1.0
-         * @platform Web,Native
-         */
-        /**
-         * @language zh_CN
-         * 构造函数。
-         *
-         * @version Egret 2.4
-         * @version eui 1.0
-         * @platform Web,Native
-         */
-        constructor();
-        /**
-         * @inheritDoc
-         *
-         * @version Egret 2.4
-         * @version eui 1.0
-         * @platform Web,Native
-         */
-        protected pointToValue(x: number, y: number): number;
-        /**
-         * @private
-         *
-         * @returns
-         */
-        private getThumbRange();
-        /**
-         * @inheritDoc
-         *
-         * @version Egret 2.4
-         * @version eui 1.0
-         * @platform Web,Native
-         */
-        updateSkinDisplayList(): void;
-    }
-}
-declare module eui {
-    /**
-     * @language en_US
      * An ViewStack navigator container consists of a collection of child
      * containers stacked on top of each other, where only one child
      * at a time is visible.
@@ -10156,242 +10290,114 @@ declare module eui {
         getItemIndex(item: any): number;
     }
 }
-declare module eui.sys {
+declare module eui {
     /**
-     * @private
-     * 数值缓动工具类
+     * @language en_US
+     * The VScrollBar (vertical scrollbar) control lets you control
+     * the portion of data that is displayed when there is too much data
+     * to fit vertically in a display area.
+     *
+     * <p>Although you can use the VScrollBar control as a stand-alone control,
+     * you usually combine it as part of another group of components to
+     * provide scrolling functionality.</p>
+     *
+     * @version Egret 2.4
+     * @version eui 1.0
+     * @platform Web,Native
+     * @includeExample  extension/eui/components/VScrollBarExample.ts
      */
-    class Animation {
+    /**
+     * @language zh_CN
+     * VScrollBar（垂直 ScrollBar）控件可以在因数据太多而不能在显示区域中以垂直方向完全显示时控制显示的数据部分。
+     * <p>虽然 VScrollBar 控件可以单独使用，但通常将它与其他组件一起使用来提供滚动功能。</p>
+     *
+     * @version Egret 2.4
+     * @version eui 1.0
+     * @platform Web,Native
+     * @includeExample  extension/eui/components/VScrollBarExample.ts
+     */
+    class VScrollBar extends ScrollBarBase {
         /**
-         * @private
+         * @inheritDoc
+         *
+         * @version Egret 2.4
+         * @version eui 1.0
+         * @platform Web,Native
          */
-        constructor(updateFunction: (animation: Animation) => void, thisObject: any);
+        protected updateDisplayList(unscaledWidth: number, unscaledHeight: number): void;
         /**
-         * @private
-         * 此动画的缓动行为。设置为null意味着不使用缓动，默认值为 sineInOut
+         * @inheritDoc
+         *
+         * @version Egret 2.4
+         * @version eui 1.0
+         * @platform Web,Native
          */
-        easerFunction: (fraction: number) => number;
-        /**
-         * @private
-         */
-        private thisObject;
-        /**
-         * @private
-         * 是否正在播放动画，不包括延迟等待和暂停的阶段
-         */
-        isPlaying: boolean;
-        /**
-         * @private
-         * 动画持续时间,单位毫秒，默认值500
-         */
-        duration: number;
-        /**
-         * @private
-         * 动画到当前时间对应的值。
-         */
-        currentValue: number;
-        /**
-         * @private
-         * 起始值
-         */
-        from: number;
-        /**
-         * @private
-         * 终点值。
-         */
-        to: number;
-        /**
-         * @private
-         * 动画启动时刻
-         */
-        private startTime;
-        /**
-         * @private
-         * 动画播放结束时的回调函数
-         */
-        endFunction: (animation: Animation) => void;
-        /**
-         * @private
-         * 动画更新时的回调函数
-         */
-        updateFunction: Function;
-        /**
-         * @private
-         * 开始正向播放动画,无论何时调用都重新从零时刻开始，若设置了延迟会首先进行等待。
-         */
-        play(): void;
-        /**
-         * @private
-         * 开始播放动画
-         */
-        private start();
-        /**
-         * @private
-         * 停止播放动画
-         */
-        stop(): void;
-        /**
-         * @private
-         * 计算当前值并返回动画是否结束
-         */
-        private doInterval(currentTime);
+        protected onPropertyChanged(event: eui.PropertyEvent): void;
     }
 }
 declare module eui {
     /**
      * @language en_US
-     * Default instance of interface <code>IThemeAdapter</code>.
+     * The VSlider (vertical slider) control lets users select a value
+     * by moving a slider thumb between the end points of the slider track.
+     * The current value of the slider is determined by the relative location of the thumb between
+     * the end points of the slider, corresponding to the slider's minimum and maximum values.
+     *
      * @version Egret 2.4
      * @version eui 1.0
      * @platform Web,Native
+     * @includeExample  extension/eui/components/VSliderExample.ts
      */
     /**
      * @language zh_CN
-     * 默认的IThemeAdapter接口实现。
+     * 使用 VSlider（垂直滑块）控件，用户可通过在滑块轨道的端点之间移动滑块来选择值。
+     * 滑块的当前值由滑块端点（对应于滑块的最小值和最大值）之间滑块的相对位置确定。
+     *
      * @version Egret 2.4
      * @version eui 1.0
      * @platform Web,Native
+     * @includeExample  extension/eui/components/VSliderExample.ts
      */
-    class DefaultThemeAdapter implements IThemeAdapter {
+    class VSlider extends SliderBase {
         /**
-         * 解析主题
-         * @param url 待解析的主题url
-         * @param compFunc 解析完成回调函数，示例：compFunc(e:egret.Event):void;
-         * @param errorFunc 解析失败回调函数，示例：errorFunc():void;
-         * @param thisObject 回调的this引用
+         * @language en_US
+         * Constructor.
+         *
+         * @version Egret 2.4
+         * @version eui 1.0
+         * @platform Web,Native
          */
-        getTheme(url: string, compFunc: Function, errorFunc: Function, thisObject: any): void;
-    }
-}
-declare module eui.sys {
-    /**
-     * @private
-     * 一个工具类,用于容器的滚屏拖动操作，计算在一段时间持续滚动后释放，应该继续滚动到的值和缓动时间。
-     * 使用此工具类，您需要创建一个 ScrollThrown 实例,并在滚动发生时调用start()方法，然后在触摸移动过程中调用update()更新当前舞台坐标。
-     * 内部将会启动一个计时器定时根据当前位置计算出速度值，并缓存下来最后4个值。当停止滚动时，再调用finish()方法，
-     * 将立即停止记录位移，并将计算出的最终结果存储到 Thrown.scrollTo 和 Thrown.duration 属性上。
-     */
-    class TouchScroll {
         /**
-         * @private
-         * 创建一个 TouchScroll 实例
-         * @param updateFunction 滚动位置更新回调函数
+         * @language zh_CN
+         * 构造函数。
+         *
+         * @version Egret 2.4
+         * @version eui 1.0
+         * @platform Web,Native
          */
-        constructor(updateFunction: (scrollPos: number) => void, endFunction: () => void, target: egret.IEventDispatcher);
+        constructor();
         /**
-         * @private
-         * 当前容器滚动外界可调节的系列
+         * @inheritDoc
+         *
+         * @version Egret 2.4
+         * @version eui 1.0
+         * @platform Web,Native
          */
-        $scrollFactor: number;
-        /**
-         * @private
-         */
-        private target;
-        /**
-         * @private
-         */
-        private updateFunction;
-        /**
-         * @private
-         */
-        private endFunction;
-        /**
-         * @private
-         */
-        private previousTime;
-        /**
-         * @private
-         */
-        private velocity;
-        /**
-         * @private
-         */
-        private previousVelocity;
-        /**
-         * @private
-         */
-        private currentPosition;
-        /**
-         * @private
-         */
-        private previousPosition;
-        /**
-         * @private
-         */
-        private currentScrollPos;
-        /**
-         * @private
-         */
-        private maxScrollPos;
-        /**
-         * @private
-         * 触摸按下时的偏移量
-         */
-        private offsetPoint;
-        /**
-         * @private
-         * 停止触摸时继续滚动的动画实例
-         */
-        private animation;
-        $bounces: boolean;
-        /**
-         * @private
-         * 正在播放缓动动画的标志。
-         */
-        isPlaying(): boolean;
-        /**
-         * @private
-         * 如果正在执行缓动滚屏，停止缓动。
-         */
-        stop(): void;
-        private started;
-        /**
-         * @private
-         * true表示已经调用过start方法。
-         */
-        isStarted(): boolean;
-        /**
-         * @private
-         * 开始记录位移变化。注意：当使用完毕后，必须调用 finish() 方法结束记录，否则该对象将无法被回收。
-         * @param touchPoint 起始触摸位置，以像素为单位，通常是stageX或stageY。
-         */
-        start(touchPoint: number): void;
-        /**
-         * @private
-         * 更新当前移动到的位置
-         * @param touchPoint 当前触摸位置，以像素为单位，通常是stageX或stageY。
-         */
-        update(touchPoint: number, maxScrollValue: number, scrollValue: any): void;
-        /**
-         * @private
-         * 停止记录位移变化，并计算出目标值和继续缓动的时间。
-         * @param currentScrollPos 容器当前的滚动值。
-         * @param maxScrollPos 容器可以滚动的最大值。当目标值不在 0~maxValue之间时，将会应用更大的摩擦力，从而影响缓动时间的长度。
-         */
-        finish(currentScrollPos: number, maxScrollPos: number): void;
+        protected pointToValue(x: number, y: number): number;
         /**
          * @private
          *
-         * @param timeStamp
          * @returns
          */
-        private onTick(timeStamp);
+        private getThumbRange();
         /**
-         * @private
+         * @inheritDoc
          *
-         * @param animation
+         * @version Egret 2.4
+         * @version eui 1.0
+         * @platform Web,Native
          */
-        private finishScrolling(animation?);
-        /**
-         * @private
-         * 缓动到水平滚动位置
-         */
-        private throwTo(hspTo, duration?);
-        /**
-         * @private
-         * 更新水平滚动位置
-         */
-        private onScrollingUpdate(animation);
+        updateSkinDisplayList(): void;
     }
 }
 declare module eui {

@@ -776,7 +776,7 @@ module eui {
          * @version eui 1.0
          * @platform Web,Native
          */
-        public left:number;
+        public left:number|string;
 
         /**
          * @inheritDoc
@@ -785,7 +785,7 @@ module eui {
          * @version eui 1.0
          * @platform Web,Native
          */
-        public right:number;
+        public right:number|string;
 
         /**
          * @inheritDoc
@@ -794,7 +794,7 @@ module eui {
          * @version eui 1.0
          * @platform Web,Native
          */
-        public top:number;
+        public top:number|string;
 
         /**
          * @inheritDoc
@@ -803,7 +803,7 @@ module eui {
          * @version eui 1.0
          * @platform Web,Native
          */
-        public bottom:number;
+        public bottom:number|string;
 
         /**
          * @inheritDoc
@@ -812,7 +812,7 @@ module eui {
          * @version eui 1.0
          * @platform Web,Native
          */
-        public horizontalCenter:number;
+        public horizontalCenter:number|string;
 
         /**
          * @inheritDoc
@@ -821,7 +821,7 @@ module eui {
          * @version eui 1.0
          * @platform Web,Native
          */
-        public verticalCenter:number;
+        public verticalCenter:number|string;
 
         /**
          * @inheritDoc

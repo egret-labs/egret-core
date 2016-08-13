@@ -115,7 +115,7 @@ module eui {
         public updateDisplayList(unscaledWidth:number, unscaledHeight:number):void {
             super.updateDisplayList(unscaledWidth, unscaledHeight);
             var target = this.$target;
-            var pos = sys.updateDisplayList(target,unscaledWidth,unscaledHeight);
+            var pos = sys.updateDisplayList(target, unscaledWidth, unscaledHeight);
             target.setContentSize(Math.ceil(pos.x), Math.ceil(pos.y));
         }
     }
@@ -143,10 +143,28 @@ module eui.sys {
 
     /**
      * @private
+     * @param value 要格式化的相对值
+     * @param total 在此值方向上的总长度
+     */
+    function formatRelative(value:number|string, total:number):number {
+        if (!value || typeof value == "number") {
+            return <number>value;
+        }
+        var str = <string>value;
+        var index = str.indexOf("%");
+        if (index == -1) {
+            return +str;
+        }
+        var percent = +str.substring(0, index);
+        return percent * 0.01 * total;
+    }
+
+    /**
+     * @private
      * 一个工具方法，使用BasicLayout规则测量目标对象。
      */
-    export function measure(target:eui.Group|eui.Component):void{
-        if(!target){
+    export function measure(target:eui.Group|eui.Component):void {
+        if (!target) {
             return;
         }
         var width = 0;
@@ -155,17 +173,17 @@ module eui.sys {
         var count = target.numChildren;
         for (var i = 0; i < count; i++) {
             var layoutElement = <eui.UIComponent> (target.getChildAt(i));
-            if (!egret.is(layoutElement,UIComponentClass) || !layoutElement.$includeInLayout) {
+            if (!egret.is(layoutElement, UIComponentClass) || !layoutElement.$includeInLayout) {
                 continue;
             }
 
             var values = layoutElement.$UIComponent;
-            var hCenter = values[sys.UIKeys.horizontalCenter];
-            var vCenter = values[sys.UIKeys.verticalCenter];
-            var left = values[sys.UIKeys.left];
-            var right = values[sys.UIKeys.right];
-            var top = values[sys.UIKeys.top];
-            var bottom = values[sys.UIKeys.bottom];
+            var hCenter = +values[sys.UIKeys.horizontalCenter];
+            var vCenter = +values[sys.UIKeys.verticalCenter];
+            var left = +values[sys.UIKeys.left];
+            var right = +values[sys.UIKeys.right];
+            var top = +values[sys.UIKeys.top];
+            var bottom = +values[sys.UIKeys.bottom];
 
             var extX:number;
             var extY:number;
@@ -206,7 +224,7 @@ module eui.sys {
             height = Math.ceil(Math.max(height, extY + preferredHeight));
         }
 
-        target.setMeasuredSize(width,height);
+        target.setMeasuredSize(width, height);
     }
 
     /**
@@ -214,7 +232,7 @@ module eui.sys {
      * 一个工具方法，使用BasicLayout规则布局目标对象。
      */
     export function updateDisplayList(target:eui.Group|eui.Component,
-                                                 unscaledWidth:number, unscaledHeight:number):egret.Point{
+                                      unscaledWidth:number, unscaledHeight:number):egret.Point {
         if (!target)
             return;
 
@@ -225,17 +243,17 @@ module eui.sys {
         var bounds = egret.$TempRectangle;
         for (var i = 0; i < count; i++) {
             var layoutElement = <eui.UIComponent> (target.getChildAt(i));
-            if (!egret.is(layoutElement,UIComponentClass) || !layoutElement.$includeInLayout) {
+            if (!egret.is(layoutElement, UIComponentClass) || !layoutElement.$includeInLayout) {
                 continue;
             }
 
             var values = layoutElement.$UIComponent;
-            var hCenter = values[sys.UIKeys.horizontalCenter];
-            var vCenter = values[sys.UIKeys.verticalCenter];
-            var left = values[sys.UIKeys.left];
-            var right = values[sys.UIKeys.right];
-            var top = values[sys.UIKeys.top];
-            var bottom = values[sys.UIKeys.bottom];
+            var hCenter = formatRelative(values[sys.UIKeys.horizontalCenter], unscaledWidth*0.5);
+            var vCenter = formatRelative(values[sys.UIKeys.verticalCenter], unscaledHeight*0.5);
+            var left = formatRelative(values[sys.UIKeys.left], unscaledWidth);
+            var right = formatRelative(values[sys.UIKeys.right], unscaledWidth);
+            var top = formatRelative(values[sys.UIKeys.top], unscaledHeight);
+            var bottom = formatRelative(values[sys.UIKeys.bottom], unscaledHeight);
             var percentWidth = values[sys.UIKeys.percentWidth];
             var percentHeight = values[sys.UIKeys.percentHeight];
 
@@ -288,6 +306,6 @@ module eui.sys {
             maxX = Math.max(maxX, childX + elementWidth);
             maxY = Math.max(maxY, childY + elementHeight);
         }
-        return egret.$TempPoint.setTo(maxX,maxY);
+        return egret.$TempPoint.setTo(maxX, maxY);
     }
 }

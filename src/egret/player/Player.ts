@@ -522,7 +522,7 @@ module egret.sys {
                     }
                 )
                 this.totalTick = 0;
-                this.totalTime = this.totalTime % 500;
+                this.totalTime = this.totalTime % 1000;
                 this.drawCalls = 0;
                 this.dirtyRatio = 0;
                 this.costDirty = 0;

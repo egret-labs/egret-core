@@ -175,7 +175,8 @@ function parseCommandLine(commandLine) {
             }
         }
         //create_app命令不强制设置projectDir属性
-        if (options.command != "create_app") {
+        if(options.projectDir == null && options.command == "create_app"){
+        }else{
             if (!options.projectDir)
                 options.projectDir = process.cwd();
             else {

@@ -381,6 +381,9 @@ module eui.sys {
                 else if (node.nodeType === 1) {
                     var id = node.attributes["id"];
                     if (id) {
+                        if (id.indexOf(" ") > -1) {
+                            egret.$warn(2022, id);
+                        }
                         if (this.skinParts.indexOf(id) == -1) {
                             this.skinParts.push(id);
                         }

@@ -78,6 +78,9 @@ class CompileLark {
         var declareFile = this.getModuleOutputPath(m.name, fileName + ".d.ts", m.outFile);
         var singleFile = this.getModuleOutputPath(m.name, fileName + ".js", m.outFile);
         var moduleRoot = FileUtil.joinPath(larkRoot, m.root);
+        if(!m.root){
+            return 0;
+        }
         var tss: string[] = [];
         m.files.forEach(file => {
             var path: string = null;
