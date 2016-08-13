@@ -13057,11 +13057,6 @@ var egret;
                 this.needUpdateRegions = false;
                 /**
                  * @private
-                 * 显示对象的渲染节点发生改变时，把自身的IRenderable对象注册到此列表上。
-                 */
-                this.dirtyNodes = {};
-                /**
-                 * @private
                  */
                 this.dirtyNodeList = [];
                 /**
@@ -13076,6 +13071,7 @@ var egret;
                 this.root = root;
                 this.dirtyRegion = new sys.DirtyRegion(root);
                 this.isStage = (root instanceof egret.Stage);
+                this.dirtyNodes = egret.createMap();
             }
             var d = __define,c=DisplayList,p=c.prototype;
             /**
@@ -13191,7 +13187,7 @@ var egret;
             p.updateDirtyRegions = function () {
                 var dirtyNodeList = this.dirtyNodeList;
                 this.dirtyNodeList = [];
-                this.dirtyNodes = {};
+                this.dirtyNodes = egret.createMap();
                 this.needUpdateRegions = false;
                 var dirtyRegion = this.dirtyRegion;
                 var length = dirtyNodeList.length;
@@ -22191,6 +22187,19 @@ var egret;
     }());
     egret.ByteArray = ByteArray;
     egret.registerClass(ByteArray,'egret.ByteArray');
+})(egret || (egret = {}));
+var egret;
+(function (egret) {
+    /**
+     * @private
+     */
+    function createMap() {
+        var obj = Object.create(null);
+        obj.__v8__ = undefined;
+        delete obj.__v8__;
+        return obj;
+    }
+    egret.createMap = createMap;
 })(egret || (egret = {}));
 //////////////////////////////////////////////////////////////////////////////////////
 //

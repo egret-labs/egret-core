@@ -14152,6 +14152,19 @@ declare module egret {
 }
 declare module egret {
     /**
+     * @private
+     */
+    interface MapLike<T> {
+        [key: string]: T;
+        [key: number]: T;
+    }
+    /**
+     * @private
+     */
+    function createMap<T>(): MapLike<T>;
+}
+declare module egret {
+    /**
      * @language en_US
      * Logger is an entrance for the log processing module of the engine
      * @version Egret 2.4
