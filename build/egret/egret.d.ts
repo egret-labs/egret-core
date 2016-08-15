@@ -12056,6 +12056,10 @@ declare module egret {
         /**
          * @private
          */
+        private stageTextAdded;
+        /**
+         * @private
+         */
         private _text;
         /**
          * @private

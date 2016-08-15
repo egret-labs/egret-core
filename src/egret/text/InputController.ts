@@ -41,6 +41,11 @@ module egret {
         /**
          * @private
          */
+        private stageTextAdded:boolean = false;
+
+        /**
+         * @private
+         */
         private _text:TextField = null;
 
         /**
@@ -72,6 +77,9 @@ module egret {
          * 
          */
         public _addStageText():void {
+            if(this.stageTextAdded) {
+                return;
+            }
             if (!this._text.$inputEnabled) {
                 this._text.$touchEnabled = true;
             }
@@ -85,6 +93,8 @@ module egret {
 
             this.stageText.addEventListener("blur", this.blurHandler, this);
             this.stageText.addEventListener("focus", this.focusHandler, this);
+
+            this.stageTextAdded = true;
         }
 
         /**
@@ -92,6 +102,9 @@ module egret {
          * 
          */
         public _removeStageText():void {
+            if(!this.stageTextAdded) {
+                return;
+            }
             if (!this._text.$inputEnabled) {
                 this._text.$touchEnabled = false;
             }
@@ -104,6 +117,8 @@ module egret {
 
             this.stageText.removeEventListener("blur", this.blurHandler, this);
             this.stageText.removeEventListener("focus", this.focusHandler, this);
+
+            this.stageTextAdded = false;
         }
 
         /**

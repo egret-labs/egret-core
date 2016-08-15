@@ -18819,6 +18819,10 @@ var egret;
             /**
              * @private
              */
+            this.stageTextAdded = false;
+            /**
+             * @private
+             */
             this._text = null;
             /**
              * @private
@@ -18842,6 +18846,9 @@ var egret;
          *
          */
         p._addStageText = function () {
+            if (this.stageTextAdded) {
+                return;
+            }
             if (!this._text.$inputEnabled) {
                 this._text.$touchEnabled = true;
             }
@@ -18851,12 +18858,16 @@ var egret;
             this._text.addEventListener(egret.TouchEvent.TOUCH_BEGIN, this.onMouseDownHandler, this);
             this.stageText.addEventListener("blur", this.blurHandler, this);
             this.stageText.addEventListener("focus", this.focusHandler, this);
+            this.stageTextAdded = true;
         };
         /**
          * @private
          *
          */
         p._removeStageText = function () {
+            if (!this.stageTextAdded) {
+                return;
+            }
             if (!this._text.$inputEnabled) {
                 this._text.$touchEnabled = false;
             }
@@ -18866,6 +18877,7 @@ var egret;
             this.tempStage.removeEventListener(egret.TouchEvent.TOUCH_BEGIN, this.onStageDownHandler, this);
             this.stageText.removeEventListener("blur", this.blurHandler, this);
             this.stageText.removeEventListener("focus", this.focusHandler, this);
+            this.stageTextAdded = false;
         };
         /**
          * @private
