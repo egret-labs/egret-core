@@ -8443,6 +8443,7 @@ declare module egret_native {
     function onTouchesMove(num: number, ids: Array<any>, xs_array: Array<any>, ys_array: Array<any>): any;
     function onTouchesEnd(num: number, ids: Array<any>, xs_array: Array<any>, ys_array: Array<any>): any;
     function onTouchesCancel(num: number, ids: Array<any>, xs_array: Array<any>, ys_array: Array<any>): any;
+    function sendToC(float32Array: Float32Array, arrayBufferLen: number, array: Array<string>): void;
     /**
      * 启动主循环
      * @param callback 主循环回调函数

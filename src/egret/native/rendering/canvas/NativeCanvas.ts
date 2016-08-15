@@ -77,7 +77,11 @@ module egret.native {
                         egret_native.setScreenCanvas(this.$nativeCanvas);
                     }
                     var context = this.$nativeCanvas.getContext("2d");
-                    context.clearScreen(0, 0, 0, 0);
+
+                    // old context.clearScreen(0, 0, 0, 0);
+                    $cmdManager.setContext(context);
+                    $cmdManager.clearScreen(0, 0, 0, 0);
+
                     this.renderContext.$nativeContext = context;
                 }
                 else {
@@ -105,7 +109,11 @@ module egret.native {
                         egret_native.setScreenCanvas(this.$nativeCanvas);
                     }
                     var context = this.$nativeCanvas.getContext("2d");
-                    context.clearScreen(0, 0, 0, 0);
+
+                    // old context.clearScreen(0, 0, 0, 0);
+                    $cmdManager.setContext(context);
+                    $cmdManager.clearScreen(0, 0, 0, 0);
+
                     this.renderContext.$nativeContext = context;
                 }
                 else {

@@ -61,6 +61,7 @@ module egret.native {
         var ticker = egret.sys.$ticker;
         var mainLoop = function () {
             ticker.update();
+            $cmdManager.flush();
         };
         egret_native.executeMainLoop(mainLoop, ticker);
         if (!egret.sys.screenAdapter) {
