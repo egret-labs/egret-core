@@ -20574,6 +20574,13 @@ var egret;
                 var element = text2Arr[i];
                 //可能设置为没有文本，忽略绘制
                 if (!element.text) {
+                    if (lineElement) {
+                        lineElement.width = lineW;
+                        lineElement.height = lineH;
+                        lineElement.charNum = lineCharNum;
+                        values[5 /* textWidth */] = Math.max(values[5 /* textWidth */], lineW);
+                        values[6 /* textHeight */] += lineH;
+                    }
                     continue;
                 }
                 element.style = element.style || {};
