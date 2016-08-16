@@ -10596,11 +10596,11 @@ declare module egret {
         /**
          * @private
          */
-        private renderText(node, context);
+        renderText(node: sys.TextNode, context: CanvasRenderingContext2D): void;
         /**
          * @private
          */
-        private renderGraphics(node, context, forHitTest?);
+        renderGraphics(node: sys.GraphicsNode, context: CanvasRenderingContext2D, forHitTest?: boolean): void;
         private renderPath(path, context);
         private renderGroup(groupNode, context);
         /**
