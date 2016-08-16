@@ -887,7 +887,7 @@ declare module eui {
          * @version eui 1.0
          * @platform Web,Native
          */
-        left: number | string;
+        left: any;
         /**
          * @language en_US
          * The horizontal distance in pixels from the right edge of the component to the
@@ -909,7 +909,7 @@ declare module eui {
          * @version eui 1.0
          * @platform Web,Native
          */
-        right: number | string;
+        right: any;
         /**
          * @language en_US
          * The vertical distance in pixels from the top edge of the component to the
@@ -931,7 +931,7 @@ declare module eui {
          * @version eui 1.0
          * @platform Web,Native
          */
-        top: number | string;
+        top: any;
         /**
          * @language en_US
          * The vertical distance in pixels from the bottom edge of the component to the
@@ -953,7 +953,7 @@ declare module eui {
          * @version eui 1.0
          * @platform Web,Native
          */
-        bottom: number | string;
+        bottom: any;
         /**
          * @language en_US
          * The horizontal distance in pixels from the center of the component to the
@@ -975,7 +975,7 @@ declare module eui {
          * @version eui 1.0
          * @platform Web,Native
          */
-        horizontalCenter: number | string;
+        horizontalCenter: any;
         /**
          * @language en_US
          * The vertical distance in pixels from the center of the component to the
@@ -997,7 +997,7 @@ declare module eui {
          * @version eui 1.0
          * @platform Web,Native
          */
-        verticalCenter: number | string;
+        verticalCenter: any;
         /**
          * @language en_US
          * Specifies the width of a component as a percentage
@@ -1594,32 +1594,32 @@ declare module eui.sys {
          * @private
          * 距父级容器离左边距离
          */
-        left: number | string;
+        left: any;
         /**
          * @private
          * 距父级容器右边距离
          */
-        right: number | string;
+        right: any;
         /**
          * @private
          * 距父级容器顶部距离
          */
-        top: number | string;
+        top: any;
         /**
          * @private
          * 距父级容器底部距离
          */
-        bottom: number | string;
+        bottom: any;
         /**
          * @private
          * 在父级容器中距水平中心位置的距离
          */
-        horizontalCenter: number | string;
+        horizontalCenter: any;
         /**
          * @private
          * 在父级容器中距竖直中心位置的距离
          */
-        verticalCenter: number | string;
+        verticalCenter: any;
         /**
          * @private
          * 相对父级容器宽度的百分比
@@ -1981,7 +1981,7 @@ declare module eui {
          * @version eui 1.0
          * @platform Web,Native
          */
-        left: number | string;
+        left: any;
         /**
          * @copy eui.UIComponent#right
          *
@@ -1989,7 +1989,7 @@ declare module eui {
          * @version eui 1.0
          * @platform Web,Native
          */
-        right: number | string;
+        right: any;
         /**
          * @copy eui.UIComponent#top
          *
@@ -1997,7 +1997,7 @@ declare module eui {
          * @version eui 1.0
          * @platform Web,Native
          */
-        top: number | string;
+        top: any;
         /**
          * @copy eui.UIComponent#bottom
          *
@@ -2005,7 +2005,7 @@ declare module eui {
          * @version eui 1.0
          * @platform Web,Native
          */
-        bottom: number | string;
+        bottom: any;
         /**
          * @copy eui.UIComponent#horizontalCenter
          *
@@ -2013,7 +2013,7 @@ declare module eui {
          * @version eui 1.0
          * @platform Web,Native
          */
-        horizontalCenter: number | string;
+        horizontalCenter: any;
         /**
          * @copy eui.UIComponent#verticalCenter
          *
@@ -2021,7 +2021,7 @@ declare module eui {
          * @version eui 1.0
          * @platform Web,Native
          */
-        verticalCenter: number | string;
+        verticalCenter: any;
         /**
          * @copy eui.UIComponent#percentWidth
          *
@@ -2625,7 +2625,7 @@ declare module eui {
          * @version eui 1.0
          * @platform Web,Native
          */
-        left: number | string;
+        left: any;
         /**
          * @inheritDoc
          *
@@ -2633,7 +2633,7 @@ declare module eui {
          * @version eui 1.0
          * @platform Web,Native
          */
-        right: number | string;
+        right: any;
         /**
          * @inheritDoc
          *
@@ -2641,7 +2641,7 @@ declare module eui {
          * @version eui 1.0
          * @platform Web,Native
          */
-        top: number | string;
+        top: any;
         /**
          * @inheritDoc
          *
@@ -2649,7 +2649,7 @@ declare module eui {
          * @version eui 1.0
          * @platform Web,Native
          */
-        bottom: number | string;
+        bottom: any;
         /**
          * @inheritDoc
          *
@@ -2657,7 +2657,7 @@ declare module eui {
          * @version eui 1.0
          * @platform Web,Native
          */
-        horizontalCenter: number | string;
+        horizontalCenter: any;
         /**
          * @inheritDoc
          *
@@ -2665,7 +2665,7 @@ declare module eui {
          * @version eui 1.0
          * @platform Web,Native
          */
-        verticalCenter: number | string;
+        verticalCenter: any;
         /**
          * @inheritDoc
          *
@@ -3757,7 +3757,7 @@ declare module eui {
          * @version eui 1.0
          * @platform Web,Native
          */
-        left: number | string;
+        left: any;
         /**
          * @inheritDoc
          *
@@ -3765,7 +3765,7 @@ declare module eui {
          * @version eui 1.0
          * @platform Web,Native
          */
-        right: number | string;
+        right: any;
         /**
          * @inheritDoc
          *
@@ -3773,7 +3773,7 @@ declare module eui {
          * @version eui 1.0
          * @platform Web,Native
          */
-        top: number | string;
+        top: any;
         /**
          * @inheritDoc
          *
@@ -3781,7 +3781,7 @@ declare module eui {
          * @version eui 1.0
          * @platform Web,Native
          */
-        bottom: number | string;
+        bottom: any;
         /**
          * @inheritDoc
          *
@@ -3789,7 +3789,7 @@ declare module eui {
          * @version eui 1.0
          * @platform Web,Native
          */
-        horizontalCenter: number | string;
+        horizontalCenter: any;
         /**
          * @inheritDoc
          *
@@ -3797,7 +3797,7 @@ declare module eui {
          * @version eui 1.0
          * @platform Web,Native
          */
-        verticalCenter: number | string;
+        verticalCenter: any;
         /**
          * @inheritDoc
          *
@@ -4694,7 +4694,7 @@ declare module eui {
          * @version eui 1.0
          * @platform Web,Native
          */
-        left: number | string;
+        left: any;
         /**
          * @inheritDoc
          *
@@ -4702,7 +4702,7 @@ declare module eui {
          * @version eui 1.0
          * @platform Web,Native
          */
-        right: number | string;
+        right: any;
         /**
          * @inheritDoc
          *
@@ -4710,7 +4710,7 @@ declare module eui {
          * @version eui 1.0
          * @platform Web,Native
          */
-        top: number | string;
+        top: any;
         /**
          * @inheritDoc
          *
@@ -4718,7 +4718,7 @@ declare module eui {
          * @version eui 1.0
          * @platform Web,Native
          */
-        bottom: number | string;
+        bottom: any;
         /**
          * @inheritDoc
          *
@@ -4726,7 +4726,7 @@ declare module eui {
          * @version eui 1.0
          * @platform Web,Native
          */
-        horizontalCenter: number | string;
+        horizontalCenter: any;
         /**
          * @inheritDoc
          *
@@ -4734,7 +4734,7 @@ declare module eui {
          * @version eui 1.0
          * @platform Web,Native
          */
-        verticalCenter: number | string;
+        verticalCenter: any;
         /**
          * @inheritDoc
          *
@@ -6123,7 +6123,7 @@ declare module eui {
          * @version eui 1.0
          * @platform Web,Native
          */
-        left: number | string;
+        left: any;
         /**
          * @copy eui.UIComponent#right
          *
@@ -6131,7 +6131,7 @@ declare module eui {
          * @version eui 1.0
          * @platform Web,Native
          */
-        right: number | string;
+        right: any;
         /**
          * @copy eui.UIComponent#top
          *
@@ -6139,7 +6139,7 @@ declare module eui {
          * @version eui 1.0
          * @platform Web,Native
          */
-        top: number | string;
+        top: any;
         /**
          * @copy eui.UIComponent#bottom
          *
@@ -6147,7 +6147,7 @@ declare module eui {
          * @version eui 1.0
          * @platform Web,Native
          */
-        bottom: number | string;
+        bottom: any;
         /**
          * @copy eui.UIComponent#horizontalCenter
          *
@@ -6155,7 +6155,7 @@ declare module eui {
          * @version eui 1.0
          * @platform Web,Native
          */
-        horizontalCenter: number | string;
+        horizontalCenter: any;
         /**
          * @copy eui.UIComponent#verticalCenter
          *
@@ -6163,7 +6163,7 @@ declare module eui {
          * @version eui 1.0
          * @platform Web,Native
          */
-        verticalCenter: number | string;
+        verticalCenter: any;
         /**
          * @copy eui.UIComponent#percentWidth
          *
@@ -6673,7 +6673,7 @@ declare module eui {
          * @version eui 1.0
          * @platform Web,Native
          */
-        left: number | string;
+        left: any;
         /**
          * @copy eui.UIComponent#right
          *
@@ -6681,7 +6681,7 @@ declare module eui {
          * @version eui 1.0
          * @platform Web,Native
          */
-        right: number | string;
+        right: any;
         /**
          * @copy eui.UIComponent#top
          *
@@ -6689,7 +6689,7 @@ declare module eui {
          * @version eui 1.0
          * @platform Web,Native
          */
-        top: number | string;
+        top: any;
         /**
          * @copy eui.UIComponent#bottom
          *
@@ -6697,7 +6697,7 @@ declare module eui {
          * @version eui 1.0
          * @platform Web,Native
          */
-        bottom: number | string;
+        bottom: any;
         /**
          * @copy eui.UIComponent#horizontalCenter
          *
@@ -6705,7 +6705,7 @@ declare module eui {
          * @version eui 1.0
          * @platform Web,Native
          */
-        horizontalCenter: number | string;
+        horizontalCenter: any;
         /**
          * @copy eui.UIComponent#verticalCenter
          *
@@ -6713,7 +6713,7 @@ declare module eui {
          * @version eui 1.0
          * @platform Web,Native
          */
-        verticalCenter: number | string;
+        verticalCenter: any;
         /**
          * @copy eui.UIComponent#percentWidth
          *
