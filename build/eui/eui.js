@@ -2260,6 +2260,7 @@ var eui;
             p.$setX = function (value) {
                 var change = this.$super.$setX.call(this, value);
                 if (change) {
+                    this.invalidateParentLayout();
                     this.invalidateProperties();
                 }
                 return change;
@@ -2273,6 +2274,7 @@ var eui;
             p.$setY = function (value) {
                 var change = this.$super.$setY.call(this, value);
                 if (change) {
+                    this.invalidateParentLayout();
                     this.invalidateProperties();
                 }
                 return change;
