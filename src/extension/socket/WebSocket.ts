@@ -146,6 +146,9 @@ module egret {
          */
         public connect(host:string, port:number):void {
             this.connectCount++;
+            if(this.connectCount > 1){
+                return;
+            }
             this.socket.connect(host, port);
         }
 
@@ -155,6 +158,9 @@ module egret {
          */
         public connectByUrl(url:string):void {
             this.connectCount++;
+            if(this.connectCount > 1){
+                return;
+            }
             this.socket.connectByUrl(url);
         }
 
@@ -179,11 +185,8 @@ module egret {
          * 
          */
         private onConnect():void {
-            this.connectCount--;
-            if(this.connectCount == 0 ) {
-                this._connected = true;
-                this.dispatchEventWith(egret.Event.CONNECT);
-            }
+            this._connected = true;
+            this.dispatchEventWith(egret.Event.CONNECT);
         }
 
         /**
@@ -191,7 +194,7 @@ module egret {
          * 
          */
         private onClose():void {
-            this.connectCount--;
+            this.connectCount = 0;
             this._connected = false;
             this.dispatchEventWith(egret.Event.CLOSE);
         }
