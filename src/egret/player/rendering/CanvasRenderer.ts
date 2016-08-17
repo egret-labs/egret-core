@@ -642,7 +642,7 @@ module egret {
         /**
          * @private
          */
-        private renderText(node:sys.TextNode, context:CanvasRenderingContext2D):void {
+        public renderText(node:sys.TextNode, context:CanvasRenderingContext2D):void {
             context.textAlign = "left";
             context.textBaseline = "middle";
             context.lineJoin = "round";//确保描边样式是圆角
@@ -671,7 +671,7 @@ module egret {
         /**
          * @private
          */
-        private renderGraphics(node:sys.GraphicsNode, context:CanvasRenderingContext2D, forHitTest?:boolean):void {
+        public renderGraphics(node:sys.GraphicsNode, context:CanvasRenderingContext2D, forHitTest?:boolean):void {
             var drawData = node.drawData;
             var length = drawData.length;
             forHitTest = !!forHitTest;

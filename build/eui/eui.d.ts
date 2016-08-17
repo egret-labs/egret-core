@@ -12408,6 +12408,7 @@ declare module eui.sys {
          */
         private formatString(value);
         private formatBinding(key, value, node);
+        private parseTemplates(value);
         /**
          * @private
          /**

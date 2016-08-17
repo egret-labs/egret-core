@@ -1398,6 +1398,7 @@ module eui.sys {
         $setX(value:number):boolean {
             var change = this.$super.$setX.call(this, value);
             if (change) {
+                this.invalidateParentLayout();
                 this.invalidateProperties();
             }
             return change;
@@ -1412,6 +1413,7 @@ module eui.sys {
         $setY(value:number):boolean {
             var change = this.$super.$setY.call(this, value);
             if (change) {
+                this.invalidateParentLayout();
                 this.invalidateProperties();
             }
             return change;

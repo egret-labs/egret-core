@@ -8218,7 +8218,7 @@ var egret;
                 }
                 if (node.dirtyRender) {
                     var surface = this.canvasRenderBuffer.surface;
-                    this.canvasRenderer["renderText"](node, this.canvasRenderBuffer.context);
+                    this.canvasRenderer.renderText(node, this.canvasRenderBuffer.context);
                     // 拷贝canvas到texture
                     var texture = node.$texture;
                     if (!texture) {
@@ -8271,14 +8271,14 @@ var egret;
                 }
                 var surface = this.canvasRenderBuffer.surface;
                 if (forHitTest) {
-                    this.canvasRenderer["renderGraphics"](node, this.canvasRenderBuffer.context, true);
+                    this.canvasRenderer.renderGraphics(node, this.canvasRenderBuffer.context, true);
                     egret.WebGLUtils.deleteWebGLTexture(surface);
                     var texture = buffer.context.getWebGLTexture(surface);
                     buffer.context.drawTexture(texture, 0, 0, width, height, 0, 0, width, height, surface.width, surface.height);
                 }
                 else {
                     if (node.dirtyRender) {
-                        this.canvasRenderer["renderGraphics"](node, this.canvasRenderBuffer.context);
+                        this.canvasRenderer.renderGraphics(node, this.canvasRenderBuffer.context);
                         // 拷贝canvas到texture
                         var texture = node.$texture;
                         if (!texture) {
