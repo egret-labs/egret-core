@@ -955,9 +955,8 @@ var egret;
                 request.open("GET", url, true);
                 request.responseType = "arraybuffer";
                 request.onload = function () {
-                    self._arrayBuffer = request.response;
                     WebAudioDecode.decodeArr.push({
-                        "buffer": self._arrayBuffer,
+                        "buffer": request.response,
                         "success": onAudioLoaded,
                         "fail": onAudioError,
                         "self": self,
@@ -3801,6 +3800,7 @@ var egret;
             else if (!egret.sys.screenAdapter) {
                 egret.sys.screenAdapter = new egret.sys.DefaultScreenAdapter();
             }
+            egret.sys.hitTestBuffer = new web.CanvasRenderBuffer(3, 3);
             var list = document.querySelectorAll(".egret-player");
             var length = list.length;
             for (var i = 0; i < length; i++) {
@@ -3808,7 +3808,6 @@ var egret;
                 var player = new web.WebPlayer(container, options);
                 container["egret-player"] = player;
             }
-            egret.sys.hitTestBuffer = new web.CanvasRenderBuffer(3, 3);
         }
         /**
          * 设置渲染模式。"auto","webgl","canvas"
