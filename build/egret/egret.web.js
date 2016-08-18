@@ -955,9 +955,8 @@ var egret;
                 request.open("GET", url, true);
                 request.responseType = "arraybuffer";
                 request.onload = function () {
-                    self._arrayBuffer = request.response;
                     WebAudioDecode.decodeArr.push({
-                        "buffer": self._arrayBuffer,
+                        "buffer": request.response,
                         "success": onAudioLoaded,
                         "fail": onAudioError,
                         "self": self,

@@ -159,7 +159,6 @@ module egret.web {
         /**
          * @private
          */
-        private _arrayBuffer:ArrayBuffer;
         private audioBuffer:AudioBuffer;
 
 
@@ -190,10 +189,8 @@ module egret.web {
             request.open("GET", url, true);
             request.responseType = "arraybuffer";
             request.onload = function () {
-                self._arrayBuffer = request.response;
-
                 WebAudioDecode.decodeArr.push({
-                    "buffer": self._arrayBuffer,
+                    "buffer": request.response,
                     "success": onAudioLoaded,
                     "fail": onAudioError,
                     "self": self,
