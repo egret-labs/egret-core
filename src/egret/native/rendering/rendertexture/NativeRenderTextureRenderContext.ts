@@ -597,7 +597,9 @@ module egret.native {
                     this.$clipList.splice(index, length - index);
                     for (; index < length; index++) {
                         this.checkSurface();
-                        this.$nativeContext.popClip();
+                        // old this.$nativeContext.popClip();
+                        $cmdManager.setContext(this.$nativeContext);
+                        $cmdManager.popClip();
                     }
                 }
                 this.$saveCount--;
@@ -643,7 +645,9 @@ module egret.native {
             if (this.$clipRect.width > 0 && this.$clipRect.height > 0) {
                 //console.log("push clip" + this.$clipRect.x + " " + this.$clipRect.y + " " + this.$clipRect.width + " " + this.$clipRect.height);
                 this.checkSurface();
-                this.$nativeContext.pushClip(this.$clipRect.x, this.$clipRect.y, this.$clipRect.width, this.$clipRect.height);
+                // old this.$nativeContext.pushClip(this.$clipRect.x, this.$clipRect.y, this.$clipRect.width, this.$clipRect.height);
+                $cmdManager.setContext(this.$nativeContext);
+                $cmdManager.pushClip(this.$clipRect.x, this.$clipRect.y, this.$clipRect.width, this.$clipRect.height);
                 this.$clipRect.setEmpty();
                 this.$clipList.push(this.$saveCount);
             }

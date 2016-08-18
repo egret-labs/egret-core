@@ -928,11 +928,23 @@ module egret.native {
          */
         public setContext(ctx:any):void {
             if(this.context != ctx) {
+                if(this.arrayBufferLen + 3 > this.maxArrayBufferLen) {
+                    this.flush();
+                }
+
                 this.context = ctx;
                 var uint32View = this.uint32View;
                 var arrayBufferLen = this.arrayBufferLen;
                 uint32View[arrayBufferLen++] = 1000;
-                uint32View[arrayBufferLen++] = ctx.___native_texture__p;
+
+                // uint32View[arrayBufferLen++] = ctx.___native_texture__p;
+                // 兼容64位
+                var addr = ctx.___native_texture__p;
+                uint32View[arrayBufferLen++] = (addr / 4294967296) >>> 0;
+                uint32View[arrayBufferLen++] = (addr & 4294967295) >>> 0;
+                // uint32View[arrayBufferLen++] = addr >> 32;
+                // uint32View[arrayBufferLen++] = addr & 4294967295;
+
                 this.arrayBufferLen = arrayBufferLen;
             }
         }
@@ -976,7 +988,7 @@ module egret.native {
         }
 
         public drawImage(i1:number, f1:number, f2:number, f3:number, f4:number, f5:number, f6:number, f7:number, f8:number):void {
-            if(this.arrayBufferLen + 9 > this.maxArrayBufferLen) {
+            if(this.arrayBufferLen + 11 > this.maxArrayBufferLen) {
                 this.flush();
             }
 
@@ -986,7 +998,13 @@ module egret.native {
 
             uint32View[arrayBufferLen++] = 101;
 
-            uint32View[arrayBufferLen++] = i1;
+            // uint32View[arrayBufferLen++] = i1;
+            // 兼容64位
+            // uint32View[arrayBufferLen++] = i1 >> 32;
+            // uint32View[arrayBufferLen++] = i1 & 4294967295;
+            uint32View[arrayBufferLen++] = (i1 / 4294967296) >>> 0;
+            uint32View[arrayBufferLen++] = (i1 & 4294967295) >>> 0;
+
             float32View[arrayBufferLen++] = f1;
             float32View[arrayBufferLen++] = f2;
             float32View[arrayBufferLen++] = f3;
@@ -1304,6 +1322,33 @@ module egret.native {
             uint32View[arrayBufferLen++] = i1;
 
             this.arrayBufferLen = arrayBufferLen;
+        }
+
+        public pushClip(f1:number, f2:number, f3:number, f4:number):void {
+            if(this.arrayBufferLen + 5 > this.maxArrayBufferLen) {
+                this.flush();
+            }
+
+            var uint32View = this.uint32View;
+            var float32View = this.float32View;
+            var arrayBufferLen = this.arrayBufferLen;
+
+            uint32View[arrayBufferLen++] = 107;
+
+            float32View[arrayBufferLen++] = f1;
+            float32View[arrayBufferLen++] = f2;
+            float32View[arrayBufferLen++] = f3;
+            float32View[arrayBufferLen++] = f4;
+
+            this.arrayBufferLen = arrayBufferLen;
+        }
+
+        public popClip():void {
+            if(this.arrayBufferLen + 1 > this.maxArrayBufferLen) {
+                this.flush();
+            }
+
+            this.uint32View[this.arrayBufferLen++] = 108;
         }
 
         //------绘制命令 end-------------

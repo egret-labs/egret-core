@@ -545,7 +545,9 @@ var egret;
                         this.$clipList.splice(index, length - index);
                         for (; index < length; index++) {
                             this.checkSurface();
-                            this.$nativeContext.popClip();
+                            // old this.$nativeContext.popClip();
+                            native.$cmdManager.setContext(this.$nativeContext);
+                            native.$cmdManager.popClip();
                         }
                     }
                     this.$saveCount--;
@@ -582,7 +584,9 @@ var egret;
                 if (this.$clipRect.width > 0 && this.$clipRect.height > 0) {
                     //console.log("push clip" + this.$clipRect.x + " " + this.$clipRect.y + " " + this.$clipRect.width + " " + this.$clipRect.height);
                     this.checkSurface();
-                    this.$nativeContext.pushClip(this.$clipRect.x, this.$clipRect.y, this.$clipRect.width, this.$clipRect.height);
+                    // old this.$nativeContext.pushClip(this.$clipRect.x, this.$clipRect.y, this.$clipRect.width, this.$clipRect.height);
+                    native.$cmdManager.setContext(this.$nativeContext);
+                    native.$cmdManager.pushClip(this.$clipRect.x, this.$clipRect.y, this.$clipRect.width, this.$clipRect.height);
                     this.$clipRect.setEmpty();
                     this.$clipList.push(this.$saveCount);
                 }
@@ -1965,11 +1969,20 @@ var egret;
              */
             p.setContext = function (ctx) {
                 if (this.context != ctx) {
+                    if (this.arrayBufferLen + 3 > this.maxArrayBufferLen) {
+                        this.flush();
+                    }
                     this.context = ctx;
                     var uint32View = this.uint32View;
                     var arrayBufferLen = this.arrayBufferLen;
                     uint32View[arrayBufferLen++] = 1000;
-                    uint32View[arrayBufferLen++] = ctx.___native_texture__p;
+                    // uint32View[arrayBufferLen++] = ctx.___native_texture__p;
+                    // 兼容64位
+                    var addr = ctx.___native_texture__p;
+                    uint32View[arrayBufferLen++] = (addr / 4294967296) >>> 0;
+                    uint32View[arrayBufferLen++] = (addr & 4294967295) >>> 0;
+                    // uint32View[arrayBufferLen++] = addr >> 32;
+                    // uint32View[arrayBufferLen++] = addr & 4294967295;
                     this.arrayBufferLen = arrayBufferLen;
                 }
             };
@@ -2004,14 +2017,19 @@ var egret;
                 this.arrayBufferLen = arrayBufferLen;
             };
             p.drawImage = function (i1, f1, f2, f3, f4, f5, f6, f7, f8) {
-                if (this.arrayBufferLen + 9 > this.maxArrayBufferLen) {
+                if (this.arrayBufferLen + 11 > this.maxArrayBufferLen) {
                     this.flush();
                 }
                 var uint32View = this.uint32View;
                 var float32View = this.float32View;
                 var arrayBufferLen = this.arrayBufferLen;
                 uint32View[arrayBufferLen++] = 101;
-                uint32View[arrayBufferLen++] = i1;
+                // uint32View[arrayBufferLen++] = i1;
+                // 兼容64位
+                // uint32View[arrayBufferLen++] = i1 >> 32;
+                // uint32View[arrayBufferLen++] = i1 & 4294967295;
+                uint32View[arrayBufferLen++] = (i1 / 4294967296) >>> 0;
+                uint32View[arrayBufferLen++] = (i1 & 4294967295) >>> 0;
                 float32View[arrayBufferLen++] = f1;
                 float32View[arrayBufferLen++] = f2;
                 float32View[arrayBufferLen++] = f3;
@@ -2239,6 +2257,26 @@ var egret;
                 uint32View[arrayBufferLen++] = 203;
                 uint32View[arrayBufferLen++] = i1;
                 this.arrayBufferLen = arrayBufferLen;
+            };
+            p.pushClip = function (f1, f2, f3, f4) {
+                if (this.arrayBufferLen + 5 > this.maxArrayBufferLen) {
+                    this.flush();
+                }
+                var uint32View = this.uint32View;
+                var float32View = this.float32View;
+                var arrayBufferLen = this.arrayBufferLen;
+                uint32View[arrayBufferLen++] = 107;
+                float32View[arrayBufferLen++] = f1;
+                float32View[arrayBufferLen++] = f2;
+                float32View[arrayBufferLen++] = f3;
+                float32View[arrayBufferLen++] = f4;
+                this.arrayBufferLen = arrayBufferLen;
+            };
+            p.popClip = function () {
+                if (this.arrayBufferLen + 1 > this.maxArrayBufferLen) {
+                    this.flush();
+                }
+                this.uint32View[this.arrayBufferLen++] = 108;
             };
             return CmdManager;
         }());
