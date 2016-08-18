@@ -1767,6 +1767,13 @@ module egret {
                 var element:egret.ITextElement = text2Arr[i];
                 //可能设置为没有文本，忽略绘制
                 if(!element.text) {
+                    if (lineElement) {
+                        lineElement.width = lineW;
+                        lineElement.height = lineH;
+                        lineElement.charNum = lineCharNum;
+                        values[sys.TextKeys.textWidth] = Math.max(values[sys.TextKeys.textWidth], lineW);
+                        values[sys.TextKeys.textHeight] += lineH;
+                    }
                     continue;
                 }
                 element.style = element.style || <egret.ITextStyle>{};

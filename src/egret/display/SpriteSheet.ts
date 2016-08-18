@@ -97,7 +97,7 @@ module egret {
          * @private
          * 纹理缓存字典
          */
-        public _textureMap:Object = {};
+        public _textureMap = egret.createMap<Texture>();
 
         /**
          * @language en_US

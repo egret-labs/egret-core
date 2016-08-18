@@ -381,6 +381,9 @@ module eui.sys {
                 else if (node.nodeType === 1) {
                     var id = node.attributes["id"];
                     if (id) {
+                        if (id.indexOf(" ") > -1) {
+                            egret.$warn(2022, id);
+                        }
                         if (this.skinParts.indexOf(id) == -1) {
                             this.skinParts.push(id);
                         }
@@ -977,7 +980,7 @@ module eui.sys {
 
             }
             value = value.substring(1, value.length - 1).trim();
-            var templates = value.split("+");
+            var templates = value.indexOf("+") == -1 ? [value] : this.parseTemplates(value);
             var chainIndex:number[] = [];
             var length = templates.length;
             for (var i = 0; i < length; i++) {
@@ -1008,6 +1011,36 @@ module eui.sys {
             return {templates: templates, chainIndex: chainIndex};
         }
 
+        private parseTemplates(value:string):string[] {
+            if (value.indexOf("'") == -1) {
+                return value.split("+");
+            }
+            var trimText = "";
+            value = value.split("\\\'").join("\v0\v");
+            while (value.length > 0) {
+                var index = value.indexOf("'");
+                if (index == -1) {
+                    trimText += value;
+                    break;
+                }
+                trimText += value.substring(0, index+1);
+                value = value.substring(index+1);
+                index = value.indexOf("'");
+                if (index == -1) {
+                    index = value.length - 1;
+                }
+                var quote = value.substring(0, index + 1);
+                trimText += quote.split("+").join("\v1\v");
+                value = value.substring(index + 1);
+            }
+            value = trimText.split("\v0\v").join("\\\'");
+            var templates = value.split("+");
+            var length = templates.length;
+            for (var i = 0; i < length; i++) {
+                templates[i] = templates[i].split("\v1\v").join("+");
+            }
+            return templates;
+        }
 
         /**
          * @private

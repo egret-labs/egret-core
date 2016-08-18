@@ -47,7 +47,7 @@ module egret {
      * @platform Web,Native
      * @includeExample egret/display/BitmapFillMode.ts
      */
-    export class BitmapFillMode {
+    export const BitmapFillMode = {
 
         /**
          * @language en_US
@@ -61,8 +61,7 @@ module egret {
          * @version Egret 2.4
          * @platform Web
          */
-        public static REPEAT:string = "repeat";
-
+        REPEAT: "repeat",
         /**
          * @language en_US
          * Scale bitmap fill to fill area.
@@ -75,7 +74,7 @@ module egret {
          * @version Egret 2.4
          * @platform Web,Native
          */
-        public static SCALE:string = "scale";
+        SCALE: "scale",
 
         /**
          * @language en_US
@@ -89,6 +88,6 @@ module egret {
          * @version Egret 2.4
          * @platform Web,Native
          */
-        public static CLIP:string = "clip";
+        CLIP: "clip"
     }
 }

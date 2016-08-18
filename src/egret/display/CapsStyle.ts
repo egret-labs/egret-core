@@ -44,7 +44,7 @@ module egret {
      * @version Egret 2.5
      * @platform Web,Native
      */
-    export class CapsStyle {
+    export const CapsStyle = {
         /**
          * @language en_US
          * Used to specify no caps in the caps parameter of the egret.Graphics.lineStyle() method.
@@ -57,7 +57,7 @@ module egret {
          * @version Egret 2.5
          * @platform Web,Native
          */
-        public static NONE:string = "none";
+        NONE: "none",
         /**
          * @language en_US
          * Used to specify round caps in the caps parameter of the egret.Graphics.lineStyle() method.
@@ -70,7 +70,7 @@ module egret {
          * @version Egret 2.5
          * @platform Web,Native
          */
-        public static ROUND:string = "round";
+        ROUND: "round",
         /**
          * @language en_US
          * Used to specify square caps in the caps parameter of the egret.Graphics.lineStyle() method.
@@ -83,6 +83,6 @@ module egret {
          * @version Egret 2.5
          * @platform Web,Native
          */
-        public static SQUARE:string = "square";
+        SQUARE: "square"
     }
 }

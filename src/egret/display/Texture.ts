@@ -330,7 +330,7 @@ module egret {
             }
         }
 
-        private static _displayList:Object = {};
+        private static _displayList = egret.createMap<DisplayObject[]>();
         static $addDisplayObject(displayObject:DisplayObject, bitmapData:BitmapData|Texture):void {
             var hashCode:number;
             if((<Texture>bitmapData)._bitmapData && (<Texture>bitmapData)._bitmapData.hashCode) {

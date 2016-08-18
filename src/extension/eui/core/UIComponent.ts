@@ -149,7 +149,7 @@ module eui {
          * @version eui 1.0
          * @platform Web,Native
          */
-        left:number|string;
+        left:any;
 
         /**
          * @language en_US
@@ -172,7 +172,7 @@ module eui {
          * @version eui 1.0
          * @platform Web,Native
          */
-        right:number|string;
+        right:any;
 
         /**
          * @language en_US
@@ -195,7 +195,7 @@ module eui {
          * @version eui 1.0
          * @platform Web,Native
          */
-        top:number|string;
+        top:any;
 
         /**
          * @language en_US
@@ -218,7 +218,7 @@ module eui {
          * @version eui 1.0
          * @platform Web,Native
          */
-        bottom:number|string;
+        bottom:any;
 
         /**
          * @language en_US
@@ -241,7 +241,7 @@ module eui {
          * @version eui 1.0
          * @platform Web,Native
          */
-        horizontalCenter:number|string;
+        horizontalCenter:any;
 
         /**
          * @language en_US
@@ -264,7 +264,7 @@ module eui {
          * @version eui 1.0
          * @platform Web,Native
          */
-        verticalCenter:number|string;
+        verticalCenter:any;
 
         /**
          * @language en_US
@@ -997,11 +997,11 @@ module eui.sys {
          * @private
          * 距父级容器离左边距离
          */
-        public get left():number|string {
+        public get left():any {
             return this.$UIComponent[UIKeys.left];
         }
 
-        public set left(value:number|string) {
+        public set left(value:any) {
             if (!value || typeof value == "number") {
                 value = +value;
             }
@@ -1020,11 +1020,11 @@ module eui.sys {
          * @private
          * 距父级容器右边距离
          */
-        public get right():number|string {
+        public get right():any {
             return this.$UIComponent[UIKeys.right];
         }
 
-        public set right(value:number|string) {
+        public set right(value:any) {
             if (!value || typeof value == "number") {
                 value = +value;
             }
@@ -1042,11 +1042,11 @@ module eui.sys {
          * @private
          * 距父级容器顶部距离
          */
-        public get top():number|string {
+        public get top():any {
             return this.$UIComponent[UIKeys.top];
         }
 
-        public set top(value:number|string) {
+        public set top(value:any) {
             if (!value || typeof value == "number") {
                 value = +value;
             }
@@ -1064,11 +1064,11 @@ module eui.sys {
          * @private
          * 距父级容器底部距离
          */
-        public get bottom():number|string {
+        public get bottom():any {
             return this.$UIComponent[UIKeys.bottom];
         }
 
-        public set bottom(value:number|string) {
+        public set bottom(value:any) {
             if (!value || typeof value == "number") {
                 value = +value;
             }
@@ -1087,11 +1087,11 @@ module eui.sys {
          * @private
          * 在父级容器中距水平中心位置的距离
          */
-        public get horizontalCenter():number|string {
+        public get horizontalCenter():any {
             return this.$UIComponent[UIKeys.horizontalCenter];
         }
 
-        public set horizontalCenter(value:number|string) {
+        public set horizontalCenter(value:any) {
             if (!value || typeof value == "number") {
                 value = +value;
             }
@@ -1109,11 +1109,11 @@ module eui.sys {
          * @private
          * 在父级容器中距竖直中心位置的距离
          */
-        public get verticalCenter():number|string {
+        public get verticalCenter():any {
             return this.$UIComponent[UIKeys.verticalCenter];
         }
 
-        public set verticalCenter(value:number|string) {
+        public set verticalCenter(value:any) {
             if (!value || typeof value == "number") {
                 value = +value;
             }
@@ -1360,9 +1360,33 @@ module eui.sys {
         /**
          * @private
          */
-        $$invalidatePosition():void {
-            this.$super.$invalidatePosition.call(this);
+        $invalidateMatrix():void {
+            this.$super.$invalidateMatrix.call(this);
             this.invalidateParentLayout();
+        }
+        /**
+         * @private
+         */
+        $setMatrix(matrix: egret.Matrix, needUpdateProperties: boolean = true): boolean {
+            this.$super.$setMatrix.call(this,matrix,needUpdateProperties);
+            this.invalidateParentLayout();
+            return true;
+        }
+        /**
+         * @private
+         */
+        $setAnchorOffsetX(value: number): boolean {
+            this.$super.$setAnchorOffsetX.call(this,value);
+            this.invalidateParentLayout();
+            return true;
+        }
+        /**
+         * @private
+         */
+        $setAnchorOffsetY(value: number): boolean {
+            this.$super.$setAnchorOffsetY.call(this,value);
+            this.invalidateParentLayout();
+            return true;
         }
 
         /**
@@ -1374,6 +1398,7 @@ module eui.sys {
         $setX(value:number):boolean {
             var change = this.$super.$setX.call(this, value);
             if (change) {
+                this.invalidateParentLayout();
                 this.invalidateProperties();
             }
             return change;
@@ -1388,6 +1413,7 @@ module eui.sys {
         $setY(value:number):boolean {
             var change = this.$super.$setY.call(this, value);
             if (change) {
+                this.invalidateParentLayout();
                 this.invalidateProperties();
             }
             return change;

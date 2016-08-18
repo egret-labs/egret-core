@@ -1542,7 +1542,7 @@ var egret;
          * @private
          * 标记矩阵失效
          */
-        p.invalidateMatrix = function () {
+        p.$invalidateMatrix = function () {
             this.$setFlags(8 /* InvalidMatrix */);
             this.$invalidatePosition();
         };
@@ -1911,7 +1911,7 @@ var egret;
                 return false;
             }
             values[0 /* scaleX */] = value;
-            this.invalidateMatrix();
+            this.$invalidateMatrix();
             return true;
         };
         d(p, "scaleY"
@@ -1955,7 +1955,7 @@ var egret;
                 return false;
             }
             this.$DisplayObject[1 /* scaleY */] = value;
-            this.invalidateMatrix();
+            this.$invalidateMatrix();
             return true;
         };
         d(p, "rotation"
@@ -2005,7 +2005,7 @@ var egret;
             values[2 /* skewX */] += angle;
             values[3 /* skewY */] += angle;
             values[4 /* rotation */] = value;
-            this.invalidateMatrix();
+            this.$invalidateMatrix();
             return true;
         };
         d(p, "skewX"
@@ -2038,7 +2038,7 @@ var egret;
             value = clampRotation(value);
             value = value / 180 * Math.PI;
             values[2 /* skewX */] = value;
-            this.invalidateMatrix();
+            this.$invalidateMatrix();
             return true;
         };
         d(p, "skewY"
@@ -2071,7 +2071,7 @@ var egret;
             value = clampRotation(value);
             value = value / 180 * Math.PI;
             values[3 /* skewY */] = value;
-            this.invalidateMatrix();
+            this.$invalidateMatrix();
             return true;
         };
         d(p, "width"
@@ -2134,7 +2134,7 @@ var egret;
             //     values[Keys.scaleY] = bounds.height / baseHeight;
             //     values[Keys.scaleX] = value / baseWidth;
             // }
-            this.invalidateMatrix();
+            this.$invalidateMatrix();
             return true;
         };
         d(p, "height"
@@ -2197,7 +2197,7 @@ var egret;
             //     values[Keys.scaleY] = value / baseHeight;
             //     values[Keys.scaleX] = bounds.width / baseWidth;
             // }
-            this.invalidateMatrix();
+            this.$invalidateMatrix();
             return true;
         };
         d(p, "measuredWidth"
@@ -4075,10 +4075,7 @@ var egret;
      * @platform Web,Native
      * @includeExample egret/display/BitmapFillMode.ts
      */
-    var BitmapFillMode = (function () {
-        function BitmapFillMode() {
-        }
-        var d = __define,c=BitmapFillMode,p=c.prototype;
+    egret.BitmapFillMode = {
         /**
          * @language en_US
          * Repeat the bitmap to fill area.
@@ -4091,7 +4088,7 @@ var egret;
          * @version Egret 2.4
          * @platform Web
          */
-        BitmapFillMode.REPEAT = "repeat";
+        REPEAT: "repeat",
         /**
          * @language en_US
          * Scale bitmap fill to fill area.
@@ -4104,7 +4101,7 @@ var egret;
          * @version Egret 2.4
          * @platform Web,Native
          */
-        BitmapFillMode.SCALE = "scale";
+        SCALE: "scale",
         /**
          * @language en_US
          * The bitmap ends at the edge of the region.
@@ -4117,11 +4114,8 @@ var egret;
          * @version Egret 2.4
          * @platform Web,Native
          */
-        BitmapFillMode.CLIP = "clip";
-        return BitmapFillMode;
-    }());
-    egret.BitmapFillMode = BitmapFillMode;
-    egret.registerClass(BitmapFillMode,'egret.BitmapFillMode');
+        CLIP: "clip"
+    };
 })(egret || (egret = {}));
 //////////////////////////////////////////////////////////////////////////////////////
 //
@@ -4307,10 +4301,7 @@ var egret;
      * @version Egret 2.5
      * @platform Web,Native
      */
-    var CapsStyle = (function () {
-        function CapsStyle() {
-        }
-        var d = __define,c=CapsStyle,p=c.prototype;
+    egret.CapsStyle = {
         /**
          * @language en_US
          * Used to specify no caps in the caps parameter of the egret.Graphics.lineStyle() method.
@@ -4323,7 +4314,7 @@ var egret;
          * @version Egret 2.5
          * @platform Web,Native
          */
-        CapsStyle.NONE = "none";
+        NONE: "none",
         /**
          * @language en_US
          * Used to specify round caps in the caps parameter of the egret.Graphics.lineStyle() method.
@@ -4336,7 +4327,7 @@ var egret;
          * @version Egret 2.5
          * @platform Web,Native
          */
-        CapsStyle.ROUND = "round";
+        ROUND: "round",
         /**
          * @language en_US
          * Used to specify square caps in the caps parameter of the egret.Graphics.lineStyle() method.
@@ -4349,11 +4340,8 @@ var egret;
          * @version Egret 2.5
          * @platform Web,Native
          */
-        CapsStyle.SQUARE = "square";
-        return CapsStyle;
-    }());
-    egret.CapsStyle = CapsStyle;
-    egret.registerClass(CapsStyle,'egret.CapsStyle');
+        SQUARE: "square"
+    };
 })(egret || (egret = {}));
 //////////////////////////////////////////////////////////////////////////////////////
 //
@@ -4394,43 +4382,37 @@ var egret;
     /**
      * @language zh_CN
      * 脏矩形策略常量。
-     * @version Egret 2.5
+     * @version Egret 3.0
      * @platform Web,Native
      */
-    var DirtyRegionPolicy = (function () {
-        function DirtyRegionPolicy() {
-        }
-        var d = __define,c=DirtyRegionPolicy,p=c.prototype;
+    egret.DirtyRegionPolicy = {
         /**
          * @language en_US
          * Close automatic detection of dirty region
-         * @version Egret 2.5
+         * @version Egret 3.0
          * @platform Web,Native
          */
         /**
          * @language zh_CN
          * 关闭自动脏矩形检测
-         * @version Egret 2.5
+         * @version Egret 3.0
          * @platform Web,Native
          */
-        DirtyRegionPolicy.OFF = "off";
+        OFF: "off",
         /**
          * @language en_US
          * Open automatic detection of dirty region
-         * @version Egret 2.5
+         * @version Egret 3.0
          * @platform Web,Native
          */
         /**
          * @language zh_CN
          * 开启自动脏矩形检测
-         * @version Egret 2.5
+         * @version Egret 3.0
          * @platform Web,Native
          */
-        DirtyRegionPolicy.ON = "on";
-        return DirtyRegionPolicy;
-    }());
-    egret.DirtyRegionPolicy = DirtyRegionPolicy;
-    egret.registerClass(DirtyRegionPolicy,'egret.DirtyRegionPolicy');
+        ON: "on"
+    };
 })(egret || (egret = {}));
 //////////////////////////////////////////////////////////////////////////////////////
 //
@@ -6145,10 +6127,7 @@ var egret;
      * @version Egret 2.5
      * @platform Web,Native
      */
-    var JointStyle = (function () {
-        function JointStyle() {
-        }
-        var d = __define,c=JointStyle,p=c.prototype;
+    egret.JointStyle = {
         /**
          * @language en_US
          * Specifies beveled joints in the joints parameter of the egret.Graphics.lineStyle() method.
@@ -6161,7 +6140,7 @@ var egret;
          * @version Egret 2.5
          * @platform Web,Native
          */
-        JointStyle.BEVEL = "bevel";
+        BEVEL: "bevel",
         /**
          * @language en_US
          * Specifies mitered joints in the joints parameter of the egret.Graphics.lineStyle() method.
@@ -6174,7 +6153,7 @@ var egret;
          * @version Egret 2.5
          * @platform Web,Native
          */
-        JointStyle.MITER = "miter";
+        MITER: "miter",
         /**
          * @language en_US
          * Specifies round joints in the joints parameter of the egret.Graphics.lineStyle() method.
@@ -6187,11 +6166,8 @@ var egret;
          * @version Egret 2.5
          * @platform Web,Native
          */
-        JointStyle.ROUND = "round";
-        return JointStyle;
-    }());
-    egret.JointStyle = JointStyle;
-    egret.registerClass(JointStyle,'egret.JointStyle');
+        ROUND: "round"
+    };
 })(egret || (egret = {}));
 //////////////////////////////////////////////////////////////////////////////////////
 //
@@ -6356,6 +6332,19 @@ var egret;
          */
         LANDSCAPE_FLIPPED: "landscapeFlipped"
     };
+})(egret || (egret = {}));
+var egret;
+(function (egret) {
+    /**
+     * @private
+     */
+    function createMap() {
+        var obj = Object.create(null);
+        obj.__v8__ = undefined;
+        delete obj.__v8__;
+        return obj;
+    }
+    egret.createMap = createMap;
 })(egret || (egret = {}));
 //////////////////////////////////////////////////////////////////////////////////////
 //
@@ -6755,7 +6744,7 @@ var egret;
             }
             delete Texture._displayList[hashCode];
         };
-        Texture._displayList = {};
+        Texture._displayList = egret.createMap();
         return Texture;
     }(egret.HashObject));
     egret.Texture = Texture;
@@ -7242,7 +7231,7 @@ var egret;
              * @private
              * 纹理缓存字典
              */
-            this._textureMap = {};
+            this._textureMap = egret.createMap();
             this.$texture = texture;
             this._bitmapX = texture._bitmapX - texture._offsetX;
             this._bitmapY = texture._bitmapY - texture._offsetY;
@@ -13143,11 +13132,6 @@ var egret;
                 this.needUpdateRegions = false;
                 /**
                  * @private
-                 * 显示对象的渲染节点发生改变时，把自身的IRenderable对象注册到此列表上。
-                 */
-                this.dirtyNodes = {};
-                /**
-                 * @private
                  */
                 this.dirtyNodeList = [];
                 /**
@@ -13162,6 +13146,7 @@ var egret;
                 this.root = root;
                 this.dirtyRegion = new sys.DirtyRegion(root);
                 this.isStage = (root instanceof egret.Stage);
+                this.dirtyNodes = egret.createMap();
             }
             var d = __define,c=DisplayList,p=c.prototype;
             /**
@@ -13277,7 +13262,7 @@ var egret;
             p.updateDirtyRegions = function () {
                 var dirtyNodeList = this.dirtyNodeList;
                 this.dirtyNodeList = [];
-                this.dirtyNodes = {};
+                this.dirtyNodes = egret.createMap();
                 this.needUpdateRegions = false;
                 var dirtyRegion = this.dirtyRegion;
                 var length = dirtyNodeList.length;
@@ -18975,6 +18960,10 @@ var egret;
             /**
              * @private
              */
+            this.stageTextAdded = false;
+            /**
+             * @private
+             */
             this._text = null;
             /**
              * @private
@@ -18998,6 +18987,9 @@ var egret;
          *
          */
         p._addStageText = function () {
+            if (this.stageTextAdded) {
+                return;
+            }
             if (!this._text.$inputEnabled) {
                 this._text.$touchEnabled = true;
             }
@@ -19007,12 +18999,16 @@ var egret;
             this._text.addEventListener(egret.TouchEvent.TOUCH_BEGIN, this.onMouseDownHandler, this);
             this.stageText.addEventListener("blur", this.blurHandler, this);
             this.stageText.addEventListener("focus", this.focusHandler, this);
+            this.stageTextAdded = true;
         };
         /**
          * @private
          *
          */
         p._removeStageText = function () {
+            if (!this.stageTextAdded) {
+                return;
+            }
             if (!this._text.$inputEnabled) {
                 this._text.$touchEnabled = false;
             }
@@ -19022,6 +19018,7 @@ var egret;
             this.tempStage.removeEventListener(egret.TouchEvent.TOUCH_BEGIN, this.onStageDownHandler, this);
             this.stageText.removeEventListener("blur", this.blurHandler, this);
             this.stageText.removeEventListener("focus", this.focusHandler, this);
+            this.stageTextAdded = false;
         };
         /**
          * @private
@@ -20721,6 +20718,13 @@ var egret;
                 var element = text2Arr[i];
                 //可能设置为没有文本，忽略绘制
                 if (!element.text) {
+                    if (lineElement) {
+                        lineElement.width = lineW;
+                        lineElement.height = lineH;
+                        lineElement.charNum = lineCharNum;
+                        values[5 /* textWidth */] = Math.max(values[5 /* textWidth */], lineW);
+                        values[6 /* textHeight */] += lineH;
+                    }
                     continue;
                 }
                 element.style = element.style || {};

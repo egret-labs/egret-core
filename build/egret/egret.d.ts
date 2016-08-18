@@ -1037,7 +1037,7 @@ declare module egret {
          * @private
          * 标记矩阵失效
          */
-        private invalidateMatrix();
+        $invalidateMatrix(): void;
         /**
          * @private
          * 标记这个显示对象在父级容器的位置发生了改变。
@@ -2375,47 +2375,11 @@ declare module egret {
      * @platform Web,Native
      * @includeExample egret/display/BitmapFillMode.ts
      */
-    class BitmapFillMode {
-        /**
-         * @language en_US
-         * Repeat the bitmap to fill area.
-         * @version Egret 2.4
-         * @platform Web
-         */
-        /**
-         * @language zh_CN
-         * 重复位图以填充区域。
-         * @version Egret 2.4
-         * @platform Web
-         */
-        static REPEAT: string;
-        /**
-         * @language en_US
-         * Scale bitmap fill to fill area.
-         * @version Egret 2.4
-         * @platform Web,Native
-         */
-        /**
-         * @language zh_CN
-         * 位图填充拉伸以填充区域。
-         * @version Egret 2.4
-         * @platform Web,Native
-         */
-        static SCALE: string;
-        /**
-         * @language en_US
-         * The bitmap ends at the edge of the region.
-         * @version Egret 2.4
-         * @platform Web,Native
-         */
-        /**
-         * @language zh_CN
-         * 在区域的边缘处截断不显示位图。
-         * @version Egret 2.4
-         * @platform Web,Native
-         */
-        static CLIP: string;
-    }
+    const BitmapFillMode: {
+        REPEAT: string;
+        SCALE: string;
+        CLIP: string;
+    };
 }
 declare module egret {
     /**
@@ -2514,47 +2478,11 @@ declare module egret {
      * @version Egret 2.5
      * @platform Web,Native
      */
-    class CapsStyle {
-        /**
-         * @language en_US
-         * Used to specify no caps in the caps parameter of the egret.Graphics.lineStyle() method.
-         * @version Egret 2.5
-         * @platform Web,Native
-         */
-        /**
-         * @language zh_CN
-         * 用于在 egret.Graphics.lineStyle() 方法的 caps 参数中指定没有端点。
-         * @version Egret 2.5
-         * @platform Web,Native
-         */
-        static NONE: string;
-        /**
-         * @language en_US
-         * Used to specify round caps in the caps parameter of the egret.Graphics.lineStyle() method.
-         * @version Egret 2.5
-         * @platform Web,Native
-         */
-        /**
-         * @language zh_CN
-         * 用于在 egret.Graphics.lineStyle() 方法的 caps 参数中指定圆头端点。
-         * @version Egret 2.5
-         * @platform Web,Native
-         */
-        static ROUND: string;
-        /**
-         * @language en_US
-         * Used to specify square caps in the caps parameter of the egret.Graphics.lineStyle() method.
-         * @version Egret 2.5
-         * @platform Web,Native
-         */
-        /**
-         * @language zh_CN
-         * 用于在 egret.Graphics.lineStyle() 方法的 caps 参数中指定方头端点。
-         * @version Egret 2.5
-         * @platform Web,Native
-         */
-        static SQUARE: string;
-    }
+    const CapsStyle: {
+        NONE: string;
+        ROUND: string;
+        SQUARE: string;
+    };
 }
 declare module egret {
     /**
@@ -2566,37 +2494,13 @@ declare module egret {
     /**
      * @language zh_CN
      * 脏矩形策略常量。
-     * @version Egret 2.5
+     * @version Egret 3.0
      * @platform Web,Native
      */
-    class DirtyRegionPolicy {
-        /**
-         * @language en_US
-         * Close automatic detection of dirty region
-         * @version Egret 2.5
-         * @platform Web,Native
-         */
-        /**
-         * @language zh_CN
-         * 关闭自动脏矩形检测
-         * @version Egret 2.5
-         * @platform Web,Native
-         */
-        static OFF: string;
-        /**
-         * @language en_US
-         * Open automatic detection of dirty region
-         * @version Egret 2.5
-         * @platform Web,Native
-         */
-        /**
-         * @language zh_CN
-         * 开启自动脏矩形检测
-         * @version Egret 2.5
-         * @platform Web,Native
-         */
-        static ON: string;
-    }
+    const DirtyRegionPolicy: {
+        OFF: string;
+        ON: string;
+    };
 }
 declare module egret {
     /**
@@ -3499,47 +3403,11 @@ declare module egret {
      * @version Egret 2.5
      * @platform Web,Native
      */
-    class JointStyle {
-        /**
-         * @language en_US
-         * Specifies beveled joints in the joints parameter of the egret.Graphics.lineStyle() method.
-         * @version Egret 2.5
-         * @platform Web,Native
-         */
-        /**
-         * @language zh_CN
-         * 在 egret.Graphics.lineStyle() 方法的 joints 参数中指定斜角连接。
-         * @version Egret 2.5
-         * @platform Web,Native
-         */
-        static BEVEL: string;
-        /**
-         * @language en_US
-         * Specifies mitered joints in the joints parameter of the egret.Graphics.lineStyle() method.
-         * @version Egret 2.5
-         * @platform Web,Native
-         */
-        /**
-         * @language zh_CN
-         * 在 egret.Graphics.lineStyle() 方法的 joints 参数中指定尖角连接。
-         * @version Egret 2.5
-         * @platform Web,Native
-         */
-        static MITER: string;
-        /**
-         * @language en_US
-         * Specifies round joints in the joints parameter of the egret.Graphics.lineStyle() method.
-         * @version Egret 2.5
-         * @platform Web,Native
-         */
-        /**
-         * @language zh_CN
-         * 在 egret.Graphics.lineStyle() 方法的 joints 参数中指定圆角连接。
-         * @version Egret 2.5
-         * @platform Web,Native
-         */
-        static ROUND: string;
-    }
+    const JointStyle: {
+        BEVEL: string;
+        MITER: string;
+        ROUND: string;
+    };
 }
 declare module egret {
     /**
@@ -3576,6 +3444,19 @@ declare module egret {
         LANDSCAPE: string;
         LANDSCAPE_FLIPPED: string;
     };
+}
+declare module egret {
+    /**
+     * @private
+     */
+    interface MapLike<T> {
+        [key: string]: T;
+        [key: number]: T;
+    }
+    /**
+     * @private
+     */
+    function createMap<T>(): MapLike<T>;
 }
 declare module egret {
     var $TextureScaleFactor: number;
@@ -4033,7 +3914,7 @@ declare module egret {
          * @private
          * 纹理缓存字典
          */
-        _textureMap: Object;
+        _textureMap: MapLike<Texture>;
         /**
          * @language en_US
          * Obtain a cached Texture object according to the specified texture name
@@ -10780,11 +10661,11 @@ declare module egret {
         /**
          * @private
          */
-        private renderText(node, context);
+        renderText(node: sys.TextNode, context: CanvasRenderingContext2D): void;
         /**
          * @private
          */
-        private renderGraphics(node, context, forHitTest?);
+        renderGraphics(node: sys.GraphicsNode, context: CanvasRenderingContext2D, forHitTest?: boolean): void;
         private renderPath(path, context);
         private renderGroup(groupNode, context);
         /**
@@ -12237,6 +12118,10 @@ declare module egret {
          * @private
          */
         private stageText;
+        /**
+         * @private
+         */
+        private stageTextAdded;
         /**
          * @private
          */

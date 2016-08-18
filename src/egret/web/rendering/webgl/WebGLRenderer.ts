@@ -674,7 +674,7 @@ module egret.web {
 
             if (node.dirtyRender) {
                 var surface = this.canvasRenderBuffer.surface;
-                this.canvasRenderer["renderText"](node, this.canvasRenderBuffer.context);
+                this.canvasRenderer.renderText(node, this.canvasRenderBuffer.context);
 
                 // 拷贝canvas到texture
                 var texture = node.$texture;
@@ -730,13 +730,13 @@ module egret.web {
             }
             var surface = this.canvasRenderBuffer.surface;
             if (forHitTest) {
-                this.canvasRenderer["renderGraphics"](node, this.canvasRenderBuffer.context, true);
+                this.canvasRenderer.renderGraphics(node, this.canvasRenderBuffer.context, true);
                 WebGLUtils.deleteWebGLTexture(surface);
                 var texture = buffer.context.getWebGLTexture(<BitmapData><any>surface);
                 buffer.context.drawTexture(texture, 0, 0, width, height, 0, 0, width, height, surface.width, surface.height);
             } else {
                 if (node.dirtyRender) {
-                    this.canvasRenderer["renderGraphics"](node, this.canvasRenderBuffer.context);
+                    this.canvasRenderer.renderGraphics(node, this.canvasRenderBuffer.context);
 
                     // 拷贝canvas到texture
                     var texture: WebGLTexture = node.$texture;

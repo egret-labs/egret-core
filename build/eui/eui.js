@@ -2222,9 +2222,34 @@ var eui;
             /**
              * @private
              */
-            p.$$invalidatePosition = function () {
-                this.$super.$invalidatePosition.call(this);
+            p.$invalidateMatrix = function () {
+                this.$super.$invalidateMatrix.call(this);
                 this.invalidateParentLayout();
+            };
+            /**
+             * @private
+             */
+            p.$setMatrix = function (matrix, needUpdateProperties) {
+                if (needUpdateProperties === void 0) { needUpdateProperties = true; }
+                this.$super.$setMatrix.call(this, matrix, needUpdateProperties);
+                this.invalidateParentLayout();
+                return true;
+            };
+            /**
+             * @private
+             */
+            p.$setAnchorOffsetX = function (value) {
+                this.$super.$setAnchorOffsetX.call(this, value);
+                this.invalidateParentLayout();
+                return true;
+            };
+            /**
+             * @private
+             */
+            p.$setAnchorOffsetY = function (value) {
+                this.$super.$setAnchorOffsetY.call(this, value);
+                this.invalidateParentLayout();
+                return true;
             };
             /**
              * @private
@@ -2235,6 +2260,7 @@ var eui;
             p.$setX = function (value) {
                 var change = this.$super.$setX.call(this, value);
                 if (change) {
+                    this.invalidateParentLayout();
                     this.invalidateProperties();
                 }
                 return change;
@@ -2248,6 +2274,7 @@ var eui;
             p.$setY = function (value) {
                 var change = this.$super.$setY.call(this, value);
                 if (change) {
+                    this.invalidateParentLayout();
                     this.invalidateProperties();
                 }
                 return change;
@@ -18291,6 +18318,9 @@ var eui;
                     else if (node.nodeType === 1) {
                         var id = node.attributes["id"];
                         if (id) {
+                            if (id.indexOf(" ") > -1) {
+                                egret.$warn(2022, id);
+                            }
                             if (this.skinParts.indexOf(id) == -1) {
                                 this.skinParts.push(id);
                             }
@@ -18853,7 +18883,7 @@ var eui;
                     return null;
                 }
                 value = value.substring(1, value.length - 1).trim();
-                var templates = value.split("+");
+                var templates = value.indexOf("+") == -1 ? [value] : this.parseTemplates(value);
                 var chainIndex = [];
                 var length = templates.length;
                 for (var i = 0; i < length; i++) {
@@ -18882,6 +18912,36 @@ var eui;
                     chainIndex.push(i);
                 }
                 return { templates: templates, chainIndex: chainIndex };
+            };
+            p.parseTemplates = function (value) {
+                if (value.indexOf("'") == -1) {
+                    return value.split("+");
+                }
+                var trimText = "";
+                value = value.split("\\\'").join("\v0\v");
+                while (value.length > 0) {
+                    var index = value.indexOf("'");
+                    if (index == -1) {
+                        trimText += value;
+                        break;
+                    }
+                    trimText += value.substring(0, index + 1);
+                    value = value.substring(index + 1);
+                    index = value.indexOf("'");
+                    if (index == -1) {
+                        index = value.length - 1;
+                    }
+                    var quote = value.substring(0, index + 1);
+                    trimText += quote.split("+").join("\v1\v");
+                    value = value.substring(index + 1);
+                }
+                value = trimText.split("\v0\v").join("\\\'");
+                var templates = value.split("+");
+                var length = templates.length;
+                for (var i = 0; i < length; i++) {
+                    templates[i] = templates[i].split("\v1\v").join("+");
+                }
+                return templates;
             };
             /**
              * @private
@@ -19998,6 +20058,7 @@ var eui;
     locale_strings[2019] = "EXML parsing error {0}: the container’s child item must be visible nodes: {1}";
     locale_strings[2020] = "EXML parsing error {0}: for child nodes in w: Declarations, the includeIn and excludeFrom properties are not allowed to use \n {1}";
     locale_strings[2021] = "Compile errors in {0}, the attribute name: {1}, the attribute value: {2}.";
+    locale_strings[2022] = "EXML parsing error: there can be no Spaces in the id `{0}`";
     locale_strings[2101] = "EXML parsing warnning : fail to register the class property : {0},there is already a class with the same name in the global,please try to rename the class name for the exml. \n {1}";
     locale_strings[2102] = "EXML parsing warnning {0}: no child node can be found on the property code \n {1}";
     locale_strings[2103] = "EXML parsing warnning {0}: the same property '{1}' on the node is assigned multiple times \n {2}";
@@ -20063,6 +20124,7 @@ var eui;
     locale_strings[2019] = "EXML解析错误 {0}: 容器的子项必须是可视节点:{1}";
     locale_strings[2020] = "EXML解析错误 {0}: 在w:Declarations内的子节点，不允许使用includeIn和excludeFrom属性\n{1}";
     locale_strings[2021] = "{0} 中存在编译错误，属性名 : {1}，属性值 : {2}";
+    locale_strings[2022] = "EXML解析错误: id `{0}` 中不可以有空格";
     //EXML警告信息
     locale_strings[2101] = "EXML解析警告: 在EXML根节点上声明的 class 属性: {0} 注册失败，所对应的类已经存在，请尝试重命名要注册的类名。\n{1}";
     locale_strings[2102] = "EXML解析警告 {0}: 在属性节点上找不到任何子节点\n{1}";
