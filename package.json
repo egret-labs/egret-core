@@ -386,6 +386,14 @@
         "root": "",
         "dependencies": [
         ]
+      },
+      {
+        "name": "egret3d",
+        "description": "egret 3D引擎库",
+        "files": [],
+        "root": "",
+        "dependencies": [
+        ]
       }
     ],
     "platforms": [
