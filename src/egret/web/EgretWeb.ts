@@ -73,6 +73,8 @@ module egret.web {
             egret.sys.screenAdapter = new egret.sys.DefaultScreenAdapter();
         }
 
+        sys.hitTestBuffer = new CanvasRenderBuffer(3, 3);        
+
         var list = document.querySelectorAll(".egret-player");
         var length = list.length;
         for (var i = 0; i < length; i++) {
@@ -86,7 +88,6 @@ module egret.web {
                };
             }
         }
-        sys.hitTestBuffer = new CanvasRenderBuffer(3, 3);
     }
 
     /**

@@ -1,6 +1,6 @@
 {
   "name": "egret",
-  "version": "3.1.6",
+  "version": "3.1.7",
   "private": true,
   "author": "egret-labs",
   "scripts": {
@@ -382,6 +382,14 @@
       {
         "name": "dragonBones",
         "description": "dragonbones 龙骨动画库",
+        "files": [],
+        "root": "",
+        "dependencies": [
+        ]
+      },
+      {
+        "name": "egret3d",
+        "description": "egret 3D引擎库",
         "files": [],
         "root": "",
         "dependencies": [
