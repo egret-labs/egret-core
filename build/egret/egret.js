@@ -3247,7 +3247,7 @@ var egret;
                     var matrix = egret.Matrix.create();
                     matrix.identity();
                     matrix.translate(1 - localX, 1 - localY);
-                    egret.sys.canvasRenderer.render(this, buffer, matrix, null, true);
+                    egret.sys.systemRenderer.render(this, buffer, matrix, null, true);
                     egret.Matrix.release(matrix);
                     try {
                         data = buffer.getPixel(1, 1);
@@ -4006,6 +4006,11 @@ var egret;
              * @platform Web,Native
              */
             this.format = "image";
+            /**
+             * @private
+             * webgl纹理生成后，是否删掉原始图像数据
+             */
+            this.$deleteSource = true;
             this.source = source;
             this.width = source.width;
             this.height = source.height;
@@ -6806,8 +6811,10 @@ var egret;
         __extends(RenderTexture, _super);
         function RenderTexture() {
             _super.call(this);
-            this.renderBuffer = new egret.sys.RenderBuffer();
-            this._setBitmapData(new egret.BitmapData(this.renderBuffer.surface));
+            this.renderBuffer = new egret.sys.CanvasRenderBuffer();
+            var bitmapData = new egret.BitmapData(this.renderBuffer.surface);
+            bitmapData.$deleteSource = false;
+            this._setBitmapData(bitmapData);
         }
         var d = __define,c=RenderTexture,p=c.prototype;
         /**
@@ -6858,7 +6865,7 @@ var egret;
                 matrix.translate(-clipBounds.x, -clipBounds.y);
             }
             matrix.scale(scale, scale);
-            egret.sys.systemRenderer.render(displayObject, renderBuffer, matrix, null, true);
+            egret.sys.canvasRenderer.render(displayObject, renderBuffer, matrix, null, true);
             egret.Matrix.release(matrix);
             //设置纹理参数
             this.$initData(0, 0, width, height, 0, 0, width, height, width, height);

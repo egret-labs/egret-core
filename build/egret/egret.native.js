@@ -2898,9 +2898,11 @@ var egret;
         function setRenderMode(renderMode) {
             if (native.$supportCanvas) {
                 egret.sys.RenderBuffer = native.NativeCanvasRenderBuffer;
+                egret.sys.CanvasRenderBuffer = native.NativeCanvasRenderBuffer;
             }
             else {
                 egret.sys.RenderBuffer = native.NativeRenderTextureRenderBuffer;
+                egret.sys.CanvasRenderBuffer = native.NativeRenderTextureRenderBuffer;
             }
             egret.sys.systemRenderer = new egret.CanvasRenderer();
             egret.sys.canvasRenderer = egret.sys.systemRenderer;

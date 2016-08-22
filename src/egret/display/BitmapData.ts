@@ -127,6 +127,12 @@ module egret {
          */
         format:string = "image";
 
+        /**
+         * @private
+         * webgl纹理生成后，是否删掉原始图像数据
+         */
+        $deleteSource:boolean = true;
+
         constructor(source) {
             super();
             this.source = source;

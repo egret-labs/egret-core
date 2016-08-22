@@ -2352,6 +2352,11 @@ declare module egret {
          * @platform Web,Native
          */
         format: string;
+        /**
+         * @private
+         * webgl纹理生成后，是否删掉原始图像数据
+         */
+        $deleteSource: boolean;
         constructor(source: any);
         $dispose(): void;
     }
@@ -9573,6 +9578,15 @@ declare module egret.sys {
     var RenderBuffer: {
         /**
          * 创建一个RenderTarget。
+         * 注意：若内存不足或创建缓冲区失败，将会抛出错误异常。
+         * @param width 渲染缓冲的初始宽
+         * @param height 渲染缓冲的初始高
+         */
+        new (width?: number, height?: number): RenderBuffer;
+    };
+    var CanvasRenderBuffer: {
+        /**
+         * 创建一个CanvasRenderBuffer。
          * 注意：若内存不足或创建缓冲区失败，将会抛出错误异常。
          * @param width 渲染缓冲的初始宽
          * @param height 渲染缓冲的初始高

@@ -69,7 +69,7 @@ module egret.web {
         var offsetY: number = Math.round(bitmapData._offsetY);
         var bitmapWidth: number = bitmapData._bitmapWidth;
         var bitmapHeight: number = bitmapData._bitmapHeight;
-        sharedContext.drawImage(bitmapData._bitmapData, bitmapData._bitmapX + rect.x / $TextureScaleFactor, bitmapData._bitmapY + rect.y / $TextureScaleFactor,
+        sharedContext.drawImage(bitmapData._bitmapData.source, bitmapData._bitmapX + rect.x / $TextureScaleFactor, bitmapData._bitmapY + rect.y / $TextureScaleFactor,
             bitmapWidth * rect.width / w, bitmapHeight * rect.height / h, offsetX, offsetY, rect.width, rect.height);
         return surface;
     }
@@ -113,7 +113,7 @@ module egret.web {
         var width = this._bitmapWidth;
         var height = this._bitmapHeight;
         var scale = $TextureScaleFactor;
-        context.drawImage(this._bitmapData, this._bitmapX, this._bitmapY, width, this._bitmapHeight,
+        context.drawImage(this._bitmapData.source, this._bitmapX, this._bitmapY, width, this._bitmapHeight,
             this._offsetX, this._offsetY, width * scale, height * scale);
         try {
             var data = buffer.getPixel(1, 1);

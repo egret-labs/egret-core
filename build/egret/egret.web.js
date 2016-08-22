@@ -3800,6 +3800,7 @@ var egret;
             else if (!egret.sys.screenAdapter) {
                 egret.sys.screenAdapter = new egret.sys.DefaultScreenAdapter();
             }
+            egret.sys.CanvasRenderBuffer = web.CanvasRenderBuffer;
             egret.sys.hitTestBuffer = new web.CanvasRenderBuffer(3, 3);
             var list = document.querySelectorAll(".egret-player");
             var length = list.length;
@@ -4576,7 +4577,7 @@ var egret;
             var offsetY = Math.round(bitmapData._offsetY);
             var bitmapWidth = bitmapData._bitmapWidth;
             var bitmapHeight = bitmapData._bitmapHeight;
-            sharedContext.drawImage(bitmapData._bitmapData, bitmapData._bitmapX + rect.x / egret.$TextureScaleFactor, bitmapData._bitmapY + rect.y / egret.$TextureScaleFactor, bitmapWidth * rect.width / w, bitmapHeight * rect.height / h, offsetX, offsetY, rect.width, rect.height);
+            sharedContext.drawImage(bitmapData._bitmapData.source, bitmapData._bitmapX + rect.x / egret.$TextureScaleFactor, bitmapData._bitmapY + rect.y / egret.$TextureScaleFactor, bitmapWidth * rect.width / w, bitmapHeight * rect.height / h, offsetX, offsetY, rect.width, rect.height);
             return surface;
         }
         /**
@@ -4614,7 +4615,7 @@ var egret;
             var width = this._bitmapWidth;
             var height = this._bitmapHeight;
             var scale = egret.$TextureScaleFactor;
-            context.drawImage(this._bitmapData, this._bitmapX, this._bitmapY, width, this._bitmapHeight, this._offsetX, this._offsetY, width * scale, height * scale);
+            context.drawImage(this._bitmapData.source, this._bitmapX, this._bitmapY, width, this._bitmapHeight, this._offsetX, this._offsetY, width * scale, height * scale);
             try {
                 var data = buffer.getPixel(1, 1);
             }
@@ -6744,8 +6745,7 @@ var egret;
                     else if (bitmapData.format == "pvr") {
                         bitmapData.webGLTexture = this.createTextureFromCompressedData(bitmapData.source.pvrtcData, bitmapData.width, bitmapData.height, bitmapData.source.mipmapsCount, bitmapData.source.format);
                     }
-                    //todo
-                    if (bitmapData.webGLTexture) {
+                    if (bitmapData.$deleteSource && bitmapData.webGLTexture) {
                         bitmapData.source = null;
                     }
                 }

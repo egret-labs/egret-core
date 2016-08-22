@@ -393,11 +393,10 @@ module egret.web {
                 if(bitmapData.format == "image") {
                     bitmapData.webGLTexture = this.createTexture(bitmapData.source);
                 }
-                else if(bitmapData.format == "pvr") {
+                else if(bitmapData.format == "pvr") {//todo 需要支持其他格式
                     bitmapData.webGLTexture = this.createTextureFromCompressedData(bitmapData.source.pvrtcData, bitmapData.width, bitmapData.height, bitmapData.source.mipmapsCount, bitmapData.source.format);
                 }
-                //todo
-                if (bitmapData.webGLTexture) {
+                if (bitmapData.$deleteSource && bitmapData.webGLTexture) {
                     bitmapData.source = null;
                 }
             }

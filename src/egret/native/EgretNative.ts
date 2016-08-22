@@ -92,9 +92,11 @@ module egret.native {
     function setRenderMode(renderMode:string):void{
         if($supportCanvas) {
             sys.RenderBuffer = NativeCanvasRenderBuffer;
+            sys.CanvasRenderBuffer = NativeCanvasRenderBuffer;
         }
         else {
             sys.RenderBuffer = NativeRenderTextureRenderBuffer;
+            sys.CanvasRenderBuffer = NativeRenderTextureRenderBuffer;
         }
         sys.systemRenderer = new CanvasRenderer();
         sys.canvasRenderer = sys.systemRenderer;

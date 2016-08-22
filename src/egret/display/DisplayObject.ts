@@ -2236,7 +2236,7 @@ module egret {
                     var matrix = Matrix.create();
                     matrix.identity();
                     matrix.translate(1 - localX, 1 - localY);
-                    sys.canvasRenderer.render(this, buffer, matrix, null, true);
+                    sys.systemRenderer.render(this, buffer, matrix, null, true);
                     Matrix.release(matrix);
 
                     try {

@@ -73,7 +73,8 @@ module egret.web {
             egret.sys.screenAdapter = new egret.sys.DefaultScreenAdapter();
         }
 
-        sys.hitTestBuffer = new CanvasRenderBuffer(3, 3);        
+        sys.CanvasRenderBuffer = web.CanvasRenderBuffer;
+        sys.hitTestBuffer = new CanvasRenderBuffer(3, 3);   
 
         var list = document.querySelectorAll(".egret-player");
         var length = list.length;
