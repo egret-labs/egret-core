@@ -4822,7 +4822,9 @@ var egret;
             child.$propagateFlagsDown(1648 /* DownOnAddedOrRemoved */);
             child.$setParent(null);
             var indexNow = children.indexOf(child);
-            children.splice(indexNow, 1);
+            if (indexNow != -1) {
+                children.splice(indexNow, 1);
+            }
             this.$propagateFlagsUp(4 /* InvalidBounds */);
             return child;
         };
@@ -18002,6 +18004,9 @@ var egret;
          * @private
          */
         p.$setText = function (value) {
+            if (value == null) {
+                value = "";
+            }
             value = String(value);
             var values = this.$BitmapText;
             if (value == values[2 /* text */])
