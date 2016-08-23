@@ -27,7 +27,7 @@
 //
 //////////////////////////////////////////////////////////////////////////////////////
 
-/// <reference path="../core/uicomponent.ts" />
+/// <reference path="../core/UIComponent.ts" />
 module eui {
     var UIImpl = sys.UIComponentImpl;
     /**

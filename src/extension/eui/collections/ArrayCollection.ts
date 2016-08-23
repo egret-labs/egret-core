@@ -27,8 +27,8 @@
 //
 //////////////////////////////////////////////////////////////////////////////////////
 
-/// <reference path="../utils/registerproperty.ts" />
-/// <reference path="../utils/registerbindable.ts" />
+/// <reference path="../utils/registerProperty.ts" />
+/// <reference path="../utils/registerBindable.ts" />
 
 module eui {
 

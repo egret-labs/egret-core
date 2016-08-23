@@ -231,7 +231,7 @@ var egret;
 //  EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 //
 //////////////////////////////////////////////////////////////////////////////////////
-/// <reference path="registerclass.ts" />
+/// <reference path="registerClass.ts" />
 function __extends(d, b) {
     for (var p in b)
         if (b.hasOwnProperty(p))
@@ -10041,7 +10041,7 @@ var egret;
 //  EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 //
 //////////////////////////////////////////////////////////////////////////////////////
-/// <reference path="../geom/point.ts" />
+/// <reference path="../geom/Point.ts" />
 var egret;
 (function (egret) {
     var localPoint = new egret.Point();

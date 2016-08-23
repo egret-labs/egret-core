@@ -762,8 +762,8 @@ var eui;
 //  EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 //
 //////////////////////////////////////////////////////////////////////////////////////
-/// <reference path="../utils/registerproperty.ts" />
-/// <reference path="../utils/registerbindable.ts" />
+/// <reference path="../utils/registerProperty.ts" />
+/// <reference path="../utils/registerBindable.ts" />
 var eui;
 (function (eui) {
     /**
@@ -2833,7 +2833,7 @@ var eui;
 //  EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 //
 //////////////////////////////////////////////////////////////////////////////////////
-/// <reference path="../core/uicomponent.ts" />
+/// <reference path="../core/UIComponent.ts" />
 var eui;
 (function (eui) {
     var UIImpl = eui.sys.UIComponentImpl;
@@ -3184,8 +3184,8 @@ var eui;
 //  EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 //
 //////////////////////////////////////////////////////////////////////////////////////
-/// <reference path="../core/uicomponent.ts" />
-/// <reference path="../utils/registerproperty.ts" />
+/// <reference path="../core/UIComponent.ts" />
+/// <reference path="../utils/registerProperty.ts" />
 var eui;
 (function (eui) {
     /**
@@ -4823,8 +4823,8 @@ var eui;
 //
 //////////////////////////////////////////////////////////////////////////////////////
 /// <reference path="../states/State.ts" />
-/// <reference path="../core/uicomponent.ts" />
-/// <reference path="../utils/registerproperty.ts" />
+/// <reference path="../core/UIComponent.ts" />
+/// <reference path="../utils/registerProperty.ts" />
 var eui;
 (function (eui) {
     /**
