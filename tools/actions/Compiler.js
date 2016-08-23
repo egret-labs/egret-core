@@ -46,6 +46,7 @@ var Compiler = (function () {
             parsedCmd.options.sourceMap = true; //引擎命令行的sourcemap属性优先
         }
         parsedCmd.options.allowUnreachableCode = true;
+        parsedCmd.options.forSortFile = option.forSortFile;
         //var compileResult = tsclark.Compiler.executeWithOption(args, files, out, outDir);
         var compileResult = tsclark.Compiler.executeWithOption(parsedCmd);
         args.declaration = defTemp;

@@ -42049,16 +42049,18 @@ var ts;
             var sortHelper = new ts.SortHelper();
             sortHelper.orderFiles(checker, program);
             // Otherwise, emit and report any errors we ran into.
-            var emitOutput = program.emit();
-            reportDiagnostics(emitOutput.diagnostics);
-            // If the emitter didn't emit anything, then pass that value along.
-            if (emitOutput.emitSkipped) {
-                return ts.ExitStatus.DiagnosticsPresent_OutputsSkipped;
-            }
-            // The emitter emitted something, inform the caller if that happened in the presence
-            // of diagnostics or not.
-            if (diagnostics.length > 0 || emitOutput.diagnostics.length > 0) {
-                return ts.ExitStatus.DiagnosticsPresent_OutputsGenerated;
+            if(!compilerOptions.forSortFile) {
+                var emitOutput = program.emit();
+                reportDiagnostics(emitOutput.diagnostics);
+                // If the emitter didn't emit anything, then pass that value along.
+                if (emitOutput.emitSkipped) {
+                    return ts.ExitStatus.DiagnosticsPresent_OutputsSkipped;
+                }
+                // The emitter emitted something, inform the caller if that happened in the presence
+                // of diagnostics or not.
+                if (diagnostics.length > 0 || emitOutput.diagnostics.length > 0) {
+                    return ts.ExitStatus.DiagnosticsPresent_OutputsGenerated;
+                }
             }
             return ts.ExitStatus.Success;
         }
