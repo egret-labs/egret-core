@@ -178,7 +178,7 @@ module egret {
         /**
          * @private
          */
-        public _bitmapData:any = null;
+        public _bitmapData:BitmapData = null;
 
         /**
          * @language en_US
@@ -201,7 +201,7 @@ module egret {
          *
          * @param value
          */
-        public _setBitmapData(value:any) {
+        public _setBitmapData(value:BitmapData) {
             this._bitmapData = value;
 
             var w = value.width * $TextureScaleFactor;
@@ -324,16 +324,9 @@ module egret {
          */
         public dispose():void {
             if (this._bitmapData) {
-                if(Capabilities.runtimeType == RuntimeType.WEB && Capabilities.renderMode == "webgl") {
-                    egret.WebGLUtils.deleteWebGLTexture(this._bitmapData);
-                }
-                if (this._bitmapData.dispose) {
-                    this._bitmapData.dispose();
-                }
-                Texture.$dispose(this);
-
-                //console.log("dispose Texture");
+                this._bitmapData.$dispose();
                 this._bitmapData = null;
+                Texture.$dispose(this);
             }
         }
 

@@ -49,8 +49,10 @@ module egret {
 
         constructor() {
             super();
-            this.renderBuffer = new sys.RenderBuffer();
-            this._setBitmapData(this.renderBuffer.surface)
+            this.renderBuffer = new sys.CanvasRenderBuffer();
+            var bitmapData = new egret.BitmapData(this.renderBuffer.surface);
+            bitmapData.$deleteSource = false;
+            this._setBitmapData(bitmapData);
         }
 
         private renderBuffer:sys.RenderBuffer;
@@ -95,6 +97,8 @@ module egret {
                 return false;
             }
             renderBuffer.resize(width, height);
+            this._bitmapData.width = width;
+            this._bitmapData.height = height;
 
             var matrix = Matrix.create();
             matrix.identity();
@@ -103,7 +107,7 @@ module egret {
                 matrix.translate(-clipBounds.x, -clipBounds.y);
             }
             matrix.scale(scale, scale);
-            sys.systemRenderer.render(displayObject, renderBuffer, matrix, null, true);
+            sys.canvasRenderer.render(displayObject, renderBuffer, matrix, null, true);
             Matrix.release(matrix);
 
             //设置纹理参数

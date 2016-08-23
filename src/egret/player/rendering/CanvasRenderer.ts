@@ -173,6 +173,39 @@ module egret {
          */
         private drawWithFilter(displayObject: DisplayObject, context: CanvasRenderingContext2D, dirtyList: egret.sys.Region[],
             matrix: Matrix, clipRegion: sys.Region, root: DisplayObject):number {
+
+            if(Capabilities.runtimeType == RuntimeType.NATIVE) { // for native
+                var drawCalls = 0;
+                var filters = displayObject.$getFilters();
+
+                // 获取显示对象的链接矩阵
+                var displayMatrix = Matrix.create();
+                displayMatrix.copyFrom(displayObject.$getConcatenatedMatrix());
+
+                // 获取显示对象的矩形区域
+                var region: sys.Region;
+                region = sys.Region.create();
+                var bounds = displayObject.$getOriginalBounds();
+                region.updateRegion(bounds, displayMatrix);
+
+                var filter = filters[0]; // 这里暂时只处理了第一个filter！
+                egret_native.Graphics.setGlobalShader(filter);
+
+                // TODO 这里存在重复计算？
+                var offsetM = Matrix.create().copyFrom(displayMatrix);
+                offsetM.translate(-region.minX, -region.minY);
+
+                drawCalls += this.drawDisplayObject(displayObject, context, dirtyList, offsetM,
+                displayObject.$displayList, region, root);
+
+                Matrix.release(offsetM);
+                Matrix.release(displayMatrix);
+
+                egret_native.Graphics.setGlobalShader(null);
+
+                return drawCalls;
+            }
+
             var drawCalls = 0;
             var filters = displayObject.$getFilters();
             var filtersLen:number = filters.length;
@@ -593,6 +626,9 @@ module egret {
          */
         private renderBitmap(node:sys.BitmapNode, context:CanvasRenderingContext2D):number {
             var image = node.image;
+            if(!image || !image.source) {
+                return;
+            }
             if (context.$imageSmoothingEnabled != node.smoothing) {
                 context.imageSmoothingEnabled = node.smoothing;
                 context.$imageSmoothingEnabled = node.smoothing;
@@ -620,7 +656,7 @@ module egret {
             var drawCalls:number = 0;
             while (pos < length) {
                 drawCalls++;
-                context.drawImage(<HTMLImageElement><any>image, data[pos++], data[pos++], data[pos++], data[pos++], data[pos++], data[pos++], data[pos++], data[pos++]);
+                context.drawImage(image.source, data[pos++], data[pos++], data[pos++], data[pos++], data[pos++], data[pos++], data[pos++], data[pos++]);
             }
             if (saved) {
                 if((<any>context).restoreTransform) {//for native

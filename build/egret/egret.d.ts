@@ -2269,6 +2269,7 @@ declare module egret {
      * @see egret.Bitmap
      * @version Egret 2.4
      * @platform Web,Native
+     * @private
      */
     /**
      * @language zh_CN
@@ -2279,8 +2280,9 @@ declare module egret {
      * @see egret.Bitmap
      * @version Egret 2.4
      * @platform Web,Native
+     * @private
      */
-    interface BitmapData extends HashObject {
+    class BitmapData extends HashObject {
         /**
          * @language en_US
          * The width of the bitmap image in pixels.
@@ -2311,6 +2313,52 @@ declare module egret {
          * @platform Web,Native
          */
         height: number;
+        /**
+         * @language en_US
+         * Original bitmap image.
+         * @version Egret 2.4
+         * @platform Web,Native
+         */
+        /**
+         * @language zh_CN
+         * 原始位图图像。
+         * @version Egret 2.4
+         * @platform Web,Native
+         */
+        source: any;
+        /**
+         * @language en_US
+         * WebGL texture.
+         * @version Egret 2.4
+         * @platform Web,Native
+         */
+        /**
+         * @language zh_CN
+         * WebGL纹理。
+         * @version Egret 2.4
+         * @platform Web,Native
+         */
+        webGLTexture: any;
+        /**
+         * @language en_US
+         * Texture format.
+         * @version Egret 2.4
+         * @platform Web,Native
+         */
+        /**
+         * @language zh_CN
+         * 纹理格式。
+         * @version Egret 2.4
+         * @platform Web,Native
+         */
+        format: string;
+        /**
+         * @private
+         * webgl纹理生成后，是否删掉原始图像数据
+         */
+        $deleteSource: boolean;
+        constructor(source: any);
+        $dispose(): void;
     }
 }
 declare module egret {
@@ -3338,6 +3386,10 @@ declare module egret {
          *
          */
         $hitTest(stageX: number, stageY: number): DisplayObject;
+        /**
+         * @private
+         */
+        $onRemoveFromStage(): void;
     }
 }
 declare module egret {
@@ -3534,7 +3586,7 @@ declare module egret {
         /**
          * @private
          */
-        _bitmapData: any;
+        _bitmapData: BitmapData;
         /**
          * @language en_US
          * The BitmapData object being referenced.
@@ -3553,7 +3605,7 @@ declare module egret {
          *
          * @param value
          */
-        _setBitmapData(value: any): void;
+        _setBitmapData(value: BitmapData): void;
         /**
          * @private
          * 设置Texture数据
@@ -3744,6 +3796,10 @@ declare module egret {
          */
         $measureContentBounds(bounds: Rectangle): void;
         $hitTest(stageX: number, stageY: number): DisplayObject;
+        /**
+         * @private
+         */
+        $onRemoveFromStage(): void;
     }
 }
 declare module egret {
@@ -3797,6 +3853,10 @@ declare module egret {
          * @private
          */
         $measureContentBounds(bounds: Rectangle): void;
+        /**
+         * @private
+         */
+        $onRemoveFromStage(): void;
     }
 }
 declare module egret {
@@ -8269,6 +8329,7 @@ declare module egret_native {
     function onTouchesMove(num: number, ids: Array<any>, xs_array: Array<any>, ys_array: Array<any>): any;
     function onTouchesEnd(num: number, ids: Array<any>, xs_array: Array<any>, ys_array: Array<any>): any;
     function onTouchesCancel(num: number, ids: Array<any>, xs_array: Array<any>, ys_array: Array<any>): any;
+    function sendToC(float32Array: Float32Array, arrayBufferLen: number, array: Array<string>): void;
     /**
      * 启动主循环
      * @param callback 主循环回调函数
@@ -9086,6 +9147,7 @@ declare module egret.sys {
          * 绘制根节点显示对象到目标画布，返回draw的次数。
          */
         drawToSurface(): number;
+        private bitmapData;
         /**
          * @private
          */
@@ -9156,595 +9218,6 @@ interface FPSData extends Object {
     costTicker: number;
     costDirty: number;
     costRender: number;
-}
-declare module egret.sys {
-    /**
-     * @private
-     * 渲染节点类型
-     */
-    const enum RenderNodeType {
-        /**
-         * 位图渲染节点
-         */
-        BitmapNode = 1,
-        /**
-         * 文本渲染节点
-         */
-        TextNode = 2,
-        /**
-         * 矢量渲染节点
-         */
-        GraphicsNode = 3,
-        /**
-         * 组渲染节点
-         */
-        GroupNode = 4,
-        /**
-         * 设置矩阵节点
-         */
-        SetTransformNode = 5,
-        /**
-         * 设置透明度节点
-         */
-        SetAlphaNode = 6,
-        /**
-         * Mesh 节点
-         */
-        MeshNode = 7,
-    }
-    /**
-     * @private
-     * 渲染节点基类
-     */
-    class RenderNode {
-        /**
-         * 节点类型..
-         */
-        type: number;
-        /**
-         * 是否需要重绘的标志。
-         */
-        needRedraw: boolean;
-        /**
-         * 这个对象在舞台上的整体透明度
-         */
-        renderAlpha: number;
-        /**
-         * 这个对象在舞台上的透明度
-         */
-        renderVisible: boolean;
-        /**
-         * 相对于显示列表根节点或位图缓存根节点上的矩阵对象
-         */
-        renderMatrix: Matrix;
-        /**
-         * 此显示对象自身（不包括子项）在显示列表根节点或位图缓存根节点上的显示尺寸。
-         */
-        renderRegion: sys.Region;
-        /**
-         * 是否发生移动
-         */
-        moved: boolean;
-        /**
-         * 绘制数据
-         */
-        drawData: any[];
-        /**
-         * 绘制次数
-         */
-        protected renderCount: number;
-        /**
-         * 在显示对象的$render()方法被调用前，自动清空自身的drawData数据。
-         */
-        cleanBeforeRender(): void;
-        $getRenderCount(): number;
-    }
-}
-declare module egret.sys {
-    /**
-     * @private
-     * 位图渲染节点
-     */
-    class BitmapNode extends RenderNode {
-        constructor();
-        /**
-         * 要绘制的位图
-         */
-        image: BitmapData;
-        /**
-         * 控制在缩放时是否对位图进行平滑处理。
-         */
-        smoothing: boolean;
-        /**
-         * 相对偏移矩阵。
-         */
-        matrix: egret.Matrix;
-        /**
-         * 图片宽度。WebGL渲染使用
-         */
-        imageWidth: number;
-        /**
-         * 图片高度。WebGL渲染使用
-         */
-        imageHeight: number;
-        /**
-         * 使用的混合模式
-         */
-        blendMode: number;
-        /**
-         * 绘制一次位图
-         */
-        drawImage(sourceX: number, sourceY: number, sourceW: number, sourceH: number, drawX: number, drawY: number, drawW: number, drawH: number): void;
-        /**
-         * 在显示对象的$render()方法被调用前，自动清空自身的drawData数据。
-         */
-        cleanBeforeRender(): void;
-        static $updateTextureData(node: sys.BitmapNode, image: any, bitmapX: number, bitmapY: number, bitmapWidth: number, bitmapHeight: number, offsetX: number, offsetY: number, textureWidth: number, textureHeight: number, destW: number, destH: number, sourceWidth: number, sourceHeight: number, scale9Grid: egret.Rectangle, fillMode: string, smoothing: boolean): void;
-        /**
-         * @private
-         * 绘制九宫格位图
-         */
-        private static $updateTextureDataWithScale9Grid(node, scale9Grid, bitmapX, bitmapY, bitmapWidth, bitmapHeight, offsetX, offsetY, textureWidth, textureHeight, destW, destH);
-        /**
-  * @private
-  */
-        private static drawClipImage(node, scale, bitmapX, bitmapY, scaledBitmapW, scaledBitmapH, offsetX, offsetY, destW, destH, startX?, startY?);
-    }
-}
-declare module egret.sys {
-    /**
-     * @private
-     * 矢量渲染节点
-     */
-    class GraphicsNode extends RenderNode {
-        constructor();
-        /**
-         * 指定一种简单的单一颜色填充，在绘制时该填充将在随后对其他 Graphics 方法（如 lineTo() 或 drawCircle()）的调用中使用。
-         * @param color 填充的颜色
-         * @param alpha 填充的 Alpha 值
-         * @param beforePath 插入在指定的路径命令之前绘制，通常是插入到当前正在绘制的线条路径之前，以确保线条总在填充的上方。
-         */
-        beginFill(color: number, alpha?: number, beforePath?: Path2D): Path2D;
-        /**
-         * 指定一种简单的单一颜色填充，在绘制时该填充将在随后对其他 Graphics 方法（如 lineTo() 或 drawCircle()）的调用中使用。
-         * 调用 clear() 方法会清除填充。
-         * @param type 用于指定要使用哪种渐变类型的 GradientType 类的值：GradientType.LINEAR 或 GradientType.RADIAL。
-         * @param colors 渐变中使用的 RGB 十六进制颜色值的数组（例如，红色为 0xFF0000，蓝色为 0x0000FF，等等）。对于每种颜色，请在 alphas 和 ratios 参数中指定对应值。
-         * @param alphas colors 数组中对应颜色的 alpha 值数组。
-         * @param ratios 颜色分布比率的数组。有效值为 0 到 255。
-         * @param matrix 一个由 egret.Matrix 类定义的转换矩阵。egret.Matrix 类包括 createGradientBox() 方法，通过该方法可以方便地设置矩阵，以便与 beginGradientFill() 方法一起使用
-         * @param beforePath 插入在指定的路径命令之前绘制，通常是插入到当前正在绘制的线条路径之前，以确保线条总在填充的上方。
-         */
-        beginGradientFill(type: string, colors: number[], alphas: number[], ratios: number[], matrix?: egret.Matrix, beforePath?: Path2D): Path2D;
-        /**
-         * 指定一种线条样式以用于随后对 lineTo() 或 drawCircle() 等 Graphics 方法的调用。
-         * @param thickness 一个整数，以点为单位表示线条的粗细，有效值为 0 到 255。如果未指定数字，或者未定义该参数，则不绘制线条。如果传递的值小于 0，则默认值为 0。值 0 表示极细的粗细；最大粗细为 255。如果传递的值大于 255，则默认值为 255。
-         * @param color 线条的十六进制颜色值（例如，红色为 0xFF0000，蓝色为 0x0000FF 等）。如果未指明值，则默认值为 0x000000（黑色）。可选。
-         * @param alpha 表示线条颜色的 Alpha 值的数字；有效值为 0 到 1。如果未指明值，则默认值为 1（纯色）。如果值小于 0，则默认值为 0。如果值大于 1，则默认值为 1。
-         * @param caps 用于指定线条末端处端点类型的 CapsStyle 类的值。默认值：CapsStyle.ROUND
-         * @param joints 指定用于拐角的连接外观的类型。默认值：JointStyle.ROUND
-         * @param miterLimit 用于表示剪切斜接的极限值的数字。
-         */
-        lineStyle(thickness?: number, color?: number, alpha?: number, caps?: string, joints?: string, miterLimit?: number): Path2D;
-        /**
-         * 清空所有缓存的绘制数据
-         */
-        clear(): void;
-        /**
-         * 覆盖父类方法，不自动清空缓存的绘图数据，改为手动调用clear()方法清空。
-         */
-        cleanBeforeRender(): void;
-        /**
-         * 绘制x偏移
-         */
-        x: number;
-        /**
-         * 绘制y偏移
-         */
-        y: number;
-        /**
-         * 绘制宽度
-         */
-        width: number;
-        /**
-         * 绘制高度
-         */
-        height: number;
-        /**
-         * 脏渲染标记
-         * 暂时调用lineStyle,beginFill,beginGradientFill标记,实际应该draw时候标记在Path2D
-         */
-        dirtyRender: boolean;
-        $texture: any;
-        $textureWidth: any;
-        $textureHeight: any;
-    }
-}
-declare module egret.sys {
-    /**
-     * @private
-     * 组渲染节点,用于组合多个渲染节点
-     */
-    class GroupNode extends RenderNode {
-        constructor();
-        addNode(node: RenderNode): void;
-        /**
-         * 覆盖父类方法，不自动清空缓存的绘图数据，改为手动调用clear()方法清空。
-         * 这里只是想清空绘制命令，因此不调用super
-         */
-        cleanBeforeRender(): void;
-        $getRenderCount(): number;
-    }
-}
-declare module egret.sys {
-    /**
-     * @private
-     * Mesh 渲染节点
-     */
-    class MeshNode extends RenderNode {
-        constructor();
-        /**
-         * 要绘制的位图
-         */
-        image: BitmapData;
-        /**
-         * 控制在缩放时是否对位图进行平滑处理。
-         */
-        smoothing: boolean;
-        /**
-         * 图片宽度。WebGL渲染使用
-         */
-        imageWidth: number;
-        /**
-         * 图片高度。WebGL渲染使用
-         */
-        imageHeight: number;
-        /**
-         * 相对偏移矩阵。
-         */
-        matrix: egret.Matrix;
-        /**
-         * UV 坐标。
-         */
-        uvs: number[];
-        /**
-         * 顶点坐标。
-         */
-        vertices: number[];
-        /**
-         * 顶点索引。
-         */
-        indices: number[];
-        /**
-         * 顶点索引。
-         */
-        bounds: Rectangle;
-        /**
-         * 绘制一次位图
-         */
-        drawMesh(sourceX: number, sourceY: number, sourceW: number, sourceH: number, drawX: number, drawY: number, drawW: number, drawH: number): void;
-        /**
-         * 在显示对象的$render()方法被调用前，自动清空自身的drawData数据。
-         */
-        cleanBeforeRender(): void;
-    }
-}
-declare module egret.sys {
-    /**
-     * @private
-     * 位图渲染节点
-     */
-    class SetAlphaNode extends RenderNode {
-        constructor();
-        /**
-         * 绘制一次位图
-         */
-        setAlpha(alpha: number): void;
-    }
-}
-declare module egret.sys {
-    /**
-     * @private
-     * 文本格式
-     */
-    interface TextFormat {
-        /**
-         * 颜色值
-         */
-        textColor?: number;
-        /**
-         * 描边颜色值
-         */
-        strokeColor?: number;
-        /**
-         * 字号
-         */
-        size?: number;
-        /**
-         * 描边大小
-         */
-        stroke?: number;
-        /**
-         * 是否加粗
-         */
-        bold?: boolean;
-        /**
-         * 是否倾斜
-         */
-        italic?: boolean;
-        /**
-         * 字体名称
-         */
-        fontFamily?: string;
-    }
-}
-declare module egret.sys {
-    /**
-     * @private
-     * 文本渲染节点
-     */
-    class TextNode extends RenderNode {
-        constructor();
-        /**
-         * 颜色值
-         */
-        textColor: number;
-        /**
-         * 描边颜色值
-         */
-        strokeColor: number;
-        /**
-         * 字号
-         */
-        size: number;
-        /**
-         * 描边大小
-         */
-        stroke: number;
-        /**
-         * 是否加粗
-         */
-        bold: boolean;
-        /**
-         * 是否倾斜
-         */
-        italic: boolean;
-        /**
-         * 字体名称
-         */
-        fontFamily: string;
-        /**
-         * 绘制一行文本
-         */
-        drawText(x: number, y: number, text: string, format: TextFormat): void;
-        /**
-         * 在显示对象的$render()方法被调用前，自动清空自身的drawData数据。
-         */
-        cleanBeforeRender(): void;
-        /**
-         * 绘制x偏移
-         */
-        x: number;
-        /**
-         * 绘制y偏移
-         */
-        y: number;
-        /**
-         * 绘制宽度
-         */
-        width: number;
-        /**
-         * 绘制高度
-         */
-        height: number;
-        /**
-         * 脏渲染标记
-         */
-        dirtyRender: boolean;
-        $texture: any;
-        $textureWidth: any;
-        $textureHeight: any;
-    }
-}
-declare module egret.sys {
-    /**
-     * 路径类型
-     */
-    const enum PathType {
-        /**
-         * 纯色填充路径
-         */
-        Fill = 1,
-        /**
-         * 渐变填充路径
-         */
-        GradientFill = 2,
-        /**
-         * 线条路径
-         */
-        Stroke = 3,
-    }
-    /**
-     * @private
-     * 2D路径命令
-     */
-    const enum PathCommand {
-        MoveTo = 1,
-        LineTo = 2,
-        CurveTo = 3,
-        CubicCurveTo = 4,
-    }
-    /**
-     * @private
-     * 2D路径
-     */
-    class Path2D {
-        /**
-         * 路径类型
-         */
-        type: number;
-        $commands: number[];
-        $data: number[];
-        private commandPosition;
-        private dataPosition;
-        /**
-         * 将当前绘图位置移动到 (x, y)。如果缺少任何一个参数，则此方法将失败，并且当前绘图位置不改变。
-         * @param x 一个表示相对于父显示对象注册点的水平位置的数字（以像素为单位）。
-         * @param y 一个表示相对于父显示对象注册点的垂直位置的数字（以像素为单位）。
-         */
-        moveTo(x: number, y: number): void;
-        /**
-         * 使用当前线条样式绘制一条从当前绘图位置开始到 (x, y) 结束的直线；当前绘图位置随后会设置为 (x, y)。
-         * @param x 一个表示相对于父显示对象注册点的水平位置的数字（以像素为单位）。
-         * @param y 一个表示相对于父显示对象注册点的垂直位置的数字（以像素为单位）。
-         */
-        lineTo(x: number, y: number): void;
-        /**
-         * 使用当前线条样式和由 (controlX, controlY) 指定的控制点绘制一条从当前绘图位置开始到 (anchorX, anchorY) 结束的二次贝塞尔曲线。当前绘图位置随后设置为 (anchorX, anchorY)。
-         * 如果在调用 moveTo() 方法之前调用了 curveTo() 方法，则当前绘图位置的默认值为 (0, 0)。如果缺少任何一个参数，则此方法将失败，并且当前绘图位置不改变。
-         * 绘制的曲线是二次贝塞尔曲线。二次贝塞尔曲线包含两个锚点和一个控制点。该曲线内插这两个锚点，并向控制点弯曲。
-         * @param controlX 一个数字，指定控制点相对于父显示对象注册点的水平位置。
-         * @param controlY 一个数字，指定控制点相对于父显示对象注册点的垂直位置。
-         * @param anchorX 一个数字，指定下一个锚点相对于父显示对象注册点的水平位置。
-         * @param anchorY 一个数字，指定下一个锚点相对于父显示对象注册点的垂直位置。
-         */
-        curveTo(controlX: number, controlY: number, anchorX: number, anchorY: number): void;
-        /**
-         * 从当前绘图位置到指定的锚点绘制一条三次贝塞尔曲线。三次贝塞尔曲线由两个锚点和两个控制点组成。该曲线内插这两个锚点，并向两个控制点弯曲。
-         * @param controlX1 指定首个控制点相对于父显示对象的注册点的水平位置。
-         * @param controlY1 指定首个控制点相对于父显示对象的注册点的垂直位置。
-         * @param controlX2 指定第二个控制点相对于父显示对象的注册点的水平位置。
-         * @param controlY2 指定第二个控制点相对于父显示对象的注册点的垂直位置。
-         * @param anchorX 指定锚点相对于父显示对象的注册点的水平位置。
-         * @param anchorY 指定锚点相对于父显示对象的注册点的垂直位置。
-         */
-        cubicCurveTo(controlX1: number, controlY1: number, controlX2: number, controlY2: number, anchorX: number, anchorY: number): void;
-        /**
-         * 绘制一个矩形
-         * @param x 圆心相对于父显示对象注册点的 x 位置（以像素为单位）。
-         * @param y 相对于父显示对象注册点的圆心的 y 位置（以像素为单位）。
-         * @param width 矩形的宽度（以像素为单位）。
-         * @param height 矩形的高度（以像素为单位）。
-         */
-        drawRect(x: number, y: number, width: number, height: number): void;
-        /**
-         * 绘制一个圆角矩形。
-         * @param x 圆心相对于父显示对象注册点的 x 位置（以像素为单位）。
-         * @param y 相对于父显示对象注册点的圆心的 y 位置（以像素为单位）。
-         * @param width 矩形的宽度（以像素为单位）。
-         * @param height 矩形的高度（以像素为单位）。
-         * @param ellipseWidth 用于绘制圆角的椭圆的宽度（以像素为单位）。
-         * @param ellipseHeight 用于绘制圆角的椭圆的高度（以像素为单位）。 （可选）如果未指定值，则默认值与为 ellipseWidth 参数提供的值相匹配。
-         */
-        drawRoundRect(x: number, y: number, width: number, height: number, ellipseWidth: number, ellipseHeight?: number): void;
-        /**
-         * 绘制一个圆。
-         * @param x 圆心相对于父显示对象注册点的 x 位置（以像素为单位）。
-         * @param y 相对于父显示对象注册点的圆心的 y 位置（以像素为单位）。
-         * @param radius 圆的半径（以像素为单位）。
-         */
-        drawCircle(x: number, y: number, radius: number): void;
-        /**
-         * 绘制一个椭圆。
-         * @param x 一个表示相对于父显示对象注册点的水平位置的数字（以像素为单位）。
-         * @param y 一个表示相对于父显示对象注册点的垂直位置的数字（以像素为单位）。
-         * @param width 矩形的宽度（以像素为单位）。
-         * @param height 矩形的高度（以像素为单位）。
-         */
-        drawEllipse(x: number, y: number, width: number, height: number): void;
-        /**
-         * 绘制一段圆弧路径。圆弧路径的圆心在 (x, y) 位置，半径为 r ，根据anticlockwise （默认为顺时针）指定的方向从 startAngle 开始绘制，到 endAngle 结束。
-         * @param x 圆弧中心（圆心）的 x 轴坐标。
-         * @param y 圆弧中心（圆心）的 y 轴坐标。
-         * @param radius 圆弧的半径。
-         * @param startAngle 圆弧的起始点， x轴方向开始计算，单位以弧度表示。
-         * 注意，必须在0~2π之间。
-         * @param endAngle 圆弧的终点， 单位以弧度表示。
-         * 注意，必须在0~2π之间。
-         * @param anticlockwise 如果为 true，逆时针绘制圆弧，反之，顺时针绘制。
-         */
-        drawArc(x: number, y: number, radius: number, startAngle: number, endAngle: number, anticlockwise: boolean): void;
-        /**
-         * 绘制一段圆弧路径
-         * @param x 圆弧中心（圆心）的 x 轴坐标。
-         * @param y 圆弧中心（圆心）的 y 轴坐标。
-         * @param radiusX 圆弧的半径 x。
-         * @param radiusY 圆弧的半径 y。
-         * @param startAngle 圆弧的起始点， x轴方向开始计算，单位以弧度表示。
-         * 注意：必须为正数。
-         * @param endAngle 圆弧的终点， 单位以弧度表示。
-         * 注意：与startAngle差值必须在0~2π之间。
-         * @param anticlockwise 如果为 true，逆时针绘制圆弧，反之，顺时针绘制。
-         * 注意：如果为true，endAngle必须小于startAngle，反之必须大于。
-         */
-        private arcToBezier(x, y, radiusX, radiusY, startAngle, endAngle, anticlockwise?);
-    }
-}
-declare module egret.sys {
-    /**
-     * @private
-     * 填充路径
-     */
-    class FillPath extends Path2D {
-        constructor();
-        /**
-         * 填充颜色
-         */
-        fillColor: number;
-        /**
-         * 填充透明度
-         */
-        fillAlpha: number;
-    }
-}
-declare module egret.sys {
-    /**
-     * @private
-     * 渐变填充路径
-     */
-    class GradientFillPath extends Path2D {
-        constructor();
-        gradientType: string;
-        colors: number[];
-        alphas: number[];
-        ratios: number[];
-        matrix: Matrix;
-    }
-}
-declare module egret.sys {
-    /**
-     * @private
-     * 线条路径。
-     * 注意：当线条宽度（lineWidth）为1或3像素时，需要特殊处理，往右下角偏移0.5像素，以显示清晰锐利的线条。
-     */
-    class StrokePath extends Path2D {
-        constructor();
-        /**
-         * 线条宽度。
-         * 注意：绘制时对1像素和3像素要特殊处理，整体向右下角偏移0.5像素，以显示清晰锐利的线条。
-         */
-        lineWidth: number;
-        /**
-         * 线条颜色
-         */
-        lineColor: number;
-        /**
-         * 线条透明度
-         */
-        lineAlpha: number;
-        /**
-         * 端点样式,"none":无端点,"round":圆头端点,"square":方头端点
-         */
-        caps: string;
-        /**
-         * 联接点样式,"bevel":斜角连接,"miter":尖角连接,"round":圆角连接
-         */
-        joints: string;
-        /**
-         * 用于表示剪切斜接的极限值的数字。
-         */
-        miterLimit: number;
-    }
 }
 declare module egret.sys {
     var $TempStage: egret.Stage;
@@ -10026,23 +9499,6 @@ declare module egret.sys {
 }
 declare module egret.sys {
     /**
-     * @private
-     */
-    interface Renderable extends HashObject {
-        /**
-         * 获取渲染节点
-         */
-        $getRenderNode(): RenderNode;
-        /**
-         * @private
-         * 更新对象在舞台上的显示区域和透明度,返回显示区域是否发生改变。
-         * 注意：此方法必须在$getRenderNode()被调用之后执行。
-         */
-        $update(dirtyRegionPolicy: string, bounds?: Rectangle): boolean;
-    }
-}
-declare module egret.sys {
-    /**
      * 共享的用于碰撞检测的渲染缓冲
      */
     var hitTestBuffer: sys.RenderBuffer;
@@ -10128,73 +9584,31 @@ declare module egret.sys {
          */
         new (width?: number, height?: number): RenderBuffer;
     };
+    var CanvasRenderBuffer: {
+        /**
+         * 创建一个CanvasRenderBuffer。
+         * 注意：若内存不足或创建缓冲区失败，将会抛出错误异常。
+         * @param width 渲染缓冲的初始宽
+         * @param height 渲染缓冲的初始高
+         */
+        new (width?: number, height?: number): RenderBuffer;
+    };
 }
-declare module egret {
+declare module egret.sys {
     /**
      * @private
-     * Canvas渲染器
      */
-    class CanvasRenderer implements sys.SystemRenderer {
-        constructor();
-        private nestLevel;
+    interface Renderable extends HashObject {
         /**
-         * 渲染一个显示对象
-         * @param displayObject 要渲染的显示对象
-         * @param buffer 渲染缓冲
-         * @param matrix 要对显示对象整体叠加的变换矩阵
-         * @param dirtyList 脏矩形列表
-         * @param forRenderTexture 绘制目标是RenderTexture的标志
-         * @returns drawCall触发绘制的次数
+         * 获取渲染节点
          */
-        render(displayObject: DisplayObject, buffer: sys.RenderBuffer, matrix: Matrix, dirtyList?: egret.sys.Region[], forRenderTexture?: boolean): number;
+        $getRenderNode(): RenderNode;
         /**
          * @private
-         * 绘制一个显示对象
+         * 更新对象在舞台上的显示区域和透明度,返回显示区域是否发生改变。
+         * 注意：此方法必须在$getRenderNode()被调用之后执行。
          */
-        private drawDisplayObject(displayObject, context, dirtyList, matrix, displayList, clipRegion, root);
-        /**
-         * @private
-         */
-        private drawWithFilter(displayObject, context, dirtyList, matrix, clipRegion, root);
-        private renderingMask;
-        /**
-         * @private
-         */
-        private drawWithClip(displayObject, context, dirtyList, matrix, clipRegion, root);
-        /**
-         * @private
-         */
-        private drawWithScrollRect(displayObject, context, dirtyList, matrix, clipRegion, root);
-        /**
-         * 将一个RenderNode对象绘制到渲染缓冲
-         * @param node 要绘制的节点
-         * @param buffer 渲染缓冲
-         * @param matrix 要叠加的矩阵
-         * @param forHitTest 绘制结果是用于碰撞检测。若为true，当渲染GraphicsNode时，会忽略透明度样式设置，全都绘制为不透明的。
-         */
-        drawNodeToBuffer(node: sys.RenderNode, buffer: sys.RenderBuffer, matrix: Matrix, forHitTest?: boolean): void;
-        /**
-         * @private
-         */
-        private renderNode(node, context, forHitTest?);
-        /**
-         * @private
-         */
-        private renderBitmap(node, context);
-        /**
-         * @private
-         */
-        renderText(node: sys.TextNode, context: CanvasRenderingContext2D): void;
-        /**
-         * @private
-         */
-        renderGraphics(node: sys.GraphicsNode, context: CanvasRenderingContext2D, forHitTest?: boolean): void;
-        private renderPath(path, context);
-        private renderGroup(groupNode, context);
-        /**
-         * @private
-         */
-        private createRenderBuffer(width, height);
+        $update(dirtyRegionPolicy: string, bounds?: Rectangle): boolean;
     }
 }
 declare module egret.sys {
@@ -10607,6 +10021,671 @@ declare module egret.sys {
          * 获取舞台坐标下的触摸对象
          */
         private findTarget(stageX, stageY);
+    }
+}
+declare module egret.sys {
+    /**
+     * @private
+     * 渲染节点类型
+     */
+    const enum RenderNodeType {
+        /**
+         * 位图渲染节点
+         */
+        BitmapNode = 1,
+        /**
+         * 文本渲染节点
+         */
+        TextNode = 2,
+        /**
+         * 矢量渲染节点
+         */
+        GraphicsNode = 3,
+        /**
+         * 组渲染节点
+         */
+        GroupNode = 4,
+        /**
+         * 设置矩阵节点
+         */
+        SetTransformNode = 5,
+        /**
+         * 设置透明度节点
+         */
+        SetAlphaNode = 6,
+        /**
+         * Mesh 节点
+         */
+        MeshNode = 7,
+    }
+    /**
+     * @private
+     * 渲染节点基类
+     */
+    class RenderNode {
+        /**
+         * 节点类型..
+         */
+        type: number;
+        /**
+         * 是否需要重绘的标志。
+         */
+        needRedraw: boolean;
+        /**
+         * 这个对象在舞台上的整体透明度
+         */
+        renderAlpha: number;
+        /**
+         * 这个对象在舞台上的透明度
+         */
+        renderVisible: boolean;
+        /**
+         * 相对于显示列表根节点或位图缓存根节点上的矩阵对象
+         */
+        renderMatrix: Matrix;
+        /**
+         * 此显示对象自身（不包括子项）在显示列表根节点或位图缓存根节点上的显示尺寸。
+         */
+        renderRegion: sys.Region;
+        /**
+         * 是否发生移动
+         */
+        moved: boolean;
+        /**
+         * 绘制数据
+         */
+        drawData: any[];
+        /**
+         * 绘制次数
+         */
+        protected renderCount: number;
+        /**
+         * 在显示对象的$render()方法被调用前，自动清空自身的drawData数据。
+         */
+        cleanBeforeRender(): void;
+        $getRenderCount(): number;
+    }
+}
+declare module egret.sys {
+    /**
+     * @private
+     * 位图渲染节点
+     */
+    class BitmapNode extends RenderNode {
+        constructor();
+        /**
+         * 要绘制的位图
+         */
+        image: BitmapData;
+        /**
+         * 控制在缩放时是否对位图进行平滑处理。
+         */
+        smoothing: boolean;
+        /**
+         * 相对偏移矩阵。
+         */
+        matrix: egret.Matrix;
+        /**
+         * 图片宽度。WebGL渲染使用
+         */
+        imageWidth: number;
+        /**
+         * 图片高度。WebGL渲染使用
+         */
+        imageHeight: number;
+        /**
+         * 使用的混合模式
+         */
+        blendMode: number;
+        /**
+         * 绘制一次位图
+         */
+        drawImage(sourceX: number, sourceY: number, sourceW: number, sourceH: number, drawX: number, drawY: number, drawW: number, drawH: number): void;
+        /**
+         * 在显示对象的$render()方法被调用前，自动清空自身的drawData数据。
+         */
+        cleanBeforeRender(): void;
+        static $updateTextureData(node: sys.BitmapNode, image: any, bitmapX: number, bitmapY: number, bitmapWidth: number, bitmapHeight: number, offsetX: number, offsetY: number, textureWidth: number, textureHeight: number, destW: number, destH: number, sourceWidth: number, sourceHeight: number, scale9Grid: egret.Rectangle, fillMode: string, smoothing: boolean): void;
+        /**
+         * @private
+         * 绘制九宫格位图
+         */
+        private static $updateTextureDataWithScale9Grid(node, scale9Grid, bitmapX, bitmapY, bitmapWidth, bitmapHeight, offsetX, offsetY, textureWidth, textureHeight, destW, destH);
+        /**
+  * @private
+  */
+        private static drawClipImage(node, scale, bitmapX, bitmapY, scaledBitmapW, scaledBitmapH, offsetX, offsetY, destW, destH, startX?, startY?);
+    }
+}
+declare module egret.sys {
+    /**
+     * @private
+     * 矢量渲染节点
+     */
+    class GraphicsNode extends RenderNode {
+        constructor();
+        /**
+         * 指定一种简单的单一颜色填充，在绘制时该填充将在随后对其他 Graphics 方法（如 lineTo() 或 drawCircle()）的调用中使用。
+         * @param color 填充的颜色
+         * @param alpha 填充的 Alpha 值
+         * @param beforePath 插入在指定的路径命令之前绘制，通常是插入到当前正在绘制的线条路径之前，以确保线条总在填充的上方。
+         */
+        beginFill(color: number, alpha?: number, beforePath?: Path2D): Path2D;
+        /**
+         * 指定一种简单的单一颜色填充，在绘制时该填充将在随后对其他 Graphics 方法（如 lineTo() 或 drawCircle()）的调用中使用。
+         * 调用 clear() 方法会清除填充。
+         * @param type 用于指定要使用哪种渐变类型的 GradientType 类的值：GradientType.LINEAR 或 GradientType.RADIAL。
+         * @param colors 渐变中使用的 RGB 十六进制颜色值的数组（例如，红色为 0xFF0000，蓝色为 0x0000FF，等等）。对于每种颜色，请在 alphas 和 ratios 参数中指定对应值。
+         * @param alphas colors 数组中对应颜色的 alpha 值数组。
+         * @param ratios 颜色分布比率的数组。有效值为 0 到 255。
+         * @param matrix 一个由 egret.Matrix 类定义的转换矩阵。egret.Matrix 类包括 createGradientBox() 方法，通过该方法可以方便地设置矩阵，以便与 beginGradientFill() 方法一起使用
+         * @param beforePath 插入在指定的路径命令之前绘制，通常是插入到当前正在绘制的线条路径之前，以确保线条总在填充的上方。
+         */
+        beginGradientFill(type: string, colors: number[], alphas: number[], ratios: number[], matrix?: egret.Matrix, beforePath?: Path2D): Path2D;
+        /**
+         * 指定一种线条样式以用于随后对 lineTo() 或 drawCircle() 等 Graphics 方法的调用。
+         * @param thickness 一个整数，以点为单位表示线条的粗细，有效值为 0 到 255。如果未指定数字，或者未定义该参数，则不绘制线条。如果传递的值小于 0，则默认值为 0。值 0 表示极细的粗细；最大粗细为 255。如果传递的值大于 255，则默认值为 255。
+         * @param color 线条的十六进制颜色值（例如，红色为 0xFF0000，蓝色为 0x0000FF 等）。如果未指明值，则默认值为 0x000000（黑色）。可选。
+         * @param alpha 表示线条颜色的 Alpha 值的数字；有效值为 0 到 1。如果未指明值，则默认值为 1（纯色）。如果值小于 0，则默认值为 0。如果值大于 1，则默认值为 1。
+         * @param caps 用于指定线条末端处端点类型的 CapsStyle 类的值。默认值：CapsStyle.ROUND
+         * @param joints 指定用于拐角的连接外观的类型。默认值：JointStyle.ROUND
+         * @param miterLimit 用于表示剪切斜接的极限值的数字。
+         */
+        lineStyle(thickness?: number, color?: number, alpha?: number, caps?: string, joints?: string, miterLimit?: number): Path2D;
+        /**
+         * 清空所有缓存的绘制数据
+         */
+        clear(): void;
+        /**
+         * 覆盖父类方法，不自动清空缓存的绘图数据，改为手动调用clear()方法清空。
+         */
+        cleanBeforeRender(): void;
+        /**
+         * 绘制x偏移
+         */
+        x: number;
+        /**
+         * 绘制y偏移
+         */
+        y: number;
+        /**
+         * 绘制宽度
+         */
+        width: number;
+        /**
+         * 绘制高度
+         */
+        height: number;
+        /**
+         * 脏渲染标记
+         * 暂时调用lineStyle,beginFill,beginGradientFill标记,实际应该draw时候标记在Path2D
+         */
+        dirtyRender: boolean;
+        $texture: any;
+        $textureWidth: any;
+        $textureHeight: any;
+        /**
+         * 清除非绘制的缓存数据
+         */
+        clean(): void;
+    }
+}
+declare module egret.sys {
+    /**
+     * @private
+     * 组渲染节点,用于组合多个渲染节点
+     */
+    class GroupNode extends RenderNode {
+        constructor();
+        addNode(node: RenderNode): void;
+        /**
+         * 覆盖父类方法，不自动清空缓存的绘图数据，改为手动调用clear()方法清空。
+         * 这里只是想清空绘制命令，因此不调用super
+         */
+        cleanBeforeRender(): void;
+        $getRenderCount(): number;
+    }
+}
+declare module egret.sys {
+    /**
+     * @private
+     * Mesh 渲染节点
+     */
+    class MeshNode extends RenderNode {
+        constructor();
+        /**
+         * 要绘制的位图
+         */
+        image: BitmapData;
+        /**
+         * 控制在缩放时是否对位图进行平滑处理。
+         */
+        smoothing: boolean;
+        /**
+         * 图片宽度。WebGL渲染使用
+         */
+        imageWidth: number;
+        /**
+         * 图片高度。WebGL渲染使用
+         */
+        imageHeight: number;
+        /**
+         * 相对偏移矩阵。
+         */
+        matrix: egret.Matrix;
+        /**
+         * UV 坐标。
+         */
+        uvs: number[];
+        /**
+         * 顶点坐标。
+         */
+        vertices: number[];
+        /**
+         * 顶点索引。
+         */
+        indices: number[];
+        /**
+         * 顶点索引。
+         */
+        bounds: Rectangle;
+        /**
+         * 绘制一次位图
+         */
+        drawMesh(sourceX: number, sourceY: number, sourceW: number, sourceH: number, drawX: number, drawY: number, drawW: number, drawH: number): void;
+        /**
+         * 在显示对象的$render()方法被调用前，自动清空自身的drawData数据。
+         */
+        cleanBeforeRender(): void;
+    }
+}
+declare module egret.sys {
+    /**
+     * @private
+     * 位图渲染节点
+     */
+    class SetAlphaNode extends RenderNode {
+        constructor();
+        /**
+         * 绘制一次位图
+         */
+        setAlpha(alpha: number): void;
+    }
+}
+declare module egret.sys {
+    /**
+     * @private
+     * 文本格式
+     */
+    interface TextFormat {
+        /**
+         * 颜色值
+         */
+        textColor?: number;
+        /**
+         * 描边颜色值
+         */
+        strokeColor?: number;
+        /**
+         * 字号
+         */
+        size?: number;
+        /**
+         * 描边大小
+         */
+        stroke?: number;
+        /**
+         * 是否加粗
+         */
+        bold?: boolean;
+        /**
+         * 是否倾斜
+         */
+        italic?: boolean;
+        /**
+         * 字体名称
+         */
+        fontFamily?: string;
+    }
+}
+declare module egret.sys {
+    /**
+     * @private
+     * 文本渲染节点
+     */
+    class TextNode extends RenderNode {
+        constructor();
+        /**
+         * 颜色值
+         */
+        textColor: number;
+        /**
+         * 描边颜色值
+         */
+        strokeColor: number;
+        /**
+         * 字号
+         */
+        size: number;
+        /**
+         * 描边大小
+         */
+        stroke: number;
+        /**
+         * 是否加粗
+         */
+        bold: boolean;
+        /**
+         * 是否倾斜
+         */
+        italic: boolean;
+        /**
+         * 字体名称
+         */
+        fontFamily: string;
+        /**
+         * 绘制一行文本
+         */
+        drawText(x: number, y: number, text: string, format: TextFormat): void;
+        /**
+         * 在显示对象的$render()方法被调用前，自动清空自身的drawData数据。
+         */
+        cleanBeforeRender(): void;
+        /**
+         * 绘制x偏移
+         */
+        x: number;
+        /**
+         * 绘制y偏移
+         */
+        y: number;
+        /**
+         * 绘制宽度
+         */
+        width: number;
+        /**
+         * 绘制高度
+         */
+        height: number;
+        /**
+         * 脏渲染标记
+         */
+        dirtyRender: boolean;
+        $texture: any;
+        $textureWidth: any;
+        $textureHeight: any;
+        /**
+         * 清除非绘制的缓存数据
+         */
+        clean(): void;
+    }
+}
+declare module egret.sys {
+    /**
+     * 路径类型
+     */
+    const enum PathType {
+        /**
+         * 纯色填充路径
+         */
+        Fill = 1,
+        /**
+         * 渐变填充路径
+         */
+        GradientFill = 2,
+        /**
+         * 线条路径
+         */
+        Stroke = 3,
+    }
+    /**
+     * @private
+     * 2D路径命令
+     */
+    const enum PathCommand {
+        MoveTo = 1,
+        LineTo = 2,
+        CurveTo = 3,
+        CubicCurveTo = 4,
+    }
+    /**
+     * @private
+     * 2D路径
+     */
+    class Path2D {
+        /**
+         * 路径类型
+         */
+        type: number;
+        $commands: number[];
+        $data: number[];
+        private commandPosition;
+        private dataPosition;
+        /**
+         * 将当前绘图位置移动到 (x, y)。如果缺少任何一个参数，则此方法将失败，并且当前绘图位置不改变。
+         * @param x 一个表示相对于父显示对象注册点的水平位置的数字（以像素为单位）。
+         * @param y 一个表示相对于父显示对象注册点的垂直位置的数字（以像素为单位）。
+         */
+        moveTo(x: number, y: number): void;
+        /**
+         * 使用当前线条样式绘制一条从当前绘图位置开始到 (x, y) 结束的直线；当前绘图位置随后会设置为 (x, y)。
+         * @param x 一个表示相对于父显示对象注册点的水平位置的数字（以像素为单位）。
+         * @param y 一个表示相对于父显示对象注册点的垂直位置的数字（以像素为单位）。
+         */
+        lineTo(x: number, y: number): void;
+        /**
+         * 使用当前线条样式和由 (controlX, controlY) 指定的控制点绘制一条从当前绘图位置开始到 (anchorX, anchorY) 结束的二次贝塞尔曲线。当前绘图位置随后设置为 (anchorX, anchorY)。
+         * 如果在调用 moveTo() 方法之前调用了 curveTo() 方法，则当前绘图位置的默认值为 (0, 0)。如果缺少任何一个参数，则此方法将失败，并且当前绘图位置不改变。
+         * 绘制的曲线是二次贝塞尔曲线。二次贝塞尔曲线包含两个锚点和一个控制点。该曲线内插这两个锚点，并向控制点弯曲。
+         * @param controlX 一个数字，指定控制点相对于父显示对象注册点的水平位置。
+         * @param controlY 一个数字，指定控制点相对于父显示对象注册点的垂直位置。
+         * @param anchorX 一个数字，指定下一个锚点相对于父显示对象注册点的水平位置。
+         * @param anchorY 一个数字，指定下一个锚点相对于父显示对象注册点的垂直位置。
+         */
+        curveTo(controlX: number, controlY: number, anchorX: number, anchorY: number): void;
+        /**
+         * 从当前绘图位置到指定的锚点绘制一条三次贝塞尔曲线。三次贝塞尔曲线由两个锚点和两个控制点组成。该曲线内插这两个锚点，并向两个控制点弯曲。
+         * @param controlX1 指定首个控制点相对于父显示对象的注册点的水平位置。
+         * @param controlY1 指定首个控制点相对于父显示对象的注册点的垂直位置。
+         * @param controlX2 指定第二个控制点相对于父显示对象的注册点的水平位置。
+         * @param controlY2 指定第二个控制点相对于父显示对象的注册点的垂直位置。
+         * @param anchorX 指定锚点相对于父显示对象的注册点的水平位置。
+         * @param anchorY 指定锚点相对于父显示对象的注册点的垂直位置。
+         */
+        cubicCurveTo(controlX1: number, controlY1: number, controlX2: number, controlY2: number, anchorX: number, anchorY: number): void;
+        /**
+         * 绘制一个矩形
+         * @param x 圆心相对于父显示对象注册点的 x 位置（以像素为单位）。
+         * @param y 相对于父显示对象注册点的圆心的 y 位置（以像素为单位）。
+         * @param width 矩形的宽度（以像素为单位）。
+         * @param height 矩形的高度（以像素为单位）。
+         */
+        drawRect(x: number, y: number, width: number, height: number): void;
+        /**
+         * 绘制一个圆角矩形。
+         * @param x 圆心相对于父显示对象注册点的 x 位置（以像素为单位）。
+         * @param y 相对于父显示对象注册点的圆心的 y 位置（以像素为单位）。
+         * @param width 矩形的宽度（以像素为单位）。
+         * @param height 矩形的高度（以像素为单位）。
+         * @param ellipseWidth 用于绘制圆角的椭圆的宽度（以像素为单位）。
+         * @param ellipseHeight 用于绘制圆角的椭圆的高度（以像素为单位）。 （可选）如果未指定值，则默认值与为 ellipseWidth 参数提供的值相匹配。
+         */
+        drawRoundRect(x: number, y: number, width: number, height: number, ellipseWidth: number, ellipseHeight?: number): void;
+        /**
+         * 绘制一个圆。
+         * @param x 圆心相对于父显示对象注册点的 x 位置（以像素为单位）。
+         * @param y 相对于父显示对象注册点的圆心的 y 位置（以像素为单位）。
+         * @param radius 圆的半径（以像素为单位）。
+         */
+        drawCircle(x: number, y: number, radius: number): void;
+        /**
+         * 绘制一个椭圆。
+         * @param x 一个表示相对于父显示对象注册点的水平位置的数字（以像素为单位）。
+         * @param y 一个表示相对于父显示对象注册点的垂直位置的数字（以像素为单位）。
+         * @param width 矩形的宽度（以像素为单位）。
+         * @param height 矩形的高度（以像素为单位）。
+         */
+        drawEllipse(x: number, y: number, width: number, height: number): void;
+        /**
+         * 绘制一段圆弧路径。圆弧路径的圆心在 (x, y) 位置，半径为 r ，根据anticlockwise （默认为顺时针）指定的方向从 startAngle 开始绘制，到 endAngle 结束。
+         * @param x 圆弧中心（圆心）的 x 轴坐标。
+         * @param y 圆弧中心（圆心）的 y 轴坐标。
+         * @param radius 圆弧的半径。
+         * @param startAngle 圆弧的起始点， x轴方向开始计算，单位以弧度表示。
+         * 注意，必须在0~2π之间。
+         * @param endAngle 圆弧的终点， 单位以弧度表示。
+         * 注意，必须在0~2π之间。
+         * @param anticlockwise 如果为 true，逆时针绘制圆弧，反之，顺时针绘制。
+         */
+        drawArc(x: number, y: number, radius: number, startAngle: number, endAngle: number, anticlockwise: boolean): void;
+        /**
+         * 绘制一段圆弧路径
+         * @param x 圆弧中心（圆心）的 x 轴坐标。
+         * @param y 圆弧中心（圆心）的 y 轴坐标。
+         * @param radiusX 圆弧的半径 x。
+         * @param radiusY 圆弧的半径 y。
+         * @param startAngle 圆弧的起始点， x轴方向开始计算，单位以弧度表示。
+         * 注意：必须为正数。
+         * @param endAngle 圆弧的终点， 单位以弧度表示。
+         * 注意：与startAngle差值必须在0~2π之间。
+         * @param anticlockwise 如果为 true，逆时针绘制圆弧，反之，顺时针绘制。
+         * 注意：如果为true，endAngle必须小于startAngle，反之必须大于。
+         */
+        private arcToBezier(x, y, radiusX, radiusY, startAngle, endAngle, anticlockwise?);
+    }
+}
+declare module egret.sys {
+    /**
+     * @private
+     * 填充路径
+     */
+    class FillPath extends Path2D {
+        constructor();
+        /**
+         * 填充颜色
+         */
+        fillColor: number;
+        /**
+         * 填充透明度
+         */
+        fillAlpha: number;
+    }
+}
+declare module egret.sys {
+    /**
+     * @private
+     * 渐变填充路径
+     */
+    class GradientFillPath extends Path2D {
+        constructor();
+        gradientType: string;
+        colors: number[];
+        alphas: number[];
+        ratios: number[];
+        matrix: Matrix;
+    }
+}
+declare module egret.sys {
+    /**
+     * @private
+     * 线条路径。
+     * 注意：当线条宽度（lineWidth）为1或3像素时，需要特殊处理，往右下角偏移0.5像素，以显示清晰锐利的线条。
+     */
+    class StrokePath extends Path2D {
+        constructor();
+        /**
+         * 线条宽度。
+         * 注意：绘制时对1像素和3像素要特殊处理，整体向右下角偏移0.5像素，以显示清晰锐利的线条。
+         */
+        lineWidth: number;
+        /**
+         * 线条颜色
+         */
+        lineColor: number;
+        /**
+         * 线条透明度
+         */
+        lineAlpha: number;
+        /**
+         * 端点样式,"none":无端点,"round":圆头端点,"square":方头端点
+         */
+        caps: string;
+        /**
+         * 联接点样式,"bevel":斜角连接,"miter":尖角连接,"round":圆角连接
+         */
+        joints: string;
+        /**
+         * 用于表示剪切斜接的极限值的数字。
+         */
+        miterLimit: number;
+    }
+}
+declare module egret {
+    /**
+     * @private
+     * Canvas渲染器
+     */
+    class CanvasRenderer implements sys.SystemRenderer {
+        constructor();
+        private nestLevel;
+        /**
+         * 渲染一个显示对象
+         * @param displayObject 要渲染的显示对象
+         * @param buffer 渲染缓冲
+         * @param matrix 要对显示对象整体叠加的变换矩阵
+         * @param dirtyList 脏矩形列表
+         * @param forRenderTexture 绘制目标是RenderTexture的标志
+         * @returns drawCall触发绘制的次数
+         */
+        render(displayObject: DisplayObject, buffer: sys.RenderBuffer, matrix: Matrix, dirtyList?: egret.sys.Region[], forRenderTexture?: boolean): number;
+        /**
+         * @private
+         * 绘制一个显示对象
+         */
+        private drawDisplayObject(displayObject, context, dirtyList, matrix, displayList, clipRegion, root);
+        /**
+         * @private
+         */
+        private drawWithFilter(displayObject, context, dirtyList, matrix, clipRegion, root);
+        private renderingMask;
+        /**
+         * @private
+         */
+        private drawWithClip(displayObject, context, dirtyList, matrix, clipRegion, root);
+        /**
+         * @private
+         */
+        private drawWithScrollRect(displayObject, context, dirtyList, matrix, clipRegion, root);
+        /**
+         * 将一个RenderNode对象绘制到渲染缓冲
+         * @param node 要绘制的节点
+         * @param buffer 渲染缓冲
+         * @param matrix 要叠加的矩阵
+         * @param forHitTest 绘制结果是用于碰撞检测。若为true，当渲染GraphicsNode时，会忽略透明度样式设置，全都绘制为不透明的。
+         */
+        drawNodeToBuffer(node: sys.RenderNode, buffer: sys.RenderBuffer, matrix: Matrix, forHitTest?: boolean): void;
+        /**
+         * @private
+         */
+        private renderNode(node, context, forHitTest?);
+        /**
+         * @private
+         */
+        private renderBitmap(node, context);
+        /**
+         * @private
+         */
+        renderText(node: sys.TextNode, context: CanvasRenderingContext2D): void;
+        /**
+         * @private
+         */
+        renderGraphics(node: sys.GraphicsNode, context: CanvasRenderingContext2D, forHitTest?: boolean): void;
+        private renderPath(path, context);
+        private renderGroup(groupNode, context);
+        /**
+         * @private
+         */
+        private createRenderBuffer(width, height);
     }
 }
 declare module egret {
@@ -11791,111 +11870,6 @@ declare module egret {
      * @version Egret 2.4
      * @platform Web,Native
      */
-    class InputController extends HashObject {
-        /**
-         * @private
-         */
-        private stageText;
-        /**
-         * @private
-         */
-        private stageTextAdded;
-        /**
-         * @private
-         */
-        private _text;
-        /**
-         * @private
-         */
-        private _isFocus;
-        /**
-         * @version Egret 2.4
-         * @platform Web,Native
-         */
-        constructor();
-        /**
-         *
-         * @param text
-         * @version Egret 2.4
-         * @platform Web,Native
-         */
-        init(text: TextField): void;
-        /**
-         * @private
-         *
-         */
-        _addStageText(): void;
-        /**
-         * @private
-         *
-         */
-        _removeStageText(): void;
-        /**
-         * @private
-         *
-         * @returns
-         */
-        _getText(): string;
-        /**
-         * @private
-         *
-         * @param value
-         */
-        _setText(value: string): void;
-        /**
-         * @private
-         */
-        _setColor(value: number): void;
-        /**
-         * @private
-         *
-         * @param event
-         */
-        private focusHandler(event);
-        /**
-         * @private
-         *
-         * @param event
-         */
-        private blurHandler(event);
-        private tempStage;
-        private onMouseDownHandler(event);
-        $onFocus(): void;
-        private onStageDownHandler(event);
-        /**
-         * @private
-         *
-         * @param event
-         */
-        private updateTextHandler(event);
-        /**
-         * @private
-         *
-         */
-        private resetText();
-        /**
-         * @private
-         *
-         */
-        _hideInput(): void;
-        /**
-         * @private
-         *
-         */
-        private updateInput();
-        /**
-         * @private
-         *
-         */
-        _updateProperties(): void;
-    }
-}
-declare module egret {
-    /**
-     * @private
-     * @version Egret 2.4
-     * @platform Web,Native
-     */
     interface IHitTextElement {
         /**
          * @version Egret 2.4
@@ -12145,6 +12119,111 @@ declare module egret {
          * @platform Web,Native
          */
         elements: Array<IWTextElement>;
+    }
+}
+declare module egret {
+    /**
+     * @private
+     * @version Egret 2.4
+     * @platform Web,Native
+     */
+    class InputController extends HashObject {
+        /**
+         * @private
+         */
+        private stageText;
+        /**
+         * @private
+         */
+        private stageTextAdded;
+        /**
+         * @private
+         */
+        private _text;
+        /**
+         * @private
+         */
+        private _isFocus;
+        /**
+         * @version Egret 2.4
+         * @platform Web,Native
+         */
+        constructor();
+        /**
+         *
+         * @param text
+         * @version Egret 2.4
+         * @platform Web,Native
+         */
+        init(text: TextField): void;
+        /**
+         * @private
+         *
+         */
+        _addStageText(): void;
+        /**
+         * @private
+         *
+         */
+        _removeStageText(): void;
+        /**
+         * @private
+         *
+         * @returns
+         */
+        _getText(): string;
+        /**
+         * @private
+         *
+         * @param value
+         */
+        _setText(value: string): void;
+        /**
+         * @private
+         */
+        _setColor(value: number): void;
+        /**
+         * @private
+         *
+         * @param event
+         */
+        private focusHandler(event);
+        /**
+         * @private
+         *
+         * @param event
+         */
+        private blurHandler(event);
+        private tempStage;
+        private onMouseDownHandler(event);
+        $onFocus(): void;
+        private onStageDownHandler(event);
+        /**
+         * @private
+         *
+         * @param event
+         */
+        private updateTextHandler(event);
+        /**
+         * @private
+         *
+         */
+        private resetText();
+        /**
+         * @private
+         *
+         */
+        _hideInput(): void;
+        /**
+         * @private
+         *
+         */
+        private updateInput();
+        /**
+         * @private
+         *
+         */
+        _updateProperties(): void;
     }
 }
 declare module egret {
@@ -14043,6 +14122,570 @@ declare module egret {
 }
 declare module egret {
     /**
+     * @language en_US
+     * Logger is an entrance for the log processing module of the engine
+     * @version Egret 2.4
+     * @platform Web,Native
+     */
+    /**
+     * @language zh_CN
+     * Logger是引擎的日志处理模块入口
+     * @version Egret 2.4
+     * @platform Web,Native
+     */
+    class Logger {
+        /**
+         * @language en_US
+         * open all
+         * @version Egret 2.4
+         * @platform Web,Native
+         */
+        /**
+         * @language zh_CN
+         * 全开
+         * @version Egret 2.4
+         * @platform Web,Native
+         */
+        static ALL: string;
+        /**
+         * @language en_US
+         * level: DEBUG
+         * @version Egret 2.4
+         * @platform Web,Native
+         */
+        /**
+         * @language zh_CN
+         * 等级为 DEBUG
+         * @version Egret 2.4
+         * @platform Web,Native
+         */
+        static DEBUG: string;
+        /**
+         * @language en_US
+         * level: INFO
+         * @version Egret 2.4
+         * @platform Web,Native
+         */
+        /**
+         * @language zh_CN
+         * 等级为 INFO
+         * @version Egret 2.4
+         * @platform Web,Native
+         */
+        static INFO: string;
+        /**
+         * @language en_US
+         * level: WARN
+         * @version Egret 2.4
+         * @platform Web,Native
+         */
+        /**
+         * @language zh_CN
+         * 等级为 WARN
+         * @version Egret 2.4
+         * @platform Web,Native
+         */
+        static WARN: string;
+        /**
+         * @language en_US
+         * level: ERROR
+         * @version Egret 2.4
+         * @platform Web,Native
+         */
+        /**
+         * @language zh_CN
+         * 等级为 ERROR
+         * @version Egret 2.4
+         * @platform Web,Native
+         */
+        static ERROR: string;
+        /**
+         * @language en_US
+         * close all
+         * @version Egret 2.4
+         * @platform Web,Native
+         */
+        /**
+         * @language zh_CN
+         * 全关
+         * @version Egret 2.4
+         * @platform Web,Native
+         */
+        static OFF: string;
+        /**
+         * @language en_US
+         * Set the current need to open the log level. Grade level are: ALL <DEBUG <INFO <WARN <ERROR <OFF<br/>
+         * This feature is only in DEBUG mode to take effect. <br/>
+         * <Ul>
+         * <Li> Logger.ALL - all levels of log can be printed out. </ li>
+         * <Li> Logger.DEBUG - print debug, info, log, warn, error. </ li>
+         * <Li> Logger.INFO - print info, log, warn, error. </ li>
+         * <Li> Logger.WARN - can print warn, error. </ li>
+         * <Li> Logger.ERROR - You can print error. </ li>
+         * <Li> Logger.OFF - all closed. </ li>
+         * </ Ul>
+         *param LogType from this level to start printing.
+         * @version Egret 2.4
+         * @platform Web,Native
+         */
+        /**
+         * @language zh_CN
+         * 设置当前需要开启的log级别。级别等级分别为：ALL < DEBUG < INFO < WARN < ERROR < OFF<br/>
+         * 此功能只在 DEBUG 模式下才生效。<br/>
+         * <ul>
+         * <li>Logger.ALL -- 所有等级的log都可以打印出来。</li>
+         * <li>Logger.DEBUG -- 可以打印debug、info、log、warn、error。</li>
+         * <li>Logger.INFO -- 可以打印info、log、warn、error。</li>
+         * <li>Logger.WARN -- 可以打印warn、error。</li>
+         * <li>Logger.ERROR -- 可以打印error。</li>
+         * <li>Logger.OFF -- 全部关闭。</li>
+         * </ul>
+         * @param logType 从这个等级开始打印。
+         * @version Egret 2.4
+         * @platform Web,Native
+         */
+        static logLevel: string;
+    }
+}
+declare module egret {
+    /**
+     * @version Egret 2.4
+     * @platform Web,Native
+     */
+    class NumberUtils {
+        /**
+         * @language en_US
+         * Judge whether it is a numerical value
+         * @param value Parameter that needs to be judged
+         * @returns
+         * @version Egret 2.4
+         * @platform Web,Native
+         */
+        /**
+         * @language zh_CN
+         * 判断是否是数值
+         * @param value 需要判断的参数
+         * @returns
+         * @version Egret 2.4
+         * @platform Web,Native
+         */
+        static isNumber(value: any): boolean;
+        /**
+         * @language en_US
+         * Obtain the approximate sin value of the corresponding angle value
+         * @param value {number} Angle value
+         * @returns {number} sin value
+         * @version Egret 2.4
+         * @platform Web,Native
+         */
+        /**
+         * @language zh_CN
+         * 得到对应角度值的sin近似值
+         * @param value {number} 角度值
+         * @returns {number} sin值
+         * @version Egret 2.4
+         * @platform Web,Native
+         */
+        static sin(value: number): number;
+        /**
+         * @private
+         *
+         * @param value
+         * @returns
+         */
+        private static sinInt(value);
+        /**
+         * @language en_US
+         * Obtain the approximate cos value of the corresponding angle value
+         * @param value {number} Angle value
+         * @returns {number} cos value
+         * @version Egret 2.4
+         * @platform Web,Native
+         */
+        /**
+         * @language zh_CN
+         * 得到对应角度值的cos近似值
+         * @param value {number} 角度值
+         * @returns {number} cos值
+         * @version Egret 2.4
+         * @platform Web,Native
+         */
+        static cos(value: number): number;
+        /**
+         * @private
+         *
+         * @param value
+         * @returns
+         */
+        private static cosInt(value);
+    }
+}
+declare var egret_sin_map: {};
+declare var egret_cos_map: {};
+declare var DEG_TO_RAD: number;
+declare module egret {
+    /**
+     * @language en_US
+     * The Timer class is the interface to timers, which let you run code on a specified time sequence. Use the start()
+     * method to start a timer. Add an event listener for the timer event to set up code to be run on the timer interval.<br/>
+     * You can create Timer objects to run once or repeat at specified intervals to execute code on a schedule. Depending
+     * on the framerate or the runtime environment (available memory and other factors), the runtime may dispatchEvent events at
+     * slightly offset intervals.
+     * @see egret.TimerEvent
+     * @version Egret 2.4
+     * @platform Web,Native
+     * @includeExample egret/utils/Timer.ts
+     */
+    /**
+     * @language zh_CN
+     * Timer 类是计时器的接口，它使您能按指定的时间序列运行代码。
+     * 使用 start() 方法来启动计时器。为 timer 事件添加事件侦听器，以便将代码设置为按计时器间隔运行。
+     * 可以创建 Timer 对象以运行一次或按指定间隔重复运行，从而按计划执行代码。
+     * 根据 Egret 的帧速率或运行时环境（可用内存和其他因素），运行时调度事件的间隔可能稍有不同。
+     * @see egret.TimerEvent
+     * @version Egret 2.4
+     * @platform Web,Native
+     * @includeExample egret/utils/Timer.ts
+     */
+    class Timer extends EventDispatcher {
+        /**
+         * @language en_US
+         * Constructs a new Timer object with the specified delay and repeatCount states.
+         * @param delay The delay between timer events, in milliseconds. A delay lower than 20 milliseconds is not recommended.
+         * Timer frequency is limited to 60 frames per second, meaning a delay lower than 16.6 milliseconds causes runtime problems.
+         * @param repeatCount Specifies the number of repetitions. If zero, the timer repeats indefinitely.If nonzero,
+         * the timer runs the specified number of times and then stops.
+         * @version Egret 2.4
+         * @platform Web,Native
+         */
+        /**
+         * @language zh_CN
+         * 使用指定的 delay 和 repeatCount 状态构造新的 Timer 对象。
+         * @param delay 计时器事件间的延迟（以毫秒为单位）。建议 delay 不要低于 20 毫秒。计时器频率不得超过 60 帧/秒，这意味着低于 16.6 毫秒的延迟可导致出现运行时问题。
+         * @param repeatCount 指定重复次数。如果为零，则计时器将持续不断重复运行。如果不为 0，则将运行计时器，运行次数为指定的次数，然后停止。
+         * @version Egret 2.4
+         * @platform Web,Native
+         */
+        constructor(delay: number, repeatCount?: number);
+        /**
+         * @private
+         */
+        private _delay;
+        /**
+         * @language en_US
+         * The delay between timer events, in milliseconds. A delay lower than 20 milliseconds is not recommended.<br/>
+         * Note: Timer frequency is limited to 60 frames per second, meaning a delay lower than 16.6 milliseconds causes runtime problems.
+         * @version Egret 2.4
+         * @platform Web,Native
+         */
+        /**
+         * @language zh_CN
+         * 计时器事件间的延迟（以毫秒为单位）。如果在计时器正在运行时设置延迟间隔，则计时器将按相同的 repeatCount 迭代重新启动。<br/>
+         * 注意：建议 delay 不要低于 20 毫秒。计时器频率不得超过 60 帧/秒，这意味着低于 16.6 毫秒的延迟可导致出现运行时问题。
+         * @version Egret 2.4
+         * @platform Web,Native
+         */
+        delay: number;
+        /**
+         * @language en_US
+         * The total number of times the timer is set to run. If the repeat count is set to 0, the timer continues indefinitely,
+         * until the stop() method is invoked or the program stops. If the repeat count is nonzero, the timer runs the specified
+         * number of times. If repeatCount is set to a total that is the same or less then currentCount the timer stops and will not fire again.
+         * @version Egret 2.4
+         * @platform Web,Native
+         */
+        /**
+         * @language zh_CN
+         * 设置的计时器运行总次数。如果重复计数设置为 0，则计时器将持续不断运行，或直至调用了 stop() 方法或节目停止。
+         * 如果重复计数不为 0，则将运行计时器，运行次数为指定的次数。如果设置的 repeatCount 总数等于或小于 currentCount，则计时器将停止并且不会再次触发。
+         * @version Egret 2.4
+         * @platform Web,Native
+         */
+        repeatCount: number;
+        /**
+         * @private
+         */
+        private _currentCount;
+        /**
+         * @language en_US
+         * The total number of times the timer has fired since it started at zero. If the timer has been reset, only the fires since the reset are counted.
+         * @version Egret 2.4
+         * @platform Web,Native
+         */
+        /**
+         * @language zh_CN
+         * 计时器从 0 开始后触发的总次数。如果已重置了计时器，则只会计入重置后的触发次数。
+         * @version Egret 2.4
+         * @platform Web,Native
+         */
+        currentCount: number;
+        /**
+         * @private
+         */
+        private _running;
+        /**
+         * @language en_US
+         * The timer's current state; true if the timer is running, otherwise false.
+         * @version Egret 2.4
+         * @platform Web,Native
+         */
+        /**
+         * @language zh_CN
+         * 计时器的当前状态；如果计时器正在运行，则为 true，否则为 false。
+         * @version Egret 2.4
+         * @platform Web,Native
+         */
+        running: boolean;
+        /**
+         * @language en_US
+         * Stops the timer, if it is running, and sets the currentCount property back to 0, like the reset button of a stopwatch.
+         * Then, when start() is called, the timer instance runs for the specified number of repetitions, as set by the repeatCount value.
+         * @version Egret 2.4
+         * @platform Web,Native
+         */
+        /**
+         * @language zh_CN
+         * 如果计时器正在运行，则停止计时器，并将 currentCount 属性设回为 0，这类似于秒表的重置按钮。然后，在调用 start() 后，将运行计时器实例，运行次数为指定的重复次数（由 repeatCount 值设置）。
+         * @version Egret 2.4
+         * @platform Web,Native
+         */
+        reset(): void;
+        /**
+         * @language en_US
+         * Starts the timer, if it is not already running.
+         * @version Egret 2.4
+         * @platform Web,Native
+         */
+        /**
+         * @language zh_CN
+         * 如果计时器尚未运行，则启动计时器。
+         * @version Egret 2.4
+         * @platform Web,Native
+         */
+        start(): void;
+        /**
+         * @language en_US
+         * Stops the timer. When start() is called after stop(), the timer instance runs for the remaining number of
+         * repetitions, as set by the repeatCount property.
+         * @version Egret 2.4
+         * @platform Web,Native
+         */
+        /**
+         * @language zh_CN
+         * 停止计时器。如果在调用 stop() 后调用 start()，则将继续运行计时器实例，运行次数为剩余的 重复次数（由 repeatCount 属性设置）。
+         * @version Egret 2.4
+         * @platform Web,Native
+         */
+        stop(): void;
+        /**
+         * @private
+         */
+        private updateInterval;
+        /**
+         * @private
+         */
+        private lastCount;
+        /**
+         * @private
+         */
+        private lastTimeStamp;
+        /**
+         * @private
+         * Ticker以60FPS频率刷新此方法
+         */
+        $update(timeStamp: number): boolean;
+    }
+}
+declare module egret {
+    /**
+     * @language en_US
+     * The XMLNode class is the base class for all xml node.
+     * @version Egret 2.4
+     * @platform Web,Native
+     */
+    /**
+     * @language zh_CN
+     * XML节点基类
+     * @version Egret 2.4
+     * @platform Web,Native
+     */
+    interface XMLNode {
+        /**
+         * @language en_US
+         * a integer representing the type of the node, 1：XML，2：XMLAttribute，3：XMLText
+         * @version Egret 2.4
+         * @platform Web,Native
+         */
+        /**
+         * @language zh_CN
+         * 节点类型，1：XML，2：XMLAttribute，3：XMLText
+         * @version Egret 2.4
+         * @platform Web,Native
+         */
+        nodeType: number;
+        /**
+         * @language en_US
+         * the parent node of this xml node.
+         * @version Egret 2.4
+         * @platform Web,Native
+         */
+        /**
+         * @language zh_CN
+         * 节点所属的父级节点
+         * @version Egret 2.4
+         * @platform Web,Native
+         */
+        parent: XML;
+    }
+    /**
+     * @language en_US
+     * The XML class contains properties for working with XML objects.
+     * @version Egret 2.4
+     * @platform Web,Native
+     * @includeExample egret/utils/XML.ts
+     */
+    /**
+     * @language zh_CN
+     * XML 类包含用于处理 XML 对象的属性。
+     * @version Egret 2.4
+     * @platform Web,Native
+     * @includeExample egret/utils/XML.ts
+     */
+    interface XML extends XMLNode {
+        /**
+         * @language en_US
+         * the attributes of this xml node.
+         * @version Egret 2.4
+         * @platform Web,Native
+         */
+        /**
+         * @language zh_CN
+         * 当前节点上的属性列表
+         * @version Egret 2.4
+         * @platform Web,Native
+         */
+        attributes: any;
+        /**
+         * @language en_US
+         * the children of the xml node.
+         * @version Egret 2.4
+         * @platform Web,Native
+         */
+        /**
+         * @language zh_CN
+         * 当前节点的子节点列表
+         * @version Egret 2.4
+         * @platform Web,Native
+         */
+        children: XMLNode[];
+        /**
+         * @language en_US
+         * the full name of this xml node. For example,the name of <s:Button/> is "s:Button".
+         * @version Egret 2.4
+         * @platform Web,Native
+         */
+        /**
+         * @language zh_CN
+         * 节点完整名称。例如节点 <s:Button/> 的 name 为："s:Button"
+         * @version Egret 2.4
+         * @platform Web,Native
+         */
+        name: string;
+        /**
+         * @language en_US
+         * thie namesapce prefix of this xml node.For example,the prefix of <s:Button/> is "s".
+         * @version Egret 2.4
+         * @platform Web,Native
+         */
+        /**
+         * @language zh_CN
+         * 节点的命名空间前缀。例如节点 <s:Button/> 的 prefix 为：s
+         * @version Egret 2.4
+         * @platform Web,Native
+         */
+        prefix: string;
+        /**
+         * @language en_US
+         * the local name of this xml node. For example,the local name of <s:Button/> is "Button".
+         * @version Egret 2.4
+         * @platform Web,Native
+         */
+        /**
+         * @language zh_CN
+         * 节点的本地名称。例如节点 <s:Button/> 的 localName 为：Button
+         * @version Egret 2.4
+         * @platform Web,Native
+         */
+        localName: string;
+        /**
+         * @language en_US
+         * the namesapce uri of this xml node.For example,the namespace uri of <s:Skin xmlns:s="http://ns.egret.com/eui"/> is "http://ns.egret.com/eui".
+         * @version Egret 2.4
+         * @platform Web,Native
+         */
+        /**
+         * @language zh_CN
+         * 节点的命名空间地址。例如节点 <s:Skin xmlns:s="http://ns.egret.com/eui"/> 的 namespace 为： http://ns.egret.com/eui
+         * @version Egret 2.4
+         * @platform Web,Native
+         */
+        namespace: string;
+    }
+    /**
+     * @language en_US
+     * The XMLText class represents a string node in the XML.
+     * @version Egret 2.4
+     * @platform Web,Native
+     */
+    /**
+     * @language zh_CN
+     * XMLText 类表示在XML中的文本节点
+     * @version Egret 2.4
+     * @platform Web,Native
+     */
+    interface XMLText extends XMLNode {
+        /**
+         * @language en_US
+         * the text content
+         * @version Egret 2.4
+         * @platform Web,Native
+         */
+        /**
+         * @language zh_CN
+         * 文本内容
+         * @version Egret 2.4
+         * @platform Web,Native
+         */
+        text: string;
+    }
+    /**
+     * @language en_US
+     * The XML class contains properties for working with XML objects.
+     * @version Egret 2.4
+     * @platform Web,Native
+     */
+    /**
+     * @language zh_CN
+     * XML 类包含用于处理 XML 对象的属性。
+     * @version Egret 2.4
+     * @platform Web,Native
+     */
+    var XML: {
+        /**
+         * @language en_US
+         * parses a text to XML instance.
+         * @param text the text to be parsed.
+         */
+        /**
+         * @language zh_CN
+         * 解析字符串为XML对象
+         * @param text 要解析的XML对象。
+         */
+        parse(text: string): XML;
+    };
+}
+declare module egret {
+    /**
      * @private
      */
     var $callLaterFunctionList: Array<any>;
@@ -14326,209 +14969,6 @@ declare module egret {
 declare module egret {
     /**
      * @language en_US
-     * Logger is an entrance for the log processing module of the engine
-     * @version Egret 2.4
-     * @platform Web,Native
-     */
-    /**
-     * @language zh_CN
-     * Logger是引擎的日志处理模块入口
-     * @version Egret 2.4
-     * @platform Web,Native
-     */
-    class Logger {
-        /**
-         * @language en_US
-         * open all
-         * @version Egret 2.4
-         * @platform Web,Native
-         */
-        /**
-         * @language zh_CN
-         * 全开
-         * @version Egret 2.4
-         * @platform Web,Native
-         */
-        static ALL: string;
-        /**
-         * @language en_US
-         * level: DEBUG
-         * @version Egret 2.4
-         * @platform Web,Native
-         */
-        /**
-         * @language zh_CN
-         * 等级为 DEBUG
-         * @version Egret 2.4
-         * @platform Web,Native
-         */
-        static DEBUG: string;
-        /**
-         * @language en_US
-         * level: INFO
-         * @version Egret 2.4
-         * @platform Web,Native
-         */
-        /**
-         * @language zh_CN
-         * 等级为 INFO
-         * @version Egret 2.4
-         * @platform Web,Native
-         */
-        static INFO: string;
-        /**
-         * @language en_US
-         * level: WARN
-         * @version Egret 2.4
-         * @platform Web,Native
-         */
-        /**
-         * @language zh_CN
-         * 等级为 WARN
-         * @version Egret 2.4
-         * @platform Web,Native
-         */
-        static WARN: string;
-        /**
-         * @language en_US
-         * level: ERROR
-         * @version Egret 2.4
-         * @platform Web,Native
-         */
-        /**
-         * @language zh_CN
-         * 等级为 ERROR
-         * @version Egret 2.4
-         * @platform Web,Native
-         */
-        static ERROR: string;
-        /**
-         * @language en_US
-         * close all
-         * @version Egret 2.4
-         * @platform Web,Native
-         */
-        /**
-         * @language zh_CN
-         * 全关
-         * @version Egret 2.4
-         * @platform Web,Native
-         */
-        static OFF: string;
-        /**
-         * @language en_US
-         * Set the current need to open the log level. Grade level are: ALL <DEBUG <INFO <WARN <ERROR <OFF<br/>
-         * This feature is only in DEBUG mode to take effect. <br/>
-         * <Ul>
-         * <Li> Logger.ALL - all levels of log can be printed out. </ li>
-         * <Li> Logger.DEBUG - print debug, info, log, warn, error. </ li>
-         * <Li> Logger.INFO - print info, log, warn, error. </ li>
-         * <Li> Logger.WARN - can print warn, error. </ li>
-         * <Li> Logger.ERROR - You can print error. </ li>
-         * <Li> Logger.OFF - all closed. </ li>
-         * </ Ul>
-         *param LogType from this level to start printing.
-         * @version Egret 2.4
-         * @platform Web,Native
-         */
-        /**
-         * @language zh_CN
-         * 设置当前需要开启的log级别。级别等级分别为：ALL < DEBUG < INFO < WARN < ERROR < OFF<br/>
-         * 此功能只在 DEBUG 模式下才生效。<br/>
-         * <ul>
-         * <li>Logger.ALL -- 所有等级的log都可以打印出来。</li>
-         * <li>Logger.DEBUG -- 可以打印debug、info、log、warn、error。</li>
-         * <li>Logger.INFO -- 可以打印info、log、warn、error。</li>
-         * <li>Logger.WARN -- 可以打印warn、error。</li>
-         * <li>Logger.ERROR -- 可以打印error。</li>
-         * <li>Logger.OFF -- 全部关闭。</li>
-         * </ul>
-         * @param logType 从这个等级开始打印。
-         * @version Egret 2.4
-         * @platform Web,Native
-         */
-        static logLevel: string;
-    }
-}
-declare module egret {
-    /**
-     * @version Egret 2.4
-     * @platform Web,Native
-     */
-    class NumberUtils {
-        /**
-         * @language en_US
-         * Judge whether it is a numerical value
-         * @param value Parameter that needs to be judged
-         * @returns
-         * @version Egret 2.4
-         * @platform Web,Native
-         */
-        /**
-         * @language zh_CN
-         * 判断是否是数值
-         * @param value 需要判断的参数
-         * @returns
-         * @version Egret 2.4
-         * @platform Web,Native
-         */
-        static isNumber(value: any): boolean;
-        /**
-         * @language en_US
-         * Obtain the approximate sin value of the corresponding angle value
-         * @param value {number} Angle value
-         * @returns {number} sin value
-         * @version Egret 2.4
-         * @platform Web,Native
-         */
-        /**
-         * @language zh_CN
-         * 得到对应角度值的sin近似值
-         * @param value {number} 角度值
-         * @returns {number} sin值
-         * @version Egret 2.4
-         * @platform Web,Native
-         */
-        static sin(value: number): number;
-        /**
-         * @private
-         *
-         * @param value
-         * @returns
-         */
-        private static sinInt(value);
-        /**
-         * @language en_US
-         * Obtain the approximate cos value of the corresponding angle value
-         * @param value {number} Angle value
-         * @returns {number} cos value
-         * @version Egret 2.4
-         * @platform Web,Native
-         */
-        /**
-         * @language zh_CN
-         * 得到对应角度值的cos近似值
-         * @param value {number} 角度值
-         * @returns {number} cos值
-         * @version Egret 2.4
-         * @platform Web,Native
-         */
-        static cos(value: number): number;
-        /**
-         * @private
-         *
-         * @param value
-         * @returns
-         */
-        private static cosInt(value);
-    }
-}
-declare var egret_sin_map: {};
-declare var egret_cos_map: {};
-declare var DEG_TO_RAD: number;
-declare module egret {
-    /**
-     * @language en_US
      * Register and start a timer,which will notify the callback method at a rate of 60 FPS ,and pass the current time stamp as parameters.<br/>
      * Note: After the registration,it will notify the callback method continuously,you can call the stopTick () method to stop it.
      * @param callBack the call back method. the timeStamp parameter of this method represents the number of milliseconds
@@ -14574,179 +15014,6 @@ declare module egret {
 declare module egret {
     /**
      * @language en_US
-     * The Timer class is the interface to timers, which let you run code on a specified time sequence. Use the start()
-     * method to start a timer. Add an event listener for the timer event to set up code to be run on the timer interval.<br/>
-     * You can create Timer objects to run once or repeat at specified intervals to execute code on a schedule. Depending
-     * on the framerate or the runtime environment (available memory and other factors), the runtime may dispatchEvent events at
-     * slightly offset intervals.
-     * @see egret.TimerEvent
-     * @version Egret 2.4
-     * @platform Web,Native
-     * @includeExample egret/utils/Timer.ts
-     */
-    /**
-     * @language zh_CN
-     * Timer 类是计时器的接口，它使您能按指定的时间序列运行代码。
-     * 使用 start() 方法来启动计时器。为 timer 事件添加事件侦听器，以便将代码设置为按计时器间隔运行。
-     * 可以创建 Timer 对象以运行一次或按指定间隔重复运行，从而按计划执行代码。
-     * 根据 Egret 的帧速率或运行时环境（可用内存和其他因素），运行时调度事件的间隔可能稍有不同。
-     * @see egret.TimerEvent
-     * @version Egret 2.4
-     * @platform Web,Native
-     * @includeExample egret/utils/Timer.ts
-     */
-    class Timer extends EventDispatcher {
-        /**
-         * @language en_US
-         * Constructs a new Timer object with the specified delay and repeatCount states.
-         * @param delay The delay between timer events, in milliseconds. A delay lower than 20 milliseconds is not recommended.
-         * Timer frequency is limited to 60 frames per second, meaning a delay lower than 16.6 milliseconds causes runtime problems.
-         * @param repeatCount Specifies the number of repetitions. If zero, the timer repeats indefinitely.If nonzero,
-         * the timer runs the specified number of times and then stops.
-         * @version Egret 2.4
-         * @platform Web,Native
-         */
-        /**
-         * @language zh_CN
-         * 使用指定的 delay 和 repeatCount 状态构造新的 Timer 对象。
-         * @param delay 计时器事件间的延迟（以毫秒为单位）。建议 delay 不要低于 20 毫秒。计时器频率不得超过 60 帧/秒，这意味着低于 16.6 毫秒的延迟可导致出现运行时问题。
-         * @param repeatCount 指定重复次数。如果为零，则计时器将持续不断重复运行。如果不为 0，则将运行计时器，运行次数为指定的次数，然后停止。
-         * @version Egret 2.4
-         * @platform Web,Native
-         */
-        constructor(delay: number, repeatCount?: number);
-        /**
-         * @private
-         */
-        private _delay;
-        /**
-         * @language en_US
-         * The delay between timer events, in milliseconds. A delay lower than 20 milliseconds is not recommended.<br/>
-         * Note: Timer frequency is limited to 60 frames per second, meaning a delay lower than 16.6 milliseconds causes runtime problems.
-         * @version Egret 2.4
-         * @platform Web,Native
-         */
-        /**
-         * @language zh_CN
-         * 计时器事件间的延迟（以毫秒为单位）。如果在计时器正在运行时设置延迟间隔，则计时器将按相同的 repeatCount 迭代重新启动。<br/>
-         * 注意：建议 delay 不要低于 20 毫秒。计时器频率不得超过 60 帧/秒，这意味着低于 16.6 毫秒的延迟可导致出现运行时问题。
-         * @version Egret 2.4
-         * @platform Web,Native
-         */
-        delay: number;
-        /**
-         * @language en_US
-         * The total number of times the timer is set to run. If the repeat count is set to 0, the timer continues indefinitely,
-         * until the stop() method is invoked or the program stops. If the repeat count is nonzero, the timer runs the specified
-         * number of times. If repeatCount is set to a total that is the same or less then currentCount the timer stops and will not fire again.
-         * @version Egret 2.4
-         * @platform Web,Native
-         */
-        /**
-         * @language zh_CN
-         * 设置的计时器运行总次数。如果重复计数设置为 0，则计时器将持续不断运行，或直至调用了 stop() 方法或节目停止。
-         * 如果重复计数不为 0，则将运行计时器，运行次数为指定的次数。如果设置的 repeatCount 总数等于或小于 currentCount，则计时器将停止并且不会再次触发。
-         * @version Egret 2.4
-         * @platform Web,Native
-         */
-        repeatCount: number;
-        /**
-         * @private
-         */
-        private _currentCount;
-        /**
-         * @language en_US
-         * The total number of times the timer has fired since it started at zero. If the timer has been reset, only the fires since the reset are counted.
-         * @version Egret 2.4
-         * @platform Web,Native
-         */
-        /**
-         * @language zh_CN
-         * 计时器从 0 开始后触发的总次数。如果已重置了计时器，则只会计入重置后的触发次数。
-         * @version Egret 2.4
-         * @platform Web,Native
-         */
-        currentCount: number;
-        /**
-         * @private
-         */
-        private _running;
-        /**
-         * @language en_US
-         * The timer's current state; true if the timer is running, otherwise false.
-         * @version Egret 2.4
-         * @platform Web,Native
-         */
-        /**
-         * @language zh_CN
-         * 计时器的当前状态；如果计时器正在运行，则为 true，否则为 false。
-         * @version Egret 2.4
-         * @platform Web,Native
-         */
-        running: boolean;
-        /**
-         * @language en_US
-         * Stops the timer, if it is running, and sets the currentCount property back to 0, like the reset button of a stopwatch.
-         * Then, when start() is called, the timer instance runs for the specified number of repetitions, as set by the repeatCount value.
-         * @version Egret 2.4
-         * @platform Web,Native
-         */
-        /**
-         * @language zh_CN
-         * 如果计时器正在运行，则停止计时器，并将 currentCount 属性设回为 0，这类似于秒表的重置按钮。然后，在调用 start() 后，将运行计时器实例，运行次数为指定的重复次数（由 repeatCount 值设置）。
-         * @version Egret 2.4
-         * @platform Web,Native
-         */
-        reset(): void;
-        /**
-         * @language en_US
-         * Starts the timer, if it is not already running.
-         * @version Egret 2.4
-         * @platform Web,Native
-         */
-        /**
-         * @language zh_CN
-         * 如果计时器尚未运行，则启动计时器。
-         * @version Egret 2.4
-         * @platform Web,Native
-         */
-        start(): void;
-        /**
-         * @language en_US
-         * Stops the timer. When start() is called after stop(), the timer instance runs for the remaining number of
-         * repetitions, as set by the repeatCount property.
-         * @version Egret 2.4
-         * @platform Web,Native
-         */
-        /**
-         * @language zh_CN
-         * 停止计时器。如果在调用 stop() 后调用 start()，则将继续运行计时器实例，运行次数为剩余的 重复次数（由 repeatCount 属性设置）。
-         * @version Egret 2.4
-         * @platform Web,Native
-         */
-        stop(): void;
-        /**
-         * @private
-         */
-        private updateInterval;
-        /**
-         * @private
-         */
-        private lastCount;
-        /**
-         * @private
-         */
-        private lastTimeStamp;
-        /**
-         * @private
-         * Ticker以60FPS频率刷新此方法
-         */
-        $update(timeStamp: number): boolean;
-    }
-}
-declare module egret {
-    /**
-     * @language en_US
      * Transfer number to color character string
      * @param value {number} color value ,such as 0xffffff
      * @returns {string} Color character string, for example, #ffffff.
@@ -14764,194 +15031,6 @@ declare module egret {
      * @includeExample egret/utils/toColorString.ts
      */
     function toColorString(value: number): string;
-}
-declare module egret {
-    /**
-     * @language en_US
-     * The XMLNode class is the base class for all xml node.
-     * @version Egret 2.4
-     * @platform Web,Native
-     */
-    /**
-     * @language zh_CN
-     * XML节点基类
-     * @version Egret 2.4
-     * @platform Web,Native
-     */
-    interface XMLNode {
-        /**
-         * @language en_US
-         * a integer representing the type of the node, 1：XML，2：XMLAttribute，3：XMLText
-         * @version Egret 2.4
-         * @platform Web,Native
-         */
-        /**
-         * @language zh_CN
-         * 节点类型，1：XML，2：XMLAttribute，3：XMLText
-         * @version Egret 2.4
-         * @platform Web,Native
-         */
-        nodeType: number;
-        /**
-         * @language en_US
-         * the parent node of this xml node.
-         * @version Egret 2.4
-         * @platform Web,Native
-         */
-        /**
-         * @language zh_CN
-         * 节点所属的父级节点
-         * @version Egret 2.4
-         * @platform Web,Native
-         */
-        parent: XML;
-    }
-    /**
-     * @language en_US
-     * The XML class contains properties for working with XML objects.
-     * @version Egret 2.4
-     * @platform Web,Native
-     * @includeExample egret/utils/XML.ts
-     */
-    /**
-     * @language zh_CN
-     * XML 类包含用于处理 XML 对象的属性。
-     * @version Egret 2.4
-     * @platform Web,Native
-     * @includeExample egret/utils/XML.ts
-     */
-    interface XML extends XMLNode {
-        /**
-         * @language en_US
-         * the attributes of this xml node.
-         * @version Egret 2.4
-         * @platform Web,Native
-         */
-        /**
-         * @language zh_CN
-         * 当前节点上的属性列表
-         * @version Egret 2.4
-         * @platform Web,Native
-         */
-        attributes: any;
-        /**
-         * @language en_US
-         * the children of the xml node.
-         * @version Egret 2.4
-         * @platform Web,Native
-         */
-        /**
-         * @language zh_CN
-         * 当前节点的子节点列表
-         * @version Egret 2.4
-         * @platform Web,Native
-         */
-        children: XMLNode[];
-        /**
-         * @language en_US
-         * the full name of this xml node. For example,the name of <s:Button/> is "s:Button".
-         * @version Egret 2.4
-         * @platform Web,Native
-         */
-        /**
-         * @language zh_CN
-         * 节点完整名称。例如节点 <s:Button/> 的 name 为："s:Button"
-         * @version Egret 2.4
-         * @platform Web,Native
-         */
-        name: string;
-        /**
-         * @language en_US
-         * thie namesapce prefix of this xml node.For example,the prefix of <s:Button/> is "s".
-         * @version Egret 2.4
-         * @platform Web,Native
-         */
-        /**
-         * @language zh_CN
-         * 节点的命名空间前缀。例如节点 <s:Button/> 的 prefix 为：s
-         * @version Egret 2.4
-         * @platform Web,Native
-         */
-        prefix: string;
-        /**
-         * @language en_US
-         * the local name of this xml node. For example,the local name of <s:Button/> is "Button".
-         * @version Egret 2.4
-         * @platform Web,Native
-         */
-        /**
-         * @language zh_CN
-         * 节点的本地名称。例如节点 <s:Button/> 的 localName 为：Button
-         * @version Egret 2.4
-         * @platform Web,Native
-         */
-        localName: string;
-        /**
-         * @language en_US
-         * the namesapce uri of this xml node.For example,the namespace uri of <s:Skin xmlns:s="http://ns.egret.com/eui"/> is "http://ns.egret.com/eui".
-         * @version Egret 2.4
-         * @platform Web,Native
-         */
-        /**
-         * @language zh_CN
-         * 节点的命名空间地址。例如节点 <s:Skin xmlns:s="http://ns.egret.com/eui"/> 的 namespace 为： http://ns.egret.com/eui
-         * @version Egret 2.4
-         * @platform Web,Native
-         */
-        namespace: string;
-    }
-    /**
-     * @language en_US
-     * The XMLText class represents a string node in the XML.
-     * @version Egret 2.4
-     * @platform Web,Native
-     */
-    /**
-     * @language zh_CN
-     * XMLText 类表示在XML中的文本节点
-     * @version Egret 2.4
-     * @platform Web,Native
-     */
-    interface XMLText extends XMLNode {
-        /**
-         * @language en_US
-         * the text content
-         * @version Egret 2.4
-         * @platform Web,Native
-         */
-        /**
-         * @language zh_CN
-         * 文本内容
-         * @version Egret 2.4
-         * @platform Web,Native
-         */
-        text: string;
-    }
-    /**
-     * @language en_US
-     * The XML class contains properties for working with XML objects.
-     * @version Egret 2.4
-     * @platform Web,Native
-     */
-    /**
-     * @language zh_CN
-     * XML 类包含用于处理 XML 对象的属性。
-     * @version Egret 2.4
-     * @platform Web,Native
-     */
-    var XML: {
-        /**
-         * @language en_US
-         * parses a text to XML instance.
-         * @param text the text to be parsed.
-         */
-        /**
-         * @language zh_CN
-         * 解析字符串为XML对象
-         * @param text 要解析的XML对象。
-         */
-        parse(text: string): XML;
-    };
 }
 declare module egret {
     /**

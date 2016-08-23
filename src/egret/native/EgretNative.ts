@@ -61,6 +61,7 @@ module egret.native {
         var ticker = egret.sys.$ticker;
         var mainLoop = function () {
             ticker.update();
+            $cmdManager.flush();
         };
         egret_native.executeMainLoop(mainLoop, ticker);
         if (!egret.sys.screenAdapter) {
@@ -91,9 +92,11 @@ module egret.native {
     function setRenderMode(renderMode:string):void{
         if($supportCanvas) {
             sys.RenderBuffer = NativeCanvasRenderBuffer;
+            sys.CanvasRenderBuffer = NativeCanvasRenderBuffer;
         }
         else {
             sys.RenderBuffer = NativeRenderTextureRenderBuffer;
+            sys.CanvasRenderBuffer = NativeRenderTextureRenderBuffer;
         }
         sys.systemRenderer = new CanvasRenderer();
         sys.canvasRenderer = sys.systemRenderer;

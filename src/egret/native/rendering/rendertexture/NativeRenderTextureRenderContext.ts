@@ -69,7 +69,9 @@ module egret.native {
             var arr = blendModesForGL[value];
             if (arr) {
                 this.checkSurface();
-                this.$nativeContext.setBlendArg(arr[0], arr[1]);
+                // old this.$nativeContext.setBlendArg(arr[0], arr[1]);
+                $cmdManager.setContext(this.$nativeContext);
+                $cmdManager.setBlendArg(arr[0], arr[1]);
             }
         }
 
@@ -88,7 +90,9 @@ module egret.native {
         public set globalAlpha(value:number) {
             this.$globalAlpha = value;
             this.checkSurface();
-            this.$nativeContext.setGlobalAlpha(value);
+            // old this.$nativeContext.setGlobalAlpha(value);
+            $cmdManager.setContext(this.$nativeContext);
+            $cmdManager.setGlobalAlpha(value);
         }
 
         /**
@@ -142,10 +146,14 @@ module egret.native {
         public set lineWidth(value:number) {
             //console.log("set lineWidth" + value);
             this.$lineWidth = value;
-            this.$nativeContext.lineWidth = value;
+            // old this.$nativeContext.lineWidth = value;
+            $cmdManager.setContext(this.$nativeContext);
+            $cmdManager.setLineWidth(value);
 
             this.checkSurface();
-            this.$nativeGraphicsContext.lineWidth = value;
+            // old this.$nativeGraphicsContext.lineWidth = value;
+            $cmdManager.setContext(this.$nativeGraphicsContext);
+            $cmdManager.setLineWidth(value);
         }
 
         private $strokeStyle:any = "#000000";
@@ -170,10 +178,15 @@ module egret.native {
                 else if (value.indexOf("rgb") != -1) {
                     value = this.$parseRGB(value);
                 }
-                egret_native.Label.setStrokeColor(parseInt(value.replace("#", "0x")));
+                // old egret_native.Label.setStrokeColor(parseInt(value.replace("#", "0x")));
+                $cmdManager.setContext(egret_native.Label);
+                $cmdManager.setStrokeColor(parseInt(value.replace("#", "0x")));
             }
             this.checkSurface();
-            this.$nativeGraphicsContext.strokeStyle = value;
+            // old this.$nativeGraphicsContext.strokeStyle = value;
+            $cmdManager.setContext(this.$nativeGraphicsContext);
+            var s1 = $cmdManager.pushString(value);
+            $cmdManager.setStrokeStyle(s1);
         }
 
         private $fillStyle:any = "#000000";
@@ -198,10 +211,15 @@ module egret.native {
                 else if (value.indexOf("rgb") != -1) {
                     value = this.$parseRGB(value);
                 }
-                egret_native.Label.setTextColor(parseInt(value.replace("#", "0x")));
+                // old egret_native.Label.setTextColor(parseInt(value.replace("#", "0x")));
+                $cmdManager.setContext(egret_native.Label);
+                $cmdManager.setTextColor(parseInt(value.replace("#", "0x")));
             }
             this.checkSurface();
-            this.$nativeGraphicsContext.fillStyle = value;
+            // old this.$nativeGraphicsContext.fillStyle = value;
+            $cmdManager.setContext(this.$nativeGraphicsContext);
+            var s1 = $cmdManager.pushString(value);
+            $cmdManager.setFillStyle(s1);
         }
 
         private $fillColorStr(s:string):string {
@@ -343,7 +361,9 @@ module egret.native {
          */
         public lineTo(x:number, y:number):void {
             this.checkSurface();
-            this.$nativeGraphicsContext.lineTo(x, y);
+            // old this.$nativeGraphicsContext.lineTo(x, y);
+            $cmdManager.setContext(this.$nativeGraphicsContext);
+            $cmdManager.lineTo(x, y);
         }
 
         /**
@@ -357,7 +377,10 @@ module egret.native {
          */
         public fill(fillRule?:string):void {
             this.checkSurface();
-            this.$nativeGraphicsContext.fill(fillRule);
+            // old this.$nativeGraphicsContext.fill(fillRule);
+            $cmdManager.setContext(this.$nativeGraphicsContext);
+            var s1 = $cmdManager.pushString(fillRule);
+            $cmdManager.fill(s1);
         }
 
         /**
@@ -368,7 +391,9 @@ module egret.native {
          */
         public closePath():void {
             this.checkSurface();
-            this.$nativeGraphicsContext.closePath();
+            // old this.$nativeGraphicsContext.closePath();
+            $cmdManager.setContext(this.$nativeGraphicsContext);
+            $cmdManager.closePath();
         }
 
         /**
@@ -383,7 +408,9 @@ module egret.native {
          */
         public rect(x:number, y:number, w:number, h:number):void {
             this.checkSurface();
-            this.$nativeGraphicsContext.rect(x, y, w, h);
+            // old this.$nativeGraphicsContext.rect(x, y, w, h);
+            $cmdManager.setContext(this.$nativeGraphicsContext);
+            $cmdManager.rect(x, y, w, h);
             this.$clipRect.setTo(x, y, w, h);
         }
 
@@ -397,7 +424,9 @@ module egret.native {
          */
         public moveTo(x:number, y:number):void {
             this.checkSurface();
-            this.$nativeGraphicsContext.moveTo(x, y);
+            // this.$nativeGraphicsContext.moveTo(x, y);
+            $cmdManager.setContext(this.$nativeGraphicsContext);
+            $cmdManager.moveTo(x, y);
         }
 
         /**
@@ -470,7 +499,9 @@ module egret.native {
          */
         public beginPath():void {
             this.checkSurface();
-            this.$nativeGraphicsContext.beginPath();
+            // old this.$nativeGraphicsContext.beginPath();
+            $cmdManager.setContext(this.$nativeGraphicsContext);
+            $cmdManager.beginPath();
         }
 
         /**
@@ -566,7 +597,9 @@ module egret.native {
                     this.$clipList.splice(index, length - index);
                     for (; index < length; index++) {
                         this.checkSurface();
-                        this.$nativeContext.popClip();
+                        // old this.$nativeContext.popClip();
+                        $cmdManager.setContext(this.$nativeContext);
+                        $cmdManager.popClip();
                     }
                 }
                 this.$saveCount--;
@@ -612,7 +645,9 @@ module egret.native {
             if (this.$clipRect.width > 0 && this.$clipRect.height > 0) {
                 //console.log("push clip" + this.$clipRect.x + " " + this.$clipRect.y + " " + this.$clipRect.width + " " + this.$clipRect.height);
                 this.checkSurface();
-                this.$nativeContext.pushClip(this.$clipRect.x, this.$clipRect.y, this.$clipRect.width, this.$clipRect.height);
+                // old this.$nativeContext.pushClip(this.$clipRect.x, this.$clipRect.y, this.$clipRect.width, this.$clipRect.height);
+                $cmdManager.setContext(this.$nativeContext);
+                $cmdManager.pushClip(this.$clipRect.x, this.$clipRect.y, this.$clipRect.width, this.$clipRect.height);
                 this.$clipRect.setEmpty();
                 this.$clipList.push(this.$saveCount);
             }
@@ -631,7 +666,10 @@ module egret.native {
         public clearRect(x:number, y:number, width:number, height:number):void {
             //console.log("clearScreen");
             this.checkSurface();
-            this.$nativeContext.clearScreen(0, 0, 0);
+
+            // old this.$nativeContext.clearScreen(0, 0, 0);
+            $cmdManager.setContext(this.$nativeContext);
+            $cmdManager.clearScreen(0, 0, 0, 0);
         }
 
         /**
@@ -655,7 +693,9 @@ module egret.native {
             var m = this.$matrix;
             //console.log("setTransformToNative::a=" + m.a + " b=" + m.b + " c=" + m.c + " d=" + m.d + " tx=" + m.tx + " ty=" + m.ty);
             this.checkSurface();
-            this.$nativeContext.setTransform(m.a, m.b, m.c, m.d, m.tx, m.ty);
+            // this.$nativeContext.setTransform(m.a, m.b, m.c, m.d, m.tx, m.ty);
+            $cmdManager.setContext(this.$nativeContext);
+            $cmdManager.setTransform(m.a, m.b, m.c, m.d, m.tx, m.ty);
         }
 
         /**
@@ -699,9 +739,15 @@ module egret.native {
         public fillText(text:string, x:number, y:number, maxWidth?:number):void {
             //console.log("drawText" + text);
             var font:string = TextField.default_fontFamily;
-            egret_native.Label.createLabel(font, this.$fontSize, "", this.$hasStrokeText ? this.$lineWidth : 0);
+            // old egret_native.Label.createLabel(font, this.$fontSize, "", this.$hasStrokeText ? this.$lineWidth : 0);
+            $cmdManager.setContext(egret_native.Label);
+            var s1 = $cmdManager.pushString(font);
+            var s2 = $cmdManager.pushString("");
+            $cmdManager.createLabel(s1, this.$fontSize, s2, this.$hasStrokeText ? this.$lineWidth : 0);
             this.$hasStrokeText = false;
-            egret_native.Label.drawText(text, x, y);
+            // old egret_native.Label.drawText(text, x, y);
+            var s3 = $cmdManager.pushString(text);
+            $cmdManager.drawText(s3, x, y);
         }
 
         private $hasStrokeText:boolean = false;
@@ -718,7 +764,11 @@ module egret.native {
          */
         public measureText(text:string):TextMetrics {
             var font:string = TextField.default_fontFamily;
-            egret_native.Label.createLabel(font, this.$fontSize, "", this.$hasStrokeText ? this.$lineWidth : 0);
+            // old egret_native.Label.createLabel(font, this.$fontSize, "", this.$hasStrokeText ? this.$lineWidth : 0);
+            $cmdManager.setContext(egret_native.Label);
+            var s1 = $cmdManager.pushString(font);
+            var s2 = $cmdManager.pushString("");
+            $cmdManager.createLabel(s1, this.$fontSize, s2, this.$hasStrokeText ? this.$lineWidth : 0);
             return {width: egret_native.Label.getTextSize(text)[0]};
         }
 
@@ -732,11 +782,14 @@ module egret.native {
         public drawImage(image:BitmapData, offsetX:number, offsetY:number, width?:number, height?:number,
                          surfaceOffsetX?:number, surfaceOffsetY?:number, surfaceImageWidth?:number, surfaceImageHeight?:number):void {
             var bitmapData;
-            if ((<NativeRenderTexture>image).$nativeRenderTexture) {
-                bitmapData = (<NativeRenderTexture>image).$nativeRenderTexture;
+            var isNative:boolean;
+            if ((<NativeRenderTexture><any>image).$nativeRenderTexture) {
+                bitmapData = (<NativeRenderTexture><any>image).$nativeRenderTexture;
+                isNative = true;
             }
             else {
                 bitmapData = image;
+                isNative = false;
             }
             if (!bitmapData) {
                 return;
@@ -781,7 +834,20 @@ module egret.native {
             }
             //console.log("drawImage::" + offsetX + " " + offsetY + " " + width + " " + height + " " + surfaceOffsetX + " " + surfaceOffsetY + " " + surfaceImageWidth + " " + surfaceImageHeight);
             this.checkSurface();
-            this.$nativeContext.drawImage(bitmapData, offsetX, offsetY, width, height, surfaceOffsetX, surfaceOffsetY, surfaceImageWidth, surfaceImageHeight);
+
+            var imageAdress;
+            if(!isNative) {
+                if(!bitmapData._native_tex_loc) {
+                    bitmapData._native_tex_loc = bitmapData.___native_texture__p;
+                }
+                imageAdress = bitmapData._native_tex_loc;
+            } else {
+                imageAdress = bitmapData.___native_texture__p;
+            }
+
+            // old this.$nativeContext.drawImage(bitmapData, offsetX, offsetY, width, height, surfaceOffsetX, surfaceOffsetY, surfaceImageWidth, surfaceImageHeight);
+            $cmdManager.setContext(this.$nativeContext);
+            $cmdManager.drawImage(imageAdress, offsetX, offsetY, width, height, surfaceOffsetX, surfaceOffsetY, surfaceImageWidth, surfaceImageHeight);
         }
 
         /**

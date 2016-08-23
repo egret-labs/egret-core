@@ -1482,6 +1482,10 @@ module egret {
             if (this.$TextField[sys.TextKeys.type] == TextFieldType.INPUT) {
                 this.inputUtils._removeStageText();
             }
+
+            if(this.textNode) {
+                this.textNode.clean();
+            }
         }
 
         /**

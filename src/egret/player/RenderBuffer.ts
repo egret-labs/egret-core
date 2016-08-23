@@ -126,4 +126,14 @@ module egret.sys {
          */
         new(width?:number, height?:number):RenderBuffer;
     };
+
+    export var CanvasRenderBuffer:{
+        /**
+         * 创建一个CanvasRenderBuffer。
+         * 注意：若内存不足或创建缓冲区失败，将会抛出错误异常。
+         * @param width 渲染缓冲的初始宽
+         * @param height 渲染缓冲的初始高
+         */
+        new(width?:number, height?:number):RenderBuffer;
+    };
 }

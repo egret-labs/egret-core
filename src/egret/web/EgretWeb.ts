@@ -73,7 +73,8 @@ module egret.web {
             egret.sys.screenAdapter = new egret.sys.DefaultScreenAdapter();
         }
 
-        sys.hitTestBuffer = new CanvasRenderBuffer(3, 3);        
+        sys.CanvasRenderBuffer = web.CanvasRenderBuffer;
+        sys.hitTestBuffer = new CanvasRenderBuffer(3, 3);   
 
         var list = document.querySelectorAll(".egret-player");
         var length = list.length;
@@ -82,11 +83,11 @@ module egret.web {
             var player = new WebPlayer(container, options);
             container["egret-player"] = player;
             //webgl模式关闭脏矩形
-            //if(options.renderMode == "webgl") {
-            //    player.stage.dirtyRegionPolicy = DirtyRegionPolicy.OFF;
-            //    egret.sys.DisplayList.prototype.setDirtyRegionPolicy = function () {
-            //    };
-            //}
+            if(options.renderMode == "webgl") {
+               player.stage.dirtyRegionPolicy = DirtyRegionPolicy.OFF;
+               egret.sys.DisplayList.prototype.setDirtyRegionPolicy = function () {
+               };
+            }
         }
     }
 

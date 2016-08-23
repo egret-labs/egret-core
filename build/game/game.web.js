@@ -202,7 +202,7 @@ var egret;
                     var bitmapData = imageLoader.data;
                     bitmapData.setAttribute("bitmapSrc", virtualUrl);
                     var texture = new egret.Texture();
-                    texture._setBitmapData(bitmapData);
+                    texture._setBitmapData(new egret.BitmapData(bitmapData));
                     loader.data = texture;
                     window.setTimeout(function () {
                         loader.dispatchEventWith(egret.Event.COMPLETE);
