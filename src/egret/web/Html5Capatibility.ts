@@ -36,15 +36,15 @@ module egret.web {
         /**
          * @private
          */
-        static QQ_AUDIO: number = 1;
+        static QQ_AUDIO:number = 1;
         /**
          * @private
          */
-        static WEB_AUDIO: number = 2;
+        static WEB_AUDIO:number = 2;
         /**
          * @private
          */
-        static HTML5_AUDIO: number = 3;
+        static HTML5_AUDIO:number = 3;
     }
 
     /**
@@ -54,15 +54,15 @@ module egret.web {
         /**
          * @private
          */
-        static WPHONE: number = 1;
+        static WPHONE:number = 1;
         /**
          * @private
          */
-        static IOS: number = 2;
+        static IOS:number = 2;
         /**
          * @private
          */
-        static ADNROID: number = 3;
+        static ADNROID:number = 3;
     }
 
     /**
@@ -71,10 +71,10 @@ module egret.web {
      */
     export class Html5Capatibility extends HashObject {
         //当前浏览器版本是否支持blob
-        public static _canUseBlob: boolean = false;
+        public static _canUseBlob:boolean = false;
 
         //当前浏览器版本是否支持webaudio
-        public static _audioType: number = 0;
+        public static _audioType:number = 0;
         /**
          * @private
          */
@@ -83,12 +83,13 @@ module egret.web {
         /**
          * @private
          */
-        public static _QQRootPath: string = "";
+        public static _QQRootPath:string = "";
 
         /**
          * @private
          */
-        public static _System_OS: number = 0;
+        public static _System_OS:number = 0;
+
         /**
          * @private
          */
@@ -99,14 +100,14 @@ module egret.web {
         /**
          * @private
          */
-        private static ua: string = "";
+        private static ua:string = "";
 
         /**
          * @private
-         * 
+         *
          */
-        public static $init(): void {
-            var ua: string = navigator.userAgent.toLowerCase();
+        public static $init():void {
+            var ua:string = navigator.userAgent.toLowerCase();
             Html5Capatibility.ua = ua;
 
             egret.Capabilities.$isMobile = (ua.indexOf('mobile') != -1 || ua.indexOf('android') != -1);
@@ -115,6 +116,8 @@ module egret.web {
             Html5Capatibility._canUseBlob = false;
             var checkAudioType;
             var audioType = Html5Capatibility._audioType;
+            var canUseWebAudio = window["AudioContext"] || window["webkitAudioContext"] || window["mozAudioContext"];
+
             if (audioType == 1 || audioType == 2 || audioType == 3) {
                 checkAudioType = false;
                 Html5Capatibility.setAudioType(audioType);
@@ -130,11 +133,14 @@ module egret.web {
                 egret.Capabilities.$os = "Windows Phone";
             }
             else if (ua.indexOf("android") >= 0) {//android
-                Html5Capatibility._System_OS = SystemOSType.ADNROID;
-
                 egret.Capabilities.$os = "Android";
-
                 Html5Capatibility._System_OS = SystemOSType.ADNROID;
+                if (canUseWebAudio) {
+                    Html5Capatibility.setAudioType(AudioType.WEB_AUDIO);
+                } else {
+                    Html5Capatibility.setAudioType(AudioType.HTML5_AUDIO);
+                }
+
                 if (window.hasOwnProperty("QZAppExternal") && ua.indexOf("qzone") >= 0) {
                     Html5Capatibility.setAudioType(AudioType.QQ_AUDIO);
 
@@ -160,7 +166,6 @@ module egret.web {
                 Html5Capatibility._System_OS = SystemOSType.IOS;
                 if (Html5Capatibility.getIOSVersion() >= 7) {
                     Html5Capatibility._canUseBlob = true;
-
                     Html5Capatibility.setAudioType(AudioType.WEB_AUDIO);
                 }
             }
@@ -178,16 +183,10 @@ module egret.web {
                 Html5Capatibility._canUseBlob = false;
             }
 
-
-            var canUseWebAudio = window["AudioContext"] || window["webkitAudioContext"] || window["mozAudioContext"];
-            if (!canUseWebAudio && Html5Capatibility._audioType == AudioType.WEB_AUDIO) {
-                Html5Capatibility.setAudioType(AudioType.HTML5_AUDIO);
-            }
-
             egret.Sound = Html5Capatibility._AudioClass;
         }
 
-        private static setAudioType(type: number): void {
+        private static setAudioType(type:number):void {
             Html5Capatibility._audioType = type;
             switch (type) {
                 case AudioType.QQ_AUDIO:
@@ -207,7 +206,7 @@ module egret.web {
          * 获取ios版本
          * @returns {string}
          */
-        private static getIOSVersion(): number {
+        private static getIOSVersion():number {
             var value = Html5Capatibility.ua.toLowerCase().match(/cpu [^\d]*\d.*like mac os x/)[0];
             return parseInt(value.match(/\d(_\d)*/)[0]) || 0;
         }
@@ -230,13 +229,13 @@ module egret.web {
     /**
      * @private
      */
-    var currentPrefix: string = null;
+    var currentPrefix:string = null;
 
     /**
      * @private
      */
-    export function getPrefixStyleName(name: string, element?: any): string {
-        var header: string = "";
+    export function getPrefixStyleName(name:string, element?:any):string {
+        var header:string = "";
 
         if (element != null) {
             header = getPrefix(name, element);
@@ -259,15 +258,15 @@ module egret.web {
     /**
      * @private
      */
-    export function getPrefix(name: string, element: any): string {
+    export function getPrefix(name:string, element:any):string {
         if (name in element) {
             return "";
         }
 
         name = name.charAt(0).toUpperCase() + name.substring(1, name.length);
-        var transArr: Array<string> = ["webkit", "ms", "Moz", "O"];
-        for (var i: number = 0; i < transArr.length; i++) {
-            var tempStyle: string = transArr[i] + name;
+        var transArr:Array<string> = ["webkit", "ms", "Moz", "O"];
+        for (var i:number = 0; i < transArr.length; i++) {
+            var tempStyle:string = transArr[i] + name;
 
             if (tempStyle in element) {
                 return transArr[i];
