@@ -34,6 +34,12 @@ module egret.native {
      */
     export var $supportCanvas = egret_native.Canvas ? true : false;
 
+    /**
+     * @private
+     * 判断当前runtime版本是否支持cmdBatch
+     */
+    export var $supportCmdBatch = egret_native.sendToC ? true : false;
+
     var isRunning:boolean = false;
     var playerList:Array<NativePlayer> = [];
 
@@ -59,9 +65,11 @@ module egret.native {
 
         }
         var ticker = egret.sys.$ticker;
-        var mainLoop = function () {
+        var mainLoop = $supportCmdBatch ? function () {
             ticker.update();
             $cmdManager.flush();
+        } : function() {
+            ticker.update();
         };
         egret_native.executeMainLoop(mainLoop, ticker);
         if (!egret.sys.screenAdapter) {

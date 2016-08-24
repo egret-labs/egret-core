@@ -35,6 +35,10 @@
             "platform": "native"
           },
           {
+            "path": "native/rendering/rendertexture/NativeRenderTextureRenderContext2.ts",
+            "platform": "native"
+          },
+          {
             "path": "native/rendering/rendertexture/NativeRenderTexture.ts",
             "platform": "native"
           },
@@ -44,6 +48,10 @@
           },
           {
             "path": "native/rendering/canvas/NativeCanvasRenderContext.ts",
+            "platform": "native"
+          },
+          {
+            "path": "native/rendering/canvas/NativeCanvasRenderContext2.ts",
             "platform": "native"
           },
           {

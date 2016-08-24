@@ -38,7 +38,7 @@ module egret.native {
          */
         constructor() {
             super();
-            this.renderContext = new NativeCanvasRenderContext();
+            this.renderContext = $supportCmdBatch ? new NativeCanvasRenderContext() : new NativeCanvasRenderContext2();
         }
 
         /**
@@ -78,9 +78,12 @@ module egret.native {
                     }
                     var context = this.$nativeCanvas.getContext("2d");
 
-                    // old context.clearScreen(0, 0, 0, 0);
-                    $cmdManager.setContext(context);
-                    $cmdManager.clearScreen(0, 0, 0, 0);
+                    if($supportCmdBatch) {
+                        $cmdManager.setContext(context);
+                        $cmdManager.clearScreen(0, 0, 0, 0);
+                    } else {
+                        context.clearScreen(0, 0, 0, 0);
+                    }
 
                     this.renderContext.$nativeContext = context;
                 }
@@ -109,10 +112,13 @@ module egret.native {
                         egret_native.setScreenCanvas(this.$nativeCanvas);
                     }
                     var context = this.$nativeCanvas.getContext("2d");
-
-                    // old context.clearScreen(0, 0, 0, 0);
-                    $cmdManager.setContext(context);
-                    $cmdManager.clearScreen(0, 0, 0, 0);
+    
+                    if($supportCmdBatch) {
+                        $cmdManager.setContext(context);
+                        $cmdManager.clearScreen(0, 0, 0, 0);
+                    } else {
+                        context.clearScreen(0, 0, 0, 0);
+                    }
 
                     this.renderContext.$nativeContext = context;
                 }

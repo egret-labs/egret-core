@@ -854,6 +854,773 @@ var egret;
 (function (egret) {
     var native;
     (function (native) {
+        var blendModesForGL = {
+            "source-over": [1, 771],
+            "lighter": [770, 1],
+            "destination-out": [0, 771],
+            "destination-in": [0, 770]
+        };
+        /**
+         * @version Egret 2.4
+         * @platform Web,Native
+         * @private
+         */
+        var NativeRenderTextureRenderContext2 = (function (_super) {
+            __extends(NativeRenderTextureRenderContext2, _super);
+            function NativeRenderTextureRenderContext2() {
+                _super.apply(this, arguments);
+                this.$matrix = new egret.Matrix();
+                this.$nativeContext = egret_native.Graphics;
+                this.$nativeGraphicsContext = egret_native.rastergl;
+                this.$globalCompositeOperation = "source-over";
+                this.$globalAlpha = 1;
+                this.$lineWidth = 0;
+                this.$strokeStyle = "#000000";
+                this.$fillStyle = "#000000";
+                this.$font = "10px sans-serif";
+                this.$fontSize = 10;
+                this.clipRectArray = null;
+                this.$saveList = [];
+                this.$clipRect = new egret.Rectangle();
+                this.$saveCount = 0;
+                this.$clipList = [];
+                this.$hasStrokeText = false;
+            }
+            var d = __define,c=NativeRenderTextureRenderContext2,p=c.prototype;
+            d(p, "globalCompositeOperation"
+                /**
+                 * @private
+                 * 设置新图像如何绘制到已有的图像上的规制
+                 * @version Egret 2.4
+                 * @platform Web,Native
+                 */
+                ,function () {
+                    return this.$globalCompositeOperation;
+                }
+                ,function (value) {
+                    this.$globalCompositeOperation = value;
+                    var arr = blendModesForGL[value];
+                    if (arr) {
+                        this.checkSurface();
+                        this.$nativeContext.setBlendArg(arr[0], arr[1]);
+                    }
+                }
+            );
+            d(p, "globalAlpha"
+                /**
+                 * @private
+                 * 设置接下来绘图填充的整体透明度
+                 * @version Egret 2.4
+                 * @platform Web,Native
+                 */
+                ,function () {
+                    return this.$globalAlpha;
+                }
+                ,function (value) {
+                    this.$globalAlpha = value;
+                    this.checkSurface();
+                    this.$nativeContext.setGlobalAlpha(value);
+                    // $cmdManager.setContext(this.$nativeContext);
+                    // $cmdManager.setGlobalAlpha(value);
+                }
+            );
+            d(p, "lineWidth"
+                /**
+                 * @private
+                 * 设置线条粗细，以像素为单位。设置为0，负数，Infinity 或 NaN 将会被忽略。
+                 * @default 1
+                 * @version Egret 2.4
+                 * @platform Web,Native
+                 */
+                ,function () {
+                    return this.$lineWidth;
+                }
+                ,function (value) {
+                    //console.log("set lineWidth" + value);
+                    this.$lineWidth = value;
+                    this.$nativeContext.lineWidth = value;
+                    // $cmdManager.setContext(this.$nativeContext);
+                    // $cmdManager.setLineWidth(value);
+                    this.checkSurface();
+                    this.$nativeGraphicsContext.lineWidth = value;
+                    // $cmdManager.setContext(this.$nativeGraphicsContext);
+                    // $cmdManager.setLineWidth(value);
+                }
+            );
+            d(p, "strokeStyle"
+                /**
+                 * @private
+                 * 设置要在图形边线填充的颜色或样式
+                 * @default "#000000"
+                 * @version Egret 2.4
+                 * @platform Web,Native
+                 */
+                ,function () {
+                    return this.$strokeStyle;
+                }
+                ,function (value) {
+                    this.$strokeStyle = value;
+                    if (value != null) {
+                        if (value.indexOf("rgba") != -1) {
+                            value = this.$parseRGBA(value);
+                        }
+                        else if (value.indexOf("rgb") != -1) {
+                            value = this.$parseRGB(value);
+                        }
+                        egret_native.Label.setStrokeColor(parseInt(value.replace("#", "0x")));
+                    }
+                    this.checkSurface();
+                    this.$nativeGraphicsContext.strokeStyle = value;
+                    // $cmdManager.setContext(this.$nativeGraphicsContext);
+                    // var s1 = $cmdManager.pushString(value);
+                    // $cmdManager.setStrokeStyle(s1);
+                }
+            );
+            d(p, "fillStyle"
+                /**
+                 * @private
+                 * 设置要在图形内部填充的颜色或样式
+                 * @default "#000000"
+                 * @version Egret 2.4
+                 * @platform Web,Native
+                 */
+                ,function () {
+                    return this.$fillStyle;
+                }
+                ,function (value) {
+                    this.$fillStyle = value;
+                    if (value != null) {
+                        if (value.indexOf("rgba") != -1) {
+                            value = this.$parseRGBA(value);
+                        }
+                        else if (value.indexOf("rgb") != -1) {
+                            value = this.$parseRGB(value);
+                        }
+                        egret_native.Label.setTextColor(parseInt(value.replace("#", "0x")));
+                    }
+                    this.checkSurface();
+                    this.$nativeGraphicsContext.fillStyle = value;
+                    // $cmdManager.setContext(this.$nativeGraphicsContext);
+                    // var s1 = $cmdManager.pushString(value);
+                    // $cmdManager.setFillStyle(s1);
+                }
+            );
+            p.$fillColorStr = function (s) {
+                if (s.length < 2) {
+                    s = "0" + s;
+                }
+                return s;
+            };
+            p.$parseRGBA = function (str) {
+                var index = str.indexOf("(");
+                str = str.slice(index + 1, str.length - 1);
+                var arr = str.split(",");
+                var a = parseInt((parseFloat(arr[3]) * 255)).toString(16);
+                var r = parseInt(arr[0]).toString(16);
+                var g = parseInt(arr[1]).toString(16);
+                var b = parseInt(arr[2]).toString(16);
+                str = "#" + this.$fillColorStr(a) + this.$fillColorStr(r) + this.$fillColorStr(g) + this.$fillColorStr(b);
+                return str;
+            };
+            p.$parseRGB = function (str) {
+                var index = str.indexOf("(");
+                str = str.slice(index + 1, str.length - 1);
+                var arr = str.split(",");
+                var r = parseInt(arr[0]).toString(16);
+                var g = parseInt(arr[1]).toString(16);
+                var b = parseInt(arr[2]).toString(16);
+                str = "#" + this.$fillColorStr(r) + this.$fillColorStr(g) + this.$fillColorStr(b);
+                return str;
+            };
+            d(p, "font"
+                /**
+                 * @private
+                 * 当前的字体样式
+                 * @version Egret 2.4
+                 * @platform Web,Native
+                 */
+                ,function () {
+                    return this.$font;
+                }
+                ,function (value) {
+                    this.$font = value;
+                    var arr = value.split(" ");
+                    var length = arr.length;
+                    for (var i = 0; i < length; i++) {
+                        var txt = arr[i];
+                        if (txt.indexOf("px") != -1) {
+                            this.$fontSize = parseInt(txt.replace("px", ""));
+                            //console.log("set font" + this.$lineWidth);
+                            return;
+                        }
+                    }
+                }
+            );
+            /**
+             * @private
+             * 绘制一段圆弧路径。圆弧路径的圆心在 (x, y) 位置，半径为 r ，根据anticlockwise （默认为顺时针）指定的方向从 startAngle 开始绘制，到 endAngle 结束。
+             * @param x 圆弧中心（圆心）的 x 轴坐标。
+             * @param y 圆弧中心（圆心）的 y 轴坐标。
+             * @param radius 圆弧的半径。
+             * @param startAngle 圆弧的起始点， x轴方向开始计算，单位以弧度表示。
+             * @param endAngle 圆弧的重点， 单位以弧度表示。
+             * @param anticlockwise 如果为 true，逆时针绘制圆弧，反之，顺时针绘制。
+             * @version Egret 2.4
+             * @platform Web,Native
+             */
+            p.arc = function (x, y, radius, startAngle, endAngle, anticlockwise) {
+                this.checkSurface();
+                this.$nativeGraphicsContext.arc(x, y, radius, startAngle, endAngle, anticlockwise);
+            };
+            /**
+             * @private
+             * 绘制一段二次贝塞尔曲线路径。它需要2个点。 第一个点是控制点，第二个点是终点。 起始点是当前路径最新的点，当创建二次贝赛尔曲线之前，可以使用 moveTo() 方法进行改变。
+             * @param cpx 控制点的 x 轴坐标。
+             * @param cpy 控制点的 y 轴坐标。
+             * @param x 终点的 x 轴坐标。
+             * @param y 终点的 y 轴坐标。
+             * @version Egret 2.4
+             * @platform Web,Native
+             */
+            p.quadraticCurveTo = function (cpx, cpy, x, y) {
+                this.checkSurface();
+                this.$nativeGraphicsContext.quadraticCurveTo(cpx, cpy, x, y);
+            };
+            /**
+             * @private
+             * 使用直线连接子路径的终点到x，y坐标。
+             * @param x 直线终点的 x 轴坐标。
+             * @param y 直线终点的 y 轴坐标。
+             * @version Egret 2.4
+             * @platform Web,Native
+             */
+            p.lineTo = function (x, y) {
+                this.checkSurface();
+                this.$nativeGraphicsContext.lineTo(x, y);
+                // $cmdManager.setContext(this.$nativeGraphicsContext);
+                // $cmdManager.lineTo(x, y);
+            };
+            /**
+             * @private
+             * 根据当前的填充样式，填充当前或已存在的路径的方法。采取非零环绕或者奇偶环绕规则。
+             * @param fillRule 一种算法，决定点是在路径内还是在路径外。允许的值：
+             * "nonzero": 非零环绕规则， 默认的规则。
+             * "evenodd": 奇偶环绕规则。
+             * @version Egret 2.4
+             * @platform Web,Native
+             */
+            p.fill = function (fillRule) {
+                this.checkSurface();
+                this.$nativeGraphicsContext.fill(fillRule);
+                // $cmdManager.setContext(this.$nativeGraphicsContext);
+                // var s1 = $cmdManager.pushString(fillRule);
+                // $cmdManager.fill(s1);
+            };
+            /**
+             * @private
+             * 使笔点返回到当前子路径的起始点。它尝试从当前点到起始点绘制一条直线。如果图形已经是封闭的或者只有一个点，那么此方法不会做任何操作。
+             * @version Egret 2.4
+             * @platform Web,Native
+             */
+            p.closePath = function () {
+                this.checkSurface();
+                this.$nativeGraphicsContext.closePath();
+                // $cmdManager.setContext(this.$nativeGraphicsContext);
+                // $cmdManager.closePath();
+            };
+            /**
+             * @private
+             * 创建一段矩形路径，矩形的起点位置是 (x, y) ，尺寸为 width 和 height。矩形的4个点通过直线连接，子路径做为闭合的标记，所以你可以填充或者描边矩形。
+             * @param x 矩形起点的 x 轴坐标。
+             * @param y 矩形起点的 y 轴坐标。
+             * @param width 矩形的宽度。
+             * @param height 矩形的高度。
+             * @version Egret 2.4
+             * @platform Web,Native
+             */
+            p.rect = function (x, y, w, h) {
+                this.checkSurface();
+                this.$nativeGraphicsContext.rect(x, y, w, h);
+                // $cmdManager.setContext(this.$nativeGraphicsContext);
+                // $cmdManager.rect(x, y, w, h);
+                this.$clipRect.setTo(x, y, w, h);
+            };
+            /**
+             * @private
+             * 将一个新的子路径的起始点移动到(x，y)坐标
+             * @param x 点的 x 轴
+             * @param y 点的 y 轴
+             * @version Egret 2.4
+             * @platform Web,Native
+             */
+            p.moveTo = function (x, y) {
+                this.checkSurface();
+                this.$nativeGraphicsContext.moveTo(x, y);
+                // $cmdManager.setContext(this.$nativeGraphicsContext);
+                // $cmdManager.moveTo(x, y);
+            };
+            /**
+             * @private
+             * 绘制一个填充矩形。矩形的起点在 (x, y) 位置，矩形的尺寸是 width 和 height ，fillStyle 属性决定矩形的样式。
+             * @param x 矩形起始点的 x 轴坐标。
+             * @param y 矩形起始点的 y 轴坐标。
+             * @param width 矩形的宽度。
+             * @param height 矩形的高度。
+             * @version Egret 2.4
+             * @platform Web,Native
+             */
+            p.fillRect = function (x, y, w, h) {
+                this.checkSurface();
+                this.$nativeGraphicsContext.fillRect(x, y, w, h);
+            };
+            /**
+             * @private
+             * 绘制一段三次贝赛尔曲线路径。该方法需要三个点。 第一、第二个点是控制点，第三个点是结束点。起始点是当前路径的最后一个点，
+             * 绘制贝赛尔曲线前，可以通过调用 moveTo() 进行修改。
+             * @param cp1x 第一个控制点的 x 轴坐标。
+             * @param cp1y 第一个控制点的 y 轴坐标。
+             * @param cp2x 第二个控制点的 x 轴坐标。
+             * @param cp2y 第二个控制点的 y 轴坐标。
+             * @param x 结束点的 x 轴坐标。
+             * @param y 结束点的 y 轴坐标。
+             * @version Egret 2.4
+             * @platform Web,Native
+             */
+            p.bezierCurveTo = function (cp1x, cp1y, cp2x, cp2y, x, y) {
+                this.checkSurface();
+                this.$nativeGraphicsContext.bezierCurveTo(cp1x, cp1y, cp2x, cp2y, x, y);
+            };
+            /**
+             * @private
+             * 根据当前的画线样式，绘制当前或已经存在的路径的方法。
+             * @version Egret 2.4
+             * @platform Web,Native
+             */
+            p.stroke = function () {
+                this.checkSurface();
+                this.$nativeGraphicsContext.stroke();
+            };
+            /**
+             * @private
+             * 使用当前的绘画样式，描绘一个起点在 (x, y) 、宽度为 w 、高度为 h 的矩形的方法。
+             * @param x 矩形起点的 x 轴坐标。
+             * @param y 矩形起点的 y 轴坐标。
+             * @param width 矩形的宽度。
+             * @param height 矩形的高度。
+             * @version Egret 2.4
+             * @platform Web,Native
+             */
+            p.strokeRect = function (x, y, w, h) {
+                //console.log("strokeRect");
+                this.checkSurface();
+                this.$nativeGraphicsContext.strokeRect(x, y, w, h);
+            };
+            /**
+             * @private
+             * 清空子路径列表开始一个新路径。 当你想创建一个新的路径时，调用此方法。
+             * @version Egret 2.4
+             * @platform Web,Native
+             */
+            p.beginPath = function () {
+                this.checkSurface();
+                this.$nativeGraphicsContext.beginPath();
+                // $cmdManager.setContext(this.$nativeGraphicsContext);
+                // $cmdManager.beginPath();
+            };
+            /**
+             * @private
+             * 根据控制点和半径绘制一段圆弧路径，使用直线连接前一个点。
+             * @param x1 第一个控制点的 x 轴坐标。
+             * @param y1 第一个控制点的 y 轴坐标。
+             * @param x2 第二个控制点的 x 轴坐标。
+             * @param y2 第二个控制点的 y 轴坐标。
+             * @param radius 圆弧的半径。
+             * @version Egret 2.4
+             * @platform Web,Native
+             */
+            p.arcTo = function (x1, y1, x2, y2, radius) {
+                this.checkSurface();
+                this.$nativeGraphicsContext.arcTo(x1, y1, x2, y2, radius);
+            };
+            /**
+             * @private
+             * 使用方法参数描述的矩阵多次叠加当前的变换矩阵。
+             * @param a 水平缩放。
+             * @param b 水平倾斜。
+             * @param c 垂直倾斜。
+             * @param d 垂直缩放。
+             * @param tx 水平移动。
+             * @param ty 垂直移动。
+             * @version Egret 2.4
+             * @platform Web,Native
+             */
+            p.transform = function (a, b, c, d, tx, ty) {
+                this.$matrix.append(a, b, c, d, tx, ty);
+                this.setTransformToNative();
+            };
+            /**
+             * @private
+             * 通过在网格中移动 surface 和 surface 原点 x 水平方向、原点 y 垂直方向，添加平移变换
+             * @param x 水平移动。
+             * @param y 垂直移动。
+             * @version Egret 2.4
+             * @platform Web,Native
+             */
+            p.translate = function (x, y) {
+                this.$matrix.translate(x, y);
+                this.setTransformToNative();
+            };
+            /**
+             * @private
+             * 根据 x 水平方向和 y 垂直方向，为 surface 单位添加缩放变换。
+             * @param x 水平方向的缩放因子。
+             * @param y 垂直方向的缩放因子。
+             * @version Egret 2.4
+             * @platform Web,Native
+             */
+            p.scale = function (x, y) {
+                this.$matrix.scale(x, y);
+                this.setTransformToNative();
+            };
+            /**
+             * @private
+             * 在变换矩阵中增加旋转，角度变量表示一个顺时针旋转角度并且用弧度表示。
+             * @param angle 顺时针旋转的弧度。
+             * @version Egret 2.4
+             * @platform Web,Native
+             */
+            p.rotate = function (angle) {
+                this.$matrix.rotate(angle);
+                this.setTransformToNative();
+            };
+            /**
+             * @private
+             * 恢复到最近的绘制样式状态，此状态是通过 save() 保存到”状态栈“中最新的元素。
+             * @version Egret 2.4
+             * @platform Web,Native
+             */
+            p.restore = function () {
+                //console.log("restore");
+                if (this.$saveCount > 0) {
+                    if (this.$saveList.length) {
+                        var data = this.$saveList.pop();
+                        for (var key in data) {
+                            this[key] = data[key];
+                        }
+                        this.setTransformToNative();
+                    }
+                    var index = this.$clipList.indexOf(this.$saveCount);
+                    if (index != -1) {
+                        var length = this.$clipList.length;
+                        this.$clipList.splice(index, length - index);
+                        for (; index < length; index++) {
+                            this.checkSurface();
+                            this.$nativeContext.popClip();
+                        }
+                    }
+                    this.$saveCount--;
+                }
+            };
+            /**
+             * @private
+             * 使用栈保存当前的绘画样式状态，你可以使用 restore() 恢复任何改变。
+             * @version Egret 2.4
+             * @platform Web,Native
+             */
+            p.save = function () {
+                //console.log("save");
+                var transformMatrix = new egret.Matrix();
+                transformMatrix.copyFrom(this.$matrix);
+                this.$saveList.push({
+                    lineWidth: this.$lineWidth,
+                    globalCompositeOperation: this.$globalCompositeOperation,
+                    globalAlpha: this.$globalAlpha,
+                    strokeStyle: this.$strokeStyle,
+                    fillStyle: this.$fillStyle,
+                    font: this.$font,
+                    $matrix: transformMatrix
+                });
+                this.$saveCount++;
+            };
+            /**
+             * @private
+             * 从当前路径创建一个剪切路径。在 clip() 调用之后，绘制的所有信息只会出现在剪切路径内部。
+             * @version Egret 2.4
+             * @platform Web,Native
+             */
+            p.clip = function (fillRule) {
+                if (this.$clipRect.width > 0 && this.$clipRect.height > 0) {
+                    //console.log("push clip" + this.$clipRect.x + " " + this.$clipRect.y + " " + this.$clipRect.width + " " + this.$clipRect.height);
+                    this.checkSurface();
+                    this.$nativeContext.pushClip(this.$clipRect.x, this.$clipRect.y, this.$clipRect.width, this.$clipRect.height);
+                    // $cmdManager.setContext(this.$nativeContext);
+                    // $cmdManager.pushClip(this.$clipRect.x, this.$clipRect.y, this.$clipRect.width, this.$clipRect.height);
+                    this.$clipRect.setEmpty();
+                    this.$clipList.push(this.$saveCount);
+                }
+            };
+            /**
+             * @private
+             * 设置指定矩形区域内（以 点 (x, y) 为起点，范围是(width, height) ）所有像素变成透明，并擦除之前绘制的所有内容。
+             * @param x 矩形起点的 x 轴坐标。
+             * @param y 矩形起点的 y 轴坐标。
+             * @param width 矩形的宽度。
+             * @param height 矩形的高度。
+             * @version Egret 2.4
+             * @platform Web,Native
+             */
+            p.clearRect = function (x, y, width, height) {
+                //console.log("clearScreen");
+                this.checkSurface();
+                this.$nativeContext.clearScreen(0, 0, 0);
+                // $cmdManager.setContext(this.$nativeContext);
+                // $cmdManager.clearScreen(0, 0, 0, 0);
+            };
+            /**
+             * @private
+             * 重新设置当前的变换为单位矩阵，并使用同样的变量调用 transform() 方法。
+             * @param a 水平缩放。
+             * @param b 水平倾斜。
+             * @param c 垂直倾斜。
+             * @param d 垂直缩放。
+             * @param tx 水平移动。
+             * @param ty 垂直移动。
+             * @version Egret 2.4
+             * @platform Web,Native
+             */
+            p.setTransform = function (a, b, c, d, tx, ty) {
+                this.$matrix.setTo(a, b, c, d, tx, ty);
+                this.setTransformToNative();
+            };
+            p.setTransformToNative = function () {
+                var m = this.$matrix;
+                //console.log("setTransformToNative::a=" + m.a + " b=" + m.b + " c=" + m.c + " d=" + m.d + " tx=" + m.tx + " ty=" + m.ty);
+                this.checkSurface();
+                this.$nativeContext.setTransform(m.a, m.b, m.c, m.d, m.tx, m.ty);
+                // $cmdManager.setContext(this.$nativeContext);
+                // $cmdManager.setTransform(m.a, m.b, m.c, m.d, m.tx, m.ty);
+            };
+            /**
+             * @private
+             * 创建一个沿参数坐标指定的直线的渐变。该方法返回一个线性的 GraphicsGradient 对象。
+             * @param x0 起点的 x 轴坐标。
+             * @param y0 起点的 y 轴坐标。
+             * @param x1 终点的 x 轴坐标。
+             * @param y1 终点的 y 轴坐标。
+             * @version Egret 2.4
+             * @platform Web,Native
+             */
+            p.createLinearGradient = function (x0, y0, x1, y1) {
+                this.checkSurface();
+                return this.$nativeGraphicsContext.createLinearGradient(x0, y0, x1, y1);
+            };
+            /**
+             * @private
+             * 根据参数确定的两个圆的坐标，创建一个放射性渐变。该方法返回一个放射性的 GraphicsGradient。
+             * @param x0 开始圆形的 x 轴坐标。
+             * @param y0 开始圆形的 y 轴坐标。
+             * @param r0 开始圆形的半径。
+             * @param x1 结束圆形的 x 轴坐标。
+             * @param y1 结束圆形的 y 轴坐标。
+             * @param r1 结束圆形的半径。
+             * @version Egret 2.4
+             * @platform Web,Native
+             */
+            p.createRadialGradient = function (x0, y0, r0, x1, y1, r1) {
+                this.checkSurface();
+                return this.$nativeGraphicsContext.createRadialGradient(x0, y0, r0, x1, y1, r1);
+            };
+            /**
+             * @private
+             * 在(x,y)位置绘制（填充）文本。
+             * @version Egret 2.4
+             * @platform Web,Native
+             */
+            p.fillText = function (text, x, y, maxWidth) {
+                //console.log("drawText" + text);
+                var font = egret.TextField.default_fontFamily;
+                egret_native.Label.createLabel(font, this.$fontSize, "", this.$hasStrokeText ? this.$lineWidth : 0);
+                // $cmdManager.setContext(egret_native.Label);
+                // var s1 = $cmdManager.pushString(font);
+                // var s2 = $cmdManager.pushString("");
+                // $cmdManager.createLabel(s1, this.$fontSize, s2, this.$hasStrokeText ? this.$lineWidth : 0);
+                this.$hasStrokeText = false;
+                egret_native.Label.drawText(text, x, y);
+                // var s3 = $cmdManager.pushString(text);
+                // $cmdManager.drawText(s3, x, y);
+            };
+            p.strokeText = function (text, x, y, maxWidth) {
+                this.$hasStrokeText = true;
+            };
+            /**
+             * @private
+             * 测量指定文本宽度，返回 TextMetrics 对象。
+             * @version Egret 2.4
+             * @platform Web,Native
+             */
+            p.measureText = function (text) {
+                var font = egret.TextField.default_fontFamily;
+                egret_native.Label.createLabel(font, this.$fontSize, "", this.$hasStrokeText ? this.$lineWidth : 0);
+                // $cmdManager.setContext(egret_native.Label);
+                // var s1 = $cmdManager.pushString(font);
+                // var s2 = $cmdManager.pushString("");
+                // $cmdManager.createLabel(s1, this.$fontSize, s2, this.$hasStrokeText ? this.$lineWidth : 0);
+                return { width: egret_native.Label.getTextSize(text)[0] };
+            };
+            /**
+             * @private
+             * 注意：如果要对绘制的图片进行缩放，出于性能优化考虑，系统不会主动去每次重置imageSmoothingEnabled属性，因此您在调用drawImage()方法前请务必
+             * 确保 imageSmoothingEnabled 已被重置为正常的值，否则有可能沿用上个显示对象绘制过程留下的值。
+             * @version Egret 2.4
+             * @platform Web,Native
+             */
+            p.drawImage = function (image, offsetX, offsetY, width, height, surfaceOffsetX, surfaceOffsetY, surfaceImageWidth, surfaceImageHeight) {
+                var bitmapData;
+                var isNative;
+                if (image.$nativeRenderTexture) {
+                    bitmapData = image.$nativeRenderTexture;
+                    isNative = true;
+                }
+                else {
+                    bitmapData = image;
+                    isNative = false;
+                }
+                if (!bitmapData) {
+                    return;
+                }
+                if (arguments.length == 3) {
+                    surfaceOffsetX = offsetX;
+                    surfaceOffsetY = offsetY;
+                    offsetX = 0;
+                    offsetY = 0;
+                    width = surfaceImageWidth = image.width;
+                    height = surfaceImageHeight = image.height;
+                }
+                else if (arguments.length == 5) {
+                    surfaceOffsetX = offsetX;
+                    surfaceOffsetY = offsetY;
+                    surfaceImageWidth = width;
+                    surfaceImageHeight = height;
+                    offsetX = 0;
+                    offsetY = 0;
+                    width = image.width;
+                    height = image.height;
+                }
+                else {
+                    if (width == void 0) {
+                        width = image.width;
+                    }
+                    if (height == void 0) {
+                        height = image.height;
+                    }
+                    if (surfaceOffsetX == void 0) {
+                        surfaceOffsetX = 0;
+                    }
+                    if (surfaceOffsetY == void 0) {
+                        surfaceOffsetY = 0;
+                    }
+                    if (surfaceImageWidth == void 0) {
+                        surfaceImageWidth = width;
+                    }
+                    if (surfaceImageHeight == void 0) {
+                        surfaceImageHeight = height;
+                    }
+                }
+                //console.log("drawImage::" + offsetX + " " + offsetY + " " + width + " " + height + " " + surfaceOffsetX + " " + surfaceOffsetY + " " + surfaceImageWidth + " " + surfaceImageHeight);
+                this.checkSurface();
+                // var imageAdress;
+                // if(!isNative) {
+                //     if(!bitmapData._native_tex_loc) {
+                //         bitmapData._native_tex_loc = bitmapData.___native_texture__p;
+                //     }
+                //     imageAdress = bitmapData._native_tex_loc;
+                // } else {
+                //     imageAdress = bitmapData.___native_texture__p;
+                // }
+                this.$nativeContext.drawImage(bitmapData, offsetX, offsetY, width, height, surfaceOffsetX, surfaceOffsetY, surfaceImageWidth, surfaceImageHeight);
+                // $cmdManager.setContext(this.$nativeContext);
+                // $cmdManager.drawImage(imageAdress, offsetX, offsetY, width, height, surfaceOffsetX, surfaceOffsetY, surfaceImageWidth, surfaceImageHeight);
+            };
+            /**
+             * @private
+             * 基于指定的源图象(BitmapData)创建一个模板，通过repetition参数指定源图像在什么方向上进行重复，返回一个GraphicsPattern对象。
+             * @param bitmapData 做为重复图像源的 BitmapData 对象。
+             * @param repetition 指定如何重复图像。
+             * 可能的值有："repeat" (两个方向重复),"repeat-x" (仅水平方向重复),"repeat-y" (仅垂直方向重复),"no-repeat" (不重复).
+             * @version Egret 2.4
+             * @platform Web,Native
+             */
+            p.createPattern = function (image, repetition) {
+                return null;
+            };
+            /**
+             * @private
+             * 返回一个 ImageData 对象，用来描述canvas区域隐含的像素数据，这个区域通过矩形表示，起始点为(sx, sy)、宽为sw、高为sh。
+             * @version Egret 2.4
+             * @platform Web,Native
+             */
+            p.getImageData = function (sx, sy, sw, sh) {
+                var res;
+                if (native.$currentSurface == this.surface) {
+                    if (native.$currentSurface != null) {
+                        native.$currentSurface.end();
+                    }
+                }
+                res = this.surface.getImageData(sx, sy, sw, sh);
+                if (res.pixelData) {
+                    res.data = res.pixelData;
+                }
+                return res;
+            };
+            p.checkSurface = function () {
+                //todo 暂时先写这里
+                if (native.$currentSurface != this.surface) {
+                    if (native.$currentSurface != null) {
+                        native.$currentSurface.end();
+                    }
+                    if (this.surface) {
+                        this.surface.begin();
+                    }
+                }
+            };
+            return NativeRenderTextureRenderContext2;
+        }(egret.HashObject));
+        native.NativeRenderTextureRenderContext2 = NativeRenderTextureRenderContext2;
+        egret.registerClass(NativeRenderTextureRenderContext2,'egret.native.NativeRenderTextureRenderContext2');
+    })(native = egret.native || (egret.native = {}));
+})(egret || (egret = {}));
+//////////////////////////////////////////////////////////////////////////////////////
+//
+//  Copyright (c) 2014-present, Egret Technology.
+//  All rights reserved.
+//  Redistribution and use in source and binary forms, with or without
+//  modification, are permitted provided that the following conditions are met:
+//
+//     * Redistributions of source code must retain the above copyright
+//       notice, this list of conditions and the following disclaimer.
+//     * Redistributions in binary form must reproduce the above copyright
+//       notice, this list of conditions and the following disclaimer in the
+//       documentation and/or other materials provided with the distribution.
+//     * Neither the name of the Egret nor the
+//       names of its contributors may be used to endorse or promote products
+//       derived from this software without specific prior written permission.
+//
+//  THIS SOFTWARE IS PROVIDED BY EGRET AND CONTRIBUTORS "AS IS" AND ANY EXPRESS
+//  OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES
+//  OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED.
+//  IN NO EVENT SHALL EGRET AND CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT,
+//  INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT
+//  LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES;LOSS OF USE, DATA,
+//  OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF
+//  LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING
+//  NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE,
+//  EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+//
+//////////////////////////////////////////////////////////////////////////////////////
+var egret;
+(function (egret) {
+    var native;
+    (function (native) {
         /**
          * @private
          * 呈现最终绘图结果的画布
@@ -869,7 +1636,7 @@ var egret;
                 this.$heightReadySet = false;
                 this.$isRoot = false;
                 this.$isDispose = false;
-                this.renderContext = new native.NativeRenderTextureRenderContext();
+                this.renderContext = native.$supportCmdBatch ? new native.NativeRenderTextureRenderContext() : new native.NativeRenderTextureRenderContext2();
             }
             var d = __define,c=NativeRenderTexture,p=c.prototype;
             p.toDataURL = function (type) {
@@ -2320,6 +3087,763 @@ var egret;
 (function (egret) {
     var native;
     (function (native) {
+        var blendModesForGL = {
+            "source-over": [1, 771],
+            "lighter": [770, 1],
+            "destination-out": [0, 771],
+            "destination-in": [0, 770]
+        };
+        /**
+         * @version Egret 2.4
+         * @platform Web,Native
+         * @private
+         */
+        var NativeCanvasRenderContext2 = (function (_super) {
+            __extends(NativeCanvasRenderContext2, _super);
+            function NativeCanvasRenderContext2() {
+                _super.apply(this, arguments);
+                this.$matrix = new egret.Matrix();
+                this.$nativeContext = null;
+                this.$globalCompositeOperation = "source-over";
+                this.$globalAlpha = 1;
+                this.$lineWidth = 0;
+                this.$strokeStyle = "#000000";
+                this.$fillStyle = "#000000";
+                this.$font = "10px sans-serif";
+                this.$fontSize = 10;
+                this.clipRectArray = null;
+                this.$saveList = [];
+                this.$clipRectArray = [];
+                this.$clipRect = new egret.Rectangle();
+                this.$saveCount = 0;
+                this.$clipList = [];
+                this.savedMatrix = new egret.Matrix();
+                this.$hasStrokeText = false;
+            }
+            var d = __define,c=NativeCanvasRenderContext2,p=c.prototype;
+            d(p, "globalCompositeOperation"
+                /**
+                 * @private
+                 * 设置新图像如何绘制到已有的图像上的规制
+                 * @version Egret 2.4
+                 * @platform Web,Native
+                 */
+                ,function () {
+                    return this.$globalCompositeOperation;
+                }
+                ,function (value) {
+                    this.$globalCompositeOperation = value;
+                    var arr = blendModesForGL[value];
+                    if (arr) {
+                        this.$nativeContext.setBlendArg(arr[0], arr[1]);
+                    }
+                }
+            );
+            d(p, "globalAlpha"
+                /**
+                 * @private
+                 * 设置接下来绘图填充的整体透明度
+                 * @version Egret 2.4
+                 * @platform Web,Native
+                 */
+                ,function () {
+                    return this.$globalAlpha;
+                }
+                ,function (value) {
+                    this.$globalAlpha = value;
+                    this.$nativeContext.setGlobalAlpha(value);
+                    // $cmdManager.setContext(this.$nativeContext);
+                    // $cmdManager.setGlobalAlpha(value);
+                }
+            );
+            d(p, "lineWidth"
+                /**
+                 * @private
+                 * 设置线条粗细，以像素为单位。设置为0，负数，Infinity 或 NaN 将会被忽略。
+                 * @default 1
+                 * @version Egret 2.4
+                 * @platform Web,Native
+                 */
+                ,function () {
+                    return this.$lineWidth;
+                }
+                ,function (value) {
+                    //console.log("set lineWidth" + value);
+                    this.$lineWidth = value;
+                    this.$nativeContext.lineWidth = value;
+                    // $cmdManager.setContext(this.$nativeContext);
+                    // $cmdManager.setLineWidth(value);
+                }
+            );
+            d(p, "strokeStyle"
+                /**
+                 * @private
+                 * 设置要在图形边线填充的颜色或样式
+                 * @default "#000000"
+                 * @version Egret 2.4
+                 * @platform Web,Native
+                 */
+                ,function () {
+                    return this.$strokeStyle;
+                }
+                ,function (value) {
+                    this.$strokeStyle = value;
+                    if (value != null) {
+                        if (value.indexOf("rgba") != -1) {
+                            value = this.$parseRGBA(value);
+                        }
+                        else if (value.indexOf("rgb") != -1) {
+                            value = this.$parseRGB(value);
+                        }
+                        egret_native.Label.setStrokeColor(parseInt(value.replace("#", "0x")));
+                    }
+                    this.$nativeContext.strokeStyle = value;
+                    // $cmdManager.setContext(this.$nativeContext);
+                    // var s1 = $cmdManager.pushString(value);
+                    // $cmdManager.setStrokeStyle(s1);
+                }
+            );
+            d(p, "fillStyle"
+                /**
+                 * @private
+                 * 设置要在图形内部填充的颜色或样式
+                 * @default "#000000"
+                 * @version Egret 2.4
+                 * @platform Web,Native
+                 */
+                ,function () {
+                    return this.$fillStyle;
+                }
+                ,function (value) {
+                    this.$fillStyle = value;
+                    if (value != null) {
+                        if (value.indexOf("rgba") != -1) {
+                            value = this.$parseRGBA(value);
+                        }
+                        else if (value.indexOf("rgb") != -1) {
+                            value = this.$parseRGB(value);
+                        }
+                        egret_native.Label.setTextColor(parseInt(value.replace("#", "0x")));
+                    }
+                    this.$nativeContext.fillStyle = value;
+                    // $cmdManager.setContext(this.$nativeContext);
+                    // var s1 = $cmdManager.pushString(value);
+                    // $cmdManager.setFillStyle(s1);
+                }
+            );
+            p.$fillColorStr = function (s) {
+                if (s.length < 2) {
+                    s = "0" + s;
+                }
+                return s;
+            };
+            p.$parseRGBA = function (str) {
+                var index = str.indexOf("(");
+                str = str.slice(index + 1, str.length - 1);
+                var arr = str.split(",");
+                var a = parseInt((parseFloat(arr[3]) * 255)).toString(16);
+                var r = parseInt(arr[0]).toString(16);
+                var g = parseInt(arr[1]).toString(16);
+                var b = parseInt(arr[2]).toString(16);
+                str = "#" + this.$fillColorStr(a) + this.$fillColorStr(r) + this.$fillColorStr(g) + this.$fillColorStr(b);
+                return str;
+            };
+            p.$parseRGB = function (str) {
+                var index = str.indexOf("(");
+                str = str.slice(index + 1, str.length - 1);
+                var arr = str.split(",");
+                var r = parseInt(arr[0]).toString(16);
+                var g = parseInt(arr[1]).toString(16);
+                var b = parseInt(arr[2]).toString(16);
+                str = "#" + this.$fillColorStr(r) + this.$fillColorStr(g) + this.$fillColorStr(b);
+                return str;
+            };
+            d(p, "font"
+                /**
+                 * @private
+                 * 当前的字体样式
+                 * @version Egret 2.4
+                 * @platform Web,Native
+                 */
+                ,function () {
+                    return this.$font;
+                }
+                ,function (value) {
+                    this.$font = value;
+                    var arr = value.split(" ");
+                    var length = arr.length;
+                    for (var i = 0; i < length; i++) {
+                        var txt = arr[i];
+                        if (txt.indexOf("px") != -1) {
+                            this.$fontSize = parseInt(txt.replace("px", ""));
+                            //console.log("set font" + this.$lineWidth);
+                            return;
+                        }
+                    }
+                }
+            );
+            /**
+             * @private
+             * 绘制一段圆弧路径。圆弧路径的圆心在 (x, y) 位置，半径为 r ，根据anticlockwise （默认为顺时针）指定的方向从 startAngle 开始绘制，到 endAngle 结束。
+             * @param x 圆弧中心（圆心）的 x 轴坐标。
+             * @param y 圆弧中心（圆心）的 y 轴坐标。
+             * @param radius 圆弧的半径。
+             * @param startAngle 圆弧的起始点， x轴方向开始计算，单位以弧度表示。
+             * @param endAngle 圆弧的重点， 单位以弧度表示。
+             * @param anticlockwise 如果为 true，逆时针绘制圆弧，反之，顺时针绘制。
+             * @version Egret 2.4
+             * @platform Web,Native
+             */
+            p.arc = function (x, y, radius, startAngle, endAngle, anticlockwise) {
+                this.$nativeContext.arc(x, y, radius, startAngle, endAngle, anticlockwise);
+            };
+            /**
+             * @private
+             * 绘制一段二次贝塞尔曲线路径。它需要2个点。 第一个点是控制点，第二个点是终点。 起始点是当前路径最新的点，当创建二次贝赛尔曲线之前，可以使用 moveTo() 方法进行改变。
+             * @param cpx 控制点的 x 轴坐标。
+             * @param cpy 控制点的 y 轴坐标。
+             * @param x 终点的 x 轴坐标。
+             * @param y 终点的 y 轴坐标。
+             * @version Egret 2.4
+             * @platform Web,Native
+             */
+            p.quadraticCurveTo = function (cpx, cpy, x, y) {
+                //console.log("quadraticCurveTo " + cpx + " " + cpy + " " + x + " " + y);
+                this.$nativeContext.quadraticCurveTo(cpx, cpy, x, y);
+            };
+            /**
+             * @private
+             * 使用直线连接子路径的终点到x，y坐标。
+             * @param x 直线终点的 x 轴坐标。
+             * @param y 直线终点的 y 轴坐标。
+             * @version Egret 2.4
+             * @platform Web,Native
+             */
+            p.lineTo = function (x, y) {
+                //console.log("lineTo " + x + " " + y);
+                this.$nativeContext.lineTo(x, y);
+                // $cmdManager.setContext(this.$nativeContext);
+                // $cmdManager.lineTo(x, y);
+            };
+            /**
+             * @private
+             * 根据当前的填充样式，填充当前或已存在的路径的方法。采取非零环绕或者奇偶环绕规则。
+             * @param fillRule 一种算法，决定点是在路径内还是在路径外。允许的值：
+             * "nonzero": 非零环绕规则， 默认的规则。
+             * "evenodd": 奇偶环绕规则。
+             * @version Egret 2.4
+             * @platform Web,Native
+             */
+            p.fill = function (fillRule) {
+                this.$nativeContext.fill(fillRule);
+                // $cmdManager.setContext(this.$nativeContext);
+                // var s1 = $cmdManager.pushString(fillRule);
+                // $cmdManager.fill(s1);
+            };
+            /**
+             * @private
+             * 使笔点返回到当前子路径的起始点。它尝试从当前点到起始点绘制一条直线。如果图形已经是封闭的或者只有一个点，那么此方法不会做任何操作。
+             * @version Egret 2.4
+             * @platform Web,Native
+             */
+            p.closePath = function () {
+                this.$nativeContext.closePath();
+                // $cmdManager.setContext(this.$nativeContext);
+                // $cmdManager.closePath();
+                if (this.clipRectArray) {
+                    this.$clipRectArray = this.clipRectArray;
+                    this.clipRectArray = null;
+                }
+            };
+            /**
+             * @private
+             * 创建一段矩形路径，矩形的起点位置是 (x, y) ，尺寸为 width 和 height。矩形的4个点通过直线连接，子路径做为闭合的标记，所以你可以填充或者描边矩形。
+             * @param x 矩形起点的 x 轴坐标。
+             * @param y 矩形起点的 y 轴坐标。
+             * @param width 矩形的宽度。
+             * @param height 矩形的高度。
+             * @version Egret 2.4
+             * @platform Web,Native
+             */
+            p.rect = function (x, y, w, h) {
+                this.$nativeContext.rect(x, y, w, h);
+                // $cmdManager.setContext(this.$nativeContext);
+                // $cmdManager.rect(x, y, w, h);
+                this.$clipRectArray.push({ x: x, y: y, w: w, h: h });
+            };
+            /**
+             * @private
+             * 将一个新的子路径的起始点移动到(x，y)坐标
+             * @param x 点的 x 轴
+             * @param y 点的 y 轴
+             * @version Egret 2.4
+             * @platform Web,Native
+             */
+            p.moveTo = function (x, y) {
+                this.$nativeContext.moveTo(x, y);
+                // $cmdManager.setContext(this.$nativeContext);
+                // $cmdManager.moveTo(x, y);
+            };
+            /**
+             * @private
+             * 绘制一个填充矩形。矩形的起点在 (x, y) 位置，矩形的尺寸是 width 和 height ，fillStyle 属性决定矩形的样式。
+             * @param x 矩形起始点的 x 轴坐标。
+             * @param y 矩形起始点的 y 轴坐标。
+             * @param width 矩形的宽度。
+             * @param height 矩形的高度。
+             * @version Egret 2.4
+             * @platform Web,Native
+             */
+            p.fillRect = function (x, y, w, h) {
+                this.$nativeContext.fillRect(x, y, w, h);
+            };
+            /**
+             * @private
+             * 绘制一段三次贝赛尔曲线路径。该方法需要三个点。 第一、第二个点是控制点，第三个点是结束点。起始点是当前路径的最后一个点，
+             * 绘制贝赛尔曲线前，可以通过调用 moveTo() 进行修改。
+             * @param cp1x 第一个控制点的 x 轴坐标。
+             * @param cp1y 第一个控制点的 y 轴坐标。
+             * @param cp2x 第二个控制点的 x 轴坐标。
+             * @param cp2y 第二个控制点的 y 轴坐标。
+             * @param x 结束点的 x 轴坐标。
+             * @param y 结束点的 y 轴坐标。
+             * @version Egret 2.4
+             * @platform Web,Native
+             */
+            p.bezierCurveTo = function (cp1x, cp1y, cp2x, cp2y, x, y) {
+                this.$nativeContext.bezierCurveTo(cp1x, cp1y, cp2x, cp2y, x, y);
+            };
+            /**
+             * @private
+             * 根据当前的画线样式，绘制当前或已经存在的路径的方法。
+             * @version Egret 2.4
+             * @platform Web,Native
+             */
+            p.stroke = function () {
+                this.$nativeContext.stroke();
+            };
+            /**
+             * @private
+             * 使用当前的绘画样式，描绘一个起点在 (x, y) 、宽度为 w 、高度为 h 的矩形的方法。
+             * @param x 矩形起点的 x 轴坐标。
+             * @param y 矩形起点的 y 轴坐标。
+             * @param w 矩形的宽度。
+             * @param h 矩形的高度。
+             * @version Egret 2.4
+             * @platform Web,Native
+             */
+            p.strokeRect = function (x, y, w, h) {
+                //console.log("strokeRect");
+                this.$nativeContext.strokeRect(x, y, w, h);
+            };
+            /**
+             * @private
+             * 清空子路径列表开始一个新路径。 当你想创建一个新的路径时，调用此方法。
+             * @version Egret 2.4
+             * @platform Web,Native
+             */
+            p.beginPath = function () {
+                this.$nativeContext.beginPath();
+                // $cmdManager.setContext(this.$nativeContext);
+                // $cmdManager.beginPath();
+                this.clipRectArray = this.$clipRectArray.concat();
+            };
+            /**
+             * @private
+             * 根据控制点和半径绘制一段圆弧路径，使用直线连接前一个点。
+             * @param x1 第一个控制点的 x 轴坐标。
+             * @param y1 第一个控制点的 y 轴坐标。
+             * @param x2 第二个控制点的 x 轴坐标。
+             * @param y2 第二个控制点的 y 轴坐标。
+             * @param radius 圆弧的半径。
+             * @version Egret 2.4
+             * @platform Web,Native
+             */
+            p.arcTo = function (x1, y1, x2, y2, radius) {
+                this.$nativeContext.arcTo(x1, y1, x2, y2, radius);
+            };
+            /**
+             * @private
+             * 使用方法参数描述的矩阵多次叠加当前的变换矩阵。
+             * @param a 水平缩放。
+             * @param b 水平倾斜。
+             * @param c 垂直倾斜。
+             * @param d 垂直缩放。
+             * @param tx 水平移动。
+             * @param ty 垂直移动。
+             * @version Egret 2.4
+             * @platform Web,Native
+             */
+            p.transform = function (a, b, c, d, tx, ty) {
+                this.$matrix.append(a, b, c, d, tx, ty);
+                this.setTransformToNative();
+            };
+            /**
+             * @private
+             * 通过在网格中移动 surface 和 surface 原点 x 水平方向、原点 y 垂直方向，添加平移变换
+             * @param x 水平移动。
+             * @param y 垂直移动。
+             * @version Egret 2.4
+             * @platform Web,Native
+             */
+            p.translate = function (x, y) {
+                this.$matrix.translate(x, y);
+                this.setTransformToNative();
+            };
+            /**
+             * @private
+             * 根据 x 水平方向和 y 垂直方向，为 surface 单位添加缩放变换。
+             * @param x 水平方向的缩放因子。
+             * @param y 垂直方向的缩放因子。
+             * @version Egret 2.4
+             * @platform Web,Native
+             */
+            p.scale = function (x, y) {
+                this.$matrix.scale(x, y);
+                this.setTransformToNative();
+            };
+            /**
+             * @private
+             * 在变换矩阵中增加旋转，角度变量表示一个顺时针旋转角度并且用弧度表示。
+             * @param angle 顺时针旋转的弧度。
+             * @version Egret 2.4
+             * @platform Web,Native
+             */
+            p.rotate = function (angle) {
+                this.$matrix.rotate(angle);
+                this.setTransformToNative();
+            };
+            /**
+             * @private
+             * 恢复到最近的绘制样式状态，此状态是通过 save() 保存到”状态栈“中最新的元素。
+             * @version Egret 2.4
+             * @platform Web,Native
+             */
+            p.restore = function () {
+                //console.log("restore");
+                if (this.$saveList.length) {
+                    var data = this.$saveList.pop();
+                    for (var key in data) {
+                        this[key] = data[key];
+                    }
+                    this.setTransformToNative();
+                    this.$nativeContext.restore();
+                    // $cmdManager.setContext(this.$nativeContext);
+                    // $cmdManager.restore();
+                    this.clipRectArray = null;
+                }
+            };
+            /**
+             * @private
+             * 使用栈保存当前的绘画样式状态，你可以使用 restore() 恢复任何改变。
+             * @version Egret 2.4
+             * @platform Web,Native
+             */
+            p.save = function () {
+                //console.log("save");
+                var transformMatrix = new egret.Matrix();
+                transformMatrix.copyFrom(this.$matrix);
+                this.$saveList.push({
+                    lineWidth: this.$lineWidth,
+                    globalCompositeOperation: this.$globalCompositeOperation,
+                    globalAlpha: this.$globalAlpha,
+                    strokeStyle: this.$strokeStyle,
+                    fillStyle: this.$fillStyle,
+                    font: this.$font,
+                    $matrix: transformMatrix,
+                    $clipRectArray: this.$clipRectArray.concat()
+                });
+                this.$nativeContext.save();
+                // $cmdManager.setContext(this.$nativeContext);
+                // $cmdManager.save();
+            };
+            /**
+             * @private
+             * 从当前路径创建一个剪切路径。在 clip() 调用之后，绘制的所有信息只会出现在剪切路径内部。
+             * @version Egret 2.4
+             * @platform Web,Native
+             */
+            p.clip = function (fillRule) {
+                if (this.$clipRectArray.length > 0) {
+                    var arr = [];
+                    for (var i = 0; i < this.$clipRectArray.length; i++) {
+                        var clipRect = this.$clipRectArray[i];
+                        arr.push(clipRect.x);
+                        arr.push(clipRect.y);
+                        arr.push(clipRect.w);
+                        arr.push(clipRect.h);
+                    }
+                    //console.log("pushRectStencils " + arr.toString());
+                    this.$nativeContext.pushRectStencils(arr);
+                    // $cmdManager.setContext(this.$nativeContext);
+                    // $cmdManager.pushRectStencils(arr);
+                    this.$clipRectArray.length = 0;
+                }
+            };
+            /**
+             * @private
+             * 设置指定矩形区域内（以 点 (x, y) 为起点，范围是(width, height) ）所有像素变成透明，并擦除之前绘制的所有内容。
+             * @param x 矩形起点的 x 轴坐标。
+             * @param y 矩形起点的 y 轴坐标。
+             * @param width 矩形的宽度。
+             * @param height 矩形的高度。
+             * @version Egret 2.4
+             * @platform Web,Native
+             */
+            p.clearRect = function (x, y, width, height) {
+                //console.log("clearRect x:" + x + " y:" +  y + " width:" + width + " height:" + height);
+                this.$nativeContext.clearRect(x, y, width, height);
+                // $cmdManager.setContext(this.$nativeContext);
+                // $cmdManager.clearRect(x, y, width, height);
+            };
+            /**
+             * @private
+             * 重新设置当前的变换为单位矩阵，并使用同样的变量调用 transform() 方法。
+             * @param a 水平缩放。
+             * @param b 水平倾斜。
+             * @param c 垂直倾斜。
+             * @param d 垂直缩放。
+             * @param tx 水平移动。
+             * @param ty 垂直移动。
+             * @version Egret 2.4
+             * @platform Web,Native
+             */
+            p.setTransform = function (a, b, c, d, tx, ty) {
+                this.$matrix.setTo(a, b, c, d, tx, ty);
+                this.setTransformToNative();
+            };
+            p.setTransformToNative = function () {
+                var m = this.$matrix;
+                //console.log("setTransformToNative::a=" + m.a + " b=" + m.b + " c=" + m.c + " d=" + m.d + " tx=" + m.tx + " ty=" + m.ty);
+                this.$nativeContext.setTransform(m.a, m.b, m.c, m.d, m.tx, m.ty);
+                // $cmdManager.setContext(this.$nativeContext);
+                // $cmdManager.setTransform(m.a, m.b, m.c, m.d, m.tx, m.ty);
+            };
+            /**
+             * @private
+             * 保存矩阵，这里只能保存一次，嵌套无效
+             */
+            p.saveTransform = function () {
+                this.savedMatrix.copyFrom(this.$matrix);
+            };
+            /**
+             * @private
+             * 保存矩阵，这里只能保存一次，嵌套无效
+             */
+            p.restoreTransform = function () {
+                this.$matrix.copyFrom(this.savedMatrix);
+            };
+            /**
+             * @private
+             * 创建一个沿参数坐标指定的直线的渐变。该方法返回一个线性的 GraphicsGradient 对象。
+             * @param x0 起点的 x 轴坐标。
+             * @param y0 起点的 y 轴坐标。
+             * @param x1 终点的 x 轴坐标。
+             * @param y1 终点的 y 轴坐标。
+             * @version Egret 2.4
+             * @platform Web,Native
+             */
+            p.createLinearGradient = function (x0, y0, x1, y1) {
+                return this.$nativeContext.createLinearGradient(x0, y0, x1, y1);
+            };
+            /**
+             * @private
+             * 根据参数确定的两个圆的坐标，创建一个放射性渐变。该方法返回一个放射性的 GraphicsGradient。
+             * @param x0 开始圆形的 x 轴坐标。
+             * @param y0 开始圆形的 y 轴坐标。
+             * @param r0 开始圆形的半径。
+             * @param x1 结束圆形的 x 轴坐标。
+             * @param y1 结束圆形的 y 轴坐标。
+             * @param r1 结束圆形的半径。
+             * @version Egret 2.4
+             * @platform Web,Native
+             */
+            p.createRadialGradient = function (x0, y0, r0, x1, y1, r1) {
+                return this.$nativeContext.createRadialGradient(x0, y0, r0, x1, y1, r1);
+            };
+            /**
+             * @private
+             * 在(x,y)位置绘制（填充）文本。
+             * @version Egret 2.4
+             * @platform Web,Native
+             */
+            p.fillText = function (text, x, y, maxWidth) {
+                //console.log("drawText" + text);
+                var font = egret.TextField.default_fontFamily;
+                this.$nativeContext.createLabel(font, this.$fontSize, "", this.$hasStrokeText ? this.$lineWidth : 0);
+                // $cmdManager.setContext(this.$nativeContext);
+                // var s1 = $cmdManager.pushString(font);
+                // var s2 = $cmdManager.pushString("");
+                // $cmdManager.createLabel(s1, this.$fontSize, s2, this.$hasStrokeText ? this.$lineWidth : 0);
+                this.$hasStrokeText = false;
+                this.$nativeContext.drawText(text, x, y);
+                // var s3 = $cmdManager.pushString(text);
+                // $cmdManager.drawText(s3, x, y);
+            };
+            p.strokeText = function (text, x, y, maxWidth) {
+                this.$hasStrokeText = true;
+            };
+            /**
+             * @private
+             * 测量指定文本宽度，返回 TextMetrics 对象。
+             * @version Egret 2.4
+             * @platform Web,Native
+             */
+            p.measureText = function (text) {
+                var font = egret.TextField.default_fontFamily;
+                egret_native.Label.createLabel(font, this.$fontSize, "", this.$hasStrokeText ? this.$lineWidth : 0);
+                // $cmdManager.setContext(egret_native.Label);
+                // var s1 = $cmdManager.pushString(font);
+                // var s2 = $cmdManager.pushString("");
+                // $cmdManager.createLabel(s1, this.$fontSize, s2, this.$hasStrokeText ? this.$lineWidth : 0);
+                return { width: egret_native.Label.getTextSize(text)[0] };
+            };
+            /**
+             * @private
+             * 注意：如果要对绘制的图片进行缩放，出于性能优化考虑，系统不会主动去每次重置imageSmoothingEnabled属性，因此您在调用drawImage()方法前请务必
+             * 确保 imageSmoothingEnabled 已被重置为正常的值，否则有可能沿用上个显示对象绘制过程留下的值。
+             * @version Egret 2.4
+             * @platform Web,Native
+             */
+            p.drawImage = function (image, offsetX, offsetY, width, height, surfaceOffsetX, surfaceOffsetY, surfaceImageWidth, surfaceImageHeight) {
+                var bitmapData;
+                var isNative;
+                if (image.$nativeCanvas) {
+                    bitmapData = image.$nativeCanvas;
+                    isNative = true;
+                }
+                else {
+                    bitmapData = image;
+                    isNative = false;
+                }
+                if (!bitmapData) {
+                    return;
+                }
+                if (arguments.length == 3) {
+                    surfaceOffsetX = offsetX;
+                    surfaceOffsetY = offsetY;
+                    offsetX = 0;
+                    offsetY = 0;
+                    width = surfaceImageWidth = image.width;
+                    height = surfaceImageHeight = image.height;
+                }
+                else if (arguments.length == 5) {
+                    surfaceOffsetX = offsetX;
+                    surfaceOffsetY = offsetY;
+                    surfaceImageWidth = width;
+                    surfaceImageHeight = height;
+                    offsetX = 0;
+                    offsetY = 0;
+                    width = image.width;
+                    height = image.height;
+                }
+                else {
+                    if (!width) {
+                        width = image.width;
+                    }
+                    if (!height) {
+                        height = image.height;
+                    }
+                    if (!surfaceOffsetX) {
+                        surfaceOffsetX = 0;
+                    }
+                    if (!surfaceOffsetY) {
+                        surfaceOffsetY = 0;
+                    }
+                    if (!surfaceImageWidth) {
+                        surfaceImageWidth = width;
+                    }
+                    if (!surfaceImageHeight) {
+                        surfaceImageHeight = height;
+                    }
+                }
+                //console.log("drawImage::" + offsetX + " " + offsetY + " " + width + " " + height + " " + surfaceOffsetX + " " + surfaceOffsetY + " " + surfaceImageWidth + " " + surfaceImageHeight);
+                //console.log("drawImage::" + bitmapData);
+                this.$nativeContext.drawImage(bitmapData, offsetX, offsetY, width, height, surfaceOffsetX, surfaceOffsetY, surfaceImageWidth, surfaceImageHeight);
+                // var imageAdress;
+                // if(!isNative) {
+                //     if(!bitmapData._native_tex_loc) {
+                //         bitmapData._native_tex_loc = bitmapData.___native_texture__p;
+                //     }
+                //     imageAdress = bitmapData._native_tex_loc;
+                // } else {
+                //     imageAdress = bitmapData.___native_texture__p;
+                // }
+                // $cmdManager.setContext(this.$nativeContext);
+                // $cmdManager.drawImage(imageAdress, offsetX, offsetY, width, height, surfaceOffsetX, surfaceOffsetY, surfaceImageWidth, surfaceImageHeight);
+            };
+            /**
+             * @private
+             * 基于指定的源图象(BitmapData)创建一个模板，通过repetition参数指定源图像在什么方向上进行重复，返回一个GraphicsPattern对象。
+             * @param bitmapData 做为重复图像源的 BitmapData 对象。
+             * @param repetition 指定如何重复图像。
+             * 可能的值有："repeat" (两个方向重复),"repeat-x" (仅水平方向重复),"repeat-y" (仅垂直方向重复),"no-repeat" (不重复).
+             * @version Egret 2.4
+             * @platform Web,Native
+             */
+            p.createPattern = function (image, repetition) {
+                return null;
+            };
+            /**
+             * @private
+             * 返回一个 ImageData 对象，用来描述canvas区域隐含的像素数据，这个区域通过矩形表示，起始点为(sx, sy)、宽为sw、高为sh。
+             * @version Egret 2.4
+             * @platform Web,Native
+             */
+            p.getImageData = function (sx, sy, sw, sh) {
+                var res;
+                if (sx != Math.floor(sx)) {
+                    sx = Math.floor(sx);
+                    sw++;
+                }
+                if (sy != Math.floor(sy)) {
+                    sy = Math.floor(sy);
+                    sh++;
+                }
+                res = this.$nativeContext.getPixels(sx, sy, sw, sh);
+                if (res.pixelData) {
+                    res.data = res.pixelData;
+                }
+                return res;
+            };
+            return NativeCanvasRenderContext2;
+        }(egret.HashObject));
+        native.NativeCanvasRenderContext2 = NativeCanvasRenderContext2;
+        egret.registerClass(NativeCanvasRenderContext2,'egret.native.NativeCanvasRenderContext2');
+    })(native = egret.native || (egret.native = {}));
+})(egret || (egret = {}));
+//////////////////////////////////////////////////////////////////////////////////////
+//
+//  Copyright (c) 2014-present, Egret Technology.
+//  All rights reserved.
+//  Redistribution and use in source and binary forms, with or without
+//  modification, are permitted provided that the following conditions are met:
+//
+//     * Redistributions of source code must retain the above copyright
+//       notice, this list of conditions and the following disclaimer.
+//     * Redistributions in binary form must reproduce the above copyright
+//       notice, this list of conditions and the following disclaimer in the
+//       documentation and/or other materials provided with the distribution.
+//     * Neither the name of the Egret nor the
+//       names of its contributors may be used to endorse or promote products
+//       derived from this software without specific prior written permission.
+//
+//  THIS SOFTWARE IS PROVIDED BY EGRET AND CONTRIBUTORS "AS IS" AND ANY EXPRESS
+//  OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES
+//  OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED.
+//  IN NO EVENT SHALL EGRET AND CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT,
+//  INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT
+//  LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES;LOSS OF USE, DATA,
+//  OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF
+//  LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING
+//  NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE,
+//  EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+//
+//////////////////////////////////////////////////////////////////////////////////////
+var egret;
+(function (egret) {
+    var native;
+    (function (native) {
         /**
          * @private
          * 呈现最终绘图结果的画布
@@ -2333,7 +3857,7 @@ var egret;
                 _super.call(this);
                 this.$width = 0;
                 this.$height = 0;
-                this.renderContext = new native.NativeCanvasRenderContext();
+                this.renderContext = native.$supportCmdBatch ? new native.NativeCanvasRenderContext() : new native.NativeCanvasRenderContext2();
             }
             var d = __define,c=NativeCanvas,p=c.prototype;
             p.toDataURL = function (type) {
@@ -2368,9 +3892,13 @@ var egret;
                                 egret_native.setScreenCanvas(this.$nativeCanvas);
                             }
                             var context = this.$nativeCanvas.getContext("2d");
-                            // old context.clearScreen(0, 0, 0, 0);
-                            native.$cmdManager.setContext(context);
-                            native.$cmdManager.clearScreen(0, 0, 0, 0);
+                            if (native.$supportCmdBatch) {
+                                native.$cmdManager.setContext(context);
+                                native.$cmdManager.clearScreen(0, 0, 0, 0);
+                            }
+                            else {
+                                context.clearScreen(0, 0, 0, 0);
+                            }
                             this.renderContext.$nativeContext = context;
                         }
                         else {
@@ -2396,9 +3924,13 @@ var egret;
                                 egret_native.setScreenCanvas(this.$nativeCanvas);
                             }
                             var context = this.$nativeCanvas.getContext("2d");
-                            // old context.clearScreen(0, 0, 0, 0);
-                            native.$cmdManager.setContext(context);
-                            native.$cmdManager.clearScreen(0, 0, 0, 0);
+                            if (native.$supportCmdBatch) {
+                                native.$cmdManager.setContext(context);
+                                native.$cmdManager.clearScreen(0, 0, 0, 0);
+                            }
+                            else {
+                                context.clearScreen(0, 0, 0, 0);
+                            }
                             this.renderContext.$nativeContext = context;
                         }
                         else {
@@ -2844,6 +4376,11 @@ var egret;
          * @private
          */
         native.$supportCanvas = egret_native.Canvas ? true : false;
+        /**
+         * @private
+         * 判断当前runtime版本是否支持cmdBatch
+         */
+        native.$supportCmdBatch = egret_native.sendToC ? true : false;
         var isRunning = false;
         var playerList = [];
         function runEgret(options) {
@@ -2867,9 +4404,11 @@ var egret;
             catch (e) {
             }
             var ticker = egret.sys.$ticker;
-            var mainLoop = function () {
+            var mainLoop = native.$supportCmdBatch ? function () {
                 ticker.update();
                 native.$cmdManager.flush();
+            } : function () {
+                ticker.update();
             };
             egret_native.executeMainLoop(mainLoop, ticker);
             if (!egret.sys.screenAdapter) {
