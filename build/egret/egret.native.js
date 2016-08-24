@@ -4377,6 +4377,15 @@ var egret;
              * @returns
              */
             function setItem(key, value) {
+                if (value === undefined) {
+                    value = "undefined";
+                }
+                else if (value === null) {
+                    value = "null";
+                }
+                else {
+                    value = value.toString();
+                }
                 localStorageData[key] = value;
                 try {
                     save();

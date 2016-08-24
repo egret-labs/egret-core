@@ -49,6 +49,15 @@ module egret.localStorage.native {
      * @returns
      */
     function setItem(key:string, value:string):boolean {
+        if(value === undefined) {
+            value = "undefined";
+        }
+        else if(value === null) {
+            value = "null";
+        }
+        else {
+            value = value.toString();
+        }
         localStorageData[key] = value;
         try {
             save();
