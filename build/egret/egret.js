@@ -6578,8 +6578,8 @@ var egret;
             this._offsetY = offsetY;
             this._textureWidth = textureWidth;
             this._textureHeight = textureHeight;
-            this._sourceWidth = sourceWidth;
-            this._sourceHeight = sourceHeight;
+            this._sourceWidth = sourceWidth / scale;
+            this._sourceHeight = sourceHeight / scale;
             //todo
             Texture.$invalidate(this);
         };
@@ -15203,8 +15203,8 @@ var egret;
                     BitmapNode.$updateTextureDataWithScale9Grid(node, scale9Grid, bitmapX, bitmapY, bitmapWidth, bitmapHeight, offsetX, offsetY, textureWidth, textureHeight, destW, destH);
                 }
                 else if (fillMode == egret.BitmapFillMode.SCALE) {
-                    var tsX = destW / textureWidth;
-                    var tsY = destH / textureHeight;
+                    var tsX = destW / textureWidth * scale;
+                    var tsY = destH / textureHeight * scale;
                     node.drawImage(bitmapX, bitmapY, bitmapWidth, bitmapHeight, offsetX * tsX, offsetY * tsY, tsX * bitmapWidth, tsY * bitmapHeight);
                 }
                 else if (fillMode == egret.BitmapFillMode.CLIP) {

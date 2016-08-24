@@ -236,8 +236,8 @@ module egret {
             this._textureWidth = textureWidth;
             this._textureHeight = textureHeight;
 
-            this._sourceWidth = sourceWidth;
-            this._sourceHeight = sourceHeight;
+            this._sourceWidth = sourceWidth / scale;
+            this._sourceHeight = sourceHeight / scale;
 
             //todo
             Texture.$invalidate(this);
