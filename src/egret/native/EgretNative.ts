@@ -40,6 +40,480 @@ module egret.native {
      */
     export var $supportCmdBatch = egret_native.sendToC ? true : false;
 
+    /*
+     * @private
+     * 命令控制器
+     * */
+    class CmdManager {
+        /*
+         * 存储绘制命令的 array buffer
+         **/
+        private maxArrayBufferLen = 80000;
+
+        private arrayBuffer:ArrayBuffer = new ArrayBuffer(this.maxArrayBufferLen * 4);
+        private uint32View:Uint32Array = new Uint32Array(this.arrayBuffer);
+        private float32View:Float32Array = new Float32Array(this.arrayBuffer);
+
+        private arrayBufferLen:number = 0;
+
+        /*
+         * 存储字符串的数组
+         */
+        private strArray:Array<string> = new Array();
+
+        /*
+         * native上下文
+         */
+        private context:any;
+
+        /*
+         * 上传绘制命令到C
+         */
+        public flush() {
+            egret_native.sendToC(this.float32View, this.arrayBufferLen, this.strArray);
+
+            this.clear();
+        }
+
+        /*
+         * 切换native上下文
+         * native绘制需要在自身的上下文进行绘制
+         */
+        public setContext(ctx:any):void {
+            if(this.context != ctx) {
+                if(this.arrayBufferLen + 3 > this.maxArrayBufferLen) {
+                    this.flush();
+                }
+
+                this.context = ctx;
+                var uint32View = this.uint32View;
+                var arrayBufferLen = this.arrayBufferLen;
+                uint32View[arrayBufferLen++] = 1000;
+
+                // uint32View[arrayBufferLen++] = ctx.___native_texture__p;
+                // 兼容64位
+                var addr = ctx.___native_texture__p;
+                uint32View[arrayBufferLen++] = (addr / 4294967296) >>> 0;
+                uint32View[arrayBufferLen++] = (addr & 4294967295) >>> 0;
+                // uint32View[arrayBufferLen++] = addr >> 32;
+                // uint32View[arrayBufferLen++] = addr & 4294967295;
+
+                this.arrayBufferLen = arrayBufferLen;
+            }
+        }
+
+        /*
+         * 清空绘制命令
+         */
+        private clear() {
+            this.arrayBufferLen = 0;
+            this.strArray.length = 0;
+        }
+
+        /*
+         * 压入一个字符串并返回索引 
+         */
+        public pushString(str:string):number {
+            var array = this.strArray;
+            var len = array.length;
+            array[len] = str;
+            return len;
+        }
+
+        //------绘制命令 start-------------
+
+        public clearScreen(i1:number, i2:number, i3:number, i4:number):void {
+            if(this.arrayBufferLen + 5 > this.maxArrayBufferLen) {
+                this.flush();
+            }
+
+            var uint32View = this.uint32View;
+            var arrayBufferLen = this.arrayBufferLen;
+
+            uint32View[arrayBufferLen++] = 100;
+
+            uint32View[arrayBufferLen++] = i1;
+            uint32View[arrayBufferLen++] = i2;
+            uint32View[arrayBufferLen++] = i3;
+            uint32View[arrayBufferLen++] = i4;
+
+            this.arrayBufferLen = arrayBufferLen;
+        }
+
+        public drawImage(i1:number, f1:number, f2:number, f3:number, f4:number, f5:number, f6:number, f7:number, f8:number):void {
+            if(this.arrayBufferLen + 11 > this.maxArrayBufferLen) {
+                this.flush();
+            }
+
+            var uint32View = this.uint32View;
+            var float32View = this.float32View;
+            var arrayBufferLen = this.arrayBufferLen;
+
+            uint32View[arrayBufferLen++] = 101;
+
+            // uint32View[arrayBufferLen++] = i1;
+            // 兼容64位
+            // uint32View[arrayBufferLen++] = i1 >> 32;
+            // uint32View[arrayBufferLen++] = i1 & 4294967295;
+            uint32View[arrayBufferLen++] = (i1 / 4294967296) >>> 0;
+            uint32View[arrayBufferLen++] = (i1 & 4294967295) >>> 0;
+
+            float32View[arrayBufferLen++] = f1;
+            float32View[arrayBufferLen++] = f2;
+            float32View[arrayBufferLen++] = f3;
+            float32View[arrayBufferLen++] = f4;
+            float32View[arrayBufferLen++] = f5;
+            float32View[arrayBufferLen++] = f6;
+            float32View[arrayBufferLen++] = f7;
+            float32View[arrayBufferLen++] = f8;
+
+            this.arrayBufferLen = arrayBufferLen;
+        }
+
+        public setTransform(f1:number, f2:number, f3:number, f4:number, f5:number, f6:number):void {
+            if(this.arrayBufferLen + 7 > this.maxArrayBufferLen) {
+                this.flush();
+            }
+
+            var uint32View = this.uint32View;
+            var float32View = this.float32View;
+            var arrayBufferLen = this.arrayBufferLen;
+
+            uint32View[arrayBufferLen++] = 103;
+
+            float32View[arrayBufferLen++] = f1;
+            float32View[arrayBufferLen++] = f2;
+            float32View[arrayBufferLen++] = f3;
+            float32View[arrayBufferLen++] = f4;
+            float32View[arrayBufferLen++] = f5;
+            float32View[arrayBufferLen++] = f6;
+
+            this.arrayBufferLen = arrayBufferLen;
+        }
+
+        public setGlobalAlpha(f1:number):void {
+            if(this.arrayBufferLen + 2 > this.maxArrayBufferLen) {
+                this.flush();
+            }
+
+            var uint32View = this.uint32View;
+            var float32View = this.float32View;
+            var arrayBufferLen = this.arrayBufferLen;
+
+            uint32View[arrayBufferLen++] = 106;
+
+            float32View[arrayBufferLen++] = f1;
+
+            this.arrayBufferLen = arrayBufferLen;
+        }
+
+        public pushRectStencils(array:any):void {
+            var len = array.length;
+
+            if(this.arrayBufferLen + len + 1 > this.maxArrayBufferLen) {
+                this.flush();
+            }
+
+            var uint32View = this.uint32View;
+            var float32View = this.float32View;
+            var arrayBufferLen = this.arrayBufferLen;
+
+            uint32View[arrayBufferLen++] = 113;
+
+            uint32View[arrayBufferLen++] = len;
+            for(var i = 0; i < len; i++) {
+                float32View[arrayBufferLen++] = array[i];
+            }
+
+            this.arrayBufferLen = arrayBufferLen;
+        }
+
+        public restore():void {
+            if(this.arrayBufferLen + 1 > this.maxArrayBufferLen) {
+                this.flush();
+            }
+
+            this.uint32View[this.arrayBufferLen++] = 116;
+        }
+
+        public save():void {
+            if(this.arrayBufferLen + 1 > this.maxArrayBufferLen) {
+                this.flush();
+            }
+
+            this.uint32View[this.arrayBufferLen++] = 117;
+        }
+
+        public setBlendArg(f1:number, f2:number):void {
+            if(this.arrayBufferLen + 3 > this.maxArrayBufferLen) {
+                this.flush();
+            }
+
+            var uint32View = this.uint32View;
+            var float32View = this.float32View;
+            var arrayBufferLen = this.arrayBufferLen;
+
+            uint32View[arrayBufferLen++] = 120;
+
+            float32View[arrayBufferLen++] = f1;
+            float32View[arrayBufferLen++] = f2;
+
+            this.arrayBufferLen = arrayBufferLen;
+        }
+
+        public beginPath():void {
+            if(this.arrayBufferLen + 1 > this.maxArrayBufferLen) {
+                this.flush();
+            }
+
+            this.uint32View[this.arrayBufferLen++] = 204;
+        }
+
+        public closePath():void {
+            if(this.arrayBufferLen + 1 > this.maxArrayBufferLen) {
+                this.flush();
+            }
+
+            this.uint32View[this.arrayBufferLen++] = 205;
+        }
+
+        public rect(f1:number, f2:number, f3:number, f4:number):void {
+            if(this.arrayBufferLen + 5 > this.maxArrayBufferLen) {
+                this.flush();
+            }
+
+            var uint32View = this.uint32View;
+            var float32View = this.float32View;
+            var arrayBufferLen = this.arrayBufferLen;
+
+            uint32View[arrayBufferLen++] = 210;
+
+            float32View[arrayBufferLen++] = f1;
+            float32View[arrayBufferLen++] = f2;
+            float32View[arrayBufferLen++] = f3;
+            float32View[arrayBufferLen++] = f4;
+
+            this.arrayBufferLen = arrayBufferLen;
+        }
+
+        public clearRect(f1:number, f2:number, f3:number, f4:number):void {
+            if(this.arrayBufferLen + 5 > this.maxArrayBufferLen) {
+                this.flush();
+            }
+
+            var uint32View = this.uint32View;
+            var float32View = this.float32View;
+            var arrayBufferLen = this.arrayBufferLen;
+
+            uint32View[arrayBufferLen++] = 214;
+
+            float32View[arrayBufferLen++] = f1;
+            float32View[arrayBufferLen++] = f2;
+            float32View[arrayBufferLen++] = f3;
+            float32View[arrayBufferLen++] = f4;
+
+            this.arrayBufferLen = arrayBufferLen;
+        }
+
+        public createLabel(i1:number, f1:number, i2:number, f2:number):void {
+            if(this.arrayBufferLen + 5 > this.maxArrayBufferLen) {
+                this.flush();
+            }
+
+            var uint32View = this.uint32View;
+            var float32View = this.float32View;
+            var arrayBufferLen = this.arrayBufferLen;
+
+            uint32View[arrayBufferLen++] = 300;
+
+            uint32View[arrayBufferLen++] = i1;
+            float32View[arrayBufferLen++] = f1;
+            uint32View[arrayBufferLen++] = i2;
+            float32View[arrayBufferLen++] = f2;
+
+            this.arrayBufferLen = arrayBufferLen;
+        }
+
+        public drawText(i1:number, f1:number, f2:number):void {
+            if(this.arrayBufferLen + 4 > this.maxArrayBufferLen) {
+                this.flush();
+            }
+
+            var uint32View = this.uint32View;
+            var float32View = this.float32View;
+            var arrayBufferLen = this.arrayBufferLen;
+
+            uint32View[arrayBufferLen++] = 301;
+
+            uint32View[arrayBufferLen++] = i1;
+            float32View[arrayBufferLen++] = f1;
+            float32View[arrayBufferLen++] = f2;
+
+            this.arrayBufferLen = arrayBufferLen;
+        }
+
+        public setTextColor(i1:number):void {
+            if(this.arrayBufferLen + 2 > this.maxArrayBufferLen) {
+                this.flush();
+            }
+
+            var uint32View = this.uint32View;
+            var arrayBufferLen = this.arrayBufferLen;
+
+            uint32View[arrayBufferLen++] = 302;
+
+            uint32View[arrayBufferLen++] = i1;
+
+            this.arrayBufferLen = arrayBufferLen;
+        }
+
+        public setStrokeColor(i1:number):void {
+            if(this.arrayBufferLen + 2 > this.maxArrayBufferLen) {
+                this.flush();
+            }
+
+            var uint32View = this.uint32View;
+            var arrayBufferLen = this.arrayBufferLen;
+
+            uint32View[arrayBufferLen++] = 303;
+
+            uint32View[arrayBufferLen++] = i1;
+
+            this.arrayBufferLen = arrayBufferLen;
+        }
+
+        public setFillStyle(i1:number):void {
+            if(this.arrayBufferLen + 2 > this.maxArrayBufferLen) {
+                this.flush();
+            }
+
+            var uint32View = this.uint32View;
+            var arrayBufferLen = this.arrayBufferLen;
+
+            uint32View[arrayBufferLen++] = 1200;
+
+            uint32View[arrayBufferLen++] = i1;
+
+            this.arrayBufferLen = arrayBufferLen;
+        }
+
+        public setStrokeStyle(i1:number):void {
+            if(this.arrayBufferLen + 2 > this.maxArrayBufferLen) {
+                this.flush();
+            }
+
+            var uint32View = this.uint32View;
+            var arrayBufferLen = this.arrayBufferLen;
+
+            uint32View[arrayBufferLen++] = 1201;
+
+            uint32View[arrayBufferLen++] = i1;
+
+            this.arrayBufferLen = arrayBufferLen;
+        }
+
+        public setLineWidth(f1:number):void {
+            if(this.arrayBufferLen + 2 > this.maxArrayBufferLen) {
+                this.flush();
+            }
+
+            var uint32View = this.uint32View;
+            var float32View = this.float32View;
+            var arrayBufferLen = this.arrayBufferLen;
+
+            uint32View[arrayBufferLen++] = 1202;
+
+            float32View[arrayBufferLen++] = f1;
+
+            this.arrayBufferLen = arrayBufferLen;
+        }
+
+        public moveTo(f1:number, f2:number):void {
+            if(this.arrayBufferLen + 3 > this.maxArrayBufferLen) {
+                this.flush();
+            }
+
+            var uint32View = this.uint32View;
+            var float32View = this.float32View;
+            var arrayBufferLen = this.arrayBufferLen;
+
+            uint32View[arrayBufferLen++] = 207;
+
+            float32View[arrayBufferLen++] = f1;
+            float32View[arrayBufferLen++] = f2;
+
+            this.arrayBufferLen = arrayBufferLen;
+        }
+
+        public lineTo(f1:number, f2:number):void {
+            if(this.arrayBufferLen + 3 > this.maxArrayBufferLen) {
+                this.flush();
+            }
+
+            var uint32View = this.uint32View;
+            var float32View = this.float32View;
+            var arrayBufferLen = this.arrayBufferLen;
+
+            uint32View[arrayBufferLen++] = 208;
+
+            float32View[arrayBufferLen++] = f1;
+            float32View[arrayBufferLen++] = f2;
+
+            this.arrayBufferLen = arrayBufferLen;
+        }
+
+        public fill(i1:number):void {
+            if(this.arrayBufferLen + 2 > this.maxArrayBufferLen) {
+                this.flush();
+            }
+
+            var uint32View = this.uint32View;
+            var arrayBufferLen = this.arrayBufferLen;
+
+            uint32View[arrayBufferLen++] = 203;
+
+            uint32View[arrayBufferLen++] = i1;
+
+            this.arrayBufferLen = arrayBufferLen;
+        }
+
+        public pushClip(f1:number, f2:number, f3:number, f4:number):void {
+            if(this.arrayBufferLen + 5 > this.maxArrayBufferLen) {
+                this.flush();
+            }
+
+            var uint32View = this.uint32View;
+            var float32View = this.float32View;
+            var arrayBufferLen = this.arrayBufferLen;
+
+            uint32View[arrayBufferLen++] = 107;
+
+            float32View[arrayBufferLen++] = f1;
+            float32View[arrayBufferLen++] = f2;
+            float32View[arrayBufferLen++] = f3;
+            float32View[arrayBufferLen++] = f4;
+
+            this.arrayBufferLen = arrayBufferLen;
+        }
+
+        public popClip():void {
+            if(this.arrayBufferLen + 1 > this.maxArrayBufferLen) {
+                this.flush();
+            }
+
+            this.uint32View[this.arrayBufferLen++] = 108;
+        }
+
+        //------绘制命令 end-------------
+
+    }
+
+    /*
+     * @private 
+     * 输出一个单例命令控制器，供所有需要调用的地方使用
+     */
+    export var $cmdManager = new CmdManager();
+
     var isRunning:boolean = false;
     var playerList:Array<NativePlayer> = [];
 

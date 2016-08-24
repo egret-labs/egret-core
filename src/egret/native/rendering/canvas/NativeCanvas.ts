@@ -38,7 +38,7 @@ module egret.native {
          */
         constructor() {
             super();
-            this.renderContext = $supportCmdBatch ? new NativeCanvasRenderContext() : new NativeCanvasRenderContext2();
+            this.renderContext = $supportCmdBatch ? new NativeCanvasRenderContext() : new OldNativeCanvasRenderContext();
         }
 
         /**

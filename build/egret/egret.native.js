@@ -126,7 +126,6 @@ var egret;
                     var arr = blendModesForGL[value];
                     if (arr) {
                         this.checkSurface();
-                        // old this.$nativeContext.setBlendArg(arr[0], arr[1]);
                         native.$cmdManager.setContext(this.$nativeContext);
                         native.$cmdManager.setBlendArg(arr[0], arr[1]);
                     }
@@ -145,7 +144,6 @@ var egret;
                 ,function (value) {
                     this.$globalAlpha = value;
                     this.checkSurface();
-                    // old this.$nativeContext.setGlobalAlpha(value);
                     native.$cmdManager.setContext(this.$nativeContext);
                     native.$cmdManager.setGlobalAlpha(value);
                 }
@@ -164,11 +162,9 @@ var egret;
                 ,function (value) {
                     //console.log("set lineWidth" + value);
                     this.$lineWidth = value;
-                    // old this.$nativeContext.lineWidth = value;
                     native.$cmdManager.setContext(this.$nativeContext);
                     native.$cmdManager.setLineWidth(value);
                     this.checkSurface();
-                    // old this.$nativeGraphicsContext.lineWidth = value;
                     native.$cmdManager.setContext(this.$nativeGraphicsContext);
                     native.$cmdManager.setLineWidth(value);
                 }
@@ -193,12 +189,10 @@ var egret;
                         else if (value.indexOf("rgb") != -1) {
                             value = this.$parseRGB(value);
                         }
-                        // old egret_native.Label.setStrokeColor(parseInt(value.replace("#", "0x")));
                         native.$cmdManager.setContext(egret_native.Label);
                         native.$cmdManager.setStrokeColor(parseInt(value.replace("#", "0x")));
                     }
                     this.checkSurface();
-                    // old this.$nativeGraphicsContext.strokeStyle = value;
                     native.$cmdManager.setContext(this.$nativeGraphicsContext);
                     var s1 = native.$cmdManager.pushString(value);
                     native.$cmdManager.setStrokeStyle(s1);
@@ -224,12 +218,10 @@ var egret;
                         else if (value.indexOf("rgb") != -1) {
                             value = this.$parseRGB(value);
                         }
-                        // old egret_native.Label.setTextColor(parseInt(value.replace("#", "0x")));
                         native.$cmdManager.setContext(egret_native.Label);
                         native.$cmdManager.setTextColor(parseInt(value.replace("#", "0x")));
                     }
                     this.checkSurface();
-                    // old this.$nativeGraphicsContext.fillStyle = value;
                     native.$cmdManager.setContext(this.$nativeGraphicsContext);
                     var s1 = native.$cmdManager.pushString(value);
                     native.$cmdManager.setFillStyle(s1);
@@ -326,7 +318,6 @@ var egret;
              */
             p.lineTo = function (x, y) {
                 this.checkSurface();
-                // old this.$nativeGraphicsContext.lineTo(x, y);
                 native.$cmdManager.setContext(this.$nativeGraphicsContext);
                 native.$cmdManager.lineTo(x, y);
             };
@@ -341,7 +332,6 @@ var egret;
              */
             p.fill = function (fillRule) {
                 this.checkSurface();
-                // old this.$nativeGraphicsContext.fill(fillRule);
                 native.$cmdManager.setContext(this.$nativeGraphicsContext);
                 var s1 = native.$cmdManager.pushString(fillRule);
                 native.$cmdManager.fill(s1);
@@ -354,7 +344,6 @@ var egret;
              */
             p.closePath = function () {
                 this.checkSurface();
-                // old this.$nativeGraphicsContext.closePath();
                 native.$cmdManager.setContext(this.$nativeGraphicsContext);
                 native.$cmdManager.closePath();
             };
@@ -370,7 +359,6 @@ var egret;
              */
             p.rect = function (x, y, w, h) {
                 this.checkSurface();
-                // old this.$nativeGraphicsContext.rect(x, y, w, h);
                 native.$cmdManager.setContext(this.$nativeGraphicsContext);
                 native.$cmdManager.rect(x, y, w, h);
                 this.$clipRect.setTo(x, y, w, h);
@@ -453,7 +441,6 @@ var egret;
              */
             p.beginPath = function () {
                 this.checkSurface();
-                // old this.$nativeGraphicsContext.beginPath();
                 native.$cmdManager.setContext(this.$nativeGraphicsContext);
                 native.$cmdManager.beginPath();
             };
@@ -545,7 +532,6 @@ var egret;
                         this.$clipList.splice(index, length - index);
                         for (; index < length; index++) {
                             this.checkSurface();
-                            // old this.$nativeContext.popClip();
                             native.$cmdManager.setContext(this.$nativeContext);
                             native.$cmdManager.popClip();
                         }
@@ -584,7 +570,6 @@ var egret;
                 if (this.$clipRect.width > 0 && this.$clipRect.height > 0) {
                     //console.log("push clip" + this.$clipRect.x + " " + this.$clipRect.y + " " + this.$clipRect.width + " " + this.$clipRect.height);
                     this.checkSurface();
-                    // old this.$nativeContext.pushClip(this.$clipRect.x, this.$clipRect.y, this.$clipRect.width, this.$clipRect.height);
                     native.$cmdManager.setContext(this.$nativeContext);
                     native.$cmdManager.pushClip(this.$clipRect.x, this.$clipRect.y, this.$clipRect.width, this.$clipRect.height);
                     this.$clipRect.setEmpty();
@@ -604,7 +589,6 @@ var egret;
             p.clearRect = function (x, y, width, height) {
                 //console.log("clearScreen");
                 this.checkSurface();
-                // old this.$nativeContext.clearScreen(0, 0, 0);
                 native.$cmdManager.setContext(this.$nativeContext);
                 native.$cmdManager.clearScreen(0, 0, 0, 0);
             };
@@ -671,13 +655,11 @@ var egret;
             p.fillText = function (text, x, y, maxWidth) {
                 //console.log("drawText" + text);
                 var font = egret.TextField.default_fontFamily;
-                // old egret_native.Label.createLabel(font, this.$fontSize, "", this.$hasStrokeText ? this.$lineWidth : 0);
                 native.$cmdManager.setContext(egret_native.Label);
                 var s1 = native.$cmdManager.pushString(font);
                 var s2 = native.$cmdManager.pushString("");
                 native.$cmdManager.createLabel(s1, this.$fontSize, s2, this.$hasStrokeText ? this.$lineWidth : 0);
                 this.$hasStrokeText = false;
-                // old egret_native.Label.drawText(text, x, y);
                 var s3 = native.$cmdManager.pushString(text);
                 native.$cmdManager.drawText(s3, x, y);
             };
@@ -692,7 +674,6 @@ var egret;
              */
             p.measureText = function (text) {
                 var font = egret.TextField.default_fontFamily;
-                // old egret_native.Label.createLabel(font, this.$fontSize, "", this.$hasStrokeText ? this.$lineWidth : 0);
                 native.$cmdManager.setContext(egret_native.Label);
                 var s1 = native.$cmdManager.pushString(font);
                 var s2 = native.$cmdManager.pushString("");
@@ -770,7 +751,6 @@ var egret;
                 else {
                     imageAdress = bitmapData.___native_texture__p;
                 }
-                // old this.$nativeContext.drawImage(bitmapData, offsetX, offsetY, width, height, surfaceOffsetX, surfaceOffsetY, surfaceImageWidth, surfaceImageHeight);
                 native.$cmdManager.setContext(this.$nativeContext);
                 native.$cmdManager.drawImage(imageAdress, offsetX, offsetY, width, height, surfaceOffsetX, surfaceOffsetY, surfaceImageWidth, surfaceImageHeight);
             };
@@ -793,6 +773,7 @@ var egret;
              * @platform Web,Native
              */
             p.getImageData = function (sx, sy, sw, sh) {
+                native.$cmdManager.flush();
                 var res;
                 if (native.$currentSurface == this.surface) {
                     if (native.$currentSurface != null) {
@@ -865,9 +846,9 @@ var egret;
          * @platform Web,Native
          * @private
          */
-        var NativeRenderTextureRenderContext2 = (function (_super) {
-            __extends(NativeRenderTextureRenderContext2, _super);
-            function NativeRenderTextureRenderContext2() {
+        var OldNativeRenderTextureRenderContext = (function (_super) {
+            __extends(OldNativeRenderTextureRenderContext, _super);
+            function OldNativeRenderTextureRenderContext() {
                 _super.apply(this, arguments);
                 this.$matrix = new egret.Matrix();
                 this.$nativeContext = egret_native.Graphics;
@@ -886,7 +867,7 @@ var egret;
                 this.$clipList = [];
                 this.$hasStrokeText = false;
             }
-            var d = __define,c=NativeRenderTextureRenderContext2,p=c.prototype;
+            var d = __define,c=OldNativeRenderTextureRenderContext,p=c.prototype;
             d(p, "globalCompositeOperation"
                 /**
                  * @private
@@ -920,8 +901,6 @@ var egret;
                     this.$globalAlpha = value;
                     this.checkSurface();
                     this.$nativeContext.setGlobalAlpha(value);
-                    // $cmdManager.setContext(this.$nativeContext);
-                    // $cmdManager.setGlobalAlpha(value);
                 }
             );
             d(p, "lineWidth"
@@ -939,12 +918,8 @@ var egret;
                     //console.log("set lineWidth" + value);
                     this.$lineWidth = value;
                     this.$nativeContext.lineWidth = value;
-                    // $cmdManager.setContext(this.$nativeContext);
-                    // $cmdManager.setLineWidth(value);
                     this.checkSurface();
                     this.$nativeGraphicsContext.lineWidth = value;
-                    // $cmdManager.setContext(this.$nativeGraphicsContext);
-                    // $cmdManager.setLineWidth(value);
                 }
             );
             d(p, "strokeStyle"
@@ -971,9 +946,6 @@ var egret;
                     }
                     this.checkSurface();
                     this.$nativeGraphicsContext.strokeStyle = value;
-                    // $cmdManager.setContext(this.$nativeGraphicsContext);
-                    // var s1 = $cmdManager.pushString(value);
-                    // $cmdManager.setStrokeStyle(s1);
                 }
             );
             d(p, "fillStyle"
@@ -1000,9 +972,6 @@ var egret;
                     }
                     this.checkSurface();
                     this.$nativeGraphicsContext.fillStyle = value;
-                    // $cmdManager.setContext(this.$nativeGraphicsContext);
-                    // var s1 = $cmdManager.pushString(value);
-                    // $cmdManager.setFillStyle(s1);
                 }
             );
             p.$fillColorStr = function (s) {
@@ -1097,8 +1066,6 @@ var egret;
             p.lineTo = function (x, y) {
                 this.checkSurface();
                 this.$nativeGraphicsContext.lineTo(x, y);
-                // $cmdManager.setContext(this.$nativeGraphicsContext);
-                // $cmdManager.lineTo(x, y);
             };
             /**
              * @private
@@ -1112,9 +1079,6 @@ var egret;
             p.fill = function (fillRule) {
                 this.checkSurface();
                 this.$nativeGraphicsContext.fill(fillRule);
-                // $cmdManager.setContext(this.$nativeGraphicsContext);
-                // var s1 = $cmdManager.pushString(fillRule);
-                // $cmdManager.fill(s1);
             };
             /**
              * @private
@@ -1125,8 +1089,6 @@ var egret;
             p.closePath = function () {
                 this.checkSurface();
                 this.$nativeGraphicsContext.closePath();
-                // $cmdManager.setContext(this.$nativeGraphicsContext);
-                // $cmdManager.closePath();
             };
             /**
              * @private
@@ -1141,8 +1103,6 @@ var egret;
             p.rect = function (x, y, w, h) {
                 this.checkSurface();
                 this.$nativeGraphicsContext.rect(x, y, w, h);
-                // $cmdManager.setContext(this.$nativeGraphicsContext);
-                // $cmdManager.rect(x, y, w, h);
                 this.$clipRect.setTo(x, y, w, h);
             };
             /**
@@ -1156,8 +1116,6 @@ var egret;
             p.moveTo = function (x, y) {
                 this.checkSurface();
                 this.$nativeGraphicsContext.moveTo(x, y);
-                // $cmdManager.setContext(this.$nativeGraphicsContext);
-                // $cmdManager.moveTo(x, y);
             };
             /**
              * @private
@@ -1224,8 +1182,6 @@ var egret;
             p.beginPath = function () {
                 this.checkSurface();
                 this.$nativeGraphicsContext.beginPath();
-                // $cmdManager.setContext(this.$nativeGraphicsContext);
-                // $cmdManager.beginPath();
             };
             /**
              * @private
@@ -1353,8 +1309,6 @@ var egret;
                     //console.log("push clip" + this.$clipRect.x + " " + this.$clipRect.y + " " + this.$clipRect.width + " " + this.$clipRect.height);
                     this.checkSurface();
                     this.$nativeContext.pushClip(this.$clipRect.x, this.$clipRect.y, this.$clipRect.width, this.$clipRect.height);
-                    // $cmdManager.setContext(this.$nativeContext);
-                    // $cmdManager.pushClip(this.$clipRect.x, this.$clipRect.y, this.$clipRect.width, this.$clipRect.height);
                     this.$clipRect.setEmpty();
                     this.$clipList.push(this.$saveCount);
                 }
@@ -1373,8 +1327,6 @@ var egret;
                 //console.log("clearScreen");
                 this.checkSurface();
                 this.$nativeContext.clearScreen(0, 0, 0);
-                // $cmdManager.setContext(this.$nativeContext);
-                // $cmdManager.clearScreen(0, 0, 0, 0);
             };
             /**
              * @private
@@ -1397,8 +1349,6 @@ var egret;
                 //console.log("setTransformToNative::a=" + m.a + " b=" + m.b + " c=" + m.c + " d=" + m.d + " tx=" + m.tx + " ty=" + m.ty);
                 this.checkSurface();
                 this.$nativeContext.setTransform(m.a, m.b, m.c, m.d, m.tx, m.ty);
-                // $cmdManager.setContext(this.$nativeContext);
-                // $cmdManager.setTransform(m.a, m.b, m.c, m.d, m.tx, m.ty);
             };
             /**
              * @private
@@ -1440,14 +1390,8 @@ var egret;
                 //console.log("drawText" + text);
                 var font = egret.TextField.default_fontFamily;
                 egret_native.Label.createLabel(font, this.$fontSize, "", this.$hasStrokeText ? this.$lineWidth : 0);
-                // $cmdManager.setContext(egret_native.Label);
-                // var s1 = $cmdManager.pushString(font);
-                // var s2 = $cmdManager.pushString("");
-                // $cmdManager.createLabel(s1, this.$fontSize, s2, this.$hasStrokeText ? this.$lineWidth : 0);
                 this.$hasStrokeText = false;
                 egret_native.Label.drawText(text, x, y);
-                // var s3 = $cmdManager.pushString(text);
-                // $cmdManager.drawText(s3, x, y);
             };
             p.strokeText = function (text, x, y, maxWidth) {
                 this.$hasStrokeText = true;
@@ -1461,10 +1405,6 @@ var egret;
             p.measureText = function (text) {
                 var font = egret.TextField.default_fontFamily;
                 egret_native.Label.createLabel(font, this.$fontSize, "", this.$hasStrokeText ? this.$lineWidth : 0);
-                // $cmdManager.setContext(egret_native.Label);
-                // var s1 = $cmdManager.pushString(font);
-                // var s2 = $cmdManager.pushString("");
-                // $cmdManager.createLabel(s1, this.$fontSize, s2, this.$hasStrokeText ? this.$lineWidth : 0);
                 return { width: egret_native.Label.getTextSize(text)[0] };
             };
             /**
@@ -1528,18 +1468,7 @@ var egret;
                 }
                 //console.log("drawImage::" + offsetX + " " + offsetY + " " + width + " " + height + " " + surfaceOffsetX + " " + surfaceOffsetY + " " + surfaceImageWidth + " " + surfaceImageHeight);
                 this.checkSurface();
-                // var imageAdress;
-                // if(!isNative) {
-                //     if(!bitmapData._native_tex_loc) {
-                //         bitmapData._native_tex_loc = bitmapData.___native_texture__p;
-                //     }
-                //     imageAdress = bitmapData._native_tex_loc;
-                // } else {
-                //     imageAdress = bitmapData.___native_texture__p;
-                // }
                 this.$nativeContext.drawImage(bitmapData, offsetX, offsetY, width, height, surfaceOffsetX, surfaceOffsetY, surfaceImageWidth, surfaceImageHeight);
-                // $cmdManager.setContext(this.$nativeContext);
-                // $cmdManager.drawImage(imageAdress, offsetX, offsetY, width, height, surfaceOffsetX, surfaceOffsetY, surfaceImageWidth, surfaceImageHeight);
             };
             /**
              * @private
@@ -1583,10 +1512,10 @@ var egret;
                     }
                 }
             };
-            return NativeRenderTextureRenderContext2;
+            return OldNativeRenderTextureRenderContext;
         }(egret.HashObject));
-        native.NativeRenderTextureRenderContext2 = NativeRenderTextureRenderContext2;
-        egret.registerClass(NativeRenderTextureRenderContext2,'egret.native.NativeRenderTextureRenderContext2');
+        native.OldNativeRenderTextureRenderContext = OldNativeRenderTextureRenderContext;
+        egret.registerClass(OldNativeRenderTextureRenderContext,'egret.native.OldNativeRenderTextureRenderContext');
     })(native = egret.native || (egret.native = {}));
 })(egret || (egret = {}));
 //////////////////////////////////////////////////////////////////////////////////////
@@ -1636,7 +1565,7 @@ var egret;
                 this.$heightReadySet = false;
                 this.$isRoot = false;
                 this.$isDispose = false;
-                this.renderContext = native.$supportCmdBatch ? new native.NativeRenderTextureRenderContext() : new native.NativeRenderTextureRenderContext2();
+                this.renderContext = native.$supportCmdBatch ? new native.NativeRenderTextureRenderContext() : new native.OldNativeRenderTextureRenderContext();
             }
             var d = __define,c=NativeRenderTexture,p=c.prototype;
             p.toDataURL = function (type) {
@@ -2021,7 +1950,6 @@ var egret;
                     this.$globalCompositeOperation = value;
                     var arr = blendModesForGL[value];
                     if (arr) {
-                        // old this.$nativeContext.setBlendArg(arr[0], arr[1]);
                         native.$cmdManager.setContext(this.$nativeContext);
                         native.$cmdManager.setBlendArg(arr[0], arr[1]);
                     }
@@ -2039,7 +1967,6 @@ var egret;
                 }
                 ,function (value) {
                     this.$globalAlpha = value;
-                    // old this.$nativeContext.setGlobalAlpha(value);
                     native.$cmdManager.setContext(this.$nativeContext);
                     native.$cmdManager.setGlobalAlpha(value);
                 }
@@ -2058,7 +1985,6 @@ var egret;
                 ,function (value) {
                     //console.log("set lineWidth" + value);
                     this.$lineWidth = value;
-                    // old this.$nativeContext.lineWidth = value;
                     native.$cmdManager.setContext(this.$nativeContext);
                     native.$cmdManager.setLineWidth(value);
                 }
@@ -2083,11 +2009,9 @@ var egret;
                         else if (value.indexOf("rgb") != -1) {
                             value = this.$parseRGB(value);
                         }
-                        // old egret_native.Label.setStrokeColor(parseInt(value.replace("#", "0x")));
                         native.$cmdManager.setContext(egret_native.Label);
                         native.$cmdManager.setStrokeColor(parseInt(value.replace("#", "0x")));
                     }
-                    // old this.$nativeContext.strokeStyle = value;
                     native.$cmdManager.setContext(this.$nativeContext);
                     var s1 = native.$cmdManager.pushString(value);
                     native.$cmdManager.setStrokeStyle(s1);
@@ -2113,11 +2037,9 @@ var egret;
                         else if (value.indexOf("rgb") != -1) {
                             value = this.$parseRGB(value);
                         }
-                        // old egret_native.Label.setTextColor(parseInt(value.replace("#", "0x")));
                         native.$cmdManager.setContext(egret_native.Label);
                         native.$cmdManager.setTextColor(parseInt(value.replace("#", "0x")));
                     }
-                    // old this.$nativeContext.fillStyle = value;
                     native.$cmdManager.setContext(this.$nativeContext);
                     var s1 = native.$cmdManager.pushString(value);
                     native.$cmdManager.setFillStyle(s1);
@@ -2213,7 +2135,6 @@ var egret;
              */
             p.lineTo = function (x, y) {
                 //console.log("lineTo " + x + " " + y);
-                // old this.$nativeContext.lineTo(x, y);
                 native.$cmdManager.setContext(this.$nativeContext);
                 native.$cmdManager.lineTo(x, y);
             };
@@ -2227,7 +2148,6 @@ var egret;
              * @platform Web,Native
              */
             p.fill = function (fillRule) {
-                // old this.$nativeContext.fill(fillRule);
                 native.$cmdManager.setContext(this.$nativeContext);
                 var s1 = native.$cmdManager.pushString(fillRule);
                 native.$cmdManager.fill(s1);
@@ -2239,7 +2159,6 @@ var egret;
              * @platform Web,Native
              */
             p.closePath = function () {
-                // old this.$nativeContext.closePath();
                 native.$cmdManager.setContext(this.$nativeContext);
                 native.$cmdManager.closePath();
                 if (this.clipRectArray) {
@@ -2258,7 +2177,6 @@ var egret;
              * @platform Web,Native
              */
             p.rect = function (x, y, w, h) {
-                // old this.$nativeContext.rect(x, y, w, h);
                 native.$cmdManager.setContext(this.$nativeContext);
                 native.$cmdManager.rect(x, y, w, h);
                 this.$clipRectArray.push({ x: x, y: y, w: w, h: h });
@@ -2272,7 +2190,6 @@ var egret;
              * @platform Web,Native
              */
             p.moveTo = function (x, y) {
-                // old this.$nativeContext.moveTo(x, y);
                 native.$cmdManager.setContext(this.$nativeContext);
                 native.$cmdManager.moveTo(x, y);
             };
@@ -2335,7 +2252,6 @@ var egret;
              * @platform Web,Native
              */
             p.beginPath = function () {
-                // old this.$nativeContext.beginPath();
                 native.$cmdManager.setContext(this.$nativeContext);
                 native.$cmdManager.beginPath();
                 this.clipRectArray = this.$clipRectArray.concat();
@@ -2419,7 +2335,6 @@ var egret;
                         this[key] = data[key];
                     }
                     this.setTransformToNative();
-                    // old this.$nativeContext.restore();
                     native.$cmdManager.setContext(this.$nativeContext);
                     native.$cmdManager.restore();
                     this.clipRectArray = null;
@@ -2445,7 +2360,6 @@ var egret;
                     $matrix: transformMatrix,
                     $clipRectArray: this.$clipRectArray.concat()
                 });
-                // old this.$nativeContext.save();
                 native.$cmdManager.setContext(this.$nativeContext);
                 native.$cmdManager.save();
             };
@@ -2466,7 +2380,6 @@ var egret;
                         arr.push(clipRect.h);
                     }
                     //console.log("pushRectStencils " + arr.toString());
-                    // old this.$nativeContext.pushRectStencils(arr);
                     native.$cmdManager.setContext(this.$nativeContext);
                     native.$cmdManager.pushRectStencils(arr);
                     this.$clipRectArray.length = 0;
@@ -2484,7 +2397,6 @@ var egret;
              */
             p.clearRect = function (x, y, width, height) {
                 //console.log("clearRect x:" + x + " y:" +  y + " width:" + width + " height:" + height);
-                // old this.$nativeContext.clearRect(x, y, width, height);
                 native.$cmdManager.setContext(this.$nativeContext);
                 native.$cmdManager.clearRect(x, y, width, height);
             };
@@ -2507,7 +2419,6 @@ var egret;
             p.setTransformToNative = function () {
                 var m = this.$matrix;
                 //console.log("setTransformToNative::a=" + m.a + " b=" + m.b + " c=" + m.c + " d=" + m.d + " tx=" + m.tx + " ty=" + m.ty);
-                // old this.$nativeContext.setTransform(m.a, m.b, m.c, m.d, m.tx, m.ty);
                 native.$cmdManager.setContext(this.$nativeContext);
                 native.$cmdManager.setTransform(m.a, m.b, m.c, m.d, m.tx, m.ty);
             };
@@ -2562,13 +2473,11 @@ var egret;
             p.fillText = function (text, x, y, maxWidth) {
                 //console.log("drawText" + text);
                 var font = egret.TextField.default_fontFamily;
-                // old this.$nativeContext.createLabel(font, this.$fontSize, "", this.$hasStrokeText ? this.$lineWidth : 0);
                 native.$cmdManager.setContext(this.$nativeContext);
                 var s1 = native.$cmdManager.pushString(font);
                 var s2 = native.$cmdManager.pushString("");
                 native.$cmdManager.createLabel(s1, this.$fontSize, s2, this.$hasStrokeText ? this.$lineWidth : 0);
                 this.$hasStrokeText = false;
-                // old this.$nativeContext.drawText(text, x, y);
                 var s3 = native.$cmdManager.pushString(text);
                 native.$cmdManager.drawText(s3, x, y);
             };
@@ -2583,7 +2492,6 @@ var egret;
              */
             p.measureText = function (text) {
                 var font = egret.TextField.default_fontFamily;
-                // old egret_native.Label.createLabel(font, this.$fontSize, "", this.$hasStrokeText ? this.$lineWidth : 0);
                 native.$cmdManager.setContext(egret_native.Label);
                 var s1 = native.$cmdManager.pushString(font);
                 var s2 = native.$cmdManager.pushString("");
@@ -2651,7 +2559,6 @@ var egret;
                 }
                 //console.log("drawImage::" + offsetX + " " + offsetY + " " + width + " " + height + " " + surfaceOffsetX + " " + surfaceOffsetY + " " + surfaceImageWidth + " " + surfaceImageHeight);
                 //console.log("drawImage::" + bitmapData);
-                // old this.$nativeContext.drawImage(bitmapData, offsetX, offsetY, width, height, surfaceOffsetX, surfaceOffsetY, surfaceImageWidth, surfaceImageHeight);
                 var imageAdress;
                 if (!isNative) {
                     if (!bitmapData._native_tex_loc) {
@@ -2684,6 +2591,7 @@ var egret;
              * @platform Web,Native
              */
             p.getImageData = function (sx, sy, sw, sh) {
+                native.$cmdManager.flush();
                 var res;
                 if (sx != Math.floor(sx)) {
                     sx = Math.floor(sx);
@@ -2703,356 +2611,6 @@ var egret;
         }(egret.HashObject));
         native.NativeCanvasRenderContext = NativeCanvasRenderContext;
         egret.registerClass(NativeCanvasRenderContext,'egret.native.NativeCanvasRenderContext');
-        /*
-         * @private
-         * 命令控制器
-         * */
-        var CmdManager = (function () {
-            function CmdManager() {
-                /*
-                 * 存储绘制命令的 array buffer
-                 **/
-                this.maxArrayBufferLen = 80000;
-                this.arrayBuffer = new ArrayBuffer(this.maxArrayBufferLen * 4);
-                this.uint32View = new Uint32Array(this.arrayBuffer);
-                this.float32View = new Float32Array(this.arrayBuffer);
-                this.arrayBufferLen = 0;
-                /*
-                 * 存储字符串的数组
-                 */
-                this.strArray = new Array();
-            }
-            var d = __define,c=CmdManager,p=c.prototype;
-            /*
-             * 上传绘制命令到C
-             */
-            p.flush = function () {
-                egret_native.sendToC(this.float32View, this.arrayBufferLen, this.strArray);
-                this.clear();
-            };
-            /*
-             * 切换native上下文
-             * native绘制需要在自身的上下文进行绘制
-             */
-            p.setContext = function (ctx) {
-                if (this.context != ctx) {
-                    if (this.arrayBufferLen + 3 > this.maxArrayBufferLen) {
-                        this.flush();
-                    }
-                    this.context = ctx;
-                    var uint32View = this.uint32View;
-                    var arrayBufferLen = this.arrayBufferLen;
-                    uint32View[arrayBufferLen++] = 1000;
-                    // uint32View[arrayBufferLen++] = ctx.___native_texture__p;
-                    // 兼容64位
-                    var addr = ctx.___native_texture__p;
-                    uint32View[arrayBufferLen++] = (addr / 4294967296) >>> 0;
-                    uint32View[arrayBufferLen++] = (addr & 4294967295) >>> 0;
-                    // uint32View[arrayBufferLen++] = addr >> 32;
-                    // uint32View[arrayBufferLen++] = addr & 4294967295;
-                    this.arrayBufferLen = arrayBufferLen;
-                }
-            };
-            /*
-             * 清空绘制命令
-             */
-            p.clear = function () {
-                this.arrayBufferLen = 0;
-                this.strArray.length = 0;
-            };
-            /*
-             * 压入一个字符串并返回索引
-             */
-            p.pushString = function (str) {
-                var array = this.strArray;
-                var len = array.length;
-                array[len] = str;
-                return len;
-            };
-            //------绘制命令 start-------------
-            p.clearScreen = function (i1, i2, i3, i4) {
-                if (this.arrayBufferLen + 5 > this.maxArrayBufferLen) {
-                    this.flush();
-                }
-                var uint32View = this.uint32View;
-                var arrayBufferLen = this.arrayBufferLen;
-                uint32View[arrayBufferLen++] = 100;
-                uint32View[arrayBufferLen++] = i1;
-                uint32View[arrayBufferLen++] = i2;
-                uint32View[arrayBufferLen++] = i3;
-                uint32View[arrayBufferLen++] = i4;
-                this.arrayBufferLen = arrayBufferLen;
-            };
-            p.drawImage = function (i1, f1, f2, f3, f4, f5, f6, f7, f8) {
-                if (this.arrayBufferLen + 11 > this.maxArrayBufferLen) {
-                    this.flush();
-                }
-                var uint32View = this.uint32View;
-                var float32View = this.float32View;
-                var arrayBufferLen = this.arrayBufferLen;
-                uint32View[arrayBufferLen++] = 101;
-                // uint32View[arrayBufferLen++] = i1;
-                // 兼容64位
-                // uint32View[arrayBufferLen++] = i1 >> 32;
-                // uint32View[arrayBufferLen++] = i1 & 4294967295;
-                uint32View[arrayBufferLen++] = (i1 / 4294967296) >>> 0;
-                uint32View[arrayBufferLen++] = (i1 & 4294967295) >>> 0;
-                float32View[arrayBufferLen++] = f1;
-                float32View[arrayBufferLen++] = f2;
-                float32View[arrayBufferLen++] = f3;
-                float32View[arrayBufferLen++] = f4;
-                float32View[arrayBufferLen++] = f5;
-                float32View[arrayBufferLen++] = f6;
-                float32View[arrayBufferLen++] = f7;
-                float32View[arrayBufferLen++] = f8;
-                this.arrayBufferLen = arrayBufferLen;
-            };
-            p.setTransform = function (f1, f2, f3, f4, f5, f6) {
-                if (this.arrayBufferLen + 7 > this.maxArrayBufferLen) {
-                    this.flush();
-                }
-                var uint32View = this.uint32View;
-                var float32View = this.float32View;
-                var arrayBufferLen = this.arrayBufferLen;
-                uint32View[arrayBufferLen++] = 103;
-                float32View[arrayBufferLen++] = f1;
-                float32View[arrayBufferLen++] = f2;
-                float32View[arrayBufferLen++] = f3;
-                float32View[arrayBufferLen++] = f4;
-                float32View[arrayBufferLen++] = f5;
-                float32View[arrayBufferLen++] = f6;
-                this.arrayBufferLen = arrayBufferLen;
-            };
-            p.setGlobalAlpha = function (f1) {
-                if (this.arrayBufferLen + 2 > this.maxArrayBufferLen) {
-                    this.flush();
-                }
-                var uint32View = this.uint32View;
-                var float32View = this.float32View;
-                var arrayBufferLen = this.arrayBufferLen;
-                uint32View[arrayBufferLen++] = 106;
-                float32View[arrayBufferLen++] = f1;
-                this.arrayBufferLen = arrayBufferLen;
-            };
-            p.pushRectStencils = function (array) {
-                var len = array.length;
-                if (this.arrayBufferLen + len + 1 > this.maxArrayBufferLen) {
-                    this.flush();
-                }
-                var uint32View = this.uint32View;
-                var float32View = this.float32View;
-                var arrayBufferLen = this.arrayBufferLen;
-                uint32View[arrayBufferLen++] = 113;
-                uint32View[arrayBufferLen++] = len;
-                for (var i = 0; i < len; i++) {
-                    float32View[arrayBufferLen++] = array[i];
-                }
-                this.arrayBufferLen = arrayBufferLen;
-            };
-            p.restore = function () {
-                if (this.arrayBufferLen + 1 > this.maxArrayBufferLen) {
-                    this.flush();
-                }
-                this.uint32View[this.arrayBufferLen++] = 116;
-            };
-            p.save = function () {
-                if (this.arrayBufferLen + 1 > this.maxArrayBufferLen) {
-                    this.flush();
-                }
-                this.uint32View[this.arrayBufferLen++] = 117;
-            };
-            p.setBlendArg = function (f1, f2) {
-                if (this.arrayBufferLen + 3 > this.maxArrayBufferLen) {
-                    this.flush();
-                }
-                var uint32View = this.uint32View;
-                var float32View = this.float32View;
-                var arrayBufferLen = this.arrayBufferLen;
-                uint32View[arrayBufferLen++] = 120;
-                float32View[arrayBufferLen++] = f1;
-                float32View[arrayBufferLen++] = f2;
-                this.arrayBufferLen = arrayBufferLen;
-            };
-            p.beginPath = function () {
-                if (this.arrayBufferLen + 1 > this.maxArrayBufferLen) {
-                    this.flush();
-                }
-                this.uint32View[this.arrayBufferLen++] = 204;
-            };
-            p.closePath = function () {
-                if (this.arrayBufferLen + 1 > this.maxArrayBufferLen) {
-                    this.flush();
-                }
-                this.uint32View[this.arrayBufferLen++] = 205;
-            };
-            p.rect = function (f1, f2, f3, f4) {
-                if (this.arrayBufferLen + 5 > this.maxArrayBufferLen) {
-                    this.flush();
-                }
-                var uint32View = this.uint32View;
-                var float32View = this.float32View;
-                var arrayBufferLen = this.arrayBufferLen;
-                uint32View[arrayBufferLen++] = 210;
-                float32View[arrayBufferLen++] = f1;
-                float32View[arrayBufferLen++] = f2;
-                float32View[arrayBufferLen++] = f3;
-                float32View[arrayBufferLen++] = f4;
-                this.arrayBufferLen = arrayBufferLen;
-            };
-            p.clearRect = function (f1, f2, f3, f4) {
-                if (this.arrayBufferLen + 5 > this.maxArrayBufferLen) {
-                    this.flush();
-                }
-                var uint32View = this.uint32View;
-                var float32View = this.float32View;
-                var arrayBufferLen = this.arrayBufferLen;
-                uint32View[arrayBufferLen++] = 214;
-                float32View[arrayBufferLen++] = f1;
-                float32View[arrayBufferLen++] = f2;
-                float32View[arrayBufferLen++] = f3;
-                float32View[arrayBufferLen++] = f4;
-                this.arrayBufferLen = arrayBufferLen;
-            };
-            p.createLabel = function (i1, f1, i2, f2) {
-                if (this.arrayBufferLen + 5 > this.maxArrayBufferLen) {
-                    this.flush();
-                }
-                var uint32View = this.uint32View;
-                var float32View = this.float32View;
-                var arrayBufferLen = this.arrayBufferLen;
-                uint32View[arrayBufferLen++] = 300;
-                uint32View[arrayBufferLen++] = i1;
-                float32View[arrayBufferLen++] = f1;
-                uint32View[arrayBufferLen++] = i2;
-                float32View[arrayBufferLen++] = f2;
-                this.arrayBufferLen = arrayBufferLen;
-            };
-            p.drawText = function (i1, f1, f2) {
-                if (this.arrayBufferLen + 4 > this.maxArrayBufferLen) {
-                    this.flush();
-                }
-                var uint32View = this.uint32View;
-                var float32View = this.float32View;
-                var arrayBufferLen = this.arrayBufferLen;
-                uint32View[arrayBufferLen++] = 301;
-                uint32View[arrayBufferLen++] = i1;
-                float32View[arrayBufferLen++] = f1;
-                float32View[arrayBufferLen++] = f2;
-                this.arrayBufferLen = arrayBufferLen;
-            };
-            p.setTextColor = function (i1) {
-                if (this.arrayBufferLen + 2 > this.maxArrayBufferLen) {
-                    this.flush();
-                }
-                var uint32View = this.uint32View;
-                var arrayBufferLen = this.arrayBufferLen;
-                uint32View[arrayBufferLen++] = 302;
-                uint32View[arrayBufferLen++] = i1;
-                this.arrayBufferLen = arrayBufferLen;
-            };
-            p.setStrokeColor = function (i1) {
-                if (this.arrayBufferLen + 2 > this.maxArrayBufferLen) {
-                    this.flush();
-                }
-                var uint32View = this.uint32View;
-                var arrayBufferLen = this.arrayBufferLen;
-                uint32View[arrayBufferLen++] = 303;
-                uint32View[arrayBufferLen++] = i1;
-                this.arrayBufferLen = arrayBufferLen;
-            };
-            p.setFillStyle = function (i1) {
-                if (this.arrayBufferLen + 2 > this.maxArrayBufferLen) {
-                    this.flush();
-                }
-                var uint32View = this.uint32View;
-                var arrayBufferLen = this.arrayBufferLen;
-                uint32View[arrayBufferLen++] = 1200;
-                uint32View[arrayBufferLen++] = i1;
-                this.arrayBufferLen = arrayBufferLen;
-            };
-            p.setStrokeStyle = function (i1) {
-                if (this.arrayBufferLen + 2 > this.maxArrayBufferLen) {
-                    this.flush();
-                }
-                var uint32View = this.uint32View;
-                var arrayBufferLen = this.arrayBufferLen;
-                uint32View[arrayBufferLen++] = 1201;
-                uint32View[arrayBufferLen++] = i1;
-                this.arrayBufferLen = arrayBufferLen;
-            };
-            p.setLineWidth = function (f1) {
-                if (this.arrayBufferLen + 2 > this.maxArrayBufferLen) {
-                    this.flush();
-                }
-                var uint32View = this.uint32View;
-                var float32View = this.float32View;
-                var arrayBufferLen = this.arrayBufferLen;
-                uint32View[arrayBufferLen++] = 1202;
-                float32View[arrayBufferLen++] = f1;
-                this.arrayBufferLen = arrayBufferLen;
-            };
-            p.moveTo = function (f1, f2) {
-                if (this.arrayBufferLen + 3 > this.maxArrayBufferLen) {
-                    this.flush();
-                }
-                var uint32View = this.uint32View;
-                var float32View = this.float32View;
-                var arrayBufferLen = this.arrayBufferLen;
-                uint32View[arrayBufferLen++] = 207;
-                float32View[arrayBufferLen++] = f1;
-                float32View[arrayBufferLen++] = f2;
-                this.arrayBufferLen = arrayBufferLen;
-            };
-            p.lineTo = function (f1, f2) {
-                if (this.arrayBufferLen + 3 > this.maxArrayBufferLen) {
-                    this.flush();
-                }
-                var uint32View = this.uint32View;
-                var float32View = this.float32View;
-                var arrayBufferLen = this.arrayBufferLen;
-                uint32View[arrayBufferLen++] = 208;
-                float32View[arrayBufferLen++] = f1;
-                float32View[arrayBufferLen++] = f2;
-                this.arrayBufferLen = arrayBufferLen;
-            };
-            p.fill = function (i1) {
-                if (this.arrayBufferLen + 2 > this.maxArrayBufferLen) {
-                    this.flush();
-                }
-                var uint32View = this.uint32View;
-                var arrayBufferLen = this.arrayBufferLen;
-                uint32View[arrayBufferLen++] = 203;
-                uint32View[arrayBufferLen++] = i1;
-                this.arrayBufferLen = arrayBufferLen;
-            };
-            p.pushClip = function (f1, f2, f3, f4) {
-                if (this.arrayBufferLen + 5 > this.maxArrayBufferLen) {
-                    this.flush();
-                }
-                var uint32View = this.uint32View;
-                var float32View = this.float32View;
-                var arrayBufferLen = this.arrayBufferLen;
-                uint32View[arrayBufferLen++] = 107;
-                float32View[arrayBufferLen++] = f1;
-                float32View[arrayBufferLen++] = f2;
-                float32View[arrayBufferLen++] = f3;
-                float32View[arrayBufferLen++] = f4;
-                this.arrayBufferLen = arrayBufferLen;
-            };
-            p.popClip = function () {
-                if (this.arrayBufferLen + 1 > this.maxArrayBufferLen) {
-                    this.flush();
-                }
-                this.uint32View[this.arrayBufferLen++] = 108;
-            };
-            return CmdManager;
-        }());
-        egret.registerClass(CmdManager,'CmdManager');
-        /*
-         * @private
-         * 输出一个单例命令控制器，供所有需要调用的地方使用
-         */
-        native.$cmdManager = new CmdManager();
     })(native = egret.native || (egret.native = {}));
 })(egret || (egret = {}));
 //////////////////////////////////////////////////////////////////////////////////////
@@ -3098,9 +2656,9 @@ var egret;
          * @platform Web,Native
          * @private
          */
-        var NativeCanvasRenderContext2 = (function (_super) {
-            __extends(NativeCanvasRenderContext2, _super);
-            function NativeCanvasRenderContext2() {
+        var OldNativeCanvasRenderContext = (function (_super) {
+            __extends(OldNativeCanvasRenderContext, _super);
+            function OldNativeCanvasRenderContext() {
                 _super.apply(this, arguments);
                 this.$matrix = new egret.Matrix();
                 this.$nativeContext = null;
@@ -3120,7 +2678,7 @@ var egret;
                 this.savedMatrix = new egret.Matrix();
                 this.$hasStrokeText = false;
             }
-            var d = __define,c=NativeCanvasRenderContext2,p=c.prototype;
+            var d = __define,c=OldNativeCanvasRenderContext,p=c.prototype;
             d(p, "globalCompositeOperation"
                 /**
                  * @private
@@ -3152,8 +2710,6 @@ var egret;
                 ,function (value) {
                     this.$globalAlpha = value;
                     this.$nativeContext.setGlobalAlpha(value);
-                    // $cmdManager.setContext(this.$nativeContext);
-                    // $cmdManager.setGlobalAlpha(value);
                 }
             );
             d(p, "lineWidth"
@@ -3171,8 +2727,6 @@ var egret;
                     //console.log("set lineWidth" + value);
                     this.$lineWidth = value;
                     this.$nativeContext.lineWidth = value;
-                    // $cmdManager.setContext(this.$nativeContext);
-                    // $cmdManager.setLineWidth(value);
                 }
             );
             d(p, "strokeStyle"
@@ -3198,9 +2752,6 @@ var egret;
                         egret_native.Label.setStrokeColor(parseInt(value.replace("#", "0x")));
                     }
                     this.$nativeContext.strokeStyle = value;
-                    // $cmdManager.setContext(this.$nativeContext);
-                    // var s1 = $cmdManager.pushString(value);
-                    // $cmdManager.setStrokeStyle(s1);
                 }
             );
             d(p, "fillStyle"
@@ -3226,9 +2777,6 @@ var egret;
                         egret_native.Label.setTextColor(parseInt(value.replace("#", "0x")));
                     }
                     this.$nativeContext.fillStyle = value;
-                    // $cmdManager.setContext(this.$nativeContext);
-                    // var s1 = $cmdManager.pushString(value);
-                    // $cmdManager.setFillStyle(s1);
                 }
             );
             p.$fillColorStr = function (s) {
@@ -3322,8 +2870,6 @@ var egret;
             p.lineTo = function (x, y) {
                 //console.log("lineTo " + x + " " + y);
                 this.$nativeContext.lineTo(x, y);
-                // $cmdManager.setContext(this.$nativeContext);
-                // $cmdManager.lineTo(x, y);
             };
             /**
              * @private
@@ -3336,9 +2882,6 @@ var egret;
              */
             p.fill = function (fillRule) {
                 this.$nativeContext.fill(fillRule);
-                // $cmdManager.setContext(this.$nativeContext);
-                // var s1 = $cmdManager.pushString(fillRule);
-                // $cmdManager.fill(s1);
             };
             /**
              * @private
@@ -3348,8 +2891,6 @@ var egret;
              */
             p.closePath = function () {
                 this.$nativeContext.closePath();
-                // $cmdManager.setContext(this.$nativeContext);
-                // $cmdManager.closePath();
                 if (this.clipRectArray) {
                     this.$clipRectArray = this.clipRectArray;
                     this.clipRectArray = null;
@@ -3367,8 +2908,6 @@ var egret;
              */
             p.rect = function (x, y, w, h) {
                 this.$nativeContext.rect(x, y, w, h);
-                // $cmdManager.setContext(this.$nativeContext);
-                // $cmdManager.rect(x, y, w, h);
                 this.$clipRectArray.push({ x: x, y: y, w: w, h: h });
             };
             /**
@@ -3381,8 +2920,6 @@ var egret;
              */
             p.moveTo = function (x, y) {
                 this.$nativeContext.moveTo(x, y);
-                // $cmdManager.setContext(this.$nativeContext);
-                // $cmdManager.moveTo(x, y);
             };
             /**
              * @private
@@ -3444,8 +2981,6 @@ var egret;
              */
             p.beginPath = function () {
                 this.$nativeContext.beginPath();
-                // $cmdManager.setContext(this.$nativeContext);
-                // $cmdManager.beginPath();
                 this.clipRectArray = this.$clipRectArray.concat();
             };
             /**
@@ -3528,8 +3063,6 @@ var egret;
                     }
                     this.setTransformToNative();
                     this.$nativeContext.restore();
-                    // $cmdManager.setContext(this.$nativeContext);
-                    // $cmdManager.restore();
                     this.clipRectArray = null;
                 }
             };
@@ -3554,8 +3087,6 @@ var egret;
                     $clipRectArray: this.$clipRectArray.concat()
                 });
                 this.$nativeContext.save();
-                // $cmdManager.setContext(this.$nativeContext);
-                // $cmdManager.save();
             };
             /**
              * @private
@@ -3575,8 +3106,6 @@ var egret;
                     }
                     //console.log("pushRectStencils " + arr.toString());
                     this.$nativeContext.pushRectStencils(arr);
-                    // $cmdManager.setContext(this.$nativeContext);
-                    // $cmdManager.pushRectStencils(arr);
                     this.$clipRectArray.length = 0;
                 }
             };
@@ -3593,8 +3122,6 @@ var egret;
             p.clearRect = function (x, y, width, height) {
                 //console.log("clearRect x:" + x + " y:" +  y + " width:" + width + " height:" + height);
                 this.$nativeContext.clearRect(x, y, width, height);
-                // $cmdManager.setContext(this.$nativeContext);
-                // $cmdManager.clearRect(x, y, width, height);
             };
             /**
              * @private
@@ -3616,8 +3143,6 @@ var egret;
                 var m = this.$matrix;
                 //console.log("setTransformToNative::a=" + m.a + " b=" + m.b + " c=" + m.c + " d=" + m.d + " tx=" + m.tx + " ty=" + m.ty);
                 this.$nativeContext.setTransform(m.a, m.b, m.c, m.d, m.tx, m.ty);
-                // $cmdManager.setContext(this.$nativeContext);
-                // $cmdManager.setTransform(m.a, m.b, m.c, m.d, m.tx, m.ty);
             };
             /**
              * @private
@@ -3671,14 +3196,8 @@ var egret;
                 //console.log("drawText" + text);
                 var font = egret.TextField.default_fontFamily;
                 this.$nativeContext.createLabel(font, this.$fontSize, "", this.$hasStrokeText ? this.$lineWidth : 0);
-                // $cmdManager.setContext(this.$nativeContext);
-                // var s1 = $cmdManager.pushString(font);
-                // var s2 = $cmdManager.pushString("");
-                // $cmdManager.createLabel(s1, this.$fontSize, s2, this.$hasStrokeText ? this.$lineWidth : 0);
                 this.$hasStrokeText = false;
                 this.$nativeContext.drawText(text, x, y);
-                // var s3 = $cmdManager.pushString(text);
-                // $cmdManager.drawText(s3, x, y);
             };
             p.strokeText = function (text, x, y, maxWidth) {
                 this.$hasStrokeText = true;
@@ -3692,10 +3211,6 @@ var egret;
             p.measureText = function (text) {
                 var font = egret.TextField.default_fontFamily;
                 egret_native.Label.createLabel(font, this.$fontSize, "", this.$hasStrokeText ? this.$lineWidth : 0);
-                // $cmdManager.setContext(egret_native.Label);
-                // var s1 = $cmdManager.pushString(font);
-                // var s2 = $cmdManager.pushString("");
-                // $cmdManager.createLabel(s1, this.$fontSize, s2, this.$hasStrokeText ? this.$lineWidth : 0);
                 return { width: egret_native.Label.getTextSize(text)[0] };
             };
             /**
@@ -3760,17 +3275,6 @@ var egret;
                 //console.log("drawImage::" + offsetX + " " + offsetY + " " + width + " " + height + " " + surfaceOffsetX + " " + surfaceOffsetY + " " + surfaceImageWidth + " " + surfaceImageHeight);
                 //console.log("drawImage::" + bitmapData);
                 this.$nativeContext.drawImage(bitmapData, offsetX, offsetY, width, height, surfaceOffsetX, surfaceOffsetY, surfaceImageWidth, surfaceImageHeight);
-                // var imageAdress;
-                // if(!isNative) {
-                //     if(!bitmapData._native_tex_loc) {
-                //         bitmapData._native_tex_loc = bitmapData.___native_texture__p;
-                //     }
-                //     imageAdress = bitmapData._native_tex_loc;
-                // } else {
-                //     imageAdress = bitmapData.___native_texture__p;
-                // }
-                // $cmdManager.setContext(this.$nativeContext);
-                // $cmdManager.drawImage(imageAdress, offsetX, offsetY, width, height, surfaceOffsetX, surfaceOffsetY, surfaceImageWidth, surfaceImageHeight);
             };
             /**
              * @private
@@ -3806,10 +3310,10 @@ var egret;
                 }
                 return res;
             };
-            return NativeCanvasRenderContext2;
+            return OldNativeCanvasRenderContext;
         }(egret.HashObject));
-        native.NativeCanvasRenderContext2 = NativeCanvasRenderContext2;
-        egret.registerClass(NativeCanvasRenderContext2,'egret.native.NativeCanvasRenderContext2');
+        native.OldNativeCanvasRenderContext = OldNativeCanvasRenderContext;
+        egret.registerClass(OldNativeCanvasRenderContext,'egret.native.OldNativeCanvasRenderContext');
     })(native = egret.native || (egret.native = {}));
 })(egret || (egret = {}));
 //////////////////////////////////////////////////////////////////////////////////////
@@ -3857,7 +3361,7 @@ var egret;
                 _super.call(this);
                 this.$width = 0;
                 this.$height = 0;
-                this.renderContext = native.$supportCmdBatch ? new native.NativeCanvasRenderContext() : new native.NativeCanvasRenderContext2();
+                this.renderContext = native.$supportCmdBatch ? new native.NativeCanvasRenderContext() : new native.OldNativeCanvasRenderContext();
             }
             var d = __define,c=NativeCanvas,p=c.prototype;
             p.toDataURL = function (type) {
@@ -4381,6 +3885,356 @@ var egret;
          * 判断当前runtime版本是否支持cmdBatch
          */
         native.$supportCmdBatch = egret_native.sendToC ? true : false;
+        /*
+         * @private
+         * 命令控制器
+         * */
+        var CmdManager = (function () {
+            function CmdManager() {
+                /*
+                 * 存储绘制命令的 array buffer
+                 **/
+                this.maxArrayBufferLen = 80000;
+                this.arrayBuffer = new ArrayBuffer(this.maxArrayBufferLen * 4);
+                this.uint32View = new Uint32Array(this.arrayBuffer);
+                this.float32View = new Float32Array(this.arrayBuffer);
+                this.arrayBufferLen = 0;
+                /*
+                 * 存储字符串的数组
+                 */
+                this.strArray = new Array();
+            }
+            var d = __define,c=CmdManager,p=c.prototype;
+            /*
+             * 上传绘制命令到C
+             */
+            p.flush = function () {
+                egret_native.sendToC(this.float32View, this.arrayBufferLen, this.strArray);
+                this.clear();
+            };
+            /*
+             * 切换native上下文
+             * native绘制需要在自身的上下文进行绘制
+             */
+            p.setContext = function (ctx) {
+                if (this.context != ctx) {
+                    if (this.arrayBufferLen + 3 > this.maxArrayBufferLen) {
+                        this.flush();
+                    }
+                    this.context = ctx;
+                    var uint32View = this.uint32View;
+                    var arrayBufferLen = this.arrayBufferLen;
+                    uint32View[arrayBufferLen++] = 1000;
+                    // uint32View[arrayBufferLen++] = ctx.___native_texture__p;
+                    // 兼容64位
+                    var addr = ctx.___native_texture__p;
+                    uint32View[arrayBufferLen++] = (addr / 4294967296) >>> 0;
+                    uint32View[arrayBufferLen++] = (addr & 4294967295) >>> 0;
+                    // uint32View[arrayBufferLen++] = addr >> 32;
+                    // uint32View[arrayBufferLen++] = addr & 4294967295;
+                    this.arrayBufferLen = arrayBufferLen;
+                }
+            };
+            /*
+             * 清空绘制命令
+             */
+            p.clear = function () {
+                this.arrayBufferLen = 0;
+                this.strArray.length = 0;
+            };
+            /*
+             * 压入一个字符串并返回索引
+             */
+            p.pushString = function (str) {
+                var array = this.strArray;
+                var len = array.length;
+                array[len] = str;
+                return len;
+            };
+            //------绘制命令 start-------------
+            p.clearScreen = function (i1, i2, i3, i4) {
+                if (this.arrayBufferLen + 5 > this.maxArrayBufferLen) {
+                    this.flush();
+                }
+                var uint32View = this.uint32View;
+                var arrayBufferLen = this.arrayBufferLen;
+                uint32View[arrayBufferLen++] = 100;
+                uint32View[arrayBufferLen++] = i1;
+                uint32View[arrayBufferLen++] = i2;
+                uint32View[arrayBufferLen++] = i3;
+                uint32View[arrayBufferLen++] = i4;
+                this.arrayBufferLen = arrayBufferLen;
+            };
+            p.drawImage = function (i1, f1, f2, f3, f4, f5, f6, f7, f8) {
+                if (this.arrayBufferLen + 11 > this.maxArrayBufferLen) {
+                    this.flush();
+                }
+                var uint32View = this.uint32View;
+                var float32View = this.float32View;
+                var arrayBufferLen = this.arrayBufferLen;
+                uint32View[arrayBufferLen++] = 101;
+                // uint32View[arrayBufferLen++] = i1;
+                // 兼容64位
+                // uint32View[arrayBufferLen++] = i1 >> 32;
+                // uint32View[arrayBufferLen++] = i1 & 4294967295;
+                uint32View[arrayBufferLen++] = (i1 / 4294967296) >>> 0;
+                uint32View[arrayBufferLen++] = (i1 & 4294967295) >>> 0;
+                float32View[arrayBufferLen++] = f1;
+                float32View[arrayBufferLen++] = f2;
+                float32View[arrayBufferLen++] = f3;
+                float32View[arrayBufferLen++] = f4;
+                float32View[arrayBufferLen++] = f5;
+                float32View[arrayBufferLen++] = f6;
+                float32View[arrayBufferLen++] = f7;
+                float32View[arrayBufferLen++] = f8;
+                this.arrayBufferLen = arrayBufferLen;
+            };
+            p.setTransform = function (f1, f2, f3, f4, f5, f6) {
+                if (this.arrayBufferLen + 7 > this.maxArrayBufferLen) {
+                    this.flush();
+                }
+                var uint32View = this.uint32View;
+                var float32View = this.float32View;
+                var arrayBufferLen = this.arrayBufferLen;
+                uint32View[arrayBufferLen++] = 103;
+                float32View[arrayBufferLen++] = f1;
+                float32View[arrayBufferLen++] = f2;
+                float32View[arrayBufferLen++] = f3;
+                float32View[arrayBufferLen++] = f4;
+                float32View[arrayBufferLen++] = f5;
+                float32View[arrayBufferLen++] = f6;
+                this.arrayBufferLen = arrayBufferLen;
+            };
+            p.setGlobalAlpha = function (f1) {
+                if (this.arrayBufferLen + 2 > this.maxArrayBufferLen) {
+                    this.flush();
+                }
+                var uint32View = this.uint32View;
+                var float32View = this.float32View;
+                var arrayBufferLen = this.arrayBufferLen;
+                uint32View[arrayBufferLen++] = 106;
+                float32View[arrayBufferLen++] = f1;
+                this.arrayBufferLen = arrayBufferLen;
+            };
+            p.pushRectStencils = function (array) {
+                var len = array.length;
+                if (this.arrayBufferLen + len + 1 > this.maxArrayBufferLen) {
+                    this.flush();
+                }
+                var uint32View = this.uint32View;
+                var float32View = this.float32View;
+                var arrayBufferLen = this.arrayBufferLen;
+                uint32View[arrayBufferLen++] = 113;
+                uint32View[arrayBufferLen++] = len;
+                for (var i = 0; i < len; i++) {
+                    float32View[arrayBufferLen++] = array[i];
+                }
+                this.arrayBufferLen = arrayBufferLen;
+            };
+            p.restore = function () {
+                if (this.arrayBufferLen + 1 > this.maxArrayBufferLen) {
+                    this.flush();
+                }
+                this.uint32View[this.arrayBufferLen++] = 116;
+            };
+            p.save = function () {
+                if (this.arrayBufferLen + 1 > this.maxArrayBufferLen) {
+                    this.flush();
+                }
+                this.uint32View[this.arrayBufferLen++] = 117;
+            };
+            p.setBlendArg = function (f1, f2) {
+                if (this.arrayBufferLen + 3 > this.maxArrayBufferLen) {
+                    this.flush();
+                }
+                var uint32View = this.uint32View;
+                var float32View = this.float32View;
+                var arrayBufferLen = this.arrayBufferLen;
+                uint32View[arrayBufferLen++] = 120;
+                float32View[arrayBufferLen++] = f1;
+                float32View[arrayBufferLen++] = f2;
+                this.arrayBufferLen = arrayBufferLen;
+            };
+            p.beginPath = function () {
+                if (this.arrayBufferLen + 1 > this.maxArrayBufferLen) {
+                    this.flush();
+                }
+                this.uint32View[this.arrayBufferLen++] = 204;
+            };
+            p.closePath = function () {
+                if (this.arrayBufferLen + 1 > this.maxArrayBufferLen) {
+                    this.flush();
+                }
+                this.uint32View[this.arrayBufferLen++] = 205;
+            };
+            p.rect = function (f1, f2, f3, f4) {
+                if (this.arrayBufferLen + 5 > this.maxArrayBufferLen) {
+                    this.flush();
+                }
+                var uint32View = this.uint32View;
+                var float32View = this.float32View;
+                var arrayBufferLen = this.arrayBufferLen;
+                uint32View[arrayBufferLen++] = 210;
+                float32View[arrayBufferLen++] = f1;
+                float32View[arrayBufferLen++] = f2;
+                float32View[arrayBufferLen++] = f3;
+                float32View[arrayBufferLen++] = f4;
+                this.arrayBufferLen = arrayBufferLen;
+            };
+            p.clearRect = function (f1, f2, f3, f4) {
+                if (this.arrayBufferLen + 5 > this.maxArrayBufferLen) {
+                    this.flush();
+                }
+                var uint32View = this.uint32View;
+                var float32View = this.float32View;
+                var arrayBufferLen = this.arrayBufferLen;
+                uint32View[arrayBufferLen++] = 214;
+                float32View[arrayBufferLen++] = f1;
+                float32View[arrayBufferLen++] = f2;
+                float32View[arrayBufferLen++] = f3;
+                float32View[arrayBufferLen++] = f4;
+                this.arrayBufferLen = arrayBufferLen;
+            };
+            p.createLabel = function (i1, f1, i2, f2) {
+                if (this.arrayBufferLen + 5 > this.maxArrayBufferLen) {
+                    this.flush();
+                }
+                var uint32View = this.uint32View;
+                var float32View = this.float32View;
+                var arrayBufferLen = this.arrayBufferLen;
+                uint32View[arrayBufferLen++] = 300;
+                uint32View[arrayBufferLen++] = i1;
+                float32View[arrayBufferLen++] = f1;
+                uint32View[arrayBufferLen++] = i2;
+                float32View[arrayBufferLen++] = f2;
+                this.arrayBufferLen = arrayBufferLen;
+            };
+            p.drawText = function (i1, f1, f2) {
+                if (this.arrayBufferLen + 4 > this.maxArrayBufferLen) {
+                    this.flush();
+                }
+                var uint32View = this.uint32View;
+                var float32View = this.float32View;
+                var arrayBufferLen = this.arrayBufferLen;
+                uint32View[arrayBufferLen++] = 301;
+                uint32View[arrayBufferLen++] = i1;
+                float32View[arrayBufferLen++] = f1;
+                float32View[arrayBufferLen++] = f2;
+                this.arrayBufferLen = arrayBufferLen;
+            };
+            p.setTextColor = function (i1) {
+                if (this.arrayBufferLen + 2 > this.maxArrayBufferLen) {
+                    this.flush();
+                }
+                var uint32View = this.uint32View;
+                var arrayBufferLen = this.arrayBufferLen;
+                uint32View[arrayBufferLen++] = 302;
+                uint32View[arrayBufferLen++] = i1;
+                this.arrayBufferLen = arrayBufferLen;
+            };
+            p.setStrokeColor = function (i1) {
+                if (this.arrayBufferLen + 2 > this.maxArrayBufferLen) {
+                    this.flush();
+                }
+                var uint32View = this.uint32View;
+                var arrayBufferLen = this.arrayBufferLen;
+                uint32View[arrayBufferLen++] = 303;
+                uint32View[arrayBufferLen++] = i1;
+                this.arrayBufferLen = arrayBufferLen;
+            };
+            p.setFillStyle = function (i1) {
+                if (this.arrayBufferLen + 2 > this.maxArrayBufferLen) {
+                    this.flush();
+                }
+                var uint32View = this.uint32View;
+                var arrayBufferLen = this.arrayBufferLen;
+                uint32View[arrayBufferLen++] = 1200;
+                uint32View[arrayBufferLen++] = i1;
+                this.arrayBufferLen = arrayBufferLen;
+            };
+            p.setStrokeStyle = function (i1) {
+                if (this.arrayBufferLen + 2 > this.maxArrayBufferLen) {
+                    this.flush();
+                }
+                var uint32View = this.uint32View;
+                var arrayBufferLen = this.arrayBufferLen;
+                uint32View[arrayBufferLen++] = 1201;
+                uint32View[arrayBufferLen++] = i1;
+                this.arrayBufferLen = arrayBufferLen;
+            };
+            p.setLineWidth = function (f1) {
+                if (this.arrayBufferLen + 2 > this.maxArrayBufferLen) {
+                    this.flush();
+                }
+                var uint32View = this.uint32View;
+                var float32View = this.float32View;
+                var arrayBufferLen = this.arrayBufferLen;
+                uint32View[arrayBufferLen++] = 1202;
+                float32View[arrayBufferLen++] = f1;
+                this.arrayBufferLen = arrayBufferLen;
+            };
+            p.moveTo = function (f1, f2) {
+                if (this.arrayBufferLen + 3 > this.maxArrayBufferLen) {
+                    this.flush();
+                }
+                var uint32View = this.uint32View;
+                var float32View = this.float32View;
+                var arrayBufferLen = this.arrayBufferLen;
+                uint32View[arrayBufferLen++] = 207;
+                float32View[arrayBufferLen++] = f1;
+                float32View[arrayBufferLen++] = f2;
+                this.arrayBufferLen = arrayBufferLen;
+            };
+            p.lineTo = function (f1, f2) {
+                if (this.arrayBufferLen + 3 > this.maxArrayBufferLen) {
+                    this.flush();
+                }
+                var uint32View = this.uint32View;
+                var float32View = this.float32View;
+                var arrayBufferLen = this.arrayBufferLen;
+                uint32View[arrayBufferLen++] = 208;
+                float32View[arrayBufferLen++] = f1;
+                float32View[arrayBufferLen++] = f2;
+                this.arrayBufferLen = arrayBufferLen;
+            };
+            p.fill = function (i1) {
+                if (this.arrayBufferLen + 2 > this.maxArrayBufferLen) {
+                    this.flush();
+                }
+                var uint32View = this.uint32View;
+                var arrayBufferLen = this.arrayBufferLen;
+                uint32View[arrayBufferLen++] = 203;
+                uint32View[arrayBufferLen++] = i1;
+                this.arrayBufferLen = arrayBufferLen;
+            };
+            p.pushClip = function (f1, f2, f3, f4) {
+                if (this.arrayBufferLen + 5 > this.maxArrayBufferLen) {
+                    this.flush();
+                }
+                var uint32View = this.uint32View;
+                var float32View = this.float32View;
+                var arrayBufferLen = this.arrayBufferLen;
+                uint32View[arrayBufferLen++] = 107;
+                float32View[arrayBufferLen++] = f1;
+                float32View[arrayBufferLen++] = f2;
+                float32View[arrayBufferLen++] = f3;
+                float32View[arrayBufferLen++] = f4;
+                this.arrayBufferLen = arrayBufferLen;
+            };
+            p.popClip = function () {
+                if (this.arrayBufferLen + 1 > this.maxArrayBufferLen) {
+                    this.flush();
+                }
+                this.uint32View[this.arrayBufferLen++] = 108;
+            };
+            return CmdManager;
+        }());
+        egret.registerClass(CmdManager,'CmdManager');
+        /*
+         * @private
+         * 输出一个单例命令控制器，供所有需要调用的地方使用
+         */
+        native.$cmdManager = new CmdManager();
         var isRunning = false;
         var playerList = [];
         function runEgret(options) {
