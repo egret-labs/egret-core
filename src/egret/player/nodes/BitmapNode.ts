@@ -102,8 +102,8 @@ module egret.sys {
                     bitmapHeight, offsetX, offsetY, textureWidth, textureHeight, destW, destH);
             }
             else if (fillMode == egret.BitmapFillMode.SCALE) {
-                var tsX: number = destW / textureWidth;
-                var tsY: number = destH / textureHeight;
+                var tsX: number = destW / textureWidth * scale;
+                var tsY: number = destH / textureHeight * scale;
                 node.drawImage(bitmapX, bitmapY,
                     bitmapWidth, bitmapHeight, offsetX * tsX, offsetY * tsY, tsX * bitmapWidth, tsY * bitmapHeight);
             }
