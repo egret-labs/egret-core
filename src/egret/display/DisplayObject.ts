@@ -258,7 +258,8 @@ module egret {
                 16:0,               //skewXdeg,
                 17:0,               //skewYdeg,
                 18:0,               //concatenatedAlpha,
-                19:null             //filters
+                19:null,            //concatenatedVisible,
+                20:null             //filters
             };
         }
 

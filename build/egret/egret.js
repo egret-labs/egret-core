@@ -1471,7 +1471,8 @@ var egret;
                 16: 0,
                 17: 0,
                 18: 0,
-                19: null //filters
+                19: null,
+                20: null //filters
             };
         }
         var d = __define,c=DisplayObject,p=c.prototype;
