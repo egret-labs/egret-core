@@ -28,8 +28,18 @@ var SortFiles = (function () {
         if(!configJson.compilerOptions) {
             configJson.compilerOptions = {};
         }
-        configJson.compilerOptions.outDir = "bin-debug";
-        configJson.files = result.files;
+        if(!configJson.compilerOptions.outDir) {
+            configJson.compilerOptions.outDir = "bin-debug";
+        }
+        var finalFiles = [];
+        result.files.forEach(f=> {
+            if (!f)
+                return;
+            if (/lib\.d\.ts$/.test(f))
+                return;
+            finalFiles.push(f);
+        });
+        configJson.files = finalFiles;
         FileUtil.save(tsconfigPath, JSON.stringify(configJson, null, "\t"));
         return 0;
     };
