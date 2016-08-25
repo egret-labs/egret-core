@@ -381,6 +381,10 @@ module eui.sys {
                 else if (node.nodeType === 1) {
                     var id = node.attributes["id"];
                     if (id) {
+                        var first = parseInt(id.slice(0,1))
+                        if (!isNaN(first)){
+                            egret.$warn(2023, id);
+                        }
                         if (id.indexOf(" ") > -1) {
                             egret.$warn(2022, id);
                         }
