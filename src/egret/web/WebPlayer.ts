@@ -203,22 +203,64 @@ module egret.web {
             canvas.style[egret.web.getPrefixStyleName("transformOrigin")] = "0% 0% 0px";
             canvas.style.width = displayWidth + "px";
             canvas.style.height = displayHeight + "px";
+            var vAlign = 0, hAlign = 0;
+            switch (this.stage.align) {
+                case StageAlign.BOTTOM:
+                    vAlign = 1;
+                    hAlign = 0.5;
+                    break;
+                case StageAlign.BOTTOM_LEFT:
+                    vAlign = 1;
+                    hAlign = 0;
+                    break;
+                case StageAlign.BOTTOM_RIGHT:
+                    vAlign = 1;
+                    hAlign = 1;
+                    break;
+                case StageAlign.CENTER:
+                    vAlign = 0.5;
+                    hAlign = 0.5;
+                    break;
+                case StageAlign.LEFT:
+                    vAlign = 0.5;
+                    hAlign = 0;
+                    break;
+                case StageAlign.RIGHT:
+                    vAlign = 0.5;
+                    hAlign = 1;
+                    break;
+                case StageAlign.TOP:
+                    vAlign = 0;
+                    hAlign = 0.5;
+                    break;
+                case StageAlign.TOP_LEFT:
+                    vAlign = 0;
+                    hAlign = 0;
+                    break;
+                case StageAlign.TOP_RIGHT:
+                    vAlign = 0;
+                    hAlign = 1;
+                    break;
+            
+                default:
+                    break;
+            }
             var rotation = 0;
             if (shouldRotate) {
                 if (orientation == OrientationMode.LANDSCAPE) {//
                     rotation = 90;
-                    canvas.style.top = (screenRect.height - displayWidth) / 2 + "px";
-                    canvas.style.left = (screenRect.width + displayHeight) / 2 + "px";
+                    canvas.style.top = (screenRect.height - displayWidth) * vAlign + "px";
+                    canvas.style.left = (screenRect.width + displayHeight) * hAlign + "px";
                 }
                 else {
                     rotation = -90;
-                    canvas.style.top = (screenRect.height + displayWidth) / 2 + "px";
-                    canvas.style.left = (screenRect.width - displayHeight) / 2 + "px";
+                    canvas.style.top = (screenRect.height + displayWidth) * vAlign + "px";
+                    canvas.style.left = (screenRect.width - displayHeight) * hAlign + "px";
                 }
             }
             else {
-                canvas.style.top = (screenRect.height - displayHeight) / 2 + "px";
-                canvas.style.left = (screenRect.width - displayWidth) / 2 + "px";
+                canvas.style.top = (screenRect.height - displayHeight) * vAlign + "px";
+                canvas.style.left = (screenRect.width - displayWidth) * hAlign + "px";
             }
 
             var transform = `rotate(${ rotation }deg)`;
