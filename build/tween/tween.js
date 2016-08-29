@@ -1441,3 +1441,172 @@ var egret;
     egret.Tween = Tween;
     egret.registerClass(Tween,'egret.Tween');
 })(egret || (egret = {}));
+var egret;
+(function (egret) {
+    var tween;
+    (function (tween) {
+        var BasePath = (function (_super) {
+            __extends(BasePath, _super);
+            function BasePath() {
+                _super.apply(this, arguments);
+                this.name = "";
+            }
+            var d = __define,c=BasePath,p=c.prototype;
+            return BasePath;
+        }(egret.EventDispatcher));
+        tween.BasePath = BasePath;
+        egret.registerClass(BasePath,'egret.tween.BasePath');
+        var To = (function (_super) {
+            __extends(To, _super);
+            function To() {
+                _super.apply(this, arguments);
+                this.props = undefined;
+                this.duration = 500;
+                this.ease = undefined;
+            }
+            var d = __define,c=To,p=c.prototype;
+            return To;
+        }(BasePath));
+        tween.To = To;
+        egret.registerClass(To,'egret.tween.To');
+        var Wait = (function (_super) {
+            __extends(Wait, _super);
+            function Wait() {
+                _super.apply(this, arguments);
+                this.duration = 500;
+                this.passive = undefined;
+            }
+            var d = __define,c=Wait,p=c.prototype;
+            return Wait;
+        }(BasePath));
+        tween.Wait = Wait;
+        egret.registerClass(Wait,'egret.tween.Wait');
+        var Set = (function (_super) {
+            __extends(Set, _super);
+            function Set() {
+                _super.apply(this, arguments);
+                this.props = undefined;
+            }
+            var d = __define,c=Set,p=c.prototype;
+            return Set;
+        }(BasePath));
+        tween.Set = Set;
+        egret.registerClass(Set,'egret.tween.Set');
+        var Tick = (function (_super) {
+            __extends(Tick, _super);
+            function Tick() {
+                _super.apply(this, arguments);
+                this.delta = 500;
+            }
+            var d = __define,c=Tick,p=c.prototype;
+            return Tick;
+        }(BasePath));
+        tween.Tick = Tick;
+        egret.registerClass(Tick,'egret.tween.Tick');
+        function convertEase(ease) {
+            if (typeof ease === 'function') {
+                return ease;
+            }
+            else {
+                var func = egret.Ease[ease];
+                if (typeof func === 'function') {
+                    return func;
+                }
+            }
+            return null;
+        }
+        /**
+         * <code>
+         * 	<tween:TweenItem target="{this.button}">
+         * 		<tween:paths>
+         * 			<tween:To props="{{x: 500}}" duration="500" ease="sineIn"/>
+         * 			<tween:Wait duration="500"/>
+         * 		<tween:paths>
+         * 	</tween:TweenItem>
+         * </code>
+         */
+        var TweenItem = (function (_super) {
+            __extends(TweenItem, _super);
+            function TweenItem() {
+                _super.call(this);
+            }
+            var d = __define,c=TweenItem,p=c.prototype;
+            d(p, "props"
+                ,function () {
+                    return this._props;
+                }
+                ,function (value) {
+                    this._props = value;
+                }
+            );
+            d(p, "target"
+                ,function () {
+                    return this._target;
+                }
+                ,function (value) {
+                    this._target = value;
+                }
+            );
+            d(p, "paths"
+                ,function () {
+                    return this._paths;
+                }
+                ,function (value) {
+                    this._paths = value || [];
+                }
+            );
+            p.play = function () {
+                if (!this.tween) {
+                    this.createTween();
+                }
+                else {
+                    this.tween.setPaused(false);
+                }
+            };
+            p.pause = function () {
+                if (this.tween) {
+                    this.tween.setPaused(true);
+                }
+            };
+            p.createTween = function () {
+                this.tween = egret.Tween.get(this._target, this._props);
+                if (this._paths) {
+                    this.applyPaths();
+                }
+            };
+            p.applyPaths = function () {
+                for (var i = 0; i < this._paths.length; i++) {
+                    var path = this._paths[i];
+                    this.applyPath(path);
+                }
+            };
+            p.applyPath = function (path) {
+                var _this = this;
+                if (path instanceof To) {
+                    this.tween.to(path.props, path.duration, convertEase(path.ease));
+                }
+                else if (path instanceof Wait) {
+                    this.tween.wait(path.duration, path.passive);
+                }
+                else if (path instanceof Set) {
+                    this.tween.set(path.props);
+                }
+                else if (path instanceof Tick) {
+                    this.tween.tick(path.delta);
+                }
+                this.tween.call(function () { return _this.pathComplete(path); });
+            };
+            p.pathComplete = function (path) {
+                path.dispatchEventWith('complete');
+                this.dispatchEventWith('itemComplete', false, path);
+                var index = this._paths.indexOf(path);
+                if (index >= 0 && index === this._paths.length - 1) {
+                    path.dispatchEventWith('complete');
+                }
+            };
+            return TweenItem;
+        }(egret.EventDispatcher));
+        tween.TweenItem = TweenItem;
+        egret.registerClass(TweenItem,'egret.tween.TweenItem');
+    })(tween = egret.tween || (egret.tween = {}));
+})(egret || (egret = {}));

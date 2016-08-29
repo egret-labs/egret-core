@@ -940,3 +940,60 @@ declare module egret {
         tick(delta: number): void;
     }
 }
+declare module egret.tween {
+    type EaseType = 'quadIn' | 'quadOut' | 'quadOut' | 'quadInOut' | 'cubicIn' | 'cubicOut' | 'cubicInOut' | 'quartIn' | 'quartOut' | 'quartInOut' | 'quintIn' | 'quintOut' | 'quintInOut' | 'sineIn' | 'sineOut' | 'sineInOut' | 'backIn' | 'backOut' | 'backInOut' | 'circIn' | 'circOut' | 'circInOut' | 'bounceIn' | 'bounceOut' | 'bounceInOut' | 'elasticIn' | 'elasticOut' | 'elasticInOut';
+    interface TweenProps {
+        useTicks?: boolean;
+        ignoreGlobalPause?: boolean;
+        loop?: boolean;
+        override?: boolean;
+        paused?: boolean;
+        position?: number;
+        onChange?: () => void;
+        onChangeObj?: any;
+    }
+    class BasePath extends EventDispatcher {
+        name: string;
+    }
+    class To extends BasePath {
+        props: Object;
+        duration: number;
+        ease: EaseType | Function;
+    }
+    class Wait extends BasePath {
+        duration: number;
+        passive: boolean;
+    }
+    class Set extends BasePath {
+        props: Object;
+    }
+    class Tick extends BasePath {
+        delta: number;
+    }
+    /**
+     * <code>
+     * 	<tween:TweenItem target="{this.button}">
+     * 		<tween:paths>
+     * 			<tween:To props="{{x: 500}}" duration="500" ease="sineIn"/>
+     * 			<tween:Wait duration="500"/>
+     * 		<tween:paths>
+     * 	</tween:TweenItem>
+     * </code>
+     */
+    class TweenItem extends EventDispatcher {
+        private _props;
+        private _target;
+        private _paths;
+        private tween;
+        constructor();
+        props: TweenProps;
+        target: any;
+        paths: BasePath[];
+        play(): void;
+        pause(): void;
+        private createTween();
+        private applyPaths();
+        private applyPath(path);
+        private pathComplete(path);
+    }
+}
