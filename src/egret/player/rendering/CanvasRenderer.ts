@@ -261,12 +261,12 @@ module egret {
                         blurFilter(imageData.data, displayBuffer.surface.width, displayBuffer.surface.height, (<BlurFilter>filter).$blurX, (<BlurFilter>filter).$blurY);
                     } else if(filter.type == "glow") {
                         // TODO glow滤镜实现 kickout hideObject
-                        var r = (<GlowFilter>filter).$red;
-                        var g = (<GlowFilter>filter).$green;
-                        var b = (<GlowFilter>filter).$blue;
-                        var a = (<GlowFilter>filter).$alpha;
-                        dropShadowFilter(imageData.data, displayBuffer.surface.width, displayBuffer.surface.height, [r, g, b, a], (<GlowFilter>filter).$blurX, (<GlowFilter>filter).$blurY,
-                            (<DropShadowFilter>filter).$angle || 0, (<DropShadowFilter>filter).$distance || 0, (<GlowFilter>filter).$strength);
+                        // var r = (<GlowFilter>filter).$red;
+                        // var g = (<GlowFilter>filter).$green;
+                        // var b = (<GlowFilter>filter).$blue;
+                        // var a = (<GlowFilter>filter).$alpha;
+                        // dropShadowFilter(imageData.data, displayBuffer.surface.width, displayBuffer.surface.height, [r, g, b, a], (<GlowFilter>filter).$blurX, (<GlowFilter>filter).$blurY,
+                        //     (<DropShadowFilter>filter).$angle || 0, (<DropShadowFilter>filter).$distance || 0, (<GlowFilter>filter).$strength);
                     }
                 }  
                 displayContext.putImageData(imageData, 0, 0);

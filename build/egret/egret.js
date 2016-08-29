@@ -16526,12 +16526,6 @@ var egret;
                         blurFilter(imageData.data, displayBuffer.surface.width, displayBuffer.surface.height, filter.$blurX, filter.$blurY);
                     }
                     else if (filter.type == "glow") {
-                        // TODO glow滤镜实现 kickout hideObject
-                        var r = filter.$red;
-                        var g = filter.$green;
-                        var b = filter.$blue;
-                        var a = filter.$alpha;
-                        dropShadowFilter(imageData.data, displayBuffer.surface.width, displayBuffer.surface.height, [r, g, b, a], filter.$blurX, filter.$blurY, filter.$angle || 0, filter.$distance || 0, filter.$strength);
                     }
                 }
                 displayContext.putImageData(imageData, 0, 0);
