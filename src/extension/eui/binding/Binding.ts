@@ -138,7 +138,7 @@ module eui {
 
 
         static $bindProperties(host:any, templates:any[], chainIndex:number[], target:any, prop:string):Watcher {
-            if (templates.length == 1) {
+            if (templates.length == 1 && chainIndex.length == 1) {
                 return Binding.bindProperty(host, templates[0].split("."), target, prop);
             }
 

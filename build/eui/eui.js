@@ -135,7 +135,7 @@ var eui;
             return watcher;
         };
         Binding.$bindProperties = function (host, templates, chainIndex, target, prop) {
-            if (templates.length == 1) {
+            if (templates.length == 1 && chainIndex.length == 1) {
                 return Binding.bindProperty(host, templates[0].split("."), target, prop);
             }
             var assign = function () {
