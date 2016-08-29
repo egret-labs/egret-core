@@ -164,8 +164,9 @@ class AutoCompileCommand implements egret.Command {
         var exmlTS = this.buildChangedEXML(exmls);
         this.buildChangedRes(others);
         codes = codes.concat(exmlTS);
-        this.messages[1] = [];
+
         if (codes.length || this.sourceMapStateChanged) {
+            this.messages[1] = [];
             this.sourceMapStateChanged = false;
             var result = this.buildChangedTS(codes);
             //console.log("result.files:", result.files);
