@@ -6805,13 +6805,23 @@ var egret;
              * 绘制Mesh
              */
             p.drawMesh = function (image, sourceX, sourceY, sourceWidth, sourceHeight, destX, destY, destWidth, destHeight, imageSourceWidth, imageSourceHeight, meshUVs, meshVertices, meshIndices, bounds) {
-                if (this.contextLost || !image) {
+                var buffer = this.currentBuffer;
+                if (this.contextLost || !image || !buffer) {
                     return;
                 }
-                if (!image.source && !image.webGLTexture) {
+                var texture;
+                if (image.source && image.source["texture"]) {
+                    // 如果是render target
+                    texture = image.source["texture"];
+                    buffer.saveTransform();
+                    buffer.transform(1, 0, 0, -1, 0, destHeight + destY * 2); // 翻转
+                }
+                else if (!image.source && !image.webGLTexture) {
                     return;
                 }
-                var texture = this.getWebGLTexture(image);
+                else {
+                    texture = this.getWebGLTexture(image);
+                }
                 if (!texture) {
                     return;
                 }

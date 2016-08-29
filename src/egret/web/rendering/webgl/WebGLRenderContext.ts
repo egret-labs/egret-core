@@ -470,15 +470,23 @@ module egret.web {
             imageSourceWidth: number, imageSourceHeight: number,
             meshUVs: number[], meshVertices: number[], meshIndices: number[], bounds: Rectangle
         ): void {
-            if (this.contextLost || !image) {
+            var buffer = this.currentBuffer;
+            if (this.contextLost || !image || !buffer) {
                 return;
             }
 
-            if (!image.source && !image.webGLTexture) {
+            var texture: WebGLTexture;
+            if (image.source && image.source["texture"]) {
+                // 如果是render target
+                texture = image.source["texture"];
+                buffer.saveTransform();
+                buffer.transform(1, 0, 0, -1, 0, destHeight + destY * 2);// 翻转
+            } else if (!image.source && !image.webGLTexture) {
                 return;
+            } else {
+                texture = this.getWebGLTexture(image);
             }
 
-            var texture = this.getWebGLTexture(image);
             if (!texture) {
                 return;
             }
