@@ -34,7 +34,7 @@ module egret.native {
      * @private
      */
     function convertImageToRenderTexture(texture:egret.Texture, rect?:egret.Rectangle):NativeCanvas {
-        var buffer = <NativeCanvasRenderBuffer><any>sys.hitTestBuffer;
+        var buffer = <NativeCanvasRenderBuffer><any>sys.canvasHitTestBuffer;
         var w = texture.$getTextureWidth();
         var h = texture.$getTextureHeight();
         if (rect == null) {

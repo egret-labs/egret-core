@@ -769,7 +769,7 @@ module egret {
             var m = target.$getInvertedConcatenatedMatrix();
             var localX = m.a * stageX + m.c * stageY + m.tx;
             var localY = m.b * stageX + m.d * stageY + m.ty;
-            var buffer = sys.hitTestBuffer;
+            var buffer = sys.canvasHitTestBuffer;
             buffer.resize(3, 3);
             var node = this.$renderNode;
             var matrix = Matrix.create();

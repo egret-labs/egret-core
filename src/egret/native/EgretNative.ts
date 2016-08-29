@@ -558,7 +558,8 @@ module egret.native {
         //todo
         var player = new NativePlayer();
         playerList.push(player);
-        sys.hitTestBuffer = new NativeCanvasRenderBuffer(3, 3);
+        sys.customHitTestBuffer = new NativeCanvasRenderBuffer(3, 3);
+        sys.canvasHitTestBuffer = sys.customHitTestBuffer;
         //老版本runtime不支持canvas,关闭脏矩形
         if (!$supportCanvas) {
             player.$stage.dirtyRegionPolicy = DirtyRegionPolicy.OFF;

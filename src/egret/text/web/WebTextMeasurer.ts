@@ -76,7 +76,7 @@ module egret.web {
      * @private
      */
     function createContext():void {
-        context = sys.hitTestBuffer.context;
+        context = sys.canvasHitTestBuffer.context;
         context.textAlign = "left";
         context.textBaseline = "middle";
     }

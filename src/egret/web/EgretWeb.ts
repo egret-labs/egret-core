@@ -63,6 +63,7 @@ module egret.web {
         }
         Html5Capatibility._audioType = options.audioType;
         Html5Capatibility.$init();
+        sys.CanvasRenderBuffer = web.CanvasRenderBuffer;
         setRenderMode(options.renderMode);
         var ticker = egret.sys.$ticker;
         startTicker(ticker);
@@ -72,9 +73,6 @@ module egret.web {
         else if (!egret.sys.screenAdapter) {
             egret.sys.screenAdapter = new egret.sys.DefaultScreenAdapter();
         }
-
-        sys.CanvasRenderBuffer = web.CanvasRenderBuffer;
-        sys.hitTestBuffer = new CanvasRenderBuffer(3, 3);   
 
         var list = document.querySelectorAll(".egret-player");
         var length = list.length;
@@ -100,12 +98,16 @@ module egret.web {
             sys.RenderBuffer = web.WebGLRenderBuffer;
             sys.systemRenderer = new WebGLRenderer();
             sys.canvasRenderer = new CanvasRenderer();
+            sys.customHitTestBuffer = new WebGLRenderBuffer(3, 3);
+            sys.canvasHitTestBuffer = new CanvasRenderBuffer(3, 3);
             Capabilities.$renderMode = "webgl";
         }
         else {
             sys.RenderBuffer = web.CanvasRenderBuffer;
             sys.systemRenderer = new CanvasRenderer();
             sys.canvasRenderer = sys.systemRenderer;
+            sys.customHitTestBuffer = new CanvasRenderBuffer(3, 3);
+            sys.canvasHitTestBuffer = sys.customHitTestBuffer;
             Capabilities.$renderMode = "canvas";
         }
     }

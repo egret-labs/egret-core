@@ -31,7 +31,8 @@ module egret.sys {
     /**
      * 共享的用于碰撞检测的渲染缓冲
      */
-    export var hitTestBuffer:sys.RenderBuffer;
+    export var customHitTestBuffer:sys.RenderBuffer;
+    export var canvasHitTestBuffer:sys.RenderBuffer;
     /**
      * @private
      * 渲染缓冲
@@ -123,8 +124,9 @@ module egret.sys {
          * 注意：若内存不足或创建缓冲区失败，将会抛出错误异常。
          * @param width 渲染缓冲的初始宽
          * @param height 渲染缓冲的初始高
+         * @param root 是否为舞台buffer
          */
-        new(width?:number, height?:number):RenderBuffer;
+        new(width?:number, height?:number, root?:boolean):RenderBuffer;
     };
 
     export var CanvasRenderBuffer:{

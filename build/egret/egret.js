@@ -3243,7 +3243,7 @@ var egret;
                     }
                 }
                 else {
-                    var buffer = egret.sys.hitTestBuffer;
+                    var buffer = egret.sys.customHitTestBuffer;
                     buffer.resize(3, 3);
                     var matrix = egret.Matrix.create();
                     matrix.identity();
@@ -3889,13 +3889,13 @@ var egret;
                 }
             }
             else {
-                var buffer = egret.sys.hitTestBuffer;
+                var buffer = egret.sys.customHitTestBuffer;
                 buffer.resize(3, 3);
                 var node = this.$getRenderNode();
                 var matrix = egret.Matrix.create();
                 matrix.identity();
                 matrix.translate(1 - localX, 1 - localY);
-                egret.sys.canvasRenderer.drawNodeToBuffer(node, buffer, matrix, true);
+                egret.sys.systemRenderer.drawNodeToBuffer(node, buffer, matrix, true);
                 egret.Matrix.release(matrix);
                 try {
                     data = buffer.getPixel(1, 1);
@@ -6058,7 +6058,7 @@ var egret;
             var m = target.$getInvertedConcatenatedMatrix();
             var localX = m.a * stageX + m.c * stageY + m.tx;
             var localY = m.b * stageX + m.d * stageY + m.ty;
-            var buffer = egret.sys.hitTestBuffer;
+            var buffer = egret.sys.canvasHitTestBuffer;
             buffer.resize(3, 3);
             var node = this.$renderNode;
             var matrix = egret.Matrix.create();

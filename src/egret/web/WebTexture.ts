@@ -106,7 +106,7 @@ module egret.web {
     }
 
     function getPixel32(x: number, y: number): number[] {
-        var buffer = <CanvasRenderBuffer><any>sys.hitTestBuffer;
+        var buffer = <CanvasRenderBuffer><any>sys.canvasHitTestBuffer;
         buffer.resize(3, 3);
         var context: any = buffer.context;
         context.translate(1 - x, 1 - y);

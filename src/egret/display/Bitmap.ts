@@ -567,13 +567,13 @@ module egret {
                 }
             }
             else {
-                var buffer = sys.hitTestBuffer;
+                var buffer = sys.customHitTestBuffer;
                 buffer.resize(3, 3);
                 var node = this.$getRenderNode();
                 var matrix = Matrix.create();
                 matrix.identity();
                 matrix.translate(1 - localX, 1 - localY);
-                sys.canvasRenderer.drawNodeToBuffer(node, buffer, matrix, true);
+                sys.systemRenderer.drawNodeToBuffer(node, buffer, matrix, true);
                 Matrix.release(matrix);
 
                 try {

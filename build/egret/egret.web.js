@@ -2893,7 +2893,7 @@ var egret;
          * @private
          */
         function createContext() {
-            context = egret.sys.hitTestBuffer.context;
+            context = egret.sys.canvasHitTestBuffer.context;
             context.textAlign = "left";
             context.textBaseline = "middle";
         }
@@ -2973,7 +2973,7 @@ var egret;
          * Canvas2D渲染缓冲
          */
         var CanvasRenderBuffer = (function () {
-            function CanvasRenderBuffer(width, height) {
+            function CanvasRenderBuffer(width, height, root) {
                 this.surface = createCanvas(width, height);
                 this.context = this.surface.getContext("2d");
             }
@@ -3793,6 +3793,7 @@ var egret;
             }
             web.Html5Capatibility._audioType = options.audioType;
             web.Html5Capatibility.$init();
+            egret.sys.CanvasRenderBuffer = web.CanvasRenderBuffer;
             setRenderMode(options.renderMode);
             var ticker = egret.sys.$ticker;
             startTicker(ticker);
@@ -3802,8 +3803,6 @@ var egret;
             else if (!egret.sys.screenAdapter) {
                 egret.sys.screenAdapter = new egret.sys.DefaultScreenAdapter();
             }
-            egret.sys.CanvasRenderBuffer = web.CanvasRenderBuffer;
-            egret.sys.hitTestBuffer = new web.CanvasRenderBuffer(3, 3);
             var list = document.querySelectorAll(".egret-player");
             var length = list.length;
             for (var i = 0; i < length; i++) {
@@ -3827,12 +3826,16 @@ var egret;
                 egret.sys.RenderBuffer = web.WebGLRenderBuffer;
                 egret.sys.systemRenderer = new web.WebGLRenderer();
                 egret.sys.canvasRenderer = new egret.CanvasRenderer();
+                egret.sys.customHitTestBuffer = new web.WebGLRenderBuffer(3, 3);
+                egret.sys.canvasHitTestBuffer = new web.CanvasRenderBuffer(3, 3);
                 egret.Capabilities.$renderMode = "webgl";
             }
             else {
                 egret.sys.RenderBuffer = web.CanvasRenderBuffer;
                 egret.sys.systemRenderer = new egret.CanvasRenderer();
                 egret.sys.canvasRenderer = egret.sys.systemRenderer;
+                egret.sys.customHitTestBuffer = new web.CanvasRenderBuffer(3, 3);
+                egret.sys.canvasHitTestBuffer = egret.sys.customHitTestBuffer;
                 egret.Capabilities.$renderMode = "canvas";
             }
         }
@@ -4353,7 +4356,7 @@ var egret;
                 stage.$maxTouches = option.maxTouches;
                 stage.frameRate = option.frameRate;
                 stage.textureScaleFactor = option.textureScaleFactor;
-                var buffer = new egret.sys.RenderBuffer();
+                var buffer = new egret.sys.RenderBuffer(undefined, undefined, true);
                 var canvas = buffer.surface;
                 this.attachCanvas(container, canvas);
                 var webTouch = new web.WebTouchHandler(stage, canvas);
@@ -4610,7 +4613,7 @@ var egret;
             aLink.dispatchEvent(evt);
         }
         function getPixel32(x, y) {
-            var buffer = egret.sys.hitTestBuffer;
+            var buffer = egret.sys.canvasHitTestBuffer;
             buffer.resize(3, 3);
             var context = buffer.context;
             context.translate(1 - x, 1 - y);
@@ -7280,7 +7283,7 @@ var egret;
          * WebGL渲染缓存
          */
         var WebGLRenderBuffer = (function () {
-            function WebGLRenderBuffer(width, height) {
+            function WebGLRenderBuffer(width, height, root) {
                 this.globalAlpha = 1;
                 /**
                  * stencil state
@@ -7304,7 +7307,7 @@ var egret;
                     this.resize(width, height);
                 }
                 // 如果是第一个加入的buffer，说明是舞台buffer
-                this.root = this.context.$bufferStack.length == 0;
+                this.root = root;
                 // 如果是用于舞台渲染的renderBuffer，则默认添加renderTarget到renderContext中，而且是第一个
                 if (this.root) {
                     this.context.pushBuffer(this);

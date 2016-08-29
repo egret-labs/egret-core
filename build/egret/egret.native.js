@@ -3663,7 +3663,7 @@ var egret;
          * @private
          */
         function convertImageToRenderTexture(texture, rect) {
-            var buffer = egret.sys.hitTestBuffer;
+            var buffer = egret.sys.canvasHitTestBuffer;
             var w = texture.$getTextureWidth();
             var h = texture.$getTextureHeight();
             if (rect == null) {
@@ -3781,7 +3781,7 @@ var egret;
                         }
                     }, this);
                 }
-                var buffer = new egret.sys.RenderBuffer();
+                var buffer = new egret.sys.RenderBuffer(undefined, undefined, true);
                 var canvas = buffer.surface;
                 canvas.$isRoot = true;
                 var touch = new native.NativeTouchHandler(stage);
@@ -4276,7 +4276,8 @@ var egret;
             //todo
             var player = new native.NativePlayer();
             playerList.push(player);
-            egret.sys.hitTestBuffer = new native.NativeCanvasRenderBuffer(3, 3);
+            egret.sys.customHitTestBuffer = new native.NativeCanvasRenderBuffer(3, 3);
+            egret.sys.canvasHitTestBuffer = egret.sys.customHitTestBuffer;
             //老版本runtime不支持canvas,关闭脏矩形
             if (!native.$supportCanvas) {
                 player.$stage.dirtyRegionPolicy = egret.DirtyRegionPolicy.OFF;

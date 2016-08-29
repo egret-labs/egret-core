@@ -69,7 +69,7 @@ module egret.native {
                 }, this);
             }
 
-            var buffer = new sys.RenderBuffer();
+            var buffer = new sys.RenderBuffer(undefined, undefined, true);
             var canvas = <NativeCanvas>buffer.surface;
             canvas.$isRoot = true;
 

@@ -57,7 +57,7 @@ module egret.web {
          */
         private root:boolean;
 
-        public constructor(width?:number, height?:number) {
+        public constructor(width?:number, height?:number, root?:boolean) {
             // 获取webglRenderContext
             this.context = WebGLRenderContext.getInstance(width, height);
             // buffer 对应的 render target
@@ -67,7 +67,7 @@ module egret.web {
             }
 
             // 如果是第一个加入的buffer，说明是舞台buffer
-            this.root = this.context.$bufferStack.length == 0;
+            this.root = root;
 
             // 如果是用于舞台渲染的renderBuffer，则默认添加renderTarget到renderContext中，而且是第一个
             if(this.root) {

@@ -2232,7 +2232,7 @@ module egret {
                     }
                 }
                 else {
-                    var buffer = sys.hitTestBuffer;
+                    var buffer = sys.customHitTestBuffer;
                     buffer.resize(3, 3);
                     var matrix = Matrix.create();
                     matrix.identity();
