@@ -1662,6 +1662,9 @@ var RES;
                     }
                     delete this.textureMap[subkey];
                 }
+                if (sheet.dispose) {
+                    sheet.dispose();
+                }
                 return true;
             }
             return false;

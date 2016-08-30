@@ -3515,7 +3515,7 @@ var egret;
             _super.prototype.$onAddToStage.call(this, stage, nestLevel);
             var bitmapData = this.$Bitmap[0 /* bitmapData */];
             if (bitmapData) {
-                egret.Texture.$addDisplayObject(this, bitmapData);
+                egret.BitmapData.$addDisplayObject(this, bitmapData);
             }
         };
         /**
@@ -3526,7 +3526,7 @@ var egret;
             _super.prototype.$onRemoveFromStage.call(this);
             var bitmapData = this.$Bitmap[0 /* bitmapData */];
             if (bitmapData) {
-                egret.Texture.$removeDisplayObject(this, bitmapData);
+                egret.BitmapData.$removeDisplayObject(this, bitmapData);
             }
         };
         d(p, "bitmapData"
@@ -3600,7 +3600,7 @@ var egret;
             }
             else {
                 if (oldBitmapData) {
-                    egret.Texture.$removeDisplayObject(this, oldBitmapData);
+                    egret.BitmapData.$removeDisplayObject(this, oldBitmapData);
                 }
                 this.setImageData(null, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0);
                 this.$invalidateContentBounds();
@@ -3626,9 +3626,9 @@ var egret;
                         this.$invalidateContentBounds();
                         return true;
                     }
-                    egret.Texture.$removeDisplayObject(this, oldBitmapData);
+                    egret.BitmapData.$removeDisplayObject(this, oldBitmapData);
                 }
-                egret.Texture.$addDisplayObject(this, value);
+                egret.BitmapData.$addDisplayObject(this, value);
             }
             this.$invalidateContentBounds();
             return true;
@@ -3936,6 +3936,19 @@ var egret;
     egret.Bitmap = Bitmap;
     egret.registerClass(Bitmap,'egret.Bitmap');
 })(egret || (egret = {}));
+var egret;
+(function (egret) {
+    /**
+     * @private
+     */
+    function createMap() {
+        var obj = Object.create(null);
+        obj.__v8__ = undefined;
+        delete obj.__v8__;
+        return obj;
+    }
+    egret.createMap = createMap;
+})(egret || (egret = {}));
 //////////////////////////////////////////////////////////////////////////////////////
 //
 //  Copyright (c) 2014-present, Egret Technology.
@@ -4027,7 +4040,94 @@ var egret;
                 this.source.dispose();
             }
             this.source = null;
+            BitmapData.$dispose(this);
         };
+        BitmapData.$addDisplayObject = function (displayObject, bitmapData) {
+            var hashCode;
+            if (bitmapData._bitmapData && bitmapData._bitmapData.hashCode) {
+                hashCode = bitmapData._bitmapData.hashCode;
+            }
+            else {
+                hashCode = bitmapData.hashCode;
+            }
+            if (!hashCode) {
+                return;
+            }
+            if (!BitmapData._displayList[hashCode]) {
+                BitmapData._displayList[hashCode] = [displayObject];
+                return;
+            }
+            var tempList = BitmapData._displayList[hashCode];
+            if (tempList.indexOf(displayObject) < 0) {
+                tempList.push(displayObject);
+            }
+        };
+        BitmapData.$removeDisplayObject = function (displayObject, bitmapData) {
+            var hashCode;
+            if (bitmapData._bitmapData && bitmapData._bitmapData.hashCode) {
+                hashCode = bitmapData._bitmapData.hashCode;
+            }
+            else {
+                hashCode = bitmapData.hashCode;
+            }
+            if (!hashCode) {
+                return;
+            }
+            if (!BitmapData._displayList[hashCode]) {
+                return;
+            }
+            var tempList = BitmapData._displayList[hashCode];
+            var index = tempList.indexOf(displayObject);
+            if (index >= 0) {
+                tempList.splice(index);
+            }
+        };
+        BitmapData.$invalidate = function (bitmapData) {
+            var hashCode;
+            if (bitmapData._bitmapData && bitmapData._bitmapData.hashCode) {
+                hashCode = bitmapData._bitmapData.hashCode;
+            }
+            else {
+                hashCode = bitmapData.hashCode;
+            }
+            if (!hashCode) {
+                return;
+            }
+            if (!BitmapData._displayList[hashCode]) {
+                return;
+            }
+            var tempList = BitmapData._displayList[hashCode];
+            for (var i = 0; i < tempList.length; i++) {
+                if (tempList[i] instanceof egret.Bitmap) {
+                    tempList[i].$refreshImageData();
+                }
+                tempList[i].$invalidateContentBounds();
+            }
+        };
+        BitmapData.$dispose = function (bitmapData) {
+            var hashCode;
+            if (bitmapData._bitmapData && bitmapData._bitmapData.hashCode) {
+                hashCode = bitmapData._bitmapData.hashCode;
+            }
+            else {
+                hashCode = bitmapData.hashCode;
+            }
+            if (!hashCode) {
+                return;
+            }
+            if (!BitmapData._displayList[hashCode]) {
+                return;
+            }
+            var tempList = BitmapData._displayList[hashCode];
+            for (var i = 0; i < tempList.length; i++) {
+                if (tempList[i] instanceof egret.Bitmap) {
+                    tempList[i].$Bitmap[1 /* image */] = null;
+                }
+                tempList[i].$invalidateContentBounds();
+            }
+            delete BitmapData._displayList[hashCode];
+        };
+        BitmapData._displayList = egret.createMap();
         return BitmapData;
     }(egret.HashObject));
     egret.BitmapData = BitmapData;
@@ -6341,19 +6441,6 @@ var egret;
         LANDSCAPE_FLIPPED: "landscapeFlipped"
     };
 })(egret || (egret = {}));
-var egret;
-(function (egret) {
-    /**
-     * @private
-     */
-    function createMap() {
-        var obj = Object.create(null);
-        obj.__v8__ = undefined;
-        delete obj.__v8__;
-        return obj;
-    }
-    egret.createMap = createMap;
-})(egret || (egret = {}));
 //////////////////////////////////////////////////////////////////////////////////////
 //
 //  Copyright (c) 2014-present, Egret Technology.
@@ -6582,7 +6669,7 @@ var egret;
             this._sourceWidth = sourceWidth / scale;
             this._sourceHeight = sourceHeight / scale;
             //todo
-            Texture.$invalidate(this);
+            egret.BitmapData.$invalidate(this);
         };
         /**
          * @language en_US
@@ -6664,95 +6751,8 @@ var egret;
             if (this._bitmapData) {
                 this._bitmapData.$dispose();
                 this._bitmapData = null;
-                Texture.$dispose(this);
             }
         };
-        Texture.$addDisplayObject = function (displayObject, bitmapData) {
-            var hashCode;
-            if (bitmapData._bitmapData && bitmapData._bitmapData.hashCode) {
-                hashCode = bitmapData._bitmapData.hashCode;
-            }
-            else {
-                hashCode = bitmapData.hashCode;
-            }
-            if (!hashCode) {
-                return;
-            }
-            if (!Texture._displayList[hashCode]) {
-                Texture._displayList[hashCode] = [displayObject];
-                return;
-            }
-            var tempList = Texture._displayList[hashCode];
-            if (tempList.indexOf(displayObject) < 0) {
-                tempList.push(displayObject);
-            }
-        };
-        Texture.$removeDisplayObject = function (displayObject, bitmapData) {
-            var hashCode;
-            if (bitmapData._bitmapData && bitmapData._bitmapData.hashCode) {
-                hashCode = bitmapData._bitmapData.hashCode;
-            }
-            else {
-                hashCode = bitmapData.hashCode;
-            }
-            if (!hashCode) {
-                return;
-            }
-            if (!Texture._displayList[hashCode]) {
-                return;
-            }
-            var tempList = Texture._displayList[hashCode];
-            var index = tempList.indexOf(displayObject);
-            if (index >= 0) {
-                tempList.splice(index);
-            }
-        };
-        Texture.$invalidate = function (bitmapData) {
-            var hashCode;
-            if (bitmapData._bitmapData && bitmapData._bitmapData.hashCode) {
-                hashCode = bitmapData._bitmapData.hashCode;
-            }
-            else {
-                hashCode = bitmapData.hashCode;
-            }
-            if (!hashCode) {
-                return;
-            }
-            if (!Texture._displayList[hashCode]) {
-                return;
-            }
-            var tempList = Texture._displayList[hashCode];
-            for (var i = 0; i < tempList.length; i++) {
-                if (tempList[i] instanceof egret.Bitmap) {
-                    tempList[i].$refreshImageData();
-                }
-                tempList[i].$invalidateContentBounds();
-            }
-        };
-        Texture.$dispose = function (bitmapData) {
-            var hashCode;
-            if (bitmapData._bitmapData && bitmapData._bitmapData.hashCode) {
-                hashCode = bitmapData._bitmapData.hashCode;
-            }
-            else {
-                hashCode = bitmapData.hashCode;
-            }
-            if (!hashCode) {
-                return;
-            }
-            if (!Texture._displayList[hashCode]) {
-                return;
-            }
-            var tempList = Texture._displayList[hashCode];
-            for (var i = 0; i < tempList.length; i++) {
-                if (tempList[i] instanceof egret.Bitmap) {
-                    tempList[i].$Bitmap[1 /* image */] = null;
-                }
-                tempList[i].$invalidateContentBounds();
-            }
-            delete Texture._displayList[hashCode];
-        };
-        Texture._displayList = egret.createMap();
         return Texture;
     }(egret.HashObject));
     egret.Texture = Texture;

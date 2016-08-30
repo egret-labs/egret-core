@@ -45,6 +45,7 @@ var egret;
     /**
      * 转换 Image，Canvas，Video 为 Egret 框架内使用的 BitmapData 对象。
      * @param data 需要转换的对象，包括HTMLImageElement|HTMLCanvasElement|HTMLVideoElement
+     * @deprecated
      */
     function $toBitmapData(data) {
         data["hashCode"] = data["$hashCode"] = egret.$hashCount++;
@@ -1559,7 +1560,8 @@ var egret;
                     if (!this._bitmapData) {
                         this.video.width = this.video.videoWidth;
                         this.video.height = this.video.videoHeight;
-                        this._bitmapData = egret.$toBitmapData(this.video);
+                        this._bitmapData = new egret.BitmapData(this.video);
+                        this._bitmapData.$deleteSource = false;
                     }
                     return this._bitmapData;
                 }
@@ -1634,6 +1636,8 @@ var egret;
                 }
                 else if (this.isPlayed && bitmapData) {
                     node.image = bitmapData;
+                    egret.WebGLUtils.deleteWebGLTexture(bitmapData.webGLTexture);
+                    bitmapData.webGLTexture = null;
                     node.drawImage(0, 0, bitmapData.width, bitmapData.height, 0, 0, width, height);
                 }
             };
@@ -2941,7 +2945,6 @@ var egret;
                 canvas.width = width;
                 canvas.height = height;
             }
-            egret.$toBitmapData(canvas);
             var context = canvas.getContext("2d");
             if (context["imageSmoothingEnabled"] === undefined) {
                 var keys = ["webkitImageSmoothingEnabled", "mozImageSmoothingEnabled", "msImageSmoothingEnabled"];
@@ -6523,7 +6526,6 @@ var egret;
                 canvas.width = width;
                 canvas.height = height;
             }
-            egret.$toBitmapData(canvas);
             return canvas;
         }
         /**
@@ -6827,9 +6829,9 @@ var egret;
                     return;
                 }
                 var texture;
-                if (image.source && image.source["texture"]) {
+                if (image["texture"]) {
                     // 如果是render target
-                    texture = image.source["texture"];
+                    texture = image["texture"];
                     buffer.saveTransform();
                     buffer.transform(1, 0, 0, -1, 0, destHeight + destY * 2); // 翻转
                 }
@@ -6856,9 +6858,9 @@ var egret;
                     return;
                 }
                 var texture;
-                if (image.source && image.source["texture"]) {
+                if (image["texture"]) {
                     // 如果是render target
-                    texture = image.source["texture"];
+                    texture = image["texture"];
                     buffer.saveTransform();
                     buffer.transform(1, 0, 0, -1, 0, destHeight + destY * 2); // 翻转
                 }
@@ -7590,9 +7592,9 @@ var egret;
                     if (!this._dirtyRegionPolicy && this.dirtyRegionPolicy) {
                         this.drawSurfaceToFrameBuffer(0, 0, this.rootRenderTarget.width, this.rootRenderTarget.height, 0, 0, this.rootRenderTarget.width, this.rootRenderTarget.height, true);
                     }
-                    // if(this._dirtyRegionPolicy) {
-                    //     this.drawFrameBufferToSurface(0, 0, this.rootRenderTarget.width, this.rootRenderTarget.height, 0, 0, this.rootRenderTarget.width, this.rootRenderTarget.height);
-                    // }
+                    if (this._dirtyRegionPolicy) {
+                        this.drawFrameBufferToSurface(0, 0, this.rootRenderTarget.width, this.rootRenderTarget.height, 0, 0, this.rootRenderTarget.width, this.rootRenderTarget.height);
+                    }
                     this._dirtyRegionPolicy = this.dirtyRegionPolicy;
                 }
             };
