@@ -971,14 +971,28 @@ declare module egret.tween {
         delta: number;
     }
     /**
-     * <code>
+     * ```
      * 	<tween:TweenItem target="{this.button}">
+     * 		<tween:props>
+     * 			<e:Object loop="{true}"/>
+     * 		</tween:props>
      * 		<tween:paths>
-     * 			<tween:To props="{{x: 500}}" duration="500" ease="sineIn"/>
-     * 			<tween:Wait duration="500"/>
-     * 		<tween:paths>
+     * 			<e:Array>
+     * 				<tween:To duration="500">
+     * 					<tween:props>
+     * 						<e:Object x="{100}" y="{200}" />
+     * 					</tween:props>
+     * 				</tween:To>
+     * 				<tween:Wait duration="1000" />
+     * 				<tween:To duration="1000">
+     * 					<tween:props>
+     * 						<e:Object x="{200}" y="{100}" />
+     * 					</tween:props>
+     * 				</tween:To>
+     * 			</e:Array>
+     * 		</tween:paths>
      * 	</tween:TweenItem>
-     * </code>
+     * ```
      */
     class TweenItem extends EventDispatcher {
         private _props;
@@ -995,5 +1009,15 @@ declare module egret.tween {
         private applyPaths();
         private applyPath(path);
         private pathComplete(path);
+    }
+    class TweenGroup extends EventDispatcher {
+        private _items;
+        private completeCount;
+        constructor();
+        items: TweenItem[];
+        private registerEvent(add);
+        play(): void;
+        pause(): void;
+        private itemComplete(e);
     }
 }

@@ -1516,14 +1516,28 @@ var egret;
             return null;
         }
         /**
-         * <code>
+         * ```
          * 	<tween:TweenItem target="{this.button}">
+         * 		<tween:props>
+         * 			<e:Object loop="{true}"/>
+         * 		</tween:props>
          * 		<tween:paths>
-         * 			<tween:To props="{{x: 500}}" duration="500" ease="sineIn"/>
-         * 			<tween:Wait duration="500"/>
-         * 		<tween:paths>
+         * 			<e:Array>
+         * 				<tween:To duration="500">
+         * 					<tween:props>
+         * 						<e:Object x="{100}" y="{200}" />
+         * 					</tween:props>
+         * 				</tween:To>
+         * 				<tween:Wait duration="1000" />
+         * 				<tween:To duration="1000">
+         * 					<tween:props>
+         * 						<e:Object x="{200}" y="{100}" />
+         * 					</tween:props>
+         * 				</tween:To>
+         * 			</e:Array>
+         * 		</tween:paths>
          * 	</tween:TweenItem>
-         * </code>
+         * ```
          */
         var TweenItem = (function (_super) {
             __extends(TweenItem, _super);
@@ -1598,7 +1612,7 @@ var egret;
             };
             p.pathComplete = function (path) {
                 path.dispatchEventWith('complete');
-                this.dispatchEventWith('itemComplete', false, path);
+                this.dispatchEventWith('pathComplete', false, path);
                 var index = this._paths.indexOf(path);
                 if (index >= 0 && index === this._paths.length - 1) {
                     path.dispatchEventWith('complete');
@@ -1608,5 +1622,63 @@ var egret;
         }(egret.EventDispatcher));
         tween.TweenItem = TweenItem;
         egret.registerClass(TweenItem,'egret.tween.TweenItem');
+        var TweenGroup = (function (_super) {
+            __extends(TweenGroup, _super);
+            function TweenGroup() {
+                _super.call(this);
+                this.completeCount = 0;
+            }
+            var d = __define,c=TweenGroup,p=c.prototype;
+            d(p, "items"
+                ,function () {
+                    return this._items;
+                }
+                ,function (value) {
+                    this.completeCount = 0;
+                    this.registerEvent(false);
+                    this._items = value;
+                    this.registerEvent(true);
+                }
+            );
+            p.registerEvent = function (add) {
+                var _this = this;
+                this._items && this._items.forEach(function (item) {
+                    if (add) {
+                        item.addEventListener('complete', _this.itemComplete, _this);
+                    }
+                    else {
+                        item.removeEventListener('complete', _this.itemComplete, _this);
+                    }
+                });
+            };
+            p.play = function () {
+                if (this._items) {
+                    for (var i = 0; i < this._items.length; i++) {
+                        var item = this._items[i];
+                        item.play();
+                    }
+                }
+            };
+            p.pause = function () {
+                if (this._items) {
+                    for (var i = 0; i < this._items.length; i++) {
+                        var item = this._items[i];
+                        item.pause();
+                    }
+                }
+            };
+            p.itemComplete = function (e) {
+                var item = e.currentTarget.data;
+                this.completeCount++;
+                this.dispatchEventWith('itemComplete', false, item);
+                if (this.completeCount === this.items.length) {
+                    this.dispatchEventWith('complete');
+                    this.completeCount = 0;
+                }
+            };
+            return TweenGroup;
+        }(egret.EventDispatcher));
+        tween.TweenGroup = TweenGroup;
+        egret.registerClass(TweenGroup,'egret.tween.TweenGroup');
     })(tween = egret.tween || (egret.tween = {}));
 })(egret || (egret = {}));

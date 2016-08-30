@@ -36,7 +36,7 @@ module egret.tween {
 		public duration: number = 500;
 		public passive: boolean = undefined;
 	}
-	
+
 	export class Set extends BasePath {
 		public props: Object = undefined;
 	}
@@ -58,14 +58,28 @@ module egret.tween {
 	}
 
 	/**
-	 * <code>
+	 * ```
 	 * 	<tween:TweenItem target="{this.button}">
+	 * 		<tween:props>
+	 * 			<e:Object loop="{true}"/>
+	 * 		</tween:props>
 	 * 		<tween:paths>
-	 * 			<tween:To props="{{x: 500}}" duration="500" ease="sineIn"/>
-	 * 			<tween:Wait duration="500"/>
-	 * 		<tween:paths>
+	 * 			<e:Array>
+	 * 				<tween:To duration="500">
+	 * 					<tween:props>
+	 * 						<e:Object x="{100}" y="{200}" />
+	 * 					</tween:props>
+	 * 				</tween:To>
+	 * 				<tween:Wait duration="1000" />
+	 * 				<tween:To duration="1000">
+	 * 					<tween:props>
+	 * 						<e:Object x="{200}" y="{100}" />
+	 * 					</tween:props>
+	 * 				</tween:To>
+	 * 			</e:Array>
+	 * 		</tween:paths>
 	 * 	</tween:TweenItem>
-	 * </code>
+	 * ```
 	 */
 	export class TweenItem extends EventDispatcher {
 
@@ -148,11 +162,70 @@ module egret.tween {
 
 		private pathComplete(path: BasePath): void {
 			path.dispatchEventWith('complete');
-			this.dispatchEventWith('itemComplete', false, path);
+			this.dispatchEventWith('pathComplete', false, path);
 
 			var index = this._paths.indexOf(path);
 			if (index >= 0 && index === this._paths.length - 1) {
 				path.dispatchEventWith('complete');
+			}
+		}
+	}
+
+	export class TweenGroup extends EventDispatcher {
+		private _items: TweenItem[];
+
+		private completeCount: number = 0;
+
+		constructor() {
+			super();
+		}
+
+		public get items(): TweenItem[] {
+			return this._items;
+		}
+
+		public set items(value: TweenItem[]) {
+			this.completeCount = 0;
+			this.registerEvent(false);
+			this._items = value;
+			this.registerEvent(true);
+		}
+
+		private registerEvent(add: boolean): void {
+			this._items && this._items.forEach(item => {
+				if (add) {
+					item.addEventListener('complete', this.itemComplete, this);
+				} else {
+					item.removeEventListener('complete', this.itemComplete, this);
+				}
+			});
+		}
+
+		public play(): void {
+			if (this._items) {
+				for (var i = 0; i < this._items.length; i++) {
+					var item = this._items[i];
+					item.play();
+				}
+			}
+		}
+
+		public pause(): void {
+			if (this._items) {
+				for (var i = 0; i < this._items.length; i++) {
+					var item = this._items[i];
+					item.pause();
+				}
+			}
+		}
+
+		private itemComplete(e: Event): void {
+			var item = e.currentTarget.data as TweenItem;
+			this.completeCount++;
+			this.dispatchEventWith('itemComplete', false, item);
+			if (this.completeCount === this.items.length) {
+				this.dispatchEventWith('complete');
+				this.completeCount = 0;
 			}
 		}
 	}
