@@ -1559,7 +1559,8 @@ var egret;
                     if (!this._bitmapData) {
                         this.video.width = this.video.videoWidth;
                         this.video.height = this.video.videoHeight;
-                        this._bitmapData = egret.$toBitmapData(this.video);
+                        this._bitmapData = new egret.BitmapData(this.video);
+                        this._bitmapData.$deleteSource = false;
                     }
                     return this._bitmapData;
                 }
@@ -1634,6 +1635,8 @@ var egret;
                 }
                 else if (this.isPlayed && bitmapData) {
                     node.image = bitmapData;
+                    egret.WebGLUtils.deleteWebGLTexture(bitmapData.webGLTexture);
+                    bitmapData.webGLTexture = null;
                     node.drawImage(0, 0, bitmapData.width, bitmapData.height, 0, 0, width, height);
                 }
             };

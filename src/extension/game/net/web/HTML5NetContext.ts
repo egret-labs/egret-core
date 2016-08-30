@@ -226,11 +226,11 @@ module egret.web {
             function onLoadComplete(e) {
                 removeListeners();
 
-                var bitmapData = <HTMLImageElement><any>imageLoader.data;
-                bitmapData.setAttribute("bitmapSrc", virtualUrl);
+                var bitmapData = imageLoader.data;
+                bitmapData.source.setAttribute("bitmapSrc", virtualUrl);
 
                 var texture:Texture = new Texture();
-                texture._setBitmapData(new egret.BitmapData(bitmapData));
+                texture._setBitmapData(bitmapData);
 
                 loader.data = texture;
 
