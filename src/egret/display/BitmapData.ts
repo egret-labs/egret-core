@@ -150,6 +150,103 @@ module egret {
                 this.source.dispose();
             }
             this.source = null;
+            BitmapData.$dispose(this);
+        }
+
+
+
+        private static _displayList = egret.createMap<DisplayObject[]>();
+        static $addDisplayObject(displayObject:DisplayObject, bitmapData:BitmapData|Texture):void {
+            var hashCode:number;
+            if((<Texture>bitmapData)._bitmapData && (<Texture>bitmapData)._bitmapData.hashCode) {
+                hashCode = (<Texture>bitmapData)._bitmapData.hashCode;
+            }
+            else {
+                hashCode = bitmapData.hashCode;
+            }
+            if(!hashCode) {
+                return;
+            }
+            if (!BitmapData._displayList[hashCode]) {
+                BitmapData._displayList[hashCode] = [displayObject];
+                return;
+            }
+
+            var tempList:Array<DisplayObject> = BitmapData._displayList[hashCode];
+            if (tempList.indexOf(displayObject) < 0) {
+                tempList.push(displayObject);
+            }
+        }
+
+        static $removeDisplayObject(displayObject:DisplayObject, bitmapData:BitmapData|Texture):void {
+            var hashCode:number;
+            if((<Texture>bitmapData)._bitmapData && (<Texture>bitmapData)._bitmapData.hashCode) {
+                hashCode = (<Texture>bitmapData)._bitmapData.hashCode;
+            }
+            else {
+                hashCode = bitmapData.hashCode;
+            }
+            if(!hashCode) {
+                return;
+            }
+            if (!BitmapData._displayList[hashCode]) {
+                return;
+            }
+
+            var tempList:Array<DisplayObject> = BitmapData._displayList[hashCode];
+            var index:number = tempList.indexOf(displayObject);
+            if (index >= 0) {
+                tempList.splice(index);
+            }
+        }
+
+        static $invalidate(bitmapData:BitmapData|Texture):void {
+            var hashCode:number;
+            if((<Texture>bitmapData)._bitmapData && (<Texture>bitmapData)._bitmapData.hashCode) {
+                hashCode = (<Texture>bitmapData)._bitmapData.hashCode;
+            }
+            else {
+                hashCode = bitmapData.hashCode;
+            }
+            if(!hashCode) {
+                return;
+            }
+
+            if (!BitmapData._displayList[hashCode]) {
+                return;
+            }
+            var tempList:Array<DisplayObject> = BitmapData._displayList[hashCode];
+            for (var i:number = 0; i < tempList.length; i++) {
+                if (tempList[i] instanceof egret.Bitmap) {
+                    (<egret.Bitmap>tempList[i]).$refreshImageData();
+                }
+                tempList[i].$invalidateContentBounds();
+            }
+        }
+
+        static $dispose(bitmapData:BitmapData|Texture):void {
+            var hashCode:number;
+            if((<Texture>bitmapData)._bitmapData && (<Texture>bitmapData)._bitmapData.hashCode) {
+                hashCode = (<Texture>bitmapData)._bitmapData.hashCode;
+            }
+            else {
+                hashCode = bitmapData.hashCode;
+            }
+            if(!hashCode) {
+                return;
+            }
+
+            if (!BitmapData._displayList[hashCode]) {
+                return;
+            }
+            var tempList:Array<DisplayObject> = BitmapData._displayList[hashCode];
+            for (var i:number = 0; i < tempList.length; i++) {
+                if (tempList[i] instanceof egret.Bitmap) {
+                    (<egret.Bitmap>tempList[i]).$Bitmap[sys.BitmapKeys.image] = null;
+                }
+                tempList[i].$invalidateContentBounds();
+            }
+            delete BitmapData._displayList[hashCode];
         }
     }
 }

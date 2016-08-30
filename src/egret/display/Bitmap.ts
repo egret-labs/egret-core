@@ -133,7 +133,7 @@ module egret {
 
             var bitmapData = this.$Bitmap[sys.BitmapKeys.bitmapData];
             if (bitmapData) {
-                Texture.$addDisplayObject(this, bitmapData);
+                BitmapData.$addDisplayObject(this, bitmapData);
             }
         }
 
@@ -146,7 +146,7 @@ module egret {
 
             var bitmapData = this.$Bitmap[sys.BitmapKeys.bitmapData];
             if (bitmapData) {
-                Texture.$removeDisplayObject(this, bitmapData);
+                BitmapData.$removeDisplayObject(this, bitmapData);
             }
         }
 
@@ -221,7 +221,7 @@ module egret {
             }
             else {
                 if (oldBitmapData) {
-                    Texture.$removeDisplayObject(this, oldBitmapData);
+                    BitmapData.$removeDisplayObject(this, oldBitmapData);
                 }
                 this.setImageData(null, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0);
                 this.$invalidateContentBounds();
@@ -248,9 +248,9 @@ module egret {
                         this.$invalidateContentBounds();
                         return true;
                     }
-                    Texture.$removeDisplayObject(this, oldBitmapData);
+                    BitmapData.$removeDisplayObject(this, oldBitmapData);
                 }
-                Texture.$addDisplayObject(this, value);
+                BitmapData.$addDisplayObject(this, value);
             }
 
             this.$invalidateContentBounds();
