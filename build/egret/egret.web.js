@@ -6787,9 +6787,9 @@ var egret;
                     return;
                 }
                 var texture;
-                if (image.source && image.source["texture"]) {
+                if (image["texture"]) {
                     // 如果是render target
-                    texture = image.source["texture"];
+                    texture = image["texture"];
                     buffer.saveTransform();
                     buffer.transform(1, 0, 0, -1, 0, destHeight + destY * 2); // 翻转
                 }
@@ -6816,9 +6816,9 @@ var egret;
                     return;
                 }
                 var texture;
-                if (image.source && image.source["texture"]) {
+                if (image["texture"]) {
                     // 如果是render target
-                    texture = image.source["texture"];
+                    texture = image["texture"];
                     buffer.saveTransform();
                     buffer.transform(1, 0, 0, -1, 0, destHeight + destY * 2); // 翻转
                 }
@@ -7507,9 +7507,9 @@ var egret;
                     if (!this._dirtyRegionPolicy && this.dirtyRegionPolicy) {
                         this.drawSurfaceToFrameBuffer(0, 0, this.rootRenderTarget.width, this.rootRenderTarget.height, 0, 0, this.rootRenderTarget.width, this.rootRenderTarget.height, true);
                     }
-                    // if(this._dirtyRegionPolicy) {
-                    //     this.drawFrameBufferToSurface(0, 0, this.rootRenderTarget.width, this.rootRenderTarget.height, 0, 0, this.rootRenderTarget.width, this.rootRenderTarget.height);
-                    // }
+                    if (this._dirtyRegionPolicy) {
+                        this.drawFrameBufferToSurface(0, 0, this.rootRenderTarget.width, this.rootRenderTarget.height, 0, 0, this.rootRenderTarget.width, this.rootRenderTarget.height);
+                    }
                     this._dirtyRegionPolicy = this.dirtyRegionPolicy;
                 }
             };

@@ -309,9 +309,9 @@ module egret.web {
                 if(!this._dirtyRegionPolicy && this.dirtyRegionPolicy) {
                     this.drawSurfaceToFrameBuffer(0, 0, this.rootRenderTarget.width, this.rootRenderTarget.height, 0, 0, this.rootRenderTarget.width, this.rootRenderTarget.height, true);
                 }
-                // if(this._dirtyRegionPolicy) {
-                //     this.drawFrameBufferToSurface(0, 0, this.rootRenderTarget.width, this.rootRenderTarget.height, 0, 0, this.rootRenderTarget.width, this.rootRenderTarget.height);
-                // }
+                if(this._dirtyRegionPolicy) {
+                    this.drawFrameBufferToSurface(0, 0, this.rootRenderTarget.width, this.rootRenderTarget.height, 0, 0, this.rootRenderTarget.width, this.rootRenderTarget.height);
+                }
                 this._dirtyRegionPolicy = this.dirtyRegionPolicy;
             }
         }
