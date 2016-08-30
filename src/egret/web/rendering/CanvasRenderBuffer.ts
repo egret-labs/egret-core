@@ -38,7 +38,6 @@ module egret.web {
             canvas.width = width;
             canvas.height = height;
         }
-        $toBitmapData(canvas);
         var context = canvas.getContext("2d");
         if (context["imageSmoothingEnabled"] === undefined) {
             var keys = ["webkitImageSmoothingEnabled", "mozImageSmoothingEnabled", "msImageSmoothingEnabled"];

@@ -45,6 +45,7 @@ var egret;
     /**
      * 转换 Image，Canvas，Video 为 Egret 框架内使用的 BitmapData 对象。
      * @param data 需要转换的对象，包括HTMLImageElement|HTMLCanvasElement|HTMLVideoElement
+     * @deprecated
      */
     function $toBitmapData(data) {
         data["hashCode"] = data["$hashCode"] = egret.$hashCount++;
@@ -2944,7 +2945,6 @@ var egret;
                 canvas.width = width;
                 canvas.height = height;
             }
-            egret.$toBitmapData(canvas);
             var context = canvas.getContext("2d");
             if (context["imageSmoothingEnabled"] === undefined) {
                 var keys = ["webkitImageSmoothingEnabled", "mozImageSmoothingEnabled", "msImageSmoothingEnabled"];
@@ -6504,7 +6504,6 @@ var egret;
                 canvas.width = width;
                 canvas.height = height;
             }
-            egret.$toBitmapData(canvas);
             return canvas;
         }
         /**

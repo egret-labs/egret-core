@@ -38,7 +38,6 @@ module egret.web {
             canvas.width = width;
             canvas.height = height;
         }
-        $toBitmapData(canvas);
         return canvas;
     }
 
