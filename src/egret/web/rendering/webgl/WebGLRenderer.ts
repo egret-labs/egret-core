@@ -528,11 +528,33 @@ module egret.web {
 
             //绘制显示对象自身
             buffer.setTransform(m.a, m.b, m.c, m.d, m.tx + matrix.tx, m.ty + matrix.ty);
-            buffer.context.pushMask(scrollRect);
+
+            var context = buffer.context;
+            var scissor = false;
+            if(context.$scissorState || m.b != 0 || m.c != 0) {// 有旋转的情况下不能使用scissor
+                context.pushMask(scrollRect);
+            } else {
+                var x = scrollRect.x;
+                var y = scrollRect.y;
+                var w = scrollRect.width;
+                var h = scrollRect.height;
+                x = x * m.a + m.tx + matrix.tx;
+                y = y * m.d + m.ty + matrix.ty;
+                w = w * m.a;
+                h = h * m.d;
+                context.enableScissor(x, - y - h + buffer.height, w, h);
+                scissor = true;
+            }
+
             drawCalls += this.drawDisplayObject(displayObject, buffer, dirtyList, matrix, displayObject.$displayList, region, root);
             buffer.setTransform(m.a, m.b, m.c, m.d, m.tx + matrix.tx, m.ty + matrix.ty);
-            buffer.context.popMask();
 
+            if(scissor) {
+                context.disableScissor();
+            } else {
+                context.popMask();
+            }
+            
             sys.Region.release(region);
             Matrix.release(m);
             return drawCalls;
