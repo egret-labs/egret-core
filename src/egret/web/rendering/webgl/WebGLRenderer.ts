@@ -531,7 +531,7 @@ module egret.web {
 
             var context = buffer.context;
             var scissor = false;
-            if(context.$scissorState || m.b != 0 || m.c != 0) {// 有旋转的情况下不能使用scissor
+            if(buffer.$hasScissor || m.b != 0 || m.c != 0) {// 有旋转的情况下不能使用scissor
                 context.pushMask(scrollRect);
             } else {
                 var x = scrollRect.x;

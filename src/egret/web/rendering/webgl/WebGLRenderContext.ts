@@ -148,6 +148,8 @@ module egret.web {
 
             buffer.restoreStencil();
 
+            buffer.restoreScissor();
+
             this.onResize(buffer.width, buffer.height);
         }
 
@@ -334,6 +336,23 @@ module egret.web {
         }
 
         /**
+         * 开启scissor检测
+         */
+        public enableScissorTest(rect:egret.Rectangle): void {
+            var gl: any = this.context;
+            gl.enable(gl.SCISSOR_TEST);
+            gl.scissor(rect.x, rect.y, rect.width, rect.height);
+        }
+
+        /**
+         * 关闭scissor检测
+         */
+        public disableScissorTest(): void {
+            var gl: any = this.context;
+            gl.disable(gl.SCISSOR_TEST);
+        }
+
+        /**
          * 获取像素信息
          */
         public getPixels(x, y, width, height, pixels): void {
@@ -407,12 +426,12 @@ module egret.web {
          */
         public clearRect(x: number, y: number, width: number, height: number): void {
             if (x != 0 || y != 0 || width != this.surface.width || height != this.surface.height) {
-                if(this.$scissorState) {
+                var buffer = this.currentBuffer;
+                if(buffer.$hasScissor) {
                     this.setGlobalCompositeOperation("destination-out");
                     this.drawRect(x, y, width, height);
                     this.setGlobalCompositeOperation("source-over");
                 } else {
-                    var buffer = this.currentBuffer;
                     var m = buffer.globalMatrix;
                     if(m.b == 0 && m.c == 0) {
                         x = x * m.a + m.tx;
@@ -639,16 +658,18 @@ module egret.web {
          * 开启scissor test
          */
         public enableScissor(x:number, y:number, width:number, height:number): void {
+            var buffer = this.currentBuffer;
             this.drawCmdManager.pushEnableScissor(x, y, width, height);
-            this.$scissorState = true;
+            buffer.$hasScissor = true;
         }
 
         /**
          * 关闭scissor test
          */
         public disableScissor(): void {
+            var buffer = this.currentBuffer;
             this.drawCmdManager.pushDisableScissor();
-            this.$scissorState = false;
+            buffer.$hasScissor = false;
         }
 
         /**
@@ -783,13 +804,16 @@ module egret.web {
                     this.activateBuffer(data.buffer);
                     break;
                 case DRAWABLE_TYPE.ENABLE_SCISSOR:
-                    var gl: any = this.context;
-                    gl.enable(gl.SCISSOR_TEST);
-                    gl.scissor(data.x, data.y, data.width, data.height);
+                    var buffer = this.activatedBuffer;
+                    if (buffer) {
+                        buffer.enableScissor(data.x, data.y, data.width, data.height);
+                    }
                     break;
                 case DRAWABLE_TYPE.DISABLE_SCISSOR:
-                    var gl: any = this.context;
-                    gl.disable(gl.SCISSOR_TEST);
+                    var buffer = this.activatedBuffer;
+                    if (buffer) {
+                        buffer.disableScissor();
+                    }
                     break;
                 default:
                     break;
