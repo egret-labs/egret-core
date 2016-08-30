@@ -1890,6 +1890,7 @@ var egret;
         }(egret.EventDispatcher));
         tween.TweenItem = TweenItem;
         egret.registerClass(TweenItem,'egret.tween.TweenItem');
+        registerProperty(TweenItem, 'paths', 'Array', true);
         /**
          * @language en_US
          * TweenGroup is a collection of TweenItem that can be played in parallel with each Item
@@ -2002,5 +2003,14 @@ var egret;
         }(egret.EventDispatcher));
         tween.TweenGroup = TweenGroup;
         egret.registerClass(TweenGroup,'egret.tween.TweenGroup');
+        registerProperty(TweenGroup, 'items', 'Array', true);
+        function registerProperty(classDefinition, property, type, asDefault) {
+            var prototype = classDefinition.prototype;
+            prototype.__meta__ = prototype.__meta__ || {};
+            prototype.__meta__[property] = type;
+            if (asDefault) {
+                prototype.__defaultProperty__ = property;
+            }
+        }
     })(tween = egret.tween || (egret.tween = {}));
 })(egret || (egret = {}));

@@ -452,6 +452,8 @@ module egret.tween {
         }
     }
 
+    registerProperty(TweenItem, 'paths', 'Array', true);
+
     /**
      * @language en_US
      * TweenGroup is a collection of TweenItem that can be played in parallel with each Item
@@ -565,6 +567,17 @@ module egret.tween {
                 this.dispatchEventWith('complete');
                 this.completeCount = 0;
             }
+        }
+    }
+
+    registerProperty(TweenGroup, 'items', 'Array', true);
+
+    function registerProperty(classDefinition: any, property: string, type: string, asDefault?: boolean): void {
+        var prototype: any = classDefinition.prototype;
+        prototype.__meta__ = prototype.__meta__ || {};
+        prototype.__meta__[property] = type;
+        if (asDefault) {
+            prototype.__defaultProperty__ = property;
         }
     }
 }
