@@ -16882,7 +16882,7 @@ var egret;
             if (blendMode) {
                 context.globalCompositeOperation = blendModes[blendMode];
             }
-            if (alpha != NaN) {
+            if (alpha == alpha) {
                 var originAlpha = context.globalAlpha;
                 context.globalAlpha *= alpha;
             }
@@ -16897,7 +16897,7 @@ var egret;
                     if (blendMode) {
                         context.globalCompositeOperation = defaultCompositeOp;
                     }
-                    if (alpha != NaN) {
+                    if (alpha == alpha) {
                         context.globalAlpha = originAlpha;
                     }
                 }
@@ -16909,7 +16909,7 @@ var egret;
                 if (blendMode) {
                     context.globalCompositeOperation = defaultCompositeOp;
                 }
-                if (alpha != NaN) {
+                if (alpha == alpha) {
                     context.globalAlpha = originAlpha;
                 }
             }

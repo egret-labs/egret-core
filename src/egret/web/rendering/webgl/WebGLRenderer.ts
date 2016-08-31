@@ -606,7 +606,7 @@ module egret.web {
             if (blendMode) {
                 buffer.context.setGlobalCompositeOperation(blendModes[blendMode]);
             }
-            if(alpha != NaN) {
+            if(alpha == alpha) {
                 var originAlpha = buffer.globalAlpha;
                 buffer.globalAlpha *= alpha;
             }
@@ -617,7 +617,7 @@ module egret.web {
             if (blendMode) {
                 buffer.context.setGlobalCompositeOperation(defaultCompositeOp);
             }
-            if(alpha != NaN) {
+            if(alpha == alpha) {
                 buffer.globalAlpha = originAlpha;
             }
             if (m) {
