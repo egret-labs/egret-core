@@ -203,10 +203,10 @@ module egret {
          */
         public _setBitmapData(value:BitmapData) {
             this._bitmapData = value;
-
-            var w = value.width * $TextureScaleFactor;
-            var h = value.height * $TextureScaleFactor;
-            this.$initData(0, 0, w, h, 0, 0, w, h, w, h);
+            var scale = $TextureScaleFactor;
+            var w = value.width * scale;
+            var h = value.height * scale;
+            this.$initData(0, 0, w, h, 0, 0, w, h, value.width, value.height);
         }
 
         /**
@@ -236,8 +236,8 @@ module egret {
             this._textureWidth = textureWidth;
             this._textureHeight = textureHeight;
 
-            this._sourceWidth = sourceWidth / scale;
-            this._sourceHeight = sourceHeight / scale;
+            this._sourceWidth = sourceWidth;
+            this._sourceHeight = sourceHeight;
 
             //todo
             BitmapData.$invalidate(this);
