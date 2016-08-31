@@ -15173,6 +15173,10 @@ var egret;
                  * 使用的混合模式
                  */
                 this.blendMode = null;
+                /**
+                 * 相对透明度
+                 */
+                this.alpha = NaN;
                 this.type = 1 /* BitmapNode */;
             }
             var d = __define,c=BitmapNode,p=c.prototype;
@@ -16862,6 +16866,7 @@ var egret;
             var pos = 0;
             var m = node.matrix;
             var blendMode = node.blendMode;
+            var alpha = node.alpha;
             var saved = false;
             if (m) {
                 if (context.saveTransform) {
@@ -16873,8 +16878,13 @@ var egret;
                 saved = true;
                 context.transform(m.a, m.b, m.c, m.d, m.tx, m.ty);
             }
+            //这里不考虑嵌套
             if (blendMode) {
                 context.globalCompositeOperation = blendModes[blendMode];
+            }
+            if (alpha != NaN) {
+                var originAlpha = context.globalAlpha;
+                context.globalAlpha *= alpha;
             }
             var drawCalls = 0;
             while (pos < length) {
@@ -16887,13 +16897,21 @@ var egret;
                     if (blendMode) {
                         context.globalCompositeOperation = defaultCompositeOp;
                     }
+                    if (alpha != NaN) {
+                        context.globalAlpha = originAlpha;
+                    }
                 }
                 else {
                     context.restore();
                 }
             }
-            else if (blendMode) {
-                context.globalCompositeOperation = defaultCompositeOp;
+            else {
+                if (blendMode) {
+                    context.globalCompositeOperation = defaultCompositeOp;
+                }
+                if (alpha != NaN) {
+                    context.globalAlpha = originAlpha;
+                }
             }
             return drawCalls;
         };

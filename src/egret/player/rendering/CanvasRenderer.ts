@@ -638,6 +638,7 @@ module egret {
             var pos = 0;
             var m = node.matrix;
             var blendMode = node.blendMode;
+            var alpha = node.alpha;
             var saved = false;
             if (m) {
                 if((<any>context).saveTransform) {//for native
@@ -649,8 +650,13 @@ module egret {
                 saved = true;
                 context.transform(m.a, m.b, m.c, m.d, m.tx, m.ty);
             }
+            //这里不考虑嵌套
             if(blendMode) {
                 context.globalCompositeOperation = blendModes[blendMode];
+            }
+            if(alpha != NaN) {
+                var originAlpha = context.globalAlpha;
+                context.globalAlpha *= alpha;
             }
             
             var drawCalls:number = 0;
@@ -664,13 +670,21 @@ module egret {
                     if(blendMode) {
                         context.globalCompositeOperation = defaultCompositeOp;
                     }
+                    if(alpha != NaN) {
+                        context.globalAlpha = originAlpha;
+                    }
                 }
                 else {
                     context.restore();
                 }
             }
-            else if(blendMode) {
-                context.globalCompositeOperation = defaultCompositeOp;
+            else  {
+                if(blendMode){
+                    context.globalCompositeOperation = defaultCompositeOp;
+                }
+                if(alpha != NaN) {
+                    context.globalAlpha = originAlpha;
+                }
             }
             return drawCalls;
         }

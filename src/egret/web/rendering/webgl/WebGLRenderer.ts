@@ -597,12 +597,18 @@ module egret.web {
             var pos = 0;
             var m = node.matrix;
             var blendMode = node.blendMode;
+            var alpha = node.alpha;
             if (m) {
                 buffer.saveTransform();
                 buffer.transform(m.a, m.b, m.c, m.d, m.tx, m.ty);
             }
+            //这里不考虑嵌套
             if (blendMode) {
                 buffer.context.setGlobalCompositeOperation(blendModes[blendMode]);
+            }
+            if(alpha != NaN) {
+                var originAlpha = buffer.globalAlpha;
+                buffer.globalAlpha *= alpha;
             }
             while (pos < length) {
                 buffer.context.drawImage(image, data[pos++], data[pos++], data[pos++], data[pos++],
@@ -610,6 +616,9 @@ module egret.web {
             }
             if (blendMode) {
                 buffer.context.setGlobalCompositeOperation(defaultCompositeOp);
+            }
+            if(alpha != NaN) {
+                buffer.globalAlpha = originAlpha;
             }
             if (m) {
                 buffer.restoreTransform();
