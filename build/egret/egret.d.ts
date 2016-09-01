@@ -10144,6 +10144,10 @@ declare module egret.sys {
          */
         alpha: number;
         /**
+         * 相对透明度
+         */
+        filter: ColorMatrixFilter;
+        /**
          * 绘制一次位图
          */
         drawImage(sourceX: number, sourceY: number, sourceW: number, sourceH: number, drawX: number, drawY: number, drawW: number, drawH: number): void;

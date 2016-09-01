@@ -70,6 +70,10 @@ module egret.sys {
          */
         public alpha: number = NaN;
         /**
+         * 相对透明度
+         */
+        public filter: ColorMatrixFilter = null;
+        /**
          * 绘制一次位图
          */
         public drawImage(sourceX: number, sourceY: number, sourceW: number, sourceH: number,
@@ -85,6 +89,9 @@ module egret.sys {
             super.cleanBeforeRender();
             this.image = null;
             this.matrix = null;
+            this.blendMode = null;
+            this.alpha = NaN;
+            this.filter = null;
         }
 
 

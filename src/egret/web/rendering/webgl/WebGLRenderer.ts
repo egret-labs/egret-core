@@ -591,6 +591,9 @@ module egret.web {
          */
         private renderBitmap(node: sys.BitmapNode, buffer: WebGLRenderBuffer): void {
             var image = node.image;
+            if(!image || !image.source) {
+                return;
+            }
             //buffer.imageSmoothingEnabled = node.smoothing;
             var data = node.drawData;
             var length = data.length;
@@ -610,9 +613,19 @@ module egret.web {
                 var originAlpha = buffer.globalAlpha;
                 buffer.globalAlpha *= alpha;
             }
-            while (pos < length) {
-                buffer.context.drawImage(image, data[pos++], data[pos++], data[pos++], data[pos++],
-                    data[pos++], data[pos++], data[pos++], data[pos++], node.imageWidth, node.imageHeight);
+            if(node.filter) {
+                buffer.context.$filter = node.filter;
+                while (pos < length) {
+                    buffer.context.drawImage(image, data[pos++], data[pos++], data[pos++], data[pos++],
+                        data[pos++], data[pos++], data[pos++], data[pos++], node.imageWidth, node.imageHeight);
+                }
+                buffer.context.$filter = null;
+            }
+            else {
+                while (pos < length) {
+                    buffer.context.drawImage(image, data[pos++], data[pos++], data[pos++], data[pos++],
+                        data[pos++], data[pos++], data[pos++], data[pos++], node.imageWidth, node.imageHeight);
+                }
             }
             if (blendMode) {
                 buffer.context.setGlobalCompositeOperation(defaultCompositeOp);

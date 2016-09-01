@@ -15177,6 +15177,10 @@ var egret;
                  * 相对透明度
                  */
                 this.alpha = NaN;
+                /**
+                 * 相对透明度
+                 */
+                this.filter = null;
                 this.type = 1 /* BitmapNode */;
             }
             var d = __define,c=BitmapNode,p=c.prototype;
@@ -15194,6 +15198,9 @@ var egret;
                 _super.prototype.cleanBeforeRender.call(this);
                 this.image = null;
                 this.matrix = null;
+                this.blendMode = null;
+                this.alpha = NaN;
+                this.filter = null;
             };
             BitmapNode.$updateTextureData = function (node, image, bitmapX, bitmapY, bitmapWidth, bitmapHeight, offsetX, offsetY, textureWidth, textureHeight, destW, destH, sourceWidth, sourceHeight, scale9Grid, fillMode, smoothing) {
                 if (!image) {
