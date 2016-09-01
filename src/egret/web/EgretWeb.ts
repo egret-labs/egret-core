@@ -53,7 +53,7 @@ module egret.web {
      * @private
      * 网页加载完成，实例化页面中定义的Egret标签
      */
-    function runEgret(options?:{renderMode?:string;audioType?:number;screenAdapter?:sys.IScreenAdapter}):void {
+    function runEgret(options?:{renderMode?:string;audioType?:number;screenAdapter?:sys.IScreenAdapter;antialias?:boolean}):void {
         if (isRunning) {
             return;
         }
@@ -63,6 +63,15 @@ module egret.web {
         }
         Html5Capatibility._audioType = options.audioType;
         Html5Capatibility.$init();
+
+        // WebGL上下文参数自定义
+        if(options.renderMode == "webgl") {
+            // WebGL抗锯齿默认关闭，提升PC及某些平台性能
+            var antialias = options.antialias;
+            WebGLRenderContext.antialias = !!antialias;
+            // WebGLRenderContext.antialias = (typeof antialias == undefined) ? true : antialias;
+        }
+
         sys.CanvasRenderBuffer = web.CanvasRenderBuffer;
         setRenderMode(options.renderMode);
         var ticker = egret.sys.$ticker;
@@ -72,7 +81,7 @@ module egret.web {
         }
         else if (!egret.sys.screenAdapter) {
             egret.sys.screenAdapter = new egret.sys.DefaultScreenAdapter();
-        }
+        }        
 
         var list = document.querySelectorAll(".egret-player");
         var length = list.length;
