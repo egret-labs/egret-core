@@ -6845,9 +6845,9 @@ var egret;
                     return;
                 }
                 var texture;
-                if (image["texture"]) {
+                if (image.source && image.source["texture"]) {
                     // 如果是render target
-                    texture = image["texture"];
+                    texture = image.source["texture"];
                     buffer.saveTransform();
                     buffer.transform(1, 0, 0, -1, 0, destHeight + destY * 2); // 翻转
                 }
@@ -6874,9 +6874,9 @@ var egret;
                     return;
                 }
                 var texture;
-                if (image["texture"]) {
+                if (image.source && image.source["texture"]) {
                     // 如果是render target
-                    texture = image["texture"];
+                    texture = image.source["texture"];
                     buffer.saveTransform();
                     buffer.transform(1, 0, 0, -1, 0, destHeight + destY * 2); // 翻转
                 }
