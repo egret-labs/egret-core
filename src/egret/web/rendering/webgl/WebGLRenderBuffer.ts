@@ -144,7 +144,7 @@ module egret.web {
             if(this.$scissorState) {
                 this.context.enableScissorTest(this.scissorRect);
             } else {
-                this.context.disableScissor();
+                this.context.disableScissorTest();
             }
         }
 

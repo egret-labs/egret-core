@@ -7466,7 +7466,7 @@ var egret;
                     this.context.enableScissorTest(this.scissorRect);
                 }
                 else {
-                    this.context.disableScissor();
+                    this.context.disableScissorTest();
                 }
             };
             d(p, "width"
