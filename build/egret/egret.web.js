@@ -8176,7 +8176,7 @@ var egret;
              */
             p.renderBitmap = function (node, buffer) {
                 var image = node.image;
-                if (!image || !image.source) {
+                if (!image) {
                     return;
                 }
                 //buffer.imageSmoothingEnabled = node.smoothing;
