@@ -180,7 +180,9 @@ module egret {
             for (var i:number = startLine; i < lineArr.length; i++) {
                 var lineEle:egret.ILineElement = lineArr[i];
                 if (lineH + lineEle.height >= y) {
-                    line = i + 1;
+                    if (lineH < y) {
+                        line = i + 1;
+                    }
                     break;
                 }
                 else {
@@ -197,14 +199,22 @@ module egret {
                 return null;
             }
             var lineElement:egret.ILineElement = lineArr[line - 1];
+
+
+            var textFieldWidth:number = textfield.$TextField[sys.TextKeys.textFieldWidth];
+            if (isNaN(textFieldWidth)) {
+                textFieldWidth = textfield.textWidth;
+            }
+            var halign:number = TextFieldUtils.$getHalign(textfield);
+            x -= halign * (textFieldWidth - lineElement.width);
             var lineW:number = 0;
             for (i = 0; i < lineElement.elements.length; i++) {
                 var iwTE:IWTextElement = lineElement.elements[i];
 
-                if (lineW + iwTE.width < x) {
+                if (lineW + iwTE.width <= x) {
                     lineW += iwTE.width;
                 }
-                else {
+                else if (lineW < x) {
                     return {"lineIndex" : line - 1, "textElementIndex" : i};
                 }
             }
