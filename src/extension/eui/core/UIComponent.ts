@@ -1827,12 +1827,12 @@ module eui.sys {
         var prototype = descendant.prototype;
         prototype.$super = base.prototype;
 
-        registerProperty(descendant, "left", "any");
-        registerProperty(descendant, "right", "any");
-        registerProperty(descendant, "top", "any");
-        registerProperty(descendant, "bottom", "any");
-        registerProperty(descendant, "horizontalCenter", "any");
-        registerProperty(descendant, "verticalCenter", "any");
+        registerProperty(descendant, "left", "Percentage");
+        registerProperty(descendant, "right", "Percentage");
+        registerProperty(descendant, "top", "Percentage");
+        registerProperty(descendant, "bottom", "Percentage");
+        registerProperty(descendant, "horizontalCenter", "Percentage");
+        registerProperty(descendant, "verticalCenter", "Percentage");
         if (isContainer) {
             prototype.$childAdded = function (child:egret.DisplayObject, index:number):void {
                 this.invalidateSize();
