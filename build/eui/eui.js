@@ -9657,8 +9657,10 @@ var eui;
         p.setLayoutBoundsSize = function (layoutWidth, layoutHeight) {
             UIImpl.prototype.setLayoutBoundsSize.call(this, layoutWidth, layoutHeight);
             if (isNaN(layoutWidth) || layoutWidth === this._widthConstraint || layoutWidth == 0) {
+                this._widthConstraint = layoutWidth;
                 return;
             }
+            this._widthConstraint = layoutWidth;
             var values = this.$UIComponent;
             if (!isNaN(values[9 /* explicitHeight */])) {
                 return;
@@ -9666,7 +9668,6 @@ var eui;
             if (layoutWidth == values[16 /* measuredWidth */]) {
                 return;
             }
-            this._widthConstraint = layoutWidth;
             this.invalidateSize();
         };
         /**
