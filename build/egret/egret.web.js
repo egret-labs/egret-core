@@ -3796,6 +3796,12 @@ var egret;
             }
             web.Html5Capatibility._audioType = options.audioType;
             web.Html5Capatibility.$init();
+            // WebGL上下文参数自定义
+            if (options.renderMode == "webgl") {
+                // WebGL抗锯齿默认关闭，提升PC及某些平台性能
+                var antialias = options.antialias;
+                web.WebGLRenderContext.antialias = !!antialias;
+            }
             egret.sys.CanvasRenderBuffer = web.CanvasRenderBuffer;
             setRenderMode(options.renderMode);
             var ticker = egret.sys.$ticker;
@@ -6679,6 +6685,7 @@ var egret;
             };
             p.getWebGLContext = function () {
                 var options = {
+                    antialias: WebGLRenderContext.antialias,
                     stencil: true //设置可以使用模板（用于不规则遮罩）
                 };
                 var gl;

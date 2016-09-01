@@ -48,6 +48,8 @@ module egret.web {
      */
     export class WebGLRenderContext {
 
+        public static antialias:boolean;
+
         /**
          * 渲染上下文
          */
@@ -284,6 +286,7 @@ module egret.web {
 
         private getWebGLContext() {
             var options = {
+                antialias: WebGLRenderContext.antialias,
                 stencil: true//设置可以使用模板（用于不规则遮罩）
             };
             var gl: any;
