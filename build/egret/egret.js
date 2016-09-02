@@ -6011,8 +6011,16 @@ var egret;
             endAngle = clampAngle(endAngle);
             var fillPath = this.fillPath;
             var strokePath = this.strokePath;
-            fillPath && fillPath.drawArc(x, y, radius, startAngle, endAngle, anticlockwise);
-            strokePath && strokePath.drawArc(x, y, radius, startAngle, endAngle, anticlockwise);
+            if (fillPath) {
+                fillPath.$lastX = this.lastX;
+                fillPath.$lastY = this.lastY;
+                fillPath.drawArc(x, y, radius, startAngle, endAngle, anticlockwise);
+            }
+            if (strokePath) {
+                strokePath.$lastX = this.lastX;
+                strokePath.$lastY = this.lastY;
+                strokePath.drawArc(x, y, radius, startAngle, endAngle, anticlockwise);
+            }
             if (anticlockwise) {
                 this.arcBounds(x, y, radius, endAngle, startAngle);
             }
@@ -15893,6 +15901,16 @@ var egret;
                 this.$data = [];
                 this.commandPosition = 0;
                 this.dataPosition = 0;
+                /**
+                 * 当前移动到的坐标X
+                 * 注意：目前只有drawArc之前会被赋值
+                 */
+                this.$lastX = 0;
+                /**
+                 * 当前移动到的坐标Y
+                 * 注意：目前只有drawArc之前会被赋值
+                 */
+                this.$lastY = 0;
             }
             var d = __define,c=Path2D,p=c.prototype;
             /**
@@ -16106,7 +16124,9 @@ var egret;
                 }
                 var currentX = x + Math.cos(start) * radiusX;
                 var currentY = y + Math.sin(start) * radiusY;
-                this.moveTo(currentX, currentY);
+                if (this.$lastX != currentX || this.$lastY != currentY) {
+                    this.moveTo(currentX, currentY);
+                }
                 var u = Math.cos(start);
                 var v = Math.sin(start);
                 for (var i = 0; i < 4; i++) {

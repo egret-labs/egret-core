@@ -75,6 +75,17 @@ module egret.sys {
         private dataPosition: number = 0;
 
         /**
+         * 当前移动到的坐标X
+         * 注意：目前只有drawArc之前会被赋值
+         */
+        public $lastX:number = 0;
+        /**
+         * 当前移动到的坐标Y
+         * 注意：目前只有drawArc之前会被赋值
+         */
+        public $lastY:number = 0;
+
+        /**
          * 将当前绘图位置移动到 (x, y)。如果缺少任何一个参数，则此方法将失败，并且当前绘图位置不改变。
          * @param x 一个表示相对于父显示对象注册点的水平位置的数字（以像素为单位）。
          * @param y 一个表示相对于父显示对象注册点的垂直位置的数字（以像素为单位）。
@@ -297,7 +308,9 @@ module egret.sys {
             }
             var currentX = x + Math.cos(start) * radiusX;
             var currentY = y + Math.sin(start) * radiusY;
-            this.moveTo(currentX, currentY);
+            if(this.$lastX != currentX || this.$lastY != currentY) {
+                this.moveTo(currentX, currentY);
+            }
             var u = Math.cos(start);
             var v = Math.sin(start);
             for (var i = 0; i < 4; i++) {
