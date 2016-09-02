@@ -1396,13 +1396,13 @@ module egret {
          * @private
          *
          */
-        private fillBackground(lines:number[]):void {
+        private fillBackground(lines?:number[]):void {
             var graphics = this.graphicsNode;
             if (graphics) {
                 graphics.clear();
             }
             var values = this.$TextField;
-            if (values[sys.TextKeys.background] || values[sys.TextKeys.border] || lines.length > 0) {
+            if (values[sys.TextKeys.background] || values[sys.TextKeys.border] || (lines && lines.length > 0)) {
                 if (!graphics) {
                     graphics = this.graphicsNode = new sys.GraphicsNode();
                     var groupNode = new sys.GroupNode();
@@ -1424,7 +1424,7 @@ module egret {
                     strokePath.drawRect(0, 0, this.$getWidth() - 1, this.$getHeight() - 1);
                 }
                 //渲染下划线
-                if (lines.length > 0) {
+                if (lines && lines.length > 0) {
                     var textColor = values[sys.TextKeys.textColor];
                     var lastColor = -1;
                     var length = lines.length;
@@ -1561,6 +1561,7 @@ module egret {
                     this.inputUtils._updateProperties();
                 }
                 if (this.$isTyping) {
+                    this.fillBackground();
                     return;
                 }
             }

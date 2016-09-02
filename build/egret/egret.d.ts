@@ -13064,7 +13064,7 @@ declare module egret {
          * @private
          *
          */
-        private fillBackground(lines);
+        private fillBackground(lines?);
         /**
          * @language en_US
          * Enter the text automatically entered into the input state, the input type is text only and may only be invoked in the user interaction.

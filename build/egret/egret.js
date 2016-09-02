@@ -20422,7 +20422,7 @@ var egret;
                 graphics.clear();
             }
             var values = this.$TextField;
-            if (values[33 /* background */] || values[31 /* border */] || lines.length > 0) {
+            if (values[33 /* background */] || values[31 /* border */] || (lines && lines.length > 0)) {
                 if (!graphics) {
                     graphics = this.graphicsNode = new egret.sys.GraphicsNode();
                     var groupNode = new egret.sys.GroupNode();
@@ -20444,7 +20444,7 @@ var egret;
                     strokePath.drawRect(0, 0, this.$getWidth() - 1, this.$getHeight() - 1);
                 }
                 //渲染下划线
-                if (lines.length > 0) {
+                if (lines && lines.length > 0) {
                     var textColor = values[2 /* textColor */];
                     var lastColor = -1;
                     var length = lines.length;
@@ -20567,6 +20567,7 @@ var egret;
                     this.inputUtils._updateProperties();
                 }
                 if (this.$isTyping) {
+                    this.fillBackground();
                     return;
                 }
             }
