@@ -226,6 +226,7 @@ module egret.sys {
             }
             var t2 = egret.getTimer();
             let deltaTime = timeStamp - this.lastTimeStamp;
+            this.lastTimeStamp = timeStamp;
             if (deltaTime >= this.frameDeltaTime) {
                 this.lastCount = this.frameInterval;
             }
@@ -239,7 +240,6 @@ module egret.sys {
                 }
                 this.lastCount += this.frameInterval;
             }
-            this.lastTimeStamp = timeStamp;
             this.render(true, this.costEnterFrame + t2 - t1);
             var t3 = egret.getTimer();
             this.broadcastEnterFrame();

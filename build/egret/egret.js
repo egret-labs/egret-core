@@ -6638,9 +6638,10 @@ var egret;
          */
         p._setBitmapData = function (value) {
             this._bitmapData = value;
-            var w = value.width * egret.$TextureScaleFactor;
-            var h = value.height * egret.$TextureScaleFactor;
-            this.$initData(0, 0, w, h, 0, 0, w, h, w, h);
+            var scale = egret.$TextureScaleFactor;
+            var w = value.width * scale;
+            var h = value.height * scale;
+            this.$initData(0, 0, w, h, 0, 0, w, h, value.width, value.height);
         };
         /**
          * @private
@@ -6666,8 +6667,8 @@ var egret;
             this._offsetY = offsetY;
             this._textureWidth = textureWidth;
             this._textureHeight = textureHeight;
-            this._sourceWidth = sourceWidth / scale;
-            this._sourceHeight = sourceHeight / scale;
+            this._sourceWidth = sourceWidth;
+            this._sourceHeight = sourceHeight;
             //todo
             egret.BitmapData.$invalidate(this);
         };
@@ -14800,6 +14801,7 @@ var egret;
                 }
                 var t2 = egret.getTimer();
                 var deltaTime = timeStamp - this.lastTimeStamp;
+                this.lastTimeStamp = timeStamp;
                 if (deltaTime >= this.frameDeltaTime) {
                     this.lastCount = this.frameInterval;
                 }
@@ -14813,7 +14815,6 @@ var egret;
                     }
                     this.lastCount += this.frameInterval;
                 }
-                this.lastTimeStamp = timeStamp;
                 this.render(true, this.costEnterFrame + t2 - t1);
                 var t3 = egret.getTimer();
                 this.broadcastEnterFrame();
@@ -15206,7 +15207,7 @@ var egret;
                 else if (fillMode == egret.BitmapFillMode.SCALE) {
                     var tsX = destW / textureWidth * scale;
                     var tsY = destH / textureHeight * scale;
-                    node.drawImage(bitmapX, bitmapY, bitmapWidth, bitmapHeight, offsetX * tsX, offsetY * tsY, tsX * bitmapWidth, tsY * bitmapHeight);
+                    node.drawImage(bitmapX, bitmapY, bitmapWidth, bitmapHeight, offsetX, offsetY, tsX * bitmapWidth, tsY * bitmapHeight);
                 }
                 else if (fillMode == egret.BitmapFillMode.CLIP) {
                     var displayW = Math.min(textureWidth, destW);
@@ -21316,7 +21317,9 @@ var egret;
             for (var i = startLine; i < lineArr.length; i++) {
                 var lineEle = lineArr[i];
                 if (lineH + lineEle.height >= y) {
-                    line = i + 1;
+                    if (lineH < y) {
+                        line = i + 1;
+                    }
                     break;
                 }
                 else {
@@ -21331,13 +21334,19 @@ var egret;
                 return null;
             }
             var lineElement = lineArr[line - 1];
+            var textFieldWidth = textfield.$TextField[3 /* textFieldWidth */];
+            if (isNaN(textFieldWidth)) {
+                textFieldWidth = textfield.textWidth;
+            }
+            var halign = TextFieldUtils.$getHalign(textfield);
+            x -= halign * (textFieldWidth - lineElement.width);
             var lineW = 0;
             for (i = 0; i < lineElement.elements.length; i++) {
                 var iwTE = lineElement.elements[i];
-                if (lineW + iwTE.width < x) {
+                if (lineW + iwTE.width <= x) {
                     lineW += iwTE.width;
                 }
-                else {
+                else if (lineW < x) {
                     return { "lineIndex": line - 1, "textElementIndex": i };
                 }
             }

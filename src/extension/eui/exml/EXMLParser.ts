@@ -45,6 +45,7 @@ module eui.sys {
     var RECTANGLE = "egret.Rectangle";
     var TYPE_CLASS = "Class";
     var TYPE_ARRAY = "Array";
+    var TYPE_PERCENTAGE = "Percentage";
     var TYPE_STATE = "State[]";
     var SKIN_NAME = "skinName";
     var ELEMENTS_CONTENT = "elementsContent";
@@ -381,8 +382,8 @@ module eui.sys {
                 else if (node.nodeType === 1) {
                     var id = node.attributes["id"];
                     if (id) {
-                        var first = parseInt(id.slice(0,1))
-                        if (!isNaN(first)){
+                        var first = parseInt(id.slice(0, 1))
+                        if (!isNaN(first)) {
                             egret.$warn(2023, id);
                         }
                         if (id.indexOf(" ") > -1) {
@@ -918,6 +919,11 @@ module eui.sys {
                 }
                 value = "new " + RECTANGLE + "(" + value + ")";
             }
+            else if (type == TYPE_PERCENTAGE) {
+                if (value.indexOf("%") != -1) {
+                    value = this.formatString(value);;
+                }
+            }
             else {
                 var orgValue:string = value;
                 switch (type) {
@@ -1027,8 +1033,8 @@ module eui.sys {
                     trimText += value;
                     break;
                 }
-                trimText += value.substring(0, index+1);
-                value = value.substring(index+1);
+                trimText += value.substring(0, index + 1);
+                value = value.substring(index + 1);
                 index = value.indexOf("'");
                 if (index == -1) {
                     index = value.length - 1;

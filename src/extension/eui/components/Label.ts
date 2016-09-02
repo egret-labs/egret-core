@@ -187,11 +187,6 @@ module eui {
         protected commitProperties():void {
 
         }
-
-        /**
-         * @private
-         */
-        private availableWidth = NaN;
         /**
          * @copy eui.UIComponent#measure
          *
@@ -203,18 +198,19 @@ module eui {
             var values = this.$UIComponent;
             var textValues = this.$TextField;
             var oldWidth = textValues[egret.sys.TextKeys.textFieldWidth];
+            var availableWidth = NaN;
             if (!isNaN(this._widthConstraint)) {
-                this.availableWidth = this._widthConstraint;
+                availableWidth = this._widthConstraint;
                 this._widthConstraint = NaN;
             }
             else if (!isNaN(values[sys.UIKeys.explicitWidth])) {
-                this.availableWidth = values[sys.UIKeys.explicitWidth];
+                availableWidth = values[sys.UIKeys.explicitWidth];
             }
             else if (values[sys.UIKeys.maxWidth] != 100000) {
-                this.availableWidth = values[sys.UIKeys.maxWidth];
+                availableWidth = values[sys.UIKeys.maxWidth];
             }
 
-            super.$setWidth(this.availableWidth);
+            super.$setWidth(availableWidth);
             this.setMeasuredSize(this.textWidth, this.textHeight);
             super.$setWidth(oldWidth);
         }
@@ -473,10 +469,11 @@ module eui {
          */
         public setLayoutBoundsSize(layoutWidth:number, layoutHeight:number):void {
             UIImpl.prototype.setLayoutBoundsSize.call(this, layoutWidth, layoutHeight);
-            this._widthConstraint = layoutWidth;
             if (isNaN(layoutWidth) || layoutWidth === this._widthConstraint || layoutWidth == 0) {
+                this._widthConstraint = layoutWidth;
                 return;
             }
+            this._widthConstraint = layoutWidth;
             var values = this.$UIComponent;
             if (!isNaN(values[sys.UIKeys.explicitHeight])) {
                 return;

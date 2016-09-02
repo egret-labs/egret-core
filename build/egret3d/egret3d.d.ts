@@ -1,17 +1,29 @@
 declare module egret3d {
+    class Egret3DLog {
+        static outError(message: any): void;
+        static outWarn(message: any): void;
+        static outDebug(message: any): void;
+    }
+}
+declare module egret3d {
     /**
      * @private
      */
     class Egret3DState {
         private static use;
+        private static _width;
+        private static _height;
         private static _info;
         private static _time;
         private static _dataInfo;
         private static fpsInfo;
         private static info;
+        private static _canvas;
         static initState(): void;
+        private static _fps;
         static showTime(time: number, delay: number): void;
         static showDataInfo(...data: any[]): void;
+        private static array;
         static show(): void;
     }
 }
@@ -30,20 +42,22 @@ declare module egret3d {
     * @private
     */
     enum ShaderPhaseType {
-        start_vertex = 0,
-        local_vertex = 1,
-        global_vertex = 2,
-        end_vertex = 3,
-        start_fragment = 4,
-        materialsource_fragment = 5,
-        diffuse_fragment = 6,
-        normal_fragment = 7,
-        matCap_fragment = 8,
-        specular_fragment = 9,
-        shadow_fragment = 10,
-        lighting_fragment = 11,
-        multi_end_fragment = 12,
-        end_fragment = 13,
+        base_vertex = 0,
+        start_vertex = 1,
+        local_vertex = 2,
+        global_vertex = 3,
+        end_vertex = 4,
+        base_fragment = 5,
+        start_fragment = 6,
+        materialsource_fragment = 7,
+        diffuse_fragment = 8,
+        normal_fragment = 9,
+        matCap_fragment = 10,
+        specular_fragment = 11,
+        shadow_fragment = 12,
+        lighting_fragment = 13,
+        multi_end_fragment = 14,
+        end_fragment = 15,
     }
 }
 declare module egret3d {
@@ -333,6 +347,34 @@ declare module egret3d {
         */
         static Z_AXIS: Vector3D;
         /**
+        * @language zh_CN
+        * @private
+        * @version Egret 3.0
+        * @platform Web,Native
+        */
+        static HELP_0: Vector3D;
+        /**
+* @language zh_CN
+* @private
+* @version Egret 3.0
+* @platform Web,Native
+*/
+        static HELP_1: Vector3D;
+        /**
+* @language zh_CN
+* @private
+* @version Egret 3.0
+* @platform Web,Native
+*/
+        static HELP_2: Vector3D;
+        /**
+* @language zh_CN
+* @private
+* @version Egret 3.0
+* @platform Web,Native
+*/
+        static HELP_3: Vector3D;
+        /**
         * @language en_US
         * The first element of a Vector3D object, such as the x coordinate of
         * a point in the three-dimensional space. The default value is 0.
@@ -494,11 +536,13 @@ declare module egret3d {
         /**
         * @language zh_CN
         * 向量相加，结果返回一个新实例
+        * @param a
+        * @param target 默认为null
         * @returns Vector3D 结果返回
         * @version Egret 3.0
         * @platform Web,Native
         */
-        add(a: Vector3D): Vector3D;
+        add(a: Vector3D, target?: Vector3D): Vector3D;
         /**
         * @language en_US
         * Returns a new Vector3D object that is an exact copy of the current
@@ -557,7 +601,7 @@ declare module egret3d {
         * @version Egret 3.0
         * @platform Web,Native
         */
-        crossProduct(a: Vector3D): Vector3D;
+        crossProduct(a: Vector3D, target?: Vector3D): Vector3D;
         /**
         * @language en_US
         * Decrements the value of the x, y, and z elements of the current。
@@ -805,6 +849,10 @@ declare module egret3d {
         * @platform Web,Native
         */
         lerp(v0: Vector3D, v1: Vector3D, t: number): void;
+        private Dot(v0, v1);
+        private OrthoNormalVectorFast(n, target);
+        slerp(lhs: Vector3D, rhs: Vector3D, t: number): void;
+        private Cross(lhs, rhs, target?);
         /**
         * @language zh_CN
         * 当前Vector3D以字符串形式返回
@@ -821,6 +869,15 @@ declare module egret3d {
         * @platform Web,Native
         */
         parsing(str: string): void;
+        /**
+         * @language zh_CN
+         * 是否相等
+         * @param rectangle  比较的对象
+         * @returns boolean 相等返回ture
+         * @version Egret 3.0
+         * @platform Web,Native
+         */
+        equal(other: Vector3D): boolean;
     }
 }
 declare module egret3d {
@@ -880,12 +937,20 @@ declare module egret3d {
         constructor(x?: number, y?: number, width?: number, height?: number);
         /**
         * @language zh_CN
-        * 复制矩形数据
-        * @param other 被复制的矩形
+        * 从一个矩形拷贝数据
+        * @param rect 拷贝的对象
         * @version Egret 3.0
         * @platform Web,Native
         */
-        copy(other: Rectangle): Rectangle;
+        copyFrom(rect: Rectangle): void;
+        /**
+        * @language zh_CN
+        * 拷贝数据到一个矩形
+        * @param rect 拷贝到目标矩形
+        * @version Egret 3.0
+        * @platform Web,Native
+        */
+        copyTo(rect: Rectangle): void;
         /**
          * @language zh_CN
          * 检测x y 是否在当前矩形内
@@ -896,6 +961,35 @@ declare module egret3d {
          * @platform Web,Native
          */
         inner(x: number, y: number): boolean;
+        /**
+         * @language zh_CN
+         * 是否相等
+         * @param rectangle  比较的对象
+         * @returns boolean 相等返回ture
+         * @version Egret 3.0
+         * @platform Web,Native
+         */
+        equal(rectangle: Rectangle): boolean;
+        /**
+         * @language zh_CN
+         * 是否相等
+         * @param rectangle  比较的对象
+         * @returns boolean 相等返回ture
+         * @version Egret 3.0
+         * @platform Web,Native
+         */
+        equalArea(x: number, y: number, width: number, height: number): boolean;
+        /**
+          * @language zh_CN
+          * 返回相交区域
+          * @param source  比较区域
+          * @param target  目标接参
+          * @returns Rectangle 返回相交的区域
+          * @version Egret 3.0
+          * @platform Web,Native
+          */
+        equalInnerArea(source: Rectangle, target: Rectangle): boolean;
+        innerArea(source: Rectangle, target: Rectangle): Rectangle;
     }
 }
 declare module egret3d {
@@ -956,6 +1050,27 @@ declare module egret3d {
         * @platform Web,Native
         */
         w: number;
+        /**
+        * @language zh_CN
+        * @private
+        * @version Egret 3.0
+        * @platform Web,Native
+        */
+        static HELP_0: Quaternion;
+        /**
+        * @language zh_CN
+        * @private
+        * @version Egret 3.0
+        * @platform Web,Native
+        */
+        static HELP_1: Quaternion;
+        /**
+        * @language zh_CN
+        * @private
+        * @version Egret 3.0
+        * @platform Web,Native
+        */
+        static HELP_2: Quaternion;
         /**
         * @language en_US
         * Creates a new Quaternion object.
@@ -1208,6 +1323,26 @@ declare module egret3d {
         * @platform Web,Native
         */
         transformVector(vector: Vector3D, target?: Vector3D): Vector3D;
+        /**
+        * @language zh_CN
+        * 计算出一个方向变换到另一个方向的四元数
+        * @param fromDirection 初始方向
+        * @param toDirection 变换后的方向
+        * @version Egret 3.0
+        * @platform Web,Native
+        */
+        fromToRotation(fromDirection: Vector3D, toDirection: Vector3D): void;
+        /**
+        * @language zh_CN
+        * 计算出一个方向变换到另一个方向的四元数
+        * @param fromDirection 初始方向
+        * @param toDirection 变换后的方向
+        * @param target 计算出的四元数 默认为null 结果会返回
+        * @returns Quaternion 计算出的四元数 如果 target为null 就会创建新实例返回
+        * @version Egret 3.0
+        * @platform Web,Native
+        */
+        static fromToRotation(fromDirection: Vector3D, toDirection: Vector3D, target?: Quaternion): Quaternion;
         /**
         * @language en_US
         * Copies the data from a quaternion into this instance.
@@ -1548,6 +1683,26 @@ declare module egret3d {
         orthoOffCenter(l: number, r: number, b: number, t: number, zn: number, zf: number): void;
         /**
         * @language zh_CN
+        * 计算出一个方向变换到另一个方向的旋转矩阵
+        * @param fromDirection 初始方向
+        * @param toDirection 变换后的方向
+        * @version Egret 3.0
+        * @platform Web,Native
+        */
+        fromToRotation(fromDirection: Vector3D, toDirection: Vector3D): void;
+        /**
+        * @language zh_CN
+        * 计算出一个方向变换到另一个方向的旋转矩阵
+        * @param fromDirection 初始方向
+        * @param toDirection 变换后的方向
+        * @param target 计算出的旋转矩阵 默认为null 结果会返回
+        * @returns Quaternion 计算出的旋转矩阵 如果 target为null 就会创建新实例返回
+        * @version Egret 3.0
+        * @platform Web,Native
+        */
+        static fromToRotation(fromDirection: Vector3D, toDirection: Vector3D, target?: Matrix4_4): Matrix4_4;
+        /**
+        * @language zh_CN
         * 通过将当前 Matrix4_4 对象与另一个 Matrix4_4 对象相乘来前置一个矩阵
         * @param lhs 目标矩阵.
         * @version Egret 3.0
@@ -1742,6 +1897,8 @@ declare module egret3d {
         * @platform Web,Native
         */
         invers33(): void;
+        static transpose(matrix: Matrix4_4, result: Matrix4_4): Matrix4_4;
+        static inverse(matrix: Matrix4_4, result: Matrix4_4): Matrix4_4;
         /**
         * @language zh_CN
         * 当前矩阵求逆
@@ -2187,7 +2344,7 @@ declare module egret3d {
         * @version Egret 3.0
         * @platform Web,Native
         */
-        IntersectMesh(verticesData: Array<number>, indexData: Array<number>, offset: number, faces: number, uv_offset: number, mMat: Matrix4_4, result: PickResult): boolean;
+        IntersectMesh(verticesData: Float32Array, indexData: Uint16Array, offset: number, faces: number, uv_offset: number, mMat: Matrix4_4, result: PickResult): boolean;
         private invViewMat;
         /**
         * @language zh_CN
@@ -2358,6 +2515,14 @@ declare module egret3d {
         setColorARGB(argb: number): void;
         /**
          * @language zh_CN
+         * 设置颜色值
+         * @param rgb 0xffffff格式
+         * @version Egret 3.0
+         * @platform Web,Native
+         */
+        setColorRGB(rgb: number): void;
+        /**
+         * @language zh_CN
          * 在2个颜色之间取随机颜色
          * @param c1 第一个颜色
          * @param c2 第二个颜色
@@ -2410,14 +2575,14 @@ declare module egret3d {
         * @version Egret 3.0
         * @platform Web,Native
         */
-        vexData: Array<number>;
+        vexData: Float32Array;
         /**
         * @language zh_CN
         * 索引数据
         * @version Egret 3.0
         * @platform Web,Native
         */
-        indexData: Array<number>;
+        indexData: Uint16Array;
         /**
         * @language zh_CN
         * 顶点长度
@@ -2689,7 +2854,6 @@ declare module egret3d {
         calcBezierY(pos: Array<Point>, ctrl: Array<Point>, t: number): number;
         calcBezierX(pos: Array<Point>, ctrl: Array<Point>, t: number): number;
         private cubic_bezier(p0, p1, p2, p3, t);
-        private cubic_bezier2(p0, p1, p2, p3, t);
         private mix(num0, num1, t);
     }
     /**
@@ -2707,11 +2871,9 @@ declare module egret3d {
         private static calc;
         constructor();
         calc(t: number): number;
-        merge(): Float32Array;
         scaleBy(value: number): void;
         trySampler(): Float32Array;
         sampler(): Float32Array;
-        private pushSameValue(value);
         private doSampler();
         validate(): void;
         static compressFloats(floats: Array<number>, times: Array<number>): Float32Array;
@@ -2729,18 +2891,51 @@ declare module egret3d {
     class ColorTransform {
         /**
         * @language zh_CN
-        * 颜色变化矩阵。
+        * 颜色变化矩阵(r,g,b)
         * @version Egret 3.0
         * @platform Web,Native
         */
         m44: Matrix4_4;
         /**
         * @language zh_CN
-        * 颜色偏移数组
+        * 透明度
         * @version Egret 3.0
         * @platform Web,Native
         */
-        vec4: Float32Array;
+        alpha: number;
+        /**
+        * @language zh_CN
+        * @class egret3d.ColorTransform
+        * @classdesc
+        * ColorTransform 用到的数据，用于偏色某个材质球
+        * @version Egret 3.0
+        * @platform Web,Native
+        */
+        constructor();
+        /**
+        * @language zh_CN
+        * 缩放颜色，对rgba进行对应比例的系数缩放
+        * @param color 颜色缩放系数
+        * @version Egret 3.0
+        * @platform Web,Native
+        */
+        scale(r?: number, g?: number, b?: number, a?: number): void;
+        /**
+        * @language zh_CN
+        * 偏移颜色，对rgba进行对应便宜
+        * @param color 颜色缩放系数
+        * @version Egret 3.0
+        * @platform Web,Native
+        */
+        offset(r?: number, g?: number, b?: number, a?: number): void;
+        /**
+        * @language zh_CN
+        * 灰度变换
+        * @param color 颜色缩放系数
+        * @version Egret 3.0
+        * @platform Web,Native
+        */
+        gray(): void;
         /**
         * @language zh_CN
         * 重置数据
@@ -2749,14 +2944,37 @@ declare module egret3d {
         */
         reset(): void;
         /**
+        * @language zh_CN
+        * 颜色变换叠加
+        * @param ctf 叠加的颜色变换的矩阵
+        * @version Egret 3.0
+        * @platform Web,Native
+        */
+        multiply(ctf: ColorTransform): void;
+        /**
+        * @language zh_CN
+        * 拷贝一个颜色变换数据
+        * @param ctf 拷贝对象
+        * @version Egret 3.0
+        * @platform Web,Native
+        */
+        copyFrom(ctf: ColorTransform): void;
+        /**
+        * @language zh_CN
+        * 拷贝该颜色变换数据
+        * @param ctf 拷贝至目标对象
+        * @version Egret 3.0
+        * @platform Web,Native
+        */
+        copyTo(ctf: ColorTransform): void;
+        /**
          * @language zh_CN
-         * @class egret3d.ColorTransform
-         * @classdesc
-         * ColorTransform 用到的数据，用于偏色某个材质球
+         * 设置颜色值
+         * @param rgb 0xffffff格式
          * @version Egret 3.0
          * @platform Web,Native
          */
-        constructor();
+        setColorRGB(value: number): void;
     }
 }
 declare module egret3d {
@@ -2792,6 +3010,41 @@ declare module egret3d {
         * @platform Web,Native
         */
         uv: Vector3D;
+        /**
+        * @language zh_CN
+        * 相交面的索引
+        * @version Egret 3.0
+        * @platform Web,Native
+        */
+        faceIndex: number;
+        /**
+        * @language zh_CN
+        * 相交面顶点0索引
+        * @version Egret 3.0
+        * @platform Web,Native
+        */
+        v0: number;
+        /**
+        * @language zh_CN
+        * 相交面顶点1索引
+        * @version Egret 3.0
+        * @platform Web,Native
+        */
+        v1: number;
+        /**
+        * @language zh_CN
+        * 相交面顶点2索引
+        * @version Egret 3.0
+        * @platform Web,Native
+        */
+        v2: number;
+        /**
+        * @language zh_CN
+        * 鼠标拣选到的所有物体
+        * @version Egret 3.0
+        * @platform Web,Native
+        */
+        pickList: any;
     }
 }
 declare module egret3d {
@@ -2818,6 +3071,13 @@ declare module egret3d {
         * @platform Web,Native
         */
         static RESIZE: string;
+        /**
+       * @language zh_CN
+       * CHANGE 常量定义 change 事件对象的 type 属性值。
+       * @version Egret 3.0
+       * @platform Web,Native
+       */
+        static CHANGE: string;
         /**
         * @language zh_CN
         * 事件目标。
@@ -2979,6 +3239,13 @@ declare module egret3d {
          * @platform Web,Native
          */
         static MOUSE_OVER: string;
+        /**
+ * @language zh_CN
+ * MOUSE_OVER 常量定义 onMouseOut 事件对象的 type 属性的值。
+ * @version Egret 3.0
+ * @platform Web,Native
+ */
+        static MOUSE_OUT: string;
         /**
          * @language zh_CN
          * MOUSE_WHEEL 常量定义 onMouseWheel 事件对象的 type 属性的值。
@@ -3626,7 +3893,7 @@ declare module egret3d {
         * @version Egret 3.0
         * @platform Web,Native
         */
-        hasEventListener(type: string, thisObject: any, callback: Function): boolean;
+        hasEventListener(type: string, thisObject?: any, callback?: Function): boolean;
     }
 }
 declare module egret3d {
@@ -4255,6 +4522,29 @@ declare module egret3d.GLSL {
 declare module egret3d.GLSL {
     /**
     * @private
+    * @class egret3d.ConstVar
+    * @classdesc
+    * shader中常量类型变量的所有数据
+    * 包含变量类型，变量名，变量的值
+    *
+    * @see egret3d.DefineVar
+    *
+    * @version Egret 3.0
+    * @platform Web,Native
+    */
+    class DefineVar extends VarRegister {
+        /**
+        * @language zh_CN
+        * 构造
+        * @param name 常量名
+        * @param value 常量的值
+        */
+        constructor(name: string, value: string);
+    }
+}
+declare module egret3d.GLSL {
+    /**
+    * @private
     * @class egret3d.VaryingType
     * @classdesc
     * shader中varying 变量 类型
@@ -4474,6 +4764,7 @@ declare module egret3d.GLSL {
         */
         sampler3DList: Array<Sampler3D>;
         extensionList: Array<Extension>;
+        defineList: Array<DefineVar>;
         /**
         * @private
         * 增加一个变量对象
@@ -4590,29 +4881,115 @@ declare module egret3d {
         private static connectSampler(sampler);
         private static connectSampler3D(sampler);
         private static connectExtension(extension);
+        private static connectDefine(def);
         private static getTexture2DIndex(i);
     }
 }
 declare module egret3d {
     /**
-    * @private
     * @language zh_CN
+    * 实时阴影渲染需要提供的数据接口。
+    * 基于shadow mapping 的阴影算法,
+    * 当前阴影只支持方向光,
+    * 默认灯光方向是 Vector3D(1, -1, 0), 阴影摄像机为此灯光的子节点,
+    * 阴影渲染摄像机的位置为Vector3D(-707, 707, 0),
+    * 摄像机 near 1 far 3000  width 2048 height 2048 ,
+    * 当渲染阴影的物体超出阴影摄像机的范围阴影将不会渲染阴影,
+    * 可以进行调节阴影摄像机的 位置 和 其它参数来进行处理,
+    * this.directLight 当前渲染阴影的灯光,
+    * this.shadowCamera 当前渲染阴影的摄像机
     * @version Egret 3.0
     * @platform Web,Native
     */
     class ShadowCast {
         private static _instance;
-        private static _enable;
-        shadowRender: RenderBase[];
+        private _boundBox;
+        /**
+        * @language zh_CN
+        * 开启阴影渲染
+        * @version Egret 3.0
+        * @platform Web,Native
+        */
+        static enableShadow: boolean;
+        /**
+        * @language zh_CN
+        * @private
+        * 阴影贴图的宽
+        * @version Egret 3.0
+        * @platform Web,Native
+        */
+        static textureSizeWidth: number;
+        /**
+        * @language zh_CN
+        * @private
+        * 阴影贴图的高
+        * @version Egret 3.0
+        * @platform Web,Native
+        */
+        static textureSizeHeight: number;
+        /**
+        * @language zh_CN
+        * 渲染阴影的摄像机
+        * @version Egret 3.0
+        * @platform Web,Native
+        */
         shadowCamera: Camera3D;
-        distance: number;
-        dir: Vector3D;
+        /**
+        * @language zh_CN
+        * 阴影渲染器
+        * @version Egret 3.0
+        * @platform Web,Native
+        */
+        shadowRender: MultiRender;
+        /**
+        * @language zh_CN
+        * 阴影渲染器
+        * @version Egret 3.0
+        * @platform Web,Native
+        */
+        directLight: DirectLight;
+        /**
+        * @language zh_CN
+        * 单例
+        * @returns ShadowCast 实例返回
+        * @version Egret 3.0
+        * @platform Web,Native
+        */
         static instance: ShadowCast;
+        /**
+        * @private
+        * @language zh_CN
+        * @version Egret 3.0
+        * @platform Web,Native
+        */
         constructor();
-        static enableShadow(flag: boolean): void;
-        private init();
-        castShadowLight(): void;
-        calculateCamera(object3d: Object3D, camera: Camera3D): void;
+        /**
+        * @language zh_CN
+        * 设置阴影贴图的宽度和高度
+        * @param width 宽度
+        * @param height 高度
+        * @version Egret 3.0
+        * @platform Web,Native
+        */
+        setTextureSize(width: number, height: number): void;
+        /**
+        * @language zh_CN
+        * 如需要渲染阴影必须先设置当前阴影灯光，暂支持方向光
+        * 灯光中的变换会用于阴影像机的变换
+        * 注意:在阴影摄像机视锥中的物体,阴影才会渲染.
+        * @param light 实例返回
+        * @version Egret 3.0
+        * @platform Web,Native
+        */
+        castShadowLight(light: DirectLight): void;
+        /**
+        * @private
+        * @language zh_CN
+        * @version Egret 3.0
+        * @platform Web,Native
+        */
+        update(entityCollect: EntityCollect, camera: Camera3D, time: number, delay: number, viewPort: Rectangle): void;
+        private calculateBoundBox(entityCollect);
     }
 }
 declare module egret3d {
@@ -4667,8 +5044,13 @@ declare module egret3d {
         state: IAnimationState;
         /**
         * @private
+        * 构建结束后需要清理掉临时数据
         */
         build(geometry: Geometry, count: number): void;
+        /**
+        * @private
+        */
+        afterBuild(): void;
         /**
         * @private
         */
@@ -5526,6 +5908,13 @@ declare module egret3d {
         * @platform Web,Native
         */
         currentSkeletonPose: SkeletonPose;
+        /**
+        * @language zh_CN
+        * ��ȡ��һ֡��SkeletonPose
+        * @version Egret 3.0
+        * @platform Web,Native
+        */
+        previousSkeletonPose: SkeletonPose;
         /**
         * @language zh_CN
         * ��ȡ��ǰ֡����
@@ -7089,9 +7478,10 @@ declare module egret3d {
         private blend_Factors_dst;
         private cullingMode;
         private depthCompareMode;
-        private vertexFormat;
         private program;
         private programChange;
+        private cacheVertexPoint;
+        private cacheVertexFormat;
         /**
         * @private
         * @language zh_CN
@@ -7129,7 +7519,7 @@ declare module egret3d {
         * @version Egret 3.0
         * @platform Web,Native
         */
-        creatIndexBuffer(indexData: Array<number>): IndexBuffer3D;
+        creatIndexBuffer(indexData: Int16Array): IndexBuffer3D;
         /**
         * @language zh_CN
         * 提交索引数据
@@ -7145,7 +7535,7 @@ declare module egret3d {
         * @version Egret 3.0
         * @platform Web,Native
         */
-        creatVertexBuffer(vertexData: Array<number>, dawType?: number): VertexBuffer3D;
+        creatVertexBuffer(vertexData: Float32Array, dawType?: number): VertexBuffer3D;
         /**
         * @language zh_CN
         * 提交顶点数据
@@ -7182,21 +7572,21 @@ declare module egret3d {
         * @version Egret 3.0
         * @platform Web,Native
         */
-        upLoadCompressedTexture2D(mipLevel: number, texture: Texture2D): void;
+        upLoadCompressedTexture2D(mipLevel: number, texture: ContextTexture2D): void;
         /**
         * @language zh_CN
         * 创建 2维贴图 向显卡提交buffer申请 并创建Texture2D对象
         * @version Egret 3.0
         * @platform Web,Native
         */
-        creatTexture2D(): Texture2D;
+        creatTexture2D(): ContextTexture2D;
         /**
         * @language zh_CN
         * 创建 Cube贴图 向显卡提交buffer申请 并创建Texture3D对象
         * @version Egret 3.0
         * @platform Web,Native
         */
-        creatCubeTexture(): Texture3D;
+        creatCubeTexture(): ContextTexture3D;
         /**
         * @language zh_CN
         * @private
@@ -7204,7 +7594,7 @@ declare module egret3d {
         * @version Egret 3.0
         * @platform Web,Native
         */
-        uploadCubetexture(tex: Texture3D): void;
+        uploadCubetexture(tex: ContextTexture3D): void;
         /**
         * @language zh_CN
         * @private
@@ -7214,7 +7604,7 @@ declare module egret3d {
         * @version Egret 3.0
         * @platform Web,Native
         */
-        createFramebuffer(width: number, height: number, format: FrameBufferFormat): Texture2D;
+        createFramebuffer(width: number, height: number, format: FrameBufferFormat): ContextTexture2D;
         /**
         * @language zh_CN
         * @private
@@ -7224,7 +7614,7 @@ declare module egret3d {
         * @version Egret 3.0
         * @platform Web,Native
         */
-        setRenderToTexture(texture: Texture2D, enableDepthAndStencil?: Boolean, surfaceSelector?: number): void;
+        setRenderToTexture(texture: ContextTexture2D, enableDepthAndStencil?: Boolean, surfaceSelector?: number): void;
         /**
         * @language zh_CN
         * 设置渲染缓冲为屏幕
@@ -7587,29 +7977,6 @@ declare module egret3d {
         * @version Egret 3.0
         * @platform Web,Native
         */
-        clearVaPointer(index: number): void;
-        /**
-        * @language zh_CN
-        * 检查激活 的顶点结构
-        * @version Egret 3.0
-        * @platform Web,Native
-        */
-        isActiveVertexFormat(format: number): boolean;
-        /**
-        * @language zh_CN
-        * 激活的顶点结构
-        * @version Egret 3.0
-        * @platform Web,Native
-        */
-        activeVertexFormat(format: number): void;
-        /**
-        * @language zh_CN
-        * 关闭顶点着色器变量索引
-        * @param index 变量索引
-        * @version Egret 3.0
-        * @platform Web,Native
-        */
-        unActiveVertexFormat(): void;
         /**
         * @language zh_CN
         * @private
@@ -7643,7 +8010,7 @@ declare module egret3d {
         * @version Egret 3.0
         * @platform Web,Native
         */
-        setTexture2DAt(samplerIndex: number, uniLocation: number, index: number, texture: Texture2D): void;
+        setTexture2DAt(samplerIndex: number, uniLocation: any, index: number, texture: ContextTexture2D): void;
         disableTexture2DAt(samplerIndex: number, uniLocation: number, index: number): void;
         /**
         * @language zh_CN
@@ -7656,7 +8023,7 @@ declare module egret3d {
         * @version Egret 3.0
         * @platform Web,Native
         */
-        setCubeTextureAt(samplerIndex: number, uniLocation: number, index: number, texture: Texture3D): void;
+        setCubeTextureAt(samplerIndex: number, uniLocation: number, index: number, texture: ContextTexture3D): void;
         /**
         * @language zh_CN
         * @private
@@ -7771,7 +8138,7 @@ declare module egret3d {
         * @private
         * RenderTexture 的引用
         */
-        texture: Texture2D;
+        texture: ContextTexture2D;
     }
 }
 declare module egret3d {
@@ -7802,7 +8169,7 @@ declare module egret3d {
          * @language zh_CN
          * @private
          */
-        arrayBuffer: ArrayBuffer;
+        arrayBuffer: Uint16Array;
         /**
         * @language zh_CN
         * 构造
@@ -7960,12 +8327,12 @@ declare module egret3d {
 }
 declare module egret3d {
     /**
-    * @class egret3d.Texture2D
+    * @class egret3d.Shader
     * @classdesc
-    * Texture 类表示上载到渲染上下文的二维纹理。</p>
+    * Shader 类表示上载到渲染上下文的一对渲染程序中的 顶点找色shader，或片段着色的shader 。</p>
     *
-    * 定义一个 2D 纹理，以便在渲染期间使用。</p>
-    * 无法直接实例化 Texture。使用 Context3DProxy createTexture() 方法创建实例。</p>
+    * shader 是基于 opengl es 2.0 标准 也就是webgl版本的shader着色器。</p>
+    *
     * @see egret3d.Program3D
     * @see egret3d.IndexBuffer3D
     * @see egret3d.VertexBuffer3D
@@ -7975,7 +8342,72 @@ declare module egret3d {
     * @version Egret 3.0
     * @platform Web,Native
     */
-    class Texture2D {
+    class Shader {
+        /**
+      * @language zh_CN
+      * @private
+      * 声明 shader 为顶点 类型
+      * @see egret3d.ShaderPool
+      */
+        static vertex: number;
+        /**
+   * @language zh_CN
+   * @private
+   * 声明 shader 为片段 类型
+   * @see egret3d.ShaderPool
+   */
+        static fragment: number;
+        /**
+       * @language zh_CN
+       * @private
+       * 获取已经有的shader 的ID
+       */
+        static ID_COUNT: number;
+        /**
+        * @language zh_CN
+        *
+        * 获取已经有的shader 的ID
+        */
+        id: string;
+        /**
+        * @language zh_CN
+        * @private
+        * WebGLShader 的引用
+        */
+        private _shader;
+        /**
+        * @language zh_CN
+        * 构造
+        * @param shader WebGLShader对象
+        * @version Egret 3.0
+        * @platform Web,Native
+        */
+        constructor(shader: WebGLShader);
+        /**
+        * @language zh_CN
+        * @private
+        * WebGLShader 的引用
+        */
+        shader: WebGLShader;
+    }
+}
+declare module egret3d {
+    /**
+    * @class egret3d.ContextTexture2D
+    * @classdesc
+    * Texture 类表示上载到渲染上下文的二维纹理。</p>
+    *
+    * 定义一个 2D 纹理，以便在渲染期间使用。</p>
+    * 无法直接实例化 Texture。使用 Context3DProxy createTexture() 方法创建实例。</p>
+    * @see egret3d.Program3D
+    * @see egret3d.IndexBuffer3D
+    * @see egret3d.VertexBuffer3D
+    * @see egret3d.Shader
+    * @see egret3d.CubeTexture
+    * @version Egret 3.0
+    * @platform Web,Native
+    */
+    class ContextTexture2D {
         /**
        * @language zh_CN
        * @private
@@ -8060,86 +8492,20 @@ declare module egret3d {
 }
 declare module egret3d {
     /**
-    * @class egret3d.Shader
-    * @classdesc
-    * Shader 类表示上载到渲染上下文的一对渲染程序中的 顶点找色shader，或片段着色的shader 。</p>
-    *
-    * shader 是基于 opengl es 2.0 标准 也就是webgl版本的shader着色器。</p>
-    *
-    * @see egret3d.Program3D
-    * @see egret3d.IndexBuffer3D
-    * @see egret3d.VertexBuffer3D
-    * @see egret3d.Texture2D
-    * @see egret3d.Shader
-    * @see egret3d.CubeTexture
-    * @version Egret 3.0
-    * @platform Web,Native
-    */
-    class Shader {
-        /**
-      * @language zh_CN
-      * @private
-      * 声明 shader 为顶点 类型
-      * @see egret3d.ShaderPool
-      */
-        static vertex: number;
-        /**
-   * @language zh_CN
-   * @private
-   * 声明 shader 为片段 类型
-   * @see egret3d.ShaderPool
-   */
-        static fragment: number;
-        /**
-       * @language zh_CN
-       * @private
-       * 获取已经有的shader 的ID
-       */
-        static ID_COUNT: number;
-        /**
-        * @language zh_CN
-        *
-        * 获取已经有的shader 的ID
-        */
-        id: string;
-        /**
-        * @language zh_CN
-        * @private
-        * WebGLShader 的引用
-        */
-        private _shader;
-        /**
-        * @language zh_CN
-        * 构造
-        * @param shader WebGLShader对象
-        * @version Egret 3.0
-        * @platform Web,Native
-        */
-        constructor(shader: WebGLShader);
-        /**
-        * @language zh_CN
-        * @private
-        * WebGLShader 的引用
-        */
-        shader: WebGLShader;
-    }
-}
-declare module egret3d {
-    /**
-    * @class egret3d.Texture3D
+    * @class egret3d.ContextTexture3D
     * @classdesc
     * 由6加Texture2D 组成
     * 可以使一个6面体上贴出不同的贴图
     * @see egret3d.Program3D
     * @see egret3d.IndexBuffer3D
     * @see egret3d.VertexBuffer3D
-    * @see egret3d.Texture2D
+    * @see egret3d.ContextTexture2D
     * @see egret3d.Shader
     * @see egret3d.CubeTexture
     * @version Egret 3.0
     * @platform Web,Native
     */
-    class Texture3D {
+    class ContextTexture3D {
         /**
        * @language zh_CN
        * @private
@@ -8194,12 +8560,12 @@ declare module egret3d {
         * @platform Web,Native
          */
         mimapData: Array<MipmapData>;
-        image_front: Texture2D;
-        image_back: Texture2D;
-        image_left: Texture2D;
-        image_right: Texture2D;
-        image_up: Texture2D;
-        image_down: Texture2D;
+        image_front: ContextTexture2D;
+        image_back: ContextTexture2D;
+        image_left: ContextTexture2D;
+        image_right: ContextTexture2D;
+        image_up: ContextTexture2D;
+        image_down: ContextTexture2D;
         /**
          * @language zh_CN
          * 构造函数
@@ -8260,7 +8626,6 @@ declare module egret3d {
          * @version Egret 3.0
          * @platform Web,Native
          */
-        static renderListChange: boolean;
         protected static s_id: number;
         protected _modelMatrix3D: Matrix4_4;
         protected _transformChange: boolean;
@@ -9098,6 +9463,7 @@ declare module egret3d {
         * @platform Web,Native
         */
         dispose(): void;
+        root: Object3D;
     }
 }
 declare module egret3d {
@@ -9229,12 +9595,12 @@ declare module egret3d {
         * @language zh_CN
         * 构建一个Mesh对象
         * @param geometry 模型数据
-        * @param material 模型材质
-        * @param animation 模型动画
+        * @param material 模型材质 默认为null 为null做自动创建一个TextureMaterial
+        * @param animation 模型动画 默认为null 没有动画可以不指定
         * @version Egret 3.0
         * @platform Web,Native
         */
-        constructor(geometry: Geometry, material: MaterialBase, animation?: IAnimation);
+        constructor(geometry: Geometry, material?: MaterialBase, animation?: IAnimation);
         /**
         * @private
         */
@@ -9337,7 +9703,7 @@ declare module egret3d {
          * @language zh_CN
          * 指定材质，和公告板宽、高，构建一个公告板
          * @param material 渲染材质
-         * @param geometry 几何数据，默认参数为null 为null会在内部创建一个PlaneGeometry
+         * @param geometry 几何数据，默认参数为null 为null会在内部创建一个PlaneGeometry  自定义PlaneGeometry的时候 请注意创建面的朝向
          * @param width 公告板宽度 默认参数为 100
          * @param height 公告板高度 默认参数为 100
          * @version Egret 3.0
@@ -9422,6 +9788,1255 @@ declare module egret3d {
          * @platform Web,Native
          */
         constructor();
+    }
+}
+declare module egret3d.gui {
+    /**
+ * @private
+ */
+    class BitmapFont {
+        private static _fontTextures;
+        constructor();
+        static load(data: any): void;
+        static getTexture(unicode: number): Texture;
+    }
+}
+declare module egret3d {
+    /**
+    * @private
+    */
+    class DisplayObject extends EventDispatcher {
+        id: number;
+        name: string;
+        stage: QuadStage;
+        parent: DisplayObject;
+        childs: DisplayObject[];
+        aabb: Rectangle;
+        pickResult: PickResult;
+        mouseEnable: boolean;
+        mouseChildern: boolean;
+        hasMouseMove: boolean;
+        hasMouseDown: boolean;
+        hasMouseUp: boolean;
+        hasMouseClick: boolean;
+        hasMouseOut: boolean;
+        mouseInState: boolean;
+        transform: Matrix4_4;
+        protected _renderType: number;
+        protected _rgbNumber: number;
+        protected _alphaNumber: number;
+        protected _color: ColorTransform;
+        protected _pivot: Vector3D;
+        protected _pos: Vector3D;
+        protected _rot: Vector3D;
+        protected _sca: Vector3D;
+        protected _globalColor: ColorTransform;
+        protected _globalPos: Vector3D;
+        protected _globalRot: Vector3D;
+        protected _globalSca: Vector3D;
+        protected _localMaskRect: Rectangle;
+        protected _globalMaskRect: Rectangle;
+        protected _orientation: Quaternion;
+        protected _globalOrientation: Quaternion;
+        protected _localVisible: boolean;
+        protected _globalVisible: boolean;
+        protected _visibleChange: boolean;
+        protected _colorChange: boolean;
+        protected _transformChange: boolean;
+        protected _maskRectChange: boolean;
+        protected _transformInvalid: boolean;
+        protected _renderTypeInvalid: boolean;
+        protected _maskRectInvalid: boolean;
+        protected _colorInvalid: boolean;
+        protected _textureInvalid: boolean;
+        protected _visibleInvalid: boolean;
+        protected _qut: Quaternion;
+        protected _vec: Vector3D;
+        init(): void;
+        renderType: number;
+        width: number;
+        height: number;
+        pivotX: number;
+        pivotY: number;
+        pivotZ: number;
+        mask: Rectangle;
+        protected calculateTransform(): void;
+        private calculateMask();
+        protected onUpdateTransform(): void;
+        dispatchMuseDown(): void;
+        dispatchMuseUp(): void;
+        dispatchMuseClick(): void;
+        dispatchMuseMove(): void;
+        dispatchMuseOut(): void;
+        addChild(display: DisplayObject): DisplayObject;
+        addChildAt(display: DisplayObject, index: number): DisplayObject;
+        private doAddChildAt(display, index);
+        removeChild(display: DisplayObject): DisplayObject;
+        removeChildAt(index: number): DisplayObject;
+        private doRemoveChild(display);
+        swapChildIndex(display: DisplayObject, index: number): void;
+        activeFromStage(stage: QuadStage): void;
+        private updateStage(stage);
+        hasChild(display: DisplayObject): number;
+        getChildByIndex(index: number): DisplayObject;
+        getChildByName(index: number): DisplayObject;
+        update(time: number, delay: number, zIndex: number, geometry: Geometry, view3D: View3D, globalIndex: number): void;
+        protected updateMaskChange(change: boolean): void;
+        /**
+        * @language zh_CN
+        * 设置缩放/旋转/位移信息状态
+        * @param change 是否有更新
+        * @version Egret 3.0
+        * @platform Web,Native
+        */
+        protected updateTransformChange(change: boolean): void;
+        protected updateVisibleChange(change: boolean): void;
+        globalVisible: boolean;
+        visible: boolean;
+        /**
+        * @language zh_CN
+        * 设置颜色变换信息状态
+        * @param change 是否有更新
+        * @version Egret 3.0
+        * @platform Web,Native
+        */
+        protected updateColorChange(change: boolean): void;
+        /**
+        * @language zh_CN
+        * 返回 object 世界位置 x
+        * @returns object 世界位置x
+        * @version Egret 3.0
+        * @platform Web,Native
+        */
+        /**
+        * @language zh_CN
+        * 设置 object 世界位置 x
+        * @version Egret 3.0
+        * @platform Web,Native
+        */
+        globalX: number;
+        /**
+        * @language zh_CN
+        * 返回 object 世界位置 y
+        * @returns object 世界位置 y
+        * @version Egret 3.0
+        * @platform Web,Native
+        */
+        /**
+        * @language zh_CN
+        * 设置 object 世界位置 y
+        * @version Egret 3.0
+        * @platform Web,Native
+        */
+        globalY: number;
+        /**
+        * @language zh_CN
+        * 返回 object 世界位置 z
+        * @returns object 世界位置 z
+        * @version Egret 3.0
+        * @platform Web,Native
+        */
+        /**
+        * @language zh_CN
+        * 设置 object 世界位置 z
+        * @version Egret 3.0
+        * @platform Web,Native
+        */
+        globalZ: number;
+        /**
+        * @language zh_CN
+        * 返回 object 世界位置
+        * 返回世界坐标系的 全局位置坐标
+        * @returns object 世界位置
+        * @version Egret 3.0
+        * @platform Web,Native
+        */
+        /**
+        * @language zh_CN
+        * 设置 object 世界位置
+        * @version Egret 3.0
+        * @platform Web,Native
+        */
+        globalPosition: Vector3D;
+        /**
+        * @language zh_CN
+        * 返回 object 世界旋转x
+        * @returns object 世界旋转x
+        * @version Egret 3.0
+        * @platform Web,Native
+        */
+        /**
+        * @language zh_CN
+        * 设置 object 世界旋转 x
+        * @version Egret 3.0
+        * @platform Web,Native
+        */
+        globalRotationX: number;
+        /**
+        * @language zh_CN
+        * 返回 object 世界旋转y
+        * @returns object 世界旋转y
+        * @version Egret 3.0
+        * @platform Web,Native
+        */
+        /**
+        * @language zh_CN
+        * 设置 object 世界旋转 y
+        * @version Egret 3.0
+        * @platform Web,Native
+        */
+        globalRotationY: number;
+        /**
+        * @language zh_CN
+        * 返回 object 世界旋转z
+        * @returns object 世界旋转z
+        * @version Egret 3.0
+        * @platform Web,Native
+        */
+        /**
+        * @language zh_CN
+        * 设置 object 世界旋转 z
+        * @version Egret 3.0
+        * @platform Web,Native
+        */
+        globalRotationZ: number;
+        /**
+        * @language zh_CN
+        * 返回 object 世界旋转
+        * 返回世界坐标系的 全局旋转信息
+        * @returns object 世界旋转
+        * @version Egret 3.0
+        * @platform Web,Native
+        */
+        /**
+        * @language zh_CN
+        * 设置 object 世界旋转
+        * @version Egret 3.0
+        * @platform Web,Native
+        */
+        globalRotation: Vector3D;
+        /**
+        * @language zh_CN
+        * 返回 object 世界缩放
+        * 返回世界坐标系的 全局缩放信息
+        * @returns object 世界缩放
+        * @version Egret 3.0
+        * @platform Web,Native
+        */
+        /**
+        * @language zh_CN
+        * 设置 object 世界缩放
+        * @version Egret 3.0
+        * @platform Web,Native
+        */
+        globalScale: Vector3D;
+        /**
+        * @language zh_CN
+        * 获取 object 世界缩放 x
+        * @version Egret 3.0
+        * @platform Web,Native
+        */
+        /**
+        * @language zh_CN
+        * 设置 object 世界缩放 x
+        * @version Egret 3.0
+        * @platform Web,Native
+        */
+        globalScaleX: number;
+        /**
+        * @language zh_CN
+        * 获取 object 世界缩放 y
+        * @version Egret 3.0
+        * @platform Web,Native
+        */
+        /**
+        * @language zh_CN
+        * 设置 object 世界缩放 y
+        * @version Egret 3.0
+        * @platform Web,Native
+        */
+        globalScaleY: number;
+        /**
+        * @language zh_CN
+        * 获取 object 世界缩放 z
+        * @version Egret 3.0
+        * @platform Web,Native
+        */
+        /**
+        * @language zh_CN
+        * 设置 object 世界缩放 z
+        * @version Egret 3.0
+        * @platform Web,Native
+        */
+        globalScaleZ: number;
+        /**
+        * @language zh_CN
+        * 返回 object 世界旋转 四元数
+        * 返回世界坐标系的 全局旋转信息，数据类型是 四元素
+        * @returns object 世界旋转
+        * @version Egret 3.0
+        * @platform Web,Native
+        */
+        /**
+        * @language zh_CN
+        * 设置 object 世界旋转 四元数
+        * @version Egret 3.0
+        * @platform Web,Native
+        */
+        globalOrientation: Quaternion;
+        globalMask: Rectangle;
+        /**
+        * @language zh_CN
+        * 返回位移。</p>
+        * 获取容器的坐标位置，基于父节点的位置坐标。</p>
+        * @returns 位移
+        * @version Egret 3.0
+        * @platform Web,Native
+        */
+        /**
+        * @language zh_CN
+        * 设置位移。</p>
+        * 设置基于父节点的位置坐标，当父容器发生变化时，子节点也会变化。</p>
+        * @param vec 位移
+        * @version Egret 3.0
+        * @platform Web,Native
+        */
+        position: Vector3D;
+        /**
+        * @language zh_CN
+        * 返回旋转。</p>
+        * 获取容器的旋转信息，基于父节点的旋转信息 欧拉角信息。</p>
+        * @returns 旋转 欧拉角信息
+        * @version Egret 3.0
+        * @platform Web,Native
+        */
+        /**
+        * @language zh_CN
+        * 设置旋转 。</p>
+        * 设置基于父节点的旋转信息 欧拉角信息，当父容器发生变化时，子节点也会变化。</p>
+        * @param vec 旋转 欧拉角信息
+        * @version Egret 3.0
+        * @platform Web,Native
+        */
+        rotation: Vector3D;
+        /**
+        * @language zh_CN
+        * 返回旋转。</p>
+        * 返回 基于四元素的旋转信息。</p>
+        * @returns 旋转
+        * @version Egret 3.0
+        * @platform Web,Native
+        */
+        /**
+        * @language zh_CN
+        * 设置旋转。</p>
+        * 设置旋转 基于四元素 旋转信息，当父容器发生变化时，子节点也会变化。</p>
+        * @param value 旋转
+        * @version Egret 3.0
+        * @platform Web,Native
+        */
+        orientation: Quaternion;
+        /**
+        * @language zh_CN
+        * 设置旋转 分量x
+        * @param value 分量x
+        * @version Egret 3.0
+        * @platform Web,Native
+        */
+        orientationX: number;
+        /**
+        * @language zh_CN
+        * 设置旋转 分量y
+        * @param value 分量y
+        * @version Egret 3.0
+        * @platform Web,Native
+        */
+        orientationY: number;
+        /**
+        * @language zh_CN
+        * 设置旋转 分量z
+        * @param value 分量z
+        * @version Egret 3.0
+        * @platform Web,Native
+        */
+        orientationZ: number;
+        /**
+        * @language zh_CN
+        * 设置旋转 分量w
+        * @param value 分量w
+        * @version Egret 3.0
+        * @platform Web,Native
+        */
+        orientationW: number;
+        /**
+        * @language zh_CN
+        * 返回缩放。</p>
+        * 返回基于父容器的缩放信息。</p>
+        * @returns 缩放
+        * @version Egret 3.0
+        * @platform Web,Native
+        */
+        /**
+        * @language zh_CN
+        * 设置缩放。</p>
+        * 设置基于父容器的缩放信息，当父容器发生变化时，子节点也会变化。</p>
+        * @param vec 缩放
+        * @version Egret 3.0
+        * @platform Web,Native
+        */
+        scale: Vector3D;
+        /**
+        * @language zh_CN
+        * 返回x坐标
+        * 返回基于父容器的位置坐标信息值
+        * @returns x坐标
+        * @version Egret 3.0
+        * @platform Web,Native
+        */
+        /**
+        * @language zh_CN
+        * 设置x坐标。</p>
+        * 设置基于父容器的位置信息，当父容器发生变化时，子节点也会变化，值不变。</p>
+        * @param value x坐标
+        * @version Egret 3.0
+        * @platform Web,Native
+        */
+        x: number;
+        /**
+        * @language zh_CN
+        * 返回y坐标
+        *
+        * 返回基于父容器的位置坐标信息值
+        * @returns y坐标
+        * @version Egret 3.0
+        * @platform Web,Native
+        */
+        /**
+        * @language zh_CN
+        * 设置y坐标。</p>
+        * 设置基于父容器的位置信息，当父容器发生变化时，子节点也会变化，值不变。</p>
+        * @param value y坐标
+        * @version Egret 3.0
+        * @platform Web,Native
+        */
+        y: number;
+        /**
+        * @language zh_CN
+        * 返回z坐标
+        *
+        * 返回基于父容器的位置坐标信息值
+        * @returns z坐标
+        * @version Egret 3.0
+        * @platform Web,Native
+        */
+        /**
+        * @language zh_CN
+        * 设置z坐标。</p>
+        * 设置基于父容器的位置信息，当父容器发生变化时，子节点也会变化，值不变。</p>
+        * @param value z坐标
+        * @version Egret 3.0
+        * @platform Web,Native
+        */
+        z: number;
+        /**
+        * @language zh_CN
+        * 返回x旋转
+        *
+        * 返回基于父容器的位置旋转信息值
+        * @returns x旋转
+        * @version Egret 3.0
+        * @platform Web,Native
+        */
+        /**
+        * @language zh_CN
+        * 设置x轴旋转。</p>
+        * 设置基于父容器的旋转信息，当父容器发生变化时，子节点也会变化，值不变。</p>
+        * @param value x轴旋转
+        * @version Egret 3.0
+        * @platform Web,Native
+        */
+        rotationX: number;
+        /**
+        * @language zh_CN
+        * 返回y旋转
+        *
+        * 返回基于父容器的位置旋转信息值
+        * @returns y旋转
+        * @version Egret 3.0
+        * @platform Web,Native
+        */
+        /**
+        * @language zh_CN
+        * 设置y轴旋转。</p>
+        * 设置基于父容器的旋转信息，当父容器发生变化时，子节点也会变化，值不变。</p>
+        * @param value y轴旋转
+        * @version Egret 3.0
+        * @platform Web,Native
+        */
+        rotationY: number;
+        /**
+        * @language zh_CN
+        * 返回z旋转
+        *
+        * 返回基于父容器的位置旋转信息值
+        * @returns z旋转
+        * @version Egret 3.0
+        * @platform Web,Native
+        */
+        /**
+        * @language zh_CN
+        * 设置z轴旋转。</p>
+        * 设置基于父容器的旋转信息，当父容器发生变化时，子节点也会变化，值不变。</p>
+        * @param value z轴旋转
+        * @version Egret 3.0
+        * @platform Web,Native
+        */
+        rotationZ: number;
+        /**
+        * @language zh_CN
+        * 返回x缩放
+        * 返回基于父容器的缩放信息值
+        * @returns x缩放
+        * @version Egret 3.0
+        * @platform Web,Native
+        */
+        /**
+        * @language zh_CN
+        * 设置x轴缩放。</p>
+        * 设置基于父容器的旋转信息，当父容器发生变化时，子节点也会变化，值不变
+        * @param value x轴缩放
+        * @version Egret 3.0
+        * @platform Web,Native
+        */
+        scaleX: number;
+        /**
+        * @language zh_CN
+        * 返回y缩放
+        * 返回基于父容器的缩放信息值
+        * @returns y缩放
+        * @version Egret 3.0
+        * @platform Web,Native
+        */
+        /**
+        * @language zh_CN
+        * 设置y轴缩放
+        *
+        * 设置基于父容器的旋转信息，当父容器发生变化时，子节点也会变化，值不变
+        * @param value y轴缩放
+        * @version Egret 3.0
+        * @platform Web,Native
+        */
+        scaleY: number;
+        /**
+        * @language zh_CN
+        * 返回z缩放
+        * 返回基于父容器的缩放信息值
+        * @returns z缩放
+        * @version Egret 3.0
+        * @platform Web,Native
+        */
+        /**
+        * @language zh_CN
+        * 设置z轴缩放
+        *
+        * 设置基于父容器的旋转信息，当父容器发生变化时，子节点也会变化，值不变
+        * @param value z轴缩放
+        * @version Egret 3.0
+        * @platform Web,Native
+        */
+        scaleZ: number;
+        /**
+        * @language zh_CN
+        * 返回全局的颜色变换信息
+        * @returns colorTransform
+        * @version Egret 3.0
+        * @platform Web,Native
+        */
+        globalColor: ColorTransform;
+        /**
+        * @language zh_CN
+        * 返回颜色值 0xffffff格式
+        * @returns color
+        * @version Egret 3.0
+        * @platform Web,Native
+        */
+        /**
+        * @language zh_CN
+        * 设置颜色 0xffffff格式
+        * @version Egret 3.0
+        * @platform Web,Native
+        */
+        color: number;
+        /**
+        * @language zh_CN
+        * 获得alpha值，[0,1]之间的一个数
+        * @returns number alpha
+        * @version Egret 3.0
+        * @platform Web,Native
+        */
+        /**
+        * @language zh_CN
+        * 设置alpha值[0,1]之间的一个数
+        * @version Egret 3.0
+        * @platform Web,Native
+        */
+        alpha: number;
+    }
+}
+declare module egret3d {
+    /**
+    * @private
+    */
+    class QuadData {
+        static singleQuadData: Array<number>;
+        static vertexLen: number;
+        static posOffest: number;
+        static posSize: number;
+        static offsetOffest: number;
+        static offsetSize: number;
+        static uvRectangleOffest: number;
+        static uvRectangleSize: number;
+        static rotationOffest: number;
+        static rotationSize: number;
+        static scaleOffest: number;
+        static scaleSize: number;
+        static colorOffest: number;
+        static colorSize: number;
+        static singleQuadIndex: Array<number>;
+        static vertexBytes: number;
+        static quadVertexLen: number;
+        static buildGeometry(geometry: Geometry, start: number, numberQuad: number): void;
+    }
+}
+declare module egret3d {
+    /**
+    * @language zh_CN
+    * quad对象，枚举出一些异常情况
+    * @version Egret 3.0
+    * @platform Web,Native
+    */
+    class QuadNullType {
+        static NULL_TEXTURE: number;
+        static NULL_QUAD: number;
+        static NULL_INVISIBLE: number;
+    }
+    /**
+    * @private
+    */
+    class Quad extends DisplayObject {
+        protected _texture: Texture;
+        protected _globalIndex: number;
+        private static IdentityVector;
+        private static TempVector;
+        private static DefaultUVRect;
+        constructor();
+        texture: Texture;
+        update(time: number, delay: number, zIndex: number, geometry: Geometry, view3D: View3D, globalIndex: number): void;
+        static clear(zIndex: number, geometry: Geometry): void;
+    }
+}
+declare module egret3d {
+    /**
+ * @private
+ */
+    class GUIEventFire {
+        private _finalist;
+        private _mouseList;
+        private _quadStage;
+        constructor(quadStage: QuadStage);
+        private mouseOut(e);
+        private mouseDown(e);
+        private mouseUp(e);
+        private mouseOver(e);
+        private mouseMove(e);
+        private mouseClick(e);
+        fire(): void;
+        private getMousePickList();
+    }
+}
+declare module egret3d {
+    /**
+ * @private
+ */
+    class SortUtil {
+        static sortZindex(a: Quad, b: Quad): number;
+        static sortAB(quads: Quad[]): Quad[];
+        static sortBA(quads: Quad[]): Quad[];
+    }
+}
+declare module egret3d {
+    /**
+    * @private
+    */
+    class QuadMesh extends Mesh {
+        startQuad: number;
+        numberQuad: number;
+        id: number;
+        quadList: Quad[];
+        finalList: Quad[];
+        uiMaterial: TextureMaterial;
+        guiMethod: GUIMethod;
+        constructor(start: number);
+        setTexture(index: number, texture: ITexture): void;
+    }
+}
+declare module egret3d {
+    /**
+    * @private
+    */
+    class GUITextureGroup {
+        private _textures;
+        private _nextIndex;
+        static MAX_COUNT: Number;
+        constructor();
+        register(texture: Texture): boolean;
+        replace(texture: Texture, index: number): Texture;
+        activeTexture(mesh: QuadMesh): void;
+    }
+}
+declare module egret3d {
+    /**
+    * @private
+    */
+    class QuadStage extends EventDispatcher {
+        static moreQuad: number;
+        private _childList;
+        private _quadMeshs;
+        private _quadCurHistory;
+        private _quadLastHistory;
+        private _textureGroup;
+        private _view3D;
+        private _guiEventFire;
+        private _renderListInvalid;
+        quadList: Quad[];
+        constructor(view3D: View3D);
+        registerTexture(texture: Texture): boolean;
+        private creatQuadMesh();
+        private getChildQuads(displayObject, quadChilds);
+        addChild(displayObject: DisplayObject): void;
+        setRenderListInvalid(): void;
+        private updateRenderList();
+        removeChild(quad: DisplayObject): void;
+        update(time: number, delay: number, context3DProxy: Context3DProxy, view3D: View3D): void;
+        private clearInvalidVertices(count);
+        dispatchMuseDown(): void;
+        dispatchMuseUp(): void;
+        dispatchMuseClick(): void;
+        dispatchMuseMove(): void;
+        dispatchMouseOut(): void;
+        dispatchMouseOver(): void;
+    }
+}
+declare module egret3d.gui {
+    /**
+* @private
+* @class egret3d.gui.UILayout
+* @classdesc
+* @version Egret 3.0
+* @platform Web,Native
+*/
+    class UILayout extends DisplayObject {
+        onRender(): void;
+        onUpdate(): void;
+        onEvent(): void;
+    }
+}
+declare module egret3d.gui {
+    /**
+* @private
+* @class egret3d.gui.UIElement
+* @classdesc
+* @version Egret 3.0
+* @platform Web,Native
+*/
+    class UIElement extends UILayout {
+        protected instanceStyles: Object;
+        private static defaultStyles;
+        constructor();
+        onRender(): void;
+        onUpdate(): void;
+        onEvent(): void;
+        setStyle(style: string, value: Texture): void;
+        getStyle(style: string): Texture;
+        static getStyleDefinition(): Object;
+        static mergeStyles(...list: any[]): Object;
+    }
+}
+declare module egret3d.gui {
+    /**
+* @private
+* @class egret3d.gui.UIButton
+* @classdesc
+* @version Egret 3.0
+* @platform Web,Native
+*/
+    class UIButton extends UIElement {
+        _skin: Quad;
+        private _enable;
+        protected _state: string;
+        protected _isDowning: boolean;
+        protected static STATE_DOWN: string;
+        protected static STATE_UP: string;
+        protected static STATE_DISABLE: string;
+        constructor();
+        width: number;
+        height: number;
+        setStyle(style: string, value: Texture): void;
+        protected mouseEventHandler(event: MouseEvent3D): void;
+        protected mouseOut(): void;
+        protected mouseOver(): void;
+        protected startPress(): void;
+        protected onStageEnd(event: MouseEvent3D): void;
+        protected endPress(): void;
+        enable: boolean;
+        setMouseState(state: string): void;
+        onRender(): void;
+        protected drawBackground(): void;
+    }
+    class ButtonLabelPlacement {
+        static BOTTOM: string;
+        static TOP: string;
+        static LEFT: string;
+        static RIGHT: string;
+    }
+}
+declare module egret3d.gui {
+    /**
+* @private
+* @class egret3d.gui.UITextFieldAutoSize
+* @classdesc
+* @version Egret 3.0
+* @platform Web,Native
+*/
+    enum UITextFieldAutoSize {
+        NONE = 0,
+        LEFT = 1,
+        RIGHT = 2,
+        CENTER = 3,
+    }
+    /**
+* @private
+* @class egret3d.gui.UITextFieldType
+* @classdesc
+* @version Egret 3.0
+* @platform Web,Native
+*/
+    enum UITextFieldType {
+        DYNAMIC = 0,
+        INPUT = 1,
+    }
+    /**
+* @private
+* @class egret3d.gui.UITextFormatAlign
+* @classdesc
+* @version Egret 3.0
+* @platform Web,Native
+*/
+    enum UITextFormatAlign {
+        CENTER = 0,
+        JUSTIFY = 1,
+        LEFT = 2,
+        RIGHT = 3,
+    }
+    /**
+* @private
+* @class egret3d.gui.UITextFormat
+* @classdesc
+* @version Egret 3.0
+* @platform Web,Native
+*/
+    class UITextFormat {
+    }
+    /**
+* @private
+* @class egret3d.gui.UITextField
+* @classdesc
+* @version Egret 3.0
+* @platform Web,Native
+*/
+    class UITextField extends DisplayObject {
+        private static sharedHTMLInputElement;
+        private static sharedHTMLTextAreaElement;
+        private _displayAsPassword;
+        private _maxChars;
+        private _multiline;
+        private _restrict;
+        private _selectable;
+        private _selectionBeginIndex;
+        private _selectionEndIndex;
+        private _type;
+        private _textColor;
+        private _textWidth;
+        private _textHeight;
+        private _text;
+        private _textLine;
+        private _fontQuadLine;
+        private _quadPool;
+        private _blankQuad;
+        private _autoSize;
+        private _textLineInfo;
+        private _bgQuad;
+        private _fontQuadPanel;
+        constructor(textFieldType?: UITextFieldType);
+        protected onShowInputAgent(e: Event3D): void;
+        private onSharedHTMLTextLoseFocus(ev);
+        width: number;
+        height: number;
+        /**
+        * @language zh_CN
+        * 指定文本字段是否是密码文本字段。
+        * @param displayAsPassword  是否为密码文本字段
+        * @version Egret 3.0
+        * @platform Web,Native
+        */
+        displayAsPassword: boolean;
+        /**
+        * @language zh_CN
+        * (只读)文本字段中的字符数。
+        * @version Egret 3.0
+        * @platform Web,Native
+        */
+        length: number;
+        /**
+        * @language zh_CN
+        * 文本字段中最多可包含的字符数（即用户输入的字符数）。
+        * @param maxChars  最大字符数
+        * @version Egret 3.0
+        * @platform Web,Native
+        */
+        maxChars: number;
+        /**
+        * @language zh_CN
+        * 指示字段是否为多行文本字段。
+        * @param multiline  是否多行
+        * @version Egret 3.0
+        * @platform Web,Native
+        */
+        multiline: boolean;
+        /**
+        * @language zh_CN
+        * 指示用户可输入到文本字段中的字符集。
+        * @param restrict  字符集
+        * @version Egret 3.0
+        * @platform Web,Native
+        */
+        restrict: string;
+        /**
+        * @language zh_CN
+        * 一个布尔值，指示文本字段是否可选。
+        * @param selectable  是否可选
+        * @version Egret 3.0
+        * @platform Web,Native
+        */
+        selectable: boolean;
+        /**
+        * @language zh_CN
+        * (只读)当前所选内容中第一个字符从零开始的字符索引值。
+        * @version Egret 3.0
+        * @platform Web,Native
+        */
+        selectionBeginIndex: number;
+        /**
+        * @language zh_CN
+        * (只读)当前所选内容中最后一个字符从零开始的字符索引值。
+        * @version Egret 3.0
+        * @platform Web,Native
+        */
+        selectionEndIndex: number;
+        /**
+        * @language zh_CN
+        * 该文本字段的类型。
+        * @param type  文本字段的类型
+        * @version Egret 3.0
+        * @platform Web,Native
+        */
+        type: UITextFieldType;
+        /**
+        * @language zh_CN
+        * 文本字段中文本的颜色（采用十六进制格式）。
+        * @param textColor  文本颜色
+        * @version Egret 3.0
+        * @platform Web,Native
+        */
+        textColor: number;
+        /**
+        * @language zh_CN
+        * （只读）文本的宽度，以像素为单位。
+        * @version Egret 3.0
+        * @platform Web,Native
+        */
+        textWidth: number;
+        /**
+        * @language zh_CN
+        * （只读）文本的高度，以像素为单位。
+        * @version Egret 3.0
+        * @platform Web,Native
+        */
+        textHeight: number;
+        /**
+        * @language zh_CN
+        * 当前文本字段中当前文本的字符串。
+        * @param text  文本字符串
+        * @version Egret 3.0
+        * @platform Web,Native
+        */
+        text: string;
+        private clearText();
+        autoSize: UITextFieldAutoSize;
+        private refreshAlign();
+        private buildTextLineInfo(text);
+        /**
+        * @language zh_CN
+        * 将 newText 参数指定的字符串追加到文本字段的文本的末尾。
+        * @param newText 新字符串
+        * @version Egret 3.0
+        * @platform Web,Native
+        */
+        appendText(newText: string): void;
+        /**
+        * @language zh_CN
+        * 返回一个矩形，该矩形是字符的边框。
+        * @param charIndex 字符索引值
+        * @version Egret 3.0
+        * @platform Web,Native
+        */
+        getCharBoundaries(charIndex: number): Rectangle;
+        /**
+        * @language zh_CN
+        * 在 x 和 y 参数指定的位置返回从零开始的字符索引值。
+        * @param x x坐标位置
+        * @param y y坐标位置
+        * @version Egret 3.0
+        * @platform Web,Native
+        */
+        getCharIndexAtPoint(x: number, y: number): number;
+        /**
+        * @language zh_CN
+        * 使用 value 参数的内容替换当前所选内容。
+        * @param value 新字符串
+        * @version Egret 3.0
+        * @platform Web,Native
+        */
+        replaceSelectedText(value: string): void;
+        /**
+        * @language zh_CN
+        * 使用 newText 参数的内容替换 beginIndex 和 endIndex 参数指定的字符范围。
+        * @param beginIndex 起始位置索引
+        * @param endIndex 结束位置索引
+        * @param newText 新字符串
+        * @version Egret 3.0
+        * @platform Web,Native
+        */
+        replaceText(beginIndex: number, endIndex: number, newText: string): void;
+        /**
+        * @language zh_CN
+        * 将第一个字符和最后一个字符的索引值（使用 beginIndex 和 endIndex 参数指定）指定的文本设置为所选内容。
+        * @param beginIndex 起始位置索引
+        * @param endIndex 结束位置索引
+        * @version Egret 3.0
+        * @platform Web,Native
+        */
+        setSelection(beginIndex: number, endIndex: number): void;
+        onUpdate(): void;
+        private createFontQuad(unicode, isAddChild?);
+        private deleteFontQuad(fontQuad);
+    }
+}
+declare module egret3d.gui {
+    /**
+* @private
+* @class egret3d.gui.UILabelButton
+* @classdesc
+* @version Egret 3.0
+* @platform Web,Native
+*/
+    class UILabelButton extends UIButton {
+        protected _label: string;
+        private _textField;
+        private _textWidth;
+        private _textHeight;
+        constructor();
+        textHeight: number;
+        textWidth: number;
+        textField: UITextField;
+        label: string;
+        onRender(): void;
+    }
+}
+declare module egret3d.gui {
+    /**
+* @private
+* @class egret3d.gui.UIToggleButtonBase
+* @classdesc
+* @version Egret 3.0
+* @platform Web,Native
+*/
+    class UIToggleButtonBase extends UILabelButton {
+        private _selected;
+        protected static STATE_DOWN_AND_SELECTED: string;
+        protected static STATE_UP_AND_SELECTED: string;
+        private _textPadding;
+        constructor();
+        buttonAndLabelWidth: number;
+        textPadding: number;
+        onRender(): void;
+        selected: boolean;
+        setMouseState(state: string): void;
+        protected startPress(): void;
+        protected endPress(): void;
+    }
+}
+declare module egret3d.gui {
+    /**
+* @private
+* @class egret3d.gui.UIPanel
+* @classdesc
+* @version Egret 3.0
+* @platform Web,Native
+*/
+    class UIPanel extends UIElement {
+        protected _background: Quad;
+        protected _container: UIElement;
+        private _w;
+        private _h;
+        constructor();
+        private updateMask();
+        background: Quad;
+        width: number;
+        height: number;
+        onRender(): void;
+        private drawBackground();
+        setStyle(style: string, value: Texture): void;
+        addChild(display: DisplayObject): DisplayObject;
+        addChildAt(display: DisplayObject, index: number): DisplayObject;
+        removeChild(display: DisplayObject): DisplayObject;
+        removeChildAt(index: number): DisplayObject;
+        swapChildIndex(display: DisplayObject, index: number): void;
+        hasChild(display: DisplayObject): number;
+        getChildByIndex(index: number): DisplayObject;
+        getChildByName(index: number): DisplayObject;
+    }
+}
+declare module egret3d.gui {
+    /**
+* @private
+* @class egret3d.gui.UIList
+* @classdesc
+* @version Egret 3.0
+* @platform Web,Native
+*/
+    class UIList extends egret3d.gui.UIPanel {
+        private _selectedIndex;
+        private _selectedItem;
+        private _items;
+        private _gap;
+        private _startDrag;
+        private _containerHeight;
+        constructor();
+        private onMouseDown(event);
+        private onMouseUp(event);
+        private onMouseMove(event);
+        updateView(): void;
+        gap: number;
+        selectedIndex: number;
+        selectedItem: UIElement;
+        /**
+         * 添加item元素. 默认添加到尾部
+         * @param item
+         * @param index
+         * @returns {}
+         */
+        addItem(item: DisplayObject): void;
+        removeItem(item: DisplayObject): void;
+    }
+}
+declare module egret3d.gui {
+    /**
+* @private
+* @class egret3d.gui.UIToggleButton
+* @classdesc
+* @version Egret 3.0
+* @platform Web,Native
+*/
+    class UIToggleButton extends egret3d.gui.UILabelButton {
+        constructor();
+    }
+}
+declare module egret3d.gui {
+    /**
+* @private
+* @class egret3d.gui.UICheckBox
+* @classdesc
+* @version Egret 3.0
+* @platform Web,Native
+*/
+    class UICheckBox extends UIToggleButtonBase {
+        constructor();
+    }
+}
+declare module egret3d.gui {
+    /**
+* @private
+* @class egret3d.gui.UIRadioButton
+* @classdesc
+* @version Egret 3.0
+* @platform Web,Native
+*/
+    class UIRadioButton extends gui.UIToggleButtonBase {
+        private _group;
+        constructor();
+        group: UIRadioButtonGroup;
+    }
+}
+declare module egret3d.gui {
+    /**
+* @private
+* @class egret3d.gui.UIRadioButtonGroup
+* @classdesc
+* @version Egret 3.0
+* @platform Web,Native
+*/
+    class UIRadioButtonGroup extends EventDispatcher {
+        private _enable;
+        private _selection;
+        private _items;
+        constructor();
+        enable: boolean;
+        addItem(item: UIRadioButton): void;
+        removeItem(item: UIRadioButton): void;
+        getRadioButtonAt(index: number): UIRadioButton;
+        private onItemChange(event);
+    }
+}
+declare module egret3d.gui {
+    /**
+* @private
+* @class egret3d.gui.UIProgressBar
+* @classdesc
+* @version Egret 3.0
+* @platform Web,Native
+*/
+    class UIProgressBar extends UIElement {
+        private _background;
+        private _bar;
+        private _ratio;
+        private _mask;
+        constructor();
+        /**
+         * 0-1;
+         *
+         * @param value
+         * @returns {}
+         */
+        ratio: number;
+        width: number;
+        height: number;
+        setBarRect(x: number, y: number, w: number, h: number): void;
+        bar: DisplayObject;
+        background: DisplayObject;
+        private updateBar();
+        setStyle(style: string, value: Texture): void;
+        private updateStyle();
     }
 }
 declare module egret3d {
@@ -9515,7 +11130,7 @@ declare module egret3d {
          */
         protected _intensity: number;
         protected _radius: number;
-        protected _falloff: number;
+        protected _cutoff: number;
         /**
         *@language zh_CN
         *@private
@@ -9740,7 +11355,17 @@ declare module egret3d {
         * @version Egret 3.0
         * @platform Web,Native
         */
-        falloff: number;
+        cutoff: number;
+        /**
+          * @language zh_CN
+          *
+          * 背光颜色
+          * 模拟间接光照而开发的背光，而不用去同时打两盏不同方向的组合灯光，可以优化显示效果
+          * @param color 背光颜色色值
+          * @version Egret 3.0
+          * @platform Web,Native
+          */
+        ambient: number;
         /**
         * @language zh_CN
         * @private
@@ -9917,6 +11542,7 @@ declare module egret3d {
         * @platform Web,Native
         */
         constructor(dir: Vector3D);
+        private _dir;
         /**
         * @language zh_CN
         *
@@ -9927,6 +11553,8 @@ declare module egret3d {
         * @platform Web,Native
         */
         ambient: number;
+        dir: Vector3D;
+        protected onUpdateTransform(): void;
         /**
          * @language zh_CN
          *
@@ -10143,8 +11771,24 @@ declare module egret3d {
         private _vtxNum;
         private _planeNum;
         private _vertex;
+        private _tempVertices;
         private _pos;
         private _plane;
+        private _frustum;
+        /**
+        * @language zh_CN
+        * @private
+        * @version Egret 3.0
+        * @platform Web,Native
+        */
+        vertices: Vector3D[];
+        /**
+        * @language zh_CN
+        * 摄像机渲染线框
+        * @version Egret 3.0
+        * @platform Web,Native
+        */
+        wireframe: Wireframe;
         /**
         * @language zh_CN
         * 视椎体中心点
@@ -10162,6 +11806,7 @@ declare module egret3d {
         constructor();
         /**
         * @language zh_CN
+        * @private
         * 生成一个视椎体
         * @param fovY 观察时y 轴方向的角度，就是观察范围夹角。
         * @param aspectRatio 纵横比，在视空间宽度除以高度.
@@ -10171,6 +11816,16 @@ declare module egret3d {
         * @platform Web,Native
         */
         makeFrustum(fovY: number, aspectRatio: number, nearPlane: number, farPlane: number): void;
+        protected makeOrthoFrustum(w: number, h: number, zn: number, zf: number): void;
+        protected makeOrthoToCenterFrustum(l: number, r: number, b: number, t: number, zn: number, zf: number): void;
+        /**
+        * @language zh_CN
+        * 数据更新.
+        * @param camera 视椎的摄像机.
+        * @version Egret 3.0
+        * @platform Web,Native
+        */
+        updateFrustum(camera: Camera3D): void;
         /**
         * @language zh_CN
         * 数据更新.
@@ -10362,19 +12017,76 @@ declare module egret3d {
          * @platform Web,Native
          */
         VF_SKIN = 64,
-    }
-    /**
+        /**
+          * @private
+          * @language zh_CN
+          * quad uv rectangle
+          * @version Egret 3.0
+          * @platform Web,Native
+          */
+        VF_UVREC = 128,
+        /**
+     * @private
      * @language zh_CN
-     * @class egret3d.Geometry
-     * @classdesc
-     * 表示几何形状 子集
-     * @see egret3d.VertexBuffer3D
-     * @see egret3d.IndexBuffer3D
-     * @see egret3d.SubGeometry
-     *
+     * quad uv rectangle
      * @version Egret 3.0
      * @platform Web,Native
      */
+        VF_ROTATION = 256,
+        /**
+     * @private
+     * @language zh_CN
+     * quad uv rectangle
+     * @version Egret 3.0
+     * @platform Web,Native
+     */
+        VF_SIZE = 512,
+        /**
+     * @private
+     * @language zh_CN
+     * quad uv rectangle
+     * @version Egret 3.0
+     * @platform Web,Native
+     */
+        VF_SCALE = 1024,
+        /**
+        * @private
+        * @language zh_CN
+        * quad uv rectangle
+        * @version Egret 3.0
+        * @platform Web,Native
+        */
+        VF_QUADPOS = 2048,
+        /**
+        * @private
+        * @language zh_CN
+        * quad uv rectangle
+        * @version Egret 3.0
+        * @platform Web,Native
+        */
+        VF_QUADOFFSET = 4096,
+        /**
+         * @private
+         * @language zh_CN
+         * quad uv rectangle
+         * @version Egret 3.0
+         * @platform Web,Native
+         */
+        VF_QUAD_COLOR = 8192,
+    }
+    /**
+    * @language zh_CN
+    * @class egret3d.Geometry
+    * @classdesc
+    * 注意:当使用vertexArray 或 indexArray 必须先设置 vertexCount 或 indexCount
+    * 表示几何形状 子集
+    * @see egret3d.VertexBuffer3D
+    * @see egret3d.IndexBuffer3D
+    * @see egret3d.SubGeometry
+    *
+    * @version Egret 3.0
+    * @platform Web,Native
+    */
     class Geometry {
         /**
          * @language zh_CN
@@ -10384,6 +12096,7 @@ declare module egret3d {
          * @platform Web,Native
          */
         geomtryType: number;
+        drawType: number;
         /**
         * @language zh_CN
         * 顶点格式
@@ -10404,14 +12117,14 @@ declare module egret3d {
         * @version Egret 3.0
         * @platform Web,Native
         */
-        verticesData: Array<number>;
+        vertexArray: Float32Array;
         /**
         * @language zh_CN
         * 索引数据
         * @version Egret 3.0
         * @platform Web,Native
         */
-        indexData: Array<number>;
+        indexArray: Uint16Array;
         /**
         * @language zh_CN
         * shader buffer
@@ -10426,62 +12139,6 @@ declare module egret3d {
         * @platform Web,Native
         */
         sharedIndexBuffer: IndexBuffer3D;
-        /**
-        * @private
-        * @language zh_CN
-        * 顶点坐标数据
-        * @version Egret 3.0
-        * @platform Web,Native
-        */
-        source_positionData: Array<number>;
-        /**
-        * @private
-        * @language zh_CN
-        * 顶点法线数据
-        * @version Egret 3.0
-        * @platform Web,Native
-        */
-        source_normalData: Array<number>;
-        /**
-        * @private
-        * @language zh_CN
-        * 顶点切线数据
-        * @version Egret 3.0
-        * @platform Web,Native
-        */
-        source_tangentData: Array<number>;
-        /**
-        * @private
-        * @language zh_CN
-        * 顶点颜色数据
-        * @version Egret 3.0
-        * @platform Web,Native
-        */
-        source_colorData: Array<number>;
-        /**
-        * @private
-        * @language zh_CN
-        * 顶点uv数据
-        * @version Egret 3.0
-        * @platform Web,Native
-        */
-        source_uvData: Array<number>;
-        /**
-        * @private
-        * @language zh_CN
-        * 顶点第二uv数据
-        * @version Egret 3.0
-        * @platform Web,Native
-        */
-        source_uv2Data: Array<number>;
-        /**
-        * @private
-        * @language zh_CN
-        * 顶点第二uv数据
-        * @version Egret 3.0
-        * @platform Web,Native
-        */
-        source_SkinData: Array<number>;
         /**
         * @private
         */
@@ -10562,29 +12219,61 @@ declare module egret3d {
         * buffer 需要重新提交的时候
         */
         private _bufferDiry;
+        /**
+        * @language zh_CN
+        * 顶点的数量
+        * @version Egret 3.0
+        * @platform Web,Native
+        */
         _vertexCount: number;
         /**
         * @language zh_CN
-        * 得到顶点的数量
-        * @returns number 顶点的数量
+        * 索引数量
+        * @version Egret 3.0
+        * @platform Web,Native
+        */
+        _indexCount: number;
+        /**
+        * @language zh_CN
+        * 顶点的数量
         * @version Egret 3.0
         * @platform Web,Native
         */
         /**
         * @language zh_CN
-        * 设置顶点的数量
-        * @param value 顶点的数量
+        * 设置顶点的数量，同时 this.vertexArray = new Float32Array(this.vertexAttLength * this.vertexCount);
         * @version Egret 3.0
         * @platform Web,Native
         */
         vertexCount: number;
         /**
         * @language zh_CN
-        * 获取模型面数
+        * 索引的数量
+        * @version Egret 3.0
+        * @platform Web,Native
+        */
+        /**
+        * @language zh_CN
+        * 设置索引的数量，同时 this.indexArray = new Uint16Array(this._indexCount);
+        * @version Egret 3.0
+        * @platform Web,Native
+        */
+        indexCount: number;
+        _faceCount: number;
+        /**
+        * @language zh_CN
+        * 模型面数
+        * @version Egret 3.0
+        * @platform Web,Native
+        */
+        /**
+        * @language zh_CN
+        * 模型面数
         * @version Egret 3.0
         * @platform Web,Native
         */
         faceCount: number;
+        constructor();
         /**
         * @language zh_CN
         * @private
@@ -10611,14 +12300,6 @@ declare module egret3d {
         * @platform Web,Native
         */
         vertexFormat: number;
-        /**
-        * @private
-        * @language zh_CN
-        * 根据顶点格式生成顶点buffer
-        * @version Egret 3.0
-        * @platform Web,Native
-        */
-        calculateVertexFormat(): void;
         /**
         * @private
         * @language zh_CN
@@ -10870,7 +12551,6 @@ declare module egret3d {
          * Updates the vertex normals based on the geometry.
          */
         private static updateVertexNormals(geomtrtData);
-        private static updateFaceTangents(geometry);
     }
 }
 declare module egret3d {
@@ -10886,6 +12566,7 @@ declare module egret3d {
      * @platform Web,Native
      */
     class SubGeometry {
+        private useVertexAttributeList;
         /**
          * @language zh_CN
          * 顶点索引
@@ -10948,13 +12629,6 @@ declare module egret3d {
         */
         static use: boolean;
         activeState(time: number, delay: number, passUsage: PassUsage, contextProxy: Context3DProxy): void;
-        /**
-        * @private
-        * @language zh_CN
-        * @version Egret 3.0
-        * @platform Web,Native
-        */
-        deactiveState(passUsage: PassUsage, contextProxy: Context3DProxy): void;
     }
 }
 declare module egret3d {
@@ -11571,19 +13245,23 @@ declare module egret3d {
 }
 declare module egret3d {
     /**
-     * @language zh_CN
-     * @class egret3d.URLLoader
-     * @classdesc
-     * URLLoader类
-     * 用于加载和解析各类3d资源.
-     * DDS, TGA, jpg, png等格式的贴图文件.
-     * ESM, EAM, ECA等egret3d独有的模型文件,动作文件,相机动画文件
-     * @includeExample loader/URLLoader.ts
-     * @see egret3d.EventDispatcher
-     *
-     * @version Egret 3.0
-     * @platform Web,Native
-     */
+    * @language zh_CN
+    * @class egret3d.URLLoader
+    * @classdesc
+    * URLLoader类
+    * 用于加载和解析各类3d资源.  加载完成后数据存在 data 中
+    * DDS, TGA, jpg, png, hdr等格式的贴图文件. 加载完成后返回 ITexture对象
+    * ESM, EAM, ECA, EPA 等egret3d独有的模型文件,动作文件,相机动画文件, 属性动画文件
+    * ESM: Geometry
+    * EAM: SkeletonAnimationClip
+    * ECA: CameraAnimationController
+    * EPA: PropertyAnim
+    * @includeExample loader/URLLoader.ts
+    * @see egret3d.EventDispatcher
+    *
+    * @version Egret 3.0
+    * @platform Web,Native
+    */
     class URLLoader extends EventDispatcher {
         private _xhr;
         private _event;
@@ -11791,6 +13469,7 @@ declare module egret3d {
         private onError(event);
         private getXHR();
         protected onLoad(img: HTMLImageElement): void;
+        protected checkTexture(texture: ITexture): void;
         protected doLoadComplete(): void;
     }
 }
@@ -11844,29 +13523,11 @@ declare module egret3d {
          * @param loadMipmaps 是否加载mipmaps
          * @returns DDSTexture
          */
-        static parse(buffer: ArrayBuffer, loadMipmaps?: boolean): MimapTexture;
+        static parse(buffer: ArrayBuffer, loadMipmaps?: boolean): Texture;
         private static loadARGBMip(buffer, dataOffset, width, height);
         private static fourCCToInt32(value);
         private static int32ToFourCC(value);
         private static softSolutionDXT(width, height, format, byteArray);
-    }
-}
-declare module egret3d {
-    /**
-     * @private
-     * @language zh_CN
-     * @class egret3d.PVR
-     * @classdesc
-     * PVR  object
-     */
-    class PVR {
-        mipmaps: Array<MipmapData>;
-        width: number;
-        height: number;
-        format: number;
-        mipmapCount: number;
-        isCubemap: boolean;
-        constructor();
     }
 }
 declare module egret3d {
@@ -11892,7 +13553,7 @@ declare module egret3d {
          * @language zh_CN
          * @param buffer
          */
-        static parse(buffer: ArrayBuffer): PVR;
+        static parse(buffer: ArrayBuffer): Texture;
         private static _parseV2(pvrDatas);
         private static _parseV3(pvrDatas);
         private static _extract(pvrDatas);
@@ -11917,10 +13578,13 @@ declare module egret3d {
          * @param buffer 二进制流
          * @returns MimapTexture
          */
-        static parse(buffer: ArrayBuffer): MimapTexture;
+        static parse(buffer: ArrayBuffer): Texture;
     }
 }
 declare module egret3d {
+    /**
+    * @private
+    */
     class HDRParser {
         private static radiancePattern;
         private static commentPattern;
@@ -11930,7 +13594,7 @@ declare module egret3d {
         private static widthHeightPattern;
         private static ldexp(mantissa, exponent);
         private static readPixelsRawRLE(buffer, data, offset, fileOffset, scanline_width, num_scanlines);
-        static parse(buffer: any): MimapTexture;
+        static parse(buffer: any): Texture;
     }
 }
 declare module egret3d {
@@ -12115,26 +13779,63 @@ declare module egret3d {
         autoPlayAnimation: boolean;
         private _pathRoot;
         private _path;
-        private _mapXmlParser;
+        private _mapParser;
+        /**
+        * @private
+        * @language zh_CN
+        * @version Egret 3.0
+        * @platform Web,Native
+        */
+        mapParser: MapConfigParser;
         private static _assetMgr;
         private _textures;
         private _taskCount;
         private _event;
-        huds: Array<HUD>;
-        taskTotal: number;
-        taskCurrent: number;
-        view3d: View3D;
-        lightDict: any;
+        private _type;
         /**
+        * @private
         * @language zh_CN
-        * 构建一个场景加载对象 构建后直接加载
-        * @param name 场景名字 默认为null 不加载 有值时 直接加载
-        * @param mapConfig 场景配置文件 默认为"MapConfig.xml"
-        * @param path 场景文件路径 默认"resource/scene/"
         * @version Egret 3.0
         * @platform Web,Native
         */
-        constructor(name?: string, mapConfig?: string, path?: string);
+        huds: Array<HUD>;
+        /**
+        * @language zh_CN
+        * 任务总数
+        * @version Egret 3.0
+        * @platform Web,Native
+        */
+        taskTotal: number;
+        /**
+        * @language zh_CN
+        * 当前完成的任务个数
+        * @version Egret 3.0
+        * @platform Web,Native
+        */
+        taskCurrent: number;
+        /**
+        * @private
+        * @language zh_CN
+        * @version Egret 3.0
+        * @platform Web,Native
+        */
+        view3d: View3D;
+        /**
+        * @private
+        * @language zh_CN
+        * @version Egret 3.0
+        * @platform Web,Native
+        */
+        lightDict: any;
+        private _taskDict;
+        /**
+        * @language zh_CN
+        * 加载场景配置文件 .json 或 .xml
+        * @param url 默认参数为null  场景文件路径
+        * @version Egret 3.0
+        * @platform Web,Native
+        */
+        constructor(url?: string);
         /**
         * @language zh_CN
         * 查找贴图
@@ -12146,19 +13847,17 @@ declare module egret3d {
         /**
         * @language zh_CN
         * 加载场景
-        * @param name 场景名字
-        * @param mapConfig 场景配置文件 默认为"MapConfig.xml"
-        * @param path 场景文件路径 默认"resource/scene/"
+        * @param url 场景文件路径
         * @version Egret 3.0
         * @platform Web,Native
         */
-        load(name: string, mapConfig?: string, path?: string): void;
-        private parseXML(xml);
+        load(url: string): void;
+        private parseConfig(dataConfig, type);
         private onParticleXML(load, mapNodeData);
         private processParticle(particleData, nodeData);
         private processParticleGeometry(particleData, nodeData);
         private processObject3d(nodeData, object3d);
-        private onXmlLoad(loader);
+        private onConfigLoad(loader);
         private onHeightImg(load, mapNodeData);
         private onTexture(load, name);
         private onHudTexture(load, hudData);
@@ -12173,6 +13872,7 @@ declare module egret3d {
         private onEamLoad(load, loadData);
         private onEpaLoad(load, mapNodeData);
         private addTask(load);
+        private processTaskCurrent(load);
         private processTask(load);
         private addImaTask(name, type, matID, mapNodeData, material);
         private addMethodImgTask(name, method, textureName);
@@ -12200,6 +13900,7 @@ declare module egret3d {
         fov: number;
         clipNear: number;
         clipFar: number;
+        tagName: string;
         /**
          * @language zh_CN
          * 对应的材质球id
@@ -12221,13 +13922,6 @@ declare module egret3d {
          * @platform Web,Native
          */
         propertyAnims: Array<any>;
-        /**
-         * @language zh_CN
-         * 材质球的id，全局唯一
-         * @version Egret 3.0
-         * @platform Web,Native
-         */
-        lightIds: Array<any>;
         /**
          * @language zh_CN
          * 是否启用公告板模式
@@ -12325,6 +14019,43 @@ declare module egret3d {
     * @platform Web,Native
     */
     class MapXmlParser {
+        private _mapConfigParser;
+        private parseTexture(node);
+        constructor(data: any, mapConfigParser: MapConfigParser);
+        private parseMethod(node);
+        private parseMat(node);
+        private parseNode(node);
+        private parseEnvironment(environment);
+        private parseHud(node);
+        private nodeFilter(node);
+    }
+}
+declare module egret3d {
+    /**
+    * @language zh_CN
+    * @private
+    * @version Egret 3.0
+    * @platform Web,Native
+    */
+    class MapJsonParser {
+        private _mapConfigParser;
+        constructor(data: any, mapConfigParser: MapConfigParser);
+        private parseMethod(node);
+        private parseMat(node);
+        private parseNode(node);
+        private parseEnvironment(environment);
+        private parseHud(node);
+        private parseTexture(node);
+    }
+}
+declare module egret3d {
+    /**
+    * @language zh_CN
+    * @private
+    * @version Egret 3.0
+    * @platform Web,Native
+    */
+    class MapConfigParser {
         /**
         * @language zh_CN
         * 地图配置信息的版本号
@@ -12346,19 +14077,12 @@ declare module egret3d {
         pointLight: boolean;
         textures: any;
         taskDict: any;
-        private parseTexture(node);
-        constructor(data: any);
-        private parseMethod(node);
-        private parseMat(node);
-        private processNode();
-        private parseNode(node);
-        private parseEnvironment(environment);
-        private parseHud(node);
-        protected calculateMatTask(data: MatSphereData): void;
-        protected calculateNodeTask(data: MapNodeData): void;
-        protected calculateHudTask(data: HUDData): void;
-        protected calculateTextureTask(data: any): void;
-        private nodeFilter(node);
+        constructor(data: any, type: string);
+        calculateMatTask(data: MatSphereData): void;
+        calculateNodeTask(data: MapNodeData): void;
+        calculateHudTask(data: HUDData): void;
+        calculateTextureTask(data: any): void;
+        processNode(): void;
     }
 }
 declare module egret3d {
@@ -12450,6 +14174,13 @@ declare module egret3d {
          * @platform Web,Native
          */
         specularTextureName: string;
+        /**
+        * @language zh_CN
+        * matcap贴图的索引（name）
+        * @version Egret 3.0
+        * @platform Web,Native
+        */
+        matcapTextureName: string;
         /**
          * @language zh_CN
          * diffuse的颜色，0xffffff格式
@@ -12770,6 +14501,54 @@ declare module egret3d {
 }
 declare module egret3d {
     /**
+    * @class egret3d.AlphaMaskMethod
+    * @classdesc
+    * 实现alpha遮罩渲染方法。
+    * 该贴图的r通道被用于赋值到diffuse数据的alpha上面。
+    * @see egret3d.MethodBase
+    * @includeExample material/method/AlphaMaskMethod.ts
+    * @version Egret 3.0
+    * @platform Web,Native
+    */
+    class GUIMethod extends MethodBase {
+        /**
+        * @language zh_CN
+        * 创建一个AlphaMaskMethod对象
+        * @version Egret 3.0
+        * @platform Web,Native
+        */
+        constructor();
+        /**
+        * @language zh_CN
+        * 设置lightmap贴图
+        * @param texture lightmap贴图
+        * @version Egret 3.0
+        * @platform Web,Native
+        */
+        setTextures(index: number, texture: ITexture): void;
+        /**
+        * @private
+        * @language zh_CN
+        * @param time
+        * @param delay
+        * @param usage
+        * @param materialData
+        * @param geometry
+        * @param context3DProxy
+        * @param modeltransform
+        * @param modeltransform
+        * @param camera3D
+        */
+        upload(time: number, delay: number, usage: PassUsage, geometry: SubGeometry, context3DProxy: Context3DProxy, modeltransform: Matrix4_4, camera3D: Camera3D): void;
+        /**
+        * @private
+        * @language zh_CN
+        */
+        activeState(time: number, delay: number, usage: PassUsage, geometry: SubGeometry, context3DProxy: Context3DProxy, modeltransform: Matrix4_4, camera3D: Camera3D): void;
+    }
+}
+declare module egret3d {
+    /**
     * @class egret3d.TerrainARGBMethod
     * @classdesc
     * 地形贴图混合渲染方法。
@@ -13051,6 +14830,20 @@ declare module egret3d {
         * @platform Web,Native
         */
         fogStartDistance: number;
+        /**
+        * @language zh_CN
+        * 获取雾的结束距离
+        * @returns number 雾的结束距离
+        * @version Egret 3.0
+        * @platform Web,Native
+        */
+        /**
+        * @language zh_CN
+        * 设置雾的结束距离
+        * @param value 雾的结束距离
+        * @version Egret 3.0
+        * @platform Web,Native
+        */
         fogFarDistance: number;
         /**
         * @language zh_CN
@@ -14212,6 +16005,25 @@ declare module egret3d {
          */
         attribute_boneWeight: GLSL.Attribute;
         /**
+       * @language zh_CN
+       */
+        attribute_shapePosition: GLSL.Attribute;
+        /**
+          * @language zh_CN
+          */
+        attribute_uvRec: GLSL.Attribute;
+        /**
+          * @language zh_CN
+          */
+        /**
+          * @language zh_CN
+          */
+        attribute_size: GLSL.Attribute;
+        /**
+     * @language zh_CN
+     */
+        attribute_quad_color: GLSL.Attribute;
+        /**
          * @language zh_CN
          */
         attribute_offset: GLSL.Attribute;
@@ -14231,7 +16043,7 @@ declare module egret3d {
         /**
          * @language zh_CN
          */
-        attribute_scale: GLSL.Attribute;
+        attribute_maskRectangle: GLSL.Attribute;
         /**
          * @language zh_CN
          */
@@ -14302,7 +16114,7 @@ declare module egret3d {
         /**
          * @language zh_CN
          */
-        uniform_NormalMatrix: GLSL.Uniform;
+        uniform_orthProectMatrix: GLSL.Uniform;
         /**
          * @language zh_CN
          */
@@ -15046,6 +16858,23 @@ declare module egret3d {
     /**
     * @private
     */
+    class FakePBRPass extends MaterialPass {
+        constructor(materialData: MaterialData);
+        setTexture(name: string, texture: Texture): void;
+        /**
+        * @language zh_CN
+        * @private
+        * 初始化 UseMethod。
+        * @version Egret 3.0
+        * @platform Web,Native
+        */
+        initUseMethod(animation: IAnimation, geom: Geometry): void;
+    }
+}
+declare module egret3d {
+    /**
+    * @private
+    */
     class ShadowPass extends MaterialPass {
         constructor(materialData: MaterialData);
         /**
@@ -15135,6 +16964,7 @@ declare module egret3d {
          */
         materialData: MaterialData;
         private _lightGroup;
+        private _shadowMethod;
         /**
         * @language zh_CN
         * @class egret3d.MaterialBase
@@ -15504,24 +17334,30 @@ declare module egret3d {
         */
         addPass(pass: PassType): void;
         /**
-         * @language zh_CN
-         * 返回材质 castShadow 值。
-         * 返回材质 是否产生阴影 值。
-         * @returns {boolean}
-         * @version Egret 3.0
-         * @platform Web,Native
-         */
+        * @language zh_CN
+        * 使用阴影详细请看 ShadowCast
+        * @see egret3d.ShadowCast
+        * 返回材质 castShadow 值。
+        * 返回材质 是否产生阴影 值。
+        * @returns {boolean}
+        * @version Egret 3.0
+        * @platform Web,Native
+        */
         /**
-         * @language zh_CN
-         * 设置材质 castShadow 值。
-         * 设置材质是否接受阴影，设置了之后必须要给 shadowmaping 的方法。
-         * @param value {boolean}
-         * @version Egret 3.0
-         * @platform Web,Native
-         */
+        * @language zh_CN
+        * 使用阴影详细请看 ShadowCast
+        * @see egret3d.ShadowCast
+        * 设置材质 castShadow 值。
+        * 设置材质是否接受阴影，设置了之后必须要给 shadowmaping 的方法。
+        * @param value {boolean}
+        * @version Egret 3.0
+        * @platform Web,Native
+        */
         castShadow: boolean;
         /**
         * @language zh_CN
+        * 使用阴影详细请看 ShadowCast
+        * @see egret3d.ShadowCast
         * 返回材质 acceptShadow 值。
         * 返回材质是否接受阴影，设置了之后必须要给 shadowmaping 的方法。
         * @returns {boolean}
@@ -15529,13 +17365,15 @@ declare module egret3d {
         * @platform Web,Native
         */
         /**
-         * @language zh_CN
-         * 设置材质 acceptShadow 值。
-         * 设置材质是否是否产生阴影，设置了之后必须要给 shadowmaping 的方法。
-         * @param value {boolean}
-         * @version Egret 3.0
-         * @platform Web,Native
-         */
+        * @language zh_CN
+        * 使用阴影详细请看 ShadowCast
+        * @see egret3d.ShadowCast
+        * 设置材质 acceptShadow 值。
+        * 设置材质是否是否产生阴影，设置了之后必须要给 shadowmaping 的方法。
+        * @param value {boolean}
+        * @version Egret 3.0
+        * @platform Web,Native
+        */
         acceptShadow: boolean;
         /**
         * @language zh_CN
@@ -15552,6 +17390,23 @@ declare module egret3d {
         * @platform Web,Native
         */
         shadowColor: number;
+        /**
+        * @language zh_CN
+        * @private
+        * 返回材质 阴影offset
+        * @returns number 阴影offset
+        * @version Egret 3.0
+        * @platform Web,Native
+        */
+        /**
+        * @language zh_CN
+        * @private
+        * 设置 阴影offset
+        * @param offset
+        * @version Egret 3.0
+        * @platform Web,Native
+        */
+        shadowOffset: number;
         /**
         * @language zh_CN
         * 返回材质 smooth 值。
@@ -15758,6 +17613,46 @@ declare module egret3d {
 declare module egret3d {
     /**
     * @language zh_CN
+    * @class egret3d.TextureMaterial
+    * @classdesc
+    * 纹理材质。
+    * 标准的贴图材质球，可以设置三种贴图， diffuse ， normal ， speclar 贴图
+    * 材质球中默认不设置纹理，显示的黑白棋盘格
+    * @version Egret 3.0
+    * @platform Web,Native
+    */
+    class FakePBRMaterial extends MaterialBase {
+        private _fakePBR;
+        /**
+         * @language zh_CN
+         * 创建一个新的 TextureMaterial 对象。
+         * @param texture 用来渲染的贴图，默认会给出一张棋盘格贴图
+         * @param materialData 材质数据信息，可以不指定
+         * @version Egret 3.0
+         * @platform Web,Native
+         */
+        constructor(texture?: ITexture, materialData?: MaterialData);
+        protected initMatPass(): void;
+        albedoTexture: ITexture;
+        normalTexture: ITexture;
+        glossTexture: ITexture;
+        specularTexture: ITexture;
+        opacityTexture: ITexture;
+        reflectionTexture: ITexture;
+        /**
+         * @language zh_CN
+         * 克隆方法。
+         * 将材质球克隆一份，公用shader着色器和贴图，不公用参数
+         * @returns {TextureMaterial}
+         * @version Egret 3.0
+         * @platform Web,Native
+         */
+        clone(): TextureMaterial;
+    }
+}
+declare module egret3d {
+    /**
+    * @language zh_CN
     * @class egret3d.CubeTextureMaterial
     * @classdesc
     * cube纹理材质。
@@ -15873,6 +17768,7 @@ declare module egret3d {
     class ValueShape {
         valueType: ValueType;
         calculate(num: number, valueShape?: ValueShape): any;
+        dispose(): void;
     }
     /**
     * @private
@@ -15961,18 +17857,22 @@ declare module egret3d {
     }
     /**
     * @private
-    *圆柱体.以Y轴为高 (parameters = [R, height])
+    * 圆锥体
     */
-    class CylinderValueShape extends ValueShape {
+    class ConeValueShape extends ValueShape {
         valueType: ValueType;
-        radiusTop: number;
-        radiusBottom: number;
-        height: number;
+        radius: number;
+        angle: number;
+        length: number;
         coneType: number;
         origPoint: Vector3D;
-        calculate(num: number): any;
-        private yz_zy(v);
-        getDirection(point: Vector3D, dst: Vector3D): Vector3D;
+        directions: Vector3D[];
+        dispose(): void;
+        calculate(count: number): any;
+        private calculateBase(count);
+        private calculateBaseShell(count);
+        private calculateVolume(count);
+        private calculateVolumeShell(count);
     }
     /**
     * @private
@@ -15981,6 +17881,7 @@ declare module egret3d {
     class BallValueShape extends ValueShape {
         valueType: ValueType;
         r: number;
+        fromShell: boolean;
         calculate(num: number): any;
         private getPoints1(num, r);
     }
@@ -15991,8 +17892,9 @@ declare module egret3d {
     class HemiBallValueShape extends ValueShape {
         valueType: ValueType;
         r: number;
+        fromShell: boolean;
         calculate(num: number): any;
-        private getPoints1(num, r);
+        private getPoints(num, r);
     }
     /**
      * @private
@@ -16044,12 +17946,36 @@ declare module egret3d {
     /**
     * @private
     */
-    class ParticleTime extends AnimationNode {
+    class ParticleLifeGenerator {
         private _node;
+        private _data;
+        private _burstsClone;
+        planes: Point[];
+        loopTime: number;
+        circleTime: number;
+        private _inputCount;
+        private _tiny;
+        constructor();
+        /**
+        * 根据粒子的数据生成生命周期数据。
+        * @private
+        */
+        generator(data: ParticleData): void;
+        private burstPlanes(now, next);
+        private generatorConst();
+        private generatorBezier();
+        private tryCreatePlane(now);
+        private getLifeTime(time);
+    }
+}
+declare module egret3d {
+    /**
+    * @private
+    */
+    class ParticleTime extends AnimationNode {
         /**
         * 所有单位粒子的生命周期
         */
-        private _life;
         private attribute_time;
         private _animationState;
         constructor();
@@ -16071,20 +17997,10 @@ declare module egret3d {
         */
         build(geometry: Geometry, count: number): void;
         /**
-        * private
-        * 出生时间创建(const)
+        * @private
+        * 构建结束后需要清理掉临时数据
         */
-        private createBornTimeConst(count, emission);
-        /**
-         * private
-         * 出生时间创建(bezier);
-         */
-        private createBornTimeBezier(count, emission);
-        /**
-        * private
-        * 插入粒子爆炸生成
-        */
-        private burstParticle(bursts, bornTimeArray, count);
+        afterBuild(): void;
         /**
        * @language zh_CN
        * 获取时间节点在geometry的顶点数据中偏移量
@@ -16131,11 +18047,6 @@ declare module egret3d {
         */
         offsetIndex: number;
         /**
-        * @private
-        * 计算用的矩阵
-        */
-        private rotationMat;
-        /**
         * @language zh_CN
         * 填充顶点数据
         * @param geometry 网格数据
@@ -16144,6 +18055,11 @@ declare module egret3d {
         * @platform Web,Native
         */
         build(geometry: Geometry, count: number): void;
+        /**
+        * @private
+        * 构建结束后需要清理掉临时数据
+        */
+        afterBuild(): void;
     }
 }
 declare module egret3d {
@@ -16182,6 +18098,11 @@ declare module egret3d {
         * @platform Web,Native
         */
         build(geometry: Geometry, count: number): void;
+        /**
+        * @private
+        * 构建结束后需要清理掉临时数据
+        */
+        afterBuild(): void;
     }
 }
 declare module egret3d {
@@ -16190,7 +18111,7 @@ declare module egret3d {
     * 粒子初始化的尺寸大小
     */
     class ParticleScale extends AnimationNode {
-        private _scale;
+        private _scaleValue;
         private _animationState;
         private _node;
         constructor();
@@ -16211,6 +18132,11 @@ declare module egret3d {
         * @platform Web,Native
         */
         build(geometry: Geometry, count: number): void;
+        /**
+        * @private
+        * 构建结束后需要清理掉临时数据
+        */
+        afterBuild(): void;
     }
 }
 declare module egret3d {
@@ -16283,9 +18209,9 @@ declare module egret3d {
         private attribute_followPosition;
         private attribute_followRotation;
         private attribute_followScale;
-        private count;
-        private particleAnimationState;
-        private lifeCircles;
+        private _count;
+        private _animationState;
+        private _lifeCircles;
         private _followRotation;
         private _followScale;
         constructor();
@@ -16344,7 +18270,7 @@ declare module egret3d {
     * @platform Web,Native
     */
     class ParticleVelocityNode extends AnimationNode {
-        private _velocityConstShape;
+        private _constValue;
         private attribute_velocity;
         private _node;
         private _animationState;
@@ -16366,6 +18292,11 @@ declare module egret3d {
         * @platform Web,Native
         */
         build(geometry: Geometry, count: number): void;
+        /**
+        * @private
+        * 构建结束后需要清理掉临时数据
+        */
+        afterBuild(): void;
     }
 }
 declare module egret3d {
@@ -16470,7 +18401,7 @@ declare module egret3d {
     * @platform Web,Native
     */
     class ParticleVelocityOverConstNode extends AnimationNode {
-        private _velocityOverShape;
+        private _overValue;
         private attribute_velocityOver;
         private particleAnimationState;
         constructor();
@@ -16491,6 +18422,11 @@ declare module egret3d {
         * @platform Web,Native
         */
         build(geometry: Geometry, count: number): void;
+        /**
+        * @private
+        * 构建结束后需要清理掉临时数据
+        */
+        afterBuild(): void;
     }
 }
 declare module egret3d {
@@ -16591,7 +18527,7 @@ declare module egret3d {
         * @private
         */
         private _node;
-        private _forceData;
+        private _forceValue;
         private attribute_accelerationSpeed;
         constructor();
         /**
@@ -16611,6 +18547,11 @@ declare module egret3d {
         * @platform Web,Native
         */
         build(geometry: Geometry, count: number): void;
+        /**
+        * @private
+        * 构建结束后需要清理掉临时数据
+        */
+        afterBuild(): void;
     }
 }
 declare module egret3d {
@@ -16709,7 +18650,7 @@ declare module egret3d {
     class ParticleVelocityLimitConstNode extends AnimationNode {
         private attribute_velocityLimit;
         private _animationState;
-        private _velocityLimitShape;
+        private _limitValue;
         constructor();
         /**
         * @language zh_CN
@@ -16728,6 +18669,11 @@ declare module egret3d {
         * @platform Web,Native
         */
         build(geometry: Geometry, count: number): void;
+        /**
+        * @private
+        * 构建结束后需要清理掉临时数据
+        */
+        afterBuild(): void;
     }
 }
 declare module egret3d {
@@ -16833,6 +18779,11 @@ declare module egret3d {
         * @platform Web,Native
         */
         build(geometry: Geometry, count: number): void;
+        /**
+        * @private
+        * 构建结束后需要清理掉临时数据
+        */
+        afterBuild(): void;
     }
 }
 declare module egret3d {
@@ -17042,6 +18993,15 @@ declare module egret3d {
         importSubEmitter(phase: number, subEmitter: ParticleEmitter): void;
         /**
         * @language zh_CN
+        * 获取子粒子
+        * @param phase 某个阶段的子粒子
+        * @return ParticleEmitter列表
+        * @version Egret 3.0
+        * @platform Web,Native
+        */
+        getSubEmitters(phase: number): ParticleEmitter[];
+        /**
+        * @language zh_CN
         * 填充顶点数据
         * @param geometry 网格数据
         * @param count 粒子数量
@@ -17055,6 +19015,7 @@ declare module egret3d {
         private timeIndex;
         private count;
         private position;
+        private ignoreEmit;
         /**
         * @language zh_CN
         * @param animTime 动画当前时间（单位为ms）
@@ -17330,11 +19291,12 @@ declare module egret3d {
         * @version Egret 3.0
         * @platform Web,Native
         */
+        static Reset: boolean;
         update(time: number, delay: number, geometry: Geometry): void;
         /**
        * @private
        * @language zh_CN
-       * 将骨骼信息更新给GPU
+       * 将粒子信息更新给GPU
        * @param time 当前时间
        * @param delay 当前帧时间
        * @param usage PassUsage
@@ -17535,9 +19497,8 @@ declare module egret3d {
         scaleBezier: ParticleDataScaleBezier;
         rotationSpeed: ParticleDataRotationSpeed;
         colorOffset: ParticleDataColorOffset;
-        materialData: MatSphereData;
         textureSheet: ParticleDataTextureSheet;
-        static SCALE_VALUE: number;
+        materialData: MatSphereData;
         /**
         * @language zh_CN
         * @version Egret 3.0
@@ -17545,7 +19506,6 @@ declare module egret3d {
         */
         constructor();
         validate(): void;
-        scaleBy(value: number): void;
     }
     class ParticleDataNode {
         protected _nodeType: number;
@@ -17605,15 +19565,16 @@ declare module egret3d {
     class ParticleDataShape extends ParticleDataNode {
         type: number;
         randomDirection: boolean;
+        emitFromShell: boolean;
         cubeW: number;
         cubeH: number;
         cubeD: number;
         sphereRadius: number;
         hemiSphereRadius: number;
-        coneHeight: number;
-        coneRadiusBottom: number;
-        coneRadiusTop: number;
         coneType: number;
+        coneLength: number;
+        coneRadius: number;
+        coneAngle: number;
         meshType: number;
         meshFile: string;
         geometry: Geometry;
@@ -17798,9 +19759,8 @@ declare module egret3d {
          * @version Egret 3.0
          * @platform Web,Native
          */
-        version: number;
+        version: string;
         private _particleData;
-        private _xml;
         /**
         * @language zh_CN
         * constructor
@@ -17811,7 +19771,7 @@ declare module egret3d {
          * @param xml 粒子特效的数据解析
          * @returns ParticleData
          */
-        parse(text: string): ParticleData;
+        parse(xml: any, data: ParticleData): void;
         /**
          * @private
          * 解析基础属性
@@ -17912,6 +19872,152 @@ declare module egret3d {
 }
 declare module egret3d {
     /**
+     * @private
+     * @language zh_CN
+     * @class egret3d.ParticleJsonParser
+     * @classdesc
+     * 用 ParticleJsonParser 解析粒子文件
+     */
+    class ParticleJsonParser {
+        /**
+         * @language zh_CN
+         * 粒子的版本号
+         * @version Egret 3.0
+         * @platform Web,Native
+         */
+        version: string;
+        private _particleData;
+        /**
+        * @language zh_CN
+        * constructor
+        */
+        constructor();
+        /**
+         * @language zh_CN
+         * @param json 粒子特效的数据解析
+         * @returns ParticleData
+         */
+        parse(json: any, data: ParticleData): void;
+        /**
+         * @private
+         * 解析基础属性
+         */
+        private parseProperty(node);
+        /**
+         * @private
+         * 解析颜色属性
+         */
+        private parseColorProperty(property, c1, c2, cg1, cg2, tintColor);
+        /**
+         * @private
+         * 解析发射器数据
+         */
+        private parseEmission(node);
+        /**
+         * @private
+         * 解析生命周期相关数据
+         */
+        private parseLife(node);
+        /**
+         * @private
+         * 解析发射器的范围类型
+         */
+        private parseShape(node);
+        /**
+         * @private
+         * 解析粒子出生的旋转信息
+         */
+        private parseRotationBirth(node);
+        /**
+         * @private
+         * 解析粒子出生的缩放信息
+         */
+        private parseScaleBirth(node);
+        /**
+         * @private
+         * 解析粒子的几何形状
+         */
+        private parseGeometry(node);
+        /**
+         * @private
+         * 解析粒子速度相关信息
+         */
+        private parseMoveSpeed(node);
+        /**
+         * @private
+         * 解析全局位置or本地位置类型
+         */
+        private parseFollowTarget(node);
+        /**
+         * @private
+         * 解析粒子生命过程中缩放变化信息
+         */
+        private parseScaleBeizer(node);
+        /**
+        * @private
+        * 解析粒子旋转角速度
+        */
+        private parseRotationSpeed(node);
+        /**
+        * @private
+        * 解析粒子生命过程中颜色渐变信息
+        */
+        private parseColorOffset(node);
+        /**
+        * @private
+        * 解析材质球
+        */
+        private parseTextureSheet(node);
+        /**
+        * @private
+        * 解析渐变数据
+        */
+        private parseGradientsColor(itemList, dst);
+        /**
+        * @private
+        * 解析一条贝塞尔曲线数据
+        */
+        private parseBezierData(node);
+        /**
+        * @private
+        * 解析一个vector3D数据
+        */
+        private parseVector3D(node, vector);
+    }
+}
+declare module egret3d {
+    /**
+     * @private
+     * @language zh_CN
+     * @class egret3d.ParticleParser
+     * @classdesc
+     * 用 ParticleParser 解析粒子文件
+     */
+    class ParticleParser {
+        /**
+         * @language zh_CN
+         * 粒子的版本号
+         * @version Egret 3.0
+         * @platform Web,Native
+         */
+        version: string;
+        data: ParticleData;
+        /**
+        * @language zh_CN
+        * constructor
+        */
+        constructor();
+        /**
+         * @language zh_CN
+         * @param xml 粒子特效的数据解析
+         * @returns ParticleData
+         */
+        parseJson(text: string): ParticleData;
+        parseXml(text: string): ParticleData;
+    }
+}
+declare module egret3d {
+    /**
    * @class egret3d.ParticleEmitter
    * @classdesc
    * 粒子发射器
@@ -17930,6 +20036,7 @@ declare module egret3d {
         private _userNodes;
         private _data;
         private _externalGeometry;
+        private _genaretor;
         /**
         * @language zh_CN
         * 构造函数
@@ -17940,6 +20047,10 @@ declare module egret3d {
         * @platform Web,Native
         */
         constructor(data: ParticleData, material?: MaterialBase);
+        /**
+        * @private
+        */
+        generator: ParticleLifeGenerator;
         /**
         * @language zh_CN
         * 渲染排序的参数，数值越大，先渲染</p>
@@ -18067,6 +20178,14 @@ declare module egret3d {
         * @platform Web,Native
         */
         update(time: number, delay: number, camera: Camera3D): void;
+        /**
+        * @language zh_CN
+        * 克隆一个模型
+        * @returns 克隆后的粒子
+        * @version Egret 3.0
+        * @platform Web,Native
+        */
+        clone(): ParticleEmitter;
     }
 }
 declare module egret3d {
@@ -18197,14 +20316,14 @@ declare module egret3d {
         * @version Egret 3.0
         * @platform Web,Native
         */
-        texture2D: Texture2D;
+        texture2D: ContextTexture2D;
         /**
         * @language zh_CN
         * Texture3D 对象 保存贴图的数据
         * @version Egret 3.0
         * @platform Web,Native
         */
-        texture3D: Texture3D;
+        texture3D: ContextTexture3D;
         /**
          * @language zh_CN
          * 是否预乘alpha
@@ -18240,6 +20359,11 @@ declare module egret3d {
          * 是否预乘alpha
          */
         wrap_u_filter: number;
+        /**
+         * gl.filp_y
+         * @language zh_CN
+         * 是否需要颠倒uv
+         */
         filp_y: number;
         /**
          * gl.REPEAT
@@ -18249,6 +20373,10 @@ declare module egret3d {
          * 是否预乘alpha
          */
         wrap_v_filter: number;
+        guiIndex: number;
+        uvRectangle: Rectangle;
+        parentTexture: ITexture;
+        copyFromTexture(texture: ITexture, x: number, y: number, width: number, height: number): void;
         /**
         * @language zh_CN
         * 上传贴图数据给GPU
@@ -18266,6 +20394,27 @@ declare module egret3d {
         * @platform Web,Native
         */
         hasMipmap: boolean;
+        /**
+        * @language zh_CN
+        * @private
+        * @version Egret 3.0
+        * @platform Web,Native
+        */
+        internalFormat: InternalFormat;
+        /**
+        * @language zh_CN
+        * 贴图颜色格式
+        * @version Egret 3.0
+        * @platform Web,Native
+        */
+        colorFormat: number;
+        /**
+        * @language zh_CN
+        * 贴图mipmap data
+        * @version Egret 3.0
+        * @platform Web,Native
+        */
+        mimapData: Array<MipmapData>;
         /**
         * @language zh_CN
         * 强制上传贴图数据给GPU，强制要求贴图更新。
@@ -18337,44 +20486,13 @@ declare module egret3d {
 }
 declare module egret3d {
     /**
-     * @private
-     */
-    class PVRTexture extends ITexture {
-        constructor();
-        upload(context3D: Context3DProxy): void;
-        uploadForcing(context3D: Context3DProxy): void;
-    }
-}
-declare module egret3d {
-    /**
     * @class egret3d.MimapTexture
     * @classdesc
     * MimapTexture 贴图对象
     * @version Egret 3.0
     * @platform Web,Native
     */
-    class MimapTexture extends ITexture {
-        /**
-        * @language zh_CN
-        * @private
-        * @version Egret 3.0
-        * @platform Web,Native
-        */
-        internalFormat: InternalFormat;
-        /**
-        * @language zh_CN
-        * 贴图颜色格式
-        * @version Egret 3.0
-        * @platform Web,Native
-        */
-        colorFormat: number;
-        /**
-        * @language zh_CN
-        * 贴图mipmap data
-        * @version Egret 3.0
-        * @platform Web,Native
-        */
-        mimapData: Array<MipmapData>;
+    class Texture extends ITexture {
         /**
         * @language zh_CN
         * 构造函数
@@ -18382,7 +20500,19 @@ declare module egret3d {
         * @platform Web,Native
         */
         constructor();
+        /**
+        * @language zh_CN
+        * @private
+        * @version Egret 3.0
+        * @platform Web,Native
+        */
         upload(context3D: Context3DProxy): void;
+        /**
+        * @language zh_CN
+        * @private
+        * @version Egret 3.0
+        * @platform Web,Native
+        */
         uploadForcing(context3D: Context3DProxy): void;
     }
 }
@@ -18426,42 +20556,42 @@ declare module egret3d {
         * @version Egret 3.0
         * @platform Web,Native
         */
-        image_front: Texture2D;
+        image_front: ContextTexture2D;
         /**
         * @language zh_CN
         * image_back 背部ITexture图片元素
         * @version Egret 3.0
         * @platform Web,Native
         */
-        image_back: Texture2D;
+        image_back: ContextTexture2D;
         /**
         * @language zh_CN
         * image_left 左部ITexture图片元素
         * @version Egret 3.0
         * @platform Web,Native
         */
-        image_left: Texture2D;
+        image_left: ContextTexture2D;
         /**
         * @language zh_CN
         * image_right 右部ITexture图片元素
         * @version Egret 3.0
         * @platform Web,Native
         */
-        image_right: Texture2D;
+        image_right: ContextTexture2D;
         /**
         * @language zh_CN
         * image_up 顶部ITexture图片元素
         * @version Egret 3.0
         * @platform Web,Native
         */
-        image_up: Texture2D;
+        image_up: ContextTexture2D;
         /**
         * @language zh_CN
         * image_down 底部ITexture图片元素
         * @version Egret 3.0
         * @platform Web,Native
         */
-        image_down: Texture2D;
+        image_down: ContextTexture2D;
         /**
          * @language zh_CN
          * 构造函数
@@ -18472,7 +20602,7 @@ declare module egret3d {
          * @param image_up 默认参为null 顶部HTMLImageElement图片元素
          * @param image_down 默认参为null 底部HTMLImageElement图片元素
          */
-        constructor(image_front?: Texture2D, image_back?: Texture2D, image_left?: Texture2D, image_right?: Texture2D, image_up?: Texture2D, image_down?: Texture2D);
+        constructor(image_front?: ContextTexture2D, image_back?: ContextTexture2D, image_left?: ContextTexture2D, image_right?: ContextTexture2D, image_up?: ContextTexture2D, image_down?: ContextTexture2D);
         /**
          * @language zh_CN
          * 创建CubuTexture
@@ -18659,328 +20789,669 @@ declare module egret3d {
 }
 declare module egret3d {
     /**
+     * @language en_US
+     * The Endian class contains values that denote the byte order used to represent multibyte numbers.
+     * The byte order is either bigEndian (most significant byte first) or littleEndian (least significant byte first).
+     * @version Egret 2.4
+     * @platform Web,Native
+     */
+    /**
+     * @language zh_CN
      * Endian 类中包含一些值，它们表示用于表示多字节数字的字节顺序。
      * 字节顺序为 bigEndian（最高有效字节位于最前）或 littleEndian（最低有效字节位于最前）。
-     * @class egret3d.Endian
-     * @classdesc
+     * @version Egret 2.4
+     * @platform Web,Native
      */
     class Endian {
         /**
+         * @language en_US
+         * Indicates the least significant byte of the multibyte number appears first in the sequence of bytes.
+         * The hexadecimal number 0x12345678 has 4 bytes (2 hexadecimal digits per byte). The most significant byte is 0x12. The least significant byte is 0x78. (For the equivalent decimal number, 305419896, the most significant digit is 3, and the least significant digit is 6).
+         * @version Egret 2.4
+         * @platform Web,Native
+         */
+        /**
+         * @language zh_CN
          * 表示多字节数字的最低有效字节位于字节序列的最前面。
          * 十六进制数字 0x12345678 包含 4 个字节（每个字节包含 2 个十六进制数字）。最高有效字节为 0x12。最低有效字节为 0x78。（对于等效的十进制数字 305419896，最高有效数字是 3，最低有效数字是 6）。
-         * @constant {string} egret.Endian.LITTLE_ENDIAN
+         * @version Egret 2.4
+         * @platform Web,Native
          */
         static LITTLE_ENDIAN: string;
         /**
+         * @language en_US
+         * Indicates the most significant byte of the multibyte number appears first in the sequence of bytes.
+         * The hexadecimal number 0x12345678 has 4 bytes (2 hexadecimal digits per byte).  The most significant byte is 0x12. The least significant byte is 0x78. (For the equivalent decimal number, 305419896, the most significant digit is 3, and the least significant digit is 6).
+         * @version Egret 2.4
+         * @platform Web,Native
+         */
+        /**
+         * @language zh_CN
          * 表示多字节数字的最高有效字节位于字节序列的最前面。
          * 十六进制数字 0x12345678 包含 4 个字节（每个字节包含 2 个十六进制数字）。最高有效字节为 0x12。最低有效字节为 0x78。（对于等效的十进制数字 305419896，最高有效数字是 3，最低有效数字是 6）。
-         * @constant {string} egret.Endian.BIG_ENDIAN
+         * @version Egret 2.4
+         * @platform Web,Native
          */
         static BIG_ENDIAN: string;
     }
     /**
-     * @class egret.ByteArray
-     * @classdesc
+     * @language en_US
+     * The ByteArray class provides methods and attributes for optimized reading and writing as well as dealing with binary data.
+     * Note: The ByteArray class is applied to the advanced developers who need to access data at the byte layer.
+     * @version Egret 2.4
+     * @platform Web,Native
+     * @includeExample egret/utils/ByteArray.ts
+     */
+    /**
+     * @language zh_CN
      * ByteArray 类提供用于优化读取、写入以及处理二进制数据的方法和属性。
-     * 注意：ByteArray 类适用于需要在字节层访问数据的高级 开发人员。
+     * 注意：ByteArray 类适用于需要在字节层访问数据的高级开发人员。
+     * @version Egret 2.4
+     * @platform Web,Native
+     * @includeExample egret/utils/ByteArray.ts
      */
     class ByteArray {
+        /**
+         * @private
+         */
         private static SIZE_OF_BOOLEAN;
+        /**
+         * @private
+         */
         private static SIZE_OF_INT8;
+        /**
+         * @private
+         */
         private static SIZE_OF_INT16;
+        /**
+         * @private
+         */
         private static SIZE_OF_INT32;
+        /**
+         * @private
+         */
         private static SIZE_OF_UINT8;
+        /**
+         * @private
+         */
         private static SIZE_OF_UINT16;
+        /**
+         * @private
+         */
         private static SIZE_OF_UINT32;
+        /**
+         * @private
+         */
         private static SIZE_OF_FLOAT32;
+        /**
+         * @private
+         */
         private static SIZE_OF_FLOAT64;
+        /**
+         * @private
+         */
         private BUFFER_EXT_SIZE;
         private data;
+        /**
+         * @private
+         */
         private _position;
+        /**
+         * @private
+         */
         private write_position;
         /**
+         * @language en_US
+         * Changes or reads the byte order; egret.Endian.BIG_ENDIAN or egret.Endian.LITTLE_ENDIAN.
+         * @default egret.Endian.BIG_ENDIAN
+         * @version Egret 2.4
+         * @platform Web,Native
+         */
+        /**
+         * @language zh_CN
          * 更改或读取数据的字节顺序；egret.Endian.BIG_ENDIAN 或 egret.Endian.LITTLE_ENDIAN。
          * @default egret.Endian.BIG_ENDIAN
-         * @member egret.ByteArray#endian
+         * @version Egret 2.4
+         * @platform Web,Native
          */
         endian: string;
         /**
-        * 创建一个 egret.ByteArray 对象以引用指定的 ArrayBuffer 对象
-        * @param buffer {ArrayBuffer} 数据源
-        * @version Egret 3.0
-        * @platform Web,Native
-        */
+         * @version Egret 2.4
+         * @platform Web,Native
+         */
         constructor(buffer?: ArrayBuffer);
+        /**
+         * @private
+         * @param buffer
+         */
         private _setArrayBuffer(buffer);
         /**
-        * @language zh_CN
-        * 获取ArrayBuffer
-        * @returns ArrayBuffer
-        * @version Egret 3.0
-        * @platform Web,Native
-        */
+         * @deprecated
+         * @version Egret 2.4
+         * @platform Web,Native
+         */
+        setArrayBuffer(buffer: ArrayBuffer): void;
         /**
-        * @language zh_CN
-        * 设置ArrayBuffer
-        * @param value
-        * @version Egret 3.0
-        * @platform Web,Native
-        */
+         * @private
+         */
         buffer: ArrayBuffer;
         /**
-        * @language zh_CN
-        * 获取dataView
-        * @returns DataView
-        * @version Egret 3.0
-        * @platform Web,Native
-        */
+         * @private
+         * @version Egret 2.4
+         * @platform Web,Native
+         */
         /**
-        * @language zh_CN
-        * 设置DataView
-        * @param value
-        * @version Egret 3.0
-        * @platform Web,Native
-        */
+         * @private
+         */
         dataView: DataView;
         /**
          * @private
          */
-        uncompress(type?: string): void;
-        /**
-        * @language zh_CN
-        * 获取buffer的偏移位置
-        * @rerurns number 偏移位置
-        * @version Egret 3.0
-        * @platform Web,Native
-        */
         bufferOffset: number;
         /**
-        * @language zh_CN
-        * 将文件指针的当前位置（以字节为单位）移动或返回到 ByteArray 对象中。下一次调用读取方法时将在此位置开始读取，或者下一次调用写入方法时将在此位置开始写入。
-        * @rerurns number 当前位置
-        * @version Egret 3.0
-        * @platform Web,Native
-        */
+         * @language en_US
+         * The current position of the file pointer (in bytes) to move or return to the ByteArray object. The next time you start reading reading method call in this position, or will start writing in this position next time call a write method.
+         * @version Egret 2.4
+         * @platform Web,Native
+         */
         /**
-        * @language zh_CN
-        * 设置文件指针的当前位置
-        * @param value 当前位置
-        * @version Egret 3.0
-        * @platform Web,Native
-        */
+         * @language zh_CN
+         * 将文件指针的当前位置（以字节为单位）移动或返回到 ByteArray 对象中。下一次调用读取方法时将在此位置开始读取，或者下一次调用写入方法时将在此位置开始写入。
+         * @version Egret 2.4
+         * @platform Web,Native
+         */
         position: number;
         /**
-        * @language zh_CN
-        * ByteArray 对象的长度（以字节为单位）。
-        * 如果将长度设置为大于当前长度的值，则用零填充字节数组的右侧。
-        * 如果将长度设置为小于当前长度的值，将会截断该字节数组。
-        * @member {number} egret.ByteArray#length
-        * @returns number ByteArray的长度
-        * @version Egret 3.0
-        * @platform Web,Native
-        */
+         * @language en_US
+         * The length of the ByteArray object (in bytes).
+                  * If the length is set to be larger than the current length, the right-side zero padding byte array.
+                  * If the length is set smaller than the current length, the byte array is truncated.
+         * @version Egret 2.4
+         * @platform Web,Native
+         */
         /**
-        * @language zh_CN
-        * 设置ByteArray 对象的长度（以字节为单位）。
-        * @param value ByteArray对象的长度
-        * @version Egret 3.0
-        * @platform Web,Native
-        */
+         * @language zh_CN
+         * ByteArray 对象的长度（以字节为单位）。
+         * 如果将长度设置为大于当前长度的值，则用零填充字节数组的右侧。
+         * 如果将长度设置为小于当前长度的值，将会截断该字节数组。
+         * @version Egret 2.4
+         * @platform Web,Native
+         */
         length: number;
         /**
+         * @language en_US
+         * The number of bytes that can be read from the current position of the byte array to the end of the array data.
+         * When you access a ByteArray object, the bytesAvailable property in conjunction with the read methods each use to make sure you are reading valid data.
+         * @version Egret 2.4
+         * @platform Web,Native
+         */
+        /**
+         * @language zh_CN
          * 可从字节数组的当前位置到数组末尾读取的数据的字节数。
          * 每次访问 ByteArray 对象时，将 bytesAvailable 属性与读取方法结合使用，以确保读取有效的数据。
-         * @member {number} egret.ByteArray#bytesAvailable
+         * @version Egret 2.4
+         * @platform Web,Native
          */
         bytesAvailable: number;
         /**
+         * @language en_US
+         * Clears the contents of the byte array and resets the length and position properties to 0.
+         * @version Egret 2.4
+         * @platform Web,Native
+         */
+        /**
+         * @language zh_CN
          * 清除字节数组的内容，并将 length 和 position 属性重置为 0。
-         * @method egret.ByteArray#clear
+
+         * @version Egret 2.4
+         * @platform Web,Native
          */
         clear(): void;
         /**
+         * @language en_US
+         * Read a Boolean value from the byte stream. Read a simple byte. If the byte is non-zero, it returns true; otherwise, it returns false.
+         * @return If the byte is non-zero, it returns true; otherwise, it returns false.
+         * @version Egret 2.4
+         * @platform Web,Native
+         */
+        /**
+         * @language zh_CN
          * 从字节流中读取布尔值。读取单个字节，如果字节非零，则返回 true，否则返回 false
-         * @returns 如果字节不为零，则返回 true，否则返回 false
-         * @method egret.ByteArray#readBoolean
+         * @return 如果字节不为零，则返回 true，否则返回 false
+         * @version Egret 2.4
+         * @platform Web,Native
          */
         readBoolean(): boolean;
         /**
+         * @language en_US
+         * Read signed bytes from the byte stream.
+         * @return An integer ranging from -128 to 127
+         * @version Egret 2.4
+         * @platform Web,Native
+         */
+        /**
+         * @language zh_CN
          * 从字节流中读取带符号的字节
-         * @returns 介于 -128 和 127 之间的整数
-         * @method egret.ByteArray#readByte
+         * @return 介于 -128 和 127 之间的整数
+         * @version Egret 2.4
+         * @platform Web,Native
          */
         readByte(): number;
         /**
+         * @language en_US
+         * Read data byte number specified by the length parameter from the byte stream. Starting from the position specified by offset, read bytes into the ByteArray object specified by the bytes parameter, and write bytes into the target ByteArray
+         * @param bytes ByteArray object that data is read into
+         * @param offset Offset (position) in bytes. Read data should be written from this position
+         * @param length Byte number to be read Default value 0 indicates reading all available data
+         * @version Egret 2.4
+         * @platform Web,Native
+         */
+        /**
+         * @language zh_CN
          * 从字节流中读取 length 参数指定的数据字节数。从 offset 指定的位置开始，将字节读入 bytes 参数指定的 ByteArray 对象中，并将字节写入目标 ByteArray 中
          * @param bytes 要将数据读入的 ByteArray 对象
          * @param offset bytes 中的偏移（位置），应从该位置写入读取的数据
          * @param length 要读取的字节数。默认值 0 导致读取所有可用的数据
-         * @method egret.ByteArray#readBytes
+         * @version Egret 2.4
+         * @platform Web,Native
          */
         readBytes(bytes: ByteArray, offset?: number, length?: number): void;
         /**
+         * @language en_US
+         * Read an IEEE 754 double-precision (64 bit) floating point number from the byte stream
+         * @return Double-precision (64 bit) floating point number
+         * @version Egret 2.4
+         * @platform Web,Native
+         */
+        /**
+         * @language zh_CN
          * 从字节流中读取一个 IEEE 754 双精度（64 位）浮点数
-         * @returns 双精度（64 位）浮点数
-         * @method egret.ByteArray#readDouble
+         * @return 双精度（64 位）浮点数
+         * @version Egret 2.4
+         * @platform Web,Native
          */
         readDouble(): number;
         /**
+         * @language en_US
+         * Read an IEEE 754 single-precision (32 bit) floating point number from the byte stream
+         * @return Single-precision (32 bit) floating point number
+         * @version Egret 2.4
+         * @platform Web,Native
+         */
+        /**
+         * @language zh_CN
          * 从字节流中读取一个 IEEE 754 单精度（32 位）浮点数
-         * @returns 单精度（32 位）浮点数
-         * @method egret.ByteArray#readFloat
+         * @return 单精度（32 位）浮点数
+         * @version Egret 2.4
+         * @platform Web,Native
          */
         readFloat(): number;
         /**
+         * @language en_US
+         * Read a 32-bit signed integer from the byte stream.
+         * @return A 32-bit signed integer ranging from -2147483648 to 2147483647
+         * @version Egret 2.4
+         * @platform Web,Native
+         */
+        /**
+         * @language zh_CN
          * 从字节流中读取一个带符号的 32 位整数
-         * @returns 介于 -2147483648 和 2147483647 之间的 32 位带符号整数
-         * @method egret.ByteArray#readFloat
+         * @return 介于 -2147483648 和 2147483647 之间的 32 位带符号整数
+         * @version Egret 2.4
+         * @platform Web,Native
          */
         readInt(): number;
         /**
-         * 使用指定的字符集从字节流中读取指定长度的多字节字符串
-         * @param length 要从字节流中读取的字节数
-         * @param charSet 表示用于解释字节的字符集的字符串。可能的字符集字符串包括 "shift-jis"、"cn-gb"、"iso-8859-1"”等
-         * @returns UTF-8 编码的字符串
-         * @method egret.ByteArray#readMultiByte
+         * @language en_US
+         * Read a 16-bit signed integer from the byte stream.
+         * @return A 16-bit signed integer ranging from -32768 to 32767
+         * @version Egret 2.4
+         * @platform Web,Native
          */
         /**
+         * @language zh_CN
          * 从字节流中读取一个带符号的 16 位整数
-         * @returns 介于 -32768 和 32767 之间的 16 位带符号整数
-         * @method egret.ByteArray#readShort
+         * @return 介于 -32768 和 32767 之间的 16 位带符号整数
+         * @version Egret 2.4
+         * @platform Web,Native
          */
         readShort(): number;
         /**
+         * @language en_US
+         * Read unsigned bytes from the byte stream.
+         * @return A 32-bit unsigned integer ranging from 0 to 255
+         * @version Egret 2.4
+         * @platform Web,Native
+         */
+        /**
+         * @language zh_CN
          * 从字节流中读取无符号的字节
-         * @returns 介于 0 和 255 之间的 32 位无符号整数
-         * @method egret.ByteArray#readUnsignedByte
+         * @return 介于 0 和 255 之间的 32 位无符号整数
+         * @version Egret 2.4
+         * @platform Web,Native
          */
         readUnsignedByte(): number;
         /**
+         * @language en_US
+         * Read a 32-bit unsigned integer from the byte stream.
+         * @return A 32-bit unsigned integer ranging from 0 to 4294967295
+         * @version Egret 2.4
+         * @platform Web,Native
+         */
+        /**
+         * @language zh_CN
          * 从字节流中读取一个无符号的 32 位整数
-         * @returns 介于 0 和 4294967295 之间的 32 位无符号整数
-         * @method egret.ByteArray#readUnsignedInt
+         * @return 介于 0 和 4294967295 之间的 32 位无符号整数
+         * @version Egret 2.4
+         * @platform Web,Native
          */
         readUnsignedInt(): number;
         /**
+         * @language en_US
+         * Read a 16-bit unsigned integer from the byte stream.
+         * @return A 16-bit unsigned integer ranging from 0 to 65535
+         * @version Egret 2.4
+         * @platform Web,Native
+         */
+        /**
+         * @language zh_CN
          * 从字节流中读取一个无符号的 16 位整数
-         * @returns 介于 0 和 65535 之间的 16 位无符号整数
-         * @method egret.ByteArray#readUnsignedShort
+         * @return 介于 0 和 65535 之间的 16 位无符号整数
+         * @version Egret 2.4
+         * @platform Web,Native
          */
         readUnsignedShort(): number;
         /**
+         * @language en_US
+         * Read a UTF-8 character string from the byte stream Assume that the prefix of the character string is a short unsigned integer (use byte to express length)
+         * @return UTF-8 character string
+         * @version Egret 2.4
+         * @platform Web,Native
+         */
+        /**
+         * @language zh_CN
          * 从字节流中读取一个 UTF-8 字符串。假定字符串的前缀是无符号的短整型（以字节表示长度）
-         * @returns UTF-8 编码的字符串
-         * @method egret.ByteArray#readUTF
+         * @return UTF-8 编码的字符串
+         * @version Egret 2.4
+         * @platform Web,Native
          */
         readUTF(): string;
         /**
+         * @language en_US
+         * Read a UTF-8 byte sequence specified by the length parameter from the byte stream, and then return a character string
+         * @param Specify a short unsigned integer of the UTF-8 byte length
+         * @return A character string consists of UTF-8 bytes of the specified length
+         * @version Egret 2.4
+         * @platform Web,Native
+         */
+        /**
+         * @language zh_CN
          * 从字节流中读取一个由 length 参数指定的 UTF-8 字节序列，并返回一个字符串
          * @param length 指明 UTF-8 字节长度的无符号短整型数
-         * @returns 由指定长度的 UTF-8 字节组成的字符串
-         * @method egret.ByteArray#readUTFBytes
+         * @return 由指定长度的 UTF-8 字节组成的字符串
+         * @version Egret 2.4
+         * @platform Web,Native
          */
         readUTFBytes(length: number): string;
         /**
-        * 读取一行字符串
-        * @returns 由指定长度的 UTF-8 字节组成的字符串
-        */
-        readLine(): string;
+         * @language en_US
+         * Write a Boolean value. A single byte is written according to the value parameter. If the value is true, write 1; if the value is false, write 0.
+         * @param value A Boolean value determining which byte is written. If the value is true, write 1; if the value is false, write 0.
+         * @version Egret 2.4
+         * @platform Web,Native
+         */
         /**
+         * @language zh_CN
          * 写入布尔值。根据 value 参数写入单个字节。如果为 true，则写入 1，如果为 false，则写入 0
          * @param value 确定写入哪个字节的布尔值。如果该参数为 true，则该方法写入 1；如果该参数为 false，则该方法写入 0
-         * @method egret.ByteArray#writeBoolean
+         * @version Egret 2.4
+         * @platform Web,Native
          */
         writeBoolean(value: boolean): void;
         /**
+         * @language en_US
+         * Write a byte into the byte stream
+         * The low 8 bits of the parameter are used. The high 24 bits are ignored.
+         * @param value A 32-bit integer. The low 8 bits will be written into the byte stream
+         * @version Egret 2.4
+         * @platform Web,Native
+         */
+        /**
+         * @language zh_CN
          * 在字节流中写入一个字节
          * 使用参数的低 8 位。忽略高 24 位
          * @param value 一个 32 位整数。低 8 位将被写入字节流
-         * @method egret.ByteArray#writeByte
+         * @version Egret 2.4
+         * @platform Web,Native
          */
         writeByte(value: number): void;
         /**
+         * @language en_US
+         * Write the byte sequence that includes length bytes in the specified byte array, bytes, (starting at the byte specified by offset, using a zero-based index), into the byte stream
+         * If the length parameter is omitted, the default length value 0 is used and the entire buffer starting at offset is written. If the offset parameter is also omitted, the entire buffer is written
+         * If the offset or length parameter is out of range, they are clamped to the beginning and end of the bytes array.
+         * @param bytes ByteArray Object
+         * @param offset A zero-based index specifying the position into the array to begin writing
+         * @param length An unsigned integer specifying how far into the buffer to write
+         * @version Egret 2.4
+         * @platform Web,Native
+         */
+        /**
+         * @language zh_CN
          * 将指定字节数组 bytes（起始偏移量为 offset，从零开始的索引）中包含 length 个字节的字节序列写入字节流
          * 如果省略 length 参数，则使用默认长度 0；该方法将从 offset 开始写入整个缓冲区。如果还省略了 offset 参数，则写入整个缓冲区
          * 如果 offset 或 length 超出范围，它们将被锁定到 bytes 数组的开头和结尾
          * @param bytes ByteArray 对象
          * @param offset 从 0 开始的索引，表示在数组中开始写入的位置
          * @param length 一个无符号整数，表示在缓冲区中的写入范围
-         * @method egret.ByteArray#writeBytes
+         * @version Egret 2.4
+         * @platform Web,Native
          */
         writeBytes(bytes: ByteArray, offset?: number, length?: number): void;
         /**
+         * @language en_US
+         * Write an IEEE 754 double-precision (64 bit) floating point number into the byte stream
+         * @param value Double-precision (64 bit) floating point number
+         * @version Egret 2.4
+         * @platform Web,Native
+         */
+        /**
+         * @language zh_CN
          * 在字节流中写入一个 IEEE 754 双精度（64 位）浮点数
          * @param value 双精度（64 位）浮点数
-         * @method egret.ByteArray#writeDouble
+         * @version Egret 2.4
+         * @platform Web,Native
          */
         writeDouble(value: number): void;
         /**
+         * @language en_US
+         * Write an IEEE 754 single-precision (32 bit) floating point number into the byte stream
+         * @param value Single-precision (32 bit) floating point number
+         * @version Egret 2.4
+         * @platform Web,Native
+         */
+        /**
+         * @language zh_CN
          * 在字节流中写入一个 IEEE 754 单精度（32 位）浮点数
          * @param value 单精度（32 位）浮点数
-         * @method egret.ByteArray#writeFloat
+         * @version Egret 2.4
+         * @platform Web,Native
          */
         writeFloat(value: number): void;
         /**
+         * @language en_US
+         * Write a 32-bit signed integer into the byte stream
+         * @param value An integer to be written into the byte stream
+         * @version Egret 2.4
+         * @platform Web,Native
+         */
+        /**
+         * @language zh_CN
          * 在字节流中写入一个带符号的 32 位整数
          * @param value 要写入字节流的整数
-         * @method egret.ByteArray#writeInt
+         * @version Egret 2.4
+         * @platform Web,Native
          */
         writeInt(value: number): void;
         /**
-         * 使用指定的字符集将多字节字符串写入字节流
-         * @param value 要写入的字符串值
-         * @param charSet 表示要使用的字符集的字符串。可能的字符集字符串包括 "shift-jis"、"cn-gb"、"iso-8859-1"”等
-         * @method egret.ByteArray#writeMultiByte
+         * @language en_US
+         * Write a 16-bit integer into the byte stream. The low 16 bits of the parameter are used. The high 16 bits are ignored.
+         * @param value A 32-bit integer. Its low 16 bits will be written into the byte stream
+         * @version Egret 2.4
+         * @platform Web,Native
          */
         /**
+         * @language zh_CN
          * 在字节流中写入一个 16 位整数。使用参数的低 16 位。忽略高 16 位
          * @param value 32 位整数，该整数的低 16 位将被写入字节流
-         * @method egret.ByteArray#writeShort
+         * @version Egret 2.4
+         * @platform Web,Native
          */
         writeShort(value: number): void;
         /**
+         * @language en_US
+         * Write a 32-bit unsigned integer into the byte stream
+         * @param value An unsigned integer to be written into the byte stream
+         * @version Egret 2.4
+         * @platform Web,Native
+         */
+        /**
+         * @language zh_CN
          * 在字节流中写入一个无符号的 32 位整数
          * @param value 要写入字节流的无符号整数
-         * @method egret.ByteArray#writeUnsignedInt
+         * @version Egret 2.4
+         * @platform Web,Native
          */
         writeUnsignedInt(value: number): void;
         /**
+         * @language en_US
+         * Write a 16-bit unsigned integer into the byte stream
+         * @param value An unsigned integer to be written into the byte stream
+         * @version Egret 2.5
+         * @platform Web,Native
+         */
+        /**
+         * @language zh_CN
+         * 在字节流中写入一个无符号的 16 位整数
+         * @param value 要写入字节流的无符号整数
+         * @version Egret 2.5
+         * @platform Web,Native
+         */
+        writeUnsignedShort(value: number): void;
+        /**
+         * @language en_US
+         * Write a UTF-8 string into the byte stream. The length of the UTF-8 string in bytes is written first, as a 16-bit integer, followed by the bytes representing the characters of the string
+         * @param value Character string value to be written
+         * @version Egret 2.4
+         * @platform Web,Native
+         */
+        /**
+         * @language zh_CN
          * 将 UTF-8 字符串写入字节流。先写入以字节表示的 UTF-8 字符串长度（作为 16 位整数），然后写入表示字符串字符的字节
          * @param value 要写入的字符串值
-         * @method egret.ByteArray#writeUTF
+         * @version Egret 2.4
+         * @platform Web,Native
          */
         writeUTF(value: string): void;
         /**
+         * @language en_US
+         * Write a UTF-8 string into the byte stream. Similar to the writeUTF() method, but the writeUTFBytes() method does not prefix the string with a 16-bit length word
+         * @param value Character string value to be written
+         * @version Egret 2.4
+         * @platform Web,Native
+         */
+        /**
+         * @language zh_CN
          * 将 UTF-8 字符串写入字节流。类似于 writeUTF() 方法，但 writeUTFBytes() 不使用 16 位长度的词为字符串添加前缀
          * @param value 要写入的字符串值
-         * @method egret.ByteArray#writeUTFBytes
+         * @version Egret 2.4
+         * @platform Web,Native
          */
         writeUTFBytes(value: string): void;
+        /**
+         *
+         * @returns
+         * @version Egret 2.4
+         * @platform Web,Native
+         */
         toString(): string;
         /**
+         * @private
          * 将 Uint8Array 写入字节流
          * @param bytes 要写入的Uint8Array
          * @param validateBuffer
          */
         _writeUint8Array(bytes: Uint8Array, validateBuffer?: boolean): void;
         /**
+         * @param len
+         * @returns
+         * @version Egret 2.4
+         * @platform Web,Native
          * @private
          */
         validate(len: number): boolean;
-        /*********************/
-        /*********************/
+        /**********************/
+        /**********************/
+        /**
+         * @private
+         * @param len
+         * @param needReplace
+         */
         private validateBuffer(len, needReplace?);
         /**
+         * @private
          * UTF-8 Encoding/Decoding
          */
         private encodeUTF8(str);
+        /**
+         * @private
+         *
+         * @param data
+         * @returns
+         */
         private decodeUTF8(data);
+        /**
+         * @private
+         *
+         * @param code_point
+         */
         private encoderError(code_point);
+        /**
+         * @private
+         *
+         * @param fatal
+         * @param opt_code_point
+         * @returns
+         */
         private decoderError(fatal, opt_code_point?);
+        /**
+         * @private
+         */
         private EOF_byte;
+        /**
+         * @private
+         */
         private EOF_code_point;
+        /**
+         * @private
+         *
+         * @param a
+         * @param min
+         * @param max
+         */
         private inRange(a, min, max);
+        /**
+         * @private
+         *
+         * @param n
+         * @param d
+         */
         private div(n, d);
+        /**
+         * @private
+         *
+         * @param string
+         */
         private stringToCodePoints(string);
     }
 }
@@ -19140,6 +21611,7 @@ declare module egret3d {
         */
         static getConst(shaderLine: string): GLSL.ConstVar;
         static getExtension(shaderLine: string): GLSL.Extension;
+        static getDefine(shaderLine: string): GLSL.DefineVar;
         /**
         * @language zh_CN
         * @private
@@ -19357,11 +21829,17 @@ declare module egret3d {
         */
         orthogonal = 1,
         /**
+        * 正交投影
+        * @version Egret 3.0
+        * @platform Web,Native
+        */
+        orthogonalToCenter = 2,
+        /**
         * VR投影
         * @version Egret 3.0
         * @platform Web,Native
         */
-        VR = 2,
+        VR = 3,
     }
     /**
     * VR类型
@@ -19411,6 +21889,13 @@ declare module egret3d {
         /**
         * @private
         * @language zh_CN
+        * @version Egret 3.0
+        * @platform Web,Native
+        */
+        private _orthProjectMatrix;
+        /**
+        * @private
+        * @language zh_CN
         * 眼睛矩阵(左，右眼) 实现VR时会用到
         * @version Egret 3.0
         * @platform Web,Native
@@ -19423,7 +21908,6 @@ declare module egret3d {
          * @platform Web,Native
          */
         frustum: Frustum;
-        viewPort: Rectangle;
         private _viewPort;
         private _scissorRect;
         private _aspectRatio;
@@ -19440,6 +21924,7 @@ declare module egret3d {
         private _normalMatrix;
         private _unprojection;
         protected _animation: any;
+        protected _projectChange: boolean;
         /**
          * @language zh_CN
          * constructor
@@ -19448,6 +21933,13 @@ declare module egret3d {
          * @platform Web,Native
          */
         constructor(cameraType?: CameraType);
+        /**
+        * @language zh_CN
+        * 获取相机类型
+        * @returns CameraType 相机类型
+        * @version Egret 3.0
+        * @platform Web,Native
+        */
         /**
          * @language zh_CN
          * 设置相机类型
@@ -19536,6 +22028,15 @@ declare module egret3d {
         far: number;
         /**
         * @language zh_CN
+        * 返回viewPort
+        *
+        * @returns Rectangle
+        * @version Egret 3.0
+        * @platform Web,Native
+        */
+        viewPort: Rectangle;
+        /**
+        * @language zh_CN
         * 返回相机视图投影矩阵
         *
         * @returns 视图投影矩阵
@@ -19543,6 +22044,7 @@ declare module egret3d {
         * @platform Web,Native
         */
         viewProjectionMatrix: Matrix4_4;
+        orthProjectionMatrix: Matrix4_4;
         /**
          * @private
          * @language zh_CN
@@ -19555,15 +22057,15 @@ declare module egret3d {
          */
         updateScissorRect(x: number, y: number, width: number, height: number): void;
         /**
-         * @language zh_CN
-         * 更新视口
-         * @param x number
-         * @param y number
-         * @param width number
-         * @param height number
-         * @version Egret 3.0
-         * @platform Web,Native
-         */
+        * @language zh_CN
+        * 更新视口
+        * @param x number
+        * @param y number
+        * @param width number
+        * @param height number
+        * @version Egret 3.0
+        * @platform Web,Native
+        */
         updateViewport(x: number, y: number, width: number, height: number): void;
         /**
          * @language zh_CN
@@ -19600,7 +22102,7 @@ declare module egret3d {
         * @version Egret 3.0
         * @platform Web,Native
         */
-        updataOrth(): void;
+        updataOrth(target: Matrix4_4): void;
         /**
          * @language zh_CN
          * 检测对象是否在相机视椎体内
@@ -19643,7 +22145,6 @@ declare module egret3d {
         private _halfw;
         private _halfh;
         /**
-        * @private
         * @language zh_CN
         * 3维坐标转2维屏幕坐标
         * @param n 3维坐标
@@ -19653,7 +22154,6 @@ declare module egret3d {
         */
         object3DToScreenRay(n: Vector3D, target?: Vector3D): Vector3D;
         /**
-        * @private
         * @language zh_CN
         * 2维屏幕坐标转3维坐标
         * @param n 2维屏幕坐标
@@ -21862,6 +24362,7 @@ declare module egret3d {
         protected _postList: IPost[];
         protected _postHUD: HUD;
         protected _postProcessing: PostProcessing;
+        protected _quadStage: QuadStage;
         /**
         * @language zh_CN
         * 构建一个view3d对象
@@ -21875,6 +24376,7 @@ declare module egret3d {
         */
         constructor(x: number, y: number, width: number, height: number, camera?: Camera3D);
         render: RenderBase;
+        quadStage: QuadStage;
         post: any[];
         /**
         * @language zh_CN
@@ -22008,6 +24510,30 @@ declare module egret3d {
         * @platform Web,Native
         */
         entityCollect: EntityCollect;
+        /**
+        * @language zh_CN
+        * 获取gui stage
+        * @return QuadStage
+        * @version Egret 3.0
+        * @platform Web,Native
+        */
+        getGUIStage(): QuadStage;
+        /**
+        * @language zh_CN
+        * 添加一个gui对象
+        * @param displayObject displayObject显示对象
+        * @version Egret 3.0
+        * @platform Web,Native
+        */
+        addGUI(displayObject: DisplayObject): void;
+        /**
+        * @language zh_CN
+        * 从场景根节点中移除一个gui quad对象
+        * @param displayObject displayObject显示对象
+        * @version Egret 3.0
+        * @platform Web,Native
+        */
+        removeGUI(displayObject: DisplayObject): void;
         /**
         * @language zh_CN
         * 添加一个Object3D对象进场景根节点
@@ -22211,6 +24737,13 @@ declare module egret3d {
         offsetY: number;
         /**
         * @language zh_CN
+        * 渲染之后的回调
+        * @version Egret 3.0
+        * @platform Web,Native
+        */
+        afterRender: Function;
+        /**
+        * @language zh_CN
         * 构造一个Egret3DCanvas对象
         * @param blend2D 暂时未使用，默认参数为false
         * @version Egret 3.0
@@ -22335,29 +24868,32 @@ declare module egret3d {
      * 引擎库前期加载设置，开发中加载未压缩的编译引擎
      */
     class Egret3DEngine {
-        static debug: boolean;
-        private static djs;
-        private static scriptSource;
-        private static importList;
-        private static _xhr;
-        private static _libUrl;
-        private static _complete;
+        static instance: Egret3DEngine;
+        jsPath: string;
+        onTsconfig: Function;
+        debug: boolean;
+        private _tsconfigs;
+        private _currentConfig;
+        private _xhr;
+        private importList;
+        private _complete;
+        private _thisObject;
         private static getXHR();
-        static onTsconfig: Function;
-        /**
-         * @language zh_CN
-         * 请求读取
-         * @event complete 读取完成响应回调
-         */
-        static preload(complete: Function): void;
-        private static onReadyStateChange(event);
-        private static loadComplete();
-        private static onProgress(event);
-        private static onError(event);
-        private static applyClass(source);
-        static addImportScript(path: string): void;
-        private static startLoadScript(e);
-        private static loadScriptError(e);
+        constructor();
+        addTsconfig(path: string): void;
+        setTsconfig(index: number, path: string): void;
+        clearTsconfig(): void;
+        preload(complete: Function, thisObject?: any): void;
+        addImportScript(path: string): void;
+        private doLoader(path);
+        private onProgress(event);
+        private onReadyStateChange(event);
+        private onLoadComplete(source);
+        private onError(event);
+        private onAllLoadTsconfigComplete();
+        private onAllLoadComplete();
+        private startLoadScript(e);
+        private loadScriptError(e);
     }
 }
 declare module egret3d {

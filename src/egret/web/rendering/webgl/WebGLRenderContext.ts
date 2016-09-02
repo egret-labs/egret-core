@@ -48,6 +48,8 @@ module egret.web {
      */
     export class WebGLRenderContext {
 
+        public static antialias:boolean;
+
         /**
          * 渲染上下文
          */
@@ -284,6 +286,7 @@ module egret.web {
 
         private getWebGLContext() {
             var options = {
+                antialias: WebGLRenderContext.antialias,
                 stencil: true//设置可以使用模板（用于不规则遮罩）
             };
             var gl: any;
@@ -472,9 +475,9 @@ module egret.web {
             }
 
             var texture: WebGLTexture;
-            if (image["texture"]) {
+            if (image.source && image.source["texture"]) {
                 // 如果是render target
-                texture = image["texture"];
+                texture = image.source["texture"];
                 buffer.saveTransform();
                 buffer.transform(1, 0, 0, -1, 0, destHeight + destY * 2);// 翻转
             } else if (!image.source && !image.webGLTexture) {
@@ -512,9 +515,9 @@ module egret.web {
             }
 
             var texture: WebGLTexture;
-            if (image["texture"]) {
+            if (image.source && image.source["texture"]) {
                 // 如果是render target
-                texture = image["texture"];
+                texture = image.source["texture"];
                 buffer.saveTransform();
                 buffer.transform(1, 0, 0, -1, 0, destHeight + destY * 2);// 翻转
             } else if (!image.source && !image.webGLTexture) {
