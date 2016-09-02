@@ -595,8 +595,10 @@ module egret {
             textureWidth: number, textureHeight: number, destW: number, destH: number, sourceWidth: number, sourceHeight: number,
             scale9Grid: egret.Rectangle, fillMode: string, smoothing: boolean): void {
             console.warn('deprecated method : Bitmap.$drawImage,use egret.sys.BitmapNode.$drawImage instead of it');
-            sys.BitmapNode.$updateTextureData.call(this, arguments);
-
+            sys.BitmapNode.$updateTextureData(node, image, 
+                bitmapX, bitmapY, bitmapWidth, bitmapHeight, offsetX, offsetY, 
+                textureWidth, textureHeight, destW, destH, sourceWidth, sourceHeight, 
+                scale9Grid, fillMode, smoothing);
         }
 
     }
