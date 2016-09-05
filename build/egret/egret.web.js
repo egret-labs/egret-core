@@ -8128,21 +8128,11 @@ var egret;
                         buffer.setTransform(m.a, m.b, m.c, m.d, m.tx - region.minX, m.ty - region.minY);
                         buffer.context.pushMask(scrollRect);
                     }
-                    var offsetM = egret.Matrix.create().setTo(1, 0, 0, 1, 0, 0);
                     //绘制显示对象
                     if (hasBlendMode) {
                         buffer.context.setGlobalCompositeOperation(compositeOp);
                     }
-                    if (scrollRect) {
-                        var m = displayMatrix;
-                        buffer.setTransform(m.a, m.b, m.c, m.d, m.tx - region.minX, m.ty - region.minY);
-                        buffer.context.pushMask(scrollRect);
-                    }
-                    drawCalls += this.drawDisplayObject(displayObject, buffer, dirtyList, offsetM, displayObject.$displayList, region, null);
-                    egret.Matrix.release(offsetM);
-                    if (scrollRect) {
-                        buffer.context.popMask();
-                    }
+                    drawCalls += this.drawDisplayObject(displayObject, buffer, dirtyList, matrix, displayObject.$displayList, region, null);
                     if (hasBlendMode) {
                         buffer.context.setGlobalCompositeOperation(defaultCompositeOp);
                     }

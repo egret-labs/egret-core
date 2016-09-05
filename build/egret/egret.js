@@ -569,6 +569,7 @@ var egret;
          * @param bubbles Determines whether the Event object bubbles. Event listeners can access this information through
          * the inherited bubbles property.
          * @param data {any} data
+         * @param cancelable Determines whether the Event object can be canceled. The default values is false.
          * @version Egret 2.4
          * @platform Web,Native
          */
@@ -578,12 +579,13 @@ var egret;
          * @param type {string} 事件类型
          * @param bubbles {boolean} 确定 Event 对象是否参与事件流的冒泡阶段。默认值为 false。
          * @param data {any} 事件data
+         * @param cancelable {boolean} 确定是否可以取消 Event 对象。默认值为 false。
          * @version Egret 2.4
          * @platform Web,Native
          */
-        p.dispatchEventWith = function (type, bubbles, data) {
+        p.dispatchEventWith = function (type, bubbles, data, cancelable) {
             if (bubbles || this.hasEventListener(type)) {
-                var event = egret.Event.create(egret.Event, type, bubbles);
+                var event = egret.Event.create(egret.Event, type, bubbles, cancelable);
                 event.data = data;
                 var result = this.dispatchEvent(event);
                 egret.Event.release(event);
@@ -16481,8 +16483,48 @@ var egret;
          */
         p.drawWithFilter = function (displayObject, context, dirtyList, matrix, clipRegion, root) {
             if (egret.Capabilities.runtimeType == egret.RuntimeType.NATIVE) {
+                // var drawCalls = 0;
+                // var filters = displayObject.$getFilters();
+                // // 获取显示对象的链接矩阵
+                // var displayMatrix = Matrix.create();
+                // displayMatrix.copyFrom(displayObject.$getConcatenatedMatrix());
+                // // 获取显示对象的矩形区域
+                // var region: sys.Region;
+                // region = sys.Region.create();
+                // var bounds = displayObject.$getOriginalBounds();
+                // region.updateRegion(bounds, displayMatrix);
+                // var filter = filters[0]; // 这里暂时只处理了第一个filter！
+                // egret_native.Graphics.setGlobalShader(filter);
+                // // TODO 这里存在重复计算？
+                // var offsetM = Matrix.create().copyFrom(displayMatrix);
+                // offsetM.translate(-region.minX, -region.minY);
+                // drawCalls += this.drawDisplayObject(displayObject, context, dirtyList, offsetM,
+                // displayObject.$displayList, region, root);
+                // Matrix.release(offsetM);
+                // Matrix.release(displayMatrix);
+                // egret_native.Graphics.setGlobalShader(null);
+                // return drawCalls;
                 var drawCalls = 0;
                 var filters = displayObject.$getFilters();
+                var hasBlendMode = (displayObject.$blendMode !== 0);
+                if (hasBlendMode) {
+                    var compositeOp = blendModes[displayObject.$blendMode];
+                    if (!compositeOp) {
+                        compositeOp = defaultCompositeOp;
+                    }
+                }
+                if (filters.length == 1 && filters[0].type == "colorTransform" && !displayObject.$children) {
+                    if (hasBlendMode) {
+                        context.globalCompositeOperation = compositeOp;
+                    }
+                    egret_native.Graphics.setGlobalShader(filters[0]);
+                    drawCalls += this.drawDisplayObject(displayObject, context, dirtyList, matrix, displayObject.$displayList, clipRegion, root);
+                    egret_native.Graphics.setGlobalShader(null);
+                    if (hasBlendMode) {
+                        context.globalCompositeOperation = defaultCompositeOp;
+                    }
+                    return drawCalls;
+                }
                 // 获取显示对象的链接矩阵
                 var displayMatrix = egret.Matrix.create();
                 displayMatrix.copyFrom(displayObject.$getConcatenatedMatrix());
@@ -16491,15 +16533,32 @@ var egret;
                 region = egret.sys.Region.create();
                 var bounds = displayObject.$getOriginalBounds();
                 region.updateRegion(bounds, displayMatrix);
-                var filter = filters[0]; // 这里暂时只处理了第一个filter！
-                egret_native.Graphics.setGlobalShader(filter);
-                // TODO 这里存在重复计算？
-                var offsetM = egret.Matrix.create().copyFrom(displayMatrix);
-                offsetM.translate(-region.minX, -region.minY);
-                drawCalls += this.drawDisplayObject(displayObject, context, dirtyList, offsetM, displayObject.$displayList, region, root);
+                // 为显示对象创建一个新的buffer
+                // todo 这里应该计算 region.x region.y
+                var displayBuffer = this.createRenderBuffer(region.width, region.height);
+                displayBuffer.context.setTransform(1, 0, 0, 1, -region.minX, -region.minY);
+                var offsetM = egret.Matrix.create().setTo(1, 0, 0, 1, -region.minX, -region.minY);
+                drawCalls += this.drawDisplayObject(displayObject, displayBuffer.context, dirtyList, offsetM, displayObject.$displayList, region, root);
                 egret.Matrix.release(offsetM);
+                //绘制结果到屏幕
+                if (drawCalls > 0) {
+                    if (hasBlendMode) {
+                        context.globalCompositeOperation = compositeOp;
+                    }
+                    drawCalls++;
+                    context.globalAlpha = 1;
+                    context.setTransform(1, 0, 0, 1, region.minX + matrix.tx, region.minY + matrix.ty);
+                    // 绘制结果的时候，应用滤镜
+                    egret_native.Graphics.setGlobalShader(filters[0]);
+                    context.drawImage(displayBuffer.surface, 0, 0, displayBuffer.width, displayBuffer.height, 0, 0, displayBuffer.width, displayBuffer.height);
+                    egret_native.Graphics.setGlobalShader(null);
+                    if (hasBlendMode) {
+                        context.globalCompositeOperation = defaultCompositeOp;
+                    }
+                }
+                renderBufferPool.push(displayBuffer);
+                egret.sys.Region.release(region);
                 egret.Matrix.release(displayMatrix);
-                egret_native.Graphics.setGlobalShader(null);
                 return drawCalls;
             }
             var drawCalls = 0;

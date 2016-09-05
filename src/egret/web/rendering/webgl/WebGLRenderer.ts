@@ -370,22 +370,12 @@ module egret.web {
                     buffer.setTransform(m.a, m.b, m.c, m.d, m.tx - region.minX, m.ty - region.minY);
                     buffer.context.pushMask(scrollRect);
                 }
-                var offsetM = Matrix.create().setTo(1, 0, 0, 1, 0, 0);
                 //绘制显示对象
                 if (hasBlendMode) {
                     buffer.context.setGlobalCompositeOperation(compositeOp);
                 }
-                if (scrollRect) {
-                    var m = displayMatrix;
-                    buffer.setTransform(m.a, m.b, m.c, m.d, m.tx - region.minX, m.ty - region.minY);
-                    buffer.context.pushMask(scrollRect);
-                }
-                drawCalls += this.drawDisplayObject(displayObject, buffer, dirtyList, offsetM,
+                drawCalls += this.drawDisplayObject(displayObject, buffer, dirtyList, matrix,
                     displayObject.$displayList, region, null);
-                Matrix.release(offsetM);
-                if (scrollRect) {
-                    buffer.context.popMask();
-                }
                 if (hasBlendMode) {
                     buffer.context.setGlobalCompositeOperation(defaultCompositeOp);
                 }

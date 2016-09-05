@@ -177,6 +177,30 @@ module egret {
             if(Capabilities.runtimeType == RuntimeType.NATIVE) { // for native
                 var drawCalls = 0;
                 var filters = displayObject.$getFilters();
+                var hasBlendMode = (displayObject.$blendMode !== 0);
+                if (hasBlendMode) {
+                    var compositeOp = blendModes[displayObject.$blendMode];
+                    if (!compositeOp) {
+                        compositeOp = defaultCompositeOp;
+                    }
+                }
+
+                if (filters.length == 1 && filters[0].type == "colorTransform" && !displayObject.$children) {
+                    if (hasBlendMode) {
+                        context.globalCompositeOperation = compositeOp;
+                    }
+
+                    egret_native.Graphics.setGlobalShader(filters[0]);
+                    drawCalls += this.drawDisplayObject(displayObject, context, dirtyList, matrix,
+                        displayObject.$displayList, clipRegion, root);
+                    egret_native.Graphics.setGlobalShader(null);
+
+                    if (hasBlendMode) {
+                        context.globalCompositeOperation = defaultCompositeOp;
+                    }
+
+                    return drawCalls;
+                }
 
                 // 获取显示对象的链接矩阵
                 var displayMatrix = Matrix.create();
@@ -188,20 +212,41 @@ module egret {
                 var bounds = displayObject.$getOriginalBounds();
                 region.updateRegion(bounds, displayMatrix);
 
-                var filter = filters[0]; // 这里暂时只处理了第一个filter！
-                egret_native.Graphics.setGlobalShader(filter);
+                // 为显示对象创建一个新的buffer
+                // todo 这里应该计算 region.x region.y
+                var displayBuffer = this.createRenderBuffer(region.width, region.height);
+                displayBuffer.context.setTransform(1, 0, 0, 1, -region.minX, -region.minY);
+                var offsetM = Matrix.create().setTo(1, 0, 0, 1, -region.minX, -region.minY);
 
-                // TODO 这里存在重复计算？
-                var offsetM = Matrix.create().copyFrom(displayMatrix);
-                offsetM.translate(-region.minX, -region.minY);
-
-                drawCalls += this.drawDisplayObject(displayObject, context, dirtyList, offsetM,
-                displayObject.$displayList, region, root);
+                drawCalls += this.drawDisplayObject(displayObject, displayBuffer.context, dirtyList, offsetM,
+                    displayObject.$displayList, region, root);
 
                 Matrix.release(offsetM);
-                Matrix.release(displayMatrix);
 
-                egret_native.Graphics.setGlobalShader(null);
+                //绘制结果到屏幕
+                if (drawCalls > 0) {
+
+                    if (hasBlendMode) {
+                        context.globalCompositeOperation = compositeOp;
+                    }
+
+                    drawCalls++;
+                    context.globalAlpha = 1;
+                    context.setTransform(1, 0, 0, 1, region.minX + matrix.tx, region.minY + matrix.ty);
+                    // 绘制结果的时候，应用滤镜
+                    egret_native.Graphics.setGlobalShader(filters[0]);
+                    context.drawImage(displayBuffer.surface, 0, 0, displayBuffer.width, displayBuffer.height, 0, 0, displayBuffer.width, displayBuffer.height);
+                    egret_native.Graphics.setGlobalShader(null);
+
+                    if (hasBlendMode) {
+                        context.globalCompositeOperation = defaultCompositeOp;
+                    }
+
+                }
+
+                renderBufferPool.push(displayBuffer);
+                sys.Region.release(region);
+                Matrix.release(displayMatrix);
 
                 return drawCalls;
             }

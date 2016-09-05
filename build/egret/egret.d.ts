@@ -262,6 +262,7 @@ declare module egret {
          * @param bubbles Determines whether the Event object bubbles. Event listeners can access this information through
          * the inherited bubbles property.
          * @param data {any} data
+         * @param cancelable Determines whether the Event object can be canceled. The default values is false.
          * @version Egret 2.4
          * @platform Web,Native
          */
@@ -271,10 +272,11 @@ declare module egret {
          * @param type {string} 事件类型
          * @param bubbles {boolean} 确定 Event 对象是否参与事件流的冒泡阶段。默认值为 false。
          * @param data {any} 事件data
+         * @param cancelable {boolean} 确定是否可以取消 Event 对象。默认值为 false。
          * @version Egret 2.4
          * @platform Web,Native
          */
-        dispatchEventWith(type: string, bubbles?: boolean, data?: any): boolean;
+        dispatchEventWith(type: string, bubbles?: boolean, data?: any, cancelable?: boolean): boolean;
     }
 }
 declare module egret.sys {
