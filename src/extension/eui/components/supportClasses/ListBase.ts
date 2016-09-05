@@ -570,7 +570,7 @@ module eui {
 
 
             if (values[sys.ListBaseKeys.dispatchChangeAfterSelection]) {
-                var result = this.dispatchEventWith(egret.Event.CHANGING, false, true);
+                var result = this.dispatchEventWith(egret.Event.CHANGING, false, true, true);
                 if (!result) {
                     this.itemSelected(values[sys.ListBaseKeys.proposedSelectedIndex], false);
                     values[sys.ListBaseKeys.proposedSelectedIndex] = ListBase.NO_PROPOSED_SELECTION;
