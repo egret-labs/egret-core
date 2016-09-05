@@ -10464,6 +10464,16 @@ declare module egret.sys {
         private commandPosition;
         private dataPosition;
         /**
+         * 当前移动到的坐标X
+         * 注意：目前只有drawArc之前会被赋值
+         */
+        $lastX: number;
+        /**
+         * 当前移动到的坐标Y
+         * 注意：目前只有drawArc之前会被赋值
+         */
+        $lastY: number;
+        /**
          * 将当前绘图位置移动到 (x, y)。如果缺少任何一个参数，则此方法将失败，并且当前绘图位置不改变。
          * @param x 一个表示相对于父显示对象注册点的水平位置的数字（以像素为单位）。
          * @param y 一个表示相对于父显示对象注册点的垂直位置的数字（以像素为单位）。
@@ -13054,7 +13064,7 @@ declare module egret {
          * @private
          *
          */
-        private fillBackground(lines);
+        private fillBackground(lines?);
         /**
          * @language en_US
          * Enter the text automatically entered into the input state, the input type is text only and may only be invoked in the user interaction.

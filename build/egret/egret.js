@@ -3912,7 +3912,7 @@ var egret;
         };
         Bitmap.$drawImage = function (node, image, bitmapX, bitmapY, bitmapWidth, bitmapHeight, offsetX, offsetY, textureWidth, textureHeight, destW, destH, sourceWidth, sourceHeight, scale9Grid, fillMode, smoothing) {
             console.warn('deprecated method : Bitmap.$drawImage,use egret.sys.BitmapNode.$drawImage instead of it');
-            egret.sys.BitmapNode.$updateTextureData.call(this, arguments);
+            egret.sys.BitmapNode.$updateTextureData(node, image, bitmapX, bitmapY, bitmapWidth, bitmapHeight, offsetX, offsetY, textureWidth, textureHeight, destW, destH, sourceWidth, sourceHeight, scale9Grid, fillMode, smoothing);
         };
         /**
          * @language en_US
@@ -6011,8 +6011,16 @@ var egret;
             endAngle = clampAngle(endAngle);
             var fillPath = this.fillPath;
             var strokePath = this.strokePath;
-            fillPath && fillPath.drawArc(x, y, radius, startAngle, endAngle, anticlockwise);
-            strokePath && strokePath.drawArc(x, y, radius, startAngle, endAngle, anticlockwise);
+            if (fillPath) {
+                fillPath.$lastX = this.lastX;
+                fillPath.$lastY = this.lastY;
+                fillPath.drawArc(x, y, radius, startAngle, endAngle, anticlockwise);
+            }
+            if (strokePath) {
+                strokePath.$lastX = this.lastX;
+                strokePath.$lastY = this.lastY;
+                strokePath.drawArc(x, y, radius, startAngle, endAngle, anticlockwise);
+            }
             if (anticlockwise) {
                 this.arcBounds(x, y, radius, endAngle, startAngle);
             }
@@ -15893,6 +15901,16 @@ var egret;
                 this.$data = [];
                 this.commandPosition = 0;
                 this.dataPosition = 0;
+                /**
+                 * 当前移动到的坐标X
+                 * 注意：目前只有drawArc之前会被赋值
+                 */
+                this.$lastX = 0;
+                /**
+                 * 当前移动到的坐标Y
+                 * 注意：目前只有drawArc之前会被赋值
+                 */
+                this.$lastY = 0;
             }
             var d = __define,c=Path2D,p=c.prototype;
             /**
@@ -16106,7 +16124,9 @@ var egret;
                 }
                 var currentX = x + Math.cos(start) * radiusX;
                 var currentY = y + Math.sin(start) * radiusY;
-                this.moveTo(currentX, currentY);
+                if (this.$lastX != currentX || this.$lastY != currentY) {
+                    this.moveTo(currentX, currentY);
+                }
                 var u = Math.cos(start);
                 var v = Math.sin(start);
                 for (var i = 0; i < 4; i++) {
@@ -20402,7 +20422,7 @@ var egret;
                 graphics.clear();
             }
             var values = this.$TextField;
-            if (values[33 /* background */] || values[31 /* border */] || lines.length > 0) {
+            if (values[33 /* background */] || values[31 /* border */] || (lines && lines.length > 0)) {
                 if (!graphics) {
                     graphics = this.graphicsNode = new egret.sys.GraphicsNode();
                     var groupNode = new egret.sys.GroupNode();
@@ -20424,7 +20444,7 @@ var egret;
                     strokePath.drawRect(0, 0, this.$getWidth() - 1, this.$getHeight() - 1);
                 }
                 //渲染下划线
-                if (lines.length > 0) {
+                if (lines && lines.length > 0) {
                     var textColor = values[2 /* textColor */];
                     var lastColor = -1;
                     var length = lines.length;
@@ -20547,6 +20567,7 @@ var egret;
                     this.inputUtils._updateProperties();
                 }
                 if (this.$isTyping) {
+                    this.fillBackground();
                     return;
                 }
             }
