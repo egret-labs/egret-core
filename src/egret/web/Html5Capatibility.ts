@@ -208,7 +208,7 @@ module egret.web {
          */
         private static getIOSVersion():number {
             var value = Html5Capatibility.ua.toLowerCase().match(/cpu [^\d]*\d.*like mac os x/)[0];
-            return parseInt(value.match(/\d(_\d)*/)[0]) || 0;
+            return parseInt(value.match(/\d+(_\d)*/)[0]) || 0;
         }
 
         /**
