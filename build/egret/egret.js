@@ -2918,8 +2918,13 @@ var egret;
                 if (this.$displayList) {
                     this.$displayList.$renderNode.moved = true;
                 }
-                var withFiltersBounds = this.$measureFiltersBounds(bounds);
-                bounds.copyFrom(withFiltersBounds);
+                var offset = this.$measureFiltersOffset();
+                if (offset) {
+                    bounds.x += offset.minX;
+                    bounds.y += offset.minY;
+                    bounds.width += offset.maxX;
+                    bounds.height += offset.maxY;
+                }
             }
             return bounds;
         };
@@ -3042,41 +3047,46 @@ var egret;
                 if (root !== self.$stage) {
                     self.$getConcatenatedMatrixAt(root, matrix);
                 }
-                renderBounds = self.$measureFiltersBounds(renderBounds);
                 region.updateRegion(renderBounds, matrix);
+                var offset = self.$measureFiltersOffset();
+                if (offset) {
+                    region.minX += offset.minX;
+                    region.minY += offset.minY;
+                    region.maxX += offset.maxX;
+                    region.maxY += offset.maxY;
+                    region.updateArea();
+                }
             }
             return true;
         };
         /**
          * @private
          */
-        p.$measureFiltersBounds = function (bounds) {
+        p.$measureFiltersOffset = function () {
             var filters = this.$DisplayObject[20 /* filters */];
             if (filters && filters.length) {
                 var length = filters.length;
-                DisplayObject.boundsForUpdate.copyFrom(bounds);
-                bounds = DisplayObject.boundsForUpdate;
-                var x = bounds.x;
-                var y = bounds.y;
-                var w = bounds.width;
-                var h = bounds.height;
+                var minX = 0;
+                var minY = 0;
+                var maxX = 0;
+                var maxY = 0;
                 for (var i = 0; i < length; i++) {
                     var filter = filters[i];
                     if (filter.type == "blur") {
                         var offsetX = filter.blurX;
                         var offsetY = filter.blurY;
-                        x -= offsetX;
-                        y -= offsetY;
-                        w += offsetX * 2;
-                        h += offsetY * 2;
+                        minX -= offsetX;
+                        minY -= offsetY;
+                        maxX += offsetX * 2;
+                        maxY += offsetY * 2;
                     }
                     else if (filter.type == "glow") {
                         var offsetX = filter.blurX;
                         var offsetY = filter.blurY;
-                        x -= offsetX;
-                        y -= offsetY;
-                        w += offsetX * 2;
-                        h += offsetY * 2;
+                        minX -= offsetX;
+                        minY -= offsetY;
+                        maxX += offsetX * 2;
+                        maxY += offsetY * 2;
                         var distance = filter.distance || 0;
                         var angle = filter.angle || 0;
                         var distanceX = 0;
@@ -3086,30 +3096,25 @@ var egret;
                             distanceX = Math.ceil(distance * egret.NumberUtils.cos(angle));
                             distanceY = Math.ceil(distance * egret.NumberUtils.sin(angle));
                             if (distanceX > 0) {
-                                // x += distanceX;
-                                w += distanceX;
+                                maxX += distanceX;
                             }
                             else if (distanceX < 0) {
-                                x += distanceX;
-                                w -= distanceX;
+                                minX += distanceX;
+                                maxX -= distanceX;
                             }
                             if (distanceY > 0) {
-                                // y += distanceY;
-                                h += distanceY;
+                                maxY += distanceY;
                             }
                             else if (distanceY < 0) {
-                                y += distanceY;
-                                h -= distanceY;
+                                minY += distanceY;
+                                maxY -= distanceY;
                             }
                         }
                     }
                 }
-                bounds.x = x;
-                bounds.y = y;
-                bounds.width = w;
-                bounds.height = h;
+                return { minX: minX, minY: minY, maxX: maxX, maxY: maxY };
             }
-            return bounds;
+            return null;
         };
         /**
          * @private
@@ -16483,27 +16488,6 @@ var egret;
          */
         p.drawWithFilter = function (displayObject, context, dirtyList, matrix, clipRegion, root) {
             if (egret.Capabilities.runtimeType == egret.RuntimeType.NATIVE) {
-                // var drawCalls = 0;
-                // var filters = displayObject.$getFilters();
-                // // 获取显示对象的链接矩阵
-                // var displayMatrix = Matrix.create();
-                // displayMatrix.copyFrom(displayObject.$getConcatenatedMatrix());
-                // // 获取显示对象的矩形区域
-                // var region: sys.Region;
-                // region = sys.Region.create();
-                // var bounds = displayObject.$getOriginalBounds();
-                // region.updateRegion(bounds, displayMatrix);
-                // var filter = filters[0]; // 这里暂时只处理了第一个filter！
-                // egret_native.Graphics.setGlobalShader(filter);
-                // // TODO 这里存在重复计算？
-                // var offsetM = Matrix.create().copyFrom(displayMatrix);
-                // offsetM.translate(-region.minX, -region.minY);
-                // drawCalls += this.drawDisplayObject(displayObject, context, dirtyList, offsetM,
-                // displayObject.$displayList, region, root);
-                // Matrix.release(offsetM);
-                // Matrix.release(displayMatrix);
-                // egret_native.Graphics.setGlobalShader(null);
-                // return drawCalls;
                 var drawCalls = 0;
                 var filters = displayObject.$getFilters();
                 var hasBlendMode = (displayObject.$blendMode !== 0);

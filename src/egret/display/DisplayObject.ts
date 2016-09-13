@@ -1866,7 +1866,7 @@ module egret {
          * 获取显示对象占用的矩形区域集合，通常包括自身绘制的测量区域，如果是容器，还包括所有子项占据的区域。
          */
         $getOriginalBounds(): Rectangle {
-            var bounds = this.$DisplayObject[Keys.bounds];
+            var bounds:Rectangle = this.$DisplayObject[Keys.bounds];
             if (this.$hasFlags(sys.DisplayObjectFlags.InvalidBounds)) {
                 bounds.copyFrom(this.$getContentBounds());
                 this.$measureChildBounds(bounds);
@@ -1874,8 +1874,13 @@ module egret {
                 if (this.$displayList) {
                     this.$displayList.$renderNode.moved = true;
                 }
-                var withFiltersBounds = this.$measureFiltersBounds(bounds);
-                bounds.copyFrom(withFiltersBounds);
+                var offset = this.$measureFiltersOffset();
+                if(offset) {
+                    bounds.x += offset.minX;
+                    bounds.y += offset.minY;
+                    bounds.width += offset.maxX;
+                    bounds.height += offset.maxY;
+                }
             }
             return bounds;
         }
@@ -2019,8 +2024,15 @@ module egret {
                 if (root !== self.$stage) {
                     self.$getConcatenatedMatrixAt(root, matrix);
                 }
-                renderBounds = self.$measureFiltersBounds(renderBounds);
                 region.updateRegion(renderBounds, matrix);
+                var offset = self.$measureFiltersOffset();
+                if(offset) {
+                    region.minX += offset.minX;
+                    region.minY += offset.minY;
+                    region.maxX += offset.maxX;
+                    region.maxY += offset.maxY;
+                    region.updateArea();
+                }
             }
             return true;
         }
@@ -2030,33 +2042,31 @@ module egret {
         /**
          * @private
          */
-        public $measureFiltersBounds(bounds: Rectangle): Rectangle {
+        public $measureFiltersOffset(): any {
             var filters = this.$DisplayObject[Keys.filters];
             if (filters && filters.length) {
                 var length = filters.length;
-                DisplayObject.boundsForUpdate.copyFrom(bounds);
-                bounds = DisplayObject.boundsForUpdate;
-                var x: number = bounds.x;
-                var y: number = bounds.y;
-                var w: number = bounds.width;
-                var h: number = bounds.height;
+                var minX: number = 0;
+                var minY: number = 0;
+                var maxX: number = 0;
+                var maxY: number = 0;
                 for (var i: number = 0; i < length; i++) {
                     var filter: Filter = filters[i];
                     if (filter.type == "blur") {
                         var offsetX = (<BlurFilter>filter).blurX;
                         var offsetY = (<BlurFilter>filter).blurY;
-                        x -= offsetX;
-                        y -= offsetY;
-                        w += offsetX * 2;
-                        h += offsetY * 2;
+                        minX -= offsetX;
+                        minY -= offsetY;
+                        maxX += offsetX * 2;
+                        maxY += offsetY * 2;
                     }
                     else if (filter.type == "glow") {
                         var offsetX = (<BlurFilter>filter).blurX;
                         var offsetY = (<BlurFilter>filter).blurY;
-                        x -= offsetX;
-                        y -= offsetY;
-                        w += offsetX * 2;
-                        h += offsetY * 2;
+                        minX -= offsetX;
+                        minY -= offsetY;
+                        maxX += offsetX * 2;
+                        maxY += offsetY * 2;
                         var distance: number = (<DropShadowFilter>filter).distance || 0;
                         var angle: number = (<DropShadowFilter>filter).angle || 0;
                         var distanceX = 0;
@@ -2066,30 +2076,25 @@ module egret {
                             distanceX = Math.ceil(distance * egret.NumberUtils.cos(angle));
                             distanceY = Math.ceil(distance * egret.NumberUtils.sin(angle));
                             if (distanceX > 0) {
-                                // x += distanceX;
-                                w += distanceX;
+                                maxX += distanceX;
                             }
                             else if (distanceX < 0) {
-                                x += distanceX;
-                                w -= distanceX;
+                                minX += distanceX;
+                                maxX -= distanceX;
                             }
                             if (distanceY > 0) {
-                                // y += distanceY;
-                                h += distanceY;
+                                maxY += distanceY;
                             }
                             else if (distanceY < 0) {
-                                y += distanceY;
-                                h -= distanceY;
+                                minY += distanceY;
+                                maxY -= distanceY;
                             }
                         }
                     }
                 }
-                bounds.x = x;
-                bounds.y = y;
-                bounds.width = w;
-                bounds.height = h;
+                return {minX, minY, maxX, maxY};
             }
-            return bounds;
+            return null;
         }
 
         /**

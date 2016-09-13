@@ -1901,7 +1901,7 @@ declare module egret {
         /**
          * @private
          */
-        $measureFiltersBounds(bounds: Rectangle): Rectangle;
+        $measureFiltersOffset(): any;
         /**
          * @private
          * 获取相对于指定根节点的连接矩阵。
