@@ -684,6 +684,7 @@ module egret {
             var m = node.matrix;
             var blendMode = node.blendMode;
             var alpha = node.alpha;
+
             var saved = false;
             if (m) {
                 if((<any>context).saveTransform) {//for native
@@ -705,9 +706,38 @@ module egret {
             }
             
             var drawCalls:number = 0;
-            while (pos < length) {
+            var filter = node.filter;
+            //todo 暂时只考虑绘制一次的情况
+            if(filter && length == 8) {
+                if(Capabilities.runtimeType == RuntimeType.NATIVE) { // for native
+                    egret_native.Graphics.setGlobalShader(filter);
+                    while (pos < length) {
+                        drawCalls++;
+                        context.drawImage(image.source, data[pos++], data[pos++], data[pos++], data[pos++], data[pos++], data[pos++], data[pos++], data[pos++]);
+                    }
+                    egret_native.Graphics.setGlobalShader(null);
+                }
+
+                var drawCalls = 0;
+                var displayBuffer = this.createRenderBuffer(data[6],data[7]);
+                var displayContext = displayBuffer.context;
                 drawCalls++;
-                context.drawImage(image.source, data[pos++], data[pos++], data[pos++], data[pos++], data[pos++], data[pos++], data[pos++], data[pos++]);
+                displayContext.drawImage(image.source, data[0], data[1], data[2], data[3], 0, 0, data[6], data[7]);
+                //绘制结果到屏幕
+                drawCalls++;
+                // 应用滤镜
+                var imageData = displayContext.getImageData(0, 0, displayBuffer.surface.width, displayBuffer.surface.height);
+                colorFilter(imageData.data, displayBuffer.surface.width, displayBuffer.surface.height, (<ColorMatrixFilter>filter).$matrix);
+                displayContext.putImageData(imageData, 0, 0);
+                // 绘制结果的时候，应用滤镜
+                context.drawImage(<any>displayBuffer.surface, 0, 0, data[6], data[7], data[4], data[5], data[6], data[7]);
+                renderBufferPool.push(displayBuffer);
+            }
+            else {
+                while (pos < length) {
+                    drawCalls++;
+                    context.drawImage(image.source, data[pos++], data[pos++], data[pos++], data[pos++], data[pos++], data[pos++], data[pos++], data[pos++]);
+                }
             }
             if (saved) {
                 if((<any>context).restoreTransform) {//for native
