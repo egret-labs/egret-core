@@ -6623,10 +6623,6 @@ declare module eui {
          */
         protected commitProperties(): void;
         /**
-         * @private
-         */
-        private availableWidth;
-        /**
          * @copy eui.UIComponent#measure
          *
          * @version Egret 2.4

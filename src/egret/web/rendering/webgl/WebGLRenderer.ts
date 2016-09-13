@@ -370,22 +370,12 @@ module egret.web {
                     buffer.setTransform(m.a, m.b, m.c, m.d, m.tx - region.minX, m.ty - region.minY);
                     buffer.context.pushMask(scrollRect);
                 }
-                var offsetM = Matrix.create().setTo(1, 0, 0, 1, 0, 0);
                 //绘制显示对象
                 if (hasBlendMode) {
                     buffer.context.setGlobalCompositeOperation(compositeOp);
                 }
-                if (scrollRect) {
-                    var m = displayMatrix;
-                    buffer.setTransform(m.a, m.b, m.c, m.d, m.tx - region.minX, m.ty - region.minY);
-                    buffer.context.pushMask(scrollRect);
-                }
-                drawCalls += this.drawDisplayObject(displayObject, buffer, dirtyList, offsetM,
+                drawCalls += this.drawDisplayObject(displayObject, buffer, dirtyList, matrix,
                     displayObject.$displayList, region, null);
-                Matrix.release(offsetM);
-                if (scrollRect) {
-                    buffer.context.popMask();
-                }
                 if (hasBlendMode) {
                     buffer.context.setGlobalCompositeOperation(defaultCompositeOp);
                 }
@@ -528,11 +518,33 @@ module egret.web {
 
             //绘制显示对象自身
             buffer.setTransform(m.a, m.b, m.c, m.d, m.tx + matrix.tx, m.ty + matrix.ty);
-            buffer.context.pushMask(scrollRect);
+
+            var context = buffer.context;
+            var scissor = false;
+            if(buffer.$hasScissor || m.b != 0 || m.c != 0) {// 有旋转的情况下不能使用scissor
+                context.pushMask(scrollRect);
+            } else {
+                var x = scrollRect.x;
+                var y = scrollRect.y;
+                var w = scrollRect.width;
+                var h = scrollRect.height;
+                x = x * m.a + m.tx + matrix.tx;
+                y = y * m.d + m.ty + matrix.ty;
+                w = w * m.a;
+                h = h * m.d;
+                context.enableScissor(x, - y - h + buffer.height, w, h);
+                scissor = true;
+            }
+
             drawCalls += this.drawDisplayObject(displayObject, buffer, dirtyList, matrix, displayObject.$displayList, region, root);
             buffer.setTransform(m.a, m.b, m.c, m.d, m.tx + matrix.tx, m.ty + matrix.ty);
-            buffer.context.popMask();
 
+            if(scissor) {
+                context.disableScissor();
+            } else {
+                context.popMask();
+            }
+            
             sys.Region.release(region);
             Matrix.release(m);
             return drawCalls;

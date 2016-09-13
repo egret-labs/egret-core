@@ -117,6 +117,38 @@ module egret.web {
         }
 
         /**
+         * scissor state
+         * scissor 开关状态  
+         */
+        public $scissorState:boolean = false;
+        private scissorRect:Rectangle = new egret.Rectangle();
+        public $hasScissor:boolean = true;
+
+        public enableScissor(x:number, y:number, width:number, height:number):void {
+            if(!this.$scissorState) {
+                this.$scissorState = true;
+                this.scissorRect.setTo(x, y, width, height);
+                this.context.enableScissorTest(this.scissorRect);
+            }
+        }
+
+        public disableScissor():void {
+            if(this.$scissorState) {
+                this.$scissorState = false;
+                this.scissorRect.setEmpty();
+                this.context.disableScissorTest();
+            }  
+        }
+
+        public restoreScissor():void {
+            if(this.$scissorState) {
+                this.context.enableScissorTest(this.scissorRect);
+            } else {
+                this.context.disableScissorTest();
+            }
+        }
+
+        /**
          * 渲染缓冲的宽度，以像素为单位。
          * @readOnly
          */
@@ -237,8 +269,28 @@ module egret.web {
             }
             // 设置模版
             if (length > 0) {
-                this.context.pushMask(regions);
-                this.maskPushed = true;
+
+                // 对第一个且只有一个mask用scissor处理
+                if(!this.$hasScissor && length == 1) {
+                    var region = regions[0];
+                    regions = regions.slice(1);
+                    var x = region.minX + offsetX;
+                    var y = region.minY + offsetY;
+                    var width = region.width;
+                    var height = region.height;
+                    this.context.enableScissor(x, - y - height + this.height, width, height);
+                    this.scissorEnabled = true;
+                } else {
+                    this.scissorEnabled = false;
+                }
+
+                if(regions.length > 0) {
+                    this.context.pushMask(regions);
+                    this.maskPushed = true;
+                } else {
+                    this.maskPushed = false;
+                }
+
                 this.offsetX = offsetX;
                 this.offsetY = offsetY;
             }
@@ -250,6 +302,7 @@ module egret.web {
         }
 
         private maskPushed:boolean;
+        private scissorEnabled:boolean;
         private offsetX:number;
         private offsetY:number;
 
@@ -257,11 +310,17 @@ module egret.web {
          * 取消上一次设置的clip。
          */
         public endClip():void {
-            if (this.maskPushed) {
+            if (this.maskPushed || this.scissorEnabled) {
                 this.context.pushBuffer(this);
 
-                this.setTransform(1, 0, 0, 1, this.offsetX, this.offsetY);
-                this.context.popMask();
+                if(this.maskPushed) {
+                    this.setTransform(1, 0, 0, 1, this.offsetX, this.offsetY);
+                    this.context.popMask();
+                }
+
+                if(this.scissorEnabled) {
+                    this.context.disableScissor();
+                }
 
                 this.context.popBuffer();
             }
@@ -327,6 +386,7 @@ module egret.web {
             this.rootRenderTarget.activate();
 
             this.context.disableStencilTest();// 切换frameBuffer注意要禁用STENCIL_TEST
+            this.context.disableScissorTest();
 
             this.setTransform(1, 0, 0, 1, 0, 0);
             this.globalAlpha = 1;
@@ -339,6 +399,7 @@ module egret.web {
             this.rootRenderTarget.activate();
 
             this.restoreStencil();
+            this.restoreScissor();
         }
 
         /**
@@ -352,6 +413,7 @@ module egret.web {
             this.rootRenderTarget.activate();
 
             this.context.disableStencilTest();// 切换frameBuffer注意要禁用STENCIL_TEST
+            this.context.disableScissorTest();
 
             this.setTransform(1, 0, 0, 1, 0, 0);
             this.globalAlpha = 1;
@@ -364,6 +426,7 @@ module egret.web {
             this.rootRenderTarget.activate();
 
             this.restoreStencil();
+            this.restoreScissor();
         }
 
         /**

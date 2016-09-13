@@ -171,6 +171,10 @@ declare module egret {
          */
         private _connected;
         /**
+         * @private
+         */
+        private _connecting;
+        /**
          * @language en_US
          * Create an egret.WebSocket object
          * This parameter is reserved for later versions. The connection address and port number are imported in the connect function
@@ -185,7 +189,6 @@ declare module egret {
          * @platform Web,Native
          */
         constructor(host?: string, port?: number);
-        private connectCount;
         /**
          * @language en_US
          * Connect the socket to the specified host and port number

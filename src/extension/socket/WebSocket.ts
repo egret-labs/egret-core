@@ -101,6 +101,10 @@ module egret {
          * @private
          */
         private _connected:boolean = false;
+        /**
+         * @private
+         */
+        private _connecting:boolean = false;
 
         /**
          * @language en_US
@@ -126,8 +130,6 @@ module egret {
             this.socket.addCallBacks(this.onConnect, this.onClose, this.onSocketData, this.onError, this);
         }
         
-        private connectCount:number = 0;
-
         /**
          * @language en_US
          * Connect the socket to the specified host and port number
@@ -145,8 +147,10 @@ module egret {
          * @platform Web,Native
          */
         public connect(host:string, port:number):void {
-            this.connectCount++;
-            this.socket.connect(host, port);
+            if(!this._connecting && !this._connected) {
+                this._connecting = true;
+                this.socket.connect(host, port);
+            }
         }
 
         /**
@@ -154,8 +158,10 @@ module egret {
          * @param url 全地址。如ws://echo.websocket.org:80
          */
         public connectByUrl(url:string):void {
-            this.connectCount++;
-            this.socket.connectByUrl(url);
+            if(!this._connecting && !this._connected) {
+                this._connecting = true;
+                this.socket.connectByUrl(url);
+            }
         }
 
         /**
@@ -171,18 +177,8 @@ module egret {
          * @platform Web,Native
          */
         public close():void {
-            this.socket.close();
-        }
-
-        /**
-         * @private
-         * 
-         */
-        private onConnect():void {
-            this.connectCount--;
-            if(this.connectCount == 0 ) {
-                this._connected = true;
-                this.dispatchEventWith(egret.Event.CONNECT);
+            if(this._connected) {
+                this.socket.close();
             }
         }
 
@@ -190,8 +186,17 @@ module egret {
          * @private
          * 
          */
+        private onConnect():void {
+            this._connected = true;
+            this._connecting = false;
+            this.dispatchEventWith(egret.Event.CONNECT);
+        }
+
+        /**
+         * @private
+         * 
+         */
         private onClose():void {
-            this.connectCount--;
             this._connected = false;
             this.dispatchEventWith(egret.Event.CLOSE);
         }
@@ -201,6 +206,9 @@ module egret {
          * 
          */
         private onError():void {
+            if(this._connecting) {
+                this._connecting = false;
+            }
             this.dispatchEventWith(egret.IOErrorEvent.IO_ERROR);
         }
 

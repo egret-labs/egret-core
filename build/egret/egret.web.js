@@ -3653,7 +3653,7 @@ var egret;
              */
             Html5Capatibility.getIOSVersion = function () {
                 var value = Html5Capatibility.ua.toLowerCase().match(/cpu [^\d]*\d.*like mac os x/)[0];
-                return parseInt(value.match(/\d(_\d)*/)[0]) || 0;
+                return parseInt(value.match(/\d+(_\d)*/)[0]) || 0;
             };
             /**
              * @private
@@ -3796,6 +3796,12 @@ var egret;
             }
             web.Html5Capatibility._audioType = options.audioType;
             web.Html5Capatibility.$init();
+            // WebGL上下文参数自定义
+            if (options.renderMode == "webgl") {
+                // WebGL抗锯齿默认关闭，提升PC及某些平台性能
+                var antialias = options.antialias;
+                web.WebGLRenderContext.antialias = !!antialias;
+            }
             egret.sys.CanvasRenderBuffer = web.CanvasRenderBuffer;
             setRenderMode(options.renderMode);
             var ticker = egret.sys.$ticker;
@@ -6065,6 +6071,28 @@ var egret;
                 this.drawData[this.drawDataLen] = _data;
                 this.drawDataLen++;
             };
+            /*
+             * 压入enabel scissor命令
+             */
+            p.pushEnableScissor = function (x, y, width, height) {
+                var data = this.drawData[this.drawDataLen] || {};
+                data.type = 8 /* ENABLE_SCISSOR */;
+                data.x = x;
+                data.y = y;
+                data.width = width;
+                data.height = height;
+                this.drawData[this.drawDataLen] = data;
+                this.drawDataLen++;
+            };
+            /*
+             * 压入disable scissor命令
+             */
+            p.pushDisableScissor = function () {
+                var data = this.drawData[this.drawDataLen] || {};
+                data.type = 9 /* DISABLE_SCISSOR */;
+                this.drawData[this.drawDataLen] = data;
+                this.drawDataLen++;
+            };
             /**
              * 清空命令数组
              */
@@ -6518,6 +6546,7 @@ var egret;
                 this.projectionY = NaN;
                 this.shaderManager = null;
                 this.contextLost = false;
+                this.$scissorState = false;
                 this.vertSize = 5;
                 this.blurFilter = null;
                 this.surface = createCanvas(width, height);
@@ -6580,6 +6609,7 @@ var egret;
                     this.bindIndices = true;
                 }
                 buffer.restoreStencil();
+                buffer.restoreScissor();
                 this.onResize(buffer.width, buffer.height);
             };
             /**
@@ -6655,6 +6685,7 @@ var egret;
             };
             p.getWebGLContext = function () {
                 var options = {
+                    antialias: WebGLRenderContext.antialias,
                     stencil: true //设置可以使用模板（用于不规则遮罩）
                 };
                 var gl;
@@ -6700,6 +6731,21 @@ var egret;
             p.disableStencilTest = function () {
                 var gl = this.context;
                 gl.disable(gl.STENCIL_TEST);
+            };
+            /**
+             * 开启scissor检测
+             */
+            p.enableScissorTest = function (rect) {
+                var gl = this.context;
+                gl.enable(gl.SCISSOR_TEST);
+                gl.scissor(rect.x, rect.y, rect.width, rect.height);
+            };
+            /**
+             * 关闭scissor检测
+             */
+            p.disableScissorTest = function () {
+                var gl = this.context;
+                gl.disable(gl.SCISSOR_TEST);
             };
             /**
              * 获取像素信息
@@ -6763,9 +6809,29 @@ var egret;
              */
             p.clearRect = function (x, y, width, height) {
                 if (x != 0 || y != 0 || width != this.surface.width || height != this.surface.height) {
-                    this.setGlobalCompositeOperation("destination-out");
-                    this.drawRect(x, y, width, height);
-                    this.setGlobalCompositeOperation("source-over");
+                    var buffer = this.currentBuffer;
+                    if (buffer.$hasScissor) {
+                        this.setGlobalCompositeOperation("destination-out");
+                        this.drawRect(x, y, width, height);
+                        this.setGlobalCompositeOperation("source-over");
+                    }
+                    else {
+                        var m = buffer.globalMatrix;
+                        if (m.b == 0 && m.c == 0) {
+                            x = x * m.a + m.tx;
+                            y = y * m.d + m.ty;
+                            width = width * m.a;
+                            height = height * m.d;
+                            this.enableScissor(x, -y - height + buffer.height, width, height);
+                            this.clear();
+                            this.disableScissor();
+                        }
+                        else {
+                            this.setGlobalCompositeOperation("destination-out");
+                            this.drawRect(x, y, width, height);
+                            this.setGlobalCompositeOperation("source-over");
+                        }
+                    }
                 }
                 else {
                     this.clear();
@@ -6786,9 +6852,9 @@ var egret;
                     return;
                 }
                 var texture;
-                if (image["texture"]) {
+                if (image.source && image.source["texture"]) {
                     // 如果是render target
-                    texture = image["texture"];
+                    texture = image.source["texture"];
                     buffer.saveTransform();
                     buffer.transform(1, 0, 0, -1, 0, destHeight + destY * 2); // 翻转
                 }
@@ -6815,9 +6881,9 @@ var egret;
                     return;
                 }
                 var texture;
-                if (image["texture"]) {
+                if (image.source && image.source["texture"]) {
                     // 如果是render target
-                    texture = image["texture"];
+                    texture = image.source["texture"];
                     buffer.saveTransform();
                     buffer.transform(1, 0, 0, -1, 0, destHeight + destY * 2); // 翻转
                 }
@@ -6929,6 +6995,22 @@ var egret;
              */
             p.clear = function () {
                 this.drawCmdManager.pushClearColor();
+            };
+            /**
+             * 开启scissor test
+             */
+            p.enableScissor = function (x, y, width, height) {
+                var buffer = this.currentBuffer;
+                this.drawCmdManager.pushEnableScissor(x, y, width, height);
+                buffer.$hasScissor = true;
+            };
+            /**
+             * 关闭scissor test
+             */
+            p.disableScissor = function () {
+                var buffer = this.currentBuffer;
+                this.drawCmdManager.pushDisableScissor();
+                buffer.$hasScissor = false;
             };
             p.$drawWebGL = function () {
                 if (this.drawCmdManager.drawDataLen == 0 || this.contextLost) {
@@ -7044,6 +7126,18 @@ var egret;
                         break;
                     case 7 /* ACT_BUFFER */:
                         this.activateBuffer(data.buffer);
+                        break;
+                    case 8 /* ENABLE_SCISSOR */:
+                        var buffer = this.activatedBuffer;
+                        if (buffer) {
+                            buffer.enableScissor(data.x, data.y, data.width, data.height);
+                        }
+                        break;
+                    case 9 /* DISABLE_SCISSOR */:
+                        var buffer = this.activatedBuffer;
+                        if (buffer) {
+                            buffer.disableScissor();
+                        }
                         break;
                     default:
                         break;
@@ -7294,6 +7388,13 @@ var egret;
                 this.stencilState = false;
                 this.$stencilList = [];
                 this.stencilHandleCount = 0;
+                /**
+                 * scissor state
+                 * scissor 开关状态
+                 */
+                this.$scissorState = false;
+                this.scissorRect = new egret.Rectangle();
+                this.$hasScissor = true;
                 // dirtyRegionPolicy hack
                 this.dirtyRegionPolicy = true;
                 this._dirtyRegionPolicy = true; // 默认设置为true，保证第一帧绘制在frameBuffer上
@@ -7344,6 +7445,28 @@ var egret;
                 }
                 else {
                     this.context.disableStencilTest();
+                }
+            };
+            p.enableScissor = function (x, y, width, height) {
+                if (!this.$scissorState) {
+                    this.$scissorState = true;
+                    this.scissorRect.setTo(x, y, width, height);
+                    this.context.enableScissorTest(this.scissorRect);
+                }
+            };
+            p.disableScissor = function () {
+                if (this.$scissorState) {
+                    this.$scissorState = false;
+                    this.scissorRect.setEmpty();
+                    this.context.disableScissorTest();
+                }
+            };
+            p.restoreScissor = function () {
+                if (this.$scissorState) {
+                    this.context.enableScissorTest(this.scissorRect);
+                }
+                else {
+                    this.context.disableScissorTest();
                 }
             };
             d(p, "width"
@@ -7451,8 +7574,27 @@ var egret;
                 }
                 // 设置模版
                 if (length > 0) {
-                    this.context.pushMask(regions);
-                    this.maskPushed = true;
+                    // 对第一个且只有一个mask用scissor处理
+                    if (!this.$hasScissor && length == 1) {
+                        var region = regions[0];
+                        regions = regions.slice(1);
+                        var x = region.minX + offsetX;
+                        var y = region.minY + offsetY;
+                        var width = region.width;
+                        var height = region.height;
+                        this.context.enableScissor(x, -y - height + this.height, width, height);
+                        this.scissorEnabled = true;
+                    }
+                    else {
+                        this.scissorEnabled = false;
+                    }
+                    if (regions.length > 0) {
+                        this.context.pushMask(regions);
+                        this.maskPushed = true;
+                    }
+                    else {
+                        this.maskPushed = false;
+                    }
                     this.offsetX = offsetX;
                     this.offsetY = offsetY;
                 }
@@ -7465,10 +7607,15 @@ var egret;
              * 取消上一次设置的clip。
              */
             p.endClip = function () {
-                if (this.maskPushed) {
+                if (this.maskPushed || this.scissorEnabled) {
                     this.context.pushBuffer(this);
-                    this.setTransform(1, 0, 0, 1, this.offsetX, this.offsetY);
-                    this.context.popMask();
+                    if (this.maskPushed) {
+                        this.setTransform(1, 0, 0, 1, this.offsetX, this.offsetY);
+                        this.context.popMask();
+                    }
+                    if (this.scissorEnabled) {
+                        this.context.disableScissor();
+                    }
                     this.context.popBuffer();
                 }
             };
@@ -7522,6 +7669,7 @@ var egret;
                 this.rootRenderTarget.useFrameBuffer = false;
                 this.rootRenderTarget.activate();
                 this.context.disableStencilTest(); // 切换frameBuffer注意要禁用STENCIL_TEST
+                this.context.disableScissorTest();
                 this.setTransform(1, 0, 0, 1, 0, 0);
                 this.globalAlpha = 1;
                 this.context.setGlobalCompositeOperation("source-over");
@@ -7531,6 +7679,7 @@ var egret;
                 this.rootRenderTarget.useFrameBuffer = true;
                 this.rootRenderTarget.activate();
                 this.restoreStencil();
+                this.restoreScissor();
             };
             /**
              * 交换surface的图像到frameBuffer中
@@ -7542,6 +7691,7 @@ var egret;
                 this.rootRenderTarget.useFrameBuffer = true;
                 this.rootRenderTarget.activate();
                 this.context.disableStencilTest(); // 切换frameBuffer注意要禁用STENCIL_TEST
+                this.context.disableScissorTest();
                 this.setTransform(1, 0, 0, 1, 0, 0);
                 this.globalAlpha = 1;
                 this.context.setGlobalCompositeOperation("source-over");
@@ -7551,6 +7701,7 @@ var egret;
                 this.rootRenderTarget.useFrameBuffer = false;
                 this.rootRenderTarget.activate();
                 this.restoreStencil();
+                this.restoreScissor();
             };
             /**
              * 清空缓冲区数据
@@ -7977,21 +8128,11 @@ var egret;
                         buffer.setTransform(m.a, m.b, m.c, m.d, m.tx - region.minX, m.ty - region.minY);
                         buffer.context.pushMask(scrollRect);
                     }
-                    var offsetM = egret.Matrix.create().setTo(1, 0, 0, 1, 0, 0);
                     //绘制显示对象
                     if (hasBlendMode) {
                         buffer.context.setGlobalCompositeOperation(compositeOp);
                     }
-                    if (scrollRect) {
-                        var m = displayMatrix;
-                        buffer.setTransform(m.a, m.b, m.c, m.d, m.tx - region.minX, m.ty - region.minY);
-                        buffer.context.pushMask(scrollRect);
-                    }
-                    drawCalls += this.drawDisplayObject(displayObject, buffer, dirtyList, offsetM, displayObject.$displayList, region, null);
-                    egret.Matrix.release(offsetM);
-                    if (scrollRect) {
-                        buffer.context.popMask();
-                    }
+                    drawCalls += this.drawDisplayObject(displayObject, buffer, dirtyList, matrix, displayObject.$displayList, region, null);
                     if (hasBlendMode) {
                         buffer.context.setGlobalCompositeOperation(defaultCompositeOp);
                     }
@@ -8120,10 +8261,31 @@ var egret;
                 }
                 //绘制显示对象自身
                 buffer.setTransform(m.a, m.b, m.c, m.d, m.tx + matrix.tx, m.ty + matrix.ty);
-                buffer.context.pushMask(scrollRect);
+                var context = buffer.context;
+                var scissor = false;
+                if (buffer.$hasScissor || m.b != 0 || m.c != 0) {
+                    context.pushMask(scrollRect);
+                }
+                else {
+                    var x = scrollRect.x;
+                    var y = scrollRect.y;
+                    var w = scrollRect.width;
+                    var h = scrollRect.height;
+                    x = x * m.a + m.tx + matrix.tx;
+                    y = y * m.d + m.ty + matrix.ty;
+                    w = w * m.a;
+                    h = h * m.d;
+                    context.enableScissor(x, -y - h + buffer.height, w, h);
+                    scissor = true;
+                }
                 drawCalls += this.drawDisplayObject(displayObject, buffer, dirtyList, matrix, displayObject.$displayList, region, root);
                 buffer.setTransform(m.a, m.b, m.c, m.d, m.tx + matrix.tx, m.ty + matrix.ty);
-                buffer.context.popMask();
+                if (scissor) {
+                    context.disableScissor();
+                }
+                else {
+                    context.popMask();
+                }
                 egret.sys.Region.release(region);
                 egret.Matrix.release(m);
                 return drawCalls;

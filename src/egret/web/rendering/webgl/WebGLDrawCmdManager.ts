@@ -40,7 +40,9 @@ module egret.web {
         BLEND,
         RESIZE_TARGET,
         CLEAR_COLOR,
-        ACT_BUFFER
+        ACT_BUFFER,
+        ENABLE_SCISSOR,
+        DISABLE_SCISSOR
     }
 
     /**
@@ -230,6 +232,30 @@ module egret.web {
             _data.width = buffer.rootRenderTarget.width;
             _data.height = buffer.rootRenderTarget.height;
             this.drawData[this.drawDataLen] = _data;
+            this.drawDataLen++;
+        }
+
+        /*
+         * 压入enabel scissor命令
+         */
+        public pushEnableScissor(x:number, y:number, width:number, height:number) {
+            var data = this.drawData[this.drawDataLen] || {};
+            data.type = DRAWABLE_TYPE.ENABLE_SCISSOR;
+            data.x = x;
+            data.y = y;
+            data.width = width;
+            data.height = height;
+            this.drawData[this.drawDataLen] = data;
+            this.drawDataLen++;
+        }
+
+        /*
+         * 压入disable scissor命令
+         */
+        public pushDisableScissor() {
+            var data = this.drawData[this.drawDataLen] || {};
+            data.type = DRAWABLE_TYPE.DISABLE_SCISSOR;
+            this.drawData[this.drawDataLen] = data;
             this.drawDataLen++;
         }
 

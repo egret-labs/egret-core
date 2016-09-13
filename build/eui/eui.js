@@ -2660,12 +2660,12 @@ var eui;
             mixin(descendant, UIComponentImpl);
             var prototype = descendant.prototype;
             prototype.$super = base.prototype;
-            eui.registerProperty(descendant, "left", "any");
-            eui.registerProperty(descendant, "right", "any");
-            eui.registerProperty(descendant, "top", "any");
-            eui.registerProperty(descendant, "bottom", "any");
-            eui.registerProperty(descendant, "horizontalCenter", "any");
-            eui.registerProperty(descendant, "verticalCenter", "any");
+            eui.registerProperty(descendant, "left", "Percentage");
+            eui.registerProperty(descendant, "right", "Percentage");
+            eui.registerProperty(descendant, "top", "Percentage");
+            eui.registerProperty(descendant, "bottom", "Percentage");
+            eui.registerProperty(descendant, "horizontalCenter", "Percentage");
+            eui.registerProperty(descendant, "verticalCenter", "Percentage");
             if (isContainer) {
                 prototype.$childAdded = function (child, index) {
                     this.invalidateSize();
@@ -9460,10 +9460,6 @@ var eui;
              * @private
              */
             this._widthConstraint = NaN;
-            /**
-             * @private
-             */
-            this.availableWidth = NaN;
             this.initializeUIValues();
             this.text = text;
         }
@@ -9544,17 +9540,18 @@ var eui;
             var values = this.$UIComponent;
             var textValues = this.$TextField;
             var oldWidth = textValues[3 /* textFieldWidth */];
+            var availableWidth = NaN;
             if (!isNaN(this._widthConstraint)) {
-                this.availableWidth = this._widthConstraint;
+                availableWidth = this._widthConstraint;
                 this._widthConstraint = NaN;
             }
             else if (!isNaN(values[8 /* explicitWidth */])) {
-                this.availableWidth = values[8 /* explicitWidth */];
+                availableWidth = values[8 /* explicitWidth */];
             }
             else if (values[13 /* maxWidth */] != 100000) {
-                this.availableWidth = values[13 /* maxWidth */];
+                availableWidth = values[13 /* maxWidth */];
             }
-            _super.prototype.$setWidth.call(this, this.availableWidth);
+            _super.prototype.$setWidth.call(this, availableWidth);
             this.setMeasuredSize(this.textWidth, this.textHeight);
             _super.prototype.$setWidth.call(this, oldWidth);
         };
@@ -9659,10 +9656,11 @@ var eui;
          */
         p.setLayoutBoundsSize = function (layoutWidth, layoutHeight) {
             UIImpl.prototype.setLayoutBoundsSize.call(this, layoutWidth, layoutHeight);
-            this._widthConstraint = layoutWidth;
             if (isNaN(layoutWidth) || layoutWidth === this._widthConstraint || layoutWidth == 0) {
+                this._widthConstraint = layoutWidth;
                 return;
             }
+            this._widthConstraint = layoutWidth;
             var values = this.$UIComponent;
             if (!isNaN(values[9 /* explicitHeight */])) {
                 return;
@@ -10177,7 +10175,7 @@ var eui;
                 return false;
             }
             if (values[4 /* dispatchChangeAfterSelection */]) {
-                var result = this.dispatchEventWith(egret.Event.CHANGING, false, true);
+                var result = this.dispatchEventWith(egret.Event.CHANGING, false, true, true);
                 if (!result) {
                     this.itemSelected(values[2 /* proposedSelectedIndex */], false);
                     values[2 /* proposedSelectedIndex */] = ListBase.NO_PROPOSED_SELECTION;
@@ -18073,6 +18071,7 @@ var eui;
         var RECTANGLE = "egret.Rectangle";
         var TYPE_CLASS = "Class";
         var TYPE_ARRAY = "Array";
+        var TYPE_PERCENTAGE = "Percentage";
         var TYPE_STATE = "State[]";
         var SKIN_NAME = "skinName";
         var ELEMENTS_CONTENT = "elementsContent";
@@ -18824,6 +18823,12 @@ var eui;
                         }
                     }
                     value = "new " + RECTANGLE + "(" + value + ")";
+                }
+                else if (type == TYPE_PERCENTAGE) {
+                    if (value.indexOf("%") != -1) {
+                        value = this.formatString(value);
+                        ;
+                    }
                 }
                 else {
                     var orgValue = value;
