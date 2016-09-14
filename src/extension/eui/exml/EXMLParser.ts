@@ -921,7 +921,8 @@ module eui.sys {
             }
             else if (type == TYPE_PERCENTAGE) {
                 if (value.indexOf("%") != -1) {
-                    value = this.formatString(value);;
+                    value = this.formatString(value);
+                    ;
                 }
             }
             else {
@@ -1603,7 +1604,7 @@ module eui.sys {
                 var length:number = children.length;
                 for (var i:number = 0; i < length; i++) {
                     var node:any = children[i];
-                    if (this.isInnerClass(node)) {
+                    if (node.nodeType !== 1 || this.isInnerClass(node)) {
                         continue;
                     }
                     this.getIds(node, result);

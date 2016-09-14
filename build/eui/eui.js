@@ -19471,7 +19471,7 @@ var eui;
                     var length = children.length;
                     for (var i = 0; i < length; i++) {
                         var node = children[i];
-                        if (this.isInnerClass(node)) {
+                        if (node.nodeType !== 1 || this.isInnerClass(node)) {
                             continue;
                         }
                         this.getIds(node, result);
