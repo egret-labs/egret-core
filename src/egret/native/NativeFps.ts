@@ -87,9 +87,28 @@ module egret.native {
             this.addChild(text);
             this.textLog = text;
         };
+        private arrFps = [];
         public update(datas:FPSData) {
+            this.arrFps.push(datas.fps);
+            var fpsTotal = 0;
+            var lenFps = this.arrFps.length;
+
+            if (lenFps > 101) {
+                lenFps = 101;
+                this.arrFps.shift();
+            }
+            var fpsMin = this.arrFps[0];
+            var fpsMax = this.arrFps[0];
+            for (let i = 0; i < lenFps; i++) {
+                var num = this.arrFps[i];
+                fpsTotal += num;
+                if (num < fpsMin) fpsMin = num;
+                else if (num > fpsMax) fpsMax = num;
+            }
+
             this.textFps.textFlow=[
                 {text: `${datas.fps} FPS ${egret.Capabilities.renderMode}\n`},
+                {text: `min${fpsMin} max${fpsMax} avg${Math.floor(fpsTotal / lenFps)}\n`},
                 {text: `Draw: ${datas.draw}\nDirty: ${datas.dirty}%\n`},
                 {text: "Cost: "},
                 {text: `${datas.costTicker} `, style: {"textColor": 0x18fefe}},
