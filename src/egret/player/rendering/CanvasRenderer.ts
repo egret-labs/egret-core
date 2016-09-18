@@ -661,8 +661,38 @@ module egret {
                 case sys.RenderNodeType.SetAlphaNode:
                     context.globalAlpha = node.drawData[0];
                     break;
+                case sys.RenderNodeType.MeshNode:
+                    drawCalls = this.renderMesh(<sys.MeshNode>node, context);
+                    break;
             }
             return drawCalls;
+        }
+
+        /** 
+         * render mesh 
+         */
+        private renderMesh(node:sys.MeshNode, context:any):number {
+            if(Capabilities.runtimeType != RuntimeType.NATIVE) {
+                return 0;
+            }
+            var image = node.image;
+            var data = node.drawData;
+            var length = data.length;
+            var pos = 0;
+            var m = node.matrix;
+            if (m) {
+                context.saveTransform();
+                context.transform(m.a, m.b, m.c, m.d, m.tx, m.ty);
+            }
+            while (pos < length) {
+                context.drawMesh(image, data[pos++], data[pos++], data[pos++], data[pos++], data[pos++], data[pos++], data[pos++],
+                    data[pos++], node.imageWidth, node.imageHeight, node.uvs, node.vertices, node.indices, node.bounds);
+            }
+            if (m) {
+                context.restoreTransform();
+            }
+            // TODO 应该计算合理的drawCall？
+            return 1;
         }
 
 

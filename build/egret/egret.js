@@ -16917,8 +16917,36 @@ var egret;
                 case 6 /* SetAlphaNode */:
                     context.globalAlpha = node.drawData[0];
                     break;
+                case 7 /* MeshNode */:
+                    drawCalls = this.renderMesh(node, context);
+                    break;
             }
             return drawCalls;
+        };
+        /**
+         * render mesh
+         */
+        p.renderMesh = function (node, context) {
+            if (egret.Capabilities.runtimeType != egret.RuntimeType.NATIVE) {
+                return 0;
+            }
+            var image = node.image;
+            var data = node.drawData;
+            var length = data.length;
+            var pos = 0;
+            var m = node.matrix;
+            if (m) {
+                context.saveTransform();
+                context.transform(m.a, m.b, m.c, m.d, m.tx, m.ty);
+            }
+            while (pos < length) {
+                context.drawMesh(image, data[pos++], data[pos++], data[pos++], data[pos++], data[pos++], data[pos++], data[pos++], data[pos++], node.imageWidth, node.imageHeight, node.uvs, node.vertices, node.indices, node.bounds);
+            }
+            if (m) {
+                context.restoreTransform();
+            }
+            // TODO 应该计算合理的drawCall？
+            return 1;
         };
         /**
          * @private

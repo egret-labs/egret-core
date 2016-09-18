@@ -10691,6 +10691,10 @@ declare module egret {
          */
         private renderNode(node, context, forHitTest?);
         /**
+         * render mesh
+         */
+        private renderMesh(node, context);
+        /**
          * @private
          */
         private renderBitmap(node, context);
