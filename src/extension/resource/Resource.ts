@@ -754,7 +754,7 @@ module RES {
         public hasRes(key:string):boolean{
             var type:string = this.resConfig.getType(key);
             if(type==""){
-                var prefix:string = RES.AnalyzerBase.getStringPrefix(key);
+                var prefix:string = RES.AnalyzerBase.getStringTail(key);
                 type = this.resConfig.getType(prefix);
                 if(type==""){
                     return false;

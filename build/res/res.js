@@ -3006,7 +3006,7 @@ var RES;
         p.hasRes = function (key) {
             var type = this.resConfig.getType(key);
             if (type == "") {
-                var prefix = RES.AnalyzerBase.getStringPrefix(key);
+                var prefix = RES.AnalyzerBase.getStringTail(key);
                 type = this.resConfig.getType(prefix);
                 if (type == "") {
                     return false;
