@@ -17139,7 +17139,7 @@ var egret;
                 buffer.resize(width, height, true);
             }
             else {
-                buffer = new egret.sys.RenderBuffer(width, height);
+                buffer = new egret.sys.CanvasRenderBuffer(width, height);
             }
             return buffer;
         };

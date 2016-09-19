@@ -893,7 +893,7 @@ module egret {
                 buffer.resize(width, height, true);
             }
             else {
-                buffer = new sys.RenderBuffer(width, height);
+                buffer = new sys.CanvasRenderBuffer(width, height);
             }
             return buffer;
         }
