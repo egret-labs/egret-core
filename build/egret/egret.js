@@ -10531,6 +10531,12 @@ var egret;
                 this.$targets[i].$invalidateContentBounds();
             }
         };
+        /**
+         * @private
+         */
+        p.$toJson = function () {
+            return '';
+        };
         return Filter;
     }(egret.HashObject));
     egret.Filter = Filter;
@@ -10661,6 +10667,12 @@ var egret;
                 this.invalidate();
             }
         );
+        /**
+         * @private
+         */
+        p.$toJson = function () {
+            return '{"blurX": ' + this.$blurX + ', "blurY": ' + this.$blurY + ', "quality": 1}';
+        };
         return BlurFilter;
     }(egret.Filter));
     egret.BlurFilter = BlurFilter;
@@ -10783,6 +10795,12 @@ var egret;
                     this.$matrix[i] = (i == 0 || i == 6 || i == 12 || i == 18) ? 1 : 0;
                 }
             }
+        };
+        /**
+         * @private
+         */
+        p.$toJson = function () {
+            return '{"matrix": [' + this.$matrix.toString() + ']}';
         };
         return ColorMatrixFilter;
     }(egret.Filter));
@@ -11078,6 +11096,12 @@ var egret;
                 this.invalidate();
             }
         );
+        /**
+         * @private
+         */
+        p.$toJson = function () {
+            return '{"color": ' + this.$color + ', "red": ' + this.$red + ', "green": ' + this.$green + ', "blue": ' + this.$blue + ', "alpha": ' + this.$alpha + ', "blurX": ' + this.$blurX + ', "blurY": ' + this.blurY + ', "strength": ' + this.$strength + ', "quality": ' + this.$quality + ', "inner": ' + this.$inner + ', "knockout": ' + this.$knockout + '}';
+        };
         return GlowFilter;
     }(egret.Filter));
     egret.GlowFilter = GlowFilter;
@@ -11249,6 +11273,12 @@ var egret;
                 this.invalidate();
             }
         );
+        /**
+         * @private
+         */
+        p.$toJson = function () {
+            return '{"distance": ' + this.$distance + ', "angle": ' + this.$angle + ', "color": ' + this.$color + ', "red": ' + this.$red + ', "green": ' + this.$green + ', "blue": ' + this.$blue + ', "alpha": ' + this.$alpha + ', "blurX": ' + this.$blurX + ', "blurY": ' + this.blurY + ', "strength": ' + this.$strength + ', "quality": ' + this.$quality + ', "inner": ' + this.$inner + ', "knockout": ' + this.$knockout + ', "hideObject": ' + this.$hideObject + '}';
+        };
         return DropShadowFilter;
     }(egret.GlowFilter));
     egret.DropShadowFilter = DropShadowFilter;
@@ -16512,9 +16542,9 @@ var egret;
                     if (hasBlendMode) {
                         context.globalCompositeOperation = compositeOp;
                     }
-                    egret_native.Graphics.setGlobalShader(filters[0]);
+                    context.setGlobalShader(filters[0].$toJson());
                     drawCalls += this.drawDisplayObject(displayObject, context, dirtyList, matrix, displayObject.$displayList, clipRegion, root);
-                    egret_native.Graphics.setGlobalShader(null);
+                    context.setGlobalShader("");
                     if (hasBlendMode) {
                         context.globalCompositeOperation = defaultCompositeOp;
                     }
@@ -16544,9 +16574,9 @@ var egret;
                     context.globalAlpha = 1;
                     context.setTransform(1, 0, 0, 1, region.minX + matrix.tx, region.minY + matrix.ty);
                     // 绘制结果的时候，应用滤镜
-                    egret_native.Graphics.setGlobalShader(filters[0]);
+                    context.setGlobalShader(filters[0].$toJson());
                     context.drawImage(displayBuffer.surface, 0, 0, displayBuffer.width, displayBuffer.height, 0, 0, displayBuffer.width, displayBuffer.height);
-                    egret_native.Graphics.setGlobalShader(null);
+                    context.setGlobalShader("");
                     if (hasBlendMode) {
                         context.globalCompositeOperation = defaultCompositeOp;
                     }

@@ -292,7 +292,9 @@ var egret;
              */
             p.arc = function (x, y, radius, startAngle, endAngle, anticlockwise) {
                 this.checkSurface();
-                this.$nativeGraphicsContext.arc(x, y, radius, startAngle, endAngle, anticlockwise);
+                native.$cmdManager.setContext(this.$nativeGraphicsContext);
+                native.$cmdManager.arc(x, y, radius, startAngle, endAngle, anticlockwise ? 1 : 0);
+                // this.$nativeGraphicsContext.arc(x, y, radius, startAngle, endAngle, anticlockwise);
             };
             /**
              * @private
@@ -306,7 +308,9 @@ var egret;
              */
             p.quadraticCurveTo = function (cpx, cpy, x, y) {
                 this.checkSurface();
-                this.$nativeGraphicsContext.quadraticCurveTo(cpx, cpy, x, y);
+                native.$cmdManager.setContext(this.$nativeGraphicsContext);
+                native.$cmdManager.quadraticCurveTo(cpx, cpy, x, y);
+                // this.$nativeGraphicsContext.quadraticCurveTo(cpx, cpy, x, y);
             };
             /**
              * @private
@@ -389,7 +393,9 @@ var egret;
              */
             p.fillRect = function (x, y, w, h) {
                 this.checkSurface();
-                this.$nativeGraphicsContext.fillRect(x, y, w, h);
+                native.$cmdManager.setContext(this.$nativeGraphicsContext);
+                native.$cmdManager.fillRect(x, y, w, h);
+                // this.$nativeGraphicsContext.fillRect(x, y, w, h);
             };
             /**
              * @private
@@ -406,7 +412,9 @@ var egret;
              */
             p.bezierCurveTo = function (cp1x, cp1y, cp2x, cp2y, x, y) {
                 this.checkSurface();
-                this.$nativeGraphicsContext.bezierCurveTo(cp1x, cp1y, cp2x, cp2y, x, y);
+                native.$cmdManager.setContext(this.$nativeGraphicsContext);
+                native.$cmdManager.bezierCurveTo(cp1x, cp1y, cp2x, cp2y, x, y);
+                // this.$nativeGraphicsContext.bezierCurveTo(cp1x, cp1y, cp2x, cp2y, x, y);
             };
             /**
              * @private
@@ -416,7 +424,9 @@ var egret;
              */
             p.stroke = function () {
                 this.checkSurface();
-                this.$nativeGraphicsContext.stroke();
+                native.$cmdManager.setContext(this.$nativeGraphicsContext);
+                native.$cmdManager.stroke();
+                // this.$nativeGraphicsContext.stroke();
             };
             /**
              * @private
@@ -431,7 +441,9 @@ var egret;
             p.strokeRect = function (x, y, w, h) {
                 //console.log("strokeRect");
                 this.checkSurface();
-                this.$nativeGraphicsContext.strokeRect(x, y, w, h);
+                native.$cmdManager.setContext(this.$nativeGraphicsContext);
+                native.$cmdManager.strokeRect(x, y, w, h);
+                // this.$nativeGraphicsContext.strokeRect(x, y, w, h);
             };
             /**
              * @private
@@ -2109,7 +2121,9 @@ var egret;
              * @platform Web,Native
              */
             p.arc = function (x, y, radius, startAngle, endAngle, anticlockwise) {
-                this.$nativeContext.arc(x, y, radius, startAngle, endAngle, anticlockwise);
+                native.$cmdManager.setContext(this.$nativeContext);
+                native.$cmdManager.arc(x, y, radius, startAngle, endAngle, anticlockwise ? 1 : 0);
+                // this.$nativeContext.arc(x, y, radius, startAngle, endAngle, anticlockwise);
             };
             /**
              * @private
@@ -2123,7 +2137,9 @@ var egret;
              */
             p.quadraticCurveTo = function (cpx, cpy, x, y) {
                 //console.log("quadraticCurveTo " + cpx + " " + cpy + " " + x + " " + y);
-                this.$nativeContext.quadraticCurveTo(cpx, cpy, x, y);
+                native.$cmdManager.setContext(this.$nativeContext);
+                native.$cmdManager.quadraticCurveTo(cpx, cpy, x, y);
+                // this.$nativeContext.quadraticCurveTo(cpx, cpy, x, y);
             };
             /**
              * @private
@@ -2204,7 +2220,9 @@ var egret;
              * @platform Web,Native
              */
             p.fillRect = function (x, y, w, h) {
-                this.$nativeContext.fillRect(x, y, w, h);
+                native.$cmdManager.setContext(this.$nativeContext);
+                native.$cmdManager.fillRect(x, y, w, h);
+                // this.$nativeContext.fillRect(x, y, w, h);
             };
             /**
              * @private
@@ -2220,7 +2238,9 @@ var egret;
              * @platform Web,Native
              */
             p.bezierCurveTo = function (cp1x, cp1y, cp2x, cp2y, x, y) {
-                this.$nativeContext.bezierCurveTo(cp1x, cp1y, cp2x, cp2y, x, y);
+                native.$cmdManager.setContext(this.$nativeContext);
+                native.$cmdManager.bezierCurveTo(cp1x, cp1y, cp2x, cp2y, x, y);
+                // this.$nativeContext.bezierCurveTo(cp1x, cp1y, cp2x, cp2y, x, y);
             };
             /**
              * @private
@@ -2229,7 +2249,9 @@ var egret;
              * @platform Web,Native
              */
             p.stroke = function () {
-                this.$nativeContext.stroke();
+                native.$cmdManager.setContext(this.$nativeContext);
+                native.$cmdManager.stroke();
+                // this.$nativeContext.stroke();
             };
             /**
              * @private
@@ -2243,7 +2265,9 @@ var egret;
              */
             p.strokeRect = function (x, y, w, h) {
                 //console.log("strokeRect");
-                this.$nativeContext.strokeRect(x, y, w, h);
+                native.$cmdManager.setContext(this.$nativeContext);
+                native.$cmdManager.strokeRect(x, y, w, h);
+                // this.$nativeContext.strokeRect(x, y, w, h);
             };
             /**
              * @private
@@ -2723,6 +2747,16 @@ var egret;
                     res.data = res.pixelData;
                 }
                 return res;
+            };
+            /**
+             * @private
+             * 设置全局shader
+             * @param filter filter属性生成的json
+             */
+            p.setGlobalShader = function (filter) {
+                native.$cmdManager.setContext(this.$nativeContext);
+                var s1 = native.$cmdManager.pushString(filter);
+                native.$cmdManager.setGlobalShader(s1);
             };
             return NativeCanvasRenderContext;
         }(egret.HashObject));
@@ -4458,6 +4492,96 @@ var egret;
                     this.flush();
                 }
                 this.uint32View[this.arrayBufferLen++] = 108;
+            };
+            p.stroke = function () {
+                if (this.arrayBufferLen + 1 > this.maxArrayBufferLen) {
+                    this.flush();
+                }
+                this.uint32View[this.arrayBufferLen++] = 206;
+            };
+            p.arc = function (f1, f2, f3, f4, f5, i6) {
+                if (this.arrayBufferLen + 7 > this.maxArrayBufferLen) {
+                    this.flush();
+                }
+                var uint32View = this.uint32View;
+                var float32View = this.float32View;
+                var arrayBufferLen = this.arrayBufferLen;
+                uint32View[arrayBufferLen++] = 209;
+                float32View[arrayBufferLen++] = f1;
+                float32View[arrayBufferLen++] = f2;
+                float32View[arrayBufferLen++] = f3;
+                float32View[arrayBufferLen++] = f4;
+                float32View[arrayBufferLen++] = f5;
+                uint32View[arrayBufferLen++] = i6;
+                this.arrayBufferLen = arrayBufferLen;
+            };
+            p.quadraticCurveTo = function (f1, f2, f3, f4) {
+                if (this.arrayBufferLen + 5 > this.maxArrayBufferLen) {
+                    this.flush();
+                }
+                var uint32View = this.uint32View;
+                var float32View = this.float32View;
+                var arrayBufferLen = this.arrayBufferLen;
+                uint32View[arrayBufferLen++] = 211;
+                float32View[arrayBufferLen++] = f1;
+                float32View[arrayBufferLen++] = f2;
+                float32View[arrayBufferLen++] = f3;
+                float32View[arrayBufferLen++] = f4;
+                this.arrayBufferLen = arrayBufferLen;
+            };
+            p.fillRect = function (f1, f2, f3, f4) {
+                if (this.arrayBufferLen + 5 > this.maxArrayBufferLen) {
+                    this.flush();
+                }
+                var uint32View = this.uint32View;
+                var float32View = this.float32View;
+                var arrayBufferLen = this.arrayBufferLen;
+                uint32View[arrayBufferLen++] = 212;
+                float32View[arrayBufferLen++] = f1;
+                float32View[arrayBufferLen++] = f2;
+                float32View[arrayBufferLen++] = f3;
+                float32View[arrayBufferLen++] = f4;
+                this.arrayBufferLen = arrayBufferLen;
+            };
+            p.strokeRect = function (f1, f2, f3, f4) {
+                if (this.arrayBufferLen + 5 > this.maxArrayBufferLen) {
+                    this.flush();
+                }
+                var uint32View = this.uint32View;
+                var float32View = this.float32View;
+                var arrayBufferLen = this.arrayBufferLen;
+                uint32View[arrayBufferLen++] = 213;
+                float32View[arrayBufferLen++] = f1;
+                float32View[arrayBufferLen++] = f2;
+                float32View[arrayBufferLen++] = f3;
+                float32View[arrayBufferLen++] = f4;
+                this.arrayBufferLen = arrayBufferLen;
+            };
+            p.bezierCurveTo = function (f1, f2, f3, f4, f5, f6) {
+                if (this.arrayBufferLen + 7 > this.maxArrayBufferLen) {
+                    this.flush();
+                }
+                var uint32View = this.uint32View;
+                var float32View = this.float32View;
+                var arrayBufferLen = this.arrayBufferLen;
+                uint32View[arrayBufferLen++] = 215;
+                float32View[arrayBufferLen++] = f1;
+                float32View[arrayBufferLen++] = f2;
+                float32View[arrayBufferLen++] = f3;
+                float32View[arrayBufferLen++] = f4;
+                float32View[arrayBufferLen++] = f5;
+                float32View[arrayBufferLen++] = f6;
+                this.arrayBufferLen = arrayBufferLen;
+            };
+            p.setGlobalShader = function (i1) {
+                if (this.arrayBufferLen + 2 > this.maxArrayBufferLen) {
+                    this.flush();
+                }
+                var uint32View = this.uint32View;
+                var arrayBufferLen = this.arrayBufferLen;
+                uint32View[arrayBufferLen++] = 111;
+                uint32View[arrayBufferLen++] = i1;
+                this.arrayBufferLen = arrayBufferLen;
             };
             return CmdManager;
         }());

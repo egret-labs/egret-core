@@ -315,7 +315,9 @@ module egret.native {
          * @platform Web,Native
          */
         public arc(x:number, y:number, radius:number, startAngle:number, endAngle:number, anticlockwise?:boolean):void {
-            this.$nativeContext.arc(x, y, radius, startAngle, endAngle, anticlockwise);
+            $cmdManager.setContext(this.$nativeContext);
+            $cmdManager.arc(x, y, radius, startAngle, endAngle, anticlockwise ? 1 : 0);
+            // this.$nativeContext.arc(x, y, radius, startAngle, endAngle, anticlockwise);
         }
 
         /**
@@ -330,7 +332,9 @@ module egret.native {
          */
         public quadraticCurveTo(cpx:number, cpy:number, x:number, y:number):void {
             //console.log("quadraticCurveTo " + cpx + " " + cpy + " " + x + " " + y);
-            this.$nativeContext.quadraticCurveTo(cpx, cpy, x, y);
+            $cmdManager.setContext(this.$nativeContext);
+            $cmdManager.quadraticCurveTo(cpx, cpy, x, y);
+            // this.$nativeContext.quadraticCurveTo(cpx, cpy, x, y);
         }
 
         /**
@@ -417,7 +421,9 @@ module egret.native {
          * @platform Web,Native
          */
         public fillRect(x:number, y:number, w:number, h:number):void {
-            this.$nativeContext.fillRect(x, y, w, h);
+            $cmdManager.setContext(this.$nativeContext);
+            $cmdManager.fillRect(x, y, w, h);
+            // this.$nativeContext.fillRect(x, y, w, h);
         }
 
         /**
@@ -434,7 +440,9 @@ module egret.native {
          * @platform Web,Native
          */
         public bezierCurveTo(cp1x:number, cp1y:number, cp2x:number, cp2y:number, x:number, y:number):void {
-            this.$nativeContext.bezierCurveTo(cp1x, cp1y, cp2x, cp2y, x, y);
+            $cmdManager.setContext(this.$nativeContext);
+            $cmdManager.bezierCurveTo(cp1x, cp1y, cp2x, cp2y, x, y);
+            // this.$nativeContext.bezierCurveTo(cp1x, cp1y, cp2x, cp2y, x, y);
         }
 
         /**
@@ -444,7 +452,9 @@ module egret.native {
          * @platform Web,Native
          */
         public stroke():void {
-            this.$nativeContext.stroke();
+            $cmdManager.setContext(this.$nativeContext);
+            $cmdManager.stroke();
+            // this.$nativeContext.stroke();
         }
 
         /**
@@ -459,7 +469,9 @@ module egret.native {
          */
         public strokeRect(x:number, y:number, w:number, h:number):void {
             //console.log("strokeRect");
-            this.$nativeContext.strokeRect(x, y, w, h);
+            $cmdManager.setContext(this.$nativeContext);
+            $cmdManager.strokeRect(x, y, w, h);
+            // this.$nativeContext.strokeRect(x, y, w, h);
         }
 
         private clipRectArray = null;
@@ -993,6 +1005,18 @@ module egret.native {
                 res.data = res.pixelData;
             }
             return res;
+        }
+
+        /**
+         * @private
+         * 设置全局shader
+         * @param filter filter属性生成的json
+         */
+        public setGlobalShader(filter:string):void {
+            $cmdManager.setContext(this.$nativeContext);
+
+            var s1 = $cmdManager.pushString(filter);
+            $cmdManager.setGlobalShader(s1);
         }
     }
 }

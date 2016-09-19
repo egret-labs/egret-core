@@ -190,10 +190,10 @@ module egret {
                         context.globalCompositeOperation = compositeOp;
                     }
 
-                    egret_native.Graphics.setGlobalShader(filters[0]);
+                    (<any>context).setGlobalShader(filters[0].$toJson());
                     drawCalls += this.drawDisplayObject(displayObject, context, dirtyList, matrix,
                         displayObject.$displayList, clipRegion, root);
-                    egret_native.Graphics.setGlobalShader(null);
+                    (<any>context).setGlobalShader("");
 
                     if (hasBlendMode) {
                         context.globalCompositeOperation = defaultCompositeOp;
@@ -234,9 +234,9 @@ module egret {
                     context.globalAlpha = 1;
                     context.setTransform(1, 0, 0, 1, region.minX + matrix.tx, region.minY + matrix.ty);
                     // 绘制结果的时候，应用滤镜
-                    egret_native.Graphics.setGlobalShader(filters[0]);
+                    (<any>context).setGlobalShader(filters[0].$toJson());
                     context.drawImage(displayBuffer.surface, 0, 0, displayBuffer.width, displayBuffer.height, 0, 0, displayBuffer.width, displayBuffer.height);
-                    egret_native.Graphics.setGlobalShader(null);
+                    (<any>context).setGlobalShader("");
 
                     if (hasBlendMode) {
                         context.globalCompositeOperation = defaultCompositeOp;

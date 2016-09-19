@@ -504,6 +504,128 @@ module egret.native {
             this.uint32View[this.arrayBufferLen++] = 108;
         }
 
+        public stroke():void {
+            if(this.arrayBufferLen + 1 > this.maxArrayBufferLen) {
+                this.flush();
+            }
+
+            this.uint32View[this.arrayBufferLen++] = 206;
+        }
+
+        public arc(f1:number, f2:number, f3:number, f4:number, f5:number, i6:number):void {
+            if(this.arrayBufferLen + 7 > this.maxArrayBufferLen) {
+                this.flush();
+            }
+
+            var uint32View = this.uint32View;
+            var float32View = this.float32View;
+            var arrayBufferLen = this.arrayBufferLen;
+
+            uint32View[arrayBufferLen++] = 209;
+
+            float32View[arrayBufferLen++] = f1;
+            float32View[arrayBufferLen++] = f2;
+            float32View[arrayBufferLen++] = f3;
+            float32View[arrayBufferLen++] = f4;
+            float32View[arrayBufferLen++] = f5;
+            uint32View[arrayBufferLen++] = i6;
+
+            this.arrayBufferLen = arrayBufferLen;
+        }
+
+        public quadraticCurveTo(f1:number, f2:number, f3:number, f4:number):void {
+            if(this.arrayBufferLen + 5 > this.maxArrayBufferLen) {
+                this.flush();
+            }
+
+            var uint32View = this.uint32View;
+            var float32View = this.float32View;
+            var arrayBufferLen = this.arrayBufferLen;
+
+            uint32View[arrayBufferLen++] = 211;
+
+            float32View[arrayBufferLen++] = f1;
+            float32View[arrayBufferLen++] = f2;
+            float32View[arrayBufferLen++] = f3;
+            float32View[arrayBufferLen++] = f4;
+
+            this.arrayBufferLen = arrayBufferLen;
+        }
+
+        public fillRect(f1:number, f2:number, f3:number, f4:number):void {
+            if(this.arrayBufferLen + 5 > this.maxArrayBufferLen) {
+                this.flush();
+            }
+
+            var uint32View = this.uint32View;
+            var float32View = this.float32View;
+            var arrayBufferLen = this.arrayBufferLen;
+
+            uint32View[arrayBufferLen++] = 212;
+
+            float32View[arrayBufferLen++] = f1;
+            float32View[arrayBufferLen++] = f2;
+            float32View[arrayBufferLen++] = f3;
+            float32View[arrayBufferLen++] = f4;
+
+            this.arrayBufferLen = arrayBufferLen;
+        }
+
+        public strokeRect(f1:number, f2:number, f3:number, f4:number):void {
+            if(this.arrayBufferLen + 5 > this.maxArrayBufferLen) {
+                this.flush();
+            }
+
+            var uint32View = this.uint32View;
+            var float32View = this.float32View;
+            var arrayBufferLen = this.arrayBufferLen;
+
+            uint32View[arrayBufferLen++] = 213;
+
+            float32View[arrayBufferLen++] = f1;
+            float32View[arrayBufferLen++] = f2;
+            float32View[arrayBufferLen++] = f3;
+            float32View[arrayBufferLen++] = f4;
+
+            this.arrayBufferLen = arrayBufferLen;
+        }
+
+        public bezierCurveTo(f1:number, f2:number, f3:number, f4:number, f5:number, f6:number):void {
+            if(this.arrayBufferLen + 7 > this.maxArrayBufferLen) {
+                this.flush();
+            }
+
+            var uint32View = this.uint32View;
+            var float32View = this.float32View;
+            var arrayBufferLen = this.arrayBufferLen;
+
+            uint32View[arrayBufferLen++] = 215;
+
+            float32View[arrayBufferLen++] = f1;
+            float32View[arrayBufferLen++] = f2;
+            float32View[arrayBufferLen++] = f3;
+            float32View[arrayBufferLen++] = f4;
+            float32View[arrayBufferLen++] = f5;
+            float32View[arrayBufferLen++] = f6;
+
+            this.arrayBufferLen = arrayBufferLen;
+        }
+
+        public setGlobalShader(i1:number):void {
+            if(this.arrayBufferLen + 2 > this.maxArrayBufferLen) {
+                this.flush();
+            }
+
+            var uint32View = this.uint32View;
+            var arrayBufferLen = this.arrayBufferLen;
+
+            uint32View[arrayBufferLen++] = 111;
+
+            uint32View[arrayBufferLen++] = i1;
+
+            this.arrayBufferLen = arrayBufferLen;
+        }
+
         //------绘制命令 end-------------
 
     }

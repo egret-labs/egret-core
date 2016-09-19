@@ -6810,6 +6810,10 @@ declare module egret {
         $addTarget(target: DisplayObject): void;
         $removeTarget(target: DisplayObject): void;
         protected invalidate(): void;
+        /**
+         * @private
+         */
+        $toJson(): string;
     }
 }
 declare module egret {
@@ -6887,6 +6891,10 @@ declare module egret {
          * @private
          */
         $blurY: number;
+        /**
+         * @private
+         */
+        $toJson(): string;
     }
 }
 declare module egret {
@@ -6949,6 +6957,10 @@ declare module egret {
          * @private
          */
         private setMatrix(value);
+        /**
+         * @private
+         */
+        $toJson(): string;
     }
 }
 declare module egret {
@@ -7140,6 +7152,10 @@ declare module egret {
          * @platform Web
          */
         knockout: boolean;
+        /**
+         * @private
+         */
+        $toJson(): string;
     }
 }
 declare module egret {
@@ -7240,6 +7256,10 @@ declare module egret {
          * @platform Web
          */
         hideObject: boolean;
+        /**
+         * @private
+         */
+        $toJson(): string;
     }
 }
 declare module egret {
