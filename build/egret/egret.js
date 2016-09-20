@@ -13295,28 +13295,31 @@ var egret;
                 for (var i = 0; i < length; i++) {
                     var display = dirtyNodeList[i];
                     var node = display.$getRenderNode();
-                    node.needRedraw = false; //先清空上次缓存的标记,防止上次没遍历到的节点needRedraw始终为true.
-                    if (this.isStage) {
-                        if (node.renderAlpha > 0 && node.renderVisible) {
+                    //有可能 markDirty 之后，显示对象自身改变，变的没有renderNode
+                    if (node) {
+                        node.needRedraw = false; //先清空上次缓存的标记,防止上次没遍历到的节点 needRedraw 始终为 true.
+                        if (this.isStage) {
+                            if (node.renderAlpha > 0 && node.renderVisible) {
+                                if (dirtyRegion.addRegion(node.renderRegion)) {
+                                    node.needRedraw = true;
+                                }
+                            }
+                            var moved = display.$update(this.$dirtyRegionPolicy);
+                            if (node.renderAlpha > 0 && node.renderVisible && (moved || !node.needRedraw)) {
+                                if (dirtyRegion.addRegion(node.renderRegion)) {
+                                    node.needRedraw = true;
+                                }
+                            }
+                        }
+                        else {
                             if (dirtyRegion.addRegion(node.renderRegion)) {
                                 node.needRedraw = true;
                             }
-                        }
-                        var moved = display.$update(this.$dirtyRegionPolicy);
-                        if (node.renderAlpha > 0 && node.renderVisible && (moved || !node.needRedraw)) {
-                            if (dirtyRegion.addRegion(node.renderRegion)) {
-                                node.needRedraw = true;
-                            }
-                        }
-                    }
-                    else {
-                        if (dirtyRegion.addRegion(node.renderRegion)) {
-                            node.needRedraw = true;
-                        }
-                        var moved = display.$update(this.$dirtyRegionPolicy);
-                        if (moved || !node.needRedraw) {
-                            if (dirtyRegion.addRegion(node.renderRegion)) {
-                                node.needRedraw = true;
+                            var moved = display.$update(this.$dirtyRegionPolicy);
+                            if (moved || !node.needRedraw) {
+                                if (dirtyRegion.addRegion(node.renderRegion)) {
+                                    node.needRedraw = true;
+                                }
                             }
                         }
                     }
