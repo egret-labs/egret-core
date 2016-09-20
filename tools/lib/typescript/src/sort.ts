@@ -152,32 +152,33 @@ namespace ts {
                 this.symbolToFileMap(file, symbol);
                 this.staticMemberToClassName(file, symbol);
                 if (symbol.valueDeclaration && symbol.valueDeclaration.locals) {
-                    this.symbolTabelToFileMap(file, symbol.valueDeclaration.locals);
+                    return this.symbolTabelToFileMap(file, symbol.valueDeclaration.locals);
                 }
                 if (symbol.exports) {
-                    this.symbolTabelToFileMap(file, symbol.exports);
+                    return this.symbolTabelToFileMap(file, symbol.exports);
                 }
             });
             if (file.fileName.indexOf(".d.ts") > 0)
                 return;
             var self = this;
-            findFunctionCall(file);
+            return findFunctionCall(file);
             function findFunctionCall(pnode:Node) {
                 forEachChild(pnode,node=>{
-                    if(node.kind == SyntaxKind.ClassDeclaration ||
-                        node.kind == SyntaxKind.InterfaceDeclaration ||
-                        node.kind == SyntaxKind.FunctionDeclaration)
-                        return;
+                    // if(node.kind == SyntaxKind.ClassDeclaration ||
+                    //     node.kind == SyntaxKind.InterfaceDeclaration ||
+                    //     node.kind == SyntaxKind.FunctionDeclaration)
+                    //     return;
+                    if(node.kind == SyntaxKind.InterfaceDeclaration) return;
                     if(node.kind == SyntaxKind.PropertyAccessExpression||
                         node.kind == SyntaxKind.CallExpression ||
                         node.kind == SyntaxKind.NewExpression ||
                         node.kind == SyntaxKind.Identifier ){
 
                         var name = "callExpression" + ++functionId;
-                        self.findUsedClasses(node,name,functionCallToClassMap,0);
+                        return self.findUsedClasses(node,name,functionCallToClassMap,0);
                     }
                     else
-                        findFunctionCall(node);
+                        return findFunctionCall(node);
                 });
             }
 
@@ -452,7 +453,7 @@ namespace ts {
             }
 
             fileNodesList.forEach(e=> {
-                insert(e);
+                return insert(e);
             });
 
             orderedFileList = sorted.map(n=> n.name);
