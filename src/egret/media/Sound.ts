@@ -190,12 +190,14 @@ module egret {
         /**
          * @language en_US
          * Background music
+         * @default "music"
          * @version Egret 2.4
          * @platform Web,Native
          */
         /**
          * @language zh_CN
          * 背景音乐
+         * @default "music"
          * @version Egret 2.4
          * @platform Web,Native
          */
@@ -204,12 +206,14 @@ module egret {
         /**
          * @language en_US
          * EFFECT
+         * @default "effect"
          * @version Egret 2.4
          * @platform Web,Native
          */
         /**
          * @language zh_CN
          * 音效
+         * @default "effect"
          * @version Egret 2.4
          * @platform Web,Native
          */
