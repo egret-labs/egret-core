@@ -206,8 +206,15 @@ module egret.web {
                 }
 
                 buffer.context.$filter = <ColorMatrixFilter>filters[0];
-                drawCalls += this.drawDisplayObject(displayObject, buffer, dirtyList, matrix,
-                    displayObject.$displayList, clipRegion, root);
+                if ((displayObject.$mask && (displayObject.$mask.$parentDisplayList || root))) {
+                    drawCalls += this.drawWithClip(displayObject, buffer, dirtyList, matrix, clipRegion, root);
+                }
+                else if (displayObject.$scrollRect || displayObject.$maskRect) {
+                    drawCalls += this.drawWithScrollRect(displayObject, buffer, dirtyList, matrix, clipRegion, root);
+                }
+                else {
+                    drawCalls += this.drawDisplayObject(displayObject, buffer, dirtyList, matrix, displayObject.$displayList, clipRegion, root);
+                }
                 buffer.context.$filter = null;
 
                 if (hasBlendMode) {
@@ -234,8 +241,16 @@ module egret.web {
             displayBuffer.setTransform(1, 0, 0, 1, -region.minX, -region.minY);
             var offsetM = Matrix.create().setTo(1, 0, 0, 1, -region.minX, -region.minY);
 
-            drawCalls += this.drawDisplayObject(displayObject, displayBuffer, dirtyList, offsetM,
-                displayObject.$displayList, region, root);
+            //todo 可以优化减少draw次数
+            if ((displayObject.$mask && (displayObject.$mask.$parentDisplayList || root))) {
+                drawCalls += this.drawWithClip(displayObject, displayBuffer, dirtyList, offsetM, region, root);
+            }
+            else if (displayObject.$scrollRect || displayObject.$maskRect) {
+                drawCalls += this.drawWithScrollRect(displayObject, displayBuffer, dirtyList, offsetM, region, root);
+            }
+            else {
+                drawCalls += this.drawDisplayObject(displayObject, displayBuffer, dirtyList, offsetM, displayObject.$displayList, region, root);
+            }
 
             Matrix.release(offsetM);
             displayBuffer.context.popBuffer();
