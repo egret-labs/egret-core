@@ -161,7 +161,7 @@ module egret {
             color = +color || 0;
             alpha = +alpha || 0;
             this.fillPath = this.$renderNode.beginFill(color, alpha, this.strokePath);
-            if(this.$renderNode.drawData.length > 1) {
+            if (this.$renderNode.drawData.length > 1) {
                 this.fillPath.moveTo(this.lastX, this.lastY);
             }
         }
@@ -169,7 +169,7 @@ module egret {
 
         /**
          * @language en_US
-         * Specifies a gradient fill used by subsequent calls to other Graphics methods (such as lineTo() or drawCircle()) for the object. 
+         * Specifies a gradient fill used by subsequent calls to other Graphics methods (such as lineTo() or drawCircle()) for the object.
          * Calling the clear() method clears the fill.
          * @param type A value from the GradientType class that specifies which gradient type to use: GradientType.LINEAR or GradientType.RADIAL.
          * @param colors An array of RGB hexadecimal color values used in the gradient; for example, red is 0xFF0000, blue is 0x0000FF, and so on. You can specify up to 15 colors. For each color, specify a corresponding value in the alphas and ratios parameters.
@@ -193,7 +193,7 @@ module egret {
          */
         public beginGradientFill(type:string, colors:number[], alphas:number[], ratios:number[], matrix:egret.Matrix = null):void {
             this.fillPath = this.$renderNode.beginGradientFill(type, colors, alphas, ratios, matrix, this.strokePath);
-            if(this.$renderNode.drawData.length > 1) {
+            if (this.$renderNode.drawData.length > 1) {
                 this.fillPath.moveTo(this.lastX, this.lastY);
             }
         }
@@ -254,7 +254,7 @@ module egret {
                 miterLimit = +miterLimit || 0;
                 this.setStrokeWidth(thickness);
                 this.strokePath = this.$renderNode.lineStyle(thickness, color, alpha, caps, joints, miterLimit);
-                if(this.$renderNode.drawData.length > 1) {
+                if (this.$renderNode.drawData.length > 1) {
                     this.strokePath.moveTo(this.lastX, this.lastY);
                 }
             }
@@ -406,7 +406,7 @@ module egret {
             strokePath && strokePath.drawEllipse(x, y, width, height);
 
             this.extendBoundsByPoint(x + width, y + height);
-            this.updatePosition(x, y);
+            this.updatePosition(x + width, y + height * 0.5);
             this.$renderNode.dirtyRender = true;
         }
 
@@ -588,12 +588,12 @@ module egret {
 
             var fillPath = this.fillPath;
             var strokePath = this.strokePath;
-            if(fillPath) {
+            if (fillPath) {
                 fillPath.$lastX = this.lastX;
                 fillPath.$lastY = this.lastY;
                 fillPath.drawArc(x, y, radius, startAngle, endAngle, anticlockwise);
             }
-            if(strokePath) {
+            if (strokePath) {
                 strokePath.$lastX = this.lastX;
                 strokePath.$lastY = this.lastY;
                 strokePath.drawArc(x, y, radius, startAngle, endAngle, anticlockwise);
@@ -802,7 +802,7 @@ module egret {
          * @private
          */
         public $onRemoveFromStage():void {
-            if(this.$renderNode) {
+            if (this.$renderNode) {
                 this.$renderNode.clean();
             }
         }
