@@ -305,13 +305,17 @@ module egret {
                     } else if(filter.type == "blur") {
                         blurFilter(imageData.data, displayBuffer.surface.width, displayBuffer.surface.height, (<BlurFilter>filter).$blurX, (<BlurFilter>filter).$blurY);
                     } else if(filter.type == "glow") {
-                        // TODO glow滤镜实现 kickout hideObject
-                        // var r = (<GlowFilter>filter).$red;
-                        // var g = (<GlowFilter>filter).$green;
-                        // var b = (<GlowFilter>filter).$blue;
-                        // var a = (<GlowFilter>filter).$alpha;
-                        // dropShadowFilter(imageData.data, displayBuffer.surface.width, displayBuffer.surface.height, [r, g, b, a], (<GlowFilter>filter).$blurX, (<GlowFilter>filter).$blurY,
-                        //     (<DropShadowFilter>filter).$angle || 0, (<DropShadowFilter>filter).$distance || 0, (<GlowFilter>filter).$strength);
+                        var r = (<GlowFilter>filter).$red;
+                        var g = (<GlowFilter>filter).$green;
+                        var b = (<GlowFilter>filter).$blue;
+                        var a = (<GlowFilter>filter).$alpha;
+                        if((<GlowFilter>filter).$inner || (<GlowFilter>filter).$knockout || (<DropShadowFilter>filter).$hideObject) {
+                            dropShadowFilter2(imageData.data, displayBuffer.surface.width, displayBuffer.surface.height, [r / 255, g / 255, b / 255, a], (<GlowFilter>filter).$blurX, (<GlowFilter>filter).$blurY,
+                            (<DropShadowFilter>filter).$angle ? ((<DropShadowFilter>filter).$angle / 180 * Math.PI) : 0, (<DropShadowFilter>filter).$distance || 0, (<GlowFilter>filter).$strength, (<GlowFilter>filter).$inner ? 1 : 0, (<GlowFilter>filter).$knockout ? 0 : 1, (<DropShadowFilter>filter).$hideObject ? 1 : 0);
+                        } else {
+                            // 如果没有高级效果，使用性能比较高的方式
+                            dropShadowFilter(imageData.data, displayBuffer.surface.width, displayBuffer.surface.height, [r / 255, g / 255, b / 255, a / 255], (<GlowFilter>filter).$blurX, (<GlowFilter>filter).$blurY, (<DropShadowFilter>filter).$angle ? ((<DropShadowFilter>filter).$angle / 180 * Math.PI) : 0, (<DropShadowFilter>filter).$distance || 0, (<GlowFilter>filter).$strength);
+                        }
                     }
                 }  
                 displayContext.putImageData(imageData, 0, 0);
@@ -1099,9 +1103,9 @@ module egret {
         }
     }
 
-    function glowFilter(buffer, w, h, color, blurX, blurY, strength) {
-        dropShadowFilter(buffer, w, h, color, blurX, blurY, 0, 0, strength)
-    }
+    // function glowFilter(buffer, w, h, color, blurX, blurY, strength) {
+    //     dropShadowFilter(buffer, w, h, color, blurX, blurY, 0, 0, strength)
+    // }
 
     function dropShadowFilter(buffer, w, h, color, blurX, blurY, angle, distance, strength) {
         var tmp = alphaFilter(buffer, color);
@@ -1170,6 +1174,106 @@ module egret {
             dst[ptr + 2] = Sb + Db * (1 - Sa);
             dst[ptr + 3] = (Sa + Da * (1 - Sa)) * 255;
         }
+    }
+
+    function getPixelKey(w, x, y) {
+        return y * w * 4 + x * 4;
+    }
+
+    function mix(v1, v2, rate) {
+        return v1 * (1 - rate) + v2 * rate;
+    }
+
+    // dropShadowFilter2
+    // 模拟shader中的算法，可以实现内发光，挖空等高级效果
+    function dropShadowFilter2(buffer, w, h, color, blurX, blurY, angle, distance, strength, inner, knockout, hideObject) {
+        var plane = new Uint8ClampedArray(buffer);
+
+        var alpha = color[3];
+        
+        var curDistanceX = 0;
+        var curDistanceY = 0;
+        var offsetX = distance * Math.cos(angle);
+        var offsetY = distance * Math.sin(angle);
+
+        var linearSamplingTimes = 7.0;
+        var circleSamplingTimes = 12.0;
+        var PI = 3.14159265358979323846264;
+        var cosAngle;
+        var sinAngle;
+
+        var stepX = blurX / linearSamplingTimes;
+        var stepY = blurY / linearSamplingTimes;
+
+        // 遍历像素
+        for(var u = 0; u < w; u++) {
+            for(var v = 0; v < h; v++) {
+
+                // 此处为了避免毛刺可以添加一个随机值
+                var offset = 0;
+                
+                // 处理单个像素
+                var key = v * w * 4 + u * 4;
+                var totalAlpha = 0;
+                var maxTotalAlpha = 0;
+
+                // 采样出来的色值
+                var _r = buffer[key + 0] / 255;
+                var _g = buffer[key + 1] / 255;
+                var _b = buffer[key + 2] / 255;
+                var _a = buffer[key + 3] / 255;
+
+                for (var a = 0; a <= PI * 2; a += PI * 2 / circleSamplingTimes) {
+                    cosAngle = Math.cos(a + offset);
+                    sinAngle = Math.sin(a + offset);
+                    for (var i = 0; i < linearSamplingTimes; i++) {
+                        curDistanceX = i * stepX * cosAngle;
+                        curDistanceY = i * stepY * sinAngle;
+                        var _u = Math.round(u + curDistanceX - offsetX);
+                        var _v = Math.round(v + curDistanceY - offsetY);
+                        var __a = 0;
+                        if (_u >= w || _u < 0 || _v < 0 || _v >= h) {
+                            __a = 0;
+                        }
+                        else {
+                            var _key = _v * w * 4 + _u * 4;
+                            __a = buffer[_key + 3] / 255;
+                        }
+                        totalAlpha += (linearSamplingTimes - i) * __a;
+                        maxTotalAlpha += (linearSamplingTimes - i);
+                    }
+                }
+                
+                _a = Math.max(_a, 0.0001);
+                // 'ownColor.rgb = ownColor.rgb / ownColor.a;',
+
+                var outerGlowAlpha = (totalAlpha / maxTotalAlpha) * strength * alpha * (1. - inner) * Math.max(Math.min(hideObject, knockout), 1. - _a);
+                var innerGlowAlpha = ((maxTotalAlpha - totalAlpha) / maxTotalAlpha) * strength * alpha * inner * _a;
+
+                _a = Math.max(_a * knockout * (1 - hideObject), 0.0001);
+
+                var rate1 = innerGlowAlpha / (innerGlowAlpha + _a);
+                var r1 = mix(_r, color[0], rate1);
+                var g1 = mix(_g, color[1], rate1);
+                var b1 = mix(_b, color[2], rate1);
+
+                var rate2 = outerGlowAlpha / (innerGlowAlpha + _a + outerGlowAlpha);
+                var r2 = mix(r1, color[0], rate2);
+                var g2 = mix(g1, color[1], rate2);
+                var b2 = mix(b1, color[2], rate2);
+
+                var resultAlpha = Math.min(_a + outerGlowAlpha + innerGlowAlpha, 1);
+
+                // 赋值颜色
+                plane[key + 0] = r2 * 255;
+                plane[key + 1] = g2 * 255;
+                plane[key + 2] = b2 * 255;
+                plane[key + 3] = resultAlpha * 255;
+
+            }
+        }
+
+        buffer.set(plane);
     }
 
 
