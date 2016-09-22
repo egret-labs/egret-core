@@ -145,9 +145,17 @@ module egret {
     }
 }
 
+/**
+ * @private
+ */
 var egret_sin_map = {};
+/**
+ * @private
+ */
 var egret_cos_map = {};
-
+/**
+ * @private
+ */
 var DEG_TO_RAD:number = Math.PI / 180;
 
 for (var NumberUtils_i = 0; NumberUtils_i < 360; NumberUtils_i++) {

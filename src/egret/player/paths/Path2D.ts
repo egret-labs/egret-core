@@ -30,6 +30,7 @@
 module egret.sys {
 
     /**
+     * @private
      * 路径类型
      */
     export const enum PathType {

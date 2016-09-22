@@ -1,4 +1,28 @@
+/**
+ * @language en_US
+ * Is debug mode.
+ * @version Egret 2.5
+ * @platform Web,Native
+ */
+/**
+ * @language zh_CN
+ * 是否为 debug 模式。
+ * @version Egret 2.5
+ * @platform Web,Native
+ */
 declare var DEBUG: boolean;
+/**
+ * @language en_US
+ * Is release mode.
+ * @version Egret 2.5
+ * @platform Web,Native
+ */
+/**
+ * @language zh_CN
+ * 是否为 release 模式。
+ * @version Egret 2.5
+ * @platform Web,Native
+ */
 declare var RELEASE: boolean;
 declare module egret {
     function $error(code: number, ...params: any[]): void;
@@ -10452,6 +10476,7 @@ declare module egret.sys {
 }
 declare module egret.sys {
     /**
+     * @private
      * 路径类型
      */
     const enum PathType {
@@ -11268,7 +11293,13 @@ declare module egret {
         static $boundingClientHeight: number;
     }
 }
+/**
+ * @private
+ */
 declare var testDeviceType: () => boolean;
+/**
+ * @private
+ */
 declare var testRuntimeType: () => boolean;
 declare module egret {
     /**
@@ -13392,6 +13423,9 @@ declare module egret {
         static $getScrollNum(textfield: egret.TextField): number;
     }
 }
+/**
+ * @private
+ */
 declare module egret.sys {
     /**
      * 测量文本在指定样式下的宽度。
@@ -14360,8 +14394,17 @@ declare module egret {
         private static cosInt(value);
     }
 }
+/**
+ * @private
+ */
 declare var egret_sin_map: {};
+/**
+ * @private
+ */
 declare var egret_cos_map: {};
+/**
+ * @private
+ */
 declare var DEG_TO_RAD: number;
 declare module egret {
     /**

@@ -30,8 +30,13 @@
 
 //此文件仅保证程序中的debug代码能够通过编译，不会生成代码，在JS代码压缩阶段，会移除所有debug代码
 
-
+/**
+ * @private
+ */
 declare var DEBUG:boolean;
+/**
+ * @private
+ */
 declare var RELEASE:boolean;
 
 module egret {

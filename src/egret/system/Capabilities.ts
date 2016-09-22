@@ -332,7 +332,9 @@ module egret {
 
 }
 
-
+/**
+ * @private
+ */
 var testDeviceType = function () {
     if (!this["navigator"]) {
         return true
@@ -341,6 +343,9 @@ var testDeviceType = function () {
     return (ua.indexOf('mobile') != -1 || ua.indexOf('android') != -1);
 };
 
+/**
+ * @private
+ */
 var testRuntimeType = function () {
     if (this["navigator"]) {
         return true;

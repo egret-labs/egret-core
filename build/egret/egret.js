@@ -17874,6 +17874,9 @@ var egret;
         egret.$markReadOnly(Capabilities, "boundingClientHeight", false);
     }
 })(egret || (egret = {}));
+/**
+ * @private
+ */
 var testDeviceType = function () {
     if (!this["navigator"]) {
         return true;
@@ -17881,6 +17884,9 @@ var testDeviceType = function () {
     var ua = navigator.userAgent.toLowerCase();
     return (ua.indexOf('mobile') != -1 || ua.indexOf('android') != -1);
 };
+/**
+ * @private
+ */
 var testRuntimeType = function () {
     if (this["navigator"]) {
         return true;
@@ -21641,6 +21647,9 @@ var egret;
 //  EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 //
 //////////////////////////////////////////////////////////////////////////////////////
+/**
+ * @private
+ */
 var egret;
 (function (egret) {
     var sys;
@@ -23188,8 +23197,17 @@ var egret;
     egret.NumberUtils = NumberUtils;
     egret.registerClass(NumberUtils,'egret.NumberUtils');
 })(egret || (egret = {}));
+/**
+ * @private
+ */
 var egret_sin_map = {};
+/**
+ * @private
+ */
 var egret_cos_map = {};
+/**
+ * @private
+ */
 var DEG_TO_RAD = Math.PI / 180;
 for (var NumberUtils_i = 0; NumberUtils_i < 360; NumberUtils_i++) {
     egret_sin_map[NumberUtils_i] = Math.sin(NumberUtils_i * DEG_TO_RAD);
