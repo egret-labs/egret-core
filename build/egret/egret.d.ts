@@ -8007,12 +8007,14 @@ declare module egret {
         /**
          * @language en_US
          * Background music
+         * @default "music"
          * @version Egret 2.4
          * @platform Web,Native
          */
         /**
          * @language zh_CN
          * 背景音乐
+         * @default "music"
          * @version Egret 2.4
          * @platform Web,Native
          */
@@ -8020,12 +8022,14 @@ declare module egret {
         /**
          * @language en_US
          * EFFECT
+         * @default "effect"
          * @version Egret 2.4
          * @platform Web,Native
          */
         /**
          * @language zh_CN
          * 音效
+         * @default "effect"
          * @version Egret 2.4
          * @platform Web,Native
          */
@@ -8315,6 +8319,9 @@ declare module egret {
         new (url?: string, cache?: boolean): Video;
     };
 }
+/**
+ * @private
+ */
 declare module egret_native {
     var nativeType: string;
     /**
@@ -9501,9 +9508,14 @@ declare module egret.sys {
 }
 declare module egret.sys {
     /**
+     * @private
      * 共享的用于碰撞检测的渲染缓冲
      */
     var customHitTestBuffer: sys.RenderBuffer;
+    /**
+     * @private
+     * 共享的用于canvas碰撞检测的渲染缓冲
+     */
     var canvasHitTestBuffer: sys.RenderBuffer;
     /**
      * @private
@@ -9578,6 +9590,9 @@ declare module egret.sys {
          */
         setDirtyRegionPolicy(state: string): void;
     }
+    /**
+     * @private
+     */
     var RenderBuffer: {
         /**
          * 创建一个RenderTarget。
@@ -9588,6 +9603,9 @@ declare module egret.sys {
          */
         new (width?: number, height?: number, root?: boolean): RenderBuffer;
     };
+    /**
+     * @private
+     */
     var CanvasRenderBuffer: {
         /**
          * 创建一个CanvasRenderBuffer。
