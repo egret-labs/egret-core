@@ -41,17 +41,6 @@ module egret.tween {
         'bounceIn' | 'bounceOut' | 'bounceInOut' |
         'elasticIn' | 'elasticOut' | 'elasticInOut';
 
-    export interface TweenProps {
-        useTicks?: boolean;
-        ignoreGlobalPause?: boolean;
-        loop?: boolean;
-        override?: boolean;
-        paused?: boolean;
-        position?: number;
-        onChange?: () => void;
-        onChangeObj?: any;
-    }
-
     /**
      * @language en_US
      * Abstract class, Indicate the base action.
@@ -305,7 +294,7 @@ module egret.tween {
         /**
          * @private
          */
-        private _props: TweenProps;
+        private _props: any;
         /**
          * @language en_US
          * The Tween's props.
@@ -318,11 +307,11 @@ module egret.tween {
          * @version Egret 3.1.8
          * @platform Web,Native
          */
-        public get props(): TweenProps {
+        public get props(): any {
             return this._props;
         }
 
-        public set props(value: TweenProps) {
+        public set props(value: any) {
             this._props = value;
         }
 
