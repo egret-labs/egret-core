@@ -4246,6 +4246,9 @@ var egret;
     egret.MainContext = MainContext;
     egret.registerClass(MainContext,'egret.MainContext');
 })(egret || (egret = {}));
+/**
+ * @private
+ */
 var testDeviceType1 = function () {
     if (!this["navigator"]) {
         return true;
@@ -4253,6 +4256,9 @@ var testDeviceType1 = function () {
     var ua = navigator.userAgent.toLowerCase();
     return (ua.indexOf('mobile') != -1 || ua.indexOf('android') != -1);
 };
+/**
+ * @private
+ */
 var testRuntimeType1 = function () {
     if (this["navigator"]) {
         return true;

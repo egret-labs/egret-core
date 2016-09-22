@@ -2310,7 +2310,13 @@ declare module egret {
         static instance: egret.MainContext;
     }
 }
+/**
+ * @private
+ */
 declare var testDeviceType1: () => boolean;
+/**
+ * @private
+ */
 declare var testRuntimeType1: () => boolean;
 declare module egret {
     /**

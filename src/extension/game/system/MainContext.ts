@@ -162,7 +162,9 @@ module egret {
         }
     }
 }
-
+/**
+ * @private
+ */
 var testDeviceType1 = function () {
     if (!this["navigator"]) {
         return true
@@ -170,7 +172,9 @@ var testDeviceType1 = function () {
     var ua = navigator.userAgent.toLowerCase();
     return (ua.indexOf('mobile') != -1 || ua.indexOf('android') != -1);
 };
-
+/**
+ * @private
+ */
 var testRuntimeType1 = function () {
     if (this["navigator"]) {
         return true;
@@ -181,11 +185,5 @@ var testRuntimeType1 = function () {
 egret.MainContext.deviceType = testDeviceType1() ? egret.MainContext.DEVICE_MOBILE : egret.MainContext.DEVICE_PC;
 egret.MainContext._runtimeType = testRuntimeType1() ? egret.MainContext.RUNTIME_HTML5 : egret.MainContext.RUNTIME_NATIVE;
 
-/**
- * @private
- */
 delete testDeviceType1;
-/**
- * @private
- */
 delete testRuntimeType1;
