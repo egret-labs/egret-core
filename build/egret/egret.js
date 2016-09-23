@@ -17009,7 +17009,7 @@ var egret;
                 context.transform(m.a, m.b, m.c, m.d, m.tx, m.ty);
             }
             while (pos < length) {
-                context.drawMesh(image, data[pos++], data[pos++], data[pos++], data[pos++], data[pos++], data[pos++], data[pos++], data[pos++], node.imageWidth, node.imageHeight, node.uvs, node.vertices, node.indices, node.bounds);
+                context.drawMesh(image.source, data[pos++], data[pos++], data[pos++], data[pos++], data[pos++], data[pos++], data[pos++], data[pos++], node.imageWidth, node.imageHeight, node.uvs, node.vertices, node.indices, node.bounds);
             }
             if (m) {
                 context.restoreTransform();
