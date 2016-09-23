@@ -11656,7 +11656,7 @@ declare module egret {
          */
         /**
          * @language zh_CN
-         * 一个整数，表示字符之间的距量。
+         * 一个整数，表示字符之间的距离。
          * @default 0
          * @version Egret 2.4
          * @platform Web,Native
