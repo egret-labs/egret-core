@@ -113,5 +113,12 @@ module egret {
                 } 
             }
         }
+
+        /**
+         * @private
+         */
+        public $toJson():string {
+            return '{"matrix": [' + this.$matrix.toString() + ']}';
+        }
     }
 }

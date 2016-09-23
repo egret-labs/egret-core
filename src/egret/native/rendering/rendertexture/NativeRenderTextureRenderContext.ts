@@ -325,7 +325,9 @@ module egret.native {
          */
         public arc(x:number, y:number, radius:number, startAngle:number, endAngle:number, anticlockwise?:boolean):void {
             this.checkSurface();
-            this.$nativeGraphicsContext.arc(x, y, radius, startAngle, endAngle, anticlockwise);
+            $cmdManager.setContext(this.$nativeGraphicsContext);
+            $cmdManager.arc(x, y, radius, startAngle, endAngle, anticlockwise ? 1 : 0);
+            // this.$nativeGraphicsContext.arc(x, y, radius, startAngle, endAngle, anticlockwise);
         }
 
         /**
@@ -340,7 +342,9 @@ module egret.native {
          */
         public quadraticCurveTo(cpx:number, cpy:number, x:number, y:number):void {
             this.checkSurface();
-            this.$nativeGraphicsContext.quadraticCurveTo(cpx, cpy, x, y);
+            $cmdManager.setContext(this.$nativeGraphicsContext);
+            $cmdManager.quadraticCurveTo(cpx, cpy, x, y);
+            // this.$nativeGraphicsContext.quadraticCurveTo(cpx, cpy, x, y);
         }
 
         /**
@@ -429,7 +433,9 @@ module egret.native {
          */
         public fillRect(x:number, y:number, w:number, h:number):void {
             this.checkSurface();
-            this.$nativeGraphicsContext.fillRect(x, y, w, h);
+            $cmdManager.setContext(this.$nativeGraphicsContext);
+            $cmdManager.fillRect(x, y, w, h);
+            // this.$nativeGraphicsContext.fillRect(x, y, w, h);
         }
 
         /**
@@ -447,7 +453,9 @@ module egret.native {
          */
         public bezierCurveTo(cp1x:number, cp1y:number, cp2x:number, cp2y:number, x:number, y:number):void {
             this.checkSurface();
-            this.$nativeGraphicsContext.bezierCurveTo(cp1x, cp1y, cp2x, cp2y, x, y);
+            $cmdManager.setContext(this.$nativeGraphicsContext);
+            $cmdManager.bezierCurveTo(cp1x, cp1y, cp2x, cp2y, x, y);
+            // this.$nativeGraphicsContext.bezierCurveTo(cp1x, cp1y, cp2x, cp2y, x, y);
         }
 
         /**
@@ -458,7 +466,9 @@ module egret.native {
          */
         public stroke():void {
             this.checkSurface();
-            this.$nativeGraphicsContext.stroke();
+            $cmdManager.setContext(this.$nativeGraphicsContext);
+            $cmdManager.stroke();
+            // this.$nativeGraphicsContext.stroke();
         }
 
         /**
@@ -474,7 +484,9 @@ module egret.native {
         public strokeRect(x:number, y:number, w:number, h:number):void {
             //console.log("strokeRect");
             this.checkSurface();
-            this.$nativeGraphicsContext.strokeRect(x, y, w, h);
+            $cmdManager.setContext(this.$nativeGraphicsContext);
+            $cmdManager.strokeRect(x, y, w, h);
+            // this.$nativeGraphicsContext.strokeRect(x, y, w, h);
         }
 
         private clipRectArray = null;

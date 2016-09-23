@@ -315,7 +315,9 @@ module egret.native {
          * @platform Web,Native
          */
         public arc(x:number, y:number, radius:number, startAngle:number, endAngle:number, anticlockwise?:boolean):void {
-            this.$nativeContext.arc(x, y, radius, startAngle, endAngle, anticlockwise);
+            $cmdManager.setContext(this.$nativeContext);
+            $cmdManager.arc(x, y, radius, startAngle, endAngle, anticlockwise ? 1 : 0);
+            // this.$nativeContext.arc(x, y, radius, startAngle, endAngle, anticlockwise);
         }
 
         /**
@@ -330,7 +332,9 @@ module egret.native {
          */
         public quadraticCurveTo(cpx:number, cpy:number, x:number, y:number):void {
             //console.log("quadraticCurveTo " + cpx + " " + cpy + " " + x + " " + y);
-            this.$nativeContext.quadraticCurveTo(cpx, cpy, x, y);
+            $cmdManager.setContext(this.$nativeContext);
+            $cmdManager.quadraticCurveTo(cpx, cpy, x, y);
+            // this.$nativeContext.quadraticCurveTo(cpx, cpy, x, y);
         }
 
         /**
@@ -417,7 +421,9 @@ module egret.native {
          * @platform Web,Native
          */
         public fillRect(x:number, y:number, w:number, h:number):void {
-            this.$nativeContext.fillRect(x, y, w, h);
+            $cmdManager.setContext(this.$nativeContext);
+            $cmdManager.fillRect(x, y, w, h);
+            // this.$nativeContext.fillRect(x, y, w, h);
         }
 
         /**
@@ -434,7 +440,9 @@ module egret.native {
          * @platform Web,Native
          */
         public bezierCurveTo(cp1x:number, cp1y:number, cp2x:number, cp2y:number, x:number, y:number):void {
-            this.$nativeContext.bezierCurveTo(cp1x, cp1y, cp2x, cp2y, x, y);
+            $cmdManager.setContext(this.$nativeContext);
+            $cmdManager.bezierCurveTo(cp1x, cp1y, cp2x, cp2y, x, y);
+            // this.$nativeContext.bezierCurveTo(cp1x, cp1y, cp2x, cp2y, x, y);
         }
 
         /**
@@ -444,7 +452,9 @@ module egret.native {
          * @platform Web,Native
          */
         public stroke():void {
-            this.$nativeContext.stroke();
+            $cmdManager.setContext(this.$nativeContext);
+            $cmdManager.stroke();
+            // this.$nativeContext.stroke();
         }
 
         /**
@@ -459,7 +469,9 @@ module egret.native {
          */
         public strokeRect(x:number, y:number, w:number, h:number):void {
             //console.log("strokeRect");
-            this.$nativeContext.strokeRect(x, y, w, h);
+            $cmdManager.setContext(this.$nativeContext);
+            $cmdManager.strokeRect(x, y, w, h);
+            // this.$nativeContext.strokeRect(x, y, w, h);
         }
 
         private clipRectArray = null;
@@ -830,6 +842,134 @@ module egret.native {
 
         /**
          * @private
+         * draw mesh
+         */
+        public drawMesh(image, offsetX, offsetY, width, height, surfaceOffsetX, surfaceOffsetY, surfaceImageWidth, surfaceImageHeight,
+                    textureSourceWidth, textureSourceHeight, meshUVs, meshVertices, meshIndices):void {
+            var bitmapData;
+            if (image.$nativeCanvas) {
+                bitmapData = image.$nativeCanvas;
+            }
+            else {
+                bitmapData = image;
+            }
+            if (!bitmapData) {
+                return;
+            }
+            if (arguments.length == 3) {
+                surfaceOffsetX = offsetX;
+                surfaceOffsetY = offsetY;
+                offsetX = 0;
+                offsetY = 0;
+                width = surfaceImageWidth = image.width;
+                height = surfaceImageHeight = image.height;
+            }
+            else if (arguments.length == 5) {
+                surfaceOffsetX = offsetX;
+                surfaceOffsetY = offsetY;
+                surfaceImageWidth = width;
+                surfaceImageHeight = height;
+                offsetX = 0;
+                offsetY = 0;
+                width = image.width;
+                height = image.height;
+            }
+            else {
+                if (!width) {
+                    width = image.width;
+                }
+                if (!height) {
+                    height = image.height;
+                }
+                if (!surfaceOffsetX) {
+                    surfaceOffsetX = 0;
+                }
+                if (!surfaceOffsetY) {
+                    surfaceOffsetY = 0;
+                }
+                if (!surfaceImageWidth) {
+                    surfaceImageWidth = width;
+                }
+                if (!surfaceImageHeight) {
+                    surfaceImageHeight = height;
+                }
+            }
+
+            this.vertices = new Float32Array(meshVertices.length / 2 * 5);
+            this.indicesForMesh = new Uint32Array(meshIndices.length);
+            this.cacheArrays(this.$matrix, 1, offsetX, offsetY, width, height, surfaceOffsetX, surfaceOffsetY,
+                surfaceImageWidth, surfaceImageHeight, textureSourceWidth, textureSourceHeight, meshUVs, meshVertices, meshIndices);
+
+            // 打断批渲染
+            $cmdManager.flush();
+
+            this.$nativeContext.drawMesh(bitmapData, this.vertices, this.indicesForMesh, this.vertices.length, this.indicesForMesh.length);
+        }
+
+        private vertices:Float32Array;
+        private indicesForMesh:Float32Array;
+
+        private cacheArrays(transform, alpha, sourceX, sourceY, sourceWidth, sourceHeight, destX, destY, destWidth, destHeight,
+                    textureSourceWidth, textureSourceHeight, meshUVs, meshVertices, meshIndices) {
+            //计算出绘制矩阵，之后把矩阵还原回之前的
+            var locWorldTransform = transform;
+            var originalA = locWorldTransform.a;
+            var originalB = locWorldTransform.b;
+            var originalC = locWorldTransform.c;
+            var originalD = locWorldTransform.d;
+            var originalTx = locWorldTransform.tx;
+            var originalTy = locWorldTransform.ty;
+            if (destX != 0 || destY != 0) {
+                locWorldTransform.append(1, 0, 0, 1, destX, destY);
+            }
+            if (sourceWidth / destWidth != 1 || sourceHeight / destHeight != 1) {
+                locWorldTransform.append(destWidth / sourceWidth, 0, 0, destHeight / sourceHeight, 0, 0);
+            }
+            var a = locWorldTransform.a;
+            var b = locWorldTransform.b;
+            var c = locWorldTransform.c;
+            var d = locWorldTransform.d;
+            var tx = locWorldTransform.tx;
+            var ty = locWorldTransform.ty;
+            locWorldTransform.a = originalA;
+            locWorldTransform.b = originalB;
+            locWorldTransform.c = originalC;
+            locWorldTransform.d = originalD;
+            locWorldTransform.tx = originalTx;
+            locWorldTransform.ty = originalTy;
+            if (meshVertices) {
+                // 计算索引位置与赋值
+                var vertices = this.vertices;
+                // 缓存顶点数组
+                var i = 0, iD = 0, l = 0;
+                var u = 0, v = 0, x = 0, y = 0;
+                for (i = 0, l = meshUVs.length; i < l; i += 2) {
+                    iD = i * 5 / 2;
+                    x = meshVertices[i];
+                    y = meshVertices[i + 1];
+                    u = meshUVs[i];
+                    v = meshUVs[i + 1];
+                    // xy
+                    vertices[iD + 0] = a * x + c * y + tx;
+                    vertices[iD + 1] = b * x + d * y + ty;
+                    // uv
+                    vertices[iD + 2] = (sourceX + u * sourceWidth) / textureSourceWidth;
+                    vertices[iD + 3] = (sourceY + v * sourceHeight) / textureSourceHeight;
+                    // alpha
+                    vertices[iD + 4] = alpha;
+                }
+                for (i = 0; i < meshIndices.length; i++) {
+                    this.indicesForMesh[i] = meshIndices[i];
+                }
+            }
+            else {
+                console.log("meshVertices not exist");
+            }
+            this.vertices = vertices;
+        }
+
+        /**
+         * @private
          * 基于指定的源图象(BitmapData)创建一个模板，通过repetition参数指定源图像在什么方向上进行重复，返回一个GraphicsPattern对象。
          * @param bitmapData 做为重复图像源的 BitmapData 对象。
          * @param repetition 指定如何重复图像。
@@ -865,6 +1005,18 @@ module egret.native {
                 res.data = res.pixelData;
             }
             return res;
+        }
+
+        /**
+         * @private
+         * 设置全局shader
+         * @param filter filter属性生成的json
+         */
+        public setGlobalShader(filter:string):void {
+            $cmdManager.setContext(this.$nativeContext);
+
+            var s1 = $cmdManager.pushString(filter);
+            $cmdManager.setGlobalShader(s1);
         }
     }
 }

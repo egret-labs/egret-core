@@ -4267,13 +4267,7 @@ var testRuntimeType1 = function () {
 };
 egret.MainContext.deviceType = testDeviceType1() ? egret.MainContext.DEVICE_MOBILE : egret.MainContext.DEVICE_PC;
 egret.MainContext._runtimeType = testRuntimeType1() ? egret.MainContext.RUNTIME_HTML5 : egret.MainContext.RUNTIME_NATIVE;
-/**
- * @private
- */
 delete testDeviceType1;
-/**
- * @private
- */
 delete testRuntimeType1;
 //////////////////////////////////////////////////////////////////////////////////////
 //

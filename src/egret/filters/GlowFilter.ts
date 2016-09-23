@@ -330,5 +330,12 @@ module egret {
             this.$knockout = value;
             this.invalidate();
         }
+
+        /**
+         * @private
+         */
+        public $toJson():string {
+            return '{"color": ' + this.$color + ', "red": ' + this.$red + ', "green": ' + this.$green + ', "blue": ' + this.$blue + ', "alpha": ' + this.$alpha + ', "blurX": ' + this.$blurX + ', "blurY": ' + this.blurY + ', "strength": ' + this.$strength + ', "quality": ' + this.$quality + ', "inner": ' + this.$inner + ', "knockout": ' + this.$knockout + '}';
+        }
     }
 }

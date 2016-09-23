@@ -68,5 +68,12 @@ module egret {
                 this.$targets[i].$invalidateContentBounds();
             }
         }
+
+        /**
+         * @private
+         */
+        public $toJson():string {
+            return '';
+        }
     }
 }
