@@ -9203,7 +9203,7 @@ var dragonBones;
      * @version DragonBones 4.7
      */
     function getMovieNames(groupName) {
-        var groupConfig = this._groupConfigMap[groupName];
+        var groupConfig = _groupConfigMap[groupName];
         if (groupConfig) {
             var movieNameGroup = [];
             for (var i = 0, l = groupConfig.movie.length; i < l; ++i) {
@@ -9918,9 +9918,9 @@ var dragonBones;
         };
         /**
          * @language zh_CN
-         * 播放动画。
-         * @param clipName 动画的名称，如果未设置，则播放默认动画，或将暂停状态切换为播放状态，或重新播放上一个正在播放的动画。
-         * @param playTimes 动画需要播放的次数。 [-1: 使用动画数据默认值, 0: 无限循环播放, [1~N]: 循环播放 N 次]
+         * 播放动画剪辑。
+         * @param clipName 动画剪辑的名称，如果未设置，则播放默认动画剪辑，或将暂停状态切换为播放状态，或重新播放上一个正在播放的动画剪辑。
+         * @param playTimes 动画剪辑需要播放的次数。 [-1: 使用动画剪辑默认值, 0: 无限循环播放, [1~N]: 循环播放 N 次]
          * @version DragonBones 4.7
          */
         Movie.prototype.play = function (clipName, playTimes) {
@@ -9997,8 +9997,8 @@ var dragonBones;
         };
         /**
          * @language zh_CN
-         * 是否包含指定动画。
-         * @param clipName 动画的名称。
+         * 是否包含指定动画剪辑。
+         * @param clipName 动画剪辑的名称。
          * @version DragonBones 4.7
          */
         Movie.prototype.hasClip = function (clipName) {
@@ -10007,7 +10007,7 @@ var dragonBones;
         Object.defineProperty(Movie.prototype, "isPlaying", {
             /**
              * @language zh_CN
-             * 动画是否处正在播放。
+             * 动画剪辑是否处正在播放。
              * @version DragonBones 4.7
              */
             get: function () {
@@ -10019,7 +10019,7 @@ var dragonBones;
         Object.defineProperty(Movie.prototype, "isComplete", {
             /**
              * @language zh_CN
-             * 动画是否均播放完毕。
+             * 动画剪辑是否均播放完毕。
              * @version DragonBones 4.7
              */
             get: function () {
@@ -10031,7 +10031,7 @@ var dragonBones;
         Object.defineProperty(Movie.prototype, "currentTime", {
             /**
              * @language zh_CN
-             * 当前动画的播放时间。 (以秒为单位)
+             * 当前动画剪辑的播放时间。 (以秒为单位)
              * @version DragonBones 4.7
              */
             get: function () {
@@ -10043,7 +10043,7 @@ var dragonBones;
         Object.defineProperty(Movie.prototype, "totalTime", {
             /**
              * @language zh_CN
-             * 当前动画的总时间。 (以秒为单位)
+             * 当前动画剪辑的总时间。 (以秒为单位)
              * @version DragonBones 4.7
              */
             get: function () {
@@ -10055,7 +10055,7 @@ var dragonBones;
         Object.defineProperty(Movie.prototype, "currentPlayTimes", {
             /**
              * @language zh_CN
-             * 当前动画的播放次数。
+             * 当前动画剪辑的播放次数。
              * @version DragonBones 4.7
              */
             get: function () {
@@ -10067,7 +10067,7 @@ var dragonBones;
         Object.defineProperty(Movie.prototype, "playTimes", {
             /**
              * @language zh_CN
-             * 需要播放的次数。 [0: 无限循环播放, [1~N]: 循环播放 N 次]
+             * 当前动画剪辑需要播放的次数。 [0: 无限循环播放, [1~N]: 循环播放 N 次]
              * @version DragonBones 4.7
              */
             get: function () {
