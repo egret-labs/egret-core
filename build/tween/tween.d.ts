@@ -942,16 +942,6 @@ declare module egret {
 }
 declare module egret.tween {
     type EaseType = 'quadIn' | 'quadOut' | 'quadOut' | 'quadInOut' | 'cubicIn' | 'cubicOut' | 'cubicInOut' | 'quartIn' | 'quartOut' | 'quartInOut' | 'quintIn' | 'quintOut' | 'quintInOut' | 'sineIn' | 'sineOut' | 'sineInOut' | 'backIn' | 'backOut' | 'backInOut' | 'circIn' | 'circOut' | 'circInOut' | 'bounceIn' | 'bounceOut' | 'bounceInOut' | 'elasticIn' | 'elasticOut' | 'elasticInOut';
-    interface TweenProps {
-        useTicks?: boolean;
-        ignoreGlobalPause?: boolean;
-        loop?: boolean;
-        override?: boolean;
-        paused?: boolean;
-        position?: number;
-        onChange?: () => void;
-        onChangeObj?: any;
-    }
     /**
      * @language en_US
      * Abstract class, Indicate the base action.
@@ -1193,7 +1183,7 @@ declare module egret.tween {
          * @version Egret 3.1.8
          * @platform Web,Native
          */
-        props: TweenProps;
+        props: any;
         /**
          * @private
          */

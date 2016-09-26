@@ -43,7 +43,31 @@
 //  console.log("release");
 //
 
+/**
+ * @language en_US
+ * Is debug mode.
+ * @version Egret 2.5
+ * @platform Web,Native
+ */
+/**
+ * @language zh_CN
+ * 是否为 debug 模式。
+ * @version Egret 2.5
+ * @platform Web,Native
+ */
 declare var DEBUG:boolean;
+/**
+ * @language en_US
+ * Is release mode.
+ * @version Egret 2.5
+ * @platform Web,Native
+ */
+/**
+ * @language zh_CN
+ * 是否为 release 模式。
+ * @version Egret 2.5
+ * @platform Web,Native
+ */
 declare var RELEASE:boolean;
 
 this["DEBUG"] = true;

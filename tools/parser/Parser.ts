@@ -209,7 +209,10 @@ export function parseCommandLine(commandLine: string[]) {
             if (!options.projectDir)
                 options.projectDir = process.cwd();
             else {
-                options.projectDir = path.resolve(process.cwd(), options.projectDir);
+                var absPath = path.resolve(process.cwd(), options.projectDir);
+                if(file.isDirectory(absPath)) {
+                    options.projectDir = absPath;
+                }
             }
             options.projectDir = file.joinPath(options.projectDir, "/");
             properties.init(options.projectDir);

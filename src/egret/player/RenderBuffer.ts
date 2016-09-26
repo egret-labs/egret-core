@@ -29,9 +29,14 @@
 
 module egret.sys {
     /**
+     * @private
      * 共享的用于碰撞检测的渲染缓冲
      */
     export var customHitTestBuffer:sys.RenderBuffer;
+    /**
+     * @private
+     * 共享的用于canvas碰撞检测的渲染缓冲
+     */
     export var canvasHitTestBuffer:sys.RenderBuffer;
     /**
      * @private
@@ -118,6 +123,9 @@ module egret.sys {
         setDirtyRegionPolicy(state:string):void;
     }
 
+    /**
+     * @private
+     */
     export var RenderBuffer:{
         /**
          * 创建一个RenderTarget。
@@ -129,6 +137,9 @@ module egret.sys {
         new(width?:number, height?:number, root?:boolean):RenderBuffer;
     };
 
+    /**
+     * @private
+     */
     export var CanvasRenderBuffer:{
         /**
          * 创建一个CanvasRenderBuffer。

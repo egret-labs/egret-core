@@ -132,5 +132,12 @@ module egret {
          * @private
          */
         public $blurY:number;
+
+        /**
+         * @private
+         */
+        public $toJson():string {
+            return '{"blurX": ' + this.$blurX + ', "blurY": ' + this.$blurY + ', "quality": 1}';
+        }
     }
 }

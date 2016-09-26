@@ -5843,7 +5843,7 @@ var egret;
             fillPath && fillPath.drawEllipse(x, y, width, height);
             strokePath && strokePath.drawEllipse(x, y, width, height);
             this.extendBoundsByPoint(x + width, y + height);
-            this.updatePosition(x, y);
+            this.updatePosition(x + width, y + height * 0.5);
             this.$renderNode.dirtyRender = true;
         };
         /**
@@ -10531,6 +10531,12 @@ var egret;
                 this.$targets[i].$invalidateContentBounds();
             }
         };
+        /**
+         * @private
+         */
+        p.$toJson = function () {
+            return '';
+        };
         return Filter;
     }(egret.HashObject));
     egret.Filter = Filter;
@@ -10661,6 +10667,12 @@ var egret;
                 this.invalidate();
             }
         );
+        /**
+         * @private
+         */
+        p.$toJson = function () {
+            return '{"blurX": ' + this.$blurX + ', "blurY": ' + this.$blurY + ', "quality": 1}';
+        };
         return BlurFilter;
     }(egret.Filter));
     egret.BlurFilter = BlurFilter;
@@ -10783,6 +10795,12 @@ var egret;
                     this.$matrix[i] = (i == 0 || i == 6 || i == 12 || i == 18) ? 1 : 0;
                 }
             }
+        };
+        /**
+         * @private
+         */
+        p.$toJson = function () {
+            return '{"matrix": [' + this.$matrix.toString() + ']}';
         };
         return ColorMatrixFilter;
     }(egret.Filter));
@@ -11078,6 +11096,12 @@ var egret;
                 this.invalidate();
             }
         );
+        /**
+         * @private
+         */
+        p.$toJson = function () {
+            return '{"color": ' + this.$color + ', "red": ' + this.$red + ', "green": ' + this.$green + ', "blue": ' + this.$blue + ', "alpha": ' + this.$alpha + ', "blurX": ' + this.$blurX + ', "blurY": ' + this.blurY + ', "strength": ' + this.$strength + ', "quality": ' + this.$quality + ', "inner": ' + this.$inner + ', "knockout": ' + this.$knockout + '}';
+        };
         return GlowFilter;
     }(egret.Filter));
     egret.GlowFilter = GlowFilter;
@@ -11249,6 +11273,12 @@ var egret;
                 this.invalidate();
             }
         );
+        /**
+         * @private
+         */
+        p.$toJson = function () {
+            return '{"distance": ' + this.$distance + ', "angle": ' + this.$angle + ', "color": ' + this.$color + ', "red": ' + this.$red + ', "green": ' + this.$green + ', "blue": ' + this.$blue + ', "alpha": ' + this.$alpha + ', "blurX": ' + this.$blurX + ', "blurY": ' + this.blurY + ', "strength": ' + this.$strength + ', "quality": ' + this.$quality + ', "inner": ' + this.$inner + ', "knockout": ' + this.$knockout + ', "hideObject": ' + this.$hideObject + '}';
+        };
         return DropShadowFilter;
     }(egret.GlowFilter));
     egret.DropShadowFilter = DropShadowFilter;
@@ -16515,7 +16545,7 @@ var egret;
                     if (hasBlendMode) {
                         context.globalCompositeOperation = compositeOp;
                     }
-                    egret_native.Graphics.setGlobalShader(filters[0]);
+                    context.setGlobalShader(filters[0].$toJson());
                     if (displayObject.$mask && (displayObject.$mask.$parentDisplayList || root)) {
                         drawCalls += this.drawWithClip(displayObject, context, dirtyList, matrix, clipRegion, root);
                     }
@@ -16525,7 +16555,7 @@ var egret;
                     else {
                         drawCalls += this.drawDisplayObject(displayObject, context, dirtyList, matrix, displayObject.$displayList, clipRegion, root);
                     }
-                    egret_native.Graphics.setGlobalShader(null);
+                    context.setGlobalShader("");
                     if (hasBlendMode) {
                         context.globalCompositeOperation = defaultCompositeOp;
                     }
@@ -16563,9 +16593,9 @@ var egret;
                     context.globalAlpha = 1;
                     context.setTransform(1, 0, 0, 1, region.minX + matrix.tx, region.minY + matrix.ty);
                     // 绘制结果的时候，应用滤镜
-                    egret_native.Graphics.setGlobalShader(filters[0]);
+                    context.setGlobalShader(filters[0].$toJson());
                     context.drawImage(displayBuffer.surface, 0, 0, displayBuffer.width, displayBuffer.height, 0, 0, displayBuffer.width, displayBuffer.height);
-                    egret_native.Graphics.setGlobalShader(null);
+                    context.setGlobalShader("");
                     if (hasBlendMode) {
                         context.globalCompositeOperation = defaultCompositeOp;
                     }
@@ -16956,8 +16986,36 @@ var egret;
                 case 6 /* SetAlphaNode */:
                     context.globalAlpha = node.drawData[0];
                     break;
+                case 7 /* MeshNode */:
+                    drawCalls = this.renderMesh(node, context);
+                    break;
             }
             return drawCalls;
+        };
+        /**
+         * render mesh
+         */
+        p.renderMesh = function (node, context) {
+            if (egret.Capabilities.runtimeType != egret.RuntimeType.NATIVE) {
+                return 0;
+            }
+            var image = node.image;
+            var data = node.drawData;
+            var length = data.length;
+            var pos = 0;
+            var m = node.matrix;
+            if (m) {
+                context.saveTransform();
+                context.transform(m.a, m.b, m.c, m.d, m.tx, m.ty);
+            }
+            while (pos < length) {
+                context.drawMesh(image.source, data[pos++], data[pos++], data[pos++], data[pos++], data[pos++], data[pos++], data[pos++], data[pos++], node.imageWidth, node.imageHeight, node.uvs, node.vertices, node.indices, node.bounds);
+            }
+            if (m) {
+                context.restoreTransform();
+            }
+            // TODO 应该计算合理的drawCall？
+            return 1;
         };
         /**
          * @private
@@ -17874,6 +17932,9 @@ var egret;
         egret.$markReadOnly(Capabilities, "boundingClientHeight", false);
     }
 })(egret || (egret = {}));
+/**
+ * @private
+ */
 var testDeviceType = function () {
     if (!this["navigator"]) {
         return true;
@@ -17881,6 +17942,9 @@ var testDeviceType = function () {
     var ua = navigator.userAgent.toLowerCase();
     return (ua.indexOf('mobile') != -1 || ua.indexOf('android') != -1);
 };
+/**
+ * @private
+ */
 var testRuntimeType = function () {
     if (this["navigator"]) {
         return true;
@@ -18374,7 +18438,7 @@ var egret;
              */
             /**
              * @language zh_CN
-             * 一个整数，表示字符之间的距量。
+             * 一个整数，表示字符之间的距离。
              * @default 0
              * @version Egret 2.4
              * @platform Web,Native
@@ -18515,7 +18579,7 @@ var egret;
                     node.imageWidth = texture._sourceWidth;
                     node.imageHeight = texture._sourceHeight;
                     node.drawImage(texture._bitmapX, texture._bitmapY, bitmapWidth, bitmapHeight, xPos + texture._offsetX, yPos + texture._offsetY, texture.$getScaleBitmapWidth(), texture.$getScaleBitmapHeight());
-                    xPos += bitmapFont.getConfig(character, "xadvance") || (texture.$getTextureWidth() + values[4 /* letterSpacing */]);
+                    xPos += (bitmapFont.getConfig(character, "xadvance") || texture.$getTextureWidth()) + values[4 /* letterSpacing */];
                 }
                 yPos += lineHeight + values[3 /* lineSpacing */];
             }
@@ -21641,6 +21705,9 @@ var egret;
 //  EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 //
 //////////////////////////////////////////////////////////////////////////////////////
+/**
+ * @private
+ */
 var egret;
 (function (egret) {
     var sys;
@@ -23188,8 +23255,17 @@ var egret;
     egret.NumberUtils = NumberUtils;
     egret.registerClass(NumberUtils,'egret.NumberUtils');
 })(egret || (egret = {}));
+/**
+ * @private
+ */
 var egret_sin_map = {};
+/**
+ * @private
+ */
 var egret_cos_map = {};
+/**
+ * @private
+ */
 var DEG_TO_RAD = Math.PI / 180;
 for (var NumberUtils_i = 0; NumberUtils_i < 360; NumberUtils_i++) {
     egret_sin_map[NumberUtils_i] = Math.sin(NumberUtils_i * DEG_TO_RAD);

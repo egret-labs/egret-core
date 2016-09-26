@@ -189,8 +189,9 @@ module egret {
                     if (hasBlendMode) {
                         context.globalCompositeOperation = compositeOp;
                     }
+                    
+                    (<any>context).setGlobalShader(filters[0].$toJson());
 
-                    egret_native.Graphics.setGlobalShader(filters[0]);
                     if (displayObject.$mask && (displayObject.$mask.$parentDisplayList || root)) {
                         drawCalls += this.drawWithClip(displayObject, context, dirtyList, matrix, clipRegion, root);
                     }
@@ -200,7 +201,8 @@ module egret {
                     else {
                         drawCalls += this.drawDisplayObject(displayObject, context, dirtyList, matrix, displayObject.$displayList, clipRegion, root);
                     }
-                    egret_native.Graphics.setGlobalShader(null);
+
+                    (<any>context).setGlobalShader("");
 
                     if (hasBlendMode) {
                         context.globalCompositeOperation = defaultCompositeOp;
@@ -248,9 +250,9 @@ module egret {
                     context.globalAlpha = 1;
                     context.setTransform(1, 0, 0, 1, region.minX + matrix.tx, region.minY + matrix.ty);
                     // 绘制结果的时候，应用滤镜
-                    egret_native.Graphics.setGlobalShader(filters[0]);
+                    (<any>context).setGlobalShader(filters[0].$toJson());
                     context.drawImage(displayBuffer.surface, 0, 0, displayBuffer.width, displayBuffer.height, 0, 0, displayBuffer.width, displayBuffer.height);
-                    egret_native.Graphics.setGlobalShader(null);
+                    (<any>context).setGlobalShader("");
 
                     if (hasBlendMode) {
                         context.globalCompositeOperation = defaultCompositeOp;
@@ -687,8 +689,38 @@ module egret {
                 case sys.RenderNodeType.SetAlphaNode:
                     context.globalAlpha = node.drawData[0];
                     break;
+                case sys.RenderNodeType.MeshNode:
+                    drawCalls = this.renderMesh(<sys.MeshNode>node, context);
+                    break;
             }
             return drawCalls;
+        }
+
+        /** 
+         * render mesh 
+         */
+        private renderMesh(node:sys.MeshNode, context:any):number {
+            if(Capabilities.runtimeType != RuntimeType.NATIVE) {
+                return 0;
+            }
+            var image = node.image;
+            var data = node.drawData;
+            var length = data.length;
+            var pos = 0;
+            var m = node.matrix;
+            if (m) {
+                context.saveTransform();
+                context.transform(m.a, m.b, m.c, m.d, m.tx, m.ty);
+            }
+            while (pos < length) {
+                context.drawMesh(image.source, data[pos++], data[pos++], data[pos++], data[pos++], data[pos++], data[pos++], data[pos++],
+                    data[pos++], node.imageWidth, node.imageHeight, node.uvs, node.vertices, node.indices, node.bounds);
+            }
+            if (m) {
+                context.restoreTransform();
+            }
+            // TODO 应该计算合理的drawCall？
+            return 1;
         }
 
 
