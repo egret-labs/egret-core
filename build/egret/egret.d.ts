@@ -11259,6 +11259,21 @@ declare module egret {
          */
         static supportVersion: string;
         static $supportVersion: string;
+        /***
+         * @language en_US
+         * version of Egret.
+         * @type {string}
+         * @version Egret 3.2.0
+         * @platform Web,Native
+         */
+        /***
+         * @language zh_CN
+         * Egret 的版本号。
+         * @type {string}
+         * @version Egret 3.2.0
+         * @platform Web,Native
+         */
+        static engineVersion: string;
         /**
          * 设置系统信息
          */
