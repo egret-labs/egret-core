@@ -642,6 +642,14 @@ var egret;
          * @private
          *
          */
+        p.$renderFrame = function () {
+            this.$bitmapData = this.$movieClipData.getTextureByFrame(this.$currentFrameNum);
+            this.$invalidateContentBounds();
+        };
+        /**
+         * @private
+         *
+         */
         p.handlePendingEvent = function () {
             if (this.$eventPool.length != 0) {
                 this.$eventPool.reverse();

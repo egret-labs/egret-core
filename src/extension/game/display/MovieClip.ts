@@ -568,6 +568,15 @@ module egret {
          * @private
          *
          */
+        public $renderFrame():void {
+            this.$bitmapData = this.$movieClipData.getTextureByFrame(this.$currentFrameNum);
+            this.$invalidateContentBounds();
+        }
+
+        /**
+         * @private
+         *
+         */
         private handlePendingEvent():void {
             if (this.$eventPool.length != 0) {
                 this.$eventPool.reverse();
