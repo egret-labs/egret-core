@@ -155,6 +155,9 @@ module egret {
          * @returns
          */
         private getTextureByResName(resName:string):Texture {
+            if (this.spriteSheet == null) {
+                return null;
+            }
             var texture = this.spriteSheet.getTexture(resName);
             if (!texture) {
                 var textureData = this.textureData[resName];

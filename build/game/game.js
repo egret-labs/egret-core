@@ -949,6 +949,9 @@ var egret;
          * @returns
          */
         p.getTextureByResName = function (resName) {
+            if (this.spriteSheet == null) {
+                return null;
+            }
             var texture = this.spriteSheet.getTexture(resName);
             if (!texture) {
                 var textureData = this.textureData[resName];
