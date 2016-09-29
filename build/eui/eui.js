@@ -18923,12 +18923,16 @@ var eui;
                 return { templates: templates, chainIndex: chainIndex };
             };
             p.parseTemplates = function (value) {
+                //仅仅是表达式相加 如:{a.b+c.d}
                 if (value.indexOf("'") == -1) {
                     return value.split("+");
                 }
+                //包含文本的需要提取文本并对文本进行处理
+                var isSingleQuoteLeak = false; //是否缺失单引号
                 var trimText = "";
                 value = value.split("\\\'").join("\v0\v");
                 while (value.length > 0) {
+                    //'成对出现 这是第一个
                     var index = value.indexOf("'");
                     if (index == -1) {
                         trimText += value;
@@ -18936,15 +18940,21 @@ var eui;
                     }
                     trimText += value.substring(0, index + 1);
                     value = value.substring(index + 1);
+                    //'成对出现 这是第二个
                     index = value.indexOf("'");
                     if (index == -1) {
                         index = value.length - 1;
+                        isSingleQuoteLeak = true;
                     }
                     var quote = value.substring(0, index + 1);
                     trimText += quote.split("+").join("\v1\v");
                     value = value.substring(index + 1);
                 }
                 value = trimText.split("\v0\v").join("\\\'");
+                //补全缺失的单引号
+                if (isSingleQuoteLeak) {
+                    value += "'";
+                }
                 var templates = value.split("+");
                 var length = templates.length;
                 for (var i = 0; i < length; i++) {

@@ -642,6 +642,14 @@ var egret;
          * @private
          *
          */
+        p.$renderFrame = function () {
+            this.$bitmapData = this.$movieClipData.getTextureByFrame(this.$currentFrameNum);
+            this.$invalidateContentBounds();
+        };
+        /**
+         * @private
+         *
+         */
         p.handlePendingEvent = function () {
             if (this.$eventPool.length != 0) {
                 this.$eventPool.reverse();
@@ -949,6 +957,9 @@ var egret;
          * @returns
          */
         p.getTextureByResName = function (resName) {
+            if (this.spriteSheet == null) {
+                return null;
+            }
             var texture = this.spriteSheet.getTexture(resName);
             if (!texture) {
                 var textureData = this.textureData[resName];

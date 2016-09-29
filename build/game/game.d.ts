@@ -318,6 +318,11 @@ declare module egret {
          * @private
          *
          */
+        $renderFrame(): void;
+        /**
+         * @private
+         *
+         */
         private handlePendingEvent();
         /**
          * MovieClip 实例中帧的总数
