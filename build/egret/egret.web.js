@@ -4594,6 +4594,7 @@ var egret;
             sharedCanvas.height = iHeight;
             if (egret.Capabilities.$renderMode == "webgl") {
                 var renderTexture;
+                //webgl下非RenderTexture纹理先画到RenderTexture
                 if (!texture.$renderBuffer) {
                     renderTexture = new egret.RenderTexture();
                     renderTexture.drawToTexture(new egret.Bitmap(texture));
@@ -4601,6 +4602,7 @@ var egret;
                 else {
                     renderTexture = texture;
                 }
+                //从RenderTexture中读取像素数据，填入canvas
                 var pixels = renderTexture.$renderBuffer.getPixels(0, 0, iWidth, iHeight);
                 var imageData = new ImageData(iWidth, iHeight);
                 for (var i = 0; i < pixels.length; i++) {
