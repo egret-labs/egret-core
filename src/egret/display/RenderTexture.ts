@@ -49,13 +49,13 @@ module egret {
 
         constructor() {
             super();
-            this.renderBuffer = new sys.CanvasRenderBuffer();
-            var bitmapData = new egret.BitmapData(this.renderBuffer.surface);
+            this.$renderBuffer = new sys.RenderBuffer();
+            var bitmapData = new egret.BitmapData(this.$renderBuffer.surface);
             bitmapData.$deleteSource = false;
             this._setBitmapData(bitmapData);
         }
 
-        private renderBuffer:sys.RenderBuffer;
+        public $renderBuffer:sys.RenderBuffer;
         /**
          * @language en_US
          * The specified display object is drawn as a texture
@@ -92,7 +92,7 @@ module egret {
                 height = bounds.height * scale;
             }
 
-            var renderBuffer = this.renderBuffer;
+            var renderBuffer = this.$renderBuffer;
             if (!renderBuffer) {
                 return false;
             }
@@ -107,7 +107,7 @@ module egret {
                 matrix.translate(-clipBounds.x, -clipBounds.y);
             }
             matrix.scale(scale, scale);
-            sys.canvasRenderer.render(displayObject, renderBuffer, matrix, null, true);
+            sys.systemRenderer.render(displayObject, renderBuffer, matrix, null, true);
             Matrix.release(matrix);
 
             //设置纹理参数
@@ -120,18 +120,18 @@ module egret {
 
         public getPixel32(x:number, y:number):number[] {
             var data:number[];
-            if (this.renderBuffer) {
+            if (this.$renderBuffer) {
                 var scale = $TextureScaleFactor;
                 x = Math.round(x / scale);
                 y = Math.round(y / scale);
-                data = this.renderBuffer.getPixel(x, y);
+                data = this.$renderBuffer.getPixel(x, y);
             }
             return data;
         }
 
         public dispose():void {
             super.dispose();
-            this.renderBuffer = null;
+            this.$renderBuffer = null;
         }
     }
 }

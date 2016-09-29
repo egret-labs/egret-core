@@ -330,13 +330,20 @@ module egret.web {
          * 获取指定坐标的像素
          */
         public getPixel(x:number, y:number):number[] {
-            var pixels = new Uint8Array(4);
+            return this.getPixels(x, y, 1, 1);
+        }
+
+        /**
+         * 获取指定区域的像素
+         */
+        public getPixels(x:number, y:number, width:number, height:number):number[] {
+            var pixels = new Uint8Array(4 * width * height);
 
             var useFrameBuffer = this.rootRenderTarget.useFrameBuffer;
             this.rootRenderTarget.useFrameBuffer = true;
             this.rootRenderTarget.activate();
 
-            this.context.getPixels(x, y, 1, 1, pixels);
+            this.context.getPixels(x, y, width, height, pixels);
 
             this.rootRenderTarget.useFrameBuffer = useFrameBuffer;
             this.rootRenderTarget.activate();

@@ -30,17 +30,18 @@
 
 module egret.web {
 
-    var sharedCanvas;
-    var sharedContext;
+    var sharedCanvas: HTMLCanvasElement;
+    var sharedContext: CanvasRenderingContext2D;
 
     /**
      * @private
      */
     function convertImageToCanvas(texture: egret.Texture, rect?: egret.Rectangle): HTMLCanvasElement {
-        if(!sharedCanvas) {
+        if (!sharedCanvas) {
             sharedCanvas = document.createElement("canvas");
             sharedContext = sharedCanvas.getContext("2d");
         }
+
         var w = texture.$getTextureWidth();
         var h = texture.$getTextureHeight();
         if (rect == null) {
@@ -64,14 +65,40 @@ module egret.web {
         sharedCanvas.width = iWidth;
         sharedCanvas.height = iHeight;
 
-        var bitmapData = texture;
-        var offsetX: number = Math.round(bitmapData._offsetX);
-        var offsetY: number = Math.round(bitmapData._offsetY);
-        var bitmapWidth: number = bitmapData._bitmapWidth;
-        var bitmapHeight: number = bitmapData._bitmapHeight;
-        sharedContext.drawImage(bitmapData._bitmapData.source, bitmapData._bitmapX + rect.x / $TextureScaleFactor, bitmapData._bitmapY + rect.y / $TextureScaleFactor,
-            bitmapWidth * rect.width / w, bitmapHeight * rect.height / h, offsetX, offsetY, rect.width, rect.height);
-        return surface;
+        if (Capabilities.$renderMode == "webgl") {
+            var renderTexture: RenderTexture;
+            //webgl下非RenderTexture纹理先画到RenderTexture
+            if (!(<RenderTexture>texture).$renderBuffer) {
+                renderTexture = new egret.RenderTexture();
+                renderTexture.drawToTexture(new egret.Bitmap(texture));
+            }
+            else {
+                renderTexture = <RenderTexture>texture;
+            }
+            //从RenderTexture中读取像素数据，填入canvas
+            var pixels = renderTexture.$renderBuffer.getPixels(0, 0, iWidth, iHeight);
+            var imageData = new ImageData(iWidth, iHeight);
+            for (var i = 0; i < pixels.length; i++) {
+                imageData.data[i] = pixels[i];
+            }
+            sharedContext.putImageData(imageData, 0, 0);
+
+            if (!(<RenderTexture>texture).$renderBuffer) {
+                renderTexture.dispose();
+            }
+
+            return surface;
+        }
+        else {
+            var bitmapData = texture;
+            var offsetX: number = Math.round(bitmapData._offsetX);
+            var offsetY: number = Math.round(bitmapData._offsetY);
+            var bitmapWidth: number = bitmapData._bitmapWidth;
+            var bitmapHeight: number = bitmapData._bitmapHeight;
+            sharedContext.drawImage(bitmapData._bitmapData.source, bitmapData._bitmapX + rect.x / $TextureScaleFactor, bitmapData._bitmapY + rect.y / $TextureScaleFactor,
+                bitmapWidth * rect.width / w, bitmapHeight * rect.height / h, offsetX, offsetY, rect.width, rect.height);
+            return surface;
+        }
     }
 
     /**

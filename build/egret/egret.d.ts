@@ -3744,7 +3744,7 @@ declare module egret {
      */
     class RenderTexture extends egret.Texture {
         constructor();
-        private renderBuffer;
+        $renderBuffer: sys.RenderBuffer;
         /**
          * @language en_US
          * The specified display object is drawn as a texture
@@ -9616,6 +9616,10 @@ declare module egret.sys {
          * 获取指定坐标的像素
          */
         getPixel(x: number, y: number): number[];
+        /**
+         * 获取指定区域的像素
+         */
+        getPixels(x: number, y: number, width: number, height: number): number[];
         /**
          * 转换成base64字符串，如果图片（或者包含的图片）跨域，则返回null
          * @param type 转换的类型，如: "image/png","image/jpeg"

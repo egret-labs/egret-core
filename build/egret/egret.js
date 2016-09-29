@@ -6828,8 +6828,8 @@ var egret;
         __extends(RenderTexture, _super);
         function RenderTexture() {
             _super.call(this);
-            this.renderBuffer = new egret.sys.CanvasRenderBuffer();
-            var bitmapData = new egret.BitmapData(this.renderBuffer.surface);
+            this.$renderBuffer = new egret.sys.RenderBuffer();
+            var bitmapData = new egret.BitmapData(this.$renderBuffer.surface);
             bitmapData.$deleteSource = false;
             this._setBitmapData(bitmapData);
         }
@@ -6868,7 +6868,7 @@ var egret;
                 width = bounds.width * scale;
                 height = bounds.height * scale;
             }
-            var renderBuffer = this.renderBuffer;
+            var renderBuffer = this.$renderBuffer;
             if (!renderBuffer) {
                 return false;
             }
@@ -6882,7 +6882,7 @@ var egret;
                 matrix.translate(-clipBounds.x, -clipBounds.y);
             }
             matrix.scale(scale, scale);
-            egret.sys.canvasRenderer.render(displayObject, renderBuffer, matrix, null, true);
+            egret.sys.systemRenderer.render(displayObject, renderBuffer, matrix, null, true);
             egret.Matrix.release(matrix);
             //设置纹理参数
             this.$initData(0, 0, width, height, 0, 0, width, height, width, height);
@@ -6892,17 +6892,17 @@ var egret;
         };
         p.getPixel32 = function (x, y) {
             var data;
-            if (this.renderBuffer) {
+            if (this.$renderBuffer) {
                 var scale = egret.$TextureScaleFactor;
                 x = Math.round(x / scale);
                 y = Math.round(y / scale);
-                data = this.renderBuffer.getPixel(x, y);
+                data = this.$renderBuffer.getPixel(x, y);
             }
             return data;
         };
         p.dispose = function () {
             _super.prototype.dispose.call(this);
-            this.renderBuffer = null;
+            this.$renderBuffer = null;
         };
         return RenderTexture;
     }(egret.Texture));

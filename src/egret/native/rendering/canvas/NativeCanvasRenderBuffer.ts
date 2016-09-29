@@ -160,6 +160,13 @@ module egret.native {
         }
 
         /**
+         * 获取指定区域的像素
+         */
+        public getPixels(x:number, y:number, width:number, height:number):number[] {
+            return this.context.getImageData(x, y, width, height).data;
+        }
+
+        /**
          * 转换成base64字符串，如果图片（或者包含的图片）跨域，则返回null
          * @param type 转换的类型，如: "image/png","image/jpeg"
          */

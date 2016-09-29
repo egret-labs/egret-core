@@ -1853,6 +1853,12 @@ var egret;
                 return this.context.getImageData(x, y, 1, 1).data;
             };
             /**
+             * 获取指定区域的像素
+             */
+            p.getPixels = function (x, y, width, height) {
+                return this.context.getImageData(x, y, width, height).data;
+            };
+            /**
              * 转换成base64字符串，如果图片（或者包含的图片）跨域，则返回null
              * @param type 转换的类型，如: "image/png","image/jpeg"
              */
@@ -3862,6 +3868,12 @@ var egret;
              */
             p.getPixel = function (x, y) {
                 return this.context.getImageData(x, y, 1, 1).data;
+            };
+            /**
+             * 获取指定区域的像素
+             */
+            p.getPixels = function (x, y, width, height) {
+                return this.context.getImageData(x, y, width, height).data;
             };
             /**
              * 转换成base64字符串，如果图片（或者包含的图片）跨域，则返回null

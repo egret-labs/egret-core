@@ -3095,6 +3095,12 @@ var egret;
                 return this.context.getImageData(x, y, 1, 1).data;
             };
             /**
+             * 获取指定区域的像素
+             */
+            p.getPixels = function (x, y, width, height) {
+                return this.context.getImageData(x, y, width, height).data;
+            };
+            /**
              * 转换成base64字符串，如果图片（或者包含的图片）跨域，则返回null
              * @param type 转换的类型，如: "image/png","image/jpeg"
              */
@@ -4586,13 +4592,35 @@ var egret;
             surface["style"]["height"] = iHeight + "px";
             sharedCanvas.width = iWidth;
             sharedCanvas.height = iHeight;
-            var bitmapData = texture;
-            var offsetX = Math.round(bitmapData._offsetX);
-            var offsetY = Math.round(bitmapData._offsetY);
-            var bitmapWidth = bitmapData._bitmapWidth;
-            var bitmapHeight = bitmapData._bitmapHeight;
-            sharedContext.drawImage(bitmapData._bitmapData.source, bitmapData._bitmapX + rect.x / egret.$TextureScaleFactor, bitmapData._bitmapY + rect.y / egret.$TextureScaleFactor, bitmapWidth * rect.width / w, bitmapHeight * rect.height / h, offsetX, offsetY, rect.width, rect.height);
-            return surface;
+            if (egret.Capabilities.$renderMode == "webgl") {
+                var renderTexture;
+                if (!texture.$renderBuffer) {
+                    renderTexture = new egret.RenderTexture();
+                    renderTexture.drawToTexture(new egret.Bitmap(texture));
+                }
+                else {
+                    renderTexture = texture;
+                }
+                var pixels = renderTexture.$renderBuffer.getPixels(0, 0, iWidth, iHeight);
+                var imageData = new ImageData(iWidth, iHeight);
+                for (var i = 0; i < pixels.length; i++) {
+                    imageData.data[i] = pixels[i];
+                }
+                sharedContext.putImageData(imageData, 0, 0);
+                if (!texture.$renderBuffer) {
+                    renderTexture.dispose();
+                }
+                return surface;
+            }
+            else {
+                var bitmapData = texture;
+                var offsetX = Math.round(bitmapData._offsetX);
+                var offsetY = Math.round(bitmapData._offsetY);
+                var bitmapWidth = bitmapData._bitmapWidth;
+                var bitmapHeight = bitmapData._bitmapHeight;
+                sharedContext.drawImage(bitmapData._bitmapData.source, bitmapData._bitmapX + rect.x / egret.$TextureScaleFactor, bitmapData._bitmapY + rect.y / egret.$TextureScaleFactor, bitmapWidth * rect.width / w, bitmapHeight * rect.height / h, offsetX, offsetY, rect.width, rect.height);
+                return surface;
+            }
         }
         /**
          * @private
@@ -7623,11 +7651,17 @@ var egret;
              * 获取指定坐标的像素
              */
             p.getPixel = function (x, y) {
-                var pixels = new Uint8Array(4);
+                return this.getPixels(x, y, 1, 1);
+            };
+            /**
+             * 获取指定区域的像素
+             */
+            p.getPixels = function (x, y, width, height) {
+                var pixels = new Uint8Array(4 * width * height);
                 var useFrameBuffer = this.rootRenderTarget.useFrameBuffer;
                 this.rootRenderTarget.useFrameBuffer = true;
                 this.rootRenderTarget.activate();
-                this.context.getPixels(x, y, 1, 1, pixels);
+                this.context.getPixels(x, y, width, height, pixels);
                 this.rootRenderTarget.useFrameBuffer = useFrameBuffer;
                 this.rootRenderTarget.activate();
                 return pixels;
