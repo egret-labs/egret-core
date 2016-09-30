@@ -118,17 +118,23 @@ module egret {
             return true;
         }
 
+        /**
+         * @inheritDoc
+         */
         public getPixel32(x:number, y:number):number[] {
             var data:number[];
             if (this.$renderBuffer) {
                 var scale = $TextureScaleFactor;
                 x = Math.round(x / scale);
                 y = Math.round(y / scale);
-                data = this.$renderBuffer.getPixel(x, y);
+                data = this.$renderBuffer.getPixels(x, y, 1, 1);
             }
             return data;
         }
 
+        /**
+         * @inheritDoc
+         */
         public dispose():void {
             super.dispose();
             this.$renderBuffer = null;

@@ -39,9 +39,9 @@ module egret {
     locale_strings[1036] = "Sound has stopped, please recall Sound.play () to play the sound!";
     locale_strings[1037] = "Non-load the correct blob!";
     locale_strings[1038] = "XML format error!";
-    locale_strings[1039] = "crossOrigin images can not set pixelHitTest  property!";
+    locale_strings[1039] = "Cross domains pictures can not get pixel information!";
     locale_strings[1040] = "hitTestPoint can not detect crossOrigin images! Please check if the display object has crossOrigin elements.";
-    locale_strings[1041] = "egret.MainContext.runtimeType is deprecated, please use egret.Capabilities.runtimeType replace";
+    locale_strings[1041] = "{0} is deprecated, please use {1} replace";
     locale_strings[1042] = "The parameters passed in the region needs is an integer in drawToTexture method. Otherwise, some browsers will draw abnormal.";
     locale_strings[1043] = "Compile errors in {0}, the attribute name: {1}, the attribute value: {2}.";
     locale_strings[1044] = "The current version of the Runtime does not support video playback, please use the latest version";

@@ -97,14 +97,9 @@ module egret.sys {
         endClip():void;
 
         /**
-         * 获取指定坐标的像素
-         */
-        getPixel(x:number,y:number):number[];
-
-        /**
          * 获取指定区域的像素
          */
-        getPixels(x:number,y:number,width:number,height:number):number[];
+        getPixels(x:number,y:number,width?:number,height?:number):number[];
 
         /**
          * 转换成base64字符串，如果图片（或者包含的图片）跨域，则返回null

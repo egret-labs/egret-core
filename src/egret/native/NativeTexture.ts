@@ -99,7 +99,13 @@ module egret.native {
         return null;
     }
 
+    function getPixels(x:number, y:number, width:number, height:number):number[] {
+        egret.$error(1035);
+        return null;
+    }
+
     Texture.prototype.toDataURL = toDataURL;
     Texture.prototype.saveToFile = saveToFile;
     Texture.prototype.getPixel32 = getPixel32;
+    Texture.prototype.getPixels = getPixels;
 }

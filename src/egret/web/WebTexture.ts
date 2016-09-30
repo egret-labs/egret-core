@@ -133,26 +133,23 @@ module egret.web {
     }
 
     function getPixel32(x: number, y: number): number[] {
-        var buffer = <CanvasRenderBuffer><any>sys.canvasHitTestBuffer;
-        buffer.resize(3, 3);
-        var context: any = buffer.context;
-        context.translate(1 - x, 1 - y);
-        var width = this._bitmapWidth;
-        var height = this._bitmapHeight;
-        var scale = $TextureScaleFactor;
-        context.drawImage(this._bitmapData.source, this._bitmapX, this._bitmapY, width, this._bitmapHeight,
-            this._offsetX, this._offsetY, width * scale, height * scale);
+        egret.$warn(1041, "getPixel32", "getPixels");
+        return this.getPixels(x, y);
+    }
+
+    function getPixels(x: number, y: number, width:number = 1, height:number = 1): number[] {
         try {
-            var data = buffer.getPixel(1, 1);
+            var surface = convertImageToCanvas(this);
+            var result = sharedContext.getImageData(x, y, height, width).data;
+            return <number[]><any>result;
         }
         catch (e) {
-            console.log(this);
-            throw new Error(sys.tr(1039));
+            egret.$error(1039);
         }
-        return data;
     }
 
     Texture.prototype.toDataURL = toDataURL;
     Texture.prototype.saveToFile = saveToFile;
     Texture.prototype.getPixel32 = getPixel32;
+    Texture.prototype.getPixels = getPixels;
 }

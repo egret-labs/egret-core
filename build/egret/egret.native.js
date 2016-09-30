@@ -1847,15 +1847,11 @@ var egret;
                 this.context.restore();
             };
             /**
-             * 获取指定坐标的像素
-             */
-            p.getPixel = function (x, y) {
-                return this.context.getImageData(x, y, 1, 1).data;
-            };
-            /**
              * 获取指定区域的像素
              */
             p.getPixels = function (x, y, width, height) {
+                if (width === void 0) { width = 1; }
+                if (height === void 0) { height = 1; }
                 return this.context.getImageData(x, y, width, height).data;
             };
             /**
@@ -3864,15 +3860,11 @@ var egret;
                 this.context.restore();
             };
             /**
-             * 获取指定坐标的像素
-             */
-            p.getPixel = function (x, y) {
-                return this.context.getImageData(x, y, 1, 1).data;
-            };
-            /**
              * 获取指定区域的像素
              */
             p.getPixels = function (x, y, width, height) {
+                if (width === void 0) { width = 1; }
+                if (height === void 0) { height = 1; }
                 return this.context.getImageData(x, y, width, height).data;
             };
             /**
@@ -3995,9 +3987,14 @@ var egret;
             egret.$error(1035);
             return null;
         }
+        function getPixels(x, y, width, height) {
+            egret.$error(1035);
+            return null;
+        }
         egret.Texture.prototype.toDataURL = toDataURL;
         egret.Texture.prototype.saveToFile = saveToFile;
         egret.Texture.prototype.getPixel32 = getPixel32;
+        egret.Texture.prototype.getPixels = getPixels;
     })(native = egret.native || (egret.native = {}));
 })(egret || (egret = {}));
 //////////////////////////////////////////////////////////////////////////////////////

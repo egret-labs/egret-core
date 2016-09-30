@@ -787,7 +787,7 @@ module egret {
             Matrix.release(matrix);
 
             try {
-                var data = buffer.getPixel(1, 1);
+                var data = buffer.getPixels(1, 1);
             }
             catch (e) {
                 throw new Error(sys.tr(1039));

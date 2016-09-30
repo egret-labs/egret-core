@@ -3089,15 +3089,11 @@ var egret;
                 this.context.restore();
             };
             /**
-             * 获取指定坐标的像素
-             */
-            p.getPixel = function (x, y) {
-                return this.context.getImageData(x, y, 1, 1).data;
-            };
-            /**
              * 获取指定区域的像素
              */
             p.getPixels = function (x, y, width, height) {
+                if (width === void 0) { width = 1; }
+                if (height === void 0) { height = 1; }
                 return this.context.getImageData(x, y, width, height).data;
             };
             /**
@@ -4652,26 +4648,25 @@ var egret;
             aLink.dispatchEvent(evt);
         }
         function getPixel32(x, y) {
-            var buffer = egret.sys.canvasHitTestBuffer;
-            buffer.resize(3, 3);
-            var context = buffer.context;
-            context.translate(1 - x, 1 - y);
-            var width = this._bitmapWidth;
-            var height = this._bitmapHeight;
-            var scale = egret.$TextureScaleFactor;
-            context.drawImage(this._bitmapData.source, this._bitmapX, this._bitmapY, width, this._bitmapHeight, this._offsetX, this._offsetY, width * scale, height * scale);
+            egret.$warn(1041, "getPixel32", "getPixels");
+            return this.getPixels(x, y);
+        }
+        function getPixels(x, y, width, height) {
+            if (width === void 0) { width = 1; }
+            if (height === void 0) { height = 1; }
             try {
-                var data = buffer.getPixel(1, 1);
+                var surface = convertImageToCanvas(this);
+                var result = sharedContext.getImageData(x, y, height, width).data;
+                return result;
             }
             catch (e) {
-                console.log(this);
-                throw new Error(egret.sys.tr(1039));
+                egret.$error(1039);
             }
-            return data;
         }
         egret.Texture.prototype.toDataURL = toDataURL;
         egret.Texture.prototype.saveToFile = saveToFile;
         egret.Texture.prototype.getPixel32 = getPixel32;
+        egret.Texture.prototype.getPixels = getPixels;
     })(web = egret.web || (egret.web = {}));
 })(egret || (egret = {}));
 //////////////////////////////////////////////////////////////////////////////////////
@@ -7650,15 +7645,11 @@ var egret;
                 }
             };
             /**
-             * 获取指定坐标的像素
-             */
-            p.getPixel = function (x, y) {
-                return this.getPixels(x, y, 1, 1);
-            };
-            /**
              * 获取指定区域的像素
              */
             p.getPixels = function (x, y, width, height) {
+                if (width === void 0) { width = 1; }
+                if (height === void 0) { height = 1; }
                 var pixels = new Uint8Array(4 * width * height);
                 var useFrameBuffer = this.rootRenderTarget.useFrameBuffer;
                 this.rootRenderTarget.useFrameBuffer = true;

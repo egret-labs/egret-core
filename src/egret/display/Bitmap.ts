@@ -559,7 +559,7 @@ module egret {
             if (displayList) {
                 var buffer = displayList.renderBuffer;
                 try {
-                    data = buffer.getPixel(localX - displayList.offsetX, localY - displayList.offsetY);
+                    data = buffer.getPixels(localX - displayList.offsetX, localY - displayList.offsetY);
                 }
                 catch (e) {
                     console.log(this.$Bitmap[sys.BitmapKeys.bitmapData]);
@@ -577,7 +577,7 @@ module egret {
                 Matrix.release(matrix);
 
                 try {
-                    data = buffer.getPixel(1, 1);
+                    data = buffer.getPixels(1, 1);
                 }
                 catch (e) {
                     console.log(this.$Bitmap[sys.BitmapKeys.bitmapData]);

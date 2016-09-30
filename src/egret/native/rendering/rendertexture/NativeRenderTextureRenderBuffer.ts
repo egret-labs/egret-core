@@ -166,16 +166,9 @@ module egret.native {
         }
 
         /**
-         * 获取指定坐标的像素
-         */
-        public getPixel(x:number, y:number):number[] {
-            return this.context.getImageData(x, y, 1, 1).data;
-        }
-
-        /**
          * 获取指定区域的像素
          */
-        public getPixels(x:number, y:number, width:number, height:number):number[] {
+        public getPixels(x:number, y:number, width:number = 1, height:number = 1):number[] {
             return this.context.getImageData(x, y, width, height).data;
         }
 

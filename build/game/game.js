@@ -4201,7 +4201,7 @@ var egret;
              * @platform Web,Native
              */
             ,function () {
-                egret.$warn(1041);
+                egret.$warn(1041, "egret.MainContext.runtimeType", "egret.Capabilities.runtimeType");
                 return MainContext._runtimeType;
             }
         );
