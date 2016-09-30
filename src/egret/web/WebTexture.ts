@@ -76,7 +76,7 @@ module egret.web {
                 renderTexture = <RenderTexture>texture;
             }
             //从RenderTexture中读取像素数据，填入canvas
-            var pixels = renderTexture.$renderBuffer.getPixels(0, 0, iWidth, iHeight);
+            var pixels = renderTexture.$renderBuffer.getPixels(rect.x, rect.y, iWidth, iHeight);
             var imageData = new ImageData(iWidth, iHeight);
             for (var i = 0; i < pixels.length; i++) {
                 imageData.data[i] = pixels[i];
