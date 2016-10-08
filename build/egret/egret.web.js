@@ -7657,7 +7657,17 @@ var egret;
                 this.context.getPixels(x, y, width, height, pixels);
                 this.rootRenderTarget.useFrameBuffer = useFrameBuffer;
                 this.rootRenderTarget.activate();
-                return pixels;
+                //图像反转
+                var result = new Uint8Array(4 * width * height);
+                for (var i = 0; i < height; i++) {
+                    for (var j = 0; j < width; j++) {
+                        result[(width * (height - i) + j) * 4] = pixels[(width * i + j) * 4];
+                        result[(width * (height - i) + j) * 4 + 1] = pixels[(width * i + j) * 4 + 1];
+                        result[(width * (height - i) + j) * 4 + 2] = pixels[(width * i + j) * 4 + 2];
+                        result[(width * (height - i) + j) * 4 + 3] = pixels[(width * i + j) * 4 + 3];
+                    }
+                }
+                return result;
             };
             /**
              * 转换成base64字符串，如果图片（或者包含的图片）跨域，则返回null

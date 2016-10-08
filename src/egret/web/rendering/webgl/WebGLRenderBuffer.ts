@@ -341,7 +341,18 @@ module egret.web {
             this.rootRenderTarget.useFrameBuffer = useFrameBuffer;
             this.rootRenderTarget.activate();
 
-            return <number[]><any>pixels;
+            //图像反转
+            var result = new Uint8Array(4 * width * height);
+            for(var i = 0 ; i < height ; i++) {
+                for(var j = 0 ; j < width ; j++) {
+                    result[(width * (height - i) + j) * 4] = pixels[(width * i + j) * 4];
+                    result[(width * (height - i) + j) * 4 + 1] = pixels[(width * i + j) * 4 + 1];
+                    result[(width * (height - i) + j) * 4 + 2] = pixels[(width * i + j) * 4 + 2];
+                    result[(width * (height - i) + j) * 4 + 3] = pixels[(width * i + j) * 4 + 3];
+                }
+            }
+
+            return <number[]><any>result;
         }
 
         /**
