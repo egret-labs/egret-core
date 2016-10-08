@@ -196,10 +196,21 @@ module egret {
             return this._bitmapData;
         }
 
+        public set bitmapData(value:BitmapData) {
+            this._setBitmapData(value);
+        }
+
+         /**
+         * @language en_US
+         * Set the BitmapData object.
+         * @version Egret 3.2.1
+         * @platform Web,Native
+         */
         /**
-         * @private
-         *
-         * @param value
+         * @language zh_CN
+         * 设置 BitmapData 对象。
+         * @version Egret 3.2.1
+         * @platform Web,Native
          */
         public _setBitmapData(value:BitmapData) {
             this._bitmapData = value;

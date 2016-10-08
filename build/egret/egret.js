@@ -6645,11 +6645,21 @@ var egret;
             ,function () {
                 return this._bitmapData;
             }
+            ,function (value) {
+                this._setBitmapData(value);
+            }
         );
         /**
-         * @private
-         *
-         * @param value
+        * @language en_US
+        * Set the BitmapData object.
+        * @version Egret 3.2.1
+        * @platform Web,Native
+        */
+        /**
+         * @language zh_CN
+         * 设置 BitmapData 对象。
+         * @version Egret 3.2.1
+         * @platform Web,Native
          */
         p._setBitmapData = function (value) {
             this._bitmapData = value;
