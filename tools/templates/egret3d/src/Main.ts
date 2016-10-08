@@ -112,10 +112,6 @@ class Main extends egret.DisplayObject{
         //生成mesh
         this.model = new egret3d.Mesh(ge,mat);
 
-        if(ge.vertexFormat & egret3d.VertexFormat.VF_SKIN) {
-            //设置骨骼动画
-            this.model.animation = new egret3d.SkeletonAnimation(ge.skeleton);
-        }
         this.model.material.lightGroup = this.lights;
         this.model.y = -100;
 
