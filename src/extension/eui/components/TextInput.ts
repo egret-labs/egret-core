@@ -159,7 +159,6 @@ module eui {
          * @platform Web,Native
          */
         public set inputType(value: string) {
-            console.log('set inputType')
             this.$TextInput[sys.TextInputKeys.inputType] = value;
             if (this.textDisplay) {
                 this.textDisplay.inputType = value;
@@ -174,7 +173,6 @@ module eui {
          * @platform Web,Native
          */
         public get inputType(): string {
-            console.log('get inputType')
             if (this.textDisplay) {
                 return this.textDisplay.inputType;
             }

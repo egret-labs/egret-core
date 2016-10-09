@@ -14164,7 +14164,6 @@ var eui;
              * @platform Web,Native
              */
             ,function () {
-                console.log('get inputType');
                 if (this.textDisplay) {
                     return this.textDisplay.inputType;
                 }
@@ -14178,7 +14177,6 @@ var eui;
              * @platform Web,Native
              */
             ,function (value) {
-                console.log('set inputType');
                 this.$TextInput[8 /* inputType */] = value;
                 if (this.textDisplay) {
                     this.textDisplay.inputType = value;
