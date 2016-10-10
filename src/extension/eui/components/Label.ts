@@ -128,9 +128,7 @@ module eui {
             if (this.$style == value) {
                 return;
             }
-            //todo 这里直接用 EXML.$stage 不太好
-            var theme:Theme = EXML.$stage.getImplementation("eui.Theme");
-            var config = theme.$getStyleConfig(value);
+            var config = eui.$styles[value];
             if(config) {
                 for(var key in config) {
                     this[key] = config[key];

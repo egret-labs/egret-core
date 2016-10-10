@@ -9491,9 +9491,7 @@ var eui;
             if (this.$style == value) {
                 return;
             }
-            //todo 这里直接用 EXML.$stage 不太好
-            var theme = EXML.$stage.getImplementation("eui.Theme");
-            var config = theme.$getStyleConfig(value);
+            var config = eui.$styles[value];
             if (config) {
                 for (var key in config) {
                     this[key] = config[key];
@@ -16375,7 +16373,7 @@ var eui;
                 }
             }
             if (data.styles) {
-                this.styles = data.styles;
+                eui.$styles = data.styles;
             }
             if (!data.exmls || data.exmls.length == 0) {
                 this.onLoaded();
@@ -16501,16 +16499,15 @@ var eui;
             }
             this.skinMap[hostComponentKey] = skinName;
         };
-        /**
-         * @private
-         */
-        p.$getStyleConfig = function (style) {
-            return this.styles[style];
-        };
         return Theme;
     }(egret.EventDispatcher));
     eui.Theme = Theme;
     egret.registerClass(Theme,'eui.Theme');
+    /**
+     * @private
+     * styles 配置信息
+     */
+    eui.$styles = {};
 })(eui || (eui = {}));
 //////////////////////////////////////////////////////////////////////////////////////
 //

@@ -11048,12 +11048,12 @@ declare module eui {
          * @platform Web,Native
          */
         mapSkin(hostComponentKey: string, skinName: string): void;
-        private styles;
-        /**
-         * @private
-         */
-        $getStyleConfig(style: string): any;
     }
+    /**
+     * @private
+     * styles 配置信息
+     */
+    var $styles: any;
 }
 declare module eui {
     /**

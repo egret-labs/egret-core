@@ -240,7 +240,7 @@ module eui {
             }
 
             if(data.styles) {
-                this.styles = data.styles;
+                eui.$styles = data.styles;
             }
 
             if (!data.exmls || data.exmls.length == 0) {
@@ -385,15 +385,11 @@ module eui {
             }
             this.skinMap[hostComponentKey] = skinName;
         }
-
-        private styles:any;
-
-        /**
-         * @private
-         */
-        public $getStyleConfig(style:string):any {
-            return this.styles[style];
-        }
     }
 
+    /**
+     * @private
+     * styles 配置信息
+     */
+    export var $styles:any = {};
 }
