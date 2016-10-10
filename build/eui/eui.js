@@ -9456,6 +9456,7 @@ var eui;
          */
         function Label(text) {
             _super.call(this);
+            this.$style = null;
             /**
              * @private
              */
@@ -9464,6 +9465,41 @@ var eui;
             this.text = text;
         }
         var d = __define,c=Label,p=c.prototype;
+        d(p, "style"
+            /**
+             * @language en_US
+             * Horizontal alignment of text.
+             * @default：egret.HorizontalAlign.LEFT
+             * @version Egret 2.4
+             * @platform Web,Native
+             */
+            /**
+             * @language zh_CN
+             * 文本的水平对齐方式。
+             * @default：egret.HorizontalAlign.LEFT
+             * @version Egret 2.4
+             * @platform Web,Native
+             */
+            ,function () {
+                return this.$style;
+            }
+            ,function (value) {
+                this.$setStyle(value);
+            }
+        );
+        p.$setStyle = function (value) {
+            if (this.$style == value) {
+                return;
+            }
+            //todo 这里直接用 EXML.$stage 不太好
+            var theme = EXML.$stage.getImplementation("eui.Theme");
+            var config = theme.$getStyleConfig(value);
+            if (config) {
+                for (var key in config) {
+                    this[key] = config[key];
+                }
+            }
+        };
         /**
          * @private
          *
@@ -16338,6 +16374,9 @@ var eui;
                     }
                 }
             }
+            if (data.styles) {
+                this.styles = data.styles;
+            }
             if (!data.exmls || data.exmls.length == 0) {
                 this.onLoaded();
             }
@@ -16461,6 +16500,12 @@ var eui;
                 }
             }
             this.skinMap[hostComponentKey] = skinName;
+        };
+        /**
+         * @private
+         */
+        p.$getStyleConfig = function (style) {
+            return this.styles[style];
         };
         return Theme;
     }(egret.EventDispatcher));

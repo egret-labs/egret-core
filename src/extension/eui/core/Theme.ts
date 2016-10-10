@@ -239,6 +239,10 @@ module eui {
                 }
             }
 
+            if(data.styles) {
+                this.styles = data.styles;
+            }
+
             if (!data.exmls || data.exmls.length == 0) {
                 this.onLoaded();
             }
@@ -380,6 +384,15 @@ module eui {
                 }
             }
             this.skinMap[hostComponentKey] = skinName;
+        }
+
+        private styles:any;
+
+        /**
+         * @private
+         */
+        public $getStyleConfig(style:string):any {
+            return this.styles[style];
         }
     }
 

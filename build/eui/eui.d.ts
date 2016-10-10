@@ -6566,6 +6566,23 @@ declare module eui {
          * @platform Web,Native
          */
         constructor(text?: string);
+        private $style;
+        /**
+         * @language en_US
+         * Horizontal alignment of text.
+         * @default：egret.HorizontalAlign.LEFT
+         * @version Egret 2.4
+         * @platform Web,Native
+         */
+        /**
+         * @language zh_CN
+         * 文本的水平对齐方式。
+         * @default：egret.HorizontalAlign.LEFT
+         * @version Egret 2.4
+         * @platform Web,Native
+         */
+        style: string;
+        $setStyle(value: string): void;
         /**
          * @private
          *
@@ -11031,6 +11048,11 @@ declare module eui {
          * @platform Web,Native
          */
         mapSkin(hostComponentKey: string, skinName: string): void;
+        private styles;
+        /**
+         * @private
+         */
+        $getStyleConfig(style: string): any;
     }
 }
 declare module eui {
