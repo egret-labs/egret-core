@@ -426,21 +426,17 @@ module egret.web {
                     maskBuffer.context.pushBuffer(maskBuffer);
                     maskBuffer.setTransform(1, 0, 0, 1, -region.minX, -region.minY);
                     offsetM = Matrix.create().setTo(1, 0, 0, 1, -region.minX, -region.minY);
-                    var calls = this.drawDisplayObject(mask, maskBuffer, dirtyList, offsetM,
+                    drawCalls += this.drawDisplayObject(mask, maskBuffer, dirtyList, offsetM,
                         mask.$displayList, region, root);
                     maskBuffer.context.popBuffer();
-
-                    if (calls > 0) {
-                        drawCalls += calls;
-                        displayBuffer.context.setGlobalCompositeOperation("destination-in");
-                        displayBuffer.setTransform(1, 0, 0, -1, 0, maskBuffer.height);
-                        displayBuffer.globalAlpha = 1;
-                        var maskBufferWidth = maskBuffer.rootRenderTarget.width;
-                        var maskBufferHeight = maskBuffer.rootRenderTarget.height;
-                        displayBuffer.context.drawTexture(maskBuffer.rootRenderTarget.texture, 0, 0, maskBufferWidth, maskBufferHeight,
-                            0, 0, maskBufferWidth, maskBufferHeight, maskBufferWidth, maskBufferHeight);
-                        displayBuffer.context.setGlobalCompositeOperation("source-over");
-                    }
+                    displayBuffer.context.setGlobalCompositeOperation("destination-in");
+                    displayBuffer.setTransform(1, 0, 0, -1, 0, maskBuffer.height);
+                    displayBuffer.globalAlpha = 1;
+                    var maskBufferWidth = maskBuffer.rootRenderTarget.width;
+                    var maskBufferHeight = maskBuffer.rootRenderTarget.height;
+                    displayBuffer.context.drawTexture(maskBuffer.rootRenderTarget.texture, 0, 0, maskBufferWidth, maskBufferHeight,
+                        0, 0, maskBufferWidth, maskBufferHeight, maskBufferWidth, maskBufferHeight);
+                    displayBuffer.context.setGlobalCompositeOperation("source-over");
                     renderBufferPool.push(maskBuffer);
                     //}
                 }

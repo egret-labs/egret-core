@@ -16879,14 +16879,11 @@ var egret;
                     }
                     maskContext.setTransform(1, 0, 0, 1, -region.minX, -region.minY);
                     offsetM = egret.Matrix.create().setTo(1, 0, 0, 1, -region.minX, -region.minY);
-                    var calls = this.drawDisplayObject(mask, maskContext, dirtyList, offsetM, mask.$displayList, region, root);
-                    if (calls > 0) {
-                        drawCalls += calls;
-                        displayContext.globalCompositeOperation = "destination-in";
-                        displayContext.setTransform(1, 0, 0, 1, 0, 0);
-                        displayContext.globalAlpha = 1;
-                        displayContext.drawImage(maskBuffer.surface, 0, 0);
-                    }
+                    drawCalls += this.drawDisplayObject(mask, maskContext, dirtyList, offsetM, mask.$displayList, region, root);
+                    displayContext.globalCompositeOperation = "destination-in";
+                    displayContext.setTransform(1, 0, 0, 1, 0, 0);
+                    displayContext.globalAlpha = 1;
+                    displayContext.drawImage(maskBuffer.surface, 0, 0);
                     renderBufferPool.push(maskBuffer);
                 }
             }
