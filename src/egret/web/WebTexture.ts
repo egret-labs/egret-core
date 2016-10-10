@@ -140,7 +140,7 @@ module egret.web {
     function getPixels(x: number, y: number, width:number = 1, height:number = 1): number[] {
         try {
             var surface = convertImageToCanvas(this);
-            var result = sharedContext.getImageData(x, y, height, width).data;
+            var result = sharedContext.getImageData(x, y, width, height).data;
             return <number[]><any>result;
         }
         catch (e) {

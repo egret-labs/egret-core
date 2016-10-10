@@ -4656,7 +4656,7 @@ var egret;
             if (height === void 0) { height = 1; }
             try {
                 var surface = convertImageToCanvas(this);
-                var result = sharedContext.getImageData(x, y, height, width).data;
+                var result = sharedContext.getImageData(x, y, width, height).data;
                 return result;
             }
             catch (e) {
