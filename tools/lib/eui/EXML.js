@@ -177,7 +177,14 @@ function getClassNameById(id, ns) {
     return name;
 }
 function getDtsInfoFromExml(exmlFile) {
-    var xml = egret.XML.parse(require("../FileUtil").read(exmlFile));
+    var xml;
+    try {
+        xml = egret.XML.parse(require("../FileUtil").read(exmlFile))
+    }
+    catch(e) {
+        console.log(e);
+        utils.exit(2002, exmlFile);
+    }
     if (!xml) {
         utils.exit(2002, exmlFile);
     }
