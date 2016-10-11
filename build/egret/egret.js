@@ -17053,7 +17053,7 @@ var egret;
             //todo 暂时只考虑绘制一次的情况
             if (filter && length == 8) {
                 if (egret.Capabilities.runtimeType == egret.RuntimeType.NATIVE) {
-                    egret_native.Graphics.setGlobalShader(filter);
+                    egret_native.Graphics.setGlobalShader(filter.$toJson());
                     while (pos < length) {
                         drawCalls++;
                         context.drawImage(image.source, data[pos++], data[pos++], data[pos++], data[pos++], data[pos++], data[pos++], data[pos++], data[pos++]);
