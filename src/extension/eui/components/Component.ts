@@ -168,8 +168,8 @@ module eui {
                 return;
             if (value) {
                 values[sys.ComponentKeys.skinName] = value;
-            } else if (this.$stage) {
-                var theme = this.$stage.getImplementation("eui.Theme");
+            } else {
+                var theme = egret.getImplementation("eui.Theme");
                 if (theme) {
                     var skinName = theme.getSkinName(this);
                     if (skinName) {
@@ -612,7 +612,7 @@ module eui {
         protected createChildren():void {
             var values = this.$Component;
             if (!values[sys.ComponentKeys.skinName]) {
-                var theme = this.$stage.getImplementation("eui.Theme");
+                var theme = egret.getImplementation("eui.Theme");
                 if (theme) {
                     var skinName = theme.getSkinName(this);
                     if (skinName) {

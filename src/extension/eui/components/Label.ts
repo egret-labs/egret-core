@@ -100,6 +100,45 @@ module eui {
             this.text = text;
         }
 
+        private $style:string = null;
+
+        /**
+         * @language en_US
+         * Horizontal alignment of text.
+         * @default：egret.HorizontalAlign.LEFT
+         * @version Egret 2.4
+         * @platform Web,Native
+         */
+        /**
+         * @language zh_CN
+         * 文本的水平对齐方式。
+         * @default：egret.HorizontalAlign.LEFT
+         * @version Egret 2.4
+         * @platform Web,Native
+         */
+        public get style():string {
+            return this.$style;
+        }
+
+        public set style(value:string) {
+            this.$setStyle(value);
+        }
+
+        $setStyle(value:string) {
+            if (this.$style == value) {
+                return;
+            }
+            var theme:Theme = egret.getImplementation("eui.Theme");
+            if(theme) {
+                var config = theme.$getStyleConfig(value);
+                if(config) {
+                    for(var key in config) {
+                        this[key] = config[key];
+                    }
+                }
+            }
+        }
+
         /**
          * @private
          *

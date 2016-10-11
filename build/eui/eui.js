@@ -2924,7 +2924,7 @@ var eui;
         p.$parseFont = function () {
             this.$fontChanged = false;
             if (this.$font && typeof this.$font == "string") {
-                var adapter = this.$stage.getImplementation("eui.IAssetAdapter");
+                var adapter = egret.getImplementation("eui.IAssetAdapter");
                 if (!adapter) {
                     adapter = new eui.DefaultAssetAdapter();
                 }
@@ -3306,8 +3306,8 @@ var eui;
                 if (value) {
                     values[1 /* skinName */] = value;
                 }
-                else if (this.$stage) {
-                    var theme = this.$stage.getImplementation("eui.Theme");
+                else {
+                    var theme = egret.getImplementation("eui.Theme");
                     if (theme) {
                         var skinName = theme.getSkinName(this);
                         if (skinName) {
@@ -3723,7 +3723,7 @@ var eui;
         p.createChildren = function () {
             var values = this.$Component;
             if (!values[1 /* skinName */]) {
-                var theme = this.$stage.getImplementation("eui.Theme");
+                var theme = egret.getImplementation("eui.Theme");
                 if (theme) {
                     var skinName = theme.getSkinName(this);
                     if (skinName) {
@@ -8837,7 +8837,7 @@ var eui;
             this.sourceChanged = false;
             var source = this._source;
             if (source && typeof source == "string") {
-                var adapter = this.$stage.getImplementation("eui.IAssetAdapter");
+                var adapter = egret.getImplementation("eui.IAssetAdapter");
                 if (!adapter) {
                     adapter = assetAdapter;
                 }
@@ -9456,6 +9456,7 @@ var eui;
          */
         function Label(text) {
             _super.call(this);
+            this.$style = null;
             /**
              * @private
              */
@@ -9464,6 +9465,42 @@ var eui;
             this.text = text;
         }
         var d = __define,c=Label,p=c.prototype;
+        d(p, "style"
+            /**
+             * @language en_US
+             * Horizontal alignment of text.
+             * @default：egret.HorizontalAlign.LEFT
+             * @version Egret 2.4
+             * @platform Web,Native
+             */
+            /**
+             * @language zh_CN
+             * 文本的水平对齐方式。
+             * @default：egret.HorizontalAlign.LEFT
+             * @version Egret 2.4
+             * @platform Web,Native
+             */
+            ,function () {
+                return this.$style;
+            }
+            ,function (value) {
+                this.$setStyle(value);
+            }
+        );
+        p.$setStyle = function (value) {
+            if (this.$style == value) {
+                return;
+            }
+            var theme = egret.getImplementation("eui.Theme");
+            if (theme) {
+                var config = theme.$getStyleConfig(value);
+                if (config) {
+                    for (var key in config) {
+                        this[key] = config[key];
+                    }
+                }
+            }
+        };
         /**
          * @private
          *
@@ -16254,8 +16291,8 @@ var eui;
          * Create an instance of Theme
          * @param configURL the external theme path. if null, you need to register the default skin name with
          * mapSkin() manually.
-         * @param stage current stage. The theme will register to the stage with this parameter.
-         * If null, you need to register with stage.registerImplementation("eui.Theme",theme)
+         * @param stage current stage.
+         * If null, you need to register with egret.registerImplementation("eui.Theme",theme)
          * manually.
          * @version Egret 2.4
          * @version eui 1.0
@@ -16266,8 +16303,8 @@ var eui;
          * 创建一个主题实例
          * @param configURL 要加载并解析的外部主题配置文件路径。若传入 null，将不进行配置文件加载，
          * 之后需要在外部以代码方式手动调用 mapSkin() 方法完成每条默认皮肤名的注册。
-         * @param stage 当前舞台引用。传入此参数，主题会自动注册自身到舞台上。
-         * 若传入null，需要在外部手动调用 stage.registerImplementation("eui.Theme",theme) 来完成主题的注册。
+         * @param stage 当前舞台引用。
+         * 若传入null，需要在外部手动调用 egret.registerImplementation("eui.Theme",theme) 来完成主题的注册。
          * @version Egret 2.4
          * @version eui 1.0
          * @platform Web,Native
@@ -16282,11 +16319,14 @@ var eui;
              * @private
              */
             this.skinMap = {};
+            /**
+             * @private
+             * styles 配置信息
+             */
+            this.$styles = {};
             this.initialized = !configURL;
             if (stage) {
-                this.$stage = stage;
-                EXML.$stage = stage;
-                stage.registerImplementation("eui.Theme", this);
+                egret.registerImplementation("eui.Theme", this);
             }
             this.$configURL = configURL;
             this.load(configURL);
@@ -16298,7 +16338,7 @@ var eui;
          * @param url
          */
         p.load = function (url) {
-            var adapter = this.$stage ? this.$stage.getImplementation("eui.IThemeAdapter") : null;
+            var adapter = egret.getImplementation("eui.IThemeAdapter");
             if (!adapter) {
                 adapter = new eui.DefaultThemeAdapter();
             }
@@ -16337,6 +16377,9 @@ var eui;
                         this.mapSkin(key, skins[key]);
                     }
                 }
+            }
+            if (data.styles) {
+                this.$styles = data.styles;
             }
             if (!data.exmls || data.exmls.length == 0) {
                 this.onLoaded();
@@ -16461,6 +16504,9 @@ var eui;
                 }
             }
             this.skinMap[hostComponentKey] = skinName;
+        };
+        p.$getStyleConfig = function (style) {
+            return this.$styles[style];
         };
         return Theme;
     }(egret.EventDispatcher));
@@ -18527,6 +18573,12 @@ var eui;
                 var attributes = node.attributes;
                 var keyList = Object.keys(attributes);
                 keyList.sort(); //排序一下防止出现随机顺序
+                //对 style 属性先行赋值
+                var styleIndex = keyList.indexOf("style");
+                if (styleIndex > 0) {
+                    keyList.splice(styleIndex, 1);
+                    keyList.unshift("style");
+                }
                 var length = keyList.length;
                 for (var i = 0; i < length; i++) {
                     key = keyList[i];
@@ -20013,7 +20065,7 @@ var EXML;
             }
             callback(url, str);
         };
-        var adapter = EXML.$stage ? EXML.$stage.getImplementation("eui.IThemeAdapter") : null;
+        var adapter = egret.getImplementation("eui.IThemeAdapter");
         if (!adapter) {
             adapter = new eui.DefaultThemeAdapter();
         }

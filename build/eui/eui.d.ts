@@ -6566,6 +6566,23 @@ declare module eui {
          * @platform Web,Native
          */
         constructor(text?: string);
+        private $style;
+        /**
+         * @language en_US
+         * Horizontal alignment of text.
+         * @default：egret.HorizontalAlign.LEFT
+         * @version Egret 2.4
+         * @platform Web,Native
+         */
+        /**
+         * @language zh_CN
+         * 文本的水平对齐方式。
+         * @default：egret.HorizontalAlign.LEFT
+         * @version Egret 2.4
+         * @platform Web,Native
+         */
+        style: string;
+        $setStyle(value: string): void;
         /**
          * @private
          *
@@ -10485,7 +10502,7 @@ declare module eui {
      * And use the following code to inject it to the system:
      * <pre>
      *      var assetAdapter = new YourAssetAdapter();
-     *      Stage.registerImplementation("eui.IAssetAdapter",assetAdapter)
+     *      egret.registerImplementation("eui.IAssetAdapter",assetAdapter)
      * </pre>
      *
      * @version Egret 2.4
@@ -10499,7 +10516,7 @@ declare module eui {
      * 然后调用如下代码注入自定义实现到框架即可：
      * <pre>
      *      var assetAdapter = new YourAssetAdapter();
-     *      Stage.registerImplementation("eui.IAssetAdapter",assetAdapter)
+     *      egret.registerImplementation("eui.IAssetAdapter",assetAdapter)
      * </pre>
      * @version Egret 2.4
      * @version eui 1.0
@@ -10639,7 +10656,7 @@ declare module eui {
      * And use the following code to inject it to the system:
      * <pre>
      *      var themeAdapter = new YourThemeAdapter();
-     *      Stage.registerImplementation("eui.IThemeAdapter",themeAdapter);
+     *      egret.registerImplementation("eui.IThemeAdapter",themeAdapter);
      * </pre>
      *
      * @version Egret 2.4
@@ -10653,7 +10670,7 @@ declare module eui {
      * 然后调用如下代码注入自定义实现到框架即可：
      * <pre>
      *      var themeAdapter = new YourThemeAdapter();
-     *      Stage.registerImplementation("eui.IThemeAdapter",themeAdapter);
+     *      egret.registerImplementation("eui.IThemeAdapter",themeAdapter);
      * </pre>
      * @version Egret 2.4
      * @version eui 1.0
@@ -10926,15 +10943,14 @@ declare module eui {
      * @includeExample  extension/eui/core/ThemeExample.ts
      */
     class Theme extends egret.EventDispatcher {
-        private $stage;
         private $configURL;
         /**
          * @language en_US
          * Create an instance of Theme
          * @param configURL the external theme path. if null, you need to register the default skin name with
          * mapSkin() manually.
-         * @param stage current stage. The theme will register to the stage with this parameter.
-         * If null, you need to register with stage.registerImplementation("eui.Theme",theme)
+         * @param stage current stage.
+         * If null, you need to register with egret.registerImplementation("eui.Theme",theme)
          * manually.
          * @version Egret 2.4
          * @version eui 1.0
@@ -10945,13 +10961,13 @@ declare module eui {
          * 创建一个主题实例
          * @param configURL 要加载并解析的外部主题配置文件路径。若传入 null，将不进行配置文件加载，
          * 之后需要在外部以代码方式手动调用 mapSkin() 方法完成每条默认皮肤名的注册。
-         * @param stage 当前舞台引用。传入此参数，主题会自动注册自身到舞台上。
-         * 若传入null，需要在外部手动调用 stage.registerImplementation("eui.Theme",theme) 来完成主题的注册。
+         * @param stage 当前舞台引用。
+         * 若传入null，需要在外部手动调用 egret.registerImplementation("eui.Theme",theme) 来完成主题的注册。
          * @version Egret 2.4
          * @version eui 1.0
          * @platform Web,Native
          */
-        constructor(configURL: string, stage: egret.Stage);
+        constructor(configURL: string, stage?: egret.Stage);
         /**
          * @private
          */
@@ -11031,6 +11047,12 @@ declare module eui {
          * @platform Web,Native
          */
         mapSkin(hostComponentKey: string, skinName: string): void;
+        /**
+         * @private
+         * styles 配置信息
+         */
+        private $styles;
+        $getStyleConfig(style: string): any;
     }
 }
 declare module eui {
@@ -12516,7 +12538,6 @@ declare module EXML {
      * @platform Web,Native
      */
     var prefixURL: string;
-    var $stage: egret.Stage;
     /**
      * @language en_US
      * Parsing a text of EXML file for a definition of class. You can declare the <code>class</code> property in the root

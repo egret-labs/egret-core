@@ -35,7 +35,7 @@ module eui {
      * And use the following code to inject it to the system:
      * <pre>
      *      var themeAdapter = new YourThemeAdapter();
-     *      Stage.registerImplementation("eui.IThemeAdapter",themeAdapter);
+     *      egret.registerImplementation("eui.IThemeAdapter",themeAdapter);
      * </pre>
      *
      * @version Egret 2.4
@@ -49,7 +49,7 @@ module eui {
      * 然后调用如下代码注入自定义实现到框架即可：
      * <pre>
      *      var themeAdapter = new YourThemeAdapter();
-     *      Stage.registerImplementation("eui.IThemeAdapter",themeAdapter);
+     *      egret.registerImplementation("eui.IThemeAdapter",themeAdapter);
      * </pre>
      * @version Egret 2.4
      * @version eui 1.0

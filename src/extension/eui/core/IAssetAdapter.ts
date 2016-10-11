@@ -35,7 +35,7 @@ module eui {
      * And use the following code to inject it to the system:
      * <pre>
      *      var assetAdapter = new YourAssetAdapter();
-     *      Stage.registerImplementation("eui.IAssetAdapter",assetAdapter)
+     *      egret.registerImplementation("eui.IAssetAdapter",assetAdapter)
      * </pre>
      *
      * @version Egret 2.4
@@ -49,7 +49,7 @@ module eui {
      * 然后调用如下代码注入自定义实现到框架即可：
      * <pre>
      *      var assetAdapter = new YourAssetAdapter();
-     *      Stage.registerImplementation("eui.IAssetAdapter",assetAdapter)
+     *      egret.registerImplementation("eui.IAssetAdapter",assetAdapter)
      * </pre>
      * @version Egret 2.4
      * @version eui 1.0

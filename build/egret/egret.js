@@ -7452,10 +7452,6 @@ var egret;
              * @private
              */
             this.$stageHeight = 0;
-            /**
-             * @private
-             */
-            this.implMap = {};
             this.$scaleMode = egret.StageScaleMode.SHOW_ALL;
             this.$orientation = egret.OrientationMode.AUTO;
             this.$maxTouches = 99;
@@ -7542,43 +7538,16 @@ var egret;
             egret.sys.$invalidateRenderFlag = true;
         };
         /**
-         * @language en_US
-         * Adds an interface-name-to-implementation-class mapping to the registry.
-         * @param interfaceName the interface name to register. For example："eui.IAssetAdapter","eui.Theme"
-         * @param instance the instance to register.
-         * @version Egret 2.4
-         * @platform Web,Native
-         */
-        /**
-         * @language zh_CN
-         * 注册一个接口实现。
-         * @param interfaceName 注入的接口名称。例如："eui.IAssetAdapter","eui.Theme"
-         * @param instance 实现此接口的实例。
-         * @version Egret 2.4
-         * @platform Web,Native
+         * @deprecated
          */
         p.registerImplementation = function (interfaceName, instance) {
-            this.implMap[interfaceName] = instance;
+            egret.registerImplementation(interfaceName, instance);
         };
         /**
-         * @language en_US
-         * Returns the singleton instance of the implementation class that was registered for the specified interface.
-         * This method is usually called by egret framework.
-         * @param interfaceName The interface name to identify. For example："eui.IAssetAdapter","eui.Theme"
-         * @returns the singleton instance of the implementation class
-         * @version Egret 2.4
-         * @platform Web,Native
-         */
-        /**
-         * @language zh_CN
-         * 获取一个接口实现。此方法通常由框架内部调用。获取项目注入的自定义实现实例。
-         * @param interfaceName 要获取的接口名称。例如："eui.IAssetAdapter","eui.Theme"
-         * @returns 返回实现此接口的实例。
-         * @version Egret 2.4
-         * @platform Web,Native
+         * @deprecated
          */
         p.getImplementation = function (interfaceName) {
-            return this.implMap[interfaceName];
+            return egret.getImplementation(interfaceName);
         };
         d(p, "scaleMode"
             /**
@@ -18025,6 +17994,57 @@ egret.Capabilities.$runtimeType = testRuntimeType() ? egret.RuntimeType.WEB : eg
 //  EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 //
 //////////////////////////////////////////////////////////////////////////////////////
+var egret;
+(function (egret) {
+    function getI() {
+    }
+    egret.getI = getI;
+    /**
+    * @private
+    */
+    var implMap = {};
+    /**
+     * @language en_US
+     * Adds an interface-name-to-implementation-class mapping to the registry.
+     * @param interfaceName the interface name to register. For example："eui.IAssetAdapter","eui.Theme"
+     * @param instance the instance to register.
+     * @version Egret 2.4
+     * @platform Web,Native
+     */
+    /**
+     * @language zh_CN
+     * 注册一个接口实现。
+     * @param interfaceName 注入的接口名称。例如："eui.IAssetAdapter","eui.Theme"
+     * @param instance 实现此接口的实例。
+     * @version Egret 3.2.1
+     * @platform Web,Native
+     */
+    function registerImplementation(interfaceName, instance) {
+        implMap[interfaceName] = instance;
+    }
+    egret.registerImplementation = registerImplementation;
+    /**
+     * @language en_US
+     * Returns the singleton instance of the implementation class that was registered for the specified interface.
+     * This method is usually called by egret framework.
+     * @param interfaceName The interface name to identify. For example："eui.IAssetAdapter","eui.Theme"
+     * @returns the singleton instance of the implementation class
+     * @version Egret 2.4
+     * @platform Web,Native
+     */
+    /**
+     * @language zh_CN
+     * 获取一个接口实现。此方法通常由框架内部调用。获取项目注入的自定义实现实例。
+     * @param interfaceName 要获取的接口名称。例如："eui.IAssetAdapter","eui.Theme"
+     * @returns 返回实现此接口的实例。
+     * @version Egret 3.2.1
+     * @platform Web,Native
+     */
+    function getImplementation(interfaceName) {
+        return implMap[interfaceName];
+    }
+    egret.getImplementation = getImplementation;
+})(egret || (egret = {}));
 //////////////////////////////////////////////////////////////////////////////////////
 //
 //  Copyright (c) 2014-present, Egret Technology.
