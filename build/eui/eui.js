@@ -18573,6 +18573,12 @@ var eui;
                 var attributes = node.attributes;
                 var keyList = Object.keys(attributes);
                 keyList.sort(); //排序一下防止出现随机顺序
+                //对 style 属性先行赋值
+                var styleIndex = keyList.indexOf("style");
+                if (styleIndex > 0) {
+                    keyList.splice(styleIndex, 1);
+                    keyList.unshift("style");
+                }
                 var length = keyList.length;
                 for (var i = 0; i < length; i++) {
                     key = keyList[i];
