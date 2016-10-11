@@ -128,10 +128,13 @@ module eui {
             if (this.$style == value) {
                 return;
             }
-            var config = eui.$styles[value];
-            if(config) {
-                for(var key in config) {
-                    this[key] = config[key];
+            var theme:Theme = egret.getImplementation("eui.Theme");
+            if(theme) {
+                var config = theme.$getStyleConfig(value);
+                if(config) {
+                    for(var key in config) {
+                        this[key] = config[key];
+                    }
                 }
             }
         }

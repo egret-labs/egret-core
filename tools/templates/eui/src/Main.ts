@@ -38,8 +38,8 @@ class Main extends eui.UILayer {
         //inject the custom material parser
         //注入自定义的素材解析器
         var assetAdapter = new AssetAdapter();
-        this.stage.registerImplementation("eui.IAssetAdapter",assetAdapter);
-        this.stage.registerImplementation("eui.IThemeAdapter",new ThemeAdapter());
+        egret.registerImplementation("eui.IAssetAdapter",assetAdapter);
+        egret.registerImplementation("eui.IThemeAdapter",new ThemeAdapter());
         //Config loading process interface
         //设置加载进度界面
         this.loadingView = new LoadingUI();

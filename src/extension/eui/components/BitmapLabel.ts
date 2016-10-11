@@ -111,7 +111,7 @@ module eui {
         private $parseFont(): void {
             this.$fontChanged = false;
             if (this.$font && typeof this.$font == "string") {
-                var adapter: IAssetAdapter = this.$stage.getImplementation("eui.IAssetAdapter");
+                var adapter: IAssetAdapter = egret.getImplementation("eui.IAssetAdapter");
                 if (!adapter) {
                     adapter = new DefaultAssetAdapter();
                 }

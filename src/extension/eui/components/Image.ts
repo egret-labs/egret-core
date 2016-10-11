@@ -235,7 +235,7 @@ module eui {
             this.sourceChanged = false;
             var source = this._source;
             if (source && typeof source == "string") {
-                var adapter:IAssetAdapter = this.$stage.getImplementation("eui.IAssetAdapter");
+                var adapter:IAssetAdapter = egret.getImplementation("eui.IAssetAdapter");
                 if (!adapter) {
                     adapter = assetAdapter;
                 }

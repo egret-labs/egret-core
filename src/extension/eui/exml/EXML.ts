@@ -63,8 +63,6 @@ module EXML {
         configurable: true
     });
 
-    export var $stage: egret.Stage;
-
     /**
      * @language en_US
      * Parsing a text of EXML file for a definition of class. You can declare the <code>class</code> property in the root
@@ -255,7 +253,7 @@ module EXML {
             }
             callback(url, str);
         };
-        var adapter:eui.IThemeAdapter = EXML.$stage?EXML.$stage.getImplementation("eui.IThemeAdapter"):null;
+        var adapter:eui.IThemeAdapter = egret.getImplementation("eui.IThemeAdapter");
         if (!adapter) {
             adapter = new eui.DefaultThemeAdapter();
         }

@@ -147,7 +147,6 @@ module eui {
      */
     export class Theme extends egret.EventDispatcher {
 
-        private $stage:egret.Stage;
         private $configURL:string;
 
         /**
@@ -155,8 +154,8 @@ module eui {
          * Create an instance of Theme
          * @param configURL the external theme path. if null, you need to register the default skin name with
          * mapSkin() manually.
-         * @param stage current stage. The theme will register to the stage with this parameter.
-         * If null, you need to register with stage.registerImplementation("eui.Theme",theme)
+         * @param stage current stage.
+         * If null, you need to register with egret.registerImplementation("eui.Theme",theme)
          * manually.
          * @version Egret 2.4
          * @version eui 1.0
@@ -167,19 +166,17 @@ module eui {
          * 创建一个主题实例
          * @param configURL 要加载并解析的外部主题配置文件路径。若传入 null，将不进行配置文件加载，
          * 之后需要在外部以代码方式手动调用 mapSkin() 方法完成每条默认皮肤名的注册。
-         * @param stage 当前舞台引用。传入此参数，主题会自动注册自身到舞台上。
-         * 若传入null，需要在外部手动调用 stage.registerImplementation("eui.Theme",theme) 来完成主题的注册。
+         * @param stage 当前舞台引用。
+         * 若传入null，需要在外部手动调用 egret.registerImplementation("eui.Theme",theme) 来完成主题的注册。
          * @version Egret 2.4
          * @version eui 1.0
          * @platform Web,Native
          */
-        public constructor(configURL:string, stage:egret.Stage) {
+        public constructor(configURL:string, stage?:egret.Stage) {
             super();
             this.initialized = !configURL;
             if (stage) {
-                this.$stage = stage;
-                EXML.$stage = stage;
-                stage.registerImplementation("eui.Theme", this);
+                egret.registerImplementation("eui.Theme", this);
             }
             this.$configURL = configURL;
             this.load(configURL);
@@ -196,7 +193,7 @@ module eui {
          * @param url
          */
         private load(url:string):void {
-            var adapter:IThemeAdapter = this.$stage?this.$stage.getImplementation("eui.IThemeAdapter"):null;
+            var adapter:IThemeAdapter = egret.getImplementation("eui.IThemeAdapter");
             if (!adapter) {
                 adapter = new DefaultThemeAdapter();
             }
@@ -240,7 +237,7 @@ module eui {
             }
 
             if(data.styles) {
-                eui.$styles = data.styles;
+                this.$styles = data.styles;
             }
 
             if (!data.exmls || data.exmls.length == 0) {
@@ -385,11 +382,15 @@ module eui {
             }
             this.skinMap[hostComponentKey] = skinName;
         }
-    }
 
-    /**
-     * @private
-     * styles 配置信息
-     */
-    export var $styles:any = {};
+        /**
+         * @private
+         * styles 配置信息
+         */
+        private $styles:any = {};
+
+        public $getStyleConfig(style:string):any {
+            return this.$styles[style];
+        }
+    }
 }
