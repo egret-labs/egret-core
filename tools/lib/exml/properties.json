@@ -8,6 +8,9 @@
 		"super":"egret.DisplayObject",
 		"texture":"egret.Texture"
 	},
+	"egret.BitmapData":{
+		"super":"egret.HashObject"
+	},
 	"egret.BitmapFont":{
 		"super":"egret.SpriteSheet"
 	},
@@ -62,6 +65,7 @@
 	"egret.DropShadowFilter":{
 		"angle":"number",
 		"distance":"number",
+		"hideObject":"boolean",
 		"super":"egret.GlowFilter"
 	},
 	"egret.EventDispatcher":{
@@ -120,6 +124,7 @@
 		"y":"number"
 	},
 	"egret.RenderTexture":{
+		"$renderBuffer":"sys.RenderBuffer",
 		"super":"egret.Texture"
 	},
 	"egret.Shape":{
@@ -159,6 +164,7 @@
 		"wordWrap":"boolean"
 	},
 	"egret.Texture":{
+		"bitmapData":"egret.BitmapData",
 		"super":"egret.HashObject"
 	},
 	"egret.gui.AddItems":{
@@ -875,16 +881,9 @@
 			"contentJustify"
 		],
 		"egret.TextField":{
-			"inputType":"egret.TextFieldInputType",
 			"textAlign":"text_textAlign",
-			"type":"egret.TextFieldType",
 			"verticalAlign":"text_verticalAlign"
 		},
-		"egret.TextFieldInputType":[
-			"text",
-			"tel",
-			"password"
-		],
 		"egret.TextFieldType":[
 			"dynamic",
 			"input"

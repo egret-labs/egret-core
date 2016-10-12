@@ -8,6 +8,9 @@
 		"super":"egret.DisplayObject",
 		"texture":"egret.Texture"
 	},
+	"egret.BitmapData":{
+		"super":"egret.HashObject"
+	},
 	"egret.BitmapFont":{
 		"super":"egret.SpriteSheet"
 	},
@@ -62,6 +65,7 @@
 	"egret.DropShadowFilter":{
 		"angle":"number",
 		"distance":"number",
+		"hideObject":"boolean",
 		"super":"egret.GlowFilter"
 	},
 	"egret.EventDispatcher":{
@@ -120,6 +124,7 @@
 		"y":"number"
 	},
 	"egret.RenderTexture":{
+		"$renderBuffer":"sys.RenderBuffer",
 		"super":"egret.Texture"
 	},
 	"egret.Shape":{
@@ -159,6 +164,7 @@
 		"wordWrap":"boolean"
 	},
 	"egret.Texture":{
+		"bitmapData":"egret.BitmapData",
 		"super":"egret.HashObject"
 	},
 	"eui.AddItems":{
@@ -177,24 +183,24 @@
 		"super":"eui.LayoutBase"
 	},
 	"eui.BitmapLabel":{
-		"bottom":"number",
-		"horizontalCenter":"number",
+		"bottom":"any",
+		"horizontalCenter":"any",
 		"implements":[
 			"eui.UIComponent",
 			"eui.IDisplayText"
 		],
 		"includeInLayout":"boolean",
-		"left":"number",
+		"left":"any",
 		"maxHeight":"number",
 		"maxWidth":"number",
 		"minHeight":"number",
 		"minWidth":"number",
 		"percentHeight":"number",
 		"percentWidth":"number",
-		"right":"number",
+		"right":"any",
 		"super":"egret.BitmapText",
-		"top":"number",
-		"verticalCenter":"number"
+		"top":"any",
+		"verticalCenter":"any"
 	},
 	"eui.Button":{
 		"icon":"any",
@@ -207,25 +213,25 @@
 		"super":"eui.ToggleButton"
 	},
 	"eui.Component":{
-		"bottom":"number",
+		"bottom":"any",
 		"currentState":"string",
 		"enabled":"boolean",
-		"horizontalCenter":"number",
+		"horizontalCenter":"any",
 		"hostComponentKey":"string",
 		"implements":["eui.UIComponent"],
 		"includeInLayout":"boolean",
-		"left":"number",
+		"left":"any",
 		"maxHeight":"number",
 		"maxWidth":"number",
 		"minHeight":"number",
 		"minWidth":"number",
 		"percentHeight":"number",
 		"percentWidth":"number",
-		"right":"number",
+		"right":"any",
 		"skinName":"any",
 		"super":"egret.DisplayObjectContainer",
-		"top":"number",
-		"verticalCenter":"number"
+		"top":"any",
+		"verticalCenter":"any"
 	},
 	"eui.DataGroup":{
 		"dataProvider":"eui.ICollection",
@@ -236,14 +242,14 @@
 		"useVirtualLayout":"boolean"
 	},
 	"eui.EditableText":{
-		"bottom":"number",
-		"horizontalCenter":"number",
+		"bottom":"any",
+		"horizontalCenter":"any",
 		"implements":[
 			"eui.UIComponent",
 			"eui.IDisplayText"
 		],
 		"includeInLayout":"boolean",
-		"left":"number",
+		"left":"any",
 		"maxHeight":"number",
 		"maxWidth":"number",
 		"minHeight":"number",
@@ -252,35 +258,35 @@
 		"percentWidth":"number",
 		"prompt":"string",
 		"promptColor":"number",
-		"right":"number",
+		"right":"any",
 		"super":"egret.TextField",
-		"top":"number",
-		"verticalCenter":"number"
+		"top":"any",
+		"verticalCenter":"any"
 	},
 	"eui.Group":{
-		"bottom":"number",
+		"bottom":"any",
 		"currentState":"string",
 		"elementsContent":"Array",
-		"horizontalCenter":"number",
+		"horizontalCenter":"any",
 		"implements":["eui.IViewport"],
 		"includeInLayout":"boolean",
 		"layout":"eui.LayoutBase",
-		"left":"number",
+		"left":"any",
 		"maxHeight":"number",
 		"maxWidth":"number",
 		"minHeight":"number",
 		"minWidth":"number",
 		"percentHeight":"number",
 		"percentWidth":"number",
-		"right":"number",
+		"right":"any",
 		"scrollEnabled":"boolean",
 		"scrollH":"number",
 		"scrollV":"number",
 		"states":"Array",
 		"super":"egret.DisplayObjectContainer",
-		"top":"number",
+		"top":"any",
 		"touchThrough":"boolean",
-		"verticalCenter":"number"
+		"verticalCenter":"any"
 	},
 	"eui.HScrollBar":{
 		"super":"eui.ScrollBarBase"
@@ -292,22 +298,22 @@
 		"super":"eui.LinearLayoutBase"
 	},
 	"eui.Image":{
-		"bottom":"number",
-		"horizontalCenter":"number",
+		"bottom":"any",
+		"horizontalCenter":"any",
 		"implements":["eui.UIComponent"],
 		"includeInLayout":"boolean",
-		"left":"number",
+		"left":"any",
 		"maxHeight":"number",
 		"maxWidth":"number",
 		"minHeight":"number",
 		"minWidth":"number",
 		"percentHeight":"number",
 		"percentWidth":"number",
-		"right":"number",
+		"right":"any",
 		"source":"any",
 		"super":"egret.Bitmap",
-		"top":"number",
-		"verticalCenter":"number"
+		"top":"any",
+		"verticalCenter":"any"
 	},
 	"eui.ItemRenderer":{
 		"data":"any",
@@ -317,24 +323,25 @@
 		"super":"eui.Component"
 	},
 	"eui.Label":{
-		"bottom":"number",
-		"horizontalCenter":"number",
+		"bottom":"any",
+		"horizontalCenter":"any",
 		"implements":[
 			"eui.UIComponent",
 			"eui.IDisplayText"
 		],
 		"includeInLayout":"boolean",
-		"left":"number",
+		"left":"any",
 		"maxHeight":"number",
 		"maxWidth":"number",
 		"minHeight":"number",
 		"minWidth":"number",
 		"percentHeight":"number",
 		"percentWidth":"number",
-		"right":"number",
+		"right":"any",
+		"style":"string",
 		"super":"egret.TextField",
-		"top":"number",
-		"verticalCenter":"number"
+		"top":"any",
+		"verticalCenter":"any"
 	},
 	"eui.LayoutBase":{
 		"super":"egret.EventDispatcher",
@@ -467,6 +474,7 @@
 	},
 	"eui.TextInput":{
 		"displayAsPassword":"boolean",
+		"inputType":"string",
 		"maxChars":"number",
 		"prompt":"string",
 		"promptDisplay":"eui.Label",
@@ -541,16 +549,9 @@
 			"contentJustify"
 		],
 		"egret.TextField":{
-			"inputType":"egret.TextFieldInputType",
 			"textAlign":"text_textAlign",
-			"type":"egret.TextFieldType",
 			"verticalAlign":"text_verticalAlign"
 		},
-		"egret.TextFieldInputType":[
-			"text",
-			"tel",
-			"password"
-		],
 		"egret.TextFieldType":[
 			"dynamic",
 			"input"
