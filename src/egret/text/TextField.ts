@@ -247,6 +247,34 @@ module egret {
         public static default_fontFamily:string = "Arial";
 
         /**
+         * @language en_US
+         * default size in pixels of text
+         * @version Egret 3.2.1
+         * @platform Web,Native
+         */
+        /**
+         * @language zh_CN
+         * 默认文本字号大小
+         * @version Egret 3.2.1
+         * @platform Web,Native
+         */
+        public static default_size:number = 30;
+
+        /**
+         * @language en_US
+         * default color of the text.
+         * @version Egret 3.2.1
+         * @platform Web,Native
+         */
+        /**
+         * @language zh_CN
+         * 默认文本颜色
+         * @version Egret 3.2.1
+         * @platform Web,Native
+         */
+        public static default_textColor:number = 0xffffff;
+
+        /**
          * @version Egret 2.4
          * @platform Web,Native
          */
@@ -257,9 +285,9 @@ module egret {
             this.textNode = textNode;
             this.$renderNode = textNode;
             this.$TextField = {
-                0: 30,             //fontSize
+                0: TextField.default_size,             //fontSize
                 1: 0,              //lineSpacing
-                2: 0xffffff,       //textColor
+                2: TextField.default_textColor,       //textColor
                 3: NaN,           //textFieldWidth
                 4: NaN,           //textFieldHeight
                 5: 0,              //textWidth

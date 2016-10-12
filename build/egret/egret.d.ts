@@ -12639,6 +12639,32 @@ declare module egret {
          */
         static default_fontFamily: string;
         /**
+         * @language en_US
+         * default size in pixels of text
+         * @version Egret 3.2.1
+         * @platform Web,Native
+         */
+        /**
+         * @language zh_CN
+         * 默认文本字号大小
+         * @version Egret 3.2.1
+         * @platform Web,Native
+         */
+        static default_size: number;
+        /**
+         * @language en_US
+         * default color of the text.
+         * @version Egret 3.2.1
+         * @platform Web,Native
+         */
+        /**
+         * @language zh_CN
+         * 默认文本颜色
+         * @version Egret 3.2.1
+         * @platform Web,Native
+         */
+        static default_textColor: number;
+        /**
          * @version Egret 2.4
          * @platform Web,Native
          */

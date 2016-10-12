@@ -19704,9 +19704,9 @@ var egret;
             this.textNode = textNode;
             this.$renderNode = textNode;
             this.$TextField = {
-                0: 30,
+                0: TextField.default_size,
                 1: 0,
-                2: 0xffffff,
+                2: TextField.default_textColor,
                 3: NaN,
                 4: NaN,
                 5: 0,
@@ -21335,6 +21335,32 @@ var egret;
          * @platform Web,Native
          */
         TextField.default_fontFamily = "Arial";
+        /**
+         * @language en_US
+         * default size in pixels of text
+         * @version Egret 3.2.1
+         * @platform Web,Native
+         */
+        /**
+         * @language zh_CN
+         * 默认文本字号大小
+         * @version Egret 3.2.1
+         * @platform Web,Native
+         */
+        TextField.default_size = 30;
+        /**
+         * @language en_US
+         * default color of the text.
+         * @version Egret 3.2.1
+         * @platform Web,Native
+         */
+        /**
+         * @language zh_CN
+         * 默认文本颜色
+         * @version Egret 3.2.1
+         * @platform Web,Native
+         */
+        TextField.default_textColor = 0xffffff;
         return TextField;
     }(egret.DisplayObject));
     egret.TextField = TextField;
