@@ -87,6 +87,10 @@ module egret.native {
          * @param useMaxSize 若传入true，则将改变后的尺寸与已有尺寸对比，保留较大的尺寸。
          */
         public resize(width:number, height:number, useMaxSize?:boolean):void {
+            //resize 之前要提交下绘制命令
+            if($supportCmdBatch) {
+                $cmdManager.flush();
+            }
             var surface = this.surface;
             surface.width = width;
             surface.height = height;
@@ -101,6 +105,10 @@ module egret.native {
          * @param offsetY 原始图像数据在改变后缓冲区的绘制起始位置y
          */
         public resizeTo(width:number, height:number, offsetX:number, offsetY:number):void {
+            //resize 之前要提交下绘制命令
+            if($supportCmdBatch) {
+                $cmdManager.flush();
+            }
             if(!sharedCanvas) {
                 sharedCanvas = createCanvas();
             }

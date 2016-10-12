@@ -3800,6 +3800,10 @@ var egret;
              * @param useMaxSize 若传入true，则将改变后的尺寸与已有尺寸对比，保留较大的尺寸。
              */
             p.resize = function (width, height, useMaxSize) {
+                //resize 之前要提交下绘制命令
+                if (native.$supportCmdBatch) {
+                    native.$cmdManager.flush();
+                }
                 var surface = this.surface;
                 surface.width = width;
                 surface.height = height;
@@ -3813,6 +3817,10 @@ var egret;
              * @param offsetY 原始图像数据在改变后缓冲区的绘制起始位置y
              */
             p.resizeTo = function (width, height, offsetX, offsetY) {
+                //resize 之前要提交下绘制命令
+                if (native.$supportCmdBatch) {
+                    native.$cmdManager.flush();
+                }
                 if (!sharedCanvas) {
                     sharedCanvas = createCanvas();
                 }
