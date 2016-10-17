@@ -610,11 +610,11 @@ module eui.sys {
 
             //对 style 属性先行赋值
             var styleIndex = keyList.indexOf("style");
-            if(styleIndex > 0) {
+            if (styleIndex > 0) {
                 keyList.splice(styleIndex, 1);
                 keyList.unshift("style");
             }
-            
+
             var length = keyList.length;
             for (var i = 0; i < length; i++) {
                 key = keyList[i];
@@ -873,7 +873,8 @@ module eui.sys {
          * 是否是普通赋值的key
          */
         private isNormalKey(key:string):boolean {
-            if (!key || key.indexOf(".") != -1 || wingKeys.indexOf(key) != -1)
+            if (!key || key.indexOf(".") != -1
+                || key.indexOf(":") != -1 || wingKeys.indexOf(key) != -1)
                 return false;
             return true;
         }
@@ -1060,7 +1061,7 @@ module eui.sys {
             }
             value = trimText.split("\v0\v").join("\\\'");
             //补全缺失的单引号
-            if(isSingleQuoteLeak){
+            if (isSingleQuoteLeak) {
                 value += "'";
             }
             var templates = value.split("+");

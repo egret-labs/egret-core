@@ -18822,7 +18822,8 @@ var eui;
              * 是否是普通赋值的key
              */
             p.isNormalKey = function (key) {
-                if (!key || key.indexOf(".") != -1 || wingKeys.indexOf(key) != -1)
+                if (!key || key.indexOf(".") != -1
+                    || key.indexOf(":") != -1 || wingKeys.indexOf(key) != -1)
                     return false;
                 return true;
             };
