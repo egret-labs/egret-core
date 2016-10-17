@@ -17829,7 +17829,7 @@ var egret;
              * @platform Web,Native
              */
             ,function () {
-                return "3.2.0";
+                return "3.2.1";
             }
         );
         /**
