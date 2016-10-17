@@ -2882,16 +2882,8 @@ var egret;
                 font += "bold ";
             font += (fontSize || 12) + "px ";
             font += (fontFamily || "Arial");
-            var width = 0;
-            var cache = fontCache[font] || (fontCache[font] = {});
             context.font = font;
-            var length = text.length;
-            for (var i = 0; i < length; i++) {
-                var letter = text.charCodeAt(i);
-                var w = cache[letter] || (cache[letter] = context.measureText(text.charAt(i)).width);
-                width += w;
-            }
-            return width;
+            return context.measureText(text).width;
         }
         /**
          * @private
@@ -8186,7 +8178,7 @@ var egret;
                     if (hasBlendMode) {
                         buffer.context.setGlobalCompositeOperation(compositeOp);
                     }
-                    drawCalls += this.drawDisplayObject(displayObject, buffer, dirtyList, matrix, displayObject.$displayList, region, null);
+                    drawCalls += this.drawDisplayObject(displayObject, buffer, dirtyList, matrix, displayObject.$displayList, clipRegion, root);
                     if (hasBlendMode) {
                         buffer.context.setGlobalCompositeOperation(defaultCompositeOp);
                     }

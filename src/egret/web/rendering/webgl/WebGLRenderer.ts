@@ -390,7 +390,7 @@ module egret.web {
                     buffer.context.setGlobalCompositeOperation(compositeOp);
                 }
                 drawCalls += this.drawDisplayObject(displayObject, buffer, dirtyList, matrix,
-                    displayObject.$displayList, region, null);
+                    displayObject.$displayList, clipRegion, root);
                 if (hasBlendMode) {
                     buffer.context.setGlobalCompositeOperation(defaultCompositeOp);
                 }

@@ -1763,42 +1763,42 @@ declare namespace dragonBones {
         fadeTotalTime: number;
         /**
          * @internal
-         * @private Animation
+         * @private
          */
         _isFadeOutComplete: boolean;
         /**
          * @internal
-         * @private Animation
+         * @private
          */
         _layer: number;
         /**
          * @internal
-         * @private TimelineState
+         * @private
          */
         _position: number;
         /**
          * @internal
-         * @private TimelineState
+         * @private
          */
         _duration: number;
         /**
          * @internal
-         * @private Animation, TimelineState
+         * @private
          */
         _weightResult: number;
         /**
          * @internal
-         * @private Animation, TimelineState
+         * @private
          */
         _fadeProgress: number;
         /**
          * @internal
-         * @private Animation TimelineState
+         * @private
          */
         _group: string;
         /**
          * @internal
-         * @private TimelineState
+         * @private
          */
         _timeline: AnimationTimelineState;
         /**
@@ -2240,7 +2240,7 @@ declare namespace dragonBones {
      * @see dragonBones.Bone
      * @see dragonBones.Slot
      * @see dragonBones.Animation
-     * @see dragonBones.IArmatureDisplayContainer
+     * @see dragonBones.IArmatureDisplay
      * @version DragonBones 3.0
      */
     class Armature extends BaseObject implements IAnimateble {
@@ -3222,7 +3222,7 @@ declare namespace dragonBones {
     };
     /**
      * @language zh_CN
-     * 生成骨架的基础工厂。 (通常只需要一个全局工厂实例)
+     * 创建骨架的基础工厂。 (通常只需要一个全局工厂实例)
      * @see dragonBones.DragonBonesData
      * @see dragonBones.TextureAtlasData
      * @see dragonBones.ArmatureData
@@ -4154,17 +4154,13 @@ declare namespace dragonBones {
          */
         protected _generateSlot(dataPackage: BuildArmaturePackage, slotDisplayDataSet: SlotDisplayDataSet): Slot;
         /**
-         * @inheritDoc
-         */
-        clear(): void;
-        /**
          * @language zh_CN
          * 创建一个指定名称的骨架，并使用骨架的显示容器来更新骨架动画。
          * @param armatureName 骨架数据名称。
          * @param dragonBonesName 龙骨数据名称，如果未设置，将检索所有的龙骨数据，如果多个数据中包含同名的骨架数据，可能无法创建出准确的骨架。
          * @param skinName 皮肤名称，如果未设置，则使用默认皮肤。
          * @returns 骨架的显示容器。
-         * @see dragonBones.IArmatureDisplayContainer
+         * @see dragonBones.EgretArmatureDisplay
          * @version DragonBones 4.5
          */
         buildArmatureDisplay(armatureName: string, dragonBonesName?: string, skinName?: string): EgretArmatureDisplay;
@@ -4258,11 +4254,11 @@ declare namespace dragonBones {
         /**
          * @private
          */
-        protected _initDisplay(value: Object): void;
+        protected _initDisplay(value: any): void;
         /**
          * @private
          */
-        protected _disposeDisplay(value: Object): void;
+        protected _disposeDisplay(value: any): void;
         /**
          * @private
          */
@@ -4274,7 +4270,7 @@ declare namespace dragonBones {
         /**
          * @private
          */
-        protected _replaceDisplay(value: Object): void;
+        protected _replaceDisplay(value: any): void;
         /**
          * @private
          */
@@ -4423,7 +4419,7 @@ declare namespace dragonBones {
     /**
      * @language zh_CN
      * 通过读取缓存的二进制动画数据来更新动画，具有良好的运行性能，同时对内存的占用也非常低。
-     * @see dragonBones.buildMovie。
+     * @see dragonBones.buildMovie
      * @version DragonBones 4.7
      */
     class Movie extends egret.DisplayObjectContainer implements IAnimateble {
