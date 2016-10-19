@@ -179,9 +179,9 @@ function getClassNameById(id, ns) {
 function getDtsInfoFromExml(exmlFile) {
     var xml;
     try {
-        xml = egret.XML.parse(require("../FileUtil").read(exmlFile))
+        xml = egret.XML.parse(require("../FileUtil").read(exmlFile));
     }
-    catch(e) {
+    catch (e) {
         console.log(e);
         utils.exit(2002, exmlFile);
     }
@@ -197,3 +197,4 @@ function getDtsInfoFromExml(exmlFile) {
     return { className: className, extendName: extendName };
 }
 exports.getDtsInfoFromExml = getDtsInfoFromExml;
+//# sourceMappingURL=EXML.js.map
