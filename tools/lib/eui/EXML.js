@@ -30,7 +30,7 @@
 var __global = global;
 var xml = require("../xml/index");
 var utils = require("../utils");
-var config = require("./parser/EXMLConfig");
+var config = require("./EXMLConfig");
 egret.XML = xml;
 /**
  * @private
