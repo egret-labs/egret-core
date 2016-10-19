@@ -176,7 +176,7 @@ namespace egret {
          */
         $init() {
             this.$reset();
-            var movieClipData:MovieClipData = this.$movieClipData;
+            let movieClipData:MovieClipData = this.$movieClipData;
             if (movieClipData && movieClipData.$isDataValid()) {
                 this.frames = movieClipData.frames;
                 this.$totalFrames = movieClipData.numFrames;
@@ -219,18 +219,18 @@ namespace egret {
          * @private
          */
         $render():void {
-            var texture = this.$bitmapData;
+            let texture = this.$bitmapData;
             if (texture) {
-                var offsetX:number = Math.round(this.offsetPoint.x);
-                var offsetY:number = Math.round(this.offsetPoint.y);
-                var bitmapWidth:number = texture._bitmapWidth;
-                var bitmapHeight:number = texture._bitmapHeight;
-                var textureWidth:number = texture.$getTextureWidth();
-                var textureHeight:number = texture.$getTextureHeight();
-                var destW:number = Math.round(texture.$getScaleBitmapWidth());
-                var destH:number = Math.round(texture.$getScaleBitmapHeight());
-                var sourceWidth:number = texture._sourceWidth;
-                var sourceHeight:number = texture._sourceHeight;
+                let offsetX:number = Math.round(this.offsetPoint.x);
+                let offsetY:number = Math.round(this.offsetPoint.y);
+                let bitmapWidth:number = texture._bitmapWidth;
+                let bitmapHeight:number = texture._bitmapHeight;
+                let textureWidth:number = texture.$getTextureWidth();
+                let textureHeight:number = texture.$getTextureHeight();
+                let destW:number = Math.round(texture.$getScaleBitmapWidth());
+                let destH:number = Math.round(texture.$getScaleBitmapHeight());
+                let sourceWidth:number = texture._sourceWidth;
+                let sourceHeight:number = texture._sourceHeight;
 
                 sys.BitmapNode.$updateTextureData(<sys.BitmapNode>this.$renderNode, texture._bitmapData, texture._bitmapX, texture._bitmapY,
                     bitmapWidth, bitmapHeight, offsetX, offsetY, textureWidth, textureHeight, destW, destH, sourceWidth, sourceHeight, null, egret.BitmapFillMode.SCALE, this.$smoothing);
@@ -241,12 +241,12 @@ namespace egret {
          * @private
          */
         $measureContentBounds(bounds:Rectangle):void {
-            var texture = this.$bitmapData;
+            let texture = this.$bitmapData;
             if (texture) {
-                var x:number = this.offsetPoint.x;
-                var y:number = this.offsetPoint.y;
-                var w:number = texture.$getTextureWidth();
-                var h:number = texture.$getTextureHeight();
+                let x:number = this.offsetPoint.x;
+                let y:number = this.offsetPoint.y;
+                let w:number = texture.$getTextureWidth();
+                let h:number = texture.$getTextureHeight();
 
                 bounds.setTo(x, y, w, h);
             }
@@ -290,10 +290,10 @@ namespace egret {
             if (ignoreCase) {
                 labelName = labelName.toLowerCase();
             }
-            var frameLabels = this.frameLabels;
+            let frameLabels = this.frameLabels;
             if (frameLabels) {
-                var outputFramelabel:FrameLabel = null;
-                for (var i = 0; i < frameLabels.length; i++) {
+                let outputFramelabel:FrameLabel = null;
+                for (let i = 0; i < frameLabels.length; i++) {
                     outputFramelabel = frameLabels[i];
                     if (ignoreCase ? outputFramelabel.name.toLowerCase() == labelName : outputFramelabel.name == labelName) {
                         return outputFramelabel;
@@ -308,10 +308,10 @@ namespace egret {
          * @param labelName {string} 帧标签名
          */
         private getFrameStartEnd(labelName: string): void {
-            var frameLabels = this.frameLabels;
+            let frameLabels = this.frameLabels;
             if(frameLabels){
-                var outputFramelabel:FrameLabel = null;
-                for (var i = 0; i < frameLabels.length; i++) {
+                let outputFramelabel:FrameLabel = null;
+                for (let i = 0; i < frameLabels.length; i++) {
                     outputFramelabel = frameLabels[i];
                     if(labelName == outputFramelabel.name){
                         this.$frameLabelStart = outputFramelabel.frame;
@@ -329,10 +329,10 @@ namespace egret {
          * @returns {egret.FrameLabel} FrameLabel对象
          */
         private getFrameLabelByFrame(frame:number):FrameLabel {
-            var frameLabels = this.frameLabels;
+            let frameLabels = this.frameLabels;
             if (frameLabels) {
-                var outputFramelabel:FrameLabel = null;
-                for (var i = 0; i < frameLabels.length; i++) {
+                let outputFramelabel:FrameLabel = null;
+                for (let i = 0; i < frameLabels.length; i++) {
                     outputFramelabel = frameLabels[i];
                     if (outputFramelabel.frame == frame) {
                         return outputFramelabel;
@@ -350,11 +350,11 @@ namespace egret {
          * @returns {egret.FrameLabel} FrameLabel对象
          */
         private getFrameLabelForFrame(frame:number):FrameLabel {
-            var outputFrameLabel:FrameLabel = null;
-            var tempFrameLabel:FrameLabel = null;
-            var frameLabels = this.frameLabels;
+            let outputFrameLabel:FrameLabel = null;
+            let tempFrameLabel:FrameLabel = null;
+            let frameLabels = this.frameLabels;
             if (frameLabels) {
-                for (var i = 0; i < frameLabels.length; i++) {
+                for (let i = 0; i < frameLabels.length; i++) {
                     tempFrameLabel = frameLabels[i];
                     if (tempFrameLabel.frame > frame) {
                         return outputFrameLabel;
@@ -450,7 +450,7 @@ namespace egret {
          * @param frame
          */
         private gotoFrame(frame:any):void {
-            var frameNum:number;
+            let frameNum:number;
             if (typeof frame === "string") {
                 frameNum = this.getFrameLabelByName(frame).frame;
             } else {
@@ -487,20 +487,20 @@ namespace egret {
          * @returns
          */
         private advanceTime(timeStamp:number):boolean {
-            var self = this;
+            let self = this;
 
-            var advancedTime:number = timeStamp - self.lastTime;
+            let advancedTime:number = timeStamp - self.lastTime;
             self.lastTime = timeStamp;
 
-            var frameIntervalTime:number = self.frameIntervalTime;
-            var currentTime = self.passedTime + advancedTime;
+            let frameIntervalTime:number = self.frameIntervalTime;
+            let currentTime = self.passedTime + advancedTime;
             self.passedTime = currentTime % frameIntervalTime;
 
-            var num:number = currentTime / frameIntervalTime;
+            let num:number = currentTime / frameIntervalTime;
             if (num < 1) {
                 return false;
             }
-            var event;
+            let event;
             while (num >= 1) {
                 num--;
                 self.$nextFrameNum++;
@@ -551,7 +551,7 @@ namespace egret {
          *
          */
         private constructFrame() {
-            var currentFrameNum:number = this.$currentFrameNum;
+            let currentFrameNum:number = this.$currentFrameNum;
             if (this.displayedKeyFrameNum == currentFrameNum) {
                 return;
             }
@@ -580,13 +580,13 @@ namespace egret {
         private handlePendingEvent():void {
             if (this.$eventPool.length != 0) {
                 this.$eventPool.reverse();
-                var eventPool:any[] = this.$eventPool;
-                var length:number = eventPool.length;
-                var isComplete:boolean = false;
-                var isLoopComplete:boolean = false;
+                let eventPool:any[] = this.$eventPool;
+                let length:number = eventPool.length;
+                let isComplete:boolean = false;
+                let isLoopComplete:boolean = false;
 
-                for (var i = 0; i < length; i++) {
-                    var event:string = eventPool.pop();
+                for (let i = 0; i < length; i++) {
+                    let event:string = eventPool.pop();
                     if (event == Event.LOOP_COMPLETE) {
                         isLoopComplete = true;
                     } else if (event == Event.COMPLETE) {
@@ -630,7 +630,7 @@ namespace egret {
          * @platform Web,Native
          */
         public get currentFrameLabel():string {
-            var label = this.getFrameLabelByFrame(this.$currentFrameNum);
+            let label = this.getFrameLabelByFrame(this.$currentFrameNum);
             return label && label.name;
         }
 
@@ -640,7 +640,7 @@ namespace egret {
          * @platform Web,Native
          */
         public get currentLabel():string {
-            var label:FrameLabel = this.getFrameLabelForFrame(this.$currentFrameNum);
+            let label:FrameLabel = this.getFrameLabelForFrame(this.$currentFrameNum);
             return label ? label.name : null;
         }
 

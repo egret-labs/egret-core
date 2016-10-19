@@ -50,7 +50,7 @@ namespace egret {
         constructor() {
             super();
             this.$renderBuffer = new sys.RenderBuffer();
-            var bitmapData = new egret.BitmapData(this.$renderBuffer.surface);
+            let bitmapData = new egret.BitmapData(this.$renderBuffer.surface);
             bitmapData.$deleteSource = false;
             this._setBitmapData(bitmapData);
         }
@@ -79,20 +79,20 @@ namespace egret {
                 return false;
             }
 
-            var bounds = clipBounds || displayObject.$getOriginalBounds();
+            let bounds = clipBounds || displayObject.$getOriginalBounds();
             if (bounds.width == 0 || bounds.height == 0) {
                 return false;
             }
 
             scale /= $TextureScaleFactor;
-            var width = (bounds.x + bounds.width) * scale;
-            var height = (bounds.y + bounds.height) * scale;
+            let width = (bounds.x + bounds.width) * scale;
+            let height = (bounds.y + bounds.height) * scale;
             if (clipBounds) {
                 width = bounds.width * scale;
                 height = bounds.height * scale;
             }
 
-            var renderBuffer = this.$renderBuffer;
+            let renderBuffer = this.$renderBuffer;
             if (!renderBuffer) {
                 return false;
             }
@@ -100,7 +100,7 @@ namespace egret {
             this._bitmapData.width = width;
             this._bitmapData.height = height;
 
-            var matrix = Matrix.create();
+            let matrix = Matrix.create();
             matrix.identity();
             //应用裁切
             if (clipBounds) {
@@ -122,9 +122,9 @@ namespace egret {
          * @inheritDoc
          */
         public getPixel32(x:number, y:number):number[] {
-            var data:number[];
+            let data:number[];
             if (this.$renderBuffer) {
-                var scale = $TextureScaleFactor;
+                let scale = $TextureScaleFactor;
                 x = Math.round(x / scale);
                 y = Math.round(y / scale);
                 data = this.$renderBuffer.getPixels(x, y, 1, 1);

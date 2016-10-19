@@ -6,7 +6,7 @@ namespace egret {
     /**
     * @private
     */
-    var implMap: any = {};
+    let implMap: any = {};
 
     /**
      * @language en_US

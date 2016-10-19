@@ -121,8 +121,8 @@ namespace eui {
          */
         public set elementsContent(value:egret.DisplayObject[]) {
             if (value) {
-                var length = value.length;
-                for (var i = 0; i < length; i++) {
+                let length = value.length;
+                for (let i = 0; i < length; i++) {
                     this.addChild(value[i]);
                 }
             }
@@ -238,9 +238,9 @@ namespace eui {
         public setContentSize(width:number, height:number):void {
             width = Math.ceil(+width || 0);
             height = Math.ceil(+height || 0);
-            var values = this.$Group;
-            var wChange = (values[Keys.contentWidth] !== width);
-            var hChange = (values[Keys.contentHeight] !== height);
+            let values = this.$Group;
+            let wChange = (values[Keys.contentWidth] !== width);
+            let hChange = (values[Keys.contentHeight] !== height);
             if (!wChange && !hChange) {
                 return;
             }
@@ -266,7 +266,7 @@ namespace eui {
 
         public set scrollEnabled(value:boolean) {
             value = !!value;
-            var values = this.$Group;
+            let values = this.$Group;
             if (value === values[Keys.scrollEnabled])
                 return;
             values[Keys.scrollEnabled] = value;
@@ -286,7 +286,7 @@ namespace eui {
 
         public set scrollH(value:number) {
             value = +value || 0;
-            var values = this.$Group;
+            let values = this.$Group;
             if (value === values[Keys.scrollH])
                 return;
             values[Keys.scrollH] = value;
@@ -309,7 +309,7 @@ namespace eui {
 
         public set scrollV(value:number) {
             value = +value || 0;
-            var values = this.$Group;
+            let values = this.$Group;
             if (value == values[Keys.scrollV])
                 return;
             values[Keys.scrollV] = value;
@@ -325,10 +325,10 @@ namespace eui {
          * @returns
          */
         private updateScrollRect():boolean {
-            var values = this.$Group;
-            var hasClip = values[Keys.scrollEnabled];
+            let values = this.$Group;
+            let hasClip = values[Keys.scrollEnabled];
             if (hasClip) {
-                var uiValues = this.$UIComponent;
+                let uiValues = this.$UIComponent;
                 this.scrollRect = egret.$TempRectangle.setTo(values[Keys.scrollH],
                     values[Keys.scrollV],
                     uiValues[sys.UIKeys.width], uiValues[sys.UIKeys.height]);
@@ -441,17 +441,17 @@ namespace eui {
          * @private
          */
         $hitTest(stageX:number, stageY:number):egret.DisplayObject {
-            var target = super.$hitTest(stageX, stageY);
+            let target = super.$hitTest(stageX, stageY);
             if (target || this.$Group[Keys.touchThrough]) {
                 return target;
             }
             if (!this.$visible || !this.touchEnabled) {
                 return null;
             }
-            var point = this.globalToLocal(stageX, stageY, egret.$TempPoint);
-            var values = this.$UIComponent;
-            var bounds = egret.$TempRectangle.setTo(0, 0, values[sys.UIKeys.width], values[sys.UIKeys.height]);
-            var scrollRect = this.$scrollRect;
+            let point = this.globalToLocal(stageX, stageY, egret.$TempPoint);
+            let values = this.$UIComponent;
+            let bounds = egret.$TempRectangle.setTo(0, 0, values[sys.UIKeys.width], values[sys.UIKeys.height]);
+            let scrollRect = this.$scrollRect;
             if(scrollRect){
                 bounds.x = scrollRect.x;
                 bounds.y = scrollRect.y;
@@ -522,7 +522,7 @@ namespace eui {
          * @platform Web,Native
          */
         public invalidateState():void {
-            var values = this.$stateValues;
+            let values = this.$stateValues;
             if (values.stateIsDirty) {
                 return;
             }
@@ -583,7 +583,7 @@ namespace eui {
          */
         protected commitProperties():void {
             sys.UIComponentImpl.prototype["commitProperties"].call(this);
-            var values = this.$stateValues;
+            let values = this.$stateValues;
             if (values.stateIsDirty) {
                 values.stateIsDirty = false;
                 if (!values.explicitState) {

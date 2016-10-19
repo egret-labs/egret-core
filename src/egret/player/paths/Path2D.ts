@@ -93,7 +93,7 @@ namespace egret.sys {
          */
         public moveTo(x: number, y: number) {
             this.$commands[this.commandPosition++] = PathCommand.MoveTo;
-            var pos = this.dataPosition;
+            let pos = this.dataPosition;
             this.$data[pos++] = x;
             this.$data[pos++] = y;
             this.dataPosition = pos;
@@ -106,7 +106,7 @@ namespace egret.sys {
          */
         public lineTo(x: number, y: number) {
             this.$commands[this.commandPosition++] = PathCommand.LineTo;
-            var pos = this.dataPosition;
+            let pos = this.dataPosition;
             this.$data[pos++] = x;
             this.$data[pos++] = y;
             this.dataPosition = pos;
@@ -123,7 +123,7 @@ namespace egret.sys {
          */
         public curveTo(controlX: number, controlY: number, anchorX: number, anchorY: number) {
             this.$commands[this.commandPosition++] = PathCommand.CurveTo;
-            var pos = this.dataPosition;
+            let pos = this.dataPosition;
             this.$data[pos++] = controlX;
             this.$data[pos++] = controlY;
             this.$data[pos++] = anchorX;
@@ -143,7 +143,7 @@ namespace egret.sys {
         public cubicCurveTo(controlX1: number, controlY1: number, controlX2: number,
             controlY2: number, anchorX: number, anchorY: number) {
             this.$commands[this.commandPosition++] = PathCommand.CubicCurveTo;
-            var pos = this.dataPosition;
+            let pos = this.dataPosition;
             this.$data[pos++] = controlX1;
             this.$data[pos++] = controlY1;
             this.$data[pos++] = controlX2;
@@ -161,8 +161,8 @@ namespace egret.sys {
          * @param height 矩形的高度（以像素为单位）。
          */
         public drawRect(x: number, y: number, width: number, height: number) {
-            var x2 = x + width;
-            var y2 = y + height;
+            let x2 = x + width;
+            let y2 = y + height;
             this.moveTo(x, y);
             this.lineTo(x2, y);
             this.lineTo(x2, y2);
@@ -180,16 +180,16 @@ namespace egret.sys {
          * @param ellipseHeight 用于绘制圆角的椭圆的高度（以像素为单位）。 （可选）如果未指定值，则默认值与为 ellipseWidth 参数提供的值相匹配。
          */
         public drawRoundRect(x: number, y: number, width: number, height: number, ellipseWidth: number, ellipseHeight?: number): void {
-            var radiusX = (ellipseWidth * 0.5) | 0;
-            var radiusY = ellipseHeight ? (ellipseHeight * 0.5) | 0 : radiusX;
+            let radiusX = (ellipseWidth * 0.5) | 0;
+            let radiusY = ellipseHeight ? (ellipseHeight * 0.5) | 0 : radiusX;
 
             if (!radiusX || !radiusY) {
                 this.drawRect(x, y, width, height);
                 return;
             }
 
-            var hw = width * 0.5;
-            var hh = height * 0.5;
+            let hw = width * 0.5;
+            let hh = height * 0.5;
             if (radiusX > hw) {
                 radiusX = hw;
             }
@@ -210,12 +210,12 @@ namespace egret.sys {
             //  G         D
             //    F-----E
             // 从D点开始，结束在D点
-            var right = x + width;
-            var bottom = y + height;
-            var xlw = x + radiusX;
-            var xrw = right - radiusX;
-            var ytw = y + radiusY;
-            var ybw = bottom - radiusY;
+            let right = x + width;
+            let bottom = y + height;
+            let xlw = x + radiusX;
+            let xrw = right - radiusX;
+            let ytw = y + radiusY;
+            let ybw = bottom - radiusY;
             this.moveTo(right, ybw);
             this.curveTo(right, bottom, xrw, bottom);
             this.lineTo(xlw, bottom);
@@ -245,8 +245,8 @@ namespace egret.sys {
          * @param height 矩形的高度（以像素为单位）。
          */
         public drawEllipse(x: number, y: number, width: number, height: number): void {
-            var radiusX = width * 0.5;
-            var radiusY = height * 0.5;
+            let radiusX = width * 0.5;
+            let radiusY = height * 0.5;
             // 移动x和y到椭圆的中心.
             x += radiusX;
             y += radiusY;
@@ -292,9 +292,9 @@ namespace egret.sys {
          * 注意：如果为true，endAngle必须小于startAngle，反之必须大于。
          */
         private arcToBezier(x: number, y: number, radiusX: number, radiusY: number, startAngle: number, endAngle: number, anticlockwise?: boolean): void {
-            var halfPI = Math.PI * 0.5;
-            var start = startAngle;
-            var end = start;
+            let halfPI = Math.PI * 0.5;
+            let start = startAngle;
+            let end = start;
             if (anticlockwise) {
                 end += -halfPI - (start % halfPI);
                 if (end < endAngle) {
@@ -307,24 +307,24 @@ namespace egret.sys {
                     end = endAngle;
                 }
             }
-            var currentX = x + Math.cos(start) * radiusX;
-            var currentY = y + Math.sin(start) * radiusY;
+            let currentX = x + Math.cos(start) * radiusX;
+            let currentY = y + Math.sin(start) * radiusY;
             if(this.$lastX != currentX || this.$lastY != currentY) {
                 this.moveTo(currentX, currentY);
             }
-            var u = Math.cos(start);
-            var v = Math.sin(start);
-            for (var i = 0; i < 4; i++) {
-                var addAngle = end - start;
-                var a = 4 * Math.tan(addAngle / 4) / 3;
-                var x1 = currentX - v * a * radiusX;
-                var y1 = currentY + u * a * radiusY;
+            let u = Math.cos(start);
+            let v = Math.sin(start);
+            for (let i = 0; i < 4; i++) {
+                let addAngle = end - start;
+                let a = 4 * Math.tan(addAngle / 4) / 3;
+                let x1 = currentX - v * a * radiusX;
+                let y1 = currentY + u * a * radiusY;
                 u = Math.cos(end);
                 v = Math.sin(end);
                 currentX = x + u * radiusX;
                 currentY = y + v * radiusY;
-                var x2 = currentX + v * a * radiusX;
-                var y2 = currentY - u * a * radiusY;
+                let x2 = currentX + v * a * radiusX;
+                let y2 = currentY - u * a * radiusY;
                 this.cubicCurveTo(x1, y1, x2, y2, currentX, currentY);
                 if (end === endAngle) {
                     break;

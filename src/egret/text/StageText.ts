@@ -103,5 +103,5 @@ namespace egret {
      * @version Egret 2.4
      * @platform Web,Native
      */
-    export var StageText:{new():StageText};
+    export let StageText:{new():StageText};
 }

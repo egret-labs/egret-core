@@ -1818,10 +1818,6 @@ declare namespace eui.sys {
         getPreferredBounds(bounds: egret.Rectangle): void;
         /**
          * @private
-         *
-         * @param bounds
-         * @param w
-         * @param h
          */
         private applyMatrix(bounds, w, h);
         /**
@@ -10501,7 +10497,7 @@ declare namespace eui {
      * If your project need to custom the resource parsing rule, you need to implement the <code>IAssetAdapter</code>.
      * And use the following code to inject it to the system:
      * <pre>
-     *      var assetAdapter = new YourAssetAdapter();
+     *      let assetAdapter = new YourAssetAdapter();
      *      egret.registerImplementation("eui.IAssetAdapter",assetAdapter)
      * </pre>
      *
@@ -10515,7 +10511,7 @@ declare namespace eui {
      * 若项目需要自定义 Image.source的解析规则，需要实现这个接口，
      * 然后调用如下代码注入自定义实现到框架即可：
      * <pre>
-     *      var assetAdapter = new YourAssetAdapter();
+     *      let assetAdapter = new YourAssetAdapter();
      *      egret.registerImplementation("eui.IAssetAdapter",assetAdapter)
      * </pre>
      * @version Egret 2.4
@@ -10655,7 +10651,7 @@ declare namespace eui {
      * If your project need to custom the theme rule, you need to implement the <code>IThemeAdapter</code>.
      * And use the following code to inject it to the system:
      * <pre>
-     *      var themeAdapter = new YourThemeAdapter();
+     *      let themeAdapter = new YourThemeAdapter();
      *      egret.registerImplementation("eui.IThemeAdapter",themeAdapter);
      * </pre>
      *
@@ -10669,7 +10665,7 @@ declare namespace eui {
      * 若项目需要自定义主题需要实现这个接口，
      * 然后调用如下代码注入自定义实现到框架即可：
      * <pre>
-     *      var themeAdapter = new YourThemeAdapter();
+     *      let themeAdapter = new YourThemeAdapter();
      *      egret.registerImplementation("eui.IThemeAdapter",themeAdapter);
      * </pre>
      * @version Egret 2.4
@@ -12055,7 +12051,7 @@ declare namespace eui.sys {
         /**
          * @private
          */
-        constructor(name: string, stateGroups?: Array<any>);
+        constructor(name: string, stateGroups?: any[]);
         /**
          * @private
          * 视图状态名称
@@ -12064,15 +12060,15 @@ declare namespace eui.sys {
         /**
          * @private
          */
-        stateGroups: Array<any>;
+        stateGroups: any[];
         /**
          * @private
          */
-        addItems: Array<any>;
+        addItems: any[];
         /**
          * @private
          */
-        setProperty: Array<any>;
+        setProperty: any[];
         /**
          * @private
          * 添加一个覆盖
@@ -12226,7 +12222,7 @@ declare namespace eui.sys {
      * @private
      * EXML配置管理器实例
      */
-    var exmlConfig: EXMLConfig;
+    let exmlConfig: EXMLConfig;
     /**
      * @private
      */
@@ -12480,12 +12476,12 @@ declare namespace eui.sys {
      * @private
      * EUI 命名空间
      */
-    var NS_S: string;
+    let NS_S: string;
     /**
      * @private
      * Wing命名空间
      */
-    var NS_W: string;
+    let NS_W: string;
     /**
      * @private
      */
@@ -12537,7 +12533,7 @@ declare namespace EXML {
      * @version eui 1.0
      * @platform Web,Native
      */
-    var prefixURL: string;
+    let prefixURL: string;
     /**
      * @language en_US
      * Parsing a text of EXML file for a definition of class. You can declare the <code>class</code> property in the root
@@ -13593,7 +13589,7 @@ declare namespace eui {
          * @version eui 1.0
          * @platform Web,Native
          */
-        protected flexChildrenProportionally(spaceForChildren: number, spaceToDistribute: number, totalPercent: number, childInfoArray: Array<any>): void;
+        protected flexChildrenProportionally(spaceForChildren: number, spaceToDistribute: number, totalPercent: number, childInfoArray: any[]): void;
     }
 }
 declare namespace eui.sys {

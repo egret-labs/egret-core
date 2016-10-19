@@ -312,7 +312,7 @@ namespace egret {
          * @platform Web,Native
          */
         public readUTF():string {
-            var message:string;
+            let message:string;
             if (this._type == WebSocket.TYPE_BINARY) {
                 this._readByte.position = 0;
                 message = this._readByte.readUTF();

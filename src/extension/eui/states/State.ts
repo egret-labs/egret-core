@@ -156,12 +156,12 @@ namespace eui {
          * @platform Web,Native
          */
         public initialize(host:any, stage:egret.Stage):void {
-            var overrides = this.overrides;
-            var length = overrides.length;
-            for (var i = 0; i < length; i++) {
-                var addItems:AddItems = <AddItems>overrides[i];
+            let overrides = this.overrides;
+            let length = overrides.length;
+            for (let i = 0; i < length; i++) {
+                let addItems:AddItems = <AddItems>overrides[i];
                 if (addItems instanceof eui.AddItems) {
-                    var target:egret.DisplayObject = host[addItems.target];
+                    let target:egret.DisplayObject = host[addItems.target];
                     if (target&&target instanceof eui.Image&&!target.$parent) {
                         stage.addChild(target);
                         stage.removeChild(target);
@@ -196,12 +196,12 @@ namespace eui.sys {
         public set states(value:eui.State[]) {
             if (!value)
                 value = [];
-            var values = this.$stateValues;
+            let values = this.$stateValues;
             values.states = value;
-            var statesMap = {};
-            var length = value.length;
-            for (var i = 0; i < length; i++) {
-                var state = value[i];
+            let statesMap = {};
+            let length = value.length;
+            for (let i = 0; i < length; i++) {
+                let state = value[i];
                 statesMap[state.name] = state;
             }
             values.statesMap = statesMap;
@@ -219,7 +219,7 @@ namespace eui.sys {
         }
 
         public set currentState(value:string) {
-            var values = this.$stateValues;
+            let values = this.$stateValues;
             values.explicitState = value;
             values.currentState = value;
             this.commitCurrentState();
@@ -230,11 +230,11 @@ namespace eui.sys {
          * 应用当前的视图状态。子类覆盖此方法在视图状态发生改变时执行相应更新操作。
          */
         private commitCurrentState():void {
-            var values = this.$stateValues;
+            let values = this.$stateValues;
             if (!values.parent) {
                 return;
             }
-            var destination:eui.State = values.statesMap[values.currentState];
+            let destination:eui.State = values.statesMap[values.currentState];
             if (!destination) {
                 if (values.states.length > 0) {
                     values.currentState = values.states[0].name;
@@ -247,12 +247,12 @@ namespace eui.sys {
                 return;
             }
 
-            var parent = values.parent;
-            var state = values.statesMap[values.oldState];
+            let parent = values.parent;
+            let state = values.statesMap[values.oldState];
             if (state) {
-                var overrides = state.overrides;
-                var length = overrides.length;
-                for (var i = 0; i < length; i++) {
+                let overrides = state.overrides;
+                let length = overrides.length;
+                for (let i = 0; i < length; i++) {
                     overrides[i].remove(this, parent);
                 }
             }
@@ -261,9 +261,9 @@ namespace eui.sys {
 
             state = values.statesMap[values.currentState];
             if (state) {
-                overrides = state.overrides;
-                length = overrides.length;
-                for (i = 0; i < length; i++) {
+                let overrides = state.overrides;
+                let length = overrides.length;
+                for (let i = 0; i < length; i++) {
                     overrides[i].apply(this, parent);
                 }
             }
@@ -284,9 +284,9 @@ namespace eui.sys {
          */
         private initializeStates(stage:egret.Stage):void {
             this.$stateValues.intialized = true;
-            var states = this.states;
-            var length = states.length;
-            for (var i = 0; i < length; i++) {
+            let states = this.states;
+            let length = states.length;
+            for (let i = 0; i < length; i++) {
                 states[i].initialize(this,stage);
             }
         }

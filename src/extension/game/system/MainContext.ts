@@ -165,17 +165,17 @@ namespace egret {
 /**
  * @private
  */
-var testDeviceType1 = function () {
+let testDeviceType1 = function () {
     if (!this["navigator"]) {
         return true
     }
-    var ua = navigator.userAgent.toLowerCase();
+    let ua = navigator.userAgent.toLowerCase();
     return (ua.indexOf('mobile') != -1 || ua.indexOf('android') != -1);
 };
 /**
  * @private
  */
-var testRuntimeType1 = function () {
+let testRuntimeType1 = function () {
     if (this["navigator"]) {
         return true;
     }

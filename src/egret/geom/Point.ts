@@ -30,8 +30,8 @@
 
 namespace egret {
 
-    var pointPool:Point[] = [];
-    var DEG_TO_RAD:number = Math.PI / 180;
+    let pointPool:Point[] = [];
+    let DEG_TO_RAD:number = Math.PI / 180;
 
     /**
      * @language en_US
@@ -86,7 +86,7 @@ namespace egret {
          * @platform Web,Native
          */
         public static create(x:number,y:number):Point {
-            var point = pointPool.pop();
+            let point = pointPool.pop();
             if (!point) {
                 point = new Point();
             }
@@ -303,7 +303,7 @@ namespace egret {
          * @platform Web,Native
          */
         public static interpolate(pt1:Point, pt2:Point, f:number):Point {
-            var f1:number = 1 - f;
+            let f1:number = 1 - f;
             return new Point(pt1.x * f + pt2.x * f1, pt1.y * f + pt2.y * f1);
         }
 
@@ -323,7 +323,7 @@ namespace egret {
          */
         public normalize(thickness:number):void {
             if (this.x != 0 || this.y != 0) {
-                var relativeThickness:number = thickness / this.length;
+                let relativeThickness:number = thickness / this.length;
                 this.x *= relativeThickness;
                 this.y *= relativeThickness;
             }
@@ -416,6 +416,6 @@ namespace egret {
      * @private
      * 仅供框架内复用，要防止暴露引用到外部。
      */
-    export var $TempPoint = new Point();
+    export let $TempPoint = new Point();
 
 }

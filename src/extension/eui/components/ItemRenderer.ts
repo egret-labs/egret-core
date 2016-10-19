@@ -200,7 +200,7 @@ namespace eui {
          */
         protected onTouchCancle(event:egret.TouchEvent):void{
             this.touchCaptured = false;
-            var stage = event.$currentTarget;
+            let stage = event.$currentTarget;
             stage.removeEventListener(egret.TouchEvent.TOUCH_CANCEL, this.onTouchCancle, this);
             stage.removeEventListener(egret.TouchEvent.TOUCH_END, this.onStageTouchEnd, this);
             this.invalidateState();
@@ -234,7 +234,7 @@ namespace eui {
          * 舞台上触摸弹起事件
          */
         private onStageTouchEnd(event:egret.Event):void {
-            var stage = event.$currentTarget;
+            let stage = event.$currentTarget;
             stage.removeEventListener(egret.TouchEvent.TOUCH_CANCEL, this.onTouchCancle, this);
             stage.removeEventListener(egret.TouchEvent.TOUCH_END, this.onStageTouchEnd, this);
             this.touchCaptured = false;
@@ -249,13 +249,13 @@ namespace eui {
          * @platform Web,Native
          */
         protected getCurrentState():string {
-            var state = "up";
+            let state = "up";
             if (this.touchCaptured) {
                 state = "down";
             }
             if (this._selected) {
-                var selectedState = state + "AndSelected";
-                var skin = this.skin;
+                let selectedState = state + "AndSelected";
+                let skin = this.skin;
                 if (skin && skin.hasState(selectedState)) {
                     return selectedState;
                 }

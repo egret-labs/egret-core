@@ -27,7 +27,7 @@
 //
 //////////////////////////////////////////////////////////////////////////////////////
 namespace egret.native {
-    var callBackDic = {};
+    let callBackDic = {};
 
     /**
      * @private
@@ -35,7 +35,7 @@ namespace egret.native {
     export class NativeExternalInterface implements ExternalInterface {
 
         static call(functionName:string, value:string):void {
-            var data:any = {};
+            let data:any = {};
             data.functionName = functionName;
             data.value = value;
             egret_native.sendInfoToPlugin(JSON.stringify(data));
@@ -51,11 +51,11 @@ namespace egret.native {
      * @param info
      */
     function onReceivedPluginInfo(info:string):void {
-        var data = JSON.parse(info);
-        var functionName = data.functionName;
-        var listener = callBackDic[functionName];
+        let data = JSON.parse(info);
+        let functionName = data.functionName;
+        let listener = callBackDic[functionName];
         if (listener) {
-            var value = data.value;
+            let value = data.value;
             listener.call(null, value);
         }
         else {

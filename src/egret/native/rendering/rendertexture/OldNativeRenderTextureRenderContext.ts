@@ -27,7 +27,7 @@
 //
 //////////////////////////////////////////////////////////////////////////////////////
 namespace egret.native {
-    var blendModesForGL = {
+    let blendModesForGL = {
         "source-over": [1, 771],
         "lighter": [770, 1],
         "destination-out": [0, 771],
@@ -66,7 +66,7 @@ namespace egret.native {
 
         public set globalCompositeOperation(value:string) {
             this.$globalCompositeOperation = value;
-            var arr = blendModesForGL[value];
+            let arr = blendModesForGL[value];
             if (arr) {
                 this.checkSurface();
                 this.$nativeContext.setBlendArg(arr[0], arr[1]);
@@ -212,24 +212,24 @@ namespace egret.native {
         }
 
         private $parseRGBA(str:string):string {
-            var index:number = str.indexOf("(");
+            let index:number = str.indexOf("(");
             str = str.slice(index + 1, str.length - 1);
-            var arr:Array<string> = str.split(",");
-            var a:string = parseInt(<any>(parseFloat(arr[3]) * 255)).toString(16);
-            var r:string = parseInt(arr[0]).toString(16);
-            var g:string = parseInt(arr[1]).toString(16);
-            var b:string = parseInt(arr[2]).toString(16);
+            let arr:string[] = str.split(",");
+            let a:string = parseInt(<any>(parseFloat(arr[3]) * 255)).toString(16);
+            let r:string = parseInt(arr[0]).toString(16);
+            let g:string = parseInt(arr[1]).toString(16);
+            let b:string = parseInt(arr[2]).toString(16);
             str = "#" + this.$fillColorStr(a) + this.$fillColorStr(r) + this.$fillColorStr(g) + this.$fillColorStr(b);
             return str;
         }
 
         private $parseRGB(str:string):string {
-            var index:number = str.indexOf("(");
+            let index:number = str.indexOf("(");
             str = str.slice(index + 1, str.length - 1);
-            var arr:Array<string> = str.split(",");
-            var r:string = parseInt(arr[0]).toString(16);
-            var g:string = parseInt(arr[1]).toString(16);
-            var b:string = parseInt(arr[2]).toString(16);
+            let arr:string[] = str.split(",");
+            let r:string = parseInt(arr[0]).toString(16);
+            let g:string = parseInt(arr[1]).toString(16);
+            let b:string = parseInt(arr[2]).toString(16);
             str = "#" + this.$fillColorStr(r) + this.$fillColorStr(g) + this.$fillColorStr(b);
             return str;
         }
@@ -289,10 +289,10 @@ namespace egret.native {
 
         public set font(value:string) {
             this.$font = value;
-            var arr:Array<string> = value.split(" ");
-            var length:number = arr.length;
-            for (var i:number = 0; i < length; i++) {
-                var txt:string = arr[i];
+            let arr:string[] = value.split(" ");
+            let length:number = arr.length;
+            for (let i:number = 0; i < length; i++) {
+                let txt:string = arr[i];
                 if (txt.indexOf("px") != -1) {
                     this.$fontSize = parseInt(txt.replace("px", ""));
                     //console.log("set font" + this.$lineWidth);
@@ -554,15 +554,15 @@ namespace egret.native {
             //console.log("restore");
             if (this.$saveCount > 0) {
                 if (this.$saveList.length) {
-                    var data = this.$saveList.pop();
-                    for (var key in data) {
+                    let data = this.$saveList.pop();
+                    for (let key in data) {
                         this[key] = data[key];
                     }
                     this.setTransformToNative();
                 }
-                var index:number = this.$clipList.indexOf(this.$saveCount);
+                let index:number = this.$clipList.indexOf(this.$saveCount);
                 if (index != -1) {
-                    var length:number = this.$clipList.length;
+                    let length:number = this.$clipList.length;
                     this.$clipList.splice(index, length - index);
                     for (; index < length; index++) {
                         this.checkSurface();
@@ -573,7 +573,7 @@ namespace egret.native {
             }
         }
 
-        private $saveList:Array<any> = [];
+        private $saveList:any[] = [];
 
         /**
          * @private
@@ -583,7 +583,7 @@ namespace egret.native {
          */
         public save():void {
             //console.log("save");
-            var transformMatrix = new Matrix();
+            let transformMatrix = new Matrix();
             transformMatrix.copyFrom(this.$matrix);
             this.$saveList.push({
                 lineWidth: this.$lineWidth,
@@ -599,7 +599,7 @@ namespace egret.native {
 
         private $clipRect:Rectangle = new Rectangle();
         private $saveCount:number = 0;
-        private $clipList:Array<number> = [];
+        private $clipList:number[] = [];
 
 
         /**
@@ -653,7 +653,7 @@ namespace egret.native {
         }
 
         private setTransformToNative():void {
-            var m = this.$matrix;
+            let m = this.$matrix;
             //console.log("setTransformToNative::a=" + m.a + " b=" + m.b + " c=" + m.c + " d=" + m.d + " tx=" + m.tx + " ty=" + m.ty);
             this.checkSurface();
             this.$nativeContext.setTransform(m.a, m.b, m.c, m.d, m.tx, m.ty);
@@ -699,7 +699,7 @@ namespace egret.native {
          */
         public fillText(text:string, x:number, y:number, maxWidth?:number):void {
             //console.log("drawText" + text);
-            var font:string = TextField.default_fontFamily;
+            let font:string = TextField.default_fontFamily;
             egret_native.Label.createLabel(font, this.$fontSize, "", this.$hasStrokeText ? this.$lineWidth : 0);
             this.$hasStrokeText = false;
             egret_native.Label.drawText(text, x, y);
@@ -718,7 +718,7 @@ namespace egret.native {
          * @platform Web,Native
          */
         public measureText(text:string):TextMetrics {
-            var font:string = TextField.default_fontFamily;
+            let font:string = TextField.default_fontFamily;
             egret_native.Label.createLabel(font, this.$fontSize, "", this.$hasStrokeText ? this.$lineWidth : 0);
             return {width: egret_native.Label.getTextSize(text)[0]};
         }
@@ -732,8 +732,8 @@ namespace egret.native {
          */
         public drawImage(image:BitmapData, offsetX:number, offsetY:number, width?:number, height?:number,
                          surfaceOffsetX?:number, surfaceOffsetY?:number, surfaceImageWidth?:number, surfaceImageHeight?:number):void {
-            var bitmapData;
-            var isNative:boolean;
+            let bitmapData;
+            let isNative:boolean;
             if ((<NativeRenderTexture><any>image).$nativeRenderTexture) {
                 bitmapData = (<NativeRenderTexture><any>image).$nativeRenderTexture;
                 isNative = true;
@@ -809,7 +809,7 @@ namespace egret.native {
          * @platform Web,Native
          */
         public getImageData(sx:number, sy:number, sw:number, sh:number):ImageData {
-            var res;
+            let res;
             if ($currentSurface == this.surface) {
                 if ($currentSurface != null) {
                     $currentSurface.end();

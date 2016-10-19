@@ -30,7 +30,7 @@
 
 namespace eui {
 
-    var UIComponentClass = "eui.UIComponent";
+    let UIComponentClass = "eui.UIComponent";
 
     /**
      * @language en_US
@@ -762,7 +762,7 @@ namespace eui {
          * 标记目标容器的尺寸和显示列表失效
          */
         private invalidateTargetLayout():void {
-            var target = this.$target;
+            let target = this.$target;
             if (target) {
                 target.invalidateSize();
                 target.invalidateDisplayList();
@@ -777,24 +777,24 @@ namespace eui {
          * @platform Web,Native
          */
         public measure():void {
-            var target = this.$target;
+            let target = this.$target;
             if (!target)
                 return;
 
-            var savedColumnCount = this._columnCount;
-            var savedRowCount = this._rowCount;
-            var savedColumnWidth = this._columnWidth;
-            var savedRowHeight = this._rowHeight;
+            let savedColumnCount = this._columnCount;
+            let savedRowCount = this._rowCount;
+            let savedColumnWidth = this._columnWidth;
+            let savedRowHeight = this._rowHeight;
 
-            var measuredWidth = 0;
-            var measuredHeight = 0;
+            let measuredWidth = 0;
+            let measuredHeight = 0;
 
-            var values = target.$UIComponent;
+            let values = target.$UIComponent;
             this.calculateRowAndColumn(values[sys.UIKeys.explicitWidth], values[sys.UIKeys.explicitHeight]);
-            var columnCount = this._requestedColumnCount > 0 ? this._requestedColumnCount : this._columnCount;
-            var rowCount = this._requestedRowCount > 0 ? this._requestedRowCount : this._rowCount;
-            var horizontalGap = isNaN(this._horizontalGap) ? 0 : this._horizontalGap;
-            var verticalGap = isNaN(this._verticalGap) ? 0 : this._verticalGap;
+            let columnCount = this._requestedColumnCount > 0 ? this._requestedColumnCount : this._columnCount;
+            let rowCount = this._requestedRowCount > 0 ? this._requestedRowCount : this._rowCount;
+            let horizontalGap = isNaN(this._horizontalGap) ? 0 : this._horizontalGap;
+            let verticalGap = isNaN(this._verticalGap) ? 0 : this._verticalGap;
             if (columnCount > 0) {
                 measuredWidth = columnCount * (this._columnWidth + horizontalGap) - horizontalGap;
             }
@@ -803,8 +803,8 @@ namespace eui {
                 measuredHeight = rowCount * (this._rowHeight + verticalGap) - verticalGap;
             }
 
-            var hPadding = this._paddingLeft + this._paddingRight;
-            var vPadding = this._paddingTop + this._paddingBottom;
+            let hPadding = this._paddingLeft + this._paddingRight;
+            let vPadding = this._paddingTop + this._paddingBottom;
 
             target.setMeasuredSize(measuredWidth + hPadding, measuredHeight + vPadding)
 
@@ -819,14 +819,14 @@ namespace eui {
          * 计算行和列的尺寸及数量
          */
         private calculateRowAndColumn(explicitWidth:number, explicitHeight:number):void {
-            var target = this.$target;
-            var horizontalGap = isNaN(this._horizontalGap) ? 0 : this._horizontalGap;
-            var verticalGap = isNaN(this._verticalGap) ? 0 : this._verticalGap;
+            let target = this.$target;
+            let horizontalGap = isNaN(this._horizontalGap) ? 0 : this._horizontalGap;
+            let verticalGap = isNaN(this._verticalGap) ? 0 : this._verticalGap;
             this._rowCount = this._columnCount = -1;
-            var numElements = target.numElements;
-            var count = numElements;
-            for (var index = 0; index < count; index++) {
-                var layoutElement = <UIComponent> (target.getElementAt(index));
+            let numElements = target.numElements;
+            let count = numElements;
+            for (let index = 0; index < count; index++) {
+                let layoutElement = <UIComponent> (target.getElementAt(index));
                 if (layoutElement && (!egret.is(layoutElement, UIComponentClass) || !layoutElement.$includeInLayout)) {
                     numElements--;
                     continue;
@@ -853,22 +853,22 @@ namespace eui {
                 this._rowHeight = this.explicitRowHeight;
             }
 
-            var itemWidth = this._columnWidth + horizontalGap;
+            let itemWidth = this._columnWidth + horizontalGap;
             //防止出现除数为零的情况
             if (itemWidth <= 0)
                 itemWidth = 1;
-            var itemHeight = this._rowHeight + verticalGap;
+            let itemHeight = this._rowHeight + verticalGap;
             if (itemHeight <= 0)
                 itemHeight = 1;
 
-            var orientedByColumns = (this._orientation == TileOrientation.COLUMNS);
-            var widthHasSet = !isNaN(explicitWidth);
-            var heightHasSet = !isNaN(explicitHeight);
+            let orientedByColumns = (this._orientation == TileOrientation.COLUMNS);
+            let widthHasSet = !isNaN(explicitWidth);
+            let heightHasSet = !isNaN(explicitHeight);
 
-            var paddingL = this._paddingLeft;
-            var paddingR = this._paddingRight;
-            var paddingT = this._paddingTop;
-            var paddingB = this._paddingBottom;
+            let paddingL = this._paddingLeft;
+            let paddingR = this._paddingRight;
+            let paddingT = this._paddingTop;
+            let paddingB = this._paddingBottom;
 
             if (this._requestedColumnCount > 0 || this._requestedRowCount > 0) {
                 if (this._requestedRowCount > 0)
@@ -878,7 +878,7 @@ namespace eui {
                     this._columnCount = Math.min(this._requestedColumnCount, numElements);
             }
             else if (!widthHasSet && !heightHasSet) {
-                var side = Math.sqrt(numElements * itemWidth * itemHeight);
+                let side = Math.sqrt(numElements * itemWidth * itemHeight);
                 if (orientedByColumns) {
                     this._rowCount = Math.max(1, Math.round(side / itemHeight));
                 }
@@ -887,13 +887,13 @@ namespace eui {
                 }
             }
             else if (widthHasSet && (!heightHasSet || !orientedByColumns)) {
-                var targetWidth = Math.max(0,
+                let targetWidth = Math.max(0,
                     explicitWidth - paddingL - paddingR);
                 this._columnCount = Math.floor((targetWidth + horizontalGap) / itemWidth);
                 this._columnCount = Math.max(1, Math.min(this._columnCount, numElements));
             }
             else {
-                var targetHeight = Math.max(0,
+                let targetHeight = Math.max(0,
                     explicitHeight - paddingT - paddingB);
                 this._rowCount = Math.floor((targetHeight + verticalGap) / itemHeight);
                 this._rowCount = Math.max(1, Math.min(this._rowCount, numElements));
@@ -943,13 +943,13 @@ namespace eui {
          * 更新虚拟布局的最大子对象尺寸
          */
         private doUpdateMaxElementSize(startIndex:number, endIndex:number):void {
-            var maxElementWidth = this.maxElementWidth;
-            var maxElementHeight = this.maxElementHeight;
-            var bounds = egret.$TempRectangle;
-            var target = this.$target;
+            let maxElementWidth = this.maxElementWidth;
+            let maxElementHeight = this.maxElementHeight;
+            let bounds = egret.$TempRectangle;
+            let target = this.$target;
             if ((startIndex != -1) && (endIndex != -1)) {
-                for (var index = startIndex; index <= endIndex; index++) {
-                    var elt = <UIComponent> target.getVirtualElementAt(index);
+                for (let index = startIndex; index <= endIndex; index++) {
+                    let elt = <UIComponent> target.getVirtualElementAt(index);
                     if (!egret.is(elt, UIComponentClass) || !elt.$includeInLayout) {
                         continue;
                     }
@@ -1001,7 +1001,7 @@ namespace eui {
          */
         public scrollPositionChanged():void {
             if (this.$useVirtualLayout) {
-                var changed = this.getIndexInView();
+                let changed = this.getIndexInView();
                 if (changed) {
                     this.indexInViewCalculated = true;
                     this.$target.invalidateDisplayList();
@@ -1020,56 +1020,56 @@ namespace eui {
                 return false;
             }
 
-            var target = this.$target;
-            var numElements = target.numElements;
+            let target = this.$target;
+            let numElements = target.numElements;
             if (!this.$useVirtualLayout) {
                 this.startIndex = 0;
                 this.endIndex = numElements - 1;
                 return false;
             }
 
-            var values = target.$UIComponent;
+            let values = target.$UIComponent;
             if (values[sys.UIKeys.width] == 0 || values[sys.UIKeys.height] == 0) {
                 this.startIndex = this.endIndex = -1;
                 return false;
             }
-            var oldStartIndex = this.startIndex;
-            var oldEndIndex = this.endIndex;
-            var paddingL = this._paddingLeft;
-            var paddingT = this._paddingTop;
-            var horizontalGap = isNaN(this._horizontalGap) ? 0 : this._horizontalGap;
-            var verticalGap = isNaN(this._verticalGap) ? 0 : this._verticalGap;
+            let oldStartIndex = this.startIndex;
+            let oldEndIndex = this.endIndex;
+            let paddingL = this._paddingLeft;
+            let paddingT = this._paddingTop;
+            let horizontalGap = isNaN(this._horizontalGap) ? 0 : this._horizontalGap;
+            let verticalGap = isNaN(this._verticalGap) ? 0 : this._verticalGap;
             if (this._orientation == TileOrientation.COLUMNS) {
-                var itemWidth = this._columnWidth + horizontalGap;
+                let itemWidth = this._columnWidth + horizontalGap;
                 if (itemWidth <= 0) {
                     this.startIndex = 0;
                     this.endIndex = numElements - 1;
                     return false;
                 }
-                var minVisibleX = target.scrollH;
-                var maxVisibleX = minVisibleX + values[sys.UIKeys.width];
-                var startColumn = Math.floor((minVisibleX - paddingL) / itemWidth);
+                let minVisibleX = target.scrollH;
+                let maxVisibleX = minVisibleX + values[sys.UIKeys.width];
+                let startColumn = Math.floor((minVisibleX - paddingL) / itemWidth);
                 if (startColumn < 0)
                     startColumn = 0;
-                var endColumn = Math.ceil((maxVisibleX - paddingL) / itemWidth);
+                let endColumn = Math.ceil((maxVisibleX - paddingL) / itemWidth);
                 if (endColumn < 0)
                     endColumn = 0;
                 this.startIndex = Math.min(numElements - 1, Math.max(0, startColumn * this._rowCount));
                 this.endIndex = Math.min(numElements - 1, Math.max(0, endColumn * this._rowCount - 1));
             }
             else {
-                var itemHeight = this._rowHeight + verticalGap;
+                let itemHeight = this._rowHeight + verticalGap;
                 if (itemHeight <= 0) {
                     this.startIndex = 0;
                     this.endIndex = numElements - 1;
                     return false;
                 }
-                var minVisibleY = target.scrollV;
-                var maxVisibleY = minVisibleY + values[sys.UIKeys.height];
-                var startRow = Math.floor((minVisibleY - paddingT) / itemHeight);
+                let minVisibleY = target.scrollV;
+                let maxVisibleY = minVisibleY + values[sys.UIKeys.height];
+                let startRow = Math.floor((minVisibleY - paddingT) / itemHeight);
                 if (startRow < 0)
                     startRow = 0;
-                var endRow = Math.ceil((maxVisibleY - paddingT) / itemHeight);
+                let endRow = Math.ceil((maxVisibleY - paddingT) / itemHeight);
                 if (endRow < 0)
                     endRow = 0;
                 this.startIndex = Math.min(numElements - 1, Math.max(0, startRow * this._columnCount));
@@ -1090,11 +1090,11 @@ namespace eui {
             super.updateDisplayList(width, height);
             if (!this.$target)
                 return;
-            var target = this.$target;
-            var paddingL = this._paddingLeft;
-            var paddingR = this._paddingRight;
-            var paddingT = this._paddingTop;
-            var paddingB = this._paddingBottom;
+            let target = this.$target;
+            let paddingL = this._paddingLeft;
+            let paddingR = this._paddingRight;
+            let paddingT = this._paddingTop;
+            let paddingB = this._paddingBottom;
             if (this.indexInViewCalculated) {
                 this.indexInViewCalculated = false;
             }
@@ -1116,22 +1116,22 @@ namespace eui {
                 target.setContentSize(0, 0);
                 return;
             }
-            var endIndex = this.endIndex;
+            let endIndex = this.endIndex;
             target.setVirtualElementIndicesInView(this.startIndex, endIndex);
-            var elt:UIComponent;
-            var x:number;
-            var y:number;
-            var columnIndex:number;
-            var rowIndex:number;
-            var orientedByColumns = (this._orientation == TileOrientation.COLUMNS);
-            var index = this.startIndex;
-            var horizontalGap = isNaN(this._horizontalGap) ? 0 : this._horizontalGap;
-            var verticalGap = isNaN(this._verticalGap) ? 0 : this._verticalGap;
-            var rowCount = this._rowCount;
-            var columnCount = this._columnCount;
-            var columnWidth = this._columnWidth;
-            var rowHeight = this._rowHeight;
-            for (var i = this.startIndex; i <= endIndex; i++) {
+            let elt:UIComponent;
+            let x:number;
+            let y:number;
+            let columnIndex:number;
+            let rowIndex:number;
+            let orientedByColumns = (this._orientation == TileOrientation.COLUMNS);
+            let index = this.startIndex;
+            let horizontalGap = isNaN(this._horizontalGap) ? 0 : this._horizontalGap;
+            let verticalGap = isNaN(this._verticalGap) ? 0 : this._verticalGap;
+            let rowCount = this._rowCount;
+            let columnCount = this._columnCount;
+            let columnWidth = this._columnWidth;
+            let rowHeight = this._rowHeight;
+            for (let i = this.startIndex; i <= endIndex; i++) {
                 if(this.$useVirtualLayout){
                     elt = <UIComponent> (this.target.getVirtualElementAt(i));
                 }else{
@@ -1159,10 +1159,10 @@ namespace eui {
                 index++;
             }
 
-            var hPadding = paddingL + paddingR;
-            var vPadding = paddingT + paddingB;
-            var contentWidth = (columnWidth + horizontalGap) * columnCount - horizontalGap;
-            var contentHeight = (rowHeight + verticalGap) * rowCount - verticalGap;
+            let hPadding = paddingL + paddingR;
+            let vPadding = paddingT + paddingB;
+            let contentWidth = (columnWidth + horizontalGap) * columnCount - horizontalGap;
+            let contentHeight = (rowHeight + verticalGap) * rowCount - verticalGap;
             target.setContentSize(contentWidth + hPadding, contentHeight + vPadding);
         }
 
@@ -1172,9 +1172,9 @@ namespace eui {
          */
         private sizeAndPositionElement(element:UIComponent, cellX:number, cellY:number,
                                        cellWidth:number, cellHeight:number):void {
-            var elementWidth = NaN;
-            var elementHeight = NaN;
-            var values = element.$UIComponent;
+            let elementWidth = NaN;
+            let elementHeight = NaN;
+            let values = element.$UIComponent;
             if (this._horizontalAlign == JustifyAlign.JUSTIFY)
                 elementWidth = cellWidth;
             else if (!isNaN(values[sys.UIKeys.percentWidth]))
@@ -1188,8 +1188,8 @@ namespace eui {
 
             element.setLayoutBoundsSize(Math.round(elementWidth), Math.round(elementHeight));
 
-            var x = cellX;
-            var bounds = egret.$TempRectangle;
+            let x = cellX;
+            let bounds = egret.$TempRectangle;
             element.getLayoutBounds(bounds);
             switch (this._horizontalAlign) {
                 case egret.HorizontalAlign.RIGHT:
@@ -1200,7 +1200,7 @@ namespace eui {
                     break;
             }
 
-            var y = cellY;
+            let y = cellY;
             switch (this._verticalAlign) {
                 case egret.VerticalAlign.BOTTOM:
                     y += cellHeight - bounds.height;
@@ -1218,13 +1218,13 @@ namespace eui {
          * 为两端对齐调整间隔或格子尺寸
          */
         private adjustForJustify(width:number, height:number):void {
-            var paddingL = this._paddingLeft;
-            var paddingR = this._paddingRight;
-            var paddingT = this._paddingTop;
-            var paddingB = this._paddingBottom;
+            let paddingL = this._paddingLeft;
+            let paddingR = this._paddingRight;
+            let paddingT = this._paddingTop;
+            let paddingB = this._paddingBottom;
 
-            var targetWidth = Math.max(0, width - paddingL - paddingR);
-            var targetHeight = Math.max(0, height - paddingT - paddingB);
+            let targetWidth = Math.max(0, width - paddingL - paddingR);
+            let targetHeight = Math.max(0, height - paddingT - paddingB);
             if (!isNaN(this.explicitVerticalGap))
                 this._verticalGap = this.explicitVerticalGap;
             if (!isNaN(this.explicitHorizontalGap))
@@ -1232,9 +1232,9 @@ namespace eui {
             this._verticalGap = isNaN(this._verticalGap) ? 0 : this._verticalGap;
             this._horizontalGap = isNaN(this._horizontalGap) ? 0 : this._horizontalGap;
 
-            var offsetY = targetHeight - this._rowHeight * this._rowCount;
-            var offsetX = targetWidth - this._columnWidth * this._columnCount;
-            var gapCount;
+            let offsetY = targetHeight - this._rowHeight * this._rowCount;
+            let offsetX = targetWidth - this._columnWidth * this._columnCount;
+            let gapCount;
             if (offsetY > 0) {
                 if (this._rowAlign == RowAlign.JUSTIFY_USING_GAP) {
                     gapCount = Math.max(1, this._rowCount - 1);

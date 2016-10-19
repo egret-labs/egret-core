@@ -29,7 +29,7 @@
 
 namespace egret.web {
     if (DEBUG) {
-        var logFuncs:Object;
+        let logFuncs:Object;
 
         function setLogLevel(logType:string):void {
             if (logFuncs == null) {

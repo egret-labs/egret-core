@@ -55,7 +55,7 @@
  * @version Egret 2.5
  * @platform Web,Native
  */
-declare var DEBUG:boolean;
+declare let DEBUG:boolean;
 /**
  * @language en_US
  * Is release mode.
@@ -68,7 +68,7 @@ declare var DEBUG:boolean;
  * @version Egret 2.5
  * @platform Web,Native
  */
-declare var RELEASE:boolean;
+declare let RELEASE:boolean;
 
 this["DEBUG"] = true;
 this["RELEASE"] = false;
@@ -92,7 +92,7 @@ namespace egret {
     egret.getString = _getString;
 
     function _error(code:number, ...params:any[]):void {
-        var text:string = egret.sys.tr.apply(null, arguments);
+        let text:string = egret.sys.tr.apply(null, arguments);
         if (DEBUG) {
             egret.sys.$logToFPS("Error #" + code + ": " + text)
         }
@@ -102,7 +102,7 @@ namespace egret {
     egret.$error = _error;
 
     function _warn(code:number, ...params:any[]):void {
-        var text:string = egret.sys.tr.apply(null, arguments);
+        let text:string = egret.sys.tr.apply(null, arguments);
         if (DEBUG) {
             egret.sys.$logToFPS("Warning #" + code + ": " + text)
         }
@@ -112,7 +112,7 @@ namespace egret {
     egret.$warn = _warn;
 
     function _markReadOnly(instance:any, property:string, isProperty:boolean = true):void {
-        var data:PropertyDescriptor = Object.getOwnPropertyDescriptor(isProperty ? instance.prototype : instance, property);
+        let data:PropertyDescriptor = Object.getOwnPropertyDescriptor(isProperty ? instance.prototype : instance, property);
         if (data == null) {
             console.log(instance);
             return;

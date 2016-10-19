@@ -128,7 +128,7 @@ namespace egret.web {
             }
             this.isStopped = true;
 
-            var audio = this.audio;
+            let audio = this.audio;
             audio.pause();
             audio.removeEventListener("ended", this.onPlayEnd);
             this.audio = null;

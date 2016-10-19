@@ -96,7 +96,7 @@ namespace egret {
         }
 
         $hitTest(stageX:number, stageY:number):DisplayObject {
-            var target = super.$hitTest(stageX, stageY);
+            let target = super.$hitTest(stageX, stageY);
             if (target == this) {
                 target = this.$graphics.$hitTest(stageX, stageY);
             }

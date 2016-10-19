@@ -54,13 +54,13 @@ namespace eui {
          */
         public getTheme(url:string,compFunc:Function,errorFunc:Function,thisObject:any):void {
             function onGet(event:egret.Event):void {
-                var loader:egret.HttpRequest = <egret.HttpRequest> (event.target);
+                let loader:egret.HttpRequest = <egret.HttpRequest> (event.target);
                 compFunc.call(thisObject, loader.response);
             }
             function onError(event:egret.Event):void {
                 errorFunc.call(thisObject);
             }
-            var loader:egret.HttpRequest = new egret.HttpRequest();
+            let loader:egret.HttpRequest = new egret.HttpRequest();
             loader.addEventListener(egret.Event.COMPLETE,onGet,thisObject);
             loader.addEventListener(egret.IOErrorEvent.IO_ERROR,onError,thisObject);
             loader.responseType = egret.HttpResponseType.TEXT;

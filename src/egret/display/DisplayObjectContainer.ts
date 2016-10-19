@@ -78,9 +78,9 @@ namespace egret {
                 return;
             }
             this.$setFlags(flags);
-            var children = this.$children;
+            let children = this.$children;
             let length = children.length
-            for (var i = 0; i < length; i++) {
+            for (let i = 0; i < length; i++) {
                 children[i].$propagateFlagsDown(flags);
             }
         }
@@ -124,7 +124,7 @@ namespace egret {
          * @platform Web,Native
          */
         public addChild(child: DisplayObject): DisplayObject {
-            var index: number = this.$children.length;
+            let index: number = this.$children.length;
 
             if (child.$parent == this)
                 index--;
@@ -181,7 +181,7 @@ namespace egret {
                 }
             }
 
-            var host: DisplayObjectContainer = child.$parent;
+            let host: DisplayObjectContainer = child.$parent;
             if (host == this) {
                 this.doSetChildIndex(child, index);
                 return child;
@@ -193,7 +193,7 @@ namespace egret {
 
             this.$children.splice(index, 0, child);
             child.$setParent(this);
-            var stage: Stage = this.$stage;
+            let stage: Stage = this.$stage;
             if (stage) {//当前容器在舞台
                 child.$onAddToStage(stage, this.$nestLevel + 1);
             }
@@ -201,15 +201,15 @@ namespace egret {
                 child.dispatchEventWith(Event.ADDED, true);
             }
             if (stage) {
-                var list = DisplayObjectContainer.$EVENT_ADD_TO_STAGE_LIST;
+                let list = DisplayObjectContainer.$EVENT_ADD_TO_STAGE_LIST;
                 while (list.length) {
-                    var childAddToStage = list.shift();
+                    let childAddToStage = list.shift();
                     if (childAddToStage.$stage && notifyListeners) {
                         childAddToStage.dispatchEventWith(Event.ADDED_TO_STAGE);
                     }
                 }
             }
-            var displayList = this.$displayList || this.$parentDisplayList;
+            let displayList = this.$displayList || this.$parentDisplayList;
             this.assignParentDisplayList(child, displayList, displayList);
             child.$propagateFlagsDown(sys.DisplayObjectFlags.DownOnAddedOrRemoved);
             this.$propagateFlagsUp(sys.DisplayObjectFlags.InvalidBounds);
@@ -320,10 +320,10 @@ namespace egret {
          * @platform Web,Native
          */
         public getChildByName(name: string): DisplayObject {
-            var children = this.$children;
-            var length = children.length;
-            var displayObject: DisplayObject;
-            for (var i = 0; i < length; i++) {
+            let children = this.$children;
+            let length = children.length;
+            let displayObject: DisplayObject;
+            for (let i = 0; i < length; i++) {
                 displayObject = children[i];
                 if (displayObject.name == name) {
                     return displayObject;
@@ -355,7 +355,7 @@ namespace egret {
          * @platform Web,Native
          */
         public removeChild(child: DisplayObject): DisplayObject {
-            var index = this.$children.indexOf(child);
+            let index = this.$children.indexOf(child);
             if (index >= 0) {
                 return this.$doRemoveChild(index);
             }
@@ -402,17 +402,17 @@ namespace egret {
          */
         $doRemoveChild(index: number, notifyListeners: boolean = true): DisplayObject {
             index = +index | 0;
-            var children = this.$children;
-            var child: DisplayObject = children[index];
+            let children = this.$children;
+            let child: DisplayObject = children[index];
             this.$childRemoved(child, index);
             if (notifyListeners) {
                 child.dispatchEventWith(Event.REMOVED, true);
             }
             if (this.$stage) {//在舞台上
                 child.$onRemoveFromStage();
-                var list = DisplayObjectContainer.$EVENT_REMOVE_FROM_STAGE_LIST
+                let list = DisplayObjectContainer.$EVENT_REMOVE_FROM_STAGE_LIST
                 while (list.length > 0) {
-                    var childAddToStage = list.shift();
+                    let childAddToStage = list.shift();
                     if (notifyListeners && childAddToStage.$hasAddToStage) {
                         childAddToStage.$hasAddToStage = false;
                         childAddToStage.dispatchEventWith(Event.REMOVED_FROM_STAGE);
@@ -421,11 +421,11 @@ namespace egret {
                     childAddToStage.$stage = null;
                 }
             }
-            var displayList = this.$displayList || this.$parentDisplayList;
+            let displayList = this.$displayList || this.$parentDisplayList;
             this.assignParentDisplayList(child, displayList, null);
             child.$propagateFlagsDown(sys.DisplayObjectFlags.DownOnAddedOrRemoved);
             child.$setParent(null);
-            var indexNow = children.indexOf(child);
+            let indexNow = children.indexOf(child);
             if(indexNow!=-1){
                 children.splice(indexNow, 1);
             }
@@ -465,7 +465,7 @@ namespace egret {
          * @private
          */
         private doSetChildIndex(child: DisplayObject, index: number): void {
-            var lastIndex = this.$children.indexOf(child);
+            let lastIndex = this.$children.indexOf(child);
             if (lastIndex < 0) {
                 DEBUG && $error(1006);
             }
@@ -533,8 +533,8 @@ namespace egret {
          * @platform Web,Native
          */
         public swapChildren(child1: DisplayObject, child2: DisplayObject): void {
-            var index1 = this.$children.indexOf(child1);
-            var index2 = this.$children.indexOf(child2);
+            let index1 = this.$children.indexOf(child1);
+            let index2 = this.$children.indexOf(child2);
             if (index1 == -1 || index2 == -1) {
                 DEBUG && $error(1006);
             }
@@ -548,16 +548,16 @@ namespace egret {
          */
         private doSwapChildrenAt(index1: number, index2: number): void {
             if (index1 > index2) {
-                var temp = index2;
+                let temp = index2;
                 index2 = index1;
                 index1 = temp;
             }
             else if (index1 == index2) {
                 return;
             }
-            var list: Array<DisplayObject> = this.$children;
-            var child1: DisplayObject = list[index1];
-            var child2: DisplayObject = list[index2];
+            let list: Array<DisplayObject> = this.$children;
+            let child1: DisplayObject = list[index1];
+            let child2: DisplayObject = list[index2];
             this.$childRemoved(child1, index1);
             this.$childRemoved(child2, index2);
             list[index1] = child2;
@@ -587,8 +587,8 @@ namespace egret {
          * @platform Web,Native
          */
         public removeChildren(): void {
-            var children = this.$children;
-            for (var i: number = children.length - 1; i >= 0; i--) {
+            let children = this.$children;
+            for (let i: number = children.length - 1; i >= 0; i--) {
                 this.$doRemoveChild(i);
             }
         }
@@ -616,11 +616,11 @@ namespace egret {
          */
         $onAddToStage(stage: Stage, nestLevel: number): void {
             super.$onAddToStage(stage, nestLevel);
-            var children = this.$children;
-            var length = children.length;
+            let children = this.$children;
+            let length = children.length;
             nestLevel++;
-            for (var i = 0; i < length; i++) {
-                var child: DisplayObject = this.$children[i];
+            for (let i = 0; i < length; i++) {
+                let child: DisplayObject = this.$children[i];
                 child.$onAddToStage(stage, nestLevel);
             }
         }
@@ -631,10 +631,10 @@ namespace egret {
          */
         $onRemoveFromStage(): void {
             super.$onRemoveFromStage();
-            var children = this.$children;
-            var length = children.length;
-            for (var i = 0; i < length; i++) {
-                var child: DisplayObject = children[i];
+            let children = this.$children;
+            let length = children.length;
+            for (let i = 0; i < length; i++) {
+                let child: DisplayObject = children[i];
                 child.$onRemoveFromStage();
             }
         }
@@ -644,15 +644,15 @@ namespace egret {
          * @private
          */
         $measureChildBounds(bounds: Rectangle): void {
-            var children = this.$children;
-            var length = children.length;
+            let children = this.$children;
+            let length = children.length;
             if (length == 0) {
                 return;
             }
-            var xMin = 0, xMax = 0, yMin = 0, yMax = 0;
-            var found: boolean = false;
-            for (var i = -1; i < length; i++) {
-                var childBounds = i == -1 ? bounds : children[i].$getTransformedBounds(this, $TempRectangle);
+            let xMin = 0, xMax = 0, yMin = 0, yMax = 0;
+            let found: boolean = false;
+            for (let i = -1; i < length; i++) {
+                let childBounds = i == -1 ? bounds : children[i].$getTransformedBounds(this, $TempRectangle);
                 if (childBounds.isEmpty()) {
                     continue;
                 }
@@ -728,10 +728,10 @@ namespace egret {
             if (!notifyChildren) {
                 return;
             }
-            var cacheRoot = this.$displayList || this.$parentDisplayList;
-            var children = this.$children;
+            let cacheRoot = this.$displayList || this.$parentDisplayList;
+            let children = this.$children;
             if (children) {
-                for (var i = children.length - 1; i >= 0; i--) {
+                for (let i = children.length - 1; i >= 0; i--) {
                     this.markChildDirty(children[i], cacheRoot);
                 }
             }
@@ -755,16 +755,16 @@ namespace egret {
                 return;
             }
             child.$setFlags(sys.DisplayObjectFlags.DirtyChildren);
-            var displayList = child.$displayList;
+            let displayList = child.$displayList;
             if ((displayList || child.$renderNode) && parentCache) {
                 parentCache.markDirty(displayList || child);
             }
             if (displayList) {
                 return;
             }
-            var children = child.$children;
+            let children = child.$children;
             if (children) {
-                for (var i = children.length - 1; i >= 0; i--) {
+                for (let i = children.length - 1; i >= 0; i--) {
                     this.markChildDirty(children[i], parentCache);
                 }
             }
@@ -775,9 +775,9 @@ namespace egret {
          */
         $cacheAsBitmapChanged(): void {
             super.$cacheAsBitmapChanged();
-            var cacheRoot = this.$displayList || this.$parentDisplayList;
-            var children = this.$children;
-            for (var i = children.length - 1; i >= 0; i--) {
+            let cacheRoot = this.$displayList || this.$parentDisplayList;
+            let children = this.$children;
+            for (let i = children.length - 1; i >= 0; i--) {
                 this.assignParentDisplayList(children[i], cacheRoot, cacheRoot);
             }
         }
@@ -788,16 +788,16 @@ namespace egret {
         private assignParentDisplayList(child: DisplayObject, parentCache: egret.sys.DisplayList, newParent: egret.sys.DisplayList): void {
             child.$parentDisplayList = newParent;
             child.$setFlags(sys.DisplayObjectFlags.DirtyChildren);
-            var displayList = child.$displayList;
+            let displayList = child.$displayList;
             if ((child.$renderNode || displayList) && parentCache) {
                 parentCache.markDirty(displayList || child);
             }
             if (displayList) {
                 return;
             }
-            var children = child.$children;
+            let children = child.$children;
             if (children) {
-                for (var i = children.length - 1; i >= 0; i--) {
+                for (let i = children.length - 1; i >= 0; i--) {
                     this.assignParentDisplayList(children[i], parentCache, newParent);
                 }
             }
@@ -810,11 +810,11 @@ namespace egret {
             if (!this.$visible) {
                 return null;
             }
-            var m = this.$getInvertedConcatenatedMatrix();
-            var localX = m.a * stageX + m.c * stageY + m.tx;
-            var localY = m.b * stageX + m.d * stageY + m.ty;
+            let m = this.$getInvertedConcatenatedMatrix();
+            let localX = m.a * stageX + m.c * stageY + m.tx;
+            let localY = m.b * stageX + m.d * stageY + m.ty;
 
-            var rect = this.$scrollRect ? this.$scrollRect : this.$maskRect;
+            let rect = this.$scrollRect ? this.$scrollRect : this.$maskRect;
             if (rect && !rect.contains(localX, localY)) {
                 return null;
             }
@@ -822,14 +822,15 @@ namespace egret {
             if (this.$mask && !this.$mask.$hitTest(stageX, stageY)) {
                 return null
             }
-            var children = this.$children;
-            var found = false;
-            for (var i = children.length - 1; i >= 0; i--) {
-                var child = children[i];
+            let children = this.$children;
+            let found = false;
+            let target:DisplayObject = null;
+            for (let i = children.length - 1; i >= 0; i--) {
+                let child = children[i];
                 if (child.$maskedObject) {
                     continue;
                 }
-                var target = child.$hitTest(stageX, stageY);
+                target = child.$hitTest(stageX, stageY);
                 if (target) {
                     found = true;
                     if (target.$touchEnabled) {
@@ -873,10 +874,10 @@ namespace egret {
          * 标记所有子项失效,与markChildDirty不同,此方法无视子项是否启用cacheAsBitmap,必须遍历完所有子项.通常只有alpha属性改变需要采用这种操作.
          */
         private $invalidateAllChildren(): void {
-            var children = this.$children;
+            let children = this.$children;
             if (children) {
-                for (var i = children.length - 1; i >= 0; i--) {
-                    var child = children[i];
+                for (let i = children.length - 1; i >= 0; i--) {
+                    let child = children[i];
                     child.$invalidate();
                     if ((<DisplayObjectContainer>child).$children) {
                         (<DisplayObjectContainer>child).$invalidateAllChildren();

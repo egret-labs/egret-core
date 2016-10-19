@@ -193,7 +193,7 @@ namespace egret {
         }
         
         $onFocus():void {
-            var self = this;
+            let self = this;
             if (!this._text.visible) {
                 return;
             }
@@ -219,12 +219,14 @@ namespace egret {
          * @param event 
          */
         private updateTextHandler(event:Event):void {
-            var values = this._text.$TextField;
-            var textValue = this.stageText.$getText();
-            var isChanged:boolean = false;
+            let values = this._text.$TextField;
+            let textValue = this.stageText.$getText();
+            let isChanged:boolean = false;
+            let reg: RegExp;
+            let result: string[];
             if (values[sys.TextKeys.restrictAnd] != null) {//内匹配
-                var reg = new RegExp("[" + values[sys.TextKeys.restrictAnd] + "]", "g");
-                var result = textValue.match(reg);
+                reg = new RegExp("[" + values[sys.TextKeys.restrictAnd] + "]", "g");
+                result = textValue.match(reg);
                 if (result) {
                     textValue = result.join("");
                 }
@@ -292,12 +294,12 @@ namespace egret {
                 return;
             }
 
-            var stage:egret.Stage = this._text.$stage;
+            let stage:egret.Stage = this._text.$stage;
             if (stage == null) {
             }
             else {
-                var item:DisplayObject = this._text;
-                var visible:boolean = item.$visible;
+                let item:DisplayObject = this._text;
+                let visible:boolean = item.$visible;
                 while (true) {
                     if (!visible) {
                         break;

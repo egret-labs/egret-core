@@ -119,9 +119,9 @@ namespace egret {
          * @platform Web,Native
          */
         public static dispatchTextEvent(target:IEventDispatcher, type:string, text:string):boolean {
-            var event:TextEvent = Event.create(TextEvent, type);
+            let event:TextEvent = Event.create(TextEvent, type);
             event.text = text;
-            var result = target.dispatchEvent(event);
+            let result = target.dispatchEvent(event);
             Event.release(event);
             return result;
 

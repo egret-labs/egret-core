@@ -104,9 +104,9 @@ namespace egret {
                 this.variables = {};
             }
             source = source.split("+").join(" ");
-            var tokens, re = /[?&]?([^=]+)=([^&]*)/g;
+            let tokens, re = /[?&]?([^=]+)=([^&]*)/g;
             while (tokens = re.exec(source)) {
-                var key = decodeURIComponent(tokens[1]),
+                let key = decodeURIComponent(tokens[1]),
                     val = decodeURIComponent(tokens[2]);
                 //没有重复键值，直接赋值
                 if ((key in this.variables) == false) {
@@ -114,7 +114,7 @@ namespace egret {
                     continue;
                 }
                 //有重复键值，如果已经存在数组，直接push到数组，否则创建一个新数组
-                var value = this.variables[key];
+                let value = this.variables[key];
                 if (value instanceof Array) {
                     (<Array<string>>value).push(val)
                 }
@@ -140,9 +140,9 @@ namespace egret {
             if (!this.variables) {
                 return "";
             }
-            var variables:any = this.variables;
-            var stringArray:string[] = [];
-            for (var key in variables) {
+            let variables:any = this.variables;
+            let stringArray:string[] = [];
+            for (let key in variables) {
                 stringArray.push(this.encodeValue(key, variables[key]));
             }
             return stringArray.join("&");

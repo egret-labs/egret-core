@@ -53,6 +53,6 @@ namespace egret {
     /**
      * @copy egret.Orientation
      */
-    export var DeviceOrientation: { new (): DeviceOrientation } = null;
+    export let DeviceOrientation: { new (): DeviceOrientation } = null;
 
 }

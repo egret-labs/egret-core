@@ -247,7 +247,7 @@ namespace egret {
     /**
      * @copy egret.Video
      */
-    export var Video:{
+    export let Video:{
         new (url?:string,cache?:boolean): Video
     };
 }

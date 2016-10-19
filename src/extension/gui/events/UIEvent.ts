@@ -122,8 +122,8 @@ namespace egret.gui {
          * @method egret.gui.UIEvent.dispatchUIEvent
          */
         public static dispatchUIEvent(target:IEventDispatcher,type:string):boolean{
-			var event:UIEvent = Event.create(UIEvent, type);
-			var result = target.dispatchEvent(event);
+			let event:UIEvent = Event.create(UIEvent, type);
+			let result = target.dispatchEvent(event);
 			Event.release(event);
 			return result;
         }

@@ -34,11 +34,11 @@ namespace egret.web {
     export class WebGLShaderManager {
         private gl:WebGLRenderingContext = null;
         private maxAttibs:number = 10;
-        private attribState:Array<any> = [];
-        private tempAttribState:Array<any> = [];
+        private attribState:any[] = [];
+        private tempAttribState:any[] = [];
 
         constructor(gl:any) {
-            for (var i = 0; i < this.maxAttibs; i++) {
+            for (let i = 0; i < this.maxAttibs; i++) {
                 this.attribState[i] = false;
             }
             this.setContext(gl);
@@ -75,8 +75,8 @@ namespace egret.web {
         }
 
         private setAttribs(attribs) {
-            var i:number;
-            var l:number;
+            let i:number;
+            let l:number;
 
             l = this.tempAttribState.length;
             for (i = 0; i < l; i++) {
@@ -85,11 +85,11 @@ namespace egret.web {
 
             l = attribs.length;
             for (i = 0; i < l; i++) {
-                var attribId = attribs[i];
+                let attribId = attribs[i];
                 this.tempAttribState[attribId] = true;
             }
 
-            var gl = this.gl;
+            let gl = this.gl;
             l = this.attribState.length;
             for (i = 0; i < l; i++) {
                 if (this.attribState[i] !== this.tempAttribState[i]) {

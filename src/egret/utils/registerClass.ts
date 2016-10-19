@@ -39,7 +39,7 @@ namespace egret {
      * @example the following code shows how to register the runtime class information for the EventDispatcher class and do the type checking:
      * <pre>
      *      egret.registerClass(egret.EventDispatcher,"egret.EventDispatcher",["egret.IEventDispatcher"]);
-     *      var dispatcher = new egret.EventDispatcher();
+     *      let dispatcher = new egret.EventDispatcher();
      *      egret.log(egret.is(dispatcher, "egret.IEventDispatcher"));  //true。
      *      egret.log(egret.is(dispatcher, "egret.EventDispatcher"));   //true。
      *      egret.log(egret.is(dispatcher, "egret.Bitmap"));   //false。
@@ -58,7 +58,7 @@ namespace egret {
      * <pre>
      *      //为egret.EventDispatcher类注册运行时类信息，由于它实现了IEventDispatcher接口，这里应同时传入接口名对应的字符串。
      *      egret.registerClass(egret.EventDispatcher,"egret.EventDispatcher",["egret.IEventDispatcher"]);
-     *      var dispatcher = new egret.EventDispatcher();
+     *      let dispatcher = new egret.EventDispatcher();
      *      egret.log(egret.is(dispatcher, "egret.IEventDispatcher"));  //true。
      *      egret.log(egret.is(dispatcher, "egret.EventDispatcher"));   //true。
      *      egret.log(egret.is(dispatcher, "egret.Bitmap"));   //false。
@@ -83,17 +83,17 @@ namespace egret {
                 $error(1003, "className");
             }
         }
-        var prototype:any = classDefinition.prototype;
+        let prototype:any = classDefinition.prototype;
         prototype.__class__ = className;
-        var types = [className];
+        let types = [className];
         if (interfaceNames) {
             types = types.concat(interfaceNames);
         }
-        var superTypes = prototype.__types__;
+        let superTypes = prototype.__types__;
         if (prototype.__types__) {
-            var length = superTypes.length;
-            for(var i=0;i<length;i++){
-                var name = superTypes[i];
+            let length = superTypes.length;
+            for(let i=0;i<length;i++){
+                let name = superTypes[i];
                 if(types.indexOf(name)==-1){
                     types.push(name);
                 }

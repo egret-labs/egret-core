@@ -133,7 +133,7 @@ namespace eui {
             if (this.textDisplay) {
                 return this.textDisplay.displayAsPassword;
             }
-            var v = this.$TextInput[sys.TextInputKeys.displayAsPassword];
+            let v = this.$TextInput[sys.TextInputKeys.displayAsPassword];
             return v ? v : false;
         }
 
@@ -220,7 +220,7 @@ namespace eui {
             if (this.textDisplay) {
                 return this.textDisplay.maxChars;
             }
-            var v = this.$TextInput[sys.TextInputKeys.maxChars];
+            let v = this.$TextInput[sys.TextInputKeys.maxChars];
             return v ? v : 0;
         }
 
@@ -250,7 +250,7 @@ namespace eui {
             if (this.textDisplay) {
                 return this.textDisplay.maxWidth;
             }
-            var v = this.$TextInput[sys.TextInputKeys.maxWidth];
+            let v = this.$TextInput[sys.TextInputKeys.maxWidth];
             return v ? v : 100000;
         }
 
@@ -280,7 +280,7 @@ namespace eui {
             if (this.textDisplay) {
                 //return this.textDisplay.maxHeight;
             }
-            var v = this.$TextInput[sys.TextInputKeys.maxHeight];
+            let v = this.$TextInput[sys.TextInputKeys.maxHeight];
             return v ? v : 100000;
         }
 
@@ -389,7 +389,7 @@ namespace eui {
          * @platform Web,Native
          */
         protected getCurrentState():string {
-            var skin = this.skin;
+            let skin = this.skin;
             if (this.prompt && !this.isFocus && !this.text) {
                 if (this.enabled && skin.hasState("normalWithPrompt")) {
                     return "normalWithPrompt";
@@ -417,7 +417,7 @@ namespace eui {
          */
         protected partAdded(partName:string, instance:any):void {
             super.partAdded(partName, instance);
-            var values = this.$TextInput;
+            let values = this.$TextInput;
             if (instance == this.textDisplay) {
                 this.textDisplayAdded();
                 if (this.textDisplay instanceof EditableText) {
@@ -457,7 +457,7 @@ namespace eui {
          * @private
          */
         private textDisplayAdded():void {
-            var values = this.$TextInput;
+            let values = this.$TextInput;
             if (values[sys.TextInputKeys.displayAsPassword]) {
                 this.textDisplay.displayAsPassword = values[sys.TextInputKeys.displayAsPassword];
             }
@@ -487,7 +487,7 @@ namespace eui {
          * @private
          */
         private textDisplayRemoved() {
-            var values = this.$TextInput;
+            let values = this.$TextInput;
             values[sys.TextInputKeys.displayAsPassword] = this.textDisplay.displayAsPassword;
             values[sys.TextInputKeys.textColor] = this.textDisplay.textColor;
             values[sys.TextInputKeys.maxChars] = this.textDisplay.maxChars;

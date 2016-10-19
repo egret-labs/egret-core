@@ -67,7 +67,7 @@ namespace egret.gui {
 		 * 此视图状态作为 String 数组所属的状态组。 
 		 * @member egret.gui.State#stateGroups
 		 */		
-		public stateGroups:Array<any>;
+		public stateGroups:any[];
 		/**
 		 * 初始化视图
 		 * @method egret.gui.State#initialize
@@ -76,7 +76,7 @@ namespace egret.gui {
 		public initialize(parent:IStateClient):void{
 			if (!this.initialized){
 				this.initialized = true;
-				for (var i:number = 0; i < this.overrides.length; i++){
+				for (let i:number = 0; i < this.overrides.length; i++){
 					(<IOverride> (this.overrides[i])).initialize(parent);
 				}
 			}

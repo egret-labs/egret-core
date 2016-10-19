@@ -54,7 +54,7 @@ namespace egret.gui {
          * 返回此 Keyframe 对象的副本。
          */
         public clone():Keyframe{
-            var kf:Keyframe = new Keyframe(this.time, this.value, this.valueBy);
+            let kf:Keyframe = new Keyframe(this.time, this.value, this.valueBy);
             kf.easer = this.easer;
             kf._timeFraction = this._timeFraction;
             return kf;

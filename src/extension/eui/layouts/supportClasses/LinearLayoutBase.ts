@@ -342,7 +342,7 @@ namespace eui {
          * @platform Web,Native
          */
         protected invalidateTargetLayout():void {
-            var target = this.$target;
+            let target = this.$target;
             if (target) {
                 target.invalidateSize();
                 target.invalidateDisplayList();
@@ -414,7 +414,7 @@ namespace eui {
          * @platform Web,Native
          */
         public updateDisplayList(width:number, height:number):void {
-            var target = this.$target;
+            let target = this.$target;
             if (!target)
                 return;
 
@@ -558,9 +558,9 @@ namespace eui {
          * @platform Web,Native
          */
         protected findIndexAt(x:number, i0:number, i1:number):number {
-            var index = ((i0 + i1) * 0.5)|0;
-            var elementX = this.getStartPosition(index);
-            var elementWidth = this.getElementSize(index);
+            let index = ((i0 + i1) * 0.5)|0;
+            let elementX = this.getStartPosition(index);
+            let elementWidth = this.getElementSize(index);
             if ((x >= elementX) && (x < elementX + elementWidth + this.$gap))
                 return index;
             else if (i0 == i1)
@@ -633,7 +633,7 @@ namespace eui {
         public scrollPositionChanged():void {
             super.scrollPositionChanged();
             if (this.$useVirtualLayout) {
-                var changed = this.getIndexInView();
+                let changed = this.getIndexInView();
                 if (changed) {
                     this.indexInViewCalculated = true;
                     this.target.invalidateDisplayList();
@@ -744,30 +744,30 @@ namespace eui {
          * @platform Web,Native
          */
         protected flexChildrenProportionally(spaceForChildren:number, spaceToDistribute:number,
-                                             totalPercent:number, childInfoArray:Array<any>):void {
+                                             totalPercent:number, childInfoArray:any[]):void {
 
-            var numElements:number = childInfoArray.length;
-            var done:boolean;
+            let numElements:number = childInfoArray.length;
+            let done:boolean;
 
             do {
                 done = true;
 
-                var unused:number = spaceToDistribute -
+                let unused:number = spaceToDistribute -
                     (spaceForChildren * totalPercent / 100);
                 if (unused > 0)
                     spaceToDistribute -= unused;
                 else
                     unused = 0;
 
-                var spacePerPercent:number = spaceToDistribute / totalPercent;
+                let spacePerPercent:number = spaceToDistribute / totalPercent;
 
-                for (var i:number = 0; i < numElements; i++) {
-                    var childInfo:sys.ChildInfo = childInfoArray[i];
+                for (let i:number = 0; i < numElements; i++) {
+                    let childInfo:sys.ChildInfo = childInfoArray[i];
 
-                    var size:number = childInfo.percent * spacePerPercent;
+                    let size:number = childInfo.percent * spacePerPercent;
 
                     if (size < childInfo.min) {
-                        var min:number = childInfo.min;
+                        let min:number = childInfo.min;
                         childInfo.size = min;
 
                         childInfoArray[i] = childInfoArray[--numElements];
@@ -785,7 +785,7 @@ namespace eui {
                         break;
                     }
                     else if (size > childInfo.max) {
-                        var max:number = childInfo.max;
+                        let max:number = childInfo.max;
                         childInfo.size = max;
 
                         childInfoArray[i] = childInfoArray[--numElements];

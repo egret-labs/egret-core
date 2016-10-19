@@ -132,7 +132,7 @@ namespace egret {
                     this.bottomRightStrokeWidth = 2;
                     break;
                 default:
-                    var half = Math.ceil(width * 0.5) | 0;
+                    let half = Math.ceil(width * 0.5) | 0;
                     this.topLeftStrokeWidth = half;
                     this.bottomRightStrokeWidth = half;
                     break;
@@ -285,8 +285,8 @@ namespace egret {
             y = +y || 0;
             width = +width || 0;
             height = +height || 0;
-            var fillPath = this.fillPath;
-            var strokePath = this.strokePath;
+            let fillPath = this.fillPath;
+            let strokePath = this.strokePath;
             fillPath && fillPath.drawRect(x, y, width, height);
             strokePath && strokePath.drawRect(x, y, width, height);
             this.extendBoundsByPoint(x + width, y + height);
@@ -325,16 +325,16 @@ namespace egret {
             height = +height || 0;
             ellipseWidth = +ellipseWidth || 0;
             ellipseHeight = +ellipseHeight || 0;
-            var fillPath = this.fillPath;
-            var strokePath = this.strokePath;
+            let fillPath = this.fillPath;
+            let strokePath = this.strokePath;
             fillPath && fillPath.drawRoundRect(x, y, width, height, ellipseWidth, ellipseHeight);
             strokePath && strokePath.drawRoundRect(x, y, width, height, ellipseWidth, ellipseHeight);
 
-            var radiusX = (ellipseWidth * 0.5) | 0;
-            var radiusY = ellipseHeight ? (ellipseHeight * 0.5) | 0 : radiusX;
-            var right = x + width;
-            var bottom = y + height;
-            var ybw = bottom - radiusY;
+            let radiusX = (ellipseWidth * 0.5) | 0;
+            let radiusY = ellipseHeight ? (ellipseHeight * 0.5) | 0 : radiusX;
+            let right = x + width;
+            let bottom = y + height;
+            let ybw = bottom - radiusY;
             this.extendBoundsByPoint(x, y);
             this.extendBoundsByPoint(right, bottom);
             this.updatePosition(right, ybw);
@@ -363,8 +363,8 @@ namespace egret {
             x = +x || 0;
             y = +y || 0;
             radius = +radius || 0;
-            var fillPath = this.fillPath;
-            var strokePath = this.strokePath;
+            let fillPath = this.fillPath;
+            let strokePath = this.strokePath;
             fillPath && fillPath.drawCircle(x, y, radius);
             strokePath && strokePath.drawCircle(x, y, radius);
             this.extendBoundsByPoint(x - radius, y - radius);
@@ -400,8 +400,8 @@ namespace egret {
             width = +width || 0;
             height = +height || 0;
 
-            var fillPath = this.fillPath;
-            var strokePath = this.strokePath;
+            let fillPath = this.fillPath;
+            let strokePath = this.strokePath;
             fillPath && fillPath.drawEllipse(x, y, width, height);
             strokePath && strokePath.drawEllipse(x, y, width, height);
 
@@ -429,8 +429,8 @@ namespace egret {
         public moveTo(x:number, y:number):void {
             x = +x || 0;
             y = +y || 0;
-            var fillPath = this.fillPath;
-            var strokePath = this.strokePath;
+            let fillPath = this.fillPath;
+            let strokePath = this.strokePath;
             fillPath && fillPath.moveTo(x, y);
             strokePath && strokePath.moveTo(x, y);
             this.includeLastPosition = false;
@@ -458,8 +458,8 @@ namespace egret {
         public lineTo(x:number, y:number):void {
             x = +x || 0;
             y = +y || 0;
-            var fillPath = this.fillPath;
-            var strokePath = this.strokePath;
+            let fillPath = this.fillPath;
+            let strokePath = this.strokePath;
             fillPath && fillPath.lineTo(x, y);
             strokePath && strokePath.lineTo(x, y);
             this.updatePosition(x, y);
@@ -495,8 +495,8 @@ namespace egret {
             controlY = +controlY || 0;
             anchorX = +anchorX || 0;
             anchorY = +anchorY || 0;
-            var fillPath = this.fillPath;
-            var strokePath = this.strokePath;
+            let fillPath = this.fillPath;
+            let strokePath = this.strokePath;
             fillPath && fillPath.curveTo(controlX, controlY, anchorX, anchorY);
             strokePath && strokePath.curveTo(controlX, controlY, anchorX, anchorY);
             this.extendBoundsByPoint(controlX, controlY);
@@ -537,8 +537,8 @@ namespace egret {
             controlY2 = +controlY2 || 0;
             anchorX = +anchorX || 0;
             anchorY = +anchorY || 0;
-            var fillPath = this.fillPath;
-            var strokePath = this.strokePath;
+            let fillPath = this.fillPath;
+            let strokePath = this.strokePath;
             fillPath && fillPath.cubicCurveTo(controlX1, controlY1, controlX2, controlY2, anchorX, anchorY);
             strokePath && strokePath.cubicCurveTo(controlX1, controlY1, controlX2, controlY2, anchorX, anchorY);
             this.extendBoundsByPoint(controlX1, controlY1);
@@ -586,8 +586,8 @@ namespace egret {
             startAngle = clampAngle(startAngle);
             endAngle = clampAngle(endAngle);
 
-            var fillPath = this.fillPath;
-            var strokePath = this.strokePath;
+            let fillPath = this.fillPath;
+            let strokePath = this.strokePath;
             if (fillPath) {
                 fillPath.$lastX = this.lastX;
                 fillPath.$lastY = this.lastY;
@@ -604,8 +604,8 @@ namespace egret {
             else {
                 this.arcBounds(x, y, radius, startAngle, endAngle);
             }
-            var endX = x + Math.cos(endAngle) * radius;
-            var endY = y + Math.sin(endAngle) * radius;
+            let endX = x + Math.cos(endAngle) * radius;
+            let endY = y + Math.sin(endAngle) * radius;
             this.updatePosition(endX, endY);
             this.$renderNode.dirtyRender = true;
         }
@@ -615,7 +615,7 @@ namespace egret {
          * 测量圆弧的矩形大小
          */
         private arcBounds(x:number, y:number, radius:number, startAngle:number, endAngle:number):void {
-            var PI = Math.PI;
+            let PI = Math.PI;
             if (Math.abs(startAngle - endAngle) < 0.01) {
                 this.extendBoundsByPoint(x - radius, y - radius);
                 this.extendBoundsByPoint(x + radius, y + radius);
@@ -624,19 +624,19 @@ namespace egret {
             if (startAngle > endAngle) {
                 endAngle += PI * 2;
             }
-            var startX = Math.cos(startAngle) * radius;
-            var endX = Math.cos(endAngle) * radius;
-            var xMin = Math.min(startX, endX);
-            var xMax = Math.max(startX, endX);
+            let startX = Math.cos(startAngle) * radius;
+            let endX = Math.cos(endAngle) * radius;
+            let xMin = Math.min(startX, endX);
+            let xMax = Math.max(startX, endX);
 
-            var startY = Math.sin(startAngle) * radius;
-            var endY = Math.sin(endAngle) * radius;
-            var yMin = Math.min(startY, endY);
-            var yMax = Math.max(startY, endY);
+            let startY = Math.sin(startAngle) * radius;
+            let endY = Math.sin(endAngle) * radius;
+            let yMin = Math.min(startY, endY);
+            let yMax = Math.max(startY, endY);
 
-            var startRange = startAngle / (PI * 0.5);
-            var endRange = endAngle / (PI * 0.5);
-            for (var i = Math.ceil(startRange); i <= endRange; i++) {
+            let startRange = startAngle / (PI * 0.5);
+            let endRange = endAngle / (PI * 0.5);
+            for (let i = Math.ceil(startRange); i <= endRange; i++) {
                 switch (i % 4) {
                     case 0:
                         xMax = radius;
@@ -728,7 +728,7 @@ namespace egret {
          * @private
          */
         private updateNodeBounds():void {
-            var node = this.$renderNode;
+            let node = this.$renderNode;
             node.x = this.minX;
             node.y = this.minY;
             node.width = Math.ceil(this.maxX - this.minX);
@@ -773,27 +773,27 @@ namespace egret {
          *
          */
         $hitTest(stageX:number, stageY:number):DisplayObject {
-            var target = this.targetDisplay;
-            var m = target.$getInvertedConcatenatedMatrix();
-            var localX = m.a * stageX + m.c * stageY + m.tx;
-            var localY = m.b * stageX + m.d * stageY + m.ty;
-            var buffer = sys.canvasHitTestBuffer;
+            let target = this.targetDisplay;
+            let m = target.$getInvertedConcatenatedMatrix();
+            let localX = m.a * stageX + m.c * stageY + m.tx;
+            let localY = m.b * stageX + m.d * stageY + m.ty;
+            let buffer = sys.canvasHitTestBuffer;
             buffer.resize(3, 3);
-            var node = this.$renderNode;
-            var matrix = Matrix.create();
+            let node = this.$renderNode;
+            let matrix = Matrix.create();
             matrix.identity();
             matrix.translate(1 - localX, 1 - localY);
             sys.canvasRenderer.drawNodeToBuffer(node, buffer, matrix, true);
             Matrix.release(matrix);
 
             try {
-                var data = buffer.getPixels(1, 1);
+                let data = buffer.getPixels(1, 1);
+                if (data[3] === 0) {
+                    return null;
+                }
             }
             catch (e) {
                 throw new Error(sys.tr(1039));
-            }
-            if (data[3] === 0) {
-                return null;
             }
             return target;
         }

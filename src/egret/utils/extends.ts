@@ -27,7 +27,7 @@
 //
 //////////////////////////////////////////////////////////////////////////////////////
 //function __extends(d, b) {
-//    for (var p in b) if (b.hasOwnProperty(p)) d[p] = b[p];
+//    for (let p in b) if (b.hasOwnProperty(p)) d[p] = b[p];
 //    function __() {
 //        this.constructor = d;
 //    }
@@ -59,20 +59,20 @@ namespace egret {
      * @exmaple egret.superSetter(egret.Sprite, this, "alpha", 1);
      */
     export function superSetter(currentClass:any, thisObj:any, type:string, ...values) {
-        var cla = currentClass.prototype;
+        let cla = currentClass.prototype;
 
-        var seters;
+        let seters;
         if (!currentClass.hasOwnProperty("__sets__")) {
             Object.defineProperty(currentClass, "__sets__", {"value":{}});
         }
         seters = currentClass["__sets__"];
 
-        var setF = seters[type];
+        let setF = seters[type];
         if (setF) {
             return setF.apply(thisObj, values);
         }
 
-        var d = Object.getPrototypeOf(cla);
+        let d = Object.getPrototypeOf(cla);
         if (d == null) {
             return;
         }
@@ -110,20 +110,20 @@ namespace egret {
      * @exmaple egret.superGetter(egret.Sprite, this, "alpha");
      */
     export function superGetter(currentClass:any, thisObj:any, type:string):any {
-        var cla = currentClass.prototype;
+        let cla = currentClass.prototype;
 
-        var geters;
+        let geters;
         if (!currentClass.hasOwnProperty("__gets__")) {
             Object.defineProperty(currentClass, "__gets__", {"value":{}});
         }
         geters = currentClass["__gets__"];
 
-        var getF = geters[type];
+        let getF = geters[type];
         if (getF) {
             return getF.call(thisObj);
         }
 
-        var d = Object.getPrototypeOf(cla);
+        let d = Object.getPrototypeOf(cla);
         if (d == null) {
             return;
         }

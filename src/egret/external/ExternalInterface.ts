@@ -48,7 +48,7 @@ namespace egret {
 
     }
 
-    export var ExternalInterface: {
+    export let ExternalInterface: {
         /**
          * @language en_US
          * Call functionName, and the value passed to the native.

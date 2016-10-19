@@ -33,7 +33,7 @@ namespace egret.native {
      * 创建一个RenderTexture。
      */
     function createRenderTexture(width?:number, height?:number):NativeRenderTexture {
-        var result = new NativeRenderTexture();
+        let result = new NativeRenderTexture();
         if (!isNaN(width) && !isNaN(height)) {
             result.width = width;
             result.height = height;
@@ -41,7 +41,7 @@ namespace egret.native {
         return result;
     }
 
-    var sharedRenderTexture:NativeRenderTexture;
+    let sharedRenderTexture:NativeRenderTexture;
 
     /**
      * @private
@@ -86,7 +86,7 @@ namespace egret.native {
          * @param useMaxSize 若传入true，则将改变后的尺寸与已有尺寸对比，保留较大的尺寸。
          */
         public resize(width:number, height:number, useMaxSize?:boolean):void {
-            var surface = this.surface;
+            let surface = this.surface;
             if (useMaxSize) {
                 if (surface.width < width) {
                     surface.width = width;
@@ -117,10 +117,10 @@ namespace egret.native {
             if(!sharedRenderTexture) {
                 sharedRenderTexture = createRenderTexture();
             }
-            var oldContext = this.context;
-            var oldSurface = this.surface;
-            var newSurface = sharedRenderTexture;
-            var newContext = newSurface.getContext("2d");
+            let oldContext = this.context;
+            let oldSurface = this.surface;
+            let newSurface = sharedRenderTexture;
+            let newContext = newSurface.getContext("2d");
             sharedRenderTexture = oldSurface;
             this.context = newContext;
             this.surface = newSurface;
@@ -145,13 +145,13 @@ namespace egret.native {
         public beginClip(regions:sys.Region[], offsetX?:number, offsetY?:number):void {
             offsetX = +offsetX || 0;
             offsetY = +offsetY || 0;
-            var context = this.context;
+            let context = this.context;
             context.save();
             context.beginPath();
             context.setTransform(1, 0, 0, 1, offsetX, offsetY);
-            var length = regions.length;
-            for (var i = 0; i < length; i++) {
-                var region = regions[i];
+            let length = regions.length;
+            for (let i = 0; i < length; i++) {
+                let region = regions[i];
                 context.clearRect(region.minX, region.minY, region.width, region.height);
                 context.rect(region.minX, region.minY, region.width, region.height);
             }
@@ -184,8 +184,8 @@ namespace egret.native {
          * 清空缓冲区数据
          */
         public clear():void {
-            var width = this.surface.width;
-            var height = this.surface.height;
+            let width = this.surface.width;
+            let height = this.surface.height;
             if(width > 0 && height > 0) {
                 this.context.setTransform(1, 0, 0, 1, 0, 0);
                 this.context.clearRect(0, 0, width, height);

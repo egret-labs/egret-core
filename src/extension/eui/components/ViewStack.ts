@@ -129,14 +129,14 @@ namespace eui {
          * @platform Web,Native
          */
         public get selectedChild():egret.DisplayObject {
-            var index = this.selectedIndex;
+            let index = this.selectedIndex;
             if (index >= 0 && index < this.numChildren)
                 return this.getChildAt(index);
             return null;
         }
 
         public set selectedChild(value:egret.DisplayObject) {
-            var index = this.getChildIndex(value);
+            let index = this.getChildIndex(value);
             if (index >= 0 && index < this.numChildren)
                 this.setSelectedIndex(index);
         }
@@ -202,7 +202,7 @@ namespace eui {
         $childAdded(child:egret.DisplayObject, index:number):void {
             super.$childAdded(child, index);
             this.showOrHide(child, false);
-            var selectedIndex = this.selectedIndex;
+            let selectedIndex = this.selectedIndex;
             if (selectedIndex == -1) {
                 this.setSelectedIndex(index);
             }
@@ -221,7 +221,7 @@ namespace eui {
         $childRemoved(child:egret.DisplayObject, index:number):void {
             super.$childRemoved(child, index);
             this.showOrHide(child, true);
-            var selectedIndex = this.selectedIndex;
+            let selectedIndex = this.selectedIndex;
             if (index == selectedIndex) {
                 if (this.numChildren > 0) {
                     if (index == 0) {
@@ -319,7 +319,7 @@ namespace eui {
          * @platform Web,Native
          */
         public getItemAt(index:number):any {
-            var element:egret.DisplayObject = this.$children[index];
+            let element:egret.DisplayObject = this.$children[index];
             return element ? element.name : "";
         }
 
@@ -331,9 +331,9 @@ namespace eui {
          * @platform Web,Native
          */
         public getItemIndex(item:any):number {
-            var list = this.$children;
-            var length = list.length;
-            for (var i = 0; i < length; i++) {
+            let list = this.$children;
+            let length = list.length;
+            for (let i = 0; i < length; i++) {
                 if (list[i].name == item) {
                     return i;
                 }

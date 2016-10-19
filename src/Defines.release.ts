@@ -33,11 +33,11 @@
 /**
  * @private
  */
-declare var DEBUG:boolean;
+declare let DEBUG:boolean;
 /**
  * @private
  */
-declare var RELEASE:boolean;
+declare let RELEASE:boolean;
 
 namespace egret {
     export declare function $error(code:number,...params:any[]):void;

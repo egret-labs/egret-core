@@ -12,9 +12,9 @@ declare namespace egret.gui {
         /**
          * 构造函数
          * @method egret.gui.ArrayCollection#constructor
-         * @param source {Array<any>} 数据源
+         * @param source {any[]} 数据源
          */
-        constructor(source?: Array<any>);
+        constructor(source?: any[]);
         /**
          *
          */
@@ -25,7 +25,7 @@ declare namespace egret.gui {
          * 若对数据源进行了排序或过滤等操作，请手动调用refresh()方法刷新数据。<br/>
          * @member egret.gui.ArrayCollection#source
          */
-        source: Array<any>;
+        source: any[];
         /**
          * 在对数据源进行排序或过滤操作后可以手动调用此方法刷新所有数据,以更新视图。
          * @method egret.gui.ArrayCollection#refresh
@@ -103,9 +103,9 @@ declare namespace egret.gui {
         /**
          * 用新数据源替换原始数据源，此方法与直接设置source不同，它不会导致目标视图重置滚动位置。
          * @method egret.gui.ArrayCollection#replaceAll
-         * @param newSource {Array<any>} 新的数据源
+         * @param newSource {any[]} 新的数据源
          */
-        replaceAll(newSource: Array<any>): void;
+        replaceAll(newSource: any[]): void;
         /**
          * 移动一个项目
          * 在oldIndex和newIndex之间的项目，
@@ -232,7 +232,7 @@ declare namespace egret.gui {
          * 处于展开状态的节点列表
          * @member egret.gui.ObjectCollection#openNodes
          */
-        openNodes: Array<any>;
+        openNodes: any[];
         /**
          * @member egret.gui.ObjectCollection#length
          */
@@ -973,7 +973,7 @@ declare namespace egret.gui {
          * 设置容器子对象数组 。数组包含要添加到容器的子项列表，之前的已存在于容器中的子项列表被全部移除后添加列表里的每一项到容器。
          * 设置该属性时会对您输入的数组进行一次浅复制操作，所以您之后对该数组的操作不会影响到添加到容器的子项列表数量。
          */
-        elementsContent: Array<any>;
+        elementsContent: any[];
         /**
          */
         numElements: number;
@@ -1754,12 +1754,12 @@ declare namespace egret.gui {
         /**
          * 返回子元素列表
          */
-        _getElementsContent(): Array<any>;
+        _getElementsContent(): any[];
         /**
          * 设置容器子对象数组 。数组包含要添加到容器的子项列表，之前的已存在于容器中的子项列表被全部移除后添加列表里的每一项到容器。
          * 设置该属性时会对您输入的数组进行一次浅复制操作，所以您之后对该数组的操作不会影响到添加到容器的子项列表数量。
          */
-        elementsContent: Array<any>;
+        elementsContent: any[];
         /**
          * @member egret.gui.Skin#numElements
          */
@@ -1847,8 +1847,8 @@ declare namespace egret.gui {
          * 为此组件定义的视图状态。
          * @member egret.StateClientHelper#states
          */
-        states: Array<any>;
-        _setStates(value: Array<any>): void;
+        states: any[];
+        _setStates(value: any[]): void;
         /**
          * 当前的过渡效果
          */
@@ -1946,7 +1946,7 @@ declare namespace egret.gui {
          * @private
          */
         private static _skinParts;
-        skinParts: Array<string>;
+        skinParts: string[];
         private stateMap;
         private backgroundAsset;
         labelDisplay: Label;
@@ -2262,7 +2262,7 @@ declare namespace egret.gui {
          * @method egret.gui.GroupBase#getElementIndicesInView
          * @returns {number}
          */
-        getElementIndicesInView(): Array<number>;
+        getElementIndicesInView(): number[];
         /**
          * 在支持虚拟布局的容器中，设置容器内可见的子元素索引范围。此方法在不支持虚拟布局的容器中无效。
          * 通常在即将连续调用getVirtualElementAt()之前需要显式设置一次，以便容器提前释放已经不可见的子元素。
@@ -2375,7 +2375,7 @@ declare namespace egret.gui {
          * @method egret.gui.DataGroup#getElementIndicesInView
          * @returns {number}
          */
-        getElementIndicesInView(): Array<number>;
+        getElementIndicesInView(): number[];
         /**
          * 更改是否使用虚拟布局
          */
@@ -3014,7 +3014,7 @@ declare namespace egret.gui {
          * 当前选中的一个或多个项目的索引列表
          * @member egret.gui.List#selectedIndices
          */
-        selectedIndices: Array<number>;
+        selectedIndices: number[];
         /**
          * @member egret.gui.List#selectedIndex
          */
@@ -3027,7 +3027,7 @@ declare namespace egret.gui {
         /**
          * 设置多个选中项
          */
-        _setSelectedIndices(value: Array<number>, dispatchChangeEvent?: boolean): void;
+        _setSelectedIndices(value: number[], dispatchChangeEvent?: boolean): void;
         /**
          * 处理对组件设置的属性
          * @method egret.gui.List#commitProperties
@@ -3626,12 +3626,12 @@ declare namespace egret.gui {
         /**
          * 返回子元素列表
          */
-        _getElementsContent(): Array<any>;
+        _getElementsContent(): any[];
         /**
          * 设置容器子对象数组 。数组包含要添加到容器的子项列表，之前的已存在于容器中的子项列表被全部移除后添加列表里的每一项到容器。
          * 设置该属性时会对您输入的数组进行一次浅复制操作，所以您之后对该数组的操作不会影响到添加到容器的子项列表数量。
          */
-        elementsContent: Array<any>;
+        elementsContent: any[];
         /**
          * 设置容器子对象列表
          */
@@ -6932,7 +6932,7 @@ declare namespace egret.gui {
          * Execute callback function
          * @param callback {Function} Callback method
          * @param thisObj {any} this action scope of the callback method
-         * @param params {Array<any>} Parameter of the callback method
+         * @param params {any[]} Parameter of the callback method
          * @returns {egret.ScrollerTween} ScrollerTween object itself
          * @version Egret 2.4
          * @platform Web,Native
@@ -6942,12 +6942,12 @@ declare namespace egret.gui {
          * 执行回调函数
          * @param callback {Function} 回调方法
          * @param thisObj {any} 回调方法this作用域
-         * @param params {Array<any>} 回调方法参数
+         * @param params {any[]} 回调方法参数
          * @returns {egret.ScrollerTween} Tween对象本身
          * @version Egret 2.4
          * @platform Web,Native
          */
-        call(callback: Function, thisObj?: any, params?: Array<any>): ScrollerTween;
+        call(callback: Function, thisObj?: any, params?: any[]): ScrollerTween;
         /**
          * @method egret.ScrollerTween#tick
          * @param delta {number}
@@ -7816,7 +7816,7 @@ declare namespace egret.gui {
          * 为此组件定义的视图状态。
          * @member egret.gui.IStateClient#states
          */
-        states: Array<any>;
+        states: any[];
         /**
          * 返回是否含有指定名称的视图状态
          * @method egret.gui.IStateClient#hasState
@@ -8670,7 +8670,7 @@ declare namespace egret.gui {
          * 设置 targets 属性后，target 属性将返回此 Array 中的第一个项目。
          * @member egret.gui.Effect#targets
          */
-        targets: Array<any>;
+        targets: any[];
         private _playheadTime;
         /**
          * 效果的当前时间位置。此属性的值介于 0 和总持续时间（包括该效果的 startDelay、repeatCount 和 repeatDelay）之间。
@@ -8683,7 +8683,7 @@ declare namespace egret.gui {
          * @param targets 要使用此效果设置动画的对象的数组。
          * @return 效果的效果实例对象的数组，一个目标一个数组。
          */
-        createInstances(targets?: Array<any>): Array<any>;
+        createInstances(targets?: any[]): any[];
         /**
          * 创建一个效果实例并对其进行初始化。在播放效果实例前，使用此方法（而非 play() 方法）处理效果实例属性。
          *  <p>所创建的效果实例的类型由 instanceClass 属性指定。然后，使用 _initInstance() 方法初始化此实例。
@@ -8715,7 +8715,7 @@ declare namespace egret.gui {
          * @param playReversedFromEnd 如果为 true，则向后播放效果。
          * @return 效果的 EffectInstance 对象的数组，一个目标一个数组。
          */
-        play(targets?: Array<any>, playReversedFromEnd?: boolean): Array<any>;
+        play(targets?: any[], playReversedFromEnd?: boolean): any[];
         /**
          * 暂停效果，直到调用 resume() 方法。
          * @method egret.gui.Effect#pause
@@ -8935,7 +8935,7 @@ declare namespace egret.gui {
          */
         compositeDuration: number;
         createInstance(target?: any): IEffectInstance;
-        createInstances(targets?: Array<any>): Array<any>;
+        createInstances(targets?: any[]): any[];
         _initInstance(instance: IEffectInstance): void;
         /**
          * 将新的子效果添加到此复合效果。
@@ -9144,7 +9144,7 @@ declare namespace egret.gui {
          * 设置 target 属性将替换此 Array 中的所有对象。
          * 设置 targets 属性后，target 属性将返回此 Array 中的第一个项目。
          */
-        targets: Array<any>;
+        targets: any[];
         /**
          * 效果的当前时间位置。此属性的值介于 0 和总持续时间（包括该效果的 startDelay、repeatCount 和 repeatDelay）之间。
          */
@@ -9154,7 +9154,7 @@ declare namespace egret.gui {
          *  @param targets 要使用此效果设置动画的对象的数组。
          *  @return 效果的效果实例对象的数组，一个目标一个数组。
          */
-        createInstances(targets?: Array<any>): Array<any>;
+        createInstances(targets?: any[]): any[];
         /**
          * 创建一个效果实例并对其进行初始化。在播放效果实例前，使用此方法（而非 play() 方法）处理效果实例属性。
          *  <p>所创建的效果实例的类型由 instanceClass 属性指定。然后，使用 _initInstance() 方法初始化此实例。
@@ -9176,7 +9176,7 @@ declare namespace egret.gui {
          * @param playReversedFromEnd 如果为 true，则向后播放效果。
          * @return 效果的 EffectInstance 对象的数组，一个目标一个数组。
          */
-        play(targets?: Array<any>, playReversedFromEnd?: boolean): Array<any>;
+        play(targets?: any[], playReversedFromEnd?: boolean): any[];
         /**
          * 暂停效果，直到调用 resume() 方法。
          */
@@ -10124,7 +10124,7 @@ declare namespace egret.gui {
         /**
          * 正在播放或者等待播放的EffectInstances
          */
-        _activeEffectQueue: Array<any>;
+        _activeEffectQueue: any[];
         /**
          * @inheritDoc
          */
@@ -10135,7 +10135,7 @@ declare namespace egret.gui {
          */
         playheadTime: number;
         _setPlayheadTime(value: number): void;
-        _childSets: Array<any>;
+        _childSets: any[];
         /**
          * 不含重复次数的持续时间
          */
@@ -10175,7 +10175,7 @@ declare namespace egret.gui {
          * Sequence 效果将按子效果组的添加顺序一次播放一个子效果组。
          * Parallel 效果将同时播放所有子效果组，而不考虑这些子效果组的添加顺序。
          */
-        addChildSet(childSet: Array<any>): void;
+        addChildSet(childSet: any[]): void;
         /**
          * @inheritDoc
          */
@@ -10458,10 +10458,10 @@ declare namespace egret.gui {
          * @param kind {string}
          * @param location {number}
          * @param oldLocation {number}
-         * @param items {Array<any>}
-         * @param oldItems {Array<any>}
+         * @param items {any[]}
+         * @param oldItems {any[]}
          */
-        constructor(type: string, bubbles?: boolean, cancelable?: boolean, kind?: string, location?: number, oldLocation?: number, items?: Array<any>, oldItems?: Array<any>);
+        constructor(type: string, bubbles?: boolean, cancelable?: boolean, kind?: string, location?: number, oldLocation?: number, items?: any[], oldItems?: any[]);
         /**
          * 指示发生的事件类型。此属性值可以是 CollectionEventKind 类中的一个值，也可以是 null，用于指示类型未知。
          * @member egret.gui.CollectionEvent#kind
@@ -10471,12 +10471,12 @@ declare namespace egret.gui {
          * 受事件影响的项目的列表
          * @member egret.gui.CollectionEvent#items
          */
-        items: Array<any>;
+        items: any[];
         /**
          * 仅当kind的值为CollectionEventKind.REPLACE时，表示替换前的项目列表
          * @member egret.gui.CollectionEvent#oldItems
          */
-        oldItems: Array<any>;
+        oldItems: any[];
         /**
          * 如果 kind 值为 CollectionEventKind.ADD、 CollectionEventKind.MOVE、
          * CollectionEventKind.REMOVE 或 CollectionEventKind.REPLACE，
@@ -10495,7 +10495,7 @@ declare namespace egret.gui {
          * 使用指定的EventDispatcher对象来抛出事件对象。抛出的对象将会缓存在对象池上，供下次循环复用。
          * @method egret.gui.CollectionEvent.dispatchCollectionEvent
          */
-        static dispatchCollectionEvent(target: IEventDispatcher, type: string, kind?: string, location?: number, oldLocation?: number, items?: Array<any>, oldItems?: Array<any>): boolean;
+        static dispatchCollectionEvent(target: IEventDispatcher, type: string, kind?: string, location?: number, oldLocation?: number, items?: any[], oldItems?: any[]): boolean;
         clean(): void;
     }
 }
@@ -11553,9 +11553,9 @@ declare namespace egret.gui {
          * @param spaceForChildren {number}
          * @param spaceToDistribute {number}
          * @param totalPercent {number}
-         * @param childInfoArray {Array<any>}
+         * @param childInfoArray {any[]}
          */
-        static flexChildrenProportionally(spaceForChildren: number, spaceToDistribute: number, totalPercent: number, childInfoArray: Array<any>): void;
+        static flexChildrenProportionally(spaceForChildren: number, spaceToDistribute: number, totalPercent: number, childInfoArray: any[]): void;
     }
 }
 declare namespace egret.gui {
@@ -11998,9 +11998,9 @@ declare namespace egret.gui {
          * @param spaceForChildren {number}
          * @param spaceToDistribute {number}
          * @param totalPercent {number}
-         * @param childInfoArray {Array<any>}
+         * @param childInfoArray {any[]}
          */
-        static flexChildrenProportionally(spaceForChildren: number, spaceToDistribute: number, totalPercent: number, childInfoArray: Array<any>): void;
+        static flexChildrenProportionally(spaceForChildren: number, spaceToDistribute: number, totalPercent: number, childInfoArray: any[]): void;
     }
 }
 declare namespace egret.gui {
@@ -12098,7 +12098,7 @@ declare namespace egret.gui {
          * 已经弹出的窗口列表
          * @member egret.gui.IPopUpManager#popUpList
          */
-        popUpList: Array<any>;
+        popUpList: any[];
     }
 }
 declare namespace egret.gui {
@@ -12241,7 +12241,7 @@ declare namespace egret.gui {
          * 已经弹出的窗口列表
          * @member egret.gui.PopUpManager.popUpList
          */
-        static popUpList: Array<any>;
+        static popUpList: any[];
         /**
          * 添加事件监听,参考PopUpEvent定义的常量。
          * @method egret.gui.PopUpManager.addEventListener
@@ -12282,7 +12282,7 @@ declare namespace egret.gui {
          * 已经弹出的窗口列表
          * @member egret.gui.PopUpManagerImpl#popUpList
          */
-        popUpList: Array<any>;
+        popUpList: any[];
         /**
          * 模态窗口列表
          */
@@ -12702,7 +12702,7 @@ declare namespace egret.gui {
          * 此视图状态作为 String 数组所属的状态组。
          * @member egret.gui.State#stateGroups
          */
-        stateGroups: Array<any>;
+        stateGroups: any[];
         /**
          * 初始化视图
          * @method egret.gui.State#initialize
@@ -12872,5 +12872,5 @@ declare namespace egret.gui {
     /**
      * 设置键值对的简便方法。此方法仅供exmlc编译器内部使用。
      */
-    function setProperties(target: any, keys: Array<string>, values: Array<string>): any;
+    function setProperties(target: any, keys: string[], values: string[]): any;
 }

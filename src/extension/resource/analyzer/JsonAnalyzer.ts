@@ -43,12 +43,12 @@ namespace RES {
          * 解析并缓存加载成功的数据
          */
         public analyzeData(resItem:ResourceItem, data:any):void {
-            var name:string = resItem.name;
+            let name:string = resItem.name;
             if (this.fileDic[name] || !data) {
                 return;
             }
             try {
-                var str:string = <string> data;
+                let str:string = <string> data;
                 this.fileDic[name] = JSON.parse(str);
             }
             catch (e) {

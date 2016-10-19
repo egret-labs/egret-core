@@ -159,7 +159,7 @@ namespace eui {
          * @platform Web,Native
          */
         public apply(host:Skin, parent:egret.DisplayObjectContainer):void {
-            var obj:any = this.target ? host[this.target] : host;
+            let obj:any = this.target ? host[this.target] : host;
             if (!obj)
                 return;
             this.oldValue = obj[this.name];
@@ -174,7 +174,7 @@ namespace eui {
          * @platform Web,Native
          */
         public remove(host:Skin, parent:egret.DisplayObjectContainer):void {
-            var obj:any = this.target ? host[this.target] : host;
+            let obj:any = this.target ? host[this.target] : host;
             if (!obj)
                 return;
             this.setPropertyValue(obj, this.name, this.oldValue, this.oldValue);

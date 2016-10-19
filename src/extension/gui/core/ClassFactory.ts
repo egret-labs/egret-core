@@ -55,7 +55,7 @@ namespace egret.gui {
 		 * @returns {any}
          */
         public newInstance():any{
-            var instance:Object = new this.generator();
+            let instance:Object = new this.generator();
             return instance;
         }
     }

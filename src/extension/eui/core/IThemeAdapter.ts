@@ -34,7 +34,7 @@ namespace eui {
      * If your project need to custom the theme rule, you need to implement the <code>IThemeAdapter</code>.
      * And use the following code to inject it to the system:
      * <pre>
-     *      var themeAdapter = new YourThemeAdapter();
+     *      let themeAdapter = new YourThemeAdapter();
      *      egret.registerImplementation("eui.IThemeAdapter",themeAdapter);
      * </pre>
      *
@@ -48,7 +48,7 @@ namespace eui {
      * 若项目需要自定义主题需要实现这个接口，
      * 然后调用如下代码注入自定义实现到框架即可：
      * <pre>
-     *      var themeAdapter = new YourThemeAdapter();
+     *      let themeAdapter = new YourThemeAdapter();
      *      egret.registerImplementation("eui.IThemeAdapter",themeAdapter);
      * </pre>
      * @version Egret 2.4

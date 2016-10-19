@@ -57,7 +57,7 @@ namespace egret.gui {
                 return new skinName();
             }
             else if(typeof(skinName)=="string"){
-                var clazz:any = getDefinitionByName(<string><any> skinName);
+                let clazz:any = getDefinitionByName(<string><any> skinName);
                 if(clazz){
                     return new clazz();
                 }

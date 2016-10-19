@@ -208,7 +208,7 @@ namespace egret.gui {
 				return this.dataGroup.autoLayout;
 			else
 			{
-				var v:any = this._dataGroupProperties.autoLayout;
+				let v:any = this._dataGroupProperties.autoLayout;
 				return (v === undefined) ? true : v;
 			}
 		}
@@ -287,7 +287,7 @@ namespace egret.gui {
 					RendererExistenceEvent.RENDERER_ADD, this.dispatchEvent, this);
 				this.dataGroup.removeEventListener(
 					RendererExistenceEvent.RENDERER_REMOVE, this.dispatchEvent, this);
-				var newDataGroupProperties:any = {};
+				let newDataGroupProperties:any = {};
 				newDataGroupProperties.layout = this.dataGroup.layout;
 				newDataGroupProperties.autoLayout = this.dataGroup.autoLayout;
 				newDataGroupProperties.dataProvider = this.dataGroup.dataProvider;

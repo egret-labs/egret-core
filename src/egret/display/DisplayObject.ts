@@ -298,7 +298,7 @@ namespace egret {
                 return;
             }
             this.$removeFlags(flags)
-            var parent = this.$parent;
+            let parent = this.$parent;
             if (parent) {
                 parent.$removeFlagsUp(flags);
             }
@@ -321,7 +321,7 @@ namespace egret {
                 return;
             }
             this.$setFlags(flags);
-            var parent = this.$parent;
+            let parent = this.$parent;
             if (parent) {
                 parent.$propagateFlagsUp(flags);
             }
@@ -492,7 +492,7 @@ namespace egret {
          * the new object into the matrix property of the display object.
          * @example the following code increases the tx value of a display object's matrix
          * <pre>
-         *     var myMatrix:Matrix = myDisplayObject.matrix;
+         *     let myMatrix:Matrix = myDisplayObject.matrix;
          *     myMatrix.tx += 10;
          *     myDisplayObject.matrix = myMatrix;
          * </pre>
@@ -505,7 +505,7 @@ namespace egret {
          * 注意：要改变一个显示对象矩阵的值，您必引用整个矩阵对象，然后将它重新赋值给显示对象的 matrix 属性。
          * @example 以下代码改变了显示对象矩阵的tx属性值：
          * <pre>
-         *     var myMatrix:Matrix = myDisplayObject.matrix;
+         *     let myMatrix:Matrix = myDisplayObject.matrix;
          *     myMatrix.tx += 10;
          *     myDisplayObject.matrix = myMatrix;
          * </pre>
@@ -521,7 +521,7 @@ namespace egret {
          * 获取矩阵
          */
         $getMatrix(): Matrix {
-            var values = this.$DisplayObject;
+            let values = this.$DisplayObject;
             if (this.$hasFlags(sys.DisplayObjectFlags.InvalidMatrix)) {
                 values[Keys.matrix].$updateScaleAndRotation(values[Keys.scaleX], values[Keys.scaleY], values[Keys.skewX], values[Keys.skewY]);
                 this.$removeFlags(sys.DisplayObjectFlags.InvalidMatrix);
@@ -539,8 +539,8 @@ namespace egret {
          */
         $setMatrix(matrix: Matrix, needUpdateProperties: boolean = true): boolean {
             let self = this;
-            var values = self.$DisplayObject;
-            var m = values[Keys.matrix];
+            let values = self.$DisplayObject;
+            let m = values[Keys.matrix];
             if (m.equals(matrix)) {
                 return false;
             }
@@ -567,7 +567,7 @@ namespace egret {
          * 获得这个显示对象以及它所有父级对象的连接矩阵。
          */
         $getConcatenatedMatrix(): Matrix {
-            var matrix = this.$DisplayObject[Keys.concatenatedMatrix];
+            let matrix = this.$DisplayObject[Keys.concatenatedMatrix];
             if (this.$hasFlags(sys.DisplayObjectFlags.InvalidConcatenatedMatrix)) {
                 if (this.$parent) {
                     this.$parent.$getConcatenatedMatrix().$preMultiplyInto(this.$getMatrix(),
@@ -576,10 +576,10 @@ namespace egret {
                     matrix.copyFrom(this.$getMatrix());
                 }
 
-                var values = this.$DisplayObject;
-                var offsetX = values[Keys.anchorOffsetX];
-                var offsetY = values[Keys.anchorOffsetY];
-                var rect = this.$scrollRect;
+                let values = this.$DisplayObject;
+                let offsetX = values[Keys.anchorOffsetX];
+                let offsetY = values[Keys.anchorOffsetY];
+                let rect = this.$scrollRect;
                 if (rect) {
                     matrix.$preMultiplyInto($TempMatrix.setTo(1, 0, 0, 1, -rect.x - offsetX, -rect.y - offsetY), matrix);
 
@@ -604,7 +604,7 @@ namespace egret {
          * 获取链接矩阵
          */
         $getInvertedConcatenatedMatrix(): Matrix {
-            var values = this.$DisplayObject;
+            let values = this.$DisplayObject;
             if (this.$hasFlags(sys.DisplayObjectFlags.InvalidInvertedConcatenatedMatrix)) {
                 this.$getConcatenatedMatrix().$invertInto(values[Keys.invertedConcatenatedMatrix]);
                 this.$removeFlags(sys.DisplayObjectFlags.InvalidInvertedConcatenatedMatrix);
@@ -655,7 +655,7 @@ namespace egret {
          */
         $setX(value: number): boolean {
             value = +value || 0;
-            var m = this.$DisplayObject[Keys.matrix];
+            let m = this.$DisplayObject[Keys.matrix];
             if (value == m.tx) {
                 return false;
             }
@@ -707,7 +707,7 @@ namespace egret {
          */
         $setY(value: number): boolean {
             value = +value || 0;
-            var m = this.$DisplayObject[Keys.matrix];
+            let m = this.$DisplayObject[Keys.matrix];
             if (value == m.ty) {
                 return false;
             }
@@ -756,7 +756,7 @@ namespace egret {
          */
         $setScaleX(value: number): boolean {
             value = +value || 0;
-            var values = this.$DisplayObject;
+            let values = this.$DisplayObject;
             if (value == values[Keys.scaleX]) {
                 return false;
             }
@@ -850,12 +850,12 @@ namespace egret {
         $setRotation(value: number): boolean {
             value = +value || 0;
             value = clampRotation(value);
-            var values = this.$DisplayObject;
+            let values = this.$DisplayObject;
             if (value == values[Keys.rotation]) {
                 return false;
             }
-            var delta = value - values[Keys.rotation];
-            var angle = delta / 180 * Math.PI;
+            let delta = value - values[Keys.rotation];
+            let angle = delta / 180 * Math.PI;
             values[Keys.skewX] += angle;
             values[Keys.skewY] += angle;
             values[Keys.rotation] = value;
@@ -886,7 +886,7 @@ namespace egret {
          */
         $setSkewX(value: number): boolean {
             value = +value || 0;
-            var values = this.$DisplayObject;
+            let values = this.$DisplayObject;
             if (value == values[Keys.skewXdeg]) {
                 return false;
             }
@@ -923,7 +923,7 @@ namespace egret {
          */
         $setSkewY(value: number): boolean {
             value = +value || 0;
-            var values = this.$DisplayObject;
+            let values = this.$DisplayObject;
             if (value == values[Keys.skewYdeg]) {
                 return false;
             }
@@ -991,15 +991,15 @@ namespace egret {
             }
 
             // if (false) {
-            //     var values = this.$DisplayObject;
-            //     var originalBounds = this.$getOriginalBounds();
-            //     var bounds = this.$getTransformedBounds(this.$parent, $TempRectangle);
-            //     var angle = values[Keys.rotation] / 180 * Math.PI;
-            //     var baseWidth = originalBounds.$getBaseWidth(angle);
+            //     let values = this.$DisplayObject;
+            //     let originalBounds = this.$getOriginalBounds();
+            //     let bounds = this.$getTransformedBounds(this.$parent, $TempRectangle);
+            //     let angle = values[Keys.rotation] / 180 * Math.PI;
+            //     let baseWidth = originalBounds.$getBaseWidth(angle);
             //     if (!baseWidth) {
             //         return false;
             //     }
-            //     var baseHeight = originalBounds.$getBaseHeight(angle);
+            //     let baseHeight = originalBounds.$getBaseHeight(angle);
             //     values[Keys.scaleY] = bounds.height / baseHeight;
             //     values[Keys.scaleX] = value / baseWidth;
             // }
@@ -1061,15 +1061,15 @@ namespace egret {
             }
 
             // if (false) {
-            //     var values = this.$DisplayObject;
-            //     var originalBounds = this.$getOriginalBounds();
-            //     var bounds = this.$getTransformedBounds(this.$parent, $TempRectangle);
-            //     var angle = values[Keys.rotation] / 180 * Math.PI;
-            //     var baseHeight = originalBounds.$getBaseHeight(angle);
+            //     let values = this.$DisplayObject;
+            //     let originalBounds = this.$getOriginalBounds();
+            //     let bounds = this.$getTransformedBounds(this.$parent, $TempRectangle);
+            //     let angle = values[Keys.rotation] / 180 * Math.PI;
+            //     let baseHeight = originalBounds.$getBaseHeight(angle);
             //     if (!baseHeight) {
             //         return false;
             //     }
-            //     var baseWidth = originalBounds.$getBaseWidth(angle);
+            //     let baseWidth = originalBounds.$getBaseWidth(angle);
             //     values[Keys.scaleY] = value / baseHeight;
             //     values[Keys.scaleX] = bounds.width / baseWidth;
             // }
@@ -1235,10 +1235,10 @@ namespace egret {
          * 获取这个显示对象跟它所有父级透明度的乘积
          */
         $getConcatenatedVisible(): boolean {
-            var values = this.$DisplayObject;
+            let values = this.$DisplayObject;
             if (this.$hasFlags(sys.DisplayObjectFlags.InvalidConcatenatedVisible)) {
                 if (this.$parent) {
-                    var parentVisible = this.$parent.$getConcatenatedVisible();
+                    let parentVisible = this.$parent.$getConcatenatedVisible();
                     values[Keys.concatenatedVisible] = parentVisible && this.$visible;
                 }
                 else {
@@ -1288,12 +1288,12 @@ namespace egret {
         }
 
         public $setHasDisplayList(value: boolean): void {
-            var hasDisplayList = !!this.$displayList;
+            let hasDisplayList = !!this.$displayList;
             if (hasDisplayList == value) {
                 return;
             }
             if (value) {
-                var displayList = sys.DisplayList.create(this);
+                let displayList = sys.DisplayList.create(this);
                 if (displayList) {
                     this.$displayList = displayList;
                     if (this.$parentDisplayList) {
@@ -1313,7 +1313,7 @@ namespace egret {
          * cacheAsBitmap属性改变
          */
         $cacheAsBitmapChanged(): void {
-            var parentCache = this.$displayList || this.$parentDisplayList;
+            let parentCache = this.$displayList || this.$parentDisplayList;
             if (this.$renderNode && parentCache) {
                 parentCache.markDirty(this);
             }
@@ -1372,10 +1372,10 @@ namespace egret {
          * 获取这个显示对象跟它所有父级透明度的乘积
          */
         $getConcatenatedAlpha(): number {
-            var values = this.$DisplayObject;
+            let values = this.$DisplayObject;
             if (this.$hasFlags(sys.DisplayObjectFlags.InvalidConcatenatedAlpha)) {
                 if (this.$parent) {
-                    var parentAlpha = this.$parent.$getConcatenatedAlpha();
+                    let parentAlpha = this.$parent.$getConcatenatedAlpha();
                     values[Keys.concatenatedAlpha] = parentAlpha * this.$alpha;
                 }
                 else {
@@ -1473,7 +1473,7 @@ namespace egret {
          * the new object into the scrollRect property of the display object.
          * @example the following code increases the x value of a display object's scrollRect
          * <pre>
-         *     var myRectangle:Rectangle = myDisplayObject.scrollRect;
+         *     let myRectangle:Rectangle = myDisplayObject.scrollRect;
          *     myRectangle.x += 10;
          *     myDisplayObject.scrollRect = myRectangle;
          * </pre>
@@ -1489,7 +1489,7 @@ namespace egret {
          * 注意：要改变一个显示对象 scrollRect 属性的值，您必引用整个 scrollRect 对象，然后将它重新赋值给显示对象的 scrollRect 属性。
          * @example 以下代码改变了显示对象 scrollRect 的 x 属性值：
          * <pre>
-         *     var myRectangle:Rectangle = myDisplayObject.scrollRect;
+         *     let myRectangle:Rectangle = myDisplayObject.scrollRect;
          *     myRectangle.x += 10;
          *     myDisplayObject.scrollRect = myRectangle;//设置完scrollRect的x、y、width、height值之后，一定要对myDisplayObject重新赋值scrollRect，不然会出问题。
          * </pre>
@@ -1556,7 +1556,7 @@ namespace egret {
         }
 
         public set blendMode(value: string) {
-            var mode = sys.blendModeToNumber(value);
+            let mode = sys.blendModeToNumber(value);
             if (mode == this.$blendMode) {
                 return;
             }
@@ -1602,7 +1602,7 @@ namespace egret {
          * 下面例子为 mask 为 Rectangle 类型对象，这种情况下，修改 mask 的值后，一定要对 myDisplayObject 重新赋值 mask，不然会出问题。
          * @example 以下代码改变了显示对象 mask 的 x 属性值：
          * <pre>
-         *     var myMask:Rectangle = myDisplayObject.mask;
+         *     let myMask:Rectangle = myDisplayObject.mask;
          *     myMask.x += 10;
          *     myDisplayObject.mask = myMask;//设置完 mask 的x、y、width、height值之后，一定要对myDisplayObject重新赋值 mask，不然会出问题。
          * </pre>
@@ -1689,7 +1689,7 @@ namespace egret {
         }
 
         public set filters(value: Array<Filter>) {
-            var filters: Array<Filter> = this.$DisplayObject[Keys.filters];
+            let filters: Array<Filter> = this.$DisplayObject[Keys.filters];
             if (!filters && !value) {
                 this.$DisplayObject[Keys.filters] = value;
                 return;
@@ -1698,15 +1698,15 @@ namespace egret {
             //需要通知子项
             this.$invalidate(true);
             if (filters && filters.length) {
-                var length: number = filters.length;
-                for (var i: number = 0; i < length; i++) {
+                let length: number = filters.length;
+                for (let i: number = 0; i < length; i++) {
                     filters[i].$removeTarget(this);
                 }
             }
             this.$DisplayObject[Keys.filters] = value;
             if (value && value.length) {
-                length = value.length;
-                for (i = 0; i < length; i++) {
+                let length = value.length;
+                for (let i = 0; i < length; i++) {
                     value[i].$addTarget(this);
                 }
             }
@@ -1765,7 +1765,7 @@ namespace egret {
         public getBounds(resultRect?: Rectangle, calculateAnchor: boolean = true): egret.Rectangle {
             resultRect = this.$getTransformedBounds(this, resultRect);
             if (calculateAnchor) {
-                var values = this.$DisplayObject;
+                let values = this.$DisplayObject;
                 if (values[Keys.anchorOffsetX] != 0 || values[Keys.anchorOffsetY] != 0) {
                     resultRect.x -= values[Keys.anchorOffsetX];
                     resultRect.y -= values[Keys.anchorOffsetY];
@@ -1779,7 +1779,7 @@ namespace egret {
          * @private
          */
         $getTransformedBounds(targetCoordinateSpace: DisplayObject, resultRect?: Rectangle): Rectangle {
-            var bounds = this.$getOriginalBounds();
+            let bounds = this.$getOriginalBounds();
             if (!resultRect) {
                 resultRect = new Rectangle();
             }
@@ -1787,10 +1787,10 @@ namespace egret {
             if (targetCoordinateSpace == this || resultRect.isEmpty()) {
                 return resultRect;
             }
-            var m: Matrix;
+            let m: Matrix;
             if (targetCoordinateSpace) {
                 m = $TempMatrix;
-                var invertedTargetMatrix = targetCoordinateSpace.$getInvertedConcatenatedMatrix();
+                let invertedTargetMatrix = targetCoordinateSpace.$getInvertedConcatenatedMatrix();
                 invertedTargetMatrix.$preMultiplyInto(this.$getConcatenatedMatrix(), m);
             } else {
                 m = this.$getConcatenatedMatrix();
@@ -1821,7 +1821,7 @@ namespace egret {
          * @platform Web,Native
          */
         public globalToLocal(stageX: number = 0, stageY: number = 0, resultPoint?: Point): Point {
-            var m = this.$getInvertedConcatenatedMatrix();
+            let m = this.$getInvertedConcatenatedMatrix();
             return m.transformPoint(stageX, stageY, resultPoint);
         }
 
@@ -1847,7 +1847,7 @@ namespace egret {
          * @platform Web,Native
          */
         public localToGlobal(localX: number = 0, localY: number = 0, resultPoint?: Point): Point {
-            var m = this.$getConcatenatedMatrix();
+            let m = this.$getConcatenatedMatrix();
             return m.transformPoint(localX, localY, resultPoint);
         }
 
@@ -1866,7 +1866,7 @@ namespace egret {
          * 获取显示对象占用的矩形区域集合，通常包括自身绘制的测量区域，如果是容器，还包括所有子项占据的区域。
          */
         $getOriginalBounds(): Rectangle {
-            var bounds:Rectangle = this.$DisplayObject[Keys.bounds];
+            let bounds:Rectangle = this.$DisplayObject[Keys.bounds];
             if (this.$hasFlags(sys.DisplayObjectFlags.InvalidBounds)) {
                 bounds.copyFrom(this.$getContentBounds());
                 this.$measureChildBounds(bounds);
@@ -1874,7 +1874,7 @@ namespace egret {
                 if (this.$displayList) {
                     this.$displayList.$renderNode.moved = true;
                 }
-                var offset = this.$measureFiltersOffset();
+                let offset = this.$measureFiltersOffset();
                 if(offset) {
                     bounds.x += offset.minX;
                     bounds.y += offset.minY;
@@ -1898,7 +1898,7 @@ namespace egret {
          * @private
          */
         $getContentBounds(): Rectangle {
-            var bounds = this.$DisplayObject[Keys.contentBounds];
+            let bounds = this.$DisplayObject[Keys.contentBounds];
             if (this.$hasFlags(sys.DisplayObjectFlags.InvalidContentBounds)) {
                 this.$measureContentBounds(bounds);
                 if (this.$renderNode) {
@@ -1932,7 +1932,7 @@ namespace egret {
                 return;
             }
             this.$setFlags(sys.DisplayObjectFlags.DirtyRender | sys.DisplayObjectFlags.InvalidRenderNodes);
-            var displayList = this.$displayList ? this.$displayList : this.$parentDisplayList;
+            let displayList = this.$displayList ? this.$displayList : this.$parentDisplayList;
             if (displayList) {
                 displayList.markDirty(this);
             }
@@ -1949,7 +1949,7 @@ namespace egret {
                 return;
             }
             self.$setFlags(sys.DisplayObjectFlags.DirtyChildren);
-            var displayList = self.$displayList;
+            let displayList = self.$displayList;
             if ((displayList || self.$renderNode) && self.$parentDisplayList) {
                 self.$parentDisplayList.markDirty(displayList || self);
             }
@@ -1967,7 +1967,7 @@ namespace egret {
          * 获取渲染节点
          */
         $getRenderNode(): sys.RenderNode {
-            var node = this.$renderNode;
+            let node = this.$renderNode;
             if (!node) {
                 return null;
             }
@@ -1988,27 +1988,27 @@ namespace egret {
 
             let self = this;
             self.$removeFlagsUp(sys.DisplayObjectFlags.Dirty);
-            var node = self.$renderNode;
+            let node = self.$renderNode;
             node.renderAlpha = self.$getConcatenatedAlpha();
             //必须在访问moved属性前调用以下两个方法，因为moved属性在以下两个方法内重置。
-            var concatenatedMatrix = self.$getConcatenatedMatrix();
+            let concatenatedMatrix = self.$getConcatenatedMatrix();
             if (dirtyRegionPolicy == DirtyRegionPolicy.OFF) {
-                var displayList = self.$displayList || self.$parentDisplayList;
+                let displayList = self.$displayList || self.$parentDisplayList;
                 if (!displayList) {
                     return false;
                 }
-                var matrix = node.renderMatrix;
+                let matrix = node.renderMatrix;
                 matrix.copyFrom(concatenatedMatrix);
-                var root = displayList.root;
+                let root = displayList.root;
                 if (root !== self.$stage) {
                     self.$getConcatenatedMatrixAt(root, matrix);
                 }
             }
             else {
-                var renderBounds = bounds || self.$getContentBounds();
+                let renderBounds = bounds || self.$getContentBounds();
                 node.renderVisible = self.$getConcatenatedVisible();
-                var displayList = self.$displayList || self.$parentDisplayList;
-                var region = node.renderRegion;
+                let displayList = self.$displayList || self.$parentDisplayList;
+                let region = node.renderRegion;
                 if (!displayList) {
                     region.setTo(0, 0, 0, 0);
                     node.moved = false;
@@ -2018,14 +2018,14 @@ namespace egret {
                     return false;
                 }
                 node.moved = false;
-                var matrix = node.renderMatrix;
+                let matrix = node.renderMatrix;
                 matrix.copyFrom(concatenatedMatrix);
-                var root = displayList.root;
+                let root = displayList.root;
                 if (root !== self.$stage) {
                     self.$getConcatenatedMatrixAt(root, matrix);
                 }
                 region.updateRegion(renderBounds, matrix);
-                var offset = self.$measureFiltersOffset();
+                let offset = self.$measureFiltersOffset();
                 if(offset) {
                     region.minX += offset.minX;
                     region.minY += offset.minY;
@@ -2043,34 +2043,34 @@ namespace egret {
          * @private
          */
         public $measureFiltersOffset(): any {
-            var filters = this.$DisplayObject[Keys.filters];
+            let filters = this.$DisplayObject[Keys.filters];
             if (filters && filters.length) {
-                var length = filters.length;
-                var minX: number = 0;
-                var minY: number = 0;
-                var maxX: number = 0;
-                var maxY: number = 0;
-                for (var i: number = 0; i < length; i++) {
-                    var filter: Filter = filters[i];
+                let length = filters.length;
+                let minX: number = 0;
+                let minY: number = 0;
+                let maxX: number = 0;
+                let maxY: number = 0;
+                for (let i: number = 0; i < length; i++) {
+                    let filter: Filter = filters[i];
                     if (filter.type == "blur") {
-                        var offsetX = (<BlurFilter>filter).blurX;
-                        var offsetY = (<BlurFilter>filter).blurY;
+                        let offsetX = (<BlurFilter>filter).blurX;
+                        let offsetY = (<BlurFilter>filter).blurY;
                         minX -= offsetX;
                         minY -= offsetY;
                         maxX += offsetX * 2;
                         maxY += offsetY * 2;
                     }
                     else if (filter.type == "glow") {
-                        var offsetX = (<BlurFilter>filter).blurX;
-                        var offsetY = (<BlurFilter>filter).blurY;
+                        let offsetX = (<BlurFilter>filter).blurX;
+                        let offsetY = (<BlurFilter>filter).blurY;
                         minX -= offsetX;
                         minY -= offsetY;
                         maxX += offsetX * 2;
                         maxY += offsetY * 2;
-                        var distance: number = (<DropShadowFilter>filter).distance || 0;
-                        var angle: number = (<DropShadowFilter>filter).angle || 0;
-                        var distanceX = 0;
-                        var distanceY = 0;
+                        let distance: number = (<DropShadowFilter>filter).distance || 0;
+                        let angle: number = (<DropShadowFilter>filter).angle || 0;
+                        let distanceX = 0;
+                        let distanceY = 0;
                         if (distance != 0) {
                             //todo 缓存这个数据
                             distanceX = Math.ceil(distance * egret.NumberUtils.cos(angle));
@@ -2104,13 +2104,13 @@ namespace egret {
          * @param matrix 目标显示对象相对于舞台的完整连接矩阵。
          */
         $getConcatenatedMatrixAt(root: DisplayObject, matrix: Matrix): void {
-            var invertMatrix = root.$getInvertedConcatenatedMatrix();
+            let invertMatrix = root.$getInvertedConcatenatedMatrix();
             if (invertMatrix.a === 0 || invertMatrix.d === 0) {//缩放值为0，逆矩阵无效
-                var target: DisplayObject = this;
-                var rootLevel = root.$nestLevel;
+                let target: DisplayObject = this;
+                let rootLevel = root.$nestLevel;
                 matrix.identity();
                 while (target.$nestLevel > rootLevel) {
-                    var rect = target.$scrollRect;
+                    let rect = target.$scrollRect;
                     if (rect) {
                         matrix.concat($TempMatrix.setTo(1, 0, 0, 1, -rect.x, -rect.y));
                     }
@@ -2124,11 +2124,11 @@ namespace egret {
         }
 
         $getConcatenatedAlphaAt(root: DisplayObject, alpha: number): number {
-            var rootAlpha = root.$getConcatenatedAlpha();
+            let rootAlpha = root.$getConcatenatedAlpha();
             if (rootAlpha === 0) {
                 alpha = 1;
-                var target: DisplayObject = this;
-                var rootLevel = root.$nestLevel;
+                let target: DisplayObject = this;
+                let rootLevel = root.$nestLevel;
                 while (target.$nestLevel > rootLevel) {
                     alpha *= target.$alpha;
                     target = target.$parent;
@@ -2152,21 +2152,21 @@ namespace egret {
          * @private
          */
         $hitTest(stageX: number, stageY: number): DisplayObject {
-            var values = this.$DisplayObject;
+            let values = this.$DisplayObject;
             if (!this.$renderNode || !this.$visible || values[Keys.scaleX] == 0 || values[Keys.scaleY] == 0) {
                 return null;
             }
-            var m = this.$getInvertedConcatenatedMatrix();
+            let m = this.$getInvertedConcatenatedMatrix();
             if (m.a == 0 && m.b == 0 && m.c == 0 && m.d == 0) {//防止父类影响子类
                 return null;
             }
-            var bounds = this.$getContentBounds();
-            var localX = m.a * stageX + m.c * stageY + m.tx;
-            var localY = m.b * stageX + m.d * stageY + m.ty;
+            let bounds = this.$getContentBounds();
+            let localX = m.a * stageX + m.c * stageY + m.tx;
+            let localY = m.b * stageX + m.d * stageY + m.ty;
             if (bounds.contains(localX, localY)) {
                 if (!this.$children) {//容器已经检查过scrollRect和mask，避免重复对遮罩进行碰撞。
 
-                    var rect = this.$scrollRect ? this.$scrollRect : this.$maskRect;
+                    let rect = this.$scrollRect ? this.$scrollRect : this.$maskRect;
                     if (rect && !rect.contains(localX, localY)) {
                         return null;
                     }
@@ -2203,17 +2203,17 @@ namespace egret {
          */
         public hitTestPoint(x: number, y: number, shapeFlag?: boolean): boolean {
             if (!shapeFlag) {
-                var values = this.$DisplayObject;
+                let values = this.$DisplayObject;
                 if (values[Keys.scaleX] == 0 || values[Keys.scaleY] == 0) {
                     return false;
                 }
-                var m = this.$getInvertedConcatenatedMatrix();
-                var bounds = this.getBounds(null, false);
-                var localX = m.a * x + m.c * y + m.tx;
-                var localY = m.b * x + m.d * y + m.ty;
+                let m = this.$getInvertedConcatenatedMatrix();
+                let bounds = this.getBounds(null, false);
+                let localX = m.a * x + m.c * y + m.tx;
+                let localY = m.b * x + m.d * y + m.ty;
                 if (bounds.contains(localX, localY)) {
                     //这里不考虑设置mask的情况
-                    var rect = this.$scrollRect ? this.$scrollRect : this.$maskRect;
+                    let rect = this.$scrollRect ? this.$scrollRect : this.$maskRect;
                     if (rect && !rect.contains(localX, localY)) {
                         return false;
                     }
@@ -2222,13 +2222,13 @@ namespace egret {
                 return false;
             }
             else {
-                var m = this.$getInvertedConcatenatedMatrix();
-                var localX = m.a * x + m.c * y + m.tx;
-                var localY = m.b * x + m.d * y + m.ty;
-                var data: number[];
-                var displayList = this.$displayList;
+                let m = this.$getInvertedConcatenatedMatrix();
+                let localX = m.a * x + m.c * y + m.tx;
+                let localY = m.b * x + m.d * y + m.ty;
+                let data: number[];
+                let displayList = this.$displayList;
                 if (displayList) {
-                    var buffer = displayList.renderBuffer;
+                    let buffer = displayList.renderBuffer;
                     try {
                         data = buffer.getPixels(localX - displayList.offsetX, localY - displayList.offsetY);
                     }
@@ -2237,9 +2237,9 @@ namespace egret {
                     }
                 }
                 else {
-                    var buffer = sys.customHitTestBuffer;
+                    let buffer = sys.customHitTestBuffer;
                     buffer.resize(3, 3);
-                    var matrix = Matrix.create();
+                    let matrix = Matrix.create();
                     matrix.identity();
                     matrix.translate(1 - localX, 1 - localY);
                     sys.systemRenderer.render(this, buffer, matrix, null, true);
@@ -2273,9 +2273,9 @@ namespace egret {
          */
         $addListener(type: string, listener: Function, thisObject: any, useCapture?: boolean, priority?: number, dispatchOnce?: boolean): void {
             super.$addListener(type, listener, thisObject, useCapture, priority, dispatchOnce);
-            var isEnterFrame = (type == Event.ENTER_FRAME);
+            let isEnterFrame = (type == Event.ENTER_FRAME);
             if (isEnterFrame || type == Event.RENDER) {
-                var list = isEnterFrame ? DisplayObject.$enterFrameCallBackList : DisplayObject.$renderCallBackList;
+                let list = isEnterFrame ? DisplayObject.$enterFrameCallBackList : DisplayObject.$renderCallBackList;
                 if (list.indexOf(this) == -1) {
                     list.push(this);
                 }
@@ -2289,10 +2289,10 @@ namespace egret {
          */
         public removeEventListener(type: string, listener: Function, thisObject: any, useCapture?: boolean): void {
             super.removeEventListener(type, listener, thisObject, useCapture);
-            var isEnterFrame: boolean = (type == Event.ENTER_FRAME);
+            let isEnterFrame: boolean = (type == Event.ENTER_FRAME);
             if ((isEnterFrame || type == Event.RENDER) && !this.hasEventListener(type)) {
-                var list = isEnterFrame ? DisplayObject.$enterFrameCallBackList : DisplayObject.$renderCallBackList;
-                var index = list.indexOf(this);
+                let list = isEnterFrame ? DisplayObject.$enterFrameCallBackList : DisplayObject.$renderCallBackList;
+                let index = list.indexOf(this);
                 if (index !== -1) {
                     list.splice(index, 1);
                 }
@@ -2309,8 +2309,8 @@ namespace egret {
                 return super.dispatchEvent(event);
             }
 
-            var list = this.$getPropagationList(this);
-            var targetIndex = list.length * 0.5;
+            let list = this.$getPropagationList(this);
+            let targetIndex = list.length * 0.5;
             event.$setTarget(this);
             this.$dispatchPropagationEvent(event, list, targetIndex);
             return !event.$isDefaultPrevented;
@@ -2331,12 +2331,12 @@ namespace egret {
          * Egret最终采用了HTML里目标节点触发两次的事件流方式。
          */
         $getPropagationList(target: DisplayObject): DisplayObject[] {
-            var list: DisplayObject[] = [];
+            let list: DisplayObject[] = [];
             while (target) {
                 list.push(target);
                 target = target.$parent;
             }
-            var captureList = list.concat();
+            let captureList = list.concat();
             captureList.reverse();//使用一次reverse()方法比多次调用unshift()性能高。
             list = captureList.concat(list);
             return list;
@@ -2346,10 +2346,10 @@ namespace egret {
          * @private
          */
         $dispatchPropagationEvent(event: Event, list: DisplayObject[], targetIndex: number): void {
-            var length = list.length;
-            var captureIndex = targetIndex - 1;
-            for (var i = 0; i < length; i++) {
-                var currentTarget = list[i];
+            let length = list.length;
+            let captureIndex = targetIndex - 1;
+            for (let i = 0; i < length; i++) {
+                let currentTarget = list[i];
                 event.$currentTarget = currentTarget;
                 if (i < captureIndex)
                     event.$eventPhase = EventPhase.CAPTURING_PHASE;
@@ -2370,7 +2370,7 @@ namespace egret {
          * @platform Web,Native
          */
         public willTrigger(type: string): boolean {
-            var parent: DisplayObject = this;
+            let parent: DisplayObject = this;
             while (parent) {
                 if (parent.hasEventListener(type))
                     return true;

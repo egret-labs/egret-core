@@ -189,8 +189,8 @@ namespace eui {
             if(!target.hasEventListener(eventType)){
                 return true;
             }
-            var event = egret.Event.create(UIEvent, eventType, bubbles, cancelable);
-            var result = target.dispatchEvent(event);
+            let event = egret.Event.create(UIEvent, eventType, bubbles, cancelable);
+            let result = target.dispatchEvent(event);
             egret.Event.release(event);
             return result;
         }

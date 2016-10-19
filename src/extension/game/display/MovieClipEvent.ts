@@ -116,9 +116,9 @@ namespace egret {
          * @platform Web,Native
          */
         public static dispatchMovieClipEvent(target: IEventDispatcher, type: string, frameLabel: string = null): boolean {
-            var event: MovieClipEvent = Event.create(MovieClipEvent, type);
+            let event: MovieClipEvent = Event.create(MovieClipEvent, type);
             event.frameLabel = frameLabel;
-            var result = target.dispatchEvent(event);
+            let result = target.dispatchEvent(event);
             Event.release(event);
             return result;
         }

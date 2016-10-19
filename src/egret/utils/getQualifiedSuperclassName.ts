@@ -59,12 +59,12 @@ namespace egret {
         if (!value || (typeof value != "object" && !value.prototype)) {
             return null;
         }
-        var prototype:any = value.prototype ? value.prototype : Object.getPrototypeOf(value);
-        var superProto = Object.getPrototypeOf(prototype);
+        let prototype:any = value.prototype ? value.prototype : Object.getPrototypeOf(value);
+        let superProto = Object.getPrototypeOf(prototype);
         if (!superProto) {
             return null;
         }
-        var superClass = getQualifiedClassName(superProto.constructor);
+        let superClass = getQualifiedClassName(superProto.constructor);
         if (!superClass) {
             return null;
         }

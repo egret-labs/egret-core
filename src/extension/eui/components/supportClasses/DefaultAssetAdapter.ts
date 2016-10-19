@@ -30,9 +30,9 @@
 
 namespace eui {
 
-    var loaderPool:egret.ImageLoader[] = [];
-    var callBackMap:any = {};
-    var loaderMap:any = {};
+    let loaderPool:egret.ImageLoader[] = [];
+    let callBackMap:any = {};
+    let loaderMap:any = {};
 
     /**
      * @language en_US
@@ -74,12 +74,12 @@ namespace eui {
          * @platform Web,Native
          */
         public getAsset(source:string, callBack:(data:any, source:string) => void, thisObject:any):void {
-            var list = callBackMap[source];
+            let list = callBackMap[source];
             if (list) {
                 list.push([callBack, thisObject]);
                 return;
             }
-            var loader = loaderPool.pop();
+            let loader = loaderPool.pop();
             if (!loader) {
                 loader = new egret.ImageLoader();
             }
@@ -97,23 +97,23 @@ namespace eui {
          * @param event 
          */
         private onLoadFinish(event:egret.Event):void {
-            var loader = event.currentTarget;
+            let loader = event.currentTarget;
             loader.removeEventListener(egret.Event.COMPLETE, this.onLoadFinish, this);
             loader.removeEventListener(egret.IOErrorEvent.IO_ERROR, this.onLoadFinish, this);
-            var data:egret.Texture;
+            let data:egret.Texture;
             if (event.$type == egret.Event.COMPLETE) {
                 data = new egret.Texture();
                 data._setBitmapData(loader.data);
                 loader.data = null;
             }
             loaderPool.push(loader);
-            var source = loaderMap[loader.$hashCode];
+            let source = loaderMap[loader.$hashCode];
             delete loaderMap[loader.$hashCode];
-            var list:any[] = callBackMap[source];
+            let list:any[] = callBackMap[source];
             delete callBackMap[source];
-            var length = list.length;
-            for(var i=0;i<length;i++){
-                var arr:any[] = list[i];
+            let length = list.length;
+            for(let i=0;i<length;i++){
+                let arr:any[] = list[i];
                 arr[0].call(arr[1],data,source);
             }
         }

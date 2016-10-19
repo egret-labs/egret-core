@@ -89,7 +89,7 @@ namespace eui {
          * 舞台尺寸改变
          */
         private onResize(event?:egret.Event):void{
-            var stage = this.$stage;
+            let stage = this.$stage;
             this.$setWidth(stage.$stageWidth);
             this.$setHeight(stage.$stageHeight);
         }

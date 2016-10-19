@@ -29,7 +29,7 @@
 
 /// <reference path="../core/UIComponent.ts" />
 namespace eui {
-    var UIImpl = sys.UIComponentImpl;
+    let UIImpl = sys.UIComponentImpl;
     /**
      * @language en_US
      * BitmapLabel is one line or multiline uneditable BitmapText
@@ -64,8 +64,8 @@ namespace eui {
          * @param value
          */
         $setWidth(value: number): boolean {
-            var result1: boolean = super.$setWidth(value);
-            var result2: boolean = UIImpl.prototype.$setWidth.call(this, value);
+            let result1: boolean = super.$setWidth(value);
+            let result2: boolean = UIImpl.prototype.$setWidth.call(this, value);
             return result1 && result2;
         }
         /**
@@ -74,8 +74,8 @@ namespace eui {
          * @param value
          */
         $setHeight(value: number): boolean {
-            var result1: boolean = super.$setHeight(value);
-            var result2: boolean = UIImpl.prototype.$setHeight.call(this, value);
+            let result1: boolean = super.$setHeight(value);
+            let result2: boolean = UIImpl.prototype.$setHeight.call(this, value);
             return result1 && result2;
         }
         /**
@@ -84,13 +84,13 @@ namespace eui {
          * @param value
          */
         $setText(value: string): boolean {
-            var result: boolean = super.$setText(value);
+            let result: boolean = super.$setText(value);
             PropertyEvent.dispatchPropertyEvent(this, PropertyEvent.PROPERTY_CHANGE, "text");
             return result;
         }
         private $font: any;
         $setFont(value: any): boolean {
-            var values = this.$BitmapText;
+            let values = this.$BitmapText;
             if (this.$font == value) {
                 return false;
             }
@@ -111,7 +111,7 @@ namespace eui {
         private $parseFont(): void {
             this.$fontChanged = false;
             if (this.$font && typeof this.$font == "string") {
-                var adapter: IAssetAdapter = egret.getImplementation("eui.IAssetAdapter");
+                let adapter: IAssetAdapter = egret.getImplementation("eui.IAssetAdapter");
                 if (!adapter) {
                     adapter = new DefaultAssetAdapter();
                 }
@@ -191,10 +191,10 @@ namespace eui {
          * @platform Web,Native
          */
         protected measure(): void {
-            var values = this.$UIComponent;
-            var textValues = this.$BitmapText;
-            var oldWidth = textValues[egret.sys.BitmapTextKeys.textFieldWidth];
-            var availableWidth = NaN;
+            let values = this.$UIComponent;
+            let textValues = this.$BitmapText;
+            let oldWidth = textValues[egret.sys.BitmapTextKeys.textFieldWidth];
+            let availableWidth = NaN;
             if (!isNaN(this._widthConstraint)) {
                 availableWidth = this._widthConstraint;
                 this._widthConstraint = NaN;
@@ -466,7 +466,7 @@ namespace eui {
             if (isNaN(layoutWidth) || layoutWidth === this._widthConstraint || layoutWidth == 0) {
                 return;
             }
-            var values = this.$UIComponent;
+            let values = this.$UIComponent;
             if (!isNaN(values[sys.UIKeys.explicitHeight])) {
                 return;
             }

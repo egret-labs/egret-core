@@ -79,7 +79,7 @@ namespace egret.gui {
 		 * @returns {IVisualElement}
 		 */
 		public getElementAt(index:number):IVisualElement{
-			var retval:IVisualElement =
+			let retval:IVisualElement =
 				this.owner[this.raw_getElementAt](
 					this.owner[this.lowerBoundReference] + index);
 			return retval;
@@ -91,7 +91,7 @@ namespace egret.gui {
 		 * @returns {IVisualElement}
 		 */
 		public addElement(element:IVisualElement):IVisualElement{
-			var index:number = this.owner[this.upperBoundReference];
+			let index:number = this.owner[this.upperBoundReference];
 			if(element.parent===(<DisplayObjectContainer><any> this.owner))
 				index--;
 			this.owner[this.upperBoundReference]++;
@@ -120,7 +120,7 @@ namespace egret.gui {
 		 * @returns {IVisualElement}
 		 */
 		public removeElement(element:IVisualElement):IVisualElement{
-			var index:number = this.owner[this.raw_getElementIndex](element);
+			let index:number = this.owner[this.raw_getElementIndex](element);
 			if (this.owner[this.lowerBoundReference] <= index &&
 				index < this.owner[this.upperBoundReference]){
 				this.owner[this.raw_removeElement](element);
@@ -137,7 +137,7 @@ namespace egret.gui {
 		 */
 		public removeElementAt(index:number):IVisualElement{
 			index += this.owner[this.lowerBoundReference];
-			var element:IVisualElement;
+			let element:IVisualElement;
 			if (this.owner[this.lowerBoundReference] <= index &&
 				index < this.owner[this.upperBoundReference]){
 				element = this.owner[this.raw_removeElementAt](index);
@@ -153,7 +153,7 @@ namespace egret.gui {
 		 * @returns {number}
 		 */
 		public getElementIndex(element:IVisualElement):number{
-			var retval:number = this.owner[this.raw_getElementIndex](element);
+			let retval:number = this.owner[this.raw_getElementIndex](element);
 			retval -= this.owner[this.lowerBoundReference];
 			return retval;
 		}

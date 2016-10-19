@@ -204,7 +204,7 @@ namespace egret {
      * @version Egret 2.4
      * @platform Web,Native
      */
-    export var XML:{
+    export let XML:{
         /**
          * @language en_US
          * parses a text to XML instance.

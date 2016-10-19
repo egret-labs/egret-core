@@ -114,7 +114,7 @@ namespace egret {
          *        event.updateAfterEvent();
          *    }
          *
-         *    var moveTimer:Timer=new Timer(50,250);
+         *    let moveTimer:Timer=new Timer(50,250);
          *    moveTimer.addEventListener(TimerEvent.TIMER,onTimer);
          *    moveTimer.start();
          * </pre>
@@ -135,7 +135,7 @@ namespace egret {
          *        event.updateAfterEvent();
          *    }
          *
-         *    var moveTimer:Timer=new Timer(50,250);
+         *    let moveTimer:Timer=new Timer(50,250);
          *    moveTimer.addEventListener(TimerEvent.TIMER,onTimer);
          *    moveTimer.start();
          * </pre>
@@ -174,8 +174,8 @@ namespace egret {
          * @platform Web,Native
          */
         public static dispatchTimerEvent(target:IEventDispatcher, type:string, bubbles?:boolean, cancelable?:boolean):boolean {
-            var event = Event.create(TimerEvent, type, bubbles, cancelable);
-            var result = target.dispatchEvent(event);
+            let event = Event.create(TimerEvent, type, bubbles, cancelable);
+            let result = target.dispatchEvent(event);
             Event.release(event);
             return result;
         }

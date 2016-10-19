@@ -127,6 +127,6 @@ namespace egret {
      * @version Egret 2.4
      * @platform Web,Native
      */
-    export var ISocket:{new():ISocket};
+    export let ISocket:{new():ISocket};
 
 }

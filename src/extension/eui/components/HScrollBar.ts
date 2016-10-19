@@ -65,32 +65,32 @@ namespace eui {
          */
         protected updateDisplayList(unscaledWidth:number, unscaledHeight:number):void {
             super.updateDisplayList(unscaledWidth, unscaledHeight);
-            var thumb = this.thumb;
-            var viewport = this.$viewport;
+            let thumb = this.thumb;
+            let viewport = this.$viewport;
             if (!thumb || !viewport) {
                 return;
             }
-            var bounds = egret.$TempRectangle;
+            let bounds = egret.$TempRectangle;
             thumb.getPreferredBounds(bounds);
-            var thumbWidth = bounds.width;
-            var thumbY = bounds.y;
-            var hsp = viewport.scrollH;
-            var contentWidth = viewport.contentWidth;
-            var width = viewport.width;
+            let thumbWidth = bounds.width;
+            let thumbY = bounds.y;
+            let hsp = viewport.scrollH;
+            let contentWidth = viewport.contentWidth;
+            let width = viewport.width;
             if (hsp <= 0) {
-                var scaleWidth = thumbWidth * (1-(-hsp) / (width * 0.5));
+                let scaleWidth = thumbWidth * (1-(-hsp) / (width * 0.5));
                 scaleWidth = Math.max(5,Math.round(scaleWidth));
                 thumb.setLayoutBoundsSize(scaleWidth, NaN);
                 thumb.setLayoutBoundsPosition(0, thumbY);
             }
             else if (hsp >= contentWidth - width) {
-                scaleWidth = thumbWidth * (1-(hsp - contentWidth + width) / (width * 0.5));
+                let scaleWidth = thumbWidth * (1-(hsp - contentWidth + width) / (width * 0.5));
                 scaleWidth = Math.max(5,Math.round(scaleWidth));
                 thumb.setLayoutBoundsSize(scaleWidth, NaN);
                 thumb.setLayoutBoundsPosition(unscaledWidth - scaleWidth, thumbY);
             }
             else {
-                var thumbX = (unscaledWidth-thumbWidth) * hsp / (contentWidth - width);
+                let thumbX = (unscaledWidth-thumbWidth) * hsp / (contentWidth - width);
                 thumb.setLayoutBoundsSize(NaN, NaN);
                 thumb.setLayoutBoundsPosition(thumbX, thumbY);
             }

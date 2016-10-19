@@ -126,7 +126,7 @@ namespace RES {
      * @version Egret 2.4
      * @platform Web,Native
      */
-    export var VersionController:{
+    export let VersionController:{
         /**
          * @language en_US
          * Constructor initialization

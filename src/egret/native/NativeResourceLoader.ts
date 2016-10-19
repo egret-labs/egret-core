@@ -82,8 +82,8 @@ namespace egret {
             //}
             //else {
             this._downCount++;
-            var promise = egret.PromiseObject.create();
-            var self = this;
+            let promise = egret.PromiseObject.create();
+            let self = this;
             promise.onSuccessFunc = function () {
                 self.loadOver();
             };

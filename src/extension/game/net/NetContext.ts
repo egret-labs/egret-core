@@ -51,7 +51,7 @@ namespace egret {
      * @version Egret 2.4
      * @platform Web,Native
      */
-    export var NetContext:{
+    export let NetContext:{
         new():NetContext;
         getNetContext():NetContext;
     };
@@ -63,7 +63,7 @@ namespace egret {
      * @returns 
      */
     export function $getUrl(request:URLRequest):string {
-        var url:string = request.url;
+        let url:string = request.url;
         //get请求没有设置参数，而是设置URLVariables的情况
         if (url.indexOf("?") == -1 && request.method == URLRequestMethod.GET && request.data && request.data instanceof URLVariables) {
             url = url + "?" + request.data.toString();

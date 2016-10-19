@@ -292,7 +292,7 @@ namespace eui {
 
         public set pendingValue(value:number) {
             value = +value || 0;
-            var values = this.$SliderBase;
+            let values = this.$SliderBase;
             if (value === values[Keys.pendingValue])
                 return;
             values[Keys.pendingValue] = value;
@@ -388,15 +388,15 @@ namespace eui {
          * @platform Web,Native
          */
         protected onThumbTouchBegin(event:egret.TouchEvent):void {
-            var values = this.$SliderBase;
+            let values = this.$SliderBase;
             if (values[Keys.animation] && values[Keys.animation].isPlaying)
                 this.stopAnimation();
 
-            var stage = this.$stage;
+            let stage = this.$stage;
             stage.addEventListener(egret.TouchEvent.TOUCH_MOVE, this.onStageTouchMove, this);
             stage.addEventListener(egret.TouchEvent.TOUCH_END, this.onStageTouchEnd, this);
 
-            var clickOffset = this.thumb.globalToLocal(event.stageX, event.stageY, egret.$TempPoint);
+            let clickOffset = this.thumb.globalToLocal(event.stageX, event.stageY, egret.$TempPoint);
 
             values[Keys.clickOffsetX] = clickOffset.x;
             values[Keys.clickOffsetY] = clickOffset.y;
@@ -408,14 +408,14 @@ namespace eui {
          * 舞台上触摸移动事件
          */
         private onStageTouchMove(event:egret.TouchEvent):void {
-            var values = this.$SliderBase;
+            let values = this.$SliderBase;
             values[Keys.moveStageX] = event.$stageX;
             values[Keys.moveStageY] = event.$stageY;
-            var track = this.track;
+            let track = this.track;
             if (!track)
                 return;
-            var p = track.globalToLocal(values[Keys.moveStageX], values[Keys.moveStageY], egret.$TempPoint);
-            var newValue = this.pointToValue(p.x - values[Keys.clickOffsetX], p.y - values[Keys.clickOffsetY]);
+            let p = track.globalToLocal(values[Keys.moveStageX], values[Keys.moveStageY], egret.$TempPoint);
+            let newValue = this.pointToValue(p.x - values[Keys.clickOffsetX], p.y - values[Keys.clickOffsetY]);
             newValue = this.nearestValidValue(newValue, this.snapInterval);
             this.updateWhenTouchMove(newValue);
             event.updateAfterEvent();
@@ -470,11 +470,11 @@ namespace eui {
          * @platform Web,Native
          */
         protected onStageTouchEnd(event:egret.Event):void {
-            var stage:egret.Stage = event.$currentTarget;
+            let stage:egret.Stage = event.$currentTarget;
             stage.removeEventListener(egret.TouchEvent.TOUCH_MOVE, this.onStageTouchMove, this);
             stage.removeEventListener(egret.TouchEvent.TOUCH_END, this.onStageTouchEnd, this);
             UIEvent.dispatchUIEvent(this, UIEvent.CHANGE_END);
-            var values = this.$SliderBase;
+            let values = this.$SliderBase;
             if (!this.liveDragging && this.value != values[Keys.pendingValue]) {
                 this.setValue(values[Keys.pendingValue]);
                 this.dispatchEventWith(egret.Event.CHANGE);
@@ -495,8 +495,8 @@ namespace eui {
          * 当结束时，若不是在 touchDownTarget 上弹起，而是另外的子显示对象上弹起时，额外抛出一个触摸单击事件。
          */
         private stageTouchEndHandler(event:egret.TouchEvent):void {
-            var target:egret.DisplayObject = event.$target;
-            var values = this.$SliderBase;
+            let target:egret.DisplayObject = event.$target;
+            let values = this.$SliderBase;
             event.$currentTarget.removeEventListener(egret.TouchEvent.TOUCH_END, this.stageTouchEndHandler, this);
             if (values[Keys.touchDownTarget] != target && this.contains(<egret.DisplayObject> (target))) {
                 egret.TouchEvent.dispatchTouchEvent(this, egret.TouchEvent.TOUCH_TAP, true, true,
@@ -557,24 +557,24 @@ namespace eui {
          * @platform Web,Native
          */
         protected onTrackTouchBegin(event:egret.TouchEvent):void {
-            var thumbW = this.thumb ? this.thumb.width : 0;
-            var thumbH = this.thumb ? this.thumb.height : 0;
-            var offsetX = event.$stageX - (thumbW / 2);
-            var offsetY = event.$stageY - (thumbH / 2);
-            var p = this.track.globalToLocal(offsetX, offsetY, egret.$TempPoint);
+            let thumbW = this.thumb ? this.thumb.width : 0;
+            let thumbH = this.thumb ? this.thumb.height : 0;
+            let offsetX = event.$stageX - (thumbW / 2);
+            let offsetY = event.$stageY - (thumbH / 2);
+            let p = this.track.globalToLocal(offsetX, offsetY, egret.$TempPoint);
 
-            var rangeValues = this.$Range
-            var newValue = this.pointToValue(p.x, p.y);
+            let rangeValues = this.$Range
+            let newValue = this.pointToValue(p.x, p.y);
             newValue = this.nearestValidValue(newValue, rangeValues[sys.RangeKeys.snapInterval]);
 
-            var values = this.$SliderBase;
+            let values = this.$SliderBase;
             if (newValue != values[Keys.pendingValue]) {
                 if (values[Keys.slideDuration] != 0) {
                     if (!values[Keys.animation]) {
                         values[Keys.animation] = new sys.Animation(this.$animationUpdateHandler, this);
                         values[Keys.animation].endFunction = this.animationEndHandler;
                     }
-                    var animation = values[Keys.animation];
+                    let animation = values[Keys.animation];
                     if (animation.isPlaying)
                         this.stopAnimation();
                     values[Keys.slideToValue] = newValue;

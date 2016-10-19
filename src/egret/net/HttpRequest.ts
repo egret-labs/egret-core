@@ -218,6 +218,6 @@ namespace egret {
      * @version Egret 2.4
      * @platform Web,Native
      */
-    export var HttpRequest:{ new (): HttpRequest };
+    export let HttpRequest:{ new (): HttpRequest };
 
 }

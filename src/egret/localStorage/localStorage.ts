@@ -48,7 +48,7 @@ namespace egret.localStorage {
      * @version Egret 2.4
      * @platform Web,Native
      */
-    export var getItem:(key:string)=>string;
+    export let getItem:(key:string)=>string;
 
     /**
      * @language en_US
@@ -68,7 +68,7 @@ namespace egret.localStorage {
      * @version Egret 2.4
      * @platform Web,Native
      */
-    export var setItem:(key:string, value:string)=>boolean;
+    export let setItem:(key:string, value:string)=>boolean;
 
     /**
      * @language en_US
@@ -84,7 +84,7 @@ namespace egret.localStorage {
      * @version Egret 2.4
      * @platform Web,Native
      */
-    export var removeItem:(key:string)=>void;
+    export let removeItem:(key:string)=>void;
 
     /**
      * @language en_US
@@ -98,5 +98,5 @@ namespace egret.localStorage {
      * @version Egret 2.4
      * @platform Web,Native
      */
-    export var clear:()=>void;
+    export let clear:()=>void;
 }

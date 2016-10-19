@@ -31,7 +31,7 @@
 
 namespace egret {
 
-    var localPoint:Point = new Point();
+    let localPoint:Point = new Point();
 
     /**
      * @language en_US
@@ -293,7 +293,7 @@ namespace egret {
          */
         private getLocalXY():void {
             this.targetChanged = false;
-            var m = (<DisplayObject>this.$target).$getInvertedConcatenatedMatrix();
+            let m = (<DisplayObject>this.$target).$getInvertedConcatenatedMatrix();
             m.transformPoint(this.$stageX, this.$stageY, localPoint);
             this._localX = localPoint.x;
             this._localY = localPoint.y;
@@ -389,10 +389,10 @@ namespace egret {
             if (!bubbles && !target.hasEventListener(type)) {
                 return true;
             }
-            var event:TouchEvent = Event.create(TouchEvent, type, bubbles, cancelable);
+            let event:TouchEvent = Event.create(TouchEvent, type, bubbles, cancelable);
             event.$initTo(stageX, stageY, touchPointID);
             event.touchDown = touchDown;
-            var result = target.dispatchEvent(event);
+            let result = target.dispatchEvent(event);
             Event.release(event);
             return result;
         }

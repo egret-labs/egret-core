@@ -99,7 +99,7 @@ namespace egret.native {
          * @inheritDoc
          */
         public load(url:string):void {
-            var self = this;
+            let self = this;
 
             this.url = url;
 
@@ -120,7 +120,7 @@ namespace egret.native {
             }
 
             function download() {
-                var promise = PromiseObject.create();
+                let promise = PromiseObject.create();
                 promise.onSuccessFunc = onLoadComplete;
                 promise.onErrorFunc = function () {
                     egret.IOErrorEvent.dispatchIOErrorEvent(self);
@@ -136,9 +136,9 @@ namespace egret.native {
         }
 
         private preload():void {
-            var self = this;
+            let self = this;
             if (self.type == egret.Sound.EFFECT) {
-                var promise = new egret.PromiseObject();
+                let promise = new egret.PromiseObject();
                 promise.onSuccessFunc = function (soundId) {
                     self.dispatchEventWith(egret.Event.COMPLETE);
                 };
@@ -160,7 +160,7 @@ namespace egret.native {
                 egret.$error(1049);
             }
 
-            var channel = new NaSoundChannel();
+            let channel = new NaSoundChannel();
             channel.$url = this.url;
             channel.$loops = loops;
             channel.$type = this.type;

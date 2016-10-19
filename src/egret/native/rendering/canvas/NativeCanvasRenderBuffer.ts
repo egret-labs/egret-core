@@ -33,7 +33,7 @@ namespace egret.native {
      * 创建一个canvas。
      */
     function createCanvas(width?:number, height?:number):NativeCanvas {
-        var result = new NativeCanvas();
+        let result = new NativeCanvas();
         if (!isNaN(width) && !isNaN(height)) {
             result.width = width;
             result.height = height;
@@ -41,7 +41,7 @@ namespace egret.native {
         return result;
     }
 
-    var sharedCanvas:NativeCanvas;
+    let sharedCanvas:NativeCanvas;
 
     /**
      * @private
@@ -91,7 +91,7 @@ namespace egret.native {
             if($supportCmdBatch) {
                 $cmdManager.flush();
             }
-            var surface = this.surface;
+            let surface = this.surface;
             surface.width = width;
             surface.height = height;
             this.clear();
@@ -112,10 +112,10 @@ namespace egret.native {
             if(!sharedCanvas) {
                 sharedCanvas = createCanvas();
             }
-            var oldContext = this.context;
-            var oldSurface = this.surface;
-            var newSurface = sharedCanvas;
-            var newContext = newSurface.getContext("2d");
+            let oldContext = this.context;
+            let oldSurface = this.surface;
+            let newSurface = sharedCanvas;
+            let newContext = newSurface.getContext("2d");
             sharedCanvas = oldSurface;
             this.context = newContext;
             this.surface = newSurface;
@@ -140,13 +140,13 @@ namespace egret.native {
         public beginClip(regions:sys.Region[], offsetX?:number, offsetY?:number):void {
             offsetX = +offsetX || 0;
             offsetY = +offsetY || 0;
-            var context = this.context;
+            let context = this.context;
             context.save();
             context.beginPath();
             context.setTransform(1, 0, 0, 1, offsetX, offsetY);
-            var length = regions.length;
-            for (var i = 0; i < length; i++) {
-                var region = regions[i];
+            let length = regions.length;
+            for (let i = 0; i < length; i++) {
+                let region = regions[i];
                 context.clearRect(region.minX, region.minY, region.width, region.height);
                 context.rect(region.minX, region.minY, region.width, region.height);
             }
@@ -179,8 +179,8 @@ namespace egret.native {
          * 清空缓冲区数据
          */
         public clear():void {
-            var width = this.surface.width;
-            var height = this.surface.height;
+            let width = this.surface.width;
+            let height = this.surface.height;
             if(width > 0 && height > 0) {
                 this.context.setTransform(1, 0, 0, 1, 0, 0);
                 this.context.clearRect(0, 0, width, height);

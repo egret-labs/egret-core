@@ -59,7 +59,7 @@ namespace egret.gui {
         }
         
         public ease(fraction:number):number{
-            var easeOutFraction:number = 1 - this._easeInFraction;
+            let easeOutFraction:number = 1 - this._easeInFraction;
             
             if (fraction <= this._easeInFraction && this._easeInFraction > 0)
                 return this._easeInFraction * this._easeIn(fraction/this._easeInFraction);
