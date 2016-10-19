@@ -37,7 +37,7 @@ class Main extends eui.UILayer {
         super.createChildren();
         //inject the custom material parser
         //注入自定义的素材解析器
-        var assetAdapter = new AssetAdapter();
+        let assetAdapter = new AssetAdapter();
         egret.registerImplementation("eui.IAssetAdapter",assetAdapter);
         egret.registerImplementation("eui.IThemeAdapter",new ThemeAdapter());
         //Config loading process interface
@@ -57,7 +57,7 @@ class Main extends eui.UILayer {
         RES.removeEventListener(RES.ResourceEvent.CONFIG_COMPLETE, this.onConfigComplete, this);
         // load skin theme configuration file, you can manually modify the file. And replace the default skin.
         //加载皮肤主题配置文件,可以手动修改这个文件。替换默认皮肤。
-        var theme = new eui.Theme("resource/default.thm.json", this.stage);
+        let theme = new eui.Theme("resource/default.thm.json", this.stage);
         theme.addEventListener(eui.UIEvent.COMPLETE, this.onThemeLoadComplete, this);
 
         RES.addEventListener(RES.ResourceEvent.GROUP_COMPLETE, this.onResourceLoadComplete, this);
@@ -129,26 +129,26 @@ class Main extends eui.UILayer {
      * Create scene interface
      */
     protected startCreateScene(): void {
-        var sky:egret.Bitmap = this.createBitmapByName("bg_jpg");
+        let sky:egret.Bitmap = this.createBitmapByName("bg_jpg");
         this.addChild(sky);
-        var stageW:number = this.stage.stageWidth;
-        var stageH:number = this.stage.stageHeight;
+        let stageW:number = this.stage.stageWidth;
+        let stageH:number = this.stage.stageHeight;
         sky.width = stageW;
         sky.height = stageH;
 
-        var topMask = new egret.Shape();
+        let topMask = new egret.Shape();
         topMask.graphics.beginFill(0x000000, 0.5);
         topMask.graphics.drawRect(0, 0, stageW, 172);
         topMask.graphics.endFill();
         topMask.y = 33;
         this.addChild(topMask);
 
-        var icon:egret.Bitmap = this.createBitmapByName("egret_icon_png");
+        let icon:egret.Bitmap = this.createBitmapByName("egret_icon_png");
         this.addChild(icon);
         icon.x = 26;
         icon.y = 33;
 
-        var line = new egret.Shape();
+        let line = new egret.Shape();
         line.graphics.lineStyle(2,0xffffff);
         line.graphics.moveTo(0,0);
         line.graphics.lineTo(0,117);
@@ -158,7 +158,7 @@ class Main extends eui.UILayer {
         this.addChild(line);
 
 
-        var colorLabel = new egret.TextField();
+        let colorLabel = new egret.TextField();
         colorLabel.textColor = 0xffffff;
         colorLabel.width = stageW - 172;
         colorLabel.textAlign = "center";
@@ -168,7 +168,7 @@ class Main extends eui.UILayer {
         colorLabel.y = 80;
         this.addChild(colorLabel);
 
-        var textfield = new egret.TextField();
+        let textfield = new egret.TextField();
         this.addChild(textfield);
         textfield.alpha = 0;
         textfield.width = stageW - 172;
@@ -183,7 +183,7 @@ class Main extends eui.UILayer {
         // Get asynchronously a json configuration file according to name keyword. As for the property of name please refer to the configuration file of resources/resource.json.
         RES.getResAsync("description_json", this.startAnimation, this);
 
-        var button = new eui.Button();
+        let button = new eui.Button();
         button.label = "Click!";
         button.horizontalCenter = 0;
         button.verticalCenter = 0;
@@ -195,8 +195,8 @@ class Main extends eui.UILayer {
      * Create a Bitmap object according to name keyword.As for the property of name please refer to the configuration file of resources/resource.json.
      */
     private createBitmapByName(name:string):egret.Bitmap {
-        var result = new egret.Bitmap();
-        var texture:egret.Texture = RES.getRes(name);
+        let result = new egret.Bitmap();
+        let texture:egret.Texture = RES.getRes(name);
         result.texture = texture;
         return result;
     }
@@ -205,26 +205,26 @@ class Main extends eui.UILayer {
      * Description file loading is successful, start to play the animation
      */
     private startAnimation(result:Array<any>):void {
-        var self:any = this;
+        let self:any = this;
 
-        var parser = new egret.HtmlTextParser();
-        var textflowArr:Array<Array<egret.ITextElement>> = [];
-        for (var i:number = 0; i < result.length; i++) {
+        let parser = new egret.HtmlTextParser();
+        let textflowArr:Array<Array<egret.ITextElement>> = [];
+        for (let i:number = 0; i < result.length; i++) {
             textflowArr.push(parser.parser(result[i]));
         }
 
-        var textfield = self.textfield;
-        var count = -1;
-        var change:Function = function () {
+        let textfield = self.textfield;
+        let count = -1;
+        let change:Function = function () {
             count++;
             if (count >= textflowArr.length) {
                 count = 0;
             }
-            var lineArr = textflowArr[count];
+            let lineArr = textflowArr[count];
 
             self.changeDescription(textfield, lineArr);
 
-            var tw = egret.Tween.get(textfield);
+            let tw = egret.Tween.get(textfield);
             tw.to({"alpha": 1}, 200);
             tw.wait(2000);
             tw.to({"alpha": 0}, 200);
@@ -245,7 +245,7 @@ class Main extends eui.UILayer {
      * Click the button
      */
     private onButtonClick(e: egret.TouchEvent) {
-        var panel = new eui.Panel();
+        let panel = new eui.Panel();
         panel.title = "Title";
         panel.horizontalCenter = 0;
         panel.verticalCenter = 0;

@@ -41,7 +41,7 @@ class AssetAdapter implements eui.IAssetAdapter {
             compFunc.call(thisObject, data, source);
         }
         if (RES.hasRes(source)) {
-            var data = RES.getRes(source);
+            let data = RES.getRes(source);
             if (data) {
                 onGetRes(data);
             }

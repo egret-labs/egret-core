@@ -42,7 +42,7 @@ class LoadingUI {
     public CloseLoadingView(): void {
         this.div.innerHTML = "正在加载:100%";
         window.setTimeout(() => {
-            var loadingMap = document.getElementById('loadingCon');
+            let loadingMap = document.getElementById('loadingCon');
             loadingMap.hidden = true;
         },1000);
     }
