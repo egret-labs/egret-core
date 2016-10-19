@@ -6,9 +6,7 @@ var InternalCompile = (function () {
     }
     InternalCompile.prototype.execute = function () {
         var options = egret.args;
-        console.log(egret.args.projectDir);
         options.releaseDir = path.resolve(egret.args.projectDir, options.fileName);
-        console.log(options.releaseDir);
         options.minify = true;
         options.publish = true;
         var compileProject = new CompileProject();

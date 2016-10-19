@@ -10,7 +10,7 @@ var SortFiles = (function () {
         var files = FileUtil.search(FileUtil.joinPath(options.projectDir, "src"), "ts");
         var compiler = new Compiler();
         var compileFiles = libFiles.concat(files);
-        options['compilerOptions'] = {target: 1, experimentalDecorators: true};
+        options['compilerOptions'] = { target: 1, experimentalDecorators: true };
         var result = compiler.compile({
             args: options,
             def: false,
@@ -19,20 +19,21 @@ var SortFiles = (function () {
             forSortFile: true,
             outDir: FileUtil.joinPath(options.projectDir, "tmp")
         });
+        var sss = result.files;
         var tsconfigPath = FileUtil.joinPath(options.projectDir, "tsconfig.json");
         var tsconfig = FileUtil.read(tsconfigPath);
-        if(!tsconfig || tsconfig == "") {
+        if (!tsconfig || tsconfig == "") {
             tsconfig = "{}";
         }
         var configJson = JSON.parse(tsconfig);
-        if(!configJson.compilerOptions) {
+        if (!configJson.compilerOptions) {
             configJson.compilerOptions = {};
         }
-        if(!configJson.compilerOptions.outDir) {
+        if (!configJson.compilerOptions.outDir) {
             configJson.compilerOptions.outDir = "bin-debug";
         }
         var finalFiles = [];
-        result.files.forEach(f=> {
+        result.files.forEach(function (f) {
             if (!f)
                 return;
             if (/lib\.d\.ts$/.test(f))

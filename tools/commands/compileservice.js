@@ -122,7 +122,6 @@ var AutoCompileCommand = (function () {
         var exmlTS = this.buildChangedEXML(exmls);
         this.buildChangedRes(others);
         codes = codes.concat(exmlTS);
-
         if (codes.length || this.sourceMapStateChanged) {
             this.messages[1] = [];
             this.sourceMapStateChanged = false;

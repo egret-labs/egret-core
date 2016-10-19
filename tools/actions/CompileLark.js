@@ -69,7 +69,7 @@ var CompileLark = (function () {
         var declareFile = this.getModuleOutputPath(m.name, fileName + ".d.ts", m.outFile);
         var singleFile = this.getModuleOutputPath(m.name, fileName + ".js", m.outFile);
         var moduleRoot = FileUtil.joinPath(larkRoot, m.root);
-        if(!m.root){
+        if (!m.root) {
             return 0;
         }
         var tss = [];
