@@ -46,10 +46,10 @@ namespace egret.gui {
         }
         
         public get compositeDuration():number{
-            var parallelDuration:number = 0;
-            for (var i:number = 0; i < this.children.length; ++i){
-                var childDuration:number;
-                var child:Effect = <Effect><any> (this.children[i]);
+            let parallelDuration:number = 0;
+            for (let i:number = 0; i < this.children.length; ++i){
+                let childDuration:number;
+                let child:Effect = <Effect><any> (this.children[i]);
                 if (child instanceof CompositeEffect)
                     childDuration = (<CompositeEffect><any> child).compositeDuration;
                 else

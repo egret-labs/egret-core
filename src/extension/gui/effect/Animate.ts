@@ -124,7 +124,7 @@ namespace egret.gui {
         public _initInstance(instance:IEffectInstance):void{
             super._initInstance(instance);
             
-            var animateInstance:AnimateInstance = <AnimateInstance><any> instance;
+            let animateInstance:AnimateInstance = <AnimateInstance><any> instance;
             
             animateInstance.addEventListener(EffectEvent.EFFECT_REPEAT, this.animationEventHandler, this);
             if (this.numUpdateListeners > 0)
@@ -143,7 +143,7 @@ namespace egret.gui {
             
             if (this.motionPaths){
                 animateInstance.motionPaths = new Array<MotionPath>();
-                for (var i:number = 0; i < this.motionPaths.length; ++i)
+                for (let i:number = 0; i < this.motionPaths.length; ++i)
                     animateInstance.motionPaths[i] = this.motionPaths[i].clone();
             }
         }

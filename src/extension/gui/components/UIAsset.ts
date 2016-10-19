@@ -127,7 +127,7 @@ namespace egret.gui {
 		 */		
 		private parseSource():void{
 			this.sourceChanged = false;
-			var adapter:IAssetAdapter = UIAsset.assetAdapter;
+			let adapter:IAssetAdapter = UIAsset.assetAdapter;
 			if(!adapter){
                 adapter = this.getAdapter();
 			}
@@ -135,7 +135,7 @@ namespace egret.gui {
 				this.contentChanged(null,null);
 			}
 			else{
-				var reuseContent:DisplayObject = this.contentReused?null:this._content;
+				let reuseContent:DisplayObject = this.contentReused?null:this._content;
 				this.contentReused = true;
 				adapter.getAsset(this._source,this.contentChanged,this,reuseContent);
 			}
@@ -144,7 +144,7 @@ namespace egret.gui {
          * 获取资源适配器
          */
         private getAdapter():IAssetAdapter{
-            var adapter:IAssetAdapter;
+            let adapter:IAssetAdapter;
             try{
                 adapter = $getAdapter("egret.gui.IAssetAdapter");
             }
@@ -160,7 +160,7 @@ namespace egret.gui {
 		private contentChanged(content:any,source:any):void{
 			if(source!==this._source)
 				return;
-            var oldContent:any = this._content;
+            let oldContent:any = this._content;
             this._content = content;
             if(this._content instanceof Texture){
 				this._contentIsTexture = true;
@@ -195,15 +195,15 @@ namespace egret.gui {
 		 */
 		public measure():void{
 			super.measure();
-            var content:any = this._content;
+            let content:any = this._content;
 			if(content instanceof DisplayObject){
                 if("preferredWidth" in content){
                     this.measuredWidth = (<ILayoutElement><any> (content)).preferredWidth;
                     this.measuredHeight = (<ILayoutElement><any> (content)).preferredHeight;
                 }
                 else{
-					var oldW:number = content.explicitWidth;
-					var oldH:number = content.explicitHeight;
+					let oldW:number = content.explicitWidth;
+					let oldH:number = content.explicitHeight;
 					content.width = NaN;
 					content.height = NaN;
                     this.measuredWidth = content.measuredWidth*content.scaleX;
@@ -228,7 +228,7 @@ namespace egret.gui {
 		 */
 		public updateDisplayList(unscaledWidth:number, unscaledHeight:number):void{
 			super.updateDisplayList(unscaledWidth,unscaledHeight);
-            var content:any = this._content;
+            let content:any = this._content;
 			if(this.autoScale&&content instanceof DisplayObject){
 				if("setLayoutBoundsSize" in content){
                     (<ILayoutElement><any> (content)).setLayoutBoundsSize(unscaledWidth,unscaledHeight);
@@ -275,9 +275,9 @@ namespace egret.gui {
 		 */
 		$render():void{
 			if (this._contentIsTexture) {
-				var bitmapData = <Texture> this._content;
-				var destW:number;
-				var destH:number;
+				let bitmapData = <Texture> this._content;
+				let destW:number;
+				let destH:number;
 				if(this.autoScale){
 					destW = this._UIC_Props_._uiWidth;
 					destH = this._UIC_Props_._uiHeight;
@@ -298,9 +298,9 @@ namespace egret.gui {
 		 */
 		$measureContentBounds(bounds:Rectangle):void {
 			if(this._contentIsTexture){
-				var texture:Texture = <Texture> this._content;
-				var w = NaN;
-				var h = NaN;
+				let texture:Texture = <Texture> this._content;
+				let w = NaN;
+				let h = NaN;
 				if(this.autoScale){
 					w = this._UIC_Props_._uiWidth == 10000 ? this.$getExplicitWidth() : this._UIC_Props_._uiWidth;
 					h = this._UIC_Props_._uiHeight == 10000 ? this.$getExplicitHeight() : this._UIC_Props_._uiHeight;

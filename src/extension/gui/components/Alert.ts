@@ -70,7 +70,7 @@ namespace egret.gui {
         public static show(text:string="",title:string="",closeHandler:Function=null,
                                     firstButtonLabel:string="OK",secondButtonLabel:string="",
                                     modal:boolean=true,center:boolean=true,thisObject?:any):Alert{
-            var alert:Alert = new Alert();
+            let alert:Alert = new Alert();
             alert.contentText = text;
             alert.title = title;
             alert._firstButtonLabel = firstButtonLabel;
@@ -164,7 +164,7 @@ namespace egret.gui {
         private onClose(event:TouchEvent):void{
             PopUpManager.removePopUp(this);
             if(this.closeHandler!=null){
-                var closeEvent:CloseEvent = new CloseEvent(CloseEvent.CLOSE);
+                let closeEvent:CloseEvent = new CloseEvent(CloseEvent.CLOSE);
                 switch(event.currentTarget){
                     case this.firstButton:
                         closeEvent.detail = Alert.FIRST_BUTTON;
@@ -183,14 +183,14 @@ namespace egret.gui {
         public closeButton_clickHandler(event:TouchEvent):void{
             super.closeButton_clickHandler(event);
             PopUpManager.removePopUp(this);
-            var closeEvent:CloseEvent = new CloseEvent(CloseEvent.CLOSE,false,false,Alert.CLOSE_BUTTON);
+            let closeEvent:CloseEvent = new CloseEvent(CloseEvent.CLOSE,false,false,Alert.CLOSE_BUTTON);
             this.callCloseHandler(closeEvent);
         }
 
         private callCloseHandler(closeEvent: CloseEvent) {
             if (this.closeHandler == null)
                 return;
-            var target = this.thisObject || this;
+            let target = this.thisObject || this;
             this.closeHandler.call(target, closeEvent);
         }
 

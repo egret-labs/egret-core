@@ -83,6 +83,6 @@ namespace egret.gui {
 		 * 已经弹出的窗口列表
 		 * @member egret.gui.IPopUpManager#popUpList
 		 */		
-		popUpList:Array<any>;
+		popUpList:any[];
 	}
 }

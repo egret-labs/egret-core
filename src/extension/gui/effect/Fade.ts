@@ -59,7 +59,7 @@ namespace egret.gui {
         public _initInstance(instance:IEffectInstance):void{
             super._initInstance(instance);
             
-            var fadeInstance:FadeInstance = <FadeInstance><any> instance;
+            let fadeInstance:FadeInstance = <FadeInstance><any> instance;
             fadeInstance.alphaFrom = this.alphaFrom;
             fadeInstance.alphaTo = this.alphaTo;
         }

@@ -50,10 +50,10 @@ namespace egret.gui {
          */
         public getTheme(url:string,compFunc:Function,errorFunc:Function,thisObject:any):void {
             function onGet(event:egret.Event):void {
-                var loader:egret.HttpRequest = <egret.HttpRequest> (event.target);
+                let loader:egret.HttpRequest = <egret.HttpRequest> (event.target);
                 compFunc.call(thisObject, loader.response);
             }
-            var loader:egret.HttpRequest = new HttpRequest();
+            let loader:egret.HttpRequest = new HttpRequest();
             loader.addEventListener(Event.COMPLETE,onGet,thisObject);
             loader.addEventListener(IOErrorEvent.IO_ERROR,errorFunc,thisObject);
             loader.responseType = egret.HttpResponseType.TEXT;

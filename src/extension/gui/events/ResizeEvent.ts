@@ -72,10 +72,10 @@ namespace egret.gui {
          * @method egret.gui.ResizeEvent.dispatchResizeEvent
          */
         public static dispatchResizeEvent(target:IEventDispatcher,oldWidth:number = NaN, oldHeight:number = NaN):boolean {
-			var event:ResizeEvent = Event.create(ResizeEvent, ResizeEvent.RESIZE);
+			let event:ResizeEvent = Event.create(ResizeEvent, ResizeEvent.RESIZE);
 			event.oldWidth = oldWidth;
 			event.oldHeight = oldHeight;
-			var result = target.dispatchEvent(event);
+			let result = target.dispatchEvent(event);
 			Event.release(event);
 			return result;
         }

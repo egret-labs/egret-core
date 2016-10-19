@@ -76,7 +76,7 @@ namespace egret.gui {
 		 * @param parent {IContainer} 
 		 */
 		public apply(parent:IContainer):void{   
-			var obj:any = this.target==null||this.target==""?parent:parent[this.target];
+			let obj:any = this.target==null||this.target==""?parent:parent[this.target];
 			if(obj==null)
 				return;
 			this.oldValue = obj[this.name];
@@ -88,7 +88,7 @@ namespace egret.gui {
 		 * @param parent {IContainer} 
 		 */
 		public remove(parent:IContainer):void{   
-			var obj:any = this.target==null||this.target==""?parent:parent[this.target];
+			let obj:any = this.target==null||this.target==""?parent:parent[this.target];
 			if(obj==null)
 				return;
 			this.setPropertyValue(obj, this.name, this.oldValue, this.oldValue);

@@ -44,7 +44,7 @@ var egret;
             /**
              * 构造函数
              * @method egret.gui.ArrayCollection#constructor
-             * @param source {Array<any>} 数据源
+             * @param source {any[]} 数据源
              */
             function ArrayCollection(source) {
                 if (source === void 0) { source = null; }
@@ -206,7 +206,7 @@ var egret;
             /**
              * 用新数据源替换原始数据源，此方法与直接设置source不同，它不会导致目标视图重置滚动位置。
              * @method egret.gui.ArrayCollection#replaceAll
-             * @param newSource {Array<any>} 新的数据源
+             * @param newSource {any[]} 新的数据源
              */
             p.replaceAll = function (newSource) {
                 if (!newSource)
@@ -216,7 +216,7 @@ var egret;
                 for (var i = newLength; i < oldLenght; i++) {
                     this.removeItemAt(newLength);
                 }
-                for (i = 0; i < newLength; i++) {
+                for (var i = 0; i < newLength; i++) {
                     if (i >= oldLenght)
                         this.addItemAt(newSource[i], i);
                     else
@@ -2080,8 +2080,8 @@ var egret;
                 var skin = this._skin;
                 if (skin && "skinParts" in skin) {
                     var skinParts = skin.skinParts;
-                    var length = skinParts.length;
-                    for (var i = 0; i < length; i++) {
+                    var length_1 = skinParts.length;
+                    for (var i = 0; i < length_1; i++) {
                         var partName = skinParts[i];
                         if ((partName in skin)) {
                             try {
@@ -2103,8 +2103,8 @@ var egret;
                 if (skin) {
                     if ("skinParts" in skin) {
                         var skinParts = skin.skinParts;
-                        var length = skinParts.length;
-                        for (var i = 0; i < length; i++) {
+                        var length_2 = skinParts.length;
+                        for (var i = 0; i < length_2; i++) {
                             var partName = skinParts[i];
                             if (!(partName in this))
                                 continue;
@@ -2641,8 +2641,8 @@ var egret;
                         }
                         this._removeFromDisplayList(this._placeHolderGroup);
                         this.contentGroup.elementsContent = sourceContent;
-                        for (i = sourceContent.length - 1; i >= 0; i--) {
-                            element = sourceContent[i];
+                        for (var i = sourceContent.length - 1; i >= 0; i--) {
+                            var element = sourceContent[i];
                             element.ownerChanged(this);
                         }
                         this._placeHolderGroup = null;
@@ -4439,7 +4439,7 @@ var egret;
                     if (value == this._elementsContent)
                         return;
                     if (this._hostComponent) {
-                        var i;
+                        var i = void 0;
                         for (i = this._elementsContent.length - 1; i >= 0; i--) {
                             this._elementRemoved(this._elementsContent[i], i);
                         }
@@ -4657,8 +4657,8 @@ var egret;
                 if (!value)
                     value = [];
                 if (typeof (value[0]) == "string") {
-                    var length = value.length;
-                    for (var i = 0; i < length; i++) {
+                    var length_3 = value.length;
+                    for (var i = 0; i < length_3; i++) {
                         var state = new gui.State(value[i], []);
                         value[i] = state;
                     }
@@ -4832,8 +4832,8 @@ var egret;
                 var state = this.getState(stateName);
                 if (state) {
                     var overrides = state.overrides;
-                    var length = overrides.length;
-                    for (var i = 0; i < length; i++)
+                    var length_4 = overrides.length;
+                    for (var i = 0; i < length_4; i++)
                         overrides[i].apply((this));
                 }
             };
@@ -6161,8 +6161,8 @@ var egret;
                 var freeRenderers = this.freeRenderers;
                 for (var hashCode in freeRenderers) {
                     var list = freeRenderers[hashCode];
-                    var length = list.length;
-                    for (var i = 0; i < length; i++) {
+                    var length_5 = list.length;
+                    for (var i = 0; i < length_5; i++) {
                         renderer = list[i];
                         renderer.visible = true;
                         this.recycle(renderer);
@@ -6289,8 +6289,8 @@ var egret;
                 if (this.layout && this.layout.useVirtualLayout) {
                     var virtualRendererIndices = this.virtualRendererIndices;
                     if (virtualRendererIndices) {
-                        var length = virtualRendererIndices.length;
-                        for (var i = 0; i < length; i++) {
+                        var length_6 = virtualRendererIndices.length;
+                        for (var i = 0; i < length_6; i++) {
                             var vrIndex = virtualRendererIndices[i];
                             if (vrIndex >= index)
                                 virtualRendererIndices[i] = vrIndex + 1;
@@ -6316,8 +6316,8 @@ var egret;
                 var virtualRendererIndices = this.virtualRendererIndices;
                 if (virtualRendererIndices && (virtualRendererIndices.length > 0)) {
                     var vrItemIndex = -1;
-                    var length = virtualRendererIndices.length;
-                    for (var i = 0; i < length; i++) {
+                    var length_7 = virtualRendererIndices.length;
+                    for (var i = 0; i < length_7; i++) {
                         var vrIndex = virtualRendererIndices[i];
                         if (vrIndex == index)
                             vrItemIndex = i;
@@ -6358,15 +6358,15 @@ var egret;
                     return;
                 if (this.layout && this.layout.useVirtualLayout) {
                     var virtualRendererIndices = this.virtualRendererIndices;
-                    var length = virtualRendererIndices.length;
-                    for (var i = 0; i < length; i++) {
+                    var length_8 = virtualRendererIndices.length;
+                    for (var i = 0; i < length_8; i++) {
                         var index = virtualRendererIndices[i];
                         this.resetRendererItemIndex(index);
                     }
                 }
                 else {
                     var indexToRendererLength = this.indexToRenderer.length;
-                    for (index = 0; index < indexToRendererLength; index++)
+                    for (var index = 0; index < indexToRendererLength; index++)
                         this.resetRendererItemIndex(index);
                 }
             };
@@ -6514,16 +6514,16 @@ var egret;
                 }
                 if (this.itemRendererSkinNameChange) {
                     this.itemRendererSkinNameChange = false;
-                    var length = this.indexToRenderer.length;
-                    for (var i = 0; i < length; i++) {
+                    var length_9 = this.indexToRenderer.length;
+                    for (var i = 0; i < length_9; i++) {
                         this.setItemRenderSkinName(this.indexToRenderer[i]);
                     }
                     var freeRenderers = this.freeRenderers;
                     for (var hashCode in freeRenderers) {
                         var list = freeRenderers[hashCode];
                         if (list) {
-                            length = list.length;
-                            for (i = 0; i < length; i++) {
+                            length_9 = list.length;
+                            for (var i = 0; i < length_9; i++) {
                                 this.setItemRenderSkinName(list[i]);
                             }
                         }
@@ -7423,13 +7423,13 @@ var egret;
                 }
                 if (this.labelFieldOrFunctionChanged) {
                     if (this.dataGroup != null) {
-                        var itemIndex;
+                        var itemIndex = void 0;
                         if (this.layout && this.layout.useVirtualLayout) {
                             var list = this.dataGroup.getElementIndicesInView();
-                            var length = list.length;
-                            for (var i = 0; i < length; i++) {
-                                var itemIndex = list[i];
-                                this.updateRendererLabelProperty(itemIndex);
+                            var length_10 = list.length;
+                            for (var i = 0; i < length_10; i++) {
+                                var itemIndex_1 = list[i];
+                                this.updateRendererLabelProperty(itemIndex_1);
                             }
                         }
                         else {
@@ -7703,14 +7703,14 @@ var egret;
             p.dataProvider_collectionChangeHandler = function (event) {
                 var items = event.items;
                 if (event.kind == gui.CollectionEventKind.ADD) {
-                    var length = items.length;
-                    for (var i = 0; i < length; i++) {
+                    var length_11 = items.length;
+                    for (var i = 0; i < length_11; i++) {
                         this.itemAdded(event.location + i);
                     }
                 }
                 else if (event.kind == gui.CollectionEventKind.REMOVE) {
-                    length = items.length;
-                    for (i = length - 1; i >= 0; i--) {
+                    var length_12 = items.length;
+                    for (var i = length_12 - 1; i >= 0; i--) {
                         this.itemRemoved(event.location + i);
                     }
                 }
@@ -13038,11 +13038,11 @@ var egret;
              * @private
              */
             //public _measureBounds():egret.Rectangle {
-            //    var bounds:Rectangle = super._measureBounds();
-            //    var w:number = this.width;
-            //    var h:number = this.height;
-            //    var x:number = 0;
-            //    var y:number = 0;
+            //    let bounds:Rectangle = super._measureBounds();
+            //    let w:number = this.width;
+            //    let h:number = this.height;
+            //    let x:number = 0;
+            //    let y:number = 0;
             //    if (x < bounds.x) {
             //        bounds.x = x;
             //    }
@@ -14207,7 +14207,7 @@ var egret;
                 if (this._ScrV_Props_._horizontalScrollPolicy != "off") {
                     var pos = this.viewport.horizontalScrollPosition;
                     var maxPos = this.getMaxScrollLeft();
-                    var pos = Math.min(pos, maxPos);
+                    pos = Math.min(pos, maxPos);
                     this.setViewportHScrollPosition(pos);
                     var hbar = this.horizontalScrollBar;
                     if (hbar) {
@@ -16566,13 +16566,13 @@ var egret;
                 _super.prototype.commitProperties.call(this);
                 if (this.iconFieldOrFunctionChanged) {
                     if (this.dataGroup != null) {
-                        var itemIndex;
+                        var itemIndex = void 0;
                         if (this.layout && this.layout.useVirtualLayout) {
                             var list = this.dataGroup.getElementIndicesInView();
-                            var length = list.length;
-                            for (var i = 0; i < length; i++) {
-                                var itemIndex = list[i];
-                                this.updateRendererIconProperty(itemIndex);
+                            var length_13 = list.length;
+                            for (var i = 0; i < length_13; i++) {
+                                var itemIndex_2 = list[i];
+                                this.updateRendererIconProperty(itemIndex_2);
                             }
                         }
                         else {
@@ -16866,8 +16866,8 @@ var egret;
             p.$render = function () {
                 if (this._contentIsTexture) {
                     var bitmapData = this._content;
-                    var destW;
-                    var destH;
+                    var destW = void 0;
+                    var destH = void 0;
                     if (this.autoScale) {
                         destW = this._UIC_Props_._uiWidth;
                         destH = this._UIC_Props_._uiHeight;
@@ -17291,8 +17291,8 @@ var egret;
                     this._createAllChildren = value;
                     if (this._createAllChildren) {
                         var elements = this._getElementsContent();
-                        var length = elements.length;
-                        for (var i = 0; i < length; i++) {
+                        var length_14 = elements.length;
+                        for (var i = 0; i < length_14; i++) {
                             var element = elements[i];
                             if (element instanceof egret.DisplayObject && element.parent != this) {
                                 this.childOrderingChanged = true;
@@ -17417,8 +17417,8 @@ var egret;
                 if (this.childOrderingChanged) {
                     this.childOrderingChanged = false;
                     var elements = this._getElementsContent();
-                    var length = elements.length;
-                    for (var i = 0; i < length; i++) {
+                    var length_15 = elements.length;
+                    for (var i = 0; i < length_15; i++) {
                         var element = elements[i];
                         if (element instanceof egret.DisplayObject && element.parent == this) {
                             this._addToDisplayList(element);
@@ -17947,7 +17947,9 @@ var egret;
                     }
                     else if (this._steps.length > 0) {
                         // 找到新的tween
-                        for (var i = 0, l = this._steps.length; i < l; i++) {
+                        var i = void 0;
+                        var l = this._steps.length;
+                        for (i = 0; i < l; i++) {
                             if (this._steps[i].t > t) {
                                 break;
                             }
@@ -18192,7 +18194,7 @@ var egret;
              * Execute callback function
              * @param callback {Function} Callback method
              * @param thisObj {any} this action scope of the callback method
-             * @param params {Array<any>} Parameter of the callback method
+             * @param params {any[]} Parameter of the callback method
              * @returns {egret.ScrollerTween} ScrollerTween object itself
              * @version Egret 2.4
              * @platform Web,Native
@@ -18202,7 +18204,7 @@ var egret;
              * 执行回调函数
              * @param callback {Function} 回调方法
              * @param thisObj {any} 回调方法this作用域
-             * @param params {Array<any>} 回调方法参数
+             * @param params {any[]} 回调方法参数
              * @returns {egret.ScrollerTween} Tween对象本身
              * @version Egret 2.4
              * @platform Web,Native
@@ -18426,13 +18428,13 @@ var egret;
                 }
                 else if (typeof (source) == "string") {
                     var url = source;
-                    var loader = new egret.ImageLoader();
-                    loader.addEventListener(egret.Event.COMPLETE, function (event) {
+                    var loader_1 = new egret.ImageLoader();
+                    loader_1.addEventListener(egret.Event.COMPLETE, function (event) {
                         content = new egret.Texture();
-                        content._setBitmapData(loader.data);
+                        content._setBitmapData(loader_1.data);
                         compFunc.call(thisObject, content, source);
                     }, this);
-                    loader.load(url);
+                    loader_1.load(url);
                 }
                 else {
                     compFunc.call(thisObject, content, source);
@@ -19088,10 +19090,10 @@ var egret;
                     var vCenter = layoutElement.verticalCenter;
                     var left = layoutElement.left;
                     var right = layoutElement.right;
-                    var top = layoutElement.top;
+                    var top_1 = layoutElement.top;
                     var bottom = layoutElement.bottom;
-                    var extX;
-                    var extY;
+                    var extX = void 0;
+                    var extY = void 0;
                     if (!isNaN(left) && !isNaN(right)) {
                         extX = left + right;
                     }
@@ -19105,14 +19107,14 @@ var egret;
                     else {
                         extX = layoutElement.preferredX;
                     }
-                    if (!isNaN(top) && !isNaN(bottom)) {
-                        extY = top + bottom;
+                    if (!isNaN(top_1) && !isNaN(bottom)) {
+                        extY = top_1 + bottom;
                     }
                     else if (!isNaN(vCenter)) {
                         extY = Math.abs(vCenter) * 2;
                     }
-                    else if (!isNaN(top) || !isNaN(bottom)) {
-                        extY = isNaN(top) ? 0 : top;
+                    else if (!isNaN(top_1) || !isNaN(bottom)) {
+                        extY = isNaN(top_1) ? 0 : top_1;
                         extY += isNaN(bottom) ? 0 : bottom;
                     }
                     else {
@@ -19144,7 +19146,7 @@ var egret;
                     var vCenter = layoutElement.verticalCenter;
                     var left = layoutElement.left;
                     var right = layoutElement.right;
-                    var top = layoutElement.top;
+                    var top_2 = layoutElement.top;
                     var bottom = layoutElement.bottom;
                     var percentWidth = layoutElement.percentWidth;
                     var percentHeight = layoutElement.percentHeight;
@@ -19156,8 +19158,8 @@ var egret;
                     else if (!isNaN(percentWidth)) {
                         childWidth = Math.round(unscaledWidth * Math.min(percentWidth * 0.01, 1));
                     }
-                    if (!isNaN(top) && !isNaN(bottom)) {
-                        childHeight = unscaledHeight - bottom - top;
+                    if (!isNaN(top_2) && !isNaN(bottom)) {
+                        childHeight = unscaledHeight - bottom - top_2;
                     }
                     else if (!isNaN(percentHeight)) {
                         childHeight = Math.round(unscaledHeight * Math.min(percentHeight * 0.01, 1));
@@ -19177,8 +19179,8 @@ var egret;
                         childX = layoutElement.layoutBoundsX;
                     if (!isNaN(vCenter))
                         childY = Math.round((unscaledHeight - elementHeight) / 2 + vCenter);
-                    else if (!isNaN(top))
-                        childY = top;
+                    else if (!isNaN(top_2))
+                        childY = top_2;
                     else if (!isNaN(bottom))
                         childY = unscaledHeight - elementHeight - bottom;
                     else
@@ -22578,7 +22580,7 @@ var egret;
                 ,function () {
                     var parallelDuration = 0;
                     for (var i = 0; i < this.children.length; ++i) {
-                        var childDuration;
+                        var childDuration = void 0;
                         var child = (this.children[i]);
                         if (child instanceof gui.CompositeEffect)
                             childDuration = child.compositeDuration;
@@ -22781,7 +22783,7 @@ var egret;
                 ,function () {
                     var sequenceDuration = 0;
                     for (var i = 0; i < this.children.length; ++i) {
-                        var childDuration;
+                        var childDuration = void 0;
                         var child = (this.children[i]);
                         if (child instanceof gui.CompositeEffect)
                             childDuration = child.compositeDuration;
@@ -24512,9 +24514,9 @@ var egret;
             p.animationUpdate = function (animation) {
                 this.applyValues(animation);
                 if (this.numUpdateListeners > 0) {
-                    var event = new gui.EffectEvent(gui.EffectEvent.EFFECT_UPDATE);
-                    event.effectInstance = this;
-                    this.dispatchEvent(event);
+                    var event_1 = new gui.EffectEvent(gui.EffectEvent.EFFECT_UPDATE);
+                    event_1.effectInstance = this;
+                    this.dispatchEvent(event_1);
                 }
             };
             p.animationRepeat = function (animation) {
@@ -24572,14 +24574,14 @@ var egret;
                 if (this.constraintsHolder) {
                     var left = this.reenableConstraint("left");
                     var right = this.reenableConstraint("right");
-                    var top = this.reenableConstraint("top");
+                    var top_3 = this.reenableConstraint("top");
                     var bottom = this.reenableConstraint("bottom");
                     this.reenableConstraint("horizontalCenter");
                     this.reenableConstraint("verticalCenter");
                     this.constraintsHolder = null;
                     if (left != undefined && right != undefined && "explicitWidth" in this.target)
                         this.target.width = this.oldWidth;
-                    if (top != undefined && bottom != undefined && "explicitHeight" in this.target)
+                    if (top_3 != undefined && bottom != undefined && "explicitHeight" in this.target)
                         this.target.height = this.oldHeight;
                 }
             };
@@ -24775,18 +24777,18 @@ var egret;
                 if (this.motionPaths) {
                     var i = 0;
                     var j = 0;
-                    var mp;
-                    var n = this.motionPaths.length;
+                    var mp = void 0;
+                    var n_1 = this.motionPaths.length;
                     if (newEffectStartTime < this.instanceStartTime) {
                         var deltaStartTime = this.instanceStartTime - newEffectStartTime;
-                        for (i = 0; i < n; i++) {
+                        for (i = 0; i < n_1; i++) {
                             mp = (this.motionPaths[i]);
                             for (j = 0; j < mp.keyframes.length; j++)
                                 mp.keyframes[j].time += deltaStartTime;
                         }
                         this.instanceStartTime = newEffectStartTime;
                     }
-                    for (i = 0; i < n; i++) {
+                    for (i = 0; i < n_1; i++) {
                         mp = (this.motionPaths[i]);
                         if (mp.property == newMotionPath.property) {
                             for (j = 0; j < newMotionPath.keyframes.length; j++) {
@@ -24798,20 +24800,20 @@ var egret;
                     }
                 }
                 else {
-                    this.motionPaths = new Array();
+                    this.motionPaths = [];
                     this.instanceStartTime = newEffectStartTime;
                 }
                 if (!added) {
                     if (newEffectStartTime > this.instanceStartTime) {
-                        for (j = 0; j < newMotionPath.keyframes.length; j++)
+                        for (var j = 0; j < newMotionPath.keyframes.length; j++)
                             newMotionPath.keyframes[j].time +=
                                 (newEffectStartTime - this.instanceStartTime);
                     }
                     this.motionPaths.push(newMotionPath);
                 }
-                n = this.motionPaths.length;
-                for (i = 0; i < n; i++) {
-                    mp = (this.motionPaths[i]);
+                var n = this.motionPaths.length;
+                for (var i = 0; i < n; i++) {
+                    var mp = (this.motionPaths[i]);
                     var kf = mp.keyframes[mp.keyframes.length - 1];
                     if (!isNaN(kf.time))
                         this.duration = Math.max(this.duration, kf.time);
@@ -25286,7 +25288,7 @@ var egret;
                 if (this.playReversed && this.replayEffectQueue != null && this.replayEffectQueue.length > 0) {
                     var position = this._durationWithoutRepeat - this.playheadTime;
                     var numDone = this.replayEffectQueue.length;
-                    for (i = numDone - 1; i >= 0; i--) {
+                    for (var i = numDone - 1; i >= 0; i--) {
                         var childEffect = this.replayEffectQueue[i];
                         if (position <= childEffect._actualDuration) {
                             if (this._activeEffectQueue == null)
@@ -25566,7 +25568,7 @@ var egret;
                     var activeLength = this._activeEffectQueue.length;
                     for (i = 0; i < activeLength; ++i) {
                         var setToCompare = this.playReversed ? (activeLength - 1 - i) : i;
-                        var childEffectInstances;
+                        var childEffectInstances = void 0;
                         var startTime = cumulativeDuration;
                         var endTime = cumulativeDuration + this._childSets[setToCompare][0]._actualDuration;
                         cumulativeDuration = endTime;
@@ -25867,10 +25869,11 @@ var egret;
                 if (scaleX === void 0) { scaleX = NaN; }
                 if (scaleY === void 0) { scaleY = NaN; }
                 if (rotation === void 0) { rotation = NaN; }
+                var xformedPt;
                 if (translation == null && transformCenter != null) {
                     egret.$TempPoint.x = transformCenter.x;
                     egret.$TempPoint.y = transformCenter.y;
-                    var xformedPt = TransformUtil.transformPointToParent(obj, egret.$TempPoint);
+                    xformedPt = TransformUtil.transformPointToParent(obj, egret.$TempPoint);
                 }
                 if (!isNaN(rotation))
                     obj.rotation = rotation;
@@ -26149,8 +26152,8 @@ var egret;
              * @param kind {string}
              * @param location {number}
              * @param oldLocation {number}
-             * @param items {Array<any>}
-             * @param oldItems {Array<any>}
+             * @param items {any[]}
+             * @param oldItems {any[]}
              */
             function CollectionEvent(type, bubbles, cancelable, kind, location, oldLocation, items, oldItems) {
                 if (bubbles === void 0) { bubbles = false; }
@@ -28089,10 +28092,10 @@ var egret;
                     var vCenter = layoutElement.verticalCenter;
                     var left = layoutElement.left;
                     var right = layoutElement.right;
-                    var top = layoutElement.top;
+                    var top_4 = layoutElement.top;
                     var bottom = layoutElement.bottom;
-                    var extX;
-                    var extY;
+                    var extX = void 0;
+                    var extY = void 0;
                     if (!isNaN(left) && !isNaN(right)) {
                         extX = left + right;
                     }
@@ -28106,14 +28109,14 @@ var egret;
                     else {
                         extX = layoutElement.preferredX;
                     }
-                    if (!isNaN(top) && !isNaN(bottom)) {
-                        extY = top + bottom;
+                    if (!isNaN(top_4) && !isNaN(bottom)) {
+                        extY = top_4 + bottom;
                     }
                     else if (!isNaN(vCenter)) {
                         extY = Math.abs(vCenter) * 2;
                     }
-                    else if (!isNaN(top) || !isNaN(bottom)) {
-                        extY = isNaN(top) ? 0 : top;
+                    else if (!isNaN(top_4) || !isNaN(bottom)) {
+                        extY = isNaN(top_4) ? 0 : top_4;
                         extY += isNaN(bottom) ? 0 : bottom;
                     }
                     else {
@@ -28147,7 +28150,7 @@ var egret;
                     var vCenter = layoutElement.verticalCenter;
                     var left = layoutElement.left;
                     var right = layoutElement.right;
-                    var top = layoutElement.top;
+                    var top_5 = layoutElement.top;
                     var bottom = layoutElement.bottom;
                     var percentWidth = layoutElement.percentWidth;
                     var percentHeight = layoutElement.percentHeight;
@@ -28159,8 +28162,8 @@ var egret;
                     else if (!isNaN(percentWidth)) {
                         childWidth = Math.round(unscaledWidth * Math.min(percentWidth * 0.01, 1));
                     }
-                    if (!isNaN(top) && !isNaN(bottom)) {
-                        childHeight = unscaledHeight - bottom - top;
+                    if (!isNaN(top_5) && !isNaN(bottom)) {
+                        childHeight = unscaledHeight - bottom - top_5;
                     }
                     else if (!isNaN(percentHeight)) {
                         childHeight = Math.round(unscaledHeight * Math.min(percentHeight * 0.01, 1));
@@ -28180,8 +28183,8 @@ var egret;
                         childX = layoutElement.layoutBoundsX;
                     if (!isNaN(vCenter))
                         childY = Math.round((unscaledHeight - elementHeight) / 2 + vCenter);
-                    else if (!isNaN(top))
-                        childY = top;
+                    else if (!isNaN(top_5))
+                        childY = top_5;
                     else if (!isNaN(bottom))
                         childY = unscaledHeight - elementHeight - bottom;
                     else
@@ -28582,7 +28585,7 @@ var egret;
                 var paddingL = isNaN(this._paddingLeft) ? padding : this._paddingLeft;
                 var gap = isNaN(this._gap) ? 0 : this._gap;
                 if (!this.useVirtualLayout) {
-                    var element;
+                    var element = void 0;
                     if (this.target) {
                         element = this.target.getElementAt(index);
                     }
@@ -28908,12 +28911,12 @@ var egret;
                 else {
                     if (totalPercentWidth > 0) {
                         HorizontalLayout.flexChildrenProportionally(targetWidth, widthToDistribute, totalPercentWidth, childInfoArray);
-                        var roundOff = 0;
-                        var length = childInfoArray.length;
-                        for (i = 0; i < length; i++) {
+                        var roundOff_1 = 0;
+                        var length_16 = childInfoArray.length;
+                        for (i = 0; i < length_16; i++) {
                             childInfo = childInfoArray[i];
-                            var childSize = Math.round(childInfo.size + roundOff);
-                            roundOff += childInfo.size - childSize;
+                            var childSize = Math.round(childInfo.size + roundOff_1);
+                            roundOff_1 += childInfo.size - childSize;
                             widthDic[childInfo.layoutElement.hashCode] = childSize;
                             widthToDistribute -= childSize;
                         }
@@ -28933,7 +28936,7 @@ var egret;
                 var justifyHeight = Math.ceil(targetHeight);
                 if (this._verticalAlign == egret.VerticalAlign.CONTENT_JUSTIFY)
                     justifyHeight = Math.ceil(Math.max(targetHeight, this.maxElementHeight));
-                roundOff = 0;
+                var roundOff = 0;
                 var layoutElementWidth;
                 var childWidth;
                 for (i = 0; i < count; i++) {
@@ -28987,7 +28990,7 @@ var egret;
              * @param spaceForChildren {number}
              * @param spaceToDistribute {number}
              * @param totalPercent {number}
-             * @param childInfoArray {Array<any>}
+             * @param childInfoArray {any[]}
              */
             HorizontalLayout.flexChildrenProportionally = function (spaceForChildren, spaceToDistribute, totalPercent, childInfoArray) {
                 var numChildren = childInfoArray.length;
@@ -30340,7 +30343,7 @@ var egret;
                 var paddingT = isNaN(this._paddingTop) ? padding : this._paddingTop;
                 var gap = isNaN(this._gap) ? 0 : this._gap;
                 if (!this.useVirtualLayout) {
-                    var element;
+                    var element = void 0;
                     if (this.target) {
                         element = this.target.getElementAt(index);
                     }
@@ -30664,12 +30667,12 @@ var egret;
                 else {
                     if (totalPercentHeight > 0) {
                         VerticalLayout.flexChildrenProportionally(targetHeight, heightToDistribute, totalPercentHeight, childInfoArray);
-                        var roundOff = 0;
-                        var length = childInfoArray.length;
-                        for (i = 0; i < length; i++) {
+                        var roundOff_2 = 0;
+                        var length_17 = childInfoArray.length;
+                        for (i = 0; i < length_17; i++) {
                             childInfo = childInfoArray[i];
-                            var childSize = Math.round(childInfo.size + roundOff);
-                            roundOff += childInfo.size - childSize;
+                            var childSize = Math.round(childInfo.size + roundOff_2);
+                            roundOff_2 += childInfo.size - childSize;
                             heightDic[childInfo.layoutElement.hashCode] = childSize;
                             heightToDistribute -= childSize;
                         }
@@ -30690,7 +30693,7 @@ var egret;
                 var justifyWidth = Math.ceil(targetWidth);
                 if (this._horizontalAlign == egret.HorizontalAlign.CONTENT_JUSTIFY)
                     justifyWidth = Math.ceil(Math.max(targetWidth, this.maxElementWidth));
-                roundOff = 0;
+                var roundOff = 0;
                 var layoutElementHeight = NaN;
                 var childHeight;
                 for (i = 0; i < count; i++) {
@@ -30745,7 +30748,7 @@ var egret;
              * @param spaceForChildren {number}
              * @param spaceToDistribute {number}
              * @param totalPercent {number}
-             * @param childInfoArray {Array<any>}
+             * @param childInfoArray {any[]}
              */
             VerticalLayout.flexChildrenProportionally = function (spaceForChildren, spaceToDistribute, totalPercent, childInfoArray) {
                 var numChildren = childInfoArray.length;
@@ -31564,7 +31567,8 @@ var egret;
             p.updateModal = function (uiStage) {
                 var popUpContainer = uiStage.popUpContainer;
                 var found = false;
-                for (var i = popUpContainer.numElements - 1; i >= 0; i--) {
+                var i;
+                for (i = popUpContainer.numElements - 1; i >= 0; i--) {
                     var element = popUpContainer.getElementAt(i);
                     var data = this.findPopUpData(element);
                     if (data && data.modal) {
@@ -32737,10 +32741,10 @@ var egret;
                     return this.mapValueDic[requestName];
                 var returnClass = (this.mapClassDic[requestName]);
                 if (returnClass) {
-                    var instance = new returnClass();
-                    this.mapValueDic[requestName] = instance;
+                    var instance_1 = new returnClass();
+                    this.mapValueDic[requestName] = instance_1;
                     delete this.mapClassDic[requestName];
-                    return instance;
+                    return instance_1;
                 }
                 throw new Error("#" + egret.sys.tr(1028) + ": " + requestName);
             };

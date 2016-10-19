@@ -87,10 +87,10 @@ namespace egret.gui {
          */
         public static dispatchStateChangeEvent(target:IEventDispatcher,type:string,
                                                oldState:string = null,newState:string = null):boolean{
-			var event:StateChangeEvent = Event.create(StateChangeEvent, type);
+			let event:StateChangeEvent = Event.create(StateChangeEvent, type);
 			event.oldState = oldState;
 			event.newState = newState;
-			var result = target.dispatchEvent(event);
+			let result = target.dispatchEvent(event);
 			Event.release(event);
 			return result;
         }

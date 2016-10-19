@@ -214,7 +214,7 @@ namespace egret.gui {
 		 * 开始抛出buttonDown事件
 		 */
 		private checkButtonDownConditions():void{
-			var isCurrentlyDown:boolean = this.isDown();
+			let isCurrentlyDown:boolean = this.isDown();
 			if (this._downEventFired != isCurrentlyDown){
 				if (isCurrentlyDown){
                     UIEvent.dispatchUIEvent(this,UIEvent.BUTTON_DOWN);
@@ -272,8 +272,8 @@ namespace egret.gui {
 		 * 检查需要启用还是关闭重发计时器
 		 */
 		private checkAutoRepeatTimerConditions(buttonDown:boolean):void{
-			var needsTimer:boolean = this.autoRepeat && buttonDown;
-			var hasTimer:boolean = this.autoRepeatTimer != null;
+			let needsTimer:boolean = this.autoRepeat && buttonDown;
+			let hasTimer:boolean = this.autoRepeatTimer != null;
 
 			if (needsTimer == hasTimer)
 				return;
@@ -309,7 +309,7 @@ namespace egret.gui {
 		 * @param event {Event}
 		 */
 		public mouseEventHandler(event:Event):void{
-			var touchEvent:TouchEvent = <TouchEvent> event;
+			let touchEvent:TouchEvent = <TouchEvent> event;
 			switch (event.type){
 				//case TouchEvent.TOUCH_ROLL_OVER:{
 				//	if (touchEvent.touchDown && !this.mouseCaptured)

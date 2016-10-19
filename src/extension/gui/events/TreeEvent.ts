@@ -99,12 +99,12 @@ namespace egret.gui {
         public static dispatchTreeEvent(target:IEventDispatcher,type:string,itemIndex:number = -1,
                                          item:any = null,itemRenderer:ITreeItemRenderer = null,opening:boolean=false,
                                          bubbles:boolean = false,cancelable:boolean = false):boolean{
-			var event:TreeEvent = Event.create(TreeEvent, type);
+			let event:TreeEvent = Event.create(TreeEvent, type);
 			event.itemIndex = itemIndex;
 			event.item = item;
 			event.itemRenderer = itemRenderer;
 			event.opening = opening;
-			var result = target.dispatchEvent(event);
+			let result = target.dispatchEvent(event);
 			Event.release(event);
 			return result;
         }
