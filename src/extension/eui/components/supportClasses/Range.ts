@@ -27,7 +27,7 @@
 //
 //////////////////////////////////////////////////////////////////////////////////////
 
-module eui.sys {
+namespace eui.sys {
     
     /**
      * @private
@@ -46,7 +46,7 @@ module eui.sys {
     }
 }
 
-module eui {
+namespace eui {
 
     /**
      * @language en_US

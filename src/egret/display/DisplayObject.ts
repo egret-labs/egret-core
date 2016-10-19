@@ -28,7 +28,7 @@
 //////////////////////////////////////////////////////////////////////////////////////
 
 
-module egret.sys {
+namespace egret.sys {
     /**
      * @private
      * 显示对象失效标志
@@ -123,7 +123,7 @@ module egret.sys {
     }
 }
 
-module egret {
+namespace egret {
 
     /**
      * @private

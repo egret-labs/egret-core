@@ -23072,7 +23072,7 @@ var egret;
 (function (egret) {
     /**
      * @language en_US
-     * Logger is an entrance for the log processing module of the engine
+     * Logger is an entrance for the log processing namespace of the engine
      * @version Egret 2.4
      * @platform Web,Native
      */

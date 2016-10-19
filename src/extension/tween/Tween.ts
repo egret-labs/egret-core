@@ -28,7 +28,7 @@
 //////////////////////////////////////////////////////////////////////////////////////
 
 
-module egret {
+namespace egret {
 	/**
      * @language en_US
      * Tween is the animation easing class of Egret

@@ -28,7 +28,7 @@
 //////////////////////////////////////////////////////////////////////////////////////
 
 
-module egret {
+namespace egret {
     /**
      * @language en_US
      * Easing function set. Different easing functions are used to make an animation proceed according to the corresponding equation

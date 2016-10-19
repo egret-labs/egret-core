@@ -29,7 +29,7 @@
 
 /// <reference path="EXMLParser.ts" />
 
-module EXML {
+namespace EXML {
 
     var parser = new eui.sys.EXMLParser();
 

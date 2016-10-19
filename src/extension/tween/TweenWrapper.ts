@@ -28,7 +28,7 @@
 //////////////////////////////////////////////////////////////////////////////////////
 
 
-module egret.tween {
+namespace egret.tween {
 
     export type EaseType =
         'quadIn' | 'quadOut' | 'quadOut' | 'quadInOut' |

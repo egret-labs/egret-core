@@ -27,7 +27,7 @@
 //
 //////////////////////////////////////////////////////////////////////////////////////
 
-module egret.gui {
+namespace egret.gui {
 
 	export class SkinnableTextBase extends SkinnableComponent{
 		/**

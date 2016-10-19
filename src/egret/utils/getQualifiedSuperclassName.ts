@@ -27,7 +27,7 @@
 //
 //////////////////////////////////////////////////////////////////////////////////////
 
-module egret {
+namespace egret {
 
     /** @language en_US
      * Returns the fully qualified class name of the base class of the object specified by the value parameter.

@@ -27,7 +27,7 @@
 //
 //////////////////////////////////////////////////////////////////////////////////////
 
-module egret {
+namespace egret {
     /**
      * @language en_US
      * The DisplayObjectContainer class is a basic display list building block: a display list node that can contain children.

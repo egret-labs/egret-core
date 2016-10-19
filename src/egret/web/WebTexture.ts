@@ -28,7 +28,7 @@
 //////////////////////////////////////////////////////////////////////////////////////
 
 
-module egret.web {
+namespace egret.web {
 
     var sharedCanvas: HTMLCanvasElement;
     var sharedContext: CanvasRenderingContext2D;

@@ -27,7 +27,7 @@
 //
 //////////////////////////////////////////////////////////////////////////////////////
 
-module eui {
+namespace eui {
     /**
      * @language en_US
      * The JustifyAlign class defines the possible values for the

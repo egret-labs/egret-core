@@ -27,7 +27,7 @@
 //
 //////////////////////////////////////////////////////////////////////////////////////
 
-module egret {
+namespace egret {
     /**
      * @language en_US
      * The Stage class represents the main drawing area.The Stage object is not globally accessible. You need to access

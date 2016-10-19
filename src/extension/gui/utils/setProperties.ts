@@ -29,7 +29,7 @@
 
 
 
-module egret.gui {
+namespace egret.gui {
 
     /**
      * 设置键值对的简便方法。此方法仅供exmlc编译器内部使用。

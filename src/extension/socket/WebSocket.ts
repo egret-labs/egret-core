@@ -26,7 +26,7 @@
 //  EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 //
 //////////////////////////////////////////////////////////////////////////////////////
-module egret {
+namespace egret {
     /**
      * @language en_US
      * The egret.WebSocket class enables code to establish a TCP socket connection, for sending and receiving character string or binary data.

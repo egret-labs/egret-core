@@ -27,7 +27,7 @@
 //
 //////////////////////////////////////////////////////////////////////////////////////
 
-module eui {
+namespace eui {
     /**
      * @language en_US
      * The UILayer class is the subclass of the Group class.It not only has the standard function of the Group class,but also

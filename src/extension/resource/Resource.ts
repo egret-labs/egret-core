@@ -43,7 +43,7 @@
 /// <reference path="version/HTML5VersionController.ts" />
 /// <reference path="version/NativeVersionController.ts" />
 
-module RES {
+namespace RES {
     /**
      * @language en_US
      * Conduct mapping injection with class definition as the value.

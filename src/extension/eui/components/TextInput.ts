@@ -1,4 +1,4 @@
-module eui.sys {
+namespace eui.sys {
     /**
      * @private
      */
@@ -14,7 +14,7 @@ module eui.sys {
         inputType
     }
 }
-module eui {
+namespace eui {
     import FocusEvent = egret.FocusEvent;
     /**
      *

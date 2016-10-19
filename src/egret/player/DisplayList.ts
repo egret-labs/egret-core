@@ -27,7 +27,7 @@
 //
 //////////////////////////////////////////////////////////////////////////////////////
 
-module egret.sys {
+namespace egret.sys {
 
     var displayListPool: DisplayList[] = [];
     var blendModes = ["source-over", "lighter", "destination-out"];

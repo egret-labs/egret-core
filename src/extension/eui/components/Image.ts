@@ -29,7 +29,7 @@
 
 /// <reference path="supportClasses/DefaultAssetAdapter.ts" />
 
-module eui {
+namespace eui {
 
     /**
      * @private

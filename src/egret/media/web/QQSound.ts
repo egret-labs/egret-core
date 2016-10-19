@@ -30,7 +30,7 @@
 /**
  * @private
  */
-declare module QZAppExternal {
+declare namespace QZAppExternal {
     function playLocalSound(call, data);
 
     function playLocalBackSound(call, data);
@@ -43,7 +43,7 @@ declare module QZAppExternal {
 }
 
 
-module egret.web {
+namespace egret.web {
 
     /**
      * @private

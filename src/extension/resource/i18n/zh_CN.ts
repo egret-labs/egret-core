@@ -1,4 +1,4 @@
-module egret {
+namespace egret {
 
     $locale_strings = $locale_strings || {};
     $locale_strings["zh_CN"] = $locale_strings["zh_CN"] || {};

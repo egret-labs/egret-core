@@ -32,7 +32,7 @@
      * @platform Web,Native
      * @includeExample egret/localStorage/localStorage.ts
      */
-module egret.localStorage {
+namespace egret.localStorage {
 
     /**
      * @language en_US

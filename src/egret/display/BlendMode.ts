@@ -27,7 +27,7 @@
 //
 //////////////////////////////////////////////////////////////////////////////////////
 
-module egret {
+namespace egret {
 
     //混合模式在Web端只有部分被支持，在 Native 中全部都支持。
     //目前所有平台的浏览器都支持的有：Layer,Alpha,Normal,Add,ERASE。
@@ -105,7 +105,7 @@ module egret {
     }
 }
 
-module egret.sys {
+namespace egret.sys {
 
     var blendModeString = ["normal", "add", "erase"];
     var blendModeNumber = {};

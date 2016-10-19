@@ -28,7 +28,7 @@
 //////////////////////////////////////////////////////////////////////////////////////
 
 
-module egret.web {
+namespace egret.web {
     /**
      * @class egret.HTML5NetContext
      * @classdesc

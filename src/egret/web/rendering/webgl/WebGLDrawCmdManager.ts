@@ -26,7 +26,7 @@
 //  EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 //
 //////////////////////////////////////////////////////////////////////////////////////
-module egret.web {
+namespace egret.web {
     /**
      * @private
      * draw类型，所有的绘图操作都会缓存在drawData中，每个drawData都是一个drawable对象

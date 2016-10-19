@@ -27,7 +27,7 @@
 //
 //////////////////////////////////////////////////////////////////////////////////////
 
-module eui {
+namespace eui {
 
     /**
      * @language en_US
@@ -137,7 +137,7 @@ module eui {
     }
 }
 
-module eui.sys {
+namespace eui.sys {
 
     var UIComponentClass = "eui.UIComponent";
 

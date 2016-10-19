@@ -26,7 +26,7 @@
 //  EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 //
 //////////////////////////////////////////////////////////////////////////////////////
-module eui.sys {
+namespace eui.sys {
     /**
      * @private
      */
@@ -36,7 +36,7 @@ module eui.sys {
         asPassword
     }
 }
-module eui {
+namespace eui {
 
     var UIImpl = sys.UIComponentImpl;
 

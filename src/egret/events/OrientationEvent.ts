@@ -27,7 +27,7 @@
 //
 //////////////////////////////////////////////////////////////////////////////////////
 
-module egret {
+namespace egret {
     /**
      * @language en_US
      * The OrientationEvent provides information from the physical orientation of the device.

@@ -28,7 +28,7 @@
 //////////////////////////////////////////////////////////////////////////////////////
 
 
-module egret {
+namespace egret {
     export var $TextureScaleFactor:number = 1;
     /**
      * @language en_US

@@ -1,4 +1,4 @@
-declare module RES {
+declare namespace RES {
     /**
      * @language en_US
      * Resource term. One of the resources arrays in resource.json.
@@ -229,7 +229,7 @@ declare module RES {
         toString(): string;
     }
 }
-declare module RES {
+declare namespace RES {
     /**
      * @class RES.ResourceConfig
      * @classdesc
@@ -315,7 +315,7 @@ declare module RES {
         private parseResourceItem(data);
     }
 }
-declare module RES {
+declare namespace RES {
     /**
      * @class RES.ResourceLoader
      * @classdesc
@@ -420,7 +420,7 @@ declare module RES {
         private removeGroupName(groupName);
     }
 }
-declare module RES {
+declare namespace RES {
     /**
      * @language en_US
      * The events of resource loading.
@@ -599,7 +599,7 @@ declare module RES {
         static dispatchResourceEvent(target: egret.IEventDispatcher, type: string, groupName?: string, resItem?: ResourceItem, itemsLoaded?: number, itemsTotal?: number): boolean;
     }
 }
-declare module RES {
+declare namespace RES {
     /**
      * @classic
      * @private
@@ -643,7 +643,7 @@ declare module RES {
         static getStringTail(name: string): string;
     }
 }
-declare module RES {
+declare namespace RES {
     /**
      * @private
      */
@@ -696,7 +696,7 @@ declare module RES {
         protected onResourceDestroy(resource: any): void;
     }
 }
-declare module RES {
+declare namespace RES {
     /**
      * @private
      */
@@ -748,7 +748,7 @@ declare module RES {
         protected onResourceDestroy(texture: any): void;
     }
 }
-declare module RES {
+declare namespace RES {
     /**
      * @private
      */
@@ -756,7 +756,7 @@ declare module RES {
         constructor();
     }
 }
-declare module RES {
+declare namespace RES {
     /**
      * @private
      */
@@ -768,7 +768,7 @@ declare module RES {
         analyzeData(resItem: ResourceItem, data: any): void;
     }
 }
-declare module RES {
+declare namespace RES {
     /**
      * SpriteSheet解析器
      * @private
@@ -805,7 +805,7 @@ declare module RES {
         protected onResourceDestroy(texture: any): void;
     }
 }
-declare module RES {
+declare namespace RES {
     /**
      * @private
      */
@@ -817,7 +817,7 @@ declare module RES {
         protected onResourceDestroy(font: egret.BitmapFont): void;
     }
 }
-declare module RES {
+declare namespace RES {
     /**
      * @private
      */
@@ -860,7 +860,7 @@ declare module RES {
         destroyRes(name: string): boolean;
     }
 }
-declare module RES {
+declare namespace RES {
     /**
      * @private
      */
@@ -872,7 +872,7 @@ declare module RES {
         analyzeData(resItem: ResourceItem, data: any): void;
     }
 }
-declare module RES {
+declare namespace RES {
     /**
      * @language en_US
      * Version control loading interface
@@ -981,7 +981,7 @@ declare module RES {
         new (): VersionController;
     };
 }
-declare module RES.web {
+declare namespace RES.web {
     /**
      * @private
      */
@@ -1000,7 +1000,7 @@ declare module RES.web {
         getVirtualUrl(url: string): string;
     }
 }
-declare module RES.native {
+declare namespace RES.native {
     /**
      * @private
      */
@@ -1023,7 +1023,7 @@ declare module RES.native {
         private getLocalData(filePath);
     }
 }
-declare module RES {
+declare namespace RES {
     /**
      * @language en_US
      * Conduct mapping injection with class definition as the value.
@@ -1412,7 +1412,7 @@ declare module RES {
     function removeEventListener(type: string, listener: (event: egret.Event) => void, thisObject: any, useCapture?: boolean): void;
     function $getVirtualUrl(url: any): any;
 }
-declare module RES {
+declare namespace RES {
     /**
      * SpriteSheet解析器
      * @private
@@ -1446,7 +1446,7 @@ declare module RES {
         private getImageLoader();
     }
 }
-declare module egret {
+declare namespace egret {
 }
-declare module egret {
+declare namespace egret {
 }

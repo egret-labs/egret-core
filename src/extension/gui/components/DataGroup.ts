@@ -31,7 +31,7 @@
 /// <reference path="supportClasses/ItemRenderer.ts" />
 
 
-module egret.gui {
+namespace egret.gui {
 
 	/**
 	 * @class egret.gui.DataGroup

@@ -26,7 +26,7 @@
 //  EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 //
 //////////////////////////////////////////////////////////////////////////////////////
-module egret.native {
+namespace egret.native {
     var blendModesForGL = {
         "source-over": [1, 771],
         "lighter": [770, 1],

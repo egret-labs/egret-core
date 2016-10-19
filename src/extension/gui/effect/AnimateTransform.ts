@@ -29,7 +29,7 @@
 
 /// <reference path="easing/Linear.ts" />
 
-module egret.gui {
+namespace egret.gui {
 
     /**
      * @class egret.gui.AnimateTransform

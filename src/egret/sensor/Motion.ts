@@ -1,6 +1,6 @@
 
 
-module egret {
+namespace egret {
 
     /**
      * @copy egret.Motion

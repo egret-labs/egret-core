@@ -30,7 +30,7 @@
 /// <reference path="../states/State.ts" />
 /// <reference path="../core/UIComponent.ts" />
 /// <reference path="../utils/registerProperty.ts" />
-module eui {
+namespace eui {
 
     /**
      * @private

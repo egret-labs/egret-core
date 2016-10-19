@@ -1,6 +1,6 @@
 
 
-module egret {
+namespace egret {
 
     /**
      * @language en_US

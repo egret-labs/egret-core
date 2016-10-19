@@ -26,7 +26,7 @@
 //  EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 //
 //////////////////////////////////////////////////////////////////////////////////////
-module eui {
+namespace eui {
 
     egret.$locale_strings = egret.$locale_strings || {};
     egret.$locale_strings["en_US"] = egret.$locale_strings["en_US"] || {};

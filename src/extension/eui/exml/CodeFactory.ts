@@ -27,7 +27,7 @@
 //
 //////////////////////////////////////////////////////////////////////////////////////
 
-module eui.sys {
+namespace eui.sys {
 
     var STATE = "eui.State";
     var ADD_ITEMS = "eui.AddItems";

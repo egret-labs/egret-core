@@ -26,7 +26,7 @@
 //  EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 //
 //////////////////////////////////////////////////////////////////////////////////////
-module egret.web {
+namespace egret.web {
 
     /**
      * @classdesc
@@ -468,7 +468,7 @@ module egret.web {
     StageText = HTML5StageText;
 }
 
-module egret.web {
+namespace egret.web {
     /**
      * @private
      */
@@ -771,7 +771,7 @@ module egret.web {
     }
 }
 
-module egret.web {
+namespace egret.web {
 
     var stageToTextLayerMap:any = {};
     var stageToCanvasMap:any = {};

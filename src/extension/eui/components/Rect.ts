@@ -27,7 +27,7 @@
 //
 //////////////////////////////////////////////////////////////////////////////////////
 
-module eui {
+namespace eui {
     /**
      * @language en_US
      * The Rect component is a rectangular shape. It can be touched.

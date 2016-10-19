@@ -27,7 +27,7 @@
 //
 //////////////////////////////////////////////////////////////////////////////////////
 
-module egret {
+namespace egret {
 
     /**
      * @private
@@ -41,7 +41,7 @@ module egret {
 
 }
 
-module egret.sys {
+namespace egret.sys {
     /**
      * @private
      * 全局多语言翻译函数

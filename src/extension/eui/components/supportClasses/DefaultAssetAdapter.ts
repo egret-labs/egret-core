@@ -28,7 +28,7 @@
 //////////////////////////////////////////////////////////////////////////////////////
 
 
-module eui {
+namespace eui {
 
     var loaderPool:egret.ImageLoader[] = [];
     var callBackMap:any = {};

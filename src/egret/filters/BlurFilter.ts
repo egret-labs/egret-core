@@ -26,7 +26,7 @@
 //  EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 //
 //////////////////////////////////////////////////////////////////////////////////////
-module egret {
+namespace egret {
     /**
      * @language en_US
      * The BlurFilter class lets you apply a blur visual effect to display objects. A blur effect softens the details of an image.

@@ -29,7 +29,7 @@
 
 
 
-module eui.sys {
+namespace eui.sys {
 
     /**
      * @private

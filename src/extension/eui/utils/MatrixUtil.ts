@@ -27,7 +27,7 @@
 //
 //////////////////////////////////////////////////////////////////////////////////////
 
-module eui.sys {
+namespace eui.sys {
 
     var SOLUTION_TOLERANCE = 0.1;
     var MIN_MAX_TOLERANCE = 0.1;

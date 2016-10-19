@@ -28,7 +28,7 @@
 //////////////////////////////////////////////////////////////////////////////////////
 
 
-module egret {
+namespace egret {
     /**
      * @language en_US
      * Bitmap font, texture set of a font. It is generally used as the value of the BitmapText.font attribute.

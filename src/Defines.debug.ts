@@ -73,7 +73,7 @@ declare var RELEASE:boolean;
 this["DEBUG"] = true;
 this["RELEASE"] = false;
 
-module egret {
+namespace egret {
     export declare function $error(code:number, ...params:any[]):void;
 
     export declare function $warn(code:number, ...params:any[]):void;

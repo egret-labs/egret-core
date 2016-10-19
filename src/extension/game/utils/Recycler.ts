@@ -28,7 +28,7 @@
 //////////////////////////////////////////////////////////////////////////////////////
 
 
-module egret {
+namespace egret {
     /**
      * @language en_US
      * Tool class for object cache repeat use, which can be used to construct an object pool. Objects are automatically recycled after a certain duration.

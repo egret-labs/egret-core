@@ -30,7 +30,7 @@
 /**
  * @private
  */
-module egret.sys {
+namespace egret.sys {
 
     /**
      * 测量文本在指定样式下的宽度。

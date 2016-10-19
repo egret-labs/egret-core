@@ -28,7 +28,7 @@
 //////////////////////////////////////////////////////////////////////////////////////
 
 
-module egret {
+namespace egret {
     /**
      * @language en_US
      * The BitmapFillMode class defines the image fill mode of Bitmap.

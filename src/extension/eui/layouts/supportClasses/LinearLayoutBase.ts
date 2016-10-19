@@ -27,7 +27,7 @@
 //
 //////////////////////////////////////////////////////////////////////////////////////
 
-module eui {
+namespace eui {
     /**
      * @language en_US
      * Linear layout base class, usually as the parent class of
@@ -813,7 +813,7 @@ module eui {
 
 }
 
-module eui.sys {
+namespace eui.sys {
 
     /**
      * @private

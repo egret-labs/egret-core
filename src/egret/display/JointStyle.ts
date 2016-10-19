@@ -27,7 +27,7 @@
 //
 //////////////////////////////////////////////////////////////////////////////////////
 
-module egret {
+namespace egret {
     /**
      * @language en_US
      * The JointStyle class is an enumeration of constant values that specify the joint style to use in drawing lines.

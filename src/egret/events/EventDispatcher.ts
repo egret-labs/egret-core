@@ -28,7 +28,7 @@
 //////////////////////////////////////////////////////////////////////////////////////
 
 
-module egret {
+namespace egret {
 
     /**
      * @private
@@ -325,7 +325,7 @@ module egret {
 
 }
 
-module egret.sys {
+namespace egret.sys {
     /**
      * @private
      * 事件信息对象

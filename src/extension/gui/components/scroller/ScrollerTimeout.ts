@@ -27,7 +27,7 @@
 //
 //////////////////////////////////////////////////////////////////////////////////////
 
-module egret.gui {
+namespace egret.gui {
 
     var setTimeoutCache:any = {};
     var setTimeoutIndex:number = 0;

@@ -26,7 +26,7 @@
 //  EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 //
 //////////////////////////////////////////////////////////////////////////////////////
-module egret {
+namespace egret {
     /**
      * @language en_US
      * When a load operation has begun or a socket has received data, ProgressEvent object is dispatched.

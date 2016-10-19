@@ -27,7 +27,7 @@
 //
 //////////////////////////////////////////////////////////////////////////////////////
 
-module egret.sys {
+namespace egret.sys {
 
     var CAPS_STYLES = ["none", "round", "square"];
     var JOINT_STYLES = ["bevel", "miter", "round"];

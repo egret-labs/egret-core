@@ -31,7 +31,7 @@
 if (DEBUG&&window['HTMLVideoElement'] == undefined) {
     window['HTMLVideoElement'] = HTMLDivElement;
 }
-module egret.web {
+namespace egret.web {
 
     var className = "egret.BitmapData";
     registerClass(HTMLImageElement, className);
@@ -40,7 +40,7 @@ module egret.web {
 
 }
 
-module egret {
+namespace egret {
 
     /**
      * 转换 Image，Canvas，Video 为 Egret 框架内使用的 BitmapData 对象。

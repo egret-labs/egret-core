@@ -26,7 +26,7 @@
 //  EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 //
 //////////////////////////////////////////////////////////////////////////////////////
-module egret.localStorage.native {
+namespace egret.localStorage.native {
     var filePath:string = "LocalStorage.local";
 
     var localStorageData = {};

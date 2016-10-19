@@ -28,7 +28,7 @@
 //////////////////////////////////////////////////////////////////////////////////////
 
 /// <reference path="../core/UIComponent.ts" />
-module eui {
+namespace eui {
     var UIImpl = sys.UIComponentImpl;
     /**
      * @language en_US

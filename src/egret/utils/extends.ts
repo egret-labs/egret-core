@@ -36,7 +36,7 @@
 //    d.prototype = new __();
 //}
 
-module egret {
+namespace egret {
 
     /**
      * @language en_US

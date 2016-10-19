@@ -28,7 +28,7 @@
 //////////////////////////////////////////////////////////////////////////////////////
 
 
-module egret.sys {
+namespace egret.sys {
 
     var usingChannel:Array<SoundChannel> = [];
 
@@ -56,7 +56,7 @@ module egret.sys {
     }
 }
 
-module egret {
+namespace egret {
 
     /**
      * @language en_US

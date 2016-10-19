@@ -30,7 +30,7 @@
 /**
  * @private
  */
-declare module egret_native {
+declare namespace egret_native {
     var nativeType:string;
 
     /**
@@ -104,7 +104,7 @@ declare module egret_native {
 
     function getOption(type:string):string;
 
-    module Audio {
+    namespace Audio {
         function preloadBackgroundMusic(path:string):void;
 
         function playBackgroundMusic(path:string, loop:boolean):void;
@@ -138,7 +138,7 @@ declare module egret_native {
 
     function download(url:string, savePath:string, promise:any):void;
 
-    module Graphics {
+    namespace Graphics {
 
 
         function clearScreen(r:number, g:number, b:number):void;
@@ -177,7 +177,7 @@ declare module egret_native {
         function setTextureScaleFactor(value:number):void;
     }
 
-    module Label {
+    namespace Label {
 
         function createLabel(font:string, size:number, defaultString:string, defaultStroke:number):void;
 
@@ -195,13 +195,13 @@ declare module egret_native {
     }
 
 
-    module EGTXML {
+    namespace EGTXML {
 
 
         function readXML(filepath:string):void;
     }
 
-    module Texture {
+    namespace Texture {
 
         function create(filePath:string):any;
 
@@ -215,7 +215,7 @@ declare module egret_native {
     }
 
 
-    module TextInputOp {
+    namespace TextInputOp {
 
         function setKeybordOpen(isOpen:boolean, jsonConfig?:Object):void
 
@@ -239,7 +239,7 @@ declare module egret_native {
 
     function EGT_getTextEditerContentText():string;
 
-    module EGTView {
+    namespace EGTView {
 
         function getFrameWidth():number;
 
@@ -266,7 +266,7 @@ declare module egret_native {
         saveToFile(type:string, filePath:string);
     }
 
-    module rastergl {
+    namespace rastergl {
         function arc(x:number, y:number, radius:number, startAngle:number, endAngle:number, anticlockwise?:boolean):void;
 
         function quadraticCurveTo(cpx:number, cpy:number, x:number, y:number):void;
@@ -323,7 +323,7 @@ declare module egret_native {
         export var fillStyle:any;
     }
 
-    module Game {
+    namespace Game {
         function listResource(root, promise);
 
         function listUpdate(root, promise);

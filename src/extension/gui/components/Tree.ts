@@ -30,7 +30,7 @@
 /// <reference path="../core/ClassFactory.ts" />
 /// <reference path="./supportClasses/TreeItemRenderer.ts" />
 
-module egret.gui {
+namespace egret.gui {
 
 	/**
 	 * @class egret.gui.Tree

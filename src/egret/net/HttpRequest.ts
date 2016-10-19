@@ -27,7 +27,7 @@
 //
 //////////////////////////////////////////////////////////////////////////////////////
 
-module egret {
+namespace egret {
     /**
      * @language en_US
      * The HttpRequest class downloads data from a URL as text or binary data. It is useful for downloading text files,

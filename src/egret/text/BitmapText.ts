@@ -26,7 +26,7 @@
 //  EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 //
 //////////////////////////////////////////////////////////////////////////////////////
-module egret.sys {
+namespace egret.sys {
     /**
      * @private
      */
@@ -85,7 +85,7 @@ module egret.sys {
         smoothing,
     }
 }
-module egret {
+namespace egret {
     /**
      * @language en_US
      * Bitmap font adopts the Bitmap+SpriteSheet mode to render text.

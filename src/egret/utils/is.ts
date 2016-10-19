@@ -27,7 +27,7 @@
 //
 //////////////////////////////////////////////////////////////////////////////////////
 
-module egret {
+namespace egret {
     /**
      * @language en_US
      * Indicates whether an object is a instance of the class or interface specified as the parameter.This method has better performance

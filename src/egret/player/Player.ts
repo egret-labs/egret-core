@@ -29,7 +29,7 @@
 
 /// <reference path="../display/Sprite.ts" />
 
-module egret.sys {
+namespace egret.sys {
 
     export var $TempStage:egret.Stage;
 

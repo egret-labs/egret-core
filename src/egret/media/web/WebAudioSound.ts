@@ -41,7 +41,7 @@ interface AudioBufferSourceNodeEgret {
     disconnect();
 }
 
-module egret.web {
+namespace egret.web {
 
     /**
      * @private

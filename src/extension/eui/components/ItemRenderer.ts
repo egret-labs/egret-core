@@ -27,7 +27,7 @@
 //
 //////////////////////////////////////////////////////////////////////////////////////
 /// <reference path="../utils/registerBindable.ts" />
-module eui {
+namespace eui {
 
     /**
      * @language en_US

@@ -1,4 +1,4 @@
-declare module egret.gui {
+declare namespace egret.gui {
     /**
      * @class egret.gui.ArrayCollection
      * @classdesc
@@ -123,7 +123,7 @@ declare module egret.gui {
         private dispatchCoEvent(kind?, location?, oldLocation?, items?, oldItems?);
     }
 }
-declare module egret.gui {
+declare namespace egret.gui {
     /**
      * @class egret.gui.ICollection
      * @interface
@@ -153,7 +153,7 @@ declare module egret.gui {
         getItemIndex(item: any): number;
     }
 }
-declare module egret.gui {
+declare namespace egret.gui {
     /**
      * @class egret.gui.ITreeCollection
      * @interface
@@ -192,7 +192,7 @@ declare module egret.gui {
         getDepth(item: any): number;
     }
 }
-declare module egret.gui {
+declare namespace egret.gui {
     /**
      * @class egret.gui.ObjectCollection
      * @classdesc
@@ -322,7 +322,7 @@ declare module egret.gui {
         static assignParent(parent: any, childrenKey?: string, parentKey?: string): void;
     }
 }
-declare module egret.gui {
+declare namespace egret.gui {
     /**
      * @class egret.gui.UIComponent
      * @classdesc
@@ -711,7 +711,7 @@ declare module egret.gui {
         layoutBoundsHeight: number;
     }
 }
-declare module egret.gui {
+declare namespace egret.gui {
     /**
      * @class egret.gui.SkinnableComponent
      * @classdesc
@@ -943,7 +943,7 @@ declare module egret.gui {
         swapChildrenAt(index1: number, index2: number): void;
     }
 }
-declare module egret.gui {
+declare namespace egret.gui {
     /**
      * @class egret.gui.SkinnableContainer
      * @classdesc
@@ -1071,7 +1071,7 @@ declare module egret.gui {
         _contentGroup_elementRemovedHandler(event: ElementExistenceEvent): void;
     }
 }
-declare module egret.gui {
+declare namespace egret.gui {
     /**
      * @class egret.gui.Panel
      * @classdesc
@@ -1107,7 +1107,7 @@ declare module egret.gui {
         partAdded(partName: string, instance: any): void;
     }
 }
-declare module egret.gui {
+declare namespace egret.gui {
     /**
      * @class egret.gui.TitleWindow
      * @classdesc
@@ -1194,7 +1194,7 @@ declare module egret.gui {
         private adjustPosForStage();
     }
 }
-declare module egret.gui {
+declare namespace egret.gui {
     /**
      * @class egret.gui.Alert
      * @classdesc
@@ -1314,7 +1314,7 @@ declare module egret.gui {
         partRemoved(partName: string, instance: any): void;
     }
 }
-declare module egret.gui {
+declare namespace egret.gui {
     /**
      * @class egret.gui.BitmapLabel
      * @classdesc
@@ -1468,7 +1468,7 @@ declare module egret.gui {
         commitProperties(): void;
     }
 }
-declare module egret.gui {
+declare namespace egret.gui {
     /**
      * @class egret.gui.ButtonBase
      * @classdesc
@@ -1622,7 +1622,7 @@ declare module egret.gui {
         partAdded(partName: string, instance: any): void;
     }
 }
-declare module egret.gui {
+declare namespace egret.gui {
     /**
      * @class egret.gui.Button
      * @classdesc
@@ -1666,7 +1666,7 @@ declare module egret.gui {
         partAdded(partName: string, instance: any): void;
     }
 }
-declare module egret.gui {
+declare namespace egret.gui {
     /**
      * @class egret.gui.Skin
      * @classdesc
@@ -1924,7 +1924,7 @@ declare module egret.gui {
         private getTotalDuration(effect);
     }
 }
-declare module egret.gui {
+declare namespace egret.gui {
     /**
      * @class egret.gui.StateSkin
      * @classdesc
@@ -1972,7 +1972,7 @@ declare module egret.gui {
         updateDisplayList(unscaledWidth: number, unscaledHeight: number): void;
     }
 }
-declare module egret.gui {
+declare namespace egret.gui {
     /**
      * @class egret.gui.ToggleButtonBase
      * @classdesc
@@ -2019,7 +2019,7 @@ declare module egret.gui {
         buttonReleased(): void;
     }
 }
-declare module egret.gui {
+declare namespace egret.gui {
     /**
      * @class egret.gui.CheckBox
      * @classdesc
@@ -2034,7 +2034,7 @@ declare module egret.gui {
         constructor();
     }
 }
-declare module egret.gui {
+declare namespace egret.gui {
     /**
      * @class egret.gui.ClassFactory
      * @classdesc ClassFactory 实例是一个“工厂对象”，Egret 可用其生成其他类的实例，每个实例拥有相同的属性。
@@ -2059,7 +2059,7 @@ declare module egret.gui {
         newInstance(): any;
     }
 }
-declare module egret.gui {
+declare namespace egret.gui {
     /**
      * @class egret.gui.ItemRenderer
      * @classdesc
@@ -2108,7 +2108,7 @@ declare module egret.gui {
         getCurrentSkinState(): string;
     }
 }
-declare module egret.gui {
+declare namespace egret.gui {
     /**
      * @class egret.gui.GroupBase
      * @classdesc
@@ -2280,7 +2280,7 @@ declare module egret.gui {
         getVirtualElementAt(index: number): IVisualElement;
     }
 }
-declare module egret.gui {
+declare namespace egret.gui {
     /**
      * @class egret.gui.DataGroup
      * @classdesc
@@ -2634,7 +2634,7 @@ declare module egret.gui {
         swapChildrenAt(index1: number, index2: number): void;
     }
 }
-declare module egret.gui {
+declare namespace egret.gui {
     /**
      * @class egret.gui.SkinnableDataContainer
      * @classdesc
@@ -2745,7 +2745,7 @@ declare module egret.gui {
         removeEventListener(type: string, listener: Function, thisObject: any, useCapture?: boolean): void;
     }
 }
-declare module egret.gui {
+declare namespace egret.gui {
     /**
      * @class egret.gui.ListBase
      * @classdesc
@@ -2981,7 +2981,7 @@ declare module egret.gui {
         dataProviderRefreshed(): void;
     }
 }
-declare module egret.gui {
+declare namespace egret.gui {
     /**
      * @class egret.gui.List
      * @classdesc
@@ -3085,7 +3085,7 @@ declare module egret.gui {
         private stage_touchEndHandler(event);
     }
 }
-declare module egret.gui {
+declare namespace egret.gui {
     /**
      * @class egret.gui.DropDownListBase
      * @classdesc
@@ -3226,7 +3226,7 @@ declare module egret.gui {
         private close_updateCompleteHandler(event);
     }
 }
-declare module egret.gui {
+declare namespace egret.gui {
     /**
      * @class egret.gui.DropDownList
      * @classdesc
@@ -3265,7 +3265,7 @@ declare module egret.gui {
         updateLabelDisplay(displayItem?: any): void;
     }
 }
-declare module egret.gui {
+declare namespace egret.gui {
     /**
      * @class egret.gui.TextBase
      * @classdesc
@@ -3425,7 +3425,7 @@ declare module egret.gui {
         dispatchPropertyChangeEvent(propertyName: string, oldValue: any, value: any): void;
     }
 }
-declare module egret.gui {
+declare namespace egret.gui {
     /**
      *
      */
@@ -3596,7 +3596,7 @@ declare module egret.gui {
         private textField_textInputHandler(event);
     }
 }
-declare module egret.gui {
+declare namespace egret.gui {
     /**
      * @class egret.gui.Group
      * @classdesc
@@ -3778,7 +3778,7 @@ declare module egret.gui {
         swapChildrenAt(index1: number, index2: number): void;
     }
 }
-declare module egret.gui {
+declare namespace egret.gui {
     /**
      * @class egret.gui.Range
      * @classdesc
@@ -3880,7 +3880,7 @@ declare module egret.gui {
         changeValueByStep(increase?: boolean): void;
     }
 }
-declare module egret.gui {
+declare namespace egret.gui {
     /**
      * @class egret.gui.TrackBase
      * @classdesc
@@ -4071,7 +4071,7 @@ declare module egret.gui {
         private stage_mouseUpSomewhereHandler(event);
     }
 }
-declare module egret.gui {
+declare namespace egret.gui {
     /**
      * @class egret.gui.SliderBase
      * @classdesc
@@ -4163,7 +4163,7 @@ declare module egret.gui {
         partAdded(partName: string, instance: any): void;
     }
 }
-declare module egret.gui {
+declare namespace egret.gui {
     /**
      * @class egret.gui.HSlider
      * @classdesc
@@ -4189,7 +4189,7 @@ declare module egret.gui {
         updateSkinDisplayList(): void;
     }
 }
-declare module egret.gui {
+declare namespace egret.gui {
     /**
      *  @classdesc
      * HScrollBar（水平 ScrollBar）控件可以在因数据太多而不能在显示区域中以水平方向完全显示时控制显示的数据部分。
@@ -4237,7 +4237,7 @@ declare module egret.gui {
         updateSkinDisplayList(): void;
     }
 }
-declare module egret.gui {
+declare namespace egret.gui {
     /**
      * @class egret.gui.IItemRenderer
      * @interface
@@ -4268,7 +4268,7 @@ declare module egret.gui {
         label: string;
     }
 }
-declare module egret.gui {
+declare namespace egret.gui {
     /**
      * @class egret.gui.IItemRendererOwner
      * @interface
@@ -4287,7 +4287,7 @@ declare module egret.gui {
         updateRenderer(renderer: IItemRenderer, itemIndex: number, data: any): IItemRenderer;
     }
 }
-declare module egret.gui {
+declare namespace egret.gui {
     /**
      * @class egret.gui.ITreeItemRenderer
      * @interface
@@ -4318,7 +4318,7 @@ declare module egret.gui {
         opened: boolean;
     }
 }
-declare module egret.gui {
+declare namespace egret.gui {
     /**
      * @class egret.gui.Label
      * @classdesc
@@ -4421,7 +4421,7 @@ declare module egret.gui {
         updateDisplayList(unscaledWidth: number, unscaledHeight: number): void;
     }
 }
-declare module egret.gui {
+declare namespace egret.gui {
     /**
      * @class egret.gui.PopUpAnchor
      * @classdesc
@@ -4555,7 +4555,7 @@ declare module egret.gui {
         private removedFromStageHandler(event);
     }
 }
-declare module egret.gui {
+declare namespace egret.gui {
     /**
      * @class egret.gui.ProgressBar
      * @classdesc
@@ -4668,7 +4668,7 @@ declare module egret.gui {
         updateSkinDisplayList(): void;
     }
 }
-declare module egret.gui {
+declare namespace egret.gui {
     /**
      * @class egret.gui.ProgressBarDirection
      * @classdesc
@@ -4697,7 +4697,7 @@ declare module egret.gui {
         static BOTTOM_TO_TOP: string;
     }
 }
-declare module egret.gui {
+declare namespace egret.gui {
     /**
      * @class egret.gui.RadioButton
      * @classdesc
@@ -4781,7 +4781,7 @@ declare module egret.gui {
         private addToGroup();
     }
 }
-declare module egret.gui {
+declare namespace egret.gui {
     /**
      * @class egret.gui.RadioButtonGroup
      * @classdesc
@@ -4867,7 +4867,7 @@ declare module egret.gui {
         private radioButton_removedHandler(event);
     }
 }
-declare module egret.gui {
+declare namespace egret.gui {
     /**
      * @class egret.gui.Rect
      * @classdesc
@@ -4934,7 +4934,7 @@ declare module egret.gui {
         updateDisplayList(unscaledWidth: number, unscaledHeight: number): void;
     }
 }
-declare module egret.gui {
+declare namespace egret.gui {
     /**
      * @private
      */
@@ -5430,7 +5430,7 @@ declare module egret.gui {
         $hitTest(stageX: number, stageY: number): DisplayObject;
     }
 }
-declare module egret.gui {
+declare namespace egret.gui {
     /**
      * @class egret.gui.Scroller
      * @classdesc
@@ -5709,7 +5709,7 @@ declare module egret.gui {
         private vBarChanged(e);
     }
 }
-declare module egret.gui {
+declare namespace egret.gui {
     /**
      * @private
      */
@@ -5722,7 +5722,7 @@ declare module egret.gui {
         _animatTargetIsShow: boolean;
     }
 }
-declare module egret.gui {
+declare namespace egret.gui {
     /**
      * @class egret.gui.Spacer
      * @classdesc
@@ -5738,7 +5738,7 @@ declare module egret.gui {
         constructor();
     }
 }
-declare module egret.gui {
+declare namespace egret.gui {
     /**
      * @class egret.gui.TabBar
      * @classdesc
@@ -5787,7 +5787,7 @@ declare module egret.gui {
         _item_touchEndHandler(event: TouchEvent): void;
     }
 }
-declare module egret.gui {
+declare namespace egret.gui {
     /**
      * @class egret.gui.TabBarButton
      * @classdesc
@@ -5821,7 +5821,7 @@ declare module egret.gui {
         buttonReleased(): void;
     }
 }
-declare module egret.gui {
+declare namespace egret.gui {
     class SkinnableTextBase extends SkinnableComponent {
         /**
          * 构造函数
@@ -5986,7 +5986,7 @@ declare module egret.gui {
         private textDisplay_changingHandler(event);
     }
 }
-declare module egret.gui {
+declare namespace egret.gui {
     class TextArea extends SkinnableTextBase {
         /**
          * 构造函数
@@ -6040,7 +6040,7 @@ declare module egret.gui {
         createSkinParts(): void;
     }
 }
-declare module egret.gui {
+declare namespace egret.gui {
     /**
      * TextInput 是一个文本输入控件，供用户输入和编辑单行统一格式文本
      * @classic
@@ -6067,7 +6067,7 @@ declare module egret.gui {
         createSkinParts(): void;
     }
 }
-declare module egret.gui {
+declare namespace egret.gui {
     /**
      * @class egret.gui.ToggleButton
      * @classdesc
@@ -6101,7 +6101,7 @@ declare module egret.gui {
         partAdded(partName: string, instance: any): void;
     }
 }
-declare module egret.gui {
+declare namespace egret.gui {
     /**
      * @class egret.gui.ToggleSwitch
      * @classdesc
@@ -6116,7 +6116,7 @@ declare module egret.gui {
         constructor();
     }
 }
-declare module egret.gui {
+declare namespace egret.gui {
     /**
      * @class egret.gui.TreeItemRenderer
      * @classdesc
@@ -6219,7 +6219,7 @@ declare module egret.gui {
         disclosureButton_mouseDownHandler(event: TouchEvent): void;
     }
 }
-declare module egret.gui {
+declare namespace egret.gui {
     /**
      * @class egret.gui.Tree
      * @classdesc
@@ -6316,7 +6316,7 @@ declare module egret.gui {
         private updateRendererIconProperty(itemIndex);
     }
 }
-declare module egret.gui {
+declare namespace egret.gui {
     /**
      * @class egret.gui.UIAsset
      * @classdesc
@@ -6472,7 +6472,7 @@ declare module egret.gui {
         swapChildrenAt(index1: number, index2: number): void;
     }
 }
-declare module egret.gui {
+declare namespace egret.gui {
     /**
      * @class egret.gui.VSlider
      * @classdesc
@@ -6498,7 +6498,7 @@ declare module egret.gui {
         updateSkinDisplayList(): void;
     }
 }
-declare module egret.gui {
+declare namespace egret.gui {
     /**
      * @classic
      * VScrollBar（垂直 ScrollBar）控件可以在因数据太多而不能在显示区域中以垂直方向完全显示时控制显示的数据部分
@@ -6539,7 +6539,7 @@ declare module egret.gui {
         updateSkinDisplayList(): void;
     }
 }
-declare module egret.gui {
+declare namespace egret.gui {
     /**
      * @class egret.gui.ViewStack
      * @classdesc
@@ -6641,7 +6641,7 @@ declare module egret.gui {
         private dispatchCoEvent(kind?, location?, oldLocation?, items?, oldItems?);
     }
 }
-declare module egret.gui {
+declare namespace egret.gui {
     /**
      * @private
      */
@@ -6651,7 +6651,7 @@ declare module egret.gui {
      */
     function $clearTimer(key: number): void;
 }
-declare module egret.gui {
+declare namespace egret.gui {
     /**
      * @private
      */
@@ -6958,7 +6958,7 @@ declare module egret.gui {
         tick(delta: number): void;
     }
 }
-declare module egret.gui {
+declare namespace egret.gui {
     /**
      * @private
      */
@@ -7036,7 +7036,7 @@ declare module egret.gui {
         _bounces: boolean;
     }
 }
-declare module egret.gui {
+declare namespace egret.gui {
     /**
      * @class egret.gui.DefaultAssetAdapter
      * @classdesc
@@ -7069,7 +7069,7 @@ declare module egret.gui {
         getTheme(url: string, compFunc: Function, errorFunc: Function, thisObject: any): void;
     }
 }
-declare module egret.gui {
+declare namespace egret.gui {
     /**
      * @class egret.gui.DefaultSkinAdapter
      * @classdesc
@@ -7092,7 +7092,7 @@ declare module egret.gui {
         getSkin(skinName: any, hostComponentKey: string): any;
     }
 }
-declare module egret.gui {
+declare namespace egret.gui {
     /**
      * @classdesc
      * 默认的IThemeAdapter接口实现
@@ -7113,7 +7113,7 @@ declare module egret.gui {
         getTheme(url: string, compFunc: Function, errorFunc: Function, thisObject: any): void;
     }
 }
-declare module egret.gui {
+declare namespace egret.gui {
     /**
      * @class egret.gui.DropDownController
      * @classdesc
@@ -7267,7 +7267,7 @@ declare module egret.gui {
         private stage_mouseWheelHandler(event);
     }
 }
-declare module egret.gui {
+declare namespace egret.gui {
     /**
      * @class egret.gui.SkinBasicLayout
      * @classdesc
@@ -7300,7 +7300,7 @@ declare module egret.gui {
         updateDisplayList(unscaledWidth: number, unscaledHeight: number): void;
     }
 }
-declare module egret.gui {
+declare namespace egret.gui {
     class Theme {
         /**
          * 构造函数
@@ -7319,7 +7319,7 @@ declare module egret.gui {
         getDefaultSkin(client: SkinnableComponent): any;
     }
 }
-declare module egret.gui {
+declare namespace egret.gui {
     /**
      * @class egret.gui.IAssetAdapter
      * @interface
@@ -7340,7 +7340,7 @@ declare module egret.gui {
         getAsset(source: any, compFunc: (content: any, source: any) => void, thisObject: any, oldContent: any): void;
     }
 }
-declare module egret.gui {
+declare namespace egret.gui {
     /**
      * @class egret.gui.IContainer
      * @interface
@@ -7410,7 +7410,7 @@ declare module egret.gui {
         setElementIndex(element: IVisualElement, index: number): void;
     }
 }
-declare module egret.gui {
+declare namespace egret.gui {
     /**
      * @class egret.gui.IDisplayText
      * @interface
@@ -7426,7 +7426,7 @@ declare module egret.gui {
         text: string;
     }
 }
-declare module egret.gui {
+declare namespace egret.gui {
     /**
      * @class egret.gui.IEditableText
      * @interface
@@ -7533,7 +7533,7 @@ declare module egret.gui {
         setFocus(): void;
     }
 }
-declare module egret.gui {
+declare namespace egret.gui {
     /**
      * @classdesc
      * IFactory 接口定义工厂类（如 ClassFactory）必须实现的接口。
@@ -7552,7 +7552,7 @@ declare module egret.gui {
         hashCode: number;
     }
 }
-declare module egret.gui {
+declare namespace egret.gui {
     /**
      * @class egret.gui.IInvalidateDisplay
      * @interface
@@ -7567,7 +7567,7 @@ declare module egret.gui {
         validateNow(): void;
     }
 }
-declare module egret.gui {
+declare namespace egret.gui {
     /**
      * @class egret.gui.IInvalidating
      * @interface
@@ -7598,7 +7598,7 @@ declare module egret.gui {
         validateNow(skipDisplayList?: boolean): void;
     }
 }
-declare module egret.gui {
+declare namespace egret.gui {
     /**
      * @class egret.gui.ILayoutElement
      * @interface
@@ -7747,7 +7747,7 @@ declare module egret.gui {
         setLayoutBoundsPosition(x: number, y: number): void;
     }
 }
-declare module egret.gui {
+declare namespace egret.gui {
     /**
      * @class egret.gui.ISkin
      * @interface
@@ -7762,7 +7762,7 @@ declare module egret.gui {
         hostComponent: SkinnableComponent;
     }
 }
-declare module egret.gui {
+declare namespace egret.gui {
     /**
      * @class egret.gui.ISkinAdapter
      * @interface
@@ -7781,7 +7781,7 @@ declare module egret.gui {
         getSkin(skinName: any, hostComponentKey: string): any;
     }
 }
-declare module egret.gui {
+declare namespace egret.gui {
     /**
      * @class egret.gui.ISkinnableClient
      * @interface
@@ -7798,7 +7798,7 @@ declare module egret.gui {
         skinName: any;
     }
 }
-declare module egret.gui {
+declare namespace egret.gui {
     /**
      * @class egret.gui.IStateClient
      * @interface
@@ -7826,7 +7826,7 @@ declare module egret.gui {
         hasState(stateName: string): boolean;
     }
 }
-declare module egret.gui {
+declare namespace egret.gui {
     /**
      * @class egret.gui.IStyleClient
      * @interface
@@ -7867,7 +7867,7 @@ declare module egret.gui {
         regenerateStyleCache(parentChain: any): void;
     }
 }
-declare module egret.gui {
+declare namespace egret.gui {
     /**
      * @interface
      * @classdesc
@@ -7884,7 +7884,7 @@ declare module egret.gui {
         getTheme(url: string, compFunc: Function, errorFunc: Function, thisObject: any): void;
     }
 }
-declare module egret.gui {
+declare namespace egret.gui {
     /**
      * @class egret.gui.IUIComponent
      * @interface
@@ -7921,7 +7921,7 @@ declare module egret.gui {
         setActualSize(newWidth: number, newHeight: number): void;
     }
 }
-declare module egret.gui {
+declare namespace egret.gui {
     /**
      * @class egret.gui.IUIStage
      * @interface
@@ -7951,7 +7951,7 @@ declare module egret.gui {
         stage: Stage;
     }
 }
-declare module egret.gui {
+declare namespace egret.gui {
     /**
      * @class egret.gui.IViewStack
      * @interface
@@ -7971,7 +7971,7 @@ declare module egret.gui {
         selectedChild: IVisualElement;
     }
 }
-declare module egret.gui {
+declare namespace egret.gui {
     /**
      * @class egret.gui.IViewport
      * @interface
@@ -8013,7 +8013,7 @@ declare module egret.gui {
         clipAndEnableScrolling: boolean;
     }
 }
-declare module egret.gui {
+declare namespace egret.gui {
     /**
      * @class egret.gui.IVisualElement
      * @interface
@@ -8089,7 +8089,7 @@ declare module egret.gui {
         y: number;
     }
 }
-declare module egret.gui {
+declare namespace egret.gui {
     /**
      * @class egret.gui.IVisualElementContainer
      * @interface
@@ -8120,7 +8120,7 @@ declare module egret.gui {
         swapElementsAt(index1: number, index2: number): void;
     }
 }
-declare module egret.gui {
+declare namespace egret.gui {
     class NavigationUnit {
         static DOWN: number;
         static END: number;
@@ -8134,7 +8134,7 @@ declare module egret.gui {
         static UP: number;
     }
 }
-declare module egret.gui {
+declare namespace egret.gui {
     /**
      * @class egret.gui.PopUpPosition
      * @classdesc
@@ -8179,7 +8179,7 @@ declare module egret.gui {
         static SCREEN_CENTER: string;
     }
 }
-declare module egret.gui {
+declare namespace egret.gui {
     /**
      * @class egret.gui.ScrollPolicy
      * @classdesc
@@ -8203,7 +8203,7 @@ declare module egret.gui {
         static ON: string;
     }
 }
-declare module egret.gui {
+declare namespace egret.gui {
     /**
      * @private
      */
@@ -8298,7 +8298,7 @@ declare module egret.gui {
         _layoutHeightExplicitlySet: boolean;
     }
 }
-declare module egret.gui {
+declare namespace egret.gui {
     /**
      * @class egret.gui.UIGlobals
      * @classdesc
@@ -8334,7 +8334,7 @@ declare module egret.gui {
         static uiStage: IUIStage;
     }
 }
-declare module egret.gui {
+declare namespace egret.gui {
     /**
      * UIStage的虚拟子容器
      */
@@ -8410,7 +8410,7 @@ declare module egret.gui {
         setElementIndex(element: IVisualElement, index: number): void;
     }
 }
-declare module egret.gui {
+declare namespace egret.gui {
     /**
      * @class egret.gui.UIStage
      * @classdesc
@@ -8586,7 +8586,7 @@ declare module egret.gui {
         private raw_swapElementsAt(index1, index2);
     }
 }
-declare module egret.gui {
+declare namespace egret.gui {
     /**
      * @class egret.gui.Effect
      * @classdesc
@@ -8760,7 +8760,7 @@ declare module egret.gui {
         _effectEndHandler(event: EffectEvent): void;
     }
 }
-declare module egret.gui {
+declare namespace egret.gui {
     /**
      * @class egret.gui.Animate
      * @classdesc
@@ -8818,7 +8818,7 @@ declare module egret.gui {
         private animationEventHandler(event);
     }
 }
-declare module egret.gui {
+declare namespace egret.gui {
     /**
      * @class egret.gui.Power
      * @classdesc
@@ -8845,7 +8845,7 @@ declare module egret.gui {
         ease(fraction: number): number;
     }
 }
-declare module egret.gui {
+declare namespace egret.gui {
     /**
      * @class egret.gui.AnimateTransform
      * @classdesc
@@ -8910,7 +8910,7 @@ declare module egret.gui {
         private static storeSharedInstance(topmostParallel, target, effectInstance);
     }
 }
-declare module egret.gui {
+declare namespace egret.gui {
     /**
      * @class egret.gui.CompositeEffect
      * @classdesc
@@ -8944,7 +8944,7 @@ declare module egret.gui {
         addChild(childEffect: Effect): void;
     }
 }
-declare module egret.gui {
+declare namespace egret.gui {
     /**
      * @class egret.gui.EffectInstance
      * @classdesc
@@ -9096,7 +9096,7 @@ declare module egret.gui {
         private delayTimerHandler(event);
     }
 }
-declare module egret.gui {
+declare namespace egret.gui {
     /**
      * @class egret.gui.Fade
      * @classdesc
@@ -9121,7 +9121,7 @@ declare module egret.gui {
         _initInstance(instance: IEffectInstance): void;
     }
 }
-declare module egret.gui {
+declare namespace egret.gui {
     interface IEffect extends IEventDispatcher {
         /**
          * 效果的持续时间（以毫秒为单位）。
@@ -9204,7 +9204,7 @@ declare module egret.gui {
         end(effectInstance?: IEffectInstance): void;
     }
 }
-declare module egret.gui {
+declare namespace egret.gui {
     interface IEffectInstance {
         /**
          * 效果的持续时间（以毫秒为单位）。
@@ -9282,7 +9282,7 @@ declare module egret.gui {
         finishRepeat(): void;
     }
 }
-declare module egret.gui {
+declare namespace egret.gui {
     /**
      * @class egret.gui.Move
      * @classdesc
@@ -9328,7 +9328,7 @@ declare module egret.gui {
         _initInstance(instance: IEffectInstance): void;
     }
 }
-declare module egret.gui {
+declare namespace egret.gui {
     /**
      * @class egret.gui.Parallel
      * @classdesc
@@ -9343,7 +9343,7 @@ declare module egret.gui {
         compositeDuration: number;
     }
 }
-declare module egret.gui {
+declare namespace egret.gui {
     /**
      * @class egret.gui.Rotate
      * @classdesc
@@ -9374,7 +9374,7 @@ declare module egret.gui {
         _initInstance(instance: IEffectInstance): void;
     }
 }
-declare module egret.gui {
+declare namespace egret.gui {
     /**
      * @class egret.gui.Scale
      * @classdesc
@@ -9420,7 +9420,7 @@ declare module egret.gui {
         _initInstance(instance: IEffectInstance): void;
     }
 }
-declare module egret.gui {
+declare namespace egret.gui {
     /**
      * @class egret.gui.Sequence
      * @classdesc
@@ -9435,7 +9435,7 @@ declare module egret.gui {
         compositeDuration: number;
     }
 }
-declare module egret.gui {
+declare namespace egret.gui {
     /**
      * @class egret.gui.EaseInOutBase
      * @classdesc
@@ -9466,7 +9466,7 @@ declare module egret.gui {
         _easeOut(fraction: number): number;
     }
 }
-declare module egret.gui {
+declare namespace egret.gui {
     /**
      * @class egret.gui.Sine
      * @classdesc
@@ -9489,7 +9489,7 @@ declare module egret.gui {
         _easeOut(fraction: number): number;
     }
 }
-declare module egret.gui {
+declare namespace egret.gui {
     /**
      * @class egret.gui.Animation
      * @classdesc
@@ -9714,7 +9714,7 @@ declare module egret.gui {
         private static currentTime;
     }
 }
-declare module egret.gui {
+declare namespace egret.gui {
     /**
      * @class egret.gui.Keyframe
      * @classdesc
@@ -9757,7 +9757,7 @@ declare module egret.gui {
         valueBy: any;
     }
 }
-declare module egret.gui {
+declare namespace egret.gui {
     /**
      * @class egret.gui.MotionPath
      * @classdesc
@@ -9796,7 +9796,7 @@ declare module egret.gui {
         getValue(fraction: number): any;
     }
 }
-declare module egret.gui {
+declare namespace egret.gui {
     /**
      * @class egret.gui.RepeatBehavior
      * @classdesc
@@ -9814,7 +9814,7 @@ declare module egret.gui {
         static REVERSE: string;
     }
 }
-declare module egret.gui {
+declare namespace egret.gui {
     /**
      * @class egret.gui.SimpleMotionPath
      * @classdesc
@@ -9847,7 +9847,7 @@ declare module egret.gui {
         valueBy: any;
     }
 }
-declare module egret.gui {
+declare namespace egret.gui {
     /**
      * @class egret.gui.Bounce
      * @classdesc
@@ -9863,7 +9863,7 @@ declare module egret.gui {
         easeOut(t: number, b: number, c: number, d: number): number;
     }
 }
-declare module egret.gui {
+declare namespace egret.gui {
     /**
      * @class egret.gui.Elastic
      * @classdesc
@@ -9879,7 +9879,7 @@ declare module egret.gui {
         easeOut(t: number, b: number, c: number, d: number, a?: number, p?: number): number;
     }
 }
-declare module egret.gui {
+declare namespace egret.gui {
     interface IEaser {
         /**
          * 输入动画播放的当前时刻点，返回转换过后映射的时刻点。
@@ -9888,7 +9888,7 @@ declare module egret.gui {
         ease(fraction: number): number;
     }
 }
-declare module egret.gui {
+declare namespace egret.gui {
     /**
      * @class egret.gui.Power
      * @classdesc
@@ -9917,7 +9917,7 @@ declare module egret.gui {
         _easeOut(fraction: number): number;
     }
 }
-declare module egret.gui {
+declare namespace egret.gui {
     /**
      * @class egret.gui.AnimateInstance
      * @classdesc
@@ -10050,7 +10050,7 @@ declare module egret.gui {
         getCurrentValue(property: string): any;
     }
 }
-declare module egret.gui {
+declare namespace egret.gui {
     /**
      * @class egret.gui.AnimateTransformInstance
      * @classdesc
@@ -10109,7 +10109,7 @@ declare module egret.gui {
         applyValues(anim: Animation): void;
     }
 }
-declare module egret.gui {
+declare namespace egret.gui {
     /**
      * @class egret.gui.CompositeEffectInstance
      * @classdesc
@@ -10189,7 +10189,7 @@ declare module egret.gui {
         _effectEndHandler(event: EffectEvent): void;
     }
 }
-declare module egret.gui {
+declare namespace egret.gui {
     /**
      * @class egret.gui.FadeInstance
      * @classdesc
@@ -10214,7 +10214,7 @@ declare module egret.gui {
         play(): void;
     }
 }
-declare module egret.gui {
+declare namespace egret.gui {
     /**
      * @class egret.gui.ParallelInstance
      * @classdesc
@@ -10277,7 +10277,7 @@ declare module egret.gui {
         private timerHandler(event);
     }
 }
-declare module egret.gui {
+declare namespace egret.gui {
     /**
      * @class egret.gui.SequenceInstance
      * @classdesc
@@ -10340,7 +10340,7 @@ declare module egret.gui {
         private playNextChildSet(offset?);
     }
 }
-declare module egret.gui {
+declare namespace egret.gui {
     /**
      * @class egret.gui.TransformUtil
      */
@@ -10358,7 +10358,7 @@ declare module egret.gui {
         static transformPointToParent(obj: egret.DisplayObject, localPosition?: egret.Point): egret.Point;
     }
 }
-declare module egret.gui {
+declare namespace egret.gui {
     interface IInterpolator {
         /**
          * 如果有在 0.0 和 1.0 之间的某个动画的已过去部分，以及要插补的开始值和结束值，则返回内插值。
@@ -10384,7 +10384,7 @@ declare module egret.gui {
         decrement(baseValue: any, decrementValue: any): any;
     }
 }
-declare module egret.gui {
+declare namespace egret.gui {
     /**
      * @class egret.gui.NumberInterpolator
      * @classdesc
@@ -10403,7 +10403,7 @@ declare module egret.gui {
         decrement(baseValue: any, decrementValue: any): any;
     }
 }
-declare module egret.gui {
+declare namespace egret.gui {
     /**
      * @class egret.gui.CloseEvent
      * @classdesc
@@ -10437,7 +10437,7 @@ declare module egret.gui {
         clean(): void;
     }
 }
-declare module egret.gui {
+declare namespace egret.gui {
     /**
      * @class egret.gui.CollectionEvent
      * @classdesc
@@ -10499,7 +10499,7 @@ declare module egret.gui {
         clean(): void;
     }
 }
-declare module egret.gui {
+declare namespace egret.gui {
     /**
      * @class egret.gui.CollectionEventKind
      * @classdesc
@@ -10554,7 +10554,7 @@ declare module egret.gui {
         static CLOSE: string;
     }
 }
-declare module egret.gui {
+declare namespace egret.gui {
     class EffectEvent extends Event {
         /**
          * 动画播放结束
@@ -10586,7 +10586,7 @@ declare module egret.gui {
         effectInstance: IEffectInstance;
     }
 }
-declare module egret.gui {
+declare namespace egret.gui {
     /**
      * @class egret.gui.ElementExistenceEvent
      * @classdesc
@@ -10626,7 +10626,7 @@ declare module egret.gui {
         clean(): void;
     }
 }
-declare module egret.gui {
+declare namespace egret.gui {
     /**
      * @class egret.gui.IndexChangeEvent
      * @classdesc
@@ -10671,7 +10671,7 @@ declare module egret.gui {
         clean(): void;
     }
 }
-declare module egret.gui {
+declare namespace egret.gui {
     /**
      * @class egret.gui.ListEvent
      * @classdesc
@@ -10734,7 +10734,7 @@ declare module egret.gui {
         clean(): void;
     }
 }
-declare module egret.gui {
+declare namespace egret.gui {
     /**
      * @class egret.gui.MoveEvent
      * @classdesc
@@ -10772,7 +10772,7 @@ declare module egret.gui {
         static dispatchMoveEvent(target: IEventDispatcher, oldX?: number, oldY?: number): boolean;
     }
 }
-declare module egret.gui {
+declare namespace egret.gui {
     /**
      * @class egret.gui.PopUpEvent
      * @classdesc
@@ -10823,7 +10823,7 @@ declare module egret.gui {
         clean(): void;
     }
 }
-declare module egret.gui {
+declare namespace egret.gui {
     /**
      * @class egret.gui.PropertyChangeEvent
      * @classdesc
@@ -10882,7 +10882,7 @@ declare module egret.gui {
         clean(): void;
     }
 }
-declare module egret.gui {
+declare namespace egret.gui {
     /**
      * @class egret.gui.PropertyChangeEventKind
      * @classdesc
@@ -10901,7 +10901,7 @@ declare module egret.gui {
         static DELETE: string;
     }
 }
-declare module egret.gui {
+declare namespace egret.gui {
     /**
      * @class egret.gui.RendererExistenceEvent
      * @classdesc
@@ -10952,7 +10952,7 @@ declare module egret.gui {
         clean(): void;
     }
 }
-declare module egret.gui {
+declare namespace egret.gui {
     /**
      * @class egret.gui.ResizeEvent
      * @classdesc
@@ -10990,7 +10990,7 @@ declare module egret.gui {
         static dispatchResizeEvent(target: IEventDispatcher, oldWidth?: number, oldHeight?: number): boolean;
     }
 }
-declare module egret.gui {
+declare namespace egret.gui {
     /**
      * @class egret.gui.SkinPartEvent
      * @classdesc
@@ -11035,7 +11035,7 @@ declare module egret.gui {
         clean(): void;
     }
 }
-declare module egret.gui {
+declare namespace egret.gui {
     /**
      * @class egret.gui.StateChangeEvent
      * @classdesc
@@ -11083,7 +11083,7 @@ declare module egret.gui {
         static dispatchStateChangeEvent(target: IEventDispatcher, type: string, oldState?: string, newState?: string): boolean;
     }
 }
-declare module egret.gui {
+declare namespace egret.gui {
     /**
      * @class egret.gui.TrackBaseEvent
      * @classdesc
@@ -11121,7 +11121,7 @@ declare module egret.gui {
         static dispatchTrackBaseEvent(target: IEventDispatcher, type: string): boolean;
     }
 }
-declare module egret.gui {
+declare namespace egret.gui {
     /**
      * @class egret.gui.TreeEvent
      * @classdesc
@@ -11182,7 +11182,7 @@ declare module egret.gui {
         clean(): void;
     }
 }
-declare module egret.gui {
+declare namespace egret.gui {
     /**
      * @class egret.gui.UIEvent
      * @classdesc
@@ -11269,7 +11269,7 @@ declare module egret.gui {
         static dispatchUIEvent(target: IEventDispatcher, type: string): boolean;
     }
 }
-declare module egret.gui {
+declare namespace egret.gui {
     /**
      * @class egret.gui.LayoutBase
      * @classdesc
@@ -11340,7 +11340,7 @@ declare module egret.gui {
         updateDisplayList(width: number, height: number): void;
     }
 }
-declare module egret.gui {
+declare namespace egret.gui {
     /**
      * @class egret.gui.BasicLayout
      * @classdesc
@@ -11379,7 +11379,7 @@ declare module egret.gui {
         updateDisplayList(unscaledWidth: number, unscaledHeight: number): void;
     }
 }
-declare module egret.gui {
+declare namespace egret.gui {
     /**
      * @class egret.gui.ColumnAlign
      * @classdesc
@@ -11403,7 +11403,7 @@ declare module egret.gui {
         static JUSTIFY_USING_WIDTH: string;
     }
 }
-declare module egret.gui {
+declare namespace egret.gui {
     /**
      * @class egret.gui.HorizontalLayout
      * @classdesc
@@ -11558,7 +11558,7 @@ declare module egret.gui {
         static flexChildrenProportionally(spaceForChildren: number, spaceToDistribute: number, totalPercent: number, childInfoArray: Array<any>): void;
     }
 }
-declare module egret.gui {
+declare namespace egret.gui {
     /**
      * @class egret.gui.RowAlign
      * @classdesc
@@ -11582,7 +11582,7 @@ declare module egret.gui {
         static JUSTIFY_USING_HEIGHT: string;
     }
 }
-declare module egret.gui {
+declare namespace egret.gui {
     /**
      * @class egret.gui.TileLayout
      * @classdesc
@@ -11825,7 +11825,7 @@ declare module egret.gui {
         private adjustForJustify(width, height);
     }
 }
-declare module egret.gui {
+declare namespace egret.gui {
     /**
      * @class egret.gui.TileOrientation
      * @classdesc
@@ -11844,7 +11844,7 @@ declare module egret.gui {
         static COLUMNS: string;
     }
 }
-declare module egret.gui {
+declare namespace egret.gui {
     /**
      * @class egret.gui.VerticalLayout
      * @classdesc
@@ -12003,7 +12003,7 @@ declare module egret.gui {
         static flexChildrenProportionally(spaceForChildren: number, spaceToDistribute: number, totalPercent: number, childInfoArray: Array<any>): void;
     }
 }
-declare module egret.gui {
+declare namespace egret.gui {
     /**
      * @class egret.gui.ILayoutManagerClient
      * @interface
@@ -12050,7 +12050,7 @@ declare module egret.gui {
         parent: DisplayObjectContainer;
     }
 }
-declare module egret.gui {
+declare namespace egret.gui {
     /**
      * @class egret.gui.IPopUpManager
      * @interface
@@ -12101,7 +12101,7 @@ declare module egret.gui {
         popUpList: Array<any>;
     }
 }
-declare module egret.gui {
+declare namespace egret.gui {
     /**
      * @class egret.gui.LayoutManager
      * @classdesc
@@ -12183,7 +12183,7 @@ declare module egret.gui {
         validateClient(target: ILayoutManagerClient, skipDisplayList?: boolean): void;
     }
 }
-declare module egret.gui {
+declare namespace egret.gui {
     /**
      * @class egret.gui.PopUpManager
      * @classdesc
@@ -12263,7 +12263,7 @@ declare module egret.gui {
         static removeEventListener(type: string, listener: Function, thisObject: any, useCapture?: boolean): void;
     }
 }
-declare module egret.gui {
+declare namespace egret.gui {
     /**
      * @class egret.gui.PopUpManagerImpl
      * @classdesc
@@ -12347,7 +12347,7 @@ declare module egret.gui {
         bringToFront(popUp: IVisualElement): void;
     }
 }
-declare module egret.gui {
+declare namespace egret.gui {
     /**
      * @class egret.gui.DepthQueue
      * @classdesc
@@ -12430,7 +12430,7 @@ declare module egret.gui {
         items: any;
     }
 }
-declare module egret.gui {
+declare namespace egret.gui {
     /**
      * @class egret.gui.OverrideBase
      * @classdesc
@@ -12452,7 +12452,7 @@ declare module egret.gui {
         initializeFromObject(properties: any): any;
     }
 }
-declare module egret.gui {
+declare namespace egret.gui {
     /**
      * @class egret.gui.AddItems
      * @classdesc
@@ -12522,7 +12522,7 @@ declare module egret.gui {
         remove(parent: IContainer): void;
     }
 }
-declare module egret.gui {
+declare namespace egret.gui {
     /**
      * @class egret.gui.IOverride
      * @interface
@@ -12550,7 +12550,7 @@ declare module egret.gui {
         remove(parent: IContainer): void;
     }
 }
-declare module egret.gui {
+declare namespace egret.gui {
     class InterruptionBehavior {
         /**
          * 指定一个过渡（可中断另一个正在运行的过渡）在开始之前结束另一个过渡。
@@ -12565,7 +12565,7 @@ declare module egret.gui {
         constructor();
     }
 }
-declare module egret.gui {
+declare namespace egret.gui {
     /**
      * @class egret.gui.SetProperty
      * @classdesc
@@ -12617,7 +12617,7 @@ declare module egret.gui {
         private toBoolean(value);
     }
 }
-declare module egret.gui {
+declare namespace egret.gui {
     /**
      * @class egret.gui.SetStyle
      * @classdesc
@@ -12670,7 +12670,7 @@ declare module egret.gui {
         private toBoolean(value);
     }
 }
-declare module egret.gui {
+declare namespace egret.gui {
     /**
      * @class egret.gui.State
      * @classdesc
@@ -12711,7 +12711,7 @@ declare module egret.gui {
         initialize(parent: IStateClient): void;
     }
 }
-declare module egret.gui {
+declare namespace egret.gui {
     class Transition {
         constructor();
         /**
@@ -12741,7 +12741,7 @@ declare module egret.gui {
         interruptionBehavior: string;
     }
 }
-declare module egret.gui {
+declare namespace egret.gui {
     /**
      * @language en_US
      * Conduct mapping injection with class definition as the value.
@@ -12843,7 +12843,7 @@ declare module egret.gui {
         getInstance(clazz: any, named?: string): any;
     }
 }
-declare module egret.gui {
+declare namespace egret.gui {
     /**
      * @class egret.gui.LayoutUtil
      * @classdesc
@@ -12859,7 +12859,7 @@ declare module egret.gui {
         static adjustRelativeByXY(element: IVisualElement, parent?: DisplayObjectContainer): void;
     }
 }
-declare module egret.gui {
+declare namespace egret.gui {
     /**
      * 返回字符串所对应的全局唯一Rectangle对象。此方法主要为了减少scale9Grid属性的实例个数。
      * 参数的相同的九宫格数据使用此方法可以全局共享同一个Rectangle对象。
@@ -12868,7 +12868,7 @@ declare module egret.gui {
      */
     function getScale9Grid(value: string): Rectangle;
 }
-declare module egret.gui {
+declare namespace egret.gui {
     /**
      * 设置键值对的简便方法。此方法仅供exmlc编译器内部使用。
      */

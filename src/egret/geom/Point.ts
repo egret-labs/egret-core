@@ -28,7 +28,7 @@
 //////////////////////////////////////////////////////////////////////////////////////
 
 
-module egret {
+namespace egret {
 
     var pointPool:Point[] = [];
     var DEG_TO_RAD:number = Math.PI / 180;

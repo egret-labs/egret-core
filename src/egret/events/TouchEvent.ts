@@ -29,7 +29,7 @@
 
 /// <reference path="../geom/Point.ts" />
 
-module egret {
+namespace egret {
 
     var localPoint:Point = new Point();
 

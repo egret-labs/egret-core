@@ -40,7 +40,7 @@ function __extends(d, b) {
 }
 var __define = this.__define || function (o, p, g, s) {   Object.defineProperty(o, p, { configurable:true, enumerable:true, get:g,set:s }) };
 
-module egret {
+namespace egret {
     /**
      * @language en_US
      * The HashObject class is the base class for all objects in the Egret framework.The HashObject
