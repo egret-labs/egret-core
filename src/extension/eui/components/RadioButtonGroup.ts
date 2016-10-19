@@ -30,24 +30,24 @@
 
 namespace eui {
 
-    var groupCount:number = 0;
+    let groupCount:number = 0;
 
     /**
      * @private
      * 显示列表深度排序
      */
     function breadthOrderCompare(a:egret.DisplayObject, b:egret.DisplayObject):number {
-        var aParent = a.parent;
-        var bParent = b.parent;
+        let aParent = a.parent;
+        let bParent = b.parent;
 
         if (!aParent || !bParent)
             return 0;
 
-        var aNestLevel = a.$nestLevel;
-        var bNestLevel = b.$nestLevel;
+        let aNestLevel = a.$nestLevel;
+        let bNestLevel = b.$nestLevel;
 
-        var aIndex = 0;
-        var bIndex = 0;
+        let aIndex = 0;
+        let bIndex = 0;
 
         if (aParent == bParent) {
             aIndex = aParent.getChildIndex(a);
@@ -197,9 +197,9 @@ namespace eui {
             if (this.$enabled === value)
                 return;
             this.$enabled = value;
-            var buttons = this.radioButtons;
-            var length = buttons.length;
-            for (var i = 0; i < length; i++)
+            let buttons = this.radioButtons;
+            let length = buttons.length;
+            for (let i = 0; i < length; i++)
                 buttons[i].invalidateState();
         }
 
@@ -278,9 +278,9 @@ namespace eui {
                 this.$setSelection(null, false);
                 return;
             }
-            var n = this.numRadioButtons;
-            for (var i = 0; i < n; i++) {
-                var radioButton = this.radioButtons[i];
+            let n = this.numRadioButtons;
+            for (let i = 0; i < n; i++) {
+                let radioButton = this.radioButtons[i];
                 if (radioButton.value == value ||
                     radioButton.label == value) {
                     this.changeSelection(i, false);
@@ -333,11 +333,11 @@ namespace eui {
          */
         $addInstance(instance:RadioButton):void {
             instance.addEventListener(egret.Event.REMOVED, this.removedHandler, this);
-            var buttons = this.radioButtons;
+            let buttons = this.radioButtons;
             buttons.push(instance);
             buttons.sort(breadthOrderCompare);
-            var length = buttons.length;
-            for (var i = 0; i < length; i++) {
+            let length = buttons.length;
+            for (let i = 0; i < length; i++) {
                 buttons[i].$indexNumber = i;
             }
             if (this._selectedValue)
@@ -355,11 +355,11 @@ namespace eui {
          */
         $removeInstance(instance:RadioButton, addListener?:boolean):void {
             if (instance) {
-                var foundInstance = false;
-                var buttons = this.radioButtons;
-                var length = buttons.length;
-                for (var i = 0; i < length; i++) {
-                    var rb = buttons[i];
+                let foundInstance = false;
+                let buttons = this.radioButtons;
+                let length = buttons.length;
+                for (let i = 0; i < length; i++) {
+                    let rb = buttons[i];
                     if (foundInstance) {
                         rb.$indexNumber = rb.$indexNumber - 1;
                     }
@@ -396,8 +396,8 @@ namespace eui {
                 }
             }
             else {
-                var n = this.numRadioButtons;
-                for (var i = 0; i < n; i++) {
+                let n = this.numRadioButtons;
+                for (let i = 0; i < n; i++) {
                     if (value == this.getRadioButtonAt(i)) {
                         this.changeSelection(i, fireChange);
                         break;
@@ -413,7 +413,7 @@ namespace eui {
          * 改变选中项
          */
         private changeSelection(index:number, fireChange?:boolean):void {
-            var rb = this.getRadioButtonAt(index);
+            let rb = this.getRadioButtonAt(index);
             if (rb && rb != this._selection) {
 
                 if (this._selection)
@@ -431,7 +431,7 @@ namespace eui {
          * 单选按钮添加到显示列表
          */
         private addedHandler(event:egret.Event):void {
-            var rb:RadioButton = event.target;
+            let rb:RadioButton = event.target;
             if (rb) {
                 rb.removeEventListener(egret.Event.ADDED, this.addedHandler, this);
                 this.$addInstance(rb);
@@ -443,7 +443,7 @@ namespace eui {
          * 单选按钮从显示列表移除
          */
         private removedHandler(event:egret.Event):void {
-            var rb:RadioButton = event.target;
+            let rb:RadioButton = event.target;
             if (rb) {
                 rb.removeEventListener(egret.Event.REMOVED, this.removedHandler, this);
                 this.$removeInstance(rb, true);

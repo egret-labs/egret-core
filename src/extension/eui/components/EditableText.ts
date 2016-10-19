@@ -38,7 +38,7 @@ namespace eui.sys {
 }
 namespace eui {
 
-    var UIImpl = sys.UIComponentImpl;
+    let UIImpl = sys.UIComponentImpl;
 
     /**
      * @language en_US
@@ -99,8 +99,8 @@ namespace eui {
          * @param value
          */
         $setWidth(value: number): boolean {
-            var result1: boolean = super.$setWidth(value);
-            var result2: boolean = UIImpl.prototype.$setWidth.call(this, value);
+            let result1: boolean = super.$setWidth(value);
+            let result2: boolean = UIImpl.prototype.$setWidth.call(this, value);
             return result1 && result2;
         }
 
@@ -110,8 +110,8 @@ namespace eui {
          * @param value
          */
         $setHeight(value: number): boolean {
-            var result1: boolean = super.$setHeight(value);
-            var result2: boolean = UIImpl.prototype.$setHeight.call(this, value);
+            let result1: boolean = super.$setHeight(value);
+            let result2: boolean = UIImpl.prototype.$setHeight.call(this, value);
             return result1 && result2;
         }
         /**
@@ -120,7 +120,7 @@ namespace eui {
          * @param value
          */
         $getText():string {
-            var value = super.$getText();
+            let value = super.$getText();
             if(value == this.$EditableText[sys.EditableTextKeys.promptText]){
                 value = "";
             }
@@ -132,7 +132,7 @@ namespace eui {
          * @param value
          */
         $setText(value: string): boolean {
-            var promptText = this.$EditableText[sys.EditableTextKeys.promptText];
+            let promptText = this.$EditableText[sys.EditableTextKeys.promptText];
             if (promptText != value || promptText == null) {
                 this.$isShowPrompt = false;
                 this.textColor = this.$EditableText[sys.EditableTextKeys.textColorUser];
@@ -144,7 +144,7 @@ namespace eui {
                     super.$setTextColor(this.$promptColor);
                 }
             }
-            var result: boolean = super.$setText(value);
+            let result: boolean = super.$setText(value);
             PropertyEvent.dispatchPropertyEvent(this, PropertyEvent.PROPERTY_CHANGE, "text");
             return result;
         }
@@ -199,12 +199,12 @@ namespace eui {
             return this.$EditableText[sys.EditableTextKeys.promptText];
         }
         public set prompt(value: string) {
-            var values = this.$EditableText;
-            var promptText = values[sys.EditableTextKeys.promptText];
+            let values = this.$EditableText;
+            let promptText = values[sys.EditableTextKeys.promptText];
             if (promptText == value)
                 return;
             values[sys.EditableTextKeys.promptText] = value;
-            var text = this.text;
+            let text = this.text;
             if (!text || text == promptText) {
                 this.showPromptText();
             }
@@ -235,7 +235,7 @@ namespace eui {
             value = +value | 0;
             if (this.$promptColor != value) {
                 this.$promptColor = value;
-                var text = this.text;
+                let text = this.text;
                 if (!text || text == this.$EditableText[sys.EditableTextKeys.promptText]) {
                     this.showPromptText();
                 }
@@ -260,8 +260,8 @@ namespace eui {
             this.$isFocusIn = true;
             this.$isShowPrompt = false;
             this.displayAsPassword = this.$EditableText[sys.EditableTextKeys.asPassword];
-            var values = this.$EditableText;
-            var text = this.text;
+            let values = this.$EditableText;
+            let text = this.text;
             if (!text || text == values[sys.EditableTextKeys.promptText]) {
                 this.textColor = values[sys.EditableTextKeys.textColorUser];
                 this.text = "";
@@ -271,7 +271,7 @@ namespace eui {
          * @private
          */
         private showPromptText(): void {
-            var values = this.$EditableText;
+            let values = this.$EditableText;
             this.$isShowPrompt = true;
             super.$setTextColor(this.$promptColor);
             super.$setDisplayAsPassword(false);
@@ -346,10 +346,10 @@ namespace eui {
          * @platform Web,Native
          */
         protected measure(): void {
-            var values = this.$UIComponent;
-            var textValues = this.$TextField;
-            var oldWidth = textValues[egret.sys.TextKeys.textFieldWidth];
-            var availableWidth = NaN;
+            let values = this.$UIComponent;
+            let textValues = this.$TextField;
+            let oldWidth = textValues[egret.sys.TextKeys.textFieldWidth];
+            let availableWidth = NaN;
             if (!isNaN(this._widthConstraint)) {
                 availableWidth = this._widthConstraint;
                 this._widthConstraint = NaN;
@@ -624,7 +624,7 @@ namespace eui {
             if (isNaN(layoutWidth) || layoutWidth === this._widthConstraint || layoutWidth == 0) {
                 return;
             }
-            var values = this.$UIComponent;
+            let values = this.$UIComponent;
             if (!isNaN(values[sys.UIKeys.explicitHeight])) {
                 return;
             }

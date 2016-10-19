@@ -658,12 +658,12 @@ namespace egret {
          * @platform Web,Native
          */
         public static dispatchEvent(target:IEventDispatcher, type:string, bubbles:boolean = false, data?:any):boolean {
-            var event:IOErrorEvent = Event.create(Event, type, bubbles);
-            var props:any = Event._getPropertyData(Event);
+            let event:IOErrorEvent = Event.create(Event, type, bubbles);
+            let props:any = Event._getPropertyData(Event);
             if (data != undefined) {
                 props.data = data;
             }
-            var result = target.dispatchEvent(event);
+            let result = target.dispatchEvent(event);
             Event.release(event);
             return result;
         }
@@ -675,7 +675,7 @@ namespace egret {
          * @returns
          */
         public static _getPropertyData(EventClass:any):any {
-            var props:any = EventClass._props;
+            let props:any = EventClass._props;
             if (!props)
                 props = EventClass._props = {};
             return props;
@@ -694,7 +694,7 @@ namespace egret {
          * @param cancelable Determines whether the Event object can be canceled. The default values is false.
          * @example
          * <pre>
-         *    var event = Event.create(Event,type, bubbles);
+         *    let event = Event.create(Event,type, bubbles);
          *    event.data = data;    //optional,initializes custom data here
          *    this.dispatchEvent(event);
          *    Event.release(event);
@@ -713,7 +713,7 @@ namespace egret {
          * @param cancelable 确定是否可以取消 Event 对象。默认值为 false。
          * @example
          * <pre>
-         *    var event = Event.create(Event,type, bubbles);
+         *    let event = Event.create(Event,type, bubbles);
          *    event.data = data;  //可选，若指定义事件上需要附加其他参数，可以在获取实例后在此处设置。
          *    this.dispatchEvent(event);
          *    Event.release(event);
@@ -724,12 +724,12 @@ namespace egret {
          */
         public static create<T extends Event>(EventClass:{new (type:string, bubbles?:boolean, cancelable?:boolean): T;eventPool?:Event[]},
                                               type:string, bubbles?:boolean, cancelable?:boolean):T {
-            var eventPool:Event[] = EventClass.eventPool;
+            let eventPool:Event[] = EventClass.eventPool;
             if (!eventPool) {
                 eventPool = EventClass.eventPool = [];
             }
             if (eventPool.length) {
-                var event:T = <T> eventPool.pop();
+                let event:T = <T> eventPool.pop();
                 event.$type = type;
                 event.$bubbles = !!bubbles;
                 event.$cancelable = !!cancelable;
@@ -751,7 +751,7 @@ namespace egret {
          * if not,it may throw an error.
          * @example
          * <pre>
-         *    var event = Event.create(Event,type, bubbles);
+         *    let event = Event.create(Event,type, bubbles);
          *    event.data = data; //optional,initializes custom data here
          *    this.dispatchEvent(event);
          *    Event.release(event);
@@ -767,7 +767,7 @@ namespace egret {
          * 注意：此方法只能传入由Event.create()创建的事件实例，传入非法对象实例可能会导致报错。
          * @example
          * <pre>
-         *    var event = Event.create(Event,type, bubbles);
+         *    let event = Event.create(Event,type, bubbles);
          *    event.data = data;   //可选，若指定义事件上需要附加其他参数，可以在获取实例后在此处设置。
          *    this.dispatchEvent(event);
          *    Event.release(event);
@@ -778,7 +778,7 @@ namespace egret {
          */
         public static release(event:Event):void {
             event.clean();
-            var EventClass:any = Object.getPrototypeOf(event).constructor;
+            let EventClass:any = Object.getPrototypeOf(event).constructor;
             EventClass.eventPool.push(event);
         }
 

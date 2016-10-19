@@ -58,7 +58,7 @@ namespace egret.web {
             this.host = host;
             this.port = port;
 
-            var socketServerUrl = "ws://" + this.host + ":" + this.port;
+            let socketServerUrl = "ws://" + this.host + ":" + this.port;
             this.socket = new window["WebSocket"](socketServerUrl);
             this.socket.binaryType = "arraybuffer";
             this._bindEvent();
@@ -71,8 +71,8 @@ namespace egret.web {
         }
 
         private _bindEvent():void {
-            var that = this;
-            var socket = this.socket;
+            let that = this;
+            let socket = this.socket;
             socket.onopen = function () {
                 if (that.onConnect) {
                     that.onConnect.call(that.thisObject);

@@ -254,10 +254,10 @@ namespace egret {
          * 设置系统信息
          */
         public static $setNativeCapabilities(value:string):void {
-            var arr = value.split("-");
+            let arr = value.split("-");
             if (arr.length <= 4) {
                 //todo 未来去掉数量判断，2.5.4版本之前的参数大于4个
-                var osType:string = arr[0];
+                let osType:string = arr[0];
                 switch (osType) {
                     case "android":
                         osType = "Android";
@@ -267,7 +267,7 @@ namespace egret {
                         break;
                 }
                 Capabilities.$os = osType;
-                var version = arr[2].substring(1,arr[2].length);
+                let version = arr[2].substring(1,arr[2].length);
                 Capabilities.$supportVersion = version;
             }
         }
@@ -353,18 +353,18 @@ namespace egret {
 /**
  * @private
  */
-var testDeviceType = function () {
+let testDeviceType = function () {
     if (!this["navigator"]) {
         return true
     }
-    var ua = navigator.userAgent.toLowerCase();
+    let ua = navigator.userAgent.toLowerCase();
     return (ua.indexOf('mobile') != -1 || ua.indexOf('android') != -1);
 };
 
 /**
  * @private
  */
-var testRuntimeType = function () {
+let testRuntimeType = function () {
     if (this["navigator"]) {
         return true;
     }

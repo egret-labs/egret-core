@@ -91,10 +91,12 @@ namespace egret.web {
             if (DEBUG && !url) {
                 egret.$error(3002);
             }
-            if (this.video && this.video.src == url)
+            if (this.video && this.video.src == url){
                 return;
+            }
+            let video:HTMLVideoElement;
             if(!this.video || egret.Capabilities.isMobile){
-                var video = document.createElement("video");
+                video = document.createElement("video");
                 this.video = video;
                 video.controls = null;
             }else{
@@ -131,7 +133,7 @@ namespace egret.web {
 
             this.isPlayed = true;
 
-            var video = this.video;
+            let video = this.video;
             if (startTime != undefined)
                 video.currentTime = +startTime || 0;
             video.loop = !!loop;
@@ -157,7 +159,7 @@ namespace egret.web {
         }
 
         private checkFullScreen(playFullScreen:boolean):void {
-            var video = this.video;
+            let video = this.video;
 
             if (playFullScreen) {
                 if (video.parentElement == null) {
@@ -188,9 +190,9 @@ namespace egret.web {
         }
 
         private goFullscreen():boolean {
-            var video = this.video;
+            let video = this.video;
 
-            var fullscreenType:string;
+            let fullscreenType:string;
             fullscreenType = egret.web.getPrefixStyleName('requestFullscreen', video);
             if (!video[fullscreenType]) {
                 fullscreenType = egret.web.getPrefixStyleName('requestFullScreen', video);
@@ -209,7 +211,7 @@ namespace egret.web {
         }
 
         private setFullScreenMonitor(use:boolean):void {
-            var video = this.video;
+            let video = this.video;
 
             if (use) {
                 video.addEventListener("mozfullscreenchange", this.screenChanged);
@@ -232,7 +234,7 @@ namespace egret.web {
         }
 
         private screenChanged = (e):void => {
-            var isfullscreen = !!this.video['webkitDisplayingFullscreen'];
+            let isfullscreen = !!this.video['webkitDisplayingFullscreen'];
             if (!isfullscreen) {
                 this.checkFullScreen(false);
                 
@@ -386,12 +388,12 @@ namespace egret.web {
         }
 
         private loadPoster() {
-            var poster = this.poster;
+            let poster = this.poster;
             if (!poster)
                 return;
-            var imageLoader = new egret.ImageLoader();
+            let imageLoader = new egret.ImageLoader();
             imageLoader.once(egret.Event.COMPLETE, e=> {
-                var posterData = <HTMLImageElement><any>imageLoader.data;
+                let posterData = <HTMLImageElement><any>imageLoader.data;
                 this.posterData = imageLoader.data;
 
                 this.posterData.width = this.getPlayWidth();
@@ -408,7 +410,7 @@ namespace egret.web {
          */
         private onVideoLoaded = () => {
             this.video.removeEventListener("canplay", this.onVideoLoaded);
-            var video = this.video;
+            let video = this.video;
             this.loaded = true;
             //video.pause();
             if (this.posterData) {
@@ -427,8 +429,8 @@ namespace egret.web {
          * @private
          */
         $measureContentBounds(bounds:Rectangle):void {
-            var bitmapData = this.bitmapData;
-            var posterData = this.posterData;
+            let bitmapData = this.bitmapData;
+            let posterData = this.posterData;
             if (bitmapData) {
                 bounds.setTo(0, 0, this.getPlayWidth(), this.getPlayHeight());
             }
@@ -476,11 +478,11 @@ namespace egret.web {
          * @private
          */
         $render():void {
-            var node = <sys.BitmapNode>this.$renderNode;
-            var bitmapData = this.bitmapData;
-            var posterData = this.posterData;
-            var width = this.getPlayWidth();
-            var height = this.getPlayHeight();
+            let node = <sys.BitmapNode>this.$renderNode;
+            let bitmapData = this.bitmapData;
+            let posterData = this.posterData;
+            let width = this.getPlayWidth();
+            let height = this.getPlayHeight();
             if ((!this.isPlayed || egret.Capabilities.isMobile) && posterData) {
                 node.image = posterData;
                 node.drawImage(0, 0, posterData.width, posterData.height, 0, 0, width, height);

@@ -31,12 +31,12 @@
 
 namespace EXML {
 
-    var parser = new eui.sys.EXMLParser();
+    let parser = new eui.sys.EXMLParser();
 
-    var requestPool: egret.HttpRequest[] = [];
-    var callBackMap:any = {};
-    var parsedClasses:any = {};
-    var $prefixURL: string = "";
+    let requestPool: egret.HttpRequest[] = [];
+    let callBackMap:any = {};
+    let parsedClasses:any = {};
+    let $prefixURL: string = "";
     /**
      * @language en_US
      * Set a prefix url.
@@ -55,7 +55,7 @@ namespace EXML {
      * @version eui 1.0
      * @platform Web,Native
      */
-    export var prefixURL: string;
+    export let prefixURL: string;
     Object.defineProperty(EXML, "prefixURL", {
         get: function(): string { return $prefixURL },
         set: function(value: string) { $prefixURL = value },
@@ -134,7 +134,7 @@ namespace EXML {
             callBack && callBack.call(thisObject, parsedClasses[url], url);
             return;
         }
-        var list = callBackMap[url];
+        let list = callBackMap[url];
         if (list) {
             list.push([callBack, thisObject]);
             return;
@@ -152,7 +152,7 @@ namespace EXML {
             callBack && callBack.call(thisObject, [], urls);
             return;
         }
-        var exmlContents:string[] = [];
+        let exmlContents:string[] = [];
 
         urls.forEach(url=> {
 
@@ -162,7 +162,7 @@ namespace EXML {
                 return;
             }
 
-            var loaded = (url:string, text:string) => {
+            let loaded = (url:string, text:string) => {
                 exmlContents[url] = text;
                 exmlContents.push(url);
                 if (exmlContents.length == urls.length)
@@ -178,7 +178,7 @@ namespace EXML {
      * @private
      */
     function onLoadAllFinished(urls:string[], exmlContents:any, callBack?:(clazz:any[], url:string[]) => void, thisObject?:any) {
-        var clazzes = [];
+        let clazzes = [];
         urls.forEach((url, i)=> {
 
             if ((url in parsedClasses) && !exmlContents[url]) {
@@ -186,8 +186,8 @@ namespace EXML {
                 return;
             }
 
-            var text = exmlContents[url];
-            var clazz = $parseURLContent(url, text);
+            let text = exmlContents[url];
+            let clazz = $parseURLContent(url, text);
             clazzes[i] = clazz;
 
         });
@@ -201,16 +201,17 @@ namespace EXML {
      * @param text
      */
     export function $parseURLContentAsJs(url:string,text:string,className:string):any{
+        let clazz:any = null;
         if (text) {
-            var clazz = parser.$parseCode(text,className);
+            clazz = parser.$parseCode(text,className);
         }
         if (url) {
             parsedClasses[url] = clazz;
-            var list:any[] = callBackMap[url];
+            let list:any[] = callBackMap[url];
             delete callBackMap[url];
-            var length = list ? list.length : 0;
-            for (var i = 0; i < length; i++) {
-                var arr = list[i];
+            let length = list ? list.length : 0;
+            for (let i = 0; i < length; i++) {
+                let arr = list[i];
                 if (arr[0] && arr[1])
                     arr[0].call(arr[1], clazz, url);
             }
@@ -221,16 +222,17 @@ namespace EXML {
      * @private
      */
     export function $parseURLContent(url:string, text:string):any {
+        let clazz:any = null;
         if (text) {
-            var clazz = parse(text);
+            clazz = parse(text);
         }
         if (url) {
             parsedClasses[url] = clazz;
-            var list:any[] = callBackMap[url];
+            let list:any[] = callBackMap[url];
             delete callBackMap[url];
-            var length = list ? list.length : 0;
-            for (var i = 0; i < length; i++) {
-                var arr = list[i];
+            let length = list ? list.length : 0;
+            for (let i = 0; i < length; i++) {
+                let arr = list[i];
                 if (arr[0] && arr[1])
                     arr[0].call(arr[1], clazz, url);
             }
@@ -242,18 +244,18 @@ namespace EXML {
      * @private
      */
     function request(url:string, callback:(url:string, text:string) => void) {
-        var openUrl = url;
+        let openUrl = url;
         if (url.indexOf("://") == -1) {
             openUrl = $prefixURL + url;
         }
 
-        var onConfigLoaded = function (str:string) {
+        let onConfigLoaded = function (str:string) {
             if(!str) {
                 str = "";
             }
             callback(url, str);
         };
-        var adapter:eui.IThemeAdapter = egret.getImplementation("eui.IThemeAdapter");
+        let adapter:eui.IThemeAdapter = egret.getImplementation("eui.IThemeAdapter");
         if (!adapter) {
             adapter = new eui.DefaultThemeAdapter();
         }

@@ -107,11 +107,11 @@ namespace egret {
 
 namespace egret.sys {
 
-    var blendModeString = ["normal", "add", "erase"];
-    var blendModeNumber = {};
-    var length = blendModeString.length;
-    for (var i = 0; i < length; i++) {
-        var str = blendModeString[i];
+    let blendModeString = ["normal", "add", "erase"];
+    let blendModeNumber = {};
+    let length = blendModeString.length;
+    for (let i = 0; i < length; i++) {
+        let str = blendModeString[i];
         blendModeNumber[str] = i;
     }
 
@@ -120,7 +120,7 @@ namespace egret.sys {
      * 转换 blendMode 字符串为数字。
      */
     export function blendModeToNumber(blendMode:string):number {
-        var num = blendModeNumber[blendMode];
+        let num = blendModeNumber[blendMode];
         return num === undefined ? 0 : num;
     }
 
@@ -129,7 +129,7 @@ namespace egret.sys {
      * 转换数字为 blendMode 字符串。
      */
     export function numberToBlendMode(blendMode:number):string {
-        var str = blendModeString[blendMode];
+        let str = blendModeString[blendMode];
         return str === undefined ? "normal" : str;
     }
 

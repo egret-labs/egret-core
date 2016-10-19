@@ -49,7 +49,7 @@ namespace egret.native {
          * @param loader {URLLoader}
          */
         public proceed(loader:URLLoader):void {
-            var self = this;
+            let self = this;
             if (loader.dataFormat == URLLoaderDataFormat.TEXTURE) {
                 self.loadTexture(loader);
                 return;
@@ -59,13 +59,13 @@ namespace egret.native {
                 return;
             }
 
-            var request:URLRequest = loader._request;
-            var virtualUrl:string = self.getVirtualUrl($getUrl(request));
-            var httpRequest = new HttpRequest();
+            let request:URLRequest = loader._request;
+            let virtualUrl:string = self.getVirtualUrl($getUrl(request));
+            let httpRequest = new HttpRequest();
             httpRequest.open(virtualUrl, request.method == URLRequestMethod.POST ? HttpMethod.POST : HttpMethod.GET);
-            var length = request.requestHeaders.length;
-            for (var i:number = 0; i < length; i++) {
-                var urlRequestHeader:egret.URLRequestHeader = request.requestHeaders[i];
+            let length = request.requestHeaders.length;
+            for (let i:number = 0; i < length; i++) {
+                let urlRequestHeader:egret.URLRequestHeader = request.requestHeaders[i];
                 httpRequest.setRequestHeader(urlRequestHeader.name, urlRequestHeader.value);
             }
             httpRequest.addEventListener(Event.COMPLETE, function (){
@@ -80,10 +80,10 @@ namespace egret.native {
         }
 
         private loadSound(loader:URLLoader) {
-            var self = this;
-            var virtualUrl:string = this.getVirtualUrl(loader._request.url);
+            let self = this;
+            let virtualUrl:string = this.getVirtualUrl(loader._request.url);
 
-            var sound:egret.Sound = new egret.Sound();
+            let sound:egret.Sound = new egret.Sound();
             sound.addEventListener(egret.Event.COMPLETE, onLoadComplete, self);
             sound.addEventListener(egret.IOErrorEvent.IO_ERROR, onError, self);
             sound.addEventListener(egret.ProgressEvent.PROGRESS, onPostProgress, self);
@@ -103,7 +103,7 @@ namespace egret.native {
 
                 loader.data = sound;
 
-                var loadedFunc = function () {
+                let loadedFunc = function () {
                     loader.dispatchEventWith(Event.COMPLETE);
                 };
                 if(__global.setTimeout) {
@@ -122,11 +122,11 @@ namespace egret.native {
         }
 
         private loadTexture(loader:URLLoader):void {
-            var self = this;
-            var request = loader._request;
-            var virtualUrl:string = self.getVirtualUrl(request.url);
+            let self = this;
+            let request = loader._request;
+            let virtualUrl:string = self.getVirtualUrl(request.url);
 
-            var imageLoader:ImageLoader = new ImageLoader();
+            let imageLoader:ImageLoader = new ImageLoader();
             imageLoader.addEventListener(egret.Event.COMPLETE, onLoadComplete, self);
             imageLoader.addEventListener(egret.IOErrorEvent.IO_ERROR, onError, self);
             imageLoader.addEventListener(egret.ProgressEvent.PROGRESS, onPostProgress, self);
@@ -144,15 +144,15 @@ namespace egret.native {
             function onLoadComplete(e) {
                 removeListeners();
 
-                var bitmapData = <any>imageLoader.data;
+                let bitmapData = <any>imageLoader.data;
                 //bitmapData.setAttribute("bitmapSrc", virtualUrl);
 
-                var texture:Texture = new Texture();
+                let texture:Texture = new Texture();
                 texture._setBitmapData(bitmapData);
 
                 loader.data = texture;
 
-                var loadedFunc = function () {
+                let loadedFunc = function () {
                     loader.dispatchEventWith(Event.COMPLETE);
                 };
                 if(__global.setTimeout) {

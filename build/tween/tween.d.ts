@@ -849,7 +849,7 @@ declare namespace egret {
          * Execute callback function
          * @param callback {Function} Callback method
          * @param thisObj {any} this action scope of the callback method
-         * @param params {Array<any>} Parameter of the callback method
+         * @param params {any[]} Parameter of the callback method
          * @returns {egret.Tween} Tween object itself
          * @version Egret 2.4
          * @platform Web,Native
@@ -866,7 +866,7 @@ declare namespace egret {
          * 执行回调函数
          * @param callback {Function} 回调方法
          * @param thisObj {any} 回调方法this作用域
-         * @param params {Array<any>} 回调方法参数
+         * @param params {any[]} 回调方法参数
          * @returns {egret.Tween} Tween对象本身
          * @version Egret 2.4
          * @platform Web,Native
@@ -878,7 +878,7 @@ declare namespace egret {
          *  }, this, [233, "hello"]);
          * </pre>
          */
-        call(callback: Function, thisObj?: any, params?: Array<any>): Tween;
+        call(callback: Function, thisObj?: any, params?: any[]): Tween;
         /**
          * Now modify the properties of the specified object to the specified value
          * @param props {Object} Property set of an object

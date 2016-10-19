@@ -231,8 +231,8 @@ namespace eui {
          * @platform Web,Native
          */
         public getItemIndex(item:any):number {
-            var length:number = this._source.length;
-            for (var i:number = 0; i < length; i++) {
+            let length:number = this._source.length;
+            for (let i:number = 0; i < length; i++) {
                 if (this._source[i] === item) {
                     return i;
                 }
@@ -257,7 +257,7 @@ namespace eui {
          * @platform Web,Native
          */
         public itemUpdated(item:any):void {
-            var index:number = this.getItemIndex(item);
+            let index:number = this.getItemIndex(item);
             if (index != -1) {
                 this.dispatchCoEvent(CollectionEventKind.UPDATE, index, -1, [item]);
             }
@@ -278,7 +278,7 @@ namespace eui {
          * @platform Web,Native
          */
         public removeAll():void {
-            var items:any[] = this._source.concat();
+            let items:any[] = this._source.concat();
             this._source.length = 0;
             this.dispatchCoEvent(CollectionEventKind.REMOVE, 0, -1, items);
         }
@@ -307,7 +307,7 @@ namespace eui {
                 DEBUG && egret.$error(1007);
                 return;
             }
-            var item:any = this._source.splice(index, 1)[0];
+            let item:any = this._source.splice(index, 1)[0];
             this.dispatchCoEvent(CollectionEventKind.REMOVE, index, -1, [item]);
             return item;
         }
@@ -337,7 +337,7 @@ namespace eui {
                 DEBUG && egret.$error(1007);
                 return;
             }
-            var oldItem:any = this._source.splice(index, 1, item)[0];
+            let oldItem:any = this._source.splice(index, 1, item)[0];
             this.dispatchCoEvent(CollectionEventKind.REPLACE, index, -1, [item], [oldItem]);
             return oldItem;
         }
@@ -361,12 +361,12 @@ namespace eui {
         public replaceAll(newSource:any[]):void {
             if (!newSource)
                 newSource = [];
-            var newLength = newSource.length;
-            var oldLength = this._source.length;
-            for (var i = newLength; i < oldLength; i++) {
+            let newLength = newSource.length;
+            let oldLength = this._source.length;
+            for (let i = newLength; i < oldLength; i++) {
                 this.removeItemAt(newLength);
             }
-            for (i = 0; i < newLength; i++) {
+            for (let i = 0; i < newLength; i++) {
                 if (i >= oldLength)
                     this.addItemAt(newSource[i], i);
                 else

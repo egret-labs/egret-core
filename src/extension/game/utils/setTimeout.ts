@@ -29,11 +29,11 @@
 
 namespace egret {
 
-    var setTimeoutCache:any = {};
-    var setTimeoutIndex:number = 0;
+    let setTimeoutCache:any = {};
+    let setTimeoutIndex:number = 0;
 
-    var setTimeoutCount:number = 0;
-    var lastTime:number = 0;
+    let setTimeoutCount:number = 0;
+    let lastTime:number = 0;
     /**
      * @language en_US
      * Run the designated function in specified delay (in milliseconds).
@@ -59,7 +59,7 @@ namespace egret {
      * @includeExample extension/game/utils/setTimeout.ts
      */
     export function setTimeout(listener:Function, thisObject:any, delay:number, ...args):number {
-        var data = {listener: listener, thisObject: thisObject, delay: delay, params: args};
+        let data = {listener: listener, thisObject: thisObject, delay: delay, params: args};
 
         setTimeoutCount++;
         if (setTimeoutCount == 1 && sys.$ticker) {
@@ -104,12 +104,12 @@ namespace egret {
      * @param dt 
      */
     function timeoutUpdate(timeStamp:number):boolean {
-        var dt:number = timeStamp - lastTime;
+        let dt:number = timeStamp - lastTime;
         lastTime = timeStamp;
 
-        for (var key in setTimeoutCache) {
-            var key2:any = key;
-            var data = setTimeoutCache[key2];
+        for (let key in setTimeoutCache) {
+            let key2:any = key;
+            let data = setTimeoutCache[key2];
             data.delay -= dt;
             if (data.delay <= 0) {
                 data.listener.apply(data.thisObject, data.params);

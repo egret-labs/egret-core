@@ -94,7 +94,7 @@ declare namespace egret {
      * @version Egret 2.4
      * @platform Web,Native
      */
-    var ISocket: {
+    let ISocket: {
         new (): ISocket;
     };
 }

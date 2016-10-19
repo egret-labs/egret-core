@@ -33,7 +33,7 @@ if (DEBUG&&window['HTMLVideoElement'] == undefined) {
 }
 namespace egret.web {
 
-    var className = "egret.BitmapData";
+    let className = "egret.BitmapData";
     registerClass(HTMLImageElement, className);
     registerClass(HTMLCanvasElement, className);
     registerClass(HTMLVideoElement, className);

@@ -94,7 +94,7 @@ namespace egret {
             if (movieClipName == "") {
                 return null;
             }
-            var output:MovieClipData = this.findFromCache(movieClipName, this.$mcDataCache);
+            let output:MovieClipData = this.findFromCache(movieClipName, this.$mcDataCache);
             if (!output) {
                 output = new MovieClipData();
                 this.fillData(movieClipName, output, this.$mcDataCache);
@@ -125,7 +125,7 @@ namespace egret {
          */
         private fillData(movieClipName:string, movieClip:MovieClipData, cache:any):void {
             if (this.$mcDataSet) {
-                var mcData = this.$mcDataSet.mc[movieClipName];
+                let mcData = this.$mcDataSet.mc[movieClipName];
                 if (mcData) {
                     movieClip.$init(mcData, this.$mcDataSet.res, this.$spriteSheet);
                     if (this.enableCache) {

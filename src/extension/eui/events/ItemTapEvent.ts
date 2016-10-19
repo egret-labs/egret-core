@@ -151,11 +151,11 @@ namespace eui {
             if (!target.hasEventListener(eventType)) {
                 return true;
             }
-            var event = egret.Event.create(ItemTapEvent, eventType);
+            let event = egret.Event.create(ItemTapEvent, eventType);
             event.item = itemRenderer.data;
             event.itemIndex = itemRenderer.itemIndex;
             event.itemRenderer = itemRenderer;
-            var result = target.dispatchEvent(event);
+            let result = target.dispatchEvent(event);
             egret.Event.release(event);
             return result;
         }

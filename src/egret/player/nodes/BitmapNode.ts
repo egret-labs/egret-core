@@ -102,7 +102,7 @@ namespace egret.sys {
             if (!image) {
                 return;
             }
-            var scale = $TextureScaleFactor;
+            let scale = $TextureScaleFactor;
             node.smoothing = smoothing;
             node.image = image;
             node.imageWidth = sourceWidth;
@@ -113,26 +113,26 @@ namespace egret.sys {
                     bitmapHeight, offsetX, offsetY, textureWidth, textureHeight, destW, destH);
             }
             else if (fillMode == egret.BitmapFillMode.SCALE) {
-                var tsX: number = destW / textureWidth * scale;
-                var tsY: number = destH / textureHeight * scale;
+                let tsX: number = destW / textureWidth * scale;
+                let tsY: number = destH / textureHeight * scale;
                 node.drawImage(bitmapX, bitmapY,
                     bitmapWidth, bitmapHeight, offsetX, offsetY, tsX * bitmapWidth, tsY * bitmapHeight);
             }
             else if (fillMode == egret.BitmapFillMode.CLIP) {
-                var displayW: number = Math.min(textureWidth, destW);
-                var displayH: number = Math.min(textureHeight, destH);
-                var scaledBitmapW = bitmapWidth * scale;
-                var scaledBitmapH = bitmapHeight * scale;
+                let displayW: number = Math.min(textureWidth, destW);
+                let displayH: number = Math.min(textureHeight, destH);
+                let scaledBitmapW = bitmapWidth * scale;
+                let scaledBitmapH = bitmapHeight * scale;
                 BitmapNode.drawClipImage(node, scale, bitmapX, bitmapY, scaledBitmapW, scaledBitmapH,
                     offsetX, offsetY, displayW, displayH);
             }
             else {
-                var scaledBitmapW = bitmapWidth * scale;
-                var scaledBitmapH = bitmapHeight * scale;
-                for (var startX = 0; startX < destW; startX += textureWidth) {
-                    for (var startY = 0; startY < destH; startY += textureHeight) {
-                        var displayW = Math.min(destW - startX, textureWidth);
-                        var displayH = Math.min(destH - startY, textureHeight);
+                let scaledBitmapW = bitmapWidth * scale;
+                let scaledBitmapH = bitmapHeight * scale;
+                for (let startX = 0; startX < destW; startX += textureWidth) {
+                    for (let startY = 0; startY < destH; startY += textureHeight) {
+                        let displayW = Math.min(destW - startX, textureWidth);
+                        let displayH = Math.min(destH - startY, textureHeight);
                         BitmapNode.drawClipImage(node, scale, bitmapX, bitmapY, scaledBitmapW, scaledBitmapH,
                             offsetX, offsetY, displayW, displayH, startX, startY);
                     }
@@ -149,20 +149,20 @@ namespace egret.sys {
         private static $updateTextureDataWithScale9Grid(node: sys.BitmapNode, scale9Grid: egret.Rectangle, bitmapX: number, bitmapY: number,
             bitmapWidth: number, bitmapHeight: number, offsetX: number, offsetY: number,
             textureWidth: number, textureHeight: number, destW: number, destH: number): void {
-            var imageWidth: number = bitmapWidth;
-            var imageHeight: number = bitmapHeight;
+            let imageWidth: number = bitmapWidth;
+            let imageHeight: number = bitmapHeight;
 
             destW = destW - (textureWidth - bitmapWidth * $TextureScaleFactor);
             destH = destH - (textureHeight - bitmapHeight * $TextureScaleFactor);
 
 
-            var targetW0 = scale9Grid.x - offsetX;
-            var targetH0 = scale9Grid.y - offsetY;
+            let targetW0 = scale9Grid.x - offsetX;
+            let targetH0 = scale9Grid.y - offsetY;
 
-            var sourceW0 = targetW0 / $TextureScaleFactor;
-            var sourceH0 = targetH0 / $TextureScaleFactor;
-            var sourceW1 = scale9Grid.width / $TextureScaleFactor;
-            var sourceH1 = scale9Grid.height / $TextureScaleFactor;
+            let sourceW0 = targetW0 / $TextureScaleFactor;
+            let sourceH0 = targetH0 / $TextureScaleFactor;
+            let sourceW1 = scale9Grid.width / $TextureScaleFactor;
+            let sourceH1 = scale9Grid.height / $TextureScaleFactor;
 
 
             //防止空心的情况出现。
@@ -178,33 +178,33 @@ namespace egret.sys {
                     sourceW0--;
                 }
             }
-            var sourceX0 = bitmapX;
-            var sourceX1 = sourceX0 + sourceW0;
-            var sourceX2 = sourceX1 + sourceW1;
-            var sourceW2 = imageWidth - sourceW0 - sourceW1;
+            let sourceX0 = bitmapX;
+            let sourceX1 = sourceX0 + sourceW0;
+            let sourceX2 = sourceX1 + sourceW1;
+            let sourceW2 = imageWidth - sourceW0 - sourceW1;
 
-            var sourceY0 = bitmapY;
-            var sourceY1 = sourceY0 + sourceH0;
-            var sourceY2 = sourceY1 + sourceH1;
-            var sourceH2 = imageHeight - sourceH0 - sourceH1;
+            let sourceY0 = bitmapY;
+            let sourceY1 = sourceY0 + sourceH0;
+            let sourceY2 = sourceY1 + sourceH1;
+            let sourceH2 = imageHeight - sourceH0 - sourceH1;
 
-            var targetW2 = sourceW2 * $TextureScaleFactor;
-            var targetH2 = sourceH2 * $TextureScaleFactor;
+            let targetW2 = sourceW2 * $TextureScaleFactor;
+            let targetH2 = sourceH2 * $TextureScaleFactor;
 
             if ((sourceW0 + sourceW2) * $TextureScaleFactor > destW || (sourceH0 + sourceH2) * $TextureScaleFactor > destH) {
                 node.drawImage(bitmapX, bitmapY, bitmapWidth, bitmapHeight, offsetX, offsetY, destW, destH);
                 return;
             }
 
-            var targetX0 = offsetX;
-            var targetX1 = targetX0 + targetW0;
-            var targetX2 = targetX0 + (destW - targetW2);
-            var targetW1 = destW - targetW0 - targetW2;
+            let targetX0 = offsetX;
+            let targetX1 = targetX0 + targetW0;
+            let targetX2 = targetX0 + (destW - targetW2);
+            let targetW1 = destW - targetW0 - targetW2;
 
-            var targetY0 = offsetY;
-            var targetY1 = targetY0 + targetH0;
-            var targetY2 = targetY0 + destH - targetH2;
-            var targetH1 = destH - targetH0 - targetH2;
+            let targetY0 = offsetY;
+            let targetY1 = targetY0 + targetH0;
+            let targetY2 = targetY0 + destH - targetH2;
+            let targetH1 = destH - targetH0 - targetH2;
 
             //
             //             x0     x1     x2
@@ -244,7 +244,7 @@ namespace egret.sys {
         private static drawClipImage(node: sys.BitmapNode, scale: number, bitmapX: number, bitmapY: number, scaledBitmapW: number,
             scaledBitmapH: number, offsetX: number, offsetY: number, destW: number, destH: number,
             startX: number = 0, startY: number = 0): void {
-            var offset = offsetX + scaledBitmapW - destW;
+            let offset = offsetX + scaledBitmapW - destW;
             if (offset > 0) {
                 scaledBitmapW -= offset;
             }

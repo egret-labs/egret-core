@@ -105,7 +105,7 @@ namespace egret.web {
          * @inheritDoc
          */
         public load(url:string):void {
-            var self = this;
+            let self = this;
 
             this.url = url;
 
@@ -149,7 +149,7 @@ namespace egret.web {
                 egret.$error(1049);
             }
 
-            var channel = new QQSoundChannel();
+            let channel = new QQSoundChannel();
             channel.$url = this.url;
             channel.$loops = loops;
             channel.$type = this.type;

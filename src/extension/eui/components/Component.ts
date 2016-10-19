@@ -162,16 +162,16 @@ namespace eui {
         }
 
         public set skinName(value:any) {
-            var values = this.$Component;
+            let values = this.$Component;
             values[sys.ComponentKeys.skinNameExplicitlySet] = true;
             if (values[sys.ComponentKeys.skinName] == value)
                 return;
             if (value) {
                 values[sys.ComponentKeys.skinName] = value;
             } else {
-                var theme = egret.getImplementation("eui.Theme");
+                let theme = egret.getImplementation("eui.Theme");
                 if (theme) {
-                    var skinName = theme.getSkinName(this);
+                    let skinName = theme.getSkinName(this);
                     if (skinName) {
                         values[sys.ComponentKeys.skinName] = skinName;
                     }
@@ -185,15 +185,15 @@ namespace eui {
          * 解析skinName
          */
         $parseSkinName():void {
-            var skinName = this.skinName;
-            var skin:any;
+            let skinName = this.skinName;
+            let skin:any;
             if (skinName) {
                 if (skinName.prototype) {
                     skin = new skinName();
                 }
                 else if (typeof(skinName) == "string") {
-                    var clazz:any;
-                    var text:string = skinName.trim();
+                    let clazz:any;
+                    let text:string = skinName.trim();
                     if (text.charAt(0) == "<") {
                         clazz = EXML.parse(text);
                     }
@@ -224,7 +224,7 @@ namespace eui {
             if (this.skinName != url) {
                 return;
             }
-            var skin = new clazz();
+            let skin = new clazz();
             this.setSkin(skin)
         }
 
@@ -265,22 +265,22 @@ namespace eui {
                 skin = null;
                 DEBUG && egret.$error(2202);
             }
-            var values = this.$Component;
-            var oldSkin:Skin = values[sys.ComponentKeys.skin];
+            let values = this.$Component;
+            let oldSkin:Skin = values[sys.ComponentKeys.skin];
             if (oldSkin) {
-                var skinParts:string[] = oldSkin.skinParts;
-                var length = skinParts.length;
-                for (var i = 0; i < length; i++) {
-                    var partName = skinParts[i];
+                let skinParts:string[] = oldSkin.skinParts;
+                let length = skinParts.length;
+                for (let i = 0; i < length; i++) {
+                    let partName = skinParts[i];
                     if (this[partName]) {
                         this.setSkinPart(partName, null);
                     }
                 }
-                var children = oldSkin.$elementsContent;
+                let children = oldSkin.$elementsContent;
                 if (children) {
                     length = children.length;
-                    for (var i = 0; i < length; i++) {
-                        var child = children[i];
+                    for (let i = 0; i < length; i++) {
+                        let child = children[i];
                         if (child.$parent == this) {
                             this.removeChild(child);
                         }
@@ -290,18 +290,18 @@ namespace eui {
             }
             values[sys.ComponentKeys.skin] = skin;
             if (skin) {
-                var skinParts:string[] = skin.skinParts;
-                var length = skinParts.length;
-                for (var i = 0; i < length; i++) {
-                    var partName = skinParts[i];
-                    var instance = skin[partName];
+                let skinParts:string[] = skin.skinParts;
+                let length = skinParts.length;
+                for (let i = 0; i < length; i++) {
+                    let partName = skinParts[i];
+                    let instance = skin[partName];
                     if (instance) {
                         this.setSkinPart(partName, instance);
                     }
                 }
-                children = skin.$elementsContent;
+                let children = skin.$elementsContent;
                 if (children) {
-                    for (i = children.length - 1; i >= 0; i--) {
+                    for (let i = children.length - 1; i >= 0; i--) {
                         this.addChildAt(children[i], 0);
                     }
                 }
@@ -336,7 +336,7 @@ namespace eui {
          * @platform Web,Native
          */
         public setSkinPart(partName:string, instance:any):void {
-            var oldInstance = this[partName];
+            let oldInstance = this[partName];
             if (oldInstance) {
                 this.partRemoved(partName, oldInstance);
             }
@@ -415,7 +415,7 @@ namespace eui {
          */
         $setTouchChildren(value:boolean):boolean {
             value = !!value;
-            var values = this.$Component;
+            let values = this.$Component;
             values[sys.ComponentKeys.explicitTouchChildren] = value;
             if (values[sys.ComponentKeys.enabled]) {
                 values[sys.ComponentKeys.explicitTouchChildren] = value;
@@ -433,7 +433,7 @@ namespace eui {
          */
         $setTouchEnabled(value:boolean):boolean {
             value = !!value;
-            var values = this.$Component;
+            let values = this.$Component;
             values[sys.ComponentKeys.explicitTouchEnabled] = value;
             if (values[sys.ComponentKeys.enabled]) {
                 return super.$setTouchEnabled(value);
@@ -484,7 +484,7 @@ namespace eui {
          */
         $setEnabled(value:boolean):boolean {
 
-            var values = this.$Component;
+            let values = this.$Component;
             if (value === values[sys.ComponentKeys.enabled]) {
                 return false;
             }
@@ -525,13 +525,13 @@ namespace eui {
          * @platform Web,Native
          */
         public get currentState():string {
-            var values = this.$Component;
+            let values = this.$Component;
             return values[sys.ComponentKeys.explicitState] ?
                 values[sys.ComponentKeys.explicitState] : this.getCurrentState();
         }
 
         public set currentState(value:string) {
-            var values = this.$Component;
+            let values = this.$Component;
             if (value == values[sys.ComponentKeys.explicitState]) {
                 return;
             }
@@ -555,7 +555,7 @@ namespace eui {
          * @platform Web,Native
          */
         public invalidateState():void {
-            var values = this.$Component;
+            let values = this.$Component;
             if (values[sys.ComponentKeys.stateIsDirty])
                 return;
 
@@ -610,11 +610,11 @@ namespace eui {
          * @platform Web,Native
          */
         protected createChildren():void {
-            var values = this.$Component;
+            let values = this.$Component;
             if (!values[sys.ComponentKeys.skinName]) {
-                var theme = egret.getImplementation("eui.Theme");
+                let theme = egret.getImplementation("eui.Theme");
                 if (theme) {
-                    var skinName = theme.getSkinName(this);
+                    let skinName = theme.getSkinName(this);
                     if (skinName) {
                         values[sys.ComponentKeys.skinName] = skinName;
                         this.$parseSkinName();
@@ -660,7 +660,7 @@ namespace eui {
          */
         protected commitProperties():void {
             sys.UIComponentImpl.prototype["commitProperties"].call(this);
-            var values = this.$Component;
+            let values = this.$Component;
             if (values[sys.ComponentKeys.stateIsDirty]) {
                 values[sys.ComponentKeys.stateIsDirty] = false;
                 if (values[sys.ComponentKeys.skin]) {
@@ -685,11 +685,11 @@ namespace eui {
          */
         protected measure():void {
             sys.measure(this);
-            var skin = this.$Component[sys.ComponentKeys.skin];
+            let skin = this.$Component[sys.ComponentKeys.skin];
             if (!skin) {
                 return;
             }
-            var values = this.$UIComponent;
+            let values = this.$UIComponent;
             if (!isNaN(skin.width)) {
                 values[sys.UIKeys.measuredWidth] = skin.width;
             }

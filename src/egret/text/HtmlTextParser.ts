@@ -54,7 +54,7 @@ namespace egret {
             this.initReplaceArr();
         }
 
-        private replaceArr:Array<any> = [];
+        private replaceArr:any[] = [];
         private initReplaceArr():void {
             this.replaceArr = [];
             this.replaceArr.push([/&lt;/g, "<"]);
@@ -70,9 +70,9 @@ namespace egret {
          * @returns 
          */
         private replaceSpecial(value:string):string {
-            for (var i = 0; i < this.replaceArr.length; i++) {
-                var k = this.replaceArr[i][0];
-                var v = this.replaceArr[i][1];
+            for (let i = 0; i < this.replaceArr.length; i++) {
+                let k = this.replaceArr[i][0];
+                let v = this.replaceArr[i][1];
 
                 value = value.replace(k, v);
             }
@@ -104,10 +104,10 @@ namespace egret {
             this.stackArray = [];
             this.resutlArr = [];
 
-            var firstIdx:number = 0;//文本段开始位置
-            var length:number = htmltext.length;
+            let firstIdx:number = 0;//文本段开始位置
+            let length:number = htmltext.length;
             while (firstIdx < length) {
-                var starIdx:number = htmltext.indexOf("<", firstIdx);
+                let starIdx:number = htmltext.indexOf("<", firstIdx);
                 if (starIdx < 0) {
                     this.addToResultArr(htmltext.substring(firstIdx));
                     firstIdx = length;
@@ -115,7 +115,7 @@ namespace egret {
                 else {
                     this.addToResultArr(htmltext.substring(firstIdx, starIdx));
 
-                    var fontEnd = htmltext.indexOf(">", starIdx);
+                    let fontEnd = htmltext.indexOf(">", starIdx);
                     if (fontEnd == -1) {
                         egret.$error(1038);
                         fontEnd = starIdx;
@@ -157,28 +157,28 @@ namespace egret {
         //将字符数据转成Json数据
         private changeStringToObject(str:string):egret.ITextStyle {
             str = str.trim();
-            var info:any = {};
+            let info:any = {};
 
-            var header = [];
+            let header = [];
             if (str.charAt(0) == "i" || str.charAt(0) == "b" || str.charAt(0) == "u")  {
                 this.addProperty(info, str, "true");
             }
             else if (header = str.match(/^(font|a)\s/)){
                 str = str.substring(header[0].length).trim();
 
-                var next:number = 0;
-                var titles;
+                let next:number = 0;
+                let titles;
                 while (titles = str.match(this.getHeadReg())) {
-                    var title = titles[0];
-                    var value = "";
-                    var str = str.substring(title.length).trim();
+                    let title = titles[0];
+                    let value = "";
+                    str = str.substring(title.length).trim();
                     if (str.charAt(0) == "\"") {
-                        var next = str.indexOf("\"", 1);
+                        let next = str.indexOf("\"", 1);
                         value = str.substring(1, next);
                         next += 1;
                     }
                     else if (str.charAt(0) == "\'") {
-                        var next = str.indexOf("\'", 1);
+                        let next = str.indexOf("\'", 1);
                         value = str.substring(1, next);
                         next += 1;
                     }
@@ -264,14 +264,14 @@ namespace egret {
          * @param infoStr 
          */
         private addToArray(infoStr:string):void {
-            var info:egret.ITextStyle = this.changeStringToObject(infoStr);
+            let info:egret.ITextStyle = this.changeStringToObject(infoStr);
 
             if (this.stackArray.length == 0) {
                 this.stackArray.push(info);
             }
             else {
-                var lastInfo:Object = this.stackArray[this.stackArray.length - 1];
-                for (var key in lastInfo) {
+                let lastInfo:Object = this.stackArray[this.stackArray.length - 1];
+                for (let key in lastInfo) {
                     if (info[key] == null) {
                         info[key] = lastInfo[key];
                     }

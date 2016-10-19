@@ -214,7 +214,7 @@ namespace RES {
      * @version Egret 2.4
      * @platform Web,Native
      */
-    export function createGroup(name:string,keys:Array<string>,override:boolean = false):boolean{
+    export function createGroup(name:string,keys:string[],override:boolean = false):boolean{
         return instance.createGroup(name,keys,override);
     }
     /**
@@ -510,9 +510,9 @@ namespace RES {
          * 根据type获取对应的文件解析库
          */
         $getAnalyzerByType(type:string):AnalyzerBase{
-            var analyzer:AnalyzerBase = this.analyzerDic[type];
+            let analyzer:AnalyzerBase = this.analyzerDic[type];
             if (!analyzer) {
-                var clazz = this.analyzerClassMap[type];
+                let clazz = this.analyzerClassMap[type];
                 if (!clazz) {
                     if (DEBUG) {
                         egret.$error(3203, type);
@@ -546,7 +546,7 @@ namespace RES {
          */
         private init():void{
             this.vcs = new VersionController();
-            var analyzerClassMap = this.analyzerClassMap;
+            let analyzerClassMap = this.analyzerClassMap;
             analyzerClassMap[ResourceItem.TYPE_BIN] = BinAnalyzer;
             analyzerClassMap[ResourceItem.TYPE_IMAGE] = ImageAnalyzer;
             analyzerClassMap[ResourceItem.TYPE_TEXT] = TextAnalyzer;
@@ -569,9 +569,9 @@ namespace RES {
          */
         private static GROUP_CONFIG:string = "RES__CONFIG";
 
-        private configItemList:Array<any> = [];
+        private configItemList:any[] = [];
 
-        private loadingConfigList:Array<any>;
+        private loadingConfigList:any[];
 
         private callLaterFlag:boolean = false;
         /**
@@ -587,7 +587,7 @@ namespace RES {
          */
         public loadConfig(url:string,resourceRoot:string,type:string="json"):void{
 
-            var configItem:any = {url:url,resourceRoot:resourceRoot,type:type};
+            let configItem:any = {url:url,resourceRoot:resourceRoot,type:type};
             this.configItemList.push(configItem);
             if(!this.callLaterFlag){
                 egret.callLater(this.startLoadConfig,this);
@@ -597,18 +597,18 @@ namespace RES {
 
         private startLoadConfig():void{
             this.callLaterFlag = false;
-            var configList:Array<any> = this.configItemList;
+            let configList:any[] = this.configItemList;
             this.configItemList = [];
             this.loadingConfigList = configList;
-            var length:number = configList.length;
-            var itemList:Array<ResourceItem> = [];
-            for(var i:number=0;i<length;i++){
-                var item:any = configList[i];
-                var resItem:ResourceItem = new ResourceItem(item.url,item.url,item.type);
+            let length:number = configList.length;
+            let itemList:Array<ResourceItem> = [];
+            for(let i:number=0;i<length;i++){
+                let item:any = configList[i];
+                let resItem:ResourceItem = new ResourceItem(item.url,item.url,item.type);
                 itemList.push(resItem);
             }
 
-            var callback:egret.AsyncCallback = {
+            let callback:egret.AsyncCallback = {
 
 
                 onSuccess:(data:any)=>{
@@ -632,7 +632,7 @@ namespace RES {
         /**
          * 已经加载过组名列表
          */
-        private loadedGroups:Array<string> = [];
+        private loadedGroups:string[] = [];
         /**
          * 检查某个资源组是否已经加载完成
 		 * @method RES.isGroupLoaded
@@ -652,7 +652,7 @@ namespace RES {
             return this.resConfig.getGroupByName(name);
         }
 
-        private groupNameList:Array<any> = [];
+        private groupNameList:any[] = [];
         /**
          * 根据组名加载一组资源
 		 * @method RES.loadGroup
@@ -667,7 +667,7 @@ namespace RES {
             if(this.resLoader.isGroupInLoading(name))
                 return;
             if(this.configComplete){
-                var group:Array<ResourceItem> = this.resConfig.getGroupByName(name);
+                let group:Array<ResourceItem> = this.resConfig.getGroupByName(name);
                 this.resLoader.loadGroup(group,name,priority);
             }
             else{
@@ -679,13 +679,13 @@ namespace RES {
          * 可以监听ResourceEvent.CONFIG_COMPLETE事件来确认配置加载完成。
          * @method RES.ResourceConfig#createGroup
          * @param name {string} 要创建的加载资源组的组名
-         * @param keys {egret.Array<string>} 要包含的键名列表，key对应配置文件里的name属性或一个资源组名。
+         * @param keys {egret.string[]} 要包含的键名列表，key对应配置文件里的name属性或一个资源组名。
          * @param override {boolean} 是否覆盖已经存在的同名资源组,默认false。
          * @returns {boolean}
          */
-        public createGroup(name:string,keys:Array<string>,override:boolean=false):boolean{
+        public createGroup(name:string,keys:string[],override:boolean=false):boolean{
             if(override){
-                var index:number = this.loadedGroups.indexOf(name);
+                let index:number = this.loadedGroups.indexOf(name);
                 if(index!=-1){
                     this.loadedGroups.splice(index,1);
                 }
@@ -701,11 +701,11 @@ namespace RES {
          */
         private onGroupComp(event:ResourceEvent):void{
             if(event.groupName==Resource.GROUP_CONFIG){
-                var length:number = this.loadingConfigList.length;
-                for(var i:number = 0;i < length;i++){
-                    var config:any = this.loadingConfigList[i];
-                    var resolver:AnalyzerBase = this.$getAnalyzerByType(config.type);
-                    var data:any = resolver.getRes(config.url);
+                let length:number = this.loadingConfigList.length;
+                for(let i:number = 0;i < length;i++){
+                    let config:any = this.loadingConfigList[i];
+                    let resolver:AnalyzerBase = this.$getAnalyzerByType(config.type);
+                    let data:any = resolver.getRes(config.url);
                     resolver.destroyRes(config.url);
                     this.resConfig.parseConfig(data,config.resourceRoot);
                 }
@@ -724,11 +724,11 @@ namespace RES {
          * 启动延迟的组加载
          */
         private loadDelayGroups():void{
-            var groupNameList:Array<any> = this.groupNameList;
+            let groupNameList:any[] = this.groupNameList;
             this.groupNameList = [];
-            var length:number = groupNameList.length;
-            for(var i:number=0;i<length;i++){
-                var item:any = groupNameList[i];
+            let length:number = groupNameList.length;
+            for(let i:number=0;i<length;i++){
+                let item:any = groupNameList[i];
                 this.loadGroup(item.name,item.priority);
             }
 
@@ -752,9 +752,9 @@ namespace RES {
 		 * @returns {boolean}
          */
         public hasRes(key:string):boolean{
-            var type:string = this.resConfig.getType(key);
+            let type:string = this.resConfig.getType(key);
             if(type==""){
-                var prefix:string = RES.AnalyzerBase.getStringTail(key);
+                let prefix:string = RES.AnalyzerBase.getStringTail(key);
                 type = this.resConfig.getType(prefix);
                 if(type==""){
                     return false;
@@ -781,16 +781,16 @@ namespace RES {
 		 * @returns {any}
          */
         public getRes(key:string):any{
-            var type:string = this.resConfig.getType(key);
+            let type:string = this.resConfig.getType(key);
             if(type==""){
-                var prefix:string = RES.AnalyzerBase.getStringPrefix(key);
+                let prefix:string = RES.AnalyzerBase.getStringPrefix(key);
                 type = this.resConfig.getType(prefix);
                 if(type==""){
                     return null;
                 }
             }
 
-            var analyzer:AnalyzerBase = this.$getAnalyzerByType(type);
+            let analyzer:AnalyzerBase = this.$getAnalyzerByType(type);
             return analyzer.getRes(key);
         }
 
@@ -806,8 +806,8 @@ namespace RES {
          * @param thisObject {any}
          */
         public getResAsync(key:string,compFunc:Function,thisObject:any):void{
-            var type:string = this.resConfig.getType(key);
-            var name:string = this.resConfig.getName(key);
+            let type:string = this.resConfig.getType(key);
+            let name:string = this.resConfig.getName(key);
             if(type==""){
                 name = RES.AnalyzerBase.getStringPrefix(key);
                 type = this.resConfig.getType(name);
@@ -816,19 +816,19 @@ namespace RES {
                     return;
                 }
             }
-            var analyzer:AnalyzerBase = this.$getAnalyzerByType(type);
-            var res:any = analyzer.getRes(key);
+            let analyzer:AnalyzerBase = this.$getAnalyzerByType(type);
+            let res:any = analyzer.getRes(key);
             if(res){
                 egret.$callAsync(compFunc, thisObject, res, key);
                 return;
             }
-            var args:any = {key:key,compFunc:compFunc,thisObject:thisObject};
+            let args:any = {key:key,compFunc:compFunc,thisObject:thisObject};
             if(this.asyncDic[name]){
                 this.asyncDic[name].push(args);
             }
             else{
                 this.asyncDic[name] = [args];
-                var resItem:ResourceItem = this.resConfig.getResourceItem(name);
+                let resItem:ResourceItem = this.resConfig.getResourceItem(name);
                 this.resLoader.loadItem(resItem);
             }
         }
@@ -855,21 +855,21 @@ namespace RES {
             }
             this._loadedUrlTypes[url] = type;
 
-            var analyzer:AnalyzerBase = this.$getAnalyzerByType(type);
+            let analyzer:AnalyzerBase = this.$getAnalyzerByType(type);
 
-            var name:string = url;
-            var res:any = analyzer.getRes(name);
+            let name:string = url;
+            let res:any = analyzer.getRes(name);
             if(res){
                 egret.$callAsync(compFunc, thisObject, res, url);
                 return;
             }
-            var args:any = {key:name,compFunc:compFunc,thisObject:thisObject};
+            let args:any = {key:name,compFunc:compFunc,thisObject:thisObject};
             if(this.asyncDic[name]){
                 this.asyncDic[name].push(args);
             }
             else{
                 this.asyncDic[name] = [args];
-                var resItem:ResourceItem = new ResourceItem(name,url,type);
+                let resItem:ResourceItem = new ResourceItem(name,url,type);
                 this.resLoader.loadItem(resItem);
             }
         }
@@ -878,11 +878,11 @@ namespace RES {
          * 通过url获取文件类型
          */
         private getTypeByUrl(url:string):string{
-            var suffix:string = url.substr(url.lastIndexOf(".")+1);
+            let suffix:string = url.substr(url.lastIndexOf(".")+1);
             if(suffix){
                 suffix = suffix.toLowerCase();
             }
-            var type:string;
+            let type:string;
             switch(suffix){
                 case ResourceItem.TYPE_XML:
                 case ResourceItem.TYPE_JSON:
@@ -923,13 +923,13 @@ namespace RES {
          * 一个加载项加载完成
          */
         private onResourceItemComp(item:ResourceItem):void{
-            var argsList:Array<any> = this.asyncDic[item.name];
+            let argsList:any[] = this.asyncDic[item.name];
             delete this.asyncDic[item.name];
-            var analyzer:AnalyzerBase = this.$getAnalyzerByType(item.type);
-            var length:number = argsList.length;
-            for(var i:number=0;i<length;i++){
-                var args:any = argsList[i];
-                var res:any = analyzer.getRes(args.key);
+            let analyzer:AnalyzerBase = this.$getAnalyzerByType(item.type);
+            let length:number = argsList.length;
+            for(let i:number=0;i<length;i++){
+                let args:any = argsList[i];
+                let res:any = analyzer.getRes(args.key);
                 args.compFunc.call(args.thisObject,res,args.key);
             }
         }
@@ -941,21 +941,21 @@ namespace RES {
 		 * @returns {boolean}
          */
         public destroyRes(name:string, force:boolean = true):boolean{
-            var group:Array<any> = this.resConfig.getRawGroupByName(name);
+            let group:any[] = this.resConfig.getRawGroupByName(name);
             if(group && group.length > 0){
-                var index:number = this.loadedGroups.indexOf(name);
+                let index:number = this.loadedGroups.indexOf(name);
                 if(index!=-1){
                     this.loadedGroups.splice(index,1);
                 }
-                var length:number = group.length;
-                for(var i:number=0;i<length;i++){
-                    var item:any = group[i];
+                let length:number = group.length;
+                for(let i:number=0;i<length;i++){
+                    let item:any = group[i];
                     if(!force && this.isResInLoadedGroup(item.name)) {
 
                     }
                     else {
                         item.loaded = false;
-                        var analyzer:AnalyzerBase = this.$getAnalyzerByType(item.type);
+                        let analyzer:AnalyzerBase = this.$getAnalyzerByType(item.type);
                         analyzer.destroyRes(item.name);
                         this.removeLoadedGroupsByItemName(item.name);
                     }
@@ -963,7 +963,7 @@ namespace RES {
                 return true;
             }
             else{
-                var type:string = this.resConfig.getType(name);
+                let type:string = this.resConfig.getType(name);
                 if (type == "") {
                     type = this._loadedUrlTypes[name];
 
@@ -971,26 +971,26 @@ namespace RES {
                         return false;
                     }
                     delete this._loadedUrlTypes[name];
-                    var analyzer:AnalyzerBase = this.$getAnalyzerByType(type);
+                    let analyzer:AnalyzerBase = this.$getAnalyzerByType(type);
                     analyzer.destroyRes(name);
                     return true;
                 }
-                item = this.resConfig.getRawResourceItem(name);
+                let item = this.resConfig.getRawResourceItem(name);
                 item.loaded = false;
-                analyzer = this.$getAnalyzerByType(type);
-                var result = analyzer.destroyRes(name);
+                let analyzer = this.$getAnalyzerByType(type);
+                let result = analyzer.destroyRes(name);
                 this.removeLoadedGroupsByItemName(item.name);
                 return result;
             }
         }
         private removeLoadedGroupsByItemName(name:string):void {
-            var loadedGroups:Array<string> = this.loadedGroups;
-            var loadedGroupLength:number = loadedGroups.length;
-            for(var i:number = 0 ; i < loadedGroupLength ; i++) {
-                var group:Array<any> = this.resConfig.getRawGroupByName(loadedGroups[i]);
-                var length:number = group.length;
-                for(var j:number = 0 ; j < length ; j++) {
-                    var item:any = group[j];
+            let loadedGroups:string[] = this.loadedGroups;
+            let loadedGroupLength:number = loadedGroups.length;
+            for(let i:number = 0 ; i < loadedGroupLength ; i++) {
+                let group:any[] = this.resConfig.getRawGroupByName(loadedGroups[i]);
+                let length:number = group.length;
+                for(let j:number = 0 ; j < length ; j++) {
+                    let item:any = group[j];
                     if(item.name == name) {
                         loadedGroups.splice(i, 1);
                         i--;
@@ -1001,13 +1001,13 @@ namespace RES {
             }
         }
         private isResInLoadedGroup(name:string):boolean {
-            var loadedGroups:Array<string> = this.loadedGroups;
-            var loadedGroupLength:number = loadedGroups.length;
-            for(var i:number = 0 ; i < loadedGroupLength ; i++) {
-                var group:Array<any> = this.resConfig.getRawGroupByName(loadedGroups[i]);
-                var length:number = group.length;
-                for(var j:number = 0 ; j < length ; j++) {
-                    var item:any = group[j];
+            let loadedGroups:string[] = this.loadedGroups;
+            let loadedGroupLength:number = loadedGroups.length;
+            for(let i:number = 0 ; i < loadedGroupLength ; i++) {
+                let group:any[] = this.resConfig.getRawGroupByName(loadedGroups[i]);
+                let length:number = group.length;
+                for(let j:number = 0 ; j < length ; j++) {
+                    let item:any = group[j];
                     if(item.name == name) {
                         return true;
                     }
@@ -1039,5 +1039,5 @@ namespace RES {
     /**
      * Resource单例
      */
-    var instance:Resource = new Resource();
+    let instance:Resource = new Resource();
 }

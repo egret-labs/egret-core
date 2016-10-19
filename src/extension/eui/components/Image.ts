@@ -35,7 +35,7 @@ namespace eui {
      * @private
      * 默认的皮肤适配器
      */
-    var assetAdapter = new DefaultAssetAdapter();
+    let assetAdapter = new DefaultAssetAdapter();
     /**
      * @language en_US
      * The Image control lets you show JPEG, PNG, and GIF files
@@ -164,7 +164,7 @@ namespace eui {
 
         //if egret
         $setFillMode(value:string):boolean {
-            var result:boolean = super.$setFillMode(value);
+            let result:boolean = super.$setFillMode(value);
             this.invalidateDisplayList();
 
             return result;
@@ -219,7 +219,7 @@ namespace eui {
             if (value == this.$Bitmap[egret.sys.BitmapKeys.bitmapData]) {
                 return false;
             }
-            var result:boolean = super.$setBitmapData(value);
+            let result:boolean = super.$setBitmapData(value);
             this.sourceChanged = false;
             this.invalidateSize();
             this.invalidateDisplayList();
@@ -233,9 +233,9 @@ namespace eui {
          */
         private parseSource():void {
             this.sourceChanged = false;
-            var source = this._source;
+            let source = this._source;
             if (source && typeof source == "string") {
-                var adapter:IAssetAdapter = egret.getImplementation("eui.IAssetAdapter");
+                let adapter:IAssetAdapter = egret.getImplementation("eui.IAssetAdapter");
                 if (!adapter) {
                     adapter = assetAdapter;
                 }
@@ -266,12 +266,12 @@ namespace eui {
         }
 
         $measureContentBounds(bounds:egret.Rectangle):void {
-            var values = this.$Bitmap;
-            var image = this.$Bitmap[egret.sys.BitmapKeys.bitmapData];
+            let values = this.$Bitmap;
+            let image = this.$Bitmap[egret.sys.BitmapKeys.bitmapData];
             if (image) {
-                var uiValues = this.$UIComponent;
-                var width = uiValues[sys.UIKeys.width];
-                var height = uiValues[sys.UIKeys.height];
+                let uiValues = this.$UIComponent;
+                let width = uiValues[sys.UIKeys.width];
+                let height = uiValues[sys.UIKeys.height];
                 if (isNaN(width) || isNaN(height)) {
                     bounds.setEmpty();
                     return;
@@ -297,18 +297,18 @@ namespace eui {
          * @param context
          */
         $render():void {
-            var image = this.$Bitmap[egret.sys.BitmapKeys.bitmapData];
+            let image = this.$Bitmap[egret.sys.BitmapKeys.bitmapData];
             if (!image) {
                 return;
             }
-            var uiValues = this.$UIComponent;
-            var width = uiValues[sys.UIKeys.width];
-            var height = uiValues[sys.UIKeys.height];
+            let uiValues = this.$UIComponent;
+            let width = uiValues[sys.UIKeys.width];
+            let height = uiValues[sys.UIKeys.height];
             if (width === 0 || height === 0) {
                 return;
             }
 
-            var values = this.$Bitmap;
+            let values = this.$Bitmap;
              egret.sys.BitmapNode.$updateTextureData(<egret.sys.BitmapNode>this.$renderNode, values[egret.sys.BitmapKeys.image],
                 values[egret.sys.BitmapKeys.bitmapX], values[egret.sys.BitmapKeys.bitmapY], values[egret.sys.BitmapKeys.bitmapWidth], values[egret.sys.BitmapKeys.bitmapHeight],
                 values[egret.sys.BitmapKeys.offsetX], values[egret.sys.BitmapKeys.offsetY], values[egret.sys.BitmapKeys.textureWidth], values[egret.sys.BitmapKeys.textureHeight],
@@ -368,7 +368,7 @@ namespace eui {
          * @platform Web,Native
          */
         protected measure():void {
-            var bitmapData = this.$Bitmap[egret.sys.BitmapKeys.bitmapData];
+            let bitmapData = this.$Bitmap[egret.sys.BitmapKeys.bitmapData];
             if (bitmapData) {
                 this.setMeasuredSize(bitmapData.$getTextureWidth(), bitmapData.$getTextureHeight());
             }

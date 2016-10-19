@@ -46,5 +46,5 @@ namespace egret {
      * @version Egret 2.4
      * @platform Web,Native
      */
-    export var getOption:(key:string)=>string;
+    export let getOption:(key:string)=>string;
 }

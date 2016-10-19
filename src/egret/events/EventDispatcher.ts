@@ -41,7 +41,7 @@ namespace egret {
     }
 
 
-    var ONCE_EVENT_LIST:egret.sys.EventBin[] = [];
+    let ONCE_EVENT_LIST:egret.sys.EventBin[] = [];
 
     /**
      * @language en_US
@@ -118,8 +118,8 @@ namespace egret {
          * @param useCapture
          */
         $getEventMap(useCapture?:boolean) {
-            var values = this.$EventDispatcher;
-            var eventMap:any = useCapture ? values[Keys.captureEventsMap] : values[Keys.eventsMap];
+            let values = this.$EventDispatcher;
+            let eventMap:any = useCapture ? values[Keys.captureEventsMap] : values[Keys.eventsMap];
             return eventMap;
         }
 
@@ -148,9 +148,9 @@ namespace egret {
             if (DEBUG && !listener) {
                 $error(1003, "listener");
             }
-            var values = this.$EventDispatcher;
-            var eventMap:any = useCapture ? values[Keys.captureEventsMap] : values[Keys.eventsMap];
-            var list:egret.sys.EventBin[] = eventMap[type];
+            let values = this.$EventDispatcher;
+            let eventMap:any = useCapture ? values[Keys.captureEventsMap] : values[Keys.eventsMap];
+            let list:egret.sys.EventBin[] = eventMap[type];
             if (!list) {
                 list = eventMap[type] = [];
             }
@@ -161,12 +161,12 @@ namespace egret {
             this.$insertEventBin(list, type, listener, thisObject, useCapture, priority, dispatchOnce);
         }
 
-        $insertEventBin(list:Array<any>, type:string, listener:Function, thisObject:any, useCapture?:boolean, priority?:number, dispatchOnce?:boolean):boolean {
+        $insertEventBin(list:any[], type:string, listener:Function, thisObject:any, useCapture?:boolean, priority?:number, dispatchOnce?:boolean):boolean {
             priority = +priority | 0;
-            var insertIndex = -1;
-            var length = list.length;
-            for (var i = 0; i < length; i++) {
-                var bin = list[i];
+            let insertIndex = -1;
+            let length = list.length;
+            for (let i = 0; i < length; i++) {
+                let bin = list[i];
                 if (bin.listener == listener && bin.thisObject == thisObject && bin.target == this) {
                     return false;
                 }
@@ -174,7 +174,7 @@ namespace egret {
                     insertIndex = i;
                 }
             }
-            var eventBin:sys.EventBin = {
+            let eventBin:sys.EventBin = {
                 type: type, listener: listener, thisObject: thisObject, priority: priority,
                 target: this, useCapture: useCapture, dispatchOnce: !!dispatchOnce
             };
@@ -194,9 +194,9 @@ namespace egret {
          */
         public removeEventListener(type:string, listener:Function, thisObject:any, useCapture?:boolean):void {
 
-            var values = this.$EventDispatcher;
-            var eventMap:Object = useCapture ? values[Keys.captureEventsMap] : values[Keys.eventsMap];
-            var list:egret.sys.EventBin[] = eventMap[type];
+            let values = this.$EventDispatcher;
+            let eventMap:Object = useCapture ? values[Keys.captureEventsMap] : values[Keys.eventsMap];
+            let list:egret.sys.EventBin[] = eventMap[type];
             if (!list) {
                 return;
             }
@@ -211,10 +211,10 @@ namespace egret {
             }
         }
 
-        $removeEventBin(list:Array<any>, listener:Function, thisObject:any):boolean {
-            var length = list.length;
-            for (var i = 0; i < length; i++) {
-                var bin = list[i];
+        $removeEventBin(list:any[], listener:Function, thisObject:any):boolean {
+            let length = list.length;
+            for (let i = 0; i < length; i++) {
+                let bin = list[i];
                 if (bin.listener == listener && bin.thisObject == thisObject && bin.target == this) {
                     list.splice(i, 1);
                     return true;
@@ -230,7 +230,7 @@ namespace egret {
          * @platform Web,Native
          */
         public hasEventListener(type:string):boolean {
-            var values = this.$EventDispatcher;
+            let values = this.$EventDispatcher;
             return !!(values[Keys.eventsMap][type] || values[Keys.captureEventsMap][type]);
         }
 
@@ -259,21 +259,21 @@ namespace egret {
          * @private
          */
         $notifyListener(event:Event, capturePhase:boolean):boolean {
-            var values = this.$EventDispatcher;
-            var eventMap:Object = capturePhase ? values[Keys.captureEventsMap] : values[Keys.eventsMap];
-            var list:egret.sys.EventBin[] = eventMap[event.$type];
+            let values = this.$EventDispatcher;
+            let eventMap:Object = capturePhase ? values[Keys.captureEventsMap] : values[Keys.eventsMap];
+            let list:egret.sys.EventBin[] = eventMap[event.$type];
             if (!list) {
                 return true;
             }
-            var length = list.length;
+            let length = list.length;
             if (length == 0) {
                 return true;
             }
-            var onceList = ONCE_EVENT_LIST;
+            let onceList = ONCE_EVENT_LIST;
             //做个标记，防止外部修改原始数组导致遍历错误。这里不直接调用list.concat()因为dispatch()方法调用通常比on()等方法频繁。
             values[Keys.notifyLevel]++;
-            for (var i = 0; i < length; i++) {
-                var eventBin = list[i];
+            for (let i = 0; i < length; i++) {
+                let eventBin = list[i];
                 eventBin.listener.call(eventBin.thisObject, event);
                 if (eventBin.dispatchOnce) {
                     onceList.push(eventBin);
@@ -284,7 +284,7 @@ namespace egret {
             }
             values[Keys.notifyLevel]--;
             while (onceList.length) {
-                eventBin = onceList.pop();
+                let eventBin = onceList.pop();
                 eventBin.target.removeEventListener(eventBin.type, eventBin.listener, eventBin.thisObject, eventBin.useCapture);
             }
             return !event.$isDefaultPrevented;
@@ -313,9 +313,9 @@ namespace egret {
          */
         public dispatchEventWith(type:string, bubbles?:boolean, data?:any, cancelable?: boolean):boolean {
             if (bubbles || this.hasEventListener(type)) {
-                var event:Event = Event.create(Event, type, bubbles, cancelable);
+                let event:Event = Event.create(Event, type, bubbles, cancelable);
                 event.data = data;
-                var result = this.dispatchEvent(event);
+                let result = this.dispatchEvent(event);
                 Event.release(event);
                 return result;
             }

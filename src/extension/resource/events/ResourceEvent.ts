@@ -210,12 +210,12 @@ namespace RES {
          */
         public static dispatchResourceEvent(target:egret.IEventDispatcher,type:string,
                                                     groupName:string="",resItem:ResourceItem=null,itemsLoaded:number=0,itemsTotal:number=0):boolean{
-			var event:ResourceEvent = egret.Event.create(ResourceEvent, type);
+			let event:ResourceEvent = egret.Event.create(ResourceEvent, type);
 			event.groupName = groupName;
 			event.resItem = resItem;
 			event.itemsLoaded = itemsLoaded;
 			event.itemsTotal = itemsTotal;
-			var result = target.dispatchEvent(event);
+			let result = target.dispatchEvent(event);
 			egret.Event.release(event);
 			return result;
         }

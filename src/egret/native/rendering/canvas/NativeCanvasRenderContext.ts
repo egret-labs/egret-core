@@ -27,7 +27,7 @@
 //
 //////////////////////////////////////////////////////////////////////////////////////
 namespace egret.native {
-    var blendModesForGL = {
+    let blendModesForGL = {
         "source-over": [1, 771],
         "lighter": [770, 1],
         "destination-out": [0, 771],
@@ -65,7 +65,7 @@ namespace egret.native {
 
         public set globalCompositeOperation(value:string) {
             this.$globalCompositeOperation = value;
-            var arr = blendModesForGL[value];
+            let arr = blendModesForGL[value];
             if (arr) {
                 $cmdManager.setContext(this.$nativeContext);
                 $cmdManager.setBlendArg(arr[0], arr[1]);
@@ -171,7 +171,7 @@ namespace egret.native {
                 $cmdManager.setStrokeColor(parseInt(value.replace("#", "0x")));
             }
             $cmdManager.setContext(this.$nativeContext);
-            var s1 = $cmdManager.pushString(value);
+            let s1 = $cmdManager.pushString(value);
             $cmdManager.setStrokeStyle(s1);
         }
 
@@ -201,7 +201,7 @@ namespace egret.native {
                 $cmdManager.setTextColor(parseInt(value.replace("#", "0x")));
             }
             $cmdManager.setContext(this.$nativeContext);
-            var s1 = $cmdManager.pushString(value);
+            let s1 = $cmdManager.pushString(value);
             $cmdManager.setFillStyle(s1);
         }
 
@@ -213,24 +213,24 @@ namespace egret.native {
         }
 
         private $parseRGBA(str:string):string {
-            var index:number = str.indexOf("(");
+            let index:number = str.indexOf("(");
             str = str.slice(index + 1, str.length - 1);
-            var arr:Array<string> = str.split(",");
-            var a:string = parseInt(<any>(parseFloat(arr[3]) * 255)).toString(16);
-            var r:string = parseInt(arr[0]).toString(16);
-            var g:string = parseInt(arr[1]).toString(16);
-            var b:string = parseInt(arr[2]).toString(16);
+            let arr:string[] = str.split(",");
+            let a:string = parseInt(<any>(parseFloat(arr[3]) * 255)).toString(16);
+            let r:string = parseInt(arr[0]).toString(16);
+            let g:string = parseInt(arr[1]).toString(16);
+            let b:string = parseInt(arr[2]).toString(16);
             str = "#" + this.$fillColorStr(a) + this.$fillColorStr(r) + this.$fillColorStr(g) + this.$fillColorStr(b);
             return str;
         }
 
         private $parseRGB(str:string):string {
-            var index:number = str.indexOf("(");
+            let index:number = str.indexOf("(");
             str = str.slice(index + 1, str.length - 1);
-            var arr:Array<string> = str.split(",");
-            var r:string = parseInt(arr[0]).toString(16);
-            var g:string = parseInt(arr[1]).toString(16);
-            var b:string = parseInt(arr[2]).toString(16);
+            let arr:string[] = str.split(",");
+            let r:string = parseInt(arr[0]).toString(16);
+            let g:string = parseInt(arr[1]).toString(16);
+            let b:string = parseInt(arr[2]).toString(16);
             str = "#" + this.$fillColorStr(r) + this.$fillColorStr(g) + this.$fillColorStr(b);
             return str;
         }
@@ -290,10 +290,10 @@ namespace egret.native {
 
         public set font(value:string) {
             this.$font = value;
-            var arr:Array<string> = value.split(" ");
-            var length:number = arr.length;
-            for (var i:number = 0; i < length; i++) {
-                var txt:string = arr[i];
+            let arr:string[] = value.split(" ");
+            let length:number = arr.length;
+            for (let i:number = 0; i < length; i++) {
+                let txt:string = arr[i];
                 if (txt.indexOf("px") != -1) {
                     this.$fontSize = parseInt(txt.replace("px", ""));
                     //console.log("set font" + this.$lineWidth);
@@ -362,7 +362,7 @@ namespace egret.native {
          */
         public fill(fillRule?:string):void {
             $cmdManager.setContext(this.$nativeContext);
-            var s1 = $cmdManager.pushString(fillRule);
+            let s1 = $cmdManager.pushString(fillRule);
             $cmdManager.fill(s1);
         }
 
@@ -567,8 +567,8 @@ namespace egret.native {
         public restore():void {
             //console.log("restore");
             if (this.$saveList.length) {
-                var data = this.$saveList.pop();
-                for (var key in data) {
+                let data = this.$saveList.pop();
+                for (let key in data) {
                     this[key] = data[key];
                 }
                 this.setTransformToNative();
@@ -579,7 +579,7 @@ namespace egret.native {
 
         }
 
-        private $saveList:Array<any> = [];
+        private $saveList:any[] = [];
 
         /**
          * @private
@@ -589,7 +589,7 @@ namespace egret.native {
          */
         public save():void {
             //console.log("save");
-            var transformMatrix = new Matrix();
+            let transformMatrix = new Matrix();
             transformMatrix.copyFrom(this.$matrix);
             this.$saveList.push({
                 lineWidth: this.$lineWidth,
@@ -606,11 +606,11 @@ namespace egret.native {
         }
 
 
-        private $clipRectArray:Array<any> = [];
+        private $clipRectArray:any[] = [];
 
         private $clipRect:Rectangle = new Rectangle();
         private $saveCount:number = 0;
-        private $clipList:Array<number> = [];
+        private $clipList:number[] = [];
 
 
         /**
@@ -621,9 +621,9 @@ namespace egret.native {
          */
         public clip(fillRule?:string):void {
             if (this.$clipRectArray.length > 0) {
-                var arr = [];
-                for (var i:number = 0; i < this.$clipRectArray.length; i++) {
-                    var clipRect = this.$clipRectArray[i];
+                let arr = [];
+                for (let i:number = 0; i < this.$clipRectArray.length; i++) {
+                    let clipRect = this.$clipRectArray[i];
                     arr.push(clipRect.x);
                     arr.push(clipRect.y);
                     arr.push(clipRect.w);
@@ -670,7 +670,7 @@ namespace egret.native {
         }
 
         private setTransformToNative():void {
-            var m = this.$matrix;
+            let m = this.$matrix;
             //console.log("setTransformToNative::a=" + m.a + " b=" + m.b + " c=" + m.c + " d=" + m.d + " tx=" + m.tx + " ty=" + m.ty);
             $cmdManager.setContext(this.$nativeContext);
             $cmdManager.setTransform(m.a, m.b, m.c, m.d, m.tx, m.ty);
@@ -732,13 +732,13 @@ namespace egret.native {
          */
         public fillText(text:string, x:number, y:number, maxWidth?:number):void {
             //console.log("drawText" + text);
-            var font:string = TextField.default_fontFamily;
+            let font:string = TextField.default_fontFamily;
             $cmdManager.setContext(this.$nativeContext);
-            var s1 = $cmdManager.pushString(font);
-            var s2 = $cmdManager.pushString("");
+            let s1 = $cmdManager.pushString(font);
+            let s2 = $cmdManager.pushString("");
             $cmdManager.createLabel(s1, this.$fontSize, s2, this.$hasStrokeText ? this.$lineWidth : 0);
             this.$hasStrokeText = false;
-            var s3 = $cmdManager.pushString(text);
+            let s3 = $cmdManager.pushString(text);
             $cmdManager.drawText(s3, x, y);
         }
 
@@ -755,10 +755,10 @@ namespace egret.native {
          * @platform Web,Native
          */
         public measureText(text:string):TextMetrics {
-            var font:string = TextField.default_fontFamily;
+            let font:string = TextField.default_fontFamily;
             $cmdManager.setContext(egret_native.Label);
-            var s1 = $cmdManager.pushString(font);
-            var s2 = $cmdManager.pushString("");
+            let s1 = $cmdManager.pushString(font);
+            let s2 = $cmdManager.pushString("");
             $cmdManager.createLabel(s1, this.$fontSize, s2, this.$hasStrokeText ? this.$lineWidth : 0);
             return {width: egret_native.Label.getTextSize(text)[0]};
         }
@@ -772,8 +772,8 @@ namespace egret.native {
          */
         public drawImage(image:BitmapData, offsetX:number, offsetY:number, width?:number, height?:number,
                          surfaceOffsetX?:number, surfaceOffsetY?:number, surfaceImageWidth?:number, surfaceImageHeight?:number):void {
-            var bitmapData;
-            var isNative:boolean;
+            let bitmapData;
+            let isNative:boolean;
             if ((<NativeCanvas><any>image).$nativeCanvas) {
                 bitmapData = (<NativeCanvas><any>image).$nativeCanvas;
                 isNative = true;
@@ -826,7 +826,7 @@ namespace egret.native {
             //console.log("drawImage::" + offsetX + " " + offsetY + " " + width + " " + height + " " + surfaceOffsetX + " " + surfaceOffsetY + " " + surfaceImageWidth + " " + surfaceImageHeight);
             //console.log("drawImage::" + bitmapData);
             
-            var imageAdress;
+            let imageAdress;
             if(!isNative) {
                 if(!bitmapData._native_tex_loc) {
                     bitmapData._native_tex_loc = bitmapData.___native_texture__p;
@@ -846,7 +846,7 @@ namespace egret.native {
          */
         public drawMesh(image, offsetX, offsetY, width, height, surfaceOffsetX, surfaceOffsetY, surfaceImageWidth, surfaceImageHeight,
                     textureSourceWidth, textureSourceHeight, meshUVs, meshVertices, meshIndices):void {
-            var bitmapData;
+            let bitmapData;
             if (image.$nativeCanvas) {
                 bitmapData = image.$nativeCanvas;
             }
@@ -912,25 +912,25 @@ namespace egret.native {
         private cacheArrays(transform, alpha, sourceX, sourceY, sourceWidth, sourceHeight, destX, destY, destWidth, destHeight,
                     textureSourceWidth, textureSourceHeight, meshUVs, meshVertices, meshIndices) {
             //计算出绘制矩阵，之后把矩阵还原回之前的
-            var locWorldTransform = transform;
-            var originalA = locWorldTransform.a;
-            var originalB = locWorldTransform.b;
-            var originalC = locWorldTransform.c;
-            var originalD = locWorldTransform.d;
-            var originalTx = locWorldTransform.tx;
-            var originalTy = locWorldTransform.ty;
+            let locWorldTransform = transform;
+            let originalA = locWorldTransform.a;
+            let originalB = locWorldTransform.b;
+            let originalC = locWorldTransform.c;
+            let originalD = locWorldTransform.d;
+            let originalTx = locWorldTransform.tx;
+            let originalTy = locWorldTransform.ty;
             if (destX != 0 || destY != 0) {
                 locWorldTransform.append(1, 0, 0, 1, destX, destY);
             }
             if (sourceWidth / destWidth != 1 || sourceHeight / destHeight != 1) {
                 locWorldTransform.append(destWidth / sourceWidth, 0, 0, destHeight / sourceHeight, 0, 0);
             }
-            var a = locWorldTransform.a;
-            var b = locWorldTransform.b;
-            var c = locWorldTransform.c;
-            var d = locWorldTransform.d;
-            var tx = locWorldTransform.tx;
-            var ty = locWorldTransform.ty;
+            let a = locWorldTransform.a;
+            let b = locWorldTransform.b;
+            let c = locWorldTransform.c;
+            let d = locWorldTransform.d;
+            let tx = locWorldTransform.tx;
+            let ty = locWorldTransform.ty;
             locWorldTransform.a = originalA;
             locWorldTransform.b = originalB;
             locWorldTransform.c = originalC;
@@ -939,10 +939,10 @@ namespace egret.native {
             locWorldTransform.ty = originalTy;
             if (meshVertices) {
                 // 计算索引位置与赋值
-                var vertices = this.vertices;
+                let vertices = this.vertices;
                 // 缓存顶点数组
-                var i = 0, iD = 0, l = 0;
-                var u = 0, v = 0, x = 0, y = 0;
+                let i = 0, iD = 0, l = 0;
+                let u = 0, v = 0, x = 0, y = 0;
                 for (i = 0, l = meshUVs.length; i < l; i += 2) {
                     iD = i * 5 / 2;
                     x = meshVertices[i];
@@ -965,7 +965,6 @@ namespace egret.native {
             else {
                 console.log("meshVertices not exist");
             }
-            this.vertices = vertices;
         }
 
         /**
@@ -991,7 +990,7 @@ namespace egret.native {
 
             $cmdManager.flush();
 
-            var res;
+            let res;
             if (sx != Math.floor(sx)) {
                 sx = Math.floor(sx);
                 sw++;
@@ -1015,7 +1014,7 @@ namespace egret.native {
         public setGlobalShader(filter:string):void {
             $cmdManager.setContext(this.$nativeContext);
 
-            var s1 = $cmdManager.pushString(filter);
+            let s1 = $cmdManager.pushString(filter);
             $cmdManager.setGlobalShader(s1);
         }
     }

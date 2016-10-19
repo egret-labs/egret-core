@@ -48,16 +48,16 @@ namespace egret.sys {
          * 这里只是想清空绘制命令，因此不调用super
          */
         public cleanBeforeRender():void {
-            var data = this.drawData;
-            for (var i = data.length - 1; i >= 0; i--) {
+            let data = this.drawData;
+            for (let i = data.length - 1; i >= 0; i--) {
                 data[i].cleanBeforeRender();
             }
         }
 
         public $getRenderCount():number {
-            var result = 0;
-            var data = this.drawData;
-            for (var i = data.length - 1; i >= 0; i--) {
+            let result = 0;
+            let data = this.drawData;
+            for (let i = data.length - 1; i >= 0; i--) {
                 result += data[i].$getRenderCount();
             }
             return result;

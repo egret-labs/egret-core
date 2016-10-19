@@ -31,7 +31,7 @@
  * @private
  */
 declare namespace egret_native {
-    var nativeType:string;
+    let nativeType:string;
 
     /**
      * 游戏启动
@@ -49,15 +49,15 @@ declare namespace egret_native {
 
     function setFrameRate(frameRate:number):void;
 
-    function onTouchesBegin(num:number, ids:Array<any>, xs_array:Array<any>, ys_array:Array<any>);
+    function onTouchesBegin(num:number, ids:any[], xs_array:any[], ys_array:any[]);
 
-    function onTouchesMove(num:number, ids:Array<any>, xs_array:Array<any>, ys_array:Array<any>);
+    function onTouchesMove(num:number, ids:any[], xs_array:any[], ys_array:any[]);
 
-    function onTouchesEnd(num:number, ids:Array<any>, xs_array:Array<any>, ys_array:Array<any>);
+    function onTouchesEnd(num:number, ids:any[], xs_array:any[], ys_array:any[]);
 
-    function onTouchesCancel(num:number, ids:Array<any>, xs_array:Array<any>, ys_array:Array<any>);
+    function onTouchesCancel(num:number, ids:any[], xs_array:any[], ys_array:any[]);
 
-    function sendToC(float32Array:Float32Array, arrayBufferLen:number, array:Array<string>):void;
+    function sendToC(float32Array:Float32Array, arrayBufferLen:number, array:string[]):void;
 
     /**
      * 启动主循环
@@ -155,7 +155,7 @@ declare namespace egret_native {
 
         function popClip():void;
 
-        function setGlobalColorTransform(colorTransformMatrix:Array<number>):void;
+        function setGlobalColorTransform(colorTransformMatrix:number[]):void;
 
         function setGlobalColorTransformEnabled(bool:boolean):void;
 
@@ -189,7 +189,7 @@ declare namespace egret_native {
 
         function setTextAlignment(type:string):void;
 
-        function getTextSize(text:string):Array<number>;
+        function getTextSize(text:string):number[];
 
 
     }
@@ -312,15 +312,15 @@ declare namespace egret_native {
         /**
          * @private
          */
-        export var lineWidth:number;
+        export let lineWidth:number;
         /**
          * @private
          */
-        export var strokeStyle:any;
+        export let strokeStyle:any;
         /**
          * @private
          */
-        export var fillStyle:any;
+        export let fillStyle:any;
     }
 
     namespace Game {

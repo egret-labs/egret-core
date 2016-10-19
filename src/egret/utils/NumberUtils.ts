@@ -73,13 +73,13 @@ namespace egret {
          * @platform Web,Native
          */
         public static sin(value:number):number {
-            var valueFloor:number = Math.floor(value);
-            var valueCeil:number = valueFloor + 1;
-            var resultFloor:number = NumberUtils.sinInt(valueFloor);
+            let valueFloor:number = Math.floor(value);
+            let valueCeil:number = valueFloor + 1;
+            let resultFloor:number = NumberUtils.sinInt(valueFloor);
             if (valueFloor == value) {
                 return resultFloor;
             }
-            var resultCeil:number = NumberUtils.sinInt(valueCeil);
+            let resultCeil:number = NumberUtils.sinInt(valueCeil);
 
             return (value - valueFloor) * resultCeil + (valueCeil - value) * resultFloor;
         }
@@ -116,13 +116,13 @@ namespace egret {
          * @platform Web,Native
          */
         public static cos(value:number):number {
-            var valueFloor:number = Math.floor(value);
-            var valueCeil:number = valueFloor + 1;
-            var resultFloor:number = NumberUtils.cosInt(valueFloor);
+            let valueFloor:number = Math.floor(value);
+            let valueCeil:number = valueFloor + 1;
+            let resultFloor:number = NumberUtils.cosInt(valueFloor);
             if (valueFloor == value) {
                 return resultFloor;
             }
-            var resultCeil:number = NumberUtils.cosInt(valueCeil);
+            let resultCeil:number = NumberUtils.cosInt(valueCeil);
 
             return (value - valueFloor) * resultCeil + (valueCeil - value) * resultFloor;
         }
@@ -148,17 +148,17 @@ namespace egret {
 /**
  * @private
  */
-var egret_sin_map = {};
+let egret_sin_map = {};
 /**
  * @private
  */
-var egret_cos_map = {};
+let egret_cos_map = {};
 /**
  * @private
  */
-var DEG_TO_RAD:number = Math.PI / 180;
+let DEG_TO_RAD:number = Math.PI / 180;
 
-for (var NumberUtils_i = 0; NumberUtils_i < 360; NumberUtils_i++) {
+for (let NumberUtils_i = 0; NumberUtils_i < 360; NumberUtils_i++) {
     egret_sin_map[NumberUtils_i] = Math.sin(NumberUtils_i * DEG_TO_RAD);
     egret_cos_map[NumberUtils_i] = Math.cos(NumberUtils_i * DEG_TO_RAD);
 }
@@ -177,7 +177,7 @@ if (!Function.prototype.bind) {
             egret.$error(1029);
         }
 
-        var aArgs = Array.prototype.slice.call(arguments, 1),
+        let aArgs = Array.prototype.slice.call(arguments, 1),
             fToBind = this,
             fNOP = function () {
             },

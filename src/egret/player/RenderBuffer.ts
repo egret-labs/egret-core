@@ -32,12 +32,12 @@ namespace egret.sys {
      * @private
      * 共享的用于碰撞检测的渲染缓冲
      */
-    export var customHitTestBuffer:sys.RenderBuffer;
+    export let customHitTestBuffer:sys.RenderBuffer;
     /**
      * @private
      * 共享的用于canvas碰撞检测的渲染缓冲
      */
-    export var canvasHitTestBuffer:sys.RenderBuffer;
+    export let canvasHitTestBuffer:sys.RenderBuffer;
     /**
      * @private
      * 渲染缓冲
@@ -126,7 +126,7 @@ namespace egret.sys {
     /**
      * @private
      */
-    export var RenderBuffer:{
+    export let RenderBuffer:{
         /**
          * 创建一个RenderTarget。
          * 注意：若内存不足或创建缓冲区失败，将会抛出错误异常。
@@ -140,7 +140,7 @@ namespace egret.sys {
     /**
      * @private
      */
-    export var CanvasRenderBuffer:{
+    export let CanvasRenderBuffer:{
         /**
          * 创建一个CanvasRenderBuffer。
          * 注意：若内存不足或创建缓冲区失败，将会抛出错误异常。

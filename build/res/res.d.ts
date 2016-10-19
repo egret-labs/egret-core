@@ -248,19 +248,19 @@ declare namespace RES {
          * 根据组名获取原始的组加载项列表
          * @method RES.ResourceConfig#getRawGroupByName
          * @param name {string} 组名
-         * @returns {Array<any>}
+         * @returns {any[]}
          */
-        getRawGroupByName(name: string): Array<any>;
+        getRawGroupByName(name: string): any[];
         /**
          * 创建自定义的加载资源组,注意：此方法仅在资源配置文件加载完成后执行才有效。
          * 可以监听ResourceEvent.CONFIG_COMPLETE事件来确认配置加载完成。
          * @method RES.ResourceConfig#createGroup
          * @param name {string} 要创建的加载资源组的组名
-         * @param keys {egret.Array<string>} 要包含的键名列表，key对应配置文件里的name属性或sbuKeys属性的一项或一个资源组名。
+         * @param keys {egret.string[]} 要包含的键名列表，key对应配置文件里的name属性或sbuKeys属性的一项或一个资源组名。
          * @param override {boolean} 是否覆盖已经存在的同名资源组,默认false。
          * @returns {boolean}
          */
-        createGroup(name: string, keys: Array<string>, override?: boolean): boolean;
+        createGroup(name: string, keys: string[], override?: boolean): boolean;
         /**
          * 一级键名字典
          */
@@ -659,7 +659,7 @@ declare namespace RES {
         /**
          * 加载项字典
          */
-        resItemDic: Array<any>;
+        resItemDic: any[];
         /**
          * @inheritDoc
          */
@@ -712,7 +712,7 @@ declare namespace RES {
         /**
          * 加载项字典
          */
-        protected resItemDic: Array<any>;
+        protected resItemDic: any[];
         /**
          * @inheritDoc
          */
@@ -833,7 +833,7 @@ declare namespace RES {
         /**
          * 加载项字典
          */
-        protected resItemDic: Array<any>;
+        protected resItemDic: any[];
         /**
          * @inheritDoc
          */
@@ -969,7 +969,7 @@ declare namespace RES {
      * @version Egret 2.4
      * @platform Web,Native
      */
-    var VersionController: {
+    let VersionController: {
         /**
          * @language en_US
          * Constructor initialization
@@ -991,7 +991,7 @@ declare namespace RES.web {
         fetchVersion(callback: egret.AsyncCallback): void;
         /**
          * 获取所有有变化的文件
-         * @returns {Array<any>}
+         * @returns {any[]}
          */
         getChangeList(): Array<{
             url: string;
@@ -1013,7 +1013,7 @@ declare namespace RES.native {
         private getList(callback, type, root?);
         /**
          * 获取所有有变化的文件
-         * @returns {Array<any>}
+         * @returns {any[]}
          */
         getChangeList(): Array<{
             url: string;
@@ -1177,7 +1177,7 @@ declare namespace RES {
      * @version Egret 2.4
      * @platform Web,Native
      */
-    function createGroup(name: string, keys: Array<string>, override?: boolean): boolean;
+    function createGroup(name: string, keys: string[], override?: boolean): boolean;
     /**
      * @language en_US
      * Check whether the configuration file contains the specified resources.

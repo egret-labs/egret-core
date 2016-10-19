@@ -817,13 +817,13 @@ namespace eui.sys {
         initialized
     }
 
-    var UIComponentClass = "eui.UIComponent";
+    let UIComponentClass = "eui.UIComponent";
 
     function isDeltaIdentity(m:egret.Matrix):boolean {
         return (m.a === 1 && m.b === 0 && m.c === 0 && m.d === 1);
     }
 
-    var validator = new sys.Validator();
+    let validator = new sys.Validator();
 
     /**
      * @private
@@ -906,7 +906,7 @@ namespace eui.sys {
          * 提交属性，子类在调用完invalidateProperties()方法后，应覆盖此方法以应用属性
          */
         protected commitProperties():void {
-            var values = this.$UIComponent;
+            let values = this.$UIComponent;
             if (values[UIKeys.oldWidth] != values[UIKeys.width] || values[UIKeys.oldHeight] != values[UIKeys.height]) {
                 this.dispatchEventWith(egret.Event.RESIZE);
                 values[UIKeys.oldWidth] = values[UIKeys.width];
@@ -967,7 +967,7 @@ namespace eui.sys {
         $onAddToStage(stage:egret.Stage, nestLevel:number):void {
             this.$super.$onAddToStage.call(this, stage, nestLevel);
             this.checkInvalidateFlag();
-            var values = this.$UIComponent;
+            let values = this.$UIComponent;
             if (!values[sys.UIKeys.initialized]) {
                 values[sys.UIKeys.initialized] = true;
                 this.createChildren();
@@ -981,7 +981,7 @@ namespace eui.sys {
          * 检查属性失效标记并应用
          */
         private checkInvalidateFlag(event?:Event):void {
-            var values = this.$UIComponent;
+            let values = this.$UIComponent;
             if (values[sys.UIKeys.invalidatePropertiesFlag]) {
                 validator.invalidateProperties(this);
             }
@@ -1009,7 +1009,7 @@ namespace eui.sys {
                 value = value.toString().trim();
             }
 
-            var values = this.$UIComponent;
+            let values = this.$UIComponent;
             if (values[UIKeys.left] === value)
                 return;
             values[UIKeys.left] = value;
@@ -1031,7 +1031,7 @@ namespace eui.sys {
             else {
                 value = value.toString().trim();
             }
-            var values = this.$UIComponent;
+            let values = this.$UIComponent;
             if (values[UIKeys.right] === value)
                 return;
             values[UIKeys.right] = value;
@@ -1053,7 +1053,7 @@ namespace eui.sys {
             else {
                 value = value.toString().trim();
             }
-            var values = this.$UIComponent;
+            let values = this.$UIComponent;
             if (values[UIKeys.top] === value)
                 return;
             values[UIKeys.top] = value;
@@ -1075,7 +1075,7 @@ namespace eui.sys {
             else {
                 value = value.toString().trim();
             }
-            var values = this.$UIComponent;
+            let values = this.$UIComponent;
             if (values[UIKeys.bottom] == value)
                 return;
             values[UIKeys.bottom] = value;
@@ -1098,7 +1098,7 @@ namespace eui.sys {
             else {
                 value = value.toString().trim();
             }
-            var values = this.$UIComponent;
+            let values = this.$UIComponent;
             if (values[UIKeys.horizontalCenter] === value)
                 return;
             values[UIKeys.horizontalCenter] = value;
@@ -1120,7 +1120,7 @@ namespace eui.sys {
             else {
                 value = value.toString().trim();
             }
-            var values = this.$UIComponent;
+            let values = this.$UIComponent;
             if (values[UIKeys.verticalCenter] === value)
                 return;
             values[UIKeys.verticalCenter] = value;
@@ -1138,7 +1138,7 @@ namespace eui.sys {
 
         public set percentWidth(value:number) {
             value = +value;
-            var values = this.$UIComponent;
+            let values = this.$UIComponent;
             if (values[UIKeys.percentWidth] === value)
                 return;
             values[UIKeys.percentWidth] = value;
@@ -1155,7 +1155,7 @@ namespace eui.sys {
 
         public set percentHeight(value:number) {
             value = +value;
-            var values = this.$UIComponent;
+            let values = this.$UIComponent;
             if (values[UIKeys.percentHeight] === value)
                 return;
             values[UIKeys.percentHeight] = value;
@@ -1194,7 +1194,7 @@ namespace eui.sys {
          */
         $setWidth(value:number):boolean {
             value = +value;
-            var values = this.$UIComponent;
+            let values = this.$UIComponent;
             if (value < 0 || values[UIKeys.width] === value && values[UIKeys.explicitWidth] === value)
                 return false;
             values[UIKeys.explicitWidth] = value;
@@ -1232,7 +1232,7 @@ namespace eui.sys {
          */
         $setHeight(value:number):boolean {
             value = +value;
-            var values = this.$UIComponent;
+            let values = this.$UIComponent;
             if (value < 0 || values[UIKeys.height] === value && values[UIKeys.explicitHeight] === value)
                 return false;
             values[UIKeys.explicitHeight] = value;
@@ -1255,7 +1255,7 @@ namespace eui.sys {
 
         public set minWidth(value:number) {
             value = +value || 0;
-            var values = this.$UIComponent;
+            let values = this.$UIComponent;
             if (value < 0 || values[UIKeys.minWidth] === value) {
                 return;
             }
@@ -1274,7 +1274,7 @@ namespace eui.sys {
 
         public set maxWidth(value:number) {
             value = +value || 0;
-            var values = this.$UIComponent;
+            let values = this.$UIComponent;
             if (value < 0 || values[UIKeys.maxWidth] === value) {
                 return;
             }
@@ -1293,7 +1293,7 @@ namespace eui.sys {
 
         public set minHeight(value:number) {
             value = +value || 0;
-            var values = this.$UIComponent;
+            let values = this.$UIComponent;
             if (value < 0 || values[UIKeys.minHeight] === value) {
                 return;
             }
@@ -1313,7 +1313,7 @@ namespace eui.sys {
 
         public set maxHeight(value:number) {
             value = +value || 0;
-            var values = this.$UIComponent;
+            let values = this.$UIComponent;
             if (value < 0 || values[UIKeys.maxHeight] === value) {
                 return;
             }
@@ -1329,7 +1329,7 @@ namespace eui.sys {
          * @param height 测量高度
          */
         public setMeasuredSize(width:number, height:number):void {
-            var values = this.$UIComponent;
+            let values = this.$UIComponent;
             values[UIKeys.measuredWidth] = Math.ceil(+width || 0);
             values[UIKeys.measuredHeight] = Math.ceil(+height || 0);
         }
@@ -1341,8 +1341,8 @@ namespace eui.sys {
          * 不会影响显式标记尺寸属性
          */
         private setActualSize(w:number, h:number):void {
-            var change = false;
-            var values = this.$UIComponent;
+            let change = false;
+            let values = this.$UIComponent;
             if (values[UIKeys.width] !== w) {
                 values[UIKeys.width] = w;
                 change = true;
@@ -1396,7 +1396,7 @@ namespace eui.sys {
          * @returns
          */
         $setX(value:number):boolean {
-            var change = this.$super.$setX.call(this, value);
+            let change = this.$super.$setX.call(this, value);
             if (change) {
                 this.invalidateParentLayout();
                 this.invalidateProperties();
@@ -1411,7 +1411,7 @@ namespace eui.sys {
          * @returns
          */
         $setY(value:number):boolean {
-            var change = this.$super.$setY.call(this, value);
+            let change = this.$super.$setY.call(this, value);
             if (change) {
                 this.invalidateParentLayout();
                 this.invalidateProperties();
@@ -1425,7 +1425,7 @@ namespace eui.sys {
          * 标记属性失效
          */
         public invalidateProperties():void {
-            var values = this.$UIComponent;
+            let values = this.$UIComponent;
             if (!values[sys.UIKeys.invalidatePropertiesFlag]) {
                 values[sys.UIKeys.invalidatePropertiesFlag] = true;
                 if (this.$stage)
@@ -1438,7 +1438,7 @@ namespace eui.sys {
          * 验证组件的属性
          */
         public validateProperties():void {
-            var values = this.$UIComponent;
+            let values = this.$UIComponent;
             if (values[sys.UIKeys.invalidatePropertiesFlag]) {
                 this.commitProperties();
                 values[sys.UIKeys.invalidatePropertiesFlag] = false;
@@ -1450,7 +1450,7 @@ namespace eui.sys {
          * 标记提交过需要验证组件尺寸
          */
         public invalidateSize():void {
-            var values = this.$UIComponent;
+            let values = this.$UIComponent;
             if (!values[sys.UIKeys.invalidateSizeFlag]) {
                 values[sys.UIKeys.invalidateSizeFlag] = true;
                 if (this.$stage)
@@ -1464,20 +1464,20 @@ namespace eui.sys {
          */
         public validateSize(recursive?:boolean):void {
             if (recursive) {
-                var children = this.$children;
+                let children = this.$children;
                 if (children) {
-                    var length = children.length;
-                    for (var i = 0; i < length; i++) {
-                        var child = children[i];
+                    let length = children.length;
+                    for (let i = 0; i < length; i++) {
+                        let child = children[i];
                         if (egret.is(child, UIComponentClass)) {
                             (<eui.UIComponent>child).validateSize(true);
                         }
                     }
                 }
             }
-            var values = this.$UIComponent;
+            let values = this.$UIComponent;
             if (values[sys.UIKeys.invalidateSizeFlag]) {
-                var changed = this.measureSizes();
+                let changed = this.measureSizes();
                 if (changed) {
                     this.invalidateDisplayList();
                     this.invalidateParentLayout();
@@ -1491,8 +1491,8 @@ namespace eui.sys {
          * 测量组件尺寸，返回尺寸是否发生变化
          */
         private measureSizes():boolean {
-            var changed = false;
-            var values = this.$UIComponent;
+            let changed = false;
+            let values = this.$UIComponent;
             if (!values[sys.UIKeys.invalidateSizeFlag])
                 return changed;
 
@@ -1511,8 +1511,8 @@ namespace eui.sys {
                     values[UIKeys.measuredHeight] = values[UIKeys.maxHeight]
                 }
             }
-            var preferredW = this.getPreferredUWidth();
-            var preferredH = this.getPreferredUHeight();
+            let preferredW = this.getPreferredUWidth();
+            let preferredH = this.getPreferredUHeight();
             if (preferredW !== values[UIKeys.oldPreferWidth] ||
                 preferredH !== values[UIKeys.oldPreferHeight]) {
                 values[UIKeys.oldPreferWidth] = preferredW;
@@ -1527,7 +1527,7 @@ namespace eui.sys {
          * 标记需要验证显示列表
          */
         public invalidateDisplayList():void {
-            var values = this.$UIComponent;
+            let values = this.$UIComponent;
             if (!values[sys.UIKeys.invalidateDisplayListFlag]) {
                 values[sys.UIKeys.invalidateDisplayListFlag] = true;
                 if (this.$stage)
@@ -1540,7 +1540,7 @@ namespace eui.sys {
          * 验证子项的位置和大小，并绘制其他可视内容
          */
         public validateDisplayList():void {
-            var values = this.$UIComponent;
+            let values = this.$UIComponent;
             if (values[sys.UIKeys.invalidateDisplayListFlag]) {
                 this.updateFinalSize();
                 this.updateDisplayList(values[UIKeys.width], values[UIKeys.height]);
@@ -1553,9 +1553,9 @@ namespace eui.sys {
          * 更新最终的组件宽高
          */
         private updateFinalSize():void {
-            var unscaledWidth = 0;
-            var unscaledHeight = 0;
-            var values = this.$UIComponent;
+            let unscaledWidth = 0;
+            let unscaledHeight = 0;
+            let values = this.$UIComponent;
             if (values[sys.UIKeys.layoutWidthExplicitlySet]) {
                 unscaledWidth = values[UIKeys.width];
             }
@@ -1591,7 +1591,7 @@ namespace eui.sys {
          * 标记父级容器的尺寸和显示列表为失效
          */
         protected invalidateParentLayout():void {
-            var parent = this.$parent;
+            let parent = this.$parent;
             if (!parent || !this.$includeInLayout || !egret.is(parent, UIComponentClass))
                 return;
             (<eui.UIComponent><any>parent).invalidateSize();
@@ -1608,13 +1608,13 @@ namespace eui.sys {
             if (layoutHeight < 0 || layoutWidth < 0) {
                 return;
             }
-            var values = this.$UIComponent;
-            var maxWidth = values[UIKeys.maxWidth];
-            var maxHeight = values[UIKeys.maxHeight];
-            var minWidth = Math.min(values[UIKeys.minWidth], maxWidth);
-            var minHeight = Math.min(values[UIKeys.minHeight], maxHeight);
-            var width:number;
-            var height:number;
+            let values = this.$UIComponent;
+            let maxWidth = values[UIKeys.maxWidth];
+            let maxHeight = values[UIKeys.maxHeight];
+            let minWidth = Math.min(values[UIKeys.minWidth], maxWidth);
+            let minHeight = Math.min(values[UIKeys.minHeight], maxHeight);
+            let width:number;
+            let height:number;
             if (isNaN(layoutWidth)) {
                 values[sys.UIKeys.layoutWidthExplicitlySet] = false;
                 width = this.getPreferredUWidth();
@@ -1631,13 +1631,13 @@ namespace eui.sys {
                 values[sys.UIKeys.layoutHeightExplicitlySet] = true;
                 height = Math.max(minHeight, Math.min(maxHeight, layoutHeight));
             }
-            var matrix = this.getAnchorMatrix();
+            let matrix = this.getAnchorMatrix();
             if (isDeltaIdentity(matrix)) {
                 this.setActualSize(width, height);
                 return;
             }
 
-            var fitSize = sys.MatrixUtil.fitBounds(layoutWidth, layoutHeight, matrix,
+            let fitSize = sys.MatrixUtil.fitBounds(layoutWidth, layoutHeight, matrix,
                 values[UIKeys.explicitWidth], values[UIKeys.explicitHeight],
                 this.getPreferredUWidth(), this.getPreferredUHeight(),
                 minWidth, minHeight, maxWidth, maxHeight);
@@ -1653,14 +1653,14 @@ namespace eui.sys {
          * 设置组件的布局位置
          */
         public setLayoutBoundsPosition(x:number, y:number):void {
-            var matrix = this.$getMatrix();
+            let matrix = this.$getMatrix();
             if (!isDeltaIdentity(matrix) || this.anchorOffsetX != 0 || this.anchorOffsetY != 0) {
-                var bounds = egret.$TempRectangle;
+                let bounds = egret.$TempRectangle;
                 this.getLayoutBounds(bounds);
                 x += this.$getX() - bounds.x;
                 y += this.$getY() - bounds.y;
             }
-            var changed:boolean = this.$super.$setX.call(this, x);
+            let changed:boolean = this.$super.$setX.call(this, x);
             if (this.$super.$setY.call(this, y) || changed) {
                 UIEvent.dispatchUIEvent(this, UIEvent.MOVE);
             }
@@ -1673,8 +1673,8 @@ namespace eui.sys {
          * 注意此方法返回值已经包含scale和rotation。
          */
         public getLayoutBounds(bounds:egret.Rectangle):void {
-            var values = this.$UIComponent;
-            var w:number;
+            let values = this.$UIComponent;
+            let w:number;
             if (values[sys.UIKeys.layoutWidthExplicitlySet]) {
                 w = values[UIKeys.width];
             }
@@ -1684,7 +1684,7 @@ namespace eui.sys {
             else {
                 w = values[UIKeys.measuredWidth];
             }
-            var h:number;
+            let h:number;
             if (values[sys.UIKeys.layoutHeightExplicitlySet]) {
                 h = values[UIKeys.height];
             }
@@ -1704,7 +1704,7 @@ namespace eui.sys {
          * @returns
          */
         private getPreferredUWidth():number {
-            var values = this.$UIComponent;
+            let values = this.$UIComponent;
             return isNaN(values[UIKeys.explicitWidth]) ?
                 values[UIKeys.measuredWidth] : values[UIKeys.explicitWidth];
         }
@@ -1715,7 +1715,7 @@ namespace eui.sys {
          * @returns
          */
         private getPreferredUHeight():number {
-            var values = this.$UIComponent;
+            let values = this.$UIComponent;
             return isNaN(values[UIKeys.explicitHeight]) ?
                 values[UIKeys.measuredHeight] : values[UIKeys.explicitHeight];
         }
@@ -1727,22 +1727,18 @@ namespace eui.sys {
          * 注意此方法返回值已经包含scale和rotation。
          */
         public getPreferredBounds(bounds:egret.Rectangle):void {
-            var w = this.getPreferredUWidth();
-            var h = this.getPreferredUHeight();
+            let w = this.getPreferredUWidth();
+            let h = this.getPreferredUHeight();
             this.applyMatrix(bounds, w, h);
         }
 
 
         /**
          * @private
-         *
-         * @param bounds
-         * @param w
-         * @param h
          */
         private applyMatrix(bounds:egret.Rectangle, w:number, h:number):void {
-            var bounds = bounds.setTo(0, 0, w, h);
-            var matrix = this.getAnchorMatrix();
+            bounds.setTo(0, 0, w, h);
+            let matrix = this.getAnchorMatrix();
 
             if (isDeltaIdentity(matrix)) {
                 bounds.x += matrix.tx;
@@ -1758,11 +1754,11 @@ namespace eui.sys {
          * @private
          */
         private getAnchorMatrix():egret.Matrix {
-            var matrix = this.$getMatrix();
-            var offsetX = this.anchorOffsetX;
-            var offsetY = this.anchorOffsetY;
+            let matrix = this.$getMatrix();
+            let offsetX = this.anchorOffsetX;
+            let offsetY = this.anchorOffsetY;
             if (offsetX != 0 || offsetY != 0) {
-                var tempM = egret.$TempMatrix;
+                let tempM = egret.$TempMatrix;
                 matrix.$preMultiplyInto(tempM.setTo(1, 0, 0, 1, -offsetX, -offsetY), tempM);
                 return tempM;
             }
@@ -1777,9 +1773,9 @@ namespace eui.sys {
         if (typeof prototype[key] != "function") {
             return false;
         }
-        var body = prototype[key].toString();
-        var index = body.indexOf("{");
-        var lastIndex = body.lastIndexOf("}");
+        let body = prototype[key].toString();
+        let index = body.indexOf("{");
+        let lastIndex = body.lastIndexOf("}");
         body = body.substring(index + 1, lastIndex);
         return body.trim() == "";
     }
@@ -1791,22 +1787,22 @@ namespace eui.sys {
      * @param template 模板类
      */
     export function mixin(target:any, template:any):void {
-        for (var property in template) {
+        for (let property in template) {
             if (property != "prototype" && template.hasOwnProperty(property)) {
                 target[property] = template[property];
             }
         }
-        var prototype = target.prototype;
-        var protoBase = template.prototype;
-        var keys = Object.keys(protoBase);
-        var length = keys.length;
-        for (var i = 0; i < length; i++) {
-            var key = keys[i];
+        let prototype = target.prototype;
+        let protoBase = template.prototype;
+        let keys = Object.keys(protoBase);
+        let length = keys.length;
+        for (let i = 0; i < length; i++) {
+            let key = keys[i];
             if (key == "__meta__") {
                 continue;
             }
             if (!prototype.hasOwnProperty(key) || isEmptyFunction(prototype, key)) {
-                var value = Object.getOwnPropertyDescriptor(protoBase, key);
+                let value = Object.getOwnPropertyDescriptor(protoBase, key);
                 Object.defineProperty(prototype, key, value);
             }
         }
@@ -1824,7 +1820,7 @@ namespace eui.sys {
      */
     export function implementUIComponent(descendant:any, base:any, isContainer?:boolean):void {
         mixin(descendant, UIComponentImpl);
-        var prototype = descendant.prototype;
+        let prototype = descendant.prototype;
         prototype.$super = base.prototype;
 
         registerProperty(descendant, "left", "Percentage");
@@ -1850,7 +1846,7 @@ namespace eui.sys {
 
             Object.defineProperty(prototype, "preferredWidth", {
                 get: function () {
-                    var bounds = egret.$TempRectangle;
+                    let bounds = egret.$TempRectangle;
                     this.getPreferredBounds(bounds);
                     return bounds.width;
                 },
@@ -1859,7 +1855,7 @@ namespace eui.sys {
             });
             Object.defineProperty(prototype, "preferredHeight", {
                 get: function () {
-                    var bounds = egret.$TempRectangle;
+                    let bounds = egret.$TempRectangle;
                     this.getPreferredBounds(bounds);
                     return bounds.height;
                 },
@@ -1868,7 +1864,7 @@ namespace eui.sys {
             });
             Object.defineProperty(prototype, "preferredX", {
                 get: function () {
-                    var bounds = egret.$TempRectangle;
+                    let bounds = egret.$TempRectangle;
                     this.getPreferredBounds(bounds);
                     return bounds.x;
                 },
@@ -1877,7 +1873,7 @@ namespace eui.sys {
             });
             Object.defineProperty(prototype, "preferredY", {
                 get: function () {
-                    var bounds = egret.$TempRectangle;
+                    let bounds = egret.$TempRectangle;
                     this.getPreferredBounds(bounds);
                     return bounds.y;
                 },
@@ -1886,7 +1882,7 @@ namespace eui.sys {
             });
             Object.defineProperty(prototype, "layoutBoundsX", {
                 get: function () {
-                    var bounds = egret.$TempRectangle;
+                    let bounds = egret.$TempRectangle;
                     this.getLayoutBounds(bounds);
                     return bounds.x;
                 },
@@ -1895,7 +1891,7 @@ namespace eui.sys {
             });
             Object.defineProperty(prototype, "layoutBoundsY", {
                 get: function () {
-                    var bounds = egret.$TempRectangle;
+                    let bounds = egret.$TempRectangle;
                     this.getLayoutBounds(bounds);
                     return bounds.y;
                 },
@@ -1904,7 +1900,7 @@ namespace eui.sys {
             });
             Object.defineProperty(prototype, "layoutBoundsWidth", {
                 get: function () {
-                    var bounds = egret.$TempRectangle;
+                    let bounds = egret.$TempRectangle;
                     this.getLayoutBounds(bounds);
                     return bounds.width;
                 },
@@ -1913,7 +1909,7 @@ namespace eui.sys {
             });
             Object.defineProperty(prototype, "layoutBoundsHeight", {
                 get: function () {
-                    var bounds = egret.$TempRectangle;
+                    let bounds = egret.$TempRectangle;
                     this.getLayoutBounds(bounds);
                     return bounds.height;
                 },

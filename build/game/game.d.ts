@@ -984,7 +984,7 @@ declare namespace egret {
          * Execute callback function
          * @param callback {Function} Callback method
          * @param thisObj {any} this action scope of the callback method
-         * @param params {Array<any>} Parameter of the callback method
+         * @param params {any[]} Parameter of the callback method
          * @returns {egret.ScrollTween} ScrollTween object itself
          * @version Egret 2.4
          * @platform Web,Native
@@ -994,12 +994,12 @@ declare namespace egret {
          * 执行回调函数
          * @param callback {Function} 回调方法
          * @param thisObj {any} 回调方法this作用域
-         * @param params {Array<any>} 回调方法参数
+         * @param params {any[]} 回调方法参数
          * @returns {egret.ScrollTween} Tween对象本身
          * @version Egret 2.4
          * @platform Web,Native
          */
-        call(callback: Function, thisObj?: any, params?: Array<any>): ScrollTween;
+        call(callback: Function, thisObj?: any, params?: any[]): ScrollTween;
         /**
          * @method egret.ScrollTween#tick
          * @param delta {number}
@@ -1605,7 +1605,7 @@ declare namespace egret {
      * @version Egret 2.4
      * @platform Web,Native
      */
-    var NetContext: {
+    let NetContext: {
         new (): NetContext;
         getNetContext(): NetContext;
     };
@@ -2318,11 +2318,11 @@ declare namespace egret {
 /**
  * @private
  */
-declare var testDeviceType1: () => boolean;
+declare let testDeviceType1: () => boolean;
 /**
  * @private
  */
-declare var testRuntimeType1: () => boolean;
+declare let testRuntimeType1: () => boolean;
 declare namespace egret {
     /**
      * @language en_US
@@ -2359,7 +2359,7 @@ declare namespace egret {
         /**
          * @private
          */
-        static _callBackList: Array<any>;
+        static _callBackList: any[];
         static $init(): void;
         static onUpdate(timeStamp: number): boolean;
         /**

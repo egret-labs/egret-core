@@ -149,7 +149,7 @@ namespace eui {
             if (value == this.$viewport) {
                 return;
             }
-            var viewport = this.$viewport;
+            let viewport = this.$viewport;
             if (viewport)
             {
                 viewport.removeEventListener(eui.PropertyEvent.PROPERTY_CHANGE, this.onPropertyChanged,this);

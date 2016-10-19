@@ -126,7 +126,7 @@ namespace eui {
             if (!this.target) {
                 return;
             }
-            var nextOldValue = this.target[this.prop];
+            let nextOldValue = this.target[this.prop];
             if (this.oldValue) {
                 this.setPropertyValue(this.target, this.prop, this.oldValue, this.oldValue);
             }
@@ -147,7 +147,7 @@ namespace eui {
             if (!this.target) {
                 return;
             }
-            var oldValue = this.oldValue;
+            let oldValue = this.oldValue;
             if (this.target[this.prop]) {
                 this.oldValue = this.target[this.prop];
             }

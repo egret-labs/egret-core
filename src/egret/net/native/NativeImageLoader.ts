@@ -72,7 +72,7 @@ namespace egret.native {
         }
 
         private check(url:string):void {
-            var self = this;
+            let self = this;
             if (self.isNetUrl(url)) {//网络请求
                 self.download(url);
             }
@@ -85,8 +85,8 @@ namespace egret.native {
         }
 
         private download(url:string):void {
-            var self = this;
-            var promise = egret.PromiseObject.create();
+            let self = this;
+            let promise = egret.PromiseObject.create();
             promise.onSuccessFunc = function () {
                 self.loadTexture(url);
             };
@@ -97,8 +97,8 @@ namespace egret.native {
         }
 
         private loadTexture(url:string):void {
-            var self = this;
-            var promise = new egret.PromiseObject();
+            let self = this;
+            let promise = new egret.PromiseObject();
             promise.onSuccessFunc = function (bitmapData) {
                 self.data = new egret.BitmapData(bitmapData);
 

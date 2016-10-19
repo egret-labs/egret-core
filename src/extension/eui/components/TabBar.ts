@@ -104,7 +104,7 @@ namespace eui {
          */
         protected createChildren():void{
             if (!this.$layout) {
-                var layout = new HorizontalLayout();
+                let layout = new HorizontalLayout();
                 layout.gap = 0;
                 layout.horizontalAlign = JustifyAlign.JUSTIFY;
                 layout.verticalAlign = JustifyAlign.CONTENT_JUSTIFY;
@@ -119,7 +119,7 @@ namespace eui {
          * @param value 
          */
         $setDataProvider(value:ICollection):boolean{
-            var dp = this.$dataProvider;
+            let dp = this.$dataProvider;
             if(dp&&dp instanceof eui.ViewStack){
                 dp.removeEventListener(PropertyEvent.PROPERTY_CHANGE,this.onViewStackIndexChange,this);
                 this.removeEventListener(egret.Event.CHANGE,this.onIndexChanged,this);

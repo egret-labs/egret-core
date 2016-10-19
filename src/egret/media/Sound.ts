@@ -30,7 +30,7 @@
 
 namespace egret.sys {
 
-    var usingChannel:Array<SoundChannel> = [];
+    let usingChannel:Array<SoundChannel> = [];
 
     /**
      * @private
@@ -47,7 +47,7 @@ namespace egret.sys {
      * @param channel
      */
     export function $popSoundChannel(channel:SoundChannel):boolean {
-        var index:number = usingChannel.indexOf(channel);
+        let index:number = usingChannel.indexOf(channel);
         if (index >= 0) {
             usingChannel.splice(index, 1);
             return true;
@@ -169,7 +169,7 @@ namespace egret {
     /**
      * @copy egret.Sound
      */
-    export var Sound:{
+    export let Sound:{
 
         /**
          * @language en_US

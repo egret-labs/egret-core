@@ -117,7 +117,7 @@ namespace egret {
      * @version Egret 2.4
      * @platform Web,Native
      */
-    export var ImageLoader:{
+    export let ImageLoader:{
         /**
          * @language en_US
          * constructor

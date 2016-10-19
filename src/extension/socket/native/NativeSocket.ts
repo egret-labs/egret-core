@@ -58,7 +58,7 @@ namespace egret.native {
             this.host = host;
             this.port = port;
 
-            var socketServerUrl = "ws://" + this.host + ":" + this.port;
+            let socketServerUrl = "ws://" + this.host + ":" + this.port;
             this.socket = new __global["egret_native"]["WebSocket"](socketServerUrl);
             this._bindEvent();
         }
@@ -69,8 +69,8 @@ namespace egret.native {
         }
 
         private _bindEvent():void {
-            var that = this;
-            var socket = this.socket;
+            let that = this;
+            let socket = this.socket;
             socket.onOpen = function () {
                 if (that.onConnect) {
                     that.onConnect.call(that.thisObject);

@@ -37,7 +37,7 @@ namespace egret {
      * @returns A value of true if the object is a instance of the class or interface specified as the parameter.
      * @example
      * <pre>
-     *     var instance = new egret.Sprite();
+     *     let instance = new egret.Sprite();
      *     egret.log(egret.is(instance,"egret.Sprite"))  //true
      *     egret.log(egret.is(instance,"egret.DisplayObjectContainer"))  //true
      *     egret.log(egret.is(instance,"egret.Bitmap"))  //false
@@ -54,7 +54,7 @@ namespace egret {
      * @returns 返回true表示当前对象是指定类或接口的实例。
      * @example
      * <pre>
-     *     var instance = new egret.Sprite();
+     *     let instance = new egret.Sprite();
      *     egret.log(egret.is(instance,"egret.Sprite"))  //true
      *     egret.log(egret.is(instance,"egret.DisplayObjectContainer"))  //true
      *     egret.log(egret.is(instance,"egret.Bitmap"))  //false
@@ -67,8 +67,8 @@ namespace egret {
         if (!instance || typeof instance != "object") {
             return false;
         }
-        var prototype:any = Object.getPrototypeOf(instance);
-        var types = prototype ? prototype.__types__ : null;
+        let prototype:any = Object.getPrototypeOf(instance);
+        let types = prototype ? prototype.__types__ : null;
         if (!types) {
             return false;
         }

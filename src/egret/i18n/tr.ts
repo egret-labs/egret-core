@@ -32,12 +32,12 @@ namespace egret {
     /**
      * @private
      */
-    export var $locale_strings:any = $locale_strings||{};
+    export let $locale_strings:any = egret.$locale_strings||{};
 
     /**
      * @private
      */
-    export var $language: string = "en_US";
+    export let $language: string = "en_US";
 
 }
 
@@ -50,12 +50,12 @@ namespace egret.sys {
      * @returns 返回拼接后的字符串
      */
     export function tr(code:number, ...args):string{
-        var text = $locale_strings[$language][code];
+        let text = $locale_strings[$language][code];
         if(!text){
             return "{"+code+"}";
         }
-        var length = args.length;
-        for(var i=0;i<length;i++){
+        let length = args.length;
+        for(let i=0;i<length;i++){
             text = text.replace("{" + i + "}", args[i]);
         }
         return text;

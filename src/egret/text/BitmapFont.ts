@@ -100,9 +100,9 @@ namespace egret {
          * @platform Web,Native
          */
         public getTexture(name:string):Texture {
-            var texture:Texture = this._textureMap[name];
+            let texture:Texture = this._textureMap[name];
             if (!texture) {
-                var c:any = this.charList[name];
+                let c:any = this.charList[name];
                 if (!c) {
                     return null;
                 }
@@ -134,16 +134,16 @@ namespace egret {
          */
         public _getFirstCharHeight():number{
             if(this.firstCharHeight==0){
-                for(var str in this.charList){
-                    var c:any = this.charList[str];
+                for(let str in this.charList){
+                    let c:any = this.charList[str];
                     if(c){
-                        var sourceH:number = c.sourceH;
+                        let sourceH:number = c.sourceH;
                         if(sourceH === undefined){
-                            var h:number = c.h;
+                            let h:number = c.h;
                             if(h===undefined){
                                 h = 0;
                             }
-                            var offY:number = c.offY;
+                            let offY:number = c.offY;
                             if(offY === undefined){
                                 offY = 0;
                             }
@@ -168,14 +168,14 @@ namespace egret {
          */
         private parseConfig(fntText:string):any {
             fntText = fntText.split("\r\n").join("\n");
-            var lines:Array<string> = fntText.split("\n");
-            var charsCount:number = this.getConfigByKey(lines[3], "count");
+            let lines:string[] = fntText.split("\n");
+            let charsCount:number = this.getConfigByKey(lines[3], "count");
 
-            var chars:any = {};
-            for (var i:number = 4; i < 4 + charsCount; i++) {
-                var charText:string = lines[i];
-                var letter:string = String.fromCharCode(this.getConfigByKey(charText, "id"));
-                var c = {};
+            let chars:any = {};
+            for (let i:number = 4; i < 4 + charsCount; i++) {
+                let charText:string = lines[i];
+                let letter:string = String.fromCharCode(this.getConfigByKey(charText, "id"));
+                let c = {};
                 chars[letter] = c;
                 c["x"] = this.getConfigByKey(charText, "x");
                 c["y"] = this.getConfigByKey(charText, "y");
@@ -196,11 +196,11 @@ namespace egret {
          * @returns 
          */
         private getConfigByKey(configText:string, key:string):number {
-            var itemConfigTextList = configText.split(" ");
-            for (var i = 0 , length = itemConfigTextList.length; i < length; i++) {
-                var itemConfigText = itemConfigTextList[i];
+            let itemConfigTextList = configText.split(" ");
+            for (let i = 0 , length = itemConfigTextList.length; i < length; i++) {
+                let itemConfigText = itemConfigTextList[i];
                 if (key == itemConfigText.substring(0, key.length)) {
-                    var value:string = itemConfigText.substring(key.length + 1);
+                    let value:string = itemConfigText.substring(key.length + 1);
                     return parseInt(value);
                 }
             }

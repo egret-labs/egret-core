@@ -29,7 +29,7 @@
 
 namespace eui {
 
-    var key = "__bindables__";
+    let key = "__bindables__";
 
     /**
      * @language en_US
@@ -68,7 +68,7 @@ namespace eui {
             instance[key].push(property);
         }
         else{
-            var list = [property];
+            let list = [property];
             if(instance[key]){
                 list = instance[key].concat(list);
             }

@@ -32,12 +32,12 @@ namespace egret.sys {
     /**
      * @private
      */
-    export var systemRenderer:SystemRenderer;
+    export let systemRenderer:SystemRenderer;
     /**
      * @private
      * 用于碰撞检测绘制
      */
-    export var canvasRenderer:SystemRenderer;
+    export let canvasRenderer:SystemRenderer;
     /**
      * @private
      * 显示渲染器接口

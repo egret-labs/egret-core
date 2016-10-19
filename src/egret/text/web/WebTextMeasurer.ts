@@ -33,11 +33,11 @@ namespace egret.web {
     /**
      * @private
      */
-    var context:CanvasRenderingContext2D = null;
+    let context:CanvasRenderingContext2D = null;
     /**
      * @private
      */
-    var fontCache:any = {};
+    let fontCache:any = {};
 
     /**
      * 测量文本在指定样式下的宽度。
@@ -51,7 +51,7 @@ namespace egret.web {
         if(!context) {
             createContext();
         }
-        var font = "";
+        let font = "";
         if (italic)
             font += "italic ";
         if (bold)

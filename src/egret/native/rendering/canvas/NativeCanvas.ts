@@ -76,7 +76,7 @@ namespace egret.native {
                     if (this.$isRoot) {
                         egret_native.setScreenCanvas(this.$nativeCanvas);
                     }
-                    var context = this.$nativeCanvas.getContext("2d");
+                    let context = this.$nativeCanvas.getContext("2d");
 
                     if($supportCmdBatch) {
                         $cmdManager.setContext(context);
@@ -111,7 +111,7 @@ namespace egret.native {
                     if (this.$isRoot) {
                         egret_native.setScreenCanvas(this.$nativeCanvas);
                     }
-                    var context = this.$nativeCanvas.getContext("2d");
+                    let context = this.$nativeCanvas.getContext("2d");
     
                     if($supportCmdBatch) {
                         $cmdManager.setContext(context);
