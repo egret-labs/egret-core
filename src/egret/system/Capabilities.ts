@@ -247,7 +247,7 @@ module egret {
          * @platform Web,Native
          */
         public static get engineVersion():string {
-            return "3.2.0";
+            return "3.2.1";
         }
 
         /**
