@@ -42,6 +42,7 @@ class Compiler {
             }
             //make 使用引擎的配置,必须用下面的参数
             parsedCmd.options.target = 1;
+            parsedCmd.options.stripInternal = true;
             parsedCmd.options.sourceMap = args.sourceMap;
             parsedCmd.options.removeComments = args.removeComments;
             parsedCmd.options.declaration = args.declaration;
@@ -113,10 +114,6 @@ class Compiler {
         this.services = ts.createLanguageService(servicesHost, ts.createDocumentRegistry());
         this.sortFiles();
         if(!options.forSortFile) {
-            // rootFileNames.forEach(fileName => {
-            //     // First time around, emit all files
-            //     this.emitFile(fileName);
-            // });
             let output = this.services.getEmitOutput(undefined);
             this.logErrors(undefined);
             output.outputFiles.forEach(o => {
@@ -180,7 +177,7 @@ class Compiler {
         filesChanged.forEach((file: any) => {
             if (file.type == "added") {
                 this.parsedCmd.fileNames.push(file.fileName);
-                this.files[file.fileName].version++;
+                this.files[file.fileName] = { version: 0 };
             }
             else if (file.type == "removed") {
                 var index = this.parsedCmd.fileNames.indexOf(file.fileName);
