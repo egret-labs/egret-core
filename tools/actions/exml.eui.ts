@@ -138,8 +138,15 @@ function sort(exmls: exml.EXMLFile[]) {
 
 }
 
+const ignorePath = egret.args.properties.getIgnorePath();
 function exmlFilter(f: string) {
-    return /\.exml$/.test(f) && (f.indexOf(egret.args.releaseRootDir) < 0)
+    var isIgnore = false;
+    ignorePath.forEach(path => {
+        if(f.indexOf(path) != -1) {
+            isIgnore = true;
+        }
+    });
+    return /\.exml$/.test(f) && (f.indexOf(egret.args.releaseRootDir) < 0) && !isIgnore;
 }
 function themeFilter(f: string) {
     return (f.indexOf('.thm.json') > 0) && (f.indexOf(egret.args.releaseRootDir) < 0)

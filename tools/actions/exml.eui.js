@@ -116,8 +116,15 @@ function searchEXML() {
 function sort(exmls) {
     var preload = exmls.filter(function (e) { return e.preload; });
 }
+var ignorePath = egret.args.properties.getIgnorePath();
 function exmlFilter(f) {
-    return /\.exml$/.test(f) && (f.indexOf(egret.args.releaseRootDir) < 0);
+    var isIgnore = false;
+    ignorePath.forEach(function (path) {
+        if (f.indexOf(path) != -1) {
+            isIgnore = true;
+        }
+    });
+    return /\.exml$/.test(f) && (f.indexOf(egret.args.releaseRootDir) < 0) && !isIgnore;
 }
 function themeFilter(f) {
     return (f.indexOf('.thm.json') > 0) && (f.indexOf(egret.args.releaseRootDir) < 0);
@@ -180,4 +187,3 @@ function generateExmlDTS() {
     file.save(exmlDtsPath, dts);
     return dts;
 }
-//# sourceMappingURL=exml.eui.js.map

@@ -56,7 +56,6 @@ var Compiler = (function () {
             return this.compileNew(parsedCmd);
         }
         else {
-            console.log("use typescript 1.8.7");
             // var compileResult = tsclark.Compiler.executeWithOption(args, files, out, outDir);
             var compileResult = tsclark.Compiler.executeWithOption(parsedCmd);
             args.declaration = defTemp;
