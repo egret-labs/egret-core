@@ -98,6 +98,10 @@ exports.optionDeclarations = [
         type: 'boolean',
         shortName: "e"
     }, {
+        name: 'experimental',
+        type: 'boolean',
+        shortName: "exp"
+    }, {
         name: 'egretVersion',
         type: 'string',
         shortName: "ev"
@@ -175,13 +179,14 @@ function parseCommandLine(commandLine) {
             }
         }
         //create_app命令不强制设置projectDir属性
-        if(options.projectDir == null && options.command == "create_app"){
-        }else{
+        if (options.projectDir == null && options.command == "create_app") {
+        }
+        else {
             if (!options.projectDir)
                 options.projectDir = process.cwd();
             else {
                 var absPath = path.resolve(process.cwd(), options.projectDir);
-                if(file.isDirectory(absPath)) {
+                if (file.isDirectory(absPath)) {
                     options.projectDir = absPath;
                 }
             }
