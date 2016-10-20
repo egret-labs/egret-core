@@ -44909,6 +44909,8 @@ var ts;
         }
     }
     function visitFile(sourceFile) {
+        var hasDecorators = !!((sourceFile.flags & 524288 /* HasDecorators */) ||
+            (sourceFile.flags & 1048576 /* HasParamDecorators */));
         var statements = sourceFile.statements;
         var length = statements.length;
         for (var i = 0; i < length; i++) {
@@ -44928,15 +44930,18 @@ var ts;
                 }
             }
             else {
-                visitStatement(statements[i]);
+                visitStatement(statements[i], hasDecorators);
             }
         }
     }
-    function visitStatement(statement) {
+    function visitStatement(statement, hasDecorators) {
         switch (statement.kind) {
             case 221 /* ClassDeclaration */:
                 checkInheriting(statement);
                 checkStaticMember(statement);
+                if (hasDecorators) {
+                    checkClassDecorators(statement);
+                }
                 break;
             case 200 /* VariableStatement */:
                 var variable = statement;
@@ -44945,11 +44950,11 @@ var ts;
                 });
                 break;
             case 225 /* ModuleDeclaration */:
-                visitModule(statement);
+                visitModule(statement, hasDecorators);
                 break;
         }
     }
-    function visitModule(node) {
+    function visitModule(node, hasDecorators) {
         if (node.body.kind == 225 /* ModuleDeclaration */) {
             visitModule(node.body);
             return;
@@ -44961,7 +44966,7 @@ var ts;
             if (statement.flags & 2 /* Ambient */) {
                 continue;
             }
-            visitStatement(statement);
+            visitStatement(statement, hasDecorators);
         }
     }
     function checkDependencyAtLocation(node) {
@@ -44970,7 +44975,7 @@ var ts;
             return;
         }
         var sourceFile = getSourceFileOfNode(type.symbol.valueDeclaration);
-        if (sourceFile.isDeclarationFile) {
+        if (!sourceFile || sourceFile.isDeclarationFile) {
             return;
         }
         addDependency(getSourceFileOfNode(node).fileName, sourceFile.fileName);
@@ -45013,6 +45018,55 @@ var ts;
                 var property = member;
                 checkExpression(property.initializer);
             }
+        }
+    }
+    function checkClassDecorators(node) {
+        if (node.decorators) {
+            checkDecorators(node.decorators);
+        }
+        var members = node.members;
+        if (!members) {
+            return;
+        }
+        for (var _i = 0, members_3 = members; _i < members_3.length; _i++) {
+            var member = members_3[_i];
+            var decorators = void 0;
+            var functionLikeMember = void 0;
+            if (member.kind === 149 /* GetAccessor */ || member.kind === 150 /* SetAccessor */) {
+                var accessors = ts.getAllAccessorDeclarations(node.members, member);
+                if (member !== accessors.firstAccessor) {
+                    continue;
+                }
+                decorators = accessors.firstAccessor.decorators;
+                if (!decorators && accessors.secondAccessor) {
+                    decorators = accessors.secondAccessor.decorators;
+                }
+                functionLikeMember = accessors.setAccessor;
+            }
+            else {
+                decorators = member.decorators;
+                if (member.kind === 147 /* MethodDeclaration */) {
+                    functionLikeMember = member;
+                }
+            }
+            if (decorators) {
+                checkDecorators(decorators);
+            }
+            if (functionLikeMember) {
+                var parameterIndex = 0;
+                for (var _a = 0, _b = functionLikeMember.parameters; _a < _b.length; _a++) {
+                    var parameter = _b[_a];
+                    if (parameter.decorators) {
+                        checkDecorators(parameter.decorators);
+                    }
+                }
+            }
+        }
+    }
+    function checkDecorators(decorators) {
+        for (var _i = 0, decorators_1 = decorators; _i < decorators_1.length; _i++) {
+            var decorator = decorators_1[_i];
+            checkExpression(decorator.expression);
         }
     }
     function checkExpression(expression) {
@@ -45090,7 +45144,7 @@ var ts;
                 }
                 var declaration = type.symbol.valueDeclaration;
                 var sourceFile = getSourceFileOfNode(declaration);
-                if (sourceFile.isDeclarationFile) {
+                if (!sourceFile || sourceFile.isDeclarationFile) {
                     return;
                 }
                 addDependency(getSourceFileOfNode(expression).fileName, sourceFile.fileName);
@@ -45109,8 +45163,8 @@ var ts;
         if (!members) {
             return;
         }
-        for (var _i = 0, members_3 = members; _i < members_3.length; _i++) {
-            var member = members_3[_i];
+        for (var _i = 0, members_4 = members; _i < members_4.length; _i++) {
+            var member = members_4[_i];
             if (member.flags & 32 /* Static */) {
                 continue;
             }
@@ -45217,7 +45271,7 @@ var ts;
 (function (ts) {
     /** The version of the TypeScript compiler release */
     ts.version = "2.0.5";
-    ts.version_plus = "2.0.6";
+    ts.version_plus = "2.0.11";
     var emptyArray = [];
     function findConfigFile(searchPath, fileExists, configName) {
         if (configName === void 0) { configName = "tsconfig.json"; }
