@@ -1,0 +1,44 @@
+<componentPackage>
+    <component id="ArrayCollection" super="egret.EventEmitter" default="source" show="false" module="eui"/>
+    <component id="BasicLayout" super="eui.LayoutBase" show="false" module="eui"/>
+    <component id="BitmapLabel" super="egret.BitmapText" show="true" module="eui"/>
+    <component id="BitmapText" super="egret.DisplayObject" show="false" module="egret"/>
+    <component id="Button" super="eui.Component" state="up,down,disabled" show="true" module="eui"/>
+    <component id="CheckBox" super="eui.ToggleButton" show="true" module="eui"/>
+    <component id="Component" super="eui.DisplayObjectContainer" state="" show="true" module="eui"/>
+    <component id="DataGroup" super="eui.Group" default="dataProvider" show="true" module="eui"/>
+    <component id="EditableText" super="egret.TextField" show="true" module="eui"/>
+    <component id="Group" super="egret.DisplayObjectContainer" default="elementsContent" show="true" module="eui"/>
+    <component id="HorizontalLayout" super="eui.LinearLayoutBase" show="false" module="eui"/>
+    <component id="HScrollBar" super="eui.ScrollBarBase" show="true" module="eui"/>
+    <component id="HSlider" super="eui.SliderBase" show="true" module="eui"/>
+    <component id="Image" super="egret.Bitmap" show="true" module="eui"/>
+    <component id="ItemRenderer" super="eui.Component" show="false" module="eui"/>
+    <component id="Label" super="egret.TextField" show="true" module="eui"/>
+    <component id="LayoutBase" super="egret.EventDispatcher" show="false" module="eui"/>
+    <component id="List" super="eui.ListBase" show="true" module="eui"/>
+    <component id="ListBase" super="eui.DataGroup" show="false" module="eui"/>
+    <component id="Matrix" super="egret.HashObject" show="false" module="egret"/>
+    <component id="Panel" default="elementsContent" super="eui.Component" show="true" module="eui"/>
+    <component id="Point" super="egret.HashObject" show="false" module="egret"/>
+    <component id="ProgressBar" super="eui.Range" show="true" module="eui"/>
+    <component id="RadioButton" super="eui.ToggleButton" show="true" module="eui"/>
+    <component id="RadioButtonGroup" super="egret.EventDispatcher" show="false" module="eui"/>
+    <component id="Range" super="eui.Component" show="false" module="eui"/>
+    <component id="Rect" super="eui.Component" show="true" module="eui"/>
+    <component id="Rectangle" super="egret.HashObject" show="false" module="egret"/>
+    <component id="Scroller" super="eui.Component" default="viewport" show="true" module="eui"/>
+    <component id="ScrollBarBase" super="eui.Component" show="false" module="eui"/>
+    <component id="Skin" super="egret.EventDispatcher" default="elementsContent" show="false" module="eui"/>
+    <component id="SliderBase" super="eui.Range" show="false" module="eui"/>
+    <component id="State" super="egret.HashObject" default="overrides" show="false" module="eui"/>
+    <component id="TabBar" super="eui.ListBase" show="true" module="eui"/>
+    <component id="TextInput" super="eui.Component" show="true" module="eui"/>
+    <component id="TileLayout" super="eui.LayoutBase" show="false" module="eui"/>
+    <component id="ToggleButton" super="eui.Button" state="up,down,disabled,upAndSelected,downAndSelected,disabledAndSelected" show="true" module="eui"/>
+    <component id="ToggleSwitch" super="eui.ToggleButton" show="true" module="eui"/>
+    <component id="VerticalLayout" super="eui.LayoutBase" show="false" module="eui"/>
+    <component id="ViewStack" super="eui.Group" show="true" module="eui"/>
+    <component id="VScrollBar" super="eui.ScrollBarBase" show="true" module="eui"/>
+    <component id="VSlider" super="eui.SliderBase" show="true" module="eui"/>
+</componentPackage>
