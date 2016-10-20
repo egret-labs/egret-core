@@ -1900,7 +1900,6 @@ namespace egret {
                                         break;
                                     }
                                     if (ww + w > textFieldWidth) {//纯英文，一个词就超出宽度的情况
-<<<<<<< HEAD
                                         var words2:Array<string> = words[k].match(/./g);
                                         for (var k2 = 0, wl2 = words2.length; k2 < wl2; k2++) {
 
@@ -1923,11 +1922,7 @@ namespace egret {
                                                 w = measureTextWidth(words2[k2], values, element.style);
                                             }
                                             // w = measureTextWidth(words2[k2], values, element.style);
-=======
-                                        let words2:string[] = words[k].match(/./g);
-                                        for (let k2 = 0, wl2 = words2.length; k2 < wl2; k2++) {
-                                            w = measureTextWidth(words2[k2], values, element.style);
->>>>>>> egret-labs/master
+
                                             if(k2>0 && lineW+w>textFieldWidth){
                                                 break;
                                             }
