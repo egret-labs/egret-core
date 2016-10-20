@@ -27,7 +27,7 @@
 //
 //////////////////////////////////////////////////////////////////////////////////////
 
-module egret.native {
+namespace egret.native {
 
     /**
      * @private
@@ -102,7 +102,7 @@ module egret.native {
          * @inheritDoc
          */
         public load(url:string):void {
-            var self = this;
+            let self = this;
 
             this.url = url;
 
@@ -110,7 +110,7 @@ module egret.native {
                 egret.$error(3002);
             }
 
-            var audio = new Audio(url);
+            let audio = new Audio(url);
             audio.addEventListener("canplaythrough", onCanPlay);
             audio.addEventListener("error", onAudioError);
             this.originAudio = audio;
@@ -123,7 +123,7 @@ module egret.native {
             }
 
             function download() {
-                var promise = PromiseObject.create();
+                let promise = PromiseObject.create();
                 promise.onSuccessFunc = onAudioLoaded;
                 promise.onErrorFunc = onAudioError;
                 egret_native.download(url, url, promise);
@@ -163,7 +163,7 @@ module egret.native {
                 egret.$error(1049);
             }
 
-            var audio = NativeSound.$pop(this.url);
+            let audio = NativeSound.$pop(this.url);
             if (audio == null) {
                 audio = new Audio(this.url);
             }
@@ -172,7 +172,7 @@ module egret.native {
             }
             audio.autoplay = true;
 
-            var channel = new NativeSoundChannel(audio);
+            let channel = new NativeSoundChannel(audio);
             channel.$url = this.url;
             channel.$loops = loops;
             channel.$startTime = startTime;
@@ -200,14 +200,14 @@ module egret.native {
         private static audios:Object = {};
 
         static $clear(url:string):void {
-            var array:HTMLAudioElement[] = NativeSound.audios[url];
+            let array:HTMLAudioElement[] = NativeSound.audios[url];
             if (array) {
                 array.length = 0;
             }
         }
 
         static $pop(url:string):HTMLAudioElement {
-            var array:HTMLAudioElement[] = NativeSound.audios[url];
+            let array:HTMLAudioElement[] = NativeSound.audios[url];
             if (array && array.length > 0) {
                 return array.pop();
             }
@@ -215,7 +215,7 @@ module egret.native {
         }
 
         static $recycle(url:string, audio:HTMLAudioElement):void {
-            var array:HTMLAudioElement[] = NativeSound.audios[url];
+            let array:HTMLAudioElement[] = NativeSound.audios[url];
             if (NativeSound.audios[url] == null) {
                 array = NativeSound.audios[url] = [];
             }

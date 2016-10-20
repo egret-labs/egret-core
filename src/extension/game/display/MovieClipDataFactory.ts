@@ -27,7 +27,7 @@
 //
 //////////////////////////////////////////////////////////////////////////////////////
 
-module egret {
+namespace egret {
     /**
      * @classdesc 使用 MovieClipDataFactory 类，可以生成 MovieClipData 对象用于创建MovieClip
      * @see http://edn.egret.com/cn/docs/page/596 MovieClip序列帧动画
@@ -94,7 +94,7 @@ module egret {
             if (movieClipName == "") {
                 return null;
             }
-            var output:MovieClipData = this.findFromCache(movieClipName, this.$mcDataCache);
+            let output:MovieClipData = this.findFromCache(movieClipName, this.$mcDataCache);
             if (!output) {
                 output = new MovieClipData();
                 this.fillData(movieClipName, output, this.$mcDataCache);
@@ -125,7 +125,7 @@ module egret {
          */
         private fillData(movieClipName:string, movieClip:MovieClipData, cache:any):void {
             if (this.$mcDataSet) {
-                var mcData = this.$mcDataSet.mc[movieClipName];
+                let mcData = this.$mcDataSet.mc[movieClipName];
                 if (mcData) {
                     movieClip.$init(mcData, this.$mcDataSet.res, this.$spriteSheet);
                     if (this.enableCache) {

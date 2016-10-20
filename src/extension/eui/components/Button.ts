@@ -27,7 +27,7 @@
 //
 //////////////////////////////////////////////////////////////////////////////////////
 
-module eui {
+namespace eui {
 
     /**
      * @language en_US
@@ -196,7 +196,7 @@ module eui {
          * @platform Web,Native
          */
         protected onTouchCancle(event:egret.TouchEvent):void {
-            var stage = event.$currentTarget;
+            let stage = event.$currentTarget;
             stage.removeEventListener(egret.TouchEvent.TOUCH_CANCEL, this.onTouchCancle, this);
             stage.removeEventListener(egret.TouchEvent.TOUCH_END, this.onStageTouchEnd, this);
             this.touchCaptured = false;
@@ -231,7 +231,7 @@ module eui {
          * 舞台上触摸弹起事件
          */
         private onStageTouchEnd(event:egret.Event):void {
-            var stage = event.$currentTarget;
+            let stage = event.$currentTarget;
             stage.removeEventListener(egret.TouchEvent.TOUCH_CANCEL, this.onTouchCancle, this);
             stage.removeEventListener(egret.TouchEvent.TOUCH_END, this.onStageTouchEnd, this);
             if (this.contains(event.target)){

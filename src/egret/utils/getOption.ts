@@ -27,7 +27,7 @@
 //
 //////////////////////////////////////////////////////////////////////////////////////
 
-module egret {
+namespace egret {
     /**
      * @language en_US
      * Get browser or Runtime parameters, returns an empty string if not set
@@ -46,5 +46,5 @@ module egret {
      * @version Egret 2.4
      * @platform Web,Native
      */
-    export var getOption:(key:string)=>string;
+    export let getOption:(key:string)=>string;
 }

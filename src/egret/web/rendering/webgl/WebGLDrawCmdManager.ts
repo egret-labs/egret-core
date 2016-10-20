@@ -26,7 +26,7 @@
 //  EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 //
 //////////////////////////////////////////////////////////////////////////////////////
-module egret.web {
+namespace egret.web {
     /**
      * @private
      * draw类型，所有的绘图操作都会缓存在drawData中，每个drawData都是一个drawable对象
@@ -68,7 +68,7 @@ module egret.web {
          */
         public pushDrawRect():void {
             if(this.drawDataLen == 0 || this.drawData[this.drawDataLen - 1].type != DRAWABLE_TYPE.RECT) {
-                var data = this.drawData[this.drawDataLen] || {};
+                let data = this.drawData[this.drawDataLen] || {};
                 data.type = DRAWABLE_TYPE.RECT;
                 data.count = 0;
                 this.drawData[this.drawDataLen] = data;
@@ -83,7 +83,7 @@ module egret.web {
         public pushDrawTexture(texture:any, count:number = 2, filter?:any, textureWidth?:number, textureHeight?:number):void {
             if(filter) {
                 // 目前有滤镜的情况下不会合并绘制
-                var data = this.drawData[this.drawDataLen] || {};
+                let data = this.drawData[this.drawDataLen] || {};
                 data.type = DRAWABLE_TYPE.TEXTURE;
                 data.texture = texture;
                 data.filter = filter;
@@ -95,7 +95,7 @@ module egret.web {
             } else {
 
                 if (this.drawDataLen == 0 || this.drawData[this.drawDataLen - 1].type != DRAWABLE_TYPE.TEXTURE || texture != this.drawData[this.drawDataLen - 1].texture || this.drawData[this.drawDataLen - 1].filter) {
-                    var data = this.drawData[this.drawDataLen] || {};
+                    let data = this.drawData[this.drawDataLen] || {};
                     data.type = DRAWABLE_TYPE.TEXTURE;
                     data.texture = texture;
                     data.count = 0;
@@ -112,7 +112,7 @@ module egret.web {
          * 压入pushMask指令
          */
         public pushPushMask(count:number = 1):void {
-            var data = this.drawData[this.drawDataLen] || {};
+            let data = this.drawData[this.drawDataLen] || {};
             data.type = DRAWABLE_TYPE.PUSH_MASK;
             data.count = count * 2;
             this.drawData[this.drawDataLen] = data;
@@ -123,7 +123,7 @@ module egret.web {
          * 压入popMask指令
          */
         public pushPopMask(count:number = 1):void {
-            var data = this.drawData[this.drawDataLen] || {};
+            let data = this.drawData[this.drawDataLen] || {};
             data.type = DRAWABLE_TYPE.POP_MASK;
             data.count = count * 2;
             this.drawData[this.drawDataLen] = data;
@@ -134,11 +134,11 @@ module egret.web {
          * 压入混色指令
          */
         public pushSetBlend(value:string):void {
-            var len = this.drawDataLen;
+            let len = this.drawDataLen;
             // 有无遍历到有效绘图操作
-            var drawState = false;
-            for(var i = len - 1; i >= 0; i--) {
-                var data = this.drawData[i];
+            let drawState = false;
+            for(let i = len - 1; i >= 0; i--) {
+                let data = this.drawData[i];
 
                 if(data){
                     if(data.type == DRAWABLE_TYPE.TEXTURE || data.type == DRAWABLE_TYPE.RECT) {
@@ -163,7 +163,7 @@ module egret.web {
                 }
             }
 
-            var _data = this.drawData[this.drawDataLen] || {};
+            let _data = this.drawData[this.drawDataLen] || {};
             _data.type = DRAWABLE_TYPE.BLEND;
             _data.value = value;
             this.drawData[this.drawDataLen] = _data;
@@ -174,7 +174,7 @@ module egret.web {
          * 压入resize render target命令
          */
         public pushResize(buffer:WebGLRenderBuffer, width:number, height:number) {
-            var data = this.drawData[this.drawDataLen] || {};
+            let data = this.drawData[this.drawDataLen] || {};
             data.type = DRAWABLE_TYPE.RESIZE_TARGET;
             data.buffer = buffer;
             data.width = width;
@@ -187,7 +187,7 @@ module egret.web {
          * 压入clear color命令
          */
         public pushClearColor() {
-            var data = this.drawData[this.drawDataLen] || {};
+            let data = this.drawData[this.drawDataLen] || {};
             data.type = DRAWABLE_TYPE.CLEAR_COLOR;
             this.drawData[this.drawDataLen] = data;
             this.drawDataLen++;
@@ -197,11 +197,11 @@ module egret.web {
          * 压入激活buffer命令
          */
         public pushActivateBuffer(buffer:WebGLRenderBuffer) {
-            var len = this.drawDataLen;
+            let len = this.drawDataLen;
             // 有无遍历到有效绘图操作
-            var drawState = false;
-            for(var i = len - 1; i >= 0; i--) {
-                var data = this.drawData[i];
+            let drawState = false;
+            for(let i = len - 1; i >= 0; i--) {
+                let data = this.drawData[i];
 
                 if(data){
                     if(data.type != DRAWABLE_TYPE.BLEND && data.type != DRAWABLE_TYPE.ACT_BUFFER) {
@@ -226,7 +226,7 @@ module egret.web {
                 }
             }
 
-            var _data = this.drawData[this.drawDataLen] || {};
+            let _data = this.drawData[this.drawDataLen] || {};
             _data.type = DRAWABLE_TYPE.ACT_BUFFER;
             _data.buffer = buffer;
             _data.width = buffer.rootRenderTarget.width;
@@ -239,7 +239,7 @@ module egret.web {
          * 压入enabel scissor命令
          */
         public pushEnableScissor(x:number, y:number, width:number, height:number) {
-            var data = this.drawData[this.drawDataLen] || {};
+            let data = this.drawData[this.drawDataLen] || {};
             data.type = DRAWABLE_TYPE.ENABLE_SCISSOR;
             data.x = x;
             data.y = y;
@@ -253,7 +253,7 @@ module egret.web {
          * 压入disable scissor命令
          */
         public pushDisableScissor() {
-            var data = this.drawData[this.drawDataLen] || {};
+            let data = this.drawData[this.drawDataLen] || {};
             data.type = DRAWABLE_TYPE.DISABLE_SCISSOR;
             this.drawData[this.drawDataLen] = data;
             this.drawDataLen++;
@@ -263,8 +263,8 @@ module egret.web {
          * 清空命令数组
          */
         public clear():void {
-            for(var i = 0; i < this.drawDataLen; i++) {
-                var data = this.drawData[i];
+            for(let i = 0; i < this.drawDataLen; i++) {
+                let data = this.drawData[i];
 
                 data.type = 0;
                 data.count = 0;

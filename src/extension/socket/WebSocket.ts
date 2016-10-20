@@ -26,7 +26,7 @@
 //  EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 //
 //////////////////////////////////////////////////////////////////////////////////////
-module egret {
+namespace egret {
     /**
      * @language en_US
      * The egret.WebSocket class enables code to establish a TCP socket connection, for sending and receiving character string or binary data.
@@ -312,7 +312,7 @@ module egret {
          * @platform Web,Native
          */
         public readUTF():string {
-            var message:string;
+            let message:string;
             if (this._type == WebSocket.TYPE_BINARY) {
                 this._readByte.position = 0;
                 message = this._readByte.readUTF();

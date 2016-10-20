@@ -27,7 +27,7 @@
 //
 //////////////////////////////////////////////////////////////////////////////////////
 
-module eui {
+namespace eui {
 
 
     interface ThemeData {
@@ -193,7 +193,7 @@ module eui {
          * @param url
          */
         private load(url:string):void {
-            var adapter:IThemeAdapter = egret.getImplementation("eui.IThemeAdapter");
+            let adapter:IThemeAdapter = egret.getImplementation("eui.IThemeAdapter");
             if (!adapter) {
                 adapter = new DefaultThemeAdapter();
             }
@@ -206,16 +206,17 @@ module eui {
          * @param str
          */
         private onConfigLoaded(str:string):void {
+            let data:any;
             if(str) {
                 if(DEBUG){
                     try {
-                        var data = JSON.parse(str);
+                        data = JSON.parse(str);
                     }
                     catch (e) {
                         egret.$error(3000);
                     }
                 }else{
-                    var data = JSON.parse(str);
+                    data = JSON.parse(str);
                 }
             }
             else if (DEBUG) {
@@ -224,12 +225,12 @@ module eui {
 
 
             if (data && data.skins) {
-                var skinMap = this.skinMap
-                var skins = data.skins;
-                var keys = Object.keys(skins);
-                var length = keys.length;
-                for (var i = 0; i < length; i++) {
-                    var key = keys[i];
+                let skinMap = this.skinMap
+                let skins = data.skins;
+                let keys = Object.keys(skins);
+                let length = keys.length;
+                for (let i = 0; i < length; i++) {
+                    let key = keys[i];
                     if (!skinMap[key]) {
                         this.mapSkin(key, skins[key]);
                     }
@@ -274,12 +275,12 @@ module eui {
          *
          */
         private handleDelayList():void {
-            var list = this.delayList;
-            var length = list.length;
-            for (var i = 0; i < length; i++) {
-                var client = list[i];
+            let list = this.delayList;
+            let length = list.length;
+            for (let i = 0; i < length; i++) {
+                let client = list[i];
                 if (!client.$Component[sys.ComponentKeys.skinNameExplicitlySet]) {
-                    var skinName = this.getSkinName(client);
+                    let skinName = this.getSkinName(client);
                     if (skinName) {
                         client.$Component[sys.ComponentKeys.skinName] = skinName;
                         client.$parseSkinName();
@@ -327,8 +328,8 @@ module eui {
                 }
                 return "";
             }
-            var skinMap = this.skinMap;
-            var skinName:string = skinMap[client.hostComponentKey];
+            let skinMap = this.skinMap;
+            let skinName:string = skinMap[client.hostComponentKey];
             if (!skinName) {
                 skinName = this.findSkinName(client);
             }
@@ -342,11 +343,11 @@ module eui {
             if (!prototype) {
                 return "";
             }
-            var key = prototype["__class__"];
+            let key = prototype["__class__"];
             if (key === void 0) {
                 return "";
             }
-            var skinName = this.skinMap[key];
+            let skinName = this.skinMap[key];
             if (skinName || key == "eui.Component") {
                 return skinName;
             }

@@ -27,7 +27,7 @@
 //
 //////////////////////////////////////////////////////////////////////////////////////
 
-module egret {
+namespace egret {
 
     /**
      * @language en_US
@@ -274,12 +274,12 @@ module egret {
 
         public set length(value:number) {
             this.write_position = value;
-            var tmp:Uint8Array = new Uint8Array(new ArrayBuffer(value));
-            var byteLength:number = this.data.buffer.byteLength;
+            let tmp:Uint8Array = new Uint8Array(new ArrayBuffer(value));
+            let byteLength:number = this.data.buffer.byteLength;
             if (byteLength > value) {
                 this._position = value;
             }
-            var length:number = Math.min(byteLength, value);
+            let length:number = Math.min(byteLength, value);
             tmp.set(new Uint8Array(this.data.buffer, 0, length));
             this.buffer = tmp.buffer;
         }
@@ -390,7 +390,7 @@ module egret {
                 bytes = new ByteArray(new ArrayBuffer(offset + length));
             }
             //This method is expensive
-            for (var i = 0; i < length; i++) {
+            for (let i = 0; i < length; i++) {
                 bytes.data.setUint8(i + offset, this.data.getUint8(this.position++));
             }
         }
@@ -412,7 +412,7 @@ module egret {
         public readDouble():number {
             if (!this.validate(ByteArray.SIZE_OF_FLOAT64)) return null;
 
-            var value:number = this.data.getFloat64(this.position, this.endian == Endian.LITTLE_ENDIAN);
+            let value:number = this.data.getFloat64(this.position, this.endian == Endian.LITTLE_ENDIAN);
             this.position += ByteArray.SIZE_OF_FLOAT64;
             return value;
         }
@@ -434,7 +434,7 @@ module egret {
         public readFloat():number {
             if (!this.validate(ByteArray.SIZE_OF_FLOAT32)) return null;
 
-            var value:number = this.data.getFloat32(this.position, this.endian == Endian.LITTLE_ENDIAN);
+            let value:number = this.data.getFloat32(this.position, this.endian == Endian.LITTLE_ENDIAN);
             this.position += ByteArray.SIZE_OF_FLOAT32;
             return value;
         }
@@ -456,7 +456,7 @@ module egret {
         public readInt():number {
             if (!this.validate(ByteArray.SIZE_OF_INT32)) return null;
 
-            var value = this.data.getInt32(this.position, this.endian == Endian.LITTLE_ENDIAN);
+            let value = this.data.getInt32(this.position, this.endian == Endian.LITTLE_ENDIAN);
             this.position += ByteArray.SIZE_OF_INT32;
             return value;
         }
@@ -491,7 +491,7 @@ module egret {
         public readShort():number {
             if (!this.validate(ByteArray.SIZE_OF_INT16)) return null;
 
-            var value = this.data.getInt16(this.position, this.endian == Endian.LITTLE_ENDIAN);
+            let value = this.data.getInt16(this.position, this.endian == Endian.LITTLE_ENDIAN);
             this.position += ByteArray.SIZE_OF_INT16;
             return value;
         }
@@ -533,7 +533,7 @@ module egret {
         public readUnsignedInt():number {
             if (!this.validate(ByteArray.SIZE_OF_UINT32)) return null;
 
-            var value = this.data.getUint32(this.position, this.endian == Endian.LITTLE_ENDIAN);
+            let value = this.data.getUint32(this.position, this.endian == Endian.LITTLE_ENDIAN);
             this.position += ByteArray.SIZE_OF_UINT32;
             return value;
         }
@@ -555,7 +555,7 @@ module egret {
         public readUnsignedShort():number {
             if (!this.validate(ByteArray.SIZE_OF_UINT16)) return null;
 
-            var value = this.data.getUint16(this.position, this.endian == Endian.LITTLE_ENDIAN);
+            let value = this.data.getUint16(this.position, this.endian == Endian.LITTLE_ENDIAN);
             this.position += ByteArray.SIZE_OF_UINT16;
             return value;
         }
@@ -577,7 +577,7 @@ module egret {
         public readUTF():string {
             if (!this.validate(ByteArray.SIZE_OF_UINT16)) return null;
 
-            var length:number = this.data.getUint16(this.position, this.endian == Endian.LITTLE_ENDIAN);
+            let length:number = this.data.getUint16(this.position, this.endian == Endian.LITTLE_ENDIAN);
             this.position += ByteArray.SIZE_OF_UINT16;
 
             if (length > 0) {
@@ -606,10 +606,10 @@ module egret {
         public readUTFBytes(length:number):string {
             if (!this.validate(length)) return null;
 
-            var bytes:Uint8Array = new Uint8Array(this.buffer, this.bufferOffset + this.position, length);
+            let bytes:Uint8Array = new Uint8Array(this.buffer, this.bufferOffset + this.position, length);
             this.position += length;
-            /*var bytes: Uint8Array = new Uint8Array(new ArrayBuffer(length));
-             for (var i = 0; i < length; i++) {
+            /*let bytes: Uint8Array = new Uint8Array(new ArrayBuffer(length));
+             for (let i = 0; i < length; i++) {
              bytes[i] = this.data.getUint8(this.position++);
              }*/
             return this.decodeUTF8(bytes);
@@ -680,7 +680,7 @@ module egret {
          * @platform Web,Native
          */
         public writeBytes(bytes:ByteArray, offset:number = 0, length:number = 0):void {
-            var writeLength:number;
+            let writeLength:number;
             if (offset < 0) {
                 return;
             }
@@ -696,9 +696,9 @@ module egret {
             if (writeLength > 0) {
                 this.validateBuffer(writeLength);
 
-                var tmp_data = new DataView(bytes.buffer);
-                var length = writeLength;
-                var BYTES_OF_UINT32 = 4;
+                let tmp_data = new DataView(bytes.buffer);
+                let length = writeLength;
+                let BYTES_OF_UINT32 = 4;
                 for (; length > BYTES_OF_UINT32; length -= BYTES_OF_UINT32) {
                     this.data.setUint32(this._position, tmp_data.getUint32(offset));
                     this.position += BYTES_OF_UINT32;
@@ -851,8 +851,8 @@ module egret {
          * @platform Web,Native
          */
         public writeUTF(value:string):void {
-            var utf8bytes:Uint8Array = this.encodeUTF8(value);
-            var length:number = utf8bytes.length;
+            let utf8bytes:Uint8Array = this.encodeUTF8(value);
+            let length:number = utf8bytes.length;
 
             this.validateBuffer(ByteArray.SIZE_OF_UINT16 + length);
 
@@ -901,7 +901,7 @@ module egret {
                 this.validateBuffer(this.position + bytes.length);
             }
 
-            for (var i = 0; i < bytes.length; i++) {
+            for (let i = 0; i < bytes.length; i++) {
                 this.data.setUint8(this.position++, bytes[i]);
             }
         }
@@ -934,8 +934,8 @@ module egret {
             this.write_position = len > this.write_position ? len : this.write_position;
             len += this._position;
             if (this.data.byteLength < len || needReplace) {
-                var tmp:Uint8Array = new Uint8Array(new ArrayBuffer(len + this.BUFFER_EXT_SIZE));
-                var length = Math.min(this.data.buffer.byteLength, len + this.BUFFER_EXT_SIZE);
+                let tmp:Uint8Array = new Uint8Array(new ArrayBuffer(len + this.BUFFER_EXT_SIZE));
+                let length = Math.min(this.data.buffer.byteLength, len + this.BUFFER_EXT_SIZE);
                 tmp.set(new Uint8Array(this.data.buffer, 0, length));
                 this.buffer = tmp.buffer;
             }
@@ -946,12 +946,12 @@ module egret {
          * UTF-8 Encoding/Decoding
          */
         private encodeUTF8(str:string):Uint8Array {
-            var pos:number = 0;
-            var codePoints = this.stringToCodePoints(str);
-            var outputBytes = [];
+            let pos:number = 0;
+            let codePoints = this.stringToCodePoints(str);
+            let outputBytes = [];
 
             while (codePoints.length > pos) {
-                var code_point:number = codePoints[pos++];
+                let code_point:number = codePoints[pos++];
 
                 if (this.inRange(code_point, 0xD800, 0xDFFF)) {
                     this.encoderError(code_point);
@@ -959,7 +959,7 @@ module egret {
                 else if (this.inRange(code_point, 0x0000, 0x007f)) {
                     outputBytes.push(code_point);
                 } else {
-                    var count, offset;
+                    let count, offset;
                     if (this.inRange(code_point, 0x0080, 0x07FF)) {
                         count = 1;
                         offset = 0xC0;
@@ -974,7 +974,7 @@ module egret {
                     outputBytes.push(this.div(code_point, Math.pow(64, count)) + offset);
 
                     while (count > 0) {
-                        var temp = this.div(code_point, Math.pow(64, count - 1));
+                        let temp = this.div(code_point, Math.pow(64, count - 1));
                         outputBytes.push(0x80 + (temp % 64));
                         count -= 1;
                     }
@@ -990,18 +990,18 @@ module egret {
          * @returns
          */
         private decodeUTF8(data:Uint8Array):string {
-            var fatal:boolean = false;
-            var pos:number = 0;
-            var result:string = "";
-            var code_point:number;
-            var utf8_code_point = 0;
-            var utf8_bytes_needed = 0;
-            var utf8_bytes_seen = 0;
-            var utf8_lower_boundary = 0;
+            let fatal:boolean = false;
+            let pos:number = 0;
+            let result:string = "";
+            let code_point:number;
+            let utf8_code_point = 0;
+            let utf8_bytes_needed = 0;
+            let utf8_bytes_seen = 0;
+            let utf8_lower_boundary = 0;
 
             while (data.length > pos) {
 
-                var _byte = data[pos++];
+                let _byte = data[pos++];
 
                 if (_byte == this.EOF_byte) {
                     if (utf8_bytes_needed != 0) {
@@ -1049,8 +1049,8 @@ module egret {
                             code_point = null;
                         } else {
 
-                            var cp = utf8_code_point;
-                            var lower_boundary = utf8_lower_boundary;
+                            let cp = utf8_code_point;
+                            let lower_boundary = utf8_lower_boundary;
                             utf8_code_point = 0;
                             utf8_bytes_needed = 0;
                             utf8_bytes_seen = 0;
@@ -1138,11 +1138,11 @@ module egret {
          */
         private stringToCodePoints(string) {
             /** @type {Array.<number>} */
-            var cps = [];
+            let cps = [];
             // Based on http://www.w3.org/TR/WebIDL/#idl-DOMString
-            var i = 0, n = string.length;
+            let i = 0, n = string.length;
             while (i < string.length) {
-                var c = string.charCodeAt(i);
+                let c = string.charCodeAt(i);
                 if (!this.inRange(c, 0xD800, 0xDFFF)) {
                     cps.push(c);
                 } else if (this.inRange(c, 0xDC00, 0xDFFF)) {
@@ -1151,10 +1151,10 @@ module egret {
                     if (i == n - 1) {
                         cps.push(0xFFFD);
                     } else {
-                        var d = string.charCodeAt(i + 1);
+                        let d = string.charCodeAt(i + 1);
                         if (this.inRange(d, 0xDC00, 0xDFFF)) {
-                            var a = c & 0x3FF;
-                            var b = d & 0x3FF;
+                            let a = c & 0x3FF;
+                            let b = d & 0x3FF;
                             i += 1;
                             cps.push(0x10000 + (a << 10) + b);
                         } else {

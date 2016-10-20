@@ -27,7 +27,7 @@
 //
 //////////////////////////////////////////////////////////////////////////////////////
 
-module egret.web {
+namespace egret.web {
 
     /**
      * @private
@@ -102,18 +102,18 @@ module egret.web {
          * @inheritDoc
          */
         public load(url:string):void {
-            var self = this;
+            let self = this;
 
             this.url = url;
 
             if (DEBUG && !url) {
                 egret.$error(3002);
             }
-            var audio = new Audio(url);
+            let audio = new Audio(url);
             audio.addEventListener("canplaythrough", onAudioLoaded);
             audio.addEventListener("error", onAudioError);
 
-            var ua:string = navigator.userAgent.toLowerCase();
+            let ua:string = navigator.userAgent.toLowerCase();
             if (ua.indexOf("firefox") >= 0) {//火狐兼容
                 audio.autoplay = !0;
                 audio.muted = true;
@@ -157,7 +157,7 @@ module egret.web {
                 egret.$error(1049);
             }
 
-            var audio = HtmlSound.$pop(this.url);
+            let audio = HtmlSound.$pop(this.url);
             if (audio == null) {
                 audio = <HTMLAudioElement>this.originAudio.cloneNode();
             }
@@ -166,7 +166,7 @@ module egret.web {
             }
             audio.autoplay = true;
 
-            var channel = new HtmlSoundChannel(audio);
+            let channel = new HtmlSoundChannel(audio);
             channel.$url = this.url;
             channel.$loops = loops;
             channel.$startTime = startTime;
@@ -194,14 +194,14 @@ module egret.web {
         private static audios:Object = {};
 
         static $clear(url:string):void {
-            var array:HTMLAudioElement[] = HtmlSound.audios[url];
+            let array:HTMLAudioElement[] = HtmlSound.audios[url];
             if (array) {
                 array.length = 0;
             }
         }
 
         static $pop(url:string):HTMLAudioElement {
-            var array:HTMLAudioElement[] = HtmlSound.audios[url];
+            let array:HTMLAudioElement[] = HtmlSound.audios[url];
             if (array && array.length > 0) {
                 return array.pop();
             }
@@ -209,7 +209,7 @@ module egret.web {
         }
 
         static $recycle(url:string, audio:HTMLAudioElement):void {
-            var array:HTMLAudioElement[] = HtmlSound.audios[url];
+            let array:HTMLAudioElement[] = HtmlSound.audios[url];
             if (HtmlSound.audios[url] == null) {
                 array = HtmlSound.audios[url] = [];
             }

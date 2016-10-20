@@ -27,7 +27,7 @@
 //
 //////////////////////////////////////////////////////////////////////////////////////
 
-module egret.native {
+namespace egret.native {
 
     /**
      * @private
@@ -115,7 +115,7 @@ module egret.native {
             }
             this.isStopped = true;
 
-            var audio = this.audio;
+            let audio = this.audio;
             audio.pause();
             audio.removeEventListener("ended", this.onPlayEnd);
             this.audio = null;

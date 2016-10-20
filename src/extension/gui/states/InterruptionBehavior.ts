@@ -1,5 +1,5 @@
 
-module egret.gui {
+namespace egret.gui {
 
     export class InterruptionBehavior{
         /**

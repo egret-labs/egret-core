@@ -1,8 +1,8 @@
-module egret {
+namespace egret {
 
     $locale_strings = $locale_strings || {};
     $locale_strings["en_US"] = $locale_strings["en_US"] || {};
-    var locale_strings = $locale_strings["en_US"];
+    let locale_strings = $locale_strings["en_US"];
 
     //core  1000-1999
     locale_strings[1001] = "Could not find Egret entry class: {0}。";

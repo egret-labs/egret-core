@@ -27,7 +27,7 @@
 //
 //////////////////////////////////////////////////////////////////////////////////////
 
-module egret {
+namespace egret {
     /**
      * @language en_US
      * The Sprite class is a basic display list building block: a display list node that can contain children.
@@ -87,11 +87,11 @@ module egret {
             if (!this.$visible) {
                 return null;
             }
-            var m = this.$getInvertedConcatenatedMatrix();
-            var localX = m.a * stageX + m.c * stageY + m.tx;
-            var localY = m.b * stageX + m.d * stageY + m.ty;
+            let m = this.$getInvertedConcatenatedMatrix();
+            let localX = m.a * stageX + m.c * stageY + m.tx;
+            let localY = m.b * stageX + m.d * stageY + m.ty;
 
-            var rect = this.$scrollRect ? this.$scrollRect : this.$maskRect;
+            let rect = this.$scrollRect ? this.$scrollRect : this.$maskRect;
             if (rect && !rect.contains(localX, localY)) {
                 return null;
             }
@@ -99,14 +99,15 @@ module egret {
             if (this.$mask && !this.$mask.$hitTest(stageX, stageY)) {
                 return null;
             }
-            var children = this.$children;
-            var found = false;
-            for (var i = children.length - 1; i >= 0; i--) {
-                var child = children[i];
+            let children = this.$children;
+            let found = false;
+            let target:DisplayObject = null;
+            for (let i = children.length - 1; i >= 0; i--) {
+                let child = children[i];
                 if (child.$maskedObject) {
                     continue;
                 }
-                var target = child.$hitTest(stageX, stageY);
+                target = child.$hitTest(stageX, stageY);
                 if (target) {
                     found = true;
                     if(target.$touchEnabled){

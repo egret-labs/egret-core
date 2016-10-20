@@ -27,7 +27,7 @@
 //
 //////////////////////////////////////////////////////////////////////////////////////
 
-module eui {
+namespace eui {
     /**
      * @language en_US
      * The Rect component is a rectangular shape. It can be touched.
@@ -261,7 +261,7 @@ module eui {
          * @platform Web,Native
          */
         protected updateDisplayList(unscaledWidth:number, unscaledHeight:number):void {
-            var g = this.graphics;
+            let g = this.graphics;
             g.clear();
             if (this.$strokeWeight > 0) {
                 g.beginFill(this.$fillColor, 0);

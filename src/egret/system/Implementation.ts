@@ -1,4 +1,4 @@
-module egret {
+namespace egret {
     export function getI(): void {
 
     }
@@ -6,7 +6,7 @@ module egret {
     /**
     * @private
     */
-    var implMap: any = {};
+    let implMap: any = {};
 
     /**
      * @language en_US

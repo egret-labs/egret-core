@@ -28,7 +28,7 @@
 //////////////////////////////////////////////////////////////////////////////////////
 
 
-module eui {
+namespace eui {
 
     /**
      * @language en_US
@@ -278,11 +278,11 @@ module eui {
         $setValue(newValue:number):boolean {
             if (this.value === newValue)
                 return false;
-            var values = this.$Range;
-            var result:boolean = super.$setValue(newValue);
+            let values = this.$Range;
+            let result:boolean = super.$setValue(newValue);
             if (this._slideDuration > 0 && this.$stage) {
                 this.validateProperties();//最大值最小值发生改变时要立即应用，防止当前起始值不正确。
-                var animation = this.animation;
+                let animation = this.animation;
                 if (animation.isPlaying) {
                     this.animationValue = this.slideToValue;
                     this.invalidateDisplayList();
@@ -291,7 +291,7 @@ module eui {
                 this.slideToValue = this.nearestValidValue(newValue, values[sys.RangeKeys.snapInterval]);
                 if (this.slideToValue === this.animationValue)
                     return result;
-                var duration = this._slideDuration *
+                let duration = this._slideDuration *
                     (Math.abs(this.animationValue - this.slideToValue) / (values[sys.RangeKeys.maximum] - values[sys.RangeKeys.minimum]));
                 animation.duration = duration === Infinity ? 0 : duration;
                 animation.from = this.animationValue;
@@ -314,8 +314,8 @@ module eui {
          * 动画播放更新数值
          */
         private animationUpdateHandler(animation:sys.Animation):void {
-            var values = this.$Range;
-            var value = this.nearestValidValue(animation.currentValue, values[sys.RangeKeys.snapInterval]);
+            let values = this.$Range;
+            let value = this.nearestValidValue(animation.currentValue, values[sys.RangeKeys.snapInterval]);
             this.animationValue = Math.min(values[sys.RangeKeys.maximum], Math.max(values[sys.RangeKeys.minimum], value));
             this.invalidateDisplayList();
         }
@@ -373,26 +373,26 @@ module eui {
          * @platform Web,Native
          */
         protected updateSkinDisplayList():void {
-            var currentValue = this.animation.isPlaying ? this.animationValue : this.value;
-            var maxValue = this.maximum;
-            var thumb = this.thumb;
+            let currentValue = this.animation.isPlaying ? this.animationValue : this.value;
+            let maxValue = this.maximum;
+            let thumb = this.thumb;
             if (thumb) {
-                var thumbWidth = thumb.width;
-                var thumbHeight = thumb.height;
-                var clipWidth = Math.round((currentValue / maxValue) * thumbWidth);
+                let thumbWidth = thumb.width;
+                let thumbHeight = thumb.height;
+                let clipWidth = Math.round((currentValue / maxValue) * thumbWidth);
                 if (clipWidth < 0 || clipWidth === Infinity)
                     clipWidth = 0;
-                var clipHeight = Math.round((currentValue / maxValue) * thumbHeight);
+                let clipHeight = Math.round((currentValue / maxValue) * thumbHeight);
                 if (clipHeight < 0 || clipHeight === Infinity)
                     clipHeight = 0;
 
-                var rect = thumb.$scrollRect;
+                let rect = thumb.$scrollRect;
                 if (!rect) {
                     rect = egret.$TempRectangle;
                 }
                 rect.setTo(0,0,thumbWidth,thumbHeight);
-                var thumbPosX = thumb.x - rect.x;
-                var thumbPosY = thumb.y - rect.y;
+                let thumbPosX = thumb.x - rect.x;
+                let thumbPosY = thumb.y - rect.y;
                  switch (this._direction) {
                      case eui.Direction.LTR:
                          rect.width = clipWidth;

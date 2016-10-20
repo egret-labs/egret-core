@@ -28,7 +28,7 @@
 //////////////////////////////////////////////////////////////////////////////////////
 
 
-module egret.gui {
+namespace egret.gui {
 
     /**
      * @class egret.gui.Rect
@@ -58,7 +58,7 @@ module egret.gui {
         }
 
         $hitTest(stageX:number, stageY:number):DisplayObject {
-            var target = super.$hitTest(stageX, stageY);
+            let target = super.$hitTest(stageX, stageY);
             if (target == this) {
                 target = this.$graphics.$hitTest(stageX, stageY);
             }
@@ -160,11 +160,11 @@ module egret.gui {
          * @private
          */
         //public _measureBounds():egret.Rectangle {
-        //    var bounds:Rectangle = super._measureBounds();
-        //    var w:number = this.width;
-        //    var h:number = this.height;
-        //    var x:number = 0;
-        //    var y:number = 0;
+        //    let bounds:Rectangle = super._measureBounds();
+        //    let w:number = this.width;
+        //    let h:number = this.height;
+        //    let x:number = 0;
+        //    let y:number = 0;
         //    if (x < bounds.x) {
         //        bounds.x = x;
         //    }
@@ -188,7 +188,7 @@ module egret.gui {
          */
         public updateDisplayList(unscaledWidth:number, unscaledHeight:number):void {
             super.updateDisplayList(unscaledWidth, unscaledWidth);
-            var g:Graphics = this.graphics;
+            let g:Graphics = this.graphics;
             g.clear();
             g.beginFill(this._fillColor, this._fillAlpha);
             if (this._strokeAlpha > 0) {

@@ -26,7 +26,7 @@
 //  EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 //
 //////////////////////////////////////////////////////////////////////////////////////
-module egret.web {
+namespace egret.web {
     /**
      * @private
      */
@@ -59,7 +59,7 @@ module egret.web {
         };
 
         public setMatrix(matrix:any):void {
-            var uniform = this.uniforms.matrix;
+            let uniform = this.uniforms.matrix;
 
             if(uniform.value[0] != matrix[0] ||
                 uniform.value[0] != matrix[0] ||
@@ -105,7 +105,7 @@ module egret.web {
                 uniform.dirty = true;
             }
 
-            var uniform2 = this.uniforms.colorAdd;
+            let uniform2 = this.uniforms.colorAdd;
 
             if(uniform2.value.x != matrix[4] / 255.0 ||
                 uniform2.value.y != matrix[9] / 255.0 ||

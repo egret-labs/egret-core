@@ -26,7 +26,7 @@
 //  EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 //
 //////////////////////////////////////////////////////////////////////////////////////
-module egret.gui {
+namespace egret.gui {
     export class NavigationUnit {
         public static DOWN: number = 40;
         public static END: number = 35;

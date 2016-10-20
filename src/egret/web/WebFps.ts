@@ -26,7 +26,7 @@
 //  EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 //
 //////////////////////////////////////////////////////////////////////////////////////
-module egret.web {
+namespace egret.web {
     /**
      * @private
      */
@@ -56,7 +56,7 @@ module egret.web {
                 if (egret.Capabilities.isMobile) {
                     this.fontSize -= 2;
                 }
-                var all = document.createElement('div');
+                let all = document.createElement('div');
                 all.style.position = 'absolute';
                 all.style.background = `rgba(0,0,0,${styles['bgAlpha']})`;
                 all.style.left = this.panelX + 'px';
@@ -64,7 +64,7 @@ module egret.web {
                 all.style.pointerEvents = 'none';
                 document.body.appendChild(all);
 
-                var container = document.createElement('div');
+                let container = document.createElement('div');
                 container.style.color = this.fontColor;
                 container.style.fontSize = this.fontSize + 'px';
                 container.style.lineHeight = this.fontSize + 'px';
@@ -96,52 +96,52 @@ module egret.web {
         private cost3Color = "#ff0000";
 
         private addFps() {
-            var div = document.createElement('div');
+            let div = document.createElement('div');
             div.style.display = 'inline-block';
             this.containerFps = div;
             this.container.appendChild(div);
-            var fps = document.createElement('div');
+            let fps = document.createElement('div');
             fps.style.paddingBottom = '2px'
             this.fps = fps;
             this.containerFps.appendChild(fps)
             fps.innerHTML = `0 FPS ${this.renderMode}<br/>min0 max0 avg0`;
 
-            var canvas = document.createElement('canvas');
+            let canvas = document.createElement('canvas');
             this.containerFps.appendChild(canvas);
             canvas.width = this.WIDTH;
             canvas.height = this.HEIGHT;
             this.canvasFps = canvas;
-            var context = canvas.getContext('2d');
+            let context = canvas.getContext('2d');
             this.contextFps = context;
             context.fillStyle = this.bgCanvasColor;
             context.fillRect(0, 0, this.WIDTH, this.HEIGHT);
 
-            var divDatas = document.createElement('div');
+            let divDatas = document.createElement('div');
             this.divDatas = divDatas;
             this.containerFps.appendChild(divDatas);
-            var left = document.createElement('div');
+            let left = document.createElement('div');
             left.style['float'] = 'left';
             left.innerHTML = `Draw<br/>Dirty<br/>Cost`
             divDatas.appendChild(left);
-            var right = document.createElement('div');
+            let right = document.createElement('div');
             right.style.paddingLeft = left.offsetWidth + 20 + "px";
 
             divDatas.appendChild(right);
-            var draw = document.createElement('div');
+            let draw = document.createElement('div');
             this.divDraw = draw;
             draw.innerHTML = `0<br/>0<br/>`;
             right.appendChild(draw);
-            var cost = document.createElement('div');
+            let cost = document.createElement('div');
             this.divCost = cost;
             cost.innerHTML = `<font  style="color:${this.cost1Color}">0<font/> <font  style="color:${this.cost2Color}">0<font/> <font  style="color:${this.cost3Color}">0<font/>`
             right.appendChild(cost);
 
-            var canvas = document.createElement('canvas');
+            canvas = document.createElement('canvas');
             this.canvasCost = canvas;
             this.containerFps.appendChild(canvas);
             canvas.width = this.WIDTH;
             canvas.height = this.HEIGHT;
-            var context = canvas.getContext('2d');
+            context = canvas.getContext('2d');
             this.contextCost = context;
             context.fillStyle = this.bgCanvasColor;
             context.fillRect(0, 0, this.WIDTH, this.HEIGHT);
@@ -152,7 +152,7 @@ module egret.web {
         }
 
         private addLog() {
-            var log = document.createElement('div');
+            let log = document.createElement('div');
             log.style.maxWidth = document.body.clientWidth - 8 - this.panelX + 'px';
             log.style.wordWrap = "break-word";
             this.log = log;
@@ -165,11 +165,15 @@ module egret.web {
         private lastNumDirty;
 
         public update(datas:FPSData, showLastData = false) {
+            let numFps:number;
+            let numCostTicker:number;
+            let numCostDirty:number;
+            let numCostRender:number;
             if (!showLastData) {
-                var numFps = datas.fps;
-                var numCostTicker = datas.costTicker;
-                var numCostDirty = datas.costDirty;
-                var numCostRender = datas.costRender;
+                numFps = datas.fps;
+                numCostTicker = datas.costTicker;
+                numCostDirty = datas.costDirty;
+                numCostRender = datas.costRender;
                 this.lastNumDraw = datas.draw;
                 this.lastNumDirty = datas.dirty;
                 this.arrFps.push(numFps);
@@ -181,44 +185,44 @@ module egret.web {
                 numCostRender = this.arrCost[this.arrCost.length - 1][2];
             }
 
-            var fpsTotal = 0;
-            var lenFps = this.arrFps.length;
+            let fpsTotal = 0;
+            let lenFps = this.arrFps.length;
 
             if (lenFps > 101) {
                 lenFps = 101;
                 this.arrFps.shift();
             }
-            var fpsMin = this.arrFps[0];
-            var fpsMax = this.arrFps[0];
+            let fpsMin = this.arrFps[0];
+            let fpsMax = this.arrFps[0];
             for (let i = 0; i < lenFps; i++) {
-                var num = this.arrFps[i];
+                let num = this.arrFps[i];
                 fpsTotal += num;
                 if (num < fpsMin) fpsMin = num;
                 else if (num > fpsMax) fpsMax = num;
             }
-            var WIDTH = this.WIDTH;
-            var HEIGHT = this.HEIGHT;
-            var context = this.contextFps;
+            let WIDTH = this.WIDTH;
+            let HEIGHT = this.HEIGHT;
+            let context = this.contextFps;
             context.drawImage(this.canvasFps, 1, 0, WIDTH - 1, HEIGHT, 0, 0, WIDTH - 1, HEIGHT);
             context.fillStyle = this.bgCanvasColor;
             context.fillRect(WIDTH - 1, 0, 1, HEIGHT);
-            var lastHeight = Math.floor(numFps / 60 * 20);
+            let lastHeight = Math.floor(numFps / 60 * 20);
             if (lastHeight < 1)lastHeight = 1;
             context.fillStyle = this.fpsFrontColor;
             context.fillRect(WIDTH - 1, 20 - lastHeight, 1, lastHeight);
 
-            var WIDTH_COST = this.WIDTH_COST;
-            var context = this.contextCost;
+            let WIDTH_COST = this.WIDTH_COST;
+            context = this.contextCost;
             context.drawImage(this.canvasCost, 1, 0, WIDTH_COST - 1, HEIGHT, 0, 0, WIDTH_COST - 1, HEIGHT);
             context.drawImage(this.canvasCost, WIDTH_COST + 2, 0, WIDTH_COST - 1, HEIGHT, WIDTH_COST + 1, 0, WIDTH_COST - 1, HEIGHT);
             context.drawImage(this.canvasCost, WIDTH_COST * 2 + 3, 0, WIDTH_COST - 1, HEIGHT, WIDTH_COST * 2 + 2, 0, WIDTH_COST - 1, HEIGHT);
-            var c1Height = Math.floor(numCostTicker / 2);
+            let c1Height = Math.floor(numCostTicker / 2);
             if (c1Height < 1)c1Height = 1;
             else if (c1Height > 20) c1Height = 20;
-            var c2Height = Math.floor(numCostDirty / 2);
+            let c2Height = Math.floor(numCostDirty / 2);
             if (c2Height < 1)c2Height = 1;
             else if (c2Height > 20) c2Height = 20;
-            var c3Height = Math.floor(numCostRender / 2);
+            let c3Height = Math.floor(numCostRender / 2);
             if (c3Height < 1)c3Height = 1;
             else if (c3Height > 20) c3Height = 20;
             context.fillStyle = this.bgCanvasColor;
@@ -232,8 +236,8 @@ module egret.web {
             context.fillStyle = this.cost3Color;
             context.fillRect(WIDTH_COST * 3 + 1, 20 - c3Height, 1, c3Height);
 
-            var fpsAvg = Math.floor(fpsTotal / lenFps);
-            var fpsOutput = `${numFps} FPS ${this.renderMode}`;
+            let fpsAvg = Math.floor(fpsTotal / lenFps);
+            let fpsOutput = `${numFps} FPS ${this.renderMode}`;
             if (this.showPanle) {
                 fpsOutput += `<br/>min${fpsMin} max${fpsMax} avg${fpsAvg}`;
                 this.divDraw.innerHTML = `${this.lastNumDraw}<br/>${this.lastNumDirty}%<br/>`;

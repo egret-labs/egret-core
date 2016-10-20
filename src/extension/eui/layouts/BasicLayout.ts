@@ -27,7 +27,7 @@
 //
 //////////////////////////////////////////////////////////////////////////////////////
 
-module eui {
+namespace eui {
 
     /**
      * @language en_US
@@ -114,8 +114,8 @@ module eui {
          */
         public updateDisplayList(unscaledWidth:number, unscaledHeight:number):void {
             super.updateDisplayList(unscaledWidth, unscaledHeight);
-            var target = this.$target;
-            var pos = sys.updateDisplayList(target, unscaledWidth, unscaledHeight);
+            let target = this.$target;
+            let pos = sys.updateDisplayList(target, unscaledWidth, unscaledHeight);
             target.setContentSize(Math.ceil(pos.x), Math.ceil(pos.y));
         }
     }
@@ -137,9 +137,9 @@ module eui {
     }
 }
 
-module eui.sys {
+namespace eui.sys {
 
-    var UIComponentClass = "eui.UIComponent";
+    let UIComponentClass = "eui.UIComponent";
 
     /**
      * @private
@@ -150,12 +150,12 @@ module eui.sys {
         if (!value || typeof value == "number") {
             return <number>value;
         }
-        var str = <string>value;
-        var index = str.indexOf("%");
+        let str = <string>value;
+        let index = str.indexOf("%");
         if (index == -1) {
             return +str;
         }
-        var percent = +str.substring(0, index);
+        let percent = +str.substring(0, index);
         return percent * 0.01 * total;
     }
 
@@ -167,26 +167,26 @@ module eui.sys {
         if (!target) {
             return;
         }
-        var width = 0;
-        var height = 0;
-        var bounds = egret.$TempRectangle;
-        var count = target.numChildren;
-        for (var i = 0; i < count; i++) {
-            var layoutElement = <eui.UIComponent> (target.getChildAt(i));
+        let width = 0;
+        let height = 0;
+        let bounds = egret.$TempRectangle;
+        let count = target.numChildren;
+        for (let i = 0; i < count; i++) {
+            let layoutElement = <eui.UIComponent> (target.getChildAt(i));
             if (!egret.is(layoutElement, UIComponentClass) || !layoutElement.$includeInLayout) {
                 continue;
             }
 
-            var values = layoutElement.$UIComponent;
-            var hCenter = +values[sys.UIKeys.horizontalCenter];
-            var vCenter = +values[sys.UIKeys.verticalCenter];
-            var left = +values[sys.UIKeys.left];
-            var right = +values[sys.UIKeys.right];
-            var top = +values[sys.UIKeys.top];
-            var bottom = +values[sys.UIKeys.bottom];
+            let values = layoutElement.$UIComponent;
+            let hCenter = +values[sys.UIKeys.horizontalCenter];
+            let vCenter = +values[sys.UIKeys.verticalCenter];
+            let left = +values[sys.UIKeys.left];
+            let right = +values[sys.UIKeys.right];
+            let top = +values[sys.UIKeys.top];
+            let bottom = +values[sys.UIKeys.bottom];
 
-            var extX:number;
-            var extY:number;
+            let extX:number;
+            let extY:number;
 
             layoutElement.getPreferredBounds(bounds);
 
@@ -218,8 +218,8 @@ module eui.sys {
                 extY = bounds.y;
             }
 
-            var preferredWidth = bounds.width;
-            var preferredHeight = bounds.height;
+            let preferredWidth = bounds.width;
+            let preferredHeight = bounds.height;
             width = Math.ceil(Math.max(width, extX + preferredWidth));
             height = Math.ceil(Math.max(height, extY + preferredHeight));
         }
@@ -236,29 +236,29 @@ module eui.sys {
         if (!target)
             return;
 
-        var count = target.numChildren;
+        let count = target.numChildren;
 
-        var maxX = 0;
-        var maxY = 0;
-        var bounds = egret.$TempRectangle;
-        for (var i = 0; i < count; i++) {
-            var layoutElement = <eui.UIComponent> (target.getChildAt(i));
+        let maxX = 0;
+        let maxY = 0;
+        let bounds = egret.$TempRectangle;
+        for (let i = 0; i < count; i++) {
+            let layoutElement = <eui.UIComponent> (target.getChildAt(i));
             if (!egret.is(layoutElement, UIComponentClass) || !layoutElement.$includeInLayout) {
                 continue;
             }
 
-            var values = layoutElement.$UIComponent;
-            var hCenter = formatRelative(values[sys.UIKeys.horizontalCenter], unscaledWidth*0.5);
-            var vCenter = formatRelative(values[sys.UIKeys.verticalCenter], unscaledHeight*0.5);
-            var left = formatRelative(values[sys.UIKeys.left], unscaledWidth);
-            var right = formatRelative(values[sys.UIKeys.right], unscaledWidth);
-            var top = formatRelative(values[sys.UIKeys.top], unscaledHeight);
-            var bottom = formatRelative(values[sys.UIKeys.bottom], unscaledHeight);
-            var percentWidth = values[sys.UIKeys.percentWidth];
-            var percentHeight = values[sys.UIKeys.percentHeight];
+            let values = layoutElement.$UIComponent;
+            let hCenter = formatRelative(values[sys.UIKeys.horizontalCenter], unscaledWidth*0.5);
+            let vCenter = formatRelative(values[sys.UIKeys.verticalCenter], unscaledHeight*0.5);
+            let left = formatRelative(values[sys.UIKeys.left], unscaledWidth);
+            let right = formatRelative(values[sys.UIKeys.right], unscaledWidth);
+            let top = formatRelative(values[sys.UIKeys.top], unscaledHeight);
+            let bottom = formatRelative(values[sys.UIKeys.bottom], unscaledHeight);
+            let percentWidth = values[sys.UIKeys.percentWidth];
+            let percentHeight = values[sys.UIKeys.percentHeight];
 
-            var childWidth = NaN;
-            var childHeight = NaN;
+            let childWidth = NaN;
+            let childHeight = NaN;
 
             if (!isNaN(left) && !isNaN(right)) {
                 childWidth = unscaledWidth - right - left;
@@ -276,12 +276,12 @@ module eui.sys {
 
             layoutElement.setLayoutBoundsSize(childWidth, childHeight);
             layoutElement.getLayoutBounds(bounds);
-            var elementWidth = bounds.width;
-            var elementHeight = bounds.height;
+            let elementWidth = bounds.width;
+            let elementHeight = bounds.height;
 
 
-            var childX = NaN;
-            var childY = NaN;
+            let childX = NaN;
+            let childY = NaN;
 
             if (!isNaN(hCenter))
                 childX = Math.round((unscaledWidth - elementWidth) / 2 + hCenter);

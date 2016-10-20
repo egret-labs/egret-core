@@ -540,9 +540,9 @@ var egret;
                     }
                     var index = this.$clipList.indexOf(this.$saveCount);
                     if (index != -1) {
-                        var length = this.$clipList.length;
-                        this.$clipList.splice(index, length - index);
-                        for (; index < length; index++) {
+                        var length_1 = this.$clipList.length;
+                        this.$clipList.splice(index, length_1 - index);
+                        for (; index < length_1; index++) {
                             this.checkSurface();
                             native.$cmdManager.setContext(this.$nativeContext);
                             native.$cmdManager.popClip();
@@ -1279,9 +1279,9 @@ var egret;
                     }
                     var index = this.$clipList.indexOf(this.$saveCount);
                     if (index != -1) {
-                        var length = this.$clipList.length;
-                        this.$clipList.splice(index, length - index);
-                        for (; index < length; index++) {
+                        var length_2 = this.$clipList.length;
+                        this.$clipList.splice(index, length_2 - index);
+                        for (; index < length_2; index++) {
                             this.checkSurface();
                             this.$nativeContext.popClip();
                         }
@@ -2713,7 +2713,6 @@ var egret;
                 else {
                     console.log("meshVertices not exist");
                 }
-                this.vertices = vertices;
             };
             /**
              * @private
@@ -3542,7 +3541,6 @@ var egret;
                 else {
                     console.log("meshVertices not exist");
                 }
-                this.vertices = vertices;
             };
             /**
              * @private
@@ -4185,7 +4183,7 @@ var egret;
                 /*
                  * 存储字符串的数组
                  */
-                this.strArray = new Array();
+                this.strArray = [];
             }
             var d = __define,c=CmdManager,p=c.prototype;
             /*
@@ -4700,9 +4698,9 @@ var egret;
         if (DEBUG) {
             egret.log = function () {
                 if (DEBUG) {
-                    var length = arguments.length;
+                    var length_3 = arguments.length;
                     var info = "";
-                    for (var i = 0; i < length; i++) {
+                    for (var i = 0; i < length_3; i++) {
                         info += arguments[i] + " ";
                     }
                     egret.sys.$logToFPS(info);
@@ -5729,14 +5727,14 @@ var egret;
                 this.loading = true;
                 this.loaded = false;
                 if (cache && !egret_native.isFileExists(url)) {
-                    var self = this;
+                    var self_1 = this;
                     var promise = egret.PromiseObject.create();
                     promise.onSuccessFunc = function () {
-                        self.loadEnd();
+                        self_1.loadEnd();
                     };
                     promise.onErrorFunc = function () {
                         egret.$warn(1048);
-                        self.dispatchEventWith(egret.IOErrorEvent.IO_ERROR);
+                        self_1.dispatchEventWith(egret.IOErrorEvent.IO_ERROR);
                     };
                     egret_native.download(url, url, promise);
                 }

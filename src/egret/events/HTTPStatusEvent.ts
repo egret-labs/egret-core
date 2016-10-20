@@ -28,7 +28,7 @@
 //////////////////////////////////////////////////////////////////////////////////////
 
 
-module egret {
+namespace egret {
 
     /**
      * @language en_US
@@ -119,9 +119,9 @@ module egret {
          * @platform Web,Native
          */
         public static dispatchHTTPStatusEvent(target:IEventDispatcher, status:number):boolean {
-            var event:HTTPStatusEvent = Event.create(HTTPStatusEvent, HTTPStatusEvent.HTTP_STATUS);
+            let event:HTTPStatusEvent = Event.create(HTTPStatusEvent, HTTPStatusEvent.HTTP_STATUS);
             event._status = status;
-            var result = target.dispatchEvent(event);
+            let result = target.dispatchEvent(event);
             Event.release(event);
             return result;
         }

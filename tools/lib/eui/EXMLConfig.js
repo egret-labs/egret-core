@@ -1,8 +1,8 @@
 /**
  * Created by yanjiaqi on 15/10/21.
  */
-var file = require("../../FileUtil");
-var XMLTool = require("../../xml/index");
+var file = require("../FileUtil");
+var XMLTool = require("../xml/index");
 /**
  * @private
  * EUI 命名空间
@@ -267,3 +267,4 @@ var EXMLConfig = (function () {
     return EXMLConfig;
 }());
 exports.EXMLConfig = EXMLConfig;
+//# sourceMappingURL=EXMLConfig.js.map

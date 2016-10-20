@@ -28,7 +28,7 @@
 //////////////////////////////////////////////////////////////////////////////////////
 
 
-module egret.native {
+namespace egret.native {
     /**
      * 测量文本在指定样式下的宽度。
      * @param text 要测量的文本内容。
@@ -38,7 +38,7 @@ module egret.native {
      * @param italic 是否斜体
      */
     function measureText(text:string, fontFamily:string, fontSize:number, bold:boolean, italic:boolean):number {
-        var font:string = TextField.default_fontFamily;
+        let font:string = TextField.default_fontFamily;
         egret_native.Label.createLabel(font, fontSize, "", 0);
         return egret_native.Label.getTextSize(text)[0];
     }

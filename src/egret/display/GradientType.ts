@@ -1,4 +1,4 @@
-module egret {
+namespace egret {
     /**
      * @language en_US
      * The GradientType class provides values for the type parameter in the beginGradientFill() methods of the egret.Graphics class.

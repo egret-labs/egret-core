@@ -28,7 +28,7 @@
 //////////////////////////////////////////////////////////////////////////////////////
 
 
-module eui {
+namespace eui {
 
 	/**
 	 * @language en_US
@@ -130,13 +130,13 @@ module eui {
 		 * @platform Web,Native
 		 */
 		protected getCurrentState():string{
-			var state = super.getCurrentState();
+			let state = super.getCurrentState();
 			if (!this.$selected){
 				return state;
 			}
 			else{
-				var selectedState = state + "AndSelected";
-				var skin = this.skin;
+				let selectedState = state + "AndSelected";
+				let skin = this.skin;
 				if(skin&&skin.hasState(selectedState)){
 					return selectedState;
 				}

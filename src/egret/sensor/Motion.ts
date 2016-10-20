@@ -1,11 +1,11 @@
 
 
-module egret {
+namespace egret {
 
     /**
      * @copy egret.Motion
      */
-    export var Motion: { new (): Motion };
+    export let Motion: { new (): Motion };
 
     /**
      * @language en_US

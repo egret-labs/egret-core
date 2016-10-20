@@ -27,7 +27,7 @@
 //
 //////////////////////////////////////////////////////////////////////////////////////
 
-module egret.sys {
+namespace egret.sys {
     /**
      * @private
      */
@@ -50,7 +50,7 @@ module egret.sys {
     }
 }
 
-module egret {
+namespace egret {
 
     /**
      * @language en_US
@@ -131,7 +131,7 @@ module egret {
         $onAddToStage(stage: Stage, nestLevel: number): void {
             super.$onAddToStage(stage, nestLevel);
 
-            var bitmapData = this.$Bitmap[sys.BitmapKeys.bitmapData];
+            let bitmapData = this.$Bitmap[sys.BitmapKeys.bitmapData];
             if (bitmapData) {
                 BitmapData.$addDisplayObject(this, bitmapData);
             }
@@ -144,7 +144,7 @@ module egret {
         $onRemoveFromStage(): void {
             super.$onRemoveFromStage();
 
-            var bitmapData = this.$Bitmap[sys.BitmapKeys.bitmapData];
+            let bitmapData = this.$Bitmap[sys.BitmapKeys.bitmapData];
             if (bitmapData) {
                 BitmapData.$removeDisplayObject(this, bitmapData);
             }
@@ -165,7 +165,7 @@ module egret {
          * @platform Web,Native
          */
         public get bitmapData(): BitmapData {
-            var value = this.$Bitmap[sys.BitmapKeys.bitmapData];
+            let value = this.$Bitmap[sys.BitmapKeys.bitmapData];
             if (value instanceof Texture) {
                 return null;
             }
@@ -193,7 +193,7 @@ module egret {
          * @platform Web,Native
          */
         public get texture(): Texture {
-            var value = this.$Bitmap[sys.BitmapKeys.bitmapData];
+            let value = this.$Bitmap[sys.BitmapKeys.bitmapData];
             if (value instanceof Texture) {
                 return value;
             }
@@ -210,8 +210,8 @@ module egret {
          * @private
          */
         $setBitmapData(value: BitmapData | Texture): boolean {
-            var values = this.$Bitmap;
-            var oldBitmapData = values[sys.BitmapKeys.bitmapData];
+            let values = this.$Bitmap;
+            let oldBitmapData = values[sys.BitmapKeys.bitmapData];
             if (value == oldBitmapData) {
                 return false;
             }
@@ -230,14 +230,14 @@ module egret {
 
             if (this.$stage) {
                 if (oldBitmapData) {
-                    var oldHashCode: number;
+                    let oldHashCode: number;
                     if ((<Texture>oldBitmapData)._bitmapData && (<Texture>oldBitmapData)._bitmapData.hashCode) {
                         oldHashCode = (<Texture>oldBitmapData)._bitmapData.hashCode;
                     }
                     else {
                         oldHashCode = oldBitmapData.hashCode;
                     }
-                    var newHashCode: number;
+                    let newHashCode: number;
                     if ((<Texture>value)._bitmapData && (<Texture>value)._bitmapData.hashCode) {
                         newHashCode = (<Texture>value)._bitmapData.hashCode;
                     }
@@ -261,11 +261,11 @@ module egret {
          * @private
          */
         public $refreshImageData(): void {
-            var values = this.$Bitmap;
-            var bitmapData = values[sys.BitmapKeys.bitmapData];
+            let values = this.$Bitmap;
+            let bitmapData = values[sys.BitmapKeys.bitmapData];
             if (bitmapData) {
                 if (bitmapData instanceof Texture) {
-                    var texture = <Texture>bitmapData;
+                    let texture = <Texture>bitmapData;
                     this.setImageData(texture._bitmapData,
                         texture._bitmapX, texture._bitmapY,
                         texture._bitmapWidth, texture._bitmapHeight,
@@ -274,8 +274,8 @@ module egret {
                         texture._sourceWidth, texture._sourceHeight);
                 }
                 else {
-                    var width = (<BitmapData>bitmapData).width;
-                    var height = (<BitmapData>bitmapData).height;
+                    let width = (<BitmapData>bitmapData).width;
+                    let height = (<BitmapData>bitmapData).height;
                     this.setImageData(<BitmapData>bitmapData, 0, 0, width, height, 0, 0, width, height, width, height);
                 }
             }
@@ -286,7 +286,7 @@ module egret {
          */
         private setImageData(image: BitmapData, bitmapX: number, bitmapY: number, bitmapWidth: number, bitmapHeight: number,
             offsetX: number, offsetY: number, textureWidth: number, textureHeight: number, sourceWidth: number, sourceHeight: number): void {
-            var values = this.$Bitmap;
+            let values = this.$Bitmap;
             values[sys.BitmapKeys.image] = image;
             values[sys.BitmapKeys.bitmapX] = bitmapX;
             values[sys.BitmapKeys.bitmapY] = bitmapY;
@@ -409,13 +409,13 @@ module egret {
          * @platform Web
          */
         public get smoothing(): boolean {
-            var values = this.$Bitmap;
+            let values = this.$Bitmap;
             return values[sys.BitmapKeys.smoothing];
         }
 
         public set smoothing(value: boolean) {
             value = !!value;
-            var values = this.$Bitmap;
+            let values = this.$Bitmap;
             if (value == values[sys.BitmapKeys.smoothing]) {
                 return;
             }
@@ -430,7 +430,7 @@ module egret {
          */
         $setWidth(value: number): boolean {
             //value = +value || 0;
-            var values = this.$Bitmap;
+            let values = this.$Bitmap;
             if (value < 0 || value == values[sys.BitmapKeys.explicitBitmapWidth]) {
                 return false;
             }
@@ -448,7 +448,7 @@ module egret {
          */
         $setHeight(value: number): boolean {
             //value = +value || 0;
-            var values = this.$Bitmap;
+            let values = this.$Bitmap;
             if (value < 0 || value == values[sys.BitmapKeys.explicitBitmapHeight]) {
                 return false;
             }
@@ -464,7 +464,7 @@ module egret {
          * 获取显示宽度
          */
         $getWidth(): number {
-            var values = this.$Bitmap;
+            let values = this.$Bitmap;
             return isNaN(values[sys.BitmapKeys.explicitBitmapWidth]) ? this.$getContentBounds().width : values[sys.BitmapKeys.explicitBitmapWidth];
         }
 
@@ -473,7 +473,7 @@ module egret {
          * 获取显示宽度
          */
         $getHeight(): number {
-            var values = this.$Bitmap;
+            let values = this.$Bitmap;
             return isNaN(values[sys.BitmapKeys.explicitBitmapHeight]) ? this.$getContentBounds().height : values[sys.BitmapKeys.explicitBitmapHeight];
         }
 
@@ -481,16 +481,16 @@ module egret {
          * @private
          */
         $measureContentBounds(bounds: Rectangle): void {
-            var values = this.$Bitmap;
+            let values = this.$Bitmap;
             if (values[sys.BitmapKeys.image]) {
-                var values = this.$Bitmap;
-                var w: number = !isNaN(values[sys.BitmapKeys.explicitBitmapWidth]) ? values[sys.BitmapKeys.explicitBitmapWidth] : values[sys.BitmapKeys.textureWidth];
-                var h: number = !isNaN(values[sys.BitmapKeys.explicitBitmapHeight]) ? values[sys.BitmapKeys.explicitBitmapHeight] : values[sys.BitmapKeys.textureHeight];
+                let values = this.$Bitmap;
+                let w: number = !isNaN(values[sys.BitmapKeys.explicitBitmapWidth]) ? values[sys.BitmapKeys.explicitBitmapWidth] : values[sys.BitmapKeys.textureWidth];
+                let h: number = !isNaN(values[sys.BitmapKeys.explicitBitmapHeight]) ? values[sys.BitmapKeys.explicitBitmapHeight] : values[sys.BitmapKeys.textureHeight];
                 bounds.setTo(0, 0, w, h);
             }
             else {
-                w = !isNaN(values[sys.BitmapKeys.explicitBitmapWidth]) ? values[sys.BitmapKeys.explicitBitmapWidth] : 0;
-                h = !isNaN(values[sys.BitmapKeys.explicitBitmapHeight]) ? values[sys.BitmapKeys.explicitBitmapHeight] : 0;
+                let w = !isNaN(values[sys.BitmapKeys.explicitBitmapWidth]) ? values[sys.BitmapKeys.explicitBitmapWidth] : 0;
+                let h = !isNaN(values[sys.BitmapKeys.explicitBitmapHeight]) ? values[sys.BitmapKeys.explicitBitmapHeight] : 0;
 
                 bounds.setTo(0, 0, w, h);
             }
@@ -500,10 +500,10 @@ module egret {
          * @private
          */
         $render(): void {
-            var values = this.$Bitmap;
+            let values = this.$Bitmap;
             if (values[sys.BitmapKeys.image]) {
-                var destW: number = !isNaN(values[sys.BitmapKeys.explicitBitmapWidth]) ? values[sys.BitmapKeys.explicitBitmapWidth] : values[sys.BitmapKeys.textureWidth];
-                var destH: number = !isNaN(values[sys.BitmapKeys.explicitBitmapHeight]) ? values[sys.BitmapKeys.explicitBitmapHeight] : values[sys.BitmapKeys.textureHeight];
+                let destW: number = !isNaN(values[sys.BitmapKeys.explicitBitmapWidth]) ? values[sys.BitmapKeys.explicitBitmapWidth] : values[sys.BitmapKeys.textureWidth];
+                let destH: number = !isNaN(values[sys.BitmapKeys.explicitBitmapHeight]) ? values[sys.BitmapKeys.explicitBitmapHeight] : values[sys.BitmapKeys.textureHeight];
 
                 sys.BitmapNode.$updateTextureData(<sys.BitmapNode>this.$renderNode, values[sys.BitmapKeys.image],
                     values[sys.BitmapKeys.bitmapX], values[sys.BitmapKeys.bitmapY], values[sys.BitmapKeys.bitmapWidth], values[sys.BitmapKeys.bitmapHeight],
@@ -540,7 +540,7 @@ module egret {
         }
 
         $hitTest(stageX: number, stageY: number): DisplayObject {
-            var target = super.$hitTest(stageX, stageY);
+            let target = super.$hitTest(stageX, stageY);
             if (target && this._pixelHitTest) {
                 target = this.hitTestPixel(stageX, stageY);
             }
@@ -551,13 +551,13 @@ module egret {
          * @private
          */
         private hitTestPixel(stageX: number, stageY: number): DisplayObject {
-            var m = this.$getInvertedConcatenatedMatrix();
-            var localX = m.a * stageX + m.c * stageY + m.tx;
-            var localY = m.b * stageX + m.d * stageY + m.ty;
-            var data: number[];
-            var displayList = this.$displayList;
+            let m = this.$getInvertedConcatenatedMatrix();
+            let localX = m.a * stageX + m.c * stageY + m.tx;
+            let localY = m.b * stageX + m.d * stageY + m.ty;
+            let data: number[];
+            let displayList = this.$displayList;
             if (displayList) {
-                var buffer = displayList.renderBuffer;
+                let buffer = displayList.renderBuffer;
                 try {
                     data = buffer.getPixels(localX - displayList.offsetX, localY - displayList.offsetY);
                 }
@@ -567,10 +567,10 @@ module egret {
                 }
             }
             else {
-                var buffer = sys.customHitTestBuffer;
+                let buffer = sys.customHitTestBuffer;
                 buffer.resize(3, 3);
-                var node = this.$getRenderNode();
-                var matrix = Matrix.create();
+                let node = this.$getRenderNode();
+                let matrix = Matrix.create();
                 matrix.identity();
                 matrix.translate(1 - localX, 1 - localY);
                 sys.systemRenderer.drawNodeToBuffer(node, buffer, matrix, true);

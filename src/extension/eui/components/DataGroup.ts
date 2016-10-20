@@ -28,7 +28,7 @@
 //////////////////////////////////////////////////////////////////////////////////////
 
 
-module eui {
+namespace eui {
 
     /**
      * @private
@@ -136,7 +136,7 @@ module eui {
 
         public set useVirtualLayout(value:boolean) {
             value = !!value;
-            var values = this.$DataGroup;
+            let values = this.$DataGroup;
             if (value === values[Keys.useVirtualLayout])
                 return;
 
@@ -161,9 +161,9 @@ module eui {
 
             if (this.$layout && value && (this.$layout.$useVirtualLayout != value.$useVirtualLayout))
                 this.onUseVirtualLayoutChanged();
-            var result:boolean = super.$setLayout(value);
+            let result:boolean = super.$setLayout(value);
             if (value) {
-                var rect = this.$DataGroup[Keys.typicalLayoutRect];
+                let rect = this.$DataGroup[Keys.typicalLayoutRect];
                 if (rect) {
                     value.setTypicalSize(rect.width, rect.height);
                 }
@@ -179,7 +179,7 @@ module eui {
          * 是否使用虚拟布局标记改变
          */
         private onUseVirtualLayoutChanged(event?:egret.Event):void {
-            var values = this.$DataGroup;
+            let values = this.$DataGroup;
             values[Keys.useVirtualLayoutChanged] = true;
             values[Keys.cleanFreeRenderer] = true;
             this.removeDataProviderListener();
@@ -197,11 +197,11 @@ module eui {
             if (!this.$layout || !this.$layout.$useVirtualLayout) {
                 return;
             }
-            var indexToRenderer = this.$indexToRenderer;
-            var keys = Object.keys(indexToRenderer);
-            var length = keys.length;
-            for (var i = 0; i < length; i++) {
-                var index = +keys[i];
+            let indexToRenderer = this.$indexToRenderer;
+            let keys = Object.keys(indexToRenderer);
+            let length = keys.length;
+            for (let i = 0; i < length; i++) {
+                let index = +keys[i];
                 if (index < startIndex || index > endIndex) {
                     this.freeRendererByIndex(index);
                 }
@@ -230,13 +230,13 @@ module eui {
             index = +index | 0;
             if (index < 0 || index >= this.$dataProvider.length)
                 return null;
-            var renderer = this.$indexToRenderer[index];
+            let renderer = this.$indexToRenderer[index];
             if (!renderer) {
-                var item:any = this.$dataProvider.getItemAt(index);
+                let item:any = this.$dataProvider.getItemAt(index);
                 renderer = this.createVirtualRenderer(item);
                 this.$indexToRenderer[index] = renderer;
                 this.updateRenderer(renderer, index, item);
-                var values = this.$DataGroup;
+                let values = this.$DataGroup;
                 if (values[Keys.createNewRendererFlag]) {
                     renderer.validateNow();
                     values[Keys.createNewRendererFlag] = false;
@@ -251,7 +251,7 @@ module eui {
          * 释放指定索引处的项呈示器
          */
         private freeRendererByIndex(index:number):void {
-            var renderer = this.$indexToRenderer[index];
+            let renderer = this.$indexToRenderer[index];
             if (renderer) {
                 delete this.$indexToRenderer[index];
                 this.doFreeRenderer(renderer);
@@ -264,9 +264,9 @@ module eui {
          * @param renderer
          */
         private doFreeRenderer(renderer:IItemRenderer):void {
-            var values = this.$DataGroup;
-            var rendererClass = values[Keys.rendererToClassMap][renderer.$hashCode];
-            var hashCode = rendererClass.$hashCode;
+            let values = this.$DataGroup;
+            let rendererClass = values[Keys.rendererToClassMap][renderer.$hashCode];
+            let hashCode = rendererClass.$hashCode;
             if (!values[Keys.freeRenderers][hashCode]) {
                 values[Keys.freeRenderers][hashCode] = [];
             }
@@ -292,11 +292,11 @@ module eui {
          * 为指定索引创建虚拟的项呈示器
          */
         private createVirtualRenderer(item:any):IItemRenderer {
-            var renderer:IItemRenderer;
-            var rendererClass = this.itemToRendererClass(item);
-            var hashCode = rendererClass.$hashCode;
-            var values = this.$DataGroup;
-            var freeRenderers = values[Keys.freeRenderers];
+            let renderer:IItemRenderer;
+            let rendererClass = this.itemToRendererClass(item);
+            let hashCode = rendererClass.$hashCode;
+            let values = this.$DataGroup;
+            let freeRenderers = values[Keys.freeRenderers];
             if (freeRenderers[hashCode] && freeRenderers[hashCode].length > 0) {
                 renderer = freeRenderers[hashCode].pop();
                 renderer.visible = true;
@@ -312,8 +312,8 @@ module eui {
          * 根据rendererClass创建一个Renderer,并添加到显示列表
          */
         private createOneRenderer(rendererClass:any):IItemRenderer {
-            var renderer = <IItemRenderer> (new rendererClass());
-            var values = this.$DataGroup;
+            let renderer = <IItemRenderer> (new rendererClass());
+            let values = this.$DataGroup;
             values[Keys.rendererToClassMap][renderer.$hashCode] = rendererClass;
             if (!egret.is(renderer, "eui.IItemRenderer")) {
                 return null;
@@ -331,7 +331,7 @@ module eui {
          */
         private setItemRenderSkinName(renderer:IItemRenderer, skinName:any):void {
             if (renderer && renderer instanceof Component) {
-                var comp:Component = <Component> <any>renderer;
+                let comp:Component = <Component> <any>renderer;
                 if (!comp.$Component[sys.ComponentKeys.skinNameExplicitlySet]) {
                     comp.skinName = skinName;
                     comp.$Component[sys.ComponentKeys.skinNameExplicitlySet] = false;
@@ -445,11 +445,11 @@ module eui {
                 case CollectionEventKind.RESET:
                 case CollectionEventKind.REFRESH:
                     if (this.$layout && this.$layout.$useVirtualLayout) {
-                        var indexToRenderer = this.$indexToRenderer;
-                        var keys = Object.keys(indexToRenderer);
-                        var length = keys.length;
-                        for (var i = length - 1; i >= 0; i--) {
-                            var index = +keys[i];
+                        let indexToRenderer = this.$indexToRenderer;
+                        let keys = Object.keys(indexToRenderer);
+                        let length = keys.length;
+                        for (let i = length - 1; i >= 0; i--) {
+                            let index = +keys[i];
                             this.freeRendererByIndex(index);
                         }
                     }
@@ -467,8 +467,8 @@ module eui {
          * 数据源添加项目事件处理
          */
         private itemAddedHandler(items:any[], index:number):void {
-            var length = items.length;
-            for (var i = 0; i < length; i++) {
+            let length = items.length;
+            for (let i = 0; i < length; i++) {
                 this.itemAdded(items[i], index + i);
             }
             this.resetRenderersIndices();
@@ -479,8 +479,8 @@ module eui {
          * 数据源移除项目事件处理
          */
         private itemRemovedHandler(items:any[], location:number):void {
-            var length = items.length;
-            for (var i = length - 1; i >= 0; i--) {
+            let length = items.length;
+            for (let i = length - 1; i >= 0; i--) {
                 this.itemRemoved(items[i], location + i);
             }
 
@@ -522,11 +522,11 @@ module eui {
                 this.$indexToRenderer.splice(index, 0, null);
                 return;
             }
-            var renderer = this.createVirtualRenderer(item);
+            let renderer = this.createVirtualRenderer(item);
             this.$indexToRenderer.splice(index, 0, renderer);
             if (renderer) {
                 this.updateRenderer(renderer, index, item);
-                var values = this.$DataGroup;
+                let values = this.$DataGroup;
                 if (values[Keys.createNewRendererFlag]) {
                     values[Keys.createNewRendererFlag] = false;
                     this.rendererAdded(renderer, index, item);
@@ -564,7 +564,7 @@ module eui {
         protected itemRemoved(item:any, index:number):void {
             if (this.$layout)
                 this.$layout.elementRemoved(index);
-            var oldRenderer = this.$indexToRenderer[index];
+            let oldRenderer = this.$indexToRenderer[index];
 
             if (this.$indexToRenderer.length > index)
                 this.$indexToRenderer.splice(index, 1);
@@ -585,21 +585,21 @@ module eui {
          * 更新当前所有项的索引
          */
         private resetRenderersIndices():void {
-            var indexToRenderer = this.$indexToRenderer;
+            let indexToRenderer = this.$indexToRenderer;
             if (indexToRenderer.length == 0)
                 return;
 
             if (this.$layout && this.$layout.$useVirtualLayout) {
-                var keys = Object.keys(indexToRenderer);
-                var length = keys.length;
-                for (var i = 0; i < length; i++) {
-                    var index = +keys[i];
+                let keys = Object.keys(indexToRenderer);
+                let length = keys.length;
+                for (let i = 0; i < length; i++) {
+                    let index = +keys[i];
                     this.resetRendererItemIndex(index);
                 }
             }
             else {
-                var indexToRendererLength = indexToRenderer.length;
-                for (index = 0; index < indexToRendererLength; index++) {
+                let indexToRendererLength = indexToRenderer.length;
+                for (let index = 0; index < indexToRendererLength; index++) {
                     this.resetRendererItemIndex(index);
                 }
             }
@@ -614,7 +614,7 @@ module eui {
                 return;//防止无限循环
             }
 
-            var renderer = this.$indexToRenderer[location];
+            let renderer = this.$indexToRenderer[location];
             if (renderer)
                 this.updateRenderer(renderer, location, item);
         }
@@ -624,7 +624,7 @@ module eui {
          * 调整指定项呈示器的索引值
          */
         private resetRendererItemIndex(index:number):void {
-            var renderer = this.$indexToRenderer[index];
+            let renderer = this.$indexToRenderer[index];
             if (renderer)
                 renderer.itemIndex = index;
         }
@@ -655,7 +655,7 @@ module eui {
         }
 
         public set itemRenderer(value:any) {
-            var values = this.$DataGroup;
+            let values = this.$DataGroup;
             if (values[Keys.itemRenderer] == value)
                 return;
             values[Keys.itemRenderer] = value;
@@ -688,7 +688,7 @@ module eui {
         }
 
         public set itemRendererSkinName(value:any) {
-            var values = this.$DataGroup;
+            let values = this.$DataGroup;
             if (values[Keys.itemRendererSkinName] == value)
                 return;
             values[Keys.itemRendererSkinName] = value;
@@ -723,7 +723,7 @@ module eui {
         }
 
         public set itemRendererFunction(value:(item:any)=>any) {
-            var values = this.$DataGroup;
+            let values = this.$DataGroup;
             if (values[Keys.itemRendererFunction] == value)
                 return;
             values[Keys.itemRendererFunction] = value;
@@ -738,8 +738,8 @@ module eui {
          * 为特定的数据项返回项呈示器的工厂实例
          */
         private itemToRendererClass(item:any):any {
-            var rendererClass:any;
-            var values = this.$DataGroup;
+            let rendererClass:any;
+            let values = this.$DataGroup;
             if (values[Keys.itemRendererFunction]) {
                 rendererClass = values[Keys.itemRendererFunction](item);
             }
@@ -764,7 +764,7 @@ module eui {
          */
         protected createChildren():void {
             if (!this.$layout) {
-                var layout:VerticalLayout = new VerticalLayout();
+                let layout:VerticalLayout = new VerticalLayout();
                 layout.gap = 0;
                 layout.horizontalAlign = JustifyAlign.CONTENT_JUSTIFY;
                 this.$setLayout(layout);
@@ -781,7 +781,7 @@ module eui {
          * @platform Web,Native
          */
         protected commitProperties():void {
-            var values = this.$DataGroup;
+            let values = this.$DataGroup;
             if (values[Keys.itemRendererChanged] || this.$dataProviderChanged || values[Keys.useVirtualLayoutChanged]) {
                 this.removeAllRenderers();
                 if (this.$layout)
@@ -816,22 +816,22 @@ module eui {
 
             if (values[Keys.itemRendererSkinNameChange]) {
                 values[Keys.itemRendererSkinNameChange] = false;
-                var skinName = values[Keys.itemRendererSkinName];
-                var indexToRenderer = this.$indexToRenderer;
-                var keys = Object.keys(indexToRenderer);
-                var length = keys.length;
-                for (var i = 0; i < length; i++) {
-                    var index = keys[i];
+                let skinName = values[Keys.itemRendererSkinName];
+                let indexToRenderer = this.$indexToRenderer;
+                let keys = Object.keys(indexToRenderer);
+                let length = keys.length;
+                for (let i = 0; i < length; i++) {
+                    let index = keys[i];
                     this.setItemRenderSkinName(indexToRenderer[index], skinName);
                 }
-                var freeRenderers = values[Keys.freeRenderers];
-                var keys = Object.keys(freeRenderers);
-                var length = keys.length;
-                for (var i = 0; i < length; i++) {
-                    var hashCode = keys[i];
-                    var list:IItemRenderer[] = freeRenderers[hashCode];
-                    var length = list.length;
-                    for (var i = 0; i < length; i++) {
+                let freeRenderers = values[Keys.freeRenderers];
+                keys = Object.keys(freeRenderers);
+                length = keys.length;
+                for (let i = 0; i < length; i++) {
+                    let hashCode = keys[i];
+                    let list:IItemRenderer[] = freeRenderers[hashCode];
+                    let length = list.length;
+                    for (let i = 0; i < length; i++) {
                         this.setItemRenderSkinName(list[i], skinName);
                     }
                 }
@@ -861,19 +861,19 @@ module eui {
          * @platform Web,Native
          */
         protected updateDisplayList(unscaledWidth:number, unscaledHeight:number):void {
-            var useVirtualLayout = (this.$layout && this.$layout.$useVirtualLayout);
+            let useVirtualLayout = (this.$layout && this.$layout.$useVirtualLayout);
             if (useVirtualLayout) {
                 this.ensureTypicalLayoutElement();
             }
             super.updateDisplayList(unscaledWidth, unscaledHeight);
-            var values = this.$DataGroup;
+            let values = this.$DataGroup;
             if (useVirtualLayout) {
                 //检查索引 0 处的项测量大小是否发生改变，若改变就重新计算 typicalLayoutRect
-                var rect = values[Keys.typicalLayoutRect];
+                let rect = values[Keys.typicalLayoutRect];
                 if (rect) {
-                    var renderer = this.$indexToRenderer[0];
+                    let renderer = this.$indexToRenderer[0];
                     if (renderer) {
-                        var bounds = egret.$TempRectangle;
+                        let bounds = egret.$TempRectangle;
                         renderer.getPreferredBounds(bounds);
                         if (bounds.width != rect.width || bounds.height != rect.height) {
                             values[Keys.typicalLayoutRect] = null;
@@ -902,21 +902,21 @@ module eui {
          * 测量项呈示器默认尺寸
          */
         private measureRendererSize():void {
-            var values = this.$DataGroup;
+            let values = this.$DataGroup;
             if (!values[Keys.typicalItem]) {
                 this.setTypicalLayoutRect(null);
                 return;
             }
-            var typicalRenderer = this.createVirtualRenderer(values[Keys.typicalItem]);
+            let typicalRenderer = this.createVirtualRenderer(values[Keys.typicalItem]);
             if (!typicalRenderer) {
                 this.setTypicalLayoutRect(null);
                 return;
             }
             this.updateRenderer(typicalRenderer, 0, values[Keys.typicalItem]);
             typicalRenderer.validateNow();
-            var bounds = egret.$TempRectangle;
+            let bounds = egret.$TempRectangle;
             typicalRenderer.getPreferredBounds(bounds);
-            var rect = new egret.Rectangle(0, 0, bounds.width, bounds.height);
+            let rect = new egret.Rectangle(0, 0, bounds.width, bounds.height);
             if (this.$layout && this.$layout.$useVirtualLayout) {
                 if (values[Keys.createNewRendererFlag]) {
                     this.rendererAdded(typicalRenderer, 0, values[Keys.typicalItem]);
@@ -958,29 +958,29 @@ module eui {
          * 移除所有项呈示器
          */
         private removeAllRenderers():void {
-            var indexToRenderer = this.$indexToRenderer;
-            var keys = Object.keys(indexToRenderer);
-            var length = keys.length;
-            for (var i = 0; i < length; i++) {
-                var index = keys[i];
-                var renderer = indexToRenderer[index];
+            let indexToRenderer = this.$indexToRenderer;
+            let keys = Object.keys(indexToRenderer);
+            let length = keys.length;
+            for (let i = 0; i < length; i++) {
+                let index = keys[i];
+                let renderer = indexToRenderer[index];
                 if (renderer) {
                     this.rendererRemoved(renderer, renderer.itemIndex, renderer.data);
                     this.removeChild(renderer);
                 }
             }
             this.$indexToRenderer = [];
-            var values = this.$DataGroup;
+            let values = this.$DataGroup;
             if (values[Keys.cleanFreeRenderer]) {
-                var freeRenderers = values[Keys.freeRenderers];
-                var keys = Object.keys(freeRenderers);
-                var length = keys.length;
-                for (var i = 0; i < length; i++) {
-                    var hashCode = keys[i];
-                    var list:IItemRenderer[] = freeRenderers[hashCode];
-                    var length = list.length;
-                    for (var i = 0; i < length; i++) {
-                        renderer = list[i];
+                let freeRenderers = values[Keys.freeRenderers];
+                let keys = Object.keys(freeRenderers);
+                let length = keys.length;
+                for (let i = 0; i < length; i++) {
+                    let hashCode = keys[i];
+                    let list:IItemRenderer[] = freeRenderers[hashCode];
+                    let length = list.length;
+                    for (let i = 0; i < length; i++) {
+                        let renderer = list[i];
                         this.rendererRemoved(renderer, renderer.itemIndex, renderer.data);
                         this.removeChild(renderer);
                     }
@@ -998,12 +998,12 @@ module eui {
         private createRenderers():void {
             if (!this.$dataProvider)
                 return;
-            var index = 0;
-            var length = this.$dataProvider.length;
-            for (var i = 0; i < length; i++) {
-                var item = this.$dataProvider.getItemAt(i);
-                var rendererClass = this.itemToRendererClass(item);
-                var renderer:IItemRenderer = this.createOneRenderer(rendererClass);
+            let index = 0;
+            let length = this.$dataProvider.length;
+            for (let i = 0; i < length; i++) {
+                let item = this.$dataProvider.getItemAt(i);
+                let rendererClass = this.itemToRendererClass(item);
+                let renderer:IItemRenderer = this.createOneRenderer(rendererClass);
                 if (!renderer)
                     continue;
                 this.$indexToRenderer[index] = renderer;
@@ -1046,7 +1046,7 @@ module eui {
          * @platform Web,Native
          */
         public updateRenderer(renderer:IItemRenderer, itemIndex:number, data:any):IItemRenderer {
-            var values = this.$DataGroup;
+            let values = this.$DataGroup;
             values[Keys.renderersBeingUpdated] = true;
             renderer.itemIndex = itemIndex;
             renderer.data = data;

@@ -28,7 +28,7 @@
 //////////////////////////////////////////////////////////////////////////////////////
 
 
-module egret.gui {
+namespace egret.gui {
 
 	/**
 	 * @class egret.gui.IndexChangeEvent
@@ -85,10 +85,10 @@ module egret.gui {
          */
         public static dispatchIndexChangeEvent(target:IEventDispatcher,type:string,
                                                oldIndex:number = -1,newIndex:number = -1,cancelable:boolean = false):boolean{
-			var event:IndexChangeEvent = Event.create(IndexChangeEvent, type);
+			let event:IndexChangeEvent = Event.create(IndexChangeEvent, type);
 			event.oldIndex = oldIndex;
 			event.newIndex = newIndex;
-			var result = target.dispatchEvent(event);
+			let result = target.dispatchEvent(event);
 			Event.release(event);
 			return result;
         }

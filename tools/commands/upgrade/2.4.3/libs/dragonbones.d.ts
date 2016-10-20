@@ -1,4 +1,4 @@
-declare module dragonBones {
+declare namespace dragonBones {
     /**
      * @class dragonBones.DragonBones
      * @classdesc
@@ -17,7 +17,7 @@ declare module dragonBones {
         constructor();
     }
 }
-declare module dragonBones {
+declare namespace dragonBones {
     /**
      * @class dragonBones.Animation
      * @classdesc
@@ -231,7 +231,7 @@ declare module dragonBones {
         animationDataList: Array<AnimationData>;
     }
 }
-declare module dragonBones {
+declare namespace dragonBones {
     /**
      * @class dragonBones.AnimationState
      * @classdesc
@@ -496,7 +496,7 @@ declare module dragonBones {
         playTimes: number;
     }
 }
-declare module dragonBones {
+declare namespace dragonBones {
     /**
      * @class dragonBones.IAnimatable
      * @classdesc
@@ -513,7 +513,7 @@ declare module dragonBones {
         advanceTime(passedTime: number): void;
     }
 }
-declare module dragonBones {
+declare namespace dragonBones {
     /**
      * @class dragonBones.IAnimationState
      * @classdesc
@@ -524,7 +524,7 @@ declare module dragonBones {
         progress: number;
     }
 }
-declare module dragonBones {
+declare namespace dragonBones {
     /**
      * @class dragonBones.SlotTimelineState
      * @classdesc
@@ -582,7 +582,7 @@ declare module dragonBones {
         private updateSingleFrame();
     }
 }
-declare module dragonBones {
+declare namespace dragonBones {
     /**
      * @class dragonBones.TimelineState
      * @classdesc
@@ -651,7 +651,7 @@ declare module dragonBones {
         private updateSingleFrame();
     }
 }
-declare module dragonBones {
+declare namespace dragonBones {
     /**
      * @class dragonBones.WorldClock
      * @classdesc
@@ -709,7 +709,7 @@ declare module dragonBones {
         advanceTime(passedTime?: number): void;
     }
 }
-declare module dragonBones {
+declare namespace dragonBones {
     /**
      * @class dragonBones.EventDispatcher
      * @classdesc
@@ -719,7 +719,7 @@ declare module dragonBones {
         constructor(target?: egret.IEventDispatcher);
     }
 }
-declare module dragonBones {
+declare namespace dragonBones {
     /**
      *
      *
@@ -816,7 +816,7 @@ declare module dragonBones {
         constructor();
     }
 }
-declare module dragonBones {
+declare namespace dragonBones {
     /**
      * @class dragonBones.Armature
      * @classdesc
@@ -1031,7 +1031,7 @@ declare module dragonBones {
         getAnimation(): any;
     }
 }
-declare module dragonBones {
+declare namespace dragonBones {
     /**
      * @class dragonBones.Matrix
      * @classdesc
@@ -1114,7 +1114,7 @@ declare module dragonBones {
         copyFrom(m: Matrix): void;
     }
 }
-declare module dragonBones {
+declare namespace dragonBones {
     /**
      * @class dragonBones.DBTransform
      * @classdesc
@@ -1184,7 +1184,7 @@ declare module dragonBones {
         toString(): string;
     }
 }
-declare module dragonBones {
+declare namespace dragonBones {
     /**
      * @class dragonBones.DBObject
      * @classdesc
@@ -1267,7 +1267,7 @@ declare module dragonBones {
         _updateGlobal(): any;
     }
 }
-declare module dragonBones {
+declare namespace dragonBones {
     /**
      * @class dragonBones.Bone
      * @classdesc
@@ -1482,7 +1482,7 @@ declare module dragonBones {
         slot: Slot;
     }
 }
-declare module dragonBones {
+declare namespace dragonBones {
     /**
      * @class dragonBones.ITextureAltas
      * @classdesc
@@ -1493,7 +1493,7 @@ declare module dragonBones {
         resetAnimation(): void;
     }
 }
-declare module dragonBones {
+declare namespace dragonBones {
     /**
      * @class dragonBones.Slot
      * @classdesc
@@ -1698,7 +1698,7 @@ declare module dragonBones {
         _updateGlobal(): any;
     }
 }
-declare module dragonBones {
+declare namespace dragonBones {
     /**
      * @class dragonBones.AnimationCache
      * @classdesc
@@ -1767,7 +1767,7 @@ declare module dragonBones {
         update(progress: number): void;
     }
 }
-declare module dragonBones {
+declare namespace dragonBones {
     /**
      * @class dragonBones.AnimationCacheManager
      * @classdesc
@@ -1903,7 +1903,7 @@ declare module dragonBones {
         getAnimationCache(animationName: string): AnimationCache;
     }
 }
-declare module dragonBones {
+declare namespace dragonBones {
     /**
      *
      * @example
@@ -1961,7 +1961,7 @@ declare module dragonBones {
         clear(): void;
     }
 }
-declare module dragonBones {
+declare namespace dragonBones {
     /**
      * @class dragonBones.ICacheUser
      * @classdesc
@@ -1975,7 +1975,7 @@ declare module dragonBones {
         frameCache: FrameCache;
     }
 }
-declare module dragonBones {
+declare namespace dragonBones {
     /**
      * @class dragonBones.ICacheableArmature
      * @classdesc
@@ -1989,7 +1989,7 @@ declare module dragonBones {
         enableEventDispatch: boolean;
     }
 }
-declare module dragonBones {
+declare namespace dragonBones {
     /**
      * @class dragonBones.ISlotCacheGenerator
      * @classdesc
@@ -2006,7 +2006,7 @@ declare module dragonBones {
         displayIndex: number;
     }
 }
-declare module dragonBones {
+declare namespace dragonBones {
     /**
      * @class dragonBones.SlotFrameCache
      * @classdesc
@@ -2066,7 +2066,7 @@ declare module dragonBones {
         clear(): void;
     }
 }
-declare module dragonBones {
+declare namespace dragonBones {
     /**
      * @class dragonBones.TimelineCache
      * @classdesc
@@ -2129,7 +2129,7 @@ declare module dragonBones {
         bindCacheUser(cacheUser: ICacheUser): void;
     }
 }
-declare module dragonBones {
+declare namespace dragonBones {
     /**
      * @class dragonBones.SlotTimelineCache
      * @classdesc
@@ -2187,7 +2187,7 @@ declare module dragonBones {
         addFrame(): void;
     }
 }
-declare module dragonBones {
+declare namespace dragonBones {
     /**
      * @class dragonBones.Event
      * @classdesc
@@ -2201,7 +2201,7 @@ declare module dragonBones {
         constructor(type: string, bubbles?: boolean, cancelable?: boolean);
     }
 }
-declare module dragonBones {
+declare namespace dragonBones {
     /**
      * @class dragonBones.AnimationEvent
      * @extends dragonBones.Event
@@ -2357,7 +2357,7 @@ declare module dragonBones {
         constructor(type: string, cancelable?: boolean);
     }
 }
-declare module dragonBones {
+declare namespace dragonBones {
     /**
      * @class dragonBones.ArmatureEvent
      * @extends dragonBones.Event
@@ -2376,7 +2376,7 @@ declare module dragonBones {
         constructor(type: string);
     }
 }
-declare module dragonBones {
+declare namespace dragonBones {
     /**
      * @class dragonBones.FrameEvent
      * @extends dragonBones.Event
@@ -2504,7 +2504,7 @@ declare module dragonBones {
         constructor(type: string, cancelable?: boolean);
     }
 }
-declare module dragonBones {
+declare namespace dragonBones {
     /**
      * @class dragonBones.SoundEvent
      * @extends dragonBones.Event
@@ -2617,7 +2617,7 @@ declare module dragonBones {
         constructor(type: string, cancelable?: boolean);
     }
 }
-declare module dragonBones {
+declare namespace dragonBones {
     /**
      * @class dragonBones.BaseFactory
      * @classdesc
@@ -2834,7 +2834,7 @@ declare module dragonBones {
         textureAtlas: any;
     }
 }
-declare module dragonBones {
+declare namespace dragonBones {
     /**
      * @class dragonBones.FastArmature
      * @classdesc
@@ -3019,7 +3019,7 @@ declare module dragonBones {
         _addEvent(event: Event): void;
     }
 }
-declare module dragonBones {
+declare namespace dragonBones {
     /**
      * @class dragonBones.FastDBObject
      * @classdesc
@@ -3100,7 +3100,7 @@ declare module dragonBones {
         frameCache: FrameCache;
     }
 }
-declare module dragonBones {
+declare namespace dragonBones {
     /**
      * @class dragonBones.FastBone
      * @classdesc
@@ -3165,7 +3165,7 @@ declare module dragonBones {
         slot: FastSlot;
     }
 }
-declare module dragonBones {
+declare namespace dragonBones {
     /**
      * @class dragonBones.FastSlot
      * @classdesc
@@ -3302,7 +3302,7 @@ declare module dragonBones {
         _updateGlobal(): any;
     }
 }
-declare module dragonBones {
+declare namespace dragonBones {
     /**
      * @class dragonBones.FastAnimation
      * @classdesc
@@ -3465,7 +3465,7 @@ declare module dragonBones {
         lastAnimationName: string;
     }
 }
-declare module dragonBones {
+declare namespace dragonBones {
     /**
      * @class dragonBones.FastAnimationState
      * @classdesc
@@ -3615,7 +3615,7 @@ declare module dragonBones {
         progress: number;
     }
 }
-declare module dragonBones {
+declare namespace dragonBones {
     /**
      * @class dragonBones.FastBoneTimelineState
      * @classdesc
@@ -3668,7 +3668,7 @@ declare module dragonBones {
         private updateTween();
     }
 }
-declare module dragonBones {
+declare namespace dragonBones {
     /**
      * @class dragonBones.FastSlotTimelineState
      * @classdesc
@@ -3726,7 +3726,7 @@ declare module dragonBones {
         private updateSingleFrame();
     }
 }
-declare module dragonBones {
+declare namespace dragonBones {
     /**
      * @class dragonBones.Point
      * @classdesc
@@ -3758,7 +3758,7 @@ declare module dragonBones {
         toString(): string;
     }
 }
-declare module dragonBones {
+declare namespace dragonBones {
     /**
      * @class dragonBones.geom
      * @classdesc
@@ -3796,7 +3796,7 @@ declare module dragonBones {
         constructor(x?: number, y?: number, width?: number, height?: number);
     }
 }
-declare module dragonBones {
+declare namespace dragonBones {
     /**
      * @class dragonBones.Timeline
      * @classdesc
@@ -3832,7 +3832,7 @@ declare module dragonBones {
         frameList: Array<Frame>;
     }
 }
-declare module dragonBones {
+declare namespace dragonBones {
     /**
      * @class dragonbones.AnimationData
      * @extends dragonbones.Timeline
@@ -3908,7 +3908,7 @@ declare module dragonBones {
         addSlotTimeline(timeline: SlotTimeline): void;
     }
 }
-declare module dragonBones {
+declare namespace dragonBones {
     /**
      * @class dragonBones.ArmatureData
      * @classdesc
@@ -3995,7 +3995,7 @@ declare module dragonBones {
         animationDataList: Array<AnimationData>;
     }
 }
-declare module dragonBones {
+declare namespace dragonBones {
     /**
      * @class dragonBones.BoneData
      * @classdesc
@@ -4047,7 +4047,7 @@ declare module dragonBones {
         dispose(): void;
     }
 }
-declare module dragonBones {
+declare namespace dragonBones {
     /**
      * @class dragonBones.ColorTransform
      * @classdesc
@@ -4097,7 +4097,7 @@ declare module dragonBones {
         constructor();
     }
 }
-declare module dragonBones {
+declare namespace dragonBones {
     class CurveData {
         private static SamplingTimes;
         private static SamplingStep;
@@ -4114,7 +4114,7 @@ declare module dragonBones {
         point2: Point;
     }
 }
-declare module dragonBones {
+declare namespace dragonBones {
     /**
      * @class dragonBones.DisplayData
      * @classdesc
@@ -4160,7 +4160,7 @@ declare module dragonBones {
         dispose(): void;
     }
 }
-declare module dragonBones {
+declare namespace dragonBones {
     /**
      * @class dragonBones.DragonBonesData
      * @classdesc
@@ -4235,7 +4235,7 @@ declare module dragonBones {
         removeAllDisplayData(): void;
     }
 }
-declare module dragonBones {
+declare namespace dragonBones {
     /**
      * @class dragonBones.Frame
      * @classdesc
@@ -4278,7 +4278,7 @@ declare module dragonBones {
         dispose(): void;
     }
 }
-declare module dragonBones {
+declare namespace dragonBones {
     /**
      * @class dragonBones.SkinData
      * @classdesc
@@ -4318,7 +4318,7 @@ declare module dragonBones {
         slotDataList: Array<SlotData>;
     }
 }
-declare module dragonBones {
+declare namespace dragonBones {
     /**
      * @class dragonBones.SlotData
      * @classdesc
@@ -4380,7 +4380,7 @@ declare module dragonBones {
         displayDataList: Array<DisplayData>;
     }
 }
-declare module dragonBones {
+declare namespace dragonBones {
     /**
      * @class dragonBones.SlotFrame
      * @extends dragonBones.Frame
@@ -4431,7 +4431,7 @@ declare module dragonBones {
         dispose(): void;
     }
 }
-declare module dragonBones {
+declare namespace dragonBones {
     /**
      * @class dragonBones.SlotTimeline
      * @extends dragonBones.Timeline
@@ -4464,7 +4464,7 @@ declare module dragonBones {
         dispose(): void;
     }
 }
-declare module dragonBones {
+declare namespace dragonBones {
     /**
      * @class dragonBones.TransformFrame
      * @extends dragonBones.Frame
@@ -4545,7 +4545,7 @@ declare module dragonBones {
         dispose(): void;
     }
 }
-declare module dragonBones {
+declare namespace dragonBones {
     /**
      * @class dragonBones.TransformTimeline
      * @extends dragonBones.Timeline
@@ -4588,7 +4588,7 @@ declare module dragonBones {
         dispose(): void;
     }
 }
-declare module dragonBones {
+declare namespace dragonBones {
     /**
      *@class dragonBones.DataParser
      * @classdesc
@@ -4617,7 +4617,7 @@ declare module dragonBones {
         private static getNumber(data, key, defaultValue);
     }
 }
-declare module dragonBones {
+declare namespace dragonBones {
     /**
      *@class dragonBones.DataParser
      * @classdesc
@@ -4698,7 +4698,7 @@ declare module dragonBones {
         private static getNumber(data, key, defaultValue);
     }
 }
-declare module dragonBones {
+declare namespace dragonBones {
     /**
      * @class dragonBones.ITextureAltas
      * @classdesc
@@ -4721,7 +4721,7 @@ declare module dragonBones {
         getRegion(name: string): Rectangle;
     }
 }
-declare module dragonBones {
+declare namespace dragonBones {
     /**
      * @class dragonBones.TextureData
      * @classdesc
@@ -4791,7 +4791,7 @@ declare module dragonBones {
         constructor(region: Rectangle, frame: Rectangle, rotated: boolean);
     }
 }
-declare module dragonBones {
+declare namespace dragonBones {
     class ColorTransformUtil {
         static originalColor: ColorTransform;
         static cloneColor(color: ColorTransform): ColorTransform;
@@ -4800,7 +4800,7 @@ declare module dragonBones {
         constructor();
     }
 }
-declare module dragonBones {
+declare namespace dragonBones {
     /**
      * @class dragonBones.ConstValues
      * @classdesc
@@ -5099,7 +5099,7 @@ declare module dragonBones {
         static A_FIXED_ROTATION: string;
     }
 }
-declare module dragonBones {
+declare namespace dragonBones {
     /**
      * @class dragonBones.DBDataUtil
      * @classdesc
@@ -5140,7 +5140,7 @@ declare module dragonBones {
         static addHideTimeline(animationData: AnimationData, armatureData: ArmatureData): void;
     }
 }
-declare module dragonBones {
+declare namespace dragonBones {
     /**
      * @class dragonBones.MathUtil
      * @classdesc
@@ -5174,7 +5174,7 @@ declare module dragonBones {
     }
 }
 declare var db_sin_map: {};
-declare module dragonBones {
+declare namespace dragonBones {
     /**
      * @class dragonBones.TransformUtils
      * @classdesc
@@ -5218,7 +5218,7 @@ declare module dragonBones {
         static normalizeRotation(rotation: number): number;
     }
 }
-declare module dragonBones {
+declare namespace dragonBones {
     /**
      * @class dragonBones.EgretFactory
      * @extends dragonBones.BaseFactory
@@ -5237,7 +5237,7 @@ declare module dragonBones {
         _generateFastSlot(): FastSlot;
     }
 }
-declare module dragonBones {
+declare namespace dragonBones {
     /**
      * @class dragonBones.EgretSlot
      * @extends dragonBones.Slot
@@ -5272,7 +5272,7 @@ declare module dragonBones {
         _updateDisplayBlendMode(value: string): void;
     }
 }
-declare module dragonBones {
+declare namespace dragonBones {
     /**
      * @class dragonBones.EgretSheetAtlas
      * @implements dragonBones.ITextureAtlas
@@ -5324,7 +5324,7 @@ declare module dragonBones {
         getRegion(subTextureName: string): Rectangle;
     }
 }
-declare module dragonBones {
+declare namespace dragonBones {
     /**
      * @class dragonBones.EgretSlot
      * @extends dragonBones.Slot
@@ -5360,7 +5360,7 @@ declare module dragonBones {
         _calculateRelativeParentTransform(): void;
     }
 }
-declare module dragonBones {
+declare namespace dragonBones {
     /**
      * @class dragonBones.EgretTextureAtlas
      * @implements dragonBones.ITextureAtlas

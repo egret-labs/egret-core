@@ -27,7 +27,7 @@
 //
 //////////////////////////////////////////////////////////////////////////////////////
 
-module egret {
+namespace egret {
 
     /**
      * @language en_US
@@ -53,7 +53,7 @@ module egret {
         if (value > 16777215)
             value = 16777215;
 
-        var color:string = value.toString(16).toUpperCase();
+        let color:string = value.toString(16).toUpperCase();
         while (color.length > 6) {
             color = color.slice(1, color.length);
         }

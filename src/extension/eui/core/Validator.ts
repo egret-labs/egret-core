@@ -28,7 +28,7 @@
 //////////////////////////////////////////////////////////////////////////////////////
 
 
-module eui.sys {
+namespace eui.sys {
 
     /**
      * @private
@@ -83,8 +83,8 @@ module eui.sys {
          * 验证失效的属性
          */
         private validateProperties():void {
-            var queue = this.invalidatePropertiesQueue;
-            var client:UIComponent = queue.shift();
+            let queue = this.invalidatePropertiesQueue;
+            let client:UIComponent = queue.shift();
             while (client) {
                 if (client.$stage) {
                     client.validateProperties();
@@ -130,8 +130,8 @@ module eui.sys {
          * 测量尺寸
          */
         private validateSize():void {
-            var queue = this.invalidateSizeQueue;
-            var client:UIComponent = queue.pop();
+            let queue = this.invalidateSizeQueue;
+            let client:UIComponent = queue.pop();
             while (client) {
                 if (client.$stage) {
                     client.validateSize();
@@ -171,8 +171,8 @@ module eui.sys {
          * 重新布局
          */
         private validateDisplayList():void {
-            var queue = this.invalidateDisplayListQueue;
-            var client:UIComponent = queue.shift();
+            let queue = this.invalidateDisplayListQueue;
+            let client:UIComponent = queue.shift();
             while (client) {
                 if (client.$stage) {
                     client.validateDisplayList();
@@ -247,16 +247,16 @@ module eui.sys {
          */
         public validateClient(target:UIComponent):void {
 
-            var obj:UIComponent;
-            var done = false;
-            var oldTargetLevel = this.targetLevel;
+            let obj:UIComponent;
+            let done = false;
+            let oldTargetLevel = this.targetLevel;
 
             if (this.targetLevel === Number.POSITIVE_INFINITY)
                 this.targetLevel = target.$nestLevel;
 
-            var propertiesQueue = this.invalidatePropertiesQueue;
-            var sizeQueue = this.invalidateSizeQueue;
-            var displayListQueue = this.invalidateDisplayListQueue;
+            let propertiesQueue = this.invalidatePropertiesQueue;
+            let sizeQueue = this.invalidateSizeQueue;
+            let displayListQueue = this.invalidateDisplayListQueue;
             while (!done) {
                 done = true;
 
@@ -360,7 +360,7 @@ module eui.sys {
          * 插入一个元素
          */
         public insert(client:UIComponent):void {
-            var depth = client.$nestLevel;
+            let depth = client.$nestLevel;
             if (this.maxDepth < this.minDepth) {
                 this.minDepth = this.maxDepth = depth;
             }
@@ -371,7 +371,7 @@ module eui.sys {
                     this.maxDepth = depth;
             }
 
-            var bin = this.depthBins[depth];
+            let bin = this.depthBins[depth];
 
             if (!bin) {
                 bin = this.depthBins[depth] = new DepthBin();
@@ -383,11 +383,11 @@ module eui.sys {
          * 从队列尾弹出深度最大的一个对象
          */
         public pop():UIComponent {
-            var client:UIComponent;
+            let client:UIComponent;
 
-            var minDepth = this.minDepth;
+            let minDepth = this.minDepth;
             if (minDepth <= this.maxDepth) {
-                var bin = this.depthBins[this.maxDepth];
+                let bin = this.depthBins[this.maxDepth];
                 while (!bin || bin.length === 0) {
                     this.maxDepth--;
                     if (this.maxDepth < minDepth)
@@ -413,11 +413,11 @@ module eui.sys {
          * 从队列首弹出深度最小的一个对象
          */
         public shift():UIComponent {
-            var client:UIComponent;
+            let client:UIComponent;
 
-            var maxDepth = this.maxDepth;
+            let maxDepth = this.maxDepth;
             if (this.minDepth <= maxDepth) {
-                var bin = this.depthBins[this.minDepth];
+                let bin = this.depthBins[this.minDepth];
                 while (!bin || bin.length === 0) {
                     this.minDepth++;
                     if (this.minDepth > maxDepth)
@@ -442,13 +442,13 @@ module eui.sys {
          * 移除大于等于指定组件层级的元素中最大的元素
          */
         public removeLargestChild(client:UIComponent):UIComponent {
-            var hashCode = client.$hashCode;
-            var nestLevel = client.$nestLevel;
-            var max = this.maxDepth;
-            var min = nestLevel;
+            let hashCode = client.$hashCode;
+            let nestLevel = client.$nestLevel;
+            let max = this.maxDepth;
+            let min = nestLevel;
 
             while (min <= max) {
-                var bin = this.depthBins[max];
+                let bin = this.depthBins[max];
                 if (bin && bin.length > 0) {
                     if (max === nestLevel) {
                         if (bin.map[hashCode]) {
@@ -458,10 +458,10 @@ module eui.sys {
                     }
                     else if(egret.is(client,"egret.DisplayObjectContainer")){
 
-                        var items = bin.items;
-                        var length = bin.length;
-                        for (var i = 0; i < length; i++) {
-                            var value = items[i];
+                        let items = bin.items;
+                        let length = bin.length;
+                        for (let i = 0; i < length; i++) {
+                            let value = items[i];
                             if ((<egret.DisplayObjectContainer><any> client).contains(value)) {
                                 bin.remove(value);
                                 return value;
@@ -490,12 +490,12 @@ module eui.sys {
          * 移除大于等于指定组件层级的元素中最小的元素
          */
         public removeSmallestChild(client:UIComponent):UIComponent {
-            var nestLevel = client.$nestLevel;
-            var min = nestLevel;
-            var max = this.maxDepth;
-            var hashCode = client.$hashCode;
+            let nestLevel = client.$nestLevel;
+            let min = nestLevel;
+            let max = this.maxDepth;
+            let hashCode = client.$hashCode;
             while (min <= max) {
-                var bin = this.depthBins[min];
+                let bin = this.depthBins[min];
                 if (bin && bin.length > 0) {
                     if (min === nestLevel) {
                         if (bin.map[hashCode]) {
@@ -504,10 +504,10 @@ module eui.sys {
                         }
                     }
                     else if(egret.is(client,"egret.DisplayObjectContainer")){
-                        var items = bin.items;
-                        var length = bin.length;
-                        for (var i = 0; i < length; i++) {
-                            var value = items[i];
+                        let items = bin.items;
+                        let length = bin.length;
+                        for (let i = 0; i < length; i++) {
+                            let value = items[i];
                             if ((<egret.DisplayObjectContainer><any> client).contains(value)) {
                                 bin.remove(value);
                                 return value;
@@ -549,7 +549,7 @@ module eui.sys {
         public length:number = 0;
 
         public insert(client:UIComponent):void {
-            var hashCode = client.$hashCode;
+            let hashCode = client.$hashCode;
             if (this.map[hashCode]) {
                 return;
             }
@@ -559,7 +559,7 @@ module eui.sys {
         }
 
         public pop():UIComponent {
-            var client = this.items.pop();//使用pop会比shift有更高的性能，避免索引整体重置。
+            let client = this.items.pop();//使用pop会比shift有更高的性能，避免索引整体重置。
             if (client) {
                 this.length--;
                 if(this.length===0){
@@ -573,7 +573,7 @@ module eui.sys {
         }
 
         public remove(client:UIComponent):void {
-            var index = this.items.indexOf(client);
+            let index = this.items.indexOf(client);
             if (index >= 0) {
                 this.items.splice(index, 1);
                 this.length--;

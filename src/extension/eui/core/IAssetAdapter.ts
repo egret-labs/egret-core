@@ -27,14 +27,14 @@
 //
 //////////////////////////////////////////////////////////////////////////////////////
 
-module eui {
+namespace eui {
     /**
      * @language en_US
      * Interface of asset adapter.
      * If your project need to custom the resource parsing rule, you need to implement the <code>IAssetAdapter</code>.
      * And use the following code to inject it to the system:
      * <pre>
-     *      var assetAdapter = new YourAssetAdapter();
+     *      let assetAdapter = new YourAssetAdapter();
      *      egret.registerImplementation("eui.IAssetAdapter",assetAdapter)
      * </pre>
      *
@@ -48,7 +48,7 @@ module eui {
      * 若项目需要自定义 Image.source的解析规则，需要实现这个接口，
      * 然后调用如下代码注入自定义实现到框架即可：
      * <pre>
-     *      var assetAdapter = new YourAssetAdapter();
+     *      let assetAdapter = new YourAssetAdapter();
      *      egret.registerImplementation("eui.IAssetAdapter",assetAdapter)
      * </pre>
      * @version Egret 2.4

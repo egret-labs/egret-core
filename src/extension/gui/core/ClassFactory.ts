@@ -28,7 +28,7 @@
 //////////////////////////////////////////////////////////////////////////////////////
 
 
-module egret.gui {
+namespace egret.gui {
 	/**
 	 * @class egret.gui.ClassFactory
 	 * @classdesc ClassFactory 实例是一个“工厂对象”，Egret 可用其生成其他类的实例，每个实例拥有相同的属性。
@@ -55,7 +55,7 @@ module egret.gui {
 		 * @returns {any}
          */
         public newInstance():any{
-            var instance:Object = new this.generator();
+            let instance:Object = new this.generator();
             return instance;
         }
     }

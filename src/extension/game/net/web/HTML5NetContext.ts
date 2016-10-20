@@ -28,7 +28,7 @@
 //////////////////////////////////////////////////////////////////////////////////////
 
 
-module egret.web {
+namespace egret.web {
     /**
      * @class egret.HTML5NetContext
      * @classdesc
@@ -50,7 +50,7 @@ module egret.web {
          * @param loader
          */
         public proceed(loader:URLLoader):void {
-            var self = this;
+            let self = this;
             if (loader.dataFormat == URLLoaderDataFormat.TEXTURE) {
                 this.loadTexture(loader);
                 return;
@@ -61,10 +61,10 @@ module egret.web {
             }
 
 
-            var request:URLRequest = loader._request;
-            var virtualUrl:string = self.getVirtualUrl(egret.$getUrl(request));
+            let request:URLRequest = loader._request;
+            let virtualUrl:string = self.getVirtualUrl(egret.$getUrl(request));
 
-            var httpLoader:egret.HttpRequest = new egret.HttpRequest();
+            let httpLoader:egret.HttpRequest = new egret.HttpRequest();
             httpLoader.addEventListener(egret.Event.COMPLETE, onLoadComplete, this);
             httpLoader.addEventListener(egret.IOErrorEvent.IO_ERROR, onError, this);
             httpLoader.addEventListener(egret.ProgressEvent.PROGRESS, onPostProgress, this);
@@ -77,7 +77,7 @@ module egret.web {
             }
             else if (request.data instanceof URLVariables) {
                 httpLoader.setRequestHeader("Content-Type", "application/x-www-form-urlencoded");
-                var urlVars:URLVariables = <URLVariables> request.data;
+                let urlVars:URLVariables = <URLVariables> request.data;
                 httpLoader.send(urlVars.toString());
             }
             else {
@@ -164,10 +164,10 @@ module egret.web {
          * @param loader
          */
         private loadSound(loader:URLLoader):void {
-            var self = this;
-            var virtualUrl:string = this.getVirtualUrl(loader._request.url);
+            let self = this;
+            let virtualUrl:string = this.getVirtualUrl(loader._request.url);
 
-            var sound:egret.Sound = new egret.Sound();
+            let sound:egret.Sound = new egret.Sound();
             sound.addEventListener(egret.Event.COMPLETE, onLoadComplete, self);
             sound.addEventListener(egret.IOErrorEvent.IO_ERROR, onError, self);
             sound.addEventListener(egret.ProgressEvent.PROGRESS, onPostProgress, self);
@@ -205,10 +205,10 @@ module egret.web {
          * @param loader
          */
         private loadTexture(loader:URLLoader):void {
-            var self = this;
+            let self = this;
 
-            var virtualUrl:string = this.getVirtualUrl(loader._request.url);
-            var imageLoader:ImageLoader = new ImageLoader();
+            let virtualUrl:string = this.getVirtualUrl(loader._request.url);
+            let imageLoader:ImageLoader = new ImageLoader();
             imageLoader.addEventListener(egret.Event.COMPLETE, onLoadComplete, self);
             imageLoader.addEventListener(egret.IOErrorEvent.IO_ERROR, onError, self);
             imageLoader.addEventListener(egret.ProgressEvent.PROGRESS, onPostProgress, self);
@@ -226,10 +226,10 @@ module egret.web {
             function onLoadComplete(e) {
                 removeListeners();
 
-                var bitmapData = imageLoader.data;
+                let bitmapData = imageLoader.data;
                 bitmapData.source.setAttribute("bitmapSrc", virtualUrl);
 
-                var texture:Texture = new Texture();
+                let texture:Texture = new Texture();
                 texture._setBitmapData(bitmapData);
 
                 loader.data = texture;
@@ -251,7 +251,7 @@ module egret.web {
          *
          * @returns
          */
-        public getChangeList():Array<any> {
+        public getChangeList():any[] {
             return [];
         }
 

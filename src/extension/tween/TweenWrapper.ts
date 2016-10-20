@@ -28,7 +28,7 @@
 //////////////////////////////////////////////////////////////////////////////////////
 
 
-module egret.tween {
+namespace egret.tween {
 
     export type EaseType =
         'quadIn' | 'quadOut' | 'quadOut' | 'quadInOut' |
@@ -227,7 +227,7 @@ module egret.tween {
         if (typeof ease === 'function') {
             return ease;
         } else {
-            var func: Function = Ease[ease];
+            let func: Function = Ease[ease];
             if (typeof func === 'function') {
                 return func;
             }
@@ -410,8 +410,8 @@ module egret.tween {
         }
 
         private applyPaths(): void {
-            for (var i = 0; i < this._paths.length; i++) {
-                var path = this._paths[i];
+            for (let i = 0; i < this._paths.length; i++) {
+                let path = this._paths[i];
                 this.applyPath(path);
             }
         }
@@ -434,7 +434,7 @@ module egret.tween {
             path.dispatchEventWith('complete');
             this.dispatchEventWith('pathComplete', false, path);
 
-            var index = this._paths.indexOf(path);
+            let index = this._paths.indexOf(path);
             if (index >= 0 && index === this._paths.length - 1) {
                 this.dispatchEventWith('complete');
             }
@@ -520,8 +520,8 @@ module egret.tween {
          */
         public play(): void {
             if (this._items) {
-                for (var i = 0; i < this._items.length; i++) {
-                    var item = this._items[i];
+                for (let i = 0; i < this._items.length; i++) {
+                    let item = this._items[i];
                     item.play();
                 }
             }
@@ -541,15 +541,15 @@ module egret.tween {
          */
         public pause(): void {
             if (this._items) {
-                for (var i = 0; i < this._items.length; i++) {
-                    var item = this._items[i];
+                for (let i = 0; i < this._items.length; i++) {
+                    let item = this._items[i];
                     item.pause();
                 }
             }
         }
 
         private itemComplete(e: Event): void {
-            var item = e.currentTarget as TweenItem;
+            let item = e.currentTarget as TweenItem;
             this.completeCount++;
             this.dispatchEventWith('itemComplete', false, item);
             if (this.completeCount === this.items.length) {
@@ -562,7 +562,7 @@ module egret.tween {
     registerProperty(TweenGroup, 'items', 'Array', true);
 
     function registerProperty(classDefinition: any, property: string, type: string, asDefault?: boolean): void {
-        var prototype: any = classDefinition.prototype;
+        let prototype: any = classDefinition.prototype;
         prototype.__meta__ = prototype.__meta__ || {};
         prototype.__meta__[property] = type;
         if (asDefault) {

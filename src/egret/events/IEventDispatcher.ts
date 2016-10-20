@@ -28,7 +28,7 @@
 //////////////////////////////////////////////////////////////////////////////////////
 
 
-module egret {
+namespace egret {
     /**
      * @language en_US
      * The IEventDispatcher interface defines methods for adding or removing event listeners, checks whether specific types

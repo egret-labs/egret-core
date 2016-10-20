@@ -26,7 +26,7 @@
 //  EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 //
 //////////////////////////////////////////////////////////////////////////////////////
-module egret {
+namespace egret {
     /**
      * @language en_US
      * When a load operation has begun or a socket has received data, ProgressEvent object is dispatched.
@@ -149,10 +149,10 @@ module egret {
          * @platform Web,Native
          */
         public static dispatchProgressEvent(target:IEventDispatcher, type:string, bytesLoaded:number = 0, bytesTotal:number = 0):boolean {
-            var event:ProgressEvent = Event.create(ProgressEvent, type);
+            let event:ProgressEvent = Event.create(ProgressEvent, type);
             event.bytesLoaded = bytesLoaded;
             event.bytesTotal = bytesTotal;
-            var result = target.dispatchEvent(event);
+            let result = target.dispatchEvent(event);
             Event.release(event);
             return result;
         }

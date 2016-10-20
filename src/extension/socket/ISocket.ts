@@ -26,7 +26,7 @@
 //  EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 //
 //////////////////////////////////////////////////////////////////////////////////////
-module egret {
+namespace egret {
     /**
      * @language en_US
      * @private
@@ -127,6 +127,6 @@ module egret {
      * @version Egret 2.4
      * @platform Web,Native
      */
-    export var ISocket:{new():ISocket};
+    export let ISocket:{new():ISocket};
 
 }

@@ -29,16 +29,16 @@
 
 
 
-module egret.gui {
+namespace egret.gui {
 
     /**
      * 设置键值对的简便方法。此方法仅供exmlc编译器内部使用。
      */
-    export function setProperties(target:any,keys:Array<string>,values:Array<string>):any{
+    export function setProperties(target:any,keys:string[],values:string[]):any{
 
-        var length:number = keys.length;
-        for(var i:number=0;i<length;i++){
-            var key:string = keys[i];
+        let length:number = keys.length;
+        for(let i:number=0;i<length;i++){
+            let key:string = keys[i];
             target[key] = values[i];
         }
         return target;

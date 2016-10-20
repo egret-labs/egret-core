@@ -1,6 +1,6 @@
 
 
-module egret {
+namespace egret {
 
     /**
      * @language en_US
@@ -53,6 +53,6 @@ module egret {
     /**
      * @copy egret.Orientation
      */
-    export var DeviceOrientation: { new (): DeviceOrientation } = null;
+    export let DeviceOrientation: { new (): DeviceOrientation } = null;
 
 }

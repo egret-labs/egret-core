@@ -27,7 +27,7 @@
 //
 //////////////////////////////////////////////////////////////////////////////////////
 
-module egret {
+namespace egret {
     /**
      * @language en_US
      * h5 and native interaction.
@@ -48,7 +48,7 @@ module egret {
 
     }
 
-    export var ExternalInterface: {
+    export let ExternalInterface: {
         /**
          * @language en_US
          * Call functionName, and the value passed to the native.

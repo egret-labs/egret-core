@@ -1,4 +1,4 @@
-declare module egret {
+declare namespace egret {
     /**
      * @language en_US
      * Easing function set. Different easing functions are used to make an animation proceed according to the corresponding equation
@@ -502,7 +502,7 @@ declare module egret {
         static elasticInOut: Function;
     }
 }
-declare module egret {
+declare namespace egret {
     /**
      * @language en_US
      * Tween is the animation easing class of Egret
@@ -849,7 +849,7 @@ declare module egret {
          * Execute callback function
          * @param callback {Function} Callback method
          * @param thisObj {any} this action scope of the callback method
-         * @param params {Array<any>} Parameter of the callback method
+         * @param params {any[]} Parameter of the callback method
          * @returns {egret.Tween} Tween object itself
          * @version Egret 2.4
          * @platform Web,Native
@@ -866,7 +866,7 @@ declare module egret {
          * 执行回调函数
          * @param callback {Function} 回调方法
          * @param thisObj {any} 回调方法this作用域
-         * @param params {Array<any>} 回调方法参数
+         * @param params {any[]} 回调方法参数
          * @returns {egret.Tween} Tween对象本身
          * @version Egret 2.4
          * @platform Web,Native
@@ -878,7 +878,7 @@ declare module egret {
          *  }, this, [233, "hello"]);
          * </pre>
          */
-        call(callback: Function, thisObj?: any, params?: Array<any>): Tween;
+        call(callback: Function, thisObj?: any, params?: any[]): Tween;
         /**
          * Now modify the properties of the specified object to the specified value
          * @param props {Object} Property set of an object
@@ -940,7 +940,7 @@ declare module egret {
         tick(delta: number): void;
     }
 }
-declare module egret.tween {
+declare namespace egret.tween {
     type EaseType = 'quadIn' | 'quadOut' | 'quadOut' | 'quadInOut' | 'cubicIn' | 'cubicOut' | 'cubicInOut' | 'quartIn' | 'quartOut' | 'quartInOut' | 'quintIn' | 'quintOut' | 'quintInOut' | 'sineIn' | 'sineOut' | 'sineInOut' | 'backIn' | 'backOut' | 'backInOut' | 'circIn' | 'circOut' | 'circInOut' | 'bounceIn' | 'bounceOut' | 'bounceInOut' | 'elasticIn' | 'elasticOut' | 'elasticInOut';
     /**
      * @language en_US

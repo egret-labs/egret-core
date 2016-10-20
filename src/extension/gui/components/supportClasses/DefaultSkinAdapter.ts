@@ -28,7 +28,7 @@
 //////////////////////////////////////////////////////////////////////////////////////
 
 
-module egret.gui {
+namespace egret.gui {
 
 	/**
 	 * @class egret.gui.DefaultSkinAdapter
@@ -57,7 +57,7 @@ module egret.gui {
                 return new skinName();
             }
             else if(typeof(skinName)=="string"){
-                var clazz:any = getDefinitionByName(<string><any> skinName);
+                let clazz:any = getDefinitionByName(<string><any> skinName);
                 if(clazz){
                     return new clazz();
                 }

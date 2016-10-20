@@ -27,7 +27,7 @@
 //
 //////////////////////////////////////////////////////////////////////////////////////
 
-module eui.sys {
+namespace eui.sys {
 
     /**
      * @private
@@ -56,7 +56,7 @@ module eui.sys {
     }
 }
 
-module eui {
+namespace eui {
 
     /**
      * @language en_US
@@ -166,10 +166,10 @@ module eui {
          * @platform Web,Native
          */
         public apply(host:any, parent:egret.DisplayObjectContainer):void {
-            var index:number;
-            var relative:egret.DisplayObject = host[this.relativeTo];
-            var target:egret.DisplayObject = host[this.target];
-            var container:egret.DisplayObjectContainer = this.propertyName ? host[this.propertyName] : parent;
+            let index:number;
+            let relative:egret.DisplayObject = host[this.relativeTo];
+            let target:egret.DisplayObject = host[this.target];
+            let container:egret.DisplayObjectContainer = this.propertyName ? host[this.propertyName] : parent;
             if (!target || !container)
                 return;
             switch (this.position) {
@@ -203,16 +203,16 @@ module eui {
          * @platform Web,Native
          */
         public remove(host:any,parent:egret.DisplayObjectContainer):void {
-            var container:egret.DisplayObjectContainer = this.propertyName ? host[this.propertyName] : parent;
-            var target:egret.DisplayObject = host[this.target];
+            let container:egret.DisplayObjectContainer = this.propertyName ? host[this.propertyName] : parent;
+            let target:egret.DisplayObject = host[this.target];
             if (!target || !container)
                 return;
             if (target.$parent === container) {
                 container.removeChild(target);
             }
             if (egret.is(container, "eui.Component")) {
-                var arr = (<Skin>(<Component>container).$Component[sys.ComponentKeys.skin]).$elementsContent;
-                var idx = arr.indexOf(target);
+                let arr = (<Skin>(<Component>container).$Component[sys.ComponentKeys.skin]).$elementsContent;
+                let idx = arr.indexOf(target);
                 if (idx > -1) {
                     arr.splice(idx, 1);
                 }

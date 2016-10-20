@@ -28,7 +28,7 @@
 //////////////////////////////////////////////////////////////////////////////////////
 
 
-module egret {
+namespace egret {
 
 	/**
      * @language en_US
@@ -99,8 +99,8 @@ module egret {
          * @platform Web,Native
          */
         public static dispatchStageOrientationEvent(target:IEventDispatcher, type:string):boolean {
-            var event:IOErrorEvent = Event.create(StageOrientationEvent, type);
-            var result = target.dispatchEvent(event);
+            let event:IOErrorEvent = Event.create(StageOrientationEvent, type);
+            let result = target.dispatchEvent(event);
             Event.release(event);
             return result;
         }

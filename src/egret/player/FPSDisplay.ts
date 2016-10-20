@@ -27,7 +27,7 @@
 //
 //////////////////////////////////////////////////////////////////////////////////////
 
-module egret {
+namespace egret {
     /**
      * @private
      */
@@ -45,7 +45,7 @@ module egret {
     /**
      * @private
      */
-    export var FPSDisplay:{
+    export let FPSDisplay:{
         new (stage:Stage, showFPS:boolean, showLog:boolean, logFilter:string,styles:Object): FPSDisplay
     };
 }

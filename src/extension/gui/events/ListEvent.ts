@@ -28,7 +28,7 @@
 //////////////////////////////////////////////////////////////////////////////////////
 
 
-module egret.gui {
+namespace egret.gui {
 
 	/**
 	 * @class egret.gui.ListEvent
@@ -102,7 +102,7 @@ module egret.gui {
          */
         public static dispatchListEvent(target:IEventDispatcher,type:string,touchEvent:TouchEvent=null,
                                         itemIndex:number = -1,item:any = null,itemRenderer:IItemRenderer = null):boolean{
-            var event:ListEvent = Event.create(ListEvent, type);
+            let event:ListEvent = Event.create(ListEvent, type);
             event.touchPointID = touchEvent.touchPointID;
             event.$stageX = touchEvent.stageX;
             event.$stageY = touchEvent.stageY;
@@ -113,7 +113,7 @@ module egret.gui {
             event.itemIndex = itemIndex;
             event.item = item;
             event.itemRenderer = itemRenderer;
-            var result = target.dispatchEvent(event);
+            let result = target.dispatchEvent(event);
             Event.release(event);
             return result;
         }

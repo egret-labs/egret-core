@@ -48,12 +48,12 @@ class Main extends egret.DisplayObject{
         this._egret3DCanvas.addView3D(this._view3D);
 
         //创建平行光
-        var dirLight: egret3d.DirectLight = new egret3d.DirectLight(new egret3d.Vector3D(0.3,-0.3,0.1));
+        let dirLight: egret3d.DirectLight = new egret3d.DirectLight(new egret3d.Vector3D(0.3,-0.3,0.1));
         dirLight.diffuse = 0xffffff;
         this.lights.addLight(dirLight);
 
         ///创建加载类
-        var load: egret3d.URLLoader = new egret3d.URLLoader();
+        let load: egret3d.URLLoader = new egret3d.URLLoader();
         //设置加载完成回调
         load.addEventListener(egret3d.LoaderEvent3D.LOADER_COMPLETE,this.onLoad,this);
         //开始加载
@@ -106,9 +106,9 @@ class Main extends egret.DisplayObject{
         this.loadingUI.OnLoadFinished();
 
         //创建纹理材质
-        var mat = new egret3d.TextureMaterial();
+        let mat = new egret3d.TextureMaterial();
         //创建模型基类
-        var ge: egret3d.Geometry = e.loader.data;
+        let ge: egret3d.Geometry = e.loader.data;
         //生成mesh
         this.model = new egret3d.Mesh(ge,mat);
 
@@ -118,14 +118,14 @@ class Main extends egret.DisplayObject{
         //插入model
         this._view3D.addChild3D(this.model);
 
-        var loadtex: egret3d.URLLoader = new egret3d.URLLoader();
+        let loadtex: egret3d.URLLoader = new egret3d.URLLoader();
         //注册贴图读取完成回调
         loadtex.addEventListener(egret3d.LoaderEvent3D.LOADER_COMPLETE,this.onLoadTexture,this);
         //开始读取贴图 
         loadtex.load("resource/LingTong/hero_12.png");
         loadtex["mat"] = mat;
 
-        var loadAniIdle: egret3d.URLLoader = new egret3d.URLLoader();
+        let loadAniIdle: egret3d.URLLoader = new egret3d.URLLoader();
         //注册动画读取完成回调
         loadAniIdle.addEventListener(egret3d.LoaderEvent3D.LOADER_COMPLETE,this.onAnimationIdle,this);
         //开始读取动画

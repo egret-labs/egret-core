@@ -1,8 +1,8 @@
-module egret {
+namespace egret {
 
     $locale_strings = $locale_strings || {};
     $locale_strings["zh_CN"] = $locale_strings["zh_CN"] || {};
-    var locale_strings = $locale_strings["zh_CN"];
+    let locale_strings = $locale_strings["zh_CN"];
 
     //RES 3200-3299
     locale_strings[3200] = "RES.createGroup()传入了配置中不存在的键值: {0}";

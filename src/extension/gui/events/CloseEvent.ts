@@ -28,7 +28,7 @@
 //////////////////////////////////////////////////////////////////////////////////////
 
 
-module egret.gui {
+namespace egret.gui {
 
 	/**
 	 * @class egret.gui.CloseEvent
@@ -66,9 +66,9 @@ module egret.gui {
          * @method egret.gui.CloseEvent.dispatchCloseEvent
          */
         public static dispatchCloseEvent(target:IEventDispatcher,type:string,detail:any = -1):boolean{
-			var event:CloseEvent = Event.create(CloseEvent, type);
+			let event:CloseEvent = Event.create(CloseEvent, type);
 			event.detail = detail;
-			var result = target.dispatchEvent(event);
+			let result = target.dispatchEvent(event);
 			Event.release(event);
 			return result;
         }

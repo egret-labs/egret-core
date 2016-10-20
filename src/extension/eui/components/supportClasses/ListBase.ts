@@ -27,7 +27,7 @@
 //
 //////////////////////////////////////////////////////////////////////////////////////
 
-module eui.sys {
+namespace eui.sys {
 
     /**
      * @private
@@ -72,7 +72,7 @@ module eui.sys {
     }
 }
 
-module eui {
+namespace eui {
 
     /**
      * @language en_US
@@ -196,7 +196,7 @@ module eui {
 
         public set requireSelection(value:boolean) {
             value = !!value;
-            var values = this.$ListBase;
+            let values = this.$ListBase;
             if (value === values[sys.ListBaseKeys.requireSelection]) {
                 return;
             }
@@ -267,7 +267,7 @@ module eui {
          * @returns
          */
         $getSelectedIndex():number {
-            var values = this.$ListBase;
+            let values = this.$ListBase;
             if (values[sys.ListBaseKeys.proposedSelectedIndex] != ListBase.NO_PROPOSED_SELECTION)
                 return values[sys.ListBaseKeys.proposedSelectedIndex];
             return values[sys.ListBaseKeys.selectedIndex];
@@ -302,7 +302,7 @@ module eui {
             if (value == this.selectedIndex) {
                 return;
             }
-            var values = this.$ListBase;
+            let values = this.$ListBase;
             if (dispatchChangeEvent)
                 values[sys.ListBaseKeys.dispatchChangeAfterSelection] =
                     (values[sys.ListBaseKeys.dispatchChangeAfterSelection] || dispatchChangeEvent);
@@ -363,11 +363,11 @@ module eui {
          * @platform Web,Native
          */
         public get selectedItem():any {
-            var values = this.$ListBase;
+            let values = this.$ListBase;
             if (values[sys.ListBaseKeys.pendingSelectedItem] !== undefined)
                 return values[sys.ListBaseKeys.pendingSelectedItem];
 
-            var selectedIndex = this.$getSelectedIndex();
+            let selectedIndex = this.$getSelectedIndex();
             if (selectedIndex == ListBase.NO_SELECTION || this.$dataProvider == null)
                 return undefined;
 
@@ -401,7 +401,7 @@ module eui {
             if (this.selectedItem === value)
                 return;
 
-            var values = this.$ListBase;
+            let values = this.$ListBase;
             if (dispatchChangeEvent)
                 values[sys.ListBaseKeys.dispatchChangeAfterSelection] =
                     (values[sys.ListBaseKeys.dispatchChangeAfterSelection] || dispatchChangeEvent);
@@ -425,12 +425,12 @@ module eui {
          * @platform Web,Native
          */
         protected commitProperties():void {
-            var dataProviderChanged = this.$dataProviderChanged;
+            let dataProviderChanged = this.$dataProviderChanged;
             super.commitProperties();
 
-            var values = this.$ListBase;
-            var selectedIndex = this.$getSelectedIndex();
-            var dataProvider = this.$dataProvider;
+            let values = this.$ListBase;
+            let selectedIndex = this.$getSelectedIndex();
+            let dataProvider = this.$dataProvider;
             if (dataProviderChanged) {
                 if (selectedIndex >= 0 && dataProvider && selectedIndex < dataProvider.length)
                     this.itemSelected(selectedIndex, true);
@@ -461,7 +461,7 @@ module eui {
                 values[sys.ListBaseKeys.pendingSelectedItem] = undefined;
             }
 
-            var changedSelection = false;
+            let changedSelection = false;
             if (values[sys.ListBaseKeys.proposedSelectedIndex] != ListBase.NO_PROPOSED_SELECTION)
                 changedSelection = this.commitSelection();
 
@@ -513,7 +513,7 @@ module eui {
          * @platform Web,Native
          */
         protected itemSelected(index:number, selected:boolean):void {
-            var renderer = this.$indexToRenderer[index];
+            let renderer = this.$indexToRenderer[index];
             if (renderer) {
                 renderer.selected = selected;
             }
@@ -552,11 +552,11 @@ module eui {
          * @platform Web,Native
          */
         protected commitSelection(dispatchChangedEvents:boolean = true):boolean {
-            var dataProvider = this.$dataProvider;
-            var values = this.$ListBase;
-            var maxIndex = dataProvider ? dataProvider.length - 1 : -1;
-            var oldSelectedIndex = values[sys.ListBaseKeys.selectedIndex];
-            var tmpProposedIndex = values[sys.ListBaseKeys.proposedSelectedIndex];
+            let dataProvider = this.$dataProvider;
+            let values = this.$ListBase;
+            let maxIndex = dataProvider ? dataProvider.length - 1 : -1;
+            let oldSelectedIndex = values[sys.ListBaseKeys.selectedIndex];
+            let tmpProposedIndex = values[sys.ListBaseKeys.proposedSelectedIndex];
             if (tmpProposedIndex < ListBase.NO_SELECTION)
                 tmpProposedIndex = ListBase.NO_SELECTION;
             if (tmpProposedIndex > maxIndex)
@@ -570,7 +570,7 @@ module eui {
 
 
             if (values[sys.ListBaseKeys.dispatchChangeAfterSelection]) {
-                var result = this.dispatchEventWith(egret.Event.CHANGING, false, true, true);
+                let result = this.dispatchEventWith(egret.Event.CHANGING, false, true, true);
                 if (!result) {
                     this.itemSelected(values[sys.ListBaseKeys.proposedSelectedIndex], false);
                     values[sys.ListBaseKeys.proposedSelectedIndex] = ListBase.NO_PROPOSED_SELECTION;
@@ -628,7 +628,7 @@ module eui {
          * @platform Web,Native
          */
         protected adjustSelection(newIndex:number, add:boolean = false):void {
-            var values = this.$ListBase;
+            let values = this.$ListBase;
             if (values[sys.ListBaseKeys.proposedSelectedIndex] != ListBase.NO_PROPOSED_SELECTION)
                 values[sys.ListBaseKeys.proposedSelectedIndex] = newIndex;
             else
@@ -658,7 +658,7 @@ module eui {
          */
         protected itemAdded(item:any, index:number):void {
             super.itemAdded(item, index);
-            var selectedIndex = this.$getSelectedIndex();
+            let selectedIndex = this.$getSelectedIndex();
             if (selectedIndex == ListBase.NO_SELECTION) {
                 if (this.$ListBase[sys.ListBaseKeys.requireSelection])
                     this.adjustSelection(index, true);
@@ -693,7 +693,7 @@ module eui {
             if (this.selectedIndex == ListBase.NO_SELECTION)
                 return;
 
-            var selectedIndex = this.$getSelectedIndex();
+            let selectedIndex = this.$getSelectedIndex();
             if (index == selectedIndex) {
                 if (this.requireSelection && this.$dataProvider && this.$dataProvider.length > 0) {
                     if (index == 0) {
@@ -829,7 +829,7 @@ module eui {
          * @platform Web,Native
          */
         protected onRendererTouchBegin(event:egret.TouchEvent):void {
-            var values = this.$ListBase;
+            let values = this.$ListBase;
             if (event.$isDefaultPrevented)
                 return;
             values[sys.ListBaseKeys.touchCancle] = false;
@@ -855,7 +855,7 @@ module eui {
          * @platform Web,Native
          */
         protected onRendererTouchCancle(event:egret.TouchEvent):void {
-            var values = this.$ListBase;
+            let values = this.$ListBase;
             values[sys.ListBaseKeys.touchDownItemRenderer] = null;
             values[sys.ListBaseKeys.touchCancle] = true;
             if(this.$stage){
@@ -879,9 +879,9 @@ module eui {
          * @platform Web,Native
          */
         protected onRendererTouchEnd(event:egret.TouchEvent):void {
-            var values = this.$ListBase;
-            var itemRenderer = <IItemRenderer> (event.$currentTarget);
-            var touchDownItemRenderer = values[sys.ListBaseKeys.touchDownItemRenderer];
+            let values = this.$ListBase;
+            let itemRenderer = <IItemRenderer> (event.$currentTarget);
+            let touchDownItemRenderer = values[sys.ListBaseKeys.touchDownItemRenderer];
             if (itemRenderer != touchDownItemRenderer)
                 return;
             if(!values[sys.ListBaseKeys.touchCancle]){
@@ -896,7 +896,7 @@ module eui {
          * 触摸在舞台上结束
          */
         private stage_touchEndHandler(event:egret.Event):void {
-            var stage = <egret.Stage>event.$currentTarget;
+            let stage = <egret.Stage>event.$currentTarget;
             stage.removeEventListener(egret.TouchEvent.TOUCH_END, this.stage_touchEndHandler, this);
             this.$ListBase[sys.ListBaseKeys.touchDownItemRenderer] = null;
         }

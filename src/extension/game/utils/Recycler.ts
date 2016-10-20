@@ -28,7 +28,7 @@
 //////////////////////////////////////////////////////////////////////////////////////
 
 
-module egret {
+namespace egret {
     /**
      * @language en_US
      * Tool class for object cache repeat use, which can be used to construct an object pool. Objects are automatically recycled after a certain duration.
@@ -72,15 +72,15 @@ module egret {
         /**
          * @private
          */
-        public static _callBackList:Array<any> = [];
+        public static _callBackList:any[] = [];
 
         public static $init():void {
             sys.$ticker.$startTick(Recycler.onUpdate, Recycler);
         }
 
         public static onUpdate(timeStamp:number):boolean {
-            var list = Recycler._callBackList;
-            for (var i = list.length - 1; i >= 0; i--) {
+            let list = Recycler._callBackList;
+            for (let i = list.length - 1; i >= 0; i--) {
                 list[i].$checkFrame();
             }
             return false;
@@ -111,7 +111,7 @@ module egret {
         /**
          * @private
          */
-        private objectPool:Array<any> = [];
+        private objectPool:any[] = [];
 
         /**
          * @private
@@ -147,7 +147,7 @@ module egret {
          * @platform Web,Native
          */
         public push(object:any):void{
-            var pool:Array<any> = this.objectPool;
+            let pool:any[] = this.objectPool;
             if(pool.indexOf(object)==-1){
                 pool.push(object);
                 if (object.__recycle) {
@@ -199,8 +199,8 @@ module egret {
                 this._length = 0;
             }
             this.frameCount = 0;
-            var list:Array<any> = Recycler._callBackList;
-            var index:number = list.indexOf(this);
+            let list:any[] = Recycler._callBackList;
+            let index:number = list.indexOf(this);
             if(index!=-1){
                 list.splice(index,1);
             }

@@ -27,11 +27,11 @@
 //
 //////////////////////////////////////////////////////////////////////////////////////
 
-module egret.sys {
+namespace egret.sys {
 
-    var displayListPool: DisplayList[] = [];
-    var blendModes = ["source-over", "lighter", "destination-out"];
-    var defaultCompositeOp = "source-over";
+    let displayListPool: DisplayList[] = [];
+    let blendModes = ["source-over", "lighter", "destination-out"];
+    let defaultCompositeOp = "source-over";
 
     /**
      * @private
@@ -44,14 +44,14 @@ module egret.sys {
          * 创建一个DisplayList对象，若内存不足或无法创建RenderBuffer，将会返回null。
          */
         public static create(target: DisplayObject): DisplayList {
-            var displayList = new egret.sys.DisplayList(target);
+            let displayList = new egret.sys.DisplayList(target);
             try {
-                var buffer = new RenderBuffer();
+                let buffer = new RenderBuffer();
+                displayList.renderBuffer = buffer;
             }
             catch (e) {
                 return null;
             }
-            displayList.renderBuffer = buffer;
             displayList.root = target;
             return displayList;
         }
@@ -88,36 +88,36 @@ module egret.sys {
          * 更新对象在舞台上的显示区域和透明度,返回显示区域是否发生改变。
          */
         $update(dirtyRegionPolicy: string): boolean {
-            var target = this.root;
+            let target = this.root;
             //当cache对象的显示列表已经加入dirtyList，对象又取消cache的时候，root为空
             if (target == null) {
                 return false;
             }
             target.$removeFlagsUp(DisplayObjectFlags.Dirty);
-            var node = this.$renderNode;
+            let node = this.$renderNode;
             //这里不需要更新node.renderAlpha。因为alpha已经写入到缓存的内部
 
             //必须在访问moved属性前调用以下两个方法，因为moved属性在以下两个方法内重置。
-            var concatenatedMatrix = target.$getConcatenatedMatrix();
+            let concatenatedMatrix = target.$getConcatenatedMatrix();
             if (dirtyRegionPolicy == DirtyRegionPolicy.OFF) {
-                var displayList = target.$parentDisplayList;
+                let displayList = target.$parentDisplayList;
                 if (this.needUpdateRegions) {
                     this.updateDirtyRegions();
                 }
                 if (!displayList) {
                     return false;
                 }
-                var matrix = node.renderMatrix;
+                let matrix = node.renderMatrix;
                 matrix.copyFrom(concatenatedMatrix);
-                var root = displayList.root;
+                let root = displayList.root;
                 if (root !== target.$stage) {
                     target.$getConcatenatedMatrixAt(root, matrix);
                 }
             }
             else {
-                var bounds = target.$getOriginalBounds();
-                var displayList = target.$parentDisplayList;
-                var region = node.renderRegion;
+                let bounds = target.$getOriginalBounds();
+                let displayList = target.$parentDisplayList;
+                let region = node.renderRegion;
                 if (this.needUpdateRegions) {
                     this.updateDirtyRegions();
                 }
@@ -131,9 +131,9 @@ module egret.sys {
                     return false;
                 }
                 node.moved = false;
-                var matrix = node.renderMatrix;
+                let matrix = node.renderMatrix;
                 matrix.copyFrom(concatenatedMatrix);
-                var root = displayList.root;
+                let root = displayList.root;
                 if (root !== target.$stage) {
                     target.$getConcatenatedMatrixAt(root, matrix);
                 }
@@ -196,7 +196,7 @@ module egret.sys {
          * 标记一个节点需要重新渲染
          */
         public markDirty(node: Renderable): void {
-            var key = node.$hashCode;
+            let key = node.$hashCode;
             if (this.dirtyNodes[key]) {
                 return;
             }
@@ -205,7 +205,7 @@ module egret.sys {
             if (!this.needUpdateRegions) {
                 this.needUpdateRegions = true;
                 this.isDirty = true;
-                var parentCache = this.root.$parentDisplayList;
+                let parentCache = this.root.$parentDisplayList;
                 if (parentCache) {
                     parentCache.markDirty(this);
                 }
@@ -227,15 +227,15 @@ module egret.sys {
          * 更新节点属性并返回脏矩形列表。
          */
         public updateDirtyRegions(): Region[] {
-            var dirtyNodeList = this.dirtyNodeList;
+            let dirtyNodeList = this.dirtyNodeList;
             this.dirtyNodeList = [];
             this.dirtyNodes = egret.createMap<boolean>();
             this.needUpdateRegions = false;
-            var dirtyRegion = this.dirtyRegion;
-            var length = dirtyNodeList.length;
-            for (var i = 0; i < length; i++) {
-                var display = dirtyNodeList[i];
-                var node = display.$getRenderNode();
+            let dirtyRegion = this.dirtyRegion;
+            let length = dirtyNodeList.length;
+            for (let i = 0; i < length; i++) {
+                let display = dirtyNodeList[i];
+                let node = display.$getRenderNode();
                 //有可能 markDirty 之后，显示对象自身改变，变的没有renderNode
                 if(node) {
                     node.needRedraw = false;//先清空上次缓存的标记,防止上次没遍历到的节点 needRedraw 始终为 true.
@@ -245,7 +245,7 @@ module egret.sys {
                                 node.needRedraw = true;
                             }
                         }
-                        var moved = display.$update(this.$dirtyRegionPolicy);
+                        let moved = display.$update(this.$dirtyRegionPolicy);
                         if (node.renderAlpha > 0 && node.renderVisible && (moved || !node.needRedraw)) {//若不判断needRedraw,从0设置为1的情况将会不显示
                             if (dirtyRegion.addRegion(node.renderRegion)) {
                                 node.needRedraw = true;
@@ -256,7 +256,7 @@ module egret.sys {
                         if (dirtyRegion.addRegion(node.renderRegion)) {
                             node.needRedraw = true;
                         }
-                        var moved = display.$update(this.$dirtyRegionPolicy);
+                        let moved = display.$update(this.$dirtyRegionPolicy);
                         if (moved || !node.needRedraw) {//若不判断needRedraw,从0设置为1的情况将会不显示
                             if (dirtyRegion.addRegion(node.renderRegion)) {
                                 node.needRedraw = true;
@@ -274,24 +274,24 @@ module egret.sys {
          * 绘制根节点显示对象到目标画布，返回draw的次数。
          */
         public drawToSurface(): number {
-            var drawCalls = 0;
-            var dirtyList = this.dirtyList;
+            let drawCalls = 0;
+            let dirtyList = this.dirtyList;
             if (dirtyList && dirtyList.length > 0) {
                 if (!this.isStage) {//对非舞台画布要根据目标显示对象尺寸改变而改变。
                     this.changeSurfaceSize();
                 }
-                var buffer = this.renderBuffer;
+                let buffer = this.renderBuffer;
                 buffer.beginClip(this.dirtyList, this.offsetX, this.offsetY);
-                var dirtyList = this.$dirtyRegionPolicy == egret.DirtyRegionPolicy.OFF ? null : this.dirtyList;
-                var drawCalls = systemRenderer.render(this.root, buffer, this.offsetMatrix, dirtyList);
+                let dirtyList = this.$dirtyRegionPolicy == egret.DirtyRegionPolicy.OFF ? null : this.dirtyList;
+                let drawCalls = systemRenderer.render(this.root, buffer, this.offsetMatrix, dirtyList);
                 buffer.endClip();
 
                 if (!this.isStage) {//对非舞台画布要保存渲染节点。
-                    var surface = buffer.surface;
-                    var renderNode = <BitmapNode>this.$renderNode;
+                    let surface = buffer.surface;
+                    let renderNode = <BitmapNode>this.$renderNode;
                     renderNode.drawData.length = 0;
-                    var width = surface.width;
-                    var height = surface.height;
+                    let width = surface.width;
+                    let height = surface.height;
                     if(!this.bitmapData) {
                         this.bitmapData = new egret.BitmapData(surface);
                     }
@@ -326,17 +326,17 @@ module egret.sys {
          * 改变画布的尺寸，由于画布尺寸修改会清空原始画布。所以这里将原始画布绘制到一个新画布上，再与原始画布交换。
          */
         public changeSurfaceSize(): void {
-            var root = this.root;
-            var oldOffsetX = this.offsetX;
-            var oldOffsetY = this.offsetY;
-            var bounds = this.root.$getOriginalBounds();
+            let root = this.root;
+            let oldOffsetX = this.offsetX;
+            let oldOffsetY = this.offsetY;
+            let bounds = this.root.$getOriginalBounds();
             this.offsetX = -bounds.x;
             this.offsetY = -bounds.y;
             this.offsetMatrix.setTo(1, 0, 0, 1, this.offsetX, this.offsetY);
-            var buffer = this.renderBuffer;
+            let buffer = this.renderBuffer;
             //在chrome里，小等于256*256的canvas会不启用GPU加速。
-            var width = Math.max(257, bounds.width);
-            var height = Math.max(257, bounds.height);
+            let width = Math.max(257, bounds.width);
+            let height = Math.max(257, bounds.height);
             if (this.offsetX == oldOffsetX &&
                 this.offsetY == oldOffsetY &&
                 buffer.surface.width == width &&

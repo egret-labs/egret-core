@@ -27,7 +27,7 @@
 //
 //////////////////////////////////////////////////////////////////////////////////////
 
-module egret {
+namespace egret {
 
     /** @language en_US
      * Returns the fully qualified class name of the base class of the object specified by the value parameter.
@@ -59,12 +59,12 @@ module egret {
         if (!value || (typeof value != "object" && !value.prototype)) {
             return null;
         }
-        var prototype:any = value.prototype ? value.prototype : Object.getPrototypeOf(value);
-        var superProto = Object.getPrototypeOf(prototype);
+        let prototype:any = value.prototype ? value.prototype : Object.getPrototypeOf(value);
+        let superProto = Object.getPrototypeOf(prototype);
         if (!superProto) {
             return null;
         }
-        var superClass = getQualifiedClassName(superProto.constructor);
+        let superClass = getQualifiedClassName(superProto.constructor);
         if (!superClass) {
             return null;
         }

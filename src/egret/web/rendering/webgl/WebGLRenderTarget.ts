@@ -27,7 +27,7 @@
 //
 //////////////////////////////////////////////////////////////////////////////////////
 
-module egret.web {
+namespace egret.web {
 
     /**
      * @private
@@ -82,7 +82,7 @@ module egret.web {
          * 重置render target的尺寸
          */
         public resize(width:number, height:number):void {
-            var gl = this.gl;
+            let gl = this.gl;
 
             // 设置texture尺寸
             gl.bindTexture(gl.TEXTURE_2D, this.texture);
@@ -105,7 +105,7 @@ module egret.web {
          * 激活此render target
          */
         public activate():void {
-            var gl = this.gl;
+            let gl = this.gl;
             gl.bindFramebuffer(gl.FRAMEBUFFER, this.getFrameBuffer());
         }
 
@@ -126,9 +126,9 @@ module egret.web {
          * TODO 创建材质的方法可以合并
          */
         private createTexture():WebGLTexture {
-            var gl = this.gl;
+            let gl = this.gl;
 
-            var texture:WebGLTexture = gl.createTexture();
+            let texture:WebGLTexture = gl.createTexture();
             gl.bindTexture(gl.TEXTURE_2D, texture);
             gl.texImage2D(gl.TEXTURE_2D, 0, gl.RGBA, this.width, this.height, 0, gl.RGBA, gl.UNSIGNED_BYTE, null);
             gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MAG_FILTER, gl.LINEAR);
@@ -142,7 +142,7 @@ module egret.web {
          * 清除render target颜色缓存
          */
         public clear(bind?:boolean) {
-            var gl = this.gl;
+            let gl = this.gl;
 
             if(bind) {
                 this.activate();

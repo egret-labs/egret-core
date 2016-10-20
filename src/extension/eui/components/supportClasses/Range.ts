@@ -27,7 +27,7 @@
 //
 //////////////////////////////////////////////////////////////////////////////////////
 
-module eui.sys {
+namespace eui.sys {
     
     /**
      * @private
@@ -46,7 +46,7 @@ module eui.sys {
     }
 }
 
-module eui {
+namespace eui {
 
     /**
      * @language en_US
@@ -152,7 +152,7 @@ module eui {
 
         public set maximum(value:number) {
             value = +value || 0;
-            var values = this.$Range;
+            let values = this.$Range;
             if (value === values[sys.RangeKeys.maximum])
                 return;
             values[sys.RangeKeys.maximum] = value;
@@ -194,7 +194,7 @@ module eui {
 
         public set minimum(value:number) {
             value = +value || 0;
-            var values = this.$Range;
+            let values = this.$Range;
             if (value === values[sys.RangeKeys.minimum])
                 return;
             values[sys.RangeKeys.minimum] = value;
@@ -233,7 +233,7 @@ module eui {
          * @platform Web,Native
          */
         public get value():number {
-            var values = this.$Range;
+            let values = this.$Range;
             return values[sys.RangeKeys.valueChanged] ?
                 values[sys.RangeKeys.changedValue] : values[sys.RangeKeys.value];
         }
@@ -251,7 +251,7 @@ module eui {
         $setValue(newValue:number):boolean {
             if (newValue === this.value)
                 return false;
-            var values = this.$Range;
+            let values = this.$Range;
             values[sys.RangeKeys.changedValue] = newValue;
             values[sys.RangeKeys.valueChanged] = true;
             this.invalidateProperties();
@@ -298,7 +298,7 @@ module eui {
         }
 
         public set snapInterval(value:number) {
-            var values = this.$Range;
+            let values = this.$Range;
             values[sys.RangeKeys.explicitSnapInterval] = true;
             value = +value || 0;
             if (value === values[sys.RangeKeys.snapInterval])
@@ -332,7 +332,7 @@ module eui {
          */
         protected commitProperties():void {
             super.commitProperties();
-            var values = this.$Range;
+            let values = this.$Range;
             if (values[sys.RangeKeys.minimum] > values[sys.RangeKeys.maximum]) {
 
                 if (!values[sys.RangeKeys.maxChanged])
@@ -343,7 +343,7 @@ module eui {
 
             if (values[sys.RangeKeys.valueChanged] || values[sys.RangeKeys.maxChanged] ||
                 values[sys.RangeKeys.minChanged] || values[sys.RangeKeys.snapIntervalChanged]) {
-                var currentValue = values[sys.RangeKeys.valueChanged] ?
+                let currentValue = values[sys.RangeKeys.valueChanged] ?
                     values[sys.RangeKeys.changedValue] : values[sys.RangeKeys.value];
                 values[sys.RangeKeys.valueChanged] = false;
                 values[sys.RangeKeys.maxChanged] = false;
@@ -358,11 +358,11 @@ module eui {
          * 修正size到最接近snapInterval的整数倍
          */
         private nearestValidSize(size:number):number {
-            var interval:number = this.snapInterval;
+            let interval:number = this.snapInterval;
             if (interval == 0)
                 return size;
 
-            var validSize:number = Math.round(size / interval) * interval;
+            let validSize:number = Math.round(size / interval) * interval;
             return (Math.abs(validSize) < interval) ? interval : validSize;
         }
 
@@ -423,25 +423,25 @@ module eui {
          * @platform Web,Native
          */
         protected nearestValidValue(value:number, interval:number):number {
-            var values = this.$Range;
+            let values = this.$Range;
             if (interval == 0)
                 return Math.max(values[sys.RangeKeys.minimum], Math.min(values[sys.RangeKeys.maximum], value));
 
-            var maxValue = values[sys.RangeKeys.maximum] - values[sys.RangeKeys.minimum];
-            var scale = 1;
+            let maxValue = values[sys.RangeKeys.maximum] - values[sys.RangeKeys.minimum];
+            let scale = 1;
 
             value -= values[sys.RangeKeys.minimum];
             if (interval != Math.round(interval)) {
-                var parts = ((1 + interval).toString()).split(".");
+                let parts = ((1 + interval).toString()).split(".");
                 scale = Math.pow(10, parts[1].length);
                 maxValue *= scale;
                 value = Math.round(value * scale);
                 interval = Math.round(interval * scale);
             }
 
-            var lower = Math.max(0, Math.floor(value / interval) * interval);
-            var upper = Math.min(maxValue, Math.floor((value + interval) / interval) * interval);
-            var validValue = ((value - lower) >= ((upper - lower) / 2)) ? upper : lower;
+            let lower = Math.max(0, Math.floor(value / interval) * interval);
+            let upper = Math.min(maxValue, Math.floor((value + interval) / interval) * interval);
+            let validValue = ((value - lower) >= ((upper - lower) / 2)) ? upper : lower;
 
             return (validValue / scale) + values[sys.RangeKeys.minimum];
         }
@@ -472,7 +472,7 @@ module eui {
          * @platform Web,Native
          */
         protected setValue(value:number):void {
-            var values = this.$Range;
+            let values = this.$Range;
             if (values[sys.RangeKeys.value] === value)
             return;
             if (values[sys.RangeKeys.maximum] > values[sys.RangeKeys.minimum])

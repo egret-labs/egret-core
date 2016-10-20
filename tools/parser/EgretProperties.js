@@ -96,8 +96,8 @@ var EgretProperties = (function () {
         return 1;
     };
     EgretProperties.prototype.getIgnorePath = function () {
-        if (globals.hasKeys(this.properties, ["native", "path_ignore"])) {
-            return this.properties["native"]["path_ignore"];
+        if (globals.hasKeys(this.properties, [egret.args.runtime, "path_ignore"])) {
+            return this.properties[egret.args.runtime]["path_ignore"];
         }
         return [];
     };

@@ -28,7 +28,7 @@
 //////////////////////////////////////////////////////////////////////////////////////
 
 
-module egret.gui {
+namespace egret.gui {
     /**
      * @class egret.gui.FadeInstance
      * @classdesc
@@ -56,8 +56,8 @@ module egret.gui {
         public alphaTo:number;
         
         public play():void{
-            var fromValue:number = this.alphaFrom;
-            var toValue:number = this.alphaTo;
+            let fromValue:number = this.alphaFrom;
+            let toValue:number = this.alphaTo;
 
             if ("visible" in this.target && !this.target.visible){
                 if (isNaN(fromValue))

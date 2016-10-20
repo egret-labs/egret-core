@@ -28,8 +28,8 @@
 //////////////////////////////////////////////////////////////////////////////////////
 
 
-module egret {
-    export var $TextureScaleFactor:number = 1;
+namespace egret {
+    export let $TextureScaleFactor:number = 1;
     /**
      * @language en_US
      * The Texture class encapsulates different image resources on different platforms.
@@ -214,9 +214,9 @@ module egret {
          */
         public _setBitmapData(value:BitmapData) {
             this._bitmapData = value;
-            var scale = $TextureScaleFactor;
-            var w = value.width * scale;
-            var h = value.height * scale;
+            let scale = $TextureScaleFactor;
+            let w = value.width * scale;
+            let h = value.height * scale;
             this.$initData(0, 0, w, h, 0, 0, w, h, value.width, value.height);
         }
 
@@ -236,7 +236,7 @@ module egret {
          */
         public $initData(bitmapX:number, bitmapY:number, bitmapWidth:number, bitmapHeight:number, offsetX:number, offsetY:number,
                         textureWidth:number, textureHeight:number, sourceWidth:number, sourceHeight:number):void {
-            var scale = $TextureScaleFactor;
+            let scale = $TextureScaleFactor;
             this._bitmapX = bitmapX / scale;
             this._bitmapY = bitmapY / scale;
             this._bitmapWidth = bitmapWidth / scale;

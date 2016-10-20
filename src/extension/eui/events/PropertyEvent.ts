@@ -28,7 +28,7 @@
 //////////////////////////////////////////////////////////////////////////////////////
 
 
-module eui {
+namespace eui {
 
     /**
      * @language en_US
@@ -145,9 +145,9 @@ module eui {
             if (!target.hasEventListener(eventType)) {
                 return true;
             }
-            var event = egret.Event.create(PropertyEvent, eventType);
+            let event = egret.Event.create(PropertyEvent, eventType);
             event.property = property;
-            var result = target.dispatchEvent(event);
+            let result = target.dispatchEvent(event);
             egret.Event.release(event);
             return result;
         }

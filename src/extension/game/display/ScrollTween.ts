@@ -28,7 +28,7 @@
 //////////////////////////////////////////////////////////////////////////////////////
 
 
-module egret {
+namespace egret {
 
     /**
      * @private
@@ -224,8 +224,8 @@ module egret {
             if (!target.tween_count) {
                 return;
             }
-            var tweens:ScrollTween[] = ScrollTween._tweens;
-            for (var i = tweens.length - 1; i >= 0; i--) {
+            let tweens:ScrollTween[] = ScrollTween._tweens;
+            for (let i = tweens.length - 1; i >= 0; i--) {
                 if (tweens[i]._target == target) {
                     tweens[i].paused = true;
                     tweens.splice(i, 1);
@@ -241,12 +241,12 @@ module egret {
          * @param paused 
          */
         private static tick(timeStamp:number, paused = false):boolean {
-            var delta = timeStamp - ScrollTween._lastTime;
+            let delta = timeStamp - ScrollTween._lastTime;
             ScrollTween._lastTime = timeStamp;
 
-            var tweens:ScrollTween[] = ScrollTween._tweens.concat();
-            for (var i = tweens.length - 1; i >= 0; i--) {
-                var tween:ScrollTween = tweens[i];
+            let tweens:ScrollTween[] = ScrollTween._tweens.concat();
+            for (let i = tweens.length - 1; i >= 0; i--) {
+                let tween:ScrollTween = tweens[i];
                 if ((paused && !tween.ignoreGlobalPause) || tween.paused) {
                     continue;
                 }
@@ -263,8 +263,8 @@ module egret {
          * @param value 
          */
         private static _register(tween:ScrollTween, value:boolean):void {
-            var target:any = tween._target;
-            var tweens:ScrollTween[] = ScrollTween._tweens;
+            let target:any = tween._target;
+            let tweens:ScrollTween[] = ScrollTween._tweens;
             if (value) {
                 if (target) {
                     target.tween_count = target.tween_count > 0 ? target.tween_count + 1 : 1;
@@ -279,7 +279,7 @@ module egret {
                 if (target) {
                     target.tween_count--;
                 }
-                var i = tweens.length;
+                let i = tweens.length;
                 while (i--) {
                     if (tweens[i] == tween) {
                         tweens.splice(i, 1);
@@ -348,8 +348,8 @@ module egret {
             }
 
             //正常化位置
-            var t:number = value;
-            var end:boolean = false;
+            let t:number = value;
+            let end:boolean = false;
             if (t >= this.duration) {
                 if (this.loop) {
                     t = t % this.duration;
@@ -363,7 +363,7 @@ module egret {
                 return end;
             }
 
-            var prevPos = this._prevPos;
+            let prevPos = this._prevPos;
             this.position = this._prevPos = t;
             this._prevPosition = value;
 
@@ -373,12 +373,14 @@ module egret {
                     this._updateTargetProps(null, 1);
                 } else if (this._steps.length > 0) {
                     // 找到新的tween
-                    for (var i = 0, l = this._steps.length; i < l; i++) {
+                    let i:number;
+                    let l = this._steps.length;
+                    for (i = 0; i < l; i++) {
                         if (this._steps[i].t > t) {
                             break;
                         }
                     }
-                    var step = this._steps[i - 1];
+                    let step = this._steps[i - 1];
                     this._updateTargetProps(step, (this._stepPosition = t - step.t) / step.d);
                 }
             }
@@ -413,11 +415,11 @@ module egret {
          * @param includeStart 
          */
         private _runActions(startPos:number, endPos:number, includeStart:boolean = false) {
-            var sPos:number = startPos;
-            var ePos:number = endPos;
-            var i:number = -1;
-            var j:number = this._actions.length;
-            var k:number = 1;
+            let sPos:number = startPos;
+            let ePos:number = endPos;
+            let i:number = -1;
+            let j:number = this._actions.length;
+            let k:number = 1;
             if (startPos > endPos) {
                 //把所有的倒置
                 sPos = endPos;
@@ -426,8 +428,8 @@ module egret {
                 j = k = -1;
             }
             while ((i += k) != j) {
-                var action = this._actions[i];
-                var pos = action.t;
+                let action = this._actions[i];
+                let pos = action.t;
                 if (pos == ePos || (pos > sPos && pos < ePos) || (includeStart && pos == startPos)) {
                     action.f.apply(action.o, action.p);
                 }
@@ -441,7 +443,7 @@ module egret {
          * @param ratio 
          */
         private _updateTargetProps(step:any, ratio:number) {
-            var p0, p1, v, v0, v1, arr;
+            let p0, p1, v, v0, v1, arr;
             if (!step && ratio == 1) {
                 this.passive = false;
                 p0 = p1 = this._curQueueProps;
@@ -459,7 +461,7 @@ module egret {
                 p1 = step.p1;
             }
 
-            for (var n in this._initQueueProps) {
+            for (let n in this._initQueueProps) {
                 if ((v0 = p0[n]) == null) {
                     p0[n] = v0 = this._initQueueProps[n];
                 }
@@ -472,10 +474,10 @@ module egret {
                     v = v0 + (v1 - v0) * ratio;
                 }
 
-                var ignore = false;
+                let ignore = false;
                 if (arr = ScrollTween._plugins[n]) {
-                    for (var i = 0, l = arr.length; i < l; i++) {
-                        var v2 = arr[i].tween(this, n, v, p0, p1, ratio, !!step && p0 == p1, !step);
+                    for (let i = 0, l = arr.length; i < l; i++) {
+                        let v2 = arr[i].tween(this, n, v, p0, p1, ratio, !!step && p0 == p1, !step);
                         if (v2 == ScrollTween.IGNORE) {
                             ignore = true;
                         }
@@ -520,8 +522,8 @@ module egret {
          * @returns 
          */
         private _cloneProps(props):any {
-            var o = {};
-            for (var n in props) {
+            let o = {};
+            for (let n in props) {
                 o[n] = props[n];
             }
             return o;
@@ -549,8 +551,8 @@ module egret {
          * @returns 
          */
         private _appendQueueProps(o):any {
-            var arr, oldValue, i, l, injectProps;
-            for (var n in o) {
+            let arr, oldValue, i, l, injectProps;
+            for (let n in o) {
                 if (this._initQueueProps[n] === undefined) {
                     oldValue = this._target[n];
                     //设置plugins
@@ -565,7 +567,7 @@ module egret {
                 }
             }
 
-            for (var n in o) {
+            for (let n in o) {
                 oldValue = this._curQueueProps[n];
                 if (arr = ScrollTween._plugins[n]) {
                     injectProps = injectProps || {};
@@ -627,7 +629,7 @@ module egret {
          * Execute callback function
 		 * @param callback {Function} Callback method
 		 * @param thisObj {any} this action scope of the callback method
-		 * @param params {Array<any>} Parameter of the callback method
+		 * @param params {any[]} Parameter of the callback method
 		 * @returns {egret.ScrollTween} ScrollTween object itself
          * @version Egret 2.4
          * @platform Web,Native
@@ -637,12 +639,12 @@ module egret {
          * 执行回调函数
 		 * @param callback {Function} 回调方法
 		 * @param thisObj {any} 回调方法this作用域
-		 * @param params {Array<any>} 回调方法参数
+		 * @param params {any[]} 回调方法参数
 		 * @returns {egret.ScrollTween} Tween对象本身
          * @version Egret 2.4
          * @platform Web,Native
 		 */
-        public call(callback:Function, thisObj:any = undefined, params:Array<any> = undefined):ScrollTween {
+        public call(callback:Function, thisObj:any = undefined, params:any[] = undefined):ScrollTween {
             return this._addAction({f: callback, p: params ? params : [], o: thisObj ? thisObj : this._target});
         }
 

@@ -28,12 +28,12 @@
 //////////////////////////////////////////////////////////////////////////////////////
 
 
-module egret {
+namespace egret {
 
     /**
      * @private
      */
-    var getDefinitionByNameCache = {};
+    let getDefinitionByNameCache = {};
 
     /**
      * @language en_US
@@ -54,15 +54,15 @@ module egret {
     export function getDefinitionByName(name:string):any {
         if (!name)
             return null;
-        var definition = getDefinitionByNameCache[name];
+        let definition = getDefinitionByNameCache[name];
         if (definition) {
             return definition;
         }
-        var paths = name.split(".");
-        var length = paths.length;
+        let paths = name.split(".");
+        let length = paths.length;
         definition = __global;
-        for (var i = 0; i < length; i++) {
-            var path = paths[i];
+        for (let i = 0; i < length; i++) {
+            let path = paths[i];
             definition = definition[path];
             if (!definition) {
                 return null;
@@ -80,4 +80,4 @@ module egret {
 
 }
 
-var __global = __global || this;
+let __global = this.__global || this;

@@ -133,3 +133,4 @@ var UpgradeCommand = (function () {
     return UpgradeCommand;
 }());
 module.exports = UpgradeCommand;
+//# sourceMappingURL=upgrade.js.map

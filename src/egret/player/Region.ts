@@ -27,9 +27,9 @@
 //
 //////////////////////////////////////////////////////////////////////////////////////
 
-module egret.sys {
+namespace egret.sys {
 
-    var regionPool:Region[] = [];
+    let regionPool:Region[] = [];
 
     /**
      * @private
@@ -51,7 +51,7 @@ module egret.sys {
          * 使用完后调用对应的release()静态方法回收对象，能有效减少对象创建数量造成的性能开销。
          */
         public static create():Region {
-            var region = regionPool.pop();
+            let region = regionPool.pop();
             if (!region) {
                 region = new Region();
             }
@@ -203,8 +203,8 @@ module egret.sys {
             if(this.isEmpty()) {
                 return false;
             }
-            var max = this.minX > target.minX ? this.minX : target.minX;
-            var min = this.maxX < target.maxX ? this.maxX : target.maxX;
+            let max = this.minX > target.minX ? this.minX : target.minX;
+            let min = this.maxX < target.maxX ? this.maxX : target.maxX;
             if (max > min) {
                 return false;
             }
@@ -223,18 +223,18 @@ module egret.sys {
                 this.setEmpty();
                 return;
             }
-            var m = matrix;
-            var a = m.a;
-            var b = m.b;
-            var c = m.c;
-            var d = m.d;
-            var tx = m.tx;
-            var ty = m.ty;
-            var x = bounds.x;
-            var y = bounds.y;
-            var xMax = x + bounds.width;
-            var yMax = y + bounds.height;
-            var minX:number, minY:number, maxX:number, maxY:number;
+            let m = matrix;
+            let a = m.a;
+            let b = m.b;
+            let c = m.c;
+            let d = m.d;
+            let tx = m.tx;
+            let ty = m.ty;
+            let x = bounds.x;
+            let y = bounds.y;
+            let xMax = x + bounds.width;
+            let yMax = y + bounds.height;
+            let minX:number, minY:number, maxX:number, maxY:number;
             //优化，通常情况下不缩放旋转的对象占多数，直接加上偏移量即可。
             if (a == 1.0 && b == 0.0 && c == 0.0 && d == 1.0) {
                 minX = x + tx - 1;
@@ -243,16 +243,16 @@ module egret.sys {
                 maxY = yMax + ty + 1;
             }
             else {
-                var x0 = a * x + c * y + tx;
-                var y0 = b * x + d * y + ty;
-                var x1 = a * xMax + c * y + tx;
-                var y1 = b * xMax + d * y + ty;
-                var x2 = a * xMax + c * yMax + tx;
-                var y2 = b * xMax + d * yMax + ty;
-                var x3 = a * x + c * yMax + tx;
-                var y3 = b * x + d * yMax + ty;
+                let x0 = a * x + c * y + tx;
+                let y0 = b * x + d * y + ty;
+                let x1 = a * xMax + c * y + tx;
+                let y1 = b * xMax + d * y + ty;
+                let x2 = a * xMax + c * yMax + tx;
+                let y2 = b * xMax + d * yMax + ty;
+                let x3 = a * x + c * yMax + tx;
+                let y3 = b * x + d * yMax + ty;
 
-                var tmp = 0;
+                let tmp = 0;
 
                 if (x0 > x1) {
                     tmp = x0;

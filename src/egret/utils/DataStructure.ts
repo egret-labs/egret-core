@@ -1,4 +1,4 @@
-module egret {
+namespace egret {
 
     /**
      * @private

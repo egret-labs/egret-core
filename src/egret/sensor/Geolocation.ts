@@ -1,6 +1,6 @@
 
 
-module egret {
+namespace egret {
 
     /**
      * @language en_US
@@ -63,7 +63,7 @@ module egret {
     /**
      * @copy egret.Geolocation
      */
-    export var Geolocation: {
+    export let Geolocation: {
         /**
          * @language en_US
          * constructor

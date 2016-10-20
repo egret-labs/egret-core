@@ -28,7 +28,7 @@
 //////////////////////////////////////////////////////////////////////////////////////
 
 
-module egret.gui {
+namespace egret.gui {
 
 	/**
 	 * @class egret.gui.ToggleButtonBase
@@ -83,13 +83,13 @@ module egret.gui {
 		 * @returns {string}
 		 */
 		public getCurrentSkinState():string{
-			var state:string = super.getCurrentSkinState();
+			let state:string = super.getCurrentSkinState();
 			if (!this.selected){
 				return state;
 			}
 			else{
-				var selectedState:string = state + "AndSelected";
-				var skin:IStateClient = this.skin
+				let selectedState:string = state + "AndSelected";
+				let skin:IStateClient = this.skin
 				if(skin&&skin.hasState(selectedState)){
 					return selectedState;
 				}

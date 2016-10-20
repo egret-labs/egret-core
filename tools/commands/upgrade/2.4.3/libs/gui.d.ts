@@ -1,4 +1,4 @@
-declare module egret.gui {
+declare namespace egret.gui {
     /**
      * @class egret.gui.ICollection
      * @interface

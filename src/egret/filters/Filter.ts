@@ -27,7 +27,7 @@
 //
 //////////////////////////////////////////////////////////////////////////////////////
 
-module egret {
+namespace egret {
     /**
      * @private
      * @version Egret 2.4
@@ -43,8 +43,8 @@ module egret {
         private $targets:DisplayObject[] = [];
         
         public $addTarget(target:DisplayObject):void {
-            var length:number = this.$targets.length;
-            for(var i:number = 0 ; i < length ; i++) {
+            let length:number = this.$targets.length;
+            for(let i:number = 0 ; i < length ; i++) {
                 if(this.$targets[i].$hashCode == target.$hashCode) {
                     return;
                 }
@@ -53,8 +53,8 @@ module egret {
         }
         
         public $removeTarget(target:DisplayObject):void {
-            var length:number = this.$targets.length;
-            for(var i:number = 0 ; i < length ; i++) {
+            let length:number = this.$targets.length;
+            for(let i:number = 0 ; i < length ; i++) {
                 if(this.$targets[i].$hashCode == target.$hashCode) {
                     this.$targets.splice(i, 1);
                     return;
@@ -63,8 +63,8 @@ module egret {
         }
         
         protected invalidate():void {
-            var length:number = this.$targets.length;
-            for(var i:number = 0 ; i < length ; i++) {
+            let length:number = this.$targets.length;
+            for(let i:number = 0 ; i < length ; i++) {
                 this.$targets[i].$invalidateContentBounds();
             }
         }

@@ -28,7 +28,7 @@
 //////////////////////////////////////////////////////////////////////////////////////
 
 
-module egret.gui {
+namespace egret.gui {
     /**
      * @class egret.gui.Elastic
      * @classdesc
@@ -58,7 +58,7 @@ module egret.gui {
             if (!p)
                 p = d * 0.3;
             
-            var s:number;
+            let s:number;
             if (!a || a < Math.abs(c)){
                 a = c;
                 s = p / 4;

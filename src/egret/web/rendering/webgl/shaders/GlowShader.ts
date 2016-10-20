@@ -26,7 +26,7 @@
 //  EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 //
 //////////////////////////////////////////////////////////////////////////////////////
-module egret.web {
+namespace egret.web {
     /**
      * @private
      */
@@ -123,7 +123,7 @@ module egret.web {
         };
 
         public setDistance(distance:number):void {
-            var uniform = this.uniforms.distance;
+            let uniform = this.uniforms.distance;
 
             if(uniform.value != distance) {
                 uniform.value = distance;
@@ -133,7 +133,7 @@ module egret.web {
         }
 
         public setAngle(angle:number):void {
-            var uniform = this.uniforms.angle;
+            let uniform = this.uniforms.angle;
 
             if(uniform.value != angle) {
                 uniform.value = angle;
@@ -143,7 +143,7 @@ module egret.web {
         }
 
         public setColor(red:number, green:number, blue:number):void {
-            var uniform = this.uniforms.color;
+            let uniform = this.uniforms.color;
 
             if(uniform.value.x != red || uniform.value.y != green || uniform.value.z != blue) {
                 uniform.value.x = red;
@@ -155,7 +155,7 @@ module egret.web {
         }
 
         public setAlpha(alpha:number):void {
-            var uniform = this.uniforms.alpha;
+            let uniform = this.uniforms.alpha;
 
             if(uniform.value != alpha) {
                 uniform.value = alpha;
@@ -165,7 +165,7 @@ module egret.web {
         }
 
         public setBlurX(blurX:number):void {
-            var uniform = this.uniforms.blurX;
+            let uniform = this.uniforms.blurX;
 
             if(uniform.value != blurX) {
                 uniform.value = blurX;
@@ -175,7 +175,7 @@ module egret.web {
         }
 
         public setBlurY(blurY:number):void {
-            var uniform = this.uniforms.blurY;
+            let uniform = this.uniforms.blurY;
 
             if(uniform.value != blurY) {
                 uniform.value = blurY;
@@ -185,7 +185,7 @@ module egret.web {
         }
 
         public setStrength(strength:number):void {
-            var uniform = this.uniforms.strength;
+            let uniform = this.uniforms.strength;
 
             if(uniform.value != strength) {
                 uniform.value = strength;
@@ -195,7 +195,7 @@ module egret.web {
         }
 
         public setInner(inner:number):void {
-            var uniform = this.uniforms.inner;
+            let uniform = this.uniforms.inner;
 
             if(uniform.value != inner) {
                 uniform.value = inner;
@@ -205,7 +205,7 @@ module egret.web {
         }
 
         public setKnockout(knockout:number):void {
-            var uniform = this.uniforms.knockout;
+            let uniform = this.uniforms.knockout;
 
             if(uniform.value != knockout) {
                 uniform.value = knockout;
@@ -215,7 +215,7 @@ module egret.web {
         }
 
         public setHideObject(hideObject:number):void {
-            var uniform = this.uniforms.hideObject;
+            let uniform = this.uniforms.hideObject;
 
             if(uniform.value != hideObject) {
                 uniform.value = hideObject;
@@ -228,7 +228,7 @@ module egret.web {
          * 设置采样材质的尺寸
          */
         public setTextureSize(width:number, height:number):void {
-            var uniform = this.uniforms.uTextureSize;
+            let uniform = this.uniforms.uTextureSize;
 
             if(width != uniform.value.x || height != uniform.value.y) {
                 uniform.value.x = width;

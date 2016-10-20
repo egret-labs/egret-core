@@ -27,18 +27,18 @@
 //
 //////////////////////////////////////////////////////////////////////////////////////
 
-module egret.native {
+namespace egret.native {
 
     /**
      * @private
      */
-    export var $supportCanvas = egret_native.Canvas ? true : false;
+    export let $supportCanvas = egret_native.Canvas ? true : false;
 
     /**
      * @private
      * 判断当前runtime版本是否支持cmdBatch
      */
-    export var $supportCmdBatch = egret_native.sendToC ? true : false;
+    export let $supportCmdBatch = egret_native.sendToC ? true : false;
 
     /*
      * @private
@@ -59,7 +59,7 @@ module egret.native {
         /*
          * 存储字符串的数组
          */
-        private strArray:Array<string> = new Array();
+        private strArray:string[] = [];
 
         /*
          * native上下文
@@ -86,13 +86,13 @@ module egret.native {
                 }
 
                 this.context = ctx;
-                var uint32View = this.uint32View;
-                var arrayBufferLen = this.arrayBufferLen;
+                let uint32View = this.uint32View;
+                let arrayBufferLen = this.arrayBufferLen;
                 uint32View[arrayBufferLen++] = 1000;
 
                 // uint32View[arrayBufferLen++] = ctx.___native_texture__p;
                 // 兼容64位
-                var addr = ctx.___native_texture__p;
+                let addr = ctx.___native_texture__p;
                 uint32View[arrayBufferLen++] = (addr / 4294967296) >>> 0;
                 uint32View[arrayBufferLen++] = (addr & 4294967295) >>> 0;
                 // uint32View[arrayBufferLen++] = addr >> 32;
@@ -114,8 +114,8 @@ module egret.native {
          * 压入一个字符串并返回索引 
          */
         public pushString(str:string):number {
-            var array = this.strArray;
-            var len = array.length;
+            let array = this.strArray;
+            let len = array.length;
             array[len] = str;
             return len;
         }
@@ -127,8 +127,8 @@ module egret.native {
                 this.flush();
             }
 
-            var uint32View = this.uint32View;
-            var arrayBufferLen = this.arrayBufferLen;
+            let uint32View = this.uint32View;
+            let arrayBufferLen = this.arrayBufferLen;
 
             uint32View[arrayBufferLen++] = 100;
 
@@ -145,9 +145,9 @@ module egret.native {
                 this.flush();
             }
 
-            var uint32View = this.uint32View;
-            var float32View = this.float32View;
-            var arrayBufferLen = this.arrayBufferLen;
+            let uint32View = this.uint32View;
+            let float32View = this.float32View;
+            let arrayBufferLen = this.arrayBufferLen;
 
             uint32View[arrayBufferLen++] = 101;
 
@@ -175,9 +175,9 @@ module egret.native {
                 this.flush();
             }
 
-            var uint32View = this.uint32View;
-            var float32View = this.float32View;
-            var arrayBufferLen = this.arrayBufferLen;
+            let uint32View = this.uint32View;
+            let float32View = this.float32View;
+            let arrayBufferLen = this.arrayBufferLen;
 
             uint32View[arrayBufferLen++] = 103;
 
@@ -196,9 +196,9 @@ module egret.native {
                 this.flush();
             }
 
-            var uint32View = this.uint32View;
-            var float32View = this.float32View;
-            var arrayBufferLen = this.arrayBufferLen;
+            let uint32View = this.uint32View;
+            let float32View = this.float32View;
+            let arrayBufferLen = this.arrayBufferLen;
 
             uint32View[arrayBufferLen++] = 106;
 
@@ -208,20 +208,20 @@ module egret.native {
         }
 
         public pushRectStencils(array:any):void {
-            var len = array.length;
+            let len = array.length;
 
             if(this.arrayBufferLen + len + 1 > this.maxArrayBufferLen) {
                 this.flush();
             }
 
-            var uint32View = this.uint32View;
-            var float32View = this.float32View;
-            var arrayBufferLen = this.arrayBufferLen;
+            let uint32View = this.uint32View;
+            let float32View = this.float32View;
+            let arrayBufferLen = this.arrayBufferLen;
 
             uint32View[arrayBufferLen++] = 113;
 
             uint32View[arrayBufferLen++] = len;
-            for(var i = 0; i < len; i++) {
+            for(let i = 0; i < len; i++) {
                 float32View[arrayBufferLen++] = array[i];
             }
 
@@ -249,9 +249,9 @@ module egret.native {
                 this.flush();
             }
 
-            var uint32View = this.uint32View;
-            var float32View = this.float32View;
-            var arrayBufferLen = this.arrayBufferLen;
+            let uint32View = this.uint32View;
+            let float32View = this.float32View;
+            let arrayBufferLen = this.arrayBufferLen;
 
             uint32View[arrayBufferLen++] = 120;
 
@@ -282,9 +282,9 @@ module egret.native {
                 this.flush();
             }
 
-            var uint32View = this.uint32View;
-            var float32View = this.float32View;
-            var arrayBufferLen = this.arrayBufferLen;
+            let uint32View = this.uint32View;
+            let float32View = this.float32View;
+            let arrayBufferLen = this.arrayBufferLen;
 
             uint32View[arrayBufferLen++] = 210;
 
@@ -301,9 +301,9 @@ module egret.native {
                 this.flush();
             }
 
-            var uint32View = this.uint32View;
-            var float32View = this.float32View;
-            var arrayBufferLen = this.arrayBufferLen;
+            let uint32View = this.uint32View;
+            let float32View = this.float32View;
+            let arrayBufferLen = this.arrayBufferLen;
 
             uint32View[arrayBufferLen++] = 214;
 
@@ -320,9 +320,9 @@ module egret.native {
                 this.flush();
             }
 
-            var uint32View = this.uint32View;
-            var float32View = this.float32View;
-            var arrayBufferLen = this.arrayBufferLen;
+            let uint32View = this.uint32View;
+            let float32View = this.float32View;
+            let arrayBufferLen = this.arrayBufferLen;
 
             uint32View[arrayBufferLen++] = 300;
 
@@ -339,9 +339,9 @@ module egret.native {
                 this.flush();
             }
 
-            var uint32View = this.uint32View;
-            var float32View = this.float32View;
-            var arrayBufferLen = this.arrayBufferLen;
+            let uint32View = this.uint32View;
+            let float32View = this.float32View;
+            let arrayBufferLen = this.arrayBufferLen;
 
             uint32View[arrayBufferLen++] = 301;
 
@@ -357,8 +357,8 @@ module egret.native {
                 this.flush();
             }
 
-            var uint32View = this.uint32View;
-            var arrayBufferLen = this.arrayBufferLen;
+            let uint32View = this.uint32View;
+            let arrayBufferLen = this.arrayBufferLen;
 
             uint32View[arrayBufferLen++] = 302;
 
@@ -372,8 +372,8 @@ module egret.native {
                 this.flush();
             }
 
-            var uint32View = this.uint32View;
-            var arrayBufferLen = this.arrayBufferLen;
+            let uint32View = this.uint32View;
+            let arrayBufferLen = this.arrayBufferLen;
 
             uint32View[arrayBufferLen++] = 303;
 
@@ -387,8 +387,8 @@ module egret.native {
                 this.flush();
             }
 
-            var uint32View = this.uint32View;
-            var arrayBufferLen = this.arrayBufferLen;
+            let uint32View = this.uint32View;
+            let arrayBufferLen = this.arrayBufferLen;
 
             uint32View[arrayBufferLen++] = 1200;
 
@@ -402,8 +402,8 @@ module egret.native {
                 this.flush();
             }
 
-            var uint32View = this.uint32View;
-            var arrayBufferLen = this.arrayBufferLen;
+            let uint32View = this.uint32View;
+            let arrayBufferLen = this.arrayBufferLen;
 
             uint32View[arrayBufferLen++] = 1201;
 
@@ -417,9 +417,9 @@ module egret.native {
                 this.flush();
             }
 
-            var uint32View = this.uint32View;
-            var float32View = this.float32View;
-            var arrayBufferLen = this.arrayBufferLen;
+            let uint32View = this.uint32View;
+            let float32View = this.float32View;
+            let arrayBufferLen = this.arrayBufferLen;
 
             uint32View[arrayBufferLen++] = 1202;
 
@@ -433,9 +433,9 @@ module egret.native {
                 this.flush();
             }
 
-            var uint32View = this.uint32View;
-            var float32View = this.float32View;
-            var arrayBufferLen = this.arrayBufferLen;
+            let uint32View = this.uint32View;
+            let float32View = this.float32View;
+            let arrayBufferLen = this.arrayBufferLen;
 
             uint32View[arrayBufferLen++] = 207;
 
@@ -450,9 +450,9 @@ module egret.native {
                 this.flush();
             }
 
-            var uint32View = this.uint32View;
-            var float32View = this.float32View;
-            var arrayBufferLen = this.arrayBufferLen;
+            let uint32View = this.uint32View;
+            let float32View = this.float32View;
+            let arrayBufferLen = this.arrayBufferLen;
 
             uint32View[arrayBufferLen++] = 208;
 
@@ -467,8 +467,8 @@ module egret.native {
                 this.flush();
             }
 
-            var uint32View = this.uint32View;
-            var arrayBufferLen = this.arrayBufferLen;
+            let uint32View = this.uint32View;
+            let arrayBufferLen = this.arrayBufferLen;
 
             uint32View[arrayBufferLen++] = 203;
 
@@ -482,9 +482,9 @@ module egret.native {
                 this.flush();
             }
 
-            var uint32View = this.uint32View;
-            var float32View = this.float32View;
-            var arrayBufferLen = this.arrayBufferLen;
+            let uint32View = this.uint32View;
+            let float32View = this.float32View;
+            let arrayBufferLen = this.arrayBufferLen;
 
             uint32View[arrayBufferLen++] = 107;
 
@@ -517,9 +517,9 @@ module egret.native {
                 this.flush();
             }
 
-            var uint32View = this.uint32View;
-            var float32View = this.float32View;
-            var arrayBufferLen = this.arrayBufferLen;
+            let uint32View = this.uint32View;
+            let float32View = this.float32View;
+            let arrayBufferLen = this.arrayBufferLen;
 
             uint32View[arrayBufferLen++] = 209;
 
@@ -538,9 +538,9 @@ module egret.native {
                 this.flush();
             }
 
-            var uint32View = this.uint32View;
-            var float32View = this.float32View;
-            var arrayBufferLen = this.arrayBufferLen;
+            let uint32View = this.uint32View;
+            let float32View = this.float32View;
+            let arrayBufferLen = this.arrayBufferLen;
 
             uint32View[arrayBufferLen++] = 211;
 
@@ -557,9 +557,9 @@ module egret.native {
                 this.flush();
             }
 
-            var uint32View = this.uint32View;
-            var float32View = this.float32View;
-            var arrayBufferLen = this.arrayBufferLen;
+            let uint32View = this.uint32View;
+            let float32View = this.float32View;
+            let arrayBufferLen = this.arrayBufferLen;
 
             uint32View[arrayBufferLen++] = 212;
 
@@ -576,9 +576,9 @@ module egret.native {
                 this.flush();
             }
 
-            var uint32View = this.uint32View;
-            var float32View = this.float32View;
-            var arrayBufferLen = this.arrayBufferLen;
+            let uint32View = this.uint32View;
+            let float32View = this.float32View;
+            let arrayBufferLen = this.arrayBufferLen;
 
             uint32View[arrayBufferLen++] = 213;
 
@@ -595,9 +595,9 @@ module egret.native {
                 this.flush();
             }
 
-            var uint32View = this.uint32View;
-            var float32View = this.float32View;
-            var arrayBufferLen = this.arrayBufferLen;
+            let uint32View = this.uint32View;
+            let float32View = this.float32View;
+            let arrayBufferLen = this.arrayBufferLen;
 
             uint32View[arrayBufferLen++] = 215;
 
@@ -616,8 +616,8 @@ module egret.native {
                 this.flush();
             }
 
-            var uint32View = this.uint32View;
-            var arrayBufferLen = this.arrayBufferLen;
+            let uint32View = this.uint32View;
+            let arrayBufferLen = this.arrayBufferLen;
 
             uint32View[arrayBufferLen++] = 111;
 
@@ -634,10 +634,10 @@ module egret.native {
      * @private 
      * 输出一个单例命令控制器，供所有需要调用的地方使用
      */
-    export var $cmdManager = new CmdManager();
+    export let $cmdManager = new CmdManager();
 
-    var isRunning:boolean = false;
-    var playerList:Array<NativePlayer> = [];
+    let isRunning:boolean = false;
+    let playerList:Array<NativePlayer> = [];
 
     function runEgret(options?:{renderMode?:string;audioType?:number;screenAdapter?:sys.IScreenAdapter}) {
         if (isRunning) {
@@ -650,7 +650,7 @@ module egret.native {
         setRenderMode(options.renderMode);
         if (DEBUG) {
             //todo 获得系统语言版本
-            var language = "zh_CN";
+            let language = "zh_CN";
 
             if (language in egret.$locale_strings)
                 egret.$language = language;
@@ -660,8 +660,8 @@ module egret.native {
         } catch (e) {
 
         }
-        var ticker = egret.sys.$ticker;
-        var mainLoop = $supportCmdBatch ? function () {
+        let ticker = egret.sys.$ticker;
+        let mainLoop = $supportCmdBatch ? function () {
             ticker.update();
             $cmdManager.flush();
         } : function() {
@@ -678,7 +678,7 @@ module egret.native {
         }
 
         //todo
-        var player = new NativePlayer();
+        let player = new NativePlayer();
         playerList.push(player);
         sys.customHitTestBuffer = new NativeCanvasRenderBuffer(3, 3);
         sys.canvasHitTestBuffer = sys.customHitTestBuffer;
@@ -709,15 +709,15 @@ module egret.native {
     }
 
     function updateAllScreens():void {
-        var length:number = playerList.length;
-        for (var i:number = 0; i < length; i++) {
+        let length:number = playerList.length;
+        for (let i:number = 0; i < length; i++) {
             playerList[i].updateScreenSize();
         }
     }
 
     function toArray(argument) {
-        var args = [];
-        for (var i = 0; i < argument.length; i++) {
+        let args = [];
+        for (let i = 0; i < argument.length; i++) {
             args.push(argument[i]);
         }
         return args;
@@ -735,9 +735,9 @@ module egret.native {
     if (DEBUG) {
         egret.log = function () {
             if (DEBUG) {
-                var length = arguments.length;
-                var info = "";
-                for (var i = 0; i < length; i++) {
+                let length = arguments.length;
+                let info = "";
+                for (let i = 0; i < length; i++) {
                     info += arguments[i] + " ";
                 }
                 sys.$logToFPS(info);

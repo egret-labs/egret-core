@@ -27,7 +27,7 @@
 //
 //////////////////////////////////////////////////////////////////////////////////////
 
-module egret.web {
+namespace egret.web {
     /**
      * @private
      * 抽象shader类，所有shader的基类
@@ -59,7 +59,7 @@ module egret.web {
 
         public program:WebGLProgram = null;
 
-        public attributes:Array<number>;
+        public attributes:number[];
 
         public uniforms = {
             projectionVector: {type: '2f', value: {x: 0, y: 0}, dirty: true}
@@ -75,9 +75,9 @@ module egret.web {
         }
 
         public init():void {
-            var gl:WebGLRenderingContext = this.gl;
+            let gl:WebGLRenderingContext = this.gl;
 
-            var program:WebGLProgram = WebGLUtils.compileProgram(gl, this.defaultVertexSrc, this.fragmentSrc);
+            let program:WebGLProgram = WebGLUtils.compileProgram(gl, this.defaultVertexSrc, this.fragmentSrc);
             gl.useProgram(program);
 
             this.aVertexPosition = gl.getAttribLocation(program, "aVertexPosition");
@@ -89,7 +89,7 @@ module egret.web {
             }
             this.attributes = [this.aVertexPosition, this.aTextureCoord, this.colorAttribute];
 
-            for (var key in this.uniforms) {
+            for (let key in this.uniforms) {
                 this.uniforms[key].uniformLocation = gl.getUniformLocation(program, key);
             }
             this.initUniforms();
@@ -101,13 +101,13 @@ module egret.web {
             if (!this.uniforms) {
                 return;
             }
-            var gl:WebGLRenderingContext = this.gl;
-            var uniform;
+            let gl:WebGLRenderingContext = this.gl;
+            let uniform;
 
-            for (var key in this.uniforms) {
+            for (let key in this.uniforms) {
                 uniform = this.uniforms[key];
                 uniform.dirty = true;
-                var type = uniform.type;
+                let type = uniform.type;
                 if (type === 'mat2' || type === 'mat3' || type === 'mat4') {
                     uniform.glMatrix = true;
                     uniform.glValueLength = 1;
@@ -145,10 +145,10 @@ module egret.web {
             if (!this.uniforms) {
                 return;
             }
-            var uniform;
-            var gl:WebGLRenderingContext = this.gl;
+            let uniform;
+            let gl:WebGLRenderingContext = this.gl;
 
-            for (var key in this.uniforms) {
+            for (let key in this.uniforms) {
                 uniform = this.uniforms[key];
 
                 if(uniform.dirty) {
@@ -180,7 +180,7 @@ module egret.web {
          * 同步视角坐标
          */
         public setProjection(projectionX:number, projectionY:number):void {
-            var uniform = this.uniforms.projectionVector;
+            let uniform = this.uniforms.projectionVector;
 
             if(uniform.value.x != projectionX || uniform.value.y != projectionY) {
                 uniform.value.x = projectionX;
@@ -194,7 +194,7 @@ module egret.web {
          * 设置attribute pointer
          */
         public setAttribPointer(stride:number):void {
-            var gl:WebGLRenderingContext = this.gl;
+            let gl:WebGLRenderingContext = this.gl;
             gl.vertexAttribPointer(this.aVertexPosition, 2, gl.FLOAT, false, stride, 0);
             gl.vertexAttribPointer(this.aTextureCoord, 2, gl.FLOAT, false, stride, 2 * 4);
             gl.vertexAttribPointer(this.colorAttribute, 1, gl.FLOAT, false, stride, 4 * 4);

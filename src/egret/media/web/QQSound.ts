@@ -30,7 +30,7 @@
 /**
  * @private
  */
-declare module QZAppExternal {
+declare namespace QZAppExternal {
     function playLocalSound(call, data);
 
     function playLocalBackSound(call, data);
@@ -43,7 +43,7 @@ declare module QZAppExternal {
 }
 
 
-module egret.web {
+namespace egret.web {
 
     /**
      * @private
@@ -105,7 +105,7 @@ module egret.web {
          * @inheritDoc
          */
         public load(url:string):void {
-            var self = this;
+            let self = this;
 
             this.url = url;
 
@@ -149,7 +149,7 @@ module egret.web {
                 egret.$error(1049);
             }
 
-            var channel = new QQSoundChannel();
+            let channel = new QQSoundChannel();
             channel.$url = this.url;
             channel.$loops = loops;
             channel.$type = this.type;

@@ -27,7 +27,7 @@
 //
 //////////////////////////////////////////////////////////////////////////////////////
 
-module egret.web {
+namespace egret.web {
 
     /**
      * @private
@@ -67,10 +67,10 @@ module egret.web {
                 return;
             }
 
-            var self = this;
+            let self = this;
             this._startTime = Date.now();
 
-            var loop:number = 0;
+            let loop:number = 0;
             if (self.$loops > 0) {
                 loop = self.$loops - 1;
             }

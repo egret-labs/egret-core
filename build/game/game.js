@@ -654,19 +654,19 @@ var egret;
             if (this.$eventPool.length != 0) {
                 this.$eventPool.reverse();
                 var eventPool = this.$eventPool;
-                var length = eventPool.length;
+                var length_1 = eventPool.length;
                 var isComplete = false;
                 var isLoopComplete = false;
-                for (var i = 0; i < length; i++) {
-                    var event = eventPool.pop();
-                    if (event == egret.Event.LOOP_COMPLETE) {
+                for (var i = 0; i < length_1; i++) {
+                    var event_1 = eventPool.pop();
+                    if (event_1 == egret.Event.LOOP_COMPLETE) {
                         isLoopComplete = true;
                     }
-                    else if (event == egret.Event.COMPLETE) {
+                    else if (event_1 == egret.Event.COMPLETE) {
                         isComplete = true;
                     }
                     else {
-                        this.dispatchEventWith(event);
+                        this.dispatchEventWith(event_1);
                     }
                 }
                 if (isLoopComplete) {
@@ -1025,10 +1025,10 @@ var egret;
          */
         p.fillFrameLabelsData = function (frameLabelsData) {
             if (frameLabelsData) {
-                var length = frameLabelsData.length;
-                if (length > 0) {
+                var length_2 = frameLabelsData.length;
+                if (length_2 > 0) {
                     this.labels = [];
-                    for (var i = 0; i < length; i++) {
+                    for (var i = 0; i < length_2; i++) {
                         var label = frameLabelsData[i];
                         this.labels.push(new egret.FrameLabel(label.name, label.frame, label.end));
                     }
@@ -1042,10 +1042,10 @@ var egret;
          */
         p.fillFrameEventsData = function (frameEventsData) {
             if (frameEventsData) {
-                var length = frameEventsData.length;
-                if (length > 0) {
+                var length_3 = frameEventsData.length;
+                if (length_3 > 0) {
                     this.events = [];
-                    for (var i = 0; i < length; i++) {
+                    for (var i = 0; i < length_3; i++) {
                         var events = frameEventsData[i];
                         this.events[events.frame] = events.name;
                     }
@@ -1728,7 +1728,9 @@ var egret;
                 }
                 else if (this._steps.length > 0) {
                     // 找到新的tween
-                    for (var i = 0, l = this._steps.length; i < l; i++) {
+                    var i = void 0;
+                    var l = this._steps.length;
+                    for (i = 0; i < l; i++) {
                         if (this._steps[i].t > t) {
                             break;
                         }
@@ -1973,7 +1975,7 @@ var egret;
          * Execute callback function
          * @param callback {Function} Callback method
          * @param thisObj {any} this action scope of the callback method
-         * @param params {Array<any>} Parameter of the callback method
+         * @param params {any[]} Parameter of the callback method
          * @returns {egret.ScrollTween} ScrollTween object itself
          * @version Egret 2.4
          * @platform Web,Native
@@ -1983,7 +1985,7 @@ var egret;
          * 执行回调函数
          * @param callback {Function} 回调方法
          * @param thisObj {any} 回调方法this作用域
-         * @param params {Array<any>} 回调方法参数
+         * @param params {any[]} 回调方法参数
          * @returns {egret.ScrollTween} Tween对象本身
          * @version Egret 2.4
          * @platform Web,Native

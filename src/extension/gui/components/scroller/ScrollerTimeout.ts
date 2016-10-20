@@ -27,18 +27,18 @@
 //
 //////////////////////////////////////////////////////////////////////////////////////
 
-module egret.gui {
+namespace egret.gui {
 
-    var setTimeoutCache:any = {};
-    var setTimeoutIndex:number = 0;
+    let setTimeoutCache:any = {};
+    let setTimeoutIndex:number = 0;
 
-    var setTimeoutCount:number = 0;
-    var lastTime:number = 0;
+    let setTimeoutCount:number = 0;
+    let lastTime:number = 0;
     /**
      * @private
      */
     export function $addTimer(listener:Function, thisObject:any, delay:number, ...args):number {
-        var data = {listener: listener, thisObject: thisObject, delay: delay, params: args};
+        let data = {listener: listener, thisObject: thisObject, delay: delay, params: args};
 
         setTimeoutCount++;
         if (setTimeoutCount == 1 && sys.$ticker) {
@@ -72,12 +72,12 @@ module egret.gui {
      * @param dt 
      */
     function timeoutUpdate(timeStamp:number):boolean {
-        var dt:number = timeStamp - lastTime;
+        let dt:number = timeStamp - lastTime;
         lastTime = timeStamp;
 
-        for (var key in setTimeoutCache) {
-            var key2:any = key;
-            var data = setTimeoutCache[key2];
+        for (let key in setTimeoutCache) {
+            let key2:any = key;
+            let data = setTimeoutCache[key2];
             data.delay -= dt;
             if (data.delay <= 0) {
                 data.listener.apply(data.thisObject, data.params);

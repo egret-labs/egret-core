@@ -27,9 +27,9 @@
 //
 //////////////////////////////////////////////////////////////////////////////////////
 
-module egret.native {
+namespace egret.native {
 
-    export var $currentSurface:NativeRenderTexture;
+    export let $currentSurface:NativeRenderTexture;
 
     /**
      * @private

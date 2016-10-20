@@ -28,13 +28,13 @@
 //////////////////////////////////////////////////////////////////////////////////////
 
 
-module egret {
+namespace egret {
 
-    var PI = Math.PI;
-    var TwoPI = PI * 2;
-    var DEG_TO_RAD:number = PI / 180;
+    let PI = Math.PI;
+    let TwoPI = PI * 2;
+    let DEG_TO_RAD:number = PI / 180;
 
-    var matrixPool:Matrix[] = [];
+    let matrixPool:Matrix[] = [];
     /**
      * @language en_US
      * The Matrix class represents a transformation matrix that determines how to map points from one coordinate space to
@@ -90,7 +90,7 @@ module egret {
          * @platform Web,Native
          */
         public static create():Matrix {
-            var matrix = matrixPool.pop();
+            let matrix = matrixPool.pop();
             if (!matrix) {
                 matrix = new Matrix();
             }
@@ -255,12 +255,12 @@ module egret {
          * @platform Web,Native
          */
         public concat(other:Matrix):void {
-            var a =  this.a * other.a;
-            var b =  0.0;
-            var c =  0.0;
-            var d =  this.d * other.d;
-            var tx = this.tx * other.a + other.tx;
-            var ty = this.ty * other.d + other.ty;
+            let a =  this.a * other.a;
+            let b =  0.0;
+            let c =  0.0;
+            let d =  this.d * other.d;
+            let tx = this.tx * other.a + other.tx;
+            let ty = this.ty * other.d + other.ty;
 
             if (this.b !== 0.0 || this.c !== 0.0 || other.b !== 0.0 || other.c !== 0.0) {
                 a  += this.b * other.c;
@@ -345,12 +345,12 @@ module egret {
          * @private
          */
         $invertInto(target:Matrix):void {
-            var a = this.a;
-            var b  = this.b;
-            var c  = this.c;
-            var d = this.d;
-            var tx = this.tx;
-            var ty = this.ty;
+            let a = this.a;
+            let b  = this.b;
+            let c  = this.c;
+            let d = this.d;
+            let tx = this.tx;
+            let ty = this.ty;
             if (b == 0 && c == 0) {
                 target.b = target.c = 0;
                 if(a==0||d==0){
@@ -365,13 +365,13 @@ module egret {
 
                 return;
             }
-            var determinant = a * d - b * c;
+            let determinant = a * d - b * c;
             if (determinant == 0) {
                 target.identity();
                 return;
             }
             determinant = 1 / determinant;
-            var k = target.a =  d * determinant;
+            let k = target.a =  d * determinant;
             b = target.b = -b * determinant;
             c = target.c = -c * determinant;
             d = target.d =  a * determinant;
@@ -399,14 +399,14 @@ module egret {
             angle = +angle;
             if (angle !== 0) {
                 angle = angle / DEG_TO_RAD;
-                var u = egret.NumberUtils.cos(angle);
-                var v = egret.NumberUtils.sin(angle);
-                var ta = this.a;
-                var tb = this.b;
-                var tc = this.c;
-                var td = this.d;
-                var ttx = this.tx;
-                var tty = this.ty;
+                let u = egret.NumberUtils.cos(angle);
+                let v = egret.NumberUtils.sin(angle);
+                let ta = this.a;
+                let tb = this.b;
+                let tc = this.c;
+                let td = this.d;
+                let ttx = this.tx;
+                let tty = this.ty;
                 this.a = ta  * u - tb  * v;
                 this.b = ta  * v + tb  * u;
                 this.c = tc  * u - td  * v;
@@ -503,8 +503,8 @@ module egret {
          * @platform Web,Native
          */
         public transformPoint(pointX:number, pointY:number, resultPoint?:Point):Point {
-            var x = this.a * pointX + this.c * pointY + this.tx;
-            var y = this.b * pointX + this.d * pointY + this.ty;
+            let x = this.a * pointX + this.c * pointY + this.tx;
+            let y = this.b * pointX + this.d * pointY + this.ty;
             if (resultPoint) {
                 resultPoint.setTo(x, y);
                 return resultPoint;
@@ -582,10 +582,10 @@ module egret {
          * @platform Web,Native
          */
         public prepend(a:number, b:number, c:number, d:number, tx:number, ty:number):Matrix {
-            var tx1 = this.tx;
+            let tx1 = this.tx;
             if (a != 1 || b != 0 || c != 0 || d != 1) {
-                var a1 = this.a;
-                var c1 = this.c;
+                let a1 = this.a;
+                let c1 = this.c;
                 this.a = a1 * a + this.b * c;
                 this.b = a1 * b + this.b * d;
                 this.c = c1 * a + this.d * c;
@@ -623,10 +623,10 @@ module egret {
          * @platform Web,Native
          */
         public append(a:number, b:number, c:number, d:number, tx:number, ty:number):Matrix {
-            var a1 = this.a;
-            var b1 = this.b;
-            var c1 = this.c;
-            var d1 = this.d;
+            let a1 = this.a;
+            let b1 = this.b;
+            let c1 = this.c;
+            let d1 = this.d;
             if (a != 1 || b != 0 || c != 0 || d != 1) {
                 this.a = a * a1 + b * c1;
                 this.b = a * b1 + b * d1;
@@ -657,9 +657,9 @@ module egret {
          * @platform Web,Native
          */
         public deltaTransformPoint(point:Point):Point {
-            var self = this;
-            var x = self.a * point.x + self.c * point.y;
-            var y = self.b * point.x + self.d * point.y;
+            let self = this;
+            let x = self.a * point.x + self.c * point.y;
+            let y = self.b * point.x + self.d * point.y;
             return new egret.Point(x, y);
         }
 
@@ -704,11 +704,11 @@ module egret {
          * @platform Web,Native
          */
         public createBox(scaleX:number, scaleY:number, rotation:number = 0, tx:number = 0, ty:number = 0):void {
-            var self = this;
+            let self = this;
             if (rotation !== 0) {
                 rotation = rotation / DEG_TO_RAD;
-                var u = egret.NumberUtils.cos(rotation);
-                var v = egret.NumberUtils.sin(rotation);
+                let u = egret.NumberUtils.cos(rotation);
+                let v = egret.NumberUtils.sin(rotation);
                 self.a = u * scaleX;
                 self.b = v * scaleY;
                 self.c = -v * scaleX;
@@ -755,28 +755,28 @@ module egret {
          * @private
          */
         $transformBounds(bounds:Rectangle):void {
-            var a  = this.a;
-            var b  = this.b;
-            var c  = this.c;
-            var d  = this.d;
-            var tx = this.tx;
-            var ty = this.ty;
+            let a  = this.a;
+            let b  = this.b;
+            let c  = this.c;
+            let d  = this.d;
+            let tx = this.tx;
+            let ty = this.ty;
 
-            var x = bounds.x;
-            var y = bounds.y;
-            var xMax = x + bounds.width;
-            var yMax = y + bounds.height;
+            let x = bounds.x;
+            let y = bounds.y;
+            let xMax = x + bounds.width;
+            let yMax = y + bounds.height;
 
-            var x0 = a * x + c * y + tx;
-            var y0 = b * x + d * y + ty;
-            var x1 = a * xMax + c * y + tx;
-            var y1 = b * xMax + d * y + ty;
-            var x2 = a * xMax + c * yMax + tx;
-            var y2 = b * xMax + d * yMax + ty;
-            var x3 = a * x + c * yMax + tx;
-            var y3 = b * x + d * yMax + ty;
+            let x0 = a * x + c * y + tx;
+            let y0 = b * x + d * y + ty;
+            let x1 = a * xMax + c * y + tx;
+            let y1 = b * xMax + d * y + ty;
+            let x2 = a * xMax + c * yMax + tx;
+            let y2 = b * xMax + d * yMax + ty;
+            let x3 = a * x + c * yMax + tx;
+            let y3 = b * x + d * yMax + ty;
 
-            var tmp = 0;
+            let tmp = 0;
 
             if (x0 > x1) {
                 tmp = x0;
@@ -818,11 +818,11 @@ module egret {
          * @private
          */
         $getScaleX():number {
-            var m = this;
+            let m = this;
             if (m.a == 1 && m.b == 0) {
                 return 1;
             }
-            var result = Math.sqrt(m.a * m.a + m.b * m.b);
+            let result = Math.sqrt(m.a * m.a + m.b * m.b);
             return this.getDeterminant() < 0 ? -result : result;
         }
 
@@ -830,11 +830,11 @@ module egret {
          * @private
          */
         $getScaleY():number {
-            var m = this;
+            let m = this;
             if (m.c == 0 && m.d == 1) {
                 return 1;
             }
-            var result = Math.sqrt(m.c * m.c + m.d * m.d);
+            let result = Math.sqrt(m.c * m.c + m.d * m.d);
             return this.getDeterminant() < 0 ? -result : result;
         }
 
@@ -864,8 +864,8 @@ module egret {
             }
             skewX = skewX / DEG_TO_RAD;
             skewY = skewY / DEG_TO_RAD;
-            var u = egret.NumberUtils.cos(skewX);
-            var v = egret.NumberUtils.sin(skewX);
+            let u = egret.NumberUtils.cos(skewX);
+            let v = egret.NumberUtils.sin(skewX);
             if (skewX == skewY) {
                 this.a = u * scaleX;
                 this.b = v * scaleX;
@@ -882,12 +882,12 @@ module egret {
          * target = other * this
          */
         $preMultiplyInto(other:Matrix, target:Matrix):void {
-            var a =  other.a * this.a;
-            var b =  0.0;
-            var c =  0.0;
-            var d =  other.d * this.d;
-            var tx = other.tx * this.a + this.tx;
-            var ty = other.ty * this.d + this.ty;
+            let a =  other.a * this.a;
+            let b =  0.0;
+            let c =  0.0;
+            let d =  other.d * this.d;
+            let tx = other.tx * this.a + this.tx;
+            let ty = other.ty * this.d + this.ty;
 
             if (other.b !== 0.0 || other.c !== 0.0 || this.b !== 0.0 || this.c !== 0.0) {
                 a  += other.b * this.c;
@@ -911,5 +911,5 @@ module egret {
      * @private
      * 仅供框架内复用，要防止暴露引用到外部。
      */
-    export var $TempMatrix = new Matrix();
+    export let $TempMatrix = new Matrix();
 }

@@ -28,7 +28,7 @@
 //////////////////////////////////////////////////////////////////////////////////////
 
 
-module eui {
+namespace eui {
 
     /**
      * @language en_US
@@ -149,7 +149,7 @@ module eui {
             if (value == this.$viewport) {
                 return;
             }
-            var viewport = this.$viewport;
+            let viewport = this.$viewport;
             if (viewport)
             {
                 viewport.removeEventListener(eui.PropertyEvent.PROPERTY_CHANGE, this.onPropertyChanged,this);

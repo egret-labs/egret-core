@@ -26,7 +26,7 @@
 //  EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 //
 //////////////////////////////////////////////////////////////////////////////////////
-module egret {
+namespace egret {
     /**
      * @language en_US
      * The ColorMatrixFilter class lets you apply a 4 x 5 matrix transformation on the RGBA color and alpha values of every pixel in the input image to produce a result with a new set of RGBA color and alpha values.
@@ -47,11 +47,11 @@ module egret {
         /**
          * @private
          */
-        public $matrix:Array<number> = [];
+        public $matrix:number[] = [];
         /**
          * @private
          */
-        private matrix2:Array<number> = [];
+        private matrix2:number[] = [];
 
         /**
          * @language en_US
@@ -65,7 +65,7 @@ module egret {
          * @version Egret 3.1.0
          * @platform Web
          */
-        constructor(matrix:Array<number> = null) {
+        constructor(matrix:number[] = null) {
             super();
             this.type = "colorTransform";
             this.setMatrix(matrix);
@@ -87,14 +87,14 @@ module egret {
          * @version Egret 3.1.0
          * @platform Web
          */
-        public get matrix():Array<number> {
-            for (var i = 0; i < 20; i++) {
+        public get matrix():number[] {
+            for (let i = 0; i < 20; i++) {
                 this.matrix2[i] = this.$matrix[i];
             }
             return this.matrix2;
         }
 
-        public set matrix(value:Array<number>) {
+        public set matrix(value:number[]) {
             this.setMatrix(value);
             this.invalidate();
         }
@@ -102,13 +102,13 @@ module egret {
         /**
          * @private
          */
-        private setMatrix(value:Array<number>):void {
+        private setMatrix(value:number[]):void {
             if(value) {
-                for (var i = 0; i < 20; i++) {
+                for (let i = 0; i < 20; i++) {
                     this.$matrix[i] = value[i];
                 } 
             } else {
-                for (var i = 0; i < 20; i++) {
+                for (let i = 0; i < 20; i++) {
                     this.$matrix[i] = (i == 0 || i == 6 || i == 12 || i == 18) ? 1 : 0;
                 } 
             }

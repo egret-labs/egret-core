@@ -28,7 +28,7 @@
 //////////////////////////////////////////////////////////////////////////////////////
 
 
-module egret {
+namespace egret {
 
 	/**
      * @language en_US
@@ -97,8 +97,8 @@ module egret {
          * @platform Web,Native
          */
         public static dispatchIOErrorEvent(target:IEventDispatcher):boolean {
-            var event:IOErrorEvent = Event.create(IOErrorEvent, IOErrorEvent.IO_ERROR);
-            var result = target.dispatchEvent(event);
+            let event:IOErrorEvent = Event.create(IOErrorEvent, IOErrorEvent.IO_ERROR);
+            let result = target.dispatchEvent(event);
             Event.release(event);
             return result;
         }

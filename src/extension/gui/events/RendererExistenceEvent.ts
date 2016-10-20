@@ -28,7 +28,7 @@
 //////////////////////////////////////////////////////////////////////////////////////
 
 
-module egret.gui {
+namespace egret.gui {
 
     /**
      * @class egret.gui.RendererExistenceEvent
@@ -91,11 +91,11 @@ module egret.gui {
          */
         public static dispatchRendererExistenceEvent(target:IEventDispatcher, type:string, renderer:IItemRenderer = null,
                                                      index:number = -1, data:any = null):boolean {
-            var event:RendererExistenceEvent = Event.create(RendererExistenceEvent, type);
+            let event:RendererExistenceEvent = Event.create(RendererExistenceEvent, type);
             event.renderer = renderer;
             event.index = index;
             event.data = data;
-            var result = target.dispatchEvent(event);
+            let result = target.dispatchEvent(event);
             Event.release(event);
             return result;
         }

@@ -28,7 +28,7 @@
 //////////////////////////////////////////////////////////////////////////////////////
 
 
-module egret.gui {
+namespace egret.gui {
 
 	/**
 	 * @class egret.gui.MoveEvent
@@ -73,10 +73,10 @@ module egret.gui {
          * @method egret.gui.MoveEvent.dispatchMoveEvent
          */
         public static dispatchMoveEvent(target:IEventDispatcher,oldX:number = NaN, oldY:number = NaN):boolean{
-			var event:MoveEvent = Event.create(MoveEvent, MoveEvent.MOVE);
+			let event:MoveEvent = Event.create(MoveEvent, MoveEvent.MOVE);
 			event.oldX = oldX;
 			event.oldY = oldY;
-			var result = target.dispatchEvent(event);
+			let result = target.dispatchEvent(event);
 			Event.release(event);
 			return result;
         }

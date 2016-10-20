@@ -31,7 +31,7 @@
 /// <reference path="supportClasses/ItemRenderer.ts" />
 
 
-module egret.gui {
+namespace egret.gui {
 
 	/**
 	 * @class egret.gui.DataGroup
@@ -98,7 +98,7 @@ module egret.gui {
 		/**
 		 * 存储当前可见的项呈示器索引列表
 		 */
-		private virtualRendererIndices:Array<number>;
+		private virtualRendererIndices:number[];
 
 		/**
 		 * @method egret.gui.DataGroup#setVirtualElementIndicesInView
@@ -109,11 +109,11 @@ module egret.gui {
 			if(!this.layout||!this.layout.useVirtualLayout)
 				return;
 			this.virtualRendererIndices = [];
-			for(var i:number=startIndex;i<=endIndex;i++){
+			for(let i:number=startIndex;i<=endIndex;i++){
 				this.virtualRendererIndices.push(i);
 			}
-			for(var index in this.indexToRenderer){
-                var index2 = parseInt(index);
+			for(let index in this.indexToRenderer){
+                let index2 = parseInt(index);
 				if(this.virtualRendererIndices.indexOf(index2)==-1){
 					this.freeRendererByIndex(index2);
 				}
@@ -128,10 +128,10 @@ module egret.gui {
 		public getVirtualElementAt(index:number):IVisualElement{
 			if(index<0||index>=this.dataProvider.length)
 				return null;
-			var element:IVisualElement = this.indexToRenderer[index];
+			let element:IVisualElement = this.indexToRenderer[index];
 			if(!element){
-				var item:any = this.dataProvider.getItemAt(index);
-				var renderer:IItemRenderer = this.createVirtualRenderer(index);
+				let item:any = this.dataProvider.getItemAt(index);
+				let renderer:IItemRenderer = this.createVirtualRenderer(index);
 				this.indexToRenderer[index] = renderer;
 				this.updateRenderer(renderer,index,item);
 				if(this.createNewRendererFlag){
@@ -146,8 +146,8 @@ module egret.gui {
 			return element;
 		}
 
-		private rendererToClassMap:Array<any> = [];
-		private freeRenderers:Array<any> = [];
+		private rendererToClassMap:any[] = [];
+		private freeRenderers:any[] = [];
 
 		/**
 		 * 释放指定索引处的项呈示器
@@ -155,7 +155,7 @@ module egret.gui {
 		private freeRendererByIndex(index:number):void{
 			if(!this.indexToRenderer[index])
 				return;
-			var renderer:IItemRenderer = <IItemRenderer> (this.indexToRenderer[index]);
+			let renderer:IItemRenderer = <IItemRenderer> (this.indexToRenderer[index]);
 			delete this.indexToRenderer[index];
 			if(renderer&&renderer instanceof DisplayObject){
 				this.doFreeRenderer(renderer);
@@ -165,8 +165,8 @@ module egret.gui {
 		 * 释放指定的项呈示器
 		 */
 		private doFreeRenderer(renderer:IItemRenderer):void{
-			var rendererFactory:IFactory = this.rendererToClassMap[renderer.hashCode];
-            var hashCode:number = rendererFactory.hashCode;
+			let rendererFactory:IFactory = this.rendererToClassMap[renderer.hashCode];
+            let hashCode:number = rendererFactory.hashCode;
 			if(!this.freeRenderers[hashCode]){
 				this.freeRenderers[hashCode] = [];
 			}
@@ -192,11 +192,11 @@ module egret.gui {
 		 * 为指定索引创建虚拟的项呈示器
 		 */
 		private createVirtualRenderer(index:number):IItemRenderer{
-			var item:any = this.dataProvider.getItemAt(index);
-			var renderer:IItemRenderer;
-			var rendererFactory:IFactory = this.itemToRendererClass(item);
-            var hashCode:number = rendererFactory.hashCode;
-            var freeRenderers:Array<any> = this.freeRenderers;
+			let item:any = this.dataProvider.getItemAt(index);
+			let renderer:IItemRenderer;
+			let rendererFactory:IFactory = this.itemToRendererClass(item);
+            let hashCode:number = rendererFactory.hashCode;
+            let freeRenderers:any[] = this.freeRenderers;
 			if(freeRenderers[hashCode]&&freeRenderers[hashCode].length>0){
 				renderer = freeRenderers[hashCode].pop();
 				(<DisplayObject><any> renderer).visible = true;
@@ -209,9 +209,9 @@ module egret.gui {
 		 * 根据rendererClass创建一个Renderer,并添加到显示列表
 		 */
 		private createOneRenderer(rendererFactory:IFactory):IItemRenderer{
-			var renderer:IItemRenderer;
-            var hashCode:number = rendererFactory.hashCode;
-            var recycler:Array<IItemRenderer> = this.recyclerDic[hashCode];
+			let renderer:IItemRenderer;
+            let hashCode:number = rendererFactory.hashCode;
+            let recycler:Array<IItemRenderer> = this.recyclerDic[hashCode];
 			if(recycler){
                 renderer = recycler.pop();
 				if(recycler.length==0)
@@ -236,13 +236,13 @@ module egret.gui {
 		private setItemRenderSkinName(renderer:IItemRenderer):void{
 			if(!renderer)
 				return;
-			var comp:SkinnableComponent = <SkinnableComponent> <any>renderer;
+			let comp:SkinnableComponent = <SkinnableComponent> <any>renderer;
 			if(comp){
 				if(!comp._skinNameExplicitlySet)
 					comp.skinName = this._itemRendererSkinName;
 			}
 			else{
-				var client:ISkinnableClient = <ISkinnableClient> <any>renderer;
+				let client:ISkinnableClient = <ISkinnableClient> <any>renderer;
 				if(client&&!client.skinName)
 					client.skinName = this._itemRendererSkinName;
 			}
@@ -256,8 +256,8 @@ module egret.gui {
 			if(!this.virtualLayoutUnderway)
 				return;
 			this.virtualLayoutUnderway = false;
-			var found:boolean = false;
-			for(var hashCode in this.freeRenderers){
+			let found:boolean = false;
+			for(let hashCode in this.freeRenderers){
 				if(this.freeRenderers[hashCode].length>0){
 					found = true;
 					break;
@@ -277,12 +277,12 @@ module egret.gui {
 		 * 延迟清理多余的在显示列表中的ItemRenderer。
 		 */
 		private cleanAllFreeRenderer(event:TimerEvent=null):void{
-			var renderer:IItemRenderer;
-            var freeRenderers:Array<any> = this.freeRenderers;
-            for(var hashCode in freeRenderers){
-                var list:Array<any> = freeRenderers[hashCode];
-                var length:number = list.length;
-				for(var i:number=0;i<length;i++){
+			let renderer:IItemRenderer;
+            let freeRenderers:any[] = this.freeRenderers;
+            for(let hashCode in freeRenderers){
+                let list:any[] = freeRenderers[hashCode];
+                let length:number = list.length;
+				for(let i:number=0;i<length;i++){
                     renderer = list[i];
 					(<DisplayObject> <any>renderer).visible = true;
 					this.recycle(renderer);
@@ -296,7 +296,7 @@ module egret.gui {
 		 * @method egret.gui.DataGroup#getElementIndicesInView
 		 * @returns {number}
 		 */
-		public getElementIndicesInView():Array<number>{
+		public getElementIndicesInView():number[]{
 			if(this.layout&&this.layout.useVirtualLayout)
 				return this.virtualRendererIndices?this.virtualRendererIndices:[];
 			return super.getElementIndicesInView();
@@ -365,8 +365,8 @@ module egret.gui {
 				case CollectionEventKind.RESET:
 				case CollectionEventKind.REFRESH:
 					if(this.layout&&this.layout.useVirtualLayout){
-						for(var index in this.indexToRenderer){
-                            var index2 = parseInt(index);
+						for(let index in this.indexToRenderer){
+                            let index2 = parseInt(index);
 							this.freeRendererByIndex(index2);
 						}
 					}
@@ -381,9 +381,9 @@ module egret.gui {
 		/**
 		 * 数据源添加项目事件处理
 		 */
-		private itemAddedHandler(items:Array<any>,index:number):void{
-			var length:number = items.length;
-			for (var i:number = 0; i < length; i++){
+		private itemAddedHandler(items:any[],index:number):void{
+			let length:number = items.length;
+			for (let i:number = 0; i < length; i++){
 				this.itemAdded(items[i], index + i);
 			}
 			this.resetRenderersIndices();
@@ -399,9 +399,9 @@ module egret.gui {
 		/**
 		 * 数据源移除项目事件处理
 		 */
-		private itemRemovedHandler(items:Array<any>,location:number):void{
-			var length:number = items.length;
-			for (var i:number = length-1; i >= 0; i--){
+		private itemRemovedHandler(items:any[],location:number):void{
+			let length:number = items.length;
+			for (let i:number = length-1; i >= 0; i--){
 				this.itemRemoved(items[i], location + i);
 			}
 
@@ -415,11 +415,11 @@ module egret.gui {
 				this.layout.elementAdded(index);
 
 			if (this.layout && this.layout.useVirtualLayout){
-                var virtualRendererIndices:Array<any> = this.virtualRendererIndices;
+                let virtualRendererIndices:any[] = this.virtualRendererIndices;
 				if (virtualRendererIndices){
-					var length:number = virtualRendererIndices.length;
-					for (var i:number = 0; i < length; i++){
-						var vrIndex:number = virtualRendererIndices[i];
+					let length:number = virtualRendererIndices.length;
+					for (let i:number = 0; i < length; i++){
+						let vrIndex:number = virtualRendererIndices[i];
 						if (vrIndex >= index)
 							virtualRendererIndices[i] = vrIndex + 1;
 					}
@@ -427,8 +427,8 @@ module egret.gui {
 				}
 				return;
 			}
-			var rendererFactory:IFactory = this.itemToRendererClass(item);
-			var renderer:IItemRenderer = this.createOneRenderer(rendererFactory);
+			let rendererFactory:IFactory = this.itemToRendererClass(item);
+			let renderer:IItemRenderer = this.createOneRenderer(rendererFactory);
 			this.indexToRenderer.splice(index,0,renderer);
 			if(!renderer)
 				return;
@@ -443,12 +443,12 @@ module egret.gui {
 		private itemRemoved(item:any, index:number):void{
 			if (this.layout)
 				this.layout.elementRemoved(index);
-            var virtualRendererIndices:Array<any> = this.virtualRendererIndices;
+            let virtualRendererIndices:any[] = this.virtualRendererIndices;
 			if (virtualRendererIndices && (virtualRendererIndices.length > 0)){
-				var vrItemIndex:number = -1;
-				var length:number = virtualRendererIndices.length;
-				for (var i:number = 0; i < length; i++){
-					var vrIndex:number = virtualRendererIndices[i];
+				let vrItemIndex:number = -1;
+				let length:number = virtualRendererIndices.length;
+				for (let i:number = 0; i < length; i++){
+					let vrIndex:number = virtualRendererIndices[i];
 					if (vrIndex == index)
 						vrItemIndex = i;
 					else if (vrIndex > index)
@@ -457,7 +457,7 @@ module egret.gui {
 				if (vrItemIndex != -1)
 					virtualRendererIndices.splice(vrItemIndex, 1);
 			}
-			var oldRenderer:IItemRenderer = this.indexToRenderer[index];
+			let oldRenderer:IItemRenderer = this.indexToRenderer[index];
 
 			if (this.indexToRenderer.length > index)
 				this.indexToRenderer.splice(index, 1);
@@ -482,8 +482,8 @@ module egret.gui {
 			if("ownerChanged" in renderer){
 				(<IVisualElement> <any>renderer).ownerChanged(null);
 			}
-			var rendererFactory:IFactory = this.rendererToClassMap[renderer.hashCode];
-            var hashCode:number = rendererFactory.hashCode;
+			let rendererFactory:IFactory = this.rendererToClassMap[renderer.hashCode];
+            let hashCode:number = rendererFactory.hashCode;
 			if(!this.recyclerDic[hashCode]){
 				this.recyclerDic[hashCode] = [];
 			}
@@ -497,16 +497,16 @@ module egret.gui {
 				return;
 
 			if (this.layout && this.layout.useVirtualLayout){
-                var virtualRendererIndices:Array<any> = this.virtualRendererIndices;
-                var length:number =  virtualRendererIndices.length;
-				for(var i:number=0;i<length;i++){
-                    var index:number = virtualRendererIndices[i];
+                let virtualRendererIndices:any[] = this.virtualRendererIndices;
+                let length:number =  virtualRendererIndices.length;
+				for(let i:number=0;i<length;i++){
+                    let index:number = virtualRendererIndices[i];
 				    this.resetRendererItemIndex(index);
                 }
 			}
 			else{
-				var indexToRendererLength:number = this.indexToRenderer.length;
-				for (index = 0; index < indexToRendererLength; index++)
+				let indexToRendererLength:number = this.indexToRenderer.length;
+				for (let index = 0; index < indexToRendererLength; index++)
 					this.resetRendererItemIndex(index);
 			}
 		}
@@ -517,7 +517,7 @@ module egret.gui {
 			if (this.renderersBeingUpdated)
 				return;//防止无限循环
 
-			var renderer:IItemRenderer = this.indexToRenderer[location];
+			let renderer:IItemRenderer = this.indexToRenderer[location];
 			if(renderer)
 				this.updateRenderer(renderer,location,item);
 		}
@@ -525,7 +525,7 @@ module egret.gui {
 		 * 调整指定项呈示器的索引值
 		 */
 		private resetRendererItemIndex(index:number):void{
-			var renderer:IItemRenderer = <IItemRenderer> (this.indexToRenderer[index]);
+			let renderer:IItemRenderer = <IItemRenderer> (this.indexToRenderer[index]);
 			if (renderer)
 				renderer.itemIndex = index;
 		}
@@ -607,7 +607,7 @@ module egret.gui {
 		 * 为特定的数据项返回项呈示器的工厂实例
 		 */
 		private itemToRendererClass(item:any):IFactory{
-			var rendererFactory:IFactory;
+			let rendererFactory:IFactory;
 			if(this._itemRendererFunction!=null){
 				rendererFactory = this._itemRendererFunction(item);
 				if(!rendererFactory)
@@ -627,7 +627,7 @@ module egret.gui {
 		 */
 		public createChildren():void{
 			if(!this.layout){
-				var _layout:VerticalLayout = new VerticalLayout();
+				let _layout:VerticalLayout = new VerticalLayout();
 				_layout.gap = 0;
 				_layout.horizontalAlign = HorizontalAlign.CONTENT_JUSTIFY;
 				this.layout = _layout;
@@ -674,16 +674,16 @@ module egret.gui {
 			}
 			if(this.itemRendererSkinNameChange){
 				this.itemRendererSkinNameChange = false;
-				var length:number = this.indexToRenderer.length;
-				for(var i:number=0;i<length;i++){
+				let length:number = this.indexToRenderer.length;
+				for(let i:number=0;i<length;i++){
 					this.setItemRenderSkinName(this.indexToRenderer[i]);
 				}
-                var freeRenderers:Array<any> = this.freeRenderers;
-				for(var hashCode in freeRenderers){
-					var list:Array<any> = freeRenderers[hashCode];
+                let freeRenderers:any[] = this.freeRenderers;
+				for(let hashCode in freeRenderers){
+					let list:any[] = freeRenderers[hashCode];
 					if(list){
 						length = list.length;
-						for(i=0;i<length;i++){
+						for(let i=0;i<length;i++){
 							this.setItemRenderSkinName(list[i]);
 						}
 					}
@@ -750,8 +750,8 @@ module egret.gui {
 				this.setTypicalLayoutRect(null);
 				return;
 			}
-			var rendererFactory:IFactory = this.itemToRendererClass(this.typicalItem);
-			var typicalRenderer:IItemRenderer = this.createOneRenderer(rendererFactory);
+			let rendererFactory:IFactory = this.itemToRendererClass(this.typicalItem);
+			let typicalRenderer:IItemRenderer = this.createOneRenderer(rendererFactory);
 			if(!typicalRenderer){
 				this.setTypicalLayoutRect(null);
 				return;
@@ -760,7 +760,7 @@ module egret.gui {
 			this.updateRenderer(typicalRenderer,0,this.typicalItem);
 			if("validateNow" in typicalRenderer)
 				(<IInvalidating> <any>typicalRenderer).validateNow();
-			var rect:Rectangle = new Rectangle(0,0,typicalRenderer.preferredWidth,
+			let rect:Rectangle = new Rectangle(0,0,typicalRenderer.preferredWidth,
 				typicalRenderer.preferredHeight);
 			this.recycle(typicalRenderer);
 			this.setTypicalLayoutRect(rect);
@@ -784,7 +784,7 @@ module egret.gui {
 		/**
 		 * 索引到项呈示器的转换数组
 		 */
-		private indexToRenderer:Array<any> = [];
+		private indexToRenderer:any[] = [];
 		/**
 		 * 清理freeRenderer标志
 		 */
@@ -793,9 +793,9 @@ module egret.gui {
 		 * 移除所有项呈示器
 		 */
 		private removeAllRenderers():void{
-			var length:number = this.indexToRenderer.length;
-			var renderer:IItemRenderer;
-			for(var i:number=0;i<length;i++){
+			let length:number = this.indexToRenderer.length;
+			let renderer:IItemRenderer;
+			for(let i:number=0;i<length;i++){
 				renderer = this.indexToRenderer[i];
 				if(renderer){
 					this.recycle(renderer);
@@ -816,12 +816,12 @@ module egret.gui {
 		private createRenderers():void{
 			if(!this._dataProvider)
 				return;
-			var index:number = 0;
-			var length:number = this._dataProvider.length;
-			for(var i:number=0;i<length;i++){
-				var item:any = this._dataProvider.getItemAt(i);
-				var rendererFactory:IFactory = this.itemToRendererClass(item);
-				var renderer:IItemRenderer = this.createOneRenderer(rendererFactory);
+			let index:number = 0;
+			let length:number = this._dataProvider.length;
+			for(let i:number=0;i<length;i++){
+				let item:any = this._dataProvider.getItemAt(i);
+				let rendererFactory:IFactory = this.itemToRendererClass(item);
+				let renderer:IItemRenderer = this.createOneRenderer(rendererFactory);
 				if(!renderer)
 					continue;
 				this.indexToRenderer[index] = renderer;

@@ -1,4 +1,4 @@
-declare module egret {
+declare namespace egret {
     /**
      * @private
      */
@@ -6,7 +6,7 @@ declare module egret {
 }
 
 declare var __extends: any;
-declare module egret {
+declare namespace egret {
     /**
      * @language en_US
      * Call setter properties of the parent class, instead of the other writing languages, such as super.alpha = 1;
@@ -47,7 +47,7 @@ declare module egret {
     function superGetter(thisObj: any, type: string): any;
 }
 
-declare module egret {
+declare namespace egret {
     /**
      * @private
      */
@@ -115,7 +115,7 @@ declare module egret {
     function $warn(code: number, ...args: any[]): void;
 }
 
-declare module egret {
+declare namespace egret {
     /**
      * @classdesc
      * IHashObject是哈希对象接口。引擎内所有接口的基类,为对象实例提供唯一的hashCode值,提高对象比较的性能。
@@ -136,7 +136,7 @@ declare module egret {
 /**
  * @namespace egret
  */
-declare module egret {
+declare namespace egret {
     /**
      * @class egret.HashObject
      * @classdesc 哈希对象。引擎内所有对象的基类，为对象实例提供唯一的hashCode值,提高对象比较的性能。
@@ -161,7 +161,7 @@ declare module egret {
     }
 }
 
-declare module egret {
+declare namespace egret {
     /**
      * @class egret.Recycler
      * @classdesc
@@ -210,7 +210,7 @@ declare module egret {
     }
 }
 
-declare module egret {
+declare namespace egret {
     var __START_TIME: number;
     /**
      * 用于计算相对时间。此方法返回自启动 Egret 引擎以来经过的毫秒数。
@@ -221,7 +221,7 @@ declare module egret {
     function getTimer(): number;
 }
 
-declare module egret {
+declare namespace egret {
     var __callLaterFunctionList: Array<any>;
     var __callLaterThisList: Array<any>;
     var __callLaterArgsList: Array<any>;
@@ -247,7 +247,7 @@ declare module egret {
     function __callAsync(method: Function, thisObject: any, ...args: any[]): void;
 }
 
-declare module egret {
+declare namespace egret {
     /**
      * @private
      */
@@ -261,7 +261,7 @@ declare module egret {
     }
 }
 
-declare module egret {
+declare namespace egret {
     /**
      * @private
      * OrientationMode 类为舞台初始旋转模式提供值。
@@ -290,7 +290,7 @@ declare module egret {
     }
 }
 
-declare module egret {
+declare namespace egret {
     /**
      * @private
      * 绘图上下文
@@ -320,7 +320,7 @@ declare module egret {
     }
 }
 
-declare module egret {
+declare namespace egret {
     /**
      * @classdesc
      * Event 类作为创建 Event 对象的基类，当发生事件时，Event 对象将作为参数传递给事件侦听器。
@@ -526,7 +526,7 @@ declare module egret {
     }
 }
 
-declare module egret {
+declare namespace egret {
     /**
      * @class egret.HTTPStatusEvent
      * @classdesc
@@ -566,7 +566,7 @@ declare module egret {
     }
 }
 
-declare module egret {
+declare namespace egret {
     /**
      * @class egret.SoundEvent
      * @classdesc
@@ -590,7 +590,7 @@ declare module egret {
     }
 }
 
-declare module egret {
+declare namespace egret {
     /**
      * @class egret.FocusEvent
      * @classdesc
@@ -620,7 +620,7 @@ declare module egret {
     }
 }
 
-declare module egret {
+declare namespace egret {
     /**
      * @class egret.IOErrorEvent
      * @classdesc IO流事件，当错误导致输入或输出操作失败时调度 IOErrorEvent 对象。
@@ -650,7 +650,7 @@ declare module egret {
     }
 }
 
-declare module egret {
+declare namespace egret {
     /**
      * @class egret.TouchEvent
      * @classdesc
@@ -790,7 +790,7 @@ declare module egret {
 }
 
 /** @namespace egret */
-declare module egret {
+declare namespace egret {
     /**
      * @class egret.TimerEvent
      * @classdesc
@@ -828,7 +828,7 @@ declare module egret {
     }
 }
 
-declare module egret {
+declare namespace egret {
     /**
      * 用户在富文本中单击超链接时，对象将调度 TextEvent 对象。文本事件类型：TextEvent.LINK。
      * @includeExample egret/events/TextEvent.ts
@@ -860,7 +860,7 @@ declare module egret {
     }
 }
 
-declare module egret {
+declare namespace egret {
     /**
      * @class egret.ProgressEvent
      * @classdesc
@@ -910,7 +910,7 @@ declare module egret {
     }
 }
 
-declare module egret {
+declare namespace egret {
     /**
      * @class egret.EventPhase
      * @classdesc
@@ -937,7 +937,7 @@ declare module egret {
     }
 }
 
-declare module egret {
+declare namespace egret {
     /**
      *
      * @class egret.IEventDispatcher
@@ -996,7 +996,7 @@ declare module egret {
     }
 }
 
-declare module egret {
+declare namespace egret {
     /**
      *
      * @class egret.EventDispatcher
@@ -1100,7 +1100,7 @@ declare module egret {
     }
 }
 
-declare module egret {
+declare namespace egret {
     /**
      * @class egret.MovieClipEvent
      * @classdesc
@@ -1136,7 +1136,7 @@ declare module egret {
     }
 }
 
-declare module egret {
+declare namespace egret {
     /**
      * @class egret.MainContext
      * @classdesc
@@ -1221,7 +1221,7 @@ declare module egret {
 declare var testDeviceType: () => boolean;
 declare var testRuntimeType: () => boolean;
 
-declare module egret {
+declare namespace egret {
     /**
      * @class egret.Profiler
      * @classdesc
@@ -1284,7 +1284,7 @@ declare module egret {
     }
 }
 
-declare module egret {
+declare namespace egret {
     /**
      * Ticker是egret引擎的心跳控制器，是游戏唯一的时间处理入口。
      * @includeExample egret/context/Ticker.ts
@@ -1366,7 +1366,7 @@ declare module egret {
     }
 }
 
-declare module egret {
+declare namespace egret {
     /**
      * @class egret.HorizontalAlign
      * @classdesc 水平对齐方式
@@ -1404,7 +1404,7 @@ declare module egret {
     }
 }
 
-declare module egret {
+declare namespace egret {
     /**
      * @class egret.VerticalAlign
      * @classdesc 垂直对齐方式
@@ -1442,7 +1442,7 @@ declare module egret {
     }
 }
 
-declare module egret {
+declare namespace egret {
     /**
      * @class egret.Timer
      * @classdesc
@@ -1509,7 +1509,7 @@ declare module egret {
     }
 }
 
-declare module egret {
+declare namespace egret {
     /**
      * 返回一个对象的完全限定名<br/>
      * @method egret.getQualifiedClassName
@@ -1535,7 +1535,7 @@ declare module egret {
     function getQualifiedSuperclassName(value: any): string;
 }
 
-declare module egret {
+declare namespace egret {
     /**
      * 返回 name 参数指定的类的类对象引用。
      * @method egret.getDefinitionByName
@@ -1551,7 +1551,7 @@ declare module egret {
 }
 declare var __global: any;
 
-declare module egret {
+declare namespace egret {
     /**
      * 在指定的延迟（以毫秒为单位）后运行指定的函数。
      * @method egret.setTimeout
@@ -1572,7 +1572,7 @@ declare module egret {
     function clearTimeout(key: number): void;
 }
 
-declare module egret {
+declare namespace egret {
     /**
      * 在指定的延迟（以毫秒为单位）后运行指定的函数。
      * @method egret.setInterval
@@ -1593,7 +1593,7 @@ declare module egret {
     function clearInterval(key: number): void;
 }
 
-declare module egret {
+declare namespace egret {
     /**
      * 检查指定的应用程序域之内是否存在一个公共定义。该定义可以是一个类、一个命名空间或一个函数的定义。
      * @method egret.hasDefinition
@@ -1608,7 +1608,7 @@ declare module egret {
     function hasDefinition(name: string): boolean;
 }
 
-declare module egret {
+declare namespace egret {
     /**
      * 转换数字为颜色字符串
      * @method egret.toColorString
@@ -1619,7 +1619,7 @@ declare module egret {
     function toColorString(value: number): string;
 }
 
-declare module egret {
+declare namespace egret {
     /**
      * @class egret.Matrix
      * @classdesc
@@ -1878,7 +1878,7 @@ declare module egret {
     }
 }
 
-declare module egret {
+declare namespace egret {
     /**
      * @class egret.Point
      * @classdesc
@@ -2001,7 +2001,7 @@ declare module egret {
     }
 }
 
-declare module egret {
+declare namespace egret {
     /**
      * @class egret.Rectangle
      * @classdesc 矩形类
@@ -2210,7 +2210,7 @@ declare module egret {
     }
 }
 
-declare module egret {
+declare namespace egret {
     /**
      * @class egret.ColorTransform
      * @classdesc
@@ -2337,7 +2337,7 @@ declare module egret {
     }
 }
 
-declare module egret {
+declare namespace egret {
     /**
      * @class egret.Transform
      * @classdesc
@@ -2370,7 +2370,7 @@ declare module egret {
     }
 }
 
-declare module egret {
+declare namespace egret {
     /**
      * @deprecated
      * @private
@@ -2392,7 +2392,7 @@ declare module egret {
     }
 }
 
-declare module egret {
+declare namespace egret {
     /**
      * @class egret.StageDelegate
      * @classdesc
@@ -2627,7 +2627,7 @@ declare module egret {
     }
 }
 
-declare module egret {
+declare namespace egret {
     /**
      * @classdesc
      * @extends egret.HashObject
@@ -2698,7 +2698,7 @@ declare module egret {
     }
 }
 
-declare module egret {
+declare namespace egret {
     /**
      * @classdesc 注入器
      * @class egret.Injector
@@ -2749,7 +2749,7 @@ declare module egret {
     }
 }
 
-declare module egret {
+declare namespace egret {
     /**
      * @private
      */
@@ -2772,7 +2772,7 @@ declare module egret {
     }
 }
 
-declare module egret {
+declare namespace egret {
     /**
      * @private
      */
@@ -2781,7 +2781,7 @@ declare module egret {
     }
 }
 
-declare module egret {
+declare namespace egret {
     /**
      * @class egret.BlurFilter
      * @classdesc
@@ -2802,7 +2802,7 @@ declare module egret {
     }
 }
 
-declare module egret {
+declare namespace egret {
     /**
      * @class egret.ColorMatrixFilter
      * @classdesc
@@ -2831,7 +2831,7 @@ declare module egret {
     }
 }
 
-declare module egret {
+declare namespace egret {
     /**
      * @class egret.GlowFilter
      * @classdesc
@@ -2867,7 +2867,7 @@ declare module egret {
     }
 }
 
-declare module egret {
+declare namespace egret {
     /**
      * @class egret.DropShadowFilter
      * @classdesc
@@ -2896,7 +2896,7 @@ declare module egret {
     }
 }
 
-declare module egret {
+declare namespace egret {
     /**
      * @class egret.BlendMode
      * @classdesc
@@ -2931,7 +2931,7 @@ declare module egret {
     }
 }
 
-declare module egret {
+declare namespace egret {
     /**
      * @private
      */
@@ -2978,7 +2978,7 @@ declare module egret {
     }
 }
 
-declare module egret {
+declare namespace egret {
     /**
      * @private
      */
@@ -2992,7 +2992,7 @@ declare module egret {
     }
 }
 
-declare module egret {
+declare namespace egret {
     /**
      * @class egret.DisplayObject
      * @extends egret.EventDispatcher
@@ -3386,7 +3386,7 @@ declare module egret {
     }
 }
 
-declare module egret {
+declare namespace egret {
     /**
      * @extends egret.DisplayObject
      * @class egret.DisplayObjectContainer
@@ -3526,7 +3526,7 @@ declare module egret {
     }
 }
 
-declare module egret {
+declare namespace egret {
     /**
      * @classdesc
      * StageScaleMode 类为 Stage.scaleMode 属性提供值。
@@ -3557,7 +3557,7 @@ declare module egret {
     }
 }
 
-declare module egret {
+declare namespace egret {
     /**
      * @class egret.Stage
      * @classdesc
@@ -3674,7 +3674,7 @@ declare module egret {
     }
 }
 
-declare module egret {
+declare namespace egret {
     /**
      * @private
      */
@@ -3702,7 +3702,7 @@ declare module egret {
     }
 }
 
-declare module egret {
+declare namespace egret {
     /**
      * @class egret.ScrollView
      * @classdesc
@@ -3895,7 +3895,7 @@ declare module egret {
     }
 }
 
-declare module egret {
+declare namespace egret {
     /**
      * @class egret.BitmapFillMode
      * @classdesc
@@ -3918,7 +3918,7 @@ declare module egret {
     }
 }
 
-declare module egret {
+declare namespace egret {
     /**
      * @class egret.Bitmap
      * @classdesc
@@ -3974,7 +3974,7 @@ declare module egret {
     }
 }
 
-declare module egret {
+declare namespace egret {
     /**
      * @classdesc
      * @class egret.BitmapText
@@ -4042,7 +4042,7 @@ declare module egret {
     }
 }
 
-declare module egret {
+declare namespace egret {
     class GradientType {
         /**
          * 用于指定线性渐变填充的值
@@ -4057,7 +4057,7 @@ declare module egret {
     }
 }
 
-declare module egret {
+declare namespace egret {
     /**
      * @class egret.Graphics
      * @classdesc
@@ -4226,7 +4226,7 @@ declare module egret {
     }
 }
 
-declare module egret {
+declare namespace egret {
     /**
      * @class egret.Shape
      * @classdesc 此类用于使用 Egret 绘图应用程序编程接口 (API) 创建简单形状。Shape 类包括 graphics 属性，该属性使您可以从 Graphics 类访问方法。
@@ -4250,7 +4250,7 @@ declare module egret {
     }
 }
 
-declare module egret {
+declare namespace egret {
     /**
      * @extends egret.DisplayObjectContainer
      * @class egret.Sprite
@@ -4280,7 +4280,7 @@ declare module egret {
     }
 }
 
-declare module egret {
+declare namespace egret {
     /**
      * @private
      */
@@ -4335,7 +4335,7 @@ declare module egret {
     }
 }
 
-declare module egret {
+declare namespace egret {
     /**
      * @private
      */
@@ -4372,7 +4372,7 @@ declare module egret {
     }
 }
 
-declare module egret {
+declare namespace egret {
     /**
      * @private
      */
@@ -4441,7 +4441,7 @@ declare module egret {
     }
 }
 
-declare module egret {
+declare namespace egret {
     /**
      * @class egret.TextField
      * @classdesc
@@ -4758,7 +4758,7 @@ declare module egret {
     }
 }
 
-declare module egret {
+declare namespace egret {
     /**
      * @class egret.HtmlTextParser
      * @classdesc 将html格式文本转换为可赋值给 egret.TextField#textFlow 属性的对象
@@ -4790,7 +4790,7 @@ declare module egret {
     }
 }
 
-declare module egret {
+declare namespace egret {
     /**
      * @class egret.TextFieldType
      * @classdesc
@@ -4810,7 +4810,7 @@ declare module egret {
     }
 }
 
-declare module egret {
+declare namespace egret {
     /**
      * @class egret.SpriteSheet
      * @classdesc SpriteSheet 是一张由多个子位图拼接而成的集合位图，它包含多个 Texture 对象。
@@ -4881,7 +4881,7 @@ declare module egret {
     }
 }
 
-declare module egret {
+declare namespace egret {
     /**
      * @private
      */
@@ -4907,7 +4907,7 @@ declare module egret {
     }
 }
 
-declare module egret {
+declare namespace egret {
     /**
      * @classdesc
      * @class egret.BitmapFont
@@ -4939,7 +4939,7 @@ declare module egret {
     }
 }
 
-declare module egret {
+declare namespace egret {
     /**
      * @class egret.MovieClip
      * @classdesc 影片剪辑，可以通过影片剪辑播放序列帧动画。MovieClip 类从以下类继承而来：DisplayObject 和 EventDispatcher。不同于 DisplayObject 对象，MovieClip 对象拥有一个时间轴。
@@ -5088,7 +5088,7 @@ declare module egret {
     }
 }
 
-declare module egret {
+declare namespace egret {
     /**
      * @private
      */
@@ -5120,7 +5120,7 @@ declare module egret {
     }
 }
 
-declare module egret {
+declare namespace egret {
     /**
      * @class egret.MovieClipData
      * @classdesc 使用 MovieClipData 类，您可以创建 MovieClip 对象和处理 MovieClip 对象的数据。MovieClipData 一般由MovieClipDataFactory生成
@@ -5195,7 +5195,7 @@ declare module egret {
     }
 }
 
-declare module egret {
+declare namespace egret {
     /**
      * @class egret.MovieClipDataFactory
      * @classdesc 使用 MovieClipDataFactory 类，可以生成 MovieClipData 对象用于创建MovieClip
@@ -5250,7 +5250,7 @@ declare module egret {
     }
 }
 
-declare module egret {
+declare namespace egret {
     /**
      * @classdesc
      * @extends egret.EventDispatcher
@@ -5322,7 +5322,7 @@ declare module egret {
     }
 }
 
-declare module egret {
+declare namespace egret {
     /**
      * @class egret.URLRequestMethod
      * @classdesc URLRequestMethod 类提供了一些值，这些值可指定在将数据发送到服务器时，
@@ -5344,7 +5344,7 @@ declare module egret {
     }
 }
 
-declare module egret {
+declare namespace egret {
     /**
      * @class egret.URLLoaderDataFormat
      * @classdesc URLLoaderDataFormat 类提供了一些用于指定如何接收已下载数据的值。
@@ -5381,7 +5381,7 @@ declare module egret {
     }
 }
 
-declare module egret {
+declare namespace egret {
     /**
      * @class egret.URLVariables
      * @classdesc
@@ -5418,7 +5418,7 @@ declare module egret {
     }
 }
 
-declare module egret {
+declare namespace egret {
     /**
      * @class egret.URLRequestHeader
      * @classdesc
@@ -5446,7 +5446,7 @@ declare module egret {
     }
 }
 
-declare module egret {
+declare namespace egret {
     /**
      * @class egret.URLRequest
      * @classdesc URLRequest 类可捕获单个 HTTP 请求中的所有信息。
@@ -5494,7 +5494,7 @@ declare module egret {
     }
 }
 
-declare module egret {
+declare namespace egret {
     /**
      * @class egret.URLLoader
      * @classdesc
@@ -5546,7 +5546,7 @@ declare module egret {
     }
 }
 
-declare module egret {
+declare namespace egret {
     /**
      * @class egret.Texture
      * @classdesc 纹理类是对不同平台不同的图片资源的封装
@@ -5680,8 +5680,8 @@ declare module egret {
         private static _bitmapCallbackMap;
     }
 }
-declare module egret_native {
-    module Texture {
+declare namespace egret_native {
+    namespace Texture {
         function addTexture(filePath: string): any;
         function addTextureAsyn(filePath: string, promise: any): any;
         function addTextureUnsyn(filePath: string, promise: any): any;
@@ -5689,7 +5689,7 @@ declare module egret_native {
     }
 }
 
-declare module egret {
+declare namespace egret {
     /**
      * @class egret.RenderTexture
      * @classdesc
@@ -5751,7 +5751,7 @@ declare module egret {
     }
 }
 
-declare module egret {
+declare namespace egret {
     /**
      * @class egret.RendererContext
      * @classdesc
@@ -5894,7 +5894,7 @@ declare module egret {
     }
 }
 
-declare module egret {
+declare namespace egret {
     /**
      * @private
      */
@@ -5914,7 +5914,7 @@ declare module egret {
     }
 }
 
-declare module egret {
+declare namespace egret {
     /**
      *
      * @class egret.TouchContext
@@ -5946,7 +5946,7 @@ declare module egret {
     }
 }
 
-declare module egret {
+declare namespace egret {
     /**
      * @class egret.NetContext
      * @classdesc
@@ -5967,7 +5967,7 @@ declare module egret {
     }
 }
 
-declare module egret {
+declare namespace egret {
     /**
      * @classdesc
      * @extends egret.HashObject
@@ -5980,7 +5980,7 @@ declare module egret {
     }
 }
 
-declare module egret {
+declare namespace egret {
     /**
      * @includeExample egret/context/external/ExternalInterface.ts
      */
@@ -6005,7 +6005,7 @@ declare module egret {
     }
 }
 
-declare module egret {
+declare namespace egret {
     /**
      * 这个类是HTML5的WebWrapper的第一个版本
      * @private
@@ -6053,7 +6053,7 @@ declare module egret {
     }
 }
 
-declare module egret {
+declare namespace egret {
     /**
      * @includeExample egret/context/localStorage/localStorage.ts
      */
@@ -6086,7 +6086,7 @@ declare module egret {
     }
 }
 
-declare module egret {
+declare namespace egret {
     /**
      * @class egret.XML
      * @classdesc
@@ -6155,7 +6155,7 @@ declare module egret {
     }
 }
 
-declare module egret {
+declare namespace egret {
     /**
      * Endian 类中包含一些值，它们表示用于表示多字节数字的字节顺序。
      * 字节顺序为 bigEndian（最高有效字节位于最前）或 littleEndian（最低有效字节位于最前）。
@@ -6426,7 +6426,7 @@ declare module egret {
     }
 }
 
-declare module egret {
+declare namespace egret {
     /**
      * 获取浏览器或者Runtime参数，如果没有设置返回空字符串
      * 在浏览器中相当于获取url中参数，在Runtime获取对应setOption参数
@@ -6437,7 +6437,7 @@ declare module egret {
     function getOption(key: string): string;
 }
 
-declare module egret {
+declare namespace egret {
     /**
      * @class egret.Tween
      * @classdesc
@@ -6592,7 +6592,7 @@ declare module egret {
     }
 }
 
-declare module egret {
+declare namespace egret {
     /**
      * 缓动函数集合，使用不同的缓动函数使得动画按照对应的方程进行
      * @see http://bbs.egret-labs.org/thread-392-1-1.html Tween和Ease
@@ -6642,7 +6642,7 @@ declare module egret {
 /**
  * Created by yjtx on 15-5-18.
  */
-declare module egret {
+declare namespace egret {
     /**
      * @private
      */
@@ -6662,7 +6662,7 @@ declare module egret {
     }
 }
 
-declare module egret {
+declare namespace egret {
     /**
      * @class egret.Sound
      * @classdesc Sound 类允许您在应用程序中使用声音。
@@ -6794,7 +6794,7 @@ declare module egret {
     }
 }
 
-declare module egret {
+declare namespace egret {
     class NumberUtils {
         /**
          * @private
@@ -6819,7 +6819,7 @@ declare module egret {
 declare var egret_sin_map: {};
 declare var egret_cos_map: {};
 
-declare module egret {
+declare namespace egret {
     /**
      * @private
      */
@@ -6840,7 +6840,7 @@ declare module egret {
     }
 }
 
-declare module egret {
+declare namespace egret {
     /**
      * @private
      */

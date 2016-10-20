@@ -4,15 +4,8 @@
 import utils = require('../lib/utils');
 import file = require('../lib/FileUtil');
 import exml = require("../lib/eui/EXML");
-import exmlParser = require("../lib/eui/parser/EXMLParser");
-var parser = new exmlParser.EXMLParser();
 
 export function beforeBuild() {
-    //eui生成js文件不用清空类定义
-    //var exmlDtsPath = getExmlDtsPath();
-    //if (file.exists(exmlDtsPath)) {
-    //    file.save(exmlDtsPath, "");
-    //}
     generateExmlDTS();
 }
 
@@ -33,11 +26,6 @@ export function buildChanges(exmls: string[]): egret.TaskResult {
     };
     if (!exmls || exmls.length == 0)
         return state;
-    if(egret.args.exmlGenJs){
-        exmls.forEach(exmlFile=>{
-            parse(exmlFile);
-        });
-    }
     return state;
 }
 
@@ -150,8 +138,15 @@ function sort(exmls: exml.EXMLFile[]) {
 
 }
 
+const ignorePath = egret.args.properties.getIgnorePath();
 function exmlFilter(f: string) {
-    return /\.exml$/.test(f) && (f.indexOf(egret.args.releaseRootDir) < 0)
+    var isIgnore = false;
+    ignorePath.forEach(path => {
+        if(f.indexOf(path) != -1) {
+            isIgnore = true;
+        }
+    });
+    return /\.exml$/.test(f) && (f.indexOf(egret.args.releaseRootDir) < 0) && !isIgnore;
 }
 function themeFilter(f: string) {
     return (f.indexOf('.thm.json') > 0) && (f.indexOf(egret.args.releaseRootDir) < 0)
@@ -232,54 +227,3 @@ function generateExmlDTS(): string {
     return dts;
 }
 
-var module_template = "var {module};\n"+
-    "(function ({module}) {\n"+
-    "{definition}\n" +
-    "})({module} || ({module} = {}));";
-
-function parse(exmlPath:string){
-    var xmlString = file.read(exmlPath,true);
-    var classText = parser.parse(xmlString);
-
-    //获得类名和模块名
-    //var className = parser.getClassNameOfNode(parser.topNode);
-    var className = parser.className;
-    var moduleName;
-    var index = className.lastIndexOf(".");
-    if(index != -1){
-        moduleName = className.substring(0,index);
-        className = className.substring(index+1);
-    }
-    //配置类名声明
-    classText = "var "+className+"="+classText;
-    //配置模块声明
-    var jstext = "{definition}";//初始模块为入口载入模版
-    if (moduleName) {
-        var indent:number = -1;
-        moduleName.split(".").forEach(module=>{
-                //模版添加缩进
-                indent += 1;
-                var template = utils.addIndents(indent,module_template);
-                //var template = utils.IndentAdder.getInstance().addIndents(indent,module_template);
-                //注入模块名
-                template = utils.inject(template,{module:module});
-                //加载模版
-                jstext = utils.inject(jstext,{definition:template});
-            }
-        );
-        //在最里层添加类定义
-        var indentedClass = utils.addIndents(indent+1,classText);
-        //var indentedClass = utils.IndentAdder.getInstance().addIndents(indent+1,classText);
-        jstext = utils.inject(jstext,{definition:indentedClass});
-        //jstext = utils.IndentAdder.getInstance().commit(jstext);
-    }else{
-        jstext = classText;
-    }
-    var relativeEXMLPath = file.getRelativePath(egret.args.projectDir,exmlPath);
-    var relativeTSPath = relativeEXMLPath.substring(0,relativeEXMLPath.lastIndexOf(".")).concat(".ts");
-    var tspath = file.joinPath(egret.args.srcDir,"gen",relativeTSPath);
-    //console.log(tspath);
-    //var jspath = exmlPath.substring(0,exmlPath.lastIndexOf(".")).concat(".ts");
-    //file.save(jspath,jstext);
-    file.save(tspath,jstext);
-}

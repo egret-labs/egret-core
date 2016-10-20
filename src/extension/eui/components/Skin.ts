@@ -27,7 +27,7 @@
 //
 //////////////////////////////////////////////////////////////////////////////////////
 
-module eui {
+namespace eui {
 
     /**
      * @language en_US
@@ -262,7 +262,7 @@ module eui {
                 this._hostComponent.removeEventListener(egret.Event.ADDED_TO_STAGE,this.onAddedToStage,this);
             }
             this._hostComponent = value;
-            var values = this.$stateValues;
+            let values = this.$stateValues;
             values.parent = value;
             if (value) {
                 this.commitCurrentState();

@@ -41,7 +41,7 @@ interface AudioBufferSourceNodeEgret {
     disconnect();
 }
 
-module egret.web {
+namespace egret.web {
 
     /**
      * @private
@@ -59,7 +59,7 @@ module egret.web {
         /**
          * @private
          */
-        public static decodeArr:Array<any> = [];
+        public static decodeArr:any[] = [];
         /**
          * @private
          */
@@ -77,7 +77,7 @@ module egret.web {
                 return;
             }
             WebAudioDecode.isDecoding = true;
-            var decodeInfo = WebAudioDecode.decodeArr.shift();
+            let decodeInfo = WebAudioDecode.decodeArr.shift();
 
             WebAudioDecode.ctx.decodeAudioData(decodeInfo["buffer"], function (audioBuffer) {
                 decodeInfo["self"].audioBuffer = audioBuffer;
@@ -177,7 +177,7 @@ module egret.web {
          * @inheritDoc
          */
         public load(url:string):void {
-            var self = this;
+            let self = this;
 
             this.url = url;
 
@@ -185,7 +185,7 @@ module egret.web {
                 egret.$error(3002);
             }
 
-            var request = new XMLHttpRequest();
+            let request = new XMLHttpRequest();
             request.open("GET", url, true);
             request.responseType = "arraybuffer";
             request.onload = function () {
@@ -221,7 +221,7 @@ module egret.web {
                 egret.$error(1049);
             }
 
-            var channel = new WebAudioSoundChannel();
+            let channel = new WebAudioSoundChannel();
             channel.$url = this.url;
             channel.$loops = loops;
             channel.$audioBuffer = this.audioBuffer;

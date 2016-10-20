@@ -28,7 +28,7 @@
 //////////////////////////////////////////////////////////////////////////////////////
 
 
-module egret {
+namespace egret {
     /**
      * @language en_US
      * Easing function set. Different easing functions are used to make an animation proceed according to the corresponding equation
@@ -561,10 +561,10 @@ module egret {
          * @platform Web,Native
          */
         public static getElasticIn(amplitude, period):Function {
-            var pi2 = Math.PI * 2;
+            let pi2 = Math.PI * 2;
             return function (t) {
                 if (t == 0 || t == 1) return t;
-                var s = period / pi2 * Math.asin(1 / amplitude);
+                let s = period / pi2 * Math.asin(1 / amplitude);
                 return -(amplitude * Math.pow(2, 10 * (t -= 1)) * Math.sin((t - s) * pi2 / period));
             }
         }
@@ -596,10 +596,10 @@ module egret {
          * @platform Web,Native
          */
         public static getElasticOut(amplitude, period):Function {
-            var pi2 = Math.PI * 2;
+            let pi2 = Math.PI * 2;
             return function (t) {
                 if (t == 0 || t == 1) return t;
-                var s = period / pi2 * Math.asin(1 / amplitude);
+                let s = period / pi2 * Math.asin(1 / amplitude);
                 return (amplitude * Math.pow(2, -10 * t) * Math.sin((t - s) * pi2 / period) + 1);
             }
         }
@@ -631,9 +631,9 @@ module egret {
          * @platform Web,Native
          */
         public static getElasticInOut(amplitude, period):Function {
-            var pi2 = Math.PI * 2;
+            let pi2 = Math.PI * 2;
             return function (t) {
-                var s = period / pi2 * Math.asin(1 / amplitude);
+                let s = period / pi2 * Math.asin(1 / amplitude);
                 if ((t *= 2) < 1) return -0.5 * (amplitude * Math.pow(2, 10 * (t -= 1)) * Math.sin((t - s) * pi2 / period));
                 return amplitude * Math.pow(2, -10 * (t -= 1)) * Math.sin((t - s) * pi2 / period) * 0.5 + 1;
             }

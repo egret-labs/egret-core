@@ -34,7 +34,7 @@
 var __global = global;
 var xml = require("../xml/index");
 var utils = require("../utils");
-import config = require("./parser/EXMLConfig");
+import config = require("./EXMLConfig");
 egret.XML = xml;
 
 

@@ -27,20 +27,20 @@
 //
 //////////////////////////////////////////////////////////////////////////////////////
 
-module eui {
+namespace eui {
 
     /**
      * @private
      */
-    var listeners = "__listeners__";
+    let listeners = "__listeners__";
     /**
      * @private
      */
-    var bindables = "__bindables__";
+    let bindables = "__bindables__";
     /**
      * @private
      */
-    var bindableCount = 0;
+    let bindableCount = 0;
 
     /**
      * @private
@@ -50,11 +50,11 @@ module eui {
      * @returns
      */
     function getPropertyDescriptor(host:any, property:string):any {
-        var data = Object.getOwnPropertyDescriptor(host, property);
+        let data = Object.getOwnPropertyDescriptor(host, property);
         if (data) {
             return data;
         }
-        var prototype = Object.getPrototypeOf(host);
+        let prototype = Object.getPrototypeOf(host);
         if (prototype) {
             return getPropertyDescriptor(prototype, property);
         }
@@ -62,11 +62,11 @@ module eui {
     }
 
     function notifyListener(host:any, property:string):void {
-        var list:any[] = host[listeners];
-        var length = list.length;
-        for (var i = 0; i < length; i+=2) {
-            var listener:Function = list[i];
-            var target:any = list[i+1];
+        let list:any[] = host[listeners];
+        let length = list.length;
+        for (let i = 0; i < length; i+=2) {
+            let listener:Function = list[i];
+            let target:any = list[i+1];
             listener.call(target,property);
         }
     }
@@ -134,9 +134,9 @@ module eui {
                 }
             }
             if (chain.length > 0) {
-                var property = chain.shift();
-                var next = Watcher.watch(null, chain, handler, thisObject);
-                var watcher = new Watcher(property, handler, thisObject, next);
+                let property = chain.shift();
+                let next = Watcher.watch(null, chain, handler, thisObject);
+                let watcher = new Watcher(property, handler, thisObject, next);
                 watcher.reset(host);
                 return watcher;
             }
@@ -150,17 +150,17 @@ module eui {
          * 检查属性是否可以绑定。若还未绑定，尝试添加绑定事件。若是只读或只写属性，返回false。
          */
         private static checkBindable(host:any, property:string):boolean {
-            var list:string[] = host[bindables];
+            let list:string[] = host[bindables];
             if (list && list.indexOf(property) != -1) {
                 return true;
             }
-            var isEventDispatcher = egret.is(host, "egret.IEventDispatcher");
+            let isEventDispatcher = egret.is(host, "egret.IEventDispatcher");
             if(!isEventDispatcher && !host[listeners]){
                 host[listeners] = [];
             }
-            var data:PropertyDescriptor = getPropertyDescriptor(host, property);
+            let data:PropertyDescriptor = getPropertyDescriptor(host, property);
             if (data && data.set && data.get) {
-                var orgSet = data.set;
+                let orgSet = data.set;
                 data.set = function (value:any) {
                     if (this[property] != value) {
                         orgSet.call(this, value);
@@ -175,7 +175,7 @@ module eui {
             }
             else if (!data || (!data.get && !data.set)) {
                 bindableCount++;
-                var newProp = "_" + bindableCount + property;
+                let newProp = "_" + bindableCount + property;
                 host[newProp] = data ? data.value : null;
                 data = <any>{enumerable: true, configurable: true};
                 data.get = function ():any {
@@ -346,14 +346,14 @@ module eui {
          * @platform Web,Native
          */
         public reset(newHost:egret.IEventDispatcher):void {
-            var oldHost = this.host;
+            let oldHost = this.host;
             if(oldHost){
                 if (egret.is(oldHost, "egret.IEventDispatcher")) {
                     oldHost.removeEventListener(PropertyEvent.PROPERTY_CHANGE, this.wrapHandler, this);
                 }
                 else {
-                    var list:any[] = oldHost[listeners];
-                    var index = list.indexOf(this);
+                    let list:any[] = oldHost[listeners];
+                    let index = list.indexOf(this);
                     list.splice(index-1,2);
                 }
             }
@@ -366,7 +366,7 @@ module eui {
                     newHost.addEventListener(PropertyEvent.PROPERTY_CHANGE, this.wrapHandler, this, false, 100);
                 }
                 else{
-                    var list:any[] = newHost[listeners];
+                    let list:any[] = newHost[listeners];
                     list.push(this.onPropertyChange);
                     list.push(this);
                 }

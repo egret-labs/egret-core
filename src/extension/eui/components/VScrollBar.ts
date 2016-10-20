@@ -27,7 +27,7 @@
 //
 //////////////////////////////////////////////////////////////////////////////////////
 
-module eui {
+namespace eui {
 
     /**
      * @language en_US
@@ -65,32 +65,32 @@ module eui {
          */
         protected updateDisplayList(unscaledWidth:number, unscaledHeight:number):void {
             super.updateDisplayList(unscaledWidth, unscaledHeight);
-            var thumb = this.thumb;
-            var viewport = this.$viewport;
+            let thumb = this.thumb;
+            let viewport = this.$viewport;
             if (!thumb || !viewport) {
                 return;
             }
-            var bounds = egret.$TempRectangle;
+            let bounds = egret.$TempRectangle;
             thumb.getPreferredBounds(bounds);
-            var thumbHeight = bounds.height;
-            var thumbX = bounds.x;
-            var vsp = viewport.scrollV;
-            var contentHeight = viewport.contentHeight;
-            var height = viewport.height;
+            let thumbHeight = bounds.height;
+            let thumbX = bounds.x;
+            let vsp = viewport.scrollV;
+            let contentHeight = viewport.contentHeight;
+            let height = viewport.height;
             if (vsp <= 0) {
-                var scaleHeight = thumbHeight * (1-(-vsp) / (height * 0.5));
+                let scaleHeight = thumbHeight * (1-(-vsp) / (height * 0.5));
                 scaleHeight = Math.max(5,Math.round(scaleHeight));
                 thumb.setLayoutBoundsSize(NaN, scaleHeight);
                 thumb.setLayoutBoundsPosition(thumbX, 0);
             }
             else if (vsp >= contentHeight - height) {
-                scaleHeight = thumbHeight * (1-(vsp - contentHeight + height) / (height * 0.5));
+                let scaleHeight = thumbHeight * (1-(vsp - contentHeight + height) / (height * 0.5));
                 scaleHeight = Math.max(5,Math.round(scaleHeight));
                 thumb.setLayoutBoundsSize(NaN, scaleHeight);
                 thumb.setLayoutBoundsPosition(thumbX, unscaledHeight - scaleHeight);
             }
             else {
-                var thumbY = (unscaledHeight - thumbHeight) * vsp / (contentHeight - height);
+                let thumbY = (unscaledHeight - thumbHeight) * vsp / (contentHeight - height);
                 thumb.setLayoutBoundsSize(NaN, NaN);
                 thumb.setLayoutBoundsPosition(thumbX, thumbY);
             }

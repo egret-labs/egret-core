@@ -27,11 +27,11 @@
 //
 //////////////////////////////////////////////////////////////////////////////////////
 
-module eui {
+namespace eui {
 
     egret.$locale_strings = egret.$locale_strings || {};
     egret.$locale_strings["zh_CN"] = egret.$locale_strings["zh_CN"] || {};
-    var locale_strings = egret.$locale_strings["zh_CN"];
+    let locale_strings = egret.$locale_strings["zh_CN"];
 
     //2000-2999
     //EXML报错信息

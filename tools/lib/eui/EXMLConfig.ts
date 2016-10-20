@@ -1,8 +1,8 @@
 /**
  * Created by yanjiaqi on 15/10/21.
  */
-import file = require("../../FileUtil");
-import XMLTool = require("../../xml/index");
+import file = require("../FileUtil");
+import XMLTool = require("../xml/index");
 /**
  * @private
  * EUI 命名空间
@@ -78,11 +78,11 @@ export class EXMLConfig {
      */
     private _dirPath:string;
 
-    public get dirPath():string{
+    get dirPath():string{
         return this._dirPath;
     }
 
-    public set dirPath(value:string){
+    set dirPath(value:string){
         if(this._dirPath !== value){
             this._dirPath = value;
             this.classNameToExmlFilePath = this.getClassToPathInfo(this.dirPath);

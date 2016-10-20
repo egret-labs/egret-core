@@ -30,7 +30,7 @@
 /// <reference path="registerClass.ts" />
 
 function __extends(d, b) {
-    for (var p in b) if (b.hasOwnProperty(p)) d[p] = b[p];
+    for (let p in b) if (b.hasOwnProperty(p)) d[p] = b[p];
     function __() {
         this.constructor = d;
     }
@@ -38,9 +38,9 @@ function __extends(d, b) {
     __.prototype = b.prototype;
     d.prototype = new __();
 }
-var __define = this.__define || function (o, p, g, s) {   Object.defineProperty(o, p, { configurable:true, enumerable:true, get:g,set:s }) };
+let __define = this.__define || function (o, p, g, s) {   Object.defineProperty(o, p, { configurable:true, enumerable:true, get:g,set:s }) };
 
-module egret {
+namespace egret {
     /**
      * @language en_US
      * The HashObject class is the base class for all objects in the Egret framework.The HashObject
@@ -76,7 +76,7 @@ module egret {
      * @private
      * 哈希计数
      */
-    export var $hashCount:number = 1;
+    export let $hashCount:number = 1;
 
     /**
      * @language en_US

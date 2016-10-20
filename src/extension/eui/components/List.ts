@@ -27,7 +27,7 @@
 //
 //////////////////////////////////////////////////////////////////////////////////////
 
-module eui {
+namespace eui {
 
     /**
      * @language en_US
@@ -155,11 +155,11 @@ module eui {
          * @platform Web,Native
          */
         public get selectedItems():any[] {
-            var result:any[] = [];
-            var list = this.selectedIndices;
+            let result:any[] = [];
+            let list = this.selectedIndices;
             if (list) {
-                var count = list.length;
-                for (var i = 0; i < count; i++) {
+                let count = list.length;
+                for (let i = 0; i < count; i++) {
                     result[i] = this.$dataProvider.getItemAt(list[i]);
                 }
             }
@@ -167,13 +167,13 @@ module eui {
         }
 
         public set selectedItems(value:any[]) {
-            var indices:number[] = [];
+            let indices:number[] = [];
 
             if (value) {
-                var count = value.length;
+                let count = value.length;
 
-                for (var i = 0; i < count; i++) {
-                    var index:number = this.$dataProvider.getItemIndex(value[i]);
+                for (let i = 0; i < count; i++) {
+                    let index:number = this.$dataProvider.getItemIndex(value[i]);
                     if (index != -1) {
                         indices.splice(0, 0, index);
                     }
@@ -210,7 +210,7 @@ module eui {
          * @platform Web,Native
          */
         protected setSelectedIndices(value:number[], dispatchChangeEvent?:boolean):void {
-            var values = this.$ListBase;
+            let values = this.$ListBase;
             if (dispatchChangeEvent)
                 values[sys.ListBaseKeys.dispatchChangeAfterSelection] =
                     (values[sys.ListBaseKeys.dispatchChangeAfterSelection] || dispatchChangeEvent);
@@ -244,13 +244,13 @@ module eui {
          * @platform Web,Native
          */
         protected commitSelection(dispatchChangedEvents:boolean = true):boolean {
-            var values = this.$ListBase;
-            var oldSelectedIndex = values[sys.ListBaseKeys.selectedIndex];
+            let values = this.$ListBase;
+            let oldSelectedIndex = values[sys.ListBaseKeys.selectedIndex];
             if (this._proposedSelectedIndices) {
                 this._proposedSelectedIndices = this._proposedSelectedIndices.filter(this.isValidIndex);
 
                 if (!this.allowMultipleSelection && this._proposedSelectedIndices.length > 0) {
-                    var temp:number[] = [];
+                    let temp:number[] = [];
                     temp.push(this._proposedSelectedIndices[0]);
                     this._proposedSelectedIndices = temp;
                 }
@@ -262,14 +262,14 @@ module eui {
                 }
             }
 
-            var retVal = super.commitSelection(false);
+            let retVal = super.commitSelection(false);
 
             if (!retVal) {
                 this._proposedSelectedIndices = null;
                 return false;
             }
 
-            var selectedIndex = this.$getSelectedIndex();
+            let selectedIndex = this.$getSelectedIndex();
             if (selectedIndex > ListBase.NO_SELECTION) {
                 if (this._proposedSelectedIndices) {
                     if (this._proposedSelectedIndices.indexOf(selectedIndex) == -1)
@@ -325,13 +325,13 @@ module eui {
          * @platform Web,Native
          */
         protected commitMultipleSelection():void {
-            var removedItems:number[] = [];
-            var addedItems:number[] = [];
-            var i:number;
-            var count:number;
+            let removedItems:number[] = [];
+            let addedItems:number[] = [];
+            let i:number;
+            let count:number;
 
-            var selectedIndices = this._selectedIndices;
-            var proposedSelectedIndices = this._proposedSelectedIndices;
+            let selectedIndices = this._selectedIndices;
+            let proposedSelectedIndices = this._proposedSelectedIndices;
             if (selectedIndices.length > 0 && proposedSelectedIndices.length > 0) {
                 count = proposedSelectedIndices.length;
                 for (i = 0; i < count; i++) {
@@ -401,9 +401,9 @@ module eui {
          * 计算当前的选中项列表
          */
         private calculateSelectedIndices(index:number):number[] {
-            var interval:number[] = [];
-            var selectedIndices = this._selectedIndices;
-            var length = selectedIndices.length;
+            let interval:number[] = [];
+            let selectedIndices = this._selectedIndices;
+            let length = selectedIndices.length;
             if (length > 0) {
                 if (length == 1 && (selectedIndices[0] == index)) {
                     if (!this.$ListBase[sys.ListBaseKeys.requireSelection]) {
@@ -413,8 +413,8 @@ module eui {
                     return interval;
                 }
                 else {
-                    var found = false;
-                    for (var i = 0; i < length; i++) {
+                    let found = false;
+                    for (let i = 0; i < length; i++) {
                         if (selectedIndices[i] == index) {
                             found = true;
                         }
@@ -443,8 +443,8 @@ module eui {
          */
         protected onRendererTouchEnd(event:egret.TouchEvent):void {
             if (this.allowMultipleSelection) {
-                var itemRenderer = <IItemRenderer> (event.currentTarget);
-                var touchDownItemRenderer = this.$ListBase[sys.ListBaseKeys.touchDownItemRenderer];
+                let itemRenderer = <IItemRenderer> (event.currentTarget);
+                let touchDownItemRenderer = this.$ListBase[sys.ListBaseKeys.touchDownItemRenderer];
                 if (itemRenderer != touchDownItemRenderer)
                     return;
                 this.setSelectedIndices(this.calculateSelectedIndices(itemRenderer.itemIndex), true);

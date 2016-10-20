@@ -27,20 +27,20 @@
 //
 //////////////////////////////////////////////////////////////////////////////////////
 
-module egret {
+namespace egret {
 
     /**
      * @private
      */
-    export var $callLaterFunctionList:Array<any> = [];
+    export let $callLaterFunctionList:any[] = [];
     /**
      * @private
      */
-    export var $callLaterThisList:Array<any> = [];
+    export let $callLaterThisList:any[] = [];
     /**
      * @private
      */
-    export var $callLaterArgsList:Array<any> = [];
+    export let $callLaterArgsList:any[] = [];
 
     /**
      * @language en_US
@@ -72,15 +72,15 @@ module egret {
     /**
      * @private
      */
-    export var $callAsyncFunctionList:Array<any> = [];
+    export let $callAsyncFunctionList:any[] = [];
     /**
      * @private
      */
-    export var $callAsyncThisList:Array<any> = [];
+    export let $callAsyncThisList:any[] = [];
     /**
      * @private
      */
-    export var $callAsyncArgsList:Array<any> = [];
+    export let $callAsyncArgsList:any[] = [];
     /**
      * 异步调用函数
      * @param method {Function} 要异步调用的函数

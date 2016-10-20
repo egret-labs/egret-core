@@ -28,15 +28,15 @@
 //////////////////////////////////////////////////////////////////////////////////////
 
 
-module egret.native {
+namespace egret.native {
 
     /**
      * @private
      */
     function convertImageToRenderTexture(texture:egret.Texture, rect?:egret.Rectangle):NativeCanvas {
-        var buffer = <NativeCanvasRenderBuffer><any>sys.canvasHitTestBuffer;
-        var w = texture.$getTextureWidth();
-        var h = texture.$getTextureHeight();
+        let buffer = <NativeCanvasRenderBuffer><any>sys.canvasHitTestBuffer;
+        let w = texture.$getTextureWidth();
+        let h = texture.$getTextureHeight();
         if (rect == null) {
             rect = egret.$TempRectangle;
             rect.x = 0;
@@ -50,16 +50,16 @@ module egret.native {
         rect.width = Math.min(rect.width, w - rect.x);
         rect.height = Math.min(rect.height, h - rect.y);
 
-        var iWidth = rect.width;
-        var iHeight = rect.height;
-        var surface = buffer.surface;
+        let iWidth = rect.width;
+        let iHeight = rect.height;
+        let surface = buffer.surface;
         buffer.resize(iWidth,iHeight);
 
-        var bitmapData = texture;
-        var offsetX:number = Math.round(bitmapData._offsetX);
-        var offsetY:number = Math.round(bitmapData._offsetY);
-        var bitmapWidth:number = bitmapData._bitmapWidth;
-        var bitmapHeight:number = bitmapData._bitmapHeight;
+        let bitmapData = texture;
+        let offsetX:number = Math.round(bitmapData._offsetX);
+        let offsetY:number = Math.round(bitmapData._offsetY);
+        let bitmapWidth:number = bitmapData._bitmapWidth;
+        let bitmapHeight:number = bitmapData._bitmapHeight;
         buffer.context.drawImage(bitmapData._bitmapData, bitmapData._bitmapX + rect.x / $TextureScaleFactor, bitmapData._bitmapY + rect.y / $TextureScaleFactor,
             bitmapWidth * rect.width / w, bitmapHeight * rect.height / h, offsetX, offsetY, rect.width, rect.height);
 
@@ -71,8 +71,8 @@ module egret.native {
      */
     function toDataURL(type:string, rect?:egret.Rectangle):string {
         try {
-            var renderTexture = convertImageToRenderTexture(this, rect);
-            var base64 = renderTexture.toDataURL(type);
+            let renderTexture = convertImageToRenderTexture(this, rect);
+            let base64 = renderTexture.toDataURL(type);
             //renderTexture.$dispose();
             return base64
         }
@@ -85,7 +85,7 @@ module egret.native {
 
     function saveToFile(type:string, filePath:string, rect?:egret.Rectangle):void {
         try {
-            var renderTexture = convertImageToRenderTexture(this, rect);
+            let renderTexture = convertImageToRenderTexture(this, rect);
             renderTexture.saveToFile(type, filePath);
             //renderTexture.$dispose();
         }

@@ -28,7 +28,7 @@
 //////////////////////////////////////////////////////////////////////////////////////
 
 
-module eui {
+namespace eui {
 
     /**
      * @language en_US
@@ -106,8 +106,8 @@ module eui {
          */
         public set elementsContent(value:egret.DisplayObject[]) {
             if (value) {
-                var length = value.length;
-                for (var i = 0; i < length; i++) {
+                let length = value.length;
+                for (let i = 0; i < length; i++) {
                     this.addChild(value[i]);
                 }
             }

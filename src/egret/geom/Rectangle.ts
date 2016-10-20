@@ -28,9 +28,9 @@
 //////////////////////////////////////////////////////////////////////////////////////
 
 
-module egret {
+namespace egret {
 
-    var rectanglePool:Rectangle[] = [];
+    let rectanglePool:Rectangle[] = [];
     /**
      * @language en_US
      * A Rectangle object is an area defined by its position, as indicated by its top-left corner point (x, y) and by its
@@ -87,7 +87,7 @@ module egret {
          * @platform Web,Native
          */
         public static create():Rectangle {
-            var rect = rectanglePool.pop();
+            let rect = rectanglePool.pop();
             if (!rect) {
                 rect = new Rectangle();
             }
@@ -445,15 +445,15 @@ module egret {
          * @private
          */
         $intersectInPlace(clipRect: Rectangle): Rectangle {
-            var x0 = this.x;
-            var y0 = this.y;
-            var x1 = clipRect.x;
-            var y1 = clipRect.y;
-            var l = Math.max(x0, x1);
-            var r = Math.min(x0 + this.width, x1 + clipRect.width);
+            let x0 = this.x;
+            let y0 = this.y;
+            let x1 = clipRect.x;
+            let y1 = clipRect.y;
+            let l = Math.max(x0, x1);
+            let r = Math.min(x0 + this.width, x1 + clipRect.width);
             if (l <= r) {
-                var t = Math.max(y0, y1);
-                var b = Math.min(y0 + this.height, y1 + clipRect.height);
+                let t = Math.max(y0, y1);
+                let b = Math.min(y0 + this.height, y1 + clipRect.height);
                 if (t <= b) {
                     this.setTo(l, t, r - l, b - t);
                     return this;
@@ -589,10 +589,10 @@ module egret {
          * @platform Web,Native
          */
         public containsRect(rect:egret.Rectangle):boolean {
-            var r1 = rect.x + rect.width;
-            var b1 = rect.y + rect.height;
-            var r2 = this.x + this.width;
-            var b2 = this.y + this.height;
+            let r1 = rect.x + rect.width;
+            let b1 = rect.y + rect.height;
+            let r2 = this.x + this.width;
+            let b2 = this.y + this.height;
             return (rect.x >= this.x) && (rect.x < r2) && (rect.y >= this.y) && (rect.y < b2) && (r1 > this.x) && (r1 <= r2) && (b1 > this.y) && (b1 <= b2);
         }
 
@@ -714,7 +714,7 @@ module egret {
          * @platform Web,Native
          */
         public union(toUnion:Rectangle):Rectangle {
-            var result = this.clone();
+            let result = this.clone();
             if (toUnion.isEmpty()) {
                 return result;
             }
@@ -722,8 +722,8 @@ module egret {
                 result.copyFrom(toUnion);
                 return result;
             }
-            var l: number = Math.min(result.x, toUnion.x);
-            var t: number = Math.min(result.y, toUnion.y);
+            let l: number = Math.min(result.x, toUnion.x);
+            let t: number = Math.min(result.y, toUnion.y);
             result.setTo(l, t,
                 Math.max(result.right, toUnion.right) - l,
                 Math.max(result.bottom, toUnion.bottom) - t);
@@ -734,8 +734,8 @@ module egret {
          * @private
          */
         $getBaseWidth(angle:number):number {
-            var u = Math.abs(Math.cos(angle));
-            var v = Math.abs(Math.sin(angle));
+            let u = Math.abs(Math.cos(angle));
+            let v = Math.abs(Math.sin(angle));
             return u * this.width + v * this.height;
         }
 
@@ -743,8 +743,8 @@ module egret {
          * @private
          */
         $getBaseHeight(angle:number):number {
-            var u = Math.abs(Math.cos(angle));
-            var v = Math.abs(Math.sin(angle));
+            let u = Math.abs(Math.cos(angle));
+            let v = Math.abs(Math.sin(angle));
             return v * this.width + u * this.height;
         }
     }
@@ -753,5 +753,5 @@ module egret {
      * @private
      * 仅供框架内复用，要防止暴露引用到外部。
      */
-    export var $TempRectangle = new Rectangle();
+    export let $TempRectangle = new Rectangle();
 }

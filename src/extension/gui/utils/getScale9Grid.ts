@@ -27,9 +27,9 @@
 //
 //////////////////////////////////////////////////////////////////////////////////////
 
-module egret.gui {
+namespace egret.gui {
 
-    var rectangleCache:any = {};
+    let rectangleCache:any = {};
     /**
      * 返回字符串所对应的全局唯一Rectangle对象。此方法主要为了减少scale9Grid属性的实例个数。
      * 参数的相同的九宫格数据使用此方法可以全局共享同一个Rectangle对象。
@@ -43,8 +43,8 @@ module egret.gui {
         if(!value){
             return null;
         }
-        var arr:Array<string> = value.split(",");
-        var rect:Rectangle = new Rectangle(parseInt(arr[0]),parseInt(arr[1]),parseInt(arr[2]),parseInt(arr[3]));
+        let arr:string[] = value.split(",");
+        let rect:Rectangle = new Rectangle(parseInt(arr[0]),parseInt(arr[1]),parseInt(arr[2]),parseInt(arr[3]));
         rectangleCache[value] = rect;
         return rect;
     }

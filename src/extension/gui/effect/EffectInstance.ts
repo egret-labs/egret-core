@@ -28,7 +28,7 @@
 //////////////////////////////////////////////////////////////////////////////////////
 
 
-module egret.gui {
+namespace egret.gui {
 
     /**
      * @class egret.gui.EffectInstance
@@ -84,7 +84,7 @@ module egret.gui {
          * 实际的持续时间包含startDelay，repeatDelay，repeatCount这些值
          */
         public get _actualDuration():number {
-            var value:number = NaN;
+            let value:number = NaN;
             
             if (this.repeatCount > 0){
                 value = this.duration * this.repeatCount +

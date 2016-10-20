@@ -28,7 +28,7 @@
 ////////////////////////////////////////////////////////////////////////////////////////
 
 
-module RES {
+namespace RES {
 
     /**
      * SpriteSheet解析器
@@ -42,15 +42,15 @@ module RES {
         }
 
         public getRes(name:string):any {
-            var res:any = this.fileDic[name];
+            let res:any = this.fileDic[name];
             if (!res) {
                 res = this.textureMap[name];
             }
             if (!res) {
-                var prefix:string = RES.AnalyzerBase.getStringPrefix(name);
+                let prefix:string = RES.AnalyzerBase.getStringPrefix(name);
                 res = this.fileDic[prefix];
                 if (res) {
-                    var tail:string = RES.AnalyzerBase.getStringTail(name);
+                    let tail:string = RES.AnalyzerBase.getStringTail(name);
                     res = (<egret.SpriteSheet> res).getTexture(tail);
                 }
             }
@@ -61,16 +61,16 @@ module RES {
          * 一项加载结束
          */
         public onLoadFinish(event:egret.Event):void {
-            var request = event.target;
-            var data:any = this.resItemDic[request.$hashCode];
+            let request = event.target;
+            let data:any = this.resItemDic[request.$hashCode];
             delete this.resItemDic[request.hashCode];
-            var resItem:ResourceItem = data.item;
-            var compFunc:Function = data.func;
+            let resItem:ResourceItem = data.item;
+            let compFunc:Function = data.func;
             resItem.loaded = (event.type == egret.Event.COMPLETE);
             if (resItem.loaded) {
                 if (request instanceof egret.HttpRequest) {
                     resItem.loaded = false;
-                    var imageUrl:string = this.analyzeConfig(resItem, request.response);
+                    let imageUrl:string = this.analyzeConfig(resItem, request.response);
                     if (imageUrl) {
                         this.loadImage(imageUrl, data);
                         this.recycler.push(request);
@@ -78,7 +78,7 @@ module RES {
                     }
                 }
                 else {
-                    var texture:egret.Texture = new egret.Texture();
+                    let texture:egret.Texture = new egret.Texture();
                     texture._setBitmapData(request.data);
                     this.analyzeBitmap(resItem, texture);
                 }
@@ -100,11 +100,11 @@ module RES {
          * 解析并缓存加载成功的配置文件
          */
         public analyzeConfig(resItem:ResourceItem, data:string):string {
-            var name:string = resItem.name;
-            var config:any;
-            var imageUrl:string = "";
+            let name:string = resItem.name;
+            let config:any;
+            let imageUrl:string = "";
             try {
-                var str:string = <string> data;
+                let str:string = <string> data;
                 config = JSON.parse(str);
             }
             catch (e) {
@@ -121,14 +121,14 @@ module RES {
          * 解析并缓存加载成功的位图数据
          */
         public analyzeBitmap(resItem:ResourceItem, texture:egret.Texture):void {
-            var name:string = resItem.name;
+            let name:string = resItem.name;
             if (this.fileDic[name] || !texture) {
                 return;
             }
-            var config:any = this.sheetMap[name];
+            let config:any = this.sheetMap[name];
             delete this.sheetMap[name];
-            var targetName:string = resItem.data && resItem.data.subkeys ? "" : name;
-            var spriteSheet:egret.SpriteSheet  = this.parseSpriteSheet(texture, config, targetName);
+            let targetName:string = resItem.data && resItem.data.subkeys ? "" : name;
+            let spriteSheet:egret.SpriteSheet  = this.parseSpriteSheet(texture, config, targetName);
             this.fileDic[name] = spriteSheet;
         }
 
@@ -138,13 +138,13 @@ module RES {
         public getRelativePath(url:string, file:string):string {
             url = url.split("\\").join("/");
 
-            var params = url.match(/#.*|\?.*/);
-            var paramUrl = "";
+            let params = url.match(/#.*|\?.*/);
+            let paramUrl = "";
             if (params) {
                 paramUrl = params[0];
             }
 
-            var index:number = url.lastIndexOf("/");
+            let index:number = url.lastIndexOf("/");
             if (index != -1) {
                 url = url.substring(0, index + 1) + file;
             }
@@ -155,18 +155,18 @@ module RES {
         }
 
         protected parseSpriteSheet(texture:egret.Texture, data:any, name:string):egret.SpriteSheet  {
-            var frames:any = data.frames;
+            let frames:any = data.frames;
             if(!frames){
                 return null;
             }
-            var spriteSheet:egret.SpriteSheet = new egret.SpriteSheet(texture);
-            var textureMap:any = this.textureMap;
-            for(var subkey in frames){
-                var config:any = frames[subkey];
-                var texture:egret.Texture = spriteSheet.createTexture(subkey,config.x,config.y,config.w,config.h,config.offX, config.offY,config.sourceW,config.sourceH);
+            let spriteSheet:egret.SpriteSheet = new egret.SpriteSheet(texture);
+            let textureMap:any = this.textureMap;
+            for(let subkey in frames){
+                let config:any = frames[subkey];
+                let texture:egret.Texture = spriteSheet.createTexture(subkey,config.x,config.y,config.w,config.h,config.offX, config.offY,config.sourceW,config.sourceH);
                 if(config["scale9grid"]){
-                    var str:string = config["scale9grid"];
-                    var list:Array<string> = str.split(",");
+                    let str:string = config["scale9grid"];
+                    let list:string[] = str.split(",");
                     texture["scale9Grid"] = new egret.Rectangle(parseInt(list[0]),parseInt(list[1]),parseInt(list[2]),parseInt(list[3]));
                 }
                 if(textureMap[subkey]==null){
@@ -180,11 +180,11 @@ module RES {
         }
 
         public destroyRes(name:string):boolean {
-            var sheet:any = this.fileDic[name];
+            let sheet:any = this.fileDic[name];
             if (sheet) {
                 delete this.fileDic[name];
-                var texture;
-                for (var subkey in sheet._textureMap) {
+                let texture;
+                for (let subkey in sheet._textureMap) {
                     if (texture == null) {
                         texture = sheet._textureMap[subkey];
                         this.onResourceDestroy(texture);
@@ -206,13 +206,13 @@ module RES {
         private recyclerIamge:egret.ImageLoader[] = [];
 
         private loadImage(url:string, data:any):void {
-            var loader = this.getImageLoader();
+            let loader = this.getImageLoader();
             this.resItemDic[loader.hashCode] = data;
             loader.load($getVirtualUrl(url));
         }
 
         private getImageLoader():egret.ImageLoader {
-            var loader = this.recyclerIamge.pop();
+            let loader = this.recyclerIamge.pop();
             if (!loader) {
                 loader = new egret.ImageLoader();
                 loader.addEventListener(egret.Event.COMPLETE, this.onLoadFinish, this);

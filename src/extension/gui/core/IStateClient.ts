@@ -28,7 +28,7 @@
 //////////////////////////////////////////////////////////////////////////////////////
 
 
-module egret.gui {
+namespace egret.gui {
 
 	/**
 	 * @class egret.gui.IStateClient
@@ -48,7 +48,7 @@ module egret.gui {
 		 * 为此组件定义的视图状态。
 		 * @member egret.gui.IStateClient#states
 		 */		
-		states:Array<any>;
+		states:any[];
 		
 		/**
 		 * 返回是否含有指定名称的视图状态

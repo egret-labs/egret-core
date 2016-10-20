@@ -28,7 +28,7 @@
 //////////////////////////////////////////////////////////////////////////////////////
 
 
-module egret.gui {
+namespace egret.gui {
 
 	/**
 	 * @class egret.gui.OverrideBase
@@ -62,7 +62,7 @@ module egret.gui {
 		 * @returns {any}
 		 */		
 		public initializeFromObject(properties:any):any{
-			for (var p in properties){
+			for (let p in properties){
 				this[p] = properties[p];
 			}
 			return this;

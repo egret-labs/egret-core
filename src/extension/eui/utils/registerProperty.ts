@@ -27,7 +27,7 @@
 //
 //////////////////////////////////////////////////////////////////////////////////////
 
-module eui {
+namespace eui {
 
     /**
      * @language en_US
@@ -117,7 +117,7 @@ module eui {
                 egret.$error(1003, "type");
             }
         }
-        var prototype: any = classDefinition.prototype;
+        let prototype: any = classDefinition.prototype;
         prototype.__meta__ = prototype.__meta__||{};
         prototype.__meta__[property] = type;
         if(asDefault){

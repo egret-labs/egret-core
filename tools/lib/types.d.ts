@@ -84,6 +84,7 @@ declare module egret {
         serverOnly?: boolean;
         declaration?: boolean;
         autoCompile?: boolean;
+        experimental?: boolean;
         fileName?: string;
         added: string[];
         removed: string[];

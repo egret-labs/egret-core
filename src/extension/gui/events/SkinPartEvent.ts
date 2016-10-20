@@ -28,7 +28,7 @@
 //////////////////////////////////////////////////////////////////////////////////////
 
 
-module egret.gui {
+namespace egret.gui {
 
 	/**
 	 * @class egret.gui.SkinPartEvent
@@ -84,10 +84,10 @@ module egret.gui {
          */
         public static dispatchSkinPartEvent(target:IEventDispatcher,type:string,
                                             partName:string = null,instance:any = null):boolean{
-			var event:SkinPartEvent = Event.create(SkinPartEvent, type);
+			let event:SkinPartEvent = Event.create(SkinPartEvent, type);
 			event.partName = partName;
 			event.instance = instance;
-			var result = target.dispatchEvent(event);
+			let result = target.dispatchEvent(event);
 			Event.release(event);
 			return result;
         }

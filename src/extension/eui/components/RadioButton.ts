@@ -28,13 +28,13 @@
 //////////////////////////////////////////////////////////////////////////////////////
 
 
-module eui {
+namespace eui {
 
     /**
      * @private
      * 存储根据groupName自动创建的RadioButtonGroup列表
      */
-    var automaticRadioButtonGroups = {};
+    let automaticRadioButtonGroups = {};
 
     /**
      * @language en_US
@@ -147,7 +147,7 @@ module eui {
          */
         public get group():RadioButtonGroup {
             if (!this._group && this._groupName) {
-                var g:RadioButtonGroup = automaticRadioButtonGroups[this._groupName];
+                let g:RadioButtonGroup = automaticRadioButtonGroups[this._groupName];
                 if (!g) {
                     g = new RadioButtonGroup();
                     g.$name = this._groupName;
@@ -226,7 +226,7 @@ module eui {
          * @param value 
          */
         $setSelected(value:boolean):boolean{
-            var result:boolean = super.$setSelected(value);
+            let result:boolean = super.$setSelected(value);
             this.invalidateDisplayList();
 
             return result;
@@ -327,7 +327,7 @@ module eui {
          * 添此单选按钮加到组
          */
         private addToGroup():RadioButtonGroup {
-            var g:RadioButtonGroup = this.group;
+            let g:RadioButtonGroup = this.group;
             if (g)
                 g.$addInstance(this);
             return g;

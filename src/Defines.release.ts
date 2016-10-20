@@ -33,13 +33,13 @@
 /**
  * @private
  */
-declare var DEBUG:boolean;
+declare let DEBUG:boolean;
 /**
  * @private
  */
-declare var RELEASE:boolean;
+declare let RELEASE:boolean;
 
-module egret {
+namespace egret {
     export declare function $error(code:number,...params:any[]):void;
     export declare function $warn(code:number,...params:any[]):void;
     export declare function getString(code:number, ...params:any[]):string;

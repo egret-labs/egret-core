@@ -27,7 +27,7 @@
 //
 //////////////////////////////////////////////////////////////////////////////////////
 
-module egret {
+namespace egret {
 
     /**
      * @language en_US
@@ -247,7 +247,7 @@ module egret {
     /**
      * @copy egret.Video
      */
-    export var Video:{
+    export let Video:{
         new (url?:string,cache?:boolean): Video
     };
 }

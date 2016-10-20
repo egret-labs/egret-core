@@ -28,7 +28,7 @@
 //////////////////////////////////////////////////////////////////////////////////////
 
 
-module RES {
+namespace RES {
     /**
      * @private
      */
@@ -47,7 +47,7 @@ module RES {
         /**
          * 加载项字典
          */
-        public resItemDic:Array<any> = [];
+        public resItemDic:any[] = [];
 
         /**
          * @inheritDoc
@@ -57,7 +57,7 @@ module RES {
                 compFunc.call(thisObject, resItem);
                 return;
             }
-            var request:egret.HttpRequest = this.getRequest();
+            let request:egret.HttpRequest = this.getRequest();
             this.resItemDic[request.hashCode] = {item: resItem, func: compFunc, thisObject: thisObject};
 
 
@@ -75,7 +75,7 @@ module RES {
          * 获取一个URLLoader对象
          */
         private getRequest():egret.HttpRequest {
-            var request:egret.HttpRequest = this.recycler.pop();
+            let request:egret.HttpRequest = this.recycler.pop();
             if (!request) {
                 request = new egret.HttpRequest();
                 request.addEventListener(egret.Event.COMPLETE, this.onLoadFinish, this);
@@ -89,11 +89,11 @@ module RES {
          * 一项加载结束
          */
         public onLoadFinish(event:egret.Event):void {
-            var request:egret.HttpRequest = <egret.HttpRequest> (event.target);
-            var data:any = this.resItemDic[request.hashCode];
+            let request:egret.HttpRequest = <egret.HttpRequest> (event.target);
+            let data:any = this.resItemDic[request.hashCode];
             delete this.resItemDic[request.hashCode];
-            var resItem:ResourceItem = data.item;
-            var compFunc:Function = data.func;
+            let resItem:ResourceItem = data.item;
+            let compFunc:Function = data.func;
             resItem.loaded = (event.type == egret.Event.COMPLETE);
             if (resItem.loaded) {
                 this.analyzeData(resItem, request.response)
@@ -106,7 +106,7 @@ module RES {
          * 解析并缓存加载成功的数据
          */
         public analyzeData(resItem:ResourceItem, data:any):void {
-            var name:string = resItem.name;
+            let name:string = resItem.name;
             if (this.fileDic[name] || (data != "" && !data)) {
                 return;
             }
@@ -124,7 +124,7 @@ module RES {
          * @inheritDoc
          */
         public hasRes(name:string):boolean {
-            var res:any = this.getRes(name);
+            let res:any = this.getRes(name);
             return res != null;
         }
 

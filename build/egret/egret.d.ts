@@ -10,7 +10,7 @@
  * @version Egret 2.5
  * @platform Web,Native
  */
-declare var DEBUG: boolean;
+declare let DEBUG: boolean;
 /**
  * @language en_US
  * Is release mode.
@@ -23,15 +23,15 @@ declare var DEBUG: boolean;
  * @version Egret 2.5
  * @platform Web,Native
  */
-declare var RELEASE: boolean;
-declare module egret {
+declare let RELEASE: boolean;
+declare namespace egret {
     function $error(code: number, ...params: any[]): void;
     function $warn(code: number, ...params: any[]): void;
     function getString(code: number, ...params: any[]): string;
     function $markReadOnly(instance: any, property: string, isProperty?: boolean): void;
     function $markCannotUse(instance: any, property: string, defaultVale: any): void;
 }
-declare module egret {
+declare namespace egret {
     /**
      * @language en_US
      * Registers the runtime class information for a class.This method adds some strings which represent the class name or
@@ -43,7 +43,7 @@ declare module egret {
      * @example the following code shows how to register the runtime class information for the EventDispatcher class and do the type checking:
      * <pre>
      *      egret.registerClass(egret.EventDispatcher,"egret.EventDispatcher",["egret.IEventDispatcher"]);
-     *      var dispatcher = new egret.EventDispatcher();
+     *      let dispatcher = new egret.EventDispatcher();
      *      egret.log(egret.is(dispatcher, "egret.IEventDispatcher"));  //true。
      *      egret.log(egret.is(dispatcher, "egret.EventDispatcher"));   //true。
      *      egret.log(egret.is(dispatcher, "egret.Bitmap"));   //false。
@@ -62,7 +62,7 @@ declare module egret {
      * <pre>
      *      //为egret.EventDispatcher类注册运行时类信息，由于它实现了IEventDispatcher接口，这里应同时传入接口名对应的字符串。
      *      egret.registerClass(egret.EventDispatcher,"egret.EventDispatcher",["egret.IEventDispatcher"]);
-     *      var dispatcher = new egret.EventDispatcher();
+     *      let dispatcher = new egret.EventDispatcher();
      *      egret.log(egret.is(dispatcher, "egret.IEventDispatcher"));  //true。
      *      egret.log(egret.is(dispatcher, "egret.EventDispatcher"));   //true。
      *      egret.log(egret.is(dispatcher, "egret.Bitmap"));   //false。
@@ -78,8 +78,8 @@ declare module egret {
     function registerClass(classDefinition: any, className: string, interfaceNames?: string[]): void;
 }
 declare function __extends(d: any, b: any): void;
-declare var __define: any;
-declare module egret {
+declare let __define: any;
+declare namespace egret {
     /**
      * @language en_US
      * The HashObject class is the base class for all objects in the Egret framework.The HashObject
@@ -114,7 +114,7 @@ declare module egret {
      * @private
      * 哈希计数
      */
-    var $hashCount: number;
+    let $hashCount: number;
     /**
      * @language en_US
      * The HashObject class is the base class for all objects in the Egret framework.The HashObject
@@ -168,7 +168,7 @@ declare module egret {
         onFail: (error: number, data: any) => any;
     }
 }
-declare module egret {
+declare namespace egret {
     /**
      * @language en_US
      * The EventDispatcher class is the base class for all classes that dispatchEvent events. The EventDispatcher class implements
@@ -249,14 +249,14 @@ declare module egret {
          * @private
          */
         $addListener(type: string, listener: Function, thisObject: any, useCapture?: boolean, priority?: number, dispatchOnce?: boolean): void;
-        $insertEventBin(list: Array<any>, type: string, listener: Function, thisObject: any, useCapture?: boolean, priority?: number, dispatchOnce?: boolean): boolean;
+        $insertEventBin(list: any[], type: string, listener: Function, thisObject: any, useCapture?: boolean, priority?: number, dispatchOnce?: boolean): boolean;
         /**
          * @inheritDoc
          * @version Egret 2.4
          * @platform Web,Native
          */
         removeEventListener(type: string, listener: Function, thisObject: any, useCapture?: boolean): void;
-        $removeEventBin(list: Array<any>, listener: Function, thisObject: any): boolean;
+        $removeEventBin(list: any[], listener: Function, thisObject: any): boolean;
         /**
          * @inheritDoc
          * @version Egret 2.4
@@ -303,7 +303,7 @@ declare module egret {
         dispatchEventWith(type: string, bubbles?: boolean, data?: any, cancelable?: boolean): boolean;
     }
 }
-declare module egret.sys {
+declare namespace egret.sys {
     /**
      * @private
      * 事件信息对象
@@ -336,7 +336,7 @@ declare module egret.sys {
         dispatchOnce: boolean;
     }
 }
-declare module egret {
+declare namespace egret {
     /**
      * @language en_US
      * A Rectangle object is an area defined by its position, as indicated by its top-left corner point (x, y) and by its
@@ -866,9 +866,9 @@ declare module egret {
      * @private
      * 仅供框架内复用，要防止暴露引用到外部。
      */
-    var $TempRectangle: Rectangle;
+    let $TempRectangle: Rectangle;
 }
-declare module egret.sys {
+declare namespace egret.sys {
     /**
      * @private
      * 显示对象失效标志
@@ -941,7 +941,7 @@ declare module egret.sys {
         InitFlags = 2032,
     }
 }
-declare module egret {
+declare namespace egret {
     /**
      * @language en_US
      * The DisplayObject class is the base class for all objects that can be placed on the display list. The display list
@@ -1156,7 +1156,7 @@ declare module egret {
          * the new object into the matrix property of the display object.
          * @example the following code increases the tx value of a display object's matrix
          * <pre>
-         *     var myMatrix:Matrix = myDisplayObject.matrix;
+         *     let myMatrix:Matrix = myDisplayObject.matrix;
          *     myMatrix.tx += 10;
          *     myDisplayObject.matrix = myMatrix;
          * </pre>
@@ -1169,7 +1169,7 @@ declare module egret {
          * 注意：要改变一个显示对象矩阵的值，您必引用整个矩阵对象，然后将它重新赋值给显示对象的 matrix 属性。
          * @example 以下代码改变了显示对象矩阵的tx属性值：
          * <pre>
-         *     var myMatrix:Matrix = myDisplayObject.matrix;
+         *     let myMatrix:Matrix = myDisplayObject.matrix;
          *     myMatrix.tx += 10;
          *     myDisplayObject.matrix = myMatrix;
          * </pre>
@@ -1659,7 +1659,7 @@ declare module egret {
          * the new object into the scrollRect property of the display object.
          * @example the following code increases the x value of a display object's scrollRect
          * <pre>
-         *     var myRectangle:Rectangle = myDisplayObject.scrollRect;
+         *     let myRectangle:Rectangle = myDisplayObject.scrollRect;
          *     myRectangle.x += 10;
          *     myDisplayObject.scrollRect = myRectangle;
          * </pre>
@@ -1675,7 +1675,7 @@ declare module egret {
          * 注意：要改变一个显示对象 scrollRect 属性的值，您必引用整个 scrollRect 对象，然后将它重新赋值给显示对象的 scrollRect 属性。
          * @example 以下代码改变了显示对象 scrollRect 的 x 属性值：
          * <pre>
-         *     var myRectangle:Rectangle = myDisplayObject.scrollRect;
+         *     let myRectangle:Rectangle = myDisplayObject.scrollRect;
          *     myRectangle.x += 10;
          *     myDisplayObject.scrollRect = myRectangle;//设置完scrollRect的x、y、width、height值之后，一定要对myDisplayObject重新赋值scrollRect，不然会出问题。
          * </pre>
@@ -1748,7 +1748,7 @@ declare module egret {
          * 下面例子为 mask 为 Rectangle 类型对象，这种情况下，修改 mask 的值后，一定要对 myDisplayObject 重新赋值 mask，不然会出问题。
          * @example 以下代码改变了显示对象 mask 的 x 属性值：
          * <pre>
-         *     var myMask:Rectangle = myDisplayObject.mask;
+         *     let myMask:Rectangle = myDisplayObject.mask;
          *     myMask.x += 10;
          *     myDisplayObject.mask = myMask;//设置完 mask 的x、y、width、height值之后，一定要对myDisplayObject重新赋值 mask，不然会出问题。
          * </pre>
@@ -2017,7 +2017,7 @@ declare module egret {
         willTrigger(type: string): boolean;
     }
 }
-declare module egret.sys {
+declare namespace egret.sys {
     /**
      * @private
      */
@@ -2039,7 +2039,7 @@ declare module egret.sys {
         sourceHeight = 14,
     }
 }
-declare module egret {
+declare namespace egret {
     /**
      * @language en_US
      * The Bitmap class represents display objects that represent bitmap images.
@@ -2283,7 +2283,7 @@ declare module egret {
         static $drawImage(node: sys.BitmapNode, image: any, bitmapX: number, bitmapY: number, bitmapWidth: number, bitmapHeight: number, offsetX: number, offsetY: number, textureWidth: number, textureHeight: number, destW: number, destH: number, sourceWidth: number, sourceHeight: number, scale9Grid: egret.Rectangle, fillMode: string, smoothing: boolean): void;
     }
 }
-declare module egret {
+declare namespace egret {
     /**
      * @private
      */
@@ -2296,7 +2296,7 @@ declare module egret {
      */
     function createMap<T>(): MapLike<T>;
 }
-declare module egret {
+declare namespace egret {
     /**
      * @language en_US
      * A BitmapData object contains an array of pixel data. This data can represent either a fully opaque bitmap or a
@@ -2405,7 +2405,7 @@ declare module egret {
         static $dispose(bitmapData: BitmapData | Texture): void;
     }
 }
-declare module egret {
+declare namespace egret {
     /**
      * @language en_US
      * The BitmapFillMode class defines the image fill mode of Bitmap.
@@ -2430,7 +2430,7 @@ declare module egret {
         CLIP: string;
     };
 }
-declare module egret {
+declare namespace egret {
     /**
      * @language en_US
      * A class that provides constant values for visual blend mode effects. These constants are used in the blendMode
@@ -2499,7 +2499,7 @@ declare module egret {
         static ERASE: string;
     }
 }
-declare module egret.sys {
+declare namespace egret.sys {
     /**
      * @private
      * 转换 blendMode 字符串为数字。
@@ -2511,7 +2511,7 @@ declare module egret.sys {
      */
     function numberToBlendMode(blendMode: number): string;
 }
-declare module egret {
+declare namespace egret {
     /**
      * @language en_US
      * The CapsStyle class is an enumeration of constant values that specify the caps style to use in drawing lines.
@@ -2533,7 +2533,7 @@ declare module egret {
         SQUARE: string;
     };
 }
-declare module egret {
+declare namespace egret {
     /**
      * @language en_US
      * Values for the dirty region policy
@@ -2551,7 +2551,7 @@ declare module egret {
         ON: string;
     };
 }
-declare module egret {
+declare namespace egret {
     /**
      * @language en_US
      * The DisplayObjectContainer class is a basic display list building block: a display list node that can contain children.
@@ -2968,7 +2968,7 @@ declare module egret {
         private $invalidateAllChildren();
     }
 }
-declare module egret {
+declare namespace egret {
     /**
      * @language en_US
      * The GradientType class provides values for the type parameter in the beginGradientFill() methods of the egret.Graphics class.
@@ -3014,7 +3014,7 @@ declare module egret {
         static RADIAL: string;
     }
 }
-declare module egret {
+declare namespace egret {
     /**
      * @language en_US
      * The Graphics class contains a set of methods for creating vector shape. Display objects that support drawing include Sprite and Shape objects. Each class in these classes includes the graphics attribute that is a Graphics object.
@@ -3436,7 +3436,7 @@ declare module egret {
         $onRemoveFromStage(): void;
     }
 }
-declare module egret {
+declare namespace egret {
     /**
      * @language en_US
      * The JointStyle class is an enumeration of constant values that specify the joint style to use in drawing lines.
@@ -3458,7 +3458,7 @@ declare module egret {
         ROUND: string;
     };
 }
-declare module egret {
+declare namespace egret {
     /**
      * @private
      */
@@ -3483,7 +3483,7 @@ declare module egret {
         $measureContentBounds(bounds: Rectangle): void;
     }
 }
-declare module egret {
+declare namespace egret {
     /**
      * OrientationMode 类为舞台初始旋转模式提供值。
      */
@@ -3494,8 +3494,8 @@ declare module egret {
         LANDSCAPE_FLIPPED: string;
     };
 }
-declare module egret {
-    var $TextureScaleFactor: number;
+declare namespace egret {
+    let $TextureScaleFactor: number;
     /**
      * @language en_US
      * The Texture class encapsulates different image resources on different platforms.
@@ -3740,7 +3740,7 @@ declare module egret {
         dispose(): void;
     }
 }
-declare module egret {
+declare namespace egret {
     /**
      * @language en_US
      * RenderTexture is a dynamic texture
@@ -3789,7 +3789,7 @@ declare module egret {
         dispose(): void;
     }
 }
-declare module egret {
+declare namespace egret {
     /**
      * @language en_US
      * This class is used to create lightweight shapes using the drawing application program interface (API). The Shape
@@ -3849,7 +3849,7 @@ declare module egret {
         $onRemoveFromStage(): void;
     }
 }
-declare module egret {
+declare namespace egret {
     /**
      * @language en_US
      * The Sprite class is a basic display list building block: a display list node that can contain children.
@@ -3906,7 +3906,7 @@ declare module egret {
         $onRemoveFromStage(): void;
     }
 }
-declare module egret {
+declare namespace egret {
     /**
      * @language en_US
      * SpriteSheet is a mosaic of multiple sub-bitmaps, comprising a plurality of Texture objects.
@@ -4032,7 +4032,7 @@ declare module egret {
         dispose(): void;
     }
 }
-declare module egret {
+declare namespace egret {
     /**
      * @language en_US
      * The Stage class represents the main drawing area.The Stage object is not globally accessible. You need to access
@@ -4259,7 +4259,7 @@ declare module egret {
         setContentSize(width: number, height: number): void;
     }
 }
-declare module egret {
+declare namespace egret {
     /**
      * @language en_US
      * The Event class is used as the base class for the creation of Event objects, which are passed as parameters to event
@@ -4838,7 +4838,7 @@ declare module egret {
          * @param cancelable Determines whether the Event object can be canceled. The default values is false.
          * @example
          * <pre>
-         *    var event = Event.create(Event,type, bubbles);
+         *    let event = Event.create(Event,type, bubbles);
          *    event.data = data;    //optional,initializes custom data here
          *    this.dispatchEvent(event);
          *    Event.release(event);
@@ -4857,7 +4857,7 @@ declare module egret {
          * @param cancelable 确定是否可以取消 Event 对象。默认值为 false。
          * @example
          * <pre>
-         *    var event = Event.create(Event,type, bubbles);
+         *    let event = Event.create(Event,type, bubbles);
          *    event.data = data;  //可选，若指定义事件上需要附加其他参数，可以在获取实例后在此处设置。
          *    this.dispatchEvent(event);
          *    Event.release(event);
@@ -4879,7 +4879,7 @@ declare module egret {
          * if not,it may throw an error.
          * @example
          * <pre>
-         *    var event = Event.create(Event,type, bubbles);
+         *    let event = Event.create(Event,type, bubbles);
          *    event.data = data; //optional,initializes custom data here
          *    this.dispatchEvent(event);
          *    Event.release(event);
@@ -4895,7 +4895,7 @@ declare module egret {
          * 注意：此方法只能传入由Event.create()创建的事件实例，传入非法对象实例可能会导致报错。
          * @example
          * <pre>
-         *    var event = Event.create(Event,type, bubbles);
+         *    let event = Event.create(Event,type, bubbles);
          *    event.data = data;   //可选，若指定义事件上需要附加其他参数，可以在获取实例后在此处设置。
          *    this.dispatchEvent(event);
          *    Event.release(event);
@@ -4907,7 +4907,7 @@ declare module egret {
         static release(event: Event): void;
     }
 }
-declare module egret {
+declare namespace egret {
     /**
      * @language en_US
      * The EventPhase class provides values for the eventPhase property of the Event class.
@@ -4964,7 +4964,7 @@ declare module egret {
         BUBBLING_PHASE = 3,
     }
 }
-declare module egret {
+declare namespace egret {
     /**
      * @language en_US
      * When the user changes the focus from one object in the display list to another object, the object dispatches a FocusEvent object. Currently only supports input text.
@@ -5027,7 +5027,7 @@ declare module egret {
         constructor(type: string, bubbles?: boolean, cancelable?: boolean);
     }
 }
-declare module egret {
+declare namespace egret {
     /**
      * @language en_US
      * The GeolocationEvent represents the position and altitude of the device on Earth,
@@ -5203,7 +5203,7 @@ declare module egret {
         errorMessage: string;
     }
 }
-declare module egret {
+declare namespace egret {
     /**
      * @language en_US
      * When a network request returns an HTTP status code, the application dispatches HTTPStatusEvent objects.
@@ -5287,7 +5287,7 @@ declare module egret {
         static dispatchHTTPStatusEvent(target: IEventDispatcher, status: number): boolean;
     }
 }
-declare module egret {
+declare namespace egret {
     /**
      * @language en_US
      * The IEventDispatcher interface defines methods for adding or removing event listeners, checks whether specific types
@@ -5517,7 +5517,7 @@ declare module egret {
         willTrigger(type: string): boolean;
     }
 }
-declare module egret {
+declare namespace egret {
     /**
      * @language en_US
      * @classdesc IO流事件，当错误导致输入或输出操作失败时调度 IOErrorEvent 对象。
@@ -5582,7 +5582,7 @@ declare module egret {
         static dispatchIOErrorEvent(target: IEventDispatcher): boolean;
     }
 }
-declare module egret {
+declare namespace egret {
     /**
      * @language en_US
      * MotionEvent represents the device's movement
@@ -5643,7 +5643,7 @@ declare module egret {
         rotationRate: DeviceRotationRate;
     }
 }
-declare module egret {
+declare namespace egret {
     /**
      * @language en_US
      * The OrientationEvent provides information from the physical orientation of the device.
@@ -5711,7 +5711,7 @@ declare module egret {
         gamma: number;
     }
 }
-declare module egret {
+declare namespace egret {
     /**
      * @language en_US
      * When a load operation has begun or a socket has received data, ProgressEvent object is dispatched.
@@ -5825,7 +5825,7 @@ declare module egret {
         static dispatchProgressEvent(target: IEventDispatcher, type: string, bytesLoaded?: number, bytesTotal?: number): boolean;
     }
 }
-declare module egret {
+declare namespace egret {
     /**
      * @language en_US
      * When the direction of the stage of change, Stage object dispatches StageOrientationEvent object.
@@ -5892,7 +5892,7 @@ declare module egret {
         static dispatchStageOrientationEvent(target: IEventDispatcher, type: string): boolean;
     }
 }
-declare module egret {
+declare namespace egret {
     /**
      * @language en_US
      * When a user clicks a hyperlink rich text object dispatches TextEvent object. Text Event Type: TextEvent.LINK.
@@ -5976,7 +5976,7 @@ declare module egret {
         static dispatchTextEvent(target: IEventDispatcher, type: string, text: string): boolean;
     }
 }
-declare module egret {
+declare namespace egret {
     /**
      * @language en_US
      * A Timer object dispatches a TimerEvent objects whenever the Timer object reaches the interval specified by the Timer.delay property.
@@ -6055,7 +6055,7 @@ declare module egret {
          *        event.updateAfterEvent();
          *    }
          *
-         *    var moveTimer:Timer=new Timer(50,250);
+         *    let moveTimer:Timer=new Timer(50,250);
          *    moveTimer.addEventListener(TimerEvent.TIMER,onTimer);
          *    moveTimer.start();
          * </pre>
@@ -6076,7 +6076,7 @@ declare module egret {
          *        event.updateAfterEvent();
          *    }
          *
-         *    var moveTimer:Timer=new Timer(50,250);
+         *    let moveTimer:Timer=new Timer(50,250);
          *    moveTimer.addEventListener(TimerEvent.TIMER,onTimer);
          *    moveTimer.start();
          * </pre>
@@ -6114,7 +6114,7 @@ declare module egret {
         static dispatchTimerEvent(target: IEventDispatcher, type: string, bubbles?: boolean, cancelable?: boolean): boolean;
     }
 }
-declare module egret {
+declare namespace egret {
     /**
      * @language en_US
      * The Point object represents a location in a two-dimensional coordinate system, where x represents the horizontal
@@ -6428,9 +6428,9 @@ declare module egret {
      * @private
      * 仅供框架内复用，要防止暴露引用到外部。
      */
-    var $TempPoint: Point;
+    let $TempPoint: Point;
 }
-declare module egret {
+declare namespace egret {
     /**
      * @language en_US
      * The TouchEvent class lets you handle events on devices that detect user contact with the device (such as a finger
@@ -6730,7 +6730,7 @@ declare module egret {
         static dispatchTouchEvent(target: IEventDispatcher, type: string, bubbles?: boolean, cancelable?: boolean, stageX?: number, stageY?: number, touchPointID?: number, touchDown?: boolean): boolean;
     }
 }
-declare module egret {
+declare namespace egret {
     /**
      * @language en_US
      * h5 and native interaction.
@@ -6749,7 +6749,7 @@ declare module egret {
      */
     interface ExternalInterface {
     }
-    var ExternalInterface: {
+    let ExternalInterface: {
         /**
          * @language en_US
          * Call functionName, and the value passed to the native.
@@ -6778,7 +6778,7 @@ declare module egret {
         addCallback(functionName: string, listener: (value) => void): void;
     };
 }
-declare module egret {
+declare namespace egret {
     /**
      * @private
      * @version Egret 2.4
@@ -6808,7 +6808,7 @@ declare module egret {
         HIGH = 3,
     }
 }
-declare module egret {
+declare namespace egret {
     /**
      * @private
      * @version Egret 2.4
@@ -6830,7 +6830,7 @@ declare module egret {
         $toJson(): string;
     }
 }
-declare module egret {
+declare namespace egret {
     /**
      * @language en_US
      * The BlurFilter class lets you apply a blur visual effect to display objects. A blur effect softens the details of an image.
@@ -6911,7 +6911,7 @@ declare module egret {
         $toJson(): string;
     }
 }
-declare module egret {
+declare namespace egret {
     /**
      * @language en_US
      * The ColorMatrixFilter class lets you apply a 4 x 5 matrix transformation on the RGBA color and alpha values of every pixel in the input image to produce a result with a new set of RGBA color and alpha values.
@@ -6932,7 +6932,7 @@ declare module egret {
         /**
          * @private
          */
-        $matrix: Array<number>;
+        $matrix: number[];
         /**
          * @private
          */
@@ -6949,7 +6949,7 @@ declare module egret {
          * @version Egret 3.1.0
          * @platform Web
          */
-        constructor(matrix?: Array<number>);
+        constructor(matrix?: number[]);
         /**
          * @language en_US
          * A comma delimited list of 20 doubles that comprise a 4x5 matrix applied to the rendered element.
@@ -6966,7 +6966,7 @@ declare module egret {
          * @version Egret 3.1.0
          * @platform Web
          */
-        matrix: Array<number>;
+        matrix: number[];
         /**
          * @private
          */
@@ -6977,7 +6977,7 @@ declare module egret {
         $toJson(): string;
     }
 }
-declare module egret {
+declare namespace egret {
     /**
      * @class egret.GlowFilter
      * @classdesc
@@ -7172,7 +7172,7 @@ declare module egret {
         $toJson(): string;
     }
 }
-declare module egret {
+declare namespace egret {
     /**
      * @class egret.DropShadowFilter
      * @classdesc
@@ -7276,7 +7276,7 @@ declare module egret {
         $toJson(): string;
     }
 }
-declare module egret {
+declare namespace egret {
     /**
      * @language en_US
      * The Matrix class represents a transformation matrix that determines how to map points from one coordinate space to
@@ -7810,21 +7810,21 @@ declare module egret {
      * @private
      * 仅供框架内复用，要防止暴露引用到外部。
      */
-    var $TempMatrix: Matrix;
+    let $TempMatrix: Matrix;
 }
-declare module egret {
+declare namespace egret {
 }
-declare module egret {
+declare namespace egret {
     /**
      * @private
      */
-    var $locale_strings: any;
+    let $locale_strings: any;
     /**
      * @private
      */
-    var $language: string;
+    let $language: string;
 }
-declare module egret.sys {
+declare namespace egret.sys {
     /**
      * @private
      * 全局多语言翻译函数
@@ -7834,14 +7834,14 @@ declare module egret.sys {
      */
     function tr(code: number, ...args: any[]): string;
 }
-declare module egret {
+declare namespace egret {
 }
 /**
  * @version Egret 2.4
  * @platform Web,Native
  * @includeExample egret/localStorage/localStorage.ts
  */
-declare module egret.localStorage {
+declare namespace egret.localStorage {
     /**
      * @language en_US
      * Read data
@@ -7856,7 +7856,7 @@ declare module egret.localStorage {
      * @version Egret 2.4
      * @platform Web,Native
      */
-    var getItem: (key: string) => string;
+    let getItem: (key: string) => string;
     /**
      * @language en_US
      * Save data
@@ -7875,7 +7875,7 @@ declare module egret.localStorage {
      * @version Egret 2.4
      * @platform Web,Native
      */
-    var setItem: (key: string, value: string) => boolean;
+    let setItem: (key: string, value: string) => boolean;
     /**
      * @language en_US
      * Delete data
@@ -7890,7 +7890,7 @@ declare module egret.localStorage {
      * @version Egret 2.4
      * @platform Web,Native
      */
-    var removeItem: (key: string) => void;
+    let removeItem: (key: string) => void;
     /**
      * @language en_US
      * Clear all data
@@ -7903,9 +7903,9 @@ declare module egret.localStorage {
      * @version Egret 2.4
      * @platform Web,Native
      */
-    var clear: () => void;
+    let clear: () => void;
 }
-declare module egret.sys {
+declare namespace egret.sys {
     /**
      * @private
      * @param channel
@@ -7917,7 +7917,7 @@ declare module egret.sys {
      */
     function $popSoundChannel(channel: SoundChannel): boolean;
 }
-declare module egret {
+declare namespace egret {
     /**
      * @language en_US
      * The Sound class lets you work with sound in an application.
@@ -8022,7 +8022,7 @@ declare module egret {
     /**
      * @copy egret.Sound
      */
-    var Sound: {
+    let Sound: {
         /**
          * @language en_US
          * Create Sound object, load an external audio file and play
@@ -8070,7 +8070,7 @@ declare module egret {
         EFFECT: string;
     };
 }
-declare module egret {
+declare namespace egret {
     /**
      * @language en_US
      * The SoundChannel class controls a sound in an application.
@@ -8139,7 +8139,7 @@ declare module egret {
         stop(): void;
     }
 }
-declare module egret {
+declare namespace egret {
     /**
      * @language en_US
      * The Video class lets you work with video in an application.
@@ -8349,15 +8349,15 @@ declare module egret {
     /**
      * @copy egret.Video
      */
-    var Video: {
+    let Video: {
         new (url?: string, cache?: boolean): Video;
     };
 }
 /**
  * @private
  */
-declare module egret_native {
-    var nativeType: string;
+declare namespace egret_native {
+    let nativeType: string;
     /**
      * 游戏启动
      * @private
@@ -8368,11 +8368,11 @@ declare module egret_native {
     function getVersion(): any;
     function setScreenCanvas(canvas: Canvas): void;
     function setFrameRate(frameRate: number): void;
-    function onTouchesBegin(num: number, ids: Array<any>, xs_array: Array<any>, ys_array: Array<any>): any;
-    function onTouchesMove(num: number, ids: Array<any>, xs_array: Array<any>, ys_array: Array<any>): any;
-    function onTouchesEnd(num: number, ids: Array<any>, xs_array: Array<any>, ys_array: Array<any>): any;
-    function onTouchesCancel(num: number, ids: Array<any>, xs_array: Array<any>, ys_array: Array<any>): any;
-    function sendToC(float32Array: Float32Array, arrayBufferLen: number, array: Array<string>): void;
+    function onTouchesBegin(num: number, ids: any[], xs_array: any[], ys_array: any[]): any;
+    function onTouchesMove(num: number, ids: any[], xs_array: any[], ys_array: any[]): any;
+    function onTouchesEnd(num: number, ids: any[], xs_array: any[], ys_array: any[]): any;
+    function onTouchesCancel(num: number, ids: any[], xs_array: any[], ys_array: any[]): any;
+    function sendToC(float32Array: Float32Array, arrayBufferLen: number, array: string[]): void;
     /**
      * 启动主循环
      * @param callback 主循环回调函数
@@ -8398,7 +8398,7 @@ declare module egret_native {
     function loadRecord(filepath: string): string;
     function saveRecord(filepath: string, fileContent: string): void;
     function getOption(type: string): string;
-    module Audio {
+    namespace Audio {
         function preloadBackgroundMusic(path: string): void;
         function playBackgroundMusic(path: string, loop: boolean): void;
         function setBackgroundMusicVolume(value: number): void;
@@ -8417,7 +8417,7 @@ declare module egret_native {
         function resumeAllEffects(): void;
     }
     function download(url: string, savePath: string, promise: any): void;
-    module Graphics {
+    namespace Graphics {
         function clearScreen(r: number, g: number, b: number): void;
         function drawImage(texture: any, sourceX: any, sourceY: any, sourceWidth: any, sourceHeight: any, destX: any, destY: any, destWidth: any, destHeight: any): void;
         function drawImageScale9(texture: any, sourceX: any, sourceY: any, sourceWidth: any, sourceHeight: any, destX: any, destY: any, destWidth: any, destHeight: any, x: any, y: any, width: any, height: any): boolean;
@@ -8425,7 +8425,7 @@ declare module egret_native {
         function setGlobalAlpha(alpha: number): void;
         function pushClip(x: number, y: number, w: number, h: number): void;
         function popClip(): void;
-        function setGlobalColorTransform(colorTransformMatrix: Array<number>): void;
+        function setGlobalColorTransform(colorTransformMatrix: number[]): void;
         function setGlobalColorTransformEnabled(bool: boolean): void;
         function setGlobalShader(filterData: any): void;
         function lineStyle(thickness: number, color: number): void;
@@ -8436,25 +8436,25 @@ declare module egret_native {
         function setBlendArg(src: number, des: number): void;
         function setTextureScaleFactor(value: number): void;
     }
-    module Label {
+    namespace Label {
         function createLabel(font: string, size: number, defaultString: string, defaultStroke: number): void;
         function setTextColor(color: number): void;
         function setStrokeColor(color: number): void;
         function drawText(text: string, x: number, y: number): void;
         function setTextAlignment(type: string): void;
-        function getTextSize(text: string): Array<number>;
+        function getTextSize(text: string): number[];
     }
-    module EGTXML {
+    namespace EGTXML {
         function readXML(filepath: string): void;
     }
-    module Texture {
+    namespace Texture {
         function create(filePath: string): any;
         function addTexture(filePath: string): any;
         function addTextureAsyn(filePath: string, promise: any): any;
         function addTextureUnsyn(filePath: string, promise: any): any;
         function removeTexture(filePath: string): void;
     }
-    module TextInputOp {
+    namespace TextInputOp {
         function setKeybordOpen(isOpen: boolean, jsonConfig?: Object): void;
         function isFullScreenKeyBoard(): boolean;
         function setInputTextMaxLenght(value: number): void;
@@ -8465,7 +8465,7 @@ declare module egret_native {
     function EGT_keyboardDidHide(): void;
     function EGT_keyboardDidShow(): void;
     function EGT_getTextEditerContentText(): string;
-    module EGTView {
+    namespace EGTView {
         function getFrameWidth(): number;
         function getFrameHeight(): number;
         function setVisibleRect(x: number, y: number, w: number, h: number): number;
@@ -8482,7 +8482,7 @@ declare module egret_native {
         toDataURL(type: any): any;
         saveToFile(type: string, filePath: string): any;
     }
-    module rastergl {
+    namespace rastergl {
         function arc(x: number, y: number, radius: number, startAngle: number, endAngle: number, anticlockwise?: boolean): void;
         function quadraticCurveTo(cpx: number, cpy: number, x: number, y: number): void;
         function lineTo(x: number, y: number): void;
@@ -8507,17 +8507,17 @@ declare module egret_native {
         /**
          * @private
          */
-        var lineWidth: number;
+        let lineWidth: number;
         /**
          * @private
          */
-        var strokeStyle: any;
+        let strokeStyle: any;
         /**
          * @private
          */
-        var fillStyle: any;
+        let fillStyle: any;
     }
-    module Game {
+    namespace Game {
         function listResource(root: any, promise: any): any;
         function listUpdate(root: any, promise: any): any;
     }
@@ -8542,7 +8542,7 @@ declare module egret_native {
         getContext(type: string): RenderContext;
     }
 }
-declare module egret {
+declare namespace egret {
     /**
      * @private
      * @version Egret 2.4
@@ -8635,7 +8635,7 @@ declare module egret {
         private destroy();
     }
 }
-declare module egret {
+declare namespace egret {
     /**
      * @language en_US
      * The HttpMethod class provides values that specify whether the HttpRequest object should use the POST method
@@ -8681,7 +8681,7 @@ declare module egret {
         static POST: string;
     }
 }
-declare module egret {
+declare namespace egret {
     /**
      * @language en_US
      * The HttpRequest class downloads data from a URL as text or binary data. It is useful for downloading text files,
@@ -8870,11 +8870,11 @@ declare module egret {
      * @version Egret 2.4
      * @platform Web,Native
      */
-    var HttpRequest: {
+    let HttpRequest: {
         new (): HttpRequest;
     };
 }
-declare module egret {
+declare namespace egret {
     /**
      * @language en_US
      * The HttpResponseType class provides values that specify how downloaded data is received.
@@ -8918,7 +8918,7 @@ declare module egret {
         static ARRAY_BUFFER: string;
     }
 }
-declare module egret {
+declare namespace egret {
     /**
      * @language en_US
      * The Loader class is used to load image (JPG, PNG, or GIF) files. Use the load() method to initiate loading.
@@ -9005,7 +9005,7 @@ declare module egret {
      * @version Egret 2.4
      * @platform Web,Native
      */
-    var ImageLoader: {
+    let ImageLoader: {
         /**
          * @language en_US
          * constructor
@@ -9034,7 +9034,7 @@ declare module egret {
         crossOrigin: string;
     };
 }
-declare module egret.sys {
+declare namespace egret.sys {
     /**
      * @private
      * 脏矩形计算工具类
@@ -9097,7 +9097,7 @@ declare module egret.sys {
         setDirtyRegionPolicy(policy: string): void;
     }
 }
-declare module egret.sys {
+declare namespace egret.sys {
     /**
      * @private
      * 显示列表
@@ -9204,7 +9204,7 @@ declare module egret.sys {
         setDirtyRegionPolicy(policy: string): void;
     }
 }
-declare module egret {
+declare namespace egret {
     /**
      * @language en_US
      * egret project entry function
@@ -9230,7 +9230,7 @@ declare module egret {
      */
     function updateAllScreens(): void;
 }
-declare module egret {
+declare namespace egret {
     /**
      * @private
      */
@@ -9247,7 +9247,7 @@ declare module egret {
     /**
      * @private
      */
-    var FPSDisplay: {
+    let FPSDisplay: {
         new (stage: Stage, showFPS: boolean, showLog: boolean, logFilter: string, styles: Object): FPSDisplay;
     };
 }
@@ -9262,8 +9262,8 @@ interface FPSData extends Object {
     costDirty: number;
     costRender: number;
 }
-declare module egret.sys {
-    var $TempStage: egret.Stage;
+declare namespace egret.sys {
+    let $TempStage: egret.Stage;
     /**
      * @private
      * Egret播放器
@@ -9389,7 +9389,7 @@ declare module egret.sys {
     /**
      * @private
      */
-    var $logToFPS: (info: string) => void;
+    let $logToFPS: (info: string) => void;
 }
 /**
  * @private
@@ -9448,7 +9448,7 @@ interface PlayerOption {
      */
     textureScaleFactor?: number;
 }
-declare module egret.sys {
+declare namespace egret.sys {
     /**
      * @private
      */
@@ -9540,17 +9540,17 @@ declare module egret.sys {
         updateRegion(bounds: Rectangle, matrix: Matrix): void;
     }
 }
-declare module egret.sys {
+declare namespace egret.sys {
     /**
      * @private
      * 共享的用于碰撞检测的渲染缓冲
      */
-    var customHitTestBuffer: sys.RenderBuffer;
+    let customHitTestBuffer: sys.RenderBuffer;
     /**
      * @private
      * 共享的用于canvas碰撞检测的渲染缓冲
      */
-    var canvasHitTestBuffer: sys.RenderBuffer;
+    let canvasHitTestBuffer: sys.RenderBuffer;
     /**
      * @private
      * 渲染缓冲
@@ -9627,7 +9627,7 @@ declare module egret.sys {
     /**
      * @private
      */
-    var RenderBuffer: {
+    let RenderBuffer: {
         /**
          * 创建一个RenderTarget。
          * 注意：若内存不足或创建缓冲区失败，将会抛出错误异常。
@@ -9640,7 +9640,7 @@ declare module egret.sys {
     /**
      * @private
      */
-    var CanvasRenderBuffer: {
+    let CanvasRenderBuffer: {
         /**
          * 创建一个CanvasRenderBuffer。
          * 注意：若内存不足或创建缓冲区失败，将会抛出错误异常。
@@ -9650,7 +9650,7 @@ declare module egret.sys {
         new (width?: number, height?: number): RenderBuffer;
     };
 }
-declare module egret.sys {
+declare namespace egret.sys {
     /**
      * @private
      */
@@ -9667,7 +9667,7 @@ declare module egret.sys {
         $update(dirtyRegionPolicy: string, bounds?: Rectangle): boolean;
     }
 }
-declare module egret.sys {
+declare namespace egret.sys {
     /**
      * @private
      * 设备屏幕
@@ -9690,7 +9690,7 @@ declare module egret.sys {
         setContentSize(width: number, height: number): any;
     }
 }
-declare module egret.sys {
+declare namespace egret.sys {
     /**
      * @private
      * 屏幕适配器接口，当播放器视口尺寸改变时，屏幕适配器将被用于计算当前对应的舞台显示尺寸。
@@ -9737,7 +9737,7 @@ declare module egret.sys {
      * @private
      * 屏幕适配器实例，开发者可以通过给这个变量赋值实现了IScreenAdapter接口的实例，从而注入自定义的屏幕适配器。
      */
-    var screenAdapter: IScreenAdapter;
+    let screenAdapter: IScreenAdapter;
     /**
      * @private
      * 屏幕适配器默认实现，开发者可以实现自定义规则的屏幕适配器。并在初始化加载时将适配器的实例赋值给egret.sys.screenAdapter上，从而替换掉默认适配器。
@@ -9759,7 +9759,7 @@ declare module egret.sys {
         calculateStageSize(scaleMode: string, screenWidth: number, screenHeight: number, contentWidth: number, contentHeight: number): StageDisplaySize;
     }
 }
-declare module egret {
+declare namespace egret {
     /**
      * @language en_US
      * StageScaleMode class provides values for the stage zoom mode.
@@ -9865,16 +9865,16 @@ declare module egret {
         static FIXED_WIDE: string;
     }
 }
-declare module egret.sys {
+declare namespace egret.sys {
     /**
      * @private
      */
-    var systemRenderer: SystemRenderer;
+    let systemRenderer: SystemRenderer;
     /**
      * @private
      * 用于碰撞检测绘制
      */
-    var canvasRenderer: SystemRenderer;
+    let canvasRenderer: SystemRenderer;
     /**
      * @private
      * 显示渲染器接口
@@ -9900,21 +9900,21 @@ declare module egret.sys {
         drawNodeToBuffer(node: sys.RenderNode, buffer: RenderBuffer, matrix: Matrix, forHitTest?: boolean): void;
     }
 }
-declare module egret.sys {
+declare namespace egret.sys {
     /**
      * @private
      */
-    var $START_TIME: number;
+    let $START_TIME: number;
     /**
      * @private
      * 是否要广播Event.RENDER事件的标志。
      */
-    var $invalidateRenderFlag: boolean;
+    let $invalidateRenderFlag: boolean;
     /**
      * @private
      * 需要立即刷新屏幕的标志
      */
-    var $requestRenderingFlag: boolean;
+    let $requestRenderingFlag: boolean;
     /**
      * @private
      * Egret心跳计时器
@@ -10013,9 +10013,10 @@ declare module egret.sys {
      * @private
      * 心跳计时器单例
      */
-    var $ticker: SystemTicker;
+    let $ticker: SystemTicker;
 }
-declare module egret.sys {
+declare let egret_stages: egret.Stage[];
+declare namespace egret.sys {
     /**
      * @private
      * 用户交互操作管理器
@@ -10079,7 +10080,7 @@ declare module egret.sys {
         private findTarget(stageX, stageY);
     }
 }
-declare module egret.sys {
+declare namespace egret.sys {
     /**
      * @private
      * 渲染节点类型
@@ -10162,7 +10163,7 @@ declare module egret.sys {
         $getRenderCount(): number;
     }
 }
-declare module egret.sys {
+declare namespace egret.sys {
     /**
      * @private
      * 位图渲染节点
@@ -10221,7 +10222,7 @@ declare module egret.sys {
         private static drawClipImage(node, scale, bitmapX, bitmapY, scaledBitmapW, scaledBitmapH, offsetX, offsetY, destW, destH, startX?, startY?);
     }
 }
-declare module egret.sys {
+declare namespace egret.sys {
     /**
      * @private
      * 矢量渲染节点
@@ -10294,7 +10295,7 @@ declare module egret.sys {
         clean(): void;
     }
 }
-declare module egret.sys {
+declare namespace egret.sys {
     /**
      * @private
      * 组渲染节点,用于组合多个渲染节点
@@ -10310,7 +10311,7 @@ declare module egret.sys {
         $getRenderCount(): number;
     }
 }
-declare module egret.sys {
+declare namespace egret.sys {
     /**
      * @private
      * Mesh 渲染节点
@@ -10363,7 +10364,7 @@ declare module egret.sys {
         cleanBeforeRender(): void;
     }
 }
-declare module egret.sys {
+declare namespace egret.sys {
     /**
      * @private
      * 位图渲染节点
@@ -10376,7 +10377,7 @@ declare module egret.sys {
         setAlpha(alpha: number): void;
     }
 }
-declare module egret.sys {
+declare namespace egret.sys {
     /**
      * @private
      * 文本格式
@@ -10412,7 +10413,7 @@ declare module egret.sys {
         fontFamily?: string;
     }
 }
-declare module egret.sys {
+declare namespace egret.sys {
     /**
      * @private
      * 文本渲染节点
@@ -10484,7 +10485,7 @@ declare module egret.sys {
         clean(): void;
     }
 }
-declare module egret.sys {
+declare namespace egret.sys {
     /**
      * @private
      * 路径类型
@@ -10629,7 +10630,7 @@ declare module egret.sys {
         private arcToBezier(x, y, radiusX, radiusY, startAngle, endAngle, anticlockwise?);
     }
 }
-declare module egret.sys {
+declare namespace egret.sys {
     /**
      * @private
      * 填充路径
@@ -10646,7 +10647,7 @@ declare module egret.sys {
         fillAlpha: number;
     }
 }
-declare module egret.sys {
+declare namespace egret.sys {
     /**
      * @private
      * 渐变填充路径
@@ -10660,7 +10661,7 @@ declare module egret.sys {
         matrix: Matrix;
     }
 }
-declare module egret.sys {
+declare namespace egret.sys {
     /**
      * @private
      * 线条路径。
@@ -10695,7 +10696,7 @@ declare module egret.sys {
         miterLimit: number;
     }
 }
-declare module egret {
+declare namespace egret {
     /**
      * @private
      * Canvas渲染器
@@ -10767,7 +10768,7 @@ declare module egret {
         private createRenderBuffer(width, height);
     }
 }
-declare module egret {
+declare namespace egret {
     /**
      * @language en_US
      * Orientation monitor the orientation of the device, send CHANGE event when the orientation is changed
@@ -10818,11 +10819,11 @@ declare module egret {
     /**
      * @copy egret.Orientation
      */
-    var DeviceOrientation: {
+    let DeviceOrientation: {
         new (): DeviceOrientation;
     };
 }
-declare module egret {
+declare namespace egret {
     /**
      * @language en_US
      * The Geolocation able to obtain the position of the device.
@@ -10883,7 +10884,7 @@ declare module egret {
     /**
      * @copy egret.Geolocation
      */
-    var Geolocation: {
+    let Geolocation: {
         /**
          * @language en_US
          * constructor
@@ -10899,11 +10900,11 @@ declare module egret {
         new (): Geolocation;
     };
 }
-declare module egret {
+declare namespace egret {
     /**
      * @copy egret.Motion
      */
-    var Motion: {
+    let Motion: {
         new (): Motion;
     };
     /**
@@ -11066,7 +11067,7 @@ declare module egret {
         z: number;
     }
 }
-declare module egret {
+declare namespace egret {
     /**
      * @language en_US
      * Type of operation.
@@ -11325,12 +11326,12 @@ declare module egret {
 /**
  * @private
  */
-declare var testDeviceType: () => boolean;
+declare let testDeviceType: () => boolean;
 /**
  * @private
  */
-declare var testRuntimeType: () => boolean;
-declare module egret {
+declare let testRuntimeType: () => boolean;
+declare namespace egret {
     /**
      * @language en_US
      * Writes an error message to the console if the assertion is false. If the assertion is true, nothing will happen.
@@ -11386,7 +11387,7 @@ declare module egret {
      */
     function log(message?: any, ...optionalParams: any[]): void;
 }
-declare module egret {
+declare namespace egret {
     function getI(): void;
     /**
      * @language en_US
@@ -11424,7 +11425,7 @@ declare module egret {
      */
     function getImplementation(interfaceName: string): any;
 }
-declare module egret {
+declare namespace egret {
     /**
      * @language en_US
      * Bitmap font, texture set of a font. It is generally used as the value of the BitmapText.font attribute.
@@ -11513,7 +11514,7 @@ declare module egret {
         private getConfigByKey(configText, key);
     }
 }
-declare module egret.sys {
+declare namespace egret.sys {
     /**
      * @private
      */
@@ -11572,7 +11573,7 @@ declare module egret.sys {
         smoothing = 12,
     }
 }
-declare module egret {
+declare namespace egret {
     /**
      * @language en_US
      * Bitmap font adopts the Bitmap+SpriteSheet mode to render text.
@@ -11814,16 +11815,16 @@ declare module egret {
         /**
          * @private
          */
-        $lineHeights: Array<number>;
+        $lineHeights: number[];
         /**
          * @private
          *
          * @returns
          */
-        $getTextLines(): Array<string>;
+        $getTextLines(): string[];
     }
 }
-declare module egret {
+declare namespace egret {
     /**
      * @language en_US
      * The HorizontalAlign class defines the possible values for the horizontal alignment.
@@ -11916,7 +11917,7 @@ declare module egret {
         static CONTENT_JUSTIFY: string;
     }
 }
-declare module egret {
+declare namespace egret {
     /**
      * @language en_US
      * Convert the text in html format to the object that can be assigned to the egret.TextField#textFlow property
@@ -12002,7 +12003,7 @@ declare module egret {
         private addToArray(infoStr);
     }
 }
-declare module egret {
+declare namespace egret {
     /**
      * @private
      * @version Egret 2.4
@@ -12259,7 +12260,7 @@ declare module egret {
         elements: Array<IWTextElement>;
     }
 }
-declare module egret {
+declare namespace egret {
     /**
      * @private
      * @version Egret 2.4
@@ -12364,7 +12365,7 @@ declare module egret {
         _updateProperties(): void;
     }
 }
-declare module egret {
+declare namespace egret {
     /**
      * @private
      * @version Egret 2.4
@@ -12434,11 +12435,11 @@ declare module egret {
      * @version Egret 2.4
      * @platform Web,Native
      */
-    var StageText: {
+    let StageText: {
         new (): StageText;
     };
 }
-declare module egret.sys {
+declare namespace egret.sys {
     /**
      * @private
      */
@@ -12597,7 +12598,7 @@ declare module egret.sys {
         inputType = 37,
     }
 }
-declare module egret {
+declare namespace egret {
     /**
      * @language en_US
      * TextField is the text rendering class of egret. It conducts rendering by using the browser / device API. Due to different ways of font rendering in different browsers / devices, there may be differences in the rendering
@@ -13357,7 +13358,7 @@ declare module egret {
         private onTapHandler(e);
     }
 }
-declare module egret {
+declare namespace egret {
     /**
      * @language en_US
      * TextFieldInputType class is an enumeration of constant value used in setting the inputType property of the TextField class.
@@ -13412,7 +13413,7 @@ declare module egret {
         static PASSWORD: string;
     }
 }
-declare module egret {
+declare namespace egret {
     /**
      * @language en_US
      * TextFieldType class is an enumeration of constant value used in setting the type property of the TextField class.
@@ -13454,7 +13455,7 @@ declare module egret {
         static INPUT: string;
     }
 }
-declare module egret {
+declare namespace egret {
     /**
      * @private
      * @version Egret 2.4
@@ -13519,7 +13520,7 @@ declare module egret {
 /**
  * @private
  */
-declare module egret.sys {
+declare namespace egret.sys {
     /**
      * 测量文本在指定样式下的宽度。
      * @param text 要测量的文本内容。
@@ -13528,9 +13529,9 @@ declare module egret.sys {
      * @param bold 是否粗体
      * @param italic 是否斜体
      */
-    var measureText: (text: string, fontFamily: string, fontSize: number, bold: boolean, italic: boolean) => number;
+    let measureText: (text: string, fontFamily: string, fontSize: number, bold: boolean, italic: boolean) => number;
 }
-declare module egret {
+declare namespace egret {
     /**
      * @language en_US
      * The VerticalAlign class defines the possible values for the vertical alignment.
@@ -13619,7 +13620,7 @@ declare module egret {
         static CONTENT_JUSTIFY: string;
     }
 }
-declare module egret {
+declare namespace egret {
     /**
      * @language en_US
      * The Endian class contains values that denote the byte order used to represent multibyte numbers.
@@ -14287,10 +14288,10 @@ declare module egret {
         private stringToCodePoints(string);
     }
 }
-declare module egret {
+declare namespace egret {
     /**
      * @language en_US
-     * Logger is an entrance for the log processing module of the engine
+     * Logger is an entrance for the log processing namespace of the engine
      * @version Egret 2.4
      * @platform Web,Native
      */
@@ -14414,7 +14415,7 @@ declare module egret {
         static logLevel: string;
     }
 }
-declare module egret {
+declare namespace egret {
     /**
      * @version Egret 2.4
      * @platform Web,Native
@@ -14490,16 +14491,16 @@ declare module egret {
 /**
  * @private
  */
-declare var egret_sin_map: {};
+declare let egret_sin_map: {};
 /**
  * @private
  */
-declare var egret_cos_map: {};
+declare let egret_cos_map: {};
 /**
  * @private
  */
-declare var DEG_TO_RAD: number;
-declare module egret {
+declare let DEG_TO_RAD: number;
+declare namespace egret {
     /**
      * @language en_US
      * The Timer class is the interface to timers, which let you run code on a specified time sequence. Use the start()
@@ -14672,7 +14673,7 @@ declare module egret {
         $update(timeStamp: number): boolean;
     }
 }
-declare module egret {
+declare namespace egret {
     /**
      * @language en_US
      * The XMLNode class is the base class for all xml node.
@@ -14846,7 +14847,7 @@ declare module egret {
      * @version Egret 2.4
      * @platform Web,Native
      */
-    var XML: {
+    let XML: {
         /**
          * @language en_US
          * parses a text to XML instance.
@@ -14860,19 +14861,19 @@ declare module egret {
         parse(text: string): XML;
     };
 }
-declare module egret {
+declare namespace egret {
     /**
      * @private
      */
-    var $callLaterFunctionList: Array<any>;
+    let $callLaterFunctionList: any[];
     /**
      * @private
      */
-    var $callLaterThisList: Array<any>;
+    let $callLaterThisList: any[];
     /**
      * @private
      */
-    var $callLaterArgsList: Array<any>;
+    let $callLaterArgsList: any[];
     /**
      * @language en_US
      * Delay the function to run unless screen is redrawn.
@@ -14897,15 +14898,15 @@ declare module egret {
     /**
      * @private
      */
-    var $callAsyncFunctionList: Array<any>;
+    let $callAsyncFunctionList: any[];
     /**
      * @private
      */
-    var $callAsyncThisList: Array<any>;
+    let $callAsyncThisList: any[];
     /**
      * @private
      */
-    var $callAsyncArgsList: Array<any>;
+    let $callAsyncArgsList: any[];
     /**
      * 异步调用函数
      * @param method {Function} 要异步调用的函数
@@ -14915,7 +14916,7 @@ declare module egret {
      */
     function $callAsync(method: Function, thisObject: any, ...args: any[]): void;
 }
-declare module egret {
+declare namespace egret {
     /**
      * @language en_US
      * Call setter properties of the parent class, instead of the other writing languages, such as super.alpha = 1;
@@ -14959,7 +14960,7 @@ declare module egret {
      */
     function superGetter(currentClass: any, thisObj: any, type: string): any;
 }
-declare module egret {
+declare namespace egret {
     /**
      * @language en_US
      * Returns a reference to the class object of the class specified by the name parameter.
@@ -14978,8 +14979,8 @@ declare module egret {
      */
     function getDefinitionByName(name: string): any;
 }
-declare var __global: any;
-declare module egret {
+declare let __global: any;
+declare namespace egret {
     /**
      * @language en_US
      * Get browser or Runtime parameters, returns an empty string if not set
@@ -14998,9 +14999,9 @@ declare module egret {
      * @version Egret 2.4
      * @platform Web,Native
      */
-    var getOption: (key: string) => string;
+    let getOption: (key: string) => string;
 }
-declare module egret {
+declare namespace egret {
     /**
      * @language en_US
      * Return the fully qualified class name of an object
@@ -15031,7 +15032,7 @@ declare module egret {
      */
     function getQualifiedClassName(value: any): string;
 }
-declare module egret {
+declare namespace egret {
     /** @language en_US
      * Returns the fully qualified class name of the base class of the object specified by the value parameter.
      * @param value The object for which a parent class is desired. Any JavaScript value may be passed to this method including
@@ -15060,7 +15061,7 @@ declare module egret {
      */
     function getQualifiedSuperclassName(value: any): string;
 }
-declare module egret {
+declare namespace egret {
     /**
      * @language en_US
      * Used to compute relative time.this method returns the number of milliseconds since the Egret framework was initialized
@@ -15079,7 +15080,7 @@ declare module egret {
      */
     function getTimer(): number;
 }
-declare module egret {
+declare namespace egret {
     /**
      * @language en_US
      * Check whether a public definition exists in the specified application domain. The definition can be that of a class, a naming space or a function.
@@ -15104,7 +15105,7 @@ declare module egret {
      */
     function hasDefinition(name: string): boolean;
 }
-declare module egret {
+declare namespace egret {
     /**
      * @language en_US
      * Indicates whether an object is a instance of the class or interface specified as the parameter.This method has better performance
@@ -15114,7 +15115,7 @@ declare module egret {
      * @returns A value of true if the object is a instance of the class or interface specified as the parameter.
      * @example
      * <pre>
-     *     var instance = new egret.Sprite();
+     *     let instance = new egret.Sprite();
      *     egret.log(egret.is(instance,"egret.Sprite"))  //true
      *     egret.log(egret.is(instance,"egret.DisplayObjectContainer"))  //true
      *     egret.log(egret.is(instance,"egret.Bitmap"))  //false
@@ -15131,7 +15132,7 @@ declare module egret {
      * @returns 返回true表示当前对象是指定类或接口的实例。
      * @example
      * <pre>
-     *     var instance = new egret.Sprite();
+     *     let instance = new egret.Sprite();
      *     egret.log(egret.is(instance,"egret.Sprite"))  //true
      *     egret.log(egret.is(instance,"egret.DisplayObjectContainer"))  //true
      *     egret.log(egret.is(instance,"egret.Bitmap"))  //false
@@ -15142,7 +15143,7 @@ declare module egret {
      */
     function is(instance: any, typeName: string): boolean;
 }
-declare module egret {
+declare namespace egret {
     /**
      * @language en_US
      * Register and start a timer,which will notify the callback method at a rate of 60 FPS ,and pass the current time stamp as parameters.<br/>
@@ -15165,7 +15166,7 @@ declare module egret {
      */
     function startTick(callBack: (timeStamp: number) => boolean, thisObject: any): void;
 }
-declare module egret {
+declare namespace egret {
     /**
      * @language en_US
      * Stops the timer started by the egret.startTick() method.
@@ -15187,7 +15188,7 @@ declare module egret {
      */
     function stopTick(callBack: (timeStamp: number) => boolean, thisObject: any): void;
 }
-declare module egret {
+declare namespace egret {
     /**
      * @language en_US
      * Transfer number to color character string
@@ -15208,7 +15209,7 @@ declare module egret {
      */
     function toColorString(value: number): string;
 }
-declare module egret {
+declare namespace egret {
     /**
      * @private
      */

@@ -30,7 +30,7 @@
 /**
  * @private
  */
-module egret.sys {
+namespace egret.sys {
 
     /**
      * 测量文本在指定样式下的宽度。
@@ -40,5 +40,5 @@ module egret.sys {
      * @param bold 是否粗体
      * @param italic 是否斜体
      */
-    export var measureText:(text:string, fontFamily:string, fontSize:number, bold:boolean, italic:boolean)=>number;
+    export let measureText:(text:string, fontFamily:string, fontSize:number, bold:boolean, italic:boolean)=>number;
 }

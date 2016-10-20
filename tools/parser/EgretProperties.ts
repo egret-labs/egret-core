@@ -115,8 +115,8 @@ class EgretProperties implements egret.EgretPropertiesClass {
     }
 
     getIgnorePath(): Array<any> {
-        if (globals.hasKeys(this.properties, ["native", "path_ignore"])) {
-            return this.properties["native"]["path_ignore"];
+        if (globals.hasKeys(this.properties, [egret.args.runtime, "path_ignore"])) {
+            return this.properties[egret.args.runtime]["path_ignore"];
         }
         return [];
     }

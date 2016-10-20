@@ -27,42 +27,42 @@
 //
 //////////////////////////////////////////////////////////////////////////////////////
 
-module eui.sys {
+namespace eui.sys {
     /**
      * @private
      * 需要记录的历史速度的最大次数。
      */
-    var MAX_VELOCITY_COUNT = 4;
+    let MAX_VELOCITY_COUNT = 4;
     /**
      * @private
      * 记录的历史速度的权重列表。
      */
-    var VELOCITY_WEIGHTS:number[] = [1, 1.33, 1.66, 2];
+    let VELOCITY_WEIGHTS:number[] = [1, 1.33, 1.66, 2];
     /**
      * @private
      * 当前速度所占的权重。
      */
-    var CURRENT_VELOCITY_WEIGHT = 2.33;
+    let CURRENT_VELOCITY_WEIGHT = 2.33;
     /**
      * @private
      * 最小的改变速度，解决浮点数精度问题。
      */
-    var MINIMUM_VELOCITY = 0.02;
+    let MINIMUM_VELOCITY = 0.02;
     /**
      * @private
      * 当容器自动滚动时要应用的摩擦系数
      */
-    var FRICTION = 0.998;
+    let FRICTION = 0.998;
     /**
      * @private
      * 当容器自动滚动时并且滚动位置超出容器范围时要额外应用的摩擦系数
      */
-    var EXTRA_FRICTION = 0.95;
+    let EXTRA_FRICTION = 0.95;
     /**
      * @private
      * 摩擦系数的自然对数
      */
-    var FRICTION_LOG = Math.log(FRICTION);
+    let FRICTION_LOG = Math.log(FRICTION);
 
     /**
      * @private
@@ -71,7 +71,7 @@ module eui.sys {
      * @returns
      */
     function easeOut(ratio:number):number {
-        var invRatio:number = ratio - 1.0;
+        let invRatio:number = ratio - 1.0;
         return invRatio * invRatio * invRatio + 1;
     }
 
@@ -213,8 +213,8 @@ module eui.sys {
             maxScrollValue = Math.max(maxScrollValue, 0);
             this.currentPosition = touchPoint;
             this.maxScrollPos = maxScrollValue;
-            var disMove = this.offsetPoint - touchPoint;
-            var scrollPos = disMove + scrollValue;
+            let disMove = this.offsetPoint - touchPoint;
+            let scrollPos = disMove + scrollValue;
             this.offsetPoint = touchPoint;
             if (scrollPos < 0) {
                 if (!this.$bounces) {
@@ -245,20 +245,20 @@ module eui.sys {
         public finish(currentScrollPos:number, maxScrollPos:number):void {
             egret.stopTick(this.onTick, this);
             this.started = false;
-            var sum = this.velocity * CURRENT_VELOCITY_WEIGHT;
-            var previousVelocityX = this.previousVelocity;
-            var length = previousVelocityX.length;
-            var totalWeight = CURRENT_VELOCITY_WEIGHT;
-            for (var i = 0; i < length; i++) {
-                var weight = VELOCITY_WEIGHTS[i];
+            let sum = this.velocity * CURRENT_VELOCITY_WEIGHT;
+            let previousVelocityX = this.previousVelocity;
+            let length = previousVelocityX.length;
+            let totalWeight = CURRENT_VELOCITY_WEIGHT;
+            for (let i = 0; i < length; i++) {
+                let weight = VELOCITY_WEIGHTS[i];
                 sum += previousVelocityX[0] * weight;
                 totalWeight += weight;
             }
 
-            var pixelsPerMS = sum / totalWeight;
-            var absPixelsPerMS = Math.abs(pixelsPerMS);
-            var duration = 0;
-            var posTo = 0;
+            let pixelsPerMS = sum / totalWeight;
+            let absPixelsPerMS = Math.abs(pixelsPerMS);
+            let duration = 0;
+            let posTo = 0;
             if (absPixelsPerMS > MINIMUM_VELOCITY) {
                 posTo = currentScrollPos + (pixelsPerMS - MINIMUM_VELOCITY) / FRICTION_LOG * 2 * this.$scrollFactor;
                 if (posTo < 0 || posTo > maxScrollPos) {
@@ -282,7 +282,7 @@ module eui.sys {
                 posTo = currentScrollPos;
             }
             if (this.target["$getThrowInfo"]) {
-                var event:eui.ScrollerThrowEvent = this.target["$getThrowInfo"](currentScrollPos, posTo);
+                let event:eui.ScrollerThrowEvent = this.target["$getThrowInfo"](currentScrollPos, posTo);
                 posTo = event.toPos;
             }
             if (duration > 0) {
@@ -309,9 +309,9 @@ module eui.sys {
          * @returns
          */
         private onTick(timeStamp:number):boolean {
-            var timeOffset = timeStamp - this.previousTime;
+            let timeOffset = timeStamp - this.previousTime;
             if (timeOffset > 10) {
-                var previousVelocity = this.previousVelocity;
+                let previousVelocity = this.previousVelocity;
                 if (previousVelocity.length >= MAX_VELOCITY_COUNT) {
                     previousVelocity.shift();
                 }
@@ -328,9 +328,9 @@ module eui.sys {
          * @param animation
          */
         private finishScrolling(animation?:Animation):void {
-            var hsp = this.currentScrollPos;
-            var maxHsp = this.maxScrollPos;
-            var hspTo = hsp;
+            let hsp = this.currentScrollPos;
+            let maxHsp = this.maxScrollPos;
+            let hspTo = hsp;
             if (hsp < 0) {
                 hspTo = 0;
             }
@@ -345,12 +345,12 @@ module eui.sys {
          * 缓动到水平滚动位置
          */
         private throwTo(hspTo:number, duration:number = 500):void {
-            var hsp = this.currentScrollPos;
+            let hsp = this.currentScrollPos;
             if (hsp == hspTo) {
                 this.endFunction.call(this.target);
                 return;
             }
-            var animation = this.animation;
+            let animation = this.animation;
             animation.duration = duration;
             animation.from = hsp;
             animation.to = hspTo;

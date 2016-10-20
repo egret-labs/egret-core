@@ -27,9 +27,9 @@
 //
 //////////////////////////////////////////////////////////////////////////////////////
 
-module eui {
+namespace eui {
 
-    var UIImpl = sys.UIComponentImpl;
+    let UIImpl = sys.UIComponentImpl;
     /**
      * @language en_US
      * Label is an UIComponent that can render one or more lines of text.
@@ -128,11 +128,11 @@ module eui {
             if (this.$style == value) {
                 return;
             }
-            var theme:Theme = egret.getImplementation("eui.Theme");
+            let theme:Theme = egret.getImplementation("eui.Theme");
             if(theme) {
-                var config = theme.$getStyleConfig(value);
+                let config = theme.$getStyleConfig(value);
                 if(config) {
-                    for(var key in config) {
+                    for(let key in config) {
                         this[key] = config[key];
                     }
                 }
@@ -154,8 +154,8 @@ module eui {
          * @param value
          */
         $setWidth(value:number):boolean {
-            var result1:boolean = super.$setWidth(value);
-            var result2:boolean = UIImpl.prototype.$setWidth.call(this, value);
+            let result1:boolean = super.$setWidth(value);
+            let result2:boolean = UIImpl.prototype.$setWidth.call(this, value);
             return result1 && result2;
         }
 
@@ -165,8 +165,8 @@ module eui {
          * @param value
          */
         $setHeight(value:number):boolean {
-            var result1:boolean = super.$setHeight(value);
-            var result2:boolean = UIImpl.prototype.$setHeight.call(this, value);
+            let result1:boolean = super.$setHeight(value);
+            let result2:boolean = UIImpl.prototype.$setHeight.call(this, value);
             return result1 && result2;
         }
 
@@ -176,7 +176,7 @@ module eui {
          * @param value
          */
         $setText(value:string):boolean {
-            var result:boolean = super.$setText(value);
+            let result:boolean = super.$setText(value);
             PropertyEvent.dispatchPropertyEvent(this, PropertyEvent.PROPERTY_CHANGE, "text");
             return result;
         }
@@ -234,10 +234,10 @@ module eui {
          * @platform Web,Native
          */
         protected measure():void {
-            var values = this.$UIComponent;
-            var textValues = this.$TextField;
-            var oldWidth = textValues[egret.sys.TextKeys.textFieldWidth];
-            var availableWidth = NaN;
+            let values = this.$UIComponent;
+            let textValues = this.$TextField;
+            let oldWidth = textValues[egret.sys.TextKeys.textFieldWidth];
+            let availableWidth = NaN;
             if (!isNaN(this._widthConstraint)) {
                 availableWidth = this._widthConstraint;
                 this._widthConstraint = NaN;
@@ -513,7 +513,7 @@ module eui {
                 return;
             }
             this._widthConstraint = layoutWidth;
-            var values = this.$UIComponent;
+            let values = this.$UIComponent;
             if (!isNaN(values[sys.UIKeys.explicitHeight])) {
                 return;
             }

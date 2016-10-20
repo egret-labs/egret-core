@@ -28,7 +28,7 @@
 //////////////////////////////////////////////////////////////////////////////////////
 
 
-module egret.gui {
+namespace egret.gui {
     /**
      * @language en_US
      * Conduct mapping injection with class definition as the value.
@@ -103,7 +103,7 @@ module egret.gui {
 
 
         public mapClass(whenAskedFor:any, instantiateClass:any, named:string = ""):void {
-            var requestName:string = this.getKey(whenAskedFor) + "#" + named;
+            let requestName:string = this.getKey(whenAskedFor) + "#" + named;
             this.mapClassDic[requestName] = instantiateClass;
         }
 
@@ -130,7 +130,7 @@ module egret.gui {
          * @param named {string} 可选参数，在同一个类作为键需要映射多条规则时，可以传入此参数区分不同的映射。在调用getInstance()方法时要传入同样的参数。
          */
         public mapValue(whenAskedFor:any,useValue:any,named:string=""):void{
-            var requestName:string = this.getKey(whenAskedFor)+"#"+named;
+            let requestName:string = this.getKey(whenAskedFor)+"#"+named;
             this.mapValueDic[requestName] = useValue;
         }
 
@@ -153,12 +153,12 @@ module egret.gui {
          * @platform Web,Native
          */
         public getInstance(clazz:any, named:string = ""):any {
-            var requestName:string = this.getKey(clazz) + "#" + named;
+            let requestName:string = this.getKey(clazz) + "#" + named;
             if (this.mapValueDic[requestName])
                 return this.mapValueDic[requestName];
-            var returnClass:any = <any> (this.mapClassDic[requestName]);
+            let returnClass:any = <any> (this.mapClassDic[requestName]);
             if (returnClass) {
-                var instance:any = new returnClass();
+                let instance:any = new returnClass();
                 this.mapValueDic[requestName] = instance;
                 delete this.mapClassDic[requestName];
                 return instance;
@@ -170,5 +170,5 @@ module egret.gui {
     /**
      * Resource单例
      */
-    var instance:Adapter = new Adapter();
+    let instance:Adapter = new Adapter();
 }

@@ -28,7 +28,7 @@
 //////////////////////////////////////////////////////////////////////////////////////
 
 
-module egret {
+namespace egret {
 
     /**
      * @language en_US
@@ -158,7 +158,7 @@ module egret {
             if (textureHeight === void 0) {
                 textureHeight = offsetY + bitmapHeight;
             }
-            var texture:Texture = new egret.Texture();
+            let texture:Texture = new egret.Texture();
             texture._bitmapData = this.$texture._bitmapData;
             texture.$initData(this._bitmapX + bitmapX, this._bitmapY + bitmapY, bitmapWidth, bitmapHeight, offsetX, offsetY, textureWidth, textureHeight, this.$texture._sourceWidth, this.$texture._sourceHeight);
 

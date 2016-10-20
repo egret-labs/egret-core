@@ -27,7 +27,7 @@
 //
 //////////////////////////////////////////////////////////////////////////////////////
 
-module egret.native {
+namespace egret.native {
     if (DEBUG) {
         function setLogLevel(logType:string):void {
             egret_native.loglevel(logType);

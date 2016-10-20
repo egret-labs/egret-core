@@ -1,7 +1,7 @@
 /**
  * Created by yjtx on 15-9-18.
  */
-module helpModule1 {
+namespace helpModule1 {
     var help_dict = global["helpModule"]["help_dict"];
     export var upgrade = {
         "command": "upgrade",

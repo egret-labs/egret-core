@@ -27,7 +27,7 @@
 //
 //////////////////////////////////////////////////////////////////////////////////////
 
-module egret {
+namespace egret {
     /**
      * @language en_US
      * The XMLNode class is the base class for all xml node.
@@ -204,7 +204,7 @@ module egret {
      * @version Egret 2.4
      * @platform Web,Native
      */
-    export var XML:{
+    export let XML:{
         /**
          * @language en_US
          * parses a text to XML instance.

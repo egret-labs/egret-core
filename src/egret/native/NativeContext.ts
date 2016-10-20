@@ -30,8 +30,8 @@
 /**
  * @private
  */
-declare module egret_native {
-    var nativeType:string;
+declare namespace egret_native {
+    let nativeType:string;
 
     /**
      * 游戏启动
@@ -49,15 +49,15 @@ declare module egret_native {
 
     function setFrameRate(frameRate:number):void;
 
-    function onTouchesBegin(num:number, ids:Array<any>, xs_array:Array<any>, ys_array:Array<any>);
+    function onTouchesBegin(num:number, ids:any[], xs_array:any[], ys_array:any[]);
 
-    function onTouchesMove(num:number, ids:Array<any>, xs_array:Array<any>, ys_array:Array<any>);
+    function onTouchesMove(num:number, ids:any[], xs_array:any[], ys_array:any[]);
 
-    function onTouchesEnd(num:number, ids:Array<any>, xs_array:Array<any>, ys_array:Array<any>);
+    function onTouchesEnd(num:number, ids:any[], xs_array:any[], ys_array:any[]);
 
-    function onTouchesCancel(num:number, ids:Array<any>, xs_array:Array<any>, ys_array:Array<any>);
+    function onTouchesCancel(num:number, ids:any[], xs_array:any[], ys_array:any[]);
 
-    function sendToC(float32Array:Float32Array, arrayBufferLen:number, array:Array<string>):void;
+    function sendToC(float32Array:Float32Array, arrayBufferLen:number, array:string[]):void;
 
     /**
      * 启动主循环
@@ -104,7 +104,7 @@ declare module egret_native {
 
     function getOption(type:string):string;
 
-    module Audio {
+    namespace Audio {
         function preloadBackgroundMusic(path:string):void;
 
         function playBackgroundMusic(path:string, loop:boolean):void;
@@ -138,7 +138,7 @@ declare module egret_native {
 
     function download(url:string, savePath:string, promise:any):void;
 
-    module Graphics {
+    namespace Graphics {
 
 
         function clearScreen(r:number, g:number, b:number):void;
@@ -155,7 +155,7 @@ declare module egret_native {
 
         function popClip():void;
 
-        function setGlobalColorTransform(colorTransformMatrix:Array<number>):void;
+        function setGlobalColorTransform(colorTransformMatrix:number[]):void;
 
         function setGlobalColorTransformEnabled(bool:boolean):void;
 
@@ -177,7 +177,7 @@ declare module egret_native {
         function setTextureScaleFactor(value:number):void;
     }
 
-    module Label {
+    namespace Label {
 
         function createLabel(font:string, size:number, defaultString:string, defaultStroke:number):void;
 
@@ -189,19 +189,19 @@ declare module egret_native {
 
         function setTextAlignment(type:string):void;
 
-        function getTextSize(text:string):Array<number>;
+        function getTextSize(text:string):number[];
 
 
     }
 
 
-    module EGTXML {
+    namespace EGTXML {
 
 
         function readXML(filepath:string):void;
     }
 
-    module Texture {
+    namespace Texture {
 
         function create(filePath:string):any;
 
@@ -215,7 +215,7 @@ declare module egret_native {
     }
 
 
-    module TextInputOp {
+    namespace TextInputOp {
 
         function setKeybordOpen(isOpen:boolean, jsonConfig?:Object):void
 
@@ -239,7 +239,7 @@ declare module egret_native {
 
     function EGT_getTextEditerContentText():string;
 
-    module EGTView {
+    namespace EGTView {
 
         function getFrameWidth():number;
 
@@ -266,7 +266,7 @@ declare module egret_native {
         saveToFile(type:string, filePath:string);
     }
 
-    module rastergl {
+    namespace rastergl {
         function arc(x:number, y:number, radius:number, startAngle:number, endAngle:number, anticlockwise?:boolean):void;
 
         function quadraticCurveTo(cpx:number, cpy:number, x:number, y:number):void;
@@ -312,18 +312,18 @@ declare module egret_native {
         /**
          * @private
          */
-        export var lineWidth:number;
+        export let lineWidth:number;
         /**
          * @private
          */
-        export var strokeStyle:any;
+        export let strokeStyle:any;
         /**
          * @private
          */
-        export var fillStyle:any;
+        export let fillStyle:any;
     }
 
-    module Game {
+    namespace Game {
         function listResource(root, promise);
 
         function listUpdate(root, promise);
