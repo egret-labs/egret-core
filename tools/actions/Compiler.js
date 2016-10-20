@@ -32,7 +32,7 @@ var Compiler = (function () {
             }
             //make 使用引擎的配置,必须用下面的参数
             parsedCmd.options.target = 1;
-            parsedCmd.options.stripInternal = true;
+            // parsedCmd.options.stripInternal = true;
             parsedCmd.options.sourceMap = args.sourceMap;
             parsedCmd.options.removeComments = args.removeComments;
             parsedCmd.options.declaration = args.declaration;
