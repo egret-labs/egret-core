@@ -92,6 +92,10 @@ function afterBuildChanges(exmlsChanged) {
     generateExmlDTS();
 }
 exports.afterBuildChanges = afterBuildChanges;
+function updateSetting(merge) {
+    if (merge === void 0) { merge = false; }
+}
+exports.updateSetting = updateSetting;
 function generateExmlDTS() {
     var srcPath = egret.args.srcDir;
     var projectPath = egret.args.projectDir;

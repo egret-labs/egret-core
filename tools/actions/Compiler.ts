@@ -36,10 +36,10 @@ class Compiler {
             options: {},
             errors: []
         };
+        if (args.compilerOptions) {
+            parsedCmd.options = <any>args.compilerOptions;
+        }
         if (out) {
-            if (args.compilerOptions) {
-                parsedCmd.options = args.compilerOptions;
-            }
             //make 使用引擎的配置,必须用下面的参数
             parsedCmd.options.target = 1;
             // parsedCmd.options.stripInternal = true;
@@ -50,9 +50,6 @@ class Compiler {
         }
         else {
             //console.log("args.compilerOptions:",parsedCmd.options.outDir)
-            if (args.compilerOptions) {
-                parsedCmd.options = args.compilerOptions;
-            }
             parsedCmd.options.outDir = outDir;
         }
         if (args.sourceMap == true) {
@@ -60,14 +57,14 @@ class Compiler {
         }
         parsedCmd.options.allowUnreachableCode = true;
         parsedCmd.options.emitReflection = true;
-        parsedCmd.options.forSortFile = option.forSortFile;
+        parsedCmd.options["forSortFile"] = option.forSortFile;
         if(args.experimental) {
             console.log("use typescript 2.0.3");
             return this.compileNew(parsedCmd);
         }
         else {
             // var compileResult = tsclark.Compiler.executeWithOption(args, files, out, outDir);
-            var compileResult = tsclark.Compiler.executeWithOption(parsedCmd);
+            var compileResult = tsclark.Compiler.executeWithOption(<any>parsedCmd);
 
             args.declaration = defTemp;
             if (compileResult.messages) {
