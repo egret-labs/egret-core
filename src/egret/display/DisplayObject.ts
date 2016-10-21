@@ -1928,7 +1928,7 @@ namespace egret {
          * @param notiryChildren 是否标记子项也需要重绘。传入false或不传入，将只标记自身需要重绘。注意:当子项cache时不会继续向下标记
          */
         $invalidate(notifyChildren?: boolean): void {
-            if (!this.$renderNode || this.$hasFlags(sys.DisplayObjectFlags.DirtyRender)) {
+            if (!this.$renderNode || this.$hasFlags(sys.DisplayObjectFlags.DirtyRender | sys.DisplayObjectFlags.InvalidRenderNodes)) {
                 return;
             }
             this.$setFlags(sys.DisplayObjectFlags.DirtyRender | sys.DisplayObjectFlags.InvalidRenderNodes);
