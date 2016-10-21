@@ -19,7 +19,6 @@ var MODULE_NAME = "eui.";
 var hashCount = 0;
 var properties = {};
 //added by yanjiaqi 2015.10.21
-var properties = {};
 var stylesMap = {};
 var Component = (function () {
     /**
@@ -267,4 +266,3 @@ var EXMLConfig = (function () {
     return EXMLConfig;
 }());
 exports.EXMLConfig = EXMLConfig;
-//# sourceMappingURL=EXMLConfig.js.map

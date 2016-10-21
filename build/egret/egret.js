@@ -2962,7 +2962,7 @@ var egret;
          * @param notiryChildren 是否标记子项也需要重绘。传入false或不传入，将只标记自身需要重绘。注意:当子项cache时不会继续向下标记
          */
         p.$invalidate = function (notifyChildren) {
-            if (!this.$renderNode || this.$hasFlags(256 /* DirtyRender */)) {
+            if (!this.$renderNode || this.$hasFlags(256 /* DirtyRender */ | 128 /* InvalidRenderNodes */)) {
                 return;
             }
             this.$setFlags(256 /* DirtyRender */ | 128 /* InvalidRenderNodes */);
@@ -6909,8 +6909,6 @@ var egret;
             egret.Matrix.release(matrix);
             //设置纹理参数
             this.$initData(0, 0, width, height, 0, 0, width, height, width, height);
-            //防止RenderTexture渲染破坏脏标记
-            displayObject.$propagateFlagsDown(128 /* InvalidRenderNodes */);
             return true;
         };
         /**

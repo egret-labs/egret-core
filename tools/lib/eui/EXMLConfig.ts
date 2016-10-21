@@ -23,7 +23,6 @@ var hashCount = 0;
 var properties: any = {};
 
 //added by yanjiaqi 2015.10.21
-var properties = {};
 var stylesMap = {};
 
 class Component{
