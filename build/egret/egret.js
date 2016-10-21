@@ -21175,28 +21175,74 @@ var egret;
                                 var wl = words.length;
                                 var charNum = 0;
                                 for (; k < wl; k++) {
-                                    w = measureTextWidth(words[k], values, element.style);
+                                    // detect 4 bytes unicode, refer https://mths.be/punycode
+                                    var codeLen = words[k].length;
+                                    var has4BytesUnicode = false;
+                                    if (codeLen == 1 && k < wl - 1) {
+                                        var charCodeHigh = words[k].charCodeAt(0);
+                                        var charCodeLow = words[k + 1].charCodeAt(0);
+                                        if (charCodeHigh >= 0xD800 && charCodeHigh <= 0xDBFF && (charCodeLow & 0xFC00) == 0xDC00) {
+                                            var realWord = words[k] + words[k + 1];
+                                            codeLen = 2;
+                                            has4BytesUnicode = true;
+                                            w = measureTextWidth(realWord, values, element.style);
+                                        }
+                                        else {
+                                            w = measureTextWidth(words[k], values, element.style);
+                                        }
+                                    }
+                                    else {
+                                        w = measureTextWidth(words[k], values, element.style);
+                                    }
+                                    // w = measureTextWidth(words[k], values, element.style);
                                     if (lineW != 0 && lineW + w > textFieldWidth && lineW + k != 0) {
                                         break;
                                     }
                                     if (ww + w > textFieldWidth) {
                                         var words2 = words[k].match(/./g);
                                         for (var k2 = 0, wl2 = words2.length; k2 < wl2; k2++) {
-                                            w = measureTextWidth(words2[k2], values, element.style);
+                                            // detect 4 bytes unicode, refer https://mths.be/punycode
+                                            var codeLen = words2[k2].length;
+                                            var has4BytesUnicode2 = false;
+                                            if (codeLen == 1 && k2 < wl2 - 1) {
+                                                var charCodeHigh = words2[k2].charCodeAt(0);
+                                                var charCodeLow = words2[k2 + 1].charCodeAt(0);
+                                                if (charCodeHigh >= 0xD800 && charCodeHigh <= 0xDBFF && (charCodeLow & 0xFC00) == 0xDC00) {
+                                                    var realWord = words2[k2] + words2[k2 + 1];
+                                                    codeLen = 2;
+                                                    has4BytesUnicode2 = true;
+                                                    w = measureTextWidth(realWord, values, element.style);
+                                                }
+                                                else {
+                                                    w = measureTextWidth(words2[k2], values, element.style);
+                                                }
+                                            }
+                                            else {
+                                                w = measureTextWidth(words2[k2], values, element.style);
+                                            }
+                                            // w = measureTextWidth(words2[k2], values, element.style);
                                             if (k2 > 0 && lineW + w > textFieldWidth) {
                                                 break;
                                             }
-                                            charNum += words2[k2].length;
+                                            // charNum += words2[k2].length;
+                                            charNum += codeLen;
                                             ww += w;
                                             lineW += w;
                                             lineCharNum += charNum;
+                                            if (has4BytesUnicode2) {
+                                                k2++;
+                                            }
                                         }
                                     }
                                     else {
-                                        charNum += words[k].length;
+                                        // charNum += words[k].length;
+                                        charNum += codeLen;
                                         ww += w;
                                         lineW += w;
                                         lineCharNum += charNum;
+                                    }
+                                    if (has4BytesUnicode) {
+                                        k++;
                                     }
                                 }
                                 if (k > 0) {
