@@ -13367,8 +13367,8 @@ var egret;
                     }
                     var buffer = this.renderBuffer;
                     buffer.beginClip(this.dirtyList, this.offsetX, this.offsetY);
-                    var dirtyList_1 = this.$dirtyRegionPolicy == egret.DirtyRegionPolicy.OFF ? null : this.dirtyList;
-                    var drawCalls_1 = sys.systemRenderer.render(this.root, buffer, this.offsetMatrix, dirtyList_1);
+                    dirtyList = this.$dirtyRegionPolicy == egret.DirtyRegionPolicy.OFF ? null : this.dirtyList;
+                    drawCalls = sys.systemRenderer.render(this.root, buffer, this.offsetMatrix, dirtyList);
                     buffer.endClip();
                     if (!this.isStage) {
                         var surface = buffer.surface;
@@ -16533,7 +16533,7 @@ var egret;
          */
         p.drawWithFilter = function (displayObject, context, dirtyList, matrix, clipRegion, root) {
             if (egret.Capabilities.runtimeType == egret.RuntimeType.NATIVE) {
-                var drawCalls_2 = 0;
+                var drawCalls_1 = 0;
                 var filters_1 = displayObject.$getFilters();
                 var hasBlendMode_1 = (displayObject.$blendMode !== 0);
                 var compositeOp_1;
@@ -16549,19 +16549,19 @@ var egret;
                     }
                     context.setGlobalShader(filters_1[0].$toJson());
                     if (displayObject.$mask && (displayObject.$mask.$parentDisplayList || root)) {
-                        drawCalls_2 += this.drawWithClip(displayObject, context, dirtyList, matrix, clipRegion, root);
+                        drawCalls_1 += this.drawWithClip(displayObject, context, dirtyList, matrix, clipRegion, root);
                     }
                     else if (displayObject.$scrollRect || displayObject.$maskRect) {
-                        drawCalls_2 += this.drawWithScrollRect(displayObject, context, dirtyList, matrix, clipRegion, root);
+                        drawCalls_1 += this.drawWithScrollRect(displayObject, context, dirtyList, matrix, clipRegion, root);
                     }
                     else {
-                        drawCalls_2 += this.drawDisplayObject(displayObject, context, dirtyList, matrix, displayObject.$displayList, clipRegion, root);
+                        drawCalls_1 += this.drawDisplayObject(displayObject, context, dirtyList, matrix, displayObject.$displayList, clipRegion, root);
                     }
                     context.setGlobalShader("");
                     if (hasBlendMode_1) {
                         context.globalCompositeOperation = defaultCompositeOp;
                     }
-                    return drawCalls_2;
+                    return drawCalls_1;
                 }
                 // 获取显示对象的链接矩阵
                 var displayMatrix_1 = egret.Matrix.create();
@@ -16577,21 +16577,21 @@ var egret;
                 displayBuffer_1.context.setTransform(1, 0, 0, 1, -region_1.minX, -region_1.minY);
                 var offsetM_1 = egret.Matrix.create().setTo(1, 0, 0, 1, -region_1.minX, -region_1.minY);
                 if (displayObject.$mask && (displayObject.$mask.$parentDisplayList || root)) {
-                    drawCalls_2 += this.drawWithClip(displayObject, displayBuffer_1.context, dirtyList, offsetM_1, region_1, root);
+                    drawCalls_1 += this.drawWithClip(displayObject, displayBuffer_1.context, dirtyList, offsetM_1, region_1, root);
                 }
                 else if (displayObject.$scrollRect || displayObject.$maskRect) {
-                    drawCalls_2 += this.drawWithScrollRect(displayObject, displayBuffer_1.context, dirtyList, offsetM_1, region_1, root);
+                    drawCalls_1 += this.drawWithScrollRect(displayObject, displayBuffer_1.context, dirtyList, offsetM_1, region_1, root);
                 }
                 else {
-                    drawCalls_2 += this.drawDisplayObject(displayObject, displayBuffer_1.context, dirtyList, offsetM_1, displayObject.$displayList, region_1, root);
+                    drawCalls_1 += this.drawDisplayObject(displayObject, displayBuffer_1.context, dirtyList, offsetM_1, displayObject.$displayList, region_1, root);
                 }
                 egret.Matrix.release(offsetM_1);
                 //绘制结果到屏幕
-                if (drawCalls_2 > 0) {
+                if (drawCalls_1 > 0) {
                     if (hasBlendMode_1) {
                         context.globalCompositeOperation = compositeOp_1;
                     }
-                    drawCalls_2++;
+                    drawCalls_1++;
                     context.globalAlpha = 1;
                     context.setTransform(1, 0, 0, 1, region_1.minX + matrix.tx, region_1.minY + matrix.ty);
                     // 绘制结果的时候，应用滤镜
@@ -16605,7 +16605,7 @@ var egret;
                 renderBufferPool.push(displayBuffer_1);
                 egret.sys.Region.release(region_1);
                 egret.Matrix.release(displayMatrix_1);
-                return drawCalls_2;
+                return drawCalls_1;
             }
             var drawCalls = 0;
             var filters = displayObject.$getFilters();
