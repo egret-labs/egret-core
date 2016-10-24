@@ -38247,7 +38247,7 @@ var ts;
 var ts;
 (function (ts) {
     ts.version = "2.0.5";
-    ts.version_plus = "2.0.11";
+    ts.version_plus = "2.0.12";
     var emptyArray = [];
     function findConfigFile(searchPath, fileExists, configName) {
         if (configName === void 0) { configName = "tsconfig.json"; }
@@ -40680,11 +40680,7 @@ var ts;
             if (statement.flags & 2) {
                 continue;
             }
-            if (statement.kind === 202) {
-                var expression = statement;
-                checkExpression(expression.expression);
-            }
-            else if (statement.kind === 229) {
+            if (statement.kind === 229) {
                 var importDeclaration = statement;
                 if (importDeclaration.moduleReference.kind == 139) {
                     var qualifiedName = importDeclaration.moduleReference;
@@ -40698,6 +40694,10 @@ var ts;
     }
     function visitStatement(statement, hasDecorators) {
         switch (statement.kind) {
+            case 202:
+                var expression = statement;
+                checkExpression(expression.expression);
+                break;
             case 221:
                 checkInheriting(statement);
                 checkStaticMember(statement);
