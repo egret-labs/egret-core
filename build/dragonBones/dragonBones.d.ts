@@ -491,10 +491,6 @@ declare namespace dragonBones {
         /**
          * @private
          */
-        clone(): Transform;
-        /**
-         * @private
-         */
         identity(): Transform;
         /**
          * @private
@@ -555,6 +551,10 @@ declare namespace dragonBones {
         tx: number;
         ty: number;
         constructor(a?: number, b?: number, c?: number, d?: number, tx?: number, ty?: number);
+        /**
+         * @private
+         */
+        toString(): string;
         /**
          * @language zh_CN
          * 复制矩阵。
@@ -2879,7 +2879,7 @@ declare namespace dragonBones {
         _debugDraw(): void;
         /**
          * @language zh_CN
-         * 释放显示对象和骨架。 (骨架会回收到内存池)
+         * 释放显示对象和骨架。
          * @version DragonBones 4.5
          */
         dispose(): void;
@@ -3216,6 +3216,7 @@ declare namespace dragonBones {
      */
     type BuildArmaturePackage = {
         dataName?: string;
+        textureAtlasName?: string;
         data?: DragonBonesData;
         armature?: ArmatureData;
         skin?: SkinData;
@@ -3259,11 +3260,11 @@ declare namespace dragonBones {
         /**
          * @private
          */
-        protected _getTextureData(dragonBonesName: string, textureName: string): TextureData;
+        protected _getTextureData(textureAtlasName: string, textureName: string): TextureData;
         /**
          * @private
          */
-        protected _fillBuildArmaturePackage(dragonBonesName: string, armatureName: string, skinName: string, dataPackage: BuildArmaturePackage): boolean;
+        protected _fillBuildArmaturePackage(dataPackage: BuildArmaturePackage, dragonBonesName: string, armatureName: string, skinName: string, textureAtlasName: string): boolean;
         /**
          * @private
          */
@@ -3287,12 +3288,12 @@ declare namespace dragonBones {
         /**
          * @private
          */
-        protected abstract _generateSlot(dataPackage: BuildArmaturePackage, slotDisplayDataSet: SlotDisplayDataSet): Slot;
+        protected abstract _generateSlot(dataPackage: BuildArmaturePackage, slotDisplayDataSet: SlotDisplayDataSet, armature: Armature): Slot;
         /**
          * @language zh_CN
          * 解析并添加龙骨数据。
          * @param rawData 需要解析的原始数据。 (JSON)
-         * @param dragonBonesName 为数据提供一个名称，以便可以通过这个名称获取数据，如果未设置，则使用数据中的名称。
+         * @param name 为数据提供一个名称，以便可以通过这个名称获取数据，如果未设置，则使用数据中的名称。
          * @returns DragonBonesData
          * @see #getDragonBonesData()
          * @see #addDragonBonesData()
@@ -3300,7 +3301,7 @@ declare namespace dragonBones {
          * @see dragonBones.DragonBonesData
          * @version DragonBones 4.5
          */
-        parseDragonBonesData(rawData: any, dragonBonesName?: string): DragonBonesData;
+        parseDragonBonesData(rawData: any, name?: string, scale?: number): DragonBonesData;
         /**
          * @language zh_CN
          * 解析并添加贴图集数据。
@@ -3332,18 +3333,18 @@ declare namespace dragonBones {
          * @language zh_CN
          * 添加龙骨数据。
          * @param data 龙骨数据。
-         * @param dragonBonesName 为数据指定一个名称，以便可以通过这个名称获取数据，如果未设置，则使用数据中的名称。
+         * @param name 为数据指定一个名称，以便可以通过这个名称获取数据，如果未设置，则使用数据中的名称。
          * @see #parseDragonBonesData()
          * @see #getDragonBonesData()
          * @see #removeDragonBonesData()
          * @see dragonBones.DragonBonesData
          * @version DragonBones 3.0
          */
-        addDragonBonesData(data: DragonBonesData, dragonBonesName?: string): void;
+        addDragonBonesData(data: DragonBonesData, name?: string): void;
         /**
          * @language zh_CN
          * 移除龙骨数据。
-         * @param dragonBonesName 数据名称。
+         * @param name 数据名称。
          * @param disposeData 是否释放数据。 [false: 不释放, true: 释放]
          * @see #parseDragonBonesData()
          * @see #getDragonBonesData()
@@ -3351,11 +3352,11 @@ declare namespace dragonBones {
          * @see dragonBones.DragonBonesData
          * @version DragonBones 3.0
          */
-        removeDragonBonesData(dragonBonesName: string, disposeData?: boolean): void;
+        removeDragonBonesData(name: string, disposeData?: boolean): void;
         /**
          * @language zh_CN
          * 获取指定名称的贴图集数据列表。
-         * @param dragonBonesName 数据名称。
+         * @param name 数据名称。
          * @returns 贴图集数据列表。
          * @see #parseTextureAtlasData()
          * @see #addTextureAtlasData()
@@ -3363,23 +3364,23 @@ declare namespace dragonBones {
          * @see dragonBones.textures.TextureAtlasData
          * @version DragonBones 3.0
          */
-        getTextureAtlasData(dragonBonesName: string): Array<TextureAtlasData>;
+        getTextureAtlasData(name: string): Array<TextureAtlasData>;
         /**
          * @language zh_CN
          * 添加贴图集数据。
          * @param data 贴图集数据。
-         * @param dragonBonesName 为数据指定一个名称，以便可以通过这个名称获取数据，如果未设置，则使用数据中的名称。
+         * @param name 为数据指定一个名称，以便可以通过这个名称获取数据，如果未设置，则使用数据中的名称。
          * @see #parseTextureAtlasData()
          * @see #getTextureAtlasData()
          * @see #removeTextureAtlasData()
          * @see dragonBones.textures.TextureAtlasData
          * @version DragonBones 3.0
          */
-        addTextureAtlasData(data: TextureAtlasData, dragonBonesName?: string): void;
+        addTextureAtlasData(data: TextureAtlasData, name?: string): void;
         /**
          * @language zh_CN
          * 移除贴图集数据。
-         * @param dragonBonesName 数据名称。
+         * @param name 数据名称。
          * @param disposeData 是否释放数据。 [false: 不释放, true: 释放]
          * @see #parseTextureAtlasData()
          * @see #getTextureAtlasData()
@@ -3387,7 +3388,7 @@ declare namespace dragonBones {
          * @see dragonBones.textures.TextureAtlasData
          * @version DragonBones 3.0
          */
-        removeTextureAtlasData(dragonBonesName: string, disposeData?: boolean): void;
+        removeTextureAtlasData(name: string, disposeData?: boolean): void;
         /**
          * @language zh_CN
          * 清除所有的数据。
@@ -3401,11 +3402,12 @@ declare namespace dragonBones {
          * @param armatureName 骨架数据名称。
          * @param dragonBonesName 龙骨数据名称，如果未设置，将检索所有的龙骨数据，当多个龙骨数据中包含同名的骨架数据时，可能无法创建出准确的骨架。
          * @param skinName 皮肤名称，如果未设置，则使用默认皮肤。
+         * @param textureAtlasName 贴图集数据名称，如果未设置，则使用龙骨数据。
          * @returns 骨架
          * @see dragonBones.Armature
          * @version DragonBones 3.0
          */
-        buildArmature(armatureName: string, dragonBonesName?: string, skinName?: string): Armature;
+        buildArmature(armatureName: string, dragonBonesName?: string, skinName?: string, textureAtlasName?: string): Armature;
         /**
          * @language zh_CN
          * 将指定骨架的动画替换成其他骨架的动画。 (通常这些骨架应该具有相同的骨架结构)
@@ -4152,26 +4154,27 @@ declare namespace dragonBones {
         /**
          * @private
          */
-        protected _generateSlot(dataPackage: BuildArmaturePackage, slotDisplayDataSet: SlotDisplayDataSet): Slot;
+        protected _generateSlot(dataPackage: BuildArmaturePackage, slotDisplayDataSet: SlotDisplayDataSet, armature: Armature): Slot;
         /**
          * @language zh_CN
          * 创建一个指定名称的骨架，并使用骨架的显示容器来更新骨架动画。
          * @param armatureName 骨架数据名称。
          * @param dragonBonesName 龙骨数据名称，如果未设置，将检索所有的龙骨数据，如果多个数据中包含同名的骨架数据，可能无法创建出准确的骨架。
          * @param skinName 皮肤名称，如果未设置，则使用默认皮肤。
+         * @param textureAtlasName 贴图集数据名称，如果未设置，则使用龙骨数据。
          * @returns 骨架的显示容器。
          * @see dragonBones.EgretArmatureDisplay
          * @version DragonBones 4.5
          */
-        buildArmatureDisplay(armatureName: string, dragonBonesName?: string, skinName?: string): EgretArmatureDisplay;
+        buildArmatureDisplay(armatureName: string, dragonBonesName?: string, skinName?: string, textureAtlasName?: string): EgretArmatureDisplay;
         /**
          * @language zh_CN
          * 获取带有指定贴图的显示对象。
          * @param textureName 指定的贴图名称。
-         * @param dragonBonesName 指定的龙骨数据名称，如果未设置，将检索所有的龙骨数据。
+         * @param textureAtlasName 指定的贴图集数据名称，如果未设置，将检索所有的贴图集数据。
          * @version DragonBones 3.0
          */
-        getTextureDisplay(textureName: string, dragonBonesName?: string): egret.Bitmap;
+        getTextureDisplay(textureName: string, textureAtlasName?: string): egret.Bitmap;
         /**
          * @language zh_CN
          * 获取全局声音事件管理器。
