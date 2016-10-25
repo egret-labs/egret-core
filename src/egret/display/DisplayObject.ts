@@ -43,82 +43,82 @@ namespace egret.sys {
          * @private
          * 显示对象自身的绘制区域尺寸失效
          */
-        InvalidContentBounds = 0x0002,
+        InvalidContentBounds                  = 0x0002,
 
-        /**
-         * @private
-         * 显示对象的矩形区域尺寸失效，包括自身绘制区域和子项的区域集合
-         */
-        InvalidBounds = 0x0004,
+            /**
+             * @private
+             * 显示对象的矩形区域尺寸失效，包括自身绘制区域和子项的区域集合
+             */
+            InvalidBounds                     = 0x0004,
 
-        /**
-         * @private
-         * 显示对象的matrix属性失效标志，通常因为scaleX，width等属性发生改变。
-         */
-        InvalidMatrix = 0x0008,
+            /**
+             * @private
+             * 显示对象的matrix属性失效标志，通常因为scaleX，width等属性发生改变。
+             */
+            InvalidMatrix                     = 0x0008,
 
-        /**
-         * @private
-         * 显示对象祖代的矩阵失效。
-         */
-        InvalidConcatenatedMatrix = 0x0010,
+            /**
+             * @private
+             * 显示对象祖代的矩阵失效。
+             */
+            InvalidConcatenatedMatrix         = 0x0010,
 
-        /**
-         * @private
-         * 显示对象祖代的逆矩阵失效。
-         */
-        InvalidInvertedConcatenatedMatrix = 0x0020,
+            /**
+             * @private
+             * 显示对象祖代的逆矩阵失效。
+             */
+            InvalidInvertedConcatenatedMatrix = 0x0020,
 
-        /**
-         * @private
-         * 显示对象祖代的透明度属性失效。
-         */
-        InvalidConcatenatedAlpha = 0x0040,
-        /**
-         * @private
-         * DrawData失效,需要重新出发render方法.
-         */
-        InvalidRenderNodes = 0x0080,
-        /**
-         * @private
-         * 显示对象自身需要重绘的标志
-         */
-        DirtyRender = 0x0100,
-        /**
-         * @private
-         * 子项中已经全部含有DirtyRender标志，无需继续遍历。
-         */
-        DirtyChildren = 0x200,
-        /**
-         * @private
-         * DirtyRender|DirtyChildren
-         */
-        Dirty = DirtyRender | DirtyChildren,
-        /**
-         * @private
-         * 显示对象祖代的是否可见属性失效。
-         */
-        InvalidConcatenatedVisible = 0x400,
-        /**
-         * @private
-         * 添加或删除子项时，需要向子项传递的标志。
-         */
-        DownOnAddedOrRemoved = DisplayObjectFlags.InvalidConcatenatedMatrix |
-        DisplayObjectFlags.InvalidInvertedConcatenatedMatrix |
-        DisplayObjectFlags.InvalidConcatenatedAlpha |
-        DisplayObjectFlags.InvalidConcatenatedVisible |
-        DisplayObjectFlags.DirtyChildren,
-        /**
-         * @private
-         * 显示对象初始化时的标志量
-         */
-        InitFlags =
-        DisplayObjectFlags.InvalidConcatenatedMatrix |
-        DisplayObjectFlags.InvalidInvertedConcatenatedMatrix |
-        DisplayObjectFlags.InvalidConcatenatedAlpha |
-        DisplayObjectFlags.InvalidConcatenatedVisible |
-        DisplayObjectFlags.InvalidRenderNodes |
-        DisplayObjectFlags.Dirty
+            /**
+             * @private
+             * 显示对象祖代的透明度属性失效。
+             */
+            InvalidConcatenatedAlpha          = 0x0040,
+            /**
+             * @private
+             * DrawData失效,需要重新出发render方法.
+             */
+            InvalidRenderNodes                = 0x0080,
+            /**
+             * @private
+             * 显示对象自身需要重绘的标志
+             */
+            DirtyRender                       = 0x0100,
+            /**
+             * @private
+             * 子项中已经全部含有DirtyRender标志，无需继续遍历。
+             */
+            DirtyChildren                     = 0x200,
+            /**
+             * @private
+             * DirtyRender|DirtyChildren
+             */
+            Dirty                             = DirtyRender | DirtyChildren,
+            /**
+             * @private
+             * 显示对象祖代的是否可见属性失效。
+             */
+            InvalidConcatenatedVisible        = 0x400,
+            /**
+             * @private
+             * 添加或删除子项时，需要向子项传递的标志。
+             */
+            DownOnAddedOrRemoved              = DisplayObjectFlags.InvalidConcatenatedMatrix |
+                DisplayObjectFlags.InvalidInvertedConcatenatedMatrix |
+                DisplayObjectFlags.InvalidConcatenatedAlpha |
+                DisplayObjectFlags.InvalidConcatenatedVisible |
+                DisplayObjectFlags.DirtyChildren,
+            /**
+             * @private
+             * 显示对象初始化时的标志量
+             */
+            InitFlags                         =
+                DisplayObjectFlags.InvalidConcatenatedMatrix |
+                DisplayObjectFlags.InvalidInvertedConcatenatedMatrix |
+                DisplayObjectFlags.InvalidConcatenatedAlpha |
+                DisplayObjectFlags.InvalidConcatenatedVisible |
+                DisplayObjectFlags.InvalidRenderNodes |
+                DisplayObjectFlags.Dirty
 
     }
 }
@@ -129,7 +129,7 @@ namespace egret {
      * @private
      * 格式化旋转角度的值
      */
-    function clampRotation(value): number {
+    function clampRotation(value):number {
         value %= 360;
         if (value > 180) {
             value -= 360;
@@ -239,45 +239,45 @@ namespace egret {
             super();
             this.$displayFlags = sys.DisplayObjectFlags.InitFlags;
             this.$DisplayObject = {
-                0:1,                //scaleX,
-                1:1,                //scaleY,
-                2:0,                //skewX,
-                3:0,                //skewY,
-                4:0,                //rotation
-                5:"",               //name
-                6:new Matrix(),     //matrix,
-                7:new Matrix(),     //concatenatedMatrix,
-                8:new Matrix(),     //invertedConcatenatedMatrix,
-                9:new Rectangle(),  //bounds,
-                10:new Rectangle(), //contentBounds
-                11:false,           //cacheAsBitmap
-                12:0,               //anchorOffsetX,
-                13:0,               //anchorOffsetY,
-                14:NaN,             //explicitWidth,
-                15:NaN,             //explicitHeight,
-                16:0,               //skewXdeg,
-                17:0,               //skewYdeg,
-                18:0,               //concatenatedAlpha,
-                19:null,            //concatenatedVisible,
-                20:null             //filters
+                0:  1,                //scaleX,
+                1:  1,                //scaleY,
+                2:  0,                //skewX,
+                3:  0,                //skewY,
+                4:  0,                //rotation
+                5:  "",               //name
+                6:  new Matrix(),     //matrix,
+                7:  new Matrix(),     //concatenatedMatrix,
+                8:  new Matrix(),     //invertedConcatenatedMatrix,
+                9:  new Rectangle(),  //bounds,
+                10: new Rectangle(), //contentBounds
+                11: false,           //cacheAsBitmap
+                12: 0,               //anchorOffsetX,
+                13: 0,               //anchorOffsetY,
+                14: NaN,             //explicitWidth,
+                15: NaN,             //explicitHeight,
+                16: 0,               //skewXdeg,
+                17: 0,               //skewYdeg,
+                18: 0,               //concatenatedAlpha,
+                19: null,            //concatenatedVisible,
+                20: null             //filters
             };
         }
 
         /**
          * @private
          */
-        $DisplayObject: Object;
+        $DisplayObject:Object;
 
         /**
          * @private
          */
-        $displayFlags: number;
+        $displayFlags:number;
 
         /**
          * @private
          * 添加一个标志量
          */
-        $setFlags(flags: number): void {
+        $setFlags(flags:number):void {
             this.$displayFlags |= flags;
         }
 
@@ -285,7 +285,7 @@ namespace egret {
          * @private
          * 移除一个标志量
          */
-        $removeFlags(flags: number): void {
+        $removeFlags(flags:number):void {
             this.$displayFlags &= ~flags;
         }
 
@@ -293,7 +293,7 @@ namespace egret {
          * @private
          * 沿着显示列表向上移除标志量，如果标志量没被设置过就停止移除。
          */
-        $removeFlagsUp(flags: number): void {
+        $removeFlagsUp(flags:number):void {
             if (!this.$hasAnyFlags(flags)) {
                 return;
             }
@@ -308,7 +308,7 @@ namespace egret {
          * @private
          * 是否含有指定的所有标志量
          */
-        $hasFlags(flags: number): boolean {
+        $hasFlags(flags:number):boolean {
             return (this.$displayFlags & flags) == flags;
         }
 
@@ -316,7 +316,7 @@ namespace egret {
          * @private
          * 沿着显示列表向上传递标志量，如果标志量已经被设置过就停止传递。
          */
-        $propagateFlagsUp(flags: number): void {
+        $propagateFlagsUp(flags:number):void {
             if (this.$hasFlags(flags)) {
                 return;
             }
@@ -331,7 +331,7 @@ namespace egret {
          * @private
          * 沿着显示列表向下传递标志量，非容器直接设置自身的flag，此方法会在 DisplayObjectContainer 中被覆盖。
          */
-        $propagateFlagsDown(flags: number): void {
+        $propagateFlagsDown(flags:number):void {
             this.$setFlags(flags);
         }
 
@@ -339,20 +339,21 @@ namespace egret {
          * @private
          * 是否含有多个标志量其中之一。
          */
-        $hasAnyFlags(flags: number): boolean {
+        $hasAnyFlags(flags:number):boolean {
             return !!(this.$displayFlags & flags);
         }
+
         /**
          * @private
          * 是否添加到舞台上，防止重复发送 removed_from_stage 消息
          */
-        $hasAddToStage: boolean;
+        $hasAddToStage:boolean;
 
         /**
          * @private
          * 标记矩阵失效
          */
-        $invalidateMatrix(): void {
+        $invalidateMatrix():void {
             this.$setFlags(sys.DisplayObjectFlags.InvalidMatrix);
             this.$invalidatePosition();
         }
@@ -361,7 +362,7 @@ namespace egret {
          * @private
          * 标记这个显示对象在父级容器的位置发生了改变。
          */
-        $invalidatePosition(): void {
+        $invalidatePosition():void {
             let self = this;
             self.$invalidateTransform();
             self.$propagateFlagsDown(sys.DisplayObjectFlags.InvalidConcatenatedMatrix |
@@ -375,7 +376,7 @@ namespace egret {
          * @private
          * 能够含有子项的类将子项列表存储在这个属性里。
          */
-        $children: DisplayObject[] = null;
+        $children:DisplayObject[] = null;
 
         /**
          * @language en_US
@@ -391,18 +392,18 @@ namespace egret {
          * @version Egret 2.4
          * @platform Web,Native
          */
-        public get name(): string {
+        public get name():string {
             return this.$DisplayObject[Keys.name];
         }
 
-        public set name(value: string) {
+        public set name(value:string) {
             this.$DisplayObject[Keys.name] = value;
         }
 
         /**
          * @private
          */
-        $parent: DisplayObjectContainer = null;
+        $parent:DisplayObjectContainer = null;
 
         /**
          * @language en_US
@@ -418,7 +419,7 @@ namespace egret {
          * @version Egret 2.4
          * @platform Web,Native
          */
-        public get parent(): DisplayObjectContainer {
+        public get parent():DisplayObjectContainer {
             return this.$parent;
         }
 
@@ -426,7 +427,7 @@ namespace egret {
          * @private
          * 设置父级显示对象
          */
-        $setParent(parent: DisplayObjectContainer): boolean {
+        $setParent(parent:DisplayObjectContainer):boolean {
             if (this.$parent == parent) {
                 return false;
             }
@@ -438,7 +439,7 @@ namespace egret {
          * @private
          * 显示对象添加到舞台
          */
-        $onAddToStage(stage: Stage, nestLevel: number): void {
+        $onAddToStage(stage:Stage, nestLevel:number):void {
             this.$stage = stage;
             this.$nestLevel = nestLevel;
             this.$hasAddToStage = true;
@@ -449,7 +450,7 @@ namespace egret {
          * @private
          * 显示对象从舞台移除
          */
-        $onRemoveFromStage(): void {
+        $onRemoveFromStage():void {
             this.$nestLevel = 0;
             Sprite.$EVENT_REMOVE_FROM_STAGE_LIST.push(this);
         }
@@ -457,13 +458,13 @@ namespace egret {
         /**
          * @private
          */
-        $stage: Stage = null;
+        $stage:Stage = null;
 
         /**
          * @private
          * 这个对象在显示列表中的嵌套深度，舞台为1，它的子项为2，子项的子项为3，以此类推。当对象不在显示列表中时此属性值为0.
          */
-        $nestLevel: number = 0;
+        $nestLevel:number = 0;
 
         /**
          * @language en_US
@@ -481,7 +482,7 @@ namespace egret {
          * @version Egret 2.4
          * @platform Web,Native
          */
-        public get stage(): Stage {
+        public get stage():Stage {
             return this.$stage;
         }
 
@@ -512,7 +513,7 @@ namespace egret {
          * @version Egret 2.4
          * @platform Web,Native
          */
-        public get matrix(): Matrix {
+        public get matrix():Matrix {
             return this.$getMatrix().clone();
         }
 
@@ -520,7 +521,7 @@ namespace egret {
          * @private
          * 获取矩阵
          */
-        $getMatrix(): Matrix {
+        $getMatrix():Matrix {
             let values = this.$DisplayObject;
             if (this.$hasFlags(sys.DisplayObjectFlags.InvalidMatrix)) {
                 values[Keys.matrix].$updateScaleAndRotation(values[Keys.scaleX], values[Keys.scaleY], values[Keys.skewX], values[Keys.skewY]);
@@ -529,7 +530,7 @@ namespace egret {
             return values[Keys.matrix];
         }
 
-        public set matrix(value: Matrix) {
+        public set matrix(value:Matrix) {
             this.$setMatrix(value);
         }
 
@@ -537,7 +538,7 @@ namespace egret {
          * @private
          * 设置矩阵
          */
-        $setMatrix(matrix: Matrix, needUpdateProperties: boolean = true): boolean {
+        $setMatrix(matrix:Matrix, needUpdateProperties:boolean = true):boolean {
             let self = this;
             let values = self.$DisplayObject;
             let m = values[Keys.matrix];
@@ -566,7 +567,7 @@ namespace egret {
          * @private
          * 获得这个显示对象以及它所有父级对象的连接矩阵。
          */
-        $getConcatenatedMatrix(): Matrix {
+        $getConcatenatedMatrix():Matrix {
             let matrix = this.$DisplayObject[Keys.concatenatedMatrix];
             if (this.$hasFlags(sys.DisplayObjectFlags.InvalidConcatenatedMatrix)) {
                 if (this.$parent) {
@@ -603,7 +604,7 @@ namespace egret {
          * @private
          * 获取链接矩阵
          */
-        $getInvertedConcatenatedMatrix(): Matrix {
+        $getInvertedConcatenatedMatrix():Matrix {
             let values = this.$DisplayObject;
             if (this.$hasFlags(sys.DisplayObjectFlags.InvalidInvertedConcatenatedMatrix)) {
                 this.$getConcatenatedMatrix().$invertInto(values[Keys.invertedConcatenatedMatrix]);
@@ -633,7 +634,7 @@ namespace egret {
          * @version Egret 2.4
          * @platform Web,Native
          */
-        public get x(): number {
+        public get x():number {
             return this.$getX();
         }
 
@@ -641,11 +642,11 @@ namespace egret {
          * @private
          * 获取x坐标
          */
-        $getX(): number {
+        $getX():number {
             return this.$DisplayObject[Keys.matrix].tx;
         }
 
-        public set x(value: number) {
+        public set x(value:number) {
             this.$setX(value);
         }
 
@@ -653,7 +654,7 @@ namespace egret {
          * @private
          * 设置x坐标
          */
-        $setX(value: number): boolean {
+        $setX(value:number):boolean {
             value = +value || 0;
             let m = this.$DisplayObject[Keys.matrix];
             if (value == m.tx) {
@@ -685,7 +686,7 @@ namespace egret {
          * @version Egret 2.4
          * @platform Web,Native
          */
-        public get y(): number {
+        public get y():number {
             return this.$getY();
         }
 
@@ -693,11 +694,11 @@ namespace egret {
          * @private
          * 获取y坐标
          */
-        $getY(): number {
+        $getY():number {
             return this.$DisplayObject[Keys.matrix].ty;
         }
 
-        public set y(value: number) {
+        public set y(value:number) {
             this.$setY(value);
         }
 
@@ -705,7 +706,7 @@ namespace egret {
          * @private
          * 设置y坐标
          */
-        $setY(value: number): boolean {
+        $setY(value:number):boolean {
             value = +value || 0;
             let m = this.$DisplayObject[Keys.matrix];
             if (value == m.ty) {
@@ -733,11 +734,11 @@ namespace egret {
          * @version Egret 2.4
          * @platform Web,Native
          */
-        public get scaleX(): number {
+        public get scaleX():number {
             return this.$getScaleX();
         }
 
-        public set scaleX(value: number) {
+        public set scaleX(value:number) {
             this.$setScaleX(value);
         }
 
@@ -746,7 +747,7 @@ namespace egret {
          *
          * @returns
          */
-        $getScaleX(): number {
+        $getScaleX():number {
             return this.$DisplayObject[Keys.scaleX];
         }
 
@@ -754,7 +755,7 @@ namespace egret {
          * @private
          * 设置水平缩放值
          */
-        $setScaleX(value: number): boolean {
+        $setScaleX(value:number):boolean {
             value = +value || 0;
             let values = this.$DisplayObject;
             if (value == values[Keys.scaleX]) {
@@ -780,11 +781,11 @@ namespace egret {
          * @version Egret 2.4
          * @platform Web,Native
          */
-        public get scaleY(): number {
+        public get scaleY():number {
             return this.$getScaleY();
         }
 
-        public set scaleY(value: number) {
+        public set scaleY(value:number) {
             this.$setScaleY(value);
         }
 
@@ -793,7 +794,7 @@ namespace egret {
          *
          * @returns
          */
-        $getScaleY(): number {
+        $getScaleY():number {
             return this.$DisplayObject[Keys.scaleY];
         }
 
@@ -801,7 +802,7 @@ namespace egret {
          * @private
          * 设置垂直缩放值
          */
-        $setScaleY(value: number): boolean {
+        $setScaleY(value:number):boolean {
             value = +value || 0;
             if (value == this.$DisplayObject[Keys.scaleY]) {
                 return false;
@@ -830,7 +831,7 @@ namespace egret {
          * @version Egret 2.4
          * @platform Web,Native
          */
-        public get rotation(): number {
+        public get rotation():number {
             return this.$getRotation();
         }
 
@@ -839,26 +840,24 @@ namespace egret {
          *
          * @returns
          */
-        $getRotation(): number {
+        $getRotation():number {
             return this.$DisplayObject[Keys.rotation];
         }
 
-        public set rotation(value: number) {
+        public set rotation(value:number) {
             this.$setRotation(value);
         }
 
-        $setRotation(value: number): boolean {
+        $setRotation(value:number):boolean {
             value = +value || 0;
             value = clampRotation(value);
             let values = this.$DisplayObject;
             if (value == values[Keys.rotation]) {
                 return false;
             }
-            let delta = value - values[Keys.rotation];
-            let angle = delta / 180 * Math.PI;
-            values[Keys.skewX] += angle;
-            values[Keys.skewY] += angle;
-            values[Keys.rotation] = value;
+            let angle = value / 180 * Math.PI;
+            values[Keys.skewX] = values[Keys.skewY] = angle;
+            values[Keys.skewXdeg] = values[Keys.skewYdeg] = values[Keys.rotation] = value;
             this.$invalidateMatrix();
 
             return true;
@@ -871,11 +870,11 @@ namespace egret {
          * @version Egret 2.4
          * @platform Web,Native
          */
-        public get skewX(): number {
+        public get skewX():number {
             return this.$DisplayObject[Keys.skewXdeg];
         }
 
-        public set skewX(value: number) {
+        public set skewX(value:number) {
             this.$setSkewX(value);
         }
 
@@ -884,7 +883,7 @@ namespace egret {
          *
          * @param value
          */
-        $setSkewX(value: number): boolean {
+        $setSkewX(value:number):boolean {
             value = +value || 0;
             let values = this.$DisplayObject;
             if (value == values[Keys.skewXdeg]) {
@@ -908,11 +907,11 @@ namespace egret {
          * @version Egret 2.4
          * @platform Web,Native
          */
-        public get skewY(): number {
+        public get skewY():number {
             return this.$DisplayObject[Keys.skewYdeg];
         }
 
-        public set skewY(value: number) {
+        public set skewY(value:number) {
             this.$setSkewY(value);
         }
 
@@ -921,7 +920,7 @@ namespace egret {
          *
          * @param value
          */
-        $setSkewY(value: number): boolean {
+        $setSkewY(value:number):boolean {
             value = +value || 0;
             let values = this.$DisplayObject;
             if (value == values[Keys.skewYdeg]) {
@@ -951,7 +950,7 @@ namespace egret {
          * @version Egret 2.4
          * @platform Web,Native
          */
-        public get width(): number {
+        public get width():number {
             return this.$getWidth();
         }
 
@@ -959,7 +958,7 @@ namespace egret {
          * @private
          * 获取显示宽度
          */
-        $getWidth(): number {
+        $getWidth():number {
             return isNaN(this.$getExplicitWidth()) ? this.$getOriginalBounds().width : this.$getExplicitWidth();
 
             //return this.$getTransformedBounds(this.$parent, $TempRectangle).width;
@@ -970,11 +969,11 @@ namespace egret {
          *
          * @returns
          */
-        $getExplicitWidth(): number {
+        $getExplicitWidth():number {
             return this.$DisplayObject[Keys.explicitWidth];
         }
 
-        public set width(value: number) {
+        public set width(value:number) {
             this.$setWidth(value);
         }
 
@@ -982,7 +981,7 @@ namespace egret {
          * @private
          * 设置显示宽度
          */
-        $setWidth(value: number): boolean {
+        $setWidth(value:number):boolean {
             this.$DisplayObject[Keys.explicitWidth] = isNaN(value) ? NaN : value;
 
             value = +value;
@@ -1021,7 +1020,7 @@ namespace egret {
          * @version Egret 2.4
          * @platform Web,Native
          */
-        public get height(): number {
+        public get height():number {
             return this.$getHeight();
         }
 
@@ -1029,7 +1028,7 @@ namespace egret {
          * @private
          * 获取显示高度
          */
-        $getHeight(): number {
+        $getHeight():number {
             return isNaN(this.$getExplicitHeight()) ? this.$getOriginalBounds().height : this.$getExplicitHeight();
 
             //return this.$getTransformedBounds(this.$parent, $TempRectangle).height;
@@ -1040,11 +1039,11 @@ namespace egret {
          *
          * @returns
          */
-        $getExplicitHeight(): number {
+        $getExplicitHeight():number {
             return this.$DisplayObject[Keys.explicitHeight];
         }
 
-        public set height(value: number) {
+        public set height(value:number) {
             this.$setHeight(value);
         }
 
@@ -1052,7 +1051,7 @@ namespace egret {
          * @private
          * 设置显示高度
          */
-        $setHeight(value: number): boolean {
+        $setHeight(value:number):boolean {
             this.$DisplayObject[Keys.explicitHeight] = isNaN(value) ? NaN : value;
 
             value = +value;
@@ -1086,7 +1085,7 @@ namespace egret {
          * @version Egret 2.4
          * @platform Web,Native
          */
-        public get measuredWidth(): number {
+        public get measuredWidth():number {
             return this.$getOriginalBounds().width;
         }
 
@@ -1097,7 +1096,7 @@ namespace egret {
          * @version Egret 2.4
          * @platform Web,Native
          */
-        public get measuredHeight(): number {
+        public get measuredHeight():number {
             return this.$getOriginalBounds().height;
         }
 
@@ -1115,18 +1114,18 @@ namespace egret {
          * @version Egret 2.4
          * @platform Web,Native
          */
-        public get anchorOffsetX(): number {
+        public get anchorOffsetX():number {
             return this.$DisplayObject[Keys.anchorOffsetX];
         }
 
         /**
          * @private
          */
-        $getAnchorOffsetX(): boolean {
+        $getAnchorOffsetX():boolean {
             return this.$DisplayObject[Keys.anchorOffsetX];
         }
 
-        public set anchorOffsetX(value: number) {
+        public set anchorOffsetX(value:number) {
             this.$setAnchorOffsetX(value);
         }
 
@@ -1136,7 +1135,7 @@ namespace egret {
          * @param value
          * @returns
          */
-        $setAnchorOffsetX(value: number): boolean {
+        $setAnchorOffsetX(value:number):boolean {
             value = +value || 0;
             if (value == this.$DisplayObject[Keys.anchorOffsetX]) {
                 return false;
@@ -1160,18 +1159,18 @@ namespace egret {
          * @version Egret 2.4
          * @platform Web,Native
          */
-        public get anchorOffsetY(): number {
+        public get anchorOffsetY():number {
             return this.$DisplayObject[Keys.anchorOffsetY];
         }
 
         /**
          * @private
          */
-        $getAnchorOffsetY(): boolean {
+        $getAnchorOffsetY():boolean {
             return this.$DisplayObject[Keys.anchorOffsetY];
         }
 
-        public set anchorOffsetY(value: number) {
+        public set anchorOffsetY(value:number) {
             this.$setAnchorOffsetY(value);
         }
 
@@ -1181,7 +1180,7 @@ namespace egret {
          * @param value
          * @returns
          */
-        $setAnchorOffsetY(value: number): boolean {
+        $setAnchorOffsetY(value:number):boolean {
             value = +value || 0;
             if (value == this.$DisplayObject[Keys.anchorOffsetY]) {
                 return false;
@@ -1194,7 +1193,7 @@ namespace egret {
         /**
          * @private
          */
-        $visible: boolean = true;
+        $visible:boolean = true;
 
         /**
          * @language en_US
@@ -1211,15 +1210,15 @@ namespace egret {
          * @version Egret 2.4
          * @platform Web,Native
          */
-        public get visible(): boolean {
+        public get visible():boolean {
             return this.$visible;
         }
 
-        public set visible(value: boolean) {
+        public set visible(value:boolean) {
             this.$setVisible(value);
         }
 
-        $setVisible(value: boolean): boolean {
+        $setVisible(value:boolean):boolean {
             value = !!value;
             if (value == this.$visible) {
                 return false;
@@ -1234,7 +1233,7 @@ namespace egret {
          * @private
          * 获取这个显示对象跟它所有父级透明度的乘积
          */
-        $getConcatenatedVisible(): boolean {
+        $getConcatenatedVisible():boolean {
             let values = this.$DisplayObject;
             if (this.$hasFlags(sys.DisplayObjectFlags.InvalidConcatenatedVisible)) {
                 if (this.$parent) {
@@ -1253,7 +1252,7 @@ namespace egret {
          * @private
          * cacheAsBitmap创建的缓存位图节点。
          */
-        $displayList: egret.sys.DisplayList = null;
+        $displayList:egret.sys.DisplayList = null;
 
         /**
          * @language en_US
@@ -1277,17 +1276,17 @@ namespace egret {
          * @version Egret 2.4
          * @platform Web,Native
          */
-        public get cacheAsBitmap(): boolean {
+        public get cacheAsBitmap():boolean {
             return this.$DisplayObject[Keys.cacheAsBitmap];
         }
 
-        public set cacheAsBitmap(value: boolean) {
+        public set cacheAsBitmap(value:boolean) {
             value = !!value;
             this.$DisplayObject[Keys.cacheAsBitmap] = value;
             this.$setHasDisplayList(value);
         }
 
-        public $setHasDisplayList(value: boolean): void {
+        public $setHasDisplayList(value:boolean):void {
             let hasDisplayList = !!this.$displayList;
             if (hasDisplayList == value) {
                 return;
@@ -1312,7 +1311,7 @@ namespace egret {
          * @private
          * cacheAsBitmap属性改变
          */
-        $cacheAsBitmapChanged(): void {
+        $cacheAsBitmapChanged():void {
             let parentCache = this.$displayList || this.$parentDisplayList;
             if (this.$renderNode && parentCache) {
                 parentCache.markDirty(this);
@@ -1324,7 +1323,7 @@ namespace egret {
         /**
          * @private
          */
-        $alpha: number = 1;
+        $alpha:number = 1;
 
         /**
          * @language en_US
@@ -1342,11 +1341,11 @@ namespace egret {
          * @version Egret 2.4
          * @platform Web,Native
          */
-        public get alpha(): number {
+        public get alpha():number {
             return this.$alpha;
         }
 
-        public set alpha(value: number) {
+        public set alpha(value:number) {
             this.$setAlpha(value);
         }
 
@@ -1355,7 +1354,7 @@ namespace egret {
          *
          * @param value
          */
-        $setAlpha(value: number): boolean {
+        $setAlpha(value:number):boolean {
             value = +value || 0;
             if (value == this.$alpha) {
                 return false;
@@ -1371,7 +1370,7 @@ namespace egret {
          * @private
          * 获取这个显示对象跟它所有父级透明度的乘积
          */
-        $getConcatenatedAlpha(): number {
+        $getConcatenatedAlpha():number {
             let values = this.$DisplayObject;
             if (this.$hasFlags(sys.DisplayObjectFlags.InvalidConcatenatedAlpha)) {
                 if (this.$parent) {
@@ -1402,9 +1401,9 @@ namespace egret {
          * @version Egret 2.5
          * @platform Web,Native
          */
-        static defaultTouchEnabled: boolean = false;
+        static defaultTouchEnabled:boolean = false;
 
-        $touchEnabled: boolean = DisplayObject.defaultTouchEnabled;
+        $touchEnabled:boolean = DisplayObject.defaultTouchEnabled;
         /**
          * @language en_US
          * Specifies whether this object receives touch or other user input. The default value is false, which means that
@@ -1427,11 +1426,11 @@ namespace egret {
          * @version Egret 2.4
          * @platform Web,Native
          */
-        public get touchEnabled(): boolean {
+        public get touchEnabled():boolean {
             return this.$getTouchEnabled();
         }
 
-        public set touchEnabled(value: boolean) {
+        public set touchEnabled(value:boolean) {
             this.$setTouchEnabled(value);
         }
 
@@ -1440,14 +1439,14 @@ namespace egret {
          *
          * @returns
          */
-        $getTouchEnabled(): boolean {
+        $getTouchEnabled():boolean {
             return this.$touchEnabled;
         }
 
         /**
          * @private
          */
-        $setTouchEnabled(value: boolean): boolean {
+        $setTouchEnabled(value:boolean):boolean {
             if (this.$touchEnabled == value) {
                 return false;
             }
@@ -1458,7 +1457,7 @@ namespace egret {
         /**
          * @private
          */
-        $scrollRect: Rectangle = null;
+        $scrollRect:Rectangle = null;
 
         /**
          * @language en_US
@@ -1496,11 +1495,11 @@ namespace egret {
          * @version Egret 2.4
          * @platform Web,Native
          */
-        public get scrollRect(): Rectangle {
+        public get scrollRect():Rectangle {
             return this.$scrollRect;
         }
 
-        public set scrollRect(value: Rectangle) {
+        public set scrollRect(value:Rectangle) {
             this.$setScrollRect(value);
         }
 
@@ -1509,7 +1508,7 @@ namespace egret {
          *
          * @param value
          */
-        $setScrollRect(value: Rectangle): boolean {
+        $setScrollRect(value:Rectangle):boolean {
             if (!value && !this.$scrollRect) {
                 return false;
             }
@@ -1530,7 +1529,7 @@ namespace egret {
         /**
          * @private
          */
-        $blendMode: number = 0;
+        $blendMode:number = 0;
 
         /**
          * @language en_US
@@ -1551,11 +1550,11 @@ namespace egret {
          * @version Egret 2.4
          * @platform Web,Native
          */
-        public get blendMode(): string {
+        public get blendMode():string {
             return sys.numberToBlendMode(this.$blendMode);
         }
 
-        public set blendMode(value: string) {
+        public set blendMode(value:string) {
             let mode = sys.blendModeToNumber(value);
             if (mode == this.$blendMode) {
                 return;
@@ -1568,17 +1567,17 @@ namespace egret {
          * @private
          * 被遮罩的对象
          */
-        $maskedObject: DisplayObject = null;
+        $maskedObject:DisplayObject = null;
 
         /**
          * @private
          */
-        $mask: DisplayObject = null;
+        $mask:DisplayObject = null;
 
         /**
          * @private
          */
-        $maskRect: Rectangle = null;
+        $maskRect:Rectangle = null;
 
         /**
          * @language en_US
@@ -1609,11 +1608,11 @@ namespace egret {
          * @version Egret 2.4
          * @platform Web,Native
          */
-        public get mask(): DisplayObject | Rectangle {
+        public get mask():DisplayObject | Rectangle {
             return this.$mask ? this.$mask : this.$maskRect;
         }
 
-        public set mask(value: DisplayObject | Rectangle) {
+        public set mask(value:DisplayObject | Rectangle) {
             if (value === this) {
                 return;
             }
@@ -1652,7 +1651,7 @@ namespace egret {
             this.$invalidateTransform();
         }
 
-        $setMaskRect(value: Rectangle): boolean {
+        $setMaskRect(value:Rectangle):boolean {
             if (!value && !this.$maskRect) {
                 return false;
             }
@@ -1684,12 +1683,12 @@ namespace egret {
          * @version Egret 3.1.0
          * @platform Web
          */
-        public get filters(): Array<Filter> {
+        public get filters():Array<Filter> {
             return this.$DisplayObject[Keys.filters];
         }
 
-        public set filters(value: Array<Filter>) {
-            let filters: Array<Filter> = this.$DisplayObject[Keys.filters];
+        public set filters(value:Array<Filter>) {
+            let filters:Array<Filter> = this.$DisplayObject[Keys.filters];
             if (!filters && !value) {
                 this.$DisplayObject[Keys.filters] = value;
                 return;
@@ -1698,8 +1697,8 @@ namespace egret {
             //需要通知子项
             this.$invalidate(true);
             if (filters && filters.length) {
-                let length: number = filters.length;
-                for (let i: number = 0; i < length; i++) {
+                let length:number = filters.length;
+                for (let i:number = 0; i < length; i++) {
                     filters[i].$removeTarget(this);
                 }
             }
@@ -1716,7 +1715,7 @@ namespace egret {
          * @private
          * 获取filters
          */
-        $getFilters(): Array<Filter> {
+        $getFilters():Array<Filter> {
             return this.$DisplayObject[Keys.filters];
         }
 
@@ -1739,7 +1738,7 @@ namespace egret {
          * @version Egret 2.4
          * @platform Web,Native
          */
-        public getTransformedBounds(targetCoordinateSpace: DisplayObject, resultRect?: Rectangle): Rectangle {
+        public getTransformedBounds(targetCoordinateSpace:DisplayObject, resultRect?:Rectangle):Rectangle {
             targetCoordinateSpace = targetCoordinateSpace || this;
             return this.$getTransformedBounds(targetCoordinateSpace, resultRect);
         }
@@ -1762,7 +1761,7 @@ namespace egret {
          * @version Egret 2.4
          * @platform Web,Native
          */
-        public getBounds(resultRect?: Rectangle, calculateAnchor: boolean = true): egret.Rectangle {
+        public getBounds(resultRect?:Rectangle, calculateAnchor:boolean = true):egret.Rectangle {
             resultRect = this.$getTransformedBounds(this, resultRect);
             if (calculateAnchor) {
                 let values = this.$DisplayObject;
@@ -1778,7 +1777,7 @@ namespace egret {
         /**
          * @private
          */
-        $getTransformedBounds(targetCoordinateSpace: DisplayObject, resultRect?: Rectangle): Rectangle {
+        $getTransformedBounds(targetCoordinateSpace:DisplayObject, resultRect?:Rectangle):Rectangle {
             let bounds = this.$getOriginalBounds();
             if (!resultRect) {
                 resultRect = new Rectangle();
@@ -1787,7 +1786,7 @@ namespace egret {
             if (targetCoordinateSpace == this || resultRect.isEmpty()) {
                 return resultRect;
             }
-            let m: Matrix;
+            let m:Matrix;
             if (targetCoordinateSpace) {
                 m = $TempMatrix;
                 let invertedTargetMatrix = targetCoordinateSpace.$getInvertedConcatenatedMatrix();
@@ -1820,7 +1819,7 @@ namespace egret {
          * @version Egret 2.4
          * @platform Web,Native
          */
-        public globalToLocal(stageX: number = 0, stageY: number = 0, resultPoint?: Point): Point {
+        public globalToLocal(stageX:number = 0, stageY:number = 0, resultPoint?:Point):Point {
             let m = this.$getInvertedConcatenatedMatrix();
             return m.transformPoint(stageX, stageY, resultPoint);
         }
@@ -1846,7 +1845,7 @@ namespace egret {
          * @version Egret 2.4
          * @platform Web,Native
          */
-        public localToGlobal(localX: number = 0, localY: number = 0, resultPoint?: Point): Point {
+        public localToGlobal(localX:number = 0, localY:number = 0, resultPoint?:Point):Point {
             let m = this.$getConcatenatedMatrix();
             return m.transformPoint(localX, localY, resultPoint);
         }
@@ -1855,7 +1854,7 @@ namespace egret {
          * @private
          * 标记自身的测量尺寸失效
          */
-        $invalidateContentBounds(): void {
+        $invalidateContentBounds():void {
             this.$invalidate();
             this.$setFlags(sys.DisplayObjectFlags.InvalidContentBounds);
             this.$propagateFlagsUp(sys.DisplayObjectFlags.InvalidBounds);
@@ -1865,7 +1864,7 @@ namespace egret {
          * @private
          * 获取显示对象占用的矩形区域集合，通常包括自身绘制的测量区域，如果是容器，还包括所有子项占据的区域。
          */
-        $getOriginalBounds(): Rectangle {
+        $getOriginalBounds():Rectangle {
             let bounds:Rectangle = this.$DisplayObject[Keys.bounds];
             if (this.$hasFlags(sys.DisplayObjectFlags.InvalidBounds)) {
                 bounds.copyFrom(this.$getContentBounds());
@@ -1875,7 +1874,7 @@ namespace egret {
                     this.$displayList.$renderNode.moved = true;
                 }
                 let offset = this.$measureFiltersOffset();
-                if(offset) {
+                if (offset) {
                     bounds.x += offset.minX;
                     bounds.y += offset.minY;
                     bounds.width += offset.maxX;
@@ -1890,14 +1889,14 @@ namespace egret {
          * 测量子项占用的矩形区域
          * @param bounds 测量结果存储在这个矩形对象内
          */
-        $measureChildBounds(bounds: Rectangle): void {
+        $measureChildBounds(bounds:Rectangle):void {
 
         }
 
         /**
          * @private
          */
-        $getContentBounds(): Rectangle {
+        $getContentBounds():Rectangle {
             let bounds = this.$DisplayObject[Keys.contentBounds];
             if (this.$hasFlags(sys.DisplayObjectFlags.InvalidContentBounds)) {
                 this.$measureContentBounds(bounds);
@@ -1914,20 +1913,20 @@ namespace egret {
          * 测量自身占用的矩形区域，注意：此测量结果并不包括子项占据的区域。
          * @param bounds 测量结果存储在这个矩形对象内
          */
-        $measureContentBounds(bounds: Rectangle): void {
+        $measureContentBounds(bounds:Rectangle):void {
         }
 
         /**
          * @private
          */
-        $parentDisplayList: egret.sys.DisplayList = null;
+        $parentDisplayList:egret.sys.DisplayList = null;
 
         /**
          * @private
          * 标记此显示对象需要重绘。此方法会触发自身的cacheAsBitmap重绘。如果只是矩阵改变，自身显示内容并不改变，应该调用$invalidateTransform().
          * @param notiryChildren 是否标记子项也需要重绘。传入false或不传入，将只标记自身需要重绘。注意:当子项cache时不会继续向下标记
          */
-        $invalidate(notifyChildren?: boolean): void {
+        $invalidate(notifyChildren?:boolean):void {
             if (!this.$renderNode || this.$hasFlags(sys.DisplayObjectFlags.DirtyRender | sys.DisplayObjectFlags.InvalidRenderNodes)) {
                 return;
             }
@@ -1943,7 +1942,7 @@ namespace egret {
          * 标记自身以及所有子项在父级中变换叠加的显示内容失效。此方法不会触发自身的cacheAsBitmap重绘。
          * 通常用于矩阵改变或从显示列表添加和移除时。若自身的显示内容已经改变需要重绘，应该调用$invalidate()。
          */
-        $invalidateTransform(): void {
+        $invalidateTransform():void {
             let self = this;
             if (self.$hasFlags(sys.DisplayObjectFlags.DirtyChildren)) {
                 return;
@@ -1960,13 +1959,13 @@ namespace egret {
          * @private
          * 渲染节点,不为空表示自身有绘制到屏幕的内容
          */
-        $renderNode: sys.RenderNode = null;
+        $renderNode:sys.RenderNode = null;
 
         /**
          * @private
          * 获取渲染节点
          */
-        $getRenderNode(): sys.RenderNode {
+        $getRenderNode():sys.RenderNode {
             let node = this.$renderNode;
             if (!node) {
                 return null;
@@ -1980,11 +1979,12 @@ namespace egret {
             }
             return node;
         }
+
         /**
          * @private
          * 更新对象在舞台上的显示区域,返回显示区域是否发生改变。
          */
-        $update(dirtyRegionPolicy: string, bounds?: Rectangle): boolean {
+        $update(dirtyRegionPolicy:string, bounds?:Rectangle):boolean {
 
             let self = this;
             self.$removeFlagsUp(sys.DisplayObjectFlags.Dirty);
@@ -2026,7 +2026,7 @@ namespace egret {
                 }
                 region.updateRegion(renderBounds, matrix);
                 let offset = self.$measureFiltersOffset();
-                if(offset) {
+                if (offset) {
                     region.minX += offset.minX;
                     region.minY += offset.minY;
                     region.maxX += offset.maxX;
@@ -2042,16 +2042,16 @@ namespace egret {
         /**
          * @private
          */
-        public $measureFiltersOffset(): any {
+        public $measureFiltersOffset():any {
             let filters = this.$DisplayObject[Keys.filters];
             if (filters && filters.length) {
                 let length = filters.length;
-                let minX: number = 0;
-                let minY: number = 0;
-                let maxX: number = 0;
-                let maxY: number = 0;
-                for (let i: number = 0; i < length; i++) {
-                    let filter: Filter = filters[i];
+                let minX:number = 0;
+                let minY:number = 0;
+                let maxX:number = 0;
+                let maxY:number = 0;
+                for (let i:number = 0; i < length; i++) {
+                    let filter:Filter = filters[i];
                     if (filter.type == "blur") {
                         let offsetX = (<BlurFilter>filter).blurX;
                         let offsetY = (<BlurFilter>filter).blurY;
@@ -2067,8 +2067,8 @@ namespace egret {
                         minY -= offsetY;
                         maxX += offsetX * 2;
                         maxY += offsetY * 2;
-                        let distance: number = (<DropShadowFilter>filter).distance || 0;
-                        let angle: number = (<DropShadowFilter>filter).angle || 0;
+                        let distance:number = (<DropShadowFilter>filter).distance || 0;
+                        let angle:number = (<DropShadowFilter>filter).angle || 0;
                         let distanceX = 0;
                         let distanceY = 0;
                         if (distance != 0) {
@@ -2103,10 +2103,10 @@ namespace egret {
          * @param root 根节点显示对象
          * @param matrix 目标显示对象相对于舞台的完整连接矩阵。
          */
-        $getConcatenatedMatrixAt(root: DisplayObject, matrix: Matrix): void {
+        $getConcatenatedMatrixAt(root:DisplayObject, matrix:Matrix):void {
             let invertMatrix = root.$getInvertedConcatenatedMatrix();
             if (invertMatrix.a === 0 || invertMatrix.d === 0) {//缩放值为0，逆矩阵无效
-                let target: DisplayObject = this;
+                let target:DisplayObject = this;
                 let rootLevel = root.$nestLevel;
                 matrix.identity();
                 while (target.$nestLevel > rootLevel) {
@@ -2123,11 +2123,11 @@ namespace egret {
             }
         }
 
-        $getConcatenatedAlphaAt(root: DisplayObject, alpha: number): number {
+        $getConcatenatedAlphaAt(root:DisplayObject, alpha:number):number {
             let rootAlpha = root.$getConcatenatedAlpha();
             if (rootAlpha === 0) {
                 alpha = 1;
-                let target: DisplayObject = this;
+                let target:DisplayObject = this;
                 let rootLevel = root.$nestLevel;
                 while (target.$nestLevel > rootLevel) {
                     alpha *= target.$alpha;
@@ -2144,14 +2144,14 @@ namespace egret {
          * @private
          * 执行渲染,绘制自身到屏幕
          */
-        $render(): void {
+        $render():void {
 
         }
 
         /**
          * @private
          */
-        $hitTest(stageX: number, stageY: number): DisplayObject {
+        $hitTest(stageX:number, stageY:number):DisplayObject {
             let values = this.$DisplayObject;
             if (!this.$renderNode || !this.$visible || values[Keys.scaleX] == 0 || values[Keys.scaleY] == 0) {
                 return null;
@@ -2201,7 +2201,7 @@ namespace egret {
          * @version Egret 2.4
          * @platform Web,Native
          */
-        public hitTestPoint(x: number, y: number, shapeFlag?: boolean): boolean {
+        public hitTestPoint(x:number, y:number, shapeFlag?:boolean):boolean {
             if (!shapeFlag) {
                 let values = this.$DisplayObject;
                 if (values[Keys.scaleX] == 0 || values[Keys.scaleY] == 0) {
@@ -2225,7 +2225,7 @@ namespace egret {
                 let m = this.$getInvertedConcatenatedMatrix();
                 let localX = m.a * x + m.c * y + m.tx;
                 let localY = m.b * x + m.d * y + m.ty;
-                let data: number[];
+                let data:number[];
                 let displayList = this.$displayList;
                 if (displayList) {
                     let buffer = displayList.renderBuffer;
@@ -2262,16 +2262,16 @@ namespace egret {
         /**
          * @private
          */
-        static $enterFrameCallBackList: DisplayObject[] = [];
+        static $enterFrameCallBackList:DisplayObject[] = [];
         /**
          * @private
          */
-        static $renderCallBackList: DisplayObject[] = [];
+        static $renderCallBackList:DisplayObject[] = [];
 
         /**
          * @private
          */
-        $addListener(type: string, listener: Function, thisObject: any, useCapture?: boolean, priority?: number, dispatchOnce?: boolean): void {
+        $addListener(type:string, listener:Function, thisObject:any, useCapture?:boolean, priority?:number, dispatchOnce?:boolean):void {
             super.$addListener(type, listener, thisObject, useCapture, priority, dispatchOnce);
             let isEnterFrame = (type == Event.ENTER_FRAME);
             if (isEnterFrame || type == Event.RENDER) {
@@ -2287,9 +2287,9 @@ namespace egret {
          * @version Egret 2.4
          * @platform Web,Native
          */
-        public removeEventListener(type: string, listener: Function, thisObject: any, useCapture?: boolean): void {
+        public removeEventListener(type:string, listener:Function, thisObject:any, useCapture?:boolean):void {
             super.removeEventListener(type, listener, thisObject, useCapture);
-            let isEnterFrame: boolean = (type == Event.ENTER_FRAME);
+            let isEnterFrame:boolean = (type == Event.ENTER_FRAME);
             if ((isEnterFrame || type == Event.RENDER) && !this.hasEventListener(type)) {
                 let list = isEnterFrame ? DisplayObject.$enterFrameCallBackList : DisplayObject.$renderCallBackList;
                 let index = list.indexOf(this);
@@ -2304,7 +2304,7 @@ namespace egret {
          * @version Egret 2.4
          * @platform Web,Native
          */
-        public dispatchEvent(event: Event): boolean {
+        public dispatchEvent(event:Event):boolean {
             if (!event.$bubbles) {
                 return super.dispatchEvent(event);
             }
@@ -2330,8 +2330,8 @@ namespace egret {
          *
          * Egret最终采用了HTML里目标节点触发两次的事件流方式。
          */
-        $getPropagationList(target: DisplayObject): DisplayObject[] {
-            let list: DisplayObject[] = [];
+        $getPropagationList(target:DisplayObject):DisplayObject[] {
+            let list:DisplayObject[] = [];
             while (target) {
                 list.push(target);
                 target = target.$parent;
@@ -2345,7 +2345,7 @@ namespace egret {
         /**
          * @private
          */
-        $dispatchPropagationEvent(event: Event, list: DisplayObject[], targetIndex: number): void {
+        $dispatchPropagationEvent(event:Event, list:DisplayObject[], targetIndex:number):void {
             let length = list.length;
             let captureIndex = targetIndex - 1;
             for (let i = 0; i < length; i++) {
@@ -2369,8 +2369,8 @@ namespace egret {
          * @version Egret 2.4
          * @platform Web,Native
          */
-        public willTrigger(type: string): boolean {
-            let parent: DisplayObject = this;
+        public willTrigger(type:string):boolean {
+            let parent:DisplayObject = this;
             while (parent) {
                 if (parent.hasEventListener(type))
                     return true;

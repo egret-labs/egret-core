@@ -2003,11 +2003,9 @@ var egret;
             if (value == values[4 /* rotation */]) {
                 return false;
             }
-            var delta = value - values[4 /* rotation */];
-            var angle = delta / 180 * Math.PI;
-            values[2 /* skewX */] += angle;
-            values[3 /* skewY */] += angle;
-            values[4 /* rotation */] = value;
+            var angle = value / 180 * Math.PI;
+            values[2 /* skewX */] = values[3 /* skewY */] = angle;
+            values[16 /* skewXdeg */] = values[17 /* skewYdeg */] = values[4 /* rotation */] = value;
             this.$invalidateMatrix();
             return true;
         };
