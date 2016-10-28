@@ -13510,8 +13510,8 @@ var eui;
          * @param scrollPos
          */
         p.horizontalUpdateHandler = function (scrollPos) {
-            this.dispatchEventWith(egret.Event.CHANGE);
             this.$Scroller[10 /* viewport */].scrollH = scrollPos;
+            this.dispatchEventWith(egret.Event.CHANGE);
         };
         /**
          * @private
@@ -13519,8 +13519,8 @@ var eui;
          * @param scrollPos
          */
         p.verticalUpdateHandler = function (scrollPos) {
-            this.dispatchEventWith(egret.Event.CHANGE);
             this.$Scroller[10 /* viewport */].scrollV = scrollPos;
+            this.dispatchEventWith(egret.Event.CHANGE);
         };
         /**
          * @private
