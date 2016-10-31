@@ -223,7 +223,7 @@ declare namespace egret_native {
 
         function setInputTextMaxLenght(value:number):void;
 
-
+        function updateConfig(jsonConfig?:Object):void
     }
 
     function EGT_TextInput(text:string):void

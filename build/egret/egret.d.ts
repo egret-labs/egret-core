@@ -8458,6 +8458,7 @@ declare namespace egret_native {
         function setKeybordOpen(isOpen: boolean, jsonConfig?: Object): void;
         function isFullScreenKeyBoard(): boolean;
         function setInputTextMaxLenght(value: number): void;
+        function updateConfig(jsonConfig?: Object): void;
     }
     function EGT_TextInput(text: string): void;
     function EGT_keyboardFinish(): void;

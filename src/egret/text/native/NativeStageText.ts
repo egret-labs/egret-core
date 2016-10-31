@@ -137,6 +137,9 @@ namespace egret.native {
         public $show(): void {
             let self = this;
 
+            let textfield: egret.TextField = this.$textfield;
+            let values = textfield.$TextField;
+
             egret_native.TextInputOp.setKeybordOpen(false);
 
             egret_native.EGT_getTextEditerContentText = function () {
@@ -150,6 +153,12 @@ namespace egret.native {
 
                 egret_native.EGT_keyboardDidShow = function () {
                 }
+
+                if(egret_native.TextInputOp.updateConfig) {
+                    egret_native.TextInputOp.updateConfig(JSON.stringify({
+                        "font_color": values[sys.TextKeys.textColor]
+                    }));
+                }
             };
 
             egret_native.EGT_keyboardDidHide = function () {
@@ -157,9 +166,6 @@ namespace egret.native {
 
             egret_native.EGT_deleteBackward = function () {
             };
-
-            let textfield: egret.TextField = this.$textfield;
-            let values = textfield.$TextField;
             let inputType = values[sys.TextKeys.inputType];
             let inputMode = values[sys.TextKeys.multiline] ? 0 : 6;
             let inputFlag = -1;//textfield.displayAsPassword ? 0 : -1;
