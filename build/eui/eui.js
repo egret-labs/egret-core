@@ -13510,8 +13510,8 @@ var eui;
          * @param scrollPos
          */
         p.horizontalUpdateHandler = function (scrollPos) {
-            this.dispatchEventWith(egret.Event.CHANGE);
             this.$Scroller[10 /* viewport */].scrollH = scrollPos;
+            this.dispatchEventWith(egret.Event.CHANGE);
         };
         /**
          * @private
@@ -13519,8 +13519,8 @@ var eui;
          * @param scrollPos
          */
         p.verticalUpdateHandler = function (scrollPos) {
-            this.dispatchEventWith(egret.Event.CHANGE);
             this.$Scroller[10 /* viewport */].scrollV = scrollPos;
+            this.dispatchEventWith(egret.Event.CHANGE);
         };
         /**
          * @private
@@ -17594,7 +17594,7 @@ var eui;
                 for (var i = 0; i < length; i++) {
                     var clazz = innerClasses[i];
                     clazz.indent = indent + 1;
-                    returnStr += indent1Str + "let " + clazz.className + " = " + clazz.toCode() + "\n\n";
+                    returnStr += indent1Str + "var " + clazz.className + " = " + clazz.toCode() + "\n\n";
                 }
                 returnStr += indent1Str + "function " + this.className + "() {\n";
                 if (this.superClass) {
@@ -17619,7 +17619,7 @@ var eui;
                     }
                 }
                 returnStr += indent1Str + "}\n";
-                returnStr += indent1Str + "let _proto = " + this.className + ".prototype;\n\n";
+                returnStr += indent1Str + "var _proto = " + this.className + ".prototype;\n\n";
                 //打印函数列表
                 var functions = this.functionBlock;
                 length = functions.length;
@@ -17663,7 +17663,7 @@ var eui;
              */
             p.addVar = function (name, value) {
                 var valueStr = value ? " = " + value : "";
-                this.addCodeLine("let " + name + valueStr + ";");
+                this.addCodeLine("var " + name + valueStr + ";");
             };
             /**
              * @private

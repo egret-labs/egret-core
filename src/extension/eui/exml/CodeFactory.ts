@@ -200,7 +200,7 @@ namespace eui.sys {
             for (let i = 0; i < length; i++) {
                 let clazz = innerClasses[i];
                 clazz.indent = indent + 1;
-                returnStr += indent1Str + "let " + clazz.className + " = " + clazz.toCode() + "\n\n";
+                returnStr += indent1Str + "var " + clazz.className + " = " + clazz.toCode() + "\n\n";
             }
 
             returnStr += indent1Str + "function " + this.className + "() {\n";
@@ -228,7 +228,7 @@ namespace eui.sys {
                 }
             }
             returnStr += indent1Str + "}\n";
-            returnStr += indent1Str + "let _proto = " + this.className + ".prototype;\n\n";
+            returnStr += indent1Str + "var _proto = " + this.className + ".prototype;\n\n";
 
             //打印函数列表
             let functions = this.functionBlock;
@@ -265,7 +265,7 @@ namespace eui.sys {
          */
         public addVar(name:string, value?:string):void {
             let valueStr = value ? " = " + value : "";
-            this.addCodeLine("let " + name + valueStr + ";");
+            this.addCodeLine("var " + name + valueStr + ";");
         }
 
         /**

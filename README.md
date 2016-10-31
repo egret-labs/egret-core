@@ -136,13 +136,12 @@ Egret Engine 3.0 包含了白鹭时代研发的遵循HTML5标准的2D引擎及�
 #### Mobile App
 * Android 2.3+
 * iOS 7.0+
-* Windows Phone 8 ( 已支持，参见[这里](http://edn.egret.com/cn/docs/page/171) ）
+* Windows Phone 8 ( 已支持，参见[这里](http://developer.egret.com/cn/github/egret-docs/Engine2D/publish/publishWinPhone/index.html) ）
 
 
 文档与教程
 -------------------------
-* 访问 Egret 的 [文档](http://edn.egret.com/cn/docs/)
-* 访问 [这里](http://edn.egret.com/cn/apidoc/) 获取 API 文档
+* 访问 [这里](http://developer.egret.com/cn/apidoc/) 获取 API 文档
 * 访问 [这里](https://github.com/egret-team/egret-examples) 获取示例项目
 
 第三方库
@@ -279,7 +278,7 @@ Egret Engine 3.0 包含了白鹭时代研发的遵循HTML5标准的2D引擎及�
 
 联系我们
 -------------------
-* 开发者中心: http://edn.egret.com
+* 开发者中心: http://developer.egret.com
 * 开发者论坛: http://bbs.egret.com
 * 开发者群:
   * 1群：141578440 (2000 members capacity / Full)
