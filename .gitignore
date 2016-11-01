@@ -35,3 +35,4 @@ src/tsc_config_temp.txt
 /src/tests
 
 .wing/settings.json
+/built
