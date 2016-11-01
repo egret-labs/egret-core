@@ -6973,6 +6973,8 @@ var egret;
              */
             p.$show = function () {
                 var self = this;
+                var textfield = this.$textfield;
+                var values = textfield.$TextField;
                 egret_native.TextInputOp.setKeybordOpen(false);
                 egret_native.EGT_getTextEditerContentText = function () {
                     return self.$getText();
@@ -6983,13 +6985,16 @@ var egret;
                     self.showScreenKeyboard();
                     egret_native.EGT_keyboardDidShow = function () {
                     };
+                    if (egret_native.TextInputOp.updateConfig) {
+                        egret_native.TextInputOp.updateConfig(JSON.stringify({
+                            "font_color": values[2 /* textColor */]
+                        }));
+                    }
                 };
                 egret_native.EGT_keyboardDidHide = function () {
                 };
                 egret_native.EGT_deleteBackward = function () {
                 };
-                var textfield = this.$textfield;
-                var values = textfield.$TextField;
                 var inputType = values[37 /* inputType */];
                 var inputMode = values[30 /* multiline */] ? 0 : 6;
                 var inputFlag = -1; //textfield.displayAsPassword ? 0 : -1;
