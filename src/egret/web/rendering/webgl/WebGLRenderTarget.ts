@@ -34,7 +34,7 @@ namespace egret.web {
      * WebGLRenderTarget类
      * 一个WebGL渲染目标，拥有一个frame buffer和texture
      */
-    export class WebGLRenderTarget {
+    export class WebGLRenderTarget extends HashObject {
 
         private gl:WebGLRenderingContext;
 
@@ -54,6 +54,7 @@ namespace egret.web {
         public clearColor = [0, 0, 0, 0];
 
         public constructor(gl:WebGLRenderingContext, width:number, height:number) {
+            super();
             this.gl = gl;
 
             // 如果尺寸为 0 chrome会报警
