@@ -226,6 +226,7 @@ function parseJSON(json) {
     options.modified = json.modified;
     options.removed = json.removed;
     options.runtime = json.runtime;
+    options.experimental = json.experimental;
     return options;
 }
 exports.parseJSON = parseJSON;
