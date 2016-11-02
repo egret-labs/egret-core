@@ -130,7 +130,7 @@ class Compiler {
             console.log(error);
             this.errors.push(error);
         }
-        this.sortedFiles = this.services.getProgram().getRootFileNames();
+        this.sortedFiles = sortResult.sortedFileNames;
     }
 
     private services: ts.LanguageService;
