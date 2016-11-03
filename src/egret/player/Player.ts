@@ -319,10 +319,10 @@ namespace egret.sys {
         showLog = !!showLog;
         this.showFPS = !!showFPS;
         this.showLog = showLog;
-        if (!this.fpsDisplay) {
+        if (!this.fps) {
             let x = styles["x"] === undefined ? 0 : styles["x"];
             let y = styles["y"] === undefined ? 0 : styles["y"];
-            fpsDisplay = this.fpsDisplay = new FPS(this.stage, showFPS, showLog, logFilter, styles);
+            fpsDisplay = this.fps = new FPS(this.stage, showFPS, showLog, logFilter, styles);
             fpsDisplay.x = x;
             fpsDisplay.y = y;
 
