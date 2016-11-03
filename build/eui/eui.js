@@ -6633,12 +6633,14 @@ var eui;
             if (promptText != value || promptText == null) {
                 this.$isShowPrompt = false;
                 this.textColor = this.$EditableText[1 /* textColorUser */];
+                this.displayAsPassword = this.$EditableText[2 /* asPassword */];
             }
             if (!this.$isFocusIn) {
                 if (value == "" || value == null) {
                     value = promptText;
                     this.$isShowPrompt = true;
                     _super.prototype.$setTextColor.call(this, this.$promptColor);
+                    _super.prototype.$setDisplayAsPassword.call(this, false);
                 }
             }
             var result = _super.prototype.$setText.call(this, value);
