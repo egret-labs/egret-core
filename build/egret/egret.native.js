@@ -6620,7 +6620,7 @@ var egret;
                     var promise = egret.PromiseObject.create();
                     promise.onSuccessFunc = function (getted_str) {
                         self._response = getted_str;
-                        egret.callLater(egret.Event.dispatchEvent, egret.Event, self, egret.Event.COMPLETE);
+                        egret.$callAsync(egret.Event.dispatchEvent, egret.Event, self, egret.Event.COMPLETE);
                     };
                     promise.onErrorFunc = function (error_code) {
                         egret.$warn(1019, error_code);

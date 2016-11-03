@@ -13639,10 +13639,8 @@ var egret;
              */
             p.$render = function (triggerByFrame, costTicker) {
                 if (this.showFPS || this.showLog) {
-                    this.stage.addChild(this.fpsDisplay);
+                    this.stage.addChild(this.fps);
                 }
-                this.callLaters();
-                this.callLaterAsyncs();
                 var stage = this.stage;
                 var t = egret.getTimer();
                 var dirtyList = stage.$displayList.updateDirtyRegions();
@@ -13663,53 +13661,7 @@ var egret;
                         }
                         dirtyRatio = Math.ceil(dirtyArea * 1000 / (stage.stageWidth * stage.stageHeight)) / 10;
                     }
-                    this.fpsDisplay.update(drawCalls, dirtyRatio, t1 - t, t2 - t1, costTicker);
-                }
-            };
-            /**
-             * @private
-             *
-             */
-            p.callLaters = function () {
-                var functionList;
-                var thisList;
-                var argsList;
-                if (egret.$callLaterFunctionList.length > 0) {
-                    functionList = egret.$callLaterFunctionList;
-                    egret.$callLaterFunctionList = [];
-                    thisList = egret.$callLaterThisList;
-                    egret.$callLaterThisList = [];
-                    argsList = egret.$callLaterArgsList;
-                    egret.$callLaterArgsList = [];
-                }
-                if (functionList) {
-                    var length_6 = functionList.length;
-                    for (var i = 0; i < length_6; i++) {
-                        var func = functionList[i];
-                        if (func != null) {
-                            func.apply(thisList[i], argsList[i]);
-                        }
-                    }
-                }
-            };
-            /**
-             * @private
-             *
-             */
-            p.callLaterAsyncs = function () {
-                if (egret.$callAsyncFunctionList.length > 0) {
-                    var locCallAsyncFunctionList = egret.$callAsyncFunctionList;
-                    var locCallAsyncThisList = egret.$callAsyncThisList;
-                    var locCallAsyncArgsList = egret.$callAsyncArgsList;
-                    egret.$callAsyncFunctionList = [];
-                    egret.$callAsyncThisList = [];
-                    egret.$callAsyncArgsList = [];
-                    for (var i = 0; i < locCallAsyncFunctionList.length; i++) {
-                        var func = locCallAsyncFunctionList[i];
-                        if (func != null) {
-                            func.apply(locCallAsyncThisList[i], locCallAsyncArgsList[i]);
-                        }
-                    }
+                    this.fps.update(drawCalls, dirtyRatio, t1 - t, t2 - t1, costTicker);
                 }
             };
             /**
@@ -13767,8 +13719,8 @@ var egret;
                 fpsDisplay = this.fpsDisplay = new FPS(this.stage, showFPS, showLog, logFilter, styles);
                 fpsDisplay.x = x;
                 fpsDisplay.y = y;
-                var length_7 = infoLines.length;
-                for (var i = 0; i < length_7; i++) {
+                var length_6 = infoLines.length;
+                for (var i = 0; i < length_6; i++) {
                     fpsDisplay.updateInfo(infoLines[i]);
                 }
                 infoLines = null;
@@ -14844,6 +14796,7 @@ var egret;
                 var length = callBackList.length;
                 var requestRenderingFlag = sys.$requestRenderingFlag;
                 var timeStamp = egret.getTimer();
+                this.callLaterAsyncs();
                 for (var i = 0; i < length; i++) {
                     if (callBackList[i].call(thisObjectList[i], timeStamp)) {
                         requestRenderingFlag = true;
@@ -14881,6 +14834,7 @@ var egret;
                 if (length == 0) {
                     return;
                 }
+                this.callLaters();
                 if (sys.$invalidateRenderFlag) {
                     this.broadcastRender();
                     sys.$invalidateRenderFlag = false;
@@ -14918,6 +14872,50 @@ var egret;
                 list = list.concat();
                 for (var i = 0; i < length; i++) {
                     list[i].dispatchEventWith(egret.Event.RENDER);
+                }
+            };
+            /**
+             * @private
+             */
+            p.callLaters = function () {
+                var functionList;
+                var thisList;
+                var argsList;
+                if (egret.$callLaterFunctionList.length > 0) {
+                    functionList = egret.$callLaterFunctionList;
+                    egret.$callLaterFunctionList = [];
+                    thisList = egret.$callLaterThisList;
+                    egret.$callLaterThisList = [];
+                    argsList = egret.$callLaterArgsList;
+                    egret.$callLaterArgsList = [];
+                }
+                if (functionList) {
+                    var length_7 = functionList.length;
+                    for (var i = 0; i < length_7; i++) {
+                        var func = functionList[i];
+                        if (func != null) {
+                            func.apply(thisList[i], argsList[i]);
+                        }
+                    }
+                }
+            };
+            /**
+             * @private
+             */
+            p.callLaterAsyncs = function () {
+                if (egret.$callAsyncFunctionList.length > 0) {
+                    var locCallAsyncFunctionList = egret.$callAsyncFunctionList;
+                    var locCallAsyncThisList = egret.$callAsyncThisList;
+                    var locCallAsyncArgsList = egret.$callAsyncArgsList;
+                    egret.$callAsyncFunctionList = [];
+                    egret.$callAsyncThisList = [];
+                    egret.$callAsyncArgsList = [];
+                    for (var i = 0; i < locCallAsyncFunctionList.length; i++) {
+                        var func = locCallAsyncFunctionList[i];
+                        if (func != null) {
+                            func.apply(locCallAsyncThisList[i], locCallAsyncArgsList[i]);
+                        }
+                    }
                 }
             };
             return SystemTicker;

@@ -9329,16 +9329,6 @@ declare namespace egret.sys {
         $render(triggerByFrame: boolean, costTicker: number): void;
         /**
          * @private
-         *
-         */
-        private callLaters();
-        /**
-         * @private
-         *
-         */
-        private callLaterAsyncs();
-        /**
-         * @private
          * 更新舞台尺寸
          * @param stageWidth 舞台宽度（以像素为单位）
          * @param stageHeight 舞台高度（以像素为单位）
@@ -9360,7 +9350,7 @@ declare namespace egret.sys {
         /**
          * @private
          */
-        private fpsDisplay;
+        private fps;
         /**
          * @private
          * 是否显示脏矩形重绘区。
@@ -10009,6 +9999,14 @@ declare namespace egret.sys {
          * 广播Render事件。
          */
         private broadcastRender();
+        /**
+         * @private
+         */
+        private callLaters();
+        /**
+         * @private
+         */
+        private callLaterAsyncs();
     }
     /**
      * @private
