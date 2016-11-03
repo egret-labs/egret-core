@@ -125,6 +125,11 @@ namespace egret {
          */
         private passedTime:number = 0;
 
+        /**
+         * @private
+         */
+        private $frameRate:number = NaN;
+
         //Construct Function
 
         /**
@@ -182,7 +187,10 @@ namespace egret {
                 this.$totalFrames = movieClipData.numFrames;
                 this.frameLabels = movieClipData.labels;
                 this.frameEvents = movieClipData.events;
-                this.frameIntervalTime = 1000 / movieClipData.frameRate;
+                if(this.$frameRate != this.$frameRate) {
+                    this.$frameRate = movieClipData.frameRate;
+                }
+                this.frameIntervalTime = 1000 / this.$frameRate;
                 this._initFrame();
             }
         }
@@ -650,15 +658,15 @@ namespace egret {
          * @platform Web,Native
          */
         public get frameRate():number {
-            return this.$movieClipData.frameRate;
+            return this.$frameRate;
         }
 
         public set frameRate(value:number) {
-            if (value == this.$movieClipData.frameRate) {
+            if (value == this.$frameRate) {
                 return;
             }
-            this.$movieClipData.frameRate = value;
-            this.frameIntervalTime = 1000 / this.$movieClipData.frameRate;
+            this.$frameRate = value;
+            this.frameIntervalTime = 1000 / this.$frameRate;
         }
 
         /**
