@@ -131,6 +131,8 @@ namespace egret.web {
      */
     function parse(text:string):XML {
         let xmlDocStr = egret_native.xmlStr2JsonStr(text);
+        //替换换行符
+        xmlDocStr = xmlDocStr.replace(/\n/g,"\\n");
         let xmlDoc = JSON.parse(xmlDocStr);
         return parseNode(xmlDoc, null);
     }
@@ -147,7 +149,7 @@ namespace egret.web {
         let nodeAttributes = node.attributes;
         let attributes = xml.attributes;
         for (let key in nodeAttributes) {
-            attributes[key] = nodeAttributes[key];
+            attributes[key] = xml["$" + key] = nodeAttributes[key];
         }
         let childNodes = node.children;
         let length = childNodes.length;

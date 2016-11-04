@@ -7153,6 +7153,8 @@ var egret;
          */
         function parse(text) {
             var xmlDocStr = egret_native.xmlStr2JsonStr(text);
+            //替换换行符
+            xmlDocStr = xmlDocStr.replace(/\n/g, "\\n");
             var xmlDoc = JSON.parse(xmlDocStr);
             return parseNode(xmlDoc, null);
         }
@@ -7168,7 +7170,7 @@ var egret;
             var nodeAttributes = node.attributes;
             var attributes = xml.attributes;
             for (var key in nodeAttributes) {
-                attributes[key] = nodeAttributes[key];
+                attributes[key] = xml["$" + key] = nodeAttributes[key];
             }
             var childNodes = node.children;
             var length = childNodes.length;
