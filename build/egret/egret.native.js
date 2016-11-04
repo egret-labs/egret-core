@@ -2756,7 +2756,13 @@ var egret;
              */
             p.setGlobalShader = function (filter) {
                 native.$cmdManager.setContext(this.$nativeContext);
-                var s1 = native.$cmdManager.pushString(filter);
+                var s1;
+                if (filter) {
+                    s1 = native.$cmdManager.pushString(filter.$toJson());
+                }
+                else {
+                    s1 = native.$cmdManager.pushString("");
+                }
                 native.$cmdManager.setGlobalShader(s1);
             };
             return NativeCanvasRenderContext;
@@ -3575,6 +3581,14 @@ var egret;
                     res.data = res.pixelData;
                 }
                 return res;
+            };
+            /**
+             * @private
+             * 设置全局shader
+             * @param filter filter属性生成的json
+             */
+            p.setGlobalShader = function (filter) {
+                egret_native.Graphics.setGlobalShader(filter);
             };
             return OldNativeCanvasRenderContext;
         }(egret.HashObject));

@@ -16546,7 +16546,7 @@ var egret;
                     if (hasBlendMode_1) {
                         context.globalCompositeOperation = compositeOp_1;
                     }
-                    context.setGlobalShader(filters_1[0].$toJson());
+                    context.setGlobalShader(filters_1[0]);
                     if (displayObject.$mask && (displayObject.$mask.$parentDisplayList || root)) {
                         drawCalls_1 += this.drawWithClip(displayObject, context, dirtyList, matrix, clipRegion, root);
                     }
@@ -16556,7 +16556,7 @@ var egret;
                     else {
                         drawCalls_1 += this.drawDisplayObject(displayObject, context, dirtyList, matrix, displayObject.$displayList, clipRegion, root);
                     }
-                    context.setGlobalShader("");
+                    context.setGlobalShader(null);
                     if (hasBlendMode_1) {
                         context.globalCompositeOperation = defaultCompositeOp;
                     }
@@ -16594,9 +16594,9 @@ var egret;
                     context.globalAlpha = 1;
                     context.setTransform(1, 0, 0, 1, region_1.minX + matrix.tx, region_1.minY + matrix.ty);
                     // 绘制结果的时候，应用滤镜
-                    context.setGlobalShader(filters_1[0].$toJson());
+                    context.setGlobalShader(filters_1[0]);
                     context.drawImage(displayBuffer_1.surface, 0, 0, displayBuffer_1.width, displayBuffer_1.height, 0, 0, displayBuffer_1.width, displayBuffer_1.height);
-                    context.setGlobalShader("");
+                    context.setGlobalShader(null);
                     if (hasBlendMode_1) {
                         context.globalCompositeOperation = defaultCompositeOp;
                     }
@@ -17058,7 +17058,7 @@ var egret;
             //todo 暂时只考虑绘制一次的情况
             if (filter && length == 8) {
                 if (egret.Capabilities.runtimeType == egret.RuntimeType.NATIVE) {
-                    egret_native.Graphics.setGlobalShader(filter.$toJson());
+                    egret_native.Graphics.setGlobalShader(filter);
                     while (pos < length) {
                         drawCalls++;
                         context.drawImage(image.source, data[pos++], data[pos++], data[pos++], data[pos++], data[pos++], data[pos++], data[pos++], data[pos++]);

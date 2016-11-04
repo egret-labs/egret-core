@@ -946,5 +946,14 @@ namespace egret.native {
             }
             return res;
         }
+
+        /**
+         * @private
+         * 设置全局shader
+         * @param filter filter属性生成的json
+         */
+        public setGlobalShader(filter:egret.Filter):void {
+            egret_native.Graphics.setGlobalShader(filter);
+        }
     }
 }

@@ -1011,10 +1011,16 @@ namespace egret.native {
          * 设置全局shader
          * @param filter filter属性生成的json
          */
-        public setGlobalShader(filter:string):void {
+        public setGlobalShader(filter:egret.Filter):void {
             $cmdManager.setContext(this.$nativeContext);
 
-            let s1 = $cmdManager.pushString(filter);
+            let s1;
+            if(filter) {
+                s1 = $cmdManager.pushString(filter.$toJson());
+            } else {
+                s1 = $cmdManager.pushString("");
+            }
+            
             $cmdManager.setGlobalShader(s1);
         }
     }

@@ -191,7 +191,7 @@ namespace egret {
                         context.globalCompositeOperation = compositeOp;
                     }
                     
-                    (<any>context).setGlobalShader(filters[0].$toJson());
+                    (<any>context).setGlobalShader(filters[0]);
 
                     if (displayObject.$mask && (displayObject.$mask.$parentDisplayList || root)) {
                         drawCalls += this.drawWithClip(displayObject, context, dirtyList, matrix, clipRegion, root);
@@ -203,7 +203,7 @@ namespace egret {
                         drawCalls += this.drawDisplayObject(displayObject, context, dirtyList, matrix, displayObject.$displayList, clipRegion, root);
                     }
 
-                    (<any>context).setGlobalShader("");
+                    (<any>context).setGlobalShader(null);
 
                     if (hasBlendMode) {
                         context.globalCompositeOperation = defaultCompositeOp;
@@ -251,9 +251,9 @@ namespace egret {
                     context.globalAlpha = 1;
                     context.setTransform(1, 0, 0, 1, region.minX + matrix.tx, region.minY + matrix.ty);
                     // 绘制结果的时候，应用滤镜
-                    (<any>context).setGlobalShader(filters[0].$toJson());
+                    (<any>context).setGlobalShader(filters[0]);
                     context.drawImage(displayBuffer.surface, 0, 0, displayBuffer.width, displayBuffer.height, 0, 0, displayBuffer.width, displayBuffer.height);
-                    (<any>context).setGlobalShader("");
+                    (<any>context).setGlobalShader(null);
 
                     if (hasBlendMode) {
                         context.globalCompositeOperation = defaultCompositeOp;
@@ -767,7 +767,7 @@ namespace egret {
             //todo 暂时只考虑绘制一次的情况
             if(filter && length == 8) {
                 if(Capabilities.runtimeType == RuntimeType.NATIVE) { // for native
-                    egret_native.Graphics.setGlobalShader(filter.$toJson());
+                    egret_native.Graphics.setGlobalShader(filter);
                     while (pos < length) {
                         drawCalls++;
                         context.drawImage(image.source, data[pos++], data[pos++], data[pos++], data[pos++], data[pos++], data[pos++], data[pos++], data[pos++]);
