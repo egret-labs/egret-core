@@ -75,6 +75,6 @@ namespace egret {
          * @version Egret 2.4
          * @platform Web,Native
          */
-        addCallback(functionName:string, listener:(value)=>void):void
+        addCallback(functionName:string, listener:(value:string)=>void):void
     };
 }
