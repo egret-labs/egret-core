@@ -117,10 +117,6 @@ namespace egret {
         /**
          * @private
          */
-        private _actions:any[] = null;
-        /**
-         * @private
-         */
         private paused:boolean = false;
         /**
          * @private
@@ -272,7 +268,7 @@ namespace egret {
                 if ((paused && !tween.ignoreGlobalPause) || tween.paused) {
                     continue;
                 }
-                tween.tick(tween._useTicks ? 1 : delta);
+                tween.$tick(tween._useTicks ? 1 : delta);
             }
 
             return false;
@@ -368,7 +364,6 @@ namespace egret {
             this._curQueueProps = {};
             this._initQueueProps = {};
             this._steps = [];
-            this._actions = [];
             if (props && props.paused) {
                 this.paused = true;
             }
@@ -408,44 +403,52 @@ namespace egret {
                 return end;
             }
 
+            if (end) {
+                this.setPaused(true);
+            }
 
             let prevPos = this._prevPos;
             this.position = this._prevPos = t;
             this._prevPosition = value;
 
             if (this._target) {
-                if (end) {
-                    //结束
-                    this._updateTargetProps(null, 1);
-                } else if (this._steps.length > 0) {
+                if (this._steps.length > 0) {
                     // 找到新的tween
-                    let i:number;
                     let l = this._steps.length;
-                    for (i = 0; i < l; i++) {
-                        if (this._steps[i].t > t) {
-                            break;
+                    let stepIndex = -1;
+                    for (let i = 0; i < l; i++) {
+                        if (this._steps[i].type == "step") {
+                            stepIndex = i;
+                            if (this._steps[i].t <= t && this._steps[i].t + this._steps[i].d >= t) {
+                                break;
+                            }
                         }
                     }
-                    let step = this._steps[i - 1];
-                    this._updateTargetProps(step, (this._stepPosition = t - step.t) / step.d);
-                }
-            }
-
-            if (end) {
-                this.setPaused(true);
-            }
-
-            //执行actions
-            if (actionsMode != 0 && this._actions.length > 0) {
-                if (this._useTicks) {
-                    this._runActions(t, t);
-                } else if (actionsMode == 1 && t < prevPos) {
-                    if (prevPos != this.duration) {
-                        this._runActions(prevPos, this.duration);
+                    for (let i = 0; i < l; i++) {
+                        if (this._steps[i].type == "action") {
+                            //执行actions
+                            if (actionsMode != 0) {
+                                if (this._useTicks) {
+                                    this._runAction(this._steps[i], t, t);
+                                }
+                                else if (actionsMode == 1 && t < prevPos) {
+                                    if (prevPos != this.duration) {
+                                        this._runAction(this._steps[i], prevPos, this.duration);
+                                    }
+                                    this._runAction(this._steps[i], 0, t, true);
+                                }
+                                else {
+                                    this._runAction(this._steps[i], prevPos, t);
+                                }
+                            }
+                        }
+                        else if (this._steps[i].type == "step") {
+                            if (stepIndex == i) {
+                                let step = this._steps[stepIndex];
+                                this._updateTargetProps(step, Math.min((this._stepPosition = t - step.t) / step.d, 1));
+                            }
+                        }
                     }
-                    this._runActions(0, t, true);
-                } else {
-                    this._runActions(prevPos, t);
                 }
             }
 
@@ -460,25 +463,17 @@ namespace egret {
          * @param endPos 
          * @param includeStart 
          */
-        private _runActions(startPos:number, endPos:number, includeStart:boolean = false) {
-            let sPos:number = startPos;
-            let ePos:number = endPos;
-            let i:number = -1;
-            let j:number = this._actions.length;
-            let k:number = 1;
+        private _runAction(action:any, startPos:number, endPos:number, includeStart:boolean = false) {
+            let sPos: number = startPos;
+            let ePos: number = endPos;
             if (startPos > endPos) {
                 //把所有的倒置
                 sPos = endPos;
                 ePos = startPos;
-                i = j;
-                j = k = -1;
             }
-            while ((i += k) != j) {
-                let action = this._actions[i];
-                let pos = action.t;
-                if (pos == ePos || (pos > sPos && pos < ePos) || (includeStart && pos == startPos)) {
-                    action.f.apply(action.o, action.p);
-                }
+            let pos = action.t;
+            if (pos == ePos || (pos > sPos && pos < ePos) || (includeStart && pos == startPos)) {
+                action.f.apply(action.o, action.p);
             }
         }
 
@@ -583,6 +578,7 @@ namespace egret {
          */
         private _addStep(o):Tween {
             if (o.d > 0) {
+                o.type = "step";
                 this._steps.push(o);
                 o.t = this.duration;
                 this.duration += o.d;
@@ -639,7 +635,8 @@ namespace egret {
          */
         private _addAction(o):Tween {
             o.t = this.duration;
-            this._actions.push(o);
+            o.type = "action";
+            this._steps.push(o);
             return this;
         }
 
@@ -705,7 +702,9 @@ namespace egret {
             if (isNaN(duration) || duration < 0) {
                 duration = 0;
             }
-            return this._addStep({d: duration || 0, p0: this._cloneProps(this._curQueueProps), e: ease, p1: this._cloneProps(this._appendQueueProps(props))});
+            this._addStep({d: duration || 0, p0: this._cloneProps(this._curQueueProps), e: ease, p1: this._cloneProps(this._appendQueueProps(props))});
+            //加入一步set，防止游戏极其卡顿时候，to后面的call取到的属性值不对
+            return this.set(props);
         }
 
 		/**
@@ -821,7 +820,7 @@ namespace egret {
          * @version Egret 2.4
          * @platform Web,Native
 		 */
-        public tick(delta:number):void {
+        public $tick(delta:number):void {
             if (this.paused) {
                 return;
             }
