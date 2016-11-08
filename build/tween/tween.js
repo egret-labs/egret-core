@@ -1052,20 +1052,15 @@ var egret;
             if (includeStart === void 0) { includeStart = false; }
             var sPos = startPos;
             var ePos = endPos;
-            // let i:number = -1;
-            // let j:number = this._actions.length;
-            // let k:number = 1;
             if (startPos > endPos) {
                 //把所有的倒置
                 sPos = endPos;
                 ePos = startPos;
             }
-            // while ((i += k) != j) {
             var pos = action.t;
             if (pos == ePos || (pos > sPos && pos < ePos) || (includeStart && pos == startPos)) {
                 action.f.apply(action.o, action.p);
             }
-            // }
         };
         /**
          * @private
@@ -1168,7 +1163,6 @@ var egret;
                 this._steps.push(o);
                 o.t = this.duration;
                 this.duration += o.d;
-                this.lastStepIndex = this._steps.length - 1;
             }
             return this;
         };
@@ -1286,6 +1280,7 @@ var egret;
                 duration = 0;
             }
             this._addStep({ d: duration || 0, p0: this._cloneProps(this._curQueueProps), e: ease, p1: this._cloneProps(this._appendQueueProps(props)) });
+            //加入一步set，防止游戏极其卡顿时候，to后面的call取到的属性值不对
             return this.set(props);
         };
         /**

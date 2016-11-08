@@ -266,8 +266,9 @@ namespace egret.native {
          */
         public textBaseline:string;
 
-        private $font:string = "10px sans-serif";
+        private $font:string = "normal normal 10px sans-serif";
         private $fontSize:number = 10;
+        private $fontFamily:string = "";
 
         /**
          * @private
@@ -282,14 +283,38 @@ namespace egret.native {
         public set font(value:string) {
             this.$font = value;
             let arr:string[] = value.split(" ");
-            let length:number = arr.length;
-            for (let i:number = 0; i < length; i++) {
-                let txt:string = arr[i];
-                if (txt.indexOf("px") != -1) {
-                    this.$fontSize = parseInt(txt.replace("px", ""));
-                    //console.log("set font" + this.$lineWidth);
-                    return;
+            let sizeTxt:string = arr[2];
+            if (sizeTxt.indexOf("px") != -1) {
+                this.$fontSize = parseInt(sizeTxt.replace("px", ""));
+                //console.log("set font" + this.$lineWidth);
+            }
+            let fontFamilyText:string;
+            if(arr.length == 4) {
+                fontFamilyText = arr[3];
+            }
+            else {
+                fontFamilyText = arr.slice(3).join(" ");
+            }
+            if(fontFamilyText.indexOf(", ") != -1) {
+                arr = fontFamilyText.split(", ");
+            }
+            else if(fontFamilyText.indexOf(",") != -1) {
+                arr = fontFamilyText.split(",");
+                let length:number = arr.length;
+                for(let i = 0 ; i < length ; i++) {
+                    let fontFamily = arr[i];
+                    //暂时先不考虑带有引号的情况
+                    if(fontMapping[fontFamily]) {
+                        this.$fontFamily = fontMapping[fontFamily];
+                        return;
+                    }
                 }
+            }
+            else {
+                this.$fontFamily = fontMapping[fontFamilyText];
+            }
+            if(!this.$fontFamily) {
+                this.$fontFamily = "/system/fonts/DroidSansFallback.ttf";
             }
         }
 
@@ -699,8 +724,7 @@ namespace egret.native {
          */
         public fillText(text:string, x:number, y:number, maxWidth?:number):void {
             //console.log("drawText" + text);
-            let font:string = TextField.default_fontFamily;
-            this.$nativeContext.createLabel(font, this.$fontSize, "", this.$hasStrokeText ? this.$lineWidth : 0);
+            this.$nativeContext.createLabel(this.$fontFamily, this.$fontSize, "", this.$hasStrokeText ? this.$lineWidth : 0);
             this.$hasStrokeText = false;
             this.$nativeContext.drawText(text, x, y);
         }
@@ -718,8 +742,7 @@ namespace egret.native {
          * @platform Web,Native
          */
         public measureText(text:string):TextMetrics {
-            let font:string = TextField.default_fontFamily;
-            egret_native.Label.createLabel(font, this.$fontSize, "", this.$hasStrokeText ? this.$lineWidth : 0);
+            egret_native.Label.createLabel(this.$fontFamily, this.$fontSize, "", this.$hasStrokeText ? this.$lineWidth : 0);
             return {width: egret_native.Label.getTextSize(text)[0]};
         }
 

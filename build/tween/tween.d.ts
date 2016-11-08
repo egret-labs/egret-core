@@ -615,10 +615,6 @@ declare namespace egret {
          */
         private passive;
         /**
-         * @private
-         */
-        private lastStepIndex;
-        /**
          * @language en_US
          * Activate an object and add a Tween animation to the object
          * @param target {any} The object to be activated

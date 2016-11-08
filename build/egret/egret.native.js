@@ -39,7 +39,29 @@ var egret;
          * @param italic 是否斜体
          */
         function measureText(text, fontFamily, fontSize, bold, italic) {
-            var font = egret.TextField.default_fontFamily;
+            var font;
+            var arr;
+            if (fontFamily.indexOf(", ") != -1) {
+                arr = fontFamily.split(", ");
+            }
+            else if (fontFamily.indexOf(",") != -1) {
+                arr = fontFamily.split(",");
+                var length_1 = arr.length;
+                for (var i = 0; i < length_1; i++) {
+                    var fontFamily_1 = arr[i];
+                    //暂时先不考虑带有引号的情况
+                    if (egret.fontMapping[fontFamily_1]) {
+                        font = egret.fontMapping[fontFamily_1];
+                        break;
+                    }
+                }
+            }
+            else {
+                font = egret.fontMapping[fontFamily];
+            }
+            if (!font) {
+                font = "/system/fonts/DroidSansFallback.ttf";
+            }
             egret_native.Label.createLabel(font, fontSize, "", 0);
             return egret_native.Label.getTextSize(text)[0];
         }
@@ -101,8 +123,9 @@ var egret;
                 this.$lineWidth = 0;
                 this.$strokeStyle = "#000000";
                 this.$fillStyle = "#000000";
-                this.$font = "10px sans-serif";
+                this.$font = "normal normal 10px sans-serif";
                 this.$fontSize = 10;
+                this.$fontFamily = "";
                 this.clipRectArray = null;
                 this.$saveList = [];
                 this.$clipRect = new egret.Rectangle();
@@ -267,14 +290,37 @@ var egret;
                 ,function (value) {
                     this.$font = value;
                     var arr = value.split(" ");
-                    var length = arr.length;
-                    for (var i = 0; i < length; i++) {
-                        var txt = arr[i];
-                        if (txt.indexOf("px") != -1) {
-                            this.$fontSize = parseInt(txt.replace("px", ""));
-                            //console.log("set font" + this.$lineWidth);
-                            return;
+                    var sizeTxt = arr[2];
+                    if (sizeTxt.indexOf("px") != -1) {
+                        this.$fontSize = parseInt(sizeTxt.replace("px", ""));
+                    }
+                    var fontFamilyText;
+                    if (arr.length == 4) {
+                        fontFamilyText = arr[3];
+                    }
+                    else {
+                        fontFamilyText = arr.slice(3).join(" ");
+                    }
+                    if (fontFamilyText.indexOf(", ") != -1) {
+                        arr = fontFamilyText.split(", ");
+                    }
+                    else if (fontFamilyText.indexOf(",") != -1) {
+                        arr = fontFamilyText.split(",");
+                        var length_2 = arr.length;
+                        for (var i = 0; i < length_2; i++) {
+                            var fontFamily = arr[i];
+                            //暂时先不考虑带有引号的情况
+                            if (egret.fontMapping[fontFamily]) {
+                                this.$fontFamily = egret.fontMapping[fontFamily];
+                                return;
+                            }
                         }
+                    }
+                    else {
+                        this.$fontFamily = egret.fontMapping[fontFamilyText];
+                    }
+                    if (!this.$fontFamily) {
+                        this.$fontFamily = "/system/fonts/DroidSansFallback.ttf";
                     }
                 }
             );
@@ -540,9 +586,9 @@ var egret;
                     }
                     var index = this.$clipList.indexOf(this.$saveCount);
                     if (index != -1) {
-                        var length_1 = this.$clipList.length;
-                        this.$clipList.splice(index, length_1 - index);
-                        for (; index < length_1; index++) {
+                        var length_3 = this.$clipList.length;
+                        this.$clipList.splice(index, length_3 - index);
+                        for (; index < length_3; index++) {
                             this.checkSurface();
                             native.$cmdManager.setContext(this.$nativeContext);
                             native.$cmdManager.popClip();
@@ -666,9 +712,8 @@ var egret;
              */
             p.fillText = function (text, x, y, maxWidth) {
                 //console.log("drawText" + text);
-                var font = egret.TextField.default_fontFamily;
                 native.$cmdManager.setContext(egret_native.Label);
-                var s1 = native.$cmdManager.pushString(font);
+                var s1 = native.$cmdManager.pushString(this.$fontFamily);
                 var s2 = native.$cmdManager.pushString("");
                 native.$cmdManager.createLabel(s1, this.$fontSize, s2, this.$hasStrokeText ? this.$lineWidth : 0);
                 this.$hasStrokeText = false;
@@ -685,9 +730,8 @@ var egret;
              * @platform Web,Native
              */
             p.measureText = function (text) {
-                var font = egret.TextField.default_fontFamily;
                 native.$cmdManager.setContext(egret_native.Label);
-                var s1 = native.$cmdManager.pushString(font);
+                var s1 = native.$cmdManager.pushString(this.$fontFamily);
                 var s2 = native.$cmdManager.pushString("");
                 native.$cmdManager.createLabel(s1, this.$fontSize, s2, this.$hasStrokeText ? this.$lineWidth : 0);
                 return { width: egret_native.Label.getTextSize(text)[0] };
@@ -870,8 +914,9 @@ var egret;
                 this.$lineWidth = 0;
                 this.$strokeStyle = "#000000";
                 this.$fillStyle = "#000000";
-                this.$font = "10px sans-serif";
+                this.$font = "normal normal 10px sans-serif";
                 this.$fontSize = 10;
+                this.$fontFamily = "";
                 this.clipRectArray = null;
                 this.$saveList = [];
                 this.$clipRect = new egret.Rectangle();
@@ -1026,14 +1071,37 @@ var egret;
                 ,function (value) {
                     this.$font = value;
                     var arr = value.split(" ");
-                    var length = arr.length;
-                    for (var i = 0; i < length; i++) {
-                        var txt = arr[i];
-                        if (txt.indexOf("px") != -1) {
-                            this.$fontSize = parseInt(txt.replace("px", ""));
-                            //console.log("set font" + this.$lineWidth);
-                            return;
+                    var sizeTxt = arr[2];
+                    if (sizeTxt.indexOf("px") != -1) {
+                        this.$fontSize = parseInt(sizeTxt.replace("px", ""));
+                    }
+                    var fontFamilyText;
+                    if (arr.length == 4) {
+                        fontFamilyText = arr[3];
+                    }
+                    else {
+                        fontFamilyText = arr.slice(3).join(" ");
+                    }
+                    if (fontFamilyText.indexOf(", ") != -1) {
+                        arr = fontFamilyText.split(", ");
+                    }
+                    else if (fontFamilyText.indexOf(",") != -1) {
+                        arr = fontFamilyText.split(",");
+                        var length_4 = arr.length;
+                        for (var i = 0; i < length_4; i++) {
+                            var fontFamily = arr[i];
+                            //暂时先不考虑带有引号的情况
+                            if (egret.fontMapping[fontFamily]) {
+                                this.$fontFamily = egret.fontMapping[fontFamily];
+                                return;
+                            }
                         }
+                    }
+                    else {
+                        this.$fontFamily = egret.fontMapping[fontFamilyText];
+                    }
+                    if (!this.$fontFamily) {
+                        this.$fontFamily = "/system/fonts/DroidSansFallback.ttf";
                     }
                 }
             );
@@ -1279,9 +1347,9 @@ var egret;
                     }
                     var index = this.$clipList.indexOf(this.$saveCount);
                     if (index != -1) {
-                        var length_2 = this.$clipList.length;
-                        this.$clipList.splice(index, length_2 - index);
-                        for (; index < length_2; index++) {
+                        var length_5 = this.$clipList.length;
+                        this.$clipList.splice(index, length_5 - index);
+                        for (; index < length_5; index++) {
                             this.checkSurface();
                             this.$nativeContext.popClip();
                         }
@@ -1400,8 +1468,7 @@ var egret;
              */
             p.fillText = function (text, x, y, maxWidth) {
                 //console.log("drawText" + text);
-                var font = egret.TextField.default_fontFamily;
-                egret_native.Label.createLabel(font, this.$fontSize, "", this.$hasStrokeText ? this.$lineWidth : 0);
+                egret_native.Label.createLabel(this.$fontFamily, this.$fontSize, "", this.$hasStrokeText ? this.$lineWidth : 0);
                 this.$hasStrokeText = false;
                 egret_native.Label.drawText(text, x, y);
             };
@@ -1415,8 +1482,7 @@ var egret;
              * @platform Web,Native
              */
             p.measureText = function (text) {
-                var font = egret.TextField.default_fontFamily;
-                egret_native.Label.createLabel(font, this.$fontSize, "", this.$hasStrokeText ? this.$lineWidth : 0);
+                egret_native.Label.createLabel(this.$fontFamily, this.$fontSize, "", this.$hasStrokeText ? this.$lineWidth : 0);
                 return { width: egret_native.Label.getTextSize(text)[0] };
             };
             /**
@@ -1938,8 +2004,9 @@ var egret;
                 this.$lineWidth = 0;
                 this.$strokeStyle = "#000000";
                 this.$fillStyle = "#000000";
-                this.$font = "10px sans-serif";
+                this.$font = "normal normal 10px sans-serif";
                 this.$fontSize = 10;
+                this.$fontFamily = "";
                 this.clipRectArray = null;
                 this.$saveList = [];
                 this.$clipRectArray = [];
@@ -2099,14 +2166,37 @@ var egret;
                 ,function (value) {
                     this.$font = value;
                     var arr = value.split(" ");
-                    var length = arr.length;
-                    for (var i = 0; i < length; i++) {
-                        var txt = arr[i];
-                        if (txt.indexOf("px") != -1) {
-                            this.$fontSize = parseInt(txt.replace("px", ""));
-                            //console.log("set font" + this.$lineWidth);
-                            return;
+                    var sizeTxt = arr[2];
+                    if (sizeTxt.indexOf("px") != -1) {
+                        this.$fontSize = parseInt(sizeTxt.replace("px", ""));
+                    }
+                    var fontFamilyText;
+                    if (arr.length == 4) {
+                        fontFamilyText = arr[3];
+                    }
+                    else {
+                        fontFamilyText = arr.slice(3).join(" ");
+                    }
+                    if (fontFamilyText.indexOf(", ") != -1) {
+                        arr = fontFamilyText.split(", ");
+                    }
+                    else if (fontFamilyText.indexOf(",") != -1) {
+                        arr = fontFamilyText.split(",");
+                        var length_6 = arr.length;
+                        for (var i = 0; i < length_6; i++) {
+                            var fontFamily = arr[i];
+                            //暂时先不考虑带有引号的情况
+                            if (egret.fontMapping[fontFamily]) {
+                                this.$fontFamily = egret.fontMapping[fontFamily];
+                                return;
+                            }
                         }
+                    }
+                    else {
+                        this.$fontFamily = egret.fontMapping[fontFamilyText];
+                    }
+                    if (!this.$fontFamily) {
+                        this.$fontFamily = "/system/fonts/DroidSansFallback.ttf";
                     }
                 }
             );
@@ -2498,9 +2588,8 @@ var egret;
              */
             p.fillText = function (text, x, y, maxWidth) {
                 //console.log("drawText" + text);
-                var font = egret.TextField.default_fontFamily;
                 native.$cmdManager.setContext(this.$nativeContext);
-                var s1 = native.$cmdManager.pushString(font);
+                var s1 = native.$cmdManager.pushString(this.$fontFamily);
                 var s2 = native.$cmdManager.pushString("");
                 native.$cmdManager.createLabel(s1, this.$fontSize, s2, this.$hasStrokeText ? this.$lineWidth : 0);
                 this.$hasStrokeText = false;
@@ -2517,11 +2606,12 @@ var egret;
              * @platform Web,Native
              */
             p.measureText = function (text) {
-                var font = egret.TextField.default_fontFamily;
                 native.$cmdManager.setContext(egret_native.Label);
-                var s1 = native.$cmdManager.pushString(font);
+                var s1 = native.$cmdManager.pushString(this.$fontFamily);
                 var s2 = native.$cmdManager.pushString("");
                 native.$cmdManager.createLabel(s1, this.$fontSize, s2, this.$hasStrokeText ? this.$lineWidth : 0);
+                //同步更新
+                native.$cmdManager.flush();
                 return { width: egret_native.Label.getTextSize(text)[0] };
             };
             /**
@@ -2825,8 +2915,9 @@ var egret;
                 this.$lineWidth = 0;
                 this.$strokeStyle = "#000000";
                 this.$fillStyle = "#000000";
-                this.$font = "10px sans-serif";
+                this.$font = "normal normal 10px sans-serif";
                 this.$fontSize = 10;
+                this.$fontFamily = "";
                 this.clipRectArray = null;
                 this.$saveList = [];
                 this.$clipRectArray = [];
@@ -2977,14 +3068,37 @@ var egret;
                 ,function (value) {
                     this.$font = value;
                     var arr = value.split(" ");
-                    var length = arr.length;
-                    for (var i = 0; i < length; i++) {
-                        var txt = arr[i];
-                        if (txt.indexOf("px") != -1) {
-                            this.$fontSize = parseInt(txt.replace("px", ""));
-                            //console.log("set font" + this.$lineWidth);
-                            return;
+                    var sizeTxt = arr[2];
+                    if (sizeTxt.indexOf("px") != -1) {
+                        this.$fontSize = parseInt(sizeTxt.replace("px", ""));
+                    }
+                    var fontFamilyText;
+                    if (arr.length == 4) {
+                        fontFamilyText = arr[3];
+                    }
+                    else {
+                        fontFamilyText = arr.slice(3).join(" ");
+                    }
+                    if (fontFamilyText.indexOf(", ") != -1) {
+                        arr = fontFamilyText.split(", ");
+                    }
+                    else if (fontFamilyText.indexOf(",") != -1) {
+                        arr = fontFamilyText.split(",");
+                        var length_7 = arr.length;
+                        for (var i = 0; i < length_7; i++) {
+                            var fontFamily = arr[i];
+                            //暂时先不考虑带有引号的情况
+                            if (egret.fontMapping[fontFamily]) {
+                                this.$fontFamily = egret.fontMapping[fontFamily];
+                                return;
+                            }
                         }
+                    }
+                    else {
+                        this.$fontFamily = egret.fontMapping[fontFamilyText];
+                    }
+                    if (!this.$fontFamily) {
+                        this.$fontFamily = "/system/fonts/DroidSansFallback.ttf";
                     }
                 }
             );
@@ -3352,8 +3466,7 @@ var egret;
              */
             p.fillText = function (text, x, y, maxWidth) {
                 //console.log("drawText" + text);
-                var font = egret.TextField.default_fontFamily;
-                this.$nativeContext.createLabel(font, this.$fontSize, "", this.$hasStrokeText ? this.$lineWidth : 0);
+                this.$nativeContext.createLabel(this.$fontFamily, this.$fontSize, "", this.$hasStrokeText ? this.$lineWidth : 0);
                 this.$hasStrokeText = false;
                 this.$nativeContext.drawText(text, x, y);
             };
@@ -3367,8 +3480,7 @@ var egret;
              * @platform Web,Native
              */
             p.measureText = function (text) {
-                var font = egret.TextField.default_fontFamily;
-                egret_native.Label.createLabel(font, this.$fontSize, "", this.$hasStrokeText ? this.$lineWidth : 0);
+                egret_native.Label.createLabel(this.$fontFamily, this.$fontSize, "", this.$hasStrokeText ? this.$lineWidth : 0);
                 return { width: egret_native.Label.getTextSize(text)[0] };
             };
             /**
@@ -4712,9 +4824,9 @@ var egret;
         if (DEBUG) {
             egret.log = function () {
                 if (DEBUG) {
-                    var length_3 = arguments.length;
+                    var length_8 = arguments.length;
                     var info = "";
-                    for (var i = 0; i < length_3; i++) {
+                    for (var i = 0; i < length_8; i++) {
                         info += arguments[i] + " ";
                     }
                     egret.sys.$logToFPS(info);

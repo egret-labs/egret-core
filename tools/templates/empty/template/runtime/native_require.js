@@ -24,7 +24,6 @@ egret_native.egretInit = function () {
         });
     }
     egret_native.requireFiles();
-    egret.TextField.default_fontFamily = "/system/fonts/DroidSansFallback.ttf";
     //egret.dom为空实现
     egret.dom = {};
     egret.dom.drawAsCanvas = function () {
@@ -40,6 +39,6 @@ egret_native.egretStart = function () {
 
     egret.native.NativePlayer.option = option;
     egret.runEgret();
-    egret_native.Label.createLabel(egret.TextField.default_fontFamily, 20, "", 0);
+    egret_native.Label.createLabel("/system/fonts/DroidSansFallback.ttf", 20, "", 0);
     egret_native.EGTView.preSetOffScreenBufferEnable(true);
 };
