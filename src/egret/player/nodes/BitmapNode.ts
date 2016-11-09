@@ -116,7 +116,7 @@ namespace egret.sys {
                 let tsX: number = destW / textureWidth * scale;
                 let tsY: number = destH / textureHeight * scale;
                 node.drawImage(bitmapX, bitmapY,
-                    bitmapWidth, bitmapHeight, offsetX, offsetY, tsX * bitmapWidth, tsY * bitmapHeight);
+                    bitmapWidth, bitmapHeight, tsX * offsetX, tsY * offsetY, tsX * bitmapWidth, tsY * bitmapHeight);
             }
             else if (fillMode == egret.BitmapFillMode.CLIP) {
                 let displayW: number = Math.min(textureWidth, destW);
