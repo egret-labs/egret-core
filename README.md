@@ -1,6 +1,6 @@
 Egret Engine
 ================================================
-Current Version: v3.2.1
+Current Version: v3.2.2
 
 
 Developed by Egret Technology, Egret Engine 3.0 includes a newly built 3D engine and a 2D engine created based on HTML5. With its robust cross-platform operability and commitment to solving the performance and fragmentation problems of HTML5 APP and games, Egret Engine 3.0 will perfectly meet developers’ needs. We appreciate every suggestion and please send it to Egret team if you have any.
@@ -39,6 +39,8 @@ Document & API
 
 Release Notes
 --------------------
+[Egret 3.2.2 Release Notes 2016-10-31](/docs/en/3.2.2_ReleaseNotes.md)
+
 [Egret 3.2.1 Release Notes 2016-10-17](/docs/en/3.2.1_ReleaseNotes.md)
 
 [Egret 3.2.0 Release Notes 2016-9-26](/docs/en/3.2.0_ReleaseNotes.md)
@@ -136,13 +138,12 @@ Egret Engine 3.0 包含了白鹭时代研发的遵循HTML5标准的2D引擎及�
 #### Mobile App
 * Android 2.3+
 * iOS 7.0+
-* Windows Phone 8 ( 已支持，参见[这里](http://edn.egret.com/cn/docs/page/171) ）
+* Windows Phone 8 ( 已支持，参见[这里](http://developer.egret.com/cn/github/egret-docs/Engine2D/publish/publishWinPhone/index.html) ）
 
 
 文档与教程
 -------------------------
-* 访问 Egret 的 [文档](http://edn.egret.com/cn/docs/)
-* 访问 [这里](http://edn.egret.com/cn/apidoc/) 获取 API 文档
+* 访问 [这里](http://developer.egret.com/cn/apidoc/) 获取 API 文档
 * 访问 [这里](https://github.com/egret-team/egret-examples) 获取示例项目
 
 第三方库
@@ -161,6 +162,8 @@ Egret Engine 3.0 包含了白鹭时代研发的遵循HTML5标准的2D引擎及�
 
 发布说明
 --------------------
+[Egret 3.2.2 Release Notes 2016-10-31](/docs/cn/3.2.2_ReleaseNotes.md)
+
 [Egret 3.2.1 Release Notes 2016-10-17](/docs/cn/3.2.1_ReleaseNotes.md)
 
 [Egret 3.2.0 Release Notes 2016-9-26](/docs/cn/3.2.0_ReleaseNotes.md)
@@ -279,7 +282,7 @@ Egret Engine 3.0 包含了白鹭时代研发的遵循HTML5标准的2D引擎及�
 
 联系我们
 -------------------
-* 开发者中心: http://edn.egret.com
+* 开发者中心: http://developer.egret.com
 * 开发者论坛: http://bbs.egret.com
 * 开发者群:
   * 1群：141578440 (2000 members capacity / Full)

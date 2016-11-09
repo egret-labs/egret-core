@@ -144,7 +144,7 @@ namespace egret.native {
                 let promise = PromiseObject.create();
                 promise.onSuccessFunc = function (getted_str) {
                     self._response = getted_str;
-                    callLater(Event.dispatchEvent, Event, self, Event.COMPLETE);
+                    $callAsync(egret.Event.dispatchEvent, egret.Event, self, egret.Event.COMPLETE);
                 };
                 promise.onErrorFunc = function (error_code) {
                     $warn(1019, error_code);

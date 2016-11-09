@@ -485,10 +485,14 @@ namespace egret.web {
             let height = this.getPlayHeight();
             if ((!this.isPlayed || egret.Capabilities.isMobile) && posterData) {
                 node.image = posterData;
+                node.imageWidth = width;
+                node.imageHeight = height;
                 node.drawImage(0, 0, posterData.width, posterData.height, 0, 0, width, height);
             }
             else if (this.isPlayed && bitmapData) {
                 node.image = bitmapData;
+                node.imageWidth = bitmapData.width;
+                node.imageHeight = bitmapData.height;
                 WebGLUtils.deleteWebGLTexture(bitmapData.webGLTexture);
                 bitmapData.webGLTexture = null;
                 node.drawImage(0, 0, bitmapData.width, bitmapData.height, 0, 0, width, height);

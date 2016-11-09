@@ -5843,6 +5843,7 @@ var egret;
             var strokePath = this.strokePath;
             fillPath && fillPath.drawEllipse(x, y, width, height);
             strokePath && strokePath.drawEllipse(x, y, width, height);
+            this.extendBoundsByPoint(x, y);
             this.extendBoundsByPoint(x + width, y + height);
             this.updatePosition(x + width, y + height * 0.5);
             this.$renderNode.dirtyRender = true;
@@ -13367,8 +13368,8 @@ var egret;
                     }
                     var buffer = this.renderBuffer;
                     buffer.beginClip(this.dirtyList, this.offsetX, this.offsetY);
-                    var dirtyList_1 = this.$dirtyRegionPolicy == egret.DirtyRegionPolicy.OFF ? null : this.dirtyList;
-                    var drawCalls_1 = sys.systemRenderer.render(this.root, buffer, this.offsetMatrix, dirtyList_1);
+                    dirtyList = this.$dirtyRegionPolicy == egret.DirtyRegionPolicy.OFF ? null : this.dirtyList;
+                    drawCalls = sys.systemRenderer.render(this.root, buffer, this.offsetMatrix, dirtyList);
                     buffer.endClip();
                     if (!this.isStage) {
                         var surface = buffer.surface;
@@ -13638,10 +13639,8 @@ var egret;
              */
             p.$render = function (triggerByFrame, costTicker) {
                 if (this.showFPS || this.showLog) {
-                    this.stage.addChild(this.fpsDisplay);
+                    this.stage.addChild(this.fps);
                 }
-                this.callLaters();
-                this.callLaterAsyncs();
                 var stage = this.stage;
                 var t = egret.getTimer();
                 var dirtyList = stage.$displayList.updateDirtyRegions();
@@ -13662,53 +13661,7 @@ var egret;
                         }
                         dirtyRatio = Math.ceil(dirtyArea * 1000 / (stage.stageWidth * stage.stageHeight)) / 10;
                     }
-                    this.fpsDisplay.update(drawCalls, dirtyRatio, t1 - t, t2 - t1, costTicker);
-                }
-            };
-            /**
-             * @private
-             *
-             */
-            p.callLaters = function () {
-                var functionList;
-                var thisList;
-                var argsList;
-                if (egret.$callLaterFunctionList.length > 0) {
-                    functionList = egret.$callLaterFunctionList;
-                    egret.$callLaterFunctionList = [];
-                    thisList = egret.$callLaterThisList;
-                    egret.$callLaterThisList = [];
-                    argsList = egret.$callLaterArgsList;
-                    egret.$callLaterArgsList = [];
-                }
-                if (functionList) {
-                    var length_6 = functionList.length;
-                    for (var i = 0; i < length_6; i++) {
-                        var func = functionList[i];
-                        if (func != null) {
-                            func.apply(thisList[i], argsList[i]);
-                        }
-                    }
-                }
-            };
-            /**
-             * @private
-             *
-             */
-            p.callLaterAsyncs = function () {
-                if (egret.$callAsyncFunctionList.length > 0) {
-                    var locCallAsyncFunctionList = egret.$callAsyncFunctionList;
-                    var locCallAsyncThisList = egret.$callAsyncThisList;
-                    var locCallAsyncArgsList = egret.$callAsyncArgsList;
-                    egret.$callAsyncFunctionList = [];
-                    egret.$callAsyncThisList = [];
-                    egret.$callAsyncArgsList = [];
-                    for (var i = 0; i < locCallAsyncFunctionList.length; i++) {
-                        var func = locCallAsyncFunctionList[i];
-                        if (func != null) {
-                            func.apply(locCallAsyncThisList[i], locCallAsyncArgsList[i]);
-                        }
-                    }
+                    this.fps.update(drawCalls, dirtyRatio, t1 - t, t2 - t1, costTicker);
                 }
             };
             /**
@@ -13760,14 +13713,14 @@ var egret;
             showLog = !!showLog;
             this.showFPS = !!showFPS;
             this.showLog = showLog;
-            if (!this.fpsDisplay) {
+            if (!this.fps) {
                 var x = styles["x"] === undefined ? 0 : styles["x"];
                 var y = styles["y"] === undefined ? 0 : styles["y"];
-                fpsDisplay = this.fpsDisplay = new FPS(this.stage, showFPS, showLog, logFilter, styles);
+                fpsDisplay = this.fps = new FPS(this.stage, showFPS, showLog, logFilter, styles);
                 fpsDisplay.x = x;
                 fpsDisplay.y = y;
-                var length_7 = infoLines.length;
-                for (var i = 0; i < length_7; i++) {
+                var length_6 = infoLines.length;
+                for (var i = 0; i < length_6; i++) {
                     fpsDisplay.updateInfo(infoLines[i]);
                 }
                 infoLines = null;
@@ -14843,6 +14796,7 @@ var egret;
                 var length = callBackList.length;
                 var requestRenderingFlag = sys.$requestRenderingFlag;
                 var timeStamp = egret.getTimer();
+                this.callLaterAsyncs();
                 for (var i = 0; i < length; i++) {
                     if (callBackList[i].call(thisObjectList[i], timeStamp)) {
                         requestRenderingFlag = true;
@@ -14880,6 +14834,7 @@ var egret;
                 if (length == 0) {
                     return;
                 }
+                this.callLaters();
                 if (sys.$invalidateRenderFlag) {
                     this.broadcastRender();
                     sys.$invalidateRenderFlag = false;
@@ -14917,6 +14872,50 @@ var egret;
                 list = list.concat();
                 for (var i = 0; i < length; i++) {
                     list[i].dispatchEventWith(egret.Event.RENDER);
+                }
+            };
+            /**
+             * @private
+             */
+            p.callLaters = function () {
+                var functionList;
+                var thisList;
+                var argsList;
+                if (egret.$callLaterFunctionList.length > 0) {
+                    functionList = egret.$callLaterFunctionList;
+                    egret.$callLaterFunctionList = [];
+                    thisList = egret.$callLaterThisList;
+                    egret.$callLaterThisList = [];
+                    argsList = egret.$callLaterArgsList;
+                    egret.$callLaterArgsList = [];
+                }
+                if (functionList) {
+                    var length_7 = functionList.length;
+                    for (var i = 0; i < length_7; i++) {
+                        var func = functionList[i];
+                        if (func != null) {
+                            func.apply(thisList[i], argsList[i]);
+                        }
+                    }
+                }
+            };
+            /**
+             * @private
+             */
+            p.callLaterAsyncs = function () {
+                if (egret.$callAsyncFunctionList.length > 0) {
+                    var locCallAsyncFunctionList = egret.$callAsyncFunctionList;
+                    var locCallAsyncThisList = egret.$callAsyncThisList;
+                    var locCallAsyncArgsList = egret.$callAsyncArgsList;
+                    egret.$callAsyncFunctionList = [];
+                    egret.$callAsyncThisList = [];
+                    egret.$callAsyncArgsList = [];
+                    for (var i = 0; i < locCallAsyncFunctionList.length; i++) {
+                        var func = locCallAsyncFunctionList[i];
+                        if (func != null) {
+                            func.apply(locCallAsyncThisList[i], locCallAsyncArgsList[i]);
+                        }
+                    }
                 }
             };
             return SystemTicker;
@@ -16533,7 +16532,7 @@ var egret;
          */
         p.drawWithFilter = function (displayObject, context, dirtyList, matrix, clipRegion, root) {
             if (egret.Capabilities.runtimeType == egret.RuntimeType.NATIVE) {
-                var drawCalls_2 = 0;
+                var drawCalls_1 = 0;
                 var filters_1 = displayObject.$getFilters();
                 var hasBlendMode_1 = (displayObject.$blendMode !== 0);
                 var compositeOp_1;
@@ -16547,21 +16546,21 @@ var egret;
                     if (hasBlendMode_1) {
                         context.globalCompositeOperation = compositeOp_1;
                     }
-                    context.setGlobalShader(filters_1[0].$toJson());
+                    context.setGlobalShader(filters_1[0]);
                     if (displayObject.$mask && (displayObject.$mask.$parentDisplayList || root)) {
-                        drawCalls_2 += this.drawWithClip(displayObject, context, dirtyList, matrix, clipRegion, root);
+                        drawCalls_1 += this.drawWithClip(displayObject, context, dirtyList, matrix, clipRegion, root);
                     }
                     else if (displayObject.$scrollRect || displayObject.$maskRect) {
-                        drawCalls_2 += this.drawWithScrollRect(displayObject, context, dirtyList, matrix, clipRegion, root);
+                        drawCalls_1 += this.drawWithScrollRect(displayObject, context, dirtyList, matrix, clipRegion, root);
                     }
                     else {
-                        drawCalls_2 += this.drawDisplayObject(displayObject, context, dirtyList, matrix, displayObject.$displayList, clipRegion, root);
+                        drawCalls_1 += this.drawDisplayObject(displayObject, context, dirtyList, matrix, displayObject.$displayList, clipRegion, root);
                     }
-                    context.setGlobalShader("");
+                    context.setGlobalShader(null);
                     if (hasBlendMode_1) {
                         context.globalCompositeOperation = defaultCompositeOp;
                     }
-                    return drawCalls_2;
+                    return drawCalls_1;
                 }
                 // 获取显示对象的链接矩阵
                 var displayMatrix_1 = egret.Matrix.create();
@@ -16577,27 +16576,27 @@ var egret;
                 displayBuffer_1.context.setTransform(1, 0, 0, 1, -region_1.minX, -region_1.minY);
                 var offsetM_1 = egret.Matrix.create().setTo(1, 0, 0, 1, -region_1.minX, -region_1.minY);
                 if (displayObject.$mask && (displayObject.$mask.$parentDisplayList || root)) {
-                    drawCalls_2 += this.drawWithClip(displayObject, displayBuffer_1.context, dirtyList, offsetM_1, region_1, root);
+                    drawCalls_1 += this.drawWithClip(displayObject, displayBuffer_1.context, dirtyList, offsetM_1, region_1, root);
                 }
                 else if (displayObject.$scrollRect || displayObject.$maskRect) {
-                    drawCalls_2 += this.drawWithScrollRect(displayObject, displayBuffer_1.context, dirtyList, offsetM_1, region_1, root);
+                    drawCalls_1 += this.drawWithScrollRect(displayObject, displayBuffer_1.context, dirtyList, offsetM_1, region_1, root);
                 }
                 else {
-                    drawCalls_2 += this.drawDisplayObject(displayObject, displayBuffer_1.context, dirtyList, offsetM_1, displayObject.$displayList, region_1, root);
+                    drawCalls_1 += this.drawDisplayObject(displayObject, displayBuffer_1.context, dirtyList, offsetM_1, displayObject.$displayList, region_1, root);
                 }
                 egret.Matrix.release(offsetM_1);
                 //绘制结果到屏幕
-                if (drawCalls_2 > 0) {
+                if (drawCalls_1 > 0) {
                     if (hasBlendMode_1) {
                         context.globalCompositeOperation = compositeOp_1;
                     }
-                    drawCalls_2++;
+                    drawCalls_1++;
                     context.globalAlpha = 1;
                     context.setTransform(1, 0, 0, 1, region_1.minX + matrix.tx, region_1.minY + matrix.ty);
                     // 绘制结果的时候，应用滤镜
-                    context.setGlobalShader(filters_1[0].$toJson());
+                    context.setGlobalShader(filters_1[0]);
                     context.drawImage(displayBuffer_1.surface, 0, 0, displayBuffer_1.width, displayBuffer_1.height, 0, 0, displayBuffer_1.width, displayBuffer_1.height);
-                    context.setGlobalShader("");
+                    context.setGlobalShader(null);
                     if (hasBlendMode_1) {
                         context.globalCompositeOperation = defaultCompositeOp;
                     }
@@ -16605,7 +16604,7 @@ var egret;
                 renderBufferPool.push(displayBuffer_1);
                 egret.sys.Region.release(region_1);
                 egret.Matrix.release(displayMatrix_1);
-                return drawCalls_2;
+                return drawCalls_1;
             }
             var drawCalls = 0;
             var filters = displayObject.$getFilters();
@@ -17059,7 +17058,7 @@ var egret;
             //todo 暂时只考虑绘制一次的情况
             if (filter && length == 8) {
                 if (egret.Capabilities.runtimeType == egret.RuntimeType.NATIVE) {
-                    egret_native.Graphics.setGlobalShader(filter.$toJson());
+                    egret_native.Graphics.setGlobalShader(filter);
                     while (pos < length) {
                         drawCalls++;
                         context.drawImage(image.source, data[pos++], data[pos++], data[pos++], data[pos++], data[pos++], data[pos++], data[pos++], data[pos++]);
@@ -17835,7 +17834,7 @@ var egret;
              * @platform Web,Native
              */
             ,function () {
-                return "3.2.1";
+                return "3.2.2";
             }
         );
         /**
@@ -23100,6 +23099,33 @@ var egret;
     }());
     egret.ByteArray = ByteArray;
     egret.registerClass(ByteArray,'egret.ByteArray');
+})(egret || (egret = {}));
+var egret;
+(function (egret) {
+    /**
+     * @private
+     */
+    egret.fontMapping = {};
+    /**
+     * @language en_US
+     * Register font mapping.
+     * @param fontFamily The font family name to register.
+     * @param value The font value.
+     * @version Egret 3.2.3
+     * @platform Native
+     */
+    /**
+     * @language zh_CN
+     * 注册字体映射
+     * @param fontFamily 要注册的字体名称
+     * @param value 注册的字体值
+     * @version Egret 3.2.3
+     * @platform Native
+     */
+    function registerFontMapping(fontFamily, value) {
+        egret.fontMapping[fontFamily] = value;
+    }
+    egret.registerFontMapping = registerFontMapping;
 })(egret || (egret = {}));
 //////////////////////////////////////////////////////////////////////////////////////
 //

@@ -136,12 +136,14 @@ namespace eui {
             if (promptText != value || promptText == null) {
                 this.$isShowPrompt = false;
                 this.textColor = this.$EditableText[sys.EditableTextKeys.textColorUser];
+                this.displayAsPassword = this.$EditableText[sys.EditableTextKeys.asPassword];
             }
             if (!this.$isFocusIn) {
                 if (value == "" || value == null) {
                     value = promptText;
                     this.$isShowPrompt = true;
                     super.$setTextColor(this.$promptColor);
+                    super.$setDisplayAsPassword(false);
                 }
             }
             let result: boolean = super.$setText(value);

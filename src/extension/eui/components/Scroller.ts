@@ -762,8 +762,8 @@ namespace eui {
          * @param scrollPos
          */
         private horizontalUpdateHandler(scrollPos:number):void {
-            this.dispatchEventWith(egret.Event.CHANGE);
             this.$Scroller[Keys.viewport].scrollH = scrollPos;
+            this.dispatchEventWith(egret.Event.CHANGE);
         }
 
         /**
@@ -772,8 +772,8 @@ namespace eui {
          * @param scrollPos
          */
         private verticalUpdateHandler(scrollPos:number):void {
-            this.dispatchEventWith(egret.Event.CHANGE);
             this.$Scroller[Keys.viewport].scrollV = scrollPos;
+            this.dispatchEventWith(egret.Event.CHANGE);
         }
 
         /**

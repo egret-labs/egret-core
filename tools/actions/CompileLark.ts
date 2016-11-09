@@ -3,7 +3,6 @@
 import utils = require('../lib/utils');
 import Compiler = require('./Compiler');
 import FileUtil = require('../lib/FileUtil');
-import tsclark = require("../lib/typescript/tsclark");
 import path = require('path');
 
 var ANY = 'any';

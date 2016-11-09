@@ -7,7 +7,6 @@ import Compiler = require('./Compiler');
 import FileUtil = require('../lib/FileUtil');
 import project = require('../actions/Project');
 import htmlparser = require("../lib/htmlparser");
-import tsclark = require("../lib/typescript/tsclark");
 import FileAutoChange = require("../actions/FileAutoChange");
 
 class CompileTemplate {

@@ -69,6 +69,9 @@ var Project = (function () {
         if (this.option && this.option.runtime) {
             params.push("--runtime", this.option.runtime);
         }
+        if (this.option && this.option.experimental) {
+            params.push("-exp");
+        }
         var build = cprocess.spawn(process.execPath, params, {
             detached: true,
             cwd: os.tmpdir()

@@ -424,7 +424,7 @@ namespace egret.tween {
             } else if (path instanceof Set) {
                 this.tween.set(path.props);
             } else if (path instanceof Tick) {
-                this.tween.tick(path.delta);
+                this.tween.$tick(path.delta);
             }
 
             this.tween.call(() => this.pathComplete(path));

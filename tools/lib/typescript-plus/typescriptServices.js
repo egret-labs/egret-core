@@ -44918,24 +44918,15 @@ var ts;
             if (statement.flags & 2 /* Ambient */) {
                 continue;
             }
-            if (statement.kind === 202 /* ExpressionStatement */) {
-                var expression = statement;
-                checkExpression(expression.expression);
-            }
-            else if (statement.kind === 229 /* ImportEqualsDeclaration */) {
-                var importDeclaration = statement;
-                if (importDeclaration.moduleReference.kind == 139 /* QualifiedName */) {
-                    var qualifiedName = importDeclaration.moduleReference;
-                    checkDependencyAtLocation(qualifiedName);
-                }
-            }
-            else {
-                visitStatement(statements[i], hasDecorators);
-            }
+            visitStatement(statements[i], hasDecorators);
         }
     }
     function visitStatement(statement, hasDecorators) {
         switch (statement.kind) {
+            case 202 /* ExpressionStatement */:
+                var expression = statement;
+                checkExpression(expression.expression);
+                break;
             case 221 /* ClassDeclaration */:
                 checkInheriting(statement);
                 checkStaticMember(statement);
@@ -44948,6 +44939,13 @@ var ts;
                 variable.declarationList.declarations.forEach(function (declaration) {
                     checkExpression(declaration.initializer);
                 });
+                break;
+            case 229 /* ImportEqualsDeclaration */:
+                var importDeclaration = statement;
+                if (importDeclaration.moduleReference.kind == 139 /* QualifiedName */) {
+                    var qualifiedName = importDeclaration.moduleReference;
+                    checkDependencyAtLocation(qualifiedName);
+                }
                 break;
             case 225 /* ModuleDeclaration */:
                 visitModule(statement, hasDecorators);
@@ -45203,10 +45201,11 @@ var ts;
         pathWeightMap = ts.createMap();
         for (var i = 0; i < sourceFiles.length; i++) {
             var sourceFile = sourceFiles[i];
+            var path = sourceFile.fileName;
             if (sourceFile.isDeclarationFile) {
+                pathWeightMap[path] = 10000;
                 continue;
             }
-            var path = sourceFile.fileName;
             var references = updatePathWeight(path, 0, [path]);
             if (references) {
                 result.circularReferences = references;
@@ -45271,7 +45270,7 @@ var ts;
 (function (ts) {
     /** The version of the TypeScript compiler release */
     ts.version = "2.0.5";
-    ts.version_plus = "2.0.11";
+    ts.version_plus = "2.0.14";
     var emptyArray = [];
     function findConfigFile(searchPath, fileExists, configName) {
         if (configName === void 0) { configName = "tsconfig.json"; }
@@ -59941,7 +59940,10 @@ var ts;
         }
         function getEmitOutput(fileName, emitDeclarationsOnly) {
             synchronizeHostData();
-            var sourceFile = getValidSourceFile(fileName);
+            var sourceFile;
+            if (fileName) {
+                sourceFile = getValidSourceFile(fileName);
+            }
             var outputFiles = [];
             function writeFile(fileName, data, writeByteOrderMark) {
                 outputFiles.push({
