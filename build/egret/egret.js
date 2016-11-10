@@ -23107,6 +23107,11 @@ var egret;
      */
     egret.fontMapping = {};
     /**
+     * 兼容旧版本不使用 fontMapping 的情况
+     * @private
+     */
+    egret.useFontMapping = false;
+    /**
      * @language en_US
      * Register font mapping.
      * @param fontFamily The font family name to register.
@@ -23123,6 +23128,7 @@ var egret;
      * @platform Native
      */
     function registerFontMapping(fontFamily, value) {
+        egret.useFontMapping = true;
         egret.fontMapping[fontFamily] = value;
     }
     egret.registerFontMapping = registerFontMapping;

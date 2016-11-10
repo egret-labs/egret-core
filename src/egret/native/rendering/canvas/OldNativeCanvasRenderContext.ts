@@ -288,33 +288,39 @@ namespace egret.native {
                 this.$fontSize = parseInt(sizeTxt.replace("px", ""));
                 //console.log("set font" + this.$lineWidth);
             }
-            let fontFamilyText:string;
-            if(arr.length == 4) {
-                fontFamilyText = arr[3];
-            }
-            else {
-                fontFamilyText = arr.slice(3).join(" ");
-            }
-            if(fontFamilyText.indexOf(", ") != -1) {
-                arr = fontFamilyText.split(", ");
-            }
-            else if(fontFamilyText.indexOf(",") != -1) {
-                arr = fontFamilyText.split(",");
-                let length:number = arr.length;
-                for(let i = 0 ; i < length ; i++) {
-                    let fontFamily = arr[i];
-                    //暂时先不考虑带有引号的情况
-                    if(fontMapping[fontFamily]) {
-                        this.$fontFamily = fontMapping[fontFamily];
-                        return;
+            if(useFontMapping) {
+                let fontFamilyText:string;
+                if(arr.length == 4) {
+                    fontFamilyText = arr[3];
+                }
+                else {
+                    fontFamilyText = arr.slice(3).join(" ");
+                }
+                if(fontFamilyText.indexOf(", ") != -1) {
+                    arr = fontFamilyText.split(", ");
+                }
+                else if(fontFamilyText.indexOf(",") != -1) {
+                    arr = fontFamilyText.split(",");
+                    let length:number = arr.length;
+                    for(let i = 0 ; i < length ; i++) {
+                        let fontFamily = arr[i];
+                        //暂时先不考虑带有引号的情况
+                        if(fontMapping[fontFamily]) {
+                            this.$fontFamily = fontMapping[fontFamily];
+                            return;
+                        }
                     }
+                }
+                else {
+                    this.$fontFamily = fontMapping[fontFamilyText];
+                }
+                if(!this.$fontFamily) {
+                    this.$fontFamily = "/system/fonts/DroidSansFallback.ttf";
                 }
             }
             else {
-                this.$fontFamily = fontMapping[fontFamilyText];
-            }
-            if(!this.$fontFamily) {
-                this.$fontFamily = "/system/fonts/DroidSansFallback.ttf";
+                //兼容旧版本直接将 default_fontFamily 设置为字体路径的情况
+                this.$fontFamily = TextField.default_fontFamily;
             }
         }
 

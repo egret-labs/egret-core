@@ -294,33 +294,39 @@ var egret;
                     if (sizeTxt.indexOf("px") != -1) {
                         this.$fontSize = parseInt(sizeTxt.replace("px", ""));
                     }
-                    var fontFamilyText;
-                    if (arr.length == 4) {
-                        fontFamilyText = arr[3];
-                    }
-                    else {
-                        fontFamilyText = arr.slice(3).join(" ");
-                    }
-                    if (fontFamilyText.indexOf(", ") != -1) {
-                        arr = fontFamilyText.split(", ");
-                    }
-                    else if (fontFamilyText.indexOf(",") != -1) {
-                        arr = fontFamilyText.split(",");
-                        var length_2 = arr.length;
-                        for (var i = 0; i < length_2; i++) {
-                            var fontFamily = arr[i];
-                            //暂时先不考虑带有引号的情况
-                            if (egret.fontMapping[fontFamily]) {
-                                this.$fontFamily = egret.fontMapping[fontFamily];
-                                return;
+                    if (egret.useFontMapping) {
+                        var fontFamilyText = void 0;
+                        if (arr.length == 4) {
+                            fontFamilyText = arr[3];
+                        }
+                        else {
+                            fontFamilyText = arr.slice(3).join(" ");
+                        }
+                        if (fontFamilyText.indexOf(", ") != -1) {
+                            arr = fontFamilyText.split(", ");
+                        }
+                        else if (fontFamilyText.indexOf(",") != -1) {
+                            arr = fontFamilyText.split(",");
+                            var length_2 = arr.length;
+                            for (var i = 0; i < length_2; i++) {
+                                var fontFamily = arr[i];
+                                //暂时先不考虑带有引号的情况
+                                if (egret.fontMapping[fontFamily]) {
+                                    this.$fontFamily = egret.fontMapping[fontFamily];
+                                    return;
+                                }
                             }
+                        }
+                        else {
+                            this.$fontFamily = egret.fontMapping[fontFamilyText];
+                        }
+                        if (!this.$fontFamily) {
+                            this.$fontFamily = "/system/fonts/DroidSansFallback.ttf";
                         }
                     }
                     else {
-                        this.$fontFamily = egret.fontMapping[fontFamilyText];
-                    }
-                    if (!this.$fontFamily) {
-                        this.$fontFamily = "/system/fonts/DroidSansFallback.ttf";
+                        //兼容旧版本直接将 default_fontFamily 设置为字体路径的情况
+                        this.$fontFamily = egret.TextField.default_fontFamily;
                     }
                 }
             );
@@ -1075,33 +1081,39 @@ var egret;
                     if (sizeTxt.indexOf("px") != -1) {
                         this.$fontSize = parseInt(sizeTxt.replace("px", ""));
                     }
-                    var fontFamilyText;
-                    if (arr.length == 4) {
-                        fontFamilyText = arr[3];
-                    }
-                    else {
-                        fontFamilyText = arr.slice(3).join(" ");
-                    }
-                    if (fontFamilyText.indexOf(", ") != -1) {
-                        arr = fontFamilyText.split(", ");
-                    }
-                    else if (fontFamilyText.indexOf(",") != -1) {
-                        arr = fontFamilyText.split(",");
-                        var length_4 = arr.length;
-                        for (var i = 0; i < length_4; i++) {
-                            var fontFamily = arr[i];
-                            //暂时先不考虑带有引号的情况
-                            if (egret.fontMapping[fontFamily]) {
-                                this.$fontFamily = egret.fontMapping[fontFamily];
-                                return;
+                    if (egret.useFontMapping) {
+                        var fontFamilyText = void 0;
+                        if (arr.length == 4) {
+                            fontFamilyText = arr[3];
+                        }
+                        else {
+                            fontFamilyText = arr.slice(3).join(" ");
+                        }
+                        if (fontFamilyText.indexOf(", ") != -1) {
+                            arr = fontFamilyText.split(", ");
+                        }
+                        else if (fontFamilyText.indexOf(",") != -1) {
+                            arr = fontFamilyText.split(",");
+                            var length_4 = arr.length;
+                            for (var i = 0; i < length_4; i++) {
+                                var fontFamily = arr[i];
+                                //暂时先不考虑带有引号的情况
+                                if (egret.fontMapping[fontFamily]) {
+                                    this.$fontFamily = egret.fontMapping[fontFamily];
+                                    return;
+                                }
                             }
+                        }
+                        else {
+                            this.$fontFamily = egret.fontMapping[fontFamilyText];
+                        }
+                        if (!this.$fontFamily) {
+                            this.$fontFamily = "/system/fonts/DroidSansFallback.ttf";
                         }
                     }
                     else {
-                        this.$fontFamily = egret.fontMapping[fontFamilyText];
-                    }
-                    if (!this.$fontFamily) {
-                        this.$fontFamily = "/system/fonts/DroidSansFallback.ttf";
+                        //兼容旧版本直接将 default_fontFamily 设置为字体路径的情况
+                        this.$fontFamily = egret.TextField.default_fontFamily;
                     }
                 }
             );
@@ -2170,33 +2182,39 @@ var egret;
                     if (sizeTxt.indexOf("px") != -1) {
                         this.$fontSize = parseInt(sizeTxt.replace("px", ""));
                     }
-                    var fontFamilyText;
-                    if (arr.length == 4) {
-                        fontFamilyText = arr[3];
-                    }
-                    else {
-                        fontFamilyText = arr.slice(3).join(" ");
-                    }
-                    if (fontFamilyText.indexOf(", ") != -1) {
-                        arr = fontFamilyText.split(", ");
-                    }
-                    else if (fontFamilyText.indexOf(",") != -1) {
-                        arr = fontFamilyText.split(",");
-                        var length_6 = arr.length;
-                        for (var i = 0; i < length_6; i++) {
-                            var fontFamily = arr[i];
-                            //暂时先不考虑带有引号的情况
-                            if (egret.fontMapping[fontFamily]) {
-                                this.$fontFamily = egret.fontMapping[fontFamily];
-                                return;
+                    if (egret.useFontMapping) {
+                        var fontFamilyText = void 0;
+                        if (arr.length == 4) {
+                            fontFamilyText = arr[3];
+                        }
+                        else {
+                            fontFamilyText = arr.slice(3).join(" ");
+                        }
+                        if (fontFamilyText.indexOf(", ") != -1) {
+                            arr = fontFamilyText.split(", ");
+                        }
+                        else if (fontFamilyText.indexOf(",") != -1) {
+                            arr = fontFamilyText.split(",");
+                            var length_6 = arr.length;
+                            for (var i = 0; i < length_6; i++) {
+                                var fontFamily = arr[i];
+                                //暂时先不考虑带有引号的情况
+                                if (egret.fontMapping[fontFamily]) {
+                                    this.$fontFamily = egret.fontMapping[fontFamily];
+                                    return;
+                                }
                             }
+                        }
+                        else {
+                            this.$fontFamily = egret.fontMapping[fontFamilyText];
+                        }
+                        if (!this.$fontFamily) {
+                            this.$fontFamily = "/system/fonts/DroidSansFallback.ttf";
                         }
                     }
                     else {
-                        this.$fontFamily = egret.fontMapping[fontFamilyText];
-                    }
-                    if (!this.$fontFamily) {
-                        this.$fontFamily = "/system/fonts/DroidSansFallback.ttf";
+                        //兼容旧版本直接将 default_fontFamily 设置为字体路径的情况
+                        this.$fontFamily = egret.TextField.default_fontFamily;
                     }
                 }
             );
@@ -3072,33 +3090,39 @@ var egret;
                     if (sizeTxt.indexOf("px") != -1) {
                         this.$fontSize = parseInt(sizeTxt.replace("px", ""));
                     }
-                    var fontFamilyText;
-                    if (arr.length == 4) {
-                        fontFamilyText = arr[3];
-                    }
-                    else {
-                        fontFamilyText = arr.slice(3).join(" ");
-                    }
-                    if (fontFamilyText.indexOf(", ") != -1) {
-                        arr = fontFamilyText.split(", ");
-                    }
-                    else if (fontFamilyText.indexOf(",") != -1) {
-                        arr = fontFamilyText.split(",");
-                        var length_7 = arr.length;
-                        for (var i = 0; i < length_7; i++) {
-                            var fontFamily = arr[i];
-                            //暂时先不考虑带有引号的情况
-                            if (egret.fontMapping[fontFamily]) {
-                                this.$fontFamily = egret.fontMapping[fontFamily];
-                                return;
+                    if (egret.useFontMapping) {
+                        var fontFamilyText = void 0;
+                        if (arr.length == 4) {
+                            fontFamilyText = arr[3];
+                        }
+                        else {
+                            fontFamilyText = arr.slice(3).join(" ");
+                        }
+                        if (fontFamilyText.indexOf(", ") != -1) {
+                            arr = fontFamilyText.split(", ");
+                        }
+                        else if (fontFamilyText.indexOf(",") != -1) {
+                            arr = fontFamilyText.split(",");
+                            var length_7 = arr.length;
+                            for (var i = 0; i < length_7; i++) {
+                                var fontFamily = arr[i];
+                                //暂时先不考虑带有引号的情况
+                                if (egret.fontMapping[fontFamily]) {
+                                    this.$fontFamily = egret.fontMapping[fontFamily];
+                                    return;
+                                }
                             }
+                        }
+                        else {
+                            this.$fontFamily = egret.fontMapping[fontFamilyText];
+                        }
+                        if (!this.$fontFamily) {
+                            this.$fontFamily = "/system/fonts/DroidSansFallback.ttf";
                         }
                     }
                     else {
-                        this.$fontFamily = egret.fontMapping[fontFamilyText];
-                    }
-                    if (!this.$fontFamily) {
-                        this.$fontFamily = "/system/fonts/DroidSansFallback.ttf";
+                        //兼容旧版本直接将 default_fontFamily 设置为字体路径的情况
+                        this.$fontFamily = egret.TextField.default_fontFamily;
                     }
                 }
             );
