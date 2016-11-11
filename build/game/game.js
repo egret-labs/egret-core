@@ -247,6 +247,10 @@ var egret;
             /**
              * @private
              */
+            this.$frameRate = NaN;
+            /**
+             * @private
+             */
             this.lastTime = 0;
             this.$smoothing = egret.Bitmap.defaultSmoothing;
             this.$renderNode = new egret.sys.BitmapNode();
@@ -290,7 +294,10 @@ var egret;
                 this.$totalFrames = movieClipData.numFrames;
                 this.frameLabels = movieClipData.labels;
                 this.frameEvents = movieClipData.events;
-                this.frameIntervalTime = 1000 / movieClipData.frameRate;
+                if (this.$frameRate != this.$frameRate) {
+                    this.$frameRate = movieClipData.frameRate;
+                }
+                this.frameIntervalTime = 1000 / this.$frameRate;
                 this._initFrame();
             }
         };
@@ -727,14 +734,14 @@ var egret;
              * @platform Web,Native
              */
             ,function () {
-                return this.$movieClipData.frameRate;
+                return this.$frameRate;
             }
             ,function (value) {
-                if (value == this.$movieClipData.frameRate) {
+                if (value == this.$frameRate) {
                     return;
                 }
-                this.$movieClipData.frameRate = value;
-                this.frameIntervalTime = 1000 / this.$movieClipData.frameRate;
+                this.$frameRate = value;
+                this.frameIntervalTime = 1000 / this.$frameRate;
             }
         );
         d(p, "isPlaying"

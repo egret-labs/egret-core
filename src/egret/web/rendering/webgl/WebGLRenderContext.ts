@@ -475,9 +475,9 @@ namespace egret.web {
             }
 
             let texture: WebGLTexture;
-            if (image.source && image.source["texture"]) {
+            if (image["texture"] || (image.source && image.source["texture"])) {
                 // 如果是render target
-                texture = image.source["texture"];
+                texture = image["texture"] || image.source["texture"];
                 buffer.saveTransform();
                 buffer.transform(1, 0, 0, -1, 0, destHeight + destY * 2);// 翻转
             } else if (!image.source && !image.webGLTexture) {
@@ -515,9 +515,9 @@ namespace egret.web {
             }
 
             let texture: WebGLTexture;
-            if (image.source && image.source["texture"]) {
+            if (image["texture"] || (image.source && image.source["texture"])) {
                 // 如果是render target
-                texture = image.source["texture"];
+                texture = image["texture"] || image.source["texture"];
                 buffer.saveTransform();
                 buffer.transform(1, 0, 0, -1, 0, destHeight + destY * 2);// 翻转
             } else if (!image.source && !image.webGLTexture) {
@@ -1046,7 +1046,7 @@ namespace egret.web {
         public static initBlendMode(): void {
             WebGLRenderContext.blendModesForGL = {};
             WebGLRenderContext.blendModesForGL["source-over"] = [1, 771];
-            WebGLRenderContext.blendModesForGL["lighter"] = [1, 772];
+            WebGLRenderContext.blendModesForGL["lighter"] = [1, 1];
             WebGLRenderContext.blendModesForGL["lighter-in"] = [770, 771];
             WebGLRenderContext.blendModesForGL["destination-out"] = [0, 771];
             WebGLRenderContext.blendModesForGL["destination-in"] = [0, 770];

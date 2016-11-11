@@ -41,6 +41,7 @@ module egret {
     locale_strings[5] = "编译错误";
     locale_strings[6] = "manifest.json生成成功";
     locale_strings[7] = "native拷贝共计耗时：{0}秒";
+    locale_strings[8] = "项目模块不能同时使用 gui 和 eui ，推荐使用 eui 模块";
     //create
     locale_strings[1001] = "请输入项目名称。例: {color_green}egret create [project_name]{color_normal}";
     locale_strings[1002] = "该项目已存在";

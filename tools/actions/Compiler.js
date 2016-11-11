@@ -110,7 +110,7 @@ var Compiler = (function () {
             console.log(error);
             this.errors.push(error);
         }
-        this.sortedFiles = this.services.getProgram().getRootFileNames();
+        this.sortedFiles = sortResult.sortedFileNames;
     };
     Compiler.prototype.emitFile = function (fileName) {
         var output = this.services.getEmitOutput(fileName);

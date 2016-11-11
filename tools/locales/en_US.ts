@@ -38,7 +38,8 @@ locale_strings[3] = "Time: {0} second";
 locale_strings[4] = "Script execution failed";
 locale_strings[5] = "Compile failed";
 locale_strings[6] = "manifest.json generated successfully";
-locale_strings[7] = "Total time for native copy: {0} second",
+locale_strings[7] = "Total time for native copy: {0} second";
+locale_strings[8] = "Project modules can not use both gui and eui, and the eui module is recommended";
 
 //create
 locale_strings[1001] = "Enter a project name. Example:  {color_green}egret create [project_name]{color_normal}";

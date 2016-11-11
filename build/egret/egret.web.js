@@ -1634,10 +1634,14 @@ var egret;
                 var height = this.getPlayHeight();
                 if ((!this.isPlayed || egret.Capabilities.isMobile) && posterData) {
                     node.image = posterData;
+                    node.imageWidth = width;
+                    node.imageHeight = height;
                     node.drawImage(0, 0, posterData.width, posterData.height, 0, 0, width, height);
                 }
                 else if (this.isPlayed && bitmapData) {
                     node.image = bitmapData;
+                    node.imageWidth = bitmapData.width;
+                    node.imageHeight = bitmapData.height;
                     egret.WebGLUtils.deleteWebGLTexture(bitmapData.webGLTexture);
                     bitmapData.webGLTexture = null;
                     node.drawImage(0, 0, bitmapData.width, bitmapData.height, 0, 0, width, height);
@@ -3817,11 +3821,12 @@ var egret;
                 var player = new web.WebPlayer(container, options);
                 container["egret-player"] = player;
                 //webgl模式关闭脏矩形
-                if (options.renderMode == "webgl") {
+                if (egret.Capabilities.$renderMode == "webgl") {
                     player.stage.dirtyRegionPolicy = egret.DirtyRegionPolicy.OFF;
-                    egret.sys.DisplayList.prototype.setDirtyRegionPolicy = function () {
-                    };
                 }
+            }
+            if (egret.Capabilities.$renderMode == "webgl") {
+                egret.sys.DisplayList.prototype.setDirtyRegionPolicy = function () { };
             }
         }
         /**
@@ -6425,8 +6430,10 @@ var egret;
          * WebGLRenderTarget类
          * 一个WebGL渲染目标，拥有一个frame buffer和texture
          */
-        var WebGLRenderTarget = (function () {
+        var WebGLRenderTarget = (function (_super) {
+            __extends(WebGLRenderTarget, _super);
             function WebGLRenderTarget(gl, width, height) {
+                _super.call(this);
                 // 清除色
                 this.clearColor = [0, 0, 0, 0];
                 // 是否启用frame buffer, 默认为true
@@ -6511,7 +6518,7 @@ var egret;
                 gl.clear(gl.COLOR_BUFFER_BIT);
             };
             return WebGLRenderTarget;
-        }());
+        }(egret.HashObject));
         web.WebGLRenderTarget = WebGLRenderTarget;
         egret.registerClass(WebGLRenderTarget,'egret.web.WebGLRenderTarget');
     })(web = egret.web || (egret.web = {}));
@@ -6877,9 +6884,9 @@ var egret;
                     return;
                 }
                 var texture;
-                if (image.source && image.source["texture"]) {
+                if (image["texture"] || (image.source && image.source["texture"])) {
                     // 如果是render target
-                    texture = image.source["texture"];
+                    texture = image["texture"] || image.source["texture"];
                     buffer.saveTransform();
                     buffer.transform(1, 0, 0, -1, 0, destHeight + destY * 2); // 翻转
                 }
@@ -6906,9 +6913,9 @@ var egret;
                     return;
                 }
                 var texture;
-                if (image.source && image.source["texture"]) {
+                if (image["texture"] || (image.source && image.source["texture"])) {
                     // 如果是render target
-                    texture = image.source["texture"];
+                    texture = image["texture"] || image.source["texture"];
                     buffer.saveTransform();
                     buffer.transform(1, 0, 0, -1, 0, destHeight + destY * 2); // 翻转
                 }
@@ -7342,7 +7349,7 @@ var egret;
             WebGLRenderContext.initBlendMode = function () {
                 WebGLRenderContext.blendModesForGL = {};
                 WebGLRenderContext.blendModesForGL["source-over"] = [1, 771];
-                WebGLRenderContext.blendModesForGL["lighter"] = [1, 772];
+                WebGLRenderContext.blendModesForGL["lighter"] = [1, 1];
                 WebGLRenderContext.blendModesForGL["lighter-in"] = [770, 771];
                 WebGLRenderContext.blendModesForGL["destination-out"] = [0, 771];
                 WebGLRenderContext.blendModesForGL["destination-in"] = [0, 770];
@@ -7403,8 +7410,10 @@ var egret;
          * @private
          * WebGL渲染缓存
          */
-        var WebGLRenderBuffer = (function () {
+        var WebGLRenderBuffer = (function (_super) {
+            __extends(WebGLRenderBuffer, _super);
             function WebGLRenderBuffer(width, height, root) {
+                _super.call(this);
                 this.globalAlpha = 1;
                 /**
                  * stencil state
@@ -7419,7 +7428,7 @@ var egret;
                  */
                 this.$scissorState = false;
                 this.scissorRect = new egret.Rectangle();
-                this.$hasScissor = true;
+                this.$hasScissor = false;
                 // dirtyRegionPolicy hack
                 this.dirtyRegionPolicy = true;
                 this._dirtyRegionPolicy = true; // 默认设置为true，保证第一帧绘制在frameBuffer上
@@ -7809,6 +7818,13 @@ var egret;
                 // height = Math.min(height, 1024);
                 if (buffer) {
                     buffer.resize(width, height);
+                    var matrix = buffer.globalMatrix;
+                    matrix.a = 1;
+                    matrix.b = 0;
+                    matrix.c = 0;
+                    matrix.d = 1;
+                    matrix.tx = 0;
+                    matrix.ty = 0;
                 }
                 else {
                     buffer = new WebGLRenderBuffer(width, height);
@@ -7823,7 +7839,7 @@ var egret;
                 renderBufferPool.push(buffer);
             };
             return WebGLRenderBuffer;
-        }());
+        }(egret.HashObject));
         web.WebGLRenderBuffer = WebGLRenderBuffer;
         egret.registerClass(WebGLRenderBuffer,'egret.web.WebGLRenderBuffer',["egret.sys.RenderBuffer"]);
         var renderBufferPool = []; //渲染缓冲区对象池

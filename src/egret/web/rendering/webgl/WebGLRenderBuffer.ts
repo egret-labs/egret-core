@@ -33,7 +33,7 @@ namespace egret.web {
      * @private
      * WebGL渲染缓存
      */
-    export class WebGLRenderBuffer implements sys.RenderBuffer {
+    export class WebGLRenderBuffer extends HashObject implements sys.RenderBuffer {
 
         /**
          * 渲染上下文
@@ -58,6 +58,7 @@ namespace egret.web {
         private root:boolean;
 
         public constructor(width?:number, height?:number, root?:boolean) {
+            super();
             // 获取webglRenderContext
             this.context = WebGLRenderContext.getInstance(width, height);
             // buffer 对应的 render target
@@ -122,7 +123,7 @@ namespace egret.web {
          */
         public $scissorState:boolean = false;
         private scissorRect:Rectangle = new egret.Rectangle();
-        public $hasScissor:boolean = true;
+        public $hasScissor:boolean = false;
 
         public enableScissor(x:number, y:number, width:number, height:number):void {
             if(!this.$scissorState) {
@@ -521,6 +522,13 @@ namespace egret.web {
             // height = Math.min(height, 1024);
             if (buffer) {
                 buffer.resize(width, height);
+                var matrix = buffer.globalMatrix;
+                matrix.a = 1;
+                matrix.b = 0;
+                matrix.c = 0;
+                matrix.d = 1;
+                matrix.tx = 0;
+                matrix.ty = 0;
             }
             else {
                 buffer = new WebGLRenderBuffer(width, height);

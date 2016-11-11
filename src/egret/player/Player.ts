@@ -170,10 +170,8 @@ namespace egret.sys {
          */
         $render(triggerByFrame:boolean, costTicker:number):void {
             if (this.showFPS || this.showLog) {
-                this.stage.addChild(this.fpsDisplay);
+                this.stage.addChild(this.fps);
             }
-            this.callLaters();
-            this.callLaterAsyncs();
             let stage = this.stage;
             let t = egret.getTimer();
             let dirtyList = stage.$displayList.updateDirtyRegions();
@@ -196,63 +194,9 @@ namespace egret.sys {
                     }
                     dirtyRatio = Math.ceil(dirtyArea * 1000 / (stage.stageWidth * stage.stageHeight)) / 10;
                 }
-                this.fpsDisplay.update(drawCalls, dirtyRatio, t1 - t, t2 - t1, costTicker);
+                this.fps.update(drawCalls, dirtyRatio, t1 - t, t2 - t1, costTicker);
             }
         }
-
-        /**
-         * @private
-         *
-         */
-        private callLaters():void {
-            let functionList:any[];
-            let thisList:any[];
-            let argsList:any[];
-            if ($callLaterFunctionList.length > 0) {
-                functionList = $callLaterFunctionList;
-                $callLaterFunctionList = [];
-                thisList = $callLaterThisList;
-                $callLaterThisList = [];
-                argsList = $callLaterArgsList;
-                $callLaterArgsList = [];
-            }
-
-            if (functionList) {
-                let length:number = functionList.length;
-                for (let i:number = 0; i < length; i++) {
-                    let func:Function = functionList[i];
-                    if (func != null) {
-                        func.apply(thisList[i], argsList[i]);
-                    }
-                }
-            }
-
-        }
-
-        /**
-         * @private
-         *
-         */
-        private callLaterAsyncs():void {
-            if ($callAsyncFunctionList.length > 0) {
-                let locCallAsyncFunctionList = $callAsyncFunctionList;
-                let locCallAsyncThisList = $callAsyncThisList;
-                let locCallAsyncArgsList = $callAsyncArgsList;
-
-                $callAsyncFunctionList = [];
-                $callAsyncThisList = [];
-                $callAsyncArgsList = [];
-
-                for (let i:number = 0; i < locCallAsyncFunctionList.length; i++) {
-                    let func:Function = locCallAsyncFunctionList[i];
-                    if (func != null) {
-                        func.apply(locCallAsyncThisList[i], locCallAsyncArgsList[i]);
-                    }
-                }
-            }
-
-        }
-
 
         /**
          * @private
@@ -291,7 +235,7 @@ namespace egret.sys {
         /**
          * @private
          */
-        private fpsDisplay:FPS;
+        private fps:FPS;
 
         /**
          * @private
@@ -375,10 +319,10 @@ namespace egret.sys {
         showLog = !!showLog;
         this.showFPS = !!showFPS;
         this.showLog = showLog;
-        if (!this.fpsDisplay) {
+        if (!this.fps) {
             let x = styles["x"] === undefined ? 0 : styles["x"];
             let y = styles["y"] === undefined ? 0 : styles["y"];
-            fpsDisplay = this.fpsDisplay = new FPS(this.stage, showFPS, showLog, logFilter, styles);
+            fpsDisplay = this.fps = new FPS(this.stage, showFPS, showLog, logFilter, styles);
             fpsDisplay.x = x;
             fpsDisplay.y = y;
 

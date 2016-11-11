@@ -8,7 +8,7 @@ namespace egret {
      *
      * @event egret.Event.CHANGE device's orientation is changed
      * @version Egret 2.4
-     * @platform Web,Native
+     * @platform Web
      * @includeExample egret/sensor/DeviceOrientation.ts
      * @see http://edn.egret.com/cn/docs/page/661 获取设备旋转角度
      */
@@ -17,7 +17,7 @@ namespace egret {
      * Orientation 监听设备方向的变化，当方向变化时派发 CHANGE 事件
      * @event egret.Event.CHANGE 设备方向改变时派发
      * @version Egret 2.4
-     * @platform Web,Native
+     * @platform Web
      * @includeExample egret/sensor/DeviceOrientation.ts
      * @see http://edn.egret.com/cn/docs/page/661 获取设备旋转角度
      */
@@ -26,26 +26,26 @@ namespace egret {
          * @language en_US
          * Start to monitor the device's orientation
          * @version Egret 2.4
-         * @platform Web,Native
+         * @platform Web
          */
         /**
          * @language zh_CN
          * 开始监听设备方向变化
          * @version Egret 2.4
-         * @platform Web,Native
+         * @platform Web
          */
         start(): void;
         /**
          * @language en_US
          * Stop monitor the device's orientation
          * @version Egret 2.4
-         * @platform Web,Native
+         * @platform Web
          */
         /**
          * @language zh_CN
          * 停止监听设备方向变化
          * @version Egret 2.4
-         * @platform Web,Native
+         * @platform Web
          */
         stop(): void;
     }

@@ -90,11 +90,12 @@ namespace egret.web {
             let player = new WebPlayer(container, options);
             container["egret-player"] = player;
             //webgl模式关闭脏矩形
-            if(options.renderMode == "webgl") {
+            if(Capabilities.$renderMode == "webgl") {
                player.stage.dirtyRegionPolicy = DirtyRegionPolicy.OFF;
-               egret.sys.DisplayList.prototype.setDirtyRegionPolicy = function () {
-               };
             }
+        }
+        if(Capabilities.$renderMode == "webgl") {
+            egret.sys.DisplayList.prototype.setDirtyRegionPolicy = function () {};
         }
     }
 

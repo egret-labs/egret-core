@@ -6633,12 +6633,14 @@ var eui;
             if (promptText != value || promptText == null) {
                 this.$isShowPrompt = false;
                 this.textColor = this.$EditableText[1 /* textColorUser */];
+                this.displayAsPassword = this.$EditableText[2 /* asPassword */];
             }
             if (!this.$isFocusIn) {
                 if (value == "" || value == null) {
                     value = promptText;
                     this.$isShowPrompt = true;
                     _super.prototype.$setTextColor.call(this, this.$promptColor);
+                    _super.prototype.$setDisplayAsPassword.call(this, false);
                 }
             }
             var result = _super.prototype.$setText.call(this, value);
@@ -8904,7 +8906,7 @@ var eui;
                 return;
             }
             var values = this.$Bitmap;
-            egret.sys.BitmapNode.$updateTextureData(this.$renderNode, values[1 /* image */], values[2 /* bitmapX */], values[3 /* bitmapY */], values[4 /* bitmapWidth */], values[5 /* bitmapHeight */], values[6 /* offsetX */], values[7 /* offsetY */], values[8 /* textureWidth */], values[9 /* textureHeight */], width, height, values[13 /* sourceWidth */], values[14 /* sourceHeight */], this.scale9Grid, this.$fillMode, values[10 /* smoothing */]);
+            egret.sys.BitmapNode.$updateTextureData(this.$renderNode, values[1 /* image */], values[2 /* bitmapX */], values[3 /* bitmapY */], values[4 /* bitmapWidth */], values[5 /* bitmapHeight */], values[6 /* offsetX */], values[7 /* offsetY */], values[8 /* textureWidth */], values[9 /* textureHeight */], width, height, values[13 /* sourceWidth */], values[14 /* sourceHeight */], this.scale9Grid || values[0 /* bitmapData */]["scale9Grid"], this.$fillMode, values[10 /* smoothing */]);
         };
         /**
          * @copy eui.UIComponent#createChildren
@@ -13510,8 +13512,8 @@ var eui;
          * @param scrollPos
          */
         p.horizontalUpdateHandler = function (scrollPos) {
-            this.dispatchEventWith(egret.Event.CHANGE);
             this.$Scroller[10 /* viewport */].scrollH = scrollPos;
+            this.dispatchEventWith(egret.Event.CHANGE);
         };
         /**
          * @private
@@ -13519,8 +13521,8 @@ var eui;
          * @param scrollPos
          */
         p.verticalUpdateHandler = function (scrollPos) {
-            this.dispatchEventWith(egret.Event.CHANGE);
             this.$Scroller[10 /* viewport */].scrollV = scrollPos;
+            this.dispatchEventWith(egret.Event.CHANGE);
         };
         /**
          * @private
@@ -17594,7 +17596,7 @@ var eui;
                 for (var i = 0; i < length; i++) {
                     var clazz = innerClasses[i];
                     clazz.indent = indent + 1;
-                    returnStr += indent1Str + "let " + clazz.className + " = " + clazz.toCode() + "\n\n";
+                    returnStr += indent1Str + "var " + clazz.className + " = " + clazz.toCode() + "\n\n";
                 }
                 returnStr += indent1Str + "function " + this.className + "() {\n";
                 if (this.superClass) {
@@ -17619,7 +17621,7 @@ var eui;
                     }
                 }
                 returnStr += indent1Str + "}\n";
-                returnStr += indent1Str + "let _proto = " + this.className + ".prototype;\n\n";
+                returnStr += indent1Str + "var _proto = " + this.className + ".prototype;\n\n";
                 //打印函数列表
                 var functions = this.functionBlock;
                 length = functions.length;
@@ -17663,7 +17665,7 @@ var eui;
              */
             p.addVar = function (name, value) {
                 var valueStr = value ? " = " + value : "";
-                this.addCodeLine("let " + name + valueStr + ";");
+                this.addCodeLine("var " + name + valueStr + ";");
             };
             /**
              * @private

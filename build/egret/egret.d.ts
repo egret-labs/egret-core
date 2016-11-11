@@ -6775,7 +6775,7 @@ declare namespace egret {
          * @version Egret 2.4
          * @platform Web,Native
          */
-        addCallback(functionName: string, listener: (value) => void): void;
+        addCallback(functionName: string, listener: (value: string) => void): void;
     };
 }
 declare namespace egret {
@@ -8458,6 +8458,7 @@ declare namespace egret_native {
         function setKeybordOpen(isOpen: boolean, jsonConfig?: Object): void;
         function isFullScreenKeyBoard(): boolean;
         function setInputTextMaxLenght(value: number): void;
+        function updateConfig(jsonConfig?: Object): void;
     }
     function EGT_TextInput(text: string): void;
     function EGT_keyboardFinish(): void;
@@ -9328,16 +9329,6 @@ declare namespace egret.sys {
         $render(triggerByFrame: boolean, costTicker: number): void;
         /**
          * @private
-         *
-         */
-        private callLaters();
-        /**
-         * @private
-         *
-         */
-        private callLaterAsyncs();
-        /**
-         * @private
          * 更新舞台尺寸
          * @param stageWidth 舞台宽度（以像素为单位）
          * @param stageHeight 舞台高度（以像素为单位）
@@ -9359,7 +9350,7 @@ declare namespace egret.sys {
         /**
          * @private
          */
-        private fpsDisplay;
+        private fps;
         /**
          * @private
          * 是否显示脏矩形重绘区。
@@ -10008,6 +9999,14 @@ declare namespace egret.sys {
          * 广播Render事件。
          */
         private broadcastRender();
+        /**
+         * @private
+         */
+        private callLaters();
+        /**
+         * @private
+         */
+        private callLaterAsyncs();
     }
     /**
      * @private
@@ -10775,7 +10774,7 @@ declare namespace egret {
      *
      * @event egret.Event.CHANGE device's orientation is changed
      * @version Egret 2.4
-     * @platform Web,Native
+     * @platform Web
      * @includeExample egret/sensor/DeviceOrientation.ts
      * @see http://edn.egret.com/cn/docs/page/661 获取设备旋转角度
      */
@@ -10784,7 +10783,7 @@ declare namespace egret {
      * Orientation 监听设备方向的变化，当方向变化时派发 CHANGE 事件
      * @event egret.Event.CHANGE 设备方向改变时派发
      * @version Egret 2.4
-     * @platform Web,Native
+     * @platform Web
      * @includeExample egret/sensor/DeviceOrientation.ts
      * @see http://edn.egret.com/cn/docs/page/661 获取设备旋转角度
      */
@@ -10793,26 +10792,26 @@ declare namespace egret {
          * @language en_US
          * Start to monitor the device's orientation
          * @version Egret 2.4
-         * @platform Web,Native
+         * @platform Web
          */
         /**
          * @language zh_CN
          * 开始监听设备方向变化
          * @version Egret 2.4
-         * @platform Web,Native
+         * @platform Web
          */
         start(): void;
         /**
          * @language en_US
          * Stop monitor the device's orientation
          * @version Egret 2.4
-         * @platform Web,Native
+         * @platform Web
          */
         /**
          * @language zh_CN
          * 停止监听设备方向变化
          * @version Egret 2.4
-         * @platform Web,Native
+         * @platform Web
          */
         stop(): void;
     }
@@ -10834,7 +10833,7 @@ declare namespace egret {
      * @event egret.Event.CHANGE The device's location is changed
      * @event egret.Event.IO_ERROR Error occurred while getting the location
      * @version Egret 2.4
-     * @platform Web,Native
+     * @platform Web
      * @includeExample egret/sensor/Geolocation.ts
      */
     /**
@@ -10846,7 +10845,7 @@ declare namespace egret {
      * @event egret.Event.CHANGE 设备位置发生改变
      * @event egret.Event.IO_ERROR 获取设备位置时发生错误
      * @version Egret 2.4
-     * @platform Web,Native
+     * @platform Web
      * @includeExample egret/sensor/Geolocation.ts
      */
     interface Geolocation extends EventDispatcher {
@@ -10855,14 +10854,14 @@ declare namespace egret {
          * Start to monitor the device's location
          * @returns
          * @version Egret 2.4
-         * @platform Web,Native
+         * @platform Web
          */
         /**
          * @language zh_CN
          * 开始监听设备位置信息
          * @returns
          * @version Egret 2.4
-         * @platform Web,Native
+         * @platform Web
          */
         start(): void;
         /**
@@ -10870,14 +10869,14 @@ declare namespace egret {
          * Stop monitor the device's location
          * @returns
          * @version Egret 2.4
-         * @platform Web,Native
+         * @platform Web
          */
         /**
          * @language zh_CN
          * 停止监听设备位置信息
          * @returns
          * @version Egret 2.4
-         * @platform Web,Native
+         * @platform Web
          */
         stop(): void;
     }
@@ -10889,13 +10888,13 @@ declare namespace egret {
          * @language en_US
          * constructor
          * @version Egret 2.4
-         * @platform Web,Native
+         * @platform Web
          */
         /**
          * @language zh_CN
          * 构造函数
          * @version Egret 2.4
-         * @platform Web,Native
+         * @platform Web
          */
         new (): Geolocation;
     };
@@ -10915,7 +10914,7 @@ declare namespace egret {
      *
      * @event egret.Event.CHANGE device is moved
      * @version Egret 2.4
-     * @platform Web,Native
+     * @platform Web
      * @includeExample egret/sensor/Motion.ts
      */
     /**
@@ -10926,7 +10925,7 @@ declare namespace egret {
      *
      * @event egret.Event.CHANGE 运动状态发生改变
      * @version Egret 2.4
-     * @platform Web,Native
+     * @platform Web
      * @includeExample egret/sensor/Motion.ts
      */
     interface Motion extends EventDispatcher {
@@ -10934,26 +10933,26 @@ declare namespace egret {
          * @language en_US
          * Start to monitor device movement
          * @version Egret 2.4
-         * @platform Web,Native
+         * @platform Web
          */
         /**
          * @language zh_CN
          * 开始监听设备运动状态
          * @version Egret 2.4
-         * @platform Web,Native
+         * @platform Web
          */
         start(): void;
         /**
          * @language en_US
          * Stop monitor device movement
          * @version Egret 2.4
-         * @platform Web,Native
+         * @platform Web
          */
         /**
          * @language zh_CN
          * 停止监听设备运动状态
          * @version Egret 2.4
-         * @platform Web,Native
+         * @platform Web
          */
         stop(): void;
     }
@@ -10962,52 +10961,52 @@ declare namespace egret {
      * A DeviceRotationRate object provides information about the rate at which
      * the device is rotating around all three axes.
      * @version Egret 2.4
-     * @platform Web,Native
+     * @platform Web
      */
     /**
      * @language zh_CN
      * DeviceRotationRate 提供设备围绕三个轴旋转的角速度信息，单位是 角度/秒
      * @version Egret 2.4
-     * @platform Web,Native
+     * @platform Web
      */
     interface DeviceRotationRate {
         /**
          * @language en_US
          * The amount of rotation around the Z axis, in degrees per second.
          * @version Egret 2.4
-         * @platform Web,Native
+         * @platform Web
          */
         /**
          * @language zh_CN
          * 设备绕 Z 轴旋转的角速度信息，单位是 度/秒
          * @version Egret 2.4
-         * @platform Web,Native
+         * @platform Web
          */
         alpha: number;
         /**
          * @language en_US
          * The amount of rotation around the X axis, in degrees per second.
          * @version Egret 2.4
-         * @platform Web,Native
+         * @platform Web
          */
         /**
          * @language zh_CN
          * 设备绕 X 轴旋转的角速度信息，单位是 度/秒
          * @version Egret 2.4
-         * @platform Web,Native
+         * @platform Web
          */
         beta: number;
         /**
          * @language en_US
          * The amount of rotation around the Y axis, in degrees per second.
          * @version Egret 2.4
-         * @platform Web,Native
+         * @platform Web
          */
         /**
          * @language zh_CN
          * 设备绕 Y 轴旋转的角速度信息，单位是 度/秒
          * @version Egret 2.4
-         * @platform Web,Native
+         * @platform Web
          */
         gamma: number;
     }
@@ -11017,52 +11016,52 @@ declare namespace egret {
      * of acceleration the device is experiencing along all three axes.
      * Acceleration is expressed in m/s2.
      * @version Egret 2.4
-     * @platform Web,Native
+     * @platform Web
      */
     /**
      * @language zh_CN
      * DeviceAcceleration 提供设备在三个维度的加速度信息，加速度值的单位是 m/s2
      * @version Egret 2.4
-     * @platform Web,Native
+     * @platform Web
      */
     interface DeviceAcceleration {
         /**
          * @language en_US
          * The amount of acceleration along the X axis
          * @version Egret 2.4
-         * @platform Web,Native
+         * @platform Web
          */
         /**
          * @language zh_CN
          * X 轴方向的加速度值
          * @version Egret 2.4
-         * @platform Web,Native
+         * @platform Web
          */
         x: number;
         /**
          * @language en_US
          * The amount of acceleration along the Y axis
          * @version Egret 2.4
-         * @platform Web,Native
+         * @platform Web
          */
         /**
          * @language zh_CN
          * Y 轴方向的加速度值
          * @version Egret 2.4
-         * @platform Web,Native
+         * @platform Web
          */
         y: number;
         /**
          * @language en_US
          * The amount of acceleration along the Z axis
          * @version Egret 2.4
-         * @platform Web,Native
+         * @platform Web
          */
         /**
          * @language zh_CN
          * Z 轴方向的加速度值
          * @version Egret 2.4
-         * @platform Web,Native
+         * @platform Web
          */
         z: number;
     }
@@ -14287,6 +14286,34 @@ declare namespace egret {
          */
         private stringToCodePoints(string);
     }
+}
+declare namespace egret {
+    /**
+     * @private
+     */
+    let fontMapping: {};
+    /**
+     * 兼容旧版本不使用 fontMapping 的情况
+     * @private
+     */
+    let useFontMapping: boolean;
+    /**
+     * @language en_US
+     * Register font mapping.
+     * @param fontFamily The font family name to register.
+     * @param value The font value.
+     * @version Egret 3.2.3
+     * @platform Native
+     */
+    /**
+     * @language zh_CN
+     * 注册字体映射
+     * @param fontFamily 要注册的字体名称
+     * @param value 注册的字体值
+     * @version Egret 3.2.3
+     * @platform Native
+     */
+    function registerFontMapping(fontFamily: string, value: string): void;
 }
 declare namespace egret {
     /**

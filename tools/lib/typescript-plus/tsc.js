@@ -38247,7 +38247,7 @@ var ts;
 var ts;
 (function (ts) {
     ts.version = "2.0.5";
-    ts.version_plus = "2.0.12";
+    ts.version_plus = "2.0.14";
     var emptyArray = [];
     function findConfigFile(searchPath, fileExists, configName) {
         if (configName === void 0) { configName = "tsconfig.json"; }
@@ -40680,16 +40680,7 @@ var ts;
             if (statement.flags & 2) {
                 continue;
             }
-            if (statement.kind === 229) {
-                var importDeclaration = statement;
-                if (importDeclaration.moduleReference.kind == 139) {
-                    var qualifiedName = importDeclaration.moduleReference;
-                    checkDependencyAtLocation(qualifiedName);
-                }
-            }
-            else {
-                visitStatement(statements[i], hasDecorators);
-            }
+            visitStatement(statements[i], hasDecorators);
         }
     }
     function visitStatement(statement, hasDecorators) {
@@ -40710,6 +40701,13 @@ var ts;
                 variable.declarationList.declarations.forEach(function (declaration) {
                     checkExpression(declaration.initializer);
                 });
+                break;
+            case 229:
+                var importDeclaration = statement;
+                if (importDeclaration.moduleReference.kind == 139) {
+                    var qualifiedName = importDeclaration.moduleReference;
+                    checkDependencyAtLocation(qualifiedName);
+                }
                 break;
             case 225:
                 visitModule(statement, hasDecorators);
@@ -40948,10 +40946,11 @@ var ts;
         pathWeightMap = ts.createMap();
         for (var i = 0; i < sourceFiles.length; i++) {
             var sourceFile = sourceFiles[i];
+            var path = sourceFile.fileName;
             if (sourceFile.isDeclarationFile) {
+                pathWeightMap[path] = 10000;
                 continue;
             }
-            var path = sourceFile.fileName;
             var references = updatePathWeight(path, 0, [path]);
             if (references) {
                 result.circularReferences = references;
@@ -41616,3 +41615,5 @@ var ts;
     var _a;
 })(ts || (ts = {}));
 ts.executeCommandLine(ts.sys.args);
+
+//# sourceMappingURL=tsc.js.map

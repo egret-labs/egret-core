@@ -38,7 +38,29 @@ namespace egret.native {
      * @param italic 是否斜体
      */
     function measureText(text:string, fontFamily:string, fontSize:number, bold:boolean, italic:boolean):number {
-        let font:string = TextField.default_fontFamily;
+        let font:string;
+        var arr:string[];
+        if(fontFamily.indexOf(", ") != -1) {
+            arr = fontFamily.split(", ");
+        }
+        else if(fontFamily.indexOf(",") != -1) {
+            arr = fontFamily.split(",");
+            let length:number = arr.length;
+            for(let i = 0 ; i < length ; i++) {
+                let fontFamily = arr[i];
+                //暂时先不考虑带有引号的情况
+                if(fontMapping[fontFamily]) {
+                    font = fontMapping[fontFamily];
+                    break;
+                }
+            }
+        }
+        else {
+            font = fontMapping[fontFamily];
+        }
+        if(!font) {
+            font= "/system/fonts/DroidSansFallback.ttf";
+        }
         egret_native.Label.createLabel(font, fontSize, "", 0);
         return egret_native.Label.getTextSize(text)[0];
     }

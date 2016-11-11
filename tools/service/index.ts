@@ -153,6 +153,9 @@ function startBackgroundService() {
     if (egret.args.runtime) {
         startupParams.push("--runtime", egret.args.runtime);
     }
+    if (egret.args.experimental) {
+        startupParams.push("-exp");
+    }
     var server = childProcess.spawn(nodePath, startupParams, {
         detached: true,
         stdio: ['ignore', 'ignore', 'ignore'],

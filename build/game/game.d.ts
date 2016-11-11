@@ -160,6 +160,10 @@ declare namespace egret {
          */
         private passedTime;
         /**
+         * @private
+         */
+        private $frameRate;
+        /**
          * 创建新的 MovieClip 实例。创建 MovieClip 之后，调用舞台上的显示对象容器的addElement方法。
          * @param movieClipData {movieClipData} 被引用的 movieClipData 对象
          * @version Egret 2.4
