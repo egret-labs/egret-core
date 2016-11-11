@@ -175,13 +175,13 @@ namespace egret.web {
          * @private
          * 
          */
-        private onBlurHandler(): void {
-            this.htmlInput.clearInputElement();
-            window.scrollTo(0, 0);
+        private onBlurHandler(): void {            
             let elem = <HTMLInputElement>this.inputElement;
             HTML5StageText.rawEvents.forEach(type => {
                 elem.removeEventListener(type, this.evHandler);
             });
+            this.htmlInput.clearInputElement();
+            window.scrollTo(0, 0);
         }
 
         /**
