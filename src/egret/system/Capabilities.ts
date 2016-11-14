@@ -247,7 +247,7 @@ namespace egret {
          * @platform Web,Native
          */
         public static get engineVersion():string {
-            return "3.2.2";
+            return "3.2.3";
         }
 
         /**

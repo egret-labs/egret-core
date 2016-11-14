@@ -17834,7 +17834,7 @@ var egret;
              * @platform Web,Native
              */
             ,function () {
-                return "3.2.2";
+                return "3.2.3";
             }
         );
         /**
