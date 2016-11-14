@@ -4,6 +4,11 @@ namespace egret {
      * @private
      */
     export let fontMapping = {};
+    /**
+     * 兼容旧版本不使用 fontMapping 的情况
+     * @private
+     */
+    export let useFontMapping:boolean = false;
 
     /**
      * @language en_US
@@ -22,6 +27,7 @@ namespace egret {
      * @platform Native
      */
     export function registerFontMapping(fontFamily:string,value:string):void {
+        useFontMapping = true;
         fontMapping[fontFamily] = value;
     }
 }

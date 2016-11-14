@@ -38247,7 +38247,7 @@ var ts;
 var ts;
 (function (ts) {
     ts.version = "2.0.5";
-    ts.version_plus = "2.0.14";
+    ts.version_plus = "2.0.15";
     var emptyArray = [];
     function findConfigFile(searchPath, fileExists, configName) {
         if (configName === void 0) { configName = "tsconfig.json"; }
@@ -40704,10 +40704,7 @@ var ts;
                 break;
             case 229:
                 var importDeclaration = statement;
-                if (importDeclaration.moduleReference.kind == 139) {
-                    var qualifiedName = importDeclaration.moduleReference;
-                    checkDependencyAtLocation(qualifiedName);
-                }
+                checkDependencyAtLocation(importDeclaration.moduleReference);
                 break;
             case 225:
                 visitModule(statement, hasDecorators);
@@ -40730,11 +40727,11 @@ var ts;
         }
     }
     function checkDependencyAtLocation(node) {
-        var type = checker.getTypeAtLocation(node);
-        if (!type || !type.symbol || type.flags & 65536) {
+        var symbol = checker.getSymbolAtLocation(node);
+        if (!symbol || !symbol.valueDeclaration) {
             return;
         }
-        var sourceFile = getSourceFileOfNode(type.symbol.valueDeclaration);
+        var sourceFile = getSourceFileOfNode(symbol.valueDeclaration);
         if (!sourceFile || sourceFile.isDeclarationFile) {
             return;
         }
@@ -40761,7 +40758,7 @@ var ts;
         }
         var currentFileName = getSourceFileOfNode(node).fileName;
         superClasses.forEach(function (superClass) {
-            checkDependencyAtLocation(superClass);
+            checkDependencyAtLocation(superClass.expression);
         });
     }
     function checkStaticMember(node) {
@@ -40881,11 +40878,14 @@ var ts;
                 break;
             case 172:
             case 69:
-                var type = checker.getTypeAtLocation(expression);
-                if (!type || !type.symbol || type.flags & 65536) {
+                var symbol = checker.getSymbolAtLocation(expression);
+                if (!symbol) {
                     return;
                 }
-                var declaration = type.symbol.valueDeclaration;
+                var declaration = symbol.valueDeclaration;
+                if (!declaration) {
+                    return;
+                }
                 var sourceFile = getSourceFileOfNode(declaration);
                 if (!sourceFile || sourceFile.isDeclarationFile) {
                     return;
@@ -41515,8 +41515,8 @@ var ts;
         }
     }
     function printVersion() {
-        ts.sys.write("typescript version :     " + ts.version + ts.sys.newLine);
-        ts.sys.write("typescript-plus version :" + ts.version_plus + ts.sys.newLine);
+        ts.sys.write("Version : " + ts.version_plus + ts.sys.newLine);
+        ts.sys.write("typescript-version : " + ts.version + ts.sys.newLine);
     }
     function printHelp() {
         var output = "";
@@ -41616,4 +41616,3 @@ var ts;
 })(ts || (ts = {}));
 ts.executeCommandLine(ts.sys.args);
 
-//# sourceMappingURL=tsc.js.map

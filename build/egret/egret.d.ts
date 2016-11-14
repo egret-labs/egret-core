@@ -14293,6 +14293,11 @@ declare namespace egret {
      */
     let fontMapping: {};
     /**
+     * 兼容旧版本不使用 fontMapping 的情况
+     * @private
+     */
+    let useFontMapping: boolean;
+    /**
      * @language en_US
      * Register font mapping.
      * @param fontFamily The font family name to register.
