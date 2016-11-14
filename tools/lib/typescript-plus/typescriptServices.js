@@ -44942,10 +44942,7 @@ var ts;
                 break;
             case 229 /* ImportEqualsDeclaration */:
                 var importDeclaration = statement;
-                if (importDeclaration.moduleReference.kind == 139 /* QualifiedName */) {
-                    var qualifiedName = importDeclaration.moduleReference;
-                    checkDependencyAtLocation(qualifiedName);
-                }
+                checkDependencyAtLocation(importDeclaration.moduleReference);
                 break;
             case 225 /* ModuleDeclaration */:
                 visitModule(statement, hasDecorators);
@@ -44968,11 +44965,11 @@ var ts;
         }
     }
     function checkDependencyAtLocation(node) {
-        var type = checker.getTypeAtLocation(node);
-        if (!type || !type.symbol || type.flags & 65536 /* Interface */) {
+        var symbol = checker.getSymbolAtLocation(node);
+        if (!symbol || !symbol.valueDeclaration) {
             return;
         }
-        var sourceFile = getSourceFileOfNode(type.symbol.valueDeclaration);
+        var sourceFile = getSourceFileOfNode(symbol.valueDeclaration);
         if (!sourceFile || sourceFile.isDeclarationFile) {
             return;
         }
@@ -44999,7 +44996,7 @@ var ts;
         }
         var currentFileName = getSourceFileOfNode(node).fileName;
         superClasses.forEach(function (superClass) {
-            checkDependencyAtLocation(superClass);
+            checkDependencyAtLocation(superClass.expression);
         });
     }
     function checkStaticMember(node) {
@@ -45136,11 +45133,14 @@ var ts;
                 break;
             case 172 /* PropertyAccessExpression */:
             case 69 /* Identifier */:
-                var type = checker.getTypeAtLocation(expression);
-                if (!type || !type.symbol || type.flags & 65536 /* Interface */) {
+                var symbol = checker.getSymbolAtLocation(expression);
+                if (!symbol) {
                     return;
                 }
-                var declaration = type.symbol.valueDeclaration;
+                var declaration = symbol.valueDeclaration;
+                if (!declaration) {
+                    return;
+                }
                 var sourceFile = getSourceFileOfNode(declaration);
                 if (!sourceFile || sourceFile.isDeclarationFile) {
                     return;
@@ -45270,7 +45270,7 @@ var ts;
 (function (ts) {
     /** The version of the TypeScript compiler release */
     ts.version = "2.0.5";
-    ts.version_plus = "2.0.14";
+    ts.version_plus = "2.0.15";
     var emptyArray = [];
     function findConfigFile(searchPath, fileExists, configName) {
         if (configName === void 0) { configName = "tsconfig.json"; }
@@ -62981,4 +62981,3 @@ var TypeScript;
 var toolsVersion = "2.0";
 /* tslint:enable:no-unused-variable */
 
-//# sourceMappingURL=typescriptServices.js.map
