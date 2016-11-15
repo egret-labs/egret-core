@@ -15266,7 +15266,7 @@ var egret;
                 else if (fillMode == egret.BitmapFillMode.SCALE) {
                     var tsX = destW / textureWidth * scale;
                     var tsY = destH / textureHeight * scale;
-                    node.drawImage(bitmapX, bitmapY, bitmapWidth, bitmapHeight, offsetX, offsetY, tsX * bitmapWidth, tsY * bitmapHeight);
+                    node.drawImage(bitmapX, bitmapY, bitmapWidth, bitmapHeight, tsX * offsetX, tsY * offsetY, tsX * bitmapWidth, tsY * bitmapHeight);
                 }
                 else if (fillMode == egret.BitmapFillMode.CLIP) {
                     var displayW = Math.min(textureWidth, destW);

@@ -10014,6 +10014,9 @@ declare namespace egret.sys {
      */
     let $ticker: SystemTicker;
 }
+/**
+ * @private
+ */
 declare let egret_stages: egret.Stage[];
 declare namespace egret.sys {
     /**

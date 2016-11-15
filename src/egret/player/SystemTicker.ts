@@ -360,6 +360,9 @@ namespace egret.sys {
 
 }
 
+/**
+ * @private
+ */
 declare let egret_stages:egret.Stage[];
 if (DEBUG) {
     egret_stages = [];
