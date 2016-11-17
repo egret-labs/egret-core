@@ -78,6 +78,7 @@ namespace egret.native {
 
             }
             finally {
+                this.audio.volume = this.$volume;
                 this.audio.play();
             }
         }
@@ -123,14 +124,13 @@ namespace egret.native {
             NativeSound.$recycle(this.$url, audio);
         }
 
+        private $volume:number = 1;
         /**
          * @private
          * @inheritDoc
          */
         public get volume():number {
-            if (!this.audio)
-                return 1;
-            return this.audio.volume;
+            return this.$volume;
         }
 
         /**
@@ -141,7 +141,7 @@ namespace egret.native {
                 egret.$error(1036);
                 return;
             }
-
+            this.$volume = value;            
             if (!this.audio)
                 return;
             this.audio.volume = value;

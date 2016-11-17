@@ -5398,6 +5398,7 @@ var egret;
                     //this.audio.load();
                     _this.$play();
                 };
+                this.$volume = 1;
                 audio.addEventListener("ended", this.onPlayEnd);
                 this.audio = audio;
             }
@@ -5413,6 +5414,7 @@ var egret;
                 catch (e) {
                 }
                 finally {
+                    this.audio.volume = this.$volume;
                     this.audio.play();
                 }
             };
@@ -5439,9 +5441,7 @@ var egret;
                  * @inheritDoc
                  */
                 ,function () {
-                    if (!this.audio)
-                        return 1;
-                    return this.audio.volume;
+                    return this.$volume;
                 }
                 /**
                  * @inheritDoc
@@ -5451,6 +5451,7 @@ var egret;
                         egret.$error(1036);
                         return;
                     }
+                    this.$volume = value;
                     if (!this.audio)
                         return;
                     this.audio.volume = value;
