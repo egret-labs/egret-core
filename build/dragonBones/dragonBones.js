@@ -1713,15 +1713,19 @@ var dragonBones;
          * @inheritDoc
          */
         DisplayData.prototype._onClear = function () {
+            if (this.mesh) {
+                this.mesh.returnToPool();
+            }
+            if (this.area) {
+                this.area.returnToPool();
+            }
             this.isRelativePivot = false;
             this.type = 0 /* Image */;
             this.name = null;
             this.texture = null;
             this.armature = null;
-            if (this.mesh) {
-                this.mesh.returnToPool();
-                this.mesh = null;
-            }
+            this.mesh = null;
+            this.area = null;
             this.pivot.clear();
             this.transform.identity();
         };
@@ -1766,6 +1770,32 @@ var dragonBones;
         return MeshData;
     }(dragonBones.BaseObject));
     dragonBones.MeshData = MeshData;
+    /**
+     * @private
+     */
+    var AreaData = (function (_super) {
+        __extends(AreaData, _super);
+        function AreaData() {
+            _super.call(this);
+            this.width = 0;
+            this.height = 0;
+            this.vertices = [];
+        }
+        AreaData.toString = function () {
+            return "[class dragonBones.AreaData]";
+        };
+        /**
+         * @inheritDoc
+         */
+        AreaData.prototype._onClear = function () {
+            this.type = 0 /* Rectangle */;
+            this.width = 0;
+            this.height = 0;
+            this.vertices.length = 0;
+        };
+        return AreaData;
+    }(dragonBones.BaseObject));
+    dragonBones.AreaData = AreaData;
 })(dragonBones || (dragonBones = {}));
 var dragonBones;
 (function (dragonBones) {
@@ -2003,7 +2033,6 @@ var dragonBones;
                 case 4 /* All */:
                     for (; i < l; ++i) {
                         animationState = this._animationStates[i];
-                        animationState.fadeOut(fadeOutTime, pauseFadeOut);
                         if (fadeOutTime == 0) {
                             animationState.returnToPool();
                         }
@@ -2664,6 +2693,7 @@ var dragonBones;
             this.weight = 1;
             this.autoFadeOutTime = -1;
             this.fadeTotalTime = 0;
+            this._onFadeInComplete = false;
             this._fadeState = 0;
             this._layer = 0;
             this._position = 0;
@@ -2794,6 +2824,7 @@ var dragonBones;
                         }
                     }
                     else {
+                        self._onFadeInComplete = true;
                         self._isPausePlayhead = false;
                         self._fadeState = 0;
                         if (eventDispatcher.hasEvent(dragonBones.EventObject.FADE_IN_COMPLETE)) {
@@ -2905,6 +2936,7 @@ var dragonBones;
         AnimationState.prototype._advanceTime = function (passedTime, weightLeft, index) {
             var self = this;
             // Update fade time. (Still need to be update even if the passedTime is zero)
+            self._onFadeInComplete = false;
             if (self._fadeState != 0) {
                 self._advanceFadeTime(passedTime);
             }
@@ -3302,7 +3334,7 @@ var dragonBones;
             var self = this;
             var currentPlayTimes = 0;
             if (self._keyFrameCount == 1 && this != self._animationState._timeline) {
-                self._isCompleted = true;
+                self._isCompleted = self._animationState._fadeState >= 0; // 
                 currentPlayTimes = 1;
             }
             else if (self._hasAsynchronyTimeline) {
@@ -3348,6 +3380,9 @@ var dragonBones;
             self._isReverse = self._currentTime > value && self._currentPlayTimes == currentPlayTimes;
             self._currentTime = value;
             self._currentPlayTimes = currentPlayTimes;
+            if (self._animationState._onFadeInComplete) {
+                self._currentFrame = null;
+            }
             return true;
         };
         TimelineState.prototype.fadeIn = function (armature, animationState, timelineData, time) {
@@ -3534,6 +3569,9 @@ var dragonBones;
         };
         AnimationTimelineState.prototype._onCrossFrame = function (frame) {
             var self = this;
+            if (self._animationState._fadeState < 0) {
+                return;
+            }
             if (self._animationState.actionEnabled) {
                 var actions = frame.actions;
                 for (var i = 0, l = actions.length; i < l; ++i) {
@@ -3897,62 +3935,47 @@ var dragonBones;
                 self._tweenColor = 0 /* None */;
                 return;
             }
-            if (self.slot._displayDataSet) {
-                var displayIndex = self._currentFrame.displayIndex;
-                if (self.slot.displayIndex >= 0 && displayIndex >= 0) {
-                    if (self.slot._displayDataSet.displays.length > 1) {
-                        self.slot._setDisplayIndex(displayIndex);
-                    }
-                }
-                else {
-                    self.slot._setDisplayIndex(displayIndex);
-                }
+            if (self._animationState._fadeState >= 0) {
+                self.slot._setDisplayIndex(self._currentFrame.displayIndex);
                 self.slot._updateMeshData(true);
             }
-            if (self._currentFrame.displayIndex >= 0) {
-                self._tweenColor = 0 /* None */;
-                var currentColor = self._currentFrame.color;
-                if (self._keyFrameCount > 1 && (self._tweenEasing != dragonBones.DragonBones.NO_TWEEN || self._curve)) {
-                    var nextFrame = self._currentFrame.next;
-                    var nextColor = nextFrame.color;
-                    if (currentColor != nextColor && nextFrame.displayIndex >= 0) {
-                        self._durationColor.alphaMultiplier = nextColor.alphaMultiplier - currentColor.alphaMultiplier;
-                        self._durationColor.redMultiplier = nextColor.redMultiplier - currentColor.redMultiplier;
-                        self._durationColor.greenMultiplier = nextColor.greenMultiplier - currentColor.greenMultiplier;
-                        self._durationColor.blueMultiplier = nextColor.blueMultiplier - currentColor.blueMultiplier;
-                        self._durationColor.alphaOffset = nextColor.alphaOffset - currentColor.alphaOffset;
-                        self._durationColor.redOffset = nextColor.redOffset - currentColor.redOffset;
-                        self._durationColor.greenOffset = nextColor.greenOffset - currentColor.greenOffset;
-                        self._durationColor.blueOffset = nextColor.blueOffset - currentColor.blueOffset;
-                        if (self._durationColor.alphaMultiplier != 0 ||
-                            self._durationColor.redMultiplier != 0 ||
-                            self._durationColor.greenMultiplier != 0 ||
-                            self._durationColor.blueMultiplier != 0 ||
-                            self._durationColor.alphaOffset != 0 ||
-                            self._durationColor.redOffset != 0 ||
-                            self._durationColor.greenOffset != 0 ||
-                            self._durationColor.blueOffset != 0) {
-                            self._tweenColor = 2 /* Always */;
-                        }
-                    }
-                }
-                if (self._tweenColor == 0 /* None */) {
-                    if (self._slotColor.alphaMultiplier != currentColor.alphaMultiplier ||
-                        self._slotColor.redMultiplier != currentColor.redMultiplier ||
-                        self._slotColor.greenMultiplier != currentColor.greenMultiplier ||
-                        self._slotColor.blueMultiplier != currentColor.blueMultiplier ||
-                        self._slotColor.alphaOffset != currentColor.alphaOffset ||
-                        self._slotColor.redOffset != currentColor.redOffset ||
-                        self._slotColor.greenOffset != currentColor.greenOffset ||
-                        self._slotColor.blueOffset != currentColor.blueOffset) {
-                        self._tweenColor = 1 /* Once */;
+            self._tweenColor = 0 /* None */;
+            var currentColor = self._currentFrame.color;
+            if (self._keyFrameCount > 1 && (self._tweenEasing != dragonBones.DragonBones.NO_TWEEN || self._curve)) {
+                var nextFrame = self._currentFrame.next;
+                var nextColor = nextFrame.color;
+                if (currentColor != nextColor && nextFrame.displayIndex >= 0) {
+                    self._durationColor.alphaMultiplier = nextColor.alphaMultiplier - currentColor.alphaMultiplier;
+                    self._durationColor.redMultiplier = nextColor.redMultiplier - currentColor.redMultiplier;
+                    self._durationColor.greenMultiplier = nextColor.greenMultiplier - currentColor.greenMultiplier;
+                    self._durationColor.blueMultiplier = nextColor.blueMultiplier - currentColor.blueMultiplier;
+                    self._durationColor.alphaOffset = nextColor.alphaOffset - currentColor.alphaOffset;
+                    self._durationColor.redOffset = nextColor.redOffset - currentColor.redOffset;
+                    self._durationColor.greenOffset = nextColor.greenOffset - currentColor.greenOffset;
+                    self._durationColor.blueOffset = nextColor.blueOffset - currentColor.blueOffset;
+                    if (self._durationColor.alphaMultiplier != 0 ||
+                        self._durationColor.redMultiplier != 0 ||
+                        self._durationColor.greenMultiplier != 0 ||
+                        self._durationColor.blueMultiplier != 0 ||
+                        self._durationColor.alphaOffset != 0 ||
+                        self._durationColor.redOffset != 0 ||
+                        self._durationColor.greenOffset != 0 ||
+                        self._durationColor.blueOffset != 0) {
+                        self._tweenColor = 2 /* Always */;
                     }
                 }
             }
-            else {
-                self._tweenEasing = dragonBones.DragonBones.NO_TWEEN;
-                self._curve = null;
-                self._tweenColor = 0 /* None */;
+            if (self._tweenColor == 0 /* None */) {
+                if (self._slotColor.alphaMultiplier != currentColor.alphaMultiplier ||
+                    self._slotColor.redMultiplier != currentColor.redMultiplier ||
+                    self._slotColor.greenMultiplier != currentColor.greenMultiplier ||
+                    self._slotColor.blueMultiplier != currentColor.blueMultiplier ||
+                    self._slotColor.alphaOffset != currentColor.alphaOffset ||
+                    self._slotColor.redOffset != currentColor.redOffset ||
+                    self._slotColor.greenOffset != currentColor.greenOffset ||
+                    self._slotColor.blueOffset != currentColor.blueOffset) {
+                    self._tweenColor = 1 /* Once */;
+                }
             }
         };
         SlotTimelineState.prototype._onUpdateFrame = function (isUpdate) {
@@ -3994,7 +4017,7 @@ var dragonBones;
                 var weight = self._animationState._weightResult;
                 if (weight > 0) {
                     if (self._animationState._fadeState != 0) {
-                        var fadeProgress = self._animationState._fadeProgress;
+                        var fadeProgress = Math.pow(self._animationState._fadeProgress, 4);
                         self._slotColor.alphaMultiplier += (self._color.alphaMultiplier - self._slotColor.alphaMultiplier) * fadeProgress;
                         self._slotColor.redMultiplier += (self._color.redMultiplier - self._slotColor.redMultiplier) * fadeProgress;
                         self._slotColor.greenMultiplier += (self._color.greenMultiplier - self._slotColor.greenMultiplier) * fadeProgress;
@@ -4333,7 +4356,7 @@ var dragonBones;
                 this._animation.returnToPool();
             }
             if (this._display) {
-                this._display._onClean();
+                this._display._onClear();
             }
             this.userData = null;
             this._cacheFrameIndex = -1;
@@ -4462,9 +4485,8 @@ var dragonBones;
                 var slotIndex = isOriginal ? i : slotIndices[i];
                 var slotData = sortedSlots[slotIndex];
                 var slot = this.getSlot(slotData.name);
-                if (slot && slot._zOrder != i) {
-                    slot._zOrder = i;
-                    slot._zOrderDirty = true;
+                if (slot) {
+                    slot._setZorder(i);
                 }
             }
             this._slotsDirty = true;
@@ -5570,9 +5592,6 @@ var dragonBones;
             this.inheritAnimation = true;
             this.displayController = null;
             this._blendIndex = 0;
-            this._zOrder = 0;
-            this._pivotX = 0;
-            this._pivotY = 0;
             this._displayDataSet = null;
             this._meshData = null;
             this._childArmature = null;
@@ -5589,7 +5608,10 @@ var dragonBones;
             this._originDirty = false;
             this._transformDirty = false;
             this._ffdDirty = false;
-            this._displayIndex = 0;
+            this._zOrder = 0;
+            this._displayIndex = -2;
+            this._pivotX = 0;
+            this._pivotY = 0;
             this._blendMode = 0 /* Normal */;
             this._display = null;
             this._localMatrix.identity();
@@ -5912,6 +5934,17 @@ var dragonBones;
          * @internal
          * @private
          */
+        Slot.prototype._setZorder = function (value) {
+            if (this._zOrder == value) {
+            }
+            this._zOrder = value;
+            this._zOrderDirty = true;
+            return this._zOrderDirty;
+        };
+        /**
+         * @internal
+         * @private
+         */
         Slot.prototype._setDisplayIndex = function (value) {
             if (this._displayIndex == value) {
                 return false;
@@ -5959,7 +5992,7 @@ var dragonBones;
             enumerable: true,
             configurable: true
         });
-        Object.defineProperty(Slot.prototype, "MeshDisplay", {
+        Object.defineProperty(Slot.prototype, "meshDisplay", {
             /**
              * @private
              */
@@ -6296,7 +6329,7 @@ var dragonBones;
                     }
                     if (displayData.mesh ||
                         (displayIndex < slot._displayDataSet.displays.length && slot._displayDataSet.displays[displayIndex].mesh)) {
-                        displayList[displayIndex] = slot.MeshDisplay;
+                        displayList[displayIndex] = slot.meshDisplay;
                     }
                     else {
                         displayList[displayIndex] = slot.rawDisplay;
@@ -8378,7 +8411,7 @@ var dragonBones;
         /**
          * @inheritDoc
          */
-        EgretArmatureDisplay.prototype._onClean = function () {
+        EgretArmatureDisplay.prototype._onClear = function () {
             for (var i in this._subTextures) {
                 //this._subTextures[i].dispose();
                 delete this._subTextures[i];
