@@ -383,11 +383,8 @@ namespace eui.sys {
                 else if (node.nodeType === 1) {
                     let id = node.attributes["id"];
                     if (id) {
-                        let first = parseInt(id.slice(0, 1))
-                        if (!isNaN(first)) {
-                            egret.$warn(2023, id);
-                        }
-                        if (id.indexOf(" ") > -1) {
+                        var e = new RegExp("^[a-zA-Z_$]{1}[a-z0-9A-Z_$]*");
+                        if(id.match(e) == null) {
                             egret.$warn(2022, id);
                         }
                         if (this.skinParts.indexOf(id) == -1) {
