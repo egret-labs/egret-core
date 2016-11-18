@@ -595,7 +595,7 @@ namespace egret {
                                    matrix:Matrix, clipRegion:sys.Region, root:DisplayObject):number {
             let drawCalls = 0;
             let scrollRect = displayObject.$scrollRect ? displayObject.$scrollRect : displayObject.$maskRect;
-            if (scrollRect.width == 0 || scrollRect.height == 0) {
+            if (scrollRect.isEmpty()) {
                 return drawCalls;
             }
             let m = Matrix.create();
@@ -610,9 +610,7 @@ namespace egret {
                 }
             }
             let region:sys.Region = sys.Region.create();
-            if (!scrollRect.isEmpty()) {
-                region.updateRegion(scrollRect, m);
-            }
+            region.updateRegion(scrollRect, m);
             if (region.isEmpty() || (clipRegion && !clipRegion.intersects(region))) {
                 sys.Region.release(region);
                 Matrix.release(m);

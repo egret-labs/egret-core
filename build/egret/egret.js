@@ -16896,7 +16896,7 @@ var egret;
         p.drawWithScrollRect = function (displayObject, context, dirtyList, matrix, clipRegion, root) {
             var drawCalls = 0;
             var scrollRect = displayObject.$scrollRect ? displayObject.$scrollRect : displayObject.$maskRect;
-            if (scrollRect.width == 0 || scrollRect.height == 0) {
+            if (scrollRect.isEmpty()) {
                 return drawCalls;
             }
             var m = egret.Matrix.create();
@@ -16911,9 +16911,7 @@ var egret;
                 }
             }
             var region = egret.sys.Region.create();
-            if (!scrollRect.isEmpty()) {
-                region.updateRegion(scrollRect, m);
-            }
+            region.updateRegion(scrollRect, m);
             if (region.isEmpty() || (clipRegion && !clipRegion.intersects(region))) {
                 egret.sys.Region.release(region);
                 egret.Matrix.release(m);
