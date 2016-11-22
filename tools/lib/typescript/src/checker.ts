@@ -830,7 +830,7 @@ namespace ts {
 
             if (!node.id) node.id = nextNodeId++;
             links = egretNodesLink[node.id] || (egretNodesLink[node.id] = {});
-            links.resolvedSymbol = (getFullWidth(node) > 0 && resolveName(node, node.text, SymbolFlags.Class | SymbolFlags.Export, null, node)) || unknownSymbol;
+            links.resolvedSymbol = (getFullWidth(node) > 0 && resolveName(node, node.text, SymbolFlags.Class | SymbolFlags.Export | SymbolFlags.Function | SymbolFlags.BlockScopedVariable, null, node)) || unknownSymbol;
 
             if (links.resolvedSymbol) {
                 return links.resolvedSymbol;
