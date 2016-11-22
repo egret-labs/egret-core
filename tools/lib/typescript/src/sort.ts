@@ -1,4 +1,4 @@
-﻿/// <reference path="core.ts"/>
+/// <reference path="core.ts"/>
 /// <reference path="sys.ts"/>
 /// <reference path="types.ts"/>
 /// <reference path="scanner.ts"/>
@@ -30,14 +30,14 @@ namespace ts {
     var orderedFileList: string[] = [];
 
 
-    function addClassToFileMap(name:string,file:string) {
-        var map:any = classNameToFileMap[name];
-        if(!map || file==map){
+    function addClassToFileMap(name: string, file: string) {
+        var map: any = classNameToFileMap[name];
+        if (!map || file == map) {
             classNameToFileMap[name] = file;
         }
-        else{
-            if(typeof(map)=='string'){
-                map = { map:true };
+        else {
+            if (typeof (map) == 'string') {
+                map = { map: true };
             }
             map[file] = true;
             classNameToFileMap[name] = map;
@@ -50,19 +50,19 @@ namespace ts {
             return orderedFileList;
         }
 
-        static getErrors(): Diagnostic[]{
+        static getErrors(): Diagnostic[] {
             return errors;
         }
 
         static getClassNameAndProps() {
-            var names:any = {};
+            var names: any = {};
             var files = program.getSourceFiles().concat();
-            files.forEach(f=> {
+            files.forEach(f => {
                 if (f.fileName.indexOf('.d.ts') > 0)
                     return;
                 var symbols = checker.getSymbolsInScope(f, SymbolFlags.Module | SymbolFlags.PropertyOrAccessor | SymbolFlags.Method | SymbolFlags.Class | SymbolFlags.Export);
-                symbols.forEach(s=> {
-                    var name:string = s.name;
+                symbols.forEach(s => {
+                    var name: string = s.name;
                     names[name] = true;
                 });
             });
@@ -87,13 +87,13 @@ namespace ts {
             fileToReferenceMap = {};
             var files = prog.getSourceFiles().concat();
             var libdts = files.shift();
-            orderedFileList = files.map(f=> f.fileName);
+            orderedFileList = files.map(f => f.fileName);
             checker = chk;
             program = prog;
-            forEach(files, file=> this.symbolTabelToFileMap(file, file.locals));
+            forEach(files, file => this.symbolTabelToFileMap(file, file.locals));
             this.sortFiles();
             var sources = prog.getSourceFiles();
-            orderedFileList.forEach(f=> {
+            orderedFileList.forEach(f => {
                 for (var i = 0; i < sources.length; i++) {
                     var s = sources[i];
                     if (s.fileName == f) {
@@ -106,7 +106,7 @@ namespace ts {
         }
 
 
-        private symbolToFileMap(file: SourceFile, symbol:Symbol) {
+        private symbolToFileMap(file: SourceFile, symbol: Symbol) {
             var classtype = <InterfaceType>checker.getDeclaredTypeOfSymbol(symbol.exportSymbol || symbol);
             if (symbol.flags & (SymbolFlags.Module))
                 return;
@@ -114,8 +114,8 @@ namespace ts {
             var isInterface = symbol.flags & SymbolFlags.Interface;
             if (classtype) {
 
-                var fullName = getFullyQualifiedName( symbol);
-                addClassToFileMap(fullName,file.fileName);
+                var fullName = getFullyQualifiedName(symbol);
+                addClassToFileMap(fullName, file.fileName);
 
 
                 var classes = fileToClassNameMap[file.fileName];
@@ -127,15 +127,15 @@ namespace ts {
                     classes.push(fullName);
                 if (isInterface)
                     return;
-                var baseTypes:Array<InterfaceType>;
+                var baseTypes: Array<InterfaceType>;
                 try {
                     baseTypes = <Array<InterfaceType>>checker.getBaseTypes(classtype);
                 }
-                catch (e){
+                catch (e) {
 
                 }
                 if (baseTypes && baseTypes.length) {
-                    forEach(baseTypes,(t: InterfaceType) => this.classNameToBaseClass(fullName, t));
+                    forEach(baseTypes, (t: InterfaceType) => this.classNameToBaseClass(fullName, t));
                 }
                 this.constructorToClassName(file, <ClassDeclaration>symbol.valueDeclaration, 0);
                 this.addStaticDepend(file, <ClassDeclaration>symbol.valueDeclaration, 0);
@@ -145,39 +145,40 @@ namespace ts {
         }
         private symbolTabelToFileMap(file: SourceFile, symbolTable: SymbolTable) {
             this.findFileRefers(file);
-            ts.forEachValue(symbolTable, symbol=> {
+            ts.forEachValue(symbolTable, symbol => {
                 symbol = symbol.exportSymbol || symbol;
                 if (symbol.name == "prototype")
                     return;
                 this.symbolToFileMap(file, symbol);
                 this.staticMemberToClassName(file, symbol);
                 if (symbol.valueDeclaration && symbol.valueDeclaration.locals) {
-                    this.symbolTabelToFileMap(file, symbol.valueDeclaration.locals);
+                    return this.symbolTabelToFileMap(file, symbol.valueDeclaration.locals);
                 }
                 if (symbol.exports) {
-                    this.symbolTabelToFileMap(file, symbol.exports);
+                    return this.symbolTabelToFileMap(file, symbol.exports);
                 }
             });
             if (file.fileName.indexOf(".d.ts") > 0)
                 return;
             var self = this;
-            findFunctionCall(file);
-            function findFunctionCall(pnode:Node) {
-                forEachChild(pnode,node=>{
-                    if(node.kind == SyntaxKind.ClassDeclaration ||
-                        node.kind == SyntaxKind.InterfaceDeclaration ||
-                        node.kind == SyntaxKind.FunctionDeclaration)
-                        return;
-                    if(node.kind == SyntaxKind.PropertyAccessExpression||
+            return findFunctionCall(file);
+            function findFunctionCall(pnode: Node) {
+                forEachChild(pnode, node => {
+                    // if(node.kind == SyntaxKind.ClassDeclaration ||
+                    //     node.kind == SyntaxKind.InterfaceDeclaration ||
+                    //     node.kind == SyntaxKind.FunctionDeclaration)
+                    //     return;
+                    if (node.kind == SyntaxKind.InterfaceDeclaration) return;
+                    if (node.kind == SyntaxKind.PropertyAccessExpression ||
                         node.kind == SyntaxKind.CallExpression ||
                         node.kind == SyntaxKind.NewExpression ||
-                        node.kind == SyntaxKind.Identifier ){
+                        node.kind == SyntaxKind.Identifier) {
 
                         var name = "callExpression" + ++functionId;
-                        self.findUsedClasses(node,name,functionCallToClassMap,0);
+                        return self.findUsedClasses(node, name, functionCallToClassMap, 0);
                     }
                     else
-                        findFunctionCall(node);
+                        return findFunctionCall(node);
                 });
             }
 
@@ -187,7 +188,7 @@ namespace ts {
         private findFileRefers(file: SourceFile) {
             var refers = file.referencedFiles;
             if (refers)
-                fileToReferenceMap[file.fileName] = refers.map(r=> ts.normalizePath(ts.combinePaths(ts.getDirectoryPath(file.fileName), r.fileName)));
+                fileToReferenceMap[file.fileName] = refers.map(r => ts.normalizePath(ts.combinePaths(ts.getDirectoryPath(file.fileName), r.fileName)));
         }
 
         private constructorToClassName(file: SourceFile, classNode: ClassDeclaration, nest: number) {
@@ -195,7 +196,7 @@ namespace ts {
                 return;
             var className = checker.getFullyQualifiedName(classNode.symbol);
             var nodesToCheck: Node[] = [];
-            forEachChild(classNode, node=> {
+            forEachChild(classNode, node => {
                 if (node.kind == SyntaxKind.Constructor) {
                     nodesToCheck.push((<ConstructorDeclaration>node).body);
                 }
@@ -209,11 +210,11 @@ namespace ts {
             }
 
 
-            nodesToCheck.forEach(node=> this.findUsedClasses(node,className,constructorToClassMap,0));
+            nodesToCheck.forEach(node => this.findUsedClasses(node, className, constructorToClassMap, 0));
         }
 
         private findUsedClasses = (node: Node, name: string, collection: Map<string[]>, nest: number) => {
-            if(!node)
+            if (!node)
                 return;
             if (nest > 4)
                 return;
@@ -238,7 +239,7 @@ namespace ts {
                     && !(definedSymbol.exportSymbol && (definedSymbol.exportSymbol.flags & SymbolFlags.Module))
                     && (definedSymbol.flags & SymbolFlags.Value || definedSymbol.flags & SymbolFlags.Export)
                     && definedSymbol.declarations && definedSymbol.declarations.length
-                    && !(definedSymbol.declarations[0].symbol.flags & SymbolFlags.Variable)) {
+                    /*&& !(definedSymbol.declarations[0].symbol.flags & SymbolFlags.Variable)*/) {
 
                     var targetName = checker.getFullyQualifiedName(definedSymbol);
                     if (targetName == "unknown")
@@ -260,7 +261,7 @@ namespace ts {
 
                         if (node.kind == SyntaxKind.NewExpression) {
                             if (!(targetName in constructorToClassMap)) {
-                                this.constructorToClassName(source, <ClassDeclaration>declareNode, nest+1);
+                                this.constructorToClassName(source, <ClassDeclaration>declareNode, nest + 1);
                             }
                         }
                     }
@@ -268,16 +269,13 @@ namespace ts {
                     if (node.kind == SyntaxKind.CallExpression)
                         this.findUsedClasses(declareNode, targetName, functionCallToClassMap, nest + 1);
                     if (node.kind == SyntaxKind.NewExpression)
-                        constructorToClassMap[targetName] && constructorToClassMap[targetName].forEach(clazz=> {
+                        constructorToClassMap[targetName] && constructorToClassMap[targetName].forEach(clazz => {
                             classes.push(clazz)
                         });
 
                 }
             }
-            else {
-                forEachChild(node, n=> this.findUsedClasses(n, name, collection, nest));
-            }
-
+            forEachChild(node, n => this.findUsedClasses(n, name, collection, nest));
         }
 
         private staticMemberToClassName(file: SourceFile, symbol: Symbol) {
@@ -335,10 +333,10 @@ namespace ts {
             });
         }
 
-        private classNameToBaseClass(className:any, baseType:InterfaceType) {
+        private classNameToBaseClass(className: any, baseType: InterfaceType) {
             var fullName = checker.getFullyQualifiedName(baseType.symbol);
             var bases = classNameToBaseClassMap[className] || [];
-            if(bases.indexOf(fullName)<0)
+            if (bases.indexOf(fullName) < 0)
                 bases.push(fullName);
             classNameToBaseClassMap[className] = bases;
         }
@@ -348,7 +346,7 @@ namespace ts {
 
 
         //todo
-        private getFileNode(file:string) {
+        private getFileNode(file: string) {
             if (file in fileNameToNodeMap)
                 return fileNameToNodeMap[file];
             var typeNode = new FileNode();
@@ -366,27 +364,27 @@ namespace ts {
         }
 
         private sortFiles() {
-            forEachKey(fileToReferenceMap, fileName=> {
+            forEachKey(fileToReferenceMap, fileName => {
                 var fileNode = this.getFileNode(fileName);
                 var refers = fileToReferenceMap[fileName];
-                refers.forEach(r=> {
+                refers.forEach(r => {
                     var referNode = this.getFileNode(r);
                     fileNode.addRefer(referNode);
                 });
             });
 
-            forEachKey(classNameToFileMap, className=> {
+            forEachKey(classNameToFileMap, className => {
                 var file = classNameToFileMap[className];
-                if(typeof(file)!='string')
+                if (typeof (file) != 'string')
                     return;
-                var fileName:string = <string>file;
+                var fileName: string = <string>file;
                 var fileNode = this.getFileNode(fileName);
 
 
 
                 var supers = classNameToBaseClassMap[className];
                 if (supers) {
-                    supers.forEach(superClass=> {
+                    supers.forEach(superClass => {
                         var dependFile = classNameToFileMap[superClass];
                         if (!dependFile || dependFile && (<any>dependFile)['map'] || dependFile == fileName || (<any>dependFile)[fileName])
                             return;
@@ -398,10 +396,10 @@ namespace ts {
                 if (staticDepends) {
                     var constructorDepends = constructorToClassMap[staticDepends] || [];
                     constructorDepends.push(staticDepends);
-                    constructorDepends.forEach(depend=> {
+                    constructorDepends.forEach(depend => {
                         var dependFile = classNameToFileMap[depend];
 
-                        if (dependFile && (<any>dependFile)['map']==undefined && dependFile != file&& typeof(dependFile) =='string' ) {
+                        if (dependFile && (<any>dependFile)['map'] == undefined && dependFile != file && typeof (dependFile) == 'string') {
                             var dependFileNode = this.getFileNode(<string>dependFile);
                             fileNode.addCall(dependFileNode);
                         }
@@ -409,10 +407,10 @@ namespace ts {
                 }
                 var functionName = className;
                 var functionCallDepens = functionCallToClassMap[functionName];
-                if(functionCallDepens){
-                    functionCallDepens.forEach(depend=> {
+                if (functionCallDepens) {
+                    functionCallDepens.forEach(depend => {
                         var dependFile = classNameToFileMap[depend];
-                        if (!dependFile || dependFile && (<any>dependFile)['map'] ||dependFile == file || typeof(dependFile)!='string')
+                        if (!dependFile || dependFile && (<any>dependFile)['map'] || dependFile == file || typeof (dependFile) != 'string')
                             return;
                         var dependNode = this.getFileNode(<string>dependFile);
                         fileNode.addCall(dependNode);
@@ -425,10 +423,10 @@ namespace ts {
                 topTypes: FileNode[] = [],
                 otherTypes: FileNode[] = [];
 
-            fileNodesList.forEach(t=> {
+            fileNodesList.forEach(t => {
                 t.markHardDepends();
             });
-            fileNodesList.forEach(t=> {
+            fileNodesList.forEach(t => {
                 t.markSoftDepends();
             });
 
@@ -445,29 +443,28 @@ namespace ts {
             function insert(file: FileNode) {
                 if (file.name.toLowerCase() in sortedMap)
                     return;
+                sortedMap[file.name.toLowerCase()] = true;
                 for (var i in file.depends)
                     insert(fileNameToNodeMap[i]);
                 sorted.push(file);
-                sortedMap[file.name.toLowerCase()] = true;
             }
 
-            fileNodesList.forEach(e=> {
-                insert(e);
+            fileNodesList.forEach(e => {
+                return insert(e);
             });
 
-            orderedFileList = sorted.map(n=> n.name);
+            orderedFileList = sorted.map(n => n.name);
         }
 
     }
 
     var fileToFileMap: Map<Map<boolean>> = {};
 
-    export class UsedFileResolver{
+    export class UsedFileResolver {
 
         static mapFile(source: string, used: string) {
             var depends = fileToFileMap[source];
-            if (!depends)
-            {
+            if (!depends) {
                 depends = {};
                 fileToFileMap[source] = depends;
             }
@@ -483,21 +480,17 @@ namespace ts {
     * no export properties may have same name, add id after the name
     */
     function getFullyQualifiedName(symbol: Symbol) {
-        var name:string = null;
-        if (symbol.exportSymbol)
-        {
+        var name: string = null;
+        if (symbol.exportSymbol) {
             name = checker.getFullyQualifiedName(symbol.exportSymbol);
             classNames[name] = Object.keys(classNames).length;
         }
-        else
-        {
+        else {
             name = checker.getFullyQualifiedName(symbol);
-            if (!(symbol.flags & (SymbolFlags.Class | SymbolFlags.Interface | SymbolFlags.Module)))
-            {
+            if (!(symbol.flags & (SymbolFlags.Class | SymbolFlags.Interface | SymbolFlags.Module))) {
                 name += symbol.id;
             }
-            else
-            {
+            else {
                 classNames[name] = Object.keys(classNames).length;
             }
         }
@@ -543,7 +536,7 @@ namespace ts {
                 return;
             this.depends = {};
             var files = this.supers.concat(this.refers);
-            files.forEach(f=> {
+            files.forEach(f => {
                 if (!f.depends)
                     f.markHardDepends();
 
@@ -562,7 +555,7 @@ namespace ts {
                 return;
             var files = this.calls.concat();
             this.softdepends = {};
-            files.forEach(f=> {
+            files.forEach(f => {
                 if (f.name == this.name)
                     return;
                 if (!f.softdepends)
