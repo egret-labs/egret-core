@@ -19,7 +19,7 @@ egret_native.requireFiles = function () {
 egret_native.egretInit = function () {
     if(egret_native.featureEnable) {
         //控制一些优化方案是否开启
-        egret_native.featureEnable({
+        var result = egret_native.featureEnable({
             
         });
     }
