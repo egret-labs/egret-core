@@ -112,6 +112,10 @@ var CreateAppCommand = (function () {
                 this.modifyAndroidStudioSupport(app_path);
                 this.modifyLocalProperties(app_path);
             }
+            else if(file.isFile(file.joinPath(file.joinPath(app_path, "proj.android"), "project.properties"))){
+                //修改ADT工程的
+                this.modifyAndroidADTSupport(app_path);
+            }
         }
     };
     CreateAppCommand.prototype.rename_app = function (app_path, app_data) {
@@ -197,7 +201,7 @@ var CreateAppCommand = (function () {
                 }
             }
         }
-        //console.log("buildToolVersion = "+resultVersion);
+       // console.log("buildToolVersion = "+resultVersion);
         return resultVersion;
     };
     ;
@@ -221,7 +225,7 @@ var CreateAppCommand = (function () {
                     break;
                 }
             }
-            //console.log(propertiesFile + " : "+version);
+            // console.log(propertiesFile + " : "+version);
             return version;
         }
         else {
@@ -229,7 +233,7 @@ var CreateAppCommand = (function () {
         }
         return "undefined";
     };
-    CreateAppCommand.prototype.getAndroidSDKAPILevelValue = function () {
+    CreateAppCommand.prototype.getAndroidSDKAPILevelValue = function (target_level) {
         // check ANDROID_HOME
         var android_home = process.env.ANDROID_HOME;
         if (!android_home) {
@@ -257,6 +261,11 @@ var CreateAppCommand = (function () {
                 platformVersion = this.getAndroidSDKAPILevel(path);
                 if ("undefined" != platformVersion) {
                     versionValue = parseInt(platformVersion);
+                    //如果本地存在所需的SDK。直接返回
+                    if("undefined" != target_level && target_level == versionValue){
+                        resultVersion = target_level;
+                        break;
+                    }
                     if (versionValue > tempVersion) {
                         tempVersion = versionValue;
                         resultVersion = platformVersion;
@@ -264,7 +273,7 @@ var CreateAppCommand = (function () {
                 }
             }
         }
-        //console.log("buildToolVersion = "+resultVersion);
+        //console.log("SDKAPILevelValue = "+resultVersion);
         return resultVersion;
     };
     ;
@@ -284,7 +293,7 @@ var CreateAppCommand = (function () {
             globals.exit(1611);
         }
     };
-    ;
+
     CreateAppCommand.prototype.modifyLocalProperties = function (app_path) {
         var android_home = process.env.ANDROID_HOME;
         if (!android_home) {
@@ -305,7 +314,79 @@ var CreateAppCommand = (function () {
             globals.exit(1613);
         }
     };
-    ;
+    //获取当前ADT项目默认的Android API Level
+    CreateAppCommand.prototype.getProjTargetAPILevel = function (app_path) {
+
+        var projectPropertiesFile = file.joinPath(file.joinPath(app_path, "proj.android"), "project.properties");
+        if (file.isFile(projectPropertiesFile)) {
+            var fileContent = file.read(projectPropertiesFile, true);
+            var lines = fileContent.split("\n");
+            var index = -1;
+            var index2 = -1;
+            var version = "";
+            for (var i = 0; i < lines.length; i++) {
+                index = lines[i].indexOf("target");
+                if (index != -1 && -1 != lines[i].indexOf("=")) {
+                    version = lines[i].substring(lines[i].indexOf("-")+1);
+
+                    index = version.indexOf("\r");
+                    if (index != -1) {
+                        version = version.substring(0, index);
+                    }
+                    break;
+                }
+            }
+            return version;
+        }
+        else {
+            console.error("找不到 project.properties 文件。app_path ： " + app_path);
+        }
+        return "undefined";
+    };
+    //修正Android ADT Support 项目
+    CreateAppCommand.prototype.modifyAndroidADTSupport = function (app_path) {
+        var projTargetAPILevel = this.getProjTargetAPILevel(app_path);
+        if(projTargetAPILevel == "undefined"){
+            return;
+        }
+        var platformVersion = this.getAndroidSDKAPILevelValue(projTargetAPILevel);
+        if(platformVersion == "undefined"){
+            return;
+        }
+        
+        if(parseInt(platformVersion) < parseInt(projTargetAPILevel)){
+            console.error("All installed platforms is lower then project target API level , project target API Levle is = "+projTargetAPILevel+"; app_path:" + app_path);
+            return;
+        }
+       var projectPropertiesFile = file.joinPath(file.joinPath(app_path, "proj.android"), "project.properties");
+        if (file.isFile(projectPropertiesFile)) {
+            var fileContent = file.read(projectPropertiesFile);
+            var lines = fileContent.split("\n");
+            var len = lines.length;
+            var i = 0;
+            for( i=0 ; i<len ; i++ ){
+                index = lines[i].indexOf("target");
+                if (index != -1 && -1 != lines[i].indexOf("=")) {
+                     version = lines[i].substring(lines[i].indexOf("-") + 1);
+                    index = version.indexOf("\r");
+                    if (index != -1) {
+                        version = version.substring(0, index);
+                    }
+
+                    var resultLine = lines[i].replace(new RegExp(version, "g"), platformVersion);
+                    fileContent = fileContent.replace(new RegExp(lines[i], "g"), resultLine);
+
+                    file.save(projectPropertiesFile, fileContent);
+                    break;
+                }
+            }
+        }
+        else {
+            console.error("找不到 project.properties 文件。app_path ： " + file.getAbsolutePath(app_path));
+            globals.exit(1611);
+        }
+    };
+
     CreateAppCommand.prototype.run_unzip = function (app_path, template_path, app_data) {
         var template_zip_path = file.joinPath(template_path, app_data["template"]["zip"]);
         var cmd = "unzip -q " + globals.addQuotes(template_zip_path) + " -d " + globals.addQuotes(app_path);
