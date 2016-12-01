@@ -474,6 +474,7 @@ var egret;
                 }
                 try {
                     //this.audio.pause();
+                    this.audio.volume = 1;
                     this.audio.currentTime = this.$startTime;
                 }
                 catch (e) {
@@ -494,10 +495,15 @@ var egret;
                 }
                 this.isStopped = true;
                 var audio = this.audio;
-                audio.pause();
                 audio.removeEventListener("ended", this.onPlayEnd);
+                audio.volume = 0;
                 this.audio = null;
-                web.HtmlSound.$recycle(this.$url, audio);
+                var url = this.$url;
+                //延迟一定时间再停止，规避chrome报错
+                setTimeout(function () {
+                    audio.pause();
+                    web.HtmlSound.$recycle(url, audio);
+                }, 200);
             };
             d(p, "volume"
                 /**
