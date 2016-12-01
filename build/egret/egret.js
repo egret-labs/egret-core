@@ -1531,7 +1531,8 @@ var egret;
          * @private
          * 沿着显示列表向下传递标志量，非容器直接设置自身的flag，此方法会在 DisplayObjectContainer 中被覆盖。
          */
-        p.$propagateFlagsDown = function (flags) {
+        p.$propagateFlagsDown = function (flags, cachedBreak) {
+            if (cachedBreak === void 0) { cachedBreak = false; }
             this.$setFlags(flags);
         };
         /**
@@ -4594,15 +4595,19 @@ var egret;
         /**
          * @private
          */
-        p.$propagateFlagsDown = function (flags) {
+        p.$propagateFlagsDown = function (flags, cachedBreak) {
+            if (cachedBreak === void 0) { cachedBreak = false; }
             if (this.$hasFlags(flags)) {
                 return;
             }
             this.$setFlags(flags);
+            if (cachedBreak && this.$displayList) {
+                return;
+            }
             var children = this.$children;
             var length = children.length;
             for (var i = 0; i < length; i++) {
-                children[i].$propagateFlagsDown(flags);
+                children[i].$propagateFlagsDown(flags, cachedBreak);
             }
         };
         d(p, "numChildren"
@@ -4726,7 +4731,7 @@ var egret;
             }
             var displayList = this.$displayList || this.$parentDisplayList;
             this.assignParentDisplayList(child, displayList, displayList);
-            child.$propagateFlagsDown(1648 /* DownOnAddedOrRemoved */);
+            child.$propagateFlagsDown(1648 /* DownOnAddedOrRemoved */, true);
             this.$propagateFlagsUp(4 /* InvalidBounds */);
             this.$childAdded(child, index);
             return child;
@@ -4932,7 +4937,7 @@ var egret;
             }
             var displayList = this.$displayList || this.$parentDisplayList;
             this.assignParentDisplayList(child, displayList, null);
-            child.$propagateFlagsDown(1648 /* DownOnAddedOrRemoved */);
+            child.$propagateFlagsDown(1648 /* DownOnAddedOrRemoved */, true);
             child.$setParent(null);
             var indexNow = children.indexOf(child);
             if (indexNow != -1) {

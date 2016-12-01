@@ -331,7 +331,7 @@ namespace egret {
          * @private
          * 沿着显示列表向下传递标志量，非容器直接设置自身的flag，此方法会在 DisplayObjectContainer 中被覆盖。
          */
-        $propagateFlagsDown(flags: number): void {
+        $propagateFlagsDown(flags: number, cachedBreak:boolean = false): void {
             this.$setFlags(flags);
         }
 
