@@ -187,9 +187,7 @@ namespace egret {
                 this.$totalFrames = movieClipData.numFrames;
                 this.frameLabels = movieClipData.labels;
                 this.frameEvents = movieClipData.events;
-                if(this.$frameRate != this.$frameRate) {
-                    this.$frameRate = movieClipData.frameRate;
-                }
+                this.$frameRate = movieClipData.frameRate;
                 this.frameIntervalTime = 1000 / this.$frameRate;
                 this._initFrame();
             }
