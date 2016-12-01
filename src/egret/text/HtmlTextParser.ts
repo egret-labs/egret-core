@@ -173,12 +173,12 @@ namespace egret {
                     let value = "";
                     str = str.substring(title.length).trim();
                     if (str.charAt(0) == "\"") {
-                        let next = str.indexOf("\"", 1);
+                        next = str.indexOf("\"", 1);
                         value = str.substring(1, next);
                         next += 1;
                     }
                     else if (str.charAt(0) == "\'") {
-                        let next = str.indexOf("\'", 1);
+                        next = str.indexOf("\'", 1);
                         value = str.substring(1, next);
                         next += 1;
                     }

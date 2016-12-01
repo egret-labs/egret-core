@@ -19166,14 +19166,14 @@ var egret;
                     var value = "";
                     str = str.substring(title.length).trim();
                     if (str.charAt(0) == "\"") {
-                        var next_1 = str.indexOf("\"", 1);
-                        value = str.substring(1, next_1);
-                        next_1 += 1;
+                        next = str.indexOf("\"", 1);
+                        value = str.substring(1, next);
+                        next += 1;
                     }
                     else if (str.charAt(0) == "\'") {
-                        var next_2 = str.indexOf("\'", 1);
-                        value = str.substring(1, next_2);
-                        next_2 += 1;
+                        next = str.indexOf("\'", 1);
+                        value = str.substring(1, next);
+                        next += 1;
                     }
                     else {
                         value = str.match(/(\S)+/)[0];
