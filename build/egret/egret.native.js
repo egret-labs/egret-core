@@ -5126,7 +5126,7 @@ var egret;
                 listener.call(null, value);
             }
             else {
-                egret.$warn(1004, functionName);
+                egret.$warn(1050, functionName);
             }
         }
         egret.ExternalInterface = NativeExternalInterface;
