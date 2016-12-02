@@ -91,15 +91,13 @@ function updateSetting(merge) {
                 if (exmlFile.theme.indexOf("," + thmPath + ",") >= 0)
                     thm.exmls.push(exmlEl);
             }
-            else
+            else if(thm.autoGenerateExmlsList) {
                 thm.exmls.push(exmlEl);
+            }
         });
     });
     themes.forEach(function (thm, i) {
-        if (themeDatas[i].autoGenerateExmlsList == false)
-            return;
         var path = file.joinPath(egret.args.projectDir, thm);
-        themeDatas[i].autoGenerateExmlsList;
         var thmData = JSON.stringify(themeDatas[i], null, "  ");
         file.save(path, thmData);
     });
