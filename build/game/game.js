@@ -235,7 +235,7 @@ var egret;
             /**
              * @private
              */
-            this.$nextFrameNum = 0;
+            this.$nextFrameNum = 1;
             /**
              * @private
              */
@@ -586,14 +586,9 @@ var egret;
             if (num < 1) {
                 return false;
             }
-            var event;
             while (num >= 1) {
                 num--;
                 self.$nextFrameNum++;
-                event = this.frameEvents[self.$nextFrameNum];
-                if (event && event != "") {
-                    egret.MovieClipEvent.dispatchMovieClipEvent(self, egret.MovieClipEvent.FRAME_LABEL, event);
-                }
                 if (self.$nextFrameNum > self.$totalFrames || (self.$frameLabelStart > 0 && self.$nextFrameNum > self.$frameLabelEnd)) {
                     if (self.playTimes == -1) {
                         self.$eventPool.push(egret.Event.LOOP_COMPLETE);
@@ -628,6 +623,10 @@ var egret;
          */
         p.advanceFrame = function () {
             this.$currentFrameNum = this.$nextFrameNum;
+            var event = this.frameEvents[this.$nextFrameNum];
+            if (event && event != "") {
+                egret.MovieClipEvent.dispatchMovieClipEvent(this, egret.MovieClipEvent.FRAME_LABEL, event);
+            }
         };
         /**
          * @private

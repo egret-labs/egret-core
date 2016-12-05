@@ -113,7 +113,7 @@ namespace egret {
         /**
          * @private
          */
-        $nextFrameNum:number = 0;
+        $nextFrameNum:number = 1;
 
         /**
          * @private
@@ -506,14 +506,9 @@ namespace egret {
             if (num < 1) {
                 return false;
             }
-            let event;
             while (num >= 1) {
                 num--;
                 self.$nextFrameNum++;
-                event = this.frameEvents[self.$nextFrameNum];
-                if(event && event!=""){
-                    MovieClipEvent.dispatchMovieClipEvent(self,MovieClipEvent.FRAME_LABEL,event);
-                }
                 if (self.$nextFrameNum > self.$totalFrames || (self.$frameLabelStart>0 && self.$nextFrameNum>self.$frameLabelEnd)) {
                     if (self.playTimes == -1) {
                         self.$eventPool.push(Event.LOOP_COMPLETE);
@@ -550,6 +545,10 @@ namespace egret {
          */
         private advanceFrame():void {
             this.$currentFrameNum = this.$nextFrameNum;
+            let event = this.frameEvents[this.$nextFrameNum];
+            if(event && event!=""){
+                MovieClipEvent.dispatchMovieClipEvent(this,MovieClipEvent.FRAME_LABEL,event);
+            }
         }
 
         /**
