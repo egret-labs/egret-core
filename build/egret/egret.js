@@ -16980,8 +16980,7 @@ var egret;
                     this.renderText(node, context);
                     break;
                 case 3 /* GraphicsNode */:
-                    drawCalls = 1;
-                    this.renderGraphics(node, context, forHitTest);
+                    return this.renderGraphics(node, context, forHitTest);
                     break;
                 case 4 /* GroupNode */:
                     drawCalls = this.renderGroup(node, context);
@@ -17196,6 +17195,7 @@ var egret;
                         break;
                 }
             }
+            return length == 0 ? 0 : 1;
         };
         p.renderPath = function (path, context) {
             context.beginPath();

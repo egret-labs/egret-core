@@ -10761,7 +10761,7 @@ declare namespace egret {
         /**
          * @private
          */
-        renderGraphics(node: sys.GraphicsNode, context: CanvasRenderingContext2D, forHitTest?: boolean): void;
+        renderGraphics(node: sys.GraphicsNode, context: CanvasRenderingContext2D, forHitTest?: boolean): number;
         private renderPath(path, context);
         private renderGroup(groupNode, context);
         /**

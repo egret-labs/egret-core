@@ -676,8 +676,7 @@ namespace egret {
                     this.renderText(<sys.TextNode>node, context);
                     break;
                 case sys.RenderNodeType.GraphicsNode:
-                    drawCalls = 1;
-                    this.renderGraphics(<sys.GraphicsNode>node, context, forHitTest);
+                    return this.renderGraphics(<sys.GraphicsNode>node, context, forHitTest);
                     break;
                 case sys.RenderNodeType.GroupNode:
                     drawCalls = this.renderGroup(<sys.GroupNode>node, context);
@@ -851,7 +850,7 @@ namespace egret {
         /**
          * @private
          */
-        public renderGraphics(node:sys.GraphicsNode, context:CanvasRenderingContext2D, forHitTest?:boolean):void {
+        public renderGraphics(node:sys.GraphicsNode, context:CanvasRenderingContext2D, forHitTest?:boolean):number {
             let drawData = node.drawData;
             let length = drawData.length;
             forHitTest = !!forHitTest;
@@ -900,6 +899,7 @@ namespace egret {
                         break;
                 }
             }
+            return length == 0 ? 0 : 1;
         }
 
         private renderPath(path:sys.Path2D, context:CanvasRenderingContext2D):void {
