@@ -8745,7 +8745,7 @@ var dragonBones;
                         if (!displayData.texture || dataPackage.textureAtlasName) {
                             displayData.texture = this._getTextureData(dataPackage.textureAtlasName || dataPackage.dataName, displayData.name);
                         }
-                        if (egret.Capabilities.renderMode == "webgl") {
+                        if (egret.Capabilities.renderMode == "webgl" || egret.Capabilities.runtimeType == egret.RuntimeType.NATIVE) {
                             displayList.push(slot._meshDisplay);
                         }
                         else {
