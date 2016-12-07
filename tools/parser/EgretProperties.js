@@ -101,6 +101,12 @@ var EgretProperties = (function () {
         }
         return [];
     };
+    EgretProperties.prototype.getCopyExmlList = function () {
+        if (globals.hasKeys(this.properties, [egret.args.runtime, "copyExmlList"])) {
+            return this.properties[egret.args.runtime]["copyExmlList"];
+        }
+        return [];
+    };
     EgretProperties.prototype.getNativePath = function (platform) {
         if (globals.hasKeys(this.properties, ["native", platform + "_path"])) {
             return file.joinPath(this.getProjectRoot(), this.properties["native"][platform + "_path"]);

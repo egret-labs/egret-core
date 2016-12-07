@@ -121,6 +121,13 @@ class EgretProperties implements egret.EgretPropertiesClass {
         return [];
     }
 
+    getCopyExmlList(): Array<string> {
+        if (globals.hasKeys(this.properties, [egret.args.runtime, "copyExmlList"])) {
+            return this.properties[egret.args.runtime]["copyExmlList"];
+        }
+        return [];
+    }
+
     getNativePath(platform) {
         if (globals.hasKeys(this.properties, ["native", platform + "_path"])) {
             return file.joinPath(this.getProjectRoot(), this.properties["native"][platform + "_path"]);

@@ -48,8 +48,21 @@ var GenerateVersionCommand = (function () {
         });
         var allVersion = {};
         var length = list.length;
+        var copyExmlList = egret.args.properties.getCopyExmlList();
         for (var i = 0; i < length; i++) {
             var filePath = list[i];
+            if(copyExmlList.length && filePath.slice(filePath.lastIndexOf(".") + 1) == "exml") {
+                var needCopy = false;
+                for(var j = 0 ; j < copyExmlList.length ; j++) {
+                    if(filePath.indexOf(copyExmlList[j]) != -1) {
+                        needCopy = true;
+                        break;
+                    }
+                }
+                if(!needCopy) {
+                    continue;
+                }
+            }
             var txt = FileUtil.read(filePath);
             var crc32 = globals.getCrc32();
             var txtCrc32 = crc32(txt);

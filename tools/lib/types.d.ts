@@ -148,6 +148,8 @@ declare module egret {
 
         getIgnorePath(): Array <any>
 
+        getCopyExmlList(): Array <string>
+
         getNativePath(platform)
 
         getModulePath(moduleName)
