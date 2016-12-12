@@ -1,0 +1,85 @@
+{
+  "version": "1.1",
+  "type": "ShinnedMesh",
+  "animator": {
+    "defaultState": "attack",
+    "stateList": [
+      {
+        "name": "attack",
+        "esmName": "attack",
+        "speed": 1.0,
+        "nextName": "",
+        "transitionList": []
+      }
+    ]
+  },
+  "skeletonAnimations": [
+    {
+      "id": "1",
+      "auto": "attack",
+      "clips": [
+        {
+          "path": "Eam/attack.eam",
+          "name": "attack",
+          "loop": "false"
+        }
+      ]
+    }
+  ],
+  "nodes": [
+    {
+      "type": "Mesh",
+      "insID": "-1448038",
+      "parent": "-1448032",
+      "name": "Zhouyu",
+      "path": "Esm/Zhouyu.esm",
+      "pos": {
+        "x": "0",
+        "y": "0",
+        "z": "0"
+      },
+      "rot": {
+        "rx": "0",
+        "ry": "0",
+        "rz": "0",
+        "rw": "1"
+      },
+      "scale": {
+        "sx": "1",
+        "sy": "1",
+        "sz": "1"
+      },
+      "mats": "326",
+      "skeletonAnimation": "1",
+      "staticType": ""
+    }
+  ],
+  "mats": [
+    {
+      "id": "326",
+      "name": "Egret3D/d/E3D_D_Normal",
+      "diffuseTextureName": "Texture/hero_01.png",
+      "normalTextureName": "",
+      "specularTextureName": "",
+      "shadowTextureName": "",
+      "diffuseColor": "0xffffff",
+      "ambientColor": "0xffffff",
+      "specularColor": "0x000000",
+      "alpha": "1",
+      "cutAlpha": "0",
+      "specularLevel": "1",
+      "gloss": "80",
+      "ambientPower": "1",
+      "diffusePower": "1",
+      "normalPower": "1",
+      "castShadow": "false",
+      "acceptShadow": "false",
+      "smooth": "true",
+      "repeat": "true",
+      "bothside": "false",
+      "drawMode": "4",
+      "cullMode": "1029",
+      "blendMode": "NORMAL"
+    }
+  ]
+}
