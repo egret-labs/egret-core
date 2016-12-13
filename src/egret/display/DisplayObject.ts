@@ -1784,7 +1784,7 @@ namespace egret {
                 resultRect = new Rectangle();
             }
             resultRect.copyFrom(bounds);
-            if (targetCoordinateSpace == this || resultRect.isEmpty()) {
+            if (targetCoordinateSpace == this) {
                 return resultRect;
             }
             let m: Matrix;

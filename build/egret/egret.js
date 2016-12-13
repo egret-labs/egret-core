@@ -2828,7 +2828,7 @@ var egret;
                 resultRect = new egret.Rectangle();
             }
             resultRect.copyFrom(bounds);
-            if (targetCoordinateSpace == this || resultRect.isEmpty()) {
+            if (targetCoordinateSpace == this) {
                 return resultRect;
             }
             var m;
