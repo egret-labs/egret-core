@@ -20058,18 +20058,21 @@ var egret;
                 return this.$TextField[19 /* wordWrap */];
             }
             ,function (value) {
-                value = !!value;
-                var values = this.$TextField;
-                if (value == values[19 /* wordWrap */]) {
-                    return;
-                }
-                if (values[20 /* displayAsPassword */]) {
-                    return;
-                }
-                values[19 /* wordWrap */] = value;
-                this.$invalidateTextField();
+                this.$setWordWrap(value);
             }
         );
+        p.$setWordWrap = function (value) {
+            value = !!value;
+            var values = this.$TextField;
+            if (value == values[19 /* wordWrap */]) {
+                return;
+            }
+            if (values[20 /* displayAsPassword */]) {
+                return;
+            }
+            values[19 /* wordWrap */] = value;
+            this.$invalidateTextField();
+        };
         d(p, "type"
             /**
              * @version Egret 2.4
@@ -20690,10 +20693,16 @@ var egret;
              * @default false
              */
             ,function (value) {
-                this.$TextField[31 /* border */] = !!value;
-                this.$invalidate();
+                this.$setBorder(value);
             }
         );
+        /**
+         * @private
+         */
+        p.$setBorder = function (value) {
+            this.$TextField[31 /* border */] = !!value;
+            this.$invalidate();
+        };
         d(p, "borderColor"
             /**
              * @version Egret 2.4
@@ -20715,10 +20724,16 @@ var egret;
              * @default 0x000000
              */
             ,function (value) {
-                this.$TextField[32 /* borderColor */] = +value || 0;
-                this.$invalidate();
+                this.$setBorderColor(value);
             }
         );
+        /**
+         * @private
+         */
+        p.$setBorderColor = function (value) {
+            this.$TextField[32 /* borderColor */] = +value || 0;
+            this.$invalidate();
+        };
         d(p, "background"
             /**
              * @version Egret 2.4
@@ -20742,10 +20757,16 @@ var egret;
              * @default false
              */
             ,function (value) {
-                this.$TextField[33 /* background */] = value;
-                this.$invalidate();
+                this.$setBackground(value);
             }
         );
+        /**
+         * @private
+         */
+        p.$setBackground = function (value) {
+            this.$TextField[33 /* background */] = value;
+            this.$invalidate();
+        };
         d(p, "backgroundColor"
             /**
              * @version Egret 2.4
@@ -20767,10 +20788,16 @@ var egret;
              * @default 0xFFFFFF
              */
             ,function (value) {
-                this.$TextField[34 /* backgroundColor */] = value;
-                this.$invalidate();
+                this.$setBackgroundColor(value);
             }
         );
+        /**
+         * @private
+         */
+        p.$setBackgroundColor = function (value) {
+            this.$TextField[34 /* backgroundColor */] = value;
+            this.$invalidate();
+        };
         /**
          * @private
          *

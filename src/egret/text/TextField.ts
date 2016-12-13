@@ -653,6 +653,10 @@ namespace egret {
         }
 
         public set wordWrap(value:boolean) {
+            this.$setWordWrap(value);
+        }
+
+        $setWordWrap(value:boolean):void {
             value = !!value;
             let values = this.$TextField;
             if (value == values[sys.TextKeys.wordWrap]) {
@@ -1331,6 +1335,13 @@ namespace egret {
          * @default false
          */
         public set border(value:boolean) {
+            this.$setBorder(value);
+        }
+
+        /**
+         * @private
+         */
+        $setBorder(value:boolean):void {
             this.$TextField[sys.TextKeys.border] = !!value;
             this.$invalidate();
         }
@@ -1356,6 +1367,13 @@ namespace egret {
          * @default 0x000000
          */
         public set borderColor(value:number) {
+            this.$setBorderColor(value);
+        }
+
+        /**
+         * @private
+         */
+        $setBorderColor(value:number):void {
             this.$TextField[sys.TextKeys.borderColor] = +value || 0;
             this.$invalidate();
         }
@@ -1383,6 +1401,13 @@ namespace egret {
          * @default false
          */
         public set background(value:boolean) {
+            this.$setBackground(value);
+        }
+
+        /**
+         * @private
+         */
+        $setBackground(value:boolean):void {
             this.$TextField[sys.TextKeys.background] = value;
             this.$invalidate();
         }
@@ -1408,6 +1433,13 @@ namespace egret {
          * @default 0xFFFFFF
          */
         public set backgroundColor(value:number) {
+            this.$setBackgroundColor(value);
+        }
+
+        /**
+         * @private
+         */
+        $setBackgroundColor(value:number):void {
             this.$TextField[sys.TextKeys.backgroundColor] = value;
             this.$invalidate();
         }

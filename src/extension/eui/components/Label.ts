@@ -100,6 +100,27 @@ namespace eui {
             this.text = text;
         }
 
+        private $styleList:Array<string> = [
+            "fontFamily",
+            "size",
+            "bold",
+            "italic",
+            "textAlign",
+            "verticalAlign",
+            "lineSpacing",
+            "textColor",
+            "wordWrap",
+            "displayAsPassword",
+            "strokeColor",
+            "stroke",
+            "maxChars",
+            "multiline",
+            "border",
+            "borderColor",
+            "background",
+            "backgroundColor"
+        ];
+        private $revertStyle = {};
         private $style:string = null;
 
         /**
@@ -126,15 +147,117 @@ namespace eui {
             if (this.$style == value) {
                 return;
             }
+            this.$style = value;
             let theme:Theme = egret.getImplementation("eui.Theme");
             if(theme) {
-                let config = theme.$getStyleConfig(value);
-                if(config) {
-                    for(let key in config) {
-                        this[key] = config[key];
+                for(let key in this.$revertStyle) {
+                    this[key] = this.$revertStyle[key];
+                }
+                this.$revertStyle = {};
+                let styleList = value.split(",");
+                for(let i = 0 ; i < styleList.length ; i++) {
+                    let config = theme.$getStyleConfig(styleList[i]);
+                    if(config) {
+                        for(let key in config) {
+                            if(this.$styleList.indexOf(key) != -1) {
+                                let revertValue = this[key];
+                                this[key] = config[key];
+                                this.$revertStyle[key] = revertValue;
+                            }
+                        }
                     }
                 }
             }
+        }
+
+        $setFontFamily(value:string):boolean {
+            delete this.$revertStyle["fontFanily"];
+            return super.$setFontFamily(value);
+        }
+
+        $setSize(value:number):boolean {
+            delete this.$revertStyle["size"];
+            return super.$setSize(value);
+        }
+
+        $setBold(value:boolean):boolean {
+            delete this.$revertStyle["bold"];
+            return super.$setBold(value);
+        }
+
+        $setItalic(value:boolean):boolean {
+            delete this.$revertStyle["italic"];
+            return super.$setItalic(value);
+        }
+
+        $setTextAlign(value:string):boolean {
+            delete this.$revertStyle["textAlign"];
+            return super.$setTextAlign(value);
+        }
+
+        $setVerticalAlign(value:string):boolean {
+            delete this.$revertStyle["verticalAlign"];
+            return super.$setVerticalAlign(value);
+        }
+
+        $setLineSpacing(value:number):boolean {
+            delete this.$revertStyle["lineSpacing"];
+            return super.$setLineSpacing(value);
+        }
+
+        $setTextColor(value:number):boolean {
+            delete this.$revertStyle["textColor"];
+            return super.$setTextColor(value);
+        }
+
+        $setWordWrap(value:boolean):void {
+            delete this.$revertStyle["wordWrap"];
+            super.$setWordWrap(value);
+        }
+
+        $setDisplayAsPassword(value:boolean):boolean {
+            delete this.$revertStyle["displayAsPassword"];
+            return super.$setDisplayAsPassword(value);
+        }
+
+        $setStrokeColor(value:number):boolean {
+            delete this.$revertStyle["strokeColor"];
+            return super.$setStrokeColor(value);
+        }
+
+        $setStroke(value:number):boolean {
+            delete this.$revertStyle["stroke"];
+            return super.$setStroke(value);
+        }
+
+        $setMaxChars(value:number):boolean {
+            delete this.$revertStyle["maxChars"];
+            return super.$setMaxChars(value);
+        }
+
+        $setMultiline(value:boolean):boolean {
+            delete this.$revertStyle["multiline"];
+            return super.$setMultiline(value);
+        }
+
+        $setBorder(value:boolean):void {
+            delete this.$revertStyle["border"];
+            super.$setBorder(value);
+        }
+
+        $setBorderColor(value:number):void {
+            delete this.$revertStyle["borderColor"];
+            super.$setBorderColor(value);
+        }
+
+        $setBackground(value:boolean):void {
+            delete this.$revertStyle["background"];
+            super.$setBackground(value);
+        }
+
+        $setBackgroundColor(value:number):void {
+            delete this.$revertStyle["backgroundColor"];
+            super.$setBackgroundColor(value);
         }
 
         /**

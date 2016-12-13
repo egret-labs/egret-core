@@ -9455,6 +9455,27 @@ var eui;
          */
         function Label(text) {
             _super.call(this);
+            this.$styleList = [
+                "fontFamily",
+                "size",
+                "bold",
+                "italic",
+                "textAlign",
+                "verticalAlign",
+                "lineSpacing",
+                "textColor",
+                "wordWrap",
+                "displayAsPassword",
+                "strokeColor",
+                "stroke",
+                "maxChars",
+                "multiline",
+                "border",
+                "borderColor",
+                "background",
+                "backgroundColor"
+            ];
+            this.$revertStyle = {};
             this.$style = null;
             /**
              * @private
@@ -9488,15 +9509,99 @@ var eui;
             if (this.$style == value) {
                 return;
             }
+            this.$style = value;
             var theme = egret.getImplementation("eui.Theme");
             if (theme) {
-                var config = theme.$getStyleConfig(value);
-                if (config) {
-                    for (var key in config) {
-                        this[key] = config[key];
+                for (var key in this.$revertStyle) {
+                    this[key] = this.$revertStyle[key];
+                }
+                this.$revertStyle = {};
+                var styleList = value.split(",");
+                for (var i = 0; i < styleList.length; i++) {
+                    var config = theme.$getStyleConfig(styleList[i]);
+                    if (config) {
+                        for (var key in config) {
+                            if (this.$styleList.indexOf(key) != -1) {
+                                var revertValue = this[key];
+                                this[key] = config[key];
+                                this.$revertStyle[key] = revertValue;
+                            }
+                        }
                     }
                 }
             }
+        };
+        p.$setFontFamily = function (value) {
+            delete this.$revertStyle["fontFanily"];
+            return _super.prototype.$setFontFamily.call(this, value);
+        };
+        p.$setSize = function (value) {
+            delete this.$revertStyle["size"];
+            return _super.prototype.$setSize.call(this, value);
+        };
+        p.$setBold = function (value) {
+            delete this.$revertStyle["bold"];
+            return _super.prototype.$setBold.call(this, value);
+        };
+        p.$setItalic = function (value) {
+            delete this.$revertStyle["italic"];
+            return _super.prototype.$setItalic.call(this, value);
+        };
+        p.$setTextAlign = function (value) {
+            delete this.$revertStyle["textAlign"];
+            return _super.prototype.$setTextAlign.call(this, value);
+        };
+        p.$setVerticalAlign = function (value) {
+            delete this.$revertStyle["verticalAlign"];
+            return _super.prototype.$setVerticalAlign.call(this, value);
+        };
+        p.$setLineSpacing = function (value) {
+            delete this.$revertStyle["lineSpacing"];
+            return _super.prototype.$setLineSpacing.call(this, value);
+        };
+        p.$setTextColor = function (value) {
+            delete this.$revertStyle["textColor"];
+            return _super.prototype.$setTextColor.call(this, value);
+        };
+        p.$setWordWrap = function (value) {
+            delete this.$revertStyle["wordWrap"];
+            _super.prototype.$setWordWrap.call(this, value);
+        };
+        p.$setDisplayAsPassword = function (value) {
+            delete this.$revertStyle["displayAsPassword"];
+            return _super.prototype.$setDisplayAsPassword.call(this, value);
+        };
+        p.$setStrokeColor = function (value) {
+            delete this.$revertStyle["strokeColor"];
+            return _super.prototype.$setStrokeColor.call(this, value);
+        };
+        p.$setStroke = function (value) {
+            delete this.$revertStyle["stroke"];
+            return _super.prototype.$setStroke.call(this, value);
+        };
+        p.$setMaxChars = function (value) {
+            delete this.$revertStyle["maxChars"];
+            return _super.prototype.$setMaxChars.call(this, value);
+        };
+        p.$setMultiline = function (value) {
+            delete this.$revertStyle["multiline"];
+            return _super.prototype.$setMultiline.call(this, value);
+        };
+        p.$setBorder = function (value) {
+            delete this.$revertStyle["border"];
+            _super.prototype.$setBorder.call(this, value);
+        };
+        p.$setBorderColor = function (value) {
+            delete this.$revertStyle["borderColor"];
+            _super.prototype.$setBorderColor.call(this, value);
+        };
+        p.$setBackground = function (value) {
+            delete this.$revertStyle["background"];
+            _super.prototype.$setBackground.call(this, value);
+        };
+        p.$setBackgroundColor = function (value) {
+            delete this.$revertStyle["backgroundColor"];
+            _super.prototype.$setBackgroundColor.call(this, value);
         };
         /**
          * @private

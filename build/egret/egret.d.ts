@@ -12832,6 +12832,7 @@ declare namespace egret {
          * @platform Web,Native
          */
         wordWrap: boolean;
+        $setWordWrap(value: boolean): void;
         /**
          * @private
          */
@@ -13163,6 +13164,10 @@ declare namespace egret {
          */
         border: boolean;
         /**
+         * @private
+         */
+        $setBorder(value: boolean): void;
+        /**
          * @version Egret 2.4
          * @platform Web,Native
          */
@@ -13179,6 +13184,10 @@ declare namespace egret {
          * @default 0x000000
          */
         borderColor: number;
+        /**
+         * @private
+         */
+        $setBorderColor(value: number): void;
         /**
          * @version Egret 2.4
          * @platform Web,Native
@@ -13199,6 +13208,10 @@ declare namespace egret {
          */
         background: boolean;
         /**
+         * @private
+         */
+        $setBackground(value: boolean): void;
+        /**
          * @version Egret 2.4
          * @platform Web,Native
          */
@@ -13215,6 +13228,10 @@ declare namespace egret {
          * @default 0xFFFFFF
          */
         backgroundColor: number;
+        /**
+         * @private
+         */
+        $setBackgroundColor(value: number): void;
         /**
          * @private
          *

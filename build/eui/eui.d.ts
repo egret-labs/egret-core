@@ -6562,6 +6562,8 @@ declare namespace eui {
          * @platform Web,Native
          */
         constructor(text?: string);
+        private $styleList;
+        private $revertStyle;
         private $style;
         /**
          * @language en_US
@@ -6577,6 +6579,24 @@ declare namespace eui {
          */
         style: string;
         $setStyle(value: string): void;
+        $setFontFamily(value: string): boolean;
+        $setSize(value: number): boolean;
+        $setBold(value: boolean): boolean;
+        $setItalic(value: boolean): boolean;
+        $setTextAlign(value: string): boolean;
+        $setVerticalAlign(value: string): boolean;
+        $setLineSpacing(value: number): boolean;
+        $setTextColor(value: number): boolean;
+        $setWordWrap(value: boolean): void;
+        $setDisplayAsPassword(value: boolean): boolean;
+        $setStrokeColor(value: number): boolean;
+        $setStroke(value: number): boolean;
+        $setMaxChars(value: number): boolean;
+        $setMultiline(value: boolean): boolean;
+        $setBorder(value: boolean): void;
+        $setBorderColor(value: number): void;
+        $setBackground(value: boolean): void;
+        $setBackgroundColor(value: number): void;
         /**
          * @private
          *
