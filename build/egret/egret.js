@@ -19460,7 +19460,6 @@ var egret;
         };
         //点中文本
         p.onMouseDownHandler = function (event) {
-            event.stopPropagation();
             this.$onFocus();
         };
         p.$onFocus = function () {
@@ -19477,7 +19476,9 @@ var egret;
         };
         //未点中文本
         p.onStageDownHandler = function (event) {
-            this.stageText.$hide();
+            if (event.$target != this._text) {
+                this.stageText.$hide();
+            }
         };
         /**
          * @private
