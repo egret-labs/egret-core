@@ -40,7 +40,6 @@ namespace egret {
      * @see egret.Bitmap
      * @version Egret 2.4
      * @platform Web,Native
-     * @private
      */
     /**
      * @language zh_CN
@@ -51,7 +50,6 @@ namespace egret {
      * @see egret.Bitmap
      * @version Egret 2.4
      * @platform Web,Native
-     * @private
      */
     export class BitmapData extends HashObject {
         /**
@@ -90,12 +88,14 @@ namespace egret {
          * Original bitmap image.
          * @version Egret 2.4
          * @platform Web,Native
+         * @private
          */
         /**
          * @language zh_CN
          * 原始位图图像。
          * @version Egret 2.4
          * @platform Web,Native
+         * @private
          */
         source: any;
 
@@ -104,12 +104,14 @@ namespace egret {
          * WebGL texture.
          * @version Egret 2.4
          * @platform Web,Native
+         * @private
          */
         /**
          * @language zh_CN
          * WebGL纹理。
          * @version Egret 2.4
          * @platform Web,Native
+         * @private
          */
         webGLTexture: any;
 

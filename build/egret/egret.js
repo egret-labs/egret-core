@@ -3998,7 +3998,6 @@ var egret;
      * @see egret.Bitmap
      * @version Egret 2.4
      * @platform Web,Native
-     * @private
      */
     /**
      * @language zh_CN
@@ -4009,7 +4008,6 @@ var egret;
      * @see egret.Bitmap
      * @version Egret 2.4
      * @platform Web,Native
-     * @private
      */
     var BitmapData = (function (_super) {
         __extends(BitmapData, _super);

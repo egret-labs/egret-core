@@ -2308,7 +2308,6 @@ declare namespace egret {
      * @see egret.Bitmap
      * @version Egret 2.4
      * @platform Web,Native
-     * @private
      */
     /**
      * @language zh_CN
@@ -2319,7 +2318,6 @@ declare namespace egret {
      * @see egret.Bitmap
      * @version Egret 2.4
      * @platform Web,Native
-     * @private
      */
     class BitmapData extends HashObject {
         /**
@@ -2357,12 +2355,14 @@ declare namespace egret {
          * Original bitmap image.
          * @version Egret 2.4
          * @platform Web,Native
+         * @private
          */
         /**
          * @language zh_CN
          * 原始位图图像。
          * @version Egret 2.4
          * @platform Web,Native
+         * @private
          */
         source: any;
         /**
@@ -2370,12 +2370,14 @@ declare namespace egret {
          * WebGL texture.
          * @version Egret 2.4
          * @platform Web,Native
+         * @private
          */
         /**
          * @language zh_CN
          * WebGL纹理。
          * @version Egret 2.4
          * @platform Web,Native
+         * @private
          */
         webGLTexture: any;
         /**
