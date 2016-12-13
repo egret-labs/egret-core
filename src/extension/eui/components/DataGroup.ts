@@ -387,7 +387,7 @@ namespace eui {
          * @param value
          */
         $setDataProvider(value:ICollection):boolean {
-            if (this.$dataProvider == value || !value.getItemAt)
+            if (this.$dataProvider == value || (value && !value.getItemAt))
                 return false;
             this.removeDataProviderListener();
             this.$dataProvider = value;

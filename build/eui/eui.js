@@ -5810,7 +5810,7 @@ var eui;
          * @param value
          */
         p.$setDataProvider = function (value) {
-            if (this.$dataProvider == value || !value.getItemAt)
+            if (this.$dataProvider == value || (value && !value.getItemAt))
                 return false;
             this.removeDataProviderListener();
             this.$dataProvider = value;
