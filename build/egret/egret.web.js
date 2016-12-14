@@ -3595,14 +3595,18 @@ var egret;
                 else if (ua.indexOf("android") >= 0) {
                     egret.Capabilities.$os = "Android";
                     Html5Capatibility._System_OS = SystemOSType.ADNROID;
-                    if (canUseWebAudio) {
-                        Html5Capatibility.setAudioType(AudioType.WEB_AUDIO);
-                    }
-                    else {
-                        Html5Capatibility.setAudioType(AudioType.HTML5_AUDIO);
+                    if (checkAudioType) {
+                        if (canUseWebAudio) {
+                            Html5Capatibility.setAudioType(AudioType.WEB_AUDIO);
+                        }
+                        else {
+                            Html5Capatibility.setAudioType(AudioType.HTML5_AUDIO);
+                        }
                     }
                     if (window.hasOwnProperty("QZAppExternal") && ua.indexOf("qzone") >= 0) {
-                        Html5Capatibility.setAudioType(AudioType.QQ_AUDIO);
+                        if (checkAudioType) {
+                            Html5Capatibility.setAudioType(AudioType.QQ_AUDIO);
+                        }
                         var bases = document.getElementsByTagName('base');
                         if (bases && bases.length > 0) {
                             Html5Capatibility._QQRootPath = bases[0]["baseURI"];
@@ -3623,7 +3627,9 @@ var egret;
                     Html5Capatibility._System_OS = SystemOSType.IOS;
                     if (Html5Capatibility.getIOSVersion() >= 7) {
                         Html5Capatibility._canUseBlob = true;
-                        Html5Capatibility.setAudioType(AudioType.WEB_AUDIO);
+                        if (checkAudioType) {
+                            Html5Capatibility.setAudioType(AudioType.WEB_AUDIO);
+                        }
                     }
                 }
                 else {
