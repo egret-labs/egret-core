@@ -8,7 +8,7 @@ var os = require('os');
 var copydir = require('../lib/copy-dir');
 var UnzipCommand = require("./installsdk/UnzipCommand");
 
-var sdkConfigList = [{"category":"sdk","name":"Android SDK Base","varName":"ANDROID_HOME","url":"http://10.0.7.36/android-sdk_r24.4.1-windows.zip","installDir":"android-sdk-windows","fileSize":"196919088"},{"category":"sdk","name":"Android Platform Tools","url":"http://10.0.7.36/platform-tools_r24-windows.zip","installDir":"android-sdk-windows/platform-tools","fileSize":"3744669"},{"category":"sdk","name":"Android Build Tools","url":"http://10.0.7.36/build-tools_r24.0.1-windows.zip","installDir":"android-sdk-windows/build-tools/24.0.1","fileSize":"48323734"},{"category":"gapi19","name":"SDK Platform","url":"http://10.0.7.36/android-19_r04.zip","installDir":"android-sdk-windows/platforms/android-19","fileSize":"62590023"},{"category":"android_toolchain","name":"Java SDK","varName":"JAVA_HOME","url":"http://10.0.7.36/jdk1.8.0_77.zip","installDir":"jdk1.8.0_77","fileSize":"158202195"},{"category":"android_toolchain","name":"Apache Ant","varName":"ANT_HOME","url":"http://10.0.7.36/apache-ant-1.8.2-bin.zip","installDir":"apache-ant-1.8.2","fileSize":"41491235"},{"category":"android_toolchain","name":"Gradle","varName":"GRADLE_HOME","url":"http://10.0.7.36/gradle-2.9-bin.zip","installDir":"gradle-2.9","fileSize":"44652280"}];
+var sdkConfigList = [{"category":"sdk","name":"Android SDK Base","varName":"ANDROID_HOME","url":"http://10.0.7.36/android-sdk_r24.4.1-windows.zip","installDir":"android-sdk-windows","fileSize":"196919088"},{"category":"sdk","name":"Android Platform Tools","url":"http://10.0.7.36/platform-tools_r24-windows.zip","installDir":"android-sdk-windows/platform-tools","fileSize":"3744669"},{"category":"sdk","name":"Android Build Tools","url":"http://10.0.7.36/build-tools_r24.0.1-windows.zip","installDir":"android-sdk-windows/build-tools/24.0.1","fileSize":"48323734"},{"category":"gapi19","name":"SDK Platform","url":"http://10.0.7.36/android-19_r04.zip","installDir":"android-sdk-windows/platforms/android-19","fileSize":"62590023"},{"category":"android_toolchain","name":"Apache Ant","varName":"ANT_HOME","url":"http://10.0.7.36/apache-ant-1.8.2-bin.zip","installDir":"apache-ant-1.8.2","fileSize":"41491235"},{"category":"android_toolchain","name":"Gradle","varName":"GRADLE_HOME","url":"http://10.0.7.36/gradle-2.9-bin.zip","installDir":"gradle-2.9","fileSize":"44652280"}];
 
 var InstallSDK = (function (){
 	function InstallSDK() {
@@ -336,6 +336,16 @@ var InstallSDK = (function (){
 
 		return sdkInstallDir;
 	}
+	
+	function needAddBinToPath(name) {
+		var result = false;
+		
+		if (name == "ANT_HOME" || name == "GRADLE_HOME") {
+			result = true;
+		}
+		
+		return result;
+	}
 
 	function saveSDKInfoToConfigFile() {
 		var config = {};
@@ -344,7 +354,13 @@ var InstallSDK = (function (){
 		for (var i=0; i<list.length; i++) {
 			var obj = list[i];
 			if (obj.varName) {
-				config[obj.varName] = obj.installDir;				
+				var installDir = obj.installDir;
+				
+				if (needAddBinToPath(obj.varName)) {
+					installDir = path.join(installDir, "bin");
+				}
+				
+				config[obj.varName] = installDir;				
 			}
 		}
 
