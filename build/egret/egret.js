@@ -17289,6 +17289,18 @@ var egret;
         }
         return gradient;
     }
+    // 判断浏览器是否支持 Uint8ClampedArray
+    var use8Clamp = false;
+    try {
+        use8Clamp = (typeof Uint8ClampedArray !== undefined);
+    }
+    catch (e) { }
+    function setArray(a, b, index) {
+        if (index === void 0) { index = 0; }
+        for (var i = 0, l = b.length; i < l; i++) {
+            a[i + index] = b[i];
+        }
+    }
     /**
      * @private
      */
@@ -17319,13 +17331,19 @@ var egret;
      * @private
      */
     function blurFilterH(buffer, w, h, blurX) {
-        var lineBuffer = new Uint8ClampedArray(w * 4);
+        var lineBuffer;
+        if (use8Clamp) {
+            lineBuffer = new Uint8ClampedArray(w * 4);
+        }
+        else {
+            lineBuffer = new Array(w * 4);
+        }
         var lineSize = w * 4;
         var windowLength = (blurX * 2) + 1;
         var windowSize = windowLength * 4;
         for (var y = 0; y < h; y++) {
             var pLineStart = y * lineSize;
-            var rs = 0, gs = 0, bs = 0, as = 0, alpha = 0, alpha2 = 0;
+            var rs = 0, gs = 0, bs = 0, _as = 0, alpha = 0, alpha2 = 0;
             // Fill window
             for (var ptr = -blurX * 4, end = blurX * 4 + 4; ptr < end; ptr += 4) {
                 var key = pLineStart + ptr;
@@ -17336,14 +17354,22 @@ var egret;
                 rs += buffer[key + 0] * alpha;
                 gs += buffer[key + 1] * alpha;
                 bs += buffer[key + 2] * alpha;
-                as += alpha;
+                _as += alpha;
             }
             // Slide window
             for (var ptr = pLineStart, end = pLineStart + lineSize, linePtr = 0, lastPtr = ptr - blurX * 4, nextPtr = ptr + (blurX + 1) * 4; ptr < end; ptr += 4, linePtr += 4, nextPtr += 4, lastPtr += 4) {
-                lineBuffer[linePtr + 0] = rs / as;
-                lineBuffer[linePtr + 1] = gs / as;
-                lineBuffer[linePtr + 2] = bs / as;
-                lineBuffer[linePtr + 3] = as / windowLength;
+                if (_as === 0) {
+                    lineBuffer[linePtr + 0] = 0;
+                    lineBuffer[linePtr + 1] = 0;
+                    lineBuffer[linePtr + 2] = 0;
+                    lineBuffer[linePtr + 3] = 0;
+                }
+                else {
+                    lineBuffer[linePtr + 0] = rs / _as;
+                    lineBuffer[linePtr + 1] = gs / _as;
+                    lineBuffer[linePtr + 2] = bs / _as;
+                    lineBuffer[linePtr + 3] = _as / windowLength;
+                }
                 alpha = buffer[nextPtr + 3];
                 alpha2 = buffer[lastPtr + 3];
                 if (alpha || alpha == 0) {
@@ -17351,13 +17377,13 @@ var egret;
                         rs += buffer[nextPtr + 0] * alpha - buffer[lastPtr + 0] * alpha2;
                         gs += buffer[nextPtr + 1] * alpha - buffer[lastPtr + 1] * alpha2;
                         bs += buffer[nextPtr + 2] * alpha - buffer[lastPtr + 2] * alpha2;
-                        as += alpha - alpha2;
+                        _as += alpha - alpha2;
                     }
                     else {
                         rs += buffer[nextPtr + 0] * alpha;
                         gs += buffer[nextPtr + 1] * alpha;
                         bs += buffer[nextPtr + 2] * alpha;
-                        as += alpha;
+                        _as += alpha;
                     }
                 }
                 else {
@@ -17365,26 +17391,37 @@ var egret;
                         rs += -buffer[lastPtr + 0] * alpha2;
                         gs += -buffer[lastPtr + 1] * alpha2;
                         bs += -buffer[lastPtr + 2] * alpha2;
-                        as += -alpha2;
+                        _as += -alpha2;
                     }
                     else {
                     }
                 }
             }
             // Copy line
-            buffer.set(lineBuffer, pLineStart);
+            if (use8Clamp) {
+                buffer.set(lineBuffer, pLineStart);
+            }
+            else {
+                setArray(buffer, lineBuffer, pLineStart);
+            }
         }
     }
     /**
      * @private
      */
     function blurFilterV(buffer, w, h, blurY) {
-        var columnBuffer = new Uint8ClampedArray(h * 4);
+        var columnBuffer;
+        if (use8Clamp) {
+            columnBuffer = new Uint8ClampedArray(h * 4);
+        }
+        else {
+            columnBuffer = new Array(h * 4);
+        }
         var stride = w * 4;
         var windowLength = (blurY * 2) + 1;
         for (var x = 0; x < w; x++) {
             var pColumnStart = x * 4;
-            var rs = 0, gs = 0, bs = 0, as = 0, alpha = 0, alpha2 = 0;
+            var rs = 0, gs = 0, bs = 0, _as = 0, alpha = 0, alpha2 = 0;
             // Fill window
             for (var ptr = -blurY * stride, end = blurY * stride + stride; ptr < end; ptr += stride) {
                 var key = pColumnStart + ptr;
@@ -17395,14 +17432,22 @@ var egret;
                 rs += buffer[key + 0] * alpha;
                 gs += buffer[key + 1] * alpha;
                 bs += buffer[key + 2] * alpha;
-                as += alpha;
+                _as += alpha;
             }
             // Slide window
             for (var ptr = pColumnStart, end = pColumnStart + h * stride, columnPtr = 0, lastPtr = pColumnStart - blurY * stride, nextPtr = pColumnStart + ((blurY + 1) * stride); ptr < end; ptr += stride, columnPtr += 4, nextPtr += stride, lastPtr += stride) {
-                columnBuffer[columnPtr + 0] = rs / as;
-                columnBuffer[columnPtr + 1] = gs / as;
-                columnBuffer[columnPtr + 2] = bs / as;
-                columnBuffer[columnPtr + 3] = as / windowLength;
+                if (_as === 0) {
+                    columnBuffer[columnPtr + 0] = 0;
+                    columnBuffer[columnPtr + 1] = 0;
+                    columnBuffer[columnPtr + 2] = 0;
+                    columnBuffer[columnPtr + 3] = 0;
+                }
+                else {
+                    columnBuffer[columnPtr + 0] = rs / _as;
+                    columnBuffer[columnPtr + 1] = gs / _as;
+                    columnBuffer[columnPtr + 2] = bs / _as;
+                    columnBuffer[columnPtr + 3] = _as / windowLength;
+                }
                 alpha = buffer[nextPtr + 3];
                 alpha2 = buffer[lastPtr + 3];
                 if (alpha || alpha == 0) {
@@ -17410,13 +17455,13 @@ var egret;
                         rs += buffer[nextPtr + 0] * alpha - buffer[lastPtr + 0] * alpha2;
                         gs += buffer[nextPtr + 1] * alpha - buffer[lastPtr + 1] * alpha2;
                         bs += buffer[nextPtr + 2] * alpha - buffer[lastPtr + 2] * alpha2;
-                        as += alpha - alpha2;
+                        _as += alpha - alpha2;
                     }
                     else {
                         rs += buffer[nextPtr + 0] * alpha;
                         gs += buffer[nextPtr + 1] * alpha;
                         bs += buffer[nextPtr + 2] * alpha;
-                        as += alpha;
+                        _as += alpha;
                     }
                 }
                 else {
@@ -17424,7 +17469,7 @@ var egret;
                         rs += -buffer[lastPtr + 0] * alpha2;
                         gs += -buffer[lastPtr + 1] * alpha2;
                         bs += -buffer[lastPtr + 2] * alpha2;
-                        as += -alpha2;
+                        _as += -alpha2;
                     }
                     else {
                     }
@@ -17449,12 +17494,25 @@ var egret;
         scaleAlphaChannel(tmp, strength);
         compositeSourceOver(tmp, buffer);
         buffer.set(tmp);
+        if (use8Clamp) {
+            buffer.set(tmp);
+        }
+        else {
+            setArray(buffer, tmp);
+        }
     }
     function alphaFilter(buffer, color) {
         if (!color) {
             color = [0, 0, 0, 0];
         }
-        var plane = new Uint8ClampedArray(buffer);
+        var plane;
+        if (use8Clamp) {
+            plane = new Uint8ClampedArray(buffer);
+        }
+        else {
+            plane = new Array(buffer.length);
+            setArray(plane, buffer);
+        }
         for (var ptr = 0, end = plane.length; ptr < end; ptr += 4) {
             var alpha = plane[ptr + 3];
             plane[ptr + 0] = color[0] * alpha;
@@ -17466,22 +17524,46 @@ var egret;
     function panFilter(buffer, w, h, angle, distance) {
         var dy = (Math.sin(angle) * distance) | 0;
         var dx = (Math.cos(angle) * distance) | 0;
-        var oldBuffer = new Int32Array(buffer.buffer);
-        var newBuffer = new Int32Array(oldBuffer.length);
-        for (var oy = 0; oy < h; oy++) {
-            var ny = oy + dy;
-            if (ny < 0 || ny > h) {
-                continue;
-            }
-            for (var ox = 0; ox < w; ox++) {
-                var nx = ox + dx;
-                if (nx < 0 || nx > w) {
+        var oldBuffer, newBuffer;
+        if (use8Clamp) {
+            oldBuffer = new Int32Array(buffer.buffer);
+            newBuffer = new Int32Array(oldBuffer.length);
+            for (var oy = 0; oy < h; oy++) {
+                var ny = oy + dy;
+                if (ny < 0 || ny > h) {
                     continue;
                 }
-                newBuffer[ny * w + nx] = oldBuffer[oy * w + ox];
+                for (var ox = 0; ox < w; ox++) {
+                    var nx = ox + dx;
+                    if (nx < 0 || nx > w) {
+                        continue;
+                    }
+                    newBuffer[ny * w + nx] = oldBuffer[oy * w + ox];
+                }
             }
+            oldBuffer.set(newBuffer);
         }
-        oldBuffer.set(newBuffer);
+        else {
+            oldBuffer = buffer;
+            newBuffer = new Array(oldBuffer.length);
+            for (var oy = 0; oy < h; oy++) {
+                var ny = oy + dy;
+                if (ny < 0 || ny > h) {
+                    continue;
+                }
+                for (var ox = 0; ox < w; ox++) {
+                    var nx = ox + dx;
+                    if (nx < 0 || nx > w) {
+                        continue;
+                    }
+                    newBuffer[(ny * w + nx) * 4 + 0] = oldBuffer[(oy * w + ox) * 4 + 0];
+                    newBuffer[(ny * w + nx) * 4 + 1] = oldBuffer[(oy * w + ox) * 4 + 1];
+                    newBuffer[(ny * w + nx) * 4 + 2] = oldBuffer[(oy * w + ox) * 4 + 2];
+                    newBuffer[(ny * w + nx) * 4 + 3] = oldBuffer[(oy * w + ox) * 4 + 3];
+                }
+            }
+            setArray(oldBuffer, newBuffer);
+        }
     }
     function scaleAlphaChannel(buffer, value) {
         for (var ptr = 0, end = buffer.length; ptr < end; ptr += 4) {
@@ -17513,7 +17595,13 @@ var egret;
     // dropShadowFilter2
     // 模拟shader中的算法，可以实现内发光，挖空等高级效果
     function dropShadowFilter2(buffer, w, h, color, blurX, blurY, angle, distance, strength, inner, knockout, hideObject) {
-        var plane = new Uint8ClampedArray(buffer);
+        var plane;
+        if (use8Clamp) {
+            plane = new Uint8ClampedArray(buffer.length);
+        }
+        else {
+            plane = new Array(buffer.length);
+        }
         var alpha = color[3];
         var curDistanceX = 0;
         var curDistanceY = 0;
@@ -17581,7 +17669,12 @@ var egret;
                 plane[key + 3] = resultAlpha * 255;
             }
         }
-        buffer.set(plane);
+        if (use8Clamp) {
+            buffer.set(plane);
+        }
+        else {
+            setArray(buffer, plane);
+        }
     }
 })(egret || (egret = {}));
 var egret;

@@ -1001,6 +1001,18 @@ namespace egret {
         return gradient;
     }
 
+    // 判断浏览器是否支持 Uint8ClampedArray
+    let use8Clamp = false;
+    try{
+        use8Clamp = (typeof Uint8ClampedArray !== undefined);
+    } catch(e) {}
+
+    function setArray(a, b, index:number = 0):void {
+        for(let i = 0, l = b.length; i < l; i++) {
+            a[i + index] = b[i];
+        }
+    }
+
     /**
      * @private
      */
@@ -1034,13 +1046,18 @@ namespace egret {
      * @private
      */
     function blurFilterH(buffer, w, h, blurX) {
-        let lineBuffer = new Uint8ClampedArray(w * 4);
+        let lineBuffer;
+        if(use8Clamp) {
+            lineBuffer = new Uint8ClampedArray(w * 4);
+        } else {
+            lineBuffer = new Array(w * 4);
+        }
         let lineSize = w * 4;
         let windowLength = (blurX * 2) + 1;
         let windowSize = windowLength * 4;
         for (let y = 0; y < h; y++) {
             let pLineStart = y * lineSize;
-            let rs = 0, gs = 0, bs = 0, as = 0, alpha = 0, alpha2 = 0;
+            let rs = 0, gs = 0, bs = 0, _as = 0, alpha = 0, alpha2 = 0;
             // Fill window
             for (let ptr = -blurX * 4, end = blurX * 4 + 4; ptr < end; ptr += 4) {
                 let key = pLineStart + ptr;
@@ -1051,14 +1068,23 @@ namespace egret {
                 rs += buffer[key + 0] * alpha;
                 gs += buffer[key + 1] * alpha;
                 bs += buffer[key + 2] * alpha;
-                as += alpha;
+                _as += alpha;
             }
             // Slide window
             for (let ptr = pLineStart, end = pLineStart + lineSize, linePtr = 0, lastPtr = ptr - blurX * 4, nextPtr = ptr + (blurX + 1) * 4; ptr < end; ptr += 4, linePtr += 4, nextPtr += 4, lastPtr += 4) {
-                lineBuffer[linePtr + 0] = rs / as;
-                lineBuffer[linePtr + 1] = gs / as;
-                lineBuffer[linePtr + 2] = bs / as;
-                lineBuffer[linePtr + 3] = as / windowLength;
+
+                if(_as === 0) {
+                    lineBuffer[linePtr + 0] = 0;
+                    lineBuffer[linePtr + 1] = 0;
+                    lineBuffer[linePtr + 2] = 0;
+                    lineBuffer[linePtr + 3] = 0;
+                } else {
+                    lineBuffer[linePtr + 0] = rs / _as;
+                    lineBuffer[linePtr + 1] = gs / _as;
+                    lineBuffer[linePtr + 2] = bs / _as;
+                    lineBuffer[linePtr + 3] = _as / windowLength;
+                }
+                
                 alpha = buffer[nextPtr + 3];
                 alpha2 = buffer[lastPtr + 3];
                 
@@ -1067,26 +1093,30 @@ namespace egret {
                         rs += buffer[nextPtr + 0] * alpha - buffer[lastPtr + 0] * alpha2;
                         gs += buffer[nextPtr + 1] * alpha - buffer[lastPtr + 1] * alpha2;
                         bs += buffer[nextPtr + 2] * alpha - buffer[lastPtr + 2] * alpha2;
-                        as += alpha - alpha2;
+                        _as += alpha - alpha2;
                     } else {
                         rs += buffer[nextPtr + 0] * alpha;
                         gs += buffer[nextPtr + 1] * alpha;
                         bs += buffer[nextPtr + 2] * alpha;
-                        as += alpha;
+                        _as += alpha;
                     }
                 } else {
                     if(alpha2 || alpha2 == 0) {
                         rs += - buffer[lastPtr + 0] * alpha2;
                         gs += - buffer[lastPtr + 1] * alpha2;
                         bs += - buffer[lastPtr + 2] * alpha2;
-                        as += - alpha2;
+                        _as += - alpha2;
                     } else {
                         // do nothing
                     }
                 }
             }
             // Copy line
-            buffer.set(lineBuffer, pLineStart);
+            if(use8Clamp) {
+                buffer.set(lineBuffer, pLineStart);
+            } else {
+                setArray(buffer, lineBuffer, pLineStart);
+            }
         }
     }
 
@@ -1094,12 +1124,17 @@ namespace egret {
      * @private
      */
     function blurFilterV(buffer, w, h, blurY) {
-        let columnBuffer = new Uint8ClampedArray(h * 4);
+        let columnBuffer;
+        if(use8Clamp) {
+            columnBuffer = new Uint8ClampedArray(h * 4);
+        } else {
+            columnBuffer = new Array(h * 4);
+        }
         let stride = w * 4;
         let windowLength = (blurY * 2) + 1;
         for (let x = 0; x < w; x++) {
             let pColumnStart = x * 4;
-            let rs = 0, gs = 0, bs = 0, as = 0, alpha = 0, alpha2 = 0;
+            let rs = 0, gs = 0, bs = 0, _as = 0, alpha = 0, alpha2 = 0;
             // Fill window
             for (let ptr = -blurY * stride, end = blurY * stride + stride; ptr < end; ptr += stride) {
                 let key = pColumnStart + ptr;
@@ -1110,14 +1145,23 @@ namespace egret {
                 rs += buffer[key + 0] * alpha;
                 gs += buffer[key + 1] * alpha;
                 bs += buffer[key + 2] * alpha;
-                as += alpha;
+                _as += alpha;
             }
             // Slide window
             for (let ptr = pColumnStart, end = pColumnStart + h * stride, columnPtr = 0, lastPtr = pColumnStart - blurY * stride, nextPtr = pColumnStart + ((blurY + 1) * stride); ptr < end; ptr += stride, columnPtr += 4, nextPtr += stride, lastPtr += stride) {
-                columnBuffer[columnPtr + 0] = rs / as;
-                columnBuffer[columnPtr + 1] = gs / as;
-                columnBuffer[columnPtr + 2] = bs / as;
-                columnBuffer[columnPtr + 3] = as / windowLength;
+
+                if(_as === 0) {
+                    columnBuffer[columnPtr + 0] = 0;
+                    columnBuffer[columnPtr + 1] = 0;
+                    columnBuffer[columnPtr + 2] = 0;
+                    columnBuffer[columnPtr + 3] = 0;
+                } else {
+                    columnBuffer[columnPtr + 0] = rs / _as;
+                    columnBuffer[columnPtr + 1] = gs / _as;
+                    columnBuffer[columnPtr + 2] = bs / _as;
+                    columnBuffer[columnPtr + 3] = _as / windowLength;
+                }
+                
                 alpha = buffer[nextPtr + 3];
                 alpha2 = buffer[lastPtr + 3];
 
@@ -1126,19 +1170,19 @@ namespace egret {
                         rs += buffer[nextPtr + 0] * alpha - buffer[lastPtr + 0] * alpha2;
                         gs += buffer[nextPtr + 1] * alpha - buffer[lastPtr + 1] * alpha2;
                         bs += buffer[nextPtr + 2] * alpha - buffer[lastPtr + 2] * alpha2;
-                        as += alpha - alpha2;
+                        _as += alpha - alpha2;
                     } else {
                         rs += buffer[nextPtr + 0] * alpha;
                         gs += buffer[nextPtr + 1] * alpha;
                         bs += buffer[nextPtr + 2] * alpha;
-                        as += alpha;
+                        _as += alpha;
                     }
                 } else {
                     if(alpha2 || alpha2 == 0) {
                         rs += - buffer[lastPtr + 0] * alpha2;
                         gs += - buffer[lastPtr + 1] * alpha2;
                         bs += - buffer[lastPtr + 2] * alpha2;
-                        as += - alpha2;
+                        _as += - alpha2;
                     } else {
                         // do nothing
                     }
@@ -1165,13 +1209,24 @@ namespace egret {
         scaleAlphaChannel(tmp, strength);
         compositeSourceOver(tmp, buffer);
         buffer.set(tmp);
+        if(use8Clamp) {
+            buffer.set(tmp);
+        } else {
+            setArray(buffer, tmp);
+        }
     }
 
     function alphaFilter(buffer, color) {
         if (!color) {
             color = [0, 0, 0, 0];
         }
-        let plane = new Uint8ClampedArray(buffer);
+        let plane;
+        if(use8Clamp) {
+            plane = new Uint8ClampedArray(buffer)
+        } else {
+            plane = new Array(buffer.length);
+            setArray(plane, buffer);
+        }
         for (let ptr = 0, end = plane.length; ptr < end; ptr += 4) {
             let alpha = plane[ptr + 3];
             plane[ptr + 0] = color[0] * alpha;
@@ -1184,22 +1239,50 @@ namespace egret {
     function panFilter(buffer, w, h, angle, distance) {
         let dy = (Math.sin(angle) * distance) | 0;
         let dx = (Math.cos(angle) * distance) | 0;
-        let oldBuffer = new Int32Array(buffer.buffer);
-        let newBuffer = new Int32Array(oldBuffer.length);
-        for (let oy = 0; oy < h; oy++) {
-            let ny = oy + dy;
-            if (ny < 0 || ny > h) {
-            continue;
+        
+        let oldBuffer, newBuffer;
+        if(use8Clamp) {
+            oldBuffer = new Int32Array(buffer.buffer);
+            newBuffer = new Int32Array(oldBuffer.length);
+
+            for (let oy = 0; oy < h; oy++) {
+                let ny = oy + dy;
+                if (ny < 0 || ny > h) {
+                    continue;
+                }
+                for (let ox = 0; ox < w; ox++) {
+                    let nx = ox + dx;
+                    if (nx < 0 || nx > w) {
+                        continue;
+                    }
+                    newBuffer[ny * w + nx] = oldBuffer[oy * w + ox];
+                }
             }
-            for (let ox = 0; ox < w; ox++) {
-            let nx = ox + dx;
-            if (nx < 0 || nx > w) {
-                continue;
+
+            oldBuffer.set(newBuffer);
+        } else {
+            oldBuffer = buffer;
+            newBuffer = new Array(oldBuffer.length);
+
+            for (let oy = 0; oy < h; oy++) {
+                let ny = oy + dy;
+                if (ny < 0 || ny > h) {
+                    continue;
+                }
+                for (let ox = 0; ox < w; ox++) {
+                    let nx = ox + dx;
+                    if (nx < 0 || nx > w) {
+                        continue;
+                    }
+                    newBuffer[(ny * w + nx) * 4 + 0] = oldBuffer[(oy * w + ox) * 4 + 0];
+                    newBuffer[(ny * w + nx) * 4 + 1] = oldBuffer[(oy * w + ox) * 4 + 1];
+                    newBuffer[(ny * w + nx) * 4 + 2] = oldBuffer[(oy * w + ox) * 4 + 2];
+                    newBuffer[(ny * w + nx) * 4 + 3] = oldBuffer[(oy * w + ox) * 4 + 3];
+                }
             }
-            newBuffer[ny * w + nx] = oldBuffer[oy * w + ox];
-            }
+
+            setArray(oldBuffer, newBuffer);
         }
-        oldBuffer.set(newBuffer);
     }
 
     function scaleAlphaChannel(buffer, value) {
@@ -1238,7 +1321,12 @@ namespace egret {
     // dropShadowFilter2
     // 模拟shader中的算法，可以实现内发光，挖空等高级效果
     function dropShadowFilter2(buffer, w, h, color, blurX, blurY, angle, distance, strength, inner, knockout, hideObject) {
-        let plane = new Uint8ClampedArray(buffer);
+        let plane;
+        if(use8Clamp) {
+            plane = new Uint8ClampedArray(buffer.length);
+        } else {
+            plane = new Array(buffer.length);
+        }
 
         let alpha = color[3];
         
@@ -1324,7 +1412,12 @@ namespace egret {
             }
         }
 
-        buffer.set(plane);
+        if(use8Clamp) {
+            buffer.set(plane);
+        } else {
+            setArray(buffer, plane);
+        }
+        
     }
 
 
