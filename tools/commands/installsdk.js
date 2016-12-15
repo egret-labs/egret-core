@@ -8,7 +8,7 @@ var os = require('os');
 var copydir = require('../lib/copy-dir');
 var UnzipCommand = require("./installsdk/UnzipCommand");
 
-var sdkConfigStr = '[{\"category\":\"sdk\",\"name\":\"Android SDK Base\",\"varName\":\"ANDROID_HOME\",\"url\":\"http://10.0.7.36/android-sdk_r24.4.1-windows.zip\",\"installDir\":\"android-sdk-windows\",\"fileSize\":\"199701062\"},{\"category\":\"sdk\",\"name\":\"Android Platform Tools\",\"url\":\"http://10.0.7.36/platform-tools_r24-windows.zip\",\"installDir\":\"android-sdk-windows/platform-tools\",\"fileSize\":\"2984063\"},{\"category\":\"sdk\",\"name\":\"Android Build Tools\",\"url\":\"http://10.0.7.36/build-tools_r24.0.1-windows.zip\",\"installDir\":\"android-sdk-windows/build-tools/24.0.1\",\"fileSize\":\"49511433\"},{\"category\":\"gapi19\",\"name\":\"SDK Platform\",\"url\":\"http://10.0.7.36/android-19_r04.zip\",\"installDir\":\"android-sdk-windows/platforms/android-19\",\"fileSize\":\"63871092\"},{\"category\":\"android_toolchain\",\"name\":\"Java SDK\",\"varName\":\"JAVA_HOME\",\"url\":\"http://10.0.7.36/jdk1.8.0_77.zip\",\"installDir\":\"jdk1.8.0_77\",\"fileSize\":\"162716770\"},{\"category\":\"android_toolchain\",\"name\":\"Apache Ant\",\"varName\":\"ANT_HOME\",\"url\":\"http://10.0.7.36/apache-ant-1.8.2-bin.zip\",\"installDir\":\"apache-ant-1.8.2\",\"fileSize\":\"10920710\"},{\"category\":\"android_toolchain\",\"name\":\"Gradle\",\"varName\":\"GRADLE_HOME\",\"url\":\"http://10.0.7.36/gradle-2.9-bin.zip\",\"installDir\":\"gradle-2.9\",\"fileSize\":\"44748613\"}]';
+var sdkConfigList = [{"category":"sdk","name":"Android SDK Base","varName":"ANDROID_HOME","url":"http://10.0.7.36/android-sdk_r24.4.1-windows.zip","installDir":"android-sdk-windows","fileSize":"196919088"},{"category":"sdk","name":"Android Platform Tools","url":"http://10.0.7.36/platform-tools_r24-windows.zip","installDir":"android-sdk-windows/platform-tools","fileSize":"3744669"},{"category":"sdk","name":"Android Build Tools","url":"http://10.0.7.36/build-tools_r24.0.1-windows.zip","installDir":"android-sdk-windows/build-tools/24.0.1","fileSize":"48323734"},{"category":"gapi19","name":"SDK Platform","url":"http://10.0.7.36/android-19_r04.zip","installDir":"android-sdk-windows/platforms/android-19","fileSize":"62590023"},{"category":"android_toolchain","name":"Java SDK","varName":"JAVA_HOME","url":"http://10.0.7.36/jdk1.8.0_77.zip","installDir":"jdk1.8.0_77","fileSize":"158202195"},{"category":"android_toolchain","name":"Apache Ant","varName":"ANT_HOME","url":"http://10.0.7.36/apache-ant-1.8.2-bin.zip","installDir":"apache-ant-1.8.2","fileSize":"41491235"},{"category":"android_toolchain","name":"Gradle","varName":"GRADLE_HOME","url":"http://10.0.7.36/gradle-2.9-bin.zip","installDir":"gradle-2.9","fileSize":"44652280"}];
 
 var InstallSDK = (function (){
 	function InstallSDK() {
@@ -64,7 +64,8 @@ var InstallSDK = (function (){
 			
 			var length = uzm.taskList.length;
 			var fileStr = getFileStrByCount(length);
-			print(length + " " + fileStr + " will be unzipped! Start to unzip!");
+			print(length + " " + fileStr + " will be unzipped and installed!");
+			print("Start to unzip and install!");
 			
 			uzm.start();
 		}
@@ -104,8 +105,6 @@ var InstallSDK = (function (){
 
 		startToDownload();
 	}
-
-	
 
 	function printAndroidSDKConfig() {
 		var config = getAndroidSDKConfig();
@@ -175,12 +174,7 @@ var InstallSDK = (function (){
 		writeToFile(configFile, str);
 	}
 
-	var sdkConfigList = null;
 	function getSDKConfigList() {
-		if (!sdkConfigList) {
-			sdkConfigList = JSON.parse(sdkConfigStr);
-		}
-
 		return sdkConfigList;
 	}
 
@@ -341,42 +335,6 @@ var InstallSDK = (function (){
 		}
 
 		return sdkInstallDir;
-	}
-
-	var unzipDir = null;
-	function setUnzipDir(dir) {
-		unzipDir = dir;
-        if (!fs.existsSync(unzipDir)) {
-            fs.mkdirSync(unzipDir);
-        }
-	}
-
-	function getUnzipDir() {
-		if (!unzipDir) {
-			var root = getRootPath();
-			var dir = path.join(root, "unzip");
-			setUnzipDir(dir);
-		}
-
-		return unzipDir;
-	}
-
-	function deleteFolderRecursive(path) {
-		try {
-			if( fs.existsSync(path) ) {
-			  fs.readdirSync(path).forEach(function(file) {
-				var curPath = path + "/" + file;
-				  if(fs.statSync(curPath).isDirectory()) { // recurse
-					  deleteFolderRecursive(curPath);
-				  } else { // delete file
-					  fs.unlinkSync(curPath);
-				  }
-			  });
-			  fs.rmdirSync(path);
-			}
-		} catch (e) {
-			
-		}
 	}
 
 	function saveSDKInfoToConfigFile() {
