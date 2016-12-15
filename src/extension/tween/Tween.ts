@@ -382,7 +382,7 @@ namespace egret {
          * @param actionsMode 
          * @returns 
          */
-        private setPosition(value:number, actionsMode:number = 1):boolean {
+        public setPosition(value:number, actionsMode:number = 1):boolean {
             if (value < 0) {
                 value = 0;
             }

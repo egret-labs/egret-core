@@ -187,8 +187,6 @@ namespace egret {
         private tempStage:egret.Stage;
         //点中文本
         private onMouseDownHandler(event:TouchEvent) {
-            event.stopPropagation();
-
             this.$onFocus();
         }
         
@@ -210,7 +208,9 @@ namespace egret {
         
         //未点中文本
         private onStageDownHandler(event:TouchEvent) {
-            this.stageText.$hide();
+            if(event.$target != this._text) {
+                this.stageText.$hide();
+            }
         }
 
         /**

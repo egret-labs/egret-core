@@ -799,7 +799,6 @@ var egret;
             }
             this.isStopped = value;
             if (value) {
-                this.playTimes = 0;
                 egret.sys.$ticker.$stopTick(this.advanceTime, this);
             }
             else {

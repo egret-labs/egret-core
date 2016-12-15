@@ -463,6 +463,10 @@ var egret;
                     //this.audio.load();
                     _this.$play();
                 };
+                /**
+                 * @private
+                 */
+                this._volume = 1;
                 audio.addEventListener("ended", this.onPlayEnd);
                 this.audio = audio;
             }
@@ -474,7 +478,7 @@ var egret;
                 }
                 try {
                     //this.audio.pause();
-                    this.audio.volume = 1;
+                    this.audio.volume = this._volume;
                     this.audio.currentTime = this.$startTime;
                 }
                 catch (e) {
@@ -497,10 +501,11 @@ var egret;
                 var audio = this.audio;
                 audio.removeEventListener("ended", this.onPlayEnd);
                 audio.volume = 0;
+                this._volume = 0;
                 this.audio = null;
                 var url = this.$url;
                 //延迟一定时间再停止，规避chrome报错
-                setTimeout(function () {
+                window.setTimeout(function () {
                     audio.pause();
                     web.HtmlSound.$recycle(url, audio);
                 }, 200);
@@ -511,9 +516,7 @@ var egret;
                  * @inheritDoc
                  */
                 ,function () {
-                    if (!this.audio)
-                        return 1;
-                    return this.audio.volume;
+                    return this._volume;
                 }
                 /**
                  * @inheritDoc
@@ -523,6 +526,7 @@ var egret;
                         egret.$error(1036);
                         return;
                     }
+                    this._volume = value;
                     if (!this.audio)
                         return;
                     this.audio.volume = value;
@@ -3595,14 +3599,18 @@ var egret;
                 else if (ua.indexOf("android") >= 0) {
                     egret.Capabilities.$os = "Android";
                     Html5Capatibility._System_OS = SystemOSType.ADNROID;
-                    if (canUseWebAudio) {
-                        Html5Capatibility.setAudioType(AudioType.WEB_AUDIO);
-                    }
-                    else {
-                        Html5Capatibility.setAudioType(AudioType.HTML5_AUDIO);
+                    if (checkAudioType) {
+                        if (canUseWebAudio) {
+                            Html5Capatibility.setAudioType(AudioType.WEB_AUDIO);
+                        }
+                        else {
+                            Html5Capatibility.setAudioType(AudioType.HTML5_AUDIO);
+                        }
                     }
                     if (window.hasOwnProperty("QZAppExternal") && ua.indexOf("qzone") >= 0) {
-                        Html5Capatibility.setAudioType(AudioType.QQ_AUDIO);
+                        if (checkAudioType) {
+                            Html5Capatibility.setAudioType(AudioType.QQ_AUDIO);
+                        }
                         var bases = document.getElementsByTagName('base');
                         if (bases && bases.length > 0) {
                             Html5Capatibility._QQRootPath = bases[0]["baseURI"];
@@ -3623,7 +3631,9 @@ var egret;
                     Html5Capatibility._System_OS = SystemOSType.IOS;
                     if (Html5Capatibility.getIOSVersion() >= 7) {
                         Html5Capatibility._canUseBlob = true;
-                        Html5Capatibility.setAudioType(AudioType.WEB_AUDIO);
+                        if (checkAudioType) {
+                            Html5Capatibility.setAudioType(AudioType.WEB_AUDIO);
+                        }
                     }
                 }
                 else {

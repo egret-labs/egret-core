@@ -732,7 +732,7 @@ declare namespace egret {
          * @param actionsMode
          * @returns
          */
-        private setPosition(value, actionsMode?);
+        setPosition(value: number, actionsMode?: number): boolean;
         /**
          * @private
          *
@@ -1217,16 +1217,18 @@ declare namespace egret.tween {
         /**
          * @language en_US
          * Play the Tween
+         * @time The starting position, the default is from the last position to play
          * @version Egret 3.1.8
          * @platform Web,Native
          */
         /**
          * @language zh_CN
          * 播放Tween
+         * @time 播放的起始位置, 默认为从上次位置继续播放
          * @version Egret 3.1.8
          * @platform Web,Native
          */
-        play(): void;
+        play(time?: number): void;
         /**
          * @language en_US
          * Pause the Tween
@@ -1240,6 +1242,19 @@ declare namespace egret.tween {
          * @platform Web,Native
          */
         pause(): void;
+        /**
+         * @language en_US
+         * Stop the Tween
+         * @version Egret 3.1.8
+         * @platform Web,Native
+         */
+        /**
+         * @language zh_CN
+         * 停止Tween
+         * @version Egret 3.1.8
+         * @platform Web,Native
+         */
+        stop(): void;
         private createTween();
         private applyPaths();
         private applyPath(path);
@@ -1287,16 +1302,18 @@ declare namespace egret.tween {
         /**
          * @language en_US
          * Play the all TweenItems
+         * @time The starting position, the default is from the last position to play
          * @version Egret 3.1.8
          * @platform Web,Native
          */
         /**
          * @language zh_CN
          * 播放所有的TweenItem
+         * @time 播放的起始位置, 默认为从上次位置继续播放
          * @version Egret 3.1.8
          * @platform Web,Native
          */
-        play(): void;
+        play(time?: number): void;
         /**
          * @language en_US
          * Pause the all TweenItems
@@ -1310,6 +1327,19 @@ declare namespace egret.tween {
          * @platform Web,Native
          */
         pause(): void;
+        /**
+         * @language en_US
+         * Stop the all TweenItems
+         * @version Egret 3.1.8
+         * @platform Web,Native
+         */
+        /**
+         * @language zh_CN
+         * 停止所有的TweenItem
+         * @version Egret 3.1.8
+         * @platform Web,Native
+         */
+        stop(): void;
         private itemComplete(e);
     }
 }

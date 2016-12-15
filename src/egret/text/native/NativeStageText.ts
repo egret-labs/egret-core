@@ -178,15 +178,15 @@ namespace egret.native {
             let returnType = 1;
             let maxLength = values[sys.TextKeys.maxChars] <= 0 ? -1 : values[sys.TextKeys.maxChars];
             let node = textfield.$getRenderNode();
-            let matrix = node.renderMatrix;
+            let point = this.$textfield.localToGlobal(0, 0);
             egret_native.TextInputOp.setKeybordOpen(true, JSON.stringify({
                 "inputMode": inputMode,
                 "inputFlag": inputFlag,
                 "returnType": returnType,
                 "maxLength": maxLength,
                 
-                "x": matrix.tx,
-                "y": matrix.ty,
+                "x": point.x,
+                "y": point.y,
                 "width": textfield.width,
                 "height": textfield.height,
                 "font_size": values[sys.TextKeys.fontSize],

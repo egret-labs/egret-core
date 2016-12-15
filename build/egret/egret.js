@@ -2721,14 +2721,12 @@ var egret;
             /**
              * @language en_US
              * An indexed array that contains each filter object currently associated with the display object.
-             * Note: Currently only the next support WebGL, Canvas rendering and native are not supported.
              * @version Egret 3.1.0
              * @platform Web
              */
             /**
              * @language zh_CN
              * 包含当前与显示对象关联的每个滤镜对象的索引数组。
-             * 注意 : 目前只有 WebGL 下支持，Canvs 渲染以及 native 均不支持。
              * @version Egret 3.1.0
              * @platform Web
              */
@@ -2828,7 +2826,7 @@ var egret;
                 resultRect = new egret.Rectangle();
             }
             resultRect.copyFrom(bounds);
-            if (targetCoordinateSpace == this || resultRect.isEmpty()) {
+            if (targetCoordinateSpace == this) {
                 return resultRect;
             }
             var m;
@@ -19553,7 +19551,6 @@ var egret;
         };
         //点中文本
         p.onMouseDownHandler = function (event) {
-            event.stopPropagation();
             this.$onFocus();
         };
         p.$onFocus = function () {
@@ -19570,7 +19567,9 @@ var egret;
         };
         //未点中文本
         p.onStageDownHandler = function (event) {
-            this.stageText.$hide();
+            if (event.$target != this._text) {
+                this.stageText.$hide();
+            }
         };
         /**
          * @private
