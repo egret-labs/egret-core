@@ -19061,7 +19061,7 @@ var eui;
                         continue;
                     }
                     var first = item.charAt(0);
-                    if (first == "'" || first == "\"" || first >= "0" && first <= "9") {
+                    if (first == "'" || first == "\"" || first >= "0" && first <= "9" || first == "-") {
                         continue;
                     }
                     if (item.indexOf(".") == -1 && jsKeyWords.indexOf(item) != -1) {
