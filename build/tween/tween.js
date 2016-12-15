@@ -1816,21 +1816,26 @@ var egret;
             /**
              * @language en_US
              * Play the Tween
+             * @time The starting position, the default is from the last position to play
              * @version Egret 3.1.8
              * @platform Web,Native
              */
             /**
              * @language zh_CN
              * 播放Tween
+             * @time 播放的起始位置, 默认为从上次位置继续播放
              * @version Egret 3.1.8
              * @platform Web,Native
              */
-            p.play = function () {
+            p.play = function (time) {
                 if (!this.tween) {
                     this.createTween();
                 }
                 else {
                     this.tween.setPaused(false);
+                    if (time !== undefined && time !== null) {
+                        this.tween.setPosition(time);
+                    }
                 }
             };
             /**
@@ -1849,6 +1854,22 @@ var egret;
                 if (this.tween) {
                     this.tween.setPaused(true);
                 }
+            };
+            /**
+             * @language en_US
+             * Stop the Tween
+             * @version Egret 3.1.8
+             * @platform Web,Native
+             */
+            /**
+             * @language zh_CN
+             * 停止Tween
+             * @version Egret 3.1.8
+             * @platform Web,Native
+             */
+            p.stop = function () {
+                this.pause();
+                this.tween = null;
             };
             p.createTween = function () {
                 this.tween = egret.Tween.get(this._target, this._props);
@@ -1953,21 +1974,24 @@ var egret;
             /**
              * @language en_US
              * Play the all TweenItems
+             * @time The starting position, the default is from the last position to play
              * @version Egret 3.1.8
              * @platform Web,Native
              */
             /**
              * @language zh_CN
              * 播放所有的TweenItem
+             * @time 播放的起始位置, 默认为从上次位置继续播放
              * @version Egret 3.1.8
              * @platform Web,Native
              */
-            p.play = function () {
-                if (this._items) {
-                    for (var i = 0; i < this._items.length; i++) {
-                        var item = this._items[i];
-                        item.play();
-                    }
+            p.play = function (time) {
+                if (!this._items) {
+                    return;
+                }
+                for (var i = 0; i < this._items.length; i++) {
+                    var item = this._items[i];
+                    item.play(time);
                 }
             };
             /**
@@ -1983,11 +2007,33 @@ var egret;
              * @platform Web,Native
              */
             p.pause = function () {
-                if (this._items) {
-                    for (var i = 0; i < this._items.length; i++) {
-                        var item = this._items[i];
-                        item.pause();
-                    }
+                if (!this._items) {
+                    return;
+                }
+                for (var i = 0; i < this._items.length; i++) {
+                    var item = this._items[i];
+                    item.pause();
+                }
+            };
+            /**
+             * @language en_US
+             * Stop the all TweenItems
+             * @version Egret 3.1.8
+             * @platform Web,Native
+             */
+            /**
+             * @language zh_CN
+             * 停止所有的TweenItem
+             * @version Egret 3.1.8
+             * @platform Web,Native
+             */
+            p.stop = function () {
+                if (!this._items) {
+                    return;
+                }
+                for (var i = 0; i < this._items.length; i++) {
+                    var item = this._items[i];
+                    item.stop();
                 }
             };
             p.itemComplete = function (e) {
