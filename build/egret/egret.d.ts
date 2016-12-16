@@ -11390,7 +11390,6 @@ declare namespace egret {
     function log(message?: any, ...optionalParams: any[]): void;
 }
 declare namespace egret {
-    function getI(): void;
     /**
      * @language en_US
      * Adds an interface-name-to-implementation-class mapping to the registry.
