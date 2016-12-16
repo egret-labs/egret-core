@@ -18095,9 +18095,6 @@ egret.Capabilities.$runtimeType = testRuntimeType() ? egret.RuntimeType.WEB : eg
 //////////////////////////////////////////////////////////////////////////////////////
 var egret;
 (function (egret) {
-    function getI() {
-    }
-    egret.getI = getI;
     /**
     * @private
     */

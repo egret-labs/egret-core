@@ -1,8 +1,4 @@
 namespace egret {
-    export function getI(): void {
-
-    }
-
     /**
     * @private
     */
