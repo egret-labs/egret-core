@@ -8074,6 +8074,9 @@ var egret;
                 // 获取显示对象的链接矩阵
                 var displayMatrix = egret.Matrix.create();
                 displayMatrix.copyFrom(displayObject.$getConcatenatedMatrix());
+                if (root) {
+                    displayObject.$getConcatenatedMatrixAt(root, displayMatrix);
+                }
                 // 获取显示对象的矩形区域
                 var region;
                 region = egret.sys.Region.create();
