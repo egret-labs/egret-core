@@ -82,8 +82,8 @@ namespace RES {
      * @platform Web,Native
      * @includeExample extension/resource/Resource.ts
      */
-    export function getAnalyzer(type:string) {
-        instance.$getAnalyzerByType(type);
+    export function getAnalyzer(type:string):AnalyzerBase {
+        return instance.$getAnalyzerByType(type);
     }
 
     /**

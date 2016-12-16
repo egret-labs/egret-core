@@ -2342,7 +2342,7 @@ var RES;
      * @includeExample extension/resource/Resource.ts
      */
     function getAnalyzer(type) {
-        instance.$getAnalyzerByType(type);
+        return instance.$getAnalyzerByType(type);
     }
     RES.getAnalyzer = getAnalyzer;
     /**

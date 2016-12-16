@@ -1059,7 +1059,7 @@ declare namespace RES {
      * @platform Web,Native
      * @includeExample extension/resource/Resource.ts
      */
-    function getAnalyzer(type: string): void;
+    function getAnalyzer(type: string): AnalyzerBase;
     /**
      * @language en_US
      * Register the VersionController
