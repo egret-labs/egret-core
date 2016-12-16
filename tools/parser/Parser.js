@@ -105,6 +105,9 @@ exports.optionDeclarations = [
         name: 'egretVersion',
         type: 'string',
         shortName: "ev"
+    } ,{
+        name: 'ide',
+        type: 'boolean'
     }, {
         name: 'exmlGenJs',
         type: 'boolean',

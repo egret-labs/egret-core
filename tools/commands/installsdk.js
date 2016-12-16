@@ -16,7 +16,15 @@ var InstallSDK = (function (){
 	}
 
 	function print(info) {
-		console.log(info);
+		if(egret.args.ide){
+		 	var out = {
+		 		'output': info
+		 	}
+		 	console.log(JSON.stringify(out));
+		 } else{
+		 	console.log(info);
+		 }
+		
 	}
 	
 	function getFileStrByCount(count) {
@@ -107,12 +115,15 @@ var InstallSDK = (function (){
 	}
 
 	function printAndroidSDKConfig() {
-		var config = getAndroidSDKConfig();
-		var wingdata={
-			'androidSDKInfo':config
+		 var config = getAndroidSDKConfig();
+		 var outdata={
+		 	'androidSDKInfo':config
+		 }
+		 var str = JSON.stringify(outdata);
+		 if(egret.args.ide){
+		 	console.log(str);
 		}
-		var str = JSON.stringify(wingdata);
-		console.log('wingdata:'+str);			
+		
 	}
 
 	InstallSDK.printAndroidSDKConfig = printAndroidSDKConfig;
