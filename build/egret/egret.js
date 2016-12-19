@@ -18110,7 +18110,7 @@ var egret;
      * Adds an interface-name-to-implementation-class mapping to the registry.
      * @param interfaceName the interface name to register. For example："eui.IAssetAdapter","eui.Theme"
      * @param instance the instance to register.
-     * @version Egret 2.4
+     * @version Egret 3.2.1
      * @platform Web,Native
      */
     /**
@@ -18131,7 +18131,7 @@ var egret;
      * This method is usually called by egret framework.
      * @param interfaceName The interface name to identify. For example："eui.IAssetAdapter","eui.Theme"
      * @returns the singleton instance of the implementation class
-     * @version Egret 2.4
+     * @version Egret 3.2.1
      * @platform Web,Native
      */
     /**
