@@ -48,8 +48,7 @@ var Compiler = (function () {
         parsedCmd.options.allowUnreachableCode = true;
         parsedCmd.options.emitReflection = true;
         parsedCmd.options["forSortFile"] = option.forSortFile;
-        if (args.experimental) {
-            console.log("use typescript 2.0.3");
+        if(true) {//args.experimental
             return this.compileNew(parsedCmd);
         }
         else {
@@ -76,7 +75,7 @@ var Compiler = (function () {
         });
         // Create the language service host to allow the LS to communicate with the host
         var servicesHost = {
-            getScriptFileNames: function () { return _this.sortedFiles; },
+            getScriptFileNames: function () { return rootFileNames; },
             getScriptVersion: function (fileName) { return _this.files[fileName] && _this.files[fileName].version.toString(); },
             getScriptSnapshot: function (fileName) {
                 if (!file.exists(fileName)) {
@@ -121,11 +120,9 @@ var Compiler = (function () {
     };
     Compiler.prototype.logErrors = function (fileName) {
         var _this = this;
-        var allDiagnostics = this.services.getCompilerOptionsDiagnostics();
-        if (fileName) {
-            allDiagnostics.concat(this.services.getSyntacticDiagnostics(fileName))
-                .concat(this.services.getSemanticDiagnostics(fileName));
-        }
+        var allDiagnostics = this.services.getCompilerOptionsDiagnostics()
+            .concat(this.services.getSyntacticDiagnostics(fileName))
+            .concat(this.services.getSemanticDiagnostics(fileName));
         allDiagnostics.forEach(function (diagnostic) {
             var message = ts.flattenDiagnosticMessageText(diagnostic.messageText, "\n");
             var msg;
