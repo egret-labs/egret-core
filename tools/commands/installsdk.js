@@ -1,66 +1,40 @@
 var fs = require('fs');
 var http = require('http');
-var https = require('https');
 var path = require('path');
 var events = require('events');
-var os = require('os');
 
-var copydir = require('../lib/copy-dir');
 var UnzipCommand = require("./installsdk/UnzipCommand");
 
-var sdkConfigList = [{"category":"sdk","name":"Android SDK Base","varName":"ANDROID_HOME","url":"http://10.0.7.36/android-sdk_r24.4.1-windows.zip","installDir":"android-sdk-windows","fileSize":"196919088"},{"category":"sdk","name":"Android Platform Tools","url":"http://10.0.7.36/platform-tools_r24-windows.zip","installDir":"android-sdk-windows/platform-tools","fileSize":"3744669"},{"category":"sdk","name":"Android Build Tools","url":"http://10.0.7.36/build-tools_r24.0.1-windows.zip","installDir":"android-sdk-windows/build-tools/24.0.1","fileSize":"48323734"},{"category":"gapi19","name":"SDK Platform","url":"http://10.0.7.36/android-19_r04.zip","installDir":"android-sdk-windows/platforms/android-19","fileSize":"62590023"},{"category":"android_toolchain","name":"Apache Ant","varName":"ANT_HOME","url":"http://10.0.7.36/apache-ant-1.8.2-bin.zip","installDir":"apache-ant-1.8.2","fileSize":"41491235"},{"category":"android_toolchain","name":"Gradle","varName":"GRADLE_HOME","url":"http://10.0.7.36/gradle-2.9-bin.zip","installDir":"gradle-2.9","fileSize":"44652280"}];
+var sdkConfigList = [{"varName":"ANDROID_HOME","url":"http://10.0.7.36/android-sdk_r24.4.1-windows.zip","installDir":"android-sdk-windows","fileSize":"196919088"},{"url":"http://10.0.7.36/platform-tools_r24-windows.zip","installDir":"android-sdk-windows/platform-tools","fileSize":"3744669"},{"url":"http://10.0.7.36/build-tools_r24.0.1-windows.zip","installDir":"android-sdk-windows/build-tools/24.0.1","fileSize":"48323734"},{"url":"http://10.0.7.36/android-19_r04.zip","installDir":"android-sdk-windows/platforms/android-19","fileSize":"62590023"},{"varName":"ANT_HOME","url":"http://10.0.7.36/apache-ant-1.8.2-bin.zip","installDir":"apache-ant-1.8.2","fileSize":"41491235"},{"varName":"GRADLE_HOME","url":"http://10.0.7.36/gradle-2.9-bin.zip","installDir":"gradle-2.9","fileSize":"44652280"}];
 
 var InstallSDK = (function (){
 	function InstallSDK() {
         this.isAsync = true;
 	}
-
-	function print(info) {
-		if(egret.args.ide){
-		 	var out = {
-		 		'output': info
-		 	}
-		 	console.log(JSON.stringify(out));
-		 } else{
-		 	console.log(info);
-		 }
-		
-	}
-	
-	function getFileStrByCount(count) {
-		var str = "file";
-		if (count > 1) {
-			str += "s";
-		}
-		
-		return str;
-	}
-	
-	function calcTotalFileSize(list) {
-		var size = 0;
-		if (list) {
-			for (var i=0; i<list.length; i++) {
-				var fileSize = new Number(list[i].fileSize);
-				size += fileSize;
-			}
-		} else {
-			size = -1;
-		}
-		
-		return size;
-	}
 	
 	InstallSDK.prototype.execute = function() {
-		
+		function getUnzipManager() {
+			var list = getAllLocalFilesAndAbsInstallDirs();
+			var uzm = new UnzipManager(list);
+
+			return uzm;
+		}
+
+		function getBaseName(dir) {
+			return path.win32.basename(dir);
+		}
+
 		function startToUnzipAndInstall() {
 			var uzm = getUnzipManager();
 			
-			uzm.on("oneTaskFinished", function (fileName) {		
-				var length = this.taskList.length;				
-				print(this.count + "/" + length + " " + fileName + " unzipped and installed successfully!");
+			uzm.on(uzm.oneTaskFinishedEventName, function (taskIndex) {
+				var length = this.taskList.length;
+				var task = this.taskList[taskIndex];
+				var fileName = getBaseName(task.localFile);
+				print(this.finishedTaskCount + "/" + length + " " + fileName + " unzipped and installed successfully!");
 			});
 			
-			uzm.on("AllTasksFinished", function () {
+			uzm.on(uzm.allTasksFinishedEventName, function () {
 				print("All files are unzipped and installed successfully!");
 								
 				saveSDKInfoToConfigFile();
@@ -78,31 +52,43 @@ var InstallSDK = (function (){
 			uzm.start();
 		}
 
-		function startToDownload() {
+		function getDownloadManager() {
 			var list = getSDKConfigList();
 			var downloadDir = getDownloadDir();
 			
 			var dlm = new DownloadManager(list, downloadDir);
+
+			return dlm;
+		}
+
+		function startToDownload() {
+			var dlm = getDownloadManager();
 			
-			dlm.on("oneTaskFinished", function (fileName, fileSize) {
+			dlm.on(dlm.oneTaskFinishedEventName, function (taskIndex) {
+
+				var task = this.taskList[taskIndex];
+				var url = task.url;
+				var fileName =  path.posix.basename(url);
+				var fileSize = task.fileSize;
+
 				var length = this.taskList.length;
-				print(this.count + "/" + length + " " + fileName + " downloaded successfully!");
+				print(this.finishedTaskCount + "/" + length + " " + fileName + " downloaded successfully!");
 				
 				var totalMBSize = parseInt(fileSize * 1.0 / (1024 * 1024));
 				print("This file size is " + totalMBSize + "MB.");
 			});
 			
-			dlm.on("AllTasksFinished", function () {
+			dlm.on(dlm.allTasksFinishedEventName, function () {
 				print("All files are downloaded successfully!");
 				
 				startToUnzipAndInstall();
 			});
 
-			var length = list.length;
+			var length = dlm.taskList.length;
 			var fileStr = getFileStrByCount(length);
 			print(length + " " + fileStr + " will be downloaded!");
 			
-			var totalByteSize = calcTotalFileSize(list);
+			var totalByteSize = calcTotalFileSize(dlm.taskList);
 			var totalMBSize = parseInt(totalByteSize * 1.0 / (1024 * 1024));
 			print("The total size is " + totalMBSize + "MB.");
 			
@@ -114,13 +100,50 @@ var InstallSDK = (function (){
 		startToDownload();
 	}
 
+	function print(info) {
+		var isEgret = isInEgretMode();
+		if(isEgret && egret.args.ide){
+			var out = {
+				'output': info
+			}
+			console.log(JSON.stringify(out));
+		} else {
+			console.log(info);
+		}
+	}
+
+	function getFileStrByCount(count) {
+		var str = "file";
+		if (count > 1) {
+			str += "s";
+		}
+
+		return str;
+	}
+
+	function calcTotalFileSize(list) {
+		var size = 0;
+		if (list) {
+			for (var i=0; i<list.length; i++) {
+				var fileSize = new Number(list[i].fileSize);
+				size += fileSize;
+			}
+		} else {
+			size = -1;
+		}
+
+		return size;
+	}
+
 	function printAndroidSDKConfig() {
 		 var config = getAndroidSDKConfig();
 		 var outdata={
-		 	'androidSDKInfo':config
+		 	'androidSDKInfo': config
 		 }
-		 var str = JSON.stringify(outdata);
-		 if(egret.args.ide){
+
+		 var isEgret = isInEgretMode();		 
+		 if(!isEgret || egret.args.ide) {
+		 	var str = JSON.stringify(outdata);
 		 	console.log(str);
 		}
 		
@@ -155,7 +178,8 @@ var InstallSDK = (function (){
 	function getRootPath() {
 		var root = "";
 		
-		if (!egret) {
+		var isEgret = isInEgretMode();
+		if (!isEgret) {
 			root = __dirname;
 		} else {
 			root = getAppDataEnginesRootPath();
@@ -180,31 +204,33 @@ var InstallSDK = (function (){
 		fs.writeFileSync(fileName, data);
 	}
 
-	function writeJSONObjectToFile(configFile, jsonObj) {
-		var str = JSON.stringify(jsonObj);
-		writeToFile(configFile, str);
-	}
-
-	function getSDKConfigList() {
-		return sdkConfigList;
-	}
-
-	function getAndroidSDKConfigFilePath() {
-		var root = getRootPath();
-		var fileName = "AndroidSDKConfig.json";
-		var filePath = path.join(root, fileName);
-		
-		return filePath;
-	}
-
 	function getJSONObjectFromFile(configFile) {
 		var config = null;
 		var str = readFromFile(configFile);
 		if (str != "") {
 			config = JSON.parse(str);
 		}
-		
+
 		return config;
+	}
+
+	function writeJSONObjectToFile(configFile, jsonObj) {
+		var str = JSON.stringify(jsonObj);
+		writeToFile(configFile, str);
+	}
+
+	function getConfigFilePathByFileName(fileName) {
+		var root = getRootPath();
+		var filePath = path.join(root, fileName);
+
+		return filePath;
+	}
+
+	function getAndroidSDKConfigFilePath() {
+		var fileName = "AndroidSDKConfig.json";
+		var filePath = getConfigFilePathByFileName(fileName);
+		
+		return filePath;
 	}
 	
 	var AndroidSDKConfig = null;
@@ -216,6 +242,181 @@ var InstallSDK = (function (){
 
 		return AndroidSDKConfig;
 	}
+
+	function needAddBinToPath(name) {
+		var result = false;
+
+		if (name == "ANT_HOME" || name == "GRADLE_HOME") {
+			result = true;
+		}
+
+		return result;
+	}
+
+	function getSDKConfigList() {
+		return sdkConfigList;
+	}
+
+	var allLocalFilesAndAbsInstallDirs = null;
+	function getAllLocalFilesAndAbsInstallDirs() {
+		if (!allLocalFilesAndAbsInstallDirs) {
+			allLocalFilesAndAbsInstallDirs = [];
+
+			var downloadDir = getDownloadDir();
+			var sdkInstallDir = getSDKInstallDir();
+
+			var lists = getSDKConfigList();
+			for (var i=0; i<lists.length; i++) {
+				var list = lists[i];
+
+				var url = list.url;
+				var fileName =  path.posix.basename(url);
+				var localFile = path.join(downloadDir, fileName);
+				var installDir = path.join(sdkInstallDir, list.installDir);
+
+				var result = {
+					"localFile" : localFile,
+					"installDir" : installDir,
+					"varName" : list.varName
+				};
+
+				allLocalFilesAndAbsInstallDirs.push(result);
+
+			}
+		}
+
+		return allLocalFilesAndAbsInstallDirs;
+	}
+
+	function saveSDKInfoToConfigFile() {
+		var config = {};
+
+		var list = getAllLocalFilesAndAbsInstallDirs();
+		for (var i=0; i<list.length; i++) {
+			var obj = list[i];
+			if (obj.varName) {
+				var installDir = obj.installDir;
+
+				if (needAddBinToPath(obj.varName)) {
+					installDir = path.join(installDir, "bin");
+				}
+
+				config[obj.varName] = installDir;
+			}
+		}
+
+		var filePath = getAndroidSDKConfigFilePath();
+		writeJSONObjectToFile(filePath, config);
+	}
+
+	var MultiTaskManager = function () {
+		// public. shoulde be overrided by subclass.
+		this.oneTaskFinishedEventName = "oneTaskFinished";
+
+		this.allTasksFinishedEventName = "allTasksFinished";
+
+		this.taskList = [];
+
+		// protected. shoulde be overrided by subclass.
+		this.progressConfigFileName = "MultiTaskProgressConfig.json";
+
+		this.unfinishedTask = function (taskIndex) {
+
+		}
+
+		// private. shoulde NOT be overrided by subclass.
+		this.finishedTaskCount = 0;
+
+		this.isTaskInProgressConfigList = function(taskIndex) {
+			var result = false;
+
+			var configList = this.getProgressConfigList();
+			if (configList) {
+				for (var i=0; i<configList.length; i++) {
+					if (taskIndex == configList[i]) {
+						result = true;
+					}
+				}
+			}
+
+			return result;
+		}
+
+		this.isTaskFinished = function(taskIndex) {
+			var finished = this.isTaskInProgressConfigList(taskIndex);
+
+			return finished;
+		}
+
+		this.getProgressConfigFilePath = function() {
+			var fileName = this.progressConfigFileName;
+			var filePath = getConfigFilePathByFileName(fileName);
+
+			return filePath;
+		};
+
+		this.getProgressConfigList = function() {
+			var progressConfigFilePath = this.getProgressConfigFilePath();
+			var configList = getJSONObjectFromFile(progressConfigFilePath);
+
+			return configList;
+		};
+
+		this.writeProgressConfigToFile = function(taskIndex) {
+			var configList = this.getProgressConfigList();
+			if (!configList) {
+				configList = [];
+			}
+
+			var isTaskInConfigList = this.isTaskInProgressConfigList(taskIndex);
+			if (!isTaskInConfigList) {
+				configList.push(taskIndex);
+
+				var configFilePath = this.getProgressConfigFilePath();
+				if (configFilePath) {
+					writeJSONObjectToFile(configFilePath, configList);
+				}
+			}
+		}
+
+		this.emitTaskFinishedEvent = function(taskIndex) {
+			this.emit(this.oneTaskFinishedEventName, taskIndex);
+		}
+
+		this.tryToEmitAllTasksFinishedEvent = function() {
+			if (this.finishedTaskCount == this.taskList.length) {
+				this.emit(this.allTasksFinishedEventName);
+			}
+		}
+
+		// protected. used by subclasses to notify one task finished.
+		this.taskFinishCallback = function (taskIndex) {
+			this.finishedTaskCount++;
+
+			this.writeProgressConfigToFile(taskIndex);
+
+			this.emitTaskFinishedEvent(taskIndex);
+
+			this.tryToEmitAllTasksFinishedEvent();
+		}
+
+		// public. used to start to process tasks.
+		this.start = function () {
+			if (this.taskList) {
+				for (var i = 0; i<this.taskList.length; i++) {
+					var taskFinished = this.isTaskFinished(i);
+					if (taskFinished) {
+						this.taskFinishCallback(i);
+					} else {
+						this.unfinishedTask(i);
+					}
+				}
+			}
+
+		}
+	}
+
+	MultiTaskManager.prototype = new events.EventEmitter;
 
 	function Downloader() {
 		this.download = function(url, dest, cb) {
@@ -232,46 +433,6 @@ var InstallSDK = (function (){
 		  return file;
 		};
 	}
-	var DownloadManager = function (list, dlDir) {
-		this.count = 0;
-		this.taskList = list;
-		if (!dlDir) {
-			dlDir = os.tmpdir();
-		}
-		this.downloadDir = dlDir;
-		this.downloader = new Downloader();
-
-		this.start = function () {			
-			for (var i=0; i<this.taskList.length; i++) {
-				var task = this.taskList[i];
-				var url = task.url;
-				var fileName =  path.posix.basename(url);
-				var fileSavePath = path.join(this.downloadDir, fileName);
-				
-				var dl = this.downloader.download(url, fileSavePath, this.taskFinishCallback);
-				dl.downloadMgr = this;
-				dl.taskIndex = i;
-			}
-		}
-
-		this.taskFinishCallback = function () {
-			var downloadMgr = this.downloadMgr;
-			downloadMgr.count++;
-			
-			var task = downloadMgr.taskList[this.taskIndex];
-			var url = task.url;
-			var fileName =  path.posix.basename(url);
-			var fileSize = task.fileSize;
-			
-			downloadMgr.emit("oneTaskFinished", fileName, fileSize);
-			
-			if (downloadMgr.count == downloadMgr.taskList.length) {
-				downloadMgr.emit("AllTasksFinished");
-			}
-		}
-	}
-
-	DownloadManager.prototype = new events.EventEmitter;
 
 	var downloadDir = null;
 	function setDownloadDir(dir) {
@@ -291,44 +452,39 @@ var InstallSDK = (function (){
 		return downloadDir;
 	}
 
-	var UnzipManager = function (list) {
-		this.count = 0;
+	var DownloadManager = function (list, dlDir) {
+		// for internal use only.
+		this.downloadDir = dlDir || getDownloadDir();
+
+		var downloader = new Downloader();
+
+		var thiz = this;
+
+		// override parent class members.
+		this.oneTaskFinishedEventName = "oneDownloadTaskFinished";
+
+		this.allTasksFinishedEventName = "allDownloadTasksFinished";
+
+		this.progressConfigFileName = "DownloadProgressConfig.json";
+
 		this.taskList = list;
 
-		this.start = function () {
-			for (var i=0; i<this.taskList.length; i++) {
-				var task = this.taskList[i];
+		this.unfinishedTask = function(taskIndex) {
+			var task = this.taskList[taskIndex];
 
-				var localFile = task.localFile;
-				var installDir = task.installDir;
-				
-				var This = this;
-				var unzipper = UnzipCommand.unzip(localFile, installDir, function(result, srcPath) {
-					if (result == 0) {
-						var baseName = getBaseName(srcPath);
-						This.taskFinishCallback(baseName);
-					} else {
-						console.error("unzip failed!");
-					}
-				});
-				
-				
-			}
-		}
+			var url = task.url;
 
-		this.taskFinishCallback = function (fileName) {
-			var unzipMgr = getUnzipManager();
-			unzipMgr.count++;
-			
-			unzipMgr.emit("oneTaskFinished", fileName);
-			
-			if (unzipMgr.count == unzipMgr.taskList.length) {
-				unzipMgr.emit("AllTasksFinished");
-			}
+			var downloadDir = this.downloadDir;
+			var fileName =  path.posix.basename(url);
+			var fileSavePath = path.join(downloadDir, fileName);
+
+			var dl = downloader.download(url, fileSavePath, function() {
+				thiz.taskFinishCallback(taskIndex);
+			});
 		}
 	}
 
-	UnzipManager.prototype = new events.EventEmitter;
+	DownloadManager.prototype = new MultiTaskManager();
 
 	var sdkInstallDir = null;
 	function setSDKInstallDir(dir) {
@@ -347,84 +503,58 @@ var InstallSDK = (function (){
 
 		return sdkInstallDir;
 	}
-	
-	function needAddBinToPath(name) {
-		var result = false;
-		
-		if (name == "ANT_HOME" || name == "GRADLE_HOME") {
-			result = true;
-		}
-		
-		return result;
-	}
 
-	function saveSDKInfoToConfigFile() {
-		var config = {};
-		
-		var list = getAllLocalFilesAndAbsInstallDirs();
-		for (var i=0; i<list.length; i++) {
-			var obj = list[i];
-			if (obj.varName) {
-				var installDir = obj.installDir;
-				
-				if (needAddBinToPath(obj.varName)) {
-					installDir = path.join(installDir, "bin");
+	var UnzipManager = function (list) {
+		// for internal use only.
+		var thiz = this;
+
+		// override parent class members.
+		this.oneTaskFinishedEventName = "oneUnzipTaskFinished";
+
+		this.allTasksFinishedEventName = "allUnzipTasksFinished";
+
+		this.progressConfigFileName = "UnzipProgressConfig.json";
+
+		this.taskList = list;
+
+		this.unfinishedTask = function(taskIndex) {
+			var task = this.taskList[taskIndex];
+
+			var localFile = task.localFile;
+			var installDir = task.installDir;
+
+			UnzipCommand.unzip(localFile, installDir, function(result) {
+				if (result == 0) {
+					thiz.taskFinishCallback(taskIndex);
+				} else {
+					console.error("unzip failed!");
 				}
-				
-				config[obj.varName] = installDir;				
-			}
+			});
 		}
-
-		var filePath = getAndroidSDKConfigFilePath();
-		writeJSONObjectToFile(filePath, config);
 	}
 
-	var allLocalFilesAndAbsInstallDirs = null;
-	function getAllLocalFilesAndAbsInstallDirs() {
-		if (!allLocalFilesAndAbsInstallDirs) {
-			allLocalFilesAndAbsInstallDirs = [];
-			
-			var downloadDir = getDownloadDir();
-			var sdkInstallDir = getSDKInstallDir();
-			
-			var lists = getSDKConfigList();			
-			for (var i=0; i<lists.length; i++) {
-				var list = lists[i];
-				
-				var url = list.url;
-				var fileName =  path.posix.basename(url);	
-				var localFile = path.join(downloadDir, fileName);				
-				var installDir = path.join(sdkInstallDir, list.installDir);
-
-				var result = {
-					"localFile" : localFile,
-					"installDir" : installDir,
-					"varName" : list.varName
-				};
-
-				allLocalFilesAndAbsInstallDirs.push(result);
-
-			}
-		}
-
-		return allLocalFilesAndAbsInstallDirs;
-	}
-
-	function getBaseName(dir) {
-		return path.win32.basename(dir);
-	}
-
-	var uzm = null;
-	function getUnzipManager() {
-		if (!uzm) {
-			var list = getAllLocalFilesAndAbsInstallDirs();
-			uzm = new UnzipManager(list);
-		}
-
-		return uzm;
-	}
+	UnzipManager.prototype = new MultiTaskManager();
 
 	return InstallSDK;
 })();
 
 module.exports = InstallSDK;
+
+
+function isInEgretMode() {
+	var isEgret = false;
+	try {
+		isEgret = !!egret;
+	} catch(e) {
+
+	}
+
+	return isEgret;
+}
+
+(function (){
+	var isEgret = isInEgretMode();	
+	if (!isEgret) {
+		InstallSDK.prototype.execute();
+	}
+})();

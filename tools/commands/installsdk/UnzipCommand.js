@@ -17,10 +17,10 @@ var UnzipCommand = (function () {
         build.stderr.on("data", function (data) {
             //console.log(data);
         });
-        var self = this;
+
         build.on("exit", function (result) {
             if (callback) {
-				callback(result, srcPath);
+				callback(result);
 			}
         });
 				
