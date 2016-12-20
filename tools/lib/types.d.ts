@@ -2,7 +2,7 @@
 /// <reference path="totaljs/totaljs.d.ts" />
 /// <reference path="xml/xml.ts" />
 /// <reference path="../globals.ts" />
-/// <reference path="./typescript-plus/typescriptServices.d.ts" />
+/// <reference path="./typescript-plus/lib/typescriptServices.d.ts" />
 
 declare module egret {
 

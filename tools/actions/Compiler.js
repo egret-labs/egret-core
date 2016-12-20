@@ -1,5 +1,5 @@
 var file = require("../lib/FileUtil");
-var ts = require("../lib/typescript-plus/typescript");
+var ts = require("../lib/typescript-plus/lib/typescript");
 var Compiler = (function () {
     function Compiler() {
         this.files = {};

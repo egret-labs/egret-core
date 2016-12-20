@@ -21,7 +21,7 @@ export function loadTsConfig(url, options: egret.ToolArgs): void {
                  if(compilerOptions.hasOwnProperty(optionName)){
                      var outputError = true;
                      //下面几种情况不输出错误信息
-                     if(optionName == 'target' && (<string>compilerOptions[optionName]).toLowerCase() == 'es5'){
+                     if(optionName == 'target' && (<string><any>compilerOptions[optionName]).toLowerCase() == 'es5'){
                          outputError = false;
                      }else if(optionName=='outDir'){
                          var outdir = compilerOptions[optionName].toLowerCase();

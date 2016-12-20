@@ -2,7 +2,7 @@
 /// <reference path="../lib/types.d.ts" />
 import utils = require('../lib/utils');
 import file = require('../lib/FileUtil');
-import ts = require("../lib/typescript-plus/typescript");
+import ts = require("../lib/typescript-plus/lib/typescript");
 
 interface CompileOption {
     args: egret.ToolArgs;
