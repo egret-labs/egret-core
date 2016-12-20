@@ -2327,6 +2327,26 @@ var RES;
     RES.registerAnalyzer = registerAnalyzer;
     /**
      * @language en_US
+     * Get mapping injection.
+     * @param type Injection type.
+     * @version Egret 3.2.6
+     * @platform Web,Native
+     * @includeExample extension/resource/Resource.ts
+     */
+    /**
+     * @language zh_CN
+     * 获取映射注入。
+     * @param type 注入的类型。
+     * @version Egret 3.2.6
+     * @platform Web,Native
+     * @includeExample extension/resource/Resource.ts
+     */
+    function getAnalyzer(type) {
+        return instance.$getAnalyzerByType(type);
+    }
+    RES.getAnalyzer = getAnalyzer;
+    /**
+     * @language en_US
      * Register the VersionController
      * @param vcs The VersionController to register.
      * @version Egret 2.5

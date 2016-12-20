@@ -247,4 +247,5 @@ var helpModule;
         "apitest": "版本升级后检测api是否已经替换完成。限于2.4之前版本升级到2.5（及以上）版本的检测，需要在2.5（及以上）版本项目中输入"
     };
     global["helpModule"] = global["helpModule"] || helpModule;
+    //global["helpModule"]["help_dict"] = help_dict;
 })(helpModule || (helpModule = {}));

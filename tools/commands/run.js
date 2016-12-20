@@ -1,12 +1,12 @@
 /// <reference path="../lib/types.d.ts" />
-var utils = require('../lib/utils');
+var utils = require("../lib/utils");
 // import fileUtil = require('../lib/FileUtil');
 var watch = require("../lib/watch");
 var path = require("path");
-var Build = require('./build');
-var server = require('../server/server');
-var FileUtil = require('../lib/FileUtil');
-var service = require('../service/index');
+var Build = require("./build");
+var server = require("../server/server");
+var FileUtil = require("../lib/FileUtil");
+var service = require("../service/index");
 var Run = (function () {
     function Run() {
         var _this = this;

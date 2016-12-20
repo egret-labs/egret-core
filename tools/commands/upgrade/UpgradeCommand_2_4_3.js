@@ -1,8 +1,8 @@
 /// <reference path="../../lib/types.d.ts" />
-var file = require('../../lib/FileUtil');
-var CHILD_EXEC = require('child_process');
-var utils = require('../../lib/utils');
-var APITestTool = require('../../actions/APITest');
+var file = require("../../lib/FileUtil");
+var CHILD_EXEC = require("child_process");
+var utils = require("../../lib/utils");
+var APITestTool = require("../../actions/APITest");
 var UpgradeCommand_2_4_3 = (function () {
     function UpgradeCommand_2_4_3() {
         this.isAsync = true;
@@ -109,7 +109,8 @@ var UpgradeCommand_2_4_3 = (function () {
         var lib_included = {
             'egret': 1, 'eui': 1, 'gui': 1, 'game': 1,
             'res': 1, 'tween': 1, 'socket': 1, 'dragonBones': 1,
-            'core': 1, 'version': 1, 'version_old': 1 };
+            'core': 1, 'version': 1, 'version_old': 1
+        };
         var lib_exclude = '';
         if (oldProperties.modules) {
             var replaced = '<script egret="lib" src="libs/modules/res/res.js" src-release="libs/modules/res/res.min.js"></script>';

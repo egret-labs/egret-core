@@ -1,5 +1,5 @@
 /// <reference path="../lib/types.d.ts" />
-var server = require('../server/server');
+var server = require("../server/server");
 var DesignService = (function () {
     function DesignService() {
     }

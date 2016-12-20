@@ -1,11 +1,11 @@
 /// <reference path="../lib/types.d.ts" />
-var utils = require('../lib/utils');
-var NativeProject = require('../actions/NativeProject');
-var projectAction = require('../actions/Project');
-var FileUtil = require('../lib/FileUtil');
-var doT = require('../lib/doT');
+var utils = require("../lib/utils");
+var NativeProject = require("../actions/NativeProject");
+var projectAction = require("../actions/Project");
+var FileUtil = require("../lib/FileUtil");
+var doT = require("../lib/doT");
 var TemplatesRoot = "tools/templates/";
-var Clean = require('../commands/clean');
+var Clean = require("../commands/clean");
 var Create = (function () {
     function Create() {
     }

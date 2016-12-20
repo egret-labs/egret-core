@@ -248,4 +248,5 @@ var helpModule;
         "apitest": "Check the api was replaced or not after upgrade engine. Only for the 2.4(or before) upgrade to 2.5(or later).Use this command in 2.5(or later) project"
     };
     global["helpModule"] = global["helpModule"] || helpModule;
+    //global["helpModule"]["help_dict"] = help_dict;
 })(helpModule || (helpModule = {}));

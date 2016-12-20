@@ -3,9 +3,9 @@
  */
 /// <reference path="../lib/types.d.ts" />
 var TSP = require("../commands/upgrade/2.4.3/TsServiceProxy");
-var file = require('../lib/FileUtil');
+var file = require("../lib/FileUtil");
 var TSS = require("../commands/upgrade/2.4.3/typescriptServices");
-var utils = require('../lib/utils');
+var utils = require("../lib/utils");
 var DTS = require('../commands/upgrade/2.4.3/compare2dts.js');
 var AutoLogger = (function () {
     function AutoLogger() {

@@ -1,6 +1,6 @@
 /// <reference path="../lib/types.d.ts" />
-var utils = require('../lib/utils');
-var FileUtil = require('../lib/FileUtil');
+var utils = require("../lib/utils");
+var FileUtil = require("../lib/FileUtil");
 var CreateLib = (function () {
     function CreateLib() {
     }

@@ -1,7 +1,7 @@
 /// <reference path="../../lib/types.d.ts" />
-var url = require('url');
-var file = require('../../lib/FileUtil');
-var CreateAction = require('../../actions/Create');
+var url = require("url");
+var file = require("../../lib/FileUtil");
+var CreateAction = require("../../actions/Create");
 var exportObject = {
     LarkStaticContentPath: '$/content/',
     UserProjectPath: null,

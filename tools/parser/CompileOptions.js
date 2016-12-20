@@ -1,7 +1,7 @@
 /// <reference path="../lib/types.d.ts" />
-var os = require('os');
-var crypto = require('crypto');
-var FileUtil = require('../lib/FileUtil');
+var os = require("os");
+var crypto = require("crypto");
+var FileUtil = require("../lib/FileUtil");
 var CompileOptions = (function () {
     function CompileOptions() {
         this._outDir = null;

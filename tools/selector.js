@@ -147,7 +147,7 @@ function printVersions() {
         getAllEngineVersions();
     }
     Object.keys(engines).sort(compareVersion).reverse().forEach(function (v) {
-        console.log(("Egret Engine " + engines[v].version + "  ") + engines[v].root);
+        console.log("Egret Engine " + engines[v].version + "  " + engines[v].root);
     });
 }
 function executeVersion(version, root) {

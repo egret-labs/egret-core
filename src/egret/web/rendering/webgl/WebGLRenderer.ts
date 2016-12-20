@@ -228,6 +228,9 @@ namespace egret.web {
             // 获取显示对象的链接矩阵
             let displayMatrix = Matrix.create();
             displayMatrix.copyFrom(displayObject.$getConcatenatedMatrix());
+            if(root) {
+                displayObject.$getConcatenatedMatrixAt(root, displayMatrix);
+            }
 
             // 获取显示对象的矩形区域
             let region: sys.Region;

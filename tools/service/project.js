@@ -1,8 +1,8 @@
 /// <reference path="../lib/types.d.ts" />
 var os = require("os");
-var cprocess = require('child_process');
-var utils = require('../lib/utils');
-var FileUtil = require('../lib/FileUtil');
+var cprocess = require("child_process");
+var utils = require("../lib/utils");
+var FileUtil = require("../lib/FileUtil");
 var Project = (function () {
     function Project() {
         this.buildProcessOutputs = [];

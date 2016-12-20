@@ -2,9 +2,9 @@
  * Created by yanjiaqi on 15/9/16.
  */
 /// <reference path="../lib/types.d.ts" />
-var file = require('../lib/FileUtil');
-var utils = require('../lib/utils');
-var APITestTool = require('../actions/APITest');
+var file = require("../lib/FileUtil");
+var utils = require("../lib/utils");
+var APITestTool = require("../actions/APITest");
 var APItestCommand = (function () {
     function APItestCommand() {
         this.isAsync = true; //APITestTool是一个异步Action必须配置异步环境 很重要

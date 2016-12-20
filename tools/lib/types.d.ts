@@ -2,8 +2,7 @@
 /// <reference path="totaljs/totaljs.d.ts" />
 /// <reference path="xml/xml.ts" />
 /// <reference path="../globals.ts" />
-/// <reference path="./typescript/tsclark.d.ts" />
-
+/// <reference path="./typescript-plus/lib/typescriptServices.d.ts" />
 
 declare module egret {
 
@@ -323,6 +322,14 @@ declare module egret {
     export interface FileChange {
         fileName: string;
         type: string;
+    }
+
+    export interface CompileResult {
+        program: ts.Program;
+        files?: string[];
+        exitStatus: number;
+        compileWithChanges?: (filesChanged: egret.FileChanges, sourceMap?: boolean) => CompileResult;
+        messages?: string[];
     }
 }
 

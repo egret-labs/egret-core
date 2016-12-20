@@ -5,9 +5,9 @@ var __extends = (this && this.__extends) || function (d, b) {
     d.prototype = b === null ? Object.create(b) : (__.prototype = b.prototype, new __());
 };
 global.TotalJS = { Controller: {} };
-var events = require('events');
-var utils = require('../lib/utils');
-var Default = require('./controllers/default');
+var events = require("events");
+var utils = require("../lib/utils");
+var Default = require("./controllers/default");
 global.lark = global.lark || {};
 function startServer(options, startupUrl) {
     var total = require('../lib/totaljs/');
@@ -45,8 +45,9 @@ exports.startServer = startServer;
 var ServerConsole = (function (_super) {
     __extends(ServerConsole, _super);
     function ServerConsole() {
-        _super.call(this);
-        this.attach();
+        var _this = _super.call(this) || this;
+        _this.attach();
+        return _this;
     }
     ServerConsole.prototype.attach = function () {
         var _this = this;
@@ -59,7 +60,7 @@ var ServerConsole = (function (_super) {
             console[method] = function () {
                 var params = [];
                 for (var _i = 0; _i < arguments.length; _i++) {
-                    params[_i - 0] = arguments[_i];
+                    params[_i] = arguments[_i];
                 }
                 oldMethod.apply(console, params);
                 if (!params || !params.length)

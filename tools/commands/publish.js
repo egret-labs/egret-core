@@ -1,9 +1,9 @@
 /// <reference path="../lib/types.d.ts" />
-var utils = require('../lib/utils');
-var FileUtil = require('../lib/FileUtil');
+var utils = require("../lib/utils");
+var FileUtil = require("../lib/FileUtil");
 var exml = require("../actions/exml");
-var CompileProject = require('../actions/CompileProject');
-var GenerateVersion = require('../actions/GenerateVersionCommand');
+var CompileProject = require("../actions/CompileProject");
+var GenerateVersion = require("../actions/GenerateVersionCommand");
 var ZipCMD = require("../actions/ZipCommand");
 var project = require("../actions/Project");
 var copyNative = require("../actions/CopyNativeFiles");
@@ -78,8 +78,9 @@ var Publish = (function () {
         else {
             var releaseHtmlPath = FileUtil.joinPath(options.releaseDir, "index.html");
             FileUtil.copy(FileUtil.joinPath(options.projectDir, "index.html"), releaseHtmlPath);
+            //拷贝favicon.ico
             var faviconPath = FileUtil.joinPath(options.projectDir, "favicon.ico");
-            if(FileUtil.exists(faviconPath)) {
+            if (FileUtil.exists(faviconPath)) {
                 FileUtil.copy(faviconPath, FileUtil.joinPath(options.releaseDir, "favicon.ico"));
             }
             //修改 html

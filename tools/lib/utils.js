@@ -27,11 +27,11 @@
 //
 //////////////////////////////////////////////////////////////////////////////////////
 /// <reference path="./node.d.ts" />
-var cp = require('child_process');
-var path = require('path');
-var file = require('./FileUtil');
+var cp = require("child_process");
+var path = require("path");
+var file = require("./FileUtil");
 var UglifyJS = require("./uglify-js/uglifyjs");
-var net = require('net');
+var net = require("net");
 //第三方调用时，可能不支持颜色显示，可通过添加 -nocoloroutput 移除颜色信息
 var ColorOutputReplacements = {
     "{color_green}": "\033[1;32;1m",

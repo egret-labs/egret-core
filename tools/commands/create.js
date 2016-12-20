@@ -1,8 +1,8 @@
 /// <reference path="../lib/types.d.ts" />
-var utils = require('../lib/utils');
-var createAction = require('../actions/Create');
-var server = require('../server/server');
-var FileUtil = require('../lib/FileUtil');
+var utils = require("../lib/utils");
+var createAction = require("../actions/Create");
+var server = require("../server/server");
+var FileUtil = require("../lib/FileUtil");
 console.log(utils.tr(1003, 0));
 var Create = (function () {
     function Create() {

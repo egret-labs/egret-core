@@ -1,6 +1,5 @@
-var utils = require('../lib/utils');
-var file = require('../lib/FileUtil');
-/// <reference path="../lib/typescript/tsclark.d.ts" />
+var utils = require("../lib/utils");
+var file = require("../lib/FileUtil");
 function loadTsConfig(url, options) {
     var configStr = file.read(url);
     var configObj;

@@ -1,7 +1,7 @@
 /// <reference path="../../lib/types.d.ts" />
 //import globals = require("../../Globals");
 //import params = require("../../ParamsParser");
-var file = require('../../lib/FileUtil');
+var file = require("../../lib/FileUtil");
 //import config = require('../../lib/ProjectConfig');
 var UpgradeCommand_1_1_0 = (function () {
     function UpgradeCommand_1_1_0() {

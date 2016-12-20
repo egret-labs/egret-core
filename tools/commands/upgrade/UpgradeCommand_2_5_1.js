@@ -1,5 +1,5 @@
 /// <reference path="../../lib/types.d.ts" />
-var file = require('../../lib/FileUtil');
+var file = require("../../lib/FileUtil");
 var modify = require("./ModifyProperties");
 var UpgradeCommand_2_5_1 = (function () {
     function UpgradeCommand_2_5_1() {

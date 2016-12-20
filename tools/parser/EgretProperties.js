@@ -1,5 +1,5 @@
 /// <reference path="../lib/types.d.ts" />
-var file = require('../lib/FileUtil');
+var file = require("../lib/FileUtil");
 var EgretProperties = (function () {
     function EgretProperties() {
         this.properties = {};

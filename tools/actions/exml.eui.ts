@@ -113,7 +113,6 @@ export function updateSetting(merge = false) {
 
     themes.forEach((thm, i) => {
         var path = file.joinPath(egret.args.projectDir, thm);
-        themeDatas[i].autoGenerateExmlsList;
         var thmData = JSON.stringify(themeDatas[i], null, "  ");
         file.save(path, thmData);
     });

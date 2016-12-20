@@ -1,9 +1,8 @@
 /// <reference path="../lib/types.d.ts" />
-/// <reference path="../lib/typescript/tsclark.d.ts" />
-var Compiler = require('./Compiler');
-var FileUtil = require('../lib/FileUtil');
-var exmlActions = require('../actions/exml');
-var LoadConfig = require('./LoadConfig');
+var Compiler = require("./Compiler");
+var FileUtil = require("../lib/FileUtil");
+var exmlActions = require("../actions/exml");
+var LoadConfig = require("./LoadConfig");
 var CompileProject = (function () {
     function CompileProject() {
     }
