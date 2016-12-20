@@ -1,6 +1,6 @@
 /// <reference path="../lib/types.d.ts" />
 //import globals = require("../globals");
-var FileUtil = require('../lib/FileUtil');
+var FileUtil = require("../lib/FileUtil");
 var fs = require("fs");
 var CopyFilesCommand = require("../commands/copyfile");
 var GenerateVersionCommand = (function () {

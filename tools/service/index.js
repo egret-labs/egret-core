@@ -1,10 +1,10 @@
-var url = require('url');
-var net = require('net');
-var Project = require('./project');
-var ServiceSocket = require('./ServiceSocket');
-var file = require('../lib/FileUtil');
-var childProcess = require('child_process');
-var parser = require('../parser/Parser');
+var url = require("url");
+var net = require("net");
+var Project = require("./project");
+var ServiceSocket = require("./ServiceSocket");
+var file = require("../lib/FileUtil");
+var childProcess = require("child_process");
+var parser = require("../parser/Parser");
 var os = require("os");
 exports.LARK_SERVICE_PORT = 51545;
 //Lark version, use to shutdown if the version is different to the value passed by the build command

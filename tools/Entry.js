@@ -36,7 +36,7 @@ require('./globals');
 require("./lib/core/globals.js");
 var Parser = require("./parser/Parser");
 var earlyParams = require("./parser/ParseEarlyVersionParams");
-var utils = require('./lib/utils');
+var utils = require("./lib/utils");
 function executeCommandLine(args) {
     var options = Parser.parseCommandLine(args);
     egret.args = options;

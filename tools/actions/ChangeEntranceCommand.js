@@ -1,5 +1,5 @@
 /// <reference path="../lib/types.d.ts" />
-var FileUtil = require('../lib/FileUtil');
+var FileUtil = require("../lib/FileUtil");
 var ChangeEntranceCommand = (function () {
     function ChangeEntranceCommand() {
     }

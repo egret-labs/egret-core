@@ -1,12 +1,12 @@
 /// <reference path="../lib/types.d.ts" />
-var utils = require('../lib/utils');
-var service = require('../service/index');
-var FileUtil = require('../lib/FileUtil');
-var CopyFiles = require('../actions/CopyFiles');
-var APITestTool = require('../actions/APITest');
-var CHILD_EXEC = require('child_process');
-var APITestCommand = require('./apitest');
-var Compiler = require('../actions/Compiler');
+var utils = require("../lib/utils");
+var service = require("../service/index");
+var FileUtil = require("../lib/FileUtil");
+var CopyFiles = require("../actions/CopyFiles");
+var APITestTool = require("../actions/APITest");
+var CHILD_EXEC = require("child_process");
+var APITestCommand = require("./apitest");
+var Compiler = require("../actions/Compiler");
 console.log(utils.tr(1004, 0));
 var timeBuildStart = (new Date()).getTime();
 var Build = (function () {

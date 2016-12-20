@@ -58,8 +58,8 @@ function getLibsList(html, isNative, isDebug) {
     }
 }
 exports.getLibsList = getLibsList;
-var doT = require('../lib/doT');
-var FileUtil = require('../lib/FileUtil');
+var doT = require("../lib/doT");
+var FileUtil = require("../lib/FileUtil");
 function getNativeProjectInfo(html) {
     if (!FileUtil.exists(html))
         return;

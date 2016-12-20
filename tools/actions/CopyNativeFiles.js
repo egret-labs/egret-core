@@ -1,5 +1,5 @@
 /// <reference path="../lib/types.d.ts" />
-var FileUtil = require('../lib/FileUtil');
+var FileUtil = require("../lib/FileUtil");
 var CopyFilesCommand = require("../commands/copyfile");
 var ChangeEntranceCMD = require("../actions/ChangeEntranceCommand");
 var CopyNativeFiles = (function () {

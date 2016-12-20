@@ -1,5 +1,5 @@
 /// <reference path="../lib/types.d.ts" />
-var file = require('../lib/FileUtil');
+var file = require("../lib/FileUtil");
 var exml = require("../lib/eui/EXML");
 function beforeBuild() {
     generateExmlDTS();

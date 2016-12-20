@@ -1,14 +1,14 @@
 /// <reference path="../lib/types.d.ts" />
-var utils = require('../lib/utils');
-var service = require('../service/index');
-var FileUtil = require('../lib/FileUtil');
-var Native = require('../actions/NativeProject');
-var CopyFiles = require('../actions/CopyFiles');
-var exmlActions = require('../actions/exml');
-var state = require('../lib/DirectoryState');
-var CompileProject = require('../actions/CompileProject');
-var CompileTemplate = require('../actions/CompileTemplate');
-var parser = require('../parser/Parser');
+var utils = require("../lib/utils");
+var service = require("../service/index");
+var FileUtil = require("../lib/FileUtil");
+var Native = require("../actions/NativeProject");
+var CopyFiles = require("../actions/CopyFiles");
+var exmlActions = require("../actions/exml");
+var state = require("../lib/DirectoryState");
+var CompileProject = require("../actions/CompileProject");
+var CompileTemplate = require("../actions/CompileTemplate");
+var parser = require("../parser/Parser");
 var AutoCompileCommand = (function () {
     function AutoCompileCommand() {
         this.exitCode = [0, 0];

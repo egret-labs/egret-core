@@ -1,6 +1,6 @@
 /// <reference path="../lib/types.d.ts" />
-var CompileProject = require('../actions/CompileProject');
-var path = require('path');
+var CompileProject = require("../actions/CompileProject");
+var path = require("path");
 var InternalCompile = (function () {
     function InternalCompile() {
     }

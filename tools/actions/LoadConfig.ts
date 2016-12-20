@@ -1,6 +1,5 @@
 import utils = require('../lib/utils');
 import file = require('../lib/FileUtil');
-/// <reference path="../lib/typescript/tsclark.d.ts" />
 export function loadTsConfig(url, options: egret.ToolArgs): void {
     var configStr: string = file.read(url);
     var configObj: Object;
@@ -12,7 +11,7 @@ export function loadTsConfig(url, options: egret.ToolArgs): void {
             errLog.push(utils.tr(1117));//不是有效的 json 文件
         }
     }
-    var compilerOptions:ts.CompilerOptions ={};
+    var compilerOptions:ts.CompilerOptions = {};
     if (configObj) {
         compilerOptions = configObj["compilerOptions"];
         if (compilerOptions) {
@@ -22,7 +21,7 @@ export function loadTsConfig(url, options: egret.ToolArgs): void {
                  if(compilerOptions.hasOwnProperty(optionName)){
                      var outputError = true;
                      //下面几种情况不输出错误信息
-                     if(optionName == 'target' && compilerOptions[optionName].toLowerCase() == 'es5'){
+                     if(optionName == 'target' && (<string>compilerOptions[optionName]).toLowerCase() == 'es5'){
                          outputError = false;
                      }else if(optionName=='outDir'){
                          var outdir = compilerOptions[optionName].toLowerCase();

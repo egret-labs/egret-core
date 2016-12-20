@@ -1,6 +1,6 @@
 /// <reference path="../lib/types.d.ts" />
-var FileUtil = require('../lib/FileUtil');
-var Compiler = require('../actions/Compiler');
+var FileUtil = require("../lib/FileUtil");
+var Compiler = require("../actions/Compiler");
 var SortFiles = (function () {
     function SortFiles() {
     }

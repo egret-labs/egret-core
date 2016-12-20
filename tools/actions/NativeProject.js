@@ -1,8 +1,8 @@
 /// <reference path="../lib/types.d.ts" />
-var utils = require('../lib/utils');
-var FileUtil = require('../lib/FileUtil');
+var utils = require("../lib/utils");
+var FileUtil = require("../lib/FileUtil");
 var childProcess = require("child_process");
-var CompileTemplate = require('../actions/CompileTemplate');
+var CompileTemplate = require("../actions/CompileTemplate");
 var copyNative = require("../actions/CopyNativeFiles");
 var NativeProject = (function () {
     function NativeProject() {
@@ -17,10 +17,10 @@ var NativeProject = (function () {
     };
     NativeProject.run = function (platform) {
     };
-    NativeProject.copyNativeTemplate = copyNativeTemplate;
-    NativeProject.copyOutputToNative = copyOutputToNative;
     return NativeProject;
 }());
+NativeProject.copyNativeTemplate = copyNativeTemplate;
+NativeProject.copyOutputToNative = copyOutputToNative;
 function copyOutputToNative(platform) {
     var platformFolders = getPlatformFolders(platform);
     var templateDatas = platformFolders.map(function (t) { return getNativeTemplateData(t); });

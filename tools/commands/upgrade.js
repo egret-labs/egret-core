@@ -3,8 +3,8 @@
  */
 /// <reference path="../lib/types.d.ts" />
 /// <reference path="../lib/async/async.d.ts" />
-var async = require('../lib/async/async');
-var service = require('../service/index');
+var async = require("../lib/async/async");
+var service = require("../service/index");
 //import config = require('../lib/ProjectConfig');
 //import globals = require("../Globals");
 var UpgradeCommand = (function () {

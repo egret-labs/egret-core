@@ -1,6 +1,6 @@
 /// <reference path="../lib/types.d.ts" />
-var file = require('../lib/FileUtil');
-var exmlc = require('../lib/exml/exmlc');
+var file = require("../lib/FileUtil");
+var exmlc = require("../lib/exml/exmlc");
 function beforeBuild() {
     //todo move to upgrade
     var oldPath = file.joinPath(egret.args.srcDir, "libs", "exml.g.d.ts");

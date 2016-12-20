@@ -1,9 +1,7 @@
 
 /// <reference path="../lib/types.d.ts" />
-/// <reference path="../lib/typescript/tsclark.d.ts" />
 import utils = require('../lib/utils');
 import file = require('../lib/FileUtil');
-import tsclark = require("../lib/typescript/tsclark");
 import ts = require("../lib/typescript-plus/typescript");
 
 interface CompileOption {
@@ -16,7 +14,7 @@ interface CompileOption {
 }
 
 class Compiler {
-    public compile(option: CompileOption): tsclark.LarkCompileResult {
+    public compile(option: CompileOption): egret.CompileResult {
         //console.log('---Compiler.compile---')
         var args = option.args, def = option.def, files = option.files,
             out = option.out, outDir = option.outDir;
@@ -58,27 +56,13 @@ class Compiler {
         parsedCmd.options.allowUnreachableCode = true;
         parsedCmd.options.emitReflection = true;
         parsedCmd.options["forSortFile"] = option.forSortFile;
-        if(true) {//args.experimental
-            return this.compileNew(parsedCmd);
-        }
-        else {
-            // var compileResult = tsclark.Compiler.executeWithOption(args, files, out, outDir);
-            var compileResult = tsclark.Compiler.executeWithOption(<any>parsedCmd);
-
-            args.declaration = defTemp;
-            if (compileResult.messages) {
-                compileResult.messages.forEach(m=> console.log(m));
-            }
-
-            process.chdir(realCWD);
-            return compileResult;
-        }
+        return this.compileNew(parsedCmd);
     }
 
     private files: ts.Map<{ version: number }> = <any>{};
     private sortedFiles;
 
-    private compileNew(parsedCmd): tsclark.LarkCompileResult {
+    private compileNew(parsedCmd): egret.CompileResult {
         this.errors = [];
         this.parsedCmd = parsedCmd;
         let options = parsedCmd.options;
@@ -165,7 +149,7 @@ class Compiler {
 
     private parsedCmd: ts.ParsedCommandLine;
 
-    private compileWithChanges(filesChanged: egret.FileChanges, sourceMap?: boolean): tsclark.LarkCompileResult {
+    private compileWithChanges(filesChanged: egret.FileChanges, sourceMap?: boolean): egret.CompileResult {
         this.errors = [];
         filesChanged.forEach((file: any) => {
             if (file.type == "added") {
@@ -191,11 +175,5 @@ class Compiler {
         return { files: this.sortedFiles, program: <any>this.services.getProgram(), exitStatus: 0, messages:this.errors, compileWithChanges:this.compileWithChanges.bind(this)};
     }
 }
-
-tsclark.Compiler.exit = exitCode => {
-    if (exitCode != 0)
-        console.log(utils.tr(10003, exitCode));
-    return exitCode;
-};
 
 export = Compiler;

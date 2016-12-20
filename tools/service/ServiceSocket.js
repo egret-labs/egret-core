@@ -8,14 +8,14 @@ var events = require("events");
 var ServiceSocket = (function (_super) {
     __extends(ServiceSocket, _super);
     function ServiceSocket(socket) {
-        var _this = this;
-        _super.call(this);
-        this.larkMessageParser = new LarkMessageBody();
-        this.socket = socket;
+        var _this = _super.call(this) || this;
+        _this.larkMessageParser = new LarkMessageBody();
+        _this.socket = socket;
         socket.setEncoding("utf-8");
         socket.on("data", function (msg) { return _this.onData(msg); });
         socket.on("end", function () { return _this.emit("end"); });
         socket.on("close", function () { return _this.emit("close"); });
+        return _this;
     }
     ServiceSocket.prototype.send = function (object) {
         var msg = LarkMessageBody.toMessage(object);
@@ -67,7 +67,7 @@ var LarkMessageBody = (function () {
             msgCallback(this.data);
         }
     };
-    LarkMessageBody.LARKHEADER = "LARK-MSG";
     return LarkMessageBody;
 }());
+LarkMessageBody.LARKHEADER = "LARK-MSG";
 module.exports = ServiceSocket;

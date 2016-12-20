@@ -266,7 +266,7 @@ class CreateAppCommand implements egret.Command {
         return "undefined";
     }
 
-    private getAndroidSDKAPILevelValue(target_level) {
+    private getAndroidSDKAPILevelValue(target_level?) {
         // check ANDROID_HOME
         var android_home = process.env.ANDROID_HOME
         if (!android_home) {
@@ -407,9 +407,9 @@ class CreateAppCommand implements egret.Command {
             var len = lines.length;
             var i = 0;
             for (i = 0; i < len; i++) {
-                index = lines[i].indexOf("target");
+                let index = lines[i].indexOf("target");
                 if (index != -1 && -1 != lines[i].indexOf("=")) {
-                    version = lines[i].substring(lines[i].indexOf("-") + 1);
+                    let version = lines[i].substring(lines[i].indexOf("-") + 1);
                     index = version.indexOf("\r");
                     if (index != -1) {
                         version = version.substring(0, index);

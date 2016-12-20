@@ -1,11 +1,11 @@
 /// <reference path="../lib/types.d.ts" />
 //import globals = require("../globals");
 //import params = require("../ParamsParser");
-var file = require('../lib/FileUtil');
+var file = require("../lib/FileUtil");
 //import config = require("../ProjectConfig");
 var config = egret.args.properties;
 var ParseConfigCommand = require("../actions/ParseConfig");
-var CompileTemplate = require('../actions/CompileTemplate');
+var CompileTemplate = require("../actions/CompileTemplate");
 var fs = require('fs');
 var cp_exec = require('child_process').exec;
 var copyNative = require("../actions/CopyNativeFiles");
@@ -364,9 +364,9 @@ var CreateAppCommand = (function () {
             var len = lines.length;
             var i = 0;
             for (i = 0; i < len; i++) {
-                index = lines[i].indexOf("target");
+                var index = lines[i].indexOf("target");
                 if (index != -1 && -1 != lines[i].indexOf("=")) {
-                    version = lines[i].substring(lines[i].indexOf("-") + 1);
+                    var version = lines[i].substring(lines[i].indexOf("-") + 1);
                     index = version.indexOf("\r");
                     if (index != -1) {
                         version = version.substring(0, index);

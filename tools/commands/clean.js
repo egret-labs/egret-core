@@ -1,10 +1,10 @@
 /// <reference path="../lib/types.d.ts" />
-var utils = require('../lib/utils');
-var service = require('../service/index');
-var CopyFiles = require('../actions/CopyFiles');
-var CompileProject = require('../actions/CompileProject');
-var CompileTemplate = require('../actions/CompileTemplate');
-var NativeProject = require('../actions/NativeProject');
+var utils = require("../lib/utils");
+var service = require("../service/index");
+var CopyFiles = require("../actions/CopyFiles");
+var CompileProject = require("../actions/CompileProject");
+var CompileTemplate = require("../actions/CompileTemplate");
+var NativeProject = require("../actions/NativeProject");
 console.log(utils.tr(1106, 0));
 var timeBuildStart = (new Date()).getTime();
 var Clean = (function () {

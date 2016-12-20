@@ -1,5 +1,5 @@
 /// <reference path="../lib/types.d.ts" />
-var FileUtil = require('../lib/FileUtil');
+var FileUtil = require("../lib/FileUtil");
 var FileAutoChange = require("../actions/FileAutoChange");
 var CompileTemplate = (function () {
     function CompileTemplate() {

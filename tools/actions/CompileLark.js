@@ -1,8 +1,8 @@
 /// <reference path="../lib/types.d.ts" />
-var utils = require('../lib/utils');
-var Compiler = require('./Compiler');
-var FileUtil = require('../lib/FileUtil');
-var path = require('path');
+var utils = require("../lib/utils");
+var Compiler = require("./Compiler");
+var FileUtil = require("../lib/FileUtil");
+var path = require("path");
 var ANY = 'any';
 var CompileLark = (function () {
     function CompileLark() {

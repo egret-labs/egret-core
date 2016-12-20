@@ -1,8 +1,4 @@
-/// <reference path="../lib/types.d.ts" />
-/// <reference path="../lib/typescript/tsclark.d.ts" />
-var utils = require('../lib/utils');
-var file = require('../lib/FileUtil');
-var tsclark = require("../lib/typescript/tsclark");
+var file = require("../lib/FileUtil");
 var ts = require("../lib/typescript-plus/typescript");
 var Compiler = (function () {
     function Compiler() {
@@ -48,19 +44,7 @@ var Compiler = (function () {
         parsedCmd.options.allowUnreachableCode = true;
         parsedCmd.options.emitReflection = true;
         parsedCmd.options["forSortFile"] = option.forSortFile;
-        if (true) {
-            return this.compileNew(parsedCmd);
-        }
-        else {
-            // var compileResult = tsclark.Compiler.executeWithOption(args, files, out, outDir);
-            var compileResult = tsclark.Compiler.executeWithOption(parsedCmd);
-            args.declaration = defTemp;
-            if (compileResult.messages) {
-                compileResult.messages.forEach(function (m) { return console.log(m); });
-            }
-            process.chdir(realCWD);
-            return compileResult;
-        }
+        return this.compileNew(parsedCmd);
     };
     Compiler.prototype.compileNew = function (parsedCmd) {
         var _this = this;
@@ -162,9 +146,4 @@ var Compiler = (function () {
     };
     return Compiler;
 }());
-tsclark.Compiler.exit = function (exitCode) {
-    if (exitCode != 0)
-        console.log(utils.tr(10003, exitCode));
-    return exitCode;
-};
 module.exports = Compiler;

@@ -1,10 +1,8 @@
 /// <reference path="../lib/types.d.ts" />
-/// <reference path="../lib/typescript/tsclark.d.ts" />
 
 import utils = require('../lib/utils');
 import Compiler = require('./Compiler');
 import FileUtil = require('../lib/FileUtil');
-import tsclark = require("../lib/typescript/tsclark");
 import exmlActions = require('../actions/exml');
 import LoadConfig = require('./LoadConfig');
 
@@ -24,7 +22,7 @@ class CompileProject {
     private compilerOptions:ts.CompilerOptions;
     public compileProject(option: egret.ToolArgs, files?: egret.FileChanges) {
         //console.log("----compileProject.compileProject----")
-        var compileResult: tsclark.LarkCompileResult;
+        var compileResult: egret.CompileResult;
         if (files && this.recompile) {// console.log("----compileProject.compileProject.B-----")
             files.forEach(f=> f.fileName = f.fileName.replace(option.projectDir, ""));
             var realCWD = process.cwd();
@@ -63,7 +61,7 @@ class CompileProject {
 
     }
 
-    private recompile: (files: egret.FileChanges, sourceMap?: boolean ) => tsclark.LarkCompileResult;
+    private recompile: (files: egret.FileChanges, sourceMap?: boolean ) => egret.CompileResult;
 }
 
 function GetJavaScriptFileNames(tsFiles: string[],root:string|RegExp,prefix?:string) {

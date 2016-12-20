@@ -4,7 +4,7 @@
 /// <reference path="../lib/types.d.ts" />
 //import globals = require("../globals");
 //import params = require("../ParamsParser");
-var file = require('../lib/FileUtil');
+var file = require("../lib/FileUtil");
 //import config = require('../ProjectConfig');
 var config = egret.args.properties;
 var CopyFilesCommand = (function () {

@@ -1,7 +1,7 @@
 ///<reference path="./typescriptServices.d.ts" />
 var TSS = require("./typescriptServices");
 var fs = require("fs");
-var file = require('../../../lib/FileUtil');
+var file = require("../../../lib/FileUtil");
 var Logger = {
     log: function (a, b, c, d, e) {
         //var consoleLog = arguments[0];
@@ -577,9 +577,9 @@ var Host = (function () {
     };
     Host.prototype.setDefaultLibFileName = function (fileName) { Host.defaultLibFileName = fileName; };
     Host.prototype.getDefaultLibFileName = function () { return Host.defaultLibFileName; };
-    Host.defaultLibFileName = 'default';
     return Host;
 }());
+Host.defaultLibFileName = 'default';
 var CancellationToken = (function () {
     function CancellationToken(cancellationToken) {
         this.cancellationToken = cancellationToken;
@@ -587,9 +587,9 @@ var CancellationToken = (function () {
     CancellationToken.prototype.isCancellationRequested = function () {
         return this.cancellationToken && this.cancellationToken.isCancellationRequested();
     };
-    CancellationToken.None = new CancellationToken(null);
     return CancellationToken;
 }());
+CancellationToken.None = new CancellationToken(null);
 /**
  * 一个代码实体类
  */

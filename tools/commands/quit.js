@@ -1,5 +1,5 @@
 /// <reference path="../lib/types.d.ts" />
-var service = require('../service/index');
+var service = require("../service/index");
 var Quit = (function () {
     function Quit() {
     }
