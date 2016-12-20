@@ -48,7 +48,7 @@ var Compiler = (function () {
         parsedCmd.options.allowUnreachableCode = true;
         parsedCmd.options.emitReflection = true;
         parsedCmd.options["forSortFile"] = option.forSortFile;
-        if(true) {//args.experimental
+        if (true) {
             return this.compileNew(parsedCmd);
         }
         else {

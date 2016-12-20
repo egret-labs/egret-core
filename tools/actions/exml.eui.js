@@ -91,7 +91,7 @@ function updateSetting(merge) {
                 if (exmlFile.theme.indexOf("," + thmPath + ",") >= 0)
                     thm.exmls.push(exmlEl);
             }
-            else if(thm.autoGenerateExmlsList) {
+            else if (thm.autoGenerateExmlsList) {
                 thm.exmls.push(exmlEl);
             }
         });

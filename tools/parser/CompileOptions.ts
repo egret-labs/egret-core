@@ -127,6 +127,7 @@ class CompileOptions implements egret.ToolArgs {
     removed: string[];
     modified: string[];
     runtime: string = "web";
+    experimental: boolean;
     version: string;
     compile: boolean;
     password: string;

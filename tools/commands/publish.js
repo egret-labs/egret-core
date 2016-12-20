@@ -78,8 +78,9 @@ var Publish = (function () {
         else {
             var releaseHtmlPath = FileUtil.joinPath(options.releaseDir, "index.html");
             FileUtil.copy(FileUtil.joinPath(options.projectDir, "index.html"), releaseHtmlPath);
+            //拷贝favicon.ico
             var faviconPath = FileUtil.joinPath(options.projectDir, "favicon.ico");
-            if(FileUtil.exists(faviconPath)) {
+            if (FileUtil.exists(faviconPath)) {
                 FileUtil.copy(faviconPath, FileUtil.joinPath(options.releaseDir, "favicon.ico"));
             }
             //修改 html
