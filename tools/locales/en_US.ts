@@ -160,6 +160,19 @@ locale_strings[2020] = "{0}: error error for child nodes in w: Declarations, the
 locale_strings[2102] = "{0}: warning no child node can be found on the property code \n {1}";
 locale_strings[2103] = "{0}: warning the same property '{1}' on the node is assigned multiple times \n {2}";
 
+// android sdk install
+locale_strings[2201] = "{0} file(s) will be downloaded!";
+locale_strings[2202] = "The total size is {0}MB";
+locale_strings[2203] = "Start to download!";
+locale_strings[2204] = "{0} downloaded successfully!";
+locale_strings[2205] = "This file size is {0}MB";
+locale_strings[2206] = "All files are downloaded successfully!";
+locale_strings[2207] = "{0} file(s) will be unzipped and installed!";
+locale_strings[2208] = "Start to unzip and install!";
+locale_strings[2209] = "{0} unzipped and installed successfully!";
+locale_strings[2210] = "All files are unzipped and installed successfully!";
+locale_strings[2211] = "Android SDK installed successfully!";
+
 locale_strings[8001] = "please input value of the command option {color_green} {0} {color_normal},and it must be one of these: {color_green}[{1}]{color_normal}";
 locale_strings[8002] = "{color_red}Please choose the Egret project folder{color_normal}\n\tEgret_Project\t\t{color_gray}//project folder{color_normal}\n\t\t--launcher\t{color_gray}//launcher folder{color_normal}\n\t\t--src\t\t{color_gray}//source code folder{color_normal}";
 locale_strings[8003] = "The file {0} not exist";

@@ -4,6 +4,7 @@ var path = require('path');
 var events = require('events');
 
 var UnzipCommand = require("./installsdk/UnzipCommand");
+var utils = require('../lib/utils');
 
 var sdkConfigList = [{"varName":"ANDROID_HOME","url":"http://10.0.7.36/android-sdk_r24.4.1-windows.zip","installDir":"android-sdk-windows","fileSize":"196919088"},{"url":"http://10.0.7.36/platform-tools_r24-windows.zip","installDir":"android-sdk-windows/platform-tools","fileSize":"3744669"},{"url":"http://10.0.7.36/build-tools_r24.0.1-windows.zip","installDir":"android-sdk-windows/build-tools/24.0.1","fileSize":"48323734"},{"url":"http://10.0.7.36/android-19_r04.zip","installDir":"android-sdk-windows/platforms/android-19","fileSize":"62590023"},{"varName":"ANT_HOME","url":"http://10.0.7.36/apache-ant-1.8.2-bin.zip","installDir":"apache-ant-1.8.2","fileSize":"41491235"},{"varName":"GRADLE_HOME","url":"http://10.0.7.36/gradle-2.9-bin.zip","installDir":"gradle-2.9","fileSize":"44652280"}];
 
@@ -31,23 +32,28 @@ var InstallSDK = (function (){
 				var length = this.taskList.length;
 				var task = this.taskList[taskIndex];
 				var fileName = getBaseName(task.localFile);
-				print(this.finishedTaskCount + "/" + length + " " + fileName + " unzipped and installed successfully!");
+				var progressMsg = utils.tr(2209, this.finishedTaskCount + "/" + length + " " + fileName);
+				print(progressMsg);
 			});
 			
 			uzm.on(uzm.allTasksFinishedEventName, function () {
-				print("All files are unzipped and installed successfully!");
+				var allUnzippedMsg = utils.tr(2210);
+				print(allUnzippedMsg);
 								
 				saveSDKInfoToConfigFile();
 				
-				print("Android SDK installed successfully!");
+				var sdkInstalledMsg = utils.tr(2211);
+				print(sdkInstalledMsg);
 				
 				printAndroidSDKConfig();
 			});
 			
 			var length = uzm.taskList.length;
-			var fileStr = getFileStrByCount(length);
-			print(length + " " + fileStr + " will be unzipped and installed!");
-			print("Start to unzip and install!");
+			var unzipMsg = utils.tr(2207, length);
+			print(unzipMsg);
+
+			var startMsg = utils.tr(2208);
+			print(startMsg);
 			
 			uzm.start();
 		}
@@ -72,27 +78,32 @@ var InstallSDK = (function (){
 				var fileSize = task.fileSize;
 
 				var length = this.taskList.length;
-				print(this.finishedTaskCount + "/" + length + " " + fileName + " downloaded successfully!");
+				var progressMsg = utils.tr(2204, this.finishedTaskCount + "/" + length + " " + fileName);
+				print(progressMsg);
 				
 				var totalMBSize = parseInt(fileSize * 1.0 / (1024 * 1024));
-				print("This file size is " + totalMBSize + "MB.");
+				var fileSizeMsg = utils.tr(2205, totalMBSize);
+				print(fileSizeMsg);
 			});
 			
 			dlm.on(dlm.allTasksFinishedEventName, function () {
-				print("All files are downloaded successfully!");
+				var allDownloadedMsg = utils.tr(2206);
+				print(allDownloadedMsg);
 				
 				startToUnzipAndInstall();
 			});
 
 			var length = dlm.taskList.length;
-			var fileStr = getFileStrByCount(length);
-			print(length + " " + fileStr + " will be downloaded!");
+			var downloadMsg = utils.tr(2201, length);
+			print(downloadMsg);
 			
 			var totalByteSize = calcTotalFileSize(dlm.taskList);
 			var totalMBSize = parseInt(totalByteSize * 1.0 / (1024 * 1024));
-			print("The total size is " + totalMBSize + "MB.");
+			var totalSizeMsg = utils.tr(2202, totalMBSize);
+			print(totalSizeMsg);
 			
-			print("Start to download!")
+			var startMsg = utils.tr(2203);
+			print(startMsg);
 			
 			dlm.start();
 		}
