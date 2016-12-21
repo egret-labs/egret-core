@@ -172,7 +172,7 @@ namespace egret.web {
 }
 
 if (DEBUG) {
-    let language = navigator.language || navigator.browserLanguage || "en_US";
+    let language = navigator.language || navigator["browserLanguage"] || "en_US";
     language = language.replace("-", "_");
 
     if (language in egret.$locale_strings)

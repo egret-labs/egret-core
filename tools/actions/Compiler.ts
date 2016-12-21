@@ -55,6 +55,16 @@ class Compiler {
         }
         parsedCmd.options.allowUnreachableCode = true;
         parsedCmd.options.emitReflection = true;
+        let defines:any = {};
+        if(egret.args.publish) {
+            defines.DEBUG = false;
+            defines.RELEASE = true;
+        }
+        else {
+            defines.DEBUG = true;
+            defines.RELEASE = false;
+        }
+        parsedCmd.options.defines = defines;
         parsedCmd.options["forSortFile"] = option.forSortFile;
         return this.compileNew(parsedCmd);
     }
@@ -75,7 +85,7 @@ class Compiler {
 
         // Create the language service host to allow the LS to communicate with the host
         const servicesHost: ts.LanguageServiceHost = {
-            getScriptFileNames: () => rootFileNames,
+            getScriptFileNames: () => this.sortedFiles,
             getScriptVersion: (fileName) => this.files[fileName] && this.files[fileName].version.toString(),
             getScriptSnapshot: (fileName) => {
                 if (!file.exists(fileName)) {

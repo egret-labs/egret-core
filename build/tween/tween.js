@@ -1,3 +1,11 @@
+var __reflect = (this && this.__reflect) || function (p, c, t) {
+    p.__class__ = c, t ? t.push(c) : t = [c], p.__types__ = p.__types__ ? t.concat(p.__types__) : t;
+};
+var __extends = (this && this.__extends) || function (d, b) {
+    for (var p in b) if (b.hasOwnProperty(p)) d[p] = b[p];
+    function __() { this.constructor = d; }
+    d.prototype = b === null ? Object.create(b) : (__.prototype = b.prototype, new __());
+};
 //////////////////////////////////////////////////////////////////////////////////////
 //
 //  Copyright (c) 2014-present, Egret Technology.
@@ -50,7 +58,6 @@ var egret;
         function Ease() {
             egret.$error(1014);
         }
-        var d = __define,c=Ease,p=c.prototype;
         /**
          * @language en_US
          * get.See example.
@@ -401,244 +408,244 @@ var egret;
                 return amplitude * Math.pow(2, -10 * (t -= 1)) * Math.sin((t - s) * pi2 / period) * 0.5 + 1;
             };
         };
-        /**
-         * @language en_US
-         * quad in.See example.
-         * @version Egret 2.4
-         * @platform Web,Native
-         */
-        /**
-         * @language zh_CN
-         * quad in。请查看示例
-         * @version Egret 2.4
-         * @platform Web,Native
-         */
-        Ease.quadIn = Ease.getPowIn(2);
-        /**
-         * @language en_US
-         * quad out.See example.
-         * @version Egret 2.4
-         * @platform Web,Native
-         */
-        /**
-         * @language zh_CN
-         * quad out。请查看示例
-         * @version Egret 2.4
-         * @platform Web,Native
-         */
-        Ease.quadOut = Ease.getPowOut(2);
-        /**
-         * @language en_US
-         * quad in out.See example.
-         * @version Egret 2.4
-         * @platform Web,Native
-         */
-        /**
-         * @language zh_CN
-         * quad in out。请查看示例
-         * @version Egret 2.4
-         * @platform Web,Native
-         */
-        Ease.quadInOut = Ease.getPowInOut(2);
-        /**
-         * @language en_US
-         * cubic in.See example.
-         * @version Egret 2.4
-         * @platform Web,Native
-         */
-        /**
-         * @language zh_CN
-         * cubic in。请查看示例
-         * @version Egret 2.4
-         * @platform Web,Native
-         */
-        Ease.cubicIn = Ease.getPowIn(3);
-        /**
-         * @language en_US
-         * cubic out.See example.
-         * @version Egret 2.4
-         * @platform Web,Native
-         */
-        /**
-         * @language zh_CN
-         * cubic out。请查看示例
-         * @version Egret 2.4
-         * @platform Web,Native
-         */
-        Ease.cubicOut = Ease.getPowOut(3);
-        /**
-         * @language en_US
-         * cubic in out.See example.
-         * @version Egret 2.4
-         * @platform Web,Native
-         */
-        /**
-         * @language zh_CN
-         * cubic in out。请查看示例
-         * @version Egret 2.4
-         * @platform Web,Native
-         */
-        Ease.cubicInOut = Ease.getPowInOut(3);
-        /**
-         * @language en_US
-         * quart in.See example.
-         * @version Egret 2.4
-         * @platform Web,Native
-         */
-        /**
-         * @language zh_CN
-         * quart in。请查看示例
-         * @version Egret 2.4
-         * @platform Web,Native
-         */
-        Ease.quartIn = Ease.getPowIn(4);
-        /**
-         * @language en_US
-         * quart out.See example.
-         * @version Egret 2.4
-         * @platform Web,Native
-         */
-        /**
-         * @language zh_CN
-         * quart out。请查看示例
-         * @version Egret 2.4
-         * @platform Web,Native
-         */
-        Ease.quartOut = Ease.getPowOut(4);
-        /**
-         * @language en_US
-         * quart in out.See example.
-         * @version Egret 2.4
-         * @platform Web,Native
-         */
-        /**
-         * @language zh_CN
-         * quart in out。请查看示例
-         * @version Egret 2.4
-         * @platform Web,Native
-         */
-        Ease.quartInOut = Ease.getPowInOut(4);
-        /**
-         * @language en_US
-         * quint in.See example.
-         * @version Egret 2.4
-         * @platform Web,Native
-         */
-        /**
-         * @language zh_CN
-         * quint in。请查看示例
-         * @version Egret 2.4
-         * @platform Web,Native
-         */
-        Ease.quintIn = Ease.getPowIn(5);
-        /**
-         * @language en_US
-         * quint out.See example.
-         * @version Egret 2.4
-         * @platform Web,Native
-         */
-        /**
-         * @language zh_CN
-         * quint out。请查看示例
-         * @version Egret 2.4
-         * @platform Web,Native
-         */
-        Ease.quintOut = Ease.getPowOut(5);
-        /**
-         * @language en_US
-         * quint in out.See example.
-         * @version Egret 2.4
-         * @platform Web,Native
-         */
-        /**
-         * @language zh_CN
-         * quint in out。请查看示例
-         * @version Egret 2.4
-         * @platform Web,Native
-         */
-        Ease.quintInOut = Ease.getPowInOut(5);
-        /**
-         * @language en_US
-         * back in.See example.
-         * @version Egret 2.4
-         * @platform Web,Native
-         */
-        /**
-         * @language zh_CN
-         * back in。请查看示例
-         * @version Egret 2.4
-         * @platform Web,Native
-         */
-        Ease.backIn = Ease.getBackIn(1.7);
-        /**
-         * @language en_US
-         * back out.See example.
-         * @version Egret 2.4
-         * @platform Web,Native
-         */
-        /**
-         * @language zh_CN
-         * back out。请查看示例
-         * @version Egret 2.4
-         * @platform Web,Native
-         */
-        Ease.backOut = Ease.getBackOut(1.7);
-        /**
-         * @language en_US
-         * back in out.See example.
-         * @version Egret 2.4
-         * @platform Web,Native
-         */
-        /**
-         * @language zh_CN
-         * back in out。请查看示例
-         * @version Egret 2.4
-         * @platform Web,Native
-         */
-        Ease.backInOut = Ease.getBackInOut(1.7);
-        /**
-         * @language en_US
-         * elastic in.See example.
-         * @version Egret 2.4
-         * @platform Web,Native
-         */
-        /**
-         * @language zh_CN
-         * elastic in。请查看示例
-         * @version Egret 2.4
-         * @platform Web,Native
-         */
-        Ease.elasticIn = Ease.getElasticIn(1, 0.3);
-        /**
-         * @language en_US
-         * elastic out.See example.
-         * @version Egret 2.4
-         * @platform Web,Native
-         */
-        /**
-         * @language zh_CN
-         * elastic out。请查看示例
-         * @version Egret 2.4
-         * @platform Web,Native
-         */
-        Ease.elasticOut = Ease.getElasticOut(1, 0.3);
-        /**
-         * @language en_US
-         * elastic in out.See example.
-         * @version Egret 2.4
-         * @platform Web,Native
-         */
-        /**
-         * @language zh_CN
-         * elastic in out。请查看示例
-         * @version Egret 2.4
-         * @platform Web,Native
-         */
-        Ease.elasticInOut = Ease.getElasticInOut(1, 0.3 * 1.5);
         return Ease;
     }());
+    /**
+     * @language en_US
+     * quad in.See example.
+     * @version Egret 2.4
+     * @platform Web,Native
+     */
+    /**
+     * @language zh_CN
+     * quad in。请查看示例
+     * @version Egret 2.4
+     * @platform Web,Native
+     */
+    Ease.quadIn = Ease.getPowIn(2);
+    /**
+     * @language en_US
+     * quad out.See example.
+     * @version Egret 2.4
+     * @platform Web,Native
+     */
+    /**
+     * @language zh_CN
+     * quad out。请查看示例
+     * @version Egret 2.4
+     * @platform Web,Native
+     */
+    Ease.quadOut = Ease.getPowOut(2);
+    /**
+     * @language en_US
+     * quad in out.See example.
+     * @version Egret 2.4
+     * @platform Web,Native
+     */
+    /**
+     * @language zh_CN
+     * quad in out。请查看示例
+     * @version Egret 2.4
+     * @platform Web,Native
+     */
+    Ease.quadInOut = Ease.getPowInOut(2);
+    /**
+     * @language en_US
+     * cubic in.See example.
+     * @version Egret 2.4
+     * @platform Web,Native
+     */
+    /**
+     * @language zh_CN
+     * cubic in。请查看示例
+     * @version Egret 2.4
+     * @platform Web,Native
+     */
+    Ease.cubicIn = Ease.getPowIn(3);
+    /**
+     * @language en_US
+     * cubic out.See example.
+     * @version Egret 2.4
+     * @platform Web,Native
+     */
+    /**
+     * @language zh_CN
+     * cubic out。请查看示例
+     * @version Egret 2.4
+     * @platform Web,Native
+     */
+    Ease.cubicOut = Ease.getPowOut(3);
+    /**
+     * @language en_US
+     * cubic in out.See example.
+     * @version Egret 2.4
+     * @platform Web,Native
+     */
+    /**
+     * @language zh_CN
+     * cubic in out。请查看示例
+     * @version Egret 2.4
+     * @platform Web,Native
+     */
+    Ease.cubicInOut = Ease.getPowInOut(3);
+    /**
+     * @language en_US
+     * quart in.See example.
+     * @version Egret 2.4
+     * @platform Web,Native
+     */
+    /**
+     * @language zh_CN
+     * quart in。请查看示例
+     * @version Egret 2.4
+     * @platform Web,Native
+     */
+    Ease.quartIn = Ease.getPowIn(4);
+    /**
+     * @language en_US
+     * quart out.See example.
+     * @version Egret 2.4
+     * @platform Web,Native
+     */
+    /**
+     * @language zh_CN
+     * quart out。请查看示例
+     * @version Egret 2.4
+     * @platform Web,Native
+     */
+    Ease.quartOut = Ease.getPowOut(4);
+    /**
+     * @language en_US
+     * quart in out.See example.
+     * @version Egret 2.4
+     * @platform Web,Native
+     */
+    /**
+     * @language zh_CN
+     * quart in out。请查看示例
+     * @version Egret 2.4
+     * @platform Web,Native
+     */
+    Ease.quartInOut = Ease.getPowInOut(4);
+    /**
+     * @language en_US
+     * quint in.See example.
+     * @version Egret 2.4
+     * @platform Web,Native
+     */
+    /**
+     * @language zh_CN
+     * quint in。请查看示例
+     * @version Egret 2.4
+     * @platform Web,Native
+     */
+    Ease.quintIn = Ease.getPowIn(5);
+    /**
+     * @language en_US
+     * quint out.See example.
+     * @version Egret 2.4
+     * @platform Web,Native
+     */
+    /**
+     * @language zh_CN
+     * quint out。请查看示例
+     * @version Egret 2.4
+     * @platform Web,Native
+     */
+    Ease.quintOut = Ease.getPowOut(5);
+    /**
+     * @language en_US
+     * quint in out.See example.
+     * @version Egret 2.4
+     * @platform Web,Native
+     */
+    /**
+     * @language zh_CN
+     * quint in out。请查看示例
+     * @version Egret 2.4
+     * @platform Web,Native
+     */
+    Ease.quintInOut = Ease.getPowInOut(5);
+    /**
+     * @language en_US
+     * back in.See example.
+     * @version Egret 2.4
+     * @platform Web,Native
+     */
+    /**
+     * @language zh_CN
+     * back in。请查看示例
+     * @version Egret 2.4
+     * @platform Web,Native
+     */
+    Ease.backIn = Ease.getBackIn(1.7);
+    /**
+     * @language en_US
+     * back out.See example.
+     * @version Egret 2.4
+     * @platform Web,Native
+     */
+    /**
+     * @language zh_CN
+     * back out。请查看示例
+     * @version Egret 2.4
+     * @platform Web,Native
+     */
+    Ease.backOut = Ease.getBackOut(1.7);
+    /**
+     * @language en_US
+     * back in out.See example.
+     * @version Egret 2.4
+     * @platform Web,Native
+     */
+    /**
+     * @language zh_CN
+     * back in out。请查看示例
+     * @version Egret 2.4
+     * @platform Web,Native
+     */
+    Ease.backInOut = Ease.getBackInOut(1.7);
+    /**
+     * @language en_US
+     * elastic in.See example.
+     * @version Egret 2.4
+     * @platform Web,Native
+     */
+    /**
+     * @language zh_CN
+     * elastic in。请查看示例
+     * @version Egret 2.4
+     * @platform Web,Native
+     */
+    Ease.elasticIn = Ease.getElasticIn(1, 0.3);
+    /**
+     * @language en_US
+     * elastic out.See example.
+     * @version Egret 2.4
+     * @platform Web,Native
+     */
+    /**
+     * @language zh_CN
+     * elastic out。请查看示例
+     * @version Egret 2.4
+     * @platform Web,Native
+     */
+    Ease.elasticOut = Ease.getElasticOut(1, 0.3);
+    /**
+     * @language en_US
+     * elastic in out.See example.
+     * @version Egret 2.4
+     * @platform Web,Native
+     */
+    /**
+     * @language zh_CN
+     * elastic in out。请查看示例
+     * @version Egret 2.4
+     * @platform Web,Native
+     */
+    Ease.elasticInOut = Ease.getElasticInOut(1, 0.3 * 1.5);
     egret.Ease = Ease;
-    egret.registerClass(Ease,'egret.Ease');
+    __reflect(Ease.prototype, "egret.Ease");
 })(egret || (egret = {}));
 //////////////////////////////////////////////////////////////////////////////////////
 //
@@ -695,62 +702,62 @@ var egret;
          * @platform Web,Native
          */
         function Tween(target, props, pluginData) {
-            _super.call(this);
+            var _this = _super.call(this) || this;
             /**
              * @private
              */
-            this._target = null;
+            _this._target = null;
             /**
              * @private
              */
-            this._useTicks = false;
+            _this._useTicks = false;
             /**
              * @private
              */
-            this.ignoreGlobalPause = false;
+            _this.ignoreGlobalPause = false;
             /**
              * @private
              */
-            this.loop = false;
+            _this.loop = false;
             /**
              * @private
              */
-            this.pluginData = null;
+            _this.pluginData = null;
             /**
              * @private
              */
-            this._steps = null;
+            _this._steps = null;
             /**
              * @private
              */
-            this.paused = false;
+            _this.paused = false;
             /**
              * @private
              */
-            this.duration = 0;
+            _this.duration = 0;
             /**
              * @private
              */
-            this._prevPos = -1;
+            _this._prevPos = -1;
             /**
              * @private
              */
-            this.position = null;
+            _this.position = null;
             /**
              * @private
              */
-            this._prevPosition = 0;
+            _this._prevPosition = 0;
             /**
              * @private
              */
-            this._stepPosition = 0;
+            _this._stepPosition = 0;
             /**
              * @private
              */
-            this.passive = false;
-            this.initialize(target, props, pluginData);
+            _this.passive = false;
+            _this.initialize(target, props, pluginData);
+            return _this;
         }
-        var d = __define,c=Tween,p=c.prototype;
         /**
          * @language en_US
          * Activate an object and add a Tween animation to the object
@@ -940,7 +947,7 @@ var egret;
          * @param props
          * @param pluginData
          */
-        p.initialize = function (target, props, pluginData) {
+        Tween.prototype.initialize = function (target, props, pluginData) {
             this._target = target;
             if (props) {
                 this._useTicks = props.useTicks;
@@ -972,7 +979,7 @@ var egret;
          * @param actionsMode
          * @returns
          */
-        p.setPosition = function (value, actionsMode) {
+        Tween.prototype.setPosition = function (value, actionsMode) {
             if (actionsMode === void 0) { actionsMode = 1; }
             if (value < 0) {
                 value = 0;
@@ -1048,7 +1055,7 @@ var egret;
          * @param endPos
          * @param includeStart
          */
-        p._runAction = function (action, startPos, endPos, includeStart) {
+        Tween.prototype._runAction = function (action, startPos, endPos, includeStart) {
             if (includeStart === void 0) { includeStart = false; }
             var sPos = startPos;
             var ePos = endPos;
@@ -1068,7 +1075,7 @@ var egret;
          * @param step
          * @param ratio
          */
-        p._updateTargetProps = function (step, ratio) {
+        Tween.prototype._updateTargetProps = function (step, ratio) {
             var p0, p1, v, v0, v1, arr;
             if (!step && ratio == 1) {
                 this.passive = false;
@@ -1133,7 +1140,7 @@ var egret;
          * @version Egret 2.4
          * @platform Web,Native
          */
-        p.setPaused = function (value) {
+        Tween.prototype.setPaused = function (value) {
             this.paused = value;
             Tween._register(this, !value);
             return this;
@@ -1144,7 +1151,7 @@ var egret;
          * @param props
          * @returns
          */
-        p._cloneProps = function (props) {
+        Tween.prototype._cloneProps = function (props) {
             var o = {};
             for (var n in props) {
                 o[n] = props[n];
@@ -1157,7 +1164,7 @@ var egret;
          * @param o
          * @returns
          */
-        p._addStep = function (o) {
+        Tween.prototype._addStep = function (o) {
             if (o.d > 0) {
                 o.type = "step";
                 this._steps.push(o);
@@ -1172,7 +1179,7 @@ var egret;
          * @param o
          * @returns
          */
-        p._appendQueueProps = function (o) {
+        Tween.prototype._appendQueueProps = function (o) {
             var arr, oldValue, i, l, injectProps;
             for (var n in o) {
                 if (this._initQueueProps[n] === undefined) {
@@ -1212,7 +1219,7 @@ var egret;
          * @param o
          * @returns
          */
-        p._addAction = function (o) {
+        Tween.prototype._addAction = function (o) {
             o.t = this.duration;
             o.type = "action";
             this._steps.push(o);
@@ -1224,7 +1231,7 @@ var egret;
          * @param props
          * @param o
          */
-        p._set = function (props, o) {
+        Tween.prototype._set = function (props, o) {
             for (var n in props) {
                 o[n] = props[n];
             }
@@ -1247,7 +1254,7 @@ var egret;
          * @version Egret 2.4
          * @platform Web,Native
          */
-        p.wait = function (duration, passive) {
+        Tween.prototype.wait = function (duration, passive) {
             if (duration == null || duration <= 0) {
                 return this;
             }
@@ -1274,7 +1281,7 @@ var egret;
          * @version Egret 2.4
          * @platform Web,Native
          */
-        p.to = function (props, duration, ease) {
+        Tween.prototype.to = function (props, duration, ease) {
             if (ease === void 0) { ease = undefined; }
             if (isNaN(duration) || duration < 0) {
                 duration = 0;
@@ -1317,7 +1324,7 @@ var egret;
          *  }, this, [233, "hello"]);
          * </pre>
          */
-        p.call = function (callback, thisObj, params) {
+        Tween.prototype.call = function (callback, thisObj, params) {
             if (thisObj === void 0) { thisObj = undefined; }
             if (params === void 0) { params = undefined; }
             return this._addAction({ f: callback, p: params ? params : [], o: thisObj ? thisObj : this._target });
@@ -1338,7 +1345,7 @@ var egret;
          * @version Egret 2.4
          * @platform Web,Native
          */
-        p.set = function (props, target) {
+        Tween.prototype.set = function (props, target) {
             if (target === void 0) { target = null; }
             //更新当前数据，保证缓动流畅性
             this._appendQueueProps(props);
@@ -1360,7 +1367,7 @@ var egret;
          * @version Egret 2.4
          * @platform Web,Native
          */
-        p.play = function (tween) {
+        Tween.prototype.play = function (tween) {
             if (!tween) {
                 tween = this;
             }
@@ -1382,7 +1389,7 @@ var egret;
          * @version Egret 2.4
          * @platform Web,Native
          */
-        p.pause = function (tween) {
+        Tween.prototype.pause = function (tween) {
             if (!tween) {
                 tween = this;
             }
@@ -1395,51 +1402,51 @@ var egret;
          * @version Egret 2.4
          * @platform Web,Native
          */
-        p.$tick = function (delta) {
+        Tween.prototype.$tick = function (delta) {
             if (this.paused) {
                 return;
             }
             this.setPosition(this._prevPosition + delta);
         };
-        /**
-         * 不做特殊处理
-         * @constant {number} egret.Tween.NONE
-         * @private
-         */
-        Tween.NONE = 0;
-        /**
-         * 循环
-         * @constant {number} egret.Tween.LOOP
-         * @private
-         */
-        Tween.LOOP = 1;
-        /**
-         * 倒序
-         * @constant {number} egret.Tween.REVERSE
-         * @private
-         */
-        Tween.REVERSE = 2;
-        /**
-         * @private
-         */
-        Tween._tweens = [];
-        /**
-         * @private
-         */
-        Tween.IGNORE = {};
-        /**
-         * @private
-         */
-        Tween._plugins = {};
-        /**
-         * @private
-         */
-        Tween._inited = false;
-        Tween._lastTime = 0;
         return Tween;
     }(egret.EventDispatcher));
+    /**
+     * 不做特殊处理
+     * @constant {number} egret.Tween.NONE
+     * @private
+     */
+    Tween.NONE = 0;
+    /**
+     * 循环
+     * @constant {number} egret.Tween.LOOP
+     * @private
+     */
+    Tween.LOOP = 1;
+    /**
+     * 倒序
+     * @constant {number} egret.Tween.REVERSE
+     * @private
+     */
+    Tween.REVERSE = 2;
+    /**
+     * @private
+     */
+    Tween._tweens = [];
+    /**
+     * @private
+     */
+    Tween.IGNORE = {};
+    /**
+     * @private
+     */
+    Tween._plugins = {};
+    /**
+     * @private
+     */
+    Tween._inited = false;
+    Tween._lastTime = 0;
     egret.Tween = Tween;
-    egret.registerClass(Tween,'egret.Tween');
+    __reflect(Tween.prototype, "egret.Tween");
 })(egret || (egret = {}));
 //////////////////////////////////////////////////////////////////////////////////////
 //
@@ -1488,7 +1495,7 @@ var egret;
         var BasePath = (function (_super) {
             __extends(BasePath, _super);
             function BasePath() {
-                _super.apply(this, arguments);
+                var _this = _super.apply(this, arguments) || this;
                 /**
                  * @language en_US
                  * the name of this action.
@@ -1501,13 +1508,13 @@ var egret;
                  * @version Egret 3.1.8
                  * @platform Web,Native
                  */
-                this.name = "";
+                _this.name = "";
+                return _this;
             }
-            var d = __define,c=BasePath,p=c.prototype;
             return BasePath;
         }(egret.EventDispatcher));
         tween.BasePath = BasePath;
-        egret.registerClass(BasePath,'egret.tween.BasePath');
+        __reflect(BasePath.prototype, "egret.tween.BasePath");
         /**
          * @language en_US
          * Indicate the to action. See <code>Tween.to</code>
@@ -1523,7 +1530,7 @@ var egret;
         var To = (function (_super) {
             __extends(To, _super);
             function To() {
-                _super.apply(this, arguments);
+                var _this = _super.apply(this, arguments) || this;
                 /**
                  * @language en_US
                  * Property set of an object
@@ -1536,7 +1543,7 @@ var egret;
                  * @version Egret 3.1.8
                  * @platform Web,Native
                  */
-                this.props = undefined;
+                _this.props = undefined;
                 /**
                  * @language en_US
                  * Duration
@@ -1549,7 +1556,7 @@ var egret;
                  * @version Egret 3.1.8
                  * @platform Web,Native
                  */
-                this.duration = 500;
+                _this.duration = 500;
                 /**
                  * @language en_US
                  * Easing algorithm
@@ -1562,13 +1569,13 @@ var egret;
                  * @version Egret 3.1.8
                  * @platform Web,Native
                  */
-                this.ease = undefined;
+                _this.ease = undefined;
+                return _this;
             }
-            var d = __define,c=To,p=c.prototype;
             return To;
         }(BasePath));
         tween.To = To;
-        egret.registerClass(To,'egret.tween.To');
+        __reflect(To.prototype, "egret.tween.To");
         /**
          * @language en_US
          * Indicate the wait action. See <code>Tween.wait</code>
@@ -1584,7 +1591,7 @@ var egret;
         var Wait = (function (_super) {
             __extends(Wait, _super);
             function Wait() {
-                _super.apply(this, arguments);
+                var _this = _super.apply(this, arguments) || this;
                 /**
                  * @language en_US
                  * Duration
@@ -1597,7 +1604,7 @@ var egret;
                  * @version Egret 3.1.8
                  * @platform Web,Native
                  */
-                this.duration = 500;
+                _this.duration = 500;
                 /**
                  * @language en_US
                  * Whether properties are updated during the waiting time
@@ -1610,13 +1617,13 @@ var egret;
                  * @version Egret 3.1.8
                  * @platform Web,Native
                  */
-                this.passive = undefined;
+                _this.passive = undefined;
+                return _this;
             }
-            var d = __define,c=Wait,p=c.prototype;
             return Wait;
         }(BasePath));
         tween.Wait = Wait;
-        egret.registerClass(Wait,'egret.tween.Wait');
+        __reflect(Wait.prototype, "egret.tween.Wait");
         /**
          * @language en_US
          * Indicate the set action. See <code>Tween.set</code>
@@ -1632,7 +1639,7 @@ var egret;
         var Set = (function (_super) {
             __extends(Set, _super);
             function Set() {
-                _super.apply(this, arguments);
+                var _this = _super.apply(this, arguments) || this;
                 /**
                  * @language en_US
                  * Property set of an object
@@ -1645,13 +1652,13 @@ var egret;
                  * @version Egret 3.1.8
                  * @platform Web,Native
                  */
-                this.props = undefined;
+                _this.props = undefined;
+                return _this;
             }
-            var d = __define,c=Set,p=c.prototype;
             return Set;
         }(BasePath));
         tween.Set = Set;
-        egret.registerClass(Set,'egret.tween.Set');
+        __reflect(Set.prototype, "egret.tween.Set");
         /**
          * @language en_US
          * Indicate the tick action. See <code>Tween.tick</code>
@@ -1667,7 +1674,7 @@ var egret;
         var Tick = (function (_super) {
             __extends(Tick, _super);
             function Tick() {
-                _super.apply(this, arguments);
+                var _this = _super.apply(this, arguments) || this;
                 /**
                  * @language en_US
                  * Delta time
@@ -1680,13 +1687,13 @@ var egret;
                  * @version Egret 3.1.8
                  * @platform Web,Native
                  */
-                this.delta = 0;
+                _this.delta = 0;
+                return _this;
             }
-            var d = __define,c=Tick,p=c.prototype;
             return Tick;
         }(BasePath));
         tween.Tick = Tick;
-        egret.registerClass(Tick,'egret.tween.Tick');
+        __reflect(Tick.prototype, "egret.tween.Tick");
         function convertEase(ease) {
             if (typeof ease === 'function') {
                 return ease;
@@ -1750,10 +1757,9 @@ var egret;
         var TweenItem = (function (_super) {
             __extends(TweenItem, _super);
             function TweenItem() {
-                _super.call(this);
+                return _super.call(this) || this;
             }
-            var d = __define,c=TweenItem,p=c.prototype;
-            d(p, "props"
+            Object.defineProperty(TweenItem.prototype, "props", {
                 /**
                  * @language en_US
                  * The Tween's props.
@@ -1766,14 +1772,16 @@ var egret;
                  * @version Egret 3.1.8
                  * @platform Web,Native
                  */
-                ,function () {
+                get: function () {
                     return this._props;
-                }
-                ,function (value) {
+                },
+                set: function (value) {
                     this._props = value;
-                }
-            );
-            d(p, "target"
+                },
+                enumerable: true,
+                configurable: true
+            });
+            Object.defineProperty(TweenItem.prototype, "target", {
                 /**
                  * @language en_US
                  * The Tween's target.
@@ -1786,14 +1794,16 @@ var egret;
                  * @version Egret 3.1.8
                  * @platform Web,Native
                  */
-                ,function () {
+                get: function () {
                     return this._target;
-                }
-                ,function (value) {
+                },
+                set: function (value) {
                     this._target = value;
-                }
-            );
-            d(p, "paths"
+                },
+                enumerable: true,
+                configurable: true
+            });
+            Object.defineProperty(TweenItem.prototype, "paths", {
                 /**
                  * @language en_US
                  * The Actions in Tween.
@@ -1806,13 +1816,15 @@ var egret;
                  * @version Egret 3.1.8
                  * @platform Web,Native
                  */
-                ,function () {
+                get: function () {
                     return this._paths;
-                }
-                ,function (value) {
+                },
+                set: function (value) {
                     this._paths = value || [];
-                }
-            );
+                },
+                enumerable: true,
+                configurable: true
+            });
             /**
              * @language en_US
              * Play the Tween
@@ -1827,7 +1839,7 @@ var egret;
              * @version Egret 3.1.8
              * @platform Web,Native
              */
-            p.play = function (time) {
+            TweenItem.prototype.play = function (time) {
                 if (!this.tween) {
                     this.createTween();
                 }
@@ -1850,7 +1862,7 @@ var egret;
              * @version Egret 3.1.8
              * @platform Web,Native
              */
-            p.pause = function () {
+            TweenItem.prototype.pause = function () {
                 if (this.tween) {
                     this.tween.setPaused(true);
                 }
@@ -1867,23 +1879,23 @@ var egret;
              * @version Egret 3.1.8
              * @platform Web,Native
              */
-            p.stop = function () {
+            TweenItem.prototype.stop = function () {
                 this.pause();
                 this.tween = null;
             };
-            p.createTween = function () {
+            TweenItem.prototype.createTween = function () {
                 this.tween = egret.Tween.get(this._target, this._props);
                 if (this._paths) {
                     this.applyPaths();
                 }
             };
-            p.applyPaths = function () {
+            TweenItem.prototype.applyPaths = function () {
                 for (var i = 0; i < this._paths.length; i++) {
                     var path = this._paths[i];
                     this.applyPath(path);
                 }
             };
-            p.applyPath = function (path) {
+            TweenItem.prototype.applyPath = function (path) {
                 var _this = this;
                 if (path instanceof To) {
                     this.tween.to(path.props, path.duration, convertEase(path.ease));
@@ -1899,7 +1911,7 @@ var egret;
                 }
                 this.tween.call(function () { return _this.pathComplete(path); });
             };
-            p.pathComplete = function (path) {
+            TweenItem.prototype.pathComplete = function (path) {
                 path.dispatchEventWith('complete');
                 this.dispatchEventWith('pathComplete', false, path);
                 var index = this._paths.indexOf(path);
@@ -1910,7 +1922,7 @@ var egret;
             return TweenItem;
         }(egret.EventDispatcher));
         tween.TweenItem = TweenItem;
-        egret.registerClass(TweenItem,'egret.tween.TweenItem');
+        __reflect(TweenItem.prototype, "egret.tween.TweenItem");
         registerProperty(TweenItem, 'paths', 'Array', true);
         /**
          * @language en_US
@@ -1933,11 +1945,11 @@ var egret;
         var TweenGroup = (function (_super) {
             __extends(TweenGroup, _super);
             function TweenGroup() {
-                _super.call(this);
-                this.completeCount = 0;
+                var _this = _super.call(this) || this;
+                _this.completeCount = 0;
+                return _this;
             }
-            var d = __define,c=TweenGroup,p=c.prototype;
-            d(p, "items"
+            Object.defineProperty(TweenGroup.prototype, "items", {
                 /**
                  * @language en_US
                  * The Array that TweenItems in TweenGroup.
@@ -1950,17 +1962,19 @@ var egret;
                  * @version Egret 3.1.8
                  * @platform Web,Native
                  */
-                ,function () {
+                get: function () {
                     return this._items;
-                }
-                ,function (value) {
+                },
+                set: function (value) {
                     this.completeCount = 0;
                     this.registerEvent(false);
                     this._items = value;
                     this.registerEvent(true);
-                }
-            );
-            p.registerEvent = function (add) {
+                },
+                enumerable: true,
+                configurable: true
+            });
+            TweenGroup.prototype.registerEvent = function (add) {
                 var _this = this;
                 this._items && this._items.forEach(function (item) {
                     if (add) {
@@ -1985,7 +1999,7 @@ var egret;
              * @version Egret 3.1.8
              * @platform Web,Native
              */
-            p.play = function (time) {
+            TweenGroup.prototype.play = function (time) {
                 if (!this._items) {
                     return;
                 }
@@ -2006,7 +2020,7 @@ var egret;
              * @version Egret 3.1.8
              * @platform Web,Native
              */
-            p.pause = function () {
+            TweenGroup.prototype.pause = function () {
                 if (!this._items) {
                     return;
                 }
@@ -2027,7 +2041,7 @@ var egret;
              * @version Egret 3.1.8
              * @platform Web,Native
              */
-            p.stop = function () {
+            TweenGroup.prototype.stop = function () {
                 if (!this._items) {
                     return;
                 }
@@ -2036,7 +2050,7 @@ var egret;
                     item.stop();
                 }
             };
-            p.itemComplete = function (e) {
+            TweenGroup.prototype.itemComplete = function (e) {
                 var item = e.currentTarget;
                 this.completeCount++;
                 this.dispatchEventWith('itemComplete', false, item);
@@ -2048,7 +2062,7 @@ var egret;
             return TweenGroup;
         }(egret.EventDispatcher));
         tween.TweenGroup = TweenGroup;
-        egret.registerClass(TweenGroup,'egret.tween.TweenGroup');
+        __reflect(TweenGroup.prototype, "egret.tween.TweenGroup");
         registerProperty(TweenGroup, 'items', 'Array', true);
         function registerProperty(classDefinition, property, type, asDefault) {
             var prototype = classDefinition.prototype;

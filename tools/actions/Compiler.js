@@ -43,6 +43,16 @@ var Compiler = (function () {
         }
         parsedCmd.options.allowUnreachableCode = true;
         parsedCmd.options.emitReflection = true;
+        var defines = {};
+        if (egret.args.publish) {
+            defines.DEBUG = false;
+            defines.RELEASE = true;
+        }
+        else {
+            defines.DEBUG = true;
+            defines.RELEASE = false;
+        }
+        parsedCmd.options.defines = defines;
         parsedCmd.options["forSortFile"] = option.forSortFile;
         return this.compileNew(parsedCmd);
     };
@@ -59,7 +69,7 @@ var Compiler = (function () {
         });
         // Create the language service host to allow the LS to communicate with the host
         var servicesHost = {
-            getScriptFileNames: function () { return rootFileNames; },
+            getScriptFileNames: function () { return _this.sortedFiles; },
             getScriptVersion: function (fileName) { return _this.files[fileName] && _this.files[fileName].version.toString(); },
             getScriptSnapshot: function (fileName) {
                 if (!file.exists(fileName)) {

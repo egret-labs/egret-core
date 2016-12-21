@@ -66,7 +66,7 @@ namespace egret.web {
 
             if (this._responseType == "arraybuffer" && /msie 9.0/i.test(navigator.userAgent)){
                 let w:any = window;
-                return w.convertResponseBodyToText(this._xhr.responseBody);
+                return w.convertResponseBodyToText(this._xhr["responseBody"]);
             }
 
             if (this._responseType == "document") {

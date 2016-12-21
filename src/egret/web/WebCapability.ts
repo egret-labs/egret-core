@@ -61,7 +61,7 @@ namespace egret.web {
                 }
             }
             
-            let language = (navigator.language || navigator.browserLanguage).toLowerCase();
+            let language = (navigator.language || navigator["browserLanguage"]).toLowerCase();
             let strings = language.split("-");
             if (strings.length > 1) {
                 strings[1] = strings[1].toUpperCase();

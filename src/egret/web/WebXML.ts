@@ -152,7 +152,7 @@ namespace egret.web {
         if(node.localName=="parsererror"){
             throw new Error(node.textContent);
         }
-        let xml = new XML(node.localName, parent, node.prefix, node.namespaceURI, node.nodeName);
+        let xml = new XML(node.localName, parent, node["prefix"], node.namespaceURI, node.nodeName);
         let nodeAttributes = node.attributes;
         let attributes = xml.attributes;
         let length = nodeAttributes.length;

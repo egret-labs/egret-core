@@ -1,3 +1,11 @@
+var __reflect = (this && this.__reflect) || function (p, c, t) {
+    p.__class__ = c, t ? t.push(c) : t = [c], p.__types__ = p.__types__ ? t.concat(p.__types__) : t;
+};
+var __extends = (this && this.__extends) || function (d, b) {
+    for (var p in b) if (b.hasOwnProperty(p)) d[p] = b[p];
+    function __() { this.constructor = d; }
+    d.prototype = b === null ? Object.create(b) : (__.prototype = b.prototype, new __());
+};
 //////////////////////////////////////////////////////////////////////////////////////
 //
 //  Copyright (c) 2014-present, Egret Technology.
@@ -106,42 +114,42 @@ var egret;
         function WebSocket(host, port) {
             if (host === void 0) { host = ""; }
             if (port === void 0) { port = 0; }
-            _super.call(this);
+            var _this = _super.call(this) || this;
             /**
              * @private
              */
-            this._writeMessage = "";
+            _this._writeMessage = "";
             /**
              * @private
              */
-            this._readMessage = "";
+            _this._readMessage = "";
             /**
              * @private
              */
-            this._connected = false;
+            _this._connected = false;
             /**
              * @private
              */
-            this._connecting = false;
+            _this._connecting = false;
             /**
              * @private
              */
-            this._isReadySend = false;
+            _this._isReadySend = false;
             /**
              * @private
              */
-            this._bytesWrite = false;
+            _this._bytesWrite = false;
             /**
              * @private
              */
-            this._type = WebSocket.TYPE_STRING;
-            this._connected = false;
-            this._writeMessage = "";
-            this._readMessage = "";
-            this.socket = new egret.ISocket();
-            this.socket.addCallBacks(this.onConnect, this.onClose, this.onSocketData, this.onError, this);
+            _this._type = WebSocket.TYPE_STRING;
+            _this._connected = false;
+            _this._writeMessage = "";
+            _this._readMessage = "";
+            _this.socket = new egret.ISocket();
+            _this.socket.addCallBacks(_this.onConnect, _this.onClose, _this.onSocketData, _this.onError, _this);
+            return _this;
         }
-        var d = __define,c=WebSocket,p=c.prototype;
         /**
          * @language en_US
          * Connect the socket to the specified host and port number
@@ -158,7 +166,7 @@ var egret;
          * @version Egret 2.4
          * @platform Web,Native
          */
-        p.connect = function (host, port) {
+        WebSocket.prototype.connect = function (host, port) {
             if (!this._connecting && !this._connected) {
                 this._connecting = true;
                 this.socket.connect(host, port);
@@ -168,7 +176,7 @@ var egret;
          * 根据提供的url连接
          * @param url 全地址。如ws://echo.websocket.org:80
          */
-        p.connectByUrl = function (url) {
+        WebSocket.prototype.connectByUrl = function (url) {
             if (!this._connecting && !this._connected) {
                 this._connecting = true;
                 this.socket.connectByUrl(url);
@@ -186,7 +194,7 @@ var egret;
          * @version Egret 2.4
          * @platform Web,Native
          */
-        p.close = function () {
+        WebSocket.prototype.close = function () {
             if (this._connected) {
                 this.socket.close();
             }
@@ -195,7 +203,7 @@ var egret;
          * @private
          *
          */
-        p.onConnect = function () {
+        WebSocket.prototype.onConnect = function () {
             this._connected = true;
             this._connecting = false;
             this.dispatchEventWith(egret.Event.CONNECT);
@@ -204,7 +212,7 @@ var egret;
          * @private
          *
          */
-        p.onClose = function () {
+        WebSocket.prototype.onClose = function () {
             this._connected = false;
             this.dispatchEventWith(egret.Event.CLOSE);
         };
@@ -212,7 +220,7 @@ var egret;
          * @private
          *
          */
-        p.onError = function () {
+        WebSocket.prototype.onError = function () {
             if (this._connecting) {
                 this._connecting = false;
             }
@@ -223,7 +231,7 @@ var egret;
          *
          * @param message
          */
-        p.onSocketData = function (message) {
+        WebSocket.prototype.onSocketData = function (message) {
             if (typeof message == "string") {
                 this._readMessage += message;
             }
@@ -244,7 +252,7 @@ var egret;
          * @version Egret 2.4
          * @platform Web,Native
          */
-        p.flush = function () {
+        WebSocket.prototype.flush = function () {
             if (!this._connected) {
                 egret.$warn(3101);
                 return;
@@ -274,7 +282,7 @@ var egret;
          * @version Egret 2.4
          * @platform Web,Native
          */
-        p.writeUTF = function (message) {
+        WebSocket.prototype.writeUTF = function (message) {
             if (!this._connected) {
                 egret.$warn(3101);
                 return;
@@ -308,7 +316,7 @@ var egret;
          * @version Egret 2.4
          * @platform Web,Native
          */
-        p.readUTF = function () {
+        WebSocket.prototype.readUTF = function () {
             var message;
             if (this._type == WebSocket.TYPE_BINARY) {
                 this._readByte.position = 0;
@@ -343,7 +351,7 @@ var egret;
          * @version Egret 2.4
          * @platform Web,Native
          */
-        p.writeBytes = function (bytes, offset, length) {
+        WebSocket.prototype.writeBytes = function (bytes, offset, length) {
             if (offset === void 0) { offset = 0; }
             if (length === void 0) { length = 0; }
             if (!this._connected) {
@@ -376,7 +384,7 @@ var egret;
          * @version Egret 2.4
          * @platform Web,Native
          */
-        p.readBytes = function (bytes, offset, length) {
+        WebSocket.prototype.readBytes = function (bytes, offset, length) {
             if (offset === void 0) { offset = 0; }
             if (length === void 0) { length = 0; }
             if (!this._readByte) {
@@ -387,7 +395,7 @@ var egret;
             this._readByte.readBytes(bytes, offset, length);
             this._readByte.clear();
         };
-        d(p, "connected"
+        Object.defineProperty(WebSocket.prototype, "connected", {
             /**
              * @language en_US
              * Indicates whether the Socket object is connected currently
@@ -400,11 +408,13 @@ var egret;
              * @version Egret 2.4
              * @platform Web,Native
              */
-            ,function () {
+            get: function () {
                 return this._connected;
-            }
-        );
-        d(p, "type"
+            },
+            enumerable: true,
+            configurable: true
+        });
+        Object.defineProperty(WebSocket.prototype, "type", {
             /**
              * @language en_US
              * Format for sending and receiving data. The default setting is the character string format
@@ -417,47 +427,49 @@ var egret;
              * @version Egret 2.4
              * @platform Web,Native
              */
-            ,function () {
+            get: function () {
                 return this._type;
-            }
-            ,function (value) {
+            },
+            set: function (value) {
                 this._type = value;
                 if (value == WebSocket.TYPE_BINARY && !this._writeByte) {
                     this._readByte = new egret.ByteArray();
                     this._writeByte = new egret.ByteArray();
                 }
-            }
-        );
-        /**
-         * @language en_US
-         * Send and receive data in character string format
-         * @version Egret 2.4
-         * @platform Web,Native
-         */
-        /**
-         * @language zh_CN
-         * 以字符串格式发送和接收数据
-         * @version Egret 2.4
-         * @platform Web,Native
-         */
-        WebSocket.TYPE_STRING = "webSocketTypeString";
-        /**
-         * @language en_US
-         * Send and receive data in binary format
-         * @version Egret 2.4
-         * @platform Web,Native
-         */
-        /**
-         * @language zh_CN
-         * 以二进制格式发送和接收数据
-         * @version Egret 2.4
-         * @platform Web,Native
-         */
-        WebSocket.TYPE_BINARY = "webSocketTypeBinary";
+            },
+            enumerable: true,
+            configurable: true
+        });
         return WebSocket;
     }(egret.EventDispatcher));
+    /**
+     * @language en_US
+     * Send and receive data in character string format
+     * @version Egret 2.4
+     * @platform Web,Native
+     */
+    /**
+     * @language zh_CN
+     * 以字符串格式发送和接收数据
+     * @version Egret 2.4
+     * @platform Web,Native
+     */
+    WebSocket.TYPE_STRING = "webSocketTypeString";
+    /**
+     * @language en_US
+     * Send and receive data in binary format
+     * @version Egret 2.4
+     * @platform Web,Native
+     */
+    /**
+     * @language zh_CN
+     * 以二进制格式发送和接收数据
+     * @version Egret 2.4
+     * @platform Web,Native
+     */
+    WebSocket.TYPE_BINARY = "webSocketTypeBinary";
     egret.WebSocket = WebSocket;
-    egret.registerClass(WebSocket,'egret.WebSocket');
+    __reflect(WebSocket.prototype, "egret.WebSocket");
 })(egret || (egret = {}));
 //////////////////////////////////////////////////////////////////////////////////////
 //
@@ -499,26 +511,25 @@ var egret;
                 this.host = "";
                 this.port = 0;
             }
-            var d = __define,c=NativeSocket,p=c.prototype;
-            p.addCallBacks = function (onConnect, onClose, onSocketData, onError, thisObject) {
+            NativeSocket.prototype.addCallBacks = function (onConnect, onClose, onSocketData, onError, thisObject) {
                 this.onConnect = onConnect;
                 this.onClose = onClose;
                 this.onSocketData = onSocketData;
                 this.onError = onError;
                 this.thisObject = thisObject;
             };
-            p.connect = function (host, port) {
+            NativeSocket.prototype.connect = function (host, port) {
                 this.host = host;
                 this.port = port;
                 var socketServerUrl = "ws://" + this.host + ":" + this.port;
                 this.socket = new __global["egret_native"]["WebSocket"](socketServerUrl);
                 this._bindEvent();
             };
-            p.connectByUrl = function (url) {
+            NativeSocket.prototype.connectByUrl = function (url) {
                 this.socket = new __global["egret_native"]["WebSocket"](url);
                 this._bindEvent();
             };
-            p._bindEvent = function () {
+            NativeSocket.prototype._bindEvent = function () {
                 var that = this;
                 var socket = this.socket;
                 socket.onOpen = function () {
@@ -542,16 +553,16 @@ var egret;
                     }
                 };
             };
-            p.send = function (message) {
+            NativeSocket.prototype.send = function (message) {
                 this.socket.send(message);
             };
-            p.close = function () {
+            NativeSocket.prototype.close = function () {
                 this.socket.close();
             };
             return NativeSocket;
         }());
         native.NativeSocket = NativeSocket;
-        egret.registerClass(NativeSocket,'egret.native.NativeSocket',["egret.ISocket"]);
+        __reflect(NativeSocket.prototype, "egret.native.NativeSocket", ["egret.ISocket"]);
         if (egret.Capabilities.runtimeType == egret.RuntimeType.NATIVE) {
             egret.ISocket = NativeSocket;
         }
@@ -600,15 +611,14 @@ var egret;
                     egret.$error(3100);
                 }
             }
-            var d = __define,c=HTML5WebSocket,p=c.prototype;
-            p.addCallBacks = function (onConnect, onClose, onSocketData, onError, thisObject) {
+            HTML5WebSocket.prototype.addCallBacks = function (onConnect, onClose, onSocketData, onError, thisObject) {
                 this.onConnect = onConnect;
                 this.onClose = onClose;
                 this.onSocketData = onSocketData;
                 this.onError = onError;
                 this.thisObject = thisObject;
             };
-            p.connect = function (host, port) {
+            HTML5WebSocket.prototype.connect = function (host, port) {
                 this.host = host;
                 this.port = port;
                 var socketServerUrl = "ws://" + this.host + ":" + this.port;
@@ -616,12 +626,12 @@ var egret;
                 this.socket.binaryType = "arraybuffer";
                 this._bindEvent();
             };
-            p.connectByUrl = function (url) {
+            HTML5WebSocket.prototype.connectByUrl = function (url) {
                 this.socket = new window["WebSocket"](url);
                 this.socket.binaryType = "arraybuffer";
                 this._bindEvent();
             };
-            p._bindEvent = function () {
+            HTML5WebSocket.prototype._bindEvent = function () {
                 var that = this;
                 var socket = this.socket;
                 socket.onopen = function () {
@@ -645,16 +655,16 @@ var egret;
                     }
                 };
             };
-            p.send = function (message) {
+            HTML5WebSocket.prototype.send = function (message) {
                 this.socket.send(message);
             };
-            p.close = function () {
+            HTML5WebSocket.prototype.close = function () {
                 this.socket.close();
             };
             return HTML5WebSocket;
         }());
         web.HTML5WebSocket = HTML5WebSocket;
-        egret.registerClass(HTML5WebSocket,'egret.web.HTML5WebSocket',["egret.ISocket"]);
+        __reflect(HTML5WebSocket.prototype, "egret.web.HTML5WebSocket", ["egret.ISocket"]);
         if (egret.Capabilities.runtimeType == egret.RuntimeType.WEB) {
             egret.ISocket = HTML5WebSocket;
         }
