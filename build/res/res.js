@@ -3305,6 +3305,7 @@ var RES;
      * 配置文件组组名
      */
     Resource.GROUP_CONFIG = "RES__CONFIG";
+    __reflect(Resource.prototype, "Resource");
     /**
      * Resource单例
      */
