@@ -4820,6 +4820,7 @@ var egret;
             };
             return CmdManager;
         }());
+        __reflect(CmdManager.prototype, "CmdManager");
         /*
          * @private
          * 输出一个单例命令控制器，供所有需要调用的地方使用

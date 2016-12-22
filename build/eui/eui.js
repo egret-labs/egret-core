@@ -491,6 +491,7 @@ var eui;
             };
             return DepthQueue;
         }());
+        __reflect(DepthQueue.prototype, "DepthQueue");
         /**
          * @private
          * 列表项
@@ -538,6 +539,7 @@ var eui;
             };
             return DepthBin;
         }());
+        __reflect(DepthBin.prototype, "DepthBin");
     })(sys = eui.sys || (eui.sys = {}));
 })(eui || (eui = {}));
 //////////////////////////////////////////////////////////////////////////////////////
@@ -17244,7 +17246,7 @@ var eui;
          */
         ArrayCollection.prototype.removeAll = function () {
             var items = this._source.concat();
-            this._source.length = 0;
+            this._source = [];
             this.dispatchCoEvent(eui.CollectionEventKind.REMOVE, 0, -1, items);
         };
         /**

@@ -1023,7 +1023,7 @@ var ts;
 var ts;
 (function (ts) {
     ts.version = "2.1.4";
-    ts.version_plus = "2.1.7";
+    ts.version_plus = "2.1.8";
 })(ts || (ts = {}));
 (function (ts) {
     var Ternary;
@@ -38554,7 +38554,6 @@ var ts;
         var startLexicalEnvironment = context.startLexicalEnvironment, resumeLexicalEnvironment = context.resumeLexicalEnvironment, endLexicalEnvironment = context.endLexicalEnvironment, hoistVariableDeclaration = context.hoistVariableDeclaration;
         var resolver = context.getEmitResolver();
         var compilerOptions = context.getCompilerOptions();
-        var typeChecker = compilerOptions.emitReflection ? context.getEmitHost().getTypeChecker() : null;
         var languageVersion = ts.getEmitScriptTarget(compilerOptions);
         var moduleKind = ts.getEmitModuleKind(compilerOptions);
         var previousOnEmitNode = context.onEmitNode;
@@ -38821,9 +38820,6 @@ var ts;
             addConstructorDecorationStatement(statements, node);
             if (isNamespaceExport(node)) {
                 addExportMemberAssignment(statements, node);
-                if (compilerOptions.emitReflection) {
-                    addClassReflectionStatement(statements, node);
-                }
             }
             else if (isDecoratedClass) {
                 if (isDefaultExternalModuleExport(node)) {
@@ -39885,66 +39881,6 @@ var ts;
             ts.setSourceMapRange(statement, ts.createRange(-1, node.end));
             statements.push(statement);
         }
-        function addClassReflectionStatement(statements, node) {
-            var interfaceMap = {};
-            getImplementedInterfaces(node, interfaceMap);
-            var allInterfaces = Object.keys(interfaceMap);
-            var interfaces;
-            var superTypes = getSuperClassTypes(node);
-            if (superTypes) {
-                interfaces = [];
-                for (var _i = 0, allInterfaces_1 = allInterfaces; _i < allInterfaces_1.length; _i++) {
-                    var type = allInterfaces_1[_i];
-                    if (superTypes.indexOf(type) === -1) {
-                        interfaces.push(type);
-                    }
-                }
-            }
-            else {
-                interfaces = allInterfaces;
-            }
-            node.typeNames = interfaces;
-            var fullClassName = typeChecker.getFullyQualifiedName(node.symbol);
-            var expression = createReflectHelper(context, node.name, fullClassName, interfaces);
-            ts.setSourceMapRange(expression, ts.createRange(node.name.pos, node.end));
-            var statement = ts.createStatement(expression);
-            ts.setSourceMapRange(statement, ts.createRange(-1, node.end));
-            statements.push(statement);
-        }
-        function getImplementedInterfaces(node, result) {
-            var superInterfaces = null;
-            if (node.kind === 226) {
-                superInterfaces = ts.getClassImplementsHeritageClauseElements(node);
-            }
-            else {
-                superInterfaces = ts.getInterfaceBaseTypeNodes(node);
-            }
-            if (superInterfaces) {
-                superInterfaces.forEach(function (superInterface) {
-                    var type = typeChecker.getTypeAtLocation(superInterface);
-                    if (type && type.symbol && type.symbol.flags & 64) {
-                        var symbol = type.symbol;
-                        var fullName = typeChecker.getFullyQualifiedName(symbol);
-                        result[fullName] = true;
-                        if (symbol.valueDeclaration) {
-                            getImplementedInterfaces(symbol.valueDeclaration, result);
-                        }
-                    }
-                });
-            }
-        }
-        function getSuperClassTypes(node) {
-            var superClass = ts.getClassExtendsHeritageClauseElement(node);
-            if (!superClass) {
-                return null;
-            }
-            var type = typeChecker.getTypeAtLocation(superClass);
-            if (!type || !type.symbol) {
-                return;
-            }
-            var declaration = type.symbol.valueDeclaration;
-            return declaration ? declaration.typeNames : null;
-        }
         function createNamespaceExport(exportName, exportValue, location) {
             return ts.createStatement(ts.createAssignment(ts.getNamespaceMemberName(currentNamespaceContainerName, exportName, false, true), exportValue), location);
         }
@@ -40165,34 +40101,13 @@ var ts;
         }
         return ts.createCall(ts.getHelperName("__decorate"), undefined, argumentsArray, location);
     }
-    var reflectHelper = {
-        name: "typescript:reflect",
-        scoped: false,
-        priority: 0,
-        text: "\n            var __reflect = (this && this.__reflect) || function (p, c, t) {\n                p.__class__ = c, t ? t.push(c) : t = [c], p.__types__ = p.__types__ ? t.concat(p.__types__) : t;\n            };"
-    };
-    function createReflectHelper(context, name, fullClassName, interfaces) {
-        context.requestEmitHelper(reflectHelper);
-        var argumentsArray = [
-            ts.createPropertyAccess(name, ts.createIdentifier("prototype")),
-            ts.createLiteral(fullClassName)
-        ];
-        if (interfaces.length) {
-            var elements = [];
-            for (var _i = 0, interfaces_1 = interfaces; _i < interfaces_1.length; _i++) {
-                var value = interfaces_1[_i];
-                elements.push(ts.createLiteral(value));
-            }
-            argumentsArray.push(ts.createArrayLiteral(elements));
-        }
-        return ts.createCall(ts.getHelperName("__reflect"), undefined, argumentsArray);
-    }
 })(ts || (ts = {}));
 var ts;
 (function (ts) {
-    function transformDefines(context) {
+    function transformTypeScriptPlus(context) {
         var resolver = context.getEmitResolver();
         var compilerOptions = context.getCompilerOptions();
+        var typeChecker = compilerOptions.emitReflection ? context.getEmitHost().getTypeChecker() : null;
         var compilerDefines = getCompilerDefines(compilerOptions.defines);
         var previousOnSubstituteNode = context.onSubstituteNode;
         if (compilerDefines) {
@@ -40200,6 +40115,115 @@ var ts;
             context.enableSubstitution(70);
         }
         return transformSourceFile;
+        function transformSourceFile(node) {
+            if (!compilerOptions.emitReflection) {
+                return node;
+            }
+            var visited = ts.updateSourceFileNode(node, ts.visitNodes(node.statements, visitStatement, ts.isStatement));
+            ts.addEmitHelpers(visited, context.readEmitHelpers());
+            return visited;
+        }
+        function visitStatement(node) {
+            if (ts.hasModifier(node, 2)) {
+                return node;
+            }
+            if (node.kind === 226) {
+                return visitClassDeclaration(node);
+            }
+            if (node.kind === 230) {
+                return visitModule(node);
+            }
+            return node;
+        }
+        function visitModule(node) {
+            if (node.body.kind === 230) {
+                return updateModuleDeclaration(node, visitModule(node.body));
+            }
+            if (node.body.kind === 231) {
+                var body = updateModuleBlock(node.body, ts.visitNodes(node.body.statements, visitStatement, ts.isStatement));
+                return updateModuleDeclaration(node, body);
+            }
+            return node;
+        }
+        function updateModuleDeclaration(node, body) {
+            if (node.body !== body) {
+                var updated = ts.getMutableClone(node);
+                updated.body = body;
+                return ts.updateNode(updated, node);
+            }
+            return node;
+        }
+        function updateModuleBlock(node, statements) {
+            if (node.statements !== statements) {
+                var updated = ts.getMutableClone(node);
+                updated.statements = ts.createNodeArray(statements);
+                return ts.updateNode(updated, node);
+            }
+            return node;
+        }
+        function visitClassDeclaration(node) {
+            var classStatement = ts.getMutableClone(node);
+            var statements = [classStatement];
+            var interfaceMap = {};
+            getImplementedInterfaces(node, interfaceMap);
+            var allInterfaces = Object.keys(interfaceMap);
+            var interfaces;
+            var superTypes = getSuperClassTypes(node);
+            if (superTypes) {
+                interfaces = [];
+                for (var _i = 0, allInterfaces_1 = allInterfaces; _i < allInterfaces_1.length; _i++) {
+                    var type = allInterfaces_1[_i];
+                    if (superTypes.indexOf(type) === -1) {
+                        interfaces.push(type);
+                    }
+                }
+            }
+            else {
+                interfaces = allInterfaces;
+            }
+            node.typeNames = interfaces;
+            var fullClassName = typeChecker.getFullyQualifiedName(node.symbol);
+            var expression = createReflectHelper(context, node.name, fullClassName, interfaces);
+            ts.setSourceMapRange(expression, ts.createRange(node.name.pos, node.end));
+            var statement = ts.createStatement(expression);
+            ts.setSourceMapRange(statement, ts.createRange(-1, node.end));
+            statements.push(statement);
+            return statements;
+        }
+        function getImplementedInterfaces(node, result) {
+            var superInterfaces = null;
+            if (node.kind === 226) {
+                superInterfaces = ts.getClassImplementsHeritageClauseElements(node);
+            }
+            else {
+                superInterfaces = ts.getInterfaceBaseTypeNodes(node);
+            }
+            if (superInterfaces) {
+                superInterfaces.forEach(function (superInterface) {
+                    var type = typeChecker.getTypeAtLocation(superInterface);
+                    if (type && type.symbol && type.symbol.flags & 64) {
+                        var symbol = type.symbol;
+                        var fullName = typeChecker.getFullyQualifiedName(symbol);
+                        result[fullName] = true;
+                        if (symbol.valueDeclaration) {
+                            getImplementedInterfaces(symbol.valueDeclaration, result);
+                        }
+                    }
+                });
+            }
+        }
+        function getSuperClassTypes(node) {
+            var superClass = ts.getClassExtendsHeritageClauseElement(node);
+            if (!superClass) {
+                return null;
+            }
+            var type = typeChecker.getTypeAtLocation(superClass);
+            if (!type || !type.symbol) {
+                return;
+            }
+            var declaration = type.symbol.valueDeclaration;
+            return declaration ? declaration.typeNames : null;
+        }
         function getCompilerDefines(defines) {
             if (!defines) {
                 return null;
@@ -40252,11 +40276,30 @@ var ts;
             }
             return node;
         }
-        function transformSourceFile(node) {
-            return node;
-        }
     }
-    ts.transformDefines = transformDefines;
+    ts.transformTypeScriptPlus = transformTypeScriptPlus;
+    var reflectHelper = {
+        name: "typescript:reflect",
+        scoped: false,
+        priority: 0,
+        text: "\n            var __reflect = (this && this.__reflect) || function (p, c, t) {\n                p.__class__ = c, t ? t.push(c) : t = [c], p.__types__ = p.__types__ ? t.concat(p.__types__) : t;\n            };"
+    };
+    function createReflectHelper(context, name, fullClassName, interfaces) {
+        context.requestEmitHelper(reflectHelper);
+        var argumentsArray = [
+            ts.createPropertyAccess(name, ts.createIdentifier("prototype")),
+            ts.createLiteral(fullClassName)
+        ];
+        if (interfaces.length) {
+            var elements = [];
+            for (var _i = 0, interfaces_1 = interfaces; _i < interfaces_1.length; _i++) {
+                var value = interfaces_1[_i];
+                elements.push(ts.createLiteral(value));
+            }
+            argumentsArray.push(ts.createArrayLiteral(elements));
+        }
+        return ts.createCall(ts.getHelperName("__reflect"), undefined, argumentsArray);
+    }
 })(ts || (ts = {}));
 var ts;
 (function (ts) {
@@ -46221,8 +46264,8 @@ var ts;
         var languageVersion = ts.getEmitScriptTarget(compilerOptions);
         var moduleKind = ts.getEmitModuleKind(compilerOptions);
         var transformers = [];
-        if (compilerOptions.defines) {
-            transformers.push(ts.transformDefines);
+        if (compilerOptions.defines || compilerOptions.emitReflection) {
+            transformers.push(ts.transformTypeScriptPlus);
         }
         transformers.push(ts.transformTypeScript);
         if (jsx === 2) {

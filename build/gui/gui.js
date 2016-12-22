@@ -29712,6 +29712,7 @@ var egret;
             }
             return ChildInfo;
         }());
+        __reflect(ChildInfo.prototype, "ChildInfo");
     })(gui = egret.gui || (egret.gui = {}));
 })(egret || (egret = {}));
 //////////////////////////////////////////////////////////////////////////////////////
@@ -31518,6 +31519,7 @@ var egret;
             }
             return ChildInfo;
         }());
+        __reflect(ChildInfo.prototype, "ChildInfo");
     })(gui = egret.gui || (egret.gui = {}));
 })(egret || (egret = {}));
 //////////////////////////////////////////////////////////////////////////////////////
@@ -32414,6 +32416,7 @@ var egret;
             }
             return PopUpData;
         }());
+        __reflect(PopUpData.prototype, "PopUpData");
     })(gui = egret.gui || (egret.gui = {}));
 })(egret || (egret = {}));
 //////////////////////////////////////////////////////////////////////////////////////
