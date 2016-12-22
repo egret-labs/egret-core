@@ -1023,7 +1023,7 @@ var ts;
 var ts;
 (function (ts) {
     ts.version = "2.1.4";
-    ts.version_plus = "2.1.8";
+    ts.version_plus = "2.1.9";
 })(ts || (ts = {}));
 (function (ts) {
     var Ternary;
@@ -40205,8 +40205,9 @@ var ts;
                         var symbol = type.symbol;
                         var fullName = typeChecker.getFullyQualifiedName(symbol);
                         result[fullName] = true;
-                        if (symbol.valueDeclaration) {
-                            getImplementedInterfaces(symbol.valueDeclaration, result);
+                        var declaration = ts.getDeclarationOfKind(symbol, 227);
+                        if (declaration) {
+                            getImplementedInterfaces(declaration, result);
                         }
                     }
                 });
@@ -40221,7 +40222,7 @@ var ts;
             if (!type || !type.symbol) {
                 return;
             }
-            var declaration = type.symbol.valueDeclaration;
+            var declaration = ts.getDeclarationOfKind(type.symbol, 226);
             return declaration ? declaration.typeNames : null;
         }
         function getCompilerDefines(defines) {
@@ -42092,14 +42093,10 @@ var ts;
                 return null;
             }
             var symbol = typeChecker.getSymbolAtLocation(propertyExpression.name);
-            if (!symbol || !symbol.valueDeclaration) {
+            if (!symbol) {
                 return;
             }
-            var declaration = symbol.valueDeclaration;
-            if (declaration.kind === 149) {
-                return declaration;
-            }
-            return null;
+            return ts.getDeclarationOfKind(symbol, 149);
         }
         function visitArrowFunction(node) {
             if (node.transformFlags & 16384) {
