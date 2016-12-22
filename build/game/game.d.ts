@@ -34,7 +34,7 @@ declare namespace egret {
          * @version Egret 2.4
          * @platform Web,Native
          */
-        readonly name: string;
+        name: string;
         /**
          * @language en_US
          * Frame serial number of the label
@@ -47,7 +47,7 @@ declare namespace egret {
          * @version Egret 2.4
          * @platform Web,Native
          */
-        readonly frame: number;
+        frame: number;
         /**
          * @language en_US
          * Frame serial number, the end of the label
@@ -60,7 +60,7 @@ declare namespace egret {
          * @version Egret 2.4
          * @platform Web,Native
          */
-        readonly end: number;
+        end: number;
         /**
          * @language en_US
          * Duplicate the current frame label object
@@ -333,25 +333,25 @@ declare namespace egret {
          * @version Egret 2.4
          * @platform Web,Native
          */
-        readonly totalFrames: number;
+        totalFrames: number;
         /**
          * MovieClip 实例当前播放的帧的序号
          * @version Egret 2.4
          * @platform Web,Native
          */
-        readonly currentFrame: number;
+        currentFrame: number;
         /**
          * MovieClip 实例当前播放的帧的标签。如果当前帧没有标签，则 currentFrameLabel返回null。
          * @version Egret 2.4
          * @platform Web,Native
          */
-        readonly currentFrameLabel: string;
+        currentFrameLabel: string;
         /**
          * 当前播放的帧对应的标签，如果当前帧没有标签，则currentLabel返回包含标签的先前帧的标签。如果当前帧和先前帧都不包含标签，currentLabel返回null。
          * @version Egret 2.4
          * @platform Web,Native
          */
-        readonly currentLabel: string;
+        currentLabel: string;
         /**
          * MovieClip 实例的帧频
          * @version Egret 2.4
@@ -363,7 +363,7 @@ declare namespace egret {
          * @version Egret 2.4
          * @platform Web,Native
          */
-        readonly isPlaying: boolean;
+        isPlaying: boolean;
         /**
          * @version Egret 2.4
          * @platform Web,Native
@@ -616,7 +616,7 @@ declare namespace egret {
          * @version Egret 2.4
          * @platform Web,Native
          */
-        readonly spriteSheet: SpriteSheet;
+        spriteSheet: SpriteSheet;
         /**
          * @private
          *
@@ -2186,7 +2186,7 @@ declare namespace egret {
          * @version Egret 2.4
          * @platform Web,Native
          */
-        readonly stage: Stage;
+        stage: Stage;
         /**
          * @version Egret 2.4
          * @platform Web,Native
@@ -2210,7 +2210,7 @@ declare namespace egret {
          * @version Egret 2.4
          * @platform Web,Native
          */
-        static readonly runtimeType: string;
+        static runtimeType: string;
         /**
          * @version Egret 2.4
          * @platform Web,Native
@@ -2238,7 +2238,7 @@ declare namespace egret {
          * @version Egret 2.4
          * @platform Web,Native
          */
-        static readonly instance: egret.MainContext;
+        static instance: egret.MainContext;
     }
 }
 /**
@@ -2322,7 +2322,7 @@ declare namespace egret {
          * @version Egret 2.4
          * @platform Web,Native
          */
-        readonly length: number;
+        length: number;
         /**
          * @language en_US
          * Cache an object for repeat use

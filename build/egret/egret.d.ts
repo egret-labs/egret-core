@@ -158,7 +158,7 @@ declare namespace egret {
          * @version Egret 2.4
          * @platform Web,Native
          */
-        readonly hashCode: number;
+        hashCode: number;
     }
     /**
      * @private
@@ -1107,7 +1107,7 @@ declare namespace egret {
          * @version Egret 2.4
          * @platform Web,Native
          */
-        readonly parent: DisplayObjectContainer;
+        parent: DisplayObjectContainer;
         /**
          * @private
          * 设置父级显示对象
@@ -1148,7 +1148,7 @@ declare namespace egret {
          * @version Egret 2.4
          * @platform Web,Native
          */
-        readonly stage: Stage;
+        stage: Stage;
         /**
          * @language en_US
          * A Matrix object containing values that alter the scaling, rotation, and translation of the display object.<br/>
@@ -1438,7 +1438,7 @@ declare namespace egret {
          * @version Egret 2.4
          * @platform Web,Native
          */
-        readonly measuredWidth: number;
+        measuredWidth: number;
         /**
          * 测量高度
          * @returns {number}
@@ -1446,7 +1446,7 @@ declare namespace egret {
          * @version Egret 2.4
          * @platform Web,Native
          */
-        readonly measuredHeight: number;
+        measuredHeight: number;
         /**
          * @language en_US
          * X represents the object of which is the anchor.
@@ -2068,7 +2068,7 @@ declare namespace egret {
          * @version Egret 2.4
          * @platform Web,Native
          */
-        readonly numChildren: number;
+        numChildren: number;
         /**
          * @language en_US
          * Adds a child DisplayObject instance to this DisplayObjectContainer instance. The child is added to the front
@@ -2890,7 +2890,7 @@ declare namespace egret {
          * @version Egret 2.4
          * @platform Web,Native
          */
-        readonly type: string;
+        type: string;
         /**
          * @private
          */
@@ -2907,7 +2907,7 @@ declare namespace egret {
          * @version Egret 2.4
          * @platform Web,Native
          */
-        readonly bubbles: boolean;
+        bubbles: boolean;
         /**
          * @private
          */
@@ -2927,7 +2927,7 @@ declare namespace egret {
          * @version Egret 2.4
          * @platform Web,Native
          */
-        readonly cancelable: boolean;
+        cancelable: boolean;
         /**
          * @private
          */
@@ -2952,7 +2952,7 @@ declare namespace egret {
          * @version Egret 2.4
          * @platform Web,Native
          */
-        readonly eventPhase: number;
+        eventPhase: number;
         /**
          * @private
          */
@@ -2972,7 +2972,7 @@ declare namespace egret {
          * @version Egret 2.4
          * @platform Web,Native
          */
-        readonly currentTarget: any;
+        currentTarget: any;
         /**
          * @private
          */
@@ -2990,7 +2990,7 @@ declare namespace egret {
          * @version Egret 2.4
          * @platform Web,Native
          */
-        readonly target: any;
+        target: any;
         $setTarget(target: any): boolean;
         /**
          * @private
@@ -3539,7 +3539,7 @@ declare namespace egret {
          * @version Egret 2.4
          * @platform Web,Native
          */
-        readonly graphics: Graphics;
+        graphics: Graphics;
         $hitTest(stageX: number, stageY: number): DisplayObject;
         /**
          * @private
@@ -3638,7 +3638,7 @@ declare namespace egret {
          * @version Egret 2.4
          * @platform Web,Native
          */
-        readonly textureWidth: number;
+        textureWidth: number;
         $getTextureWidth(): number;
         /**
          * @private
@@ -3657,7 +3657,7 @@ declare namespace egret {
          * @version Egret 2.4
          * @platform Web,Native
          */
-        readonly textureHeight: number;
+        textureHeight: number;
         $getTextureHeight(): number;
         $getScaleBitmapWidth(): number;
         $getScaleBitmapHeight(): number;
@@ -3923,7 +3923,7 @@ declare namespace egret {
          * @version Egret 2.4
          * @platform Web,Native
          */
-        readonly length: number;
+        length: number;
         /**
          * @language en_US
          * Sets the members of Point to the specified values
@@ -5039,7 +5039,7 @@ declare namespace egret {
          * @version Egret 2.4
          * @platform Web,Native
          */
-        readonly status: number;
+        status: number;
         /**
          * @language en_US
          * EventDispatcher object using the specified event object thrown Event. The objects will be thrown in the object cache pool for the next round robin.
@@ -6168,7 +6168,7 @@ declare namespace egret {
          * @version Egret 2.4
          * @platform Web,Native
          */
-        readonly stageX: number;
+        stageX: number;
         /**
          * @private
          */
@@ -6185,7 +6185,7 @@ declare namespace egret {
          * @version Egret 2.4
          * @platform Web,Native
          */
-        readonly stageY: number;
+        stageY: number;
         private _localX;
         /**
          * @language en_US
@@ -6199,7 +6199,7 @@ declare namespace egret {
          * @version Egret 2.4
          * @platform Web,Native
          */
-        readonly localX: number;
+        localX: number;
         private _localY;
         /**
          * @language en_US
@@ -6213,7 +6213,7 @@ declare namespace egret {
          * @version Egret 2.4
          * @platform Web,Native
          */
-        readonly localY: number;
+        localY: number;
         private targetChanged;
         /**
          * @private
@@ -10331,7 +10331,7 @@ declare namespace egret {
          * @version Egret 2.4
          * @platform Web,Native
          */
-        readonly graphics: Graphics;
+        graphics: Graphics;
         /**
          * @private
          */
@@ -10844,7 +10844,7 @@ declare namespace egret {
          * @version Egret 2.4
          * @platform Web,Native
          */
-        static readonly language: string;
+        static language: string;
         /**
          * @private
          */
@@ -10861,7 +10861,7 @@ declare namespace egret {
          * @version Egret 2.4
          * @platform Web,Native
          */
-        static readonly isMobile: boolean;
+        static isMobile: boolean;
         /**
          * @private
          */
@@ -10894,7 +10894,7 @@ declare namespace egret {
          * @version Egret 2.4
          * @platform Web,Native
          */
-        static readonly os: string;
+        static os: string;
         /**
          * @private
          */
@@ -10919,7 +10919,7 @@ declare namespace egret {
          * @version Egret 2.4
          * @platform Web,Native
          */
-        static readonly runtimeType: string;
+        static runtimeType: string;
         /***
          * @language en_US
          * version of the native support.
@@ -10934,7 +10934,7 @@ declare namespace egret {
          * @version Egret 2.5
          * @platform Web,Native
          */
-        static readonly supportVersion: string;
+        static supportVersion: string;
         static $supportVersion: string;
         /***
          * @language en_US
@@ -10950,7 +10950,7 @@ declare namespace egret {
          * @version Egret 3.2.0
          * @platform Web,Native
          */
-        static readonly engineVersion: string;
+        static engineVersion: string;
         /**
          * 设置系统信息
          */
@@ -10969,7 +10969,7 @@ declare namespace egret {
          * @version Egret 3.0.7
          * @platform Web,Native
          */
-        static readonly renderMode: string;
+        static renderMode: string;
         static $renderMode: string;
         /***
          * @language en_US
@@ -10987,7 +10987,7 @@ declare namespace egret {
          * @version Egret 3.1.3
          * @platform Web,Native
          */
-        static readonly boundingClientWidth: number;
+        static boundingClientWidth: number;
         static $boundingClientWidth: number;
         /***
          * @language en_US
@@ -11005,7 +11005,7 @@ declare namespace egret {
          * @version Egret 3.1.3
          * @platform Web,Native
          */
-        static readonly boundingClientHeight: number;
+        static boundingClientHeight: number;
         static $boundingClientHeight: number;
     }
 }
@@ -11428,7 +11428,7 @@ declare namespace egret {
          * @version Egret 2.4
          * @platform Web,Native
          */
-        readonly textWidth: number;
+        textWidth: number;
         /**
          * @language en_US
          * Get Text BitmapText height
@@ -11441,7 +11441,7 @@ declare namespace egret {
          * @version Egret 2.4
          * @platform Web,Native
          */
-        readonly textHeight: number;
+        textHeight: number;
         /**
          * @private
          */
@@ -12671,25 +12671,25 @@ declare namespace egret {
          * @version Egret 2.4
          * @platform Web,Native
          */
-        readonly maxScrollV: number;
+        maxScrollV: number;
         /**
          * @private
          * @version Egret 2.4
          * @platform Web,Native
          */
-        readonly selectionBeginIndex: number;
+        selectionBeginIndex: number;
         /**
          * @private
          * @version Egret 2.4
          * @platform Web,Native
          */
-        readonly selectionEndIndex: number;
+        selectionEndIndex: number;
         /**
          * @private
          * @version Egret 2.4
          * @platform Web,Native
          */
-        readonly caretIndex: number;
+        caretIndex: number;
         /**
          * @private
          *
@@ -12715,7 +12715,7 @@ declare namespace egret {
          * @version Egret 2.4
          * @platform Web,Native
          */
-        readonly numLines: number;
+        numLines: number;
         /**
          * @language en_US
          * Indicate whether field is a multiline text field. Note that this property is valid only when the type is TextFieldType.INPUT.
@@ -12977,7 +12977,7 @@ declare namespace egret {
          * @version Egret 2.4
          * @platform Web,Native
          */
-        readonly textWidth: number;
+        textWidth: number;
         /**
          * @language en_US
          * Get Text measuring height
@@ -12990,7 +12990,7 @@ declare namespace egret {
          * @version Egret 2.4
          * @platform Web,Native
          */
-        readonly textHeight: number;
+        textHeight: number;
         /**
          * @private
          * @param text
@@ -13451,7 +13451,7 @@ declare namespace egret {
         /**
          * @private
          */
-        readonly bufferOffset: number;
+        bufferOffset: number;
         /**
          * @language en_US
          * The current position of the file pointer (in bytes) to move or return to the ByteArray object. The next time you start reading reading method call in this position, or will start writing in this position next time call a write method.
@@ -13496,7 +13496,7 @@ declare namespace egret {
          * @version Egret 2.4
          * @platform Web,Native
          */
-        readonly bytesAvailable: number;
+        bytesAvailable: number;
         /**
          * @language en_US
          * Clears the contents of the byte array and resets the length and position properties to 0.
@@ -14136,7 +14136,7 @@ declare namespace egret {
          * @version Egret 2.4
          * @platform Web,Native
          */
-        readonly stageWidth: number;
+        stageWidth: number;
         /**
          * @private
          */
@@ -14153,7 +14153,7 @@ declare namespace egret {
          * @version Egret 2.4
          * @platform Web,Native
          */
-        readonly stageHeight: number;
+        stageHeight: number;
         /**
          * @language en_US
          * After you call the invalidate() method, when the display list is next rendered, the Egret runtime sends a render
@@ -14602,7 +14602,7 @@ declare namespace egret {
          * @version Egret 2.4
          * @platform Web,Native
          */
-        readonly currentCount: number;
+        currentCount: number;
         /**
          * @private
          */
@@ -14619,7 +14619,7 @@ declare namespace egret {
          * @version Egret 2.4
          * @platform Web,Native
          */
-        readonly running: boolean;
+        running: boolean;
         /**
          * @language en_US
          * Stops the timer, if it is running, and sets the currentCount property back to 0, like the reset button of a stopwatch.
