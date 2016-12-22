@@ -2150,7 +2150,7 @@ declare namespace ts {
 declare namespace ts {
     /** The version of the TypeScript compiler release */
     const version = "2.1.4";
-    const version_plus = "2.1.7";
+    const version_plus = "2.1.8";
 }
 declare namespace ts {
     type FileWatcherCallback = (fileName: string, removed?: boolean) => void;
