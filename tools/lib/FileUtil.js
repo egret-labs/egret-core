@@ -184,7 +184,7 @@ function _copy_file(source_file, output_file) {
 }
 function _copy_dir(sourceDir, outputDir) {
     createDirectory(outputDir);
-    var list = FS.readdirSync(sourceDir);
+    var list = readdirSync(sourceDir);
     list.forEach(function (fileName) {
         copy(Path.join(sourceDir, fileName), Path.join(outputDir, fileName));
     });
@@ -208,7 +208,7 @@ exports.remove = remove;
 function rmdir(path) {
     var files = [];
     if (FS.existsSync(path)) {
-        files = FS.readdirSync(path);
+        files = readdirSync(path);
         files.forEach(function (file) {
             var curPath = path + "/" + file;
             if (FS.statSync(curPath).isDirectory()) {
@@ -279,7 +279,7 @@ function getDirectoryListing(path, relative) {
     if (relative === void 0) { relative = false; }
     path = escapePath(path);
     try {
-        var list = FS.readdirSync(path);
+        var list = readdirSync(path);
     }
     catch (e) {
         return [];
@@ -360,8 +360,13 @@ function searchByFunction(dir, filterFunc, checkDir) {
     return list;
 }
 exports.searchByFunction = searchByFunction;
-function findFiles(filePath, list, extension, filterFunc, checkDir) {
+function readdirSync(filePath) {
     var files = FS.readdirSync(filePath);
+    files.sort();
+    return files;
+}
+function findFiles(filePath, list, extension, filterFunc, checkDir) {
+    var files = readdirSync(filePath);
     var length = files.length;
     for (var i = 0; i < length; i++) {
         if (files[i].charAt(0) == ".") {

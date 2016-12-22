@@ -188,7 +188,7 @@ function _copy_file(source_file, output_file) {
 
 function _copy_dir(sourceDir, outputDir) {
     createDirectory(outputDir);
-    var list = FS.readdirSync(sourceDir);
+    var list = readdirSync(sourceDir);
     list.forEach(function (fileName) {
         copy(Path.join(sourceDir, fileName), Path.join(outputDir, fileName));
     });
@@ -214,7 +214,7 @@ export function remove(path:string):void {
 function rmdir(path) {
     var files = [];
     if (FS.existsSync(path)) {
-        files = FS.readdirSync(path);
+        files = readdirSync(path);
         files.forEach(function (file) {
             var curPath = path + "/" + file;
             if (FS.statSync(curPath).isDirectory()) {
@@ -284,7 +284,7 @@ export function getFileName(path:string):string {
 export function getDirectoryListing(path:string, relative:boolean = false):string[] {
     path = escapePath(path);
     try {
-        var list = FS.readdirSync(path);
+        var list = readdirSync(path);
     }
     catch (e) {
         return [];
@@ -366,9 +366,14 @@ export function searchByFunction(dir: string, filterFunc: Function, checkDir?:bo
     return list;
 }
 
+function readdirSync(filePath:string) {
+    var files = FS.readdirSync(filePath);
+    files.sort();
+    return files;
+}
 
 function findFiles(filePath:string, list:string[], extension:string, filterFunc?:Function, checkDir?:boolean) {
-    var files = FS.readdirSync(filePath);
+    var files = readdirSync(filePath);
     var length = files.length;
     for (var i = 0; i < length; i++) {
         if (files[i].charAt(0) == ".") {
