@@ -3681,7 +3681,7 @@ var eui;
         return Group;
     }(egret.DisplayObjectContainer));
     eui.Group = Group;
-    __reflect(Group.prototype, "eui.Group", ["eui.IViewport"]);
+    __reflect(Group.prototype, "eui.Group", ["eui.IViewport", "eui.UIComponent"]);
     eui.sys.implementUIComponent(Group, egret.DisplayObjectContainer, true);
     eui.sys.mixin(Group, eui.sys.StateClient);
     eui.registerProperty(Group, "elementsContent", "Array", true);
@@ -16734,7 +16734,7 @@ var eui;
         return ViewStack;
     }(eui.Group));
     eui.ViewStack = ViewStack;
-    __reflect(ViewStack.prototype, "eui.ViewStack", ["eui.ICollection"]);
+    __reflect(ViewStack.prototype, "eui.ViewStack", ["eui.ICollection", "egret.IEventDispatcher"]);
     eui.registerBindable(ViewStack.prototype, "selectedIndex");
     if (true) {
         egret.$markReadOnly(ViewStack, "length");
@@ -17348,7 +17348,7 @@ var eui;
         return ArrayCollection;
     }(egret.EventDispatcher));
     eui.ArrayCollection = ArrayCollection;
-    __reflect(ArrayCollection.prototype, "eui.ArrayCollection", ["eui.ICollection"]);
+    __reflect(ArrayCollection.prototype, "eui.ArrayCollection", ["eui.ICollection", "egret.IEventDispatcher"]);
     eui.registerProperty(ArrayCollection, "source", "Array", true);
     if (true) {
         egret.$markReadOnly(ArrayCollection, "length");

@@ -1283,7 +1283,7 @@ var egret;
         UIComponent.prototypeCanSet = undefined;
         UIComponent.emptyStyleChain = {};
         gui.UIComponent = UIComponent;
-        __reflect(UIComponent.prototype, "egret.gui.UIComponent", ["egret.gui.IUIComponent", "egret.gui.ILayoutManagerClient", "egret.gui.ILayoutElement", "egret.gui.IInvalidating", "egret.gui.IVisualElement", "egret.gui.IStyleClient"]);
+        __reflect(UIComponent.prototype, "egret.gui.UIComponent", ["egret.gui.IUIComponent", "egret.gui.IVisualElement", "egret.gui.ILayoutElement", "egret.IEventDispatcher", "egret.gui.ILayoutManagerClient", "egret.gui.IInvalidating", "egret.gui.IStyleClient"]);
     })(gui = egret.gui || (egret.gui = {}));
 })(egret || (egret = {}));
 //////////////////////////////////////////////////////////////////////////////////////
@@ -3797,7 +3797,7 @@ var egret;
             return SkinnableContainer;
         }(gui.SkinnableComponent));
         gui.SkinnableContainer = SkinnableContainer;
-        __reflect(SkinnableContainer.prototype, "egret.gui.SkinnableContainer", ["egret.gui.IVisualElementContainer"]);
+        __reflect(SkinnableContainer.prototype, "egret.gui.SkinnableContainer", ["egret.gui.IVisualElementContainer", "egret.gui.IVisualElement", "egret.gui.ILayoutElement", "egret.IEventDispatcher", "egret.gui.IContainer"]);
     })(gui = egret.gui || (egret.gui = {}));
 })(egret || (egret = {}));
 //////////////////////////////////////////////////////////////////////////////////////
@@ -4580,7 +4580,7 @@ var egret;
             return Effect;
         }(egret.EventDispatcher));
         gui.Effect = Effect;
-        __reflect(Effect.prototype, "egret.gui.Effect", ["egret.gui.IEffect"]);
+        __reflect(Effect.prototype, "egret.gui.Effect", ["egret.gui.IEffect", "egret.IEventDispatcher"]);
     })(gui = egret.gui || (egret.gui = {}));
 })(egret || (egret = {}));
 //////////////////////////////////////////////////////////////////////////////////////
@@ -4966,7 +4966,7 @@ var egret;
             return ItemRenderer;
         }(gui.ButtonBase));
         gui.ItemRenderer = ItemRenderer;
-        __reflect(ItemRenderer.prototype, "egret.gui.ItemRenderer", ["egret.gui.IItemRenderer"]);
+        __reflect(ItemRenderer.prototype, "egret.gui.ItemRenderer", ["egret.gui.IItemRenderer", "egret.gui.ILayoutElement", "egret.IEventDispatcher"]);
     })(gui = egret.gui || (egret.gui = {}));
 })(egret || (egret = {}));
 //////////////////////////////////////////////////////////////////////////////////////
@@ -8874,7 +8874,7 @@ var egret;
             return Skin;
         }(egret.EventDispatcher));
         gui.Skin = Skin;
-        __reflect(Skin.prototype, "egret.gui.Skin", ["egret.gui.IStateClient", "egret.gui.ISkin", "egret.gui.IContainer"]);
+        __reflect(Skin.prototype, "egret.gui.Skin", ["egret.gui.IStateClient", "egret.IEventDispatcher", "egret.gui.ISkin", "egret.gui.IContainer"]);
     })(gui = egret.gui || (egret.gui = {}));
 })(egret || (egret = {}));
 //////////////////////////////////////////////////////////////////////////////////////
@@ -9687,7 +9687,7 @@ var egret;
             return Group;
         }(gui.GroupBase));
         gui.Group = Group;
-        __reflect(Group.prototype, "egret.gui.Group", ["egret.gui.IVisualElementContainer"]);
+        __reflect(Group.prototype, "egret.gui.Group", ["egret.gui.IVisualElementContainer", "egret.gui.IVisualElement", "egret.gui.ILayoutElement", "egret.IEventDispatcher", "egret.gui.IContainer"]);
     })(gui = egret.gui || (egret.gui = {}));
 })(egret || (egret = {}));
 //////////////////////////////////////////////////////////////////////////////////////
@@ -11729,7 +11729,7 @@ var egret;
             return TabBarButton;
         }(gui.ToggleButtonBase));
         gui.TabBarButton = TabBarButton;
-        __reflect(TabBarButton.prototype, "egret.gui.TabBarButton", ["egret.gui.IItemRenderer"]);
+        __reflect(TabBarButton.prototype, "egret.gui.TabBarButton", ["egret.gui.IItemRenderer", "egret.gui.ILayoutElement", "egret.IEventDispatcher"]);
     })(gui = egret.gui || (egret.gui = {}));
 })(egret || (egret = {}));
 //////////////////////////////////////////////////////////////////////////////////////
@@ -12449,7 +12449,7 @@ var egret;
             return ArrayCollection;
         }(egret.EventDispatcher));
         gui.ArrayCollection = ArrayCollection;
-        __reflect(ArrayCollection.prototype, "egret.gui.ArrayCollection", ["egret.gui.ICollection"]);
+        __reflect(ArrayCollection.prototype, "egret.gui.ArrayCollection", ["egret.gui.ICollection", "egret.IEventDispatcher"]);
     })(gui = egret.gui || (egret.gui = {}));
 })(egret || (egret = {}));
 //////////////////////////////////////////////////////////////////////////////////////
@@ -16755,7 +16755,7 @@ var egret;
             return EditableText;
         }(gui.TextBase));
         gui.EditableText = EditableText;
-        __reflect(EditableText.prototype, "egret.gui.EditableText", ["egret.gui.IEditableText", "egret.gui.IViewport"]);
+        __reflect(EditableText.prototype, "egret.gui.EditableText", ["egret.gui.IEditableText", "egret.gui.IUIComponent", "egret.gui.IVisualElement", "egret.gui.ILayoutElement", "egret.IEventDispatcher", "egret.gui.IViewport"]);
     })(gui = egret.gui || (egret.gui = {}));
 })(egret || (egret = {}));
 //////////////////////////////////////////////////////////////////////////////////////
@@ -18071,7 +18071,7 @@ var egret;
             return ObjectCollection;
         }(egret.EventDispatcher));
         gui.ObjectCollection = ObjectCollection;
-        __reflect(ObjectCollection.prototype, "egret.gui.ObjectCollection", ["egret.gui.ICollection", "egret.gui.ITreeCollection"]);
+        __reflect(ObjectCollection.prototype, "egret.gui.ObjectCollection", ["egret.gui.ICollection", "egret.IEventDispatcher", "egret.gui.ITreeCollection"]);
     })(gui = egret.gui || (egret.gui = {}));
 })(egret || (egret = {}));
 //////////////////////////////////////////////////////////////////////////////////////
@@ -23648,7 +23648,7 @@ var egret;
             return Scroller;
         }(gui.SkinnableComponent));
         gui.Scroller = Scroller;
-        __reflect(Scroller.prototype, "egret.gui.Scroller", ["egret.gui.IVisualElementContainer"]);
+        __reflect(Scroller.prototype, "egret.gui.Scroller", ["egret.gui.IVisualElementContainer", "egret.gui.IVisualElement", "egret.gui.ILayoutElement", "egret.IEventDispatcher", "egret.gui.IContainer"]);
         //增加ScrollView方法
         for (var p in gui.ScrollerView.prototype) {
             //跳过Scroller，SkinnableComponent，UIComponent 重写的方法
@@ -32395,7 +32395,7 @@ var egret;
         }(egret.EventDispatcher));
         PopUpManagerImpl.REMOVE_FROM_UISTAGE = "removeFromUIStage";
         gui.PopUpManagerImpl = PopUpManagerImpl;
-        __reflect(PopUpManagerImpl.prototype, "egret.gui.PopUpManagerImpl", ["egret.gui.IPopUpManager"]);
+        __reflect(PopUpManagerImpl.prototype, "egret.gui.PopUpManagerImpl", ["egret.gui.IPopUpManager", "egret.IEventDispatcher"]);
         var PopUpData = (function () {
             /**
              * @method egret.PopUpData#constructor
