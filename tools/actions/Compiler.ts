@@ -66,7 +66,9 @@ class Compiler {
         }
         parsedCmd.options.defines = defines;
         parsedCmd.options["forSortFile"] = option.forSortFile;
-        return this.compileNew(parsedCmd);
+        var compileResult = this.compileNew(parsedCmd);
+        process.chdir(realCWD);            
+        return compileResult;
     }
 
     private files: ts.Map<{ version: number }> = <any>{};

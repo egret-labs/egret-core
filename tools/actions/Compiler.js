@@ -54,7 +54,9 @@ var Compiler = (function () {
         }
         parsedCmd.options.defines = defines;
         parsedCmd.options["forSortFile"] = option.forSortFile;
-        return this.compileNew(parsedCmd);
+        var compileResult = this.compileNew(parsedCmd);
+        process.chdir(realCWD);
+        return compileResult;
     };
     Compiler.prototype.compileNew = function (parsedCmd) {
         var _this = this;
