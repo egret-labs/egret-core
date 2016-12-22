@@ -5547,7 +5547,7 @@ var egret;
             return NativeSoundChannel;
         }(egret.EventDispatcher));
         native.NativeSoundChannel = NativeSoundChannel;
-        __reflect(NativeSoundChannel.prototype, "egret.native.NativeSoundChannel", ["egret.SoundChannel"]);
+        __reflect(NativeSoundChannel.prototype, "egret.native.NativeSoundChannel", ["egret.SoundChannel", "egret.IEventDispatcher"]);
     })(native = egret.native || (egret.native = {}));
 })(egret || (egret = {}));
 //////////////////////////////////////////////////////////////////////////////////////
@@ -5841,7 +5841,7 @@ var egret;
             return NaSoundChannel;
         }(egret.EventDispatcher));
         native.NaSoundChannel = NaSoundChannel;
-        __reflect(NaSoundChannel.prototype, "egret.native.NaSoundChannel", ["egret.SoundChannel"]);
+        __reflect(NaSoundChannel.prototype, "egret.native.NaSoundChannel", ["egret.SoundChannel", "egret.IEventDispatcher"]);
     })(native = egret.native || (egret.native = {}));
 })(egret || (egret = {}));
 //////////////////////////////////////////////////////////////////////////////////////

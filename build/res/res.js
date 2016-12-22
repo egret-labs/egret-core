@@ -2142,7 +2142,7 @@ var RES;
             return NativeVersionController;
         }());
         native.NativeVersionController = NativeVersionController;
-        __reflect(NativeVersionController.prototype, "RES.native.NativeVersionController", ["RES.VersionController"]);
+        __reflect(NativeVersionController.prototype, "RES.native.NativeVersionController", ["RES.VersionController", "RES.IVersionController"]);
         if (egret.Capabilities.runtimeType == egret.RuntimeType.NATIVE) {
             RES.VersionController = NativeVersionController;
         }
@@ -2258,7 +2258,7 @@ var RES;
             return Html5VersionController;
         }(egret.EventDispatcher));
         web.Html5VersionController = Html5VersionController;
-        __reflect(Html5VersionController.prototype, "RES.web.Html5VersionController", ["RES.VersionController"]);
+        __reflect(Html5VersionController.prototype, "RES.web.Html5VersionController", ["RES.VersionController", "RES.IVersionController"]);
         if (egret.Capabilities.runtimeType == egret.RuntimeType.WEB) {
             RES.VersionController = Html5VersionController;
         }
