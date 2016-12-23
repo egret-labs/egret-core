@@ -102,6 +102,10 @@ var CompileLark = (function () {
         }
         if (dts) {
             this.dtsFiles.push([declareFile, depends]);
+            //兼容 Wing 用的旧版 TypeScript，删除 readonly 关键字
+            var dtsContent = FileUtil.read(declareFile);
+            dtsContent = dtsContent.replace(/readonly /g, "");
+            FileUtil.save(declareFile, dtsContent);
         }
         if (configuration.minify) {
             utils.minify(singleFile, singleFile);

@@ -1,3 +1,11 @@
+var __reflect = (this && this.__reflect) || function (p, c, t) {
+    p.__class__ = c, t ? t.push(c) : t = [c], p.__types__ = p.__types__ ? t.concat(p.__types__) : t;
+};
+var __extends = (this && this.__extends) || function (d, b) {
+    for (var p in b) if (b.hasOwnProperty(p)) d[p] = b[p];
+    function __() { this.constructor = d; }
+    d.prototype = b === null ? Object.create(b) : (__.prototype = b.prototype, new __());
+};
 //////////////////////////////////////////////////////////////////////////////////////
 //
 //  Copyright (c) 2014-present, Egret Technology.
@@ -42,15 +50,14 @@ var egret;
              * @private
              */
             function HTML5NetContext() {
-                _super.call(this);
+                return _super.call(this) || this;
             }
-            var d = __define,c=HTML5NetContext,p=c.prototype;
             /**
              * @private
              *
              * @param loader
              */
-            p.proceed = function (loader) {
+            HTML5NetContext.prototype.proceed = function (loader) {
                 var self = this;
                 if (loader.dataFormat == egret.URLLoaderDataFormat.TEXTURE) {
                     this.loadTexture(loader);
@@ -133,7 +140,7 @@ var egret;
              *
              * @param dataFormat
              */
-            p.getResponseType = function (dataFormat) {
+            HTML5NetContext.prototype.getResponseType = function (dataFormat) {
                 switch (dataFormat) {
                     case egret.URLLoaderDataFormat.TEXT:
                     case egret.URLLoaderDataFormat.VARIABLES:
@@ -149,7 +156,7 @@ var egret;
              *
              * @param loader
              */
-            p.loadSound = function (loader) {
+            HTML5NetContext.prototype.loadSound = function (loader) {
                 var self = this;
                 var virtualUrl = this.getVirtualUrl(loader._request.url);
                 var sound = new egret.Sound();
@@ -182,7 +189,7 @@ var egret;
              *
              * @param loader
              */
-            p.loadTexture = function (loader) {
+            HTML5NetContext.prototype.loadTexture = function (loader) {
                 var self = this;
                 var virtualUrl = this.getVirtualUrl(loader._request.url);
                 var imageLoader = new egret.ImageLoader();
@@ -219,7 +226,7 @@ var egret;
              *
              * @returns
              */
-            p.getChangeList = function () {
+            HTML5NetContext.prototype.getChangeList = function () {
                 return [];
             };
             /**
@@ -228,7 +235,7 @@ var egret;
              * @param url
              * @returns {string}
              */
-            p.getVirtualUrl = function (url) {
+            HTML5NetContext.prototype.getVirtualUrl = function (url) {
                 return url;
             };
             HTML5NetContext.getNetContext = function () {
@@ -240,7 +247,7 @@ var egret;
             return HTML5NetContext;
         }(egret.HashObject));
         web.HTML5NetContext = HTML5NetContext;
-        egret.registerClass(HTML5NetContext,'egret.web.HTML5NetContext',["egret.NetContext"]);
+        __reflect(HTML5NetContext.prototype, "egret.web.HTML5NetContext", ["egret.NetContext"]);
         egret.NetContext = HTML5NetContext;
     })(web = egret.web || (egret.web = {}));
 })(egret || (egret = {}));

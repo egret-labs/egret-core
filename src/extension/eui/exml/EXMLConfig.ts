@@ -81,7 +81,7 @@ namespace eui.sys {
             let superInstance = getInstanceOf(superProto.constructor);
             let superInfo = this.$describe(superInstance);
             if (superInfo) {
-                function factory():void {
+                let factory = function():void {
                 }
 
                 factory.prototype = superInfo;

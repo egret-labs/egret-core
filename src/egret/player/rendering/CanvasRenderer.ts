@@ -27,6 +27,10 @@
 //
 //////////////////////////////////////////////////////////////////////////////////////
 
+interface CanvasRenderingContext2D {
+    imageSmoothingEnabled:boolean;
+    $imageSmoothingEnabled:boolean;
+}
 namespace egret {
 
     let blendModes = ["source-over", "lighter", "destination-out"];
@@ -682,7 +686,7 @@ namespace egret {
                     this.renderText(<sys.TextNode>node, context);
                     break;
                 case sys.RenderNodeType.GraphicsNode:
-                    return this.renderGraphics(<sys.GraphicsNode>node, context, forHitTest);
+                    drawCalls = this.renderGraphics(<sys.GraphicsNode>node, context, forHitTest);
                     break;
                 case sys.RenderNodeType.GroupNode:
                     drawCalls = this.renderGroup(<sys.GroupNode>node, context);

@@ -1,3 +1,254 @@
+var __reflect = (this && this.__reflect) || function (p, c, t) {
+    p.__class__ = c, t ? t.push(c) : t = [c], p.__types__ = p.__types__ ? t.concat(p.__types__) : t;
+};
+var __extends = (this && this.__extends) || function (d, b) {
+    for (var p in b) if (b.hasOwnProperty(p)) d[p] = b[p];
+    function __() { this.constructor = d; }
+    d.prototype = b === null ? Object.create(b) : (__.prototype = b.prototype, new __());
+};
+//////////////////////////////////////////////////////////////////////////////////////
+//
+//  Copyright (c) 2014-present, Egret Technology.
+//  All rights reserved.
+//  Redistribution and use in source and binary forms, with or without
+//  modification, are permitted provided that the following conditions are met:
+//
+//     * Redistributions of source code must retain the above copyright
+//       notice, this list of conditions and the following disclaimer.
+//     * Redistributions in binary form must reproduce the above copyright
+//       notice, this list of conditions and the following disclaimer in the
+//       documentation and/or other materials provided with the distribution.
+//     * Neither the name of the Egret nor the
+//       names of its contributors may be used to endorse or promote products
+//       derived from this software without specific prior written permission.
+//
+//  THIS SOFTWARE IS PROVIDED BY EGRET AND CONTRIBUTORS "AS IS" AND ANY EXPRESS
+//  OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES
+//  OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED.
+//  IN NO EVENT SHALL EGRET AND CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT,
+//  INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT
+//  LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES;LOSS OF USE, DATA,
+//  OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF
+//  LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING
+//  NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE,
+//  EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+//
+//////////////////////////////////////////////////////////////////////////////////////
+var RES;
+(function (RES) {
+    /**
+     * @classic
+     * @private
+     */
+    var AnalyzerBase = (function (_super) {
+        __extends(AnalyzerBase, _super);
+        function AnalyzerBase() {
+            var _this = _super.call(this) || this;
+            _this.resourceConfig = null;
+            _this.resourceConfig = (RES["configInstance"]);
+            return _this;
+        }
+        /**
+         * 添加一个二级键名到配置列表。
+         * @method RES.ResourceConfig#addSubkey
+         * @param subkey {string} 要添加的二级键名
+         * @param name {string} 二级键名所属的资源name属性
+         */
+        AnalyzerBase.prototype.addSubkey = function (subkey, name) {
+            this.resourceConfig.addSubkey(subkey, name);
+        };
+        /**
+         * 加载一个资源文件
+         * @param resItem 加载项信息
+         * @param compFunc 加载完成回调函数,示例:compFunc(resItem:ResourceItem):void;
+         * @param thisObject 加载完成回调函数的this引用
+         */
+        AnalyzerBase.prototype.loadFile = function (resItem, compFunc, thisObject) {
+        };
+        /**
+         * 同步方式获取解析完成的数据
+         * @param name 对应配置文件里的name属性。
+         */
+        AnalyzerBase.prototype.getRes = function (name) {
+        };
+        /**
+         * 销毁某个资源文件的二进制数据,返回是否删除成功。
+         * @param name 配置文件中加载项的name属性
+         */
+        AnalyzerBase.prototype.destroyRes = function (name) {
+            return false;
+        };
+        /**
+         * 读取一个字符串里第一个点之前的内容。
+         * @param name {string} 要读取的字符串
+         */
+        AnalyzerBase.getStringPrefix = function (name) {
+            if (!name) {
+                return "";
+            }
+            var index = name.indexOf(".");
+            if (index != -1) {
+                return name.substring(0, index);
+            }
+            return "";
+        };
+        /**
+         * 读取一个字符串里第一个点之后的内容。
+         * @param name {string} 要读取的字符串
+         */
+        AnalyzerBase.getStringTail = function (name) {
+            if (!name) {
+                return "";
+            }
+            var index = name.indexOf(".");
+            if (index != -1) {
+                return name.substring(index + 1);
+            }
+            return "";
+        };
+        return AnalyzerBase;
+    }(egret.HashObject));
+    RES.AnalyzerBase = AnalyzerBase;
+    __reflect(AnalyzerBase.prototype, "RES.AnalyzerBase");
+})(RES || (RES = {}));
+//////////////////////////////////////////////////////////////////////////////////////
+//
+//  Copyright (c) 2014-present, Egret Technology.
+//  All rights reserved.
+//  Redistribution and use in source and binary forms, with or without
+//  modification, are permitted provided that the following conditions are met:
+//
+//     * Redistributions of source code must retain the above copyright
+//       notice, this list of conditions and the following disclaimer.
+//     * Redistributions in binary form must reproduce the above copyright
+//       notice, this list of conditions and the following disclaimer in the
+//       documentation and/or other materials provided with the distribution.
+//     * Neither the name of the Egret nor the
+//       names of its contributors may be used to endorse or promote products
+//       derived from this software without specific prior written permission.
+//
+//  THIS SOFTWARE IS PROVIDED BY EGRET AND CONTRIBUTORS "AS IS" AND ANY EXPRESS
+//  OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES
+//  OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED.
+//  IN NO EVENT SHALL EGRET AND CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT,
+//  INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT
+//  LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES;LOSS OF USE, DATA,
+//  OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF
+//  LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING
+//  NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE,
+//  EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+//
+//////////////////////////////////////////////////////////////////////////////////////
+var RES;
+(function (RES) {
+    /**
+     * @private
+     */
+    var BinAnalyzer = (function (_super) {
+        __extends(BinAnalyzer, _super);
+        /**
+         * 构造函数
+         */
+        function BinAnalyzer() {
+            var _this = _super.call(this) || this;
+            /**
+             * 字节流数据缓存字典
+             */
+            _this.fileDic = {};
+            /**
+             * 加载项字典
+             */
+            _this.resItemDic = [];
+            _this._dataFormat = egret.HttpResponseType.ARRAY_BUFFER;
+            /**
+             * Loader对象池
+             */
+            _this.recycler = [];
+            return _this;
+        }
+        /**
+         * @inheritDoc
+         */
+        BinAnalyzer.prototype.loadFile = function (resItem, compFunc, thisObject) {
+            if (this.fileDic[resItem.name]) {
+                compFunc.call(thisObject, resItem);
+                return;
+            }
+            var request = this.getRequest();
+            this.resItemDic[request.hashCode] = { item: resItem, func: compFunc, thisObject: thisObject };
+            request.open(RES.$getVirtualUrl(resItem.url));
+            request.send();
+        };
+        /**
+         * 获取一个URLLoader对象
+         */
+        BinAnalyzer.prototype.getRequest = function () {
+            var request = this.recycler.pop();
+            if (!request) {
+                request = new egret.HttpRequest();
+                request.addEventListener(egret.Event.COMPLETE, this.onLoadFinish, this);
+                request.addEventListener(egret.IOErrorEvent.IO_ERROR, this.onLoadFinish, this);
+            }
+            request.responseType = this._dataFormat;
+            return request;
+        };
+        /**
+         * 一项加载结束
+         */
+        BinAnalyzer.prototype.onLoadFinish = function (event) {
+            var request = (event.target);
+            var data = this.resItemDic[request.hashCode];
+            delete this.resItemDic[request.hashCode];
+            var resItem = data.item;
+            var compFunc = data.func;
+            resItem.loaded = (event.type == egret.Event.COMPLETE);
+            if (resItem.loaded) {
+                this.analyzeData(resItem, request.response);
+            }
+            this.recycler.push(request);
+            compFunc.call(data.thisObject, resItem);
+        };
+        /**
+         * 解析并缓存加载成功的数据
+         */
+        BinAnalyzer.prototype.analyzeData = function (resItem, data) {
+            var name = resItem.name;
+            if (this.fileDic[name] || (data != "" && !data)) {
+                return;
+            }
+            this.fileDic[name] = data;
+        };
+        /**
+         * @inheritDoc
+         */
+        BinAnalyzer.prototype.getRes = function (name) {
+            return this.fileDic[name];
+        };
+        /**
+         * @inheritDoc
+         */
+        BinAnalyzer.prototype.hasRes = function (name) {
+            var res = this.getRes(name);
+            return res != null;
+        };
+        /**
+         * @inheritDoc
+         */
+        BinAnalyzer.prototype.destroyRes = function (name) {
+            if (this.fileDic[name]) {
+                this.onResourceDestroy(this.fileDic[name]);
+                delete this.fileDic[name];
+                return true;
+            }
+            return false;
+        };
+        BinAnalyzer.prototype.onResourceDestroy = function (resource) {
+        };
+        return BinAnalyzer;
+    }(RES.AnalyzerBase));
+    RES.BinAnalyzer = BinAnalyzer;
+    __reflect(BinAnalyzer.prototype, "RES.BinAnalyzer");
+})(RES || (RES = {}));
 //////////////////////////////////////////////////////////////////////////////////////
 //
 //  Copyright (c) 2014-present, Egret Technology.
@@ -91,8 +342,7 @@ var RES;
             this.url = url;
             this.type = type;
         }
-        var d = __define,c=ResourceItem,p=c.prototype;
-        d(p, "loaded"
+        Object.defineProperty(ResourceItem.prototype, "loaded", {
             /**
              * @language en_US
              * Load complete flag.
@@ -105,15 +355,17 @@ var RES;
              * @version Egret 2.4
              * @platform Web,Native
              */
-            ,function () {
+            get: function () {
                 return this.data ? this.data.loaded : this._loaded;
-            }
-            ,function (value) {
+            },
+            set: function (value) {
                 if (this.data)
                     this.data.loaded = value;
                 this._loaded = value;
-            }
-        );
+            },
+            enumerable: true,
+            configurable: true
+        });
         /**
          * @language en_US
          * Turn into a string.
@@ -126,631 +378,365 @@ var RES;
          * @version Egret 2.4
          * @platform Web,Native
          */
-        p.toString = function () {
+        ResourceItem.prototype.toString = function () {
             return "[ResourceItem name=\"" + this.name + "\" url=\"" + this.url + "\" type=\"" + this.type + "\"]";
         };
-        /**
-         * @language en_US
-         * XML file.
-         * @version Egret 2.4
-         * @platform Web,Native
-         */
-        /**
-         * @language zh_CN
-         * XML 文件。
-         * @version Egret 2.4
-         * @platform Web,Native
-         */
-        ResourceItem.TYPE_XML = "xml";
-        /**
-         * @language en_US
-         * Picture file.
-         * @version Egret 2.4
-         * @platform Web,Native
-         */
-        /**
-         * @language zh_CN
-         * 图片文件。
-         * @version Egret 2.4
-         * @platform Web,Native
-         */
-        ResourceItem.TYPE_IMAGE = "image";
-        /**
-         * @language en_US
-         * Binary file.
-         * @version Egret 2.4
-         * @platform Web
-         */
-        /**
-         * @language zh_CN
-         * 二进制文件。
-         * @version Egret 2.4
-         * @platform Web
-         */
-        ResourceItem.TYPE_BIN = "bin";
-        /**
-         * @language en_US
-         * Text file.
-         * @version Egret 2.4
-         * @platform Web,Native
-         */
-        /**
-         * @language zh_CN
-         * 文本文件。
-         * @version Egret 2.4
-         * @platform Web,Native
-         */
-        ResourceItem.TYPE_TEXT = "text";
-        /**
-         * @language en_US
-         * JSON file.
-         * @version Egret 2.4
-         * @platform Web,Native
-         */
-        /**
-         * @language zh_CN
-         * JSON 文件。
-         * @version Egret 2.4
-         * @platform Web,Native
-         */
-        ResourceItem.TYPE_JSON = "json";
-        /**
-         * @language en_US
-         * SpriteSheet file.
-         * @version Egret 2.4
-         * @platform Web,Native
-         */
-        /**
-         * @language zh_CN
-         * SpriteSheet 文件。
-         * @version Egret 2.4
-         * @platform Web,Native
-         */
-        ResourceItem.TYPE_SHEET = "sheet";
-        /**
-         * @language en_US
-         * BitmapTextSpriteSheet file.
-         * @version Egret 2.4
-         * @platform Web,Native
-         */
-        /**
-         * @language zh_CN
-         * BitmapTextSpriteSheet 文件。
-         * @version Egret 2.4
-         * @platform Web,Native
-         */
-        ResourceItem.TYPE_FONT = "font";
-        /**
-         * @language en_US
-         * Sound file.
-         * @version Egret 2.4
-         * @platform Web,Native
-         */
-        /**
-         * @language zh_CN
-         * 声音文件。
-         * @version Egret 2.4
-         * @platform Web,Native
-         */
-        ResourceItem.TYPE_SOUND = "sound";
         return ResourceItem;
     }());
+    /**
+     * @language en_US
+     * XML file.
+     * @version Egret 2.4
+     * @platform Web,Native
+     */
+    /**
+     * @language zh_CN
+     * XML 文件。
+     * @version Egret 2.4
+     * @platform Web,Native
+     */
+    ResourceItem.TYPE_XML = "xml";
+    /**
+     * @language en_US
+     * Picture file.
+     * @version Egret 2.4
+     * @platform Web,Native
+     */
+    /**
+     * @language zh_CN
+     * 图片文件。
+     * @version Egret 2.4
+     * @platform Web,Native
+     */
+    ResourceItem.TYPE_IMAGE = "image";
+    /**
+     * @language en_US
+     * Binary file.
+     * @version Egret 2.4
+     * @platform Web
+     */
+    /**
+     * @language zh_CN
+     * 二进制文件。
+     * @version Egret 2.4
+     * @platform Web
+     */
+    ResourceItem.TYPE_BIN = "bin";
+    /**
+     * @language en_US
+     * Text file.
+     * @version Egret 2.4
+     * @platform Web,Native
+     */
+    /**
+     * @language zh_CN
+     * 文本文件。
+     * @version Egret 2.4
+     * @platform Web,Native
+     */
+    ResourceItem.TYPE_TEXT = "text";
+    /**
+     * @language en_US
+     * JSON file.
+     * @version Egret 2.4
+     * @platform Web,Native
+     */
+    /**
+     * @language zh_CN
+     * JSON 文件。
+     * @version Egret 2.4
+     * @platform Web,Native
+     */
+    ResourceItem.TYPE_JSON = "json";
+    /**
+     * @language en_US
+     * SpriteSheet file.
+     * @version Egret 2.4
+     * @platform Web,Native
+     */
+    /**
+     * @language zh_CN
+     * SpriteSheet 文件。
+     * @version Egret 2.4
+     * @platform Web,Native
+     */
+    ResourceItem.TYPE_SHEET = "sheet";
+    /**
+     * @language en_US
+     * BitmapTextSpriteSheet file.
+     * @version Egret 2.4
+     * @platform Web,Native
+     */
+    /**
+     * @language zh_CN
+     * BitmapTextSpriteSheet 文件。
+     * @version Egret 2.4
+     * @platform Web,Native
+     */
+    ResourceItem.TYPE_FONT = "font";
+    /**
+     * @language en_US
+     * Sound file.
+     * @version Egret 2.4
+     * @platform Web,Native
+     */
+    /**
+     * @language zh_CN
+     * 声音文件。
+     * @version Egret 2.4
+     * @platform Web,Native
+     */
+    ResourceItem.TYPE_SOUND = "sound";
     RES.ResourceItem = ResourceItem;
-    egret.registerClass(ResourceItem,'RES.ResourceItem');
+    __reflect(ResourceItem.prototype, "RES.ResourceItem");
 })(RES || (RES = {}));
-//////////////////////////////////////////////////////////////////////////////////////
-//
-//  Copyright (c) 2014-present, Egret Technology.
-//  All rights reserved.
-//  Redistribution and use in source and binary forms, with or without
-//  modification, are permitted provided that the following conditions are met:
-//
-//     * Redistributions of source code must retain the above copyright
-//       notice, this list of conditions and the following disclaimer.
-//     * Redistributions in binary form must reproduce the above copyright
-//       notice, this list of conditions and the following disclaimer in the
-//       documentation and/or other materials provided with the distribution.
-//     * Neither the name of the Egret nor the
-//       names of its contributors may be used to endorse or promote products
-//       derived from this software without specific prior written permission.
-//
-//  THIS SOFTWARE IS PROVIDED BY EGRET AND CONTRIBUTORS "AS IS" AND ANY EXPRESS
-//  OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES
-//  OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED.
-//  IN NO EVENT SHALL EGRET AND CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT,
-//  INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT
-//  LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES;LOSS OF USE, DATA,
-//  OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF
-//  LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING
-//  NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE,
-//  EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
-//
-//////////////////////////////////////////////////////////////////////////////////////
+////////////////////////////////////////////////////////////////////////////////////////
+////
+////  Copyright (c) 2014-present, Egret Technology.
+////  All rights reserved.
+////  Redistribution and use in source and binary forms, with or without
+////  modification, are permitted provided that the following conditions are met:
+////
+////     * Redistributions of source code must retain the above copyright
+////       notice, this list of conditions and the following disclaimer.
+////     * Redistributions in binary form must reproduce the above copyright
+////       notice, this list of conditions and the following disclaimer in the
+////       documentation and/or other materials provided with the distribution.
+////     * Neither the name of the Egret nor the
+////       names of its contributors may be used to endorse or promote products
+////       derived from this software without specific prior written permission.
+////
+////  THIS SOFTWARE IS PROVIDED BY EGRET AND CONTRIBUTORS "AS IS" AND ANY EXPRESS
+////  OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES
+////  OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED.
+////  IN NO EVENT SHALL EGRET AND CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT,
+////  INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT
+////  LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES;LOSS OF USE, DATA,
+////  OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF
+////  LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING
+////  NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE,
+////  EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+////
+////////////////////////////////////////////////////////////////////////////////////////
 var RES;
 (function (RES) {
     /**
-     * @class RES.ResourceConfig
-     * @classdesc
+     * SpriteSheet解析器
      * @private
      */
-    var ResourceConfig = (function () {
-        function ResourceConfig() {
+    var SheetAnalyzer = (function (_super) {
+        __extends(SheetAnalyzer, _super);
+        function SheetAnalyzer() {
+            var _this = _super.call(this) || this;
+            _this.sheetMap = {};
+            _this.textureMap = {};
             /**
-             * 一级键名字典
+             * ImageLoader对象池
              */
-            this.keyMap = {};
-            /**
-             * 加载组字典
-             */
-            this.groupDic = {};
-            RES["configInstance"] = this;
+            _this.recyclerIamge = [];
+            _this._dataFormat = egret.HttpResponseType.TEXT;
+            return _this;
         }
-        var d = __define,c=ResourceConfig,p=c.prototype;
-        /**
-         * 根据组名获取组加载项列表
-         * @method RES.ResourceConfig#getGroupByName
-         * @param name {string} 组名
-         * @returns {Array<egret.ResourceItem>}
-         */
-        p.getGroupByName = function (name) {
-            var group = new Array();
-            if (!this.groupDic[name])
-                return group;
-            var list = this.groupDic[name];
-            var length = list.length;
-            for (var i = 0; i < length; i++) {
-                var obj = list[i];
-                group.push(this.parseResourceItem(obj));
+        SheetAnalyzer.prototype.getRes = function (name) {
+            var res = this.fileDic[name];
+            if (!res) {
+                res = this.textureMap[name];
             }
-            return group;
+            if (!res) {
+                var prefix = RES.AnalyzerBase.getStringPrefix(name);
+                res = this.fileDic[prefix];
+                if (res) {
+                    var tail = RES.AnalyzerBase.getStringTail(name);
+                    res = res.getTexture(tail);
+                }
+            }
+            return res;
         };
         /**
-         * 根据组名获取原始的组加载项列表
-         * @method RES.ResourceConfig#getRawGroupByName
-         * @param name {string} 组名
-         * @returns {any[]}
+         * 一项加载结束
          */
-        p.getRawGroupByName = function (name) {
-            if (this.groupDic[name])
-                return this.groupDic[name];
-            return [];
-        };
-        /**
-         * 创建自定义的加载资源组,注意：此方法仅在资源配置文件加载完成后执行才有效。
-         * 可以监听ResourceEvent.CONFIG_COMPLETE事件来确认配置加载完成。
-         * @method RES.ResourceConfig#createGroup
-         * @param name {string} 要创建的加载资源组的组名
-         * @param keys {egret.string[]} 要包含的键名列表，key对应配置文件里的name属性或sbuKeys属性的一项或一个资源组名。
-         * @param override {boolean} 是否覆盖已经存在的同名资源组,默认false。
-         * @returns {boolean}
-         */
-        p.createGroup = function (name, keys, override) {
-            if (override === void 0) { override = false; }
-            if ((!override && this.groupDic[name]) || !keys || keys.length == 0)
-                return false;
-            var groupDic = this.groupDic;
-            var group = [];
-            var length = keys.length;
-            for (var i = 0; i < length; i++) {
-                var key = keys[i];
-                var g = groupDic[key];
-                if (g) {
-                    var len = g.length;
-                    for (var j = 0; j < len; j++) {
-                        var item = g[j];
-                        if (group.indexOf(item) == -1)
-                            group.push(item);
+        SheetAnalyzer.prototype.onLoadFinish = function (event) {
+            var request = event.target;
+            var data = this.resItemDic[request.$hashCode];
+            delete this.resItemDic[request.hashCode];
+            var resItem = data.item;
+            var compFunc = data.func;
+            resItem.loaded = (event.type == egret.Event.COMPLETE);
+            if (resItem.loaded) {
+                if (request instanceof egret.HttpRequest) {
+                    resItem.loaded = false;
+                    var imageUrl = this.analyzeConfig(resItem, request.response);
+                    if (imageUrl) {
+                        this.loadImage(imageUrl, data);
+                        this.recycler.push(request);
+                        return;
                     }
                 }
                 else {
-                    var item = this.keyMap[key];
-                    if (item) {
-                        if (group.indexOf(item) == -1)
-                            group.push(item);
-                    }
-                    else {
-                        egret.$warn(3200, key);
-                    }
+                    var texture = new egret.Texture();
+                    texture._setBitmapData(request.data);
+                    this.analyzeBitmap(resItem, texture);
                 }
             }
-            if (group.length == 0)
-                return false;
-            this.groupDic[name] = group;
-            return true;
-        };
-        /**
-         * 解析一个配置文件
-         * @method RES.ResourceConfig#parseConfig
-         * @param data {any} 配置文件数据
-         * @param folder {string} 加载项的路径前缀。
-         */
-        p.parseConfig = function (data, folder) {
-            if (!data)
-                return;
-            var resources = data["resources"];
-            if (resources) {
-                var length_1 = resources.length;
-                for (var i = 0; i < length_1; i++) {
-                    var item = resources[i];
-                    var url = item.url;
-                    if (url && url.indexOf("://") == -1)
-                        item.url = folder + url;
-                    this.addItemToKeyMap(item);
-                }
-            }
-            var groups = data["groups"];
-            if (groups) {
-                var length_2 = groups.length;
-                for (var i = 0; i < length_2; i++) {
-                    var group = groups[i];
-                    var list = [];
-                    var keys = group.keys.split(",");
-                    var l = keys.length;
-                    for (var j = 0; j < l; j++) {
-                        var name_1 = keys[j].trim();
-                        var item = this.keyMap[name_1];
-                        if (item && list.indexOf(item) == -1) {
-                            list.push(item);
-                        }
-                    }
-                    this.groupDic[group.name] = list;
-                }
-            }
-        };
-        /**
-         * 添加一个二级键名到配置列表。
-         * @method RES.ResourceConfig#addSubkey
-         * @param subkey {string} 要添加的二级键名
-         * @param name {string} 二级键名所属的资源name属性
-         */
-        p.addSubkey = function (subkey, name) {
-            var item = this.keyMap[name];
-            if (item && !this.keyMap[subkey]) {
-                this.keyMap[subkey] = item;
-            }
-        };
-        /**
-         * 添加一个加载项数据到列表
-         */
-        p.addItemToKeyMap = function (item) {
-            if (!this.keyMap[item.name])
-                this.keyMap[item.name] = item;
-            if (item.hasOwnProperty("subkeys")) {
-                var subkeys = (item.subkeys).split(",");
-                item.subkeys = subkeys;
-                var length_3 = subkeys.length;
-                for (var i = 0; i < length_3; i++) {
-                    var key = subkeys[i];
-                    if (this.keyMap[key] != null)
-                        continue;
-                    this.keyMap[key] = item;
-                }
-            }
-        };
-        /**
-         * 获取加载项的name属性
-         * @method RES.ResourceConfig#getType
-         * @param key {string} 对应配置文件里的name属性或sbuKeys属性的一项。
-         * @returns {string}
-         */
-        p.getName = function (key) {
-            var data = this.keyMap[key];
-            return data ? data.name : "";
-        };
-        /**
-         * 获取加载项类型。
-         * @method RES.ResourceConfig#getType
-         * @param key {string} 对应配置文件里的name属性或sbuKeys属性的一项。
-         * @returns {string}
-         */
-        p.getType = function (key) {
-            var data = this.keyMap[key];
-            return data ? data.type : "";
-        };
-        p.getRawResourceItem = function (key) {
-            return this.keyMap[key];
-        };
-        /**
-         * 获取加载项信息对象
-         * @method RES.ResourceConfig#getResourceItem
-         * @param key {string} 对应配置文件里的key属性或sbuKeys属性的一项。
-         * @returns {egret.ResourceItem}
-         */
-        p.getResourceItem = function (key) {
-            var data = this.keyMap[key];
-            if (data)
-                return this.parseResourceItem(data);
-            return null;
-        };
-        /**
-         * 转换Object数据为ResourceItem对象
-         */
-        p.parseResourceItem = function (data) {
-            var resItem = new RES.ResourceItem(data.name, data.url, data.type);
-            resItem.data = data;
-            return resItem;
-        };
-        return ResourceConfig;
-    }());
-    RES.ResourceConfig = ResourceConfig;
-    egret.registerClass(ResourceConfig,'RES.ResourceConfig');
-})(RES || (RES = {}));
-//////////////////////////////////////////////////////////////////////////////////////
-//
-//  Copyright (c) 2014-present, Egret Technology.
-//  All rights reserved.
-//  Redistribution and use in source and binary forms, with or without
-//  modification, are permitted provided that the following conditions are met:
-//
-//     * Redistributions of source code must retain the above copyright
-//       notice, this list of conditions and the following disclaimer.
-//     * Redistributions in binary form must reproduce the above copyright
-//       notice, this list of conditions and the following disclaimer in the
-//       documentation and/or other materials provided with the distribution.
-//     * Neither the name of the Egret nor the
-//       names of its contributors may be used to endorse or promote products
-//       derived from this software without specific prior written permission.
-//
-//  THIS SOFTWARE IS PROVIDED BY EGRET AND CONTRIBUTORS "AS IS" AND ANY EXPRESS
-//  OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES
-//  OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED.
-//  IN NO EVENT SHALL EGRET AND CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT,
-//  INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT
-//  LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES;LOSS OF USE, DATA,
-//  OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF
-//  LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING
-//  NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE,
-//  EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
-//
-//////////////////////////////////////////////////////////////////////////////////////
-var RES;
-(function (RES) {
-    /**
-     * @class RES.ResourceLoader
-     * @classdesc
-     * @extends egret.EventDispatcher
-     * @private
-     */
-    var ResourceLoader = (function (_super) {
-        __extends(ResourceLoader, _super);
-        /**
-         * 构造函数
-         * @method RES.ResourceLoader#constructor
-         */
-        function ResourceLoader() {
-            _super.call(this);
-            /**
-             * 最大并发加载数
-             */
-            this.thread = 2;
-            /**
-             * 正在加载的线程计数
-             */
-            this.loadingCount = 0;
-            /**
-             * 一项加载结束回调函数。无论加载成功或者出错都将执行回调函数。示例：callBack(resItem:ResourceItem):void;
-             * @member {Function} RES.ResourceLoader#callBack
-             */
-            this.callBack = null;
-            /**
-             * RES单例的引用
-             * @member {any} RES.ResourceLoader#resInstance
-             */
-            this.resInstance = null;
-            /**
-             * 当前组加载的项总个数,key为groupName
-             */
-            this.groupTotalDic = {};
-            /**
-             * 已经加载的项个数,key为groupName
-             */
-            this.numLoadedDic = {};
-            /**
-             * 正在加载的组列表,key为groupName
-             */
-            this.itemListDic = {};
-            /**
-             * 加载失败的组,key为groupName
-             */
-            this.groupErrorDic = {};
-            this.retryTimesDic = {};
-            this.maxRetryTimes = 3;
-            this.failedList = new Array();
-            /**
-             * 优先级队列,key为priority，value为groupName列表
-             */
-            this.priorityQueue = {};
-            /**
-             * 延迟加载队列
-             */
-            this.lazyLoadList = new Array();
-            /**
-             * 资源解析库字典类
-             */
-            this.analyzerDic = {};
-            /**
-             * 当前应该加载同优先级队列的第几列
-             */
-            this.queueIndex = 0;
-        }
-        var d = __define,c=ResourceLoader,p=c.prototype;
-        /**
-         * 检查指定的组是否正在加载中
-         * @method RES.ResourceLoader#isGroupInLoading
-         * @param groupName {string}
-         * @returns {boolean}
-         */
-        p.isGroupInLoading = function (groupName) {
-            return this.itemListDic[groupName] !== undefined;
-        };
-        /**
-         * 开始加载一组文件
-         * @method RES.ResourceLoader#loadGroup
-         * @param list {egret.Array<ResourceItem>} 加载项列表
-         * @param groupName {string} 组名
-         * @param priority {number} 加载优先级
-         */
-        p.loadGroup = function (list, groupName, priority) {
-            if (priority === void 0) { priority = 0; }
-            if (this.itemListDic[groupName] || !groupName)
-                return;
-            if (!list || list.length == 0) {
-                egret.$warn(3201, groupName);
-                var event_1 = new RES.ResourceEvent(RES.ResourceEvent.GROUP_LOAD_ERROR);
-                event_1.groupName = groupName;
-                this.dispatchEvent(event_1);
-                return;
-            }
-            if (this.priorityQueue[priority])
-                this.priorityQueue[priority].push(groupName);
-            else
-                this.priorityQueue[priority] = [groupName];
-            this.itemListDic[groupName] = list;
-            var length = list.length;
-            for (var i = 0; i < length; i++) {
-                var resItem = list[i];
-                resItem.groupName = groupName;
-            }
-            this.groupTotalDic[groupName] = list.length;
-            this.numLoadedDic[groupName] = 0;
-            this.next();
-        };
-        /**
-         * 加载一个文件
-         * @method RES.ResourceLoader#loadItem
-         * @param resItem {egret.ResourceItem} 要加载的项
-         */
-        p.loadItem = function (resItem) {
-            this.lazyLoadList.push(resItem);
-            resItem.groupName = "";
-            this.next();
-        };
-        /**
-         * 加载下一项
-         */
-        p.next = function () {
-            while (this.loadingCount < this.thread) {
-                var resItem = this.getOneResourceItem();
-                if (!resItem)
-                    break;
-                this.loadingCount++;
-                if (resItem.loaded) {
-                    this.onItemComplete(resItem);
-                }
-                else {
-                    var analyzer = this.resInstance.$getAnalyzerByType(resItem.type);
-                    analyzer.loadFile(resItem, this.onItemComplete, this);
-                }
-            }
-        };
-        /**
-         * 获取下一个待加载项
-         */
-        p.getOneResourceItem = function () {
-            if (this.failedList.length > 0)
-                return this.failedList.shift();
-            var maxPriority = Number.NEGATIVE_INFINITY;
-            for (var p in this.priorityQueue) {
-                maxPriority = Math.max(maxPriority, p);
-            }
-            var queue = this.priorityQueue[maxPriority];
-            if (!queue || queue.length == 0) {
-                if (this.lazyLoadList.length == 0)
-                    return null;
-                //后请求的先加载，以便更快获取当前需要的资源
-                return this.lazyLoadList.pop();
-            }
-            var length = queue.length;
-            var list;
-            for (var i = 0; i < length; i++) {
-                if (this.queueIndex >= length)
-                    this.queueIndex = 0;
-                list = this.itemListDic[queue[this.queueIndex]];
-                if (list.length > 0)
-                    break;
-                this.queueIndex++;
-            }
-            if (list.length == 0)
-                return null;
-            return list.shift();
-        };
-        /**
-         * 加载结束
-         */
-        p.onItemComplete = function (resItem) {
-            this.loadingCount--;
-            var groupName = resItem.groupName;
-            if (!resItem.loaded) {
-                var times = this.retryTimesDic[resItem.name] || 1;
-                if (times > this.maxRetryTimes) {
-                    delete this.retryTimesDic[resItem.name];
-                    RES.ResourceEvent.dispatchResourceEvent(this.resInstance, RES.ResourceEvent.ITEM_LOAD_ERROR, groupName, resItem);
-                }
-                else {
-                    this.retryTimesDic[resItem.name] = times + 1;
-                    this.failedList.push(resItem);
-                    this.next();
-                    return;
-                }
-            }
-            if (groupName) {
-                this.numLoadedDic[groupName]++;
-                var itemsLoaded = this.numLoadedDic[groupName];
-                var itemsTotal = this.groupTotalDic[groupName];
-                if (!resItem.loaded) {
-                    this.groupErrorDic[groupName] = true;
-                }
-                RES.ResourceEvent.dispatchResourceEvent(this.resInstance, RES.ResourceEvent.GROUP_PROGRESS, groupName, resItem, itemsLoaded, itemsTotal);
-                if (itemsLoaded == itemsTotal) {
-                    var groupError = this.groupErrorDic[groupName];
-                    this.removeGroupName(groupName);
-                    delete this.groupTotalDic[groupName];
-                    delete this.numLoadedDic[groupName];
-                    delete this.itemListDic[groupName];
-                    delete this.groupErrorDic[groupName];
-                    if (groupError) {
-                        RES.ResourceEvent.dispatchResourceEvent(this, RES.ResourceEvent.GROUP_LOAD_ERROR, groupName);
-                    }
-                    else {
-                        RES.ResourceEvent.dispatchResourceEvent(this, RES.ResourceEvent.GROUP_COMPLETE, groupName);
-                    }
-                }
+            if (request instanceof egret.HttpRequest) {
+                this.recycler.push(request);
             }
             else {
-                this.callBack.call(this.resInstance, resItem);
+                this.recyclerIamge.push(request);
             }
-            this.next();
+            compFunc.call(data.thisObject, resItem);
         };
         /**
-         * 从优先级队列中移除指定的组名
+         * 解析并缓存加载成功的配置文件
          */
-        p.removeGroupName = function (groupName) {
-            for (var p in this.priorityQueue) {
-                var queue = this.priorityQueue[p];
-                var index = 0;
-                var found = false;
-                var length_4 = queue.length;
-                for (var i = 0; i < length_4; i++) {
-                    var name_2 = queue[i];
-                    if (name_2 == groupName) {
-                        queue.splice(index, 1);
-                        found = true;
-                        break;
-                    }
-                    index++;
+        SheetAnalyzer.prototype.analyzeConfig = function (resItem, data) {
+            var name = resItem.name;
+            var config;
+            var imageUrl = "";
+            try {
+                var str = data;
+                config = JSON.parse(str);
+            }
+            catch (e) {
+                egret.$warn(1017, resItem.url, data);
+            }
+            if (config) {
+                this.sheetMap[name] = config;
+                imageUrl = this.getRelativePath(resItem.url, config["file"]);
+            }
+            return imageUrl;
+        };
+        /**
+         * 解析并缓存加载成功的位图数据
+         */
+        SheetAnalyzer.prototype.analyzeBitmap = function (resItem, texture) {
+            var name = resItem.name;
+            if (this.fileDic[name] || !texture) {
+                return;
+            }
+            var config = this.sheetMap[name];
+            delete this.sheetMap[name];
+            var targetName = resItem.data && resItem.data.subkeys ? "" : name;
+            var spriteSheet = this.parseSpriteSheet(texture, config, targetName);
+            this.fileDic[name] = spriteSheet;
+        };
+        /**
+         * 获取相对位置
+         */
+        SheetAnalyzer.prototype.getRelativePath = function (url, file) {
+            url = url.split("\\").join("/");
+            var params = url.match(/#.*|\?.*/);
+            var paramUrl = "";
+            if (params) {
+                paramUrl = params[0];
+            }
+            var index = url.lastIndexOf("/");
+            if (index != -1) {
+                url = url.substring(0, index + 1) + file;
+            }
+            else {
+                url = file;
+            }
+            return url + paramUrl;
+        };
+        SheetAnalyzer.prototype.parseSpriteSheet = function (texture, data, name) {
+            var frames = data.frames;
+            if (!frames) {
+                return null;
+            }
+            var spriteSheet = new egret.SpriteSheet(texture);
+            var textureMap = this.textureMap;
+            for (var subkey in frames) {
+                var config = frames[subkey];
+                var texture_1 = spriteSheet.createTexture(subkey, config.x, config.y, config.w, config.h, config.offX, config.offY, config.sourceW, config.sourceH);
+                if (config["scale9grid"]) {
+                    var str = config["scale9grid"];
+                    var list = str.split(",");
+                    texture_1["scale9Grid"] = new egret.Rectangle(parseInt(list[0]), parseInt(list[1]), parseInt(list[2]), parseInt(list[3]));
                 }
-                if (found) {
-                    if (queue.length == 0) {
-                        delete this.priorityQueue[p];
+                if (textureMap[subkey] == null) {
+                    textureMap[subkey] = texture_1;
+                    if (name) {
+                        this.addSubkey(subkey, name);
                     }
-                    break;
                 }
             }
+            return spriteSheet;
         };
-        return ResourceLoader;
-    }(egret.EventDispatcher));
-    RES.ResourceLoader = ResourceLoader;
-    egret.registerClass(ResourceLoader,'RES.ResourceLoader');
+        SheetAnalyzer.prototype.destroyRes = function (name) {
+            var sheet = this.fileDic[name];
+            if (sheet) {
+                delete this.fileDic[name];
+                var texture = void 0;
+                for (var subkey in sheet._textureMap) {
+                    if (texture == null) {
+                        texture = sheet._textureMap[subkey];
+                        this.onResourceDestroy(texture);
+                        texture = null;
+                    }
+                    delete this.textureMap[subkey];
+                }
+                if (sheet.dispose) {
+                    sheet.dispose();
+                }
+                return true;
+            }
+            return false;
+        };
+        SheetAnalyzer.prototype.loadImage = function (url, data) {
+            var loader = this.getImageLoader();
+            this.resItemDic[loader.hashCode] = data;
+            loader.load(RES.$getVirtualUrl(url));
+        };
+        SheetAnalyzer.prototype.getImageLoader = function () {
+            var loader = this.recyclerIamge.pop();
+            if (!loader) {
+                loader = new egret.ImageLoader();
+                loader.addEventListener(egret.Event.COMPLETE, this.onLoadFinish, this);
+                loader.addEventListener(egret.IOErrorEvent.IO_ERROR, this.onLoadFinish, this);
+            }
+            return loader;
+        };
+        SheetAnalyzer.prototype.onResourceDestroy = function (texture) {
+            if (texture) {
+                texture.dispose();
+            }
+        };
+        return SheetAnalyzer;
+    }(RES.BinAnalyzer));
+    RES.SheetAnalyzer = SheetAnalyzer;
+    __reflect(SheetAnalyzer.prototype, "RES.SheetAnalyzer");
+})(RES || (RES = {}));
+//////////////////////////////////////////////////////////////////////////////////////
+//
+//  Copyright (c) 2014-present, Egret Technology.
+//  All rights reserved.
+//  Redistribution and use in source and binary forms, with or without
+//  modification, are permitted provided that the following conditions are met:
+//
+//     * Redistributions of source code must retain the above copyright
+//       notice, this list of conditions and the following disclaimer.
+//     * Redistributions in binary form must reproduce the above copyright
+//       notice, this list of conditions and the following disclaimer in the
+//       documentation and/or other materials provided with the distribution.
+//     * Neither the name of the Egret nor the
+//       names of its contributors may be used to endorse or promote products
+//       derived from this software without specific prior written permission.
+//
+//  THIS SOFTWARE IS PROVIDED BY EGRET AND CONTRIBUTORS "AS IS" AND ANY EXPRESS
+//  OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES
+//  OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED.
+//  IN NO EVENT SHALL EGRET AND CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT,
+//  INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT
+//  LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES;LOSS OF USE, DATA,
+//  OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF
+//  LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING
+//  NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE,
+//  EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+//
+//////////////////////////////////////////////////////////////////////////////////////
+var RES;
+(function (RES) {
 })(RES || (RES = {}));
 //////////////////////////////////////////////////////////////////////////////////////
 //
@@ -819,7 +805,7 @@ var RES;
         function ResourceEvent(type, bubbles, cancelable) {
             if (bubbles === void 0) { bubbles = false; }
             if (cancelable === void 0) { cancelable = false; }
-            _super.call(this, type, bubbles, cancelable);
+            var _this = _super.call(this, type, bubbles, cancelable) || this;
             /**
              * @language en_US
              * File number that has been loaded.
@@ -832,7 +818,7 @@ var RES;
              * @version Egret 2.4
              * @platform Web,Native
              */
-            this.itemsLoaded = 0;
+            _this.itemsLoaded = 0;
             /**
              * @language en_US
              * Total file number to load.
@@ -845,7 +831,7 @@ var RES;
              * @version Egret 2.4
              * @platform Web,Native
              */
-            this.itemsTotal = 0;
+            _this.itemsTotal = 0;
             /**
              * @language en_US
              * Resource group name.
@@ -858,7 +844,7 @@ var RES;
              * @version Egret 2.4
              * @platform Web,Native
              */
-            this.groupName = "";
+            _this.groupName = "";
             /**
              * @language en_US
              * An item of information that is finished by the end of a load.
@@ -871,9 +857,9 @@ var RES;
              * @version Egret 2.4
              * @platform Web,Native
              */
-            this.resItem = null;
+            _this.resItem = null;
+            return _this;
         }
-        var d = __define,c=ResourceEvent,p=c.prototype;
         /**
          * 使用指定的EventDispatcher对象来抛出事件对象。抛出的对象将会缓存在对象池上，供下次循环复用。
          * @method RES.ResourceEvent.dispatchResourceEvent
@@ -899,475 +885,88 @@ var RES;
             egret.Event.release(event);
             return result;
         };
-        /**
-         * @language en_US
-         * Failure event for a load item.
-         * @version Egret 2.4
-         * @platform Web,Native
-         */
-        /**
-         * @language zh_CN
-         * 一个加载项加载失败事件。
-         * @version Egret 2.4
-         * @platform Web,Native
-         */
-        ResourceEvent.ITEM_LOAD_ERROR = "itemLoadError";
-        /**
-         * @language en_US
-         * Configure file to load and parse the completion event. Note: if a configuration file is loaded, it will not be thrown out, and if you want to handle the configuration loading failure, monitor the CONFIG_LOAD_ERROR event.
-         * @version Egret 2.4
-         * @platform Web,Native
-         */
-        /**
-         * @language zh_CN
-         * 配置文件加载并解析完成事件。注意：若有配置文件加载失败，将不会抛出此事件，若要处理配置加载失败，请同时监听 CONFIG_LOAD_ERROR 事件。
-         * @version Egret 2.4
-         * @platform Web,Native
-         */
-        ResourceEvent.CONFIG_COMPLETE = "configComplete";
-        /**
-         * @language en_US
-         * Configuration file failed to load.
-         * @version Egret 2.4
-         * @platform Web,Native
-         */
-        /**
-         * @language zh_CN
-         * 配置文件加载失败事件。
-         * @version Egret 2.4
-         * @platform Web,Native
-         */
-        ResourceEvent.CONFIG_LOAD_ERROR = "configLoadError";
-        /**
-         * @language en_US
-         * Delay load group resource loading progress event.
-         * @version Egret 2.4
-         * @platform Web,Native
-         */
-        /**
-         * @language zh_CN
-         * 延迟加载组资源加载进度事件。
-         * @version Egret 2.4
-         * @platform Web,Native
-         */
-        ResourceEvent.GROUP_PROGRESS = "groupProgress";
-        /**
-         * @language en_US
-         * Delay load group resource to complete event. Note: if you have a resource item loading failure, the event will not be thrown, if you want to handle the group load failure, please listen to the GROUP_LOAD_ERROR event.
-         * @version Egret 2.4
-         * @platform Web,Native
-         */
-        /**
-         * @language zh_CN
-         * 延迟加载组资源加载完成事件。注意：若组内有资源项加载失败，将不会抛出此事件，若要处理组加载失败，请同时监听 GROUP_LOAD_ERROR 事件。
-         * @version Egret 2.4
-         * @platform Web,Native
-         */
-        ResourceEvent.GROUP_COMPLETE = "groupComplete";
-        /**
-         * @language en_US
-         * Delayed load group resource failed event.
-         * @version Egret 2.4
-         * @platform Web,Native
-         */
-        /**
-         * @language zh_CN
-         * 延迟加载组资源加载失败事件。
-         * @version Egret 2.4
-         * @platform Web,Native
-         */
-        ResourceEvent.GROUP_LOAD_ERROR = "groupLoadError";
         return ResourceEvent;
     }(egret.Event));
+    /**
+     * @language en_US
+     * Failure event for a load item.
+     * @version Egret 2.4
+     * @platform Web,Native
+     */
+    /**
+     * @language zh_CN
+     * 一个加载项加载失败事件。
+     * @version Egret 2.4
+     * @platform Web,Native
+     */
+    ResourceEvent.ITEM_LOAD_ERROR = "itemLoadError";
+    /**
+     * @language en_US
+     * Configure file to load and parse the completion event. Note: if a configuration file is loaded, it will not be thrown out, and if you want to handle the configuration loading failure, monitor the CONFIG_LOAD_ERROR event.
+     * @version Egret 2.4
+     * @platform Web,Native
+     */
+    /**
+     * @language zh_CN
+     * 配置文件加载并解析完成事件。注意：若有配置文件加载失败，将不会抛出此事件，若要处理配置加载失败，请同时监听 CONFIG_LOAD_ERROR 事件。
+     * @version Egret 2.4
+     * @platform Web,Native
+     */
+    ResourceEvent.CONFIG_COMPLETE = "configComplete";
+    /**
+     * @language en_US
+     * Configuration file failed to load.
+     * @version Egret 2.4
+     * @platform Web,Native
+     */
+    /**
+     * @language zh_CN
+     * 配置文件加载失败事件。
+     * @version Egret 2.4
+     * @platform Web,Native
+     */
+    ResourceEvent.CONFIG_LOAD_ERROR = "configLoadError";
+    /**
+     * @language en_US
+     * Delay load group resource loading progress event.
+     * @version Egret 2.4
+     * @platform Web,Native
+     */
+    /**
+     * @language zh_CN
+     * 延迟加载组资源加载进度事件。
+     * @version Egret 2.4
+     * @platform Web,Native
+     */
+    ResourceEvent.GROUP_PROGRESS = "groupProgress";
+    /**
+     * @language en_US
+     * Delay load group resource to complete event. Note: if you have a resource item loading failure, the event will not be thrown, if you want to handle the group load failure, please listen to the GROUP_LOAD_ERROR event.
+     * @version Egret 2.4
+     * @platform Web,Native
+     */
+    /**
+     * @language zh_CN
+     * 延迟加载组资源加载完成事件。注意：若组内有资源项加载失败，将不会抛出此事件，若要处理组加载失败，请同时监听 GROUP_LOAD_ERROR 事件。
+     * @version Egret 2.4
+     * @platform Web,Native
+     */
+    ResourceEvent.GROUP_COMPLETE = "groupComplete";
+    /**
+     * @language en_US
+     * Delayed load group resource failed event.
+     * @version Egret 2.4
+     * @platform Web,Native
+     */
+    /**
+     * @language zh_CN
+     * 延迟加载组资源加载失败事件。
+     * @version Egret 2.4
+     * @platform Web,Native
+     */
+    ResourceEvent.GROUP_LOAD_ERROR = "groupLoadError";
     RES.ResourceEvent = ResourceEvent;
-    egret.registerClass(ResourceEvent,'RES.ResourceEvent');
-})(RES || (RES = {}));
-//////////////////////////////////////////////////////////////////////////////////////
-//
-//  Copyright (c) 2014-present, Egret Technology.
-//  All rights reserved.
-//  Redistribution and use in source and binary forms, with or without
-//  modification, are permitted provided that the following conditions are met:
-//
-//     * Redistributions of source code must retain the above copyright
-//       notice, this list of conditions and the following disclaimer.
-//     * Redistributions in binary form must reproduce the above copyright
-//       notice, this list of conditions and the following disclaimer in the
-//       documentation and/or other materials provided with the distribution.
-//     * Neither the name of the Egret nor the
-//       names of its contributors may be used to endorse or promote products
-//       derived from this software without specific prior written permission.
-//
-//  THIS SOFTWARE IS PROVIDED BY EGRET AND CONTRIBUTORS "AS IS" AND ANY EXPRESS
-//  OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES
-//  OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED.
-//  IN NO EVENT SHALL EGRET AND CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT,
-//  INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT
-//  LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES;LOSS OF USE, DATA,
-//  OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF
-//  LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING
-//  NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE,
-//  EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
-//
-//////////////////////////////////////////////////////////////////////////////////////
-var RES;
-(function (RES) {
-    /**
-     * @classic
-     * @private
-     */
-    var AnalyzerBase = (function (_super) {
-        __extends(AnalyzerBase, _super);
-        function AnalyzerBase() {
-            _super.call(this);
-            this.resourceConfig = null;
-            this.resourceConfig = (RES["configInstance"]);
-        }
-        var d = __define,c=AnalyzerBase,p=c.prototype;
-        /**
-         * 添加一个二级键名到配置列表。
-         * @method RES.ResourceConfig#addSubkey
-         * @param subkey {string} 要添加的二级键名
-         * @param name {string} 二级键名所属的资源name属性
-         */
-        p.addSubkey = function (subkey, name) {
-            this.resourceConfig.addSubkey(subkey, name);
-        };
-        /**
-         * 加载一个资源文件
-         * @param resItem 加载项信息
-         * @param compFunc 加载完成回调函数,示例:compFunc(resItem:ResourceItem):void;
-         * @param thisObject 加载完成回调函数的this引用
-         */
-        p.loadFile = function (resItem, compFunc, thisObject) {
-        };
-        /**
-         * 同步方式获取解析完成的数据
-         * @param name 对应配置文件里的name属性。
-         */
-        p.getRes = function (name) {
-        };
-        /**
-         * 销毁某个资源文件的二进制数据,返回是否删除成功。
-         * @param name 配置文件中加载项的name属性
-         */
-        p.destroyRes = function (name) {
-            return false;
-        };
-        /**
-         * 读取一个字符串里第一个点之前的内容。
-         * @param name {string} 要读取的字符串
-         */
-        AnalyzerBase.getStringPrefix = function (name) {
-            if (!name) {
-                return "";
-            }
-            var index = name.indexOf(".");
-            if (index != -1) {
-                return name.substring(0, index);
-            }
-            return "";
-        };
-        /**
-         * 读取一个字符串里第一个点之后的内容。
-         * @param name {string} 要读取的字符串
-         */
-        AnalyzerBase.getStringTail = function (name) {
-            if (!name) {
-                return "";
-            }
-            var index = name.indexOf(".");
-            if (index != -1) {
-                return name.substring(index + 1);
-            }
-            return "";
-        };
-        return AnalyzerBase;
-    }(egret.HashObject));
-    RES.AnalyzerBase = AnalyzerBase;
-    egret.registerClass(AnalyzerBase,'RES.AnalyzerBase');
-})(RES || (RES = {}));
-//////////////////////////////////////////////////////////////////////////////////////
-//
-//  Copyright (c) 2014-present, Egret Technology.
-//  All rights reserved.
-//  Redistribution and use in source and binary forms, with or without
-//  modification, are permitted provided that the following conditions are met:
-//
-//     * Redistributions of source code must retain the above copyright
-//       notice, this list of conditions and the following disclaimer.
-//     * Redistributions in binary form must reproduce the above copyright
-//       notice, this list of conditions and the following disclaimer in the
-//       documentation and/or other materials provided with the distribution.
-//     * Neither the name of the Egret nor the
-//       names of its contributors may be used to endorse or promote products
-//       derived from this software without specific prior written permission.
-//
-//  THIS SOFTWARE IS PROVIDED BY EGRET AND CONTRIBUTORS "AS IS" AND ANY EXPRESS
-//  OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES
-//  OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED.
-//  IN NO EVENT SHALL EGRET AND CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT,
-//  INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT
-//  LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES;LOSS OF USE, DATA,
-//  OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF
-//  LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING
-//  NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE,
-//  EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
-//
-//////////////////////////////////////////////////////////////////////////////////////
-var RES;
-(function (RES) {
-    /**
-     * @private
-     */
-    var BinAnalyzer = (function (_super) {
-        __extends(BinAnalyzer, _super);
-        /**
-         * 构造函数
-         */
-        function BinAnalyzer() {
-            _super.call(this);
-            /**
-             * 字节流数据缓存字典
-             */
-            this.fileDic = {};
-            /**
-             * 加载项字典
-             */
-            this.resItemDic = [];
-            this._dataFormat = egret.HttpResponseType.ARRAY_BUFFER;
-            /**
-             * Loader对象池
-             */
-            this.recycler = [];
-        }
-        var d = __define,c=BinAnalyzer,p=c.prototype;
-        /**
-         * @inheritDoc
-         */
-        p.loadFile = function (resItem, compFunc, thisObject) {
-            if (this.fileDic[resItem.name]) {
-                compFunc.call(thisObject, resItem);
-                return;
-            }
-            var request = this.getRequest();
-            this.resItemDic[request.hashCode] = { item: resItem, func: compFunc, thisObject: thisObject };
-            request.open(RES.$getVirtualUrl(resItem.url));
-            request.send();
-        };
-        /**
-         * 获取一个URLLoader对象
-         */
-        p.getRequest = function () {
-            var request = this.recycler.pop();
-            if (!request) {
-                request = new egret.HttpRequest();
-                request.addEventListener(egret.Event.COMPLETE, this.onLoadFinish, this);
-                request.addEventListener(egret.IOErrorEvent.IO_ERROR, this.onLoadFinish, this);
-            }
-            request.responseType = this._dataFormat;
-            return request;
-        };
-        /**
-         * 一项加载结束
-         */
-        p.onLoadFinish = function (event) {
-            var request = (event.target);
-            var data = this.resItemDic[request.hashCode];
-            delete this.resItemDic[request.hashCode];
-            var resItem = data.item;
-            var compFunc = data.func;
-            resItem.loaded = (event.type == egret.Event.COMPLETE);
-            if (resItem.loaded) {
-                this.analyzeData(resItem, request.response);
-            }
-            this.recycler.push(request);
-            compFunc.call(data.thisObject, resItem);
-        };
-        /**
-         * 解析并缓存加载成功的数据
-         */
-        p.analyzeData = function (resItem, data) {
-            var name = resItem.name;
-            if (this.fileDic[name] || (data != "" && !data)) {
-                return;
-            }
-            this.fileDic[name] = data;
-        };
-        /**
-         * @inheritDoc
-         */
-        p.getRes = function (name) {
-            return this.fileDic[name];
-        };
-        /**
-         * @inheritDoc
-         */
-        p.hasRes = function (name) {
-            var res = this.getRes(name);
-            return res != null;
-        };
-        /**
-         * @inheritDoc
-         */
-        p.destroyRes = function (name) {
-            if (this.fileDic[name]) {
-                this.onResourceDestroy(this.fileDic[name]);
-                delete this.fileDic[name];
-                return true;
-            }
-            return false;
-        };
-        p.onResourceDestroy = function (resource) {
-        };
-        return BinAnalyzer;
-    }(RES.AnalyzerBase));
-    RES.BinAnalyzer = BinAnalyzer;
-    egret.registerClass(BinAnalyzer,'RES.BinAnalyzer');
-})(RES || (RES = {}));
-//////////////////////////////////////////////////////////////////////////////////////
-//
-//  Copyright (c) 2014-present, Egret Technology.
-//  All rights reserved.
-//  Redistribution and use in source and binary forms, with or without
-//  modification, are permitted provided that the following conditions are met:
-//
-//     * Redistributions of source code must retain the above copyright
-//       notice, this list of conditions and the following disclaimer.
-//     * Redistributions in binary form must reproduce the above copyright
-//       notice, this list of conditions and the following disclaimer in the
-//       documentation and/or other materials provided with the distribution.
-//     * Neither the name of the Egret nor the
-//       names of its contributors may be used to endorse or promote products
-//       derived from this software without specific prior written permission.
-//
-//  THIS SOFTWARE IS PROVIDED BY EGRET AND CONTRIBUTORS "AS IS" AND ANY EXPRESS
-//  OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES
-//  OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED.
-//  IN NO EVENT SHALL EGRET AND CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT,
-//  INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT
-//  LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES;LOSS OF USE, DATA,
-//  OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF
-//  LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING
-//  NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE,
-//  EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
-//
-//////////////////////////////////////////////////////////////////////////////////////
-var RES;
-(function (RES) {
-    /**
-     * @private
-     */
-    var ImageAnalyzer = (function (_super) {
-        __extends(ImageAnalyzer, _super);
-        /**
-         * 构造函数
-         */
-        function ImageAnalyzer() {
-            _super.call(this);
-            /**
-             * 字节流数据缓存字典
-             */
-            this.fileDic = {};
-            /**
-             * 加载项字典
-             */
-            this.resItemDic = [];
-            /**
-             * Loader对象池
-             */
-            this.recycler = [];
-        }
-        var d = __define,c=ImageAnalyzer,p=c.prototype;
-        /**
-         * @inheritDoc
-         */
-        p.loadFile = function (resItem, compFunc, thisObject) {
-            if (this.fileDic[resItem.name]) {
-                compFunc.call(thisObject, resItem);
-                return;
-            }
-            var loader = this.getLoader();
-            this.resItemDic[loader.$hashCode] = { item: resItem, func: compFunc, thisObject: thisObject };
-            loader.load(RES.$getVirtualUrl(resItem.url));
-        };
-        /**
-         * 获取一个Loader对象
-         */
-        p.getLoader = function () {
-            var loader = this.recycler.pop();
-            if (!loader) {
-                loader = new egret.ImageLoader();
-                loader.addEventListener(egret.Event.COMPLETE, this.onLoadFinish, this);
-                loader.addEventListener(egret.IOErrorEvent.IO_ERROR, this.onLoadFinish, this);
-            }
-            return loader;
-        };
-        /**
-         * 一项加载结束
-         */
-        p.onLoadFinish = function (event) {
-            var request = (event.$target);
-            var data = this.resItemDic[request.$hashCode];
-            delete this.resItemDic[request.$hashCode];
-            var resItem = data.item;
-            var compFunc = data.func;
-            resItem.loaded = (event.$type == egret.Event.COMPLETE);
-            if (resItem.loaded) {
-                var texture = new egret.Texture();
-                texture._setBitmapData(request.data);
-                this.analyzeData(resItem, texture);
-            }
-            this.recycler.push(request);
-            compFunc.call(data.thisObject, resItem);
-        };
-        /**
-         * 解析并缓存加载成功的数据
-         */
-        p.analyzeData = function (resItem, texture) {
-            var name = resItem.name;
-            if (this.fileDic[name] || !texture) {
-                return;
-            }
-            this.fileDic[name] = texture;
-            var config = resItem.data;
-            if (config && config["scale9grid"]) {
-                var str = config["scale9grid"];
-                var list = str.split(",");
-                texture["scale9Grid"] = new egret.Rectangle(parseInt(list[0]), parseInt(list[1]), parseInt(list[2]), parseInt(list[3]));
-            }
-        };
-        /**
-         * @inheritDoc
-         */
-        p.getRes = function (name) {
-            return this.fileDic[name];
-        };
-        /**
-         * @inheritDoc
-         */
-        p.hasRes = function (name) {
-            var res = this.getRes(name);
-            return res != null;
-        };
-        /**
-         * @inheritDoc
-         */
-        p.destroyRes = function (name) {
-            if (this.fileDic[name]) {
-                this.onResourceDestroy(this.fileDic[name]);
-                delete this.fileDic[name];
-                return true;
-            }
-            return false;
-        };
-        p.onResourceDestroy = function (texture) {
-            texture.dispose();
-        };
-        return ImageAnalyzer;
-    }(RES.AnalyzerBase));
-    RES.ImageAnalyzer = ImageAnalyzer;
-    egret.registerClass(ImageAnalyzer,'RES.ImageAnalyzer');
+    __reflect(ResourceEvent.prototype, "RES.ResourceEvent");
 })(RES || (RES = {}));
 //////////////////////////////////////////////////////////////////////////////////////
 //
@@ -1405,14 +1004,14 @@ var RES;
     var TextAnalyzer = (function (_super) {
         __extends(TextAnalyzer, _super);
         function TextAnalyzer() {
-            _super.call(this);
-            this._dataFormat = egret.HttpResponseType.TEXT;
+            var _this = _super.call(this) || this;
+            _this._dataFormat = egret.HttpResponseType.TEXT;
+            return _this;
         }
-        var d = __define,c=TextAnalyzer,p=c.prototype;
         return TextAnalyzer;
     }(RES.BinAnalyzer));
     RES.TextAnalyzer = TextAnalyzer;
-    egret.registerClass(TextAnalyzer,'RES.TextAnalyzer');
+    __reflect(TextAnalyzer.prototype, "RES.TextAnalyzer");
 })(RES || (RES = {}));
 //////////////////////////////////////////////////////////////////////////////////////
 //
@@ -1450,14 +1049,14 @@ var RES;
     var JsonAnalyzer = (function (_super) {
         __extends(JsonAnalyzer, _super);
         function JsonAnalyzer() {
-            _super.call(this);
-            this._dataFormat = egret.HttpResponseType.TEXT;
+            var _this = _super.call(this) || this;
+            _this._dataFormat = egret.HttpResponseType.TEXT;
+            return _this;
         }
-        var d = __define,c=JsonAnalyzer,p=c.prototype;
         /**
          * 解析并缓存加载成功的数据
          */
-        p.analyzeData = function (resItem, data) {
+        JsonAnalyzer.prototype.analyzeData = function (resItem, data) {
             var name = resItem.name;
             if (this.fileDic[name] || !data) {
                 return;
@@ -1473,224 +1072,284 @@ var RES;
         return JsonAnalyzer;
     }(RES.BinAnalyzer));
     RES.JsonAnalyzer = JsonAnalyzer;
-    egret.registerClass(JsonAnalyzer,'RES.JsonAnalyzer');
+    __reflect(JsonAnalyzer.prototype, "RES.JsonAnalyzer");
 })(RES || (RES = {}));
-////////////////////////////////////////////////////////////////////////////////////////
-////
-////  Copyright (c) 2014-present, Egret Technology.
-////  All rights reserved.
-////  Redistribution and use in source and binary forms, with or without
-////  modification, are permitted provided that the following conditions are met:
-////
-////     * Redistributions of source code must retain the above copyright
-////       notice, this list of conditions and the following disclaimer.
-////     * Redistributions in binary form must reproduce the above copyright
-////       notice, this list of conditions and the following disclaimer in the
-////       documentation and/or other materials provided with the distribution.
-////     * Neither the name of the Egret nor the
-////       names of its contributors may be used to endorse or promote products
-////       derived from this software without specific prior written permission.
-////
-////  THIS SOFTWARE IS PROVIDED BY EGRET AND CONTRIBUTORS "AS IS" AND ANY EXPRESS
-////  OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES
-////  OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED.
-////  IN NO EVENT SHALL EGRET AND CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT,
-////  INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT
-////  LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES;LOSS OF USE, DATA,
-////  OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF
-////  LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING
-////  NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE,
-////  EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
-////
-////////////////////////////////////////////////////////////////////////////////////////
+//////////////////////////////////////////////////////////////////////////////////////
+//
+//  Copyright (c) 2014-present, Egret Technology.
+//  All rights reserved.
+//  Redistribution and use in source and binary forms, with or without
+//  modification, are permitted provided that the following conditions are met:
+//
+//     * Redistributions of source code must retain the above copyright
+//       notice, this list of conditions and the following disclaimer.
+//     * Redistributions in binary form must reproduce the above copyright
+//       notice, this list of conditions and the following disclaimer in the
+//       documentation and/or other materials provided with the distribution.
+//     * Neither the name of the Egret nor the
+//       names of its contributors may be used to endorse or promote products
+//       derived from this software without specific prior written permission.
+//
+//  THIS SOFTWARE IS PROVIDED BY EGRET AND CONTRIBUTORS "AS IS" AND ANY EXPRESS
+//  OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES
+//  OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED.
+//  IN NO EVENT SHALL EGRET AND CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT,
+//  INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT
+//  LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES;LOSS OF USE, DATA,
+//  OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF
+//  LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING
+//  NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE,
+//  EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+//
+//////////////////////////////////////////////////////////////////////////////////////
 var RES;
 (function (RES) {
     /**
-     * SpriteSheet解析器
+     * @class RES.ResourceLoader
+     * @classdesc
+     * @extends egret.EventDispatcher
      * @private
      */
-    var SheetAnalyzer = (function (_super) {
-        __extends(SheetAnalyzer, _super);
-        function SheetAnalyzer() {
-            _super.call(this);
-            this.sheetMap = {};
-            this.textureMap = {};
+    var ResourceLoader = (function (_super) {
+        __extends(ResourceLoader, _super);
+        /**
+         * 构造函数
+         * @method RES.ResourceLoader#constructor
+         */
+        function ResourceLoader() {
+            var _this = _super.call(this) || this;
             /**
-             * ImageLoader对象池
+             * 最大并发加载数
              */
-            this.recyclerIamge = [];
-            this._dataFormat = egret.HttpResponseType.TEXT;
+            _this.thread = 2;
+            /**
+             * 正在加载的线程计数
+             */
+            _this.loadingCount = 0;
+            /**
+             * 一项加载结束回调函数。无论加载成功或者出错都将执行回调函数。示例：callBack(resItem:ResourceItem):void;
+             * @member {Function} RES.ResourceLoader#callBack
+             */
+            _this.callBack = null;
+            /**
+             * RES单例的引用
+             * @member {any} RES.ResourceLoader#resInstance
+             */
+            _this.resInstance = null;
+            /**
+             * 当前组加载的项总个数,key为groupName
+             */
+            _this.groupTotalDic = {};
+            /**
+             * 已经加载的项个数,key为groupName
+             */
+            _this.numLoadedDic = {};
+            /**
+             * 正在加载的组列表,key为groupName
+             */
+            _this.itemListDic = {};
+            /**
+             * 加载失败的组,key为groupName
+             */
+            _this.groupErrorDic = {};
+            _this.retryTimesDic = {};
+            _this.maxRetryTimes = 3;
+            _this.failedList = new Array();
+            /**
+             * 优先级队列,key为priority，value为groupName列表
+             */
+            _this.priorityQueue = {};
+            /**
+             * 延迟加载队列
+             */
+            _this.lazyLoadList = new Array();
+            /**
+             * 资源解析库字典类
+             */
+            _this.analyzerDic = {};
+            /**
+             * 当前应该加载同优先级队列的第几列
+             */
+            _this.queueIndex = 0;
+            return _this;
         }
-        var d = __define,c=SheetAnalyzer,p=c.prototype;
-        p.getRes = function (name) {
-            var res = this.fileDic[name];
-            if (!res) {
-                res = this.textureMap[name];
-            }
-            if (!res) {
-                var prefix = RES.AnalyzerBase.getStringPrefix(name);
-                res = this.fileDic[prefix];
-                if (res) {
-                    var tail = RES.AnalyzerBase.getStringTail(name);
-                    res = res.getTexture(tail);
-                }
-            }
-            return res;
+        /**
+         * 检查指定的组是否正在加载中
+         * @method RES.ResourceLoader#isGroupInLoading
+         * @param groupName {string}
+         * @returns {boolean}
+         */
+        ResourceLoader.prototype.isGroupInLoading = function (groupName) {
+            return this.itemListDic[groupName] !== undefined;
         };
         /**
-         * 一项加载结束
+         * 开始加载一组文件
+         * @method RES.ResourceLoader#loadGroup
+         * @param list {egret.Array<ResourceItem>} 加载项列表
+         * @param groupName {string} 组名
+         * @param priority {number} 加载优先级
          */
-        p.onLoadFinish = function (event) {
-            var request = event.target;
-            var data = this.resItemDic[request.$hashCode];
-            delete this.resItemDic[request.hashCode];
-            var resItem = data.item;
-            var compFunc = data.func;
-            resItem.loaded = (event.type == egret.Event.COMPLETE);
-            if (resItem.loaded) {
-                if (request instanceof egret.HttpRequest) {
-                    resItem.loaded = false;
-                    var imageUrl = this.analyzeConfig(resItem, request.response);
-                    if (imageUrl) {
-                        this.loadImage(imageUrl, data);
-                        this.recycler.push(request);
-                        return;
-                    }
-                }
-                else {
-                    var texture = new egret.Texture();
-                    texture._setBitmapData(request.data);
-                    this.analyzeBitmap(resItem, texture);
-                }
-            }
-            if (request instanceof egret.HttpRequest) {
-                this.recycler.push(request);
-            }
-            else {
-                this.recyclerIamge.push(request);
-            }
-            compFunc.call(data.thisObject, resItem);
-        };
-        /**
-         * 解析并缓存加载成功的配置文件
-         */
-        p.analyzeConfig = function (resItem, data) {
-            var name = resItem.name;
-            var config;
-            var imageUrl = "";
-            try {
-                var str = data;
-                config = JSON.parse(str);
-            }
-            catch (e) {
-                egret.$warn(1017, resItem.url, data);
-            }
-            if (config) {
-                this.sheetMap[name] = config;
-                imageUrl = this.getRelativePath(resItem.url, config["file"]);
-            }
-            return imageUrl;
-        };
-        /**
-         * 解析并缓存加载成功的位图数据
-         */
-        p.analyzeBitmap = function (resItem, texture) {
-            var name = resItem.name;
-            if (this.fileDic[name] || !texture) {
+        ResourceLoader.prototype.loadGroup = function (list, groupName, priority) {
+            if (priority === void 0) { priority = 0; }
+            if (this.itemListDic[groupName] || !groupName)
+                return;
+            if (!list || list.length == 0) {
+                egret.$warn(3201, groupName);
+                var event_1 = new RES.ResourceEvent(RES.ResourceEvent.GROUP_LOAD_ERROR);
+                event_1.groupName = groupName;
+                this.dispatchEvent(event_1);
                 return;
             }
-            var config = this.sheetMap[name];
-            delete this.sheetMap[name];
-            var targetName = resItem.data && resItem.data.subkeys ? "" : name;
-            var spriteSheet = this.parseSpriteSheet(texture, config, targetName);
-            this.fileDic[name] = spriteSheet;
+            if (this.priorityQueue[priority])
+                this.priorityQueue[priority].push(groupName);
+            else
+                this.priorityQueue[priority] = [groupName];
+            this.itemListDic[groupName] = list;
+            var length = list.length;
+            for (var i = 0; i < length; i++) {
+                var resItem = list[i];
+                resItem.groupName = groupName;
+            }
+            this.groupTotalDic[groupName] = list.length;
+            this.numLoadedDic[groupName] = 0;
+            this.next();
         };
         /**
-         * 获取相对位置
+         * 加载一个文件
+         * @method RES.ResourceLoader#loadItem
+         * @param resItem {egret.ResourceItem} 要加载的项
          */
-        p.getRelativePath = function (url, file) {
-            url = url.split("\\").join("/");
-            var params = url.match(/#.*|\?.*/);
-            var paramUrl = "";
-            if (params) {
-                paramUrl = params[0];
+        ResourceLoader.prototype.loadItem = function (resItem) {
+            this.lazyLoadList.push(resItem);
+            resItem.groupName = "";
+            this.next();
+        };
+        /**
+         * 加载下一项
+         */
+        ResourceLoader.prototype.next = function () {
+            while (this.loadingCount < this.thread) {
+                var resItem = this.getOneResourceItem();
+                if (!resItem)
+                    break;
+                this.loadingCount++;
+                if (resItem.loaded) {
+                    this.onItemComplete(resItem);
+                }
+                else {
+                    var analyzer = this.resInstance.$getAnalyzerByType(resItem.type);
+                    analyzer.loadFile(resItem, this.onItemComplete, this);
+                }
             }
-            var index = url.lastIndexOf("/");
-            if (index != -1) {
-                url = url.substring(0, index + 1) + file;
+        };
+        /**
+         * 获取下一个待加载项
+         */
+        ResourceLoader.prototype.getOneResourceItem = function () {
+            if (this.failedList.length > 0)
+                return this.failedList.shift();
+            var maxPriority = Number.NEGATIVE_INFINITY;
+            for (var p in this.priorityQueue) {
+                maxPriority = Math.max(maxPriority, p);
+            }
+            var queue = this.priorityQueue[maxPriority];
+            if (!queue || queue.length == 0) {
+                if (this.lazyLoadList.length == 0)
+                    return null;
+                //后请求的先加载，以便更快获取当前需要的资源
+                return this.lazyLoadList.pop();
+            }
+            var length = queue.length;
+            var list;
+            for (var i = 0; i < length; i++) {
+                if (this.queueIndex >= length)
+                    this.queueIndex = 0;
+                list = this.itemListDic[queue[this.queueIndex]];
+                if (list.length > 0)
+                    break;
+                this.queueIndex++;
+            }
+            if (list.length == 0)
+                return null;
+            return list.shift();
+        };
+        /**
+         * 加载结束
+         */
+        ResourceLoader.prototype.onItemComplete = function (resItem) {
+            this.loadingCount--;
+            var groupName = resItem.groupName;
+            if (!resItem.loaded) {
+                var times = this.retryTimesDic[resItem.name] || 1;
+                if (times > this.maxRetryTimes) {
+                    delete this.retryTimesDic[resItem.name];
+                    RES.ResourceEvent.dispatchResourceEvent(this.resInstance, RES.ResourceEvent.ITEM_LOAD_ERROR, groupName, resItem);
+                }
+                else {
+                    this.retryTimesDic[resItem.name] = times + 1;
+                    this.failedList.push(resItem);
+                    this.next();
+                    return;
+                }
+            }
+            if (groupName) {
+                this.numLoadedDic[groupName]++;
+                var itemsLoaded = this.numLoadedDic[groupName];
+                var itemsTotal = this.groupTotalDic[groupName];
+                if (!resItem.loaded) {
+                    this.groupErrorDic[groupName] = true;
+                }
+                RES.ResourceEvent.dispatchResourceEvent(this.resInstance, RES.ResourceEvent.GROUP_PROGRESS, groupName, resItem, itemsLoaded, itemsTotal);
+                if (itemsLoaded == itemsTotal) {
+                    var groupError = this.groupErrorDic[groupName];
+                    this.removeGroupName(groupName);
+                    delete this.groupTotalDic[groupName];
+                    delete this.numLoadedDic[groupName];
+                    delete this.itemListDic[groupName];
+                    delete this.groupErrorDic[groupName];
+                    if (groupError) {
+                        RES.ResourceEvent.dispatchResourceEvent(this, RES.ResourceEvent.GROUP_LOAD_ERROR, groupName);
+                    }
+                    else {
+                        RES.ResourceEvent.dispatchResourceEvent(this, RES.ResourceEvent.GROUP_COMPLETE, groupName);
+                    }
+                }
             }
             else {
-                url = file;
+                this.callBack.call(this.resInstance, resItem);
             }
-            return url + paramUrl;
+            this.next();
         };
-        p.parseSpriteSheet = function (texture, data, name) {
-            var frames = data.frames;
-            if (!frames) {
-                return null;
-            }
-            var spriteSheet = new egret.SpriteSheet(texture);
-            var textureMap = this.textureMap;
-            for (var subkey in frames) {
-                var config = frames[subkey];
-                var texture_1 = spriteSheet.createTexture(subkey, config.x, config.y, config.w, config.h, config.offX, config.offY, config.sourceW, config.sourceH);
-                if (config["scale9grid"]) {
-                    var str = config["scale9grid"];
-                    var list = str.split(",");
-                    texture_1["scale9Grid"] = new egret.Rectangle(parseInt(list[0]), parseInt(list[1]), parseInt(list[2]), parseInt(list[3]));
-                }
-                if (textureMap[subkey] == null) {
-                    textureMap[subkey] = texture_1;
-                    if (name) {
-                        this.addSubkey(subkey, name);
+        /**
+         * 从优先级队列中移除指定的组名
+         */
+        ResourceLoader.prototype.removeGroupName = function (groupName) {
+            for (var p in this.priorityQueue) {
+                var queue = this.priorityQueue[p];
+                var index = 0;
+                var found = false;
+                var length_1 = queue.length;
+                for (var i = 0; i < length_1; i++) {
+                    var name_1 = queue[i];
+                    if (name_1 == groupName) {
+                        queue.splice(index, 1);
+                        found = true;
+                        break;
                     }
+                    index++;
                 }
-            }
-            return spriteSheet;
-        };
-        p.destroyRes = function (name) {
-            var sheet = this.fileDic[name];
-            if (sheet) {
-                delete this.fileDic[name];
-                var texture = void 0;
-                for (var subkey in sheet._textureMap) {
-                    if (texture == null) {
-                        texture = sheet._textureMap[subkey];
-                        this.onResourceDestroy(texture);
-                        texture = null;
+                if (found) {
+                    if (queue.length == 0) {
+                        delete this.priorityQueue[p];
                     }
-                    delete this.textureMap[subkey];
+                    break;
                 }
-                if (sheet.dispose) {
-                    sheet.dispose();
-                }
-                return true;
-            }
-            return false;
-        };
-        p.loadImage = function (url, data) {
-            var loader = this.getImageLoader();
-            this.resItemDic[loader.hashCode] = data;
-            loader.load(RES.$getVirtualUrl(url));
-        };
-        p.getImageLoader = function () {
-            var loader = this.recyclerIamge.pop();
-            if (!loader) {
-                loader = new egret.ImageLoader();
-                loader.addEventListener(egret.Event.COMPLETE, this.onLoadFinish, this);
-                loader.addEventListener(egret.IOErrorEvent.IO_ERROR, this.onLoadFinish, this);
-            }
-            return loader;
-        };
-        p.onResourceDestroy = function (texture) {
-            if (texture) {
-                texture.dispose();
             }
         };
-        return SheetAnalyzer;
-    }(RES.BinAnalyzer));
-    RES.SheetAnalyzer = SheetAnalyzer;
-    egret.registerClass(SheetAnalyzer,'RES.SheetAnalyzer');
+        return ResourceLoader;
+    }(egret.EventDispatcher));
+    RES.ResourceLoader = ResourceLoader;
+    __reflect(ResourceLoader.prototype, "RES.ResourceLoader");
 })(RES || (RES = {}));
 //////////////////////////////////////////////////////////////////////////////////////
 //
@@ -1728,10 +1387,9 @@ var RES;
     var FontAnalyzer = (function (_super) {
         __extends(FontAnalyzer, _super);
         function FontAnalyzer() {
-            _super.call(this);
+            return _super.call(this) || this;
         }
-        var d = __define,c=FontAnalyzer,p=c.prototype;
-        p.analyzeConfig = function (resItem, data) {
+        FontAnalyzer.prototype.analyzeConfig = function (resItem, data) {
             var name = resItem.name;
             var config;
             var imageUrl = "";
@@ -1751,7 +1409,7 @@ var RES;
             this.sheetMap[name] = config;
             return imageUrl;
         };
-        p.analyzeBitmap = function (resItem, texture) {
+        FontAnalyzer.prototype.analyzeBitmap = function (resItem, texture) {
             var name = resItem.name;
             if (this.fileDic[name] || !texture) {
                 return;
@@ -1761,7 +1419,7 @@ var RES;
             var bitmapFont = new egret.BitmapFont(texture, config);
             this.fileDic[name] = bitmapFont;
         };
-        p.getTexturePath = function (url, fntText) {
+        FontAnalyzer.prototype.getTexturePath = function (url, fntText) {
             var file = "";
             var lines = fntText.split("\n");
             var pngLine = lines[2];
@@ -1781,7 +1439,7 @@ var RES;
             }
             return url;
         };
-        p.onResourceDestroy = function (font) {
+        FontAnalyzer.prototype.onResourceDestroy = function (font) {
             if (font) {
                 font.dispose();
             }
@@ -1789,7 +1447,7 @@ var RES;
         return FontAnalyzer;
     }(RES.SheetAnalyzer));
     RES.FontAnalyzer = FontAnalyzer;
-    egret.registerClass(FontAnalyzer,'RES.FontAnalyzer');
+    __reflect(FontAnalyzer.prototype, "RES.FontAnalyzer");
 })(RES || (RES = {}));
 //////////////////////////////////////////////////////////////////////////////////////
 //
@@ -1830,21 +1488,21 @@ var RES;
          * 构造函数
          */
         function SoundAnalyzer() {
-            _super.call(this);
+            var _this = _super.call(this) || this;
             /**
              * 字节流数据缓存字典
              */
-            this.soundDic = {};
+            _this.soundDic = {};
             /**
              * 加载项字典
              */
-            this.resItemDic = [];
+            _this.resItemDic = [];
+            return _this;
         }
-        var d = __define,c=SoundAnalyzer,p=c.prototype;
         /**
          * @inheritDoc
          */
-        p.loadFile = function (resItem, callBack, thisObject) {
+        SoundAnalyzer.prototype.loadFile = function (resItem, callBack, thisObject) {
             if (this.soundDic[resItem.name]) {
                 callBack.call(thisObject, resItem);
                 return;
@@ -1861,7 +1519,7 @@ var RES;
         /**
          * 一项加载结束
          */
-        p.onLoadFinish = function (event) {
+        SoundAnalyzer.prototype.onLoadFinish = function (event) {
             var sound = (event.$target);
             sound.removeEventListener(egret.Event.COMPLETE, this.onLoadFinish, this);
             sound.removeEventListener(egret.IOErrorEvent.IO_ERROR, this.onLoadFinish, this);
@@ -1878,7 +1536,7 @@ var RES;
         /**
          * 解析并缓存加载成功的数据
          */
-        p.analyzeData = function (resItem, data) {
+        SoundAnalyzer.prototype.analyzeData = function (resItem, data) {
             var name = resItem.name;
             if (this.soundDic[name] || !data) {
                 return;
@@ -1888,19 +1546,19 @@ var RES;
         /**
          * @inheritDoc
          */
-        p.getRes = function (name) {
+        SoundAnalyzer.prototype.getRes = function (name) {
             return this.soundDic[name];
         };
         /**
          * @inheritDoc
          */
-        p.hasRes = function (name) {
+        SoundAnalyzer.prototype.hasRes = function (name) {
             return !!this.getRes(name);
         };
         /**
          * @inheritDoc
          */
-        p.destroyRes = function (name) {
+        SoundAnalyzer.prototype.destroyRes = function (name) {
             if (this.soundDic[name]) {
                 delete this.soundDic[name];
                 return true;
@@ -1910,7 +1568,7 @@ var RES;
         return SoundAnalyzer;
     }(RES.AnalyzerBase));
     RES.SoundAnalyzer = SoundAnalyzer;
-    egret.registerClass(SoundAnalyzer,'RES.SoundAnalyzer');
+    __reflect(SoundAnalyzer.prototype, "RES.SoundAnalyzer");
 })(RES || (RES = {}));
 //////////////////////////////////////////////////////////////////////////////////////
 //
@@ -1948,14 +1606,14 @@ var RES;
     var XMLAnalyzer = (function (_super) {
         __extends(XMLAnalyzer, _super);
         function XMLAnalyzer() {
-            _super.call(this);
-            this._dataFormat = egret.HttpResponseType.TEXT;
+            var _this = _super.call(this) || this;
+            _this._dataFormat = egret.HttpResponseType.TEXT;
+            return _this;
         }
-        var d = __define,c=XMLAnalyzer,p=c.prototype;
         /**
          * 解析并缓存加载成功的数据
          */
-        p.analyzeData = function (resItem, data) {
+        XMLAnalyzer.prototype.analyzeData = function (resItem, data) {
             var name = resItem.name;
             if (this.fileDic[name] || !data) {
                 return;
@@ -1971,7 +1629,7 @@ var RES;
         return XMLAnalyzer;
     }(RES.BinAnalyzer));
     RES.XMLAnalyzer = XMLAnalyzer;
-    egret.registerClass(XMLAnalyzer,'RES.XMLAnalyzer');
+    __reflect(XMLAnalyzer.prototype, "RES.XMLAnalyzer");
 })(RES || (RES = {}));
 //////////////////////////////////////////////////////////////////////////////////////
 //
@@ -2003,6 +1661,492 @@ var RES;
 //////////////////////////////////////////////////////////////////////////////////////
 var RES;
 (function (RES) {
+    /**
+     * @private
+     */
+    var ImageAnalyzer = (function (_super) {
+        __extends(ImageAnalyzer, _super);
+        /**
+         * 构造函数
+         */
+        function ImageAnalyzer() {
+            var _this = _super.call(this) || this;
+            /**
+             * 字节流数据缓存字典
+             */
+            _this.fileDic = {};
+            /**
+             * 加载项字典
+             */
+            _this.resItemDic = [];
+            /**
+             * Loader对象池
+             */
+            _this.recycler = [];
+            return _this;
+        }
+        /**
+         * @inheritDoc
+         */
+        ImageAnalyzer.prototype.loadFile = function (resItem, compFunc, thisObject) {
+            if (this.fileDic[resItem.name]) {
+                compFunc.call(thisObject, resItem);
+                return;
+            }
+            var loader = this.getLoader();
+            this.resItemDic[loader.$hashCode] = { item: resItem, func: compFunc, thisObject: thisObject };
+            loader.load(RES.$getVirtualUrl(resItem.url));
+        };
+        /**
+         * 获取一个Loader对象
+         */
+        ImageAnalyzer.prototype.getLoader = function () {
+            var loader = this.recycler.pop();
+            if (!loader) {
+                loader = new egret.ImageLoader();
+                loader.addEventListener(egret.Event.COMPLETE, this.onLoadFinish, this);
+                loader.addEventListener(egret.IOErrorEvent.IO_ERROR, this.onLoadFinish, this);
+            }
+            return loader;
+        };
+        /**
+         * 一项加载结束
+         */
+        ImageAnalyzer.prototype.onLoadFinish = function (event) {
+            var request = (event.$target);
+            var data = this.resItemDic[request.$hashCode];
+            delete this.resItemDic[request.$hashCode];
+            var resItem = data.item;
+            var compFunc = data.func;
+            resItem.loaded = (event.$type == egret.Event.COMPLETE);
+            if (resItem.loaded) {
+                var texture = new egret.Texture();
+                texture._setBitmapData(request.data);
+                this.analyzeData(resItem, texture);
+            }
+            this.recycler.push(request);
+            compFunc.call(data.thisObject, resItem);
+        };
+        /**
+         * 解析并缓存加载成功的数据
+         */
+        ImageAnalyzer.prototype.analyzeData = function (resItem, texture) {
+            var name = resItem.name;
+            if (this.fileDic[name] || !texture) {
+                return;
+            }
+            this.fileDic[name] = texture;
+            var config = resItem.data;
+            if (config && config["scale9grid"]) {
+                var str = config["scale9grid"];
+                var list = str.split(",");
+                texture["scale9Grid"] = new egret.Rectangle(parseInt(list[0]), parseInt(list[1]), parseInt(list[2]), parseInt(list[3]));
+            }
+        };
+        /**
+         * @inheritDoc
+         */
+        ImageAnalyzer.prototype.getRes = function (name) {
+            return this.fileDic[name];
+        };
+        /**
+         * @inheritDoc
+         */
+        ImageAnalyzer.prototype.hasRes = function (name) {
+            var res = this.getRes(name);
+            return res != null;
+        };
+        /**
+         * @inheritDoc
+         */
+        ImageAnalyzer.prototype.destroyRes = function (name) {
+            if (this.fileDic[name]) {
+                this.onResourceDestroy(this.fileDic[name]);
+                delete this.fileDic[name];
+                return true;
+            }
+            return false;
+        };
+        ImageAnalyzer.prototype.onResourceDestroy = function (texture) {
+            texture.dispose();
+        };
+        return ImageAnalyzer;
+    }(RES.AnalyzerBase));
+    RES.ImageAnalyzer = ImageAnalyzer;
+    __reflect(ImageAnalyzer.prototype, "RES.ImageAnalyzer");
+})(RES || (RES = {}));
+//////////////////////////////////////////////////////////////////////////////////////
+//
+//  Copyright (c) 2014-present, Egret Technology.
+//  All rights reserved.
+//  Redistribution and use in source and binary forms, with or without
+//  modification, are permitted provided that the following conditions are met:
+//
+//     * Redistributions of source code must retain the above copyright
+//       notice, this list of conditions and the following disclaimer.
+//     * Redistributions in binary form must reproduce the above copyright
+//       notice, this list of conditions and the following disclaimer in the
+//       documentation and/or other materials provided with the distribution.
+//     * Neither the name of the Egret nor the
+//       names of its contributors may be used to endorse or promote products
+//       derived from this software without specific prior written permission.
+//
+//  THIS SOFTWARE IS PROVIDED BY EGRET AND CONTRIBUTORS "AS IS" AND ANY EXPRESS
+//  OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES
+//  OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED.
+//  IN NO EVENT SHALL EGRET AND CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT,
+//  INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT
+//  LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES;LOSS OF USE, DATA,
+//  OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF
+//  LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING
+//  NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE,
+//  EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+//
+//////////////////////////////////////////////////////////////////////////////////////
+var RES;
+(function (RES) {
+    /**
+     * @class RES.ResourceConfig
+     * @classdesc
+     * @private
+     */
+    var ResourceConfig = (function () {
+        function ResourceConfig() {
+            /**
+             * 一级键名字典
+             */
+            this.keyMap = {};
+            /**
+             * 加载组字典
+             */
+            this.groupDic = {};
+            RES["configInstance"] = this;
+        }
+        /**
+         * 根据组名获取组加载项列表
+         * @method RES.ResourceConfig#getGroupByName
+         * @param name {string} 组名
+         * @returns {Array<egret.ResourceItem>}
+         */
+        ResourceConfig.prototype.getGroupByName = function (name) {
+            var group = new Array();
+            if (!this.groupDic[name])
+                return group;
+            var list = this.groupDic[name];
+            var length = list.length;
+            for (var i = 0; i < length; i++) {
+                var obj = list[i];
+                group.push(this.parseResourceItem(obj));
+            }
+            return group;
+        };
+        /**
+         * 根据组名获取原始的组加载项列表
+         * @method RES.ResourceConfig#getRawGroupByName
+         * @param name {string} 组名
+         * @returns {any[]}
+         */
+        ResourceConfig.prototype.getRawGroupByName = function (name) {
+            if (this.groupDic[name])
+                return this.groupDic[name];
+            return [];
+        };
+        /**
+         * 创建自定义的加载资源组,注意：此方法仅在资源配置文件加载完成后执行才有效。
+         * 可以监听ResourceEvent.CONFIG_COMPLETE事件来确认配置加载完成。
+         * @method RES.ResourceConfig#createGroup
+         * @param name {string} 要创建的加载资源组的组名
+         * @param keys {egret.string[]} 要包含的键名列表，key对应配置文件里的name属性或sbuKeys属性的一项或一个资源组名。
+         * @param override {boolean} 是否覆盖已经存在的同名资源组,默认false。
+         * @returns {boolean}
+         */
+        ResourceConfig.prototype.createGroup = function (name, keys, override) {
+            if (override === void 0) { override = false; }
+            if ((!override && this.groupDic[name]) || !keys || keys.length == 0)
+                return false;
+            var groupDic = this.groupDic;
+            var group = [];
+            var length = keys.length;
+            for (var i = 0; i < length; i++) {
+                var key = keys[i];
+                var g = groupDic[key];
+                if (g) {
+                    var len = g.length;
+                    for (var j = 0; j < len; j++) {
+                        var item = g[j];
+                        if (group.indexOf(item) == -1)
+                            group.push(item);
+                    }
+                }
+                else {
+                    var item = this.keyMap[key];
+                    if (item) {
+                        if (group.indexOf(item) == -1)
+                            group.push(item);
+                    }
+                    else {
+                        egret.$warn(3200, key);
+                    }
+                }
+            }
+            if (group.length == 0)
+                return false;
+            this.groupDic[name] = group;
+            return true;
+        };
+        /**
+         * 解析一个配置文件
+         * @method RES.ResourceConfig#parseConfig
+         * @param data {any} 配置文件数据
+         * @param folder {string} 加载项的路径前缀。
+         */
+        ResourceConfig.prototype.parseConfig = function (data, folder) {
+            if (!data)
+                return;
+            var resources = data["resources"];
+            if (resources) {
+                var length_2 = resources.length;
+                for (var i = 0; i < length_2; i++) {
+                    var item = resources[i];
+                    var url = item.url;
+                    if (url && url.indexOf("://") == -1)
+                        item.url = folder + url;
+                    this.addItemToKeyMap(item);
+                }
+            }
+            var groups = data["groups"];
+            if (groups) {
+                var length_3 = groups.length;
+                for (var i = 0; i < length_3; i++) {
+                    var group = groups[i];
+                    var list = [];
+                    var keys = group.keys.split(",");
+                    var l = keys.length;
+                    for (var j = 0; j < l; j++) {
+                        var name_2 = keys[j].trim();
+                        var item = this.keyMap[name_2];
+                        if (item && list.indexOf(item) == -1) {
+                            list.push(item);
+                        }
+                    }
+                    this.groupDic[group.name] = list;
+                }
+            }
+        };
+        /**
+         * 添加一个二级键名到配置列表。
+         * @method RES.ResourceConfig#addSubkey
+         * @param subkey {string} 要添加的二级键名
+         * @param name {string} 二级键名所属的资源name属性
+         */
+        ResourceConfig.prototype.addSubkey = function (subkey, name) {
+            var item = this.keyMap[name];
+            if (item && !this.keyMap[subkey]) {
+                this.keyMap[subkey] = item;
+            }
+        };
+        /**
+         * 添加一个加载项数据到列表
+         */
+        ResourceConfig.prototype.addItemToKeyMap = function (item) {
+            if (!this.keyMap[item.name])
+                this.keyMap[item.name] = item;
+            if (item.hasOwnProperty("subkeys")) {
+                var subkeys = (item.subkeys).split(",");
+                item.subkeys = subkeys;
+                var length_4 = subkeys.length;
+                for (var i = 0; i < length_4; i++) {
+                    var key = subkeys[i];
+                    if (this.keyMap[key] != null)
+                        continue;
+                    this.keyMap[key] = item;
+                }
+            }
+        };
+        /**
+         * 获取加载项的name属性
+         * @method RES.ResourceConfig#getType
+         * @param key {string} 对应配置文件里的name属性或sbuKeys属性的一项。
+         * @returns {string}
+         */
+        ResourceConfig.prototype.getName = function (key) {
+            var data = this.keyMap[key];
+            return data ? data.name : "";
+        };
+        /**
+         * 获取加载项类型。
+         * @method RES.ResourceConfig#getType
+         * @param key {string} 对应配置文件里的name属性或sbuKeys属性的一项。
+         * @returns {string}
+         */
+        ResourceConfig.prototype.getType = function (key) {
+            var data = this.keyMap[key];
+            return data ? data.type : "";
+        };
+        ResourceConfig.prototype.getRawResourceItem = function (key) {
+            return this.keyMap[key];
+        };
+        /**
+         * 获取加载项信息对象
+         * @method RES.ResourceConfig#getResourceItem
+         * @param key {string} 对应配置文件里的key属性或sbuKeys属性的一项。
+         * @returns {egret.ResourceItem}
+         */
+        ResourceConfig.prototype.getResourceItem = function (key) {
+            var data = this.keyMap[key];
+            if (data)
+                return this.parseResourceItem(data);
+            return null;
+        };
+        /**
+         * 转换Object数据为ResourceItem对象
+         */
+        ResourceConfig.prototype.parseResourceItem = function (data) {
+            var resItem = new RES.ResourceItem(data.name, data.url, data.type);
+            resItem.data = data;
+            return resItem;
+        };
+        return ResourceConfig;
+    }());
+    RES.ResourceConfig = ResourceConfig;
+    __reflect(ResourceConfig.prototype, "RES.ResourceConfig");
+})(RES || (RES = {}));
+//////////////////////////////////////////////////////////////////////////////////////
+//
+//  Copyright (c) 2014-present, Egret Technology.
+//  All rights reserved.
+//  Redistribution and use in source and binary forms, with or without
+//  modification, are permitted provided that the following conditions are met:
+//
+//     * Redistributions of source code must retain the above copyright
+//       notice, this list of conditions and the following disclaimer.
+//     * Redistributions in binary form must reproduce the above copyright
+//       notice, this list of conditions and the following disclaimer in the
+//       documentation and/or other materials provided with the distribution.
+//     * Neither the name of the Egret nor the
+//       names of its contributors may be used to endorse or promote products
+//       derived from this software without specific prior written permission.
+//
+//  THIS SOFTWARE IS PROVIDED BY EGRET AND CONTRIBUTORS "AS IS" AND ANY EXPRESS
+//  OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES
+//  OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED.
+//  IN NO EVENT SHALL EGRET AND CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT,
+//  INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT
+//  LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES;LOSS OF USE, DATA,
+//  OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF
+//  LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING
+//  NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE,
+//  EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+//
+//////////////////////////////////////////////////////////////////////////////////////
+var RES;
+(function (RES) {
+    var native;
+    (function (native) {
+        /**
+         * @private
+         */
+        var NativeVersionController = (function () {
+            function NativeVersionController() {
+                this._versionInfo = {};
+                this._versionPath = "";
+                this._localFileArr = [];
+            }
+            NativeVersionController.prototype.fetchVersion = function (callback) {
+                if (true) {
+                    callback.onSuccess(null);
+                    return;
+                }
+                var self = this;
+                self._versionPath = "all.manifest";
+                self._versionInfo = self.getLocalData(self._versionPath);
+                if (self._versionInfo == null) {
+                    egret.callLater(function () {
+                        callback.onFail(1, null);
+                    }, self);
+                    return;
+                }
+                var count = 0;
+                var loadOver = function (paths) {
+                    if (paths) {
+                        for (var i = 0; i < paths.length; i++) {
+                            if (paths[i] && paths[i] != "") {
+                                self._localFileArr.push("resource/" + paths[i]);
+                            }
+                        }
+                    }
+                    count++;
+                    if (count == 2) {
+                        callback.onSuccess(null);
+                    }
+                };
+                self.getList(loadOver, "assets", "resource");
+                self.getList(loadOver, "update", "resource");
+            };
+            NativeVersionController.prototype.getList = function (callback, type, root) {
+                if (root === void 0) { root = ""; }
+                var promise = egret.PromiseObject.create();
+                promise.onSuccessFunc = function (paths) {
+                    callback(paths);
+                };
+                promise.onErrorFunc = function () {
+                    console.error("list files error");
+                };
+                if (type == "assets") {
+                    egret_native.Game.listResource(root, promise);
+                }
+                else {
+                    egret_native.Game.listUpdate(root, promise);
+                }
+            };
+            /**
+             * 获取所有有变化的文件
+             * @returns {any[]}
+             */
+            NativeVersionController.prototype.getChangeList = function () {
+                var temp = [];
+                var localFileArr = this._localFileArr;
+                for (var key in this._versionInfo) {
+                    if (localFileArr.indexOf(this.getVirtualUrl(key)) < 0) {
+                        temp.push({ "url": this.getVirtualUrl(key), "size": this._versionInfo[key]["s"] });
+                    }
+                }
+                return temp;
+            };
+            NativeVersionController.prototype.getVirtualUrl = function (url) {
+                if (true) {
+                    return url;
+                }
+                if (this._versionInfo && this._versionInfo[url]) {
+                    return "resource/" + this._versionInfo[url]["v"].substring(0, 2) + "/" + this._versionInfo[url]["v"] + "_" + this._versionInfo[url]["s"] + "." + url.substring(url.lastIndexOf(".") + 1);
+                }
+                else {
+                    return url;
+                }
+            };
+            NativeVersionController.prototype.getLocalData = function (filePath) {
+                if (egret_native.readUpdateFileSync && egret_native.readResourceFileSync) {
+                    //先取更新目录
+                    var content = egret_native.readUpdateFileSync(filePath);
+                    if (content != null) {
+                        return JSON.parse(content);
+                    }
+                    //再取资源目录
+                    content = egret_native.readResourceFileSync(filePath);
+                    if (content != null) {
+                        return JSON.parse(content);
+                    }
+                }
+                return null;
+            };
+            return NativeVersionController;
+        }());
+        native.NativeVersionController = NativeVersionController;
+        __reflect(NativeVersionController.prototype, "RES.native.NativeVersionController", ["RES.VersionController", "RES.IVersionController"]);
+        if (egret.Capabilities.runtimeType == egret.RuntimeType.NATIVE) {
+            RES.VersionController = NativeVersionController;
+        }
+    })(native = RES.native || (RES.native = {}));
 })(RES || (RES = {}));
 //////////////////////////////////////////////////////////////////////////////////////
 //
@@ -2042,11 +2186,11 @@ var RES;
         var Html5VersionController = (function (_super) {
             __extends(Html5VersionController, _super);
             function Html5VersionController() {
-                _super.call(this);
-                this._versionInfo = {};
+                var _this = _super.call(this) || this;
+                _this._versionInfo = {};
+                return _this;
             }
-            var d = __define,c=Html5VersionController,p=c.prototype;
-            p.fetchVersion = function (callback) {
+            Html5VersionController.prototype.fetchVersion = function (callback) {
                 callback.onSuccess(null);
                 return;
                 /*
@@ -2090,10 +2234,10 @@ var RES;
              * 获取所有有变化的文件
              * @returns {any[]}
              */
-            p.getChangeList = function () {
+            Html5VersionController.prototype.getChangeList = function () {
                 return [];
             };
-            p.getVirtualUrl = function (url) {
+            Html5VersionController.prototype.getVirtualUrl = function (url) {
                 return url;
                 /*
     
@@ -2114,149 +2258,11 @@ var RES;
             return Html5VersionController;
         }(egret.EventDispatcher));
         web.Html5VersionController = Html5VersionController;
-        egret.registerClass(Html5VersionController,'RES.web.Html5VersionController',["RES.VersionController","RES.IVersionController"]);
+        __reflect(Html5VersionController.prototype, "RES.web.Html5VersionController", ["RES.VersionController", "RES.IVersionController"]);
         if (egret.Capabilities.runtimeType == egret.RuntimeType.WEB) {
             RES.VersionController = Html5VersionController;
         }
     })(web = RES.web || (RES.web = {}));
-})(RES || (RES = {}));
-//////////////////////////////////////////////////////////////////////////////////////
-//
-//  Copyright (c) 2014-present, Egret Technology.
-//  All rights reserved.
-//  Redistribution and use in source and binary forms, with or without
-//  modification, are permitted provided that the following conditions are met:
-//
-//     * Redistributions of source code must retain the above copyright
-//       notice, this list of conditions and the following disclaimer.
-//     * Redistributions in binary form must reproduce the above copyright
-//       notice, this list of conditions and the following disclaimer in the
-//       documentation and/or other materials provided with the distribution.
-//     * Neither the name of the Egret nor the
-//       names of its contributors may be used to endorse or promote products
-//       derived from this software without specific prior written permission.
-//
-//  THIS SOFTWARE IS PROVIDED BY EGRET AND CONTRIBUTORS "AS IS" AND ANY EXPRESS
-//  OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES
-//  OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED.
-//  IN NO EVENT SHALL EGRET AND CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT,
-//  INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT
-//  LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES;LOSS OF USE, DATA,
-//  OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF
-//  LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING
-//  NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE,
-//  EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
-//
-//////////////////////////////////////////////////////////////////////////////////////
-var RES;
-(function (RES) {
-    var native;
-    (function (native) {
-        /**
-         * @private
-         */
-        var NativeVersionController = (function () {
-            function NativeVersionController() {
-                this._versionInfo = {};
-                this._versionPath = "";
-                this._localFileArr = [];
-            }
-            var d = __define,c=NativeVersionController,p=c.prototype;
-            p.fetchVersion = function (callback) {
-                if (DEBUG) {
-                    callback.onSuccess(null);
-                    return;
-                }
-                var self = this;
-                self._versionPath = "all.manifest";
-                self._versionInfo = self.getLocalData(self._versionPath);
-                if (self._versionInfo == null) {
-                    egret.callLater(function () {
-                        callback.onFail(1, null);
-                    }, self);
-                    return;
-                }
-                var count = 0;
-                var loadOver = function (paths) {
-                    if (paths) {
-                        for (var i = 0; i < paths.length; i++) {
-                            if (paths[i] && paths[i] != "") {
-                                self._localFileArr.push("resource/" + paths[i]);
-                            }
-                        }
-                    }
-                    count++;
-                    if (count == 2) {
-                        callback.onSuccess(null);
-                    }
-                };
-                self.getList(loadOver, "assets", "resource");
-                self.getList(loadOver, "update", "resource");
-            };
-            p.getList = function (callback, type, root) {
-                if (root === void 0) { root = ""; }
-                var promise = egret.PromiseObject.create();
-                promise.onSuccessFunc = function (paths) {
-                    callback(paths);
-                };
-                promise.onErrorFunc = function () {
-                    console.error("list files error");
-                };
-                if (type == "assets") {
-                    egret_native.Game.listResource(root, promise);
-                }
-                else {
-                    egret_native.Game.listUpdate(root, promise);
-                }
-            };
-            /**
-             * 获取所有有变化的文件
-             * @returns {any[]}
-             */
-            p.getChangeList = function () {
-                var temp = [];
-                var localFileArr = this._localFileArr;
-                for (var key in this._versionInfo) {
-                    if (localFileArr.indexOf(this.getVirtualUrl(key)) < 0) {
-                        temp.push({ "url": this.getVirtualUrl(key), "size": this._versionInfo[key]["s"] });
-                    }
-                }
-                return temp;
-            };
-            p.getVirtualUrl = function (url) {
-                if (DEBUG) {
-                    return url;
-                }
-                if (this._versionInfo && this._versionInfo[url]) {
-                    return "resource/" + this._versionInfo[url]["v"].substring(0, 2) + "/" + this._versionInfo[url]["v"] + "_" + this._versionInfo[url]["s"] + "." + url.substring(url.lastIndexOf(".") + 1);
-                }
-                else {
-                    return url;
-                }
-            };
-            p.getLocalData = function (filePath) {
-                if (egret_native.readUpdateFileSync && egret_native.readResourceFileSync) {
-                    //先取更新目录
-                    var content = egret_native.readUpdateFileSync(filePath);
-                    if (content != null) {
-                        return JSON.parse(content);
-                    }
-                    //再取资源目录
-                    content = egret_native.readResourceFileSync(filePath);
-                    if (content != null) {
-                        return JSON.parse(content);
-                    }
-                }
-                return null;
-            };
-            return NativeVersionController;
-        }());
-        native.NativeVersionController = NativeVersionController;
-        egret.registerClass(NativeVersionController,'RES.native.NativeVersionController',["RES.VersionController","RES.IVersionController"]);
-        if (egret.Capabilities.runtimeType == egret.RuntimeType.NATIVE) {
-            RES.VersionController = NativeVersionController;
-        }
-    })(native = RES.native || (RES.native = {}));
 })(RES || (RES = {}));
 //////////////////////////////////////////////////////////////////////////////////////
 //
@@ -2792,40 +2798,40 @@ var RES;
          * @private
          */
         function Resource() {
-            _super.call(this);
+            var _this = _super.call(this) || this;
             /**
              * 解析器字典
              */
-            this.analyzerDic = {};
-            this.analyzerClassMap = {};
-            this.configItemList = [];
-            this.callLaterFlag = false;
+            _this.analyzerDic = {};
+            _this.analyzerClassMap = {};
+            _this.configItemList = [];
+            _this.callLaterFlag = false;
             /**
              * 配置文件加载解析完成标志
              */
-            this.configComplete = false;
+            _this.configComplete = false;
             /**
              * 已经加载过组名列表
              */
-            this.loadedGroups = [];
-            this.groupNameList = [];
+            _this.loadedGroups = [];
+            _this.groupNameList = [];
             /**
              * 异步获取资源参数缓存字典
              */
-            this.asyncDic = {};
-            this._loadedUrlTypes = {};
-            this.init();
+            _this.asyncDic = {};
+            _this._loadedUrlTypes = {};
+            _this.init();
+            return _this;
         }
-        var d = __define,c=Resource,p=c.prototype;
         /**
          * 根据type获取对应的文件解析库
          */
-        p.$getAnalyzerByType = function (type) {
+        Resource.prototype.$getAnalyzerByType = function (type) {
             var analyzer = this.analyzerDic[type];
             if (!analyzer) {
                 var clazz = this.analyzerClassMap[type];
                 if (!clazz) {
-                    if (DEBUG) {
+                    if (true) {
                         egret.$error(3203, type);
                     }
                     return null;
@@ -2839,16 +2845,16 @@ var RES;
          * @param type 文件类型字符串，例如：bin,text,image,json等。
          * @param analyzerClass 自定义解析器的类定义
          */
-        p.registerAnalyzer = function (type, analyzerClass) {
+        Resource.prototype.registerAnalyzer = function (type, analyzerClass) {
             this.analyzerClassMap[type] = analyzerClass;
         };
-        p.$registerVersionController = function (vcs) {
+        Resource.prototype.$registerVersionController = function (vcs) {
             this.vcs = vcs;
         };
         /**
          * 初始化
          */
-        p.init = function () {
+        Resource.prototype.init = function () {
             this.vcs = new RES.VersionController();
             var analyzerClassMap = this.analyzerClassMap;
             analyzerClassMap[RES.ResourceItem.TYPE_BIN] = RES.BinAnalyzer;
@@ -2873,7 +2879,7 @@ var RES;
          * @param resourceRoot {string}
          * @param type {string}
          */
-        p.loadConfig = function (url, resourceRoot, type) {
+        Resource.prototype.loadConfig = function (url, resourceRoot, type) {
             if (type === void 0) { type = "json"; }
             var configItem = { url: url, resourceRoot: resourceRoot, type: type };
             this.configItemList.push(configItem);
@@ -2882,7 +2888,7 @@ var RES;
                 this.callLaterFlag = true;
             }
         };
-        p.startLoadConfig = function () {
+        Resource.prototype.startLoadConfig = function () {
             var _this = this;
             this.callLaterFlag = false;
             var configList = this.configItemList;
@@ -2916,7 +2922,7 @@ var RES;
          * @param name {string}
          * @returns {boolean}
          */
-        p.isGroupLoaded = function (name) {
+        Resource.prototype.isGroupLoaded = function (name) {
             return this.loadedGroups.indexOf(name) != -1;
         };
         /**
@@ -2925,7 +2931,7 @@ var RES;
          * @param name {string}
          * @returns {Array<egret.ResourceItem>}
          */
-        p.getGroupByName = function (name) {
+        Resource.prototype.getGroupByName = function (name) {
             return this.resConfig.getGroupByName(name);
         };
         /**
@@ -2934,7 +2940,7 @@ var RES;
          * @param name {string}
          * @param priority {number}
          */
-        p.loadGroup = function (name, priority) {
+        Resource.prototype.loadGroup = function (name, priority) {
             if (priority === void 0) { priority = 0; }
             if (this.loadedGroups.indexOf(name) != -1) {
                 RES.ResourceEvent.dispatchResourceEvent(this, RES.ResourceEvent.GROUP_COMPLETE, name);
@@ -2959,7 +2965,7 @@ var RES;
          * @param override {boolean} 是否覆盖已经存在的同名资源组,默认false。
          * @returns {boolean}
          */
-        p.createGroup = function (name, keys, override) {
+        Resource.prototype.createGroup = function (name, keys, override) {
             if (override === void 0) { override = false; }
             if (override) {
                 var index = this.loadedGroups.indexOf(name);
@@ -2972,7 +2978,7 @@ var RES;
         /**
          * 队列加载完成事件
          */
-        p.onGroupComp = function (event) {
+        Resource.prototype.onGroupComp = function (event) {
             if (event.groupName == Resource.GROUP_CONFIG) {
                 var length_5 = this.loadingConfigList.length;
                 for (var i = 0; i < length_5; i++) {
@@ -2995,7 +3001,7 @@ var RES;
         /**
          * 启动延迟的组加载
          */
-        p.loadDelayGroups = function () {
+        Resource.prototype.loadDelayGroups = function () {
             var groupNameList = this.groupNameList;
             this.groupNameList = [];
             var length = groupNameList.length;
@@ -3007,7 +3013,7 @@ var RES;
         /**
          * 队列加载失败事件
          */
-        p.onGroupError = function (event) {
+        Resource.prototype.onGroupError = function (event) {
             if (event.groupName == Resource.GROUP_CONFIG) {
                 this.loadingConfigList = null;
                 RES.ResourceEvent.dispatchResourceEvent(this, RES.ResourceEvent.CONFIG_LOAD_ERROR);
@@ -3022,7 +3028,7 @@ var RES;
          * @param key {string} 对应配置文件里的name属性或sbuKeys属性的一项。
          * @returns {boolean}
          */
-        p.hasRes = function (key) {
+        Resource.prototype.hasRes = function (key) {
             var type = this.resConfig.getType(key);
             if (type == "") {
                 var prefix = RES.AnalyzerBase.getStringTail(key);
@@ -3038,7 +3044,7 @@ var RES;
          * @param data {any} 配置文件数据，请参考resource.json的配置文件格式。传入对应的json对象即可。
          * @param folder {string} 加载项的路径前缀。
          */
-        p.parseConfig = function (data, folder) {
+        Resource.prototype.parseConfig = function (data, folder) {
             this.resConfig.parseConfig(data, folder);
             if (!this.configComplete && !this.loadingConfigList) {
                 this.configComplete = true;
@@ -3051,7 +3057,7 @@ var RES;
          * @param key {string}
          * @returns {any}
          */
-        p.getRes = function (key) {
+        Resource.prototype.getRes = function (key) {
             var type = this.resConfig.getType(key);
             if (type == "") {
                 var prefix = RES.AnalyzerBase.getStringPrefix(key);
@@ -3070,7 +3076,7 @@ var RES;
          * @param compFunc {Function} 回调函数。示例：compFunc(data,url):void。
          * @param thisObject {any}
          */
-        p.getResAsync = function (key, compFunc, thisObject) {
+        Resource.prototype.getResAsync = function (key, compFunc, thisObject) {
             var type = this.resConfig.getType(key);
             var name = this.resConfig.getName(key);
             if (type == "") {
@@ -3105,7 +3111,7 @@ var RES;
          * @param thisObject {any}
          * @param type {string}
          */
-        p.getResByUrl = function (url, compFunc, thisObject, type) {
+        Resource.prototype.getResByUrl = function (url, compFunc, thisObject, type) {
             if (type === void 0) { type = ""; }
             if (!url) {
                 egret.$callAsync(compFunc, thisObject);
@@ -3137,7 +3143,7 @@ var RES;
         /**
          * 通过url获取文件类型
          */
-        p.getTypeByUrl = function (url) {
+        Resource.prototype.getTypeByUrl = function (url) {
             var suffix = url.substr(url.lastIndexOf(".") + 1);
             if (suffix) {
                 suffix = suffix.toLowerCase();
@@ -3182,7 +3188,7 @@ var RES;
         /**
          * 一个加载项加载完成
          */
-        p.onResourceItemComp = function (item) {
+        Resource.prototype.onResourceItemComp = function (item) {
             var argsList = this.asyncDic[item.name];
             delete this.asyncDic[item.name];
             var analyzer = this.$getAnalyzerByType(item.type);
@@ -3200,7 +3206,7 @@ var RES;
          * @param force {boolean} 销毁一个资源组时其他资源组有同样资源情况资源是否会被删除，默认值true
          * @returns {boolean}
          */
-        p.destroyRes = function (name, force) {
+        Resource.prototype.destroyRes = function (name, force) {
             if (force === void 0) { force = true; }
             var group = this.resConfig.getRawGroupByName(name);
             if (group && group.length > 0) {
@@ -3242,7 +3248,7 @@ var RES;
                 return result;
             }
         };
-        p.removeLoadedGroupsByItemName = function (name) {
+        Resource.prototype.removeLoadedGroupsByItemName = function (name) {
             var loadedGroups = this.loadedGroups;
             var loadedGroupLength = loadedGroups.length;
             for (var i = 0; i < loadedGroupLength; i++) {
@@ -3259,7 +3265,7 @@ var RES;
                 }
             }
         };
-        p.isResInLoadedGroup = function (name) {
+        Resource.prototype.isResInLoadedGroup = function (name) {
             var loadedGroups = this.loadedGroups;
             var loadedGroupLength = loadedGroups.length;
             for (var i = 0; i < loadedGroupLength; i++) {
@@ -3279,7 +3285,7 @@ var RES;
          * @method RES.setMaxLoadingThread
          * @param thread {number} 要设置的并发加载数。
          */
-        p.setMaxLoadingThread = function (thread) {
+        Resource.prototype.setMaxLoadingThread = function (thread) {
             if (thread < 1) {
                 thread = 1;
             }
@@ -3289,17 +3295,17 @@ var RES;
          * 设置资源加载失败时的重试次数。
          * @param retry 要设置的重试次数。
          */
-        p.setMaxRetryTimes = function (retry) {
+        Resource.prototype.setMaxRetryTimes = function (retry) {
             retry = Math.max(retry, 0);
             this.resLoader.maxRetryTimes = retry;
         };
-        /**
-         * 配置文件组组名
-         */
-        Resource.GROUP_CONFIG = "RES__CONFIG";
         return Resource;
     }(egret.EventDispatcher));
-    egret.registerClass(Resource,'Resource');
+    /**
+     * 配置文件组组名
+     */
+    Resource.GROUP_CONFIG = "RES__CONFIG";
+    __reflect(Resource.prototype, "Resource");
     /**
      * Resource单例
      */
@@ -3342,19 +3348,19 @@ var RES;
     var AnimationAnalyzer = (function (_super) {
         __extends(AnimationAnalyzer, _super);
         function AnimationAnalyzer() {
-            _super.call(this);
-            this.sheetMap = {};
+            var _this = _super.call(this) || this;
+            _this.sheetMap = {};
             /**
              * ImageLoader对象池
              */
-            this.recyclerIamge = [];
-            this._dataFormat = egret.HttpResponseType.TEXT;
+            _this.recyclerIamge = [];
+            _this._dataFormat = egret.HttpResponseType.TEXT;
+            return _this;
         }
-        var d = __define,c=AnimationAnalyzer,p=c.prototype;
         /**
          * 一项加载结束
          */
-        p.onLoadFinish = function (event) {
+        AnimationAnalyzer.prototype.onLoadFinish = function (event) {
             var request = event.target;
             var data = this.resItemDic[request.$hashCode];
             delete this.resItemDic[request.hashCode];
@@ -3386,7 +3392,7 @@ var RES;
         /**
          * 解析并缓存加载成功的配置文件
          */
-        p.analyzeConfig = function (resItem, data) {
+        AnimationAnalyzer.prototype.analyzeConfig = function (resItem, data) {
             var name = resItem.name;
             var config;
             var imageUrl = "";
@@ -3419,7 +3425,7 @@ var RES;
         /**
          * 解析并缓存加载成功的位图数据
          */
-        p.analyzeBitmap = function (resItem, data) {
+        AnimationAnalyzer.prototype.analyzeBitmap = function (resItem, data) {
             var name = resItem.name;
             if (this.fileDic[name] || !data) {
                 return;
@@ -3433,7 +3439,7 @@ var RES;
         /**
          * 获取相对位置
          */
-        p.getRelativePath = function (url, file) {
+        AnimationAnalyzer.prototype.getRelativePath = function (url, file) {
             url = url.split("\\").join("/");
             var index = url.lastIndexOf("/");
             if (index != -1) {
@@ -3444,7 +3450,7 @@ var RES;
             }
             return url;
         };
-        p.parseAnimation = function (bitmapData, data, name) {
+        AnimationAnalyzer.prototype.parseAnimation = function (bitmapData, data, name) {
             var attributes = Object.keys(data.mc);
             var list = data.mc[attributes[0]].frames;
             var len = list.length;
@@ -3458,7 +3464,7 @@ var RES;
             }
             return animationFrames;
         };
-        p.destroyRes = function (name) {
+        AnimationAnalyzer.prototype.destroyRes = function (name) {
             var sheet = this.fileDic[name];
             if (sheet) {
                 delete this.fileDic[name];
@@ -3466,12 +3472,12 @@ var RES;
             }
             return false;
         };
-        p.loadImage = function (url, data) {
+        AnimationAnalyzer.prototype.loadImage = function (url, data) {
             var loader = this.getImageLoader();
             this.resItemDic[loader.hashCode] = data;
             loader.load(RES.$getVirtualUrl(url));
         };
-        p.getImageLoader = function () {
+        AnimationAnalyzer.prototype.getImageLoader = function () {
             var loader = this.recyclerIamge.pop();
             if (!loader) {
                 loader = new egret.ImageLoader();
@@ -3483,7 +3489,7 @@ var RES;
         return AnimationAnalyzer;
     }(RES.BinAnalyzer));
     RES.AnimationAnalyzer = AnimationAnalyzer;
-    egret.registerClass(AnimationAnalyzer,'RES.AnimationAnalyzer');
+    __reflect(AnimationAnalyzer.prototype, "RES.AnimationAnalyzer");
 })(RES || (RES = {}));
 var egret;
 (function (egret) {

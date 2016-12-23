@@ -147,6 +147,13 @@ class Build implements egret.Command {
                 files: compileFiles,
                 outDir: null
             });
+            
+            //兼容 Wing 用的旧版 TypeScript，删除 readonly 关键字
+            let declareFile = FileUtil.joinPath(options.projectDir, outDir, module.name, module.name + ".d.ts");
+            let dtsContent = FileUtil.read(declareFile);
+            dtsContent = dtsContent.replace(/readonly /g, "");
+            FileUtil.save(declareFile, dtsContent);
+
             if(hasTmpTsFile) {
                 FileUtil.remove(tmpFilePath);
             }

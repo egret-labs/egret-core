@@ -1,3 +1,11 @@
+var __reflect = (this && this.__reflect) || function (p, c, t) {
+    p.__class__ = c, t ? t.push(c) : t = [c], p.__types__ = p.__types__ ? t.concat(p.__types__) : t;
+};
+var __extends = (this && this.__extends) || function (d, b) {
+    for (var p in b) if (b.hasOwnProperty(p)) d[p] = b[p];
+    function __() { this.constructor = d; }
+    d.prototype = b === null ? Object.create(b) : (__.prototype = b.prototype, new __());
+};
 //////////////////////////////////////////////////////////////////////////////////////
 //
 //  Copyright (c) 2014-present, Egret Technology.
@@ -36,15 +44,15 @@ var egret;
         var NativeNetContext = (function (_super) {
             __extends(NativeNetContext, _super);
             function NativeNetContext() {
-                _super.call(this);
-                this.urlData = {};
+                var _this = _super.call(this) || this;
+                _this.urlData = {};
+                return _this;
             }
-            var d = __define,c=NativeNetContext,p=c.prototype;
             /**
              * @method egret.HTML5NetContext#proceed
              * @param loader {URLLoader}
              */
-            p.proceed = function (loader) {
+            NativeNetContext.prototype.proceed = function (loader) {
                 var self = this;
                 if (loader.dataFormat == egret.URLLoaderDataFormat.TEXTURE) {
                     self.loadTexture(loader);
@@ -73,7 +81,7 @@ var egret;
                 httpRequest.responseType = loader.dataFormat == egret.URLLoaderDataFormat.BINARY ? egret.HttpResponseType.ARRAY_BUFFER : egret.HttpResponseType.TEXT;
                 httpRequest.send(request.data);
             };
-            p.loadSound = function (loader) {
+            NativeNetContext.prototype.loadSound = function (loader) {
                 var self = this;
                 var virtualUrl = this.getVirtualUrl(loader._request.url);
                 var sound = new egret.Sound();
@@ -107,7 +115,7 @@ var egret;
                     sound.removeEventListener(egret.ProgressEvent.PROGRESS, onPostProgress, self);
                 }
             };
-            p.loadTexture = function (loader) {
+            NativeNetContext.prototype.loadTexture = function (loader) {
                 var self = this;
                 var request = loader._request;
                 var virtualUrl = self.getVirtualUrl(request.url);
@@ -151,7 +159,7 @@ var egret;
              * @param url
              * @returns {boolean}
              */
-            p.isNetUrl = function (url) {
+            NativeNetContext.prototype.isNetUrl = function (url) {
                 return url.indexOf("http://") != -1 || url.indexOf("HTTP://") != -1 || url.indexOf("https://") != -1 || url.indexOf("HTTPS://") != -1;
             };
             /**
@@ -159,7 +167,7 @@ var egret;
              * @param url
              * @returns {string}
              */
-            p.getVirtualUrl = function (url) {
+            NativeNetContext.prototype.getVirtualUrl = function (url) {
                 return url;
             };
             NativeNetContext.getNetContext = function () {
@@ -168,11 +176,11 @@ var egret;
                 }
                 return NativeNetContext._instance;
             };
-            NativeNetContext.__use_asyn = egret_native.readFileAsync == null ? false : true;
             return NativeNetContext;
         }(egret.HashObject));
+        NativeNetContext.__use_asyn = egret_native.readFileAsync == null ? false : true;
         native.NativeNetContext = NativeNetContext;
-        egret.registerClass(NativeNetContext,'egret.native.NativeNetContext',["egret.NetContext"]);
+        __reflect(NativeNetContext.prototype, "egret.native.NativeNetContext", ["egret.NetContext"]);
         egret.NetContext = NativeNetContext;
     })(native = egret.native || (egret.native = {}));
 })(egret || (egret = {}));

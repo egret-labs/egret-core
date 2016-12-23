@@ -202,8 +202,8 @@ namespace egret.gui {
                     this.measuredHeight = (<ILayoutElement><any> (content)).preferredHeight;
                 }
                 else{
-					let oldW:number = content.explicitWidth;
-					let oldH:number = content.explicitHeight;
+					let oldW:number = (<any>content).explicitWidth;
+					let oldH:number = (<any>content).explicitHeight;
 					content.width = NaN;
 					content.height = NaN;
                     this.measuredWidth = content.measuredWidth*content.scaleX;

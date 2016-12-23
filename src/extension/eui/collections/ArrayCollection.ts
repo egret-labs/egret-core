@@ -279,7 +279,7 @@ namespace eui {
          */
         public removeAll():void {
             let items:any[] = this._source.concat();
-            this._source.length = 0;
+            this._source = [];
             this.dispatchCoEvent(CollectionEventKind.REMOVE, 0, -1, items);
         }
 

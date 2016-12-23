@@ -45,6 +45,7 @@ class Compiler {
             parsedCmd.options.removeComments = args.removeComments;
             parsedCmd.options.declaration = args.declaration;
             parsedCmd.options.out = out;
+            parsedCmd.options.newLine = 1;
         }
         else {
             //console.log("args.compilerOptions:",parsedCmd.options.outDir)
@@ -55,8 +56,20 @@ class Compiler {
         }
         parsedCmd.options.allowUnreachableCode = true;
         parsedCmd.options.emitReflection = true;
+        let defines:any = {};
+        if(egret.args.publish) {
+            defines.DEBUG = false;
+            defines.RELEASE = true;
+        }
+        else {
+            defines.DEBUG = true;
+            defines.RELEASE = false;
+        }
+        parsedCmd.options.defines = defines;
         parsedCmd.options["forSortFile"] = option.forSortFile;
-        return this.compileNew(parsedCmd);
+        var compileResult = this.compileNew(parsedCmd);
+        process.chdir(realCWD);            
+        return compileResult;
     }
 
     private files: ts.Map<{ version: number }> = <any>{};
@@ -75,7 +88,21 @@ class Compiler {
 
         // Create the language service host to allow the LS to communicate with the host
         const servicesHost: ts.LanguageServiceHost = {
-            getScriptFileNames: () => rootFileNames,
+            getScriptFileNames: () => this.sortedFiles,
+            getNewLine: () => {
+                var carriageReturnLineFeed = "\r\n";
+                var lineFeed = "\n";
+                if (options.newLine === 0 /* CarriageReturnLineFeed */) {
+                    return carriageReturnLineFeed;
+                }
+                else if (options.newLine === 1 /* LineFeed */) {
+                    return lineFeed;
+                }
+                else if (ts.sys) {
+                    return ts.sys.newLine;
+                }
+                return carriageReturnLineFeed;
+            }, 
             getScriptVersion: (fileName) => this.files[fileName] && this.files[fileName].version.toString(),
             getScriptSnapshot: (fileName) => {
                 if (!file.exists(fileName)) {
