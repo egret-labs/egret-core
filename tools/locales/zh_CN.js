@@ -156,6 +156,18 @@ var egret;
     locale_strings[2020] = "{0}: error 在w:Declarations内的子节点，不允许使用includeIn和excludeFrom属性\n{1}";
     locale_strings[2102] = "{0}: warning 在属性节点上找不到任何子节点\n{1}";
     locale_strings[2103] = "{0}: warning 节点上的同一个属性'{1}'被多次赋值\n{2}";
+    // android sdk install
+    locale_strings[2201] = "{0}个文件需要下载！";
+    locale_strings[2202] = "文件总大小为{0}MB";
+    locale_strings[2203] = "开始下载！";
+    locale_strings[2204] = "{0} 下载成功！";
+    locale_strings[2205] = "文件大小为{0}MB";
+    locale_strings[2206] = "所有文件下载成功！";
+    locale_strings[2207] = "{0}个文件需要解压安装！";
+    locale_strings[2208] = "开始解压安装！";
+    locale_strings[2209] = "{0} 解压安装成功！";
+    locale_strings[2210] = "所有文件解压安装成功！";
+    locale_strings[2211] = "Android SDK安装成功！";
     locale_strings[8001] = "请输入命令行选项{color_green} {0} {color_normal}的参数,并确认是以下值之一: {color_green}[{1}]{color_normal}";
     locale_strings[8002] = "{color_red}请选对正确的egret项目目录！{color_normal}\n\tEgret_Project\t\t{color_gray}//项目目录{color_normal}\n\t\t--launcher\t{color_gray}//启动目录{color_normal}\n\t\t--src\t\t{color_gray}//源代码目录{color_normal}";
     locale_strings[8003] = "配置文件{0}不存在";

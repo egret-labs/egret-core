@@ -106,6 +106,9 @@ exports.optionDeclarations = [
         type: 'string',
         shortName: "ev"
     }, {
+        name: 'ide',
+        type: 'boolean'
+    }, {
         name: 'exmlGenJs',
         type: 'boolean',
         shortName: 'gjs'
