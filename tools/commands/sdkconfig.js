@@ -1,14 +1,11 @@
+/// <reference path="../lib/node.d.ts" />
 var InstallSDK = require("./installsdk");
-
-var SDKConfig = (function (){
-	function SDKConfig() {
-	}
-
-	SDKConfig.prototype.execute = function() {
-		InstallSDK.printAndroidSDKConfig();
-	}
-
-	return SDKConfig;
-})();
-
+var SDKConfig = (function () {
+    function SDKConfig() {
+    }
+    SDKConfig.prototype.execute = function () {
+        InstallSDK.printAndroidSDKConfig();
+    };
+    return SDKConfig;
+}());
 module.exports = SDKConfig;
