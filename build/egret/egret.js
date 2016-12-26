@@ -17579,7 +17579,7 @@ var egret;
              * @platform Web,Native
              */
             get: function () {
-                return "3.2.5";
+                return "3.2.6";
             },
             enumerable: true,
             configurable: true

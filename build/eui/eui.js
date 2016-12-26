@@ -11427,6 +11427,9 @@ var eui;
                     this[key] = this.$revertStyle[key];
                 }
                 this.$revertStyle = {};
+                if (value == null) {
+                    return;
+                }
                 var styleList = value.split(",");
                 for (var i = 0; i < styleList.length; i++) {
                     var config = theme.$getStyleConfig(styleList[i]);
