@@ -33,6 +33,7 @@ var Compiler = (function () {
             parsedCmd.options.removeComments = args.removeComments;
             parsedCmd.options.declaration = args.declaration;
             parsedCmd.options.out = out;
+            parsedCmd.options.newLine = 1;
         }
         else {
             //console.log("args.compilerOptions:",parsedCmd.options.outDir)
@@ -72,6 +73,20 @@ var Compiler = (function () {
         // Create the language service host to allow the LS to communicate with the host
         var servicesHost = {
             getScriptFileNames: function () { return _this.sortedFiles; },
+            getNewLine: function () {
+                var carriageReturnLineFeed = "\r\n";
+                var lineFeed = "\n";
+                if (options.newLine === 0 /* CarriageReturnLineFeed */) {
+                    return carriageReturnLineFeed;
+                }
+                else if (options.newLine === 1 /* LineFeed */) {
+                    return lineFeed;
+                }
+                else if (ts.sys) {
+                    return ts.sys.newLine;
+                }
+                return carriageReturnLineFeed;
+            },
             getScriptVersion: function (fileName) { return _this.files[fileName] && _this.files[fileName].version.toString(); },
             getScriptSnapshot: function (fileName) {
                 if (!file.exists(fileName)) {
