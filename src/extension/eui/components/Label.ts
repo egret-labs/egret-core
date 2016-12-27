@@ -154,6 +154,9 @@ namespace eui {
                     this[key] = this.$revertStyle[key];
                 }
                 this.$revertStyle = {};
+                if(value == null) {
+                    return;
+                }
                 let styleList = value.split(",");
                 for(let i = 0 ; i < styleList.length ; i++) {
                     let config = theme.$getStyleConfig(styleList[i]);
