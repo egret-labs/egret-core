@@ -11,6 +11,7 @@ interface CompileOption {
     outDir?: string;
     def?: boolean;
     forSortFile?: boolean;
+    debug?: boolean;
 }
 
 class Compiler {
@@ -57,7 +58,11 @@ class Compiler {
         parsedCmd.options.allowUnreachableCode = true;
         parsedCmd.options.emitReflection = true;
         let defines:any = {};
-        if(egret.args.publish) {
+        if(option.debug != undefined) {
+            defines.DEBUG = option.debug;
+            defines.RELEASE = !option.debug;
+        }
+        else if(egret.args.publish) {
             defines.DEBUG = false;
             defines.RELEASE = true;
         }

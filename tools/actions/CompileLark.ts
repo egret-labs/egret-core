@@ -104,7 +104,7 @@ class CompileLark {
             return 0;
         tss = depends.concat(tss);
         var dts = platform.declaration && configuration.declaration;
-        var result = this.compiler.compile({ args: options, def: dts, out: singleFile, files: tss, outDir: null });
+        var result = this.compiler.compile({ args: options, def: dts, out: singleFile, files: tss, outDir: null, debug: configuration.name == "debug"});
         if (result.exitStatus != 0) {
             result.messages.forEach(m => console.log(m));
             return result.exitStatus;
