@@ -15,7 +15,7 @@ namespace egret {
      * @version Egret 2.4
      * @platform Web,Native
      */
-    export class GradientType {
+    export const GradientType = {
         /**
          * @language en_US
          * Value used to specify a linear gradient fill.
@@ -28,7 +28,7 @@ namespace egret {
          * @version Egret 2.4
          * @platform Web,Native
          */
-        public static LINEAR:string = "linear";
+        LINEAR: "linear",
         /**
          * @language en_US
          * Value used to specify a radial gradient fill.
@@ -41,6 +41,6 @@ namespace egret {
          * @version Egret 2.4
          * @platform Web,Native
          */
-        public static RADIAL:string = "radial";
+        RADIAL: "radial"
     }
 }

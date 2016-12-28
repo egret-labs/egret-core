@@ -30,6 +30,9 @@
 
 namespace egret {
 
+
+    type EventListener<T> = (this:T,e:egret.Event)=>any
+
     /**
      * @private
      */
@@ -128,7 +131,7 @@ namespace egret {
          * @version Egret 2.4
          * @platform Web,Native
          */
-        public addEventListener(type:string, listener:Function, thisObject:any, useCapture?:boolean, priority?:number):void {
+        public addEventListener<T>(type:string, listener:EventListener<T>, thisObject:T, useCapture?:boolean, priority?:number):void {
             this.$addListener(type, listener, thisObject, useCapture, priority);
         }
 
@@ -137,14 +140,14 @@ namespace egret {
          * @version Egret 2.4
          * @platform Web,Native
          */
-        public once(type:string, listener:Function, thisObject:any, useCapture?:boolean, priority?:number):void {
+        public once<T>(type:string, listener:EventListener<T>, thisObject:T, useCapture?:boolean, priority?:number):void {
             this.$addListener(type, listener, thisObject, useCapture, priority, true);
         }
 
         /**
          * @private
          */
-        $addListener(type:string, listener:Function, thisObject:any, useCapture?:boolean, priority?:number, dispatchOnce?:boolean):void {
+        $addListener<T>(type:string, listener:EventListener<T>, thisObject:T, useCapture?:boolean, priority?:number, dispatchOnce?:boolean):void {
             if (DEBUG && !listener) {
                 $error(1003, "listener");
             }
@@ -192,7 +195,7 @@ namespace egret {
          * @version Egret 2.4
          * @platform Web,Native
          */
-        public removeEventListener(type:string, listener:Function, thisObject:any, useCapture?:boolean):void {
+        public removeEventListener<T>(type:string, listener:EventListener<T>, thisObject:T, useCapture?:boolean):void {
 
             let values = this.$EventDispatcher;
             let eventMap:Object = useCapture ? values[Keys.captureEventsMap] : values[Keys.eventsMap];
@@ -211,7 +214,7 @@ namespace egret {
             }
         }
 
-        $removeEventBin(list:any[], listener:Function, thisObject:any):boolean {
+        $removeEventBin<T>(list:any[], listener:EventListener<T>, thisObject:T):boolean {
             let length = list.length;
             for (let i = 0; i < length; i++) {
                 let bin = list[i];
