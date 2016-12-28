@@ -3,30 +3,13 @@
 import os = require('os');
 import crypto = require('crypto');
 import file = require('../lib/FileUtil');
+import utils = require('../lib/utils');
 import path = require("path");
 
 
-type EgretPropertyModule = {
-    "name": string,
-    "path"?: string;
-}
-
-type EgretProperty = {
-    "modules"?: EgretPropertyModule[],
-    "native"?: {
-        "path_ignore": string[];
-    },
-    "publish"?: {
-        "web": number,
-        "native": number,
-        "path": string;
-    },
-    "egret_version"?: string;
-}
 
 class EgretProperties implements egret.EgretPropertiesClass {
-    properties: EgretProperty = {};
-    modulesConfig: Object = {};
+    properties: egret.EgretProperty = {};
 
     projectRoot: string = "";
     init(projectRoot: string) {
@@ -34,35 +17,47 @@ class EgretProperties implements egret.EgretPropertiesClass {
         this.reload();
     }
 
+    public invalid(report?: boolean) {
+        let result = !this.properties.modules ||
+            this.properties.modules.length == 0;
+        if (result && report) {
+            console.log(utils.tr(1602));//缺少egretProperties.json
+        }
+        return result;
+    }
+
+    hasEUI() {
+        return this.properties.modules.some(m => m.name == "eui");
+    }
+
     reload() {
         this.properties = {};
-        this.modulesConfig = {};
-        if (file.exists(file.joinPath(this.projectRoot, "egretProperties.json"))) {
-            this.properties = JSON.parse(file.read(file.joinPath(this.projectRoot, "egretProperties.json")));
+        let egretPropertiesPath = file.joinPath(this.projectRoot, "egretProperties.json");
+        if (file.exists(egretPropertiesPath)) {
+            this.properties = JSON.parse(egretPropertiesPath);
+            let useGUIorEUI = 0;
             for (let m of this.properties.modules) {
                 //兼容小写
                 if (m.name == "dragonbones" && !m.path) {
                     m.name = "dragonBones";
                 }
-                this.modulesConfig[m.name] = m;
+                if (m.name == "gui" || m.name == "eui") {
+                    useGUIorEUI++;
+                }
             }
-            //this.modulesConfig["html5"] = { "name": "html5" };
-            //this.modulesConfig["native"] = { "name": "native" };
-        }
-
-        if (this.modulesConfig["eui"] != null && this.modulesConfig["gui"] != null) {
-            globals.log2(8);
-
-            process.exit(1);
+            if (useGUIorEUI >= 2) {
+                globals.log2(8);
+                process.exit(1);
+            }
         }
     }
 
-    /**
-     * 是否有swan
-     */
-    hasEUI(): boolean {
-        return this.modulesConfig["eui"] != null;
-    }
+    // /**
+    //  * 是否有swan
+    //  */
+    // hasEUI(): boolean {
+    //     return this.properties.modules.some(m => m.name == "eui");
+    // }
 
     /**
      * 获取项目的根路径
@@ -156,8 +151,10 @@ class EgretProperties implements egret.EgretPropertiesClass {
     }
 
     getModulePath(moduleName) {
-        if (this.modulesConfig[moduleName]) {
-            return this.modulesConfig[moduleName]["path"] || null;
+        for (let m of this.properties.modules) {
+            if (m.name == moduleName) {
+                return m.path;
+            }
         }
         return null;
     }
@@ -227,14 +224,12 @@ class EgretProperties implements egret.EgretPropertiesClass {
 
     //获取项目需要的所有模块的.d.ts文件
     getModulesDts() {
-        var libs = [];
-        for (var moduleName in this.modulesConfig) {
-            var moduleConfig = this.modulesConfig[moduleName];
-            var output = this.getModuleOutput(moduleName);
-            var dtsFile = file.joinPath(output, moduleConfig.name + ".d.ts");
-            libs.push(dtsFile);
-        }
-        return libs;
+        return this.properties.modules.map(m => {
+            var output = this.getModuleOutput(m.name);
+            var dtsFile = file.joinPath(output, m.name + ".d.ts");
+            return dtsFile;
+        })
+
     }
 
     getModuleReferenceInfo() {
