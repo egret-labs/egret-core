@@ -1,5 +1,6 @@
 /// <reference path="../lib/types.d.ts" />
 var file = require("../lib/FileUtil");
+var path = require("path");
 var EgretProperties = (function () {
     function EgretProperties() {
         this.properties = {};
@@ -15,12 +16,13 @@ var EgretProperties = (function () {
         this.modulesConfig = {};
         if (file.exists(file.joinPath(this.projectRoot, "egretProperties.json"))) {
             this.properties = JSON.parse(file.read(file.joinPath(this.projectRoot, "egretProperties.json")));
-            for (var key in this.properties["modules"]) {
+            for (var _i = 0, _a = this.properties.modules; _i < _a.length; _i++) {
+                var m = _a[_i];
                 //兼容小写
-                if (this.properties["modules"][key]["name"] == "dragonbones" && !this.properties["modules"][key]["path"]) {
-                    this.properties["modules"][key]["name"] = "dragonBones";
+                if (m.name == "dragonbones" && !m.path) {
+                    m.name = "dragonBones";
                 }
-                this.modulesConfig[this.properties["modules"][key]["name"]] = this.properties["modules"][key];
+                this.modulesConfig[m.name] = m;
             }
         }
         if (this.modulesConfig["eui"] != null && this.modulesConfig["gui"] != null) {
@@ -46,7 +48,7 @@ var EgretProperties = (function () {
      * @returns {any}
      */
     EgretProperties.prototype.getVersion = function () {
-        return this.properties["egret_version"];
+        return this.properties.egret_version;
     };
     /**
      * 发布路径的根目录
@@ -55,7 +57,7 @@ var EgretProperties = (function () {
     EgretProperties.prototype.getReleaseRoot = function () {
         var p = "bin-release";
         if (globals.hasKeys(this.properties, ["publish", "path"])) {
-            p = this.properties["publish"]["path"];
+            p = this.properties.publish.path;
         }
         return file.getAbsolutePath(p);
         //return file.joinPath(egret.args.projectDir, p);
@@ -109,7 +111,7 @@ var EgretProperties = (function () {
     };
     EgretProperties.prototype.getNativePath = function (platform) {
         if (globals.hasKeys(this.properties, ["native", platform + "_path"])) {
-            return file.joinPath(this.getProjectRoot(), this.properties["native"][platform + "_path"]);
+            return path.resolve(this.getProjectRoot(), this.properties.native[platform + "_path"]);
         }
         return null;
     };
@@ -166,16 +168,7 @@ var EgretProperties = (function () {
         return (this.getModuleConfig(moduleName)["dependence"] || []).concat();
     };
     EgretProperties.prototype.getAllModuleNames = function () {
-        var names = [];
-        for (var key in this.properties["modules"]) {
-            names.push(this.properties["modules"][key]["name"]);
-            if (this.properties["modules"][key]["name"] == "core") {
-            }
-        }
-        //for (var key in this.modulesConfig) {
-        //    names.push(key);
-        //}
-        return names;
+        return this.properties.modules.map(function (m) { return m.name; });
     };
     EgretProperties.prototype.getModuleDecouple = function (moduleName) {
         return this.getModuleConfig(moduleName)["decouple"] == "true" || this.getModuleConfig(moduleName)["decouple"] == true;

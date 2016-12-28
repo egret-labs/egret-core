@@ -3,12 +3,32 @@
 import os = require('os');
 import crypto = require('crypto');
 import file = require('../lib/FileUtil');
+import path = require("path");
+
+
+type EgretPropertyModule = {
+    "name": string,
+    "path"?: string;
+}
+
+type EgretProperty = {
+    "modules"?: EgretPropertyModule[],
+    "native"?: {
+        "path_ignore": string[];
+    },
+    "publish"?: {
+        "web": number,
+        "native": number,
+        "path": string;
+    },
+    "egret_version"?: string;
+}
 
 class EgretProperties implements egret.EgretPropertiesClass {
-    properties: Object = {};
+    properties: EgretProperty = {};
     modulesConfig: Object = {};
 
-    projectRoot:string = "";
+    projectRoot: string = "";
     init(projectRoot: string) {
         this.projectRoot = projectRoot;
         this.reload();
@@ -19,12 +39,12 @@ class EgretProperties implements egret.EgretPropertiesClass {
         this.modulesConfig = {};
         if (file.exists(file.joinPath(this.projectRoot, "egretProperties.json"))) {
             this.properties = JSON.parse(file.read(file.joinPath(this.projectRoot, "egretProperties.json")));
-            for (var key in this.properties["modules"]) {
+            for (let m of this.properties.modules) {
                 //兼容小写
-                if(this.properties["modules"][key]["name"] == "dragonbones" && !this.properties["modules"][key]["path"]) {
-                    this.properties["modules"][key]["name"] = "dragonBones";
+                if (m.name == "dragonbones" && !m.path) {
+                    m.name = "dragonBones";
                 }
-                this.modulesConfig[this.properties["modules"][key]["name"]] = this.properties["modules"][key];
+                this.modulesConfig[m.name] = m;
             }
             //this.modulesConfig["html5"] = { "name": "html5" };
             //this.modulesConfig["native"] = { "name": "native" };
@@ -57,7 +77,7 @@ class EgretProperties implements egret.EgretPropertiesClass {
      * @returns {any}
      */
     getVersion(): string {
-        return this.properties["egret_version"];
+        return this.properties.egret_version;
     }
 
     /**
@@ -67,7 +87,7 @@ class EgretProperties implements egret.EgretPropertiesClass {
     getReleaseRoot(): string {
         var p = "bin-release";
         if (globals.hasKeys(this.properties, ["publish", "path"])) {
-            p = this.properties["publish"]["path"];
+            p = this.properties.publish.path;
         }
 
         return file.getAbsolutePath(p);
@@ -95,7 +115,7 @@ class EgretProperties implements egret.EgretPropertiesClass {
         else {
             egret_file = file.joinPath(currDir, "bin-debug/lib/egret_file_list_native.js");
         }
-        var egretFileList:any = this.getFileList(egret_file).map(function (item) {
+        var egretFileList: any = this.getFileList(egret_file).map(function (item) {
             return file.joinPath(currDir, "libs", item);
         });
 
@@ -130,9 +150,8 @@ class EgretProperties implements egret.EgretPropertiesClass {
 
     getNativePath(platform) {
         if (globals.hasKeys(this.properties, ["native", platform + "_path"])) {
-            return file.joinPath(this.getProjectRoot(), this.properties["native"][platform + "_path"]);
+            return path.resolve(this.getProjectRoot(), this.properties.native[platform + "_path"]);
         }
-
         return null;
     }
 
@@ -199,19 +218,7 @@ class EgretProperties implements egret.EgretPropertiesClass {
     }
 
     getAllModuleNames() {
-        var names = [];
-        for (var key in this.properties["modules"]) {
-            names.push(this.properties["modules"][key]["name"]);
-            if (this.properties["modules"][key]["name"] == "core") {
-                //names.push("html5");
-                //names.push("native");
-            }
-        }
-
-        //for (var key in this.modulesConfig) {
-        //    names.push(key);
-        //}
-        return names;
+        return this.properties.modules.map(m => m.name);
     }
 
     getModuleDecouple(moduleName) {
@@ -252,7 +259,7 @@ class EgretProperties implements egret.EgretPropertiesClass {
         return referenceInfo;
     }
 
-    getPublishType(runtime:string):number {
+    getPublishType(runtime: string): number {
         if (globals.hasKeys(this.properties, ["publish", runtime])) {
             return this.properties["publish"][runtime];
         }
@@ -260,7 +267,7 @@ class EgretProperties implements egret.EgretPropertiesClass {
         return 0;
     }
 
-    getResources():Array<string> {
+    getResources(): Array<string> {
         if (globals.hasKeys(this.properties, ["resources"])) {
             return this.properties["resources"];
         }
