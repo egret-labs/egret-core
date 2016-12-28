@@ -8192,12 +8192,6 @@ var eui;
                 var attributes = node.attributes;
                 var keyList = Object.keys(attributes);
                 keyList.sort(); //排序一下防止出现随机顺序
-                //对 style 属性先行赋值
-                var styleIndex = keyList.indexOf("style");
-                if (styleIndex > 0) {
-                    keyList.splice(styleIndex, 1);
-                    keyList.unshift("style");
-                }
                 var length = keyList.length;
                 for (var i = 0; i < length; i++) {
                     key = keyList[i];
@@ -11364,28 +11358,32 @@ var eui;
          */
         function Label(text) {
             var _this = _super.call(this) || this;
-            _this.$styleList = [
-                "fontFamily",
-                "size",
-                "bold",
-                "italic",
-                "textAlign",
-                "verticalAlign",
-                "lineSpacing",
-                "textColor",
-                "wordWrap",
-                "displayAsPassword",
-                "strokeColor",
-                "stroke",
-                "maxChars",
-                "multiline",
-                "border",
-                "borderColor",
-                "background",
-                "backgroundColor"
-            ];
+            /**
+             * style中属性是否允许被赋值，当主动赋值过属性之后将不允许被赋值
+             */
+            _this.$styleSetMap = {
+                "fontFamily": true,
+                "size": true,
+                "bold": true,
+                "italic": true,
+                "textAlign": true,
+                "verticalAlign": true,
+                "lineSpacing": true,
+                "textColor": true,
+                "wordWrap": true,
+                "displayAsPassword": true,
+                "strokeColor": true,
+                "stroke": true,
+                "maxChars": true,
+                "multiline": true,
+                "border": true,
+                "borderColor": true,
+                "background": true,
+                "backgroundColor": true
+            };
             _this.$revertStyle = {};
             _this.$style = null;
+            _this.$changeFromStyle = false;
             /**
              * @private
              */
@@ -11423,11 +11421,13 @@ var eui;
             this.$style = value;
             var theme = egret.getImplementation("eui.Theme");
             if (theme) {
+                this.$changeFromStyle = true;
                 for (var key in this.$revertStyle) {
                     this[key] = this.$revertStyle[key];
                 }
                 this.$revertStyle = {};
                 if (value == null) {
+                    this.$changeFromStyle = false;
                     return;
                 }
                 var styleList = value.split(",");
@@ -11435,7 +11435,7 @@ var eui;
                     var config = theme.$getStyleConfig(styleList[i]);
                     if (config) {
                         for (var key in config) {
-                            if (this.$styleList.indexOf(key) != -1) {
+                            if (this.$styleSetMap[key]) {
                                 var revertValue = this[key];
                                 this[key] = config[key];
                                 this.$revertStyle[key] = revertValue;
@@ -11443,78 +11443,133 @@ var eui;
                         }
                     }
                 }
+                this.$changeFromStyle = false;
             }
         };
         Label.prototype.$setFontFamily = function (value) {
-            delete this.$revertStyle["fontFanily"];
+            if (!this.$changeFromStyle) {
+                delete this.$revertStyle["fontFanily"];
+                this.$styleSetMap["fontFanily"] = false;
+            }
             return _super.prototype.$setFontFamily.call(this, value);
         };
         Label.prototype.$setSize = function (value) {
-            delete this.$revertStyle["size"];
+            if (!this.$changeFromStyle) {
+                delete this.$revertStyle["size"];
+                this.$styleSetMap["size"] = false;
+            }
             return _super.prototype.$setSize.call(this, value);
         };
         Label.prototype.$setBold = function (value) {
-            delete this.$revertStyle["bold"];
+            if (!this.$changeFromStyle) {
+                delete this.$revertStyle["bold"];
+                this.$styleSetMap["bold"] = false;
+            }
             return _super.prototype.$setBold.call(this, value);
         };
         Label.prototype.$setItalic = function (value) {
-            delete this.$revertStyle["italic"];
+            if (!this.$changeFromStyle) {
+                delete this.$revertStyle["italic"];
+                this.$styleSetMap["italic"] = false;
+            }
             return _super.prototype.$setItalic.call(this, value);
         };
         Label.prototype.$setTextAlign = function (value) {
-            delete this.$revertStyle["textAlign"];
+            if (!this.$changeFromStyle) {
+                delete this.$revertStyle["textAlign"];
+                this.$styleSetMap["textAlign"] = false;
+            }
             return _super.prototype.$setTextAlign.call(this, value);
         };
         Label.prototype.$setVerticalAlign = function (value) {
-            delete this.$revertStyle["verticalAlign"];
+            if (!this.$changeFromStyle) {
+                delete this.$revertStyle["verticalAlign"];
+                this.$styleSetMap["verticalAlign"] = false;
+            }
             return _super.prototype.$setVerticalAlign.call(this, value);
         };
         Label.prototype.$setLineSpacing = function (value) {
-            delete this.$revertStyle["lineSpacing"];
+            if (!this.$changeFromStyle) {
+                delete this.$revertStyle["lineSpacing"];
+                this.$styleSetMap["lineSpacing"] = false;
+            }
             return _super.prototype.$setLineSpacing.call(this, value);
         };
         Label.prototype.$setTextColor = function (value) {
-            delete this.$revertStyle["textColor"];
+            if (!this.$changeFromStyle) {
+                delete this.$revertStyle["textColor"];
+                this.$styleSetMap["textColor"] = false;
+            }
             return _super.prototype.$setTextColor.call(this, value);
         };
         Label.prototype.$setWordWrap = function (value) {
-            delete this.$revertStyle["wordWrap"];
+            if (!this.$changeFromStyle) {
+                delete this.$revertStyle["wordWrap"];
+                this.$styleSetMap["wordWrap"] = false;
+            }
             _super.prototype.$setWordWrap.call(this, value);
         };
         Label.prototype.$setDisplayAsPassword = function (value) {
-            delete this.$revertStyle["displayAsPassword"];
+            if (!this.$changeFromStyle) {
+                delete this.$revertStyle["displayAsPassword"];
+                this.$styleSetMap["displayAsPassword"] = false;
+            }
             return _super.prototype.$setDisplayAsPassword.call(this, value);
         };
         Label.prototype.$setStrokeColor = function (value) {
-            delete this.$revertStyle["strokeColor"];
+            if (!this.$changeFromStyle) {
+                delete this.$revertStyle["strokeColor"];
+                this.$styleSetMap["strokeColor"] = false;
+            }
             return _super.prototype.$setStrokeColor.call(this, value);
         };
         Label.prototype.$setStroke = function (value) {
-            delete this.$revertStyle["stroke"];
+            if (!this.$changeFromStyle) {
+                delete this.$revertStyle["stroke"];
+                this.$styleSetMap["stroke"] = false;
+            }
             return _super.prototype.$setStroke.call(this, value);
         };
         Label.prototype.$setMaxChars = function (value) {
-            delete this.$revertStyle["maxChars"];
+            if (!this.$changeFromStyle) {
+                delete this.$revertStyle["maxChars"];
+                this.$styleSetMap["maxChars"] = false;
+            }
             return _super.prototype.$setMaxChars.call(this, value);
         };
         Label.prototype.$setMultiline = function (value) {
-            delete this.$revertStyle["multiline"];
+            if (!this.$changeFromStyle) {
+                delete this.$revertStyle["multiline"];
+                this.$styleSetMap["multiline"] = false;
+            }
             return _super.prototype.$setMultiline.call(this, value);
         };
         Label.prototype.$setBorder = function (value) {
-            delete this.$revertStyle["border"];
+            if (!this.$changeFromStyle) {
+                delete this.$revertStyle["border"];
+                this.$styleSetMap["border"] = false;
+            }
             _super.prototype.$setBorder.call(this, value);
         };
         Label.prototype.$setBorderColor = function (value) {
-            delete this.$revertStyle["borderColor"];
+            if (!this.$changeFromStyle) {
+                delete this.$revertStyle["borderColor"];
+                this.$styleSetMap["borderColor"] = false;
+            }
             _super.prototype.$setBorderColor.call(this, value);
         };
         Label.prototype.$setBackground = function (value) {
-            delete this.$revertStyle["background"];
+            if (!this.$changeFromStyle) {
+                delete this.$revertStyle["background"];
+                this.$styleSetMap["background"] = false;
+            }
             _super.prototype.$setBackground.call(this, value);
         };
         Label.prototype.$setBackgroundColor = function (value) {
-            delete this.$revertStyle["backgroundColor"];
+            if (!this.$changeFromStyle) {
+                delete this.$revertStyle["backgroundColor"];
+                this.$styleSetMap["backgroundColor"] = false;
+            }
             _super.prototype.$setBackgroundColor.call(this, value);
         };
         /**

@@ -7054,9 +7054,13 @@ declare namespace eui {
          * @platform Web,Native
          */
         constructor(text?: string);
-        private $styleList;
+        /**
+         * style中属性是否允许被赋值，当主动赋值过属性之后将不允许被赋值
+         */
+        private $styleSetMap;
         private $revertStyle;
         private $style;
+        private $changeFromStyle;
         /**
          * @language en_US
          * The style of text.

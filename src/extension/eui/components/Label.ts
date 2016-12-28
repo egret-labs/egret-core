@@ -100,28 +100,33 @@ namespace eui {
             this.text = text;
         }
 
-        private $styleList:Array<string> = [
-            "fontFamily",
-            "size",
-            "bold",
-            "italic",
-            "textAlign",
-            "verticalAlign",
-            "lineSpacing",
-            "textColor",
-            "wordWrap",
-            "displayAsPassword",
-            "strokeColor",
-            "stroke",
-            "maxChars",
-            "multiline",
-            "border",
-            "borderColor",
-            "background",
-            "backgroundColor"
-        ];
+        /**
+         * style中属性是否允许被赋值，当主动赋值过属性之后将不允许被赋值
+         */
+        private $styleSetMap = {
+            "fontFamily": true,
+            "size": true,
+            "bold": true,
+            "italic": true,
+            "textAlign": true,
+            "verticalAlign": true,
+            "lineSpacing": true,
+            "textColor": true,
+            "wordWrap": true,
+            "displayAsPassword": true,
+            "strokeColor": true,
+            "stroke": true,
+            "maxChars": true,
+            "multiline": true,
+            "border": true,
+            "borderColor": true,
+            "background": true,
+            "backgroundColor": true
+        };
         private $revertStyle = {};
-        private $style:string = null;
+        private $style: string = null;
+
+        private $changeFromStyle:boolean = false;
 
         /**
          * @language en_US
@@ -135,34 +140,36 @@ namespace eui {
          * @version Egret 3.2.1
          * @platform Web,Native
          */
-        public get style():string {
+        public get style(): string {
             return this.$style;
         }
 
-        public set style(value:string) {
+        public set style(value: string) {
             this.$setStyle(value);
         }
 
-        $setStyle(value:string) {
+        $setStyle(value: string) {
             if (this.$style == value) {
                 return;
             }
             this.$style = value;
-            let theme:Theme = egret.getImplementation("eui.Theme");
-            if(theme) {
-                for(let key in this.$revertStyle) {
+            let theme: Theme = egret.getImplementation("eui.Theme");
+            if (theme) {
+                this.$changeFromStyle = true;
+                for (let key in this.$revertStyle) {
                     this[key] = this.$revertStyle[key];
                 }
                 this.$revertStyle = {};
-                if(value == null) {
+                if (value == null) {
+                    this.$changeFromStyle = false;
                     return;
                 }
                 let styleList = value.split(",");
-                for(let i = 0 ; i < styleList.length ; i++) {
+                for (let i = 0; i < styleList.length; i++) {
                     let config = theme.$getStyleConfig(styleList[i]);
-                    if(config) {
-                        for(let key in config) {
-                            if(this.$styleList.indexOf(key) != -1) {
+                    if (config) {
+                        for (let key in config) {
+                            if (this.$styleSetMap[key]) {
                                 let revertValue = this[key];
                                 this[key] = config[key];
                                 this.$revertStyle[key] = revertValue;
@@ -170,96 +177,151 @@ namespace eui {
                         }
                     }
                 }
+                this.$changeFromStyle = false;
             }
         }
 
-        $setFontFamily(value:string):boolean {
-            delete this.$revertStyle["fontFanily"];
+        $setFontFamily(value: string): boolean {
+            if (!this.$changeFromStyle) {
+                delete this.$revertStyle["fontFanily"];
+                this.$styleSetMap["fontFanily"] = false;
+            }
             return super.$setFontFamily(value);
         }
 
-        $setSize(value:number):boolean {
-            delete this.$revertStyle["size"];
+        $setSize(value: number): boolean {
+            if (!this.$changeFromStyle) {
+                delete this.$revertStyle["size"];
+                this.$styleSetMap["size"] = false;
+            }
             return super.$setSize(value);
         }
 
-        $setBold(value:boolean):boolean {
-            delete this.$revertStyle["bold"];
+        $setBold(value: boolean): boolean {
+            if (!this.$changeFromStyle) {
+                delete this.$revertStyle["bold"];
+                this.$styleSetMap["bold"] = false;
+            }
             return super.$setBold(value);
         }
 
-        $setItalic(value:boolean):boolean {
-            delete this.$revertStyle["italic"];
+        $setItalic(value: boolean): boolean {
+            if (!this.$changeFromStyle) {
+                delete this.$revertStyle["italic"];
+                this.$styleSetMap["italic"] = false;
+            }
             return super.$setItalic(value);
         }
 
-        $setTextAlign(value:string):boolean {
-            delete this.$revertStyle["textAlign"];
+        $setTextAlign(value: string): boolean {
+            if (!this.$changeFromStyle) {
+                delete this.$revertStyle["textAlign"];
+                this.$styleSetMap["textAlign"] = false;
+            }
             return super.$setTextAlign(value);
         }
 
-        $setVerticalAlign(value:string):boolean {
-            delete this.$revertStyle["verticalAlign"];
+        $setVerticalAlign(value: string): boolean {
+            if (!this.$changeFromStyle) {
+                delete this.$revertStyle["verticalAlign"];
+                this.$styleSetMap["verticalAlign"] = false;
+            }
             return super.$setVerticalAlign(value);
         }
 
-        $setLineSpacing(value:number):boolean {
-            delete this.$revertStyle["lineSpacing"];
+        $setLineSpacing(value: number): boolean {
+            if (!this.$changeFromStyle) {
+                delete this.$revertStyle["lineSpacing"];
+                this.$styleSetMap["lineSpacing"] = false;
+            }
             return super.$setLineSpacing(value);
         }
 
-        $setTextColor(value:number):boolean {
-            delete this.$revertStyle["textColor"];
+        $setTextColor(value: number): boolean {
+            if (!this.$changeFromStyle) {
+                delete this.$revertStyle["textColor"];
+                this.$styleSetMap["textColor"] = false;
+            }
             return super.$setTextColor(value);
         }
 
-        $setWordWrap(value:boolean):void {
-            delete this.$revertStyle["wordWrap"];
+        $setWordWrap(value: boolean): void {
+            if (!this.$changeFromStyle) {
+                delete this.$revertStyle["wordWrap"];
+                this.$styleSetMap["wordWrap"] = false;
+            }
             super.$setWordWrap(value);
         }
 
-        $setDisplayAsPassword(value:boolean):boolean {
-            delete this.$revertStyle["displayAsPassword"];
+        $setDisplayAsPassword(value: boolean): boolean {
+            if (!this.$changeFromStyle) {
+                delete this.$revertStyle["displayAsPassword"];
+                this.$styleSetMap["displayAsPassword"] = false;
+            }
             return super.$setDisplayAsPassword(value);
         }
 
-        $setStrokeColor(value:number):boolean {
-            delete this.$revertStyle["strokeColor"];
+        $setStrokeColor(value: number): boolean {
+            if (!this.$changeFromStyle) {
+                delete this.$revertStyle["strokeColor"];
+                this.$styleSetMap["strokeColor"] = false;
+            }
             return super.$setStrokeColor(value);
         }
 
-        $setStroke(value:number):boolean {
-            delete this.$revertStyle["stroke"];
+        $setStroke(value: number): boolean {
+            if (!this.$changeFromStyle) {
+                delete this.$revertStyle["stroke"];
+                this.$styleSetMap["stroke"] = false;
+            }
             return super.$setStroke(value);
         }
 
-        $setMaxChars(value:number):boolean {
-            delete this.$revertStyle["maxChars"];
+        $setMaxChars(value: number): boolean {
+            if (!this.$changeFromStyle) {
+                delete this.$revertStyle["maxChars"];
+                this.$styleSetMap["maxChars"] = false;
+            }
             return super.$setMaxChars(value);
         }
 
-        $setMultiline(value:boolean):boolean {
-            delete this.$revertStyle["multiline"];
+        $setMultiline(value: boolean): boolean {
+            if (!this.$changeFromStyle) {
+                delete this.$revertStyle["multiline"];
+                this.$styleSetMap["multiline"] = false;
+            }
             return super.$setMultiline(value);
         }
 
-        $setBorder(value:boolean):void {
-            delete this.$revertStyle["border"];
+        $setBorder(value: boolean): void {
+            if (!this.$changeFromStyle) {
+                delete this.$revertStyle["border"];
+                this.$styleSetMap["border"] = false;
+            }
             super.$setBorder(value);
         }
 
-        $setBorderColor(value:number):void {
-            delete this.$revertStyle["borderColor"];
+        $setBorderColor(value: number): void {
+            if (!this.$changeFromStyle) {
+                delete this.$revertStyle["borderColor"];
+                this.$styleSetMap["borderColor"] = false;
+            }
             super.$setBorderColor(value);
         }
 
-        $setBackground(value:boolean):void {
-            delete this.$revertStyle["background"];
+        $setBackground(value: boolean): void {
+            if (!this.$changeFromStyle) {
+                delete this.$revertStyle["background"];
+                this.$styleSetMap["background"] = false;
+            }
             super.$setBackground(value);
         }
 
-        $setBackgroundColor(value:number):void {
-            delete this.$revertStyle["backgroundColor"];
+        $setBackgroundColor(value: number): void {
+            if (!this.$changeFromStyle) {
+                delete this.$revertStyle["backgroundColor"];
+                this.$styleSetMap["backgroundColor"] = false;
+            }
             super.$setBackgroundColor(value);
         }
 
