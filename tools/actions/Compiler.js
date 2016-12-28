@@ -45,7 +45,11 @@ var Compiler = (function () {
         parsedCmd.options.allowUnreachableCode = true;
         parsedCmd.options.emitReflection = true;
         var defines = {};
-        if (egret.args.publish) {
+        if (option.debug != undefined) {
+            defines.DEBUG = option.debug;
+            defines.RELEASE = !option.debug;
+        }
+        else if (egret.args.publish) {
             defines.DEBUG = false;
             defines.RELEASE = true;
         }
