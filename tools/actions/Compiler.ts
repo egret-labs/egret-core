@@ -91,6 +91,10 @@ class Compiler {
             this.files[fileName] = { version: 0 };
         });
 
+        if (options.locale) {
+            ts.validateLocaleAndSetLanguage(options.locale, ts.sys);
+        }
+
         // Create the language service host to allow the LS to communicate with the host
         const servicesHost: ts.LanguageServiceHost = {
             getScriptFileNames: () => this.sortedFiles,

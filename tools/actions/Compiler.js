@@ -74,6 +74,9 @@ var Compiler = (function () {
         rootFileNames.forEach(function (fileName) {
             _this.files[fileName] = { version: 0 };
         });
+        if (options.locale) {
+            ts.validateLocaleAndSetLanguage(options.locale, ts.sys);
+        }
         // Create the language service host to allow the LS to communicate with the host
         var servicesHost = {
             getScriptFileNames: function () { return _this.sortedFiles; },
