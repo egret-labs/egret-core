@@ -33,8 +33,16 @@ namespace egret {
 
     export interface DisplayObject {
 
-        addEventListener<Z>(type: "touchBegin", listener: (this: Z, e: TouchEvent) => void, thisObject: Z, useCapture?: boolean, priority?: number);
-        addEventListener<Z>(type: string, listener: Function, thisObject: any, useCapture?: boolean, priority?: number);
+        addEventListener<Z>(type:   "touchMove"   |
+                                    "touchBegin"  |
+                                    "touchEnd"    |
+                                    "touchCancel" |
+                                    "touchTap"    |
+                                    "touchReleaseOutside" |
+                                    "touchRollOut"|
+                                    "touchRollOver"
+                                   , listener: (this: Z, e: TouchEvent) => void, thisObject: Z, useCapture?: boolean, priority?: number);
+        addEventListener(type: string, listener: Function, thisObject: any, useCapture?: boolean, priority?: number);
     }
 
     let localPoint: Point = new Point();
@@ -82,7 +90,7 @@ namespace egret {
          * @version Egret 2.4
          * @platform Web,Native
          */
-        public static TOUCH_MOVE: string = "touchMove";
+        public static TOUCH_MOVE: "touchMove" = "touchMove";
 
         /**
          * @language en_US
@@ -96,7 +104,7 @@ namespace egret {
          * @version Egret 2.4
          * @platform Web,Native
          */
-        public static TOUCH_BEGIN: string = "touchBegin";
+        public static TOUCH_BEGIN: "touchBegin" = "touchBegin";
 
         /**
          * @language en_US
@@ -111,7 +119,7 @@ namespace egret {
          * @version Egret 2.4
          * @platform Web,Native
          */
-        public static TOUCH_END: string = "touchEnd";
+        public static TOUCH_END: "touchEnd" = "touchEnd";
         /**
          * @language en_US
          * Dispatched when an event of some kind occurred that canceled the touch.
@@ -125,7 +133,7 @@ namespace egret {
          * @version Egret 3.0.1
          * @platform Web,Native
          */
-        public static TOUCH_CANCEL: string = "touchcancel";
+        public static TOUCH_CANCEL: "touchCancel" = "touchCancel";
 
         /**
          * @language en_US
@@ -155,21 +163,21 @@ namespace egret {
          * @version Egret 2.4
          * @platform Web,Native
          */
-        public static TOUCH_RELEASE_OUTSIDE: string = "touchReleaseOutside";
+        public static TOUCH_RELEASE_OUTSIDE: "touchReleaseOutside" = "touchReleaseOutside";
 
         /**
          * @deprecated
          * @version Egret 2.4
          * @platform Web,Native
          */
-        public static TOUCH_ROLL_OUT: string = "touchRollOut";
+        public static TOUCH_ROLL_OUT: "touchRollOut" = "touchRollOut";
 
         /**
          * @deprecated
          * @version Egret 2.4
          * @platform Web,Native
          */
-        public static TOUCH_ROLL_OVER: string = "touchRollOver";
+        public static TOUCH_ROLL_OVER: "touchRollOver" = "touchRollOver";
 
         /**
          * @language en_US

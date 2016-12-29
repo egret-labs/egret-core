@@ -29,7 +29,10 @@
 
 
 namespace egret {
-
+	export interface Stage{
+		addEventListener<Z>(type: "orientationChange"
+			, listener: (this: Z, e: StageOrientationEvent) => void, thisObject: Z, useCapture?: boolean, priority?: number);
+	}
 	/**
      * @language en_US
 	 * When the direction of the stage of change, Stage object dispatches StageOrientationEvent object.
@@ -58,7 +61,7 @@ namespace egret {
          * @version Egret 2.4
          * @platform Web,Native
 		 */
-        public static ORIENTATION_CHANGE:string = "orientationChange";
+        public static ORIENTATION_CHANGE:"orientationChange" = "orientationChange";
 
 		/**
          * @language en_US
