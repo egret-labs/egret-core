@@ -813,11 +813,21 @@ namespace egret.web {
         }
 
         private renderGroup(groupNode: sys.GroupNode, buffer: WebGLRenderBuffer): void {
+            let m = groupNode.matrix;
+            if (m) {
+                buffer.saveTransform();
+                buffer.transform(m.a, m.b, m.c, m.d, m.tx, m.ty);
+            }
+            
             let children = groupNode.drawData;
             let length = children.length;
             for (let i = 0; i < length; i++) {
                 let node: sys.RenderNode = children[i];
                 this.renderNode(node, buffer);
+            }
+
+            if (m) {
+                buffer.restoreTransform();
             }
         }
 

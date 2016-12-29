@@ -14927,7 +14927,7 @@ var egret;
                  */
                 _this.alpha = NaN;
                 /**
-                 * 相对透明度
+                 * 颜色变换滤镜
                  */
                 _this.filter = null;
                 _this.type = 1 /* BitmapNode */;
@@ -16861,12 +16861,32 @@ var egret;
             }
         };
         CanvasRenderer.prototype.renderGroup = function (groupNode, context) {
+            var m = groupNode.matrix;
+            var saved = false;
+            if (m) {
+                if (context.saveTransform) {
+                    context.saveTransform();
+                }
+                else {
+                    context.save();
+                }
+                saved = true;
+                context.transform(m.a, m.b, m.c, m.d, m.tx, m.ty);
+            }
             var drawCalls = 0;
             var children = groupNode.drawData;
             var length = children.length;
             for (var i = 0; i < length; i++) {
                 var node = children[i];
                 drawCalls += this.renderNode(node, context);
+            }
+            if (saved) {
+                if (context.restoreTransform) {
+                    context.restoreTransform();
+                }
+                else {
+                    context.restore();
+                }
             }
             return drawCalls;
         };

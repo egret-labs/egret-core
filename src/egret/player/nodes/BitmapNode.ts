@@ -70,7 +70,7 @@ namespace egret.sys {
          */
         public alpha: number = NaN;
         /**
-         * 相对透明度
+         * 颜色变换滤镜
          */
         public filter: ColorMatrixFilter = null;
         /**
