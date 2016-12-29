@@ -31,7 +31,13 @@
 
 namespace egret {
 
-    let localPoint:Point = new Point();
+    export interface DisplayObject {
+
+        addEventListener<Z>(type: "touchBegin", listener: (this: Z, e: TouchEvent) => void, thisObject: Z, useCapture?: boolean, priority?: number);
+        addEventListener<Z>(type: string, listener: Function, thisObject: any, useCapture?: boolean, priority?: number);
+    }
+
+    let localPoint: Point = new Point();
 
     /**
      * @language en_US
@@ -76,7 +82,7 @@ namespace egret {
          * @version Egret 2.4
          * @platform Web,Native
          */
-        public static TOUCH_MOVE:string = "touchMove";
+        public static TOUCH_MOVE: string = "touchMove";
 
         /**
          * @language en_US
@@ -90,7 +96,7 @@ namespace egret {
          * @version Egret 2.4
          * @platform Web,Native
          */
-        public static TOUCH_BEGIN:string = "touchBegin";
+        public static TOUCH_BEGIN: string = "touchBegin";
 
         /**
          * @language en_US
@@ -105,7 +111,7 @@ namespace egret {
          * @version Egret 2.4
          * @platform Web,Native
          */
-        public static TOUCH_END:string = "touchEnd";
+        public static TOUCH_END: string = "touchEnd";
         /**
          * @language en_US
          * Dispatched when an event of some kind occurred that canceled the touch.
@@ -119,7 +125,7 @@ namespace egret {
          * @version Egret 3.0.1
          * @platform Web,Native
          */
-        public static TOUCH_CANCEL:string = "touchcancel";
+        public static TOUCH_CANCEL: string = "touchcancel";
 
         /**
          * @language en_US
@@ -134,7 +140,7 @@ namespace egret {
          * @version Egret 2.4
          * @platform Web,Native
          */
-        public static TOUCH_TAP:string = "touchTap";
+        public static TOUCH_TAP: "touchTap" = "touchTap";
         /**
          * @language en_US
          * Dispatched when the user lifts the point of contact over the different DisplayObject instance on which the contact
@@ -149,21 +155,21 @@ namespace egret {
          * @version Egret 2.4
          * @platform Web,Native
          */
-        public static TOUCH_RELEASE_OUTSIDE:string = "touchReleaseOutside";
+        public static TOUCH_RELEASE_OUTSIDE: string = "touchReleaseOutside";
 
         /**
          * @deprecated
          * @version Egret 2.4
          * @platform Web,Native
          */
-        public static TOUCH_ROLL_OUT:string = "touchRollOut";
+        public static TOUCH_ROLL_OUT: string = "touchRollOut";
 
         /**
          * @deprecated
          * @version Egret 2.4
          * @platform Web,Native
          */
-        public static TOUCH_ROLL_OVER:string = "touchRollOver";
+        public static TOUCH_ROLL_OVER: string = "touchRollOver";
 
         /**
          * @language en_US
@@ -189,8 +195,8 @@ namespace egret {
          * @version Egret 2.4
          * @platform Web,Native
          */
-        public constructor(type:string, bubbles?:boolean, cancelable?:boolean, stageX?:number,
-                           stageY?:number, touchPointID?:number) {
+        public constructor(type: string, bubbles?: boolean, cancelable?: boolean, stageX?: number,
+            stageY?: number, touchPointID?: number) {
             super(type, bubbles, cancelable);
             this.$initTo(stageX, stageY, touchPointID);
         }
@@ -198,7 +204,7 @@ namespace egret {
         /**
          * @private
          */
-        $initTo(stageX:number, stageY:number, touchPointID:number):void {
+        $initTo(stageX: number, stageY: number, touchPointID: number): void {
             this.touchPointID = +touchPointID || 0;
             this.$stageX = +stageX || 0;
             this.$stageY = +stageY || 0;
@@ -207,7 +213,7 @@ namespace egret {
         /**
          * @private
          */
-        $stageX:number;
+        $stageX: number;
 
         /**
          * @language en_US
@@ -221,14 +227,14 @@ namespace egret {
          * @version Egret 2.4
          * @platform Web,Native
          */
-        public get stageX():number {
+        public get stageX(): number {
             return this.$stageX;
         }
 
         /**
          * @private
          */
-        $stageY:number;
+        $stageY: number;
 
         /**
          * @language en_US
@@ -242,11 +248,11 @@ namespace egret {
          * @version Egret 2.4
          * @platform Web,Native
          */
-        public get stageY():number {
+        public get stageY(): number {
             return this.$stageY;
         }
 
-        private _localX:number;
+        private _localX: number;
         /**
          * @language en_US
          * The horizontal coordinate at which the event occurred relative to the display object.
@@ -259,14 +265,14 @@ namespace egret {
          * @version Egret 2.4
          * @platform Web,Native
          */
-        public get localX():number {
+        public get localX(): number {
             if (this.targetChanged) {
                 this.getLocalXY();
             }
             return this._localX;
         }
 
-        private _localY:number;
+        private _localY: number;
         /**
          * @language en_US
          * The vertical coordinate at which the event occurred relative to the display object.
@@ -279,19 +285,19 @@ namespace egret {
          * @version Egret 2.4
          * @platform Web,Native
          */
-        public get localY():number {
+        public get localY(): number {
             if (this.targetChanged) {
                 this.getLocalXY();
             }
             return this._localY;
         }
 
-        private targetChanged:boolean = true;
+        private targetChanged: boolean = true;
 
         /**
          * @private
          */
-        private getLocalXY():void {
+        private getLocalXY(): void {
             this.targetChanged = false;
             let m = (<DisplayObject>this.$target).$getInvertedConcatenatedMatrix();
             m.transformPoint(this.$stageX, this.$stageY, localPoint);
@@ -299,7 +305,7 @@ namespace egret {
             this._localY = localPoint.y;
         }
 
-        $setTarget(target:any):boolean {
+        $setTarget(target: any): boolean {
             this.$target = target;
             this.targetChanged = !!target;
             return true;
@@ -317,7 +323,7 @@ namespace egret {
          * @version Egret 2.4
          * @platform Web,Native
          */
-        public touchPointID:number;
+        public touchPointID: number;
 
         /**
          * @language en_US
@@ -331,7 +337,7 @@ namespace egret {
          * @version Egret 2.4
          * @platform Web,Native
          */
-        public updateAfterEvent():void {
+        public updateAfterEvent(): void {
             sys.$requestRenderingFlag = true;
         }
 
@@ -347,7 +353,7 @@ namespace egret {
          * @version Egret 2.4
          * @platform Web,Native
          */
-        public touchDown:boolean = false;
+        public touchDown: boolean = false;
 
         /**
          * @language en_US
@@ -384,12 +390,12 @@ namespace egret {
          * @version Egret 2.4
          * @platform Web,Native
          */
-        public static dispatchTouchEvent(target:IEventDispatcher, type:string, bubbles?:boolean, cancelable?:boolean,
-                                         stageX?:number, stageY?:number, touchPointID?:number, touchDown:boolean = false):boolean {
+        public static dispatchTouchEvent(target: IEventDispatcher, type: string, bubbles?: boolean, cancelable?: boolean,
+            stageX?: number, stageY?: number, touchPointID?: number, touchDown: boolean = false): boolean {
             if (!bubbles && !target.hasEventListener(type)) {
                 return true;
             }
-            let event:TouchEvent = Event.create(TouchEvent, type, bubbles, cancelable);
+            let event: TouchEvent = Event.create(TouchEvent, type, bubbles, cancelable);
             event.$initTo(stageX, stageY, touchPointID);
             event.touchDown = touchDown;
             let result = target.dispatchEvent(event);
