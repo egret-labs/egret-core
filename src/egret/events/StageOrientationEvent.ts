@@ -32,6 +32,7 @@ namespace egret {
 	export interface Stage{
 		addEventListener<Z>(type: "orientationChange"
 			, listener: (this: Z, e: StageOrientationEvent) => void, thisObject: Z, useCapture?: boolean, priority?: number);
+		addEventListener(type: string, listener: Function, thisObject: any, useCapture?: boolean, priority?: number);
 	}
 	/**
      * @language en_US
