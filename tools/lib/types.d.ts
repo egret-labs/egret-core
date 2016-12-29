@@ -117,7 +117,7 @@ declare module egret {
     }
 
     export type EgretProperty = {
-        "modules"?: EgretPropertyModule[],
+        "modules": EgretPropertyModule[],
         "native"?: {
             "path_ignore": string[];
         },

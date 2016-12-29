@@ -4,7 +4,9 @@ var utils = require("../lib/utils");
 var path = require("path");
 var EgretProperties = (function () {
     function EgretProperties() {
-        this.properties = {};
+        this.properties = {
+            modules: []
+        };
         this.projectRoot = "";
     }
     EgretProperties.prototype.init = function (projectRoot) {
@@ -23,10 +25,10 @@ var EgretProperties = (function () {
         return this.properties.modules.some(function (m) { return m.name == "eui"; });
     };
     EgretProperties.prototype.reload = function () {
-        this.properties = {};
+        this.properties = { modules: [] };
         var egretPropertiesPath = file.joinPath(this.projectRoot, "egretProperties.json");
         if (file.exists(egretPropertiesPath)) {
-            this.properties = JSON.parse(egretPropertiesPath);
+            this.properties = JSON.parse(file.read(egretPropertiesPath));
             var useGUIorEUI = 0;
             for (var _i = 0, _a = this.properties.modules; _i < _a.length; _i++) {
                 var m = _a[_i];

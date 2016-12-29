@@ -29,6 +29,10 @@
 
 
 namespace egret {
+
+
+    export type PropsType<T> = Partial<T> & { [key: string]: number }
+
 	/**
      * @language en_US
      * Tween is the animation easing class of Egret
@@ -45,7 +49,7 @@ namespace egret {
      * @platform Web,Native
      * @includeExample extension/tween/Tween.ts
 	 */
-    export class Tween extends EventDispatcher {
+    export class Tween<T> extends EventDispatcher {
 		/**
          * 不做特殊处理
 		 * @constant {number} egret.Tween.NONE
@@ -68,7 +72,7 @@ namespace egret {
         /**
          * @private
          */
-        private static _tweens:Tween[] = [];
+        private static _tweens: Tween<any>[] = [];
         /**
          * @private
          */
@@ -85,19 +89,19 @@ namespace egret {
         /**
          * @private
          */
-        private _target:any = null;
+        private _target: any = null;
         /**
          * @private
          */
-        private _useTicks:boolean = false;
+        private _useTicks: boolean = false;
         /**
          * @private
          */
-        private ignoreGlobalPause:boolean = false;
+        private ignoreGlobalPause: boolean = false;
         /**
          * @private
          */
-        private loop:boolean = false;
+        private loop: boolean = false;
         /**
          * @private
          */
@@ -113,35 +117,35 @@ namespace egret {
         /**
          * @private
          */
-        private _steps:any[] = null;
+        private _steps: any[] = null;
         /**
          * @private
          */
-        private paused:boolean = false;
+        private paused: boolean = false;
         /**
          * @private
          */
-        private duration:number = 0;
+        private duration: number = 0;
         /**
          * @private
          */
-        private _prevPos:number = -1;
+        private _prevPos: number = -1;
         /**
          * @private
          */
-        private position:number = null;
+        private position: number = null;
         /**
          * @private
          */
-        private _prevPosition:number = 0;
+        private _prevPosition: number = 0;
         /**
          * @private
          */
-        private _stepPosition:number = 0;
+        private _stepPosition: number = 0;
         /**
          * @private
          */
-        private passive:boolean = false;
+        private passive: boolean = false;
 
 		/**
          * @language en_US
@@ -165,7 +169,7 @@ namespace egret {
          * @version Egret 2.4
          * @platform Web,Native
 		 */
-        public static get(target:any, props:any = null, pluginData:any = null, override:boolean = false):Tween {
+        public static get<T>(target: T, props: any = null, pluginData: any = null, override: boolean = false): Tween<T> {
             if (override) {
                 Tween.removeTweens(target);
             }
@@ -186,11 +190,11 @@ namespace egret {
          * @version Egret 2.4
          * @platform Web,Native
 		 */
-        public static removeTweens(target:any):void {
+        public static removeTweens(target: any): void {
             if (!target.tween_count) {
                 return;
             }
-            let tweens:Tween[] = Tween._tweens;
+            let tweens: Tween<any>[] = Tween._tweens;
             for (let i = tweens.length - 1; i >= 0; i--) {
                 if (tweens[i]._target == target) {
                     tweens[i].paused = true;
@@ -214,11 +218,11 @@ namespace egret {
          * @version Egret 2.4
          * @platform Web,Native
          */
-        public static pauseTweens(target:any):void {
+        public static pauseTweens(target: any): void {
             if (!target.tween_count) {
                 return;
             }
-            let tweens:egret.Tween[] = egret.Tween._tweens;
+            let tweens: egret.Tween<any>[] = egret.Tween._tweens;
             for (let i = tweens.length - 1; i >= 0; i--) {
                 if (tweens[i]._target == target) {
                     tweens[i].paused = true;
@@ -240,11 +244,11 @@ namespace egret {
          * @version Egret 2.4
          * @platform Web,Native
          */
-        public static resumeTweens(target:any):void {
+        public static resumeTweens(target: any): void {
             if (!target.tween_count) {
                 return;
             }
-            let tweens:egret.Tween[] = egret.Tween._tweens;
+            let tweens: egret.Tween<any>[] = egret.Tween._tweens;
             for (let i = tweens.length - 1; i >= 0; i--) {
                 if (tweens[i]._target == target) {
                     tweens[i].paused = false;
@@ -258,13 +262,13 @@ namespace egret {
          * @param delta 
          * @param paused 
          */
-        private static tick(timeStamp:number, paused = false):boolean {
+        private static tick(timeStamp: number, paused = false): boolean {
             let delta = timeStamp - Tween._lastTime;
             Tween._lastTime = timeStamp;
 
-            let tweens:Tween[] = Tween._tweens.concat();
+            let tweens: Tween<any>[] = Tween._tweens.concat();
             for (let i = tweens.length - 1; i >= 0; i--) {
-                let tween:Tween = tweens[i];
+                let tween: Tween<any> = tweens[i];
                 if ((paused && !tween.ignoreGlobalPause) || tween.paused) {
                     continue;
                 }
@@ -274,16 +278,16 @@ namespace egret {
             return false;
         }
 
-        private static _lastTime:number = 0;
+        private static _lastTime: number = 0;
         /**
          * @private
          * 
          * @param tween 
          * @param value 
          */
-        private static _register(tween:Tween, value:boolean):void {
-            let target:any = tween._target;
-            let tweens:Tween[] = Tween._tweens;
+        private static _register(tween: Tween<any>, value: boolean): void {
+            let target: any = tween._target;
+            let tweens: Tween<any>[] = Tween._tweens;
             if (value) {
                 if (target) {
                     target.tween_count = target.tween_count > 0 ? target.tween_count + 1 : 1;
@@ -320,10 +324,10 @@ namespace egret {
          * @version Egret 2.4
          * @platform Web,Native
 		 */
-        public static removeAllTweens():void {
-            let tweens:Tween[] = Tween._tweens;
+        public static removeAllTweens(): void {
+            let tweens: Tween<any>[] = Tween._tweens;
             for (let i = 0, l = tweens.length; i < l; i++) {
-                let tween:Tween = tweens[i];
+                let tween: Tween<any> = tweens[i];
                 tween.paused = true;
                 tween._target.tweenjs_count = 0;
             }
@@ -336,7 +340,7 @@ namespace egret {
          * @version Egret 2.4
          * @platform Web,Native
          */
-        constructor(target:any, props:any, pluginData:any) {
+        constructor(target: T, props: any, pluginData: any) {
             super();
             this.initialize(target, props, pluginData);
         }
@@ -348,7 +352,7 @@ namespace egret {
          * @param props 
          * @param pluginData 
          */
-        private initialize(target:any, props:any, pluginData:any):void {
+        private initialize(target: T, props: any, pluginData: any): void {
             this._target = target;
             if (props) {
                 this._useTicks = props.useTicks;
@@ -382,14 +386,14 @@ namespace egret {
          * @param actionsMode 
          * @returns 
          */
-        public setPosition(value:number, actionsMode:number = 1):boolean {
+        public setPosition(value: number, actionsMode: number = 1): boolean {
             if (value < 0) {
                 value = 0;
             }
 
             //正常化位置
-            let t:number = value;
-            let end:boolean = false;
+            let t: number = value;
+            let end: boolean = false;
             if (t >= this.duration) {
                 if (this.loop) {
                     t = t % this.duration;
@@ -463,7 +467,7 @@ namespace egret {
          * @param endPos 
          * @param includeStart 
          */
-        private _runAction(action:any, startPos:number, endPos:number, includeStart:boolean = false) {
+        private _runAction(action: any, startPos: number, endPos: number, includeStart: boolean = false) {
             let sPos: number = startPos;
             let ePos: number = endPos;
             if (startPos > endPos) {
@@ -483,7 +487,7 @@ namespace egret {
          * @param step 
          * @param ratio 
          */
-        private _updateTargetProps(step:any, ratio:number) {
+        private _updateTargetProps(step: any, ratio: number) {
             let p0, p1, v, v0, v1, arr;
             if (!step && ratio == 1) {
                 this.passive = false;
@@ -509,7 +513,7 @@ namespace egret {
                 if ((v1 = p1[n]) == null) {
                     p1[n] = v1 = v0;
                 }
-                if (v0 == v1 || ratio == 0 || ratio == 1 || (typeof(v0) != "number")) {
+                if (v0 == v1 || ratio == 0 || ratio == 1 || (typeof (v0) != "number")) {
                     v = ratio == 1 ? v1 : v0;
                 } else {
                     v = v0 + (v1 - v0) * ratio;
@@ -550,7 +554,7 @@ namespace egret {
          * @version Egret 2.4
          * @platform Web,Native
 		 */
-        public setPaused(value:boolean):Tween {
+        public setPaused(value: boolean): Tween<any> {
             this.paused = value;
             Tween._register(this, !value);
             return this;
@@ -562,7 +566,7 @@ namespace egret {
          * @param props 
          * @returns 
          */
-        private _cloneProps(props:any):any {
+        private _cloneProps(props: any): any {
             let o = {};
             for (let n in props) {
                 o[n] = props[n];
@@ -576,7 +580,7 @@ namespace egret {
          * @param o 
          * @returns 
          */
-        private _addStep(o):Tween {
+        private _addStep(o): Tween<any> {
             if (o.d > 0) {
                 o.type = "step";
                 this._steps.push(o);
@@ -592,7 +596,7 @@ namespace egret {
          * @param o 
          * @returns 
          */
-        private _appendQueueProps(o):any {
+        private _appendQueueProps(o): any {
             let arr, oldValue, i, l, injectProps;
             for (let n in o) {
                 if (this._initQueueProps[n] === undefined) {
@@ -633,7 +637,7 @@ namespace egret {
          * @param o 
          * @returns 
          */
-        private _addAction(o):Tween {
+        private _addAction(o): Tween<any> {
             o.t = this.duration;
             o.type = "action";
             this._steps.push(o);
@@ -646,7 +650,7 @@ namespace egret {
          * @param props 
          * @param o 
          */
-        private _set(props:any, o):void {
+        private _set(props: any, o): void {
             for (let n in props) {
                 o[n] = props[n];
             }
@@ -670,12 +674,12 @@ namespace egret {
          * @version Egret 2.4
          * @platform Web,Native
 		 */
-        public wait(duration:number, passive?:boolean):Tween {
+        public wait(duration: number, passive?: boolean): Tween<any> {
             if (duration == null || duration <= 0) {
                 return this;
             }
             let o = this._cloneProps(this._curQueueProps);
-            return this._addStep({d: duration, p0: o, p1: o, v: passive});
+            return this._addStep({ d: duration, p0: o, p1: o, v: passive });
         }
 
 		/**
@@ -698,11 +702,12 @@ namespace egret {
          * @version Egret 2.4
          * @platform Web,Native
 		 */
-        public to(props:any, duration?:number, ease:Function = undefined):Tween {
+
+        public to(props: PropsType<T>, duration?: number, ease: Function = undefined): Tween<any> {
             if (isNaN(duration) || duration < 0) {
                 duration = 0;
             }
-            this._addStep({d: duration || 0, p0: this._cloneProps(this._curQueueProps), e: ease, p1: this._cloneProps(this._appendQueueProps(props))});
+            this._addStep({ d: duration || 0, p0: this._cloneProps(this._curQueueProps), e: ease, p1: this._cloneProps(this._appendQueueProps(props)) });
             //加入一步set，防止游戏极其卡顿时候，to后面的call取到的属性值不对
             return this.set(props);
         }
@@ -741,8 +746,8 @@ namespace egret {
          *  }, this, [233, "hello"]);
          * </pre>
 		 */
-        public call(callback:Function, thisObj:any = undefined, params:any[] = undefined):Tween {
-            return this._addAction({f: callback, p: params ? params : [], o: thisObj ? thisObj : this._target});
+        public call(callback: Function, thisObj: any = undefined, params: any[] = undefined): Tween<any> {
+            return this._addAction({ f: callback, p: params ? params : [], o: thisObj ? thisObj : this._target });
         }
 
         /**
@@ -761,10 +766,10 @@ namespace egret {
          * @version Egret 2.4
          * @platform Web,Native
          */
-        public set(props:any, target = null):Tween {
+        public set(props: any, target = null): Tween<any> {
             //更新当前数据，保证缓动流畅性
             this._appendQueueProps(props);
-            return this._addAction({f: this._set, o: this, p: [props, target ? target : this._target]});
+            return this._addAction({ f: this._set, o: this, p: [props, target ? target : this._target] });
         }
 
 		/**
@@ -783,7 +788,7 @@ namespace egret {
          * @version Egret 2.4
          * @platform Web,Native
 		 */
-        public play(tween?:Tween):Tween {
+        public play(tween?: Tween<any>): Tween<any> {
             if (!tween) {
                 tween = this;
             }
@@ -806,7 +811,7 @@ namespace egret {
          * @version Egret 2.4
          * @platform Web,Native
 		 */
-        public pause(tween?:Tween):Tween {
+        public pause(tween?: Tween<any>): Tween<any> {
             if (!tween) {
                 tween = this;
             }
@@ -820,7 +825,7 @@ namespace egret {
          * @version Egret 2.4
          * @platform Web,Native
 		 */
-        public $tick(delta:number):void {
+        public $tick(delta: number): void {
             if (this.paused) {
                 return;
             }

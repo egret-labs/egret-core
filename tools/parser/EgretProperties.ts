@@ -9,7 +9,9 @@ import path = require("path");
 
 
 class EgretProperties implements egret.EgretPropertiesClass {
-    properties: egret.EgretProperty = {};
+    properties: egret.EgretProperty = {
+        modules: []
+    };
 
     projectRoot: string = "";
     init(projectRoot: string) {
@@ -31,10 +33,10 @@ class EgretProperties implements egret.EgretPropertiesClass {
     }
 
     reload() {
-        this.properties = {};
+        this.properties = { modules: [] };
         let egretPropertiesPath = file.joinPath(this.projectRoot, "egretProperties.json");
         if (file.exists(egretPropertiesPath)) {
-            this.properties = JSON.parse(egretPropertiesPath);
+            this.properties = JSON.parse(file.read(egretPropertiesPath));
             let useGUIorEUI = 0;
             for (let m of this.properties.modules) {
                 //兼容小写
