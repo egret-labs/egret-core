@@ -30,9 +30,6 @@
 
 namespace egret {
 
-
-    export type PropsType<T> = Partial<T> & { [key: string]: number }
-
 	/**
      * @language en_US
      * Tween is the animation easing class of Egret
@@ -169,7 +166,7 @@ namespace egret {
          * @version Egret 2.4
          * @platform Web,Native
 		 */
-        public static get<T>(target: T, props: any = null, pluginData: any = null, override: boolean = false): Tween<T> {
+        public static get<T>(target: T, props?: { loop?: boolean, onChange?: Function, onChangeObj?: any }, pluginData: any = null, override: boolean = false): Tween<T> {
             if (override) {
                 Tween.removeTweens(target);
             }
@@ -674,7 +671,7 @@ namespace egret {
          * @version Egret 2.4
          * @platform Web,Native
 		 */
-        public wait(duration: number, passive?: boolean): Tween<any> {
+        public wait(duration: number, passive?: boolean): Tween<T> {
             if (duration == null || duration <= 0) {
                 return this;
             }
@@ -703,7 +700,7 @@ namespace egret {
          * @platform Web,Native
 		 */
 
-        public to(props: PropsType<T>, duration?: number, ease: Function = undefined): Tween<any> {
+        public to(props: Partial<T & {[X in keyof T]: number }>, duration?: number, ease: Function = undefined): Tween<T> {
             if (isNaN(duration) || duration < 0) {
                 duration = 0;
             }
@@ -746,7 +743,7 @@ namespace egret {
          *  }, this, [233, "hello"]);
          * </pre>
 		 */
-        public call(callback: Function, thisObj: any = undefined, params: any[] = undefined): Tween<any> {
+        public call(callback: Function, thisObj: any = undefined, params: any[] = undefined): Tween<T> {
             return this._addAction({ f: callback, p: params ? params : [], o: thisObj ? thisObj : this._target });
         }
 

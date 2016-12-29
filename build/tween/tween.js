@@ -781,7 +781,6 @@ var egret;
          * @platform Web,Native
          */
         Tween.get = function (target, props, pluginData, override) {
-            if (props === void 0) { props = null; }
             if (pluginData === void 0) { pluginData = null; }
             if (override === void 0) { override = false; }
             if (override) {
