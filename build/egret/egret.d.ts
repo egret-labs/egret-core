@@ -9917,7 +9917,7 @@ declare namespace egret.sys {
          */
         alpha: number;
         /**
-         * 相对透明度
+         * 颜色变换滤镜
          */
         filter: ColorMatrixFilter;
         /**
@@ -10019,6 +10019,10 @@ declare namespace egret.sys {
      * 组渲染节点,用于组合多个渲染节点
      */
     class GroupNode extends RenderNode {
+        /**
+         * 相对偏移矩阵。
+         */
+        matrix: egret.Matrix;
         constructor();
         addNode(node: RenderNode): void;
         /**

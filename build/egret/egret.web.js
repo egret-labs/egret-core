@@ -4924,11 +4924,19 @@ var egret;
                 }
             };
             WebGLRenderer.prototype.renderGroup = function (groupNode, buffer) {
+                var m = groupNode.matrix;
+                if (m) {
+                    buffer.saveTransform();
+                    buffer.transform(m.a, m.b, m.c, m.d, m.tx, m.ty);
+                }
                 var children = groupNode.drawData;
                 var length = children.length;
                 for (var i = 0; i < length; i++) {
                     var node = children[i];
                     this.renderNode(node, buffer);
+                }
+                if (m) {
+                    buffer.restoreTransform();
                 }
             };
             /**
@@ -5337,8 +5345,8 @@ var egret;
             var aLink = document.createElement('a');
             aLink['download'] = filePath;
             aLink.href = href;
-            var evt = document.createEvent("HTMLEvents");
-            evt.initEvent("click", false, false); //initEvent 不加后两个参数在FF下会报错
+            var evt = document.createEvent('MouseEvents');
+            evt.initMouseEvent('click', true, false, window, 0, 0, 0, 0, 0, false, false, false, false, 0, null);
             aLink.dispatchEvent(evt);
         }
         function getPixel32(x, y) {
