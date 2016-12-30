@@ -412,10 +412,4 @@ namespace egret {
         }
     }
 
-    if (DEBUG) {
-        egret.$markReadOnly(TouchEvent, "stageX");
-        egret.$markReadOnly(TouchEvent, "stageY");
-        egret.$markReadOnly(TouchEvent, "localX");
-        egret.$markReadOnly(TouchEvent, "localY");
-    }
 }

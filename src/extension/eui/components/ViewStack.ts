@@ -344,8 +344,4 @@ namespace eui {
 
     registerBindable(ViewStack.prototype,"selectedIndex");
 
-    if(DEBUG){
-        egret.$markReadOnly(ViewStack,"length");
-        egret.$markReadOnly(ViewStack,"layout");
-    }
 }

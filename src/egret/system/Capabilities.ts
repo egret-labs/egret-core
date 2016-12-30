@@ -337,16 +337,6 @@ namespace egret {
         static $boundingClientHeight:number = 0;
     }
 
-    if (DEBUG) {
-        egret.$markReadOnly(Capabilities, "language", false);
-        egret.$markReadOnly(Capabilities, "isMobile", false);
-        egret.$markReadOnly(Capabilities, "os", false);
-        egret.$markReadOnly(Capabilities, "runtimeType", false);
-        egret.$markReadOnly(Capabilities, "supportVersion", false);
-        egret.$markReadOnly(Capabilities, "renderMode", false);
-        egret.$markReadOnly(Capabilities, "boundingClientWidth", false);
-        egret.$markReadOnly(Capabilities, "boundingClientHeight", false);
-    }
 
 }
 

@@ -6967,9 +6967,6 @@ var egret;
         native.NativeHttpRequest = NativeHttpRequest;
         __reflect(NativeHttpRequest.prototype, "egret.native.NativeHttpRequest", ["egret.HttpRequest"]);
         egret.HttpRequest = NativeHttpRequest;
-        if (true) {
-            egret.$markReadOnly(NativeHttpRequest, "response");
-        }
     })(native = egret.native || (egret.native = {}));
 })(egret || (egret = {}));
 //////////////////////////////////////////////////////////////////////////////////////

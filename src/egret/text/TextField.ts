@@ -2154,9 +2154,4 @@ namespace egret {
         }
     }
 
-    if (DEBUG) {
-        egret.$markReadOnly(TextField, "numLines");
-        egret.$markReadOnly(TextField, "textWidth");
-        egret.$markReadOnly(TextField, "textHeight");
-    }
 }

@@ -2098,9 +2098,6 @@ var egret;
         web.WebHttpRequest = WebHttpRequest;
         __reflect(WebHttpRequest.prototype, "egret.web.WebHttpRequest", ["egret.HttpRequest"]);
         egret.HttpRequest = WebHttpRequest;
-        if (true) {
-            egret.$markReadOnly(WebHttpRequest, "response");
-        }
     })(web = egret.web || (egret.web = {}));
 })(egret || (egret = {}));
 //////////////////////////////////////////////////////////////////////////////////////

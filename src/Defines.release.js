@@ -42,9 +42,6 @@ var egret;
     function _warn() {
     }
     egret.$warn = _warn;
-    function _markReadOnly() {
-    }
-    egret.$markReadOnly = _markReadOnly;
     function markCannotUse() {
     }
     egret.$markCannotUse = markCannotUse;

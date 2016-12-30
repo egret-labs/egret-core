@@ -1259,10 +1259,4 @@ namespace eui {
             }
         }
     }
-
-
-    if(DEBUG){
-        egret.$markReadOnly(TileLayout,"columnCount");
-        egret.$markReadOnly(TileLayout,"rowCount");
-    }
 }

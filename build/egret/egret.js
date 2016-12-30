@@ -34,106 +34,6 @@ var __extends = (this && this.__extends) || function (d, b) {
 //  EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 //
 //////////////////////////////////////////////////////////////////////////////////////
-this["DEBUG"] = true;
-this["RELEASE"] = false;
-var egret;
-(function (egret) {
-    /**
-     * @private
-     */
-    function _getString(code) {
-        var params = [];
-        for (var _i = 1; _i < arguments.length; _i++) {
-            params[_i - 1] = arguments[_i];
-        }
-        return egret.sys.tr.apply(egret.sys, arguments);
-    }
-    egret.getString = _getString;
-    function _error(code) {
-        var params = [];
-        for (var _i = 1; _i < arguments.length; _i++) {
-            params[_i - 1] = arguments[_i];
-        }
-        var text = egret.sys.tr.apply(null, arguments);
-        if (true) {
-            egret.sys.$logToFPS("Error #" + code + ": " + text);
-        }
-        throw new Error("#" + code + ": " + text); //使用这种方式报错能够终止后续代码继续运行
-    }
-    egret.$error = _error;
-    function _warn(code) {
-        var params = [];
-        for (var _i = 1; _i < arguments.length; _i++) {
-            params[_i - 1] = arguments[_i];
-        }
-        var text = egret.sys.tr.apply(null, arguments);
-        if (true) {
-            egret.sys.$logToFPS("Warning #" + code + ": " + text);
-        }
-        egret.warn("Warning #" + code + ": " + text);
-    }
-    egret.$warn = _warn;
-    function _markReadOnly(instance, property, isProperty) {
-        if (isProperty === void 0) { isProperty = true; }
-        var data = Object.getOwnPropertyDescriptor(isProperty ? instance.prototype : instance, property);
-        if (data == null) {
-            console.log(instance);
-            return;
-        }
-        data.set = function (value) {
-            if (isProperty) {
-                egret.$warn(1010, egret.getQualifiedClassName(instance), property);
-            }
-            else {
-                egret.$warn(1014, egret.getQualifiedClassName(instance), property);
-            }
-        };
-        Object.defineProperty(instance.prototype, property, data);
-    }
-    egret.$markReadOnly = _markReadOnly;
-    function markCannotUse(instance, property, defaultValue) {
-        Object.defineProperty(instance.prototype, property, {
-            get: function () {
-                egret.$warn(1009, egret.getQualifiedClassName(instance), property);
-                return defaultValue;
-            },
-            set: function (value) {
-                egret.$error(1009, egret.getQualifiedClassName(instance), property);
-            },
-            enumerable: true,
-            configurable: true
-        });
-    }
-    egret.$markCannotUse = markCannotUse;
-})(egret || (egret = {}));
-//////////////////////////////////////////////////////////////////////////////////////
-//
-//  Copyright (c) 2014-present, Egret Technology.
-//  All rights reserved.
-//  Redistribution and use in source and binary forms, with or without
-//  modification, are permitted provided that the following conditions are met:
-//
-//     * Redistributions of source code must retain the above copyright
-//       notice, this list of conditions and the following disclaimer.
-//     * Redistributions in binary form must reproduce the above copyright
-//       notice, this list of conditions and the following disclaimer in the
-//       documentation and/or other materials provided with the distribution.
-//     * Neither the name of the Egret nor the
-//       names of its contributors may be used to endorse or promote products
-//       derived from this software without specific prior written permission.
-//
-//  THIS SOFTWARE IS PROVIDED BY EGRET AND CONTRIBUTORS "AS IS" AND ANY EXPRESS
-//  OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES
-//  OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED.
-//  IN NO EVENT SHALL EGRET AND CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT,
-//  INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT
-//  LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES;LOSS OF USE, DATA,
-//  OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF
-//  LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING
-//  NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE,
-//  EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
-//
-//////////////////////////////////////////////////////////////////////////////////////
 var egret;
 (function (egret) {
     /**
@@ -310,9 +210,6 @@ var egret;
     }());
     egret.HashObject = HashObject;
     __reflect(HashObject.prototype, "egret.HashObject", ["egret.IHashObject"]);
-    if (true) {
-        egret.$markReadOnly(HashObject, "hashCode");
-    }
 })(egret || (egret = {}));
 //////////////////////////////////////////////////////////////////////////////////////
 //
@@ -3474,10 +3371,6 @@ var egret;
     DisplayObject.$renderCallBackList = [];
     egret.DisplayObject = DisplayObject;
     __reflect(DisplayObject.prototype, "egret.DisplayObject", ["egret.sys.Renderable"]);
-    if (true) {
-        egret.$markReadOnly(DisplayObject, "parent");
-        egret.$markReadOnly(DisplayObject, "stage");
-    }
 })(egret || (egret = {}));
 //////////////////////////////////////////////////////////////////////////////////////
 //
@@ -4337,9 +4230,6 @@ var egret;
     DisplayObjectContainer.$EVENT_REMOVE_FROM_STAGE_LIST = [];
     egret.DisplayObjectContainer = DisplayObjectContainer;
     __reflect(DisplayObjectContainer.prototype, "egret.DisplayObjectContainer");
-    if (true) {
-        egret.$markReadOnly(DisplayObjectContainer, "numChildren");
-    }
 })(egret || (egret = {}));
 //////////////////////////////////////////////////////////////////////////////////////
 //
@@ -4454,154 +4344,41 @@ var egret;
 var egret;
 (function (egret) {
     /**
-     * @language en_US
-     * SpriteSheet is a mosaic of multiple sub-bitmaps, comprising a plurality of Texture objects.
-     * Each Texture object shares the set bitmap of SpriteSheet, but it points to its different areas.
-     * On WebGL / OpenGL, this operation can significantly improve performance.
-     * At the same time, SpriteSheet can carry out material integration easily to reduce the number of HTTP requests
-     * For specification of the SpriteSheet format, see the document https://github.com/egret-labs/egret-core/wiki/Egret-SpriteSheet-Specification
-     * @see http://edn.egret.com/cn/docs/page/135 The use of texture packs
-     * @version Egret 2.4
-     * @platform Web,Native
-     * @includeExample egret/display/SpriteSheet.ts
+     * @private
      */
+    egret.$locale_strings = egret.$locale_strings || {};
     /**
-     * @language zh_CN
-     * SpriteSheet 是一张由多个子位图拼接而成的集合位图，它包含多个 Texture 对象。
-     * 每一个 Texture 都共享 SpriteSheet 的集合位图，但是指向它的不同的区域。
-     * 在WebGL / OpenGL上，这种做法可以显著提升性能
-     * 同时，SpriteSheet可以很方便的进行素材整合，降低HTTP请求数量
-     * SpriteSheet 格式的具体规范可以参见此文档  https://github.com/egret-labs/egret-core/wiki/Egret-SpriteSheet-Specification
-     * @see http://edn.egret.com/cn/docs/page/135 纹理集的使用
-     * @version Egret 2.4
-     * @platform Web,Native
-     * @includeExample egret/display/SpriteSheet.ts
+     * @private
      */
-    var SpriteSheet = (function (_super) {
-        __extends(SpriteSheet, _super);
+    egret.$language = "en_US";
+})(egret || (egret = {}));
+(function (egret) {
+    var sys;
+    (function (sys) {
         /**
-         * @language en_US
-         * Create an egret.SpriteSheet object
-         * @param texture {Texture} Texture
-         * @version Egret 2.4
-         * @platform Web,Native
+         * @private
+         * 全局多语言翻译函数
+         * @param code 要查询的字符串代码
+         * @param args 替换字符串中{0}标志的参数列表
+         * @returns 返回拼接后的字符串
          */
-        /**
-         * @language zh_CN
-         * 创建一个 egret.SpriteSheet 对象
-         * @param texture {Texture} 纹理
-         * @version Egret 2.4
-         * @platform Web,Native
-         */
-        function SpriteSheet(texture) {
-            var _this = _super.call(this) || this;
-            /**
-             * @private
-             * 表示这个SpriteSheet的位图区域在bitmapData上的起始位置x。
-             */
-            _this._bitmapX = 0;
-            /**
-             * @private
-             * 表示这个SpriteSheet的位图区域在bitmapData上的起始位置y。
-             */
-            _this._bitmapY = 0;
-            /**
-             * @private
-             * 纹理缓存字典
-             */
-            _this._textureMap = egret.createMap();
-            _this.$texture = texture;
-            _this._bitmapX = texture._bitmapX - texture._offsetX;
-            _this._bitmapY = texture._bitmapY - texture._offsetY;
-            return _this;
+        function tr(code) {
+            var args = [];
+            for (var _i = 1; _i < arguments.length; _i++) {
+                args[_i - 1] = arguments[_i];
+            }
+            var text = egret.$locale_strings[egret.$language][code];
+            if (!text) {
+                return "{" + code + "}";
+            }
+            var length = args.length;
+            for (var i = 0; i < length; i++) {
+                text = text.replace("{" + i + "}", args[i]);
+            }
+            return text;
         }
-        /**
-         * @language en_US
-         * Obtain a cached Texture object according to the specified texture name
-         * @param name {string} Cache the name of this Texture object
-         * @returns {egret.Texture} The Texture object
-         * @version Egret 2.4
-         * @platform Web,Native
-         */
-        /**
-         * @language zh_CN
-         * 根据指定纹理名称获取一个缓存的 Texture 对象
-         * @param name {string} 缓存这个 Texture 对象所使用的名称
-         * @returns {egret.Texture} Texture 对象
-         * @version Egret 2.4
-         * @platform Web,Native
-         */
-        SpriteSheet.prototype.getTexture = function (name) {
-            return this._textureMap[name];
-        };
-        /**
-         * @language en_US
-         * Create a new Texture object for the specified area on SpriteSheet and cache it
-         * @param name {string} Cache the name of this Texture object. If the name already exists, the previous Texture object will be overwrited.
-         * @param bitmapX {number} Starting coordinate x of texture area on bitmapData
-         * @param bitmapY {number} Starting coordinate y of texture area on bitmapData
-         * @param bitmapWidth {number} Width of texture area on bitmapData
-         * @param bitmapHeight {number} Height of texture area on bitmapData
-         * @param offsetX {number} Starting point x for a non-transparent area of the original bitmap
-         * @param offsetY {number} Starting point y for a non-transparent area of the original bitmap
-         * @param textureWidth {number} Width of the original bitmap. If it is not passed, use the bitmapWidth  value.
-         * @param textureHeight {number} Height of the original bitmap. If it is not passed, use the bitmapHeight value.
-         * @returns {egret.Texture} The created Texture object
-         * @version Egret 2.4
-         * @platform Web,Native
-         */
-        /**
-         * @language zh_CN
-         * 为 SpriteSheet 上的指定区域创建一个新的 Texture 对象并缓存它
-         * @param name {string} 缓存这个 Texture 对象所使用的名称，如果名称已存在，将会覆盖之前的 Texture 对象
-         * @param bitmapX {number} 纹理区域在 bitmapData 上的起始坐标x
-         * @param bitmapY {number} 纹理区域在 bitmapData 上的起始坐标y
-         * @param bitmapWidth {number} 纹理区域在 bitmapData 上的宽度
-         * @param bitmapHeight {number} 纹理区域在 bitmapData 上的高度
-         * @param offsetX {number} 原始位图的非透明区域 x 起始点
-         * @param offsetY {number} 原始位图的非透明区域 y 起始点
-         * @param textureWidth {number} 原始位图的高度，若不传入，则使用 bitmapWidth 的值。
-         * @param textureHeight {number} 原始位图的宽度，若不传入，则使用 bitmapHeight 的值。
-         * @returns {egret.Texture} 创建的 Texture 对象
-         * @version Egret 2.4
-         * @platform Web,Native
-         */
-        SpriteSheet.prototype.createTexture = function (name, bitmapX, bitmapY, bitmapWidth, bitmapHeight, offsetX, offsetY, textureWidth, textureHeight) {
-            if (offsetX === void 0) { offsetX = 0; }
-            if (offsetY === void 0) { offsetY = 0; }
-            if (textureWidth === void 0) {
-                textureWidth = offsetX + bitmapWidth;
-            }
-            if (textureHeight === void 0) {
-                textureHeight = offsetY + bitmapHeight;
-            }
-            var texture = new egret.Texture();
-            texture._bitmapData = this.$texture._bitmapData;
-            texture.$initData(this._bitmapX + bitmapX, this._bitmapY + bitmapY, bitmapWidth, bitmapHeight, offsetX, offsetY, textureWidth, textureHeight, this.$texture._sourceWidth, this.$texture._sourceHeight);
-            this._textureMap[name] = texture;
-            return texture;
-        };
-        /**
-         * @language en_US
-         * dispose texture
-         * @version Egret 2.4
-         * @platform Web,Native
-         */
-        /**
-         * @language zh_CN
-         * 释放纹理
-         * @version Egret 2.4
-         * @platform Web,Native
-         */
-        SpriteSheet.prototype.dispose = function () {
-            if (this.$texture) {
-                this.$texture.dispose();
-            }
-        };
-        return SpriteSheet;
-    }(egret.HashObject));
-    egret.SpriteSheet = SpriteSheet;
-    __reflect(SpriteSheet.prototype, "egret.SpriteSheet");
+        sys.tr = tr;
+    })(sys = egret.sys || (egret.sys = {}));
 })(egret || (egret = {}));
 //////////////////////////////////////////////////////////////////////////////////////
 //
@@ -5351,14 +5128,384 @@ var egret;
     Event.SOUND_COMPLETE = "soundComplete";
     egret.Event = Event;
     __reflect(Event.prototype, "egret.Event");
-    if (true) {
-        egret.$markReadOnly(Event, "type");
-        egret.$markReadOnly(Event, "bubbles");
-        egret.$markReadOnly(Event, "cancelable");
-        egret.$markReadOnly(Event, "eventPhase");
-        egret.$markReadOnly(Event, "currentTarget");
-        egret.$markReadOnly(Event, "target");
-    }
+})(egret || (egret = {}));
+//////////////////////////////////////////////////////////////////////////////////////
+//
+//  Copyright (c) 2014-present, Egret Technology.
+//  All rights reserved.
+//  Redistribution and use in source and binary forms, with or without
+//  modification, are permitted provided that the following conditions are met:
+//
+//     * Redistributions of source code must retain the above copyright
+//       notice, this list of conditions and the following disclaimer.
+//     * Redistributions in binary form must reproduce the above copyright
+//       notice, this list of conditions and the following disclaimer in the
+//       documentation and/or other materials provided with the distribution.
+//     * Neither the name of the Egret nor the
+//       names of its contributors may be used to endorse or promote products
+//       derived from this software without specific prior written permission.
+//
+//  THIS SOFTWARE IS PROVIDED BY EGRET AND CONTRIBUTORS "AS IS" AND ANY EXPRESS
+//  OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES
+//  OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED.
+//  IN NO EVENT SHALL EGRET AND CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT,
+//  INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT
+//  LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES;LOSS OF USE, DATA,
+//  OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF
+//  LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING
+//  NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE,
+//  EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+//
+//////////////////////////////////////////////////////////////////////////////////////
+var egret;
+(function (egret) {
+    var pointPool = [];
+    var DEG_TO_RAD = Math.PI / 180;
+    /**
+     * @language en_US
+     * The Point object represents a location in a two-dimensional coordinate system, where x represents the horizontal
+     * axis and y represents the vertical axis.
+     * @version Egret 2.4
+     * @platform Web,Native
+     * @includeExample egret/geom/Point.ts
+     */
+    /**
+     * @language zh_CN
+     * Point 对象表示二维坐标系统中的某个位置，其中 x 表示水平轴，y 表示垂直轴。
+     * @version Egret 2.4
+     * @platform Web,Native
+     * @includeExample egret/geom/Point.ts
+     */
+    var Point = (function (_super) {
+        __extends(Point, _super);
+        /**
+         * @language en_US
+         * Creates a new point. If you pass no parameters to this method, a point is created at (0,0).
+         * @param x The horizontal coordinate.
+         * @param y The vertical coordinate.
+         * @version Egret 2.4
+         * @platform Web,Native
+         */
+        /**
+         * @language zh_CN
+         * 创建一个 egret.Point 对象.若不传入任何参数，将会创建一个位于（0，0）位置的点。
+         * @param x 该对象的x属性值，默认为0
+         * @param y 该对象的y属性值，默认为0
+         * @version Egret 2.4
+         * @platform Web,Native
+         */
+        function Point(x, y) {
+            if (x === void 0) { x = 0; }
+            if (y === void 0) { y = 0; }
+            var _this = _super.call(this) || this;
+            _this.x = x;
+            _this.y = y;
+            return _this;
+        }
+        /**
+         * @language en_US
+         * Releases a point instance to the object pool
+         * @version Egret 2.4
+         * @platform Web,Native
+         */
+        /**
+         * @language zh_CN
+         * 释放一个Point实例到对象池
+         * @version Egret 2.4
+         * @platform Web,Native
+         */
+        Point.release = function (point) {
+            if (!point) {
+                return;
+            }
+            pointPool.push(point);
+        };
+        /**
+         * @language en_US
+         * get a point instance from the object pool or create a new one.
+         * @param x The horizontal coordinate.
+         * @param y The vertical coordinate.
+         * @version Egret 2.4
+         * @platform Web,Native
+         */
+        /**
+         * @language zh_CN
+         * 从对象池中取出或创建一个新的Point对象。
+         * @param x 该对象的x属性值，默认为0
+         * @param y 该对象的y属性值，默认为0
+         * @version Egret 2.4
+         * @platform Web,Native
+         */
+        Point.create = function (x, y) {
+            var point = pointPool.pop();
+            if (!point) {
+                point = new Point();
+            }
+            return point.setTo(x, y);
+        };
+        Object.defineProperty(Point.prototype, "length", {
+            /**
+             * @language en_US
+             * The length of the line segment from (0,0) to this point.
+             * @version Egret 2.4
+             * @platform Web,Native
+             */
+            /**
+             * @language zh_CN
+             * 从 (0,0) 到此点的线段长度。
+             * @version Egret 2.4
+             * @platform Web,Native
+             */
+            get: function () {
+                return Math.sqrt(this.x * this.x + this.y * this.y);
+            },
+            enumerable: true,
+            configurable: true
+        });
+        /**
+         * @language en_US
+         * Sets the members of Point to the specified values
+         * @param x The horizontal coordinate.
+         * @param y The vertical coordinate.
+         * @version Egret 2.4
+         * @platform Web,Native
+         */
+        /**
+         * @language zh_CN
+         * 将 Point 的成员设置为指定值
+         * @param x 该对象的x属性值
+         * @param y 该对象的y属性值
+         * @version Egret 2.4
+         * @platform Web,Native
+         */
+        Point.prototype.setTo = function (x, y) {
+            this.x = x;
+            this.y = y;
+            return this;
+        };
+        /**
+         * @language en_US
+         * Creates a copy of this Point object.
+         * @version Egret 2.4
+         * @platform Web,Native
+         */
+        /**
+         * @language zh_CN
+         * 克隆点对象
+         * @version Egret 2.4
+         * @platform Web,Native
+         */
+        Point.prototype.clone = function () {
+            return new Point(this.x, this.y);
+        };
+        /**
+         * @language en_US
+         * Determines whether two points are equal. Two points are equal if they have the same x and y values.
+         * @param toCompare The point to be compared.
+         * @returns A value of true if the object is equal to this Point object; false if it is not equal.
+         * @version Egret 2.4
+         * @platform Web,Native
+         */
+        /**
+         * @language zh_CN
+         * 确定两个点是否相同。如果两个点具有相同的 x 和 y 值，则它们是相同的点。
+         * @param toCompare 要比较的点。
+         * @returns 如果该对象与此 Point 对象相同，则为 true 值，如果不相同，则为 false。
+         * @version Egret 2.4
+         * @platform Web,Native
+         */
+        Point.prototype.equals = function (toCompare) {
+            return this.x == toCompare.x && this.y == toCompare.y;
+        };
+        /**
+         * @language en_US
+         * Returns the distance between pt1 and pt2.
+         * @param p1 The first point.
+         * @param p2 The second point.
+         * @returns The distance between the first and second points.
+         * @version Egret 2.4
+         * @platform Web,Native
+         */
+        /**
+         * @language zh_CN
+         * 返回 pt1 和 pt2 之间的距离。
+         * @param p1 第一个点
+         * @param p2 第二个点
+         * @returns 第一个点和第二个点之间的距离。
+         * @version Egret 2.4
+         * @platform Web,Native
+         */
+        Point.distance = function (p1, p2) {
+            return Math.sqrt((p1.x - p2.x) * (p1.x - p2.x) + (p1.y - p2.y) * (p1.y - p2.y));
+        };
+        /**
+         * @language en_US
+         * Copies all of the point data from the source Point object into the calling Point object.
+         * @param sourcePoint The Point object from which to copy the data.
+         * @version Egret 2.4
+         * @platform Web,Native
+         */
+        /**
+         * @language zh_CN
+         * 将源 Point 对象中的所有点数据复制到调用方 Point 对象中。
+         * @param sourcePoint 要从中复制数据的 Point 对象。
+         * @version Egret 2.4
+         * @platform Web,Native
+         */
+        Point.prototype.copyFrom = function (sourcePoint) {
+            this.x = sourcePoint.x;
+            this.y = sourcePoint.y;
+        };
+        /**
+         * @language en_US
+         * Adds the coordinates of another point to the coordinates of this point to create a new point.
+         * @param v The point to be added.
+         * @returns The new point.
+         * @version Egret 2.4
+         * @platform Web,Native
+         */
+        /**
+         * @language zh_CN
+         * 将另一个点的坐标添加到此点的坐标以创建一个新点。
+         * @param v 要添加的点。
+         * @returns 新点。
+         * @version Egret 2.4
+         * @platform Web,Native
+         */
+        Point.prototype.add = function (v) {
+            return new Point(this.x + v.x, this.y + v.y);
+        };
+        /**
+         * @language en_US
+         * Determines a point between two specified points.
+         * The parameter f determines where the new interpolated point is located relative to the two end points specified by parameters pt1 and pt2. The closer the value of the parameter f is to 1.0, the closer the interpolated point is to the first point (parameter pt1). The closer the value of the parameter f is to 0, the closer the interpolated point is to the second point (parameter pt2).
+         * @param pt1 The first point.
+         * @param pt2 The second point.
+         * @param f The level of interpolation between the two points. Indicates where the new point will be, along the line between pt1 and pt2. If f=1, pt1 is returned; if f=0, pt2 is returned.
+         * @returns The new interpolated point.
+         * @version Egret 2.4
+         * @platform Web,Native
+         */
+        /**
+         * @language zh_CN
+         * 确定两个指定点之间的点。
+         * 参数 f 确定新的内插点相对于参数 pt1 和 pt2 指定的两个端点所处的位置。参数 f 的值越接近 1.0，则内插点就越接近第一个点（参数 pt1）。参数 f 的值越接近 0，则内插点就越接近第二个点（参数 pt2）。
+         * @param pt1 第一个点。
+         * @param pt2 第二个点。
+         * @param f 两个点之间的内插级别。表示新点将位于 pt1 和 pt2 连成的直线上的什么位置。如果 f=1，则返回 pt1；如果 f=0，则返回 pt2。
+         * @returns 新的内插点。
+         * @version Egret 2.4
+         * @platform Web,Native
+         */
+        Point.interpolate = function (pt1, pt2, f) {
+            var f1 = 1 - f;
+            return new Point(pt1.x * f + pt2.x * f1, pt1.y * f + pt2.y * f1);
+        };
+        /**
+         * @language en_US
+         * Scales the line segment between (0,0) and the current point to a set length.
+         * @param thickness The scaling value. For example, if the current point is (0,5), and you normalize it to 1, the point returned is at (0,1).
+         * @version Egret 2.4
+         * @platform Web,Native
+         */
+        /**
+         * @language zh_CN
+         * 将 (0,0) 和当前点之间的线段缩放为设定的长度。
+         * @param thickness 缩放值。例如，如果当前点为 (0,5) 并且您将它规范化为 1，则返回的点位于 (0,1) 处。
+         * @version Egret 2.4
+         * @platform Web,Native
+         */
+        Point.prototype.normalize = function (thickness) {
+            if (this.x != 0 || this.y != 0) {
+                var relativeThickness = thickness / this.length;
+                this.x *= relativeThickness;
+                this.y *= relativeThickness;
+            }
+        };
+        /**
+         * @language en_US
+         * Offsets the Point object by the specified amount. The value of dx is added to the original value of x to create the new x value. The value of dy is added to the original value of y to create the new y value.
+         * @param dx The amount by which to offset the horizontal coordinate, x.
+         * @param dy The amount by which to offset the vertical coordinate, y.
+         * @version Egret 2.4
+         * @platform Web,Native
+         */
+        /**
+         * @language zh_CN
+         * 按指定量偏移 Point 对象。dx 的值将添加到 x 的原始值中以创建新的 x 值。dy 的值将添加到 y 的原始值中以创建新的 y 值。
+         * @param dx 水平坐标 x 的偏移量。
+         * @param dy 水平坐标 y 的偏移量。
+         * @version Egret 2.4
+         * @platform Web,Native
+         */
+        Point.prototype.offset = function (dx, dy) {
+            this.x += dx;
+            this.y += dy;
+        };
+        /**
+         * @language en_US
+         * Converts a pair of polar coordinates to a Cartesian point coordinate.
+         * @param len The length coordinate of the polar pair.
+         * @param angle The angle, in radians, of the polar pair.
+         * @version Egret 2.4
+         * @platform Web,Native
+         */
+        /**
+         * @language zh_CN
+         * 将一对极坐标转换为笛卡尔点坐标。
+         * @param len 极坐标对的长度。
+         * @param angle 极坐标对的角度（以弧度表示）。
+         * @version Egret 2.4
+         * @platform Web,Native
+         */
+        Point.polar = function (len, angle) {
+            return new Point(len * egret.NumberUtils.cos(angle / DEG_TO_RAD), len * egret.NumberUtils.sin(angle / DEG_TO_RAD));
+        };
+        /**
+         * @language en_US
+         * Subtracts the coordinates of another point from the coordinates of this point to create a new point.
+         * @param v The point to be subtracted.
+         * @returns The new point.
+         * @version Egret 2.4
+         * @platform Web,Native
+         */
+        /**
+         * @language zh_CN
+         * 从此点的坐标中减去另一个点的坐标以创建一个新点。
+         * @param v 要减去的点。
+         * @returns 新点。
+         * @version Egret 2.4
+         * @platform Web,Native
+         */
+        Point.prototype.subtract = function (v) {
+            return new Point(this.x - v.x, this.y - v.y);
+        };
+        /**
+         * @language en_US
+         * Returns a string that contains the values of the x and y coordinates. The string has the form "(x=x, y=y)", so calling the toString() method for a point at 23,17 would return "(x=23, y=17)".
+         * @returns The string representation of the coordinates.
+         * @version Egret 2.4
+         * @platform Web,Native
+         */
+        /**
+         * @language zh_CN
+         * 返回包含 x 和 y 坐标的值的字符串。该字符串的格式为 "(x=x, y=y)"，因此为点 23,17 调用 toString() 方法将返回 "(x=23, y=17)"。
+         * @returns 坐标的字符串表示形式。
+         * @version Egret 2.4
+         * @platform Web,Native
+         */
+        Point.prototype.toString = function () {
+            return "(x=" + this.x + ", y=" + this.y + ")";
+        };
+        return Point;
+    }(egret.HashObject));
+    egret.Point = Point;
+    __reflect(Point.prototype, "egret.Point");
+    /**
+     * @private
+     * 仅供框架内复用，要防止暴露引用到外部。
+     */
+    egret.$TempPoint = new Point();
 })(egret || (egret = {}));
 //////////////////////////////////////////////////////////////////////////////////////
 //
@@ -5938,6 +6085,186 @@ var egret;
 (function (egret) {
     /**
      * @language en_US
+     * SpriteSheet is a mosaic of multiple sub-bitmaps, comprising a plurality of Texture objects.
+     * Each Texture object shares the set bitmap of SpriteSheet, but it points to its different areas.
+     * On WebGL / OpenGL, this operation can significantly improve performance.
+     * At the same time, SpriteSheet can carry out material integration easily to reduce the number of HTTP requests
+     * For specification of the SpriteSheet format, see the document https://github.com/egret-labs/egret-core/wiki/Egret-SpriteSheet-Specification
+     * @see http://edn.egret.com/cn/docs/page/135 The use of texture packs
+     * @version Egret 2.4
+     * @platform Web,Native
+     * @includeExample egret/display/SpriteSheet.ts
+     */
+    /**
+     * @language zh_CN
+     * SpriteSheet 是一张由多个子位图拼接而成的集合位图，它包含多个 Texture 对象。
+     * 每一个 Texture 都共享 SpriteSheet 的集合位图，但是指向它的不同的区域。
+     * 在WebGL / OpenGL上，这种做法可以显著提升性能
+     * 同时，SpriteSheet可以很方便的进行素材整合，降低HTTP请求数量
+     * SpriteSheet 格式的具体规范可以参见此文档  https://github.com/egret-labs/egret-core/wiki/Egret-SpriteSheet-Specification
+     * @see http://edn.egret.com/cn/docs/page/135 纹理集的使用
+     * @version Egret 2.4
+     * @platform Web,Native
+     * @includeExample egret/display/SpriteSheet.ts
+     */
+    var SpriteSheet = (function (_super) {
+        __extends(SpriteSheet, _super);
+        /**
+         * @language en_US
+         * Create an egret.SpriteSheet object
+         * @param texture {Texture} Texture
+         * @version Egret 2.4
+         * @platform Web,Native
+         */
+        /**
+         * @language zh_CN
+         * 创建一个 egret.SpriteSheet 对象
+         * @param texture {Texture} 纹理
+         * @version Egret 2.4
+         * @platform Web,Native
+         */
+        function SpriteSheet(texture) {
+            var _this = _super.call(this) || this;
+            /**
+             * @private
+             * 表示这个SpriteSheet的位图区域在bitmapData上的起始位置x。
+             */
+            _this._bitmapX = 0;
+            /**
+             * @private
+             * 表示这个SpriteSheet的位图区域在bitmapData上的起始位置y。
+             */
+            _this._bitmapY = 0;
+            /**
+             * @private
+             * 纹理缓存字典
+             */
+            _this._textureMap = egret.createMap();
+            _this.$texture = texture;
+            _this._bitmapX = texture._bitmapX - texture._offsetX;
+            _this._bitmapY = texture._bitmapY - texture._offsetY;
+            return _this;
+        }
+        /**
+         * @language en_US
+         * Obtain a cached Texture object according to the specified texture name
+         * @param name {string} Cache the name of this Texture object
+         * @returns {egret.Texture} The Texture object
+         * @version Egret 2.4
+         * @platform Web,Native
+         */
+        /**
+         * @language zh_CN
+         * 根据指定纹理名称获取一个缓存的 Texture 对象
+         * @param name {string} 缓存这个 Texture 对象所使用的名称
+         * @returns {egret.Texture} Texture 对象
+         * @version Egret 2.4
+         * @platform Web,Native
+         */
+        SpriteSheet.prototype.getTexture = function (name) {
+            return this._textureMap[name];
+        };
+        /**
+         * @language en_US
+         * Create a new Texture object for the specified area on SpriteSheet and cache it
+         * @param name {string} Cache the name of this Texture object. If the name already exists, the previous Texture object will be overwrited.
+         * @param bitmapX {number} Starting coordinate x of texture area on bitmapData
+         * @param bitmapY {number} Starting coordinate y of texture area on bitmapData
+         * @param bitmapWidth {number} Width of texture area on bitmapData
+         * @param bitmapHeight {number} Height of texture area on bitmapData
+         * @param offsetX {number} Starting point x for a non-transparent area of the original bitmap
+         * @param offsetY {number} Starting point y for a non-transparent area of the original bitmap
+         * @param textureWidth {number} Width of the original bitmap. If it is not passed, use the bitmapWidth  value.
+         * @param textureHeight {number} Height of the original bitmap. If it is not passed, use the bitmapHeight value.
+         * @returns {egret.Texture} The created Texture object
+         * @version Egret 2.4
+         * @platform Web,Native
+         */
+        /**
+         * @language zh_CN
+         * 为 SpriteSheet 上的指定区域创建一个新的 Texture 对象并缓存它
+         * @param name {string} 缓存这个 Texture 对象所使用的名称，如果名称已存在，将会覆盖之前的 Texture 对象
+         * @param bitmapX {number} 纹理区域在 bitmapData 上的起始坐标x
+         * @param bitmapY {number} 纹理区域在 bitmapData 上的起始坐标y
+         * @param bitmapWidth {number} 纹理区域在 bitmapData 上的宽度
+         * @param bitmapHeight {number} 纹理区域在 bitmapData 上的高度
+         * @param offsetX {number} 原始位图的非透明区域 x 起始点
+         * @param offsetY {number} 原始位图的非透明区域 y 起始点
+         * @param textureWidth {number} 原始位图的高度，若不传入，则使用 bitmapWidth 的值。
+         * @param textureHeight {number} 原始位图的宽度，若不传入，则使用 bitmapHeight 的值。
+         * @returns {egret.Texture} 创建的 Texture 对象
+         * @version Egret 2.4
+         * @platform Web,Native
+         */
+        SpriteSheet.prototype.createTexture = function (name, bitmapX, bitmapY, bitmapWidth, bitmapHeight, offsetX, offsetY, textureWidth, textureHeight) {
+            if (offsetX === void 0) { offsetX = 0; }
+            if (offsetY === void 0) { offsetY = 0; }
+            if (textureWidth === void 0) {
+                textureWidth = offsetX + bitmapWidth;
+            }
+            if (textureHeight === void 0) {
+                textureHeight = offsetY + bitmapHeight;
+            }
+            var texture = new egret.Texture();
+            texture._bitmapData = this.$texture._bitmapData;
+            texture.$initData(this._bitmapX + bitmapX, this._bitmapY + bitmapY, bitmapWidth, bitmapHeight, offsetX, offsetY, textureWidth, textureHeight, this.$texture._sourceWidth, this.$texture._sourceHeight);
+            this._textureMap[name] = texture;
+            return texture;
+        };
+        /**
+         * @language en_US
+         * dispose texture
+         * @version Egret 2.4
+         * @platform Web,Native
+         */
+        /**
+         * @language zh_CN
+         * 释放纹理
+         * @version Egret 2.4
+         * @platform Web,Native
+         */
+        SpriteSheet.prototype.dispose = function () {
+            if (this.$texture) {
+                this.$texture.dispose();
+            }
+        };
+        return SpriteSheet;
+    }(egret.HashObject));
+    egret.SpriteSheet = SpriteSheet;
+    __reflect(SpriteSheet.prototype, "egret.SpriteSheet");
+})(egret || (egret = {}));
+//////////////////////////////////////////////////////////////////////////////////////
+//
+//  Copyright (c) 2014-present, Egret Technology.
+//  All rights reserved.
+//  Redistribution and use in source and binary forms, with or without
+//  modification, are permitted provided that the following conditions are met:
+//
+//     * Redistributions of source code must retain the above copyright
+//       notice, this list of conditions and the following disclaimer.
+//     * Redistributions in binary form must reproduce the above copyright
+//       notice, this list of conditions and the following disclaimer in the
+//       documentation and/or other materials provided with the distribution.
+//     * Neither the name of the Egret nor the
+//       names of its contributors may be used to endorse or promote products
+//       derived from this software without specific prior written permission.
+//
+//  THIS SOFTWARE IS PROVIDED BY EGRET AND CONTRIBUTORS "AS IS" AND ANY EXPRESS
+//  OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES
+//  OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED.
+//  IN NO EVENT SHALL EGRET AND CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT,
+//  INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT
+//  LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES;LOSS OF USE, DATA,
+//  OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF
+//  LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING
+//  NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE,
+//  EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+//
+//////////////////////////////////////////////////////////////////////////////////////
+var egret;
+(function (egret) {
+    /**
+     * @language en_US
      * The Sprite class is a basic display list building block: a display list node that can contain children.
      * @version Egret 2.4
      * @platform Web,Native
@@ -6402,458 +6729,105 @@ var egret;
     }(egret.HashObject));
     egret.Texture = Texture;
     __reflect(Texture.prototype, "egret.Texture");
-    if (true) {
-        egret.$markReadOnly(Texture, "textureWidth");
-        egret.$markReadOnly(Texture, "textureHeight");
+})(egret || (egret = {}));
+//////////////////////////////////////////////////////////////////////////////////////
+//
+//  Copyright (c) 2014-present, Egret Technology.
+//  All rights reserved.
+//  Redistribution and use in source and binary forms, with or without
+//  modification, are permitted provided that the following conditions are met:
+//
+//     * Redistributions of source code must retain the above copyright
+//       notice, this list of conditions and the following disclaimer.
+//     * Redistributions in binary form must reproduce the above copyright
+//       notice, this list of conditions and the following disclaimer in the
+//       documentation and/or other materials provided with the distribution.
+//     * Neither the name of the Egret nor the
+//       names of its contributors may be used to endorse or promote products
+//       derived from this software without specific prior written permission.
+//
+//  THIS SOFTWARE IS PROVIDED BY EGRET AND CONTRIBUTORS "AS IS" AND ANY EXPRESS
+//  OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES
+//  OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED.
+//  IN NO EVENT SHALL EGRET AND CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT,
+//  INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT
+//  LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES;LOSS OF USE, DATA,
+//  OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF
+//  LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING
+//  NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE,
+//  EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+//
+//////////////////////////////////////////////////////////////////////////////////////
+this["DEBUG"] = true;
+this["RELEASE"] = false;
+var egret;
+(function (egret) {
+    /**
+     * @private
+     */
+    function _getString(code) {
+        var params = [];
+        for (var _i = 1; _i < arguments.length; _i++) {
+            params[_i - 1] = arguments[_i];
+        }
+        return egret.sys.tr.apply(egret.sys, arguments);
     }
-})(egret || (egret = {}));
-//////////////////////////////////////////////////////////////////////////////////////
-//
-//  Copyright (c) 2014-present, Egret Technology.
-//  All rights reserved.
-//  Redistribution and use in source and binary forms, with or without
-//  modification, are permitted provided that the following conditions are met:
-//
-//     * Redistributions of source code must retain the above copyright
-//       notice, this list of conditions and the following disclaimer.
-//     * Redistributions in binary form must reproduce the above copyright
-//       notice, this list of conditions and the following disclaimer in the
-//       documentation and/or other materials provided with the distribution.
-//     * Neither the name of the Egret nor the
-//       names of its contributors may be used to endorse or promote products
-//       derived from this software without specific prior written permission.
-//
-//  THIS SOFTWARE IS PROVIDED BY EGRET AND CONTRIBUTORS "AS IS" AND ANY EXPRESS
-//  OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES
-//  OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED.
-//  IN NO EVENT SHALL EGRET AND CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT,
-//  INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT
-//  LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES;LOSS OF USE, DATA,
-//  OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF
-//  LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING
-//  NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE,
-//  EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
-//
-//////////////////////////////////////////////////////////////////////////////////////
-var egret;
-(function (egret) {
-    /**
-     * @private
-     */
-    egret.$locale_strings = egret.$locale_strings || {};
-    /**
-     * @private
-     */
-    egret.$language = "en_US";
-})(egret || (egret = {}));
-(function (egret) {
-    var sys;
-    (function (sys) {
-        /**
-         * @private
-         * 全局多语言翻译函数
-         * @param code 要查询的字符串代码
-         * @param args 替换字符串中{0}标志的参数列表
-         * @returns 返回拼接后的字符串
-         */
-        function tr(code) {
-            var args = [];
-            for (var _i = 1; _i < arguments.length; _i++) {
-                args[_i - 1] = arguments[_i];
-            }
-            var text = egret.$locale_strings[egret.$language][code];
-            if (!text) {
-                return "{" + code + "}";
-            }
-            var length = args.length;
-            for (var i = 0; i < length; i++) {
-                text = text.replace("{" + i + "}", args[i]);
-            }
-            return text;
+    egret.getString = _getString;
+    function _error(code) {
+        var params = [];
+        for (var _i = 1; _i < arguments.length; _i++) {
+            params[_i - 1] = arguments[_i];
         }
-        sys.tr = tr;
-    })(sys = egret.sys || (egret.sys = {}));
-})(egret || (egret = {}));
-//////////////////////////////////////////////////////////////////////////////////////
-//
-//  Copyright (c) 2014-present, Egret Technology.
-//  All rights reserved.
-//  Redistribution and use in source and binary forms, with or without
-//  modification, are permitted provided that the following conditions are met:
-//
-//     * Redistributions of source code must retain the above copyright
-//       notice, this list of conditions and the following disclaimer.
-//     * Redistributions in binary form must reproduce the above copyright
-//       notice, this list of conditions and the following disclaimer in the
-//       documentation and/or other materials provided with the distribution.
-//     * Neither the name of the Egret nor the
-//       names of its contributors may be used to endorse or promote products
-//       derived from this software without specific prior written permission.
-//
-//  THIS SOFTWARE IS PROVIDED BY EGRET AND CONTRIBUTORS "AS IS" AND ANY EXPRESS
-//  OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES
-//  OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED.
-//  IN NO EVENT SHALL EGRET AND CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT,
-//  INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT
-//  LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES;LOSS OF USE, DATA,
-//  OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF
-//  LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING
-//  NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE,
-//  EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
-//
-//////////////////////////////////////////////////////////////////////////////////////
-var egret;
-(function (egret) {
-    var pointPool = [];
-    var DEG_TO_RAD = Math.PI / 180;
-    /**
-     * @language en_US
-     * The Point object represents a location in a two-dimensional coordinate system, where x represents the horizontal
-     * axis and y represents the vertical axis.
-     * @version Egret 2.4
-     * @platform Web,Native
-     * @includeExample egret/geom/Point.ts
-     */
-    /**
-     * @language zh_CN
-     * Point 对象表示二维坐标系统中的某个位置，其中 x 表示水平轴，y 表示垂直轴。
-     * @version Egret 2.4
-     * @platform Web,Native
-     * @includeExample egret/geom/Point.ts
-     */
-    var Point = (function (_super) {
-        __extends(Point, _super);
-        /**
-         * @language en_US
-         * Creates a new point. If you pass no parameters to this method, a point is created at (0,0).
-         * @param x The horizontal coordinate.
-         * @param y The vertical coordinate.
-         * @version Egret 2.4
-         * @platform Web,Native
-         */
-        /**
-         * @language zh_CN
-         * 创建一个 egret.Point 对象.若不传入任何参数，将会创建一个位于（0，0）位置的点。
-         * @param x 该对象的x属性值，默认为0
-         * @param y 该对象的y属性值，默认为0
-         * @version Egret 2.4
-         * @platform Web,Native
-         */
-        function Point(x, y) {
-            if (x === void 0) { x = 0; }
-            if (y === void 0) { y = 0; }
-            var _this = _super.call(this) || this;
-            _this.x = x;
-            _this.y = y;
-            return _this;
+        var text = egret.sys.tr.apply(null, arguments);
+        if (true) {
+            egret.sys.$logToFPS("Error #" + code + ": " + text);
         }
-        /**
-         * @language en_US
-         * Releases a point instance to the object pool
-         * @version Egret 2.4
-         * @platform Web,Native
-         */
-        /**
-         * @language zh_CN
-         * 释放一个Point实例到对象池
-         * @version Egret 2.4
-         * @platform Web,Native
-         */
-        Point.release = function (point) {
-            if (!point) {
-                return;
+        throw new Error("#" + code + ": " + text); //使用这种方式报错能够终止后续代码继续运行
+    }
+    egret.$error = _error;
+    function _warn(code) {
+        var params = [];
+        for (var _i = 1; _i < arguments.length; _i++) {
+            params[_i - 1] = arguments[_i];
+        }
+        var text = egret.sys.tr.apply(null, arguments);
+        if (true) {
+            egret.sys.$logToFPS("Warning #" + code + ": " + text);
+        }
+        egret.warn("Warning #" + code + ": " + text);
+    }
+    egret.$warn = _warn;
+    function _markReadOnly(instance, property, isProperty) {
+        if (isProperty === void 0) { isProperty = true; }
+        var data = Object.getOwnPropertyDescriptor(isProperty ? instance.prototype : instance, property);
+        if (data == null) {
+            console.log(instance);
+            return;
+        }
+        data.set = function (value) {
+            if (isProperty) {
+                egret.$warn(1010, egret.getQualifiedClassName(instance), property);
             }
-            pointPool.push(point);
-        };
-        /**
-         * @language en_US
-         * get a point instance from the object pool or create a new one.
-         * @param x The horizontal coordinate.
-         * @param y The vertical coordinate.
-         * @version Egret 2.4
-         * @platform Web,Native
-         */
-        /**
-         * @language zh_CN
-         * 从对象池中取出或创建一个新的Point对象。
-         * @param x 该对象的x属性值，默认为0
-         * @param y 该对象的y属性值，默认为0
-         * @version Egret 2.4
-         * @platform Web,Native
-         */
-        Point.create = function (x, y) {
-            var point = pointPool.pop();
-            if (!point) {
-                point = new Point();
+            else {
+                egret.$warn(1014, egret.getQualifiedClassName(instance), property);
             }
-            return point.setTo(x, y);
         };
-        Object.defineProperty(Point.prototype, "length", {
-            /**
-             * @language en_US
-             * The length of the line segment from (0,0) to this point.
-             * @version Egret 2.4
-             * @platform Web,Native
-             */
-            /**
-             * @language zh_CN
-             * 从 (0,0) 到此点的线段长度。
-             * @version Egret 2.4
-             * @platform Web,Native
-             */
+        Object.defineProperty(instance.prototype, property, data);
+    }
+    function markCannotUse(instance, property, defaultValue) {
+        Object.defineProperty(instance.prototype, property, {
             get: function () {
-                return Math.sqrt(this.x * this.x + this.y * this.y);
+                egret.$warn(1009, egret.getQualifiedClassName(instance), property);
+                return defaultValue;
+            },
+            set: function (value) {
+                egret.$error(1009, egret.getQualifiedClassName(instance), property);
             },
             enumerable: true,
             configurable: true
         });
-        /**
-         * @language en_US
-         * Sets the members of Point to the specified values
-         * @param x The horizontal coordinate.
-         * @param y The vertical coordinate.
-         * @version Egret 2.4
-         * @platform Web,Native
-         */
-        /**
-         * @language zh_CN
-         * 将 Point 的成员设置为指定值
-         * @param x 该对象的x属性值
-         * @param y 该对象的y属性值
-         * @version Egret 2.4
-         * @platform Web,Native
-         */
-        Point.prototype.setTo = function (x, y) {
-            this.x = x;
-            this.y = y;
-            return this;
-        };
-        /**
-         * @language en_US
-         * Creates a copy of this Point object.
-         * @version Egret 2.4
-         * @platform Web,Native
-         */
-        /**
-         * @language zh_CN
-         * 克隆点对象
-         * @version Egret 2.4
-         * @platform Web,Native
-         */
-        Point.prototype.clone = function () {
-            return new Point(this.x, this.y);
-        };
-        /**
-         * @language en_US
-         * Determines whether two points are equal. Two points are equal if they have the same x and y values.
-         * @param toCompare The point to be compared.
-         * @returns A value of true if the object is equal to this Point object; false if it is not equal.
-         * @version Egret 2.4
-         * @platform Web,Native
-         */
-        /**
-         * @language zh_CN
-         * 确定两个点是否相同。如果两个点具有相同的 x 和 y 值，则它们是相同的点。
-         * @param toCompare 要比较的点。
-         * @returns 如果该对象与此 Point 对象相同，则为 true 值，如果不相同，则为 false。
-         * @version Egret 2.4
-         * @platform Web,Native
-         */
-        Point.prototype.equals = function (toCompare) {
-            return this.x == toCompare.x && this.y == toCompare.y;
-        };
-        /**
-         * @language en_US
-         * Returns the distance between pt1 and pt2.
-         * @param p1 The first point.
-         * @param p2 The second point.
-         * @returns The distance between the first and second points.
-         * @version Egret 2.4
-         * @platform Web,Native
-         */
-        /**
-         * @language zh_CN
-         * 返回 pt1 和 pt2 之间的距离。
-         * @param p1 第一个点
-         * @param p2 第二个点
-         * @returns 第一个点和第二个点之间的距离。
-         * @version Egret 2.4
-         * @platform Web,Native
-         */
-        Point.distance = function (p1, p2) {
-            return Math.sqrt((p1.x - p2.x) * (p1.x - p2.x) + (p1.y - p2.y) * (p1.y - p2.y));
-        };
-        /**
-         * @language en_US
-         * Copies all of the point data from the source Point object into the calling Point object.
-         * @param sourcePoint The Point object from which to copy the data.
-         * @version Egret 2.4
-         * @platform Web,Native
-         */
-        /**
-         * @language zh_CN
-         * 将源 Point 对象中的所有点数据复制到调用方 Point 对象中。
-         * @param sourcePoint 要从中复制数据的 Point 对象。
-         * @version Egret 2.4
-         * @platform Web,Native
-         */
-        Point.prototype.copyFrom = function (sourcePoint) {
-            this.x = sourcePoint.x;
-            this.y = sourcePoint.y;
-        };
-        /**
-         * @language en_US
-         * Adds the coordinates of another point to the coordinates of this point to create a new point.
-         * @param v The point to be added.
-         * @returns The new point.
-         * @version Egret 2.4
-         * @platform Web,Native
-         */
-        /**
-         * @language zh_CN
-         * 将另一个点的坐标添加到此点的坐标以创建一个新点。
-         * @param v 要添加的点。
-         * @returns 新点。
-         * @version Egret 2.4
-         * @platform Web,Native
-         */
-        Point.prototype.add = function (v) {
-            return new Point(this.x + v.x, this.y + v.y);
-        };
-        /**
-         * @language en_US
-         * Determines a point between two specified points.
-         * The parameter f determines where the new interpolated point is located relative to the two end points specified by parameters pt1 and pt2. The closer the value of the parameter f is to 1.0, the closer the interpolated point is to the first point (parameter pt1). The closer the value of the parameter f is to 0, the closer the interpolated point is to the second point (parameter pt2).
-         * @param pt1 The first point.
-         * @param pt2 The second point.
-         * @param f The level of interpolation between the two points. Indicates where the new point will be, along the line between pt1 and pt2. If f=1, pt1 is returned; if f=0, pt2 is returned.
-         * @returns The new interpolated point.
-         * @version Egret 2.4
-         * @platform Web,Native
-         */
-        /**
-         * @language zh_CN
-         * 确定两个指定点之间的点。
-         * 参数 f 确定新的内插点相对于参数 pt1 和 pt2 指定的两个端点所处的位置。参数 f 的值越接近 1.0，则内插点就越接近第一个点（参数 pt1）。参数 f 的值越接近 0，则内插点就越接近第二个点（参数 pt2）。
-         * @param pt1 第一个点。
-         * @param pt2 第二个点。
-         * @param f 两个点之间的内插级别。表示新点将位于 pt1 和 pt2 连成的直线上的什么位置。如果 f=1，则返回 pt1；如果 f=0，则返回 pt2。
-         * @returns 新的内插点。
-         * @version Egret 2.4
-         * @platform Web,Native
-         */
-        Point.interpolate = function (pt1, pt2, f) {
-            var f1 = 1 - f;
-            return new Point(pt1.x * f + pt2.x * f1, pt1.y * f + pt2.y * f1);
-        };
-        /**
-         * @language en_US
-         * Scales the line segment between (0,0) and the current point to a set length.
-         * @param thickness The scaling value. For example, if the current point is (0,5), and you normalize it to 1, the point returned is at (0,1).
-         * @version Egret 2.4
-         * @platform Web,Native
-         */
-        /**
-         * @language zh_CN
-         * 将 (0,0) 和当前点之间的线段缩放为设定的长度。
-         * @param thickness 缩放值。例如，如果当前点为 (0,5) 并且您将它规范化为 1，则返回的点位于 (0,1) 处。
-         * @version Egret 2.4
-         * @platform Web,Native
-         */
-        Point.prototype.normalize = function (thickness) {
-            if (this.x != 0 || this.y != 0) {
-                var relativeThickness = thickness / this.length;
-                this.x *= relativeThickness;
-                this.y *= relativeThickness;
-            }
-        };
-        /**
-         * @language en_US
-         * Offsets the Point object by the specified amount. The value of dx is added to the original value of x to create the new x value. The value of dy is added to the original value of y to create the new y value.
-         * @param dx The amount by which to offset the horizontal coordinate, x.
-         * @param dy The amount by which to offset the vertical coordinate, y.
-         * @version Egret 2.4
-         * @platform Web,Native
-         */
-        /**
-         * @language zh_CN
-         * 按指定量偏移 Point 对象。dx 的值将添加到 x 的原始值中以创建新的 x 值。dy 的值将添加到 y 的原始值中以创建新的 y 值。
-         * @param dx 水平坐标 x 的偏移量。
-         * @param dy 水平坐标 y 的偏移量。
-         * @version Egret 2.4
-         * @platform Web,Native
-         */
-        Point.prototype.offset = function (dx, dy) {
-            this.x += dx;
-            this.y += dy;
-        };
-        /**
-         * @language en_US
-         * Converts a pair of polar coordinates to a Cartesian point coordinate.
-         * @param len The length coordinate of the polar pair.
-         * @param angle The angle, in radians, of the polar pair.
-         * @version Egret 2.4
-         * @platform Web,Native
-         */
-        /**
-         * @language zh_CN
-         * 将一对极坐标转换为笛卡尔点坐标。
-         * @param len 极坐标对的长度。
-         * @param angle 极坐标对的角度（以弧度表示）。
-         * @version Egret 2.4
-         * @platform Web,Native
-         */
-        Point.polar = function (len, angle) {
-            return new Point(len * egret.NumberUtils.cos(angle / DEG_TO_RAD), len * egret.NumberUtils.sin(angle / DEG_TO_RAD));
-        };
-        /**
-         * @language en_US
-         * Subtracts the coordinates of another point from the coordinates of this point to create a new point.
-         * @param v The point to be subtracted.
-         * @returns The new point.
-         * @version Egret 2.4
-         * @platform Web,Native
-         */
-        /**
-         * @language zh_CN
-         * 从此点的坐标中减去另一个点的坐标以创建一个新点。
-         * @param v 要减去的点。
-         * @returns 新点。
-         * @version Egret 2.4
-         * @platform Web,Native
-         */
-        Point.prototype.subtract = function (v) {
-            return new Point(this.x - v.x, this.y - v.y);
-        };
-        /**
-         * @language en_US
-         * Returns a string that contains the values of the x and y coordinates. The string has the form "(x=x, y=y)", so calling the toString() method for a point at 23,17 would return "(x=23, y=17)".
-         * @returns The string representation of the coordinates.
-         * @version Egret 2.4
-         * @platform Web,Native
-         */
-        /**
-         * @language zh_CN
-         * 返回包含 x 和 y 坐标的值的字符串。该字符串的格式为 "(x=x, y=y)"，因此为点 23,17 调用 toString() 方法将返回 "(x=23, y=17)"。
-         * @returns 坐标的字符串表示形式。
-         * @version Egret 2.4
-         * @platform Web,Native
-         */
-        Point.prototype.toString = function () {
-            return "(x=" + this.x + ", y=" + this.y + ")";
-        };
-        return Point;
-    }(egret.HashObject));
-    egret.Point = Point;
-    __reflect(Point.prototype, "egret.Point");
-    if (true) {
-        egret.$markReadOnly(Point, "length");
     }
-    /**
-     * @private
-     * 仅供框架内复用，要防止暴露引用到外部。
-     */
-    egret.$TempPoint = new Point();
+    egret.$markCannotUse = markCannotUse;
 })(egret || (egret = {}));
 //////////////////////////////////////////////////////////////////////////////////////
 //
@@ -9195,11 +9169,12 @@ var egret;
                 return;
             }
             var tempList = BitmapData._displayList[hashCode];
-            for (var i = 0; i < tempList.length; i++) {
-                if (tempList[i] instanceof egret.Bitmap) {
-                    tempList[i].$Bitmap[1 /* image */] = null;
+            for (var _i = 0, tempList_1 = tempList; _i < tempList_1.length; _i++) {
+                var node = tempList_1[_i];
+                if (node instanceof egret.Bitmap) {
+                    node.$Bitmap[1 /* image */] = null;
                 }
-                tempList[i].$invalidateContentBounds();
+                node.$invalidateContentBounds();
             }
             delete BitmapData._displayList[hashCode];
         };
@@ -9537,7 +9512,7 @@ var egret;
      * @version Egret 3.0.1
      * @platform Web,Native
      */
-    TouchEvent.TOUCH_CANCEL = "touchcancel";
+    TouchEvent.TOUCH_CANCEL = "touchCancel";
     /**
      * @language en_US
      * Dispatched when the user lifts the point of contact over the same DisplayObject instance on which the contact
@@ -9581,12 +9556,6 @@ var egret;
     TouchEvent.TOUCH_ROLL_OVER = "touchRollOver";
     egret.TouchEvent = TouchEvent;
     __reflect(TouchEvent.prototype, "egret.TouchEvent");
-    if (true) {
-        egret.$markReadOnly(TouchEvent, "stageX");
-        egret.$markReadOnly(TouchEvent, "stageY");
-        egret.$markReadOnly(TouchEvent, "localX");
-        egret.$markReadOnly(TouchEvent, "localY");
-    }
 })(egret || (egret = {}));
 //////////////////////////////////////////////////////////////////////////////////////
 //
@@ -15951,9 +15920,6 @@ var egret;
     }(egret.DisplayObject));
     egret.Shape = Shape;
     __reflect(Shape.prototype, "egret.Shape");
-    if (true) {
-        egret.$markReadOnly(Shape, "graphics");
-    }
 })(egret || (egret = {}));
 //////////////////////////////////////////////////////////////////////////////////////
 //
@@ -17712,16 +17678,6 @@ var egret;
     Capabilities.$boundingClientHeight = 0;
     egret.Capabilities = Capabilities;
     __reflect(Capabilities.prototype, "egret.Capabilities");
-    if (true) {
-        egret.$markReadOnly(Capabilities, "language", false);
-        egret.$markReadOnly(Capabilities, "isMobile", false);
-        egret.$markReadOnly(Capabilities, "os", false);
-        egret.$markReadOnly(Capabilities, "runtimeType", false);
-        egret.$markReadOnly(Capabilities, "supportVersion", false);
-        egret.$markReadOnly(Capabilities, "renderMode", false);
-        egret.$markReadOnly(Capabilities, "boundingClientWidth", false);
-        egret.$markReadOnly(Capabilities, "boundingClientHeight", false);
-    }
 })(egret || (egret = {}));
 /**
  * @private
@@ -21363,11 +21319,6 @@ var egret;
     TextField.default_textColor = 0xffffff;
     egret.TextField = TextField;
     __reflect(TextField.prototype, "egret.TextField");
-    if (true) {
-        egret.$markReadOnly(TextField, "numLines");
-        egret.$markReadOnly(TextField, "textWidth");
-        egret.$markReadOnly(TextField, "textHeight");
-    }
 })(egret || (egret = {}));
 //////////////////////////////////////////////////////////////////////////////////////
 //
@@ -23577,10 +23528,6 @@ var egret;
         egret.$markCannotUse(Stage, "touchEnabled", true);
         egret.$markCannotUse(Stage, "matrix", null);
     }
-    if (true) {
-        egret.$markReadOnly(Stage, "stageWidth");
-        egret.$markReadOnly(Stage, "stageHeight");
-    }
 })(egret || (egret = {}));
 //////////////////////////////////////////////////////////////////////////////////////
 //
@@ -24187,10 +24134,6 @@ var egret;
     }(egret.EventDispatcher));
     egret.Timer = Timer;
     __reflect(Timer.prototype, "egret.Timer");
-    if (true) {
-        egret.$markReadOnly(Timer, "currentCount");
-        egret.$markReadOnly(Timer, "running");
-    }
 })(egret || (egret = {}));
 //////////////////////////////////////////////////////////////////////////////////////
 //

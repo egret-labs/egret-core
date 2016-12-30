@@ -1135,7 +1135,5 @@ namespace eui {
     registerProperty(DataGroup, "itemRenderer", "Class");
     registerProperty(DataGroup, "itemRendererSkinName", "Class");
     registerProperty(DataGroup, "dataProvider", "eui.ICollection", true);
-    if (DEBUG) {
-        egret.$markReadOnly(DataGroup, "numElements");
-    }
+
 }

@@ -2379,8 +2379,4 @@ namespace egret {
 
     }
 
-    if (DEBUG) {
-        egret.$markReadOnly(DisplayObject, "parent");
-        egret.$markReadOnly(DisplayObject, "stage");
-    }
 }

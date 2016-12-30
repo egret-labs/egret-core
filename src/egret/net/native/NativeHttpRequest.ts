@@ -250,7 +250,4 @@ namespace egret.native {
     }
     HttpRequest = NativeHttpRequest;
 
-    if (DEBUG) {
-        egret.$markReadOnly(NativeHttpRequest, "response");
-    }
 }

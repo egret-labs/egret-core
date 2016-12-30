@@ -351,8 +351,5 @@ namespace egret {
         egret.$markCannotUse(Stage, "touchEnabled", true);
         egret.$markCannotUse(Stage, "matrix", null);
     }
-    if (DEBUG) {
-        egret.$markReadOnly(Stage, "stageWidth");
-        egret.$markReadOnly(Stage, "stageHeight");
-    }
+
 }

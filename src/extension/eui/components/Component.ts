@@ -1017,7 +1017,5 @@ namespace eui {
     }
     registerProperty(Component, "skinName", "Class");
     sys.implementUIComponent(Component, egret.DisplayObjectContainer, true);
-    if (DEBUG) {
-        egret.$markReadOnly(Component, "skin");
-    }
+
 }
