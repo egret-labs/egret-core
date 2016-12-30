@@ -577,7 +577,7 @@ namespace egret {
          * @param o 
          * @returns 
          */
-        private _addStep(o): Tween<any> {
+        private _addStep(o): Tween<T> {
             if (o.d > 0) {
                 o.type = "step";
                 this._steps.push(o);
@@ -634,7 +634,7 @@ namespace egret {
          * @param o 
          * @returns 
          */
-        private _addAction(o): Tween<any> {
+        private _addAction(o): Tween<T> {
             o.t = this.duration;
             o.type = "action";
             this._steps.push(o);
@@ -763,7 +763,7 @@ namespace egret {
          * @version Egret 2.4
          * @platform Web,Native
          */
-        public set(props: any, target = null): Tween<any> {
+        public set(props: Partial<T & {[X in keyof T]: number }>, target = null): Tween<T> {
             //更新当前数据，保证缓动流畅性
             this._appendQueueProps(props);
             return this._addAction({ f: this._set, o: this, p: [props, target ? target : this._target] });
