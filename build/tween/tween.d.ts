@@ -503,9 +503,6 @@ declare namespace egret {
     }
 }
 declare namespace egret {
-    type PropsType<T> = Partial<T> & {
-        [key: string]: number;
-    };
     /**
      * @language en_US
      * Tween is the animation easing class of Egret
@@ -639,7 +636,11 @@ declare namespace egret {
          * @version Egret 2.4
          * @platform Web,Native
          */
-        static get<T>(target: T, props?: any, pluginData?: any, override?: boolean): Tween<T>;
+        static get<T>(target: T, props?: {
+            loop?: boolean;
+            onChange?: Function;
+            onChangeObj?: any;
+        }, pluginData?: any, override?: boolean): Tween<T>;
         /**
          * @language en_US
          * Delete all Tween animations from an object
@@ -821,7 +822,7 @@ declare namespace egret {
          * @version Egret 2.4
          * @platform Web,Native
          */
-        wait(duration: number, passive?: boolean): Tween<any>;
+        wait(duration: number, passive?: boolean): Tween<T>;
         /**
          * @language en_US
          * Modify the property of the specified object to a specified value
@@ -842,7 +843,9 @@ declare namespace egret {
          * @version Egret 2.4
          * @platform Web,Native
          */
-        to(props: PropsType<T>, duration?: number, ease?: Function): Tween<any>;
+        to(props: Partial<T & {
+            [X in keyof T]: number;
+        }>, duration?: number, ease?: Function): Tween<T>;
         /**
          * @language en_US
          * Execute callback function
@@ -877,7 +880,7 @@ declare namespace egret {
          *  }, this, [233, "hello"]);
          * </pre>
          */
-        call(callback: Function, thisObj?: any, params?: any[]): Tween<any>;
+        call(callback: Function, thisObj?: any, params?: any[]): Tween<T>;
         /**
          * Now modify the properties of the specified object to the specified value
          * @param props {Object} Property set of an object

@@ -127,13 +127,13 @@ namespace egret {
          * @version Egret 2.4
          * @platform Web,Native
          */
-        format:string = "image";
+        format: string = "image";
 
         /**
          * @private
          * webgl纹理生成后，是否删掉原始图像数据
          */
-        $deleteSource:boolean = true;
+        $deleteSource: boolean = true;
 
         constructor(source) {
             super();
@@ -148,7 +148,7 @@ namespace egret {
                 this.webGLTexture = null;
             }
             //native
-            if(this.source && this.source.dispose) {
+            if (this.source && this.source.dispose) {
                 this.source.dispose();
             }
             this.source = null;
@@ -158,15 +158,15 @@ namespace egret {
 
 
         private static _displayList = egret.createMap<DisplayObject[]>();
-        static $addDisplayObject(displayObject:DisplayObject, bitmapData:BitmapData|Texture):void {
-            let hashCode:number;
-            if((<Texture>bitmapData)._bitmapData && (<Texture>bitmapData)._bitmapData.hashCode) {
+        static $addDisplayObject(displayObject: DisplayObject, bitmapData: BitmapData | Texture): void {
+            let hashCode: number;
+            if ((<Texture>bitmapData)._bitmapData && (<Texture>bitmapData)._bitmapData.hashCode) {
                 hashCode = (<Texture>bitmapData)._bitmapData.hashCode;
             }
             else {
                 hashCode = bitmapData.hashCode;
             }
-            if(!hashCode) {
+            if (!hashCode) {
                 return;
             }
             if (!BitmapData._displayList[hashCode]) {
@@ -174,51 +174,51 @@ namespace egret {
                 return;
             }
 
-            let tempList:Array<DisplayObject> = BitmapData._displayList[hashCode];
+            let tempList: Array<DisplayObject> = BitmapData._displayList[hashCode];
             if (tempList.indexOf(displayObject) < 0) {
                 tempList.push(displayObject);
             }
         }
 
-        static $removeDisplayObject(displayObject:DisplayObject, bitmapData:BitmapData|Texture):void {
-            let hashCode:number;
-            if((<Texture>bitmapData)._bitmapData && (<Texture>bitmapData)._bitmapData.hashCode) {
+        static $removeDisplayObject(displayObject: DisplayObject, bitmapData: BitmapData | Texture): void {
+            let hashCode: number;
+            if ((<Texture>bitmapData)._bitmapData && (<Texture>bitmapData)._bitmapData.hashCode) {
                 hashCode = (<Texture>bitmapData)._bitmapData.hashCode;
             }
             else {
                 hashCode = bitmapData.hashCode;
             }
-            if(!hashCode) {
+            if (!hashCode) {
                 return;
             }
             if (!BitmapData._displayList[hashCode]) {
                 return;
             }
 
-            let tempList:Array<DisplayObject> = BitmapData._displayList[hashCode];
-            let index:number = tempList.indexOf(displayObject);
+            let tempList: Array<DisplayObject> = BitmapData._displayList[hashCode];
+            let index: number = tempList.indexOf(displayObject);
             if (index >= 0) {
                 tempList.splice(index);
             }
         }
 
-        static $invalidate(bitmapData:BitmapData|Texture):void {
-            let hashCode:number;
-            if((<Texture>bitmapData)._bitmapData && (<Texture>bitmapData)._bitmapData.hashCode) {
+        static $invalidate(bitmapData: BitmapData | Texture): void {
+            let hashCode: number;
+            if ((<Texture>bitmapData)._bitmapData && (<Texture>bitmapData)._bitmapData.hashCode) {
                 hashCode = (<Texture>bitmapData)._bitmapData.hashCode;
             }
             else {
                 hashCode = bitmapData.hashCode;
             }
-            if(!hashCode) {
+            if (!hashCode) {
                 return;
             }
 
             if (!BitmapData._displayList[hashCode]) {
                 return;
             }
-            let tempList:Array<DisplayObject> = BitmapData._displayList[hashCode];
-            for (let i:number = 0; i < tempList.length; i++) {
+            let tempList: Array<DisplayObject> = BitmapData._displayList[hashCode];
+            for (let i: number = 0; i < tempList.length; i++) {
                 if (tempList[i] instanceof egret.Bitmap) {
                     (<egret.Bitmap>tempList[i]).$refreshImageData();
                 }
@@ -226,27 +226,27 @@ namespace egret {
             }
         }
 
-        static $dispose(bitmapData:BitmapData|Texture):void {
-            let hashCode:number;
-            if((<Texture>bitmapData)._bitmapData && (<Texture>bitmapData)._bitmapData.hashCode) {
+        static $dispose(bitmapData: BitmapData | Texture): void {
+            let hashCode: number;
+            if ((<Texture>bitmapData)._bitmapData && (<Texture>bitmapData)._bitmapData.hashCode) {
                 hashCode = (<Texture>bitmapData)._bitmapData.hashCode;
             }
             else {
                 hashCode = bitmapData.hashCode;
             }
-            if(!hashCode) {
+            if (!hashCode) {
                 return;
             }
 
             if (!BitmapData._displayList[hashCode]) {
                 return;
             }
-            let tempList:Array<DisplayObject> = BitmapData._displayList[hashCode];
-            for (let i:number = 0; i < tempList.length; i++) {
-                if (tempList[i] instanceof egret.Bitmap) {
-                    (<egret.Bitmap>tempList[i]).$Bitmap[sys.BitmapKeys.image] = null;
+            let tempList = BitmapData._displayList[hashCode];
+            for (let node of tempList) {
+                if (node instanceof egret.Bitmap) {
+                    node.$Bitmap[sys.BitmapKeys.image] = null;
                 }
-                tempList[i].$invalidateContentBounds();
+                node.$invalidateContentBounds();
             }
             delete BitmapData._displayList[hashCode];
         }

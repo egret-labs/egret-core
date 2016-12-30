@@ -5998,6 +5998,10 @@ declare namespace egret {
     }
 }
 declare namespace egret {
+    interface DisplayObject {
+        addEventListener<Z>(type: "touchBegin", listener: (this: Z, e: TouchEvent) => void, thisObject: Z, useCapture?: boolean, priority?: number): any;
+        addEventListener<Z>(type: string, listener: Function, thisObject: any, useCapture?: boolean, priority?: number): any;
+    }
     /**
      * @language en_US
      * The TouchEvent class lets you handle events on devices that detect user contact with the device (such as a finger
@@ -6095,7 +6099,7 @@ declare namespace egret {
          * @version Egret 2.4
          * @platform Web,Native
          */
-        static TOUCH_TAP: string;
+        static TOUCH_TAP: "touchTap";
         /**
          * @language en_US
          * Dispatched when the user lifts the point of contact over the different DisplayObject instance on which the contact
