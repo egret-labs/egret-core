@@ -373,6 +373,10 @@ function findFiles(filePath, list, extension, filterFunc, checkDir) {
             continue;
         }
         var path = joinPath(filePath, files[i]);
+        var exists_1 = FS.existsSync(path);
+        if (!exists_1) {
+            continue;
+        }
         var stat = FS.statSync(path);
         if (stat.isDirectory()) {
             if (checkDir) {
