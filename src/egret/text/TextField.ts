@@ -2154,4 +2154,12 @@ namespace egret {
         }
     }
 
+    export interface TextField{
+        addEventListener<Z>(type: "link"
+            , listener: (this: Z, e: TextEvent) => void, thisObject: Z, useCapture?: boolean, priority?: number);
+        addEventListener<Z>(type: "focusIn" |
+                                  "focusOut"
+            , listener: (this: Z, e: FocusEvent) => void, thisObject: Z, useCapture?: boolean, priority?: number);
+        addEventListener(type: string, listener: Function, thisObject: any, useCapture?: boolean, priority?: number);
+    }
 }

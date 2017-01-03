@@ -27,6 +27,11 @@
 //
 //////////////////////////////////////////////////////////////////////////////////////
 namespace egret {
+    export interface HttpRequest{
+        addEventListener<Z>(type: "progress"
+            , listener: (this: Z, e: ProgressEvent) => void, thisObject: Z, useCapture?: boolean, priority?: number);
+        addEventListener(type: string, listener: Function, thisObject: any, useCapture?: boolean, priority?: number);
+    }
     /**
      * @language en_US
      * When a load operation has begun or a socket has received data, ProgressEvent object is dispatched.
@@ -55,7 +60,7 @@ namespace egret {
          * @version Egret 2.4
          * @platform Web,Native
          */
-        public static PROGRESS:string = "progress";
+        public static PROGRESS:"progress" = "progress";
 
         /**
          * @language en_US
@@ -69,7 +74,7 @@ namespace egret {
          * @version Egret 2.4
          * @platform Web,Native
          */
-        public static SOCKET_DATA:string = "socketData";
+        public static SOCKET_DATA:"socketData" = "socketData";
 
         /**
          * @language en_US
