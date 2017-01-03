@@ -29,11 +29,11 @@
 
 
 namespace egret {
-    export interface TextField{
-        addEventListener<Z>(type: "link"
-            , listener: (this: Z, e: TextEvent) => void, thisObject: Z, useCapture?: boolean, priority?: number);
-        addEventListener(type: string, listener: Function, thisObject: any, useCapture?: boolean, priority?: number);
-    }
+    // export interface TextField{
+    //     addEventListener<Z>(type: "link"
+    //         , listener: (this: Z, e: TextEvent) => void, thisObject: Z, useCapture?: boolean, priority?: number);
+    //     addEventListener(type: string, listener: Function, thisObject: any, useCapture?: boolean, priority?: number);
+    // }
     /**
      * @language en_US
      * When a user clicks a hyperlink rich text object dispatches TextEvent object. Text Event Type: TextEvent.LINK.

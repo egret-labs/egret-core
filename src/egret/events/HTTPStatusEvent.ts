@@ -58,7 +58,7 @@ namespace egret {
          * @version Egret 2.4
          * @platform Web,Native
          */
-        public static HTTP_STATUS:string = "httpStatus";
+        public static HTTP_STATUS:"httpStatus" = "httpStatus";
 
         /**
          * @language en_US

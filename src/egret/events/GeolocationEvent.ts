@@ -28,6 +28,12 @@
 //////////////////////////////////////////////////////////////////////////////////////
 
 namespace egret {
+
+    export interface Geolocation{
+        addEventListener<Z>(type: "ioError"
+            , listener: (this: Z, e: GeolocationEvent) => void, thisObject: Z, useCapture?: boolean, priority?: number);
+        addEventListener(type: string, listener: Function, thisObject: any, useCapture?: boolean, priority?: number);
+    }
     /**
      * @language en_US
      * The GeolocationEvent represents the position and altitude of the device on Earth,
