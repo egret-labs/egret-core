@@ -325,16 +325,7 @@
       {
         "name": "game",
         "description": "game 游戏库",
-        "files": [
-          {
-            "path": "net/native/NativeNetContext.ts",
-            "platform": "native"
-          },
-          {
-            "path": "net/web/HTML5NetContext.ts",
-            "platform": "web"
-          }
-        ],
+        "files": [],
         "root": "src/extension/game",
         "dependencies": [
           "egret"

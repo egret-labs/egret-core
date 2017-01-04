@@ -283,14 +283,14 @@ declare namespace egret {
          * @version Egret 2.4
          * @platform Web,Native
          */
-        gotoAndPlay(frame: any, playTimes?: number): void;
+        gotoAndPlay(frame: string | number, playTimes?: number): void;
         /**
          * 将播放头移到指定帧并停止
          * @param frame {any} 指定帧的帧号或帧标签
          * @version Egret 2.4
          * @platform Web,Native
          */
-        gotoAndStop(frame: any): void;
+        gotoAndStop(frame: string | number): void;
         /**
          * @private
          *
@@ -1646,7 +1646,7 @@ declare namespace egret {
      * @platform Web,Native
      * @includeExample extension/game/utils/setTimeout.ts
      */
-    function setTimeout(listener: Function, thisObject: any, delay: number, ...args: any[]): number;
+    function setTimeout<Z>(listener: (this: Z, ...arg) => void, thisObject: Z, delay: number, ...args: any[]): number;
     /**
      * @language en_US
      * Function run after the specified delay is cleared.
@@ -2393,7 +2393,7 @@ declare namespace egret {
      * @platform Web,Native
      * @includeExample extension/game/utils/setInterval.ts
      */
-    function setInterval(listener: Function, thisObject: any, delay: number, ...args: any[]): number;
+    function setInterval<Z>(listener: (this: Z, ...arg) => void, thisObject: Z, delay: number, ...args: any[]): number;
     /**
      * @language en_US
      * Clear function to run after a specified delay.
