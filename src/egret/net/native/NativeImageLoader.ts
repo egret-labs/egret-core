@@ -61,6 +61,8 @@ namespace egret.native {
          */
         public static crossOrigin:string = null;
 
+        public static REUSE_BITMAPDATA = true;
+
         /**
          * @private
          *

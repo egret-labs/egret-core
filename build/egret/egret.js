@@ -7892,6 +7892,12 @@ var egret;
 //////////////////////////////////////////////////////////////////////////////////////
 var egret;
 (function (egret) {
+    // export interface TextField{
+    //     addEventListener<Z>(type: "focusIn" |
+    //                               "focusOut"
+    //         , listener: (this: Z, e: FocusEvent) => void, thisObject: Z, useCapture?: boolean, priority?: number);
+    //     addEventListener(type: string, listener: Function, thisObject: any, useCapture?: boolean, priority?: number);
+    // }
     /**
      * @language en_US
      * When the user changes the focus from one object in the display list to another object, the object dispatches a FocusEvent object. Currently only supports input text.
@@ -8734,6 +8740,11 @@ var egret;
 //////////////////////////////////////////////////////////////////////////////////////
 var egret;
 (function (egret) {
+    // export interface TextField{
+    //     addEventListener<Z>(type: "link"
+    //         , listener: (this: Z, e: TextEvent) => void, thisObject: Z, useCapture?: boolean, priority?: number);
+    //     addEventListener(type: string, listener: Function, thisObject: any, useCapture?: boolean, priority?: number);
+    // }
     /**
      * @language en_US
      * When a user clicks a hyperlink rich text object dispatches TextEvent object. Text Event Type: TextEvent.LINK.
@@ -9147,11 +9158,12 @@ var egret;
                 return;
             }
             var tempList = BitmapData._displayList[hashCode];
-            for (var i = 0; i < tempList.length; i++) {
-                if (tempList[i] instanceof egret.Bitmap) {
-                    tempList[i].$refreshImageData();
+            for (var _i = 0, tempList_1 = tempList; _i < tempList_1.length; _i++) {
+                var node = tempList_1[_i];
+                if (node instanceof egret.Bitmap) {
+                    node.$refreshImageData();
                 }
-                tempList[i].$invalidateContentBounds();
+                node.$invalidateContentBounds();
             }
         };
         BitmapData.$dispose = function (bitmapData) {
@@ -9169,14 +9181,14 @@ var egret;
                 return;
             }
             var tempList = BitmapData._displayList[hashCode];
-            for (var _i = 0, tempList_1 = tempList; _i < tempList_1.length; _i++) {
-                var node = tempList_1[_i];
+            for (var _i = 0, tempList_2 = tempList; _i < tempList_2.length; _i++) {
+                var node = tempList_2[_i];
                 if (node instanceof egret.Bitmap) {
                     node.$Bitmap[1 /* image */] = null;
                 }
                 node.$invalidateContentBounds();
             }
-            delete BitmapData._displayList[hashCode];
+            // delete BitmapData._displayList[hashCode];
         };
         return BitmapData;
     }(egret.HashObject));
@@ -18893,23 +18905,7 @@ var egret;
             }
             return value;
         };
-        /**
-         * @language en_US
-         * Convert the text in html format to the object that can be assigned to the egret.TextField#textFlow property
-         * @param htmltext {string} Text in html
-         * @returns {Array<egret.ITextElement>} 可赋值给 egret.TextField#textFlow Object that can be assigned to the egret.TextField#textFlow property
-         * @version Egret 2.4
-         * @platform Web,Native
-         */
-        /**
-         * @language zh_CN
-         * 将html格式文本转换为可赋值给 egret.TextField#textFlow 属性的对象
-         * @param htmltext {string} html文本
-         * @returns {Array<egret.ITextElement>} 可赋值给 egret.TextField#textFlow 属性的对象
-         * @version Egret 2.4
-         * @platform Web,Native
-         */
-        HtmlTextParser.prototype.parser = function (htmltext) {
+        HtmlTextParser.prototype.parse = function (htmltext) {
             this.stackArray = [];
             this.resutlArr = [];
             var firstIdx = 0; //文本段开始位置
@@ -18937,6 +18933,25 @@ var egret;
                 }
             }
             return this.resutlArr;
+        };
+        /**
+         * @language en_US
+         * Convert the text in html format to the object that can be assigned to the egret.TextField#textFlow property
+         * @param htmltext {string} Text in html
+         * @returns {Array<egret.ITextElement>} 可赋值给 egret.TextField#textFlow Object that can be assigned to the egret.TextField#textFlow property
+         * @version Egret 2.4
+         * @platform Web,Native
+         */
+        /**
+         * @language zh_CN
+         * 将html格式文本转换为可赋值给 egret.TextField#textFlow 属性的对象
+         * @param htmltext {string} html文本
+         * @returns {Array<egret.ITextElement>} 可赋值给 egret.TextField#textFlow 属性的对象
+         * @version Egret 2.4
+         * @platform Web,Native
+         */
+        HtmlTextParser.prototype.parser = function (htmltext) {
+            return this.parse(htmltext);
         };
         /**
          * @private

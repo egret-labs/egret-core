@@ -4763,7 +4763,7 @@ declare namespace egret {
          * @version Egret 2.4
          * @platform Web,Native
          */
-        static FOCUS_IN: string;
+        static FOCUS_IN: "focusIn";
         /**
          * @language en_US
          * Loses focus
@@ -4776,7 +4776,7 @@ declare namespace egret {
          * @version Egret 2.4
          * @platform Web,Native
          */
-        static FOCUS_OUT: string;
+        static FOCUS_OUT: "focusOut";
         /**
          * @language en_US
          * Create a egret.FocusEvent objects
@@ -4799,6 +4799,10 @@ declare namespace egret {
     }
 }
 declare namespace egret {
+    interface Geolocation {
+        addEventListener<Z>(type: "ioError", listener: (this: Z, e: GeolocationEvent) => void, thisObject: Z, useCapture?: boolean, priority?: number): any;
+        addEventListener(type: string, listener: Function, thisObject: any, useCapture?: boolean, priority?: number): any;
+    }
     /**
      * @language en_US
      * The GeolocationEvent represents the position and altitude of the device on Earth,
@@ -5002,7 +5006,7 @@ declare namespace egret {
          * @version Egret 2.4
          * @platform Web,Native
          */
-        static HTTP_STATUS: string;
+        static HTTP_STATUS: "httpStatus";
         /**
          * @language en_US
          * Create a egret.HTTPStatusEvent objects
@@ -5289,6 +5293,10 @@ declare namespace egret {
     }
 }
 declare namespace egret {
+    interface HttpRequest {
+        addEventListener<Z>(type: "ioError", listener: (this: Z, e: IOErrorEvent) => void, thisObject: Z, useCapture?: boolean, priority?: number): any;
+        addEventListener(type: string, listener: Function, thisObject: any, useCapture?: boolean, priority?: number): any;
+    }
     /**
      * @language en_US
      * @classdesc IO流事件，当错误导致输入或输出操作失败时调度 IOErrorEvent 对象。
@@ -5316,7 +5324,7 @@ declare namespace egret {
          * @version Egret 2.4
          * @platform Web,Native
          */
-        static IO_ERROR: string;
+        static IO_ERROR: "ioError";
         /**
          * @language en_US
          * Create a egret.IOErrorEvent objects
@@ -5483,6 +5491,10 @@ declare namespace egret {
     }
 }
 declare namespace egret {
+    interface HttpRequest {
+        addEventListener<Z>(type: "progress", listener: (this: Z, e: ProgressEvent) => void, thisObject: Z, useCapture?: boolean, priority?: number): any;
+        addEventListener(type: string, listener: Function, thisObject: any, useCapture?: boolean, priority?: number): any;
+    }
     /**
      * @language en_US
      * When a load operation has begun or a socket has received data, ProgressEvent object is dispatched.
@@ -5510,7 +5522,7 @@ declare namespace egret {
          * @version Egret 2.4
          * @platform Web,Native
          */
-        static PROGRESS: string;
+        static PROGRESS: "progress";
         /**
          * @language en_US
          * Get the data
@@ -5523,7 +5535,7 @@ declare namespace egret {
          * @version Egret 2.4
          * @platform Web,Native
          */
-        static SOCKET_DATA: string;
+        static SOCKET_DATA: "socketData";
         /**
          * @language en_US
          * Number of items or bytes when the listener processes the event。
@@ -5668,10 +5680,6 @@ declare namespace egret {
     }
 }
 declare namespace egret {
-    interface TextField {
-        addEventListener<Z>(type: "link", listener: (this: Z, e: TextEvent) => void, thisObject: Z, useCapture?: boolean, priority?: number): any;
-        addEventListener(type: string, listener: Function, thisObject: any, useCapture?: boolean, priority?: number): any;
-    }
     /**
      * @language en_US
      * When a user clicks a hyperlink rich text object dispatches TextEvent object. Text Event Type: TextEvent.LINK.
@@ -8893,6 +8901,7 @@ declare namespace egret {
          * @platform Web,Native
          */
         crossOrigin: string;
+        REUSE_BITMAPDATA: boolean;
     };
 }
 declare namespace egret.sys {
@@ -11626,6 +11635,7 @@ declare namespace egret {
          * @private
          */
         private resutlArr;
+        parse(htmltext: string): egret.ITextElement[];
         /**
          * @language en_US
          * Convert the text in html format to the object that can be assigned to the egret.TextField#textFlow property
@@ -13046,6 +13056,11 @@ declare namespace egret {
         private addEvent();
         private removeEvent();
         private onTapHandler(e);
+    }
+    interface TextField {
+        addEventListener<Z>(type: "link", listener: (this: Z, e: TextEvent) => void, thisObject: Z, useCapture?: boolean, priority?: number): any;
+        addEventListener<Z>(type: "focusIn" | "focusOut", listener: (this: Z, e: FocusEvent) => void, thisObject: Z, useCapture?: boolean, priority?: number): any;
+        addEventListener(type: string, listener: Function, thisObject: any, useCapture?: boolean, priority?: number): any;
     }
 }
 declare namespace egret {

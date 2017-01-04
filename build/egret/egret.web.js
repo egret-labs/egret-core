@@ -2184,6 +2184,7 @@ var egret;
              * @param url 要加载的图像文件的地址。
              */
             WebImageLoader.prototype.load = function (url) {
+                this.currentURL = url;
                 if (web.Html5Capatibility._canUseBlob
                     && url.indexOf("wxLocalResource:") != 0 //微信专用不能使用 blob
                     && url.indexOf("data:") != 0
@@ -2195,9 +2196,6 @@ var egret;
                         request.addEventListener(egret.Event.COMPLETE, this.onBlobLoaded, this);
                         request.addEventListener(egret.IOErrorEvent.IO_ERROR, this.onBlobError, this);
                         request.responseType = "blob";
-                    }
-                    if (true) {
-                        this.currentURL = url;
                     }
                     request.open(url);
                     request.send();
@@ -2245,6 +2243,15 @@ var egret;
                 image.onerror = this.onLoadError.bind(this);
                 image.src = src;
             };
+            WebImageLoader.getBitmapData = function (url, image) {
+                if (!WebImageLoader.bitmapDataCache[url]) {
+                    WebImageLoader.bitmapDataCache[url] = new egret.BitmapData(image);
+                }
+                var bitmapdata = WebImageLoader.bitmapDataCache[url];
+                bitmapdata.source = image;
+                egret.BitmapData.$invalidate(bitmapdata);
+                return bitmapdata;
+            };
             /**
              * @private
              */
@@ -2253,7 +2260,7 @@ var egret;
                 if (!image) {
                     return;
                 }
-                this.data = new egret.BitmapData(image);
+                this.data = WebImageLoader.getBitmapData(this.currentURL, image);
                 var self = this;
                 window.setTimeout(function () {
                     self.dispatchEventWith(egret.Event.COMPLETE);
@@ -2307,6 +2314,8 @@ var egret;
          * 指定是否启用跨域资源共享,如果ImageLoader实例有设置过crossOrigin属性将使用设置的属性
          */
         WebImageLoader.crossOrigin = null;
+        WebImageLoader.REUSE_BITMAPDATA = true;
+        WebImageLoader.bitmapDataCache = {};
         web.WebImageLoader = WebImageLoader;
         __reflect(WebImageLoader.prototype, "egret.web.WebImageLoader", ["egret.ImageLoader"]);
         egret.ImageLoader = WebImageLoader;

@@ -347,7 +347,6 @@ namespace egret {
         public dispose():void {
             if (this._bitmapData) {
                 this._bitmapData.$dispose();
-                this._bitmapData = null;
             }
         }
     }

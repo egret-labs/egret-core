@@ -174,7 +174,7 @@ namespace egret {
                 return;
             }
 
-            let tempList: Array<DisplayObject> = BitmapData._displayList[hashCode];
+            let tempList = BitmapData._displayList[hashCode];
             if (tempList.indexOf(displayObject) < 0) {
                 tempList.push(displayObject);
             }
@@ -195,8 +195,8 @@ namespace egret {
                 return;
             }
 
-            let tempList: Array<DisplayObject> = BitmapData._displayList[hashCode];
-            let index: number = tempList.indexOf(displayObject);
+            let tempList = BitmapData._displayList[hashCode];
+            let index = tempList.indexOf(displayObject);
             if (index >= 0) {
                 tempList.splice(index);
             }
@@ -213,16 +213,15 @@ namespace egret {
             if (!hashCode) {
                 return;
             }
-
-            if (!BitmapData._displayList[hashCode]) {
+            let tempList = BitmapData._displayList[hashCode];
+            if (!tempList) {
                 return;
             }
-            let tempList: Array<DisplayObject> = BitmapData._displayList[hashCode];
-            for (let i: number = 0; i < tempList.length; i++) {
-                if (tempList[i] instanceof egret.Bitmap) {
-                    (<egret.Bitmap>tempList[i]).$refreshImageData();
+            for (let node of tempList) {
+                if (node instanceof egret.Bitmap) {
+                    node.$refreshImageData();
                 }
-                tempList[i].$invalidateContentBounds();
+                node.$invalidateContentBounds();
             }
         }
 
@@ -237,18 +236,17 @@ namespace egret {
             if (!hashCode) {
                 return;
             }
-
-            if (!BitmapData._displayList[hashCode]) {
+            let tempList = BitmapData._displayList[hashCode];
+            if (!tempList) {
                 return;
             }
-            let tempList = BitmapData._displayList[hashCode];
             for (let node of tempList) {
                 if (node instanceof egret.Bitmap) {
                     node.$Bitmap[sys.BitmapKeys.image] = null;
                 }
                 node.$invalidateContentBounds();
             }
-            delete BitmapData._displayList[hashCode];
+            // delete BitmapData._displayList[hashCode];
         }
     }
 }

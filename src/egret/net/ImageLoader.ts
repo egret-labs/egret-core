@@ -145,5 +145,7 @@ namespace egret {
          * @platform Web,Native
          */
         crossOrigin:string;
+
+        REUSE_BITMAPDATA:boolean;
     };
 }

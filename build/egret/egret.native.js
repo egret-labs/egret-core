@@ -7091,6 +7091,7 @@ var egret;
          * 指定是否启用跨域资源共享,如果ImageLoader实例有设置过crossOrigin属性将使用设置的属性
          */
         NativeImageLoader.crossOrigin = null;
+        NativeImageLoader.REUSE_BITMAPDATA = true;
         native.NativeImageLoader = NativeImageLoader;
         __reflect(NativeImageLoader.prototype, "egret.native.NativeImageLoader", ["egret.ImageLoader"]);
         egret.ImageLoader = NativeImageLoader;
