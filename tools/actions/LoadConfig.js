@@ -41,7 +41,7 @@ function loadTsConfig(url, options) {
             }
         }
     }
-    compilerOptions.target = 1; //ES5
+    compilerOptions.target = "ES5";
     options.compilerOptions = compilerOptions;
     options.tsconfigError = errLog;
 }

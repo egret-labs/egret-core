@@ -11,7 +11,7 @@ export function loadTsConfig(url, options: egret.ToolArgs): void {
             errLog.push(utils.tr(1117));//不是有效的 json 文件
         }
     }
-    var compilerOptions:ts.CompilerOptions = {};
+    var compilerOptions:any = {};
     if (configObj) {
         compilerOptions = configObj["compilerOptions"];
         if (compilerOptions) {
@@ -39,7 +39,7 @@ export function loadTsConfig(url, options: egret.ToolArgs): void {
              }
         }
     }
-    compilerOptions.target = 1;//ES5
+    compilerOptions.target = "ES5";
 
     options.compilerOptions = compilerOptions;
     options.tsconfigError = errLog;
