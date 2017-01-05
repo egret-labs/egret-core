@@ -49,6 +49,9 @@ var CompileProject = (function () {
         }
         var fileResult = GetJavaScriptFileNames(compileResult.files, /^src\//);
         compileResult.files = fileResult;
+        if (compileResult.messages.length > 0) {
+            compileResult.exitStatus = 1303;
+        }
         return compileResult;
     };
     return CompileProject;
