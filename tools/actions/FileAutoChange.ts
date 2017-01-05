@@ -212,7 +212,7 @@ class FileAutoChangeCommand implements egret.Command {
         var content = FileUtil.read(html, true);
 
         var projs = project.parseProjectInfo(content);
-        var proj:egret.ILarkProject;
+        var proj:egret.EgretProjectConfig;
         if (projs.length == 0) {
             proj = {};
         } else {

@@ -15,7 +15,7 @@ var TemplatesRoot = "tools/templates/";
 import Clean = require('../commands/clean');
 
 class Create implements egret.Command {
-    project: egret.ILarkProject;
+    project: egret.EgretProjectConfig;
     execute(): number {
 
         var proj = this.project;
@@ -41,7 +41,7 @@ class Create implements egret.Command {
     }
 }
 
-function compileTemplate(project: egret.ILarkProject) {
+function compileTemplate(project: egret.EgretProjectConfig) {
     var options = egret.args;
     var moduleScripts: string[] = [];
 
