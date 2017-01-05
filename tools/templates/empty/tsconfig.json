@@ -1,7 +1,10 @@
 {
     "compilerOptions": {
         "target": "es5",
-        "experimentalDecorators": true
+        "experimentalDecorators": true,
+        "lib":[
+            "es5","dom"
+        ]
     },
     "exclude": [
         "node_modules"

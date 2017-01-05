@@ -38,6 +38,10 @@ class Main extends egret.DisplayObjectContainer {
     public constructor() {
         super();
         this.addEventListener(egret.Event.ADDED_TO_STAGE, this.onAddToStage, this);
+
+        
+
+
     }
 
     private onAddToStage(event:egret.Event) {
@@ -69,7 +73,7 @@ class Main extends egret.DisplayObjectContainer {
      * preload资源组加载完成
      * Preload resource group is loaded
      */
-    private onResourceLoadComplete(event:RES.ResourceEvent):void {
+    private onResourceLoadComplete(event:RES.ResourceEvent) {
         if (event.groupName == "preload") {
             this.stage.removeChild(this.loadingView);
             RES.removeEventListener(RES.ResourceEvent.GROUP_COMPLETE, this.onResourceLoadComplete, this);
@@ -84,7 +88,7 @@ class Main extends egret.DisplayObjectContainer {
      * 资源组加载出错
      *  The resource group loading failed
      */
-    private onItemLoadError(event:RES.ResourceEvent):void {
+    private onItemLoadError(event:RES.ResourceEvent) {
         console.warn("Url:" + event.resItem.url + " has failed to load");
     }
 
@@ -92,7 +96,7 @@ class Main extends egret.DisplayObjectContainer {
      * 资源组加载出错
      *  The resource group loading failed
      */
-    private onResourceLoadError(event:RES.ResourceEvent):void {
+    private onResourceLoadError(event:RES.ResourceEvent) {
         //TODO
         console.warn("Group:" + event.groupName + " has failed to load");
         //忽略加载失败的项目
@@ -104,7 +108,7 @@ class Main extends egret.DisplayObjectContainer {
      * preload资源组加载进度
      * Loading process of preload resource group
      */
-    private onResourceProgress(event:RES.ResourceEvent):void {
+    private onResourceProgress(event:RES.ResourceEvent) {
         if (event.groupName == "preload") {
             this.loadingView.setProgress(event.itemsLoaded, event.itemsTotal);
         }
@@ -116,7 +120,7 @@ class Main extends egret.DisplayObjectContainer {
      * 创建游戏场景
      * Create a game scene
      */
-    private createGameScene():void {
+    private createGameScene() {
         let sky = this.createBitmapByName("bg_jpg");
         this.addChild(sky);
         let stageW = this.stage.stageWidth;
@@ -187,13 +191,13 @@ class Main extends egret.DisplayObjectContainer {
      * 描述文件加载成功，开始播放动画
      * Description file loading is successful, start to play the animation
      */
-    private startAnimation(result:string[]):void {
+    private startAnimation(result:string[]) {
         let parser = new egret.HtmlTextParser();
 
         let textflowArr = result.map( text => parser.parse(text));
         let textfield = this.textfield;
         let count = -1;
-        let change:Function = ()=> {
+        let change = ()=> {
             count++;
             if (count >= textflowArr.length) {
                 count = 0;
