@@ -129,10 +129,10 @@ class Main extends eui.UILayer {
      * Create scene interface
      */
     protected startCreateScene(): void {
-        let sky:egret.Bitmap = this.createBitmapByName("bg_jpg");
+        let sky = this.createBitmapByName("bg_jpg");
         this.addChild(sky);
-        let stageW:number = this.stage.stageWidth;
-        let stageH:number = this.stage.stageHeight;
+        let stageW = this.stage.stageWidth;
+        let stageH = this.stage.stageHeight;
         sky.width = stageW;
         sky.height = stageH;
 
@@ -205,41 +205,31 @@ class Main extends eui.UILayer {
      * Description file loading is successful, start to play the animation
      */
     private startAnimation(result:Array<any>):void {
-        let self:any = this;
+     let parser = new egret.HtmlTextParser();
 
-        let parser = new egret.HtmlTextParser();
-        let textflowArr:Array<Array<egret.ITextElement>> = [];
-        for (let i:number = 0; i < result.length; i++) {
-            textflowArr.push(parser.parser(result[i]));
-        }
-
-        let textfield = self.textfield;
+        let textflowArr = result.map( text => parser.parse(text));
+        let textfield = this.textfield;
         let count = -1;
-        let change:Function = function () {
+        let change = ()=> {
             count++;
             if (count >= textflowArr.length) {
                 count = 0;
             }
-            let lineArr = textflowArr[count];
+            let textFlow = textflowArr[count];
 
-            self.changeDescription(textfield, lineArr);
-
+            // 切换描述内容
+            // Switch to described content
+            textfield.textFlow = textFlow;
             let tw = egret.Tween.get(textfield);
             tw.to({"alpha": 1}, 200);
             tw.wait(2000);
             tw.to({"alpha": 0}, 200);
-            tw.call(change, self);
+            tw.call(change, this);
         };
 
         change();
     }
-    /**
-     * 切换描述内容
-     * Switch to described content
-     */
-    private changeDescription(textfield:egret.TextField, textFlow:Array<egret.ITextElement>):void {
-        textfield.textFlow = textFlow;
-    }
+
     /**
      * 点击按钮
      * Click the button

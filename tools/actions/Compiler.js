@@ -27,7 +27,7 @@ var Compiler = (function () {
         if (args.compilerOptions) {
             parsedCmd.options = args.compilerOptions;
         }
-        if (out) {
+        if (egret.args.command == "make") {
             //make 使用引擎的配置,必须用下面的参数
             parsedCmd.options.target = 1;
             // parsedCmd.options.stripInternal = true;
@@ -60,28 +60,32 @@ var Compiler = (function () {
             defines.RELEASE = false;
         }
         parsedCmd.options.defines = defines;
-        var compileResult = this.compileNew(parsedCmd, option.forSortFile);
+        var compileResult;
+        if (egret.args.command == "make") {
+            compileResult = this.compileNew(parsedCmd.options, parsedCmd.fileNames, option.forSortFile);
+        }
+        else {
+            var configParseResult = ts.parseJsonConfigFileContent({ "compilerOptions": parsedCmd.options }, ts.sys, "./");
+            if (configParseResult.errors && configParseResult.errors.length) {
+                configParseResult.errors.forEach(function (error) {
+                    console.log(error.messageText);
+                });
+                utils.exit(0);
+            }
+            compileResult = this.compileNew(configParseResult.options, parsedCmd.fileNames, option.forSortFile);
+        }
         process.chdir(realCWD);
         return compileResult;
     };
-    Compiler.prototype.compileNew = function (parsedCmd, forSortFile) {
+    Compiler.prototype.compileNew = function (options, rootFileNames, forSortFile) {
         var _this = this;
         this.errors = [];
-        this.parsedCmd = parsedCmd;
-        var options = parsedCmd.options;
-        var rootFileNames = parsedCmd.fileNames;
+        this.fileNames = rootFileNames;
         this.sortedFiles = rootFileNames;
         // initialize the list of files
         rootFileNames.forEach(function (fileName) {
             _this.files[fileName] = { version: 0 };
         });
-        var configParseResult = ts.parseJsonConfigFileContent({ "compilerOptions": options }, ts.sys, "./");
-        if (configParseResult.errors && configParseResult.errors.length) {
-            configParseResult.errors.forEach(function (error) {
-                console.log(error.messageText);
-            });
-            utils.exit(0);
-        }
         if (options.locale) {
             ts.validateLocaleAndSetLanguage(options.locale, ts.sys);
         }
@@ -110,7 +114,7 @@ var Compiler = (function () {
                 return ts.ScriptSnapshot.fromString(file.read(fileName, true).toString());
             },
             getCurrentDirectory: function () { return process.cwd(); },
-            getCompilationSettings: function () { return configParseResult.options; },
+            getCompilationSettings: function () { return options; },
             getDefaultLibFileName: function (options) { return ts.getDefaultLibFilePath(options); },
         };
         // Create the language service files
@@ -168,13 +172,13 @@ var Compiler = (function () {
         this.errors = [];
         filesChanged.forEach(function (file) {
             if (file.type == "added") {
-                _this.parsedCmd.fileNames.push(file.fileName);
+                _this.fileNames.push(file.fileName);
                 _this.files[file.fileName] = { version: 0 };
             }
             else if (file.type == "removed") {
-                var index = _this.parsedCmd.fileNames.indexOf(file.fileName);
+                var index = _this.fileNames.indexOf(file.fileName);
                 if (index >= 0)
-                    _this.parsedCmd.fileNames.splice(index, 1);
+                    _this.fileNames.splice(index, 1);
             }
             else {
                 _this.files[file.fileName].version++;

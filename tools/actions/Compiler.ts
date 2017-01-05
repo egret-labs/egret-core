@@ -38,7 +38,7 @@ class Compiler {
         if (args.compilerOptions) {
             parsedCmd.options = <any>args.compilerOptions;
         }
-        if (out) {
+        if (egret.args.command == "make") {
             //make 使用引擎的配置,必须用下面的参数
             parsedCmd.options.target = 1;
             // parsedCmd.options.stripInternal = true;
@@ -71,7 +71,20 @@ class Compiler {
             defines.RELEASE = false;
         }
         parsedCmd.options.defines = defines;
-        var compileResult = this.compileNew(parsedCmd, option.forSortFile);
+        var compileResult;
+        if(egret.args.command == "make") {
+            compileResult = this.compileNew(parsedCmd.options, parsedCmd.fileNames, option.forSortFile);
+        }
+        else {
+            var configParseResult = ts.parseJsonConfigFileContent({"compilerOptions":parsedCmd.options}, ts.sys, "./");
+            if(configParseResult.errors && configParseResult.errors.length) {
+                configParseResult.errors.forEach(function (error){
+                    console.log(error.messageText);
+                });
+                utils.exit(0);
+            }
+            compileResult = this.compileNew(configParseResult.options, parsedCmd.fileNames, option.forSortFile);
+        }
         process.chdir(realCWD);            
         return compileResult;
     }
@@ -79,24 +92,15 @@ class Compiler {
     private files: ts.Map<{ version: number }> = <any>{};
     private sortedFiles;
 
-    private compileNew(parsedCmd, forSortFile:boolean): egret.CompileResult {
+    private compileNew(options, rootFileNames, forSortFile:boolean): egret.CompileResult {
         this.errors = [];
-        this.parsedCmd = parsedCmd;
-        let options = parsedCmd.options;
-        let rootFileNames = parsedCmd.fileNames;
+        this.fileNames = rootFileNames;
         this.sortedFiles = rootFileNames;
+        
         // initialize the list of files
         rootFileNames.forEach(fileName => {
             this.files[fileName] = { version: 0 };
         });
-
-        var configParseResult = ts.parseJsonConfigFileContent({"compilerOptions":options}, ts.sys, "./");
-        if(configParseResult.errors && configParseResult.errors.length) {
-            configParseResult.errors.forEach(function (error){
-                console.log(error.messageText);
-            });
-            utils.exit(0);
-        }
 
         if (options.locale) {
             ts.validateLocaleAndSetLanguage(options.locale, ts.sys);
@@ -128,7 +132,7 @@ class Compiler {
                 return ts.ScriptSnapshot.fromString(file.read(fileName, true).toString());
             },
             getCurrentDirectory: () => process.cwd(),
-            getCompilationSettings: () => configParseResult.options,
+            getCompilationSettings: () => options,
             getDefaultLibFileName: (options) => ts.getDefaultLibFilePath(options),
         };
 
@@ -190,19 +194,19 @@ class Compiler {
         });
     }
 
-    private parsedCmd: ts.ParsedCommandLine;
+    private fileNames: Array<string>;
 
     private compileWithChanges(filesChanged: egret.FileChanges, sourceMap?: boolean): egret.CompileResult {
         this.errors = [];
         filesChanged.forEach((file: any) => {
             if (file.type == "added") {
-                this.parsedCmd.fileNames.push(file.fileName);
+                this.fileNames.push(file.fileName);
                 this.files[file.fileName] = { version: 0 };
             }
             else if (file.type == "removed") {
-                var index = this.parsedCmd.fileNames.indexOf(file.fileName);
+                var index = this.fileNames.indexOf(file.fileName);
                 if (index >= 0)
-                    this.parsedCmd.fileNames.splice(index, 1);
+                    this.fileNames.splice(index, 1);
             }
             else {
                 this.files[file.fileName].version++;
