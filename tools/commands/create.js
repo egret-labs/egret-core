@@ -1,7 +1,6 @@
 /// <reference path="../lib/types.d.ts" />
 var utils = require("../lib/utils");
 var createAction = require("../actions/Create");
-var server = require("../server/server");
 var FileUtil = require("../lib/FileUtil");
 console.log(utils.tr(1003, 0));
 var Create = (function () {
@@ -18,28 +17,15 @@ var Create = (function () {
         }
         var project = option.getProject(true);
         console.log(utils.tr(1004, 0));
-        //默认使用命令行创建
         project.type = project.type || "game";
-        var template = egret.manifest.templates.filter(function (t) { return t.name == project.type; });
-        if (!template || template.length == 0) {
+        var hasProjectTypeInManifest = egret.manifest.templates.some(function (t) { return t.name == project.type; });
+        if (!hasProjectTypeInManifest) {
             project.type = "game";
         }
-        if (project.type) {
-            var create = new createAction();
-            create.project = project;
-            parseProjectInfoFromTemplate(project);
-            return create.execute();
-        }
-        else {
-            option.port = 3000 + Math.ceil(Math.random() * 30000);
-            var url = option.manageUrl + "create/";
-            var exist = FileUtil.exists(option.srcDir);
-            if (exist)
-                url += "?exist=true";
-            server.startServer(option, url);
-            console.log(utils.tr(10016, url));
-            return DontExitCode;
-        }
+        var create = new createAction();
+        create.project = project;
+        parseProjectInfoFromTemplate(project);
+        return create.execute();
     };
     return Create;
 }());

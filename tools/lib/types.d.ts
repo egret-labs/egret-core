@@ -65,7 +65,6 @@ declare module egret {
         port: number;
         host: string;
         websocketUrl: string;
-        manageUrl: string;
         startUrl: string;
         debug?: boolean;
         getStartURL(address: string): string;

@@ -89,10 +89,6 @@ class CompileOptions implements egret.ToolArgs {
         var url = "ws://" + (this.host || "localhost") + ':' + this.port;
         return url;
     }
-    get manageUrl(): string {
-        var url = "http://" + (this.host || "localhost") + ':' + this.port + '/$/';
-        return url;
-    }
     get startUrl(): string {
         var url = "http://" + (this.host || "localhost") + ':' + this.port + '/index.html';
         return url;

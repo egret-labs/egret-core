@@ -1,49 +1,3 @@
-declare namespace egret {
-    /**
-     * @language en_US
-     * Registers the runtime class information for a class.This method adds some strings which represent the class name or
-     * some interface names to the class definition. After the registration,you can use egret.is() method to do the type checking
-     * for the instance of this class.<br/>
-     * Note:If you use the TypeScript programming language, the egret command line tool will automatically generate the registration code line.
-     * You don't need to manually call this method.
-     *
-     * @example the following code shows how to register the runtime class information for the EventDispatcher class and do the type checking:
-     * <pre>
-     *      egret.registerClass(egret.EventDispatcher,"egret.EventDispatcher",["egret.IEventDispatcher"]);
-     *      let dispatcher = new egret.EventDispatcher();
-     *      egret.log(egret.is(dispatcher, "egret.IEventDispatcher"));  //true。
-     *      egret.log(egret.is(dispatcher, "egret.EventDispatcher"));   //true。
-     *      egret.log(egret.is(dispatcher, "egret.Bitmap"));   //false。
-     * </pre>
-     * @param classDefinition the class definition to be registered.
-     * @param className  a unique identification string of the specific class
-     * @param interfaceNames a list of unique identification string of the specific interfaces.
-     * @version Egret 2.4
-     * @platform Web,Native
-     */
-    /**
-     * @language zh_CN
-     * 为一个类定义注册运行时类信息,用此方法往类定义上注册它自身以及所有接口对应的字符串。
-     * 在运行时，这个类的实例将可以使用 egret.is() 方法传入一个字符串来判断实例类型。
-     * @example 以下代码演示了如何为EventDispatcher类注册运行时类信息并判断类型：
-     * <pre>
-     *      //为egret.EventDispatcher类注册运行时类信息，由于它实现了IEventDispatcher接口，这里应同时传入接口名对应的字符串。
-     *      egret.registerClass(egret.EventDispatcher,"egret.EventDispatcher",["egret.IEventDispatcher"]);
-     *      let dispatcher = new egret.EventDispatcher();
-     *      egret.log(egret.is(dispatcher, "egret.IEventDispatcher"));  //true。
-     *      egret.log(egret.is(dispatcher, "egret.EventDispatcher"));   //true。
-     *      egret.log(egret.is(dispatcher, "egret.Bitmap"));   //false。
-     * </pre>
-     * 注意：若您使用 TypeScript 来编写程序，egret 命令行会自动帮您生成类信息注册代码行到最终的 Javascript 文件中。因此您不需要手动调用此方法。
-     *
-     * @param classDefinition 要注册的类定义。
-     * @param className 要注册的类名。
-     * @param interfaceNames 要注册的类所实现的接口名列表。
-     * @version Egret 2.4
-     * @platform Web,Native
-     */
-    function registerClass(classDefinition: any, className: string, interfaceNames?: string[]): void;
-}
 declare function __extends(d: any, b: any): void;
 declare let __define: any;
 declare namespace egret {
@@ -4763,7 +4717,7 @@ declare namespace egret {
          * @version Egret 2.4
          * @platform Web,Native
          */
-        static FOCUS_IN: string;
+        static FOCUS_IN: "focusIn";
         /**
          * @language en_US
          * Loses focus
@@ -4776,7 +4730,7 @@ declare namespace egret {
          * @version Egret 2.4
          * @platform Web,Native
          */
-        static FOCUS_OUT: string;
+        static FOCUS_OUT: "focusOut";
         /**
          * @language en_US
          * Create a egret.FocusEvent objects
@@ -4799,6 +4753,10 @@ declare namespace egret {
     }
 }
 declare namespace egret {
+    interface Geolocation {
+        addEventListener<Z>(type: "ioError", listener: (this: Z, e: GeolocationEvent) => void, thisObject: Z, useCapture?: boolean, priority?: number): any;
+        addEventListener(type: string, listener: Function, thisObject: any, useCapture?: boolean, priority?: number): any;
+    }
     /**
      * @language en_US
      * The GeolocationEvent represents the position and altitude of the device on Earth,
@@ -5002,7 +4960,7 @@ declare namespace egret {
          * @version Egret 2.4
          * @platform Web,Native
          */
-        static HTTP_STATUS: string;
+        static HTTP_STATUS: "httpStatus";
         /**
          * @language en_US
          * Create a egret.HTTPStatusEvent objects
@@ -5289,6 +5247,10 @@ declare namespace egret {
     }
 }
 declare namespace egret {
+    interface HttpRequest {
+        addEventListener<Z>(type: "ioError", listener: (this: Z, e: IOErrorEvent) => void, thisObject: Z, useCapture?: boolean, priority?: number): any;
+        addEventListener(type: string, listener: Function, thisObject: any, useCapture?: boolean, priority?: number): any;
+    }
     /**
      * @language en_US
      * @classdesc IO流事件，当错误导致输入或输出操作失败时调度 IOErrorEvent 对象。
@@ -5316,7 +5278,7 @@ declare namespace egret {
          * @version Egret 2.4
          * @platform Web,Native
          */
-        static IO_ERROR: string;
+        static IO_ERROR: "ioError";
         /**
          * @language en_US
          * Create a egret.IOErrorEvent objects
@@ -5483,6 +5445,10 @@ declare namespace egret {
     }
 }
 declare namespace egret {
+    interface HttpRequest {
+        addEventListener<Z>(type: "progress", listener: (this: Z, e: ProgressEvent) => void, thisObject: Z, useCapture?: boolean, priority?: number): any;
+        addEventListener(type: string, listener: Function, thisObject: any, useCapture?: boolean, priority?: number): any;
+    }
     /**
      * @language en_US
      * When a load operation has begun or a socket has received data, ProgressEvent object is dispatched.
@@ -5510,7 +5476,7 @@ declare namespace egret {
          * @version Egret 2.4
          * @platform Web,Native
          */
-        static PROGRESS: string;
+        static PROGRESS: "progress";
         /**
          * @language en_US
          * Get the data
@@ -5523,7 +5489,7 @@ declare namespace egret {
          * @version Egret 2.4
          * @platform Web,Native
          */
-        static SOCKET_DATA: string;
+        static SOCKET_DATA: "socketData";
         /**
          * @language en_US
          * Number of items or bytes when the listener processes the event。
@@ -5668,10 +5634,6 @@ declare namespace egret {
     }
 }
 declare namespace egret {
-    interface TextField {
-        addEventListener<Z>(type: "link", listener: (this: Z, e: TextEvent) => void, thisObject: Z, useCapture?: boolean, priority?: number): any;
-        addEventListener(type: string, listener: Function, thisObject: any, useCapture?: boolean, priority?: number): any;
-    }
     /**
      * @language en_US
      * When a user clicks a hyperlink rich text object dispatches TextEvent object. Text Event Type: TextEvent.LINK.
@@ -11626,6 +11588,7 @@ declare namespace egret {
          * @private
          */
         private resutlArr;
+        parse(htmltext: string): egret.ITextElement[];
         /**
          * @language en_US
          * Convert the text in html format to the object that can be assigned to the egret.TextField#textFlow property
@@ -13047,6 +13010,11 @@ declare namespace egret {
         private removeEvent();
         private onTapHandler(e);
     }
+    interface TextField {
+        addEventListener<Z>(type: "link", listener: (this: Z, e: TextEvent) => void, thisObject: Z, useCapture?: boolean, priority?: number): any;
+        addEventListener<Z>(type: "focusIn" | "focusOut", listener: (this: Z, e: FocusEvent) => void, thisObject: Z, useCapture?: boolean, priority?: number): any;
+        addEventListener(type: string, listener: Function, thisObject: any, useCapture?: boolean, priority?: number): any;
+    }
 }
 declare namespace egret {
     /**
@@ -14086,6 +14054,52 @@ declare namespace egret {
      * @platform Native
      */
     function registerFontMapping(fontFamily: string, value: string): void;
+}
+declare namespace egret {
+    /**
+     * @language en_US
+     * Registers the runtime class information for a class.This method adds some strings which represent the class name or
+     * some interface names to the class definition. After the registration,you can use egret.is() method to do the type checking
+     * for the instance of this class.<br/>
+     * Note:If you use the TypeScript programming language, the egret command line tool will automatically generate the registration code line.
+     * You don't need to manually call this method.
+     *
+     * @example the following code shows how to register the runtime class information for the EventDispatcher class and do the type checking:
+     * <pre>
+     *      egret.registerClass(egret.EventDispatcher,"egret.EventDispatcher",["egret.IEventDispatcher"]);
+     *      let dispatcher = new egret.EventDispatcher();
+     *      egret.log(egret.is(dispatcher, "egret.IEventDispatcher"));  //true。
+     *      egret.log(egret.is(dispatcher, "egret.EventDispatcher"));   //true。
+     *      egret.log(egret.is(dispatcher, "egret.Bitmap"));   //false。
+     * </pre>
+     * @param classDefinition the class definition to be registered.
+     * @param className  a unique identification string of the specific class
+     * @param interfaceNames a list of unique identification string of the specific interfaces.
+     * @version Egret 2.4
+     * @platform Web,Native
+     */
+    /**
+     * @language zh_CN
+     * 为一个类定义注册运行时类信息,用此方法往类定义上注册它自身以及所有接口对应的字符串。
+     * 在运行时，这个类的实例将可以使用 egret.is() 方法传入一个字符串来判断实例类型。
+     * @example 以下代码演示了如何为EventDispatcher类注册运行时类信息并判断类型：
+     * <pre>
+     *      //为egret.EventDispatcher类注册运行时类信息，由于它实现了IEventDispatcher接口，这里应同时传入接口名对应的字符串。
+     *      egret.registerClass(egret.EventDispatcher,"egret.EventDispatcher",["egret.IEventDispatcher"]);
+     *      let dispatcher = new egret.EventDispatcher();
+     *      egret.log(egret.is(dispatcher, "egret.IEventDispatcher"));  //true。
+     *      egret.log(egret.is(dispatcher, "egret.EventDispatcher"));   //true。
+     *      egret.log(egret.is(dispatcher, "egret.Bitmap"));   //false。
+     * </pre>
+     * 注意：若您使用 TypeScript 来编写程序，egret 命令行会自动帮您生成类信息注册代码行到最终的 Javascript 文件中。因此您不需要手动调用此方法。
+     *
+     * @param classDefinition 要注册的类定义。
+     * @param className 要注册的类名。
+     * @param interfaceNames 要注册的类所实现的接口名列表。
+     * @version Egret 2.4
+     * @platform Web,Native
+     */
+    function registerClass(classDefinition: any, className: string, interfaceNames?: string[]): void;
 }
 declare namespace egret {
     /**

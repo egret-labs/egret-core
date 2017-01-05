@@ -121,14 +121,6 @@ var CompileOptions = (function () {
         enumerable: true,
         configurable: true
     });
-    Object.defineProperty(CompileOptions.prototype, "manageUrl", {
-        get: function () {
-            var url = "http://" + (this.host || "localhost") + ':' + this.port + '/$/';
-            return url;
-        },
-        enumerable: true,
-        configurable: true
-    });
     Object.defineProperty(CompileOptions.prototype, "startUrl", {
         get: function () {
             var url = "http://" + (this.host || "localhost") + ':' + this.port + '/index.html';

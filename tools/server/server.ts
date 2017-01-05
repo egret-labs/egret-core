@@ -12,7 +12,7 @@ import Default = require('./controllers/default');
 global.lark = global.lark || {};
 
 
-export function startServer(options: egret.ToolArgs, startupUrl?:string) {
+export function startServer(options: egret.ToolArgs, startupUrl:string) {
 
     var total: TotalJS.Framework = require('../lib/totaljs/');
     total.setRoot(__dirname);
@@ -40,12 +40,12 @@ export function startServer(options: egret.ToolArgs, startupUrl?:string) {
     try {
         total.http('debug', { port: options.port, ip: '0.0.0.0' });
         if (!options.serverOnly)
-            utils.open(startupUrl || options.manageUrl);
+            utils.open(startupUrl);
     }
     catch (e) {
         if (e.toString().indexOf('listen EADDRINUSE') !== -1) {
             if (!options.serverOnly)
-                utils.open(startupUrl || options.manageUrl);
+                utils.open(startupUrl);
         }
     }
 }

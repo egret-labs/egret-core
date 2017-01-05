@@ -32,12 +32,12 @@ function startServer(options, startupUrl) {
     try {
         total.http('debug', { port: options.port, ip: '0.0.0.0' });
         if (!options.serverOnly)
-            utils.open(startupUrl || options.manageUrl);
+            utils.open(startupUrl);
     }
     catch (e) {
         if (e.toString().indexOf('listen EADDRINUSE') !== -1) {
             if (!options.serverOnly)
-                utils.open(startupUrl || options.manageUrl);
+                utils.open(startupUrl);
         }
     }
 }
