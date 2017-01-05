@@ -7,8 +7,8 @@
 declare module egret {
 
     export interface Command {
-        isAsync?:boolean;
-        execute():number;
+        isAsync?: boolean;
+        execute(): number;
     }
 
     export interface Action {
@@ -45,7 +45,7 @@ declare module egret {
         password?: string;
         keepEXMLTS: boolean;
         ide: boolean;
-        exmlGenJs:boolean;
+        exmlGenJs: boolean;
         log: boolean;
         nativeTemplatePath: string;
         all: boolean;
@@ -89,11 +89,11 @@ declare module egret {
         added: string[];
         removed: string[];
         modified: string[];
-        compilerOptions:ts.CompilerOptions;
+        compilerOptions: ts.CompilerOptions;
         tsconfigError: string[];//tsconfig 配置文件的错误信息
 
         toJSON: () => any;
-        getProject(empty?:boolean): egret.ILarkProject;
+        getProject(empty?: boolean): egret.ILarkProject;
         //工具用
     }
 
@@ -109,11 +109,31 @@ declare module egret {
         native?: any;
         egret_version?: string;
     }
+
+
+    export type EgretPropertyModule = {
+        "name": string,
+        "path"?: string;
+    }
+
+    export type EgretProperty = {
+        "modules": EgretPropertyModule[],
+        "native"?: {
+            "path_ignore": string[];
+        },
+        "publish"?: {
+            "web": number,
+            "native": number,
+            "path": string;
+        },
+        "egret_version"?: string;
+    }
     export interface EgretPropertiesClass {
-        properties: Object;
-        modulesConfig: Object;
+        properties: EgretProperty;
         init(projectRoot: string);
         reload();
+
+        invalid(report?:boolean):boolean;
         /**
          * 是否有swan
          */
@@ -142,13 +162,13 @@ declare module egret {
          * @param runtime
          * @returns {string[]|T[]}
          */
-        getAllFileList(runtime): Array <any>
+        getAllFileList(runtime): Array<any>
 
         getVersionCode(runtime)
 
-        getIgnorePath(): Array <any>
+        getIgnorePath(): Array<any>
 
-        getCopyExmlList(): Array <string>
+        getCopyExmlList(): Array<string>
 
         getNativePath(platform)
 
@@ -177,8 +197,8 @@ declare module egret {
 
         getModuleReferenceInfo()
 
-        getPublishType(runtime:string):number;
-        getResources():Array<string>;
+        getPublishType(runtime: string): number;
+        getResources(): Array<string>;
     }
 
     export interface ILarkProject {
@@ -248,7 +268,7 @@ declare module egret {
         export var options: ToolArgs;
         export interface ViewModel {
             options: ToolArgs;
-            [other:string]:any;
+            [other: string]: any;
         }
         export var console: {
             on(event: string, listener: Function): any;
@@ -259,7 +279,7 @@ declare module egret {
 
     export var manifest: egret.Manifest;
     export interface Manifest {
-        registerClass:string;
+        registerClass: string;
         modules: EgretModule[];
         platforms: TargetPlatform[];
         configurations: CompileConfiguration[];
@@ -286,7 +306,7 @@ declare module egret {
     export interface EgretModule {
         name: string;
         description?: string;
-        files?: Array<string|ManifestSourceFile>;
+        files?: Array<string | ManifestSourceFile>;
         dependencies?: string[];
         sourceRoot?: string;
         root?: string;
@@ -297,7 +317,7 @@ declare module egret {
     export interface ManifestSourceFile {
         platform?: string;
         debug?: boolean;
-        path:string
+        path: string
     }
 
     export interface CompileConfiguration {

@@ -29,7 +29,11 @@
 
 
 namespace egret {
-
+	export interface HttpRequest{
+		addEventListener<Z>(type: "ioError"
+			, listener: (this: Z, e: IOErrorEvent) => void, thisObject: Z, useCapture?: boolean, priority?: number);
+		addEventListener(type: string, listener: Function, thisObject: any, useCapture?: boolean, priority?: number);
+	}
 	/**
      * @language en_US
 	 * @classdesc IO流事件，当错误导致输入或输出操作失败时调度 IOErrorEvent 对象。
@@ -58,7 +62,7 @@ namespace egret {
          * @version Egret 2.4
          * @platform Web,Native
 		 */
-        public static IO_ERROR:string = "ioError";
+        public static IO_ERROR:"ioError" = "ioError";
 
 		/**
          * @language en_US

@@ -259,7 +259,4 @@ namespace egret.web {
     }
     HttpRequest = WebHttpRequest;
 
-    if (DEBUG) {
-        egret.$markReadOnly(WebHttpRequest, "response");
-    }
 }

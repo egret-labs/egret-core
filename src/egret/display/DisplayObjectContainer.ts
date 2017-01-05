@@ -890,7 +890,4 @@ namespace egret {
         }
     }
 
-    if (DEBUG) {
-        egret.$markReadOnly(DisplayObjectContainer, "numChildren");
-    }
 }

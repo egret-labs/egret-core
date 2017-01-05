@@ -2404,7 +2404,8 @@ var egret;
             SkinnableDataContainer.prototype.addEventListener = function (type, listener, thisObject, useCapture, priority) {
                 if (useCapture === void 0) { useCapture = false; }
                 if (priority === void 0) { priority = 0; }
-                _super.prototype.addEventListener.call(this, type, listener, thisObject, useCapture, priority);
+                //todo super.addEventListener report error in tsc2.1.4
+                gui.SkinnableComponent.prototype.addEventListener.call(this, type, listener, thisObject, useCapture, priority);
                 if (type == gui.RendererExistenceEvent.RENDERER_ADD && this.dataGroup) {
                     this.dataGroup.addEventListener(gui.RendererExistenceEvent.RENDERER_ADD, this.dispatchEvent, this);
                 }

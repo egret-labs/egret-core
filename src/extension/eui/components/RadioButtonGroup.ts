@@ -452,7 +452,4 @@ namespace eui {
     }
     registerBindable(RadioButtonGroup.prototype,"selectedValue");
 
-    if(DEBUG){
-        egret.$markReadOnly(RadioButtonGroup,"numRadioButtons");
-    }
 }

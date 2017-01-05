@@ -1,41 +1,57 @@
 /// <reference path="../lib/types.d.ts" />
 var file = require("../lib/FileUtil");
+var utils = require("../lib/utils");
 var path = require("path");
 var EgretProperties = (function () {
     function EgretProperties() {
-        this.properties = {};
-        this.modulesConfig = {};
+        this.properties = {
+            modules: []
+        };
         this.projectRoot = "";
     }
     EgretProperties.prototype.init = function (projectRoot) {
         this.projectRoot = projectRoot;
         this.reload();
     };
+    EgretProperties.prototype.invalid = function (report) {
+        var result = !this.properties.modules ||
+            this.properties.modules.length == 0;
+        if (result && report) {
+            console.log(utils.tr(1602)); //缺少egretProperties.json
+        }
+        return result;
+    };
+    EgretProperties.prototype.hasEUI = function () {
+        return this.properties.modules.some(function (m) { return m.name == "eui"; });
+    };
     EgretProperties.prototype.reload = function () {
-        this.properties = {};
-        this.modulesConfig = {};
-        if (file.exists(file.joinPath(this.projectRoot, "egretProperties.json"))) {
-            this.properties = JSON.parse(file.read(file.joinPath(this.projectRoot, "egretProperties.json")));
+        this.properties = { modules: [] };
+        var egretPropertiesPath = file.joinPath(this.projectRoot, "egretProperties.json");
+        if (file.exists(egretPropertiesPath)) {
+            this.properties = JSON.parse(file.read(egretPropertiesPath));
+            var useGUIorEUI = 0;
             for (var _i = 0, _a = this.properties.modules; _i < _a.length; _i++) {
                 var m = _a[_i];
                 //兼容小写
                 if (m.name == "dragonbones" && !m.path) {
                     m.name = "dragonBones";
                 }
-                this.modulesConfig[m.name] = m;
+                if (m.name == "gui" || m.name == "eui") {
+                    useGUIorEUI++;
+                }
+            }
+            if (useGUIorEUI >= 2) {
+                globals.log2(8);
+                process.exit(1);
             }
         }
-        if (this.modulesConfig["eui"] != null && this.modulesConfig["gui"] != null) {
-            globals.log2(8);
-            process.exit(1);
-        }
     };
-    /**
-     * 是否有swan
-     */
-    EgretProperties.prototype.hasEUI = function () {
-        return this.modulesConfig["eui"] != null;
-    };
+    // /**
+    //  * 是否有swan
+    //  */
+    // hasEUI(): boolean {
+    //     return this.properties.modules.some(m => m.name == "eui");
+    // }
     /**
      * 获取项目的根路径
      * @returns {*}
@@ -116,8 +132,11 @@ var EgretProperties = (function () {
         return null;
     };
     EgretProperties.prototype.getModulePath = function (moduleName) {
-        if (this.modulesConfig[moduleName]) {
-            return this.modulesConfig[moduleName]["path"] || null;
+        for (var _i = 0, _a = this.properties.modules; _i < _a.length; _i++) {
+            var m = _a[_i];
+            if (m.name == moduleName) {
+                return m.path;
+            }
         }
         return null;
     };
@@ -175,14 +194,12 @@ var EgretProperties = (function () {
     };
     //获取项目需要的所有模块的.d.ts文件
     EgretProperties.prototype.getModulesDts = function () {
-        var libs = [];
-        for (var moduleName in this.modulesConfig) {
-            var moduleConfig = this.modulesConfig[moduleName];
-            var output = this.getModuleOutput(moduleName);
-            var dtsFile = file.joinPath(output, moduleConfig.name + ".d.ts");
-            libs.push(dtsFile);
-        }
-        return libs;
+        var _this = this;
+        return this.properties.modules.map(function (m) {
+            var output = _this.getModuleOutput(m.name);
+            var dtsFile = file.joinPath(output, m.name + ".d.ts");
+            return dtsFile;
+        });
     };
     EgretProperties.prototype.getModuleReferenceInfo = function () {
         var _this = this;

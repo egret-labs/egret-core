@@ -71,8 +71,7 @@ class Compiler {
             defines.RELEASE = false;
         }
         parsedCmd.options.defines = defines;
-        parsedCmd.options["forSortFile"] = option.forSortFile;
-        var compileResult = this.compileNew(parsedCmd);
+        var compileResult = this.compileNew(parsedCmd, option.forSortFile);
         process.chdir(realCWD);            
         return compileResult;
     }
@@ -80,7 +79,7 @@ class Compiler {
     private files: ts.Map<{ version: number }> = <any>{};
     private sortedFiles;
 
-    private compileNew(parsedCmd): egret.CompileResult {
+    private compileNew(parsedCmd, forSortFile:boolean): egret.CompileResult {
         this.errors = [];
         this.parsedCmd = parsedCmd;
         let options = parsedCmd.options;
@@ -90,6 +89,18 @@ class Compiler {
         rootFileNames.forEach(fileName => {
             this.files[fileName] = { version: 0 };
         });
+
+        var configParseResult = ts.parseJsonConfigFileContent({"compilerOptions":options}, ts.sys, "./");
+        if(configParseResult.errors && configParseResult.errors.length) {
+            configParseResult.errors.forEach(function (error){
+                console.log(error.messageText);
+            });
+            utils.exit(0);
+        }
+
+        if (options.locale) {
+            ts.validateLocaleAndSetLanguage(options.locale, ts.sys);
+        }
 
         // Create the language service host to allow the LS to communicate with the host
         const servicesHost: ts.LanguageServiceHost = {
@@ -117,14 +128,14 @@ class Compiler {
                 return ts.ScriptSnapshot.fromString(file.read(fileName, true).toString());
             },
             getCurrentDirectory: () => process.cwd(),
-            getCompilationSettings: () => this.parsedCmd.options,
+            getCompilationSettings: () => configParseResult.options,
             getDefaultLibFileName: (options) => ts.getDefaultLibFilePath(options),
         };
 
         // Create the language service files
         this.services = ts.createLanguageService(servicesHost, ts.createDocumentRegistry());
         this.sortFiles();
-        if(!options.forSortFile) {
+        if(!forSortFile) {
             let output = this.services.getEmitOutput(undefined);
             this.logErrors(undefined);
             output.outputFiles.forEach(o => {

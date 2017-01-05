@@ -29,7 +29,11 @@
 
 
 namespace egret {
-
+    export interface Timer{
+        addEventListener<Z>(type: "timer" | "timerComplete"
+            , listener: (this: Z, e: TimerEvent) => void, thisObject: Z, useCapture?: boolean, priority?: number);
+        addEventListener(type: string, listener: Function, thisObject: any, useCapture?: boolean, priority?: number);
+    }
     /**
      * @language en_US
      * A Timer object dispatches a TimerEvent objects whenever the Timer object reaches the interval specified by the Timer.delay property.
@@ -60,7 +64,7 @@ namespace egret {
          * @version Egret 2.4
          * @platform Web,Native
          */
-        public static TIMER:string = "timer";
+        public static TIMER:"timer" = "timer";
 
         /**
          * @language en_US
@@ -74,7 +78,7 @@ namespace egret {
          * @version Egret 2.4
          * @platform Web,Native
          */
-        public static TIMER_COMPLETE:string = "timerComplete";
+        public static TIMER_COMPLETE:"timerComplete" = "timerComplete";
 
         /**
          * @language en_US

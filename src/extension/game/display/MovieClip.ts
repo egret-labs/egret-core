@@ -30,12 +30,12 @@
 namespace egret {
 
 
-     /**
-     * @language en_US
-     * @version Egret 2.4
-     * @platform Web,Native
-     * @includeExample extension/game/display/MovieClip.ts
-     */
+    /**
+    * @language en_US
+    * @version Egret 2.4
+    * @platform Web,Native
+    * @includeExample extension/game/display/MovieClip.ts
+    */
     /**
      * @language zh_CN
      * 影片剪辑，可以通过影片剪辑播放序列帧动画。MovieClip 类从以下类继承而来：DisplayObject 和 EventDispatcher。不同于 DisplayObject 对象，MovieClip 对象拥有一个时间轴。
@@ -50,85 +50,85 @@ namespace egret {
     export class MovieClip extends DisplayObject {
 
         //Render Property
-        $bitmapData:Texture = null;
+        $bitmapData: Texture = null;
 
         //Render Property
-        private offsetPoint:Point = Point.create(0, 0);
+        private offsetPoint: Point = Point.create(0, 0);
 
         //Data Property
-        $movieClipData:MovieClipData = null;
+        $movieClipData: MovieClipData = null;
 
         /**
          * @private
          */
-        private frames:any[] = null;
+        private frames: any[] = null;
         /**
          * @private
          */
-        $totalFrames:number = 0;
-        /**
-         * @version Egret 2.4
-         * @platform Web,Native
-         * @private
-         */
-        public frameLabels:any[] = null;
-        /**
-         * @private
-         */
-        $frameLabelStart:number = 0;
-        /**
-         * @private
-         */
-        $frameLabelEnd:number = 0;
+        $totalFrames: number = 0;
         /**
          * @version Egret 2.4
          * @platform Web,Native
          * @private
          */
-        public frameEvents:any[] = null;
+        public frameLabels: any[] = null;
         /**
          * @private
          */
-        private frameIntervalTime:number = 0;
+        $frameLabelStart: number = 0;
         /**
          * @private
          */
-        $eventPool:string[] = null;
+        $frameLabelEnd: number = 0;
+        /**
+         * @version Egret 2.4
+         * @platform Web,Native
+         * @private
+         */
+        public frameEvents: any[] = null;
+        /**
+         * @private
+         */
+        private frameIntervalTime: number = 0;
+        /**
+         * @private
+         */
+        $eventPool: string[] = null;
 
         //Animation Property
-        $isPlaying:boolean = false;
+        $isPlaying: boolean = false;
         /**
          * @private
          */
-        private isStopped:boolean = true;
+        private isStopped: boolean = true;
         /**
          * @private
          */
-        private playTimes:number = 0;
+        private playTimes: number = 0;
 
         /**
          * @private
          */
-        $currentFrameNum:number = 0;
+        $currentFrameNum: number = 0;
         /**
          * @private
          */
-        $nextFrameNum:number = 1;
+        $nextFrameNum: number = 1;
 
         /**
          * @private
          */
-        private displayedKeyFrameNum:number = 0;
+        private displayedKeyFrameNum: number = 0;
 
         /**
          * @private
          */
-        private passedTime:number = 0;
+        private passedTime: number = 0;
 
         /**
          * @private
          */
-        private $frameRate:number = NaN;
+        private $frameRate: number = NaN;
 
         //Construct Function
 
@@ -138,7 +138,7 @@ namespace egret {
          * @version Egret 2.4
          * @platform Web,Native
          */
-        constructor(movieClipData?:MovieClipData) {
+        constructor(movieClipData?: MovieClipData) {
             super();
             this.$smoothing = Bitmap.defaultSmoothing;
             this.$renderNode = new sys.BitmapNode();
@@ -149,7 +149,7 @@ namespace egret {
         /**
          * @private
          */
-        $smoothing:boolean;
+        $smoothing: boolean;
         /**
          * @language en_US
          * Whether or not is smoothed when scaled.
@@ -162,11 +162,11 @@ namespace egret {
          * @version Egret 3.0
          * @platform Web
          */
-        public get smoothing():boolean {
+        public get smoothing(): boolean {
             return this.$smoothing;
         }
 
-        public set smoothing(value:boolean) {
+        public set smoothing(value: boolean) {
             value = !!value;
             if (value == this.$smoothing) {
                 return;
@@ -181,7 +181,7 @@ namespace egret {
          */
         $init() {
             this.$reset();
-            let movieClipData:MovieClipData = this.$movieClipData;
+            let movieClipData: MovieClipData = this.$movieClipData;
             if (movieClipData && movieClipData.$isDataValid()) {
                 this.frames = movieClipData.frames;
                 this.$totalFrames = movieClipData.numFrames;
@@ -197,7 +197,7 @@ namespace egret {
          * @private
          *
          */
-        $reset():void {
+        $reset(): void {
             this.frames = null;
             this.playTimes = 0;
             this.$isPlaying = false;
@@ -213,7 +213,7 @@ namespace egret {
          * @private
          *
          */
-        private _initFrame():void {
+        private _initFrame(): void {
             if (this.$movieClipData.$isTextureValid()) {
                 this.advanceFrame();
                 this.constructFrame();
@@ -224,19 +224,19 @@ namespace egret {
         /**
          * @private
          */
-        $render():void {
+        $render(): void {
             let texture = this.$bitmapData;
             if (texture) {
-                let offsetX:number = Math.round(this.offsetPoint.x);
-                let offsetY:number = Math.round(this.offsetPoint.y);
-                let bitmapWidth:number = texture._bitmapWidth;
-                let bitmapHeight:number = texture._bitmapHeight;
-                let textureWidth:number = texture.$getTextureWidth();
-                let textureHeight:number = texture.$getTextureHeight();
-                let destW:number = Math.round(texture.$getScaleBitmapWidth());
-                let destH:number = Math.round(texture.$getScaleBitmapHeight());
-                let sourceWidth:number = texture._sourceWidth;
-                let sourceHeight:number = texture._sourceHeight;
+                let offsetX: number = Math.round(this.offsetPoint.x);
+                let offsetY: number = Math.round(this.offsetPoint.y);
+                let bitmapWidth: number = texture._bitmapWidth;
+                let bitmapHeight: number = texture._bitmapHeight;
+                let textureWidth: number = texture.$getTextureWidth();
+                let textureHeight: number = texture.$getTextureHeight();
+                let destW: number = Math.round(texture.$getScaleBitmapWidth());
+                let destH: number = Math.round(texture.$getScaleBitmapHeight());
+                let sourceWidth: number = texture._sourceWidth;
+                let sourceHeight: number = texture._sourceHeight;
 
                 sys.BitmapNode.$updateTextureData(<sys.BitmapNode>this.$renderNode, texture._bitmapData, texture._bitmapX, texture._bitmapY,
                     bitmapWidth, bitmapHeight, offsetX, offsetY, textureWidth, textureHeight, destW, destH, sourceWidth, sourceHeight, null, egret.BitmapFillMode.SCALE, this.$smoothing);
@@ -246,13 +246,13 @@ namespace egret {
         /**
          * @private
          */
-        $measureContentBounds(bounds:Rectangle):void {
+        $measureContentBounds(bounds: Rectangle): void {
             let texture = this.$bitmapData;
             if (texture) {
-                let x:number = this.offsetPoint.x;
-                let y:number = this.offsetPoint.y;
-                let w:number = texture.$getTextureWidth();
-                let h:number = texture.$getTextureHeight();
+                let x: number = this.offsetPoint.x;
+                let y: number = this.offsetPoint.y;
+                let w: number = texture.$getTextureWidth();
+                let h: number = texture.$getTextureHeight();
 
                 bounds.setTo(x, y, w, h);
             }
@@ -267,7 +267,7 @@ namespace egret {
          * @param stage
          * @param nestLevel
          */
-        $onAddToStage(stage:Stage, nestLevel:number):void {
+        $onAddToStage(stage: Stage, nestLevel: number): void {
             super.$onAddToStage(stage, nestLevel);
 
             if (this.$isPlaying && this.$totalFrames > 1) {
@@ -279,7 +279,7 @@ namespace egret {
          * @private
          *
          */
-        $onRemoveFromStage():void {
+        $onRemoveFromStage(): void {
             super.$onRemoveFromStage();
             this.setIsStopped(true);
         }
@@ -292,13 +292,13 @@ namespace egret {
          * @param ignoreCase {boolean} 是否忽略大小写，可选参数，默认false
          * @returns {egret.FrameLabel} FrameLabel对象
          */
-        private getFrameLabelByName(labelName:string, ignoreCase:boolean = false):FrameLabel {
+        private getFrameLabelByName(labelName: string, ignoreCase: boolean = false): FrameLabel {
             if (ignoreCase) {
                 labelName = labelName.toLowerCase();
             }
             let frameLabels = this.frameLabels;
             if (frameLabels) {
-                let outputFramelabel:FrameLabel = null;
+                let outputFramelabel: FrameLabel = null;
                 for (let i = 0; i < frameLabels.length; i++) {
                     outputFramelabel = frameLabels[i];
                     if (ignoreCase ? outputFramelabel.name.toLowerCase() == labelName : outputFramelabel.name == labelName) {
@@ -315,11 +315,11 @@ namespace egret {
          */
         private getFrameStartEnd(labelName: string): void {
             let frameLabels = this.frameLabels;
-            if(frameLabels){
-                let outputFramelabel:FrameLabel = null;
+            if (frameLabels) {
+                let outputFramelabel: FrameLabel = null;
                 for (let i = 0; i < frameLabels.length; i++) {
                     outputFramelabel = frameLabels[i];
-                    if(labelName == outputFramelabel.name){
+                    if (labelName == outputFramelabel.name) {
                         this.$frameLabelStart = outputFramelabel.frame;
                         this.$frameLabelEnd = outputFramelabel.end;
                         break;
@@ -334,10 +334,10 @@ namespace egret {
          * @param frame {number} 帧序号
          * @returns {egret.FrameLabel} FrameLabel对象
          */
-        private getFrameLabelByFrame(frame:number):FrameLabel {
+        private getFrameLabelByFrame(frame: number): FrameLabel {
             let frameLabels = this.frameLabels;
             if (frameLabels) {
-                let outputFramelabel:FrameLabel = null;
+                let outputFramelabel: FrameLabel = null;
                 for (let i = 0; i < frameLabels.length; i++) {
                     outputFramelabel = frameLabels[i];
                     if (outputFramelabel.frame == frame) {
@@ -355,9 +355,9 @@ namespace egret {
          * @param frame {number} 帧序号
          * @returns {egret.FrameLabel} FrameLabel对象
          */
-        private getFrameLabelForFrame(frame:number):FrameLabel {
-            let outputFrameLabel:FrameLabel = null;
-            let tempFrameLabel:FrameLabel = null;
+        private getFrameLabelForFrame(frame: number): FrameLabel {
+            let outputFrameLabel: FrameLabel = null;
+            let tempFrameLabel: FrameLabel = null;
             let frameLabels = this.frameLabels;
             if (frameLabels) {
                 for (let i = 0; i < frameLabels.length; i++) {
@@ -379,7 +379,7 @@ namespace egret {
          * @version Egret 2.4
          * @platform Web,Native
          */
-        public play(playTimes:number = 0):void {
+        public play(playTimes: number = 0): void {
             this.$isPlaying = true;
             this.setPlayTimes(playTimes);
             if (this.$totalFrames > 1 && this.$stage) {
@@ -392,7 +392,7 @@ namespace egret {
          * @version Egret 2.4
          * @platform Web,Native
          */
-        public stop():void {
+        public stop(): void {
             this.$isPlaying = false;
             this.setIsStopped(true);
         }
@@ -402,7 +402,7 @@ namespace egret {
          * @version Egret 2.4
          * @platform Web,Native
          */
-        public prevFrame():void {
+        public prevFrame(): void {
             this.gotoAndStop(this.$currentFrameNum - 1);
         }
 
@@ -411,7 +411,7 @@ namespace egret {
          * @version Egret 2.4
          * @platform Web,Native
          */
-        public nextFrame():void {
+        public nextFrame(): void {
             this.gotoAndStop(this.$currentFrameNum + 1);
         }
 
@@ -422,15 +422,15 @@ namespace egret {
          * @version Egret 2.4
          * @platform Web,Native
          */
-        public gotoAndPlay(frame:any, playTimes:number = 0):void {
+        public gotoAndPlay(frame: string | number, playTimes: number = 0): void {
             if (arguments.length == 0 || arguments.length > 2) {
                 egret.$error(1022, "MovieClip.gotoAndPlay()");
             }
             if (typeof frame === "string") {
                 this.getFrameStartEnd(frame);
-            }else{
-				this.$frameLabelStart = 0;
-				this.$frameLabelEnd = 0;
+            } else {
+                this.$frameLabelStart = 0;
+                this.$frameLabelEnd = 0;
             }
             this.play(playTimes);
             this.gotoFrame(frame);
@@ -442,7 +442,7 @@ namespace egret {
          * @version Egret 2.4
          * @platform Web,Native
          */
-        public gotoAndStop(frame:any):void {
+        public gotoAndStop(frame: string | number): void {
             if (arguments.length != 1) {
                 egret.$error(1022, "MovieClip.gotoAndStop()");
             }
@@ -455,8 +455,8 @@ namespace egret {
          *
          * @param frame
          */
-        private gotoFrame(frame:any):void {
-            let frameNum:number;
+        private gotoFrame(frame: string | number): void {
+            let frameNum: number;
             if (typeof frame === "string") {
                 frameNum = this.getFrameLabelByName(frame).frame;
             } else {
@@ -484,7 +484,7 @@ namespace egret {
         /**
          * @private
          */
-        private lastTime:number = 0;
+        private lastTime: number = 0;
 
         /**
          * @private
@@ -492,24 +492,24 @@ namespace egret {
          * @param advancedTime
          * @returns
          */
-        private advanceTime(timeStamp:number):boolean {
+        private advanceTime(timeStamp: number): boolean {
             let self = this;
 
-            let advancedTime:number = timeStamp - self.lastTime;
+            let advancedTime: number = timeStamp - self.lastTime;
             self.lastTime = timeStamp;
 
-            let frameIntervalTime:number = self.frameIntervalTime;
+            let frameIntervalTime: number = self.frameIntervalTime;
             let currentTime = self.passedTime + advancedTime;
             self.passedTime = currentTime % frameIntervalTime;
 
-            let num:number = currentTime / frameIntervalTime;
+            let num: number = currentTime / frameIntervalTime;
             if (num < 1) {
                 return false;
             }
             while (num >= 1) {
                 num--;
                 self.$nextFrameNum++;
-                if (self.$nextFrameNum > self.$totalFrames || (self.$frameLabelStart>0 && self.$nextFrameNum>self.$frameLabelEnd)) {
+                if (self.$nextFrameNum > self.$totalFrames || (self.$frameLabelStart > 0 && self.$nextFrameNum > self.$frameLabelEnd)) {
                     if (self.playTimes == -1) {
                         self.$eventPool.push(Event.LOOP_COMPLETE);
                         self.$nextFrameNum = 1;
@@ -528,7 +528,7 @@ namespace egret {
                         }
                     }
                 }
-                if(self.$currentFrameNum == self.$frameLabelEnd){
+                if (self.$currentFrameNum == self.$frameLabelEnd) {
                     self.$nextFrameNum = self.$frameLabelStart;
                 }
                 self.advanceFrame();
@@ -543,11 +543,11 @@ namespace egret {
          * @private
          *
          */
-        private advanceFrame():void {
+        private advanceFrame(): void {
             this.$currentFrameNum = this.$nextFrameNum;
             let event = this.frameEvents[this.$nextFrameNum];
-            if(event && event!=""){
-                MovieClipEvent.dispatchMovieClipEvent(this,MovieClipEvent.FRAME_LABEL,event);
+            if (event && event != "") {
+                MovieClipEvent.dispatchMovieClipEvent(this, MovieClipEvent.FRAME_LABEL, event);
             }
         }
 
@@ -556,7 +556,7 @@ namespace egret {
          *
          */
         private constructFrame() {
-            let currentFrameNum:number = this.$currentFrameNum;
+            let currentFrameNum: number = this.$currentFrameNum;
             if (this.displayedKeyFrameNum == currentFrameNum) {
                 return;
             }
@@ -573,7 +573,7 @@ namespace egret {
          * @private
          *
          */
-        public $renderFrame():void {
+        public $renderFrame(): void {
             this.$bitmapData = this.$movieClipData.getTextureByFrame(this.$currentFrameNum);
             this.$invalidateContentBounds();
         }
@@ -582,16 +582,16 @@ namespace egret {
          * @private
          *
          */
-        private handlePendingEvent():void {
+        private handlePendingEvent(): void {
             if (this.$eventPool.length != 0) {
                 this.$eventPool.reverse();
-                let eventPool:any[] = this.$eventPool;
-                let length:number = eventPool.length;
-                let isComplete:boolean = false;
-                let isLoopComplete:boolean = false;
+                let eventPool = this.$eventPool;
+                let length = eventPool.length;
+                let isComplete = false;
+                let isLoopComplete = false;
 
                 for (let i = 0; i < length; i++) {
-                    let event:string = eventPool.pop();
+                    let event: string = eventPool.pop();
                     if (event == Event.LOOP_COMPLETE) {
                         isLoopComplete = true;
                     } else if (event == Event.COMPLETE) {
@@ -616,7 +616,7 @@ namespace egret {
          * @version Egret 2.4
          * @platform Web,Native
          */
-        public get totalFrames():number {
+        public get totalFrames(): number {
             return this.$totalFrames;
         }
 
@@ -625,7 +625,7 @@ namespace egret {
          * @version Egret 2.4
          * @platform Web,Native
          */
-        public get currentFrame():number {
+        public get currentFrame(): number {
             return this.$currentFrameNum;
         }
 
@@ -634,7 +634,7 @@ namespace egret {
          * @version Egret 2.4
          * @platform Web,Native
          */
-        public get currentFrameLabel():string {
+        public get currentFrameLabel(): string {
             let label = this.getFrameLabelByFrame(this.$currentFrameNum);
             return label && label.name;
         }
@@ -644,8 +644,8 @@ namespace egret {
          * @version Egret 2.4
          * @platform Web,Native
          */
-        public get currentLabel():string {
-            let label:FrameLabel = this.getFrameLabelForFrame(this.$currentFrameNum);
+        public get currentLabel(): string {
+            let label: FrameLabel = this.getFrameLabelForFrame(this.$currentFrameNum);
             return label ? label.name : null;
         }
 
@@ -654,11 +654,11 @@ namespace egret {
          * @version Egret 2.4
          * @platform Web,Native
          */
-        public get frameRate():number {
+        public get frameRate(): number {
             return this.$frameRate;
         }
 
-        public set frameRate(value:number) {
+        public set frameRate(value: number) {
             if (value == this.$frameRate) {
                 return;
             }
@@ -671,14 +671,14 @@ namespace egret {
          * @version Egret 2.4
          * @platform Web,Native
          */
-        public get isPlaying():boolean {
+        public get isPlaying(): boolean {
             return this.$isPlaying;
         }
 
         /**
          * MovieClip数据源
          */
-        public set movieClipData(value:MovieClipData) {
+        public set movieClipData(value: MovieClipData) {
             this.setMovieClipData(value);
         }
 
@@ -686,7 +686,7 @@ namespace egret {
          * @version Egret 2.4
          * @platform Web,Native
          */
-        public get movieClipData():MovieClipData {
+        public get movieClipData(): MovieClipData {
             return this.$movieClipData;
         }
 
@@ -695,7 +695,7 @@ namespace egret {
          *
          * @param value
          */
-        private setMovieClipData(value:MovieClipData) {
+        private setMovieClipData(value: MovieClipData) {
             if (this.$movieClipData == value) {
                 return;
             }
@@ -708,7 +708,7 @@ namespace egret {
          *
          * @param value
          */
-        private setPlayTimes(value:number) {
+        private setPlayTimes(value: number) {
             if (value < 0 || value >= 1) {
                 this.playTimes = value < 0 ? -1 : Math.floor(value);
             }
@@ -719,7 +719,7 @@ namespace egret {
          *
          * @param value
          */
-        private setIsStopped(value:boolean) {
+        private setIsStopped(value: boolean) {
             if (this.isStopped == value) {
                 return;
             }

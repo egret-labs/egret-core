@@ -114,7 +114,4 @@ namespace egret {
         }
     }
 
-    if (DEBUG) {
-        egret.$markReadOnly(Shape, "graphics");
-    }
 }

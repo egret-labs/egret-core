@@ -27,6 +27,12 @@
 //
 //////////////////////////////////////////////////////////////////////////////////////
 namespace egret {
+    // export interface TextField{
+    //     addEventListener<Z>(type: "focusIn" |
+    //                               "focusOut"
+    //         , listener: (this: Z, e: FocusEvent) => void, thisObject: Z, useCapture?: boolean, priority?: number);
+    //     addEventListener(type: string, listener: Function, thisObject: any, useCapture?: boolean, priority?: number);
+    // }
     /**
      * @language en_US
      * When the user changes the focus from one object in the display list to another object, the object dispatches a FocusEvent object. Currently only supports input text.
@@ -55,7 +61,7 @@ namespace egret {
          * @version Egret 2.4
          * @platform Web,Native
          */
-        public static FOCUS_IN:string = "focusIn";
+        public static FOCUS_IN:"focusIn" = "focusIn";
 
         /**
          * @language en_US
@@ -69,7 +75,7 @@ namespace egret {
          * @version Egret 2.4
          * @platform Web,Native
          */
-        public static FOCUS_OUT:string = "focusOut";
+        public static FOCUS_OUT:"focusOut" = "focusOut";
 
         /**
          * @language en_US

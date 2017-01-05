@@ -1841,8 +1841,6 @@ namespace eui.sys {
         }
 
         if (DEBUG) {//用于调试时查看布局尺寸的便利属性，发行版时移除。
-            egret.$markReadOnly(descendant, "explicitWidth");
-            egret.$markReadOnly(descendant, "explicitHeight");
 
             Object.defineProperty(prototype, "preferredWidth", {
                 get: function () {

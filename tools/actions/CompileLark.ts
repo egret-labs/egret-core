@@ -12,6 +12,8 @@ class CompileLark {
     private dtsFiles: [string, string[]][] = [];
 
     public make(): number {
+
+      
         var self = this;
         var code = 0;
         var options = egret.args;
@@ -57,6 +59,8 @@ class CompileLark {
     }
 
     private buildModule(m: egret.EgretModule, platform: egret.TargetPlatform, configuration: egret.CompileConfiguration) {
+       
+         
         var name = m.name;
         var fileName = name;
         var options = egret.args;
@@ -110,6 +114,7 @@ class CompileLark {
             return result.exitStatus;
         }
         if (dts) {
+    
             this.dtsFiles.push([declareFile, depends]);
             
             //兼容 Wing 用的旧版 TypeScript，删除 readonly 关键字

@@ -127,8 +127,8 @@ namespace egret.web {
         aLink['download'] = filePath;
         aLink.href = href;
 
-        let evt = document.createEvent("HTMLEvents");
-        evt.initEvent("click", false, false);//initEvent 不加后两个参数在FF下会报错
+        var evt = document.createEvent('MouseEvents');
+        evt.initMouseEvent('click', true, false, window, 0, 0, 0, 0, 0, false, false, false, false, 0, null);
         aLink.dispatchEvent(evt);
     }
 

@@ -269,8 +269,4 @@ namespace egret {
         }
     }
 
-    if(DEBUG){
-        egret.$markReadOnly(Timer,"currentCount");
-        egret.$markReadOnly(Timer,"running");
-    }
 }

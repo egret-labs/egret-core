@@ -387,7 +387,4 @@ namespace eui {
 
     registerProperty(ArrayCollection,"source","Array",true);
 
-    if(DEBUG){
-        egret.$markReadOnly(ArrayCollection,"length");
-    }
 }

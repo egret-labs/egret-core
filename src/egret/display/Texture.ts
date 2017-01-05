@@ -352,9 +352,5 @@ namespace egret {
         }
     }
 
-    if (DEBUG) {
-        egret.$markReadOnly(Texture, "textureWidth");
-        egret.$markReadOnly(Texture, "textureHeight");
-    }
 }
 

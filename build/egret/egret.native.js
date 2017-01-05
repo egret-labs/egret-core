@@ -5084,7 +5084,7 @@ var egret;
             return NativeFps;
         }(egret.Sprite));
         native.NativeFps = NativeFps;
-        __reflect(NativeFps.prototype, "egret.native.NativeFps", ["egret.FPSDisplay"]);
+        __reflect(NativeFps.prototype, "egret.native.NativeFps", ["egret.FPSDisplay", "egret.DisplayObject"]);
         egret.FPSDisplay = NativeFps;
     })(native = egret.native || (egret.native = {}));
 })(egret || (egret = {}));
@@ -6344,7 +6344,7 @@ var egret;
             return NativeVideo;
         }(egret.DisplayObject));
         native.NativeVideo = NativeVideo;
-        __reflect(NativeVideo.prototype, "egret.native.NativeVideo", ["egret.Video"]);
+        __reflect(NativeVideo.prototype, "egret.native.NativeVideo", ["egret.Video", "egret.DisplayObject"]);
         if (__global.Video) {
             egret.Video = NativeVideo;
         }
@@ -6967,9 +6967,6 @@ var egret;
         native.NativeHttpRequest = NativeHttpRequest;
         __reflect(NativeHttpRequest.prototype, "egret.native.NativeHttpRequest", ["egret.HttpRequest"]);
         egret.HttpRequest = NativeHttpRequest;
-        if (true) {
-            egret.$markReadOnly(NativeHttpRequest, "response");
-        }
     })(native = egret.native || (egret.native = {}));
 })(egret || (egret = {}));
 //////////////////////////////////////////////////////////////////////////////////////

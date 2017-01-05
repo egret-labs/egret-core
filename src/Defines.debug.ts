@@ -80,7 +80,6 @@ namespace egret {
 
     export declare function getString(code:number, ...params:any[]):string;
 
-    export declare function $markReadOnly(instance:any, property:string, isProperty?:boolean):void;
     export declare function $markCannotUse(instance:any, property:string, defaultVale:any):void;
 
     /**
@@ -128,7 +127,6 @@ namespace egret {
         Object.defineProperty(instance.prototype, property, data);
     }
 
-    egret.$markReadOnly = _markReadOnly;
 
     function markCannotUse(instance:any, property:string, defaultValue:any):void {
         Object.defineProperty(instance.prototype, property, {

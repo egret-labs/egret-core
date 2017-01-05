@@ -784,12 +784,4 @@ namespace egret {
 
     }
 
-    if (DEBUG) {
-        egret.$markReadOnly(Event, "type");
-        egret.$markReadOnly(Event, "bubbles");
-        egret.$markReadOnly(Event, "cancelable");
-        egret.$markReadOnly(Event, "eventPhase");
-        egret.$markReadOnly(Event, "currentTarget");
-        egret.$markReadOnly(Event, "target");
-    }
 }

@@ -1621,7 +1621,7 @@ var eui;
             return UIComponentImpl;
         }(egret.DisplayObject));
         sys.UIComponentImpl = UIComponentImpl;
-        __reflect(UIComponentImpl.prototype, "eui.sys.UIComponentImpl", ["eui.UIComponent"]);
+        __reflect(UIComponentImpl.prototype, "eui.sys.UIComponentImpl", ["eui.UIComponent", "egret.DisplayObject"]);
         /**
          * 检查一个函数的方法体是否为空。
          */
@@ -1694,8 +1694,6 @@ var eui;
                 };
             }
             if (true) {
-                egret.$markReadOnly(descendant, "explicitWidth");
-                egret.$markReadOnly(descendant, "explicitHeight");
                 Object.defineProperty(prototype, "preferredWidth", {
                     get: function () {
                         var bounds = egret.$TempRectangle;
@@ -2923,12 +2921,9 @@ var eui;
         return Component;
     }(egret.DisplayObjectContainer));
     eui.Component = Component;
-    __reflect(Component.prototype, "eui.Component", ["eui.UIComponent"]);
+    __reflect(Component.prototype, "eui.Component", ["eui.UIComponent", "egret.DisplayObject"]);
     eui.registerProperty(Component, "skinName", "Class");
     eui.sys.implementUIComponent(Component, egret.DisplayObjectContainer, true);
-    if (true) {
-        egret.$markReadOnly(Component, "skin");
-    }
 })(eui || (eui = {}));
 //////////////////////////////////////////////////////////////////////////////////////
 //
@@ -3681,16 +3676,11 @@ var eui;
         return Group;
     }(egret.DisplayObjectContainer));
     eui.Group = Group;
-    __reflect(Group.prototype, "eui.Group", ["eui.IViewport", "eui.UIComponent"]);
+    __reflect(Group.prototype, "eui.Group", ["eui.IViewport", "eui.UIComponent", "egret.DisplayObject"]);
     eui.sys.implementUIComponent(Group, egret.DisplayObjectContainer, true);
     eui.sys.mixin(Group, eui.sys.StateClient);
     eui.registerProperty(Group, "elementsContent", "Array", true);
     eui.registerProperty(Group, "states", "State[]");
-    if (true) {
-        egret.$markReadOnly(Group, "contentWidth");
-        egret.$markReadOnly(Group, "contentHeight");
-        egret.$markReadOnly(Group, "numElements");
-    }
 })(eui || (eui = {}));
 //////////////////////////////////////////////////////////////////////////////////////
 //
@@ -5925,9 +5915,6 @@ var eui;
     eui.registerProperty(DataGroup, "itemRenderer", "Class");
     eui.registerProperty(DataGroup, "itemRendererSkinName", "Class");
     eui.registerProperty(DataGroup, "dataProvider", "eui.ICollection", true);
-    if (true) {
-        egret.$markReadOnly(DataGroup, "numElements");
-    }
 })(eui || (eui = {}));
 //////////////////////////////////////////////////////////////////////////////////////
 //
@@ -10495,7 +10482,7 @@ var eui;
         return BitmapLabel;
     }(egret.BitmapText));
     eui.BitmapLabel = BitmapLabel;
-    __reflect(BitmapLabel.prototype, "eui.BitmapLabel", ["eui.UIComponent", "eui.IDisplayText"]);
+    __reflect(BitmapLabel.prototype, "eui.BitmapLabel", ["eui.UIComponent", "egret.DisplayObject", "eui.IDisplayText"]);
     eui.sys.implementUIComponent(BitmapLabel, egret.BitmapText);
     eui.registerBindable(BitmapLabel.prototype, "text");
 })(eui || (eui = {}));
@@ -10987,7 +10974,7 @@ var eui;
         return Image;
     }(egret.Bitmap));
     eui.Image = Image;
-    __reflect(Image.prototype, "eui.Image", ["eui.UIComponent"]);
+    __reflect(Image.prototype, "eui.Image", ["eui.UIComponent", "egret.DisplayObject"]);
     eui.sys.implementUIComponent(Image, egret.Bitmap);
     eui.registerProperty(Image, "scale9Grid", "egret.Rectangle");
 })(eui || (eui = {}));
@@ -11808,7 +11795,7 @@ var eui;
         return Label;
     }(egret.TextField));
     eui.Label = Label;
-    __reflect(Label.prototype, "eui.Label", ["eui.UIComponent", "eui.IDisplayText"]);
+    __reflect(Label.prototype, "eui.Label", ["eui.UIComponent", "egret.DisplayObject", "eui.IDisplayText"]);
     eui.sys.implementUIComponent(Label, egret.TextField);
     eui.registerBindable(Label.prototype, "text");
 })(eui || (eui = {}));
@@ -13815,9 +13802,6 @@ var eui;
     eui.RadioButtonGroup = RadioButtonGroup;
     __reflect(RadioButtonGroup.prototype, "eui.RadioButtonGroup");
     eui.registerBindable(RadioButtonGroup.prototype, "selectedValue");
-    if (true) {
-        egret.$markReadOnly(RadioButtonGroup, "numRadioButtons");
-    }
 })(eui || (eui = {}));
 //////////////////////////////////////////////////////////////////////////////////////
 //
@@ -16794,10 +16778,6 @@ var eui;
     eui.ViewStack = ViewStack;
     __reflect(ViewStack.prototype, "eui.ViewStack", ["eui.ICollection", "egret.IEventDispatcher"]);
     eui.registerBindable(ViewStack.prototype, "selectedIndex");
-    if (true) {
-        egret.$markReadOnly(ViewStack, "length");
-        egret.$markReadOnly(ViewStack, "layout");
-    }
 })(eui || (eui = {}));
 //////////////////////////////////////////////////////////////////////////////////////
 //
@@ -17408,9 +17388,6 @@ var eui;
     eui.ArrayCollection = ArrayCollection;
     __reflect(ArrayCollection.prototype, "eui.ArrayCollection", ["eui.ICollection", "egret.IEventDispatcher"]);
     eui.registerProperty(ArrayCollection, "source", "Array", true);
-    if (true) {
-        egret.$markReadOnly(ArrayCollection, "length");
-    }
 })(eui || (eui = {}));
 //////////////////////////////////////////////////////////////////////////////////////
 //
@@ -17906,7 +17883,7 @@ var eui;
         return EditableText;
     }(egret.TextField));
     eui.EditableText = EditableText;
-    __reflect(EditableText.prototype, "eui.EditableText", ["eui.UIComponent", "eui.IDisplayText"]);
+    __reflect(EditableText.prototype, "eui.EditableText", ["eui.UIComponent", "egret.DisplayObject", "eui.IDisplayText"]);
     eui.sys.implementUIComponent(EditableText, egret.TextField);
     eui.registerBindable(EditableText.prototype, "text");
 })(eui || (eui = {}));
@@ -24159,10 +24136,6 @@ var eui;
     }(eui.LayoutBase));
     eui.TileLayout = TileLayout;
     __reflect(TileLayout.prototype, "eui.TileLayout");
-    if (true) {
-        egret.$markReadOnly(TileLayout, "columnCount");
-        egret.$markReadOnly(TileLayout, "rowCount");
-    }
 })(eui || (eui = {}));
 //////////////////////////////////////////////////////////////////////////////////////
 //

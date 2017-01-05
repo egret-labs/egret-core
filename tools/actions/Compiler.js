@@ -1,3 +1,5 @@
+/// <reference path="../lib/types.d.ts" />
+var utils = require("../lib/utils");
 var file = require("../lib/FileUtil");
 var ts = require("../lib/typescript-plus/lib/typescript");
 var Compiler = (function () {
@@ -58,12 +60,11 @@ var Compiler = (function () {
             defines.RELEASE = false;
         }
         parsedCmd.options.defines = defines;
-        parsedCmd.options["forSortFile"] = option.forSortFile;
-        var compileResult = this.compileNew(parsedCmd);
+        var compileResult = this.compileNew(parsedCmd, option.forSortFile);
         process.chdir(realCWD);
         return compileResult;
     };
-    Compiler.prototype.compileNew = function (parsedCmd) {
+    Compiler.prototype.compileNew = function (parsedCmd, forSortFile) {
         var _this = this;
         this.errors = [];
         this.parsedCmd = parsedCmd;
@@ -74,6 +75,16 @@ var Compiler = (function () {
         rootFileNames.forEach(function (fileName) {
             _this.files[fileName] = { version: 0 };
         });
+        var configParseResult = ts.parseJsonConfigFileContent({ "compilerOptions": options }, ts.sys, "./");
+        if (configParseResult.errors && configParseResult.errors.length) {
+            configParseResult.errors.forEach(function (error) {
+                console.log(error.messageText);
+            });
+            utils.exit(0);
+        }
+        if (options.locale) {
+            ts.validateLocaleAndSetLanguage(options.locale, ts.sys);
+        }
         // Create the language service host to allow the LS to communicate with the host
         var servicesHost = {
             getScriptFileNames: function () { return _this.sortedFiles; },
@@ -99,13 +110,13 @@ var Compiler = (function () {
                 return ts.ScriptSnapshot.fromString(file.read(fileName, true).toString());
             },
             getCurrentDirectory: function () { return process.cwd(); },
-            getCompilationSettings: function () { return _this.parsedCmd.options; },
+            getCompilationSettings: function () { return configParseResult.options; },
             getDefaultLibFileName: function (options) { return ts.getDefaultLibFilePath(options); },
         };
         // Create the language service files
         this.services = ts.createLanguageService(servicesHost, ts.createDocumentRegistry());
         this.sortFiles();
-        if (!options.forSortFile) {
+        if (!forSortFile) {
             var output = this.services.getEmitOutput(undefined);
             this.logErrors(undefined);
             output.outputFiles.forEach(function (o) {

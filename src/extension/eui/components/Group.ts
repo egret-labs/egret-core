@@ -905,9 +905,4 @@ namespace eui {
     registerProperty(Group, "elementsContent", "Array", true);
     registerProperty(Group, "states", "State[]");
 
-    if(DEBUG){
-        egret.$markReadOnly(Group,"contentWidth");
-        egret.$markReadOnly(Group,"contentHeight");
-        egret.$markReadOnly(Group,"numElements");
-    }
 }

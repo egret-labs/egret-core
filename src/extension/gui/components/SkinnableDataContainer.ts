@@ -311,7 +311,8 @@ namespace egret.gui {
 		 * @param priority {number}
 		 */
 		public addEventListener(type:string, listener:Function,thisObject:any,  useCapture:boolean=false, priority:number=0) : void{
-			super.addEventListener(type, listener,thisObject, useCapture, priority);
+			//todo super.addEventListener report error in tsc2.1.4
+			SkinnableComponent.prototype.addEventListener.call(this,type, listener,thisObject, useCapture, priority);
 
 			if (type == RendererExistenceEvent.RENDERER_ADD && this.dataGroup){
 				this.dataGroup.addEventListener(

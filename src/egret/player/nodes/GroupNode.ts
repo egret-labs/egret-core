@@ -34,6 +34,11 @@ namespace egret.sys {
      */
     export class GroupNode extends RenderNode {
 
+        /**
+         * 相对偏移矩阵。
+         */
+        public matrix: egret.Matrix;
+        
         public constructor() {
             super();
             this.type = RenderNodeType.GroupNode;

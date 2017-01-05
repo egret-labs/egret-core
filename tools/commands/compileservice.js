@@ -19,8 +19,7 @@ var AutoCompileCommand = (function () {
     }
     AutoCompileCommand.prototype.execute = function () {
         var _this = this;
-        if (JSON.stringify(egret.args.properties.modulesConfig) == "{}") {
-            console.log(utils.tr(1602)); //缺少egretProperties.json
+        if (egret.args.properties.invalid(true)) {
             process.exit(0);
             return;
         }

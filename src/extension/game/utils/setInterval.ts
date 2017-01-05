@@ -1,9 +1,9 @@
 namespace egret {
-    let setIntervalCache:any = {};
-    let setIntervalIndex:number = 0;
+    let setIntervalCache: any = {};
+    let setIntervalIndex: number = 0;
 
-    let setIntervalCount:number = 0;
-    let lastTime:number = 0;
+    let setIntervalCount: number = 0;
+    let lastTime: number = 0;
 
     /**
      * @language en_US
@@ -29,8 +29,8 @@ namespace egret {
      * @platform Web,Native
      * @includeExample extension/game/utils/setInterval.ts
      */
-    export function setInterval(listener:Function, thisObject:any, delay:number, ...args):number {
-        let data = {listener: listener, thisObject: thisObject, delay: delay, originDelay: delay, params: args};
+    export function setInterval<Z>(listener: (this: Z, ...arg) => void, thisObject: Z, delay: number, ...args): number {
+        let data = { listener: listener, thisObject: thisObject, delay: delay, originDelay: delay, params: args };
 
         setIntervalCount++;
         if (setIntervalCount == 1) {
@@ -58,7 +58,7 @@ namespace egret {
      * @platform Web,Native
      * @includeExample egret/utils/setInterval.ts
      */
-    export function clearInterval(key:number):void {
+    export function clearInterval(key: number): void {
         if (setIntervalCache[key]) {
             setIntervalCount--;
 
@@ -74,8 +74,8 @@ namespace egret {
      * 
      * @param dt 
      */
-    function intervalUpdate(timeStamp:number):boolean {
-        let dt:number = timeStamp - lastTime;
+    function intervalUpdate(timeStamp: number): boolean {
+        let dt: number = timeStamp - lastTime;
         lastTime = timeStamp;
 
         for (let key in setIntervalCache) {

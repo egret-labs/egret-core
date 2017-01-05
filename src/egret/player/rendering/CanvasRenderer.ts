@@ -939,12 +939,34 @@ namespace egret {
 
 
         private renderGroup(groupNode:sys.GroupNode, context:CanvasRenderingContext2D):number {
+            let m = groupNode.matrix;
+            let saved = false;
+            if (m) {
+                if((<any>context).saveTransform) {//for native
+                    (<any>context).saveTransform();
+                }
+                else {
+                    context.save();
+                }
+                saved = true;
+                context.transform(m.a, m.b, m.c, m.d, m.tx, m.ty);
+            }
+
             let drawCalls:number = 0;
             let children = groupNode.drawData;
             let length = children.length;
             for (let i = 0; i < length; i++) {
                 let node:sys.RenderNode = children[i];
                 drawCalls += this.renderNode(node, context);
+            }
+
+            if (saved) {
+                if((<any>context).restoreTransform) {//for native
+                    (<any>context).restoreTransform();
+                }
+                else {
+                    context.restore();
+                }
             }
             return drawCalls;
         }
