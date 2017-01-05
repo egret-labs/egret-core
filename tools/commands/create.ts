@@ -47,7 +47,7 @@ class Create implements egret.Command {
     }
 }
 
-function parseProjectInfoFromTemplate(project: egret.ILarkProject) {
+function parseProjectInfoFromTemplate(project: egret.EgretProjectConfig) {
     if (!project.modules || !project.modules.length) {
 
         var templates = egret.manifest.templates.filter(t=> t.name == project.type)

@@ -51,7 +51,7 @@ function getSortedEXML(): exml.EXMLFile[] {
 
 export function updateSetting(merge = false) {
 
-    var themeDatas: egret.ILarkTheme[] = [];
+    var themeDatas: egret.EgretEUIThemeConfig[] = [];
     //1.找到项目内后缀名为'.thm.json'的主题文件并返回列表
     var themes = searchTheme();
     if (themes.length == 0) {

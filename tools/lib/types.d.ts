@@ -93,11 +93,11 @@ declare module egret {
         tsconfigError: string[];//tsconfig 配置文件的错误信息
 
         toJSON: () => any;
-        getProject(empty?: boolean): egret.ILarkProject;
+        getProject(empty?: boolean): egret.EgretProjectConfig;
         //工具用
     }
 
-    export interface ILarkTheme {
+    export interface EgretEUIThemeConfig {
         skins?: { [host: string]: string };
         exmls?: Array<any>;
         autoGenerateExmlsList?: boolean;
@@ -201,7 +201,7 @@ declare module egret {
         getResources(): Array<string>;
     }
 
-    export interface ILarkProject {
+    export interface EgretProjectConfig {
         modules?: EgretModule[];
         platform?: string;
         port?: number;
@@ -209,7 +209,7 @@ declare module egret {
         contentWidth?: number;
         contentHeight?: number;
         type?: string;
-        toJSON?(): ILarkProject;
+        toJSON?(): EgretProjectConfig;
         save?(path?: string);
         orientationMode?: string;
         frameRate?: number;

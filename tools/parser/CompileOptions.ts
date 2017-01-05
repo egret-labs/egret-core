@@ -140,7 +140,7 @@ class CompileOptions implements egret.ToolArgs {
     exmlGenJs: boolean;
 
     private _tmpDir = null;
-    private _tmpProj: egret.ILarkProject;
+    private _tmpProj: egret.EgretProjectConfig;
     getTmpDir() {
         if (this._tmpDir == null) {
             var sha1 = crypto.createHash('sha1');
@@ -154,7 +154,7 @@ class CompileOptions implements egret.ToolArgs {
         return this._tmpDir;
     }
 
-    getProject(empty = false): egret.ILarkProject {
+    getProject(empty = false): egret.EgretProjectConfig {
         if (this._tmpProj == null) {
             var tmpFile = FileUtil.joinPath(this.getTmpDir(), "proj.json");
             if (empty || !FileUtil.exists(tmpFile))

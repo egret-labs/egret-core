@@ -14,7 +14,7 @@ module egret {
 
 module egret.portal {
 
-    export var project: egret.ILarkProject;
+    export var project: egret.EgretProjectConfig;
 
     export class Project {
         larkManifest = egret.manifest;
