@@ -8996,7 +8996,7 @@ var egret;
                     base64 = data;
                 }
                 var image = document.createElement("img");
-                image.src = 'data:image/png;base64,' + base64;
+                image.src = "data:image/png;base64," + base64;
                 return new BitmapData(image);
             }
             else {
