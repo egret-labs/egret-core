@@ -90,6 +90,8 @@ declare namespace egret_native {
 
     function writeFileSync(filepath:string, fileContent:string):any;
 
+    function selectPhoto(promise:egret.PromiseObject):void;
+
     function requireHttpSync(url:string, callback:Function):void;
 
     function requireHttp(url:string, param:any, callback:Function):void;
@@ -212,6 +214,8 @@ declare namespace egret_native {
         function addTextureUnsyn(filePath:string, promise:any):any;
 
         function removeTexture(filePath:string):void;
+
+        function createTextureFromArrayBuffer(arrayBuffer:ArrayBuffer):any;
     }
 
 

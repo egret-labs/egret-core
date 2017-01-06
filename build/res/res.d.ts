@@ -1004,25 +1004,6 @@ declare namespace RES.native {
         private getLocalData(filePath);
     }
 }
-declare namespace RES.web {
-    /**
-     * @private
-     */
-    class Html5VersionController extends egret.EventDispatcher implements VersionController {
-        constructor();
-        private _versionInfo;
-        fetchVersion(callback: egret.AsyncCallback): void;
-        /**
-         * 获取所有有变化的文件
-         * @returns {any[]}
-         */
-        getChangeList(): Array<{
-            url: string;
-            size: number;
-        }>;
-        getVirtualUrl(url: string): string;
-    }
-}
 declare namespace RES {
     /**
      * @language en_US
@@ -1428,6 +1409,25 @@ declare namespace RES {
      */
     function removeEventListener(type: string, listener: (event: egret.Event) => void, thisObject: any, useCapture?: boolean): void;
     function $getVirtualUrl(url: any): any;
+}
+declare namespace RES.web {
+    /**
+     * @private
+     */
+    class Html5VersionController extends egret.EventDispatcher implements VersionController {
+        constructor();
+        private _versionInfo;
+        fetchVersion(callback: egret.AsyncCallback): void;
+        /**
+         * 获取所有有变化的文件
+         * @returns {any[]}
+         */
+        getChangeList(): Array<{
+            url: string;
+            size: number;
+        }>;
+        getVirtualUrl(url: string): string;
+    }
 }
 declare namespace RES {
     /**

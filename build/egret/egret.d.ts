@@ -5962,6 +5962,8 @@ declare namespace egret {
          */
         $deleteSource: boolean;
         constructor(source: any);
+        static create(type: "arraybuffer", data: ArrayBuffer): BitmapData;
+        static create(type: "base64", data: string): BitmapData;
         $dispose(): void;
         private static _displayList;
         static $addDisplayObject(displayObject: DisplayObject, bitmapData: BitmapData | Texture): void;
@@ -8213,6 +8215,7 @@ declare namespace egret_native {
     function deleteUpdateFile(filepath: string): void;
     function readFileAsync(filepath: string, promise: egret.PromiseObject, type?: string): any;
     function writeFileSync(filepath: string, fileContent: string): any;
+    function selectPhoto(promise: egret.PromiseObject): void;
     function requireHttpSync(url: string, callback: Function): void;
     function requireHttp(url: string, param: any, callback: Function): void;
     function sendInfoToPlugin(info: string): void;
@@ -8275,6 +8278,7 @@ declare namespace egret_native {
         function addTextureAsyn(filePath: string, promise: any): any;
         function addTextureUnsyn(filePath: string, promise: any): any;
         function removeTexture(filePath: string): void;
+        function createTextureFromArrayBuffer(arrayBuffer: ArrayBuffer): any;
     }
     namespace TextInputOp {
         function setKeybordOpen(isOpen: boolean, jsonConfig?: Object): void;
@@ -13278,6 +13282,55 @@ declare namespace egret {
         static CONTENT_JUSTIFY: string;
     }
 }
+declare namespace egret {
+    /**
+    * @language en_US
+    * The ByteArray class provides methods for encoding and decoding base64.
+    * @version Egret 2.4
+    * @platform Web,Native
+    * @includeExample egret/utils/ByteArray.ts
+    */
+    /**
+     * @language zh_CN
+     * Base64Util 类提供用于编解码base64的方法。
+     * @version Egret 2.4
+     * @platform Web,Native
+     * @includeExample egret/utils/Base64Util.ts
+     */
+    class Base64Util {
+        /**
+         * @language en_US
+         * encode base64.
+         * @version Egret 2.4
+         * @platform Web,Native
+         */
+        /**
+         * @language zh_CN
+         * 编码base64。
+         * @version Egret 2.4
+         * @platform Web,Native
+         */
+        static encode(arraybuffer: ArrayBuffer): string;
+        /**
+         * @language en_US
+         * decode base64.
+         * @version Egret 2.4
+         * @platform Web,Native
+         */
+        /**
+         * @language zh_CN
+         * 解码base64。
+         * @version Egret 2.4
+         * @platform Web,Native
+         */
+        static decode(base64: string): ArrayBuffer;
+    }
+}
+/**
+ * @private
+ */
+declare let chars: string;
+declare let lookup: Uint8Array;
 declare namespace egret {
     /**
      * @language en_US
