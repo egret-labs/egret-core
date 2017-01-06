@@ -62,7 +62,7 @@ namespace egret.native {
         /**
          * 呈现最终绘图结果的画布
          */
-        public surface:any;
+        public surface:NativeCanvas;
 
         /**
          * 渲染缓冲的宽度，以像素为单位。
