@@ -6,6 +6,7 @@ var CopyFiles = require("../actions/CopyFiles");
 var APITestTool = require("../actions/APITest");
 var CHILD_EXEC = require("child_process");
 var APITestCommand = require("./apitest");
+var project = require("../parser/EgretProject");
 var Compiler = require("../actions/Compiler");
 console.log(utils.tr(1004, 0));
 var timeBuildStart = (new Date()).getTime();
@@ -63,9 +64,9 @@ var Build = (function () {
             return DontExitCode;
         }
         var options = egret.args;
-        var packageJson;
-        if (packageJson = FileUtil.read(FileUtil.joinPath(options.projectDir, "package.json"))) {
-            packageJson = JSON.parse(packageJson);
+        var packageJsonContent;
+        if (packageJsonContent = FileUtil.read(project.utils.getFilePath("package.json"))) {
+            var packageJson = JSON.parse(packageJsonContent);
             if (packageJson.modules) {
                 this.buildLib(packageJson);
                 return 0;
@@ -89,27 +90,23 @@ var Build = (function () {
         var options = egret.args;
         var libFiles = FileUtil.search(FileUtil.joinPath(options.projectDir, "libs"), "d.ts");
         var outDir = "bin";
-        var compiler = new Compiler;
+        var compiler = new Compiler();
         utils.clean(FileUtil.joinPath(options.projectDir, outDir));
-        for (var i = 0; i < packageJson.modules.length; i++) {
-            var module = packageJson.modules[i];
-            var files = [];
-            var length = module.files.length;
+        var _loop_1 = function (m) {
+            files = [];
+            length = m.files.length;
             if (length > 0) {
-                for (var j = 0; j < length; j++) {
-                    var file = module.files[j];
-                    if (file.indexOf(".ts") != -1) {
-                        files.push(FileUtil.joinPath(options.projectDir, module.root, file));
-                    }
-                }
+                files = m.files
+                    .filter(function (file) { return file.indexOf(".ts") != -1; })
+                    .map(function (file) { return FileUtil.joinPath(options.projectDir, m.root, file); });
             }
             else {
                 //todo exml
-                files = FileUtil.search(FileUtil.joinPath(options.projectDir, module.root), "ts");
+                files = FileUtil.search(FileUtil.joinPath(options.projectDir, m.root), "ts");
             }
             //解决根目录没文件编译异常问题
-            var tmpFilePath = FileUtil.joinPath(options.projectDir, module.root, "tmp.ts");
-            var hasTmpTsFile = false;
+            tmpFilePath = FileUtil.joinPath(options.projectDir, m.root, "tmp.ts");
+            hasTmpTsFile = false;
             if (!FileUtil.exists(tmpFilePath)) {
                 hasTmpTsFile = true;
                 FileUtil.save(tmpFilePath, "");
@@ -117,50 +114,50 @@ var Build = (function () {
             else if (FileUtil.read(tmpFilePath) == "") {
                 hasTmpTsFile = true;
             }
-            options['compilerOptions'] = { target: 1 }; //ES5
-            var compileFiles = libFiles.concat(files);
+            options['compilerOptions'] = { target: "ES5" }; //ES5
+            compileFiles = libFiles.concat(files);
             if (hasTmpTsFile) {
                 compileFiles.push(tmpFilePath);
             }
             //编译js文件到临时目录
-            var result = compiler.compile({
+            result = compiler.compile({
                 args: options,
                 def: false,
-                out: null,
+                out: FileUtil.joinPath(options.projectDir, outDir, m.name, "tmp"),
                 files: compileFiles,
-                outDir: FileUtil.joinPath(options.projectDir, outDir, module.name, "tmp")
+                outDir: FileUtil.joinPath(options.projectDir, outDir, m.name, "tmp")
             });
             //编译dts文件
             compiler.compile({
                 args: options,
                 def: true,
-                out: FileUtil.joinPath(options.projectDir, outDir, module.name, module.name + ".js"),
+                out: FileUtil.joinPath(options.projectDir, outDir, m.name, m.name + ".js"),
                 files: compileFiles,
-                outDir: null
+                outDir: FileUtil.joinPath(options.projectDir, outDir, m.name, "tmp")
             });
             //兼容 Wing 用的旧版 TypeScript，删除 readonly 关键字
-            var declareFile = FileUtil.joinPath(options.projectDir, outDir, module.name, module.name + ".d.ts");
+            var declareFile = FileUtil.joinPath(options.projectDir, outDir, m.name, m.name + ".d.ts");
             var dtsContent = FileUtil.read(declareFile);
             dtsContent = dtsContent.replace(/readonly /g, "");
             FileUtil.save(declareFile, dtsContent);
             if (hasTmpTsFile) {
                 FileUtil.remove(tmpFilePath);
             }
-            var str = "";
-            var dtsStr = FileUtil.read(FileUtil.joinPath(options.projectDir, outDir, module.name, module.name + ".d.ts"));
+            str = "";
+            dtsStr = FileUtil.read(FileUtil.joinPath(options.projectDir, outDir, m.name, m.name + ".d.ts"));
             if (length > 0) {
-                for (var j = 0; j < module.files.length; j++) {
-                    var file = module.files[j];
+                for (var j = 0; j < m.files.length; j++) {
+                    file = m.files[j];
                     if (file.indexOf(".d.ts") != -1) {
                         dtsStr += "\n";
-                        dtsStr += FileUtil.read(FileUtil.joinPath(options.projectDir, module.root, file));
+                        dtsStr += FileUtil.read(FileUtil.joinPath(options.projectDir, m.root, file));
                     }
                     else if (file.indexOf(".ts") != -1) {
-                        str += FileUtil.read(FileUtil.joinPath(options.projectDir, outDir, module.name, "tmp", file.replace(".ts", ".js")));
+                        str += FileUtil.read(FileUtil.joinPath(options.projectDir, outDir, m.name, "tmp", file.replace(".ts", ".js")));
                         str += "\n";
                     }
                     else if (file.indexOf(".js") != -1) {
-                        str += FileUtil.read(FileUtil.joinPath(options.projectDir, module.root, file.replace(".ts", ".js")));
+                        str += FileUtil.read(FileUtil.joinPath(options.projectDir, m.root, file.replace(".ts", ".js")));
                         str += "\n";
                     }
                 }
@@ -169,17 +166,22 @@ var Build = (function () {
                 for (var j = 0; j < result.files.length; j++) {
                     var file_1 = result.files[j];
                     if (file_1.indexOf(".ts") != -1) {
-                        str += FileUtil.read(FileUtil.joinPath(options.projectDir, outDir, module.name, "tmp", file_1.replace(module.root + "/", "").replace(".ts", ".js")));
+                        str += FileUtil.read(FileUtil.joinPath(options.projectDir, outDir, m.name, "tmp", file_1.replace(m.root + "/", "").replace(".ts", ".js")));
                         str += "\n";
                     }
                 }
             }
-            FileUtil.save(FileUtil.joinPath(options.projectDir, outDir, module.name, module.name + ".d.ts"), dtsStr);
-            FileUtil.save(FileUtil.joinPath(options.projectDir, outDir, module.name, module.name + ".js"), str);
-            var minPath = FileUtil.joinPath(options.projectDir, outDir, module.name, module.name + ".min.js");
+            FileUtil.save(FileUtil.joinPath(options.projectDir, outDir, m.name, m.name + ".d.ts"), dtsStr);
+            FileUtil.save(FileUtil.joinPath(options.projectDir, outDir, m.name, m.name + ".js"), str);
+            minPath = FileUtil.joinPath(options.projectDir, outDir, m.name, m.name + ".min.js");
             FileUtil.save(minPath, str);
             utils.minify(minPath, minPath);
-            FileUtil.remove(FileUtil.joinPath(options.projectDir, outDir, module.name, "tmp"));
+            FileUtil.remove(FileUtil.joinPath(options.projectDir, outDir, m.name, "tmp"));
+        };
+        var files, length, tmpFilePath, hasTmpTsFile, compileFiles, result, str, dtsStr, file, minPath;
+        for (var _i = 0, _a = packageJson.modules; _i < _a.length; _i++) {
+            var m = _a[_i];
+            _loop_1(m);
         }
     };
     return Build;

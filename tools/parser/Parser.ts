@@ -3,7 +3,7 @@
 import utils = require('../lib/utils');
 import file = require('../lib/FileUtil');
 import CompileOptions = require("./CompileOptions");
-import properties = require("./EgretProperties");
+import * as project from "./EgretProject";
 import path = require("path");
 
 
@@ -110,10 +110,10 @@ export var optionDeclarations: egret.CommandLineOption[] = [
         name: 'egretVersion',
         type: 'string',
         shortName: "ev"
-    },{
+    }, {
         name: 'ide',
         type: 'boolean'
-    },{
+    }, {
         name: 'exmlGenJs',
         type: 'boolean',
         shortName: 'gjs'
@@ -211,20 +211,19 @@ export function parseCommandLine(commandLine: string[]) {
         }
 
         //create_app命令不强制设置projectDir属性
-        if(options.projectDir == null && options.command == "create_app"){
-        }else{
+        if (options.projectDir == null && options.command == "create_app") {
+        } else {
             if (!options.projectDir)
                 options.projectDir = process.cwd();
             else {
                 var absPath = path.resolve(process.cwd(), options.projectDir);
-                if(file.isDirectory(absPath)) {
+                if (file.isDirectory(absPath)) {
                     options.projectDir = absPath;
                 }
             }
             options.projectDir = file.joinPath(options.projectDir, "/");
-            properties.init(options.projectDir);
-            options.properties = properties;
-
+            project.utils.init(options.projectDir);
+            options.properties = project.utils;
         }
 
         var packagePath = file.joinPath(egret.root, "package.json");

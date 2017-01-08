@@ -40,6 +40,8 @@ var Compiler = (function () {
         else {
             //console.log("args.compilerOptions:",parsedCmd.options.outDir)
             parsedCmd.options.outDir = outDir;
+            parsedCmd.options.declaration = args.declaration;
+            parsedCmd.options.out = out;
         }
         if (args.sourceMap == true) {
             parsedCmd.options.sourceMap = true; //引擎命令行的sourcemap属性优先
