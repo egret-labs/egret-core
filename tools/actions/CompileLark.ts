@@ -4,6 +4,7 @@ import utils = require('../lib/utils');
 import Compiler = require('./Compiler');
 import FileUtil = require('../lib/FileUtil');
 import path = require('path');
+import ts = require("../lib/typescript-plus/lib/typescript");
 
 var ANY = 'any';
 
@@ -13,7 +14,7 @@ class CompileLark {
 
     public make(): number {
 
-      
+
         var self = this;
         var code = 0;
         var options = egret.args;
@@ -59,8 +60,8 @@ class CompileLark {
     }
 
     private buildModule(m: egret.EgretModule, platform: egret.TargetPlatform, configuration: egret.CompileConfiguration) {
-       
-         
+
+
         var name = m.name;
         var fileName = name;
         var options = egret.args;
@@ -81,7 +82,7 @@ class CompileLark {
         var declareFile = this.getModuleOutputPath(m.name, fileName + ".d.ts", m.outFile);
         var singleFile = this.getModuleOutputPath(m.name, fileName + ".js", m.outFile);
         var moduleRoot = FileUtil.joinPath(larkRoot, m.root);
-        if(!m.root){
+        if (!m.root) {
             return 0;
         }
         var tss: string[] = [];
@@ -108,15 +109,33 @@ class CompileLark {
             return 0;
         tss = depends.concat(tss);
         var dts = platform.declaration && configuration.declaration;
-        var result = this.compiler.compile({ args: options, def: dts, out: singleFile, files: tss, outDir: null, debug: configuration.name == "debug"});
-        if (result.exitStatus != 0) {
-            result.messages.forEach(m => console.log(m));
-            return result.exitStatus;
+
+        let compileOptions: ts.CompilerOptions = {}
+        //make 使用引擎的配置,必须用下面的参数
+        compileOptions.target = ts.ScriptTarget.ES5;
+        // parsedCmd.options.stripInternal = true;
+        compileOptions.sourceMap = options.sourceMap;
+        compileOptions.removeComments = options.removeComments;
+        compileOptions.declaration = dts;
+        compileOptions.out = singleFile;
+        compileOptions.newLine = ts.NewLineKind.LineFeed;
+        compileOptions.allowUnreachableCode = true;
+        compileOptions.emitReflection = true;
+
+        let defines: any = {};
+        if (configuration.name == "debug") {
+            defines.DEBUG = true;
+            defines.RELEASE = false;
+        }
+        compileOptions.defines = defines;
+        var result = this.compiler.make(compileOptions, tss);
+        if (result != 0) {
+            return result;
         }
         if (dts) {
-    
+
             this.dtsFiles.push([declareFile, depends]);
-            
+
             //兼容 Wing 用的旧版 TypeScript，删除 readonly 关键字
             let dtsContent = FileUtil.read(declareFile);
             dtsContent = dtsContent.replace(/readonly /g, "");

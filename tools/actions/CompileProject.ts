@@ -22,8 +22,7 @@ class CompileProject {
     private compilerOptions:ts.CompilerOptions;
     public compileProject(option: egret.ToolArgs, files?: egret.FileChanges) {
         //console.log("----compileProject.compileProject----")
-        var compileResult: egret.CompileResult;
-        if (files && this.recompile) {// console.log("----compileProject.compileProject.B-----")
+        if (files && this.compilerHost && this.compilerHost.compileWithChanges) {// console.log("----compileProject.compileProject.B-----")
             files.forEach(f=> f.fileName = f.fileName.replace(option.projectDir, ""));
             var realCWD = process.cwd();
             process.chdir(option.projectDir);
@@ -32,7 +31,7 @@ class CompileProject {
             if(sourceMap == undefined){
                 sourceMap = this.compilerOptions.sourceMap;
             }
-            compileResult = this.recompile(files, sourceMap);
+            this.compilerHost = this.compilerHost.compileWithChanges(files, sourceMap);
             process.chdir(realCWD);
         }
         else { //console.log("----compileProject.compileProject.A-----")
@@ -50,22 +49,21 @@ class CompileProject {
                 out: option.out,
                 outDir: option.outDir
             };
-            compileResult = compiler.compile(compileOptions);
-            this.recompile = compileResult.compileWithChanges;
+            this.compilerHost = compiler.compile(compileOptions);
         }
 
-        var fileResult: string[] = GetJavaScriptFileNames(compileResult.files, /^src\//);
-        compileResult.files = fileResult;
+        var fileResult = GetJavaScriptFileNames(this.compilerHost.files, /^src\//);
+        this.compilerHost.files = fileResult;
 
-        if (compileResult.messages.length > 0) {
-            compileResult.exitStatus = 1303;
+        if (this.compilerHost.messages.length > 0) {
+            this.compilerHost.exitStatus = 1303;
         }
 
-        return compileResult;
+        return this.compilerHost;
 
     }
 
-    private recompile: (files: egret.FileChanges, sourceMap?: boolean ) => egret.CompileResult;
+    private compilerHost: egret.EgretCompilerHost;
 }
 
 function GetJavaScriptFileNames(tsFiles: string[],root:string|RegExp,prefix?:string) {

@@ -344,11 +344,11 @@ declare module egret {
         type: string;
     }
 
-    export interface CompileResult {
+    export interface EgretCompilerHost {
         program: ts.Program;
         files?: string[];
         exitStatus: number;
-        compileWithChanges?: (filesChanged: egret.FileChanges, sourceMap?: boolean) => CompileResult;
+        compileWithChanges?: (filesChanged: egret.FileChanges, sourceMap?: boolean) => EgretCompilerHost;
         messages?: string[];
     }
 }

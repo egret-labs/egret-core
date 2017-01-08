@@ -19,8 +19,7 @@ var CompileProject = (function () {
     };
     CompileProject.prototype.compileProject = function (option, files) {
         //console.log("----compileProject.compileProject----")
-        var compileResult;
-        if (files && this.recompile) {
+        if (files && this.compilerHost && this.compilerHost.compileWithChanges) {
             files.forEach(function (f) { return f.fileName = f.fileName.replace(option.projectDir, ""); });
             var realCWD = process.cwd();
             process.chdir(option.projectDir);
@@ -28,7 +27,7 @@ var CompileProject = (function () {
             if (sourceMap == undefined) {
                 sourceMap = this.compilerOptions.sourceMap;
             }
-            compileResult = this.recompile(files, sourceMap);
+            this.compilerHost = this.compilerHost.compileWithChanges(files, sourceMap);
             process.chdir(realCWD);
         }
         else {
@@ -44,15 +43,14 @@ var CompileProject = (function () {
                 out: option.out,
                 outDir: option.outDir
             };
-            compileResult = compiler.compile(compileOptions);
-            this.recompile = compileResult.compileWithChanges;
+            this.compilerHost = compiler.compile(compileOptions);
         }
-        var fileResult = GetJavaScriptFileNames(compileResult.files, /^src\//);
-        compileResult.files = fileResult;
-        if (compileResult.messages.length > 0) {
-            compileResult.exitStatus = 1303;
+        var fileResult = GetJavaScriptFileNames(this.compilerHost.files, /^src\//);
+        this.compilerHost.files = fileResult;
+        if (this.compilerHost.messages.length > 0) {
+            this.compilerHost.exitStatus = 1303;
         }
-        return compileResult;
+        return this.compilerHost;
     };
     return CompileProject;
 }());

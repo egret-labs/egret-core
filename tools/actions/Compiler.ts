@@ -15,7 +15,18 @@ interface CompileOption {
 }
 
 class Compiler {
-    public compile(option: CompileOption): egret.CompileResult {
+
+
+    public compileWithTsconfig(options: ts.CompilerOptions, files: string[]) {
+        var compileResult = this.compileNew(options, files, false);
+
+        if (compileResult.exitStatus != 0) {
+            compileResult.messages.forEach(m => console.log(m));
+        }
+        return compileResult.exitStatus;
+    }
+
+    public compile(option: CompileOption) {
         //console.log('---Compiler.compile---')
         var args = option.args, def = option.def, files = option.files,
             out = option.out, outDir = option.outDir;
@@ -36,35 +47,38 @@ class Compiler {
             errors: []
         };
         if (args.compilerOptions) {
-            parsedCmd.options = <any>args.compilerOptions;
+            parsedCmd.options = args.compilerOptions;
         }
-        if (egret.args.command == "make") {
-            //make 使用引擎的配置,必须用下面的参数
-            parsedCmd.options.target = 1;
-            // parsedCmd.options.stripInternal = true;
-            parsedCmd.options.sourceMap = args.sourceMap;
-            parsedCmd.options.removeComments = args.removeComments;
-            parsedCmd.options.declaration = args.declaration;
-            parsedCmd.options.out = out;
-            parsedCmd.options.newLine = 1;
-        }
-        else {
-            //console.log("args.compilerOptions:",parsedCmd.options.outDir)
-            parsedCmd.options.outDir = outDir;
-            parsedCmd.options.declaration = args.declaration;
-               parsedCmd.options.out = out;
-        }
+
+        parsedCmd.options.outDir = outDir;
+        parsedCmd.options.declaration = args.declaration;
+        parsedCmd.options.out = out;
         if (args.sourceMap == true) {
             parsedCmd.options.sourceMap = true;//引擎命令行的sourcemap属性优先
         }
         parsedCmd.options.allowUnreachableCode = true;
         parsedCmd.options.emitReflection = true;
-        let defines:any = {};
-        if(option.debug != undefined) {
-            defines.DEBUG = option.debug;
-            defines.RELEASE = !option.debug;
+
+        parsedCmd.options.defines = this.getCompilerDefines(args, option.debug);
+        var configParseResult = ts.parseJsonConfigFileContent({ "compilerOptions": parsedCmd.options }, ts.sys, "./");
+        if (configParseResult.errors && configParseResult.errors.length) {
+            configParseResult.errors.forEach(function (error) {
+                console.log(error.messageText);
+            });
+            utils.exit(0);
         }
-        else if(egret.args.publish) {
+        var compileResult = this.compileNew(configParseResult.options, parsedCmd.fileNames, option.forSortFile);
+        process.chdir(realCWD);
+        return compileResult;
+    }
+
+    private getCompilerDefines(args: egret.ToolArgs, debug?: boolean) {
+        let defines: any = {};
+        if (debug != undefined) {
+            defines.DEBUG = debug;
+            defines.RELEASE = !debug;
+        }
+        else if (args.publish) {
             defines.DEBUG = false;
             defines.RELEASE = true;
         }
@@ -72,33 +86,19 @@ class Compiler {
             defines.DEBUG = true;
             defines.RELEASE = false;
         }
-        parsedCmd.options.defines = defines;
-        var compileResult;
-        if(egret.args.command == "make") {
-            compileResult = this.compileNew(parsedCmd.options, parsedCmd.fileNames, option.forSortFile);
-        }
-        else {
-            var configParseResult = ts.parseJsonConfigFileContent({"compilerOptions":parsedCmd.options}, ts.sys, "./");
-            if(configParseResult.errors && configParseResult.errors.length) {
-                configParseResult.errors.forEach(function (error){
-                    console.log(error.messageText);
-                });
-                utils.exit(0);
-            }
-            compileResult = this.compileNew(configParseResult.options, parsedCmd.fileNames, option.forSortFile);
-        }
-        process.chdir(realCWD);            
-        return compileResult;
+        return defines;
+
     }
+
 
     private files: ts.Map<{ version: number }> = <any>{};
     private sortedFiles;
 
-    private compileNew(options, rootFileNames, forSortFile:boolean): egret.CompileResult {
+    private compileNew(options: ts.CompilerOptions, rootFileNames: string[], forSortFile: boolean): egret.EgretCompilerHost {
         this.errors = [];
         this.fileNames = rootFileNames;
         this.sortedFiles = rootFileNames;
-        
+
         // initialize the list of files
         rootFileNames.forEach(fileName => {
             this.files[fileName] = { version: 0 };
@@ -124,7 +124,7 @@ class Compiler {
                     return ts.sys.newLine;
                 }
                 return carriageReturnLineFeed;
-            }, 
+            },
             getScriptVersion: (fileName) => this.files[fileName] && this.files[fileName].version.toString(),
             getScriptSnapshot: (fileName) => {
                 if (!file.exists(fileName)) {
@@ -141,7 +141,7 @@ class Compiler {
         // Create the language service files
         this.services = ts.createLanguageService(servicesHost, ts.createDocumentRegistry());
         this.sortFiles();
-        if(!forSortFile) {
+        if (!forSortFile) {
             let output = this.services.getEmitOutput(undefined);
             this.logErrors(undefined);
             output.outputFiles.forEach(o => {
@@ -149,10 +149,10 @@ class Compiler {
             });
         }
 
-         return { files: this.sortedFiles, program: <any>this.services.getProgram(), exitStatus: 0, messages:this.errors, compileWithChanges:this.compileWithChanges.bind(this)};
+        return { files: this.sortedFiles, program: <any>this.services.getProgram(), exitStatus: 0, messages: this.errors, compileWithChanges: this.compileWithChanges.bind(this) };
     }
 
-    private sortFiles():void {
+    private sortFiles(): void {
         let program = this.services.getProgram();
         let sortResult = ts.reorderSourceFiles(program);
         if (sortResult.circularReferences.length > 0) {
@@ -166,7 +166,7 @@ class Compiler {
     }
 
     private services: ts.LanguageService;
-    private errors:string[];
+    private errors: string[];
 
     private emitFile(fileName: string) {
         let output = this.services.getEmitOutput(fileName);
@@ -180,7 +180,7 @@ class Compiler {
         let allDiagnostics = this.services.getCompilerOptionsDiagnostics()
             .concat(this.services.getSyntacticDiagnostics(fileName))
             .concat(this.services.getSemanticDiagnostics(fileName));
-            
+
         allDiagnostics.forEach(diagnostic => {
             let message = ts.flattenDiagnosticMessageText(diagnostic.messageText, "\n");
             let msg;
@@ -198,7 +198,7 @@ class Compiler {
 
     private fileNames: Array<string>;
 
-    private compileWithChanges(filesChanged: egret.FileChanges, sourceMap?: boolean): egret.CompileResult {
+    private compileWithChanges(filesChanged: egret.FileChanges, sourceMap?: boolean): egret.EgretCompilerHost {
         this.errors = [];
         filesChanged.forEach((file: any) => {
             if (file.type == "added") {
@@ -218,10 +218,10 @@ class Compiler {
         this.sortFiles();
 
         filesChanged.forEach((file: any) => {
-             this.emitFile(file.fileName);
+            this.emitFile(file.fileName);
         });
 
-        return { files: this.sortedFiles, program: <any>this.services.getProgram(), exitStatus: 0, messages:this.errors, compileWithChanges:this.compileWithChanges.bind(this)};
+        return { files: this.sortedFiles, program: <any>this.services.getProgram(), exitStatus: 0, messages: this.errors, compileWithChanges: this.compileWithChanges.bind(this) };
     }
 }
 

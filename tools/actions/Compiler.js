@@ -6,6 +6,13 @@ var Compiler = (function () {
     function Compiler() {
         this.files = {};
     }
+    Compiler.prototype.compileWithTsconfig = function (options, files) {
+        var compileResult = this.compileNew(options, files, false);
+        if (compileResult.exitStatus != 0) {
+            compileResult.messages.forEach(function (m) { return console.log(m); });
+        }
+        return compileResult.exitStatus;
+    };
     Compiler.prototype.compile = function (option) {
         //console.log('---Compiler.compile---')
         var args = option.args, def = option.def, files = option.files, out = option.out, outDir = option.outDir;
@@ -27,33 +34,33 @@ var Compiler = (function () {
         if (args.compilerOptions) {
             parsedCmd.options = args.compilerOptions;
         }
-        if (egret.args.command == "make") {
-            //make 使用引擎的配置,必须用下面的参数
-            parsedCmd.options.target = 1;
-            // parsedCmd.options.stripInternal = true;
-            parsedCmd.options.sourceMap = args.sourceMap;
-            parsedCmd.options.removeComments = args.removeComments;
-            parsedCmd.options.declaration = args.declaration;
-            parsedCmd.options.out = out;
-            parsedCmd.options.newLine = 1;
-        }
-        else {
-            //console.log("args.compilerOptions:",parsedCmd.options.outDir)
-            parsedCmd.options.outDir = outDir;
-            parsedCmd.options.declaration = args.declaration;
-            parsedCmd.options.out = out;
-        }
+        parsedCmd.options.outDir = outDir;
+        parsedCmd.options.declaration = args.declaration;
+        parsedCmd.options.out = out;
         if (args.sourceMap == true) {
             parsedCmd.options.sourceMap = true; //引擎命令行的sourcemap属性优先
         }
         parsedCmd.options.allowUnreachableCode = true;
         parsedCmd.options.emitReflection = true;
-        var defines = {};
-        if (option.debug != undefined) {
-            defines.DEBUG = option.debug;
-            defines.RELEASE = !option.debug;
+        parsedCmd.options.defines = this.getCompilerDefines(args, option.debug);
+        var configParseResult = ts.parseJsonConfigFileContent({ "compilerOptions": parsedCmd.options }, ts.sys, "./");
+        if (configParseResult.errors && configParseResult.errors.length) {
+            configParseResult.errors.forEach(function (error) {
+                console.log(error.messageText);
+            });
+            utils.exit(0);
         }
-        else if (egret.args.publish) {
+        var compileResult = this.compileNew(configParseResult.options, parsedCmd.fileNames, option.forSortFile);
+        process.chdir(realCWD);
+        return compileResult;
+    };
+    Compiler.prototype.getCompilerDefines = function (args, debug) {
+        var defines = {};
+        if (debug != undefined) {
+            defines.DEBUG = debug;
+            defines.RELEASE = !debug;
+        }
+        else if (args.publish) {
             defines.DEBUG = false;
             defines.RELEASE = true;
         }
@@ -61,23 +68,7 @@ var Compiler = (function () {
             defines.DEBUG = true;
             defines.RELEASE = false;
         }
-        parsedCmd.options.defines = defines;
-        var compileResult;
-        if (egret.args.command == "make") {
-            compileResult = this.compileNew(parsedCmd.options, parsedCmd.fileNames, option.forSortFile);
-        }
-        else {
-            var configParseResult = ts.parseJsonConfigFileContent({ "compilerOptions": parsedCmd.options }, ts.sys, "./");
-            if (configParseResult.errors && configParseResult.errors.length) {
-                configParseResult.errors.forEach(function (error) {
-                    console.log(error.messageText);
-                });
-                utils.exit(0);
-            }
-            compileResult = this.compileNew(configParseResult.options, parsedCmd.fileNames, option.forSortFile);
-        }
-        process.chdir(realCWD);
-        return compileResult;
+        return defines;
     };
     Compiler.prototype.compileNew = function (options, rootFileNames, forSortFile) {
         var _this = this;
