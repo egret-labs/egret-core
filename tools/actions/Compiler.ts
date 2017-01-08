@@ -149,7 +149,7 @@ class Compiler {
             });
         }
 
-        return { files: this.sortedFiles, program: <any>this.services.getProgram(), exitStatus: 0, messages: this.errors, compileWithChanges: this.compileWithChanges.bind(this) };
+        return { files: this.sortedFiles, program: this.services.getProgram(), exitStatus: 0, messages: this.errors, compileWithChanges: this.compileWithChanges.bind(this) };
     }
 
     private sortFiles(): void {
@@ -221,7 +221,7 @@ class Compiler {
             this.emitFile(file.fileName);
         });
 
-        return { files: this.sortedFiles, program: <any>this.services.getProgram(), exitStatus: 0, messages: this.errors, compileWithChanges: this.compileWithChanges.bind(this) };
+        return { files: this.sortedFiles, program: this.services.getProgram(), exitStatus: 0, messages: this.errors, compileWithChanges: this.compileWithChanges.bind(this) };
     }
 }
 
