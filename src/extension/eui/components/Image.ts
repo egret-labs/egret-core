@@ -37,7 +37,6 @@ namespace eui {
      */
     let assetAdapter = new DefaultAssetAdapter();
     /**
-     * @language en_US
      * The Image control lets you show JPEG, PNG, and GIF files
      * at runtime. Image inherit Bitmap，so you can set the <code>bitmapData</code> property
      * to show the data. you can also set the <code>source</code> property, Image will auto load
@@ -48,9 +47,9 @@ namespace eui {
      * @version eui 1.0
      * @platform Web,Native
      * @includeExample  extension/eui/components/ImageExample.ts
+     * @language en_US
      */
     /**
-     * @language zh_CN
      * Image 控件允许您在运行时显示 JPEG、PNG 等图片文件文件。Image 继承至 Bitmap，因此您可以直接对其 bitmapData 属性，
      * 赋值从外部加载得到的位图数据以显示对应图片。同时，Image 还提供了更加方便的 source 属性，source 属性可以接受一个网络图片url作为值，
      * 赋值为url后，它内部会自动去加载并显示图片。并且您同样也可以直接把 BitmapData 对象赋值给 source 属性以显示图片。
@@ -60,11 +59,11 @@ namespace eui {
      * @version eui 1.0
      * @platform Web,Native
      * @includeExample  extension/eui/components/ImageExample.ts
+     * @language zh_CN
      */
     export class Image extends egret.Bitmap implements UIComponent {
 
         /**
-         * @language en_US
          * Constructor.
          *
          * @param source The source used for the bitmap fill. the value can be
@@ -73,9 +72,9 @@ namespace eui {
          * @version Egret 2.4
          * @version eui 1.0
          * @platform Web,Native
+         * @language en_US
          */
         /**
-         * @language zh_CN
          * 构造函数。
          *
          * @param source 用于位图填充的源。可以是一个字符串或者 <code>egret.Texture</code> 对象
@@ -83,6 +82,7 @@ namespace eui {
          * @version Egret 2.4
          * @version eui 1.0
          * @platform Web,Native
+         * @language zh_CN
          */
         public constructor(source?:string|egret.Texture) {
             super();
@@ -93,7 +93,6 @@ namespace eui {
         }
 
         /**
-         * @language en_US
          * Represent a Rectangle Area that the 9 scale area of Image.
          * Notice: This property is valid only when <code>fillMode</code>
          * is <code>BitmapFillMode.SCALE</code>.
@@ -101,15 +100,16 @@ namespace eui {
          * @version Egret 2.4
          * @version eui 1.0
          * @platform Web,Native
+         * @language en_US
          */
         /**
-         * @language zh_CN
          * 矩形区域，它定义素材对象的九个缩放区域。
          * 注意:此属性仅在<code>fillMode</code>为<code>BitmapFillMode.SCALE</code>时有效。
          *
          * @version Egret 2.4
          * @version eui 1.0
          * @platform Web,Native
+         * @language zh_CN
          */
         public get scale9Grid():egret.Rectangle {
             return this.$scale9Grid;
@@ -122,7 +122,6 @@ namespace eui {
         }
 
         /**
-         * @language en_US
          * Determines how the bitmap fills in the dimensions.
          * <p>When set to <code>BitmapFillMode.CLIP</code>, the bitmap
          * ends at the edge of the region.</p>
@@ -136,9 +135,9 @@ namespace eui {
          * @version Egret 2.4
          * @version eui 1.0
          * @platform Web,Native
+         * @language en_US
          */
         /**
-         * @language zh_CN
          * 确定位图填充尺寸的方式。
          * <p>设置为 <code>BitmapFillMode.CLIP</code>时，位图将在边缘处被截断。</p>
          * <p>设置为 <code>BitmapFillMode.REPEAT</code>时，位图将重复以填充区域。</p>
@@ -149,6 +148,7 @@ namespace eui {
          * @version Egret 2.4
          * @version eui 1.0
          * @platform Web,Native
+         * @language zh_CN
          */
         public get fillMode():string {
             return this.$fillMode;
@@ -181,21 +181,21 @@ namespace eui {
          */
         private _source:string|egret.Texture = null;
         /**
-         * @language en_US
          * The source used for the bitmap fill. the value can be
          * a string or an instance of <code>egret.Texture</code>
          *
          * @version Egret 2.4
          * @version eui 1.0
          * @platform Web,Native
+         * @language en_US
          */
         /**
-         * @language zh_CN
          * 用于位图填充的源。可以是一个字符串或者 <code>egret.Texture</code> 对象
          *
          * @version Egret 2.4
          * @version eui 1.0
          * @platform Web,Native
+         * @language zh_CN
          */
         public get source():string|egret.Texture {
             return this._source;

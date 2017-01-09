@@ -41,37 +41,37 @@ namespace eui {
     let UIImpl = sys.UIComponentImpl;
 
     /**
-     * @language en_US
      * Editable text for displaying,
      * scrolling, selecting, and editing text.
      * @includeExample  extension/eui/components/EditablTextExample.ts
      * @version Egret 2.4
      * @version eui 1.0
      * @platform Web,Native
+     * @language en_US
      */
     /**
-     * @language zh_CN
      * 可编辑文本，用于显示、滚动、选择和编辑文本。
      * @includeExample  extension/eui/components/EditablTextExample.ts
      * @version Egret 2.4
      * @version eui 1.0
      * @platform Web,Native
+     * @language zh_CN
      */
     export class EditableText extends egret.TextField implements UIComponent, IDisplayText {
 
         /**
-         * @language en_US
          * Constructor.
          * @version Egret 2.4
          * @version eui 1.0
          * @platform Web,Native
+         * @language en_US
          */
         /**
-         * @language zh_CN
          * 构造函数。
          * @version Egret 2.4
          * @version eui 1.0
          * @platform Web,Native
+         * @language zh_CN
          */
         public constructor() {
             super();
@@ -180,14 +180,13 @@ namespace eui {
          */
         private $isShowPrompt: boolean = false;
         /**
-         * @language en_US
          * When the property of the text is empty, it will show the defalut string.
          * @version Egret 2.5.5
          * @version eui 1.0
          * @platform Web,Native
+         * @language en_US
          */
         /**
-         * @language zh_CN
          * 当text属性为空字符串时要显示的文本内容。
          * 先创建文本控件时将显示提示文本。控件获得焦点时或控件的 text 属性为非空字符串时，提示文本将消失。
          * 控件失去焦点时提示文本将重新显示，但仅当未输入文本时（如果文本字段的值为空字符串）。<p/>
@@ -196,6 +195,7 @@ namespace eui {
          * @version Egret 2.5.5
          * @version eui 1.0
          * @platform Web,Native
+         * @language zh_CN
          */
         public get prompt(): string {
             return this.$EditableText[sys.EditableTextKeys.promptText];
@@ -220,18 +220,18 @@ namespace eui {
          */
         private $isFocusIn: boolean = false;
         /**
-         * @language en_US
          * The color of the defalut string.
          * @version Egret 2.5.5
          * @version eui 1.0
          * @platform Web,Native
+         * @language en_US
          */
         /**
-         * @language zh_CN
          * 默认文本的颜色
          * @version Egret 2.5.5
          * @version eui 1.0
          * @platform Web,Native
+         * @language zh_CN
          */
         public set promptColor(value: number) {
             value = +value | 0;

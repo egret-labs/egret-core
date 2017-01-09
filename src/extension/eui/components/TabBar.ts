@@ -30,7 +30,6 @@
 namespace eui {
 
     /**
-     * @language en_US
      * The TabBar class displays a set of identical tabs.
      * One tab can be selected at a time, and the first tab is selected by default.
      * <p>The set of tabs is defined by the <code>dataProvider</code> property.
@@ -50,9 +49,9 @@ namespace eui {
      * @version eui 1.0
      * @platform Web,Native
      * @includeExample  extension/eui/components/TabBarExample.ts
+     * @language en_US
      */
     /**
-     * @language zh_CN
      * TabBar 类显示一组相同的选项卡。一次可以选择一个选项卡，且默认情况下选择第一个选项卡。
      * <p>该组选项卡由 <code>dataProvider</code> 属性定义。
      * 每个选项卡的外观由 <code>ItemRenderer</code> 定义。</p>
@@ -70,24 +69,25 @@ namespace eui {
      * @version eui 1.0
      * @platform Web,Native
      * @includeExample  extension/eui/components/TabBarExample.ts
+     * @language zh_CN
      */
     export class TabBar extends ListBase {
 
         /**
-         * @language en_US
          * Constructor.
          *
          * @version Egret 2.4
          * @version eui 1.0
          * @platform Web,Native
+         * @language en_US
          */
         /**
-         * @language zh_CN
          * 构造函数。
          *
          * @version Egret 2.4
          * @version eui 1.0
          * @platform Web,Native
+         * @language zh_CN
          */
         public constructor(){
             super();

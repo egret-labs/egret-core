@@ -32,7 +32,6 @@ namespace eui {
     let UIComponentClass = "eui.UIComponent";
 
     /**
-     * @language en_US
      * The HorizontalLayout class arranges the layout elements in a horizontal sequence,
      * left to right, with optional gaps between the elements and optional padding
      * around the elements.
@@ -41,15 +40,16 @@ namespace eui {
      * @version eui 1.0
      * @platform Web,Native
      * @includeExample  extension/eui/layout/HorizontalLayoutExample.ts
+     * @language en_US
      */
     /**
-     * @language zh_CN
      * HorizontalLayout 类按水平顺序从左到右排列布局元素，在元素和围绕元素的可选填充之间带有可选间隙。
      *
      * @version Egret 2.4
      * @version eui 1.0
      * @platform Web,Native
      * @includeExample  extension/eui/layout/HorizontalLayoutExample.ts
+     * @language zh_CN
      */
     export class HorizontalLayout extends LinearLayoutBase {
 

@@ -38,7 +38,6 @@ namespace egret {
      */
     export class DropShadowFilter extends GlowFilter {
         /**
-         * @language en_US
          * Initializes a new DropShadowFilter instance.
          * @method egret.DropShadowFilter#constructor
          * @param distance {number} The offset distance of the bevel. Valid values are in pixels (floating point).
@@ -54,9 +53,9 @@ namespace egret {
          * @param hideObject {number} Indicates whether or not the object is hidden. The value true indicates that the object itself is not drawn; only the shadow is visible. The default is false, meaning that the object is shown.
          * @version Egret 3.1.4
          * @platform Web
+         * @language en_US
          */
         /**
-         * @language zh_CN
          * 初始化 DropShadowFilter 对象
          * @method egret.DropShadowFilter#constructor
          * @param distance {number} 阴影的偏移距离，以像素为单位。
@@ -72,6 +71,7 @@ namespace egret {
          * @param hideObject {number} 表示是否隐藏对象。如果值为 true，则表示没有绘制对象本身，只有阴影是可见的。默认值为 false（显示对象）。
          * @version Egret 3.1.4
          * @platform Web
+         * @language zh_CN
          */
         constructor(distance:number = 4.0, angle:number = 45, color:number = 0, alpha:number = 1.0, blurX:number = 4.0, blurY:number = 4.0, strength:number = 1.0, quality:number = 1, inner:boolean = false, knockout:boolean = false, hideObject:boolean = false) {
             super(color, alpha, blurX, blurY, strength, quality, inner, knockout);
@@ -87,16 +87,16 @@ namespace egret {
         public $distance:number;
 
         /**
-         * @language en_US
          * The offset distance of the bevel.
          * @version Egret 3.1.4
          * @platform Web
+         * @language en_US
          */
         /**
-         * @language zh_CN
          * 阴影的偏移距离，以像素为单位。
          * @version Egret 3.1.4
          * @platform Web
+         * @language zh_CN
          */
         public get distance():number {
             return this.$distance;
@@ -116,16 +116,16 @@ namespace egret {
         public $angle:number;
 
         /**
-         * @language en_US
          * The angle of the bevel.
          * @version Egret 3.1.4
          * @platform Web
+         * @language en_US
          */
         /**
-         * @language zh_CN
          * 阴影的角度。
          * @version Egret 3.1.4
          * @platform Web
+         * @language zh_CN
          */
         public get angle():number {
             return this.$angle;
@@ -145,16 +145,16 @@ namespace egret {
         public $hideObject:boolean;
 
         /**
-         * @language en_US
          * Indicates whether or not the object is hidden.
          * @version Egret 3.1.4
          * @platform Web
+         * @language en_US
          */
         /**
-         * @language zh_CN
          * 表示是否隐藏对象。
          * @version Egret 3.1.4
          * @platform Web
+         * @language zh_CN
          */
         public get hideObject():boolean {
             return this.$hideObject;

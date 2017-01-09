@@ -35,25 +35,24 @@ namespace eui {
     let loaderMap:any = {};
 
     /**
-     * @language en_US
      * Default instance of interface <code>IAssetAdapter</code>.
      * @version Egret 2.4
      * @version eui 1.0
      * @platform Web,Native
      * @includeExample extension/eui/components/supportClasses/DefaultAssetAdapterExample.ts
+     * @language en_US
      */
     /**
-     * @language zh_CN
      * 默认的IAssetAdapter接口实现。
      * @version Egret 2.4
      * @version eui 1.0
      * @platform Web,Native
      * @includeExample extension/eui/components/supportClasses/DefaultAssetAdapterExample.ts
+     * @language zh_CN
      */
     export class DefaultAssetAdapter implements IAssetAdapter {
 
         /**
-         * @language en_US
          * resolve asset.
          * @param source the identifier of new asset need to be resolved
          * @param callBack callback function when resolving complete
@@ -62,9 +61,9 @@ namespace eui {
          * @version Egret 2.4
          * @version eui 1.0
          * @platform Web,Native
+         * @language en_US
          */
         /**
-         * @language zh_CN
          * 解析素材
          * @param source 待解析的新素材标识符
          * @param callBack 解析完成回调函数，示例：callBack(content:any,source:string):void;
@@ -72,6 +71,7 @@ namespace eui {
          * @version Egret 2.4
          * @version eui 1.0
          * @platform Web,Native
+         * @language zh_CN
          */
         public getAsset(source:string, callBack:(data:any, source:string) => void, thisObject:any):void {
             let list = callBackMap[source];

@@ -46,7 +46,6 @@ namespace eui {
     }
 
     /**
-     * @language en_US
      * The SliderBase class lets users select a value by moving a slider thumb between
      * the end points of the slider track.
      * The current value of the slider is determined by the relative location of
@@ -64,9 +63,9 @@ namespace eui {
      * @version Egret 2.4
      * @version eui 1.0
      * @platform Web,Native
+     * @language en_US
      */
     /**
-     * @language zh_CN
      * 滑块控件基类，通过使用 SliderBase 类，用户可以在滑块轨道的端点之间移动滑块来选择值。
      * 滑块的当前值由滑块端点（对应于滑块的最小值和最大值）之间滑块的相对位置确定。
      * SliderBase 类是 HSlider 和 VSlider 的基类。
@@ -81,21 +80,22 @@ namespace eui {
      * @version Egret 2.4
      * @version eui 1.0
      * @platform Web,Native
+     * @language zh_CN
      */
     export class SliderBase extends Range {
         /**
-         * @language en_US
          * Constructor
          * @version Egret 2.4
          * @version eui 1.0
          * @platform Web,Native
+         * @language en_US
          */
         /**
-         * @language zh_CN
          * 创建一个 SliderBase 实例
          * @version Egret 2.4
          * @version eui 1.0
          * @platform Web,Native
+         * @language zh_CN
          */
         public constructor() {
             super();
@@ -121,60 +121,59 @@ namespace eui {
         $SliderBase:Object;
 
         /**
-         * @language en_US
          * [SkinPart] Highlight of track.
          * @skinPart
          * @version Egret 2.4
          * @version eui 1.0
          * @platform Web,Native
+         * @language en_US
          */
         /**
-         * @language zh_CN
          * [SkinPart] 轨道高亮显示对象。
          * @skinPart
          * @version Egret 2.4
          * @version eui 1.0
          * @platform Web,Native
+         * @language zh_CN
          */
         public trackHighlight:egret.DisplayObject = null;
         /**
-         * @language en_US
          * [SkinPart] Thumb display object.
          * @skinPart
          * @version Egret 2.4
          * @version eui 1.0
          * @platform Web,Native
+         * @language en_US
          */
         /**
-         * @language zh_CN
          * [SkinPart]滑块显示对象。
          * @skinPart
          * @version Egret 2.4
          * @version eui 1.0
          * @platform Web,Native
+         * @language zh_CN
          */
         public thumb:eui.UIComponent = null;
 
         /**
-         * @language en_US
          * [SkinPart] Track display object.
          * @skinPart
          * @version Egret 2.4
          * @version eui 1.0
          * @platform Web,Native
+         * @language en_US
          */
         /**
-         * @language zh_CN
          * [SkinPart]轨道显示对象。
          * @skinPart
          * @version Egret 2.4
          * @version eui 1.0
          * @platform Web,Native
+         * @language zh_CN
          */
         public track:eui.UIComponent = null;
 
         /**
-         * @language en_US
          * Duration in milliseconds for the sliding animation when you tap on the track to move a thumb.
          *
          * @default 300
@@ -182,9 +181,9 @@ namespace eui {
          * @version Egret 2.4
          * @version eui 1.0
          * @platform Web,Native
+         * @language en_US
          */
         /**
-         * @language zh_CN
          * 在轨道上单击以移动滑块时，滑动动画持续的时间（以毫秒为单位）。设置为0将不执行缓动。
          *
          * @default 300
@@ -192,6 +191,7 @@ namespace eui {
          * @version Egret 2.4
          * @version eui 1.0
          * @platform Web,Native
+         * @language zh_CN
          */
         public get slideDuration():number {
             return this.$SliderBase[Keys.slideDuration];
@@ -202,7 +202,6 @@ namespace eui {
         }
 
         /**
-         * @language en_US
          * Converts a track-relative x,y pixel location into a value between
          * the minimum and maximum, inclusive.
          *
@@ -213,9 +212,9 @@ namespace eui {
          * @version Egret 2.4
          * @version eui 1.0
          * @platform Web,Native
+         * @language en_US
          */
         /**
-         * @language zh_CN
          * 将相对于轨道的 x,y 像素位置转换为介于最小值和最大值（包括两者）之间的一个值。
          *
          * @param x 相对于轨道原点的位置的x坐标。
@@ -225,13 +224,13 @@ namespace eui {
          * @version Egret 2.4
          * @version eui 1.0
          * @platform Web,Native
+         * @language zh_CN
          */
         protected pointToValue(x:number, y:number):number {
             return this.minimum;
         }
 
         /**
-         * @language en_US
          * Specifies whether live dragging is enabled for the slider. If true, sets the value
          * and values properties and dispatches the change event continuously as
          * the user moves the thumb.
@@ -241,9 +240,9 @@ namespace eui {
          * @version Egret 2.4
          * @version eui 1.0
          * @platform Web,Native
+         * @language en_US
          */
         /**
-         * @language zh_CN
          * 如果为 true，则将在沿着轨道拖动滑块时，而不是在释放滑块按钮时，提交此滑块的值。
          *
          * @default true
@@ -251,6 +250,7 @@ namespace eui {
          * @version Egret 2.4
          * @version eui 1.0
          * @platform Web,Native
+         * @language zh_CN
          */
         public get liveDragging():boolean {
             return this.$SliderBase[Keys.liveDragging];
@@ -262,7 +262,6 @@ namespace eui {
 
 
         /**
-         * @language en_US
          * The value the slider will have when the touch is end.
          * This property is updated when the slider thumb moves, even if <code>liveDragging</code> is false.<p/>
          * If the <code>liveDragging</code> style is false, then the slider's value is only set
@@ -273,9 +272,9 @@ namespace eui {
          * @version Egret 2.4
          * @version eui 1.0
          * @platform Web,Native
+         * @language en_US
          */
         /**
-         * @language zh_CN
          * 触摸结束时滑块将具有的值。
          * 无论 liveDragging 是否为 true，在滑块拖动期间始终更新此属性。
          * 而 value 属性在当 liveDragging 为 false 时，只在触摸释放时更新一次。
@@ -285,6 +284,7 @@ namespace eui {
          * @version Egret 2.4
          * @version eui 1.0
          * @platform Web,Native
+         * @language zh_CN
          */
         public get pendingValue():number {
             return this.$SliderBase[Keys.pendingValue];
@@ -368,7 +368,6 @@ namespace eui {
 
 
         /**
-         * @language en_US
          * Handle touch-begin events on the scroll thumb. Records the touch begin point in clickOffset.
          *
          * @param The <code>egret.TouchEvent</code> object.
@@ -376,9 +375,9 @@ namespace eui {
          * @version Egret 2.4
          * @version eui 1.0
          * @platform Web,Native
+         * @language en_US
          */
         /**
-         * @language zh_CN
          * 滑块触摸开始事件，记录触碰开始的坐标偏移量。
          *
          * @param event 事件 <code>egret.TouchEvent</code> 的对象.
@@ -386,6 +385,7 @@ namespace eui {
          * @version Egret 2.4
          * @version eui 1.0
          * @platform Web,Native
+         * @language zh_CN
          */
         protected onThumbTouchBegin(event:egret.TouchEvent):void {
             let values = this.$SliderBase;
@@ -422,20 +422,20 @@ namespace eui {
         }
 
         /**
-         * @language en_US
          * Capture touch-move events anywhere on or off the stage.
          * @param newValue new value
          * @version Egret 2.4
          * @version eui 1.0
          * @platform Web,Native
+         * @language en_US
          */
         /**
-         * @language zh_CN
          * 监听舞台的触碰移动事件。
          * @param newValue 新的值
          * @version Egret 2.4
          * @version eui 1.0
          * @platform Web,Native
+         * @language zh_CN
          */
         protected updateWhenTouchMove(newValue:number):void {
             if (newValue != this.$SliderBase[Keys.pendingValue]) {
@@ -450,7 +450,6 @@ namespace eui {
         }
 
         /**
-         * @language en_US
          * Handle touch-end events anywhere on or off the stage.
          *
          * @param The <code>egret.Event</code> object.
@@ -458,9 +457,9 @@ namespace eui {
          * @version Egret 2.4
          * @version eui 1.0
          * @platform Web,Native
+         * @language en_US
          */
         /**
-         * @language zh_CN
          * 触摸结束事件
          *
          * @param event 事件 <code>egret.Event</code> 的对象。
@@ -468,6 +467,7 @@ namespace eui {
          * @version Egret 2.4
          * @version eui 1.0
          * @platform Web,Native
+         * @language zh_CN
          */
         protected onStageTouchEnd(event:egret.Event):void {
             let stage:egret.Stage = event.$currentTarget;
@@ -536,7 +536,6 @@ namespace eui {
         }
 
         /**
-         * @language en_US
          * Handle touch-begin events for the slider track. We
          * calculate the value based on the new position and then
          * move the thumb to the correct location as well as
@@ -545,9 +544,9 @@ namespace eui {
          * @version Egret 2.4
          * @version eui 1.0
          * @platform Web,Native
+         * @language en_US
          */
         /**
-         * @language zh_CN
          * 轨道的触碰开始事件。我们会在这里根据新的坐标位置计算value，然后移动滑块到当前位置。
          *
          * @param event 事件 <code>egret.TouchEvent</code> 的对象.
@@ -555,6 +554,7 @@ namespace eui {
          * @version Egret 2.4
          * @version eui 1.0
          * @platform Web,Native
+         * @language zh_CN
          */
         protected onTrackTouchBegin(event:egret.TouchEvent):void {
             let thumbW = this.thumb ? this.thumb.width : 0;

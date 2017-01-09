@@ -30,7 +30,6 @@
 namespace eui {
 
     /**
-     * @language en_US
      * The ItemRenderer class is the base class for item renderers.
      *
      * @state up Up state
@@ -41,9 +40,9 @@ namespace eui {
      * @version eui 1.0
      * @platform Web,Native
      * @includeExample  extension/eui/components/ItemRendererExample.ts
+     * @language en_US
      */
     /**
-     * @language zh_CN
      * ItemRenderer 类是项呈示器的基类。
      *
      * @state up 弹起状态
@@ -54,24 +53,25 @@ namespace eui {
      * @version eui 1.0
      * @platform Web,Native
      * @includeExample  extension/eui/components/ItemRendererExample.ts
+     * @language zh_CN
      */
     export class ItemRenderer extends Component implements IItemRenderer {
 
         /**
-         * @language en_US
          * Constructor.
          *
          * @version Egret 2.4
          * @version eui 1.0
          * @platform Web,Native
+         * @language en_US
          */
         /**
-         * @language zh_CN
          * 构造函数。
          *
          * @version Egret 2.4
          * @version eui 1.0
          * @platform Web,Native
+         * @language zh_CN
          */
         public constructor() {
             super();
@@ -83,20 +83,20 @@ namespace eui {
          */
         private _data:any = null;
         /**
-         * @language en_US
          * The data to render or edit.
          *
          * @version Egret 2.4
          * @version eui 1.0
          * @platform Web,Native
+         * @language en_US
          */
         /**
-         * @language zh_CN
          * 要呈示或编辑的数据。
          *
          * @version Egret 2.4
          * @version eui 1.0
          * @platform Web,Native
+         * @language zh_CN
          */
         public get data():any {
             return this._data;
@@ -109,20 +109,20 @@ namespace eui {
         }
 
         /**
-         * @language en_US
          * Update the view when the <code>data</code> property changes.
          *
          * @version Egret 2.4
          * @version eui 1.0
          * @platform Web,Native
+         * @language en_US
          */
         /**
-         * @language zh_CN
          * 当数据改变时，更新视图。
          *
          * @version Egret 2.4
          * @version eui 1.0
          * @platform Web,Native
+         * @language zh_CN
          */
         protected dataChanged():void {
 
@@ -133,21 +133,21 @@ namespace eui {
          */
         private _selected:boolean = false;
         /**
-         * @language en_US
          * Contains <code>true</code> if the item renderer
          * can show itself as selected.
          *
          * @version Egret 2.4
          * @version eui 1.0
          * @platform Web,Native
+         * @language en_US
          */
         /**
-         * @language zh_CN
          * 如果项呈示器可以将其自身显示为已选中，则为 true。
          *
          * @version Egret 2.4
          * @version eui 1.0
          * @platform Web,Native
+         * @language zh_CN
          */
         public get selected():boolean {
             return this._selected;
@@ -161,21 +161,21 @@ namespace eui {
         }
 
         /**
-         * @language en_US
          * The index of the item in the data provider
          * of the host component of the item renderer.
          *
          * @version Egret 2.4
          * @version eui 1.0
          * @platform Web,Native
+         * @language en_US
          */
         /**
-         * @language zh_CN
          * 项呈示器的数据提供程序中的项目索引。
          *
          * @version Egret 2.4
          * @version eui 1.0
          * @platform Web,Native
+         * @language zh_CN
          */
         public itemIndex:number = -1;
 
@@ -185,18 +185,18 @@ namespace eui {
          */
         private touchCaptured:boolean = false;
         /**
-         * @language en_US
          * Dispatched when an event of some kind occurred that canceled the touch.
          * @version Egret 3.0.1
          * @version eui 1.0
          * @platform Web,Native
+         * @language en_US
          */
         /**
-         * @language zh_CN
          * 由于某个事件取消了触摸时触发
          * @version Egret 3.0.1
          * @version eui 1.0
          * @platform Web,Native
+         * @language zh_CN
          */
         protected onTouchCancle(event:egret.TouchEvent):void{
             this.touchCaptured = false;
@@ -207,20 +207,20 @@ namespace eui {
         }
 
         /**
-         * @language en_US
          * Handles <code>TouchEvent.TOUCH_BEGIN</code> events
          *
          * @version Egret 2.4
          * @version eui 1.0
          * @platform Web,Native
+         * @language en_US
          */
         /**
-         * @language zh_CN
          * 触碰开始时触发事件
          *
          * @version Egret 2.4
          * @version eui 1.0
          * @platform Web,Native
+         * @language zh_CN
          */
         protected onTouchBegin(event:egret.TouchEvent):void {
             this.$stage.addEventListener(egret.TouchEvent.TOUCH_CANCEL, this.onTouchCancle, this);

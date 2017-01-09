@@ -246,16 +246,16 @@ namespace egret.gui {
 		 */
 		$smoothing:boolean;
 		/**
-		 * @language en_US
 		 * Whether or not the bitmap is smoothed when scaled.
 		 * @version Egret 2.4
 		 * @platform Web
+		 * @language en_US
 		 */
 		/**
-		 * @language zh_CN
 		 * 控制在缩放时是否对位图进行平滑处理。
 		 * @version Egret 2.4
 		 * @platform Web
+		 * @language zh_CN
 		 */
 		public get smoothing():boolean {
 			return this.$smoothing;

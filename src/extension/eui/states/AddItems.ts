@@ -59,33 +59,33 @@ namespace eui.sys {
 namespace eui {
 
     /**
-     * @language en_US
      * The operation of adding a state to view.
      * @version Egret 2.4
      * @version eui 1.0
      * @platform Web,Native
+     * @language en_US
      */
     /**
-     * @language zh_CN
      * 视图添加状态显示元素操作
      * @version Egret 2.4
      * @version eui 1.0
      * @platform Web,Native
+     * @language zh_CN
      */
     export class AddItems implements IOverride {
         /**
-         * @language en_US
          * Constructor.
          * @version Egret 2.4
          * @version eui 1.0
          * @platform Web,Native
+         * @language en_US
          */
         /**
-         * @language zh_CN
          * 创建一个AddItems实例
          * @version Egret 2.4
          * @version eui 1.0
          * @platform Web,Native
+         * @language zh_CN
          */
         public constructor(target:string, propertyName:string, position:number, relativeTo:string) {
             this.target = target;
@@ -95,66 +95,66 @@ namespace eui {
         }
 
         /**
-         * @language en_US
          * The name of the property that is being added.
          * @version Egret 2.4
          * @version eui 1.0
          * @platform Web,Native
+         * @language en_US
          */
         /**
-         * @language zh_CN
          * 要添加到的属性
          * @version Egret 2.4
          * @version eui 1.0
          * @platform Web,Native
+         * @language zh_CN
          */
         public propertyName:string;
 
         /**
-         * @language en_US
          * The position to be added. Valid values: "first","last","before","after"
          * @version Egret 2.4
          * @version eui 1.0
          * @platform Web,Native
+         * @language en_US
          */
         /**
-         * @language zh_CN
          * 添加的位置，有效值为: "first","last","before","after"
          * @version Egret 2.4
          * @version eui 1.0
          * @platform Web,Native
+         * @language zh_CN
          */
         public position:number;
 
         /**
-         * @language en_US
          * an instance name of relative visual element.
          * @version Egret 2.4
          * @version eui 1.0
          * @platform Web,Native
+         * @language en_US
          */
         /**
-         * @language zh_CN
          * 相对的显示元素的实例名
          * @version Egret 2.4
          * @version eui 1.0
          * @platform Web,Native
+         * @language zh_CN
          */
         public relativeTo:string;
 
         /**
-         * @language en_US
          * The target instance name.
          * @version Egret 2.4
          * @version eui 1.0
          * @platform Web,Native
+         * @language en_US
          */
         /**
-         * @language zh_CN
          * 目标实例名
          * @version Egret 2.4
          * @version eui 1.0
          * @platform Web,Native
+         * @language zh_CN
          */
         public target:string;
 

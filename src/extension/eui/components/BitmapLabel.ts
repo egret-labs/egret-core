@@ -31,18 +31,18 @@
 namespace eui {
     let UIImpl = sys.UIComponentImpl;
     /**
-     * @language en_US
      * BitmapLabel is one line or multiline uneditable BitmapText
      * @version Egret 2.5.3
      * @version eui 1.0
      * @platform Web,Native
+     * @language en_US
      */
     /**
-     * @language zh_CN
      * BitmapLabel 组件是一行或多行不可编辑的位图文本
      * @version Egret 2.5.3
      * @version eui 1.0
      * @platform Web,Native
+     * @language zh_CN
      */
     export class BitmapLabel extends egret.BitmapText implements UIComponent, IDisplayText {
         public constructor(text?: string) {

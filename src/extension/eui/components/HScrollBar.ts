@@ -30,7 +30,6 @@
 namespace eui {
 
     /**
-     * @language en_US
      * The HScrollBar (horizontal scrollbar) control lets you control
      * the portion of data that is displayed when there is too much data
      * to fit horizontally in a display area.
@@ -43,9 +42,9 @@ namespace eui {
      * @version Egret 2.4
      * @version eui 1.0
      * @platform Web,Native
+     * @language en_US
      */
     /**
-     * @language zh_CN
      * HScrollBar（水平 ScrollBar）控件可以在因数据太多而不能在显示区域中以水平方向完全显示时控制显示的数据部分。
      * <p>虽然 HScrollBar 控件可以单独使用，但通常将它与其他组件一起使用来提供滚动功能。</p>
      *
@@ -53,6 +52,7 @@ namespace eui {
      * @version Egret 2.4
      * @version eui 1.0
      * @platform Web,Native
+     * @language zh_CN
      */
     export class HScrollBar extends ScrollBarBase {
 

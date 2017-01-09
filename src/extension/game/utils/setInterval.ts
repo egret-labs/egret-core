@@ -6,7 +6,6 @@ namespace egret {
     let lastTime: number = 0;
 
     /**
-     * @language en_US
      * To specify a delay (in milliseconds) calls the function specified interval loop.
      * @param listener {Function} Listener function
      * @param thisObject {any} this object
@@ -16,9 +15,9 @@ namespace egret {
      * @version Egret 2.4
      * @platform Web,Native
      * @includeExample extension/game/utils/setInterval.ts
+     * @language en_US
      */
     /**
-     * @language zh_CN
      * 以指定的延迟（以毫秒为单位）间隔循环调用指定的函数。
      * @param listener {Function} 侦听函数
      * @param thisObject {any} this对象
@@ -28,6 +27,7 @@ namespace egret {
      * @version Egret 2.4
      * @platform Web,Native
      * @includeExample extension/game/utils/setInterval.ts
+     * @language zh_CN
      */
     export function setInterval<Z>(listener: (this: Z, ...arg) => void, thisObject: Z, delay: number, ...args): number {
         let data = { listener: listener, thisObject: thisObject, delay: delay, originDelay: delay, params: args };
@@ -43,20 +43,20 @@ namespace egret {
     }
 
     /**
-     * @language en_US
      * Clear function to run after a specified delay.
      * @param key {number} Index that egret.setInterval returns
      * @version Egret 2.4
      * @platform Web,Native
      * @includeExample egret/utils/setInterval.ts
+     * @language en_US
      */
     /**
-     * @language zh_CN
      * 清除指定延迟后运行的函数。
      * @param key {number} egret.setInterval所返回的索引
      * @version Egret 2.4
      * @platform Web,Native
      * @includeExample egret/utils/setInterval.ts
+     * @language zh_CN
      */
     export function clearInterval(key: number): void {
         if (setIntervalCache[key]) {

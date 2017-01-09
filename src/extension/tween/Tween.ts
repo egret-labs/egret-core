@@ -31,20 +31,20 @@
 namespace egret {
 
 	/**
-     * @language en_US
      * Tween is the animation easing class of Egret
      * @see http://edn.egret.com/cn/docs/page/576 Tween ease animation
      * @version Egret 2.4
      * @platform Web,Native
      * @includeExample extension/tween/Tween.ts
+     * @language en_US
 	 */
 	/**
-     * @language zh_CN
      * Tween是Egret的动画缓动类
      * @see http://edn.egret.com/cn/docs/page/576 Tween缓动动画
      * @version Egret 2.4
      * @platform Web,Native
      * @includeExample extension/tween/Tween.ts
+     * @language zh_CN
 	 */
     export class Tween extends EventDispatcher {
 		/**
@@ -145,7 +145,6 @@ namespace egret {
         private passive: boolean = false;
 
 		/**
-         * @language en_US
          * Activate an object and add a Tween animation to the object
          * @param target {any} The object to be activated
          * @param props {any} Parameters, support loop onChange onChangeObj
@@ -154,9 +153,9 @@ namespace egret {
          * Not recommended, you can use Tween.removeTweens(target) instead.
          * @version Egret 2.4
          * @platform Web,Native
+         * @language en_US
 		 */
 		/**
-         * @language zh_CN
          * 激活一个对象，对其添加 Tween 动画
          * @param target {any} 要激活 Tween 的对象
          * @param props {any} 参数，支持loop(循环播放) onChange(变化函数) onChangeObj(变化函数作用域)
@@ -165,6 +164,7 @@ namespace egret {
          * 不建议使用，可使用 Tween.removeTweens(target) 代替。
          * @version Egret 2.4
          * @platform Web,Native
+         * @language zh_CN
 		 */
         public static get(target: any, props?: { loop?: boolean, onChange?: Function, onChangeObj?: any }, pluginData: any = null, override: boolean = false): Tween {
             if (override) {
@@ -174,18 +174,18 @@ namespace egret {
         }
 
 		/**
-         * @language en_US
          * Delete all Tween animations from an object
 		 * @param target The object whose Tween to be deleted
          * @version Egret 2.4
          * @platform Web,Native
+         * @language en_US
 		 */
 		/**
-         * @language zh_CN
          * 删除一个对象上的全部 Tween 动画
 		 * @param target  需要移除 Tween 的对象
          * @version Egret 2.4
          * @platform Web,Native
+         * @language zh_CN
 		 */
         public static removeTweens(target: any): void {
             if (!target.tween_count) {
@@ -202,18 +202,18 @@ namespace egret {
         }
 
         /**
-         * @language en_US
          * Pause all Tween animations of a certain object
          * @param target The object whose Tween to be paused
          * @version Egret 2.4
          * @platform Web,Native
+         * @language en_US
          */
         /**
-         * @language zh_CN
          * 暂停某个对象的所有 Tween
          * @param target 要暂停 Tween 的对象
          * @version Egret 2.4
          * @platform Web,Native
+         * @language zh_CN
          */
         public static pauseTweens(target: any): void {
             if (!target.tween_count) {
@@ -228,18 +228,18 @@ namespace egret {
         }
 
         /**
-         * @language en_US
          * Resume playing all easing of a certain object
          * @param target The object whose Tween to be resumed
          * @version Egret 2.4
          * @platform Web,Native
+         * @language en_US
          */
         /**
-         * @language zh_CN
          * 继续播放某个对象的所有缓动
          * @param target 要继续播放 Tween 的对象
          * @version Egret 2.4
          * @platform Web,Native
+         * @language zh_CN
          */
         public static resumeTweens(target: any): void {
             if (!target.tween_count) {
@@ -310,16 +310,16 @@ namespace egret {
         }
 
 		/**
-         * @language en_US
          * Delete all Tween
          * @version Egret 2.4
          * @platform Web,Native
+         * @language en_US
 		 */
 		/**
-         * @language zh_CN
          * 删除所有 Tween
          * @version Egret 2.4
          * @platform Web,Native
+         * @language zh_CN
 		 */
         public static removeAllTweens(): void {
             let tweens: Tween[] = Tween._tweens;
@@ -536,20 +536,20 @@ namespace egret {
         }
 
 		/**
-         * @language en_US
          * Whether setting is paused
 		 * @param value {boolean} Whether to pause
 		 * @returns Tween object itself
          * @version Egret 2.4
          * @platform Web,Native
+         * @language en_US
 		 */
 		/**
-         * @language zh_CN
          * 设置是否暂停
 		 * @param value {boolean} 是否暂停
 		 * @returns Tween对象本身
          * @version Egret 2.4
          * @platform Web,Native
+         * @language zh_CN
 		 */
         public setPaused(value: boolean): Tween {
             this.paused = value;
@@ -654,22 +654,22 @@ namespace egret {
         }
 
 		/**
-         * @language en_US
          * Wait the specified milliseconds before the execution of the next animation
 		 * @param duration {number} Waiting time, in milliseconds
 		 * @param passive {boolean} Whether properties are updated during the waiting time
 		 * @returns Tween object itself
          * @version Egret 2.4
          * @platform Web,Native
+         * @language en_US
 		 */
 		/**
-         * @language zh_CN
          * 等待指定毫秒后执行下一个动画
 		 * @param duration {number} 要等待的时间，以毫秒为单位
 		 * @param passive {boolean} 等待期间属性是否会更新
 		 * @returns Tween对象本身
          * @version Egret 2.4
          * @platform Web,Native
+         * @language zh_CN
 		 */
         public wait(duration: number, passive?: boolean): Tween {
             if (duration == null || duration <= 0) {
@@ -680,7 +680,6 @@ namespace egret {
         }
 
 		/**
-         * @language en_US
          * Modify the property of the specified object to a specified value
 		 * @param props {Object} Property set of an object
 		 * @param duration {number} Duration
@@ -688,9 +687,9 @@ namespace egret {
 		 * @returns {egret.Tween} Tween object itself
          * @version Egret 2.4
          * @platform Web,Native
+         * @language en_US
 		 */
 		/**
-         * @language zh_CN
          * 将指定对象的属性修改为指定值
 		 * @param props {Object} 对象的属性集合
 		 * @param duration {number} 持续时间
@@ -698,6 +697,7 @@ namespace egret {
 		 * @returns {egret.Tween} Tween对象本身
          * @version Egret 2.4
          * @platform Web,Native
+         * @language zh_CN
 		 */
 
         public to(props: any, duration?: number, ease: Function = undefined) {
@@ -710,7 +710,6 @@ namespace egret {
         }
 
 		/**
-         * @language en_US
          * Execute callback function
 		 * @param callback {Function} Callback method
 		 * @param thisObj {any} this action scope of the callback method
@@ -725,9 +724,9 @@ namespace egret {
          *      console.log("b: " + b); // the second parameter passed “hello”
          *  }, this, [233, "hello"]);
          * </pre>
+         * @language en_US
 		 */
 		/**
-         * @language zh_CN
          * 执行回调函数
 		 * @param callback {Function} 回调方法
 		 * @param thisObj {any} 回调方法this作用域
@@ -742,6 +741,7 @@ namespace egret {
          *      console.log("b: " + b); //对应传入的第二个参数 “hello”
          *  }, this, [233, "hello"]);
          * </pre>
+         * @language zh_CN
 		 */
         public call(callback: Function, thisObj: any = undefined, params: any[] = undefined): Tween {
             return this._addAction({ f: callback, p: params ? params : [], o: thisObj ? thisObj : this._target });
@@ -770,20 +770,20 @@ namespace egret {
         }
 
 		/**
-         * @language en_US
          * Execute
 		 * @param tween {egret.Tween} The Tween object to be operated. Default: this
 		 * @returns {egret.Tween} Tween object itself
          * @version Egret 2.4
          * @platform Web,Native
+         * @language en_US
 		 */
 		/**
-         * @language zh_CN
          * 执行
 		 * @param tween {egret.Tween} 需要操作的 Tween 对象，默认this
 		 * @returns {egret.Tween} Tween对象本身
          * @version Egret 2.4
          * @platform Web,Native
+         * @language zh_CN
 		 */
         public play(tween?: Tween): Tween {
             if (!tween) {
@@ -793,20 +793,20 @@ namespace egret {
         }
 
 		/**
-         * @language en_US
          * Pause
 		 * @param tween {egret.Tween} The Tween object to be operated. Default: this
 		 * @returns {egret.Tween} Tween object itself
          * @version Egret 2.4
          * @platform Web,Native
+         * @language en_US
 		 */
 		/**
-         * @language zh_CN
          * 暂停
 		 * @param tween {egret.Tween} 需要操作的 Tween 对象，默认this
 		 * @returns {egret.Tween} Tween对象本身
          * @version Egret 2.4
          * @platform Web,Native
+         * @language zh_CN
 		 */
         public pause(tween?: Tween): Tween {
             if (!tween) {

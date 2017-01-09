@@ -29,7 +29,6 @@
 
 namespace egret {
     /**
-     * @language en_US
      * The Stage class represents the main drawing area.The Stage object is not globally accessible. You need to access
      * it through the stage property of a DisplayObject instance.<br/>
      * The Stage class has several ancestor classes — Sprite, DisplayObject, and EventDispatcher — from which it inherits
@@ -38,9 +37,9 @@ namespace egret {
      * @version Egret 2.4
      * @platform Web,Native
      * @includeExample egret/display/Stage.ts
+     * @language en_US
      */
     /**
-     * @language zh_CN
      * Stage 类代表主绘图区。
      * 可以利用 DisplayObject 实例的 stage 属性进行访问。<br/>
      * Stage 类具有多个祖代类: Sprite、DisplayObject 和 EventDispatcher，属性和方法便是从这些类继承而来的。
@@ -52,6 +51,7 @@ namespace egret {
      * @version Egret 2.4
      * @platform Web,Native
      * @includeExample egret/display/Stage.ts
+     * @language zh_CN
      */
     export class Stage extends DisplayObjectContainer {
 
@@ -68,21 +68,21 @@ namespace egret {
         }
 
         /**
-         * @language en_US
          * Gets and sets the frame rate of the stage. The frame rate is defined as frames per second. Valid range for the
          * frame rate is from 0.01 to 1000 frames per second.<br/>
          * Note: setting the frameRate property of one Stage object changes the frame rate for all Stage objects
          * @default 30
          * @version Egret 2.4
          * @platform Web,Native
+         * @language en_US
          */
         /**
-         * @language zh_CN
          * 获取并设置舞台的帧速率。帧速率是指每秒显示的帧数。帧速率的有效范围为每秒 0.01 到 60 个帧。<br/>
          * 注意: 修改任何一个Stage的frameRate属性都会同步修改其他Stage的帧率。
          * @default 30
          * @version Egret 2.4
          * @platform Web,Native
+         * @language zh_CN
          */
         public get frameRate():number {
             return sys.$ticker.$frameRate;
@@ -98,16 +98,16 @@ namespace egret {
         $stageWidth:number = 0;
 
         /**
-         * @language en_US
          * Indicates the width of the stage, in pixels.
          * @version Egret 2.4
          * @platform Web,Native
+         * @language en_US
          */
         /**
-         * @language zh_CN
          * 舞台的当前宽度（以像素为单位）。
          * @version Egret 2.4
          * @platform Web,Native
+         * @language zh_CN
          */
         public get stageWidth():number {
             return this.$stageWidth;
@@ -119,35 +119,35 @@ namespace egret {
         $stageHeight:number = 0;
 
         /**
-         * @language en_US
          * Indicates the height of the stage, in pixels.
          * @version Egret 2.4
          * @platform Web,Native
+         * @language en_US
          */
         /**
-         * @language zh_CN
          * 舞台的当前高度（以像素为单位）。
          * @version Egret 2.4
          * @platform Web,Native
+         * @language zh_CN
          */
         public get stageHeight():number {
             return this.$stageHeight;
         }
 
         /**
-         * @language en_US
          * After you call the invalidate() method, when the display list is next rendered, the Egret runtime sends a render
          * event to each display object that has registered to listen for the render event. You must call the invalidate()
          * method each time you want the Egret runtime to send render events.
          * @version Egret 2.4
          * @platform Web,Native
+         * @language en_US
          */
         /**
-         * @language zh_CN
          * 调用 invalidate() 方法后，在显示列表下次呈现时，Egret 会向每个已注册侦听 Event.RENDER 事件的显示对象发送一个 Event.RENDER 事件。
          * 每次您希望 Egret 发送 Event.RENDER 事件时，都必须调用 invalidate() 方法。
          * @version Egret 2.4
          * @platform Web,Native
+         * @language zh_CN
          */
         public invalidate():void {
             sys.$invalidateRenderFlag = true;
@@ -175,7 +175,6 @@ namespace egret {
 
         $scaleMode:string = egret.StageScaleMode.SHOW_ALL;
         /**
-         * @language en_US
          * A StageScaleMode class that specifies which scale mode to use. The following are valid values:<br/>
          * <ul>
          * <li>StageScaleMode.EXACT_FIT -- The entire application be visible in the specified area without trying to preserve the original aspect ratio. Distortion can occur, the application may be stretched or compressed.</li>
@@ -186,9 +185,9 @@ namespace egret {
          * <li>StageScaleMode.FIXED_HEIGHT -- Keep the original aspect ratio scaling application content, after scaling application content in the horizontal and vertical directions to fill the viewport player, but only to keep the contents of the original application constant height, width may change.</li>
          * </ul>
          * @default egret.StageScaleMode.SHOW_ALL
+         * @language en_US
          */
         /**
-         * @language zh_CN
          * 一个 StageScaleMode 类中指定要使用哪种缩放模式的值。以下是有效值：<br/>
          * <ul>
          * <li>StageScaleMode.EXACT_FIT -- 整个应用程序在指定区域中可见，但不尝试保持原始高宽比。可能会发生扭曲，应用程序可能会拉伸或压缩显示。</li>
@@ -199,6 +198,7 @@ namespace egret {
          * <li>StageScaleMode.FIXED_HEIGHT -- 保持原始宽高比缩放应用程序内容，缩放后应用程序内容在水平和垂直方向都填满播放器视口，但只保持应用程序内容的原始高度不变，宽度可能会改变。</li>
          * </ul>
          * @default egret.StageScaleMode.SHOW_ALL
+         * @language zh_CN
          */
         public get scaleMode():string {
             return this.$scaleMode;
@@ -222,7 +222,6 @@ namespace egret {
         }
 
         /**
-         * @language en_US
          * Horizontal and vertical screen display screen, can only be set under the current Native in the configuration file. A egret.OrientationMode class that specifies which display mode to use. The following are valid values:<br/>
          * <ul>
          * <li>egret.OrientationMode.AUTO -- Always follow the direction of application display screen, always guaranteed by the look down.</li>
@@ -232,9 +231,9 @@ namespace egret {
          * </ul>
          * @platform Web
          * @version 2.4
+         * @language en_US
          */
         /**
-         * @language zh_CN
          * 屏幕横竖屏显示方式，目前 Native 下只能在配置文件里设置。一个 egret.OrientationMode 类中指定要使用哪种显示方式。以下是有效值：<br/>
          * <ul>
          * <li>egret.OrientationMode.AUTO -- 应用始终跟随屏幕的方向显示，始终保证由上往下看。</li>
@@ -244,20 +243,21 @@ namespace egret {
          * </ul>
          * @platform Web
          * @version 2.4
+         * @language zh_CN
          */
         public get orientation():string {
             return this.$orientation;
         }
 
         /**
-         * @language en_US
          * Draw texture zoom ratio
          * @default 1
+         * @language en_US
          */
         /**
-         * @language zh_CN
          * 绘制纹理的缩放比率，默认值为1
          * @default 1
+         * @language zh_CN
          */
         public get textureScaleFactor():number {
             return egret.$TextureScaleFactor;
@@ -269,14 +269,14 @@ namespace egret {
 
         $maxTouches:number = 99;
         /**
-         * @language en_US
          * Set the number of screens can simultaneously touch. Above this amount will not be triggered in response.
          * @default 99
+         * @language en_US
          */
         /**
-         * @language zh_CN
          * 设置屏幕同时可以触摸的数量。高于这个数量将不会被触发响应。
          * @default 99
+         * @language zh_CN
          */
         public get maxTouches():number {
             return this.$maxTouches;
@@ -291,18 +291,18 @@ namespace egret {
         }
         private $dirtyRegionPolicy:string = DirtyRegionPolicy.ON;
         /**
-         * @language en_US
          * Set dirty region policy
          * One of the constants defined by egret.DirtyRegionPolicy
          * @version Egret 2.5.5
          * @platform Web,Native
+         * @language en_US
          */
         /**
-         * @language zh_CN
          * 设置脏矩形策略
          * egret.DirtyRegionPolicy 定义的常量之一
          * @version Egret 2.5.5
          * @platform Web,Native
+         * @language zh_CN
          */
         public set dirtyRegionPolicy(policy:string) {
             if(this.$dirtyRegionPolicy != policy){
@@ -315,20 +315,20 @@ namespace egret {
         }
 
         /**
-         * @language en_US
          * Set resolution size
          * @param width width
          * @param height height
          * @version Egret 2.5.5
          * @platform Web,Native
+         * @language en_US
          */
         /**
-         * @language zh_CN
          * 设置分辨率尺寸
          * @param width 宽度
          * @param height 高度
          * @version Egret 2.5.5
          * @platform Web,Native
+         * @language zh_CN
          */
         public setContentSize(width:number, height:number):void {
             this.$screen.setContentSize(width, height);
