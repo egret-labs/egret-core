@@ -244,7 +244,6 @@ class Compiler {
             }
         }
         for (let optionName in defaultSupport) {
-            console.log(compilerOptions)
             if (compilerOptions[optionName] != defaultSupport.target) {
                 compilerOptions[optionName] = defaultSupport.target;
                 var error = utils.tr(1116, optionName);
