@@ -2,7 +2,6 @@
 var Compiler = require("./Compiler");
 var FileUtil = require("../lib/FileUtil");
 var exmlActions = require("../actions/exml");
-var LoadConfig = require("./LoadConfig");
 var path = require("path");
 var CompileProject = (function () {
     function CompileProject() {
@@ -35,8 +34,7 @@ var CompileProject = (function () {
             var compiler = new Compiler();
             var tsList = FileUtil.search(option.srcDir, "ts");
             var libsList = FileUtil.search(option.libsDir, "ts");
-            var urlConfig = option.projectDir + "tsconfig.json"; //加载配置文件
-            LoadConfig.loadTsConfig(urlConfig, option);
+            compiler.loadTsConfig(option.projectDir + "tsconfig.json", option);
             this.compilerOptions = option.compilerOptions;
             this.compilerOptions.outDir = path.join(option.projectDir, "bin-debug");
             if (option.sourceMap == true) {

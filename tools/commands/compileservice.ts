@@ -13,7 +13,6 @@ import state = require('../lib/DirectoryState');
 import CompileProject = require('../actions/CompileProject');
 import CompileTemplate = require('../actions/CompileTemplate');
 import parser = require('../parser/Parser');
-import LoadConfig = require('../actions/LoadConfig');
 
 class AutoCompileCommand implements egret.Command {
     private compileProject: CompileProject;

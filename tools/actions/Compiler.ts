@@ -3,6 +3,7 @@
 import utils = require('../lib/utils');
 import file = require('../lib/FileUtil');
 import ts = require("../lib/typescript-plus/lib/typescript");
+import * as path from 'path';
 
 interface CompileOption {
     args: egret.ToolArgs;
@@ -26,14 +27,14 @@ class Compiler {
         return compileResult.exitStatus;
     }
 
-    public compileGame(options: ts.CompilerOptions, files: string[]){ //todo
-        var host = this.compileNew(options, files,false);
+    public compileGame(options: ts.CompilerOptions, files: string[]) { //todo
+        var host = this.compileNew(options, files, false);
         return host;
     }
 
-    public sortFile(options: ts.CompilerOptions, fileNames: string[]){
-         var host = this.compileNew(options, fileNames, true);
-         return host;
+    public sortFile(options: ts.CompilerOptions, fileNames: string[]) {
+        var host = this.compileNew(options, fileNames, true);
+        return host;
     }
 
     public compile(option: CompileOption) {
@@ -57,7 +58,7 @@ class Compiler {
             errors: []
         };
         if (args.compilerOptions) {
-          
+
             parsedCmd.options = args.compilerOptions;
         }
 
@@ -75,7 +76,7 @@ class Compiler {
         return host;
     }
 
-    
+
 
 
     private files: ts.Map<{ version: number }> = <any>{};
@@ -210,6 +211,76 @@ class Compiler {
 
         return { files: this.sortedFiles, program: this.services.getProgram(), exitStatus: 0, messages: this.errors, compileWithChanges: this.compileWithChanges.bind(this) };
     }
+
+    public loadTsConfig(url, options: egret.ToolArgs): void {
+        var configObj: any;
+        try {
+            configObj = JSON.parse(file.read(url));
+            console.log(111)
+            console.log(configObj)
+        } catch (e) {
+            console.log(112)
+            // errLog.push(utils.tr(1117));//不是有效的 json 文件
+            configObj = {
+                "compilerOptions": {
+                    "target": "es5",
+                    "experimentalDecorators": true,
+                    "lib": [
+                        "es5", "dom"
+                    ]
+                },
+                "exclude": [
+                    "node_modules"
+                ]
+            }
+        }
+
+        var configParseResult = ts.parseJsonConfigFileContent(configObj, ts.sys, path.dirname(url));
+        let compilerOptions = configParseResult.options;
+        compilerOptions.defines = getCompilerDefines(options, true);
+
+        let notSupport = ["target", "outDir", "module", "noLib", "outFile", "rootDir", "out"];
+        let defaultSupport = { target: ts.ScriptTarget.ES5 }
+
+        for (let optionName of notSupport) {
+            if (compilerOptions.hasOwnProperty(optionName)) {
+                var error = utils.tr(1116, optionName);//这个编译选项目前不支持修改
+                console.log(error);//build -e 的时候输出
+                delete compilerOptions[optionName];
+            }
+        }
+        for (let optionName in defaultSupport) {
+            if (compilerOptions[optionName] != defaultSupport.target) {
+                compilerOptions[optionName] = defaultSupport.target;
+                var error = utils.tr(1116, optionName);
+                console.log(error);
+            }
+        }
+        options.compilerOptions = compilerOptions;
+        options.tsconfigError = configParseResult.errors.map(d => d.messageText.toString());
+    }
 }
 
 export = Compiler;
+
+
+
+
+
+function getCompilerDefines(args: egret.ToolArgs, debug?: boolean) {
+    let defines: any = {};
+    if (debug != undefined) {
+        defines.DEBUG = debug;
+        defines.RELEASE = !debug;
+    }
+    else if (args.publish) {
+        defines.DEBUG = false;
+        defines.RELEASE = true;
+    }
+    else {
+        defines.DEBUG = true;
+        defines.RELEASE = false;
+    }
+    return defines;
+
+}

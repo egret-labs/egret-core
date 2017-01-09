@@ -1,5 +1,8 @@
+/// <reference path="../lib/types.d.ts" />
+var utils = require("../lib/utils");
 var file = require("../lib/FileUtil");
 var ts = require("../lib/typescript-plus/lib/typescript");
+var path = require("path");
 var Compiler = (function () {
     function Compiler() {
         this.files = {};
@@ -165,6 +168,68 @@ var Compiler = (function () {
         });
         return { files: this.sortedFiles, program: this.services.getProgram(), exitStatus: 0, messages: this.errors, compileWithChanges: this.compileWithChanges.bind(this) };
     };
+    Compiler.prototype.loadTsConfig = function (url, options) {
+        var configObj;
+        try {
+            configObj = JSON.parse(file.read(url));
+            console.log(111);
+            console.log(configObj);
+        }
+        catch (e) {
+            console.log(112);
+            // errLog.push(utils.tr(1117));//不是有效的 json 文件
+            configObj = {
+                "compilerOptions": {
+                    "target": "es5",
+                    "experimentalDecorators": true,
+                    "lib": [
+                        "es5", "dom"
+                    ]
+                },
+                "exclude": [
+                    "node_modules"
+                ]
+            };
+        }
+        var configParseResult = ts.parseJsonConfigFileContent(configObj, ts.sys, path.dirname(url));
+        var compilerOptions = configParseResult.options;
+        compilerOptions.defines = getCompilerDefines(options, true);
+        var notSupport = ["target", "outDir", "module", "noLib", "outFile", "rootDir", "out"];
+        var defaultSupport = { target: ts.ScriptTarget.ES5 };
+        for (var _i = 0, notSupport_1 = notSupport; _i < notSupport_1.length; _i++) {
+            var optionName = notSupport_1[_i];
+            if (compilerOptions.hasOwnProperty(optionName)) {
+                var error = utils.tr(1116, optionName); //这个编译选项目前不支持修改
+                console.log(error); //build -e 的时候输出
+                delete compilerOptions[optionName];
+            }
+        }
+        for (var optionName in defaultSupport) {
+            if (compilerOptions[optionName] != defaultSupport.target) {
+                compilerOptions[optionName] = defaultSupport.target;
+                var error = utils.tr(1116, optionName);
+                console.log(error);
+            }
+        }
+        options.compilerOptions = compilerOptions;
+        options.tsconfigError = configParseResult.errors.map(function (d) { return d.messageText.toString(); });
+    };
     return Compiler;
 }());
+function getCompilerDefines(args, debug) {
+    var defines = {};
+    if (debug != undefined) {
+        defines.DEBUG = debug;
+        defines.RELEASE = !debug;
+    }
+    else if (args.publish) {
+        defines.DEBUG = false;
+        defines.RELEASE = true;
+    }
+    else {
+        defines.DEBUG = true;
+        defines.RELEASE = false;
+    }
+    return defines;
+}
 module.exports = Compiler;

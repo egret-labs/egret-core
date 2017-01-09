@@ -4,7 +4,6 @@ import utils = require('../lib/utils');
 import Compiler = require('./Compiler');
 import FileUtil = require('../lib/FileUtil');
 import exmlActions = require('../actions/exml');
-import LoadConfig = require('./LoadConfig');
 import path = require('path');
 
 class CompileProject {
@@ -39,11 +38,9 @@ class CompileProject {
             var compiler = new Compiler();
             var tsList = FileUtil.search(option.srcDir, "ts");
             var libsList = FileUtil.search(option.libsDir, "ts");
-
-            var urlConfig = option.projectDir + "tsconfig.json";//加载配置文件
-            LoadConfig.loadTsConfig(urlConfig, option);
+            compiler.loadTsConfig(option.projectDir + "tsconfig.json", option);
             this.compilerOptions = option.compilerOptions;
-            this.compilerOptions.outDir = path.join(option.projectDir,"bin-debug");
+            this.compilerOptions.outDir = path.join(option.projectDir, "bin-debug");
             if (option.sourceMap == true) {
                 option.compilerOptions.sourceMap = true;//引擎命令行的sourcemap属性优先
             }
@@ -51,7 +48,7 @@ class CompileProject {
             option.compilerOptions.emitReflection = true;
             this.compilerHost = compiler.compileGame(this.compilerOptions, tsList.concat(libsList));
         }
-        let relative = f => path.relative(option.projectDir,f)
+        let relative = f => path.relative(option.projectDir, f)
 
         var fileResult = GetJavaScriptFileNames(this.compilerHost.files.map(relative), /^src\//)
         this.compilerHost.files = fileResult;
