@@ -212,14 +212,12 @@ class Compiler {
         return { files: this.sortedFiles, program: this.services.getProgram(), exitStatus: 0, messages: this.errors, compileWithChanges: this.compileWithChanges.bind(this) };
     }
 
-    public loadTsConfig(url, options: egret.ToolArgs): void {
+    public loadTsconfig(url: string, options: egret.ToolArgs) {
         var configObj: any;
         try {
             configObj = JSON.parse(file.read(url));
-            console.log(111)
             console.log(configObj)
         } catch (e) {
-            console.log(112)
             // errLog.push(utils.tr(1117));//不是有效的 json 文件
             configObj = {
                 "compilerOptions": {
@@ -235,13 +233,9 @@ class Compiler {
             }
         }
 
-        var configParseResult = ts.parseJsonConfigFileContent(configObj, ts.sys, path.dirname(url));
-        let compilerOptions = configParseResult.options;
-        compilerOptions.defines = getCompilerDefines(options, true);
-
-        let notSupport = ["target", "outDir", "module", "noLib", "outFile", "rootDir", "out"];
-        let defaultSupport = { target: ts.ScriptTarget.ES5 }
-
+        let notSupport = ["outDir", "module", "noLib", "outFile", "rootDir", "out"];
+        let defaultSupport = { target: "es5" }
+        let compilerOptions = configObj.compilerOptions;
         for (let optionName of notSupport) {
             if (compilerOptions.hasOwnProperty(optionName)) {
                 var error = utils.tr(1116, optionName);//这个编译选项目前不支持修改
@@ -250,14 +244,20 @@ class Compiler {
             }
         }
         for (let optionName in defaultSupport) {
+            console.log(compilerOptions)
             if (compilerOptions[optionName] != defaultSupport.target) {
                 compilerOptions[optionName] = defaultSupport.target;
                 var error = utils.tr(1116, optionName);
+                console.log(`${optionName}将被调整为${defaultSupport.target}`)
                 console.log(error);
             }
         }
-        options.compilerOptions = compilerOptions;
-        options.tsconfigError = configParseResult.errors.map(d => d.messageText.toString());
+
+        var configParseResult = ts.parseJsonConfigFileContent(configObj, ts.sys, path.dirname(url));
+        compilerOptions = configParseResult.options;
+        compilerOptions.defines = getCompilerDefines(options, true);
+
+        return configParseResult
     }
 }
 

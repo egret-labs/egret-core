@@ -34,8 +34,9 @@ var CompileProject = (function () {
             var compiler = new Compiler();
             var tsList = FileUtil.search(option.srcDir, "ts");
             var libsList = FileUtil.search(option.libsDir, "ts");
-            compiler.loadTsConfig(option.projectDir + "tsconfig.json", option);
-            this.compilerOptions = option.compilerOptions;
+            var configParsedResult = compiler.loadTsconfig(option.projectDir + "tsconfig.json", option);
+            this.compilerOptions = configParsedResult.options;
+            option.tsconfigError = configParsedResult.errors.map(function (d) { return d.messageText.toString(); });
             this.compilerOptions.outDir = path.join(option.projectDir, "bin-debug");
             if (option.sourceMap == true) {
                 option.compilerOptions.sourceMap = true; //引擎命令行的sourcemap属性优先

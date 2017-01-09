@@ -168,15 +168,13 @@ var Compiler = (function () {
         });
         return { files: this.sortedFiles, program: this.services.getProgram(), exitStatus: 0, messages: this.errors, compileWithChanges: this.compileWithChanges.bind(this) };
     };
-    Compiler.prototype.loadTsConfig = function (url, options) {
+    Compiler.prototype.loadTsconfig = function (url, options) {
         var configObj;
         try {
             configObj = JSON.parse(file.read(url));
-            console.log(111);
             console.log(configObj);
         }
         catch (e) {
-            console.log(112);
             // errLog.push(utils.tr(1117));//不是有效的 json 文件
             configObj = {
                 "compilerOptions": {
@@ -191,11 +189,9 @@ var Compiler = (function () {
                 ]
             };
         }
-        var configParseResult = ts.parseJsonConfigFileContent(configObj, ts.sys, path.dirname(url));
-        var compilerOptions = configParseResult.options;
-        compilerOptions.defines = getCompilerDefines(options, true);
-        var notSupport = ["target", "outDir", "module", "noLib", "outFile", "rootDir", "out"];
-        var defaultSupport = { target: ts.ScriptTarget.ES5 };
+        var notSupport = ["outDir", "module", "noLib", "outFile", "rootDir", "out"];
+        var defaultSupport = { target: "es5" };
+        var compilerOptions = configObj.compilerOptions;
         for (var _i = 0, notSupport_1 = notSupport; _i < notSupport_1.length; _i++) {
             var optionName = notSupport_1[_i];
             if (compilerOptions.hasOwnProperty(optionName)) {
@@ -205,14 +201,18 @@ var Compiler = (function () {
             }
         }
         for (var optionName in defaultSupport) {
+            console.log(compilerOptions);
             if (compilerOptions[optionName] != defaultSupport.target) {
                 compilerOptions[optionName] = defaultSupport.target;
                 var error = utils.tr(1116, optionName);
+                console.log(optionName + "\u5C06\u88AB\u8C03\u6574\u4E3A" + defaultSupport.target);
                 console.log(error);
             }
         }
-        options.compilerOptions = compilerOptions;
-        options.tsconfigError = configParseResult.errors.map(function (d) { return d.messageText.toString(); });
+        var configParseResult = ts.parseJsonConfigFileContent(configObj, ts.sys, path.dirname(url));
+        compilerOptions = configParseResult.options;
+        compilerOptions.defines = getCompilerDefines(options, true);
+        return configParseResult;
     };
     return Compiler;
 }());
