@@ -801,7 +801,7 @@ namespace egret.native {
          * @version Egret 2.4
          * @platform Web,Native
          */
-        public drawImage(image:BitmapData, offsetX:number, offsetY:number, width?:number, height?:number,
+        public drawImage(image:BitmapData | NativeCanvas, offsetX:number, offsetY:number, width?:number, height?:number,
                          surfaceOffsetX?:number, surfaceOffsetY?:number, surfaceImageWidth?:number, surfaceImageHeight?:number):void {
             let bitmapData;
             let isNative:boolean;

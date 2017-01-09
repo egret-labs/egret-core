@@ -4183,16 +4183,15 @@ var egret;
             var bitmapWidth = bitmapData._bitmapWidth;
             var bitmapHeight = bitmapData._bitmapHeight;
             buffer.context.drawImage(bitmapData._bitmapData.source, bitmapData._bitmapX + rect.x / egret.$TextureScaleFactor, bitmapData._bitmapY + rect.y / egret.$TextureScaleFactor, bitmapWidth * rect.width / w, bitmapHeight * rect.height / h, offsetX, offsetY, rect.width, rect.height);
-            return surface;
+            return buffer;
         }
         /**
          * @private
          */
         function toDataURL(type, rect) {
             try {
-                var renderTexture = convertImageToRenderTexture(this, rect);
-                var base64 = renderTexture.toDataURL(type);
-                //renderTexture.$dispose();
+                var buffer = convertImageToRenderTexture(this, rect);
+                var base64 = buffer.toDataURL(type);
                 return base64;
             }
             catch (e) {
@@ -4202,20 +4201,33 @@ var egret;
         }
         function saveToFile(type, filePath, rect) {
             try {
-                var renderTexture = convertImageToRenderTexture(this, rect);
-                renderTexture.saveToFile(type, filePath);
+                var buffer = convertImageToRenderTexture(this, rect);
+                buffer.surface.saveToFile(type, filePath);
             }
             catch (e) {
                 egret.$error(1033);
             }
         }
         function getPixel32(x, y) {
-            egret.$error(1035);
-            return null;
+            egret.$warn(1041, "getPixel32", "getPixels");
+            return this.getPixels(x, y);
         }
         function getPixels(x, y, width, height) {
-            egret.$error(1035);
-            return null;
+            if (width === void 0) { width = 1; }
+            if (height === void 0) { height = 1; }
+            var self = this;
+            if (self.$renderBuffer) {
+                return self.$renderBuffer.getPixels(x, y, width, height);
+            }
+            else {
+                try {
+                    var buffer = convertImageToRenderTexture(this);
+                    return buffer.getPixels(x, y, width, height);
+                }
+                catch (e) {
+                    egret.$error(1033);
+                }
+            }
         }
         egret.Texture.prototype.toDataURL = toDataURL;
         egret.Texture.prototype.saveToFile = saveToFile;
