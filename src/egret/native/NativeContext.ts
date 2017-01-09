@@ -27,6 +27,17 @@
 //
 //////////////////////////////////////////////////////////////////////////////////////
 
+namespace egret_native {
+    function selectPhoto(): Promise<any> {
+        return new Promise((resolve) => {
+            var promise = egret.PromiseObject.create();
+            promise.onSuccessFunc = (content) => {
+                resolve(content);
+            };
+            egret_native._selectPhoto(promise);
+        });
+    }
+}
 /**
  * @private
  */
@@ -90,7 +101,7 @@ declare namespace egret_native {
 
     function writeFileSync(filepath:string, fileContent:string):any;
 
-    function selectPhoto(promise:egret.PromiseObject):void;
+    function _selectPhoto(promise:egret.PromiseObject):void;
 
     function requireHttpSync(url:string, callback:Function):void;
 
