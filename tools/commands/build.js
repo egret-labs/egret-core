@@ -94,7 +94,6 @@ var Build = (function () {
         var compiler = new Compiler();
         utils.clean(FileUtil.joinPath(options.projectDir, outDir));
         var _loop_1 = function (m) {
-            files = [];
             length = m.files.length;
             if (length > 0) {
                 files = m.files

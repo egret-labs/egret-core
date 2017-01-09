@@ -103,7 +103,7 @@ class Build implements egret.Command {
         var compiler = new Compiler();
         utils.clean(FileUtil.joinPath(options.projectDir, outDir));
         for (let m of packageJson.modules) {
-            var files = [];
+            var files:string[];
             var length = m.files.length;
             if (length > 0) {
                 files = m.files
