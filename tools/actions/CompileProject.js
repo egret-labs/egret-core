@@ -3,6 +3,7 @@ var Compiler = require("./Compiler");
 var FileUtil = require("../lib/FileUtil");
 var exmlActions = require("../actions/exml");
 var LoadConfig = require("./LoadConfig");
+var path = require("path");
 var CompileProject = (function () {
     function CompileProject() {
     }
@@ -19,7 +20,7 @@ var CompileProject = (function () {
     };
     CompileProject.prototype.compileProject = function (option, files) {
         //console.log("----compileProject.compileProject----")
-        if (files && this.compilerHost && this.compilerHost.compileWithChanges) {
+        if (files && this.compilerHost) {
             files.forEach(function (f) { return f.fileName = f.fileName.replace(option.projectDir, ""); });
             var realCWD = process.cwd();
             process.chdir(option.projectDir);
@@ -37,15 +38,16 @@ var CompileProject = (function () {
             var urlConfig = option.projectDir + "tsconfig.json"; //加载配置文件
             LoadConfig.loadTsConfig(urlConfig, option);
             this.compilerOptions = option.compilerOptions;
-            var compileOptions = {
-                args: option,
-                files: tsList.concat(libsList),
-                out: option.out,
-                outDir: option.outDir
-            };
-            this.compilerHost = compiler.compile(compileOptions);
+            this.compilerOptions.outDir = path.join(option.projectDir, "bin-debug");
+            if (option.sourceMap == true) {
+                option.compilerOptions.sourceMap = true; //引擎命令行的sourcemap属性优先
+            }
+            option.compilerOptions.allowUnreachableCode = true;
+            option.compilerOptions.emitReflection = true;
+            this.compilerHost = compiler.compileGame(this.compilerOptions, tsList.concat(libsList));
         }
-        var fileResult = GetJavaScriptFileNames(this.compilerHost.files, /^src\//);
+        var relative = function (f) { return path.relative(option.projectDir, f); };
+        var fileResult = GetJavaScriptFileNames(this.compilerHost.files.map(relative), /^src\//);
         this.compilerHost.files = fileResult;
         if (this.compilerHost.messages.length > 0) {
             this.compilerHost.exitStatus = 1303;

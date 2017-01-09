@@ -7,6 +7,40 @@ var ANY = 'any';
 var CompileEgretEngine = (function () {
     function CompileEgretEngine() {
         this.dtsFiles = [];
+        //     private hideInternalMethods() {
+        //         return;
+        //         var tempDts: string[] = [];
+        //         global.ignoreDollar = true;
+        //         this.dtsFiles.forEach(d => {
+        //             var dts = d[0], depends = d[1];
+        //             var tempDtsName = dts.replace(/\.d\.ts/, 'd.ts');
+        //             var singleFile = dts.replace(/\.d\.ts/, 'd.js');
+        //             FileUtil.copy(dts, tempDtsName);
+        //             var tss = depends.concat(tempDtsName);
+        //             var result = this.compiler.compile({
+        //                 args: egret.args,
+        //                 def: true,
+        //                 out: singleFile,
+        //                 files: tss,
+        //                 outDir: null
+        //             });
+        //             if (result.messages && result.messages.length) {
+        //                 result.messages.forEach(m => console.log(m));
+        //             }
+        //             FileUtil.remove(singleFile);
+        //             FileUtil.remove(tempDtsName);
+        //             tempDts.push(tempDtsName.replace(/\.ts$/, '.d.ts'));
+        //         });
+        //         this.dtsFiles.forEach(d => {
+        //             FileUtil.remove(d[0]);
+        //         });
+        //         tempDts.forEach(d => {
+        //             var dts = d.replace(/d\.d\.ts$/, '.d.ts');
+        //             FileUtil.copy(d, dts);
+        //             FileUtil.remove(d);
+        //         })
+        //         global.ignoreDollar = false;
+        //     }
     }
     CompileEgretEngine.prototype.make = function () {
         var code = 0;
@@ -45,7 +79,7 @@ var CompileEgretEngine = (function () {
             }
             delSwanTemp(m);
         }
-        this.hideInternalMethods();
+        // this.hideInternalMethods();
         return code;
     };
     CompileEgretEngine.prototype.buildModule = function (m, platform, configuration) {
@@ -135,41 +169,6 @@ var CompileEgretEngine = (function () {
             path += m + '/';
         path += filePath;
         return path;
-    };
-    CompileEgretEngine.prototype.hideInternalMethods = function () {
-        var _this = this;
-        return;
-        var tempDts = [];
-        global.ignoreDollar = true;
-        this.dtsFiles.forEach(function (d) {
-            var dts = d[0], depends = d[1];
-            var tempDtsName = dts.replace(/\.d\.ts/, 'd.ts');
-            var singleFile = dts.replace(/\.d\.ts/, 'd.js');
-            FileUtil.copy(dts, tempDtsName);
-            var tss = depends.concat(tempDtsName);
-            var result = _this.compiler.compile({
-                args: egret.args,
-                def: true,
-                out: singleFile,
-                files: tss,
-                outDir: null
-            });
-            if (result.messages && result.messages.length) {
-                result.messages.forEach(function (m) { return console.log(m); });
-            }
-            FileUtil.remove(singleFile);
-            FileUtil.remove(tempDtsName);
-            tempDts.push(tempDtsName.replace(/\.ts$/, '.d.ts'));
-        });
-        this.dtsFiles.forEach(function (d) {
-            FileUtil.remove(d[0]);
-        });
-        tempDts.forEach(function (d) {
-            var dts = d.replace(/d\.d\.ts$/, '.d.ts');
-            FileUtil.copy(d, dts);
-            FileUtil.remove(d);
-        });
-        global.ignoreDollar = false;
     };
     return CompileEgretEngine;
 }());

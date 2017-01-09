@@ -26,6 +26,11 @@ class Compiler {
         return compileResult.exitStatus;
     }
 
+    public compileGame(options: ts.CompilerOptions, files: string[]){ //todo
+        var host = this.compileNew(options, files,false);
+        return host;
+    }
+
     public compile(option: CompileOption) {
         //console.log('---Compiler.compile---')
         var args = option.args, def = option.def, files = option.files,
@@ -47,6 +52,7 @@ class Compiler {
             errors: []
         };
         if (args.compilerOptions) {
+          
             parsedCmd.options = args.compilerOptions;
         }
 
@@ -59,36 +65,12 @@ class Compiler {
         parsedCmd.options.allowUnreachableCode = true;
         parsedCmd.options.emitReflection = true;
 
-        parsedCmd.options.defines = this.getCompilerDefines(args, option.debug);
-        var configParseResult = ts.parseJsonConfigFileContent({ "compilerOptions": parsedCmd.options }, ts.sys, "./");
-        if (configParseResult.errors && configParseResult.errors.length) {
-            configParseResult.errors.forEach(function (error) {
-                console.log(error.messageText);
-            });
-            utils.exit(0);
-        }
-        var compileResult = this.compileNew(configParseResult.options, parsedCmd.fileNames, option.forSortFile);
+        var host = this.compileNew(parsedCmd.options, parsedCmd.fileNames, option.forSortFile);
         process.chdir(realCWD);
-        return compileResult;
+        return host;
     }
 
-    private getCompilerDefines(args: egret.ToolArgs, debug?: boolean) {
-        let defines: any = {};
-        if (debug != undefined) {
-            defines.DEBUG = debug;
-            defines.RELEASE = !debug;
-        }
-        else if (args.publish) {
-            defines.DEBUG = false;
-            defines.RELEASE = true;
-        }
-        else {
-            defines.DEBUG = true;
-            defines.RELEASE = false;
-        }
-        return defines;
-
-    }
+    
 
 
     private files: ts.Map<{ version: number }> = <any>{};

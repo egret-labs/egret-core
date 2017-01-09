@@ -51,7 +51,7 @@ class CompileEgretEngine {
             delSwanTemp(m);
         }
 
-        this.hideInternalMethods();
+        // this.hideInternalMethods();
         return code;
     }
 
@@ -151,43 +151,43 @@ class CompileEgretEngine {
         return path;
     }
 
-    private hideInternalMethods() {
-        return;
-        var tempDts: string[] = [];
-        global.ignoreDollar = true;
-        this.dtsFiles.forEach(d => {
-            var dts = d[0], depends = d[1];
-            var tempDtsName = dts.replace(/\.d\.ts/, 'd.ts');
-            var singleFile = dts.replace(/\.d\.ts/, 'd.js');
-            FileUtil.copy(dts, tempDtsName);
-            var tss = depends.concat(tempDtsName);
-            var result = this.compiler.compile({
-                args: egret.args,
-                def: true,
-                out: singleFile,
-                files: tss,
-                outDir: null
-            });
-            if (result.messages && result.messages.length) {
-                result.messages.forEach(m => console.log(m));
-            }
-            FileUtil.remove(singleFile);
-            FileUtil.remove(tempDtsName);
-            tempDts.push(tempDtsName.replace(/\.ts$/, '.d.ts'));
-        });
+//     private hideInternalMethods() {
+//         return;
+//         var tempDts: string[] = [];
+//         global.ignoreDollar = true;
+//         this.dtsFiles.forEach(d => {
+//             var dts = d[0], depends = d[1];
+//             var tempDtsName = dts.replace(/\.d\.ts/, 'd.ts');
+//             var singleFile = dts.replace(/\.d\.ts/, 'd.js');
+//             FileUtil.copy(dts, tempDtsName);
+//             var tss = depends.concat(tempDtsName);
+//             var result = this.compiler.compile({
+//                 args: egret.args,
+//                 def: true,
+//                 out: singleFile,
+//                 files: tss,
+//                 outDir: null
+//             });
+//             if (result.messages && result.messages.length) {
+//                 result.messages.forEach(m => console.log(m));
+//             }
+//             FileUtil.remove(singleFile);
+//             FileUtil.remove(tempDtsName);
+//             tempDts.push(tempDtsName.replace(/\.ts$/, '.d.ts'));
+//         });
 
-        this.dtsFiles.forEach(d => {
-            FileUtil.remove(d[0]);
-        });
+//         this.dtsFiles.forEach(d => {
+//             FileUtil.remove(d[0]);
+//         });
 
-        tempDts.forEach(d => {
-            var dts = d.replace(/d\.d\.ts$/, '.d.ts');
-            FileUtil.copy(d, dts);
-            FileUtil.remove(d);
-        })
+//         tempDts.forEach(d => {
+//             var dts = d.replace(/d\.d\.ts$/, '.d.ts');
+//             FileUtil.copy(d, dts);
+//             FileUtil.remove(d);
+//         })
 
-        global.ignoreDollar = false;
-    }
+//         global.ignoreDollar = false;
+//     }
 
 }
 

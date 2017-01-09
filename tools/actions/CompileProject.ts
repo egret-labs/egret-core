@@ -5,6 +5,7 @@ import Compiler = require('./Compiler');
 import FileUtil = require('../lib/FileUtil');
 import exmlActions = require('../actions/exml');
 import LoadConfig = require('./LoadConfig');
+import path = require('path');
 
 class CompileProject {
     compile(options: egret.ToolArgs) {
@@ -14,21 +15,21 @@ class CompileProject {
         exmlActions.build();
         var result = this.compileProject(options);
         exmlActions.afterBuild();
-        if(result.exitStatus)
+        if (result.exitStatus)
             return null;
 
         return result;
     }
-    private compilerOptions:ts.CompilerOptions;
+    private compilerOptions: ts.CompilerOptions;
     public compileProject(option: egret.ToolArgs, files?: egret.FileChanges) {
         //console.log("----compileProject.compileProject----")
-        if (files && this.compilerHost && this.compilerHost.compileWithChanges) {// console.log("----compileProject.compileProject.B-----")
-            files.forEach(f=> f.fileName = f.fileName.replace(option.projectDir, ""));
+        if (files && this.compilerHost) {// console.log("----compileProject.compileProject.B-----")
+            files.forEach(f => f.fileName = f.fileName.replace(option.projectDir, ""));
             var realCWD = process.cwd();
             process.chdir(option.projectDir);
 
             var sourceMap = option.sourceMap;
-            if(sourceMap == undefined){
+            if (sourceMap == undefined) {
                 sourceMap = this.compilerOptions.sourceMap;
             }
             this.compilerHost = this.compilerHost.compileWithChanges(files, sourceMap);
@@ -36,23 +37,23 @@ class CompileProject {
         }
         else { //console.log("----compileProject.compileProject.A-----")
             var compiler = new Compiler();
-            var tsList: string[] = FileUtil.search(option.srcDir, "ts");
-            var libsList:string[] = FileUtil.search(option.libsDir, "ts");
+            var tsList = FileUtil.search(option.srcDir, "ts");
+            var libsList = FileUtil.search(option.libsDir, "ts");
 
             var urlConfig = option.projectDir + "tsconfig.json";//加载配置文件
-            LoadConfig.loadTsConfig(urlConfig,option);
+            LoadConfig.loadTsConfig(urlConfig, option);
             this.compilerOptions = option.compilerOptions;
-
-            var compileOptions = {
-                args: option,
-                files: tsList.concat(libsList),
-                out: option.out,
-                outDir: option.outDir
-            };
-            this.compilerHost = compiler.compile(compileOptions);
+            this.compilerOptions.outDir = path.join(option.projectDir,"bin-debug");
+            if (option.sourceMap == true) {
+                option.compilerOptions.sourceMap = true;//引擎命令行的sourcemap属性优先
+            }
+            option.compilerOptions.allowUnreachableCode = true;
+            option.compilerOptions.emitReflection = true;
+            this.compilerHost = compiler.compileGame(this.compilerOptions, tsList.concat(libsList));
         }
+        let relative = f => path.relative(option.projectDir,f)
 
-        var fileResult = GetJavaScriptFileNames(this.compilerHost.files, /^src\//);
+        var fileResult = GetJavaScriptFileNames(this.compilerHost.files.map(relative), /^src\//)
         this.compilerHost.files = fileResult;
 
         if (this.compilerHost.messages.length > 0) {
@@ -66,15 +67,15 @@ class CompileProject {
     private compilerHost: egret.EgretCompilerHost;
 }
 
-function GetJavaScriptFileNames(tsFiles: string[],root:string|RegExp,prefix?:string) {
+function GetJavaScriptFileNames(tsFiles: string[], root: string | RegExp, prefix?: string) {
     var files: string[] = [];
-    tsFiles.forEach(f=> {
+    tsFiles.forEach(f => {
         if (!f)
             return;
         if (/\.d\.ts$/.test(f))
             return;
         f = FileUtil.escapePath(f);
-        f = f.replace(<any>root, '').replace(/\.ts$/, '.js').replace(/^\//,'');
+        f = f.replace(<any>root, '').replace(/\.ts$/, '.js').replace(/^\//, '');
         if (prefix) {
             f = prefix + f;
         }

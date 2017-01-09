@@ -1,5 +1,3 @@
-/// <reference path="../lib/types.d.ts" />
-var utils = require("../lib/utils");
 var file = require("../lib/FileUtil");
 var ts = require("../lib/typescript-plus/lib/typescript");
 var Compiler = (function () {
@@ -12,6 +10,10 @@ var Compiler = (function () {
             compileResult.messages.forEach(function (m) { return console.log(m); });
         }
         return compileResult.exitStatus;
+    };
+    Compiler.prototype.compileGame = function (options, files) {
+        var host = this.compileNew(options, files, false);
+        return host;
     };
     Compiler.prototype.compile = function (option) {
         //console.log('---Compiler.compile---')
@@ -42,33 +44,9 @@ var Compiler = (function () {
         }
         parsedCmd.options.allowUnreachableCode = true;
         parsedCmd.options.emitReflection = true;
-        parsedCmd.options.defines = this.getCompilerDefines(args, option.debug);
-        var configParseResult = ts.parseJsonConfigFileContent({ "compilerOptions": parsedCmd.options }, ts.sys, "./");
-        if (configParseResult.errors && configParseResult.errors.length) {
-            configParseResult.errors.forEach(function (error) {
-                console.log(error.messageText);
-            });
-            utils.exit(0);
-        }
-        var compileResult = this.compileNew(configParseResult.options, parsedCmd.fileNames, option.forSortFile);
+        var host = this.compileNew(parsedCmd.options, parsedCmd.fileNames, option.forSortFile);
         process.chdir(realCWD);
-        return compileResult;
-    };
-    Compiler.prototype.getCompilerDefines = function (args, debug) {
-        var defines = {};
-        if (debug != undefined) {
-            defines.DEBUG = debug;
-            defines.RELEASE = !debug;
-        }
-        else if (args.publish) {
-            defines.DEBUG = false;
-            defines.RELEASE = true;
-        }
-        else {
-            defines.DEBUG = true;
-            defines.RELEASE = false;
-        }
-        return defines;
+        return host;
     };
     Compiler.prototype.compileNew = function (options, rootFileNames, forSortFile) {
         var _this = this;
