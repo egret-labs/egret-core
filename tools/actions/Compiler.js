@@ -15,6 +15,10 @@ var Compiler = (function () {
         var host = this.compileNew(options, files, false);
         return host;
     };
+    Compiler.prototype.sortFile = function (options, fileNames) {
+        var host = this.compileNew(options, fileNames, true);
+        return host;
+    };
     Compiler.prototype.compile = function (option) {
         //console.log('---Compiler.compile---')
         var args = option.args, def = option.def, files = option.files, out = option.out, outDir = option.outDir;

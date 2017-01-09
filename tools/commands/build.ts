@@ -12,6 +12,7 @@ import APITestTool = require('../actions/APITest');
 import CHILD_EXEC = require('child_process');
 import APITestCommand = require('./apitest');
 import * as project from '../parser/EgretProject';
+import ts = require('../lib/typescript-plus/lib/typescript')
 
 import Compiler = require('../actions/Compiler');
 console.log(utils.tr(1004, 0));
@@ -98,7 +99,7 @@ class Build implements egret.Command {
     private buildLib(packageJson: project.Package_JSON): void {
         var options = egret.args;
         var libFiles = FileUtil.search(FileUtil.joinPath(options.projectDir, "libs"), "d.ts");
-        var outDir = "bin";
+        var outDir ="bin";
         var compiler = new Compiler();
         utils.clean(FileUtil.joinPath(options.projectDir, outDir));
         for (let m of packageJson.modules) {
@@ -123,74 +124,25 @@ class Build implements egret.Command {
             else if (FileUtil.read(tmpFilePath) == "") {
                 hasTmpTsFile = true;
             }
-            options['compilerOptions'] = { target: "ES5" as any as number };//ES5
+
+            let compilerOptions:ts.CompilerOptions = {
+                target: ts.ScriptTarget.ES5,
+                out: FileUtil.joinPath(options.projectDir, outDir, m.name, m.name + ".js"),
+                declaration:true
+            };
             var compileFiles = libFiles.concat(files);
             if (hasTmpTsFile) {
                 compileFiles.push(tmpFilePath);
             }
-            //编译js文件到临时目录
-            var result = compiler.compile({
-                args: options,
-                def: false,
-                out: FileUtil.joinPath(options.projectDir, outDir, m.name, "tmp"),
-                files: compileFiles,
-                outDir: FileUtil.joinPath(options.projectDir, outDir, m.name, "tmp")
-            });
-            //编译dts文件
-            compiler.compile({
-                args: options,
-                def: true,
-                out: FileUtil.joinPath(options.projectDir, outDir, m.name, m.name + ".js"),
-                files: compileFiles,//,
-                outDir: FileUtil.joinPath(options.projectDir, outDir, m.name, "tmp")
-            });
 
-
-            //兼容 Wing 用的旧版 TypeScript，删除 readonly 关键字
-            let declareFile = FileUtil.joinPath(options.projectDir, outDir, m.name, m.name + ".d.ts");
-            let dtsContent = FileUtil.read(declareFile);
-            dtsContent = dtsContent.replace(/readonly /g, "");
-            FileUtil.save(declareFile, dtsContent);
+            var result = compiler.compileGame(compilerOptions, compileFiles)
 
             if (hasTmpTsFile) {
                 FileUtil.remove(tmpFilePath);
             }
-            var str = "";
-            var dtsStr = FileUtil.read(FileUtil.joinPath(options.projectDir, outDir, m.name, m.name + ".d.ts"));
-            if (length > 0) {
-                for (var j = 0; j < m.files.length; j++) {
-                    var file = m.files[j];
-                    if (file.indexOf(".d.ts") != -1) {
-                        dtsStr += "\n";
-                        dtsStr += FileUtil.read(FileUtil.joinPath(options.projectDir, m.root, file));
-                    }
-                    else if (file.indexOf(".ts") != -1) {
-                        str += FileUtil.read(FileUtil.joinPath(options.projectDir, outDir, m.name, "tmp", file.replace(".ts", ".js")));
-                        str += "\n";
-                    }
-                    else if (file.indexOf(".js") != -1) {
-                        str += FileUtil.read(FileUtil.joinPath(options.projectDir, m.root, file.replace(".ts", ".js")));
-                        str += "\n";
-                    }
-                    //todo exml
-                }
-            }
-            else {
-                for (var j = 0; j < result.files.length; j++) {
-                    let file = result.files[j];
-                    if (file.indexOf(".ts") != -1) {
-                        str += FileUtil.read(FileUtil.joinPath(options.projectDir, outDir, m.name, "tmp", file.replace(m.root + "/", "").replace(".ts", ".js")));
-                        str += "\n";
-                    }
-                    //todo exml
-                }
-            }
-            FileUtil.save(FileUtil.joinPath(options.projectDir, outDir, m.name, m.name + ".d.ts"), dtsStr);
-            FileUtil.save(FileUtil.joinPath(options.projectDir, outDir, m.name, m.name + ".js"), str);
+
             var minPath = FileUtil.joinPath(options.projectDir, outDir, m.name, m.name + ".min.js");
-            FileUtil.save(minPath, str);
-            utils.minify(minPath, minPath);
-            FileUtil.remove(FileUtil.joinPath(options.projectDir, outDir, m.name, "tmp"));
+            utils.minify(compilerOptions.out, minPath);
         }
     }
 }

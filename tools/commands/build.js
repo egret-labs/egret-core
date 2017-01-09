@@ -7,6 +7,7 @@ var APITestTool = require("../actions/APITest");
 var CHILD_EXEC = require("child_process");
 var APITestCommand = require("./apitest");
 var project = require("../parser/EgretProject");
+var ts = require("../lib/typescript-plus/lib/typescript");
 var Compiler = require("../actions/Compiler");
 console.log(utils.tr(1004, 0));
 var timeBuildStart = (new Date()).getTime();
@@ -114,71 +115,23 @@ var Build = (function () {
             else if (FileUtil.read(tmpFilePath) == "") {
                 hasTmpTsFile = true;
             }
-            options['compilerOptions'] = { target: "ES5" }; //ES5
+            var compilerOptions = {
+                target: ts.ScriptTarget.ES5,
+                out: FileUtil.joinPath(options.projectDir, outDir, m.name, m.name + ".js"),
+                declaration: true
+            };
             compileFiles = libFiles.concat(files);
             if (hasTmpTsFile) {
                 compileFiles.push(tmpFilePath);
             }
-            //编译js文件到临时目录
-            result = compiler.compile({
-                args: options,
-                def: false,
-                out: FileUtil.joinPath(options.projectDir, outDir, m.name, "tmp"),
-                files: compileFiles,
-                outDir: FileUtil.joinPath(options.projectDir, outDir, m.name, "tmp")
-            });
-            //编译dts文件
-            compiler.compile({
-                args: options,
-                def: true,
-                out: FileUtil.joinPath(options.projectDir, outDir, m.name, m.name + ".js"),
-                files: compileFiles,
-                outDir: FileUtil.joinPath(options.projectDir, outDir, m.name, "tmp")
-            });
-            //兼容 Wing 用的旧版 TypeScript，删除 readonly 关键字
-            var declareFile = FileUtil.joinPath(options.projectDir, outDir, m.name, m.name + ".d.ts");
-            var dtsContent = FileUtil.read(declareFile);
-            dtsContent = dtsContent.replace(/readonly /g, "");
-            FileUtil.save(declareFile, dtsContent);
+            result = compiler.compileGame(compilerOptions, compileFiles);
             if (hasTmpTsFile) {
                 FileUtil.remove(tmpFilePath);
             }
-            str = "";
-            dtsStr = FileUtil.read(FileUtil.joinPath(options.projectDir, outDir, m.name, m.name + ".d.ts"));
-            if (length > 0) {
-                for (var j = 0; j < m.files.length; j++) {
-                    file = m.files[j];
-                    if (file.indexOf(".d.ts") != -1) {
-                        dtsStr += "\n";
-                        dtsStr += FileUtil.read(FileUtil.joinPath(options.projectDir, m.root, file));
-                    }
-                    else if (file.indexOf(".ts") != -1) {
-                        str += FileUtil.read(FileUtil.joinPath(options.projectDir, outDir, m.name, "tmp", file.replace(".ts", ".js")));
-                        str += "\n";
-                    }
-                    else if (file.indexOf(".js") != -1) {
-                        str += FileUtil.read(FileUtil.joinPath(options.projectDir, m.root, file.replace(".ts", ".js")));
-                        str += "\n";
-                    }
-                }
-            }
-            else {
-                for (var j = 0; j < result.files.length; j++) {
-                    var file_1 = result.files[j];
-                    if (file_1.indexOf(".ts") != -1) {
-                        str += FileUtil.read(FileUtil.joinPath(options.projectDir, outDir, m.name, "tmp", file_1.replace(m.root + "/", "").replace(".ts", ".js")));
-                        str += "\n";
-                    }
-                }
-            }
-            FileUtil.save(FileUtil.joinPath(options.projectDir, outDir, m.name, m.name + ".d.ts"), dtsStr);
-            FileUtil.save(FileUtil.joinPath(options.projectDir, outDir, m.name, m.name + ".js"), str);
             minPath = FileUtil.joinPath(options.projectDir, outDir, m.name, m.name + ".min.js");
-            FileUtil.save(minPath, str);
-            utils.minify(minPath, minPath);
-            FileUtil.remove(FileUtil.joinPath(options.projectDir, outDir, m.name, "tmp"));
+            utils.minify(compilerOptions.out, minPath);
         };
-        var files, length, tmpFilePath, hasTmpTsFile, compileFiles, result, str, dtsStr, file, minPath;
+        var files, length, tmpFilePath, hasTmpTsFile, compileFiles, result, minPath;
         for (var _i = 0, _a = packageJson.modules; _i < _a.length; _i++) {
             var m = _a[_i];
             _loop_1(m);

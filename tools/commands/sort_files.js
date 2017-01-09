@@ -10,15 +10,8 @@ var SortFiles = (function () {
         var files = FileUtil.search(FileUtil.joinPath(options.projectDir, "src"), "ts");
         var compiler = new Compiler();
         var compileFiles = libFiles.concat(files);
-        options['compilerOptions'] = { target: 1, experimentalDecorators: true };
-        var result = compiler.compile({
-            args: options,
-            def: false,
-            out: null,
-            files: compileFiles,
-            forSortFile: true,
-            outDir: FileUtil.joinPath(options.projectDir, "tmp")
-        });
+        options.compilerOptions = { target: 1, experimentalDecorators: true };
+        var result = compiler.sortFile(options.compilerOptions, compileFiles);
         var sss = result.files;
         var tsconfigPath = FileUtil.joinPath(options.projectDir, "tsconfig.json");
         var tsconfig = FileUtil.read(tsconfigPath);

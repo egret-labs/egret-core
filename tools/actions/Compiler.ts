@@ -31,6 +31,11 @@ class Compiler {
         return host;
     }
 
+    public sortFile(options: ts.CompilerOptions, fileNames: string[]){
+         var host = this.compileNew(options, fileNames, true);
+         return host;
+    }
+
     public compile(option: CompileOption) {
         //console.log('---Compiler.compile---')
         var args = option.args, def = option.def, files = option.files,
