@@ -1023,7 +1023,7 @@ var ts;
 var ts;
 (function (ts) {
     ts.version = "2.1.4";
-    ts.version_plus = "2.1.11";
+    ts.version_plus = "2.1.12";
 })(ts || (ts = {}));
 (function (ts) {
     var Ternary;
@@ -40105,10 +40105,9 @@ var ts;
 var ts;
 (function (ts) {
     function transformTypeScriptPlus(context) {
-        var resolver = context.getEmitResolver();
         var compilerOptions = context.getCompilerOptions();
-        var typeChecker = compilerOptions.emitReflection ? context.getEmitHost().getTypeChecker() : null;
         var compilerDefines = getCompilerDefines(compilerOptions.defines);
+        var typeChecker = compilerOptions.emitReflection || compilerDefines ? context.getEmitHost().getTypeChecker() : null;
         var previousOnSubstituteNode = context.onSubstituteNode;
         if (compilerDefines) {
             context.onSubstituteNode = onSubstituteNode;
@@ -40254,13 +40253,20 @@ var ts;
             if (compilerDefines[node.text] === undefined) {
                 return false;
             }
+            if (node.parent.kind === 223) {
+                return false;
+            }
             if (node.parent.kind === 192) {
                 var parent_13 = node.parent;
                 if (parent_13.left === node && parent_13.operatorToken.kind === 57) {
                     return false;
                 }
             }
-            var declaration = resolver.getReferencedValueDeclaration(node);
+            var symbol = typeChecker.getSymbolAtLocation(node);
+            if (!symbol || !symbol.declarations) {
+                return false;
+            }
+            var declaration = symbol.declarations[0];
             if (!declaration) {
                 return false;
             }
