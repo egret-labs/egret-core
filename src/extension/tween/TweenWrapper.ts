@@ -285,7 +285,7 @@ namespace egret.tween {
      */
     export class TweenItem extends EventDispatcher {
 
-        private tween: Tween<any>;
+        private tween: Tween;
 
         constructor() {
             super();

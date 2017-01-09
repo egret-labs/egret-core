@@ -23653,7 +23653,7 @@ var egret;
      * @version Egret 2.4
      * @platform Web,Native
      */
-    Logger.true = "debug";
+    Logger.DEBUG = "debug";
     /**
      * @language en_US
      * level: INFO

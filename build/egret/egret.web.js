@@ -5770,7 +5770,7 @@ var egret;
                 }
                 switch (logType) {
                     case egret.Logger.ALL:
-                    case egret.Logger.true:
+                    case egret.Logger.DEBUG:
                         console.debug = logFuncs_1["debug"];
                     case egret.Logger.INFO:
                         console.log = logFuncs_1["log"];
