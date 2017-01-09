@@ -5,6 +5,40 @@ var ts = require("../lib/typescript-plus/lib/typescript");
 var path = require("path");
 var Compiler = (function () {
     function Compiler() {
+        // public compile(option: CompileOption) {
+        //     //console.log('---Compiler.compile---')
+        //     var args = option.args, def = option.def, files = option.files,
+        //         out = option.out, outDir = option.outDir;
+        //     var defTemp = args.declaration;
+        //     args.declaration = def;
+        //     var realCWD = process.cwd();
+        //     var cwd = file.escapePath(args.projectDir);
+        //     files = files.map(f => f.replace(cwd, ""));
+        //     if (out)
+        //         out = file.getRelativePath(cwd, out);
+        //     if (outDir)
+        //         outDir = file.getRelativePath(cwd, outDir);
+        //     process.chdir(cwd);
+        //     var parsedCmd: ts.ParsedCommandLine = {
+        //         fileNames: files,
+        //         options: {},
+        //         errors: []
+        //     };
+        //     if (args.compilerOptions) {
+        //         parsedCmd.options = args.compilerOptions;
+        //     }
+        //     parsedCmd.options.outDir = outDir;
+        //     parsedCmd.options.declaration = args.declaration;
+        //     parsedCmd.options.out = out;
+        //     if (args.sourceMap == true) {
+        //         parsedCmd.options.sourceMap = true;//引擎命令行的sourcemap属性优先
+        //     }
+        //     parsedCmd.options.allowUnreachableCode = true;
+        //     parsedCmd.options.emitReflection = true;
+        //     var host = this.compileNew(parsedCmd.options, parsedCmd.fileNames, option.forSortFile);
+        //     process.chdir(realCWD);
+        //     return host;
+        // }
         this.files = {};
     }
     Compiler.prototype.compileWithTsconfig = function (options, files) {
@@ -20,39 +54,6 @@ var Compiler = (function () {
     };
     Compiler.prototype.sortFile = function (options, fileNames) {
         var host = this.compileNew(options, fileNames, true);
-        return host;
-    };
-    Compiler.prototype.compile = function (option) {
-        //console.log('---Compiler.compile---')
-        var args = option.args, def = option.def, files = option.files, out = option.out, outDir = option.outDir;
-        var defTemp = args.declaration;
-        args.declaration = def;
-        var realCWD = process.cwd();
-        var cwd = file.escapePath(args.projectDir);
-        files = files.map(function (f) { return f.replace(cwd, ""); });
-        if (out)
-            out = file.getRelativePath(cwd, out);
-        if (outDir)
-            outDir = file.getRelativePath(cwd, outDir);
-        process.chdir(cwd);
-        var parsedCmd = {
-            fileNames: files,
-            options: {},
-            errors: []
-        };
-        if (args.compilerOptions) {
-            parsedCmd.options = args.compilerOptions;
-        }
-        parsedCmd.options.outDir = outDir;
-        parsedCmd.options.declaration = args.declaration;
-        parsedCmd.options.out = out;
-        if (args.sourceMap == true) {
-            parsedCmd.options.sourceMap = true; //引擎命令行的sourcemap属性优先
-        }
-        parsedCmd.options.allowUnreachableCode = true;
-        parsedCmd.options.emitReflection = true;
-        var host = this.compileNew(parsedCmd.options, parsedCmd.fileNames, option.forSortFile);
-        process.chdir(realCWD);
         return host;
     };
     Compiler.prototype.compileNew = function (options, rootFileNames, forSortFile) {
@@ -172,7 +173,6 @@ var Compiler = (function () {
         var configObj;
         try {
             configObj = JSON.parse(file.read(url));
-            console.log(configObj);
         }
         catch (e) {
             // errLog.push(utils.tr(1117));//不是有效的 json 文件

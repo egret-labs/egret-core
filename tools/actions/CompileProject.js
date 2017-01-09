@@ -36,7 +36,6 @@ var CompileProject = (function () {
             var libsList = FileUtil.search(args.libsDir, "ts");
             var configParsedResult = compiler.loadTsconfig(args.projectDir + "tsconfig.json", args);
             this.compilerOptions = configParsedResult.options;
-            args.compilerOptions = configParsedResult.options;
             args.tsconfigError = configParsedResult.errors.map(function (d) { return d.messageText.toString(); });
             this.compilerOptions.outDir = path.join(args.projectDir, "bin-debug");
             if (args.sourceMap == true) {
