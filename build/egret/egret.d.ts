@@ -8177,6 +8177,8 @@ declare namespace egret {
         new (url?: string, cache?: boolean): Video;
     };
 }
+declare namespace egret_native {
+}
 /**
  * @private
  */
@@ -8215,7 +8217,7 @@ declare namespace egret_native {
     function deleteUpdateFile(filepath: string): void;
     function readFileAsync(filepath: string, promise: egret.PromiseObject, type?: string): any;
     function writeFileSync(filepath: string, fileContent: string): any;
-    function selectPhoto(promise: egret.PromiseObject): void;
+    function _selectPhoto(promise: egret.PromiseObject): void;
     function requireHttpSync(url: string, callback: Function): void;
     function requireHttp(url: string, param: any, callback: Function): void;
     function sendInfoToPlugin(info: string): void;

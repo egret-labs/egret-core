@@ -12166,6 +12166,18 @@ var egret;
 //  EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 //
 //////////////////////////////////////////////////////////////////////////////////////
+var egret_native;
+(function (egret_native) {
+    function selectPhoto() {
+        return new Promise(function (resolve) {
+            var promise = egret.PromiseObject.create();
+            promise.onSuccessFunc = function (content) {
+                resolve(content);
+            };
+            egret_native._selectPhoto(promise);
+        });
+    }
+})(egret_native || (egret_native = {}));
 //////////////////////////////////////////////////////////////////////////////////////
 //
 //  Copyright (c) 2014-present, Egret Technology.
