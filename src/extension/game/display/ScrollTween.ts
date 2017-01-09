@@ -180,7 +180,6 @@ namespace egret {
         private passive:boolean = false;
 
 		/**
-         * @language en_US
          * Activate an object and add a ScrollTween animation to the object
          * @param target {any} The object to be activated
          * @param props {any} Parameters, support loop onChange onChangeObj
@@ -188,9 +187,9 @@ namespace egret {
          * @param override {boolean} Whether to remove the object before adding a tween, the default value false
          * @version Egret 2.4
          * @platform Web,Native
+         * @language en_US
 		 */
 		/**
-         * @language zh_CN
          * 激活一个对象，对其添加 ScrollTween 动画
          * @param target {any} 要激活 ScrollTween 的对象
          * @param props {any} 参数，支持loop(循环播放) onChange(变化函数) onChangeObj(变化函数作用域)
@@ -198,6 +197,7 @@ namespace egret {
          * @param override {boolean} 是否移除对象之前添加的tween，默认值false
          * @version Egret 2.4
          * @platform Web,Native
+         * @language zh_CN
 		 */
         public static get(target:any, props:any = null, pluginData:any = null, override:boolean = false):ScrollTween {
             if (override) {
@@ -207,18 +207,18 @@ namespace egret {
         }
 
 		/**
-         * @language en_US
          * Delete all ScrollTween animations from an object
 		 * @param target The object whose ScrollTween to be deleted
          * @version Egret 2.4
          * @platform Web,Native
+         * @language en_US
 		 */
 		/**
-         * @language zh_CN
          * 删除一个对象上的全部 ScrollTween 动画
 		 * @param target  需要移除 ScrollTween 的对象
          * @version Egret 2.4
          * @platform Web,Native
+         * @language zh_CN
 		 */
         public static removeTweens(target:any):void {
             if (!target.tween_count) {
@@ -494,20 +494,20 @@ namespace egret {
         }
 
 		/**
-         * @language en_US
          * Whether setting is paused
 		 * @param value {boolean} Whether to pause
 		 * @returns ScrollTween object itself
          * @version Egret 2.4
          * @platform Web,Native
+         * @language en_US
 		 */
 		/**
-         * @language zh_CN
          * 设置是否暂停
 		 * @param value {boolean} 是否暂停
 		 * @returns Tween对象本身
          * @version Egret 2.4
          * @platform Web,Native
+         * @language zh_CN
 		 */
         public setPaused(value:boolean):ScrollTween {
             this.paused = value;
@@ -598,7 +598,6 @@ namespace egret {
         }
 
 		/**
-         * @language en_US
          * Modify the property of the specified display object to a specified value
 		 * @param props {Object} Property set of an object
 		 * @param duration {number} Duration
@@ -606,9 +605,9 @@ namespace egret {
 		 * @returns {egret.ScrollTween} ScrollTween object itself
          * @version Egret 2.4
          * @platform Web,Native
+         * @language en_US
 		 */
 		/**
-         * @language zh_CN
          * 将指定显示对象的属性修改为指定值
 		 * @param props {Object} 对象的属性集合
 		 * @param duration {number} 持续时间
@@ -616,6 +615,7 @@ namespace egret {
 		 * @returns {egret.ScrollTween} Tween对象本身
          * @version Egret 2.4
          * @platform Web,Native
+         * @language zh_CN
 		 */
         public to(props, duration?:number, ease:Function = undefined):ScrollTween {
             if (isNaN(duration) || duration < 0) {
@@ -625,7 +625,6 @@ namespace egret {
         }
 
 		/**
-         * @language en_US
          * Execute callback function
 		 * @param callback {Function} Callback method
 		 * @param thisObj {any} this action scope of the callback method
@@ -633,9 +632,9 @@ namespace egret {
 		 * @returns {egret.ScrollTween} ScrollTween object itself
          * @version Egret 2.4
          * @platform Web,Native
+         * @language en_US
 		 */
 		/**
-         * @language zh_CN
          * 执行回调函数
 		 * @param callback {Function} 回调方法
 		 * @param thisObj {any} 回调方法this作用域
@@ -643,6 +642,7 @@ namespace egret {
 		 * @returns {egret.ScrollTween} Tween对象本身
          * @version Egret 2.4
          * @platform Web,Native
+         * @language zh_CN
 		 */
         public call(callback:Function, thisObj:any = undefined, params:any[] = undefined):ScrollTween {
             return this._addAction({f: callback, p: params ? params : [], o: thisObj ? thisObj : this._target});

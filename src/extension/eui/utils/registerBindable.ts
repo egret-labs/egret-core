@@ -32,7 +32,6 @@ namespace eui {
     let key = "__bindables__";
 
     /**
-     * @language en_US
      * Register a property of an instance is can be bound.
      * This method is ususally invoked by Watcher class.
      *
@@ -42,9 +41,9 @@ namespace eui {
      * @version Egret 2.4
      * @version eui 1.0
      * @platform Web,Native
+     * @language en_US
      */
     /**
-     * @language zh_CN
      * 标记实例的一个属性是可绑定的,此方法通常由 Watcher 类调用。
      *
      * @param instance 要标记的实例
@@ -53,6 +52,7 @@ namespace eui {
      * @version Egret 2.4
      * @version eui 1.0
      * @platform Web,Native
+     * @language zh_CN
      */
     export function registerBindable(instance:any,property:string):void{
         if (DEBUG) {

@@ -32,7 +32,6 @@
 namespace eui {
 
     /**
-     * @language en_US
      * The UIComponent class is the base class for all visual components, both skinnable and nonskinnable.
      *
      * @event egret.Event.RESIZE Dispatch when the component is resized.
@@ -43,10 +42,10 @@ namespace eui {
      * @version Egret 2.4
      * @version eui 1.0
      * @platform Web,Native
+     * @language en_US
      */
 
     /**
-     * @language zh_CN
      * UIComponent 类是所有可视组件（可定制皮肤和不可定制皮肤）的基类。
      *
      * @event egret.Event.RESIZE 当UI组件的尺寸发生改变时调度
@@ -56,6 +55,7 @@ namespace eui {
      * @version Egret 2.4
      * @version eui 1.0
      * @platform Web,Native
+     * @language zh_CN
      */
 
     export interface UIComponent extends egret.DisplayObject {
@@ -103,7 +103,6 @@ namespace eui {
         $includeInLayout:boolean;
 
         /**
-         * @language en_US
          * Specifies whether this component is included in the layout of the
          * parent container.
          * If <code>false</code>, the object size and position are not affected by its parent container's
@@ -115,9 +114,9 @@ namespace eui {
          * @version Egret 2.4
          * @version eui 1.0
          * @platform Web,Native
+         * @language en_US
          */
         /**
-         * @language zh_CN
          * 指定此组件是否包含在父容器的布局中。若为false，则父级容器在测量和布局阶段都忽略此组件。
          * 注意，visible属性与此属性不同，设置visible为false，父级容器仍会对其布局。
          *
@@ -126,10 +125,10 @@ namespace eui {
          * @version Egret 2.4
          * @version eui 1.0
          * @platform Web,Native
+         * @language zh_CN
          */
         includeInLayout:boolean;
         /**
-         * @language en_US
          * The horizontal distance in pixels from the left edge of the component to the
          * anchor target's left edge.
          *
@@ -138,9 +137,9 @@ namespace eui {
          * @version Egret 2.4
          * @version eui 1.0
          * @platform Web,Native
+         * @language en_US
          */
         /**
-         * @language zh_CN
          * 距父级容器离左边距离。
          *
          * @default NaN
@@ -148,11 +147,11 @@ namespace eui {
          * @version Egret 2.4
          * @version eui 1.0
          * @platform Web,Native
+         * @language zh_CN
          */
         left:any;
 
         /**
-         * @language en_US
          * The horizontal distance in pixels from the right edge of the component to the
          * anchor target's right edge.
          *
@@ -161,9 +160,9 @@ namespace eui {
          * @version Egret 2.4
          * @version eui 1.0
          * @platform Web,Native
+         * @language en_US
          */
         /**
-         * @language zh_CN
          * 距父级容器右边距离。
          *
          * @default NaN
@@ -171,11 +170,11 @@ namespace eui {
          * @version Egret 2.4
          * @version eui 1.0
          * @platform Web,Native
+         * @language zh_CN
          */
         right:any;
 
         /**
-         * @language en_US
          * The vertical distance in pixels from the top edge of the component to the
          * anchor target's top edge.
          *
@@ -184,9 +183,9 @@ namespace eui {
          * @version Egret 2.4
          * @version eui 1.0
          * @platform Web,Native
+         * @language en_US
          */
         /**
-         * @language zh_CN
          * 距父级容器顶部距离。
          *
          * @default NaN
@@ -194,11 +193,11 @@ namespace eui {
          * @version Egret 2.4
          * @version eui 1.0
          * @platform Web,Native
+         * @language zh_CN
          */
         top:any;
 
         /**
-         * @language en_US
          * The vertical distance in pixels from the bottom edge of the component to the
          * anchor target's bottom edge.
          *
@@ -207,9 +206,9 @@ namespace eui {
          * @version Egret 2.4
          * @version eui 1.0
          * @platform Web,Native
+         * @language en_US
          */
         /**
-         * @language zh_CN
          * 距父级容器底部距离。
          *
          * @default NaN
@@ -217,11 +216,11 @@ namespace eui {
          * @version Egret 2.4
          * @version eui 1.0
          * @platform Web,Native
+         * @language zh_CN
          */
         bottom:any;
 
         /**
-         * @language en_US
          * The horizontal distance in pixels from the center of the component to the
          * center of the anchor target's content area.
          *
@@ -230,9 +229,9 @@ namespace eui {
          * @version Egret 2.4
          * @version eui 1.0
          * @platform Web,Native
+         * @language en_US
          */
         /**
-         * @language zh_CN
          * 在父级容器中距水平中心位置的距离。
          *
          * @default NaN
@@ -240,11 +239,11 @@ namespace eui {
          * @version Egret 2.4
          * @version eui 1.0
          * @platform Web,Native
+         * @language zh_CN
          */
         horizontalCenter:any;
 
         /**
-         * @language en_US
          * The vertical distance in pixels from the center of the component to the
          *  center of the anchor target's content area.
          *
@@ -253,9 +252,9 @@ namespace eui {
          * @version Egret 2.4
          * @version eui 1.0
          * @platform Web,Native
+         * @language en_US
          */
         /**
-         * @language zh_CN
          * 在父级容器中距竖直中心位置的距离。
          *
          * @default NaN
@@ -263,11 +262,11 @@ namespace eui {
          * @version Egret 2.4
          * @version eui 1.0
          * @platform Web,Native
+         * @language zh_CN
          */
         verticalCenter:any;
 
         /**
-         * @language en_US
          * Specifies the width of a component as a percentage
          * of its parent's size. Allowed values are 0-100.
          * Setting the <code>width</code> or <code>explicitWidth</code> properties
@@ -278,9 +277,9 @@ namespace eui {
          * @version Egret 2.4
          * @version eui 1.0
          * @platform Web,Native
+         * @language en_US
          */
         /**
-         * @language zh_CN
          * 相对父级容器宽度的百分比。
          *
          * @default NaN
@@ -288,11 +287,11 @@ namespace eui {
          * @version Egret 2.4
          * @version eui 1.0
          * @platform Web,Native
+         * @language zh_CN
          */
         percentWidth:number;
 
         /**
-         * @language en_US
          * Specifies the height of a component as a percentage
          * of its parent's size. Allowed values are 0-100.
          * Setting the <code>height</code> or <code>explicitHeight</code> properties
@@ -303,9 +302,9 @@ namespace eui {
          * @version Egret 2.4
          * @version eui 1.0
          * @platform Web,Native
+         * @language en_US
          */
         /**
-         * @language zh_CN
          * 相对父级容器高度的百分比。
          *
          * @default NaN
@@ -313,47 +312,47 @@ namespace eui {
          * @version Egret 2.4
          * @version eui 1.0
          * @platform Web,Native
+         * @language zh_CN
          */
         percentHeight:number;
 
         /**
-         * @language en_US
          * Number that specifies the explicit width of the component,
          * in pixels, in the component's coordinates.
          * @version Egret 2.4
          * @version eui 1.0
          * @platform Web,Native
+         * @language en_US
          */
         /**
-         * @language zh_CN
          * 外部显式指定的宽度。
          * @version Egret 2.4
          * @version eui 1.0
          * @platform Web,Native
+         * @language zh_CN
          */
         explicitWidth:number;
 
         /**
-         * @language en_US
          * Number that specifies the explicit height of the component,
          * in pixels, in the component's coordinates.
          * @readOnly
          * @version Egret 2.4
          * @version eui 1.0
          * @platform Web,Native
+         * @language en_US
          */
         /**
-         * @language zh_CN
          * 外部显式指定的高度。
          * @readOnly
          * @version Egret 2.4
          * @version eui 1.0
          * @platform Web,Native
+         * @language zh_CN
          */
         explicitHeight:number;
 
         /**
-         * @language en_US
          * The minimum recommended width of the component to be considered
          * by the parent during layout. This value is in the
          * component's coordinates, in pixels. The default value depends on
@@ -362,18 +361,18 @@ namespace eui {
          * @version Egret 2.4
          * @version eui 1.0
          * @platform Web,Native
+         * @language en_US
          */
         /**
-         * @language zh_CN
          * 组件的最小宽度,此属性设置为大于maxWidth的值时无效。同时影响测量和自动布局的尺寸。
          * @readOnly
          * @version Egret 2.4
          * @version eui 1.0
          * @platform Web,Native
+         * @language zh_CN
          */
         minWidth:number;
         /**
-         * @language en_US
          * The maximum recommended width of the component to be considered
          * by the parent during layout. This value is in the
          * component's coordinates, in pixels. The default value of this property is
@@ -381,18 +380,18 @@ namespace eui {
          * @version Egret 2.4
          * @version eui 1.0
          * @platform Web,Native
+         * @language en_US
          */
         /**
-         * @language zh_CN
          * 组件的最大高度。同时影响测量和自动布局的尺寸。
          * @version Egret 2.4
          * @version eui 1.0
          * @platform Web,Native
+         * @language zh_CN
          */
         maxWidth:number;
 
         /**
-         * @language en_US
          * The minimum recommended height of the component to be considered
          * by the parent during layout. This value is in the
          * component's coordinates, in pixels. The default value depends on
@@ -400,18 +399,18 @@ namespace eui {
          * @version Egret 2.4
          * @version eui 1.0
          * @platform Web,Native
+         * @language en_US
          */
         /**
-         * @language zh_CN
          * 组件的最小高度,此属性设置为大于maxHeight的值时无效。同时影响测量和自动布局的尺寸。
          * @version Egret 2.4
          * @version eui 1.0
          * @platform Web,Native
+         * @language zh_CN
          */
         minHeight:number;
 
         /**
-         * @language en_US
          * The maximum recommended height of the component to be considered
          * by the parent during layout. This value is in the
          * component's coordinates, in pixels. The default value of this property is
@@ -419,38 +418,38 @@ namespace eui {
          * @version Egret 2.4
          * @version eui 1.0
          * @platform Web,Native
+         * @language en_US
          */
         /**
-         * @language zh_CN
          * 组件的最大高度,同时影响测量和自动布局的尺寸。
          * @version Egret 2.4
          * @version eui 1.0
          * @platform Web,Native
+         * @language zh_CN
          */
         maxHeight:number;
 
         /**
-         * @language en_US
          * Set the result of measuring.
          * @param width measured width
          * @param height measured height
          * @version Egret 2.4
          * @version eui 1.0
          * @platform Web,Native
+         * @language en_US
          */
         /**
-         * @language zh_CN
          * 设置测量结果。
          * @param width 测量宽度
          * @param height 测量高度
          * @version Egret 2.4
          * @version eui 1.0
          * @platform Web,Native
+         * @language zh_CN
          */
         setMeasuredSize(width:number, height:number):void;
 
         /**
-         * @language en_US
          * Marks a component so that its <code>commitProperties()</code>
          * method gets called during a later screen update.<p/>
          *
@@ -471,9 +470,9 @@ namespace eui {
          * @version Egret 2.4
          * @version eui 1.0
          * @platform Web,Native
+         * @language en_US
          */
         /**
-         * @language zh_CN
          * 标记提交过需要延迟应用的属性，以便在稍后屏幕更新期间调用该组件的 commitProperties() 方法。<p/>
          *
          * 这是一个很有用的机制，可将组件更改延迟到稍后屏幕更新时进行处理，从而消除了重复的工作。<p/>
@@ -485,11 +484,11 @@ namespace eui {
          * @version Egret 2.4
          * @version eui 1.0
          * @platform Web,Native
+         * @language zh_CN
          */
         invalidateProperties():void;
 
         /**
-         * @language en_US
          * Used by layout logic to validate the properties of a component
          * by calling the <code>commitProperties()</code> method.
          * In general, subclassers should
@@ -497,19 +496,19 @@ namespace eui {
          * @version Egret 2.4
          * @version eui 1.0
          * @platform Web,Native
+         * @language en_US
          */
         /**
-         * @language zh_CN
          * 由布局逻辑用于通过调用 commitProperties() 方法来验证组件的属性。
          * 通常，子类应覆盖 commitProperties() 方法，而不是覆盖此方法。
          * @version Egret 2.4
          * @version eui 1.0
          * @platform Web,Native
+         * @language zh_CN
          */
         validateProperties():void;
 
         /**
-         * @language en_US
          * Marks a component so that its <code>measure()</code>
          * method gets called during a later screen update.<p/>
          *
@@ -530,9 +529,9 @@ namespace eui {
          * @version Egret 2.4
          * @version eui 1.0
          * @platform Web,Native
+         * @language en_US
          */
         /**
-         * @language zh_CN
          * 标记提交过需要验证组件尺寸，以便在稍后屏幕更新期间调用该组件的 measure() 方法。<p/>
          *
          * Invalidation 是一个很有用的机制，可将组件更改延迟到稍后屏幕更新时进行处理，从而消除了重复的工作。<p/>
@@ -545,30 +544,30 @@ namespace eui {
          * @version Egret 2.4
          * @version eui 1.0
          * @platform Web,Native
+         * @language zh_CN
          */
         invalidateSize():void;
 
         /**
-         * @language en_US
          * Validates the measured size of the component.
          * @param recursive If <code>true</code>, call this method
          *  on the objects children.
          * @version Egret 2.4
          * @version eui 1.0
          * @platform Web,Native
+         * @language en_US
          */
         /**
-         * @language zh_CN
          * 验证组件的尺寸。
          * @param recursive 如果为 true，则调用对象子项的此方法。
          * @version Egret 2.4
          * @version eui 1.0
          * @platform Web,Native
+         * @language zh_CN
          */
         validateSize(recursive?:boolean):void;
 
         /**
-         * @language en_US
          * Marks a component so that its <code>updateDisplayList()</code>
          * method gets called during a later screen update.<p/>
          *
@@ -589,9 +588,9 @@ namespace eui {
          * @version Egret 2.4
          * @version eui 1.0
          * @platform Web,Native
+         * @language en_US
          */
         /**
-         * @language zh_CN
          * 标记需要验证显示列表，以便在稍后屏幕更新期间调用该组件的 updateDisplayList() 方法。<p/>
          *
          * Invalidation 是一个很有用的机制，可将组件更改延迟到稍后屏幕更新时进行处理，从而消除了重复的工作。<p/>
@@ -604,28 +603,28 @@ namespace eui {
          * @version Egret 2.4
          * @version eui 1.0
          * @platform Web,Native
+         * @language zh_CN
          */
         invalidateDisplayList():void;
 
         /**
-         * @language en_US
          * Validates the position and size of children and draws other
          * visuals.
          * @version Egret 2.4
          * @version eui 1.0
          * @platform Web,Native
+         * @language en_US
          */
         /**
-         * @language zh_CN
          * 验证子项的位置和大小，并绘制其他可视内容。
          * @version Egret 2.4
          * @version eui 1.0
          * @platform Web,Native
+         * @language zh_CN
          */
         validateDisplayList():void;
 
         /**
-         * @language en_US
          * Validate and update the properties and layout of this object
          * and redraw it, if necessary.<p/>
          *
@@ -640,9 +639,9 @@ namespace eui {
          * @version Egret 2.4
          * @version eui 1.0
          * @platform Web,Native
+         * @language en_US
          */
         /**
-         * @language zh_CN
          * 验证并更新此对象的属性和布局，如果需要的话重绘对象。<p/>
          *
          * 通常只有当脚本执行完毕后，才会处理要求进行大量计算的处理属性。<p/>
@@ -653,11 +652,11 @@ namespace eui {
          * @version Egret 2.4
          * @version eui 1.0
          * @platform Web,Native
+         * @language zh_CN
          */
         validateNow():void;
 
         /**
-         * @language en_US
          * Sets the layout size of the element.
          * This is the size that the element uses to draw on screen.<p/>
          *
@@ -673,9 +672,9 @@ namespace eui {
          * @version Egret 2.4
          * @version eui 1.0
          * @platform Web,Native
+         * @language en_US
          */
         /**
-         * @language zh_CN
          * 设置元素的布局大小。这是元素在屏幕上进行绘制时所用的大小。<p/>
          *
          * 如果 width 和/或 height 参数尚未指定 (NaN))，则 EUI 会将该元素的布局大小设置为首选宽度和/或首选高度。<p/>
@@ -689,11 +688,11 @@ namespace eui {
          * @version Egret 2.4
          * @version eui 1.0
          * @platform Web,Native
+         * @language zh_CN
          */
         setLayoutBoundsSize(layoutWidth:number, layoutHeight:number):void;
 
         /**
-         * @language en_US
          * Sets the coordinates that the element uses to draw on screen.<p/>
          *
          * Note that calls to the <code>setLayoutBoundSize()</code> method can affect the layout position, so
@@ -705,9 +704,9 @@ namespace eui {
          * @version Egret 2.4
          * @version eui 1.0
          * @platform Web,Native
+         * @language en_US
          */
         /**
-         * @language zh_CN
          * 设置元素在屏幕上进行绘制时所用的布局坐标。<p/>
          *
          * 请注意，调用 setLayoutBoundSize() 方法会影响布局位置，因此请在调用 setLayoutBoundSize()
@@ -719,11 +718,11 @@ namespace eui {
          * @version Egret 2.4
          * @version eui 1.0
          * @platform Web,Native
+         * @language zh_CN
          */
         setLayoutBoundsPosition(x:number, y:number):void;
 
         /**
-         * @language en_US
          * Get the layout bounds that the element uses to draw on screen.
          * Commonly used in the <code>updateDisplayList()</code> method in parent container.<p/>
          * Priority: layout > explicit > measure.<p/>
@@ -734,9 +733,9 @@ namespace eui {
          * @version Egret 2.4
          * @version eui 1.0
          * @platform Web,Native
+         * @language en_US
          */
         /**
-         * @language zh_CN
          * 组件的布局尺寸,常用于父级的<code>updateDisplayList()</code>方法中。<p/>
          * 按照：布局尺寸>外部显式设置尺寸>测量尺寸 的优先级顺序返回尺寸。<p/>
          * 注意此方法返回值已经包含scale和rotation。
@@ -746,11 +745,11 @@ namespace eui {
          * @version Egret 2.4
          * @version eui 1.0
          * @platform Web,Native
+         * @language zh_CN
          */
         getLayoutBounds(bounds:egret.Rectangle):void;
 
         /**
-         * @language en_US
          * Get the element's preferred bounds。
          * Commonly used in the <code>measure()</code> method in parent container.<p/>
          * Priority: explicit > measure.<p/>
@@ -761,9 +760,9 @@ namespace eui {
          * @version Egret 2.4
          * @version eui 1.0
          * @platform Web,Native
+         * @language en_US
          */
         /**
-         * @language zh_CN
          * 获取组件的首选尺寸,常用于父级的<code>measure()</code>方法中。<p/>
          * 按照：外部显式设置尺寸>测量尺寸 的优先级顺序返回尺寸。<p/>
          * 注意此方法返回值已经包含scale和rotation。
@@ -773,6 +772,7 @@ namespace eui {
          * @version Egret 2.4
          * @version eui 1.0
          * @platform Web,Native
+         * @language zh_CN
          */
         getPreferredBounds(bounds:egret.Rectangle):void;
     }

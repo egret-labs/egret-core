@@ -38,7 +38,6 @@ namespace EXML {
     let parsedClasses:any = {};
     let $prefixURL: string = "";
     /**
-     * @language en_US
      * Set a prefix url.
      * The prefix url will add to the front of the Exml file path when it’s loading.
      * @param text the text of a EXML file.
@@ -46,14 +45,15 @@ namespace EXML {
      * @version Egret 2.5.3
      * @version eui 1.0
      * @platform Web,Native
+     * @language en_US
      */
     /**
-     * @language zh_CN
      * 设置 EXML 文件加载的根路径。
      * 设置后，再加载 EXML 文件时会自动把根路径加到文件路径前面
      * @version Egret 2.5.3
      * @version eui 1.0
      * @platform Web,Native
+     * @language zh_CN
      */
     export let prefixURL: string;
     Object.defineProperty(EXML, "prefixURL", {
@@ -64,7 +64,6 @@ namespace EXML {
     });
 
     /**
-     * @language en_US
      * Parsing a text of EXML file for a definition of class. You can declare the <code>class</code> property in the root
      * node of the EXML to register to the global as a class name.
      *
@@ -76,9 +75,9 @@ namespace EXML {
      * @version Egret 2.4
      * @version eui 1.0
      * @platform Web,Native
+     * @language en_US
      */
     /**
-     * @language zh_CN
      * 解析一个 EXML 文件的文本内容为一个类定义。您可以在 EXML 文件的根节点上声明 class 属性作为要注册到全局的类名。
      * 若指定的类名已经存在，将会注册失败，并输出一个警告。注册成功后，您也可以通过 egret.getDefinitionByName(className) 方法获取这个 EXML 文件对应的类定义。
      *
@@ -87,13 +86,13 @@ namespace EXML {
      * @version Egret 2.4
      * @version eui 1.0
      * @platform Web,Native
+     * @language zh_CN
      */
     export function parse(text:string):{new():any} {
         return parser.parse(text);
     }
 
     /**
-     * @language en_US
      * Load and parse an external EXML file for a class definition. You can declare the <code>class</code> property in the root
      * node of the EXML to register to the global as a class name.
      *
@@ -109,9 +108,9 @@ namespace EXML {
      * @version Egret 2.4
      * @version eui 1.0
      * @platform Web,Native
+     * @language en_US
      */
     /**
-     * @language zh_CN
      * 加载并解析一个外部的 EXML 文件为一个类定义。您可以在 EXML 文件的根节点上声明 class 属性作为要注册到全局的类名。
      * 若指定的类名已经存在，将会注册失败，并输出一个警告。注册成功后，您也可以通过 egret.getDefinitionByName(className) 方法获取这个 EXML 文件对应的类定义。
      *
@@ -123,6 +122,7 @@ namespace EXML {
      * @version Egret 2.4
      * @version eui 1.0
      * @platform Web,Native
+     * @language zh_CN
      */
     export function load(url:string, callBack?:(clazz:any, url:string) => void, thisObject?:any, useCache = false):void {
         if (DEBUG) {

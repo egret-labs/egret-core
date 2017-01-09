@@ -30,7 +30,6 @@
 namespace eui {
 
     /**
-     * @language en_US
      * The BasicLayout class arranges the layout elements according to their individual settings,
      * independent of each-other. BasicLayout, also called absolute layout, requires that you
      * explicitly position each container child.
@@ -41,9 +40,9 @@ namespace eui {
      * @version eui 1.0
      * @platform Web,Native
      * @includeExample  extension/eui/layout/BasicLayoutExample.ts
+     * @language en_US
      */
     /**
-     * @language zh_CN
      * BasicLayout 类根据其各个设置彼此独立地排列布局元素。
      * BasicLayout（也称为绝对布局）要求显式定位每个容器子代。
      * 可以使用子代的 <code>x</code> 和 <code>y</code> 属性，或使用约束来定位每个子代。
@@ -52,22 +51,23 @@ namespace eui {
      * @version eui 1.0
      * @platform Web,Native
      * @includeExample  extension/eui/layout/BasicLayoutExample.ts
+     * @language zh_CN
      */
     export class BasicLayout extends LayoutBase {
 
         /**
-         * @language en_US
          * Constructor.
          * @version Egret 2.4
          * @version eui 1.0
          * @platform Web,Native
+         * @language en_US
          */
         /**
-         * @language zh_CN
          * 构造函数。
          * @version Egret 2.4
          * @version eui 1.0
          * @platform Web,Native
+         * @language zh_CN
          */
         public constructor() {
             super();
@@ -75,20 +75,20 @@ namespace eui {
 
 
         /**
-         * @language en_US
          * BasicLayout does not support virtual layout, setting this property is invalid.
          *
          * @version Egret 2.4
          * @version eui 1.0
          * @platform Web,Native
+         * @language en_US
          */
         /**
-         * @language zh_CN
          * BasicLayout不支持虚拟布局，设置这个属性无效。
          *
          * @version Egret 2.4
          * @version eui 1.0
          * @platform Web,Native
+         * @language zh_CN
          */
         public useVirtualLayout:boolean;
 

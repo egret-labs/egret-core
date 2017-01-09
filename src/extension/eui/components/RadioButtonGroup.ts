@@ -65,7 +65,6 @@ namespace eui {
 
 
     /**
-     * @language en_US
      * The RadioButtonGroup component defines a group of RadioButton components
      * that act as a single mutually exclusive component; therefore,
      * a user can select only one RadioButton component at a time.
@@ -77,9 +76,9 @@ namespace eui {
      * @version eui 1.0
      * @platform Web,Native
      * @includeExample  extension/eui/components/RadioButtonGroupExample.ts
+     * @language en_US
      */
     /**
-     * @language zh_CN
      * RadioButtonGroup 组件定义一组 RadioButton 组件，这些组件相互排斥；因此，用户每次只能选择一个 RadioButton 组件
      *
      * @event egret.Event.CHANGE 此组中所选 RadioButton 组件的值更改时分派。
@@ -88,24 +87,25 @@ namespace eui {
      * @version eui 1.0
      * @platform Web,Native
      * @includeExample  extension/eui/components/RadioButtonGroupExample.ts
+     * @language zh_CN
      */
     export class RadioButtonGroup extends egret.EventDispatcher {
 
         /**
-         * @language en_US
          * Constructor.
          *
          * @version Egret 2.4
          * @version eui 1.0
          * @platform Web,Native
+         * @language en_US
          */
         /**
-         * @language zh_CN
          * 构造函数。
          *
          * @version Egret 2.4
          * @version eui 1.0
          * @platform Web,Native
+         * @language zh_CN
          */
         public constructor() {
             super();
@@ -124,7 +124,6 @@ namespace eui {
         private radioButtons:RadioButton[] = [];
 
         /**
-         * @language en_US
          * Returns the RadioButton component at the specified index.
          *
          * @param index The 0-based index of the RadioButton in the
@@ -139,9 +138,9 @@ namespace eui {
          * @version Egret 2.4
          * @version eui 1.0
          * @platform Web,Native
+         * @language en_US
          */
         /**
-         * @language zh_CN
          * 返回指定索引处的 RadioButton 组件。
          *
          * @param index RadioButtonGroup 中的 RadioButton 的从零开始的索引。
@@ -154,6 +153,7 @@ namespace eui {
          * @version Egret 2.4
          * @version eui 1.0
          * @platform Web,Native
+         * @language zh_CN
          */
         public getRadioButtonAt(index:number):RadioButton {
             return this.radioButtons[index];
@@ -165,7 +165,6 @@ namespace eui {
         $enabled:boolean = true;
 
         /**
-         * @language en_US
          * Determines whether selection is allowed.  Note that the value returned
          * only reflects the value that was explicitly set on the
          * <code>RadioButtonGroup</code> and does not reflect any values explicitly
@@ -176,9 +175,9 @@ namespace eui {
          * @version Egret 2.4
          * @version eui 1.0
          * @platform Web,Native
+         * @language en_US
          */
         /**
-         * @language zh_CN
          * 确定是否允许选择。请注意，返回的值仅反映对 <code>RadioButtonGroup</code> 显式设置的值，
          * 而不反映对各个 RadioButton 显式设置的任何值。
          *
@@ -187,6 +186,7 @@ namespace eui {
          * @version Egret 2.4
          * @version eui 1.0
          * @platform Web,Native
+         * @language zh_CN
          */
         public get enabled():boolean {
             return this.$enabled;
@@ -204,7 +204,6 @@ namespace eui {
         }
 
         /**
-         * @language en_US
          * The number of RadioButtons that belong to this RadioButtonGroup.
          *
          * @default 0
@@ -212,9 +211,9 @@ namespace eui {
          * @version Egret 2.4
          * @version eui 1.0
          * @platform Web,Native
+         * @language en_US
          */
         /**
-         * @language zh_CN
          *  属于此 RadioButtonGroup 的 RadioButton 数。
          *
          * @default 0
@@ -222,6 +221,7 @@ namespace eui {
          * @version Egret 2.4
          * @version eui 1.0
          * @platform Web,Native
+         * @language zh_CN
          */
         public get numRadioButtons():number {
             return this.radioButtons.length;
@@ -232,7 +232,6 @@ namespace eui {
          */
         private _selectedValue:any = null;
         /**
-         * @language en_US
          * The <code>value</code> property of the selected
          * RadioButton component in the group, if it has been set,
          * otherwise, the <code>label</code> property of the selected RadioButton.
@@ -247,9 +246,9 @@ namespace eui {
          * @version Egret 2.4
          * @version eui 1.0
          * @platform Web,Native
+         * @language en_US
          */
         /**
-         * @language zh_CN
          * 组中所选 RadioButton 组件的 <code>value</code> 属性（如果未设置），
          * 否则为所选 RadioButton 组件的 <code>label</code> 属性。
          * 如果未选择任何 RadioButton，则此属性为 <code>null</code>。
@@ -262,6 +261,7 @@ namespace eui {
          * @version Egret 2.4
          * @version eui 1.0
          * @platform Web,Native
+         * @language zh_CN
          */
         public get selectedValue():any {
             if (this.selection) {
@@ -296,7 +296,6 @@ namespace eui {
          */
         private _selection:RadioButton = null;
         /**
-         * @language en_US
          * Contains a reference to the currently selected
          * RadioButton component in the group.This property is valid only
          * when the target RadioButton is displayed on the display list
@@ -306,9 +305,9 @@ namespace eui {
          * @version Egret 2.4
          * @version eui 1.0
          * @platform Web,Native
+         * @language en_US
          */
         /**
-         * @language zh_CN
          * 当前被选中的单选按钮引用。此属性仅当目标RadioButton在显示列表时有效。
          *
          * @default null
@@ -316,6 +315,7 @@ namespace eui {
          * @version Egret 2.4
          * @version eui 1.0
          * @platform Web,Native
+         * @language zh_CN
          */
         public get selection():RadioButton {
             return this._selection;

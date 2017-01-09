@@ -49,7 +49,6 @@ namespace eui.sys {
 namespace eui {
 
     /**
-     * @language en_US
      * The Range class holds a value and an allowed range for that
      * value, defined by <code>minimum</code> and <code>maximum</code> properties.
      *
@@ -68,9 +67,9 @@ namespace eui {
      * @version eui 1.0
      * @platform Web,Native
      * @includeExample extension/eui/components/supportClasses/RangeExample.ts
+     * @language en_US
      */
     /**
-     * @language zh_CN
      * 范围选取组件,该组件包含一个值和这个值所允许的最大最小约束范围。
      *
      * <code>value</code>属性的值永远被限制于当前的<code>minimum</code>和
@@ -82,21 +81,22 @@ namespace eui {
      * @version eui 1.0
      * @platform Web,Native
      * @includeExample extension/eui/components/supportClasses/RangeExample.ts
+     * @language zh_CN
      */
     export class Range extends Component {
         /**
-         * @language en_US
          * Constructor.
          * @version Egret 2.4
          * @version eui 1.0
          * @platform Web,Native
+         * @language en_US
          */
         /**
-         * @language zh_CN
          * 创建一个 Range 实例。
          * @version Egret 2.4
          * @version eui 1.0
          * @platform Web,Native
+         * @language zh_CN
          */
         public constructor() {
             super();
@@ -120,7 +120,6 @@ namespace eui {
         $Range:Object;
 
         /**
-         * @language en_US
          * The maximum valid <code>value</code>.<p/>
          *
          * Changes to the value property are constrained
@@ -132,9 +131,9 @@ namespace eui {
          * @version Egret 2.4
          * @version eui 1.0
          * @platform Web,Native
+         * @language en_US
          */
         /**
-         * @language zh_CN
          * 最大有效值。<p/>
          *
          * 规定<code>value</code>属性的值不能够超过的最大值。该修正过程
@@ -145,6 +144,7 @@ namespace eui {
          * @version Egret 2.4
          * @version eui 1.0
          * @platform Web,Native
+         * @language zh_CN
          */
         public get maximum():number {
             return this.$Range[sys.RangeKeys.maximum];
@@ -162,7 +162,6 @@ namespace eui {
         }
 
         /**
-         * @language en_US
          * The minimum valid <code>value</code>.<p/>
          *
          * Changes to the value property are constrained
@@ -174,9 +173,9 @@ namespace eui {
          * @version Egret 2.4
          * @version eui 1.0
          * @platform Web,Native
+         * @language en_US
          */
         /**
-         * @language zh_CN
          * 最小有效值<p/>
          *
          * 规定<code>value</code>属性的值不能够低于的最小值。该修正过程
@@ -187,6 +186,7 @@ namespace eui {
          * @version Egret 2.4
          * @version eui 1.0
          * @platform Web,Native
+         * @language zh_CN
          */
         public get minimum():number {
             return this.$Range[sys.RangeKeys.minimum];
@@ -204,7 +204,6 @@ namespace eui {
         }
 
         /**
-         * @language en_US
          * The current value for this range.<p/>
          *
          * Changes to the value property are constrained
@@ -218,9 +217,9 @@ namespace eui {
          * @version Egret 2.4
          * @version eui 1.0
          * @platform Web,Native
+         * @language en_US
          */
         /**
-         * @language zh_CN
          * 此范围的当前值。<p/>
          *
          * 改变的<code>value</code>属性将在<code>commitProperties()</code>方法中被<code>minimum</code>属性
@@ -231,6 +230,7 @@ namespace eui {
          * @version Egret 2.4
          * @version eui 1.0
          * @platform Web,Native
+         * @language zh_CN
          */
         public get value():number {
             let values = this.$Range;
@@ -260,7 +260,6 @@ namespace eui {
         }
 
         /**
-         * @language en_US
          * The snapInterval property controls the valid values of the <code>value</code> property.
          *
          * If nonzero, valid values are the sum of the <code>minimum</code> and integer multiples
@@ -277,9 +276,9 @@ namespace eui {
          * @version Egret 2.4
          * @version eui 1.0
          * @platform Web,Native
+         * @language en_US
          */
         /**
-         * @language zh_CN
          * snapInterval 属性定义 value 属性的有效值。
          * 如果为非零，则有效值为 minimum 与此属性的整数倍数之和，且小于或等于 maximum。</p>
          *
@@ -292,6 +291,7 @@ namespace eui {
          * @version Egret 2.4
          * @version eui 1.0
          * @platform Web,Native
+         * @language zh_CN
          */
         public get snapInterval():number {
             return this.$Range[sys.RangeKeys.snapInterval];
@@ -317,18 +317,18 @@ namespace eui {
         }
 
         /**
-         * @language en_US
          * Processes the properties set on the component.
          * @version Egret 2.4
          * @version eui 1.0
          * @platform Web,Native
+         * @language en_US
          */
         /**
-         * @language zh_CN
          * 处理对组件设置的属性
          * @version Egret 2.4
          * @version eui 1.0
          * @platform Web,Native
+         * @language zh_CN
          */
         protected commitProperties():void {
             super.commitProperties();
@@ -367,7 +367,6 @@ namespace eui {
         }
 
         /**
-         * @language en_US
          * Returns the sum of the minimum with an integer multiple of <code>interval</code> that's
          * closest to <code>value</code>, unless <code>value</code> is closer to the maximum limit,
          * in which case the maximum is returned.<p/>
@@ -395,9 +394,9 @@ namespace eui {
          * @version Egret 2.4
          * @version eui 1.0
          * @platform Web,Native
+         * @language en_US
          */
         /**
-         * @language zh_CN
          * 返回 <code>minimum</code> 与最接近 <code>value</code> 的 <code>interval</code> 的整数倍数之和，
          * 除非 <code>value</code> 接近最大值限制的时候会返回 maximum。<p/>
          *
@@ -421,6 +420,7 @@ namespace eui {
          * @version Egret 2.4
          * @version eui 1.0
          * @platform Web,Native
+         * @language zh_CN
          */
         protected nearestValidValue(value:number, interval:number):number {
             let values = this.$Range;
@@ -447,7 +447,6 @@ namespace eui {
         }
 
         /**
-         * @language en_US
          * Sets the current value for the <code>value</code> property.<p/>
          *
          * This method assumes that the caller has already used the <code>nearestValidValue()</code> method
@@ -458,9 +457,9 @@ namespace eui {
          * @version Egret 2.4
          * @version eui 1.0
          * @platform Web,Native
+         * @language en_US
          */
         /**
-         * @language zh_CN
          * 设置当前值。<p/>
          *
          * 此方法假定调用者已经使用了 nearestValidValue() 方法来约束 value 参数。
@@ -470,6 +469,7 @@ namespace eui {
          * @version Egret 2.4
          * @version eui 1.0
          * @platform Web,Native
+         * @language zh_CN
          */
         protected setValue(value:number):void {
             let values = this.$Range;
@@ -486,18 +486,18 @@ namespace eui {
         }
 
         /**
-         * @language en_US
          * Draws the object and/or sizes and positions its children.
          * @version Egret 2.4
          * @version eui 1.0
          * @platform Web,Native
+         * @language en_US
          */
         /**
-         * @language zh_CN
          * 绘制对象和/或设置其子项的大小和位置
          * @version Egret 2.4
          * @version eui 1.0
          * @platform Web,Native
+         * @language zh_CN
          */
         protected updateDisplayList(w:number, h:number):void {
             super.updateDisplayList(w, h);
@@ -505,21 +505,21 @@ namespace eui {
         }
 
         /**
-         * @language en_US
          * Update size and visible of skin parts.<p/>
          * Subclasses override this method to update skin parts display based on <code>minimum</code>, <code>maximum</code>
          * and <code>value</code> properties.
          * @version Egret 2.4
          * @version eui 1.0
          * @platform Web,Native
+         * @language en_US
          */
         /**
-         * @language zh_CN
          * 更新皮肤部件（通常为滑块）的大小和可见性。<p/>
          * 子类覆盖此方法以基于 minimum、maximum 和 value 属性更新滑块的大小、位置和可见性。
          * @version Egret 2.4
          * @version eui 1.0
          * @platform Web,Native
+         * @language zh_CN
          */
         protected updateSkinDisplayList():void {
         }

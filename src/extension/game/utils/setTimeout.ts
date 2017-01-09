@@ -35,7 +35,6 @@ namespace egret {
     let setTimeoutCount: number = 0;
     let lastTime: number = 0;
     /**
-     * @language en_US
      * Run the designated function in specified delay (in milliseconds).
      * @param listener {Function} Listener function
      * @param thisObject {any} this object
@@ -45,9 +44,9 @@ namespace egret {
      * @version Egret 2.4
      * @platform Web,Native
      * @includeExample extension/game/utils/setTimeout.ts
+     * @language en_US
      */
     /**
-     * @language zh_CN
      * 在指定的延迟（以毫秒为单位）后运行指定的函数。
      * @param listener {Function} 侦听函数
      * @param thisObject {any} this对象
@@ -57,6 +56,7 @@ namespace egret {
      * @version Egret 2.4
      * @platform Web,Native
      * @includeExample extension/game/utils/setTimeout.ts
+     * @language zh_CN
      */
     export function setTimeout<Z>(listener: (this: Z, ...arg) => void, thisObject: Z, delay: number, ...args): number {
         let data = { listener, thisObject, delay: delay, params: args };
@@ -73,18 +73,18 @@ namespace egret {
     }
 
     /**
-     * @language en_US
      * Function run after the specified delay is cleared.
      * @param key {number} Index that egret.setTimeout returns
      * @version Egret 2.4
      * @platform Web,Native
+     * @language en_US
      */
     /**
-     * @language zh_CN
      * 清除指定延迟后运行的函数。
      * @param key {number} egret.setTimeout所返回的索引
      * @version Egret 2.4
      * @platform Web,Native
+     * @language zh_CN
      */
     export function clearTimeout(key: number): void {
         if (setTimeoutCache[key]) {

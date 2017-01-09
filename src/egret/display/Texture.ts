@@ -31,7 +31,6 @@
 namespace egret {
     export let $TextureScaleFactor:number = 1;
     /**
-     * @language en_US
      * The Texture class encapsulates different image resources on different platforms.
      * In HTML5, resource is an HTMLElement object
      * In OpenGL / WebGL, resource is a texture ID obtained after the GPU is submitted
@@ -41,9 +40,9 @@ namespace egret {
      * @version Egret 2.4
      * @platform Web,Native
      * @includeExample egret/display/Texture.ts
+     * @language en_US
      */
     /**
-     * @language zh_CN
      * 纹理类是对不同平台不同的图片资源的封装
      * 在HTML5中，资源是一个HTMLElement对象
      * 在OpenGL / WebGL中，资源是一个提交GPU后获取的纹理id
@@ -53,20 +52,21 @@ namespace egret {
      * @version Egret 2.4
      * @platform Web,Native
      * @includeExample egret/display/Texture.ts
+     * @language zh_CN
      */
     export class Texture extends HashObject {
 
         /**
-         * @language en_US
          * Create an egret.Texture object
          * @version Egret 2.4
          * @platform Web,Native
+         * @language en_US
          */
         /**
-         * @language zh_CN
          * 创建一个 egret.Texture 对象
          * @version Egret 2.4
          * @platform Web,Native
+         * @language zh_CN
          */
         public constructor() {
             super();
@@ -111,16 +111,16 @@ namespace egret {
         private _textureWidth:number = 0;
 
         /**
-         * @language en_US
          * Texture width, read only
          * @version Egret 2.4
          * @platform Web,Native
+         * @language en_US
          */
         /**
-         * @language zh_CN
          * 纹理宽度，只读属性，不可以设置
          * @version Egret 2.4
          * @platform Web,Native
+         * @language zh_CN
          */
         public get textureWidth():number {
             return this.$getTextureWidth();
@@ -137,16 +137,16 @@ namespace egret {
         private _textureHeight:number = 0;
 
         /**
-         * @language en_US
          * Texture height, read only
          * @version Egret 2.4
          * @platform Web,Native
+         * @language en_US
          */
         /**
-         * @language zh_CN
          * 纹理高度，只读属性，不可以设置
          * @version Egret 2.4
          * @platform Web,Native
+         * @language zh_CN
          */
         public get textureHeight():number {
             return this.$getTextureHeight();
@@ -181,16 +181,16 @@ namespace egret {
         public _bitmapData:BitmapData = null;
 
         /**
-         * @language en_US
          * The BitmapData object being referenced.
          * @version Egret 2.4
          * @platform Web,Native
+         * @language en_US
          */
         /**
-         * @language zh_CN
          * 被引用的 BitmapData 对象。
          * @version Egret 2.4
          * @platform Web,Native
+         * @language zh_CN
          */
         public get bitmapData():BitmapData {
             return this._bitmapData;
@@ -201,16 +201,16 @@ namespace egret {
         }
 
          /**
-         * @language en_US
          * Set the BitmapData object.
          * @version Egret 3.2.1
          * @platform Web,Native
+         * @language en_US
          */
         /**
-         * @language zh_CN
          * 设置 BitmapData 对象。
          * @version Egret 3.2.1
          * @platform Web,Native
+         * @language zh_CN
          */
         public _setBitmapData(value:BitmapData) {
             this._bitmapData = value;
@@ -262,7 +262,6 @@ namespace egret {
         }
 
         /**
-         * @language en_US
          * Obtain the color value for the specified pixel region
          * @param x  The x coordinate of the pixel region
          * @param y  The y coordinate of the pixel region
@@ -271,9 +270,9 @@ namespace egret {
          * @returns  Specifies the color value for the pixel region
          * @version Egret 3.2.1
          * @platform Web,Native
+         * @language en_US
          */
         /**
-         * @language zh_CN
          * 获取指定像素区域的颜色值
          * @param x  像素区域的X轴坐标
          * @param y  像素区域的Y轴坐标
@@ -282,34 +281,34 @@ namespace egret {
          * @returns  指定像素区域的颜色值
          * @version Egret 3.2.1
          * @platform Web
+         * @language zh_CN
          */
         public getPixels(x:number, y:number, width:number = 1, height:number = 1):number[] {
             throw new Error();
         }
 
         /**
-         * @language en_US
          * Convert base64 string, if the picture (or pictures included) cross-border or null
          * @param type Type conversions, such as "image / png"
          * @param rect The need to convert the area
          * @param smoothing Whether to convert data to the smoothing process
          * @returns {any} base64 string
          * @version Egret 2.4
+         * @language en_US
          */
         /**
-         * @language zh_CN
          * 转换成base64字符串，如果图片（或者包含的图片）跨域，则返回null
          * @param type 转换的类型，如  "image/png"
          * @param rect 需要转换的区域
          * @returns {any} base64字符串
          * @version Egret 2.4
+         * @language zh_CN
          */
         public toDataURL(type:string, rect?:egret.Rectangle):string {
             throw new Error();
         }
 
         /**
-         * @language en_US
          * Crop designated area and save it as image.
          * native support only "image / png" and "image / jpeg"; Web browser because of the various implementations are not the same, it is recommended to use only these two kinds.
          * @param type Type conversions, such as "image / png"
@@ -317,9 +316,9 @@ namespace egret {
          * @param rect The need to convert the area
          * @version Egret 2.4
          * @platform Native
+         * @language en_US
          */
         /**
-         * @language zh_CN
          * 裁剪指定区域并保存成图片。
          * native只支持 "image/png" 和 "image/jpeg"；Web中由于各个浏览器的实现不一样，因此建议也只用这2种。
          * @param type 转换的类型，如  "image/png"
@@ -327,22 +326,23 @@ namespace egret {
          * @param rect 需要转换的区域
          * @version Egret 2.4
          * @platform Native
+         * @language zh_CN
          */
         public saveToFile(type:string, filePath:string, rect?:egret.Rectangle):void {
             throw new Error();
         }
 
         /**
-         * @language en_US
          * dispose texture
          * @version Egret 2.4
          * @platform Web,Native
+         * @language en_US
          */
         /**
-         * @language zh_CN
          * 释放纹理
          * @version Egret 2.4
          * @platform Web,Native
+         * @language zh_CN
          */
         public dispose():void {
             if (this._bitmapData) {
