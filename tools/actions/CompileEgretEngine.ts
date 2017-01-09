@@ -1,5 +1,3 @@
-/// <reference path="../lib/types.d.ts" />
-
 import utils = require('../lib/utils');
 import Compiler = require('./Compiler');
 import FileUtil = require('../lib/FileUtil');
@@ -191,15 +189,6 @@ class CompileEgretEngine {
         global.ignoreDollar = false;
     }
 
-}
-
-
-function testPlatform(value, array: Array<any>) {
-    return (value == ANY && (array == null || array.length == 0)) || (array && array.indexOf(value) >= 0);
-}
-
-function testConfig(value, array: Array<any>) {
-    return value == ANY || array == null || array.indexOf(value) >= 0;
 }
 
 function listModuleFiles(m: egret.EgretModule) {

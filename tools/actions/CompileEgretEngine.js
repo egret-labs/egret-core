@@ -1,4 +1,3 @@
-/// <reference path="../lib/types.d.ts" />
 var utils = require("../lib/utils");
 var Compiler = require("./Compiler");
 var FileUtil = require("../lib/FileUtil");
@@ -174,12 +173,6 @@ var CompileEgretEngine = (function () {
     };
     return CompileEgretEngine;
 }());
-function testPlatform(value, array) {
-    return (value == ANY && (array == null || array.length == 0)) || (array && array.indexOf(value) >= 0);
-}
-function testConfig(value, array) {
-    return value == ANY || array == null || array.indexOf(value) >= 0;
-}
 function listModuleFiles(m) {
     var tsFiles = [];
     if (m.noOtherTs !== true)

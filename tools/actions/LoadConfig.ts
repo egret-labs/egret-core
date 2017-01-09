@@ -2,7 +2,7 @@ import utils = require('../lib/utils');
 import file = require('../lib/FileUtil');
 export function loadTsConfig(url, options: egret.ToolArgs): void {
     var configStr: string = file.read(url);
-    var configObj: Object;
+    var configObj:ts.ParsedCommandLine
     var errLog = [];
     if (configStr) {
         try {
