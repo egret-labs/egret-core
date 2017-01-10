@@ -87,7 +87,6 @@ var CompileEgretEngine = (function () {
         var name = m.name;
         var fileName = name;
         var options = egret.args;
-        var larkRoot = egret.root;
         if (platform.name != ANY) {
             fileName += "." + platform.name;
         }
@@ -101,7 +100,7 @@ var CompileEgretEngine = (function () {
         var outDir = this.getModuleOutputPath(null, null, m.outFile);
         var declareFile = this.getModuleOutputPath(m.name, fileName + ".d.ts", m.outFile);
         var singleFile = this.getModuleOutputPath(m.name, fileName + ".js", m.outFile);
-        var moduleRoot = FileUtil.joinPath(larkRoot, m.root);
+        var moduleRoot = FileUtil.joinPath(egret.root, m.root);
         if (!m.root) {
             return 0;
         }
