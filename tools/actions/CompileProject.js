@@ -36,7 +36,12 @@ var CompileProject = (function () {
             var configParsedResult = compiler.loadTsconfig(args.projectDir + "tsconfig.json", args);
             this.compilerOptions = configParsedResult.options;
             args.tsconfigError = configParsedResult.errors.map(function (d) { return d.messageText.toString(); });
-            this.compilerOptions.outDir = path.join(args.projectDir, "bin-debug");
+            if (args.publish) {
+                this.compilerOptions.outFile = path.join(args.releaseDir, "main.min.js");
+            }
+            else {
+                this.compilerOptions.outDir = path.join(args.projectDir, "bin-debug");
+            }
             if (args.sourceMap == true) {
                 this.compilerOptions.sourceMap = true; //引擎命令行的sourcemap属性优先
             }
