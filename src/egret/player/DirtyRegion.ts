@@ -151,7 +151,7 @@ namespace egret.sys {
          */
         public getDirtyRegions():Region[] {
             let dirtyList = this.dirtyList;
-            if (this.$dirtyRegionPolicy == egret.DirtyRegionPolicy.OFF || (Capabilities.runtimeType == RuntimeType.NATIVE && !egret["native"]["$supportCanvas" + ""])) {
+            if (this.$dirtyRegionPolicy == egret.DirtyRegionPolicy.OFF) {
                 this.clipRectChanged = true;//阻止所有的addRegion()
                 this.clear();
                 let region:Region = Region.create();

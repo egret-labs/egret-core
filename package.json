@@ -31,22 +31,6 @@
             "platform": "native"
           },
           {
-            "path": "native/rendering/rendertexture/NativeRenderTextureRenderContext.ts",
-            "platform": "native"
-          },
-          {
-            "path": "native/rendering/rendertexture/OldNativeRenderTextureRenderContext.ts",
-            "platform": "native"
-          },
-          {
-            "path": "native/rendering/rendertexture/NativeRenderTexture.ts",
-            "platform": "native"
-          },
-          {
-            "path": "native/rendering/rendertexture/NativeRenderTextureRenderBuffer.ts",
-            "platform": "native"
-          },
-          {
             "path": "native/rendering/canvas/NativeCanvasRenderContext.ts",
             "platform": "native"
           },

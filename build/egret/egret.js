@@ -12141,6 +12141,18 @@ var egret;
 //  EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 //
 //////////////////////////////////////////////////////////////////////////////////////
+var egret_native;
+(function (egret_native) {
+    function selectPhoto() {
+        return new Promise(function (resolve) {
+            var promise = egret.PromiseObject.create();
+            promise.onSuccessFunc = function (content) {
+                resolve(content);
+            };
+            egret_native._selectPhoto(promise);
+        });
+    }
+})(egret_native || (egret_native = {}));
 //////////////////////////////////////////////////////////////////////////////////////
 //
 //  Copyright (c) 2014-present, Egret Technology.
@@ -12680,7 +12692,7 @@ var egret;
              */
             DirtyRegion.prototype.getDirtyRegions = function () {
                 var dirtyList = this.dirtyList;
-                if (this.$dirtyRegionPolicy == egret.DirtyRegionPolicy.OFF || (egret.Capabilities.runtimeType == egret.RuntimeType.NATIVE && !egret["native"]["$supportCanvas" + ""])) {
+                if (this.$dirtyRegionPolicy == egret.DirtyRegionPolicy.OFF) {
                     this.clipRectChanged = true; //阻止所有的addRegion()
                     this.clear();
                     var region = sys.Region.create();
@@ -18799,6 +18811,22 @@ var egret;
             }
             return value;
         };
+        /**
+         * Convert the text in html format to the object that can be assigned to the egret.TextField#textFlow property
+         * @param htmltext {string} Text in html
+         * @returns {Array<egret.ITextElement>} 可赋值给 egret.TextField#textFlow Object that can be assigned to the egret.TextField#textFlow property
+         * @version Egret 2.4
+         * @platform Web,Native
+         * @language en_US
+         */
+        /**
+         * 将html格式文本转换为可赋值给 egret.TextField#textFlow 属性的对象
+         * @param htmltext {string} html文本
+         * @returns {Array<egret.ITextElement>} 可赋值给 egret.TextField#textFlow 属性的对象
+         * @version Egret 2.4
+         * @platform Web,Native
+         * @language zh_CN
+         */
         HtmlTextParser.prototype.parse = function (htmltext) {
             this.stackArray = [];
             this.resutlArr = [];
@@ -18828,22 +18856,6 @@ var egret;
             }
             return this.resutlArr;
         };
-        /**
-         * Convert the text in html format to the object that can be assigned to the egret.TextField#textFlow property
-         * @param htmltext {string} Text in html
-         * @returns {Array<egret.ITextElement>} 可赋值给 egret.TextField#textFlow Object that can be assigned to the egret.TextField#textFlow property
-         * @version Egret 2.4
-         * @platform Web,Native
-         * @language en_US
-         */
-        /**
-         * 将html格式文本转换为可赋值给 egret.TextField#textFlow 属性的对象
-         * @param htmltext {string} html文本
-         * @returns {Array<egret.ITextElement>} 可赋值给 egret.TextField#textFlow 属性的对象
-         * @version Egret 2.4
-         * @platform Web,Native
-         * @language zh_CN
-         */
         HtmlTextParser.prototype.parser = function (htmltext) {
             return this.parse(htmltext);
         };
