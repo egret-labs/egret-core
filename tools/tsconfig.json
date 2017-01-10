@@ -5,7 +5,10 @@
         "noImplicitAny": false,
         "sourceMap": false,
         "noImplicitUseStrict": true,
-        "allowUnreachableCode": true
+        "allowUnreachableCode": true,
+        "lib":[
+            "es5","dom","es2015.promise"
+        ]
     },
     "include":[
         "**/*.ts"

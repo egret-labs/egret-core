@@ -16,7 +16,7 @@ import Clean = require('../commands/clean');
 
 class Create implements egret.Command {
     project: egret.EgretProjectConfig;
-    execute(): number {
+    async execute() {
 
         var proj = this.project;
         var options = egret.args;
@@ -37,7 +37,7 @@ class Create implements egret.Command {
 
         new Clean().execute();
         console.log(utils.tr(10017));
-        return DontExitCode;
+        return Promise.resolve(DontExitCode);
     }
 }
 
