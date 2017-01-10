@@ -188,15 +188,16 @@ class Compiler {
 
     private compileWithChanges(filesChanged: egret.FileChanges, sourceMap?: boolean): egret.EgretCompilerHost {
         this.errors = [];
-        filesChanged.forEach((file: any) => {
+        filesChanged.forEach(file => {
             if (file.type == "added") {
                 this.fileNames.push(file.fileName);
                 this.files[file.fileName] = { version: 0 };
             }
             else if (file.type == "removed") {
                 var index = this.fileNames.indexOf(file.fileName);
-                if (index >= 0)
+                if (index >= 0) {
                     this.fileNames.splice(index, 1);
+                }
             }
             else {
                 this.files[file.fileName].version++;
@@ -205,7 +206,7 @@ class Compiler {
 
         this.sortFiles();
 
-        filesChanged.forEach((file: any) => {
+        filesChanged.forEach(file => {
             this.emitFile(file.fileName);
         });
 

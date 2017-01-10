@@ -9,18 +9,18 @@ var events = require("events");
 var utils = require("../lib/utils");
 var Default = require("./controllers/default");
 global.lark = global.lark || {};
-function startServer(options, startupUrl) {
+function startServer(args, startupUrl) {
     var total = require('../lib/totaljs/');
     total.setRoot(__dirname);
-    options.port = options.port || 3000;
-    Default.UserProjectPath = options.projectDir;
-    options.projectDir = options.projectDir || '/public/';
+    args.port = args.port || 3000;
+    Default.UserProjectPath = args.projectDir;
+    args.projectDir = args.projectDir || '/public/';
     egret.server = {
-        options: options,
+        options: args,
         console: new ServerConsole(),
         IPs: getLocalIPAddress()
     };
-    var serverTmp = '~' + options.getTmpDir() + 'server/';
+    var serverTmp = '~' + args.getTmpDir() + 'server/';
     framework.config['directory-temp'] = serverTmp;
     framework.config['directory-public'] = serverTmp;
     framework.config['directory-views'] = '~' + __dirname + '/views/';
@@ -30,13 +30,13 @@ function startServer(options, startupUrl) {
     framework.config['allow-compile-html'] = false;
     framework.config['allow-compile-css'] = false;
     try {
-        total.http('debug', { port: options.port, ip: '0.0.0.0' });
-        if (!options.serverOnly)
+        total.http('debug', { port: args.port, ip: '0.0.0.0' });
+        if (!args.serverOnly)
             utils.open(startupUrl);
     }
     catch (e) {
         if (e.toString().indexOf('listen EADDRINUSE') !== -1) {
-            if (!options.serverOnly)
+            if (!args.serverOnly)
                 utils.open(startupUrl);
         }
     }

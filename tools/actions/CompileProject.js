@@ -20,15 +20,14 @@ var CompileProject = (function () {
     CompileProject.prototype.compileProject = function (args, files) {
         //console.log("----compileProject.compileProject----")
         if (files && this.compilerHost) {
-            files.forEach(function (f) { return f.fileName = f.fileName.replace(args.projectDir, ""); });
-            var realCWD = process.cwd();
-            process.chdir(args.projectDir);
+            // files.forEach(f => f.fileName = f.fileName.replace(args.projectDir, ""));
+            // var realCWD = process.cwd();
+            // process.chdir(args.projectDir);
             var sourceMap = args.sourceMap;
             if (sourceMap == undefined) {
                 sourceMap = this.compilerOptions.sourceMap;
             }
             this.compilerHost = this.compilerHost.compileWithChanges(files, sourceMap);
-            process.chdir(realCWD);
         }
         else {
             var compiler = new Compiler();

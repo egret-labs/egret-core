@@ -23,16 +23,15 @@ class CompileProject {
     public compileProject(args: egret.ToolArgs, files?: egret.FileChanges) {
         //console.log("----compileProject.compileProject----")
         if (files && this.compilerHost) {// console.log("----compileProject.compileProject.B-----")
-            files.forEach(f => f.fileName = f.fileName.replace(args.projectDir, ""));
-            var realCWD = process.cwd();
-            process.chdir(args.projectDir);
-
+            // files.forEach(f => f.fileName = f.fileName.replace(args.projectDir, ""));
+            // var realCWD = process.cwd();
+            // process.chdir(args.projectDir);
             var sourceMap = args.sourceMap;
             if (sourceMap == undefined) {
                 sourceMap = this.compilerOptions.sourceMap;
             }
             this.compilerHost = this.compilerHost.compileWithChanges(files, sourceMap);
-            process.chdir(realCWD);
+            // process.chdir(realCWD);
         }
         else { //console.log("----compileProject.compileProject.A-----")
             var compiler = new Compiler();

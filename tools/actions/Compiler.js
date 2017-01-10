@@ -156,8 +156,9 @@ var Compiler = (function () {
             }
             else if (file.type == "removed") {
                 var index = _this.fileNames.indexOf(file.fileName);
-                if (index >= 0)
+                if (index >= 0) {
                     _this.fileNames.splice(index, 1);
+                }
             }
             else {
                 _this.files[file.fileName].version++;
