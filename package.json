@@ -426,7 +426,7 @@
         "displayName": "Egret 游戏项目",
         "language": "TypeScript",
         "tag": "game,TypeScript",
-        "description": "创建一个Egret 游戏项目",
+        "description": "创建一个 Egret 游戏项目",
         "defaultWidth": 640,
         "defaultHeight": 1136,
         "modules": [
@@ -456,7 +456,7 @@
         "displayName": "Egret GUI 项目",
         "language": "TypeScript",
         "tag": "game,app,TypeScript",
-        "description": "创建一个Egret GUI 项目(建议创建eui项目，它更易于使用，可以为您提高创建界面的效率及性能)",
+        "description": "创建一个 Egret GUI 项目(建议创建eui项目，它更易于使用，可以为您提高创建界面的效率及性能)",
         "defaultWidth": 640,
         "defaultHeight": 1136,
         "modules": [
@@ -471,7 +471,7 @@
         "displayName": "Egret 3D 项目",
         "language": "TypeScript",
         "tag": "game,app,TypeScript",
-        "description": "创建一个Egret 3D 项目",
+        "description": "创建一个 Egret 3D 项目",
         "defaultWidth": 640,
         "defaultHeight": 960,
         "modules": [
@@ -484,7 +484,7 @@
         "displayName": "Facebook Instant Games Demo 项目",
         "language": "TypeScript",
         "tag": "game,app,TypeScript",
-        "description": "Facebook Instant Games Demo 项目",
+        "description": "Facebook 推出的一种游戏类型",
         "defaultWidth": 640,
         "defaultHeight": 1136,
         "modules": [
