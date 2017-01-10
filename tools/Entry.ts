@@ -59,23 +59,19 @@ class Entry {
             var command: { new (): egret.Command } = require("./commands/" + options.command);
         }
         catch (e) {
-            console.log (e)
+            console.log(e)
             console.log(utils.tr(10002, options.command));
             return 10002;
         }
         //添加异步命令的支持 异步命令不会在return后强制退出 默认返回DontExitCode
         var commandInstance = new command();
-        if(commandInstance.isAsync){
-            commandInstance.execute();
-            return DontExitCode;
-        }else{
-            var exitCode = commandInstance.execute();
-            return exitCode;
-        }
+
+        var exitCode = commandInstance.execute();
+        return exitCode;
     }
 
     exit(exitCode) {
-        if(DontExitCode == exitCode)
+        if (DontExitCode == exitCode)
             return;
         utils.exit(exitCode);
 

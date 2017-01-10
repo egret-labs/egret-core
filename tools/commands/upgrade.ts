@@ -14,15 +14,12 @@ import service = require('../service/index');
 
 class UpgradeCommand implements egret.Command {
 
-    isAsync:boolean;
     constructor(){
-        //升级命令是一个异步命令 内含异步控制流程
-        this.isAsync = true;
     }
 
     execute():number {
         this.run();
-        return 0;
+        return DontExitCode
     }
 
     private run() {

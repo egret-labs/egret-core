@@ -8,9 +8,7 @@ import Cordova = require('../actions/Cordova');
 import CopyFiles = require('../actions/CopyFiles');
 import CompileProject = require('../actions/CompileProject');
 import CompileTemplate = require('../actions/CompileTemplate');
-import APITestTool = require('../actions/APITest');
 import CHILD_EXEC = require('child_process');
-import APITestCommand = require('./apitest');
 import * as project from '../parser/EgretProject';
 import ts = require('../lib/typescript-plus/lib/typescript')
 
@@ -20,57 +18,7 @@ var timeBuildStart: number = (new Date()).getTime();
 class Build implements egret.Command {
     execute(callback?: (exitCode: number) => void): number {
         callback = callback || defaultBuildCallback;
-        //如果APITest未通过继续执行APITest
-        if (!APITestTool.isTestPass(egret.args.projectDir)) {
-            var apitest_command = new APITestCommand();
-            apitest_command.execute(() => {
-                globals.log2(1715);//项目检测成功
-                //成功以后再次执行build
-                var build = CHILD_EXEC.exec(
-                    globals.addQuotes(process.execPath) + " \"" +
-                    FileUtil.joinPath(egret.root, '/tools/bin/egret') + '\" build \"' + egret.args.projectDir + "\"",
-                    {
-                        encoding: 'utf8',
-                        timeout: 0,
-                        maxBuffer: 200 * 1024,
-                        killSignal: 'SIGTERM',
-                        cwd: process.cwd(),
-                        env: process.env
-                    });
-                build.stderr.on("data", (data) => {
-                    console.log(data);
-                });
-                build.stdout.on("data", (data) => {
-                    console.log(data);
-                });
-                build.on("exit", (result) => {
-                    process.exit(result);
-                });
-                //返回true截断默认的exit操作
-                return true;
-            });
-            //var build = CHILD_EXEC.exec(
-            //    'node \"'+FileUtil.joinPath(egret.root,'/tools/bin/egret')+'\" apitest \"'+egret.args.projectDir+"\"",
-            //    {
-            //        encoding: 'utf8',
-            //        timeout: 0,
-            //        maxBuffer: 200*1024,
-            //        killSignal: 'SIGTERM',
-            //        cwd: process.cwd(),
-            //        env: process.env
-            //    });
-            //build.stderr.on("data", (data) =>{
-            //    console.log(data);
-            //});
-            //build.stdout.on("data",(data)=>{
-            //    console.log(data);
-            //});
-            //build.on("exit", (result)=>{
-            //    process.exit(result);
-            //});
-            return DontExitCode;
-        }
-
+    
         var options = egret.args;
         let packageJsonContent
         if (packageJsonContent = FileUtil.read(project.utils.getFilePath("package.json"))) {

@@ -7,7 +7,6 @@
 declare module egret {
 
     export interface Command {
-        isAsync?: boolean;
         execute(): number;
     }
 
