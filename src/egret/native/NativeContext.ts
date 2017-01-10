@@ -140,8 +140,6 @@ declare namespace egret_native {
         function resumeBackgroundMusic(): void;
 
         function resumeAllEffects(): void;
-
-        function _selectPhoto(promise: egret.PromiseObject): void;
     }
 
     function download(url: string, savePath: string, promise: any): void;
