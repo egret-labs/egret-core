@@ -50,7 +50,7 @@ function compileTemplate(project: egret.EgretProjectConfig) {
 
     updateEgretProperties(modules);
 
-    modules.forEach(m=> {
+    modules.forEach(m => {
         moduleScripts.push(utils.format("libs/{0}/{0}", m.name));
         var scriptName = utils.format("libs/{0}/{0}.{1}", m.name, platform);
         if (FileUtil.exists(FileUtil.joinPath(options.srcDir, scriptName + ".js")))
@@ -63,8 +63,8 @@ function compileTemplate(project: egret.EgretProjectConfig) {
     project.moduleScripts = moduleScripts;
     project['scriptTemplate'] = scriptTemplate;
 
-    var files = FileUtil.searchByFunction(options.projectDir, f=> f.indexOf("index.html") > 0);
-    files.forEach(file=> {
+    var files = FileUtil.searchByFunction(options.projectDir, f => f.indexOf("index.html") > 0);
+    files.forEach(file => {
         var content = FileUtil.read(file);
         var temp = doT.template(content);
         content = temp(project);
@@ -80,7 +80,9 @@ function updateEgretProperties(modules: egret.EgretModule[]) {
     var jsonString = FileUtil.read(propFile);
     var props: egret.EgretProperties = JSON.parse(jsonString);
     props.egret_version = egret.version;
-    props.modules = modules.map(m=> ({ name: m.name }));
+    if (!props.modules) {
+        props.modules = modules.map(m => ({ name: m.name }));
+    }
     FileUtil.save(propFile, JSON.stringify(props, null, "  "));
 }
 

@@ -128,7 +128,8 @@ var CompileEgretEngine = (function () {
             return 0;
         tss = depends.concat(tss);
         var dts = platform.declaration && configuration.declaration;
-        var compileOptions = {};
+        var tsconfig = path.join(egret.root, 'src/egret/tsconfig.json');
+        var compileOptions = {}; // this.compiler.loadTsconfig(tsconfig,options).options
         //make 使用引擎的配置,必须用下面的参数
         compileOptions.target = ts.ScriptTarget.ES5;
         // parsedCmd.options.stripInternal = true;
@@ -139,6 +140,11 @@ var CompileEgretEngine = (function () {
         compileOptions.newLine = ts.NewLineKind.LineFeed;
         compileOptions.allowUnreachableCode = true;
         compileOptions.emitReflection = true;
+        compileOptions.lib = ['lib.es5.d.ts',
+            'lib.dom.d.ts',
+            'lib.es2015.promise.d.ts',
+            'lib.scripthost.d.ts'
+        ];
         var defines = {};
         if (configuration.name == "debug") {
             defines.DEBUG = true;

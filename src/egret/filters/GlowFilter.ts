@@ -50,7 +50,6 @@ namespace egret {
          */
         public $blue:number;
         /**
-         * @language en_US
          * Initializes a new GlowFilter instance.
          * @method egret.GlowFilter#constructor
          * @param color {number} The color of the glow. Valid values are in the hexadecimal format 0xRRGGBB. The default value is 0xFF0000.
@@ -63,9 +62,9 @@ namespace egret {
          * @param knockout {number} Specifies whether the object has a knockout effect. A value of true makes the object's fill transparent and reveals the background color of the document. The default value is false (no knockout effect).
          * @version Egret 3.1.4
          * @platform Web
+         * @language en_US
          */
         /**
-         * @language zh_CN
          * 初始化 GlowFilter 对象
          * @method egret.GlowFilter#constructor
          * @param color {number} 光晕颜色，采用十六进制格式 0xRRGGBB。默认值为 0xFF0000。
@@ -78,6 +77,7 @@ namespace egret {
          * @param knockout {number} 指定对象是否具有挖空效果。值为 true 将使对象的填充变为透明，并显示文档的背景颜色。
          * @version Egret 3.1.4
          * @platform Web
+         * @language zh_CN
          */
         constructor(color:number = 0xFF0000, alpha:number = 1.0, blurX:number = 6.0, blurY:number = 6.0, strength:number = 2, quality:number = 1, inner:boolean = false, knockout:boolean = false) {
             super();
@@ -102,16 +102,16 @@ namespace egret {
         public $color:number;
 
         /**
-         * @language en_US
          * The color of the glow.
          * @version Egret 3.1.4
          * @platform Web
+         * @language en_US
          */
         /**
-         * @language zh_CN
          * 光晕颜色。
          * @version Egret 3.1.4
          * @platform Web
+         * @language zh_CN
          */
         public get color():number {
             return this.$color;
@@ -134,16 +134,16 @@ namespace egret {
         public $alpha:number;
 
         /**
-         * @language en_US
          * The alpha transparency value for the color.
          * @version Egret 3.1.4
          * @platform Web
+         * @language en_US
          */
         /**
-         * @language zh_CN
          * 颜色的 Alpha 透明度值。
          * @version Egret 3.1.4
          * @platform Web
+         * @language zh_CN
          */
         public get alpha():number {
             return this.$alpha;
@@ -163,16 +163,16 @@ namespace egret {
         public $blurX:number;
 
         /**
-         * @language en_US
          * The amount of horizontal blur.
          * @version Egret 3.1.4
          * @platform Web
+         * @language en_US
          */
         /**
-         * @language zh_CN
          * 水平模糊量。
          * @version Egret 3.1.4
          * @platform Web
+         * @language zh_CN
          */
         public get blurX():number {
             return this.$blurX;
@@ -192,16 +192,16 @@ namespace egret {
         public $blurY:number;
 
         /**
-         * @language en_US
          * The amount of vertical blur.
          * @version Egret 3.1.4
          * @platform Web
+         * @language en_US
          */
         /**
-         * @language zh_CN
          * 垂直模糊量。
          * @version Egret 3.1.4
          * @platform Web
+         * @language zh_CN
          */
         public get blurY():number {
             return this.$blurY;
@@ -221,16 +221,16 @@ namespace egret {
         public $strength:number;
 
         /**
-         * @language en_US
          * The strength of the imprint or spread.
          * @version Egret 3.1.4
          * @platform Web
+         * @language en_US
          */
         /**
-         * @language zh_CN
          * 印记或跨页的强度。
          * @version Egret 3.1.4
          * @platform Web
+         * @language zh_CN
          */
         public get strength():number {
             return this.$strength;
@@ -250,16 +250,16 @@ namespace egret {
         public $quality:number;
 
         /**
-         * @language en_US
          * The number of times to apply the filter.
          * @version Egret 3.1.4
          * @platform Web
+         * @language en_US
          */
         /**
-         * @language zh_CN
          * 应用滤镜的次数。
          * @version Egret 3.1.4
          * @platform Web
+         * @language zh_CN
          */
         public get quality():number {
             return this.$quality;
@@ -279,16 +279,16 @@ namespace egret {
         public $inner:boolean;
 
         /**
-         * @language en_US
          * Specifies whether the glow is an inner glow.
          * @version Egret 3.1.4
          * @platform Web
+         * @language en_US
          */
         /**
-         * @language zh_CN
          * 指定发光是否为内侧发光。
          * @version Egret 3.1.4
          * @platform Web
+         * @language zh_CN
          */
         public get inner():boolean {
             return this.$inner;
@@ -308,16 +308,16 @@ namespace egret {
         public $knockout:boolean;
 
         /**
-         * @language en_US
          * Specifies whether the object has a knockout effect.
          * @version Egret 3.1.4
          * @platform Web
+         * @language en_US
          */
         /**
-         * @language zh_CN
          * 指定对象是否具有挖空效果。
          * @version Egret 3.1.4
          * @platform Web
+         * @language zh_CN
          */
         public get knockout():boolean {
             return this.$knockout;

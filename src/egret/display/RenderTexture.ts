@@ -30,20 +30,20 @@
 namespace egret {
 
     /**
-     * @language en_US
      * RenderTexture is a dynamic texture
      * @extends egret.Texture
      * @version Egret 2.4
      * @platform Web,Native
      * @includeExample egret/display/RenderTexture.ts
+     * @language en_US
      */
     /**
-     * @language zh_CN
      * RenderTexture 是动态纹理类，他实现了将显示对象及其子对象绘制成为一个纹理的功能
      * @extends egret.Texture
      * @version Egret 2.4
      * @platform Web,Native
      * @includeExample egret/display/RenderTexture.ts
+     * @language zh_CN
      */
     export class RenderTexture extends egret.Texture {
 
@@ -57,22 +57,22 @@ namespace egret {
 
         public $renderBuffer:sys.RenderBuffer;
         /**
-         * @language en_US
          * The specified display object is drawn as a texture
          * @param displayObject {egret.DisplayObject} the display to draw
          * @param clipBounds {egret.Rectangle} clip rect
          * @param scale {number} scale factor
          * @version Egret 2.4
          * @platform Web,Native
+         * @language en_US
          */
         /**
-         * @language zh_CN
          * 将指定显示对象绘制为一个纹理
          * @param displayObject {egret.DisplayObject} 需要绘制的显示对象
          * @param clipBounds {egret.Rectangle} 绘制矩形区域
          * @param scale {number} 缩放比例
          * @version Egret 2.4
          * @platform Web,Native
+         * @language zh_CN
          */
         public drawToTexture(displayObject:egret.DisplayObject, clipBounds?:Rectangle, scale:number = 1):boolean {
             if (clipBounds && (clipBounds.width == 0 || clipBounds.height == 0)) {

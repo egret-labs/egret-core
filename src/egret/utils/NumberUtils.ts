@@ -37,40 +37,40 @@ namespace egret {
     export class NumberUtils {
 
         /**
-         * @language en_US
          * Judge whether it is a numerical value
          * @param value Parameter that needs to be judged
          * @returns 
          * @version Egret 2.4
          * @platform Web,Native
+         * @language en_US
          */
         /**
-         * @language zh_CN
          * 判断是否是数值
          * @param value 需要判断的参数
          * @returns
          * @version Egret 2.4
          * @platform Web,Native
+         * @language zh_CN
          */
         public static isNumber(value:any):boolean {
             return typeof(value) === "number" && !isNaN(value);
         }
 
         /**
-         * @language en_US
          * Obtain the approximate sin value of the corresponding angle value
          * @param value {number} Angle value
          * @returns {number} sin value
          * @version Egret 2.4
          * @platform Web,Native
+         * @language en_US
          */
         /**
-         * @language zh_CN
          * 得到对应角度值的sin近似值
          * @param value {number} 角度值
          * @returns {number} sin值
          * @version Egret 2.4
          * @platform Web,Native
+         * @language zh_CN
          */
         public static sin(value:number):number {
             let valueFloor:number = Math.floor(value);
@@ -100,20 +100,20 @@ namespace egret {
         }
 
         /**
-         * @language en_US
          * Obtain the approximate cos value of the corresponding angle value
          * @param value {number} Angle value
          * @returns {number} cos value
          * @version Egret 2.4
          * @platform Web,Native
+         * @language en_US
          */
         /**
-         * @language zh_CN
          * 得到对应角度值的cos近似值
          * @param value {number} 角度值
          * @returns {number} cos值
          * @version Egret 2.4
          * @platform Web,Native
+         * @language zh_CN
          */
         public static cos(value:number):number {
             let valueFloor:number = Math.floor(value);

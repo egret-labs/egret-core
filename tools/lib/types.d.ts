@@ -88,7 +88,6 @@ declare module egret {
         added: string[];
         removed: string[];
         modified: string[];
-        compilerOptions: ts.CompilerOptions;
         tsconfigError: string[];//tsconfig 配置文件的错误信息
 
         toJSON: () => any;

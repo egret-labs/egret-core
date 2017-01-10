@@ -45,83 +45,82 @@
 
 namespace RES {
     /**
-     * @language en_US
      * Conduct mapping injection with class definition as the value.
      * @param type Injection type.
      * @param analyzerClass Injection type classes need to be resolved.
      * @version Egret 2.4
      * @platform Web,Native
      * @includeExample extension/resource/Resource.ts
+     * @language en_US
      */
     /**
-     * @language zh_CN
      * 以类定义为值进行映射注入。
      * @param type 注入的类型。
      * @param analyzerClass 注入类型需要解析的类。
      * @version Egret 2.4
      * @platform Web,Native
      * @includeExample extension/resource/Resource.ts
+     * @language zh_CN
      */
     export function registerAnalyzer(type:string, analyzerClass:any) {
         instance.registerAnalyzer(type, analyzerClass);
     }
 
     /**
-     * @language en_US
      * Get mapping injection.
      * @param type Injection type.
      * @version Egret 3.2.6
      * @platform Web,Native
      * @includeExample extension/resource/Resource.ts
+     * @language en_US
      */
     /**
-     * @language zh_CN
      * 获取映射注入。
      * @param type 注入的类型。
      * @version Egret 3.2.6
      * @platform Web,Native
      * @includeExample extension/resource/Resource.ts
+     * @language zh_CN
      */
     export function getAnalyzer(type:string):AnalyzerBase {
         return instance.$getAnalyzerByType(type);
     }
 
     /**
-     * @language en_US
      * Register the VersionController
      * @param vcs The VersionController to register.
      * @version Egret 2.5
      * @platform Web,Native
+     * @language en_US
      */
     /**
-     * @language zh_CN
      * 注册版本控制器,通过RES模块加载资源时会从版本控制器获取真实url
      * @param vcs 注入的版本控制器。
      * @version Egret 2.5
      * @platform Web,Native
+     * @language zh_CN
      */
     export function registerVersionController(vcs:VersionController):void {
         instance.$registerVersionController(vcs);
     }
 
     /**
-     * @language en_US
      * Returns the VersionController
      * @version Egret 2.5
      * @platform Web,Native
+     * @language en_US
      */
     /**
-     * @language zh_CN
      * 获得版本控制器.
      * @version Egret 2.5
      * @platform Web,Native
+     * @language zh_CN
      */
     export function getVersionController():VersionController {
         return instance.vcs;
     }
 
     /**
-     * @language en_US
      * Load configuration file and parse.
      * @param url Configuration file path (path resource.json).
      * @param resourceRoot Resource path. All URL in the configuration is the relative value of the path. The ultimate URL is the value of the sum of the URL of the string and the resource in the configuration.
@@ -129,9 +128,9 @@ namespace RES {
      * @see #setMaxRetryTimes
      * @version Egret 2.4
      * @platform Web,Native
+     * @language en_US
      */
     /**
-     * @language zh_CN
      * 加载配置文件并解析。
      * @param url 配置文件路径(resource.json的路径)。
      * @param resourceRoot 资源根路径。配置中的所有url都是这个路径的相对值。最终url是这个字符串与配置里资源项的url相加的值。
@@ -139,12 +138,12 @@ namespace RES {
      * @see #setMaxRetryTimes
      * @version Egret 2.4
      * @platform Web,Native
+     * @language zh_CN
      */
     export function loadConfig(url:string,resourceRoot:string="",type:string="json"):void{
         instance.loadConfig(url,resourceRoot,type);
     }
     /**
-     * @language en_US
      * Load a set of resources according to the group name.
      * @param name Group name to load the resource group.
      * @param priority Load priority can be negative, the default value is 0.
@@ -152,9 +151,9 @@ namespace RES {
      * @see #setMaxRetryTimes
      * @version Egret 2.4
      * @platform Web,Native
+     * @language en_US
      */
     /**
-     * @language zh_CN
      * 根据组名加载一组资源。
      * @param name 要加载资源组的组名。
      * @param priority 加载优先级,可以为负数,默认值为 0。
@@ -162,33 +161,33 @@ namespace RES {
      * @see #setMaxRetryTimes
      * @version Egret 2.4
      * @platform Web,Native
+     * @language zh_CN
      */
     export function loadGroup(name:string,priority:number=0):void{
         instance.loadGroup(name,priority);
     }
     /**
-     * @language en_US
      * Check whether a resource group has been loaded.
      * @param name Group name。
      * @returns Is loading or not.
      * @see #setMaxRetryTimes
      * @version Egret 2.4
      * @platform Web,Native
+     * @language en_US
      */
     /**
-     * @language zh_CN
      * 检查某个资源组是否已经加载完成。
      * @param name 组名。
      * @returns 是否正在加载。
      * @see #setMaxRetryTimes
      * @version Egret 2.4
      * @platform Web,Native
+     * @language zh_CN
      */
     export function isGroupLoaded(name:string):boolean{
         return instance.isGroupLoaded(name);
     }
     /**
-     * @language en_US
      * A list of groups of loading is obtained according to the group name.
      * @param name Group name.
      * @returns The resource item array of group.
@@ -196,9 +195,9 @@ namespace RES {
      * @see #setMaxRetryTimes
      * @version Egret 2.4
      * @platform Web,Native
+     * @language en_US
      */
     /**
-     * @language zh_CN
      * 根据组名获取组加载项列表。
      * @param name 组名。
      * @returns 加载项列表。
@@ -206,12 +205,12 @@ namespace RES {
      * @see #setMaxRetryTimes
      * @version Egret 2.4
      * @platform Web,Native
+     * @language zh_CN
      */
     export function getGroupByName(name:string):Array<ResourceItem>{
         return instance.getGroupByName(name);
     }
     /**
-     * @language en_US
      * Create a custom load resource group, note that this method is valid only after the resource configuration file is loaded.
      * <br>You can monitor the ResourceEvent.CONFIG_COMPLETE event to verify that the configuration is complete.
      * @param name Group name to create the load resource group.
@@ -221,9 +220,9 @@ namespace RES {
      * @see #setMaxRetryTimes
      * @version Egret 2.4
      * @platform Web,Native
+     * @language en_US
      */
     /**
-     * @language zh_CN
      * 创建自定义的加载资源组,注意：此方法仅在资源配置文件加载完成后执行才有效。
      * <br>可以监听 ResourceEvent.CONFIG_COMPLETE 事件来确认配置加载完成。
      * @param name 要创建的加载资源组的组名。
@@ -233,52 +232,52 @@ namespace RES {
      * @see #setMaxRetryTimes
      * @version Egret 2.4
      * @platform Web,Native
+     * @language zh_CN
      */
     export function createGroup(name:string,keys:string[],override:boolean = false):boolean{
         return instance.createGroup(name,keys,override);
     }
     /**
-     * @language en_US
      * Check whether the configuration file contains the specified resources.
      * @param key A sbuKeys attribute or name property in a configuration file.
      * @see #setMaxRetryTimes
      * @version Egret 2.4
      * @platform Web,Native
+     * @language en_US
      */
     /**
-     * @language zh_CN
      * 检查配置文件里是否含有指定的资源。
      * @param key 对应配置文件里的 name 属性或 sbuKeys 属性的一项。
      * @see #setMaxRetryTimes
      * @version Egret 2.4
      * @platform Web,Native
+     * @language zh_CN
      */
     export function hasRes(key:string):boolean{
         return instance.hasRes(key);
     }
     /**
-     * @language en_US
      * parse a configuration file at run time，it will not clean the exist data.
      * @param data Configuration file data, please refer to the resource.json configuration file format. JSON object can be introduced into the corresponding.
      * @param folder Path prefix for load.
      * @see #setMaxRetryTimes
      * @version Egret 2.4
      * @platform Web,Native
+     * @language en_US
      */
     /**
-     * @language zh_CN
      * 运行时动态解析一个配置文件,此操作不会清空之前已存在的配置。
      * @param data 配置文件数据，请参考 resource.json 的配置文件格式。传入对应的 json 对象即可。
      * @param folder 加载项的路径前缀。
      * @see #setMaxRetryTimes
      * @version Egret 2.4
      * @platform Web,Native
+     * @language zh_CN
      */
     export function parseConfig(data:any, folder:string=""):void {
         instance.parseConfig(data,folder);
     }
     /**
-     * @language en_US
      * The synchronization method for obtaining the cache has been loaded with the success of the resource.
      * <br>The type of resource and the corresponding return value types are as follows:
      * <br>RES.ResourceItem.TYPE_BIN : ArrayBuffer JavaScript primary object
@@ -296,9 +295,9 @@ namespace RES {
      * @see #setMaxRetryTimes
      * @version Egret 2.4
      * @platform Web,Native
+     * @language en_US
      */
     /**
-     * @language zh_CN
      * 同步方式获取缓存的已经加载成功的资源。
      * <br>资源类型和对应的返回值类型关系如下：
      * <br>RES.ResourceItem.TYPE_BIN : ArrayBuffer JavaScript 原生对象
@@ -315,12 +314,12 @@ namespace RES {
      * @see #setMaxRetryTimes
      * @version Egret 2.4
      * @platform Web,Native
+     * @language zh_CN
      */
     export function getRes(key:string):any{
         return instance.getRes(key);
     }
     /**
-     * @language en_US
      * Asynchronous mode to get the resources in the configuration. As long as the resources exist in the configuration file, you can get it in an asynchronous way.
      * @param key A sbuKeys attribute or name property in a configuration file.
      * @param compFunc Call back function. Example：compFunc(data,key):void.
@@ -328,9 +327,9 @@ namespace RES {
      * @see #setMaxRetryTimes
      * @version Egret 2.4
      * @platform Web,Native
+     * @language en_US
      */
     /**
-     * @language zh_CN
      * 异步方式获取配置里的资源。只要是配置文件里存在的资源，都可以通过异步方式获取。
      * @param key 对应配置文件里的 name 属性或 sbuKeys 属性的一项。
      * @param compFunc 回调函数。示例：compFunc(data,key):void。
@@ -338,12 +337,12 @@ namespace RES {
      * @see #setMaxRetryTimes
      * @version Egret 2.4
      * @platform Web,Native
+     * @language zh_CN
      */
     export function getResAsync(key:string,compFunc:Function,thisObject:any):void{
         instance.getResAsync(key,compFunc,thisObject);
     }
     /**
-     * @language en_US
      * Access to external resources through the full URL.
      * @param url The external path to load the file.
      * @param compFunc Call back function. Example：compFunc(data,url):void。
@@ -352,9 +351,9 @@ namespace RES {
      * @version Egret 2.4
      * @platform Web,Native
      * @includeExample extension/resource/GetResByUrl.ts
+     * @language en_US
      */
     /**
-     * @language zh_CN
      * 通过完整URL方式获取外部资源。
      * @param url 要加载文件的外部路径。
      * @param compFunc 回调函数。示例：compFunc(data,url):void。
@@ -363,12 +362,12 @@ namespace RES {
      * @version Egret 2.4
      * @platform Web,Native
      * @includeExample extension/resource/GetResByUrl.ts
+     * @language zh_CN
      */
     export function getResByUrl(url:string,compFunc:Function,thisObject:any,type:string=""):void{
         instance.getResByUrl(url,compFunc,thisObject,type);
     }
     /**
-     * @language en_US
      * Destroy a single resource file or a set of resources to the cache data, to return whether to delete success.
      * @param name Name attribute or resource group name of the load item in the configuration file.
      * @param force Destruction of a resource group when the other resources groups have the same resource situation whether the resources will be deleted, the default value true.
@@ -376,9 +375,9 @@ namespace RES {
      * @see #setMaxRetryTimes
      * @version Egret 2.4
      * @platform Web,Native
+     * @language en_US
      */
     /**
-     * @language zh_CN
      * 销毁单个资源文件或一组资源的缓存数据,返回是否删除成功。
      * @param name 配置文件中加载项的name属性或资源组名。
      * @param force 销毁一个资源组时其他资源组有同样资源情况资源是否会被删除，默认值 true。
@@ -386,52 +385,52 @@ namespace RES {
      * @returns 是否销毁成功。
      * @version Egret 2.4
      * @platform Web,Native
+     * @language zh_CN
      */
     export function destroyRes(name:string, force?:boolean):boolean{
         return instance.destroyRes(name, force);
     }
     /**
-     * @language en_US
      * Sets the maximum number of concurrent load threads, the default value is 2.
      * @param thread The number of concurrent loads to be set.
      * @see #setMaxRetryTimes
      * @version Egret 2.4
      * @platform Web,Native
+     * @language en_US
      */
     /**
-     * @language zh_CN
      * 设置最大并发加载线程数量，默认值是 2。
      * @param thread 要设置的并发加载数。
      * @see #setMaxRetryTimes
      * @version Egret 2.4
      * @platform Web,Native
+     * @language zh_CN
      */
     export function setMaxLoadingThread(thread:number):void{
         instance.setMaxLoadingThread(thread);
     }
 
     /**
-     * @language en_US
      * Sets the number of retry times when the resource failed to load, and the default value is 3.
      * @param retry To set the retry count.
      * @includeExample extension/resource/Resource.ts
      * @version Egret 2.4
      * @platform Web,Native
+     * @language en_US
      */
     /**
-     * @language zh_CN
      * 设置资源加载失败时的重试次数，默认值是 3。
      * @param retry 要设置的重试次数。
      * @includeExample extension/resource/Resource.ts
      * @version Egret 2.4
      * @platform Web,Native
+     * @language zh_CN
      */
     export function setMaxRetryTimes(retry: number): void {
         instance.setMaxRetryTimes(retry);
     }
 
     /**
-     * @language en_US
      * Add event listeners, reference ResourceEvent defined constants.
      * @param type Event name。
      * @param listener Listener functions for handling events. This function must accept the Event object as its only parameter, and can't return any results,
@@ -447,9 +446,9 @@ namespace RES {
      * @see RES.ResourceEvent
      * @version Egret 2.4
      * @platform Web,Native
+     * @language en_US
      */
     /**
-     * @language zh_CN
      * 添加事件侦听器,参考 ResourceEvent 定义的常量。
      * @param type 事件的类型。
      * @param listener 处理事件的侦听器函数。此函数必须接受 Event 对象作为其唯一的参数，并且不能返回任何结果，
@@ -464,12 +463,12 @@ namespace RES {
      * @see #setMaxRetryTimes
      * @version Egret 2.4
      * @platform Web,Native
+     * @language zh_CN
      */
     export function addEventListener(type:string, listener:(event:egret.Event)=>void, thisObject:any, useCapture:boolean = false, priority:number = 0):void {
         instance.addEventListener(type,listener,thisObject,useCapture,priority);
     }
     /**
-     * @language en_US
      * Remove event listeners, reference ResourceEvent defined constants.
      * @param type Event name。
      * @param listener Listening function。
@@ -477,9 +476,9 @@ namespace RES {
      * @param useCapture Is used to capture, and this property is only valid in the display list.
      * @version Egret 2.4
      * @platform Web,Native
+     * @language en_US
      */
     /**
-     * @language zh_CN
      * 移除事件侦听器,参考ResourceEvent定义的常量。
      * @param type 事件名。
      * @param listener 侦听函数。
@@ -487,6 +486,7 @@ namespace RES {
      * @param useCapture 是否使用捕获，这个属性只在显示列表中生效。
      * @version Egret 2.4
      * @platform Web,Native
+     * @language zh_CN
      */
     export function removeEventListener(type:string, listener:(event:egret.Event)=>void,thisObject:any,useCapture:boolean = false):void {
         instance.removeEventListener(type,listener,thisObject,useCapture);

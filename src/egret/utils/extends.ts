@@ -39,7 +39,6 @@
 namespace egret {
 
     /**
-     * @language en_US
      * Call setter properties of the parent class, instead of the other writing languages, such as super.alpha = 1;
      * @param currentClass The current class class name, non-string
      * @param thisObj The current object. Always this
@@ -47,9 +46,9 @@ namespace egret {
      * @param values Value passed to the parent class
      *
      * @exmaple egret.superSetter(egret.Sprite, this, "alpha", 1);
+     * @language en_US
      */
     /**
-     * @language zh_CN
      * 调用父类的setter属性，代替其他语言的写法，如 super.alpha = 1;
      * @param thisObj 当前对象。永远都this
      * @param currentClass 当前 class 类名，非字符串
@@ -57,6 +56,7 @@ namespace egret {
      * @param values 传给父类的值
      *
      * @exmaple egret.superSetter(egret.Sprite, this, "alpha", 1);
+     * @language zh_CN
      */
     export function superSetter(currentClass:any, thisObj:any, type:string, ...values) {
         let cla = currentClass.prototype;
@@ -90,7 +90,6 @@ namespace egret {
     }
 
     /**
-     * @language en_US
      * Get getter property value of the parent class. Instead of writing in other languages, such as super.alpha;
      * @param currentClass The current class class name, non-string
      * @param thisObj The current object. Always this
@@ -98,9 +97,9 @@ namespace egret {
      * @returns {any} The value returned by the parent
      *
      * @exmaple egret.superGetter(egret.Sprite, this, "alpha");
+     * @language en_US
      */
     /**
-     * @language zh_CN
      * 获取父类的getter属性值。代替其他语言的写法，如 super.alpha;
      * @param thisObj 当前对象。永远都this
      * @param currentClass 当前 class 类名，非字符串
@@ -108,6 +107,7 @@ namespace egret {
      * @returns {any} 父类返回的值
      *
      * @exmaple egret.superGetter(egret.Sprite, this, "alpha");
+     * @language zh_CN
      */
     export function superGetter(currentClass:any, thisObj:any, type:string):any {
         let cla = currentClass.prototype;

@@ -31,7 +31,6 @@ namespace eui {
 
     let UIImpl = sys.UIComponentImpl;
     /**
-     * @language en_US
      * Label is an UIComponent that can render one or more lines of text.
      * The text to be displayed is determined by the <code>text</code> property.
      * The formatting of the text is specified by the styles，
@@ -58,9 +57,9 @@ namespace eui {
      * @version eui 1.0
      * @platform Web,Native
      * @includeExample  extension/eui/components/LabelExample.ts
+     * @language en_US
      */
     /**
-     * @language zh_CN
      * Label 是可以呈示一行或多行统一格式文本的UI组件。要显示的文本由 text 属性确定。文本格式由样式属性指定，例如 fontFamily 和 size。
      * 因为 Label 运行速度快且占用内存少，所以它特别适合用于显示多个小型非交互式文本的情况，例如，项呈示器和 Button 外观中的标签。
      * 在 Label 中，将以下三个字符序列识别为显式换行符：CR（“\r”）、LF（“\n”）和 CR+LF（“\r\n”）。
@@ -71,11 +70,11 @@ namespace eui {
      * @version eui 1.0
      * @platform Web,Native
      * @includeExample  extension/eui/components/LabelExample.ts
+     * @language zh_CN
      */
     export class Label extends egret.TextField implements UIComponent,IDisplayText {
 
         /**
-         * @language en_US
          * Constructor.
          *
          * @param text The text displayed by this text component.
@@ -83,9 +82,9 @@ namespace eui {
          * @version Egret 2.4
          * @version eui 1.0
          * @platform Web,Native
+         * @language en_US
          */
         /**
-         * @language zh_CN
          * 构造函数。
          *
          * @param text 此文本组件所显示的文本。
@@ -93,6 +92,7 @@ namespace eui {
          * @version Egret 2.4
          * @version eui 1.0
          * @platform Web,Native
+         * @language zh_CN
          */
         public constructor(text?:string) {
             super();
@@ -129,16 +129,16 @@ namespace eui {
         private $changeFromStyle:boolean = false;
 
         /**
-         * @language en_US
          * The style of text.
          * @version Egret 3.2.1
          * @platform Web,Native
+         * @language en_US
          */
         /**
-         * @language zh_CN
          * 文本样式。
          * @version Egret 3.2.1
          * @platform Web,Native
+         * @language zh_CN
          */
         public get style(): string {
             return this.$style;

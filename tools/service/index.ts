@@ -97,7 +97,6 @@ function handleCommands(task: egret.ServiceCommand, res: ServiceSocket) {
 export function execCommand(command :egret.ServiceCommand, callback?: Function,startServer = true):ServiceSocket{
     var options = egret.args;
     var requestUrl = getServiceURL(command);
-
     var client = net.connect(LARK_SERVICE_PORT,"127.0.0.1");
     var ss = new ServiceSocket(client);
     client.on('error', function (e) {

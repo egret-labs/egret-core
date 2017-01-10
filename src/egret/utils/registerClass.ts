@@ -29,7 +29,6 @@
 
 namespace egret {
     /**
-     * @language en_US
      * Registers the runtime class information for a class.This method adds some strings which represent the class name or
      * some interface names to the class definition. After the registration,you can use egret.is() method to do the type checking
      * for the instance of this class.<br/>
@@ -49,9 +48,9 @@ namespace egret {
      * @param interfaceNames a list of unique identification string of the specific interfaces.
      * @version Egret 2.4
      * @platform Web,Native
+     * @language en_US
      */
     /**
-     * @language zh_CN
      * 为一个类定义注册运行时类信息,用此方法往类定义上注册它自身以及所有接口对应的字符串。
      * 在运行时，这个类的实例将可以使用 egret.is() 方法传入一个字符串来判断实例类型。
      * @example 以下代码演示了如何为EventDispatcher类注册运行时类信息并判断类型：
@@ -70,6 +69,7 @@ namespace egret {
      * @param interfaceNames 要注册的类所实现的接口名列表。
      * @version Egret 2.4
      * @platform Web,Native
+     * @language zh_CN
      */
     export function registerClass(classDefinition:any, className:string, interfaceNames?:string[]):void {
         if (DEBUG) {

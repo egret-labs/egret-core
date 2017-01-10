@@ -383,16 +383,14 @@
         "description": "dragonbones 龙骨动画库",
         "files": [],
         "root": "",
-        "dependencies": [
-        ]
+        "dependencies": []
       },
       {
         "name": "egret3d",
         "description": "egret 3D引擎库",
         "files": [],
         "root": "",
-        "dependencies": [
-        ]
+        "dependencies": []
       }
     ],
     "platforms": [
@@ -479,6 +477,22 @@
         "modules": [
           "egret",
           "egret3d"
+        ]
+      },
+      {
+        "name": "facebook-instant-demo",
+        "displayName": "Facebook Instant Game Demo 项目",
+        "language": "TypeScript",
+        "tag": "game,app,TypeScript",
+        "description": "Facebook Instant Game Demo 项目",
+        "defaultWidth": 640,
+        "defaultHeight": 1136,
+        "modules": [
+          "egret",
+          "game",
+          "res",
+          "eui",
+          "tween"
         ]
       }
     ],

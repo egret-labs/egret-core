@@ -105,8 +105,9 @@ class CompileEgretEngine {
             return 0;
         tss = depends.concat(tss);
         var dts = platform.declaration && configuration.declaration;
+        let tsconfig = path.join(egret.root, 'src/egret/tsconfig.json');
+        let compileOptions: ts.CompilerOptions = {};// this.compiler.loadTsconfig(tsconfig,options).options
 
-        let compileOptions: ts.CompilerOptions = {}
         //make 使用引擎的配置,必须用下面的参数
         compileOptions.target = ts.ScriptTarget.ES5;
         // parsedCmd.options.stripInternal = true;
@@ -117,6 +118,11 @@ class CompileEgretEngine {
         compileOptions.newLine = ts.NewLineKind.LineFeed;
         compileOptions.allowUnreachableCode = true;
         compileOptions.emitReflection = true;
+        compileOptions.lib = ['lib.es5.d.ts',
+            'lib.dom.d.ts',
+            'lib.es2015.promise.d.ts',
+            'lib.scripthost.d.ts'
+            ];
 
         let defines: any = {};
         if (configuration.name == "debug") {
@@ -124,6 +130,7 @@ class CompileEgretEngine {
             defines.RELEASE = false;
         }
         compileOptions.defines = defines;
+
         var result = this.compiler.compileWithTsconfig(compileOptions, tss);
         if (result != 0) {
             return result;
@@ -151,43 +158,43 @@ class CompileEgretEngine {
         return path;
     }
 
-//     private hideInternalMethods() {
-//         return;
-//         var tempDts: string[] = [];
-//         global.ignoreDollar = true;
-//         this.dtsFiles.forEach(d => {
-//             var dts = d[0], depends = d[1];
-//             var tempDtsName = dts.replace(/\.d\.ts/, 'd.ts');
-//             var singleFile = dts.replace(/\.d\.ts/, 'd.js');
-//             FileUtil.copy(dts, tempDtsName);
-//             var tss = depends.concat(tempDtsName);
-//             var result = this.compiler.compile({
-//                 args: egret.args,
-//                 def: true,
-//                 out: singleFile,
-//                 files: tss,
-//                 outDir: null
-//             });
-//             if (result.messages && result.messages.length) {
-//                 result.messages.forEach(m => console.log(m));
-//             }
-//             FileUtil.remove(singleFile);
-//             FileUtil.remove(tempDtsName);
-//             tempDts.push(tempDtsName.replace(/\.ts$/, '.d.ts'));
-//         });
+    //     private hideInternalMethods() {
+    //         return;
+    //         var tempDts: string[] = [];
+    //         global.ignoreDollar = true;
+    //         this.dtsFiles.forEach(d => {
+    //             var dts = d[0], depends = d[1];
+    //             var tempDtsName = dts.replace(/\.d\.ts/, 'd.ts');
+    //             var singleFile = dts.replace(/\.d\.ts/, 'd.js');
+    //             FileUtil.copy(dts, tempDtsName);
+    //             var tss = depends.concat(tempDtsName);
+    //             var result = this.compiler.compile({
+    //                 args: egret.args,
+    //                 def: true,
+    //                 out: singleFile,
+    //                 files: tss,
+    //                 outDir: null
+    //             });
+    //             if (result.messages && result.messages.length) {
+    //                 result.messages.forEach(m => console.log(m));
+    //             }
+    //             FileUtil.remove(singleFile);
+    //             FileUtil.remove(tempDtsName);
+    //             tempDts.push(tempDtsName.replace(/\.ts$/, '.d.ts'));
+    //         });
 
-//         this.dtsFiles.forEach(d => {
-//             FileUtil.remove(d[0]);
-//         });
+    //         this.dtsFiles.forEach(d => {
+    //             FileUtil.remove(d[0]);
+    //         });
 
-//         tempDts.forEach(d => {
-//             var dts = d.replace(/d\.d\.ts$/, '.d.ts');
-//             FileUtil.copy(d, dts);
-//             FileUtil.remove(d);
-//         })
+    //         tempDts.forEach(d => {
+    //             var dts = d.replace(/d\.d\.ts$/, '.d.ts');
+    //             FileUtil.copy(d, dts);
+    //             FileUtil.remove(d);
+    //         })
 
-//         global.ignoreDollar = false;
-//     }
+    //         global.ignoreDollar = false;
+    //     }
 
 }
 
