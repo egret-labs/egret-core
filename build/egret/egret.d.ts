@@ -8175,6 +8175,8 @@ declare namespace egret {
         new (url?: string, cache?: boolean): Video;
     };
 }
+declare namespace egret_native {
+}
 /**
  * @private
  */
@@ -8185,6 +8187,7 @@ declare namespace egret_native {
      * @private
      */
     function startGame(): void;
+    function _selectPhoto(promise: egret.PromiseObject): void;
     function loglevel(logType: any): void;
     function callRender(): void;
     function getVersion(): any;
@@ -8237,6 +8240,7 @@ declare namespace egret_native {
         function pauseAllEffects(): void;
         function resumeBackgroundMusic(): void;
         function resumeAllEffects(): void;
+        function _selectPhoto(promise: egret.PromiseObject): void;
     }
     function download(url: string, savePath: string, promise: any): void;
     namespace Graphics {
@@ -11591,7 +11595,6 @@ declare namespace egret {
          * @private
          */
         private resutlArr;
-        parse(htmltext: string): egret.ITextElement[];
         /**
          * Convert the text in html format to the object that can be assigned to the egret.TextField#textFlow property
          * @param htmltext {string} Text in html
@@ -11608,6 +11611,7 @@ declare namespace egret {
          * @platform Web,Native
          * @language zh_CN
          */
+        parse(htmltext: string): egret.ITextElement[];
         parser(htmltext: string): Array<egret.ITextElement>;
         /**
          * @private

@@ -1,6 +1,6 @@
 {
   "name": "egret",
-  "version": "3.2.6",
+  "version": "4.0.0",
   "private": true,
   "author": "egret-labs",
   "scripts": {
@@ -28,22 +28,6 @@
           },
           {
             "path": "text/native/NativeTextMeasurer.ts",
-            "platform": "native"
-          },
-          {
-            "path": "native/rendering/rendertexture/NativeRenderTextureRenderContext.ts",
-            "platform": "native"
-          },
-          {
-            "path": "native/rendering/rendertexture/OldNativeRenderTextureRenderContext.ts",
-            "platform": "native"
-          },
-          {
-            "path": "native/rendering/rendertexture/NativeRenderTexture.ts",
-            "platform": "native"
-          },
-          {
-            "path": "native/rendering/rendertexture/NativeRenderTextureRenderBuffer.ts",
             "platform": "native"
           },
           {

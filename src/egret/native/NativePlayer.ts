@@ -61,14 +61,6 @@ namespace egret.native {
             //设置帧频到native
             stage.frameRate = option.frameRate;
 
-            if(!egret.native.$supportCanvas) {
-                stage.addEventListener(egret.Event.ENTER_FRAME, function (){
-                    if($currentSurface) {
-                        $currentSurface.end();
-                    }
-                }, this);
-            }
-
             let buffer = new sys.RenderBuffer(undefined, undefined, true);
             let canvas = <NativeCanvas>buffer.surface;
             canvas.$isRoot = true;

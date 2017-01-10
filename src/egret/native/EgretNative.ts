@@ -31,11 +31,6 @@ namespace egret.native {
 
     /**
      * @private
-     */
-    export let $supportCanvas = egret_native.Canvas ? true : false;
-
-    /**
-     * @private
      * 判断当前runtime版本是否支持cmdBatch
      */
     export let $supportCmdBatch = egret_native.sendToC ? true : false;
@@ -682,12 +677,6 @@ namespace egret.native {
         playerList.push(player);
         sys.customHitTestBuffer = new NativeCanvasRenderBuffer(3, 3);
         sys.canvasHitTestBuffer = sys.customHitTestBuffer;
-        //老版本runtime不支持canvas,关闭脏矩形
-        if (!$supportCanvas) {
-            player.$stage.dirtyRegionPolicy = DirtyRegionPolicy.OFF;
-            egret.sys.DisplayList.prototype.setDirtyRegionPolicy = function () {
-            };
-        }
     }
 
     /**
@@ -695,14 +684,8 @@ namespace egret.native {
      * @param renderMode
      */
     function setRenderMode(renderMode:string):void{
-        if($supportCanvas) {
-            sys.RenderBuffer = NativeCanvasRenderBuffer;
-            sys.CanvasRenderBuffer = NativeCanvasRenderBuffer;
-        }
-        else {
-            sys.RenderBuffer = NativeRenderTextureRenderBuffer;
-            sys.CanvasRenderBuffer = NativeRenderTextureRenderBuffer;
-        }
+        sys.RenderBuffer = NativeCanvasRenderBuffer;
+        sys.CanvasRenderBuffer = NativeCanvasRenderBuffer;
         sys.systemRenderer = new CanvasRenderer();
         sys.canvasRenderer = sys.systemRenderer;
         Capabilities.$renderMode = "canvas";

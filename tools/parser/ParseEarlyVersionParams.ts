@@ -26,7 +26,7 @@ function convertCreate(args: egret.ToolArgs, rawArgs: string[]) {
 function convertBuild(args: egret.ToolArgs, rawArgs: string[]) {
     args.command = "build";
     if (args['buildEngine']) {
-        console.log('egret build -e 已经废弃，请使用 egret clean 代替')
+        // console.log('egret build -e 已经废弃，请使用 egret clean 代替')
         args.command = 'clean';
     }
 }

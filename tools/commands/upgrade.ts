@@ -136,7 +136,7 @@ class UpgradeCommand implements egret.Command {
         //{"v": "2.4.1"},
         {"v": "2.5.0", "command": require("./upgrade/UpgradeCommand_2_4_3")},
         {"v": "2.5.1", "command": require("./upgrade/UpgradeCommand_2_5_1")},
-        {"v": "3.2.6"}
+        {"v": "4.0.0"}
     ];
 }
 
