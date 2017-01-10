@@ -42,183 +42,183 @@ namespace egret.tween {
         'elasticIn' | 'elasticOut' | 'elasticInOut';
 
     /**
-     * @language en_US
      * Abstract class, Indicate the base action.
      * @version Egret 3.1.8
      * @platform Web,Native
+     * @language en_US
      */
     /**
-     * @language zh_CN
      * 抽象类，表示一个基本动作
      * @version Egret 3.1.8
      * @platform Web,Native
+     * @language zh_CN
      */
     export abstract class BasePath extends EventDispatcher {
         /**
-         * @language en_US
          * the name of this action.
          * @version Egret 3.1.8
          * @platform Web,Native
+         * @language en_US
          */
         /**
-         * @language zh_CN
          * 动作的名称
          * @version Egret 3.1.8
          * @platform Web,Native
+         * @language zh_CN
          */
         public name: string = "";
     }
 
     /**
-     * @language en_US
      * Indicate the to action. See <code>Tween.to</code>
      * @version Egret 3.1.8
      * @platform Web,Native
+     * @language en_US
      */
     /**
-     * @language zh_CN
      * 表示一个to动作，参见<code>Tween.to</code>
      * @version Egret 3.1.8
      * @platform Web,Native
+     * @language zh_CN
      */
     export class To extends BasePath {
         /**
-         * @language en_US
          * Property set of an object
          * @version Egret 3.1.8
          * @platform Web,Native
+         * @language en_US
          */
         /**
-         * @language zh_CN
          * 对象的属性集合
          * @version Egret 3.1.8
          * @platform Web,Native
+         * @language zh_CN
          */
         public props: Object = undefined;
 
         /**
-         * @language en_US
          * Duration
          * @version Egret 3.1.8
          * @platform Web,Native
+         * @language en_US
          */
         /**
-         * @language zh_CN
          * 持续时间
          * @version Egret 3.1.8
          * @platform Web,Native
+         * @language zh_CN
          */
         public duration: number = 500;
 
         /**
-         * @language en_US
          * Easing algorithm
          * @version Egret 3.1.8
          * @platform Web,Native
+         * @language en_US
          */
         /**
-         * @language zh_CN
          * 缓动算法
          * @version Egret 3.1.8
          * @platform Web,Native
+         * @language zh_CN
          */
         public ease: EaseType | Function = undefined;
     }
 
     /**
-     * @language en_US
      * Indicate the wait action. See <code>Tween.wait</code>
      * @version Egret 3.1.8
      * @platform Web,Native
+     * @language en_US
      */
     /**
-     * @language zh_CN
      * 表示一个wait动作，参见<code>Tween.wait</code>
      * @version Egret 3.1.8
      * @platform Web,Native
+     * @language zh_CN
      */
     export class Wait extends BasePath {
         /**
-         * @language en_US
          * Duration
          * @version Egret 3.1.8
          * @platform Web,Native
+         * @language en_US
          */
         /**
-         * @language zh_CN
          * 持续时间
          * @version Egret 3.1.8
          * @platform Web,Native
+         * @language zh_CN
          */
         public duration: number = 500;
 
         /**
-         * @language en_US
          * Whether properties are updated during the waiting time
          * @version Egret 3.1.8
          * @platform Web,Native
+         * @language en_US
          */
         /**
-         * @language zh_CN
          * 等待期间属性是否会更新
          * @version Egret 3.1.8
          * @platform Web,Native
+         * @language zh_CN
          */
         public passive: boolean = undefined;
     }
 
     /**
-     * @language en_US
      * Indicate the set action. See <code>Tween.set</code>
      * @version Egret 3.1.8
      * @platform Web,Native
+     * @language en_US
      */
     /**
-     * @language zh_CN
      * 表示一个set动作，参见<code>Tween.set</code>
      * @version Egret 3.1.8
      * @platform Web,Native
+     * @language zh_CN
      */
     export class Set extends BasePath {
         /**
-         * @language en_US
          * Property set of an object
          * @version Egret 3.1.8
          * @platform Web,Native
+         * @language en_US
          */
         /**
-         * @language zh_CN
          * 对象的属性集合
          * @version Egret 3.1.8
          * @platform Web,Native
+         * @language zh_CN
          */
         public props: Object = undefined;
     }
 
     /**
-     * @language en_US
      * Indicate the tick action. See <code>Tween.tick</code>
      * @version Egret 3.1.8
      * @platform Web,Native
+     * @language en_US
      */
     /**
-     * @language zh_CN
      * 表示一个tick动作，参见<code>Tween.tick</code>
      * @version Egret 3.1.8
      * @platform Web,Native
+     * @language zh_CN
      */
     export class Tick extends BasePath {
         /**
-         * @language en_US
          * Delta time
          * @version Egret 3.1.8
          * @platform Web,Native
+         * @language en_US
          */
         /**
-         * @language zh_CN
          * 增加的时间
          * @version Egret 3.1.8
          * @platform Web,Native
+         * @language zh_CN
          */
         public delta: number = 0;
     }
@@ -236,7 +236,6 @@ namespace egret.tween {
     }
 
     /**
-     * @language en_US
      * TweenItem is a wrapper for Tween, which can set the behavior of Tween by setting attributes and adding Path.
      *
      * @event pathComplete Dispatched when some Path has complete.
@@ -245,9 +244,9 @@ namespace egret.tween {
      * @defaultProperty props
      * @version Egret 3.1.8
      * @platform Web,Native
+     * @language en_US
      */
     /**
-     * @language zh_CN
      * TweenItem是对Tween的包装器，能通过设置属性和添加Path的方式设置Tween的行为。
      * 通常用于使用在EXML中定义组件的动画。
      *
@@ -257,6 +256,7 @@ namespace egret.tween {
      * @defaultProperty props
      * @version Egret 3.1.8
      * @platform Web,Native
+     * @language zh_CN
      */
     /**
      * Use in exml:
@@ -285,7 +285,7 @@ namespace egret.tween {
      */
     export class TweenItem extends EventDispatcher {
 
-        private tween: Tween<any>;
+        private tween: Tween;
 
         constructor() {
             super();
@@ -296,16 +296,16 @@ namespace egret.tween {
          */
         private _props: any;
         /**
-         * @language en_US
          * The Tween's props.
          * @version Egret 3.1.8
          * @platform Web,Native
+         * @language en_US
          */
         /**
-         * @language zh_CN
          * Tween的props参数。
          * @version Egret 3.1.8
          * @platform Web,Native
+         * @language zh_CN
          */
         public get props(): any {
             return this._props;
@@ -320,16 +320,16 @@ namespace egret.tween {
          */
         private _target: any;
         /**
-         * @language en_US
          * The Tween's target.
          * @version Egret 3.1.8
          * @platform Web,Native
+         * @language en_US
          */
         /**
-         * @language zh_CN
          * Tween的target参数。
          * @version Egret 3.1.8
          * @platform Web,Native
+         * @language zh_CN
          */
         public get target(): any {
             return this._target;
@@ -344,16 +344,16 @@ namespace egret.tween {
          */
         private _paths: BasePath[];
         /**
-         * @language en_US
          * The Actions in Tween.
          * @version Egret 3.1.8
          * @platform Web,Native
+         * @language en_US
          */
         /**
-         * @language zh_CN
          * TweenItem中添加的行为。
          * @version Egret 3.1.8
          * @platform Web,Native
+         * @language zh_CN
          */
         public get paths(): BasePath[] {
             return this._paths;
@@ -364,18 +364,18 @@ namespace egret.tween {
         }
 
         /**
-         * @language en_US
          * Play the Tween
          * @time The starting position, the default is from the last position to play
          * @version Egret 3.1.8
          * @platform Web,Native
+         * @language en_US
          */
         /**
-         * @language zh_CN
          * 播放Tween
          * @time 播放的起始位置, 默认为从上次位置继续播放
          * @version Egret 3.1.8
          * @platform Web,Native
+         * @language zh_CN
          */
         public play(time?: number): void {
             if (!this.tween) {
@@ -389,16 +389,16 @@ namespace egret.tween {
         }
 
         /**
-         * @language en_US
          * Pause the Tween
          * @version Egret 3.1.8
          * @platform Web,Native
+         * @language en_US
          */
         /**
-         * @language zh_CN
          * 暂停Tween
          * @version Egret 3.1.8
          * @platform Web,Native
+         * @language zh_CN
          */
         public pause(): void {
             if (this.tween) {
@@ -407,16 +407,16 @@ namespace egret.tween {
         }
 
         /**
-         * @language en_US
          * Stop the Tween
          * @version Egret 3.1.8
          * @platform Web,Native
+         * @language en_US
          */
         /**
-         * @language zh_CN
          * 停止Tween
          * @version Egret 3.1.8
          * @platform Web,Native
+         * @language zh_CN
          */
         public stop(): void {
             this.pause();
@@ -466,7 +466,6 @@ namespace egret.tween {
     registerProperty(TweenItem, 'paths', 'Array', true);
 
     /**
-     * @language en_US
      * TweenGroup is a collection of TweenItem that can be played in parallel with each Item
      * 
      * @event itemComplete Dispatched when some TweenItem has complete.
@@ -475,13 +474,14 @@ namespace egret.tween {
      * @version Egret 3.1.8
      * @platform Web,Native
      * @includeExample extension/tween/TweenWrapper.ts
+     * @language en_US
      */
     /**
-     * @language zh_CN
      * TweenGroup是TweenItem的集合，可以并行播放每一个Item
      * @version Egret 3.1.8
      * @platform Web,Native
      * @includeExample extension/tween/TweenWrapper.ts
+     * @language zh_CN
      */
     export class TweenGroup extends EventDispatcher {
 
@@ -496,16 +496,16 @@ namespace egret.tween {
          */
         private _items: TweenItem[];
         /**
-         * @language en_US
          * The Array that TweenItems in TweenGroup.
          * @version Egret 3.1.8
          * @platform Web,Native
+         * @language en_US
          */
         /**
-         * @language zh_CN
          * TweenGroup要控制的TweenItem集合。
          * @version Egret 3.1.8
          * @platform Web,Native
+         * @language zh_CN
          */
         public get items(): TweenItem[] {
             return this._items;
@@ -529,18 +529,18 @@ namespace egret.tween {
         }
 
         /**
-         * @language en_US
          * Play the all TweenItems
          * @time The starting position, the default is from the last position to play
          * @version Egret 3.1.8
          * @platform Web,Native
+         * @language en_US
          */
         /**
-         * @language zh_CN
          * 播放所有的TweenItem
          * @time 播放的起始位置, 默认为从上次位置继续播放
          * @version Egret 3.1.8
          * @platform Web,Native
+         * @language zh_CN
          */
         public play(time?: number): void {
             if (!this._items) {
@@ -553,16 +553,16 @@ namespace egret.tween {
         }
 
         /**
-         * @language en_US
          * Pause the all TweenItems
          * @version Egret 3.1.8
          * @platform Web,Native
+         * @language en_US
          */
         /**
-         * @language zh_CN
          * 暂停播放所有的TweenItem
          * @version Egret 3.1.8
          * @platform Web,Native
+         * @language zh_CN
          */
         public pause(): void {
             if (!this._items) {
@@ -575,16 +575,16 @@ namespace egret.tween {
         }
 
         /**
-         * @language en_US
          * Stop the all TweenItems
          * @version Egret 3.1.8
          * @platform Web,Native
+         * @language en_US
          */
         /**
-         * @language zh_CN
          * 停止所有的TweenItem
          * @version Egret 3.1.8
          * @platform Web,Native
+         * @language zh_CN
          */
         public stop(): void {
             if (!this._items) {

@@ -31,40 +31,40 @@
 namespace eui {
 
     /**
-     * @language en_US
      * The ProgressBar control provides a visual representation of the progress of a task over time.
      *
      * @version Egret 2.4
      * @version eui 1.0
      * @platform Web,Native
      * @includeExample  extension/eui/components/ProgressBarExample.ts
+     * @language en_US
      */
     /**
-     * @language zh_CN
      * ProgressBar 控件为随时间而变的任务进度提供了形象化的表示。
      *
      * @version Egret 2.4
      * @version eui 1.0
      * @platform Web,Native
      * @includeExample  extension/eui/components/ProgressBarExample.ts
+     * @language zh_CN
      */
     export class ProgressBar extends Range {
 
         /**
-         * @language en_US
          * Constructor.
          *
          * @version Egret 2.4
          * @version eui 1.0
          * @platform Web,Native
+         * @language en_US
          */
         /**
-         * @language zh_CN
          * 构造函数。
          *
          * @version Egret 2.4
          * @version eui 1.0
          * @platform Web,Native
+         * @language zh_CN
          */
         public constructor() {
             super();
@@ -72,7 +72,6 @@ namespace eui {
         }
 
         /**
-         * @language en_US
          * this hightlight component of the progressbar.
          *
          * @skinPart
@@ -80,9 +79,9 @@ namespace eui {
          * @version Egret 2.4
          * @version eui 1.0
          * @platform Web,Native
+         * @language en_US
          */
         /**
-         * @language zh_CN
          * 进度高亮显示对象。
          *
          * @skinPart
@@ -90,10 +89,10 @@ namespace eui {
          * @version Egret 2.4
          * @version eui 1.0
          * @platform Web,Native
+         * @language zh_CN
          */
         public thumb:eui.UIComponent = null;
         /**
-         * @language en_US
          * the label of the progressbar.
          *
          * @skinPart
@@ -101,9 +100,9 @@ namespace eui {
          * @version Egret 2.4
          * @version eui 1.0
          * @platform Web,Native
+         * @language en_US
          */
         /**
-         * @language zh_CN
          * 进度条文本
          *
          * @skinPart
@@ -111,6 +110,7 @@ namespace eui {
          * @version Egret 2.4
          * @version eui 1.0
          * @platform Web,Native
+         * @language zh_CN
          */
         public labelDisplay:Label = null;
 
@@ -119,22 +119,22 @@ namespace eui {
          */
         private _labelFunction:(value:number, maximum:number)=>string = null;
         /**
-         * @language en_US
          * a text format callback function。example：
          * <code>labelFunction(value:Number,maximum:Number):String;</code>
          *
          * @version Egret 2.4
          * @version eui 1.0
          * @platform Web,Native
+         * @language en_US
          */
         /**
-         * @language zh_CN
          * 进度条文本格式化回调函数。示例：
          * <code>labelFunction(value:Number,maximum:Number):String;</code>
          *
          * @version Egret 2.4
          * @version eui 1.0
          * @platform Web,Native
+         * @language zh_CN
          */
         public get labelFunction():(value:number, maximum:number)=>string {
             return this._labelFunction;
@@ -148,7 +148,6 @@ namespace eui {
         }
 
         /**
-         * @language en_US
          * Convert the current value to display text
          *
          * @param value the current value
@@ -159,9 +158,9 @@ namespace eui {
          * @version Egret 2.4
          * @version eui 1.0
          * @platform Web,Native
+         * @language en_US
          */
         /**
-         * @language zh_CN
          * 将当前value转换成文本
          *
          * @param value 当前值
@@ -172,6 +171,7 @@ namespace eui {
          * @version Egret 2.4
          * @version eui 1.0
          * @platform Web,Native
+         * @language zh_CN
          */
         protected valueToLabel(value:number, maximum:number):string {
             if (this.labelFunction != null) {
@@ -186,7 +186,6 @@ namespace eui {
         private _slideDuration:number = 500;
 
         /**
-         * @language en_US
          * Duration in milliseconds for a sliding animation
          * when the value changing. If the vlaue is 0, no animation will be done.
          *
@@ -195,9 +194,9 @@ namespace eui {
          * @version Egret 2.4
          * @version eui 1.0
          * @platform Web,Native
+         * @language en_US
          */
         /**
-         * @language zh_CN
          * value改变时更新视图的缓动动画时间(毫秒为单位)。设置为0则不执行缓动。
          *
          * @default 500
@@ -205,6 +204,7 @@ namespace eui {
          * @version Egret 2.4
          * @version eui 1.0
          * @platform Web,Native
+         * @language zh_CN
          */
         public get slideDuration():number {
             return this._slideDuration;
@@ -226,7 +226,6 @@ namespace eui {
          */
         private _direction:string = Direction.LTR;
         /**
-         * @language en_US
          * Direction in which the fill of the ProgressBar expands toward completion.
          * you should use the <code>Direction</code> class constants to set the property.
          *
@@ -235,9 +234,9 @@ namespace eui {
          * @version Egret 2.4
          * @version eui 1.0
          * @platform Web,Native
+         * @language en_US
          */
         /**
-         * @language zh_CN
          * ProgressBar 填充在逐步完成过程中扩展的方向。使用 <code>Direction</code> 类定义的常量。
          *
          * @default Direction.LTR
@@ -245,6 +244,7 @@ namespace eui {
          * @version Egret 2.4
          * @version eui 1.0
          * @platform Web,Native
+         * @language zh_CN
          */
         public get direction():string {
             return this._direction;

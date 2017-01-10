@@ -29,20 +29,20 @@
 namespace egret {
 
     /**
-     * @language en_US
      * Convert the text in html format to the object that can be assigned to the egret.TextField#textFlow property
      * @see http://edn.egret.com/cn/docs/page/146 Text mixed in a variety of style
      * @version Egret 2.4
      * @platform Web,Native
      * @includeExample egret/text/HtmlTextParser.ts
+     * @language en_US
      */
     /**
-     * @language zh_CN
      * 将html格式文本转换为可赋值给 egret.TextField#textFlow 属性的对象
      * @see http://edn.egret.com/cn/docs/page/146 多种样式文本混合
      * @version Egret 2.4
      * @platform Web,Native
      * @includeExample egret/text/HtmlTextParser.ts
+     * @language zh_CN
      */
     export class HtmlTextParser {
 
@@ -84,6 +84,22 @@ namespace egret {
          */
         private resutlArr: Array<egret.ITextElement> = [];
 
+        /**
+         * Convert the text in html format to the object that can be assigned to the egret.TextField#textFlow property
+         * @param htmltext {string} Text in html
+         * @returns {Array<egret.ITextElement>} 可赋值给 egret.TextField#textFlow Object that can be assigned to the egret.TextField#textFlow property
+         * @version Egret 2.4
+         * @platform Web,Native
+         * @language en_US
+         */
+        /**
+         * 将html格式文本转换为可赋值给 egret.TextField#textFlow 属性的对象
+         * @param htmltext {string} html文本
+         * @returns {Array<egret.ITextElement>} 可赋值给 egret.TextField#textFlow 属性的对象
+         * @version Egret 2.4
+         * @platform Web,Native
+         * @language zh_CN
+         */
         public parse(htmltext: string): egret.ITextElement[] {
             this.stackArray = [];
             this.resutlArr = [];
@@ -118,22 +134,6 @@ namespace egret {
             return this.resutlArr;
         }
 
-        /**
-         * @language en_US
-         * Convert the text in html format to the object that can be assigned to the egret.TextField#textFlow property
-         * @param htmltext {string} Text in html
-         * @returns {Array<egret.ITextElement>} 可赋值给 egret.TextField#textFlow Object that can be assigned to the egret.TextField#textFlow property
-         * @version Egret 2.4
-         * @platform Web,Native
-         */
-        /**
-         * @language zh_CN
-         * 将html格式文本转换为可赋值给 egret.TextField#textFlow 属性的对象
-         * @param htmltext {string} html文本
-         * @returns {Array<egret.ITextElement>} 可赋值给 egret.TextField#textFlow 属性的对象
-         * @version Egret 2.4
-         * @platform Web,Native
-         */
         public parser(htmltext: string): Array<egret.ITextElement> {
             return this.parse(htmltext);
         }

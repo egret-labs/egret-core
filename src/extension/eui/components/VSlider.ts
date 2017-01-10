@@ -31,7 +31,6 @@
 namespace eui {
 
     /**
-     * @language en_US
      * The VSlider (vertical slider) control lets users select a value
      * by moving a slider thumb between the end points of the slider track.
      * The current value of the slider is determined by the relative location of the thumb between
@@ -41,9 +40,9 @@ namespace eui {
      * @version eui 1.0
      * @platform Web,Native
      * @includeExample  extension/eui/components/VSliderExample.ts
+     * @language en_US
      */
     /**
-     * @language zh_CN
      * 使用 VSlider（垂直滑块）控件，用户可通过在滑块轨道的端点之间移动滑块来选择值。
      * 滑块的当前值由滑块端点（对应于滑块的最小值和最大值）之间滑块的相对位置确定。
      *
@@ -51,23 +50,24 @@ namespace eui {
      * @version eui 1.0
      * @platform Web,Native
      * @includeExample  extension/eui/components/VSliderExample.ts
+     * @language zh_CN
      */
     export class VSlider extends SliderBase {
         /**
-         * @language en_US
          * Constructor.
          *
          * @version Egret 2.4
          * @version eui 1.0
          * @platform Web,Native
+         * @language en_US
          */
         /**
-         * @language zh_CN
          * 构造函数。
          *
          * @version Egret 2.4
          * @version eui 1.0
          * @platform Web,Native
+         * @language zh_CN
          */
         public constructor() {
             super();

@@ -43,7 +43,6 @@ namespace egret {
     export let $callLaterArgsList:any[] = [];
 
     /**
-     * @language en_US
      * Delay the function to run unless screen is redrawn.
      * @param method {Function} The function to be delayed to run
      * @param thisObject {any} this reference of callback function
@@ -51,9 +50,9 @@ namespace egret {
      * @version Egret 2.4
      * @platform Web,Native
      * @includeExample egret/utils/callLater.ts
+     * @language en_US
      */
     /**
-     * @language zh_CN
      * 延迟函数到屏幕重绘前执行。
      * @param method {Function} 要延迟执行的函数
      * @param thisObject {any} 回调函数的this引用
@@ -61,6 +60,7 @@ namespace egret {
      * @version Egret 2.4
      * @platform Web,Native
      * @includeExample egret/utils/callLater.ts
+     * @language zh_CN
      */
     export function callLater(method:Function,thisObject:any,...args):void
     {

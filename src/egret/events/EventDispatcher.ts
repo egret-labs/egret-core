@@ -44,7 +44,6 @@ namespace egret {
     let ONCE_EVENT_LIST:egret.sys.EventBin[] = [];
 
     /**
-     * @language en_US
      * The EventDispatcher class is the base class for all classes that dispatchEvent events. The EventDispatcher class implements
      * the IEventDispatcher interface and is the base class for the DisplayObject class. The EventDispatcher class allows
      * any object on the display list to be an event target and as such, to use the methods of the IEventDispatcher interface.
@@ -63,9 +62,9 @@ namespace egret {
      * @version Egret 2.4
      * @platform Web,Native
      * @includeExample egret/events/EventDispatcher.ts
+     * @language en_US
      */
     /**
-     * @language zh_CN
      * EventDispatcher 是 Egret 的事件派发器类，负责进行事件的发送和侦听。
      * 事件目标是事件如何通过显示列表层次结构这一问题的焦点。当发生鼠标单击、触摸或按键等事件时，
      * 框架会将事件对象调度到从显示列表根开始的事件流中。然后该事件对象在显示列表中前进，直到到达事件目标，
@@ -77,25 +76,26 @@ namespace egret {
      * @version Egret 2.4
      * @platform Web,Native
      * @includeExample egret/events/EventDispatcher.ts
+     * @language zh_CN
      */
     export class EventDispatcher extends HashObject implements IEventDispatcher {
 
         /**
-         * @language en_US
          * create an instance of the EventDispatcher class.
          * @param target The target object for events dispatched to the EventDispatcher object. This parameter is used when
          * the EventDispatcher instance is aggregated by a class that implements IEventDispatcher; it is necessary so that the
          * containing object can be the target for events. Do not use this parameter in simple cases in which a class extends EventDispatcher.
          * @version Egret 2.4
          * @platform Web,Native
+         * @language en_US
          */
         /**
-         * @language zh_CN
          * 创建一个 EventDispatcher 类的实例
          * @param target 此 EventDispatcher 所抛出事件对象的 target 指向。此参数主要用于一个实现了 IEventDispatcher 接口的自定义类，
          * 以便抛出的事件对象的 target 属性可以指向自定义类自身。请勿在直接继承 EventDispatcher 的情况下使用此参数。
          * @version Egret 2.4
          * @platform Web,Native
+         * @language zh_CN
          */
         public constructor(target:IEventDispatcher = null) {
             super();
@@ -291,7 +291,6 @@ namespace egret {
         }
 
         /**
-         * @language en_US
          * Distribute a specified event parameters.
          * @param type The type of the event. Event listeners can access this information through the inherited type property.
          * @param bubbles Determines whether the Event object bubbles. Event listeners can access this information through
@@ -300,9 +299,9 @@ namespace egret {
          * @param cancelable Determines whether the Event object can be canceled. The default values is false.
          * @version Egret 2.4
          * @platform Web,Native
+         * @language en_US
          */
         /**
-         * @language zh_CN
          * 派发一个指定参数的事件。
          * @param type {string} 事件类型
          * @param bubbles {boolean} 确定 Event 对象是否参与事件流的冒泡阶段。默认值为 false。
@@ -310,6 +309,7 @@ namespace egret {
          * @param cancelable {boolean} 确定是否可以取消 Event 对象。默认值为 false。
          * @version Egret 2.4
          * @platform Web,Native
+         * @language zh_CN
          */
         public dispatchEventWith(type:string, bubbles?:boolean, data?:any, cancelable?: boolean):boolean {
             if (bubbles || this.hasEventListener(type)) {

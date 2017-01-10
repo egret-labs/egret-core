@@ -88,7 +88,6 @@ declare module egret {
         added: string[];
         removed: string[];
         modified: string[];
-        compilerOptions: ts.CompilerOptions;
         tsconfigError: string[];//tsconfig 配置文件的错误信息
 
         toJSON: () => any;
@@ -344,11 +343,11 @@ declare module egret {
         type: string;
     }
 
-    export interface CompileResult {
+    export interface EgretCompilerHost {
         program: ts.Program;
         files?: string[];
         exitStatus: number;
-        compileWithChanges?: (filesChanged: egret.FileChanges, sourceMap?: boolean) => CompileResult;
+        compileWithChanges?: (filesChanged: egret.FileChanges, sourceMap?: boolean) => EgretCompilerHost;
         messages?: string[];
     }
 }

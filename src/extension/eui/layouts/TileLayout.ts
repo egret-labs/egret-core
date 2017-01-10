@@ -33,7 +33,6 @@ namespace eui {
     let UIComponentClass = "eui.UIComponent";
 
     /**
-     * @language en_US
      * The TileLayout class arranges layout elements in columns and rows
      * of equally-sized cells.
      * The TileLayout class uses a number of properties that control orientation,
@@ -44,9 +43,9 @@ namespace eui {
      * @version eui 1.0
      * @platform Web,Native
      * @includeExample  extension/eui/layout/TileLayoutExample.ts
+     * @language en_US
      */
     /**
-     * @language zh_CN
      * TileLayout 类在单元格大小相等的列和行中排列布局元素。
      * TileLayout 类使用许多属性来控制列和行的方向、计数、大小、间隙和两端对齐以及单元格内的元素对齐。
      *
@@ -54,22 +53,23 @@ namespace eui {
      * @version eui 1.0
      * @platform Web,Native
      * @includeExample  extension/eui/layout/TileLayoutExample.ts
+     * @language zh_CN
      */
     export class TileLayout extends LayoutBase {
 
         /**
-         * @language en_US
          * Constructor.
          * @version Egret 2.4
          * @version eui 1.0
          * @platform Web,Native
+         * @language en_US
          */
         /**
-         * @language zh_CN
          * 构造函数。
          * @version Egret 2.4
          * @version eui 1.0
          * @platform Web,Native
+         * @language zh_CN
          */
         public constructor() {
             super();
@@ -86,7 +86,6 @@ namespace eui {
          */
         private _horizontalGap:number = 6;
         /**
-         * @language en_US
          * Horizontal space between columns, in pixels.
          *
          * @default 6
@@ -94,9 +93,9 @@ namespace eui {
          * @version Egret 2.4
          * @version eui 1.0
          * @platform Web,Native
+         * @language en_US
          */
         /**
-         * @language zh_CN
          * 列之间的水平空间（以像素为单位）。
          *
          * @default 6
@@ -104,6 +103,7 @@ namespace eui {
          * @version Egret 2.4
          * @version eui 1.0
          * @platform Web,Native
+         * @language zh_CN
          */
         public get horizontalGap():number {
             return this._horizontalGap;
@@ -131,7 +131,6 @@ namespace eui {
         private _verticalGap:number = 6;
 
         /**
-         * @language en_US
          * Vertical space between rows, in pixels.
          *
          * @default 6
@@ -139,9 +138,9 @@ namespace eui {
          * @version Egret 2.4
          * @version eui 1.0
          * @platform Web,Native
+         * @language en_US
          */
         /**
-         * @language zh_CN
          * 行之间的垂直空间（以像素为单位）。
          *
          * @default 6
@@ -149,6 +148,7 @@ namespace eui {
          * @version Egret 2.4
          * @version eui 1.0
          * @platform Web,Native
+         * @language zh_CN
          */
         public get verticalGap():number {
             return this._verticalGap;
@@ -169,7 +169,6 @@ namespace eui {
          */
         private _columnCount:number = -1;
         /**
-         * @language en_US
          * Contain the actual column count.
          *
          * @default -1
@@ -177,9 +176,9 @@ namespace eui {
          * @version Egret 2.4
          * @version eui 1.0
          * @platform Web,Native
+         * @language en_US
          */
         /**
-         * @language zh_CN
          *  实际列计数。
          *
          * @default -1
@@ -187,6 +186,7 @@ namespace eui {
          * @version Egret 2.4
          * @version eui 1.0
          * @platform Web,Native
+         * @language zh_CN
          */
         public get columnCount():number {
             return this._columnCount;
@@ -197,7 +197,6 @@ namespace eui {
          */
         private _requestedColumnCount:number = 0;
         /**
-         * @language en_US
          * Number of columns to be displayed.
          * <p>Set to 0 to allow the TileLayout to determine
          * the column count automatically.</p>
@@ -211,9 +210,9 @@ namespace eui {
          * @version Egret 2.4
          * @version eui 1.0
          * @platform Web,Native
+         * @language en_US
          */
         /**
-         * @language zh_CN
          * 要显示的列数。
          * <p>设置为 0 会允许 TileLayout 自动确定列计数。</p>
          * <p>如果将 <code>orientation</code> 属性设置为 <code>TileOrientation.ROWS</code>，
@@ -224,6 +223,7 @@ namespace eui {
          * @version Egret 2.4
          * @version eui 1.0
          * @platform Web,Native
+         * @language zh_CN
          */
         public get requestedColumnCount():number {
             return this._requestedColumnCount;
@@ -244,20 +244,20 @@ namespace eui {
          */
         private _rowCount:number = -1;
         /**
-         * @language en_US
          * The row count.
          *
          * @version Egret 2.4
          * @version eui 1.0
          * @platform Web,Native
+         * @language en_US
          */
         /**
-         * @language zh_CN
          *  行计数。
          *
          * @version Egret 2.4
          * @version eui 1.0
          * @platform Web,Native
+         * @language zh_CN
          */
         public get rowCount():number {
             return this._rowCount;
@@ -268,7 +268,6 @@ namespace eui {
          */
         private _requestedRowCount:number = 0;
         /**
-         * @language en_US
          * Number of rows to be displayed.
          * <p>Set to 0 to remove explicit override and allow the TileLayout to determine
          * the row count automatically.</p>
@@ -282,9 +281,9 @@ namespace eui {
          * @version Egret 2.4
          * @version eui 1.0
          * @platform Web,Native
+         * @language en_US
          */
         /**
-         * @language zh_CN
          * 要显示的行数。
          * <code>设置为 -1 会删除显式覆盖并允许 TileLayout 自动确定行计数。</code>
          * <code>如果将 <code>orientation</code> 属性设置为 <code>TileOrientation.COLUMNS</code>，
@@ -295,6 +294,7 @@ namespace eui {
          * @version Egret 2.4
          * @version eui 1.0
          * @platform Web,Native
+         * @language zh_CN
          */
         public get requestedRowCount():number {
             return this._requestedRowCount;
@@ -321,7 +321,6 @@ namespace eui {
          */
         private _columnWidth:number = NaN;
         /**
-         * @language en_US
          * Contain the actual column width, in pixels.
          * <p>If not explicitly set, the column width is
          * determined from the width of the widest element. </p>
@@ -331,9 +330,9 @@ namespace eui {
          * @version Egret 2.4
          * @version eui 1.0
          * @platform Web,Native
+         * @language en_US
          */
         /**
-         * @language zh_CN
          * 包含实际列宽（以像素为单位）。
          * <p>若未显式设置，则从根据最宽的元素的宽度确定列宽度。</p>
          *
@@ -342,6 +341,7 @@ namespace eui {
          * @version Egret 2.4
          * @version eui 1.0
          * @platform Web,Native
+         * @language zh_CN
          */
         public get columnWidth():number {
             return this._columnWidth;
@@ -367,7 +367,6 @@ namespace eui {
          */
         private _rowHeight:number = NaN;
         /**
-         * @language en_US
          * The row height, in pixels.
          * <p>If not explicitly set, the row height is
          * determined from the maximum of elements' height.</p>
@@ -377,9 +376,9 @@ namespace eui {
          * @version Egret 2.4
          * @version eui 1.0
          * @platform Web,Native
+         * @language en_US
          */
         /**
-         * @language zh_CN
          * 行高（以像素为单位）。
          * <p>如果未显式设置，则从元素的高度的最大值确定行高度。<p>
          *
@@ -388,6 +387,7 @@ namespace eui {
          * @version Egret 2.4
          * @version eui 1.0
          * @platform Web,Native
+         * @language zh_CN
          */
         public get rowHeight():number {
             return this._rowHeight;
@@ -503,7 +503,6 @@ namespace eui {
          */
         private _horizontalAlign:string = JustifyAlign.JUSTIFY;
         /**
-         * @language en_US
          * Specifies how to align the elements within the cells in the horizontal direction.
          * Supported values are
          * HorizontalAlign.LEFT、HorizontalAlign.CENTER、
@@ -514,9 +513,9 @@ namespace eui {
          * @version Egret 2.4
          * @version eui 1.0
          * @platform Web,Native
+         * @language en_US
          */
         /**
-         * @language zh_CN
          * 指定如何在水平方向上对齐单元格内的元素。支持的值有
          * HorizontalAlign.LEFT、HorizontalAlign.CENTER、
          * HorizontalAlign.RIGHT、JustifyAlign.JUSTIFY。
@@ -526,6 +525,7 @@ namespace eui {
          * @version Egret 2.4
          * @version eui 1.0
          * @platform Web,Native
+         * @language zh_CN
          */
         public get horizontalAlign():string {
             return this._horizontalAlign;
@@ -545,7 +545,6 @@ namespace eui {
         private _verticalAlign:string = JustifyAlign.JUSTIFY;
 
         /**
-         * @language en_US
          * 指定如何在垂直方向上对齐单元格内的元素。
          * 支持的值有 VerticalAlign.TOP、VerticalAlign.MIDDLE、
          * VerticalAlign.BOTTOM、JustifyAlign.JUSTIFY。
@@ -556,9 +555,9 @@ namespace eui {
          * @version Egret 2.4
          * @version eui 1.0
          * @platform Web,Native
+         * @language en_US
          */
         /**
-         * @language zh_CN
          * Specifies how to align the elements within the cells in the vertical direction.
          * Supported values are
          * VerticalAlign.TOP、VerticalAlign.MIDDLE、
@@ -569,6 +568,7 @@ namespace eui {
          * @version Egret 2.4
          * @version eui 1.0
          * @platform Web,Native
+         * @language zh_CN
          */
         public get verticalAlign():string {
             return this._verticalAlign;
@@ -588,7 +588,6 @@ namespace eui {
         private _columnAlign:string = ColumnAlign.LEFT;
 
         /**
-         * @language en_US
          * Specifies how to justify the fully visible columns to the container width.
          *
          * <p>When set to <code>ColumnAlign.LEFT</code> it turns column justification off.
@@ -617,9 +616,9 @@ namespace eui {
          * @version Egret 2.4
          * @version eui 1.0
          * @platform Web,Native
+         * @language en_US
          */
         /**
-         * @language zh_CN
          * 指定如何将完全可见列与容器宽度对齐。
          *
          * <p>设置为 <code>ColumnAlign.LEFT</code> 时，它会关闭列两端对齐。
@@ -639,6 +638,7 @@ namespace eui {
          * @version Egret 2.4
          * @version eui 1.0
          * @platform Web,Native
+         * @language zh_CN
          */
         public get columnAlign():string {
             return this._columnAlign;
@@ -657,7 +657,6 @@ namespace eui {
          */
         private _rowAlign:string = RowAlign.TOP;
         /**
-         * @language en_US
          * Specifies how to justify the fully visible rows to the container height.
          *
          * <p>When set to <code>RowAlign.TOP</code> it turns column justification off.
@@ -685,9 +684,9 @@ namespace eui {
          * @version Egret 2.4
          * @version eui 1.0
          * @platform Web,Native
+         * @language en_US
          */
         /**
-         * @language zh_CN
          * 指定如何将完全可见行与容器高度对齐。
          *
          * <p>设置为 <code>RowAlign.TOP</code> 时，它会关闭列两端对齐。
@@ -707,6 +706,7 @@ namespace eui {
          * @version Egret 2.4
          * @version eui 1.0
          * @platform Web,Native
+         * @language zh_CN
          */
         public get rowAlign():string {
             return this._rowAlign;
@@ -725,7 +725,6 @@ namespace eui {
          */
         private _orientation:string = TileOrientation.ROWS;
         /**
-         * @language en_US
          * Specifies whether elements are arranged row by row or
          * column by column.
          *
@@ -734,9 +733,9 @@ namespace eui {
          * @version Egret 2.4
          * @version eui 1.0
          * @platform Web,Native
+         * @language en_US
          */
         /**
-         * @language zh_CN
          * 指定是逐行还是逐列排列元素。
          *
          * @default TileOrientation.ROWS
@@ -744,6 +743,7 @@ namespace eui {
          * @version Egret 2.4
          * @version eui 1.0
          * @platform Web,Native
+         * @language zh_CN
          */
         public get orientation():string {
             return this._orientation;

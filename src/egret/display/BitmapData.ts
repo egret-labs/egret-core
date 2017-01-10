@@ -30,7 +30,6 @@
 namespace egret {
 
     /**
-     * @language en_US
      * A BitmapData object contains an array of pixel data. This data can represent either a fully opaque bitmap or a
      * transparent bitmap that contains alpha channel data. Either type of BitmapData object is stored as a buffer of 32-bit
      * integers. Each 32-bit integer determines the properties of a single pixel in the bitmap.<br/>
@@ -40,9 +39,9 @@ namespace egret {
      * @see egret.Bitmap
      * @version Egret 2.4
      * @platform Web,Native
+     * @language en_US
      */
     /**
-     * @language zh_CN
      * BitmapData 对象是一个包含像素数据的数组。此数据可以表示完全不透明的位图，或表示包含 Alpha 通道数据的透明位图。
      * 以上任一类型的 BitmapData 对象都作为 32 位整数的缓冲区进行存储。每个 32 位整数确定位图中单个像素的属性。<br/>
      * 每个 32 位整数都是四个 8 位通道值（从 0 到 255）的组合，这些值描述像素的 Alpha 透明度以及红色、绿色、蓝色 (ARGB) 值。
@@ -50,82 +49,83 @@ namespace egret {
      * @see egret.Bitmap
      * @version Egret 2.4
      * @platform Web,Native
+     * @language zh_CN
      */
     export class BitmapData extends HashObject {
         /**
-         * @language en_US
          * The width of the bitmap image in pixels.
          * @readOnly
          * @version Egret 2.4
          * @platform Web,Native
+         * @language en_US
          */
         /**
-         * @language zh_CN
          * 位图图像的宽度，以像素为单位。
          * @readOnly
          * @version Egret 2.4
          * @platform Web,Native
+         * @language zh_CN
          */
         width: number;
         /**
-         * @language en_US
          * The height of the bitmap image in pixels.
          * @readOnly
          * @version Egret 2.4
          * @platform Web,Native
+         * @language en_US
          */
         /**
-         * @language zh_CN
          * 位图图像的高度，以像素为单位。
          * @readOnly
          * @version Egret 2.4
          * @platform Web,Native
+         * @language zh_CN
          */
         height: number;
 
         /**
-         * @language en_US
          * Original bitmap image.
          * @version Egret 2.4
          * @platform Web,Native
          * @private
+         * @language en_US
          */
         /**
-         * @language zh_CN
          * 原始位图图像。
          * @version Egret 2.4
          * @platform Web,Native
          * @private
+         * @language zh_CN
          */
         source: any;
 
         /**
-         * @language en_US
          * WebGL texture.
          * @version Egret 2.4
          * @platform Web,Native
          * @private
+         * @language en_US
          */
         /**
-         * @language zh_CN
          * WebGL纹理。
          * @version Egret 2.4
          * @platform Web,Native
          * @private
+         * @language zh_CN
          */
         webGLTexture: any;
 
         /**
-         * @language en_US
          * Texture format.
          * @version Egret 2.4
          * @platform Web,Native
+         * @language en_US
          */
         /**
-         * @language zh_CN
          * 纹理格式。
          * @version Egret 2.4
          * @platform Web,Native
+         * @language zh_CN
          */
         format: string = "image";
 

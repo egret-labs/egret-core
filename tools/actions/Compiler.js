@@ -2,80 +2,59 @@
 var utils = require("../lib/utils");
 var file = require("../lib/FileUtil");
 var ts = require("../lib/typescript-plus/lib/typescript");
+var path = require("path");
 var Compiler = (function () {
     function Compiler() {
+        // public compile(option: CompileOption) {
+        //     //console.log('---Compiler.compile---')
+        //     var args = option.args, def = option.def, files = option.files,
+        //         out = option.out, outDir = option.outDir;
+        //     var defTemp = args.declaration;
+        //     args.declaration = def;
+        //     var realCWD = process.cwd();
+        //     var cwd = file.escapePath(args.projectDir);
+        //     files = files.map(f => f.replace(cwd, ""));
+        //     if (out)
+        //         out = file.getRelativePath(cwd, out);
+        //     if (outDir)
+        //         outDir = file.getRelativePath(cwd, outDir);
+        //     process.chdir(cwd);
+        //     var parsedCmd: ts.ParsedCommandLine = {
+        //         fileNames: files,
+        //         options: {},
+        //         errors: []
+        //     };
+        //     if (args.compilerOptions) {
+        //         parsedCmd.options = args.compilerOptions;
+        //     }
+        //     parsedCmd.options.outDir = outDir;
+        //     parsedCmd.options.declaration = args.declaration;
+        //     parsedCmd.options.out = out;
+        //     if (args.sourceMap == true) {
+        //         parsedCmd.options.sourceMap = true;//引擎命令行的sourcemap属性优先
+        //     }
+        //     parsedCmd.options.allowUnreachableCode = true;
+        //     parsedCmd.options.emitReflection = true;
+        //     var host = this.compileNew(parsedCmd.options, parsedCmd.fileNames, option.forSortFile);
+        //     process.chdir(realCWD);
+        //     return host;
+        // }
         this.files = {};
     }
-    Compiler.prototype.compile = function (option) {
-        //console.log('---Compiler.compile---')
-        var args = option.args, def = option.def, files = option.files, out = option.out, outDir = option.outDir;
-        var defTemp = args.declaration;
-        args.declaration = def;
-        var realCWD = process.cwd();
-        var cwd = file.escapePath(args.projectDir);
-        files = files.map(function (f) { return f.replace(cwd, ""); });
-        if (out)
-            out = file.getRelativePath(cwd, out);
-        if (outDir)
-            outDir = file.getRelativePath(cwd, outDir);
-        process.chdir(cwd);
-        var parsedCmd = {
-            fileNames: files,
-            options: {},
-            errors: []
-        };
-        if (args.compilerOptions) {
-            parsedCmd.options = args.compilerOptions;
+    Compiler.prototype.compileWithTsconfig = function (options, files) {
+        var compileResult = this.compileNew(options, files, false);
+        if (compileResult.exitStatus != 0) {
+            compileResult.messages.forEach(function (m) { return console.log(m); });
         }
-        if (egret.args.command == "make") {
-            //make 使用引擎的配置,必须用下面的参数
-            parsedCmd.options.target = 1;
-            // parsedCmd.options.stripInternal = true;
-            parsedCmd.options.sourceMap = args.sourceMap;
-            parsedCmd.options.removeComments = args.removeComments;
-            parsedCmd.options.declaration = args.declaration;
-            parsedCmd.options.out = out;
-            parsedCmd.options.newLine = 1;
-        }
-        else {
-            //console.log("args.compilerOptions:",parsedCmd.options.outDir)
-            parsedCmd.options.outDir = outDir;
-        }
-        if (args.sourceMap == true) {
-            parsedCmd.options.sourceMap = true; //引擎命令行的sourcemap属性优先
-        }
-        parsedCmd.options.allowUnreachableCode = true;
-        parsedCmd.options.emitReflection = true;
-        var defines = {};
-        if (option.debug != undefined) {
-            defines.DEBUG = option.debug;
-            defines.RELEASE = !option.debug;
-        }
-        else if (egret.args.publish) {
-            defines.DEBUG = false;
-            defines.RELEASE = true;
-        }
-        else {
-            defines.DEBUG = true;
-            defines.RELEASE = false;
-        }
-        parsedCmd.options.defines = defines;
-        var compileResult;
-        if (egret.args.command == "make") {
-            compileResult = this.compileNew(parsedCmd.options, parsedCmd.fileNames, option.forSortFile);
-        }
-        else {
-            var configParseResult = ts.parseJsonConfigFileContent({ "compilerOptions": parsedCmd.options }, ts.sys, "./");
-            if (configParseResult.errors && configParseResult.errors.length) {
-                configParseResult.errors.forEach(function (error) {
-                    console.log(error.messageText);
-                });
-                utils.exit(0);
-            }
-            compileResult = this.compileNew(configParseResult.options, parsedCmd.fileNames, option.forSortFile);
-        }
-        process.chdir(realCWD);
-        return compileResult;
+        return compileResult.exitStatus;
+    };
+    Compiler.prototype.compileGame = function (options, files) {
+        var host = this.compileNew(options, files, false);
+        return host;
+    };
+    Compiler.prototype.sortFile = function (options, fileNames) {
+        var host = this.compileNew(options, fileNames, true);
+        return host;
     };
     Compiler.prototype.compileNew = function (options, rootFileNames, forSortFile) {
         var _this = this;
@@ -177,8 +156,9 @@ var Compiler = (function () {
             }
             else if (file.type == "removed") {
                 var index = _this.fileNames.indexOf(file.fileName);
-                if (index >= 0)
+                if (index >= 0) {
                     _this.fileNames.splice(index, 1);
+                }
             }
             else {
                 _this.files[file.fileName].version++;
@@ -190,6 +170,66 @@ var Compiler = (function () {
         });
         return { files: this.sortedFiles, program: this.services.getProgram(), exitStatus: 0, messages: this.errors, compileWithChanges: this.compileWithChanges.bind(this) };
     };
+    Compiler.prototype.loadTsconfig = function (url, options) {
+        var configObj;
+        try {
+            configObj = JSON.parse(file.read(url));
+        }
+        catch (e) {
+            // errLog.push(utils.tr(1117));//不是有效的 json 文件
+            configObj = {
+                "compilerOptions": {
+                    "target": "es5",
+                    "experimentalDecorators": true,
+                    "lib": [
+                        "es5", "dom"
+                    ]
+                },
+                "exclude": [
+                    "node_modules"
+                ]
+            };
+        }
+        var notSupport = ["outDir", "module", "noLib", "outFile", "rootDir", "out"];
+        var defaultSupport = { target: "es5" };
+        var compilerOptions = configObj.compilerOptions;
+        for (var _i = 0, notSupport_1 = notSupport; _i < notSupport_1.length; _i++) {
+            var optionName = notSupport_1[_i];
+            if (compilerOptions.hasOwnProperty(optionName)) {
+                var error = utils.tr(1116, optionName); //这个编译选项目前不支持修改
+                console.log(error); //build -e 的时候输出
+                delete compilerOptions[optionName];
+            }
+        }
+        for (var optionName in defaultSupport) {
+            if (compilerOptions[optionName] != defaultSupport.target) {
+                compilerOptions[optionName] = defaultSupport.target;
+                var error = utils.tr(1116, optionName);
+                console.log(optionName + "\u5C06\u88AB\u8C03\u6574\u4E3A" + defaultSupport.target);
+                console.log(error);
+            }
+        }
+        var configParseResult = ts.parseJsonConfigFileContent(configObj, ts.sys, path.dirname(url));
+        compilerOptions = configParseResult.options;
+        compilerOptions.defines = getCompilerDefines(options, true);
+        return configParseResult;
+    };
     return Compiler;
 }());
+function getCompilerDefines(args, debug) {
+    var defines = {};
+    if (debug != undefined) {
+        defines.DEBUG = debug;
+        defines.RELEASE = !debug;
+    }
+    else if (args.publish) {
+        defines.DEBUG = false;
+        defines.RELEASE = true;
+    }
+    else {
+        defines.DEBUG = true;
+        defines.RELEASE = false;
+    }
+    return defines;
+}
 module.exports = Compiler;

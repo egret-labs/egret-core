@@ -2,7 +2,7 @@
 var Compiler = require("./Compiler");
 var FileUtil = require("../lib/FileUtil");
 var exmlActions = require("../actions/exml");
-var LoadConfig = require("./LoadConfig");
+var path = require("path");
 var CompileProject = (function () {
     function CompileProject() {
     }
@@ -17,42 +17,40 @@ var CompileProject = (function () {
             return null;
         return result;
     };
-    CompileProject.prototype.compileProject = function (option, files) {
+    CompileProject.prototype.compileProject = function (args, files) {
         //console.log("----compileProject.compileProject----")
-        var compileResult;
-        if (files && this.recompile) {
-            files.forEach(function (f) { return f.fileName = f.fileName.replace(option.projectDir, ""); });
-            var realCWD = process.cwd();
-            process.chdir(option.projectDir);
-            var sourceMap = option.sourceMap;
+        if (files && this.compilerHost) {
+            // files.forEach(f => f.fileName = f.fileName.replace(args.projectDir, ""));
+            // var realCWD = process.cwd();
+            // process.chdir(args.projectDir);
+            var sourceMap = args.sourceMap;
             if (sourceMap == undefined) {
                 sourceMap = this.compilerOptions.sourceMap;
             }
-            compileResult = this.recompile(files, sourceMap);
-            process.chdir(realCWD);
+            this.compilerHost = this.compilerHost.compileWithChanges(files, sourceMap);
         }
         else {
             var compiler = new Compiler();
-            var tsList = FileUtil.search(option.srcDir, "ts");
-            var libsList = FileUtil.search(option.libsDir, "ts");
-            var urlConfig = option.projectDir + "tsconfig.json"; //加载配置文件
-            LoadConfig.loadTsConfig(urlConfig, option);
-            this.compilerOptions = option.compilerOptions;
-            var compileOptions = {
-                args: option,
-                files: tsList.concat(libsList),
-                out: option.out,
-                outDir: option.outDir
-            };
-            compileResult = compiler.compile(compileOptions);
-            this.recompile = compileResult.compileWithChanges;
+            var tsList = FileUtil.search(args.srcDir, "ts");
+            var libsList = FileUtil.search(args.libsDir, "ts");
+            var configParsedResult = compiler.loadTsconfig(args.projectDir + "tsconfig.json", args);
+            this.compilerOptions = configParsedResult.options;
+            args.tsconfigError = configParsedResult.errors.map(function (d) { return d.messageText.toString(); });
+            this.compilerOptions.outDir = path.join(args.projectDir, "bin-debug");
+            if (args.sourceMap == true) {
+                this.compilerOptions.sourceMap = true; //引擎命令行的sourcemap属性优先
+            }
+            this.compilerOptions.allowUnreachableCode = true;
+            this.compilerOptions.emitReflection = true;
+            this.compilerHost = compiler.compileGame(this.compilerOptions, tsList.concat(libsList));
         }
-        var fileResult = GetJavaScriptFileNames(compileResult.files, /^src\//);
-        compileResult.files = fileResult;
-        if (compileResult.messages.length > 0) {
-            compileResult.exitStatus = 1303;
+        var relative = function (f) { return path.relative(args.projectDir, f); };
+        var fileResult = GetJavaScriptFileNames(this.compilerHost.files.map(relative), /^src\//);
+        this.compilerHost.files = fileResult;
+        if (this.compilerHost.messages.length > 0) {
+            this.compilerHost.exitStatus = 1303;
         }
-        return compileResult;
+        return this.compilerHost;
     };
     return CompileProject;
 }());

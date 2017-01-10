@@ -20,22 +20,22 @@ namespace eui {
      *
      */
     /**
-     * @language en_US
      * The TextInput is a textfield input component, the user can input and edit the text.
      *
      * @version Egret 2.5.7
      * @version eui 1.0
      * @platform Web,Native
      * @includeExample  extension/eui/components/TextInputExample.ts
+     * @language en_US
      */
     /**
-     * @language zh_CN
      * TextInput 是一个文本输入控件，供用户输入和编辑统一格式文本
      *
      * @version Egret 2.5.7
      * @version eui 1.0
      * @platform Web,Native
      * @includeExample  extension/eui/components/TextInputExample.ts
+     * @language zh_CN
      */
     export class TextInput extends Component {
         constructor() {
@@ -58,37 +58,37 @@ namespace eui {
          */
         $TextInput:Object;
         /**
-         * @language en_US
          * [SkinPart] The TextInput display
          * @skinPart
          * @version Egret 2.5.7
          * @version eui 1.0
          * @platform Web,Native
+         * @language en_US
          */
         /**
-         * @language zh_CN
          * [SkinPart] 实体文本输入组件
          * @skinPart
          * @version Egret 2.5.7
          * @version eui 1.0
          * @platform Web,Native
+         * @language zh_CN
          */
         public textDisplay:EditableText;
         /**
-         * @language zh_CN
          * [SkinPart] When the property of the text is empty, it will show the defalut string.
          * @skinPart
          * @version Egret 2.4
          * @version eui 1.0
          * @platform Web,Native
+         * @language zh_CN
          */
         /**
-         * @language zh_CN
          * [SkinPart] 当text属性为空字符串时要显示的文本。
          * @skinPart
          * @version Egret 2.4
          * @version eui 1.0
          * @platform Web,Native
+         * @language zh_CN
          */
         public promptDisplay:Label;
 

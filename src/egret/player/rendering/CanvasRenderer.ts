@@ -27,10 +27,14 @@
 //
 //////////////////////////////////////////////////////////////////////////////////////
 
+/**
+ * @private
+ */
 interface CanvasRenderingContext2D {
     imageSmoothingEnabled:boolean;
     $imageSmoothingEnabled:boolean;
 }
+
 namespace egret {
 
     let blendModes = ["source-over", "lighter", "destination-out"];

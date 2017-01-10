@@ -52,7 +52,6 @@ namespace eui {
     }
 
     /**
-     * @language en_US
      * The DataGroup class is the base container class for data items.
      * The DataGroup class converts data items to visual elements for display.
      * While this container can hold visual elements, it is often used only
@@ -66,9 +65,9 @@ namespace eui {
      * @version Egret 2.4
      * @version eui 1.0
      * @platform Web,Native
+     * @language en_US
      */
     /**
-     * @language zh_CN
      * DataGroup 类将数据项目转换为可视元素以进行显示。
      * 尽管此容器可以包含可视元素，但它通常仅用于包含作为子项的数据项目。
      *
@@ -80,24 +79,25 @@ namespace eui {
      * @version Egret 2.4
      * @version eui 1.0
      * @platform Web,Native
+     * @language zh_CN
      */
     export class DataGroup extends Group {
 
         /**
-         * @language en_US
          * Constructor.
          *
          * @version Egret 2.4
          * @version eui 1.0
          * @platform Web,Native
+         * @language en_US
          */
         /**
-         * @language zh_CN
          * 构造函数。
          *
          * @version Egret 2.4
          * @version eui 1.0
          * @platform Web,Native
+         * @language zh_CN
          */
         public constructor() {
             super();
@@ -351,7 +351,6 @@ namespace eui {
         $dataProvider:ICollection = null;
 
         /**
-         * @language en_US
          * The data provider for this DataGroup.
          * It must be an ICollection, such as ArrayCollection
          *
@@ -361,9 +360,9 @@ namespace eui {
          * @version Egret 2.4
          * @version eui 1.0
          * @platform Web,Native
+         * @language en_US
          */
         /**
-         * @language zh_CN
          * 列表数据源，请使用实现了ICollection接口的数据类型，例如 ArrayCollection
          *
          * @see eui.ICollection
@@ -372,6 +371,7 @@ namespace eui {
          * @version Egret 2.4
          * @version eui 1.0
          * @platform Web,Native
+         * @language zh_CN
          */
         public get dataProvider():ICollection {
             return this.$dataProvider;
@@ -410,7 +410,6 @@ namespace eui {
         }
 
         /**
-         * @language en_US
          * Called when contents within the dataProvider changes.  We will catch certain
          * events and update our children based on that.
          *
@@ -419,9 +418,9 @@ namespace eui {
          * @version Egret 2.4
          * @version eui 1.0
          * @platform Web,Native
+         * @language en_US
          */
         /**
-         * @language zh_CN
          * 数据源改变事件处理。
          *
          * @param event 事件<code>eui.CollectionEvent</code>的对象。
@@ -429,6 +428,7 @@ namespace eui {
          * @version Egret 2.4
          * @version eui 1.0
          * @platform Web,Native
+         * @language zh_CN
          */
         protected onCollectionChange(event:CollectionEvent):void {
             switch (event.kind) {
@@ -488,7 +488,6 @@ namespace eui {
         }
 
         /**
-         * @language en_US
          * Adds the item for the specified dataProvider item to this DataGroup.
          *
          * This method is called as needed by the DataGroup implementation,
@@ -500,9 +499,9 @@ namespace eui {
          * @version Egret 2.4
          * @version eui 1.0
          * @platform Web,Native
+         * @language en_US
          */
         /**
-         * @language zh_CN
          * 添加一个指定的数据到数据源。
          *
          * 这个方法不应该由开发者直接调用，而用于本类自动内调用。
@@ -513,6 +512,7 @@ namespace eui {
          * @version Egret 2.4
          * @version eui 1.0
          * @platform Web,Native
+         * @language zh_CN
          */
         protected itemAdded(item:any, index:number):void {
             if (this.$layout)
@@ -535,7 +535,6 @@ namespace eui {
         }
 
         /**
-         * @language en_US
          * Removes the itemRenderer for the specified dataProvider item from this DataGroup.
          *
          * This method is called as needed by the DataGroup implementation,
@@ -547,9 +546,9 @@ namespace eui {
          * @version Egret 2.4
          * @version eui 1.0
          * @platform Web,Native
+         * @language en_US
          */
         /**
-         * @language zh_CN
          * 删除数据源中指定的项。
          *
          * 这个方法不应该由开发者直接调用，而用于本类自动内调用。
@@ -560,6 +559,7 @@ namespace eui {
          * @version Egret 2.4
          * @version eui 1.0
          * @platform Web,Native
+         * @language zh_CN
          */
         protected itemRemoved(item:any, index:number):void {
             if (this.$layout)
@@ -631,7 +631,6 @@ namespace eui {
 
 
         /**
-         * @language en_US
          * The item renderer to use for data items.
          * The class must implement the IItemRenderer interface.
          * If defined, the <code>itemRendererFunction</code> property
@@ -640,15 +639,16 @@ namespace eui {
          * @version Egret 2.4
          * @version eui 1.0
          * @platform Web,Native
+         * @language en_US
          */
         /**
-         * @language zh_CN
          * 用于数据项目的项呈示器。您应该直接为此属性赋值自定义类的类定义，而不是一个实例。注意：该类必须实现 IItemRenderer 接口。<br/>
          * rendererClass获取顺序：itemRendererFunction > itemRenderer > 默认ItemRenerer。
          *
          * @version Egret 2.4
          * @version eui 1.0
          * @platform Web,Native
+         * @language zh_CN
          */
         public get itemRenderer():any {
             return this.$DataGroup[Keys.itemRenderer];
@@ -667,21 +667,21 @@ namespace eui {
         }
 
         /**
-         * @language en_US
          * The skinName property of the itemRenderer.This property will be passed to itemRenderer.skinName as default value,if you
          * did not set it explicitly.<br>
          * Note: This property is invalid if the itemRenderer is not a subclass of the Component class.
          * @version Egret 2.4
          * @version eui 1.0
          * @platform Web,Native
+         * @language en_US
          */
         /**
-         * @language zh_CN
          * 条目渲染器的可选皮肤标识符。在实例化itemRenderer时，若其内部没有设置过skinName,则将此属性的值赋值给它的skinName。
          * 注意:若 itemRenderer 不是 Component 的子类，则此属性无效。
          * @version Egret 2.4
          * @version eui 1.0
          * @platform Web,Native
+         * @language zh_CN
          */
         public get itemRendererSkinName():any {
             return this.$DataGroup[Keys.itemRendererSkinName];
@@ -699,7 +699,6 @@ namespace eui {
         }
 
         /**
-         * @language en_US
          * Function that returns an item renderer for a
          * specific item.
          *
@@ -709,14 +708,15 @@ namespace eui {
          * @version Egret 2.4
          * @version eui 1.0
          * @platform Web,Native
+         * @language en_US
          */
         /**
-         * @language zh_CN
          * 为某个特定数据项返回一个项呈示器类定义的函数。
          * rendererClass获取顺序：itemRendererFunction > itemRenderer > 默认ItemRenerer。
          * @version Egret 2.4
          * @version eui 1.0
          * @platform Web,Native
+         * @language zh_CN
          */
         public get itemRendererFunction():(item:any)=>any {
             return this.$DataGroup[Keys.itemRendererFunction];
@@ -1014,7 +1014,6 @@ namespace eui {
         }
 
         /**
-         * @language en_US
          * Updates the renderer for reuse.
          * This method first prepares the item
          * renderer for reuse by cleaning out any stale properties
@@ -1030,9 +1029,9 @@ namespace eui {
          * @version Egret 2.4
          * @version eui 1.0
          * @platform Web,Native
+         * @language en_US
          */
         /**
-         * @language zh_CN
          * 此方法首先会准备项呈示器以重用，方法是清除任何旧属性，同时使用新属性进行更新。<p/>
          *
          * 最后，此方法应对项呈示器设置 data 属性。
@@ -1044,6 +1043,7 @@ namespace eui {
          * @version Egret 2.4
          * @version eui 1.0
          * @platform Web,Native
+         * @language zh_CN
          */
         public updateRenderer(renderer:IItemRenderer, itemIndex:number, data:any):IItemRenderer {
             let values = this.$DataGroup;
@@ -1069,7 +1069,6 @@ namespace eui {
 
 
         /**
-         * @language en_US
          * Adds the itemRenderer for the specified dataProvider item to this DataGroup.
          *
          * This method is called as needed by the DataGroup implementation,
@@ -1082,9 +1081,9 @@ namespace eui {
          * @version Egret 2.4
          * @version eui 1.0
          * @platform Web,Native
+         * @language en_US
          */
         /**
-         * @language zh_CN
          * 项呈示器被添加.
          *
          * 这个方法不能直接调用，它是由该类自身自动调用的。
@@ -1096,12 +1095,12 @@ namespace eui {
          * @version Egret 2.4
          * @version eui 1.0
          * @platform Web,Native
+         * @language zh_CN
          */
         protected rendererAdded(renderer:IItemRenderer, index:number, item:any):void {
         }
 
         /**
-         * @language en_US
          * Removes the itemRenderer for the specified dataProvider item from this DataGroup.
          *
          * This method is called as needed by the DataGroup implementation,
@@ -1114,9 +1113,9 @@ namespace eui {
          * @version Egret 2.4
          * @version eui 1.0
          * @platform Web,Native
+         * @language en_US
          */
         /**
-         * @language zh_CN
          * 项呈示器被移除。
          * 这个方法不能直接调用，它是由该类自身自动调用的。
          *
@@ -1127,6 +1126,7 @@ namespace eui {
          * @version Egret 2.4
          * @version eui 1.0
          * @platform Web,Native
+         * @language zh_CN
          */
         protected rendererRemoved(renderer:IItemRenderer, index:number, item:any):void {
         }

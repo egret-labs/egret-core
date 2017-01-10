@@ -44,29 +44,29 @@
 //
 
 /**
- * @language en_US
  * Is debug mode.
  * @version Egret 2.5
  * @platform Web,Native
+ * @language en_US
  */
 /**
- * @language zh_CN
  * 是否为 debug 模式。
  * @version Egret 2.5
  * @platform Web,Native
+ * @language zh_CN
  */
 declare let DEBUG:boolean;
 /**
- * @language en_US
  * Is release mode.
  * @version Egret 2.5
  * @platform Web,Native
+ * @language en_US
  */
 /**
- * @language zh_CN
  * 是否为 release 模式。
  * @version Egret 2.5
  * @platform Web,Native
+ * @language zh_CN
  */
 declare let RELEASE:boolean;
 

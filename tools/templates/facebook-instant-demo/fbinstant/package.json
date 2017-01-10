@@ -1,0 +1,15 @@
+{
+	"name": "egret",
+	"version": "3.2.6",
+	"modules": [
+		{
+			"name": "fbinstant",
+			"description": "fbinstant sdk v2.0",
+			"files": [
+				"fbinstant.js",
+				"fbinstant.d.ts"
+			],
+			"root": "src"
+		}
+	]
+}

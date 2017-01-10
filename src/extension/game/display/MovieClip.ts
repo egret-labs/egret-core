@@ -31,13 +31,12 @@ namespace egret {
 
 
     /**
-    * @language en_US
     * @version Egret 2.4
     * @platform Web,Native
     * @includeExample extension/game/display/MovieClip.ts
+    * @language en_US
     */
     /**
-     * @language zh_CN
      * 影片剪辑，可以通过影片剪辑播放序列帧动画。MovieClip 类从以下类继承而来：DisplayObject 和 EventDispatcher。不同于 DisplayObject 对象，MovieClip 对象拥有一个时间轴。
      * @extends egret.DisplayObject
      * @event egret.Event.COMPLETE 动画播放完成。
@@ -46,6 +45,7 @@ namespace egret {
      * @version Egret 2.4
      * @platform Web,Native
      * @includeExample extension/game/display/MovieClip.ts
+     * @language zh_CN
      */
     export class MovieClip extends DisplayObject {
 
@@ -151,16 +151,16 @@ namespace egret {
          */
         $smoothing: boolean;
         /**
-         * @language en_US
          * Whether or not is smoothed when scaled.
          * @version Egret 3.0
          * @platform Web
+         * @language en_US
          */
         /**
-         * @language zh_CN
          * 控制在缩放时是否进行平滑处理。
          * @version Egret 3.0
          * @platform Web
+         * @language zh_CN
          */
         public get smoothing(): boolean {
             return this.$smoothing;

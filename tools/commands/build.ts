@@ -11,6 +11,8 @@ import CompileTemplate = require('../actions/CompileTemplate');
 import APITestTool = require('../actions/APITest');
 import CHILD_EXEC = require('child_process');
 import APITestCommand = require('./apitest');
+import * as project from '../parser/EgretProject';
+import ts = require('../lib/typescript-plus/lib/typescript')
 
 import Compiler = require('../actions/Compiler');
 console.log(utils.tr(1004, 0));
@@ -70,9 +72,9 @@ class Build implements egret.Command {
         }
 
         var options = egret.args;
-        var packageJson;
-        if (packageJson = FileUtil.read(FileUtil.joinPath(options.projectDir, "package.json"))) {
-            packageJson = JSON.parse(packageJson);
+        let packageJsonContent
+        if (packageJsonContent = FileUtil.read(project.utils.getFilePath("package.json"))) {
+            let packageJson: project.Package_JSON = JSON.parse(packageJsonContent);
             if (packageJson.modules) {//通过有modules来识别是egret库项目
                 this.buildLib(packageJson);
                 return 0;
@@ -94,112 +96,60 @@ class Build implements egret.Command {
         return DontExitCode;
     }
 
-    private buildLib(packageJson): void {
+    private buildLib(packageJson: project.Package_JSON): void {
         var options = egret.args;
         var libFiles = FileUtil.search(FileUtil.joinPath(options.projectDir, "libs"), "d.ts");
-        var outDir = "bin";
-        var compiler = new Compiler;
+        var outDir ="bin";
+        var compiler = new Compiler();
         utils.clean(FileUtil.joinPath(options.projectDir, outDir));
-        for (var i: number = 0; i < packageJson.modules.length; i++) {
-            var module = packageJson.modules[i];
-            var files = [];
-            var length = module.files.length;
-            if(length > 0) {
-                for (var j: number = 0; j < length; j++) {
-                    var file = module.files[j];
-                    if (file.indexOf(".ts") != -1) {
-                        files.push(FileUtil.joinPath(options.projectDir, module.root, file));
-                    }
-                }
+        for (let m of packageJson.modules) {
+            var files:string[];
+            var length = m.files.length;
+            if (length > 0) {
+                files = m.files
+                    .filter(file => file.indexOf(".ts") != -1)
+                    .map(file => FileUtil.joinPath(options.projectDir, m.root, file))
             }
             else {
                 //todo exml
-                files = FileUtil.search(FileUtil.joinPath(options.projectDir, module.root), "ts");
+                files = FileUtil.search(FileUtil.joinPath(options.projectDir, m.root), "ts");
             }
             //解决根目录没文件编译异常问题
-            var tmpFilePath = FileUtil.joinPath(options.projectDir, module.root, "tmp.ts");
+            var tmpFilePath = FileUtil.joinPath(options.projectDir, m.root, "tmp.ts");
             var hasTmpTsFile = false;
-            if(!FileUtil.exists(tmpFilePath)) {
+            if (!FileUtil.exists(tmpFilePath)) {
                 hasTmpTsFile = true;
                 FileUtil.save(tmpFilePath, "");
             }
-            else if(FileUtil.read(tmpFilePath) == "") {
+            else if (FileUtil.read(tmpFilePath) == "") {
                 hasTmpTsFile = true;
             }
-            options['compilerOptions'] = {target: 1};//ES5
+
+            let compilerOptions:ts.CompilerOptions = {
+                target: ts.ScriptTarget.ES5,
+                out: FileUtil.joinPath(options.projectDir, outDir, m.name, m.name + ".js"),
+                declaration:true
+            };
             var compileFiles = libFiles.concat(files);
-            if(hasTmpTsFile) {
+            if (hasTmpTsFile) {
                 compileFiles.push(tmpFilePath);
             }
-            //编译js文件到临时目录
-            var result = compiler.compile({
-                args: options,
-                def: false,
-                out: null,
-                files: compileFiles,
-                outDir: FileUtil.joinPath(options.projectDir, outDir, module.name, "tmp")
-            });
-            //编译dts文件
-            compiler.compile({
-                args: options,
-                def: true,
-                out: FileUtil.joinPath(options.projectDir, outDir, module.name, module.name + ".js"),
-                files: compileFiles,
-                outDir: null
-            });
-            
-            //兼容 Wing 用的旧版 TypeScript，删除 readonly 关键字
-            let declareFile = FileUtil.joinPath(options.projectDir, outDir, module.name, module.name + ".d.ts");
-            let dtsContent = FileUtil.read(declareFile);
-            dtsContent = dtsContent.replace(/readonly /g, "");
-            FileUtil.save(declareFile, dtsContent);
 
-            if(hasTmpTsFile) {
+            var result = compiler.compileGame(compilerOptions, compileFiles)
+
+            if (hasTmpTsFile) {
                 FileUtil.remove(tmpFilePath);
             }
-            var str = "";
-            var dtsStr = FileUtil.read(FileUtil.joinPath(options.projectDir, outDir, module.name, module.name + ".d.ts"));
-            if(length > 0) {
-                for (var j = 0; j < module.files.length; j++) {
-                    var file = module.files[j];
-                    if (file.indexOf(".d.ts") != -1) {
-                        dtsStr += "\n";
-                        dtsStr += FileUtil.read(FileUtil.joinPath(options.projectDir, module.root, file));
-                    }
-                    else if (file.indexOf(".ts") != -1) {
-                        str += FileUtil.read(FileUtil.joinPath(options.projectDir, outDir, module.name, "tmp", file.replace(".ts", ".js")));
-                        str += "\n";
-                    }
-                    else if (file.indexOf(".js") != -1) {
-                        str += FileUtil.read(FileUtil.joinPath(options.projectDir, module.root, file.replace(".ts", ".js")));
-                        str += "\n";
-                    }
-                    //todo exml
-                }
-            }
-            else {
-                for (var j = 0; j < result.files.length; j++) {
-                    let file = result.files[j];
-                    if (file.indexOf(".ts") != -1) {
-                        str += FileUtil.read(FileUtil.joinPath(options.projectDir, outDir, module.name, "tmp", file.replace(module.root + "/", "").replace(".ts", ".js")));
-                        str += "\n";
-                    }
-                    //todo exml
-                }
-            }
-            FileUtil.save(FileUtil.joinPath(options.projectDir, outDir, module.name, module.name + ".d.ts"), dtsStr);
-            FileUtil.save(FileUtil.joinPath(options.projectDir, outDir, module.name, module.name + ".js"), str);
-            var minPath = FileUtil.joinPath(options.projectDir, outDir, module.name, module.name + ".min.js");
-            FileUtil.save(minPath, str);
-            utils.minify(minPath, minPath);
-            FileUtil.remove(FileUtil.joinPath(options.projectDir, outDir, module.name, "tmp"));
+
+            var minPath = FileUtil.joinPath(options.projectDir, outDir, m.name, m.name + ".min.js");
+            utils.minify(compilerOptions.out, minPath);
         }
     }
 }
 
 function onGotBuildCommandResult(cmd: egret.ServiceCommandResult, callback: (exitCode: number) => void) {
     if (cmd.messages) {
-        cmd.messages.forEach(m=> console.log(m));
+        cmd.messages.forEach(m => console.log(m));
     }
 
     if (!cmd.exitCode && egret.args.platform) {
@@ -211,7 +161,7 @@ function onGotBuildCommandResult(cmd: egret.ServiceCommandResult, callback: (exi
 
 function defaultBuildCallback(code) {
     var timeBuildEnd: number = (new Date()).getTime();
-    var timeBuildUsed:number = (timeBuildEnd - timeBuildStart)/1000;
+    var timeBuildUsed: number = (timeBuildEnd - timeBuildStart) / 1000;
     console.log(utils.tr(1108, timeBuildUsed));
     utils.exit(code);
 }
