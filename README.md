@@ -39,7 +39,7 @@ Document & API
 
 Release Notes
 --------------------
-[Egret 4.0.0 Release Notes 2017-1-10](/docs/en/release-note/4.0.0/4.0.0_ReleaseNotes.md)
+[Egret 4.0.0 Release Notes 2017-1-10](/docs/en/release-note/4.0.0/4.0.0_ReleaseNote.md)
 
 [Egret 3.2.6 Release Notes 2016-12-26](/docs/en/release-note/previous-version/3.2.6_ReleaseNotes.md)
 
