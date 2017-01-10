@@ -279,37 +279,6 @@ var RES;
 //////////////////////////////////////////////////////////////////////////////////////
 var RES;
 (function (RES) {
-})(RES || (RES = {}));
-//////////////////////////////////////////////////////////////////////////////////////
-//
-//  Copyright (c) 2014-present, Egret Technology.
-//  All rights reserved.
-//  Redistribution and use in source and binary forms, with or without
-//  modification, are permitted provided that the following conditions are met:
-//
-//     * Redistributions of source code must retain the above copyright
-//       notice, this list of conditions and the following disclaimer.
-//     * Redistributions in binary form must reproduce the above copyright
-//       notice, this list of conditions and the following disclaimer in the
-//       documentation and/or other materials provided with the distribution.
-//     * Neither the name of the Egret nor the
-//       names of its contributors may be used to endorse or promote products
-//       derived from this software without specific prior written permission.
-//
-//  THIS SOFTWARE IS PROVIDED BY EGRET AND CONTRIBUTORS "AS IS" AND ANY EXPRESS
-//  OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES
-//  OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED.
-//  IN NO EVENT SHALL EGRET AND CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT,
-//  INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT
-//  LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES;LOSS OF USE, DATA,
-//  OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF
-//  LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING
-//  NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE,
-//  EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
-//
-//////////////////////////////////////////////////////////////////////////////////////
-var RES;
-(function (RES) {
     /**
      * Resource term. One of the resources arrays in resource.json.
      * @version Egret 2.4
@@ -768,6 +737,287 @@ var RES;
 //////////////////////////////////////////////////////////////////////////////////////
 var RES;
 (function (RES) {
+})(RES || (RES = {}));
+//////////////////////////////////////////////////////////////////////////////////////
+//
+//  Copyright (c) 2014-present, Egret Technology.
+//  All rights reserved.
+//  Redistribution and use in source and binary forms, with or without
+//  modification, are permitted provided that the following conditions are met:
+//
+//     * Redistributions of source code must retain the above copyright
+//       notice, this list of conditions and the following disclaimer.
+//     * Redistributions in binary form must reproduce the above copyright
+//       notice, this list of conditions and the following disclaimer in the
+//       documentation and/or other materials provided with the distribution.
+//     * Neither the name of the Egret nor the
+//       names of its contributors may be used to endorse or promote products
+//       derived from this software without specific prior written permission.
+//
+//  THIS SOFTWARE IS PROVIDED BY EGRET AND CONTRIBUTORS "AS IS" AND ANY EXPRESS
+//  OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES
+//  OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED.
+//  IN NO EVENT SHALL EGRET AND CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT,
+//  INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT
+//  LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES;LOSS OF USE, DATA,
+//  OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF
+//  LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING
+//  NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE,
+//  EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+//
+//////////////////////////////////////////////////////////////////////////////////////
+var RES;
+(function (RES) {
+    /**
+     * @private
+     */
+    var ImageAnalyzer = (function (_super) {
+        __extends(ImageAnalyzer, _super);
+        /**
+         * 构造函数
+         */
+        function ImageAnalyzer() {
+            var _this = _super.call(this) || this;
+            /**
+             * 字节流数据缓存字典
+             */
+            _this.fileDic = {};
+            /**
+             * 加载项字典
+             */
+            _this.resItemDic = [];
+            /**
+             * Loader对象池
+             */
+            _this.recycler = [];
+            return _this;
+        }
+        /**
+         * @inheritDoc
+         */
+        ImageAnalyzer.prototype.loadFile = function (resItem, compFunc, thisObject) {
+            if (this.fileDic[resItem.name]) {
+                compFunc.call(thisObject, resItem);
+                return;
+            }
+            var loader = this.getLoader();
+            this.resItemDic[loader.$hashCode] = { item: resItem, func: compFunc, thisObject: thisObject };
+            loader.load(RES.$getVirtualUrl(resItem.url));
+        };
+        /**
+         * 获取一个Loader对象
+         */
+        ImageAnalyzer.prototype.getLoader = function () {
+            var loader = this.recycler.pop();
+            if (!loader) {
+                loader = new egret.ImageLoader();
+                loader.addEventListener(egret.Event.COMPLETE, this.onLoadFinish, this);
+                loader.addEventListener(egret.IOErrorEvent.IO_ERROR, this.onLoadFinish, this);
+            }
+            return loader;
+        };
+        /**
+         * 一项加载结束
+         */
+        ImageAnalyzer.prototype.onLoadFinish = function (event) {
+            var request = (event.$target);
+            var data = this.resItemDic[request.$hashCode];
+            delete this.resItemDic[request.$hashCode];
+            var resItem = data.item;
+            var compFunc = data.func;
+            resItem.loaded = (event.$type == egret.Event.COMPLETE);
+            if (resItem.loaded) {
+                var texture = new egret.Texture();
+                texture._setBitmapData(request.data);
+                this.analyzeData(resItem, texture);
+            }
+            this.recycler.push(request);
+            compFunc.call(data.thisObject, resItem);
+        };
+        /**
+         * 解析并缓存加载成功的数据
+         */
+        ImageAnalyzer.prototype.analyzeData = function (resItem, texture) {
+            var name = resItem.name;
+            if (this.fileDic[name] || !texture) {
+                return;
+            }
+            this.fileDic[name] = texture;
+            var config = resItem.data;
+            if (config && config["scale9grid"]) {
+                var str = config["scale9grid"];
+                var list = str.split(",");
+                texture["scale9Grid"] = new egret.Rectangle(parseInt(list[0]), parseInt(list[1]), parseInt(list[2]), parseInt(list[3]));
+            }
+        };
+        /**
+         * @inheritDoc
+         */
+        ImageAnalyzer.prototype.getRes = function (name) {
+            return this.fileDic[name];
+        };
+        /**
+         * @inheritDoc
+         */
+        ImageAnalyzer.prototype.hasRes = function (name) {
+            var res = this.getRes(name);
+            return res != null;
+        };
+        /**
+         * @inheritDoc
+         */
+        ImageAnalyzer.prototype.destroyRes = function (name) {
+            if (this.fileDic[name]) {
+                this.onResourceDestroy(this.fileDic[name]);
+                delete this.fileDic[name];
+                return true;
+            }
+            return false;
+        };
+        ImageAnalyzer.prototype.onResourceDestroy = function (texture) {
+            texture.dispose();
+        };
+        return ImageAnalyzer;
+    }(RES.AnalyzerBase));
+    RES.ImageAnalyzer = ImageAnalyzer;
+    __reflect(ImageAnalyzer.prototype, "RES.ImageAnalyzer");
+})(RES || (RES = {}));
+//////////////////////////////////////////////////////////////////////////////////////
+//
+//  Copyright (c) 2014-present, Egret Technology.
+//  All rights reserved.
+//  Redistribution and use in source and binary forms, with or without
+//  modification, are permitted provided that the following conditions are met:
+//
+//     * Redistributions of source code must retain the above copyright
+//       notice, this list of conditions and the following disclaimer.
+//     * Redistributions in binary form must reproduce the above copyright
+//       notice, this list of conditions and the following disclaimer in the
+//       documentation and/or other materials provided with the distribution.
+//     * Neither the name of the Egret nor the
+//       names of its contributors may be used to endorse or promote products
+//       derived from this software without specific prior written permission.
+//
+//  THIS SOFTWARE IS PROVIDED BY EGRET AND CONTRIBUTORS "AS IS" AND ANY EXPRESS
+//  OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES
+//  OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED.
+//  IN NO EVENT SHALL EGRET AND CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT,
+//  INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT
+//  LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES;LOSS OF USE, DATA,
+//  OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF
+//  LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING
+//  NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE,
+//  EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+//
+//////////////////////////////////////////////////////////////////////////////////////
+var RES;
+(function (RES) {
+    /**
+     * @private
+     */
+    var TextAnalyzer = (function (_super) {
+        __extends(TextAnalyzer, _super);
+        function TextAnalyzer() {
+            var _this = _super.call(this) || this;
+            _this._dataFormat = egret.HttpResponseType.TEXT;
+            return _this;
+        }
+        return TextAnalyzer;
+    }(RES.BinAnalyzer));
+    RES.TextAnalyzer = TextAnalyzer;
+    __reflect(TextAnalyzer.prototype, "RES.TextAnalyzer");
+})(RES || (RES = {}));
+//////////////////////////////////////////////////////////////////////////////////////
+//
+//  Copyright (c) 2014-present, Egret Technology.
+//  All rights reserved.
+//  Redistribution and use in source and binary forms, with or without
+//  modification, are permitted provided that the following conditions are met:
+//
+//     * Redistributions of source code must retain the above copyright
+//       notice, this list of conditions and the following disclaimer.
+//     * Redistributions in binary form must reproduce the above copyright
+//       notice, this list of conditions and the following disclaimer in the
+//       documentation and/or other materials provided with the distribution.
+//     * Neither the name of the Egret nor the
+//       names of its contributors may be used to endorse or promote products
+//       derived from this software without specific prior written permission.
+//
+//  THIS SOFTWARE IS PROVIDED BY EGRET AND CONTRIBUTORS "AS IS" AND ANY EXPRESS
+//  OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES
+//  OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED.
+//  IN NO EVENT SHALL EGRET AND CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT,
+//  INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT
+//  LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES;LOSS OF USE, DATA,
+//  OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF
+//  LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING
+//  NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE,
+//  EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+//
+//////////////////////////////////////////////////////////////////////////////////////
+var RES;
+(function (RES) {
+    /**
+     * @private
+     */
+    var JsonAnalyzer = (function (_super) {
+        __extends(JsonAnalyzer, _super);
+        function JsonAnalyzer() {
+            var _this = _super.call(this) || this;
+            _this._dataFormat = egret.HttpResponseType.TEXT;
+            return _this;
+        }
+        /**
+         * 解析并缓存加载成功的数据
+         */
+        JsonAnalyzer.prototype.analyzeData = function (resItem, data) {
+            var name = resItem.name;
+            if (this.fileDic[name] || !data) {
+                return;
+            }
+            try {
+                var str = data;
+                this.fileDic[name] = JSON.parse(str);
+            }
+            catch (e) {
+                egret.$warn(1017, resItem.url, data);
+            }
+        };
+        return JsonAnalyzer;
+    }(RES.BinAnalyzer));
+    RES.JsonAnalyzer = JsonAnalyzer;
+    __reflect(JsonAnalyzer.prototype, "RES.JsonAnalyzer");
+})(RES || (RES = {}));
+//////////////////////////////////////////////////////////////////////////////////////
+//
+//  Copyright (c) 2014-present, Egret Technology.
+//  All rights reserved.
+//  Redistribution and use in source and binary forms, with or without
+//  modification, are permitted provided that the following conditions are met:
+//
+//     * Redistributions of source code must retain the above copyright
+//       notice, this list of conditions and the following disclaimer.
+//     * Redistributions in binary form must reproduce the above copyright
+//       notice, this list of conditions and the following disclaimer in the
+//       documentation and/or other materials provided with the distribution.
+//     * Neither the name of the Egret nor the
+//       names of its contributors may be used to endorse or promote products
+//       derived from this software without specific prior written permission.
+//
+//  THIS SOFTWARE IS PROVIDED BY EGRET AND CONTRIBUTORS "AS IS" AND ANY EXPRESS
+//  OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES
+//  OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED.
+//  IN NO EVENT SHALL EGRET AND CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT,
+//  INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT
+//  LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES;LOSS OF USE, DATA,
+//  OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF
+//  LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING
+//  NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE,
+//  EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+//
+//////////////////////////////////////////////////////////////////////////////////////
+var RES;
+(function (RES) {
     /**
      * @class RES.ResourceLoader
      * @classdesc
@@ -1048,116 +1298,306 @@ var RES;
     /**
      * @private
      */
-    var ImageAnalyzer = (function (_super) {
-        __extends(ImageAnalyzer, _super);
-        /**
-         * 构造函数
-         */
-        function ImageAnalyzer() {
-            var _this = _super.call(this) || this;
-            /**
-             * 字节流数据缓存字典
-             */
-            _this.fileDic = {};
-            /**
-             * 加载项字典
-             */
-            _this.resItemDic = [];
-            /**
-             * Loader对象池
-             */
-            _this.recycler = [];
-            return _this;
+    var FontAnalyzer = (function (_super) {
+        __extends(FontAnalyzer, _super);
+        function FontAnalyzer() {
+            return _super.call(this) || this;
         }
-        /**
-         * @inheritDoc
-         */
-        ImageAnalyzer.prototype.loadFile = function (resItem, compFunc, thisObject) {
-            if (this.fileDic[resItem.name]) {
-                compFunc.call(thisObject, resItem);
-                return;
+        FontAnalyzer.prototype.analyzeConfig = function (resItem, data) {
+            var name = resItem.name;
+            var config;
+            var imageUrl = "";
+            try {
+                var str = data;
+                config = JSON.parse(str);
             }
-            var loader = this.getLoader();
-            this.resItemDic[loader.$hashCode] = { item: resItem, func: compFunc, thisObject: thisObject };
-            loader.load(RES.$getVirtualUrl(resItem.url));
-        };
-        /**
-         * 获取一个Loader对象
-         */
-        ImageAnalyzer.prototype.getLoader = function () {
-            var loader = this.recycler.pop();
-            if (!loader) {
-                loader = new egret.ImageLoader();
-                loader.addEventListener(egret.Event.COMPLETE, this.onLoadFinish, this);
-                loader.addEventListener(egret.IOErrorEvent.IO_ERROR, this.onLoadFinish, this);
+            catch (e) {
             }
-            return loader;
-        };
-        /**
-         * 一项加载结束
-         */
-        ImageAnalyzer.prototype.onLoadFinish = function (event) {
-            var request = (event.$target);
-            var data = this.resItemDic[request.$hashCode];
-            delete this.resItemDic[request.$hashCode];
-            var resItem = data.item;
-            var compFunc = data.func;
-            resItem.loaded = (event.$type == egret.Event.COMPLETE);
-            if (resItem.loaded) {
-                var texture = new egret.Texture();
-                texture._setBitmapData(request.data);
-                this.analyzeData(resItem, texture);
+            if (config) {
+                imageUrl = this.getRelativePath(resItem.url, config["file"]);
             }
-            this.recycler.push(request);
-            compFunc.call(data.thisObject, resItem);
+            else {
+                config = data;
+                imageUrl = this.getTexturePath(resItem.url, config);
+            }
+            this.sheetMap[name] = config;
+            return imageUrl;
         };
-        /**
-         * 解析并缓存加载成功的数据
-         */
-        ImageAnalyzer.prototype.analyzeData = function (resItem, texture) {
+        FontAnalyzer.prototype.analyzeBitmap = function (resItem, texture) {
             var name = resItem.name;
             if (this.fileDic[name] || !texture) {
                 return;
             }
-            this.fileDic[name] = texture;
-            var config = resItem.data;
-            if (config && config["scale9grid"]) {
-                var str = config["scale9grid"];
-                var list = str.split(",");
-                texture["scale9Grid"] = new egret.Rectangle(parseInt(list[0]), parseInt(list[1]), parseInt(list[2]), parseInt(list[3]));
+            var config = this.sheetMap[name];
+            delete this.sheetMap[name];
+            var bitmapFont = new egret.BitmapFont(texture, config);
+            this.fileDic[name] = bitmapFont;
+        };
+        FontAnalyzer.prototype.getTexturePath = function (url, fntText) {
+            var file = "";
+            var lines = fntText.split("\n");
+            var pngLine = lines[2];
+            var index = pngLine.indexOf("file=\"");
+            if (index != -1) {
+                pngLine = pngLine.substring(index + 6);
+                index = pngLine.indexOf("\"");
+                file = pngLine.substring(0, index);
+            }
+            url = url.split("\\").join("/");
+            index = url.lastIndexOf("/");
+            if (index != -1) {
+                url = url.substring(0, index + 1) + file;
+            }
+            else {
+                url = file;
+            }
+            return url;
+        };
+        FontAnalyzer.prototype.onResourceDestroy = function (font) {
+            if (font) {
+                font.dispose();
+            }
+        };
+        return FontAnalyzer;
+    }(RES.SheetAnalyzer));
+    RES.FontAnalyzer = FontAnalyzer;
+    __reflect(FontAnalyzer.prototype, "RES.FontAnalyzer");
+})(RES || (RES = {}));
+//////////////////////////////////////////////////////////////////////////////////////
+//
+//  Copyright (c) 2014-present, Egret Technology.
+//  All rights reserved.
+//  Redistribution and use in source and binary forms, with or without
+//  modification, are permitted provided that the following conditions are met:
+//
+//     * Redistributions of source code must retain the above copyright
+//       notice, this list of conditions and the following disclaimer.
+//     * Redistributions in binary form must reproduce the above copyright
+//       notice, this list of conditions and the following disclaimer in the
+//       documentation and/or other materials provided with the distribution.
+//     * Neither the name of the Egret nor the
+//       names of its contributors may be used to endorse or promote products
+//       derived from this software without specific prior written permission.
+//
+//  THIS SOFTWARE IS PROVIDED BY EGRET AND CONTRIBUTORS "AS IS" AND ANY EXPRESS
+//  OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES
+//  OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED.
+//  IN NO EVENT SHALL EGRET AND CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT,
+//  INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT
+//  LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES;LOSS OF USE, DATA,
+//  OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF
+//  LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING
+//  NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE,
+//  EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+//
+//////////////////////////////////////////////////////////////////////////////////////
+var RES;
+(function (RES) {
+    /**
+     * @class RES.ResourceConfig
+     * @classdesc
+     * @private
+     */
+    var ResourceConfig = (function () {
+        function ResourceConfig() {
+            /**
+             * 一级键名字典
+             */
+            this.keyMap = {};
+            /**
+             * 加载组字典
+             */
+            this.groupDic = {};
+            RES["configInstance"] = this;
+        }
+        /**
+         * 根据组名获取组加载项列表
+         * @method RES.ResourceConfig#getGroupByName
+         * @param name {string} 组名
+         * @returns {Array<egret.ResourceItem>}
+         */
+        ResourceConfig.prototype.getGroupByName = function (name) {
+            var group = new Array();
+            if (!this.groupDic[name])
+                return group;
+            var list = this.groupDic[name];
+            var length = list.length;
+            for (var i = 0; i < length; i++) {
+                var obj = list[i];
+                group.push(this.parseResourceItem(obj));
+            }
+            return group;
+        };
+        /**
+         * 根据组名获取原始的组加载项列表
+         * @method RES.ResourceConfig#getRawGroupByName
+         * @param name {string} 组名
+         * @returns {any[]}
+         */
+        ResourceConfig.prototype.getRawGroupByName = function (name) {
+            if (this.groupDic[name])
+                return this.groupDic[name];
+            return [];
+        };
+        /**
+         * 创建自定义的加载资源组,注意：此方法仅在资源配置文件加载完成后执行才有效。
+         * 可以监听ResourceEvent.CONFIG_COMPLETE事件来确认配置加载完成。
+         * @method RES.ResourceConfig#createGroup
+         * @param name {string} 要创建的加载资源组的组名
+         * @param keys {egret.string[]} 要包含的键名列表，key对应配置文件里的name属性或sbuKeys属性的一项或一个资源组名。
+         * @param override {boolean} 是否覆盖已经存在的同名资源组,默认false。
+         * @returns {boolean}
+         */
+        ResourceConfig.prototype.createGroup = function (name, keys, override) {
+            if (override === void 0) { override = false; }
+            if ((!override && this.groupDic[name]) || !keys || keys.length == 0)
+                return false;
+            var groupDic = this.groupDic;
+            var group = [];
+            var length = keys.length;
+            for (var i = 0; i < length; i++) {
+                var key = keys[i];
+                var g = groupDic[key];
+                if (g) {
+                    var len = g.length;
+                    for (var j = 0; j < len; j++) {
+                        var item = g[j];
+                        if (group.indexOf(item) == -1)
+                            group.push(item);
+                    }
+                }
+                else {
+                    var item = this.keyMap[key];
+                    if (item) {
+                        if (group.indexOf(item) == -1)
+                            group.push(item);
+                    }
+                    else {
+                        egret.$warn(3200, key);
+                    }
+                }
+            }
+            if (group.length == 0)
+                return false;
+            this.groupDic[name] = group;
+            return true;
+        };
+        /**
+         * 解析一个配置文件
+         * @method RES.ResourceConfig#parseConfig
+         * @param data {any} 配置文件数据
+         * @param folder {string} 加载项的路径前缀。
+         */
+        ResourceConfig.prototype.parseConfig = function (data, folder) {
+            if (!data)
+                return;
+            var resources = data["resources"];
+            if (resources) {
+                var length_2 = resources.length;
+                for (var i = 0; i < length_2; i++) {
+                    var item = resources[i];
+                    var url = item.url;
+                    if (url && url.indexOf("://") == -1)
+                        item.url = folder + url;
+                    this.addItemToKeyMap(item);
+                }
+            }
+            var groups = data["groups"];
+            if (groups) {
+                var length_3 = groups.length;
+                for (var i = 0; i < length_3; i++) {
+                    var group = groups[i];
+                    var list = [];
+                    var keys = group.keys.split(",");
+                    var l = keys.length;
+                    for (var j = 0; j < l; j++) {
+                        var name_2 = keys[j].trim();
+                        var item = this.keyMap[name_2];
+                        if (item && list.indexOf(item) == -1) {
+                            list.push(item);
+                        }
+                    }
+                    this.groupDic[group.name] = list;
+                }
             }
         };
         /**
-         * @inheritDoc
+         * 添加一个二级键名到配置列表。
+         * @method RES.ResourceConfig#addSubkey
+         * @param subkey {string} 要添加的二级键名
+         * @param name {string} 二级键名所属的资源name属性
          */
-        ImageAnalyzer.prototype.getRes = function (name) {
-            return this.fileDic[name];
-        };
-        /**
-         * @inheritDoc
-         */
-        ImageAnalyzer.prototype.hasRes = function (name) {
-            var res = this.getRes(name);
-            return res != null;
-        };
-        /**
-         * @inheritDoc
-         */
-        ImageAnalyzer.prototype.destroyRes = function (name) {
-            if (this.fileDic[name]) {
-                this.onResourceDestroy(this.fileDic[name]);
-                delete this.fileDic[name];
-                return true;
+        ResourceConfig.prototype.addSubkey = function (subkey, name) {
+            var item = this.keyMap[name];
+            if (item && !this.keyMap[subkey]) {
+                this.keyMap[subkey] = item;
             }
-            return false;
         };
-        ImageAnalyzer.prototype.onResourceDestroy = function (texture) {
-            texture.dispose();
+        /**
+         * 添加一个加载项数据到列表
+         */
+        ResourceConfig.prototype.addItemToKeyMap = function (item) {
+            if (!this.keyMap[item.name])
+                this.keyMap[item.name] = item;
+            if (item.hasOwnProperty("subkeys")) {
+                var subkeys = (item.subkeys).split(",");
+                item.subkeys = subkeys;
+                var length_4 = subkeys.length;
+                for (var i = 0; i < length_4; i++) {
+                    var key = subkeys[i];
+                    if (this.keyMap[key] != null)
+                        continue;
+                    this.keyMap[key] = item;
+                }
+            }
         };
-        return ImageAnalyzer;
-    }(RES.AnalyzerBase));
-    RES.ImageAnalyzer = ImageAnalyzer;
-    __reflect(ImageAnalyzer.prototype, "RES.ImageAnalyzer");
+        /**
+         * 获取加载项的name属性
+         * @method RES.ResourceConfig#getType
+         * @param key {string} 对应配置文件里的name属性或sbuKeys属性的一项。
+         * @returns {string}
+         */
+        ResourceConfig.prototype.getName = function (key) {
+            var data = this.keyMap[key];
+            return data ? data.name : "";
+        };
+        /**
+         * 获取加载项类型。
+         * @method RES.ResourceConfig#getType
+         * @param key {string} 对应配置文件里的name属性或sbuKeys属性的一项。
+         * @returns {string}
+         */
+        ResourceConfig.prototype.getType = function (key) {
+            var data = this.keyMap[key];
+            return data ? data.type : "";
+        };
+        ResourceConfig.prototype.getRawResourceItem = function (key) {
+            return this.keyMap[key];
+        };
+        /**
+         * 获取加载项信息对象
+         * @method RES.ResourceConfig#getResourceItem
+         * @param key {string} 对应配置文件里的key属性或sbuKeys属性的一项。
+         * @returns {egret.ResourceItem}
+         */
+        ResourceConfig.prototype.getResourceItem = function (key) {
+            var data = this.keyMap[key];
+            if (data)
+                return this.parseResourceItem(data);
+            return null;
+        };
+        /**
+         * 转换Object数据为ResourceItem对象
+         */
+        ResourceConfig.prototype.parseResourceItem = function (data) {
+            var resItem = new RES.ResourceItem(data.name, data.url, data.type);
+            resItem.data = data;
+            return resItem;
+        };
+        return ResourceConfig;
+    }());
+    RES.ResourceConfig = ResourceConfig;
+    __reflect(ResourceConfig.prototype, "RES.ResourceConfig");
 })(RES || (RES = {}));
 //////////////////////////////////////////////////////////////////////////////////////
 //
@@ -1192,9 +1632,9 @@ var RES;
     /**
      * @private
      */
-    var JsonAnalyzer = (function (_super) {
-        __extends(JsonAnalyzer, _super);
-        function JsonAnalyzer() {
+    var XMLAnalyzer = (function (_super) {
+        __extends(XMLAnalyzer, _super);
+        function XMLAnalyzer() {
             var _this = _super.call(this) || this;
             _this._dataFormat = egret.HttpResponseType.TEXT;
             return _this;
@@ -1202,23 +1642,23 @@ var RES;
         /**
          * 解析并缓存加载成功的数据
          */
-        JsonAnalyzer.prototype.analyzeData = function (resItem, data) {
+        XMLAnalyzer.prototype.analyzeData = function (resItem, data) {
             var name = resItem.name;
             if (this.fileDic[name] || !data) {
                 return;
             }
             try {
-                var str = data;
-                this.fileDic[name] = JSON.parse(str);
+                var xmlStr = data;
+                var xml = egret.XML.parse(xmlStr);
+                this.fileDic[name] = xml;
             }
             catch (e) {
-                egret.$warn(1017, resItem.url, data);
             }
         };
-        return JsonAnalyzer;
+        return XMLAnalyzer;
     }(RES.BinAnalyzer));
-    RES.JsonAnalyzer = JsonAnalyzer;
-    __reflect(JsonAnalyzer.prototype, "RES.JsonAnalyzer");
+    RES.XMLAnalyzer = XMLAnalyzer;
+    __reflect(XMLAnalyzer.prototype, "RES.XMLAnalyzer");
 })(RES || (RES = {}));
 //////////////////////////////////////////////////////////////////////////////////////
 //
@@ -1449,331 +1889,6 @@ var RES;
     ResourceEvent.GROUP_LOAD_ERROR = "groupLoadError";
     RES.ResourceEvent = ResourceEvent;
     __reflect(ResourceEvent.prototype, "RES.ResourceEvent");
-})(RES || (RES = {}));
-//////////////////////////////////////////////////////////////////////////////////////
-//
-//  Copyright (c) 2014-present, Egret Technology.
-//  All rights reserved.
-//  Redistribution and use in source and binary forms, with or without
-//  modification, are permitted provided that the following conditions are met:
-//
-//     * Redistributions of source code must retain the above copyright
-//       notice, this list of conditions and the following disclaimer.
-//     * Redistributions in binary form must reproduce the above copyright
-//       notice, this list of conditions and the following disclaimer in the
-//       documentation and/or other materials provided with the distribution.
-//     * Neither the name of the Egret nor the
-//       names of its contributors may be used to endorse or promote products
-//       derived from this software without specific prior written permission.
-//
-//  THIS SOFTWARE IS PROVIDED BY EGRET AND CONTRIBUTORS "AS IS" AND ANY EXPRESS
-//  OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES
-//  OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED.
-//  IN NO EVENT SHALL EGRET AND CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT,
-//  INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT
-//  LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES;LOSS OF USE, DATA,
-//  OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF
-//  LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING
-//  NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE,
-//  EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
-//
-//////////////////////////////////////////////////////////////////////////////////////
-var RES;
-(function (RES) {
-    /**
-     * @private
-     */
-    var FontAnalyzer = (function (_super) {
-        __extends(FontAnalyzer, _super);
-        function FontAnalyzer() {
-            return _super.call(this) || this;
-        }
-        FontAnalyzer.prototype.analyzeConfig = function (resItem, data) {
-            var name = resItem.name;
-            var config;
-            var imageUrl = "";
-            try {
-                var str = data;
-                config = JSON.parse(str);
-            }
-            catch (e) {
-            }
-            if (config) {
-                imageUrl = this.getRelativePath(resItem.url, config["file"]);
-            }
-            else {
-                config = data;
-                imageUrl = this.getTexturePath(resItem.url, config);
-            }
-            this.sheetMap[name] = config;
-            return imageUrl;
-        };
-        FontAnalyzer.prototype.analyzeBitmap = function (resItem, texture) {
-            var name = resItem.name;
-            if (this.fileDic[name] || !texture) {
-                return;
-            }
-            var config = this.sheetMap[name];
-            delete this.sheetMap[name];
-            var bitmapFont = new egret.BitmapFont(texture, config);
-            this.fileDic[name] = bitmapFont;
-        };
-        FontAnalyzer.prototype.getTexturePath = function (url, fntText) {
-            var file = "";
-            var lines = fntText.split("\n");
-            var pngLine = lines[2];
-            var index = pngLine.indexOf("file=\"");
-            if (index != -1) {
-                pngLine = pngLine.substring(index + 6);
-                index = pngLine.indexOf("\"");
-                file = pngLine.substring(0, index);
-            }
-            url = url.split("\\").join("/");
-            index = url.lastIndexOf("/");
-            if (index != -1) {
-                url = url.substring(0, index + 1) + file;
-            }
-            else {
-                url = file;
-            }
-            return url;
-        };
-        FontAnalyzer.prototype.onResourceDestroy = function (font) {
-            if (font) {
-                font.dispose();
-            }
-        };
-        return FontAnalyzer;
-    }(RES.SheetAnalyzer));
-    RES.FontAnalyzer = FontAnalyzer;
-    __reflect(FontAnalyzer.prototype, "RES.FontAnalyzer");
-})(RES || (RES = {}));
-//////////////////////////////////////////////////////////////////////////////////////
-//
-//  Copyright (c) 2014-present, Egret Technology.
-//  All rights reserved.
-//  Redistribution and use in source and binary forms, with or without
-//  modification, are permitted provided that the following conditions are met:
-//
-//     * Redistributions of source code must retain the above copyright
-//       notice, this list of conditions and the following disclaimer.
-//     * Redistributions in binary form must reproduce the above copyright
-//       notice, this list of conditions and the following disclaimer in the
-//       documentation and/or other materials provided with the distribution.
-//     * Neither the name of the Egret nor the
-//       names of its contributors may be used to endorse or promote products
-//       derived from this software without specific prior written permission.
-//
-//  THIS SOFTWARE IS PROVIDED BY EGRET AND CONTRIBUTORS "AS IS" AND ANY EXPRESS
-//  OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES
-//  OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED.
-//  IN NO EVENT SHALL EGRET AND CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT,
-//  INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT
-//  LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES;LOSS OF USE, DATA,
-//  OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF
-//  LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING
-//  NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE,
-//  EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
-//
-//////////////////////////////////////////////////////////////////////////////////////
-var RES;
-(function (RES) {
-    /**
-     * @private
-     */
-    var SoundAnalyzer = (function (_super) {
-        __extends(SoundAnalyzer, _super);
-        /**
-         * 构造函数
-         */
-        function SoundAnalyzer() {
-            var _this = _super.call(this) || this;
-            /**
-             * 字节流数据缓存字典
-             */
-            _this.soundDic = {};
-            /**
-             * 加载项字典
-             */
-            _this.resItemDic = [];
-            return _this;
-        }
-        /**
-         * @inheritDoc
-         */
-        SoundAnalyzer.prototype.loadFile = function (resItem, callBack, thisObject) {
-            if (this.soundDic[resItem.name]) {
-                callBack.call(thisObject, resItem);
-                return;
-            }
-            var sound = new egret.Sound();
-            sound.addEventListener(egret.Event.COMPLETE, this.onLoadFinish, this);
-            sound.addEventListener(egret.IOErrorEvent.IO_ERROR, this.onLoadFinish, this);
-            this.resItemDic[sound.$hashCode] = { item: resItem, func: callBack, thisObject: thisObject };
-            sound.load(RES.$getVirtualUrl(resItem.url));
-            if (resItem.data) {
-                sound.type = resItem.data.soundType;
-            }
-        };
-        /**
-         * 一项加载结束
-         */
-        SoundAnalyzer.prototype.onLoadFinish = function (event) {
-            var sound = (event.$target);
-            sound.removeEventListener(egret.Event.COMPLETE, this.onLoadFinish, this);
-            sound.removeEventListener(egret.IOErrorEvent.IO_ERROR, this.onLoadFinish, this);
-            var data = this.resItemDic[sound.$hashCode];
-            delete this.resItemDic[sound.$hashCode];
-            var resItem = data.item;
-            var compFunc = data.func;
-            resItem.loaded = (event.$type == egret.Event.COMPLETE);
-            if (resItem.loaded) {
-                this.analyzeData(resItem, sound);
-            }
-            compFunc.call(data.thisObject, resItem);
-        };
-        /**
-         * 解析并缓存加载成功的数据
-         */
-        SoundAnalyzer.prototype.analyzeData = function (resItem, data) {
-            var name = resItem.name;
-            if (this.soundDic[name] || !data) {
-                return;
-            }
-            this.soundDic[name] = data;
-        };
-        /**
-         * @inheritDoc
-         */
-        SoundAnalyzer.prototype.getRes = function (name) {
-            return this.soundDic[name];
-        };
-        /**
-         * @inheritDoc
-         */
-        SoundAnalyzer.prototype.hasRes = function (name) {
-            return !!this.getRes(name);
-        };
-        /**
-         * @inheritDoc
-         */
-        SoundAnalyzer.prototype.destroyRes = function (name) {
-            if (this.soundDic[name]) {
-                delete this.soundDic[name];
-                return true;
-            }
-            return false;
-        };
-        return SoundAnalyzer;
-    }(RES.AnalyzerBase));
-    RES.SoundAnalyzer = SoundAnalyzer;
-    __reflect(SoundAnalyzer.prototype, "RES.SoundAnalyzer");
-})(RES || (RES = {}));
-//////////////////////////////////////////////////////////////////////////////////////
-//
-//  Copyright (c) 2014-present, Egret Technology.
-//  All rights reserved.
-//  Redistribution and use in source and binary forms, with or without
-//  modification, are permitted provided that the following conditions are met:
-//
-//     * Redistributions of source code must retain the above copyright
-//       notice, this list of conditions and the following disclaimer.
-//     * Redistributions in binary form must reproduce the above copyright
-//       notice, this list of conditions and the following disclaimer in the
-//       documentation and/or other materials provided with the distribution.
-//     * Neither the name of the Egret nor the
-//       names of its contributors may be used to endorse or promote products
-//       derived from this software without specific prior written permission.
-//
-//  THIS SOFTWARE IS PROVIDED BY EGRET AND CONTRIBUTORS "AS IS" AND ANY EXPRESS
-//  OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES
-//  OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED.
-//  IN NO EVENT SHALL EGRET AND CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT,
-//  INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT
-//  LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES;LOSS OF USE, DATA,
-//  OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF
-//  LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING
-//  NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE,
-//  EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
-//
-//////////////////////////////////////////////////////////////////////////////////////
-var RES;
-(function (RES) {
-    /**
-     * @private
-     */
-    var XMLAnalyzer = (function (_super) {
-        __extends(XMLAnalyzer, _super);
-        function XMLAnalyzer() {
-            var _this = _super.call(this) || this;
-            _this._dataFormat = egret.HttpResponseType.TEXT;
-            return _this;
-        }
-        /**
-         * 解析并缓存加载成功的数据
-         */
-        XMLAnalyzer.prototype.analyzeData = function (resItem, data) {
-            var name = resItem.name;
-            if (this.fileDic[name] || !data) {
-                return;
-            }
-            try {
-                var xmlStr = data;
-                var xml = egret.XML.parse(xmlStr);
-                this.fileDic[name] = xml;
-            }
-            catch (e) {
-            }
-        };
-        return XMLAnalyzer;
-    }(RES.BinAnalyzer));
-    RES.XMLAnalyzer = XMLAnalyzer;
-    __reflect(XMLAnalyzer.prototype, "RES.XMLAnalyzer");
-})(RES || (RES = {}));
-//////////////////////////////////////////////////////////////////////////////////////
-//
-//  Copyright (c) 2014-present, Egret Technology.
-//  All rights reserved.
-//  Redistribution and use in source and binary forms, with or without
-//  modification, are permitted provided that the following conditions are met:
-//
-//     * Redistributions of source code must retain the above copyright
-//       notice, this list of conditions and the following disclaimer.
-//     * Redistributions in binary form must reproduce the above copyright
-//       notice, this list of conditions and the following disclaimer in the
-//       documentation and/or other materials provided with the distribution.
-//     * Neither the name of the Egret nor the
-//       names of its contributors may be used to endorse or promote products
-//       derived from this software without specific prior written permission.
-//
-//  THIS SOFTWARE IS PROVIDED BY EGRET AND CONTRIBUTORS "AS IS" AND ANY EXPRESS
-//  OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES
-//  OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED.
-//  IN NO EVENT SHALL EGRET AND CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT,
-//  INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT
-//  LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES;LOSS OF USE, DATA,
-//  OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF
-//  LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING
-//  NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE,
-//  EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
-//
-//////////////////////////////////////////////////////////////////////////////////////
-var RES;
-(function (RES) {
-    /**
-     * @private
-     */
-    var TextAnalyzer = (function (_super) {
-        __extends(TextAnalyzer, _super);
-        function TextAnalyzer() {
-            var _this = _super.call(this) || this;
-            _this._dataFormat = egret.HttpResponseType.TEXT;
-            return _this;
-        }
-        return TextAnalyzer;
-    }(RES.BinAnalyzer));
-    RES.TextAnalyzer = TextAnalyzer;
-    __reflect(TextAnalyzer.prototype, "RES.TextAnalyzer");
 })(RES || (RES = {}));
 //////////////////////////////////////////////////////////////////////////////////////
 //
@@ -2059,210 +2174,95 @@ var RES;
 var RES;
 (function (RES) {
     /**
-     * @class RES.ResourceConfig
-     * @classdesc
      * @private
      */
-    var ResourceConfig = (function () {
-        function ResourceConfig() {
+    var SoundAnalyzer = (function (_super) {
+        __extends(SoundAnalyzer, _super);
+        /**
+         * 构造函数
+         */
+        function SoundAnalyzer() {
+            var _this = _super.call(this) || this;
             /**
-             * 一级键名字典
+             * 字节流数据缓存字典
              */
-            this.keyMap = {};
+            _this.soundDic = {};
             /**
-             * 加载组字典
+             * 加载项字典
              */
-            this.groupDic = {};
-            RES["configInstance"] = this;
+            _this.resItemDic = [];
+            return _this;
         }
         /**
-         * 根据组名获取组加载项列表
-         * @method RES.ResourceConfig#getGroupByName
-         * @param name {string} 组名
-         * @returns {Array<egret.ResourceItem>}
+         * @inheritDoc
          */
-        ResourceConfig.prototype.getGroupByName = function (name) {
-            var group = new Array();
-            if (!this.groupDic[name])
-                return group;
-            var list = this.groupDic[name];
-            var length = list.length;
-            for (var i = 0; i < length; i++) {
-                var obj = list[i];
-                group.push(this.parseResourceItem(obj));
-            }
-            return group;
-        };
-        /**
-         * 根据组名获取原始的组加载项列表
-         * @method RES.ResourceConfig#getRawGroupByName
-         * @param name {string} 组名
-         * @returns {any[]}
-         */
-        ResourceConfig.prototype.getRawGroupByName = function (name) {
-            if (this.groupDic[name])
-                return this.groupDic[name];
-            return [];
-        };
-        /**
-         * 创建自定义的加载资源组,注意：此方法仅在资源配置文件加载完成后执行才有效。
-         * 可以监听ResourceEvent.CONFIG_COMPLETE事件来确认配置加载完成。
-         * @method RES.ResourceConfig#createGroup
-         * @param name {string} 要创建的加载资源组的组名
-         * @param keys {egret.string[]} 要包含的键名列表，key对应配置文件里的name属性或sbuKeys属性的一项或一个资源组名。
-         * @param override {boolean} 是否覆盖已经存在的同名资源组,默认false。
-         * @returns {boolean}
-         */
-        ResourceConfig.prototype.createGroup = function (name, keys, override) {
-            if (override === void 0) { override = false; }
-            if ((!override && this.groupDic[name]) || !keys || keys.length == 0)
-                return false;
-            var groupDic = this.groupDic;
-            var group = [];
-            var length = keys.length;
-            for (var i = 0; i < length; i++) {
-                var key = keys[i];
-                var g = groupDic[key];
-                if (g) {
-                    var len = g.length;
-                    for (var j = 0; j < len; j++) {
-                        var item = g[j];
-                        if (group.indexOf(item) == -1)
-                            group.push(item);
-                    }
-                }
-                else {
-                    var item = this.keyMap[key];
-                    if (item) {
-                        if (group.indexOf(item) == -1)
-                            group.push(item);
-                    }
-                    else {
-                        egret.$warn(3200, key);
-                    }
-                }
-            }
-            if (group.length == 0)
-                return false;
-            this.groupDic[name] = group;
-            return true;
-        };
-        /**
-         * 解析一个配置文件
-         * @method RES.ResourceConfig#parseConfig
-         * @param data {any} 配置文件数据
-         * @param folder {string} 加载项的路径前缀。
-         */
-        ResourceConfig.prototype.parseConfig = function (data, folder) {
-            if (!data)
+        SoundAnalyzer.prototype.loadFile = function (resItem, callBack, thisObject) {
+            if (this.soundDic[resItem.name]) {
+                callBack.call(thisObject, resItem);
                 return;
-            var resources = data["resources"];
-            if (resources) {
-                var length_2 = resources.length;
-                for (var i = 0; i < length_2; i++) {
-                    var item = resources[i];
-                    var url = item.url;
-                    if (url && url.indexOf("://") == -1)
-                        item.url = folder + url;
-                    this.addItemToKeyMap(item);
-                }
             }
-            var groups = data["groups"];
-            if (groups) {
-                var length_3 = groups.length;
-                for (var i = 0; i < length_3; i++) {
-                    var group = groups[i];
-                    var list = [];
-                    var keys = group.keys.split(",");
-                    var l = keys.length;
-                    for (var j = 0; j < l; j++) {
-                        var name_2 = keys[j].trim();
-                        var item = this.keyMap[name_2];
-                        if (item && list.indexOf(item) == -1) {
-                            list.push(item);
-                        }
-                    }
-                    this.groupDic[group.name] = list;
-                }
+            var sound = new egret.Sound();
+            sound.addEventListener(egret.Event.COMPLETE, this.onLoadFinish, this);
+            sound.addEventListener(egret.IOErrorEvent.IO_ERROR, this.onLoadFinish, this);
+            this.resItemDic[sound.$hashCode] = { item: resItem, func: callBack, thisObject: thisObject };
+            sound.load(RES.$getVirtualUrl(resItem.url));
+            if (resItem.data) {
+                sound.type = resItem.data.soundType;
             }
         };
         /**
-         * 添加一个二级键名到配置列表。
-         * @method RES.ResourceConfig#addSubkey
-         * @param subkey {string} 要添加的二级键名
-         * @param name {string} 二级键名所属的资源name属性
+         * 一项加载结束
          */
-        ResourceConfig.prototype.addSubkey = function (subkey, name) {
-            var item = this.keyMap[name];
-            if (item && !this.keyMap[subkey]) {
-                this.keyMap[subkey] = item;
+        SoundAnalyzer.prototype.onLoadFinish = function (event) {
+            var sound = (event.$target);
+            sound.removeEventListener(egret.Event.COMPLETE, this.onLoadFinish, this);
+            sound.removeEventListener(egret.IOErrorEvent.IO_ERROR, this.onLoadFinish, this);
+            var data = this.resItemDic[sound.$hashCode];
+            delete this.resItemDic[sound.$hashCode];
+            var resItem = data.item;
+            var compFunc = data.func;
+            resItem.loaded = (event.$type == egret.Event.COMPLETE);
+            if (resItem.loaded) {
+                this.analyzeData(resItem, sound);
             }
+            compFunc.call(data.thisObject, resItem);
         };
         /**
-         * 添加一个加载项数据到列表
+         * 解析并缓存加载成功的数据
          */
-        ResourceConfig.prototype.addItemToKeyMap = function (item) {
-            if (!this.keyMap[item.name])
-                this.keyMap[item.name] = item;
-            if (item.hasOwnProperty("subkeys")) {
-                var subkeys = (item.subkeys).split(",");
-                item.subkeys = subkeys;
-                var length_4 = subkeys.length;
-                for (var i = 0; i < length_4; i++) {
-                    var key = subkeys[i];
-                    if (this.keyMap[key] != null)
-                        continue;
-                    this.keyMap[key] = item;
-                }
+        SoundAnalyzer.prototype.analyzeData = function (resItem, data) {
+            var name = resItem.name;
+            if (this.soundDic[name] || !data) {
+                return;
             }
+            this.soundDic[name] = data;
         };
         /**
-         * 获取加载项的name属性
-         * @method RES.ResourceConfig#getType
-         * @param key {string} 对应配置文件里的name属性或sbuKeys属性的一项。
-         * @returns {string}
+         * @inheritDoc
          */
-        ResourceConfig.prototype.getName = function (key) {
-            var data = this.keyMap[key];
-            return data ? data.name : "";
+        SoundAnalyzer.prototype.getRes = function (name) {
+            return this.soundDic[name];
         };
         /**
-         * 获取加载项类型。
-         * @method RES.ResourceConfig#getType
-         * @param key {string} 对应配置文件里的name属性或sbuKeys属性的一项。
-         * @returns {string}
+         * @inheritDoc
          */
-        ResourceConfig.prototype.getType = function (key) {
-            var data = this.keyMap[key];
-            return data ? data.type : "";
-        };
-        ResourceConfig.prototype.getRawResourceItem = function (key) {
-            return this.keyMap[key];
+        SoundAnalyzer.prototype.hasRes = function (name) {
+            return !!this.getRes(name);
         };
         /**
-         * 获取加载项信息对象
-         * @method RES.ResourceConfig#getResourceItem
-         * @param key {string} 对应配置文件里的key属性或sbuKeys属性的一项。
-         * @returns {egret.ResourceItem}
+         * @inheritDoc
          */
-        ResourceConfig.prototype.getResourceItem = function (key) {
-            var data = this.keyMap[key];
-            if (data)
-                return this.parseResourceItem(data);
-            return null;
+        SoundAnalyzer.prototype.destroyRes = function (name) {
+            if (this.soundDic[name]) {
+                delete this.soundDic[name];
+                return true;
+            }
+            return false;
         };
-        /**
-         * 转换Object数据为ResourceItem对象
-         */
-        ResourceConfig.prototype.parseResourceItem = function (data) {
-            var resItem = new RES.ResourceItem(data.name, data.url, data.type);
-            resItem.data = data;
-            return resItem;
-        };
-        return ResourceConfig;
-    }());
-    RES.ResourceConfig = ResourceConfig;
-    __reflect(ResourceConfig.prototype, "RES.ResourceConfig");
+        return SoundAnalyzer;
+    }(RES.AnalyzerBase));
+    RES.SoundAnalyzer = SoundAnalyzer;
+    __reflect(SoundAnalyzer.prototype, "RES.SoundAnalyzer");
 })(RES || (RES = {}));
 //////////////////////////////////////////////////////////////////////////////////////
 //

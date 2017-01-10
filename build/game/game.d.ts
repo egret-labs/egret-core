@@ -1,5 +1,90 @@
 declare namespace egret {
     /**
+     * The URLLoaderDataFormat class provides values that specify how downloaded data is received.
+     * @see http://edn.egret.com/cn/docs/page/600 Read different data format
+     * @version Egret 2.4
+     * @platform Web,Native
+     * @includeExample extension/game/net/URLLoaderDataFormat.ts
+     * @language en_US
+     */
+    /**
+     * URLLoaderDataFormat 类提供了一些用于指定如何接收已下载数据的值。
+     * @see http://edn.egret.com/cn/docs/page/600 读取不同数据格式
+     * @version Egret 2.4
+     * @platform Web,Native
+     * @includeExample extension/game/net/URLLoaderDataFormat.ts
+     * @language zh_CN
+     */
+    class URLLoaderDataFormat {
+        /**
+         * Specify that downloaded data is received as raw binary data.
+         * @version Egret 2.4
+         * @platform Web
+         * @language en_US
+         */
+        /**
+         * 指定以原始二进制数据形式接收下载的数据。
+         * @version Egret 2.4
+         * @platform Web
+         * @language zh_CN
+         */
+        static BINARY: string;
+        /**
+         * Specify that downloaded data is received as text.
+         * @version Egret 2.4
+         * @platform Web,Native
+         * @language en_US
+         */
+        /**
+         * 指定以文本形式接收已下载的数据。
+         * @version Egret 2.4
+         * @platform Web,Native
+         * @language zh_CN
+         */
+        static TEXT: string;
+        /**
+         * Specify that downloaded data is received as URL-encoded variables.
+         * @version Egret 2.4
+         * @platform Web,Native
+         * @language en_US
+         */
+        /**
+         * 指定以 URL 编码变量形式接收下载的数据。
+         * @version Egret 2.4
+         * @platform Web,Native
+         * @language zh_CN
+         */
+        static VARIABLES: string;
+        /**
+         * Specify that downloaded data is received as bitmap texture.
+         * @version Egret 2.4
+         * @platform Web,Native
+         * @language en_US
+         */
+        /**
+         * 指定以位图纹理形式接收已下载的数据。
+         * @version Egret 2.4
+         * @platform Web,Native
+         * @language zh_CN
+         */
+        static TEXTURE: string;
+        /**
+         * Specify that downloaded data is received as sound.
+         * @version Egret 2.4
+         * @platform Web,Native
+         * @language en_US
+         */
+        /**
+         * 指定以声音形式接收已下载的数据。
+         * @version Egret 2.4
+         * @platform Web,Native
+         * @language zh_CN
+         */
+        static SOUND: string;
+    }
+}
+declare namespace egret {
+    /**
      * @version Egret 2.4
      * @platform Web,Native
      * @private
@@ -74,322 +159,6 @@ declare namespace egret {
          * @language zh_CN
          */
         clone(): FrameLabel;
-    }
-}
-declare namespace egret {
-    /**
-    * @version Egret 2.4
-    * @platform Web,Native
-    * @includeExample extension/game/display/MovieClip.ts
-    * @language en_US
-    */
-    /**
-     * 影片剪辑，可以通过影片剪辑播放序列帧动画。MovieClip 类从以下类继承而来：DisplayObject 和 EventDispatcher。不同于 DisplayObject 对象，MovieClip 对象拥有一个时间轴。
-     * @extends egret.DisplayObject
-     * @event egret.Event.COMPLETE 动画播放完成。
-     * @event egret.Event.LOOP_COMPLETE 动画循环播放完成。
-     * @see http://edn.egret.com/cn/docs/page/596 MovieClip序列帧动画
-     * @version Egret 2.4
-     * @platform Web,Native
-     * @includeExample extension/game/display/MovieClip.ts
-     * @language zh_CN
-     */
-    class MovieClip extends DisplayObject {
-        $bitmapData: Texture;
-        private offsetPoint;
-        $movieClipData: MovieClipData;
-        /**
-         * @private
-         */
-        private frames;
-        /**
-         * @private
-         */
-        $totalFrames: number;
-        /**
-         * @version Egret 2.4
-         * @platform Web,Native
-         * @private
-         */
-        frameLabels: any[];
-        /**
-         * @private
-         */
-        $frameLabelStart: number;
-        /**
-         * @private
-         */
-        $frameLabelEnd: number;
-        /**
-         * @version Egret 2.4
-         * @platform Web,Native
-         * @private
-         */
-        frameEvents: any[];
-        /**
-         * @private
-         */
-        private frameIntervalTime;
-        /**
-         * @private
-         */
-        $eventPool: string[];
-        $isPlaying: boolean;
-        /**
-         * @private
-         */
-        private isStopped;
-        /**
-         * @private
-         */
-        private playTimes;
-        /**
-         * @private
-         */
-        $currentFrameNum: number;
-        /**
-         * @private
-         */
-        $nextFrameNum: number;
-        /**
-         * @private
-         */
-        private displayedKeyFrameNum;
-        /**
-         * @private
-         */
-        private passedTime;
-        /**
-         * @private
-         */
-        private $frameRate;
-        /**
-         * 创建新的 MovieClip 实例。创建 MovieClip 之后，调用舞台上的显示对象容器的addElement方法。
-         * @param movieClipData {movieClipData} 被引用的 movieClipData 对象
-         * @version Egret 2.4
-         * @platform Web,Native
-         */
-        constructor(movieClipData?: MovieClipData);
-        /**
-         * @private
-         */
-        $smoothing: boolean;
-        /**
-         * Whether or not is smoothed when scaled.
-         * @version Egret 3.0
-         * @platform Web
-         * @language en_US
-         */
-        /**
-         * 控制在缩放时是否进行平滑处理。
-         * @version Egret 3.0
-         * @platform Web
-         * @language zh_CN
-         */
-        smoothing: boolean;
-        /**
-         * @private
-         *
-         */
-        $init(): void;
-        /**
-         * @private
-         *
-         */
-        $reset(): void;
-        /**
-         * @private
-         *
-         */
-        private _initFrame();
-        /**
-         * @private
-         */
-        $render(): void;
-        /**
-         * @private
-         */
-        $measureContentBounds(bounds: Rectangle): void;
-        /**
-         * @private
-         *
-         * @param stage
-         * @param nestLevel
-         */
-        $onAddToStage(stage: Stage, nestLevel: number): void;
-        /**
-         * @private
-         *
-         */
-        $onRemoveFromStage(): void;
-        /**
-         * @private
-         * 返回帧标签为指定字符串的FrameLabel对象
-         * @param labelName {string} 帧标签名
-         * @param ignoreCase {boolean} 是否忽略大小写，可选参数，默认false
-         * @returns {egret.FrameLabel} FrameLabel对象
-         */
-        private getFrameLabelByName(labelName, ignoreCase?);
-        /**
-         * @private
-         * 根据帧标签，设置开始和结束的帧数
-         * @param labelName {string} 帧标签名
-         */
-        private getFrameStartEnd(labelName);
-        /**
-         * @private
-         * 返回指定序号的帧的FrameLabel对象
-         * @param frame {number} 帧序号
-         * @returns {egret.FrameLabel} FrameLabel对象
-         */
-        private getFrameLabelByFrame(frame);
-        /**
-         * @private
-         * 返回指定序号的帧对应的FrameLabel对象，如果当前帧没有标签，则返回前面最近的有标签的帧的FrameLabel对象
-         * @method egret.MovieClip#getFrameLabelForFrame
-         * @param frame {number} 帧序号
-         * @returns {egret.FrameLabel} FrameLabel对象
-         */
-        private getFrameLabelForFrame(frame);
-        /**
-         * 继续播放当前动画
-         * @param playTimes {number} 播放次数。 参数为整数，可选参数，>=1：设定播放次数，<0：循环播放，默认值 0：不改变播放次数(MovieClip初始播放次数设置为1)，
-         * @version Egret 2.4
-         * @platform Web,Native
-         */
-        play(playTimes?: number): void;
-        /**
-         * 暂停播放动画
-         * @version Egret 2.4
-         * @platform Web,Native
-         */
-        stop(): void;
-        /**
-         * 将播放头移到前一帧并停止
-         * @version Egret 2.4
-         * @platform Web,Native
-         */
-        prevFrame(): void;
-        /**
-         * 跳到后一帧并停止
-         * @version Egret 2.4
-         * @platform Web,Native
-         */
-        nextFrame(): void;
-        /**
-         * 将播放头移到指定帧并播放
-         * @param frame {any} 指定帧的帧号或帧标签
-         * @param playTimes {number} 播放次数。 参数为整数，可选参数，>=1：设定播放次数，<0：循环播放，默认值 0：不改变播放次数，
-         * @version Egret 2.4
-         * @platform Web,Native
-         */
-        gotoAndPlay(frame: string | number, playTimes?: number): void;
-        /**
-         * 将播放头移到指定帧并停止
-         * @param frame {any} 指定帧的帧号或帧标签
-         * @version Egret 2.4
-         * @platform Web,Native
-         */
-        gotoAndStop(frame: string | number): void;
-        /**
-         * @private
-         *
-         * @param frame
-         */
-        private gotoFrame(frame);
-        /**
-         * @private
-         */
-        private lastTime;
-        /**
-         * @private
-         *
-         * @param advancedTime
-         * @returns
-         */
-        private advanceTime(timeStamp);
-        /**
-         * @private
-         *
-         */
-        private advanceFrame();
-        /**
-         * @private
-         *
-         */
-        private constructFrame();
-        /**
-         * @private
-         *
-         */
-        $renderFrame(): void;
-        /**
-         * @private
-         *
-         */
-        private handlePendingEvent();
-        /**
-         * MovieClip 实例中帧的总数
-         * @version Egret 2.4
-         * @platform Web,Native
-         */
-        totalFrames: number;
-        /**
-         * MovieClip 实例当前播放的帧的序号
-         * @version Egret 2.4
-         * @platform Web,Native
-         */
-        currentFrame: number;
-        /**
-         * MovieClip 实例当前播放的帧的标签。如果当前帧没有标签，则 currentFrameLabel返回null。
-         * @version Egret 2.4
-         * @platform Web,Native
-         */
-        currentFrameLabel: string;
-        /**
-         * 当前播放的帧对应的标签，如果当前帧没有标签，则currentLabel返回包含标签的先前帧的标签。如果当前帧和先前帧都不包含标签，currentLabel返回null。
-         * @version Egret 2.4
-         * @platform Web,Native
-         */
-        currentLabel: string;
-        /**
-         * MovieClip 实例的帧频
-         * @version Egret 2.4
-         * @platform Web,Native
-         */
-        frameRate: number;
-        /**
-         * MovieClip 实例当前是否正在播放
-         * @version Egret 2.4
-         * @platform Web,Native
-         */
-        isPlaying: boolean;
-        /**
-         * @version Egret 2.4
-         * @platform Web,Native
-         */
-        /**
-         * MovieClip数据源
-         */
-        movieClipData: MovieClipData;
-        /**
-         * @private
-         *
-         * @param value
-         */
-        private setMovieClipData(value);
-        /**
-         * @private
-         *
-         * @param value
-         */
-        private setPlayTimes(value);
-        /**
-         * @private
-         *
-         * @param value
-         */
-        private setIsStopped(value);
     }
 }
 declare namespace egret {
@@ -1623,129 +1392,438 @@ declare namespace egret {
 }
 declare namespace egret {
     /**
-     * Run the designated function in specified delay (in milliseconds).
-     * @param listener {Function} Listener function
-     * @param thisObject {any} this object
-     * @param delay {number} Delay time, in milliseconds
-     * @param ...args {any} Parameter list
-     * @returns {number} Return index which can be used for clearTimeout
+     * UThe URLLoader class downloads data from a URL as text, binary data, or URL-encoded variables.  It is useful for downloading text files, XML, or other information to be used in a dynamic, data-driven application.
+     * A URLLoader object downloads all of the data from a URL before making it available to code in the applications. It sends out notifications about the progress of the download,
+     * which you can monitor through bytesLoaded and bytesTotal properties, as well as through dispatched events.
+     * @see http://edn.egret.com/cn/docs/page/601 Build communication request
+     * @event egret.Event.COMPLETE Dispatched when the net request is complete.
+     * @event egret.IOErrorEvent.IO_ERROR io error.
      * @version Egret 2.4
      * @platform Web,Native
-     * @includeExample extension/game/utils/setTimeout.ts
+     * @includeExample extension/game/net/URLLoader.ts
      * @language en_US
      */
     /**
-     * 在指定的延迟（以毫秒为单位）后运行指定的函数。
-     * @param listener {Function} 侦听函数
-     * @param thisObject {any} this对象
-     * @param delay {number} 延迟时间，以毫秒为单位
-     * @param ...args {any} 参数列表
-     * @returns {number} 返回索引，可以用于 clearTimeout
+     * URLLoader 类以文本、二进制数据或 URL 编码变量的形式从 URL 下载数据。在下载文本文件、XML 或其他用于动态数据驱动应用程序的信息时，它很有用。
+     * URLLoader 对象会先从 URL 中下载所有数据，然后才将数据用于应用程序中的代码。它会发出有关下载进度的通知，
+     * 通过 bytesLoaded 和 bytesTotal 属性以及已调度的事件，可以监视下载进度。
+     * @see http://edn.egret.com/cn/docs/page/601 构建通信请求
+     * @event egret.Event.COMPLETE 加载完成后调度。
+     * @event egret.IOErrorEvent.IO_ERROR 加载错误后调度。
      * @version Egret 2.4
      * @platform Web,Native
-     * @includeExample extension/game/utils/setTimeout.ts
+     * @includeExample extension/game/net/URLLoader.ts
      * @language zh_CN
      */
-    function setTimeout<Z>(listener: (this: Z, ...arg) => void, thisObject: Z, delay: number, ...args: any[]): number;
-    /**
-     * Function run after the specified delay is cleared.
-     * @param key {number} Index that egret.setTimeout returns
-     * @version Egret 2.4
-     * @platform Web,Native
-     * @language en_US
-     */
-    /**
-     * 清除指定延迟后运行的函数。
-     * @param key {number} egret.setTimeout所返回的索引
-     * @version Egret 2.4
-     * @platform Web,Native
-     * @language zh_CN
-     */
-    function clearTimeout(key: number): void;
+    class URLLoader extends EventDispatcher {
+        /**
+         * Create an egret.URLLoader object
+         * @param request {URLRequest} A URLRequest object specifies the URL to be downloaded.
+         * If this parameter is omitted, no load operation begins. If a parameter is specified, the load operation begins immediately
+         * @version Egret 2.4
+         * @platform Web,Native
+         * @language en_US
+         */
+        /**
+         * 创建 egret.URLLoader 对象
+         * @param request {URLRequest} 一个 URLRequest 对象，指定要下载的 URL。
+         * 如果省略该参数，则不开始加载操作。如果已指定参数，则立即开始加载操作
+         * @version Egret 2.4
+         * @platform Web,Native
+         * @language zh_CN
+         */
+        constructor(request?: URLRequest);
+        /**
+         * Control whether the downloaded data is received as text (URLLoaderDataFormat.TEXT), raw binary data (URLLoaderDataFormat.BINARY), or URL-encoded variables (URLLoaderDataFormat.VARIABLES).
+         * If the value of the dataFormat property is URLLoaderDataFormat.TEXT, the received data is a string containing the text of the loaded file.
+         * If the value of the dataFormat property is URLLoaderDataFormat.BINARY, the received data is a ByteArray object containing the raw binary data.
+         * If the value of the dataFormat property is URLLoaderDataFormat.TEXTURE, the received data is a Texture object containing the bitmap data.
+         * If the value of the dataFormat property is URLLoaderDataFormat.VARIABLES, the received data is a URLVariables object containing the URL-encoded variables.
+         * The default value is URLLoaderDataFormat.TEXT.
+         * @default egret.URLLoaderDataFormat.TEXT
+         * @version Egret 2.4
+         * @platform Web,Native
+         * @language en_US
+         */
+        /**
+         * 控制是以文本 (URLLoaderDataFormat.TEXT)、原始二进制数据 (URLLoaderDataFormat.BINARY) 还是 URL 编码变量 (URLLoaderDataFormat.VARIABLES) 接收下载的数据。
+         * 如果 dataFormat 属性的值是 URLLoaderDataFormat.TEXT，则所接收的数据是一个包含已加载文件文本的字符串。
+         * 如果 dataFormat 属性的值是 URLLoaderDataFormat.BINARY，则所接收的数据是一个包含原始二进制数据的 ByteArray 对象。
+         * 如果 dataFormat 属性的值是 URLLoaderDataFormat.TEXTURE，则所接收的数据是一个包含位图数据的Texture对象。
+         * 如果 dataFormat 属性的值是 URLLoaderDataFormat.VARIABLES，则所接收的数据是一个包含 URL 编码变量的 URLVariables 对象。
+         * @default egret.URLLoaderDataFormat.TEXT
+         * @version Egret 2.4
+         * @platform Web,Native
+         * @language zh_CN
+         */
+        dataFormat: string;
+        /**
+         * The data received from the load operation. This property is populated only when the load operation is complete. The format of the data depends on the setting of the dataFormat property:
+         * If the dataFormat property is URLLoaderDataFormat.TEXT, the received data is a string containing the text of the loaded file.
+         * If the dataFormat property is URLLoaderDataFormat.BINARY, the received data is a ByteArray object containing the raw binary data.
+         * If the dataFormat property is URLLoaderDataFormat.TEXTURE, the received data is a Texture object containing the bitmap data.
+         * If the dataFormat property is URLLoaderDataFormat.VARIABLES, the received data is a URLVariables object containing the URL-encoded variables.
+         * @version Egret 2.4
+         * @platform Web,Native
+         * @language en_US
+         */
+        /**
+         * 从加载操作接收的数据。只有完成加载操作时，才会填充该属性。该数据的格式取决于 dataFormat 属性的设置：
+         * 如果 dataFormat 属性是 URLLoaderDataFormat.TEXT，则所接收的数据是一个包含已加载文件文本的字符串。
+         * 如果 dataFormat 属性是 URLLoaderDataFormat.BINARY，则所接收的数据是一个包含原始二进制数据的 ByteArray 对象。
+         * 如果 dataFormat 属性是 URLLoaderDataFormat.TEXTURE，则所接收的数据是一个包含位图数据的Texture对象。
+         * 如果 dataFormat 属性是 URLLoaderDataFormat.VARIABLES，则所接收的数据是一个包含 URL 编码变量的 URLVariables 对象。
+         * @version Egret 2.4
+         * @platform Web,Native
+         * @language zh_CN
+         */
+        data: any;
+        /**
+         * @private
+         */
+        _request: URLRequest;
+        /**
+         * Send and load data from the specified URL. The data can be received as text, raw binary data, or URL-encoded variables, depending on the value you set for the dataFormat property.
+         * Note that the default value of the dataFormat property is text. If you want to send data to the specified URL, you can set the data property in the URLRequest object.
+         * @param request {URLRequest}  A URLRequest object specifies the URL to be downloaded.
+         * @version Egret 2.4
+         * @platform Web,Native
+         * @language en_US
+         */
+        /**
+         * 从指定的 URL 发送和加载数据。可以以文本、原始二进制数据或 URL 编码变量格式接收数据，这取决于为 dataFormat 属性所设置的值。
+         * 请注意 dataFormat 属性的默认值为文本。如果想将数据发送至指定的 URL，则可以在 URLRequest 对象中设置 data 属性。
+         * @param request {URLRequest}  一个 URLRequest 对象，指定要下载的 URL。
+         * @version Egret 2.4
+         * @platform Web,Native
+         * @language zh_CN
+         */
+        load(request: URLRequest): void;
+        /**
+         * @private
+         */
+        _status: number;
+        /**
+         * @private
+         *
+         */
+        __recycle(): void;
+    }
 }
 declare namespace egret {
     /**
-     * The URLLoaderDataFormat class provides values that specify how downloaded data is received.
-     * @see http://edn.egret.com/cn/docs/page/600 Read different data format
-     * @version Egret 2.4
-     * @platform Web,Native
-     * @includeExample extension/game/net/URLLoaderDataFormat.ts
-     * @language en_US
-     */
+    * @version Egret 2.4
+    * @platform Web,Native
+    * @includeExample extension/game/display/MovieClip.ts
+    * @language en_US
+    */
     /**
-     * URLLoaderDataFormat 类提供了一些用于指定如何接收已下载数据的值。
-     * @see http://edn.egret.com/cn/docs/page/600 读取不同数据格式
+     * 影片剪辑，可以通过影片剪辑播放序列帧动画。MovieClip 类从以下类继承而来：DisplayObject 和 EventDispatcher。不同于 DisplayObject 对象，MovieClip 对象拥有一个时间轴。
+     * @extends egret.DisplayObject
+     * @event egret.Event.COMPLETE 动画播放完成。
+     * @event egret.Event.LOOP_COMPLETE 动画循环播放完成。
+     * @see http://edn.egret.com/cn/docs/page/596 MovieClip序列帧动画
      * @version Egret 2.4
      * @platform Web,Native
-     * @includeExample extension/game/net/URLLoaderDataFormat.ts
+     * @includeExample extension/game/display/MovieClip.ts
      * @language zh_CN
      */
-    class URLLoaderDataFormat {
+    class MovieClip extends DisplayObject {
+        $bitmapData: Texture;
+        private offsetPoint;
+        $movieClipData: MovieClipData;
         /**
-         * Specify that downloaded data is received as raw binary data.
+         * @private
+         */
+        private frames;
+        /**
+         * @private
+         */
+        $totalFrames: number;
+        /**
          * @version Egret 2.4
+         * @platform Web,Native
+         * @private
+         */
+        frameLabels: any[];
+        /**
+         * @private
+         */
+        $frameLabelStart: number;
+        /**
+         * @private
+         */
+        $frameLabelEnd: number;
+        /**
+         * @version Egret 2.4
+         * @platform Web,Native
+         * @private
+         */
+        frameEvents: any[];
+        /**
+         * @private
+         */
+        private frameIntervalTime;
+        /**
+         * @private
+         */
+        $eventPool: string[];
+        $isPlaying: boolean;
+        /**
+         * @private
+         */
+        private isStopped;
+        /**
+         * @private
+         */
+        private playTimes;
+        /**
+         * @private
+         */
+        $currentFrameNum: number;
+        /**
+         * @private
+         */
+        $nextFrameNum: number;
+        /**
+         * @private
+         */
+        private displayedKeyFrameNum;
+        /**
+         * @private
+         */
+        private passedTime;
+        /**
+         * @private
+         */
+        private $frameRate;
+        /**
+         * 创建新的 MovieClip 实例。创建 MovieClip 之后，调用舞台上的显示对象容器的addElement方法。
+         * @param movieClipData {movieClipData} 被引用的 movieClipData 对象
+         * @version Egret 2.4
+         * @platform Web,Native
+         */
+        constructor(movieClipData?: MovieClipData);
+        /**
+         * @private
+         */
+        $smoothing: boolean;
+        /**
+         * Whether or not is smoothed when scaled.
+         * @version Egret 3.0
          * @platform Web
          * @language en_US
          */
         /**
-         * 指定以原始二进制数据形式接收下载的数据。
-         * @version Egret 2.4
+         * 控制在缩放时是否进行平滑处理。
+         * @version Egret 3.0
          * @platform Web
          * @language zh_CN
          */
-        static BINARY: string;
+        smoothing: boolean;
         /**
-         * Specify that downloaded data is received as text.
+         * @private
+         *
+         */
+        $init(): void;
+        /**
+         * @private
+         *
+         */
+        $reset(): void;
+        /**
+         * @private
+         *
+         */
+        private _initFrame();
+        /**
+         * @private
+         */
+        $render(): void;
+        /**
+         * @private
+         */
+        $measureContentBounds(bounds: Rectangle): void;
+        /**
+         * @private
+         *
+         * @param stage
+         * @param nestLevel
+         */
+        $onAddToStage(stage: Stage, nestLevel: number): void;
+        /**
+         * @private
+         *
+         */
+        $onRemoveFromStage(): void;
+        /**
+         * @private
+         * 返回帧标签为指定字符串的FrameLabel对象
+         * @param labelName {string} 帧标签名
+         * @param ignoreCase {boolean} 是否忽略大小写，可选参数，默认false
+         * @returns {egret.FrameLabel} FrameLabel对象
+         */
+        private getFrameLabelByName(labelName, ignoreCase?);
+        /**
+         * @private
+         * 根据帧标签，设置开始和结束的帧数
+         * @param labelName {string} 帧标签名
+         */
+        private getFrameStartEnd(labelName);
+        /**
+         * @private
+         * 返回指定序号的帧的FrameLabel对象
+         * @param frame {number} 帧序号
+         * @returns {egret.FrameLabel} FrameLabel对象
+         */
+        private getFrameLabelByFrame(frame);
+        /**
+         * @private
+         * 返回指定序号的帧对应的FrameLabel对象，如果当前帧没有标签，则返回前面最近的有标签的帧的FrameLabel对象
+         * @method egret.MovieClip#getFrameLabelForFrame
+         * @param frame {number} 帧序号
+         * @returns {egret.FrameLabel} FrameLabel对象
+         */
+        private getFrameLabelForFrame(frame);
+        /**
+         * 继续播放当前动画
+         * @param playTimes {number} 播放次数。 参数为整数，可选参数，>=1：设定播放次数，<0：循环播放，默认值 0：不改变播放次数(MovieClip初始播放次数设置为1)，
          * @version Egret 2.4
          * @platform Web,Native
-         * @language en_US
          */
+        play(playTimes?: number): void;
         /**
-         * 指定以文本形式接收已下载的数据。
+         * 暂停播放动画
          * @version Egret 2.4
          * @platform Web,Native
-         * @language zh_CN
          */
-        static TEXT: string;
+        stop(): void;
         /**
-         * Specify that downloaded data is received as URL-encoded variables.
+         * 将播放头移到前一帧并停止
          * @version Egret 2.4
          * @platform Web,Native
-         * @language en_US
          */
+        prevFrame(): void;
         /**
-         * 指定以 URL 编码变量形式接收下载的数据。
+         * 跳到后一帧并停止
          * @version Egret 2.4
          * @platform Web,Native
-         * @language zh_CN
          */
-        static VARIABLES: string;
+        nextFrame(): void;
         /**
-         * Specify that downloaded data is received as bitmap texture.
+         * 将播放头移到指定帧并播放
+         * @param frame {any} 指定帧的帧号或帧标签
+         * @param playTimes {number} 播放次数。 参数为整数，可选参数，>=1：设定播放次数，<0：循环播放，默认值 0：不改变播放次数，
          * @version Egret 2.4
          * @platform Web,Native
-         * @language en_US
          */
+        gotoAndPlay(frame: string | number, playTimes?: number): void;
         /**
-         * 指定以位图纹理形式接收已下载的数据。
+         * 将播放头移到指定帧并停止
+         * @param frame {any} 指定帧的帧号或帧标签
          * @version Egret 2.4
          * @platform Web,Native
-         * @language zh_CN
          */
-        static TEXTURE: string;
+        gotoAndStop(frame: string | number): void;
         /**
-         * Specify that downloaded data is received as sound.
+         * @private
+         *
+         * @param frame
+         */
+        private gotoFrame(frame);
+        /**
+         * @private
+         */
+        private lastTime;
+        /**
+         * @private
+         *
+         * @param advancedTime
+         * @returns
+         */
+        private advanceTime(timeStamp);
+        /**
+         * @private
+         *
+         */
+        private advanceFrame();
+        /**
+         * @private
+         *
+         */
+        private constructFrame();
+        /**
+         * @private
+         *
+         */
+        $renderFrame(): void;
+        /**
+         * @private
+         *
+         */
+        private handlePendingEvent();
+        /**
+         * MovieClip 实例中帧的总数
          * @version Egret 2.4
          * @platform Web,Native
-         * @language en_US
          */
+        totalFrames: number;
         /**
-         * 指定以声音形式接收已下载的数据。
+         * MovieClip 实例当前播放的帧的序号
          * @version Egret 2.4
          * @platform Web,Native
-         * @language zh_CN
          */
-        static SOUND: string;
+        currentFrame: number;
+        /**
+         * MovieClip 实例当前播放的帧的标签。如果当前帧没有标签，则 currentFrameLabel返回null。
+         * @version Egret 2.4
+         * @platform Web,Native
+         */
+        currentFrameLabel: string;
+        /**
+         * 当前播放的帧对应的标签，如果当前帧没有标签，则currentLabel返回包含标签的先前帧的标签。如果当前帧和先前帧都不包含标签，currentLabel返回null。
+         * @version Egret 2.4
+         * @platform Web,Native
+         */
+        currentLabel: string;
+        /**
+         * MovieClip 实例的帧频
+         * @version Egret 2.4
+         * @platform Web,Native
+         */
+        frameRate: number;
+        /**
+         * MovieClip 实例当前是否正在播放
+         * @version Egret 2.4
+         * @platform Web,Native
+         */
+        isPlaying: boolean;
+        /**
+         * @version Egret 2.4
+         * @platform Web,Native
+         */
+        /**
+         * MovieClip数据源
+         */
+        movieClipData: MovieClipData;
+        /**
+         * @private
+         *
+         * @param value
+         */
+        private setMovieClipData(value);
+        /**
+         * @private
+         *
+         * @param value
+         */
+        private setPlayTimes(value);
+        /**
+         * @private
+         *
+         * @param value
+         */
+        private setIsStopped(value);
     }
 }
 declare namespace egret {
@@ -2414,121 +2492,43 @@ declare namespace egret {
 }
 declare namespace egret {
     /**
-     * UThe URLLoader class downloads data from a URL as text, binary data, or URL-encoded variables.  It is useful for downloading text files, XML, or other information to be used in a dynamic, data-driven application.
-     * A URLLoader object downloads all of the data from a URL before making it available to code in the applications. It sends out notifications about the progress of the download,
-     * which you can monitor through bytesLoaded and bytesTotal properties, as well as through dispatched events.
-     * @see http://edn.egret.com/cn/docs/page/601 Build communication request
-     * @event egret.Event.COMPLETE Dispatched when the net request is complete.
-     * @event egret.IOErrorEvent.IO_ERROR io error.
+     * Run the designated function in specified delay (in milliseconds).
+     * @param listener {Function} Listener function
+     * @param thisObject {any} this object
+     * @param delay {number} Delay time, in milliseconds
+     * @param ...args {any} Parameter list
+     * @returns {number} Return index which can be used for clearTimeout
      * @version Egret 2.4
      * @platform Web,Native
-     * @includeExample extension/game/net/URLLoader.ts
+     * @includeExample extension/game/utils/setTimeout.ts
      * @language en_US
      */
     /**
-     * URLLoader 类以文本、二进制数据或 URL 编码变量的形式从 URL 下载数据。在下载文本文件、XML 或其他用于动态数据驱动应用程序的信息时，它很有用。
-     * URLLoader 对象会先从 URL 中下载所有数据，然后才将数据用于应用程序中的代码。它会发出有关下载进度的通知，
-     * 通过 bytesLoaded 和 bytesTotal 属性以及已调度的事件，可以监视下载进度。
-     * @see http://edn.egret.com/cn/docs/page/601 构建通信请求
-     * @event egret.Event.COMPLETE 加载完成后调度。
-     * @event egret.IOErrorEvent.IO_ERROR 加载错误后调度。
+     * 在指定的延迟（以毫秒为单位）后运行指定的函数。
+     * @param listener {Function} 侦听函数
+     * @param thisObject {any} this对象
+     * @param delay {number} 延迟时间，以毫秒为单位
+     * @param ...args {any} 参数列表
+     * @returns {number} 返回索引，可以用于 clearTimeout
      * @version Egret 2.4
      * @platform Web,Native
-     * @includeExample extension/game/net/URLLoader.ts
+     * @includeExample extension/game/utils/setTimeout.ts
      * @language zh_CN
      */
-    class URLLoader extends EventDispatcher {
-        /**
-         * Create an egret.URLLoader object
-         * @param request {URLRequest} A URLRequest object specifies the URL to be downloaded.
-         * If this parameter is omitted, no load operation begins. If a parameter is specified, the load operation begins immediately
-         * @version Egret 2.4
-         * @platform Web,Native
-         * @language en_US
-         */
-        /**
-         * 创建 egret.URLLoader 对象
-         * @param request {URLRequest} 一个 URLRequest 对象，指定要下载的 URL。
-         * 如果省略该参数，则不开始加载操作。如果已指定参数，则立即开始加载操作
-         * @version Egret 2.4
-         * @platform Web,Native
-         * @language zh_CN
-         */
-        constructor(request?: URLRequest);
-        /**
-         * Control whether the downloaded data is received as text (URLLoaderDataFormat.TEXT), raw binary data (URLLoaderDataFormat.BINARY), or URL-encoded variables (URLLoaderDataFormat.VARIABLES).
-         * If the value of the dataFormat property is URLLoaderDataFormat.TEXT, the received data is a string containing the text of the loaded file.
-         * If the value of the dataFormat property is URLLoaderDataFormat.BINARY, the received data is a ByteArray object containing the raw binary data.
-         * If the value of the dataFormat property is URLLoaderDataFormat.TEXTURE, the received data is a Texture object containing the bitmap data.
-         * If the value of the dataFormat property is URLLoaderDataFormat.VARIABLES, the received data is a URLVariables object containing the URL-encoded variables.
-         * The default value is URLLoaderDataFormat.TEXT.
-         * @default egret.URLLoaderDataFormat.TEXT
-         * @version Egret 2.4
-         * @platform Web,Native
-         * @language en_US
-         */
-        /**
-         * 控制是以文本 (URLLoaderDataFormat.TEXT)、原始二进制数据 (URLLoaderDataFormat.BINARY) 还是 URL 编码变量 (URLLoaderDataFormat.VARIABLES) 接收下载的数据。
-         * 如果 dataFormat 属性的值是 URLLoaderDataFormat.TEXT，则所接收的数据是一个包含已加载文件文本的字符串。
-         * 如果 dataFormat 属性的值是 URLLoaderDataFormat.BINARY，则所接收的数据是一个包含原始二进制数据的 ByteArray 对象。
-         * 如果 dataFormat 属性的值是 URLLoaderDataFormat.TEXTURE，则所接收的数据是一个包含位图数据的Texture对象。
-         * 如果 dataFormat 属性的值是 URLLoaderDataFormat.VARIABLES，则所接收的数据是一个包含 URL 编码变量的 URLVariables 对象。
-         * @default egret.URLLoaderDataFormat.TEXT
-         * @version Egret 2.4
-         * @platform Web,Native
-         * @language zh_CN
-         */
-        dataFormat: string;
-        /**
-         * The data received from the load operation. This property is populated only when the load operation is complete. The format of the data depends on the setting of the dataFormat property:
-         * If the dataFormat property is URLLoaderDataFormat.TEXT, the received data is a string containing the text of the loaded file.
-         * If the dataFormat property is URLLoaderDataFormat.BINARY, the received data is a ByteArray object containing the raw binary data.
-         * If the dataFormat property is URLLoaderDataFormat.TEXTURE, the received data is a Texture object containing the bitmap data.
-         * If the dataFormat property is URLLoaderDataFormat.VARIABLES, the received data is a URLVariables object containing the URL-encoded variables.
-         * @version Egret 2.4
-         * @platform Web,Native
-         * @language en_US
-         */
-        /**
-         * 从加载操作接收的数据。只有完成加载操作时，才会填充该属性。该数据的格式取决于 dataFormat 属性的设置：
-         * 如果 dataFormat 属性是 URLLoaderDataFormat.TEXT，则所接收的数据是一个包含已加载文件文本的字符串。
-         * 如果 dataFormat 属性是 URLLoaderDataFormat.BINARY，则所接收的数据是一个包含原始二进制数据的 ByteArray 对象。
-         * 如果 dataFormat 属性是 URLLoaderDataFormat.TEXTURE，则所接收的数据是一个包含位图数据的Texture对象。
-         * 如果 dataFormat 属性是 URLLoaderDataFormat.VARIABLES，则所接收的数据是一个包含 URL 编码变量的 URLVariables 对象。
-         * @version Egret 2.4
-         * @platform Web,Native
-         * @language zh_CN
-         */
-        data: any;
-        /**
-         * @private
-         */
-        _request: URLRequest;
-        /**
-         * Send and load data from the specified URL. The data can be received as text, raw binary data, or URL-encoded variables, depending on the value you set for the dataFormat property.
-         * Note that the default value of the dataFormat property is text. If you want to send data to the specified URL, you can set the data property in the URLRequest object.
-         * @param request {URLRequest}  A URLRequest object specifies the URL to be downloaded.
-         * @version Egret 2.4
-         * @platform Web,Native
-         * @language en_US
-         */
-        /**
-         * 从指定的 URL 发送和加载数据。可以以文本、原始二进制数据或 URL 编码变量格式接收数据，这取决于为 dataFormat 属性所设置的值。
-         * 请注意 dataFormat 属性的默认值为文本。如果想将数据发送至指定的 URL，则可以在 URLRequest 对象中设置 data 属性。
-         * @param request {URLRequest}  一个 URLRequest 对象，指定要下载的 URL。
-         * @version Egret 2.4
-         * @platform Web,Native
-         * @language zh_CN
-         */
-        load(request: URLRequest): void;
-        /**
-         * @private
-         */
-        _status: number;
-        /**
-         * @private
-         *
-         */
-        __recycle(): void;
-    }
+    function setTimeout<Z>(listener: (this: Z, ...arg) => void, thisObject: Z, delay: number, ...args: any[]): number;
+    /**
+     * Function run after the specified delay is cleared.
+     * @param key {number} Index that egret.setTimeout returns
+     * @version Egret 2.4
+     * @platform Web,Native
+     * @language en_US
+     */
+    /**
+     * 清除指定延迟后运行的函数。
+     * @param key {number} egret.setTimeout所返回的索引
+     * @version Egret 2.4
+     * @platform Web,Native
+     * @language zh_CN
+     */
+    function clearTimeout(key: number): void;
 }

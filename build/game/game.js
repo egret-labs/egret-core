@@ -37,6 +37,125 @@ var __extends = (this && this.__extends) || function (d, b) {
 var egret;
 (function (egret) {
     /**
+     * The URLLoaderDataFormat class provides values that specify how downloaded data is received.
+     * @see http://edn.egret.com/cn/docs/page/600 Read different data format
+     * @version Egret 2.4
+     * @platform Web,Native
+     * @includeExample extension/game/net/URLLoaderDataFormat.ts
+     * @language en_US
+     */
+    /**
+     * URLLoaderDataFormat 类提供了一些用于指定如何接收已下载数据的值。
+     * @see http://edn.egret.com/cn/docs/page/600 读取不同数据格式
+     * @version Egret 2.4
+     * @platform Web,Native
+     * @includeExample extension/game/net/URLLoaderDataFormat.ts
+     * @language zh_CN
+     */
+    var URLLoaderDataFormat = (function () {
+        function URLLoaderDataFormat() {
+        }
+        return URLLoaderDataFormat;
+    }());
+    /**
+     * Specify that downloaded data is received as raw binary data.
+     * @version Egret 2.4
+     * @platform Web
+     * @language en_US
+     */
+    /**
+     * 指定以原始二进制数据形式接收下载的数据。
+     * @version Egret 2.4
+     * @platform Web
+     * @language zh_CN
+     */
+    URLLoaderDataFormat.BINARY = "binary";
+    /**
+     * Specify that downloaded data is received as text.
+     * @version Egret 2.4
+     * @platform Web,Native
+     * @language en_US
+     */
+    /**
+     * 指定以文本形式接收已下载的数据。
+     * @version Egret 2.4
+     * @platform Web,Native
+     * @language zh_CN
+     */
+    URLLoaderDataFormat.TEXT = "text";
+    /**
+     * Specify that downloaded data is received as URL-encoded variables.
+     * @version Egret 2.4
+     * @platform Web,Native
+     * @language en_US
+     */
+    /**
+     * 指定以 URL 编码变量形式接收下载的数据。
+     * @version Egret 2.4
+     * @platform Web,Native
+     * @language zh_CN
+     */
+    URLLoaderDataFormat.VARIABLES = "variables";
+    /**
+     * Specify that downloaded data is received as bitmap texture.
+     * @version Egret 2.4
+     * @platform Web,Native
+     * @language en_US
+     */
+    /**
+     * 指定以位图纹理形式接收已下载的数据。
+     * @version Egret 2.4
+     * @platform Web,Native
+     * @language zh_CN
+     */
+    URLLoaderDataFormat.TEXTURE = "texture";
+    /**
+     * Specify that downloaded data is received as sound.
+     * @version Egret 2.4
+     * @platform Web,Native
+     * @language en_US
+     */
+    /**
+     * 指定以声音形式接收已下载的数据。
+     * @version Egret 2.4
+     * @platform Web,Native
+     * @language zh_CN
+     */
+    URLLoaderDataFormat.SOUND = "sound";
+    egret.URLLoaderDataFormat = URLLoaderDataFormat;
+    __reflect(URLLoaderDataFormat.prototype, "egret.URLLoaderDataFormat");
+})(egret || (egret = {}));
+//////////////////////////////////////////////////////////////////////////////////////
+//
+//  Copyright (c) 2014-present, Egret Technology.
+//  All rights reserved.
+//  Redistribution and use in source and binary forms, with or without
+//  modification, are permitted provided that the following conditions are met:
+//
+//     * Redistributions of source code must retain the above copyright
+//       notice, this list of conditions and the following disclaimer.
+//     * Redistributions in binary form must reproduce the above copyright
+//       notice, this list of conditions and the following disclaimer in the
+//       documentation and/or other materials provided with the distribution.
+//     * Neither the name of the Egret nor the
+//       names of its contributors may be used to endorse or promote products
+//       derived from this software without specific prior written permission.
+//
+//  THIS SOFTWARE IS PROVIDED BY EGRET AND CONTRIBUTORS "AS IS" AND ANY EXPRESS
+//  OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES
+//  OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED.
+//  IN NO EVENT SHALL EGRET AND CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT,
+//  INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT
+//  LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES;LOSS OF USE, DATA,
+//  OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF
+//  LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING
+//  NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE,
+//  EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+//
+//////////////////////////////////////////////////////////////////////////////////////
+var egret;
+(function (egret) {
+    /**
      * @version Egret 2.4
      * @platform Web,Native
      * @private
@@ -131,716 +250,6 @@ var egret;
     }(egret.EventDispatcher));
     egret.FrameLabel = FrameLabel;
     __reflect(FrameLabel.prototype, "egret.FrameLabel");
-})(egret || (egret = {}));
-//////////////////////////////////////////////////////////////////////////////////////
-//
-//  Copyright (c) 2014-present, Egret Technology.
-//  All rights reserved.
-//  Redistribution and use in source and binary forms, with or without
-//  modification, are permitted provided that the following conditions are met:
-//
-//     * Redistributions of source code must retain the above copyright
-//       notice, this list of conditions and the following disclaimer.
-//     * Redistributions in binary form must reproduce the above copyright
-//       notice, this list of conditions and the following disclaimer in the
-//       documentation and/or other materials provided with the distribution.
-//     * Neither the name of the Egret nor the
-//       names of its contributors may be used to endorse or promote products
-//       derived from this software without specific prior written permission.
-//
-//  THIS SOFTWARE IS PROVIDED BY EGRET AND CONTRIBUTORS "AS IS" AND ANY EXPRESS
-//  OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES
-//  OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED.
-//  IN NO EVENT SHALL EGRET AND CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT,
-//  INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT
-//  LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES;LOSS OF USE, DATA,
-//  OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF
-//  LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING
-//  NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE,
-//  EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
-//
-//////////////////////////////////////////////////////////////////////////////////////
-var egret;
-(function (egret) {
-    /**
-    * @version Egret 2.4
-    * @platform Web,Native
-    * @includeExample extension/game/display/MovieClip.ts
-    * @language en_US
-    */
-    /**
-     * 影片剪辑，可以通过影片剪辑播放序列帧动画。MovieClip 类从以下类继承而来：DisplayObject 和 EventDispatcher。不同于 DisplayObject 对象，MovieClip 对象拥有一个时间轴。
-     * @extends egret.DisplayObject
-     * @event egret.Event.COMPLETE 动画播放完成。
-     * @event egret.Event.LOOP_COMPLETE 动画循环播放完成。
-     * @see http://edn.egret.com/cn/docs/page/596 MovieClip序列帧动画
-     * @version Egret 2.4
-     * @platform Web,Native
-     * @includeExample extension/game/display/MovieClip.ts
-     * @language zh_CN
-     */
-    var MovieClip = (function (_super) {
-        __extends(MovieClip, _super);
-        //Construct Function
-        /**
-         * 创建新的 MovieClip 实例。创建 MovieClip 之后，调用舞台上的显示对象容器的addElement方法。
-         * @param movieClipData {movieClipData} 被引用的 movieClipData 对象
-         * @version Egret 2.4
-         * @platform Web,Native
-         */
-        function MovieClip(movieClipData) {
-            var _this = _super.call(this) || this;
-            //Render Property
-            _this.$bitmapData = null;
-            //Render Property
-            _this.offsetPoint = egret.Point.create(0, 0);
-            //Data Property
-            _this.$movieClipData = null;
-            /**
-             * @private
-             */
-            _this.frames = null;
-            /**
-             * @private
-             */
-            _this.$totalFrames = 0;
-            /**
-             * @version Egret 2.4
-             * @platform Web,Native
-             * @private
-             */
-            _this.frameLabels = null;
-            /**
-             * @private
-             */
-            _this.$frameLabelStart = 0;
-            /**
-             * @private
-             */
-            _this.$frameLabelEnd = 0;
-            /**
-             * @version Egret 2.4
-             * @platform Web,Native
-             * @private
-             */
-            _this.frameEvents = null;
-            /**
-             * @private
-             */
-            _this.frameIntervalTime = 0;
-            /**
-             * @private
-             */
-            _this.$eventPool = null;
-            //Animation Property
-            _this.$isPlaying = false;
-            /**
-             * @private
-             */
-            _this.isStopped = true;
-            /**
-             * @private
-             */
-            _this.playTimes = 0;
-            /**
-             * @private
-             */
-            _this.$currentFrameNum = 0;
-            /**
-             * @private
-             */
-            _this.$nextFrameNum = 1;
-            /**
-             * @private
-             */
-            _this.displayedKeyFrameNum = 0;
-            /**
-             * @private
-             */
-            _this.passedTime = 0;
-            /**
-             * @private
-             */
-            _this.$frameRate = NaN;
-            /**
-             * @private
-             */
-            _this.lastTime = 0;
-            _this.$smoothing = egret.Bitmap.defaultSmoothing;
-            _this.$renderNode = new egret.sys.BitmapNode();
-            _this.setMovieClipData(movieClipData);
-            return _this;
-        }
-        Object.defineProperty(MovieClip.prototype, "smoothing", {
-            /**
-             * Whether or not is smoothed when scaled.
-             * @version Egret 3.0
-             * @platform Web
-             * @language en_US
-             */
-            /**
-             * 控制在缩放时是否进行平滑处理。
-             * @version Egret 3.0
-             * @platform Web
-             * @language zh_CN
-             */
-            get: function () {
-                return this.$smoothing;
-            },
-            set: function (value) {
-                value = !!value;
-                if (value == this.$smoothing) {
-                    return;
-                }
-                this.$smoothing = value;
-                this.$invalidate();
-            },
-            enumerable: true,
-            configurable: true
-        });
-        /**
-         * @private
-         *
-         */
-        MovieClip.prototype.$init = function () {
-            this.$reset();
-            var movieClipData = this.$movieClipData;
-            if (movieClipData && movieClipData.$isDataValid()) {
-                this.frames = movieClipData.frames;
-                this.$totalFrames = movieClipData.numFrames;
-                this.frameLabels = movieClipData.labels;
-                this.frameEvents = movieClipData.events;
-                this.$frameRate = movieClipData.frameRate;
-                this.frameIntervalTime = 1000 / this.$frameRate;
-                this._initFrame();
-            }
-        };
-        /**
-         * @private
-         *
-         */
-        MovieClip.prototype.$reset = function () {
-            this.frames = null;
-            this.playTimes = 0;
-            this.$isPlaying = false;
-            this.setIsStopped(true);
-            this.$currentFrameNum = 0;
-            this.$nextFrameNum = 1;
-            this.displayedKeyFrameNum = 0;
-            this.passedTime = 0;
-            this.$eventPool = [];
-        };
-        /**
-         * @private
-         *
-         */
-        MovieClip.prototype._initFrame = function () {
-            if (this.$movieClipData.$isTextureValid()) {
-                this.advanceFrame();
-                this.constructFrame();
-            }
-        };
-        /**
-         * @private
-         */
-        MovieClip.prototype.$render = function () {
-            var texture = this.$bitmapData;
-            if (texture) {
-                var offsetX = Math.round(this.offsetPoint.x);
-                var offsetY = Math.round(this.offsetPoint.y);
-                var bitmapWidth = texture._bitmapWidth;
-                var bitmapHeight = texture._bitmapHeight;
-                var textureWidth = texture.$getTextureWidth();
-                var textureHeight = texture.$getTextureHeight();
-                var destW = Math.round(texture.$getScaleBitmapWidth());
-                var destH = Math.round(texture.$getScaleBitmapHeight());
-                var sourceWidth = texture._sourceWidth;
-                var sourceHeight = texture._sourceHeight;
-                egret.sys.BitmapNode.$updateTextureData(this.$renderNode, texture._bitmapData, texture._bitmapX, texture._bitmapY, bitmapWidth, bitmapHeight, offsetX, offsetY, textureWidth, textureHeight, destW, destH, sourceWidth, sourceHeight, null, egret.BitmapFillMode.SCALE, this.$smoothing);
-            }
-        };
-        /**
-         * @private
-         */
-        MovieClip.prototype.$measureContentBounds = function (bounds) {
-            var texture = this.$bitmapData;
-            if (texture) {
-                var x = this.offsetPoint.x;
-                var y = this.offsetPoint.y;
-                var w = texture.$getTextureWidth();
-                var h = texture.$getTextureHeight();
-                bounds.setTo(x, y, w, h);
-            }
-            else {
-                bounds.setEmpty();
-            }
-        };
-        /**
-         * @private
-         *
-         * @param stage
-         * @param nestLevel
-         */
-        MovieClip.prototype.$onAddToStage = function (stage, nestLevel) {
-            _super.prototype.$onAddToStage.call(this, stage, nestLevel);
-            if (this.$isPlaying && this.$totalFrames > 1) {
-                this.setIsStopped(false);
-            }
-        };
-        /**
-         * @private
-         *
-         */
-        MovieClip.prototype.$onRemoveFromStage = function () {
-            _super.prototype.$onRemoveFromStage.call(this);
-            this.setIsStopped(true);
-        };
-        //Data Function
-        /**
-         * @private
-         * 返回帧标签为指定字符串的FrameLabel对象
-         * @param labelName {string} 帧标签名
-         * @param ignoreCase {boolean} 是否忽略大小写，可选参数，默认false
-         * @returns {egret.FrameLabel} FrameLabel对象
-         */
-        MovieClip.prototype.getFrameLabelByName = function (labelName, ignoreCase) {
-            if (ignoreCase === void 0) { ignoreCase = false; }
-            if (ignoreCase) {
-                labelName = labelName.toLowerCase();
-            }
-            var frameLabels = this.frameLabels;
-            if (frameLabels) {
-                var outputFramelabel = null;
-                for (var i = 0; i < frameLabels.length; i++) {
-                    outputFramelabel = frameLabels[i];
-                    if (ignoreCase ? outputFramelabel.name.toLowerCase() == labelName : outputFramelabel.name == labelName) {
-                        return outputFramelabel;
-                    }
-                }
-            }
-            return null;
-        };
-        /**
-         * @private
-         * 根据帧标签，设置开始和结束的帧数
-         * @param labelName {string} 帧标签名
-         */
-        MovieClip.prototype.getFrameStartEnd = function (labelName) {
-            var frameLabels = this.frameLabels;
-            if (frameLabels) {
-                var outputFramelabel = null;
-                for (var i = 0; i < frameLabels.length; i++) {
-                    outputFramelabel = frameLabels[i];
-                    if (labelName == outputFramelabel.name) {
-                        this.$frameLabelStart = outputFramelabel.frame;
-                        this.$frameLabelEnd = outputFramelabel.end;
-                        break;
-                    }
-                }
-            }
-        };
-        /**
-         * @private
-         * 返回指定序号的帧的FrameLabel对象
-         * @param frame {number} 帧序号
-         * @returns {egret.FrameLabel} FrameLabel对象
-         */
-        MovieClip.prototype.getFrameLabelByFrame = function (frame) {
-            var frameLabels = this.frameLabels;
-            if (frameLabels) {
-                var outputFramelabel = null;
-                for (var i = 0; i < frameLabels.length; i++) {
-                    outputFramelabel = frameLabels[i];
-                    if (outputFramelabel.frame == frame) {
-                        return outputFramelabel;
-                    }
-                }
-            }
-            return null;
-        };
-        /**
-         * @private
-         * 返回指定序号的帧对应的FrameLabel对象，如果当前帧没有标签，则返回前面最近的有标签的帧的FrameLabel对象
-         * @method egret.MovieClip#getFrameLabelForFrame
-         * @param frame {number} 帧序号
-         * @returns {egret.FrameLabel} FrameLabel对象
-         */
-        MovieClip.prototype.getFrameLabelForFrame = function (frame) {
-            var outputFrameLabel = null;
-            var tempFrameLabel = null;
-            var frameLabels = this.frameLabels;
-            if (frameLabels) {
-                for (var i = 0; i < frameLabels.length; i++) {
-                    tempFrameLabel = frameLabels[i];
-                    if (tempFrameLabel.frame > frame) {
-                        return outputFrameLabel;
-                    }
-                    outputFrameLabel = tempFrameLabel;
-                }
-            }
-            return outputFrameLabel;
-        };
-        //Animation Function
-        /**
-         * 继续播放当前动画
-         * @param playTimes {number} 播放次数。 参数为整数，可选参数，>=1：设定播放次数，<0：循环播放，默认值 0：不改变播放次数(MovieClip初始播放次数设置为1)，
-         * @version Egret 2.4
-         * @platform Web,Native
-         */
-        MovieClip.prototype.play = function (playTimes) {
-            if (playTimes === void 0) { playTimes = 0; }
-            this.$isPlaying = true;
-            this.setPlayTimes(playTimes);
-            if (this.$totalFrames > 1 && this.$stage) {
-                this.setIsStopped(false);
-            }
-        };
-        /**
-         * 暂停播放动画
-         * @version Egret 2.4
-         * @platform Web,Native
-         */
-        MovieClip.prototype.stop = function () {
-            this.$isPlaying = false;
-            this.setIsStopped(true);
-        };
-        /**
-         * 将播放头移到前一帧并停止
-         * @version Egret 2.4
-         * @platform Web,Native
-         */
-        MovieClip.prototype.prevFrame = function () {
-            this.gotoAndStop(this.$currentFrameNum - 1);
-        };
-        /**
-         * 跳到后一帧并停止
-         * @version Egret 2.4
-         * @platform Web,Native
-         */
-        MovieClip.prototype.nextFrame = function () {
-            this.gotoAndStop(this.$currentFrameNum + 1);
-        };
-        /**
-         * 将播放头移到指定帧并播放
-         * @param frame {any} 指定帧的帧号或帧标签
-         * @param playTimes {number} 播放次数。 参数为整数，可选参数，>=1：设定播放次数，<0：循环播放，默认值 0：不改变播放次数，
-         * @version Egret 2.4
-         * @platform Web,Native
-         */
-        MovieClip.prototype.gotoAndPlay = function (frame, playTimes) {
-            if (playTimes === void 0) { playTimes = 0; }
-            if (arguments.length == 0 || arguments.length > 2) {
-                egret.$error(1022, "MovieClip.gotoAndPlay()");
-            }
-            if (typeof frame === "string") {
-                this.getFrameStartEnd(frame);
-            }
-            else {
-                this.$frameLabelStart = 0;
-                this.$frameLabelEnd = 0;
-            }
-            this.play(playTimes);
-            this.gotoFrame(frame);
-        };
-        /**
-         * 将播放头移到指定帧并停止
-         * @param frame {any} 指定帧的帧号或帧标签
-         * @version Egret 2.4
-         * @platform Web,Native
-         */
-        MovieClip.prototype.gotoAndStop = function (frame) {
-            if (arguments.length != 1) {
-                egret.$error(1022, "MovieClip.gotoAndStop()");
-            }
-            this.stop();
-            this.gotoFrame(frame);
-        };
-        /**
-         * @private
-         *
-         * @param frame
-         */
-        MovieClip.prototype.gotoFrame = function (frame) {
-            var frameNum;
-            if (typeof frame === "string") {
-                frameNum = this.getFrameLabelByName(frame).frame;
-            }
-            else {
-                frameNum = parseInt(frame + '', 10);
-                if (frameNum != frame) {
-                    egret.$error(1022, "Frame Label Not Found");
-                }
-            }
-            if (frameNum < 1) {
-                frameNum = 1;
-            }
-            else if (frameNum > this.$totalFrames) {
-                frameNum = this.$totalFrames;
-            }
-            if (frameNum == this.$nextFrameNum) {
-                return;
-            }
-            this.$nextFrameNum = frameNum;
-            this.advanceFrame();
-            this.constructFrame();
-            this.handlePendingEvent();
-        };
-        /**
-         * @private
-         *
-         * @param advancedTime
-         * @returns
-         */
-        MovieClip.prototype.advanceTime = function (timeStamp) {
-            var self = this;
-            var advancedTime = timeStamp - self.lastTime;
-            self.lastTime = timeStamp;
-            var frameIntervalTime = self.frameIntervalTime;
-            var currentTime = self.passedTime + advancedTime;
-            self.passedTime = currentTime % frameIntervalTime;
-            var num = currentTime / frameIntervalTime;
-            if (num < 1) {
-                return false;
-            }
-            while (num >= 1) {
-                num--;
-                self.$nextFrameNum++;
-                if (self.$nextFrameNum > self.$totalFrames || (self.$frameLabelStart > 0 && self.$nextFrameNum > self.$frameLabelEnd)) {
-                    if (self.playTimes == -1) {
-                        self.$eventPool.push(egret.Event.LOOP_COMPLETE);
-                        self.$nextFrameNum = 1;
-                    }
-                    else {
-                        self.playTimes--;
-                        if (self.playTimes > 0) {
-                            self.$eventPool.push(egret.Event.LOOP_COMPLETE);
-                            self.$nextFrameNum = 1;
-                        }
-                        else {
-                            self.$nextFrameNum = self.$totalFrames;
-                            self.$eventPool.push(egret.Event.COMPLETE);
-                            self.stop();
-                            break;
-                        }
-                    }
-                }
-                if (self.$currentFrameNum == self.$frameLabelEnd) {
-                    self.$nextFrameNum = self.$frameLabelStart;
-                }
-                self.advanceFrame();
-            }
-            self.constructFrame();
-            self.handlePendingEvent();
-            return false;
-        };
-        /**
-         * @private
-         *
-         */
-        MovieClip.prototype.advanceFrame = function () {
-            this.$currentFrameNum = this.$nextFrameNum;
-            var event = this.frameEvents[this.$nextFrameNum];
-            if (event && event != "") {
-                egret.MovieClipEvent.dispatchMovieClipEvent(this, egret.MovieClipEvent.FRAME_LABEL, event);
-            }
-        };
-        /**
-         * @private
-         *
-         */
-        MovieClip.prototype.constructFrame = function () {
-            var currentFrameNum = this.$currentFrameNum;
-            if (this.displayedKeyFrameNum == currentFrameNum) {
-                return;
-            }
-            this.$bitmapData = this.$movieClipData.getTextureByFrame(currentFrameNum);
-            this.$movieClipData.$getOffsetByFrame(currentFrameNum, this.offsetPoint);
-            this.$invalidateContentBounds();
-            this.displayedKeyFrameNum = currentFrameNum;
-        };
-        /**
-         * @private
-         *
-         */
-        MovieClip.prototype.$renderFrame = function () {
-            this.$bitmapData = this.$movieClipData.getTextureByFrame(this.$currentFrameNum);
-            this.$invalidateContentBounds();
-        };
-        /**
-         * @private
-         *
-         */
-        MovieClip.prototype.handlePendingEvent = function () {
-            if (this.$eventPool.length != 0) {
-                this.$eventPool.reverse();
-                var eventPool = this.$eventPool;
-                var length_1 = eventPool.length;
-                var isComplete = false;
-                var isLoopComplete = false;
-                for (var i = 0; i < length_1; i++) {
-                    var event_1 = eventPool.pop();
-                    if (event_1 == egret.Event.LOOP_COMPLETE) {
-                        isLoopComplete = true;
-                    }
-                    else if (event_1 == egret.Event.COMPLETE) {
-                        isComplete = true;
-                    }
-                    else {
-                        this.dispatchEventWith(event_1);
-                    }
-                }
-                if (isLoopComplete) {
-                    this.dispatchEventWith(egret.Event.LOOP_COMPLETE);
-                }
-                if (isComplete) {
-                    this.dispatchEventWith(egret.Event.COMPLETE);
-                }
-            }
-        };
-        Object.defineProperty(MovieClip.prototype, "totalFrames", {
-            //Properties
-            /**
-             * MovieClip 实例中帧的总数
-             * @version Egret 2.4
-             * @platform Web,Native
-             */
-            get: function () {
-                return this.$totalFrames;
-            },
-            enumerable: true,
-            configurable: true
-        });
-        Object.defineProperty(MovieClip.prototype, "currentFrame", {
-            /**
-             * MovieClip 实例当前播放的帧的序号
-             * @version Egret 2.4
-             * @platform Web,Native
-             */
-            get: function () {
-                return this.$currentFrameNum;
-            },
-            enumerable: true,
-            configurable: true
-        });
-        Object.defineProperty(MovieClip.prototype, "currentFrameLabel", {
-            /**
-             * MovieClip 实例当前播放的帧的标签。如果当前帧没有标签，则 currentFrameLabel返回null。
-             * @version Egret 2.4
-             * @platform Web,Native
-             */
-            get: function () {
-                var label = this.getFrameLabelByFrame(this.$currentFrameNum);
-                return label && label.name;
-            },
-            enumerable: true,
-            configurable: true
-        });
-        Object.defineProperty(MovieClip.prototype, "currentLabel", {
-            /**
-             * 当前播放的帧对应的标签，如果当前帧没有标签，则currentLabel返回包含标签的先前帧的标签。如果当前帧和先前帧都不包含标签，currentLabel返回null。
-             * @version Egret 2.4
-             * @platform Web,Native
-             */
-            get: function () {
-                var label = this.getFrameLabelForFrame(this.$currentFrameNum);
-                return label ? label.name : null;
-            },
-            enumerable: true,
-            configurable: true
-        });
-        Object.defineProperty(MovieClip.prototype, "frameRate", {
-            /**
-             * MovieClip 实例的帧频
-             * @version Egret 2.4
-             * @platform Web,Native
-             */
-            get: function () {
-                return this.$frameRate;
-            },
-            set: function (value) {
-                if (value == this.$frameRate) {
-                    return;
-                }
-                this.$frameRate = value;
-                this.frameIntervalTime = 1000 / this.$frameRate;
-            },
-            enumerable: true,
-            configurable: true
-        });
-        Object.defineProperty(MovieClip.prototype, "isPlaying", {
-            /**
-             * MovieClip 实例当前是否正在播放
-             * @version Egret 2.4
-             * @platform Web,Native
-             */
-            get: function () {
-                return this.$isPlaying;
-            },
-            enumerable: true,
-            configurable: true
-        });
-        Object.defineProperty(MovieClip.prototype, "movieClipData", {
-            /**
-             * @version Egret 2.4
-             * @platform Web,Native
-             */
-            get: function () {
-                return this.$movieClipData;
-            },
-            /**
-             * MovieClip数据源
-             */
-            set: function (value) {
-                this.setMovieClipData(value);
-            },
-            enumerable: true,
-            configurable: true
-        });
-        /**
-         * @private
-         *
-         * @param value
-         */
-        MovieClip.prototype.setMovieClipData = function (value) {
-            if (this.$movieClipData == value) {
-                return;
-            }
-            this.$movieClipData = value;
-            this.$init();
-        };
-        /**
-         * @private
-         *
-         * @param value
-         */
-        MovieClip.prototype.setPlayTimes = function (value) {
-            if (value < 0 || value >= 1) {
-                this.playTimes = value < 0 ? -1 : Math.floor(value);
-            }
-        };
-        /**
-         * @private
-         *
-         * @param value
-         */
-        MovieClip.prototype.setIsStopped = function (value) {
-            if (this.isStopped == value) {
-                return;
-            }
-            this.isStopped = value;
-            if (value) {
-                egret.sys.$ticker.$stopTick(this.advanceTime, this);
-            }
-            else {
-                this.playTimes = this.playTimes == 0 ? 1 : this.playTimes;
-                this.lastTime = egret.getTimer();
-                egret.sys.$ticker.$startTick(this.advanceTime, this);
-            }
-        };
-        return MovieClip;
-    }(egret.DisplayObject));
-    egret.MovieClip = MovieClip;
-    __reflect(MovieClip.prototype, "egret.MovieClip");
 })(egret || (egret = {}));
 //////////////////////////////////////////////////////////////////////////////////////
 //
@@ -1058,10 +467,10 @@ var egret;
          */
         MovieClipData.prototype.fillFrameLabelsData = function (frameLabelsData) {
             if (frameLabelsData) {
-                var length_2 = frameLabelsData.length;
-                if (length_2 > 0) {
+                var length_1 = frameLabelsData.length;
+                if (length_1 > 0) {
                     this.labels = [];
-                    for (var i = 0; i < length_2; i++) {
+                    for (var i = 0; i < length_1; i++) {
                         var label = frameLabelsData[i];
                         this.labels.push(new egret.FrameLabel(label.name, label.frame, label.end));
                     }
@@ -1075,10 +484,10 @@ var egret;
          */
         MovieClipData.prototype.fillFrameEventsData = function (frameEventsData) {
             if (frameEventsData) {
-                var length_3 = frameEventsData.length;
-                if (length_3 > 0) {
+                var length_2 = frameEventsData.length;
+                if (length_2 > 0) {
                     this.events = [];
-                    for (var i = 0; i < length_3; i++) {
+                    for (var i = 0; i < length_2; i++) {
                         var events = frameEventsData[i];
                         this.events[events.frame] = events.name;
                     }
@@ -3242,93 +2651,142 @@ var egret;
 //////////////////////////////////////////////////////////////////////////////////////
 var egret;
 (function (egret) {
-    var setTimeoutCache = {};
-    var setTimeoutIndex = 0;
-    var setTimeoutCount = 0;
-    var lastTime = 0;
     /**
-     * Run the designated function in specified delay (in milliseconds).
-     * @param listener {Function} Listener function
-     * @param thisObject {any} this object
-     * @param delay {number} Delay time, in milliseconds
-     * @param ...args {any} Parameter list
-     * @returns {number} Return index which can be used for clearTimeout
+     * UThe URLLoader class downloads data from a URL as text, binary data, or URL-encoded variables.  It is useful for downloading text files, XML, or other information to be used in a dynamic, data-driven application.
+     * A URLLoader object downloads all of the data from a URL before making it available to code in the applications. It sends out notifications about the progress of the download,
+     * which you can monitor through bytesLoaded and bytesTotal properties, as well as through dispatched events.
+     * @see http://edn.egret.com/cn/docs/page/601 Build communication request
+     * @event egret.Event.COMPLETE Dispatched when the net request is complete.
+     * @event egret.IOErrorEvent.IO_ERROR io error.
      * @version Egret 2.4
      * @platform Web,Native
-     * @includeExample extension/game/utils/setTimeout.ts
+     * @includeExample extension/game/net/URLLoader.ts
      * @language en_US
      */
     /**
-     * 在指定的延迟（以毫秒为单位）后运行指定的函数。
-     * @param listener {Function} 侦听函数
-     * @param thisObject {any} this对象
-     * @param delay {number} 延迟时间，以毫秒为单位
-     * @param ...args {any} 参数列表
-     * @returns {number} 返回索引，可以用于 clearTimeout
+     * URLLoader 类以文本、二进制数据或 URL 编码变量的形式从 URL 下载数据。在下载文本文件、XML 或其他用于动态数据驱动应用程序的信息时，它很有用。
+     * URLLoader 对象会先从 URL 中下载所有数据，然后才将数据用于应用程序中的代码。它会发出有关下载进度的通知，
+     * 通过 bytesLoaded 和 bytesTotal 属性以及已调度的事件，可以监视下载进度。
+     * @see http://edn.egret.com/cn/docs/page/601 构建通信请求
+     * @event egret.Event.COMPLETE 加载完成后调度。
+     * @event egret.IOErrorEvent.IO_ERROR 加载错误后调度。
      * @version Egret 2.4
      * @platform Web,Native
-     * @includeExample extension/game/utils/setTimeout.ts
+     * @includeExample extension/game/net/URLLoader.ts
      * @language zh_CN
      */
-    function setTimeout(listener, thisObject, delay) {
-        var args = [];
-        for (var _i = 3; _i < arguments.length; _i++) {
-            args[_i - 3] = arguments[_i];
-        }
-        var data = { listener: listener, thisObject: thisObject, delay: delay, params: args };
-        setTimeoutCount++;
-        if (setTimeoutCount == 1 && egret.sys.$ticker) {
-            lastTime = egret.getTimer();
-            egret.sys.$ticker.$startTick(timeoutUpdate, null);
-        }
-        setTimeoutIndex++;
-        setTimeoutCache[setTimeoutIndex] = data;
-        return setTimeoutIndex;
-    }
-    egret.setTimeout = setTimeout;
-    /**
-     * Function run after the specified delay is cleared.
-     * @param key {number} Index that egret.setTimeout returns
-     * @version Egret 2.4
-     * @platform Web,Native
-     * @language en_US
-     */
-    /**
-     * 清除指定延迟后运行的函数。
-     * @param key {number} egret.setTimeout所返回的索引
-     * @version Egret 2.4
-     * @platform Web,Native
-     * @language zh_CN
-     */
-    function clearTimeout(key) {
-        if (setTimeoutCache[key]) {
-            setTimeoutCount--;
-            delete setTimeoutCache[key];
-            if (setTimeoutCount == 0 && egret.sys.$ticker) {
-                egret.sys.$ticker.$stopTick(timeoutUpdate, null);
+    var URLLoader = (function (_super) {
+        __extends(URLLoader, _super);
+        /**
+         * Create an egret.URLLoader object
+         * @param request {URLRequest} A URLRequest object specifies the URL to be downloaded.
+         * If this parameter is omitted, no load operation begins. If a parameter is specified, the load operation begins immediately
+         * @version Egret 2.4
+         * @platform Web,Native
+         * @language en_US
+         */
+        /**
+         * 创建 egret.URLLoader 对象
+         * @param request {URLRequest} 一个 URLRequest 对象，指定要下载的 URL。
+         * 如果省略该参数，则不开始加载操作。如果已指定参数，则立即开始加载操作
+         * @version Egret 2.4
+         * @platform Web,Native
+         * @language zh_CN
+         */
+        function URLLoader(request) {
+            if (request === void 0) { request = null; }
+            var _this = _super.call(this) || this;
+            /**
+             * Control whether the downloaded data is received as text (URLLoaderDataFormat.TEXT), raw binary data (URLLoaderDataFormat.BINARY), or URL-encoded variables (URLLoaderDataFormat.VARIABLES).
+             * If the value of the dataFormat property is URLLoaderDataFormat.TEXT, the received data is a string containing the text of the loaded file.
+             * If the value of the dataFormat property is URLLoaderDataFormat.BINARY, the received data is a ByteArray object containing the raw binary data.
+             * If the value of the dataFormat property is URLLoaderDataFormat.TEXTURE, the received data is a Texture object containing the bitmap data.
+             * If the value of the dataFormat property is URLLoaderDataFormat.VARIABLES, the received data is a URLVariables object containing the URL-encoded variables.
+             * The default value is URLLoaderDataFormat.TEXT.
+             * @default egret.URLLoaderDataFormat.TEXT
+             * @version Egret 2.4
+             * @platform Web,Native
+             * @language en_US
+             */
+            /**
+             * 控制是以文本 (URLLoaderDataFormat.TEXT)、原始二进制数据 (URLLoaderDataFormat.BINARY) 还是 URL 编码变量 (URLLoaderDataFormat.VARIABLES) 接收下载的数据。
+             * 如果 dataFormat 属性的值是 URLLoaderDataFormat.TEXT，则所接收的数据是一个包含已加载文件文本的字符串。
+             * 如果 dataFormat 属性的值是 URLLoaderDataFormat.BINARY，则所接收的数据是一个包含原始二进制数据的 ByteArray 对象。
+             * 如果 dataFormat 属性的值是 URLLoaderDataFormat.TEXTURE，则所接收的数据是一个包含位图数据的Texture对象。
+             * 如果 dataFormat 属性的值是 URLLoaderDataFormat.VARIABLES，则所接收的数据是一个包含 URL 编码变量的 URLVariables 对象。
+             * @default egret.URLLoaderDataFormat.TEXT
+             * @version Egret 2.4
+             * @platform Web,Native
+             * @language zh_CN
+             */
+            _this.dataFormat = egret.URLLoaderDataFormat.TEXT;
+            /**
+             * The data received from the load operation. This property is populated only when the load operation is complete. The format of the data depends on the setting of the dataFormat property:
+             * If the dataFormat property is URLLoaderDataFormat.TEXT, the received data is a string containing the text of the loaded file.
+             * If the dataFormat property is URLLoaderDataFormat.BINARY, the received data is a ByteArray object containing the raw binary data.
+             * If the dataFormat property is URLLoaderDataFormat.TEXTURE, the received data is a Texture object containing the bitmap data.
+             * If the dataFormat property is URLLoaderDataFormat.VARIABLES, the received data is a URLVariables object containing the URL-encoded variables.
+             * @version Egret 2.4
+             * @platform Web,Native
+             * @language en_US
+             */
+            /**
+             * 从加载操作接收的数据。只有完成加载操作时，才会填充该属性。该数据的格式取决于 dataFormat 属性的设置：
+             * 如果 dataFormat 属性是 URLLoaderDataFormat.TEXT，则所接收的数据是一个包含已加载文件文本的字符串。
+             * 如果 dataFormat 属性是 URLLoaderDataFormat.BINARY，则所接收的数据是一个包含原始二进制数据的 ByteArray 对象。
+             * 如果 dataFormat 属性是 URLLoaderDataFormat.TEXTURE，则所接收的数据是一个包含位图数据的Texture对象。
+             * 如果 dataFormat 属性是 URLLoaderDataFormat.VARIABLES，则所接收的数据是一个包含 URL 编码变量的 URLVariables 对象。
+             * @version Egret 2.4
+             * @platform Web,Native
+             * @language zh_CN
+             */
+            _this.data = null;
+            /**
+             * @private
+             */
+            _this._request = null;
+            /**
+             * @private
+             */
+            _this._status = -1;
+            if (request) {
+                _this.load(request);
             }
+            return _this;
         }
-    }
-    egret.clearTimeout = clearTimeout;
-    /**
-     * @private
-     *
-     * @param dt
-     */
-    function timeoutUpdate(timeStamp) {
-        var dt = timeStamp - lastTime;
-        lastTime = timeStamp;
-        for (var key in setTimeoutCache) {
-            var key2 = key;
-            var data = setTimeoutCache[key2];
-            data.delay -= dt;
-            if (data.delay <= 0) {
-                data.listener.apply(data.thisObject, data.params);
-                clearTimeout(key2);
-            }
-        }
-        return false;
-    }
+        /**
+         * Send and load data from the specified URL. The data can be received as text, raw binary data, or URL-encoded variables, depending on the value you set for the dataFormat property.
+         * Note that the default value of the dataFormat property is text. If you want to send data to the specified URL, you can set the data property in the URLRequest object.
+         * @param request {URLRequest}  A URLRequest object specifies the URL to be downloaded.
+         * @version Egret 2.4
+         * @platform Web,Native
+         * @language en_US
+         */
+        /**
+         * 从指定的 URL 发送和加载数据。可以以文本、原始二进制数据或 URL 编码变量格式接收数据，这取决于为 dataFormat 属性所设置的值。
+         * 请注意 dataFormat 属性的默认值为文本。如果想将数据发送至指定的 URL，则可以在 URLRequest 对象中设置 data 属性。
+         * @param request {URLRequest}  一个 URLRequest 对象，指定要下载的 URL。
+         * @version Egret 2.4
+         * @platform Web,Native
+         * @language zh_CN
+         */
+        URLLoader.prototype.load = function (request) {
+            this._request = request;
+            this.data = null;
+            egret.NetContext.getNetContext().proceed(this);
+        };
+        /**
+         * @private
+         *
+         */
+        URLLoader.prototype.__recycle = function () {
+            this._request = null;
+            this.data = null;
+        };
+        return URLLoader;
+    }(egret.EventDispatcher));
+    egret.URLLoader = URLLoader;
+    __reflect(URLLoader.prototype, "egret.URLLoader");
 })(egret || (egret = {}));
 //////////////////////////////////////////////////////////////////////////////////////
 //
@@ -3361,93 +2819,684 @@ var egret;
 var egret;
 (function (egret) {
     /**
-     * The URLLoaderDataFormat class provides values that specify how downloaded data is received.
-     * @see http://edn.egret.com/cn/docs/page/600 Read different data format
-     * @version Egret 2.4
-     * @platform Web,Native
-     * @includeExample extension/game/net/URLLoaderDataFormat.ts
-     * @language en_US
-     */
+    * @version Egret 2.4
+    * @platform Web,Native
+    * @includeExample extension/game/display/MovieClip.ts
+    * @language en_US
+    */
     /**
-     * URLLoaderDataFormat 类提供了一些用于指定如何接收已下载数据的值。
-     * @see http://edn.egret.com/cn/docs/page/600 读取不同数据格式
+     * 影片剪辑，可以通过影片剪辑播放序列帧动画。MovieClip 类从以下类继承而来：DisplayObject 和 EventDispatcher。不同于 DisplayObject 对象，MovieClip 对象拥有一个时间轴。
+     * @extends egret.DisplayObject
+     * @event egret.Event.COMPLETE 动画播放完成。
+     * @event egret.Event.LOOP_COMPLETE 动画循环播放完成。
+     * @see http://edn.egret.com/cn/docs/page/596 MovieClip序列帧动画
      * @version Egret 2.4
      * @platform Web,Native
-     * @includeExample extension/game/net/URLLoaderDataFormat.ts
+     * @includeExample extension/game/display/MovieClip.ts
      * @language zh_CN
      */
-    var URLLoaderDataFormat = (function () {
-        function URLLoaderDataFormat() {
+    var MovieClip = (function (_super) {
+        __extends(MovieClip, _super);
+        //Construct Function
+        /**
+         * 创建新的 MovieClip 实例。创建 MovieClip 之后，调用舞台上的显示对象容器的addElement方法。
+         * @param movieClipData {movieClipData} 被引用的 movieClipData 对象
+         * @version Egret 2.4
+         * @platform Web,Native
+         */
+        function MovieClip(movieClipData) {
+            var _this = _super.call(this) || this;
+            //Render Property
+            _this.$bitmapData = null;
+            //Render Property
+            _this.offsetPoint = egret.Point.create(0, 0);
+            //Data Property
+            _this.$movieClipData = null;
+            /**
+             * @private
+             */
+            _this.frames = null;
+            /**
+             * @private
+             */
+            _this.$totalFrames = 0;
+            /**
+             * @version Egret 2.4
+             * @platform Web,Native
+             * @private
+             */
+            _this.frameLabels = null;
+            /**
+             * @private
+             */
+            _this.$frameLabelStart = 0;
+            /**
+             * @private
+             */
+            _this.$frameLabelEnd = 0;
+            /**
+             * @version Egret 2.4
+             * @platform Web,Native
+             * @private
+             */
+            _this.frameEvents = null;
+            /**
+             * @private
+             */
+            _this.frameIntervalTime = 0;
+            /**
+             * @private
+             */
+            _this.$eventPool = null;
+            //Animation Property
+            _this.$isPlaying = false;
+            /**
+             * @private
+             */
+            _this.isStopped = true;
+            /**
+             * @private
+             */
+            _this.playTimes = 0;
+            /**
+             * @private
+             */
+            _this.$currentFrameNum = 0;
+            /**
+             * @private
+             */
+            _this.$nextFrameNum = 1;
+            /**
+             * @private
+             */
+            _this.displayedKeyFrameNum = 0;
+            /**
+             * @private
+             */
+            _this.passedTime = 0;
+            /**
+             * @private
+             */
+            _this.$frameRate = NaN;
+            /**
+             * @private
+             */
+            _this.lastTime = 0;
+            _this.$smoothing = egret.Bitmap.defaultSmoothing;
+            _this.$renderNode = new egret.sys.BitmapNode();
+            _this.setMovieClipData(movieClipData);
+            return _this;
         }
-        return URLLoaderDataFormat;
-    }());
-    /**
-     * Specify that downloaded data is received as raw binary data.
-     * @version Egret 2.4
-     * @platform Web
-     * @language en_US
-     */
-    /**
-     * 指定以原始二进制数据形式接收下载的数据。
-     * @version Egret 2.4
-     * @platform Web
-     * @language zh_CN
-     */
-    URLLoaderDataFormat.BINARY = "binary";
-    /**
-     * Specify that downloaded data is received as text.
-     * @version Egret 2.4
-     * @platform Web,Native
-     * @language en_US
-     */
-    /**
-     * 指定以文本形式接收已下载的数据。
-     * @version Egret 2.4
-     * @platform Web,Native
-     * @language zh_CN
-     */
-    URLLoaderDataFormat.TEXT = "text";
-    /**
-     * Specify that downloaded data is received as URL-encoded variables.
-     * @version Egret 2.4
-     * @platform Web,Native
-     * @language en_US
-     */
-    /**
-     * 指定以 URL 编码变量形式接收下载的数据。
-     * @version Egret 2.4
-     * @platform Web,Native
-     * @language zh_CN
-     */
-    URLLoaderDataFormat.VARIABLES = "variables";
-    /**
-     * Specify that downloaded data is received as bitmap texture.
-     * @version Egret 2.4
-     * @platform Web,Native
-     * @language en_US
-     */
-    /**
-     * 指定以位图纹理形式接收已下载的数据。
-     * @version Egret 2.4
-     * @platform Web,Native
-     * @language zh_CN
-     */
-    URLLoaderDataFormat.TEXTURE = "texture";
-    /**
-     * Specify that downloaded data is received as sound.
-     * @version Egret 2.4
-     * @platform Web,Native
-     * @language en_US
-     */
-    /**
-     * 指定以声音形式接收已下载的数据。
-     * @version Egret 2.4
-     * @platform Web,Native
-     * @language zh_CN
-     */
-    URLLoaderDataFormat.SOUND = "sound";
-    egret.URLLoaderDataFormat = URLLoaderDataFormat;
-    __reflect(URLLoaderDataFormat.prototype, "egret.URLLoaderDataFormat");
+        Object.defineProperty(MovieClip.prototype, "smoothing", {
+            /**
+             * Whether or not is smoothed when scaled.
+             * @version Egret 3.0
+             * @platform Web
+             * @language en_US
+             */
+            /**
+             * 控制在缩放时是否进行平滑处理。
+             * @version Egret 3.0
+             * @platform Web
+             * @language zh_CN
+             */
+            get: function () {
+                return this.$smoothing;
+            },
+            set: function (value) {
+                value = !!value;
+                if (value == this.$smoothing) {
+                    return;
+                }
+                this.$smoothing = value;
+                this.$invalidate();
+            },
+            enumerable: true,
+            configurable: true
+        });
+        /**
+         * @private
+         *
+         */
+        MovieClip.prototype.$init = function () {
+            this.$reset();
+            var movieClipData = this.$movieClipData;
+            if (movieClipData && movieClipData.$isDataValid()) {
+                this.frames = movieClipData.frames;
+                this.$totalFrames = movieClipData.numFrames;
+                this.frameLabels = movieClipData.labels;
+                this.frameEvents = movieClipData.events;
+                this.$frameRate = movieClipData.frameRate;
+                this.frameIntervalTime = 1000 / this.$frameRate;
+                this._initFrame();
+            }
+        };
+        /**
+         * @private
+         *
+         */
+        MovieClip.prototype.$reset = function () {
+            this.frames = null;
+            this.playTimes = 0;
+            this.$isPlaying = false;
+            this.setIsStopped(true);
+            this.$currentFrameNum = 0;
+            this.$nextFrameNum = 1;
+            this.displayedKeyFrameNum = 0;
+            this.passedTime = 0;
+            this.$eventPool = [];
+        };
+        /**
+         * @private
+         *
+         */
+        MovieClip.prototype._initFrame = function () {
+            if (this.$movieClipData.$isTextureValid()) {
+                this.advanceFrame();
+                this.constructFrame();
+            }
+        };
+        /**
+         * @private
+         */
+        MovieClip.prototype.$render = function () {
+            var texture = this.$bitmapData;
+            if (texture) {
+                var offsetX = Math.round(this.offsetPoint.x);
+                var offsetY = Math.round(this.offsetPoint.y);
+                var bitmapWidth = texture._bitmapWidth;
+                var bitmapHeight = texture._bitmapHeight;
+                var textureWidth = texture.$getTextureWidth();
+                var textureHeight = texture.$getTextureHeight();
+                var destW = Math.round(texture.$getScaleBitmapWidth());
+                var destH = Math.round(texture.$getScaleBitmapHeight());
+                var sourceWidth = texture._sourceWidth;
+                var sourceHeight = texture._sourceHeight;
+                egret.sys.BitmapNode.$updateTextureData(this.$renderNode, texture._bitmapData, texture._bitmapX, texture._bitmapY, bitmapWidth, bitmapHeight, offsetX, offsetY, textureWidth, textureHeight, destW, destH, sourceWidth, sourceHeight, null, egret.BitmapFillMode.SCALE, this.$smoothing);
+            }
+        };
+        /**
+         * @private
+         */
+        MovieClip.prototype.$measureContentBounds = function (bounds) {
+            var texture = this.$bitmapData;
+            if (texture) {
+                var x = this.offsetPoint.x;
+                var y = this.offsetPoint.y;
+                var w = texture.$getTextureWidth();
+                var h = texture.$getTextureHeight();
+                bounds.setTo(x, y, w, h);
+            }
+            else {
+                bounds.setEmpty();
+            }
+        };
+        /**
+         * @private
+         *
+         * @param stage
+         * @param nestLevel
+         */
+        MovieClip.prototype.$onAddToStage = function (stage, nestLevel) {
+            _super.prototype.$onAddToStage.call(this, stage, nestLevel);
+            if (this.$isPlaying && this.$totalFrames > 1) {
+                this.setIsStopped(false);
+            }
+        };
+        /**
+         * @private
+         *
+         */
+        MovieClip.prototype.$onRemoveFromStage = function () {
+            _super.prototype.$onRemoveFromStage.call(this);
+            this.setIsStopped(true);
+        };
+        //Data Function
+        /**
+         * @private
+         * 返回帧标签为指定字符串的FrameLabel对象
+         * @param labelName {string} 帧标签名
+         * @param ignoreCase {boolean} 是否忽略大小写，可选参数，默认false
+         * @returns {egret.FrameLabel} FrameLabel对象
+         */
+        MovieClip.prototype.getFrameLabelByName = function (labelName, ignoreCase) {
+            if (ignoreCase === void 0) { ignoreCase = false; }
+            if (ignoreCase) {
+                labelName = labelName.toLowerCase();
+            }
+            var frameLabels = this.frameLabels;
+            if (frameLabels) {
+                var outputFramelabel = null;
+                for (var i = 0; i < frameLabels.length; i++) {
+                    outputFramelabel = frameLabels[i];
+                    if (ignoreCase ? outputFramelabel.name.toLowerCase() == labelName : outputFramelabel.name == labelName) {
+                        return outputFramelabel;
+                    }
+                }
+            }
+            return null;
+        };
+        /**
+         * @private
+         * 根据帧标签，设置开始和结束的帧数
+         * @param labelName {string} 帧标签名
+         */
+        MovieClip.prototype.getFrameStartEnd = function (labelName) {
+            var frameLabels = this.frameLabels;
+            if (frameLabels) {
+                var outputFramelabel = null;
+                for (var i = 0; i < frameLabels.length; i++) {
+                    outputFramelabel = frameLabels[i];
+                    if (labelName == outputFramelabel.name) {
+                        this.$frameLabelStart = outputFramelabel.frame;
+                        this.$frameLabelEnd = outputFramelabel.end;
+                        break;
+                    }
+                }
+            }
+        };
+        /**
+         * @private
+         * 返回指定序号的帧的FrameLabel对象
+         * @param frame {number} 帧序号
+         * @returns {egret.FrameLabel} FrameLabel对象
+         */
+        MovieClip.prototype.getFrameLabelByFrame = function (frame) {
+            var frameLabels = this.frameLabels;
+            if (frameLabels) {
+                var outputFramelabel = null;
+                for (var i = 0; i < frameLabels.length; i++) {
+                    outputFramelabel = frameLabels[i];
+                    if (outputFramelabel.frame == frame) {
+                        return outputFramelabel;
+                    }
+                }
+            }
+            return null;
+        };
+        /**
+         * @private
+         * 返回指定序号的帧对应的FrameLabel对象，如果当前帧没有标签，则返回前面最近的有标签的帧的FrameLabel对象
+         * @method egret.MovieClip#getFrameLabelForFrame
+         * @param frame {number} 帧序号
+         * @returns {egret.FrameLabel} FrameLabel对象
+         */
+        MovieClip.prototype.getFrameLabelForFrame = function (frame) {
+            var outputFrameLabel = null;
+            var tempFrameLabel = null;
+            var frameLabels = this.frameLabels;
+            if (frameLabels) {
+                for (var i = 0; i < frameLabels.length; i++) {
+                    tempFrameLabel = frameLabels[i];
+                    if (tempFrameLabel.frame > frame) {
+                        return outputFrameLabel;
+                    }
+                    outputFrameLabel = tempFrameLabel;
+                }
+            }
+            return outputFrameLabel;
+        };
+        //Animation Function
+        /**
+         * 继续播放当前动画
+         * @param playTimes {number} 播放次数。 参数为整数，可选参数，>=1：设定播放次数，<0：循环播放，默认值 0：不改变播放次数(MovieClip初始播放次数设置为1)，
+         * @version Egret 2.4
+         * @platform Web,Native
+         */
+        MovieClip.prototype.play = function (playTimes) {
+            if (playTimes === void 0) { playTimes = 0; }
+            this.$isPlaying = true;
+            this.setPlayTimes(playTimes);
+            if (this.$totalFrames > 1 && this.$stage) {
+                this.setIsStopped(false);
+            }
+        };
+        /**
+         * 暂停播放动画
+         * @version Egret 2.4
+         * @platform Web,Native
+         */
+        MovieClip.prototype.stop = function () {
+            this.$isPlaying = false;
+            this.setIsStopped(true);
+        };
+        /**
+         * 将播放头移到前一帧并停止
+         * @version Egret 2.4
+         * @platform Web,Native
+         */
+        MovieClip.prototype.prevFrame = function () {
+            this.gotoAndStop(this.$currentFrameNum - 1);
+        };
+        /**
+         * 跳到后一帧并停止
+         * @version Egret 2.4
+         * @platform Web,Native
+         */
+        MovieClip.prototype.nextFrame = function () {
+            this.gotoAndStop(this.$currentFrameNum + 1);
+        };
+        /**
+         * 将播放头移到指定帧并播放
+         * @param frame {any} 指定帧的帧号或帧标签
+         * @param playTimes {number} 播放次数。 参数为整数，可选参数，>=1：设定播放次数，<0：循环播放，默认值 0：不改变播放次数，
+         * @version Egret 2.4
+         * @platform Web,Native
+         */
+        MovieClip.prototype.gotoAndPlay = function (frame, playTimes) {
+            if (playTimes === void 0) { playTimes = 0; }
+            if (arguments.length == 0 || arguments.length > 2) {
+                egret.$error(1022, "MovieClip.gotoAndPlay()");
+            }
+            if (typeof frame === "string") {
+                this.getFrameStartEnd(frame);
+            }
+            else {
+                this.$frameLabelStart = 0;
+                this.$frameLabelEnd = 0;
+            }
+            this.play(playTimes);
+            this.gotoFrame(frame);
+        };
+        /**
+         * 将播放头移到指定帧并停止
+         * @param frame {any} 指定帧的帧号或帧标签
+         * @version Egret 2.4
+         * @platform Web,Native
+         */
+        MovieClip.prototype.gotoAndStop = function (frame) {
+            if (arguments.length != 1) {
+                egret.$error(1022, "MovieClip.gotoAndStop()");
+            }
+            this.stop();
+            this.gotoFrame(frame);
+        };
+        /**
+         * @private
+         *
+         * @param frame
+         */
+        MovieClip.prototype.gotoFrame = function (frame) {
+            var frameNum;
+            if (typeof frame === "string") {
+                frameNum = this.getFrameLabelByName(frame).frame;
+            }
+            else {
+                frameNum = parseInt(frame + '', 10);
+                if (frameNum != frame) {
+                    egret.$error(1022, "Frame Label Not Found");
+                }
+            }
+            if (frameNum < 1) {
+                frameNum = 1;
+            }
+            else if (frameNum > this.$totalFrames) {
+                frameNum = this.$totalFrames;
+            }
+            if (frameNum == this.$nextFrameNum) {
+                return;
+            }
+            this.$nextFrameNum = frameNum;
+            this.advanceFrame();
+            this.constructFrame();
+            this.handlePendingEvent();
+        };
+        /**
+         * @private
+         *
+         * @param advancedTime
+         * @returns
+         */
+        MovieClip.prototype.advanceTime = function (timeStamp) {
+            var self = this;
+            var advancedTime = timeStamp - self.lastTime;
+            self.lastTime = timeStamp;
+            var frameIntervalTime = self.frameIntervalTime;
+            var currentTime = self.passedTime + advancedTime;
+            self.passedTime = currentTime % frameIntervalTime;
+            var num = currentTime / frameIntervalTime;
+            if (num < 1) {
+                return false;
+            }
+            while (num >= 1) {
+                num--;
+                self.$nextFrameNum++;
+                if (self.$nextFrameNum > self.$totalFrames || (self.$frameLabelStart > 0 && self.$nextFrameNum > self.$frameLabelEnd)) {
+                    if (self.playTimes == -1) {
+                        self.$eventPool.push(egret.Event.LOOP_COMPLETE);
+                        self.$nextFrameNum = 1;
+                    }
+                    else {
+                        self.playTimes--;
+                        if (self.playTimes > 0) {
+                            self.$eventPool.push(egret.Event.LOOP_COMPLETE);
+                            self.$nextFrameNum = 1;
+                        }
+                        else {
+                            self.$nextFrameNum = self.$totalFrames;
+                            self.$eventPool.push(egret.Event.COMPLETE);
+                            self.stop();
+                            break;
+                        }
+                    }
+                }
+                if (self.$currentFrameNum == self.$frameLabelEnd) {
+                    self.$nextFrameNum = self.$frameLabelStart;
+                }
+                self.advanceFrame();
+            }
+            self.constructFrame();
+            self.handlePendingEvent();
+            return false;
+        };
+        /**
+         * @private
+         *
+         */
+        MovieClip.prototype.advanceFrame = function () {
+            this.$currentFrameNum = this.$nextFrameNum;
+            var event = this.frameEvents[this.$nextFrameNum];
+            if (event && event != "") {
+                egret.MovieClipEvent.dispatchMovieClipEvent(this, egret.MovieClipEvent.FRAME_LABEL, event);
+            }
+        };
+        /**
+         * @private
+         *
+         */
+        MovieClip.prototype.constructFrame = function () {
+            var currentFrameNum = this.$currentFrameNum;
+            if (this.displayedKeyFrameNum == currentFrameNum) {
+                return;
+            }
+            this.$bitmapData = this.$movieClipData.getTextureByFrame(currentFrameNum);
+            this.$movieClipData.$getOffsetByFrame(currentFrameNum, this.offsetPoint);
+            this.$invalidateContentBounds();
+            this.displayedKeyFrameNum = currentFrameNum;
+        };
+        /**
+         * @private
+         *
+         */
+        MovieClip.prototype.$renderFrame = function () {
+            this.$bitmapData = this.$movieClipData.getTextureByFrame(this.$currentFrameNum);
+            this.$invalidateContentBounds();
+        };
+        /**
+         * @private
+         *
+         */
+        MovieClip.prototype.handlePendingEvent = function () {
+            if (this.$eventPool.length != 0) {
+                this.$eventPool.reverse();
+                var eventPool = this.$eventPool;
+                var length_3 = eventPool.length;
+                var isComplete = false;
+                var isLoopComplete = false;
+                for (var i = 0; i < length_3; i++) {
+                    var event_1 = eventPool.pop();
+                    if (event_1 == egret.Event.LOOP_COMPLETE) {
+                        isLoopComplete = true;
+                    }
+                    else if (event_1 == egret.Event.COMPLETE) {
+                        isComplete = true;
+                    }
+                    else {
+                        this.dispatchEventWith(event_1);
+                    }
+                }
+                if (isLoopComplete) {
+                    this.dispatchEventWith(egret.Event.LOOP_COMPLETE);
+                }
+                if (isComplete) {
+                    this.dispatchEventWith(egret.Event.COMPLETE);
+                }
+            }
+        };
+        Object.defineProperty(MovieClip.prototype, "totalFrames", {
+            //Properties
+            /**
+             * MovieClip 实例中帧的总数
+             * @version Egret 2.4
+             * @platform Web,Native
+             */
+            get: function () {
+                return this.$totalFrames;
+            },
+            enumerable: true,
+            configurable: true
+        });
+        Object.defineProperty(MovieClip.prototype, "currentFrame", {
+            /**
+             * MovieClip 实例当前播放的帧的序号
+             * @version Egret 2.4
+             * @platform Web,Native
+             */
+            get: function () {
+                return this.$currentFrameNum;
+            },
+            enumerable: true,
+            configurable: true
+        });
+        Object.defineProperty(MovieClip.prototype, "currentFrameLabel", {
+            /**
+             * MovieClip 实例当前播放的帧的标签。如果当前帧没有标签，则 currentFrameLabel返回null。
+             * @version Egret 2.4
+             * @platform Web,Native
+             */
+            get: function () {
+                var label = this.getFrameLabelByFrame(this.$currentFrameNum);
+                return label && label.name;
+            },
+            enumerable: true,
+            configurable: true
+        });
+        Object.defineProperty(MovieClip.prototype, "currentLabel", {
+            /**
+             * 当前播放的帧对应的标签，如果当前帧没有标签，则currentLabel返回包含标签的先前帧的标签。如果当前帧和先前帧都不包含标签，currentLabel返回null。
+             * @version Egret 2.4
+             * @platform Web,Native
+             */
+            get: function () {
+                var label = this.getFrameLabelForFrame(this.$currentFrameNum);
+                return label ? label.name : null;
+            },
+            enumerable: true,
+            configurable: true
+        });
+        Object.defineProperty(MovieClip.prototype, "frameRate", {
+            /**
+             * MovieClip 实例的帧频
+             * @version Egret 2.4
+             * @platform Web,Native
+             */
+            get: function () {
+                return this.$frameRate;
+            },
+            set: function (value) {
+                if (value == this.$frameRate) {
+                    return;
+                }
+                this.$frameRate = value;
+                this.frameIntervalTime = 1000 / this.$frameRate;
+            },
+            enumerable: true,
+            configurable: true
+        });
+        Object.defineProperty(MovieClip.prototype, "isPlaying", {
+            /**
+             * MovieClip 实例当前是否正在播放
+             * @version Egret 2.4
+             * @platform Web,Native
+             */
+            get: function () {
+                return this.$isPlaying;
+            },
+            enumerable: true,
+            configurable: true
+        });
+        Object.defineProperty(MovieClip.prototype, "movieClipData", {
+            /**
+             * @version Egret 2.4
+             * @platform Web,Native
+             */
+            get: function () {
+                return this.$movieClipData;
+            },
+            /**
+             * MovieClip数据源
+             */
+            set: function (value) {
+                this.setMovieClipData(value);
+            },
+            enumerable: true,
+            configurable: true
+        });
+        /**
+         * @private
+         *
+         * @param value
+         */
+        MovieClip.prototype.setMovieClipData = function (value) {
+            if (this.$movieClipData == value) {
+                return;
+            }
+            this.$movieClipData = value;
+            this.$init();
+        };
+        /**
+         * @private
+         *
+         * @param value
+         */
+        MovieClip.prototype.setPlayTimes = function (value) {
+            if (value < 0 || value >= 1) {
+                this.playTimes = value < 0 ? -1 : Math.floor(value);
+            }
+        };
+        /**
+         * @private
+         *
+         * @param value
+         */
+        MovieClip.prototype.setIsStopped = function (value) {
+            if (this.isStopped == value) {
+                return;
+            }
+            this.isStopped = value;
+            if (value) {
+                egret.sys.$ticker.$stopTick(this.advanceTime, this);
+            }
+            else {
+                this.playTimes = this.playTimes == 0 ? 1 : this.playTimes;
+                this.lastTime = egret.getTimer();
+                egret.sys.$ticker.$startTick(this.advanceTime, this);
+            }
+        };
+        return MovieClip;
+    }(egret.DisplayObject));
+    egret.MovieClip = MovieClip;
+    __reflect(MovieClip.prototype, "egret.MovieClip");
 })(egret || (egret = {}));
 //////////////////////////////////////////////////////////////////////////////////////
 //
@@ -4605,140 +4654,91 @@ var egret;
 //////////////////////////////////////////////////////////////////////////////////////
 var egret;
 (function (egret) {
+    var setTimeoutCache = {};
+    var setTimeoutIndex = 0;
+    var setTimeoutCount = 0;
+    var lastTime = 0;
     /**
-     * UThe URLLoader class downloads data from a URL as text, binary data, or URL-encoded variables.  It is useful for downloading text files, XML, or other information to be used in a dynamic, data-driven application.
-     * A URLLoader object downloads all of the data from a URL before making it available to code in the applications. It sends out notifications about the progress of the download,
-     * which you can monitor through bytesLoaded and bytesTotal properties, as well as through dispatched events.
-     * @see http://edn.egret.com/cn/docs/page/601 Build communication request
-     * @event egret.Event.COMPLETE Dispatched when the net request is complete.
-     * @event egret.IOErrorEvent.IO_ERROR io error.
+     * Run the designated function in specified delay (in milliseconds).
+     * @param listener {Function} Listener function
+     * @param thisObject {any} this object
+     * @param delay {number} Delay time, in milliseconds
+     * @param ...args {any} Parameter list
+     * @returns {number} Return index which can be used for clearTimeout
      * @version Egret 2.4
      * @platform Web,Native
-     * @includeExample extension/game/net/URLLoader.ts
+     * @includeExample extension/game/utils/setTimeout.ts
      * @language en_US
      */
     /**
-     * URLLoader 类以文本、二进制数据或 URL 编码变量的形式从 URL 下载数据。在下载文本文件、XML 或其他用于动态数据驱动应用程序的信息时，它很有用。
-     * URLLoader 对象会先从 URL 中下载所有数据，然后才将数据用于应用程序中的代码。它会发出有关下载进度的通知，
-     * 通过 bytesLoaded 和 bytesTotal 属性以及已调度的事件，可以监视下载进度。
-     * @see http://edn.egret.com/cn/docs/page/601 构建通信请求
-     * @event egret.Event.COMPLETE 加载完成后调度。
-     * @event egret.IOErrorEvent.IO_ERROR 加载错误后调度。
+     * 在指定的延迟（以毫秒为单位）后运行指定的函数。
+     * @param listener {Function} 侦听函数
+     * @param thisObject {any} this对象
+     * @param delay {number} 延迟时间，以毫秒为单位
+     * @param ...args {any} 参数列表
+     * @returns {number} 返回索引，可以用于 clearTimeout
      * @version Egret 2.4
      * @platform Web,Native
-     * @includeExample extension/game/net/URLLoader.ts
+     * @includeExample extension/game/utils/setTimeout.ts
      * @language zh_CN
      */
-    var URLLoader = (function (_super) {
-        __extends(URLLoader, _super);
-        /**
-         * Create an egret.URLLoader object
-         * @param request {URLRequest} A URLRequest object specifies the URL to be downloaded.
-         * If this parameter is omitted, no load operation begins. If a parameter is specified, the load operation begins immediately
-         * @version Egret 2.4
-         * @platform Web,Native
-         * @language en_US
-         */
-        /**
-         * 创建 egret.URLLoader 对象
-         * @param request {URLRequest} 一个 URLRequest 对象，指定要下载的 URL。
-         * 如果省略该参数，则不开始加载操作。如果已指定参数，则立即开始加载操作
-         * @version Egret 2.4
-         * @platform Web,Native
-         * @language zh_CN
-         */
-        function URLLoader(request) {
-            if (request === void 0) { request = null; }
-            var _this = _super.call(this) || this;
-            /**
-             * Control whether the downloaded data is received as text (URLLoaderDataFormat.TEXT), raw binary data (URLLoaderDataFormat.BINARY), or URL-encoded variables (URLLoaderDataFormat.VARIABLES).
-             * If the value of the dataFormat property is URLLoaderDataFormat.TEXT, the received data is a string containing the text of the loaded file.
-             * If the value of the dataFormat property is URLLoaderDataFormat.BINARY, the received data is a ByteArray object containing the raw binary data.
-             * If the value of the dataFormat property is URLLoaderDataFormat.TEXTURE, the received data is a Texture object containing the bitmap data.
-             * If the value of the dataFormat property is URLLoaderDataFormat.VARIABLES, the received data is a URLVariables object containing the URL-encoded variables.
-             * The default value is URLLoaderDataFormat.TEXT.
-             * @default egret.URLLoaderDataFormat.TEXT
-             * @version Egret 2.4
-             * @platform Web,Native
-             * @language en_US
-             */
-            /**
-             * 控制是以文本 (URLLoaderDataFormat.TEXT)、原始二进制数据 (URLLoaderDataFormat.BINARY) 还是 URL 编码变量 (URLLoaderDataFormat.VARIABLES) 接收下载的数据。
-             * 如果 dataFormat 属性的值是 URLLoaderDataFormat.TEXT，则所接收的数据是一个包含已加载文件文本的字符串。
-             * 如果 dataFormat 属性的值是 URLLoaderDataFormat.BINARY，则所接收的数据是一个包含原始二进制数据的 ByteArray 对象。
-             * 如果 dataFormat 属性的值是 URLLoaderDataFormat.TEXTURE，则所接收的数据是一个包含位图数据的Texture对象。
-             * 如果 dataFormat 属性的值是 URLLoaderDataFormat.VARIABLES，则所接收的数据是一个包含 URL 编码变量的 URLVariables 对象。
-             * @default egret.URLLoaderDataFormat.TEXT
-             * @version Egret 2.4
-             * @platform Web,Native
-             * @language zh_CN
-             */
-            _this.dataFormat = egret.URLLoaderDataFormat.TEXT;
-            /**
-             * The data received from the load operation. This property is populated only when the load operation is complete. The format of the data depends on the setting of the dataFormat property:
-             * If the dataFormat property is URLLoaderDataFormat.TEXT, the received data is a string containing the text of the loaded file.
-             * If the dataFormat property is URLLoaderDataFormat.BINARY, the received data is a ByteArray object containing the raw binary data.
-             * If the dataFormat property is URLLoaderDataFormat.TEXTURE, the received data is a Texture object containing the bitmap data.
-             * If the dataFormat property is URLLoaderDataFormat.VARIABLES, the received data is a URLVariables object containing the URL-encoded variables.
-             * @version Egret 2.4
-             * @platform Web,Native
-             * @language en_US
-             */
-            /**
-             * 从加载操作接收的数据。只有完成加载操作时，才会填充该属性。该数据的格式取决于 dataFormat 属性的设置：
-             * 如果 dataFormat 属性是 URLLoaderDataFormat.TEXT，则所接收的数据是一个包含已加载文件文本的字符串。
-             * 如果 dataFormat 属性是 URLLoaderDataFormat.BINARY，则所接收的数据是一个包含原始二进制数据的 ByteArray 对象。
-             * 如果 dataFormat 属性是 URLLoaderDataFormat.TEXTURE，则所接收的数据是一个包含位图数据的Texture对象。
-             * 如果 dataFormat 属性是 URLLoaderDataFormat.VARIABLES，则所接收的数据是一个包含 URL 编码变量的 URLVariables 对象。
-             * @version Egret 2.4
-             * @platform Web,Native
-             * @language zh_CN
-             */
-            _this.data = null;
-            /**
-             * @private
-             */
-            _this._request = null;
-            /**
-             * @private
-             */
-            _this._status = -1;
-            if (request) {
-                _this.load(request);
-            }
-            return _this;
+    function setTimeout(listener, thisObject, delay) {
+        var args = [];
+        for (var _i = 3; _i < arguments.length; _i++) {
+            args[_i - 3] = arguments[_i];
         }
-        /**
-         * Send and load data from the specified URL. The data can be received as text, raw binary data, or URL-encoded variables, depending on the value you set for the dataFormat property.
-         * Note that the default value of the dataFormat property is text. If you want to send data to the specified URL, you can set the data property in the URLRequest object.
-         * @param request {URLRequest}  A URLRequest object specifies the URL to be downloaded.
-         * @version Egret 2.4
-         * @platform Web,Native
-         * @language en_US
-         */
-        /**
-         * 从指定的 URL 发送和加载数据。可以以文本、原始二进制数据或 URL 编码变量格式接收数据，这取决于为 dataFormat 属性所设置的值。
-         * 请注意 dataFormat 属性的默认值为文本。如果想将数据发送至指定的 URL，则可以在 URLRequest 对象中设置 data 属性。
-         * @param request {URLRequest}  一个 URLRequest 对象，指定要下载的 URL。
-         * @version Egret 2.4
-         * @platform Web,Native
-         * @language zh_CN
-         */
-        URLLoader.prototype.load = function (request) {
-            this._request = request;
-            this.data = null;
-            egret.NetContext.getNetContext().proceed(this);
-        };
-        /**
-         * @private
-         *
-         */
-        URLLoader.prototype.__recycle = function () {
-            this._request = null;
-            this.data = null;
-        };
-        return URLLoader;
-    }(egret.EventDispatcher));
-    egret.URLLoader = URLLoader;
-    __reflect(URLLoader.prototype, "egret.URLLoader");
+        var data = { listener: listener, thisObject: thisObject, delay: delay, params: args };
+        setTimeoutCount++;
+        if (setTimeoutCount == 1 && egret.sys.$ticker) {
+            lastTime = egret.getTimer();
+            egret.sys.$ticker.$startTick(timeoutUpdate, null);
+        }
+        setTimeoutIndex++;
+        setTimeoutCache[setTimeoutIndex] = data;
+        return setTimeoutIndex;
+    }
+    egret.setTimeout = setTimeout;
+    /**
+     * Function run after the specified delay is cleared.
+     * @param key {number} Index that egret.setTimeout returns
+     * @version Egret 2.4
+     * @platform Web,Native
+     * @language en_US
+     */
+    /**
+     * 清除指定延迟后运行的函数。
+     * @param key {number} egret.setTimeout所返回的索引
+     * @version Egret 2.4
+     * @platform Web,Native
+     * @language zh_CN
+     */
+    function clearTimeout(key) {
+        if (setTimeoutCache[key]) {
+            setTimeoutCount--;
+            delete setTimeoutCache[key];
+            if (setTimeoutCount == 0 && egret.sys.$ticker) {
+                egret.sys.$ticker.$stopTick(timeoutUpdate, null);
+            }
+        }
+    }
+    egret.clearTimeout = clearTimeout;
+    /**
+     * @private
+     *
+     * @param dt
+     */
+    function timeoutUpdate(timeStamp) {
+        var dt = timeStamp - lastTime;
+        lastTime = timeStamp;
+        for (var key in setTimeoutCache) {
+            var key2 = key;
+            var data = setTimeoutCache[key2];
+            data.delay -= dt;
+            if (data.delay <= 0) {
+                data.listener.apply(data.thisObject, data.params);
+                clearTimeout(key2);
+            }
+        }
+        return false;
+    }
 })(egret || (egret = {}));
