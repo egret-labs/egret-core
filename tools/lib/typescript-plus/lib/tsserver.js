@@ -1023,7 +1023,7 @@ var ts;
 var ts;
 (function (ts) {
     ts.version = "2.1.4";
-    ts.version_plus = "2.1.12";
+    ts.version_plus = "2.1.13";
 })(ts || (ts = {}));
 (function (ts) {
     var Ternary;
