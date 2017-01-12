@@ -254,7 +254,7 @@ class Compiler {
 
         var configParseResult = ts.parseJsonConfigFileContent(configObj, ts.sys, path.dirname(url));
         compilerOptions = configParseResult.options;
-        compilerOptions.defines = getCompilerDefines(options, true);
+        compilerOptions.defines = getCompilerDefines(options);
 
         return configParseResult
     }
