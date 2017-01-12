@@ -96,8 +96,6 @@ declare namespace egret_native {
 
     function requireHttpSync(url:string, callback:Function):void;
 
-    function requireHttpSync(url: string, callback: Function): void;
-
     function requireHttp(url: string, param: any, callback: Function): void;
 
     function sendInfoToPlugin(info: string): void;

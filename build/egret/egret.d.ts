@@ -7729,6 +7729,9 @@ declare namespace egret.localStorage {
      */
     let clear: () => void;
 }
+declare namespace egret {
+    function pickPhoto(): Promise<ArrayBuffer>;
+}
 declare namespace egret.sys {
     /**
      * @private
@@ -8218,7 +8221,6 @@ declare namespace egret_native {
     function writeFileSync(filepath: string, fileContent: string): any;
     function pickPhoto(promise: egret.PromiseObject): void;
     function requireHttpSync(url: string, callback: Function): void;
-    function requireHttpSync(url: string, callback: Function): void;
     function requireHttp(url: string, param: any, callback: Function): void;
     function sendInfoToPlugin(info: string): void;
     function receivedPluginInfo(info: string): void;
@@ -8242,7 +8244,6 @@ declare namespace egret_native {
         function pauseAllEffects(): void;
         function resumeBackgroundMusic(): void;
         function resumeAllEffects(): void;
-        function _selectPhoto(promise: egret.PromiseObject): void;
     }
     function download(url: string, savePath: string, promise: any): void;
     namespace Graphics {
@@ -8371,9 +8372,6 @@ declare namespace egret_native {
         height: number;
         getContext(type: string): RenderContext;
     }
-}
-declare namespace egret.native {
-    function pickPhoto(): Promise<ArrayBuffer>;
 }
 declare namespace egret {
     /**

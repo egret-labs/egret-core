@@ -12019,6 +12019,52 @@ var egret;
     (function (localStorage) {
     })(localStorage = egret.localStorage || (egret.localStorage = {}));
 })(egret || (egret = {}));
+var egret;
+(function (egret) {
+    function pickPhoto() {
+        return new Promise(function (resolve, reject) {
+            if (egret.Capabilities.runtimeType === egret.RuntimeType.NATIVE) {
+                var promise = egret.PromiseObject.create();
+                promise.onSuccessFunc = function (content) {
+                    resolve(content);
+                };
+                egret_native.pickPhoto(promise);
+            }
+            else {
+                var input = document.createElement("input");
+                input.type = "file";
+                input.accept = "image/*";
+                input.onchange = function (event) {
+                    var fileInput = event.currentTarget.files;
+                    var photoURL = window.URL.createObjectURL(fileInput[0]);
+                    var img = new Image();
+                    var xhr = new XMLHttpRequest();
+                    xhr.open("GET", photoURL, true);
+                    xhr.responseType = "blob";
+                    xhr.onload = response;
+                    xhr.send();
+                    function response(e) {
+                        if (Number(this.status) === 200) {
+                            var blob = this.response;
+                            var fileReader = new FileReader();
+                            fileReader.onload = function () {
+                                resolve(this.result);
+                            };
+                            fileReader.readAsArrayBuffer(blob);
+                        }
+                        else if (Number(this.status) >= 400) {
+                            reject("faild with status" + this.status);
+                        }
+                    }
+                };
+                var event_3 = document.createEvent("MouseEvents");
+                event_3.initMouseEvent("click", true, false, window, 0, 0, 0, 0, 0, false, false, false, false, 0, null);
+                input.dispatchEvent(event_3);
+            }
+        });
+    }
+    egret.pickPhoto = pickPhoto;
+})(egret || (egret = {}));
 //////////////////////////////////////////////////////////////////////////////////////
 //
 //  Copyright (c) 2014-present, Egret Technology.
@@ -12137,22 +12183,6 @@ var egret;
 //////////////////////////////////////////////////////////////////////////////////////
 var egret;
 (function (egret) {
-})(egret || (egret = {}));
-var egret;
-(function (egret) {
-    var native;
-    (function (native) {
-        function pickPhoto() {
-            return new Promise(function (resolve) {
-                var promise = egret.PromiseObject.create();
-                promise.onSuccessFunc = function (content) {
-                    resolve(content);
-                };
-                egret_native.pickPhoto(promise);
-            });
-        }
-        native.pickPhoto = pickPhoto;
-    })(native = egret.native || (egret.native = {}));
 })(egret || (egret = {}));
 //////////////////////////////////////////////////////////////////////////////////////
 //
