@@ -22,7 +22,7 @@ import Clean = require("../commands/clean");
 import FileAutoChange = require("../actions/FileAutoChange");
 
 class Publish implements egret.Command {
-    private getVersionInfo():string {
+    private getVersionInfo(): string {
         if (egret.args.version) {
             return egret.args.version;
         }
@@ -40,7 +40,7 @@ class Publish implements egret.Command {
         //return (Math.round(Date.now() / 1000)).toString();
     }
 
-    execute():number {
+    execute(): number {
         utils.checkEgret();
 
         var options = egret.args;
@@ -48,17 +48,9 @@ class Publish implements egret.Command {
         //重新设置 releaseDir
         var versionFile = this.getVersionInfo();
 
-
-        if (egret.args.runtime == "native") {
-            options.releaseDir = FileUtil.joinPath(config.getReleaseRoot(), "native", versionFile);
-
-            globals.log(1402, "native", versionFile);
-        }
-        else {
-            options.releaseDir = FileUtil.joinPath(config.getReleaseRoot(), "web", versionFile);
-
-            globals.log(1402, "web", versionFile);
-        }
+        let runtime = egret.args.runtime == 'native' ? 'native' : "web";
+        options.releaseDir = FileUtil.joinPath(config.getReleaseRoot(), runtime, versionFile);
+        globals.log(1402, runtime, versionFile);
 
         utils.clean(options.releaseDir);
         options.minify = true;
@@ -67,12 +59,12 @@ class Publish implements egret.Command {
         var compileProject = new CompileProject();
         var result = compileProject.compile(options);
 
-        utils.minify(options.out,options.out);
+        utils.minify(options.out, options.out);
 
         //生成 all.manifest 并拷贝资源
         (new GenerateVersion).execute();
         //拷贝资源后还原default.thm.json bug修复 by yanjiaqi
-        if(exml.updateSetting){
+        if (exml.updateSetting) {
             exml.updateSetting();
         }
 
@@ -113,7 +105,7 @@ class Publish implements egret.Command {
 
             //拷贝favicon.ico
             var faviconPath = FileUtil.joinPath(options.projectDir, "favicon.ico");
-            if(FileUtil.exists(faviconPath)) {
+            if (FileUtil.exists(faviconPath)) {
                 FileUtil.copy(faviconPath, FileUtil.joinPath(options.releaseDir, "favicon.ico"));
             }
 

@@ -121,10 +121,10 @@ class FileAutoChangeCommand implements egret.Command {
 
         var allList = [];
         if (!isDebug) {
-            allList = listInfo["libs"].concat(["main.min.js"]);
+            allList = listInfo.libs.concat(["main.min.js"]);
         }
         else {
-            allList = listInfo["libs"].concat(listInfo["game"]);
+            allList = listInfo.libs.concat(listInfo["game"]);
         }
 
         var listStr = "\n";
@@ -151,7 +151,7 @@ class FileAutoChangeCommand implements egret.Command {
         return listInfo;
     }
 
-    private getLibsList(html:string, isNative:boolean, isDebug:boolean):Object {
+    private getLibsList(html:string, isNative:boolean, isDebug:boolean) {
         var gameList:string[] = [];
         var libsList:string[] = [];
 

@@ -32,14 +32,9 @@ var Publish = (function () {
         var config = egret.args.properties;
         //重新设置 releaseDir
         var versionFile = this.getVersionInfo();
-        if (egret.args.runtime == "native") {
-            options.releaseDir = FileUtil.joinPath(config.getReleaseRoot(), "native", versionFile);
-            globals.log(1402, "native", versionFile);
-        }
-        else {
-            options.releaseDir = FileUtil.joinPath(config.getReleaseRoot(), "web", versionFile);
-            globals.log(1402, "web", versionFile);
-        }
+        var runtime = egret.args.runtime == 'native' ? 'native' : "web";
+        options.releaseDir = FileUtil.joinPath(config.getReleaseRoot(), runtime, versionFile);
+        globals.log(1402, runtime, versionFile);
         utils.clean(options.releaseDir);
         options.minify = true;
         options.publish = true;
