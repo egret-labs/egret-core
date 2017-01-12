@@ -129,7 +129,8 @@ namespace egret.web {
                 else {
                     sourceNode.noteOff(0);
                 }
-                this.bufferSource.disconnect();
+                sourceNode.onended = null;
+                sourceNode.disconnect();
                 this.bufferSource = null;
 
                 this.$audioBuffer = null;
