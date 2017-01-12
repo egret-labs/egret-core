@@ -335,20 +335,13 @@ declare module egret {
         compileSingle(path: string): number;
     }
 
-    export type FileChanges = Array<FileChange>;
+    export type FileChanges = FileChange[];
 
     export interface FileChange {
         fileName: string;
         type: string;
     }
 
-    export interface EgretCompilerHost {
-        program: ts.Program;
-        files?: string[];
-        exitStatus: number;
-        compileWithChanges?: (filesChanged: egret.FileChanges, sourceMap?: boolean) => EgretCompilerHost;
-        messages?: string[];
-    }
 }
 
 declare var DEBUG: boolean;

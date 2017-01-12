@@ -1,10 +1,11 @@
 /// <reference path="../lib/types.d.ts" />
 
 import utils = require('../lib/utils');
-import Compiler = require('./Compiler');
+// import Compiler = require('./Compiler');
 import FileUtil = require('../lib/FileUtil');
 import exmlActions = require('../actions/exml');
 import path = require('path');
+import * as Compiler from './Compiler';
 
 class CompileProject {
     compile(options: egret.ToolArgs) {
@@ -34,7 +35,7 @@ class CompileProject {
             // process.chdir(realCWD);
         }
         else { //console.log("----compileProject.compileProject.A-----")
-            var compiler = new Compiler();
+            var compiler = new Compiler.Compiler();
             var tsList = FileUtil.search(args.srcDir, "ts");
             var libsList = FileUtil.search(args.libsDir, "ts");
             let configParsedResult = compiler.loadTsconfig(args.projectDir + "tsconfig.json", args);
@@ -66,7 +67,7 @@ class CompileProject {
 
     }
 
-    private compilerHost: egret.EgretCompilerHost;
+    private compilerHost: Compiler.EgretCompilerHost;
 }
 
 function GetJavaScriptFileNames(tsFiles: string[], root: string | RegExp, prefix?: string) {

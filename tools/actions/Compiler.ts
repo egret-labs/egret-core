@@ -15,7 +15,15 @@ interface CompileOption {
     debug?: boolean;
 }
 
-class Compiler {
+export interface EgretCompilerHost {
+        program: ts.Program;
+        files?: string[];
+        exitStatus: number;
+        compileWithChanges?: (filesChanged: egret.FileChanges, sourceMap?: boolean) => EgretCompilerHost;
+        messages?: string[];
+    }
+
+export class Compiler {
 
 
     public compileWithTsconfig(options: ts.CompilerOptions, files: string[]) {
@@ -82,7 +90,7 @@ class Compiler {
     private files: ts.Map<{ version: number }> = <any>{};
     private sortedFiles;
 
-    private compileNew(options: ts.CompilerOptions, rootFileNames: string[], forSortFile: boolean): egret.EgretCompilerHost {
+    private compileNew(options: ts.CompilerOptions, rootFileNames: string[], forSortFile: boolean): EgretCompilerHost {
         this.errors = [];
         this.fileNames = rootFileNames;
         this.sortedFiles = rootFileNames;
@@ -186,7 +194,7 @@ class Compiler {
 
     private fileNames: Array<string>;
 
-    private compileWithChanges(filesChanged: egret.FileChanges, sourceMap?: boolean): egret.EgretCompilerHost {
+    private compileWithChanges(filesChanged: egret.FileChanges, sourceMap?: boolean): EgretCompilerHost {
         this.errors = [];
         filesChanged.forEach(file => {
             if (file.type == "added") {
@@ -260,7 +268,6 @@ class Compiler {
     }
 }
 
-export = Compiler;
 
 
 

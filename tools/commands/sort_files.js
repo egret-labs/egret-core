@@ -1,6 +1,6 @@
 /// <reference path="../lib/types.d.ts" />
 var FileUtil = require("../lib/FileUtil");
-var Compiler = require("../actions/Compiler");
+var Compiler_1 = require("../actions/Compiler");
 var SortFiles = (function () {
     function SortFiles() {
     }
@@ -8,7 +8,7 @@ var SortFiles = (function () {
         var options = egret.args;
         var libFiles = FileUtil.search(FileUtil.joinPath(options.projectDir, "libs"), "d.ts");
         var files = FileUtil.search(FileUtil.joinPath(options.projectDir, "src"), "ts");
-        var compiler = new Compiler();
+        var compiler = new Compiler_1.Compiler();
         var compileFiles = libFiles.concat(files);
         var compilerOptions = { target: 1, experimentalDecorators: true };
         var result = compiler.sortFile(compilerOptions, compileFiles);

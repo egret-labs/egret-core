@@ -1,8 +1,9 @@
 /// <reference path="../lib/types.d.ts" />
-var Compiler = require("./Compiler");
+// import Compiler = require('./Compiler');
 var FileUtil = require("../lib/FileUtil");
 var exmlActions = require("../actions/exml");
 var path = require("path");
+var Compiler = require("./Compiler");
 var CompileProject = (function () {
     function CompileProject() {
     }
@@ -30,7 +31,7 @@ var CompileProject = (function () {
             this.compilerHost = this.compilerHost.compileWithChanges(files, sourceMap);
         }
         else {
-            var compiler = new Compiler();
+            var compiler = new Compiler.Compiler();
             var tsList = FileUtil.search(args.srcDir, "ts");
             var libsList = FileUtil.search(args.libsDir, "ts");
             var configParsedResult = compiler.loadTsconfig(args.projectDir + "tsconfig.json", args);

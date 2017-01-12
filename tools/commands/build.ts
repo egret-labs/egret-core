@@ -12,7 +12,7 @@ import CHILD_EXEC = require('child_process');
 import * as project from '../parser/EgretProject';
 import ts = require('../lib/typescript-plus/lib/typescript')
 
-import Compiler = require('../actions/Compiler');
+import * as Compiler from '../actions/Compiler';
 console.log(utils.tr(1004, 0));
 var timeBuildStart: number = (new Date()).getTime();
 class Build implements egret.Command {
@@ -48,7 +48,7 @@ class Build implements egret.Command {
         var options = egret.args;
         var libFiles = FileUtil.search(FileUtil.joinPath(options.projectDir, "libs"), "d.ts");
         var outDir ="bin";
-        var compiler = new Compiler();
+        var compiler = new Compiler.Compiler();
         utils.clean(FileUtil.joinPath(options.projectDir, outDir));
         for (let m of packageJson.modules) {
             var files:string[];

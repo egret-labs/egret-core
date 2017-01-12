@@ -1,5 +1,5 @@
 import utils = require('../lib/utils');
-import Compiler = require('./Compiler');
+import {Compiler} from'./Compiler';
 import FileUtil = require('../lib/FileUtil');
 import path = require('path');
 import ts = require("../lib/typescript-plus/lib/typescript");

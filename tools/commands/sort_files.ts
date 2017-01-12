@@ -1,7 +1,7 @@
 ﻿/// <reference path="../lib/types.d.ts" />
 
 import FileUtil = require('../lib/FileUtil');
-import Compiler = require('../actions/Compiler');
+import {Compiler} from '../actions/Compiler';
 
 class SortFiles implements egret.Command {
     execute(callback?: (exitCode: number) => void): number {

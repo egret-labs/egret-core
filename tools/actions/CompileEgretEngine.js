@@ -1,5 +1,5 @@
 var utils = require("../lib/utils");
-var Compiler = require("./Compiler");
+var Compiler_1 = require("./Compiler");
 var FileUtil = require("../lib/FileUtil");
 var path = require("path");
 var ts = require("../lib/typescript-plus/lib/typescript");
@@ -50,7 +50,7 @@ var CompileEgretEngine = (function () {
         var currentPlatform, currentConfig;
         global.registerClass = manifest.registerClass;
         var outputDir = this.getModuleOutputPath();
-        this.compiler = new Compiler();
+        this.compiler = new Compiler_1.Compiler();
         global.registerClass = manifest.registerClass;
         var configurations = [
             { name: "debug", declaration: true },

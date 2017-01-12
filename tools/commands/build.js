@@ -40,7 +40,7 @@ var Build = (function () {
         var options = egret.args;
         var libFiles = FileUtil.search(FileUtil.joinPath(options.projectDir, "libs"), "d.ts");
         var outDir = "bin";
-        var compiler = new Compiler();
+        var compiler = new Compiler.Compiler();
         utils.clean(FileUtil.joinPath(options.projectDir, outDir));
         var _loop_1 = function (m) {
             length = m.files.length;
