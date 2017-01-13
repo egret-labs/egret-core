@@ -26,19 +26,6 @@
 //  EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 //
 //////////////////////////////////////////////////////////////////////////////////////
-
-namespace egret_native {
-    function selectPhoto(): Promise<any> {
-        return new Promise((resolve) => {
-            var promise = egret.PromiseObject.create();
-            promise.onSuccessFunc = (content) => {
-                resolve(content);
-            };
-            egret_native._selectPhoto(promise);
-        });
-    }
-}
-
 /**
  * @private
  */
@@ -105,7 +92,9 @@ declare namespace egret_native {
 
     function writeFileSync(filepath: string, fileContent: string): any;
 
-    function requireHttpSync(url: string, callback: Function): void;
+    function pickPhoto(promise:egret.PromiseObject):void;
+
+    function requireHttpSync(url:string, callback:Function):void;
 
     function requireHttp(url: string, param: any, callback: Function): void;
 
@@ -149,8 +138,6 @@ declare namespace egret_native {
         function resumeBackgroundMusic(): void;
 
         function resumeAllEffects(): void;
-
-        function _selectPhoto(promise: egret.PromiseObject): void;
     }
 
     function download(url: string, savePath: string, promise: any): void;
@@ -228,7 +215,10 @@ declare namespace egret_native {
 
         function addTextureUnsyn(filePath: string, promise: any): any;
 
-        function removeTexture(filePath: string): void;
+        function removeTexture(filePath:string): void;
+
+        function createTextureFromArrayBuffer(arrayBuffer:ArrayBuffer): any;
+
     }
 
 
