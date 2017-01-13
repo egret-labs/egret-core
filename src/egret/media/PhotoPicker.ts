@@ -2,7 +2,7 @@ namespace egret {
     export function pickPhoto(): Promise<ArrayBuffer> {
         return new Promise((resolve, reject) => {
             if (egret.Capabilities.runtimeType === egret.RuntimeType.NATIVE) {
-                var promise = egret.PromiseObject.create();
+                let promise = egret.PromiseObject.create();
                 promise.onSuccessFunc = (content) => {
                     resolve(content);
                 };
