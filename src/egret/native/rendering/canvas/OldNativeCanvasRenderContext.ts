@@ -296,14 +296,17 @@ namespace egret.native {
                 else {
                     fontFamilyText = arr.slice(3).join(" ");
                 }
+                let arr2;
                 if(fontFamilyText.indexOf(", ") != -1) {
-                    arr = fontFamilyText.split(", ");
+                    arr2 = fontFamilyText.split(", ");
                 }
                 else if(fontFamilyText.indexOf(",") != -1) {
-                    arr = fontFamilyText.split(",");
-                    let length:number = arr.length;
+                    arr2 = fontFamilyText.split(",");
+                }
+                if(arr2) {
+                    let length:number = arr2.length;
                     for(let i = 0 ; i < length ; i++) {
-                        let fontFamily = arr[i];
+                        let fontFamily = arr2[i];
                         //暂时先不考虑带有引号的情况
                         if(fontMapping[fontFamily]) {
                             this.$fontFamily = fontMapping[fontFamily];
