@@ -1360,38 +1360,6 @@ declare namespace egret {
 }
 declare namespace egret {
     /**
-     * @private
-     * @version Egret 2.4
-     * @platform Web,Native
-     */
-    interface NetContext extends HashObject {
-        /**
-         *
-         * @param loader
-         * @version Egret 2.4
-         * @platform Web,Native
-         */
-        proceed(loader: URLLoader): void;
-    }
-    /**
-     * @private
-     * @version Egret 2.4
-     * @platform Web,Native
-     */
-    let NetContext: {
-        new (): NetContext;
-        getNetContext(): NetContext;
-    };
-    /**
-     * @private
-     *
-     * @param request
-     * @returns
-     */
-    function $getUrl(request: URLRequest): string;
-}
-declare namespace egret {
-    /**
      * UThe URLLoader class downloads data from a URL as text, binary data, or URL-encoded variables.  It is useful for downloading text files, XML, or other information to be used in a dynamic, data-driven application.
      * A URLLoader object downloads all of the data from a URL before making it available to code in the applications. It sends out notifications about the progress of the download,
      * which you can monitor through bytesLoaded and bytesTotal properties, as well as through dispatched events.
@@ -1499,6 +1467,19 @@ declare namespace egret {
          * @language zh_CN
          */
         load(request: URLRequest): void;
+        private getResponseType(dataFormat);
+        /**
+         * @private
+         *
+         * @param loader
+         */
+        private loadSound(loader);
+        /**
+         * @private
+         *
+         * @param loader
+         */
+        private loadTexture(loader);
         /**
          * @private
          */
@@ -2243,12 +2224,6 @@ declare namespace egret {
         /**
          * 触摸Context
          * @member egret.MainContext#touchContext
-         * @version Egret 2.4
-         * @platform Web,Native
-         */
-        /**
-         * 网络Context
-         * @member egret.MainContext#netContext
          * @version Egret 2.4
          * @platform Web,Native
          */

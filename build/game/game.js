@@ -2605,12 +2605,6 @@ var egret;
 //////////////////////////////////////////////////////////////////////////////////////
 var egret;
 (function (egret) {
-    /**
-     * @private
-     *
-     * @param request
-     * @returns
-     */
     function $getUrl(request) {
         var url = request.url;
         //get请求没有设置参数，而是设置URLVariables的情况
@@ -2619,38 +2613,6 @@ var egret;
         }
         return url;
     }
-    egret.$getUrl = $getUrl;
-})(egret || (egret = {}));
-//////////////////////////////////////////////////////////////////////////////////////
-//
-//  Copyright (c) 2014-present, Egret Technology.
-//  All rights reserved.
-//  Redistribution and use in source and binary forms, with or without
-//  modification, are permitted provided that the following conditions are met:
-//
-//     * Redistributions of source code must retain the above copyright
-//       notice, this list of conditions and the following disclaimer.
-//     * Redistributions in binary form must reproduce the above copyright
-//       notice, this list of conditions and the following disclaimer in the
-//       documentation and/or other materials provided with the distribution.
-//     * Neither the name of the Egret nor the
-//       names of its contributors may be used to endorse or promote products
-//       derived from this software without specific prior written permission.
-//
-//  THIS SOFTWARE IS PROVIDED BY EGRET AND CONTRIBUTORS "AS IS" AND ANY EXPRESS
-//  OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES
-//  OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED.
-//  IN NO EVENT SHALL EGRET AND CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT,
-//  INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT
-//  LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES;LOSS OF USE, DATA,
-//  OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF
-//  LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING
-//  NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE,
-//  EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
-//
-//////////////////////////////////////////////////////////////////////////////////////
-var egret;
-(function (egret) {
     /**
      * UThe URLLoader class downloads data from a URL as text, binary data, or URL-encoded variables.  It is useful for downloading text files, XML, or other information to be used in a dynamic, data-driven application.
      * A URLLoader object downloads all of the data from a URL before making it available to code in the applications. It sends out notifications about the progress of the download,
@@ -2773,7 +2735,113 @@ var egret;
         URLLoader.prototype.load = function (request) {
             this._request = request;
             this.data = null;
-            egret.NetContext.getNetContext().proceed(this);
+            var loader = this;
+            if (loader.dataFormat == egret.URLLoaderDataFormat.TEXTURE) {
+                this.loadTexture(loader);
+                return;
+            }
+            if (loader.dataFormat == egret.URLLoaderDataFormat.SOUND) {
+                this.loadSound(loader);
+                return;
+            }
+            var virtualUrl = $getUrl(request);
+            var httpRequest = new egret.HttpRequest();
+            httpRequest.open(virtualUrl, request.method == egret.URLRequestMethod.POST ? egret.HttpMethod.POST : egret.HttpMethod.GET);
+            var length = request.requestHeaders.length;
+            for (var i = 0; i < length; i++) {
+                var urlRequestHeader = request.requestHeaders[i];
+                httpRequest.setRequestHeader(urlRequestHeader.name, urlRequestHeader.value);
+            }
+            httpRequest.addEventListener(egret.Event.COMPLETE, function () {
+                loader.data = httpRequest.response;
+                egret.Event.dispatchEvent(loader, egret.Event.COMPLETE);
+            }, this);
+            httpRequest.addEventListener(egret.IOErrorEvent.IO_ERROR, function () {
+                egret.IOErrorEvent.dispatchIOErrorEvent(loader);
+            }, this);
+            httpRequest.responseType = loader.dataFormat == egret.URLLoaderDataFormat.BINARY ? egret.HttpResponseType.ARRAY_BUFFER : egret.HttpResponseType.TEXT;
+            httpRequest.send(request.data);
+        };
+        URLLoader.prototype.getResponseType = function (dataFormat) {
+            switch (dataFormat) {
+                case egret.URLLoaderDataFormat.TEXT:
+                case egret.URLLoaderDataFormat.VARIABLES:
+                    return egret.URLLoaderDataFormat.TEXT;
+                case egret.URLLoaderDataFormat.BINARY:
+                    return "arraybuffer";
+                default:
+                    return dataFormat;
+            }
+        };
+        /**
+         * @private
+         *
+         * @param loader
+         */
+        URLLoader.prototype.loadSound = function (loader) {
+            var self = this;
+            var virtualUrl = loader._request.url;
+            var sound = new egret.Sound();
+            sound.addEventListener(egret.Event.COMPLETE, onLoadComplete, self);
+            sound.addEventListener(egret.IOErrorEvent.IO_ERROR, onError, self);
+            sound.addEventListener(egret.ProgressEvent.PROGRESS, onPostProgress, self);
+            sound.load(virtualUrl);
+            function onPostProgress(event) {
+                loader.dispatchEvent(event);
+            }
+            function onError(event) {
+                removeListeners();
+                loader.dispatchEvent(event);
+            }
+            function onLoadComplete(e) {
+                removeListeners();
+                loader.data = sound;
+                window.setTimeout(function () {
+                    loader.dispatchEventWith(egret.Event.COMPLETE);
+                }, 0);
+            }
+            function removeListeners() {
+                sound.removeEventListener(egret.Event.COMPLETE, onLoadComplete, self);
+                sound.removeEventListener(egret.IOErrorEvent.IO_ERROR, onError, self);
+                sound.removeEventListener(egret.ProgressEvent.PROGRESS, onPostProgress, self);
+            }
+        };
+        /**
+         * @private
+         *
+         * @param loader
+         */
+        URLLoader.prototype.loadTexture = function (loader) {
+            var self = this;
+            var virtualUrl = loader._request.url;
+            var imageLoader = new egret.ImageLoader();
+            imageLoader.addEventListener(egret.Event.COMPLETE, onLoadComplete, self);
+            imageLoader.addEventListener(egret.IOErrorEvent.IO_ERROR, onError, self);
+            imageLoader.addEventListener(egret.ProgressEvent.PROGRESS, onPostProgress, self);
+            imageLoader.load(virtualUrl);
+            function onPostProgress(event) {
+                loader.dispatchEvent(event);
+            }
+            function onError(event) {
+                removeListeners();
+                loader.dispatchEvent(event);
+            }
+            function onLoadComplete(e) {
+                removeListeners();
+                var bitmapData = imageLoader.data;
+                bitmapData.source.setAttribute("bitmapSrc", virtualUrl);
+                var texture = new egret.Texture();
+                texture._setBitmapData(bitmapData);
+                loader.data = texture;
+                window.setTimeout(function () {
+                    loader.dispatchEventWith(egret.Event.COMPLETE);
+                }, self);
+            }
+            function removeListeners() {
+                imageLoader.removeEventListener(egret.Event.COMPLETE, onLoadComplete, self);
+                imageLoader.removeEventListener(egret.IOErrorEvent.IO_ERROR, onError, self);
+                imageLoader.removeEventListener(egret.ProgressEvent.PROGRESS, onPostProgress, self);
+            }
         };
         /**
          * @private
@@ -4218,13 +4286,6 @@ var egret;
              * @platform Web,Native
              */
             //public touchContext:TouchContext = null;
-            /**
-             * 网络Context
-             * @member egret.MainContext#netContext
-             * @version Egret 2.4
-             * @platform Web,Native
-             */
-            //public netContext:NetContext = null;
             /**
              * 设备divice
              * @member egret.MainContext#deviceContext
