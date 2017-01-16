@@ -16,7 +16,7 @@ import service = require('../service/index');
 type VersionInfo = {
 
     v: string,
-    command: { new (): egret.Command }
+    command?: { new (): egret.Command }
 }
 
 class UpgradeCommand implements egret.Command {
@@ -113,7 +113,7 @@ class UpgradeCommand implements egret.Command {
     }
 
     private upgradeConfigArr: VersionInfo[] = [
-        // {"v": "1.0.5", "command": require("./upgrade/UpgradeCommand_1_0_5")},
+        { "v": "4.0.0" }
     ];
 }
 

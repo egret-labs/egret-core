@@ -7,7 +7,9 @@ var async = require("../lib/async/async");
 var service = require("../service/index");
 var UpgradeCommand = (function () {
     function UpgradeCommand() {
-        this.upgradeConfigArr = [];
+        this.upgradeConfigArr = [
+            { "v": "4.0.0" }
+        ];
     }
     UpgradeCommand.prototype.execute = function () {
         this.run();
