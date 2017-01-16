@@ -96,4 +96,24 @@ var UpgradeCommand = (function () {
     };
     return UpgradeCommand;
 }());
+/**
+ * todo
+ */
+function executeCommands(commands, callback) {
+    if (commands.length == 0) {
+        callback();
+    }
+    else {
+        var command = commands.shift();
+        var result = command.execute();
+        if (typeof (result) == 'number') {
+            executeCommands(commands, callback);
+        }
+        else {
+            result.then(function () {
+                executeCommands(commands, callback);
+            });
+        }
+    }
+}
 module.exports = UpgradeCommand;

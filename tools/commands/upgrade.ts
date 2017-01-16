@@ -117,4 +117,27 @@ class UpgradeCommand implements egret.Command {
     ];
 }
 
+/**
+ * todo
+ */
+function executeCommands(commands: egret.Command[], callback) {
+    if (commands.length == 0) {
+        callback();
+    }
+    else {
+        let command = commands.shift();
+        let result = command.execute();
+        if (typeof (result) == 'number') {
+            executeCommands(commands, callback);
+        }
+        else {
+            result.then(() => {
+                executeCommands(commands, callback)
+            })
+        }
+    }
+
+}
+
+
 export = UpgradeCommand;
