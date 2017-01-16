@@ -2,8 +2,10 @@
     "compilerOptions": {
         "target": "es5",
         "experimentalDecorators": true,
-        "lib":[
-            "es5","dom"
+        "lib": [
+            "es5",
+            "dom",
+            "es2015.promise"
         ]
     },
     "exclude": [
