@@ -42,12 +42,10 @@ var UpgradeCommand = (function () {
             { "v": "2.5.1", "command": require("./upgrade/UpgradeCommand_2_5_1") },
             { "v": "4.0.0" }
         ];
-        //升级命令是一个异步命令 内含异步控制流程
-        this.isAsync = true;
     }
     UpgradeCommand.prototype.execute = function () {
         this.run();
-        return 0;
+        return DontExitCode;
     };
     UpgradeCommand.prototype.run = function () {
         //var currDir = params.getProjectRoot();

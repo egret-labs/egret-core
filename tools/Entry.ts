@@ -48,7 +48,12 @@ export function executeCommandLine(args: string[]): void {
 
     earlyParams.parse(options, args);
     var exitcode = entry.executeOption(options);
-    entry.exit(exitcode);
+    if (typeof exitcode == "number") {
+        entry.exit(exitcode);
+    }
+    else {
+        exitcode.then(value => entry.exit(value))
+    }
 }
 class Entry {
 
@@ -56,26 +61,19 @@ class Entry {
         var self = this;
         options.command = options.command || "help";
         try {
-            var command: { new (): egret.Command } = require("./commands/" + options.command);
+            var CommandClass: { new (): egret.Command } = require("./commands/" + options.command);
         }
         catch (e) {
-            console.log (e)
+            console.log(e)
             console.log(utils.tr(10002, options.command));
             return 10002;
         }
-        //添加异步命令的支持 异步命令不会在return后强制退出 默认返回DontExitCode
-        var commandInstance = new command();
-        if(commandInstance.isAsync){
-            commandInstance.execute();
-            return DontExitCode;
-        }else{
-            var exitCode = commandInstance.execute();
-            return exitCode;
-        }
+        var command = new CommandClass();
+        return command.execute();
     }
 
     exit(exitCode) {
-        if(DontExitCode == exitCode)
+        if (DontExitCode == exitCode)
             return;
         utils.exit(exitCode);
 

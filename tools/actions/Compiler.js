@@ -216,6 +216,7 @@ var Compiler = (function () {
     };
     return Compiler;
 }());
+exports.Compiler = Compiler;
 function getCompilerDefines(args, debug) {
     var defines = {};
     if (debug != undefined) {
@@ -232,4 +233,3 @@ function getCompilerDefines(args, debug) {
     }
     return defines;
 }
-module.exports = Compiler;

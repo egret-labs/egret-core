@@ -3,9 +3,6 @@ var utils = require("../lib/utils");
 var service = require("../service/index");
 var FileUtil = require("../lib/FileUtil");
 var CopyFiles = require("../actions/CopyFiles");
-var APITestTool = require("../actions/APITest");
-var CHILD_EXEC = require("child_process");
-var APITestCommand = require("./apitest");
 var project = require("../parser/EgretProject");
 var ts = require("../lib/typescript-plus/lib/typescript");
 var Compiler = require("../actions/Compiler");
@@ -16,54 +13,6 @@ var Build = (function () {
     }
     Build.prototype.execute = function (callback) {
         callback = callback || defaultBuildCallback;
-        //如果APITest未通过继续执行APITest
-        if (!APITestTool.isTestPass(egret.args.projectDir)) {
-            var apitest_command = new APITestCommand();
-            apitest_command.execute(function () {
-                globals.log2(1715); //项目检测成功
-                //成功以后再次执行build
-                var build = CHILD_EXEC.exec(globals.addQuotes(process.execPath) + " \"" +
-                    FileUtil.joinPath(egret.root, '/tools/bin/egret') + '\" build \"' + egret.args.projectDir + "\"", {
-                    encoding: 'utf8',
-                    timeout: 0,
-                    maxBuffer: 200 * 1024,
-                    killSignal: 'SIGTERM',
-                    cwd: process.cwd(),
-                    env: process.env
-                });
-                build.stderr.on("data", function (data) {
-                    console.log(data);
-                });
-                build.stdout.on("data", function (data) {
-                    console.log(data);
-                });
-                build.on("exit", function (result) {
-                    process.exit(result);
-                });
-                //返回true截断默认的exit操作
-                return true;
-            });
-            //var build = CHILD_EXEC.exec(
-            //    'node \"'+FileUtil.joinPath(egret.root,'/tools/bin/egret')+'\" apitest \"'+egret.args.projectDir+"\"",
-            //    {
-            //        encoding: 'utf8',
-            //        timeout: 0,
-            //        maxBuffer: 200*1024,
-            //        killSignal: 'SIGTERM',
-            //        cwd: process.cwd(),
-            //        env: process.env
-            //    });
-            //build.stderr.on("data", (data) =>{
-            //    console.log(data);
-            //});
-            //build.stdout.on("data",(data)=>{
-            //    console.log(data);
-            //});
-            //build.on("exit", (result)=>{
-            //    process.exit(result);
-            //});
-            return DontExitCode;
-        }
         var options = egret.args;
         var packageJsonContent;
         if (packageJsonContent = FileUtil.read(project.utils.getFilePath("package.json"))) {
@@ -91,7 +40,7 @@ var Build = (function () {
         var options = egret.args;
         var libFiles = FileUtil.search(FileUtil.joinPath(options.projectDir, "libs"), "d.ts");
         var outDir = "bin";
-        var compiler = new Compiler();
+        var compiler = new Compiler.Compiler();
         utils.clean(FileUtil.joinPath(options.projectDir, outDir));
         var _loop_1 = function (m) {
             length = m.files.length;

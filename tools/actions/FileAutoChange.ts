@@ -10,7 +10,7 @@ import doT = require('../lib/doT');
 
 
 class FileAutoChangeCommand implements egret.Command {
-    execute():number {
+    execute(): number {
         return 0;
     }
 
@@ -42,7 +42,7 @@ class FileAutoChangeCommand implements egret.Command {
         for (var tempK in gameScripts) {
             var script = gameScripts[tempK];
             var debugJs = "";
-            debugJs = 'bin-debug/'+ script;
+            debugJs = 'bin-debug/' + script;
 
             str += '\t<script egret="game" src="' + debugJs + '"></script>\n';
         }
@@ -55,7 +55,7 @@ class FileAutoChangeCommand implements egret.Command {
     }
 
     //只刷新 modules
-    private getModuleScripts():string {
+    private getModuleScripts(): string {
         var options = egret.args;
         var properties = egret.args.properties;
         var modules = properties.getAllModuleNames();
@@ -65,7 +65,7 @@ class FileAutoChangeCommand implements egret.Command {
             var debugJs = "";
             var releaseJs = "";
 
-            var moduleReRoot = 'libs/modules/'+ moduleName + "/";
+            var moduleReRoot = 'libs/modules/' + moduleName + "/";
 
             var jsDebugpath = FileUtil.joinPath(options.projectDir, moduleReRoot, moduleName + ".js");
             var jsReleasepath = FileUtil.joinPath(options.projectDir, moduleReRoot, moduleName + ".min.js");
@@ -114,17 +114,17 @@ class FileAutoChangeCommand implements egret.Command {
         return str;
     }
 
-    refreshNativeRequire(htmlPath, isDebug):ObjectURLOptions {
+    refreshNativeRequire(htmlPath, isDebug) {
         var options = egret.args;
         //生成 获取列表
         var listInfo = this.getLibsList(FileUtil.read(htmlPath), true, isDebug);
 
         var allList = [];
         if (!isDebug) {
-            allList = listInfo["libs"].concat(["main.min.js"]);
+            allList = listInfo.libs.concat(["main.min.js"]);
         }
         else {
-            allList = listInfo["libs"].concat(listInfo["game"]);
+            allList = listInfo.libs.concat(listInfo.game);
         }
 
         var listStr = "\n";
@@ -134,7 +134,7 @@ class FileAutoChangeCommand implements egret.Command {
 
         var requirePath = FileUtil.joinPath(options.templateDir, "runtime", "native_require.js");
         var requireContent = FileUtil.read(requirePath);
-        if(requireContent == "") {
+        if (requireContent == "") {
             globals.exit(10021);
         }
         var reg = /\/\/----auto game_file_list start----[\s\S]*\/\/----auto game_file_list end----/;
@@ -151,22 +151,22 @@ class FileAutoChangeCommand implements egret.Command {
         return listInfo;
     }
 
-    private getLibsList(html:string, isNative:boolean, isDebug:boolean):Object {
-        var gameList:string[] = [];
-        var libsList:string[] = [];
+    private getLibsList(html: string, isNative: boolean, isDebug: boolean) {
+        var gameList: string[] = [];
+        var libsList: string[] = [];
 
         var handler = new htmlparser.DefaultHandler(function (error, dom) {
             if (error)
                 console.log(error);
         });
-        var resultArr:string[] = [];
+        var resultArr: string[] = [];
         var parser = new htmlparser.Parser(handler);
         parser.parseComplete(html);
-        handler.dom.forEach(d=> visitDom(d));
+        handler.dom.forEach(d => visitDom(d));
 
-        return {game:gameList, libs:libsList};
+        return { game: gameList, libs: libsList };
 
-        function visitDom(el:htmlparser.Element) {
+        function visitDom(el: htmlparser.Element) {
             if (el.type == "script" && el.attribs && el.attribs["egret"]) {
                 if (isDebug) {
                     var src = el.attribs['src'];
@@ -201,18 +201,18 @@ class FileAutoChangeCommand implements egret.Command {
             }
 
             if (el.children) {
-                el.children.forEach(e=> visitDom(e));
+                el.children.forEach(e => visitDom(e));
             }
         }
     }
 
-    private getNativeProjectInfo(html:string) {
+    private getNativeProjectInfo(html: string) {
         if (!FileUtil.exists(html))
             return;
         var content = FileUtil.read(html, true);
 
         var projs = project.parseProjectInfo(content);
-        var proj:egret.EgretProjectConfig;
+        var proj: egret.EgretProjectConfig;
         if (projs.length == 0) {
             proj = {};
         } else {
