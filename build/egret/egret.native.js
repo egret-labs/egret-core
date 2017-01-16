@@ -203,6 +203,8 @@ var egret;
             }
             else if (fontFamily.indexOf(",") != -1) {
                 arr = fontFamily.split(",");
+            }
+            if (arr) {
                 var length_1 = arr.length;
                 for (var i = 0; i < length_1; i++) {
                     var fontFamily_1 = arr[i];

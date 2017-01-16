@@ -45,6 +45,8 @@ namespace egret.native {
         }
         else if(fontFamily.indexOf(",") != -1) {
             arr = fontFamily.split(",");
+        }
+        if(arr) {
             let length:number = arr.length;
             for(let i = 0 ; i < length ; i++) {
                 let fontFamily = arr[i];
