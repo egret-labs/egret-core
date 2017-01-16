@@ -114,7 +114,7 @@ class FileAutoChangeCommand implements egret.Command {
         return str;
     }
 
-    refreshNativeRequire(htmlPath, isDebug): ObjectURLOptions {
+    refreshNativeRequire(htmlPath, isDebug) {
         var options = egret.args;
         //生成 获取列表
         var listInfo = this.getLibsList(FileUtil.read(htmlPath), true, isDebug);

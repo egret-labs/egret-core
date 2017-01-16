@@ -21,6 +21,8 @@ import Clean = require("../commands/clean");
 
 import FileAutoChange = require("../actions/FileAutoChange");
 
+import path = require('path');
+
 class Publish implements egret.Command {
     private getVersionInfo(): string {
         if (egret.args.version) {
@@ -88,7 +90,7 @@ class Publish implements egret.Command {
             FileUtil.copy(FileUtil.joinPath(options.releaseDir, "main.min.js"), FileUtil.joinPath(options.releaseDir, "ziptemp", "main.min.js"));
             FileUtil.remove(FileUtil.joinPath(options.releaseDir, "main.min.js"));
 
-            listInfo["libs"].forEach(function (filepath) {
+            listInfo.libs.forEach(function (filepath) {
                 FileUtil.copy(FileUtil.joinPath(options.projectDir, filepath), FileUtil.joinPath(options.releaseDir, "ziptemp", filepath));
             });
 
@@ -100,15 +102,12 @@ class Publish implements egret.Command {
             });
         }
         else {
+
+            let copyAction = new CopyAction(options.projectDir, options.releaseDir);
+            copyAction.copy("index.html");
+            copyAction.copy("favicon.ico")
+
             var releaseHtmlPath = FileUtil.joinPath(options.releaseDir, "index.html");
-            FileUtil.copy(FileUtil.joinPath(options.projectDir, "index.html"), releaseHtmlPath);
-
-            //拷贝favicon.ico
-            var faviconPath = FileUtil.joinPath(options.projectDir, "favicon.ico");
-            if (FileUtil.exists(faviconPath)) {
-                FileUtil.copy(faviconPath, FileUtil.joinPath(options.releaseDir, "favicon.ico"));
-            }
-
             //修改 html
             var autoChange = new FileAutoChange();
             autoChange.changeHtmlToRelease(releaseHtmlPath);
@@ -116,13 +115,33 @@ class Publish implements egret.Command {
             var htmlContent = FileUtil.read(releaseHtmlPath);
 
             //根据 html 拷贝使用的 js 文件
-            var libsList = project.getLibsList(htmlContent, false, false);
-            libsList.forEach(function (filepath) {
-                FileUtil.copy(FileUtil.joinPath(options.projectDir, filepath), FileUtil.joinPath(options.releaseDir, filepath));
-            });
+            let libsList = project.getLibsList(htmlContent, false, false);
+
+            copyAction.copy(libsList);
         }
 
         return DontExitCode;
+    }
+
+}
+
+class CopyAction {
+
+    constructor(private from, private to) {
+    }
+
+    public copy(resourcePath: string | string[]) {
+        if (typeof resourcePath == 'string') {
+            let fromPath = path.resolve(this.from, resourcePath);
+            let toPath = path.resolve(this.to, resourcePath)
+            if (FileUtil.exists(fromPath)) {
+                FileUtil.copy(fromPath, toPath);
+            }
+        }
+        else {
+            resourcePath.forEach(this.copy.bind(this));
+        }
+
     }
 
 }
