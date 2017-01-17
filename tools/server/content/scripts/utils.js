@@ -1,4 +1,3 @@
-/// <reference path="libs/angular.d.ts" />
 /// <reference path="../../../lib/types.d.ts" />
 var egret;
 (function (egret) {

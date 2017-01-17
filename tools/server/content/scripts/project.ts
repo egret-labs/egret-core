@@ -1,5 +1,4 @@
 ﻿/// <reference path="../../../lib/types.d.ts" />
-/// <reference path="libs/angular.d.ts" />
 /// <reference path="utils.ts" />
 
 module egret {
