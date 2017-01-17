@@ -37,7 +37,10 @@ var __generator = (this && this.__generator) || function (thisArg, body) {
         if (op[0] & 5) throw op[1]; return { value: op[0] ? op[1] : void 0, done: true };
     }
 };
+var file = require("../lib/FileUtil");
 var service = require("../service/index");
+var Project = require("../parser/EgretProject");
+var path = require("path");
 var UpgradeCommand = (function () {
     function UpgradeCommand() {
     }
@@ -149,7 +152,17 @@ var Upgrade_4_0_1 = (function () {
     function Upgrade_4_0_1() {
     }
     Upgrade_4_0_1.prototype.execute = function () {
-        return Promise.resolve(0);
+        var tsconfigPath = Project.utils.getFilePath('tsconfig.json');
+        var tsconfigContent = file.read(tsconfigPath);
+        var tsconfig = JSON.parse(tsconfigContent);
+        tsconfig.compilerOptions.lib = [
+            "es5", "dom", "es2015.promise"
+        ];
+        tsconfigContent = JSON.stringify(tsconfig, null, "\t");
+        file.save(tsconfigPath, tsconfigContent);
+        file.copy(path.join(egret.root, 'tools/templates/empty/polyfill'), Project.utils.getFilePath('polyfill'));
+        return Promise.reject('what????');
+        // return Promise.resolve(0)
     };
     return Upgrade_4_0_1;
 }());

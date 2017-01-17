@@ -34,12 +34,20 @@ var FileAutoChangeCommand = (function () {
             var script = gameScripts[tempK];
             var debugJs = "";
             debugJs = 'bin-debug/' + script;
-            str += '\t<script egret="game" src="' + debugJs + '"></script>\n';
+            str += this.getScript('game', debugJs);
         }
         var reg = /<!--(\s)*game_files_start(\s)*-->[\s\S]*<!--(\s)*game_files_end(\s)*-->/;
         var replaceStr = '<!--game_files_start-->\n' + str + '\t<!--game_files_end-->';
         htmlContent = htmlContent.replace(reg, replaceStr);
         FileUtil.save(htmlPath, htmlContent);
+    };
+    FileAutoChangeCommand.prototype.getScript = function (type, src, releaseSrc) {
+        if (releaseSrc) {
+            return "\t<script egret=\"" + type + "\" src=\"" + src + "\" src-release=\"" + releaseSrc + "\"></script>\n'";
+        }
+        else {
+            return "\t<script egret=\"" + type + "\" src=\"" + src + "\"></script>\n";
+        }
     };
     //只刷新 modules
     FileAutoChangeCommand.prototype.getModuleScripts = function () {
@@ -67,7 +75,7 @@ var FileAutoChangeCommand = (function () {
                 releaseJs = debugJs;
             }
             if (debugJs != "") {
-                str += '\t<script egret="lib" src="' + debugJs + '" src-release="' + releaseJs + '"></script>\n';
+                str += this.getScript('lib', debugJs, releaseJs);
             }
             debugJs = "";
             releaseJs = "";
@@ -86,7 +94,7 @@ var FileAutoChangeCommand = (function () {
                 releaseJs = debugJs;
             }
             if (debugJs != "") {
-                str += '\t<script egret="lib" src="' + debugJs + '" src-release="' + releaseJs + '"></script>\n';
+                str += this.getScript('lib', debugJs, releaseJs);
             }
         }
         return str;

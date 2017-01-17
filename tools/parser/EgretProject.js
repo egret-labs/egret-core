@@ -48,10 +48,9 @@ var EgretProject = (function () {
     };
     /**
      * 获取项目的根路径
-     * @returns {*}
      */
     EgretProject.prototype.getProjectRoot = function () {
-        return egret.args.projectDir;
+        return this.projectRoot;
     };
     EgretProject.prototype.getFilePath = function (fileName) {
         return file.joinPath(this.getProjectRoot(), fileName);
@@ -84,7 +83,6 @@ var EgretProject = (function () {
     /**
      * 获取已经生成的js文件列表
      * @param runtime
-     * @returns {string[]|T[]}
      */
     EgretProject.prototype.getAllFileList = function (runtime) {
         var egret_file;
@@ -144,7 +142,7 @@ var EgretProject = (function () {
             moduleJsonPath = file.joinPath(egret.root, "tools/lib/manifest", moduleName + ".json");
         }
         else {
-            moduleJsonPath = file.joinPath(egret.args.projectDir, modulePath, moduleName + ".json");
+            moduleJsonPath = file.joinPath(this.projectRoot, modulePath, moduleName + ".json");
         }
         var content = file.read(moduleJsonPath);
         if (!content) {

@@ -13,7 +13,7 @@ export class EgretProject implements egret.EgretPropertiesClass {
         modules: []
     };
 
-    projectRoot: string = "";
+    projectRoot = "";
     init(projectRoot: string) {
         this.projectRoot = projectRoot;
         this.reload();
@@ -56,13 +56,12 @@ export class EgretProject implements egret.EgretPropertiesClass {
 
     /**
      * 获取项目的根路径
-     * @returns {*}
      */
-    getProjectRoot(): string {
-        return egret.args.projectDir;
+    getProjectRoot() {
+        return this.projectRoot;
     }
 
-    public getFilePath(fileName:string){
+    public getFilePath(fileName: string) {
         return file.joinPath(this.getProjectRoot(), fileName)
     }
 
@@ -98,9 +97,8 @@ export class EgretProject implements egret.EgretPropertiesClass {
     /**
      * 获取已经生成的js文件列表
      * @param runtime
-     * @returns {string[]|T[]}
      */
-    getAllFileList(runtime): Array<any> {
+    getAllFileList(runtime): string[] {
         var egret_file;
         var currDir = this.getProjectRoot();
         if (runtime == "html5") {
@@ -165,7 +163,7 @@ export class EgretProject implements egret.EgretPropertiesClass {
             moduleJsonPath = file.joinPath(egret.root, "tools/lib/manifest", moduleName + ".json");
         }
         else {
-            moduleJsonPath = file.joinPath(egret.args.projectDir, modulePath, moduleName + ".json");
+            moduleJsonPath = file.joinPath(this.projectRoot, modulePath, moduleName + ".json");
         }
         var content = file.read(moduleJsonPath);
         if (!content) {
@@ -269,21 +267,21 @@ export class EgretProject implements egret.EgretPropertiesClass {
         return ["resource"];
     }
 }
-export var utils =  new EgretProject();
+export var utils = new EgretProject();
 
 
 export type Package_JSON = {
 
-    modules:PACKAGE_JSON_MODULE[]
+    modules: PACKAGE_JSON_MODULE[]
 
 }
 
 export type PACKAGE_JSON_MODULE = {
 
-    files:string[],
+    files: string[],
 
-    name:string;
-    
-    root:string
+    name: string;
+
+    root: string
 
 }

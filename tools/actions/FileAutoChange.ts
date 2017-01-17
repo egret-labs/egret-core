@@ -44,7 +44,7 @@ class FileAutoChangeCommand implements egret.Command {
             var debugJs = "";
             debugJs = 'bin-debug/' + script;
 
-            str += '\t<script egret="game" src="' + debugJs + '"></script>\n';
+            str += this.getScript('game',debugJs);
         }
 
         var reg = /<!--(\s)*game_files_start(\s)*-->[\s\S]*<!--(\s)*game_files_end(\s)*-->/;
@@ -52,6 +52,16 @@ class FileAutoChangeCommand implements egret.Command {
         htmlContent = htmlContent.replace(reg, replaceStr);
 
         FileUtil.save(htmlPath, htmlContent);
+    }
+
+    private getScript(type:'lib'|'game',src, releaseSrc?) {
+        if (releaseSrc){
+return `\t<script egret="${type}" src="${src}" src-release="${releaseSrc}"></script>\n'`
+        }
+        else{
+            return `\t<script egret="${type}" src="${src}"></script>\n`;
+        }
+        
     }
 
     //只刷新 modules
@@ -85,7 +95,7 @@ class FileAutoChangeCommand implements egret.Command {
             }
 
             if (debugJs != "") {
-                str += '\t<script egret="lib" src="' + debugJs + '" src-release="' + releaseJs + '"></script>\n';
+                str += this.getScript('lib',debugJs,releaseJs);
             }
 
             debugJs = "";
@@ -108,7 +118,7 @@ class FileAutoChangeCommand implements egret.Command {
             }
 
             if (debugJs != "") {
-                str += '\t<script egret="lib" src="' + debugJs + '" src-release="' + releaseJs + '"></script>\n';
+                str += this.getScript('lib',debugJs,releaseJs);
             }
         }
         return str;

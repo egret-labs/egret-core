@@ -3,12 +3,10 @@
  */
 /// <reference path="../lib/types.d.ts" />
 
-
-//import params = require("../ParamsParser");
 import file = require('../lib/FileUtil');
 import service = require('../service/index');
-//import config = require('../lib/ProjectConfig');
-//import globals = require("../Globals");
+import Project = require('../parser/EgretProject');
+import path = require('path');
 
 
 type VersionInfo = {
@@ -135,7 +133,20 @@ class Upgrade_4_0_1 {
 
 
     execute() {
-        return Promise.resolve(0)
+
+        let tsconfigPath = Project.utils.getFilePath('tsconfig.json');
+        let tsconfigContent = file.read(tsconfigPath);
+        let tsconfig = JSON.parse(tsconfigContent);
+        tsconfig.compilerOptions.lib = [
+            "es5", "dom", "es2015.promise"
+        ]
+        tsconfigContent = JSON.stringify(tsconfig, null, "\t");
+        file.save(tsconfigPath, tsconfigContent);
+        file.copy(path.join(egret.root, 'tools/templates/empty/polyfill'), Project.utils.getFilePath('polyfill'));
+
+        return Promise.reject('what????');
+
+        // return Promise.resolve(0)
     }
 }
 
