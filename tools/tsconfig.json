@@ -6,6 +6,7 @@
         "sourceMap": false,
         "noImplicitUseStrict": true,
         "allowUnreachableCode": true,
+        "strictNullChecks": false,
         "lib":[
             "es5","dom","es2015.promise"
         ]

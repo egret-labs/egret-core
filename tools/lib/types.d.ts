@@ -62,7 +62,7 @@ declare module egret {
         /** 用户命令行指定的引擎版本 */
         egretVersion?: string;
         port: number;
-        host: string;
+        host: string | null;
         websocketUrl: string;
         startUrl: string;
         debug?: boolean;

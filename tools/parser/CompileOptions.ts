@@ -52,11 +52,11 @@ class CompileOptions implements egret.ToolArgs {
     }
 
 
-    get out(): string {
+    get out(): string | undefined {
         var filename = this.publish ? FileUtil.joinPath(this.outDir, 'main.min.js') : undefined;
         return filename;
     }
-    private _outDir: string = null;
+    private _outDir: string | null = null;
     get outDir(): string {
         if (this._outDir)
             return this._outDir;
@@ -71,11 +71,11 @@ class CompileOptions implements egret.ToolArgs {
         return FileUtil.joinPath(this.projectDir, "template/");
     }
 
-    private _host: string = null;
-    get host(): string {
+    private _host: string | null = null;
+    get host() {
         return this._host;
     }
-    set host(value: string) {
+    set host(value: string | null) {
         this._host = value;
     }
     private _port: number = NaN;
@@ -135,7 +135,7 @@ class CompileOptions implements egret.ToolArgs {
     ide: boolean;
     exmlGenJs: boolean;
 
-    private _tmpDir = null;
+    private _tmpDir:string | null = null;
     private _tmpProj: egret.EgretProjectConfig;
     getTmpDir() {
         if (this._tmpDir == null) {
