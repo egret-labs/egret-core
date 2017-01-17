@@ -26,11 +26,7 @@ class UpgradeCommand implements egret.Command {
     }
 
     private async run() {
-        //var currDir = params.getProjectRoot();
-
-        //var config = require("../core/projectConfig.js");
-        //config.init(currDir);
-        var version = egret.args.properties.getVersion();
+        var version = Project.utils.getVersion();
         if (!version) {
             version = "1.0.0";
         }
@@ -43,17 +39,11 @@ class UpgradeCommand implements egret.Command {
         try {
             await series(upgrade, upgradeConfigArr.concat())
             modify.save(upgradeConfigArr.pop().v);
-            service.execCommand({
-                path: egret.args.projectDir,
-                command: "shutdown",
-                option: egret.args
-            }, (e) => {
-                globals.log(1702);
-                return globals.exit(0);
-            }, true);
+            await service.shutdown(Project.utils.getProjectRoot())
+            globals.log(1702);
+            globals.exit(0);
         }
         catch (e) {
-            // console.log (111)
             console.log(e)
             globals.exit(1705);
         }

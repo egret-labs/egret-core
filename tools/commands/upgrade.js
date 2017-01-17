@@ -54,7 +54,7 @@ var UpgradeCommand = (function () {
             return __generator(this, function (_a) {
                 switch (_a.label) {
                     case 0:
-                        version = egret.args.properties.getVersion();
+                        version = Project.utils.getVersion();
                         if (!version) {
                             version = "1.0.0";
                         }
@@ -70,7 +70,7 @@ var UpgradeCommand = (function () {
                         _a.sent();
                         modify.save(upgradeConfigArr.pop().v);
                         service.execCommand({
-                            path: egret.args.projectDir,
+                            path: Project.utils.getProjectRoot(),
                             command: "shutdown",
                             option: egret.args
                         }, function (e) {
@@ -80,7 +80,6 @@ var UpgradeCommand = (function () {
                         return [3 /*break*/, 4];
                     case 3:
                         e_1 = _a.sent();
-                        // console.log (111)
                         console.log(e_1);
                         globals.exit(1705);
                         return [3 /*break*/, 4];

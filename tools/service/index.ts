@@ -91,11 +91,14 @@ function handleCommands(task: egret.ServiceCommand, res: ServiceSocket) {
     }
 }
 export function shutdown(path) {
-    execCommand({
-        path,
-        command: "shutdown",
-        option: egret.args
-    }, null, false);
+    return new Promise((reslove, reject) => {
+        execCommand({
+            path,
+            command: "shutdown",
+            option: egret.args
+        }, reslove, false);
+    })
+
 }
 /**
 *  Send command to Lark Service
