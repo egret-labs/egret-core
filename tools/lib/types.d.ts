@@ -130,7 +130,7 @@ declare module egret {
         init(projectRoot: string);
         reload();
 
-        invalid(report?:boolean):boolean;
+        invalid(report?: boolean): boolean;
         /**
          * 是否有swan
          */
@@ -154,13 +154,6 @@ declare module egret {
          */
         getReleaseRoot(): string
 
-        /**
-         * 获取已经生成的js文件列表
-         * @param runtime
-         * @returns {string[]|T[]}
-         */
-        getAllFileList(runtime): Array<any>
-
         getVersionCode(runtime)
 
         getIgnorePath(): Array<any>
@@ -169,33 +162,10 @@ declare module egret {
 
         getNativePath(platform)
 
-        getModulePath(moduleName)
-
-        getModuleConfig(moduleName)
-
-        //绝对路径
-        getModuleOutput(moduleName)
-
-        getModuleFileList(moduleName)
-        getModuleFileListWithAbsolutePath(moduleName)
-
-        getModulePrefixPath(moduleName)
-
-        getModuleSourcePath(moduleName)
-
-        getModuleDependenceList(moduleName)
-
-        getAllModuleNames():string[]
-
-        getModuleDecouple(moduleName)
-
-        //获取项目需要的所有模块的.d.ts文件
-        getModulesDts()
-
-        getModuleReferenceInfo()
+        getAllModuleNames(): string[]
 
         getPublishType(runtime: string): number;
-        getResources(): Array<string>;
+        getResources(): string[]
     }
 
     export interface EgretProjectConfig {

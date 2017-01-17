@@ -13,11 +13,7 @@ var Clean = (function () {
     Clean.prototype.execute = function () {
         utils.checkEgret();
         var options = egret.args;
-        service.execCommand({
-            path: options.projectDir,
-            command: "shutdown",
-            option: egret.args
-        }, null, false);
+        service.shutdown(options.projectDir);
         utils.clean(options.debugDir);
         //刷新libs 中 modules 文件
         CopyFiles.copyToLibs();

@@ -74,34 +74,6 @@ var EgretProject = (function () {
         return file.getAbsolutePath(p);
         //return file.joinPath(egret.args.projectDir, p);
     };
-    //获得egret_file_list
-    EgretProject.prototype.getFileList = function (file_list) {
-        var js_content = file.read(file_list);
-        js_content = js_content.match(/\[[^\]]*\]/)[0];
-        return JSON.parse(js_content);
-    };
-    /**
-     * 获取已经生成的js文件列表
-     * @param runtime
-     */
-    EgretProject.prototype.getAllFileList = function (runtime) {
-        var egret_file;
-        var currDir = this.getProjectRoot();
-        if (runtime == "html5") {
-            egret_file = file.joinPath(currDir, "bin-debug/lib/egret_file_list.js");
-        }
-        else {
-            egret_file = file.joinPath(currDir, "bin-debug/lib/egret_file_list_native.js");
-        }
-        var egretFileList = this.getFileList(egret_file).map(function (item) {
-            return file.joinPath(currDir, "libs", item);
-        });
-        var game_file = file.joinPath(currDir, "bin-debug/src/game_file_list.js");
-        var gameFileList = this.getFileList(game_file).map(function (item) {
-            return file.joinPath(currDir, "bin-debug", "src", item);
-        });
-        return egretFileList.concat(gameFileList);
-    };
     EgretProject.prototype.getVersionCode = function (runtime) {
         if (globals.hasKeys(this.properties, ["publish", "baseVersion"])) {
             return this.properties["publish"]["baseVersion"];
@@ -150,72 +122,11 @@ var EgretProject = (function () {
         }
         return JSON.parse(content);
     };
-    //绝对路径
-    EgretProject.prototype.getModuleOutput = function (moduleName) {
-        var output = this.getModuleConfig(moduleName)["output"] || moduleName;
-        return file.joinPath(this.getProjectRoot(), "libs", output);
-    };
-    EgretProject.prototype.getModuleFileList = function (moduleName) {
-        return this.getModuleConfig(moduleName)["file_list"].concat();
-    };
-    EgretProject.prototype.getModuleFileListWithAbsolutePath = function (moduleName) {
-        var list = this.getModuleConfig(moduleName)["file_list"].concat();
-        var prefix = this.getModulePrefixPath(moduleName);
-        var source = this.getModuleSourcePath(moduleName);
-        return list.map(function (item) {
-            return file.joinPath(prefix, source, item);
-        });
-    };
-    EgretProject.prototype.getModulePrefixPath = function (moduleName) {
-        var modulePath = this.getModulePath(moduleName);
-        if (modulePath == null) {
-            return file.joinPath(egret.root);
-        }
-        else {
-            return file.joinPath(this.getProjectRoot(), modulePath);
-        }
-    };
     EgretProject.prototype.getModuleSourcePath = function (moduleName) {
         return this.getModuleConfig(moduleName)["source"] || "";
     };
-    EgretProject.prototype.getModuleDependenceList = function (moduleName) {
-        return (this.getModuleConfig(moduleName)["dependence"] || []).concat();
-    };
     EgretProject.prototype.getAllModuleNames = function () {
         return this.properties.modules.map(function (m) { return m.name; });
-    };
-    EgretProject.prototype.getModuleDecouple = function (moduleName) {
-        return this.getModuleConfig(moduleName)["decouple"] == "true" || this.getModuleConfig(moduleName)["decouple"] == true;
-    };
-    //获取项目需要的所有模块的.d.ts文件
-    EgretProject.prototype.getModulesDts = function () {
-        var _this = this;
-        return this.properties.modules.map(function (m) {
-            var output = _this.getModuleOutput(m.name);
-            var dtsFile = file.joinPath(output, m.name + ".d.ts");
-            return dtsFile;
-        });
-    };
-    EgretProject.prototype.getModuleReferenceInfo = function () {
-        var _this = this;
-        var fileList = [];
-        var moduleNames = this.getAllModuleNames();
-        moduleNames.map(function (moduleName) {
-            var file_list = _this.getModuleFileList(moduleName);
-            var prefix = _this.getModulePrefixPath(moduleName);
-            var source = _this.getModuleSourcePath(moduleName);
-            file_list.map(function (item) {
-                var tsFile = file.joinPath(prefix, source, item);
-                var ext = file.getExtension(tsFile).toLowerCase();
-                if (ext == "ts" && item.indexOf(".d.ts") == -1) {
-                    fileList.push(tsFile);
-                }
-            });
-        });
-        //todo
-        var create_manifest = require("../../lib/tools/create_manifest.js");
-        var referenceInfo = create_manifest.getModuleReferenceInfo(fileList);
-        return referenceInfo;
     };
     EgretProject.prototype.getPublishType = function (runtime) {
         if (globals.hasKeys(this.properties, ["publish", runtime])) {

@@ -8,9 +8,9 @@ function copyToLibs() {
     var options = egret.args;
     var moduleDir = FileUtil.joinPath(options.libsDir, 'modules');
     FileUtil.remove(moduleDir);
-    var properties = EgretProject.utils;
-    properties.getAllModuleNames().map(function (moduleName) {
-        var modulePath = properties.getModulePath(moduleName);
+    var project = EgretProject.utils;
+    project.getAllModuleNames().map(function (moduleName) {
+        var modulePath = project.getModulePath(moduleName);
         var moduleBin;
         if (modulePath == null) {
             moduleBin = FileUtil.joinPath(egret.root, "build", moduleName);

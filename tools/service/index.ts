@@ -29,9 +29,9 @@ var lastBuildTime: number = Date.now();
 * Start Lark Service
 */
 export function run() {
-    var server = net.createServer(socket=> {
+    var server = net.createServer(socket => {
         var ss = new ServiceSocket(socket);
-        ss.on("message", msg=> handleCommands(msg,ss));
+        ss.on("message", msg => handleCommands(msg, ss));
     });
     try {
         server.listen(LARK_SERVICE_PORT);
@@ -40,7 +40,7 @@ export function run() {
         console.error("Service.run", e);
     }
     process.on('uncaughtException', function (e: NodeJS.ErrnoException) {
-        console.log("未捕获的异常:",e);
+        console.log("未捕获的异常:", e);
         if (e.code == 'EADDRINUSE') {
             console.log(`无法启动 service, 请检查端口 ${LARK_SERVICE_PORT} 是否被占用。`)
         }
@@ -52,9 +52,9 @@ export function run() {
 function handleCommands(task: egret.ServiceCommand, res: ServiceSocket) {
     console.log("得到任务:", task.command, task.path);
     //|| task.version && task.version != version
-    if (task.command == 'shutdown' ) {
+    if (task.command == 'shutdown') {
         res.send({});
-        shutdown();
+        internal_shutdown();
     }
     var proj: Project = getProject(task.path);
     proj.option = parser.parseJSON(task.option);
@@ -65,15 +65,15 @@ function handleCommands(task: egret.ServiceCommand, res: ServiceSocket) {
         autoExitTimer();
         var buildHandled = false;
         if (task.option.added && task.option.added.length) {
-            task.option.added.forEach(file=> proj.fileChanged(res, task, file, "added"));
+            task.option.added.forEach(file => proj.fileChanged(res, task, file, "added"));
             buildHandled = true;
         }
         if (task.option.removed && task.option.removed.length) {
-            task.option.removed.forEach(file=> proj.fileChanged(res, task, file, "removed"));
+            task.option.removed.forEach(file => proj.fileChanged(res, task, file, "removed"));
             buildHandled = true;
         }
         if (task.option.modified && task.option.modified.length) {
-            task.option.modified.forEach(file=> proj.fileChanged(res, task, file, "modified"));
+            task.option.modified.forEach(file => proj.fileChanged(res, task, file, "modified"));
             buildHandled = true;
         }
         if (!buildHandled)
@@ -90,14 +90,20 @@ function handleCommands(task: egret.ServiceCommand, res: ServiceSocket) {
         }
     }
 }
-
+export function shutdown(path) {
+    execCommand({
+        path,
+        command: "shutdown",
+        option: egret.args
+    }, null, false);
+}
 /**
 *  Send command to Lark Service
 */
-export function execCommand(command :egret.ServiceCommand, callback?: Function,startServer = true):ServiceSocket{
+export function execCommand(command: egret.ServiceCommand, callback?: Function, startServer = true): ServiceSocket {
     var options = egret.args;
     var requestUrl = getServiceURL(command);
-    var client = net.connect(LARK_SERVICE_PORT,"127.0.0.1");
+    var client = net.connect(LARK_SERVICE_PORT, "127.0.0.1");
     var ss = new ServiceSocket(client);
     client.on('error', function (e) {
         if (!startServer)
@@ -110,7 +116,7 @@ export function execCommand(command :egret.ServiceCommand, callback?: Function,s
 
     ss.send(command);
 
-    ss.on('message', cmd=> callback && callback(cmd,ss));
+    ss.on('message', cmd => callback && callback(cmd, ss));
     return ss;
 }
 
@@ -165,16 +171,16 @@ function startBackgroundService() {
     server.on("exit", () => serviceCreated = false);
 }
 
-function shutdown() {
+function internal_shutdown() {
     for (var path in projects) {
-        var project:Project = projects[path];
+        var project: Project = projects[path];
         project.shutdown();
     }
     process.exit(0);
 }
 
 
-function parseRequest(req: http.ServerRequest):egret.ServiceCommand {
+function parseRequest(req: http.ServerRequest): egret.ServiceCommand {
     var uri = url.parse(req.url, true);
     var command = uri.query.q;
     return JSON.parse(command) || {};

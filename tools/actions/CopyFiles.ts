@@ -15,9 +15,9 @@ export function copyToLibs() {
     var options = egret.args;
     let moduleDir = FileUtil.joinPath(options.libsDir, 'modules');
     FileUtil.remove(moduleDir);
-    let properties = EgretProject.utils;
-    properties.getAllModuleNames().map(moduleName => {
-        let modulePath = properties.getModulePath(moduleName);
+    let project = EgretProject.utils;
+    project.getAllModuleNames().map(moduleName => {
+        let modulePath = project.getModulePath(moduleName);
         let moduleBin;
         if (modulePath == null) {
             moduleBin = FileUtil.joinPath(egret.root, "build", moduleName);

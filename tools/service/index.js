@@ -41,7 +41,7 @@ function handleCommands(task, res) {
     //|| task.version && task.version != version
     if (task.command == 'shutdown') {
         res.send({});
-        shutdown();
+        internal_shutdown();
     }
     var proj = getProject(task.path);
     proj.option = parser.parseJSON(task.option);
@@ -77,6 +77,14 @@ function handleCommands(task, res) {
         }
     }
 }
+function shutdown(path) {
+    execCommand({
+        path: path,
+        command: "shutdown",
+        option: egret.args
+    }, null, false);
+}
+exports.shutdown = shutdown;
 /**
 *  Send command to Lark Service
 */
@@ -139,7 +147,7 @@ function startBackgroundService() {
     });
     server.on("exit", function () { return serviceCreated = false; });
 }
-function shutdown() {
+function internal_shutdown() {
     for (var path in projects) {
         var project = projects[path];
         project.shutdown();
