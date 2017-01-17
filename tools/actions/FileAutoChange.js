@@ -6,13 +6,10 @@ var FileUtil = require("../lib/FileUtil");
 var project = require("../actions/Project");
 var htmlparser = require("../lib/htmlparser");
 var doT = require("../lib/doT");
-var FileAutoChangeCommand = (function () {
-    function FileAutoChangeCommand() {
+var ModifyHTML = (function () {
+    function ModifyHTML() {
     }
-    FileAutoChangeCommand.prototype.execute = function () {
-        return 0;
-    };
-    FileAutoChangeCommand.prototype.changeHtmlToRelease = function (htmlPath) {
+    ModifyHTML.prototype.changeHtmlToRelease = function (htmlPath) {
         var htmlContent = FileUtil.read(htmlPath);
         //替换使用 html 中的 src-release 目录
         var reg = /src[^>]*src-release/g;
@@ -23,7 +20,7 @@ var FileAutoChangeCommand = (function () {
         htmlContent = htmlContent.replace(reg, replaceStr);
         FileUtil.save(htmlPath, htmlContent);
     };
-    FileAutoChangeCommand.prototype.refreshDebugHtml = function (htmlPath, gameScripts) {
+    ModifyHTML.prototype.refreshDebugHtml = function (htmlPath, gameScripts) {
         var _this = this;
         var libsScriptsStr = this.getModuleScripts();
         var reg = /<!--(\s)*modules_files_start(\s)*-->[\s\S]*<!--(\s)*modules_files_end(\s)*-->/;
@@ -36,7 +33,7 @@ var FileAutoChangeCommand = (function () {
         htmlContent = htmlContent.replace(reg, replaceStr);
         FileUtil.save(htmlPath, htmlContent);
     };
-    FileAutoChangeCommand.prototype.getScript = function (type, src, releaseSrc) {
+    ModifyHTML.prototype.getScript = function (type, src, releaseSrc) {
         switch (type) {
             case 'lib':
                 return "\t<script egret=\"" + type + "\" src=\"" + src + "\" src-release=\"" + releaseSrc + "\"></script>\n'";
@@ -50,18 +47,18 @@ var FileAutoChangeCommand = (function () {
         }
     };
     //只刷新 modules
-    FileAutoChangeCommand.prototype.getModuleScripts = function () {
-        var options = egret.args;
+    ModifyHTML.prototype.getModuleScripts = function () {
         var properties = egret.args.properties;
+        var projectRoot = properties.getProjectRoot();
         var modules = properties.getAllModuleNames();
         var str = "";
-        for (var tempK in modules) {
-            var moduleName = modules[tempK];
+        for (var _i = 0, modules_1 = modules; _i < modules_1.length; _i++) {
+            var moduleName = modules_1[_i];
             var debugJs = "";
             var releaseJs = "";
             var moduleReRoot = 'libs/modules/' + moduleName + "/";
-            var jsDebugpath = FileUtil.joinPath(options.projectDir, moduleReRoot, moduleName + ".js");
-            var jsReleasepath = FileUtil.joinPath(options.projectDir, moduleReRoot, moduleName + ".min.js");
+            var jsDebugpath = FileUtil.joinPath(projectRoot, moduleReRoot, moduleName + ".js");
+            var jsReleasepath = FileUtil.joinPath(projectRoot, moduleReRoot, moduleName + ".min.js");
             if (FileUtil.exists(jsDebugpath)) {
                 debugJs = moduleReRoot + moduleName + ".js";
             }
@@ -79,8 +76,8 @@ var FileAutoChangeCommand = (function () {
             }
             debugJs = "";
             releaseJs = "";
-            jsDebugpath = FileUtil.joinPath(options.projectDir, moduleReRoot, moduleName + ".web.js");
-            jsReleasepath = FileUtil.joinPath(options.projectDir, moduleReRoot, moduleName + ".web.min.js");
+            jsDebugpath = FileUtil.joinPath(projectRoot, moduleReRoot, moduleName + ".web.js");
+            jsReleasepath = FileUtil.joinPath(projectRoot, moduleReRoot, moduleName + ".web.min.js");
             if (FileUtil.exists(jsDebugpath)) {
                 debugJs = moduleReRoot + moduleName + ".web.js";
             }
@@ -99,7 +96,7 @@ var FileAutoChangeCommand = (function () {
         }
         return str;
     };
-    FileAutoChangeCommand.prototype.refreshNativeRequire = function (htmlPath, isDebug) {
+    ModifyHTML.prototype.refreshNativeRequire = function (htmlPath, isDebug) {
         var options = egret.args;
         //生成 获取列表
         var listInfo = this.getLibsList(FileUtil.read(htmlPath), true, isDebug);
@@ -129,7 +126,7 @@ var FileAutoChangeCommand = (function () {
         FileUtil.save(requirePath, requireContent);
         return listInfo;
     };
-    FileAutoChangeCommand.prototype.getLibsList = function (html, isNative, isDebug) {
+    ModifyHTML.prototype.getLibsList = function (html, isNative, isDebug) {
         var gameList = [];
         var libsList = [];
         var handler = new htmlparser.DefaultHandler(function (error, dom) {
@@ -176,7 +173,7 @@ var FileAutoChangeCommand = (function () {
             }
         }
     };
-    FileAutoChangeCommand.prototype.getNativeProjectInfo = function (html) {
+    ModifyHTML.prototype.getNativeProjectInfo = function (html) {
         if (!FileUtil.exists(html))
             return;
         var content = FileUtil.read(html, true);
@@ -204,6 +201,6 @@ var FileAutoChangeCommand = (function () {
         optionStr = temp(proj);
         return optionStr;
     };
-    return FileAutoChangeCommand;
+    return ModifyHTML;
 }());
-module.exports = FileAutoChangeCommand;
+module.exports = ModifyHTML;

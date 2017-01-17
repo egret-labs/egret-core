@@ -4,7 +4,6 @@
 //import params = require("../ParamsParser");
 import file = require('../lib/FileUtil');
 import BuildCommand = require("./build");
-import FileAutoChangeCommand = require("../actions/FileAutoChange");
 //import config = require("../ProjectConfig");
 var config = egret.args.properties;
 import CopyFilesCommand = require("./copyfile");

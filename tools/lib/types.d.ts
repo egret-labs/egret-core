@@ -185,7 +185,7 @@ declare module egret {
 
         getModuleDependenceList(moduleName)
 
-        getAllModuleNames()
+        getAllModuleNames():string[]
 
         getModuleDecouple(moduleName)
 

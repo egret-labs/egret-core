@@ -9,10 +9,7 @@ import htmlparser = require("../lib/htmlparser");
 import doT = require('../lib/doT');
 
 
-class FileAutoChangeCommand implements egret.Command {
-    execute(): number {
-        return 0;
-    }
+class ModifyHTML {
 
     changeHtmlToRelease(htmlPath) {
         var htmlContent = FileUtil.read(htmlPath);
@@ -29,7 +26,7 @@ class FileAutoChangeCommand implements egret.Command {
         FileUtil.save(htmlPath, htmlContent);
     }
 
-    refreshDebugHtml(htmlPath, gameScripts:string[]) {
+    refreshDebugHtml(htmlPath, gameScripts: string[]) {
         var libsScriptsStr = this.getModuleScripts();
         var reg = /<!--(\s)*modules_files_start(\s)*-->[\s\S]*<!--(\s)*modules_files_end(\s)*-->/;
         var replaceStr = '<!--modules_files_start-->\n' + libsScriptsStr + '\t<!--modules_files_end-->';
@@ -37,9 +34,9 @@ class FileAutoChangeCommand implements egret.Command {
         var htmlContent = FileUtil.read(htmlPath, true);
 
         htmlContent = htmlContent.replace(reg, replaceStr);
-        
-        let str = gameScripts.map(script => this.getScript('game','bin-debug/' + script)).join("");
-        
+
+        let str = gameScripts.map(script => this.getScript('game', 'bin-debug/' + script)).join("");
+
         var reg = /<!--(\s)*game_files_start(\s)*-->[\s\S]*<!--(\s)*game_files_end(\s)*-->/;
         var replaceStr = '<!--game_files_start-->\n' + str + '\t<!--game_files_end-->';
         htmlContent = htmlContent.replace(reg, replaceStr);
@@ -62,20 +59,19 @@ class FileAutoChangeCommand implements egret.Command {
     }
 
     //只刷新 modules
-    private getModuleScripts(): string {
-        var options = egret.args;
+    private getModuleScripts() {
         var properties = egret.args.properties;
+        let projectRoot = properties.getProjectRoot();
         var modules = properties.getAllModuleNames();
         var str = "";
-        for (var tempK in modules) {
-            var moduleName = modules[tempK];
+        for (let moduleName of modules) {
             var debugJs = "";
             var releaseJs = "";
 
             var moduleReRoot = 'libs/modules/' + moduleName + "/";
 
-            var jsDebugpath = FileUtil.joinPath(options.projectDir, moduleReRoot, moduleName + ".js");
-            var jsReleasepath = FileUtil.joinPath(options.projectDir, moduleReRoot, moduleName + ".min.js");
+            var jsDebugpath = FileUtil.joinPath(projectRoot, moduleReRoot, moduleName + ".js");
+            var jsReleasepath = FileUtil.joinPath(projectRoot, moduleReRoot, moduleName + ".min.js");
             if (FileUtil.exists(jsDebugpath)) {
                 debugJs = moduleReRoot + moduleName + ".js";
             }
@@ -97,8 +93,8 @@ class FileAutoChangeCommand implements egret.Command {
 
             debugJs = "";
             releaseJs = "";
-            jsDebugpath = FileUtil.joinPath(options.projectDir, moduleReRoot, moduleName + ".web.js");
-            jsReleasepath = FileUtil.joinPath(options.projectDir, moduleReRoot, moduleName + ".web.min.js");
+            jsDebugpath = FileUtil.joinPath(projectRoot, moduleReRoot, moduleName + ".web.js");
+            jsReleasepath = FileUtil.joinPath(projectRoot, moduleReRoot, moduleName + ".web.min.js");
             if (FileUtil.exists(jsDebugpath)) {
                 debugJs = moduleReRoot + moduleName + ".web.js";
             }
@@ -249,4 +245,4 @@ class FileAutoChangeCommand implements egret.Command {
 
 }
 
-export = FileAutoChangeCommand;
+export = ModifyHTML;
