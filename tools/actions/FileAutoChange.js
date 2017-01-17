@@ -24,10 +24,12 @@ function refreshDebugHtml(htmlPath, gameScripts) {
     var replaceStr = '<!--modules_files_start-->\n' + libsScriptsStr + '\t<!--modules_files_end-->';
     var htmlContent = FileUtil.read(htmlPath, true);
     htmlContent = htmlContent.replace(reg, replaceStr);
-    var str = gameScripts.map(function (script) { return getScript('game', 'bin-debug/' + script); }).join("");
-    var reg = /<!--(\s)*game_files_start(\s)*-->[\s\S]*<!--(\s)*game_files_end(\s)*-->/;
-    var replaceStr = '<!--game_files_start-->\n' + str + '\t<!--game_files_end-->';
-    htmlContent = htmlContent.replace(reg, replaceStr);
+    if (gameScripts) {
+        var str = gameScripts.map(function (script) { return getScript('game', 'bin-debug/' + script); }).join("");
+        var reg = /<!--(\s)*game_files_start(\s)*-->[\s\S]*<!--(\s)*game_files_end(\s)*-->/;
+        var replaceStr = '<!--game_files_start-->\n' + str + '\t<!--game_files_end-->';
+        htmlContent = htmlContent.replace(reg, replaceStr);
+    }
     FileUtil.save(htmlPath, htmlContent);
 }
 exports.refreshDebugHtml = refreshDebugHtml;
@@ -94,6 +96,7 @@ function getModuleScripts() {
     }
     return str;
 }
+exports.getModuleScripts = getModuleScripts;
 function refreshNativeRequire(htmlPath, isDebug) {
     var options = egret.args;
     //生成 获取列表

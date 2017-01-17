@@ -25,7 +25,7 @@ export function changeHtmlToRelease(htmlPath) {
     FileUtil.save(htmlPath, htmlContent);
 }
 
-export function refreshDebugHtml(htmlPath, gameScripts: string[]) {
+export function refreshDebugHtml(htmlPath, gameScripts?: string[]) {
     var libsScriptsStr = getModuleScripts();
     var reg = /<!--(\s)*modules_files_start(\s)*-->[\s\S]*<!--(\s)*modules_files_end(\s)*-->/;
     var replaceStr = '<!--modules_files_start-->\n' + libsScriptsStr + '\t<!--modules_files_end-->';
@@ -33,12 +33,13 @@ export function refreshDebugHtml(htmlPath, gameScripts: string[]) {
     var htmlContent = FileUtil.read(htmlPath, true);
 
     htmlContent = htmlContent.replace(reg, replaceStr);
+    if (gameScripts) {
+        let str = gameScripts.map(script => getScript('game', 'bin-debug/' + script)).join("");
+        var reg = /<!--(\s)*game_files_start(\s)*-->[\s\S]*<!--(\s)*game_files_end(\s)*-->/;
+        var replaceStr = '<!--game_files_start-->\n' + str + '\t<!--game_files_end-->';
+        htmlContent = htmlContent.replace(reg, replaceStr);
+    }
 
-    let str = gameScripts.map(script => getScript('game', 'bin-debug/' + script)).join("");
-
-    var reg = /<!--(\s)*game_files_start(\s)*-->[\s\S]*<!--(\s)*game_files_end(\s)*-->/;
-    var replaceStr = '<!--game_files_start-->\n' + str + '\t<!--game_files_end-->';
-    htmlContent = htmlContent.replace(reg, replaceStr);
 
     FileUtil.save(htmlPath, htmlContent);
 }
@@ -58,7 +59,7 @@ function getScript(type: 'lib' | 'game' | 'none', src, releaseSrc?) {
 }
 
 //只刷新 modules
-function getModuleScripts() {
+export function getModuleScripts() {
     var properties = egret.args.properties;
     let projectRoot = properties.getProjectRoot();
     var modules = properties.getAllModuleNames();
