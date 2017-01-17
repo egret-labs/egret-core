@@ -94,7 +94,7 @@ class AutoCompileCommand implements egret.Command {
 
         CompileTemplate.modifyIndexHTML(_scripts);
 
-        CompileTemplate.modifyNativeRequire();
+        CompileTemplate.modifyNativeRequire(true);
 
         exmlActions.afterBuild();
 
@@ -262,7 +262,7 @@ class AutoCompileCommand implements egret.Command {
 
         CompileTemplate.modifyIndexHTML(this._scripts);
 
-        CompileTemplate.modifyNativeRequire();
+        CompileTemplate.modifyNativeRequire(true);
 
         return 0;
     }

@@ -65,7 +65,7 @@ var AutoCompileCommand = (function () {
         //操作其他文件
         _scripts = result.files.length > 0 ? result.files : _scripts;
         CompileTemplate.modifyIndexHTML(_scripts);
-        CompileTemplate.modifyNativeRequire();
+        CompileTemplate.modifyNativeRequire(true);
         exmlActions.afterBuild();
         Native.build();
         this.dirState.init();
@@ -199,7 +199,7 @@ var AutoCompileCommand = (function () {
         index = FileUtil.escapePath(index);
         console.log('Compile Template: ' + index);
         CompileTemplate.modifyIndexHTML(this._scripts);
-        CompileTemplate.modifyNativeRequire();
+        CompileTemplate.modifyNativeRequire(true);
         return 0;
     };
     AutoCompileCommand.prototype.onServiceMessage = function (msg) {

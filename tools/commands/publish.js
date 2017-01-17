@@ -3,6 +3,7 @@ var utils = require("../lib/utils");
 var FileUtil = require("../lib/FileUtil");
 var exml = require("../actions/exml");
 var CompileProject = require("../actions/CompileProject");
+var CompileTemplate = require("../actions/CompileTemplate");
 var GenerateVersion = require("../actions/GenerateVersionCommand");
 var ZipCMD = require("../actions/ZipCommand");
 var project = require("../actions/Project");
@@ -49,10 +50,7 @@ var Publish = (function () {
             exml.updateSetting();
         }
         if (egret.args.runtime == "native") {
-            var rootHtmlPath = FileUtil.joinPath(options.projectDir, "index.html");
-            //修改 native_require.js
-            var autoChange = new FileAutoChange();
-            var listInfo = autoChange.refreshNativeRequire(rootHtmlPath, false);
+            var listInfo = CompileTemplate.modifyNativeRequire(false);
             var allMainfestPath = FileUtil.joinPath(options.releaseDir, "all.manifest");
             if (FileUtil.exists(allMainfestPath)) {
                 FileUtil.copy(allMainfestPath, FileUtil.joinPath(options.releaseDir, "ziptemp", "all.manifest"));
@@ -76,9 +74,7 @@ var Publish = (function () {
             copyAction.copy("index.html");
             copyAction.copy("favicon.ico");
             var releaseHtmlPath = FileUtil.joinPath(options.releaseDir, "index.html");
-            //修改 html
-            var autoChange = new FileAutoChange();
-            autoChange.changeHtmlToRelease(releaseHtmlPath);
+            FileAutoChange.changeHtmlToRelease(releaseHtmlPath);
             var htmlContent = FileUtil.read(releaseHtmlPath);
             //根据 html 拷贝使用的 js 文件
             var libsList = project.getLibsList(htmlContent, false, false);

@@ -71,12 +71,8 @@ class Publish implements egret.Command {
         }
 
         if (egret.args.runtime == "native") {
-            var rootHtmlPath = FileUtil.joinPath(options.projectDir, "index.html");
 
-            //修改 native_require.js
-            var autoChange = new FileAutoChange();
-            var listInfo = autoChange.refreshNativeRequire(rootHtmlPath, false);
-
+            var listInfo = CompileTemplate.modifyNativeRequire(false);
             var allMainfestPath = FileUtil.joinPath(options.releaseDir, "all.manifest");
             if (FileUtil.exists(allMainfestPath)) {
                 FileUtil.copy(allMainfestPath, FileUtil.joinPath(options.releaseDir, "ziptemp", "all.manifest"));
@@ -108,9 +104,7 @@ class Publish implements egret.Command {
             copyAction.copy("favicon.ico")
 
             var releaseHtmlPath = FileUtil.joinPath(options.releaseDir, "index.html");
-            //修改 html
-            var autoChange = new FileAutoChange();
-            autoChange.changeHtmlToRelease(releaseHtmlPath);
+            FileAutoChange.changeHtmlToRelease(releaseHtmlPath);
 
             var htmlContent = FileUtil.read(releaseHtmlPath);
 

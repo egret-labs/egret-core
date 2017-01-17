@@ -92,7 +92,7 @@ var CreateAppCommand = (function () {
         config.init(arg_h5_path);
         //修改native项目配置
         new ParseConfigCommand().execute();
-        CompileTemplate.modifyNativeRequire();
+        CompileTemplate.modifyNativeRequire(true);
         //拷贝项目到native工程中
         copyNative.refreshNative(true);
         globals.log2(1606, (Date.now() - startTime) / 1000);

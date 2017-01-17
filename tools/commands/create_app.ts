@@ -108,7 +108,7 @@ class CreateAppCommand implements egret.Command {
 
         //修改native项目配置
         new ParseConfigCommand().execute();
-        CompileTemplate.modifyNativeRequire();
+        CompileTemplate.modifyNativeRequire(true);
 
         //拷贝项目到native工程中
         copyNative.refreshNative(true);
