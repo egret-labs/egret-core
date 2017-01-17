@@ -1,18 +1,15 @@
-
-/// <reference path="../lib/types.d.ts" />
-
 import FileUtil = require('../lib/FileUtil');
 import FileAutoChange = require("../actions/FileAutoChange");
+import EgretProject = require('../parser/EgretProject');
 
 export function modifyIndexHTML(scripts: string[]) {
-    var options = egret.args;
-    var list = FileUtil.getDirectoryListing(options.projectDir).filter(filepath => FileUtil.getExtension(filepath) == "html");
+    let projectDir = EgretProject.utils.getProjectRoot();
+    let list = FileUtil.getDirectoryListing(projectDir).filter(filepath => FileUtil.getExtension(filepath) == "html");
     list.forEach(htmlFilePath => FileAutoChange.refreshDebugHtml(htmlFilePath, scripts));
 }
 
 export function modifyNativeRequire(isDebug: boolean) {
-    var options = egret.args;
-    var index = FileUtil.joinPath(options.projectDir, "index.html");
-    return FileAutoChange.refreshNativeRequire(index, isDebug);
+    let indexHTML = EgretProject.utils.getFilePath('index.html');
+    return FileAutoChange.refreshNativeRequire(indexHTML, isDebug);
 }
 
