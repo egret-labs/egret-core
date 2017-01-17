@@ -55,6 +55,7 @@ class UpgradeCommand implements egret.Command {
             }, true);
         }
         catch (e) {
+            // console.log (111)
             console.log(e)
             globals.exit(1705);
         }

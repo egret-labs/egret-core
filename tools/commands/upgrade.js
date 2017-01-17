@@ -77,6 +77,7 @@ var UpgradeCommand = (function () {
                         return [3 /*break*/, 4];
                     case 3:
                         e_1 = _a.sent();
+                        // console.log (111)
                         console.log(e_1);
                         globals.exit(1705);
                         return [3 /*break*/, 4];
