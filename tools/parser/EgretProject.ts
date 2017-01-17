@@ -9,7 +9,7 @@ import path = require("path");
 
 
 export class EgretProject {
-    properties: egret.EgretProperty = {
+    private egretProperties: egret.EgretProperty = {
         modules: []
     };
 
@@ -20,8 +20,8 @@ export class EgretProject {
     }
 
     public invalid(report?: boolean) {
-        let result = !this.properties.modules ||
-            this.properties.modules.length == 0;
+        let result = !this.egretProperties.modules ||
+            this.egretProperties.modules.length == 0;
         if (result && report) {
             console.log(_utils.tr(1602));//缺少egretProperties.json
         }
@@ -29,16 +29,16 @@ export class EgretProject {
     }
 
     hasEUI() {
-        return this.properties.modules.some(m => m.name == "eui");
+        return this.egretProperties.modules.some(m => m.name == "eui");
     }
 
     reload() {
-        this.properties = { modules: [] };
+        this.egretProperties = { modules: [] };
         let egretPropertiesPath = file.joinPath(this.projectRoot, "egretProperties.json");
         if (file.exists(egretPropertiesPath)) {
-            this.properties = JSON.parse(file.read(egretPropertiesPath));
+            this.egretProperties = JSON.parse(file.read(egretPropertiesPath));
             let useGUIorEUI = 0;
-            for (let m of this.properties.modules) {
+            for (let m of this.egretProperties.modules) {
                 //兼容小写
                 if (m.name == "dragonbones" && !m.path) {
                     m.name = "dragonBones";
@@ -70,7 +70,7 @@ export class EgretProject {
      * @returns {any}
      */
     getVersion(): string {
-        return this.properties.egret_version;
+        return this.egretProperties.egret_version;
     }
 
     /**
@@ -79,8 +79,8 @@ export class EgretProject {
      */
     getReleaseRoot(): string {
         var p = "bin-release";
-        if (globals.hasKeys(this.properties, ["publish", "path"])) {
-            p = this.properties.publish.path;
+        if (globals.hasKeys(this.egretProperties, ["publish", "path"])) {
+            p = this.egretProperties.publish.path;
         }
 
         return file.getAbsolutePath(p);
@@ -88,79 +88,65 @@ export class EgretProject {
     }
 
     getVersionCode(runtime) {
-        if (globals.hasKeys(this.properties, ["publish", "baseVersion"])) {
-            return this.properties["publish"]["baseVersion"];
+        if (globals.hasKeys(this.egretProperties, ["publish", "baseVersion"])) {
+            return this.egretProperties["publish"]["baseVersion"];
         }
         return 1;
     }
 
     getIgnorePath(): Array<any> {
-        if (globals.hasKeys(this.properties, [egret.args.runtime, "path_ignore"])) {
-            return this.properties[egret.args.runtime]["path_ignore"];
+        if (globals.hasKeys(this.egretProperties, [egret.args.runtime, "path_ignore"])) {
+            return this.egretProperties[egret.args.runtime]["path_ignore"];
         }
         return [];
     }
 
     getCopyExmlList(): Array<string> {
-        if (globals.hasKeys(this.properties, [egret.args.runtime, "copyExmlList"])) {
-            return this.properties[egret.args.runtime]["copyExmlList"];
+        if (globals.hasKeys(this.egretProperties, [egret.args.runtime, "copyExmlList"])) {
+            return this.egretProperties[egret.args.runtime]["copyExmlList"];
         }
         return [];
     }
 
     getNativePath(platform) {
-        if (globals.hasKeys(this.properties, ["native", platform + "_path"])) {
-            return path.resolve(this.getProjectRoot(), this.properties.native[platform + "_path"]);
+        if (globals.hasKeys(this.egretProperties, ["native", platform + "_path"])) {
+            return path.resolve(this.getProjectRoot(), this.egretProperties.native[platform + "_path"]);
         }
         return null;
     }
 
     getModulePath(moduleName) {
-        for (let m of this.properties.modules) {
+        for (let m of this.egretProperties.modules) {
             if (m.name == moduleName) {
-                return m.path;
+                let moduleBin;
+                if (m.path == null) {
+                    moduleBin = path.join(egret.root, "build", moduleName);
+                }
+                else {
+                    let tempModulePath = file.getAbsolutePath(m.path);
+                    moduleBin = path.join(tempModulePath, "bin", moduleName);
+                }
+                return moduleBin;
             }
         }
         return null;
     }
 
-    private getModuleConfig(moduleName) {
-        var moduleJsonPath;
-        var modulePath = this.getModulePath(moduleName);
-        if (modulePath == null) {
-            moduleJsonPath = file.joinPath(egret.root, "tools/lib/manifest", moduleName + ".json");
-        }
-        else {
-            moduleJsonPath = file.joinPath(this.projectRoot, modulePath, moduleName + ".json");
-        }
-        var content = file.read(moduleJsonPath);
-        if (!content) {
-            globals.exit(8003, moduleJsonPath);
-        }
-
-        return JSON.parse(content);
-    }
-
-    private getModuleSourcePath(moduleName) {
-        return this.getModuleConfig(moduleName)["source"] || "";
-    }
-
-
     getAllModuleNames() {
-        return this.properties.modules.map(m => m.name);
+        return this.egretProperties.modules.map(m => m.name);
     }
 
     getPublishType(runtime: string): number {
-        if (globals.hasKeys(this.properties, ["publish", runtime])) {
-            return this.properties["publish"][runtime];
+        if (globals.hasKeys(this.egretProperties, ["publish", runtime])) {
+            return this.egretProperties["publish"][runtime];
         }
 
         return 0;
     }
 
     getResources(): string[] {
-        if (globals.hasKeys(this.properties, ["resources"])) {
-            return this.properties["resources"];
+        if (globals.hasKeys(this.egretProperties, ["resources"])) {
+            return this.egretProperties["resources"];
         }
 
         return ["resource"];

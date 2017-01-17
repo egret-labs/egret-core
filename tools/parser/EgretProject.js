@@ -4,7 +4,7 @@ var _utils = require("../lib/utils");
 var path = require("path");
 var EgretProject = (function () {
     function EgretProject() {
-        this.properties = {
+        this.egretProperties = {
             modules: []
         };
         this.projectRoot = "";
@@ -14,23 +14,23 @@ var EgretProject = (function () {
         this.reload();
     };
     EgretProject.prototype.invalid = function (report) {
-        var result = !this.properties.modules ||
-            this.properties.modules.length == 0;
+        var result = !this.egretProperties.modules ||
+            this.egretProperties.modules.length == 0;
         if (result && report) {
             console.log(_utils.tr(1602)); //缺少egretProperties.json
         }
         return result;
     };
     EgretProject.prototype.hasEUI = function () {
-        return this.properties.modules.some(function (m) { return m.name == "eui"; });
+        return this.egretProperties.modules.some(function (m) { return m.name == "eui"; });
     };
     EgretProject.prototype.reload = function () {
-        this.properties = { modules: [] };
+        this.egretProperties = { modules: [] };
         var egretPropertiesPath = file.joinPath(this.projectRoot, "egretProperties.json");
         if (file.exists(egretPropertiesPath)) {
-            this.properties = JSON.parse(file.read(egretPropertiesPath));
+            this.egretProperties = JSON.parse(file.read(egretPropertiesPath));
             var useGUIorEUI = 0;
-            for (var _i = 0, _a = this.properties.modules; _i < _a.length; _i++) {
+            for (var _i = 0, _a = this.egretProperties.modules; _i < _a.length; _i++) {
                 var m = _a[_i];
                 //兼容小写
                 if (m.name == "dragonbones" && !m.path) {
@@ -60,7 +60,7 @@ var EgretProject = (function () {
      * @returns {any}
      */
     EgretProject.prototype.getVersion = function () {
-        return this.properties.egret_version;
+        return this.egretProperties.egret_version;
     };
     /**
      * 发布路径的根目录
@@ -68,75 +68,65 @@ var EgretProject = (function () {
      */
     EgretProject.prototype.getReleaseRoot = function () {
         var p = "bin-release";
-        if (globals.hasKeys(this.properties, ["publish", "path"])) {
-            p = this.properties.publish.path;
+        if (globals.hasKeys(this.egretProperties, ["publish", "path"])) {
+            p = this.egretProperties.publish.path;
         }
         return file.getAbsolutePath(p);
         //return file.joinPath(egret.args.projectDir, p);
     };
     EgretProject.prototype.getVersionCode = function (runtime) {
-        if (globals.hasKeys(this.properties, ["publish", "baseVersion"])) {
-            return this.properties["publish"]["baseVersion"];
+        if (globals.hasKeys(this.egretProperties, ["publish", "baseVersion"])) {
+            return this.egretProperties["publish"]["baseVersion"];
         }
         return 1;
     };
     EgretProject.prototype.getIgnorePath = function () {
-        if (globals.hasKeys(this.properties, [egret.args.runtime, "path_ignore"])) {
-            return this.properties[egret.args.runtime]["path_ignore"];
+        if (globals.hasKeys(this.egretProperties, [egret.args.runtime, "path_ignore"])) {
+            return this.egretProperties[egret.args.runtime]["path_ignore"];
         }
         return [];
     };
     EgretProject.prototype.getCopyExmlList = function () {
-        if (globals.hasKeys(this.properties, [egret.args.runtime, "copyExmlList"])) {
-            return this.properties[egret.args.runtime]["copyExmlList"];
+        if (globals.hasKeys(this.egretProperties, [egret.args.runtime, "copyExmlList"])) {
+            return this.egretProperties[egret.args.runtime]["copyExmlList"];
         }
         return [];
     };
     EgretProject.prototype.getNativePath = function (platform) {
-        if (globals.hasKeys(this.properties, ["native", platform + "_path"])) {
-            return path.resolve(this.getProjectRoot(), this.properties.native[platform + "_path"]);
+        if (globals.hasKeys(this.egretProperties, ["native", platform + "_path"])) {
+            return path.resolve(this.getProjectRoot(), this.egretProperties.native[platform + "_path"]);
         }
         return null;
     };
     EgretProject.prototype.getModulePath = function (moduleName) {
-        for (var _i = 0, _a = this.properties.modules; _i < _a.length; _i++) {
+        for (var _i = 0, _a = this.egretProperties.modules; _i < _a.length; _i++) {
             var m = _a[_i];
             if (m.name == moduleName) {
-                return m.path;
+                var moduleBin = void 0;
+                if (m.path == null) {
+                    moduleBin = path.join(egret.root, "build", moduleName);
+                }
+                else {
+                    var tempModulePath = file.getAbsolutePath(m.path);
+                    moduleBin = path.join(tempModulePath, "bin", moduleName);
+                }
+                return moduleBin;
             }
         }
         return null;
     };
-    EgretProject.prototype.getModuleConfig = function (moduleName) {
-        var moduleJsonPath;
-        var modulePath = this.getModulePath(moduleName);
-        if (modulePath == null) {
-            moduleJsonPath = file.joinPath(egret.root, "tools/lib/manifest", moduleName + ".json");
-        }
-        else {
-            moduleJsonPath = file.joinPath(this.projectRoot, modulePath, moduleName + ".json");
-        }
-        var content = file.read(moduleJsonPath);
-        if (!content) {
-            globals.exit(8003, moduleJsonPath);
-        }
-        return JSON.parse(content);
-    };
-    EgretProject.prototype.getModuleSourcePath = function (moduleName) {
-        return this.getModuleConfig(moduleName)["source"] || "";
-    };
     EgretProject.prototype.getAllModuleNames = function () {
-        return this.properties.modules.map(function (m) { return m.name; });
+        return this.egretProperties.modules.map(function (m) { return m.name; });
     };
     EgretProject.prototype.getPublishType = function (runtime) {
-        if (globals.hasKeys(this.properties, ["publish", runtime])) {
-            return this.properties["publish"][runtime];
+        if (globals.hasKeys(this.egretProperties, ["publish", runtime])) {
+            return this.egretProperties["publish"][runtime];
         }
         return 0;
     };
     EgretProject.prototype.getResources = function () {
-        if (globals.hasKeys(this.properties, ["resources"])) {
-            return this.properties["resources"];
+        if (globals.hasKeys(this.egretProperties, ["resources"])) {
+            return this.egretProperties["resources"];
         }
         return ["resource"];
     };

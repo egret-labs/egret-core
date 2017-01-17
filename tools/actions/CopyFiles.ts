@@ -18,17 +18,9 @@ export function copyToLibs() {
     let project = EgretProject.utils;
     project.getAllModuleNames().map(moduleName => {
         let modulePath = project.getModulePath(moduleName);
-        let moduleBin;
-        if (modulePath == null) {
-            moduleBin = FileUtil.joinPath(egret.root, "build", moduleName);
-        }
-        else {
-            let tempModulePath = FileUtil.getAbsolutePath(modulePath);
-            moduleBin = FileUtil.joinPath(tempModulePath, "bin", moduleName);
-        }
         let targetFile = FileUtil.joinPath(moduleDir, moduleName);
         if (options.projectDir.toLowerCase() != egret.root.toLowerCase()) {
-            FileUtil.copy(moduleBin, targetFile);
+            FileUtil.copy(modulePath, targetFile);
         }
     })
 }
