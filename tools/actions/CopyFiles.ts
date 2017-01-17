@@ -4,7 +4,6 @@
 import utils = require('../lib/utils');
 import Compiler = require('./Compiler');
 import FileUtil = require('../lib/FileUtil');
-import FileAutoChange = require('./FileAutoChange');
 import CompileTemplate = require('./CompileTemplate');
 
 var fileExtensionToIgnore = {

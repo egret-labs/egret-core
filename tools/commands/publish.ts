@@ -19,8 +19,6 @@ import copyNative = require("../actions/CopyNativeFiles");
 
 import Clean = require("../commands/clean");
 
-import FileAutoChange = require("../actions/FileAutoChange");
-
 import path = require('path');
 
 class Publish implements egret.Command {
@@ -104,7 +102,7 @@ class Publish implements egret.Command {
             copyAction.copy("favicon.ico")
 
             var releaseHtmlPath = FileUtil.joinPath(options.releaseDir, "index.html");
-            FileAutoChange.changeHtmlToRelease(releaseHtmlPath);
+            CompileTemplate.changeHtmlToRelease(releaseHtmlPath);
 
             var htmlContent = FileUtil.read(releaseHtmlPath);
 

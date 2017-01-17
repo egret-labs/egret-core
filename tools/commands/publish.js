@@ -8,7 +8,6 @@ var GenerateVersion = require("../actions/GenerateVersionCommand");
 var ZipCMD = require("../actions/ZipCommand");
 var project = require("../actions/Project");
 var copyNative = require("../actions/CopyNativeFiles");
-var FileAutoChange = require("../actions/FileAutoChange");
 var path = require("path");
 var Publish = (function () {
     function Publish() {
@@ -74,7 +73,7 @@ var Publish = (function () {
             copyAction.copy("index.html");
             copyAction.copy("favicon.ico");
             var releaseHtmlPath = FileUtil.joinPath(options.releaseDir, "index.html");
-            FileAutoChange.changeHtmlToRelease(releaseHtmlPath);
+            CompileTemplate.changeHtmlToRelease(releaseHtmlPath);
             var htmlContent = FileUtil.read(releaseHtmlPath);
             //根据 html 拷贝使用的 js 文件
             var libsList = project.getLibsList(htmlContent, false, false);
