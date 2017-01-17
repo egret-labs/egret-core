@@ -47,7 +47,7 @@ function refreshDebugHtml(htmlPath, gameScripts) {
 function getScript(type, src, releaseSrc) {
     switch (type) {
         case 'lib':
-            return "\t<script egret=\"" + type + "\" src=\"" + src + "\" src-release=\"" + releaseSrc + "\"></script>\n'";
+            return "\t<script egret=\"" + type + "\" src=\"" + src + "\" src-release=\"" + releaseSrc + "\"></script>\n";
             break;
         case 'game':
             return "\t<script egret=\"" + type + "\" src=\"" + src + "\"></script>\n";
