@@ -12167,8 +12167,9 @@ var eui;
          * @language zh_CN
          */
         Panel.prototype.onTouchEnd = function (event) {
-            this.$stage.removeEventListener(egret.TouchEvent.TOUCH_MOVE, this.onTouchMove, this);
-            this.$stage.removeEventListener(egret.TouchEvent.TOUCH_END, this.onTouchEnd, this);
+            var stage = event.$currentTarget;
+            stage.removeEventListener(egret.TouchEvent.TOUCH_MOVE, this.onTouchMove, this);
+            stage.removeEventListener(egret.TouchEvent.TOUCH_END, this.onTouchEnd, this);
         };
         return Panel;
     }(eui.Component));
