@@ -14,6 +14,7 @@ import ZipCMD = require("../actions/ZipCommand");
 import ChangeEntranceCMD = require("../actions/ChangeEntranceCommand");
 
 import project = require("../actions/Project");
+import EgretProject = require("../parser/EgretProject");
 
 import copyNative = require("../actions/CopyNativeFiles");
 
@@ -44,7 +45,7 @@ class Publish implements egret.Command {
         utils.checkEgret();
 
         var options = egret.args;
-        var config = egret.args.properties;
+        var config = EgretProject.utils;
         //重新设置 releaseDir
         var versionFile = this.getVersionInfo();
 

@@ -195,7 +195,6 @@ function parseCommandLine(commandLine) {
             }
             options.projectDir = file.joinPath(options.projectDir, "/");
             project.utils.init(options.projectDir);
-            options.properties = project.utils;
         }
         var packagePath = file.joinPath(egret.root, "package.json");
         var content = file.read(packagePath);

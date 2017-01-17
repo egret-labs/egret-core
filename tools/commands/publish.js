@@ -7,6 +7,7 @@ var CompileTemplate = require("../actions/CompileTemplate");
 var GenerateVersion = require("../actions/GenerateVersionCommand");
 var ZipCMD = require("../actions/ZipCommand");
 var project = require("../actions/Project");
+var EgretProject = require("../parser/EgretProject");
 var copyNative = require("../actions/CopyNativeFiles");
 var path = require("path");
 var Publish = (function () {
@@ -30,7 +31,7 @@ var Publish = (function () {
     Publish.prototype.execute = function () {
         utils.checkEgret();
         var options = egret.args;
-        var config = egret.args.properties;
+        var config = EgretProject.utils;
         //重新设置 releaseDir
         var versionFile = this.getVersionInfo();
         var runtime = egret.args.runtime == 'native' ? 'native' : "web";

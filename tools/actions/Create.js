@@ -39,6 +39,7 @@ var NativeProject = require("../actions/NativeProject");
 var projectAction = require("../actions/Project");
 var FileUtil = require("../lib/FileUtil");
 var doT = require("../lib/doT");
+var EgretProject = require("../parser/EgretProject");
 var TemplatesRoot = "tools/templates/";
 var Clean = require("../commands/clean");
 var Create = (function () {
@@ -46,7 +47,7 @@ var Create = (function () {
     }
     Create.prototype.execute = function () {
         return __awaiter(this, void 0, void 0, function () {
-            var proj, options, emptyTemplate, template, properties;
+            var proj, options, emptyTemplate, template;
             return __generator(this, function (_a) {
                 proj = this.project;
                 options = egret.args;
@@ -57,8 +58,7 @@ var Create = (function () {
                 FileUtil.copy(template, options.projectDir);
                 //options.outDir = FileUtil.joinPath("..", options.outDir);
                 compileTemplate(proj);
-                properties = egret.args.properties;
-                properties.reload();
+                EgretProject.utils.reload();
                 new Clean().execute();
                 console.log(utils.tr(10017));
                 return [2 /*return*/, Promise.resolve(DontExitCode)];

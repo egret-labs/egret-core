@@ -59,7 +59,7 @@ function getScript(type, src, releaseSrc) {
 }
 //只刷新 modules
 function getModuleScripts() {
-    var properties = egret.args.properties;
+    var properties = EgretProject.utils;
     var projectRoot = properties.getProjectRoot();
     var modules = properties.getAllModuleNames();
     var str = "";

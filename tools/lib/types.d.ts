@@ -68,12 +68,6 @@ declare module egret {
         debug?: boolean;
         getStartURL(address: string): string;
         template?: string;
-        /**
-        * egretProperties.json 信息
-        */
-        properties: EgretPropertiesClass;
-
-
         publish?: boolean;
         minify?: boolean;
         sourceMap?: boolean;
@@ -124,48 +118,6 @@ declare module egret {
             "path": string;
         },
         "egret_version"?: string;
-    }
-    export interface EgretPropertiesClass {
-        properties: EgretProperty;
-        init(projectRoot: string);
-        reload();
-
-        invalid(report?: boolean): boolean;
-        /**
-         * 是否有swan
-         */
-        hasEUI(): boolean;
-
-        /**
-         * 获取项目的根路径
-         * @returns {*}
-         */
-        getProjectRoot(): string
-
-        /**
-         * 获取项目使用的egret版本号
-         * @returns {any}
-         */
-        getVersion(): string
-
-        /**
-         * 发布路径的根目录
-         * @returns {string}
-         */
-        getReleaseRoot(): string
-
-        getVersionCode(runtime)
-
-        getIgnorePath(): Array<any>
-
-        getCopyExmlList(): Array<string>
-
-        getNativePath(platform)
-
-        getAllModuleNames(): string[]
-
-        getPublishType(runtime: string): number;
-        getResources(): string[]
     }
 
     export interface EgretProjectConfig {

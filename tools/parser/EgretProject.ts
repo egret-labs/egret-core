@@ -8,7 +8,7 @@ import path = require("path");
 
 
 
-export class EgretProject implements egret.EgretPropertiesClass {
+export class EgretProject {
     properties: egret.EgretProperty = {
         modules: []
     };

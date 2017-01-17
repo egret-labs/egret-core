@@ -9,6 +9,7 @@ var state = require("../lib/DirectoryState");
 var CompileProject = require("../actions/CompileProject");
 var CompileTemplate = require("../actions/CompileTemplate");
 var parser = require("../parser/Parser");
+var EgretProject = require("../parser/EgretProject");
 var AutoCompileCommand = (function () {
     function AutoCompileCommand() {
         this.exitCode = [0, 0];
@@ -19,7 +20,7 @@ var AutoCompileCommand = (function () {
     }
     AutoCompileCommand.prototype.execute = function () {
         var _this = this;
-        if (egret.args.properties.invalid(true)) {
+        if (EgretProject.utils.invalid(true)) {
             process.exit(0);
             return;
         }
@@ -108,7 +109,7 @@ var AutoCompileCommand = (function () {
                     this.messages[2] = egret.args.tsconfigError;
                 }
                 else if (fileName.indexOf("egretProperties.json") > -1) {
-                    egret.args.properties.reload();
+                    EgretProject.utils.reload();
                     this.copyLibs();
                     this.compileProject.compileProject(egret.args);
                     this.messages[2] = egret.args.tsconfigError;
@@ -206,9 +207,7 @@ var AutoCompileCommand = (function () {
         //console.log("onServiceMessage:",msg)
         if (msg.command == 'build' && msg.option) {
             this.sourceMapStateChanged = msg.option.sourceMap != egret.args.sourceMap;
-            var props = egret.args.properties;
             egret.args = parser.parseJSON(msg.option);
-            egret.args.properties = props;
         }
         if (msg.command == 'build')
             this.buildChanges(msg.changes);

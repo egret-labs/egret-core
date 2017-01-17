@@ -74,7 +74,7 @@ function getScript(type: 'lib' | 'game' | 'none', src, releaseSrc?) {
 
 //只刷新 modules
 export function getModuleScripts() {
-    var properties = egret.args.properties;
+    var properties = EgretProject.utils;
     let projectRoot = properties.getProjectRoot();
     var modules = properties.getAllModuleNames();
     var str = "";

@@ -3,7 +3,7 @@
 //import params = require("../ParamsParser");
 var file = require("../lib/FileUtil");
 //import config = require("../ProjectConfig");
-var config = egret.args.properties;
+var EgretProject = require("../parser/EgretProject");
 var ParseConfigCommand = require("../actions/ParseConfig");
 var CompileTemplate = require("../actions/CompileTemplate");
 var fs = require('fs');
@@ -89,7 +89,7 @@ var CreateAppCommand = (function () {
         }
         properties["native"][platform + "_path"] = file.relative(projectPath, nativePath);
         file.save(file.joinPath(projectPath, "egretProperties.json"), JSON.stringify(properties, null, "\t"));
-        config.init(arg_h5_path);
+        EgretProject.utils.init(arg_h5_path);
         //修改native项目配置
         new ParseConfigCommand().execute();
         CompileTemplate.modifyNativeRequire(true);

@@ -10,7 +10,7 @@ import projectAction = require('../actions/Project');
 import CompileTemplate = require('../actions/CompileTemplate');
 import FileUtil = require('../lib/FileUtil');
 import doT = require('../lib/doT');
-
+import EgretProject = require('../parser/EgretProject');
 var TemplatesRoot = "tools/templates/";
 import Clean = require('../commands/clean');
 
@@ -31,9 +31,7 @@ class Create implements egret.Command {
 
         //options.outDir = FileUtil.joinPath("..", options.outDir);
         compileTemplate(proj);
-
-        var properties = egret.args.properties;
-        properties.reload();
+        EgretProject.utils.reload();
 
         new Clean().execute();
         console.log(utils.tr(10017));
