@@ -19,34 +19,34 @@ var FileAutoChangeCommand = (function () {
         htmlContent = htmlContent.replace(reg, "src");
         //替换 game_files 脚本
         var reg = /<!--(\s)*game_files_start(\s)*-->[\s\S]*<!--(\s)*game_files_end(\s)*-->/;
-        var replaceStr = '<!--game_files_start-->\n' + '\t<script src="main.min.js"></script>\n' + '\t<!--game_files_end-->';
+        var replaceStr = '<!--game_files_start-->\n' + this.getScript("none", "main.min.js") + '\t<!--game_files_end-->';
         htmlContent = htmlContent.replace(reg, replaceStr);
         FileUtil.save(htmlPath, htmlContent);
     };
     FileAutoChangeCommand.prototype.refreshDebugHtml = function (htmlPath, gameScripts) {
+        var _this = this;
         var libsScriptsStr = this.getModuleScripts();
         var reg = /<!--(\s)*modules_files_start(\s)*-->[\s\S]*<!--(\s)*modules_files_end(\s)*-->/;
         var replaceStr = '<!--modules_files_start-->\n' + libsScriptsStr + '\t<!--modules_files_end-->';
         var htmlContent = FileUtil.read(htmlPath, true);
         htmlContent = htmlContent.replace(reg, replaceStr);
-        var str = "";
-        for (var tempK in gameScripts) {
-            var script = gameScripts[tempK];
-            var debugJs = "";
-            debugJs = 'bin-debug/' + script;
-            str += this.getScript('game', debugJs);
-        }
+        var str = gameScripts.map(function (script) { return _this.getScript('game', 'bin-debug/' + script); }).join("");
         var reg = /<!--(\s)*game_files_start(\s)*-->[\s\S]*<!--(\s)*game_files_end(\s)*-->/;
         var replaceStr = '<!--game_files_start-->\n' + str + '\t<!--game_files_end-->';
         htmlContent = htmlContent.replace(reg, replaceStr);
         FileUtil.save(htmlPath, htmlContent);
     };
     FileAutoChangeCommand.prototype.getScript = function (type, src, releaseSrc) {
-        if (releaseSrc) {
-            return "\t<script egret=\"" + type + "\" src=\"" + src + "\" src-release=\"" + releaseSrc + "\"></script>\n'";
-        }
-        else {
-            return "\t<script egret=\"" + type + "\" src=\"" + src + "\"></script>\n";
+        switch (type) {
+            case 'lib':
+                return "\t<script egret=\"" + type + "\" src=\"" + src + "\" src-release=\"" + releaseSrc + "\"></script>\n'";
+                break;
+            case 'game':
+                return "\t<script egret=\"" + type + "\" src=\"" + src + "\"></script>\n";
+                break;
+            case 'none':
+                return "\t<script  src=\"" + src + "\"></script>\n";
+                break;
         }
     };
     //只刷新 modules

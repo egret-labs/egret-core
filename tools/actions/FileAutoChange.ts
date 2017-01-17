@@ -23,13 +23,13 @@ class FileAutoChangeCommand implements egret.Command {
 
         //替换 game_files 脚本
         var reg = /<!--(\s)*game_files_start(\s)*-->[\s\S]*<!--(\s)*game_files_end(\s)*-->/;
-        var replaceStr = '<!--game_files_start-->\n' + '\t<script src="main.min.js"></script>\n' + '\t<!--game_files_end-->';
+        var replaceStr = '<!--game_files_start-->\n' + this.getScript("none", "main.min.js") + '\t<!--game_files_end-->';
         htmlContent = htmlContent.replace(reg, replaceStr);
 
         FileUtil.save(htmlPath, htmlContent);
     }
 
-    refreshDebugHtml(htmlPath, gameScripts) {
+    refreshDebugHtml(htmlPath, gameScripts:string[]) {
         var libsScriptsStr = this.getModuleScripts();
         var reg = /<!--(\s)*modules_files_start(\s)*-->[\s\S]*<!--(\s)*modules_files_end(\s)*-->/;
         var replaceStr = '<!--modules_files_start-->\n' + libsScriptsStr + '\t<!--modules_files_end-->';
@@ -37,16 +37,9 @@ class FileAutoChangeCommand implements egret.Command {
         var htmlContent = FileUtil.read(htmlPath, true);
 
         htmlContent = htmlContent.replace(reg, replaceStr);
-
-        var str = "";
-        for (var tempK in gameScripts) {
-            var script = gameScripts[tempK];
-            var debugJs = "";
-            debugJs = 'bin-debug/' + script;
-
-            str += this.getScript('game',debugJs);
-        }
-
+        
+        let str = gameScripts.map(script => this.getScript('game','bin-debug/' + script)).join("");
+        
         var reg = /<!--(\s)*game_files_start(\s)*-->[\s\S]*<!--(\s)*game_files_end(\s)*-->/;
         var replaceStr = '<!--game_files_start-->\n' + str + '\t<!--game_files_end-->';
         htmlContent = htmlContent.replace(reg, replaceStr);
@@ -54,14 +47,18 @@ class FileAutoChangeCommand implements egret.Command {
         FileUtil.save(htmlPath, htmlContent);
     }
 
-    private getScript(type:'lib'|'game',src, releaseSrc?) {
-        if (releaseSrc){
-return `\t<script egret="${type}" src="${src}" src-release="${releaseSrc}"></script>\n'`
+    private getScript(type: 'lib' | 'game' | 'none', src, releaseSrc?) {
+        switch (type) {
+            case 'lib':
+                return `\t<script egret="${type}" src="${src}" src-release="${releaseSrc}"></script>\n'`
+                break;
+            case 'game':
+                return `\t<script egret="${type}" src="${src}"></script>\n`;
+                break;
+            case 'none':
+                return `\t<script  src="${src}"></script>\n`;
+                break;
         }
-        else{
-            return `\t<script egret="${type}" src="${src}"></script>\n`;
-        }
-        
     }
 
     //只刷新 modules
@@ -95,7 +92,7 @@ return `\t<script egret="${type}" src="${src}" src-release="${releaseSrc}"></scr
             }
 
             if (debugJs != "") {
-                str += this.getScript('lib',debugJs,releaseJs);
+                str += this.getScript('lib', debugJs, releaseJs);
             }
 
             debugJs = "";
@@ -118,7 +115,7 @@ return `\t<script egret="${type}" src="${src}" src-release="${releaseSrc}"></scr
             }
 
             if (debugJs != "") {
-                str += this.getScript('lib',debugJs,releaseJs);
+                str += this.getScript('lib', debugJs, releaseJs);
             }
         }
         return str;
