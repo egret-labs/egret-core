@@ -1,7 +1,3 @@
-/**
- * Created by yanjiaqi on 15/9/7.
- */
-/// <reference path="../lib/types.d.ts" />
 var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, generator) {
     return new (P || (P = Promise))(function (resolve, reject) {
         function fulfilled(value) { try { step(generator.next(value)); } catch (e) { reject(e); } }
@@ -64,26 +60,23 @@ var UpgradeCommand = (function () {
                         ];
                         _a.label = 1;
                     case 1:
-                        _a.trys.push([1, 3, , 4]);
+                        _a.trys.push([1, 4, , 5]);
                         return [4 /*yield*/, series(upgrade, upgradeConfigArr.concat())];
                     case 2:
                         _a.sent();
                         modify.save(upgradeConfigArr.pop().v);
-                        service.execCommand({
-                            path: Project.utils.getProjectRoot(),
-                            command: "shutdown",
-                            option: egret.args
-                        }, function (e) {
-                            globals.log(1702);
-                            return globals.exit(0);
-                        }, true);
-                        return [3 /*break*/, 4];
+                        return [4 /*yield*/, service.shutdown(Project.utils.getProjectRoot())];
                     case 3:
+                        _a.sent();
+                        globals.log(1702);
+                        globals.exit(0);
+                        return [3 /*break*/, 5];
+                    case 4:
                         e_1 = _a.sent();
                         console.log(e_1);
                         globals.exit(1705);
-                        return [3 /*break*/, 4];
-                    case 4: return [2 /*return*/];
+                        return [3 /*break*/, 5];
+                    case 5: return [2 /*return*/];
                 }
             });
         });
@@ -114,7 +107,7 @@ var series = function (cb, arr) {
         .then(function () { return results; });
 };
 function upgrade(info) {
-    var version = egret.args.properties.getVersion();
+    var version = Project.utils.getVersion();
     var v = info.v;
     var command;
     if (info.command) {

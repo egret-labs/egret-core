@@ -1,8 +1,3 @@
-/**
- * Created by yanjiaqi on 15/9/7.
- */
-/// <reference path="../lib/types.d.ts" />
-
 import file = require('../lib/FileUtil');
 import service = require('../service/index');
 import Project = require('../parser/EgretProject');
@@ -84,7 +79,7 @@ let series = <T>(cb: (data: T, index?: number, result?: any) => Promise<number>,
 }
 
 function upgrade(info: VersionInfo) {
-    var version = egret.args.properties.getVersion();
+    var version = Project.utils.getVersion();
     var v = info.v;
     var command: egret.Command;
     if (info.command) {

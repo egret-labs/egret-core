@@ -78,11 +78,13 @@ function handleCommands(task, res) {
     }
 }
 function shutdown(path) {
-    execCommand({
-        path: path,
-        command: "shutdown",
-        option: egret.args
-    }, null, false);
+    return new Promise(function (reslove, reject) {
+        execCommand({
+            path: path,
+            command: "shutdown",
+            option: egret.args
+        }, reslove, false);
+    });
 }
 exports.shutdown = shutdown;
 /**
