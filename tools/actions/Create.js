@@ -67,26 +67,15 @@ var Create = (function () {
     };
     return Create;
 }());
-function compileTemplate(project) {
+function compileTemplate(projectConfig) {
     var options = egret.args;
-    var moduleScripts = [];
-    var modules = project.modules;
-    var platform = project.platform;
+    var modules = projectConfig.modules;
+    var platform = projectConfig.platform;
     updateEgretProperties(modules);
-    modules.forEach(function (m) {
-        moduleScripts.push(utils.format("libs/{0}/{0}", m.name));
-        var scriptName = utils.format("libs/{0}/{0}.{1}", m.name, platform);
-        if (FileUtil.exists(FileUtil.joinPath(options.srcDir, scriptName + ".js")))
-            moduleScripts.push(scriptName);
-    });
-    var scriptTemplate = "<!--{{~it.scripts :value:index}}-->\n    <script src=\"{{=value}}\"></script>\n    <!--{{~}}-->";
-    project.moduleScripts = moduleScripts;
-    project['scriptTemplate'] = scriptTemplate;
     var files = FileUtil.searchByFunction(options.projectDir, function (f) { return f.indexOf("index.html") > 0; });
     files.forEach(function (file) {
         var content = FileUtil.read(file);
-        var temp = doT.template(content);
-        content = temp(project);
+        content = doT.template(content)(projectConfig);
         FileUtil.save(file, content);
     });
     if (platform == 'native')

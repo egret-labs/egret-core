@@ -134,7 +134,6 @@ declare module egret {
         frameRate?: number;
         background?: string;
         entryClass?: string;
-        moduleScripts?: string[];
         scripts?: string[];
         nativeScripts?: string[];
         resolutionMode?: string;
