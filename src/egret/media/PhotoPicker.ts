@@ -1,4 +1,7 @@
 namespace egret {
+    /**
+     * 打开照片选择窗口，返回Promise对象，resolve参数为ArrayBuffer类型的照片数据,可以使用BitmapData的create方法将ArrayBuffer构造为BitmapData实例
+     */
     export function pickPhoto(): Promise<ArrayBuffer> {
         return new Promise((resolve, reject) => {
             if (egret.Capabilities.runtimeType === egret.RuntimeType.NATIVE) {
