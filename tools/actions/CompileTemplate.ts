@@ -95,6 +95,7 @@ export function getModuleScripts() {
         var releaseJs = "";
         var jsDebugpath = FileUtil.joinPath(projectRoot, targetFolder, moduleName + ".js");
         var jsReleasepath = FileUtil.joinPath(projectRoot, targetFolder, moduleName + ".min.js");
+        
         if (FileUtil.exists(jsDebugpath)) {
             debugJs = targetFolder + moduleName + ".js";
         }

@@ -36,8 +36,8 @@ class CopyNativeFiles {
             var outputRuntime = FileUtil.joinPath(url2, "launcher");
             FileUtil.copy(sourceRuntime, outputRuntime);
 
-            var sourceRuntime = FileUtil.joinPath(options.libsDir);
-            var outputRuntime = FileUtil.joinPath(url2, "libs");
+            // var sourceRuntime = FileUtil.joinPath(options.libsDir);
+            // var outputRuntime = FileUtil.joinPath(url2, "libs");
             FileUtil.copy(sourceRuntime, outputRuntime);
         }
         else {

@@ -94,22 +94,16 @@ var EgretProject = (function () {
         }
         return null;
     };
-    EgretProject.prototype.getModulePath = function (moduleName) {
-        for (var _i = 0, _a = this.egretProperties.modules; _i < _a.length; _i++) {
-            var m = _a[_i];
-            if (m.name == moduleName) {
-                var moduleBin = void 0;
-                if (m.path == null) {
-                    moduleBin = path.join(egret.root, "build", moduleName);
-                }
-                else {
-                    var tempModulePath = file.getAbsolutePath(m.path);
-                    moduleBin = path.join(tempModulePath, "bin", moduleName);
-                }
-                return moduleBin;
-            }
+    EgretProject.prototype.getModulePath = function (m) {
+        var moduleBin;
+        if (m.path == null) {
+            moduleBin = path.join(egret.root, "build", m.name);
         }
-        return null;
+        else {
+            var tempModulePath = file.getAbsolutePath(m.path);
+            moduleBin = path.join(tempModulePath, "bin", m.name);
+        }
+        return moduleBin;
     };
     EgretProject.prototype.getLibraryFolder = function () {
         return this.getFilePath('libs/modules');
@@ -118,9 +112,13 @@ var EgretProject = (function () {
         var _this = this;
         return this.egretProperties.modules.map(function (m) {
             var name = m.name;
-            var source = _this.getModulePath(name);
+            var source = _this.getModulePath(m);
             var target = path.join(_this.getLibraryFolder(), name);
-            target = path.relative(_this.getProjectRoot(), target);
+            var relative = path.relative(_this.getProjectRoot(), source);
+            if (relative.indexOf("../") == -1) {
+                target = source;
+            }
+            target = path.relative(_this.getProjectRoot(), target) + "/";
             return { name: name, source: source, target: target };
         });
     };

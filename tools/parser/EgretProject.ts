@@ -62,7 +62,7 @@ export class EgretProject {
     }
 
     getFilePath(fileName: string) {
-        return path.resolve(this.getProjectRoot(),fileName);
+        return path.resolve(this.getProjectRoot(), fileName);
     }
 
     /**
@@ -111,33 +111,34 @@ export class EgretProject {
         return null;
     }
 
-    private getModulePath(moduleName) {
-        for (let m of this.egretProperties.modules) {
-            if (m.name == moduleName) {
-                let moduleBin;
-                if (m.path == null) {
-                    moduleBin = path.join(egret.root, "build", moduleName);
-                }
-                else {
-                    let tempModulePath = file.getAbsolutePath(m.path);
-                    moduleBin = path.join(tempModulePath, "bin", moduleName);
-                }
-                return moduleBin;
-            }
+    private getModulePath(m: egret.EgretPropertyModule) {
+        let moduleBin;
+        if (m.path == null) {
+            moduleBin = path.join(egret.root, "build", m.name);
         }
-        return null;
+        else {
+            let tempModulePath = file.getAbsolutePath(m.path);
+            moduleBin = path.join(tempModulePath, "bin", m.name);
+        }
+        return moduleBin;
     }
 
-    getLibraryFolder(){
+    getLibraryFolder() {
         return this.getFilePath('libs/modules');
     }
 
     getModulesConfig() {
         return this.egretProperties.modules.map(m => {
             let name = m.name;
-            let source = this.getModulePath(name);
+            let source = this.getModulePath(m);
             let target = path.join(this.getLibraryFolder(), name)
-            target = path.relative(this.getProjectRoot(),target);
+
+            let relative = path.relative(this.getProjectRoot(), source);
+            if (relative.indexOf("../") == -1) {
+                target = source;
+            }
+         
+            target = path.relative(this.getProjectRoot(), target) + "/";
             return { name, source, target }
         })
     }

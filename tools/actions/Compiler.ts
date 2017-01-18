@@ -16,12 +16,12 @@ interface CompileOption {
 }
 
 export interface EgretCompilerHost {
-        program: ts.Program;
-        files?: string[];
-        exitStatus: number;
-        compileWithChanges?: (filesChanged: egret.FileChanges, sourceMap?: boolean) => EgretCompilerHost;
-        messages?: string[];
-    }
+    program: ts.Program;
+    files?: string[];
+    exitStatus: number;
+    compileWithChanges?: (filesChanged: egret.FileChanges, sourceMap?: boolean) => EgretCompilerHost;
+    messages?: string[];
+}
 
 export class Compiler {
 
@@ -221,7 +221,9 @@ export class Compiler {
         return { files: this.sortedFiles, program: this.services.getProgram(), exitStatus: 0, messages: this.errors, compileWithChanges: this.compileWithChanges.bind(this) };
     }
 
-    public loadTsconfig(url: string, options: egret.ToolArgs) {
+    parseTsconfig() {
+        let url = egret.args.projectDir + "tsconfig.json";
+        let options = egret.args;
         var configObj: any;
         try {
             configObj = JSON.parse(file.read(url));
@@ -232,7 +234,7 @@ export class Compiler {
                     "target": "es5",
                     "experimentalDecorators": true,
                     "lib": [
-                        "es5", "dom"
+                        "es5", "dom", "es2015.promise"
                     ]
                 },
                 "exclude": [
@@ -241,8 +243,8 @@ export class Compiler {
             }
         }
 
-        let notSupport = ["outDir", "module", "noLib", "outFile", "rootDir", "out"];
-        let defaultSupport = { target: "es5" }
+        let notSupport = ["module", "noLib", "outFile", "rootDir", "out"];
+        let defaultSupport = { target: "es5", outDir: "bin-debug" }
         let compilerOptions = configObj.compilerOptions;
         for (let optionName of notSupport) {
             if (compilerOptions.hasOwnProperty(optionName)) {
@@ -252,11 +254,10 @@ export class Compiler {
             }
         }
         for (let optionName in defaultSupport) {
-            if (compilerOptions[optionName] != defaultSupport.target) {
-                compilerOptions[optionName] = defaultSupport.target;
+            if (compilerOptions[optionName] != defaultSupport[optionName]) {
+                compilerOptions[optionName] = defaultSupport[optionName];
                 var error = utils.tr(1116, optionName);
-                console.log(`${optionName}将被调整为${defaultSupport.target}`)
-                console.log(error);
+                console.log(`${error} 将被调整为'${defaultSupport[optionName]}'`)
             }
         }
 

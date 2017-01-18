@@ -36,10 +36,9 @@ class CompileProject {
         }
         else { //console.log("----compileProject.compileProject.A-----")
             var compiler = new Compiler.Compiler();
-            var tsList = FileUtil.search(args.srcDir, "ts");
-            var libsList = FileUtil.search(args.libsDir, "ts");
-            let configParsedResult = compiler.loadTsconfig(args.projectDir + "tsconfig.json", args);
+            let configParsedResult = compiler.parseTsconfig();
             this.compilerOptions = configParsedResult.options;
+            let fileNames = configParsedResult.fileNames;
             args.tsconfigError = configParsedResult.errors.map(d => d.messageText.toString());
             if (args.publish) {
                 this.compilerOptions.outFile = path.join(args.releaseDir, "main.min.js");
@@ -52,7 +51,7 @@ class CompileProject {
             }
             this.compilerOptions.allowUnreachableCode = true;
             this.compilerOptions.emitReflection = true;
-            this.compilerHost = compiler.compileGame(this.compilerOptions, tsList.concat(libsList));
+            this.compilerHost = compiler.compileGame(this.compilerOptions, fileNames);
         }
         let relative = f => path.relative(args.projectDir, f)
 
