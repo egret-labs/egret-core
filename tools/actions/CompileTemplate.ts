@@ -76,9 +76,10 @@ function getScript(type: 'lib' | 'game' | 'none', src, releaseSrc?) {
 export function getModuleScripts() {
     var properties = EgretProject.utils;
     let projectRoot = properties.getProjectRoot();
-    var modules = properties.getAllModuleNames();
+    var modules = properties.getModulesConfig();
     var str = "";
-    for (let moduleName of modules) {
+    for (let m of modules) {
+        let moduleName = m.name;
         var debugJs = "";
         var releaseJs = "";
 

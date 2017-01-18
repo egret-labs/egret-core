@@ -115,8 +115,13 @@ var EgretProject = (function () {
         }
         return null;
     };
-    EgretProject.prototype.getAllModuleNames = function () {
-        return this.egretProperties.modules.map(function (m) { return m.name; });
+    EgretProject.prototype.getModulesConfig = function () {
+        var _this = this;
+        //todo refactor
+        return this.egretProperties.modules.map(function (m) { return m.name; }).map(function (name) {
+            var path = _this.getModulePath(name);
+            return { name: name, path: path };
+        });
     };
     EgretProject.prototype.getPublishType = function (runtime) {
         if (globals.hasKeys(this.egretProperties, ["publish", runtime])) {

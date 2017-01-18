@@ -16,11 +16,10 @@ export function copyToLibs() {
     let moduleDir = FileUtil.joinPath(options.libsDir, 'modules');
     FileUtil.remove(moduleDir);
     let project = EgretProject.utils;
-    project.getAllModuleNames().map(moduleName => {
-        let modulePath = project.getModulePath(moduleName);
-        let targetFile = FileUtil.joinPath(moduleDir, moduleName);
+    project.getModulesConfig().forEach(m => {
+        let targetFile = FileUtil.joinPath(moduleDir, m.name);
         if (options.projectDir.toLowerCase() != egret.root.toLowerCase()) {
-            FileUtil.copy(modulePath, targetFile);
+            FileUtil.copy(m.path, targetFile);
         }
     })
 }

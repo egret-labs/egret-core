@@ -115,7 +115,7 @@ export class EgretProject {
         return null;
     }
 
-    getModulePath(moduleName) {
+    private getModulePath(moduleName) {
         for (let m of this.egretProperties.modules) {
             if (m.name == moduleName) {
                 let moduleBin;
@@ -132,8 +132,12 @@ export class EgretProject {
         return null;
     }
 
-    getAllModuleNames() {
-        return this.egretProperties.modules.map(m => m.name);
+    getModulesConfig() {
+        //todo refactor
+        return this.egretProperties.modules.map(m => m.name).map(name => {
+            let path = this.getModulePath(name);
+            return { name, path }
+        })
     }
 
     getPublishType(runtime: string): number {

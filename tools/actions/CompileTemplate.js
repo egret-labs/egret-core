@@ -61,10 +61,11 @@ function getScript(type, src, releaseSrc) {
 function getModuleScripts() {
     var properties = EgretProject.utils;
     var projectRoot = properties.getProjectRoot();
-    var modules = properties.getAllModuleNames();
+    var modules = properties.getModulesConfig();
     var str = "";
     for (var _i = 0, modules_1 = modules; _i < modules_1.length; _i++) {
-        var moduleName = modules_1[_i];
+        var m = modules_1[_i];
+        var moduleName = m.name;
         var debugJs = "";
         var releaseJs = "";
         var moduleReRoot = 'libs/modules/' + moduleName + "/";
