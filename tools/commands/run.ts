@@ -9,7 +9,6 @@ import Build = require('./build');
 import server = require('../server/server');
 import FileUtil = require('../lib/FileUtil');
 import service = require('../service/index');
-import CopyFiles = require('../actions/CopyFiles');
 import CompileProject = require('../actions/CompileProject');
 import CompileTemplate = require('../actions/CompileTemplate');
 

@@ -7,7 +7,6 @@ import service = require('../service/index');
 import ServiceSocket = require('../service/ServiceSocket');
 import FileUtil = require('../lib/FileUtil');
 import Native = require('../actions/NativeProject');
-import CopyFiles = require('../actions/CopyFiles');
 import exmlActions = require('../actions/exml');
 import state = require('../lib/DirectoryState');
 import CompileProject = require('../actions/CompileProject');
