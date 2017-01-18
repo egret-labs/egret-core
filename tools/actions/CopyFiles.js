@@ -1,9 +1,6 @@
 /// <reference path="../lib/types.d.ts" />
 var FileUtil = require("../lib/FileUtil");
 var EgretProject = require("../parser/EgretProject");
-var fileExtensionToIgnore = {
-    "ts": true
-};
 function copyToLibs() {
     var options = egret.args;
     var moduleDir = FileUtil.joinPath(options.libsDir, 'modules');

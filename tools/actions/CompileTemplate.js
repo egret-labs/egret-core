@@ -5,7 +5,6 @@
 var FileUtil = require("../lib/FileUtil");
 var project = require("../actions/Project");
 var htmlparser = require("../lib/htmlparser");
-var doT = require("../lib/doT");
 var EgretProject = require("../parser/EgretProject");
 function changeHtmlToRelease(htmlPath) {
     var htmlContent = FileUtil.read(htmlPath);
@@ -132,7 +131,7 @@ function refreshNativeRequire(htmlPath, isDebug) {
     var reg = /\/\/----auto game_file_list start----[\s\S]*\/\/----auto game_file_list end----/;
     var replaceStr = '\/\/----auto game_file_list start----' + listStr + '\t\/\/----auto game_file_list end----';
     requireContent = requireContent.replace(reg, replaceStr);
-    var optionStr = getNativeProjectInfo(htmlPath);
+    var optionStr = project.getNativeProjectInfo(htmlPath);
     var reg = /\/\/----auto option start----[\s\S]*\/\/----auto option end----/;
     var replaceStr = '\/\/----auto option start----\n\t\t' + optionStr + '\n\t\t\/\/----auto option end----';
     requireContent = requireContent.replace(reg, replaceStr);
@@ -185,32 +184,4 @@ function getLibsList(html, isNative, isDebug) {
             el.children.forEach(function (e) { return visitDom(e); });
         }
     }
-}
-function getNativeProjectInfo(html) {
-    if (!FileUtil.exists(html))
-        return;
-    var content = FileUtil.read(html, true);
-    var projs = project.parseProjectInfo(content);
-    var proj;
-    if (projs.length == 0) {
-        proj = {};
-    }
-    else {
-        proj = projs[0];
-    }
-    var optionStr = 'entryClassName: "{{=it.entryClass}}",\n\t\t' +
-        'frameRate: {{=it.frameRate}},\n\t\t' +
-        'scaleMode: "{{=it.scaleMode}}",\n\t\t' +
-        'contentWidth: {{=it.contentWidth}},\n\t\t' +
-        'contentHeight: {{=it.contentHeight}},\n\t\t' +
-        'showPaintRect: {{=it.showPaintRect}},\n\t\t' +
-        'showFPS: {{=it.showFPS}},\n\t\t' +
-        'fpsStyles: "{{=it.fpsStyles}}",\n\t\t' +
-        'showLog: {{=it.showLog}},\n\t\t' +
-        'logFilter: "{{=it.logFilter}}",\n\t\t' +
-        'maxTouches: {{=it.maxTouches}},\n\t\t' +
-        'textureScaleFactor: 1';
-    var temp = doT.template(optionStr);
-    optionStr = temp(proj);
-    return optionStr;
 }

@@ -7,10 +7,6 @@ import FileUtil = require('../lib/FileUtil');
 import CompileTemplate = require('./CompileTemplate');
 import * as EgretProject from '../parser/EgretProject';
 
-var fileExtensionToIgnore = {
-    "ts": true
-};
-
 export function copyToLibs() {
     var options = egret.args;
     let moduleDir = FileUtil.joinPath(options.libsDir, 'modules');
