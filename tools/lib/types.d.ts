@@ -49,7 +49,6 @@ declare module egret {
         nativeTemplatePath: string;
         all: boolean;
         projectDir: string;
-        libsDir: string;
         getTmpDir(): string;
         srcDir: string;
         larkPropertiesFile: string;

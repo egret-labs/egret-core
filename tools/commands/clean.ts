@@ -21,7 +21,7 @@ class Clean implements egret.Command {
 
         //刷新libs 中 modules 文件
         CompileTemplate.copyToLibs();
-
+        CompileTemplate.modifyIndexHTML();
         //编译 bin-debug 文件
         var compileProject = new CompileProject();
         var result = compileProject.compile(options);
