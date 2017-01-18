@@ -3,7 +3,6 @@ var utils = require("../lib/utils");
 var service = require("../service/index");
 var FileUtil = require("../lib/FileUtil");
 var Native = require("../actions/NativeProject");
-var CopyFiles = require("../actions/CopyFiles");
 var exmlActions = require("../actions/exml");
 var state = require("../lib/DirectoryState");
 var CompileProject = require("../actions/CompileProject");
@@ -145,7 +144,7 @@ var AutoCompileCommand = (function () {
     };
     AutoCompileCommand.prototype.copyLibs = function () {
         //刷新libs 中 modules 文件
-        CopyFiles.copyToLibs();
+        CompileTemplate.copyToLibs();
         //修改 html 中 modules 块
         CompileTemplate.modifyIndexHTML();
     };

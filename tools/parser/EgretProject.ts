@@ -34,7 +34,7 @@ export class EgretProject {
 
     reload() {
         this.egretProperties = { modules: [] };
-        let egretPropertiesPath = file.joinPath(this.projectRoot, "egretProperties.json");
+        let egretPropertiesPath = this.getFilePath("egretProperties.json");
         if (file.exists(egretPropertiesPath)) {
             this.egretProperties = JSON.parse(file.read(egretPropertiesPath));
             let useGUIorEUI = 0;
@@ -61,8 +61,8 @@ export class EgretProject {
         return this.projectRoot;
     }
 
-    public getFilePath(fileName: string) {
-        return file.joinPath(this.getProjectRoot(), fileName)
+    getFilePath(fileName: string) {
+        return path.resolve(this.getProjectRoot(),fileName);
     }
 
     /**
@@ -73,11 +73,7 @@ export class EgretProject {
         return this.egretProperties.egret_version;
     }
 
-    /**
-     * 发布路径的根目录
-     * @returns {string}
-     */
-    getReleaseRoot(): string {
+    getReleaseRoot() {
         var p = "bin-release";
         if (globals.hasKeys(this.egretProperties, ["publish", "path"])) {
             p = this.egretProperties.publish.path;
@@ -132,11 +128,17 @@ export class EgretProject {
         return null;
     }
 
+    getLibraryFolder(){
+        return this.getFilePath('libs/modules');
+    }
+
     getModulesConfig() {
-        //todo refactor
-        return this.egretProperties.modules.map(m => m.name).map(name => {
-            let path = this.getModulePath(name);
-            return { name, path }
+        return this.egretProperties.modules.map(m => {
+            let name = m.name;
+            let source = this.getModulePath(name);
+            let target = path.join(this.getLibraryFolder(), name)
+            target = path.relative(this.getProjectRoot(),target);
+            return { name, source, target }
         })
     }
 

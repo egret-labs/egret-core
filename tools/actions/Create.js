@@ -47,18 +47,18 @@ var Create = (function () {
     }
     Create.prototype.execute = function () {
         return __awaiter(this, void 0, void 0, function () {
-            var proj, options, emptyTemplate, template;
+            var proj, options, project, emptyTemplate, template;
             return __generator(this, function (_a) {
                 proj = this.project;
                 options = egret.args;
+                project = EgretProject.utils;
                 projectAction.normalize(proj);
                 emptyTemplate = FileUtil.joinPath(egret.root, TemplatesRoot + "empty");
                 template = FileUtil.joinPath(egret.root, TemplatesRoot + proj.type);
-                FileUtil.copy(emptyTemplate, options.projectDir);
-                FileUtil.copy(template, options.projectDir);
-                //options.outDir = FileUtil.joinPath("..", options.outDir);
+                FileUtil.copy(emptyTemplate, project.getProjectRoot());
+                FileUtil.copy(template, project.getProjectRoot());
                 compileTemplate(proj);
-                EgretProject.utils.reload();
+                project.reload();
                 new Clean().execute();
                 console.log(utils.tr(10017));
                 return [2 /*return*/, Promise.resolve(DontExitCode)];

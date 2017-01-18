@@ -21,7 +21,7 @@ class Clean implements egret.Command {
         utils.clean(options.debugDir);
 
         //刷新libs 中 modules 文件
-        CopyFiles.copyToLibs();
+        CompileTemplate.copyToLibs();
 
         //编译 bin-debug 文件
         var compileProject = new CompileProject();

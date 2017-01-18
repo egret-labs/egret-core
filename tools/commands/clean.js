@@ -1,7 +1,6 @@
 /// <reference path="../lib/types.d.ts" />
 var utils = require("../lib/utils");
 var service = require("../service/index");
-var CopyFiles = require("../actions/CopyFiles");
 var CompileProject = require("../actions/CompileProject");
 var CompileTemplate = require("../actions/CompileTemplate");
 var NativeProject = require("../actions/NativeProject");
@@ -16,7 +15,7 @@ var Clean = (function () {
         service.shutdown(options.projectDir);
         utils.clean(options.debugDir);
         //刷新libs 中 modules 文件
-        CopyFiles.copyToLibs();
+        CompileTemplate.copyToLibs();
         //编译 bin-debug 文件
         var compileProject = new CompileProject();
         var result = compileProject.compile(options);

@@ -43,6 +43,15 @@ function refreshDebugHtml(htmlPath, gameScripts) {
     }
     FileUtil.save(htmlPath, htmlContent);
 }
+function copyToLibs() {
+    var project = EgretProject.utils;
+    var moduleDir = project.getLibraryFolder();
+    FileUtil.remove(moduleDir);
+    project.getModulesConfig().forEach(function (m) {
+        FileUtil.copy(m.source, project.getFilePath(m.target));
+    });
+}
+exports.copyToLibs = copyToLibs;
 function getScript(type, src, releaseSrc) {
     switch (type) {
         case 'lib':
@@ -65,16 +74,16 @@ function getModuleScripts() {
     for (var _i = 0, modules_1 = modules; _i < modules_1.length; _i++) {
         var m = modules_1[_i];
         var moduleName = m.name;
+        var targetFolder = m.target;
         var debugJs = "";
         var releaseJs = "";
-        var moduleReRoot = 'libs/modules/' + moduleName + "/";
-        var jsDebugpath = FileUtil.joinPath(projectRoot, moduleReRoot, moduleName + ".js");
-        var jsReleasepath = FileUtil.joinPath(projectRoot, moduleReRoot, moduleName + ".min.js");
+        var jsDebugpath = FileUtil.joinPath(projectRoot, targetFolder, moduleName + ".js");
+        var jsReleasepath = FileUtil.joinPath(projectRoot, targetFolder, moduleName + ".min.js");
         if (FileUtil.exists(jsDebugpath)) {
-            debugJs = moduleReRoot + moduleName + ".js";
+            debugJs = targetFolder + moduleName + ".js";
         }
         if (FileUtil.exists(jsReleasepath)) {
-            releaseJs = moduleReRoot + moduleName + ".min.js";
+            releaseJs = targetFolder + moduleName + ".min.js";
         }
         if (debugJs == "") {
             debugJs = releaseJs;
@@ -87,13 +96,13 @@ function getModuleScripts() {
         }
         debugJs = "";
         releaseJs = "";
-        jsDebugpath = FileUtil.joinPath(projectRoot, moduleReRoot, moduleName + ".web.js");
-        jsReleasepath = FileUtil.joinPath(projectRoot, moduleReRoot, moduleName + ".web.min.js");
+        jsDebugpath = FileUtil.joinPath(projectRoot, targetFolder, moduleName + ".web.js");
+        jsReleasepath = FileUtil.joinPath(projectRoot, targetFolder, moduleName + ".web.min.js");
         if (FileUtil.exists(jsDebugpath)) {
-            debugJs = moduleReRoot + moduleName + ".web.js";
+            debugJs = targetFolder + moduleName + ".web.js";
         }
         if (FileUtil.exists(jsReleasepath)) {
-            releaseJs = moduleReRoot + moduleName + ".web.min.js";
+            releaseJs = targetFolder + moduleName + ".web.min.js";
         }
         if (debugJs == "") {
             debugJs = releaseJs;

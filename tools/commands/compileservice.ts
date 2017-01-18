@@ -190,7 +190,7 @@ class AutoCompileCommand implements egret.Command {
 
     private copyLibs() {
         //刷新libs 中 modules 文件
-        CopyFiles.copyToLibs();
+        CompileTemplate.copyToLibs();
         //修改 html 中 modules 块
         CompileTemplate.modifyIndexHTML();
     }

@@ -32,7 +32,7 @@ class Build implements egret.Command {
             utils.exit(10015, options.projectDir);
         }
         if (!FileUtil.exists(FileUtil.joinPath(options.projectDir, 'libs/modules/egret/'))) {
-            CopyFiles.copyToLibs();
+            CompileTemplate.copyToLibs();
         }
 
         service.execCommand({

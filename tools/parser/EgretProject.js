@@ -26,7 +26,7 @@ var EgretProject = (function () {
     };
     EgretProject.prototype.reload = function () {
         this.egretProperties = { modules: [] };
-        var egretPropertiesPath = file.joinPath(this.projectRoot, "egretProperties.json");
+        var egretPropertiesPath = this.getFilePath("egretProperties.json");
         if (file.exists(egretPropertiesPath)) {
             this.egretProperties = JSON.parse(file.read(egretPropertiesPath));
             var useGUIorEUI = 0;
@@ -53,7 +53,7 @@ var EgretProject = (function () {
         return this.projectRoot;
     };
     EgretProject.prototype.getFilePath = function (fileName) {
-        return file.joinPath(this.getProjectRoot(), fileName);
+        return path.resolve(this.getProjectRoot(), fileName);
     };
     /**
      * 获取项目使用的egret版本号
@@ -62,10 +62,6 @@ var EgretProject = (function () {
     EgretProject.prototype.getVersion = function () {
         return this.egretProperties.egret_version;
     };
-    /**
-     * 发布路径的根目录
-     * @returns {string}
-     */
     EgretProject.prototype.getReleaseRoot = function () {
         var p = "bin-release";
         if (globals.hasKeys(this.egretProperties, ["publish", "path"])) {
@@ -115,12 +111,17 @@ var EgretProject = (function () {
         }
         return null;
     };
+    EgretProject.prototype.getLibraryFolder = function () {
+        return this.getFilePath('libs/modules');
+    };
     EgretProject.prototype.getModulesConfig = function () {
         var _this = this;
-        //todo refactor
-        return this.egretProperties.modules.map(function (m) { return m.name; }).map(function (name) {
-            var path = _this.getModulePath(name);
-            return { name: name, path: path };
+        return this.egretProperties.modules.map(function (m) {
+            var name = m.name;
+            var source = _this.getModulePath(name);
+            var target = path.join(_this.getLibraryFolder(), name);
+            target = path.relative(_this.getProjectRoot(), target);
+            return { name: name, source: source, target: target };
         });
     };
     EgretProject.prototype.getPublishType = function (runtime) {

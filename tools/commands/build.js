@@ -2,7 +2,7 @@
 var utils = require("../lib/utils");
 var service = require("../service/index");
 var FileUtil = require("../lib/FileUtil");
-var CopyFiles = require("../actions/CopyFiles");
+var CompileTemplate = require("../actions/CompileTemplate");
 var project = require("../parser/EgretProject");
 var ts = require("../lib/typescript-plus/lib/typescript");
 var Compiler = require("../actions/Compiler");
@@ -27,7 +27,7 @@ var Build = (function () {
             utils.exit(10015, options.projectDir);
         }
         if (!FileUtil.exists(FileUtil.joinPath(options.projectDir, 'libs/modules/egret/'))) {
-            CopyFiles.copyToLibs();
+            CompileTemplate.copyToLibs();
         }
         service.execCommand({
             path: egret.args.projectDir,

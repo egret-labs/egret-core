@@ -20,18 +20,16 @@ class Create implements egret.Command {
 
         var proj = this.project;
         var options = egret.args;
+        let project = EgretProject.utils;
 
         projectAction.normalize(proj);
 
         var emptyTemplate = FileUtil.joinPath(egret.root, TemplatesRoot + "empty");
         var template = FileUtil.joinPath(egret.root, TemplatesRoot + proj.type);
-
-        FileUtil.copy(emptyTemplate, options.projectDir);
-        FileUtil.copy(template, options.projectDir);
-
-        //options.outDir = FileUtil.joinPath("..", options.outDir);
+        FileUtil.copy(emptyTemplate, project.getProjectRoot());
+        FileUtil.copy(template, project.getProjectRoot());
         compileTemplate(proj);
-        EgretProject.utils.reload();
+        project.reload();
 
         new Clean().execute();
         console.log(utils.tr(10017));
