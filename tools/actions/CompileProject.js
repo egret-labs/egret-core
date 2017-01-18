@@ -32,7 +32,7 @@ var CompileProject = (function () {
         }
         else {
             var compiler = new Compiler.Compiler();
-            var configParsedResult = compiler.loadTsconfig(args.projectDir + "tsconfig.json", args);
+            var configParsedResult = compiler.parseTsconfig();
             this.compilerOptions = configParsedResult.options;
             var fileNames = configParsedResult.fileNames;
             args.tsconfigError = configParsedResult.errors.map(function (d) { return d.messageText.toString(); });

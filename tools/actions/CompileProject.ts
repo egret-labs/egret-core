@@ -36,7 +36,7 @@ class CompileProject {
         }
         else { //console.log("----compileProject.compileProject.A-----")
             var compiler = new Compiler.Compiler();
-            let configParsedResult = compiler.loadTsconfig(args.projectDir + "tsconfig.json", args);
+            let configParsedResult = compiler.parseTsconfig();
             this.compilerOptions = configParsedResult.options;
             let fileNames = configParsedResult.fileNames;
             args.tsconfigError = configParsedResult.errors.map(d => d.messageText.toString());
