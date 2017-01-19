@@ -65,10 +65,10 @@ var UpgradeCommand = (function () {
                     case 2:
                         _a.sent();
                         modify.save(upgradeConfigArr.pop().v);
+                        globals.log(1702);
                         return [4 /*yield*/, service.shutdown(Project.utils.getProjectRoot())];
                     case 3:
                         _a.sent();
-                        globals.log(1702);
                         globals.exit(0);
                         return [3 /*break*/, 5];
                     case 4:
@@ -153,8 +153,8 @@ var Upgrade_4_0_1 = (function () {
         tsconfigContent = JSON.stringify(tsconfig, null, "\t");
         file.save(tsconfigPath, tsconfigContent);
         file.copy(path.join(egret.root, 'tools/templates/empty/polyfill'), Project.utils.getFilePath('polyfill'));
-        return Promise.reject('what????');
-        // return Promise.resolve(0)
+        // return Promise.reject('what????');
+        return Promise.resolve(0);
     };
     return Upgrade_4_0_1;
 }());

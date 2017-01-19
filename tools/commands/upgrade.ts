@@ -34,8 +34,8 @@ class UpgradeCommand implements egret.Command {
         try {
             await series(upgrade, upgradeConfigArr.concat())
             modify.save(upgradeConfigArr.pop().v);
-            await service.shutdown(Project.utils.getProjectRoot())
             globals.log(1702);
+            await service.shutdown(Project.utils.getProjectRoot())
             globals.exit(0);
         }
         catch (e) {
@@ -129,9 +129,9 @@ class Upgrade_4_0_1 {
         file.save(tsconfigPath, tsconfigContent);
         file.copy(path.join(egret.root, 'tools/templates/empty/polyfill'), Project.utils.getFilePath('polyfill'));
 
-        return Promise.reject('what????');
+        // return Promise.reject('what????');
 
-        // return Promise.resolve(0)
+        return Promise.resolve(0)
     }
 }
 

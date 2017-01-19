@@ -127,6 +127,8 @@ export class EgretProject {
         return this.getFilePath('libs/modules');
     }
 
+
+
     getModulesConfig() {
         return this.egretProperties.modules.map(m => {
             let name = m.name;
@@ -134,11 +136,11 @@ export class EgretProject {
             let target = path.join(this.getLibraryFolder(), name)
 
             let relative = path.relative(this.getProjectRoot(), source);
-            if (relative.indexOf("../") == -1) {
+            if (relative.indexOf("..") == -1) { // source 在项目中
                 target = source;
             }
-         
-            target = path.relative(this.getProjectRoot(), target) + "/";
+
+            target = path.relative(this.getProjectRoot(), target) + path.sep;
             return { name, source, target }
         })
     }

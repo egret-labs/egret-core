@@ -115,10 +115,10 @@ var EgretProject = (function () {
             var source = _this.getModulePath(m);
             var target = path.join(_this.getLibraryFolder(), name);
             var relative = path.relative(_this.getProjectRoot(), source);
-            if (relative.indexOf("../") == -1) {
+            if (relative.indexOf("..") == -1) {
                 target = source;
             }
-            target = path.relative(_this.getProjectRoot(), target) + "/";
+            target = path.relative(_this.getProjectRoot(), target) + path.sep;
             return { name: name, source: source, target: target };
         });
     };
