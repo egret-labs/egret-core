@@ -73,6 +73,7 @@ var UpgradeCommand = (function () {
                         return [3 /*break*/, 5];
                     case 4:
                         e_1 = _a.sent();
+                        console.log("升级中断，错误信息如下");
                         console.log(e_1);
                         globals.exit(1705);
                         return [3 /*break*/, 5];
@@ -125,14 +126,7 @@ function upgrade(info) {
                 console.error('internal error !!!');
             }
             else {
-                return new Promise(function (reslove, reject) {
-                    var p = commandPromise;
-                    p.then(function () {
-                        reslove(0);
-                    }).catch(function () {
-                        reject('升级中断');
-                    });
-                });
+                return commandPromise;
             }
         }
     }
@@ -144,17 +138,21 @@ var Upgrade_4_0_1 = (function () {
     function Upgrade_4_0_1() {
     }
     Upgrade_4_0_1.prototype.execute = function () {
-        var tsconfigPath = Project.utils.getFilePath('tsconfig.json');
-        var tsconfigContent = file.read(tsconfigPath);
-        var tsconfig = JSON.parse(tsconfigContent);
-        tsconfig.compilerOptions.lib = [
-            "es5", "dom", "es2015.promise"
-        ];
-        tsconfigContent = JSON.stringify(tsconfig, null, "\t");
-        file.save(tsconfigPath, tsconfigContent);
-        file.copy(path.join(egret.root, 'tools/templates/empty/polyfill'), Project.utils.getFilePath('polyfill'));
-        // return Promise.reject('what????');
-        return Promise.resolve(0);
+        return __awaiter(this, void 0, void 0, function () {
+            var tsconfigPath, tsconfigContent, tsconfig;
+            return __generator(this, function (_a) {
+                tsconfigPath = Project.utils.getFilePath('tsconfig.json');
+                tsconfigContent = file.read(tsconfigPath);
+                tsconfig = JSON.parse(tsconfigContent);
+                tsconfig.compilerOptions.lib = [
+                    "es5", "dom", "es2015.promise"
+                ];
+                tsconfigContent = JSON.stringify(tsconfig, null, "\t");
+                file.save(tsconfigPath, tsconfigContent);
+                file.copy(path.join(egret.root, 'tools/templates/empty/polyfill'), Project.utils.getFilePath('polyfill'));
+                return [2 /*return*/, 0];
+            });
+        });
     };
     return Upgrade_4_0_1;
 }());

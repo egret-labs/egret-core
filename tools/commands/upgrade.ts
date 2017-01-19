@@ -39,6 +39,7 @@ class UpgradeCommand implements egret.Command {
             globals.exit(0);
         }
         catch (e) {
+            console.log("升级中断，错误信息如下")
             console.log(e)
             globals.exit(1705);
         }
@@ -46,7 +47,7 @@ class UpgradeCommand implements egret.Command {
 }
 
 
-let series = <T>(cb: (data: T, index?: number, result?: any) => Promise<number>, arr: T[]) => {
+let series = <T>(cb: (data: T, index?: number, result?: any) => PromiseLike<number>, arr: T[]) => {
 
     let parallel = 1;
 
@@ -96,14 +97,7 @@ function upgrade(info: VersionInfo) {
                 console.error('internal error !!!')
             }
             else {
-                return new Promise((reslove, reject) => {
-                    let p = commandPromise as Promise<number>
-                    p.then(() => {
-                        reslove(0)
-                    }).catch(() => {
-                        reject('升级中断')
-                    })
-                })
+                return commandPromise;
             }
 
         }
@@ -117,7 +111,7 @@ function upgrade(info: VersionInfo) {
 class Upgrade_4_0_1 {
 
 
-    execute() {
+    async execute() {
 
         let tsconfigPath = Project.utils.getFilePath('tsconfig.json');
         let tsconfigContent = file.read(tsconfigPath);
@@ -128,10 +122,7 @@ class Upgrade_4_0_1 {
         tsconfigContent = JSON.stringify(tsconfig, null, "\t");
         file.save(tsconfigPath, tsconfigContent);
         file.copy(path.join(egret.root, 'tools/templates/empty/polyfill'), Project.utils.getFilePath('polyfill'));
-
-        // return Promise.reject('what????');
-
-        return Promise.resolve(0)
+        return 0;
     }
 }
 
