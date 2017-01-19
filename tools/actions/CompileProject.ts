@@ -51,7 +51,7 @@ class CompileProject {
             }
             this.compilerOptions.allowUnreachableCode = true;
             this.compilerOptions.emitReflection = true;
-            this.compilerHost = compiler.compileGame(this.compilerOptions, fileNames);
+            this.compilerHost = compiler.compile(this.compilerOptions, fileNames);
         }
         let relative = f => path.relative(args.projectDir, f)
 

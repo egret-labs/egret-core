@@ -150,9 +150,12 @@ var CompileEgretEngine = (function () {
             defines.RELEASE = false;
         }
         compileOptions.defines = defines;
-        var result = this.compiler.compileWithTsconfig(compileOptions, tss);
-        if (result != 0) {
-            return result;
+        var result = this.compiler.compile(compileOptions, tss);
+        if (result.exitStatus != 0) {
+            result.messages.forEach(function (m) { return console.log(m); });
+        }
+        if (result.exitStatus != 0) {
+            return result.exitStatus;
         }
         if (dts) {
             this.dtsFiles.push([declareFile, depends]);

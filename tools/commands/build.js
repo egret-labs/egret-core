@@ -72,7 +72,7 @@ var Build = (function () {
             if (hasTmpTsFile) {
                 compileFiles.push(tmpFilePath);
             }
-            result = compiler.compileGame(compilerOptions, compileFiles);
+            result = compiler.compile(compilerOptions, compileFiles);
             if (hasTmpTsFile) {
                 FileUtil.remove(tmpFilePath);
             }

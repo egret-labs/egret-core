@@ -47,7 +47,7 @@ var CompileProject = (function () {
             }
             this.compilerOptions.allowUnreachableCode = true;
             this.compilerOptions.emitReflection = true;
-            this.compilerHost = compiler.compileGame(this.compilerOptions, fileNames);
+            this.compilerHost = compiler.compile(this.compilerOptions, fileNames);
         }
         var relative = function (f) { return path.relative(args.projectDir, f); };
         var fileResult = GetJavaScriptFileNames(this.compilerHost.files.map(relative), /^src\//);

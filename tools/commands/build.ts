@@ -81,7 +81,7 @@ class Build implements egret.Command {
                 compileFiles.push(tmpFilePath);
             }
 
-            var result = compiler.compileGame(compilerOptions, compileFiles)
+            var result = compiler.compile(compilerOptions, compileFiles)
 
             if (hasTmpTsFile) {
                 FileUtil.remove(tmpFilePath);
