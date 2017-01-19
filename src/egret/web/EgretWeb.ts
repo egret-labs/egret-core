@@ -29,6 +29,39 @@
 
 namespace egret.web {
 
+    let customContext: CustomContext;
+
+    let context: EgretContext = {
+
+        setAutoClear: function(value:boolean):void {
+            WebGLRenderBuffer.autoClear = value;
+        },
+
+        save: function () {
+            // do nothing
+        },
+
+        restore: function () {
+            let context = WebGLRenderContext.getInstance(0, 0);
+            let gl = context.context;
+            gl.bindBuffer(gl.ARRAY_BUFFER, context["vertexBuffer"]);
+            gl.bindBuffer(gl.ELEMENT_ARRAY_BUFFER, context["indexBuffer"]);
+            gl.activeTexture(gl.TEXTURE0);
+            context.shaderManager.currentShader = null;
+            context["bindIndices"] = false;
+            let buffer = context.$bufferStack[1];
+            context["activateBuffer"](buffer);
+            gl.enable(gl.BLEND);
+            context["setBlendMode"]("source-over");
+        }
+    }
+
+    function setRendererContext(custom: CustomContext) {
+        custom.onStart(context);
+        customContext = custom;
+    }
+    egret.setRendererContext = setRendererContext;
+
     /**
      * @private
      * 刷新所有Egret播放器的显示区域尺寸。仅当使用外部JavaScript代码动态修改了Egret容器大小时，需要手动调用此方法刷新显示区域。
@@ -142,6 +175,11 @@ namespace egret.web {
 
         requestAnimationFrame.call(window, onTick);
         function onTick():void {
+
+            if(customContext) {
+                customContext.onRender(context);
+            }
+
             ticker.update();
             requestAnimationFrame.call(window, onTick)
         }
@@ -162,6 +200,10 @@ namespace egret.web {
         resizeTimer = NaN;
 
         egret.updateAllScreens();
+
+        if(customContext) {
+            customContext.onResize(context);
+        }
     }
 
     window.addEventListener("resize", function () {

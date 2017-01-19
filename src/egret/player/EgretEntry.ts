@@ -49,4 +49,42 @@ namespace egret {
      */
     export declare function updateAllScreens():void;
 
+
+    /**
+     * @private
+     */
+    export type CustomContext = {
+
+        onStart: (egretContext: EgretContext) => void;
+
+        onRender: (egretContext: EgretContext) => void;
+
+        onStop: (egretContext: EgretContext) => void;
+
+        onResize: (egretContext: EgretContext) => void;
+    }
+
+    /**
+     * @private
+     */
+    export type EgretContext = {
+
+        setAutoClear: (value:boolean) => void;
+
+        save: () => void;
+
+        restore: () => void;
+
+    }
+
+    /**
+     * Refresh the screen display
+     * @language en_US
+     */
+    /**
+     * 临时接口
+     * @language zh_CN
+     */
+    export declare function setRendererContext(custom: CustomContext):void;
+
 }

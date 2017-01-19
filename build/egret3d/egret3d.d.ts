@@ -479,6 +479,15 @@ declare module egret3d {
          */
         writeByte(value: number): void;
         /**
+         * @language zh_CN
+         * 在字节流中写入一个字节
+         * 使用参数的低 8 位。忽略高 24 位
+         * @param value {number} 一个 32 位整数。低 8 位将被写入字节流
+         * @version Egret 2.4
+         * @platform Web,Native
+         */
+        writeUnsignedByte(value: number): void;
+        /**
          * @language en_US
          * Write the byte sequence that includes length bytes in the specified byte array, bytes, (starting at the byte specified by offset, using a zero-based index), into the byte stream
          * If the length parameter is omitted, the default length value 0 is used and the entire buffer starting at offset is written. If the offset parameter is also omitted, the entire buffer is written
@@ -1255,6 +1264,30 @@ declare module egret3d {
 }
 declare module egret3d {
     /**
+* @private
+*/
+    enum UniformType {
+        uniform1f = 0,
+        uniform1fv = 1,
+        uniform1i = 2,
+        uniform1iv = 3,
+        uniform2f = 4,
+        uniform2fv = 5,
+        uniform2i = 6,
+        uniform2iv = 7,
+        uniform3f = 8,
+        uniform3fv = 9,
+        uniform3i = 10,
+        uniform3iv = 11,
+        uniform4f = 12,
+        uniform4fv = 13,
+        uniform4i = 14,
+        uniform4iv = 15,
+        uniformMatrix2fv = 16,
+        uniformMatrix3fv = 17,
+        uniformMatrix4fv = 18,
+    }
+    /**
     * @private
     */
     enum InternalFormat {
@@ -1677,34 +1710,9 @@ declare module egret3d {
     }
 }
 declare module egret3d {
-    /**
-     * @private
-     * @language zh_CN
-     * @class egret3d.UV
-     * @classdesc
-     * UV类，用来存储模型顶点uv数据
-     *
-     * @see egret3d.GeometryData
-     *
-     * @version Egret 3.0
-     * @platform Web,Native
-     */
-    class UV {
-        /**
-        * @language zh_CN
-        * u
-        */
+    interface UV {
         u: number;
-        /**
-        * @language zh_CN
-        * v
-        */
         v: number;
-        /**
-        * @language zh_CN
-        * constructor
-        */
-        constructor(u?: number, v?: number);
     }
 }
 declare module egret3d {
@@ -3385,6 +3393,7 @@ declare module egret3d {
         * @private
         */
         static helpMatrix: Matrix4_4;
+        static helpMatrix2: Matrix4_4;
         /**
         * @language zh_CN
         * 一个由 16 个数字组成的矢量，其中，每四个元素可以是 4x4 矩阵的一行或一列
@@ -8407,8 +8416,10 @@ declare module egret3d {
         private _frame;
         private _time;
         private _nextframe;
+        private _lastframe;
         private _weight;
         private _reStart;
+        private _end;
         constructor(clip: SkeletonAnimationClip);
         reset(time: number): void;
         reStart(): void;
@@ -10030,7 +10041,7 @@ declare module egret3d {
         * @version Egret 3.0
         * @platform Web,Native
         */
-        createFramebuffer(width: number, height: number, format: FrameBufferFormat): ContextTexture2D;
+        createFramebuffer(width: number, height: number, format: FrameBufferFormat, needDepth?: boolean): ContextTexture2D;
         /**
         * @language zh_CN
         * @private
@@ -10909,6 +10920,7 @@ declare module egret3d {
         * context.creatTexture()接口生成的GPU纹理
         */
         textureBuffer: WebGLTexture;
+        depthBuffer: WebGLTexture;
         /**
          * @language zh_CN
          * 贴图元素对象
@@ -17814,6 +17826,10 @@ declare module egret3d {
         * @platform Web,Native
         */
         static canvas: Egret3DCanvas;
+        static scaleX: number;
+        static scaleY: number;
+        static getX(value: number): number;
+        static getY(value: number): number;
         /**
         * @language zh_CN
         * 当前鼠标X坐标。
@@ -17906,6 +17922,8 @@ declare module egret3d {
         * @platform Web,Native
         */
         constructor();
+        private disableWindowTouch;
+        init(canvas: HTMLCanvasElement): void;
         /**
         * @language zh_CN
         * 对象注册事件侦听器对象，以使侦听器能够接收事件通知。可以为特定类型的事件和优先级注册事件侦听器。
@@ -18865,6 +18883,7 @@ declare module egret3d {
         static parserVersion_2(bytes: ByteArray, geomtry: GeometryData, param: any): void;
         static parserVersion_3(bytes: ByteArray, geomtry: GeometryData, param: any): void;
         static parserVersion_4(bytes: ByteArray, geomtry: GeometryData, param: any): void;
+        static parserVersion_5(bytes: ByteArray, geomtry: GeometryData, param: any): void;
     }
 }
 declare module egret3d {
@@ -18959,12 +18978,14 @@ declare module egret3d {
      */
     class EUMVersion {
         static versionDictionary: any;
-        static parserVersion_1(bytes: ByteArray): {
-            [key: number]: ByteArray;
-        };
+        static versionValue: number;
+        private static parserVersion_1(bytes);
+        private static parserVersion_2(bytes);
         static fillGeometryUv2(id: number, uv2Dict: {
             [key: number]: ByteArray;
         }, geo: Geometry): void;
+        private static fillGeometryUv2_1(id, uv2Dict, geo);
+        private static fillGeometryUv2_2(id, uv2Dict, geo);
     }
 }
 declare module egret3d {
@@ -19541,7 +19562,14 @@ declare module egret3d {
         static TYPE_TEXTUREPACKER: string;
         /**
         * @language zh_CN
-        * 粒子的版本号
+        * 引擎的版本号
+        * @version Egret 3.0
+        * @platform Web,Native
+        */
+        engineVersion: string;
+        /**
+        * @language zh_CN
+        * 文件的版本号
         * @version Egret 3.0
         * @platform Web,Native
         */
@@ -19587,6 +19615,12 @@ declare module egret3d {
         proAnimationDict: any;
         directLight: boolean;
         pointLight: boolean;
+        isFogOpen: boolean;
+        fogColor: number;
+        fogMode: string;
+        fogDensity: number;
+        linearFogStart: number;
+        linearFogEnd: number;
         textures: any;
         uv2: string;
         constructor(data: any, type: string, fileType: string);
@@ -19750,6 +19784,9 @@ declare module egret3d {
          * @platform Web,Native
          */
         gloss: number;
+        gamma: number;
+        refraction: number;
+        refractionintensity: number;
         /**
          * @language zh_CN
          * ambient的强度
@@ -20027,6 +20064,7 @@ declare module egret3d {
         * @platform Web,Native
         */
         delAvatar(part: string): void;
+        play(anim: string, speed: number, reset: boolean): void;
         /**
         * @language zh_CN
         * @param child
@@ -20256,6 +20294,13 @@ declare module egret3d {
      * 用 ParticleJsonParser 解析粒子文件
      */
     class ParticleJsonParser {
+        /**
+        * @language zh_CN
+        * 引擎的版本号
+        * @version Egret 3.0
+        * @platform Web,Native
+        */
+        engineVersion: string;
         /**
          * @language zh_CN
          * 粒子的版本号
@@ -23400,6 +23445,16 @@ declare module egret3d {
         specularLevel: number;
         /**
         * @language zh_CN
+        * gama 矫正。
+        * @default 8.0
+        * @version Egret 3.0
+        * @platform Web,Native
+        */
+        gamma: number;
+        refraction: number;
+        refractionintensity: number;
+        /**
+        * @language zh_CN
         * 材质球的光滑度。
         * @default 8.0
         * @version Egret 3.0
@@ -23455,12 +23510,12 @@ declare module egret3d {
         albedo: number;
         /**
         * @language zh_CN
-        * 高光亮度的强度值,设置较大的值会让高光部分极亮。
+        * 法线贴图的Y轴朝向
         * @default 1.0
         * @version Egret 3.0
         * @platform Web,Native
         */
-        normalScale: number;
+        normalDir: number;
         /**
         * @language zh_CN
         * uv 在贴图上的映射区域，值的范围限制在0.0~1.0之间。
@@ -23526,7 +23581,6 @@ declare module egret3d {
          * @language zh_CN
          */
         materialSourceData: Float32Array;
-        materialSourceData2: Float32Array;
         /**
          * @language zh_CN
          */
@@ -23937,6 +23991,7 @@ declare module egret3d {
         Gbuffer = 9,
         PickPass = 10,
         OutLinePass = 11,
+        position = 12,
     }
     /**
     * @private
@@ -24313,6 +24368,41 @@ declare module egret3d {
          * @platform Web,Native
          */
         gloss: number;
+        /**
+* @language zh_CN
+* 设置材质法线贴图的Y轴朝向
+* 美术的规范各不统一，轴向不一样，需要调整
+* @param value {Number}
+* @version Egret 3.0
+* @platform Web,Native
+*/
+        /**
+        * @language zh_CN
+        * 设置材质法线贴图的Y轴朝向
+        * 美术的规范各不统一，轴向不一样，需要调整
+        * @param value {Number}
+        * @version Egret 3.0
+        * @platform Web,Native
+        */
+        normalDir: number;
+        /**
+         * @language zh_CN
+         * 返回材质的gamma值。
+         * @returns {Number}
+         * @version Egret 3.0
+         * @platform Web,Native
+         */
+        /**
+       * @language zh_CN
+       * 矫正材质的gamma值。
+       * 调整颜色的饱和对比度。
+       * @param value {Number}
+       * @version Egret 3.0
+       * @platform Web,Native
+       */
+        gamma: number;
+        refraction: number;
+        refractionintensity: number;
         /**
         * @language zh_CN
         * 获取映射贴图UV坐标，区域，用uvRectangle 的方式映射
@@ -24856,6 +24946,7 @@ declare module egret3d {
         * @platform Web,Native
         */
         renderTexture: RenderTexture;
+        depthTexture: RenderTexture;
         /**
         * @public
         * @language zh_CN
@@ -24948,6 +25039,7 @@ declare module egret3d {
         addRender(render: RenderBase, index?: number): void;
         removeRender(render: RenderBase): void;
         draw(time: number, delay: number, context3D: Context3DProxy, collect: CollectBase, backViewPort: Rectangle, posList?: any): void;
+        private curDate;
     }
 }
 declare module egret3d {
@@ -25081,6 +25173,9 @@ declare module egret3d {
         private calculateBaseShell(count);
         private calculateVolume(count);
         private calculateVolumeShell(count);
+        private static randomPosTop;
+        private randomPosAtTop();
+        randomDirectionToTop(result: Vector3D): void;
     }
     /**
     * @private
@@ -29910,6 +30005,8 @@ declare module egret3d {
         protected _animation: any;
         protected orthProjectChange: boolean;
         protected _mat: Matrix4_4;
+        protected _maxBest: boolean;
+        protected _maxBestPoint: Point;
         private _angleVector;
         billboardX: Matrix4_4;
         billboardY: Matrix4_4;
@@ -29938,6 +30035,7 @@ declare module egret3d {
          * @platform Web,Native
          */
         cameraType: CameraType;
+        maxWidthAndHeight: Point;
         /**
         * @language zh_CN
         * 返回相机横纵比
@@ -30191,7 +30289,7 @@ declare module egret3d {
     * @language zh_CN
     * @class egret3d.IQuadNode
     * @classdesc
-    * �Ĳ�����һ���ڵ�Ľӿ�
+    * �Ĳ�����һ���ڵ��Ľӿ�
     * @version Egret 3.0
     * @platform Web,Native
     */
@@ -30205,7 +30303,7 @@ declare module egret3d {
         initAABB(): void;
         /**
         * @language zh_CN
-        * �Ƿ�ýڵ���������
+        * �Ƿ��ýڵ���������
         * @version Egret 3.0
         * @platform Web,Native
         */
@@ -30226,7 +30324,7 @@ declare module egret3d {
         calcGlobalQuadAABB(): void;
         /**
         * @language zh_CN
-        * ����������ֻ����ͨ��һ�������棬���п��ܴ����������
+        * ������������ֻ����ͨ��һ�������棬���п��ܴ�����������
         * @version Egret 3.0
         * @platform Web,Native
         */
@@ -30884,6 +30982,13 @@ declare module egret3d {
         fsShader: string;
         protected _passUsage: PassUsage;
         protected _attList: Array<GLSL.Attribute>;
+        uniformData: {
+            [key: string]: {
+                uniformIndex: any;
+                type: number;
+                data: number[];
+            };
+        };
         /**
         * @language zh_CN
         * 创建一个HUD对象
@@ -31465,6 +31570,13 @@ declare module egret3d {
     * @platform Web,Native
     */
     var registGUITexture: (texture: Texture) => void;
+    let contextForEgret: {
+        onStart: (egret2dContext: any) => void;
+        onRender: (egret2dContext: any) => void;
+        onStop: () => void;
+        onResize: () => void;
+    };
+    let proDirty: boolean;
     /**
     * @class egret3d.Egret3DCanvas
     * @classdesc
@@ -31503,6 +31615,18 @@ declare module egret3d {
         protected static _canvas2D: HTMLCanvasElement;
         protected static _ctx2D: CanvasRenderingContext2D;
         /**
+        * @private
+        */
+        static Performance_GPU: number;
+        /**
+        * @private
+        */
+        static Performance_CPU: number;
+        /**
+        * @private
+        */
+        static Performance_Enable: boolean;
+        /**
         * @language zh_CN
         * Egret3DCanvas X 偏移
         * @version Egret 3.0
@@ -31524,14 +31648,17 @@ declare module egret3d {
         */
         afterRender: Function;
         protected _start: boolean;
+        protected blend2D: boolean;
+        protected stage2D: any;
         /**
         * @language zh_CN
         * 构造一个Egret3DCanvas对象
-        * @param blend2D 暂时未使用，默认参数为false
+        * @param stage2D 从外部注入stage2D，可选
         * @version Egret 3.0
         * @platform Web,Native
         */
-        constructor(blend2D?: boolean);
+        constructor(stage2D?: any);
+        private getExtension(name);
         private initEvent();
         private create2dContext();
         /**
@@ -31631,6 +31758,14 @@ declare module egret3d {
         */
         removeView3D(view3D: View3D): void;
         /**
+         * @language zh_CN
+         * Egret3DCanvas 调用一次渲染
+         * @version Egret 4.0
+         * @platform Web,Native
+         */
+        render(): void;
+        resizeBlend2D(): void;
+        /**
         * @language zh_CN
         * Egret3DCanvas 开始启动
         * @version Egret 3.0
@@ -31668,6 +31803,7 @@ declare module egret3d {
      * @classdesc
      */
     class Egret3DPolicy {
+        static engineVersion: string;
         static useParticle: boolean;
         static useAnimEffect: boolean;
         static useEffect: boolean;
@@ -31689,6 +31825,7 @@ declare module egret3d {
      */
     class Egret3DEngine {
         static instance: Egret3DEngine;
+        version: string;
         jsPath: string;
         onTsconfig: Function;
         debug: boolean;
@@ -31723,6 +31860,7 @@ declare module egret3d {
     interface IPost {
         renderQuen: RenderQuen;
         drawRectangle: Rectangle;
+        setRenderTexture(width: number, height: number, change?: boolean): any;
         draw(time: number, delay: number, context3D: Context3DProxy, collect: CollectBase, camera: Camera3D, backViewPort: Rectangle, posList: any): any;
     }
 }
@@ -31730,10 +31868,12 @@ declare module egret3d {
     class GaussPost implements IPost {
         renderQuen: RenderQuen;
         drawRectangle: Rectangle;
+        sourceTexture: Texture;
         private _h_postRender;
         private _v_postRender;
         private _debugHud;
         constructor();
+        setRenderTexture(width: number, height: number): void;
         draw(time: number, delay: number, context3D: Context3DProxy, collect: CollectBase, camera: Camera3D, backViewPort: Rectangle, posList: any): void;
     }
 }
@@ -31742,21 +31882,39 @@ declare module egret3d {
         renderQuen: RenderQuen;
         drawRectangle: Rectangle;
         private postRender;
-        private gaussPass;
         private _debugHud;
-        constructor();
+        bloom_amount: number;
+        constructor(bloom_amount?: number);
+        setRenderTexture(width: number, height: number, change?: boolean): void;
         draw(time: number, delay: number, context3D: Context3DProxy, collect: CollectBase, camera: Camera3D, backViewPort: Rectangle, posList: any): void;
     }
 }
 declare module egret3d {
+    class Gbuffer implements IPost {
+        renderQuen: RenderQuen;
+        drawRectangle: Rectangle;
+        private postRender;
+        private _debugHud;
+        constructor();
+        setRenderTexture(width: number, height: number): void;
+        draw(time: number, delay: number, context3D: Context3DProxy, collect: CollectBase, camera: Camera3D, backViewPort: Rectangle, posList: any): void;
+    }
+}
+declare module egret3d {
+    class SizeUtil {
+        private static MAX_SIZE;
+        isDimensionValid(d: number): boolean;
+        isPowerOfTwo(value: number): boolean;
+        getBestPowerOf2(value: number): number;
+    }
+    var sizeUtil: SizeUtil;
     class PostProcessing {
         postArray: IPost[];
         posTex: any;
         finalTexture: ITexture;
         hud: HUD;
         private _renderQuen;
-        width: number;
-        height: number;
+        private _sizeChange;
         constructor(renderQuen: RenderQuen);
         draw(time: number, delay: number, contextProxy: Context3DProxy, collect: CollectBase, camera: Camera3D, backViewPort: Rectangle): void;
     }
@@ -31768,6 +31926,7 @@ declare module egret3d {
         private postRender;
         private _lutTexture;
         constructor();
+        setRenderTexture(width: number, height: number): void;
         lutTexture: Texture;
         draw(time: number, delay: number, context3D: Context3DProxy, collect: CollectBase, camera: Camera3D, backViewPort: Rectangle, posList: any): void;
     }
