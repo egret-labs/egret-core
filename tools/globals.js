@@ -64,10 +64,6 @@ var globals;
         return true;
     }
     globals.hasKeys = hasKeys;
-    function getAsync() {
-        return require('./lib/core/async');
-    }
-    globals.getAsync = getAsync;
     function getCrc32() {
         return require("./lib/core/crc32");
     }

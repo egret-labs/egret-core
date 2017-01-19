@@ -203,6 +203,8 @@ var egret;
             }
             else if (fontFamily.indexOf(",") != -1) {
                 arr = fontFamily.split(",");
+            }
+            if (arr) {
                 var length_1 = arr.length;
                 for (var i = 0; i < length_1; i++) {
                     var fontFamily_1 = arr[i];
@@ -454,14 +456,17 @@ var egret;
                         else {
                             fontFamilyText = arr.slice(3).join(" ");
                         }
+                        var arr2 = void 0;
                         if (fontFamilyText.indexOf(", ") != -1) {
-                            arr = fontFamilyText.split(", ");
+                            arr2 = fontFamilyText.split(", ");
                         }
                         else if (fontFamilyText.indexOf(",") != -1) {
-                            arr = fontFamilyText.split(",");
-                            var length_2 = arr.length;
+                            arr2 = fontFamilyText.split(",");
+                        }
+                        if (arr2) {
+                            var length_2 = arr2.length;
                             for (var i = 0; i < length_2; i++) {
-                                var fontFamily = arr[i];
+                                var fontFamily = arr2[i];
                                 //暂时先不考虑带有引号的情况
                                 if (egret.fontMapping[fontFamily]) {
                                     this.$fontFamily = egret.fontMapping[fontFamily];
@@ -2921,14 +2926,17 @@ var egret;
                         else {
                             fontFamilyText = arr.slice(3).join(" ");
                         }
+                        var arr2 = void 0;
                         if (fontFamilyText.indexOf(", ") != -1) {
-                            arr = fontFamilyText.split(", ");
+                            arr2 = fontFamilyText.split(", ");
                         }
                         else if (fontFamilyText.indexOf(",") != -1) {
-                            arr = fontFamilyText.split(",");
-                            var length_4 = arr.length;
+                            arr2 = fontFamilyText.split(",");
+                        }
+                        if (arr2) {
+                            var length_4 = arr2.length;
                             for (var i = 0; i < length_4; i++) {
-                                var fontFamily = arr[i];
+                                var fontFamily = arr2[i];
                                 //暂时先不考虑带有引号的情况
                                 if (egret.fontMapping[fontFamily]) {
                                     this.$fontFamily = egret.fontMapping[fontFamily];

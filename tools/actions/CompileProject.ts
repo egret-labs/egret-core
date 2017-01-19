@@ -1,10 +1,11 @@
 /// <reference path="../lib/types.d.ts" />
 
 import utils = require('../lib/utils');
-import Compiler = require('./Compiler');
+// import Compiler = require('./Compiler');
 import FileUtil = require('../lib/FileUtil');
 import exmlActions = require('../actions/exml');
 import path = require('path');
+import * as Compiler from './Compiler';
 
 class CompileProject {
     compile(options: egret.ToolArgs) {
@@ -34,11 +35,10 @@ class CompileProject {
             // process.chdir(realCWD);
         }
         else { //console.log("----compileProject.compileProject.A-----")
-            var compiler = new Compiler();
-            var tsList = FileUtil.search(args.srcDir, "ts");
-            var libsList = FileUtil.search(args.libsDir, "ts");
-            let configParsedResult = compiler.loadTsconfig(args.projectDir + "tsconfig.json", args);
+            var compiler = new Compiler.Compiler();
+            let configParsedResult = compiler.parseTsconfig();
             this.compilerOptions = configParsedResult.options;
+            let fileNames = configParsedResult.fileNames;
             args.tsconfigError = configParsedResult.errors.map(d => d.messageText.toString());
             if (args.publish) {
                 this.compilerOptions.outFile = path.join(args.releaseDir, "main.min.js");
@@ -51,7 +51,7 @@ class CompileProject {
             }
             this.compilerOptions.allowUnreachableCode = true;
             this.compilerOptions.emitReflection = true;
-            this.compilerHost = compiler.compileGame(this.compilerOptions, tsList.concat(libsList));
+            this.compilerHost = compiler.compile(this.compilerOptions, fileNames);
         }
         let relative = f => path.relative(args.projectDir, f)
 
@@ -66,7 +66,7 @@ class CompileProject {
 
     }
 
-    private compilerHost: egret.EgretCompilerHost;
+    private compilerHost: Compiler.EgretCompilerHost;
 }
 
 function GetJavaScriptFileNames(tsFiles: string[], root: string | RegExp, prefix?: string) {

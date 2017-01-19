@@ -9,7 +9,7 @@ import FileUtil = require('../lib/FileUtil');
 console.log(utils.tr(1003, 0));
 class Create implements egret.Command {
 
-    execute(): number {
+    execute() {
         var option = egret.args;
         if (FileUtil.exists(option.projectDir)) {
             console.log(utils.tr(1002));

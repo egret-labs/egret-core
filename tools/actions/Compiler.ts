@@ -15,74 +15,20 @@ interface CompileOption {
     debug?: boolean;
 }
 
-class Compiler {
+export interface EgretCompilerHost {
+    program: ts.Program;
+    files?: string[];
+    exitStatus: number;
+    compileWithChanges?: (filesChanged: egret.FileChanges, sourceMap?: boolean) => EgretCompilerHost;
+    messages?: string[];
+}
 
-
-    public compileWithTsconfig(options: ts.CompilerOptions, files: string[]) {
-        var compileResult = this.compileNew(options, files, false);
-
-        if (compileResult.exitStatus != 0) {
-            compileResult.messages.forEach(m => console.log(m));
-        }
-        return compileResult.exitStatus;
-    }
-
-    public compileGame(options: ts.CompilerOptions, files: string[]) { //todo
-        var host = this.compileNew(options, files, false);
-        return host;
-    }
-
-    public sortFile(options: ts.CompilerOptions, fileNames: string[]) {
-        var host = this.compileNew(options, fileNames, true);
-        return host;
-    }
-
-    // public compile(option: CompileOption) {
-    //     //console.log('---Compiler.compile---')
-    //     var args = option.args, def = option.def, files = option.files,
-    //         out = option.out, outDir = option.outDir;
-    //     var defTemp = args.declaration;
-    //     args.declaration = def;
-    //     var realCWD = process.cwd();
-    //     var cwd = file.escapePath(args.projectDir);
-    //     files = files.map(f => f.replace(cwd, ""));
-    //     if (out)
-    //         out = file.getRelativePath(cwd, out);
-    //     if (outDir)
-    //         outDir = file.getRelativePath(cwd, outDir);
-    //     process.chdir(cwd);
-
-    //     var parsedCmd: ts.ParsedCommandLine = {
-    //         fileNames: files,
-    //         options: {},
-    //         errors: []
-    //     };
-    //     if (args.compilerOptions) {
-
-    //         parsedCmd.options = args.compilerOptions;
-    //     }
-
-    //     parsedCmd.options.outDir = outDir;
-    //     parsedCmd.options.declaration = args.declaration;
-    //     parsedCmd.options.out = out;
-    //     if (args.sourceMap == true) {
-    //         parsedCmd.options.sourceMap = true;//引擎命令行的sourcemap属性优先
-    //     }
-    //     parsedCmd.options.allowUnreachableCode = true;
-    //     parsedCmd.options.emitReflection = true;
-
-    //     var host = this.compileNew(parsedCmd.options, parsedCmd.fileNames, option.forSortFile);
-    //     process.chdir(realCWD);
-    //     return host;
-    // }
-
-
-
+export class Compiler {
 
     private files: ts.Map<{ version: number }> = <any>{};
     private sortedFiles;
 
-    private compileNew(options: ts.CompilerOptions, rootFileNames: string[], forSortFile: boolean): egret.EgretCompilerHost {
+    public compile(options: ts.CompilerOptions, rootFileNames: string[]): EgretCompilerHost {
         this.errors = [];
         this.fileNames = rootFileNames;
         this.sortedFiles = rootFileNames;
@@ -129,13 +75,11 @@ class Compiler {
         // Create the language service files
         this.services = ts.createLanguageService(servicesHost, ts.createDocumentRegistry());
         this.sortFiles();
-        if (!forSortFile) {
-            let output = this.services.getEmitOutput(undefined);
-            this.logErrors(undefined);
-            output.outputFiles.forEach(o => {
-                file.save(o.name, o.text);
-            });
-        }
+        let output = this.services.getEmitOutput(undefined);
+        this.logErrors(undefined);
+        output.outputFiles.forEach(o => {
+            file.save(o.name, o.text);
+        });
 
         return { files: this.sortedFiles, program: this.services.getProgram(), exitStatus: 0, messages: this.errors, compileWithChanges: this.compileWithChanges.bind(this) };
     }
@@ -174,19 +118,19 @@ class Compiler {
             let msg;
             if (diagnostic.file) {
                 let {line, character} = diagnostic.file.getLineAndCharacterOfPosition(diagnostic.start);
-                msg = `  Error ${diagnostic.file.fileName} (${line + 1},${character + 1}): ${message}`;
+                msg = `${diagnostic.file.fileName}(${line + 1},${character + 1}): error TS${diagnostic.code}: ${message}`;
             }
             else {
-                msg = `  Error: ${message}`;
+                msg = `${message}`;
             }
-            console.log(msg);
+            console.log(msg)
             this.errors.push(msg);
         });
     }
 
     private fileNames: Array<string>;
 
-    private compileWithChanges(filesChanged: egret.FileChanges, sourceMap?: boolean): egret.EgretCompilerHost {
+    private compileWithChanges(filesChanged: egret.FileChanges, sourceMap?: boolean): EgretCompilerHost {
         this.errors = [];
         filesChanged.forEach(file => {
             if (file.type == "added") {
@@ -213,7 +157,9 @@ class Compiler {
         return { files: this.sortedFiles, program: this.services.getProgram(), exitStatus: 0, messages: this.errors, compileWithChanges: this.compileWithChanges.bind(this) };
     }
 
-    public loadTsconfig(url: string, options: egret.ToolArgs) {
+    parseTsconfig() {
+        let url = egret.args.projectDir + "tsconfig.json";
+        let options = egret.args;
         var configObj: any;
         try {
             configObj = JSON.parse(file.read(url));
@@ -224,7 +170,7 @@ class Compiler {
                     "target": "es5",
                     "experimentalDecorators": true,
                     "lib": [
-                        "es5", "dom"
+                        "es5", "dom", "es2015.promise"
                     ]
                 },
                 "exclude": [
@@ -233,8 +179,8 @@ class Compiler {
             }
         }
 
-        let notSupport = ["outDir", "module", "noLib", "outFile", "rootDir", "out"];
-        let defaultSupport = { target: "es5" }
+        let notSupport = ["module", "noLib", "outFile", "rootDir", "out"];
+        let defaultSupport = { target: "es5", outDir: "bin-debug" }
         let compilerOptions = configObj.compilerOptions;
         for (let optionName of notSupport) {
             if (compilerOptions.hasOwnProperty(optionName)) {
@@ -244,11 +190,12 @@ class Compiler {
             }
         }
         for (let optionName in defaultSupport) {
-            if (compilerOptions[optionName] != defaultSupport.target) {
-                compilerOptions[optionName] = defaultSupport.target;
-                var error = utils.tr(1116, optionName);
-                console.log(`${optionName}将被调整为${defaultSupport.target}`)
-                console.log(error);
+            if (compilerOptions[optionName] != defaultSupport[optionName]) {
+                if (compilerOptions[optionName]) {
+                    var error = utils.tr(1116, optionName);
+                    console.log(`${error} 将被调整为'${defaultSupport[optionName]}'`)
+                }
+                compilerOptions[optionName] = defaultSupport[optionName];
             }
         }
 
@@ -260,7 +207,6 @@ class Compiler {
     }
 }
 
-export = Compiler;
 
 
 

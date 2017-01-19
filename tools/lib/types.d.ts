@@ -7,8 +7,7 @@
 declare module egret {
 
     export interface Command {
-        isAsync?: boolean;
-        execute(): number;
+        execute(): number | PromiseLike<number>
     }
 
     export interface Action {
@@ -50,7 +49,6 @@ declare module egret {
         nativeTemplatePath: string;
         all: boolean;
         projectDir: string;
-        libsDir: string;
         getTmpDir(): string;
         srcDir: string;
         larkPropertiesFile: string;
@@ -63,18 +61,12 @@ declare module egret {
         /** 用户命令行指定的引擎版本 */
         egretVersion?: string;
         port: number;
-        host: string;
+        host: string | null;
         websocketUrl: string;
         startUrl: string;
         debug?: boolean;
         getStartURL(address: string): string;
         template?: string;
-        /**
-        * egretProperties.json 信息
-        */
-        properties: EgretPropertiesClass;
-
-
         publish?: boolean;
         minify?: boolean;
         sourceMap?: boolean;
@@ -111,7 +103,7 @@ declare module egret {
 
     export type EgretPropertyModule = {
         "name": string,
-        "path"?: string;
+        "path": string;
     }
 
     export type EgretProperty = {
@@ -125,78 +117,6 @@ declare module egret {
             "path": string;
         },
         "egret_version"?: string;
-    }
-    export interface EgretPropertiesClass {
-        properties: EgretProperty;
-        init(projectRoot: string);
-        reload();
-
-        invalid(report?:boolean):boolean;
-        /**
-         * 是否有swan
-         */
-        hasEUI(): boolean;
-
-        /**
-         * 获取项目的根路径
-         * @returns {*}
-         */
-        getProjectRoot(): string
-
-        /**
-         * 获取项目使用的egret版本号
-         * @returns {any}
-         */
-        getVersion(): string
-
-        /**
-         * 发布路径的根目录
-         * @returns {string}
-         */
-        getReleaseRoot(): string
-
-        /**
-         * 获取已经生成的js文件列表
-         * @param runtime
-         * @returns {string[]|T[]}
-         */
-        getAllFileList(runtime): Array<any>
-
-        getVersionCode(runtime)
-
-        getIgnorePath(): Array<any>
-
-        getCopyExmlList(): Array<string>
-
-        getNativePath(platform)
-
-        getModulePath(moduleName)
-
-        getModuleConfig(moduleName)
-
-        //绝对路径
-        getModuleOutput(moduleName)
-
-        getModuleFileList(moduleName)
-        getModuleFileListWithAbsolutePath(moduleName)
-
-        getModulePrefixPath(moduleName)
-
-        getModuleSourcePath(moduleName)
-
-        getModuleDependenceList(moduleName)
-
-        getAllModuleNames()
-
-        getModuleDecouple(moduleName)
-
-        //获取项目需要的所有模块的.d.ts文件
-        getModulesDts()
-
-        getModuleReferenceInfo()
-
-        getPublishType(runtime: string): number;
-        getResources(): Array<string>;
     }
 
     export interface EgretProjectConfig {
@@ -213,7 +133,6 @@ declare module egret {
         frameRate?: number;
         background?: string;
         entryClass?: string;
-        moduleScripts?: string[];
         scripts?: string[];
         nativeScripts?: string[];
         resolutionMode?: string;
@@ -336,20 +255,13 @@ declare module egret {
         compileSingle(path: string): number;
     }
 
-    export type FileChanges = Array<FileChange>;
+    export type FileChanges = FileChange[];
 
     export interface FileChange {
         fileName: string;
         type: string;
     }
 
-    export interface EgretCompilerHost {
-        program: ts.Program;
-        files?: string[];
-        exitStatus: number;
-        compileWithChanges?: (filesChanged: egret.FileChanges, sourceMap?: boolean) => EgretCompilerHost;
-        messages?: string[];
-    }
 }
 
 declare var DEBUG: boolean;

@@ -15,7 +15,7 @@ class NativeProject {
     public static copyOutputToNative = copyOutputToNative;
 
     public static build() {
-        CompileTemplate.modifyNativeRequire();
+        CompileTemplate.modifyNativeRequire(true);
 
         //拷贝项目到native工程中
         if (egret.args.runtime == "native") {

@@ -3,7 +3,6 @@
         "target": "es5",
         "noImplicitAny": false,
         "sourceMap": false,
-        "outFile":"test.js",
         "lib": [
             "es5","dom","es2015.promise","scripthost"
         ]

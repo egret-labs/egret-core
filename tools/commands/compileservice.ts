@@ -7,12 +7,12 @@ import service = require('../service/index');
 import ServiceSocket = require('../service/ServiceSocket');
 import FileUtil = require('../lib/FileUtil');
 import Native = require('../actions/NativeProject');
-import CopyFiles = require('../actions/CopyFiles');
 import exmlActions = require('../actions/exml');
 import state = require('../lib/DirectoryState');
 import CompileProject = require('../actions/CompileProject');
 import CompileTemplate = require('../actions/CompileTemplate');
 import parser = require('../parser/Parser');
+import EgretProject = require('../parser/EgretProject');
 
 class AutoCompileCommand implements egret.Command {
     private compileProject: CompileProject;
@@ -20,7 +20,7 @@ class AutoCompileCommand implements egret.Command {
 
     execute(): number {
 
-        if (egret.args.properties.invalid(true)) {
+        if (EgretProject.utils.invalid(true)) {
             process.exit(0);
             return;
         }
@@ -94,7 +94,7 @@ class AutoCompileCommand implements egret.Command {
 
         CompileTemplate.modifyIndexHTML(_scripts);
 
-        CompileTemplate.modifyNativeRequire();
+        CompileTemplate.modifyNativeRequire(true);
 
         exmlActions.afterBuild();
 
@@ -147,7 +147,7 @@ class AutoCompileCommand implements egret.Command {
                     this.messages[2] = egret.args.tsconfigError;
                 }
                 else if (fileName.indexOf("egretProperties.json") > -1) {
-                    egret.args.properties.reload();
+                    EgretProject.utils.reload();
                     this.copyLibs();
                     this.compileProject.compileProject(egret.args);
                     this.messages[2] = egret.args.tsconfigError;
@@ -189,9 +189,9 @@ class AutoCompileCommand implements egret.Command {
 
     private copyLibs() {
         //刷新libs 中 modules 文件
-        CopyFiles.copyToLibs();
+        CompileTemplate.copyToLibs();
         //修改 html 中 modules 块
-        CopyFiles.modifyHTMLWithModules();
+        CompileTemplate.modifyIndexHTML();
     }
 
 
@@ -262,7 +262,7 @@ class AutoCompileCommand implements egret.Command {
 
         CompileTemplate.modifyIndexHTML(this._scripts);
 
-        CompileTemplate.modifyNativeRequire();
+        CompileTemplate.modifyNativeRequire(true);
 
         return 0;
     }
@@ -271,9 +271,7 @@ class AutoCompileCommand implements egret.Command {
         //console.log("onServiceMessage:",msg)
         if (msg.command == 'build' && msg.option) {
             this.sourceMapStateChanged = msg.option.sourceMap != egret.args.sourceMap;
-            var props = egret.args.properties;
             egret.args = parser.parseJSON(msg.option);
-            egret.args.properties = props;
         }
         if (msg.command == 'build')
             this.buildChanges(msg.changes);

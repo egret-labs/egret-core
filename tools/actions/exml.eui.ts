@@ -4,6 +4,7 @@
 import utils = require('../lib/utils');
 import file = require('../lib/FileUtil');
 import exml = require("../lib/eui/EXML");
+import EgretProject = require('../parser/EgretProject');
 
 export function beforeBuild() {
     generateExmlDTS();
@@ -39,11 +40,11 @@ export function afterBuildChanges(exmlsChanged: egret.FileChanges) {
 function getSortedEXML(): exml.EXMLFile[] {
 
     var files = searchEXML();
-    var exmls: exml.EXMLFile[] = files.map(path=> ({
+    var exmls: exml.EXMLFile[] = files.map(path => ({
         path: path,
         content: file.read(path)
     }));
-    exmls.forEach(it=> it.path = file.getRelativePath(egret.args.projectDir, it.path));
+    exmls.forEach(it => it.path = file.getRelativePath(egret.args.projectDir, it.path));
     exmls = exml.sort(exmls);
     return exmls;
 }
@@ -58,7 +59,7 @@ export function updateSetting(merge = false) {
         return;
     }
     //2.将主题文件读入内存变成json对象
-    themeDatas = themes.map(t=> {
+    themeDatas = themes.map(t => {
         try {
             var data = JSON.parse(file.read(file.joinPath(egret.args.projectDir, t)));
             return data || {};
@@ -72,7 +73,7 @@ export function updateSetting(merge = false) {
     //3.主题文件的exmls是一个列表，列表项是一个{path:string,content:string}的格式
     //由于存在一个exml存在于多个主题的情况 把 主题1－>N文件 建立 文件1->N主题的一对多关系表oldEXMLS(数组＋快表)
     themeDatas.forEach((thm, i) => {
-        thm.exmls && thm.exmls.forEach(e=> {
+        thm.exmls && thm.exmls.forEach(e => {
             var path = e.path ? e.path : e;
             if (oldEXMLS[path]) {
                 oldEXMLS[path].theme += themes[i] + ",";
@@ -91,9 +92,9 @@ export function updateSetting(merge = false) {
 
     var exmls = getSortedEXML();
 
-    themeDatas.forEach(thm=> thm.exmls = []);
+    themeDatas.forEach(thm => thm.exmls = []);
 
-    exmls.forEach(e=> {
+    exmls.forEach(e => {
         var epath = e.path;
         var exmlEl = merge ? { path: e.path, content: e.content } : epath;
         themeDatas.forEach((thm, i) => {
@@ -103,7 +104,7 @@ export function updateSetting(merge = false) {
                 if (exmlFile.theme.indexOf("," + thmPath + ",") >= 0)
                     thm.exmls.push(exmlEl);
             }
-            else if(thm.autoGenerateExmlsList) {
+            else if (thm.autoGenerateExmlsList) {
                 thm.exmls.push(exmlEl);
             }
         });
@@ -121,7 +122,7 @@ export function updateSetting(merge = false) {
 
 function searchTheme(): string[] {
     var files = file.searchByFunction(egret.args.projectDir, themeFilter);
-    files = files.map(it=> file.getRelativePath(egret.args.projectDir, it));
+    files = files.map(it => file.getRelativePath(egret.args.projectDir, it));
     return files;
 }
 
@@ -131,16 +132,16 @@ function searchEXML(): string[] {
 
 function sort(exmls: exml.EXMLFile[]) {
 
-    var preload = exmls.filter(e=> e.preload);
+    var preload = exmls.filter(e => e.preload);
 
 
 }
 
-const ignorePath = egret.args.properties.getIgnorePath();
+const ignorePath = EgretProject.utils.getIgnorePath();
 function exmlFilter(f: string) {
     var isIgnore = false;
     ignorePath.forEach(path => {
-        if(f.indexOf(path) != -1) {
+        if (f.indexOf(path) != -1) {
             isIgnore = true;
         }
     });
@@ -152,7 +153,7 @@ function themeFilter(f: string) {
 
 export interface SettingData {
     name: string;
-    themes: { [name: string]: string|ThemeData };
+    themes: { [name: string]: string | ThemeData };
     defaultTheme: string;
     exmls: Array<EXMLFile>
 }
@@ -189,30 +190,30 @@ function generateExmlDTS(): string {
             //解析exml并返回className和extendName继承关系
             var ret = exml.getDtsInfoFromExml(p);
             //去掉重复定义
-            if(classDefinations[ret.className]){
+            if (classDefinations[ret.className]) {
                 continue;
-            }else{
+            } else {
                 classDefinations[ret.className] = ret.extendName;
             }
             //var className = p.substring(srcPath.length, p.length - 5);
             var className = ret.className;
             //className = className.split("/").join(".");
-            if(className != "eui.Skin") {
+            if (className != "eui.Skin") {
                 var index = className.lastIndexOf(".");
                 if (index == -1) {
-                    if(ret.extendName == ""){
-                        dts += "declare class "+className+"{\n}\n";
-                    }else{
-                        dts += "declare class " + className + " extends "+ret.extendName +"{\n}\n";
+                    if (ret.extendName == "") {
+                        dts += "declare class " + className + "{\n}\n";
+                    } else {
+                        dts += "declare class " + className + " extends " + ret.extendName + "{\n}\n";
                     }
                 }
                 else {
                     var moduleName = className.substring(0, index);
                     className = className.substring(index + 1);
-                    if(ret.extendName == ""){
-                        dts += "declare module " + moduleName + "{\n\tclass "+className+"{\n\t}\n}\n";
-                    }else{
-                        dts += "declare module " + moduleName + "{\n\tclass " + className + " extends "+ret.extendName +"{\n\t}\n}\n";
+                    if (ret.extendName == "") {
+                        dts += "declare module " + moduleName + "{\n\tclass " + className + "{\n\t}\n}\n";
+                    } else {
+                        dts += "declare module " + moduleName + "{\n\tclass " + className + " extends " + ret.extendName + "{\n\t}\n}\n";
                     }
                 }
             }

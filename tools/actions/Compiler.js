@@ -5,58 +5,9 @@ var ts = require("../lib/typescript-plus/lib/typescript");
 var path = require("path");
 var Compiler = (function () {
     function Compiler() {
-        // public compile(option: CompileOption) {
-        //     //console.log('---Compiler.compile---')
-        //     var args = option.args, def = option.def, files = option.files,
-        //         out = option.out, outDir = option.outDir;
-        //     var defTemp = args.declaration;
-        //     args.declaration = def;
-        //     var realCWD = process.cwd();
-        //     var cwd = file.escapePath(args.projectDir);
-        //     files = files.map(f => f.replace(cwd, ""));
-        //     if (out)
-        //         out = file.getRelativePath(cwd, out);
-        //     if (outDir)
-        //         outDir = file.getRelativePath(cwd, outDir);
-        //     process.chdir(cwd);
-        //     var parsedCmd: ts.ParsedCommandLine = {
-        //         fileNames: files,
-        //         options: {},
-        //         errors: []
-        //     };
-        //     if (args.compilerOptions) {
-        //         parsedCmd.options = args.compilerOptions;
-        //     }
-        //     parsedCmd.options.outDir = outDir;
-        //     parsedCmd.options.declaration = args.declaration;
-        //     parsedCmd.options.out = out;
-        //     if (args.sourceMap == true) {
-        //         parsedCmd.options.sourceMap = true;//引擎命令行的sourcemap属性优先
-        //     }
-        //     parsedCmd.options.allowUnreachableCode = true;
-        //     parsedCmd.options.emitReflection = true;
-        //     var host = this.compileNew(parsedCmd.options, parsedCmd.fileNames, option.forSortFile);
-        //     process.chdir(realCWD);
-        //     return host;
-        // }
         this.files = {};
     }
-    Compiler.prototype.compileWithTsconfig = function (options, files) {
-        var compileResult = this.compileNew(options, files, false);
-        if (compileResult.exitStatus != 0) {
-            compileResult.messages.forEach(function (m) { return console.log(m); });
-        }
-        return compileResult.exitStatus;
-    };
-    Compiler.prototype.compileGame = function (options, files) {
-        var host = this.compileNew(options, files, false);
-        return host;
-    };
-    Compiler.prototype.sortFile = function (options, fileNames) {
-        var host = this.compileNew(options, fileNames, true);
-        return host;
-    };
-    Compiler.prototype.compileNew = function (options, rootFileNames, forSortFile) {
+    Compiler.prototype.compile = function (options, rootFileNames) {
         var _this = this;
         this.errors = [];
         this.fileNames = rootFileNames;
@@ -99,13 +50,11 @@ var Compiler = (function () {
         // Create the language service files
         this.services = ts.createLanguageService(servicesHost, ts.createDocumentRegistry());
         this.sortFiles();
-        if (!forSortFile) {
-            var output = this.services.getEmitOutput(undefined);
-            this.logErrors(undefined);
-            output.outputFiles.forEach(function (o) {
-                file.save(o.name, o.text);
-            });
-        }
+        var output = this.services.getEmitOutput(undefined);
+        this.logErrors(undefined);
+        output.outputFiles.forEach(function (o) {
+            file.save(o.name, o.text);
+        });
         return { files: this.sortedFiles, program: this.services.getProgram(), exitStatus: 0, messages: this.errors, compileWithChanges: this.compileWithChanges.bind(this) };
     };
     Compiler.prototype.sortFiles = function () {
@@ -137,10 +86,10 @@ var Compiler = (function () {
             var msg;
             if (diagnostic.file) {
                 var _a = diagnostic.file.getLineAndCharacterOfPosition(diagnostic.start), line = _a.line, character = _a.character;
-                msg = "  Error " + diagnostic.file.fileName + " (" + (line + 1) + "," + (character + 1) + "): " + message;
+                msg = diagnostic.file.fileName + "(" + (line + 1) + "," + (character + 1) + "): error TS" + diagnostic.code + ": " + message;
             }
             else {
-                msg = "  Error: " + message;
+                msg = "" + message;
             }
             console.log(msg);
             _this.errors.push(msg);
@@ -170,7 +119,9 @@ var Compiler = (function () {
         });
         return { files: this.sortedFiles, program: this.services.getProgram(), exitStatus: 0, messages: this.errors, compileWithChanges: this.compileWithChanges.bind(this) };
     };
-    Compiler.prototype.loadTsconfig = function (url, options) {
+    Compiler.prototype.parseTsconfig = function () {
+        var url = egret.args.projectDir + "tsconfig.json";
+        var options = egret.args;
         var configObj;
         try {
             configObj = JSON.parse(file.read(url));
@@ -182,7 +133,7 @@ var Compiler = (function () {
                     "target": "es5",
                     "experimentalDecorators": true,
                     "lib": [
-                        "es5", "dom"
+                        "es5", "dom", "es2015.promise"
                     ]
                 },
                 "exclude": [
@@ -190,8 +141,8 @@ var Compiler = (function () {
                 ]
             };
         }
-        var notSupport = ["outDir", "module", "noLib", "outFile", "rootDir", "out"];
-        var defaultSupport = { target: "es5" };
+        var notSupport = ["module", "noLib", "outFile", "rootDir", "out"];
+        var defaultSupport = { target: "es5", outDir: "bin-debug" };
         var compilerOptions = configObj.compilerOptions;
         for (var _i = 0, notSupport_1 = notSupport; _i < notSupport_1.length; _i++) {
             var optionName = notSupport_1[_i];
@@ -202,11 +153,12 @@ var Compiler = (function () {
             }
         }
         for (var optionName in defaultSupport) {
-            if (compilerOptions[optionName] != defaultSupport.target) {
-                compilerOptions[optionName] = defaultSupport.target;
-                var error = utils.tr(1116, optionName);
-                console.log(optionName + "\u5C06\u88AB\u8C03\u6574\u4E3A" + defaultSupport.target);
-                console.log(error);
+            if (compilerOptions[optionName] != defaultSupport[optionName]) {
+                if (compilerOptions[optionName]) {
+                    var error = utils.tr(1116, optionName);
+                    console.log(error + " \u5C06\u88AB\u8C03\u6574\u4E3A'" + defaultSupport[optionName] + "'");
+                }
+                compilerOptions[optionName] = defaultSupport[optionName];
             }
         }
         var configParseResult = ts.parseJsonConfigFileContent(configObj, ts.sys, path.dirname(url));
@@ -216,6 +168,7 @@ var Compiler = (function () {
     };
     return Compiler;
 }());
+exports.Compiler = Compiler;
 function getCompilerDefines(args, debug) {
     var defines = {};
     if (debug != undefined) {
@@ -232,4 +185,3 @@ function getCompilerDefines(args, debug) {
     }
     return defines;
 }
-module.exports = Compiler;

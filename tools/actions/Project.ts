@@ -14,7 +14,6 @@ export function normalize(project: egret.EgretProjectConfig) {
     project.frameRate = project.frameRate || 30;
     project.contentWidth = project.contentWidth || 640;
     project.contentHeight = project.contentHeight || 1136;
-    project.moduleScripts = project.moduleScripts || [];
     project.showLog = project.showLog || false;
     project.logFilter = project.logFilter || "";
     project.maxTouches = project.maxTouches || 2;

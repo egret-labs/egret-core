@@ -30,6 +30,15 @@
 
 namespace egret {
 
+    function $getUrl(request:URLRequest):string {
+        let url:string = request.url;
+        //get请求没有设置参数，而是设置URLVariables的情况
+        if (url.indexOf("?") == -1 && request.method == URLRequestMethod.GET && request.data && request.data instanceof URLVariables) {
+            url = url + "?" + request.data.toString();
+        }
+        return url;
+    }
+
 	/**
      * UThe URLLoader class downloads data from a URL as text, binary data, or URL-encoded variables.  It is useful for downloading text files, XML, or other information to be used in a dynamic, data-driven application.
      * A URLLoader object downloads all of the data from a URL before making it available to code in the applications. It sends out notifications about the progress of the download,
@@ -150,8 +159,134 @@ namespace egret {
         public load(request:URLRequest):void {
             this._request = request;
             this.data = null;
+            let loader = this;
+            if (loader.dataFormat == URLLoaderDataFormat.TEXTURE) {
+                this.loadTexture(loader);
+                return;
+            }
+            if (loader.dataFormat == URLLoaderDataFormat.SOUND) {
+                this.loadSound(loader);
+                return;
+            }
 
-            egret.NetContext.getNetContext().proceed(this);
+            let virtualUrl:string = $getUrl(request);
+            let httpRequest = new HttpRequest();
+            httpRequest.open(virtualUrl, request.method == URLRequestMethod.POST ? HttpMethod.POST : HttpMethod.GET);
+            let length = request.requestHeaders.length;
+            for (let i:number = 0; i < length; i++) {
+                let urlRequestHeader:egret.URLRequestHeader = request.requestHeaders[i];
+                httpRequest.setRequestHeader(urlRequestHeader.name, urlRequestHeader.value);
+            }
+            httpRequest.addEventListener(Event.COMPLETE, function (){
+                loader.data = httpRequest.response;
+                Event.dispatchEvent(loader, Event.COMPLETE);
+            }, this);
+            httpRequest.addEventListener(IOErrorEvent.IO_ERROR, function (){
+                IOErrorEvent.dispatchIOErrorEvent(loader);
+            }, this);
+            httpRequest.responseType = loader.dataFormat == URLLoaderDataFormat.BINARY ? HttpResponseType.ARRAY_BUFFER : HttpResponseType.TEXT;
+            httpRequest.send(request.data);
+        }
+
+        private getResponseType(dataFormat:string):string {
+            switch (dataFormat) {
+                case URLLoaderDataFormat.TEXT:
+                case URLLoaderDataFormat.VARIABLES:
+                    return URLLoaderDataFormat.TEXT;
+                case URLLoaderDataFormat.BINARY:
+                    return "arraybuffer";
+
+                default:
+                    return dataFormat;
+            }
+        }
+
+        /**
+         * @private
+         *
+         * @param loader
+         */
+        private loadSound(loader:URLLoader):void {
+            let self = this;
+            let virtualUrl:string = loader._request.url;
+
+            let sound:egret.Sound = new egret.Sound();
+            sound.addEventListener(egret.Event.COMPLETE, onLoadComplete, self);
+            sound.addEventListener(egret.IOErrorEvent.IO_ERROR, onError, self);
+            sound.addEventListener(egret.ProgressEvent.PROGRESS, onPostProgress, self);
+            sound.load(virtualUrl);
+
+            function onPostProgress(event:egret.ProgressEvent):void {
+                loader.dispatchEvent(event);
+            }
+
+            function onError(event:egret.IOErrorEvent) {
+                removeListeners();
+                loader.dispatchEvent(event);
+            }
+
+            function onLoadComplete(e) {
+                removeListeners();
+
+                loader.data = sound;
+
+                window.setTimeout(function() {
+                    loader.dispatchEventWith(Event.COMPLETE);
+                }, 0);
+            }
+
+            function removeListeners():void {
+                sound.removeEventListener(egret.Event.COMPLETE, onLoadComplete, self);
+                sound.removeEventListener(egret.IOErrorEvent.IO_ERROR, onError, self);
+                sound.removeEventListener(egret.ProgressEvent.PROGRESS, onPostProgress, self);
+            }
+        }
+
+        /**
+         * @private
+         *
+         * @param loader
+         */
+        private loadTexture(loader:URLLoader):void {
+            let self = this;
+
+            let virtualUrl:string = loader._request.url;
+            let imageLoader:ImageLoader = new ImageLoader();
+            imageLoader.addEventListener(egret.Event.COMPLETE, onLoadComplete, self);
+            imageLoader.addEventListener(egret.IOErrorEvent.IO_ERROR, onError, self);
+            imageLoader.addEventListener(egret.ProgressEvent.PROGRESS, onPostProgress, self);
+            imageLoader.load(virtualUrl);
+
+            function onPostProgress(event:egret.ProgressEvent):void {
+                loader.dispatchEvent(event);
+            }
+
+            function onError(event:egret.IOErrorEvent) {
+                removeListeners();
+                loader.dispatchEvent(event);
+            }
+
+            function onLoadComplete(e) {
+                removeListeners();
+
+                let bitmapData = imageLoader.data;
+                bitmapData.source.setAttribute("bitmapSrc", virtualUrl);
+
+                let texture:Texture = new Texture();
+                texture._setBitmapData(bitmapData);
+
+                loader.data = texture;
+
+                window.setTimeout(function() {
+                    loader.dispatchEventWith(Event.COMPLETE);
+                }, self);
+            }
+
+            function removeListeners():void {
+                imageLoader.removeEventListener(egret.Event.COMPLETE, onLoadComplete, self);
+                imageLoader.removeEventListener(egret.IOErrorEvent.IO_ERROR, onError, self);
+                imageLoader.removeEventListener(egret.ProgressEvent.PROGRESS, onPostProgress, self);
+            }
         }
 
         /**

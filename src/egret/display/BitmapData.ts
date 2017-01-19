@@ -142,6 +142,34 @@ namespace egret {
             this.height = source.height;
         }
 
+        public static create(type: "arraybuffer", data: ArrayBuffer): BitmapData;
+        public static create(type: "base64", data: string): BitmapData;
+        public static create(type: "arraybuffer" | "base64", data: ArrayBuffer | string): BitmapData {
+            if (Capabilities.runtimeType === RuntimeType.WEB) {
+                let base64 = "";
+                if (type === "arraybuffer") {
+                    base64 = egret.Base64Util.encode(data as ArrayBuffer);
+                }
+                else {
+                    base64 = data as string;
+                }
+                let image: HTMLImageElement = document.createElement("img");
+                image.src = "data:image/png;base64," + base64;
+                return new BitmapData(image);
+            }
+            else {
+                let buffer: ArrayBuffer = null;
+                if (type === "arraybuffer") {
+                    buffer = data as ArrayBuffer;
+                }
+                else {
+                    buffer = egret.Base64Util.decode(data as string);
+                }
+                let native_texture = egret_native.Texture.createTextureFromArrayBuffer(buffer);
+                return new BitmapData(native_texture);
+            }
+        }
+
         public $dispose(): void {
             if (Capabilities.runtimeType == RuntimeType.WEB && Capabilities.renderMode == "webgl" && this.webGLTexture) {
                 egret.WebGLUtils.deleteWebGLTexture(this.webGLTexture);

@@ -65,14 +65,6 @@ namespace egret {
         //public touchContext:TouchContext = null;
 
         /**
-         * 网络Context
-         * @member egret.MainContext#netContext
-         * @version Egret 2.4
-         * @platform Web,Native
-         */
-        //public netContext:NetContext = null;
-
-        /**
          * 设备divice
          * @member egret.MainContext#deviceContext
          * @version Egret 2.4

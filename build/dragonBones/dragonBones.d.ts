@@ -3625,14 +3625,15 @@ declare namespace dragonBones {
         protected _currentFrame: T;
         protected _armature: Armature;
         protected _animationState: AnimationState;
+        protected _mainTimeline: AnimationTimelineState;
         constructor();
         protected _onClear(): void;
         protected _onUpdateFrame(): void;
         protected _onArriveAtFrame(): void;
-        protected _setCurrentTime(passedTime: number, normalizedTime: number): boolean;
+        protected _setCurrentTime(passedTime: number): boolean;
         _init(armature: Armature, animationState: AnimationState, timelineData: M): void;
         fadeOut(): void;
-        update(passedTime: number, normalizedTime: number): void;
+        update(passedTime: number): void;
     }
     /**
      * @internal
@@ -3659,7 +3660,7 @@ declare namespace dragonBones {
         static toString(): string;
         constructor();
         protected _onCrossFrame(frame: AnimationFrameData): void;
-        update(passedTime: number, normalizedTime: number): void;
+        update(passedTime: number): void;
         setCurrentTime(value: number): void;
     }
     /**
@@ -3678,6 +3679,7 @@ declare namespace dragonBones {
     class BoneTimelineState extends TweenTimelineState<BoneFrameData, BoneTimelineData> {
         static toString(): string;
         bone: Bone;
+        private _transformDirty;
         private _tweenTransform;
         private _tweenRotate;
         private _tweenScale;
@@ -3691,7 +3693,7 @@ declare namespace dragonBones {
         protected _onUpdateFrame(): void;
         _init(armature: Armature, animationState: AnimationState, timelineData: BoneTimelineData): void;
         fadeOut(): void;
-        update(passedTime: number, normalizedTime: number): void;
+        update(passedTime: number): void;
     }
     /**
      * @internal
@@ -3711,7 +3713,7 @@ declare namespace dragonBones {
         protected _onUpdateFrame(): void;
         _init(armature: Armature, animationState: AnimationState, timelineData: SlotTimelineData): void;
         fadeOut(): void;
-        update(passedTime: number, normalizedTime: number): void;
+        update(passedTime: number): void;
     }
     /**
      * @internal
@@ -3731,7 +3733,7 @@ declare namespace dragonBones {
         protected _onUpdateFrame(): void;
         _init(armature: Armature, animationState: AnimationState, timelineData: FFDTimelineData): void;
         fadeOut(): void;
-        update(passedTime: number, normalizedTime: number): void;
+        update(passedTime: number): void;
     }
 }
 declare namespace dragonBones {
@@ -4075,7 +4077,7 @@ declare namespace dragonBones {
          * @language zh_CN
          * 解析并添加贴图集数据。
          * @param rawData 需要解析的原始数据。 (JSON)
-         * @param textureAtlas 贴图集数据。 (JSON)
+         * @param textureAtlas 贴图。
          * @param name 为数据指定一个名称，以便可以通过这个名称获取数据，如果未设置，则使用数据中的名称。
          * @param scale 为贴图集设置一个缩放值。
          * @returns 贴图集数据

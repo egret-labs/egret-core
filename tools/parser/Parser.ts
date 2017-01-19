@@ -223,7 +223,6 @@ export function parseCommandLine(commandLine: string[]) {
             }
             options.projectDir = file.joinPath(options.projectDir, "/");
             project.utils.init(options.projectDir);
-            options.properties = project.utils;
         }
 
         var packagePath = file.joinPath(egret.root, "package.json");

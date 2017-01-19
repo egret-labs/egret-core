@@ -1,8 +1,9 @@
 /// <reference path="../lib/types.d.ts" />
-var Compiler = require("./Compiler");
+// import Compiler = require('./Compiler');
 var FileUtil = require("../lib/FileUtil");
 var exmlActions = require("../actions/exml");
 var path = require("path");
+var Compiler = require("./Compiler");
 var CompileProject = (function () {
     function CompileProject() {
     }
@@ -30,11 +31,10 @@ var CompileProject = (function () {
             this.compilerHost = this.compilerHost.compileWithChanges(files, sourceMap);
         }
         else {
-            var compiler = new Compiler();
-            var tsList = FileUtil.search(args.srcDir, "ts");
-            var libsList = FileUtil.search(args.libsDir, "ts");
-            var configParsedResult = compiler.loadTsconfig(args.projectDir + "tsconfig.json", args);
+            var compiler = new Compiler.Compiler();
+            var configParsedResult = compiler.parseTsconfig();
             this.compilerOptions = configParsedResult.options;
+            var fileNames = configParsedResult.fileNames;
             args.tsconfigError = configParsedResult.errors.map(function (d) { return d.messageText.toString(); });
             if (args.publish) {
                 this.compilerOptions.outFile = path.join(args.releaseDir, "main.min.js");
@@ -47,7 +47,7 @@ var CompileProject = (function () {
             }
             this.compilerOptions.allowUnreachableCode = true;
             this.compilerOptions.emitReflection = true;
-            this.compilerHost = compiler.compileGame(this.compilerOptions, tsList.concat(libsList));
+            this.compilerHost = compiler.compile(this.compilerOptions, fileNames);
         }
         var relative = function (f) { return path.relative(args.projectDir, f); };
         var fileResult = GetJavaScriptFileNames(this.compilerHost.files.map(relative), /^src\//);

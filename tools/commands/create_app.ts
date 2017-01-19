@@ -4,9 +4,9 @@
 //import params = require("../ParamsParser");
 import file = require('../lib/FileUtil');
 import BuildCommand = require("./build");
-import FileAutoChangeCommand = require("../actions/FileAutoChange");
 //import config = require("../ProjectConfig");
-var config = egret.args.properties;
+import EgretProject = require('../parser/EgretProject');
+
 import CopyFilesCommand = require("./copyfile");
 import ParseConfigCommand = require("../actions/ParseConfig");
 import CompileTemplate = require('../actions/CompileTemplate');
@@ -105,11 +105,11 @@ class CreateAppCommand implements egret.Command {
         properties["native"][platform + "_path"] = file.relative(projectPath, nativePath);
         file.save(file.joinPath(projectPath, "egretProperties.json"), JSON.stringify(properties, null, "\t"));
 
-        config.init(arg_h5_path);
+        EgretProject.utils.init(arg_h5_path);
 
         //修改native项目配置
         new ParseConfigCommand().execute();
-        CompileTemplate.modifyNativeRequire();
+        CompileTemplate.modifyNativeRequire(true);
 
         //拷贝项目到native工程中
         copyNative.refreshNative(true);
@@ -132,7 +132,7 @@ class CreateAppCommand implements egret.Command {
                 this.modifyAndroidStudioSupport(app_path);
                 this.modifyLocalProperties(app_path);
             }
-            else if(file.isFile(file.joinPath(file.joinPath(app_path, "proj.android"), "project.properties"))){
+            else if (file.isFile(file.joinPath(file.joinPath(app_path, "proj.android"), "project.properties"))) {
                 //修改ADT工程的
                 this.modifyAndroidADTSupport(app_path);
             }
@@ -299,7 +299,7 @@ class CreateAppCommand implements egret.Command {
                 if ("undefined" != platformVersion) {
                     versionValue = parseInt(platformVersion);
                     //如果本地存在所需的SDK。直接返回
-                    if("undefined" != target_level && target_level == versionValue){
+                    if ("undefined" != target_level && target_level == versionValue) {
                         resultVersion = target_level;
                         break;
                     }

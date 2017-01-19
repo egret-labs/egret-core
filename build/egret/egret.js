@@ -8986,6 +8986,31 @@ var egret;
             _this.height = source.height;
             return _this;
         }
+        BitmapData.create = function (type, data) {
+            if (egret.Capabilities.runtimeType === egret.RuntimeType.WEB) {
+                var base64 = "";
+                if (type === "arraybuffer") {
+                    base64 = egret.Base64Util.encode(data);
+                }
+                else {
+                    base64 = data;
+                }
+                var image = document.createElement("img");
+                image.src = "data:image/png;base64," + base64;
+                return new BitmapData(image);
+            }
+            else {
+                var buffer = null;
+                if (type === "arraybuffer") {
+                    buffer = data;
+                }
+                else {
+                    buffer = egret.Base64Util.decode(data);
+                }
+                var native_texture = egret_native.Texture.createTextureFromArrayBuffer(buffer);
+                return new BitmapData(native_texture);
+            }
+        };
         BitmapData.prototype.$dispose = function () {
             if (egret.Capabilities.runtimeType == egret.RuntimeType.WEB && egret.Capabilities.renderMode == "webgl" && this.webGLTexture) {
                 egret.WebGLUtils.deleteWebGLTexture(this.webGLTexture);
@@ -11994,6 +12019,52 @@ var egret;
     (function (localStorage) {
     })(localStorage = egret.localStorage || (egret.localStorage = {}));
 })(egret || (egret = {}));
+var egret;
+(function (egret) {
+    function pickPhoto() {
+        return new Promise(function (resolve, reject) {
+            if (egret.Capabilities.runtimeType === egret.RuntimeType.NATIVE) {
+                var promise = egret.PromiseObject.create();
+                promise.onSuccessFunc = function (content) {
+                    resolve(content);
+                };
+                egret_native.pickPhoto(promise);
+            }
+            else {
+                var input = document.createElement("input");
+                input.type = "file";
+                input.accept = "image/*";
+                input.onchange = function (event) {
+                    var fileInput = event.currentTarget.files;
+                    var photoURL = window.URL.createObjectURL(fileInput[0]);
+                    var img = new Image();
+                    var xhr = new XMLHttpRequest();
+                    xhr.open("GET", photoURL, true);
+                    xhr.responseType = "blob";
+                    xhr.onload = response;
+                    xhr.send();
+                    function response(e) {
+                        if (Number(this.status) === 200) {
+                            var blob = this.response;
+                            var fileReader = new FileReader();
+                            fileReader.onload = function () {
+                                resolve(this.result);
+                            };
+                            fileReader.readAsArrayBuffer(blob);
+                        }
+                        else if (Number(this.status) >= 400) {
+                            reject("faild with status" + this.status);
+                        }
+                    }
+                };
+                var event_3 = document.createEvent("MouseEvents");
+                event_3.initMouseEvent("click", true, false, window, 0, 0, 0, 0, 0, false, false, false, false, 0, null);
+                input.dispatchEvent(event_3);
+            }
+        });
+    }
+    egret.pickPhoto = pickPhoto;
+})(egret || (egret = {}));
 //////////////////////////////////////////////////////////////////////////////////////
 //
 //  Copyright (c) 2014-present, Egret Technology.
@@ -12113,46 +12184,6 @@ var egret;
 var egret;
 (function (egret) {
 })(egret || (egret = {}));
-//////////////////////////////////////////////////////////////////////////////////////
-//
-//  Copyright (c) 2014-present, Egret Technology.
-//  All rights reserved.
-//  Redistribution and use in source and binary forms, with or without
-//  modification, are permitted provided that the following conditions are met:
-//
-//     * Redistributions of source code must retain the above copyright
-//       notice, this list of conditions and the following disclaimer.
-//     * Redistributions in binary form must reproduce the above copyright
-//       notice, this list of conditions and the following disclaimer in the
-//       documentation and/or other materials provided with the distribution.
-//     * Neither the name of the Egret nor the
-//       names of its contributors may be used to endorse or promote products
-//       derived from this software without specific prior written permission.
-//
-//  THIS SOFTWARE IS PROVIDED BY EGRET AND CONTRIBUTORS "AS IS" AND ANY EXPRESS
-//  OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES
-//  OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED.
-//  IN NO EVENT SHALL EGRET AND CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT,
-//  INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT
-//  LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES;LOSS OF USE, DATA,
-//  OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF
-//  LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING
-//  NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE,
-//  EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
-//
-//////////////////////////////////////////////////////////////////////////////////////
-var egret_native;
-(function (egret_native) {
-    function selectPhoto() {
-        return new Promise(function (resolve) {
-            var promise = egret.PromiseObject.create();
-            promise.onSuccessFunc = function (content) {
-                resolve(content);
-            };
-            egret_native._selectPhoto(promise);
-        });
-    }
-})(egret_native || (egret_native = {}));
 //////////////////////////////////////////////////////////////////////////////////////
 //
 //  Copyright (c) 2014-present, Egret Technology.
@@ -21794,6 +21825,134 @@ var egret;
     egret.VerticalAlign = VerticalAlign;
     __reflect(VerticalAlign.prototype, "egret.VerticalAlign");
 })(egret || (egret = {}));
+//////////////////////////////////////////////////////////////////////////////////////
+//
+//  Copyright (c) 2014-present, Egret Technology.
+//  All rights reserved.
+//  Redistribution and use in source and binary forms, with or without
+//  modification, are permitted provided that the following conditions are met:
+//
+//     * Redistributions of source code must retain the above copyright
+//       notice, this list of conditions and the following disclaimer.
+//     * Redistributions in binary form must reproduce the above copyright
+//       notice, this list of conditions and the following disclaimer in the
+//       documentation and/or other materials provided with the distribution.
+//     * Neither the name of the Egret nor the
+//       names of its contributors may be used to endorse or promote products
+//       derived from this software without specific prior written permission.
+//
+//  THIS SOFTWARE IS PROVIDED BY EGRET AND CONTRIBUTORS "AS IS" AND ANY EXPRESS
+//  OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES
+//  OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED.
+//  IN NO EVENT SHALL EGRET AND CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT,
+//  INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT
+//  LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES;LOSS OF USE, DATA,
+//  OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF
+//  LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING
+//  NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE,
+//  EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+//
+//////////////////////////////////////////////////////////////////////////////////////
+var egret;
+(function (egret) {
+    /**
+    * @language en_US
+    * The ByteArray class provides methods for encoding and decoding base64.
+    * @version Egret 2.4
+    * @platform Web,Native
+    * @includeExample egret/utils/ByteArray.ts
+    */
+    /**
+     * @language zh_CN
+     * Base64Util 类提供用于编解码base64的方法。
+     * @version Egret 2.4
+     * @platform Web,Native
+     * @includeExample egret/utils/Base64Util.ts
+     */
+    var Base64Util = (function () {
+        function Base64Util() {
+        }
+        /**
+         * @language en_US
+         * encode base64.
+         * @version Egret 2.4
+         * @platform Web,Native
+         */
+        /**
+         * @language zh_CN
+         * 编码base64。
+         * @version Egret 2.4
+         * @platform Web,Native
+         */
+        Base64Util.encode = function (arraybuffer) {
+            var bytes = new Uint8Array(arraybuffer);
+            var len = bytes.length;
+            var base64 = '';
+            for (var i = 0; i < len; i += 3) {
+                base64 += chars[bytes[i] >> 2];
+                base64 += chars[((bytes[i] & 3) << 4) | (bytes[i + 1] >> 4)];
+                base64 += chars[((bytes[i + 1] & 15) << 2) | (bytes[i + 2] >> 6)];
+                base64 += chars[bytes[i + 2] & 63];
+            }
+            if ((len % 3) === 2) {
+                base64 = base64.substring(0, base64.length - 1) + '=';
+            }
+            else if (len % 3 === 1) {
+                base64 = base64.substring(0, base64.length - 2) + '==';
+            }
+            return base64;
+        };
+        /**
+         * @language en_US
+         * decode base64.
+         * @version Egret 2.4
+         * @platform Web,Native
+         */
+        /**
+         * @language zh_CN
+         * 解码base64。
+         * @version Egret 2.4
+         * @platform Web,Native
+         */
+        Base64Util.decode = function (base64) {
+            var bufferLength = base64.length * 0.75;
+            var len = base64.length;
+            var p = 0;
+            var encoded1 = 0;
+            var encoded2 = 0;
+            var encoded3 = 0;
+            var encoded4 = 0;
+            if (base64[base64.length - 1] === '=') {
+                bufferLength--;
+                if (base64[base64.length - 2] === '=') {
+                    bufferLength--;
+                }
+            }
+            var arraybuffer = new ArrayBuffer(bufferLength), bytes = new Uint8Array(arraybuffer);
+            for (var i = 0; i < len; i += 4) {
+                encoded1 = lookup[base64.charCodeAt(i)];
+                encoded2 = lookup[base64.charCodeAt(i + 1)];
+                encoded3 = lookup[base64.charCodeAt(i + 2)];
+                encoded4 = lookup[base64.charCodeAt(i + 3)];
+                bytes[p++] = (encoded1 << 2) | (encoded2 >> 4);
+                bytes[p++] = ((encoded2 & 15) << 4) | (encoded3 >> 2);
+                bytes[p++] = ((encoded3 & 3) << 6) | (encoded4 & 63);
+            }
+            return arraybuffer;
+        };
+        return Base64Util;
+    }());
+    egret.Base64Util = Base64Util;
+    __reflect(Base64Util.prototype, "egret.Base64Util");
+})(egret || (egret = {}));
+/**
+ * @private
+ */
+var chars = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789+/";
+var lookup = new Uint8Array(256);
+for (var i = 0; i < chars.length; i++) {
+    lookup[chars.charCodeAt(i)] = i;
+}
 //////////////////////////////////////////////////////////////////////////////////////
 //
 //  Copyright (c) 2014-present, Egret Technology.

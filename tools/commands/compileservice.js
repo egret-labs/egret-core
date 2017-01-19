@@ -3,12 +3,12 @@ var utils = require("../lib/utils");
 var service = require("../service/index");
 var FileUtil = require("../lib/FileUtil");
 var Native = require("../actions/NativeProject");
-var CopyFiles = require("../actions/CopyFiles");
 var exmlActions = require("../actions/exml");
 var state = require("../lib/DirectoryState");
 var CompileProject = require("../actions/CompileProject");
 var CompileTemplate = require("../actions/CompileTemplate");
 var parser = require("../parser/Parser");
+var EgretProject = require("../parser/EgretProject");
 var AutoCompileCommand = (function () {
     function AutoCompileCommand() {
         this.exitCode = [0, 0];
@@ -19,7 +19,7 @@ var AutoCompileCommand = (function () {
     }
     AutoCompileCommand.prototype.execute = function () {
         var _this = this;
-        if (egret.args.properties.invalid(true)) {
+        if (EgretProject.utils.invalid(true)) {
             process.exit(0);
             return;
         }
@@ -65,7 +65,7 @@ var AutoCompileCommand = (function () {
         //操作其他文件
         _scripts = result.files.length > 0 ? result.files : _scripts;
         CompileTemplate.modifyIndexHTML(_scripts);
-        CompileTemplate.modifyNativeRequire();
+        CompileTemplate.modifyNativeRequire(true);
         exmlActions.afterBuild();
         Native.build();
         this.dirState.init();
@@ -108,7 +108,7 @@ var AutoCompileCommand = (function () {
                     this.messages[2] = egret.args.tsconfigError;
                 }
                 else if (fileName.indexOf("egretProperties.json") > -1) {
-                    egret.args.properties.reload();
+                    EgretProject.utils.reload();
                     this.copyLibs();
                     this.compileProject.compileProject(egret.args);
                     this.messages[2] = egret.args.tsconfigError;
@@ -144,9 +144,9 @@ var AutoCompileCommand = (function () {
     };
     AutoCompileCommand.prototype.copyLibs = function () {
         //刷新libs 中 modules 文件
-        CopyFiles.copyToLibs();
+        CompileTemplate.copyToLibs();
         //修改 html 中 modules 块
-        CopyFiles.modifyHTMLWithModules();
+        CompileTemplate.modifyIndexHTML();
     };
     AutoCompileCommand.prototype.buildChangedTS = function (filesChanged) {
         //console.log("changed ts:", filesChanged);
@@ -199,16 +199,14 @@ var AutoCompileCommand = (function () {
         index = FileUtil.escapePath(index);
         console.log('Compile Template: ' + index);
         CompileTemplate.modifyIndexHTML(this._scripts);
-        CompileTemplate.modifyNativeRequire();
+        CompileTemplate.modifyNativeRequire(true);
         return 0;
     };
     AutoCompileCommand.prototype.onServiceMessage = function (msg) {
         //console.log("onServiceMessage:",msg)
         if (msg.command == 'build' && msg.option) {
             this.sourceMapStateChanged = msg.option.sourceMap != egret.args.sourceMap;
-            var props = egret.args.properties;
             egret.args = parser.parseJSON(msg.option);
-            egret.args.properties = props;
         }
         if (msg.command == 'build')
             this.buildChanges(msg.changes);

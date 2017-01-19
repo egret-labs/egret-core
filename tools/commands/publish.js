@@ -3,11 +3,13 @@ var utils = require("../lib/utils");
 var FileUtil = require("../lib/FileUtil");
 var exml = require("../actions/exml");
 var CompileProject = require("../actions/CompileProject");
+var CompileTemplate = require("../actions/CompileTemplate");
 var GenerateVersion = require("../actions/GenerateVersionCommand");
 var ZipCMD = require("../actions/ZipCommand");
 var project = require("../actions/Project");
+var EgretProject = require("../parser/EgretProject");
 var copyNative = require("../actions/CopyNativeFiles");
-var FileAutoChange = require("../actions/FileAutoChange");
+var path = require("path");
 var Publish = (function () {
     function Publish() {
     }
@@ -29,17 +31,12 @@ var Publish = (function () {
     Publish.prototype.execute = function () {
         utils.checkEgret();
         var options = egret.args;
-        var config = egret.args.properties;
+        var config = EgretProject.utils;
         //重新设置 releaseDir
         var versionFile = this.getVersionInfo();
-        if (egret.args.runtime == "native") {
-            options.releaseDir = FileUtil.joinPath(config.getReleaseRoot(), "native", versionFile);
-            globals.log(1402, "native", versionFile);
-        }
-        else {
-            options.releaseDir = FileUtil.joinPath(config.getReleaseRoot(), "web", versionFile);
-            globals.log(1402, "web", versionFile);
-        }
+        var runtime = egret.args.runtime == 'native' ? 'native' : "web";
+        options.releaseDir = FileUtil.joinPath(config.getReleaseRoot(), runtime, versionFile);
+        globals.log(1402, runtime, versionFile);
         utils.clean(options.releaseDir);
         options.minify = true;
         options.publish = true;
@@ -53,10 +50,7 @@ var Publish = (function () {
             exml.updateSetting();
         }
         if (egret.args.runtime == "native") {
-            var rootHtmlPath = FileUtil.joinPath(options.projectDir, "index.html");
-            //修改 native_require.js
-            var autoChange = new FileAutoChange();
-            var listInfo = autoChange.refreshNativeRequire(rootHtmlPath, false);
+            var listInfo = CompileTemplate.modifyNativeRequire(false);
             var allMainfestPath = FileUtil.joinPath(options.releaseDir, "all.manifest");
             if (FileUtil.exists(allMainfestPath)) {
                 FileUtil.copy(allMainfestPath, FileUtil.joinPath(options.releaseDir, "ziptemp", "all.manifest"));
@@ -66,7 +60,7 @@ var Publish = (function () {
             FileUtil.copy(FileUtil.joinPath(options.templateDir, "runtime"), FileUtil.joinPath(options.releaseDir, "ziptemp", "launcher"));
             FileUtil.copy(FileUtil.joinPath(options.releaseDir, "main.min.js"), FileUtil.joinPath(options.releaseDir, "ziptemp", "main.min.js"));
             FileUtil.remove(FileUtil.joinPath(options.releaseDir, "main.min.js"));
-            listInfo["libs"].forEach(function (filepath) {
+            listInfo.libs.forEach(function (filepath) {
                 FileUtil.copy(FileUtil.joinPath(options.projectDir, filepath), FileUtil.joinPath(options.releaseDir, "ziptemp", filepath));
             });
             //runtime  打包所有js文件以及all.manifest
@@ -76,25 +70,37 @@ var Publish = (function () {
             });
         }
         else {
+            var copyAction = new CopyAction(options.projectDir, options.releaseDir);
+            copyAction.copy("index.html");
+            copyAction.copy("favicon.ico");
             var releaseHtmlPath = FileUtil.joinPath(options.releaseDir, "index.html");
-            FileUtil.copy(FileUtil.joinPath(options.projectDir, "index.html"), releaseHtmlPath);
-            //拷贝favicon.ico
-            var faviconPath = FileUtil.joinPath(options.projectDir, "favicon.ico");
-            if (FileUtil.exists(faviconPath)) {
-                FileUtil.copy(faviconPath, FileUtil.joinPath(options.releaseDir, "favicon.ico"));
-            }
-            //修改 html
-            var autoChange = new FileAutoChange();
-            autoChange.changeHtmlToRelease(releaseHtmlPath);
+            CompileTemplate.changeHtmlToRelease(releaseHtmlPath);
             var htmlContent = FileUtil.read(releaseHtmlPath);
             //根据 html 拷贝使用的 js 文件
             var libsList = project.getLibsList(htmlContent, false, false);
-            libsList.forEach(function (filepath) {
-                FileUtil.copy(FileUtil.joinPath(options.projectDir, filepath), FileUtil.joinPath(options.releaseDir, filepath));
-            });
+            copyAction.copy(libsList);
         }
         return DontExitCode;
     };
     return Publish;
+}());
+var CopyAction = (function () {
+    function CopyAction(from, to) {
+        this.from = from;
+        this.to = to;
+    }
+    CopyAction.prototype.copy = function (resourcePath) {
+        if (typeof resourcePath == 'string') {
+            var fromPath = path.resolve(this.from, resourcePath);
+            var toPath = path.resolve(this.to, resourcePath);
+            if (FileUtil.exists(fromPath)) {
+                FileUtil.copy(fromPath, toPath);
+            }
+        }
+        else {
+            resourcePath.forEach(this.copy.bind(this));
+        }
+    };
+    return CopyAction;
 }());
 module.exports = Publish;

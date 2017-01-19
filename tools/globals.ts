@@ -44,11 +44,6 @@ module globals {
         return true;
     }
 
-
-    export function getAsync() {
-        return require('./lib/core/async');
-    }
-
     export function getCrc32() {
         return require("./lib/core/crc32");
     }

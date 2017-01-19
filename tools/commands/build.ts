@@ -4,73 +4,19 @@ import utils = require('../lib/utils');
 import server = require('../server/server');
 import service = require('../service/index');
 import FileUtil = require('../lib/FileUtil');
-import Cordova = require('../actions/Cordova');
-import CopyFiles = require('../actions/CopyFiles');
 import CompileProject = require('../actions/CompileProject');
 import CompileTemplate = require('../actions/CompileTemplate');
-import APITestTool = require('../actions/APITest');
 import CHILD_EXEC = require('child_process');
-import APITestCommand = require('./apitest');
 import * as project from '../parser/EgretProject';
 import ts = require('../lib/typescript-plus/lib/typescript')
 
-import Compiler = require('../actions/Compiler');
+import * as Compiler from '../actions/Compiler';
 console.log(utils.tr(1004, 0));
 var timeBuildStart: number = (new Date()).getTime();
 class Build implements egret.Command {
     execute(callback?: (exitCode: number) => void): number {
         callback = callback || defaultBuildCallback;
-        //如果APITest未通过继续执行APITest
-        if (!APITestTool.isTestPass(egret.args.projectDir)) {
-            var apitest_command = new APITestCommand();
-            apitest_command.execute(() => {
-                globals.log2(1715);//项目检测成功
-                //成功以后再次执行build
-                var build = CHILD_EXEC.exec(
-                    globals.addQuotes(process.execPath) + " \"" +
-                    FileUtil.joinPath(egret.root, '/tools/bin/egret') + '\" build \"' + egret.args.projectDir + "\"",
-                    {
-                        encoding: 'utf8',
-                        timeout: 0,
-                        maxBuffer: 200 * 1024,
-                        killSignal: 'SIGTERM',
-                        cwd: process.cwd(),
-                        env: process.env
-                    });
-                build.stderr.on("data", (data) => {
-                    console.log(data);
-                });
-                build.stdout.on("data", (data) => {
-                    console.log(data);
-                });
-                build.on("exit", (result) => {
-                    process.exit(result);
-                });
-                //返回true截断默认的exit操作
-                return true;
-            });
-            //var build = CHILD_EXEC.exec(
-            //    'node \"'+FileUtil.joinPath(egret.root,'/tools/bin/egret')+'\" apitest \"'+egret.args.projectDir+"\"",
-            //    {
-            //        encoding: 'utf8',
-            //        timeout: 0,
-            //        maxBuffer: 200*1024,
-            //        killSignal: 'SIGTERM',
-            //        cwd: process.cwd(),
-            //        env: process.env
-            //    });
-            //build.stderr.on("data", (data) =>{
-            //    console.log(data);
-            //});
-            //build.stdout.on("data",(data)=>{
-            //    console.log(data);
-            //});
-            //build.on("exit", (result)=>{
-            //    process.exit(result);
-            //});
-            return DontExitCode;
-        }
-
+    
         var options = egret.args;
         let packageJsonContent
         if (packageJsonContent = FileUtil.read(project.utils.getFilePath("package.json"))) {
@@ -85,7 +31,7 @@ class Build implements egret.Command {
             utils.exit(10015, options.projectDir);
         }
         if (!FileUtil.exists(FileUtil.joinPath(options.projectDir, 'libs/modules/egret/'))) {
-            CopyFiles.copyToLibs();
+            CompileTemplate.copyToLibs();
         }
 
         service.execCommand({
@@ -100,7 +46,7 @@ class Build implements egret.Command {
         var options = egret.args;
         var libFiles = FileUtil.search(FileUtil.joinPath(options.projectDir, "libs"), "d.ts");
         var outDir ="bin";
-        var compiler = new Compiler();
+        var compiler = new Compiler.Compiler();
         utils.clean(FileUtil.joinPath(options.projectDir, outDir));
         for (let m of packageJson.modules) {
             var files:string[];
@@ -135,7 +81,7 @@ class Build implements egret.Command {
                 compileFiles.push(tmpFilePath);
             }
 
-            var result = compiler.compileGame(compilerOptions, compileFiles)
+            var result = compiler.compile(compilerOptions, compileFiles)
 
             if (hasTmpTsFile) {
                 FileUtil.remove(tmpFilePath);

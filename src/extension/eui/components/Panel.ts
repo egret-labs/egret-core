@@ -368,8 +368,9 @@ namespace eui {
          * @language zh_CN
          */
         protected onTouchEnd(event:egret.TouchEvent):void {
-            this.$stage.removeEventListener(egret.TouchEvent.TOUCH_MOVE, this.onTouchMove, this);
-            this.$stage.removeEventListener(egret.TouchEvent.TOUCH_END, this.onTouchEnd, this);
+            let stage = event.$currentTarget;
+            stage.removeEventListener(egret.TouchEvent.TOUCH_MOVE, this.onTouchMove, this);
+            stage.removeEventListener(egret.TouchEvent.TOUCH_END, this.onTouchEnd, this);
         }
     }
 
