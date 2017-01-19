@@ -61,7 +61,7 @@ function getScript(type, src, releaseSrc) {
             return "\t<script egret=\"" + type + "\" src=\"" + src + "\"></script>\n";
             break;
         case 'none':
-            return "\t<script  src=\"" + src + "\"></script>\n";
+            return "\t<script src=\"" + src + "\"></script>\n";
             break;
     }
 }

@@ -123,7 +123,7 @@ export class Compiler {
             else {
                 msg = `${message}`;
             }
-            console.log (msg)
+            console.log(msg)
             this.errors.push(msg);
         });
     }
@@ -191,9 +191,11 @@ export class Compiler {
         }
         for (let optionName in defaultSupport) {
             if (compilerOptions[optionName] != defaultSupport[optionName]) {
+                if (compilerOptions[optionName]) {
+                    var error = utils.tr(1116, optionName);
+                    console.log(`${error} 将被调整为'${defaultSupport[optionName]}'`)
+                }
                 compilerOptions[optionName] = defaultSupport[optionName];
-                var error = utils.tr(1116, optionName);
-                console.log(`${error} 将被调整为'${defaultSupport[optionName]}'`)
             }
         }
 

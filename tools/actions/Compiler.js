@@ -154,9 +154,11 @@ var Compiler = (function () {
         }
         for (var optionName in defaultSupport) {
             if (compilerOptions[optionName] != defaultSupport[optionName]) {
+                if (compilerOptions[optionName]) {
+                    var error = utils.tr(1116, optionName);
+                    console.log(error + " \u5C06\u88AB\u8C03\u6574\u4E3A'" + defaultSupport[optionName] + "'");
+                }
                 compilerOptions[optionName] = defaultSupport[optionName];
-                var error = utils.tr(1116, optionName);
-                console.log(error + " \u5C06\u88AB\u8C03\u6574\u4E3A'" + defaultSupport[optionName] + "'");
             }
         }
         var configParseResult = ts.parseJsonConfigFileContent(configObj, ts.sys, path.dirname(url));
