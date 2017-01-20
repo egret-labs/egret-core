@@ -75,7 +75,7 @@ var UpgradeCommand = (function () {
                         return [3 /*break*/, 5];
                     case 4:
                         e_1 = _a.sent();
-                        console.log("升级中断，错误信息如下");
+                        console.log("升级中断，具体原因如下");
                         console.log(e_1);
                         globals.exit(1705);
                         return [3 /*break*/, 5];
@@ -141,18 +141,26 @@ var Upgrade_4_0_1 = (function () {
     }
     Upgrade_4_0_1.prototype.execute = function () {
         return __awaiter(this, void 0, void 0, function () {
-            var tsconfigPath, tsconfigContent, tsconfig;
+            var tsconfigPath, tsconfigContent, tsconfig, needLibs;
             return __generator(this, function (_a) {
                 tsconfigPath = Project.utils.getFilePath('tsconfig.json');
                 tsconfigContent = file.read(tsconfigPath);
                 tsconfig = JSON.parse(tsconfigContent);
-                tsconfig.compilerOptions.lib = [
+                needLibs = [
                     "es5", "dom", "es2015.promise"
                 ];
+                if (!tsconfig.compilerOptions.lib) {
+                    tsconfig.compilerOptions.lib = [];
+                }
+                needLibs.forEach(function (lib) {
+                    if (tsconfig.compilerOptions.lib.indexOf(lib) == -1) {
+                        tsconfig.compilerOptions.lib.push(lib);
+                    }
+                });
                 tsconfigContent = JSON.stringify(tsconfig, null, "\t");
                 file.save(tsconfigPath, tsconfigContent);
                 file.copy(path.join(egret.root, 'tools/templates/empty/polyfill'), Project.utils.getFilePath('polyfill'));
-                globals.log(1703, "www.baidu.com");
+                globals.log(1703, "这里要放一个文档 URL 地址");
                 return [2 /*return*/, 0];
             });
         });
