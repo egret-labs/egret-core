@@ -7,14 +7,14 @@ var childProcess = require("child_process");
 var parser = require("../parser/Parser");
 var os = require("os");
 exports.LARK_SERVICE_PORT = 51545;
-//Lark version, use to shutdown if the version is different to the value passed by the build command
+//egret version, use to shutdown if the version is different to the value passed by the build command
 var version = process.argv[2];
 var projects = {};
 var serviceCreated = false;
 var timer;
 var lastBuildTime = Date.now();
 /**
-* Start Lark Service
+* Start Egret Service
 */
 function run() {
     var server = net.createServer(function (socket) {
@@ -88,7 +88,7 @@ function shutdown(path) {
 }
 exports.shutdown = shutdown;
 /**
-*  Send command to Lark Service
+*  Send command to Compile Service
 */
 function execCommand(command, callback, startServer) {
     if (startServer === void 0) { startServer = true; }

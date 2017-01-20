@@ -208,8 +208,8 @@ function preduceSwanModule(m) {
         return;
     }
     var replaces = [
-        ["Lark 1.0", "Egret 2.4"],
-        ["lark.", "egret."],
+        ["Egret 2.4"],
+        ["egret."],
         ["IEventEmitter", "IEventDispatcher"],
         ["EventEmitter", "EventDispatcher"],
         [".on(", ".addEventListener("],

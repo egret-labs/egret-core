@@ -7,7 +7,6 @@ var __extends = (this && this.__extends) || function (d, b) {
 global.TotalJS = { Controller: {} };
 var events = require("events");
 var utils = require("../lib/utils");
-global.lark = global.lark || {};
 function startServer(args, startupUrl) {
     var total = require('../lib/totaljs/');
     total.setRoot(__dirname);

@@ -11,7 +11,7 @@ import os = require("os");
 
 
 export var LARK_SERVICE_PORT = 51545;
-//Lark version, use to shutdown if the version is different to the value passed by the build command
+//egret version, use to shutdown if the version is different to the value passed by the build command
 var version = process.argv[2];
 var projects = {};
 var serviceCreated = false;
@@ -26,7 +26,7 @@ var lastBuildTime: number = Date.now();
 
 
 /**
-* Start Lark Service
+* Start Egret Service
 */
 export function run() {
     var server = net.createServer(socket => {
@@ -101,7 +101,7 @@ export function shutdown(path) {
 
 }
 /**
-*  Send command to Lark Service
+*  Send command to Compile Service
 */
 export function execCommand(command: egret.ServiceCommand, callback?: Function, startServer = true): ServiceSocket {
     var options = egret.args;

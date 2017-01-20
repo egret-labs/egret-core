@@ -30,7 +30,7 @@
 /// <reference path="../lib/node.d.ts" />
 
 
-global["$locale_strings"] = global["$locale_strings"] ||{};
+global["$locale_strings"] = global["$locale_strings"] || {};
 var locale_strings = global["$locale_strings"];
 locale_strings[0] = "Successful implementation";
 locale_strings[1] = "Compilation fails";
@@ -114,17 +114,17 @@ locale_strings[1611] = "The project is exist, please use another name.Example:{c
 //upgrade
 locale_strings[1701] = "Project version is lower than egret version, please implement egret upgrade {your_project} command to upgrade your project, \n do not add braces {} in the commands";
 locale_strings[1702] = "Upgrade successful";
-locale_strings[1703] = "Upgrade script completed . Please accept {color_underline}{0}{color_normal} to complete the remaining steps to upgrade \n";
+locale_strings[1703] = "Upgrade script completed . Please check {color_underline}{0}{color_normal} for details";
 locale_strings[1704] = "Updating to {0}";
 locale_strings[1705] = "Update error，pleaet check engine and files and rerun";
 locale_strings[1706] = "Total {color_red}{0}{color_normal} API conflicts,please edit your project then rerun command command";
 locale_strings[1707] = "Copy files from {0} to {1} ..";
-locale_strings[1711] =  "The project directory had been changed,please use the new directory{color_red} '{0}' {color_normal},and use the command {color_red} egret apitest {your-project} {color_normal} testing the difference between the API";
-locale_strings[1712] =  "The testing result was writing in'{0}'";
-locale_strings[1713] =  "{color_green}Egret QQ group 481169576 {color_normal}";
-locale_strings[1714] =  "Updating the egretProperties.json";
-locale_strings[1715] =  "Project testing sucessful";
-locale_strings[1716] =  "You had use the old 3rd part library {0}.Please make sure these files not used the removed API";
+locale_strings[1711] = "The project directory had been changed,please use the new directory{color_red} '{0}' {color_normal},and use the command {color_red} egret apitest {your-project} {color_normal} testing the difference between the API";
+locale_strings[1712] = "The testing result was writing in'{0}'";
+locale_strings[1713] = "{color_green}Egret QQ group 481169576 {color_normal}";
+locale_strings[1714] = "Updating the egretProperties.json";
+locale_strings[1715] = "Project testing sucessful";
+locale_strings[1716] = "You had use the old 3rd part library {0}.Please make sure these files not used the removed API";
 //info
 locale_strings[1801] = "Egret version：{0}";
 locale_strings[1802] = "Egret install path:{0}";
@@ -200,14 +200,14 @@ locale_strings[10015] = "{color_red}\"{0}\" is not a valid Egret project folder{
     "\n\t\t--src\t\t\t//source code folder" +
     "\n\t\t--egretProperties.json\t//project configuration file" +
     "\n\t\t--index.html\t\t//launcher file"
-;
+    ;
 locale_strings[10016] = "Please visit {0} if no browser open it automatically";
 locale_strings[10017] = "Egret project is created, you can execute \"Egret run\" to run the project";
 locale_strings[10018] = "Found circular dependency when try to sort the TypeScript files. "
-                      + "Maybe you are create an instance of a subclass and assign it to a static member, "
-                      + "or using a subclass in immediately executing codes";
+    + "Maybe you are create an instance of a subclass and assign it to a static member, "
+    + "or using a subclass in immediately executing codes";
 locale_strings[10019] = "Cannot find the projects used to build native apps. These projects are not include on the Github."
-                      + "Please visit http://www.egret.com to download the Egret Installer. If you have install Egret, please contact us.";
+    + "Please visit http://www.egret.com to download the Egret Installer. If you have install Egret, please contact us.";
 locale_strings[10020] = "Compile service is exit unexpectedly";
 locale_strings[10021] = "Error with the folders, please try again";
 

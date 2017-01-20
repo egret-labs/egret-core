@@ -34,7 +34,6 @@ declare module sax {
         /**
          * @language zh_CN
          * 节点类型，1：XML，2：XMLAttribute，3：XMLText
-         * @version Lark 1.0
          * @platform Web,Native
          */
         nodeType: number;

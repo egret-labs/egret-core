@@ -8,7 +8,6 @@ import events = require('events');
 import utils = require('../lib/utils');
 import file = require('../lib/FileUtil');
 import cp = require('child_process');
-global.lark = global.lark || {};
 
 
 export function startServer(args: egret.ToolArgs, startupUrl:string) {

@@ -109,7 +109,7 @@ locale_strings[1611] = "The project is exist, please use another name.Example:{c
 //upgrade
 locale_strings[1701] = "Project version is lower than egret version, please implement egret upgrade {your_project} command to upgrade your project, \n do not add braces {} in the commands";
 locale_strings[1702] = "Upgrade successful";
-locale_strings[1703] = "Upgrade script completed . Please accept {color_underline}{0}{color_normal} to complete the remaining steps to upgrade \n";
+locale_strings[1703] = "Upgrade script completed . Please check {color_underline}{0}{color_normal} for details";
 locale_strings[1704] = "Updating to {0}";
 locale_strings[1705] = "Update error，pleaet check engine and files and rerun";
 locale_strings[1706] = "Total {color_red}{0}{color_normal} API conflicts,please edit your project then rerun command command";

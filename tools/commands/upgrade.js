@@ -141,9 +141,14 @@ var Upgrade_4_0_1 = (function () {
     }
     Upgrade_4_0_1.prototype.execute = function () {
         return __awaiter(this, void 0, void 0, function () {
-            var tsconfigPath, tsconfigContent, tsconfig, needLibs;
+            var tsconfigPath, source, target, tsconfigContent, tsconfig, needLibs;
             return __generator(this, function (_a) {
                 tsconfigPath = Project.utils.getFilePath('tsconfig.json');
+                if (!file.exists(tsconfigPath)) {
+                    source = file.joinPath(egret.root, "tools/templates/empty/tsconfig.json");
+                    target = Project.utils.getFilePath("tsconfig.json");
+                    file.copy(source, target);
+                }
                 tsconfigContent = file.read(tsconfigPath);
                 tsconfig = JSON.parse(tsconfigContent);
                 needLibs = [
@@ -160,7 +165,7 @@ var Upgrade_4_0_1 = (function () {
                 tsconfigContent = JSON.stringify(tsconfig, null, "\t");
                 file.save(tsconfigPath, tsconfigContent);
                 file.copy(path.join(egret.root, 'tools/templates/empty/polyfill'), Project.utils.getFilePath('polyfill'));
-                globals.log(1703, "这里要放一个文档 URL 地址");
+                globals.log(1703, "https://github.com/egret-labs/egret-core/tree/master/docs/cn/release-note/4.0.1");
                 return [2 /*return*/, 0];
             });
         });

@@ -115,17 +115,17 @@ module egret {
     //upgrade
     locale_strings[1701] = "项目版本低于 egret 版本，请执行 egret upgrade {your_project} 命令升级您的项目，\n命令中请不要加上大括号{}";
     locale_strings[1702] = "项目升级成功";
-    locale_strings[1703] = "升级脚本运行完成，请查看 {color_underline}{0}{color_normal} 完成剩余升级步骤";
+    locale_strings[1703] = "升级脚本运行完成，请查看 {color_underline}{0}{color_normal} 了解详情";
     locale_strings[1704] = "正在更新到{0}";
     locale_strings[1705] = "升级错误，请重置引擎后重试";
     locale_strings[1706] = "共计 {color_red}{0}{color_normal} 处API冲突,请用户解决所有冲突后运行build命令";
     locale_strings[1707] = "正在从{0},拷贝到{1} ..";
-    locale_strings[1711] =  "工程目录已变更,请使用新目录{color_red} '{0}' {color_normal}执行 {color_red} egret apitest {your-project} {color_normal}进行API检测";
-    locale_strings[1712] =  "检测结果已写入'{0}'";
-    locale_strings[1713] =  "{color_green}Egret 新特性体验群 481169576 {color_normal}";
-    locale_strings[1714] =  "正在更新配置文件..";
-    locale_strings[1715] =  "项目检测成功";
-    locale_strings[1716] =  "检测到你使用了旧的第三方库{0},建议手动检查这些库文件是否使用了废弃的API或使用与{1}兼容的第三方库"; 
+    locale_strings[1711] = "工程目录已变更,请使用新目录{color_red} '{0}' {color_normal}执行 {color_red} egret apitest {your-project} {color_normal}进行API检测";
+    locale_strings[1712] = "检测结果已写入'{0}'";
+    locale_strings[1713] = "{color_green}Egret 新特性体验群 481169576 {color_normal}";
+    locale_strings[1714] = "正在更新配置文件..";
+    locale_strings[1715] = "项目检测成功";
+    locale_strings[1716] = "检测到你使用了旧的第三方库{0},建议手动检查这些库文件是否使用了废弃的API或使用与{1}兼容的第三方库";
     //info
     locale_strings[1801] = "当前Egret版本：{0}";
     locale_strings[1802] = "Egret安装路径：{0}";
@@ -201,11 +201,11 @@ module egret {
         "\n\t\t--src\t\t\t//源代码目录" +
         "\n\t\t--egretProperties.json\t//项目配置文件" +
         "\n\t\t--index.html\t\t//启动文件"
-    ;
+        ;
     locale_strings[10016] = "如果浏览器没有启动，请手动打开URL: {0}";
     locale_strings[10017] = "项目创建成功，您可以执行 egret startserver 来运行刚刚创建的应用";
     locale_strings[10018] = "试图进行文件加载顺序排序时发现循环依赖，比如类的 static 属性直接实例化了一个继承自当前类的类，"
-                          + "或者当前文件中有立即执行的代码使用了依赖于当前文件的类。";
+        + "或者当前文件中有立即执行的代码使用了依赖于当前文件的类。";
     locale_strings[10019] = "没有找到打包 App 所需要的项目文件，这些文件没有包含在 Github 中，请前往 http://www.egret.com 下载 Egret 安装包，如果您已经安装 Egret 安装包，请联系我们的工作人员";
     locale_strings[10020] = "编译服务异常退出";
     locale_strings[10021] = "文件夹操作出现问题，请注意以下事项:\n1、请查看 template/runtime/native_require.js 是否为空，若为空请重新创建一个新的项目并将文件替换掉。\n2、不要在桌面创建native工程，都放到同一个其他盘去，比如 e 盘。\n由于操作系统刷新问题，请勿在操作文件后立马执行脚本。请重新执行命令，如果多次重试还不能解决，请联系我们，QQ群：{color_green}481169576{color_normal}";

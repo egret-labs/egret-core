@@ -16,7 +16,7 @@ class UpgradeCommand implements egret.Command {
     }
 
     execute(): number {
-        
+
         utils.checkEgret();
         this.run();
         return DontExitCode
@@ -116,24 +116,29 @@ class Upgrade_4_0_1 {
     async execute() {
 
         let tsconfigPath = Project.utils.getFilePath('tsconfig.json');
+        if (!file.exists(tsconfigPath)) {
+            let source = file.joinPath(egret.root, "tools/templates/empty/tsconfig.json");
+            let target = Project.utils.getFilePath("tsconfig.json")
+            file.copy(source, target);
+        }
         let tsconfigContent = file.read(tsconfigPath);
         let tsconfig = JSON.parse(tsconfigContent);
         let needLibs = [
             "es5", "dom", "es2015.promise"
         ];
-        if (!tsconfig.compilerOptions.lib){
+        if (!tsconfig.compilerOptions.lib) {
             tsconfig.compilerOptions.lib = [];
         }
         needLibs.forEach(lib => {
-            if (tsconfig.compilerOptions.lib.indexOf(lib) == -1){
+            if (tsconfig.compilerOptions.lib.indexOf(lib) == -1) {
                 tsconfig.compilerOptions.lib.push(lib);
             }
         })
         tsconfigContent = JSON.stringify(tsconfig, null, "\t");
         file.save(tsconfigPath, tsconfigContent);
         file.copy(path.join(egret.root, 'tools/templates/empty/polyfill'), Project.utils.getFilePath('polyfill'));
-        
-        globals.log(1703,"这里要放一个文档 URL 地址")
+
+        globals.log(1703, "https://github.com/egret-labs/egret-core/tree/master/docs/cn/release-note/4.0.1")
 
         return 0;
     }
