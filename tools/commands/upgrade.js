@@ -150,6 +150,7 @@ var Upgrade_4_0_1 = (function () {
                 tsconfigContent = JSON.stringify(tsconfig, null, "\t");
                 file.save(tsconfigPath, tsconfigContent);
                 file.copy(path.join(egret.root, 'tools/templates/empty/polyfill'), Project.utils.getFilePath('polyfill'));
+                // global
                 return [2 /*return*/, 0];
             });
         });

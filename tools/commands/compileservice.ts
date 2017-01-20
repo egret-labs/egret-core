@@ -226,20 +226,22 @@ class AutoCompileCommand implements egret.Command {
 
         var src = egret.args.srcDir,
             temp = egret.args.templateDir,
-            proj = egret.args.larkPropertiesFile,
             start = "index.html";
 
-
+            console.log (fileNames)
         fileNames.forEach(f => {
             var fileName = f.fileName;
-            if (fileName == proj) {
-                this.buildProject();
-            }
+            // if (fileName == tsconfig) {  // handle tsconfig.json
+            //     this.buildProject();
+            // }
             if (fileName.indexOf(src) < 0/* && fileName.indexOf(temp) < 0*/) {
                 return;
             }
             var relativePath = fileName.replace(src, '').replace(temp, '');
             var output = FileUtil.joinPath(egret.args.debugDir, relativePath);
+            // console.log('⬇⬇⬇⬇⬇⬇⬇⬇')
+            // console.log(fileName, output, relativePath)
+            // console.log('⬆⬆⬆⬆⬆⬆⬆⬆')
             if (FileUtil.exists(fileName)) {
                 FileUtil.copy(fileName, output);
                 console.log('Copy: ', fileName, "\n  to: ", output);

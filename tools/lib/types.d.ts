@@ -51,7 +51,6 @@ declare module egret {
         projectDir: string;
         getTmpDir(): string;
         srcDir: string;
-        larkPropertiesFile: string;
         debugDir: string;
         releaseDir: string;
         releaseRootDir: string;

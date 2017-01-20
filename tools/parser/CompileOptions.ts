@@ -22,10 +22,6 @@ class CompileOptions implements egret.ToolArgs {
         return FileUtil.joinPath(this.projectDir, "src/");
     }
 
-    get larkPropertiesFile(): string {
-        return FileUtil.joinPath(this.projectDir, "lark.json");
-    }
-
     private _debugDir: string;
     get debugDir(): string {
 

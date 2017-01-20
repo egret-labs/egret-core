@@ -25,13 +25,6 @@ var CompileOptions = (function () {
         enumerable: true,
         configurable: true
     });
-    Object.defineProperty(CompileOptions.prototype, "larkPropertiesFile", {
-        get: function () {
-            return FileUtil.joinPath(this.projectDir, "lark.json");
-        },
-        enumerable: true,
-        configurable: true
-    });
     Object.defineProperty(CompileOptions.prototype, "debugDir", {
         get: function () {
             return this._debugDir || FileUtil.joinPath(this.projectDir, "bin-debug/");
