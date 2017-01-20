@@ -111,7 +111,7 @@ var egret;
     //upgrade
     locale_strings[1701] = "项目版本低于 egret 版本，请执行 egret upgrade {your_project} 命令升级您的项目，\n命令中请不要加上大括号{}";
     locale_strings[1702] = "项目升级成功";
-    locale_strings[1703] = "\n升级第一步完成，{color_red}请按 {color_underline}https://github.com/egret-labs/egret-core/wiki/Egret_Upgrade/upgrade/index.html{color_red} 完成剩余升级步骤{color_normal}\n";
+    locale_strings[1703] = "升级脚本运行完成，请查看 {color_underline}{0}{color_normal} 完成剩余升级步骤";
     locale_strings[1704] = "正在更新到{0}";
     locale_strings[1705] = "升级错误，请重置引擎后重试";
     locale_strings[1706] = "共计 {color_red}{0}{color_normal} 处API冲突,请用户解决所有冲突后运行build命令";

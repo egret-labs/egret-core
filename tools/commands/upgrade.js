@@ -37,10 +37,12 @@ var file = require("../lib/FileUtil");
 var service = require("../service/index");
 var Project = require("../parser/EgretProject");
 var path = require("path");
+var utils = require("../lib/utils");
 var UpgradeCommand = (function () {
     function UpgradeCommand() {
     }
     UpgradeCommand.prototype.execute = function () {
+        utils.checkEgret();
         this.run();
         return DontExitCode;
     };
@@ -150,7 +152,7 @@ var Upgrade_4_0_1 = (function () {
                 tsconfigContent = JSON.stringify(tsconfig, null, "\t");
                 file.save(tsconfigPath, tsconfigContent);
                 file.copy(path.join(egret.root, 'tools/templates/empty/polyfill'), Project.utils.getFilePath('polyfill'));
-                // global
+                globals.log(1703, "www.baidu.com");
                 return [2 /*return*/, 0];
             });
         });

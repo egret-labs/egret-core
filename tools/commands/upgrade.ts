@@ -2,7 +2,7 @@ import file = require('../lib/FileUtil');
 import service = require('../service/index');
 import Project = require('../parser/EgretProject');
 import path = require('path');
-// import global = require('../p')
+import utils = require('../lib/utils')
 
 type VersionInfo = {
 
@@ -16,6 +16,8 @@ class UpgradeCommand implements egret.Command {
     }
 
     execute(): number {
+        
+        utils.checkEgret();
         this.run();
         return DontExitCode
     }
@@ -123,7 +125,7 @@ class Upgrade_4_0_1 {
         file.save(tsconfigPath, tsconfigContent);
         file.copy(path.join(egret.root, 'tools/templates/empty/polyfill'), Project.utils.getFilePath('polyfill'));
         
-        // global
+        globals.log(1703,"www.baidu.com")
         return 0;
     }
 }
