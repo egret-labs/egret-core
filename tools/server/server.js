@@ -7,13 +7,11 @@ var __extends = (this && this.__extends) || function (d, b) {
 global.TotalJS = { Controller: {} };
 var events = require("events");
 var utils = require("../lib/utils");
-var Default = require("./controllers/default");
 global.lark = global.lark || {};
 function startServer(args, startupUrl) {
     var total = require('../lib/totaljs/');
     total.setRoot(__dirname);
     args.port = args.port || 3000;
-    Default.UserProjectPath = args.projectDir;
     args.projectDir = args.projectDir || '/public/';
     egret.server = {
         options: args,

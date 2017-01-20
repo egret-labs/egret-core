@@ -6,20 +6,22 @@ import entry = require('../entry');
 import createAction = require('../actions/Create');
 import server = require('../server/server');
 import FileUtil = require('../lib/FileUtil');
-console.log(utils.tr(1003, 0));
+
 class Create implements egret.Command {
 
     execute() {
+
         var option = egret.args;
         if (FileUtil.exists(option.projectDir)) {
-            console.log(utils.tr(1002));
+            globals.log(1002);
             return 0;
         }
         else {
+            globals.log(1003);
             FileUtil.createDirectory(option.projectDir);
         }
         var project = option.getProject(true);
-        console.log(utils.tr(1004, 0));
+        globals.log(1004);
         project.type = project.type || "game";
 
         let hasProjectTypeInManifest = egret.manifest.templates.some(t => t.name == project.type);

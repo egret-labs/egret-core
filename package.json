@@ -478,6 +478,22 @@
           "eui",
           "tween"
         ]
+      },
+      {
+        "name": "res-examples",
+        "displayName": "ResourceManager 示例项目",
+        "language": "TypeScript",
+        "tag": "game,app,TypeScript",
+        "description": "ResourceManager 示例项目",
+        "defaultWidth": 640,
+        "defaultHeight": 1136,
+        "modules": [
+          "egret",
+          "game",
+          "res",
+          "eui",
+          "tween"
+        ]
       }
     ],
     "scaleModes": [

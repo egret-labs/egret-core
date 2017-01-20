@@ -8,7 +8,6 @@ import events = require('events');
 import utils = require('../lib/utils');
 import file = require('../lib/FileUtil');
 import cp = require('child_process');
-import Default = require('./controllers/default');
 global.lark = global.lark || {};
 
 
@@ -17,7 +16,6 @@ export function startServer(args: egret.ToolArgs, startupUrl:string) {
     var total: TotalJS.Framework = require('../lib/totaljs/');
     total.setRoot(__dirname);
     args.port = args.port || 3000;
-    Default.UserProjectPath = args.projectDir;
     args.projectDir = args.projectDir || '/public/';
 
 

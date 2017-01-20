@@ -1,5 +1,5 @@
 import utils = require('../lib/utils');
-import {Compiler} from'../actions/Compiler';
+import { Compiler } from '../actions/Compiler';
 import FileUtil = require('../lib/FileUtil');
 import path = require('path');
 import ts = require("../lib/typescript-plus/lib/typescript");
@@ -121,7 +121,7 @@ class CompileEgretEngine implements egret.Command {
             'lib.dom.d.ts',
             'lib.es2015.promise.d.ts',
             'lib.scripthost.d.ts'
-            ];
+        ];
 
         let defines: any = {};
         if (configuration.name == "debug") {
@@ -131,20 +131,14 @@ class CompileEgretEngine implements egret.Command {
         compileOptions.defines = defines;
 
         var result = this.compiler.compile(compileOptions, tss);
-         if (result.exitStatus != 0) {
+        if (result.exitStatus != 0) {
             result.messages.forEach(m => console.log(m));
         }
         if (result.exitStatus != 0) {
             return result.exitStatus;
         }
         if (dts) {
-
             this.dtsFiles.push([declareFile, depends]);
-
-            //兼容 Wing 用的旧版 TypeScript，删除 readonly 关键字
-            let dtsContent = FileUtil.read(declareFile);
-            dtsContent = dtsContent.replace(/readonly /g, "");
-            FileUtil.save(declareFile, dtsContent);
         }
         if (configuration.minify) {
             utils.minify(singleFile, singleFile);
