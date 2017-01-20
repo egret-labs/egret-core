@@ -30,9 +30,9 @@ var CopyNativeFiles = (function () {
             var sourceRuntime = FileUtil.joinPath(options.templateDir, "runtime");
             var outputRuntime = FileUtil.joinPath(url2, "launcher");
             FileUtil.copy(sourceRuntime, outputRuntime);
-            // var sourceRuntime = FileUtil.joinPath(options.libsDir);
-            // var outputRuntime = FileUtil.joinPath(url2, "libs");
-            FileUtil.copy(sourceRuntime, outputRuntime);
+            EgretProject.utils.getModulesConfig().forEach(function (m) {
+                FileUtil.copy(m.source, FileUtil.joinPath(url2, "libs"));
+            });
         }
         else {
             FileUtil.copy(options.releaseDir, url2);
