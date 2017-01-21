@@ -57,7 +57,6 @@ var EgretProject = (function () {
     };
     /**
      * 获取项目使用的egret版本号
-     * @returns {any}
      */
     EgretProject.prototype.getVersion = function () {
         return this.egretProperties.egret_version;
@@ -95,31 +94,47 @@ var EgretProject = (function () {
         return null;
     };
     EgretProject.prototype.getModulePath = function (m) {
-        var moduleBin;
+        var dir = "";
         if (m.path == null) {
-            moduleBin = path.join(egret.root, "build", m.name);
+            dir = path.join(egret.root, "build", m.name);
         }
         else {
             var tempModulePath = file.getAbsolutePath(m.path);
-            moduleBin = path.join(tempModulePath, "bin", m.name);
+            dir = path.join(tempModulePath, "bin", m.name);
+            if (!file.exists(dir)) {
+                dir = tempModulePath;
+            }
         }
-        return moduleBin;
+        return dir;
     };
     EgretProject.prototype.getLibraryFolder = function () {
         return this.getFilePath('libs/modules');
     };
-    EgretProject.prototype.getModulesConfig = function () {
+    EgretProject.prototype.getModulesConfig = function (platform) {
         var _this = this;
         return this.egretProperties.modules.map(function (m) {
             var name = m.name;
-            var source = _this.getModulePath(m);
-            var target = path.join(_this.getLibraryFolder(), name);
-            var relative = path.relative(_this.getProjectRoot(), source);
+            var sourceDir = _this.getModulePath(m);
+            var targetDir = path.join(_this.getLibraryFolder(), name);
+            var relative = path.relative(_this.getProjectRoot(), sourceDir);
             if (relative.indexOf("..") == -1) {
-                target = source;
+                targetDir = sourceDir;
             }
-            target = path.relative(_this.getProjectRoot(), target) + path.sep;
-            return { name: name, source: source, target: target };
+            targetDir = file.escapePath(path.relative(_this.getProjectRoot(), targetDir)) + path.sep;
+            var source = [
+                file.joinPath(sourceDir, name + ".js"),
+                file.joinPath(sourceDir, name + "." + platform + ".js")
+            ].filter(file.exists);
+            var target = source.map(function (s) {
+                var debug = file.joinPath(targetDir, path.basename(s));
+                var release = file.joinPath(targetDir, path.basename(s));
+                return {
+                    debug: debug,
+                    release: release,
+                    platform: platform
+                };
+            });
+            return { name: name, target: target, sourceDir: sourceDir, targetDir: targetDir };
         });
     };
     EgretProject.prototype.getPublishType = function (runtime) {

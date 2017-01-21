@@ -6,7 +6,12 @@ import file = require('../lib/FileUtil');
 import _utils = require('../lib/utils');
 import path = require("path");
 
+type SourceCode = {
 
+    debug: string,
+    release: string,
+    platform: "web" | "native"
+}
 
 export class EgretProject {
     private egretProperties: egret.EgretProperty = {
@@ -67,9 +72,8 @@ export class EgretProject {
 
     /**
      * 获取项目使用的egret版本号
-     * @returns {any}
      */
-    getVersion(): string {
+    getVersion() {
         return this.egretProperties.egret_version;
     }
 
@@ -112,15 +116,18 @@ export class EgretProject {
     }
 
     private getModulePath(m: egret.EgretPropertyModule) {
-        let moduleBin;
+        let dir = "";
         if (m.path == null) {
-            moduleBin = path.join(egret.root, "build", m.name);
+            dir = path.join(egret.root, "build", m.name);
         }
         else {
             let tempModulePath = file.getAbsolutePath(m.path);
-            moduleBin = path.join(tempModulePath, "bin", m.name);
+            dir = path.join(tempModulePath, "bin", m.name);
+            if (!file.exists(dir)) {
+                dir = tempModulePath;
+            }
         }
-        return moduleBin;
+        return dir;
     }
 
     getLibraryFolder() {
@@ -129,19 +136,31 @@ export class EgretProject {
 
 
 
-    getModulesConfig() {
+    getModulesConfig(platform: "web" | "native") {
         return this.egretProperties.modules.map(m => {
             let name = m.name;
-            let source = this.getModulePath(m);
-            let target = path.join(this.getLibraryFolder(), name)
-
-            let relative = path.relative(this.getProjectRoot(), source);
+            let sourceDir = this.getModulePath(m);
+            let targetDir = path.join(this.getLibraryFolder(), name)
+            let relative = path.relative(this.getProjectRoot(), sourceDir);
             if (relative.indexOf("..") == -1) { // source 在项目中
-                target = source;
+                targetDir = sourceDir;
             }
+            targetDir = file.escapePath(path.relative(this.getProjectRoot(), targetDir)) + path.sep;
+            let source = [
+                file.joinPath(sourceDir, name + ".js"),
+                file.joinPath(sourceDir, name + "." + platform + ".js")
+            ].filter(file.exists);
 
-            target = path.relative(this.getProjectRoot(), target) + path.sep;
-            return { name, source, target }
+            let target: SourceCode[] = source.map(s => {
+                let debug = file.joinPath(targetDir, path.basename(s));
+                let release = file.joinPath(targetDir, path.basename(s));
+                return {
+                    debug,
+                    release,
+                    platform
+                }
+            });
+            return { name, target, sourceDir, targetDir }
         })
     }
 

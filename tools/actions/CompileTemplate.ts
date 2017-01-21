@@ -63,8 +63,8 @@ export function copyToLibs() {
     let moduleDir = project.getLibraryFolder();
     FileUtil.remove(moduleDir);
 
-    project.getModulesConfig().forEach(m => {
-        FileUtil.copy(m.source, project.getFilePath(m.target));
+    project.getModulesConfig("web").forEach(m => {
+        FileUtil.copy(m.sourceDir, project.getFilePath(m.targetDir));
     })
 }
 
@@ -86,57 +86,13 @@ function getScript(type: 'lib' | 'game' | 'none', src, releaseSrc?) {
 export function getModuleScripts() {
     var properties = EgretProject.utils;
     let projectRoot = properties.getProjectRoot();
-    var modules = properties.getModulesConfig();
+    var modules = properties.getModulesConfig("web");
     var str = "";
     for (let m of modules) {
         let moduleName = m.name;
-        let targetFolder = m.target;
-        var debugJs = "";
-        var releaseJs = "";
-        var jsDebugpath = FileUtil.joinPath(projectRoot, targetFolder, moduleName + ".js");
-        var jsReleasepath = FileUtil.joinPath(projectRoot, targetFolder, moduleName + ".min.js");
-        
-        if (FileUtil.exists(jsDebugpath)) {
-            debugJs = targetFolder + moduleName + ".js";
-        }
-
-        if (FileUtil.exists(jsReleasepath)) {
-            releaseJs = targetFolder + moduleName + ".min.js";
-        }
-
-        if (debugJs == "") {
-            debugJs = releaseJs;
-        }
-        if (releaseJs == "") {
-            releaseJs = debugJs;
-        }
-
-        if (debugJs != "") {
-            str += getScript('lib', debugJs, releaseJs);
-        }
-
-        debugJs = "";
-        releaseJs = "";
-        jsDebugpath = FileUtil.joinPath(projectRoot, targetFolder, moduleName + ".web.js");
-        jsReleasepath = FileUtil.joinPath(projectRoot, targetFolder, moduleName + ".web.min.js");
-        if (FileUtil.exists(jsDebugpath)) {
-            debugJs = targetFolder + moduleName + ".web.js";
-        }
-
-        if (FileUtil.exists(jsReleasepath)) {
-            releaseJs = targetFolder + moduleName + ".web.min.js";
-        }
-
-        if (debugJs == "") {
-            debugJs = releaseJs;
-        }
-        if (releaseJs == "") {
-            releaseJs = debugJs;
-        }
-
-        if (debugJs != "") {
-            str += getScript('lib', debugJs, releaseJs);
-        }
+        m.target.forEach(s => {
+            str += getScript("lib", s.debug, s.release);
+        });
     }
     return str;
 }

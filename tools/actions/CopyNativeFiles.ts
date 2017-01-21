@@ -37,8 +37,8 @@ class CopyNativeFiles {
             FileUtil.copy(sourceRuntime, outputRuntime);
 
 
-            EgretProject.utils.getModulesConfig().forEach(m => {
-                FileUtil.copy(m.source, FileUtil.joinPath(url2, m.target));
+            EgretProject.utils.getModulesConfig('native').forEach(m => {
+                FileUtil.copy(m.sourceDir, FileUtil.joinPath(url2, m.targetDir));
             })
         }
         else {

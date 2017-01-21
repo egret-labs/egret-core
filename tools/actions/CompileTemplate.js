@@ -47,8 +47,8 @@ function copyToLibs() {
     var project = EgretProject.utils;
     var moduleDir = project.getLibraryFolder();
     FileUtil.remove(moduleDir);
-    project.getModulesConfig().forEach(function (m) {
-        FileUtil.copy(m.source, project.getFilePath(m.target));
+    project.getModulesConfig("web").forEach(function (m) {
+        FileUtil.copy(m.sourceDir, project.getFilePath(m.targetDir));
     });
 }
 exports.copyToLibs = copyToLibs;
@@ -69,50 +69,14 @@ function getScript(type, src, releaseSrc) {
 function getModuleScripts() {
     var properties = EgretProject.utils;
     var projectRoot = properties.getProjectRoot();
-    var modules = properties.getModulesConfig();
+    var modules = properties.getModulesConfig("web");
     var str = "";
     for (var _i = 0, modules_1 = modules; _i < modules_1.length; _i++) {
         var m = modules_1[_i];
         var moduleName = m.name;
-        var targetFolder = m.target;
-        var debugJs = "";
-        var releaseJs = "";
-        var jsDebugpath = FileUtil.joinPath(projectRoot, targetFolder, moduleName + ".js");
-        var jsReleasepath = FileUtil.joinPath(projectRoot, targetFolder, moduleName + ".min.js");
-        if (FileUtil.exists(jsDebugpath)) {
-            debugJs = targetFolder + moduleName + ".js";
-        }
-        if (FileUtil.exists(jsReleasepath)) {
-            releaseJs = targetFolder + moduleName + ".min.js";
-        }
-        if (debugJs == "") {
-            debugJs = releaseJs;
-        }
-        if (releaseJs == "") {
-            releaseJs = debugJs;
-        }
-        if (debugJs != "") {
-            str += getScript('lib', debugJs, releaseJs);
-        }
-        debugJs = "";
-        releaseJs = "";
-        jsDebugpath = FileUtil.joinPath(projectRoot, targetFolder, moduleName + ".web.js");
-        jsReleasepath = FileUtil.joinPath(projectRoot, targetFolder, moduleName + ".web.min.js");
-        if (FileUtil.exists(jsDebugpath)) {
-            debugJs = targetFolder + moduleName + ".web.js";
-        }
-        if (FileUtil.exists(jsReleasepath)) {
-            releaseJs = targetFolder + moduleName + ".web.min.js";
-        }
-        if (debugJs == "") {
-            debugJs = releaseJs;
-        }
-        if (releaseJs == "") {
-            releaseJs = debugJs;
-        }
-        if (debugJs != "") {
-            str += getScript('lib', debugJs, releaseJs);
-        }
+        m.target.forEach(function (s) {
+            str += getScript("lib", s.debug, s.release);
+        });
     }
     return str;
 }
