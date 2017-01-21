@@ -1,4 +1,3 @@
-/// <reference path="../lib/node.d.ts" />
 
 import InstallSDK = require("./installsdk");
 

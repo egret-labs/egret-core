@@ -3,7 +3,6 @@
 // Definitions by: Lucien Zuercher <https://github.com/bigz94>
 // Definitions: https://github.com/borisyankov/DefinitelyTyped
 
-/// <reference path="../node.d.ts" />
 /// <reference path="./nosql.d.ts" />
 
 /**
@@ -12,7 +11,7 @@
 declare module TotalJS {
 
     interface Framework {
-        
+
         /**< Properties */
 
         /**
@@ -164,7 +163,7 @@ declare module TotalJS {
          * 
          */
         wokers: Object;
-        
+
         /**< Functions */
 
         accept(extension, contentType?): Framework;
@@ -207,7 +206,7 @@ declare module TotalJS {
             fnValid: (req?: Object) => void,
             fnExec: (req?, res?, isValidation?: boolean) => void,
             middleware?: string[]
-            ): Framework;
+        ): Framework;
 
         hash(type, value, salt?): Framework;
 
@@ -501,7 +500,7 @@ declare module TotalJS {
          * @see https://github.com/totaljs/examples/tree/master/static-version
          */
         onVersion(name: string): string;
-        
+
         /**< Events */
 
         /**
@@ -554,7 +553,7 @@ declare module TotalJS {
      * </pre>
      */
     interface Cache {
-        
+
         /**< Properties */
 
         /**
@@ -629,20 +628,20 @@ declare module TotalJS {
         setExpire(name: string, expire: Date): Cache;
 
     }
-    
+
 
     /**
      * This class helps with creating files (CSS, JavaScript, views, etc.).
      */
     interface FileSystem {
-        
+
         /**< Properties */
 
         /**
          * Create files
          */
         create: {
-        
+
             /**< Methods */
 
             /**
@@ -715,7 +714,7 @@ declare module TotalJS {
          * Remove files
          */
         rm: {
-        
+
             /**< Methods */
 
             /**
@@ -769,7 +768,7 @@ declare module TotalJS {
      * reads from the framework configuration.
      */
     interface Path {
-        
+
         /**< Methods */
 
         /**
@@ -783,7 +782,7 @@ declare module TotalJS {
          * @param name? File name without path.
          */
         databases(name?);
-        
+
         /**
          * Get the definitions path from framework.config['directory-definitions'].
          * @param name? File name without path.
@@ -856,7 +855,7 @@ declare module TotalJS {
      * This class creates framework restrictions. You can allow/disallow IP or custom headers.
      */
     interface Restrictions {
-        
+
         /**< Methods */
 
         /**
@@ -1030,7 +1029,7 @@ declare module TotalJS {
          * Parsed data from URL query.
          */
         query: Object;
-        
+
         /**
          * Controller repository object for storing current request values.
          */
@@ -1040,39 +1039,39 @@ declare module TotalJS {
          * Current HTTP request.
          */
         req: Request;
-        
+
         /**
          * Current HTTP response.
          */
         res: Response;
-        
+
         /**
          * Current HTTP session.
          *
          * @see https://github.com/totaljs/modules/tree/master/session
          */
         session: Object;
-        
+
         /**
          * Get lastEventID for Server Sent Events.
          */
         sseID: string;
-        
+
         /**
          * Gets / Sets status code of response.
          */
         status: number;
-        
+
         /**
          * Current subdomain.
          */
         subdomain: string[];
-        
+
         /**
          * Current URI object.
-         */ 
+         */
         uri: Object;
-        
+
         /**
          * Current relative URL address without params and hash tags.
          */
@@ -1089,48 +1088,48 @@ declare module TotalJS {
         xhr: boolean;
 
         /**< Methods */
-        
+
         /**
          *
          */
         all(fn);
-        
+
         /**
          *
          */
         await(name, fn);
-        
+
         /**
          *
          */
         baa(name?);
-    
+
         /**
          *
          */
         binary(buffer, contentType);
-        
+
         /**
          *
          */
         callback(view_name?);
-    
+
         /**
          *
          */
         cancel();
-        
+
         /**
          *
          */
         change(message);
-        
+
         /**
          * Clear uploaded files. Important: for prevent auto clearing use controller.noClear().
          * @return Controller object
          */
         clear(): Controller;
-        
+
         /**
          * Close a response (controller.mmr() or controller.sse() or by the custom response flushing). 
          * In the WebSocket close all connections or specific connection (by the names).
@@ -1157,42 +1156,42 @@ declare module TotalJS {
         content(body: string, type?: string, headers?: Object): Controller;
 
         cors(allow: string[], method?: string[], header?: string[], credentials?: boolean): boolean;
-        
+
         /**
          * Set current path to contents folder.
          * @param path New path.
          * @return Controller object
          */
         currentContent(path: string): Controller;
-        
+
         /**
          * 
          * @param path New path.
          * @return Controller object
          */
         currentCSS(path: string): Controller;
-        
+
         /**
          * Set current path to download folder.
          * @param path New path.
          * @return Controller object
          */
         currentDownload(path: string): Controller;
-        
+
         /**
          * Set current path to image.
          * @param path New path.
          * @return Controller object
          */
         currentImage(path: string): Controller;
-        
+
         /**
          * Set current path to JS.
          * @param path New path.
          * @return Controller object
          */
         currentJS(path: string): Controller;
-        
+
         /**
          * Set current path to video.
          * @param path New path.
@@ -1235,7 +1234,7 @@ declare module TotalJS {
          * @return Controller object
          */
         date(type: string, d1: Date, d2: Date): Controller;
-        
+
         /**
          * Compare dates. This method can be used in views.
          * @param type Compare type ('<', '<=', '>', '>=', '=')
@@ -1286,7 +1285,7 @@ declare module TotalJS {
          * @return Client connection
          */
         find(id: string): WebSocketClient;
-        
+
         /**
          * Find client connection.
          * @param id Id of client or prepare function.
@@ -1345,7 +1344,7 @@ declare module TotalJS {
          * @see https://github.com/totaljs/examples/tree/master/controller-mail
          */
         mail(address: string, subject: string, name: string, model?: Object, callback?: (err?: Error) => void): Controller;
-        
+
         /**
          * Send e-mail from a view.
          * @param address To e-mail.
@@ -1370,8 +1369,8 @@ declare module TotalJS {
          * @param fnFrom? Is executed when is content read from the cache.
          * @return Controller object 
          */
-        memorize(key: string, expiration: Date, fnTo: Function, fnFrom?: Function ): Controller;
-        
+        memorize(key: string, expiration: Date, fnTo: Function, fnFrom?: Function): Controller;
+
         /**
          * Memorize output of controller.view() - layout is not cached (only view), 
          * controller.json() and controller.plain(). This function improves your 
@@ -1384,7 +1383,7 @@ declare module TotalJS {
          * @return Controller object 
          */
         memorize(key: string, expiration: Date, disabled: boolean, fnTo: Function, fnFrom?: Function): Controller;
-        
+
         meta(title: string, description?: string, keywords?: string, picture?: string): Controller;
 
         mmr(filename: string, stream: NodeJS.ReadableStream, cb?: Function): Controller;
@@ -1397,7 +1396,7 @@ declare module TotalJS {
          * @see https://github.com/totaljs/examples/tree/master/models
          */
         model(name: string): Controller;
-        
+
         /**
          * Return a controller models.
          * @param name Controller name.
@@ -1430,7 +1429,7 @@ declare module TotalJS {
          * @see https://github.com/totaljs/examples/tree/master/cache-http
          */
         notModified(compare?: string, strict?: boolean): boolean;
-        
+
         /**
          * Check if ETag or Last Modified has modified. If @compare === {String} compare 
          * if-none-match .... if @compare === {Date} compare if-modified-since. This function 
@@ -1472,7 +1471,7 @@ declare module TotalJS {
                 err?: Error,
                 data?: String,
                 code?: number,
-                headers?: Object) => void, 
+                headers?: Object) => void,
             timeout?: number): Controller;
 
         /**
@@ -1503,7 +1502,7 @@ declare module TotalJS {
          * @return Controller object 
          */
         redirect(url: string, permament?: boolean): Controller;
-        
+
         /**
          * Response redirect (async). This method is called when all operation in async 
          * (controller.await(), controller.wait()) are completed.
@@ -1520,7 +1519,7 @@ declare module TotalJS {
          * @see https://github.com/totaljs/examples/tree/master/localization-resources
          */
         resource(): string;
-        
+
         /**
          * Read from resource file.
          * @param name Name of resource file.
@@ -1530,49 +1529,49 @@ declare module TotalJS {
          * @see https://github.com/totaljs/examples/tree/master/localization-resources
          */
         resource(name: string, key: string): string;
-    
+
         /**
          * 
          * @param name File name.
          * @return string
          */
         routeCSS(name: string): string;
-        
+
         /**
          * Route a font file by the config['static-url-font']. Returns relative URL address.
          * @param name File name.
          * @return string
          */
         routeFont(name: string): string;
-        
+
         /**
          * Route a image file by the config['static-url-image']. Returns relative URL address.
          * @param name File name.
          * @return string
          */
         routeImage(name: string): string;
-        
+
         /**
          * Route a JS file by the config['static-url-js']. Returns relative URL address.
          * @param name File name.
          * @return string
          */
         routeJS(name: string): string;
-        
+
         /**
          * Route a static file by the config['static-url']. Returns relative URL address.
          * @param name File name.
          * @return string
          */
         routeStatic(name: string): string;
-        
+
         /**
          * Route a upload file by the config['static-url-upload']. Returns relative URL address.
          * @param name File name.
          * @return string
          */
         routeUpload(name: string): string;
-        
+
         /**
          * Route a video file by the config['static-url-video']. Returns relative URL address.
          * @param name File name.
@@ -1691,7 +1690,7 @@ declare module TotalJS {
          * @see https://github.com/totaljs/examples/tree/master/cache-http
          */
         setModified(value: string): Controller;
-        
+
         /**
          * Set last modified header
          * @param value Last-Modified
@@ -1728,7 +1727,7 @@ declare module TotalJS {
          * @see https://github.com/totaljs/examples/tree/master/server-sent-events
          */
         sse(data: string, name?: string, id?: string, retry?: number): Controller;
-        
+
         /**
          * Send data via [S]erver-[s]ent [e]vents.
          * @param data Data to send.
@@ -1799,7 +1798,7 @@ declare module TotalJS {
          * @return Controller object
          */
         title(value: string): Controller;
-        
+
         /**
          * Transfer current request to a new route.
          * @param url Relative URL address.
@@ -1807,7 +1806,7 @@ declare module TotalJS {
          * @return Status
          */
         transfer(url: string, flags?: string[]): boolean;
-    
+
         /**
          * Validate an object model.
          * IMPORTANT: If 'properties' is string then properties read 
@@ -1821,7 +1820,7 @@ declare module TotalJS {
          * @see https://github.com/totaljs/examples/tree/master/validation
          */
         validate(model: Object, properties: string[], prefix?: string, name?: string): boolean;
-    
+
         /**
          * Validate an object model.
          * IMPORTANT: If 'properties' is string then properties read 
@@ -1835,7 +1834,7 @@ declare module TotalJS {
          * @see https://github.com/totaljs/examples/tree/master/validation
          */
         validate(name: string, model: Object, prefix?: string, name2?: string): boolean;
-    
+
         /**
          * Response a view. 
          * IMPORTANT: view is loaded by the controller name. 
@@ -1891,7 +1890,7 @@ declare module TotalJS {
          * @return Controller object
          */
         view501(problem?: string): Controller;
-        
+
         /**
          * Response a view. 
          * IMPORTANT: view is loaded by the controller name. 
@@ -1914,7 +1913,7 @@ declare module TotalJS {
          * @return Controller object
          */
         wait(name: string);
-        
+
         /**
          * Add a function to async waiting list.
          * @param name Name of task.
@@ -1939,7 +1938,7 @@ declare module TotalJS {
          */
         usage(detailed: boolean): string;
 
-        
+
         /**
          * Create event function
          * <pre>
@@ -1962,46 +1961,46 @@ declare module TotalJS {
     }
 
     interface WebSocket {
-        
+
         /**< Attributes */
-        
+
         /**
          * List of all connections
          */
         connections: WebSocketClient[];
-        
+
         /**
          * Identification value
          */
         id: string
-        
+
         /**
          * Websocket identification name
          */
         name: string
-        
+
         /**
          * Number clients connected
          */
         online: number;
-        
+
         /**
          * 
          */
         repository: Object;
-        
+
         /**
          * return if it is a controller
          */
         isController: boolean;
-        
+
         /**
          * Url of the websocket connection
          */
         uri: string;
-        
+
         /**< Methods */
-        
+
         /**
          * Close connection
          * <pre>
@@ -2014,19 +2013,19 @@ declare module TotalJS {
          * @names names? client.id, optional - default null
          */
         close(names?: string[]);
-        
+
         /**
          * Destroy websocket
          */
         destroy();
-        
+
         /**
          * Find a client
          * @param name Name of the client
          * return WebSocketClient
          */
         find(name: string): WebSocketClient;
-        
+
         /**
          * Send message to all
          * <pre>
@@ -2053,7 +2052,7 @@ declare module TotalJS {
          * @param blacklist? Ids of the clients to remove from list to send message to, default null
          */
         send(value: Object, names?: string[], blacklist?: string[]);
-                 
+
         /**< Events */
 
         /**
@@ -2074,7 +2073,7 @@ declare module TotalJS {
          */
         on(event: string, ...params: any[]): Framework;
     }
-    
+
     /**
      * 
      */
@@ -2138,7 +2137,7 @@ declare module TotalJS {
          * Current custom user object. default: null
          */
         user: Object;
-        
+
         /**< Methods */
 
         /**
@@ -2148,7 +2147,7 @@ declare module TotalJS {
          * @return WebSocketClient object
          */
         close(message?: string, code?: number): WebSocketClient;
-    
+
         /**
          * Get cookie.
          * @param name Name of cookie.
@@ -2162,7 +2161,7 @@ declare module TotalJS {
          * @return WebSocketClient object
          */
         send(message: string): WebSocketClient;
-        
+
         /**
          * Send message via websocket to client.
          * @param message Message to send.
@@ -2367,7 +2366,7 @@ declare module TotalJS {
          * @return Reduced Object
          */
         reduce(source: Object, prop: string[]): Object;
-        
+
         /**
          * Reduce object properties by the array or object. This function is helpful for received model from a form.
          * @param source Source object.
@@ -2434,10 +2433,10 @@ declare module TotalJS {
             flags: string,
             data: Object,
             callback: (
-            err?: Error,
-            data?: Object,
-            status?: number,
-            headers?: Object
+                err?: Error,
+                data?: Object,
+                status?: number,
+                headers?: Object
             ) => void,
             cookies?: Object,
             headers?: Object,
@@ -2462,8 +2461,8 @@ declare module TotalJS {
             callback?: (
                 err?: Error,
                 response?: string
-            ) => void, 
-            headers?: Object, 
+            ) => void,
+            headers?: Object,
             method?: string);
         /**
          * Send stream to an url address.
@@ -2514,8 +2513,8 @@ declare module TotalJS {
                 value?: Object,
                 path?: string,
                 schema?: string
-            ) => boolean, 
-            builder?: ErrorBuilder, 
+            ) => boolean,
+            builder?: ErrorBuilder,
             resource?: (
                 key?: string
             ) => void);
@@ -2599,7 +2598,7 @@ declare module TotalJS {
          * @return Mail object.
          */
         to(address: string): Mail;
-        
+
         /**< Events */
 
         /**
@@ -2755,7 +2754,7 @@ declare module TotalJS {
      * </pre>
      */
     interface Pagination {
-        
+
         /**< Properties */
 
         count: number;
@@ -2768,7 +2767,7 @@ declare module TotalJS {
         skip: number;
         take: number;
         visible: boolean;
-        
+
         /**< Methods */
 
         next(format?: string): Object;
@@ -2777,7 +2776,7 @@ declare module TotalJS {
         render(max?: number, format?: string): Pagination;
 
     }
-    
+
     /**
      * URL builder is helpful for dynamic creating URL address.
      *
@@ -2801,7 +2800,7 @@ declare module TotalJS {
         toString(): string;
 
     }
-    
+
     /**
      * Schema builder is helpful for model definitions.By the schema you can validate a model.
      *
@@ -2829,7 +2828,7 @@ declare module TotalJS {
 
         schema(name: string,
             definition: Object,
-                defaults?: (
+            defaults?: (
                 name: string,
                 isDefault: boolean,
                 schema: string
@@ -2853,11 +2852,11 @@ declare module TotalJS {
      * This stats are filled automatically. You can change/resets stats any time.
      */
     interface Stats {
-        
+
         /**< Properties */
 
         request: {
-            
+
             /**< Properties */
 
             blocked: number;
@@ -2877,7 +2876,7 @@ declare module TotalJS {
         };
 
         response: {
-            
+
             /**< Properties */
 
             binary: number;
@@ -2941,7 +2940,7 @@ declare module TotalJS {
     }
 
     interface HttpRouteOptions {
-        
+
         /**< Properties */
 
         flags?: string[];
@@ -2993,7 +2992,7 @@ interface Request {
     flags: string[];
     host: string;
     ip: string
-        isAuthorized: boolean;
+    isAuthorized: boolean;
     isProxy: boolean;
     isSecure: boolean;
     language: string;
@@ -3165,7 +3164,7 @@ declare module "total.js" {
 }
 
 declare module "total.js/image" {
-    
+
     /**
      * Create an Image instance.
      * @param filename filenamereadable stream.

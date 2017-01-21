@@ -1,4 +1,3 @@
-/// <reference path="lib/node.d.ts" />
 /*
 
  此文件需要放在引擎安装目录

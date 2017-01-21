@@ -27,8 +27,6 @@
 //
 //////////////////////////////////////////////////////////////////////////////////////
 
-/// <reference path="./node.d.ts" />
-
 import cp = require('child_process');
 import path = require('path');
 import file = require('./FileUtil');
@@ -82,7 +80,7 @@ export function tr(code: number, ...args): string {
 export function format(text: string, ...args): string {
     var length = args.length;
     for (var i = 0; i < length || i < 5; i++) {
-        text = text.replace(new RegExp("\\{" + i + "\\}", "ig"), args[i]||"");
+        text = text.replace(new RegExp("\\{" + i + "\\}", "ig"), args[i] || "");
     }
 
     text = formatStdoutString(text);
@@ -90,18 +88,18 @@ export function format(text: string, ...args): string {
     return text;
 }
 
-export function ti(code: number,injector?:any): string {
+export function ti(code: number, injector?: any): string {
     var text = $locale_strings[code];
     if (!text) {
         return "{" + code + "}";
     }
-    text = inject.call(this,text,injector);
+    text = inject.call(this, text, injector);
     return text;
 }
 
-export function inject(text: string,injector?:any):string {
-    if(injector){
-        for(var p in injector){
+export function inject(text: string, injector?: any): string {
+    if (injector) {
+        for (var p in injector) {
             text = text.replace(new RegExp("\\{" + p + "\\}", "ig"), injector[p]);
         }
     }
@@ -111,7 +109,7 @@ export function inject(text: string,injector?:any):string {
 export function exit(code: number, ...args) {
     if (code) {
         var text: string = $locale_strings[code];
-        if (text&&text.indexOf("{0}") < 0 || args && args.length > 0) {
+        if (text && text.indexOf("{0}") < 0 || args && args.length > 0) {
             var message = tr.apply(this, [code].concat(args));
             console.error(message);
         }
@@ -133,7 +131,7 @@ export function getEgretRoot() {
     for (var i = 0; i < globalpath.length; i++) {
         var prefix = globalpath[i];
         var url = file.joinPath(prefix, '../');
-        if (file.exists(file.joinPath(url,'tools/bin/egret'))) {
+        if (file.exists(file.joinPath(url, 'tools/bin/egret'))) {
             existsFlag = true;
             break;
         }
@@ -171,16 +169,16 @@ export function open(target, appName?, callback?, options?) {
             break;
         case 'win32':
             // if the first parameter to start is quoted, it uses that as the title
-                // so we pass a blank title so we can quote the file we are opening
-                if (appName) {
-                    opener = 'start "" "' + escape(appName) + '"';
-                } else {
-                    opener = 'start ""';
-                }
-                break;
-            default:
-                if (appName) {
-                    opener = escape(appName);
+            // so we pass a blank title so we can quote the file we are opening
+            if (appName) {
+                opener = 'start "" "' + escape(appName) + '"';
+            } else {
+                opener = 'start ""';
+            }
+            break;
+        default:
+            if (appName) {
+                opener = escape(appName);
             } else {
                 // use Portlands xdg-open everywhere else
                 opener = path.join(__dirname, '../vendor/xdg-open');
@@ -188,7 +186,7 @@ export function open(target, appName?, callback?, options?) {
             break;
     }
 
-    return cp.exec(opener + ' "' + escape(target) + '"',options, callback);
+    return cp.exec(opener + ' "' + escape(target) + '"', options, callback);
 }
 
 
@@ -214,11 +212,10 @@ export function minify(sourceFile: string, output: string) {
     file.save(output, result.code);
 }
 
-export function clean(path: string,excludes?:string[]) {
+export function clean(path: string, excludes?: string[]) {
     var fileList = file.getDirectoryListing(path);
     var length = fileList.length;
-    for (var i = 0; i < length; i++)
-    {
+    for (var i = 0; i < length; i++) {
         var path = fileList[i];
         if (excludes && excludes.indexOf(path) >= 0)
             continue;
@@ -244,7 +241,7 @@ export function getNetworkAddress(): string[] {
     return ips;
 }
 
-export function getAvailablePort(callback: (port: number) => void, port= 0) {
+export function getAvailablePort(callback: (port: number) => void, port = 0) {
 
     function getPort() {
         var server = net.createServer();
@@ -274,26 +271,26 @@ export function checkEgret() {
     }
 }
 
-export function isFormatString(text:string):boolean{
-    if(text){
-        if(text.indexOf("\n")!=-1){
+export function isFormatString(text: string): boolean {
+    if (text) {
+        if (text.indexOf("\n") != -1) {
             return true;
         }
     }
     return false;
 }
 
-export function addIndents(times:number,text:string){
-    if(times == 0)
+export function addIndents(times: number, text: string) {
+    if (times == 0)
         return text;
     var added = '\t';
-    for(var i=0;i<times-1;i++){
-        added+=added;
+    for (var i = 0; i < times - 1; i++) {
+        added += added;
     }
     //开头
-    if(text != null){
-        text = added+text;
+    if (text != null) {
+        text = added + text;
     }
     //替换\n
-    return text.replace(new RegExp("\\n", "ig"),'\n'+added);
+    return text.replace(new RegExp("\\n", "ig"), '\n' + added);
 }

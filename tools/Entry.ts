@@ -29,6 +29,8 @@
 
 /// <reference path="./lib/types.d.ts" />
 
+declare var global: any;
+
 global.DEBUG = true;
 global.egret = global.egret || {};
 global.registerClass = "egret";

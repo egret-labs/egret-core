@@ -1,5 +1,6 @@
 ﻿/// <reference path="../lib/types.d.ts" />
 
+declare var global: any;
 
 global.TotalJS = { Controller: {} };
 
@@ -10,7 +11,7 @@ import file = require('../lib/FileUtil');
 import cp = require('child_process');
 
 
-export function startServer(args: egret.ToolArgs, startupUrl:string) {
+export function startServer(args: egret.ToolArgs, startupUrl: string) {
 
     var total: TotalJS.Framework = require('../lib/totaljs/');
     total.setRoot(__dirname);
@@ -55,12 +56,12 @@ class ServerConsole extends events.EventEmitter {
     }
     attach() {
 
-        if (console['override']) 
+        if (console['override'])
             return;
 
 
         console['override'] = true;
-        ["log", "warn", "error"].forEach((method)=> {
+        ["log", "warn", "error"].forEach((method) => {
             var oldMethod = console[method].bind(console);
             console['old_' + method] = oldMethod;
             console[method] = (...params: string[]) => {
@@ -80,7 +81,7 @@ class ServerConsole extends events.EventEmitter {
         console['override'] = false;
     }
 
-    log(params:string[]) {
+    log(params: string[]) {
         this.emit('log', params);
     }
 }
@@ -90,7 +91,7 @@ class ServerConsole extends events.EventEmitter {
 function getLocalIPAddress(): string[] {
     var os = require('os');
     var ifaces = os.networkInterfaces();
-    var ips = [ 'localhost', '127.0.0.1'];
+    var ips = ['localhost', '127.0.0.1'];
     Object.keys(ifaces).forEach(function (ifname) {
         var alias = 0;
 

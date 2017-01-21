@@ -6,18 +6,18 @@ import net = require("net");
 import events = require("events");
 
 class ServiceSocket extends events.EventEmitter {
-    socket:net.Socket;
-    larkMessageParser:LarkMessageBody = new LarkMessageBody();
+    socket: net.Socket;
+    larkMessageParser: LarkMessageBody = new LarkMessageBody();
     constructor(socket: net.Socket) {
         super();
         this.socket = socket;
         socket.setEncoding("utf-8");
-        socket.on("data", msg=> this.onData(msg));
+        socket.on("data", msg => this.onData(msg.toString()));
         socket.on("end", () => this.emit("end"));
         socket.on("close", () => this.emit("close"));
     }
 
-    send(object:any){
+    send(object: any) {
         var msg = LarkMessageBody.toMessage(object);
         try {
             this.socket.write(msg);
@@ -32,35 +32,34 @@ class ServiceSocket extends events.EventEmitter {
         this.socket.end();
     }
 
-    private onData(text:string){
-        this.larkMessageParser.pushData(text, data=> this.onGotMessage(data));
+    private onData(text: string) {
+        this.larkMessageParser.pushData(text, data => this.onGotMessage(data));
     }
 
-    private onGotMessage(data:any){
-        this.emit("message",data);
+    private onGotMessage(data: any) {
+        this.emit("message", data);
     }
 }
 
 export = ServiceSocket;
 
-class LarkMessageBody{
+class LarkMessageBody {
     static LARKHEADER = "LARK-MSG";
-    private length:number;
-    private text:string;
+    private length: number;
+    private text: string;
 
-    public data:any;
+    public data: any;
 
-    static toMessage(data){
+    static toMessage(data) {
         var json = JSON.stringify(data);
         var length = json.length;
-        var header = LarkMessageBody.LARKHEADER + ":" + length+"\n";
-        var msg = header+json;
+        var header = LarkMessageBody.LARKHEADER + ":" + length + "\n";
+        var msg = header + json;
         return msg;
     }
 
     pushData(text: string, msgCallback: Function) {
-        if(text.indexOf(LarkMessageBody.LARKHEADER)==0)
-        {
+        if (text.indexOf(LarkMessageBody.LARKHEADER) == 0) {
             var lines = text.split('\n');
             var header = lines[0];
             var lengthStr = /\d+/.exec(header)[0];
@@ -72,7 +71,7 @@ class LarkMessageBody{
             this.text += text;
 
         var length = this.text.length;
-        if(length==this.length){
+        if (length == this.length) {
             this.data = JSON.parse(this.text);
             msgCallback(this.data);
         }

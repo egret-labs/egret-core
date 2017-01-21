@@ -27,8 +27,6 @@
 //
 //////////////////////////////////////////////////////////////////////////////////////
 
-/// <reference path="node.d.ts"/>
-
 import FS = require("fs");
 import Path = require("path");
 
@@ -39,7 +37,7 @@ var charset = "utf-8";
  * @param path 文件完整路径名
  * @param data 要保存的数据
  */
-export function save(path:string, data:any):void {
+export function save(path: string, data: any): void {
     if (exists(path)) {
         remove(path);
     }
@@ -51,7 +49,7 @@ export function save(path:string, data:any):void {
 /**
  * 创建文件夹
  */
-export function createDirectory(path:string, mode?:any, made?:any):void {
+export function createDirectory(path: string, mode?: any, made?: any): void {
     path = escapePath(path);
     if (mode === undefined) {
         mode = 511 & (~process.umask());
@@ -68,7 +66,7 @@ export function createDirectory(path:string, mode?:any, made?:any):void {
     }
     catch (err0) {
         switch (err0.code) {
-            case 'ENOENT' :
+            case 'ENOENT':
                 made = createDirectory(Path.dirname(path), mode, made);
                 createDirectory(path, mode, made);
                 break;
@@ -93,7 +91,7 @@ var textTemp = {};
  * 读取文本文件,返回打开文本的字符串内容，若失败，返回"".
  * @param path 要打开的文件路径
  */
-export function read(path:string,ignoreCache = false):string {
+export function read(path: string, ignoreCache = false): string {
     path = escapePath(path);
     var text = textTemp[path];
     if (text && !ignoreCache) {
@@ -119,7 +117,7 @@ export function read(path:string,ignoreCache = false):string {
  * 读取字节流文件,返回字节流，若失败，返回null.
  * @param path 要打开的文件路径
  */
-export function readBinary(path:string):any {
+export function readBinary(path: string): any {
     path = escapePath(path);
     try {
         var binary = FS.readFileSync(path);
@@ -135,7 +133,7 @@ export function readBinary(path:string):any {
  * @param source 文件源路径
  * @param dest 文件要复制到的目标路径
  */
-export function copy(source:string, dest:string):void {
+export function copy(source: string, dest: string): void {
     source = escapePath(source);
     dest = escapePath(dest);
     var stat = FS.lstatSync(source);
@@ -147,7 +145,7 @@ export function copy(source:string, dest:string):void {
     }
 }
 
-export function isDirectory(path:string):boolean {
+export function isDirectory(path: string): boolean {
     path = escapePath(path);
     try {
         var stat = FS.statSync(path);
@@ -158,7 +156,7 @@ export function isDirectory(path:string):boolean {
     return stat.isDirectory();
 }
 
-export function isSymbolicLink(path:string):boolean {
+export function isSymbolicLink(path: string): boolean {
     path = escapePath(path);
     try {
         var stat = FS.statSync(path);
@@ -169,7 +167,7 @@ export function isSymbolicLink(path:string):boolean {
     return stat.isSymbolicLink();
 }
 
-export function isFile(path:string):boolean {
+export function isFile(path: string): boolean {
     path = escapePath(path);
     try {
         var stat = FS.statSync(path);
@@ -198,7 +196,7 @@ function _copy_dir(sourceDir, outputDir) {
  * 删除文件或目录
  * @param path 要删除的文件源路径
  */
-export function remove(path:string):void {
+export function remove(path: string): void {
     path = escapePath(path);
     try {
         FS.lstatSync(path).isDirectory()
@@ -237,7 +235,7 @@ export function rename(oldPath, newPath) {
 /**
  * 返回指定文件的父级文件夹路径,返回字符串的结尾已包含分隔符。
  */
-export function getDirectory(path:string):string {
+export function getDirectory(path: string): string {
     path = escapePath(path);
     return Path.dirname(path) + "/";
 }
@@ -245,7 +243,7 @@ export function getDirectory(path:string):string {
 /**
  * 获得路径的扩展名,不包含点字符。
  */
-export function getExtension(path:string):string {
+export function getExtension(path: string): string {
     path = escapePath(path);
     var index = path.lastIndexOf(".");
     if (index == -1)
@@ -259,7 +257,7 @@ export function getExtension(path:string):string {
 /**
  * 获取路径的文件名(不含扩展名)或文件夹名
  */
-export function getFileName(path:string):string {
+export function getFileName(path: string): string {
     if (!path)
         return "";
     path = escapePath(path);
@@ -281,7 +279,7 @@ export function getFileName(path:string):string {
  * @param path 要搜索的文件夹
  * @param relative 是否返回相对路径，若不传入或传入false，都返回绝对路径。
  */
-export function getDirectoryListing(path:string, relative:boolean = false):string[] {
+export function getDirectoryListing(path: string, relative: boolean = false): string[] {
     path = escapePath(path);
     try {
         var list = readdirSync(path);
@@ -315,7 +313,7 @@ export function getDirectoryListing(path:string, relative:boolean = false):strin
  * @param path
  * @returns {any}
  */
-export function getDirectoryAllListing(path:string):string[] {
+export function getDirectoryAllListing(path: string): string[] {
     var list = [];
     if (isDirectory(path)) {
         var fileList = getDirectoryListing(path);
@@ -334,7 +332,7 @@ export function getDirectoryAllListing(path:string):string[] {
  * @param dir 要搜索的文件夹
  * @param extension 要搜索的文件扩展名,不包含点字符，例如："png"。不设置表示获取所有类型文件。
  */
-export function search(dir:string, extension?:string):string[] {
+export function search(dir: string, extension?: string): string[] {
     var list = [];
     try {
         var stat = FS.statSync(dir);
@@ -352,7 +350,7 @@ export function search(dir:string, extension?:string):string[] {
  * @param dir 要搜索的文件夹
  * @param filterFunc 过滤函数：filterFunc(file:File):Boolean,参数为遍历过程中的每一个文件，返回true则加入结果列表
  */
-export function searchByFunction(dir: string, filterFunc: Function, checkDir?:boolean):string[] {
+export function searchByFunction(dir: string, filterFunc: Function, checkDir?: boolean): string[] {
     var list = [];
     try {
         var stat = FS.statSync(dir);
@@ -366,13 +364,13 @@ export function searchByFunction(dir: string, filterFunc: Function, checkDir?:bo
     return list;
 }
 
-function readdirSync(filePath:string) {
+function readdirSync(filePath: string) {
     var files = FS.readdirSync(filePath);
     files.sort();
     return files;
 }
 
-function findFiles(filePath:string, list:string[], extension:string, filterFunc?:Function, checkDir?:boolean) {
+function findFiles(filePath: string, list: string[], extension: string, filterFunc?: Function, checkDir?: boolean) {
     var files = readdirSync(filePath);
     var length = files.length;
     for (var i = 0; i < length; i++) {
@@ -381,7 +379,7 @@ function findFiles(filePath:string, list:string[], extension:string, filterFunc?
         }
         var path = joinPath(filePath, files[i]);
         let exists = FS.existsSync(path);
-        if(!exists) {
+        if (!exists) {
             continue;
         }
         var stat = FS.statSync(path);
@@ -414,7 +412,7 @@ function findFiles(filePath:string, list:string[], extension:string, filterFunc?
 /**
  * 指定路径的文件或文件夹是否存在
  */
-export function exists(path:string):boolean {
+export function exists(path: string): boolean {
     path = escapePath(path);
     return FS.existsSync(path);
 }
@@ -422,7 +420,7 @@ export function exists(path:string):boolean {
 /**
  * 转换本机路径为Unix风格路径。
  */
-export function escapePath(path:string):string {
+export function escapePath(path: string): string {
     if (!path)
         return "";
     return path.split("\\").join("/");
@@ -430,7 +428,7 @@ export function escapePath(path:string):string {
 /**
  * 连接路径,支持传入多于两个的参数。也支持"../"相对路径解析。返回的分隔符为Unix风格。
  */
-export function joinPath(dir:string, ...filename:string[]):string {
+export function joinPath(dir: string, ...filename: string[]): string {
     var path = Path.join.apply(null, arguments);
     path = escapePath(path);
     return path;
@@ -455,7 +453,7 @@ export function relative(from: string, to: string) {
     return path;
 }
 
-export function getAbsolutePath(path:string) {
+export function getAbsolutePath(path: string) {
     var tempPath = Path.resolve(path);
     tempPath = escapePath(tempPath);
     path = escapePath(path);

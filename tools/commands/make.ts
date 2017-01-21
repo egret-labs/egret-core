@@ -5,6 +5,7 @@ import path = require('path');
 import ts = require("../lib/typescript-plus/lib/typescript");
 
 var ANY = 'any';
+declare var global: any;
 
 class CompileEgretEngine implements egret.Command {
     private compiler: Compiler;

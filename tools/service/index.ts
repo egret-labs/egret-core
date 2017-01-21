@@ -167,8 +167,7 @@ function startBackgroundService() {
     var server = childProcess.spawn(nodePath, startupParams, {
         detached: true,
         stdio: ['ignore', 'ignore', 'ignore'],
-        cwd: cwd,
-        silent: true
+        cwd: cwd
     });
 
     server.on("exit", () => serviceCreated = false);

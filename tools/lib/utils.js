@@ -26,7 +26,6 @@
 //  EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 //
 //////////////////////////////////////////////////////////////////////////////////////
-/// <reference path="./node.d.ts" />
 var cp = require("child_process");
 var path = require("path");
 var file = require("./FileUtil");

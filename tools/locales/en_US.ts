@@ -27,8 +27,6 @@
 //
 //////////////////////////////////////////////////////////////////////////////////////
 
-/// <reference path="../lib/node.d.ts" />
-
 
 global["$locale_strings"] = global["$locale_strings"] || {};
 var locale_strings = global["$locale_strings"];

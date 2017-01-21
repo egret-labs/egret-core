@@ -1,4 +1,3 @@
-/// <reference path="../../lib/node.d.ts" />
 var path = require("path");
 var UnzipCommand = (function () {
     function UnzipCommand() {

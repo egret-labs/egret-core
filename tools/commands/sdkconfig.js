@@ -1,4 +1,3 @@
-/// <reference path="../lib/node.d.ts" />
 var InstallSDK = require("./installsdk");
 var SDKConfig = (function () {
     function SDKConfig() {

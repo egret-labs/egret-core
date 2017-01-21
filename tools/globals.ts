@@ -173,5 +173,5 @@ module globals {
         }
     }
 }
-
+declare var global: any;
 global.globals = globals;

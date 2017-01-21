@@ -12,7 +12,7 @@ var ServiceSocket = (function (_super) {
         _this.larkMessageParser = new LarkMessageBody();
         _this.socket = socket;
         socket.setEncoding("utf-8");
-        socket.on("data", function (msg) { return _this.onData(msg); });
+        socket.on("data", function (msg) { return _this.onData(msg.toString()); });
         socket.on("end", function () { return _this.emit("end"); });
         socket.on("close", function () { return _this.emit("close"); });
         return _this;
