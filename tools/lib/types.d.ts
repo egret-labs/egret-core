@@ -55,8 +55,6 @@ declare module egret {
         releaseDir: string;
         releaseRootDir: string;
         templateDir: string;
-        out: string;
-        outDir: string;
         /** 用户命令行指定的引擎版本 */
         egretVersion?: string;
         port: number;

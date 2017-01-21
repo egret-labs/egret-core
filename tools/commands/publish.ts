@@ -57,8 +57,8 @@ class Publish implements egret.Command {
 
         var compileProject = new CompileProject();
         var result = compileProject.compile(options);
-
-        utils.minify(options.out, options.out);
+        var outfile = FileUtil.joinPath(options.releaseDir, 'main.min.js');
+        utils.minify(outfile, outfile);
 
         //生成 all.manifest 并拷贝资源
         (new GenerateVersion).execute();

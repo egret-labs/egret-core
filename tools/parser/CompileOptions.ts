@@ -38,22 +38,6 @@ class CompileOptions implements egret.ToolArgs {
         return FileUtil.joinPath(this.projectDir, "bin-release/");
     }
 
-
-    get out(): string | undefined {
-        var filename = this.publish ? FileUtil.joinPath(this.outDir, 'main.min.js') : undefined;
-        return filename;
-    }
-    private _outDir: string | null = null;
-    get outDir(): string {
-        if (this._outDir)
-            return this._outDir;
-        return this.publish ? this.releaseDir : this.debugDir;
-    }
-
-    set outDir(value: string) {
-        this._outDir = value;
-    }
-
     get templateDir(): string {
         return FileUtil.joinPath(this.projectDir, "template/");
     }

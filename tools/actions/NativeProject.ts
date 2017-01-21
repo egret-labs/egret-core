@@ -12,7 +12,6 @@ import copyNative = require("../actions/CopyNativeFiles");
 
 class NativeProject {
     public static copyNativeTemplate = copyNativeTemplate;
-    public static copyOutputToNative = copyOutputToNative;
 
     public static build() {
         CompileTemplate.modifyNativeRequire(true);
@@ -32,25 +31,6 @@ class NativeProject {
 
 export = NativeProject;
 
-
-function copyOutputToNative(platform?: string) {
-    var platformFolders = getPlatformFolders(platform);
-    var templateDatas = platformFolders.map(t=> getNativeTemplateData(t));
-    var targetFolders: string[] = [];
-    templateDatas.forEach((data, i) => {
-        if (!data)
-            return;
-        data.game.target.forEach(target=> {
-            var path = FileUtil.joinPath(platformFolders[i], target);
-            targetFolders.push(path);
-        })
-    });
-
-    targetFolders.forEach(target=> {
-        FileUtil.copy(egret.args.outDir, target);
-    });
-}
-
 function copyNativeTemplate() {
     var nativeTemplateFolder = "../NativeTemplates";
     var nativeTemplateFullPath = FileUtil.joinPath(egret.root, nativeTemplateFolder);
@@ -63,7 +43,7 @@ function copyNativeTemplate() {
     FileUtil.copy(nativeTemplateFullPath, targetTemplateFolder);
 
     var templates = getPlatformFolders();
-    templates.forEach(t=> renameTemplateProjects(t));
+    templates.forEach(t => renameTemplateProjects(t));
 }
 
 function getPlatformFolders(platform?: string) {
@@ -76,7 +56,7 @@ function getPlatformFolders(platform?: string) {
     }
     else {
         var templates = FileUtil.getDirectoryListing(targetTemplateFolder);
-        return templates && templates.filter(t=> FileUtil.isDirectory(t)) || [];
+        return templates && templates.filter(t => FileUtil.isDirectory(t)) || [];
     }
 }
 
@@ -94,8 +74,8 @@ function renameTemplateProjects(rootPath: string) {
     var templateData = getNativeTemplateData(rootPath);
     if (!templateData)
         return;
-    templateData.rename_tree.content.forEach(file=> replaceTextContents(rootPath, file, templateData.template_name, projectName));
-    templateData.rename_tree.file_name.forEach(file=> renameFileOrFolder(rootPath, file, templateData.template_name, projectName));
+    templateData.rename_tree.content.forEach(file => replaceTextContents(rootPath, file, templateData.template_name, projectName));
+    templateData.rename_tree.file_name.forEach(file => renameFileOrFolder(rootPath, file, templateData.template_name, projectName));
 }
 
 function replaceTextContents(rootPath: string, path: string, placeholder: string, replacement: string) {
@@ -122,9 +102,9 @@ function exec(command: string, params: string[], callback: Function) {
     var command = command + " " + params.join(' ');
     console.log(command);
     var cdvProcess = childProcess.exec(command, {}, (e, stdout, stdin) => { e && console.log("EXEC callback:", e) });
-    cdvProcess.stdout.on("data", data=> console.log("Build Native: " + data));
-    cdvProcess.stderr.on("data", data=> console.log("Build Native: " + data));
-    cdvProcess.on("close", code=> callback(code));
+    cdvProcess.stdout.on("data", data => console.log("Build Native: " + data));
+    cdvProcess.stderr.on("data", data => console.log("Build Native: " + data));
+    cdvProcess.on("close", code => callback(code));
     cdvProcess.on("error", (ee) => console.log("error when build", ee));
 }
 

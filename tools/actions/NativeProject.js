@@ -20,23 +20,6 @@ var NativeProject = (function () {
     return NativeProject;
 }());
 NativeProject.copyNativeTemplate = copyNativeTemplate;
-NativeProject.copyOutputToNative = copyOutputToNative;
-function copyOutputToNative(platform) {
-    var platformFolders = getPlatformFolders(platform);
-    var templateDatas = platformFolders.map(function (t) { return getNativeTemplateData(t); });
-    var targetFolders = [];
-    templateDatas.forEach(function (data, i) {
-        if (!data)
-            return;
-        data.game.target.forEach(function (target) {
-            var path = FileUtil.joinPath(platformFolders[i], target);
-            targetFolders.push(path);
-        });
-    });
-    targetFolders.forEach(function (target) {
-        FileUtil.copy(egret.args.outDir, target);
-    });
-}
 function copyNativeTemplate() {
     var nativeTemplateFolder = "../NativeTemplates";
     var nativeTemplateFullPath = FileUtil.joinPath(egret.root, nativeTemplateFolder);

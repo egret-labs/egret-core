@@ -4,7 +4,6 @@ var crypto = require("crypto");
 var FileUtil = require("../lib/FileUtil");
 var CompileOptions = (function () {
     function CompileOptions() {
-        this._outDir = null;
         this._host = null;
         this._port = NaN;
         this.esTarget = 'ES5';
@@ -41,26 +40,6 @@ var CompileOptions = (function () {
     Object.defineProperty(CompileOptions.prototype, "releaseRootDir", {
         get: function () {
             return FileUtil.joinPath(this.projectDir, "bin-release/");
-        },
-        enumerable: true,
-        configurable: true
-    });
-    Object.defineProperty(CompileOptions.prototype, "out", {
-        get: function () {
-            var filename = this.publish ? FileUtil.joinPath(this.outDir, 'main.min.js') : undefined;
-            return filename;
-        },
-        enumerable: true,
-        configurable: true
-    });
-    Object.defineProperty(CompileOptions.prototype, "outDir", {
-        get: function () {
-            if (this._outDir)
-                return this._outDir;
-            return this.publish ? this.releaseDir : this.debugDir;
-        },
-        set: function (value) {
-            this._outDir = value;
         },
         enumerable: true,
         configurable: true
