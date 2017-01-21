@@ -14,10 +14,6 @@ class CompileOptions implements egret.ToolArgs {
     compilerOptions: ts.CompilerOptions;
     tsconfigError: string[];//tsconfig 配置文件的错误信息
 
-    get dirName(): string {
-        return FileUtil.getFileName(this.projectDir);
-    }
-
     get srcDir(): string {
         return FileUtil.joinPath(this.projectDir, "src/");
     }
@@ -126,7 +122,7 @@ class CompileOptions implements egret.ToolArgs {
     ide: boolean;
     exmlGenJs: boolean;
 
-    private _tmpDir:string | null = null;
+    private _tmpDir: string | null = null;
     private _tmpProj: egret.EgretProjectConfig;
     getTmpDir() {
         if (this._tmpDir == null) {

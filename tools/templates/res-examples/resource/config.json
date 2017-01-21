@@ -1,0 +1,24 @@
+{
+    "alias": {
+        "bg_jpg": "assets/bg.jpg",
+        "egret_icon_png": "assets/egret_icon.png",
+        "description_json": "config/description.json"
+    },
+    "groups": {
+        "preload": [
+            "bg_jpg",
+            "egret_icon_png",
+            "description_json"
+        ]
+    },
+    "resources": {
+        "default.res.json": "default.res.json",
+        "assets": {
+            "bg.jpg": "assets/bg.jpg",
+            "egret_icon.png": "assets/egret_icon.png"
+        },
+        "config": {
+            "description.json": "config/description.json"
+        }
+    }
+}

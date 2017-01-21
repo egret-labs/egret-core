@@ -11,13 +11,6 @@ var CompileOptions = (function () {
         this.runtime = "web";
         this._tmpDir = null;
     }
-    Object.defineProperty(CompileOptions.prototype, "dirName", {
-        get: function () {
-            return FileUtil.getFileName(this.projectDir);
-        },
-        enumerable: true,
-        configurable: true
-    });
     Object.defineProperty(CompileOptions.prototype, "srcDir", {
         get: function () {
             return FileUtil.joinPath(this.projectDir, "src/");

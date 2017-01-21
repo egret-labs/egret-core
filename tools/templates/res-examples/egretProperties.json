@@ -16,8 +16,8 @@
       "name": "game"
     },
     {
-      "name": "res",
-      "path": "."
+      "name": "resourcemanager",
+      "path": "resourcemanager"
     },
     {
       "name": "eui"
