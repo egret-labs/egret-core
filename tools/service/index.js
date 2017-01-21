@@ -6,7 +6,7 @@ var file = require("../lib/FileUtil");
 var childProcess = require("child_process");
 var parser = require("../parser/Parser");
 var os = require("os");
-exports.LARK_SERVICE_PORT = 51545;
+var COMPILE_SERVICE_PORT = 51545;
 //egret version, use to shutdown if the version is different to the value passed by the build command
 var version = process.argv[2];
 var projects = {};
@@ -22,7 +22,7 @@ function run() {
         ss.on("message", function (msg) { return handleCommands(msg, ss); });
     });
     try {
-        server.listen(exports.LARK_SERVICE_PORT);
+        server.listen(COMPILE_SERVICE_PORT);
     }
     catch (e) {
         console.error("Service.run", e);
@@ -30,7 +30,7 @@ function run() {
     process.on('uncaughtException', function (e) {
         console.log("未捕获的异常:", e);
         if (e.code == 'EADDRINUSE') {
-            console.log("\u65E0\u6CD5\u542F\u52A8 service, \u8BF7\u68C0\u67E5\u7AEF\u53E3 " + exports.LARK_SERVICE_PORT + " \u662F\u5426\u88AB\u5360\u7528\u3002");
+            console.log("\u65E0\u6CD5\u542F\u52A8 service, \u8BF7\u68C0\u67E5\u7AEF\u53E3 " + COMPILE_SERVICE_PORT + " \u662F\u5426\u88AB\u5360\u7528\u3002");
         }
     });
     process.on('exit', shutdown);
@@ -94,7 +94,7 @@ function execCommand(command, callback, startServer) {
     if (startServer === void 0) { startServer = true; }
     var options = egret.args;
     var requestUrl = getServiceURL(command);
-    var client = net.connect(exports.LARK_SERVICE_PORT, "127.0.0.1");
+    var client = net.connect(COMPILE_SERVICE_PORT, "127.0.0.1");
     var ss = new ServiceSocket(client);
     client.on('error', function (e) {
         if (!startServer)
@@ -162,6 +162,6 @@ function parseRequest(req) {
 }
 function getServiceURL(params) {
     var json = JSON.stringify(params);
-    return "http://127.0.0.1:" + exports.LARK_SERVICE_PORT + "/?q=" + encodeURIComponent(json);
+    return "http://127.0.0.1:" + COMPILE_SERVICE_PORT + "/?q=" + encodeURIComponent(json);
 }
 /// <reference path="../lib/types.d.ts" />

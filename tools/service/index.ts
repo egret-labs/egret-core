@@ -10,7 +10,7 @@ import os = require("os");
 
 
 
-export var LARK_SERVICE_PORT = 51545;
+var COMPILE_SERVICE_PORT = 51545;
 //egret version, use to shutdown if the version is different to the value passed by the build command
 var version = process.argv[2];
 var projects = {};
@@ -34,7 +34,7 @@ export function run() {
         ss.on("message", msg => handleCommands(msg, ss));
     });
     try {
-        server.listen(LARK_SERVICE_PORT);
+        server.listen(COMPILE_SERVICE_PORT);
     }
     catch (e) {
         console.error("Service.run", e);
@@ -42,7 +42,7 @@ export function run() {
     process.on('uncaughtException', function (e: NodeJS.ErrnoException) {
         console.log("未捕获的异常:", e);
         if (e.code == 'EADDRINUSE') {
-            console.log(`无法启动 service, 请检查端口 ${LARK_SERVICE_PORT} 是否被占用。`)
+            console.log(`无法启动 service, 请检查端口 ${COMPILE_SERVICE_PORT} 是否被占用。`)
         }
     });
     process.on('exit', shutdown);
@@ -106,7 +106,7 @@ export function shutdown(path) {
 export function execCommand(command: egret.ServiceCommand, callback?: Function, startServer = true): ServiceSocket {
     var options = egret.args;
     var requestUrl = getServiceURL(command);
-    var client = net.connect(LARK_SERVICE_PORT, "127.0.0.1");
+    var client = net.connect(COMPILE_SERVICE_PORT, "127.0.0.1");
     var ss = new ServiceSocket(client);
     client.on('error', function (e) {
         if (!startServer)
@@ -190,7 +190,7 @@ function parseRequest(req: http.ServerRequest): egret.ServiceCommand {
 
 function getServiceURL(params: any) {
     var json = JSON.stringify(params);
-    return "http://127.0.0.1:" + LARK_SERVICE_PORT + "/?q=" + encodeURIComponent(json);
+    return "http://127.0.0.1:" + COMPILE_SERVICE_PORT + "/?q=" + encodeURIComponent(json);
 }
 
 

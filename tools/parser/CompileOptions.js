@@ -97,7 +97,7 @@ var CompileOptions = (function () {
             sha1.update(this.projectDir);
             var folder = sha1.digest('hex');
             var systemTmp = os.tmpdir();
-            var dir = FileUtil.joinPath(systemTmp, "lark/" + folder + "/");
+            var dir = FileUtil.joinPath(systemTmp, "egret/" + folder + "/");
             FileUtil.createDirectory(dir);
             this._tmpDir = dir;
         }

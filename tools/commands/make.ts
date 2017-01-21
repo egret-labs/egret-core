@@ -264,8 +264,6 @@ function preduceSwanModule(m: egret.EgretModule) {
             }
             content = replaceAll(content, replaces[r][0], replaces[r][1]);
         }
-        content = changeDefine(content, "lark", "egret");
-
         FileUtil.save(saveFile, content);
     }
 }
