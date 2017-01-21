@@ -1,18 +1,18 @@
 var fs = require('fs')
 var path = require('path')
 var packageJsonConfig;
-let param = require('./param')
+
 function getPackageJsonConfig() {
-    if(!packageJsonConfig) {
-        var txt = fs.readFileSync(param.getEgretPath() + "/package.json","utf-8");
+    if (!packageJsonConfig) {
+        var txt = fs.readFileSync(getEgretPath() + "/package.json", "utf-8");
         packageJsonConfig = JSON.parse(txt);
     }
     return packageJsonConfig;
 }
 
 function getEgretPath() {
-    var obj = _getEnv();
-    var egret_path = _getEnv().EGRET_PATH;
+    var obj = process.env;
+    var egret_path = process.env.EGRET_PATH;
     if (!egret_path) {
         var globalpath = module.paths.concat();
         var existsFlag = false;
@@ -49,7 +49,7 @@ function getEgretPath() {
 
 function getLanguageInfo() {
     var i18n = getPackageJsonConfig().i18n;
-    if(i18n == "en") {
+    if (i18n == "en") {
         i18n = "en_US";
         require('../../locales/en_US');
     }
