@@ -41,7 +41,7 @@ class E3dGame {
         this.egret3DCanvas.height = window.innerHeight;
         this.egret3DCanvas.start();
 
-        var view: egret3d.View3D = new egret3d.View3D(0, 0, this.egret3DCanvas.width, this.egret3DCanvas.height);
+        var view = new egret3d.View3D(0, 0, this.egret3DCanvas.width, this.egret3DCanvas.height);
         view.camera3D.lookAt(new egret3d.Vector3D(0, 1000, -1000), new egret3d.Vector3D(0, 0, 0));
         view.backColor = 0xffcccccc;
 
@@ -124,7 +124,7 @@ class E3dGame {
 
         // clip.animationName = "attack";
         // idleClip.animationName = "idle";
-        // var mesh: egret3d.Mesh = new egret3d.Mesh(geo);
+        // var mesh = new egret3d.Mesh(geo);
         // this.mesh = mesh;
 
         // clip.isLoop = false;
@@ -142,7 +142,7 @@ class E3dGame {
         // mesh.animation.play(idleClip.animationName);
         // this.ani = mesh.animation;
         // this.lightGroup = new egret3d.LightGroup();
-        // var dirLight: egret3d.DirectLight = new egret3d.DirectLight(new egret3d.Vector3D(1, -1, 0))
+        // var dirLight = new egret3d.DirectLight(new egret3d.Vector3D(1, -1, 0))
         // this.lightGroup.addLight(dirLight);
         // mesh.lightGroup = this.lightGroup;
     }
