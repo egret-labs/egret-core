@@ -117,7 +117,7 @@ var EgretProject = (function () {
             var sourceDir = _this.getModulePath(m);
             var targetDir = path.join(_this.getLibraryFolder(), name);
             var relative = path.relative(_this.getProjectRoot(), sourceDir);
-            if (relative.indexOf("..") == -1) {
+            if (relative.indexOf("..") == -1 && !path.isAbsolute(relative)) {
                 targetDir = sourceDir;
             }
             targetDir = file.escapePath(path.relative(_this.getProjectRoot(), targetDir)) + path.sep;
@@ -127,7 +127,7 @@ var EgretProject = (function () {
             ].filter(file.exists);
             var target = source.map(function (s) {
                 var debug = file.joinPath(targetDir, path.basename(s));
-                var release = file.joinPath(targetDir, path.basename(s));
+                var release = file.joinPath(targetDir, path.basename(s, '.js') + '.min.js');
                 return {
                     debug: debug,
                     release: release,

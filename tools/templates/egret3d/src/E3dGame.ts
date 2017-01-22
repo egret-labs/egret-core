@@ -4,21 +4,10 @@
  *
  */
 class E3dGame {
-    // Canvas操作对象
-    protected egret3DCanvas: egret3d.Egret3DCanvas;
+
 
     // View3D操作对象
     protected view: egret3d.View3D;
-
-    /*
-     * 进度条
-     */
-    protected loadProgress: egret3d.gui.UIProgressBar;
-
-    /**
-     *  加载器
-     */
-    // protected queueLoader: egret3d.QueueLoader;
 
     protected lightGroup: egret3d.LightGroup;
 
@@ -34,12 +23,13 @@ class E3dGame {
     private mesh: egret3d.Mesh;
 
     public constructor() {
-        this.egret3DCanvas = new egret3d.Egret3DCanvas();
-        this.egret3DCanvas.x = 0;
-        this.egret3DCanvas.y = 0;
-        this.egret3DCanvas.width = window.innerWidth;
-        this.egret3DCanvas.height = window.innerHeight;
-        this.egret3DCanvas.start();
+
+
+
+        // 创建Egret3DCanvas，传入 2D stage，将开启混合模式
+        var egret3DCanvas = new Egret3DContext(stage2D);
+        egret.setRendererContext(egret3DCanvas);
+
 
         var view = new egret3d.View3D(0, 0, this.egret3DCanvas.width, this.egret3DCanvas.height);
         view.camera3D.lookAt(new egret3d.Vector3D(0, 1000, -1000), new egret3d.Vector3D(0, 0, 0));
@@ -73,10 +63,16 @@ class E3dGame {
     }
 
     private async loadAssets() {
-        await RES.loadConfig();
-        await RES.getResAsync("ui/GUI.json");
-        await RES.getResAsync("ui/fonts.json");
-        await RES.getResAsync("EgretLoadingPage.jpg");
+        try {
+            await RES.loadConfig();
+            await RES.getResAsync("ui/GUI.json");
+            await RES.getResAsync("ui/fonts.json");
+            await RES.getResAsync("EgretLoadingPage.jpg");
+        }
+        catch (e) {
+
+        }
+
     }
 
 	/*
@@ -164,11 +160,7 @@ class E3dGame {
     * 窗口尺寸变化事件
     */
     private OnWindowResize(e: egret3d.Event3D): void {
-        //重置ui大小
-        this.egret3DCanvas.width = window.innerWidth;
-        this.egret3DCanvas.height = window.innerHeight;
-        this.view.width = this.egret3DCanvas.width;
-        this.view.height = this.egret3DCanvas.height;
+
     }
 
     protected update(e: egret3d.Event3D) {
