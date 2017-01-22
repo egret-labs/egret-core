@@ -12,7 +12,7 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
     });
 };
 var __generator = (this && this.__generator) || function (thisArg, body) {
-    var _ = { label: 0, sent: function() { if (t[0] & 1) throw t[1]; return t[1]; }, trys: [], ops: [] }, f, y, t;
+    var _ = { label: 0, sent: function () { if (t[0] & 1) throw t[1]; return t[1]; }, trys: [], ops: [] }, f, y, t;
     return { next: verb(0), "throw": verb(1), "return": verb(2) };
     function verb(n) { return function (v) { return step([n, v]); }; }
     function step(op) {
@@ -442,7 +442,7 @@ var RES;
             RES.FileSystem.data = {};
         };
         return ResourceConfig;
-    }());
+    } ());
     RES.ResourceConfig = ResourceConfig;
 })(RES || (RES = {}));
 //////////////////////////////////////////////////////////////////////////////////////
@@ -488,15 +488,17 @@ var RES;
         PromiseQueue.prototype.load = function (list, reporter) {
             var current = 0;
             var total = 1;
-            var mapper = function (r) { return RES.host.load(r)
-                .then(function (response) {
-                RES.host.save(r, response);
-                current++;
-                if (reporter && reporter.onProgress) {
-                    reporter.onProgress(current, total);
-                }
-                return response;
-            }); };
+            var mapper = function (r) {
+                return RES.host.load(r)
+                    .then(function (response) {
+                        RES.host.save(r, response);
+                        current++;
+                        if (reporter && reporter.onProgress) {
+                            reporter.onProgress(current, total);
+                        }
+                        return response;
+                    });
+            };
             if ((list instanceof Array)) {
                 total = list.length;
                 return Promise.all(list.map(mapper));
@@ -506,7 +508,7 @@ var RES;
             }
         };
         return PromiseQueue;
-    }());
+    } ());
     RES.PromiseQueue = PromiseQueue;
 })(RES || (RES = {}));
 var RES;
@@ -572,9 +574,9 @@ var RES;
             if (processor) {
                 return processor.onRemoveStart(RES.host, r)
                     .then(function (result) {
-                    RES.host.remove(r);
-                    return result;
-                });
+                        RES.host.remove(r);
+                        return result;
+                    });
             }
             else {
                 return Promise.resolve();
@@ -634,7 +636,7 @@ var RES;
             return _this;
         }
         return ResourceManagerError;
-    }(Error));
+    } (Error));
     ResourceManagerError.errorMessage = {
         1001: '文件加载失败:{0}',
         1002: "ResourceManager 初始化失败：配置文件加载失败",
@@ -664,17 +666,17 @@ var RES;
                 var _this = this;
                 return __generator(this, function (_a) {
                     return [2 /*return*/, new Promise(function (reslove, reject) {
-                            var onSuccess = function () {
-                                var texture = loader['data'] ? loader['data'] : loader['response'];
-                                reslove(texture);
-                            };
-                            var onError = function () {
-                                var e = new RES.ResourceManagerError(1001, resource.url);
-                                reject(e);
-                            };
-                            loader.addEventListener(egret.Event.COMPLETE, onSuccess, _this);
-                            loader.addEventListener(egret.IOErrorEvent.IO_ERROR, onError, _this);
-                        })];
+                        var onSuccess = function () {
+                            var texture = loader['data'] ? loader['data'] : loader['response'];
+                            reslove(texture);
+                        };
+                        var onError = function () {
+                            var e = new RES.ResourceManagerError(1001, resource.url);
+                            reject(e);
+                        };
+                        loader.addEventListener(egret.Event.COMPLETE, onSuccess, _this);
+                        loader.addEventListener(egret.IOErrorEvent.IO_ERROR, onError, _this);
+                    })];
                 });
             });
         }
@@ -1083,7 +1085,7 @@ var RES;
                 callback(pvrDatas);
             };
             return PVRParser;
-        }());
+        } ());
         PVRParser.COMPRESSED_RGB_PVRTC_4BPPV1_IMG = 0x8C00;
         PVRParser.COMPRESSED_RGB_PVRTC_2BPPV1_IMG = 0x8C01;
         PVRParser.COMPRESSED_RGBA_PVRTC_4BPPV1_IMG = 0x8C02;
@@ -1339,7 +1341,7 @@ var RES;
             return result;
         };
         return ResourceEvent;
-    }(egret.Event));
+    } (egret.Event));
     /**
      * Failure event for a load item.
      * @version Egret 2.4
@@ -1621,11 +1623,11 @@ var RES;
             var method = descriptor.value;
             descriptor.value = function () {
                 if (!RES['configItem']) {
-                    var url = "config.resjs";
+                    var url = "config.json";
                     RES.resourceRoot = "resource/";
                     RES['configItem'] = { url: url, resourceRoot: RES.resourceRoot, type: "commonjs", name: url };
                     if (_level == "warning") {
-                        console.warn("RES.loadConfig() 不再接受参数，强制访问 resource/config.resjs 文件\n", "请访问以下站点了解更多细节\n", "https://github.com/egret-labs/resourcemanager/blob/master/docs/README.md#upgrade-decorator ");
+                        console.warn("RES.loadConfig() 不再接受参数，强制访问 resource/config.json 文件\n", "请访问以下站点了解更多细节\n", "https://github.com/egret-labs/resourcemanager/blob/master/docs/README.md#upgrade-decorator ");
                     }
                 }
                 return method.apply(this);
@@ -2262,7 +2264,7 @@ var RES;
             RES.manager.config.addResourceData(data);
         };
         return Resource;
-    }(egret.EventDispatcher));
+    } (egret.EventDispatcher));
     __decorate([
         RES.upgrade.checkDecorator,
         RES.checkCancelation

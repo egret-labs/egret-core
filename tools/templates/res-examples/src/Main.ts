@@ -1,3 +1,19 @@
+/**
+ * 
+ *
+ * 编译器和运行时都会处理此处逻辑。
+ * 为了保证编译器更方便提取出此处逻辑，使用ECMAScript 2015 装饰器语法
+ *
+ * 在编译时（ 执行 res build ），命令行会遍历 resource 文件夹中的所有文件，
+ * 将其中每个文件执行 RES.mapConfig 中第三个参数所对应的函数。
+ * 如果函数返回值不为空，则被添加到资源配置中。
+ * 资源配置最终会写入 RES.mapConfig 的第一个参数所对应的文件中
+ *
+ * 在运行时，资源管理框架会首先加载 RES.mapConfig 第一个参数所对应的配置文件，
+ * 之后加载的每一个文件，都会通过 RES.mapConfig 的第三个参数去确认加载类型，
+ * 进而用对应类型的处理器进行预处理（ 如图片处理，JSON解析等）
+ * 最后再将处理后的最终结果返回给用户
+ */
 @RES.mapConfig("config.json", () => "resource", path => {
     var ext = path.substr(path.lastIndexOf(".") + 1);
     var typeMap = {
