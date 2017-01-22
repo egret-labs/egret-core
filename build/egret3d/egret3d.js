@@ -11801,16 +11801,12 @@ var egret3d;
                 "diffuseColor.xyz = (uniform_colorTransformM44 * vec4(diffuseColor.xyz, 1.0)).xyz; \n" +
                 "diffuseColor.w *= diffuseColor.w * uniform_colorTransformAlpha; \n" +
                 "} \n",
-            "color_fragment": "vec4 diffuseColor ; \n" +
-                "void main() { \n" +
-                "if( diffuseColor.w == 0.0 ){ \n" +
+            "color_fragment": "void main() { \n" +
+                "s.Albedo.xyz = vec3(1.0, 1.0, 1.0); \n" +
+                "s.Alpha = 1.0 ; \n" +
+                "if( varying_color.w < materialSource.cutAlpha ){ \n" +
                 "discard; \n" +
                 "} \n" +
-                "diffuseColor = vec4(1.0, 1.0, 1.0, 1.0); \n" +
-                "if( diffuseColor.w < materialSource.cutAlpha ){ \n" +
-                "discard; \n" +
-                "}else \n" +
-                "diffuseColor.xyz *= diffuseColor.w ; \n" +
                 "} \n",
             "combin_fs": "uniform sampler2D colorTexture; \n" +
                 "void main(void){ \n" +
@@ -11857,7 +11853,9 @@ var egret3d;
                 "s.Normal = normal; \n" +
                 "s.Specular = vec4(1.0) ; \n" +
                 "s.Albedo = c.rgb + fc.xyz * c.rgb + materialSource.ambient * c.rgb; \n" +
-                "s.Albedo = pow(s.Albedo, vec3(materialSource.gamma)); \n" +
+                "s.Albedo.x = pow(s.Albedo.x, materialSource.gamma); \n" +
+                "s.Albedo.y = pow(s.Albedo.y, materialSource.gamma); \n" +
+                "s.Albedo.z = pow(s.Albedo.z, materialSource.gamma); \n" +
                 "s.Alpha = c.a; \n" +
                 "outColor.xyz = s.Albedo * 0.5 ; \n" +
                 "outColor.w = s.Alpha; \n" +
@@ -13014,24 +13012,15 @@ var egret3d;
                 "float v1; \n" +
                 "float t0; \n" +
                 "float t1; \n" +
-                "float deltaTime = 0.0; \n" +
-                "float a_deltaTime; \n" +
-                "for(int i = 0; i < 4; i ++) \n" +
-                "{ \n" +
-                "t0 = bzData[i * 8] * tTotal; \n" +
-                "v0 = bzData[i * 8 + 1]; \n" +
-                "t1 = bzData[(i + 1) * 8] * tTotal; \n" +
-                "v1 = bzData[(i + 1) * 8 + 1]; \n" +
-                "deltaTime = t1 - t0; \n" +
-                "a_deltaTime = 0.5 * (v1 - v0); \n" +
-                "if(tCurrent >= t1) \n" +
-                "{ \n" +
-                "res += deltaTime * (v0 + a_deltaTime); \n" +
-                "}else \n" +
-                "{ \n" +
-                "deltaTime = tCurrent - t0; \n" +
-                "res += deltaTime * (v0 + a_deltaTime); \n" +
-                "break; \n" +
+                "float breakFlag = 1.0; \n" +
+                "for (int i = 0; i < 3; i++) { \n" +
+                "t1 = bzData[i * 4]; \n" +
+                "v1 = bzData[i * 4 + 1]; \n" +
+                "t0 = bzData[(i - 1) * 4]; \n" +
+                "v0 = bzData[(i - 1) * 4 + 1]; \n" +
+                "res += (min(tCurrent, t1) - t0) * (0.5 * (v1 + v0)) * breakFlag; \n" +
+                "if(t1 >= tCurrent) { \n" +
+                "breakFlag = 0.0; \n" +
                 "} \n" +
                 "} \n" +
                 "return res; \n" +
@@ -13042,21 +13031,14 @@ var egret3d;
                 "float y1; \n" +
                 "float t0; \n" +
                 "float t1; \n" +
-                "float deltaTime = 0.0; \n" +
-                "float v; \n" +
-                "for(int i = 0; i < 4; i ++) \n" +
-                "{ \n" +
-                "t0 = bzData[i * 8] * tTotal; \n" +
-                "y0 = bzData[i * 8 + 1]; \n" +
-                "t1 = bzData[(i + 1) * 8] * tTotal; \n" +
-                "y1 = bzData[(i + 1) * 8 + 1]; \n" +
-                "deltaTime = t1 - t0; \n" +
-                "if(tCurrent <= t1) \n" +
-                "{ \n" +
-                "v = (y1 - y0) / deltaTime; \n" +
-                "deltaTime = tCurrent - t0; \n" +
-                "res = y0 + v * deltaTime; \n" +
-                "break; \n" +
+                "for (int i = 1; i < 4; i ++) { \n" +
+                "t1 = bzData[i * 4]; \n" +
+                "y1 = bzData[i * 4 + 1]; \n" +
+                "if(t1 >= tCurrent) { \n" +
+                "t0 = bzData[(i - 1) * 4]; \n" +
+                "y0 = bzData[(i - 1) * 4 + 1]; \n" +
+                "float age = (tCurrent - t0) / (t1 - t0); \n" +
+                "res = y0 + (y1 - y0) * age; \n" +
                 "} \n" +
                 "} \n" +
                 "return res; \n" +
@@ -13171,7 +13153,10 @@ var egret3d;
                 "fc.xyz = max(fc,vec3(0.0)) ; \n" +
                 "} \n" +
                 "s.Albedo = diffuseColor.rgb * globalColor.xyz ; \n" +
-                "s.Albedo = pow(s.Albedo, vec3(materialSource.gamma)) * varying_color.xyz ; \n" +
+                "s.Albedo.x = pow(s.Albedo.x, materialSource.gamma); \n" +
+                "s.Albedo.y = pow(s.Albedo.y, materialSource.gamma); \n" +
+                "s.Albedo.z = pow(s.Albedo.z, materialSource.gamma); \n" +
+                "s.Albedo = s.Albedo * varying_color.xyz; \n" +
                 "s.Alpha = diffuseColor.a * globalColor.w * materialSource.alpha * varying_color.w ; \n" +
                 "outColor.xyz = s.Albedo ; \n" +
                 "outColor.w = s.Alpha; \n" +
