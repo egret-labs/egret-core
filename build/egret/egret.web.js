@@ -3907,6 +3907,33 @@ var egret;
 (function (egret) {
     var web;
     (function (web) {
+        var customContext;
+        var context = {
+            setAutoClear: function (value) {
+                web.WebGLRenderBuffer.autoClear = value;
+            },
+            save: function () {
+                // do nothing
+            },
+            restore: function () {
+                var context = web.WebGLRenderContext.getInstance(0, 0);
+                var gl = context.context;
+                gl.bindBuffer(gl.ARRAY_BUFFER, context["vertexBuffer"]);
+                gl.bindBuffer(gl.ELEMENT_ARRAY_BUFFER, context["indexBuffer"]);
+                gl.activeTexture(gl.TEXTURE0);
+                context.shaderManager.currentShader = null;
+                context["bindIndices"] = false;
+                var buffer = context.$bufferStack[1];
+                context["activateBuffer"](buffer);
+                gl.enable(gl.BLEND);
+                context["setBlendMode"]("source-over");
+            }
+        };
+        function setRendererContext(custom) {
+            custom.onStart(context);
+            customContext = custom;
+        }
+        egret.setRendererContext = setRendererContext;
         /**
          * @private
          * 刷新所有Egret播放器的显示区域尺寸。仅当使用外部JavaScript代码动态修改了Egret容器大小时，需要手动调用此方法刷新显示区域。
@@ -4009,6 +4036,9 @@ var egret;
             }
             requestAnimationFrame.call(window, onTick);
             function onTick() {
+                if (customContext) {
+                    customContext.onRender(context);
+                }
                 ticker.update();
                 requestAnimationFrame.call(window, onTick);
             }
@@ -4024,6 +4054,9 @@ var egret;
         function doResize() {
             resizeTimer = NaN;
             egret.updateAllScreens();
+            if (customContext) {
+                customContext.onResize(context);
+            }
         }
         window.addEventListener("resize", function () {
             if (isNaN(resizeTimer)) {
@@ -7382,10 +7415,37 @@ var egret;
             /**
              * 推出一个RenderBuffer并绑定上一个RenderBuffer
              */
+<<<<<<< HEAD
             WebGLRenderContext.prototype.popBuffer = function () {
                 // 如果只剩下一个buffer，则不执行pop操作
                 // 保证舞台buffer永远在最开始
                 if (this.$bufferStack.length <= 1) {
+=======
+            WebGLRenderBuffer.prototype.beginClip = function (regions, offsetX, offsetY) {
+                this.context.pushBuffer(this);
+                if (this.root) {
+                    // dirtyRegionPolicy hack
+                    if (this._dirtyRegionPolicy) {
+                        this.rootRenderTarget.useFrameBuffer = true;
+                        this.rootRenderTarget.activate();
+                    }
+                    else {
+                        this.rootRenderTarget.useFrameBuffer = false;
+                        this.rootRenderTarget.activate();
+                        WebGLRenderBuffer.autoClear && this.context.clear();
+                    }
+                }
+                offsetX = +offsetX || 0;
+                offsetY = +offsetY || 0;
+                this.setTransform(1, 0, 0, 1, offsetX, offsetY);
+                var length = regions.length;
+                //只有一个区域且刚好为舞台大小时,不设置模板
+                if (length == 1 && regions[0].minX == 0 && regions[0].minY == 0 &&
+                    regions[0].width == this.rootRenderTarget.width && regions[0].height == this.rootRenderTarget.height) {
+                    this.maskPushed = false;
+                    this.rootRenderTarget.useFrameBuffer && this.context.clear();
+                    this.context.popBuffer();
+>>>>>>> for-3d
                     return;
                 }
                 var buffer = this.$bufferStack.pop();
@@ -7584,6 +7644,62 @@ var egret;
                 gl.bindTexture(gl.TEXTURE_2D, texture);
                 gl.texImage2D(gl.TEXTURE_2D, 0, gl.RGBA, gl.RGBA, gl.UNSIGNED_BYTE, bitmapData);
             };
+<<<<<<< HEAD
+=======
+            return WebGLRenderBuffer;
+        }(egret.HashObject));
+        WebGLRenderBuffer.autoClear = true;
+        web.WebGLRenderBuffer = WebGLRenderBuffer;
+        __reflect(WebGLRenderBuffer.prototype, "egret.web.WebGLRenderBuffer", ["egret.sys.RenderBuffer"]);
+        var renderBufferPool = []; //渲染缓冲区对象池
+    })(web = egret.web || (egret.web = {}));
+})(egret || (egret = {}));
+//////////////////////////////////////////////////////////////////////////////////////
+//
+//  Copyright (c) 2014-present, Egret Technology.
+//  All rights reserved.
+//  Redistribution and use in source and binary forms, with or without
+//  modification, are permitted provided that the following conditions are met:
+//
+//     * Redistributions of source code must retain the above copyright
+//       notice, this list of conditions and the following disclaimer.
+//     * Redistributions in binary form must reproduce the above copyright
+//       notice, this list of conditions and the following disclaimer in the
+//       documentation and/or other materials provided with the distribution.
+//     * Neither the name of the Egret nor the
+//       names of its contributors may be used to endorse or promote products
+//       derived from this software without specific prior written permission.
+//
+//  THIS SOFTWARE IS PROVIDED BY EGRET AND CONTRIBUTORS "AS IS" AND ANY EXPRESS
+//  OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES
+//  OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED.
+//  IN NO EVENT SHALL EGRET AND CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT,
+//  INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT
+//  LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES;LOSS OF USE, DATA,
+//  OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF
+//  LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING
+//  NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE,
+//  EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+//
+//////////////////////////////////////////////////////////////////////////////////////
+var egret;
+(function (egret) {
+    var web;
+    (function (web) {
+        var blendModes = ["source-over", "lighter", "destination-out"];
+        var defaultCompositeOp = "source-over";
+        var BLACK_COLOR = "#000000";
+        var CAPS_STYLES = { none: 'butt', square: 'square', round: 'round' };
+        var renderBufferPool = []; //渲染缓冲区对象池
+        /**
+         * @private
+         * WebGL渲染器
+         */
+        var WebGLRenderer = (function () {
+            function WebGLRenderer() {
+                this.nestLevel = 0; //渲染的嵌套层次，0表示在调用堆栈的最外层。
+            }
+>>>>>>> for-3d
             /**
              * 获取一个WebGLTexture
              * 如果有缓存的texture返回缓存的texture，如果没有则创建并缓存texture

@@ -9063,6 +9063,32 @@ declare namespace egret {
      * @language zh_CN
      */
     function updateAllScreens(): void;
+    /**
+     * @private
+     */
+    type CustomContext = {
+        onStart: (egretContext: EgretContext) => void;
+        onRender: (egretContext: EgretContext) => void;
+        onStop: (egretContext: EgretContext) => void;
+        onResize: (egretContext: EgretContext) => void;
+    };
+    /**
+     * @private
+     */
+    type EgretContext = {
+        setAutoClear: (value: boolean) => void;
+        save: () => void;
+        restore: () => void;
+    };
+    /**
+     * Insert render context, now for egret3d
+     * @language en_US
+     */
+    /**
+     * 插入渲染上下文，目前用于egret3d的混入
+     * @language zh_CN
+     */
+    function setRendererContext(custom: CustomContext): void;
 }
 declare namespace egret {
     /**
