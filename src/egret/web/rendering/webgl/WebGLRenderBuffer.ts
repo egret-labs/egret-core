@@ -35,6 +35,8 @@ namespace egret.web {
      */
     export class WebGLRenderBuffer extends HashObject implements sys.RenderBuffer {
 
+        public static autoClear:boolean = true;
+
         /**
          * 渲染上下文
          */
@@ -247,7 +249,7 @@ namespace egret.web {
                 } else {
                     this.rootRenderTarget.useFrameBuffer = false;
                     this.rootRenderTarget.activate();
-                    this.context.clear();
+                    WebGLRenderBuffer.autoClear && this.context.clear();
                 }
             }
 
