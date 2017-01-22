@@ -42,68 +42,50 @@ class GameScene {
     }
 
     public createGameScene() {
-        this.view.backImage = RES.getRes("EgretLoadingPage.jpg")
+        let texture = RES.getRes("3d/background.jpg");
+        console.log(texture)
+        this.view.backImage = texture
 
-        // this.loadProgress = new egret3d.gui.UIProgressBar();
-        // this.loadProgress.y = this.egret3DCanvas.height - 175;
-        // this.loadProgress.width = 500;
-        // this.loadProgress.height = 20;
 
-        // this.loadProgress.x = this.egret3DCanvas.width / 2 - this.loadProgress.width / 2;
+        var geo: egret3d.Geometry = RES.getRes("3d/0_Model/Esm/Zhouyu.esm");
+        var clip: egret3d.SkeletonAnimationClip = RES.getRes("3d/0_Model/Eam/attack.eam");
+        var idleClip: egret3d.SkeletonAnimationClip = RES.getRes("3d/0_Model/Eam/idle.eam");
+        var tex: egret3d.ITexture = RES.getRes("3d/0_Model/Texture/hero_01.png");
 
-        // this.view.addGUI(this.loadProgress);
+        clip.animationName = "attack";
+        idleClip.animationName = "idle";
+        var mesh = new egret3d.Mesh(geo);
+        this.mesh = mesh;
 
-        // this.queueLoader.addEventListener(egret3d.LoaderEvent3D.COMPLETE, this.onComplete, this);
-        // this.queueLoader.addEventListener(egret3d.LoaderEvent3D.PROGRESS, this.onProgress, this);
+        clip.isLoop = false;
+        idleClip.isLoop = true;
+        mesh.material.diffuseTexture = tex;
+        mesh.material.ambientColor = 0xb4b4b4;
+        mesh.material.gloss = 10;
+        mesh.material.specularLevel = 0.5;
 
-        // // 加载完GUI 加载其它的资源
-        // this.queueLoader.load("resource/0_Model/Esm/Zhouyu.esm");
-        // this.queueLoader.load("resource/0_Model/Eam/attack.eam");
-        // this.queueLoader.load("resource/0_Model/Eam/idle.eam");
-        // this.queueLoader.load("resource/0_Model/Texture/hero_01.png");
+        let skeletonController = mesh.animation.skeletonAnimationController;
+
+        skeletonController.addSkeletonAnimationClip(clip);
+        skeletonController.addSkeletonAnimationClip(idleClip);
+        skeletonController.addEventListener(egret3d.AnimationEvent3D.COMPLETE, this.onAnimationComplete, this);
+        skeletonController.addEventListener(egret3d.AnimationEvent3D.CYCLE, this.onAnimationCycle, this);
+        this.view.addChild3D(mesh);
+        mesh.animation.play(idleClip.animationName);
+        this.lightGroup = new egret3d.LightGroup();
+        var dirLight = new egret3d.DirectLight(new egret3d.Vector3D(1, -1, 0))
+        this.lightGroup.addLight(dirLight);
+        mesh.lightGroup = this.lightGroup;
 
         // egret3d.Input.addEventListener(egret3d.KeyEvent3D.KEY_DOWN, this.onKeyDown, this);
     }
 
-    protected ani: egret3d.IAnimation;
     protected onKeyDown(e: egret3d.KeyEvent3D) {
         switch (e.keyCode) {
             case egret3d.KeyCode.Key_1:
-                this.ani.play("attack");
+                this.mesh.animation.play("attack");
                 break;
         }
-    }
-
-    protected onComplete(e: egret3d.LoaderEvent3D) {
-        // this.view.removeGUI(this.loadProgress);
-        // var geo: egret3d.Geometry = this.queueLoader.getAsset("resource/0_Model/Esm/Zhouyu.esm");
-        // var clip: egret3d.SkeletonAnimationClip = this.queueLoader.getAsset("resource/0_Model/Eam/attack.eam");
-        // var idleClip: egret3d.SkeletonAnimationClip = this.queueLoader.getAsset("resource/0_Model/Eam/idle.eam");
-        // var tex: egret3d.ITexture = this.queueLoader.getAsset("resource/0_Model/Texture/hero_01.png");
-
-        // clip.animationName = "attack";
-        // idleClip.animationName = "idle";
-        // var mesh = new egret3d.Mesh(geo);
-        // this.mesh = mesh;
-
-        // clip.isLoop = false;
-        // idleClip.isLoop = true;
-        // mesh.material.diffuseTexture = tex;
-        // mesh.material.ambientColor = 0xb4b4b4;
-        // mesh.material.gloss = 10;
-        // mesh.material.specularLevel = 0.5;
-
-        // mesh.animation.skeletonAnimationController.addSkeletonAnimationClip(clip);
-        // mesh.animation.skeletonAnimationController.addSkeletonAnimationClip(idleClip);
-        // mesh.animation.skeletonAnimationController.addEventListener(egret3d.AnimationEvent3D.COMPLETE, this.onAnimationComplete, this);
-        // mesh.animation.skeletonAnimationController.addEventListener(egret3d.AnimationEvent3D.CYCLE, this.onAnimationCycle, this);
-        // this.view.addChild3D(mesh);
-        // mesh.animation.play(idleClip.animationName);
-        // this.ani = mesh.animation;
-        // this.lightGroup = new egret3d.LightGroup();
-        // var dirLight = new egret3d.DirectLight(new egret3d.Vector3D(1, -1, 0))
-        // this.lightGroup.addLight(dirLight);
-        // mesh.lightGroup = this.lightGroup;
     }
 
     protected onAnimationComplete(e: egret3d.LoaderEvent3D) {
@@ -113,10 +95,6 @@ class GameScene {
 
     protected onAnimationCycle(e: egret3d.LoaderEvent3D) {
         console.log("播放完成一个循环");
-    }
-
-    protected onProgress(e: egret3d.LoaderEvent3D) {
-        // this.loadProgress.ratio = e.currentProgress;
     }
 
     protected update(e: egret3d.Event3D) {
