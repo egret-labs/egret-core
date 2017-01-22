@@ -1,0 +1,28 @@
+{
+    "alias": {},
+    "groups": {},
+    "resources": {
+        "EgretLoadingPage.jpg": "EgretLoadingPage.jpg",
+        "default.res.json": "default.res.json",
+        "logo.png": "logo.png",
+        "0_Model": {
+            "MapConfig.json": "0_Model/MapConfig.json",
+            "Eam": {
+                "attack.eam": "0_Model/Eam/attack.eam",
+                "idle.eam": "0_Model/Eam/idle.eam"
+            },
+            "Esm": {
+                "Zhouyu.esm": "0_Model/Esm/Zhouyu.esm"
+            },
+            "Texture": {
+                "hero_01.png": "0_Model/Texture/hero_01.png"
+            }
+        },
+        "ui": {
+            "GUI.json": "ui/GUI.json",
+            "fonts.json": "ui/fonts.json",
+            "fonts.png": "ui/fonts.png",
+            "gui.png": "ui/gui.png"
+        }
+    }
+}
