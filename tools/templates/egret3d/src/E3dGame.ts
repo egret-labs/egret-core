@@ -9,19 +9,19 @@ class E3dGame {
 
     // View3D操作对象
     protected view: egret3d.View3D;
-    
+
     /*
      * 进度条
-     */ 
+     */
     protected loadProgress: egret3d.gui.UIProgressBar;
-    
+
     /**
      *  加载器
      */
-    protected queueLoader: egret3d.QueueLoader;
-    
-    protected lightGroup:egret3d.LightGroup;
-    
+    // protected queueLoader: egret3d.QueueLoader;
+
+    protected lightGroup: egret3d.LightGroup;
+
     /**
     * look at 摄像机控制器 。</p>
     * 指定摄像机看向的目标对象。</p>
@@ -31,17 +31,17 @@ class E3dGame {
     */
     private cameraCtl: egret3d.LookAtController;
 
-    private mesh: egret3d.Mesh ;
-    
-	public constructor() {
-    	  this.egret3DCanvas = new egret3d.Egret3DCanvas();
+    private mesh: egret3d.Mesh;
+
+    public constructor() {
+        this.egret3DCanvas = new egret3d.Egret3DCanvas();
         this.egret3DCanvas.x = 0;
         this.egret3DCanvas.y = 0;
         this.egret3DCanvas.width = window.innerWidth;
         this.egret3DCanvas.height = window.innerHeight;
         this.egret3DCanvas.start();
 
-        var view: egret3d.View3D = new egret3d.View3D(0,0,this.egret3DCanvas.width,this.egret3DCanvas.height);
+        var view: egret3d.View3D = new egret3d.View3D(0, 0, this.egret3DCanvas.width, this.egret3DCanvas.height);
         view.camera3D.lookAt(new egret3d.Vector3D(0, 1000, -1000), new egret3d.Vector3D(0, 0, 0));
         view.backColor = 0xffcccccc;
 
@@ -50,7 +50,7 @@ class E3dGame {
 
         this.cameraCtl = new egret3d.LookAtController(view.camera3D, new egret3d.Object3D());
         this.cameraCtl.lookAtObject.y = 100;
-        
+
         this.cameraCtl.distance = 500;
         this.cameraCtl.rotationX = 30;
         this.cameraCtl.rotationY = 180;
@@ -58,44 +58,52 @@ class E3dGame {
         // ------------------ 初始化引擎 ---------------------
 
 
-        
-
-        this.queueLoader = new egret3d.QueueLoader();
+        this.loadAssets().then(
+            () => {
+                this.onGUISkin();
+            }
+        )
         // 加载默认ui 皮肤
-        this.queueLoader.loadDefaultGUISkin();
-        this.queueLoader.load("resource/EgretLoadingPage.jpg");
-        this.queueLoader.addEventListener(egret3d.LoaderEvent3D.COMPLETE, this.onGUISkin, this);
-        
-        egret3d.Input.addEventListener(egret3d.Event3D.RESIZE,this.OnWindowResize,this);
-        
-	}
-	
+        // this.queueLoader.loadDefaultGUISkin();
+        // this.queueLoader.load("resource/EgretLoadingPage.jpg");
+        // this.queueLoader.addEventListener(egret3d.LoaderEvent3D.COMPLETE, this.onGUISkin, this);
+
+        egret3d.Input.addEventListener(egret3d.Event3D.RESIZE, this.OnWindowResize, this);
+
+    }
+
+    private async loadAssets() {
+        await RES.loadConfig();
+        await RES.getResAsync("ui/GUI.json");
+        await RES.getResAsync("ui/fonts.json");
+        await RES.getResAsync("EgretLoadingPage.jpg");
+    }
+
 	/*
 	 *  GUI皮肤和背景图加载完成
-	 */ 
-    protected onGUISkin(e:egret3d.LoaderEvent3D){
-        this.queueLoader.removeEventListener(egret3d.LoaderEvent3D.COMPLETE,this.onGUISkin,this);
-        this.view.backImage = this.queueLoader.getAsset("resource/EgretLoadingPage.jpg");
-        
-        this.loadProgress = new egret3d.gui.UIProgressBar();
-        this.loadProgress.y = this.egret3DCanvas.height - 175;
-        this.loadProgress.width = 500;
-        this.loadProgress.height = 20;
+	 */
+    protected onGUISkin() {
+        this.view.backImage = RES.getRes("EgretLoadingPage.jpg")
 
-        this.loadProgress.x = this.egret3DCanvas.width / 2 - this.loadProgress.width / 2;
-        
-        this.view.addGUI(this.loadProgress);        
-        
-        this.queueLoader.addEventListener(egret3d.LoaderEvent3D.COMPLETE, this.onComplete, this);
-        this.queueLoader.addEventListener(egret3d.LoaderEvent3D.PROGRESS,this.onProgress,this);
-        
-        // 加载完GUI 加载其它的资源
-        this.queueLoader.load("resource/0_Model/Esm/Zhouyu.esm");
-        this.queueLoader.load("resource/0_Model/Eam/attack.eam");
-        this.queueLoader.load("resource/0_Model/Eam/idle.eam");
-        this.queueLoader.load("resource/0_Model/Texture/hero_01.png");
+        // this.loadProgress = new egret3d.gui.UIProgressBar();
+        // this.loadProgress.y = this.egret3DCanvas.height - 175;
+        // this.loadProgress.width = 500;
+        // this.loadProgress.height = 20;
 
-        egret3d.Input.addEventListener(egret3d.KeyEvent3D.KEY_DOWN, this.onKeyDown, this);
+        // this.loadProgress.x = this.egret3DCanvas.width / 2 - this.loadProgress.width / 2;
+
+        // this.view.addGUI(this.loadProgress);
+
+        // this.queueLoader.addEventListener(egret3d.LoaderEvent3D.COMPLETE, this.onComplete, this);
+        // this.queueLoader.addEventListener(egret3d.LoaderEvent3D.PROGRESS, this.onProgress, this);
+
+        // // 加载完GUI 加载其它的资源
+        // this.queueLoader.load("resource/0_Model/Esm/Zhouyu.esm");
+        // this.queueLoader.load("resource/0_Model/Eam/attack.eam");
+        // this.queueLoader.load("resource/0_Model/Eam/idle.eam");
+        // this.queueLoader.load("resource/0_Model/Texture/hero_01.png");
+
+        // egret3d.Input.addEventListener(egret3d.KeyEvent3D.KEY_DOWN, this.onKeyDown, this);
     }
 
     protected ani: egret3d.IAnimation;
@@ -106,52 +114,52 @@ class E3dGame {
                 break;
         }
     }
-	
-    protected onComplete(e:egret3d.LoaderEvent3D){
-        this.view.removeGUI(this.loadProgress);
-        var geo: egret3d.Geometry = this.queueLoader.getAsset("resource/0_Model/Esm/Zhouyu.esm");
-        var clip: egret3d.SkeletonAnimationClip = this.queueLoader.getAsset("resource/0_Model/Eam/attack.eam");
-        var idleClip: egret3d.SkeletonAnimationClip = this.queueLoader.getAsset("resource/0_Model/Eam/idle.eam");
-        var tex: egret3d.ITexture = this.queueLoader.getAsset("resource/0_Model/Texture/hero_01.png");
-       
-        clip.animationName = "attack"; 
-        idleClip.animationName = "idle"; 
-        var mesh:egret3d.Mesh = new egret3d.Mesh(geo);        
-        this.mesh = mesh;
-        
-        clip.isLoop = false;
-        idleClip.isLoop = true;
-        mesh.material.diffuseTexture = tex;
-        mesh.material.ambientColor = 0xb4b4b4;
-        mesh.material.gloss = 10;
-        mesh.material.specularLevel = 0.5;
-        
-        mesh.animation.skeletonAnimationController.addSkeletonAnimationClip(clip);
-        mesh.animation.skeletonAnimationController.addSkeletonAnimationClip(idleClip);
-        mesh.animation.skeletonAnimationController.addEventListener(egret3d.AnimationEvent3D.COMPLETE, this.onAnimationComplete, this);
-        mesh.animation.skeletonAnimationController.addEventListener(egret3d.AnimationEvent3D.CYCLE,this.onAnimationCycle,this);
-        this.view.addChild3D(mesh);
-        mesh.animation.play(idleClip.animationName);                
-        this.ani = mesh.animation;
-        this.lightGroup = new egret3d.LightGroup();
-        var dirLight:egret3d.DirectLight = new egret3d.DirectLight(new egret3d.Vector3D(1, -1, 0))       
-        this.lightGroup.addLight(dirLight);
-        mesh.lightGroup = this.lightGroup;             
+
+    protected onComplete(e: egret3d.LoaderEvent3D) {
+        // this.view.removeGUI(this.loadProgress);
+        // var geo: egret3d.Geometry = this.queueLoader.getAsset("resource/0_Model/Esm/Zhouyu.esm");
+        // var clip: egret3d.SkeletonAnimationClip = this.queueLoader.getAsset("resource/0_Model/Eam/attack.eam");
+        // var idleClip: egret3d.SkeletonAnimationClip = this.queueLoader.getAsset("resource/0_Model/Eam/idle.eam");
+        // var tex: egret3d.ITexture = this.queueLoader.getAsset("resource/0_Model/Texture/hero_01.png");
+
+        // clip.animationName = "attack";
+        // idleClip.animationName = "idle";
+        // var mesh: egret3d.Mesh = new egret3d.Mesh(geo);
+        // this.mesh = mesh;
+
+        // clip.isLoop = false;
+        // idleClip.isLoop = true;
+        // mesh.material.diffuseTexture = tex;
+        // mesh.material.ambientColor = 0xb4b4b4;
+        // mesh.material.gloss = 10;
+        // mesh.material.specularLevel = 0.5;
+
+        // mesh.animation.skeletonAnimationController.addSkeletonAnimationClip(clip);
+        // mesh.animation.skeletonAnimationController.addSkeletonAnimationClip(idleClip);
+        // mesh.animation.skeletonAnimationController.addEventListener(egret3d.AnimationEvent3D.COMPLETE, this.onAnimationComplete, this);
+        // mesh.animation.skeletonAnimationController.addEventListener(egret3d.AnimationEvent3D.CYCLE, this.onAnimationCycle, this);
+        // this.view.addChild3D(mesh);
+        // mesh.animation.play(idleClip.animationName);
+        // this.ani = mesh.animation;
+        // this.lightGroup = new egret3d.LightGroup();
+        // var dirLight: egret3d.DirectLight = new egret3d.DirectLight(new egret3d.Vector3D(1, -1, 0))
+        // this.lightGroup.addLight(dirLight);
+        // mesh.lightGroup = this.lightGroup;
     }
-    
-    protected onAnimationComplete(e:egret3d.LoaderEvent3D) {
+
+    protected onAnimationComplete(e: egret3d.LoaderEvent3D) {
         console.log("onAnimationComplete");
         this.mesh.animation.play("idle");
     }
-    
+
     protected onAnimationCycle(e: egret3d.LoaderEvent3D) {
         console.log("播放完成一个循环");
     }
-    
+
     protected onProgress(e: egret3d.LoaderEvent3D) {
         this.loadProgress.ratio = e.currentProgress;
     }
-    
+
 	/**
     * 窗口尺寸变化事件
     */
@@ -162,8 +170,8 @@ class E3dGame {
         this.view.width = this.egret3DCanvas.width;
         this.view.height = this.egret3DCanvas.height;
     }
-    
-    protected update(e:egret3d.Event3D){
+
+    protected update(e: egret3d.Event3D) {
         this.cameraCtl.update();
     }
 }
