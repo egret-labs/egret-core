@@ -1,34 +1,25 @@
 @RES.mapConfig("config.json", () => "resource", path => {
     var ext = path.substr(path.lastIndexOf(".") + 1);
     var type = "";
-    if (path == "ui/fonts.json") {
-        type = "3d-font";
-    } else if (path == "ui/GUI.json") {
-        type = "gui";
-    } else if (path == "config.json") {
-        type = "json";
+    if (path.indexOf("3d") >= 0) {
+        type = "unit";
     } else {
-        if (path.indexOf("2d/") >= 0) {
-            let ext = path.substr(path.lastIndexOf(".") + 1);
-            let typeMap = {
-                "jpg": "image",
-                "png": "image",
-                "webp": "image",
-                "json": "json",
-                "fnt": "font",
-                "pvr": "pvr",
-                "mp3": "sound"
-            }
-            type = typeMap[ext];
-            if (type == "json") {
-                if (path.indexOf("png") < 0) {
-                    type = "sheet";
-                } else if (path.indexOf("movieclip") >= 0) {
-                    type = "movieclip";
-                };
-            }
-        } else {
-            type = "unit";
+        let typeMap = {
+            "jpg": "image",
+            "png": "image",
+            "webp": "image",
+            "json": "json",
+            "fnt": "font",
+            "pvr": "pvr",
+            "mp3": "sound"
+        }
+        type = typeMap[ext];
+        if (type == "json") {
+            if (path.indexOf("sheet") >= 0) {
+                type = "sheet";
+            } else if (path.indexOf("movieclip") >= 0) {
+                type = "movieclip";
+            };
         }
     }
     return type;
@@ -38,46 +29,61 @@ class Main extends egret.DisplayObject {
     constructor() {
         super();
 
-        let promisify = (loader: egret3d.UnitLoader, url: string) => {
-            return new Promise((reslove, reject) => {
-                loader.addEventListener(egret3d.LoaderEvent3D.LOADER_COMPLETE, () => {
-                    reslove(loader.data);
-                }, this);
-                loader.load("resource/" + url);
+        utils.map();
+        this.once(egret.Event.ADDED_TO_STAGE, async () => {
+
+            // 创建Egret3DCanvas，传入 2D stage，将开启混合模式
+            var context3d = new egret3d.Egret3DCanvas(this.stage);
+            egret.setRendererContext(context3d);
+            let game = new GameScene(context3d);
+            await this.loadAssets()
+            game.createGameScene();
+
+        }, this);
 
 
-            });
+    }
+
+
+    private async loadAssets() {
+
+        async function load(resources: string[]) {
+            for (let r of resources) {
+                await RES.getResAsync(r);
+            }
         }
+        try {
+            let loading = new LoadingUI();
+            this.stage.addChild(loading);
+            await RES.loadConfig();
+            let resources = [
+                "3d/background.jpg",
+                "3d/0_Model/Esm/Zhouyu.esm",
+                "3d/0_Model/Eam/attack.eam",
+                "3d/0_Model/Eam/idle.eam",
+                "3d/0_Model/Texture/hero_01.png"
+            ];
+            await load(resources);
+            this.stage.removeChild(loading)
+        }
+        catch (e) {
+            alert(e.message)
+        }
+    }
+}
 
-        RES.processor.map("3d-font", {
+namespace utils {
 
-            onLoadStart: async (host, resource) => {
-                var loader = new egret3d.UnitLoader();
-                return promisify(loader, resource.url).then((value) => {
-                    let textures = egret3d.textureResMgr.getTextureDic();
-                    egret3d.gui.BitmapFont.load(textures);
-                    return value;
-                })
-
-            },
-
-            onRemoveStart: async (host, resource) => Promise.resolve()
-        })
-
-        RES.processor.map("gui", {
-
-            onLoadStart: async (host, resource) => {
-                var loader = new egret3d.UnitLoader();
-                return promisify(loader, resource.url).then((value) => {
-                    egret3d.gui.GUISkinManager.instance.initDefaultSkin();
-                    return value;
-                })
-
-            },
-
-            onRemoveStart: async (host, resource) => Promise.resolve()
+    function promisify(loader: egret3d.UnitLoader, url: string) {
+        return new Promise((reslove, reject) => {
+            loader.addEventListener(egret3d.LoaderEvent3D.LOADER_COMPLETE, () => {
+                reslove(loader.data);
+            }, this);
+            loader.load("resource/" + url);
         });
+    }
 
+    export function map() {
 
         RES.processor.map("unit", {
 
@@ -88,40 +94,6 @@ class Main extends egret.DisplayObject {
 
             onRemoveStart: async (host, resource) => Promise.resolve()
         });
-
-
-
-        // 创建Egret3DCanvas，传入 2D stage，将开启混合模式
-        var egret3DCanvas = new egret3d.Egret3DCanvas(this.stage);
-        egret.setRendererContext(egret3DCanvas);
-
-
-        let game = new E3dGame(egret3DCanvas);
-        this.loadAssets().then(
-            () => {
-                game.createGameScene();
-            }
-        )
-
     }
 
-
-    private async loadAssets() {
-        try {
-            let loading = new LoadingUI();
-            this.stage.addChild(loading);
-            await RES.loadConfig();
-            let resources = ["ui/GUI.json", "ui/fonts.json", "EgretLoadingPage.jpg"];
-            RES.createGroup('preload', resources);
-            RES.loadGroup('preload', 0, loading);
-            this.stage.removeChild(loading)
-        }
-        catch (e) {
-            alert(e.message)
-        }
-
-    }
-
-
-
-}     
+}
