@@ -88,7 +88,38 @@ class Main extends egret.DisplayObject {
 
             onRemoveStart: async (host, resource) => Promise.resolve()
         });
-        new E3dGame();
+
+
+
+        // 创建Egret3DCanvas，传入 2D stage，将开启混合模式
+        var egret3DCanvas = new egret3d.Egret3DCanvas(this.stage);
+        egret.setRendererContext(egret3DCanvas);
+
+
+        let game = new E3dGame(egret3DCanvas);
+        this.loadAssets().then(
+            () => {
+                game.createGameScene();
+            }
+        )
+
+    }
+
+
+    private async loadAssets() {
+        try {
+            let loading = new LoadingUI();
+            this.stage.addChild(loading);
+            await RES.loadConfig();
+            let resources = ["ui/GUI.json", "ui/fonts.json", "EgretLoadingPage.jpg"];
+            RES.createGroup('preload', resources);
+            RES.loadGroup('preload', 0, loading);
+            this.stage.removeChild(loading)
+        }
+        catch (e) {
+            alert(e.message)
+        }
+
     }
 
 

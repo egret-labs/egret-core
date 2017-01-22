@@ -22,20 +22,13 @@ class E3dGame {
 
     private mesh: egret3d.Mesh;
 
-    constructor() {
+    constructor(context_egret_3d: egret3d.Egret3DCanvas) {
 
-
-
-        // 创建Egret3DCanvas，传入 2D stage，将开启混合模式
-        var egret3DCanvas = new Egret3DContext(stage2D);
-        egret.setRendererContext(egret3DCanvas);
-
-
-        var view = new egret3d.View3D(0, 0, this.egret3DCanvas.width, this.egret3DCanvas.height);
+        var view = new egret3d.View3D(0, 0, context_egret_3d.width, context_egret_3d.height);
         view.camera3D.lookAt(new egret3d.Vector3D(0, 1000, -1000), new egret3d.Vector3D(0, 0, 0));
         view.backColor = 0xffcccccc;
 
-        this.egret3DCanvas.addView3D(view);
+        context_egret_3d.addView3D(view);
         this.view = view;
 
         this.cameraCtl = new egret3d.LookAtController(view.camera3D, new egret3d.Object3D());
@@ -44,15 +37,11 @@ class E3dGame {
         this.cameraCtl.distance = 500;
         this.cameraCtl.rotationX = 30;
         this.cameraCtl.rotationY = 180;
-        this.egret3DCanvas.addEventListener(egret3d.Event3D.ENTER_FRAME, this.update, this);
+        context_egret_3d.addEventListener(egret3d.Event3D.ENTER_FRAME, this.update, this);
         // ------------------ 初始化引擎 ---------------------
 
 
-        this.loadAssets().then(
-            () => {
-                this.onGUISkin();
-            }
-        )
+
         // 加载默认ui 皮肤
         // this.queueLoader.loadDefaultGUISkin();
         // this.queueLoader.load("resource/EgretLoadingPage.jpg");
@@ -62,26 +51,12 @@ class E3dGame {
 
     }
 
-    private async loadAssets() {
-        try {
-            let loading = new LoadingUI();
-            stage.addChild(loading);
-            await RES.loadConfig();
-            let resources = ["ui/GUI.json", "ui/fonts.json", "EgretLoadingPage.jpg"];
-            RES.createGroup('preload', resources);
-            RES.loadGroup('preload', 0, loading);
-            stage.removeChild(loading)
-        }
-        catch (e) {
-            alert(e.message)
-        }
 
-    }
 
 	/*
 	 *  GUI皮肤和背景图加载完成
 	 */
-    protected onGUISkin() {
+    public createGameScene() {
         this.view.backImage = RES.getRes("EgretLoadingPage.jpg")
 
         // this.loadProgress = new egret3d.gui.UIProgressBar();
@@ -156,7 +131,7 @@ class E3dGame {
     }
 
     protected onProgress(e: egret3d.LoaderEvent3D) {
-        this.loadProgress.ratio = e.currentProgress;
+        // this.loadProgress.ratio = e.currentProgress;
     }
 
 	/**
