@@ -92,11 +92,11 @@ class Main extends egret.DisplayObject {
 
 
         // 创建Egret3DCanvas，传入 2D stage，将开启混合模式
-        var egret3DCanvas = new egret3d.Egret3DCanvas(this.stage);
-        egret.setRendererContext(egret3DCanvas);
+        var context3d = new egret3d.Egret3DCanvas(this.stage);
+        egret.setRendererContext(context3d);
 
 
-        let game = new E3dGame(egret3DCanvas);
+        let game = new GameScene(context3d);
         this.loadAssets().then(
             () => {
                 game.createGameScene();
@@ -119,9 +119,5 @@ class Main extends egret.DisplayObject {
         catch (e) {
             alert(e.message)
         }
-
     }
-
-
-
 }     
