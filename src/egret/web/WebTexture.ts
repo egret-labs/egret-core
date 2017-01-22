@@ -116,7 +116,10 @@ namespace egret.web {
         return null;
     }
 
-    function saveToFile(type: string, filePath: string, rect?: egret.Rectangle): void {
+    /**
+     * 有些杀毒软件认为 saveToFile 可能是一个病毒文件
+     */
+    function eliFoTevas(type: string, filePath: string, rect?: egret.Rectangle): void {
         let base64 = toDataURL.call(this, type, rect);
         if (base64 == null) {
             return;
@@ -137,7 +140,7 @@ namespace egret.web {
         return this.getPixels(x, y);
     }
 
-    function getPixels(x: number, y: number, width:number = 1, height:number = 1): number[] {
+    function getPixels(x: number, y: number, width: number = 1, height: number = 1): number[] {
         try {
             let surface = convertImageToCanvas(this);
             let result = sharedContext.getImageData(x, y, width, height).data;
@@ -149,7 +152,7 @@ namespace egret.web {
     }
 
     Texture.prototype.toDataURL = toDataURL;
-    Texture.prototype.saveToFile = saveToFile;
+    Texture.prototype.saveToFile = eliFoTevas;
     Texture.prototype.getPixel32 = getPixel32;
     Texture.prototype.getPixels = getPixels;
 }

@@ -1,94 +1,82 @@
 ﻿/// <reference path="../lib/types.d.ts" />
 
-declare var global: any;
-
-global.TotalJS = { Controller: {} };
-
 import http = require('http');
 import events = require('events');
 import utils = require('../lib/utils');
-import file = require('../lib/FileUtil');
+import fs = require('fs');
 import cp = require('child_process');
+import url = require('url');
+import path = require('path');
+
+
+var PORT = 3000;
+var mine = {
+    "css": "text/css",
+    "gif": "image/gif",
+    "html": "text/html",
+    "ico": "image/x-icon",
+    "jpeg": "image/jpeg",
+    "jpg": "image/jpeg",
+    "js": "text/javascript",
+    "json": "application/json",
+    "pdf": "application/pdf",
+    "png": "image/png",
+    "svg": "image/svg+xml",
+    "swf": "application/x-shockwave-flash",
+    "tiff": "image/tiff",
+    "txt": "text/plain",
+    "wav": "audio/x-wav",
+    "wma": "audio/x-ms-wma",
+    "wmv": "video/x-ms-wmv",
+    "xml": "text/xml"
+};
 
 
 export function startServer(args: egret.ToolArgs, startupUrl: string) {
 
-    var total: TotalJS.Framework = require('../lib/totaljs/');
-    total.setRoot(__dirname);
-    args.port = args.port || 3000;
-    args.projectDir = args.projectDir || '/public/';
-
-
-    egret.server = {
-        options: args,
-        console: new ServerConsole(),
-        IPs: getLocalIPAddress()
-    };
-
-    var serverTmp = '~' + args.getTmpDir() + 'server/';
-
-    framework.config['directory-temp'] = serverTmp;
-    framework.config['directory-public'] = serverTmp;
-    framework.config['directory-views'] = '~' + __dirname + '/views/';
-    framework.config['directory-controllers'] = '~' + __dirname + '/controllers/';
-    framework.config['default-websocket-encodedecode'] = false;
-    framework.config['allow-compile-js'] = false;
-    framework.config['allow-compile-html'] = false;
-    framework.config['allow-compile-css'] = false;
-    try {
-        total.http('debug', { port: args.port, ip: '0.0.0.0' });
-        if (!args.serverOnly)
-            utils.open(startupUrl);
+    let ips = getLocalIPAddress();
+    var server = http.createServer(function (request, response) {
+        var pathname = url.parse(request.url).pathname;
+        var realPath = path.join(args.projectDir, pathname);
+        //console.log(realPath);
+        var ext = path.extname(realPath);
+        ext = ext ? ext.slice(1) : 'unknown';
+        fs.exists(realPath, function (exists) {
+            if (!exists) {
+                response.writeHead(404, {
+                    'Content-Type': 'text/plain'
+                });
+                response.write("This request URL " + pathname + " was not found on this server.");
+                response.end();
+            } else {
+                fs.readFile(realPath, "binary", function (err, file) {
+                    if (err) {
+                        response.writeHead(500, {
+                            'Content-Type': 'text/plain'
+                        });
+                        response.end(err);
+                    } else {
+                        var contentType = mine[ext] || "text/plain";
+                        response.writeHead(200, {
+                            'Content-Type': contentType
+                        });
+                        response.write(file, "binary");
+                        response.end();
+                    }
+                });
+            }
+        });
+    });
+    server.listen(PORT);
+    console.log("Server runing at port: " + PORT + ".");
+    if (!args.serverOnly) {
+        utils.open(startupUrl);
     }
-    catch (e) {
-        if (e.toString().indexOf('listen EADDRINUSE') !== -1) {
-            if (!args.serverOnly)
-                utils.open(startupUrl);
-        }
-    }
+
 }
 
 
-class ServerConsole extends events.EventEmitter {
-    constructor() {
-        super();
-        this.attach();
-    }
-    attach() {
-
-        if (console['override'])
-            return;
-
-
-        console['override'] = true;
-        ["log", "warn", "error"].forEach((method) => {
-            var oldMethod = console[method].bind(console);
-            console['old_' + method] = oldMethod;
-            console[method] = (...params: string[]) => {
-                oldMethod.apply(console, params);
-                if (!params || !params.length)
-                    return;
-                this.log(params);
-            };
-        });
-    }
-
-    dettach() {
-
-        ["log", "warn", "error"].forEach(function (method) {
-            console[method] = console['old_' + method];
-        });
-        console['override'] = false;
-    }
-
-    log(params: string[]) {
-        this.emit('log', params);
-    }
-}
-
-
-
-function getLocalIPAddress(): string[] {
+function getLocalIPAddress() {
     var os = require('os');
     var ifaces = os.networkInterfaces();
     var ips = ['localhost', '127.0.0.1'];

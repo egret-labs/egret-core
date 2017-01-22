@@ -257,7 +257,7 @@ var RES;
             var r = RES.getResourceInfo(path);
             if (!r) {
                 if (shouldNotBeNull) {
-                    throw new RES.ResourceManagerError(2006, path_or_alias);
+                    throw "none resource url or alias : " + path_or_alias;
                 }
                 return null;
             }
@@ -645,8 +645,7 @@ var RES;
         2002: "Analyzer 相关API 在 ResourceManager 中不再支持，请编写自定义 Processor ，更多内容请参见 https://github.com/egret-labs/resourcemanager/blob/master/docs/README.md#processor",
         2003: "{0}解析失败,错误原因:{1}",
         2004: "无法找到文件类型:{0}",
-        2005: "资源配置文件中无法找到特定的资源组:{0}",
-        2006: "资源配置文件中无法找到特定的资源:{0}"
+        2005: "无法找到特定的资源组:{0}"
     };
     RES.ResourceManagerError = ResourceManagerError;
 })(RES || (RES = {}));
@@ -1628,7 +1627,7 @@ var RES;
                     RES.resourceRoot = "resource/";
                     RES['configItem'] = { url: url, resourceRoot: RES.resourceRoot, type: "commonjs", name: url };
                     if (_level == "warning") {
-                        console.warn("RES.loadConfig() 不再接受参数，强制访问 resource/config.json 文件\n", "请访问以下站点了解更多细节\n", "https://github.com/egret-labs/resourcemanager/blob/master/docs/");
+                        console.warn("RES.loadConfig() 不再接受参数，强制访问 resource/config.json 文件\n", "请访问以下站点了解更多细节\n", "https://github.com/egret-labs/resourcemanager/blob/master/docs/README.md#upgrade-decorator ");
                     }
                 }
                 return method.apply(this);

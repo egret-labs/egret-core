@@ -1305,14 +1305,14 @@ declare namespace egret.tween {
         private registerEvent(add);
         /**
          * Play the all TweenItems
-         * @time The starting position, the default is from the last position to play
+         * @time The starting position, the default is from the last position to play。If use 0, the group will play from the start position.
          * @version Egret 3.1.8
          * @platform Web,Native
          * @language en_US
          */
         /**
          * 播放所有的TweenItem
-         * @time 播放的起始位置, 默认为从上次位置继续播放
+         * @time 播放的起始位置, 默认为从上次位置继续播放。如果为0，则从起始位置开始播放。
          * @version Egret 3.1.8
          * @platform Web,Native
          * @language zh_CN

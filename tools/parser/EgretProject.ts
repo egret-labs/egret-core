@@ -142,7 +142,7 @@ export class EgretProject {
             let sourceDir = this.getModulePath(m);
             let targetDir = path.join(this.getLibraryFolder(), name)
             let relative = path.relative(this.getProjectRoot(), sourceDir);
-            if (relative.indexOf("..") == -1) { // source 在项目中
+            if (relative.indexOf("..") == -1 && !path.isAbsolute(relative)) { // source 在项目中
                 targetDir = sourceDir;
             }
             targetDir = file.escapePath(path.relative(this.getProjectRoot(), targetDir)) + path.sep;
@@ -153,7 +153,7 @@ export class EgretProject {
 
             let target: SourceCode[] = source.map(s => {
                 let debug = file.joinPath(targetDir, path.basename(s));
-                let release = file.joinPath(targetDir, path.basename(s));
+                let release = file.joinPath(targetDir, path.basename(s, '.js') + '.min.js');
                 return {
                     debug,
                     release,

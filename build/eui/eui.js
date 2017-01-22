@@ -4959,6 +4959,9 @@ var eui;
             var values = this.$DataGroup;
             values[11 /* renderersBeingUpdated */] = true;
             renderer.itemIndex = itemIndex;
+            if (renderer.parent == this) {
+                this.setChildIndex(renderer, itemIndex);
+            }
             renderer.data = data;
             values[11 /* renderersBeingUpdated */] = false;
             return renderer;

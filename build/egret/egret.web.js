@@ -3907,6 +3907,33 @@ var egret;
 (function (egret) {
     var web;
     (function (web) {
+        var customContext;
+        var context = {
+            setAutoClear: function (value) {
+                web.WebGLRenderBuffer.autoClear = value;
+            },
+            save: function () {
+                // do nothing
+            },
+            restore: function () {
+                var context = web.WebGLRenderContext.getInstance(0, 0);
+                var gl = context.context;
+                gl.bindBuffer(gl.ARRAY_BUFFER, context["vertexBuffer"]);
+                gl.bindBuffer(gl.ELEMENT_ARRAY_BUFFER, context["indexBuffer"]);
+                gl.activeTexture(gl.TEXTURE0);
+                context.shaderManager.currentShader = null;
+                context["bindIndices"] = false;
+                var buffer = context.$bufferStack[1];
+                context["activateBuffer"](buffer);
+                gl.enable(gl.BLEND);
+                context["setBlendMode"]("source-over");
+            }
+        };
+        function setRendererContext(custom) {
+            custom.onStart(context);
+            customContext = custom;
+        }
+        egret.setRendererContext = setRendererContext;
         /**
          * @private
          * 刷新所有Egret播放器的显示区域尺寸。仅当使用外部JavaScript代码动态修改了Egret容器大小时，需要手动调用此方法刷新显示区域。
@@ -4009,6 +4036,9 @@ var egret;
             }
             requestAnimationFrame.call(window, onTick);
             function onTick() {
+                if (customContext) {
+                    customContext.onRender(context);
+                }
                 ticker.update();
                 requestAnimationFrame.call(window, onTick);
             }
@@ -4024,6 +4054,9 @@ var egret;
         function doResize() {
             resizeTimer = NaN;
             egret.updateAllScreens();
+            if (customContext) {
+                customContext.onResize(context);
+            }
         }
         window.addEventListener("resize", function () {
             if (isNaN(resizeTimer)) {
@@ -4780,7 +4813,10 @@ var egret;
             }
             return null;
         }
-        function saveToFile(type, filePath, rect) {
+        /**
+         * 有些杀毒软件认为 saveToFile 可能是一个病毒文件
+         */
+        function eliFoTevas(type, filePath, rect) {
             var base64 = toDataURL.call(this, type, rect);
             if (base64 == null) {
                 return;
@@ -4810,7 +4846,7 @@ var egret;
             }
         }
         egret.Texture.prototype.toDataURL = toDataURL;
-        egret.Texture.prototype.saveToFile = saveToFile;
+        egret.Texture.prototype.saveToFile = eliFoTevas;
         egret.Texture.prototype.getPixel32 = getPixel32;
         egret.Texture.prototype.getPixels = getPixels;
     })(web = egret.web || (egret.web = {}));
@@ -8353,7 +8389,7 @@ var egret;
                     else {
                         this.rootRenderTarget.useFrameBuffer = false;
                         this.rootRenderTarget.activate();
-                        this.context.clear();
+                        WebGLRenderBuffer.autoClear && this.context.clear();
                     }
                 }
                 offsetX = +offsetX || 0;
@@ -8607,6 +8643,7 @@ var egret;
             };
             return WebGLRenderBuffer;
         }(egret.HashObject));
+        WebGLRenderBuffer.autoClear = true;
         web.WebGLRenderBuffer = WebGLRenderBuffer;
         __reflect(WebGLRenderBuffer.prototype, "egret.web.WebGLRenderBuffer", ["egret.sys.RenderBuffer"]);
         var renderBufferPool = []; //渲染缓冲区对象池

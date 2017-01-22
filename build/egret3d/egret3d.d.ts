@@ -1710,9 +1710,34 @@ declare module egret3d {
     }
 }
 declare module egret3d {
-    interface UV {
+    /**
+     * @private
+     * @language zh_CN
+     * @class egret3d.UV
+     * @classdesc
+     * UV类，用来存储模型顶点uv数据
+     *
+     * @see egret3d.GeometryData
+     *
+     * @version Egret 3.0
+     * @platform Web,Native
+     */
+    class UV {
+        /**
+        * @language zh_CN
+        * u
+        */
         u: number;
+        /**
+        * @language zh_CN
+        * v
+        */
         v: number;
+        /**
+        * @language zh_CN
+        * constructor
+        */
+        constructor(u?: number, v?: number);
     }
 }
 declare module egret3d {
@@ -17826,6 +17851,10 @@ declare module egret3d {
         * @platform Web,Native
         */
         static canvas: Egret3DCanvas;
+        static scaleX: number;
+        static scaleY: number;
+        static getX(value: number): number;
+        static getY(value: number): number;
         /**
         * @language zh_CN
         * 当前鼠标X坐标。
@@ -17918,6 +17947,8 @@ declare module egret3d {
         * @platform Web,Native
         */
         constructor();
+        private disableWindowTouch;
+        init(canvas: HTMLCanvasElement): void;
         /**
         * @language zh_CN
         * 对象注册事件侦听器对象，以使侦听器能够接收事件通知。可以为特定类型的事件和优先级注册事件侦听器。
@@ -31564,6 +31595,7 @@ declare module egret3d {
     * @platform Web,Native
     */
     var registGUITexture: (texture: Texture) => void;
+    let proDirty: boolean;
     /**
     * @class egret3d.Egret3DCanvas
     * @classdesc
@@ -31635,14 +31667,16 @@ declare module egret3d {
         */
         afterRender: Function;
         protected _start: boolean;
+        protected blend2D: boolean;
+        protected stage2D: any;
         /**
         * @language zh_CN
         * 构造一个Egret3DCanvas对象
-        * @param blend2D 暂时未使用，默认参数为false
+        * @param stage2D 从外部注入stage2D，可选
         * @version Egret 3.0
         * @platform Web,Native
         */
-        constructor(blend2D?: boolean);
+        constructor(stage2D?: any);
         private getExtension(name);
         private initEvent();
         private create2dContext();
@@ -31743,6 +31777,14 @@ declare module egret3d {
         */
         removeView3D(view3D: View3D): void;
         /**
+         * @language zh_CN
+         * Egret3DCanvas 调用一次渲染
+         * @version Egret 4.0
+         * @platform Web,Native
+         */
+        render(): void;
+        resizeBlend2D(): void;
+        /**
         * @language zh_CN
         * Egret3DCanvas 开始启动
         * @version Egret 3.0
@@ -31771,6 +31813,10 @@ declare module egret3d {
         * @event call
         */
         resize(x: number, y: number, width: number, height: number): void;
+        onStart(egret2dContext: any): void;
+        onRender(egret2dContext: any): void;
+        onStop(): void;
+        onResize(): void;
     }
 }
 declare module egret3d {
@@ -31788,6 +31834,7 @@ declare module egret3d {
         static useAnimPoseInterpolation: boolean;
         static useAnimMixInterpolation: boolean;
         static useAnimCache: boolean;
+        static useLowLoop: boolean;
         static useLight: boolean;
         static usePost: boolean;
         static useCompress: boolean;

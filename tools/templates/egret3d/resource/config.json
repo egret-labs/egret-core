@@ -1,0 +1,23 @@
+{
+	"alias": {},
+	"groups": {},
+	"resources": {
+		"config.json": "config.json",
+		"3d": {
+			"background.jpg": "3d/background.jpg",
+			"0_Model": {
+				"MapConfig.json": "3d/0_Model/MapConfig.json",
+				"Eam": {
+					"attack.eam": "3d/0_Model/Eam/attack.eam",
+					"idle.eam": "3d/0_Model/Eam/idle.eam"
+				},
+				"Esm": {
+					"Zhouyu.esm": "3d/0_Model/Esm/Zhouyu.esm"
+				},
+				"Texture": {
+					"hero_01.png": "3d/0_Model/Texture/hero_01.png"
+				}
+			}
+		}
+	}
+}
