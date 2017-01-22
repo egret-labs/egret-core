@@ -22,7 +22,7 @@ class E3dGame {
 
     private mesh: egret3d.Mesh;
 
-    public constructor() {
+    constructor() {
 
 
 
@@ -64,13 +64,16 @@ class E3dGame {
 
     private async loadAssets() {
         try {
+            let loading = new LoadingUI();
+            stage.addChild(loading);
             await RES.loadConfig();
-            await RES.getResAsync("ui/GUI.json");
-            await RES.getResAsync("ui/fonts.json");
-            await RES.getResAsync("EgretLoadingPage.jpg");
+            let resources = ["ui/GUI.json", "ui/fonts.json", "EgretLoadingPage.jpg"];
+            RES.createGroup('preload', resources);
+            RES.loadGroup('preload', 0, loading);
+            stage.removeChild(loading)
         }
         catch (e) {
-
+            alert(e.message)
         }
 
     }
