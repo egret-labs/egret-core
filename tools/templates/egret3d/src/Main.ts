@@ -89,16 +89,12 @@ class Main extends egret.DisplayObject {
             onRemoveStart: async (host, resource) => Promise.resolve()
         });
 
-
-
-        // 创建Egret3DCanvas，传入 2D stage，将开启混合模式
-        var context3d = new egret3d.Egret3DCanvas(this.stage);
-        egret.setRendererContext(context3d);
-
-
-        let game = new GameScene(context3d);
         this.loadAssets().then(
             () => {
+                // 创建Egret3DCanvas，传入 2D stage，将开启混合模式
+                var context3d = new egret3d.Egret3DCanvas(this.stage);
+                egret.setRendererContext(context3d);
+                let game = new GameScene(context3d);
                 game.createGameScene();
             }
         )
