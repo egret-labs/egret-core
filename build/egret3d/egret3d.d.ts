@@ -1710,9 +1710,34 @@ declare module egret3d {
     }
 }
 declare module egret3d {
-    interface UV {
+    /**
+     * @private
+     * @language zh_CN
+     * @class egret3d.UV
+     * @classdesc
+     * UV类，用来存储模型顶点uv数据
+     *
+     * @see egret3d.GeometryData
+     *
+     * @version Egret 3.0
+     * @platform Web,Native
+     */
+    class UV {
+        /**
+        * @language zh_CN
+        * u
+        */
         u: number;
+        /**
+        * @language zh_CN
+        * v
+        */
         v: number;
+        /**
+        * @language zh_CN
+        * constructor
+        */
+        constructor(u?: number, v?: number);
     }
 }
 declare module egret3d {
@@ -31570,12 +31595,6 @@ declare module egret3d {
     * @platform Web,Native
     */
     var registGUITexture: (texture: Texture) => void;
-    let contextForEgret: {
-        onStart: (egret2dContext: any) => void;
-        onRender: (egret2dContext: any) => void;
-        onStop: () => void;
-        onResize: () => void;
-    };
     let proDirty: boolean;
     /**
     * @class egret3d.Egret3DCanvas
@@ -31794,6 +31813,10 @@ declare module egret3d {
         * @event call
         */
         resize(x: number, y: number, width: number, height: number): void;
+        onStart(egret2dContext: any): void;
+        onRender(egret2dContext: any): void;
+        onStop(): void;
+        onResize(): void;
     }
 }
 declare module egret3d {
@@ -31811,6 +31834,7 @@ declare module egret3d {
         static useAnimPoseInterpolation: boolean;
         static useAnimMixInterpolation: boolean;
         static useAnimCache: boolean;
+        static useLowLoop: boolean;
         static useLight: boolean;
         static usePost: boolean;
         static useCompress: boolean;

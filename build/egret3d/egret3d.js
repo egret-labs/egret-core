@@ -3056,6 +3056,45 @@ var egret3d;
 var egret3d;
 (function (egret3d) {
     /**
+     * @private
+     * @language zh_CN
+     * @class egret3d.UV
+     * @classdesc
+     * UV类，用来存储模型顶点uv数据
+     *
+     * @see egret3d.GeometryData
+     *
+     * @version Egret 3.0
+     * @platform Web,Native
+     */
+    var UV = (function () {
+        /**
+        * @language zh_CN
+        * constructor
+        */
+        function UV(u, v) {
+            if (u === void 0) { u = 0; }
+            if (v === void 0) { v = 0; }
+            /**
+            * @language zh_CN
+            * u
+            */
+            this.u = 0;
+            /**
+            * @language zh_CN
+            * v
+            */
+            this.v = 0;
+            this.u = u;
+            this.v = v;
+        }
+        return UV;
+    }());
+    egret3d.UV = UV;
+})(egret3d || (egret3d = {}));
+var egret3d;
+(function (egret3d) {
+    /**
     * @language zh_CN
     * @class egret3d.Point
     * @classdesc
@@ -11578,10 +11617,15 @@ var egret3d;
                 "varying vec2 varying_uv0; \n" +
                 "varying vec4 varying_color; \n" +
                 "uniform mat4 uniform_ViewMatrix ; \n" +
+                "struct SurfaceOutput{ \n" +
+                "vec3 Albedo; \n" +
+                "vec3 Normal; \n" +
+                "vec4 Specular; \n" +
+                "float Alpha ; \n" +
+                "}; \n" +
+                "SurfaceOutput s ; \n" +
                 "vec4 outColor ; \n" +
                 "vec4 diffuseColor ; \n" +
-                "vec4 specularColor ; \n" +
-                "vec4 ambientColor; \n" +
                 "vec4 light ; \n" +
                 "vec3 normal; \n" +
                 "vec2 uv_0; \n" +
@@ -11590,11 +11634,13 @@ var egret3d;
                 "vec3 fdy = dFdy(pos); \n" +
                 "return normalize(cross(fdx, fdy)); \n" +
                 "} \n" +
+                "vec3 Fresnel_Schlick(float cosT, vec3 F0) \n" +
+                "{ \n" +
+                "return F0 + (1.0-F0) * pow( 1.0 - cosT, 5.0); \n" +
+                "} \n" +
                 "void main() { \n" +
-                "diffuseColor  = vec4(1.0,1.0,1.0,1.0); \n" +
-                "specularColor = vec4(0.0,0.0,0.0,0.0); \n" +
-                "ambientColor  = vec4(0.0,0.0,0.0,0.0); \n" +
-                "light         = vec4(1.0,1.0,1.0,1.0); \n" +
+                "diffuseColor  = vec4(1.0); \n" +
+                "light         = vec4(0.0,0.0,0.0,-1.0); \n" +
                 "normal = normalize(varying_eyeNormal) ; \n" +
                 "uv_0 = varying_uv0; \n" +
                 "} \n",
@@ -11796,12 +11842,25 @@ var egret3d;
                 "e_position.xyz += curve.x * vec3(1.0,0.5,0.0) * ( attribute_color.xyz) ; \n" +
                 "} \n",
             "diffuse_fragment": "uniform sampler2D diffuseTexture; \n" +
-                "vec4 diffuseColor ; \n" +
+                "varying vec4 varying_mvPose; \n" +
                 "void main() { \n" +
-                "diffuseColor = texture2D(diffuseTexture , uv_0 ); \n" +
-                "if( diffuseColor.w < materialSource.cutAlpha ){ \n" +
+                "vec3 fc = vec3(0.0, 0.0, 0.0); \n" +
+                "vec4 c = texture2D( diffuseTexture , uv_0 ); \n" +
+                "c.xyz = c.xyz * materialSource.diffuse * c.a ; \n" +
+                "if (c.a < materialSource.cutAlpha) \n" +
                 "discard; \n" +
+                "if(materialSource.refraction<2.41){ \n" +
+                "float vl = dot(normal,-normalize(varying_mvPose.xyz)); \n" +
+                "fc = Fresnel_Schlick(vl,vec3(materialSource.refraction)) * materialSource.refractionintensity ; \n" +
+                "fc.xyz = max(fc,vec3(0.0)) ; \n" +
                 "} \n" +
+                "s.Normal = normal; \n" +
+                "s.Specular = vec4(1.0) ; \n" +
+                "s.Albedo = c.rgb + fc.xyz * c.rgb + materialSource.ambient * c.rgb; \n" +
+                "s.Albedo = pow(s.Albedo, vec3(materialSource.gamma)); \n" +
+                "s.Alpha = c.a; \n" +
+                "outColor.xyz = s.Albedo * 0.5 ; \n" +
+                "outColor.w = s.Alpha; \n" +
                 "} \n",
             "diffuse_vertex": "attribute vec3 attribute_normal; \n" +
                 "attribute vec4 attribute_color; \n" +
@@ -11816,7 +11875,7 @@ var egret3d;
                 "varying_color = attribute_color; \n" +
                 "} \n",
             "directLight_fragment": "const int max_directLight = 0 ; \n" +
-                "uniform float uniform_directLightSource[9*max_directLight] ; \n" +
+                "uniform float uniform_directLightSource[10*max_directLight] ; \n" +
                 "varying vec4 varying_mvPose; \n" +
                 "uniform mat4 uniform_ViewMatrix; \n" +
                 "mat4 normalMatrix ; \n" +
@@ -11824,6 +11883,7 @@ var egret3d;
                 "vec3 direction; \n" +
                 "vec3 diffuse; \n" +
                 "vec3 ambient; \n" +
+                "float intensity; \n" +
                 "}; \n" +
                 "mat4 transpose(mat4 inMatrix) { \n" +
                 "vec4 i0 = inMatrix[0]; \n" +
@@ -11875,22 +11935,25 @@ var egret3d;
                 "a31 * b01 - a30 * b03 - a32 * b00, \n" +
                 "a20 * b03 - a21 * b01 + a22 * b00) / det; \n" +
                 "} \n" +
-                "void calculateDirectLight( MaterialSource materialSource ){ \n" +
+                "vec4 calculateDirectLight( MaterialSource materialSource ){ \n" +
                 "float lambertTerm , specular ; \n" +
                 "vec3 dir ,viewDir = normalize(varying_mvPose.xyz/varying_mvPose.w); \n" +
+                "diffuseColor = vec4(0.0,0.0,0.0,1.0); \n" +
                 "for(int i = 0 ; i < max_directLight ; i++){ \n" +
                 "DirectLight directLight ; \n" +
                 "directLight.direction = (normalMatrix * vec4(uniform_directLightSource[i*9],uniform_directLightSource[i*9+1],uniform_directLightSource[i*9+2],1.0)).xyz; \n" +
                 "directLight.diffuse = vec3(uniform_directLightSource[i*9+3],uniform_directLightSource[i*9+4],uniform_directLightSource[i*9+5]); \n" +
                 "directLight.ambient = vec3(uniform_directLightSource[i*9+6],uniform_directLightSource[i*9+7],uniform_directLightSource[i*9+8]); \n" +
+                "directLight.intensity = uniform_directLightSource[i*9+9] ; \n" +
                 "dir = normalize(directLight.direction) ; \n" +
-                "LightingBlinnPhong(dir,directLight.diffuse,directLight.ambient,normal,viewDir,0.5); \n" +
+                "diffuseColor += LightingBlinnPhong(dir,directLight.diffuse,directLight.ambient,s.Normal,viewDir,directLight.intensity); \n" +
                 "} \n" +
+                "return diffuseColor ; \n" +
                 "} \n" +
                 "void main() { \n" +
                 "normalMatrix = inverse(uniform_ViewMatrix); \n" +
                 "normalMatrix = transpose(normalMatrix); \n" +
-                "calculateDirectLight( materialSource ); \n" +
+                "light += calculateDirectLight( materialSource ).xyzw ; \n" +
                 "} \n",
             "endShadowPass_fs": "void main() { \n" +
                 "if(varying_color.w<=0.0){ \n" +
@@ -11910,20 +11973,13 @@ var egret3d;
                 "vec4 specularColor ; \n" +
                 "vec4 ambientColor; \n" +
                 "vec4 light ; \n" +
-                "vec3 Fresnel_Schlick(float cosT, vec3 F0) \n" +
-                "{ \n" +
-                "return F0 + (1.0-F0) * pow( 1.0 - cosT, 5.0); \n" +
-                "} \n" +
                 "void main() { \n" +
-                "if(materialSource.refraction<2.41){ \n" +
-                "float vl = dot(normal,-normalize(varying_mvPose.xyz)); \n" +
-                "vec3 f = Fresnel_Schlick(vl,vec3(1.2)) * materialSource.refractionintensity ; \n" +
-                "light.xyz += max(f,vec3(0.0)) ; \n" +
+                "if(light.w < 0.0 ){ \n" +
+                "outColor.xyz = s.Albedo.xyz ; \n" +
+                "}else{ \n" +
+                "outColor.xyzw = light ; \n" +
                 "} \n" +
-                "outColor.xyz = (light.xyz+materialSource.ambient) * (diffuseColor.xyz * materialSource.diffuse * varying_color.xyz) + specularColor.xyz ; \n" +
-                "outColor.w = materialSource.alpha * diffuseColor.w * varying_color.w; \n" +
-                "outColor.xyz *= outColor.w; \n" +
-                "outColor.xyz = pow(outColor.xyz,vec3(materialSource.gamma)); \n" +
+                "outColor.xyzw *= varying_color.xyzw; \n" +
                 "} \n",
             "end_vs": "vec4 endPosition ; \n" +
                 "uniform float uniform_materialSource[20]; \n" +
@@ -12700,19 +12756,17 @@ var egret3d;
                 "vec4 color = texture2D(diffuseTexture, varying_uv0); \n" +
                 "gl_FragColor  = color; \n" +
                 "} \n",
-            "lightingBase_fs": "void LightingBlinnPhong(vec3 lightDir, vec3 lightColor , vec3 lightAmbient , vec3 normal , vec3 viewDir, float atten){ \n" +
-                "vec3 H = normalize(lightDir + normalize(viewDir)); \n" +
-                "float NdotL = max(dot(normal, lightDir),0.0); \n" +
-                "float NdotH = max(dot(normal,H),0.0); \n" +
-                "vec3 diffuse = lightColor.xyz * NdotL ; \n" +
-                "float specPower = pow (NdotH, materialSource.shininess ) * materialSource.specularScale ; \n" +
-                "vec3 specular = lightColor.xyz * specPower * materialSource.specular ; \n" +
-                "specularColor.xyz += specular; \n" +
-                "light.xyz += (diffuse+lightAmbient) * (atten * 2.0 ); \n" +
-                "light.w = materialSource.alpha + (specPower * atten); \n" +
+            "lightingBase_fs": "vec4 LightingBlinnPhong(vec3 lightDir, vec3 lightColor , vec3 lightAmbient , vec3 normal , vec3 viewDir, float atten){ \n" +
+                "vec3 h = normalize(lightDir + normalize(viewDir)); \n" +
+                "float diff = max(dot(normal, lightDir),0.0); \n" +
+                "float nh = max(dot(normal,h),0.0); \n" +
+                "float spec = pow(nh, materialSource.shininess ) * materialSource.specularScale ; \n" +
+                "vec4 c ; \n" +
+                "c.rgb = (s.Albedo * lightColor * diff + lightColor * materialSource.specular.rgb * s.Specular.rgb * spec) * (atten * 2.0); \n" +
+                "c.a = s.Alpha + spec * atten; \n" +
+                "return c; \n" +
                 "} \n" +
                 "void main(void) { \n" +
-                "light.xyzw = vec4(0.0,0.0,0.0,1.0) ; \n" +
                 "} \n",
             "lightMapSpecularPower_fs": "uniform sampler2D lightTexture ; \n" +
                 "varying vec2 varying_uv1 ; \n" +
@@ -12725,8 +12779,7 @@ var egret3d;
                 "void main(void){ \n" +
                 "vec4 lightmap = texture2D( lightTexture , varying_uv1 ); \n" +
                 "lightmap.xyz = decode_hdr(lightmap).xyz ; \n" +
-                "diffuseColor.xyz *= lightmap.xyz ; \n" +
-                "specularColor.xyz *= lightmap.xyz ; \n" +
+                "outColor.xyz *= lightmap.xyz ; \n" +
                 "} \n" +
                 "  \n",
             "lightMap_fs": "uniform sampler2D lightTexture ; \n" +
@@ -12740,7 +12793,7 @@ var egret3d;
                 "void main(void){ \n" +
                 "vec4 lightmap = texture2D( lightTexture , varying_uv1 ); \n" +
                 "lightmap.xyz = decode_hdr(lightmap).xyz  ; \n" +
-                "diffuseColor.xyz *= lightmap.xyz ; \n" +
+                "outColor.xyz *= lightmap.xyz ; \n" +
                 "} \n",
             "lineFog": "struct Fog{ \n" +
                 "vec3 fogColor  ; \n" +
@@ -12875,9 +12928,8 @@ var egret3d;
                 "return normalize(TBN * map); \n" +
                 "} \n" +
                 "void main(){ \n" +
-                "vec3 normalTex = texture2D(normalTexture,uv_0).xyz *2.0 - 1.0; \n" +
-                "normalTex.y *= materialSource.normalDir; \n" +
-                "normal.xyz = tbn( normalTex.xyz , normal.xyz , varying_mvPose.xyz , uv_0 ) ; \n" +
+                "s.Normal = texture2D(normalTexture,uv_0).xyz *2.0 - 1.0; \n" +
+                "s.Normal = tbn( s.Normal.xyz , normal.xyz , varying_mvPose.xyz , uv_0 ) ; \n" +
                 "} \n",
             "normalPassEnd_fs": "void main() { \n" +
                 "outColor = vec4(normal,1.0); \n" +
@@ -12909,41 +12961,26 @@ var egret3d;
                 "float v1; \n" +
                 "float t0; \n" +
                 "float t1; \n" +
-                // xs start
-                // 这里减少了采样次数，效果可能不一致
-                // 用float标示是否break，boolean值编译时容易出错
-                "float breakFlag = 1.0; \n" +
-                "for(int i = 0; i < 3; i++){ \n" +
-                "t1 = bzData[i * 4]; \n" +
-                "v1 = bzData[i * 4 + 1]; \n" +
-                "t0 = bzData[(i - 1) * 4]; \n" +
-                "v0 = bzData[(i - 1) * 4 + 1]; \n" +
-                "res += (min(tCurrent, t1) - t0) * (0.5 * (v1 + v0)) * breakFlag; \n" +
-                "if(t1 >= tCurrent) { \n" +
-                "breakFlag = 0.0;" +
+                "float deltaTime = 0.0; \n" +
+                "float a_deltaTime; \n" +
+                "for(int i = 0; i < 16; i ++) \n" +
+                "{ \n" +
+                "t0 = bzData[i * 2 + 0] * tTotal; \n" +
+                "v0 = bzData[i * 2 + 1]; \n" +
+                "t1 = bzData[i * 2 + 2] * tTotal; \n" +
+                "v1 = bzData[i * 2 + 3]; \n" +
+                "deltaTime = t1 - t0; \n" +
+                "a_deltaTime = 0.5 * (v1 - v0); \n" +
+                "if(tCurrent >= t1) \n" +
+                "{ \n" +
+                "res += deltaTime * (v0 + a_deltaTime); \n" +
+                "}else \n" +
+                "{ \n" +
+                "deltaTime = tCurrent - t0; \n" +
+                "res += deltaTime * (v0 + a_deltaTime); \n" +
+                "break; \n" +
                 "} \n" +
                 "} \n" +
-                // xs end
-                // "float deltaTime = 0.0; \n" +
-                // "float a_deltaTime; \n" +
-                // "for(int i = 0; i < 3; i ++) \n" +
-                // "{ \n" +
-                // "t0 = bzData[i * 2 + 0] * tTotal; \n" +
-                // "v0 = bzData[i * 2 + 1]; \n" +
-                // "t1 = bzData[i * 2 + 2] * tTotal; \n" +
-                // "v1 = bzData[i * 2 + 3]; \n" +
-                // "deltaTime = t1 - t0; \n" +
-                // "a_deltaTime = 0.5 * (v1 - v0); \n" +
-                // "if(tCurrent >= t1) \n" +
-                // "{ \n" +
-                //     "res += deltaTime * (v0 + a_deltaTime); \n" +
-                // "}else \n" +
-                // "{ \n" +
-                //     "deltaTime = tCurrent - t0; \n" +
-                //     "res += deltaTime * (v0 + a_deltaTime); \n" +
-                //     // "break; \n" +
-                // "} \n" +
-                // "} \n" +
                 "return res; \n" +
                 "} \n" +
                 "float calcBezierSize(float bzData[35], float tCurrent, float tTotal){ \n" +
@@ -12952,38 +12989,76 @@ var egret3d;
                 "float y1; \n" +
                 "float t0; \n" +
                 "float t1; \n" +
-                // xs start
-                // 这里减少了采样次数，效果可能不一致
-                "for(int i = 1; i < 4; i ++){ \n" +
-                "t1 = bzData[i * 4]; \n" +
-                "y1 = bzData[i * 4 + 1]; \n" +
-                "if(t1 >= tCurrent) { \n" +
-                "t0 = bzData[(i - 1) * 4]; \n" +
-                "y0 = bzData[(i - 1) * 4 + 1]; \n" +
-                "float age = (tCurrent - t0) / (t1 - t0); \n" +
-                "res = y0 + (y1 - y0) * age; \n" +
-                // break 语句导致某些机型编译失败或结果不正确
-                // "break; \n" +
+                "float deltaTime = 0.0; \n" +
+                "float v; \n" +
+                "for(int i = 0; i < 16; i ++) \n" +
+                "{ \n" +
+                "t0 = bzData[i * 2 + 0] * tTotal; \n" +
+                "y0 = bzData[i * 2 + 1]; \n" +
+                "t1 = bzData[i * 2 + 2] * tTotal; \n" +
+                "y1 = bzData[i * 2 + 3]; \n" +
+                "deltaTime = t1 - t0; \n" +
+                "if(tCurrent <= t1) \n" +
+                "{ \n" +
+                "v = (y1 - y0) / deltaTime; \n" +
+                "deltaTime = tCurrent - t0; \n" +
+                "res = y0 + v * deltaTime; \n" +
+                "break; \n" +
                 "} \n" +
                 "} \n" +
-                // xs end
-                // "float deltaTime = 0.0; \n" +
-                // "float v; \n" +
-                // "for(int i = 0; i < 3; i +=4) \n" +
-                // "{ \n" +
-                // "t0 = bzData[i * 2 + 0] * tTotal; \n" +
-                // "y0 = bzData[i * 2 + 1]; \n" +
-                // "t1 = bzData[i * 2 + 2] * tTotal; \n" +
-                // "y1 = bzData[i * 2 + 3]; \n" +
-                // "deltaTime = t1 - t0; \n" +
-                // "if(tCurrent <= t1) \n" +
-                // "{ \n" +
-                // "v = (y1 - y0) / deltaTime; \n" +
-                // "deltaTime = tCurrent - t0; \n" +
-                // "res = y0 + v * deltaTime; \n" +
-                // // "break; \n" +
-                // "} \n" +
-                // "} \n" +
+                "return res; \n" +
+                "} \n",
+            "particle_bezier_low": "float calcBezierArea(float bzData[35], float tCurrent, float tTotal){ \n" +
+                "float res = 0.0; \n" +
+                "float v0; \n" +
+                "float v1; \n" +
+                "float t0; \n" +
+                "float t1; \n" +
+                "float deltaTime = 0.0; \n" +
+                "float a_deltaTime; \n" +
+                "for(int i = 0; i < 4; i ++) \n" +
+                "{ \n" +
+                "t0 = bzData[i * 8] * tTotal; \n" +
+                "v0 = bzData[i * 8 + 1]; \n" +
+                "t1 = bzData[(i + 1) * 8] * tTotal; \n" +
+                "v1 = bzData[(i + 1) * 8 + 1]; \n" +
+                "deltaTime = t1 - t0; \n" +
+                "a_deltaTime = 0.5 * (v1 - v0); \n" +
+                "if(tCurrent >= t1) \n" +
+                "{ \n" +
+                "res += deltaTime * (v0 + a_deltaTime); \n" +
+                "}else \n" +
+                "{ \n" +
+                "deltaTime = tCurrent - t0; \n" +
+                "res += deltaTime * (v0 + a_deltaTime); \n" +
+                "break; \n" +
+                "} \n" +
+                "} \n" +
+                "return res; \n" +
+                "} \n" +
+                "float calcBezierSize(float bzData[35], float tCurrent, float tTotal){ \n" +
+                "float res = 0.0; \n" +
+                "float y0; \n" +
+                "float y1; \n" +
+                "float t0; \n" +
+                "float t1; \n" +
+                "float deltaTime = 0.0; \n" +
+                "float v; \n" +
+                "for(int i = 0; i < 4; i ++) \n" +
+                "{ \n" +
+                "t0 = bzData[i * 8] * tTotal; \n" +
+                "y0 = bzData[i * 8 + 1]; \n" +
+                "t1 = bzData[(i + 1) * 8] * tTotal; \n" +
+                "y1 = bzData[(i + 1) * 8 + 1]; \n" +
+                "deltaTime = t1 - t0; \n" +
+                "if(tCurrent <= t1) \n" +
+                "{ \n" +
+                "v = (y1 - y0) / deltaTime; \n" +
+                "deltaTime = tCurrent - t0; \n" +
+                "res = y0 + v * deltaTime; \n" +
+                "break; \n" +
+                "} \n" +
+                "} \n" +
                 "return res; \n" +
                 "} \n",
             "particle_color_fs": "uniform float uniform_colorTransform[40]; \n" +
@@ -13007,7 +13082,8 @@ var egret3d;
                 "float nextAlpha; \n" +
                 "float progress = varying_particleData.x/varying_particleData.y; \n" +
                 "const int maxColorCount = 20; \n" +
-                "for( int i = 1 ; i < maxColorCount ; i++ ){ \n" +
+                "const int loopCount = 20; \n" +
+                "for( int i = 1 ; i < loopCount ; i++ ){ \n" +
                 "if( progress >= fract(uniform_colorTransform[i+maxColorCount-1]) ){ \n" +
                 "startColor = uniform_colorTransform[i-1] ; \n" +
                 "startSegment = fract(uniform_colorTransform[i+maxColorCount-1]) ; \n" +
@@ -13021,8 +13097,50 @@ var egret3d;
                 "} \n" +
                 "float len = nextSegment - startSegment ; \n" +
                 "float ws = ( progress - startSegment ) / len ; \n" +
+                "ws = clamp(ws,0.0,1.0); \n" +
                 "globalColor = mix(vec4(unpack_color(startColor).xyz,startAlpha / 256.0),vec4(unpack_color(nextColor).xyz, nextAlpha / 256.0),ws) ; \n" +
-                "globalColor.w = clamp(globalColor.w,0.0,1.0); \n" +
+                "globalColor = clamp(globalColor,0.0,1.0); \n" +
+                "} \n" +
+                "//##FilterEnd## \n",
+            "particle_color_fs_low": "uniform float uniform_colorTransform[40]; \n" +
+                "vec3 unpack_color(float rgb_data) \n" +
+                "{ \n" +
+                "vec3 res; \n" +
+                "res.z = fract( rgb_data ); \n" +
+                "rgb_data -= res.z; \n" +
+                "rgb_data = rgb_data/256.0; \n" +
+                "res.y = fract( rgb_data ); \n" +
+                "rgb_data -= res.y; \n" +
+                "res.x = rgb_data/256.0; \n" +
+                "return res; \n" +
+                "} \n" +
+                "void main() { \n" +
+                "float startColor ; \n" +
+                "float startSegment ; \n" +
+                "float nextColor ; \n" +
+                "float nextSegment ; \n" +
+                "float startAlpha; \n" +
+                "float nextAlpha; \n" +
+                "float progress = varying_particleData.x/varying_particleData.y; \n" +
+                "const int maxColorCount = 20; \n" +
+                "const int loopCount = 4; \n" +
+                "for( int i = 1 ; i < loopCount ; i++ ){ \n" +
+                "if( progress >= fract(uniform_colorTransform[i+maxColorCount-1]) ){ \n" +
+                "startColor = uniform_colorTransform[i-1] ; \n" +
+                "startSegment = fract(uniform_colorTransform[i+maxColorCount-1]) ; \n" +
+                "nextColor = uniform_colorTransform[i]; \n" +
+                "nextSegment = fract(uniform_colorTransform[i+maxColorCount]) ; \n" +
+                "startAlpha = uniform_colorTransform[i+maxColorCount-1] - startSegment; \n" +
+                "nextAlpha = uniform_colorTransform[i+maxColorCount] - nextSegment; \n" +
+                "}else{ \n" +
+                "break; \n" +
+                "} \n" +
+                "} \n" +
+                "float len = nextSegment - startSegment ; \n" +
+                "float ws = ( progress - startSegment ) / len ; \n" +
+                "ws = clamp(ws,0.0,1.0); \n" +
+                "globalColor = mix(vec4(unpack_color(startColor).xyz,startAlpha / 256.0),vec4(unpack_color(nextColor).xyz, nextAlpha / 256.0),ws) ; \n" +
+                "globalColor = clamp(globalColor,0.0,1.0); \n" +
                 "} \n" +
                 "//##FilterEnd## \n",
             "particle_color_vs": "void getNodeData(){ \n" +
@@ -13044,15 +13162,23 @@ var egret3d;
                 "} \n" +
                 "} \n",
             "particle_end_fs": "varying vec4 varying_particleData; \n" +
+                "varying vec4 varying_mvPose; \n" +
                 "void main() { \n" +
-                "materialSource.diffuse *= globalColor.xyz; \n" +
-                "outColor.xyz = (light.xyz+materialSource.ambient) * (diffuseColor.xyz * materialSource.diffuse * varying_color.xyz) + specularColor.xyz ; \n" +
-                "outColor.w = materialSource.alpha * diffuseColor.w * varying_color.w; \n" +
-                "outColor.w *= globalColor.w; \n" +
+                "vec3 fc ; \n" +
+                "if(materialSource.refraction<2.41){ \n" +
+                "float vl = dot(normal,-normalize(varying_mvPose.xyz)); \n" +
+                "fc = Fresnel_Schlick(vl,vec3(materialSource.refraction)) * materialSource.refractionintensity ; \n" +
+                "fc.xyz = max(fc,vec3(0.0)) ; \n" +
+                "} \n" +
+                "s.Albedo = diffuseColor.rgb * globalColor.xyz ; \n" +
+                "s.Albedo = pow(s.Albedo, vec3(materialSource.gamma)) * varying_color.xyz ; \n" +
+                "s.Alpha = diffuseColor.a * globalColor.w * materialSource.alpha * varying_color.w ; \n" +
+                "outColor.xyz = s.Albedo ; \n" +
+                "outColor.w = s.Alpha; \n" +
                 "if(varying_particleData.w > 0.5){ \n" +
                 "outColor.xyz *= outColor.w; \n" +
                 "} \n" +
-                "outColor = clamp(outColor, 0.0, 1.0); \n" +
+                "outColor = clamp(outColor, 0.0, 1.0) ; \n" +
                 "} \n",
             "particle_end_vs": "varying vec4 varying_pos; \n" +
                 "mat4 buildModelMatrix(vec4 quat, vec3 scale, vec3 position) \n" +
@@ -14063,7 +14189,7 @@ var egret3d;
                 "} \n",
             "specularMap_fragment": "uniform sampler2D specularTexture; \n" +
                 "void main(void){ \n" +
-                "specularColor.xyz *= texture2D( specularTexture , uv_0 ).xyz ; \n" +
+                "s.Specular = texture2D(specularTexture, uv_0).xyzx ; \n" +
                 "} \n",
             "SSAO": "#define DL 2.399963229728653 \n" +
                 "#define EULER 2.718281828459045 \n" +
@@ -14174,7 +14300,9 @@ var egret3d;
                 "cc.xyz += splat_control.y * texture2D (splat_1Tex, uv * vec2(uvs[2],uvs[3]) ).xyz; \n" +
                 "cc.xyz += splat_control.z * vec4(texture2D (splat_2Tex, uv* vec2(uvs[4],uvs[5]))).xyz; \n" +
                 "cc.xyz += (1.0-splat_control.w) * vec4(texture2D (splat_3Tex, uv* vec2(uvs[6],uvs[7]))).xyz; \n" +
-                "diffuseColor.xyz = cc.xyz ; \n" +
+                "s.Albedo.xyz = cc.xyz ; \n" +
+                "outColor.xyz = s.Albedo.xyz; \n" +
+                "outColor.w = 1.0; \n" +
                 "} \n",
             "uvRoll_fs": "uniform float uvRoll[2] ; \n" +
                 "uniform sampler2D diffuseTexture; \n" +
@@ -15052,19 +15180,7 @@ var egret3d;
             for (i = 0; i < content.extensionList.length; i++) {
                 source += ShaderUtil.connectExtension(content.extensionList[i]);
             }
-            // 
-            var gl = egret3d.Context3DProxy.gl;
-            var precision = "lowp";
-            if (gl.getShaderPrecisionFormat(gl.FRAGMENT_SHADER, gl.MEDIUM_FLOAT).precision > 0 &&
-                gl.getShaderPrecisionFormat(gl.VERTEX_SHADER, gl.MEDIUM_FLOAT).precision > 0) {
-                precision = "mediump";
-            }
-            if (gl.getShaderPrecisionFormat(gl.FRAGMENT_SHADER, gl.HIGH_FLOAT).precision > 0 &&
-                gl.getShaderPrecisionFormat(gl.VERTEX_SHADER, gl.HIGH_FLOAT).precision > 0) {
-                precision = "highp";
-            }
-            source += "precision " + precision + " float;            \t\n";
-            //
+            source += "precision highp float;            \t\n";
             for (i = 0; i < content.defineList.length; i++) {
                 source += ShaderUtil.connectDefine(content.defineList[i]);
             }
@@ -30671,13 +30787,13 @@ var egret3d;
             lightData[index * DirectLight.stride + 0] = dir.x;
             lightData[index * DirectLight.stride + 1] = dir.y;
             lightData[index * DirectLight.stride + 2] = dir.z;
-            lightData[index * DirectLight.stride + 3] = this._diffuse.x * this._intensity;
-            lightData[index * DirectLight.stride + 4] = this._diffuse.y * this._intensity;
-            lightData[index * DirectLight.stride + 5] = this._diffuse.z * this._intensity;
+            lightData[index * DirectLight.stride + 3] = this._diffuse.x;
+            lightData[index * DirectLight.stride + 4] = this._diffuse.y;
+            lightData[index * DirectLight.stride + 5] = this._diffuse.z;
             lightData[index * DirectLight.stride + 6] = this._ambient.x;
             lightData[index * DirectLight.stride + 7] = this._ambient.y;
             lightData[index * DirectLight.stride + 8] = this._ambient.z;
-            //lightData[index * DirectLight.stride + 9] = this._intensity;
+            lightData[index * DirectLight.stride + 9] = this._intensity;
             //lightData[index * DirectLight.stride + 10] = this._halfIntensity;
         };
         DirectLight.q0 = new egret3d.Quaternion();
@@ -30686,7 +30802,7 @@ var egret3d;
         * @private
         * 光源数据结构长度
         */
-        DirectLight.stride = 9;
+        DirectLight.stride = 10;
         return DirectLight;
     }(egret3d.LightBase));
     egret3d.DirectLight = DirectLight;
@@ -34534,6 +34650,7 @@ var egret3d;
                 if (textureCoordinates.u < 0) {
                     textureCoordinates.u += 1.0;
                 }
+                textureCoordinates.v = Math.asin(v.y) / Math.PI + 0.5;
                 uv[i] = textureCoordinates;
             }
             uv[vertices.length - 4].u = uv[0].u = 0.125;
@@ -46238,12 +46355,12 @@ var egret3d;
             this.fsShaderList[egret3d.ShaderPhaseType.lighting_fragment] = this.fsShaderList[egret3d.ShaderPhaseType.lighting_fragment] || [];
             this.fsShaderList[egret3d.ShaderPhaseType.lighting_fragment].push("lightingBase_fs");
             if (useSpecularPower) {
-                this.fsShaderList[egret3d.ShaderPhaseType.shadow_fragment] = this.fsShaderList[egret3d.ShaderPhaseType.shadow_fragment] || [];
-                this.fsShaderList[egret3d.ShaderPhaseType.shadow_fragment].push("lightMapSpecularPower_fs");
+                this.fsShaderList[egret3d.ShaderPhaseType.multi_end_fragment] = this.fsShaderList[egret3d.ShaderPhaseType.multi_end_fragment] || [];
+                this.fsShaderList[egret3d.ShaderPhaseType.multi_end_fragment].push("lightMapSpecularPower_fs");
             }
             else {
-                this.fsShaderList[egret3d.ShaderPhaseType.shadow_fragment] = this.fsShaderList[egret3d.ShaderPhaseType.shadow_fragment] || [];
-                this.fsShaderList[egret3d.ShaderPhaseType.shadow_fragment].push("lightMap_fs");
+                this.fsShaderList[egret3d.ShaderPhaseType.multi_end_fragment] = this.fsShaderList[egret3d.ShaderPhaseType.multi_end_fragment] || [];
+                this.fsShaderList[egret3d.ShaderPhaseType.multi_end_fragment].push("lightMap_fs");
             }
         }
         Object.defineProperty(LightmapMethod.prototype, "lightTexture", {
@@ -49274,12 +49391,12 @@ var egret3d;
                 shaderList = this._fs_shader_methods[egret3d.ShaderPhaseType.shadow_fragment];
                 if (shaderList && shaderList.length > 0)
                     this.addMethodShaders(this._passUsage.fragmentShader, shaderList);
-                //lighting
-                shaderList = this._fs_shader_methods[egret3d.ShaderPhaseType.lighting_fragment];
-                if (shaderList && shaderList.length > 0)
-                    this.addMethodShaders(this._passUsage.fragmentShader, shaderList);
                 //specular
                 shaderList = this._fs_shader_methods[egret3d.ShaderPhaseType.specular_fragment];
+                if (shaderList && shaderList.length > 0)
+                    this.addMethodShaders(this._passUsage.fragmentShader, shaderList);
+                //lighting
+                shaderList = this._fs_shader_methods[egret3d.ShaderPhaseType.lighting_fragment];
                 if (shaderList && shaderList.length > 0)
                     this.addMethodShaders(this._passUsage.fragmentShader, shaderList);
                 //matCap
@@ -53226,8 +53343,9 @@ var egret3d;
             _super.call(this);
             //##FilterBegin## ##Particle##
             this.name = "ParticleSpeedNode";
-            this.importShader(true, egret3d.ShaderPhaseType.utils_vertex, "particle_bezier");
-            this.importShader(false, egret3d.ShaderPhaseType.utils_fragment, "particle_bezier");
+            var bezierShader = egret3d.Egret3DPolicy.useLowLoop ? "particle_bezier_low" : "particle_bezier";
+            this.importShader(true, egret3d.ShaderPhaseType.utils_vertex, bezierShader);
+            this.importShader(false, egret3d.ShaderPhaseType.utils_fragment, bezierShader);
             this.importShader(false, egret3d.ShaderPhaseType.diffuse_fragment, "particle_diffuse_fragment");
             this.attribute_time = new egret3d.GLSL.VarRegister();
             this.attribute_time.name = "attribute_time";
@@ -54180,7 +54298,8 @@ var egret3d;
             //##FilterBegin## ##Particle##
             this.name = "ParticleColorGlobalNode";
             this.importShader(true, egret3d.ShaderPhaseType.global_vertex, "particle_color_vs");
-            this.importShader(false, egret3d.ShaderPhaseType.end_fragment, "particle_color_fs");
+            var fsShader = egret3d.Egret3DPolicy.useLowLoop ? "particle_color_fs_low" : "particle_color_fs";
+            this.importShader(false, egret3d.ShaderPhaseType.end_fragment, fsShader);
             //##FilterEnd##
         }
         /**
@@ -63894,8 +64013,6 @@ var egret3d;
         * @platform Web,Native
         */
         View3D.prototype.update = function (time, delay) {
-            this._camera.viewPort = this._viewPort;
-            //------------------
             if (egret3d.Egret3DEngine.instance.debug)
                 this.a = new Date().getTime();
             this.updateObject3D(this._scene, time, delay);
@@ -64171,21 +64288,6 @@ var egret3d;
             v.getGUIStage().registerTexture(texture);
         }
     };
-    egret3d.contextForEgret = {
-        onStart: function (egret2dContext) {
-            egret2dContext.setAutoClear(false);
-        },
-        onRender: function (egret2dContext) {
-            egret2dContext.save();
-            Egret3DCanvas._instance.render();
-            egret2dContext.restore();
-        },
-        onStop: function () {
-        },
-        onResize: function () {
-            Egret3DCanvas._instance.resizeBlend2D();
-        }
-    };
     // 切换prgram脏标记
     // 用于完成2D渲染后强制标脏
     egret3d.proDirty = true;
@@ -64284,7 +64386,7 @@ var egret3d;
             //this.getExtension("WEBGL_depth_texture");
             //this.getExtension("WEBKIT_WEBGL_depth_texture");
             //this.getExtension("MOZ_WEBGL_depth_texture");
-            //this.create2dContext();
+            this.create2dContext();
             Egret3DCanvas.context3DProxy.register();
             console.log("this.context3D ==>", egret3d.Context3DProxy.gl);
             egret3d.Input.canvas = this;
@@ -64353,7 +64455,7 @@ var egret3d;
             * @platform Web,Native
             */
             set: function (value) {
-                if (this.canvas3DRectangle.x != value)
+                if (this.canvas3DRectangle.x != value && !this.blend2D)
                     this.resize(value, this.canvas3DRectangle.y, this.canvas3DRectangle.width, this.canvas3DRectangle.height);
             },
             enumerable: true,
@@ -64378,7 +64480,7 @@ var egret3d;
             * @platform Web,Native
             */
             set: function (value) {
-                if (this.canvas3DRectangle.y != value)
+                if (this.canvas3DRectangle.y != value && !this.blend2D)
                     this.resize(this.canvas3DRectangle.x, value, this.canvas3DRectangle.width, this.canvas3DRectangle.height);
             },
             enumerable: true,
@@ -64403,7 +64505,7 @@ var egret3d;
             * @platform Web,Native
             */
             set: function (value) {
-                if (this.canvas3DRectangle.width != value)
+                if (this.canvas3DRectangle.width != value && !this.blend2D)
                     this.resize(this.canvas3DRectangle.x, this.canvas3DRectangle.y, value, this.canvas3DRectangle.height);
             },
             enumerable: true,
@@ -64428,7 +64530,7 @@ var egret3d;
             * @platform Web,Native
             */
             set: function (value) {
-                if (this.canvas3DRectangle.height != value)
+                if (this.canvas3DRectangle.height != value && !this.blend2D)
                     this.resize(this.canvas3DRectangle.x, this.canvas3DRectangle.y, this.canvas3DRectangle.width, value);
             },
             enumerable: true,
@@ -64555,6 +64657,9 @@ var egret3d;
         * @platform Web,Native
         */
         Egret3DCanvas.prototype.start = function () {
+            if (this.blend2D) {
+                return;
+            }
             this._start = true;
             this.update(0);
             Egret3DCanvas.context3DProxy.enableBlend();
@@ -64648,6 +64753,20 @@ var egret3d;
                 egret3d.Input.scaleY = this.stage2D.$screen["webTouchHandler"].scaleY;
             }
         };
+        // custom context implement
+        Egret3DCanvas.prototype.onStart = function (egret2dContext) {
+            egret2dContext.setAutoClear(false);
+        };
+        Egret3DCanvas.prototype.onRender = function (egret2dContext) {
+            egret2dContext.save();
+            this.render();
+            egret2dContext.restore();
+        };
+        Egret3DCanvas.prototype.onStop = function () {
+        };
+        Egret3DCanvas.prototype.onResize = function () {
+            this.resizeBlend2D();
+        };
         /**
         * @private
         */
@@ -64674,7 +64793,7 @@ var egret3d;
     var Egret3DPolicy = (function () {
         function Egret3DPolicy() {
         }
-        Egret3DPolicy.engineVersion = "3.2.6";
+        Egret3DPolicy.engineVersion = "4.0.0";
         Egret3DPolicy.useParticle = true;
         Egret3DPolicy.useAnimEffect = true;
         Egret3DPolicy.useEffect = true;
@@ -64682,6 +64801,7 @@ var egret3d;
         Egret3DPolicy.useAnimPoseInterpolation = true;
         Egret3DPolicy.useAnimMixInterpolation = true;
         Egret3DPolicy.useAnimCache = false;
+        Egret3DPolicy.useLowLoop = false;
         Egret3DPolicy.useLight = true;
         Egret3DPolicy.usePost = true;
         Egret3DPolicy.useCompress = false;
@@ -64698,7 +64818,7 @@ var egret3d;
      */
     var Egret3DEngine = (function () {
         function Egret3DEngine() {
-            this.version = "3.2.6";
+            this.version = "4.0.0";
             this.jsPath = "js/";
             this.debug = false;
             this._tsconfigs = [];
