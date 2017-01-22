@@ -358,7 +358,7 @@ declare namespace egret {
          * @platform Web,Native
          * @language zh_CN
          */
-        connected: boolean;
+        readonly connected: boolean;
         /**
          * @private
          */

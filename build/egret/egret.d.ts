@@ -79,7 +79,7 @@ declare namespace egret {
          * @platform Web,Native
          * @language zh_CN
          */
-        hashCode: number;
+        readonly hashCode: number;
     }
     /**
      * @private
@@ -941,10 +941,10 @@ declare namespace egret {
      * @event egret.Event.ENTER_FRAME [广播事件] 播放头进入新帧时调度。
      * @event egret.Event.RENDER [广播事件] 将要更新和呈现显示列表时调度。
      * @event egret.TouchEvent.TOUCH_MOVE 当用户触碰设备时进行调度，而且会连续调度，直到接触点被删除。
-     * @event egret.TouchEvent.TOUCH_BEGIN 当用户第一次触摸启用触摸的设备时（例如，用手指触摸配有触摸屏的移动电话或平板电脑）调度。
-     * @event egret.TouchEvent.TOUCH_END 当用户移除与启用触摸的设备的接触时（例如，将手指从配有触摸屏的移动电话或平板电脑上抬起）调度。
-     * @event egret.TouchEvent.TOUCH_TAP 当用户在启用触摸设备上的已启动接触的同一 DisplayObject 实例上抬起接触点时（例如，在配有触摸屏的移动电话或平板电脑的显示对象上的某一点处按下并释放手指）调度。
-     * @event egret.TouchEvent.TOUCH_RELEASE_OUTSIDE 当用户在启用触摸设备上的已启动接触的不同 DisplayObject 实例上抬起接触点时（例如，在配有触摸屏的移动电话或平板电脑的显示对象上的某一点处按下并释放手指）调度。
+     * @event egret.TouchEvent.TOUCH_BEGIN 当用户第一次触摸启用触摸的设备时（例如，用手指触摸手机屏幕）调度。
+     * @event egret.TouchEvent.TOUCH_END 当用户移除与启用触摸的设备的接触时（例如，将手指从屏幕上抬起）调度。
+     * @event egret.TouchEvent.TOUCH_TAP 当用户在启用触摸设备上的已启动接触的同一 DisplayObject 实例上抬起接触点时（例如，手机点击屏幕后抬起）调度。
+     * @event egret.TouchEvent.TOUCH_RELEASE_OUTSIDE 当用户在启用触摸设备上的已启动接触的不同 DisplayObject 实例上抬起接触点时（例如，按住屏幕上的某个对象,然后从它上面挪开后再松开手指）调度。
      * @version Egret 2.4
      * @platform Web,Native
      * @includeExample egret/display/DisplayObject.ts
@@ -1060,7 +1060,7 @@ declare namespace egret {
          * @platform Web,Native
          * @language zh_CN
          */
-        parent: DisplayObjectContainer;
+        readonly parent: DisplayObjectContainer;
         /**
          * @private
          * 设置父级显示对象
@@ -1101,7 +1101,7 @@ declare namespace egret {
          * @platform Web,Native
          * @language zh_CN
          */
-        stage: Stage;
+        readonly stage: Stage;
         /**
          * A Matrix object containing values that alter the scaling, rotation, and translation of the display object.<br/>
          * Note: to change the value of a display object's matrix, you must make a copy of the entire matrix object, then copy
@@ -1391,7 +1391,7 @@ declare namespace egret {
          * @version Egret 2.4
          * @platform Web,Native
          */
-        measuredWidth: number;
+        readonly measuredWidth: number;
         /**
          * 测量高度
          * @returns {number}
@@ -1399,7 +1399,7 @@ declare namespace egret {
          * @version Egret 2.4
          * @platform Web,Native
          */
-        measuredHeight: number;
+        readonly measuredHeight: number;
         /**
          * X represents the object of which is the anchor.
          * @default 0
@@ -2021,7 +2021,7 @@ declare namespace egret {
          * @platform Web,Native
          * @language zh_CN
          */
-        numChildren: number;
+        readonly numChildren: number;
         /**
          * Adds a child DisplayObject instance to this DisplayObjectContainer instance. The child is added to the front
          * (top) of all other children in this DisplayObjectContainer instance. (To add a child to a specific index position,
@@ -2718,7 +2718,7 @@ declare namespace egret {
          * @platform Web,Native
          * @language zh_CN
          */
-        graphics: Graphics;
+        readonly graphics: Graphics;
         $hitTest(stageX: number, stageY: number): DisplayObject;
         /**
          * @private
@@ -3040,7 +3040,7 @@ declare namespace egret {
          * @platform Web,Native
          * @language zh_CN
          */
-        type: string;
+        readonly type: string;
         /**
          * @private
          */
@@ -3057,7 +3057,7 @@ declare namespace egret {
          * @platform Web,Native
          * @language zh_CN
          */
-        bubbles: boolean;
+        readonly bubbles: boolean;
         /**
          * @private
          */
@@ -3077,7 +3077,7 @@ declare namespace egret {
          * @platform Web,Native
          * @language zh_CN
          */
-        cancelable: boolean;
+        readonly cancelable: boolean;
         /**
          * @private
          */
@@ -3102,7 +3102,7 @@ declare namespace egret {
          * @platform Web,Native
          * @language zh_CN
          */
-        eventPhase: number;
+        readonly eventPhase: number;
         /**
          * @private
          */
@@ -3122,7 +3122,7 @@ declare namespace egret {
          * @platform Web,Native
          * @language zh_CN
          */
-        currentTarget: any;
+        readonly currentTarget: any;
         /**
          * @private
          */
@@ -3140,7 +3140,7 @@ declare namespace egret {
          * @platform Web,Native
          * @language zh_CN
          */
-        target: any;
+        readonly target: any;
         $setTarget(target: any): boolean;
         /**
          * @private
@@ -3660,7 +3660,7 @@ declare namespace egret {
          * @platform Web,Native
          * @language zh_CN
          */
-        textureWidth: number;
+        readonly textureWidth: number;
         $getTextureWidth(): number;
         /**
          * @private
@@ -3679,7 +3679,7 @@ declare namespace egret {
          * @platform Web,Native
          * @language zh_CN
          */
-        textureHeight: number;
+        readonly textureHeight: number;
         $getTextureHeight(): number;
         $getScaleBitmapWidth(): number;
         $getScaleBitmapHeight(): number;
@@ -3945,7 +3945,7 @@ declare namespace egret {
          * @platform Web,Native
          * @language zh_CN
          */
-        length: number;
+        readonly length: number;
         /**
          * Sets the members of Point to the specified values
          * @param x The horizontal coordinate.
@@ -4996,7 +4996,7 @@ declare namespace egret {
          * @platform Web,Native
          * @language zh_CN
          */
-        status: number;
+        readonly status: number;
         /**
          * EventDispatcher object using the specified event object thrown Event. The objects will be thrown in the object cache pool for the next round robin.
          * @param target {egret.IEventDispatcher} Distribute event target
@@ -6147,7 +6147,7 @@ declare namespace egret {
          * @platform Web,Native
          * @language zh_CN
          */
-        stageX: number;
+        readonly stageX: number;
         /**
          * @private
          */
@@ -6164,7 +6164,7 @@ declare namespace egret {
          * @platform Web,Native
          * @language zh_CN
          */
-        stageY: number;
+        readonly stageY: number;
         private _localX;
         /**
          * The horizontal coordinate at which the event occurred relative to the display object.
@@ -6178,7 +6178,7 @@ declare namespace egret {
          * @platform Web,Native
          * @language zh_CN
          */
-        localX: number;
+        readonly localX: number;
         private _localY;
         /**
          * The vertical coordinate at which the event occurred relative to the display object.
@@ -6192,7 +6192,7 @@ declare namespace egret {
          * @platform Web,Native
          * @language zh_CN
          */
-        localY: number;
+        readonly localY: number;
         private targetChanged;
         /**
          * @private
@@ -7730,6 +7730,9 @@ declare namespace egret.localStorage {
     let clear: () => void;
 }
 declare namespace egret {
+    /**
+     * 打开照片选择窗口，返回Promise对象，resolve参数为ArrayBuffer类型的照片数据,可以使用BitmapData的create方法将ArrayBuffer构造为BitmapData实例
+     */
     function pickPhoto(): Promise<ArrayBuffer>;
 }
 declare namespace egret.sys {
@@ -10320,7 +10323,7 @@ declare namespace egret {
          * @platform Web,Native
          * @language zh_CN
          */
-        graphics: Graphics;
+        readonly graphics: Graphics;
         /**
          * @private
          */
@@ -10836,7 +10839,7 @@ declare namespace egret {
          * @platform Web,Native
          * @language zh_CN
          */
-        static language: string;
+        static readonly language: string;
         /**
          * @private
          */
@@ -10853,7 +10856,7 @@ declare namespace egret {
          * @platform Web,Native
          * @language zh_CN
          */
-        static isMobile: boolean;
+        static readonly isMobile: boolean;
         /**
          * @private
          */
@@ -10886,7 +10889,7 @@ declare namespace egret {
          * @platform Web,Native
          * @language zh_CN
          */
-        static os: string;
+        static readonly os: string;
         /**
          * @private
          */
@@ -10911,7 +10914,7 @@ declare namespace egret {
          * @platform Web,Native
          * @language zh_CN
          */
-        static runtimeType: string;
+        static readonly runtimeType: string;
         /***
          * version of the native support.
          * @type {string}
@@ -10926,7 +10929,7 @@ declare namespace egret {
          * @platform Web,Native
          * @language zh_CN
          */
-        static supportVersion: string;
+        static readonly supportVersion: string;
         static $supportVersion: string;
         /***
          * version of Egret.
@@ -10942,7 +10945,7 @@ declare namespace egret {
          * @platform Web,Native
          * @language zh_CN
          */
-        static engineVersion: string;
+        static readonly engineVersion: string;
         /**
          * 设置系统信息
          */
@@ -10961,7 +10964,7 @@ declare namespace egret {
          * @platform Web,Native
          * @language zh_CN
          */
-        static renderMode: string;
+        static readonly renderMode: string;
         static $renderMode: string;
         /***
          * Clients border width.
@@ -10979,7 +10982,7 @@ declare namespace egret {
          * @platform Web,Native
          * @language zh_CN
          */
-        static boundingClientWidth: number;
+        static readonly boundingClientWidth: number;
         static $boundingClientWidth: number;
         /***
          * Clients border height.
@@ -10997,7 +11000,7 @@ declare namespace egret {
          * @platform Web,Native
          * @language zh_CN
          */
-        static boundingClientHeight: number;
+        static readonly boundingClientHeight: number;
         static $boundingClientHeight: number;
     }
 }
@@ -11420,7 +11423,7 @@ declare namespace egret {
          * @platform Web,Native
          * @language zh_CN
          */
-        textWidth: number;
+        readonly textWidth: number;
         /**
          * Get Text BitmapText height
          * @version Egret 2.4
@@ -11433,7 +11436,7 @@ declare namespace egret {
          * @platform Web,Native
          * @language zh_CN
          */
-        textHeight: number;
+        readonly textHeight: number;
         /**
          * @private
          */
@@ -12664,25 +12667,25 @@ declare namespace egret {
          * @platform Web,Native
          * @language zh_CN
          */
-        maxScrollV: number;
+        readonly maxScrollV: number;
         /**
          * @private
          * @version Egret 2.4
          * @platform Web,Native
          */
-        selectionBeginIndex: number;
+        readonly selectionBeginIndex: number;
         /**
          * @private
          * @version Egret 2.4
          * @platform Web,Native
          */
-        selectionEndIndex: number;
+        readonly selectionEndIndex: number;
         /**
          * @private
          * @version Egret 2.4
          * @platform Web,Native
          */
-        caretIndex: number;
+        readonly caretIndex: number;
         /**
          * @private
          *
@@ -12708,7 +12711,7 @@ declare namespace egret {
          * @platform Web,Native
          * @language zh_CN
          */
-        numLines: number;
+        readonly numLines: number;
         /**
          * Indicate whether field is a multiline text field. Note that this property is valid only when the type is TextFieldType.INPUT.
          * If the value is true, the text field is multiline; if the value is false, the text field is a single-line text field. In a field of type TextFieldType.INPUT, the multiline value determines whether the Enter key creates a new line (a value of false, and the Enter key is ignored).
@@ -12970,7 +12973,7 @@ declare namespace egret {
          * @platform Web,Native
          * @language zh_CN
          */
-        textWidth: number;
+        readonly textWidth: number;
         /**
          * Get Text measuring height
          * @version Egret 2.4
@@ -12983,7 +12986,7 @@ declare namespace egret {
          * @platform Web,Native
          * @language zh_CN
          */
-        textHeight: number;
+        readonly textHeight: number;
         /**
          * @private
          * @param text
@@ -13498,7 +13501,7 @@ declare namespace egret {
         /**
          * @private
          */
-        bufferOffset: number;
+        readonly bufferOffset: number;
         /**
          * The current position of the file pointer (in bytes) to move or return to the ByteArray object. The next time you start reading reading method call in this position, or will start writing in this position next time call a write method.
          * @version Egret 2.4
@@ -13543,7 +13546,7 @@ declare namespace egret {
          * @platform Web,Native
          * @language zh_CN
          */
-        bytesAvailable: number;
+        readonly bytesAvailable: number;
         /**
          * Clears the contents of the byte array and resets the length and position properties to 0.
          * @version Egret 2.4
@@ -14229,7 +14232,7 @@ declare namespace egret {
          * @platform Web,Native
          * @language zh_CN
          */
-        stageWidth: number;
+        readonly stageWidth: number;
         /**
          * @private
          */
@@ -14246,7 +14249,7 @@ declare namespace egret {
          * @platform Web,Native
          * @language zh_CN
          */
-        stageHeight: number;
+        readonly stageHeight: number;
         /**
          * After you call the invalidate() method, when the display list is next rendered, the Egret runtime sends a render
          * event to each display object that has registered to listen for the render event. You must call the invalidate()
@@ -14695,7 +14698,7 @@ declare namespace egret {
          * @platform Web,Native
          * @language zh_CN
          */
-        currentCount: number;
+        readonly currentCount: number;
         /**
          * @private
          */
@@ -14712,7 +14715,7 @@ declare namespace egret {
          * @platform Web,Native
          * @language zh_CN
          */
-        running: boolean;
+        readonly running: boolean;
         /**
          * Stops the timer, if it is running, and sets the currentCount property back to 0, like the reset button of a stopwatch.
          * Then, when start() is called, the timer instance runs for the specified number of repetitions, as set by the repeatCount value.

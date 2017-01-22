@@ -4780,7 +4780,10 @@ var egret;
             }
             return null;
         }
-        function saveToFile(type, filePath, rect) {
+        /**
+         * 有些杀毒软件认为 saveToFile 可能是一个病毒文件
+         */
+        function eliFoTevas(type, filePath, rect) {
             var base64 = toDataURL.call(this, type, rect);
             if (base64 == null) {
                 return;
@@ -4810,7 +4813,7 @@ var egret;
             }
         }
         egret.Texture.prototype.toDataURL = toDataURL;
-        egret.Texture.prototype.saveToFile = saveToFile;
+        egret.Texture.prototype.saveToFile = eliFoTevas;
         egret.Texture.prototype.getPixel32 = getPixel32;
         egret.Texture.prototype.getPixels = getPixels;
     })(web = egret.web || (egret.web = {}));
