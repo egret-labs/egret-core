@@ -37,7 +37,7 @@ declare namespace egret.gui {
         /**
          * @member egret.gui.UIComponent#owner
          */
-        owner: any;
+        readonly owner: any;
         /**
          * @method egret.gui.UIComponent#ownerChanged
          * @param value {any}
@@ -354,37 +354,37 @@ declare namespace egret.gui {
         /**
          * @member egret.gui.UIComponent#preferredWidth
          */
-        preferredWidth: number;
+        readonly preferredWidth: number;
         /**
          * @member egret.gui.UIComponent#preferredHeight
          */
-        preferredHeight: number;
+        readonly preferredHeight: number;
         /**
          * @member egret.gui.UIComponent#preferredX
          */
-        preferredX: number;
+        readonly preferredX: number;
         /**
          * @member egret.gui.UIComponent#preferredY
          */
-        preferredY: number;
+        readonly preferredY: number;
         /**
          * @member egret.gui.UIComponent#layoutBoundsX
          */
-        layoutBoundsX: number;
+        readonly layoutBoundsX: number;
         /**
          * @member egret.gui.UIComponent#layoutBoundsY
          */
-        layoutBoundsY: number;
+        readonly layoutBoundsY: number;
         /**
          * @member egret.gui.UIComponent#layoutBoundsWidth
          */
-        layoutBoundsWidth: number;
+        readonly layoutBoundsWidth: number;
         /**
          * 组件的布局高度,常用于父级的updateDisplayList()方法中
          * 按照：布局高度>外部显式设置高度>测量高度 的优先级顺序返回高度
          * @member egret.gui.UIComponent#layoutBoundsHeight
          */
-        layoutBoundsHeight: number;
+        readonly layoutBoundsHeight: number;
     }
 }
 declare namespace egret.gui {
@@ -448,7 +448,7 @@ declare namespace egret.gui {
          * 皮肤对象实例。
          * @member egret.gui.SkinnableComponent#skin
          */
-        skin: any;
+        readonly skin: any;
         /**
          * 设置皮肤
          */
@@ -873,12 +873,12 @@ declare namespace egret.gui {
          * 如果当前正在播放效果的任一实例，则为 true；否则，则为 false。
          * @member egret.gui.Effect#isPlaying
          */
-        isPlaying: boolean;
+        readonly isPlaying: boolean;
         /**
          * 是否处于暂停状态，当调用了paused()方法后此属性为true
          * @member egret.gui.Effect#isPaused
          */
-        isPaused: Boolean;
+        readonly isPaused: Boolean;
         private _perElementOffset;
         /**
          * 在效果的第一个目标之后，其他效果目标的附加延迟（以毫秒为单位）。
@@ -1039,7 +1039,7 @@ declare namespace egret.gui {
         elementsContent: any[];
         /**
          */
-        numElements: number;
+        readonly numElements: number;
         /**
          * 返回指定索引处的可视元素
          * @param index {number}
@@ -1880,7 +1880,7 @@ declare namespace egret.gui {
          * 视域的内容的宽度
          * @member egret.gui.GroupBase#contentWidth
          */
-        contentWidth: number;
+        readonly contentWidth: number;
         /**
          * 设置setContentWidth
          * @param value
@@ -1891,7 +1891,7 @@ declare namespace egret.gui {
          * 视域的内容的高度
          * @member egret.gui.GroupBase#contentHeight
          */
-        contentHeight: number;
+        readonly contentHeight: number;
         /**
          * 设置ContentHeight
          * @param value
@@ -1990,7 +1990,7 @@ declare namespace egret.gui {
          * 此容器中的可视元素的数量。
          * @member egret.gui.GroupBase#numElements
          */
-        numElements: number;
+        readonly numElements: number;
         /**
          * 返回指定索引处的可视元素。
          * @method egret.gui.GroupBase#getElementAt
@@ -2296,7 +2296,7 @@ declare namespace egret.gui {
         /**
          * 实际的持续时间包含startDelay，repeatDelay，repeatCount这些值
          */
-        _actualDuration: number;
+        readonly _actualDuration: number;
         private _duration;
         /**
          * 效果的持续时间（以毫秒为单位）。
@@ -2576,17 +2576,17 @@ declare namespace egret.gui {
          * 当前所选内容中第一个字符从零开始的字符索引值。例如，第一个字符的索引值是 0，
          * 第二个字符的索引值是 1，依此类推。如果未选定任何文本，此属性为 caretIndex 的值
          */
-        selectionBeginIndex: number;
+        readonly selectionBeginIndex: number;
         /**
          * 当前所选内容中最后一个字符从零开始的字符索引值。例如，第一个字符的索引值是 0，第二个字符的索引值是 1，
          * 依此类推。如果未选定任何文本，此属性为 caretIndex 的值。
          */
-        selectionEndIndex: number;
+        readonly selectionEndIndex: number;
         /**
          * 插入点（尖号）位置的索引。如果没有显示任何插入点，则在将焦点恢复到字段时，
          * 值将为插入点所在的位置（通常为插入点上次所在的位置，如果字段不曾具有焦点，则为 0）。
          */
-        caretIndex: number;
+        readonly caretIndex: number;
         /**
          * 将第一个字符和最后一个字符的索引值（使用 beginIndex 和 endIndex 参数指定）指定的文本设置为所选内容。
          * 如果两个参数值相同，则此方法会设置插入点，就如同设置 caretIndex 属性一样。
@@ -2791,11 +2791,11 @@ declare namespace egret.gui {
         /**
          * 文本全部显示时的高度（无行间距）
          */
-        textHeight: number;
+        readonly textHeight: number;
         /**
          * 文本全部显示时宽
          */
-        textWidth: number;
+        readonly textWidth: number;
         /**
          * 创建组件的子对象
          */
@@ -2925,7 +2925,7 @@ declare namespace egret.gui {
          * 获得容器中的子对象数
          * @member egret.gui.Group#numElements
          */
-        numElements: number;
+        readonly numElements: number;
         /**
          * 返回指定索引处的可视元素
          * @method egret.gui.Group#getElementAt
@@ -3367,7 +3367,7 @@ declare namespace egret.gui {
          * 返回此效果的总持续时间。
          * @member egret.gui.CompositeEffect#compositeDuration
          */
-        compositeDuration: number;
+        readonly compositeDuration: number;
         createInstance(target?: any): IEffectInstance;
         createInstances(targets?: any[]): any[];
         _initInstance(instance: IEffectInstance): void;
@@ -3927,7 +3927,7 @@ declare namespace egret.gui {
          * 下拉列表是否已经已打开
          * @member egret.gui.DropDownListBase#isDropDownOpen
          */
-        isDropDownOpen: boolean;
+        readonly isDropDownOpen: boolean;
         private _userProposedSelectedIndex;
         /**
          * 处理对组件设置的属性
@@ -4138,8 +4138,8 @@ declare namespace egret.gui {
          * @member egret.gui.Skin#measuredHeight
          */
         measuredHeight: number;
-        preferredWidth: number;
-        preferredHeight: number;
+        readonly preferredWidth: number;
+        readonly preferredHeight: number;
         private _initialized;
         /**
          * 创建子项,子类覆盖此方法以完成组件子项的初始化操作，
@@ -4174,7 +4174,7 @@ declare namespace egret.gui {
         /**
          * @member egret.gui.Skin#numElements
          */
-        numElements: number;
+        readonly numElements: number;
         /**
          * 如果存在视域，且传入的索引为 0，则返回该视域
          * @method egret.gui.Skin#getElementAt
@@ -4487,18 +4487,18 @@ declare namespace egret.gui {
         /**
          * @inheritDoc
          */
-        _actualDuration: number;
+        readonly _actualDuration: number;
         private _playheadTime;
         /**
          * @inheritDoc
          */
-        playheadTime: number;
+        readonly playheadTime: number;
         _setPlayheadTime(value: number): void;
         _childSets: any[];
         /**
          * 不含重复次数的持续时间
          */
-        _durationWithoutRepeat: number;
+        readonly _durationWithoutRepeat: number;
         _endEffectCalled: boolean;
         _timerAnimation: Animation;
         /**
@@ -4929,13 +4929,13 @@ declare namespace egret.gui {
         /**
          * @inheritDoc
          */
-        contentWidth: number;
+        readonly contentWidth: number;
         private setContentWidth(value);
         private _contentHeight;
         /**
          * @inheritDoc
          */
-        contentHeight: number;
+        readonly contentHeight: number;
         private setContentHeight(value);
         private _horizontalScrollPosition;
         /**
@@ -4989,15 +4989,15 @@ declare namespace egret.gui {
         /**
          * @inheritDoc
          */
-        selectionBeginIndex: number;
+        readonly selectionBeginIndex: number;
         /**
          * @inheritDoc
          */
-        selectionEndIndex: number;
+        readonly selectionEndIndex: number;
         /**
          * @inheritDoc
          */
-        caretIndex: number;
+        readonly caretIndex: number;
         /**
          * @inheritDoc
          */
@@ -5174,7 +5174,7 @@ declare namespace egret.gui {
          * 解析source得到的对象，通常为显示对象或Texture。
          * @member egret.gui.UIAsset#content
          */
-        content: any;
+        readonly content: any;
         private createChildrenCalled;
         /**
          * 创建该容器的子元素对象
@@ -5373,7 +5373,7 @@ declare namespace egret.gui {
         /**
          * @member egret.gui.ObjectCollection#length
          */
-        length: number;
+        readonly length: number;
         /**
          * @method egret.gui.ObjectCollection#getItemAt
          * @param index {number}
@@ -5544,7 +5544,7 @@ declare namespace egret.gui {
          * 子项数量
          * @member egret.gui.ViewStack#length
          */
-        length: number;
+        readonly length: number;
         /**
          * @param index {number}
          * @returns {any}
@@ -6121,7 +6121,7 @@ declare namespace egret.gui {
          * 下拉列表已经打开的标志
          * @member egret.gui.DropDownController#isOpen
          */
-        isOpen: boolean;
+        readonly isOpen: boolean;
         private _closeOnResize;
         /**
          * 如果为 true，则在调整舞台大小时会关闭下拉列表。
@@ -8009,7 +8009,7 @@ declare namespace egret.gui {
          * 舞台引用，当第一个UIComponent添加到舞台时此属性被自动赋值
          * @member egret.gui.UIGlobals.stage
          */
-        static stage: Stage;
+        static readonly stage: Stage;
         /**
          * 已经初始化完成标志
          */
@@ -8031,7 +8031,7 @@ declare namespace egret.gui {
          * 顶级应用容器
          * @member egret.gui.UIGlobals.uiStage
          */
-        static uiStage: IUIStage;
+        static readonly uiStage: IUIStage;
     }
 }
 declare namespace egret.gui {
@@ -8058,7 +8058,7 @@ declare namespace egret.gui {
          * 容器上边界属性
          */
         private upperBoundReference;
-        numElements: number;
+        readonly numElements: number;
         private raw_getElementAt;
         private raw_addElementAt;
         private raw_getElementIndex;
@@ -8211,19 +8211,19 @@ declare namespace egret.gui {
          * 弹出窗口层容器。
          * @member egret.gui.UIStage#popUpContainer
          */
-        popUpContainer: IContainer;
+        readonly popUpContainer: IContainer;
         private _toolTipContainer;
         /**
          * 工具提示层容器。
          * @member egret.gui.UIStage#toolTipContainer
          */
-        toolTipContainer: IContainer;
+        readonly toolTipContainer: IContainer;
         private _cursorContainer;
         /**
          * 鼠标样式层容器。
          * @member egret.gui.UIStage#cursorContainer
          */
-        cursorContainer: IContainer;
+        readonly cursorContainer: IContainer;
         private _noTopMostIndex;
         /**
          * 弹出窗口层的起始索引(包括)
@@ -8402,7 +8402,7 @@ declare namespace egret.gui {
          * 组内单选按钮数量
          * @member egret.gui.RadioButtonGroup#numRadioButtons
          */
-        numRadioButtons: number;
+        readonly numRadioButtons: number;
         private _selectedValue;
         /**
          * 当前被选中的单选按钮的value属性值。注意，此属性仅当目标RadioButton在显示列表时有效。
@@ -8473,7 +8473,7 @@ declare namespace egret.gui {
          * @private
          */
         $graphics: Graphics;
-        graphics: Graphics;
+        readonly graphics: Graphics;
         $hitTest(stageX: number, stageY: number): DisplayObject;
         /**
          * @private
@@ -8545,7 +8545,7 @@ declare namespace egret.gui {
          * @private
          */
         private static _skinParts;
-        skinParts: string[];
+        readonly skinParts: string[];
         private stateMap;
         private backgroundAsset;
         labelDisplay: Label;
@@ -8688,7 +8688,7 @@ declare namespace egret.gui {
         /**
          * @member egret.gui.Scroller#numElements
          */
-        numElements: number;
+        readonly numElements: number;
         /**
          * 抛出索引越界异常
          */
@@ -9107,7 +9107,7 @@ declare namespace egret.gui {
          * @method egret.gui.Parallel#constructor
          */
         constructor(target?: any);
-        compositeDuration: number;
+        readonly compositeDuration: number;
     }
 }
 declare namespace egret.gui {
@@ -9199,7 +9199,7 @@ declare namespace egret.gui {
          * @method egret.gui.Sequence#constructor
          */
         constructor(target?: any);
-        compositeDuration: number;
+        readonly compositeDuration: number;
     }
 }
 declare namespace egret.gui {
@@ -9306,7 +9306,7 @@ declare namespace egret.gui {
          * 除非已播放动画且尚未停止（以编程方式或自动）或暂停它，否则该值为 false。
          * @member egret.gui.Animation#isPlaying
          */
-        isPlaying: boolean;
+        readonly isPlaying: boolean;
         /**
          * 动画的时长（以毫秒为单位），不计算由 repeatCount 属性定义的任何重复。
          * @member egret.gui.Animation#duration
@@ -9354,14 +9354,14 @@ declare namespace egret.gui {
          * 使用 seek() 方法更改动画的位置。
          * @member egret.gui.Animation#cycleTime
          */
-        cycleTime: number;
+        readonly cycleTime: number;
         private _cycleFraction;
         /**
          * 在已应用缓动之后，在动画中已过去的当前部分。
          * 此值在 0 和 1 之间。动画的“周期”被定义为动画的单一重复，其中 repeatCount 属性用于定义将播放的周期数。
          * @member egret.gui.Animation#cycleFraction
          */
-        cycleFraction: number;
+        readonly cycleFraction: number;
         private _playReversed;
         /**
          * 如果为 true，则反向播放动画。
@@ -9439,7 +9439,7 @@ declare namespace egret.gui {
         private static startTime;
         private static _currentTime;
         private static pulse();
-        private static currentTime;
+        private static readonly currentTime;
     }
 }
 declare namespace egret.gui {
@@ -9532,7 +9532,7 @@ declare namespace egret.gui {
         /**
          * @member egret.gui.ArrayCollection#length
          */
-        length: number;
+        readonly length: number;
         /**
          * 向列表末尾添加指定项目。等效于 addItemAt(item, length)。
          * @method egret.gui.ArrayCollection#addItem
@@ -10064,7 +10064,7 @@ declare namespace egret.gui {
          * 获得对象容器的子对象总数
          * @member egret.gui.DataGroup#numElements
          */
-        numElements: number;
+        readonly numElements: number;
         /**
          * 将一个 DisplayObject 子实例添加到该 DisplayObjectContainer 实例中
          * @method egret.gui.DataGroup#addChild
@@ -10249,7 +10249,7 @@ declare namespace egret.gui {
         /**
          * @inheritDoc
          */
-        _durationWithoutRepeat: number;
+        readonly _durationWithoutRepeat: number;
         /**
          * @inheritDoc
          */
@@ -10312,7 +10312,7 @@ declare namespace egret.gui {
         /**
          * @inheritDoc
          */
-        _durationWithoutRepeat: number;
+        readonly _durationWithoutRepeat: number;
         /**
          * @inheritDoc
          */
@@ -11559,7 +11559,7 @@ declare namespace egret.gui {
          * 实际列计数。
          * @member egret.gui.TileLayout#columnCount
          */
-        columnCount: number;
+        readonly columnCount: number;
         private _requestedColumnCount;
         /**
          * 要显示的列数。设置为0表示自动确定列计数,默认值0。<br/>
@@ -11572,7 +11572,7 @@ declare namespace egret.gui {
          * 实际行计数。
          * @member egret.gui.TileLayout#rowCount
          */
-        rowCount: number;
+        readonly rowCount: number;
         private _requestedRowCount;
         /**
          * 要显示的行数。设置为0表示自动确定行计数,默认值0。<br/>
@@ -12229,7 +12229,7 @@ declare namespace egret.gui {
          * 已经弹出的窗口列表
          * @member egret.gui.PopUpManager.popUpList
          */
-        static popUpList: any[];
+        static readonly popUpList: any[];
         /**
          * 添加事件监听,参考PopUpEvent定义的常量。
          * @method egret.gui.PopUpManager.addEventListener
@@ -12270,7 +12270,7 @@ declare namespace egret.gui {
          * 已经弹出的窗口列表
          * @member egret.gui.PopUpManagerImpl#popUpList
          */
-        popUpList: any[];
+        readonly popUpList: any[];
         /**
          * 模态窗口列表
          */

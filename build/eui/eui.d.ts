@@ -1012,12 +1012,12 @@ declare namespace eui.sys {
          * @private
          * 外部显式指定的宽度
          */
-        explicitWidth: number;
+        readonly explicitWidth: number;
         /**
          * @private
          * 外部显式指定的高度
          */
-        explicitHeight: number;
+        readonly explicitHeight: number;
         /**
          * @private
          * 组件宽度,默认值为egret.NaN,设置为NaN将使用组件的measure()方法自动计算尺寸
@@ -1568,7 +1568,7 @@ declare namespace eui {
          * @platform Web,Native
          * @language zh_CN
          */
-        skin: Skin;
+        readonly skin: Skin;
         /**
          * Setter for the skin instance.
          * @version Egret 2.4
@@ -2189,14 +2189,14 @@ declare namespace eui {
          * @version eui 1.0
          * @platform Web,Native
          */
-        contentWidth: number;
+        readonly contentWidth: number;
         /**
          * @copy eui.IViewport#contentHeight
          * @version Egret 2.4
          * @version eui 1.0
          * @platform Web,Native
          */
-        contentHeight: number;
+        readonly contentHeight: number;
         /**
          *
          * Sets the <code>contentWidth</code> and <code>contentHeight</code>
@@ -2273,7 +2273,7 @@ declare namespace eui {
          * @platform Web,Native
          * @language zh_CN
          */
-        numElements: number;
+        readonly numElements: number;
         /**
          * Returns the layout element at the specified index.
          *
@@ -3322,7 +3322,7 @@ declare namespace eui {
          * @version eui 1.0
          * @platform Web,Native
          */
-        numElements: number;
+        readonly numElements: number;
         /**
          * Adds the itemRenderer for the specified dataProvider item to this DataGroup.
          *
@@ -8053,7 +8053,7 @@ declare namespace eui {
          * @platform Web,Native
          * @language zh_CN
          */
-        numRadioButtons: number;
+        readonly numRadioButtons: number;
         /**
          * @private
          */
@@ -8171,7 +8171,7 @@ declare namespace eui {
          * @private
          */
         $graphics: egret.Graphics;
-        graphics: egret.Graphics;
+        readonly graphics: egret.Graphics;
         /**
          * @private
          */
@@ -9664,7 +9664,7 @@ declare namespace eui {
          * @platform Web,Native
          * @language zh_CN
          */
-        layout: LayoutBase;
+        readonly layout: LayoutBase;
         /**
          * @private
          */
@@ -9773,7 +9773,7 @@ declare namespace eui {
          * @platform Web,Native
          * @language zh_CN
          */
-        length: number;
+        readonly length: number;
         /**
          * @inheritDoc
          *
@@ -13673,7 +13673,7 @@ declare namespace eui {
          * @platform Web,Native
          * @language zh_CN
          */
-        columnCount: number;
+        readonly columnCount: number;
         /**
          * @private
          */
@@ -13728,7 +13728,7 @@ declare namespace eui {
          * @platform Web,Native
          * @language zh_CN
          */
-        rowCount: number;
+        readonly rowCount: number;
         /**
          * @private
          */
@@ -14497,7 +14497,7 @@ declare namespace eui {
          * @version eui 1.0
          * @platform Web,Native
          */
-        length: number;
+        readonly length: number;
         /**
          * Adds the specified item to the end of the list.
          * Equivalent to <code>addItemAt(item, length)</code>.

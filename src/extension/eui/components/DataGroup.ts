@@ -1049,6 +1049,9 @@ namespace eui {
             let values = this.$DataGroup;
             values[Keys.renderersBeingUpdated] = true;
             renderer.itemIndex = itemIndex;
+            if(renderer.parent == this) {
+                this.setChildIndex(renderer, itemIndex);
+            }
             renderer.data = data;
             values[Keys.renderersBeingUpdated] = false;
             return renderer;
