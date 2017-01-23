@@ -35,7 +35,6 @@ var __generator = (this && this.__generator) || function (thisArg, body) {
     }
 };
 var utils = require("../lib/utils");
-var NativeProject = require("../actions/NativeProject");
 var projectAction = require("../actions/Project");
 var FileUtil = require("../lib/FileUtil");
 var doT = require("../lib/doT");
@@ -78,8 +77,6 @@ function compileTemplate(projectConfig) {
         content = doT.template(content)(projectConfig);
         FileUtil.save(file, content);
     });
-    if (platform == 'native')
-        NativeProject.copyNativeTemplate();
 }
 function updateEgretProperties(modules) {
     var propFile = FileUtil.joinPath(egret.args.projectDir, "egretProperties.json");

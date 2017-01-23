@@ -51,8 +51,6 @@ function compileTemplate(projectConfig: egret.EgretProjectConfig) {
         FileUtil.save(file, content);
     });
 
-    if (platform == 'native')
-        NativeProject.copyNativeTemplate();
 }
 
 function updateEgretProperties(modules: egret.EgretModule[]) {
