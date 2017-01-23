@@ -242,7 +242,7 @@ function getSDKInstallDir() {
 var MultiTaskManager = (function (_super) {
     __extends(MultiTaskManager, _super);
     function MultiTaskManager() {
-        var _this = _super.apply(this, arguments) || this;
+        var _this = _super !== null && _super.apply(this, arguments) || this;
         _this.oneTaskFinishedEventName = "oneTaskFinished";
         _this.allTasksFinishedEventName = "allTasksFinished";
         _this.taskList = [];
