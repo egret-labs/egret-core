@@ -9,7 +9,7 @@ import CompileTemplate = require('../actions/CompileTemplate');
 
 class Quit implements egret.Command {
     execute(): number {
-        service.execCommand({
+        service.client.execCommand({
             path: egret.args.projectDir,
             command: "shutdown",
             option: egret.args

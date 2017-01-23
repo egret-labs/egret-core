@@ -16,7 +16,7 @@ class Clean implements egret.Command {
         utils.checkEgret();
 
         var options = egret.args;
-        service.shutdown(options.projectDir);
+        service.client.closeServer(options.projectDir);
         utils.clean(options.debugDir);
 
         //刷新libs 中 modules 文件

@@ -29,7 +29,7 @@ class Run implements egret.Command {
             process.exit(exitCode);
         }
         if (egret.args.platform == undefined || egret.args.platform == 'web') {
-            utils.getAvailablePort(port=> this.onGotPort(port), egret.args.port);
+            utils.getAvailablePort(port => this.onGotPort(port), egret.args.port);
         }
         else {
             process.exit(0);
@@ -46,7 +46,7 @@ class Run implements egret.Command {
         server.startServer(egret.args, this.wrapByParams(egret.args.startUrl));
         if (egret.args.serverOnly) {
             console.log("Url:" + this.wrapByParams(egret.args.startUrl));
-        }else{
+        } else {
             console.log('\n');
             console.log("    " + utils.tr(10013, ''));
             console.log('\n');
@@ -66,12 +66,12 @@ class Run implements egret.Command {
         }
     }
 
-    private watchFiles(dir:string) {
+    private watchFiles(dir: string) {
 
-        watch.createMonitor(dir, { persistent: true, interval: 2007, filter: (f, stat) => !f.match(/\.g(\.d)?\.ts/) }, m=> {
-            m.on("created", (f) => this.sendBuildCMD(f,"added"))
-                .on("removed", (f) => this.sendBuildCMD(f,"removed"))
-                .on("changed", (f) => this.sendBuildCMD(f,"modified"));
+        watch.createMonitor(dir, { persistent: true, interval: 2007, filter: (f, stat) => !f.match(/\.g(\.d)?\.ts/) }, m => {
+            m.on("created", (f) => this.sendBuildCMD(f, "added"))
+                .on("removed", (f) => this.sendBuildCMD(f, "removed"))
+                .on("changed", (f) => this.sendBuildCMD(f, "modified"));
         });
         /*//监听build文件夹的变化
         watch.createMonitor(path.join(egret.root,'build'), { persistent: true, interval: 2007, filter: function (f, stat) {
@@ -81,32 +81,34 @@ class Run implements egret.Command {
                 .on("removed", (f) => this.shutDown(f, "removed"))
                 .on("changed", (f) => this.shutDown(f, "modified"));
         });*/
-        watch.createMonitor(path.dirname(dir), { persistent: true, interval: 2007, filter: (f, stat)=>{
-            if(path.basename(f)=="egretProperties.json"){
-                this.initVersion = this.getVersion(f);
-                return true;
-            }else{
-                return false;
+        watch.createMonitor(path.dirname(dir), {
+            persistent: true, interval: 2007, filter: (f, stat) => {
+                if (path.basename(f) == "egretProperties.json") {
+                    this.initVersion = this.getVersion(f);
+                    return true;
+                } else {
+                    return false;
+                }
             }
-        } }, function (m) {
+        }, function (m) {
             m.on("created", (f) => this.shutDown(f, "added"))
                 .on("removed", (f) => this.shutDown(f, "removed"))
                 .on("changed", (f) => this.shutDown(f, "modified"));
         });
     }
-    private shutDown(file: string, type: string){
+    private shutDown(file: string, type: string) {
         file = FileUtil.escapePath(file);
         var isShutdown = false;
-        if(path.basename(file) == 'egretProperties.json'){
+        if (path.basename(file) == 'egretProperties.json') {
             var nowVersion = this.getVersion(file);
-            if(this.initVersion != nowVersion){
+            if (this.initVersion != nowVersion) {
                 isShutdown = true;
             }
-        }else{
+        } else {
             isShutdown = true;
         }
-        if(isShutdown){
-            service.execCommand({
+        if (isShutdown) {
+            service.client.execCommand({
                 path: egret.args.projectDir,
                 command: "shutdown",
                 option: egret.args
@@ -116,43 +118,43 @@ class Run implements egret.Command {
     private sendBuildCMD(file: string, type: string) {
         file = FileUtil.escapePath(file);
         egret.args[type] = [file];
-        service.execCommand({ command: "build", path: egret.args.projectDir, option: egret.args }, (cmd: egret.ServiceCommandResult) => {
+        service.client.execCommand({ command: "build", path: egret.args.projectDir, option: egret.args }, (cmd: egret.ServiceCommandResult) => {
             if (!cmd.exitCode)
-                console.log('    ' +utils.tr(10011));
+                console.log('    ' + utils.tr(10011));
             else
-                console.log('    ' +utils.tr(10014),cmd.exitCode);
+                console.log('    ' + utils.tr(10014), cmd.exitCode);
             if (cmd.messages) {
-                cmd.messages.forEach(m=> console.log(m));
+                cmd.messages.forEach(m => console.log(m));
             }
         });
     }
-    private getVersion(filePath):string{
+    private getVersion(filePath): string {
         var jsstr = FileUtil.read(filePath);
-        var js  = JSON.parse(jsstr);
+        var js = JSON.parse(jsstr);
         return js["egret_version"];
     }
 
-    __tempP:string;
-    private wrapByParams(url:string):string{
-        if(!this.__tempP){
+    __tempP: string;
+    private wrapByParams(url: string): string {
+        if (!this.__tempP) {
             this.__tempP = this.genParams();
         }
-        return url+this.__tempP;
+        return url + this.__tempP;
     }
 
-    private genParams():string{
-        var ret:string = "";
-        var propertyFilePath = FileUtil.joinPath(egret.args.projectDir,"egretProperties.json");
-        if(FileUtil.exists(propertyFilePath)){
+    private genParams(): string {
+        var ret: string = "";
+        var propertyFilePath = FileUtil.joinPath(egret.args.projectDir, "egretProperties.json");
+        if (FileUtil.exists(propertyFilePath)) {
             var urlParams = JSON.parse(FileUtil.read(propertyFilePath)).urlParams;
-            if(urlParams){
-                var hasParams:boolean = false;
-                for(let key in urlParams){
+            if (urlParams) {
+                var hasParams: boolean = false;
+                for (let key in urlParams) {
                     hasParams = true;
-                    ret += key+"="+urlParams[key]+"&";
+                    ret += key + "=" + urlParams[key] + "&";
                 }
-                if(hasParams){
-                    ret = "?"+ret.substr(0,ret.length -1);
+                if (hasParams) {
+                    ret = "?" + ret.substr(0, ret.length - 1);
                 }
             }
         }

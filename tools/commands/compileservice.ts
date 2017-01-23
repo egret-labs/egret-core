@@ -25,7 +25,7 @@ class AutoCompileCommand implements egret.Command {
             return;
         }
 
-        this._request = service.execCommand({
+        this._request = service.client.execCommand({
             command: "init",
             path: egret.args.projectDir,
             option: egret.args
@@ -131,8 +131,8 @@ class AutoCompileCommand implements egret.Command {
             if (this.shouldSkip(f.fileName)) {
                 return;
             }
-            if (/\.ts$/.test(f.fileName)){
-                if(f.type == "added") {
+            if (/\.ts$/.test(f.fileName)) {
+                if (f.type == "added") {
                     hasAddedFile = true;
                 }
                 codes.push(f);
@@ -142,7 +142,7 @@ class AutoCompileCommand implements egret.Command {
             else
                 others.push(f);
         });
-        if(hasAddedFile) {
+        if (hasAddedFile) {
             return this.buildProject();
         }
         if (others.length > 0) {
@@ -235,7 +235,7 @@ class AutoCompileCommand implements egret.Command {
             temp = egret.args.templateDir,
             start = "index.html";
 
-            console.log (fileNames)
+        console.log(fileNames)
         fileNames.forEach(f => {
             var fileName = f.fileName;
             // if (fileName == tsconfig) {  // handle tsconfig.json

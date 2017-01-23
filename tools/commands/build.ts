@@ -16,7 +16,7 @@ var timeBuildStart: number = (new Date()).getTime();
 class Build implements egret.Command {
     execute(callback?: (exitCode: number) => void): number {
         callback = callback || defaultBuildCallback;
-    
+
         var options = egret.args;
         let packageJsonContent
         if (packageJsonContent = FileUtil.read(project.utils.getFilePath("package.json"))) {
@@ -34,7 +34,7 @@ class Build implements egret.Command {
             CompileTemplate.copyToLibs();
         }
 
-        service.execCommand({
+        service.client.execCommand({
             path: egret.args.projectDir,
             command: "build",
             option: egret.args
@@ -45,11 +45,11 @@ class Build implements egret.Command {
     private buildLib(packageJson: project.Package_JSON): void {
         var options = egret.args;
         var libFiles = FileUtil.search(FileUtil.joinPath(options.projectDir, "libs"), "d.ts");
-        var outDir ="bin";
+        var outDir = "bin";
         var compiler = new Compiler.Compiler();
         utils.clean(FileUtil.joinPath(options.projectDir, outDir));
         for (let m of packageJson.modules) {
-            var files:string[];
+            var files: string[];
             var length = m.files.length;
             if (length > 0) {
                 files = m.files
@@ -71,10 +71,10 @@ class Build implements egret.Command {
                 hasTmpTsFile = true;
             }
 
-            let compilerOptions:ts.CompilerOptions = {
+            let compilerOptions: ts.CompilerOptions = {
                 target: ts.ScriptTarget.ES5,
                 out: FileUtil.joinPath(options.projectDir, outDir, m.name, m.name + ".js"),
-                declaration:true
+                declaration: true
             };
             var compileFiles = libFiles.concat(files);
             if (hasTmpTsFile) {

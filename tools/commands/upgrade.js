@@ -68,7 +68,7 @@ var UpgradeCommand = (function () {
                         _a.sent();
                         modify.save(upgradeConfigArr.pop().v);
                         globals.log(1702);
-                        return [4 /*yield*/, service.shutdown(Project.utils.getProjectRoot())];
+                        return [4 /*yield*/, service.client.closeServer(Project.utils.getProjectRoot())];
                     case 3:
                         _a.sent();
                         globals.exit(0);

@@ -23,7 +23,7 @@ var AutoCompileCommand = (function () {
             process.exit(0);
             return;
         }
-        this._request = service.execCommand({
+        this._request = service.client.execCommand({
             command: "init",
             path: egret.args.projectDir,
             option: egret.args

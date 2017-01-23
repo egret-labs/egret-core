@@ -29,7 +29,7 @@ var Build = (function () {
         if (!FileUtil.exists(FileUtil.joinPath(options.projectDir, 'libs/modules/egret/'))) {
             CompileTemplate.copyToLibs();
         }
-        service.execCommand({
+        service.client.execCommand({
             path: egret.args.projectDir,
             command: "build",
             option: egret.args
