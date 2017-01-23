@@ -31818,6 +31818,8 @@ declare module egret3d {
         onStop(): void;
         onResize(): void;
     }
+    interface Stage3D extends Egret3DCanvas {
+    }
     let Stage3D: typeof Egret3DCanvas;
 }
 declare module egret3d {
