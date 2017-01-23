@@ -1,6 +1,6 @@
 Egret Engine
 ================================================
-Current Version: v4.0.0
+Current Version: v4.0.1
 
 
 Developed by Egret Technology, Egret Engine 4.0 includes a newly built 3D engine and a 2D engine created based on HTML5. With its robust cross-platform operability and commitment to solving the performance and fragmentation problems of HTML5 APP and games, Egret Engine 4.0 will perfectly meet developers’ needs. We appreciate every suggestion and please send it to Egret team if you have any.
@@ -70,6 +70,7 @@ Document & API
 * 访问 [这里](http://developer.egret.com/cn/apidoc/) 获取 API 文档
 * 访问 [这里](https://github.com/egret-team/egret-examples) 获取示例项目
 * 访问 [这里](/docs/cn/release-note/) 获取发布说明
+
 第三方库
 -------------------------
 * Egret 团队针对引擎封装维护了一些功能强大的第三方库，MD5，手势，粒子系统，物理系统等。访问[这里](https://github.com/egret-labs/egret-game-library)

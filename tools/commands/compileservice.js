@@ -88,17 +88,25 @@ var AutoCompileCommand = (function () {
         var others = [];
         filesChanged = filesChanged || this.dirState.checkChanges();
         //console.log("filesChanged:", this.dirState);
+        var hasAddedFile = false;
         filesChanged.forEach(function (f) {
             if (_this.shouldSkip(f.fileName)) {
                 return;
             }
-            if (/\.ts$/.test(f.fileName))
+            if (/\.ts$/.test(f.fileName)) {
+                if (f.type == "added") {
+                    hasAddedFile = true;
+                }
                 codes.push(f);
+            }
             else if (/\.exml$/.test(f.fileName))
                 exmls.push(f);
             else
                 others.push(f);
         });
+        if (hasAddedFile) {
+            return this.buildProject();
+        }
         if (others.length > 0) {
             var fileName;
             for (var i = 0, len = others.length; i < len; i++) {
