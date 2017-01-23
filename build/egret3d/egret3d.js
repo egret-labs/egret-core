@@ -40297,7 +40297,8 @@ var egret3d;
             if (this._mapConfigParser.engineVersion == undefined) {
                 console.log("the resource engine Version is old , but the current engine Version is " + egret3d.Egret3DPolicy.engineVersion);
             }
-            if (this._mapConfigParser.engineVersion != egret3d.Egret3DPolicy.engineVersion) {
+            var index = egret3d.Egret3DPolicy.exportToolsVersion.indexOf(this._mapConfigParser.engineVersion);
+            if (index == -1) {
                 console.log("the resource engine Version is " + this._mapConfigParser.engineVersion + ", but the current engine Version is " + egret3d.Egret3DPolicy.engineVersion);
             }
             this._versionParser = egret3d.UnitParserUtils.jsonVersion(this._mapConfigParser.version, this._data, this._mapConfigParser);
@@ -64767,6 +64768,7 @@ var egret3d;
         return Egret3DCanvas;
     }(egret3d.EventDispatcher));
     egret3d.Egret3DCanvas = Egret3DCanvas;
+    egret3d.Stage3D = Egret3DCanvas;
 })(egret3d || (egret3d = {}));
 var egret3d;
 (function (egret3d) {
@@ -64779,6 +64781,7 @@ var egret3d;
         function Egret3DPolicy() {
         }
         Egret3DPolicy.engineVersion = "4.0.0";
+        Egret3DPolicy.exportToolsVersion = ["4.0.0", "3.2.6"];
         Egret3DPolicy.useParticle = true;
         Egret3DPolicy.useAnimEffect = true;
         Egret3DPolicy.useEffect = true;

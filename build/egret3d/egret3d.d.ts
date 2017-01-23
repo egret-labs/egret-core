@@ -31818,6 +31818,7 @@ declare module egret3d {
         onStop(): void;
         onResize(): void;
     }
+    let Stage3D: typeof Egret3DCanvas;
 }
 declare module egret3d {
     /**
@@ -31827,6 +31828,7 @@ declare module egret3d {
      */
     class Egret3DPolicy {
         static engineVersion: string;
+        static exportToolsVersion: string[];
         static useParticle: boolean;
         static useAnimEffect: boolean;
         static useEffect: boolean;
