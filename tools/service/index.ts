@@ -117,9 +117,8 @@ export function execCommand(command: egret.ServiceCommand, callback?: Function, 
         setTimeout(() => execCommand(command, callback), 200);
     });
 
-    ss.send(command);
-
     ss.on('message', cmd => callback && callback(cmd, ss));
+    ss.send(command);
     return ss;
 }
 

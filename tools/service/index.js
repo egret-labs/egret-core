@@ -104,8 +104,8 @@ function execCommand(command, callback, startServer) {
         }
         setTimeout(function () { return execCommand(command, callback); }, 200);
     });
-    ss.send(command);
     ss.on('message', function (cmd) { return callback && callback(cmd, ss); });
+    ss.send(command);
     return ss;
 }
 exports.execCommand = execCommand;
