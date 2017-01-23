@@ -171,6 +171,10 @@ export namespace client {
         return ss;
     }
 
+    export function requestBuild() {
+
+    }
+
 
     export function closeServer(path) {
         return new Promise((reslove, reject) => {

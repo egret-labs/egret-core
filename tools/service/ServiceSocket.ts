@@ -1,13 +1,8 @@
-
-/// <reference path="../lib/types.d.ts" />
-
-
 import net = require("net");
 import events = require("events");
 
 class ServiceSocket extends events.EventEmitter {
     socket: net.Socket;
-    larkMessageParser: LarkMessageBody = new LarkMessageBody();
     constructor(socket: net.Socket) {
         super();
         this.socket = socket;
@@ -18,7 +13,7 @@ class ServiceSocket extends events.EventEmitter {
     }
 
     send(object: any) {
-        var msg = LarkMessageBody.toMessage(object);
+        var msg = MessageBody.stringify(object);
         try {
             this.socket.write(msg);
         }
@@ -33,7 +28,8 @@ class ServiceSocket extends events.EventEmitter {
     }
 
     private onData(text: string) {
-        this.larkMessageParser.pushData(text, data => this.onGotMessage(data));
+        let data = MessageBody.parse(text);
+        this.onGotMessage(data)
     }
 
     private onGotMessage(data: any) {
@@ -43,37 +39,32 @@ class ServiceSocket extends events.EventEmitter {
 
 export = ServiceSocket;
 
-class LarkMessageBody {
-    static LARKHEADER = "LARK-MSG";
-    private length: number;
-    private text: string;
 
-    public data: any;
+namespace MessageBody {
 
-    static toMessage(data) {
+    const HEADER = "HEADER";
+
+    export function stringify(data) {
         var json = JSON.stringify(data);
         var length = json.length;
-        var header = LarkMessageBody.LARKHEADER + ":" + length + "\n";
+        var header = HEADER + ":" + length + "\n";
         var msg = header + json;
         return msg;
     }
 
-    pushData(text: string, msgCallback: Function) {
-        if (text.indexOf(LarkMessageBody.LARKHEADER) == 0) {
+    export function parse(text: string) {
+        let data = null;
+        if (text.indexOf(HEADER) == 0) {
             var lines = text.split('\n');
             var header = lines[0];
             var lengthStr = /\d+/.exec(header)[0];
-            this.length = parseInt(lengthStr);
-            this.text = lines[1];
-            this.data = null;
+            let telength = parseInt(lengthStr);
+            text = lines[1];
+            var length = text.length;
+            if (length == telength) {
+                data = JSON.parse(text);
+            }
         }
-        else
-            this.text += text;
-
-        var length = this.text.length;
-        if (length == this.length) {
-            this.data = JSON.parse(this.text);
-            msgCallback(this.data);
-        }
+        return data;
     }
 }

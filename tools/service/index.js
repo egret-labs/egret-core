@@ -145,6 +145,9 @@ var client;
         return ss;
     }
     client_1.execCommand = execCommand;
+    function requestBuild() {
+    }
+    client_1.requestBuild = requestBuild;
     function closeServer(path) {
         return new Promise(function (reslove, reject) {
             execCommand({
