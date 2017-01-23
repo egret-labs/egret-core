@@ -23,10 +23,9 @@ class GameScene {
     private mesh: egret3d.Mesh;
 
     constructor(context3d: egret3d.Egret3DCanvas) {
-
-        var view = new egret3d.View3D(0, 0, context3d.width, context3d.height);
+        var view = new egret3d.View3D(0, (context3d.height - context3d.width) / 2, context3d.width, context3d.width);
         view.camera3D.lookAt(new egret3d.Vector3D(0, 1000, -1000), new egret3d.Vector3D(0, 0, 0));
-        view.backColor = 0xffcccccc;
+        view.backColor = 0xff181818;
 
         context3d.addView3D(view);
         this.view = view;
