@@ -4,7 +4,6 @@ var utils = require("../lib/utils");
 var fs = require("fs");
 var url = require("url");
 var path = require("path");
-var PORT = 3000;
 var mine = {
     "css": "text/css",
     "gif": "image/gif",
@@ -61,6 +60,7 @@ function startServer(args, startupUrl) {
             }
         });
     });
+    var PORT = egret.args.port;
     server.listen(PORT);
     console.log("Server running at port: " + PORT + ".");
     if (!args.serverOnly) {

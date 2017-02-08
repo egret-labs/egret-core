@@ -9,7 +9,6 @@ import url = require('url');
 import path = require('path');
 
 
-var PORT = 3000;
 var mine = {
     "css": "text/css",
     "gif": "image/gif",
@@ -67,6 +66,7 @@ export function startServer(args: egret.ToolArgs, startupUrl: string) {
             }
         });
     });
+    let PORT = egret.args.port;
     server.listen(PORT);
     console.log("Server running at port: " + PORT + ".");
     if (!args.serverOnly) {
