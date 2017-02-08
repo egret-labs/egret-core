@@ -70,7 +70,7 @@ class CreateAppCommand implements egret.Command {
 
         var app_data = this.read_json_from(file.joinPath(template_path, "create_app.json"));
         if (!app_data) {
-            globals.exit(1603);
+            globals.exit(1603, template_path);
         }
 
         var platform = "";

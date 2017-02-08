@@ -99,7 +99,7 @@ locale_strings[1501] = "Unable to start the server, please check the authority o
 //create_app
 locale_strings[1601] = "Please enter a h5 game project name, and mobile platform support library.Example: {color_green}egret create_app [app_name] -f [h5_game_path] -t [template_path] {color_normal} \n If you do not install the latest mobile platform support library,please download from the following address：\nAndroid: http://www.egret-labs.org/download/egret-android-packager-download.html, \niOS:http://www.egret-labs.org/download/egret-ios-packager-download.html";
 locale_strings[1602] = "EgretProperties.json missing or incorrectly formatted.  \n Please upgrade egret-core to the latest version from http://www.egret-labs.org/download/egret-download.html";
-locale_strings[1603] = "create_app.json is missing.\n Please download the latest mobile platform support library from the following address \n Android:  http://www.egret-labs.org/download/egret-android-packager-download.html, \n\tiOS:  http://www.egret-labs.org/download/egret-ios-packager-download.html";
+locale_strings[1603] = "create_app.json is missing in {color_red}{0}{color_normal}.\nPlease download the latest mobile platform support library from the following address \nAndroid:  http://www.egret-labs.org/download/egret-android-packager-download.html\niOS:  http://www.egret-labs.org/download/egret-ios-packager-download.html";
 locale_strings[1604] = "Egret build command execution fails";
 locale_strings[1605] = "Mobile platform project directory cannot be the same one with html5 project directory, please modify the mobile platform project directory.";
 locale_strings[1606] = "Created, total time: {0} second";
