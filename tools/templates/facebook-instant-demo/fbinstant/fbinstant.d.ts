@@ -1,4 +1,5 @@
 
+
 //Copyright (c) 2014-present, Egret Technology.
 //for fbinstant.2.0.js
 declare class FBInstant {
@@ -14,7 +15,7 @@ declare class FBInstant {
      * SDK 初始化结束会返回一个 Promise 方法
      * 应当在其他 API 使用前调用
      */
-    static initializeAsync(): Promise;
+    static initializeAsync(): Promise<void>;
     /**
      * 通知平台资源加载的百分比
      * @param percentage 0-100
@@ -24,7 +25,7 @@ declare class FBInstant {
      * 游戏已完成加载资源，用户点击了开始游戏的按钮
      * 返回一个 Promise 方法
      */
-    static startGameAsync(): Promise;
+    static startGameAsync(): Promise<void>;
     /**
      * 获取用户信息
      */
@@ -47,16 +48,16 @@ declare class FBInstant {
      * 显示平台统一的游戏结束画面
      * 当游戏重新开始的时候，返回一个 Promise 方法。
      */
-    static endGameAsync(): Promise;
+    static endGameAsync(): Promise<void>;
     /**
      * 进行截屏，用户以后可以分享给好友。
      */
-    static takeScreenshotAsync(): Promise;
+    static takeScreenshotAsync(): Promise<void>;
     /**
      * 发送分享给好友的截屏画面。
      * @param base64picture 把截图进行 base64 编码后的字符串
      */
-    static sendScreenshotAsync(base64picture: string): Promise;
+    static sendScreenshotAsync(base64picture: string): Promise<void>;
     /**
      * 遇到错误中止游戏。只有当游戏进入不可恢复的状态时才可被调用。
      * @param e 错误信息
@@ -80,25 +81,12 @@ interface FBPlayer{
      * 取回在FB平台储存的当前用户的数据
      * @param keys 数据的 key 的数组
      */
-    getDataAsync(keys: string[]): Promise;
+    getDataAsync(keys: string[]): Promise<void>;
     /**
      * 把当前用户的数据储存在FB平台上。
      * @param data 包含key-value的数据对象.
      */
-    setDataAsync(data :Object): Promise;
-}
-/**
- * 回调方法
- */
-interface Promise {
-    /**
-     * @param callback 成功后的回调方法
-     */
-    then(callback: Function): Promise;
-    /**
-     * @param callback 捕获失败的回调方法
-     */
-    catch(callback: Function): Promise;
+    setDataAsync(data :Object): Promise<void>;
 }
 /**
  * 当前游戏的来源信息
