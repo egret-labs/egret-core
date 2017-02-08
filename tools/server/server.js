@@ -62,7 +62,7 @@ function startServer(args, startupUrl) {
         });
     });
     server.listen(PORT);
-    console.log("Server runing at port: " + PORT + ".");
+    console.log("Server running at port: " + PORT + ".");
     if (!args.serverOnly) {
         utils.open(startupUrl);
     }

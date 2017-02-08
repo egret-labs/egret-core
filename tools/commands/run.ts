@@ -90,7 +90,7 @@ class Run implements egret.Command {
                     return false;
                 }
             }
-        }, function (m) {
+        }, (m) => {
             m.on("created", (f) => this.shutDown(f, "added"))
                 .on("removed", (f) => this.shutDown(f, "removed"))
                 .on("changed", (f) => this.shutDown(f, "modified"));

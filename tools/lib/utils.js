@@ -243,7 +243,6 @@ function getAvailablePort(callback, port) {
             server.close();
         });
         server.on('close', function () {
-            console.log("Server running at port:", port);
             callback(port);
         });
         server.on('error', function (err) {

@@ -86,7 +86,6 @@ var Run = (function () {
                 }
             }
         }, function (m) {
-            var _this = this;
             m.on("created", function (f) { return _this.shutDown(f, "added"); })
                 .on("removed", function (f) { return _this.shutDown(f, "removed"); })
                 .on("changed", function (f) { return _this.shutDown(f, "modified"); });
