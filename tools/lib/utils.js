@@ -51,7 +51,7 @@ var NoColorOutputReplacements = {
 function formatStdoutString(message) {
     var replacements = ColorOutputReplacements;
     for (var raw in replacements) {
-        var replace = egret.args.ide ? "" : replacements[raw];
+        var replace = (egret.args && egret.args.ide) ? "" : replacements[raw];
         message = message.split(raw).join(replace);
     }
     return message;
