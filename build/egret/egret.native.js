@@ -273,7 +273,7 @@ var egret;
         var OldNativeCanvasRenderContext = (function (_super) {
             __extends(OldNativeCanvasRenderContext, _super);
             function OldNativeCanvasRenderContext() {
-                var _this = _super.apply(this, arguments) || this;
+                var _this = _super !== null && _super.apply(this, arguments) || this;
                 _this.$matrix = new egret.Matrix();
                 _this.$nativeContext = null;
                 _this.$globalCompositeOperation = "source-over";
@@ -2734,7 +2734,7 @@ var egret;
         var NativeCanvasRenderContext = (function (_super) {
             __extends(NativeCanvasRenderContext, _super);
             function NativeCanvasRenderContext() {
-                var _this = _super.apply(this, arguments) || this;
+                var _this = _super !== null && _super.apply(this, arguments) || this;
                 _this.$matrix = new egret.Matrix();
                 _this.$nativeContext = null;
                 _this.$globalCompositeOperation = "source-over";
@@ -4637,7 +4637,7 @@ var egret;
     var NativeResourceLoader = (function (_super) {
         __extends(NativeResourceLoader, _super);
         function NativeResourceLoader() {
-            var _this = _super.apply(this, arguments) || this;
+            var _this = _super !== null && _super.apply(this, arguments) || this;
             /**
              * @private
              */
@@ -5078,7 +5078,7 @@ var egret;
         var NativeImageLoader = (function (_super) {
             __extends(NativeImageLoader, _super);
             function NativeImageLoader() {
-                var _this = _super.apply(this, arguments) || this;
+                var _this = _super !== null && _super.apply(this, arguments) || this;
                 /**
                  * @private
                  * 使用 load() 方法加载成功的 BitmapData 图像数据。

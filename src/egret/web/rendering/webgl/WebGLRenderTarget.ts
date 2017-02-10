@@ -92,6 +92,9 @@ namespace egret.web {
 
             // 设置render buffer的尺寸
             gl.bindFramebuffer(gl.FRAMEBUFFER, this.frameBuffer);// 是否需要强制绑定？
+            // 销毁并重新创建render buffer，防止 renderbufferStorage 引发内存泄漏
+            gl.deleteRenderbuffer(this.stencilBuffer);
+            this.stencilBuffer = gl.createRenderbuffer();
             gl.bindRenderbuffer(gl.RENDERBUFFER, this.stencilBuffer);// 是否需要强制绑定？
             gl.renderbufferStorage(gl.RENDERBUFFER, gl.DEPTH_STENCIL, width, height);
 

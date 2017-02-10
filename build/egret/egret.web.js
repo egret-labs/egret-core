@@ -271,7 +271,7 @@ var egret;
         var TextureShader = (function (_super) {
             __extends(TextureShader, _super);
             function TextureShader() {
-                var _this = _super.apply(this, arguments) || this;
+                var _this = _super !== null && _super.apply(this, arguments) || this;
                 _this.fragmentSrc = "precision lowp float;\n" +
                     "varying vec2 vTextureCoord;\n" +
                     "varying vec4 vColor;\n" +
@@ -2113,7 +2113,7 @@ var egret;
         var WebImageLoader = (function (_super) {
             __extends(WebImageLoader, _super);
             function WebImageLoader() {
-                var _this = _super.apply(this, arguments) || this;
+                var _this = _super !== null && _super.apply(this, arguments) || this;
                 /**
                  * @private
                  * 使用 load() 方法加载成功的 BitmapData 图像数据。
@@ -5021,7 +5021,7 @@ var egret;
         var WebDeviceOrientation = (function (_super) {
             __extends(WebDeviceOrientation, _super);
             function WebDeviceOrientation() {
-                var _this = _super.apply(this, arguments) || this;
+                var _this = _super !== null && _super.apply(this, arguments) || this;
                 /**
                  * @private
                  */
@@ -5140,7 +5140,7 @@ var egret;
         var WebMotion = (function (_super) {
             __extends(WebMotion, _super);
             function WebMotion() {
-                var _this = _super.apply(this, arguments) || this;
+                var _this = _super !== null && _super.apply(this, arguments) || this;
                 /**
                  * @private
                  */
@@ -6170,7 +6170,7 @@ var egret;
         var PrimitiveShader = (function (_super) {
             __extends(PrimitiveShader, _super);
             function PrimitiveShader() {
-                var _this = _super.apply(this, arguments) || this;
+                var _this = _super !== null && _super.apply(this, arguments) || this;
                 _this.fragmentSrc = "precision lowp float;\n" +
                     "varying vec2 vTextureCoord;\n" +
                     "varying vec4 vColor;\n" +
@@ -6223,7 +6223,7 @@ var egret;
         var BlurShader = (function (_super) {
             __extends(BlurShader, _super);
             function BlurShader() {
-                var _this = _super.apply(this, arguments) || this;
+                var _this = _super !== null && _super.apply(this, arguments) || this;
                 _this.fragmentSrc = "precision mediump float;" +
                     "uniform vec2 blur;" +
                     "uniform sampler2D uSampler;" +
@@ -6315,7 +6315,7 @@ var egret;
         var ColorTransformShader = (function (_super) {
             __extends(ColorTransformShader, _super);
             function ColorTransformShader() {
-                var _this = _super.apply(this, arguments) || this;
+                var _this = _super !== null && _super.apply(this, arguments) || this;
                 _this.fragmentSrc = "precision mediump float;\n" +
                     "varying vec2 vTextureCoord;\n" +
                     "varying vec4 vColor;\n" +
@@ -6434,7 +6434,7 @@ var egret;
         var GlowShader = (function (_super) {
             __extends(GlowShader, _super);
             function GlowShader() {
-                var _this = _super.apply(this, arguments) || this;
+                var _this = _super !== null && _super.apply(this, arguments) || this;
                 _this.fragmentSrc = [
                     'precision mediump float;',
                     'varying vec2 vTextureCoord;',
@@ -7267,6 +7267,9 @@ var egret;
                 // gl.bindTexture(gl.TEXTURE_2D, null);
                 // 设置render buffer的尺寸
                 gl.bindFramebuffer(gl.FRAMEBUFFER, this.frameBuffer); // 是否需要强制绑定？
+                // 销毁并重新创建render buffer，防止 renderbufferStorage 引发内存泄漏
+                gl.deleteRenderbuffer(this.stencilBuffer);
+                this.stencilBuffer = gl.createRenderbuffer();
                 gl.bindRenderbuffer(gl.RENDERBUFFER, this.stencilBuffer); // 是否需要强制绑定？
                 gl.renderbufferStorage(gl.RENDERBUFFER, gl.DEPTH_STENCIL, width, height);
                 this.width = width;

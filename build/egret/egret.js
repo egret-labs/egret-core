@@ -4263,7 +4263,7 @@ var egret;
     var Filter = (function (_super) {
         __extends(Filter, _super);
         function Filter() {
-            var _this = _super.apply(this, arguments) || this;
+            var _this = _super !== null && _super.apply(this, arguments) || this;
             /**
              * @version Egret 2.4
              * @platform Web,Native
@@ -7913,7 +7913,7 @@ var egret;
     var GeolocationEvent = (function (_super) {
         __extends(GeolocationEvent, _super);
         function GeolocationEvent() {
-            return _super.apply(this, arguments) || this;
+            return _super !== null && _super.apply(this, arguments) || this;
         }
         return GeolocationEvent;
     }(egret.Event));
@@ -8266,7 +8266,7 @@ var egret;
     var MotionEvent = (function (_super) {
         __extends(MotionEvent, _super);
         function MotionEvent() {
-            return _super.apply(this, arguments) || this;
+            return _super !== null && _super.apply(this, arguments) || this;
         }
         return MotionEvent;
     }(egret.Event));
@@ -8324,7 +8324,7 @@ var egret;
     var OrientationEvent = (function (_super) {
         __extends(OrientationEvent, _super);
         function OrientationEvent() {
-            return _super.apply(this, arguments) || this;
+            return _super !== null && _super.apply(this, arguments) || this;
         }
         return OrientationEvent;
     }(egret.Event));

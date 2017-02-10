@@ -16038,7 +16038,7 @@ var egret;
         var HScrollBar = (function (_super) {
             __extends(HScrollBar, _super);
             function HScrollBar() {
-                var _this = _super.apply(this, arguments) || this;
+                var _this = _super !== null && _super.apply(this, arguments) || this;
                 _this._thumbLengthRatio = 1;
                 return _this;
             }

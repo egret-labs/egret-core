@@ -8525,7 +8525,7 @@ var eui;
     var LinearLayoutBase = (function (_super) {
         __extends(LinearLayoutBase, _super);
         function LinearLayoutBase() {
-            var _this = _super.apply(this, arguments) || this;
+            var _this = _super !== null && _super.apply(this, arguments) || this;
             /**
              * @private
              */
@@ -10086,7 +10086,7 @@ var eui;
     var ToggleButton = (function (_super) {
         __extends(ToggleButton, _super);
         function ToggleButton() {
-            var _this = _super.apply(this, arguments) || this;
+            var _this = _super !== null && _super.apply(this, arguments) || this;
             /**
              * @private
              */
@@ -11423,7 +11423,7 @@ var eui;
     var List = (function (_super) {
         __extends(List, _super);
         function List() {
-            var _this = _super.apply(this, arguments) || this;
+            var _this = _super !== null && _super.apply(this, arguments) || this;
             /**
              * whether are allowed to multiple selection.
              * If <code>true</code> tap an unselected item will be selected,
@@ -14584,7 +14584,7 @@ var eui;
     var Skin = (function (_super) {
         __extends(Skin, _super);
         function Skin() {
-            var _this = _super.apply(this, arguments) || this;
+            var _this = _super !== null && _super.apply(this, arguments) || this;
             /**
              * The maximum recommended width of the component to be considered.
              * This property can only affect measure result of host component.
@@ -15781,7 +15781,7 @@ var eui;
     var VScrollBar = (function (_super) {
         __extends(VScrollBar, _super);
         function VScrollBar() {
-            return _super.apply(this, arguments) || this;
+            return _super !== null && _super.apply(this, arguments) || this;
         }
         /**
          * @inheritDoc
@@ -16978,7 +16978,7 @@ var eui;
     var HScrollBar = (function (_super) {
         __extends(HScrollBar, _super);
         function HScrollBar() {
-            return _super.apply(this, arguments) || this;
+            return _super !== null && _super.apply(this, arguments) || this;
         }
         /**
          * @inheritDoc
@@ -19222,7 +19222,7 @@ var eui;
     var ItemTapEvent = (function (_super) {
         __extends(ItemTapEvent, _super);
         function ItemTapEvent() {
-            var _this = _super.apply(this, arguments) || this;
+            var _this = _super !== null && _super.apply(this, arguments) || this;
             /**
              * The item in the data provider of the associated item.
              * @version Egret 2.4
@@ -19776,7 +19776,7 @@ var eui;
         var EXClass = (function (_super) {
             __extends(EXClass, _super);
             function EXClass() {
-                var _this = _super.apply(this, arguments) || this;
+                var _this = _super !== null && _super.apply(this, arguments) || this;
                 /**
                  * @private
                  * 类名,不包括模块名
@@ -19939,7 +19939,7 @@ var eui;
         var EXCodeBlock = (function (_super) {
             __extends(EXCodeBlock, _super);
             function EXCodeBlock() {
-                var _this = _super.apply(this, arguments) || this;
+                var _this = _super !== null && _super.apply(this, arguments) || this;
                 /**
                  * @private
                  */
@@ -20077,7 +20077,7 @@ var eui;
         var EXFunction = (function (_super) {
             __extends(EXFunction, _super);
             function EXFunction() {
-                var _this = _super.apply(this, arguments) || this;
+                var _this = _super !== null && _super.apply(this, arguments) || this;
                 /**
                  * @private
                  * 代码块
@@ -21759,7 +21759,7 @@ var eui;
     var HorizontalLayout = (function (_super) {
         __extends(HorizontalLayout, _super);
         function HorizontalLayout() {
-            return _super.apply(this, arguments) || this;
+            return _super !== null && _super.apply(this, arguments) || this;
         }
         /**
          * @inheritDoc
@@ -23815,7 +23815,7 @@ var eui;
     var VerticalLayout = (function (_super) {
         __extends(VerticalLayout, _super);
         function VerticalLayout() {
-            return _super.apply(this, arguments) || this;
+            return _super !== null && _super.apply(this, arguments) || this;
         }
         /**
          * @inheritDoc
