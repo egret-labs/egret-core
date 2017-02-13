@@ -262,21 +262,20 @@ namespace egret {
          */
         public $refreshImageData(): void {
             let values = this.$Bitmap;
-            let bitmapData = values[sys.BitmapKeys.bitmapData];
+            let bitmapData: Texture | BitmapData = values[sys.BitmapKeys.bitmapData];
             if (bitmapData) {
                 if (bitmapData instanceof Texture) {
-                    let texture = <Texture>bitmapData;
-                    this.setImageData(texture._bitmapData,
-                        texture._bitmapX, texture._bitmapY,
-                        texture._bitmapWidth, texture._bitmapHeight,
-                        texture._offsetX, texture._offsetY,
-                        texture.$getTextureWidth(), texture.$getTextureHeight(),
-                        texture._sourceWidth, texture._sourceHeight);
+                    this.setImageData(bitmapData._bitmapData,
+                        bitmapData._bitmapX, bitmapData._bitmapY,
+                        bitmapData._bitmapWidth, bitmapData._bitmapHeight,
+                        bitmapData._offsetX, bitmapData._offsetY,
+                        bitmapData.$getTextureWidth(), bitmapData.$getTextureHeight(),
+                        bitmapData._sourceWidth, bitmapData._sourceHeight);
                 }
                 else {
-                    let width = (<BitmapData>bitmapData).width;
-                    let height = (<BitmapData>bitmapData).height;
-                    this.setImageData(<BitmapData>bitmapData, 0, 0, width, height, 0, 0, width, height, width, height);
+                    let width = bitmapData.width;
+                    let height = bitmapData.height;
+                    this.setImageData(bitmapData, 0, 0, width, height, 0, 0, width, height, width, height);
                 }
             }
         }
@@ -595,9 +594,9 @@ namespace egret {
             textureWidth: number, textureHeight: number, destW: number, destH: number, sourceWidth: number, sourceHeight: number,
             scale9Grid: egret.Rectangle, fillMode: string, smoothing: boolean): void {
             console.warn('deprecated method : Bitmap.$drawImage,use egret.sys.BitmapNode.$drawImage instead of it');
-            sys.BitmapNode.$updateTextureData(node, image, 
-                bitmapX, bitmapY, bitmapWidth, bitmapHeight, offsetX, offsetY, 
-                textureWidth, textureHeight, destW, destH, sourceWidth, sourceHeight, 
+            sys.BitmapNode.$updateTextureData(node, image,
+                bitmapX, bitmapY, bitmapWidth, bitmapHeight, offsetX, offsetY,
+                textureWidth, textureHeight, destW, destH, sourceWidth, sourceHeight,
                 scale9Grid, fillMode, smoothing);
         }
 
