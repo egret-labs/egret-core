@@ -393,7 +393,12 @@ namespace egret {
             let end: boolean = false;
             if (t >= this.duration) {
                 if (this.loop) {
-                    t = t % this.duration;
+                    var newTime = t % this.duration;
+					if (t > 0 && newTime === 0) {
+						t = this.duration;
+					} else {
+						t = newTime;
+					}
                 }
                 else {
                     t = this.duration;
