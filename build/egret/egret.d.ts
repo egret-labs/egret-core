@@ -10472,7 +10472,7 @@ declare namespace egret {
         /**
          * @private
          */
-        private createRenderBuffer(width, height);
+        private createRenderBuffer(width, height, useForFilters?);
     }
 }
 declare namespace egret {

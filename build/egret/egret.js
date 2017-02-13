@@ -15958,6 +15958,7 @@ var egret;
     var BLACK_COLOR = "#000000";
     var CAPS_STYLES = { none: 'butt', square: 'square', round: 'round' };
     var renderBufferPool = []; //渲染缓冲区对象池
+    var renderBufferPool_Filters = []; //滤镜缓冲区对象池
     /**
      * @private
      * Canvas渲染器
@@ -15991,6 +15992,10 @@ var egret;
                 var length_7 = renderBufferPool.length;
                 for (var i = 0; i < length_7; i++) {
                     renderBufferPool[i].resize(0, 0);
+                }
+                if (renderBufferPool_Filters.length > 1) {
+                    renderBufferPool_Filters.length = 1;
+                    renderBufferPool_Filters[0].resize(0, 0);
                 }
             }
             return drawCall;
@@ -16191,7 +16196,7 @@ var egret;
             region.updateRegion(bounds, displayMatrix);
             // 为显示对象创建一个新的buffer
             // todo 这里应该计算 region.x region.y
-            var displayBuffer = this.createRenderBuffer(region.width, region.height);
+            var displayBuffer = this.createRenderBuffer(region.width, region.height, true);
             var displayContext = displayBuffer.context;
             displayContext.setTransform(1, 0, 0, 1, -region.minX, -region.minY);
             var offsetM = egret.Matrix.create().setTo(1, 0, 0, 1, -region.minX, -region.minY);
@@ -16245,7 +16250,7 @@ var egret;
                     context.globalCompositeOperation = defaultCompositeOp;
                 }
             }
-            renderBufferPool.push(displayBuffer);
+            renderBufferPool_Filters.push(displayBuffer);
             egret.sys.Region.release(region);
             egret.Matrix.release(displayMatrix);
             return drawCalls;
@@ -16811,8 +16816,8 @@ var egret;
         /**
          * @private
          */
-        CanvasRenderer.prototype.createRenderBuffer = function (width, height) {
-            var buffer = renderBufferPool.pop();
+        CanvasRenderer.prototype.createRenderBuffer = function (width, height, useForFilters) {
+            var buffer = useForFilters ? renderBufferPool_Filters.pop() : renderBufferPool.pop();
             if (buffer) {
                 buffer.resize(width, height, true);
             }

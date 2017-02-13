@@ -42,6 +42,7 @@ namespace egret {
     let BLACK_COLOR = "#000000";
     let CAPS_STYLES = {none: 'butt', square: 'square', round: 'round'};
     let renderBufferPool:sys.RenderBuffer[] = [];//渲染缓冲区对象池
+    let renderBufferPool_Filters:sys.RenderBuffer[] = [];//滤镜缓冲区对象池
     /**
      * @private
      * Canvas渲染器
@@ -77,6 +78,10 @@ namespace egret {
                 let length = renderBufferPool.length;
                 for (let i = 0; i < length; i++) {
                     renderBufferPool[i].resize(0, 0);
+                }
+                if(renderBufferPool_Filters.length > 1) {
+                    renderBufferPool_Filters.length = 1;
+                    renderBufferPool_Filters[0].resize(0, 0);
                 }
             }
             return drawCall;
@@ -306,7 +311,7 @@ namespace egret {
 
             // 为显示对象创建一个新的buffer
             // todo 这里应该计算 region.x region.y
-            let displayBuffer = this.createRenderBuffer(region.width, region.height);
+            let displayBuffer = this.createRenderBuffer(region.width, region.height, true);
             let displayContext = displayBuffer.context;
             displayContext.setTransform(1, 0, 0, 1, -region.minX, -region.minY);
             let offsetM = Matrix.create().setTo(1, 0, 0, 1, -region.minX, -region.minY);
@@ -369,7 +374,7 @@ namespace egret {
 
             }
 
-            renderBufferPool.push(displayBuffer);
+            renderBufferPool_Filters.push(displayBuffer);
             sys.Region.release(region);
             Matrix.release(displayMatrix);
 
@@ -978,8 +983,8 @@ namespace egret {
         /**
          * @private
          */
-        private createRenderBuffer(width:number, height:number):sys.RenderBuffer {
-            let buffer = renderBufferPool.pop();
+        private createRenderBuffer(width:number, height:number, useForFilters?:boolean):sys.RenderBuffer {
+            let buffer = useForFilters ? renderBufferPool_Filters.pop() : renderBufferPool.pop();
             if (buffer) {
                 buffer.resize(width, height, true);
             }
