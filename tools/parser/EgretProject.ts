@@ -161,9 +161,15 @@ export class EgretProject {
         var build = cprocess.spawnSync("egret", ["versions"], {
             encoding: "utf-8"
         });
-        let versions = (<string><any>build.stdout).split("\n");
-        // //删除最后一行空格
-        versions = versions.slice(0, versions.length - 1);
+        let versions;
+        if(build && build.stdout) {
+            versions = (<string><any>build.stdout).split("\n");
+            //删除最后一行空格
+            versions = versions.slice(0, versions.length - 1);
+        }
+        else {
+            versions = [];
+        }
         let egretVersions:Array<egret.EgretVersion> = versions.map(versionStr => {
             let egretVersion:string;
             let egretPath:string;

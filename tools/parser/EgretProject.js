@@ -135,9 +135,15 @@ var EgretProject = (function () {
         var build = cprocess.spawnSync("egret", ["versions"], {
             encoding: "utf-8"
         });
-        var versions = build.stdout.split("\n");
-        // //删除最后一行空格
-        versions = versions.slice(0, versions.length - 1);
+        var versions;
+        if (build && build.stdout) {
+            versions = build.stdout.split("\n");
+            //删除最后一行空格
+            versions = versions.slice(0, versions.length - 1);
+        }
+        else {
+            versions = [];
+        }
         var egretVersions = versions.map(function (versionStr) {
             var egretVersion;
             var egretPath;
