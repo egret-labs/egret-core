@@ -193,7 +193,7 @@ namespace egret.web {
             let drawCalls = 0;
             let filters = displayObject.$getFilters();
             let hasBlendMode = (displayObject.$blendMode !== 0);
-            let compositeOp:string;
+            let compositeOp: string;
             if (hasBlendMode) {
                 compositeOp = blendModes[displayObject.$blendMode];
                 if (!compositeOp) {
@@ -228,7 +228,7 @@ namespace egret.web {
             // 获取显示对象的链接矩阵
             let displayMatrix = Matrix.create();
             displayMatrix.copyFrom(displayObject.$getConcatenatedMatrix());
-            if(root) {
+            if (root) {
                 displayObject.$getConcatenatedMatrixAt(root, displayMatrix);
             }
 
@@ -292,7 +292,7 @@ namespace egret.web {
             matrix: Matrix, clipRegion: sys.Region, root: DisplayObject): number {
             let drawCalls = 0;
             let hasBlendMode = (displayObject.$blendMode !== 0);
-            let compositeOp:string;
+            let compositeOp: string;
             if (hasBlendMode) {
                 compositeOp = blendModes[displayObject.$blendMode];
                 if (!compositeOp) {
@@ -327,7 +327,7 @@ namespace egret.web {
                 }
             }
 
-            let bounds:Rectangle;
+            let bounds: Rectangle;
             if (mask) {
                 bounds = mask.$getOriginalBounds();
                 maskRegion = sys.Region.create();
@@ -531,30 +531,78 @@ namespace egret.web {
 
             let context = buffer.context;
             let scissor = false;
-            if(buffer.$hasScissor || m.b != 0 || m.c != 0) {// 有旋转的情况下不能使用scissor
+            if (buffer.$hasScissor || m.b != 0 || m.c != 0) {// 有旋转的情况下不能使用scissor
                 context.pushMask(scrollRect);
             } else {
+                let a = m.a;
+                let d = m.d;
+                let tx = m.tx;
+                let ty = m.ty;
                 let x = scrollRect.x;
                 let y = scrollRect.y;
-                let w = scrollRect.width;
-                let h = scrollRect.height;
-                x = x * m.a + m.tx + matrix.tx;
-                y = y * m.d + m.ty + matrix.ty;
-                w = w * m.a;
-                h = h * m.d;
-                context.enableScissor(x, - y - h + buffer.height, w, h);
+                let xMax = x + scrollRect.width;
+                let yMax = y + scrollRect.height;
+                let minX: number, minY: number, maxX: number, maxY: number;
+                //优化，通常情况下不缩放的对象占多数，直接加上偏移量即可。
+                if (a == 1.0 && d == 1.0) {
+                    minX = x + tx;
+                    minY = y + ty;
+                    maxX = xMax + tx;
+                    maxY = yMax + ty;
+                }
+                else {
+                    let x0 = a * x + tx;
+                    let y0 = d * y + ty;
+                    let x1 = a * xMax + tx;
+                    let y1 = d * y + ty;
+                    let x2 = a * xMax + tx;
+                    let y2 = d * yMax + ty;
+                    let x3 = a * x + tx;
+                    let y3 = d * yMax + ty;
+
+                    let tmp = 0;
+
+                    if (x0 > x1) {
+                        tmp = x0;
+                        x0 = x1;
+                        x1 = tmp;
+                    }
+                    if (x2 > x3) {
+                        tmp = x2;
+                        x2 = x3;
+                        x3 = tmp;
+                    }
+
+                    minX = (x0 < x2 ? x0 : x2);
+                    maxX = (x1 > x3 ? x1 : x3);
+
+                    if (y0 > y1) {
+                        tmp = y0;
+                        y0 = y1;
+                        y1 = tmp;
+                    }
+                    if (y2 > y3) {
+                        tmp = y2;
+                        y2 = y3;
+                        y3 = tmp;
+                    }
+
+                    minY = (y0 < y2 ? y0 : y2);
+                    maxY = (y1 > y3 ? y1 : y3);
+                }
+                context.enableScissor(minX + matrix.tx, -matrix.ty - maxY + buffer.height, maxX - minX, maxY - minY);
                 scissor = true;
             }
 
             drawCalls += this.drawDisplayObject(displayObject, buffer, dirtyList, matrix, displayObject.$displayList, region, root);
             buffer.setTransform(m.a, m.b, m.c, m.d, m.tx + matrix.tx, m.ty + matrix.ty);
 
-            if(scissor) {
+            if (scissor) {
                 context.disableScissor();
             } else {
                 context.popMask();
             }
-            
+
             sys.Region.release(region);
             Matrix.release(m);
             return drawCalls;
@@ -613,7 +661,7 @@ namespace egret.web {
          */
         private renderBitmap(node: sys.BitmapNode, buffer: WebGLRenderBuffer): void {
             let image = node.image;
-            if(!image) {
+            if (!image) {
                 return;
             }
             //buffer.imageSmoothingEnabled = node.smoothing;
@@ -631,12 +679,12 @@ namespace egret.web {
             if (blendMode) {
                 buffer.context.setGlobalCompositeOperation(blendModes[blendMode]);
             }
-            let originAlpha:number;
-            if(alpha == alpha) {
+            let originAlpha: number;
+            if (alpha == alpha) {
                 originAlpha = buffer.globalAlpha;
                 buffer.globalAlpha *= alpha;
             }
-            if(node.filter) {
+            if (node.filter) {
                 buffer.context.$filter = node.filter;
                 while (pos < length) {
                     buffer.context.drawImage(image, data[pos++], data[pos++], data[pos++], data[pos++],
@@ -653,7 +701,7 @@ namespace egret.web {
             if (blendMode) {
                 buffer.context.setGlobalCompositeOperation(defaultCompositeOp);
             }
-            if(alpha == alpha) {
+            if (alpha == alpha) {
                 buffer.globalAlpha = originAlpha;
             }
             if (m) {
@@ -818,7 +866,7 @@ namespace egret.web {
                 buffer.saveTransform();
                 buffer.transform(m.a, m.b, m.c, m.d, m.tx, m.ty);
             }
-            
+
             let children = groupNode.drawData;
             let length = children.length;
             for (let i = 0; i < length; i++) {

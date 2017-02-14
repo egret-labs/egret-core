@@ -5761,15 +5761,58 @@ var egret;
                     context.pushMask(scrollRect);
                 }
                 else {
+                    var a = m.a;
+                    var d = m.d;
+                    var tx = m.tx;
+                    var ty = m.ty;
                     var x = scrollRect.x;
                     var y = scrollRect.y;
-                    var w = scrollRect.width;
-                    var h = scrollRect.height;
-                    x = x * m.a + m.tx + matrix.tx;
-                    y = y * m.d + m.ty + matrix.ty;
-                    w = w * m.a;
-                    h = h * m.d;
-                    context.enableScissor(x, -y - h + buffer.height, w, h);
+                    var xMax = x + scrollRect.width;
+                    var yMax = y + scrollRect.height;
+                    var minX = void 0, minY = void 0, maxX = void 0, maxY = void 0;
+                    //优化，通常情况下不缩放旋转的对象占多数，直接加上偏移量即可。
+                    if (a == 1.0 && d == 1.0) {
+                        minX = x + tx;
+                        minY = y + ty;
+                        maxX = xMax + tx;
+                        maxY = yMax + ty;
+                    }
+                    else {
+                        var x0 = a * x + tx;
+                        var y0 = d * y + ty;
+                        var x1 = a * xMax + tx;
+                        var y1 = d * y + ty;
+                        var x2 = a * xMax + tx;
+                        var y2 = d * yMax + ty;
+                        var x3 = a * x + tx;
+                        var y3 = d * yMax + ty;
+                        var tmp = 0;
+                        if (x0 > x1) {
+                            tmp = x0;
+                            x0 = x1;
+                            x1 = tmp;
+                        }
+                        if (x2 > x3) {
+                            tmp = x2;
+                            x2 = x3;
+                            x3 = tmp;
+                        }
+                        minX = (x0 < x2 ? x0 : x2);
+                        maxX = (x1 > x3 ? x1 : x3);
+                        if (y0 > y1) {
+                            tmp = y0;
+                            y0 = y1;
+                            y1 = tmp;
+                        }
+                        if (y2 > y3) {
+                            tmp = y2;
+                            y2 = y3;
+                            y3 = tmp;
+                        }
+                        minY = (y0 < y2 ? y0 : y2);
+                        maxY = (y1 > y3 ? y1 : y3);
+                    }
+                    context.enableScissor(minX + matrix.tx, -matrix.ty - maxY + buffer.height, maxX - minX, maxY - minY);
                     scissor = true;
                 }
                 drawCalls += this.drawDisplayObject(displayObject, buffer, dirtyList, matrix, displayObject.$displayList, region, root);
