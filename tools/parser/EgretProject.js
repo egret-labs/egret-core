@@ -2,6 +2,7 @@
 var file = require("../lib/FileUtil");
 var _utils = require("../lib/utils");
 var path = require("path");
+var cprocess = require("child_process");
 var EgretProject = (function () {
     function EgretProject() {
         this.egretProperties = {
@@ -93,9 +94,25 @@ var EgretProject = (function () {
         }
         return null;
     };
-    EgretProject.prototype.getModulePath = function (m) {
+    EgretProject.prototype.getModulePath = function (m, egretVersions) {
         var dir = "";
         if (m.path == null) {
+            var root = void 0;
+            if (m.version) {
+                for (var _i = 0, egretVersions_1 = egretVersions; _i < egretVersions_1.length; _i++) {
+                    var version = egretVersions_1[_i];
+                    if (version.version == m.version) {
+                        root = version.path;
+                    }
+                }
+                if (!root) {
+                    globals.log(1118, m.version);
+                    root = egret.root;
+                }
+            }
+            else {
+                root = egret.root;
+            }
             dir = path.join(egret.root, "build", m.name);
         }
         else {
@@ -112,9 +129,33 @@ var EgretProject = (function () {
     };
     EgretProject.prototype.getModulesConfig = function (platform) {
         var _this = this;
-        return this.egretProperties.modules.map(function (m) {
+        if (this.moduleConfig) {
+            return this.moduleConfig;
+        }
+        var build = cprocess.spawnSync("egret", ["versions"], {
+            encoding: "utf-8"
+        });
+        var versions = build.stdout.split("\n");
+        // //删除最后一行空格
+        versions = versions.slice(0, versions.length - 1);
+        var egretVersions = versions.map(function (versionStr) {
+            var egretVersion;
+            var egretPath;
+            var versionRegExp = /(\d+\.){2}\d+(\.\d+)?/g;
+            var matchResultVersion = versionStr.match(versionRegExp);
+            if (matchResultVersion && matchResultVersion.length > 0) {
+                egretVersion = matchResultVersion[0];
+            }
+            var pathRegExp = /(?:[a-zA-Z]\:)?(?:[\\|\/][^\\|\/]+)+[\\|\/]?/g;
+            var matchResult2 = versionStr.match(pathRegExp);
+            if (matchResult2 && matchResult2.length > 0) {
+                egretPath = path.join(matchResult2[0], '.');
+            }
+            return { version: egretVersion, path: egretPath };
+        });
+        this.moduleConfig = this.egretProperties.modules.map(function (m) {
             var name = m.name;
-            var sourceDir = _this.getModulePath(m);
+            var sourceDir = _this.getModulePath(m, egretVersions);
             var targetDir = path.join(_this.getLibraryFolder(), name);
             var relative = path.relative(_this.getProjectRoot(), sourceDir);
             if (relative.indexOf("..") == -1 && !path.isAbsolute(relative)) {
@@ -136,6 +177,7 @@ var EgretProject = (function () {
             });
             return { name: name, target: target, sourceDir: sourceDir, targetDir: targetDir };
         });
+        return this.moduleConfig;
     };
     EgretProject.prototype.getPublishType = function (runtime) {
         if (globals.hasKeys(this.egretProperties, ["publish", runtime])) {

@@ -5,6 +5,7 @@ import crypto = require('crypto');
 import file = require('../lib/FileUtil');
 import _utils = require('../lib/utils');
 import path = require("path");
+import cprocess = require('child_process');
 
 type SourceCode = {
 
@@ -17,6 +18,8 @@ export class EgretProject {
     private egretProperties: egret.EgretProperty = {
         modules: []
     };
+
+    private moduleConfig;
 
     projectRoot = "";
     init(projectRoot: string) {
@@ -115,9 +118,24 @@ export class EgretProject {
         return null;
     }
 
-    private getModulePath(m: egret.EgretPropertyModule) {
+    private getModulePath(m: egret.EgretPropertyModule, egretVersions:Array<egret.EgretVersion>) {
         let dir = "";
         if (m.path == null) {
+            let root;
+            if(m.version) {
+                for(let version of egretVersions) {
+                    if(version.version == m.version) {
+                        root = version.path;
+                    }
+                }
+                if(!root) {
+                    globals.log(1118, m.version);
+                    root = egret.root;
+                }
+            }
+            else {
+                root = egret.root;
+            }
             dir = path.join(egret.root, "build", m.name);
         }
         else {
@@ -137,9 +155,33 @@ export class EgretProject {
 
 
     getModulesConfig(platform: "web" | "native") {
-        return this.egretProperties.modules.map(m => {
+        if(this.moduleConfig) {
+            return this.moduleConfig;
+        }
+        var build = cprocess.spawnSync("egret", ["versions"], {
+            encoding: "utf-8"
+        });
+        let versions = (<string><any>build.stdout).split("\n");
+        // //删除最后一行空格
+        versions = versions.slice(0, versions.length - 1);
+        let egretVersions:Array<egret.EgretVersion> = versions.map(versionStr => {
+            let egretVersion:string;
+            let egretPath:string;
+            const versionRegExp = /(\d+\.){2}\d+(\.\d+)?/g;
+            let matchResultVersion = versionStr.match(versionRegExp);
+            if (matchResultVersion && matchResultVersion.length > 0) {
+                egretVersion = matchResultVersion[0];
+            }
+            const pathRegExp = /(?:[a-zA-Z]\:)?(?:[\\|\/][^\\|\/]+)+[\\|\/]?/g;
+            let matchResult2 = versionStr.match(pathRegExp);
+            if (matchResult2 && matchResult2.length > 0) {
+                egretPath = path.join(matchResult2[0], '.');
+            }
+            return { version: egretVersion, path: egretPath };
+        });
+        this.moduleConfig = this.egretProperties.modules.map(m => {
             let name = m.name;
-            let sourceDir = this.getModulePath(m);
+            let sourceDir = this.getModulePath(m, egretVersions);
             let targetDir = path.join(this.getLibraryFolder(), name)
             let relative = path.relative(this.getProjectRoot(), sourceDir);
             if (relative.indexOf("..") == -1 && !path.isAbsolute(relative)) { // source 在项目中
@@ -160,8 +202,9 @@ export class EgretProject {
                     platform
                 }
             });
-            return { name, target, sourceDir, targetDir }
+            return { name, target, sourceDir, targetDir };
         })
+        return this.moduleConfig;
     }
 
     getPublishType(runtime: string): number {
