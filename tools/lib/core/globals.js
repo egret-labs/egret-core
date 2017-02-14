@@ -19,17 +19,17 @@ function getEgretPath() {
         for (var i = 0; i < globalpath.length; i++) {
             var prefix = globalpath[i];
             var url = path.join(prefix, "../egret-core");
-            if (file.exists(url)) {
+            if (fs.exists(url)) {
                 existsFlag = true;
                 break;
             }
             var url = path.join(prefix, "egret");
-            if (file.exists(url)) {
+            if (fs.exists(url)) {
                 existsFlag = true;
                 break;
             }
             var url = path.join(prefix, "../egret");
-            if (file.exists(url)) {
+            if (fs.exists(url)) {
                 existsFlag = true;
                 break;
             }
