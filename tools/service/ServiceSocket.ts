@@ -42,7 +42,7 @@ export = ServiceSocket;
 
 namespace MessageBody {
 
-    const HEADER = "HEADER";
+    const HEADER = "LARK-MSG";
 
     export function stringify(data) {
         var json = JSON.stringify(data);

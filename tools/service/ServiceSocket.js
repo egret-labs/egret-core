@@ -40,7 +40,7 @@ var ServiceSocket = (function (_super) {
 }(events.EventEmitter));
 var MessageBody;
 (function (MessageBody) {
-    var HEADER = "HEADER";
+    var HEADER = "LARK-MSG";
     function stringify(data) {
         var json = JSON.stringify(data);
         var length = json.length;
