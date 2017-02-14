@@ -55,35 +55,35 @@ export namespace server {
     }
 
 
-    function handleCommands(task: egret.ServiceCommand, res: ServiceSocket) {
+    function handleCommands(task: egret.ServiceCommand, serviceSocket: ServiceSocket) {
         console.log("得到任务:", task.command, task.path);
         //|| task.version && task.version != version
         if (task.command == 'shutdown') {
-            res.send({});
+            serviceSocket.send({});
             internal_shutdown();
         }
         var proj: Project = getProject(task.path);
         proj.option = parser.parseJSON(task.option);
         if (task.command == 'init') {
-            proj.buildPort = res;
+            proj.setServiceSocket(serviceSocket);
         }
         else if (task.command == 'build') {
             // autoExitTimer();
             var buildHandled = false;
             if (task.option.added && task.option.added.length) {
-                task.option.added.forEach(file => proj.fileChanged(res, task, file, "added"));
+                task.option.added.forEach(file => proj.fileChanged(serviceSocket, task, file, "added"));
                 buildHandled = true;
             }
             if (task.option.removed && task.option.removed.length) {
-                task.option.removed.forEach(file => proj.fileChanged(res, task, file, "removed"));
+                task.option.removed.forEach(file => proj.fileChanged(serviceSocket, task, file, "removed"));
                 buildHandled = true;
             }
             if (task.option.modified && task.option.modified.length) {
-                task.option.modified.forEach(file => proj.fileChanged(res, task, file, "modified"));
+                task.option.modified.forEach(file => proj.fileChanged(serviceSocket, task, file, "modified"));
                 buildHandled = true;
             }
             if (!buildHandled)
-                proj.fileChanged(res, task);
+                proj.fileChanged(serviceSocket, task);
         }
         else if (task.command == 'status') {
             var heapTotal: number = task['status']['heapTotal'];

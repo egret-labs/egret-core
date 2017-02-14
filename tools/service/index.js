@@ -40,35 +40,35 @@ var server;
         });
     }
     server_1.run = run;
-    function handleCommands(task, res) {
+    function handleCommands(task, serviceSocket) {
         console.log("得到任务:", task.command, task.path);
         //|| task.version && task.version != version
         if (task.command == 'shutdown') {
-            res.send({});
+            serviceSocket.send({});
             internal_shutdown();
         }
         var proj = getProject(task.path);
         proj.option = parser.parseJSON(task.option);
         if (task.command == 'init') {
-            proj.buildPort = res;
+            proj.setServiceSocket(serviceSocket);
         }
         else if (task.command == 'build') {
             // autoExitTimer();
             var buildHandled = false;
             if (task.option.added && task.option.added.length) {
-                task.option.added.forEach(function (file) { return proj.fileChanged(res, task, file, "added"); });
+                task.option.added.forEach(function (file) { return proj.fileChanged(serviceSocket, task, file, "added"); });
                 buildHandled = true;
             }
             if (task.option.removed && task.option.removed.length) {
-                task.option.removed.forEach(function (file) { return proj.fileChanged(res, task, file, "removed"); });
+                task.option.removed.forEach(function (file) { return proj.fileChanged(serviceSocket, task, file, "removed"); });
                 buildHandled = true;
             }
             if (task.option.modified && task.option.modified.length) {
-                task.option.modified.forEach(function (file) { return proj.fileChanged(res, task, file, "modified"); });
+                task.option.modified.forEach(function (file) { return proj.fileChanged(serviceSocket, task, file, "modified"); });
                 buildHandled = true;
             }
             if (!buildHandled)
-                proj.fileChanged(res, task);
+                proj.fileChanged(serviceSocket, task);
         }
         else if (task.command == 'status') {
             var heapTotal = task['status']['heapTotal'];
