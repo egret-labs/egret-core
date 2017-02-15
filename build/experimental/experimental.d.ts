@@ -274,5 +274,5 @@ declare namespace egret.experimental {
     }
 }
 declare namespace egret.experimental {
-    function pickPhotoUrlWithCallback(callback: any): void;
+    function pickPhoto(): Promise<string>;
 }
