@@ -345,6 +345,15 @@
         ]
       },
       {
+        "name": "experimental",
+        "description": "egret实验功能库",
+        "files": [],
+        "root": "src/extension/experimental",
+        "dependencies": [
+          "egret"
+        ]
+      },
+      {
         "name": "tween",
         "description": "tween 缓动动画库",
         "files": [],

@@ -153,7 +153,7 @@ namespace egret {
                 else {
                     base64 = data as string;
                 }
-                let image: HTMLImageElement = document.createElement("img");
+                let image: HTMLImageElement = new Image();
                 image.src = "data:image/png;base64," + base64;
                 return new BitmapData(image);
             }
