@@ -3,7 +3,7 @@ var utils = require("../lib/utils");
 var service = require("../service/index");
 var CompileProject = require("../actions/CompileProject");
 var CompileTemplate = require("../actions/CompileTemplate");
-var NativeProject = require("../actions/NativeProject");
+var copyNative = require("../actions/CopyNativeFiles");
 console.log(utils.tr(1106, 0));
 var timeBuildStart = (new Date()).getTime();
 var Clean = (function () {
@@ -25,8 +25,12 @@ var Clean = (function () {
         }
         //修改 html 中 game_list 块
         CompileTemplate.modifyIndexHTML(result.files);
-        //根据 index.html 修改 native_require.js 文件，并看情况刷新 native 工程
-        NativeProject.build();
+        CompileTemplate.modifyNativeRequire(true);
+        //拷贝项目到native工程中
+        if (egret.args.runtime == "native") {
+            console.log("----native build-----");
+            copyNative.refreshNative(true);
+        }
         var timeBuildEnd = new Date().getTime();
         var timeBuildUsed = (timeBuildEnd - timeBuildStart) / 1000;
         console.log(utils.tr(1108, timeBuildUsed));

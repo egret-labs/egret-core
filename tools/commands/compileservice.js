@@ -2,13 +2,13 @@
 var utils = require("../lib/utils");
 var service = require("../service/index");
 var FileUtil = require("../lib/FileUtil");
-var Native = require("../actions/NativeProject");
 var exmlActions = require("../actions/exml");
 var state = require("../lib/DirectoryState");
 var CompileProject = require("../actions/CompileProject");
 var CompileTemplate = require("../actions/CompileTemplate");
 var parser = require("../parser/Parser");
 var EgretProject = require("../parser/EgretProject");
+var copyNative = require("../actions/CopyNativeFiles");
 var AutoCompileCommand = (function () {
     function AutoCompileCommand() {
         this.exitCode = [0, 0];
@@ -67,7 +67,12 @@ var AutoCompileCommand = (function () {
         CompileTemplate.modifyIndexHTML(_scripts);
         CompileTemplate.modifyNativeRequire(true);
         exmlActions.afterBuild();
-        Native.build();
+        CompileTemplate.modifyNativeRequire(true);
+        //拷贝项目到native工程中
+        if (egret.args.runtime == "native") {
+            console.log("----native build-----");
+            copyNative.refreshNative(true);
+        }
         this.dirState.init();
         this._scripts = result.files;
         this.exitCode[1] = result.exitStatus;
@@ -144,7 +149,12 @@ var AutoCompileCommand = (function () {
         if (exmls.length) {
             exmlActions.afterBuildChanges(exmls);
         }
-        Native.build();
+        CompileTemplate.modifyNativeRequire(true);
+        //拷贝项目到native工程中
+        if (egret.args.runtime == "native") {
+            console.log("----native build-----");
+            copyNative.refreshNative(true);
+        }
         this.dirState.init();
         this.sendCommand();
         global.gc && global.gc();
