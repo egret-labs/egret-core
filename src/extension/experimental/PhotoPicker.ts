@@ -2,11 +2,10 @@ namespace egret.experimental {
     export function pickPhoto(): Promise<string> {
         return new Promise((resolve, reject) => {
             let fileInput = document.createElement("input");
-            fileInput.id = "fileInput";
             fileInput.type = "file";
             fileInput.accept = "image/*";
             fileInput.style.display = "none";
-            document.body.insertBefore(fileInput, document.body.firstChild);
+            //document.body.insertBefore(fileInput, document.body.firstChild);
             fileInput.addEventListener("change", function (evt) {
                 let mime = { "png": "image/png", "jpg": "image/jpeg", "jpeg": "image/jpeg", "bmp": "image/bmp" };
                 let file = (evt.target as any).files[0];
@@ -88,16 +87,15 @@ namespace egret.experimental {
                                 if (orientation !== -1) {
                                     imagetype = "jpeg";
                                 }
-                                let smallURL = "";
+                                let resultURL = "";
                                 if (imagetype === "jpg" || imagetype === "jpeg") {
-                                    smallURL = canvas.toDataURL("image/" + imagetype);
+                                    resultURL = canvas.toDataURL("image/" + imagetype);
                                 } else {
-                                    smallURL = canvas.toDataURL("image/" + imagetype);
+                                    resultURL = canvas.toDataURL("image/" + imagetype);
                                 }
-                                image.width = image.height = 500;
-                                resolve(smallURL);
+                                resolve(resultURL);
                                 image.parentNode.removeChild(image);
-                                fileInput.parentNode.removeChild(fileInput);
+                                //fileInput.parentNode.removeChild(fileInput);
                             };
                             image.src = ret;
                             image.style.display = "none";
@@ -109,7 +107,9 @@ namespace egret.experimental {
                 };
                 xhr.send();
             }, false);
-            fileInput.click();
+            let event = document.createEvent("MouseEvents");
+            event.initMouseEvent("click", true, false, window, 0, 0, 0, 0, 0, false, false, false, false, 0, null);
+            fileInput.dispatchEvent(event);
         }
         );
     }
