@@ -1,8 +1,14 @@
-import server = require('../server/server');
+import * as Server from '../server/server';
+import * as TypeScriptProject from './TypeScritpProject';
 
 
 export function run() {
     let projectRoot = egret.args.projectDir;
     let params = "";
-    server.startServer(projectRoot, 4000, "http://localhost:4000/index.html");
+    let server = new Server();
+    server.use(TypeScriptProject.middleware);
+    server.start(projectRoot, 4000, "http://localhost:4000/index.html");
+
+
+
 }

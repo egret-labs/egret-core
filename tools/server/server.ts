@@ -67,25 +67,46 @@ function fileReader(root) {
     }
 }
 
+namespace Server {
+
+    export type Middleware = (...arg) => (request: http.IncomingMessage, response: http.ServerResponse) => Promise<any>
 
 
-export function startServer(root: string, port: number, startupUrl: string, openWithBrowser: boolean = true) {
+}
 
-    let ips = getLocalIPAddress();
-    var server = http.createServer(function (request, response) {
-        fileReader(root)(request, response).then(() => {
-            response.end();
-        }).catch((e) => {
-            console.error(e);
-            response.end();
-        });
-    });
-    server.listen(port);
-    console.log("Server running at port: " + port + ".");
-    if (openWithBrowser) {
-        utils.open(startupUrl);
+
+
+class Server {
+
+    private middleware: Server.Middleware;
+
+    constructor() {
+        this.middleware = fileReader;
     }
 
+    use(middleware: Server.Middleware) {
+        this.middleware = middleware;
+    }
+
+    start(root: string, port: number, startupUrl: string, openWithBrowser: boolean = true) {
+
+        let ips = getLocalIPAddress();
+        var server = http.createServer((request, response) => {
+
+            this.middleware(root)(request, response).then(() => {
+                response.end();
+            }).catch((e) => {
+                console.error(e);
+                response.end();
+            });
+        });
+        server.listen(port);
+        console.log("Server running at port: " + port + ".");
+        if (openWithBrowser) {
+            utils.open(startupUrl);
+        }
+
+    }
 }
 
 
@@ -107,3 +128,7 @@ function getLocalIPAddress() {
 
     return ips;
 }
+
+
+
+export = Server;

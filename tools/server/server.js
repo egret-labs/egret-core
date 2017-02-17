@@ -62,24 +62,33 @@ function fileReader(root) {
         });
     };
 }
-function startServer(root, port, startupUrl, openWithBrowser) {
-    if (openWithBrowser === void 0) { openWithBrowser = true; }
-    var ips = getLocalIPAddress();
-    var server = http.createServer(function (request, response) {
-        fileReader(root)(request, response).then(function () {
-            response.end();
-        }).catch(function (e) {
-            console.error(e);
-            response.end();
-        });
-    });
-    server.listen(port);
-    console.log("Server running at port: " + port + ".");
-    if (openWithBrowser) {
-        utils.open(startupUrl);
+var Server = (function () {
+    function Server() {
+        this.middleware = fileReader;
     }
-}
-exports.startServer = startServer;
+    Server.prototype.use = function (middleware) {
+        this.middleware = middleware;
+    };
+    Server.prototype.start = function (root, port, startupUrl, openWithBrowser) {
+        var _this = this;
+        if (openWithBrowser === void 0) { openWithBrowser = true; }
+        var ips = getLocalIPAddress();
+        var server = http.createServer(function (request, response) {
+            _this.middleware(root)(request, response).then(function () {
+                response.end();
+            }).catch(function (e) {
+                console.error(e);
+                response.end();
+            });
+        });
+        server.listen(port);
+        console.log("Server running at port: " + port + ".");
+        if (openWithBrowser) {
+            utils.open(startupUrl);
+        }
+    };
+    return Server;
+}());
 function getLocalIPAddress() {
     var os = require('os');
     var ifaces = os.networkInterfaces();
@@ -96,3 +105,4 @@ function getLocalIPAddress() {
     });
     return ips;
 }
+module.exports = Server;

@@ -19,7 +19,7 @@ export interface EgretCompilerHost {
     program: ts.Program;
     files?: string[];
     exitStatus: number;
-    compileWithChanges?: (filesChanged: egret.FileChanges, sourceMap?: boolean) => EgretCompilerHost;
+    compileWithChanges: (filesChanged: egret.FileChanges, sourceMap?: boolean) => EgretCompilerHost;
     messages?: string[];
 }
 
