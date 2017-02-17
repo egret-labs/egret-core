@@ -38,6 +38,7 @@ var _this = this;
 var FileUtil = require("../lib/FileUtil");
 var path = require("path");
 var Compiler = require("../actions/Compiler");
+var watch = require("../lib/watch");
 var TypeScriptProject = (function () {
     function TypeScriptProject(projectDir) {
         this.projectDir = projectDir;
@@ -64,8 +65,8 @@ var TypeScriptProject = (function () {
             this.compilerHost = compiler.compile(this.compilerOptions, fileNames);
         }
         var relative = function (f) { return path.relative(_this.projectDir, f); };
-        var fileResult = GetJavaScriptFileNames(this.compilerHost.files.map(relative), /^src\//);
-        this.compilerHost.files = fileResult;
+        // var fileResult = GetJavaScriptFileNames(this.compilerHost.files.map(relative), /^src\//)
+        // this.compilerHost.files = fileResult;
         if (this.compilerHost.messages.length > 0) {
             this.compilerHost.exitStatus = 1303;
         }
@@ -90,13 +91,37 @@ function GetJavaScriptFileNames(tsFiles, root, prefix) {
     return files;
 }
 exports.middleware = function () {
+    var host;
+    var isInit = false;
+    var compileChanged = function (fileName, type) {
+        if (fileName.indexOf(".ts") >= 0) {
+            var fileChanged = { fileName: fileName, type: type };
+            console.log(fileChanged);
+            var time1 = Date.now();
+            host.compileWithChanges([fileChanged]);
+            console.log(Date.now() - time1);
+            console.log(host.messages);
+        }
+    };
     return function (request, response) { return __awaiter(_this, void 0, void 0, function () {
-        var project;
+        var time1, root, project, time2;
         return __generator(this, function (_a) {
-            project = new TypeScriptProject(egret.args.projectDir);
-            console.log(111);
-            project.compile();
-            console.log(112);
+            time1 = Date.now();
+            root = egret.args.projectDir;
+            if (!isInit) {
+                watch.createMonitor(root, { persistent: true, interval: 2007, filter: function (f, stat) { return !f.match(/\.g(\.d)?\.ts/); } }, function (m) {
+                    m.on("created", function (f) { return compileChanged(f, "added"); })
+                        .on("removed", function (f) { return compileChanged(f, "removed"); })
+                        .on("changed", function (f) { return compileChanged(f, "modified"); });
+                });
+                isInit = true;
+                project = new TypeScriptProject(root);
+                host = project.compile();
+                console.log(host.messages);
+            }
+            time2 = Date.now();
+            console.log(time2 - time1);
+            console.log("success");
             return [2 /*return*/];
         });
     }); };

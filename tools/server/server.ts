@@ -91,9 +91,11 @@ class Server {
     start(root: string, port: number, startupUrl: string, openWithBrowser: boolean = true) {
 
         let ips = getLocalIPAddress();
-        var server = http.createServer((request, response) => {
 
-            this.middleware(root)(request, response).then(() => {
+        let m = this.middleware(root);
+
+        var server = http.createServer((request, response) => {
+            m(request, response).then(() => {
                 response.end();
             }).catch((e) => {
                 console.error(e);
@@ -128,6 +130,11 @@ function getLocalIPAddress() {
 
     return ips;
 }
+
+
+
+
+
 
 
 

@@ -5,6 +5,7 @@ import FileUtil = require('../lib/FileUtil');
 import path = require('path');
 import * as Compiler from '../actions/Compiler';
 import * as Server from '../server/server';
+import watch = require("../lib/watch");
 
 class TypeScriptProject {
 
@@ -37,8 +38,8 @@ class TypeScriptProject {
         }
         let relative = f => path.relative(this.projectDir, f)
 
-        var fileResult = GetJavaScriptFileNames(this.compilerHost.files.map(relative), /^src\//)
-        this.compilerHost.files = fileResult;
+        // var fileResult = GetJavaScriptFileNames(this.compilerHost.files.map(relative), /^src\//)
+        // this.compilerHost.files = fileResult;
 
         if (this.compilerHost.messages.length > 0) {
             this.compilerHost.exitStatus = 1303;
@@ -71,12 +72,49 @@ function GetJavaScriptFileNames(tsFiles: string[], root: string | RegExp, prefix
 
 export var middleware: Server.Middleware = () => {
 
-    return async (request, response) => {
-        let project = new TypeScriptProject(egret.args.projectDir);
-        console.log(111)
-        project.compile();
-        console.log(112)
+    let host: Compiler.EgretCompilerHost;
+
+    let isInit = false;
+
+
+    let compileChanged = (fileName: string, type: string) => {
+        if (fileName.indexOf(".ts") >= 0) {
+            let fileChanged = { fileName, type };
+            console.log(fileChanged)
+            let time1 = Date.now();
+            host.compileWithChanges([fileChanged]);
+            console.log(Date.now() - time1)
+            console.log(host.messages)
+        }
+
     }
+
+
+
+    return async (request, response) => {
+        let time1 = Date.now();
+        let root = egret.args.projectDir;
+        if (!isInit) {
+            watch.createMonitor(root, { persistent: true, interval: 2007, filter: (f, stat) => !f.match(/\.g(\.d)?\.ts/) }, m => {
+                m.on("created", (f) => compileChanged(f, "added"))
+                    .on("removed", (f) => compileChanged(f, "removed"))
+                    .on("changed", (f) => compileChanged(f, "modified"));
+            });
+            isInit = true;
+            let project = new TypeScriptProject(root);
+            host = project.compile();
+            console.log(host.messages)
+        }
+
+
+
+        let time2 = Date.now();
+        console.log(time2 - time1);
+        console.log("success")
+    }
+
+
+
 }
 
 

@@ -70,11 +70,11 @@ var Server = (function () {
         this.middleware = middleware;
     };
     Server.prototype.start = function (root, port, startupUrl, openWithBrowser) {
-        var _this = this;
         if (openWithBrowser === void 0) { openWithBrowser = true; }
         var ips = getLocalIPAddress();
+        var m = this.middleware(root);
         var server = http.createServer(function (request, response) {
-            _this.middleware(root)(request, response).then(function () {
+            m(request, response).then(function () {
                 response.end();
             }).catch(function (e) {
                 console.error(e);
