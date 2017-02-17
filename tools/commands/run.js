@@ -38,7 +38,8 @@ var Run = (function () {
             egret.args.host = addresses[0];
         }
         this.serverStarted = true;
-        server.startServer(egret.args, this.wrapByParams(egret.args.startUrl));
+        var openWithBrowser = !egret.args.serverOnly;
+        server.startServer(egret.args.projectDir, this.wrapByParams(egret.args.startUrl), openWithBrowser);
         if (egret.args.serverOnly) {
             console.log("Url:" + this.wrapByParams(egret.args.startUrl));
         }

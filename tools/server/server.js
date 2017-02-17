@@ -24,11 +24,11 @@ var mine = {
     "wmv": "video/x-ms-wmv",
     "xml": "text/xml"
 };
-function startServer(args, startupUrl) {
+function startServer(root, startupUrl, openWithBrowser) {
     var ips = getLocalIPAddress();
     var server = http.createServer(function (request, response) {
         var pathname = url.parse(request.url).pathname;
-        var realPath = path.join(args.projectDir, pathname);
+        var realPath = path.join(root, pathname);
         //console.log(realPath);
         var ext = path.extname(realPath);
         ext = ext ? ext.slice(1) : 'unknown';
@@ -63,7 +63,7 @@ function startServer(args, startupUrl) {
     var PORT = egret.args.port;
     server.listen(PORT);
     console.log("Server running at port: " + PORT + ".");
-    if (!args.serverOnly) {
+    if (openWithBrowser) {
         utils.open(startupUrl);
     }
 }

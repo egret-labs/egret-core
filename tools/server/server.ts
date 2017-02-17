@@ -31,12 +31,12 @@ var mine = {
 };
 
 
-export function startServer(args: egret.ToolArgs, startupUrl: string) {
+export function startServer(root: string, startupUrl: string, openWithBrowser: boolean) {
 
     let ips = getLocalIPAddress();
     var server = http.createServer(function (request, response) {
         var pathname = url.parse(request.url).pathname;
-        var realPath = path.join(args.projectDir, pathname);
+        var realPath = path.join(root, pathname);
         //console.log(realPath);
         var ext = path.extname(realPath);
         ext = ext ? ext.slice(1) : 'unknown';
@@ -69,7 +69,7 @@ export function startServer(args: egret.ToolArgs, startupUrl: string) {
     let PORT = egret.args.port;
     server.listen(PORT);
     console.log("Server running at port: " + PORT + ".");
-    if (!args.serverOnly) {
+    if (openWithBrowser) {
         utils.open(startupUrl);
     }
 
