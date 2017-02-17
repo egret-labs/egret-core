@@ -1,5 +1,3 @@
-
-/// <reference path="../lib/types.d.ts" />
 import utils = require('../lib/utils');
 import file = require('../lib/FileUtil');
 import ts = require("../lib/typescript-plus/lib/typescript");
@@ -63,10 +61,10 @@ export class Compiler {
             let msg;
             if (diagnostic.file) {
                 let {line, character} = diagnostic.file.getLineAndCharacterOfPosition(diagnostic.start);
-                msg = `${diagnostic.file.fileName}(${line + 1},${character + 1}): error TS${diagnostic.code}: ${message}`;
+                msg = `  Error ${diagnostic.file.fileName} (${line + 1},${character + 1}): ${message}`;
             }
             else {
-                msg = `${message}`;
+                msg = `  Error: ${message}`;
             }
             console.log(msg);
             this.errors.push(msg);
@@ -80,7 +78,6 @@ export class Compiler {
         filesChanged.forEach(file => {
             if (file.type == "added") {
                 this.fileNames.push(file.fileName);
-                // this.files[file.fileName] = { version: 0 };
             }
             else if (file.type == "removed") {
                 var index = this.fileNames.indexOf(file.fileName);
@@ -89,17 +86,10 @@ export class Compiler {
                 }
             }
             else {
-                // this.files[file.fileName].version++;
             }
         });
 
         return this.compile(this.options, this.fileNames);
-
-        // this.sortFiles();
-        // let emitResult = this.program.emit();
-        // this.logErrors(emitResult.diagnostics);
-
-        // return { files: this.sortedFiles, program: this.program, exitStatus: 0, messages: this.errors, compileWithChanges: this.compileWithChanges.bind(this) };
     }
 
     parseTsconfig() {
@@ -125,7 +115,7 @@ export class Compiler {
         }
 
         let notSupport = ["module", "noLib", "outFile", "rootDir", "out"];
-        let defaultSupport = { target: "es5", outDir: "bin-debug" }
+        let defaultSupport = { target: "es5", outDir: "bin-debug" };
         let compilerOptions = configObj.compilerOptions;
         for (let optionName of notSupport) {
             if (compilerOptions.hasOwnProperty(optionName)) {
@@ -151,11 +141,6 @@ export class Compiler {
         return configParseResult
     }
 }
-
-
-
-
-
 
 function getCompilerDefines(args: egret.ToolArgs, debug?: boolean) {
     let defines: any = {};

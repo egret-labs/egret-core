@@ -1,4 +1,3 @@
-/// <reference path="../lib/types.d.ts" />
 var utils = require("../lib/utils");
 var file = require("../lib/FileUtil");
 var ts = require("../lib/typescript-plus/lib/typescript");
@@ -9,10 +8,9 @@ var Compiler = (function () {
     }
     Compiler.prototype.compile = function (options, rootFileNames) {
         this.fileNames = rootFileNames;
-        this.sortedFiles = rootFileNames;
         this.options = options;
         this.program = ts.createProgram(rootFileNames, options);
-        // this.sortFiles();
+        this.sortFiles();
         var emitResult = this.program.emit();
         this.logErrors(emitResult.diagnostics);
         return { files: this.sortedFiles, program: this.program, exitStatus: 0, messages: this.errors, compileWithChanges: this.compileWithChanges.bind(this) };
@@ -37,10 +35,10 @@ var Compiler = (function () {
             var msg;
             if (diagnostic.file) {
                 var _a = diagnostic.file.getLineAndCharacterOfPosition(diagnostic.start), line = _a.line, character = _a.character;
-                msg = diagnostic.file.fileName + "(" + (line + 1) + "," + (character + 1) + "): error TS" + diagnostic.code + ": " + message;
+                msg = "  Error " + diagnostic.file.fileName + " (" + (line + 1) + "," + (character + 1) + "): " + message;
             }
             else {
-                msg = "" + message;
+                msg = "  Error: " + message;
             }
             console.log(msg);
             _this.errors.push(msg);
@@ -63,10 +61,6 @@ var Compiler = (function () {
             }
         });
         return this.compile(this.options, this.fileNames);
-        // this.sortFiles();
-        // let emitResult = this.program.emit();
-        // this.logErrors(emitResult.diagnostics);
-        // return { files: this.sortedFiles, program: this.program, exitStatus: 0, messages: this.errors, compileWithChanges: this.compileWithChanges.bind(this) };
     };
     Compiler.prototype.parseTsconfig = function () {
         var url = egret.args.projectDir + "tsconfig.json";
