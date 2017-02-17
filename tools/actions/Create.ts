@@ -3,7 +3,6 @@
 
 import utils = require('../lib/utils');
 import server = require('../server/server');
-import NativeProject = require('../actions/NativeProject');
 import CompileProject = require('../actions/CompileProject');
 import projectAction = require('../actions/Project');
 import CompileTemplate = require('../actions/CompileTemplate');

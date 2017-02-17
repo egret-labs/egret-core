@@ -7,8 +7,8 @@ import service = require('../service/index');
 import FileUtil = require('../lib/FileUtil');
 import CompileProject = require('../actions/CompileProject');
 import CompileTemplate = require('../actions/CompileTemplate');
+import copyNative = require("../actions/CopyNativeFiles");
 
-import NativeProject = require('../actions/NativeProject');
 console.log(utils.tr(1106, 0));
 var timeBuildStart: number = (new Date()).getTime();
 class Clean implements egret.Command {
@@ -31,8 +31,15 @@ class Clean implements egret.Command {
         //修改 html 中 game_list 块
         CompileTemplate.modifyIndexHTML(result.files);
 
-        //根据 index.html 修改 native_require.js 文件，并看情况刷新 native 工程
-        NativeProject.build();
+
+        CompileTemplate.modifyNativeRequire(true);
+
+        //拷贝项目到native工程中
+        if (egret.args.runtime == "native") {
+            console.log("----native build-----");
+
+            copyNative.refreshNative(true);
+        }
         var timeBuildEnd = new Date().getTime();
         var timeBuildUsed = (timeBuildEnd - timeBuildStart) / 1000;
         console.log(utils.tr(1108, timeBuildUsed));

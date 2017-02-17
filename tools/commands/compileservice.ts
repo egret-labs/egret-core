@@ -6,13 +6,13 @@ import server = require('../server/server');
 import service = require('../service/index');
 import ServiceSocket = require('../service/ServiceSocket');
 import FileUtil = require('../lib/FileUtil');
-import Native = require('../actions/NativeProject');
 import exmlActions = require('../actions/exml');
 import state = require('../lib/DirectoryState');
 import CompileProject = require('../actions/CompileProject');
 import CompileTemplate = require('../actions/CompileTemplate');
 import parser = require('../parser/Parser');
 import EgretProject = require('../parser/EgretProject');
+import copyNative = require("../actions/CopyNativeFiles");
 
 class AutoCompileCommand implements egret.Command {
     private compileProject: CompileProject;
@@ -98,7 +98,15 @@ class AutoCompileCommand implements egret.Command {
 
         exmlActions.afterBuild();
 
-        Native.build();
+        CompileTemplate.modifyNativeRequire(true);
+
+        //拷贝项目到native工程中
+        if (egret.args.runtime == "native") {
+            console.log("----native build-----");
+
+            copyNative.refreshNative(true);
+        }
+
         this.dirState.init();
 
         this._scripts = result.files;
@@ -186,7 +194,14 @@ class AutoCompileCommand implements egret.Command {
         if (exmls.length) {
             exmlActions.afterBuildChanges(exmls);
         }
-        Native.build();
+        CompileTemplate.modifyNativeRequire(true);
+
+        //拷贝项目到native工程中
+        if (egret.args.runtime == "native") {
+            console.log("----native build-----");
+
+            copyNative.refreshNative(true);
+        }
         this.dirState.init();
 
         this.sendCommand();

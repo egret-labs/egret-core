@@ -7004,9 +7004,6 @@ declare module egret3d.GLSL {
     }
 }
 declare module egret3d {
-    /**
-    * @private
-    */
     class ShaderLib {
         static lib: {
             [key: string]: string;
