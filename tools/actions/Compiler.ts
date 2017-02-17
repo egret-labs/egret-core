@@ -25,67 +25,23 @@ export interface EgretCompilerHost {
 
 export class Compiler {
 
-    private files: ts.Map<{ version: number }> = <any>{};
-    private sortedFiles;
+    private sortedFiles: string[];
+    private program: ts.Program;
+    private options: ts.CompilerOptions;
 
     public compile(options: ts.CompilerOptions, rootFileNames: string[]): EgretCompilerHost {
-        this.errors = [];
         this.fileNames = rootFileNames;
-        this.sortedFiles = rootFileNames;
+        this.options = options;
 
-        // initialize the list of files
-        rootFileNames.forEach(fileName => {
-            this.files[fileName] = { version: 0 };
-        });
-
-        if (options.locale) {
-            ts.validateLocaleAndSetLanguage(options.locale, ts.sys);
-        }
-
-        // Create the language service host to allow the LS to communicate with the host
-        const servicesHost: ts.LanguageServiceHost = {
-            getScriptFileNames: () => this.sortedFiles,
-            getNewLine: () => {
-                var carriageReturnLineFeed = "\r\n";
-                var lineFeed = "\n";
-                if (options.newLine === 0 /* CarriageReturnLineFeed */) {
-                    return carriageReturnLineFeed;
-                }
-                else if (options.newLine === 1 /* LineFeed */) {
-                    return lineFeed;
-                }
-                else if (ts.sys) {
-                    return ts.sys.newLine;
-                }
-                return carriageReturnLineFeed;
-            },
-            getScriptVersion: (fileName) => this.files[fileName] && this.files[fileName].version.toString(),
-            getScriptSnapshot: (fileName) => {
-                if (!file.exists(fileName)) {
-                    return undefined;
-                }
-
-                return ts.ScriptSnapshot.fromString(file.read(fileName, true).toString());
-            },
-            getCurrentDirectory: () => process.cwd(),
-            getCompilationSettings: () => options,
-            getDefaultLibFileName: (options) => ts.getDefaultLibFilePath(options),
-        };
-
-        // Create the language service files
-        this.services = ts.createLanguageService(servicesHost, ts.createDocumentRegistry());
+        this.program = ts.createProgram(rootFileNames, options);
         this.sortFiles();
-        let output = this.services.getEmitOutput(undefined);
-        this.logErrors(undefined);
-        output.outputFiles.forEach(o => {
-            file.save(o.name, o.text);
-        });
-
-        return { files: this.sortedFiles, program: this.services.getProgram(), exitStatus: 0, messages: this.errors, compileWithChanges: this.compileWithChanges.bind(this) };
+        let emitResult = this.program.emit();
+        this.logErrors(emitResult.diagnostics);
+        return { files: this.sortedFiles, program: this.program, exitStatus: 0, messages: this.errors, compileWithChanges: this.compileWithChanges.bind(this) };
     }
 
     private sortFiles(): void {
-        let program = this.services.getProgram();
+        let program = this.program;
         let sortResult = ts.reorderSourceFiles(program);
         if (sortResult.circularReferences.length > 0) {
             let error: string = "";
@@ -97,21 +53,10 @@ export class Compiler {
         this.sortedFiles = sortResult.sortedFileNames;
     }
 
-    private services: ts.LanguageService;
-    private errors: string[];
+    private errors: string[] = [];
 
-    private emitFile(fileName: string) {
-        let output = this.services.getEmitOutput(fileName);
-        this.logErrors(fileName);
-        output.outputFiles.forEach(o => {
-            file.save(o.name, o.text);
-        });
-    }
-
-    private logErrors(fileName?: string) {
-        let allDiagnostics = this.services.getCompilerOptionsDiagnostics()
-            .concat(this.services.getSyntacticDiagnostics(fileName))
-            .concat(this.services.getSemanticDiagnostics(fileName));
+    private logErrors(diagnostics) {
+        let allDiagnostics = ts.getPreEmitDiagnostics(this.program).concat(diagnostics);
 
         allDiagnostics.forEach(diagnostic => {
             let message = ts.flattenDiagnosticMessageText(diagnostic.messageText, "\n");
@@ -123,7 +68,7 @@ export class Compiler {
             else {
                 msg = `${message}`;
             }
-            console.log(msg)
+            console.log(msg);
             this.errors.push(msg);
         });
     }
@@ -135,7 +80,7 @@ export class Compiler {
         filesChanged.forEach(file => {
             if (file.type == "added") {
                 this.fileNames.push(file.fileName);
-                this.files[file.fileName] = { version: 0 };
+                // this.files[file.fileName] = { version: 0 };
             }
             else if (file.type == "removed") {
                 var index = this.fileNames.indexOf(file.fileName);
@@ -144,17 +89,17 @@ export class Compiler {
                 }
             }
             else {
-                this.files[file.fileName].version++;
+                // this.files[file.fileName].version++;
             }
         });
 
-        this.sortFiles();
+        return this.compile(this.options, this.fileNames);
 
-        filesChanged.forEach(file => {
-            this.emitFile(file.fileName);
-        });
+        // this.sortFiles();
+        // let emitResult = this.program.emit();
+        // this.logErrors(emitResult.diagnostics);
 
-        return { files: this.sortedFiles, program: this.services.getProgram(), exitStatus: 0, messages: this.errors, compileWithChanges: this.compileWithChanges.bind(this) };
+        // return { files: this.sortedFiles, program: this.program, exitStatus: 0, messages: this.errors, compileWithChanges: this.compileWithChanges.bind(this) };
     }
 
     parseTsconfig() {

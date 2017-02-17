@@ -5,60 +5,20 @@ var ts = require("../lib/typescript-plus/lib/typescript");
 var path = require("path");
 var Compiler = (function () {
     function Compiler() {
-        this.files = {};
+        this.errors = [];
     }
     Compiler.prototype.compile = function (options, rootFileNames) {
-        var _this = this;
-        this.errors = [];
         this.fileNames = rootFileNames;
         this.sortedFiles = rootFileNames;
-        // initialize the list of files
-        rootFileNames.forEach(function (fileName) {
-            _this.files[fileName] = { version: 0 };
-        });
-        if (options.locale) {
-            ts.validateLocaleAndSetLanguage(options.locale, ts.sys);
-        }
-        // Create the language service host to allow the LS to communicate with the host
-        var servicesHost = {
-            getScriptFileNames: function () { return _this.sortedFiles; },
-            getNewLine: function () {
-                var carriageReturnLineFeed = "\r\n";
-                var lineFeed = "\n";
-                if (options.newLine === 0 /* CarriageReturnLineFeed */) {
-                    return carriageReturnLineFeed;
-                }
-                else if (options.newLine === 1 /* LineFeed */) {
-                    return lineFeed;
-                }
-                else if (ts.sys) {
-                    return ts.sys.newLine;
-                }
-                return carriageReturnLineFeed;
-            },
-            getScriptVersion: function (fileName) { return _this.files[fileName] && _this.files[fileName].version.toString(); },
-            getScriptSnapshot: function (fileName) {
-                if (!file.exists(fileName)) {
-                    return undefined;
-                }
-                return ts.ScriptSnapshot.fromString(file.read(fileName, true).toString());
-            },
-            getCurrentDirectory: function () { return process.cwd(); },
-            getCompilationSettings: function () { return options; },
-            getDefaultLibFileName: function (options) { return ts.getDefaultLibFilePath(options); },
-        };
-        // Create the language service files
-        this.services = ts.createLanguageService(servicesHost, ts.createDocumentRegistry());
-        this.sortFiles();
-        var output = this.services.getEmitOutput(undefined);
-        this.logErrors(undefined);
-        output.outputFiles.forEach(function (o) {
-            file.save(o.name, o.text);
-        });
-        return { files: this.sortedFiles, program: this.services.getProgram(), exitStatus: 0, messages: this.errors, compileWithChanges: this.compileWithChanges.bind(this) };
+        this.options = options;
+        this.program = ts.createProgram(rootFileNames, options);
+        // this.sortFiles();
+        var emitResult = this.program.emit();
+        this.logErrors(emitResult.diagnostics);
+        return { files: this.sortedFiles, program: this.program, exitStatus: 0, messages: this.errors, compileWithChanges: this.compileWithChanges.bind(this) };
     };
     Compiler.prototype.sortFiles = function () {
-        var program = this.services.getProgram();
+        var program = this.program;
         var sortResult = ts.reorderSourceFiles(program);
         if (sortResult.circularReferences.length > 0) {
             var error = "";
@@ -69,18 +29,9 @@ var Compiler = (function () {
         }
         this.sortedFiles = sortResult.sortedFileNames;
     };
-    Compiler.prototype.emitFile = function (fileName) {
-        var output = this.services.getEmitOutput(fileName);
-        this.logErrors(fileName);
-        output.outputFiles.forEach(function (o) {
-            file.save(o.name, o.text);
-        });
-    };
-    Compiler.prototype.logErrors = function (fileName) {
+    Compiler.prototype.logErrors = function (diagnostics) {
         var _this = this;
-        var allDiagnostics = this.services.getCompilerOptionsDiagnostics()
-            .concat(this.services.getSyntacticDiagnostics(fileName))
-            .concat(this.services.getSemanticDiagnostics(fileName));
+        var allDiagnostics = ts.getPreEmitDiagnostics(this.program).concat(diagnostics);
         allDiagnostics.forEach(function (diagnostic) {
             var message = ts.flattenDiagnosticMessageText(diagnostic.messageText, "\n");
             var msg;
@@ -101,7 +52,6 @@ var Compiler = (function () {
         filesChanged.forEach(function (file) {
             if (file.type == "added") {
                 _this.fileNames.push(file.fileName);
-                _this.files[file.fileName] = { version: 0 };
             }
             else if (file.type == "removed") {
                 var index = _this.fileNames.indexOf(file.fileName);
@@ -110,14 +60,13 @@ var Compiler = (function () {
                 }
             }
             else {
-                _this.files[file.fileName].version++;
             }
         });
-        this.sortFiles();
-        filesChanged.forEach(function (file) {
-            _this.emitFile(file.fileName);
-        });
-        return { files: this.sortedFiles, program: this.services.getProgram(), exitStatus: 0, messages: this.errors, compileWithChanges: this.compileWithChanges.bind(this) };
+        return this.compile(this.options, this.fileNames);
+        // this.sortFiles();
+        // let emitResult = this.program.emit();
+        // this.logErrors(emitResult.diagnostics);
+        // return { files: this.sortedFiles, program: this.program, exitStatus: 0, messages: this.errors, compileWithChanges: this.compileWithChanges.bind(this) };
     };
     Compiler.prototype.parseTsconfig = function () {
         var url = egret.args.projectDir + "tsconfig.json";
