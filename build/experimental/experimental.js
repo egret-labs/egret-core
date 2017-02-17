@@ -1,6 +1,11 @@
 var __reflect = (this && this.__reflect) || function (p, c, t) {
     p.__class__ = c, t ? t.push(c) : t = [c], p.__types__ = p.__types__ ? t.concat(p.__types__) : t;
 };
+// The MIT License (MIT)
+// Copyright (c) 2008 Jacob Seidelin
+// Permission is hereby granted, free of charge, to any person obtaining a copy of this software and associated documentation files (the "Software"), to deal in the Software without restriction, including without limitation the rights to use, copy, modify, merge, publish, distribute, sublicense, and/or sell copies of the Software, and to permit persons to whom the Software is furnished to do so, subject to the following conditions:
+// The above copyright notice and this permission notice shall be included in all copies or substantial portions of the Software.
+// THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 var egret;
 (function (egret) {
     var experimental;
@@ -746,7 +751,6 @@ var egret;
         function pickPhoto() {
             return new Promise(function (resolve, reject) {
                 var fileInput = document.createElement("input");
-                fileInput.id = "fileInput";
                 fileInput.type = "file";
                 fileInput.accept = "image/*";
                 fileInput.style.display = "none";
@@ -832,15 +836,14 @@ var egret;
                                     if (orientation !== -1) {
                                         imagetype = "jpeg";
                                     }
-                                    var smallURL = "";
+                                    var resultURL = "";
                                     if (imagetype === "jpg" || imagetype === "jpeg") {
-                                        smallURL = canvas.toDataURL("image/" + imagetype);
+                                        resultURL = canvas.toDataURL("image/" + imagetype);
                                     }
                                     else {
-                                        smallURL = canvas.toDataURL("image/" + imagetype);
+                                        resultURL = canvas.toDataURL("image/" + imagetype);
                                     }
-                                    image.width = image.height = 500;
-                                    resolve(smallURL);
+                                    resolve(resultURL);
                                     image.parentNode.removeChild(image);
                                     fileInput.parentNode.removeChild(fileInput);
                                 };

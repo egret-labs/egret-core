@@ -5770,7 +5770,7 @@ var egret;
                     var xMax = x + scrollRect.width;
                     var yMax = y + scrollRect.height;
                     var minX = void 0, minY = void 0, maxX = void 0, maxY = void 0;
-                    //优化，通常情况下不缩放旋转的对象占多数，直接加上偏移量即可。
+                    //优化，通常情况下不缩放的对象占多数，直接加上偏移量即可。
                     if (a == 1.0 && d == 1.0) {
                         minX = x + tx;
                         minY = y + ty;
