@@ -30,45 +30,58 @@ var mine = {
     "xml": "text/xml"
 };
 
+function fileReader(root) {
+    return function (request: http.IncomingMessage, response: http.ServerResponse) {
+        return new Promise((reslove, reject) => {
+            var pathname = url.parse(request.url).pathname;
+            var realPath = path.join(root, pathname);
+            //console.log(realPath);
+            var ext = path.extname(realPath);
+            ext = ext ? ext.slice(1) : 'unknown';
+            fs.exists(realPath, function (exists) {
+                if (!exists) {
+                    response.writeHead(404, {
+                        'Content-Type': 'text/plain'
+                    });
+                    response.write("This request URL " + pathname + " was not found on this server.");
+                    reslove();
+                } else {
+                    fs.readFile(realPath, "binary", function (err, file) {
+                        if (err) {
+                            response.writeHead(500, {
+                                'Content-Type': 'text/plain'
+                            });
+                            reslove();
+                        } else {
+                            var contentType = mine[ext] || "text/plain";
+                            response.writeHead(200, {
+                                'Content-Type': contentType
+                            });
+                            response.write(file, "binary");
+                            reslove();
+                        }
+                    });
+                }
+            })
+        })
+    }
+}
 
-export function startServer(root: string, startupUrl: string, openWithBrowser: boolean) {
+
+
+export function startServer(root: string, port: number, startupUrl: string, openWithBrowser: boolean = true) {
 
     let ips = getLocalIPAddress();
     var server = http.createServer(function (request, response) {
-        var pathname = url.parse(request.url).pathname;
-        var realPath = path.join(root, pathname);
-        //console.log(realPath);
-        var ext = path.extname(realPath);
-        ext = ext ? ext.slice(1) : 'unknown';
-        fs.exists(realPath, function (exists) {
-            if (!exists) {
-                response.writeHead(404, {
-                    'Content-Type': 'text/plain'
-                });
-                response.write("This request URL " + pathname + " was not found on this server.");
-                response.end();
-            } else {
-                fs.readFile(realPath, "binary", function (err, file) {
-                    if (err) {
-                        response.writeHead(500, {
-                            'Content-Type': 'text/plain'
-                        });
-                        response.end(err);
-                    } else {
-                        var contentType = mine[ext] || "text/plain";
-                        response.writeHead(200, {
-                            'Content-Type': contentType
-                        });
-                        response.write(file, "binary");
-                        response.end();
-                    }
-                });
-            }
+        fileReader(root)(request, response).then(() => {
+            response.end();
+        }).catch((e) => {
+            console.error(e);
+            response.end();
         });
     });
-    let PORT = egret.args.port;
-    server.listen(PORT);
-    console.log("Server running at port: " + PORT + ".");
+    server.listen(port);
+    console.log("Server running at port: " + port + ".");
     if (openWithBrowser) {
         utils.open(startupUrl);
     }

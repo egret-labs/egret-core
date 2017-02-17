@@ -24,45 +24,57 @@ var mine = {
     "wmv": "video/x-ms-wmv",
     "xml": "text/xml"
 };
-function startServer(root, startupUrl, openWithBrowser) {
+function fileReader(root) {
+    return function (request, response) {
+        return new Promise(function (reslove, reject) {
+            var pathname = url.parse(request.url).pathname;
+            var realPath = path.join(root, pathname);
+            //console.log(realPath);
+            var ext = path.extname(realPath);
+            ext = ext ? ext.slice(1) : 'unknown';
+            fs.exists(realPath, function (exists) {
+                if (!exists) {
+                    response.writeHead(404, {
+                        'Content-Type': 'text/plain'
+                    });
+                    response.write("This request URL " + pathname + " was not found on this server.");
+                    reslove();
+                }
+                else {
+                    fs.readFile(realPath, "binary", function (err, file) {
+                        if (err) {
+                            response.writeHead(500, {
+                                'Content-Type': 'text/plain'
+                            });
+                            reslove();
+                        }
+                        else {
+                            var contentType = mine[ext] || "text/plain";
+                            response.writeHead(200, {
+                                'Content-Type': contentType
+                            });
+                            response.write(file, "binary");
+                            reslove();
+                        }
+                    });
+                }
+            });
+        });
+    };
+}
+function startServer(root, port, startupUrl, openWithBrowser) {
+    if (openWithBrowser === void 0) { openWithBrowser = true; }
     var ips = getLocalIPAddress();
     var server = http.createServer(function (request, response) {
-        var pathname = url.parse(request.url).pathname;
-        var realPath = path.join(root, pathname);
-        //console.log(realPath);
-        var ext = path.extname(realPath);
-        ext = ext ? ext.slice(1) : 'unknown';
-        fs.exists(realPath, function (exists) {
-            if (!exists) {
-                response.writeHead(404, {
-                    'Content-Type': 'text/plain'
-                });
-                response.write("This request URL " + pathname + " was not found on this server.");
-                response.end();
-            }
-            else {
-                fs.readFile(realPath, "binary", function (err, file) {
-                    if (err) {
-                        response.writeHead(500, {
-                            'Content-Type': 'text/plain'
-                        });
-                        response.end(err);
-                    }
-                    else {
-                        var contentType = mine[ext] || "text/plain";
-                        response.writeHead(200, {
-                            'Content-Type': contentType
-                        });
-                        response.write(file, "binary");
-                        response.end();
-                    }
-                });
-            }
+        fileReader(root)(request, response).then(function () {
+            response.end();
+        }).catch(function (e) {
+            console.error(e);
+            response.end();
         });
     });
-    var PORT = egret.args.port;
-    server.listen(PORT);
-    console.log("Server running at port: " + PORT + ".");
+    server.listen(port);
+    console.log("Server running at port: " + port + ".");
     if (openWithBrowser) {
         utils.open(startupUrl);
     }

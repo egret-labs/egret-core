@@ -44,7 +44,7 @@ class Run implements egret.Command {
         }
         this.serverStarted = true;
         let openWithBrowser = !egret.args.serverOnly;
-        server.startServer(egret.args.projectDir, this.wrapByParams(egret.args.startUrl), openWithBrowser);
+        server.startServer(egret.args.projectDir, port, this.wrapByParams(egret.args.startUrl), openWithBrowser);
         if (egret.args.serverOnly) {
             console.log("Url:" + this.wrapByParams(egret.args.startUrl));
         } else {
