@@ -1,21 +1,12 @@
 import * as Server from '../server/server';
 import * as TypeScriptProject from './TypeScritpProject';
-
-
+import * as cp from 'child_process';
 
 
 export function run() {
     let projectRoot = egret.args.projectDir;
-    let params = "";
-
-
-
-    let server2 = new Server();
-    server2.use(TypeScriptProject.middleware);
-    server2.start(projectRoot, 5000, "http://localhost:5000/index.html", false);
-
     let server = new Server();
-    server.use(async);
+    server.use(watchProject("manghuangji_client"));
     server.start(projectRoot, 4000, "http://localhost:4000/index.html");
 
 }
@@ -23,7 +14,7 @@ export function run() {
 import * as http from 'http';
 
 let fetch = () => {
-    return new Promise((reslove, reject) => {
+    return new Promise<string>((reslove, reject) => {
 
         var options = {
             hostname: '127.0.0.1',
@@ -43,25 +34,22 @@ let fetch = () => {
     })
 }
 
-let async: Server.Middleware = () => {
-    return async () => {
-        console.log("async:1111")
-        await fetch();
-        console.log("async:2222")
+let watchProject = (project) => {
+
+    let output = "";
+    let state = 0;
+    let process = cp.exec(`egret startup ${project}`, (error) => {
+        console.log(error)
+    })
+    process.stdout.on("data", (data) => {
+        state = 1;
+        output += data;
+    })
+
+    return () => {
+        let result = "";
+        return async (request, response) => {
+            response.end(JSON.stringify({ state, output }));
+        }
     }
-}
-
-
-enum State {
-
-    PENDING,
-    DURING,
-    ERROR,
-
-}
-
-let info = {
-
-    code: 0,
-
 }

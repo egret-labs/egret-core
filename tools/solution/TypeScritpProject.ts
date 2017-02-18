@@ -68,49 +68,37 @@ function GetJavaScriptFileNames(tsFiles: string[], root: string | RegExp, prefix
     });
     return files;
 }
+let compileChanged = (fileName: string, type: string) => {
+    if (fileName.indexOf(".ts") >= 0) {
+        let fileChanged = { fileName, type };
+        console.log(fileChanged)
+        let time1 = Date.now();
+        host.compileWithChanges([fileChanged]);
+        console.log(Date.now() - time1)
+        console.log(host.messages)
+    }
 
+}
+
+let host: Compiler.EgretCompilerHost;
+
+export function run() {
+    let root = egret.args.projectDir;
+    watch.createMonitor(root, { persistent: true, interval: 2007, filter: (f, stat) => !f.match(/\.g(\.d)?\.ts/) }, m => {
+        m.on("created", (f) => compileChanged(f, "added"))
+            .on("removed", (f) => compileChanged(f, "removed"))
+            .on("changed", (f) => compileChanged(f, "modified"));
+    });
+    let project = new TypeScriptProject(root);
+    host = project.compile();
+    console.log(host.messages)
+}
 
 export var middleware: Server.Middleware = () => {
 
-    let host: Compiler.EgretCompilerHost;
-
-    let isInit = false;
-
-
-    let compileChanged = (fileName: string, type: string) => {
-        if (fileName.indexOf(".ts") >= 0) {
-            let fileChanged = { fileName, type };
-            console.log(fileChanged)
-            let time1 = Date.now();
-            host.compileWithChanges([fileChanged]);
-            console.log(Date.now() - time1)
-            console.log(host.messages)
-        }
-
-    }
-
-
 
     return async (request, response) => {
-        let time1 = Date.now();
-        let root = egret.args.projectDir;
-        if (!isInit) {
-            watch.createMonitor(root, { persistent: true, interval: 2007, filter: (f, stat) => !f.match(/\.g(\.d)?\.ts/) }, m => {
-                m.on("created", (f) => compileChanged(f, "added"))
-                    .on("removed", (f) => compileChanged(f, "removed"))
-                    .on("changed", (f) => compileChanged(f, "modified"));
-            });
-            isInit = true;
-            let project = new TypeScriptProject(root);
-            host = project.compile();
-            console.log(host.messages)
-        }
-
-
-
-        let time2 = Date.now();
-        console.log(time2 - time1);
-        console.log("success")
+        response.end(host.messages.toString())
     }
 
 

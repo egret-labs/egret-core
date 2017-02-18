@@ -90,38 +90,33 @@ function GetJavaScriptFileNames(tsFiles, root, prefix) {
     });
     return files;
 }
+var compileChanged = function (fileName, type) {
+    if (fileName.indexOf(".ts") >= 0) {
+        var fileChanged = { fileName: fileName, type: type };
+        console.log(fileChanged);
+        var time1 = Date.now();
+        host.compileWithChanges([fileChanged]);
+        console.log(Date.now() - time1);
+        console.log(host.messages);
+    }
+};
+var host;
+function run() {
+    var root = egret.args.projectDir;
+    watch.createMonitor(root, { persistent: true, interval: 2007, filter: function (f, stat) { return !f.match(/\.g(\.d)?\.ts/); } }, function (m) {
+        m.on("created", function (f) { return compileChanged(f, "added"); })
+            .on("removed", function (f) { return compileChanged(f, "removed"); })
+            .on("changed", function (f) { return compileChanged(f, "modified"); });
+    });
+    var project = new TypeScriptProject(root);
+    host = project.compile();
+    console.log(host.messages);
+}
+exports.run = run;
 exports.middleware = function () {
-    var host;
-    var isInit = false;
-    var compileChanged = function (fileName, type) {
-        if (fileName.indexOf(".ts") >= 0) {
-            var fileChanged = { fileName: fileName, type: type };
-            console.log(fileChanged);
-            var time1 = Date.now();
-            host.compileWithChanges([fileChanged]);
-            console.log(Date.now() - time1);
-            console.log(host.messages);
-        }
-    };
     return function (request, response) { return __awaiter(_this, void 0, void 0, function () {
-        var time1, root, project, time2;
         return __generator(this, function (_a) {
-            time1 = Date.now();
-            root = egret.args.projectDir;
-            if (!isInit) {
-                watch.createMonitor(root, { persistent: true, interval: 2007, filter: function (f, stat) { return !f.match(/\.g(\.d)?\.ts/); } }, function (m) {
-                    m.on("created", function (f) { return compileChanged(f, "added"); })
-                        .on("removed", function (f) { return compileChanged(f, "removed"); })
-                        .on("changed", function (f) { return compileChanged(f, "modified"); });
-                });
-                isInit = true;
-                project = new TypeScriptProject(root);
-                host = project.compile();
-                console.log(host.messages);
-            }
-            time2 = Date.now();
-            console.log(time2 - time1);
-            console.log("success");
+            response.end(host.messages.toString());
             return [2 /*return*/];
         });
     }); };

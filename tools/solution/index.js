@@ -35,15 +35,11 @@ var __generator = (this && this.__generator) || function (thisArg, body) {
 };
 var _this = this;
 var Server = require("../server/server");
-var TypeScriptProject = require("./TypeScritpProject");
+var cp = require("child_process");
 function run() {
     var projectRoot = egret.args.projectDir;
-    var params = "";
-    var server2 = new Server();
-    server2.use(TypeScriptProject.middleware);
-    server2.start(projectRoot, 5000, "http://localhost:5000/index.html", false);
     var server = new Server();
-    server.use(async);
+    server.use(watchProject("manghuangji_client"));
     server.start(projectRoot, 4000, "http://localhost:4000/index.html");
 }
 exports.run = run;
@@ -67,27 +63,23 @@ var fetch = function () {
         });
     });
 };
-var async = function () {
-    return function () { return __awaiter(_this, void 0, void 0, function () {
-        return __generator(this, function (_a) {
-            switch (_a.label) {
-                case 0:
-                    console.log("async:1111");
-                    return [4 /*yield*/, fetch()];
-                case 1:
-                    _a.sent();
-                    console.log("async:2222");
-                    return [2 /*return*/];
-            }
-        });
-    }); };
-};
-var State;
-(function (State) {
-    State[State["PENDING"] = 0] = "PENDING";
-    State[State["DURING"] = 1] = "DURING";
-    State[State["ERROR"] = 2] = "ERROR";
-})(State || (State = {}));
-var info = {
-    code: 0,
+var watchProject = function (project) {
+    var output = "";
+    var state = 0;
+    var process = cp.exec("egret startup " + project, function (error) {
+        console.log(error);
+    });
+    process.stdout.on("data", function (data) {
+        state = 1;
+        output += data;
+    });
+    return function () {
+        var result = "";
+        return function (request, response) { return __awaiter(_this, void 0, void 0, function () {
+            return __generator(this, function (_a) {
+                response.end(JSON.stringify({ state: state, output: output }));
+                return [2 /*return*/];
+            });
+        }); };
+    };
 };
