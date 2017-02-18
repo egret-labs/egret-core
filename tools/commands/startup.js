@@ -7,9 +7,10 @@ module.exports = (function () {
     }
     StartUp.prototype.execute = function () {
         var root = egret.args.projectDir;
-        if (file.exists(path.join(root, "egret.solution"))) {
+        var solutionFile = path.join(root, "egret.json");
+        if (file.exists(solutionFile)) {
             console.log('solution startup');
-            solution.run();
+            solution.run(solutionFile);
         }
         else {
             console.log('project startup');

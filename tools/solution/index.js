@@ -36,11 +36,23 @@ var __generator = (this && this.__generator) || function (thisArg, body) {
 var _this = this;
 var Server = require("../server/server");
 var cp = require("child_process");
-function run() {
+var FileUtil = require("../lib/FileUtil");
+function parseSolutionFile(path) {
+    var content = FileUtil.read(path);
+    var json = JSON.parse(content);
+    for (var key in json.modules) {
+        var m = json.modules[key];
+    }
+}
+function run(solutionFile) {
+    var s = parseSolutionFile(solutionFile);
     var projectRoot = egret.args.projectDir;
-    var server = new Server();
-    server.use(watchProject("manghuangji_client"));
-    server.start(projectRoot, 4000, "http://localhost:4000/index.html");
+    var dashboardServer = new Server();
+    dashboardServer.use(dashboard);
+    dashboardServer.start(projectRoot, 5000, "http://localhost:5000/index.html");
+    var typescriptServer = new Server();
+    typescriptServer.use(watchProject("manghuangji_client"));
+    typescriptServer.start(projectRoot, 4000, "http://localhost:4000/index.html");
 }
 exports.run = run;
 var http = require("http");
@@ -62,6 +74,17 @@ var fetch = function () {
             });
         });
     });
+};
+var dashboard = function () {
+    return function (reuest, response) { return __awaiter(_this, void 0, void 0, function () {
+        var scriptContent, htmlContent;
+        return __generator(this, function (_a) {
+            scriptContent = FileUtil.read(module.filename.replace("index.js", "client/index.js"));
+            htmlContent = "\n        <html>\n            <body>\n            <script type=\"text/javascript\">\n                " + scriptContent + "\n            </script>\n            </body>\n        </html>\n        ";
+            response.write(htmlContent);
+            return [2 /*return*/];
+        });
+    }); };
 };
 var watchProject = function (project) {
     var output = "";

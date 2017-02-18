@@ -1,13 +1,38 @@
 import * as Server from '../server/server';
 import * as TypeScriptProject from './TypeScritpProject';
 import * as cp from 'child_process';
+import * as FileUtil from '../lib/FileUtil';
 
+export type Solution = {
 
-export function run() {
+    modules: {
+        [moduleName: string]: {
+            root: string,
+            type: "extra" | "inline"
+        }
+    }
+
+}
+
+function parseSolutionFile(path) {
+    let content = FileUtil.read(path);
+    let json: Solution = JSON.parse(content);
+    for (var key in json.modules) {
+        let m = json.modules[key];
+    }
+}
+
+export function run(solutionFile: string) {
+    let s = parseSolutionFile(solutionFile);
     let projectRoot = egret.args.projectDir;
-    let server = new Server();
-    server.use(watchProject("manghuangji_client"));
-    server.start(projectRoot, 4000, "http://localhost:4000/index.html");
+
+    let dashboardServer = new Server();
+    dashboardServer.use(dashboard);
+    dashboardServer.start(projectRoot, 5000, "http://localhost:5000/index.html")
+
+    let typescriptServer = new Server();
+    typescriptServer.use(watchProject("manghuangji_client"));
+    typescriptServer.start(projectRoot, 4000, "http://localhost:4000/index.html");
 
 }
 
@@ -34,7 +59,23 @@ let fetch = () => {
     })
 }
 
-let watchProject = (project) => {
+let dashboard: Server.Middleware = () => {
+    return async (reuest, response) => {
+        let scriptContent = FileUtil.read(module.filename.replace("index.js", "client/index.js"));
+        let htmlContent = `
+        <html>
+            <body>
+            <script type="text/javascript">
+                ${scriptContent}
+            </script>
+            </body>
+        </html>
+        `
+        response.write(htmlContent);
+    }
+}
+
+let watchProject: (project: string) => Server.Middleware = (project) => {
 
     let output = "";
     let state = 0;

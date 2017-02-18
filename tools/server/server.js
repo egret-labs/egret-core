@@ -74,6 +74,7 @@ var Server = (function () {
         var ips = getLocalIPAddress();
         var m = this.middleware(root);
         var server = http.createServer(function (request, response) {
+            response.setHeader("Access-Control-Allow-Origin", "*");
             m(request, response).then(function () {
                 response.end();
             }).catch(function (e) {

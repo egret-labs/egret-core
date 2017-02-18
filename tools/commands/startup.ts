@@ -6,9 +6,10 @@ export = class StartUp {
 
     execute() {
         let root = egret.args.projectDir;
-        if (file.exists(path.join(root, "egret.solution"))) {
+        let solutionFile = path.join(root, "egret.json");
+        if (file.exists(solutionFile)) {
             console.log('solution startup')
-            solution.run();
+            solution.run(solutionFile);
         }
         else {
             console.log('project startup')

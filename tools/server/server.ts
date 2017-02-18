@@ -95,6 +95,7 @@ class Server {
         let m = this.middleware(root);
 
         var server = http.createServer((request, response) => {
+            response.setHeader("Access-Control-Allow-Origin", "*");
             m(request, response).then(() => {
                 response.end();
             }).catch((e) => {
