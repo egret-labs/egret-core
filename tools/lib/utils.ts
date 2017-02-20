@@ -294,3 +294,29 @@ export function addIndents(times: number, text: string) {
     //替换\n
     return text.replace(new RegExp("\\n", "ig"), '\n' + added);
 }
+
+interface MapLike<T> {
+    [index: string]: T;
+}
+
+export interface Map<T> extends MapLike<T> {
+    __mapBrand: any;
+}
+
+export function createMap<T>(template?: MapLike<T>): Map<T> {
+    const map: Map<T> = Object.create(null); // tslint:disable-line:no-null-keyword
+
+    // Using 'delete' on an object causes V8 to put the object in dictionary mode.
+    // This disables creation of hidden classes, which are expensive when an object is
+    // constantly changing shape.
+    map["__"] = undefined;
+    delete map["__"];
+
+    // Copies keys/values from template. Note that for..in will not throw if
+    // template is undefined, and instead will just exit the loop.
+    for (const key in template) if (Object.prototype.hasOwnProperty.call(template, key)) {
+        map[key] = template[key];
+    }
+
+    return map;
+}
