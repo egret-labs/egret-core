@@ -43,7 +43,7 @@ exports.dashboard = function () {
             root = egret.root;
             indexJs = path.join(egret.root, "client/index.js");
             scriptContent = FileUtil.read(indexJs);
-            htmlContent = "\n        <html>\n            <body>\n            <script type=\"text/javascript\">\n                " + scriptContent + "\n            </script>\n            </body>\n        </html>\n        ";
+            htmlContent = "\n        <html>\n            <body>\n            <div id='app'></div>\n            <script type=\"text/javascript\">\n                " + scriptContent + "\n            </script>\n           \n            </body>\n        </html>\n        ";
             response.write(htmlContent);
             return [2 /*return*/];
         });

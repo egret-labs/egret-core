@@ -53,7 +53,7 @@ function run(solutionFile) {
     dashboardServer.start(projectRoot, 5000, "http://localhost:5000/index.html");
     var typescriptServer = new Server();
     typescriptServer.use(watchProject("manghuangji_client"));
-    typescriptServer.start(projectRoot, 4000, "http://localhost:4000/index.html");
+    typescriptServer.start(projectRoot, 4000, "http://localhost:4000/index.html", false);
 }
 exports.run = run;
 var http = require("http");
@@ -90,6 +90,7 @@ var watchProject = function (project) {
         var result = "";
         return function (request, response) { return __awaiter(_this, void 0, void 0, function () {
             return __generator(this, function (_a) {
+                response.writeHead(200, { "Content-Type": "application/json" });
                 response.end(JSON.stringify({ state: state, output: output }));
                 return [2 /*return*/];
             });

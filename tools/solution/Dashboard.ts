@@ -10,12 +10,15 @@ export var dashboard: Server.Middleware = () => {
         let htmlContent = `
         <html>
             <body>
+            <div id='app'></div>
             <script type="text/javascript">
                 ${scriptContent}
             </script>
+           
             </body>
         </html>
         `
         response.write(htmlContent);
+
     }
 }

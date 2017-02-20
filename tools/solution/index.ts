@@ -32,7 +32,7 @@ export function run(solutionFile: string) {
 
     let typescriptServer = new Server();
     typescriptServer.use(watchProject("manghuangji_client"));
-    typescriptServer.start(projectRoot, 4000, "http://localhost:4000/index.html");
+    typescriptServer.start(projectRoot, 4000, "http://localhost:4000/index.html", false);
 
 }
 
@@ -76,6 +76,7 @@ let watchProject: (project: string) => Server.Middleware = (project) => {
     return () => {
         let result = "";
         return async (request, response) => {
+            response.writeHead(200, { "Content-Type": "application/json" })
             response.end(JSON.stringify({ state, output }));
         }
     }
