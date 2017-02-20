@@ -11,23 +11,24 @@ Welcome to use Egret Engine !
 ## Updated Items:
 
 * Egret CLI Tools
-     * Compiler upgrades to TypeScript 2.1.5
-     * Fix the srartserver command port number fixed to 3000
+    * Compiler upgrades to TypeScript 2.1.5
+    * Fix the srartserver command port number fixed to 3000
 
-* Egret engine 3D rendering core
-     * Repair filters may cause memory leaks
-     * Repair canvas mode filter cross domain policy exception problem
-     * Repair webgl mode to draw inverted rectangle mask exception problem
+* Egret engine rendering core
+    * Repair filters may cause memory leaks
+    * Repair canvas mode filter cross domain policy exception problem
+    * Repair webgl mode to draw inverted rectangle mask exception problem
 
 * ResourceManager
-     * Fix RES.isGroupLoaded inconsistent with previous version of the problem
-     * Supports npm 2.x version
-     * Fix RES.loadGroup bug
-     * Repair res build in the conversion of resource.json, there is no corresponding delete resource.json has been deleted Group problem
+    * Fix RES.isGroupLoaded inconsistent with previous version of the problem
+    * Supports npm 2.x version
+    * Fix RES.loadGroup bug
+    * Repair res build in the conversion of resource.json, there is no corresponding delete resource.json has been deleted Group problem
 
 * Experimental function updates
-     * Add photo selector function, you can select the phone photos and display
-     * Please visit [here] (http://wx.qimi.com/html/1210/love/1/index.html) view example project
+    * Add photo selector function, you can select the phone photos and display
+    * Please visit [here] (http://wx.qimi.com/html/1210/love/1/index.html) view example project
+
 
 ## Roadmap
 
