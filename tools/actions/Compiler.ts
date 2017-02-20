@@ -21,6 +21,29 @@ export interface EgretCompilerHost {
     messages?: string[];
 }
 
+let compilerHost: ts.CompilerHost;
+let hostGetSourceFile;
+let hostFileExists;
+let cachedProgram: ts.Program;
+let cachedExistingFiles: utils.Map<boolean>;
+
+let getSourceFile = function (fileName: string, languageVersion: ts.ScriptTarget, onError?: (message: string) => void) {
+    if (cachedProgram) {
+        const sourceFile = cachedProgram.getSourceFile(fileName);
+        if (sourceFile) {
+            return sourceFile;
+        }
+    }
+    const sourceFile = hostGetSourceFile(fileName, languageVersion, onError);
+    return sourceFile;
+}
+
+let cachedFileExists = function (fileName: string): boolean {
+    return fileName in cachedExistingFiles
+        ? cachedExistingFiles[fileName]
+        : cachedExistingFiles[fileName] = hostFileExists(fileName);
+}
+
 export class Compiler {
 
     private sortedFiles: string[];
@@ -31,11 +54,14 @@ export class Compiler {
         this.fileNames = rootFileNames;
         this.options = options;
 
-        this.program = ts.createProgram(rootFileNames, options);
-        this.sortFiles();
-        let emitResult = this.program.emit();
-        this.logErrors(emitResult.diagnostics);
-        return { files: this.sortedFiles, program: this.program, exitStatus: 0, messages: this.errors, compileWithChanges: this.compileWithChanges.bind(this) };
+        compilerHost = ts.createCompilerHost(options);
+        hostGetSourceFile = compilerHost.getSourceFile;
+        compilerHost.getSourceFile = getSourceFile;
+
+        hostFileExists = compilerHost.fileExists;
+        compilerHost.fileExists = cachedFileExists;
+
+        return this.doCompile();
     }
 
     private sortFiles(): void {
@@ -75,11 +101,14 @@ export class Compiler {
 
     private compileWithChanges(filesChanged: egret.FileChanges, sourceMap?: boolean): EgretCompilerHost {
         this.errors = [];
+        let hasAddOrRemoved = false;
         filesChanged.forEach(file => {
             if (file.type == "added") {
+                hasAddOrRemoved = true;
                 this.fileNames.push(file.fileName);
             }
             else if (file.type == "removed") {
+                hasAddOrRemoved = true;
                 var index = this.fileNames.indexOf(file.fileName);
                 if (index >= 0) {
                     this.fileNames.splice(index, 1);
@@ -88,8 +117,20 @@ export class Compiler {
             else {
             }
         });
+        if(hasAddOrRemoved) {
+            cachedProgram = undefined;
+        }
+        return this.doCompile();
+    }
 
-        return this.compile(this.options, this.fileNames);
+    private doCompile(): EgretCompilerHost {
+        cachedExistingFiles = utils.createMap<boolean>();
+        this.program = ts.createProgram(this.fileNames, this.options, compilerHost);
+        this.sortFiles();
+        let emitResult = this.program.emit();
+        this.logErrors(emitResult.diagnostics);
+        cachedProgram = this.program;
+        return { files: this.sortedFiles, program: this.program, exitStatus: 0, messages: this.errors, compileWithChanges: this.compileWithChanges.bind(this) };
     }
 
     parseTsconfig() {

@@ -2,6 +2,26 @@ var utils = require("../lib/utils");
 var file = require("../lib/FileUtil");
 var ts = require("../lib/typescript-plus/lib/typescript");
 var path = require("path");
+var compilerHost;
+var hostGetSourceFile;
+var hostFileExists;
+var cachedProgram;
+var cachedExistingFiles;
+var getSourceFile = function (fileName, languageVersion, onError) {
+    if (cachedProgram) {
+        var sourceFile_1 = cachedProgram.getSourceFile(fileName);
+        if (sourceFile_1) {
+            return sourceFile_1;
+        }
+    }
+    var sourceFile = hostGetSourceFile(fileName, languageVersion, onError);
+    return sourceFile;
+};
+var cachedFileExists = function (fileName) {
+    return fileName in cachedExistingFiles
+        ? cachedExistingFiles[fileName]
+        : cachedExistingFiles[fileName] = hostFileExists(fileName);
+};
 var Compiler = (function () {
     function Compiler() {
         this.errors = [];
@@ -9,11 +29,12 @@ var Compiler = (function () {
     Compiler.prototype.compile = function (options, rootFileNames) {
         this.fileNames = rootFileNames;
         this.options = options;
-        this.program = ts.createProgram(rootFileNames, options);
-        this.sortFiles();
-        var emitResult = this.program.emit();
-        this.logErrors(emitResult.diagnostics);
-        return { files: this.sortedFiles, program: this.program, exitStatus: 0, messages: this.errors, compileWithChanges: this.compileWithChanges.bind(this) };
+        compilerHost = ts.createCompilerHost(options);
+        hostGetSourceFile = compilerHost.getSourceFile;
+        compilerHost.getSourceFile = getSourceFile;
+        hostFileExists = compilerHost.fileExists;
+        compilerHost.fileExists = cachedFileExists;
+        return this.doCompile();
     };
     Compiler.prototype.sortFiles = function () {
         var program = this.program;
@@ -47,11 +68,14 @@ var Compiler = (function () {
     Compiler.prototype.compileWithChanges = function (filesChanged, sourceMap) {
         var _this = this;
         this.errors = [];
+        var hasAddOrRemoved = false;
         filesChanged.forEach(function (file) {
             if (file.type == "added") {
+                hasAddOrRemoved = true;
                 _this.fileNames.push(file.fileName);
             }
             else if (file.type == "removed") {
+                hasAddOrRemoved = true;
                 var index = _this.fileNames.indexOf(file.fileName);
                 if (index >= 0) {
                     _this.fileNames.splice(index, 1);
@@ -60,7 +84,19 @@ var Compiler = (function () {
             else {
             }
         });
-        return this.compile(this.options, this.fileNames);
+        if (hasAddOrRemoved) {
+            cachedProgram = undefined;
+        }
+        return this.doCompile();
+    };
+    Compiler.prototype.doCompile = function () {
+        cachedExistingFiles = utils.createMap();
+        this.program = ts.createProgram(this.fileNames, this.options, compilerHost);
+        this.sortFiles();
+        var emitResult = this.program.emit();
+        this.logErrors(emitResult.diagnostics);
+        cachedProgram = this.program;
+        return { files: this.sortedFiles, program: this.program, exitStatus: 0, messages: this.errors, compileWithChanges: this.compileWithChanges.bind(this) };
     };
     Compiler.prototype.parseTsconfig = function () {
         var url = egret.args.projectDir + "tsconfig.json";
