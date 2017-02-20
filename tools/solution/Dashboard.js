@@ -34,65 +34,18 @@ var __generator = (this && this.__generator) || function (thisArg, body) {
     }
 };
 var _this = this;
-var Server = require("../server/server");
-var Dashboard = require("./Dashboard");
-var cp = require("child_process");
 var FileUtil = require("../lib/FileUtil");
-function parseSolutionFile(path) {
-    var content = FileUtil.read(path);
-    var json = JSON.parse(content);
-    for (var key in json.modules) {
-        var m = json.modules[key];
-    }
-}
-function run(solutionFile) {
-    var s = parseSolutionFile(solutionFile);
-    var projectRoot = egret.args.projectDir;
-    var dashboardServer = new Server();
-    dashboardServer.use(Dashboard.dashboard);
-    dashboardServer.start(projectRoot, 5000, "http://localhost:5000/index.html");
-    var typescriptServer = new Server();
-    typescriptServer.use(watchProject("manghuangji_client"));
-    typescriptServer.start(projectRoot, 4000, "http://localhost:4000/index.html");
-}
-exports.run = run;
-var http = require("http");
-var fetch = function () {
-    return new Promise(function (reslove, reject) {
-        var options = {
-            hostname: '127.0.0.1',
-            port: 5000,
-            path: '/test',
-            method: 'GET'
-        };
-        http.get(options, function (res) {
-            var resData = "";
-            res.on("data", function (data) {
-                resData += data;
-            });
-            res.on("end", function () {
-                reslove(resData);
-            });
+var path = require("path");
+exports.dashboard = function () {
+    return function (reuest, response) { return __awaiter(_this, void 0, void 0, function () {
+        var root, indexJs, scriptContent, htmlContent;
+        return __generator(this, function (_a) {
+            root = egret.root;
+            indexJs = path.join(egret.root, "client/index.js");
+            scriptContent = FileUtil.read(indexJs);
+            htmlContent = "\n        <html>\n            <body>\n            <script type=\"text/javascript\">\n                " + scriptContent + "\n            </script>\n            </body>\n        </html>\n        ";
+            response.write(htmlContent);
+            return [2 /*return*/];
         });
-    });
-};
-var watchProject = function (project) {
-    var output = "";
-    var state = 0;
-    var process = cp.exec("egret startup " + project, function (error) {
-        console.log(error);
-    });
-    process.stdout.on("data", function (data) {
-        state = 1;
-        output += data;
-    });
-    return function () {
-        var result = "";
-        return function (request, response) { return __awaiter(_this, void 0, void 0, function () {
-            return __generator(this, function (_a) {
-                response.end(JSON.stringify({ state: state, output: output }));
-                return [2 /*return*/];
-            });
-        }); };
-    };
+    }); };
 };

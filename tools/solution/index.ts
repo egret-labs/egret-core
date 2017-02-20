@@ -1,5 +1,5 @@
 import * as Server from '../server/server';
-import * as TypeScriptProject from './TypeScritpProject';
+import * as Dashboard from './Dashboard';
 import * as cp from 'child_process';
 import * as FileUtil from '../lib/FileUtil';
 
@@ -27,7 +27,7 @@ export function run(solutionFile: string) {
     let projectRoot = egret.args.projectDir;
 
     let dashboardServer = new Server();
-    dashboardServer.use(dashboard);
+    dashboardServer.use(Dashboard.dashboard);
     dashboardServer.start(projectRoot, 5000, "http://localhost:5000/index.html")
 
     let typescriptServer = new Server();
@@ -59,21 +59,7 @@ let fetch = () => {
     })
 }
 
-let dashboard: Server.Middleware = () => {
-    return async (reuest, response) => {
-        let scriptContent = FileUtil.read(module.filename.replace("index.js", "client/index.js"));
-        let htmlContent = `
-        <html>
-            <body>
-            <script type="text/javascript">
-                ${scriptContent}
-            </script>
-            </body>
-        </html>
-        `
-        response.write(htmlContent);
-    }
-}
+
 
 let watchProject: (project: string) => Server.Middleware = (project) => {
 
