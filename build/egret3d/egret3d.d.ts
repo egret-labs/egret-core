@@ -3886,6 +3886,13 @@ declare module egret3d {
         * @platform Web,Native
         */
         lerp(m0: Matrix4_4, m1: Matrix4_4, t: number): void;
+        /**
+        * @language zh_CN
+        * 求矩阵在各个轴上缩放的最大值
+        * @version Egret 4.0
+        * @platform Web,Native
+        */
+        getMaxScaleOnAxis(): number;
     }
 }
 declare module egret3d {

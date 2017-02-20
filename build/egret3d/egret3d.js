@@ -6964,6 +6964,19 @@ var egret3d;
             this.copyFrom(m1).sub(m0).mult(t).add(m0);
         };
         /**
+        * @language zh_CN
+        * 求矩阵在各个轴上缩放的最大值
+        * @version Egret 4.0
+        * @platform Web,Native
+        */
+        Matrix4_4.prototype.getMaxScaleOnAxis = function () {
+            var te = this.rawData;
+            var scaleXSq = te[0] * te[0] + te[1] * te[1] + te[2] * te[2];
+            var scaleYSq = te[4] * te[4] + te[5] * te[5] + te[6] * te[6];
+            var scaleZSq = te[8] * te[8] + te[9] * te[9] + te[10] * te[10];
+            return Math.sqrt(Math.max(scaleXSq, scaleYSq, scaleZSq));
+        };
+        /**
         * @private
         */
         Matrix4_4.helpMatrix = new Matrix4_4();
@@ -8684,6 +8697,7 @@ var egret3d;
         */
         BoundBox.prototype.inBound = function (frustum) {
             this.transform.transformVector(this.center, egret3d.MathUtil.CALCULATION_VECTOR3D);
+            this.radius = this.transform.getMaxScaleOnAxis() * this.radius;
             return frustum.inSphere(egret3d.MathUtil.CALCULATION_VECTOR3D, this.radius);
         };
         BoundBox.prototype.updateAABB = function () {
