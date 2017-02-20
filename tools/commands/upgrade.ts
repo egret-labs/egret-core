@@ -30,7 +30,8 @@ class UpgradeCommand implements egret.Command {
         var modify = require("./upgrade/ModifyProperties");
 
         let upgradeConfigArr: VersionInfo[] = [
-            { "v": "4.0.1", command: Upgrade_4_0_1 }
+            { "v": "4.0.1", command: Upgrade_4_0_1 },
+            { "v": "4.0.2" }
         ];
 
         try {
