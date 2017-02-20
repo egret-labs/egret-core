@@ -8697,8 +8697,8 @@ var egret3d;
         */
         BoundBox.prototype.inBound = function (frustum) {
             this.transform.transformVector(this.center, egret3d.MathUtil.CALCULATION_VECTOR3D);
-            this.radius = this.transform.getMaxScaleOnAxis() * this.radius;
-            return frustum.inSphere(egret3d.MathUtil.CALCULATION_VECTOR3D, this.radius);
+            var radius = this.transform.getMaxScaleOnAxis() * this.radius;
+            return frustum.inSphere(egret3d.MathUtil.CALCULATION_VECTOR3D, radius);
         };
         BoundBox.prototype.updateAABB = function () {
             this.min.copyFrom(new egret3d.Vector3D(egret3d.MathUtil.MAX_VALUE, egret3d.MathUtil.MAX_VALUE, egret3d.MathUtil.MAX_VALUE));
