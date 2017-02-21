@@ -1876,7 +1876,7 @@ declare namespace egret {
         /**
          * @private
          */
-        $measureFiltersOffset(): any;
+        private $measureFiltersOffset(fromParent);
         /**
          * @private
          * 获取相对于指定根节点的连接矩阵。

@@ -2879,12 +2879,12 @@ var egret;
                 if (this.$displayList) {
                     this.$displayList.$renderNode.moved = true;
                 }
-                var offset = this.$measureFiltersOffset();
+                var offset = this.$measureFiltersOffset(false);
                 if (offset) {
                     bounds.x += offset.minX;
                     bounds.y += offset.minY;
-                    bounds.width += offset.maxX;
-                    bounds.height += offset.maxY;
+                    bounds.width += -offset.minX + offset.maxX;
+                    bounds.height += -offset.minY + offset.maxY;
                 }
             }
             return bounds;
@@ -3009,7 +3009,7 @@ var egret;
                     self.$getConcatenatedMatrixAt(root, matrix);
                 }
                 region.updateRegion(renderBounds, matrix);
-                var offset = self.$measureFiltersOffset();
+                var offset = self.$measureFiltersOffset(true);
                 if (offset) {
                     region.minX += offset.minX;
                     region.minY += offset.minY;
@@ -3023,59 +3023,73 @@ var egret;
         /**
          * @private
          */
-        DisplayObject.prototype.$measureFiltersOffset = function () {
-            var filters = this.$DisplayObject[20 /* filters */];
-            if (filters && filters.length) {
-                var length_3 = filters.length;
-                var minX = 0;
-                var minY = 0;
-                var maxX = 0;
-                var maxY = 0;
-                for (var i = 0; i < length_3; i++) {
-                    var filter = filters[i];
-                    if (filter.type == "blur") {
-                        var offsetX = filter.blurX;
-                        var offsetY = filter.blurY;
-                        minX -= offsetX;
-                        minY -= offsetY;
-                        maxX += offsetX * 2;
-                        maxY += offsetY * 2;
-                    }
-                    else if (filter.type == "glow") {
-                        var offsetX = filter.blurX;
-                        var offsetY = filter.blurY;
-                        minX -= offsetX;
-                        minY -= offsetY;
-                        maxX += offsetX * 2;
-                        maxY += offsetY * 2;
-                        var distance = filter.distance || 0;
-                        var angle = filter.angle || 0;
-                        var distanceX = 0;
-                        var distanceY = 0;
-                        if (distance != 0) {
-                            //todo 缓存这个数据
-                            distanceX = Math.ceil(distance * egret.NumberUtils.cos(angle));
-                            distanceY = Math.ceil(distance * egret.NumberUtils.sin(angle));
-                            if (distanceX > 0) {
-                                maxX += distanceX;
-                            }
-                            else if (distanceX < 0) {
+        DisplayObject.prototype.$measureFiltersOffset = function (fromParent) {
+            var display = this;
+            var minX = 0;
+            var minY = 0;
+            var maxX = 0;
+            var maxY = 0;
+            while (display) {
+                var filters = display.$DisplayObject[20 /* filters */];
+                if (filters && filters.length) {
+                    var length_3 = filters.length;
+                    for (var i = 0; i < length_3; i++) {
+                        var filter = filters[i];
+                        //todo 缓存这个数据
+                        if (filter.type == "blur") {
+                            var offsetX = filter.blurX;
+                            var offsetY = filter.blurY;
+                            minX -= offsetX;
+                            minY -= offsetY;
+                            maxX += offsetX;
+                            maxY += offsetY;
+                        }
+                        else if (filter.type == "glow") {
+                            var offsetX = filter.blurX;
+                            var offsetY = filter.blurY;
+                            minX -= offsetX;
+                            minY -= offsetY;
+                            maxX += offsetX;
+                            maxY += offsetY;
+                            var distance = filter.distance || 0;
+                            var angle = filter.angle || 0;
+                            var distanceX = 0;
+                            var distanceY = 0;
+                            if (distance != 0) {
+                                distanceX = distance * egret.NumberUtils.cos(angle);
+                                if (distanceX > 0) {
+                                    distanceX = Math.ceil(distanceX);
+                                }
+                                else {
+                                    distanceX = Math.floor(distanceX);
+                                }
+                                distanceY = distance * egret.NumberUtils.sin(angle);
+                                if (distanceY > 0) {
+                                    distanceY = Math.ceil(distanceY);
+                                }
+                                else {
+                                    distanceY = Math.floor(distanceY);
+                                }
                                 minX += distanceX;
-                                maxX -= distanceX;
-                            }
-                            if (distanceY > 0) {
-                                maxY += distanceY;
-                            }
-                            else if (distanceY < 0) {
+                                maxX += distanceX;
                                 minY += distanceY;
-                                maxY -= distanceY;
+                                maxY += distanceY;
                             }
                         }
                     }
                 }
-                return { minX: minX, minY: minY, maxX: maxX, maxY: maxY };
+                if (fromParent) {
+                    display = display.$parent;
+                }
+                else {
+                    display = null;
+                }
             }
-            return null;
+            minX = Math.min(minX, 0);
+            minY = Math.min(minY, 0);
+            maxX = Math.max(maxX, 0);
+            maxY = Math.max(maxY, 0);
+            return { minX: minX, minY: minY, maxX: maxX, maxY: maxY };
         };
         /**
          * @private
@@ -17220,7 +17234,7 @@ var egret;
              * @language zh_CN
              */
             get: function () {
-                return "4.0.0";
+                return "4.0.2";
             },
             enumerable: true,
             configurable: true

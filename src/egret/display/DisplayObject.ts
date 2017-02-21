@@ -239,27 +239,27 @@ namespace egret {
             super();
             this.$displayFlags = sys.DisplayObjectFlags.InitFlags;
             this.$DisplayObject = {
-                0:1,                //scaleX,
-                1:1,                //scaleY,
-                2:0,                //skewX,
-                3:0,                //skewY,
-                4:0,                //rotation
-                5:"",               //name
-                6:new Matrix(),     //matrix,
-                7:new Matrix(),     //concatenatedMatrix,
-                8:new Matrix(),     //invertedConcatenatedMatrix,
-                9:new Rectangle(),  //bounds,
-                10:new Rectangle(), //contentBounds
-                11:false,           //cacheAsBitmap
-                12:0,               //anchorOffsetX,
-                13:0,               //anchorOffsetY,
-                14:NaN,             //explicitWidth,
-                15:NaN,             //explicitHeight,
-                16:0,               //skewXdeg,
-                17:0,               //skewYdeg,
-                18:0,               //concatenatedAlpha,
-                19:null,            //concatenatedVisible,
-                20:null             //filters
+                0: 1,                //scaleX,
+                1: 1,                //scaleY,
+                2: 0,                //skewX,
+                3: 0,                //skewY,
+                4: 0,                //rotation
+                5: "",               //name
+                6: new Matrix(),     //matrix,
+                7: new Matrix(),     //concatenatedMatrix,
+                8: new Matrix(),     //invertedConcatenatedMatrix,
+                9: new Rectangle(),  //bounds,
+                10: new Rectangle(), //contentBounds
+                11: false,           //cacheAsBitmap
+                12: 0,               //anchorOffsetX,
+                13: 0,               //anchorOffsetY,
+                14: NaN,             //explicitWidth,
+                15: NaN,             //explicitHeight,
+                16: 0,               //skewXdeg,
+                17: 0,               //skewYdeg,
+                18: 0,               //concatenatedAlpha,
+                19: null,            //concatenatedVisible,
+                20: null             //filters
             };
         }
 
@@ -331,7 +331,7 @@ namespace egret {
          * @private
          * 沿着显示列表向下传递标志量，非容器直接设置自身的flag，此方法会在 DisplayObjectContainer 中被覆盖。
          */
-        $propagateFlagsDown(flags: number, cachedBreak:boolean = false): void {
+        $propagateFlagsDown(flags: number, cachedBreak: boolean = false): void {
             this.$setFlags(flags);
         }
 
@@ -1864,7 +1864,7 @@ namespace egret {
          * 获取显示对象占用的矩形区域集合，通常包括自身绘制的测量区域，如果是容器，还包括所有子项占据的区域。
          */
         $getOriginalBounds(): Rectangle {
-            let bounds:Rectangle = this.$DisplayObject[Keys.bounds];
+            let bounds: Rectangle = this.$DisplayObject[Keys.bounds];
             if (this.$hasFlags(sys.DisplayObjectFlags.InvalidBounds)) {
                 bounds.copyFrom(this.$getContentBounds());
                 this.$measureChildBounds(bounds);
@@ -1872,12 +1872,12 @@ namespace egret {
                 if (this.$displayList) {
                     this.$displayList.$renderNode.moved = true;
                 }
-                let offset = this.$measureFiltersOffset();
-                if(offset) {
+                let offset = this.$measureFiltersOffset(false);
+                if (offset) {
                     bounds.x += offset.minX;
                     bounds.y += offset.minY;
-                    bounds.width += offset.maxX;
-                    bounds.height += offset.maxY;
+                    bounds.width += -offset.minX + offset.maxX;
+                    bounds.height += -offset.minY + offset.maxY;
                 }
             }
             return bounds;
@@ -2023,8 +2023,8 @@ namespace egret {
                     self.$getConcatenatedMatrixAt(root, matrix);
                 }
                 region.updateRegion(renderBounds, matrix);
-                let offset = self.$measureFiltersOffset();
-                if(offset) {
+                let offset = self.$measureFiltersOffset(true);
+                if (offset) {
                     region.minX += offset.minX;
                     region.minY += offset.minY;
                     region.maxX += offset.maxX;
@@ -2040,59 +2040,73 @@ namespace egret {
         /**
          * @private
          */
-        public $measureFiltersOffset(): any {
-            let filters = this.$DisplayObject[Keys.filters];
-            if (filters && filters.length) {
-                let length = filters.length;
-                let minX: number = 0;
-                let minY: number = 0;
-                let maxX: number = 0;
-                let maxY: number = 0;
-                for (let i: number = 0; i < length; i++) {
-                    let filter: Filter = filters[i];
-                    if (filter.type == "blur") {
-                        let offsetX = (<BlurFilter>filter).blurX;
-                        let offsetY = (<BlurFilter>filter).blurY;
-                        minX -= offsetX;
-                        minY -= offsetY;
-                        maxX += offsetX * 2;
-                        maxY += offsetY * 2;
-                    }
-                    else if (filter.type == "glow") {
-                        let offsetX = (<BlurFilter>filter).blurX;
-                        let offsetY = (<BlurFilter>filter).blurY;
-                        minX -= offsetX;
-                        minY -= offsetY;
-                        maxX += offsetX * 2;
-                        maxY += offsetY * 2;
-                        let distance: number = (<DropShadowFilter>filter).distance || 0;
-                        let angle: number = (<DropShadowFilter>filter).angle || 0;
-                        let distanceX = 0;
-                        let distanceY = 0;
-                        if (distance != 0) {
-                            //todo 缓存这个数据
-                            distanceX = Math.ceil(distance * egret.NumberUtils.cos(angle));
-                            distanceY = Math.ceil(distance * egret.NumberUtils.sin(angle));
-                            if (distanceX > 0) {
-                                maxX += distanceX;
-                            }
-                            else if (distanceX < 0) {
+        private $measureFiltersOffset(fromParent: boolean): any {
+            let display: DisplayObject = this;
+            let minX: number = 0;
+            let minY: number = 0;
+            let maxX: number = 0;
+            let maxY: number = 0;
+            while (display) {
+                let filters = display.$DisplayObject[Keys.filters];
+                if (filters && filters.length) {
+                    let length = filters.length;
+                    for (let i: number = 0; i < length; i++) {
+                        let filter: Filter = filters[i];
+                        //todo 缓存这个数据
+                        if (filter.type == "blur") {
+                            let offsetX = (<BlurFilter>filter).blurX;
+                            let offsetY = (<BlurFilter>filter).blurY;
+                            minX -= offsetX;
+                            minY -= offsetY;
+                            maxX += offsetX;
+                            maxY += offsetY;
+                        }
+                        else if (filter.type == "glow") {
+                            let offsetX = (<GlowFilter>filter).blurX;
+                            let offsetY = (<GlowFilter>filter).blurY;
+                            minX -= offsetX;
+                            minY -= offsetY;
+                            maxX += offsetX;
+                            maxY += offsetY;
+                            let distance: number = (<DropShadowFilter>filter).distance || 0;
+                            let angle: number = (<DropShadowFilter>filter).angle || 0;
+                            let distanceX = 0;
+                            let distanceY = 0;
+                            if (distance != 0) {
+                                distanceX = distance * egret.NumberUtils.cos(angle);
+                                if (distanceX > 0) {
+                                    distanceX = Math.ceil(distanceX);
+                                }
+                                else {
+                                    distanceX = Math.floor(distanceX);
+                                }
+                                distanceY = distance * egret.NumberUtils.sin(angle);
+                                if (distanceY > 0) {
+                                    distanceY = Math.ceil(distanceY);
+                                }
+                                else {
+                                    distanceY = Math.floor(distanceY);
+                                }
                                 minX += distanceX;
-                                maxX -= distanceX;
-                            }
-                            if (distanceY > 0) {
-                                maxY += distanceY;
-                            }
-                            else if (distanceY < 0) {
+                                maxX += distanceX;
                                 minY += distanceY;
-                                maxY -= distanceY;
+                                maxY += distanceY;
                             }
                         }
                     }
                 }
-                return {minX, minY, maxX, maxY};
+                if (fromParent) {
+                    display = display.$parent;
+                }
+                else {
+                    display = null;
+                }
             }
-            return null;
+            minX = Math.min(minX, 0);
+            minY = Math.min(minY, 0);
+            maxX = Math.max(maxX, 0);
+            maxY = Math.max(maxY, 0);
+            return { minX, minY, maxX, maxY };
         }
 
         /**
