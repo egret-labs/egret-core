@@ -1,5 +1,4 @@
 var solution = require("../solution");
-var project = require("../solution/TypeScritpProject");
 var file = require("../lib/FileUtil");
 var path = require("path");
 module.exports = (function () {
@@ -11,10 +10,6 @@ module.exports = (function () {
         if (file.exists(solutionFile)) {
             console.log('solution startup');
             solution.run(solutionFile);
-        }
-        else {
-            console.log('project startup');
-            project.run();
         }
         return DontExitCode;
     };

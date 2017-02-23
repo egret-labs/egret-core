@@ -82,8 +82,7 @@ let compileChanged = (fileName: string, type: string) => {
 
 let host: Compiler.EgretCompilerHost;
 
-export function run() {
-    let root = egret.args.projectDir;
+export function run(root: string) {
     watch.createMonitor(root, { persistent: true, interval: 2007, filter: (f, stat) => !f.match(/\.g(\.d)?\.ts/) }, m => {
         m.on("created", (f) => compileChanged(f, "added"))
             .on("removed", (f) => compileChanged(f, "removed"))

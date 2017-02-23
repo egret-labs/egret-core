@@ -67,8 +67,8 @@ function run(solutionFile) {
         }
     }
     var staticServer = new Server();
-    staticServer.use(Server.fileReader("manghuangji_client"));
-    staticServer.start("manghuangji_client", 3005, 'http://localhost:3005/index.html');
+    staticServer.use(Server.fileReader("."));
+    staticServer.start(".", 3005, 'http://localhost:3005/index.html');
     var dashboardServer = new Server();
     dashboardServer.use(Dashboard.dashboard);
     dashboardServer.start(projectRoot, 5000, "http://localhost:5000/index.html");
@@ -97,7 +97,7 @@ var fetch = function () {
 var watchProject = function (project) {
     var output = "";
     var state = 0;
-    var process = cp.exec("egret startup " + project, function (error) {
+    var process = cp.exec("egret tsc-watch " + project, function (error) {
         console.log(error);
     });
     process.stdout.on("data", function (data) {

@@ -101,8 +101,7 @@ var compileChanged = function (fileName, type) {
     }
 };
 var host;
-function run() {
-    var root = egret.args.projectDir;
+function run(root) {
     watch.createMonitor(root, { persistent: true, interval: 2007, filter: function (f, stat) { return !f.match(/\.g(\.d)?\.ts/); } }, function (m) {
         m.on("created", function (f) { return compileChanged(f, "added"); })
             .on("removed", function (f) { return compileChanged(f, "removed"); })

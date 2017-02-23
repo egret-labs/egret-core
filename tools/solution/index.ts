@@ -46,8 +46,8 @@ export function run(solutionFile: string) {
     }
 
     let staticServer = new Server();
-    staticServer.use(Server.fileReader("manghuangji_client"));
-    staticServer.start("manghuangji_client", 3005, 'http://localhost:3005/index.html')
+    staticServer.use(Server.fileReader("."));
+    staticServer.start(".", 3005, 'http://localhost:3005/index.html')
 
     let dashboardServer = new Server();
     dashboardServer.use(Dashboard.dashboard);
@@ -83,7 +83,7 @@ let watchProject: (project: string) => Server.Middleware = (project) => {
 
     let output = "";
     let state = 0;
-    let process = cp.exec(`egret startup ${project}`, (error) => {
+    let process = cp.exec(`egret tsc-watch ${project}`, (error) => {
         console.log(error)
     })
     process.stdout.on("data", (data) => {
