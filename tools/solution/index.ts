@@ -45,6 +45,9 @@ export function run(solutionFile: string) {
         }
     }
 
+    let staticServer = new Server();
+    staticServer.use(Server.fileReader("manghuangji_client"));
+    staticServer.start("manghuangji_client", 3005, 'http://localhost:3005/index.html')
 
     let dashboardServer = new Server();
     dashboardServer.use(Dashboard.dashboard);

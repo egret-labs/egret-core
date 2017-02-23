@@ -30,49 +30,6 @@ var mine = {
     "xml": "text/xml"
 };
 
-function fileReader(root) {
-    return function (request: http.IncomingMessage, response: http.ServerResponse) {
-        return new Promise((reslove, reject) => {
-            var pathname = url.parse(request.url).pathname;
-            var realPath = path.join(root, pathname);
-            //console.log(realPath);
-            var ext = path.extname(realPath);
-            ext = ext ? ext.slice(1) : 'unknown';
-            fs.exists(realPath, function (exists) {
-                if (!exists) {
-                    response.writeHead(404, {
-                        'Content-Type': 'text/plain'
-                    });
-                    response.write("This request URL " + pathname + " was not found on this server.");
-                    reslove();
-                } else {
-                    fs.readFile(realPath, "binary", function (err, file) {
-                        if (err) {
-                            response.writeHead(500, {
-                                'Content-Type': 'text/plain'
-                            });
-                            reslove();
-                        } else {
-                            var contentType = mine[ext] || "text/plain";
-                            response.writeHead(200, {
-                                'Content-Type': contentType
-                            });
-                            response.write(file, "binary");
-                            reslove();
-                        }
-                    });
-                }
-            })
-        })
-    }
-}
-
-namespace Server {
-
-    export type Middleware = (...arg) => (request: http.IncomingMessage, response: http.ServerResponse) => Promise<any>
-
-
-}
 
 
 
@@ -81,7 +38,6 @@ class Server {
     private middleware: Server.Middleware;
 
     constructor() {
-        this.middleware = fileReader;
     }
 
     use(middleware: Server.Middleware) {
@@ -92,7 +48,7 @@ class Server {
 
         let ips = getLocalIPAddress();
 
-        let m = this.middleware(root);
+        let m = this.middleware();
 
         var server = http.createServer((request, response) => {
             response.setHeader("Access-Control-Allow-Origin", "*");
@@ -136,6 +92,51 @@ function getLocalIPAddress() {
 
 
 
+namespace Server {
+
+
+    export var fileReader = (root) => () => {
+        return function (request: http.IncomingMessage, response: http.ServerResponse) {
+            return new Promise((reslove, reject) => {
+                var pathname = url.parse(request.url).pathname;
+                var realPath = path.join(root, pathname);
+                //console.log(realPath);
+                var ext = path.extname(realPath);
+                ext = ext ? ext.slice(1) : 'unknown';
+                fs.exists(realPath, function (exists) {
+                    if (!exists) {
+                        response.writeHead(404, {
+                            'Content-Type': 'text/plain'
+                        });
+                        response.write("This request URL " + pathname + " was not found on this server.");
+                        reslove();
+                    } else {
+                        fs.readFile(realPath, "binary", function (err, file) {
+                            if (err) {
+                                response.writeHead(500, {
+                                    'Content-Type': 'text/plain'
+                                });
+                                reslove();
+                            } else {
+                                var contentType = mine[ext] || "text/plain";
+                                response.writeHead(200, {
+                                    'Content-Type': contentType
+                                });
+                                response.write(file, "binary");
+                                reslove();
+                            }
+                        });
+                    }
+                })
+            })
+        }
+    }
+
+
+    export type Middleware = (...arg) => (request: http.IncomingMessage, response: http.ServerResponse) => Promise<any>
+
+
+}
 
 
 

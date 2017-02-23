@@ -66,6 +66,9 @@ function run(solutionFile) {
                 break;
         }
     }
+    var staticServer = new Server();
+    staticServer.use(Server.fileReader("manghuangji_client"));
+    staticServer.start("manghuangji_client", 3005, 'http://localhost:3005/index.html');
     var dashboardServer = new Server();
     dashboardServer.use(Dashboard.dashboard);
     dashboardServer.start(projectRoot, 5000, "http://localhost:5000/index.html");
