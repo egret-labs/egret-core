@@ -38,6 +38,7 @@ var Server = require("../server/server");
 var Dashboard = require("./Dashboard");
 var cp = require("child_process");
 var FileUtil = require("../lib/FileUtil");
+var Resource = require("./ResourceProject");
 function parseSolutionFile(path) {
     var content = FileUtil.read(path);
     var json = JSON.parse(content);
@@ -59,6 +60,10 @@ function run(solutionFile) {
                 typescriptServer.start(projectRoot, 4000, "http://localhost:4000/index.html", false);
                 break;
             case "res":
+                var resourceServer = new Server();
+                resourceServer.use(Resource.middleware(m.root));
+                resourceServer.start(projectRoot, 4001, "http://localhost:4001/index.html", false);
+                break;
         }
     }
     var dashboardServer = new Server();

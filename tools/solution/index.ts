@@ -2,6 +2,7 @@ import * as Server from '../server/server';
 import * as Dashboard from './Dashboard';
 import * as cp from 'child_process';
 import * as FileUtil from '../lib/FileUtil';
+import * as Resource from './ResourceProject';
 
 export type Solution = {
 
@@ -37,7 +38,10 @@ export function run(solutionFile: string) {
                 typescriptServer.start(projectRoot, 4000, "http://localhost:4000/index.html", false);
                 break;
             case "res":
-
+                let resourceServer = new Server();
+                resourceServer.use(Resource.middleware(m.root))
+                resourceServer.start(projectRoot, 4001, "http://localhost:4001/index.html", false)
+                break;
         }
     }
 

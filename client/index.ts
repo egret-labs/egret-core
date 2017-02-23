@@ -12,8 +12,18 @@ let fetch = (url) => {
 
 async function run() {
     let app = document.getElementById("app");
-    let response = await fetch("http://localhost:4000/index.html")
-    app.innerText = response;
+    let ts = document.createElement("div");
+    let res = document.createElement("div");
+    app.appendChild(ts);
+    app.appendChild(res);
+
+    setInterval(() => {
+        fetch("http://localhost:4000/index.html")
+            .then(response => ts.innerText = response);
+        fetch("http://localhost:4001/index.html")
+            .then(response => res.innerText = response);
+    }, 1000)
+
 };
 
 run();

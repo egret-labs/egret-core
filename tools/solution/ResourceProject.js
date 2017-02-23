@@ -33,34 +33,24 @@ var __generator = (this && this.__generator) || function (thisArg, body) {
         if (op[0] & 5) throw op[1]; return { value: op[0] ? op[1] : void 0, done: true };
     }
 };
-var fetch = function (url) {
-    return new Promise(function (reslove, reject) {
-        var http = new XMLHttpRequest();
-        http.open("GET", url);
-        http.onload = function () {
-            reslove(http.responseText);
-        };
-        http.send();
+var _this = this;
+var child_process = require("child_process");
+exports.middleware = function (p) {
+    var process = child_process.exec("res watch " + p + " -json");
+    var output = "";
+    process.stdout.on("data", function (data) {
+        output += data;
     });
+    process.stderr.on("data", function (data) {
+        output += data;
+    });
+    return function () {
+        return function (request, response) { return __awaiter(_this, void 0, void 0, function () {
+            return __generator(this, function (_a) {
+                response.writeHead(200, { "Content-Type": "application/json" });
+                response.end(JSON.stringify({ output: output }));
+                return [2 /*return*/];
+            });
+        }); };
+    };
 };
-function run() {
-    return __awaiter(this, void 0, void 0, function () {
-        var app, ts, res;
-        return __generator(this, function (_a) {
-            app = document.getElementById("app");
-            ts = document.createElement("div");
-            res = document.createElement("div");
-            app.appendChild(ts);
-            app.appendChild(res);
-            setInterval(function () {
-                fetch("http://localhost:4000/index.html")
-                    .then(function (response) { return ts.innerText = response; });
-                fetch("http://localhost:4001/index.html")
-                    .then(function (response) { return res.innerText = response; });
-            }, 1000);
-            return [2 /*return*/];
-        });
-    });
-}
-;
-run();
