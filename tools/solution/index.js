@@ -36,9 +36,37 @@ var __generator = (this && this.__generator) || function (thisArg, body) {
 var _this = this;
 var Server = require("../server/server");
 var Dashboard = require("./Dashboard");
-var cp = require("child_process");
 var FileUtil = require("../lib/FileUtil");
 var Resource = require("./ResourceProject");
+var child_process = require("child_process");
+function childProcessWrapper(cmd, start, end) {
+    var process = child_process.exec(cmd);
+    var buffer = "";
+    var state = 0;
+    process.stdout.on("data", function (data) {
+        state = 1;
+        buffer += data;
+    });
+    process.stderr.on("data", function (data) {
+        state = 1;
+        buffer += data;
+    });
+    return {
+        getOutput: function () {
+            var startIndex = buffer.indexOf(start);
+            var endIndex = buffer.indexOf(end) + end.length;
+            var output = "";
+            if (startIndex < endIndex) {
+                output = buffer.substring(startIndex, endIndex);
+            }
+            else {
+                output = buffer.substring(startIndex);
+            }
+            return output;
+        }
+    };
+}
+exports.childProcessWrapper = childProcessWrapper;
 function parseSolutionFile(path) {
     var content = FileUtil.read(path);
     var json = JSON.parse(content);
@@ -95,21 +123,14 @@ var fetch = function () {
     });
 };
 var watchProject = function (project) {
-    var output = "";
-    var state = 0;
-    var process = cp.exec("egret tsc-watch " + project, function (error) {
-        console.log(error);
-    });
-    process.stdout.on("data", function (data) {
-        state = 1;
-        output += data;
-    });
+    var start = "tsc begin";
+    var end = "tsc end";
+    var process = childProcessWrapper("egret tsc-watch " + project, start, end);
     return function () {
-        var result = "";
         return function (request, response) { return __awaiter(_this, void 0, void 0, function () {
             return __generator(this, function (_a) {
                 response.writeHead(200, { "Content-Type": "application/json" });
-                response.end(JSON.stringify({ state: state, output: output }));
+                response.end(JSON.stringify({ output: process.getOutput() }));
                 return [2 /*return*/];
             });
         }); };

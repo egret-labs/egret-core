@@ -1,20 +1,22 @@
 import * as Server from '../server/server';
-import * as child_process from 'child_process';
+
+import * as solution from './';
+
+
+
 export var middleware: (p: string) => Server.Middleware = (p: string) => {
 
-    let process = child_process.exec(`res watch ${p} -json`);
-    let output = "";
-    process.stdout.on("data", (data) => {
-        output += data;
-    })
-    process.stderr.on("data", (data) => {
-        output += data;
-    })
+    let start = "res-watch:file changed start";
+    let end = "res-watch:file changed finish";
+    let process = solution.childProcessWrapper(`res watch ${p} -json`, start, end);
+
 
     return () => {
+        let index = 0;
         return async (request, response) => {
+
             response.writeHead(200, { "Content-Type": "application/json" })
-            response.end(JSON.stringify({ output }));
+            response.end(JSON.stringify({ output: process.getOutput() }));
         }
     }
 }

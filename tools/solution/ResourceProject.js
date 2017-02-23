@@ -34,21 +34,17 @@ var __generator = (this && this.__generator) || function (thisArg, body) {
     }
 };
 var _this = this;
-var child_process = require("child_process");
+var solution = require("./");
 exports.middleware = function (p) {
-    var process = child_process.exec("res watch " + p + " -json");
-    var output = "";
-    process.stdout.on("data", function (data) {
-        output += data;
-    });
-    process.stderr.on("data", function (data) {
-        output += data;
-    });
+    var start = "res-watch:file changed start";
+    var end = "res-watch:file changed finish";
+    var process = solution.childProcessWrapper("res watch " + p + " -json", start, end);
     return function () {
+        var index = 0;
         return function (request, response) { return __awaiter(_this, void 0, void 0, function () {
             return __generator(this, function (_a) {
                 response.writeHead(200, { "Content-Type": "application/json" });
-                response.end(JSON.stringify({ output: output }));
+                response.end(JSON.stringify({ output: process.getOutput() }));
                 return [2 /*return*/];
             });
         }); };

@@ -4,6 +4,37 @@ import * as cp from 'child_process';
 import * as FileUtil from '../lib/FileUtil';
 import * as Resource from './ResourceProject';
 
+import * as child_process from 'child_process';
+export function childProcessWrapper(cmd: string, start: string, end: string) {
+    let process = child_process.exec(cmd);
+    let buffer = "";
+    let state = 0;
+
+    process.stdout.on("data", (data) => {
+        state = 1
+        buffer += data;
+    })
+    process.stderr.on("data", (data) => {
+        state = 1
+        buffer += data;
+    })
+
+    return {
+        getOutput: () => {
+
+            let startIndex = buffer.indexOf(start)
+            let endIndex = buffer.indexOf(end) + end.length;
+            let output = "";
+            if (startIndex < endIndex) {
+                output = buffer.substring(startIndex, endIndex);
+            } else {
+                output = buffer.substring(startIndex);
+            }
+            return output;
+        }
+    }
+}
+
 export type Solution = {
 
     modules: {
@@ -80,22 +111,14 @@ let fetch = () => {
 
 
 let watchProject: (project: string) => Server.Middleware = (project) => {
-
-    let output = "";
-    let state = 0;
-    let process = cp.exec(`egret tsc-watch ${project}`, (error) => {
-        console.log(error)
-    })
-    process.stdout.on("data", (data) => {
-        state = 1;
-        output += data;
-    })
+    let start = "tsc begin";
+    let end = "tsc end"
+    let process = childProcessWrapper(`egret tsc-watch ${project}`, start, end);
 
     return () => {
-        let result = "";
         return async (request, response) => {
             response.writeHead(200, { "Content-Type": "application/json" })
-            response.end(JSON.stringify({ state, output }));
+            response.end(JSON.stringify({ output: process.getOutput() }));
         }
     }
 }

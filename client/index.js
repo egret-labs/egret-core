@@ -38,25 +38,52 @@ var fetch = function (url) {
         var http = new XMLHttpRequest();
         http.open("GET", url);
         http.onload = function () {
-            reslove(http.responseText);
+            var json = JSON.parse(http.responseText);
+            reslove(json);
         };
         http.send();
     });
 };
 function run() {
     return __awaiter(this, void 0, void 0, function () {
-        var app, ts, res;
+        function states(port, div) {
+            return new Promise(function (reslove, reject) {
+                fetch("http://localhost:" + port + "/index.html").then(function (response) {
+                    div.innerText = response.output;
+                    reslove(response);
+                });
+            });
+        }
+        var app, ts, res, iframe;
         return __generator(this, function (_a) {
             app = document.getElementById("app");
             ts = document.createElement("div");
             res = document.createElement("div");
+            iframe = document.createElement("iframe");
+            iframe.width = '480px';
+            iframe.height = '800px';
             app.appendChild(ts);
             app.appendChild(res);
+            app.appendChild(iframe);
             setInterval(function () {
-                fetch("http://localhost:4000/index.html")
-                    .then(function (response) { return ts.innerText = response; });
-                fetch("http://localhost:4001/index.html")
-                    .then(function (response) { return res.innerText = response; });
+                var cards = [
+                    { container: ts, port: 4000 },
+                    { container: res, port: 4001 }
+                ];
+                var current = 0;
+                cards.forEach(function (card) {
+                    states(card.port, card.container).then(function (response) {
+                        console.log(response);
+                        if (response.code == 2) {
+                            current++;
+                        }
+                        if (current == cards.length) {
+                            if (!iframe.src) {
+                                iframe.src = 'http://localhost:3005/index.html';
+                            }
+                        }
+                    });
+                });
             }, 1000);
             return [2 /*return*/];
         });

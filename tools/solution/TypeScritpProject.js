@@ -94,10 +94,10 @@ var compileChanged = function (fileName, type) {
     if (fileName.indexOf(".ts") >= 0) {
         var fileChanged = { fileName: fileName, type: type };
         console.log(fileChanged);
-        var time1 = Date.now();
+        console.log("tsc begin");
         host.compileWithChanges([fileChanged]);
-        console.log(Date.now() - time1);
         console.log(host.messages);
+        console.log("tsc end");
     }
 };
 var host;
@@ -108,8 +108,10 @@ function run(root) {
             .on("changed", function (f) { return compileChanged(f, "modified"); });
     });
     var project = new TypeScriptProject(root);
+    console.log("tsc begin");
     host = project.compile();
     console.log(host.messages);
+    console.log("tsc end");
 }
 exports.run = run;
 exports.middleware = function () {
