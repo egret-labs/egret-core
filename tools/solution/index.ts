@@ -8,7 +8,8 @@ export type Solution = {
     modules: {
         [moduleName: string]: {
             root: string,
-            type: "extra" | "inline"
+            type: "extra" | "tsc-plus" | "res",
+            moduleName: string
         }
     }
 
@@ -19,21 +20,31 @@ function parseSolutionFile(path) {
     let json: Solution = JSON.parse(content);
     for (var key in json.modules) {
         let m = json.modules[key];
+        m.moduleName = key;
     }
+    return json;
 }
 
 export function run(solutionFile: string) {
     let s = parseSolutionFile(solutionFile);
     let projectRoot = egret.args.projectDir;
+    for (var key in s.modules) {
+        let m = s.modules[key];
+        switch (m.type) {
+            case "tsc-plus":
+                let typescriptServer = new Server();
+                typescriptServer.use(watchProject(m.root));
+                typescriptServer.start(projectRoot, 4000, "http://localhost:4000/index.html", false);
+                break;
+            case "res":
+
+        }
+    }
+
 
     let dashboardServer = new Server();
     dashboardServer.use(Dashboard.dashboard);
     dashboardServer.start(projectRoot, 5000, "http://localhost:5000/index.html")
-
-    let typescriptServer = new Server();
-    typescriptServer.use(watchProject("manghuangji_client"));
-    typescriptServer.start(projectRoot, 4000, "http://localhost:4000/index.html", false);
-
 }
 
 import * as http from 'http';

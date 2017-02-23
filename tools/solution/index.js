@@ -43,17 +43,27 @@ function parseSolutionFile(path) {
     var json = JSON.parse(content);
     for (var key in json.modules) {
         var m = json.modules[key];
+        m.moduleName = key;
     }
+    return json;
 }
 function run(solutionFile) {
     var s = parseSolutionFile(solutionFile);
     var projectRoot = egret.args.projectDir;
+    for (var key in s.modules) {
+        var m = s.modules[key];
+        switch (m.type) {
+            case "tsc-plus":
+                var typescriptServer = new Server();
+                typescriptServer.use(watchProject(m.root));
+                typescriptServer.start(projectRoot, 4000, "http://localhost:4000/index.html", false);
+                break;
+            case "res":
+        }
+    }
     var dashboardServer = new Server();
     dashboardServer.use(Dashboard.dashboard);
     dashboardServer.start(projectRoot, 5000, "http://localhost:5000/index.html");
-    var typescriptServer = new Server();
-    typescriptServer.use(watchProject("manghuangji_client"));
-    typescriptServer.start(projectRoot, 4000, "http://localhost:4000/index.html", false);
 }
 exports.run = run;
 var http = require("http");
