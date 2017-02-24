@@ -98,9 +98,8 @@ var Compiler = (function () {
         cachedProgram = this.program;
         return { files: this.sortedFiles, program: this.program, exitStatus: 0, messages: this.errors, compileWithChanges: this.compileWithChanges.bind(this) };
     };
-    Compiler.prototype.parseTsconfig = function () {
-        var url = egret.args.projectDir + "tsconfig.json";
-        var options = egret.args;
+    Compiler.prototype.parseTsconfig = function (projectRoot, isPublish) {
+        var url = projectRoot + "tsconfig.json";
         var configObj;
         try {
             configObj = JSON.parse(file.read(url));
@@ -142,19 +141,15 @@ var Compiler = (function () {
         }
         var configParseResult = ts.parseJsonConfigFileContent(configObj, ts.sys, path.dirname(url));
         compilerOptions = configParseResult.options;
-        compilerOptions.defines = getCompilerDefines(options);
+        compilerOptions.defines = getCompilerDefines(isPublish);
         return configParseResult;
     };
     return Compiler;
 }());
 exports.Compiler = Compiler;
-function getCompilerDefines(args, debug) {
+function getCompilerDefines(isPublish) {
     var defines = {};
-    if (debug != undefined) {
-        defines.DEBUG = debug;
-        defines.RELEASE = !debug;
-    }
-    else if (args.publish) {
+    if (isPublish) {
         defines.DEBUG = false;
         defines.RELEASE = true;
     }

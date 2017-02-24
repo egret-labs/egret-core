@@ -36,7 +36,7 @@ class CompileProject {
         }
         else { //console.log("----compileProject.compileProject.A-----")
             var compiler = new Compiler.Compiler();
-            let configParsedResult = compiler.parseTsconfig();
+            let configParsedResult = compiler.parseTsconfig(egret.args.projectDir, egret.args.publish);
             this.compilerOptions = configParsedResult.options;
             let fileNames = configParsedResult.fileNames;
             args.tsconfigError = configParsedResult.errors.map(d => d.messageText.toString());

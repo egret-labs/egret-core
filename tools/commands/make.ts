@@ -9,7 +9,6 @@ declare var global: any;
 
 class CompileEgretEngine implements egret.Command {
     private compiler: Compiler;
-    private dtsFiles: [string, string[]][] = [];
 
     public execute(): number {
 
@@ -134,12 +133,7 @@ class CompileEgretEngine implements egret.Command {
         var result = this.compiler.compile(compileOptions, tss);
         if (result.exitStatus != 0) {
             result.messages.forEach(m => console.log(m));
-        }
-        if (result.exitStatus != 0) {
             return result.exitStatus;
-        }
-        if (dts) {
-            this.dtsFiles.push([declareFile, depends]);
         }
         if (configuration.minify) {
             utils.minify(singleFile, singleFile);

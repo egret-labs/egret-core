@@ -53,7 +53,7 @@ var TypeScriptProject = (function () {
         }
         else {
             var compiler = new Compiler.Compiler();
-            var configParsedResult = compiler.parseTsconfig();
+            var configParsedResult = compiler.parseTsconfig(this.projectDir, egret.args.publish);
             this.compilerOptions = configParsedResult.options;
             var fileNames = configParsedResult.fileNames;
             var tsconfigError = configParsedResult.errors.map(function (d) { return d.messageText.toString(); });

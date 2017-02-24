@@ -25,7 +25,7 @@ class TypeScriptProject {
         }
         else {
             var compiler = new Compiler.Compiler();
-            let configParsedResult = compiler.parseTsconfig();
+            let configParsedResult = compiler.parseTsconfig(this.projectDir, egret.args.publish);
             this.compilerOptions = configParsedResult.options;
             let fileNames = configParsedResult.fileNames;
             let tsconfigError = configParsedResult.errors.map(d => d.messageText.toString());

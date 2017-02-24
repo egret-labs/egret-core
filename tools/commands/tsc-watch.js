@@ -1,4 +1,4 @@
-var project = require("../solution/TypeScritpProject");
+var project = require("../solution/TypeScriptProject");
 module.exports = (function () {
     function TSC_Watch() {
     }

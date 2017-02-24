@@ -117,7 +117,7 @@ export class Compiler {
             else {
             }
         });
-        if(hasAddOrRemoved) {
+        if (hasAddOrRemoved) {
             cachedProgram = undefined;
         }
         return this.doCompile();
@@ -133,9 +133,8 @@ export class Compiler {
         return { files: this.sortedFiles, program: this.program, exitStatus: 0, messages: this.errors, compileWithChanges: this.compileWithChanges.bind(this) };
     }
 
-    parseTsconfig() {
-        let url = egret.args.projectDir + "tsconfig.json";
-        let options = egret.args;
+    parseTsconfig(projectRoot: string, isPublish: boolean) {
+        let url = projectRoot + "tsconfig.json";
         var configObj: any;
         try {
             configObj = JSON.parse(file.read(url));
@@ -177,19 +176,15 @@ export class Compiler {
 
         var configParseResult = ts.parseJsonConfigFileContent(configObj, ts.sys, path.dirname(url));
         compilerOptions = configParseResult.options;
-        compilerOptions.defines = getCompilerDefines(options);
+        compilerOptions.defines = getCompilerDefines(isPublish);
 
         return configParseResult
     }
 }
 
-function getCompilerDefines(args: egret.ToolArgs, debug?: boolean) {
+function getCompilerDefines(isPublish: boolean) {
     let defines: any = {};
-    if (debug != undefined) {
-        defines.DEBUG = debug;
-        defines.RELEASE = !debug;
-    }
-    else if (args.publish) {
+    if (isPublish) {
         defines.DEBUG = false;
         defines.RELEASE = true;
     }
