@@ -49,12 +49,7 @@ module globals {
     }
 
     export function getCompiler(method) {
-        if (method == "uglify") {
-            return require("./lib/uglify-js/uglify_adapt");
-        }
-        else {
-            return require("./lib/core/closureCompiler");
-        }
+        return require("./lib/uglify-js/uglify_adapt");
     }
 
     export function getExmlc() {

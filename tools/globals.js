@@ -69,12 +69,7 @@ var globals;
     }
     globals.getCrc32 = getCrc32;
     function getCompiler(method) {
-        if (method == "uglify") {
-            return require("./lib/uglify-js/uglify_adapt");
-        }
-        else {
-            return require("./lib/core/closureCompiler");
-        }
+        return require("./lib/uglify-js/uglify_adapt");
     }
     globals.getCompiler = getCompiler;
     function getExmlc() {
