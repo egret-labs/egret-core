@@ -104,31 +104,15 @@ class CompileEgretEngine implements egret.Command {
             return 0;
         tss = depends.concat(tss);
         var dts = platform.declaration && configuration.declaration;
-        let tsconfig = path.join(egret.root, 'src/egret/tsconfig.json');
-        let compileOptions: ts.CompilerOptions = {};// this.compiler.loadTsconfig(tsconfig,options).options
+        let tsconfig = path.join(egret.root, 'src/egret/');
+        let isPublish = configuration.name != "debug"
+        let compileOptions: ts.CompilerOptions = this.compiler.parseTsconfig(tsconfig, isPublish).options;
 
         //make 使用引擎的配置,必须用下面的参数
-        compileOptions.target = ts.ScriptTarget.ES5;
-        // parsedCmd.options.stripInternal = true;
-        compileOptions.sourceMap = options.sourceMap;
-        compileOptions.removeComments = options.removeComments;
         compileOptions.declaration = dts;
         compileOptions.out = singleFile;
-        compileOptions.newLine = ts.NewLineKind.LineFeed;
-        compileOptions.allowUnreachableCode = true;
         compileOptions.emitReflection = true;
-        compileOptions.lib = ['lib.es5.d.ts',
-            'lib.dom.d.ts',
-            'lib.es2015.promise.d.ts',
-            'lib.scripthost.d.ts'
-        ];
 
-        let defines: any = {};
-        if (configuration.name == "debug") {
-            defines.DEBUG = true;
-            defines.RELEASE = false;
-        }
-        compileOptions.defines = defines;
 
         var result = this.compiler.compile(compileOptions, tss);
         if (result.exitStatus != 0) {
