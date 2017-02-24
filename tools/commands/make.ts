@@ -88,10 +88,9 @@ class CompileEgretEngine implements egret.Command {
                 path = file;
             }
             else {
-                var source = <egret.ManifestSourceFile>file;
-                path = source.path;
-                sourcePlatform = source.platform;
-                sourceConfig = source.debug === true ? "debug" : source.debug === false ? "release" : null;
+                path = file.path;
+                sourcePlatform = file.platform;
+                sourceConfig = file.debug === true ? "debug" : file.debug === false ? "release" : null;
             }
 
             var platformOK = sourcePlatform == null && platform.name == ANY || sourcePlatform == platform.name;
