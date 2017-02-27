@@ -2747,6 +2747,22 @@ var egret;
             var virtualUrl = $getUrl(request);
             var httpRequest = new egret.HttpRequest();
             httpRequest.open(virtualUrl, request.method == egret.URLRequestMethod.POST ? egret.HttpMethod.POST : egret.HttpMethod.GET);
+            var sendData;
+            if (request.method == egret.URLRequestMethod.GET || !request.data) {
+            }
+            else if (request.data instanceof egret.URLVariables) {
+                if (egret.Capabilities.runtimeType == egret.RuntimeType.WEB) {
+                    httpRequest.setRequestHeader("Content-Type", "application/x-www-form-urlencoded");
+                }
+                var urlVars = request.data;
+                sendData = urlVars.toString();
+            }
+            else {
+                if (egret.Capabilities.runtimeType == egret.RuntimeType.WEB) {
+                    httpRequest.setRequestHeader("Content-Type", "multipart/form-data");
+                }
+                sendData = request.data;
+            }
             var length = request.requestHeaders.length;
             for (var i = 0; i < length; i++) {
                 var urlRequestHeader = request.requestHeaders[i];
@@ -2760,7 +2776,7 @@ var egret;
                 egret.IOErrorEvent.dispatchIOErrorEvent(loader);
             }, this);
             httpRequest.responseType = loader.dataFormat == egret.URLLoaderDataFormat.BINARY ? egret.HttpResponseType.ARRAY_BUFFER : egret.HttpResponseType.TEXT;
-            httpRequest.send(request.data);
+            httpRequest.send(sendData);
         };
         URLLoader.prototype.getResponseType = function (dataFormat) {
             switch (dataFormat) {

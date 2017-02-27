@@ -30,8 +30,8 @@
 
 namespace egret {
 
-    function $getUrl(request:URLRequest):string {
-        let url:string = request.url;
+    function $getUrl(request: URLRequest): string {
+        let url: string = request.url;
         //get请求没有设置参数，而是设置URLVariables的情况
         if (url.indexOf("?") == -1 && request.method == URLRequestMethod.GET && request.data && request.data instanceof URLVariables) {
             url = url + "?" + request.data.toString();
@@ -81,9 +81,9 @@ namespace egret {
          * @platform Web,Native
          * @language zh_CN
 		 */
-        public constructor(request:URLRequest=null) {
+        public constructor(request: URLRequest = null) {
             super();
-            if(request){
+            if (request) {
                 this.load(request);
             }
         }
@@ -111,7 +111,7 @@ namespace egret {
          * @platform Web,Native
          * @language zh_CN
          */
-        public dataFormat:string = URLLoaderDataFormat.TEXT;
+        public dataFormat: string = URLLoaderDataFormat.TEXT;
 
 		/**
          * The data received from the load operation. This property is populated only when the load operation is complete. The format of the data depends on the setting of the dataFormat property:
@@ -133,12 +133,12 @@ namespace egret {
          * @platform Web,Native
          * @language zh_CN
 		 */
-        public data:any = null;
+        public data: any = null;
 
         /**
          * @private
          */
-        public _request:URLRequest = null;
+        public _request: URLRequest = null;
 
 		/**
          * Send and load data from the specified URL. The data can be received as text, raw binary data, or URL-encoded variables, depending on the value you set for the dataFormat property.
@@ -156,7 +156,7 @@ namespace egret {
          * @platform Web,Native
          * @language zh_CN
          */
-        public load(request:URLRequest):void {
+        public load(request: URLRequest): void {
             this._request = request;
             this.data = null;
             let loader = this;
@@ -169,26 +169,42 @@ namespace egret {
                 return;
             }
 
-            let virtualUrl:string = $getUrl(request);
+            let virtualUrl: string = $getUrl(request);
             let httpRequest = new HttpRequest();
             httpRequest.open(virtualUrl, request.method == URLRequestMethod.POST ? HttpMethod.POST : HttpMethod.GET);
+            let sendData;
+            if (request.method == URLRequestMethod.GET || !request.data) {
+            }
+            else if (request.data instanceof URLVariables) {
+                if (Capabilities.runtimeType == RuntimeType.WEB) {
+                    httpRequest.setRequestHeader("Content-Type", "application/x-www-form-urlencoded");
+                }
+                let urlVars: URLVariables = <URLVariables>request.data;
+                sendData = urlVars.toString();
+            }
+            else {
+                if (Capabilities.runtimeType == RuntimeType.WEB) {
+                    httpRequest.setRequestHeader("Content-Type", "multipart/form-data");
+                }
+                sendData = request.data;
+            }
             let length = request.requestHeaders.length;
-            for (let i:number = 0; i < length; i++) {
-                let urlRequestHeader:egret.URLRequestHeader = request.requestHeaders[i];
+            for (let i: number = 0; i < length; i++) {
+                let urlRequestHeader: egret.URLRequestHeader = request.requestHeaders[i];
                 httpRequest.setRequestHeader(urlRequestHeader.name, urlRequestHeader.value);
             }
-            httpRequest.addEventListener(Event.COMPLETE, function (){
+            httpRequest.addEventListener(Event.COMPLETE, function () {
                 loader.data = httpRequest.response;
                 Event.dispatchEvent(loader, Event.COMPLETE);
             }, this);
-            httpRequest.addEventListener(IOErrorEvent.IO_ERROR, function (){
+            httpRequest.addEventListener(IOErrorEvent.IO_ERROR, function () {
                 IOErrorEvent.dispatchIOErrorEvent(loader);
             }, this);
             httpRequest.responseType = loader.dataFormat == URLLoaderDataFormat.BINARY ? HttpResponseType.ARRAY_BUFFER : HttpResponseType.TEXT;
-            httpRequest.send(request.data);
+            httpRequest.send(sendData);
         }
 
-        private getResponseType(dataFormat:string):string {
+        private getResponseType(dataFormat: string): string {
             switch (dataFormat) {
                 case URLLoaderDataFormat.TEXT:
                 case URLLoaderDataFormat.VARIABLES:
@@ -206,21 +222,21 @@ namespace egret {
          *
          * @param loader
          */
-        private loadSound(loader:URLLoader):void {
+        private loadSound(loader: URLLoader): void {
             let self = this;
-            let virtualUrl:string = loader._request.url;
+            let virtualUrl: string = loader._request.url;
 
-            let sound:egret.Sound = new egret.Sound();
+            let sound: egret.Sound = new egret.Sound();
             sound.addEventListener(egret.Event.COMPLETE, onLoadComplete, self);
             sound.addEventListener(egret.IOErrorEvent.IO_ERROR, onError, self);
             sound.addEventListener(egret.ProgressEvent.PROGRESS, onPostProgress, self);
             sound.load(virtualUrl);
 
-            function onPostProgress(event:egret.ProgressEvent):void {
+            function onPostProgress(event: egret.ProgressEvent): void {
                 loader.dispatchEvent(event);
             }
 
-            function onError(event:egret.IOErrorEvent) {
+            function onError(event: egret.IOErrorEvent) {
                 removeListeners();
                 loader.dispatchEvent(event);
             }
@@ -230,12 +246,12 @@ namespace egret {
 
                 loader.data = sound;
 
-                window.setTimeout(function() {
+                window.setTimeout(function () {
                     loader.dispatchEventWith(Event.COMPLETE);
                 }, 0);
             }
 
-            function removeListeners():void {
+            function removeListeners(): void {
                 sound.removeEventListener(egret.Event.COMPLETE, onLoadComplete, self);
                 sound.removeEventListener(egret.IOErrorEvent.IO_ERROR, onError, self);
                 sound.removeEventListener(egret.ProgressEvent.PROGRESS, onPostProgress, self);
@@ -247,21 +263,21 @@ namespace egret {
          *
          * @param loader
          */
-        private loadTexture(loader:URLLoader):void {
+        private loadTexture(loader: URLLoader): void {
             let self = this;
 
-            let virtualUrl:string = loader._request.url;
-            let imageLoader:ImageLoader = new ImageLoader();
+            let virtualUrl: string = loader._request.url;
+            let imageLoader: ImageLoader = new ImageLoader();
             imageLoader.addEventListener(egret.Event.COMPLETE, onLoadComplete, self);
             imageLoader.addEventListener(egret.IOErrorEvent.IO_ERROR, onError, self);
             imageLoader.addEventListener(egret.ProgressEvent.PROGRESS, onPostProgress, self);
             imageLoader.load(virtualUrl);
 
-            function onPostProgress(event:egret.ProgressEvent):void {
+            function onPostProgress(event: egret.ProgressEvent): void {
                 loader.dispatchEvent(event);
             }
 
-            function onError(event:egret.IOErrorEvent) {
+            function onError(event: egret.IOErrorEvent) {
                 removeListeners();
                 loader.dispatchEvent(event);
             }
@@ -272,17 +288,17 @@ namespace egret {
                 let bitmapData = imageLoader.data;
                 bitmapData.source.setAttribute("bitmapSrc", virtualUrl);
 
-                let texture:Texture = new Texture();
+                let texture: Texture = new Texture();
                 texture._setBitmapData(bitmapData);
 
                 loader.data = texture;
 
-                window.setTimeout(function() {
+                window.setTimeout(function () {
                     loader.dispatchEventWith(Event.COMPLETE);
                 }, self);
             }
 
-            function removeListeners():void {
+            function removeListeners(): void {
                 imageLoader.removeEventListener(egret.Event.COMPLETE, onLoadComplete, self);
                 imageLoader.removeEventListener(egret.IOErrorEvent.IO_ERROR, onError, self);
                 imageLoader.removeEventListener(egret.ProgressEvent.PROGRESS, onPostProgress, self);
@@ -292,14 +308,14 @@ namespace egret {
         /**
          * @private
          */
-        public _status:number = -1;
+        public _status: number = -1;
 
 
         /**
          * @private
          * 
          */
-        public __recycle():void {
+        public __recycle(): void {
             this._request = null;
             this.data = null;
         }
