@@ -361,6 +361,8 @@ namespace egret {
                             // 如果没有高级效果，使用性能比较高的方式
                             dropShadowFilter(imageData.data, displayBuffer.surface.width, displayBuffer.surface.height, [r / 255, g / 255, b / 255, a / 255], (<GlowFilter>filter).$blurX, (<GlowFilter>filter).$blurY, (<DropShadowFilter>filter).$angle ? ((<DropShadowFilter>filter).$angle / 180 * Math.PI) : 0, (<DropShadowFilter>filter).$distance || 0, (<GlowFilter>filter).$strength);
                         }
+                    } else if(filter.type == "custom") {
+                        // 目前canvas渲染不支持自定义滤镜
                     }
                 }  
                 displayContext.putImageData(imageData, 0, 0);

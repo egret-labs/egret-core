@@ -47,7 +47,7 @@ namespace egret.web {
             gl.bindBuffer(gl.ARRAY_BUFFER, context["vertexBuffer"]);
             gl.bindBuffer(gl.ELEMENT_ARRAY_BUFFER, context["indexBuffer"]);
             gl.activeTexture(gl.TEXTURE0);
-            context.shaderManager.currentShader = null;
+            context.currentProgram = null;
             context["bindIndices"] = false;
             let buffer = context.$bufferStack[1];
             context["activateBuffer"](buffer);

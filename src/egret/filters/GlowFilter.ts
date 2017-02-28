@@ -94,6 +94,15 @@ namespace egret {
             this.$quality = quality;
             this.$inner = inner;
             this.$knockout = knockout;
+
+            this.$uniforms.color = {x: this.$red / 255, y: this.$green / 255, z: this.$blue / 255, w: 1};
+            this.$uniforms.alpha = alpha;
+            this.$uniforms.blurX = blurX;
+            this.$uniforms.blurY = blurY;
+            this.$uniforms.strength = strength;
+            // this.$uniforms.quality = quality;
+            this.$uniforms.inner = inner ? 1 : 0;
+            this.$uniforms.knockout = knockout ? 0 : 1;
         }
 
         /**
@@ -125,6 +134,9 @@ namespace egret {
             this.$blue = value & 0x0000FF;
             this.$green = (value & 0x00ff00) >> 8;
             this.$red = value >> 16;
+            this.$uniforms.color.x = this.$red / 255;
+            this.$uniforms.color.y = this.$green / 255;
+            this.$uniforms.color.z = this.$blue / 255;
             this.invalidate();
         }
 
@@ -154,6 +166,7 @@ namespace egret {
                 return;
             }
             this.$alpha = value;
+            this.$uniforms.alpha = value;
             this.invalidate();
         }
 
@@ -183,6 +196,7 @@ namespace egret {
                 return;
             }
             this.$blurX = value;
+            this.$uniforms.blurX = value;
             this.invalidate();
         }
 
@@ -212,6 +226,7 @@ namespace egret {
                 return;
             }
             this.$blurY = value;
+            this.$uniforms.blurY = value;
             this.invalidate();
         }
 
@@ -241,6 +256,7 @@ namespace egret {
                 return;
             }
             this.$strength = value;
+            this.$uniforms.strength = value;
             this.invalidate();
         }
 
@@ -299,6 +315,7 @@ namespace egret {
                 return;
             }
             this.$inner = value;
+            this.$uniforms.inner = value ? 1 : 0;
             this.invalidate();
         }
 
@@ -328,6 +345,7 @@ namespace egret {
                 return;
             }
             this.$knockout = value;
+            this.$uniforms.knockout = value ? 0 : 1;
             this.invalidate();
         }
 

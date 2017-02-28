@@ -39,8 +39,18 @@ namespace egret {
          * @platform Web,Native
          */
         public type:string = null;
+
+        /**
+         * @private 
+         */
+        public $uniforms:any;
         
         private $targets:DisplayObject[] = [];
+
+        constructor() {
+            super();
+            this.$uniforms = {};
+        }
         
         public $addTarget(target:DisplayObject):void {
             let length:number = this.$targets.length;
