@@ -13261,7 +13261,7 @@ var eui;
          * 添加单选按钮到组内
          */
         RadioButtonGroup.prototype.$addInstance = function (instance) {
-            instance.addEventListener(egret.Event.REMOVED, this.removedHandler, this);
+            instance.addEventListener(egret.Event.REMOVED_FROM_STAGE, this.removedHandler, this);
             var buttons = this.radioButtons;
             buttons.push(instance);
             buttons.sort(breadthOrderCompare);
@@ -13292,7 +13292,7 @@ var eui;
                     }
                     else if (rb == instance) {
                         if (addListener)
-                            instance.addEventListener(egret.Event.ADDED, this.addedHandler, this);
+                            instance.addEventListener(egret.Event.ADDED_TO_STAGE, this.addedHandler, this);
                         if (instance == this._selection)
                             this._selection = null;
                         instance.$radioButtonGroup = null;
@@ -13353,8 +13353,8 @@ var eui;
          */
         RadioButtonGroup.prototype.addedHandler = function (event) {
             var rb = event.target;
-            if (rb) {
-                rb.removeEventListener(egret.Event.ADDED, this.addedHandler, this);
+            if (rb && rb instanceof eui.RadioButton) {
+                rb.removeEventListener(egret.Event.ADDED_TO_STAGE, this.addedHandler, this);
                 this.$addInstance(rb);
             }
         };
@@ -13364,8 +13364,8 @@ var eui;
          */
         RadioButtonGroup.prototype.removedHandler = function (event) {
             var rb = event.target;
-            if (rb) {
-                rb.removeEventListener(egret.Event.REMOVED, this.removedHandler, this);
+            if (rb && rb instanceof eui.RadioButton) {
+                rb.removeEventListener(egret.Event.REMOVED_FROM_STAGE, this.removedHandler, this);
                 this.$removeInstance(rb, true);
             }
         };

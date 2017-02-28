@@ -332,7 +332,7 @@ namespace eui {
          * 添加单选按钮到组内
          */
         $addInstance(instance:RadioButton):void {
-            instance.addEventListener(egret.Event.REMOVED, this.removedHandler, this);
+            instance.addEventListener(egret.Event.REMOVED_FROM_STAGE, this.removedHandler, this);
             let buttons = this.radioButtons;
             buttons.push(instance);
             buttons.sort(breadthOrderCompare);
@@ -365,7 +365,7 @@ namespace eui {
                     }
                     else if (rb == instance) {
                         if (addListener)
-                            instance.addEventListener(egret.Event.ADDED, this.addedHandler, this);
+                            instance.addEventListener(egret.Event.ADDED_TO_STAGE, this.addedHandler, this);
                         if (instance == this._selection)
                             this._selection = null;
                         instance.$radioButtonGroup = null;
@@ -432,8 +432,8 @@ namespace eui {
          */
         private addedHandler(event:egret.Event):void {
             let rb:RadioButton = event.target;
-            if (rb) {
-                rb.removeEventListener(egret.Event.ADDED, this.addedHandler, this);
+            if (rb && rb instanceof RadioButton) {
+                rb.removeEventListener(egret.Event.ADDED_TO_STAGE, this.addedHandler, this);
                 this.$addInstance(rb);
             }
         }
@@ -444,8 +444,8 @@ namespace eui {
          */
         private removedHandler(event:egret.Event):void {
             let rb:RadioButton = event.target;
-            if (rb) {
-                rb.removeEventListener(egret.Event.REMOVED, this.removedHandler, this);
+            if (rb && rb instanceof RadioButton) {
+                rb.removeEventListener(egret.Event.REMOVED_FROM_STAGE, this.removedHandler, this);
                 this.$removeInstance(rb, true);
             }
         }
