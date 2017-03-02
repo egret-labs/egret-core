@@ -1722,7 +1722,7 @@ declare namespace egret {
          * @platform Web
          * @language zh_CN
          */
-        filters: Array<Filter>;
+        filters: Array<Filter | CustomFilter>;
         /**
          * @private
          * 获取filters
@@ -2397,7 +2397,12 @@ declare namespace egret {
          * @platform Web,Native
          */
         type: string;
+        /**
+         * @private
+         */
+        $uniforms: any;
         private $targets;
+        constructor();
         $addTarget(target: DisplayObject): void;
         $removeTarget(target: DisplayObject): void;
         protected invalidate(): void;
@@ -6394,6 +6399,14 @@ declare namespace egret {
         /**
          * @private
          */
+        blurXFilter: IBlurXFilter;
+        /**
+         * @private
+         */
+        blurYFilter: IBlurYFilter;
+        /**
+         * @private
+         */
         $quality: number;
         /**
          * The amount of horizontal blur.
@@ -6433,6 +6446,22 @@ declare namespace egret {
          * @private
          */
         $toJson(): string;
+    }
+    /**
+     * @private
+     */
+    interface IBlurXFilter extends Filter {
+        type: string;
+        $uniforms: any;
+        blurX: number;
+    }
+    /**
+     * @private
+     */
+    interface IBlurYFilter extends Filter {
+        type: string;
+        $uniforms: any;
+        blurY: number;
     }
 }
 declare namespace egret {
@@ -6499,6 +6528,58 @@ declare namespace egret {
          * @private
          */
         $toJson(): string;
+    }
+}
+declare namespace egret {
+    /**
+     * custom filter, now support WebGL mode only.
+     * @version Egret 4.1.0
+     * @platform Web
+     * @language en_US
+     */
+    /**
+     * 自定义滤镜，目前仅支持WebGL模式
+     * @version Egret 4.1.0
+     * @platform Web
+     * @language zh_CN
+     */
+    class CustomFilter extends Filter {
+        /**
+         * @private
+         */
+        $vertexSrc: string;
+        /**
+         * @private
+         */
+        $fragmentSrc: string;
+        /**
+         * @private
+         */
+        $shaderKey: string;
+        /**
+         * @private
+         */
+        type: string;
+        /**
+         * 滤镜的内边距
+         * 如果自定义滤镜所需区域比原区域大（描边等），需要手动设置
+         * @version Egret 4.1.0
+         * @platform Web
+         * @language zh_CN
+         */
+        padding: number;
+        readonly uniforms: any;
+        /**
+         * 初始化 CustomFilter 对象
+         * @method egret.CustomFilter#constructor
+         * @param vertexSrc {string} 自定义的顶点着色器程序。
+         * @param fragmentSrc {string} 自定义的片段着色器程序。
+         * @param uniforms {any} 着色器中uniform的初始值（key，value一一对应），目前仅支持数字和数组。
+         * @version Egret 4.1.0
+         * @platform Web
+         * @language zh_CN
+         */
+        constructor(vertexSrc: string, fragmentSrc: string, uniforms?: any);
     }
 }
 declare namespace egret {
@@ -9235,63 +9316,6 @@ declare namespace egret.sys {
      */
     let $logToFPS: (info: string) => void;
 }
-/**
- * @private
- */
-interface PlayerOption {
-    /**
-     * 入口类完整类名
-     */
-    entryClassName?: string;
-    /**
-     * 默认帧率
-     */
-    frameRate?: number;
-    /**
-     * 屏幕适配模式
-     */
-    scaleMode?: string;
-    /**
-     * 初始内容宽度
-     */
-    contentWidth?: number;
-    /**
-     * 初始内容高度
-     */
-    contentHeight?: number;
-    /**
-     * 屏幕方向
-     */
-    orientation?: string;
-    /**
-     * 是否显示重绘区域
-     */
-    showPaintRect?: boolean;
-    /**
-     * 显示FPS
-     */
-    showFPS?: boolean;
-    /**
-     *
-     */
-    fpsStyles?: Object;
-    /**
-     * 显示日志
-     */
-    showLog?: boolean;
-    /**
-     * 过滤日志的正则表达式
-     */
-    logFilter?: string;
-    /**
-     *
-     */
-    maxTouches?: number;
-    /**
-     *
-     */
-    textureScaleFactor?: number;
-}
 declare namespace egret {
     /**
      * OrientationMode 类为舞台初始旋转模式提供值。
@@ -9302,6 +9326,98 @@ declare namespace egret {
         LANDSCAPE: string;
         LANDSCAPE_FLIPPED: string;
     };
+}
+declare namespace egret.sys {
+    /**
+     * @private
+     */
+    class Region {
+        /**
+         * @private
+         * 释放一个Region实例到对象池
+         */
+        static release(region: Region): void;
+        /**
+         * @private
+         * 从对象池中取出或创建一个新的Region对象。
+         * 建议对于一次性使用的对象，均使用此方法创建，而不是直接new一个。
+         * 使用完后调用对应的release()静态方法回收对象，能有效减少对象创建数量造成的性能开销。
+         */
+        static create(): Region;
+        /**
+         * @private
+         */
+        minX: number;
+        /**
+         * @private
+         */
+        minY: number;
+        /**
+         * @private
+         */
+        maxX: number;
+        /**
+         * @private
+         */
+        maxY: number;
+        /**
+         * @private
+         */
+        width: number;
+        /**
+         * @private
+         */
+        height: number;
+        /**
+         * @private
+         */
+        area: number;
+        /**
+         * @private
+         * 是否发生移动
+         */
+        moved: boolean;
+        /**
+         * @private
+         */
+        setTo(minX: number, minY: number, maxX: number, maxY: number): Region;
+        /**
+         * @private
+         * 把所有值都取整
+         */
+        intValues(): void;
+        /**
+         * @private
+         */
+        updateArea(): void;
+        /**
+         * @private
+         * 注意！由于性能优化，此方法不判断自身是否为空，必须在外部确认自身和目标区域都不为空再调用合并。否则结果始终从0，0点开始。
+         */
+        union(target: Region): void;
+        /**
+         * @private
+         * 注意！由于性能优化，此方法不判断自身是否为空，必须在外部确认自身和目标区域都不为空再调用合并。否则结果始终从0，0点开始。
+         */
+        intersect(target: Region): void;
+        /**
+         * @private
+         */
+        private setEmpty();
+        /**
+         * @private
+         * 确定此 Region 对象是否为空。
+         */
+        isEmpty(): boolean;
+        /**
+         * @private
+         */
+        intersects(target: Region): boolean;
+        /**
+         * @private
+         */
+        updateRegion(bounds: Rectangle, matrix: Matrix): void;
+    }
 }
 declare namespace egret.sys {
     /**
@@ -15298,95 +15414,60 @@ declare namespace egret {
      */
     function toColorString(value: number): string;
 }
-declare namespace egret.sys {
+/**
+ * @private
+ */
+interface PlayerOption {
     /**
-     * @private
+     * 入口类完整类名
      */
-    class Region {
-        /**
-         * @private
-         * 释放一个Region实例到对象池
-         */
-        static release(region: Region): void;
-        /**
-         * @private
-         * 从对象池中取出或创建一个新的Region对象。
-         * 建议对于一次性使用的对象，均使用此方法创建，而不是直接new一个。
-         * 使用完后调用对应的release()静态方法回收对象，能有效减少对象创建数量造成的性能开销。
-         */
-        static create(): Region;
-        /**
-         * @private
-         */
-        minX: number;
-        /**
-         * @private
-         */
-        minY: number;
-        /**
-         * @private
-         */
-        maxX: number;
-        /**
-         * @private
-         */
-        maxY: number;
-        /**
-         * @private
-         */
-        width: number;
-        /**
-         * @private
-         */
-        height: number;
-        /**
-         * @private
-         */
-        area: number;
-        /**
-         * @private
-         * 是否发生移动
-         */
-        moved: boolean;
-        /**
-         * @private
-         */
-        setTo(minX: number, minY: number, maxX: number, maxY: number): Region;
-        /**
-         * @private
-         * 把所有值都取整
-         */
-        intValues(): void;
-        /**
-         * @private
-         */
-        updateArea(): void;
-        /**
-         * @private
-         * 注意！由于性能优化，此方法不判断自身是否为空，必须在外部确认自身和目标区域都不为空再调用合并。否则结果始终从0，0点开始。
-         */
-        union(target: Region): void;
-        /**
-         * @private
-         * 注意！由于性能优化，此方法不判断自身是否为空，必须在外部确认自身和目标区域都不为空再调用合并。否则结果始终从0，0点开始。
-         */
-        intersect(target: Region): void;
-        /**
-         * @private
-         */
-        private setEmpty();
-        /**
-         * @private
-         * 确定此 Region 对象是否为空。
-         */
-        isEmpty(): boolean;
-        /**
-         * @private
-         */
-        intersects(target: Region): boolean;
-        /**
-         * @private
-         */
-        updateRegion(bounds: Rectangle, matrix: Matrix): void;
-    }
+    entryClassName?: string;
+    /**
+     * 默认帧率
+     */
+    frameRate?: number;
+    /**
+     * 屏幕适配模式
+     */
+    scaleMode?: string;
+    /**
+     * 初始内容宽度
+     */
+    contentWidth?: number;
+    /**
+     * 初始内容高度
+     */
+    contentHeight?: number;
+    /**
+     * 屏幕方向
+     */
+    orientation?: string;
+    /**
+     * 是否显示重绘区域
+     */
+    showPaintRect?: boolean;
+    /**
+     * 显示FPS
+     */
+    showFPS?: boolean;
+    /**
+     *
+     */
+    fpsStyles?: Object;
+    /**
+     * 显示日志
+     */
+    showLog?: boolean;
+    /**
+     * 过滤日志的正则表达式
+     */
+    logFilter?: string;
+    /**
+     *
+     */
+    maxTouches?: number;
+    /**
+     *
+     */
+    textureScaleFactor?: number;
 }

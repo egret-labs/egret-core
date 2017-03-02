@@ -68,7 +68,21 @@ namespace egret {
             this.$blurX = blurX;
             this.$blurY = blurY;
             this.$quality = quality;
+
+            this.blurXFilter = new BlurXFilter(blurX);
+
+            this.blurYFilter = new BlurYFilter(blurY);
         }
+
+        /**
+         * @private
+         */
+        public blurXFilter:IBlurXFilter;
+
+        /**
+         * @private
+         */
+        public blurYFilter:IBlurYFilter;
 
         /**
          * @private
@@ -96,6 +110,7 @@ namespace egret {
                 return;
             }
             this.$blurX = value;
+            this.blurXFilter.blurX = value;
             this.invalidate();
         }
         
@@ -125,6 +140,7 @@ namespace egret {
                 return;
             }
             this.$blurY = value;
+            this.blurYFilter.blurY = value;
             this.invalidate();
         }
         
@@ -138,6 +154,60 @@ namespace egret {
          */
         public $toJson():string {
             return '{"blurX": ' + this.$blurX + ', "blurY": ' + this.$blurY + ', "quality": 1}';
+        }
+    }
+
+    /**
+     * @private 
+     */
+    export interface IBlurXFilter extends Filter {
+        type:string;
+        $uniforms:any;
+        blurX:number;
+    }
+
+    /**
+     * @private 
+     */
+    export interface IBlurYFilter extends Filter {
+        type:string;
+        $uniforms:any;
+        blurY:number;
+    }
+
+    class BlurXFilter extends Filter implements IBlurXFilter {
+        constructor(blurX:number = 4) {
+            super();
+
+            this.type = "blurX";
+
+            this.$uniforms.blur = {x: blurX, y: 0};
+        }
+
+        public set blurX(value:number) {
+            this.$uniforms.blur.x = value;
+        }
+
+        public get blurX():number {
+            return this.$uniforms.blur.x;
+        }
+    }
+
+    class BlurYFilter extends Filter implements IBlurYFilter {
+        constructor(blurY:number = 4) {
+            super();
+
+            this.type = "blurY";
+
+            this.$uniforms.blur = {x: 0, y: blurY};
+        }
+
+        public set blurY(value:number) {
+            this.$uniforms.blur.y = value;
+        }
+
+        public get blurY():number {
+            return this.$uniforms.blur.y;
         }
     }
 }

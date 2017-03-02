@@ -201,7 +201,7 @@ namespace egret.web {
                 }
             }
 
-            if (filters.length == 1 && filters[0].type == "colorTransform" && !displayObject.$children) {
+            if (filters.length == 1 && ( filters[0].type == "colorTransform" || (filters[0].type === "custom" && (<CustomFilter>filters[0]).padding === 0) ) && !displayObject.$children) {
                 if (hasBlendMode) {
                     buffer.context.setGlobalCompositeOperation(compositeOp);
                 }

@@ -79,6 +79,10 @@ namespace egret {
             this.$distance = distance;
             this.$angle = angle;
             this.$hideObject = hideObject;
+
+            this.$uniforms.distance = distance;
+            this.$uniforms.angle = angle / 180 * Math.PI;
+            this.$uniforms.hideObject = hideObject ? 1 : 0;
         }
 
         /**
@@ -107,6 +111,7 @@ namespace egret {
                 return;
             }
             this.$distance = value;
+            this.$uniforms.distance = value;
             this.invalidate();
         }
 
@@ -136,6 +141,7 @@ namespace egret {
                 return;
             }
             this.$angle = value;
+            this.$uniforms.angle = value / 180 * Math.PI;
             this.invalidate();
         }
 
@@ -165,6 +171,7 @@ namespace egret {
                 return;
             }
             this.$hideObject = value;
+            this.$uniforms.hideObject = value ? 1 : 0;
             this.invalidate();
         }
 

@@ -260,7 +260,7 @@ namespace egret.web {
 
         public projectionX: number = NaN;
         public projectionY: number = NaN;
-        public shaderManager: WebGLShaderManager = null;
+        
         public contextLost: boolean = false;
 
         private initWebGL(): void {
@@ -270,8 +270,6 @@ namespace egret.web {
             this.surface.addEventListener("webglcontextrestored", this.handleContextRestored.bind(this), false);
 
             this.getWebGLContext();
-
-            this.shaderManager = new WebGLShaderManager(this.context);
         }
 
         private handleContextLost() {
@@ -280,7 +278,6 @@ namespace egret.web {
 
         private handleContextRestored() {
             this.initWebGL();
-            //this.shaderManager.setContext(this.context);
             this.contextLost = false;
         }
 
@@ -724,67 +721,55 @@ namespace egret.web {
             if (!data) {
                 return;
             }
-            let shader: any;
+
+            let gl = this.context;
+            let program:EgretWebGLProgram;
+            let filter = data.filter;
 
             switch (data.type) {
                 case DRAWABLE_TYPE.TEXTURE:
-
-                    let filter = data.filter;
                     if (filter) {
-                        if (filter.type == "colorTransform") {
-                            shader = this.shaderManager.colorTransformShader;
-                            (<ColorTransformShader>shader).setMatrix(filter.$matrix);
-                        } else if (filter.type == "blur") {
-                            shader = this.shaderManager.blurShader;
-                            (<BlurShader>shader).setBlur(filter.$blurX, filter.$blurY);
-                            (<BlurShader>shader).setTextureSize(data.textureWidth, data.textureHeight);
-                        } else if (filter.type == "glow") {
-                            shader = this.shaderManager.glowShader;
-                            (<GlowShader>shader).setDistance(filter.$distance || 0);
-                            (<GlowShader>shader).setAngle(filter.$angle ? filter.$angle / 180 * Math.PI : 0);
-                            (<GlowShader>shader).setColor(filter.$red / 255, filter.$green / 255, filter.$blue / 255);
-                            (<GlowShader>shader).setAlpha(filter.$alpha);
-                            (<GlowShader>shader).setBlurX(filter.$blurX);
-                            (<GlowShader>shader).setBlurY(filter.$blurY);
-                            (<GlowShader>shader).setStrength(filter.$strength);
-                            (<GlowShader>shader).setInner(filter.$inner ? 1 : 0);
-                            (<GlowShader>shader).setKnockout(filter.$knockout ? 0 : 1);
-                            (<GlowShader>shader).setHideObject(filter.$hideObject ? 1 : 0);
-                            (<GlowShader>shader).setTextureSize(data.textureWidth, data.textureHeight);
+                        if(filter.type === "custom") {
+                            program = EgretWebGLProgram.getProgram(gl, filter.$vertexSrc, filter.$fragmentSrc, filter.$shaderKey);
+                        } else if(filter.type === "colorTransform") {
+                            program = EgretWebGLProgram.getProgram(gl, EgretShaderLib.default_vert, EgretShaderLib.colorTransform_frag, "colorTransform");
+                        } else if(filter.type === "blurX") {
+                            program = EgretWebGLProgram.getProgram(gl, EgretShaderLib.default_vert, EgretShaderLib.blur_frag, "blur");
+                        } else if(filter.type === "blurY") {
+                            program = EgretWebGLProgram.getProgram(gl, EgretShaderLib.default_vert, EgretShaderLib.blur_frag, "blur");
+                        } else if(filter.type === "glow") {
+                            program = EgretWebGLProgram.getProgram(gl, EgretShaderLib.default_vert, EgretShaderLib.glow_frag, "glow");
                         }
                     } else {
-                        shader = this.shaderManager.defaultShader;
+                        program = EgretWebGLProgram.getProgram(gl, EgretShaderLib.default_vert, EgretShaderLib.texture_frag, "texture");
                     }
-                    shader.setProjection(this.projectionX, this.projectionY);
-                    this.shaderManager.activateShader(shader, this.vertSize * 4);
-                    shader.syncUniforms();
 
+                    this.activeProgram(gl, program);
+                    this.syncUniforms(program, filter, data.textureWidth, data.textureHeight);
+                    
                     offset += this.drawTextureElements(data, offset);
                     break;
                 case DRAWABLE_TYPE.RECT:
 
-                    shader = this.shaderManager.primitiveShader;
-                    shader.setProjection(this.projectionX, this.projectionY);
-                    this.shaderManager.activateShader(shader, this.vertSize * 4);
-                    shader.syncUniforms();
+                    program = EgretWebGLProgram.getProgram(gl, EgretShaderLib.default_vert, EgretShaderLib.primitive_frag, "primitive");
+                    this.activeProgram(gl, program);
+                    this.syncUniforms(program, filter, data.textureWidth, data.textureHeight);
 
                     offset += this.drawRectElements(data, offset);
                     break;
                 case DRAWABLE_TYPE.PUSH_MASK:
 
-                    shader = this.shaderManager.primitiveShader;
-                    shader.setProjection(this.projectionX, this.projectionY);
-                    this.shaderManager.activateShader(shader, this.vertSize * 4);
-                    shader.syncUniforms();
+                    program = EgretWebGLProgram.getProgram(gl, EgretShaderLib.default_vert, EgretShaderLib.primitive_frag, "primitive");
+                    this.activeProgram(gl, program);
+                    this.syncUniforms(program, filter, data.textureWidth, data.textureHeight);
 
                     offset += this.drawPushMaskElements(data, offset);
                     break;
                 case DRAWABLE_TYPE.POP_MASK:
 
-                    shader = this.shaderManager.primitiveShader;
-                    shader.setProjection(this.projectionX, this.projectionY);
-                    this.shaderManager.activateShader(shader, this.vertSize * 4);
-                    shader.syncUniforms();
+                    program = EgretWebGLProgram.getProgram(gl, EgretShaderLib.default_vert, EgretShaderLib.primitive_frag, "primitive");
+                    this.activeProgram(gl, program);
+                    this.syncUniforms(program, filter, data.textureWidth, data.textureHeight);
 
                     offset += this.drawPopMaskElements(data, offset);
                     break;
@@ -823,6 +808,45 @@ namespace egret.web {
             }
 
             return offset;
+        }
+
+        public currentProgram:EgretWebGLProgram;
+        private activeProgram(gl:WebGLRenderingContext, program:EgretWebGLProgram):void {
+            if(program != this.currentProgram) {
+                gl.useProgram(program.id);
+
+                // 目前所有attribute buffer的绑定方法都是一致的
+                let attribute = program.attributes;
+                gl.vertexAttribPointer(attribute["aVertexPosition"].location, 2, gl.FLOAT, false, 5 * 4, 0);
+                gl.enableVertexAttribArray(attribute["aVertexPosition"].location);
+                gl.vertexAttribPointer(attribute["aTextureCoord"].location, 2, gl.FLOAT, false, 5 * 4, 2 * 4);
+                gl.enableVertexAttribArray(attribute["aTextureCoord"].location);
+                gl.vertexAttribPointer(attribute["aColor"].location, 1, gl.FLOAT, false, 5 * 4, 4 * 4);
+                gl.enableVertexAttribArray(attribute["aColor"].location);
+
+                this.currentProgram = program;
+            }
+        }
+
+        private syncUniforms(program:EgretWebGLProgram, filter:Filter, textureWidth:number, textureHeight:number):void {
+            let uniforms = program.uniforms;
+            let isCustomFilter:boolean = filter && filter.type === "custom";
+            for(let key in uniforms) {
+                if(key === "projectionVector") {
+                    uniforms[key].setValue({x: this.projectionX, y: this.projectionY});
+                } else if(key === "uTextureSize") {
+                    uniforms[key].setValue({x: textureWidth, y: textureHeight});
+                } else if(key === "uSampler") {
+
+                } else {
+                    let value = filter.$uniforms[key];
+                    if(value !== undefined) {
+                        uniforms[key].setValue(value);
+                    } else {
+                        // egret.warn("filter custom: uniform " + key + " not defined!");
+                    }
+                }                
+            }
         }
 
         /**
@@ -986,33 +1010,25 @@ namespace egret.web {
                 width: number = input.rootRenderTarget.width,
                 height: number = input.rootRenderTarget.height;
 
-            // 模糊滤镜实现为blurX与blurY的叠加
+            // 模糊滤镜分别处理blurX与blurY
             if (filter.type == "blur") {
-                if (!this.blurFilter) {
-                    this.blurFilter = new egret.BlurFilter(2, 2);
-                }
+                let blurXFilter = (<BlurFilter>filter).blurXFilter;
+                let blurYFilter = (<BlurFilter>filter).blurYFilter;
 
-                if ((<BlurFilter>filter).blurX != 0 && (<BlurFilter>filter).blurY != 0) {
-                    this.blurFilter.blurX = (<BlurFilter>filter).blurX;
-                    this.blurFilter.blurY = 0;
-
+                if (blurXFilter.blurX != 0 && blurYFilter.blurY != 0) {
                     temp = WebGLRenderBuffer.create(width, height);
                     temp.setTransform(1, 0, 0, 1, 0, 0);
                     temp.globalAlpha = 1;
-                    this.drawToRenderTarget(this.blurFilter, input, temp);
+                    this.drawToRenderTarget((<BlurFilter>filter).blurXFilter, input, temp);
                     if (input != originInput) {
                         WebGLRenderBuffer.release(input);
                     }
                     input = temp;
 
-                    this.blurFilter.blurX = 0;
-                    this.blurFilter.blurY = (<BlurFilter>filter).blurY;
+                    filter = blurYFilter;
                 } else {
-                    this.blurFilter.blurX = (<BlurFilter>filter).blurX;
-                    this.blurFilter.blurY = (<BlurFilter>filter).blurY;
+                    filter = blurXFilter.blurX === 0 ? blurYFilter : blurXFilter;
                 }
-
-                filter = this.blurFilter;
             }
 
             // 绘制input结果到舞台
@@ -1021,15 +1037,7 @@ namespace egret.web {
             this.vao.cacheArrays(output.globalMatrix, output.globalAlpha, 0, 0, width, height, 0, 0, width, height, width, height);
             output.restoreTransform();
 
-            let filterData: any;
-            if (filter.type == "blur") {
-                // 实现blurx与blurY分开处理，会借用公用filter
-                // 为了允许公用filter的存在，这里拷贝filter到对象中
-                filterData = { type: "blur", $blurX: (<BlurFilter>filter).$blurX, $blurY: (<BlurFilter>filter).$blurY };
-            } else {
-                filterData = filter;
-            }
-            this.drawCmdManager.pushDrawTexture(input["rootRenderTarget"].texture, 2, filterData, width, height);
+            this.drawCmdManager.pushDrawTexture(input["rootRenderTarget"].texture, 2, filter, width, height);
 
             // 释放掉input
             if (input != originInput) {
@@ -1038,8 +1046,6 @@ namespace egret.web {
 
             this.popBuffer();
         }
-
-        private blurFilter = null;
 
         public static blendModesForGL: any = null;
 

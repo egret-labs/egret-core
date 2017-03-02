@@ -68,6 +68,13 @@ namespace egret {
         constructor(matrix:number[] = null) {
             super();
             this.type = "colorTransform";
+            this.$uniforms.matrix = [
+                1, 0, 0, 0,
+                0, 1, 0, 0,
+                0, 0, 1, 0,
+                0, 0, 0, 1
+            ];
+            this.$uniforms.colorAdd = {x: 0, y: 0, z: 0, w: 0};
             this.setMatrix(matrix);
         }
 
@@ -111,6 +118,25 @@ namespace egret {
                 for (let i = 0; i < 20; i++) {
                     this.$matrix[i] = (i == 0 || i == 6 || i == 12 || i == 18) ? 1 : 0;
                 } 
+            }
+
+            let $matrix = this.$matrix;
+            let matrix = this.$uniforms.matrix;
+            let colorAdd = this.$uniforms.colorAdd;
+
+            for(let i = 0, j = 0; i < $matrix.length; i++) {
+                if(i === 4 || i === 9 || i === 14 || i === 19) {
+                    colorAdd.x = $matrix[i];
+                } else if(i === 9) {
+                    colorAdd.y = $matrix[i];
+                } else if(i === 14) {
+                    colorAdd.z = $matrix[i];
+                } else if(i === 19) {
+                    colorAdd.w = $matrix[i];
+                } else {
+                    matrix[j] = $matrix[i];
+                    j++;
+                }
             }
         }
 

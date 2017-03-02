@@ -251,34 +251,6 @@
             "platform": "web"
           },
           {
-            "path": "web/rendering/webgl/shaders/EgretShader.ts",
-            "platform": "web"
-          },
-          {
-            "path": "web/rendering/webgl/shaders/TextureShader.ts",
-            "platform": "web"
-          },
-          {
-            "path": "web/rendering/webgl/shaders/PrimitiveShader.ts",
-            "platform": "web"
-          },
-          {
-            "path": "web/rendering/webgl/shaders/BlurShader.ts",
-            "platform": "web"
-          },
-          {
-            "path": "web/rendering/webgl/shaders/ColorTransformShader.ts",
-            "platform": "web"
-          },
-          {
-            "path": "web/rendering/webgl/shaders/GlowShader.ts",
-            "platform": "web"
-          },
-          {
-            "path": "web/rendering/webgl/WebGLShaderManager.ts",
-            "platform": "web"
-          },
-          {
             "path": "web/rendering/webgl/WebGLDrawCmdManager.ts",
             "platform": "web"
           },
@@ -300,6 +272,22 @@
           },
           {
             "path": "web/rendering/webgl/WebGLRenderer.ts",
+            "platform": "web"
+          },
+          {
+            "path": "web/rendering/webgl/EgretWebGLAttribute.ts",
+            "platform": "web"
+          },
+          {
+            "path": "web/rendering/webgl/EgretWebGLProgram.ts",
+            "platform": "web"
+          },
+          {
+            "path": "web/rendering/webgl/EgretWebGLUniform.ts",
+            "platform": "web"
+          },
+          {
+            "path": "web/rendering/webgl/shaders/EgretShaderLib.ts",
             "platform": "web"
           }
         ],

@@ -1682,11 +1682,11 @@ namespace egret {
          * @platform Web
          * @language zh_CN
          */
-        public get filters(): Array<Filter> {
+        public get filters(): Array<Filter | CustomFilter> {
             return this.$DisplayObject[Keys.filters];
         }
 
-        public set filters(value: Array<Filter>) {
+        public set filters(value: Array<Filter | CustomFilter>) {
             let filters: Array<Filter> = this.$DisplayObject[Keys.filters];
             if (!filters && !value) {
                 this.$DisplayObject[Keys.filters] = value;
@@ -2092,6 +2092,12 @@ namespace egret {
                                 minY += distanceY;
                                 maxY += distanceY;
                             }
+                        } else if(filter.type == "custom") {
+                            let padding = (<CustomFilter>filter).padding;
+                            minX -= padding;
+                            minY -= padding;
+                            maxX += padding;
+                            maxY += padding;
                         }
                     }
                 }
