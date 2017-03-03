@@ -76,7 +76,6 @@ namespace egret.web {
             gl.bindRenderbuffer(gl.RENDERBUFFER, this.stencilBuffer);
             gl.renderbufferStorage(gl.RENDERBUFFER, gl.DEPTH_STENCIL, this.width, this.height);
             gl.framebufferRenderbuffer(gl.FRAMEBUFFER, gl.DEPTH_STENCIL_ATTACHMENT, gl.RENDERBUFFER, this.stencilBuffer);
-
         }
 
         /**
@@ -97,7 +96,7 @@ namespace egret.web {
             this.stencilBuffer = gl.createRenderbuffer();
             gl.bindRenderbuffer(gl.RENDERBUFFER, this.stencilBuffer);// 是否需要强制绑定？
             gl.renderbufferStorage(gl.RENDERBUFFER, gl.DEPTH_STENCIL, width, height);
-
+            gl.framebufferRenderbuffer(gl.FRAMEBUFFER, gl.DEPTH_STENCIL_ATTACHMENT, gl.RENDERBUFFER, this.stencilBuffer);
             this.width = width;
             this.height = height;
 
