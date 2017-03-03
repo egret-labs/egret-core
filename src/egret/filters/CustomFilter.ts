@@ -31,41 +31,37 @@ namespace egret {
 
     const SOURCE_KEY_MAP = {};
 
+    let chars = '0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz'.split( '' );
+    let uuid = new Array( 36 );
+    let rnd = 0, r;
+
     /**
      * generate uuid
+     * http://www.broofa.com/Tools/Math.uuid.htm
      */
     let generateUUID = function () {
-		// http://www.broofa.com/Tools/Math.uuid.htm
+        for ( let i = 0; i < 36; i ++ ) {
 
-		let chars = '0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz'.split( '' );
-		let uuid = new Array( 36 );
-		let rnd = 0, r;
+            if ( i === 8 || i === 13 || i === 18 || i === 23 ) {
 
-		return function generateUUID() {
+                uuid[ i ] = '-';
 
-			for ( let i = 0; i < 36; i ++ ) {
+            } else if ( i === 14 ) {
 
-				if ( i === 8 || i === 13 || i === 18 || i === 23 ) {
+                uuid[ i ] = '4';
 
-					uuid[ i ] = '-';
+            } else {
 
-				} else if ( i === 14 ) {
+                if ( rnd <= 0x02 ) rnd = 0x2000000 + ( Math.random() * 0x1000000 ) | 0;
+                r = rnd & 0xf;
+                rnd = rnd >> 4;
+                uuid[ i ] = chars[ ( i === 19 ) ? ( r & 0x3 ) | 0x8 : r ];
 
-					uuid[ i ] = '4';
+            }
 
-				} else {
+        }
 
-					if ( rnd <= 0x02 ) rnd = 0x2000000 + ( Math.random() * 0x1000000 ) | 0;
-					r = rnd & 0xf;
-					rnd = rnd >> 4;
-					uuid[ i ] = chars[ ( i === 19 ) ? ( r & 0x3 ) | 0x8 : r ];
-
-				}
-
-			}
-
-			return uuid.join( '' );
-		};
+        return uuid.join( '' );
 	};
 
     /**
