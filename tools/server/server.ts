@@ -30,62 +30,42 @@ var mine = {
     "xml": "text/xml"
 };
 
-function fileReader(root) {
-    return function (request: http.IncomingMessage, response: http.ServerResponse) {
-        return new Promise((reslove, reject) => {
-            var pathname = url.parse(request.url).pathname;
-            var realPath = path.join(root, pathname);
-            //console.log(realPath);
-            var ext = path.extname(realPath);
-            ext = ext ? ext.slice(1) : 'unknown';
-            fs.exists(realPath, function (exists) {
-                if (!exists) {
-                    response.writeHead(404, {
-                        'Content-Type': 'text/plain'
-                    });
-                    response.write("This request URL " + pathname + " was not found on this server.");
-                    reslove();
-                } else {
-                    fs.readFile(realPath, "binary", function (err, file) {
-                        if (err) {
-                            response.writeHead(500, {
-                                'Content-Type': 'text/plain'
-                            });
-                            reslove();
-                        } else {
-                            var contentType = mine[ext] || "text/plain";
-                            response.writeHead(200, {
-                                'Content-Type': contentType
-                            });
-                            response.write(file, "binary");
-                            reslove();
-                        }
-                    });
-                }
-            })
-        })
+
+
+
+class Server {
+
+    private middleware: Server.Middleware;
+
+    constructor() {
     }
-}
 
+    use(middleware: Server.Middleware) {
+        this.middleware = middleware;
+    }
 
+    start(root: string, port: number, startupUrl: string, openWithBrowser: boolean = true) {
 
-export function startServer(root: string, port: number, startupUrl: string, openWithBrowser: boolean = true) {
+        let ips = getLocalIPAddress();
 
-    let ips = getLocalIPAddress();
-    var server = http.createServer(function (request, response) {
-        fileReader(root)(request, response).then(() => {
-            response.end();
-        }).catch((e) => {
-            console.error(e);
-            response.end();
+        let m = this.middleware();
+
+        var server = http.createServer((request, response) => {
+            response.setHeader("Access-Control-Allow-Origin", "*");
+            m(request, response).then(() => {
+                response.end();
+            }).catch((e) => {
+                console.error(e);
+                response.end();
+            });
         });
-    });
-    server.listen(port);
-    console.log("Server running at port: " + port + ".");
-    if (openWithBrowser) {
-        utils.open(startupUrl);
-    }
+        server.listen(port);
+        console.log("Server running at port: " + port + ".");
+        if (openWithBrowser) {
+            utils.open(startupUrl);
+        }
 
+    }
 }
 
 
@@ -107,3 +87,57 @@ function getLocalIPAddress() {
 
     return ips;
 }
+
+
+
+
+
+namespace Server {
+
+
+    export var fileReader = (root) => () => {
+        return function (request: http.IncomingMessage, response: http.ServerResponse) {
+            return new Promise((reslove, reject) => {
+                var pathname = url.parse(request.url).pathname;
+                var realPath = path.join(root, pathname);
+                //console.log(realPath);
+                var ext = path.extname(realPath);
+                ext = ext ? ext.slice(1) : 'unknown';
+                fs.exists(realPath, function (exists) {
+                    if (!exists) {
+                        response.writeHead(404, {
+                            'Content-Type': 'text/plain'
+                        });
+                        response.write("This request URL " + pathname + " was not found on this server.");
+                        reslove();
+                    } else {
+                        fs.readFile(realPath, "binary", function (err, file) {
+                            if (err) {
+                                response.writeHead(500, {
+                                    'Content-Type': 'text/plain'
+                                });
+                                reslove();
+                            } else {
+                                var contentType = mine[ext] || "text/plain";
+                                response.writeHead(200, {
+                                    'Content-Type': contentType
+                                });
+                                response.write(file, "binary");
+                                reslove();
+                            }
+                        });
+                    }
+                })
+            })
+        }
+    }
+
+
+    export type Middleware = (...arg) => (request: http.IncomingMessage, response: http.ServerResponse) => Promise<any>
+
+
+}
+
+
+
+export = Server;

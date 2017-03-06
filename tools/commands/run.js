@@ -4,7 +4,7 @@ var utils = require("../lib/utils");
 var watch = require("../lib/watch");
 var path = require("path");
 var Build = require("./build");
-var server = require("../server/server");
+var Server = require("../server/server");
 var FileUtil = require("../lib/FileUtil");
 var service = require("../service/index");
 var Run = (function () {
@@ -39,7 +39,8 @@ var Run = (function () {
         }
         this.serverStarted = true;
         var openWithBrowser = !egret.args.serverOnly;
-        server.startServer(egret.args.projectDir, port, this.wrapByParams(egret.args.startUrl), openWithBrowser);
+        var server = new Server();
+        server.start(egret.args.projectDir, port, this.wrapByParams(egret.args.startUrl), openWithBrowser);
         if (egret.args.serverOnly) {
             console.log("Url:" + this.wrapByParams(egret.args.startUrl));
         }
