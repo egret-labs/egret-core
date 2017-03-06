@@ -118,17 +118,17 @@ export class EgretProject {
         return null;
     }
 
-    private getModulePath(m: egret.EgretPropertyModule, egretVersions:Array<egret.EgretVersion>) {
+    private getModulePath(m: egret.EgretPropertyModule, egretVersions: Array<egret.EgretVersion>) {
         let dir = "";
         if (m.path == null) {
             let root;
-            if(m.version) {
-                for(let version of egretVersions) {
-                    if(version.version == m.version) {
+            if (m.version) {
+                for (let version of egretVersions) {
+                    if (version.version == m.version) {
                         root = version.path;
                     }
                 }
-                if(!root) {
+                if (!root) {
                     globals.log(1118, m.version);
                     root = egret.root;
                 }
@@ -142,7 +142,10 @@ export class EgretProject {
             let tempModulePath = file.getAbsolutePath(m.path);
             dir = path.join(tempModulePath, "bin", m.name);
             if (!file.exists(dir)) {
-                dir = tempModulePath;
+                dir = path.join(tempModulePath, "bin");
+                if (!file.exists(dir)) {
+                    dir = tempModulePath;
+                }
             }
         }
         return dir;
@@ -155,14 +158,14 @@ export class EgretProject {
 
 
     getModulesConfig(platform: "web" | "native") {
-        if(this.moduleConfig) {
+        if (this.moduleConfig) {
             return this.moduleConfig;
         }
         var build = cprocess.spawnSync("egret", ["versions"], {
             encoding: "utf-8"
         });
         let versions;
-        if(build && build.stdout) {
+        if (build && build.stdout) {
             versions = (<string><any>build.stdout).split("\n");
             //删除最后一行空格
             versions = versions.slice(0, versions.length - 1);
@@ -170,9 +173,9 @@ export class EgretProject {
         else {
             versions = [];
         }
-        let egretVersions:Array<egret.EgretVersion> = versions.map(versionStr => {
-            let egretVersion:string;
-            let egretPath:string;
+        let egretVersions: Array<egret.EgretVersion> = versions.map(versionStr => {
+            let egretVersion: string;
+            let egretPath: string;
             const versionRegExp = /(\d+\.){2}\d+(\.\d+)?/g;
             let matchResultVersion = versionStr.match(versionRegExp);
             if (matchResultVersion && matchResultVersion.length > 0) {
