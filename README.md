@@ -1,94 +1,163 @@
-Egret Engine
-================================================
-Current Version: v4.0.2
+<p align="center">
+    <img src="./docs/img/egret_logo.jpg"
+         height="130">
+</p>
+<p align="center">
+    <a href="https://github.com/egret-labs/egret-core/network">
+        <img src="https://img.shields.io/github/forks/egret-labs/egret-core.svg"
+             alt="forks">
+    </a>
+    <a href="https://github.com/egret-labs/egret-core/stargazers">
+        <img src="https://img.shields.io/github/stars/egret-labs/egret-core.svg"
+             alt="stars">
+    </a>
+    <a href="https://github.com/egret-labs/egret-core">
+        <img src="https://img.shields.io/badge/version-4.0.2-green.svg"
+             alt="version">
+    </a>
+    <a href="./LICENSE.md">
+        <img src="https://img.shields.io/badge/license-New%20BSD-blue.svg"
+             alt="license">
+    </a>
+</p>
+
+[EN](README.md) / [CN](README_CN.md)
+
+# Egret Engine
+
+The Egret Engine includes a game engine that follows the HTML5 standard developed by the Egret. It includes a common module for game engines such as 2D / 3D rendering cores, EUI systems, audio management, and resource management.
+Through the use of Egrets engine, developers can do as much as possible not concerned about the bottom of the browser to achieve, to solve the HTML5 game performance problems and fragmentation issues, flexibility to meet the developer to develop 2D or 3D game needs.
 
 
-Developed by Egret Technology, Egret Engine 4.0 includes a newly built 3D engine and a 2D engine created based on HTML5. With its robust cross-platform operability and commitment to solving the performance and fragmentation problems of HTML5 APP and games, Egret Engine 4.0 will perfectly meet developers’ needs. We appreciate every suggestion and please send it to Egret team if you have any.
+## Platform Coverage 
 
-Platforms:
---------------------
-#### PC
-* Chrome
-* Safari
-* FireFox
-* Edge
-* IE9+
+### Mobile
 
-#### Mobile Browsers / WebView
-* iOS 7.0+
-* Android 4.0+
-* Windows Phone 8
+![](https://img.shields.io/badge/iOS-8.0%2B-lightgrey.svg)
+![](https://img.shields.io/badge/Android-4.0%2B-brightgreen.svg)
+![](https://img.shields.io/badge/Windows%20Phone-8-orange.svg)
 
-#### Mobile App
-* Android 4.0+
-* iOS 8.0+
-* Windows Phone 8
+### PC
 
-3rd Party Library
--------------------------
-* Egret Team encapsulated some powerful 3rd party libraries,including Gesture,MD5,Particle,Physics. For more information,you can visit [here](https://github.com/egret-labs/egret-game-library)
+![](https://img.shields.io/badge/Chrome--brightgreen.svg)
+![](https://img.shields.io/badge/Safari--yellow.svg)
+![](https://img.shields.io/badge/FireFox--orange.svg)
+![](https://img.shields.io/badge/Edge--red.svg)
+![](https://img.shields.io/badge/IE-9+-blue.svg)
 
-Tools
--------------------------
-* [Egret Wing](http://www.egret.com/products/wing.html) , Egret IDE.
+# Installation
 
-Document & API
--------------------------
-* Visit [here](http://edn.egret.com/en/index.php/article/index/id/485) to get tutorials. 
-* Visit [here](http://edn.egret.com/en/index.php/apidoc/egret/) to get API.
-* Visit [here](/docs/en/release-note/) to get release notes.
+Install Egret Engine
 
-简介
--------------------
+* [Download](https://egret.com/products/engine.html)the Egret Engine Manager first.
 
-白鹭引擎包含了白鹭时代研发的遵循HTML5标准的游戏引擎。他包括 2D / 3D 渲染核心、GUI体系、音频管理、资源管理等游戏引擎的常用模块。
+* •	After download successful, follow the [installation and deployment](http://developer.egret.com/cn/github/egret-docs/Engine2D/projectConfig/installation/index.html) 
 
-通过使用白鹭引擎，开发者可以尽可能的不用关注浏览器的底层实现，解决HTML5游戏性能问题及碎片化问题，灵活地满足开发者开发2D或3D游戏的需求。
+After installation, we can easily manage the Egret engine and tools.
 
-支持平台
---------------------
-#### PC
-* Chrome
-* Safari
-* FireFox
-* Edge
-* IE9+
+# Getting Started
 
-#### Mobile Browsers / WebView
-* iOS 8.0+
-* Android 4.0+
-* Windows Phone 8
+#### TypeScript
 
-#### Mobile App
-* iOS 8.0+
-* Android 4.0+
-* Windows Phone 8
+An Egret project should be developed by TypeScirpt language. TypeScript is a superset of JavaScript, the specific content can refer to the TyptScript language manual. Egret API and AS3 have a lot of similarities. It will be certainly easy to get started if you are familiar with it.
 
+#### Create a project by command line
 
-文档与教程
--------------------------
-* 访问 [这里](http://developer.egret.com/cn/apidoc/) 获取 API 文档
-* 访问 [这里](https://github.com/egret-team/egret-examples) 获取示例项目
-* 访问 [这里](/docs/cn/release-note/) 获取发布说明
+You can use following command to create a default item for the game
 
-第三方库
--------------------------
-* Egret 团队针对引擎封装维护了一些功能强大的第三方库，MD5，手势，粒子系统，物理系统等。访问[这里](https://github.com/egret-labs/egret-game-library)
+    egret create HelloWorld
 
-工具
--------------------------
-* [Egret Wing](http://www.egret.com/products/wing.html) , Egret IDE
-* [Res Depot](http://www.egret.com/products/others.html#res-depot) ,RES资源模块配置文件管理工具
-* [Texture Merger](http://www.egret.com/products/others.html#egret-texture) ,SpriteSheet工具
-* [更多工具](http://www.egret.com/products)
+If you have special needs you can add parameters - type empty | game | gui | eui to specify different projects. After creating a game you can see a folder named 'HelloWorld'.
 
-联系我们
--------------------
-* 开发者中心: http://developer.egret.com
-* 开发者论坛: http://bbs.egret.com
-* 开发者群:
-  * 1群：141578440 (2000 人 / 已满 )
-  * 2群：397297607 (1000 人 / 已满 )
-  * 3群：399919028 (1000 人 / 已满 )
-  * 4群：125237513 (1000 人 / 已满 )
-  * 5群：481169576 (1000 人 / 未满 )
+#### Write the first line of code
+
+The entry for the game project is src / Main.ts by default. Write the first line of code for our project below, find the createGameScene () function in the default code, add console.log ("Hello World");
+
+Become following:
+
+    private createGameScene():void {
+            // log
+            console.log("Hello World");
+            var sky:egret.Bitmap = this.createBitmapByName("bgImage");
+            this.addChild(sky);
+            var stageW:number = this.stage.stageWidth;
+            var stageH:number = this.stage.stageHeight;
+            sky.width = stageW;
+            sky.height = stageH;
+            //...
+        }
+
+Here we call a commonly used debugging command, console.log ("need to display the log content"). It will display our log in the browser's developer tool.
+
+    We recommend using Chrome to debug the Egret project.
+
+We use the following command to build the project:
+
+    egret build
+
+Then use the following command line to run the project:
+
+    egret startserver
+
+![](./docs/img/console.png)
+
+Done.
+
+For more information, please refer to the Learning Module to view the documentation.
+
+# Demo
+
+Tower Defence Demo
+![](./docs/img/3d_demo_1.png)
+Click [here](http://developer.egret.com/cn/article/index/id/1074) for online experience.<br/>
+
+Click [here](http://developer.egret.com/cn/list/example/id/190) for more 2d/3d demos.<br/>
+
+# Show Case
+
+Click here to see [Show Case](https://egret.com/case)<br/>
+
+# Learn
+
+* Access [Doc](http://developer.egret.com/cn/github/egret-docs/Engine2D/index.html?home=1) to get Engine document
+* Access [Example](http://developer.egret.com/cn/example/egret2d/index.html#010-disp-basic) to learn demo source code
+* Access [API](http://developer.egret.com/cn/apidoc/) to get API document
+* Access [Video](http://developer.egret.com/cn/list/video/) to get videos
+* Access [Community](http://bbs.egret.com/portal.php) to communicate with other developers
+
+# Tools
+
+* Access [Egret Engine](http://www.egret.com/products/engine.html) to get Egret Engine launcher
+* Access [Egret Wing](http://www.egret.com/products/wing.html) to get Egret IDE
+* Access [Dragonbones Pro](http://dragonbones.com/cn/index.html) to get DragonBones
+* Access [Moew Tools](http://www.egret.com/products)
+
+# 第三方库
+
+* Use [base64texture](https://github.com/egret-labs/egret-game-library/tree/master/base64texture) to convert base64 String to egert Texture
+* Use [dcagent](https://github.com/egret-labs/egret-game-library/tree/master/dcagent) DataEye SDK for Egret
+* Use [ecs](https://github.com/egret-labs/egret-game-library/tree/master/ecs) component system
+* Use [euiextension](https://github.com/egret-labs/egret-game-library/tree/master/euiextension) EUI extension
+* Use [gesture](https://github.com/egret-labs/egret-game-library/tree/master/gesture) Gesture library
+* Use [keyboard](https://github.com/egret-labs/egret-game-library/tree/master/greensock) Keyboard event listener
+* Use [Greensock]() Greensock animation library
+* Use [jszip](https://github.com/egret-labs/egret-game-library/tree/master/jszip) jszip Compression library
+* Use [md5](https://github.com/egret-labs/egret-game-library/tree/master/keyboard) A simple MD5 Library
+* Use [mouse](https://github.com/egret-labs/egret-game-library/tree/master/mouse) PC mouse support library
+* Use [particle](https://github.com/egret-labs/egret-game-library/tree/master/particle) particle system
+* Use [physics](https://github.com/egret-labs/egret-game-library/tree/master/physics) p2Physics engine，current version 0.7.0
+* Use [socket](https://github.com/egret-labs/egret-game-library/tree/master/socket.io) socket.io
+* Use [tiled](https://github.com/egret-labs/egret-game-library/tree/master/tiled) tiledmap support library
+* Use [weixinapi](https://github.com/egret-labs/egret-game-library/tree/master/weixinapi) WeChat API
+* More third party libraries please visit [here](https://github.com/egret-labs/egret-game-library) 
+
+# Contributing
+
+Raising a good question is the first step to participate a open source community. You can report issues [here](https://github.com/egret-labs/egret-core/issues).
+Issue discussion in [official community](http://bbs.egret.com/portal.php) is recommended. It can help the latters solve problems more efficiently.
+
+# License
+
+This content is released under the (https://opensource.org/licenses/BSD-2-Clause) BSD License.
+
+![](https://img.shields.io/badge/license-New%20BSD-blue.svg)
