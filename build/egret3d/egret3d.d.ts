@@ -1,3 +1,29 @@
+declare module nid {
+    /**
+     * @private
+     * LZMA Decoder
+     * @author Nidin Vinayakan | nidinthb@gmail.com
+     */
+    class LZMAConfig {
+        static LZMA_DIC_MIN: number;
+        static LZMA_RES_ERROR: number;
+        static LZMA_RES_FINISHED_WITH_MARKER: number;
+        static LZMA_RES_FINISHED_WITHOUT_MARKER: number;
+        static kNumBitModelTotalBits: number;
+        static kNumMoveBits: number;
+        static PROB_INIT_VAL: number;
+        static kNumPosBitsMax: number;
+        static kNumStates: number;
+        static kNumLenToPosStates: number;
+        static kNumAlignBits: number;
+        static kStartPosModelIndex: number;
+        static kEndPosModelIndex: number;
+        static kNumFullDistances: number;
+        static kMatchMinLen: number;
+        static INIT_PROBS(p: Uint16Array): void;
+        static BitTreeReverseDecode(probs: any, numBits: number, rc: RangeDecoder, offset?: number): number;
+    }
+}
 declare module egret3d {
     /**
      * @language en_US
@@ -1066,25 +1092,8 @@ declare module nid {
      * @author Nidin Vinayakan | nidinthb@gmail.com
      */
     class LZMA {
-        static LZMA_DIC_MIN: number;
-        static LZMA_RES_ERROR: number;
-        static LZMA_RES_FINISHED_WITH_MARKER: number;
-        static LZMA_RES_FINISHED_WITHOUT_MARKER: number;
-        static kNumBitModelTotalBits: number;
-        static kNumMoveBits: number;
-        static PROB_INIT_VAL: number;
-        static kNumPosBitsMax: number;
-        static kNumStates: number;
-        static kNumLenToPosStates: number;
-        static kNumAlignBits: number;
-        static kStartPosModelIndex: number;
-        static kEndPosModelIndex: number;
-        static kNumFullDistances: number;
-        static kMatchMinLen: number;
         decoder: LzmaDecoder;
         data: Uint8Array;
-        static INIT_PROBS(p: Uint16Array): void;
-        static BitTreeReverseDecode(probs: any, numBits: number, rc: RangeDecoder, offset?: number): number;
         constructor();
         decode(data: Uint8Array): Uint8Array;
     }
@@ -1200,31 +1209,6 @@ declare module egret3d {
         static outError(message: any): void;
         static outWarn(message: any): void;
         static outDebug(message: any): void;
-    }
-}
-declare module egret3d {
-    /**
-     * @private
-     */
-    class Egret3DState {
-        private static use;
-        private static _width;
-        private static _height;
-        private static _info;
-        private static _time;
-        private static _dataInfo;
-        private static fpsInfo;
-        private static info;
-        private static _canvas;
-        static help: number;
-        static initState(): void;
-        private static _fps;
-        static showTime(time: number, delay: number): void;
-        static showDataInfo(...data: any[]): void;
-        static countStart(): void;
-        static countEnd(console: string): void;
-        private static array;
-        static show(): void;
     }
 }
 declare module egret3d {
@@ -4559,6 +4543,7 @@ declare module egret3d {
         */
         owner: Object3D;
         protected _bound: Wireframe;
+        protected initBound(): void;
         /**
         * @language zh_CN
         * 获取是否可见
@@ -4845,6 +4830,7 @@ declare module egret3d {
         * @platform Web,Native
         */
         calculateBox(): void;
+        visible: boolean;
         /**
         * @language zh_CN
         * 检测一个盒子是否在视椎体内
@@ -11298,13 +11284,6 @@ declare module egret3d {
         * @version Egret 3.0
         * @platform Web,Native
         */
-        canPick: boolean;
-        /**
-        * @language zh_CN
-        * @private
-        * @version Egret 3.0
-        * @platform Web,Native
-        */
         renderLayer: number;
         /**
         * @language zh_CN
@@ -12419,7 +12398,6 @@ declare module egret3d {
     */
     class Entity extends Object3D {
         bound: any;
-        canPick: boolean;
         renderLayer: number;
         /**
         * @language zh_CN
@@ -14595,6 +14573,9 @@ declare module egret3d.gui {
         * @version Egret 3.0
         * @platform Web,Native
         */
+        /**
+         * @private
+         */
         textHeight: number;
         /**
         * @language zh_CN
@@ -16053,50 +16034,6 @@ declare module egret3d {
 declare module egret3d {
     /**
     * @private
-    * @class egret3d.CollectBase
-    * @classdesc
-    * @version Egret 3.0
-    * @platform Web,Native
-    * Object3D 渲染对象收集器基类
-    */
-    class CollectBase {
-        rootScene: Scene3D;
-        /**
-        * @private
-        * @language zh_CN
-        * 可渲染对象列表
-        */
-        renderList: Array<IRender>;
-        protected _num: number;
-        protected _tempRootNode: IRender;
-        protected _objDict: {
-            [id: number]: number;
-        };
-        /**
-        * @language zh_CN
-        * constructor
-        * @param root 渲染根节点
-        */
-        constructor();
-        root: Scene3D;
-        /**
-        * @language zh_CN
-        * 数据更新
-        * @param camera 当前摄像机
-        */
-        update(camera: Camera3D): void;
-        /**
-        * @language zh_CN
-        * 查找一个对象在渲染列表的下标
-        * @param obj 要查找的对象
-        * @returns 返回对象在渲染列表的下标
-        */
-        findRenderObject(obj: IRender): number;
-    }
-}
-declare module egret3d {
-    /**
-    * @private
     * @version Egret 3.0
     * @platform Web,Native
     */
@@ -16116,7 +16053,7 @@ declare module egret3d {
     * @version Egret 3.0
     * @platform Web,Native
     */
-    class EntityCollect extends CollectBase {
+    class EntityCollect {
         numberVertex: number;
         numberFace: number;
         numberDraw: number;
@@ -16132,6 +16069,13 @@ declare module egret3d {
         specialCastItem: {
             [key: string]: IRender[];
         };
+        rootScene: Scene3D;
+        /**
+        * @private
+        * @language zh_CN
+        * 可渲染对象列表
+        */
+        renderList: Array<IRender>;
         /**
         * @language zh_CN
         * constructor
@@ -16140,7 +16084,25 @@ declare module egret3d {
         * @platform Web,Native
         */
         constructor();
+        root: Scene3D;
+        /**
+        * @language zh_CN
+        * 尝试添加节点
+        * @version Egret 3.0
+        * @param child   尝试添加的节点
+        * @param camera     相机
+        * @platform Web,Native
+        */
         private applyRender(child, camera);
+        /**
+        * @language zh_CN
+        * 尝试添加四叉树列表
+        * @version Egret 3.0
+        * @param quadList   需要被判定是否在视锥体里的节点列表
+        * @param camera     相机
+        * @platform Web,Native
+        */
+        private appendQuadList(quadList, camera);
         /**
         * @language zh_CN
         * 尝试将一个渲染对象，进行视锥体裁剪，放入到渲染队列中
@@ -16149,7 +16111,7 @@ declare module egret3d {
         * @version Egret 3.0
         * @platform Web,Native
         */
-        private addRenderList(renderItem, camera, cameraCulling?);
+        private addRenderItem(renderItem, camera, cameraCulling?);
         /**
         * @language zh_CN
         * 数据更新 处理需要渲染的对象
@@ -16158,19 +16120,14 @@ declare module egret3d {
         * @platform Web,Native
         */
         update(camera: Camera3D): void;
+        protected clear(): void;
         /**
         * @language zh_CN
-        * 根据当前场景的节点分布情况，生成四叉树
-        * @version Egret 3.0
-        * @param quadList   需要被判定是否在视锥体里的节点列表
-        * @param camera     相机
-        * @platform Web,Native
+        * 查找一个对象在渲染列表的下标
+        * @param obj 要查找的对象
+        * @returns 返回对象在渲染列表的下标
         */
-        private appendQuadList(quadList, camera);
-        protected clearList(): void;
-        protected sort(a: Object3D, b: Object3D, camera: Camera3D): number;
-        protected sortByOrder(a: IRender, b: IRender): number;
-        protected alphaZSort(a: IRender, b: IRender): number;
+        findRenderObject(obj: IRender): number;
     }
 }
 declare module egret3d {
@@ -16225,6 +16182,7 @@ declare module egret3d {
         * @platform Web,Native
         */
         constructor(camera?: Camera3D);
+        protected initFrustum(): void;
         /**
         * @language zh_CN
         * 是否可见
@@ -18509,7 +18467,7 @@ declare module egret3d {
         * @version Egret 3.0
         * @platform Web,Native
         */
-        unitNodeData: UnitLoader;
+        unitNodeData: UnitNodeData;
         /**
         * @language zh_CN
         * 已经获取到的字节数
@@ -24977,19 +24935,6 @@ declare module egret3d {
         renderTexture: RenderTexture;
         depthTexture: RenderTexture;
         /**
-        * @public
-        * @language zh_CN
-        * 前渲染的视图，渲染物体的总数目
-        * @version Egret 3.0
-        * @platform Web,Native
-        */
-        numEntity: number;
-        /**
-        * @private
-        * @language zh_CN
-        */
-        protected _renderIndex: number;
-        /**
         * @private
         * @language zh_CN
         */
@@ -25022,7 +24967,7 @@ declare module egret3d {
         * @param collect 渲染对象收集器
         * @param camera 渲染时的相机
         */
-        draw(time: number, delay: number, context3D: Context3DProxy, collect: CollectBase, backViewPort: Rectangle, renderQuen: RenderQuen, posList?: any): void;
+        draw(time: number, delay: number, context3D: Context3DProxy, collect: EntityCollect, backViewPort: Rectangle, renderQuen: RenderQuen, posList?: any): void;
     }
 }
 declare module egret3d {
@@ -25036,11 +24981,6 @@ declare module egret3d {
     * @platform Web,Native
     */
     class MultiRender extends RenderBase {
-        private _renderItem;
-        private _i;
-        private _j;
-        drawOver: Function;
-        protected currentViewPort: Rectangle;
         /**
         * @language zh_CN
         * constructor
@@ -25055,7 +24995,7 @@ declare module egret3d {
         * @param collect 渲染对象收集器
         * @param camera 渲染时的相机
         */
-        draw(time: number, delay: number, context3D: Context3DProxy, collect: CollectBase, backViewPort: Rectangle, renderQuen: RenderQuen, posList?: any): void;
+        draw(time: number, delay: number, context3D: Context3DProxy, collect: EntityCollect, backViewPort: Rectangle, renderQuen: RenderQuen, posList?: any): void;
     }
 }
 declare module egret3d {
@@ -25067,8 +25007,7 @@ declare module egret3d {
         setMainRender(render: RenderBase): void;
         addRender(render: RenderBase, index?: number): void;
         removeRender(render: RenderBase): void;
-        draw(time: number, delay: number, context3D: Context3DProxy, collect: CollectBase, backViewPort: Rectangle, posList?: any): void;
-        private curDate;
+        draw(time: number, delay: number, context3D: Context3DProxy, collect: EntityCollect, backViewPort: Rectangle, posList?: any): void;
     }
 }
 declare module egret3d {
@@ -25076,9 +25015,8 @@ declare module egret3d {
         hud: HUD;
         needClean: boolean;
         constructor(vs: string, fs: string);
-        setTexture(name: string, texture: Texture): void;
         setRenderToTexture(width: number, height: number, format?: FrameBufferFormat): void;
-        draw(time: number, delay: number, context3D: Context3DProxy, collect: CollectBase, backViewPort: Rectangle, posList: any): void;
+        draw(time: number, delay: number, context3D: Context3DProxy, collect: EntityCollect, backViewPort: Rectangle, posList: any): void;
     }
 }
 declare module egret3d {
@@ -31184,6 +31122,38 @@ declare module egret3d {
 }
 declare module egret3d {
     /**
+     * @private
+     */
+    class Egret3DPerformance {
+        private _entities;
+        enable: boolean;
+        prefix: string;
+        constructor();
+        entities: any;
+        getFps(): number;
+        updateFps(): void;
+        getNow(): number;
+        getEntity(key: string): any;
+        startCounter(key: any, averageRange: any): void;
+        endCounter(key: any): void;
+    }
+}
+declare module egret3d {
+    class Egret3DInspector {
+        updateTime: number;
+        private time;
+        private performancePanel;
+        private collectionPanel;
+        constructor();
+        show(delay: number, performance: Egret3DPerformance, canvas: Egret3DCanvas): void;
+        private _createPerformancePanel();
+        private _createCollectionPanel();
+        private showPerformancePanel(performance);
+        private showCollectionPanel(canvas);
+    }
+}
+declare module egret3d {
+    /**
      * @class egret3d.View3D
      * @classdesc
      * 渲染视图。</p>
@@ -31203,24 +31173,18 @@ declare module egret3d {
     class View3D {
         scissorRect: Rectangle;
         protected _viewPort: Rectangle;
-        protected _camera: Camera3D;
-        protected _scene: Scene3D;
-        protected _viewMatrix: Matrix4_4;
-        protected _entityCollect: EntityCollect;
         protected _backColor: Vector3D;
         protected _cleanParmerts: number;
-        private _sizeDiry;
+        protected _camera: Camera3D;
+        protected _scene: Scene3D;
+        protected _entityCollect: EntityCollect;
         protected _backImg: HUD;
         protected _huds: Array<HUD>;
-        protected _index: number;
-        protected _numberEntity: number;
         protected _postList: IPost[];
         protected _postHUD: HUD;
         protected _postProcessing: PostProcessing;
         protected _renderQuen: RenderQuen;
         protected _quadStage: QuadStage;
-        protected _guiInitFun: Function;
-        protected _guiCallbackThisObj: any;
         protected _shadowCast: ShadowCast;
         sunLight: DirectLight;
         /**
@@ -31235,15 +31199,6 @@ declare module egret3d {
         * @platform Web,Native
         */
         constructor(x: number, y: number, width: number, height: number, camera?: Camera3D);
-        /**
-        * @private
-        * @language zh_CN
-        * gui 舞台
-        * @returns QuadStage
-        * @version Egret 3.0
-        * @platform Web,Native
-        */
-        quadStage: QuadStage;
         /**
         * @private
         * @language zh_CN
@@ -31487,34 +31442,12 @@ declare module egret3d {
         delHUD(hud: HUD): void;
         /**
         * @private
-        */
-        private _renderItem;
-        private a;
-        /**
-        * @private
         * @language zh_CN
         * @version Egret 3.0
         * @platform Web,Native
         */
         update(time: number, delay: number): void;
         private updateObject3D(object3d, time, delay);
-        /**
-        * @private
-        * @language zh_CN
-        * 请求全屏
-        */
-        static requestFullScreen(): void;
-        /**
-        * @private
-        * @language zh_CN
-        * 退出全屏
-        */
-        static exitFullscreen(): void;
-        /**
-        * @private
-        * @language zh_CN
-        */
-        static setObjectSrceenPos(x: number, y: number, target: Object3D, camera: Camera3D): void;
     }
 }
 declare module egret3d {
@@ -31633,22 +31566,9 @@ declare module egret3d {
         protected _time: number;
         protected _delay: number;
         protected _renderer: number;
-        protected _timeDate: Date;
         protected _envetManager: EventManager;
         protected static _canvas2D: HTMLCanvasElement;
         protected static _ctx2D: CanvasRenderingContext2D;
-        /**
-        * @private
-        */
-        static Performance_GPU: number;
-        /**
-        * @private
-        */
-        static Performance_CPU: number;
-        /**
-        * @private
-        */
-        static Performance_Enable: boolean;
         /**
         * @language zh_CN
         * Egret3DCanvas X 偏移
@@ -31780,6 +31700,7 @@ declare module egret3d {
         * @platform Web,Native
         */
         removeView3D(view3D: View3D): void;
+        private $render();
         /**
          * @language zh_CN
          * Egret3DCanvas 调用一次渲染
@@ -31849,6 +31770,23 @@ declare module egret3d {
         static useLowLOD: boolean;
     }
     /**
+    * @private
+    * @language zh_CN
+    * 请求全屏
+    */
+    function requestFullScreen(): void;
+    /**
+    * @private
+    * @language zh_CN
+    * 退出全屏
+    */
+    function exitFullscreen(): void;
+    /**
+    * @private
+    * @language zh_CN
+    */
+    function setObjectSrceenPos(x: number, y: number, target: Object3D, camera: Camera3D): void;
+    /**
      * @private
      * @class egret3D.Egret3DEngine
      * @classdesc
@@ -31857,6 +31795,14 @@ declare module egret3d {
      */
     class Egret3DEngine {
         static instance: Egret3DEngine;
+        /**
+         * @private
+         **/
+        performance: Egret3DPerformance;
+        /**
+         * @private
+         **/
+        inspector: Egret3DInspector;
         version: string;
         jsPath: string;
         onTsconfig: Function;
@@ -31893,7 +31839,7 @@ declare module egret3d {
         renderQuen: RenderQuen;
         drawRectangle: Rectangle;
         setRenderTexture(width: number, height: number, change?: boolean): any;
-        draw(time: number, delay: number, context3D: Context3DProxy, collect: CollectBase, camera: Camera3D, backViewPort: Rectangle, posList: any): any;
+        draw(time: number, delay: number, context3D: Context3DProxy, collect: EntityCollect, camera: Camera3D, backViewPort: Rectangle, posList: any): any;
     }
 }
 declare module egret3d {
@@ -31906,7 +31852,7 @@ declare module egret3d {
         private _debugHud;
         constructor();
         setRenderTexture(width: number, height: number): void;
-        draw(time: number, delay: number, context3D: Context3DProxy, collect: CollectBase, camera: Camera3D, backViewPort: Rectangle, posList: any): void;
+        draw(time: number, delay: number, context3D: Context3DProxy, collect: EntityCollect, camera: Camera3D, backViewPort: Rectangle, posList: any): void;
     }
 }
 declare module egret3d {
@@ -31918,7 +31864,7 @@ declare module egret3d {
         bloom_amount: number;
         constructor(bloom_amount?: number);
         setRenderTexture(width: number, height: number, change?: boolean): void;
-        draw(time: number, delay: number, context3D: Context3DProxy, collect: CollectBase, camera: Camera3D, backViewPort: Rectangle, posList: any): void;
+        draw(time: number, delay: number, context3D: Context3DProxy, collect: EntityCollect, camera: Camera3D, backViewPort: Rectangle, posList: any): void;
     }
 }
 declare module egret3d {
@@ -31929,7 +31875,7 @@ declare module egret3d {
         private _debugHud;
         constructor();
         setRenderTexture(width: number, height: number): void;
-        draw(time: number, delay: number, context3D: Context3DProxy, collect: CollectBase, camera: Camera3D, backViewPort: Rectangle, posList: any): void;
+        draw(time: number, delay: number, context3D: Context3DProxy, collect: EntityCollect, camera: Camera3D, backViewPort: Rectangle, posList: any): void;
     }
 }
 declare module egret3d {
@@ -31948,7 +31894,7 @@ declare module egret3d {
         private _renderQuen;
         private _sizeChange;
         constructor(renderQuen: RenderQuen);
-        draw(time: number, delay: number, contextProxy: Context3DProxy, collect: CollectBase, camera: Camera3D, backViewPort: Rectangle): void;
+        draw(time: number, delay: number, contextProxy: Context3DProxy, collect: EntityCollect, camera: Camera3D, backViewPort: Rectangle): void;
     }
 }
 declare module egret3d {
@@ -31960,6 +31906,6 @@ declare module egret3d {
         constructor();
         setRenderTexture(width: number, height: number): void;
         lutTexture: Texture;
-        draw(time: number, delay: number, context3D: Context3DProxy, collect: CollectBase, camera: Camera3D, backViewPort: Rectangle, posList: any): void;
+        draw(time: number, delay: number, context3D: Context3DProxy, collect: EntityCollect, camera: Camera3D, backViewPort: Rectangle, posList: any): void;
     }
 }
