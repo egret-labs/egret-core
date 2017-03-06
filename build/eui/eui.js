@@ -13353,7 +13353,7 @@ var eui;
          */
         RadioButtonGroup.prototype.addedHandler = function (event) {
             var rb = event.target;
-            if (rb && rb instanceof eui.RadioButton) {
+            if (rb == event.currentTarget) {
                 rb.removeEventListener(egret.Event.ADDED_TO_STAGE, this.addedHandler, this);
                 this.$addInstance(rb);
             }
@@ -13364,7 +13364,7 @@ var eui;
          */
         RadioButtonGroup.prototype.removedHandler = function (event) {
             var rb = event.target;
-            if (rb && rb instanceof eui.RadioButton) {
+            if (rb == event.currentTarget) {
                 rb.removeEventListener(egret.Event.REMOVED_FROM_STAGE, this.removedHandler, this);
                 this.$removeInstance(rb, true);
             }
