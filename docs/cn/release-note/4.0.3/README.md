@@ -44,6 +44,7 @@
 ## 已知问题
 
 * 修改 ```tsconfig.json```后，执行 ``` egret build ``` 不会生效，需执行 ``` egret clean ```
+* 使用 egret build 编译 JavaScript 第三方库，编译结果为空
 
 
 ## 路线图
