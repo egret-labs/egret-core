@@ -49,9 +49,9 @@ Through the use of Egrets engine, developers can do as much as possible not conc
 
 Install Egret Engine
 
-* [Download](https://egret.com/products/engine.html)the Egret Engine Manager first.
+* [Download](https://egret.com/products/engine.html) the Egret Engine Manager first.
 
-* •	After download successful, follow the [installation and deployment](http://developer.egret.com/cn/github/egret-docs/Engine2D/projectConfig/installation/index.html) 
+* After download successful, follow the [installation and deployment](http://developer.egret.com/cn/github/egret-docs/Engine2D/projectConfig/installation/index.html) 
 
 After installation, we can easily manage the Egret engine and tools.
 
@@ -111,7 +111,7 @@ Tower Defence Demo
 ![](./docs/img/3d_demo_1.png)
 Click [here](http://developer.egret.com/cn/article/index/id/1074) for online experience.<br/>
 
-Click [here](http://developer.egret.com/cn/list/example/id/190) for more 2d/3d demos.<br/>
+Click [here](http://developer.egret.com/cn/list/example/id/190) for more 2D/3D demos.<br/>
 
 # Show Case
 
@@ -132,7 +132,7 @@ Click here to see [Show Case](https://egret.com/case)<br/>
 * Access [Dragonbones Pro](http://dragonbones.com/cn/index.html) to get DragonBones
 * Access [Moew Tools](http://www.egret.com/products)
 
-# 第三方库
+# Third Party Library
 
 * Use [base64texture](https://github.com/egret-labs/egret-game-library/tree/master/base64texture) to convert base64 String to egert Texture
 * Use [dcagent](https://github.com/egret-labs/egret-game-library/tree/master/dcagent) DataEye SDK for Egret
