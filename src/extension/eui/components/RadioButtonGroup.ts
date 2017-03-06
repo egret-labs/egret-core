@@ -432,7 +432,7 @@ namespace eui {
          */
         private addedHandler(event:egret.Event):void {
             let rb:RadioButton = event.target;
-            if (rb && rb instanceof RadioButton) {
+            if (rb == event.currentTarget) {
                 rb.removeEventListener(egret.Event.ADDED_TO_STAGE, this.addedHandler, this);
                 this.$addInstance(rb);
             }
@@ -444,7 +444,7 @@ namespace eui {
          */
         private removedHandler(event:egret.Event):void {
             let rb:RadioButton = event.target;
-            if (rb && rb instanceof RadioButton) {
+            if (rb == event.currentTarget) {
                 rb.removeEventListener(egret.Event.REMOVED_FROM_STAGE, this.removedHandler, this);
                 this.$removeInstance(rb, true);
             }
