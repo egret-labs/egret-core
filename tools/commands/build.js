@@ -46,8 +46,11 @@ var Build = (function () {
         var projectDir = egret.args.projectDir;
         var compiler = new Compiler.Compiler();
         var _a = compiler.parseTsconfig(projectDir, egret.args.publish), options = _a.options, fileNames = _a.fileNames;
-        compiler.compile(options, fileNames);
         var outFile = options.outFile;
+        if (!outFile) {
+            globals.exit(1022);
+        }
+        compiler.compile(options, fileNames);
         var outDir = path.dirname(outFile);
         var outFileName = path.basename(outFile);
         var minFile = path.join(outDir, outFileName.replace(".js", ".min.js"));
