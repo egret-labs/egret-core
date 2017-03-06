@@ -237,7 +237,14 @@ export var utils = new EgretProject();
 
 export type Package_JSON = {
 
-    modules: PACKAGE_JSON_MODULE[]
+    /**
+     * 废弃属性
+     */
+    modules?: PACKAGE_JSON_MODULE[];
+
+    typings: string | null;
+
+
 
 }
 
