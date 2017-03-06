@@ -561,9 +561,9 @@ namespace egret {
          * @language zh_CN
          */
         public containsPoint(point:Point):boolean {
-            if (this.x < point.x
+            if (this.x <= point.x
                 && this.x + this.width > point.x
-                && this.y < point.y
+                && this.y <= point.y
                 && this.y + this.height > point.y) {
                 return true;
             }
