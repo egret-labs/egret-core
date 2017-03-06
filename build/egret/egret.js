@@ -17709,7 +17709,7 @@ var egret;
              * @language zh_CN
              */
             get: function () {
-                return "4.0.2";
+                return "4.0.3";
             },
             enumerable: true,
             configurable: true
