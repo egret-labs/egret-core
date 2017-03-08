@@ -1,4 +1,16 @@
 namespace egret.experimental {
+    /**
+    * @language en_US
+    * The pickPhoto method provides ability for picking a photo.
+    * @version Egret 4.0
+    * @platform Web
+    */
+    /**
+     * @language zh_CN
+     * pickPhoto API提供用于选取照片的方法。
+     * @version Egret 4.0
+     * @platform Web
+     */
     export function pickPhoto(): Promise<string> {
         return new Promise((resolve, reject) => {
             let fileInput = document.createElement("input");
@@ -58,12 +70,10 @@ namespace egret.experimental {
                                         ctx.rotate(Math.PI);
                                         break;
                                     case 4:
-                                        // vertical flip
                                         ctx.translate(0, canvas.height);
                                         ctx.scale(1, -1);
                                         break;
                                     case 5:
-                                        // vertical flip + 90 rotate right
                                         ctx.rotate(0.5 * Math.PI);
                                         ctx.scale(1, -1);
                                         break;
