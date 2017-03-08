@@ -59,7 +59,7 @@ var UpgradeCommand = (function () {
                         modify = require("./upgrade/ModifyProperties");
                         upgradeConfigArr = [
                             { "v": "4.0.1", command: Upgrade_4_0_1 },
-                            { "v": "4.0.2" }
+                            { "v": "4.0.3" }
                         ];
                         _a.label = 1;
                     case 1:

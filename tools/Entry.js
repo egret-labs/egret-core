@@ -112,7 +112,6 @@ var Entry = (function () {
             var CommandClass = require("./commands/" + options.command);
         }
         catch (e) {
-            console.log(e);
             console.log(utils.tr(10002, options.command));
             return 10002;
         }

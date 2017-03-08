@@ -119,7 +119,10 @@ var EgretProject = (function () {
             var tempModulePath = file.getAbsolutePath(m.path);
             dir = path.join(tempModulePath, "bin", m.name);
             if (!file.exists(dir)) {
-                dir = tempModulePath;
+                dir = path.join(tempModulePath, "bin");
+                if (!file.exists(dir)) {
+                    dir = tempModulePath;
+                }
             }
         }
         return dir;

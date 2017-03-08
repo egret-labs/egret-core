@@ -17,7 +17,6 @@
     ],
     "exclude": [
         "templates/**/*.ts",
-        "lib/typescript-plus/lib/*.d.ts",
-        "commands/upgrade/2.4.3/libs/*.d.ts"
+        "lib/typescript-plus/lib/*.d.ts"
     ]
 }
