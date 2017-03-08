@@ -3,7 +3,7 @@ varying vec2 vTextureCoord;
 
 uniform sampler2D uSampler;
 
-uniform float distance;
+uniform float dist;
 uniform float angle;
 uniform vec4 color;
 uniform float alpha;
@@ -16,7 +16,6 @@ uniform float knockout;
 uniform float hideObject;
 
 uniform vec2 uTextureSize;
-vec2 px = vec2(1.0 / uTextureSize.x, 1.0 / uTextureSize.y);
 
 float random(vec3 scale, float seed)
 {
@@ -24,6 +23,7 @@ float random(vec3 scale, float seed)
 }
 
 void main(void) {
+    vec2 px = vec2(1.0 / uTextureSize.x, 1.0 / uTextureSize.y);
     // TODO 自动调节采样次数？
     const float linearSamplingTimes = 7.0;
     const float circleSamplingTimes = 12.0;
@@ -33,8 +33,8 @@ void main(void) {
     float maxTotalAlpha = 0.0;
     float curDistanceX = 0.0;
     float curDistanceY = 0.0;
-    float offsetX = distance * cos(angle) * px.x;
-    float offsetY = distance * sin(angle) * px.y;
+    float offsetX = dist * cos(angle) * px.x;
+    float offsetY = dist * sin(angle) * px.y;
 
     const float PI = 3.14159265358979323846264;
     float cosAngle;

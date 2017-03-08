@@ -10138,7 +10138,7 @@ var egret;
             _this.$distance = distance;
             _this.$angle = angle;
             _this.$hideObject = hideObject;
-            _this.$uniforms.distance = distance;
+            _this.$uniforms.dist = distance;
             _this.$uniforms.angle = angle / 180 * Math.PI;
             _this.$uniforms.hideObject = hideObject ? 1 : 0;
             return _this;
@@ -10164,7 +10164,7 @@ var egret;
                     return;
                 }
                 this.$distance = value;
-                this.$uniforms.distance = value;
+                this.$uniforms.dist = value;
                 this.invalidate();
             },
             enumerable: true,
