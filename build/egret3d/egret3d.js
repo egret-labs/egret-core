@@ -11531,7 +11531,7 @@ var egret3d;
             cube_fragment: "uniform samplerCube diffuseTexture3D ;\nvarying vec3 varying_pos;\nvec4 diffuseColor ;\nvoid main() {\n    if( diffuseColor.w == 0.0 ){\n\t\tdiscard;\n\t}\n\tvec3 uvw = normalize(varying_pos.xyz);\n\tdiffuseColor = vec4(textureCube(diffuseTexture3D, uvw.xyz));\n    \n    if( diffuseColor.w < materialSource.cutAlpha ){\n\t\tdiscard;\n\t}else\n\t\tdiffuseColor.xyz *= diffuseColor.w ;\n}",
             cube_vertex: "varying vec3 varying_pos;\nvoid main(void){\n   varying_pos =  e_position;\n} ",
             detail_Bending_vs: "uniform float uniformTime[4] ;\nvoid main(void){\n\te_position = attribute_position; \nvarying_uv0 = attribute_uv0; \n  \n  varying_color = attribute_color; \nvec4 curve = SmoothTriangleWave(vec4(sin(uniformTime[0]*0.001),1.0,1.0,1.0));\n e_position.xyz += curve.x * vec3(1.0,0.5,0.0) * ( attribute_color.xyz) ;\n}",
-            diffuse_fragment: "uniform sampler2D diffuseTexture;\nvarying vec4 varying_mvPose;\nvoid main() {\n  \tvec3 fc = vec3(0.0, 0.0, 0.0);\n\tvec4 c = texture2D( diffuseTexture , uv_0 );\n    c.xyz = c.xyz * materialSource.diffuse * c.a ; \n\tif (c.a < materialSource.cutAlpha)\n\t\tdiscard;\n\tif(materialSource.refraction<2.41){ \n       float vl = dot(normal,-normalize(varying_mvPose.xyz)); \n       fc = Fresnel_Schlick(vl,vec3(materialSource.refraction)) * materialSource.refractionintensity ; \n       fc.xyz = max(fc,vec3(0.0)) ; \n    } \n\ts.Normal = normal;\n\ts.Specular = vec4(1.0) ;\n\ts.Albedo = c.rgb + fc.xyz * c.rgb + materialSource.ambient * c.rgb;\n    s.Albedo.x = pow(s.Albedo.x, materialSource.gamma);\n    s.Albedo.y = pow(s.Albedo.y, materialSource.gamma);\n    s.Albedo.z = pow(s.Albedo.z, materialSource.gamma);\n\ts.Alpha = c.a;\n\toutColor.xyz = s.Albedo * 0.5 ;\n\toutColor.w = s.Alpha;\n}\n",
+            diffuse_fragment: "uniform sampler2D diffuseTexture;\nvarying vec4 varying_mvPose;\nvoid main() {\n  \tvec3 fc = vec3(0.0, 0.0, 0.0);\n\tvec4 c = texture2D( diffuseTexture , uv_0 );\n\tc.a = materialSource.alpha * c.a;\n    c.xyz = c.xyz * materialSource.diffuse * c.a ; \n\tif (c.a < materialSource.cutAlpha)\n\t\tdiscard;\n\tif(materialSource.refraction<2.41){ \n       float vl = dot(normal,-normalize(varying_mvPose.xyz)); \n       fc = Fresnel_Schlick(vl,vec3(materialSource.refraction)) * materialSource.refractionintensity ; \n       fc.xyz = max(fc,vec3(0.0)) ; \n    } \n\ts.Normal = normal;\n\ts.Specular = vec4(1.0) ;\n\ts.Albedo = c.rgb + fc.xyz * c.rgb + materialSource.ambient * c.rgb;\n    s.Albedo.x = pow(s.Albedo.x, materialSource.gamma);\n    s.Albedo.y = pow(s.Albedo.y, materialSource.gamma);\n    s.Albedo.z = pow(s.Albedo.z, materialSource.gamma);\n\ts.Alpha = c.a;\n\toutColor.xyz = s.Albedo * 0.5 ;\n\toutColor.w = s.Alpha;\n}\n",
             diffuse_vertex: "attribute vec3 attribute_normal;\nattribute vec4 attribute_color;\nvarying vec4 varying_mvPose; \nvoid main(void){\n    \n    mat4 mvMatrix = mat4(uniform_ViewMatrix * uniform_ModelMatrix); \n    \n    varying_mvPose = mvMatrix * vec4( e_position , 1.0 )  ; \n    \n    mat4 normalMatrix = inverse(mvMatrix) ;\n    normalMatrix = transpose(normalMatrix); \n    \n    varying_eyeNormal = mat3(normalMatrix) * -attribute_normal ; \n    \n    outPosition = varying_mvPose ; \n    varying_color = attribute_color; \n    \n}\n",
             directLight_fragment: "const int max_directLight = 0 ;\nuniform float uniform_directLightSource[10*max_directLight] ;\nvarying vec4 varying_mvPose; \nuniform mat4 uniform_ViewMatrix;\nmat4 normalMatrix ;\nstruct DirectLight{\n    vec3 direction;\n\tvec3 diffuse;\n\tvec3 ambient;\n    float intensity;\n};\nmat4 transpose(mat4 inMatrix) {\n    vec4 i0 = inMatrix[0];\n    vec4 i1 = inMatrix[1];\n    vec4 i2 = inMatrix[2];\n    vec4 i3 = inMatrix[3];\n    mat4 outMatrix = mat4(\n                 vec4(i0.x, i1.x, i2.x, i3.x),\n                 vec4(i0.y, i1.y, i2.y, i3.y),\n                 vec4(i0.z, i1.z, i2.z, i3.z),\n                 vec4(i0.w, i1.w, i2.w, i3.w)\n                 );\n    return outMatrix;\n}\nmat4 inverse(mat4 m) {\n  float\n      a00 = m[0][0], a01 = m[0][1], a02 = m[0][2], a03 = m[0][3],\n      a10 = m[1][0], a11 = m[1][1], a12 = m[1][2], a13 = m[1][3],\n      a20 = m[2][0], a21 = m[2][1], a22 = m[2][2], a23 = m[2][3],\n      a30 = m[3][0], a31 = m[3][1], a32 = m[3][2], a33 = m[3][3],\n      b00 = a00 * a11 - a01 * a10,\n      b01 = a00 * a12 - a02 * a10,\n      b02 = a00 * a13 - a03 * a10,\n      b03 = a01 * a12 - a02 * a11,\n      b04 = a01 * a13 - a03 * a11,\n      b05 = a02 * a13 - a03 * a12,\n      b06 = a20 * a31 - a21 * a30,\n      b07 = a20 * a32 - a22 * a30,\n      b08 = a20 * a33 - a23 * a30,\n      b09 = a21 * a32 - a22 * a31,\n      b10 = a21 * a33 - a23 * a31,\n      b11 = a22 * a33 - a23 * a32,\n      det = b00 * b11 - b01 * b10 + b02 * b09 + b03 * b08 - b04 * b07 + b05 * b06;\n  return mat4(\n      a11 * b11 - a12 * b10 + a13 * b09,\n      a02 * b10 - a01 * b11 - a03 * b09,\n      a31 * b05 - a32 * b04 + a33 * b03,\n      a22 * b04 - a21 * b05 - a23 * b03,\n      a12 * b08 - a10 * b11 - a13 * b07,\n      a00 * b11 - a02 * b08 + a03 * b07,\n      a32 * b02 - a30 * b05 - a33 * b01,\n      a20 * b05 - a22 * b02 + a23 * b01,\n      a10 * b10 - a11 * b08 + a13 * b06,\n      a01 * b08 - a00 * b10 - a03 * b06,\n      a30 * b04 - a31 * b02 + a33 * b00,\n      a21 * b02 - a20 * b04 - a23 * b00,\n      a11 * b07 - a10 * b09 - a12 * b06,\n      a00 * b09 - a01 * b07 + a02 * b06,\n      a31 * b01 - a30 * b03 - a32 * b00,\n      a20 * b03 - a21 * b01 + a22 * b00) / det;\n}\nvec4 calculateDirectLight( MaterialSource materialSource ){ \n    float lambertTerm , specular ; \n    vec3 dir ,viewDir = normalize(varying_mvPose.xyz/varying_mvPose.w); \n    diffuseColor = vec4(0.0,0.0,0.0,1.0);\n    for(int i = 0 ; i < max_directLight ; i++){ \n        DirectLight directLight ; \n        directLight.direction = (normalMatrix * vec4(uniform_directLightSource[i*9],uniform_directLightSource[i*9+1],uniform_directLightSource[i*9+2],1.0)).xyz; \n\t\tdirectLight.diffuse = vec3(uniform_directLightSource[i*9+3],uniform_directLightSource[i*9+4],uniform_directLightSource[i*9+5]); \n\t\tdirectLight.ambient = vec3(uniform_directLightSource[i*9+6],uniform_directLightSource[i*9+7],uniform_directLightSource[i*9+8]); \n\t\tdirectLight.intensity = uniform_directLightSource[i*9+9] ; \n\t\tdir = normalize(directLight.direction) ; \n\t\tdiffuseColor += LightingBlinnPhong(dir,directLight.diffuse,directLight.ambient,s.Normal,viewDir,directLight.intensity); \n    } \n    return diffuseColor ;\n}\nvoid main() {\n\tnormalMatrix = inverse(uniform_ViewMatrix);\n\tnormalMatrix = transpose(normalMatrix);\n\tlight += calculateDirectLight( materialSource ).xyzw ; \n}\n",
             endShadowPass_fs: "void main() {\n    if(varying_color.w<=0.0){\n       discard;\n    }\n    outColor.x =  outColor.y = outColor.z = varying_ViewPose.z/varying_ViewPose.w  ;\n    outColor.w = 1.0 ;\n    gl_FragColor = outColor ;\n}\n",
@@ -14326,12 +14326,19 @@ var egret3d;
             if (anyState) {
                 return "base";
             }
-            else if (this._currentCrossFadeNode.nextName != "") {
-                return this._currentCrossFadeNode.nextName;
-            }
-            else if (this._currentCrossFadeNode.nextName == "") {
-                if (this._currentCrossFadeNode.crossB_state.clip.isLoop) {
-                    return this._currentCrossFadeNode.crossB;
+            else {
+                if (this._currentCrossFadeNode) {
+                    if (this._currentCrossFadeNode.nextName != "") {
+                        return this._currentCrossFadeNode.nextName;
+                    }
+                    else if (this._currentCrossFadeNode.nextName == "") {
+                        if (this._currentCrossFadeNode.crossB_state.clip.isLoop) {
+                            return this._currentCrossFadeNode.crossB;
+                        }
+                    }
+                }
+                else {
+                    console.warn("CrossFade: miss _currentCrossFadeNode!");
                 }
             }
             return "";
@@ -14467,8 +14474,9 @@ var egret3d;
             var b; // this._currentCrossFadeNode.crossB_state;
             var defaultFade = this._defaultFade; // this._currentCrossFadeNode.crossB_state;
             this._currentCrossFadeNode = null;
-            if (this._crossFade)
+            if (this._crossFade) {
                 this._currentCrossFadeNode = this._crossFade.checkCrossFade(this.currentAnimName, name, this._animState);
+            }
             if (!this._currentCrossFadeNode && !reset) {
                 a = this._animState[this.currentAnimName];
                 b = this._animState[name];
@@ -14544,8 +14552,8 @@ var egret3d;
             var _lerpBPose = this._lerpBPose;
             var gpuSkeletonPose = this.gpuSkeletonPose;
             var currentCrossFadeNode = this._currentCrossFadeNode;
-            var a = this._currentCrossFadeNode.crossA_state;
-            var b = this._currentCrossFadeNode.crossB_state;
+            var a = currentCrossFadeNode.crossA_state || this._animState[currentCrossFadeNode.crossA];
+            var b = currentCrossFadeNode.crossB_state || this._animState[currentCrossFadeNode.crossB];
             var hasA = false;
             var hasB = false;
             var mix = false;
@@ -14582,10 +14590,10 @@ var egret3d;
                 }
             }
             else {
-                if (this._crossFade)
+                if (this._crossFade) {
                     this.play(this._crossFade.getNextAnim(), 1);
-                else
-                    this._currentCrossFadeNode = null;
+                }
+                this._currentCrossFadeNode = null;
             }
         };
         /*
@@ -17331,6 +17339,23 @@ var egret3d;
         /**
         * @private
         * @language zh_CN
+        * reset
+        * 重置缓存的状态
+        */
+        Context3DProxy.prototype.reset = function () {
+            this.DEPTH_TEST = false;
+            this.CULL_FACE = false;
+            this.BLEND = false;
+            this.blend_Factors_src = -1;
+            this.blend_Factors_dst = -1;
+            this.cullingMode = -1;
+            this.depthCompareMode = -1;
+            this.program = undefined;
+            this.programChange = undefined;
+        };
+        /**
+        * @private
+        * @language zh_CN
         * get GPU Context3DProxy
         * 注册并初始化相关 GPU 参数配置信息
         * 用于设置显卡的相关参数
@@ -17787,11 +17812,10 @@ var egret3d;
         */
         Context3DProxy.prototype.setProgram = function (program) {
             this.programChange = false;
-            if (this.program == program && !egret3d.proDirty) {
+            if (this.program == program) {
                 return;
             }
             ;
-            egret3d.proDirty = false;
             this.programChange = true;
             this.program = program;
             Context3DProxy.gl.useProgram(program.program);
@@ -21109,7 +21133,13 @@ var egret3d;
         */
         Mesh.prototype.copy = function (other) {
             _super.prototype.copy.call(this, other);
-            this.multiMaterial = other.multiMaterial;
+            for (var key in other.multiMaterial) {
+                if (key == "0") {
+                    continue;
+                }
+                this._multiMaterial[key] = other.multiMaterial[key];
+            }
+            this._materialCount = other.materialCount;
         };
         /**
         * @language zh_CN
@@ -28161,6 +28191,14 @@ var egret3d;
         * @platform Web,Native
         */
         EntityCollect.prototype.applyRender = function (child, camera) {
+            //检查鼠标能pick
+            if (child.enablePick) {
+                this.specialCastItem[SpecialCast.Pick].push(child);
+                this.numberPick++;
+            }
+            if (!child.visible) {
+                return;
+            }
             this.addRenderItem(child, camera);
             for (var i = 0; i < child.childs.length; i++) {
                 this.applyRender(child.childs[i], camera);
@@ -28201,12 +28239,7 @@ var egret3d;
                     return;
                 }
             }
-            //检查鼠标能pick
-            if (renderItem.enablePick) {
-                this.specialCastItem[SpecialCast.Pick].push(renderItem);
-                this.numberPick++;
-            }
-            if (!renderItem.visible || !renderItem.material) {
+            if (!renderItem.material) {
                 return;
             }
             //检查阴影产生者
@@ -28224,9 +28257,11 @@ var egret3d;
                 renderItem.zIndex = egret3d.Vector3D.HELP_0.z;
                 this.softLayerRenderItems[egret3d.Layer.TAG_NAME_ALPHA_OBJECT].push(renderItem);
             }
-            for (var i = 0; i < egret3d.Layer.layerType.length; i++) {
-                if (renderItem.tag.name == egret3d.Layer.layerType[i]) {
-                    this.softLayerRenderItems[egret3d.Layer.layerType[i]].push(renderItem);
+            else {
+                for (var i = 0; i < egret3d.Layer.layerType.length; i++) {
+                    if (renderItem.tag.name == egret3d.Layer.layerType[i]) {
+                        this.softLayerRenderItems[egret3d.Layer.layerType[i]].push(renderItem);
+                    }
                 }
             }
             if (egret3d.Egret3DEngine.instance.debug) {
@@ -28249,6 +28284,7 @@ var egret3d;
         * @platform Web,Native
         */
         EntityCollect.prototype.update = function (camera) {
+            camera.modelMatrix;
             this.clear();
             if (egret3d.Egret3DEngine.instance.debug) {
                 egret3d.Egret3DEngine.instance.performance.startCounter("entityCollect applyRender", 60);
@@ -45790,6 +45826,14 @@ var egret3d;
             this.depthTest = true;
             /**
             * @language zh_CN
+            * 深度写入 。
+            * @default true
+            * @version Egret 4.0
+            * @platform Web,Native
+            */
+            this.depthWrite = true;
+            /**
+            * @language zh_CN
             * 深度测试模式
             * @default true
             * @version Egret 3.0
@@ -46036,6 +46080,7 @@ var egret3d;
             data.castShadow = this.castShadow;
             data.acceptShadow = this.acceptShadow;
             data.depthTest = this.depthTest;
+            data.depthWrite = this.depthWrite;
             data.blendMode = this.blendMode;
             data.blend_src = this.blend_src;
             data.blend_dest = this.blend_dest;
@@ -46626,8 +46671,9 @@ var egret3d;
                 context3DProxy.setBlendFactors(egret3d.ContextConfig.ONE, egret3d.ContextConfig.ZERO);
             }
             else {
-                if (this._materialData.alphaBlending)
+                if (!this._materialData.depthWrite) {
                     egret3d.Context3DProxy.gl.depthMask(false);
+                }
                 context3DProxy.enableBlend();
                 context3DProxy.setBlendFactors(this._materialData.blend_src, this._materialData.blend_dest);
             }
@@ -46740,8 +46786,9 @@ var egret3d;
             }
             context3DProxy.drawElement(this._materialData.drawMode, subGeometry.start * Uint16Array.BYTES_PER_ELEMENT, subGeometry.count);
             // gl.drawElements(gl.POINTS, 8, gl.UNSIGNED_INT, 0);
-            if (this._materialData.alphaBlending)
+            if (!this._materialData.depthWrite) {
                 egret3d.Context3DProxy.gl.depthMask(true);
+            }
         };
         MaterialPass.prototype.deactiveState = function (passUsage, context3DProxy) {
             var sampler2D;
@@ -47596,6 +47643,28 @@ var egret3d;
              */
             set: function (bool) {
                 this.materialData.depthTest = bool;
+            },
+            enumerable: true,
+            configurable: true
+        });
+        Object.defineProperty(MaterialBase.prototype, "depthWrite", {
+            /**
+            * @language zh_CN
+            * 返回深度写入开关
+            * @version Egret 3.0
+            * @platform Web,Native
+            */
+            get: function () {
+                return this.materialData.depthWrite;
+            },
+            /**
+            * @language zh_CN
+            * 设置深度写入开关
+            * @version Egret 3.0
+            * @platform Web,Native
+            */
+            set: function (v) {
+                this.materialData.depthWrite = v;
             },
             enumerable: true,
             configurable: true
@@ -55820,6 +55889,8 @@ var egret3d;
             _super.call(this, null, material);
             this._isEmitterDirty = true;
             this._userNodes = [];
+            // 粒子自动关闭depth写入
+            this.material.depthWrite = false;
             //##FilterBegin## ##Particle##
             this.tag.name = "effect";
             this.type = egret3d.IRender.TYPE_PARTICLE_EMIT;
@@ -61398,9 +61469,6 @@ var egret3d;
             v.getGUIStage().registerTexture(texture);
         }
     };
-    // 切换prgram脏标记
-    // 用于完成2D渲染后强制标脏
-    egret3d.proDirty = true;
     /**
     * @class egret3d.Egret3DCanvas
     * @classdesc
@@ -61741,15 +61809,16 @@ var egret3d;
             if (!this.blend2D) {
                 return;
             }
+            var context3DProxy = Egret3DCanvas.context3DProxy;
             var gl = egret3d.Context3DProxy.gl;
-            gl.enable(gl.DEPTH_TEST);
-            // 为3d的buffer以及着色器标脏
-            egret3d.proDirty = true;
+            context3DProxy.reset();
+            context3DProxy.enableDepth();
+            context3DProxy.enableCullFace();
+            context3DProxy.enableBlend();
             this.$render();
             // 恢复2D上下文
-            gl.disable(gl.CULL_FACE);
-            gl.disable(gl.SCISSOR_TEST);
-            gl.disable(gl.DEPTH_TEST);
+            context3DProxy.disableDepth();
+            context3DProxy.disableCullFace();
         };
         Egret3DCanvas.prototype.resizeBlend2D = function () {
             if (this.blend2D) {
