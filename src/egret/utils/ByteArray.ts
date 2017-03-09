@@ -1073,7 +1073,7 @@ namespace egret {
         }
     }
     let pt = ByteArray.prototype;
-    if (TextDecoder) {//如果有原生的文本编码解析类  浏览器支持状况： http://caniuse.com/#feat=textencoder
+    if (typeof TextDecoder === "function") {//如果有原生的文本编码解析类  浏览器支持状况： http://caniuse.com/#feat=textencoder
         let td = new TextDecoder();
         pt.decodeUTF8 = td.decode.bind(td);
         let te = new TextEncoder();
