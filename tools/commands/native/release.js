@@ -33,19 +33,55 @@ var __generator = (this && this.__generator) || function (thisArg, body) {
         if (op[0] & 5) throw op[1]; return { value: op[0] ? op[1] : void 0, done: true };
     }
 };
-var _this = this;
-var FileUtil = require("../lib/FileUtil");
+var config = require("./config");
 var path = require("path");
-exports.dashboard = function () {
-    return function (reuest, response) { return __awaiter(_this, void 0, void 0, function () {
-        var root, indexJs, scriptContent, htmlContent;
+var utils_1 = require("../../lib/utils");
+function run(releaseConfig) {
+    return __awaiter(this, void 0, void 0, function () {
+        var android_path, sdk, ant_dir, ant;
         return __generator(this, function (_a) {
-            root = egret.root;
-            indexJs = path.join(egret.root, "client/index.js");
-            scriptContent = FileUtil.read(indexJs);
-            htmlContent = "\n        <html>\n            <body>\n            <div id='app'></div>\n            <script type=\"text/javascript\">\n                " + scriptContent + "\n            </script>\n           \n            </body>\n        </html>\n        ";
-            response.write(htmlContent);
-            return [2 /*return*/];
+            switch (_a.label) {
+                case 0:
+                    if (!releaseConfig.androidProjectPath || !releaseConfig.sdk) {
+                        globals.exit(13000);
+                    }
+                    android_path = releaseConfig.androidProjectPath;
+                    android_path = path.resolve(config.egretProjectPath, android_path);
+                    sdk = releaseConfig.sdk;
+                    return [4 /*yield*/, upgradeAntBuildXML("EgretGame", android_path)];
+                case 1:
+                    _a.sent();
+                    return [4 /*yield*/, upgradeAntBuildXML("EgretGame." + sdk, android_path + "." + sdk)];
+                case 2:
+                    _a.sent();
+                    return [4 /*yield*/, config.getConfig(config.KEY.ANT_DIR_PATH)];
+                case 3:
+                    ant_dir = _a.sent();
+                    ant = path.join(ant_dir, "ant");
+                    return [4 /*yield*/, utils_1.shell(ant, ["debug"], { cwd: android_path + "." + sdk })];
+                case 4:
+                    _a.sent();
+                    return [2 /*return*/];
+            }
         });
-    }); };
-};
+    });
+}
+exports.run = run;
+function upgradeAntBuildXML(name, android_path) {
+    return __awaiter(this, void 0, void 0, function () {
+        var android_sdk, android_command, args;
+        return __generator(this, function (_a) {
+            switch (_a.label) {
+                case 0: return [4 /*yield*/, config.getConfig(config.KEY.ANDROID_SDK)];
+                case 1:
+                    android_sdk = _a.sent();
+                    android_command = path.join(android_sdk, "tools/android");
+                    args = ["update", "project", "--name", name, "--target", "android-19", "--path", android_path];
+                    return [4 /*yield*/, utils_1.shell(android_command, args, {})];
+                case 2:
+                    _a.sent();
+                    return [2 /*return*/];
+            }
+        });
+    });
+}

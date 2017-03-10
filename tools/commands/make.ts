@@ -81,7 +81,7 @@ class CompileEgretEngine implements egret.Command {
             return 0;
         }
         var tss: string[] = [];
-        m.files.forEach(file => {
+        m.files.forEach((file:any) => {
             var path: string = null;
             var sourcePlatform: string = null, sourceConfig: string = null;
             if (typeof (file) == 'string') {
