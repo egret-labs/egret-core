@@ -26,9 +26,10 @@ let hostGetSourceFile;
 let hostFileExists;
 let cachedProgram: ts.Program;
 let cachedExistingFiles: utils.Map<boolean>;
+let changedFileNames: Array<string>;
 
 let getSourceFile = function (fileName: string, languageVersion: ts.ScriptTarget, onError?: (message: string) => void) {
-    if (cachedProgram) {
+    if (cachedProgram && changedFileNames.indexOf(fileName) == -1) {
         const sourceFile = cachedProgram.getSourceFile(fileName);
         if (sourceFile) {
             return sourceFile;
@@ -101,6 +102,7 @@ export class Compiler {
 
     private compileWithChanges(filesChanged: egret.FileChanges, sourceMap?: boolean): EgretCompilerHost {
         this.errors = [];
+        changedFileNames = [];
         let hasAddOrRemoved = false;
         filesChanged.forEach(file => {
             if (file.type == "added") {
@@ -115,6 +117,7 @@ export class Compiler {
                 }
             }
             else {
+                changedFileNames.push(file.fileName);
             }
         });
         if (hasAddOrRemoved) {

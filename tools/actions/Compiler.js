@@ -7,8 +7,9 @@ var hostGetSourceFile;
 var hostFileExists;
 var cachedProgram;
 var cachedExistingFiles;
+var changedFileNames;
 var getSourceFile = function (fileName, languageVersion, onError) {
-    if (cachedProgram) {
+    if (cachedProgram && changedFileNames.indexOf(fileName) == -1) {
         var sourceFile_1 = cachedProgram.getSourceFile(fileName);
         if (sourceFile_1) {
             return sourceFile_1;
@@ -68,6 +69,7 @@ var Compiler = (function () {
     Compiler.prototype.compileWithChanges = function (filesChanged, sourceMap) {
         var _this = this;
         this.errors = [];
+        changedFileNames = [];
         var hasAddOrRemoved = false;
         filesChanged.forEach(function (file) {
             if (file.type == "added") {
@@ -82,6 +84,7 @@ var Compiler = (function () {
                 }
             }
             else {
+                changedFileNames.push(file.fileName);
             }
         });
         if (hasAddOrRemoved) {
