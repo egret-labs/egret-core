@@ -718,7 +718,7 @@ namespace egret {
             }
             if (writeLength > 0) {
                 this.validateBuffer(writeLength);
-                this._bytes.set(bytes._bytes.slice(offset, offset + writeLength), this._position);
+                this._bytes.set(bytes._bytes.subarray(offset, offset + writeLength), this._position);
                 this.position = this._position + writeLength;
             }
         }
