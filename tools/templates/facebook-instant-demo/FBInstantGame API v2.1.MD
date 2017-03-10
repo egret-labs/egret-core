@@ -1,6 +1,6 @@
-#API 说明 v2.0
+#API 说明 v2.1
 
-##FBInstantstartGameAsync
+##FBInstant
 
 Instant Games SDK 的顶级命名空间.
 
@@ -11,6 +11,7 @@ Instant Games SDK 的顶级命名空间.
 注意，只有FBInstant.initializeAsync()获得回调以后，才能调用这个api。
 
 代码示例：
+
 ```
 var locale = FBInstant.getLocale(); // 'en_US'
 ```
@@ -19,19 +20,22 @@ var locale = FBInstant.getLocale(); // 'en_US'
 注意，只有FBInstant.initializeAsync()获得回调以后，才能调用这个api。
 
 代码示例：
+
 ```
 var platform = FBInstant.getPlatform(); // 'iOS', 'android' or 'web'
 ```
 ##FBInstant.getSDKVersion
-获取SDK的版本号，例如 "2.0"。
+获取SDK的版本号，例如 "2.1"。
 
 代码示例：
+
 ```
-var sdkVersion = FBInstant.getSDKVersion(); // '2.0'
+var sdkVersion = FBInstant.getSDKVersion(); // '2.1'
 ```
 ##FBInstant.initializeAsync
 初始化SDK，应当在其他API使用前调用。
 代码示例：
+
 ```
 FBInstant.initializeAsync().then(function() {
   var locale = FBInstant.getLocale(); // 'en_US'
@@ -46,6 +50,7 @@ FBInstant.initializeAsync().then(function() {
 告诉平台游戏初始化资源加载的进度
 
 代码示例：
+
 ```
 FBInstant.setLoadingProgress(50); // 50%的资源被加载了
 ```
@@ -55,6 +60,7 @@ FBInstant.setLoadingProgress(50); // 50%的资源被加载了
 ##FBInstant.startGameAsync
 这表明游戏已完成加载资源，用户准备好开始玩了。
 代码示例：
+
 ```
 FBInstant.startGameAsync().then(function() {
   //在这我们可以确定用户点击了开始游戏的按钮
@@ -72,6 +78,7 @@ FBInstant.startGameAsync().then(function() {
 注意，只有FBInstant.initializeAsync()获得回调以后，才能调用这个api。
 
 代码示例：
+
 ```
 var playerID = FBInstant.player.getID();
 ```
@@ -80,6 +87,7 @@ var playerID = FBInstant.player.getID();
 注意，只有FBInstant.initializeAsync()获得回调以后，才能调用这个api。
 
 代码示例：
+
 ```
 var playerName = FBInstant.player.getName();
 ```
@@ -89,6 +97,7 @@ var playerName = FBInstant.player.getName();
 警告：由于跨域的问题，在 canvas 里使用图片会有问题。要防止此情况，请将图像的 cross-origin 属性设置为 "anonymous"
 
 代码示例：
+
 ```
 var playerImage = new Image();
 playerImage.crossOrigin = 'anonymous';
@@ -96,8 +105,8 @@ playerImage.src = FBInstant.player.getPhoto();
 ```
 ##FBInstant.player.getDataAsync
 取回在FB平台储存的当前用户的数据
-
 代码示例：
+
 ```
 FBInstant.player
   .getDataAsync(['achievements', 'currentLife'])
@@ -113,8 +122,8 @@ FBInstant.player
 
 ##FBInstant.player.setDataAsync
 把当前用户的数据储存在FB平台上。
-
 代码示例：
+
 ```
 FBInstant.player
   .setDataAsync({
@@ -132,12 +141,21 @@ FBInstant.player
 ##FBInstant.context
 当前游戏的来源信息
 
-##FBInstant.context.id
+##FBInstant.context.getID
 当前游戏来源的唯一id。例如你的信息流中有很多好友都发了这个游戏，通过这个id来知道你玩的是哪一个。注意，必须在FBInstant.startGameAsync的回调后才能得到这个id。在FBInstant.endGameAsync的回调后可能会更新这个id。如果平台不支持，或者是在独立页面玩的游戏，这个id值为null
 
 代码示例：
+
 ```
 var contextID = FBInstant.context.getID();
+```
+
+##FBInstant.context.getType
+通过该方法可以获知用户是在哪玩的这个游戏。比如 'post', 'thread', 'group', or 'solo'.
+
+代码示例：
+```
+var contextType = FBInstant.context.getType();
 ```
 
 ##FBInstant.setScore
@@ -145,6 +163,7 @@ var contextID = FBInstant.context.getID();
 向平台上传分数。每当玩家的分数在游戏中改变时，就可以调用这个方法，这样平台可以在游戏外实时更新这些分数，提升用户体验。当调用 endGameAsync 时，通过这个API发送的分数将显示在排行榜上。
 
 代码示例：
+
 ```
 FBInstant.setScore(42);
 ```
@@ -155,6 +174,7 @@ FBInstant.setScore(42);
 显示平台统一的游戏结束画面。
 
 代码示例：
+
 ```
 FBInstant.endGameAsync().then(function() {
   // 在这里我们可以确定，玩家点击了重玩的按钮

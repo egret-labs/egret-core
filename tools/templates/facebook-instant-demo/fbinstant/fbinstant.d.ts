@@ -1,7 +1,7 @@
 
 
 //Copyright (c) 2014-present, Egret Technology.
-//for fbinstant.2.0.js
+//for fbinstant.2.1.js
 declare class FBInstant {
     /**
      * 获取用户的地域信息，例如:zh_CN en_US
@@ -96,4 +96,8 @@ interface Context{
      * 当前游戏来源的唯一id
      */
     getID(): string;
+    /**
+     * 游戏的来源类型：'post', 'thread', 'group', or 'solo'
+     */
+    getType(): string;
 }

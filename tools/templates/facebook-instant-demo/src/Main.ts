@@ -87,12 +87,12 @@ class Main extends eui.UILayer {
      */
     private createScene() {
         if (this.isThemeLoadEnd && this.isResourceLoadEnd) {
-            //注意:正式版需要使用下面FBInstant.startGameAsync方法
+            console.log('FBInstantGameSDK v2.1')
+            console.warn('注意:正式版需要使用下面FBInstant.startGameAsync方法')
             // FBInstant.startGameAsync().then(() => {
-            //     console.log('用户点击了开始游戏的按钮 v2.0');
+            //     console.log('用户点击了开始游戏的按钮');
             //     this.startCreateScene();
             // });
-            console.warn('警告:正式版需要使用上面注释里的FBInstant.startGameAsync方法，不要直接开始游戏，否则在真实环境无法正常游戏')
             this.startCreateScene();//测试代码，直接开始游戏。正式版需要注释掉
         }
     }
@@ -171,15 +171,12 @@ class Main extends eui.UILayer {
         btnSetData.addEventListener(egret.TouchEvent.TOUCH_TAP, () => {
             //注意，该方法只在 Facebook 真实环境下生效
             var saveData = {
-                "key1": "testValue" + self.getRandom(),
-                "key2": "testValue" + self.getRandom(),
-                "key3": "testValue" + self.getRandom(),
+                achievements: ['medal1', 'medal2', 'medal3'],
+                currentLife: 300,
             };
             console.log('开始保存数据：', saveData);
             FBInstant.player.setDataAsync(saveData).then(() => {
                 //保存数据的回调方法
-
-                
                 console.log('保存数据成功');
             });
         }, this);
@@ -190,7 +187,7 @@ class Main extends eui.UILayer {
         btnGetData.addEventListener(egret.TouchEvent.TOUCH_TAP, () => {
             //注意，该方法只在 Facebook 真实环境下生效
             console.log('开始读取数据');
-            FBInstant.player.getDataAsync(["key1", "key3"]).then((data) => {
+            FBInstant.player.getDataAsync(['achievements', 'currentLife']).then((data) => {
                 //读取数据的回调方法
                 console.log('读取数据:', data);
             });
@@ -202,6 +199,7 @@ class Main extends eui.UILayer {
         btnContext.addEventListener(egret.TouchEvent.TOUCH_TAP, () => {
             //注意，该方法只在 Facebook 真实环境下生效
             console.log('获取游戏来源id', FBInstant.context.getID());
+            console.log('获取游戏来源类型', FBInstant.context.getType());
         }, this);
 
         let btnTackeScreenShot = new eui.Button();
