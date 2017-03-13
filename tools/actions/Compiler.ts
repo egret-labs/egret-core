@@ -26,7 +26,7 @@ let hostGetSourceFile;
 let hostFileExists;
 let cachedProgram: ts.Program;
 let cachedExistingFiles: utils.Map<boolean>;
-let changedFileNames: Array<string>;
+let changedFileNames: Array<string> = [];
 
 let getSourceFile = function (fileName: string, languageVersion: ts.ScriptTarget, onError?: (message: string) => void) {
     if (cachedProgram && changedFileNames.indexOf(fileName) == -1) {

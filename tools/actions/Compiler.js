@@ -7,7 +7,7 @@ var hostGetSourceFile;
 var hostFileExists;
 var cachedProgram;
 var cachedExistingFiles;
-var changedFileNames;
+var changedFileNames = [];
 var getSourceFile = function (fileName, languageVersion, onError) {
     if (cachedProgram && changedFileNames.indexOf(fileName) == -1) {
         var sourceFile_1 = cachedProgram.getSourceFile(fileName);
