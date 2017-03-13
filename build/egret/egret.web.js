@@ -245,6 +245,9 @@ var egret;
                 }
                 audio.load();
                 this.originAudio = audio;
+                if (HtmlSound.clearAudios[this.url]) {
+                    delete HtmlSound.clearAudios[this.url];
+                }
                 HtmlSound.$recycle(this.url, audio);
                 function onAudioLoaded() {
                     removeListeners();
@@ -299,6 +302,7 @@ var egret;
                 HtmlSound.$clear(this.url);
             };
             HtmlSound.$clear = function (url) {
+                HtmlSound.clearAudios[url] = true;
                 var array = HtmlSound.audios[url];
                 if (array) {
                     array.length = 0;
@@ -312,6 +316,9 @@ var egret;
                 return null;
             };
             HtmlSound.$recycle = function (url, audio) {
+                if (HtmlSound.clearAudios[url]) {
+                    return;
+                }
                 var array = HtmlSound.audios[url];
                 if (HtmlSound.audios[url] == null) {
                     array = HtmlSound.audios[url] = [];
@@ -350,6 +357,7 @@ var egret;
          * @private
          */
         HtmlSound.audios = {};
+        HtmlSound.clearAudios = {};
         web.HtmlSound = HtmlSound;
         __reflect(HtmlSound.prototype, "egret.web.HtmlSound", ["egret.Sound"]);
     })(web = egret.web || (egret.web = {}));

@@ -10,14 +10,14 @@ var egret;
 (function (egret) {
     var experimental;
     (function (experimental) {
+        /**
+         * @private
+         */
         experimental.debug = false;
         experimental.ExifTags = {
-            // version tags
             0x9000: "ExifVersion",
             0xA000: "FlashpixVersion",
-            // colorspace tags
             0xA001: "ColorSpace",
-            // image configuration
             0xA002: "PixelXDimension",
             0xA003: "PixelYDimension",
             0x9101: "ComponentsConfiguration",
@@ -748,6 +748,18 @@ var egret;
 (function (egret) {
     var experimental;
     (function (experimental) {
+        /**
+        * @language en_US
+        * The pickPhoto method provides ability for picking a photo.
+        * @version Egret 4.0
+        * @platform Web
+        */
+        /**
+         * @language zh_CN
+         * pickPhoto API提供用于选取照片的方法。
+         * @version Egret 4.0
+         * @platform Web
+         */
         function pickPhoto() {
             return new Promise(function (resolve, reject) {
                 var fileInput = document.createElement("input");
@@ -807,12 +819,10 @@ var egret;
                                             ctx.rotate(Math.PI);
                                             break;
                                         case 4:
-                                            // vertical flip
                                             ctx.translate(0, canvas.height);
                                             ctx.scale(1, -1);
                                             break;
                                         case 5:
-                                            // vertical flip + 90 rotate right
                                             ctx.rotate(0.5 * Math.PI);
                                             ctx.scale(1, -1);
                                             break;

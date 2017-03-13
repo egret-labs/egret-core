@@ -130,6 +130,9 @@ namespace egret.native {
             }
             function onAudioLoaded():void {
                 audio.load();
+                if(NativeSound.clearAudios[this.url]) {
+                    delete NativeSound.clearAudios[this.url];
+                }
                 NativeSound.$recycle(url, audio);
             }
 
@@ -198,8 +201,10 @@ namespace egret.native {
          * @private
          */
         private static audios:Object = {};
+        private static clearAudios:Object = {};
 
         static $clear(url:string):void {
+            NativeSound.clearAudios[url] = true;
             let array:HTMLAudioElement[] = NativeSound.audios[url];
             if (array) {
                 array.length = 0;
@@ -215,6 +220,9 @@ namespace egret.native {
         }
 
         static $recycle(url:string, audio:HTMLAudioElement):void {
+            if(NativeSound.clearAudios[url]) {
+                return;
+            }
             let array:HTMLAudioElement[] = NativeSound.audios[url];
             if (NativeSound.audios[url] == null) {
                 array = NativeSound.audios[url] = [];

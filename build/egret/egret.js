@@ -9033,9 +9033,22 @@ var egret;
                 else {
                     base64 = data;
                 }
-                var image = new Image();
-                image.src = "data:image/png;base64," + base64;
-                return new BitmapData(image);
+                var imageType = "image/png"; //default value
+                if (base64.charAt(0) === '/') {
+                    imageType = "image/jpeg";
+                }
+                else if (base64.charAt(0) === 'R') {
+                    imageType = "image/gif";
+                }
+                else if (base64.charAt(0) === 'i') {
+                    imageType = "image/png";
+                }
+                var img_1 = new Image();
+                img_1.src = "data:" + imageType + ";base64," + base64;
+                img_1.crossOrigin = '*';
+                img_1.onload = function () {
+                    return new BitmapData(img_1);
+                };
             }
             else {
                 var buffer = null;
@@ -22052,10 +22065,10 @@ var egret;
 (function (egret) {
     /**
     * @language en_US
-    * The ByteArray class provides methods for encoding and decoding base64.
+    * The Base64Util class provides methods for encoding and decoding base64.
     * @version Egret 2.4
     * @platform Web,Native
-    * @includeExample egret/utils/ByteArray.ts
+    * @includeExample egret/utils/Base64Util.ts
     */
     /**
      * @language zh_CN
