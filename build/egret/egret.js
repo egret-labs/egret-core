@@ -9916,17 +9916,17 @@ var egret;
             var matrix = this.$uniforms.matrix;
             var colorAdd = this.$uniforms.colorAdd;
             for (var i = 0, j = 0; i < $matrix.length; i++) {
-                if (i === 4 || i === 9 || i === 14 || i === 19) {
-                    colorAdd.x = $matrix[i];
+                if (i === 4) {
+                    colorAdd.x = $matrix[i] / 255;
                 }
                 else if (i === 9) {
-                    colorAdd.y = $matrix[i];
+                    colorAdd.y = $matrix[i] / 255;
                 }
                 else if (i === 14) {
-                    colorAdd.z = $matrix[i];
+                    colorAdd.z = $matrix[i] / 255;
                 }
                 else if (i === 19) {
-                    colorAdd.w = $matrix[i];
+                    colorAdd.w = $matrix[i] / 255;
                 }
                 else {
                     matrix[j] = $matrix[i];
