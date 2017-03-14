@@ -6359,12 +6359,20 @@ var egret;
                     gl.useProgram(program.id);
                     // 目前所有attribute buffer的绑定方法都是一致的
                     var attribute = program.attributes;
-                    gl.vertexAttribPointer(attribute["aVertexPosition"].location, 2, gl.FLOAT, false, 5 * 4, 0);
-                    gl.enableVertexAttribArray(attribute["aVertexPosition"].location);
-                    gl.vertexAttribPointer(attribute["aTextureCoord"].location, 2, gl.FLOAT, false, 5 * 4, 2 * 4);
-                    gl.enableVertexAttribArray(attribute["aTextureCoord"].location);
-                    gl.vertexAttribPointer(attribute["aColor"].location, 1, gl.FLOAT, false, 5 * 4, 4 * 4);
-                    gl.enableVertexAttribArray(attribute["aColor"].location);
+                    for (var key in attribute) {
+                        if (key === "aVertexPosition") {
+                            gl.vertexAttribPointer(attribute["aVertexPosition"].location, 2, gl.FLOAT, false, 5 * 4, 0);
+                            gl.enableVertexAttribArray(attribute["aVertexPosition"].location);
+                        }
+                        else if (key === "aTextureCoord") {
+                            gl.vertexAttribPointer(attribute["aTextureCoord"].location, 2, gl.FLOAT, false, 5 * 4, 2 * 4);
+                            gl.enableVertexAttribArray(attribute["aTextureCoord"].location);
+                        }
+                        else if (key === "aColor") {
+                            gl.vertexAttribPointer(attribute["aColor"].location, 1, gl.FLOAT, false, 5 * 4, 4 * 4);
+                            gl.enableVertexAttribArray(attribute["aColor"].location);
+                        }
+                    }
                     this.currentProgram = program;
                 }
             };
