@@ -286,7 +286,9 @@ namespace egret {
                 removeListeners();
 
                 let bitmapData = imageLoader.data;
-                bitmapData.source.setAttribute("bitmapSrc", virtualUrl);
+                if(egret.Capabilities.runtimeType == egret.RuntimeType.WEB) {
+                    bitmapData.source.setAttribute("bitmapSrc", virtualUrl);
+                }
 
                 let texture: Texture = new Texture();
                 texture._setBitmapData(bitmapData);
