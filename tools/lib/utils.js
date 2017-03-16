@@ -26,6 +26,11 @@
 //  EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 //
 //////////////////////////////////////////////////////////////////////////////////////
+var __extends = (this && this.__extends) || function (d, b) {
+    for (var p in b) if (b.hasOwnProperty(p)) d[p] = b[p];
+    function __() { this.constructor = d; }
+    d.prototype = b === null ? Object.create(b) : (__.prototype = b.prototype, new __());
+};
 var cp = require("child_process");
 var path = require("path");
 var file = require("./FileUtil");
@@ -303,3 +308,80 @@ function createMap(template) {
     return map;
 }
 exports.createMap = createMap;
+function shell(path, args, opt, verbase) {
+    var stdout = "";
+    var stderr = "";
+    var cmd = path + " " + args.join(" ");
+    if (verbase) {
+        console.log(cmd);
+    }
+    var printStdoutBufferMessage = function (message) {
+        var str = message.toString();
+        stdout += str;
+        if (verbase) {
+            console.log(str);
+        }
+    };
+    var printStderrBufferMessage = function (message) {
+        var str = message.toString();
+        stderr += str;
+        if (verbase) {
+            console.log(str);
+        }
+    };
+    var callback = function (reslove, reject) {
+        var shell = cp.spawn(path, args, opt);
+        shell.on("error", function (message) { console.log(message); });
+        shell.stderr.on("data", printStderrBufferMessage);
+        shell.stderr.on("error", printStderrBufferMessage);
+        shell.stdout.on("data", printStdoutBufferMessage);
+        shell.stdout.on("error", printStdoutBufferMessage);
+        shell.on('exit', function (code) {
+            if (code != 0) {
+                if (verbase) {
+                    console.log('Failed: ' + code);
+                }
+                reject({ code: code, stdout: stdout, stderr: stderr });
+            }
+            else {
+                reslove({ code: code, stdout: stdout, stderr: stderr });
+            }
+        });
+    };
+    return new Promise(callback);
+}
+exports.shell = shell;
+;
+var error_code_filename = path.join(__dirname, "../error_code.json");
+var errorcode = file.readJSONSync(error_code_filename, { "encoding": "utf-8" });
+var CliException = (function (_super) {
+    __extends(CliException, _super);
+    function CliException(errorId, param) {
+        var _this = _super.call(this) || this;
+        _this.errorId = errorId;
+        var message = errorcode[_this.errorId];
+        if (message) {
+            message = message.replace('{0}', param);
+        }
+        else {
+            message = "unkown error : " + errorId;
+            console.error(message);
+        }
+        _this.message = message;
+        return _this;
+    }
+    return CliException;
+}(Error));
+exports.CliException = CliException;
+function findValidatePathSync(pathStr) {
+    if (!pathStr) {
+        pathStr = process.cwd();
+    }
+    else {
+        if (!file.existsSync(pathStr)) {
+            pathStr = path.join(process.cwd(), pathStr);
+        }
+    }
+    return pathStr;
+}
+exports.findValidatePathSync = findValidatePathSync;

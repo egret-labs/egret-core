@@ -117,7 +117,16 @@ export var optionDeclarations: egret.CommandLineOption[] = [
         name: 'exmlGenJs',
         type: 'boolean',
         shortName: 'gjs'
+    }, {
+        name: 'androidProjectPath',
+        type: 'string',
+        shortName: 'p'
+    }, {
+        name: 'sdk',
+        type: 'string',
+        shortName: 's'
     }
+
 ];
 
 var shortOptionNames: egret.Map<string> = {};
@@ -195,6 +204,12 @@ export function parseCommandLine(commandLine: string[]) {
                 || options.command == "apitest") {
                 options.projectDir = commands[1];
                 commands.splice(1, 1);
+            }else if(
+                options.command == "native" &&
+                options.commands[1] &&
+                options.commands[2]){
+                options.projectDir = commands[2];
+                commands.splice(2,1);
             }
             //else if (file.isDirectory(commands[1]) && !file.exists(commands[1]) || options.command=="create_app") {
             //    options.projectDir = commands[1];
