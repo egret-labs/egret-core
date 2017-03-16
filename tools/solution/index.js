@@ -143,7 +143,6 @@ var watchProject = function (project) {
             return __generator(this, function (_a) {
                 response.writeHead(200, { "Content-Type": "application/json" });
                 output = process.getOutput();
-                console.log("get:" + output);
                 code = process.getCode();
                 message = JSON.stringify({ output: output, code: code });
                 response.end(message);

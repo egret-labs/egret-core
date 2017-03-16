@@ -131,7 +131,6 @@ let watchProject: (project: string) => Server.Middleware = (project) => {
         return async (request, response) => {
             response.writeHead(200, { "Content-Type": "application/json" });
             let output = process.getOutput();
-            console.log("get:" + output)
             let code = process.getCode();
             let message = JSON.stringify({ output, code })
             response.end(message);
