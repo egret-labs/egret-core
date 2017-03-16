@@ -15,6 +15,9 @@ export var dashboard: Server.Middleware = () => {
 
         let htmlContent = `
         <html>
+        <head>
+            <meta charset="utf-8"/>
+        </head>
             <body>
             <div id='app'></div>
             <script type="text/javascript">

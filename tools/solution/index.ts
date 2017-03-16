@@ -32,19 +32,9 @@ export function childProcessWrapper(cmd: string, start: string, end: string) {
         return output;
     }
 
-    return {
-        getOutput,
 
-        getCode: () => {
-            //todo:performance
-            let output = getOutput();
-            if (output.indexOf(end) >= 0) {
-                return 2;
-            }
-            else {
-                return state;
-            }
-        }
+    return {
+        getOutput
     }
 }
 
@@ -91,7 +81,7 @@ export function run(solutionFile: string) {
 
     let staticServer = new Server();
     staticServer.use(Server.fileReader("."));
-    staticServer.start(".", 3005, 'http://localhost:3005/index.html')
+    staticServer.start(".", 3005, 'http://localhost:3005/index.html', false)
 
     let dashboardServer = new Server();
     dashboardServer.use(Dashboard.dashboard);
@@ -127,11 +117,26 @@ let watchProject: (project: string) => Server.Middleware = (project) => {
     let start = "tsc begin";
     let end = "tsc end"
     let process = childProcessWrapper(`egret tsc-watch ${project}`, start, end);
+
+
+    let getCode = (output) => {
+        //todo:performance
+
+    }
     return () => {
         return async (request, response) => {
             response.writeHead(200, { "Content-Type": "application/json" });
             let output = process.getOutput();
-            let code = process.getCode();
+            let code = 0;
+
+            if (output.indexOf(end) >= 0) {
+                if (output.indexOf("Error") >= 0) {
+                    code = 2;
+                }
+                else {
+                    code = 1;
+                }
+            }
             let message = JSON.stringify({ output, code })
             response.end(message);
         }

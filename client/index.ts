@@ -54,21 +54,28 @@ async function run() {
         }
     })
 
-    setInterval(() => {
+    let intervalKey = setInterval(() => {
 
         let current = 0;
 
         sub_process.forEach(card => {
             updateState(card.port, card.container).then(response => {
-                console.log(response.code)
-                if (response.code == 2) {
+                if (response.code == 1) {
                     current++;
                 }
+                if (response.code == 2) {
+                    clearInterval(intervalKey);
+                }
                 if (current == sub_process.length) {
-                    if (!iframe.src) {
-                        iframe.src = 'http://localhost:3005/index.html';
-                    }
 
+                    if (!iframe.src) {
+                        dashboard.hidden = true;
+                        iframe.src = 'http://localhost:3005/index.html';
+                        clearInterval(intervalKey);
+                    }
+                }
+                else {
+                    dashboard.hidden = false;
                 }
             });
         })

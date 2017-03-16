@@ -54,7 +54,7 @@ function run() {
                 });
             });
         }
-        var app, iframe, dashboard, sub_process;
+        var app, iframe, dashboard, sub_process, intervalKey;
         return __generator(this, function (_a) {
             app = document.getElementById("app");
             iframe = document.createElement("iframe");
@@ -73,18 +73,25 @@ function run() {
                     port: s.port
                 };
             });
-            setInterval(function () {
+            intervalKey = setInterval(function () {
                 var current = 0;
                 sub_process.forEach(function (card) {
                     updateState(card.port, card.container).then(function (response) {
-                        console.log(response.code);
-                        if (response.code == 2) {
+                        if (response.code == 1) {
                             current++;
+                        }
+                        if (response.code == 2) {
+                            clearInterval(intervalKey);
                         }
                         if (current == sub_process.length) {
                             if (!iframe.src) {
+                                dashboard.hidden = true;
                                 iframe.src = 'http://localhost:3005/index.html';
+                                clearInterval(intervalKey);
                             }
+                        }
+                        else {
+                            dashboard.hidden = false;
                         }
                     });
                 });

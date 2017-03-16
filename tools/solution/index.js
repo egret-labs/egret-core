@@ -64,17 +64,7 @@ function childProcessWrapper(cmd, start, end) {
         return output;
     };
     return {
-        getOutput: getOutput,
-        getCode: function () {
-            //todo:performance
-            var output = getOutput();
-            if (output.indexOf(end) >= 0) {
-                return 2;
-            }
-            else {
-                return state;
-            }
-        }
+        getOutput: getOutput
     };
 }
 exports.childProcessWrapper = childProcessWrapper;
@@ -107,7 +97,7 @@ function run(solutionFile) {
     }
     var staticServer = new Server();
     staticServer.use(Server.fileReader("."));
-    staticServer.start(".", 3005, 'http://localhost:3005/index.html');
+    staticServer.start(".", 3005, 'http://localhost:3005/index.html', false);
     var dashboardServer = new Server();
     dashboardServer.use(Dashboard.dashboard);
     dashboardServer.start(projectRoot, 5000, "http://localhost:5000/index.html");
@@ -137,13 +127,24 @@ var watchProject = function (project) {
     var start = "tsc begin";
     var end = "tsc end";
     var process = childProcessWrapper("egret tsc-watch " + project, start, end);
+    var getCode = function (output) {
+        //todo:performance
+    };
     return function () {
         return function (request, response) { return __awaiter(_this, void 0, void 0, function () {
             var output, code, message;
             return __generator(this, function (_a) {
                 response.writeHead(200, { "Content-Type": "application/json" });
                 output = process.getOutput();
-                code = process.getCode();
+                code = 0;
+                if (output.indexOf(end) >= 0) {
+                    if (output.indexOf("Error") >= 0) {
+                        code = 2;
+                    }
+                    else {
+                        code = 1;
+                    }
+                }
                 message = JSON.stringify({ output: output, code: code });
                 response.end(message);
                 return [2 /*return*/];
