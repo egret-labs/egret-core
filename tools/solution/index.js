@@ -51,18 +51,29 @@ function childProcessWrapper(cmd, start, end) {
         state = 1;
         buffer += data;
     });
+    var getOutput = function () {
+        var startIndex = buffer.lastIndexOf(start);
+        var endIndex = buffer.lastIndexOf(end) + end.length;
+        var output = "";
+        if (startIndex < endIndex) {
+            output = buffer.substring(startIndex, endIndex);
+        }
+        else {
+            output = buffer.substring(startIndex);
+        }
+        return output;
+    };
     return {
-        getOutput: function () {
-            var startIndex = buffer.indexOf(start);
-            var endIndex = buffer.indexOf(end) + end.length;
-            var output = "";
-            if (startIndex < endIndex) {
-                output = buffer.substring(startIndex, endIndex);
+        getOutput: getOutput,
+        getCode: function () {
+            //todo:performance
+            var output = getOutput();
+            if (output.indexOf(end) >= 0) {
+                return 2;
             }
             else {
-                output = buffer.substring(startIndex);
+                return state;
             }
-            return output;
         }
     };
 }
@@ -128,9 +139,14 @@ var watchProject = function (project) {
     var process = childProcessWrapper("egret tsc-watch " + project, start, end);
     return function () {
         return function (request, response) { return __awaiter(_this, void 0, void 0, function () {
+            var output, code, message;
             return __generator(this, function (_a) {
                 response.writeHead(200, { "Content-Type": "application/json" });
-                response.end(JSON.stringify({ output: process.getOutput() }));
+                output = process.getOutput();
+                console.log("get:" + output);
+                code = process.getCode();
+                message = JSON.stringify({ output: output, code: code });
+                response.end(message);
                 return [2 /*return*/];
             });
         }); };

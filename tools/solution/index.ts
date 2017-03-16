@@ -19,18 +19,31 @@ export function childProcessWrapper(cmd: string, start: string, end: string) {
         buffer += data;
     })
 
-    return {
-        getOutput: () => {
+    let getOutput = () => {
 
-            let startIndex = buffer.indexOf(start)
-            let endIndex = buffer.indexOf(end) + end.length;
-            let output = "";
-            if (startIndex < endIndex) {
-                output = buffer.substring(startIndex, endIndex);
-            } else {
-                output = buffer.substring(startIndex);
+        let startIndex = buffer.lastIndexOf(start)
+        let endIndex = buffer.lastIndexOf(end) + end.length;
+        let output = "";
+        if (startIndex < endIndex) {
+            output = buffer.substring(startIndex, endIndex);
+        } else {
+            output = buffer.substring(startIndex);
+        }
+        return output;
+    }
+
+    return {
+        getOutput,
+
+        getCode: () => {
+            //todo:performance
+            let output = getOutput();
+            if (output.indexOf(end) >= 0) {
+                return 2;
             }
-            return output;
+            else {
+                return state;
+            }
         }
     }
 }
@@ -114,11 +127,14 @@ let watchProject: (project: string) => Server.Middleware = (project) => {
     let start = "tsc begin";
     let end = "tsc end"
     let process = childProcessWrapper(`egret tsc-watch ${project}`, start, end);
-
     return () => {
         return async (request, response) => {
-            response.writeHead(200, { "Content-Type": "application/json" })
-            response.end(JSON.stringify({ output: process.getOutput() }));
+            response.writeHead(200, { "Content-Type": "application/json" });
+            let output = process.getOutput();
+            console.log("get:" + output)
+            let code = process.getCode();
+            let message = JSON.stringify({ output, code })
+            response.end(message);
         }
     }
 }
