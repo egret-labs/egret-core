@@ -5632,18 +5632,6 @@ var egret;
                 // 如果尺寸为 0 chrome会报警
                 _this.width = width || 1;
                 _this.height = height || 1;
-                // 创建材质
-                _this.texture = _this.createTexture();
-                // 创建frame buffer
-                _this.frameBuffer = gl.createFramebuffer();
-                gl.bindFramebuffer(gl.FRAMEBUFFER, _this.frameBuffer);
-                // 绑定材质
-                gl.framebufferTexture2D(gl.FRAMEBUFFER, gl.COLOR_ATTACHMENT0, gl.TEXTURE_2D, _this.texture, 0);
-                // 绑定stencil buffer
-                _this.stencilBuffer = gl.createRenderbuffer();
-                gl.bindRenderbuffer(gl.RENDERBUFFER, _this.stencilBuffer);
-                gl.renderbufferStorage(gl.RENDERBUFFER, gl.DEPTH_STENCIL, _this.width, _this.height);
-                gl.framebufferRenderbuffer(gl.FRAMEBUFFER, gl.DEPTH_STENCIL_ATTACHMENT, gl.RENDERBUFFER, _this.stencilBuffer);
                 return _this;
             }
             /**
@@ -5651,22 +5639,17 @@ var egret;
              */
             WebGLRenderTarget.prototype.resize = function (width, height) {
                 var gl = this.gl;
-                // 设置texture尺寸
-                gl.bindTexture(gl.TEXTURE_2D, this.texture);
-                gl.texImage2D(gl.TEXTURE_2D, 0, gl.RGBA, width, height, 0, gl.RGBA, gl.UNSIGNED_BYTE, null);
-                // gl.bindTexture(gl.TEXTURE_2D, null);
-                // 设置render buffer的尺寸
-                gl.bindFramebuffer(gl.FRAMEBUFFER, this.frameBuffer); // 是否需要强制绑定？
-                // 销毁并重新创建render buffer，防止 renderbufferStorage 引发内存泄漏
-                gl.deleteRenderbuffer(this.stencilBuffer);
-                this.stencilBuffer = gl.createRenderbuffer();
-                gl.bindRenderbuffer(gl.RENDERBUFFER, this.stencilBuffer); // 是否需要强制绑定？
-                gl.renderbufferStorage(gl.RENDERBUFFER, gl.DEPTH_STENCIL, width, height);
-                gl.framebufferRenderbuffer(gl.FRAMEBUFFER, gl.DEPTH_STENCIL_ATTACHMENT, gl.RENDERBUFFER, this.stencilBuffer);
                 this.width = width;
                 this.height = height;
-                // 此处不解绑是否会造成bug？
-                // gl.bindFramebuffer(gl.FRAMEBUFFER, null);
+                if (this.frameBuffer) {
+                    // 设置texture尺寸
+                    gl.bindTexture(gl.TEXTURE_2D, this.texture);
+                    gl.texImage2D(gl.TEXTURE_2D, 0, gl.RGBA, width, height, 0, gl.RGBA, gl.UNSIGNED_BYTE, null);
+                }
+                if (this.stencilBuffer) {
+                    gl.deleteRenderbuffer(this.stencilBuffer);
+                    this.stencilBuffer = null;
+                }
             };
             /**
              * 激活此render target
@@ -5681,6 +5664,16 @@ var egret;
             WebGLRenderTarget.prototype.getFrameBuffer = function () {
                 if (!this.useFrameBuffer) {
                     return null;
+                }
+                if (!this.frameBuffer) {
+                    var gl = this.gl;
+                    // 创建材质
+                    this.texture = this.createTexture();
+                    // 创建frame buffer
+                    this.frameBuffer = gl.createFramebuffer();
+                    gl.bindFramebuffer(gl.FRAMEBUFFER, this.frameBuffer);
+                    // 绑定材质
+                    gl.framebufferTexture2D(gl.FRAMEBUFFER, gl.COLOR_ATTACHMENT0, gl.TEXTURE_2D, this.texture, 0);
                 }
                 return this.frameBuffer;
             };
@@ -5710,6 +5703,21 @@ var egret;
                 gl.colorMask(true, true, true, true);
                 gl.clearColor(this.clearColor[0], this.clearColor[1], this.clearColor[2], this.clearColor[3]);
                 gl.clear(gl.COLOR_BUFFER_BIT);
+            };
+            WebGLRenderTarget.prototype.enabledStencil = function () {
+                if (!this.frameBuffer || this.stencilBuffer) {
+                    return;
+                }
+                var gl = this.gl;
+                // 设置render buffer的尺寸
+                gl.bindFramebuffer(gl.FRAMEBUFFER, this.frameBuffer); // 是否需要强制绑定？
+                // 绑定stencil buffer
+                this.stencilBuffer = gl.createRenderbuffer();
+                gl.bindRenderbuffer(gl.RENDERBUFFER, this.stencilBuffer);
+                gl.renderbufferStorage(gl.RENDERBUFFER, gl.DEPTH_STENCIL, this.width, this.height);
+                gl.framebufferRenderbuffer(gl.FRAMEBUFFER, gl.DEPTH_STENCIL_ATTACHMENT, gl.RENDERBUFFER, this.stencilBuffer);
+                // 此处不解绑是否会造成bug？
+                // gl.bindFramebuffer(gl.FRAMEBUFFER, null);
             };
             return WebGLRenderTarget;
         }(egret.HashObject));
@@ -6340,6 +6348,9 @@ var egret;
                     case 8 /* ENABLE_SCISSOR */:
                         var buffer = this.activatedBuffer;
                         if (buffer) {
+                            if (buffer.rootRenderTarget) {
+                                buffer.rootRenderTarget.enabledStencil();
+                            }
                             buffer.enableScissor(data.x, data.y, data.width, data.height);
                         }
                         break;
@@ -6427,6 +6438,9 @@ var egret;
                 var size = data.count * 3;
                 var buffer = this.activatedBuffer;
                 if (buffer) {
+                    if (buffer.rootRenderTarget) {
+                        buffer.rootRenderTarget.enabledStencil();
+                    }
                     if (buffer.stencilHandleCount == 0) {
                         buffer.enableStencil();
                         gl.clear(gl.STENCIL_BUFFER_BIT); // clear
