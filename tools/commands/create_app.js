@@ -34,7 +34,6 @@ var CreateAppCommand = (function () {
         if (!reg.test(app_name)) {
             globals.exit(1612);
         }
-        return;
         if (!arg_app_name) {
             globals.exit(1610);
         }
