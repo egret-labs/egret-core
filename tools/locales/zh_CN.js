@@ -113,6 +113,7 @@ var egret;
     locale_strings[1609] = "> rename project name ...";
     locale_strings[1610] = "缺少项目名称 例:{color_green}egret create_app [app_name] -f [h5_game_path] -t [template_path] {color_normal}";
     locale_strings[1611] = "项目已存在,请重新输入 例:{color_green}egret create_app [app_name] -f [h5_game_path] -t [template_path] {color_normal}";
+    locale_strings[1612] = "项目名称必须以字母为开头";
     //upgrade
     locale_strings[1701] = "项目版本低于 egret 版本，请执行 egret upgrade {your_project} 命令升级您的项目，\n命令中请不要加上大括号{}";
     locale_strings[1702] = "项目升级成功";

@@ -26,9 +26,15 @@ var CreateAppCommand = (function () {
         //var arg_app_name = params.getCommandArgs()[0];
         //var template_path = params.getOption("-t");
         //var arg_h5_path = params.getOption("-f");
+        var app_name = option.commands[1];
         var arg_app_name = option.projectDir;
         var template_path = option.nativeTemplatePath;
         var arg_h5_path = option.fileName;
+        var reg = new RegExp("^[a-zA-Z]");
+        if (!reg.test(app_name)) {
+            globals.exit(1612);
+        }
+        return;
         if (!arg_app_name) {
             globals.exit(1610);
         }
