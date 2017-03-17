@@ -1155,6 +1155,9 @@ var egret;
             };
             NativeCanvas.prototype.saveToFile = function (type, filePath) {
                 if (this.$nativeCanvas && this.$nativeCanvas.saveToFile) {
+                    if (native.$supportCmdBatch) {
+                        native.$cmdManager.flush();
+                    }
                     this.$nativeCanvas.saveToFile(type, filePath);
                 }
             };
