@@ -157,14 +157,11 @@ namespace egret {
          * @platform Web,Native
          * @language zh_CN
          */
-        protected _endian: string;
-
         public get endian() {
-            return this._endian;
+            return this.$endian == EndianConst.LITTLE_ENDIAN ? Endian.LITTLE_ENDIAN : Endian.BIG_ENDIAN;
         }
 
         public set endian(value: string) {
-            this._endian = value;
             this.$endian = value == Endian.LITTLE_ENDIAN ? EndianConst.LITTLE_ENDIAN : EndianConst.BIG_ENDIAN;
         }
 
