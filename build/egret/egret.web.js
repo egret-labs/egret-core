@@ -4182,6 +4182,7 @@ var egret;
                 if (lenFps > 101) {
                     lenFps = 101;
                     this.arrFps.shift();
+                    this.arrCost.shift();
                 }
                 var fpsMin = this.arrFps[0];
                 var fpsMax = this.arrFps[0];
