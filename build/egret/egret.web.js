@@ -954,15 +954,23 @@ var egret;
                 var request = new XMLHttpRequest();
                 request.open("GET", url, true);
                 request.responseType = "arraybuffer";
-                request.onload = function () {
-                    WebAudioDecode.decodeArr.push({
-                        "buffer": request.response,
-                        "success": onAudioLoaded,
-                        "fail": onAudioError,
-                        "self": self,
-                        "url": self.url
-                    });
-                    WebAudioDecode.decodeAudios();
+                request.onreadystatechange = function () {
+                    if (request.readyState == 4) {
+                        var ioError = (request.status >= 400 || request.status == 0);
+                        if (ioError) {
+                            self.dispatchEventWith(egret.IOErrorEvent.IO_ERROR);
+                        }
+                        else {
+                            WebAudioDecode.decodeArr.push({
+                                "buffer": request.response,
+                                "success": onAudioLoaded,
+                                "fail": onAudioError,
+                                "self": self,
+                                "url": self.url
+                            });
+                            WebAudioDecode.decodeAudios();
+                        }
+                    }
                 };
                 request.send();
                 function onAudioLoaded() {
