@@ -83,7 +83,7 @@ namespace egret.web {
                 if(lastBuffer) {
                     lastBuffer.rootRenderTarget.activate();
                 }
-
+                this.rootRenderTarget.initFrameBuffer();
                 this.surface = this.rootRenderTarget;
             }
         }

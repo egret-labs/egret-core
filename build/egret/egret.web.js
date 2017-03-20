@@ -5666,6 +5666,9 @@ var egret;
                 if (!this.useFrameBuffer) {
                     return null;
                 }
+                return this.frameBuffer;
+            };
+            WebGLRenderTarget.prototype.initFrameBuffer = function () {
                 if (!this.frameBuffer) {
                     var gl = this.gl;
                     // 创建材质
@@ -5676,7 +5679,6 @@ var egret;
                     // 绑定材质
                     gl.framebufferTexture2D(gl.FRAMEBUFFER, gl.COLOR_ATTACHMENT0, gl.TEXTURE_2D, this.texture, 0);
                 }
-                return this.frameBuffer;
             };
             /**
              * 创建材质
@@ -6561,7 +6563,7 @@ var egret;
                 output.transform(1, 0, 0, -1, 0, height);
                 this.vao.cacheArrays(output.globalMatrix, output.globalAlpha, 0, 0, width, height, 0, 0, width, height, width, height);
                 output.restoreTransform();
-                this.drawCmdManager.pushDrawTexture(input["rootRenderTarget"].texture, 2, filter, width, height);
+                this.drawCmdManager.pushDrawTexture(input.rootRenderTarget.texture, 2, filter, width, height);
                 // 释放掉input
                 if (input != originInput) {
                     web.WebGLRenderBuffer.release(input);
@@ -6679,6 +6681,7 @@ var egret;
                     if (lastBuffer) {
                         lastBuffer.rootRenderTarget.activate();
                     }
+                    _this.rootRenderTarget.initFrameBuffer();
                     _this.surface = _this.rootRenderTarget;
                 }
                 return _this;

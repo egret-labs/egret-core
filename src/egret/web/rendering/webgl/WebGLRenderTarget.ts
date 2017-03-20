@@ -100,6 +100,10 @@ namespace egret.web {
             if (!this.useFrameBuffer) {
                 return null;
             }
+            return this.frameBuffer;
+        }
+
+        public initFrameBuffer(): void {
             if (!this.frameBuffer) {
                 let gl = this.gl;
                 // 创建材质
@@ -112,7 +116,6 @@ namespace egret.web {
                 // 绑定材质
                 gl.framebufferTexture2D(gl.FRAMEBUFFER, gl.COLOR_ATTACHMENT0, gl.TEXTURE_2D, this.texture, 0);
             }
-            return this.frameBuffer;
         }
 
         /**

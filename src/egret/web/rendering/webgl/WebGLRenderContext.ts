@@ -1050,7 +1050,7 @@ namespace egret.web {
             this.vao.cacheArrays(output.globalMatrix, output.globalAlpha, 0, 0, width, height, 0, 0, width, height, width, height);
             output.restoreTransform();
 
-            this.drawCmdManager.pushDrawTexture(input["rootRenderTarget"].texture, 2, filter, width, height);
+            this.drawCmdManager.pushDrawTexture(input.rootRenderTarget.texture, 2, filter, width, height);
 
             // 释放掉input
             if (input != originInput) {
