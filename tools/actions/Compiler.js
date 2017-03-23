@@ -30,6 +30,7 @@ var Compiler = (function () {
     Compiler.prototype.compile = function (options, rootFileNames) {
         this.fileNames = rootFileNames;
         this.options = options;
+        cachedProgram = null;
         compilerHost = ts.createCompilerHost(options);
         hostGetSourceFile = compilerHost.getSourceFile;
         compilerHost.getSourceFile = getSourceFile;

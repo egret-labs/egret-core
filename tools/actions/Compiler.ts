@@ -54,7 +54,7 @@ export class Compiler {
     public compile(options: ts.CompilerOptions, rootFileNames: string[]): EgretCompilerHost {
         this.fileNames = rootFileNames;
         this.options = options;
-
+        cachedProgram = null;
         compilerHost = ts.createCompilerHost(options);
         hostGetSourceFile = compilerHost.getSourceFile;
         compilerHost.getSourceFile = getSourceFile;
