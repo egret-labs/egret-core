@@ -3,6 +3,8 @@ import * as Dashboard from './Dashboard';
 import * as cp from 'child_process';
 import * as FileUtil from '../lib/FileUtil';
 import * as Resource from './ResourceProject';
+import * as TypeScript from './TypeScriptProject';
+import * as EgretBuild from './EgretBuildProject';
 
 import * as child_process from 'child_process';
 export function childProcessWrapper(cmd: string, start: string, end: string) {
@@ -43,7 +45,7 @@ export type Solution = {
     modules: {
         [moduleName: string]: {
             root: string,
-            type: "extra" | "tsc-plus" | "res",
+            type: "extra" | "tsc-plus" | "res" | "egret-build",
             moduleName: string
         }
     }
@@ -68,13 +70,18 @@ export function run(solutionFile: string) {
         switch (m.type) {
             case "tsc-plus":
                 let typescriptServer = new Server();
-                typescriptServer.use(watchProject(m.root));
+                typescriptServer.use(TypeScript.middleware(m.root));
                 typescriptServer.start(projectRoot, 4000, "http://localhost:4000/index.html", false);
                 break;
             case "res":
                 let resourceServer = new Server();
                 resourceServer.use(Resource.middleware(m.root))
                 resourceServer.start(projectRoot, 4001, "http://localhost:4001/index.html", false)
+                break;
+            case "egret-build":
+                let egretBuildServer = new Server();
+                egretBuildServer.use(EgretBuild.middleware(m.root));
+                egretBuildServer.start(projectRoot, 4002, "http://localhost:4001/index.html", false)
                 break;
         }
     }
@@ -109,36 +116,4 @@ let fetch = () => {
             });
         })
     })
-}
-
-
-
-let watchProject: (project: string) => Server.Middleware = (project) => {
-    let start = "tsc begin";
-    let end = "tsc end"
-    let process = childProcessWrapper(`egret tsc-watch ${project}`, start, end);
-
-
-    let getCode = (output) => {
-        //todo:performance
-
-    }
-    return () => {
-        return async (request, response) => {
-            response.writeHead(200, { "Content-Type": "application/json" });
-            let output = process.getOutput();
-            let code = 0;
-
-            if (output.indexOf(end) >= 0) {
-                if (output.indexOf("Error") >= 0) {
-                    code = 2;
-                }
-                else {
-                    code = 1;
-                }
-            }
-            let message = JSON.stringify({ output, code })
-            response.end(message);
-        }
-    }
 }

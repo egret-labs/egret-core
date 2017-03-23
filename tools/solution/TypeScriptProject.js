@@ -39,6 +39,7 @@ var FileUtil = require("../lib/FileUtil");
 var path = require("path");
 var Compiler = require("../actions/Compiler");
 var watch = require("../lib/watch");
+var solution = require("./");
 var TypeScriptProject = (function () {
     function TypeScriptProject(projectDir) {
         this.projectDir = projectDir;
@@ -114,11 +115,32 @@ function run(root) {
     console.log("tsc end");
 }
 exports.run = run;
-exports.middleware = function () {
-    return function (request, response) { return __awaiter(_this, void 0, void 0, function () {
-        return __generator(this, function (_a) {
-            response.end(host.messages.toString());
-            return [2 /*return*/];
-        });
-    }); };
+exports.middleware = function (project) {
+    var start = "tsc begin";
+    var end = "tsc end";
+    var process = solution.childProcessWrapper("egret tsc-watch " + project, start, end);
+    var getCode = function (output) {
+        //todo:performance
+    };
+    return function () {
+        return function (request, response) { return __awaiter(_this, void 0, void 0, function () {
+            var output, code, message;
+            return __generator(this, function (_a) {
+                response.writeHead(200, { "Content-Type": "application/json" });
+                output = process.getOutput();
+                code = 0;
+                if (output.indexOf(end) >= 0) {
+                    if (output.indexOf("Error") >= 0) {
+                        code = 2;
+                    }
+                    else {
+                        code = 1;
+                    }
+                }
+                message = JSON.stringify({ output: output, code: code });
+                response.end(message);
+                return [2 /*return*/];
+            });
+        }); };
+    };
 };
