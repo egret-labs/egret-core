@@ -100,6 +100,11 @@ namespace egret.native {
         public close():void {
             this.socket.close();
         }
+        public disconnect():void {
+            if (this.socket.disconnect) {
+                this.socket.disconnect();
+            }
+        }
     }
     if (egret.Capabilities.runtimeType == RuntimeType.NATIVE) {
         ISocket = NativeSocket;

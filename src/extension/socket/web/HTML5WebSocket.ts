@@ -102,7 +102,11 @@ namespace egret.web {
         public close():void {
             this.socket.close();
         }
-
+        public disconnect():void {
+            if (this.socket.disconnect) {
+                this.socket.disconnect();
+            }
+        }
     }
 
     if (egret.Capabilities.runtimeType == RuntimeType.WEB) {

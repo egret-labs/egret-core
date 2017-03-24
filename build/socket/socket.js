@@ -559,6 +559,11 @@ var egret;
             NativeSocket.prototype.close = function () {
                 this.socket.close();
             };
+            NativeSocket.prototype.disconnect = function () {
+                if (this.socket.disconnect) {
+                    this.socket.disconnect();
+                }
+            };
             return NativeSocket;
         }());
         native.NativeSocket = NativeSocket;
@@ -660,6 +665,11 @@ var egret;
             };
             HTML5WebSocket.prototype.close = function () {
                 this.socket.close();
+            };
+            HTML5WebSocket.prototype.disconnect = function () {
+                if (this.socket.disconnect) {
+                    this.socket.disconnect();
+                }
             };
             return HTML5WebSocket;
         }());

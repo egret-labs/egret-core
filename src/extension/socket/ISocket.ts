@@ -115,6 +115,19 @@ namespace egret {
          * @language zh_CN
          */
         close():void;
+        /**
+         * 
+         * @version Egret 4.1.0
+         * @platform Web,Native
+         * @language en_US
+         */
+        /**
+         * 
+         * @version Egret 4.1.0
+         * @platform Web,Native
+         * @language zh_CN
+         */
+        disconnect():void;
     }
 
     /**
