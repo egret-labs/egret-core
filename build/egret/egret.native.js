@@ -1155,6 +1155,9 @@ var egret;
             };
             NativeCanvas.prototype.saveToFile = function (type, filePath) {
                 if (this.$nativeCanvas && this.$nativeCanvas.saveToFile) {
+                    if (native.$supportCmdBatch) {
+                        native.$cmdManager.flush();
+                    }
                     this.$nativeCanvas.saveToFile(type, filePath);
                 }
             };
@@ -2579,6 +2582,9 @@ var egret;
                 }
                 function onAudioLoaded() {
                     audio.load();
+                    if (NativeSound.clearAudios[this.url]) {
+                        delete NativeSound.clearAudios[this.url];
+                    }
                     NativeSound.$recycle(url, audio);
                 }
                 function onCanPlay() {
@@ -2630,6 +2636,7 @@ var egret;
                 NativeSound.$clear(this.url);
             };
             NativeSound.$clear = function (url) {
+                NativeSound.clearAudios[url] = true;
                 var array = NativeSound.audios[url];
                 if (array) {
                     array.length = 0;
@@ -2643,6 +2650,9 @@ var egret;
                 return null;
             };
             NativeSound.$recycle = function (url, audio) {
+                if (NativeSound.clearAudios[url]) {
+                    return;
+                }
                 var array = NativeSound.audios[url];
                 if (NativeSound.audios[url] == null) {
                     array = NativeSound.audios[url] = [];
@@ -2681,6 +2691,7 @@ var egret;
          * @private
          */
         NativeSound.audios = {};
+        NativeSound.clearAudios = {};
         native.NativeSound = NativeSound;
         __reflect(NativeSound.prototype, "egret.native.NativeSound", ["egret.Sound"]);
         if (__global.Audio) {

@@ -359,7 +359,7 @@ namespace egret {
                             (<DropShadowFilter>filter).$angle ? ((<DropShadowFilter>filter).$angle / 180 * Math.PI) : 0, (<DropShadowFilter>filter).$distance || 0, (<GlowFilter>filter).$strength, (<GlowFilter>filter).$inner ? 1 : 0, (<GlowFilter>filter).$knockout ? 0 : 1, (<DropShadowFilter>filter).$hideObject ? 1 : 0);
                         } else {
                             // 如果没有高级效果，使用性能比较高的方式
-                            dropShadowFilter(imageData.data, displayBuffer.surface.width, displayBuffer.surface.height, [r / 255, g / 255, b / 255, a / 255], (<GlowFilter>filter).$blurX, (<GlowFilter>filter).$blurY, (<DropShadowFilter>filter).$angle ? ((<DropShadowFilter>filter).$angle / 180 * Math.PI) : 0, (<DropShadowFilter>filter).$distance || 0, (<GlowFilter>filter).$strength);
+                            dropShadowFilter(imageData.data, displayBuffer.surface.width, displayBuffer.surface.height, [r / 255, g / 255, b / 255, a], (<GlowFilter>filter).$blurX, (<GlowFilter>filter).$blurY, (<DropShadowFilter>filter).$angle ? ((<DropShadowFilter>filter).$angle / 180 * Math.PI) : 0, (<DropShadowFilter>filter).$distance || 0, (<GlowFilter>filter).$strength);
                         }
                     } else if(filter.type == "custom") {
                         // 目前canvas渲染不支持自定义滤镜
@@ -1270,11 +1270,16 @@ namespace egret {
             plane = new Array(buffer.length);
             setArray(plane, buffer);
         }
+        let colorR = color[0];
+        let colorG = color[1];
+        let colorB = color[2];
+        let colorA = color[3];
         for (let ptr = 0, end = plane.length; ptr < end; ptr += 4) {
             let alpha = plane[ptr + 3];
-            plane[ptr + 0] = color[0] * alpha;
-            plane[ptr + 1] = color[1] * alpha;
-            plane[ptr + 2] = color[2] * alpha;
+            plane[ptr + 0] = colorR * alpha;
+            plane[ptr + 1] = colorG * alpha;
+            plane[ptr + 2] = colorB * alpha;
+            plane[ptr + 3] = colorA * alpha;
         }
         return plane;
     }

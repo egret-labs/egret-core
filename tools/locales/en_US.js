@@ -106,6 +106,7 @@ locale_strings[1608] = "> replace all configure elements ...";
 locale_strings[1609] = "> rename project name ...";
 locale_strings[1610] = "Project name is missing. Example:{color_green}egret create_app [app_name] -f [h5_game_path] -t [template_path] {color_normal}";
 locale_strings[1611] = "The project is exist, please use another name.Example:{color_green}egret create_app [app_name] -f [h5_game_path] -t [template_path] {color_normal}";
+locale_strings[1612] = "The first letter of the project name must be a-z";
 //upgrade
 locale_strings[1701] = "Project version is lower than egret version, please implement egret upgrade {your_project} command to upgrade your project, \n do not add braces {} in the commands";
 locale_strings[1702] = "Upgrade successful";

@@ -2,45 +2,9 @@ var utils = require("../lib/utils");
 var Compiler_1 = require("../actions/Compiler");
 var FileUtil = require("../lib/FileUtil");
 var path = require("path");
-var ts = require("../lib/typescript-plus/lib/typescript");
 var ANY = 'any';
 var CompileEgretEngine = (function () {
     function CompileEgretEngine() {
-        this.dtsFiles = [];
-        //     private hideInternalMethods() {
-        //         return;
-        //         var tempDts: string[] = [];
-        //         global.ignoreDollar = true;
-        //         this.dtsFiles.forEach(d => {
-        //             var dts = d[0], depends = d[1];
-        //             var tempDtsName = dts.replace(/\.d\.ts/, 'd.ts');
-        //             var singleFile = dts.replace(/\.d\.ts/, 'd.js');
-        //             FileUtil.copy(dts, tempDtsName);
-        //             var tss = depends.concat(tempDtsName);
-        //             var result = this.compiler.compile({
-        //                 args: egret.args,
-        //                 def: true,
-        //                 out: singleFile,
-        //                 files: tss,
-        //                 outDir: null
-        //             });
-        //             if (result.messages && result.messages.length) {
-        //                 result.messages.forEach(m => console.log(m));
-        //             }
-        //             FileUtil.remove(singleFile);
-        //             FileUtil.remove(tempDtsName);
-        //             tempDts.push(tempDtsName.replace(/\.ts$/, '.d.ts'));
-        //         });
-        //         this.dtsFiles.forEach(d => {
-        //             FileUtil.remove(d[0]);
-        //         });
-        //         tempDts.forEach(d => {
-        //             var dts = d.replace(/d\.d\.ts$/, '.d.ts');
-        //             FileUtil.copy(d, dts);
-        //             FileUtil.remove(d);
-        //         })
-        //         global.ignoreDollar = false;
-        //     }
     }
     CompileEgretEngine.prototype.execute = function () {
         var code = 0;
@@ -112,10 +76,9 @@ var CompileEgretEngine = (function () {
                 path = file;
             }
             else {
-                var source = file;
-                path = source.path;
-                sourcePlatform = source.platform;
-                sourceConfig = source.debug === true ? "debug" : source.debug === false ? "release" : null;
+                path = file.path;
+                sourcePlatform = file.platform;
+                sourceConfig = file.debug === true ? "debug" : file.debug === false ? "release" : null;
             }
             var platformOK = sourcePlatform == null && platform.name == ANY || sourcePlatform == platform.name;
             var configOK = sourceConfig == null || sourceConfig == configuration.name;
@@ -127,38 +90,17 @@ var CompileEgretEngine = (function () {
             return 0;
         tss = depends.concat(tss);
         var dts = platform.declaration && configuration.declaration;
-        var tsconfig = path.join(egret.root, 'src/egret/tsconfig.json');
-        var compileOptions = {}; // this.compiler.loadTsconfig(tsconfig,options).options
+        var tsconfig = path.join(egret.root, 'src/egret/');
+        var isPublish = configuration.name != "debug";
+        var compileOptions = this.compiler.parseTsconfig(tsconfig, isPublish).options;
         //make 使用引擎的配置,必须用下面的参数
-        compileOptions.target = ts.ScriptTarget.ES5;
-        // parsedCmd.options.stripInternal = true;
-        compileOptions.sourceMap = options.sourceMap;
-        compileOptions.removeComments = options.removeComments;
         compileOptions.declaration = dts;
         compileOptions.out = singleFile;
-        compileOptions.newLine = ts.NewLineKind.LineFeed;
-        compileOptions.allowUnreachableCode = true;
         compileOptions.emitReflection = true;
-        compileOptions.lib = ['lib.es5.d.ts',
-            'lib.dom.d.ts',
-            'lib.es2015.promise.d.ts',
-            'lib.scripthost.d.ts'
-        ];
-        var defines = {};
-        if (configuration.name == "debug") {
-            defines.DEBUG = true;
-            defines.RELEASE = false;
-        }
-        compileOptions.defines = defines;
         var result = this.compiler.compile(compileOptions, tss);
         if (result.exitStatus != 0) {
             result.messages.forEach(function (m) { return console.log(m); });
-        }
-        if (result.exitStatus != 0) {
             return result.exitStatus;
-        }
-        if (dts) {
-            this.dtsFiles.push([declareFile, depends]);
         }
         if (configuration.minify) {
             utils.minify(singleFile, singleFile);

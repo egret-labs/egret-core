@@ -1,4 +1,7 @@
 declare namespace egret.experimental {
+    /**
+     * @private
+     */
     let debug: boolean;
     const ExifTags: {
         0x829A: string;
@@ -274,5 +277,17 @@ declare namespace egret.experimental {
     }
 }
 declare namespace egret.experimental {
+    /**
+    * @language en_US
+    * The pickPhoto method provides ability for picking a photo.
+    * @version Egret 4.0
+    * @platform Web
+    */
+    /**
+     * @language zh_CN
+     * pickPhoto API提供用于选取照片的方法。
+     * @version Egret 4.0
+     * @platform Web
+     */
     function pickPhoto(): Promise<string>;
 }

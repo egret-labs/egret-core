@@ -9,6 +9,7 @@ import CompileTemplate = require('../actions/CompileTemplate');
 import CHILD_EXEC = require('child_process');
 import * as project from '../parser/EgretProject';
 import ts = require('../lib/typescript-plus/lib/typescript')
+import * as path from 'path';
 
 import * as Compiler from '../actions/Compiler';
 console.log(utils.tr(1004, 0));
@@ -22,9 +23,16 @@ class Build implements egret.Command {
         if (packageJsonContent = FileUtil.read(project.utils.getFilePath("package.json"))) {
             let packageJson: project.Package_JSON = JSON.parse(packageJsonContent);
             if (packageJson.modules) {//通过有modules来识别是egret库项目
-                this.buildLib(packageJson);
+                globals.log(1119);
+                globals.exit(1120);
                 return 0;
             }
+            if (FileUtil.exists(project.utils.getFilePath("tsconfig.json"))) {
+                this.buildLib2(packageJson);
+                return 0;
+            }
+
+
         }
         if (FileUtil.exists(options.srcDir) == false ||
             FileUtil.exists(options.templateDir) == false) {
@@ -42,7 +50,36 @@ class Build implements egret.Command {
         return DontExitCode;
     }
 
-    private buildLib(packageJson: project.Package_JSON): void {
+    private buildLib2(packageJson: project.Package_JSON) {
+        let projectDir = egret.args.projectDir;
+        let compiler = new Compiler.Compiler();
+        let { options, fileNames } = compiler.parseTsconfig(projectDir, egret.args.publish);
+        let outFile = options.outFile;
+        if (!outFile) {
+            globals.exit(1022);
+        }
+        compiler.compile(options, fileNames);
+
+        let outDir = path.dirname(outFile);
+        let outFileName = path.basename(outFile);
+        let minFile = path.join(outDir, outFileName.replace(".js", ".min.js"));
+        utils.minify(outFile, minFile);
+        if (options.allowJs) {
+            if (packageJson.typings) {
+                FileUtil.copy(
+                    path.join(projectDir, packageJson.typings),
+                    path.join(outDir, path.basename(packageJson.typings))
+                )
+            }
+            else {
+                globals.log(1119);
+                globals.exit(1121);
+            }
+        }
+    }
+
+    private buildLib(packageJson: project.Package_JSON) {
+
         var options = egret.args;
         var libFiles = FileUtil.search(FileUtil.joinPath(options.projectDir, "libs"), "d.ts");
         var outDir = "bin";

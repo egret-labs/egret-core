@@ -64,6 +64,10 @@ var egret;
     locale_strings[1116] = "目前不支持修改 tsconfig.json 中的编译选项: '{0}'.";
     locale_strings[1117] = "警告! tsconfig.json 不是有效的 json 文件";
     locale_strings[1118] = "未找到 {0} 版本引擎，将使用默认版本引擎替换，请在一键安装包中安装对应版本引擎";
+    locale_strings[1119] = "第三方库编译报错，您可以访问{color_underline}http://www.baidu.com{color_normal}了解详情";
+    locale_strings[1120] = "白鹭引擎 4.1 使用新结构进行第三方库升级，请先升级您的第三方库";
+    locale_strings[1121] = "您的模块 packge.json 中不包含 typings 属性，这会导致导出的模块不存在 TypeScript Definition 文件 ( .d.ts )，近而无法在 TypeScript 中包含智能语法提示";
+    locale_strings[1022] = "第三方库的 tsconfig.json 中必须包含 outFile 这一属性";
     //compile
     locale_strings[1301] = "在编译路径 {0} 下找不到 egret_file_list.js 或 game_file_list.js，请检查编译路径是否正确";
     locale_strings[1302] = "请输入编译路径。例:{color_green}egret compile --source [your_typescript_source_dir] --output [your_output_dir]{color_normal}";
@@ -109,6 +113,7 @@ var egret;
     locale_strings[1609] = "> rename project name ...";
     locale_strings[1610] = "缺少项目名称 例:{color_green}egret create_app [app_name] -f [h5_game_path] -t [template_path] {color_normal}";
     locale_strings[1611] = "项目已存在,请重新输入 例:{color_green}egret create_app [app_name] -f [h5_game_path] -t [template_path] {color_normal}";
+    locale_strings[1612] = "项目名称必须以字母为开头";
     //upgrade
     locale_strings[1701] = "项目版本低于 egret 版本，请执行 egret upgrade {your_project} 命令升级您的项目，\n命令中请不要加上大括号{}";
     locale_strings[1702] = "项目升级成功";

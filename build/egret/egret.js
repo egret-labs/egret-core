@@ -9033,9 +9033,22 @@ var egret;
                 else {
                     base64 = data;
                 }
-                var image = new Image();
-                image.src = "data:image/png;base64," + base64;
-                return new BitmapData(image);
+                var imageType = "image/png"; //default value
+                if (base64.charAt(0) === '/') {
+                    imageType = "image/jpeg";
+                }
+                else if (base64.charAt(0) === 'R') {
+                    imageType = "image/gif";
+                }
+                else if (base64.charAt(0) === 'i') {
+                    imageType = "image/png";
+                }
+                var img_1 = new Image();
+                img_1.src = "data:" + imageType + ";base64," + base64;
+                img_1.crossOrigin = '*';
+                img_1.onload = function () {
+                    return new BitmapData(img_1);
+                };
             }
             else {
                 var buffer = null;
@@ -9903,17 +9916,17 @@ var egret;
             var matrix = this.$uniforms.matrix;
             var colorAdd = this.$uniforms.colorAdd;
             for (var i = 0, j = 0; i < $matrix.length; i++) {
-                if (i === 4 || i === 9 || i === 14 || i === 19) {
-                    colorAdd.x = $matrix[i];
+                if (i === 4) {
+                    colorAdd.x = $matrix[i] / 255;
                 }
                 else if (i === 9) {
-                    colorAdd.y = $matrix[i];
+                    colorAdd.y = $matrix[i] / 255;
                 }
                 else if (i === 14) {
-                    colorAdd.z = $matrix[i];
+                    colorAdd.z = $matrix[i] / 255;
                 }
                 else if (i === 19) {
-                    colorAdd.w = $matrix[i];
+                    colorAdd.w = $matrix[i] / 255;
                 }
                 else {
                     matrix[j] = $matrix[i];
@@ -10138,7 +10151,7 @@ var egret;
             _this.$distance = distance;
             _this.$angle = angle;
             _this.$hideObject = hideObject;
-            _this.$uniforms.distance = distance;
+            _this.$uniforms.dist = distance;
             _this.$uniforms.angle = angle / 180 * Math.PI;
             _this.$uniforms.hideObject = hideObject ? 1 : 0;
             return _this;
@@ -10164,7 +10177,7 @@ var egret;
                     return;
                 }
                 this.$distance = value;
-                this.$uniforms.distance = value;
+                this.$uniforms.dist = value;
                 this.invalidate();
             },
             enumerable: true,
@@ -16424,7 +16437,7 @@ var egret;
                         }
                         else {
                             // 如果没有高级效果，使用性能比较高的方式
-                            dropShadowFilter(imageData.data, displayBuffer.surface.width, displayBuffer.surface.height, [r / 255, g / 255, b / 255, a / 255], filter.$blurX, filter.$blurY, filter.$angle ? (filter.$angle / 180 * Math.PI) : 0, filter.$distance || 0, filter.$strength);
+                            dropShadowFilter(imageData.data, displayBuffer.surface.width, displayBuffer.surface.height, [r / 255, g / 255, b / 255, a], filter.$blurX, filter.$blurY, filter.$angle ? (filter.$angle / 180 * Math.PI) : 0, filter.$distance || 0, filter.$strength);
                         }
                     }
                     else if (filter.type == "custom") {
@@ -17284,11 +17297,16 @@ var egret;
             plane = new Array(buffer.length);
             setArray(plane, buffer);
         }
+        var colorR = color[0];
+        var colorG = color[1];
+        var colorB = color[2];
+        var colorA = color[3];
         for (var ptr = 0, end = plane.length; ptr < end; ptr += 4) {
             var alpha = plane[ptr + 3];
-            plane[ptr + 0] = color[0] * alpha;
-            plane[ptr + 1] = color[1] * alpha;
-            plane[ptr + 2] = color[2] * alpha;
+            plane[ptr + 0] = colorR * alpha;
+            plane[ptr + 1] = colorG * alpha;
+            plane[ptr + 2] = colorB * alpha;
+            plane[ptr + 3] = colorA * alpha;
         }
         return plane;
     }
@@ -17709,7 +17727,7 @@ var egret;
              * @language zh_CN
              */
             get: function () {
-                return "4.0.2";
+                return "4.0.3";
             },
             enumerable: true,
             configurable: true
@@ -22052,10 +22070,10 @@ var egret;
 (function (egret) {
     /**
     * @language en_US
-    * The ByteArray class provides methods for encoding and decoding base64.
+    * The Base64Util class provides methods for encoding and decoding base64.
     * @version Egret 2.4
     * @platform Web,Native
-    * @includeExample egret/utils/ByteArray.ts
+    * @includeExample egret/utils/Base64Util.ts
     */
     /**
      * @language zh_CN

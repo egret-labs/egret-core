@@ -56,6 +56,10 @@ namespace egret.native {
 
         public saveToFile(type:string, filePath:string):void {
             if (this.$nativeCanvas && this.$nativeCanvas.saveToFile) {
+                if (native.$supportCmdBatch) {
+                    native.$cmdManager.flush();
+                }
+
                 this.$nativeCanvas.saveToFile(type, filePath);
             }
         }

@@ -153,9 +153,20 @@ namespace egret {
                 else {
                     base64 = data as string;
                 }
-                let image: HTMLImageElement = new Image();
-                image.src = "data:image/png;base64," + base64;
-                return new BitmapData(image);
+                let imageType = "image/png";//default value
+                if (base64.charAt(0) === '/') {
+                    imageType = "image/jpeg";
+                } else if (base64.charAt(0) === 'R') {
+                    imageType = "image/gif";
+                } else if (base64.charAt(0) === 'i') {
+                    imageType = "image/png";
+                }
+                let img: HTMLImageElement = new Image();
+                img.src = "data:" + imageType + ";base64," + base64;
+                img.crossOrigin = '*';
+                img.onload = function () {
+                    return new BitmapData(img);
+                }
             }
             else {
                 let buffer: ArrayBuffer = null;

@@ -8,16 +8,14 @@
 
 // THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 namespace egret.experimental {
+    /**
+     * @private
+     */
     export let debug = false;
     export const ExifTags = {
-        // version tags
-        0x9000: "ExifVersion",             // EXIF version
-        0xA000: "FlashpixVersion",         // Flashpix format version
-
-        // colorspace tags
-        0xA001: "ColorSpace",              // Color space information tag
-
-        // image configuration
+        0x9000: "ExifVersion",             
+        0xA000: "FlashpixVersion",         
+        0xA001: "ColorSpace",              
         0xA002: "PixelXDimension",         // Valid width of meaningful image
         0xA003: "PixelYDimension",         // Valid height of meaningful image
         0x9101: "ComponentsConfiguration", // Information about channels

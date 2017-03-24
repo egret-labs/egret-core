@@ -6,7 +6,7 @@ import utils = require('../lib/utils');
 import watch = require("../lib/watch");
 import path = require("path");
 import Build = require('./build');
-import server = require('../server/server');
+import Server = require('../server/server');
 import FileUtil = require('../lib/FileUtil');
 import service = require('../service/index');
 import CompileProject = require('../actions/CompileProject');
@@ -44,7 +44,10 @@ class Run implements egret.Command {
         }
         this.serverStarted = true;
         let openWithBrowser = !egret.args.serverOnly;
-        server.startServer(egret.args.projectDir, port, this.wrapByParams(egret.args.startUrl), openWithBrowser);
+        let server = new Server();
+        let projectDir = egret.args.projectDir;
+        server.use(Server.fileReader(projectDir))
+        server.start(projectDir, port, this.wrapByParams(egret.args.startUrl), openWithBrowser);
         if (egret.args.serverOnly) {
             console.log("Url:" + this.wrapByParams(egret.args.startUrl));
         } else {

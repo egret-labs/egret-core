@@ -121,6 +121,9 @@ namespace egret.web {
 
             audio.load();
             this.originAudio = audio;
+            if(HtmlSound.clearAudios[this.url]) {
+                delete HtmlSound.clearAudios[this.url];
+            }
             HtmlSound.$recycle(this.url, audio);
 
             function onAudioLoaded():void {
@@ -192,8 +195,10 @@ namespace egret.web {
          * @private
          */
         private static audios:Object = {};
+        private static clearAudios:Object = {};
 
         static $clear(url:string):void {
+            HtmlSound.clearAudios[url] = true;
             let array:HTMLAudioElement[] = HtmlSound.audios[url];
             if (array) {
                 array.length = 0;
@@ -209,6 +214,9 @@ namespace egret.web {
         }
 
         static $recycle(url:string, audio:HTMLAudioElement):void {
+            if(HtmlSound.clearAudios[url]) {
+                return;
+            }
             let array:HTMLAudioElement[] = HtmlSound.audios[url];
             if (HtmlSound.audios[url] == null) {
                 array = HtmlSound.audios[url] = [];

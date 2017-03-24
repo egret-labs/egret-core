@@ -5,6 +5,7 @@ var FileUtil = require("../lib/FileUtil");
 var CompileTemplate = require("../actions/CompileTemplate");
 var project = require("../parser/EgretProject");
 var ts = require("../lib/typescript-plus/lib/typescript");
+var path = require("path");
 var Compiler = require("../actions/Compiler");
 console.log(utils.tr(1004, 0));
 var timeBuildStart = (new Date()).getTime();
@@ -18,7 +19,12 @@ var Build = (function () {
         if (packageJsonContent = FileUtil.read(project.utils.getFilePath("package.json"))) {
             var packageJson = JSON.parse(packageJsonContent);
             if (packageJson.modules) {
-                this.buildLib(packageJson);
+                globals.log(1119);
+                globals.exit(1120);
+                return 0;
+            }
+            if (FileUtil.exists(project.utils.getFilePath("tsconfig.json"))) {
+                this.buildLib2(packageJson);
                 return 0;
             }
         }
@@ -35,6 +41,29 @@ var Build = (function () {
             option: egret.args
         }, function (cmd) { return onGotBuildCommandResult(cmd, callback); }, true);
         return DontExitCode;
+    };
+    Build.prototype.buildLib2 = function (packageJson) {
+        var projectDir = egret.args.projectDir;
+        var compiler = new Compiler.Compiler();
+        var _a = compiler.parseTsconfig(projectDir, egret.args.publish), options = _a.options, fileNames = _a.fileNames;
+        var outFile = options.outFile;
+        if (!outFile) {
+            globals.exit(1022);
+        }
+        compiler.compile(options, fileNames);
+        var outDir = path.dirname(outFile);
+        var outFileName = path.basename(outFile);
+        var minFile = path.join(outDir, outFileName.replace(".js", ".min.js"));
+        utils.minify(outFile, minFile);
+        if (options.allowJs) {
+            if (packageJson.typings) {
+                FileUtil.copy(path.join(projectDir, packageJson.typings), path.join(outDir, path.basename(packageJson.typings)));
+            }
+            else {
+                globals.log(1119);
+                globals.exit(1121);
+            }
+        }
     };
     Build.prototype.buildLib = function (packageJson) {
         var options = egret.args;
