@@ -145,7 +145,6 @@ namespace egret.web {
 
             if (!this.bindIndices) {
                 this.uploadIndicesArray(this.vao.getIndices());
-                this.bindIndices = true;
             }
 
             buffer.restoreStencil();
@@ -170,8 +169,8 @@ namespace egret.web {
          */
         private uploadIndicesArray(array: any): void {
             let gl: any = this.context;
-
             gl.bufferData(gl.ELEMENT_ARRAY_BUFFER, array, gl.STATIC_DRAW);
+            this.bindIndices = true;
         }
 
         private vertexBuffer;

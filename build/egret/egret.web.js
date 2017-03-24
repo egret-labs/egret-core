@@ -5848,7 +5848,6 @@ var egret;
                 buffer.rootRenderTarget.activate();
                 if (!this.bindIndices) {
                     this.uploadIndicesArray(this.vao.getIndices());
-                    this.bindIndices = true;
                 }
                 buffer.restoreStencil();
                 buffer.restoreScissor();
@@ -5868,6 +5867,7 @@ var egret;
             WebGLRenderContext.prototype.uploadIndicesArray = function (array) {
                 var gl = this.context;
                 gl.bufferData(gl.ELEMENT_ARRAY_BUFFER, array, gl.STATIC_DRAW);
+                this.bindIndices = true;
             };
             /**
              * 销毁绘制对象
