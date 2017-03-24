@@ -81,7 +81,7 @@ namespace eui {
         /**
          * @private
          */
-        private _data:any = null;
+        private _data: any = null;
         /**
          * The data to render or edit.
          *
@@ -98,11 +98,11 @@ namespace eui {
          * @platform Web,Native
          * @language zh_CN
          */
-        public get data():any {
+        public get data(): any {
             return this._data;
         }
 
-        public set data(value:any) {
+        public set data(value: any) {
             this._data = value;
             PropertyEvent.dispatchPropertyEvent(this, PropertyEvent.PROPERTY_CHANGE, "data");
             this.dataChanged();
@@ -124,14 +124,14 @@ namespace eui {
          * @platform Web,Native
          * @language zh_CN
          */
-        protected dataChanged():void {
+        protected dataChanged(): void {
 
         }
 
         /**
          * @private
          */
-        private _selected:boolean = false;
+        private _selected: boolean = false;
         /**
          * Contains <code>true</code> if the item renderer
          * can show itself as selected.
@@ -149,11 +149,11 @@ namespace eui {
          * @platform Web,Native
          * @language zh_CN
          */
-        public get selected():boolean {
+        public get selected(): boolean {
             return this._selected;
         }
 
-        public set selected(value:boolean) {
+        public set selected(value: boolean) {
             if (this._selected == value)
                 return;
             this._selected = value;
@@ -177,13 +177,13 @@ namespace eui {
          * @platform Web,Native
          * @language zh_CN
          */
-        public itemIndex:number = -1;
+        public itemIndex: number = -1;
 
         /**
          * @private
          * 指示第一次分派 TouchEvent.TOUCH_BEGIN 时，触摸点是否在按钮上。
          */
-        private touchCaptured:boolean = false;
+        private touchCaptured: boolean = false;
         /**
          * Dispatched when an event of some kind occurred that canceled the touch.
          * @version Egret 3.0.1
@@ -198,7 +198,7 @@ namespace eui {
          * @platform Web,Native
          * @language zh_CN
          */
-        protected onTouchCancle(event:egret.TouchEvent):void{
+        protected onTouchCancle(event: egret.TouchEvent): void {
             this.touchCaptured = false;
             let stage = event.$currentTarget;
             stage.removeEventListener(egret.TouchEvent.TOUCH_CANCEL, this.onTouchCancle, this);
@@ -222,7 +222,7 @@ namespace eui {
          * @platform Web,Native
          * @language zh_CN
          */
-        protected onTouchBegin(event:egret.TouchEvent):void {
+        protected onTouchBegin(event: egret.TouchEvent): void {
             this.$stage.addEventListener(egret.TouchEvent.TOUCH_CANCEL, this.onTouchCancle, this);
             this.$stage.addEventListener(egret.TouchEvent.TOUCH_END, this.onStageTouchEnd, this);
             this.touchCaptured = true;
@@ -233,7 +233,7 @@ namespace eui {
          * @private
          * 舞台上触摸弹起事件
          */
-        private onStageTouchEnd(event:egret.Event):void {
+        private onStageTouchEnd(event: egret.Event): void {
             let stage = event.$currentTarget;
             stage.removeEventListener(egret.TouchEvent.TOUCH_CANCEL, this.onTouchCancle, this);
             stage.removeEventListener(egret.TouchEvent.TOUCH_END, this.onStageTouchEnd, this);
@@ -248,8 +248,11 @@ namespace eui {
          * @version eui 1.0
          * @platform Web,Native
          */
-        protected getCurrentState():string {
+        protected getCurrentState(): string {
             let state = "up";
+            if (!this.enabled) {
+                state = "disabled";
+            }
             if (this.touchCaptured) {
                 state = "down";
             }

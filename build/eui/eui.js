@@ -18378,6 +18378,9 @@ var eui;
          */
         ItemRenderer.prototype.getCurrentState = function () {
             var state = "up";
+            if (!this.enabled) {
+                state = "disabled";
+            }
             if (this.touchCaptured) {
                 state = "down";
             }
