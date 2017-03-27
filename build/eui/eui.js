@@ -23577,7 +23577,7 @@ var eui;
                 }
                 switch (this._horizontalAlign) {
                     case egret.HorizontalAlign.RIGHT:
-                        x = width - (columnIndex + 1) * columnWidth - (columnIndex) * (horizontalGap) - paddingR;
+                        x = width - (columnIndex + 1) * (columnWidth + horizontalGap) + horizontalGap - paddingR;
                         break;
                     case egret.HorizontalAlign.CENTER:
                         x = width / 2 - (columnCount * columnWidth + (columnCount - 1) * horizontalGap) / 2 + columnIndex * (columnWidth + horizontalGap);
@@ -23585,17 +23585,21 @@ var eui;
                     case egret.HorizontalAlign.LEFT:
                         x = columnIndex * (columnWidth + horizontalGap) + paddingL;
                         break;
+                    default:
+                        x = columnIndex * (columnWidth + horizontalGap) + paddingL;
                 }
                 switch (this._verticalAlign) {
                     case egret.VerticalAlign.TOP:
                         y = rowIndex * (rowHeight + verticalGap) + paddingT;
                         break;
                     case egret.VerticalAlign.BOTTOM:
-                        y = height - (rowIndex + 1) * rowHeight - (rowIndex) * (verticalGap) - paddingB;
+                        y = height - (rowIndex + 1) * (rowHeight + verticalGap) + verticalGap - paddingB;
                         break;
                     case egret.VerticalAlign.MIDDLE:
                         x = height / 2 - (rowCount * rowHeight + (rowCount - 1) * verticalGap) / 2 + rowIndex * (rowHeight + verticalGap);
                         break;
+                    default:
+                        y = rowIndex * (rowHeight + verticalGap) + paddingT;
                 }
                 this.sizeAndPositionElement(elt, x, y, columnWidth, rowHeight);
                 index++;
