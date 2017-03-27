@@ -23575,8 +23575,28 @@ var eui;
                         columnIndex = columnCount - 1;
                     rowIndex = Math.ceil((index + 1) / columnCount) - 1;
                 }
-                x = columnIndex * (columnWidth + horizontalGap) + paddingL;
-                y = rowIndex * (rowHeight + verticalGap) + paddingT;
+                switch (this._horizontalAlign) {
+                    case egret.HorizontalAlign.RIGHT:
+                        x = width - (columnIndex + 1) * columnWidth - (columnIndex) * (horizontalGap) - paddingR;
+                        break;
+                    case egret.HorizontalAlign.CENTER:
+                        x = width / 2 - (columnCount * columnWidth + (columnCount - 1) * horizontalGap) / 2 + columnIndex * (columnWidth + horizontalGap);
+                        break;
+                    case egret.HorizontalAlign.LEFT:
+                        x = columnIndex * (columnWidth + horizontalGap) + paddingL;
+                        break;
+                }
+                switch (this._verticalAlign) {
+                    case egret.VerticalAlign.TOP:
+                        y = rowIndex * (rowHeight + verticalGap) + paddingT;
+                        break;
+                    case egret.VerticalAlign.BOTTOM:
+                        y = height - (rowIndex + 1) * rowHeight - (rowIndex) * (verticalGap) - paddingB;
+                        break;
+                    case egret.VerticalAlign.MIDDLE:
+                        x = height / 2 - (rowCount * rowHeight + (rowCount - 1) * verticalGap) / 2 + rowIndex * (rowHeight + verticalGap);
+                        break;
+                }
                 this.sizeAndPositionElement(elt, x, y, columnWidth, rowHeight);
                 index++;
             }
