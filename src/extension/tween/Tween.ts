@@ -557,6 +557,9 @@ namespace egret {
          * @language zh_CN
 		 */
         public setPaused(value: boolean): Tween {
+            if(this.paused == value) {
+                return this;
+            }
             this.paused = value;
             Tween._register(this, !value);
             return this;
