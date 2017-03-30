@@ -530,6 +530,10 @@ namespace egret.web {
                 sourceX, sourceY, sourceWidth, sourceHeight,
                 destX, destY, destWidth, destHeight,
                 imageSourceWidth, imageSourceHeight, meshUVs, meshVertices, meshIndices, bounds);
+
+            if (image["texture"] || (image.source && image.source["texture"])) {
+                buffer.restoreTransform();
+            }
         }
 
         /**
