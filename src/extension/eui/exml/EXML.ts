@@ -156,12 +156,6 @@ namespace EXML {
 
         urls.forEach(url=> {
 
-            if (useCache && (url in parsedClasses)) {
-                exmlContents[url] = "";
-                exmlContents.push(url);
-                return;
-            }
-
             let loaded = (url:string, text:string) => {
                 exmlContents[url] = text;
                 exmlContents.push(url);
@@ -169,6 +163,11 @@ namespace EXML {
                     onLoadAllFinished(urls, exmlContents, callBack, thisObject);
             };
 
+            if (useCache && (url in parsedClasses)) {
+                loaded(url, "");
+                return;
+            }
+            
             request(url, loaded);
         });
 
