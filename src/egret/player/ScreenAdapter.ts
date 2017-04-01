@@ -159,6 +159,12 @@ namespace egret.sys {
                     break;
             }
             //宽高不是2的整数倍会导致图片绘制出现问题
+            if (stageWidth % 2 != 0) {
+                stageWidth += 1;
+            }
+            if (stageHeight % 2 != 0) {
+                stageHeight += 1;
+            }
             if(displayWidth % 2 != 0) {
                 displayWidth += 1;
             }
