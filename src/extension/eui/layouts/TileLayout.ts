@@ -1175,7 +1175,7 @@ namespace eui {
                         y = height - (rowIndex + 1) * (rowHeight + verticalGap) + verticalGap - paddingB;
                         break;
                     case egret.VerticalAlign.MIDDLE:
-                        x = height / 2 -  (rowCount * rowHeight + (rowCount - 1) * verticalGap) / 2 + rowIndex * (rowHeight + verticalGap);
+                        y = height / 2 -  (rowCount * rowHeight + (rowCount - 1) * verticalGap) / 2 + rowIndex * (rowHeight + verticalGap);
                         break;
                     default:
                         y = rowIndex * (rowHeight + verticalGap) + paddingT;

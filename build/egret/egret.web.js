@@ -6137,6 +6137,9 @@ var egret;
                     return;
                 }
                 this.drawTexture(texture, sourceX, sourceY, sourceWidth, sourceHeight, destX, destY, destWidth, destHeight, imageSourceWidth, imageSourceHeight, meshUVs, meshVertices, meshIndices, bounds);
+                if (image["texture"] || (image.source && image.source["texture"])) {
+                    buffer.restoreTransform();
+                }
             };
             /**
              * 绘制材质

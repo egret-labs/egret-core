@@ -20853,17 +20853,16 @@ var EXML;
         }
         var exmlContents = [];
         urls.forEach(function (url) {
-            if (useCache && (url in parsedClasses)) {
-                exmlContents[url] = "";
-                exmlContents.push(url);
-                return;
-            }
             var loaded = function (url, text) {
                 exmlContents[url] = text;
                 exmlContents.push(url);
                 if (exmlContents.length == urls.length)
                     onLoadAllFinished(urls, exmlContents, callBack, thisObject);
             };
+            if (useCache && (url in parsedClasses)) {
+                loaded(url, "");
+                return;
+            }
             request(url, loaded);
         });
     }
@@ -23596,7 +23595,7 @@ var eui;
                         y = height - (rowIndex + 1) * (rowHeight + verticalGap) + verticalGap - paddingB;
                         break;
                     case egret.VerticalAlign.MIDDLE:
-                        x = height / 2 - (rowCount * rowHeight + (rowCount - 1) * verticalGap) / 2 + rowIndex * (rowHeight + verticalGap);
+                        y = height / 2 - (rowCount * rowHeight + (rowCount - 1) * verticalGap) / 2 + rowIndex * (rowHeight + verticalGap);
                         break;
                     default:
                         y = rowIndex * (rowHeight + verticalGap) + paddingT;
