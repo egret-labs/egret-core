@@ -713,7 +713,19 @@ namespace egret.native {
         console.error.apply(console, toArray(arguments))
     };
     egret.assert = function () {
-        console.assert.apply(console, toArray(arguments))
+        if (console.assert) {
+            console.assert.apply(console, toArray(arguments));
+        } else {
+            let args = toArray(arguments);
+            if (!args[0]) {
+                let args2 = [];
+                for (let i = 1; i < args.length; i++) {
+                    args2.push(args[i]);
+                }
+                console.error.apply(console, args2);
+            }
+            
+        }
     };
     if (DEBUG) {
         egret.log = function () {

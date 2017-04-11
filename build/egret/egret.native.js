@@ -2205,7 +2205,19 @@ var egret;
             console.error.apply(console, toArray(arguments));
         };
         egret.assert = function () {
-            console.assert.apply(console, toArray(arguments));
+            if (console.assert) {
+                console.assert.apply(console, toArray(arguments));
+            }
+            else {
+                var args = toArray(arguments);
+                if (!args[0]) {
+                    var args2 = [];
+                    for (var i = 1; i < args.length; i++) {
+                        args2.push(args[i]);
+                    }
+                    console.error.apply(console, args2);
+                }
+            }
         };
         if (true) {
             egret.log = function () {
