@@ -121,6 +121,7 @@ namespace egret.web {
          */
         private onBlobLoaded(event:egret.Event):void {
             let blob:Blob = this.request.response;
+            this.request = undefined;
             this.loadImage(winURL.createObjectURL(blob));
         }
 
@@ -129,6 +130,7 @@ namespace egret.web {
          */
         private onBlobError(event:egret.Event):void {
             this.dispatchIOError(this.currentURL);
+            this.request = undefined;
         }
 
         /**
