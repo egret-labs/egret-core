@@ -28,54 +28,9 @@
 //////////////////////////////////////////////////////////////////////////////////////
 
 namespace eui {
-    /**
-     * Interface of asset adapter.
-     * If your project need to custom the resource parsing rule, you need to implement the <code>IAssetAdapter</code>.
-     * And use the following code to inject it to the system:
-     * <pre>
-     *      let assetAdapter = new YourAssetAdapter();
-     *      egret.registerImplementation("eui.IAssetAdapter",assetAdapter)
-     * </pre>
-     *
-     * @version Egret 2.4
-     * @version eui 1.0
-     * @platform Web,Native
-     * @language en_US
-     */
-    /**
-     * 素材适配器接口。
-     * 若项目需要自定义 Image.source的解析规则，需要实现这个接口，
-     * 然后调用如下代码注入自定义实现到框架即可：
-     * <pre>
-     *      let assetAdapter = new YourAssetAdapter();
-     *      egret.registerImplementation("eui.IAssetAdapter",assetAdapter)
-     * </pre>
-     * @version Egret 2.4
-     * @version eui 1.0
-     * @platform Web,Native
-     * @language zh_CN
-     */
-    export interface IAssetAdapter{
-        /**
-         * parsing a source to asset.
-         * @param source identifier of a new asset need to be resolved.
-         * @param callBack called when complete resolving. Example：callBack(content:any,source:string):void;
-         * @param thisObject <code>this</code> object of callback.
-         * @version Egret 2.4
-         * @version eui 1.0
-         * @platform Web,Native
-         * @language en_US
-         */
-        /**
-         * 解析素材。
-         * @param source 待解析的新素材标识符。
-         * @param callBack 解析完成回调函数，示例：callBack(content:any,source:string):void;。
-         * @param thisObject callBack的this引用。
-         * @version Egret 2.4
-         * @version eui 1.0
-         * @platform Web,Native
-         * @language zh_CN
-         */
+
+    export interface IAssetAdapter {
+
         getAsset(source: string, callBack: (content: any, source: string) => void, thisObject: any): void;
     }
 }

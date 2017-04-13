@@ -88,7 +88,7 @@ namespace eui {
             PropertyEvent.dispatchPropertyEvent(this, PropertyEvent.PROPERTY_CHANGE, "text");
             return result;
         }
-        private $font: any;
+        private $font: string | egret.BitmapFont;
         $setFont(value: any): boolean {
             let values = this.$BitmapText;
             if (this.$font == value) {
@@ -110,25 +110,16 @@ namespace eui {
          */
         private $parseFont(): void {
             this.$fontChanged = false;
-            if (this.$font && typeof this.$font == "string") {
-                let adapter: IAssetAdapter = egret.getImplementation("eui.IAssetAdapter");
-                if (!adapter) {
-                    adapter = new DefaultAssetAdapter();
-                }
-                adapter.getAsset(this.$font, this.$onFontChanged, this);
+            let font = this.$font;
+            if (typeof font == "string") {
+                getAssets(font).then((bitmapFont) => {
+                    this.$setFontData(bitmapFont);
+                })
             } else {
-                this.$setFontData(this.$font);
+                this.$setFontData(font);
             }
         }
-        /**
-         * 皮肤发生改变
-         */
-        private $onFontChanged(bitmapFont: any, font: any): void {
-            if (font !== this.$font) {
-                return;
-            }
-            this.$setFontData(bitmapFont);
-        }
+
         $setFontData(value: egret.BitmapFont): boolean {
             if (value == this.$BitmapText[egret.sys.BitmapTextKeys.font]) {
                 return false;

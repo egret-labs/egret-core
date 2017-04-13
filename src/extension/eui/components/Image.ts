@@ -32,11 +32,6 @@
 namespace eui {
 
     /**
-     * @private
-     * 默认的皮肤适配器
-     */
-    let assetAdapter = new DefaultAssetAdapter();
-    /**
      * The Image control lets you show JPEG, PNG, and GIF files
      * at runtime. Image inherit Bitmap，so you can set the <code>bitmapData</code> property
      * to show the data. you can also set the <code>source</code> property, Image will auto load
@@ -84,7 +79,7 @@ namespace eui {
          * @platform Web,Native
          * @language zh_CN
          */
-        public constructor(source?:string|egret.Texture) {
+        public constructor(source?: string | egret.Texture) {
             super();
             this.initializeUIValues();
             if (source) {
@@ -111,11 +106,11 @@ namespace eui {
          * @platform Web,Native
          * @language zh_CN
          */
-        public get scale9Grid():egret.Rectangle {
+        public get scale9Grid(): egret.Rectangle {
             return this.$scale9Grid;
         }
 
-        public set scale9Grid(value:egret.Rectangle) {
+        public set scale9Grid(value: egret.Rectangle) {
             this.$scale9Grid = value;
             this.$invalidateContentBounds();
             this.invalidateDisplayList();
@@ -150,11 +145,11 @@ namespace eui {
          * @platform Web,Native
          * @language zh_CN
          */
-        public get fillMode():string {
+        public get fillMode(): string {
             return this.$fillMode;
         }
 
-        public set fillMode(value:string) {
+        public set fillMode(value: string) {
             if (value == this.$fillMode) {
                 return;
             }
@@ -163,8 +158,8 @@ namespace eui {
         }
 
         //if egret
-        $setFillMode(value:string):boolean {
-            let result:boolean = super.$setFillMode(value);
+        $setFillMode(value: string): boolean {
+            let result: boolean = super.$setFillMode(value);
             this.invalidateDisplayList();
 
             return result;
@@ -175,11 +170,11 @@ namespace eui {
         /**
          * @private
          */
-        private sourceChanged:boolean = false;
+        private sourceChanged: boolean = false;
         /**
          * @private
          */
-        private _source:string|egret.Texture = null;
+        private _source: string | egret.Texture = null;
         /**
          * The source used for the bitmap fill. the value can be
          * a string or an instance of <code>egret.Texture</code>
@@ -197,11 +192,11 @@ namespace eui {
          * @platform Web,Native
          * @language zh_CN
          */
-        public get source():string|egret.Texture {
+        public get source(): string | egret.Texture {
             return this._source;
         }
 
-        public set source(value:string|egret.Texture) {
+        public set source(value: string | egret.Texture) {
             if (value == this._source) {
                 return;
             }
@@ -215,11 +210,11 @@ namespace eui {
             }
         }
 
-        $setBitmapData(value:egret.Texture):boolean {
+        $setBitmapData(value: egret.Texture): boolean {
             if (value == this.$Bitmap[egret.sys.BitmapKeys.bitmapData]) {
                 return false;
             }
-            let result:boolean = super.$setBitmapData(value);
+            let result: boolean = super.$setBitmapData(value);
             this.sourceChanged = false;
             this.invalidateSize();
             this.invalidateDisplayList();
@@ -231,41 +226,32 @@ namespace eui {
          * @private
          * 解析source
          */
-        private parseSource():void {
+        private parseSource(): void {
             this.sourceChanged = false;
             let source = this._source;
             if (source && typeof source == "string") {
-                let adapter:IAssetAdapter = egret.getImplementation("eui.IAssetAdapter");
-                if (!adapter) {
-                    adapter = assetAdapter;
-                }
-                adapter.getAsset(<string>this._source, this.contentChanged, this);
+
+                getAssets(<string>this._source).then((data) => {
+                    if (source !== this._source)
+                        return;
+                    if (!egret.is(data, "egret.Texture")) {
+                        return;
+                    }
+                    this.$setBitmapData(data);
+                    if (data) {
+                        this.dispatchEventWith(egret.Event.COMPLETE);
+                    }
+                    else if (DEBUG) {
+                        egret.$warn(2301, source);
+                    }
+                })
             }
             else {
                 this.$setBitmapData(<egret.Texture>source);
             }
         }
 
-        /**
-         * @private
-         * 资源发生改变
-         */
-        private contentChanged(data:any, source:any):void {
-            if (source !== this._source)
-                return;
-            if (!egret.is(data, "egret.Texture")) {
-                return;
-            }
-            this.$setBitmapData(data);
-            if (data) {
-                this.dispatchEventWith(egret.Event.COMPLETE);
-            }
-            else if (DEBUG) {
-                egret.$warn(2301, source);
-            }
-        }
-
-        $measureContentBounds(bounds:egret.Rectangle):void {
+        $measureContentBounds(bounds: egret.Rectangle): void {
             let values = this.$Bitmap;
             let image = this.$Bitmap[egret.sys.BitmapKeys.bitmapData];
             if (image) {
@@ -296,7 +282,7 @@ namespace eui {
          *
          * @param context
          */
-        $render():void {
+        $render(): void {
             let image = this.$Bitmap[egret.sys.BitmapKeys.bitmapData];
             if (!image) {
                 return;
@@ -309,7 +295,7 @@ namespace eui {
             }
 
             let values = this.$Bitmap;
-             egret.sys.BitmapNode.$updateTextureData(<egret.sys.BitmapNode>this.$renderNode, values[egret.sys.BitmapKeys.image],
+            egret.sys.BitmapNode.$updateTextureData(<egret.sys.BitmapNode>this.$renderNode, values[egret.sys.BitmapKeys.image],
                 values[egret.sys.BitmapKeys.bitmapX], values[egret.sys.BitmapKeys.bitmapY], values[egret.sys.BitmapKeys.bitmapWidth], values[egret.sys.BitmapKeys.bitmapHeight],
                 values[egret.sys.BitmapKeys.offsetX], values[egret.sys.BitmapKeys.offsetY], values[egret.sys.BitmapKeys.textureWidth], values[egret.sys.BitmapKeys.textureHeight],
                 width, height, values[egret.sys.BitmapKeys.sourceWidth], values[egret.sys.BitmapKeys.sourceHeight], this.scale9Grid || values[egret.sys.BitmapKeys.bitmapData]["scale9Grid"], this.$fillMode, values[egret.sys.BitmapKeys.smoothing]);
@@ -320,7 +306,7 @@ namespace eui {
          * @private
          * UIComponentImpl 定义的所有变量请不要添加任何初始值，必须统一在此处初始化。
          */
-        private initializeUIValues:()=>void;
+        private initializeUIValues: () => void;
 
         /**
          * @copy eui.UIComponent#createChildren
@@ -329,7 +315,7 @@ namespace eui {
          * @version eui 1.0
          * @platform Web,Native
          */
-        protected createChildren():void {
+        protected createChildren(): void {
             if (this.sourceChanged) {
                 this.parseSource();
             }
@@ -342,7 +328,7 @@ namespace eui {
          * @version eui 1.0
          * @platform Web,Native
          */
-        protected childrenCreated():void {
+        protected childrenCreated(): void {
 
         }
 
@@ -353,7 +339,7 @@ namespace eui {
          * @version eui 1.0
          * @platform Web,Native
          */
-        protected commitProperties():void {
+        protected commitProperties(): void {
             sys.UIComponentImpl.prototype["commitProperties"].call(this);
             if (this.sourceChanged) {
                 this.parseSource();
@@ -367,7 +353,7 @@ namespace eui {
          * @version eui 1.0
          * @platform Web,Native
          */
-        protected measure():void {
+        protected measure(): void {
             let bitmapData = this.$Bitmap[egret.sys.BitmapKeys.bitmapData];
             if (bitmapData) {
                 this.setMeasuredSize(bitmapData.$getTextureWidth(), bitmapData.$getTextureHeight());
@@ -384,7 +370,7 @@ namespace eui {
          * @version eui 1.0
          * @platform Web,Native
          */
-        protected updateDisplayList(unscaledWidth:number, unscaledHeight:number):void {
+        protected updateDisplayList(unscaledWidth: number, unscaledHeight: number): void {
             this.$invalidateContentBounds();
         }
 
@@ -395,18 +381,18 @@ namespace eui {
          * @version eui 1.0
          * @platform Web,Native
          */
-        protected invalidateParentLayout():void {
+        protected invalidateParentLayout(): void {
         }
 
         /**
          * @private
          */
-        $UIComponent:Object;
+        $UIComponent: Object;
 
         /**
          * @private
          */
-        $includeInLayout:boolean;
+        $includeInLayout: boolean;
 
         /**
          * @copy eui.UIComponent#includeInLayout
@@ -415,7 +401,7 @@ namespace eui {
          * @version eui 1.0
          * @platform Web,Native
          */
-        public includeInLayout:boolean;
+        public includeInLayout: boolean;
         /**
          * @copy eui.UIComponent#left
          *
@@ -423,7 +409,7 @@ namespace eui {
          * @version eui 1.0
          * @platform Web,Native
          */
-        public left:any;
+        public left: any;
 
         /**
          * @copy eui.UIComponent#right
@@ -432,7 +418,7 @@ namespace eui {
          * @version eui 1.0
          * @platform Web,Native
          */
-        public right:any;
+        public right: any;
 
         /**
          * @copy eui.UIComponent#top
@@ -441,7 +427,7 @@ namespace eui {
          * @version eui 1.0
          * @platform Web,Native
          */
-        public top:any;
+        public top: any;
 
         /**
          * @copy eui.UIComponent#bottom
@@ -450,7 +436,7 @@ namespace eui {
          * @version eui 1.0
          * @platform Web,Native
          */
-        public bottom:any;
+        public bottom: any;
 
         /**
          * @copy eui.UIComponent#horizontalCenter
@@ -459,7 +445,7 @@ namespace eui {
          * @version eui 1.0
          * @platform Web,Native
          */
-        public horizontalCenter:any;
+        public horizontalCenter: any;
 
         /**
          * @copy eui.UIComponent#verticalCenter
@@ -468,7 +454,7 @@ namespace eui {
          * @version eui 1.0
          * @platform Web,Native
          */
-        public verticalCenter:any;
+        public verticalCenter: any;
 
         /**
          * @copy eui.UIComponent#percentWidth
@@ -477,7 +463,7 @@ namespace eui {
          * @version eui 1.0
          * @platform Web,Native
          */
-        public percentWidth:number;
+        public percentWidth: number;
 
         /**
          * @copy eui.UIComponent#percentHeight
@@ -486,7 +472,7 @@ namespace eui {
          * @version eui 1.0
          * @platform Web,Native
          */
-        public percentHeight:number;
+        public percentHeight: number;
 
         /**
          * @copy eui.UIComponent#explicitWidth
@@ -495,7 +481,7 @@ namespace eui {
          * @version eui 1.0
          * @platform Web,Native
          */
-        public explicitWidth:number;
+        public explicitWidth: number;
 
         /**
          * @copy eui.UIComponent#explicitHeight
@@ -504,7 +490,7 @@ namespace eui {
          * @version eui 1.0
          * @platform Web,Native
          */
-        public explicitHeight:number;
+        public explicitHeight: number;
 
 
         /**
@@ -514,7 +500,7 @@ namespace eui {
          * @version eui 1.0
          * @platform Web,Native
          */
-        public minWidth:number;
+        public minWidth: number;
         /**
          * @copy eui.UIComponent#maxWidth
          *
@@ -522,7 +508,7 @@ namespace eui {
          * @version eui 1.0
          * @platform Web,Native
          */
-        public maxWidth:number;
+        public maxWidth: number;
 
         /**
          * @copy eui.UIComponent#minHeight
@@ -531,7 +517,7 @@ namespace eui {
          * @version eui 1.0
          * @platform Web,Native
          */
-        public minHeight:number;
+        public minHeight: number;
         /**
          * @copy eui.UIComponent#maxHeight
          *
@@ -539,7 +525,7 @@ namespace eui {
          * @version eui 1.0
          * @platform Web,Native
          */
-        public maxHeight:number;
+        public maxHeight: number;
 
 
         /**
@@ -549,7 +535,7 @@ namespace eui {
          * @version eui 1.0
          * @platform Web,Native
          */
-        public setMeasuredSize(width:number, height:number):void {
+        public setMeasuredSize(width: number, height: number): void {
         }
 
         /**
@@ -559,7 +545,7 @@ namespace eui {
          * @version eui 1.0
          * @platform Web,Native
          */
-        public invalidateProperties():void {
+        public invalidateProperties(): void {
         }
 
         /**
@@ -569,7 +555,7 @@ namespace eui {
          * @version eui 1.0
          * @platform Web,Native
          */
-        public validateProperties():void {
+        public validateProperties(): void {
         }
 
         /**
@@ -579,7 +565,7 @@ namespace eui {
          * @version eui 1.0
          * @platform Web,Native
          */
-        public invalidateSize():void {
+        public invalidateSize(): void {
         }
 
         /**
@@ -589,7 +575,7 @@ namespace eui {
          * @version eui 1.0
          * @platform Web,Native
          */
-        public validateSize(recursive?:boolean):void {
+        public validateSize(recursive?: boolean): void {
         }
 
         /**
@@ -599,7 +585,7 @@ namespace eui {
          * @version eui 1.0
          * @platform Web,Native
          */
-        public invalidateDisplayList():void {
+        public invalidateDisplayList(): void {
         }
 
         /**
@@ -609,7 +595,7 @@ namespace eui {
          * @version eui 1.0
          * @platform Web,Native
          */
-        public validateDisplayList():void {
+        public validateDisplayList(): void {
         }
 
         /**
@@ -619,7 +605,7 @@ namespace eui {
          * @version eui 1.0
          * @platform Web,Native
          */
-        public validateNow():void {
+        public validateNow(): void {
         }
 
         /**
@@ -629,7 +615,7 @@ namespace eui {
          * @version eui 1.0
          * @platform Web,Native
          */
-        public setLayoutBoundsSize(layoutWidth:number, layoutHeight:number):void {
+        public setLayoutBoundsSize(layoutWidth: number, layoutHeight: number): void {
         }
 
         /**
@@ -639,7 +625,7 @@ namespace eui {
          * @version eui 1.0
          * @platform Web,Native
          */
-        public setLayoutBoundsPosition(x:number, y:number):void {
+        public setLayoutBoundsPosition(x: number, y: number): void {
         }
 
         /**
@@ -649,7 +635,7 @@ namespace eui {
          * @version eui 1.0
          * @platform Web,Native
          */
-        public getLayoutBounds(bounds:egret.Rectangle):void {
+        public getLayoutBounds(bounds: egret.Rectangle): void {
         }
 
         /**
@@ -659,7 +645,7 @@ namespace eui {
          * @version eui 1.0
          * @platform Web,Native
          */
-        public getPreferredBounds(bounds:egret.Rectangle):void {
+        public getPreferredBounds(bounds: egret.Rectangle): void {
         }
     }
 

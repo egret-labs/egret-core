@@ -60,7 +60,7 @@ namespace eui {
          * @platform Web,Native
          * @language zh_CN
          */
-        exmls?: Array<string|EXMLFile>;
+        exmls?: Array<string | EXMLFile>;
     }
 
     interface EXMLFile {
@@ -123,7 +123,7 @@ namespace eui {
          * @platform Web,Native
          * @language zh_CN
          */
-        className?:string;
+        className?: string;
     }
 
     /**
@@ -147,7 +147,7 @@ namespace eui {
      */
     export class Theme extends egret.EventDispatcher {
 
-        private $configURL:string;
+        private $configURL: string;
 
         /**
          * Create an instance of Theme
@@ -172,7 +172,7 @@ namespace eui {
          * @platform Web,Native
          * @language zh_CN
          */
-        public constructor(configURL:string, stage?:egret.Stage) {
+        public constructor(configURL: string, stage?: egret.Stage) {
             super();
             this.initialized = !configURL;
             if (stage) {
@@ -185,19 +185,18 @@ namespace eui {
         /**
          * @private
          */
-        private initialized:boolean;
+        private initialized: boolean;
 
         /**
          * @private
          *
          * @param url
          */
-        private load(url:string):void {
-            let adapter:IThemeAdapter = egret.getImplementation("eui.IThemeAdapter");
-            if (!adapter) {
-                adapter = new DefaultThemeAdapter();
-            }
-            adapter.getTheme(url, this.onConfigLoaded, this.onConfigLoaded, this);
+        private load(url: string): void {
+            eui.getTheme(url).then(data => this.onConfigLoaded(data))
+                .catch(e => {
+                    egret.$error(3000, this.$configURL);
+                });
         }
 
         /**
@@ -205,25 +204,18 @@ namespace eui {
          *
          * @param str
          */
-        private onConfigLoaded(str:string):void {
-            let data:any;
-            if(str) {
-                if(DEBUG){
-                    try {
-                        data = JSON.parse(str);
-                    }
-                    catch (e) {
-                        egret.$error(3000);
-                    }
-                }else{
+        private onConfigLoaded(str: string): void {
+            let data: any;
+            if (DEBUG) {
+                try {
                     data = JSON.parse(str);
                 }
+                catch (e) {
+                    egret.$error(3000);
+                }
+            } else {
+                data = JSON.parse(str);
             }
-            else if (DEBUG) {
-                egret.$error(3000, this.$configURL);
-            }
-
-
             if (data && data.skins) {
                 let skinMap = this.skinMap
                 let skins = data.skins;
@@ -237,7 +229,7 @@ namespace eui {
                 }
             }
 
-            if(data.styles) {
+            if (data.styles) {
                 this.$styles = data.styles;
             }
 
@@ -259,7 +251,7 @@ namespace eui {
 
         }
 
-        private onLoaded(classes?:any[], urls?:string[]) {
+        private onLoaded(classes?: any[], urls?: string[]) {
             this.initialized = true;
             this.handleDelayList();
             this.dispatchEventWith(egret.Event.COMPLETE);
@@ -268,13 +260,13 @@ namespace eui {
         /**
          * @private
          */
-        private delayList:Component[] = [];
+        private delayList: Component[] = [];
 
         /**
          * @private
          *
          */
-        private handleDelayList():void {
+        private handleDelayList(): void {
             let list = this.delayList;
             let length = list.length;
             for (let i = 0; i < length; i++) {
@@ -293,7 +285,7 @@ namespace eui {
         /**
          * @private
          */
-        private skinMap:{[key:string]:string} = {};
+        private skinMap: { [key: string]: string } = {};
 
 
         /**
@@ -321,7 +313,7 @@ namespace eui {
          * @platform Web,Native
          * @language zh_CN
          */
-        public getSkinName(client:Component):string {
+        public getSkinName(client: Component): string {
             if (!this.initialized) {
                 if (this.delayList.indexOf(client) == -1) {
                     this.delayList.push(client);
@@ -329,7 +321,7 @@ namespace eui {
                 return "";
             }
             let skinMap = this.skinMap;
-            let skinName:string = skinMap[client.hostComponentKey];
+            let skinName: string = skinMap[client.hostComponentKey];
             if (!skinName) {
                 skinName = this.findSkinName(client);
             }
@@ -339,7 +331,7 @@ namespace eui {
         /**
          * @private
          */
-        private findSkinName(prototype:any):string {
+        private findSkinName(prototype: any): string {
             if (!prototype) {
                 return "";
             }
@@ -372,7 +364,7 @@ namespace eui {
          * @platform Web,Native
          * @language zh_CN
          */
-        public mapSkin(hostComponentKey:string, skinName:string):void {
+        public mapSkin(hostComponentKey: string, skinName: string): void {
             if (DEBUG) {
                 if (!hostComponentKey) {
                     egret.$error(1003, "hostComponentKey");
@@ -388,9 +380,9 @@ namespace eui {
          * @private
          * styles 配置信息
          */
-        private $styles:any = {};
+        private $styles: any = {};
 
-        public $getStyleConfig(style:string):any {
+        public $getStyleConfig(style: string): any {
             return this.$styles[style];
         }
     }
