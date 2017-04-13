@@ -30,6 +30,8 @@ declare module egret {
     }
     export interface ToolArgs {
         command: string;
+        //子命令
+        subCommand?:string;
         action?: string;
         commands?: string[];
         platform?: string;

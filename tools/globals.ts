@@ -48,26 +48,6 @@ module globals {
         return require("./lib/core/crc32");
     }
 
-    export function getCompiler(method) {
-        return require("./lib/uglify-js/uglify_adapt");
-    }
-
-    export function getExmlc() {
-        return require("./lib/exml/exmlc");
-    }
-
-    export function getCodeUtil() {
-        return require("./lib/core/code_util");
-    }
-
-    export function getOpen() {
-        return require("./lib/core/open");
-    }
-
-    export function getCreateManifest() {
-        return require("./lib/tools/create_manifest.js");
-    }
-
     export function addQuotes(str) {
         return "\"" + str + "\"";
     }

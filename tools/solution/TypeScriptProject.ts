@@ -6,6 +6,7 @@ import path = require('path');
 import * as Compiler from '../actions/Compiler';
 import * as Server from '../server/server';
 import watch = require("../lib/watch");
+import * as solution from './';
 
 class TypeScriptProject {
 
@@ -95,16 +96,37 @@ export function run(root: string) {
     console.log("tsc end")
 }
 
-export var middleware: Server.Middleware = () => {
+
+export var middleware: (project: string) => Server.Middleware = (project) => {
+    let start = "tsc begin";
+    let end = "tsc end"
+    let process = solution.childProcessWrapper(`egret tsc-watch ${project}`, start, end);
 
 
-    return async (request, response) => {
-        response.end(host.messages.toString())
+    let getCode = (output) => {
+        //todo:performance
+
     }
+    return () => {
+        return async (request, response) => {
+            response.writeHead(200, { "Content-Type": "application/json" });
+            let output = process.getOutput();
+            let code = 0;
 
-
-
+            if (output.indexOf(end) >= 0) {
+                if (output.indexOf("Error") >= 0) {
+                    code = 2;
+                }
+                else {
+                    code = 1;
+                }
+            }
+            let message = JSON.stringify({ output, code })
+            response.end(message);
+        }
+    }
 }
+
 
 
 

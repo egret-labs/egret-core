@@ -46,7 +46,7 @@ var fetch = function (url) {
 };
 function run() {
     return __awaiter(this, void 0, void 0, function () {
-        function states(port, div) {
+        function updateState(port, div) {
             return new Promise(function (reslove, reject) {
                 fetch("http://localhost:" + port + "/index.html").then(function (response) {
                     div.innerText = response.output;
@@ -54,33 +54,44 @@ function run() {
                 });
             });
         }
-        var app, ts, res, iframe;
+        var app, iframe, dashboard, sub_process, intervalKey;
         return __generator(this, function (_a) {
             app = document.getElementById("app");
-            ts = document.createElement("div");
-            res = document.createElement("div");
             iframe = document.createElement("iframe");
+            dashboard = document.createElement("div");
             iframe.width = '480px';
             iframe.height = '800px';
-            app.appendChild(ts);
-            app.appendChild(res);
+            app.appendChild(dashboard);
             app.appendChild(iframe);
-            setInterval(function () {
-                var cards = [
-                    { container: ts, port: 4000 },
-                    { container: res, port: 4001 }
-                ];
+            sub_process = [
+                { port: 4000 },
+            ].map(function (s) {
+                var container = document.createElement("div");
+                dashboard.appendChild(container);
+                return {
+                    container: container,
+                    port: s.port
+                };
+            });
+            intervalKey = setInterval(function () {
                 var current = 0;
-                cards.forEach(function (card) {
-                    states(card.port, card.container).then(function (response) {
-                        console.log(response);
-                        if (response.code == 2) {
+                sub_process.forEach(function (card) {
+                    updateState(card.port, card.container).then(function (response) {
+                        if (response.code == 1) {
                             current++;
                         }
-                        if (current == cards.length) {
+                        if (response.code == 2) {
+                            clearInterval(intervalKey);
+                        }
+                        if (current == sub_process.length) {
                             if (!iframe.src) {
+                                dashboard.hidden = true;
                                 iframe.src = 'http://localhost:3005/index.html';
+                                clearInterval(intervalKey);
                             }
+                        }
+                        else {
+                            dashboard.hidden = false;
                         }
                     });
                 });

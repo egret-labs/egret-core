@@ -34,18 +34,22 @@ var __generator = (this && this.__generator) || function (thisArg, body) {
     }
 };
 var _this = this;
-var FileUtil = require("../lib/FileUtil");
-var path = require("path");
-exports.dashboard = function () {
-    return function (reuest, response) { return __awaiter(_this, void 0, void 0, function () {
-        var root, indexJs, scriptContent, htmlContent;
-        return __generator(this, function (_a) {
-            root = egret.root;
-            indexJs = path.join(egret.root, "client/index.js");
-            scriptContent = FileUtil.read(indexJs);
-            htmlContent = "\n        <html>\n        <head>\n            <meta charset=\"utf-8\"/>\n        </head>\n            <body>\n            <div id='app'></div>\n            <script type=\"text/javascript\">\n                " + scriptContent + "\n            </script>   \n            </body>\n        </html>\n        ";
-            response.write(htmlContent);
-            return [2 /*return*/];
-        });
-    }); };
+var watch = require("../lib/watch");
+exports.middleware = function (project) {
+    var start = "res-watch:file changed start";
+    var end = "res-watch:file changed finish";
+    function executeEgretBuild() {
+    }
+    watch.createMonitor(project, { persistent: true, interval: 2007, filter: function (f, stat) { return !f.match(/\.g(\.d)?\.ts/); } }, function (m) {
+        m.on("created", function (f) { return console.log(f); })
+            .on("removed", function (f) { return console.log(f); })
+            .on("changed", function (f) { return console.log(f); });
+    });
+    return function () {
+        return function (request, response) { return __awaiter(_this, void 0, void 0, function () {
+            return __generator(this, function (_a) {
+                return [2 /*return*/];
+            });
+        }); };
+    };
 };

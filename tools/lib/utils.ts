@@ -320,3 +320,77 @@ export function createMap<T>(template?: MapLike<T>): Map<T> {
 
     return map;
 }
+
+export function shell(path: string, args: string[], opt?: cp.SpawnOptions, verbase?: boolean):Promise<number>{
+    let stdout = "";
+    let stderr = "";
+    var cmd = `${path} ${args.join(" ")}`;
+    if (verbase) {
+        console.log(cmd);
+    }
+    let printStdoutBufferMessage = (message) => {
+        var str = message.toString();
+        stdout += str;
+        if (verbase) {
+            console.log(str);
+        }
+    };
+    let printStderrBufferMessage = (message) => {
+        var str = message.toString();
+        stderr += str;
+        if (verbase) {
+            console.log(str);
+        }
+    };
+    let callback = (reslove, reject) => {
+        var shell = cp.spawn(path, args, opt);
+        shell.on("error", (message) => { console.log(message); });
+        shell.stderr.on("data", printStderrBufferMessage);
+        shell.stderr.on("error", printStderrBufferMessage);
+        shell.stdout.on("data", printStdoutBufferMessage);
+        shell.stdout.on("error", printStdoutBufferMessage);
+        shell.on('exit', function (code) {
+            if (code != 0) {
+                if (verbase) {
+                    console.log('Failed: ' + code);
+                }
+                reject({ code, stdout, stderr });
+            }
+            else {
+                reslove({ code, stdout, stderr });
+            }
+        });
+    };
+    return new Promise(callback);
+};
+
+let error_code_filename = path.join(__dirname,"../error_code.json");
+let errorcode = file.readJSONSync(error_code_filename,{"encoding":"utf-8"});
+export class CliException extends Error {
+
+    public message;
+
+    constructor(public errorId,param?:string){
+        super();
+        var message:string = errorcode[this.errorId];
+        if (message){
+            message = message.replace('{0}',param);
+        }
+        else{
+            message = `unkown error : ${errorId}`;
+            console.error(message);
+        }
+        this.message = message;
+    }
+}
+
+export function findValidatePathSync(pathStr:string):string{
+    if(!pathStr){
+        pathStr = process.cwd();
+    }else{
+        if(!file.existsSync(pathStr)){
+            pathStr = path.join(process.cwd(),pathStr);
+        }
+    }
+    return pathStr;
+}

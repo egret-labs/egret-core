@@ -22,19 +22,17 @@ let fetch = (url) => {
 
 async function run() {
     let app = document.getElementById("app");
-    let ts = document.createElement("div");
-    let res = document.createElement("div");
     let iframe = document.createElement("iframe");
+    let dashboard = document.createElement("div");
     iframe.width = '480px';
     iframe.height = '800px';
-    app.appendChild(ts);
-    app.appendChild(res);
+    app.appendChild(dashboard);
     app.appendChild(iframe);
 
 
 
 
-    function states(port: number, div: HTMLDivElement) {
+    function updateState(port: number, div: HTMLDivElement) {
         return new Promise<Response>((reslove, reject) => {
             fetch(`http://localhost:${port}/index.html`).then(response => {
                 div.innerText = response.output;
@@ -44,26 +42,40 @@ async function run() {
 
     }
 
-    setInterval(() => {
+    let sub_process = [
+        { port: 4000 },
+        // { port: 4001 }
+    ].map(s => {
+        let container = document.createElement("div");
+        dashboard.appendChild(container);
+        return {
+            container,
+            port: s.port
+        }
+    })
 
-        let cards = [
-            { container: ts, port: 4000 },
-            { container: res, port: 4001 }
-        ];
+    let intervalKey = setInterval(() => {
 
         let current = 0;
 
-        cards.forEach(card => {
-            states(card.port, card.container).then(response => {
-                console.log(response)
-                if (response.code == 2) {
+        sub_process.forEach(card => {
+            updateState(card.port, card.container).then(response => {
+                if (response.code == 1) {
                     current++;
                 }
-                if (current == cards.length) {
-                    if (!iframe.src) {
-                        iframe.src = 'http://localhost:3005/index.html';
-                    }
+                if (response.code == 2) {
+                    clearInterval(intervalKey);
+                }
+                if (current == sub_process.length) {
 
+                    if (!iframe.src) {
+                        dashboard.hidden = true;
+                        iframe.src = 'http://localhost:3005/index.html';
+                        clearInterval(intervalKey);
+                    }
+                }
+                else {
+                    dashboard.hidden = false;
                 }
             });
         })

@@ -112,6 +112,14 @@ exports.optionDeclarations = [
         name: 'exmlGenJs',
         type: 'boolean',
         shortName: 'gjs'
+    }, {
+        name: 'androidProjectPath',
+        type: 'string',
+        shortName: 'p'
+    }, {
+        name: 'sdk',
+        type: 'string',
+        shortName: 's'
     }
 ];
 var shortOptionNames = {};
@@ -179,6 +187,12 @@ function parseCommandLine(commandLine) {
                 || options.command == "apitest") {
                 options.projectDir = commands[1];
                 commands.splice(1, 1);
+            }
+            else if (options.command == "native" &&
+                options.commands[1] &&
+                options.commands[2]) {
+                options.projectDir = commands[2];
+                commands.splice(2, 1);
             }
         }
         //create_app命令不强制设置projectDir属性

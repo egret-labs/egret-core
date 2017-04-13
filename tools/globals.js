@@ -68,26 +68,6 @@ var globals;
         return require("./lib/core/crc32");
     }
     globals.getCrc32 = getCrc32;
-    function getCompiler(method) {
-        return require("./lib/uglify-js/uglify_adapt");
-    }
-    globals.getCompiler = getCompiler;
-    function getExmlc() {
-        return require("./lib/exml/exmlc");
-    }
-    globals.getExmlc = getExmlc;
-    function getCodeUtil() {
-        return require("./lib/core/code_util");
-    }
-    globals.getCodeUtil = getCodeUtil;
-    function getOpen() {
-        return require("./lib/core/open");
-    }
-    globals.getOpen = getOpen;
-    function getCreateManifest() {
-        return require("./lib/tools/create_manifest.js");
-    }
-    globals.getCreateManifest = getCreateManifest;
     function addQuotes(str) {
         return "\"" + str + "\"";
     }
