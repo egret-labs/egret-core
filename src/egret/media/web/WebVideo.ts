@@ -38,41 +38,56 @@ namespace egret.web {
         /**
          * @inheritDoc
          */
-        public src:string;
+        public src: string;
         /**
          * @inheritDoc
          */
-        public poster:string;
+        public poster: string;
 
         /**
          * @private
          */
-        private posterData:BitmapData;
+        private posterData: BitmapData;
         /**
          * @private
          */
-        private video:HTMLVideoElement;
+        private video: HTMLVideoElement;
         /**
          * @private
          */
-        private loaded:boolean = false;
+        private loaded: boolean = false;
         /**
          * @private
          */
-        private closed:boolean = false;
+        private closed: boolean = false;
         /**
          * @private
          */
-        private heightSet:number = NaN;
+        private heightSet: number = NaN;
         /**
          * @private
          */
-        private widthSet:number = NaN;
+        private widthSet: number = NaN;
+        /**
+         * @private
+         * pc上视频卡住的时候不能暂停
+         */
+        private waiting: boolean = false;
+        /**
+         * @private
+         * 用户是否设置了 pause
+         */
+        private userPause: boolean = false;
+        /**
+         * @private
+         * 用户是否设置了 play
+         */
+        private userPlay: boolean = false;
 
         /**
          * @inheritDoc
          */
-        constructor(url?:string,cache:boolean=true) {
+        constructor(url?: string, cache: boolean = true) {
             super();
             this.$renderNode = new sys.BitmapNode();
             this.src = url;
@@ -85,21 +100,21 @@ namespace egret.web {
         /**
          * @inheritDoc
          */
-        public load(url?:string,cache:boolean=true) {
+        public load(url?: string, cache: boolean = true) {
             url = url || this.src;
             this.src = url;
             if (DEBUG && !url) {
                 egret.$error(3002);
             }
-            if (this.video && this.video.src == url){
+            if (this.video && this.video.src == url) {
                 return;
             }
-            let video:HTMLVideoElement;
-            if(!this.video || egret.Capabilities.isMobile){
+            let video: HTMLVideoElement;
+            if (!this.video || egret.Capabilities.isMobile) {
                 video = document.createElement("video");
                 this.video = video;
                 video.controls = null;
-            }else{
+            } else {
                 video = this.video;
             }
             video.src = url;
@@ -108,26 +123,44 @@ namespace egret.web {
             video.addEventListener("canplay", this.onVideoLoaded);
             video.addEventListener("error", () => this.onVideoError());
             video.addEventListener("ended", () => this.onVideoEnded());
+            var firstPause = false;
+            video.addEventListener("canplay", () => {
+                this.waiting = false;
+
+                if (!firstPause) {
+                    firstPause = true;
+                    video.pause();
+                } else {
+                    if (this.userPause) {
+                        this.pause();
+                    } else if (this.userPlay) {
+                        this.play();
+                    }
+                }
+            });
+            video.addEventListener("waiting", () => {
+                this.waiting = true;
+            });
+
             video.load();
-            video.play();
+            this.videoPlay();
             video.style.position = "absolute";
             video.style.top = "0px";
             video.style.zIndex = "-88888";
             video.style.left = "0px";
             video.height = 1;
             video.width = 1;
-            window.setTimeout(() => video.pause(), 170);
         }
 
-        private isPlayed:boolean = false;
+        private isPlayed: boolean = false;
 
         /**
          * @inheritDoc
          */
-        public play(startTime?:number, loop:boolean = false) {
+        public play(startTime?: number, loop: boolean = false) {
             if (this.loaded == false) {
                 this.load(this.src);
-                this.once(egret.Event.COMPLETE, e=> this.play(startTime, loop), this);
+                this.once(egret.Event.COMPLETE, e => this.play(startTime, loop), this);
                 return;
             }
 
@@ -136,7 +169,7 @@ namespace egret.web {
             let video = this.video;
             if (startTime != undefined)
                 video.currentTime = +startTime || 0;
-            video.loop = !!loop;
+                video.loop = !!loop;
 
             if (egret.Capabilities.isMobile) {
                 video.style.zIndex = "-88888"; //移动端，就算设置成最小，只要全屏，都会在最上层，而且在自动退出去后，不担心挡住canvas
@@ -157,8 +190,18 @@ namespace egret.web {
 
             this.checkFullScreen(this._fullscreen);
         }
+        private videoPlay(){
+            this.userPause = false;
+            if (this.waiting) {
+                this.userPlay = true;
+                return
+            }
+            this.userPlay = false;            
+            
+            this.video.play();
+        }
 
-        private checkFullScreen(playFullScreen:boolean):void {
+        private checkFullScreen(playFullScreen: boolean): void {
             let video = this.video;
 
             if (playFullScreen) {
@@ -178,21 +221,20 @@ namespace egret.web {
                 this.setFullScreenMonitor(false);
 
                 egret.startTick(this.markDirty, this);
-                
+
                 if (egret.Capabilities.isMobile) {
                     this.video.currentTime = 0;
                     this.onVideoEnded();
                     return;
                 }
             }
-
-            video.play();
+            this.videoPlay();
         }
 
-        private goFullscreen():boolean {
+        private goFullscreen(): boolean {
             let video = this.video;
 
-            let fullscreenType:string;
+            let fullscreenType: string;
             fullscreenType = egret.web.getPrefixStyleName('requestFullscreen', video);
             if (!video[fullscreenType]) {
                 fullscreenType = egret.web.getPrefixStyleName('requestFullScreen', video);
@@ -210,7 +252,7 @@ namespace egret.web {
             return true;
         }
 
-        private setFullScreenMonitor(use:boolean):void {
+        private setFullScreenMonitor(use: boolean): void {
             let video = this.video;
 
             if (use) {
@@ -229,22 +271,22 @@ namespace egret.web {
             }
         }
 
-        private screenError():void {
+        private screenError(): void {
             egret.$error(3014);
         }
 
-        private screenChanged = (e):void => {
+        private screenChanged = (e): void => {
             let isfullscreen = !!this.video['webkitDisplayingFullscreen'];
             if (!isfullscreen) {
                 this.checkFullScreen(false);
-                
+
                 if (!egret.Capabilities.isMobile) {
                     this._fullscreen = isfullscreen;
                 }
             }
         };
 
-        private exitFullscreen():void {
+        private exitFullscreen(): void {
             //退出全屏
             if (document['exitFullscreen']) {
                 document['exitFullscreen']();
@@ -304,9 +346,12 @@ namespace egret.web {
          * @inheritDoc
          */
         public pause() {
-            if (this.video) {
-                this.video.pause();
+            this.userPlay = false;
+            if (this.waiting) {
+                this.userPause = true;
+                return
             }
+            this.userPause = false;
 
             egret.stopTick(this.markDirty, this);
             this.$invalidate();
@@ -316,7 +361,7 @@ namespace egret.web {
         /**
          * @inheritDoc
          */
-        public get volume():number {
+        public get volume(): number {
             if (!this.video)
                 return 1;
             return this.video.volume;
@@ -325,7 +370,7 @@ namespace egret.web {
         /**
          * @inheritDoc
          */
-        public set volume(value:number) {
+        public set volume(value: number) {
             if (!this.video)
                 return;
             this.video.volume = value;
@@ -334,7 +379,7 @@ namespace egret.web {
         /**
          * @inheritDoc
          */
-        public get position():number {
+        public get position(): number {
             if (!this.video)
                 return 0;
             return this.video.currentTime;
@@ -343,7 +388,7 @@ namespace egret.web {
         /**
          * @inheritDoc
          */
-        public set position(value:number) {
+        public set position(value: number) {
             if (!this.video)
                 return;
             this.video.currentTime = value;
@@ -353,14 +398,14 @@ namespace egret.web {
         /**
          * @inheritDoc
          */
-        public get fullscreen():boolean {
+        public get fullscreen(): boolean {
             return this._fullscreen;
         }
 
         /**
          * @inheritDoc
          */
-        public set fullscreen(value:boolean) {
+        public set fullscreen(value: boolean) {
             if (egret.Capabilities.isMobile) {
                 return;
             }
@@ -370,12 +415,12 @@ namespace egret.web {
             }
         }
 
-        private _bitmapData:BitmapData;
+        private _bitmapData: BitmapData;
 
         /**
          * @inheritDoc
          */
-        public get bitmapData():BitmapData {
+        public get bitmapData(): BitmapData {
             if (!this.video || !this.loaded)
                 return null;
             if (!this._bitmapData) {
@@ -392,7 +437,7 @@ namespace egret.web {
             if (!poster)
                 return;
             let imageLoader = new egret.ImageLoader();
-            imageLoader.once(egret.Event.COMPLETE, e=> {
+            imageLoader.once(egret.Event.COMPLETE, e => {
                 let posterData = <HTMLImageElement><any>imageLoader.data;
                 this.posterData = imageLoader.data;
 
@@ -428,7 +473,7 @@ namespace egret.web {
         /**
          * @private
          */
-        $measureContentBounds(bounds:Rectangle):void {
+        $measureContentBounds(bounds: Rectangle): void {
             let bitmapData = this.bitmapData;
             let posterData = this.posterData;
             if (bitmapData) {
@@ -442,7 +487,7 @@ namespace egret.web {
             }
         }
 
-        private getPlayWidth():number {
+        private getPlayWidth(): number {
             if (!isNaN(this.widthSet)) {
                 return this.widthSet;
             }
@@ -458,7 +503,7 @@ namespace egret.web {
             return NaN;
         }
 
-        private getPlayHeight():number {
+        private getPlayHeight(): number {
             if (!isNaN(this.heightSet)) {
                 return this.heightSet;
             }
@@ -477,7 +522,7 @@ namespace egret.web {
         /**
          * @private
          */
-        $render():void {
+        $render(): void {
             let node = <sys.BitmapNode>this.$renderNode;
             let bitmapData = this.bitmapData;
             let posterData = this.posterData;
@@ -499,7 +544,7 @@ namespace egret.web {
             }
         }
 
-        private markDirty():boolean {
+        private markDirty(): boolean {
             this.$invalidate();
             return true;
         }
@@ -508,7 +553,7 @@ namespace egret.web {
          * @private
          * 设置显示高度
          */
-        $setHeight(value:number):boolean {
+        $setHeight(value: number): boolean {
             this.heightSet = +value || 0;
             this.$invalidate();
             this.$invalidateContentBounds();
@@ -519,14 +564,14 @@ namespace egret.web {
          * @private
          * 设置显示宽度
          */
-        $setWidth(value:number):boolean {
+        $setWidth(value: number): boolean {
             this.widthSet = +value || 0;
             this.$invalidate();
             this.$invalidateContentBounds();
             return super.$setWidth(value);
         }
 
-        public get paused():boolean {
+        public get paused(): boolean {
             if (this.video) {
                 return this.video.paused;
             }
@@ -535,8 +580,8 @@ namespace egret.web {
         /**
          * @inheritDoc
          */
-        public get length():number{
-            if(this.video){
+        public get length(): number {
+            if (this.video) {
                 return this.video.duration;
             }
             throw new Error("Video not loaded!");

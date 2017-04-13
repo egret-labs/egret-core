@@ -1271,6 +1271,21 @@ var egret;
                  * @private
                  */
                 _this.widthSet = NaN;
+                /**
+                 * @private
+                 * pc上视频卡住的时候不能暂停
+                 */
+                _this.waiting = false;
+                /**
+                 * @private
+                 * 用户是否设置了 pause
+                 */
+                _this.userPause = false;
+                /**
+                 * @private
+                 * 用户是否设置了 play
+                 */
+                _this.userPlay = false;
                 _this.isPlayed = false;
                 _this.screenChanged = function (e) {
                     var isfullscreen = !!_this.video['webkitDisplayingFullscreen'];
@@ -1339,15 +1354,33 @@ var egret;
                 video.addEventListener("canplay", this.onVideoLoaded);
                 video.addEventListener("error", function () { return _this.onVideoError(); });
                 video.addEventListener("ended", function () { return _this.onVideoEnded(); });
+                var firstPause = false;
+                video.addEventListener("canplay", function () {
+                    _this.waiting = false;
+                    if (!firstPause) {
+                        firstPause = true;
+                        video.pause();
+                    }
+                    else {
+                        if (_this.userPause) {
+                            _this.pause();
+                        }
+                        else if (_this.userPlay) {
+                            _this.play();
+                        }
+                    }
+                });
+                video.addEventListener("waiting", function () {
+                    _this.waiting = true;
+                });
                 video.load();
-                video.play();
+                this.videoPlay();
                 video.style.position = "absolute";
                 video.style.top = "0px";
                 video.style.zIndex = "-88888";
                 video.style.left = "0px";
                 video.height = 1;
                 video.width = 1;
-                window.setTimeout(function () { return video.pause(); }, 170);
             };
             /**
              * @inheritDoc
@@ -1383,6 +1416,15 @@ var egret;
                 }
                 this.checkFullScreen(this._fullscreen);
             };
+            WebVideo.prototype.videoPlay = function () {
+                this.userPause = false;
+                if (this.waiting) {
+                    this.userPlay = true;
+                    return;
+                }
+                this.userPlay = false;
+                this.video.play();
+            };
             WebVideo.prototype.checkFullScreen = function (playFullScreen) {
                 var video = this.video;
                 if (playFullScreen) {
@@ -1406,7 +1448,7 @@ var egret;
                         return;
                     }
                 }
-                video.play();
+                this.videoPlay();
             };
             WebVideo.prototype.goFullscreen = function () {
                 var video = this.video;
@@ -1500,9 +1542,12 @@ var egret;
              * @inheritDoc
              */
             WebVideo.prototype.pause = function () {
-                if (this.video) {
-                    this.video.pause();
+                this.userPlay = false;
+                if (this.waiting) {
+                    this.userPause = true;
+                    return;
                 }
+                this.userPause = false;
                 egret.stopTick(this.markDirty, this);
                 this.$invalidate();
             };
@@ -2072,6 +2117,7 @@ var egret;
              */
             WebImageLoader.prototype.onBlobLoaded = function (event) {
                 var blob = this.request.response;
+                this.request = undefined;
                 this.loadImage(winURL.createObjectURL(blob));
             };
             /**
@@ -2079,6 +2125,7 @@ var egret;
              */
             WebImageLoader.prototype.onBlobError = function (event) {
                 this.dispatchIOError(this.currentURL);
+                this.request = undefined;
             };
             /**
              * @private
