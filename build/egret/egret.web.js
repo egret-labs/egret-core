@@ -1288,7 +1288,7 @@ var egret;
                 _this.userPlay = false;
                 _this.isPlayed = false;
                 _this.screenChanged = function (e) {
-                    var isfullscreen = !!_this.video['webkitDisplayingFullscreen'];
+                    var isfullscreen = document.fullscreenEnabled || document.webkitIsFullScreen;
                     if (!isfullscreen) {
                         _this.checkFullScreen(false);
                         if (!egret.Capabilities.isMobile) {
