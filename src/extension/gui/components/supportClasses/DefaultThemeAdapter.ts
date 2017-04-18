@@ -1,6 +1,6 @@
 //////////////////////////////////////////////////////////////////////////////////////
 //
-//  Copyright (c) 2014-2015, Egret Technology Inc.
+//  Copyright (c) 2014-present, Egret Technology.
 //  All rights reserved.
 //  Redistribution and use in source and binary forms, with or without
 //  modification, are permitted provided that the following conditions are met:
@@ -28,7 +28,7 @@
 //////////////////////////////////////////////////////////////////////////////////////
 
 
-module egret.gui {
+namespace egret.gui {
     /**
      * @classdesc
      * 默认的IThemeAdapter接口实现
@@ -50,10 +50,10 @@ module egret.gui {
          */
         public getTheme(url:string,compFunc:Function,errorFunc:Function,thisObject:any):void {
             function onGet(event:egret.Event):void {
-                var loader:egret.HttpRequest = <egret.HttpRequest> (event.target);
+                let loader:egret.HttpRequest = <egret.HttpRequest> (event.target);
                 compFunc.call(thisObject, loader.response);
             }
-            var loader:egret.HttpRequest = new HttpRequest();
+            let loader:egret.HttpRequest = new HttpRequest();
             loader.addEventListener(Event.COMPLETE,onGet,thisObject);
             loader.addEventListener(IOErrorEvent.IO_ERROR,errorFunc,thisObject);
             loader.responseType = egret.HttpResponseType.TEXT;

@@ -1,6 +1,6 @@
 //////////////////////////////////////////////////////////////////////////////////////
 //
-//  Copyright (c) 2014-2015, Egret Technology Inc.
+//  Copyright (c) 2014-present, Egret Technology.
 //  All rights reserved.
 //  Redistribution and use in source and binary forms, with or without
 //  modification, are permitted provided that the following conditions are met:
@@ -27,18 +27,18 @@
 //
 //////////////////////////////////////////////////////////////////////////////////////
 
-module egret {
+namespace egret {
      /**
-     * @language en_US
      * @version Egret 2.4
      * @platform Web,Native
      * @includeExample extension/game/player/Ticker.ts
+     * @language en_US
      */
     /**
-     * @language zh_CN
      * @version Egret 2.4
      * @platform Web,Native
      * @includeExample extension/game/player/Ticker.ts
+     * @language zh_CN
      */
     export class Ticker extends EventDispatcher {
         /**
@@ -63,21 +63,21 @@ module egret {
         private _paused:boolean = false;
 
         private _callIndex:number = -1;
-        private _callList:Array<any>;
+        private _callList:any[];
         private _lastTime:number = 0;
         private update(timeStamp:number):boolean {
-            var advancedTime:number = timeStamp - this._lastTime;
+            let advancedTime:number = timeStamp - this._lastTime;
             this._lastTime = timeStamp;
 
             if (this._paused){
                 return false;
             }
-            var frameTime:number = advancedTime * this._timeScale;
+            let frameTime:number = advancedTime * this._timeScale;
 
             this._callList = this.callBackList.concat();
             this._callIndex = 0;
             for (; this._callIndex < this._callList.length; this._callIndex++) {
-                var eventBin:any = this._callList[this._callIndex];
+                let eventBin:any = this._callList[this._callIndex];
                 eventBin.listener.call(eventBin.thisObject, frameTime);
             }
 
@@ -87,7 +87,7 @@ module egret {
             return false;
         }
 
-        private callBackList:Array<any> = [];
+        private callBackList:any[] = [];
         /**
          * 注册帧回调事件，同一函数的重复监听会被忽略。推荐使用 egret.startTick 替代此方法。
          * @method egret.Ticker#register

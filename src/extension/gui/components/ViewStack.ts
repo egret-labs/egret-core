@@ -1,6 +1,6 @@
 //////////////////////////////////////////////////////////////////////////////////////
 //
-//  Copyright (c) 2014-2015, Egret Technology Inc.
+//  Copyright (c) 2014-present, Egret Technology.
 //  All rights reserved.
 //  Redistribution and use in source and binary forms, with or without
 //  modification, are permitted provided that the following conditions are met:
@@ -28,7 +28,7 @@
 //////////////////////////////////////////////////////////////////////////////////////
 
 
-module egret.gui {
+namespace egret.gui {
 
 	/**
 	 * @class egret.gui.ViewStack
@@ -72,10 +72,10 @@ module egret.gui {
 				return;
 			this._createAllChildren = value;
 			if(this._createAllChildren){
-				var elements:Array<any> = this._getElementsContent();
-                var length:number = elements.length;
-				for(var i:number=0;i<length;i++){
-                    var element:IVisualElement = elements[i];
+				let elements:any[] = this._getElementsContent();
+                let length:number = elements.length;
+				for(let i:number=0;i<length;i++){
+                    let element:IVisualElement = elements[i];
 					if(element instanceof DisplayObject&&element.parent!=this){
 						this.childOrderingChanged = true;
 						this._addToDisplayList(<DisplayObject><any> element);
@@ -93,13 +93,13 @@ module egret.gui {
 		 * @member egret.gui.ViewStack#selectedChild
 		 */
 		public get selectedChild():IVisualElement{
-			var index:number = this.selectedIndex;
+			let index:number = this.selectedIndex;
 			if (index>=0&&index<this.numElements)
 				return this.getElementAt(index);
 			return null;
 		}
 		public set selectedChild(value:IVisualElement){
-			var index:number = this.getElementIndex(value);
+			let index:number = this.getElementIndex(value);
 			if(index>=0&&index<this.numElements)
 				this._setSelectedIndex(index);
 		}
@@ -152,7 +152,7 @@ module egret.gui {
 		public _elementAdded(element:IVisualElement, index:number, notifyListeners:boolean=true):void{
 			if(this._createAllChildren){
                 if(element instanceof DisplayObject){
-                    var childDO:DisplayObject = <DisplayObject><any> element;
+                    let childDO:DisplayObject = <DisplayObject><any> element;
                     this._addToDisplayListAt(childDO,index,notifyListeners);
                 }
 			}
@@ -219,10 +219,10 @@ module egret.gui {
 			
 			if(this.childOrderingChanged){
 				this.childOrderingChanged = false;
-				var elements:Array<any> = this._getElementsContent();
-                var length:number = elements.length;
-                for(var i:number=0;i<length;i++){
-                    var element:IVisualElement = elements[i];
+				let elements:any[] = this._getElementsContent();
+                let length:number = elements.length;
+                for(let i:number=0;i<length;i++){
+                    let element:IVisualElement = elements[i];
 					if(element instanceof DisplayObject&&element.parent==this){
 						this._addToDisplayList(<DisplayObject><any> element);
 					}
@@ -240,7 +240,7 @@ module egret.gui {
 		 * @param newIndex
 		 */
 		private commitSelection(newIndex:number):void{
-			var oldIndex:number = this._selectedIndex;
+			let oldIndex:number = this._selectedIndex;
 			if(newIndex>=0&&newIndex<this.numElements){
 				this._selectedIndex = newIndex;
 				if(this._selectedChild&&this._selectedChild.parent==this){
@@ -276,7 +276,7 @@ module egret.gui {
 		 * @returns {any}
 		 */			
 		public getItemAt(index:number):any{
-			var element:IVisualElement = this.getElementAt(index);
+			let element:IVisualElement = this.getElementAt(index);
 			if(element)
 				return element.name;
 			return "";
@@ -286,9 +286,9 @@ module egret.gui {
 		 * @returns {number}
 		 */		
 		public getItemIndex(item:any):number{
-			var list:Array<any> = this._getElementsContent();
-			var length:number = list.length;
-			for(var i:number=0;i<length;i++){
+			let list:any[] = this._getElementsContent();
+			let length:number = list.length;
+			for(let i:number=0;i<length;i++){
 				if(list[i].name===item){
 					return i;
 				}
@@ -300,7 +300,7 @@ module egret.gui {
 		 * 抛出事件
 		 */		
 		private dispatchCoEvent(kind:string = null, location:number = -1,
-										 oldLocation:number = -1, items:Array<any> = null,oldItems:Array<any>=null):void{
+										 oldLocation:number = -1, items:any[] = null,oldItems:any[]=null):void{
             CollectionEvent.dispatchCollectionEvent(this,
                 CollectionEvent.COLLECTION_CHANGE,kind,location,oldLocation,items,oldItems);
 		}

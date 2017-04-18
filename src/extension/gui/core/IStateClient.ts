@@ -1,6 +1,6 @@
 //////////////////////////////////////////////////////////////////////////////////////
 //
-//  Copyright (c) 2014-2015, Egret Technology Inc.
+//  Copyright (c) 2014-present, Egret Technology.
 //  All rights reserved.
 //  Redistribution and use in source and binary forms, with or without
 //  modification, are permitted provided that the following conditions are met:
@@ -28,7 +28,7 @@
 //////////////////////////////////////////////////////////////////////////////////////
 
 
-module egret.gui {
+namespace egret.gui {
 
 	/**
 	 * @class egret.gui.IStateClient
@@ -48,7 +48,7 @@ module egret.gui {
 		 * 为此组件定义的视图状态。
 		 * @member egret.gui.IStateClient#states
 		 */		
-		states:Array<any>;
+		states:any[];
 		
 		/**
 		 * 返回是否含有指定名称的视图状态

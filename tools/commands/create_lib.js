@@ -1,6 +1,6 @@
 /// <reference path="../lib/types.d.ts" />
-var utils = require('../lib/utils');
-var FileUtil = require('../lib/FileUtil');
+var utils = require("../lib/utils");
+var FileUtil = require("../lib/FileUtil");
 var CreateLib = (function () {
     function CreateLib() {
     }
@@ -24,7 +24,5 @@ var CreateLib = (function () {
         return 0;
     };
     return CreateLib;
-})();
+}());
 module.exports = CreateLib;
-
-//# sourceMappingURL=create_lib.js.map

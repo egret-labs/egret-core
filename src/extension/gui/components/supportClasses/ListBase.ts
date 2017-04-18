@@ -1,6 +1,6 @@
 //////////////////////////////////////////////////////////////////////////////////////
 //
-//  Copyright (c) 2014-2015, Egret Technology Inc.
+//  Copyright (c) 2014-present, Egret Technology.
 //  All rights reserved.
 //  Redistribution and use in source and binary forms, with or without
 //  modification, are permitted provided that the following conditions are met:
@@ -28,7 +28,7 @@
 //////////////////////////////////////////////////////////////////////////////////////
 
 
-module egret.gui {
+namespace egret.gui {
 
 	/**
 	 * @class egret.gui.ListBase
@@ -357,7 +357,7 @@ module egret.gui {
 				this._pendingSelectedItem = undefined;
 			}
 
-			var changedSelection:boolean = false;
+			let changedSelection:boolean = false;
 			if (this._proposedSelectedIndex != ListBase.NO_PROPOSED_SELECTION)
 				changedSelection = this.commitSelection();
 
@@ -370,18 +370,18 @@ module egret.gui {
 
 			if (this.labelFieldOrFunctionChanged){
 				if (this.dataGroup!=null){
-					var itemIndex:number;
+					let itemIndex:number;
 
 					if (this.layout && this.layout.useVirtualLayout){
-						var list:Array<number> = this.dataGroup.getElementIndicesInView();
-						var length:number = list.length;
-						for (var i:number = 0;i<length;i++){
-							var itemIndex:number = list[i];
+						let list:number[] = this.dataGroup.getElementIndicesInView();
+						let length:number = list.length;
+						for (let i:number = 0;i<length;i++){
+							let itemIndex:number = list[i];
 							this.updateRendererLabelProperty(itemIndex);
 						}
 					}
 					else{
-						var n:number = this.dataGroup.numElements;
+						let n:number = this.dataGroup.numElements;
 						for (itemIndex = 0; itemIndex < n; itemIndex++){
 							this.updateRendererLabelProperty(itemIndex);
 						}
@@ -396,7 +396,7 @@ module egret.gui {
 		 *  更新项呈示器文字标签
 		 */
 		private updateRendererLabelProperty(itemIndex:number):void{
-			var renderer:IItemRenderer = <IItemRenderer><any> (this.dataGroup.getElementAt(itemIndex));
+			let renderer:IItemRenderer = <IItemRenderer><any> (this.dataGroup.getElementAt(itemIndex));
 			if (renderer)
 				renderer.label = this.itemToLabel(renderer.data);
 		}
@@ -495,7 +495,7 @@ module egret.gui {
 		public itemSelected(index:number, selected:boolean):void{
 			if(!this.dataGroup)
 				return;
-			var renderer:IItemRenderer = <IItemRenderer><any> (this.dataGroup.getElementAt(index));
+			let renderer:IItemRenderer = <IItemRenderer><any> (this.dataGroup.getElementAt(index));
 			if(renderer==null)
 				return;
 			renderer.selected = selected;
@@ -515,9 +515,9 @@ module egret.gui {
 		 * @returns {boolean}
 		 */
 		public commitSelection(dispatchChangedEvents:boolean = true):boolean{
-			var maxIndex:number = this.dataProvider ? this.dataProvider.length - 1 : -1;
-			var oldSelectedIndex:number = this._selectedIndex;
-			var e:IndexChangeEvent;
+			let maxIndex:number = this.dataProvider ? this.dataProvider.length - 1 : -1;
+			let oldSelectedIndex:number = this._selectedIndex;
+			let e:IndexChangeEvent;
 
 			if (!this._allowCustomSelectedItem || this._proposedSelectedIndex != ListBase.CUSTOM_SELECTED_ITEM){
 				if (this._proposedSelectedIndex < ListBase.NO_SELECTION)
@@ -532,10 +532,10 @@ module egret.gui {
 				}
 			}
 
-			var tmpProposedIndex:number = this._proposedSelectedIndex;
+			let tmpProposedIndex:number = this._proposedSelectedIndex;
 
 			if (this._dispatchChangeAfterSelection){
-				var result:boolean = IndexChangeEvent.dispatchIndexChangeEvent(this,
+				let result:boolean = IndexChangeEvent.dispatchIndexChangeEvent(this,
 					IndexChangeEvent.CHANGING,this._selectedIndex,this._proposedSelectedIndex,true);
 				if (!result){
 					this.itemSelected(this._proposedSelectedIndex, false);
@@ -634,7 +634,7 @@ module egret.gui {
 		 * @param event {RendererExistenceEvent}
 		 */
 		public dataGroup_rendererAddHandler(event:RendererExistenceEvent):void{
-			var renderer:DisplayObject = <DisplayObject><any> (event.renderer);
+			let renderer:DisplayObject = <DisplayObject><any> (event.renderer);
 
 			if (renderer == null)
 				return;
@@ -648,7 +648,7 @@ module egret.gui {
 		 * @param event {RendererExistenceEvent}
 		 */
 		public dataGroup_rendererRemoveHandler(event:RendererExistenceEvent):void{
-			var renderer:DisplayObject = <DisplayObject> <any>(event.renderer);
+			let renderer:DisplayObject = <DisplayObject> <any>(event.renderer);
 
 			if (renderer == null)
 				return;
@@ -664,10 +664,10 @@ module egret.gui {
 		 * 项呈示器鼠标事件
 		 */
 		private item_mouseEventHandler(event:TouchEvent):void{
-			var type:string = event.type;
+			let type:string = event.type;
 			type = ListBase.TYPE_MAP[type];
 			if (this.hasEventListener(type)){
-				var itemRenderer:IItemRenderer = <IItemRenderer><any> (event.currentTarget);
+				let itemRenderer:IItemRenderer = <IItemRenderer><any> (event.currentTarget);
 				this._dispatchListEvent(event,type,itemRenderer);
 			}
 		}
@@ -679,13 +679,13 @@ module egret.gui {
 		 * @param itemRenderer {IItemRenderer} 关联的条目渲染器实例
 		 */
 		public _dispatchListEvent(touchEvent:TouchEvent,type:string,itemRenderer:IItemRenderer):void{
-			var itemIndex:number = -1;
+			let itemIndex:number = -1;
 			if (itemRenderer)
 				itemIndex = itemRenderer.itemIndex;
 			else
 				itemIndex = this.dataGroup.getElementIndex(<IVisualElement> (touchEvent.currentTarget));
 
-			var item:any = this.dataProvider.getItemAt(itemIndex);
+			let item:any = this.dataProvider.getItemAt(itemIndex);
 			ListEvent.dispatchListEvent(this,
 				type,touchEvent,itemIndex,item,itemRenderer);
 		}
@@ -696,16 +696,16 @@ module egret.gui {
 		 * @param event {CollectionEvent}
 		 */
 		public dataProvider_collectionChangeHandler(event:CollectionEvent):void{
-			var items:Array<any> = event.items;
+			let items:any[] = event.items;
 			if (event.kind == CollectionEventKind.ADD){
-				var length:number = items.length;
-				for (var i:number = 0; i < length; i++){
+				let length:number = items.length;
+				for (let i:number = 0; i < length; i++){
 					this.itemAdded(event.location + i);
 				}
 			}
 			else if (event.kind == CollectionEventKind.REMOVE){
-				length = items.length;
-				for (i = length-1; i >= 0; i--){
+				let length = items.length;
+				for (let i = length-1; i >= 0; i--){
 					this.itemRemoved(event.location + i);
 				}
 			}

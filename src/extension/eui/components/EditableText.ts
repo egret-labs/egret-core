@@ -1,6 +1,6 @@
 //////////////////////////////////////////////////////////////////////////////////////
 //
-//  Copyright (c) 2014-2015, Egret Technology Inc.
+//  Copyright (c) 2014-present, Egret Technology.
 //  All rights reserved.
 //  Redistribution and use in source and binary forms, with or without
 //  modification, are permitted provided that the following conditions are met:
@@ -26,7 +26,7 @@
 //  EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 //
 //////////////////////////////////////////////////////////////////////////////////////
-module eui.sys {
+namespace eui.sys {
     /**
      * @private
      */
@@ -36,42 +36,42 @@ module eui.sys {
         asPassword
     }
 }
-module eui {
+namespace eui {
 
-    var UIImpl = sys.UIComponentImpl;
+    let UIImpl = sys.UIComponentImpl;
 
     /**
-     * @language en_US
      * Editable text for displaying,
      * scrolling, selecting, and editing text.
      * @includeExample  extension/eui/components/EditablTextExample.ts
      * @version Egret 2.4
      * @version eui 1.0
      * @platform Web,Native
+     * @language en_US
      */
     /**
-     * @language zh_CN
      * 可编辑文本，用于显示、滚动、选择和编辑文本。
      * @includeExample  extension/eui/components/EditablTextExample.ts
      * @version Egret 2.4
      * @version eui 1.0
      * @platform Web,Native
+     * @language zh_CN
      */
     export class EditableText extends egret.TextField implements UIComponent, IDisplayText {
 
         /**
-         * @language en_US
          * Constructor.
          * @version Egret 2.4
          * @version eui 1.0
          * @platform Web,Native
+         * @language en_US
          */
         /**
-         * @language zh_CN
          * 构造函数。
          * @version Egret 2.4
          * @version eui 1.0
          * @platform Web,Native
+         * @language zh_CN
          */
         public constructor() {
             super();
@@ -99,8 +99,8 @@ module eui {
          * @param value
          */
         $setWidth(value: number): boolean {
-            var result1: boolean = super.$setWidth(value);
-            var result2: boolean = UIImpl.prototype.$setWidth.call(this, value);
+            let result1: boolean = super.$setWidth(value);
+            let result2: boolean = UIImpl.prototype.$setWidth.call(this, value);
             return result1 && result2;
         }
 
@@ -110,8 +110,8 @@ module eui {
          * @param value
          */
         $setHeight(value: number): boolean {
-            var result1: boolean = super.$setHeight(value);
-            var result2: boolean = UIImpl.prototype.$setHeight.call(this, value);
+            let result1: boolean = super.$setHeight(value);
+            let result2: boolean = UIImpl.prototype.$setHeight.call(this, value);
             return result1 && result2;
         }
         /**
@@ -120,7 +120,7 @@ module eui {
          * @param value
          */
         $getText():string {
-            var value = super.$getText();
+            let value = super.$getText();
             if(value == this.$EditableText[sys.EditableTextKeys.promptText]){
                 value = "";
             }
@@ -132,19 +132,21 @@ module eui {
          * @param value
          */
         $setText(value: string): boolean {
-            var promptText = this.$EditableText[sys.EditableTextKeys.promptText];
+            let promptText = this.$EditableText[sys.EditableTextKeys.promptText];
             if (promptText != value || promptText == null) {
                 this.$isShowPrompt = false;
                 this.textColor = this.$EditableText[sys.EditableTextKeys.textColorUser];
+                this.displayAsPassword = this.$EditableText[sys.EditableTextKeys.asPassword];
             }
             if (!this.$isFocusIn) {
                 if (value == "" || value == null) {
                     value = promptText;
                     this.$isShowPrompt = true;
                     super.$setTextColor(this.$promptColor);
+                    super.$setDisplayAsPassword(false);
                 }
             }
-            var result: boolean = super.$setText(value);
+            let result: boolean = super.$setText(value);
             PropertyEvent.dispatchPropertyEvent(this, PropertyEvent.PROPERTY_CHANGE, "text");
             return result;
         }
@@ -178,14 +180,13 @@ module eui {
          */
         private $isShowPrompt: boolean = false;
         /**
-         * @language en_US
          * When the property of the text is empty, it will show the defalut string.
          * @version Egret 2.5.5
          * @version eui 1.0
          * @platform Web,Native
+         * @language en_US
          */
         /**
-         * @language zh_CN
          * 当text属性为空字符串时要显示的文本内容。
          * 先创建文本控件时将显示提示文本。控件获得焦点时或控件的 text 属性为非空字符串时，提示文本将消失。
          * 控件失去焦点时提示文本将重新显示，但仅当未输入文本时（如果文本字段的值为空字符串）。<p/>
@@ -194,17 +195,18 @@ module eui {
          * @version Egret 2.5.5
          * @version eui 1.0
          * @platform Web,Native
+         * @language zh_CN
          */
         public get prompt(): string {
             return this.$EditableText[sys.EditableTextKeys.promptText];
         }
         public set prompt(value: string) {
-            var values = this.$EditableText;
-            var promptText = values[sys.EditableTextKeys.promptText];
+            let values = this.$EditableText;
+            let promptText = values[sys.EditableTextKeys.promptText];
             if (promptText == value)
                 return;
             values[sys.EditableTextKeys.promptText] = value;
-            var text = this.text;
+            let text = this.text;
             if (!text || text == promptText) {
                 this.showPromptText();
             }
@@ -218,24 +220,24 @@ module eui {
          */
         private $isFocusIn: boolean = false;
         /**
-         * @language en_US
          * The color of the defalut string.
          * @version Egret 2.5.5
          * @version eui 1.0
          * @platform Web,Native
+         * @language en_US
          */
         /**
-         * @language zh_CN
          * 默认文本的颜色
          * @version Egret 2.5.5
          * @version eui 1.0
          * @platform Web,Native
+         * @language zh_CN
          */
         public set promptColor(value: number) {
             value = +value | 0;
             if (this.$promptColor != value) {
                 this.$promptColor = value;
-                var text = this.text;
+                let text = this.text;
                 if (!text || text == this.$EditableText[sys.EditableTextKeys.promptText]) {
                     this.showPromptText();
                 }
@@ -260,8 +262,8 @@ module eui {
             this.$isFocusIn = true;
             this.$isShowPrompt = false;
             this.displayAsPassword = this.$EditableText[sys.EditableTextKeys.asPassword];
-            var values = this.$EditableText;
-            var text = this.text;
+            let values = this.$EditableText;
+            let text = this.text;
             if (!text || text == values[sys.EditableTextKeys.promptText]) {
                 this.textColor = values[sys.EditableTextKeys.textColorUser];
                 this.text = "";
@@ -271,7 +273,7 @@ module eui {
          * @private
          */
         private showPromptText(): void {
-            var values = this.$EditableText;
+            let values = this.$EditableText;
             this.$isShowPrompt = true;
             super.$setTextColor(this.$promptColor);
             super.$setDisplayAsPassword(false);
@@ -346,10 +348,10 @@ module eui {
          * @platform Web,Native
          */
         protected measure(): void {
-            var values = this.$UIComponent;
-            var textValues = this.$TextField;
-            var oldWidth = textValues[egret.sys.TextKeys.textFieldWidth];
-            var availableWidth = NaN;
+            let values = this.$UIComponent;
+            let textValues = this.$TextField;
+            let oldWidth = textValues[egret.sys.TextKeys.textFieldWidth];
+            let availableWidth = NaN;
             if (!isNaN(this._widthConstraint)) {
                 availableWidth = this._widthConstraint;
                 this._widthConstraint = NaN;
@@ -413,7 +415,7 @@ module eui {
          * @version eui 1.0
          * @platform Web,Native
          */
-        public left: number;
+        public left: any;
 
         /**
          * @inheritDoc
@@ -422,7 +424,7 @@ module eui {
          * @version eui 1.0
          * @platform Web,Native
          */
-        public right: number;
+        public right: any;
 
         /**
          * @inheritDoc
@@ -431,7 +433,7 @@ module eui {
          * @version eui 1.0
          * @platform Web,Native
          */
-        public top: number;
+        public top: any;
 
         /**
          * @inheritDoc
@@ -440,7 +442,7 @@ module eui {
          * @version eui 1.0
          * @platform Web,Native
          */
-        public bottom: number;
+        public bottom: any;
 
         /**
          * @inheritDoc
@@ -449,7 +451,7 @@ module eui {
          * @version eui 1.0
          * @platform Web,Native
          */
-        public horizontalCenter: number;
+        public horizontalCenter: any;
 
         /**
          * @inheritDoc
@@ -458,7 +460,7 @@ module eui {
          * @version eui 1.0
          * @platform Web,Native
          */
-        public verticalCenter: number;
+        public verticalCenter: any;
 
         /**
          * @inheritDoc
@@ -624,7 +626,7 @@ module eui {
             if (isNaN(layoutWidth) || layoutWidth === this._widthConstraint || layoutWidth == 0) {
                 return;
             }
-            var values = this.$UIComponent;
+            let values = this.$UIComponent;
             if (!isNaN(values[sys.UIKeys.explicitHeight])) {
                 return;
             }

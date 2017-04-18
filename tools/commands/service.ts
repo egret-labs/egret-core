@@ -1,13 +1,8 @@
-﻿
-/// <reference path="../lib/types.d.ts" />
-
-import utils = require('../lib/utils');
-import service = require("../service/index");
-
+﻿import service = require("../service/index");
 
 class Service implements egret.Command {
     execute() {
-        service.run();
+        service.server.run();
         return DontExitCode
     }
 }

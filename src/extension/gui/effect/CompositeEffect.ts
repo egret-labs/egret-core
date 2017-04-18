@@ -1,6 +1,6 @@
 //////////////////////////////////////////////////////////////////////////////////////
 //
-//  Copyright (c) 2014-2015, Egret Technology Inc.
+//  Copyright (c) 2014-present, Egret Technology.
 //  All rights reserved.
 //  Redistribution and use in source and binary forms, with or without
 //  modification, are permitted provided that the following conditions are met:
@@ -28,7 +28,7 @@
 //////////////////////////////////////////////////////////////////////////////////////
 
 
-module egret.gui {
+namespace egret.gui {
 
     /**
      * @class egret.gui.CompositeEffect
@@ -45,7 +45,7 @@ module egret.gui {
             this.instanceClass = CompositeEffectInstance;
         }   
         
-        private childTargets:Array<any>;
+        private childTargets:any[];
         
         private _children:Array<Effect> = [];
         /**
@@ -57,7 +57,7 @@ module egret.gui {
         }
 
         public set children(value:Array<Effect>){
-            var i:number = 0;
+            let i:number = 0;
             if (this._children)
                 for (i = 0; i < this._children.length; ++i)
                     if (this._children[i])
@@ -81,19 +81,19 @@ module egret.gui {
             if (!this.childTargets)
                 this.childTargets = [ target ];
             
-            var newInstance:IEffectInstance = super.createInstance(target);
+            let newInstance:IEffectInstance = super.createInstance(target);
             
             this.childTargets = null;
             
             return newInstance;
         }
 
-        public createInstances(targets:Array<any> = null):Array<any>{
+        public createInstances(targets:any[] = null):any[]{
             if (!targets)
                 targets = this.targets;
             
             this.childTargets = targets;
-            var newInstance:IEffectInstance = this.createInstance();
+            let newInstance:IEffectInstance = this.createInstance();
             this.childTargets = null;
             return newInstance ? [ newInstance ] : [];
         }
@@ -101,16 +101,16 @@ module egret.gui {
         public _initInstance(instance:IEffectInstance):void{
             super._initInstance(instance);
             
-            var compInst:CompositeEffectInstance = <CompositeEffectInstance><any> instance;
+            let compInst:CompositeEffectInstance = <CompositeEffectInstance><any> instance;
             
-            var targets:any = this.childTargets;
+            let targets:any = this.childTargets;
             if (!(targets instanceof Array))
                 targets = [ targets ];
             
             if (this.children){
-                var n:number = this.children.length;
-                for (var i:number = 0; i < n; i++){
-                    var childEffect:Effect = this.children[i];
+                let n:number = this.children.length;
+                for (let i:number = 0; i < n; i++){
+                    let childEffect:Effect = this.children[i];
                     
                     if (childEffect.targets.length == 0){
                         compInst.addChildSet(this.children[i].createInstances(targets));

@@ -1,6 +1,6 @@
 //////////////////////////////////////////////////////////////////////////////////////
 //
-//  Copyright (c) 2014-2015, Egret Technology Inc.
+//  Copyright (c) 2014-present, Egret Technology.
 //  All rights reserved.
 //  Redistribution and use in source and binary forms, with or without
 //  modification, are permitted provided that the following conditions are met:
@@ -28,7 +28,7 @@
 //////////////////////////////////////////////////////////////////////////////////////
 
 
-module egret.gui {
+namespace egret.gui {
 
 	/**
 	 * @class egret.gui.ObjectCollection
@@ -88,17 +88,17 @@ module egret.gui {
 		/**
 		 * 要显示的节点列表
 		 */		
-		private nodeList:Array<any> = [];
+		private nodeList:any[] = [];
 		
-		private _openNodes:Array<any> = [];
+		private _openNodes:any[] = [];
 		/**
 		 * 处于展开状态的节点列表
 		 * @member egret.gui.ObjectCollection#openNodes
 		 */
-		public get openNodes():Array<any>{
+		public get openNodes():any[]{
 			return this._openNodes.concat();
 		}
-		public set openNodes(value:Array<any>){
+		public set openNodes(value:any[]){
 			this._openNodes = value?value.concat():[];
 			this.refresh();
 		}
@@ -123,8 +123,8 @@ module egret.gui {
 		 * @returns {number}
 		 */
 		public getItemIndex(item:any):number{
-			var length:number = this.nodeList.length;
-			for(var i:number=0;i<length;i++){
+			let length:number = this.nodeList.length;
+			for(let i:number=0;i<length;i++){
 				if(this.nodeList[i]===item){
 					return i;
 				}
@@ -138,7 +138,7 @@ module egret.gui {
 		 * @param item {any} 
 		 */
 		public itemUpdated(item:any):void{
-			var index:number = this.getItemIndex(item);
+			let index:number = this.getItemIndex(item);
 			if(index!=-1){
 				this.dispatchCoEvent(CollectionEventKind.UPDATE,index,-1,[item]);
 			}
@@ -154,13 +154,13 @@ module egret.gui {
 				this.closeNode(item);
 			if(!item)
 				return;
-			var parent:any = item[this.parentKey];
+			let parent:any = item[this.parentKey];
 			if(!parent)
 				return;
-			var list:Array<any> = parent[this.childrenKey];
+			let list:any[] = parent[this.childrenKey];
 			if(!list)
 				return;
-			var index:number = list.indexOf(item);
+			let index:number = list.indexOf(item);
 			if(index!=-1)
 				list.splice(index,1);
 			item[this.parentKey] = null;
@@ -200,13 +200,13 @@ module egret.gui {
 		/**
 		 * 添加打开的节点到列表
 		 */		
-		private addChildren(parent:any,list:Array<any>):void{
+		private addChildren(parent:any,list:any[]):void{
 			if(!parent.hasOwnProperty(this.childrenKey)||this._openNodes.indexOf(parent)==-1)
 				return;
-            var children:Array<any> = parent[this.childrenKey];
-            var length:number = children.length;
-			for(var i:number=0;i<length;i++){
-                var child:any = children[i];
+            let children:any[] = parent[this.childrenKey];
+            let length:number = children.length;
+			for(let i:number=0;i<length;i++){
+                let child:any = children[i];
 				list.push(child);
 				this.addChildren(child, list);
 			}
@@ -246,14 +246,14 @@ module egret.gui {
 		private openNode(item:any):void{
 			if(this._openNodes.indexOf(item)==-1){
 				this._openNodes.push(item);
-				var index:number = this.nodeList.indexOf(item);
+				let index:number = this.nodeList.indexOf(item);
 				if(index!=-1){
-					var list:Array<any> = [];
+					let list:any[] = [];
 					this.addChildren(item,list);
-					var i:number = index;
+					let i:number = index;
 					while(list.length){
 						i++;
-						var node:any = list.shift();
+						let node:any = list.shift();
 						this.nodeList.splice(i,0,node);
 						this.dispatchCoEvent(CollectionEventKind.ADD,i,-1,[node]);
 					}
@@ -265,17 +265,17 @@ module egret.gui {
 		 * 关闭一个节点
 		 */		
 		private closeNode(item:any):void{
-			var index:number = this._openNodes.indexOf(item);
+			let index:number = this._openNodes.indexOf(item);
 			if(index==-1)
 				return;
-			var list:Array<any> = [];
+			let list:any[] = [];
 			this.addChildren(item,list);
 			this._openNodes.splice(index,1);
 			index = this.nodeList.indexOf(item);
 			if(index!=-1){
 				index++;
 				while(list.length){
-					var node:any = this.nodeList.splice(index,1)[0];
+					let node:any = this.nodeList.splice(index,1)[0];
 					this.dispatchCoEvent(CollectionEventKind.REMOVE,index,-1,[node]);
 					list.shift();
 				}
@@ -289,8 +289,8 @@ module egret.gui {
 		 * @returns {number}
 		 */	
 		public getDepth(item:any):number{
-			var depth:number = 0;
-			var parent:any = item[this.parentKey];
+			let depth:number = 0;
+			let parent:any = item[this.parentKey];
 			while (parent){
 				depth++;
 				parent = parent[this.parentKey];
@@ -318,7 +318,7 @@ module egret.gui {
 		 * 抛出事件
 		 */		
 		private dispatchCoEvent(kind:string = null, location:number = -1,
-										 oldLocation:number = -1, items:Array<any> = null,oldItems:Array<any>=null):void{
+										 oldLocation:number = -1, items:any[] = null,oldItems:any[]=null):void{
 			CollectionEvent.dispatchCollectionEvent(this,CollectionEvent.COLLECTION_CHANGE,
                 kind,location,oldLocation,items,oldItems)
 		}
@@ -332,10 +332,10 @@ module egret.gui {
 		public static assignParent(parent:any,childrenKey:string="children",parentKey:string="parent"):void{
 			if(!parent.hasOwnProperty(childrenKey))
 				return;
-            var children:Array<any> = parent[childrenKey];
-            var length:number = children.length;
-            for(var i:number=0;i<length;i++){
-                var child:any = children[i];
+            let children:any[] = parent[childrenKey];
+            let length:number = children.length;
+            for(let i:number=0;i<length;i++){
+                let child:any = children[i];
 				try{
 					child[parentKey] = parent;
 				}

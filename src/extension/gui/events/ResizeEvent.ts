@@ -1,6 +1,6 @@
 //////////////////////////////////////////////////////////////////////////////////////
 //
-//  Copyright (c) 2014-2015, Egret Technology Inc.
+//  Copyright (c) 2014-present, Egret Technology.
 //  All rights reserved.
 //  Redistribution and use in source and binary forms, with or without
 //  modification, are permitted provided that the following conditions are met:
@@ -28,7 +28,7 @@
 //////////////////////////////////////////////////////////////////////////////////////
 
 
-module egret.gui {
+namespace egret.gui {
 
 	/**
 	 * @class egret.gui.ResizeEvent
@@ -72,10 +72,10 @@ module egret.gui {
          * @method egret.gui.ResizeEvent.dispatchResizeEvent
          */
         public static dispatchResizeEvent(target:IEventDispatcher,oldWidth:number = NaN, oldHeight:number = NaN):boolean {
-			var event:ResizeEvent = Event.create(ResizeEvent, ResizeEvent.RESIZE);
+			let event:ResizeEvent = Event.create(ResizeEvent, ResizeEvent.RESIZE);
 			event.oldWidth = oldWidth;
 			event.oldHeight = oldHeight;
-			var result = target.dispatchEvent(event);
+			let result = target.dispatchEvent(event);
 			Event.release(event);
 			return result;
         }

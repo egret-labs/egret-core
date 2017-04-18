@@ -1,6 +1,6 @@
 //////////////////////////////////////////////////////////////////////////////////////
 //
-//  Copyright (c) 2014-2015, Egret Technology Inc.
+//  Copyright (c) 2014-present, Egret Technology.
 //  All rights reserved.
 //  Redistribution and use in source and binary forms, with or without
 //  modification, are permitted provided that the following conditions are met:
@@ -27,11 +27,17 @@
 //
 //////////////////////////////////////////////////////////////////////////////////////
 
-module egret.sys {
+namespace egret.sys {
     /**
+     * @private
      * 共享的用于碰撞检测的渲染缓冲
      */
-    export var hitTestBuffer:sys.RenderBuffer;
+    export let customHitTestBuffer:sys.RenderBuffer;
+    /**
+     * @private
+     * 共享的用于canvas碰撞检测的渲染缓冲
+     */
+    export let canvasHitTestBuffer:sys.RenderBuffer;
     /**
      * @private
      * 渲染缓冲
@@ -91,9 +97,9 @@ module egret.sys {
         endClip():void;
 
         /**
-         * 获取指定坐标的像素
+         * 获取指定区域的像素
          */
-        getPixel(x:number,y:number):number[];
+        getPixels(x:number,y:number,width?:number,height?:number):number[];
 
         /**
          * 转换成base64字符串，如果图片（或者包含的图片）跨域，则返回null
@@ -117,9 +123,26 @@ module egret.sys {
         setDirtyRegionPolicy(state:string):void;
     }
 
-    export var RenderBuffer:{
+    /**
+     * @private
+     */
+    export let RenderBuffer:{
         /**
          * 创建一个RenderTarget。
+         * 注意：若内存不足或创建缓冲区失败，将会抛出错误异常。
+         * @param width 渲染缓冲的初始宽
+         * @param height 渲染缓冲的初始高
+         * @param root 是否为舞台buffer
+         */
+        new(width?:number, height?:number, root?:boolean):RenderBuffer;
+    };
+
+    /**
+     * @private
+     */
+    export let CanvasRenderBuffer:{
+        /**
+         * 创建一个CanvasRenderBuffer。
          * 注意：若内存不足或创建缓冲区失败，将会抛出错误异常。
          * @param width 渲染缓冲的初始宽
          * @param height 渲染缓冲的初始高

@@ -1,6 +1,6 @@
 //////////////////////////////////////////////////////////////////////////////////////
 //
-//  Copyright (c) 2014-2015, Egret Technology Inc.
+//  Copyright (c) 2014-present, Egret Technology.
 //  All rights reserved.
 //  Redistribution and use in source and binary forms, with or without
 //  modification, are permitted provided that the following conditions are met:
@@ -28,7 +28,7 @@
 //////////////////////////////////////////////////////////////////////////////////////
 
 
-module egret.gui {
+namespace egret.gui {
     /**
      * @class egret.gui.Power
      * @classdesc
@@ -75,12 +75,12 @@ module egret.gui {
             if (this.easeInFraction == 0 && this.easeOutFraction == 0)
                 return fraction;
             
-            var runRate:number = 1 / (1 - this.easeInFraction/2 - this.easeOutFraction/2);
+            let runRate:number = 1 / (1 - this.easeInFraction/2 - this.easeOutFraction/2);
             if (fraction < this.easeInFraction)
                 return fraction * runRate * (fraction / this.easeInFraction) / 2;
             if (fraction > (1 - this.easeOutFraction)){
-                var decTime:number = fraction - (1 - this.easeOutFraction);
-                var decProportion:number = decTime / this.easeOutFraction;
+                let decTime:number = fraction - (1 - this.easeOutFraction);
+                let decProportion:number = decTime / this.easeOutFraction;
                 return runRate * (1 - this.easeInFraction/2 - this.easeOutFraction +
                     decTime * (2 - decProportion) / 2);
             }

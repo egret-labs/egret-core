@@ -241,10 +241,10 @@ function sortFileList(list, srcPath) {
     }
     var paths = [];
     //把所有引用关系都合并到pathInfoList里，并把类名替换为对应文件路径。
-    for (var path in pathInfoList) {
-        paths.push(path);
-        var list = pathInfoList[path];
-        var classList = pathToClassNames[path];
+    for (var path_1 in pathInfoList) {
+        paths.push(path_1);
+        var list = pathInfoList[path_1];
+        var classList = pathToClassNames[path_1];
         length = classList.length;
         for (i = 0; i < length; i++) {
             var className = classList[i];
@@ -263,7 +263,7 @@ function sortFileList(list, srcPath) {
         for (i = length - 1; i >= 0; i--) {
             className = list[i];
             var relyPath = classNameToPath[className];
-            if (relyPath && relyPath != path) {
+            if (relyPath && relyPath != path_1) {
                 list[i] = relyPath;
             }
             else {
@@ -482,16 +482,6 @@ function readReferenceFromExml(path) {
         return;
     }
     var list = [];
-    if (modeulClassToPath) {
-        list.push(modeulClassToPath["lark.gui.AddItems"]);
-        list.push(modeulClassToPath["lark.gui.SetProperty"]);
-        list.push(modeulClassToPath["lark.gui.SetStyle"]);
-        list.push(modeulClassToPath["lark.gui.State"]);
-        list.push(modeulClassToPath["lark.gui.getScale9Grid"]);
-        list.push(modeulClassToPath["lark.gui.ClassFactory"]);
-        list.push(modeulClassToPath["lark.gui.setProperties"]);
-        list.push(modeulClassToPath["lark.gui.ButtonSkin"]);
-    }
     readReferenceFromNode(exml, list);
     referenceInfoList[path] = list;
 }
@@ -1207,5 +1197,3 @@ function trimKeyWords(codeText) {
     }
     return codeText;
 }
-
-//# sourceMappingURL=createManifest.js.map

@@ -1,6 +1,6 @@
 //////////////////////////////////////////////////////////////////////////////////////
 //
-//  Copyright (c) 2014-2015, Egret Technology Inc.
+//  Copyright (c) 2014-present, Egret Technology.
 //  All rights reserved.
 //  Redistribution and use in source and binary forms, with or without
 //  modification, are permitted provided that the following conditions are met:
@@ -28,45 +28,45 @@
 //////////////////////////////////////////////////////////////////////////////////////
 
 
-module egret {
-    export var $TextureScaleFactor:number = 1;
+namespace egret {
+    export let $TextureScaleFactor:number = 1;
     /**
-     * @language en_US
      * The Texture class encapsulates different image resources on different platforms.
      * In HTML5, resource is an HTMLElement object
      * In OpenGL / WebGL, resource is a texture ID obtained after the GPU is submitted
      * The Texture class encapsulates the details implemented on the underlayer. Developers just need to focus on interfaces
-     * @see http://docs.egret-labs.org/post/manual/bitmap/textures.html The use of texture packs
-     * @see http://docs.egret-labs.org/post/manual/loader/getres.html Several ways of access to resources
+     * @see http://edn.egret.com/cn/docs/page/135 The use of texture packs
+     * @see http://edn.egret.com/cn/docs/page/123 Several ways of access to resources
      * @version Egret 2.4
      * @platform Web,Native
      * @includeExample egret/display/Texture.ts
+     * @language en_US
      */
     /**
-     * @language zh_CN
      * 纹理类是对不同平台不同的图片资源的封装
      * 在HTML5中，资源是一个HTMLElement对象
      * 在OpenGL / WebGL中，资源是一个提交GPU后获取的纹理id
      * Texture类封装了这些底层实现的细节，开发者只需要关心接口即可
-     * @see http://docs.egret-labs.org/post/manual/bitmap/textures.html 纹理集的使用
-     * @see http://docs.egret-labs.org/post/manual/loader/getres.html 获取资源的几种方式
+     * @see http://edn.egret.com/cn/docs/page/135 纹理集的使用
+     * @see http://edn.egret.com/cn/docs/page/123 获取资源的几种方式
      * @version Egret 2.4
      * @platform Web,Native
      * @includeExample egret/display/Texture.ts
+     * @language zh_CN
      */
     export class Texture extends HashObject {
 
         /**
-         * @language en_US
          * Create an egret.Texture object
          * @version Egret 2.4
          * @platform Web,Native
+         * @language en_US
          */
         /**
-         * @language zh_CN
          * 创建一个 egret.Texture 对象
          * @version Egret 2.4
          * @platform Web,Native
+         * @language zh_CN
          */
         public constructor() {
             super();
@@ -111,16 +111,16 @@ module egret {
         private _textureWidth:number = 0;
 
         /**
-         * @language en_US
          * Texture width, read only
          * @version Egret 2.4
          * @platform Web,Native
+         * @language en_US
          */
         /**
-         * @language zh_CN
          * 纹理宽度，只读属性，不可以设置
          * @version Egret 2.4
          * @platform Web,Native
+         * @language zh_CN
          */
         public get textureWidth():number {
             return this.$getTextureWidth();
@@ -137,16 +137,16 @@ module egret {
         private _textureHeight:number = 0;
 
         /**
-         * @language en_US
          * Texture height, read only
          * @version Egret 2.4
          * @platform Web,Native
+         * @language en_US
          */
         /**
-         * @language zh_CN
          * 纹理高度，只读属性，不可以设置
          * @version Egret 2.4
          * @platform Web,Native
+         * @language zh_CN
          */
         public get textureHeight():number {
             return this.$getTextureHeight();
@@ -178,35 +178,46 @@ module egret {
         /**
          * @private
          */
-        public _bitmapData:any = null;
+        public _bitmapData:BitmapData = null;
 
         /**
-         * @language en_US
          * The BitmapData object being referenced.
          * @version Egret 2.4
          * @platform Web,Native
+         * @language en_US
          */
         /**
-         * @language zh_CN
          * 被引用的 BitmapData 对象。
          * @version Egret 2.4
          * @platform Web,Native
+         * @language zh_CN
          */
         public get bitmapData():BitmapData {
             return this._bitmapData;
         }
 
-        /**
-         * @private
-         *
-         * @param value
-         */
-        public _setBitmapData(value:any) {
-            this._bitmapData = value;
+        public set bitmapData(value:BitmapData) {
+            this._setBitmapData(value);
+        }
 
-            var w = value.width * $TextureScaleFactor;
-            var h = value.height * $TextureScaleFactor;
-            this.$initData(0, 0, w, h, 0, 0, w, h, w, h);
+         /**
+         * Set the BitmapData object.
+         * @version Egret 3.2.1
+         * @platform Web,Native
+         * @language en_US
+         */
+        /**
+         * 设置 BitmapData 对象。
+         * @version Egret 3.2.1
+         * @platform Web,Native
+         * @language zh_CN
+         */
+        public _setBitmapData(value:BitmapData) {
+            this._bitmapData = value;
+            let scale = $TextureScaleFactor;
+            let w = value.width * scale;
+            let h = value.height * scale;
+            this.$initData(0, 0, w, h, 0, 0, w, h, value.width, value.height);
         }
 
         /**
@@ -225,7 +236,7 @@ module egret {
          */
         public $initData(bitmapX:number, bitmapY:number, bitmapWidth:number, bitmapHeight:number, offsetX:number, offsetY:number,
                         textureWidth:number, textureHeight:number, sourceWidth:number, sourceHeight:number):void {
-            var scale = $TextureScaleFactor;
+            let scale = $TextureScaleFactor;
             this._bitmapX = bitmapX / scale;
             this._bitmapY = bitmapY / scale;
             this._bitmapWidth = bitmapWidth / scale;
@@ -240,54 +251,64 @@ module egret {
             this._sourceHeight = sourceHeight;
 
             //todo
-            Texture.$invalidate(this);
+            BitmapData.$invalidate(this);
         }
 
         /**
-         * @language en_US
-         * Obtain the color value of a pixel point
-         * @param x {number} The x coordinate of a pixel point
-         * @param y {number} The y coordinate of a pixel point
-         * @returns {number} Color value of a specified pixel point
-         * @version Egret 2.4
-         * @platform Web,Native
-         */
-        /**
-         * @language zh_CN
-         * 获取某一点像素的颜色值
-         * @param x {number} 像素点的X轴坐标
-         * @param y {number} 像素点的Y轴坐标
-         * @returns {number} 指定像素点的颜色值
-         * @version Egret 2.4
-         * @platform Web
+         * @deprecated
          */
         public getPixel32(x:number, y:number):number[] {
             throw new Error();
         }
 
         /**
+         * Obtain the color value for the specified pixel region
+         * @param x  The x coordinate of the pixel region
+         * @param y  The y coordinate of the pixel region
+         * @param width  The width of the pixel region
+         * @param height  The height of the pixel region
+         * @returns  Specifies the color value for the pixel region
+         * @version Egret 3.2.1
+         * @platform Web,Native
          * @language en_US
+         */
+        /**
+         * 获取指定像素区域的颜色值
+         * @param x  像素区域的X轴坐标
+         * @param y  像素区域的Y轴坐标
+         * @param width  像素点的Y轴坐标
+         * @param height  像素点的Y轴坐标
+         * @returns  指定像素区域的颜色值
+         * @version Egret 3.2.1
+         * @platform Web
+         * @language zh_CN
+         */
+        public getPixels(x:number, y:number, width:number = 1, height:number = 1):number[] {
+            throw new Error();
+        }
+
+        /**
          * Convert base64 string, if the picture (or pictures included) cross-border or null
          * @param type Type conversions, such as "image / png"
          * @param rect The need to convert the area
          * @param smoothing Whether to convert data to the smoothing process
          * @returns {any} base64 string
          * @version Egret 2.4
+         * @language en_US
          */
         /**
-         * @language zh_CN
          * 转换成base64字符串，如果图片（或者包含的图片）跨域，则返回null
          * @param type 转换的类型，如  "image/png"
          * @param rect 需要转换的区域
          * @returns {any} base64字符串
          * @version Egret 2.4
+         * @language zh_CN
          */
         public toDataURL(type:string, rect?:egret.Rectangle):string {
             throw new Error();
         }
 
         /**
-         * @language en_US
          * Crop designated area and save it as image.
          * native support only "image / png" and "image / jpeg"; Web browser because of the various implementations are not the same, it is recommended to use only these two kinds.
          * @param type Type conversions, such as "image / png"
@@ -295,9 +316,9 @@ module egret {
          * @param rect The need to convert the area
          * @version Egret 2.4
          * @platform Native
+         * @language en_US
          */
         /**
-         * @language zh_CN
          * 裁剪指定区域并保存成图片。
          * native只支持 "image/png" 和 "image/jpeg"；Web中由于各个浏览器的实现不一样，因此建议也只用这2种。
          * @param type 转换的类型，如  "image/png"
@@ -305,133 +326,31 @@ module egret {
          * @param rect 需要转换的区域
          * @version Egret 2.4
          * @platform Native
+         * @language zh_CN
          */
         public saveToFile(type:string, filePath:string, rect?:egret.Rectangle):void {
             throw new Error();
         }
 
         /**
-         * @language en_US
          * dispose texture
          * @version Egret 2.4
          * @platform Web,Native
+         * @language en_US
          */
         /**
-         * @language zh_CN
          * 释放纹理
          * @version Egret 2.4
          * @platform Web,Native
+         * @language zh_CN
          */
         public dispose():void {
             if (this._bitmapData) {
-                if (this._bitmapData.dispose) {
-                    this._bitmapData.dispose();
-                }
-                Texture.$dispose(this);
-
-                //console.log("dispose Texture");
+                this._bitmapData.$dispose();
                 this._bitmapData = null;
             }
         }
-
-        private static _displayList:Object = {};
-        static $addDisplayObject(displayObject:DisplayObject, bitmapData:BitmapData|Texture):void {
-            var hashCode:number;
-            if((<Texture>bitmapData)._bitmapData && (<Texture>bitmapData)._bitmapData.hashCode) {
-                hashCode = (<Texture>bitmapData)._bitmapData.hashCode;
-            }
-            else {
-                hashCode = bitmapData.hashCode;
-            }
-            if(!hashCode) {
-                return;
-            }
-            if (!Texture._displayList[hashCode]) {
-                Texture._displayList[hashCode] = [displayObject];
-                return;
-            }
-
-            var tempList:Array<DisplayObject> = Texture._displayList[hashCode];
-            if (tempList.indexOf(displayObject) < 0) {
-                tempList.push(displayObject);
-            }
-        }
-
-        static $removeDisplayObject(displayObject:DisplayObject, bitmapData:BitmapData|Texture):void {
-            var hashCode:number;
-            if((<Texture>bitmapData)._bitmapData && (<Texture>bitmapData)._bitmapData.hashCode) {
-                hashCode = (<Texture>bitmapData)._bitmapData.hashCode;
-            }
-            else {
-                hashCode = bitmapData.hashCode;
-            }
-            if(!hashCode) {
-                return;
-            }
-            if (!Texture._displayList[hashCode]) {
-                return;
-            }
-
-            var tempList:Array<DisplayObject> = Texture._displayList[hashCode];
-            var index:number = tempList.indexOf(displayObject);
-            if (index >= 0) {
-                tempList.splice(index);
-            }
-        }
-
-        static $invalidate(bitmapData:BitmapData|Texture):void {
-            var hashCode:number;
-            if((<Texture>bitmapData)._bitmapData && (<Texture>bitmapData)._bitmapData.hashCode) {
-                hashCode = (<Texture>bitmapData)._bitmapData.hashCode;
-            }
-            else {
-                hashCode = bitmapData.hashCode;
-            }
-            if(!hashCode) {
-                return;
-            }
-
-            if (!Texture._displayList[hashCode]) {
-                return;
-            }
-            var tempList:Array<DisplayObject> = Texture._displayList[hashCode];
-            for (var i:number = 0; i < tempList.length; i++) {
-                if (tempList[i] instanceof egret.Bitmap) {
-                    (<egret.Bitmap>tempList[i]).$refreshImageData();
-                }
-                tempList[i].$invalidateContentBounds();
-            }
-        }
-
-        static $dispose(bitmapData:BitmapData|Texture):void {
-            var hashCode:number;
-            if((<Texture>bitmapData)._bitmapData && (<Texture>bitmapData)._bitmapData.hashCode) {
-                hashCode = (<Texture>bitmapData)._bitmapData.hashCode;
-            }
-            else {
-                hashCode = bitmapData.hashCode;
-            }
-            if(!hashCode) {
-                return;
-            }
-
-            if (!Texture._displayList[hashCode]) {
-                return;
-            }
-            var tempList:Array<DisplayObject> = Texture._displayList[hashCode];
-            for (var i:number = 0; i < tempList.length; i++) {
-                if (tempList[i] instanceof egret.Bitmap) {
-                    (<egret.Bitmap>tempList[i]).$Bitmap[sys.BitmapKeys.image] = null;
-                }
-                tempList[i].$invalidateContentBounds();
-            }
-            delete Texture._displayList[hashCode];
-        }
     }
 
-    if (DEBUG) {
-        egret.$markReadOnly(Texture, "textureWidth");
-        egret.$markReadOnly(Texture, "textureHeight");
-    }
 }
 

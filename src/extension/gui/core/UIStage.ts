@@ -1,6 +1,6 @@
 //////////////////////////////////////////////////////////////////////////////////////
 //
-//  Copyright (c) 2014-2015, Egret Technology Inc.
+//  Copyright (c) 2014-present, Egret Technology.
 //  All rights reserved.
 //  Redistribution and use in source and binary forms, with or without
 //  modification, are permitted provided that the following conditions are met:
@@ -28,7 +28,7 @@
 //////////////////////////////////////////////////////////////////////////////////////
 
 
-module egret.gui {
+namespace egret.gui {
 
 	/**
 	 * @class egret.gui.UIStage
@@ -284,7 +284,7 @@ module egret.gui {
 		}
 		
 		private set noTopMostIndex(value:number){
-			var delta:number = value - this._noTopMostIndex;
+			let delta:number = value - this._noTopMostIndex;
 			this._noTopMostIndex = value;
 			this.topMostIndex += delta;
 		}
@@ -298,7 +298,7 @@ module egret.gui {
 		}
 		
 		private set topMostIndex(value:number){
-			var delta:number = value - this._topMostIndex;
+			let delta:number = value - this._topMostIndex;
 			this._topMostIndex = value;
 			this.toolTipIndex += delta;
 		}
@@ -312,7 +312,7 @@ module egret.gui {
 		}
 		
 		private set toolTipIndex(value:number){
-			var delta:number = value - this._toolTipIndex;
+			let delta:number = value - this._toolTipIndex;
 			this._toolTipIndex = value;
 			this.cursorIndex += delta;
 		}
@@ -326,7 +326,7 @@ module egret.gui {
 		}
 		
 		private set cursorIndex(value:number){
-			var delta:number = value - this._cursorIndex;
+			let delta:number = value - this._cursorIndex;
 			this._cursorIndex = value;
 		}
 		
@@ -338,7 +338,7 @@ module egret.gui {
 		 * @returns {IVisualElement}
 		 */
 		public addElement(element:IVisualElement):IVisualElement{
-			var addIndex:number = this._noTopMostIndex;
+			let addIndex:number = this._noTopMostIndex;
 			if (element.parent == <DisplayObjectContainer><any>this)
 				addIndex--;
 			return this.addElementAt(element, addIndex);
@@ -351,7 +351,7 @@ module egret.gui {
 		 */
 		public addElementAt(element:IVisualElement,index:number):IVisualElement{
 			if (element.parent==<DisplayObjectContainer><any>this){
-				var oldIndex:number = this.getElementIndex(element);
+				let oldIndex:number = this.getElementIndex(element);
 				if(oldIndex<this._noTopMostIndex)
 					this.noTopMostIndex--;
 				else if(oldIndex>=this._noTopMostIndex&&oldIndex<this._topMostIndex)
@@ -387,7 +387,7 @@ module egret.gui {
 		 * @returns {IVisualElement}
 		 */
 		public removeElementAt(index:number):IVisualElement{
-			var element:IVisualElement = super.removeElementAt(index);
+			let element:IVisualElement = super.removeElementAt(index);
 			if(index<this._noTopMostIndex)
 				this.noTopMostIndex--;
 			else if(index>=this._noTopMostIndex&&index<this._topMostIndex)
@@ -428,14 +428,14 @@ module egret.gui {
 			return super.getElementAt(index);
 		}
 		private raw_addElement(element:IVisualElement):IVisualElement{
-			var index:number = this.numElements;
+			let index:number = this.numElements;
 			if (element.parent == <DisplayObjectContainer><any>this)
 				index--;
 			return this.raw_addElementAt(element, index);
 		}
 		private raw_addElementAt(element:IVisualElement, index:number):IVisualElement{
 			if (element.parent==<DisplayObjectContainer><any>this){
-				var oldIndex:number = this.getElementIndex(element);
+				let oldIndex:number = this.getElementIndex(element);
 				if(oldIndex<this._noTopMostIndex)
 					this.noTopMostIndex--;
 				else if(oldIndex>=this._noTopMostIndex&&oldIndex<this._topMostIndex)

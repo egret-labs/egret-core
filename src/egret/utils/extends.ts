@@ -1,6 +1,6 @@
 //////////////////////////////////////////////////////////////////////////////////////
 //
-//  Copyright (c) 2014-2015, Egret Technology Inc.
+//  Copyright (c) 2014-present, Egret Technology.
 //  All rights reserved.
 //  Redistribution and use in source and binary forms, with or without
 //  modification, are permitted provided that the following conditions are met:
@@ -27,7 +27,7 @@
 //
 //////////////////////////////////////////////////////////////////////////////////////
 //function __extends(d, b) {
-//    for (var p in b) if (b.hasOwnProperty(p)) d[p] = b[p];
+//    for (let p in b) if (b.hasOwnProperty(p)) d[p] = b[p];
 //    function __() {
 //        this.constructor = d;
 //    }
@@ -36,10 +36,9 @@
 //    d.prototype = new __();
 //}
 
-module egret {
+namespace egret {
 
     /**
-     * @language en_US
      * Call setter properties of the parent class, instead of the other writing languages, such as super.alpha = 1;
      * @param currentClass The current class class name, non-string
      * @param thisObj The current object. Always this
@@ -47,9 +46,9 @@ module egret {
      * @param values Value passed to the parent class
      *
      * @exmaple egret.superSetter(egret.Sprite, this, "alpha", 1);
+     * @language en_US
      */
     /**
-     * @language zh_CN
      * 调用父类的setter属性，代替其他语言的写法，如 super.alpha = 1;
      * @param thisObj 当前对象。永远都this
      * @param currentClass 当前 class 类名，非字符串
@@ -57,22 +56,23 @@ module egret {
      * @param values 传给父类的值
      *
      * @exmaple egret.superSetter(egret.Sprite, this, "alpha", 1);
+     * @language zh_CN
      */
     export function superSetter(currentClass:any, thisObj:any, type:string, ...values) {
-        var cla = currentClass.prototype;
+        let cla = currentClass.prototype;
 
-        var seters;
+        let seters;
         if (!currentClass.hasOwnProperty("__sets__")) {
             Object.defineProperty(currentClass, "__sets__", {"value":{}});
         }
         seters = currentClass["__sets__"];
 
-        var setF = seters[type];
+        let setF = seters[type];
         if (setF) {
             return setF.apply(thisObj, values);
         }
 
-        var d = Object.getPrototypeOf(cla);
+        let d = Object.getPrototypeOf(cla);
         if (d == null) {
             return;
         }
@@ -90,7 +90,6 @@ module egret {
     }
 
     /**
-     * @language en_US
      * Get getter property value of the parent class. Instead of writing in other languages, such as super.alpha;
      * @param currentClass The current class class name, non-string
      * @param thisObj The current object. Always this
@@ -98,9 +97,9 @@ module egret {
      * @returns {any} The value returned by the parent
      *
      * @exmaple egret.superGetter(egret.Sprite, this, "alpha");
+     * @language en_US
      */
     /**
-     * @language zh_CN
      * 获取父类的getter属性值。代替其他语言的写法，如 super.alpha;
      * @param thisObj 当前对象。永远都this
      * @param currentClass 当前 class 类名，非字符串
@@ -108,22 +107,23 @@ module egret {
      * @returns {any} 父类返回的值
      *
      * @exmaple egret.superGetter(egret.Sprite, this, "alpha");
+     * @language zh_CN
      */
     export function superGetter(currentClass:any, thisObj:any, type:string):any {
-        var cla = currentClass.prototype;
+        let cla = currentClass.prototype;
 
-        var geters;
+        let geters;
         if (!currentClass.hasOwnProperty("__gets__")) {
             Object.defineProperty(currentClass, "__gets__", {"value":{}});
         }
         geters = currentClass["__gets__"];
 
-        var getF = geters[type];
+        let getF = geters[type];
         if (getF) {
             return getF.call(thisObj);
         }
 
-        var d = Object.getPrototypeOf(cla);
+        let d = Object.getPrototypeOf(cla);
         if (d == null) {
             return;
         }

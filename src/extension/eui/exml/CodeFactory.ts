@@ -1,6 +1,6 @@
 //////////////////////////////////////////////////////////////////////////////////////
 //
-//  Copyright (c) 2014-2015, Egret Technology Inc.
+//  Copyright (c) 2014-present, Egret Technology.
 //  All rights reserved.
 //  Redistribution and use in source and binary forms, with or without
 //  modification, are permitted provided that the following conditions are met:
@@ -27,13 +27,13 @@
 //
 //////////////////////////////////////////////////////////////////////////////////////
 
-module eui.sys {
+namespace eui.sys {
 
-    var STATE = "eui.State";
-    var ADD_ITEMS = "eui.AddItems";
-    var SET_PROPERTY = "eui.SetProperty";
-    var SET_STATEPROPERTY = "eui.SetStateProperty";
-    var BINDING_PROPERTY = "eui.Binding.bindProperty";
+    let STATE = "eui.State";
+    let ADD_ITEMS = "eui.AddItems";
+    let SET_PROPERTY = "eui.SetProperty";
+    let SET_STATEPROPERTY = "eui.SetStateProperty";
+    let BINDING_PROPERTIES = "eui.Binding.$bindProperties";
 
     /**
      * @private
@@ -62,8 +62,8 @@ module eui.sys {
         public getIndent(indent?:number):string {
             if (indent === void 0)
                 indent = this.indent;
-            var str = "";
-            for (var i = 0; i < indent; i++) {
+            let str = "";
+            for (let i = 0; i < indent; i++) {
                 str += "	";
             }
             return str;
@@ -130,10 +130,10 @@ module eui.sys {
          * 根据变量名获取变量定义
          */
         public getVariableByName(name:string):EXVariable {
-            var list = this.variableBlock;
-            var length = list.length;
-            for (var i = 0; i < length; i++) {
-                var item = list[i];
+            let list = this.variableBlock;
+            let length = list.length;
+            for (let i = 0; i < length; i++) {
+                let item = list[i];
                 if (item.name == name) {
                     return item;
                 }
@@ -162,10 +162,10 @@ module eui.sys {
          * 根据函数名返回函数定义块
          */
         public getFuncByName(name:string):EXFunction {
-            var list = this.functionBlock;
-            var length = list.length;
-            for (var i = 0; i < length; i++) {
-                var item = list[i];
+            let list = this.functionBlock;
+            let length = list.length;
+            for (let i = 0; i < length; i++) {
+                let item = list[i];
                 if (item.name == name) {
                     return item;
                 }
@@ -180,13 +180,13 @@ module eui.sys {
          */
         public toCode():string {
 
-            var indent = this.indent;
-            var indentStr = this.getIndent(indent);
-            var indent1Str = this.getIndent(indent + 1);
-            var indent2Str = this.getIndent(indent + 2);
+            let indent = this.indent;
+            let indentStr = this.getIndent(indent);
+            let indent1Str = this.getIndent(indent + 1);
+            let indent2Str = this.getIndent(indent + 2);
 
             //打印类起始块
-            var returnStr = indentStr + "(function (";
+            let returnStr = indentStr + "(function (";
             if (this.superClass) {
                 returnStr += "_super) {\n" + indent1Str + "__extends(" + this.className + ", _super);\n";
             }
@@ -195,12 +195,12 @@ module eui.sys {
             }
 
             //打印内部类列表
-            var innerClasses = this.innerClassBlock;
-            var length = innerClasses.length;
-            for (var i = 0; i < length; i++) {
-                var clazz = innerClasses[i];
-                clazz.indent = indent+1;
-                returnStr += indent1Str+"var "+clazz.className+" = "+clazz.toCode()+"\n\n";
+            let innerClasses = this.innerClassBlock;
+            let length = innerClasses.length;
+            for (let i = 0; i < length; i++) {
+                let clazz = innerClasses[i];
+                clazz.indent = indent + 1;
+                returnStr += indent1Str + "var " + clazz.className + " = " + clazz.toCode() + "\n\n";
             }
 
             returnStr += indent1Str + "function " + this.className + "() {\n";
@@ -209,10 +209,10 @@ module eui.sys {
             }
 
             //打印变量列表
-            var variables = this.variableBlock;
+            let variables = this.variableBlock;
             length = variables.length;
-            for (i = 0; i < length; i++) {
-                var variable = variables[i];
+            for (let i = 0; i < length; i++) {
+                let variable = variables[i];
                 if (variable.defaultValue) {
                     returnStr += indent2Str + variable.toCode() + "\n";
                 }
@@ -220,10 +220,10 @@ module eui.sys {
 
             //打印构造函数
             if (this.constructCode) {
-                var codes = this.constructCode.toCode().split("\n");
+                let codes = this.constructCode.toCode().split("\n");
                 length = codes.length;
-                for (i = 0; i < length; i++) {
-                    var code = codes[i];
+                for (let i = 0; i < length; i++) {
+                    let code = codes[i];
                     returnStr += indent2Str + code + "\n";
                 }
             }
@@ -231,10 +231,10 @@ module eui.sys {
             returnStr += indent1Str + "var _proto = " + this.className + ".prototype;\n\n";
 
             //打印函数列表
-            var functions = this.functionBlock;
+            let functions = this.functionBlock;
             length = functions.length;
-            for (i = 0; i < length; i++) {
-                var functionItem = functions[i];
+            for (let i = 0; i < length; i++) {
+                let functionItem = functions[i];
                 functionItem.indent = indent + 1;
                 returnStr += functionItem.toCode() + "\n";
             }
@@ -264,7 +264,7 @@ module eui.sys {
          * @param value 变量初始值
          */
         public addVar(name:string, value?:string):void {
-            var valueStr = value ? " = " + value : "";
+            let valueStr = value ? " = " + value : "";
             this.addCodeLine("var " + name + valueStr + ";");
         }
 
@@ -276,7 +276,7 @@ module eui.sys {
          * @param prop 目标的属性(用“.”访问)，不填则是对目标赋值
          */
         public addAssignment(target:string, value:string, prop?:string):void {
-            var propStr = prop ? "." + prop : "";
+            let propStr = prop ? "." + prop : "";
             this.addCodeLine(target + propStr + " = " + value + ";");
         }
 
@@ -348,7 +348,7 @@ module eui.sys {
          * @param args 函数参数列表
          */
         public doFunction(functionName:string, args:string[]):void {
-            var argsStr = args.join(",");
+            let argsStr = args.join(",");
             this.addCodeLine(functionName + "(" + argsStr + ")");
         }
 
@@ -427,10 +427,10 @@ module eui.sys {
          * @returns
          */
         public toCode():string {
-            var indentStr:string = this.getIndent();
-            var indent1Str:string = this.getIndent(this.indent + 1);
-            var codeIndent:string;
-            var returnStr = indentStr;
+            let indentStr:string = this.getIndent();
+            let indent1Str:string = this.getIndent(this.indent + 1);
+            let codeIndent:string;
+            let returnStr = indentStr;
             if (this.isGet) {
                 codeIndent = this.getIndent(this.indent + 2);
                 returnStr += 'Object.defineProperty(_proto, "skinParts", {\n';
@@ -442,10 +442,10 @@ module eui.sys {
             }
 
             if (this.codeBlock) {
-                var lines = this.codeBlock.toCode().split("\n");
-                var length = lines.length;
-                for (var i = 0; i < length; i++) {
-                    var line = lines[i];
+                let lines = this.codeBlock.toCode().split("\n");
+                let length = lines.length;
+                for (let i = 0; i < length; i++) {
+                    let line = lines[i];
                     returnStr += codeIndent + line + "\n";
                 }
             }
@@ -509,7 +509,7 @@ module eui.sys {
         /**
          * @private
          */
-        public constructor(name:string, stateGroups?:Array<any>) {
+        public constructor(name:string, stateGroups?:any[]) {
             super();
             this.name = name;
             if (stateGroups)
@@ -525,17 +525,17 @@ module eui.sys {
         /**
          * @private
          */
-        public stateGroups:Array<any> = [];
+        public stateGroups:any[] = [];
 
         /**
          * @private
          */
-        public addItems:Array<any> = [];
+        public addItems:any[] = [];
 
         /**
          * @private
          */
-        public setProperty:Array<any> = [];
+        public setProperty:any[] = [];
 
         /**
          * @private
@@ -554,21 +554,21 @@ module eui.sys {
          * @returns
          */
         public toCode():string {
-            var indentStr:string = this.getIndent(1);
-            var returnStr:string = "new " + STATE + " (\"" + this.name + "\",\n" + indentStr + "[\n";
-            var index:number = 0;
-            var isFirst:boolean = true;
-            var overrides:Array<any> = this.addItems.concat(this.setProperty);
+            let indentStr:string = this.getIndent(1);
+            let returnStr:string = "new " + STATE + " (\"" + this.name + "\",\n" + indentStr + "[\n";
+            let index:number = 0;
+            let isFirst:boolean = true;
+            let overrides:any[] = this.addItems.concat(this.setProperty);
             while (index < overrides.length) {
                 if (isFirst)
                     isFirst = false;
                 else
                     returnStr += ",\n";
-                var item:CodeBase = overrides[index];
-                var codes:Array<any> = item.toCode().split("\n");
-                var length:number = codes.length;
-                for (var i:number = 0; i < length; i++) {
-                    var code:string = codes[i];
+                let item:CodeBase = overrides[index];
+                let codes:any[] = item.toCode().split("\n");
+                let length:number = codes.length;
+                for (let i:number = 0; i < length; i++) {
+                    let code:string = codes[i];
                     codes[i] = indentStr + indentStr + code;
                 }
                 returnStr += codes.join("\n");
@@ -624,7 +624,7 @@ module eui.sys {
          * @returns
          */
         public toCode():string {
-            var returnStr:string = "new " + ADD_ITEMS + "(\"" + this.target + "\",\"" + this.property + "\"," + this.position + ",\"" + this.relativeTo + "\")";
+            let returnStr:string = "new " + ADD_ITEMS + "(\"" + this.target + "\",\"" + this.property + "\"," + this.position + ",\"" + this.relativeTo + "\")";
             return returnStr;
         }
     }
@@ -677,12 +677,19 @@ module eui.sys {
         /**
          * @private
          */
-        public constructor(target:string, property:string, expression:string) {
+        public constructor(target:string, property:string, templates:string[], chainIndex:number[]) {
             super();
+            if (target) {
+                target = "this." + target;
+            } else {
+                target = "this";
+            }
             this.target = target;
             this.property = property;
-            this.expression = expression;
+            this.templates = templates;
+            this.chainIndex = chainIndex;
         }
+
         /**
          * @private
          * 目标实例名
@@ -696,17 +703,26 @@ module eui.sys {
 
         /**
          * @private
-         * 绑定表达式
+         * 绑定的模板列表
          */
-        public expression:string;
+        public templates:string[];
+
+        /**
+         * @private
+         * chainIndex是一个索引列表，每个索引指向templates中的一个值，该值是代表属性链。
+         */
+        public chainIndex:number[];
+
         /**
          * @private
          *
          * @returns
          */
         public toCode():string {
-            var chain = this.expression.split(".").join("\",\"");
-            return "new " + SET_STATEPROPERTY + "(this, ["+chain+"], this."+this.target+",\""+this.property+"\")";
+            let expression = this.templates.join(",");
+            let chain = this.chainIndex.join(",");
+            return "new " + SET_STATEPROPERTY + "(this, [" + expression + "]," + "[" + chain + "]," +
+                this.target + ",\"" + this.property + "\")";
         }
     }
     /**
@@ -717,11 +733,12 @@ module eui.sys {
         /**
          * @private
          */
-        public constructor(target:string,property:string,expression:string){
+        public constructor(target:string, property:string, templates:string[], chainIndex:number[]) {
             super();
             this.target = target;
             this.property = property;
-            this.expression = expression;
+            this.templates = templates;
+            this.chainIndex = chainIndex;
         }
 
         /**
@@ -736,9 +753,16 @@ module eui.sys {
         public property:string;
         /**
          * @private
-         * 绑定表达式
+         * 绑定的模板列表
          */
-        public expression:string;
+        public templates:string[];
+
+        /**
+         * @private
+         * chainIndex是一个索引列表，每个索引指向templates中的一个值，该值是代表属性链。
+         */
+        public chainIndex:number[];
+
 
         /**
          * @private
@@ -746,8 +770,10 @@ module eui.sys {
          * @returns
          */
         public toCode():string {
-            var chain = this.expression.split(".").join("\",\"");
-            return BINDING_PROPERTY+"(this, [\""+chain+"\"], this."+this.target+",\""+this.property+"\")";
+            let expression = this.templates.join(",");
+            let chain = this.chainIndex.join(",");
+            return BINDING_PROPERTIES + "(this, [" + expression + "]," + "[" + chain + "]," +
+                this.target + ",\"" + this.property + "\")";
         }
     }
 }

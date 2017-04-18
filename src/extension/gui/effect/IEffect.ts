@@ -1,6 +1,6 @@
 //////////////////////////////////////////////////////////////////////////////////////
 //
-//  Copyright (c) 2014-2015, Egret Technology Inc.
+//  Copyright (c) 2014-present, Egret Technology.
 //  All rights reserved.
 //  Redistribution and use in source and binary forms, with or without
 //  modification, are permitted provided that the following conditions are met:
@@ -28,7 +28,7 @@
 //////////////////////////////////////////////////////////////////////////////////////
 
 
-module egret.gui {
+namespace egret.gui {
 
     export interface IEffect extends IEventDispatcher{
         /**
@@ -56,7 +56,7 @@ module egret.gui {
          * 设置 target 属性将替换此 Array 中的所有对象。
          * 设置 targets 属性后，target 属性将返回此 Array 中的第一个项目。
          */
-        targets:Array<any>;
+        targets:any[];
         
         /**
          * 效果的当前时间位置。此属性的值介于 0 和总持续时间（包括该效果的 startDelay、repeatCount 和 repeatDelay）之间。
@@ -68,7 +68,7 @@ module egret.gui {
          *  @param targets 要使用此效果设置动画的对象的数组。
          *  @return 效果的效果实例对象的数组，一个目标一个数组。
          */
-        createInstances(targets?:Array<any>):Array<any>;
+        createInstances(targets?:any[]):any[];
         
         /**
          * 创建一个效果实例并对其进行初始化。在播放效果实例前，使用此方法（而非 play() 方法）处理效果实例属性。 
@@ -93,7 +93,7 @@ module egret.gui {
          * @param playReversedFromEnd 如果为 true，则向后播放效果。
          * @return 效果的 EffectInstance 对象的数组，一个目标一个数组。
          */
-        play(targets?:Array<any>,playReversedFromEnd?:boolean):Array<any>;
+        play(targets?:any[],playReversedFromEnd?:boolean):any[];
         
         /**
          * 暂停效果，直到调用 resume() 方法。

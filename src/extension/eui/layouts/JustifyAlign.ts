@@ -1,6 +1,6 @@
 //////////////////////////////////////////////////////////////////////////////////////
 //
-//  Copyright (c) 2014-2015, Egret Technology Inc.
+//  Copyright (c) 2014-present, Egret Technology.
 //  All rights reserved.
 //  Redistribution and use in source and binary forms, with or without
 //  modification, are permitted provided that the following conditions are met:
@@ -27,9 +27,8 @@
 //
 //////////////////////////////////////////////////////////////////////////////////////
 
-module eui {
+namespace eui {
     /**
-     * @language en_US
      * The JustifyAlign class defines the possible values for the
      * <code>horizontalAlign</code> 和 <code>verticalAlign</code> property of
      * Layout class.
@@ -38,19 +37,19 @@ module eui {
      * @version eui 1.0
      * @platform Web,Native
      * @includeExample  extension/eui/layout/JustifyAlignExample.ts
+     * @language en_US
      */
     /**
-     * @language zh_CN
      * JustifyAlign 定义布局类中 horizontalAlign 与 verticalAlign 属性需要的两端对齐常量值。
      *
      * @version Egret 2.4
      * @version eui 1.0
      * @platform Web,Native
      * @includeExample  extension/eui/layout/JustifyAlignExample.ts
+     * @language zh_CN
      */
     export class JustifyAlign{
         /**
-         * @language en_US
          * Justify the children with respect to the container.
          * This uniformly sizes all children to be the same size as the
          * container.
@@ -58,19 +57,19 @@ module eui {
          * @version Egret 2.4
          * @version eui 1.0
          * @platform Web,Native
+         * @language en_US
          */
         /**
-         * @language zh_CN
          * 相对于容器对齐子代。这会将所有子代的大小统一调整为与容器相同的尺寸。
          *
          * @version Egret 2.4
          * @version eui 1.0
          * @platform Web,Native
+         * @language zh_CN
          */
         public static JUSTIFY:string = "justify";
 
         /**
-         * @language en_US
          * Content justify the children width/height respect to the container.
          * This uniformly sizes all children to be the content width/height of the container.
          * The content width/height of the container is the size of the largest child.
@@ -80,15 +79,16 @@ module eui {
          * @version Egret 2.4
          * @version eui 1.0
          * @platform Web,Native
+         * @language en_US
          */
         /**
-         * @language zh_CN
          * 相对于容器对子代进行内容对齐。这会将所有子代的大小统一调整为容器的内容宽度/高度。
          * 容器的内容宽度/高度是最大子代的大小。如果所有子代都小于容器的宽度/高度，则会将所有子代的大小调整为容器的宽度/高度。
          *
          * @version Egret 2.4
          * @version eui 1.0
          * @platform Web,Native
+         * @language zh_CN
          */
         public static CONTENT_JUSTIFY:string = "contentJustify";
     }

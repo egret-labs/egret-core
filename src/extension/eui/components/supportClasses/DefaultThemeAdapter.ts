@@ -1,6 +1,6 @@
 //////////////////////////////////////////////////////////////////////////////////////
 //
-//  Copyright (c) 2014-2015, Egret Technology Inc.
+//  Copyright (c) 2014-present, Egret Technology.
 //  All rights reserved.
 //  Redistribution and use in source and binary forms, with or without
 //  modification, are permitted provided that the following conditions are met:
@@ -28,21 +28,21 @@
 //////////////////////////////////////////////////////////////////////////////////////
 
 
-module eui {
+namespace eui {
 
     /**
-     * @language en_US
      * Default instance of interface <code>IThemeAdapter</code>.
      * @version Egret 2.4
      * @version eui 1.0
      * @platform Web,Native
+     * @language en_US
      */
     /**
-     * @language zh_CN
      * 默认的IThemeAdapter接口实现。
      * @version Egret 2.4
      * @version eui 1.0
      * @platform Web,Native
+     * @language zh_CN
      */
     export class DefaultThemeAdapter implements IThemeAdapter {
         /**
@@ -54,13 +54,13 @@ module eui {
          */
         public getTheme(url:string,compFunc:Function,errorFunc:Function,thisObject:any):void {
             function onGet(event:egret.Event):void {
-                var loader:egret.HttpRequest = <egret.HttpRequest> (event.target);
+                let loader:egret.HttpRequest = <egret.HttpRequest> (event.target);
                 compFunc.call(thisObject, loader.response);
             }
             function onError(event:egret.Event):void {
                 errorFunc.call(thisObject);
             }
-            var loader:egret.HttpRequest = new egret.HttpRequest();
+            let loader:egret.HttpRequest = new egret.HttpRequest();
             loader.addEventListener(egret.Event.COMPLETE,onGet,thisObject);
             loader.addEventListener(egret.IOErrorEvent.IO_ERROR,onError,thisObject);
             loader.responseType = egret.HttpResponseType.TEXT;

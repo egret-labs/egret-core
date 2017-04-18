@@ -1,6 +1,6 @@
 //////////////////////////////////////////////////////////////////////////////////////
 //
-//  Copyright (c) 2014-2015, Egret Technology Inc.
+//  Copyright (c) 2014-present, Egret Technology.
 //  All rights reserved.
 //  Redistribution and use in source and binary forms, with or without
 //  modification, are permitted provided that the following conditions are met:
@@ -27,53 +27,53 @@
 //
 //////////////////////////////////////////////////////////////////////////////////////
 
-module egret {
+namespace egret {
 
 	/**
-     * @language en_US
 	 * The URLRequestMethod class provides values that specify whether the
      * URLRequest object should use the POST method or the GET method when sending data to a server.
-     * @see http://docs.egret-labs.org/post/manual/net/postget.html POST与GET
+     * @see http://edn.egret.com/cn/docs/page/599 POST与GET
      * @version Egret 2.4
      * @platform Web,Native
 	 * @includeExample extension/game/net/URLRequestMethod.ts
+     * @language en_US
 	 */
 	/**
-     * @language zh_CN
 	 * URLRequestMethod 类提供了一些值，这些值可指定在将数据发送到服务器时，
      * URLRequest 对象应使用 POST 方法还是 GET 方法。
-     * @see http://docs.egret-labs.org/post/manual/net/postget.html POST与GET
+     * @see http://edn.egret.com/cn/docs/page/599 POST与GET
      * @version Egret 2.4
      * @platform Web,Native
 	 * @includeExample extension/game/net/URLRequestMethod.ts
+     * @language zh_CN
 	 */
     export class URLRequestMethod {
 
 		/**
-         * @language en_US
          * Specify that the URLRequest object is a GET.
          * @version Egret 2.4
          * @platform Web,Native
+         * @language en_US
 		 */
 		/**
-         * @language zh_CN
          * 表示 URLRequest 对象是一个 GET。
          * @version Egret 2.4
          * @platform Web,Native
+         * @language zh_CN
 		 */
         public static GET:string = "get";
 
 		/**
-         * @language en_US
          * Specify that the URLRequest object is a POST.
          * @version Egret 2.4
          * @platform Web,Native
+         * @language en_US
 		 */
 		/**
-         * @language zh_CN
          * 表示 URLRequest 对象是一个 POST。
          * @version Egret 2.4
          * @platform Web,Native
+         * @language zh_CN
 		 */
         public static POST:string = "post";
     }

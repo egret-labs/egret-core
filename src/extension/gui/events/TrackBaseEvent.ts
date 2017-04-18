@@ -1,6 +1,6 @@
 //////////////////////////////////////////////////////////////////////////////////////
 //
-//  Copyright (c) 2014-2015, Egret Technology Inc.
+//  Copyright (c) 2014-present, Egret Technology.
 //  All rights reserved.
 //  Redistribution and use in source and binary forms, with or without
 //  modification, are permitted provided that the following conditions are met:
@@ -28,7 +28,7 @@
 //////////////////////////////////////////////////////////////////////////////////////
 
 
-module egret.gui {
+namespace egret.gui {
 
 	/**
 	 * @class egret.gui.TrackBaseEvent
@@ -71,8 +71,8 @@ module egret.gui {
          * @method egret.gui.TrackBaseEvent.dispatchTrackBaseEvent
          */
         public static dispatchTrackBaseEvent(target:IEventDispatcher,type:string):boolean{
-			var event:TrackBaseEvent = Event.create(TrackBaseEvent, type);
-			var result = target.dispatchEvent(event);
+			let event:TrackBaseEvent = Event.create(TrackBaseEvent, type);
+			let result = target.dispatchEvent(event);
 			Event.release(event);
 			return result;
         }

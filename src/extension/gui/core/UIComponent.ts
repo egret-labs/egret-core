@@ -1,6 +1,6 @@
 //////////////////////////////////////////////////////////////////////////////////////
 //
-//  Copyright (c) 2014-2015, Egret Technology Inc.
+//  Copyright (c) 2014-present, Egret Technology.
 //  All rights reserved.
 //  Redistribution and use in source and binary forms, with or without
 //  modification, are permitted provided that the following conditions are met:
@@ -28,7 +28,7 @@
 //////////////////////////////////////////////////////////////////////////////////////
 
 
-module egret.gui {
+namespace egret.gui {
 
     /**
      * @private
@@ -65,7 +65,7 @@ module egret.gui {
             this.addEventListener(Event.ADDED_TO_STAGE, this.onAddedToStage, this);
             this.addEventListener(Event.ADDED_TO_STAGE, this.checkInvalidateFlag, this);
             if (UIComponent.prototypeCanSet === undefined) {
-                var chain:any = {};
+                let chain:any = {};
                 UIComponent.prototypeCanSet = (chain.__proto__ !== undefined);
             }
             //this.$renderRegion = new sys.Region();
@@ -214,8 +214,8 @@ module egret.gui {
          * 更新子项的nestLevel属性
          */
         public _updateChildrenNestLevel():void {
-            for (var i:number = this.numChildren - 1; i >= 0; i--) {
-                var child:ILayoutManagerClient = <ILayoutManagerClient><any> (this.getChildAt(i));
+            for (let i:number = this.numChildren - 1; i >= 0; i--) {
+                let child:ILayoutManagerClient = <ILayoutManagerClient><any> (this.getChildAt(i));
                 if (child && "nestLevel" in child) {
                     child.nestLevel = this._UIC_Props_._nestLevel + 1;
                 }
@@ -226,7 +226,7 @@ module egret.gui {
          * 获取指定的名称的样式属性值
          */
         public getStyle(styleProp:string):any {
-            var chain:any = this._UIC_Props_._styleProtoChain;
+            let chain:any = this._UIC_Props_._styleProtoChain;
             if (!chain) {
                 return undefined;
             }
@@ -237,7 +237,7 @@ module egret.gui {
          * 对此组件实例设置样式属性。在此组件上设置的样式会覆盖父级容器的同名样式。推荐在子项较少的组件上使用，尽量避免在全局调用此方法，有可能造成性能问题。
          */
         public setStyle(styleProp:string, newValue:any):void {
-            var chain:any = this._UIC_Props_._styleProtoChain;
+            let chain:any = this._UIC_Props_._styleProtoChain;
             if (!this._UIC_Props_._hasOwnStyleChain) {
                 chain = this._createOwnStyleProtoChain(chain);
             }
@@ -257,8 +257,8 @@ module egret.gui {
             if (this._UIC_Props_._hasNoStyleChild) {
                 return;
             }
-            for (var i:number = this.numChildren - 1; i >= 0; i--) {
-                var child:IStyleClient = <IStyleClient><any> (this.getChildAt(i));
+            for (let i:number = this.numChildren - 1; i >= 0; i--) {
+                let child:IStyleClient = <IStyleClient><any> (this.getChildAt(i));
                 if (!child) {
                     continue;
                 }
@@ -280,8 +280,8 @@ module egret.gui {
             }
             chain = this._UIC_Props_._styleProtoChain;
             if (!this._UIC_Props_._hasNoStyleChild) {
-                for (var i:number = this.numChildren - 1; i >= 0; i--) {
-                    var child:IStyleClient = <IStyleClient><any> (this.getChildAt(i));
+                for (let i:number = this.numChildren - 1; i >= 0; i--) {
+                    let child:IStyleClient = <IStyleClient><any> (this.getChildAt(i));
                     if (child && "regenerateStyleCache" in child) {
                         child["regenerateStyleCache"](chain);
                     }
@@ -297,7 +297,7 @@ module egret.gui {
             function factory():void {
             };
             factory.prototype = parentChain;
-            var childChain:Object = new factory();
+            let childChain:Object = new factory();
             factory.prototype = null;
             return childChain
         }
@@ -309,7 +309,7 @@ module egret.gui {
             if (!this._UIC_Props_._hasOwnStyleChain) {
                 return;
             }
-            var chain:any = this._UIC_Props_._styleProtoChain;
+            let chain:any = this._UIC_Props_._styleProtoChain;
             delete chain[styleProp];
             this.styleChanged(styleProp);
             this.notifyStyleChangeInChildren(styleProp);
@@ -330,8 +330,8 @@ module egret.gui {
             }
             else if (this._UIC_Props_._styleProtoChain != parentChain) {
                 this._UIC_Props_._styleProtoChain = parentChain;
-                for (var i:number = this.numChildren - 1; i >= 0; i--) {
-                    var child:IStyleClient = <IStyleClient><any> (this.getChildAt(i));
+                for (let i:number = this.numChildren - 1; i >= 0; i--) {
+                    let child:IStyleClient = <IStyleClient><any> (this.getChildAt(i));
                     if (child && "regenerateStyleCache" in child) {
                         child.regenerateStyleCache(parentChain);
                     }
@@ -344,9 +344,9 @@ module egret.gui {
          */
         public regenerateStyleCacheForIE(parentChain:any):void {
             if (this._UIC_Props_._hasOwnStyleChain) {
-                var chain:any = this._UIC_Props_._styleProtoChain;
-                var childChain:any = this.createProtoChain(parentChain);
-                for (var key in chain) {
+                let chain:any = this._UIC_Props_._styleProtoChain;
+                let childChain:any = this.createProtoChain(parentChain);
+                for (let key in chain) {
                     if (chain.hasOwnProperty(key)) {
                         childChain[key] = chain[key];
                     }
@@ -358,8 +358,8 @@ module egret.gui {
                 this._UIC_Props_._styleProtoChain = parentChain;
             }
             if (!this._UIC_Props_._hasNoStyleChild) {
-                for (var i:number = this.numChildren - 1; i >= 0; i--) {
-                    var child:IStyleClient = <IStyleClient><any> this.getChildAt(i);
+                for (let i:number = this.numChildren - 1; i >= 0; i--) {
+                    let child:IStyleClient = <IStyleClient><any> this.getChildAt(i);
                     if (child && "regenerateStyleCacheForIE" in child) {
                         child["regenerateStyleCacheForIE"](parentChain);
                     }
@@ -373,7 +373,7 @@ module egret.gui {
          * 如果需要管理子项，若有，请使用容器的addElement()方法，非法使用有可能造成无法自动布局。
          */
         public _addToDisplayList(child:DisplayObject, notifyListeners:boolean = true):DisplayObject {
-            var index:number = this.numChildren;
+            let index:number = this.numChildren;
 
             if (child.parent == this)
                 index--;
@@ -399,7 +399,7 @@ module egret.gui {
          * 如果需要管理子项，若有，请使用容器的removeElement()方法,非法使用有可能造成无法自动布局。
          */
         public _removeFromDisplayList(child:DisplayObject, notifyListeners:boolean = true):DisplayObject {
-            var index = this.$children.indexOf(child);
+            let index = this.$children.indexOf(child);
             if (index >= 0) {
                 this.$doRemoveChild(index, notifyListeners);
                 this._childRemoved(child);
@@ -417,7 +417,7 @@ module egret.gui {
          */
         public _removeFromDisplayListAt(index:number, notifyListeners:boolean = true):DisplayObject {
             if (index >= 0 && index < this.$children.length) {
-                var child:DisplayObject = this.$doRemoveChild(index, notifyListeners);
+                let child:DisplayObject = this.$doRemoveChild(index, notifyListeners);
                 this._childRemoved(child);
                 return child;
             }
@@ -467,7 +467,7 @@ module egret.gui {
                 (<ILayoutManagerClient><any>child).nestLevel = this._UIC_Props_._nestLevel + 1;
             }
             if ("styleChanged" in child) {
-                var chain:any = this._UIC_Props_._styleProtoChain;
+                let chain:any = this._UIC_Props_._styleProtoChain;
                 if (chain || ((<UIComponent>child)._UIC_Props_ && (<UIComponent>child)._UIC_Props_._styleProtoChain)) {
                     child["regenerateStyleCache"](chain);
                     child["styleChanged"](null);
@@ -507,7 +507,7 @@ module egret.gui {
          * @returns {DisplayObject}
          */
         public removeChildAt(index:number):DisplayObject {
-            var child:DisplayObject = super.removeChildAt(index);
+            let child:DisplayObject = super.removeChildAt(index);
             this._childRemoved(child);
             return child;
         }
@@ -569,7 +569,7 @@ module egret.gui {
         $setWidth(value:number):boolean {
             if (this._UIC_Props_._uiWidth == value && this.$getExplicitWidth() == value)
                 return false;
-            var result:boolean = super.$setWidth(value);
+            let result:boolean = super.$setWidth(value);
             if (isNaN(value))
                 this.invalidateSize();
             else
@@ -600,7 +600,7 @@ module egret.gui {
         $setHeight(value:number):boolean {
             if (this._UIC_Props_._uiHeight == value && this.$getExplicitHeight() == value)
                 return false;
-            var result:boolean = super.$setHeight(value);
+            let result:boolean = super.$setHeight(value);
             if (isNaN(value))
                 this.invalidateSize();
             else
@@ -727,7 +727,7 @@ module egret.gui {
          * @param h {number}
          */
         public setActualSize(w:number, h:number):void {
-            var change:boolean = false;
+            let change:boolean = false;
             if (this._UIC_Props_._uiWidth != w) {
                 this._UIC_Props_._uiWidth = w;
                 change = true;
@@ -806,14 +806,14 @@ module egret.gui {
          */
         public validateSize(recursive:boolean = false):void {
             if (recursive) {
-                for (var i:number = 0; i < this.numChildren; i++) {
-                    var child:DisplayObject = this.getChildAt(i);
+                for (let i:number = 0; i < this.numChildren; i++) {
+                    let child:DisplayObject = this.getChildAt(i);
                     if ("validateSize" in child)
                         (<ILayoutManagerClient> <any>child ).validateSize(true);
                 }
             }
             if (this._UIC_Props_._invalidateSizeFlag) {
-                var changed:boolean = this.measureSizes();
+                let changed:boolean = this.measureSizes();
                 if (changed) {
                     this.invalidateDisplayList();
                     this.invalidateParentSizeAndDisplayList();
@@ -826,7 +826,7 @@ module egret.gui {
          * 测量组件尺寸，返回尺寸是否发生变化
          */
         private measureSizes():boolean {
-            var changed:boolean = false;
+            let changed:boolean = false;
 
             if (!this._UIC_Props_._invalidateSizeFlag)
                 return changed;
@@ -880,8 +880,8 @@ module egret.gui {
          */
         public validateDisplayList():void {
             if (this._UIC_Props_._invalidateDisplayListFlag) {
-                var unscaledWidth:number = 0;
-                var unscaledHeight:number = 0;
+                let unscaledWidth:number = 0;
+                let unscaledHeight:number = 0;
                 if (this._UIC_Props_._layoutWidthExplicitlySet) {
                     unscaledWidth = this._UIC_Props_._uiWidth;
                 }
@@ -929,7 +929,7 @@ module egret.gui {
         public invalidateParentSizeAndDisplayList():void {
             if (!this.parent || !this._UIC_Props_._includeInLayout || !("invalidateSize" in this.parent))
                 return;
-            var p:IInvalidating = <IInvalidating><any>(this.parent);
+            let p:IInvalidating = <IInvalidating><any>(this.parent);
             p.invalidateSize();
             p.invalidateDisplayList();
         }
@@ -1167,7 +1167,7 @@ module egret.gui {
             if (this.$getScaleY() < 0) {
                 y += this.layoutBoundsHeight;
             }
-            var changed:boolean = false;
+            let changed:boolean = false;
             if (this.$getX() != x) {
                 this.$setX(x);
                 changed = true;
@@ -1185,8 +1185,8 @@ module egret.gui {
          * @member egret.gui.UIComponent#preferredWidth
          */
         public get preferredWidth():number {
-            var w:number = !isNaN(this.$getExplicitWidth()) ? this.$getExplicitWidth() : this._UIC_Props_._measuredWidth;
-            var scaleX:number = this.$getScaleX();
+            let w:number = !isNaN(this.$getExplicitWidth()) ? this.$getExplicitWidth() : this._UIC_Props_._measuredWidth;
+            let scaleX:number = this.$getScaleX();
             if (scaleX < 0) {
                 scaleX = -scaleX;
             }
@@ -1197,8 +1197,8 @@ module egret.gui {
          * @member egret.gui.UIComponent#preferredHeight
          */
         public get preferredHeight():number {
-            var h:number = !isNaN(this.$getExplicitHeight()) ? this.$getExplicitHeight() : this._UIC_Props_._measuredHeight;
-            var scaleY:number = this.$getScaleY();
+            let h:number = !isNaN(this.$getExplicitHeight()) ? this.$getExplicitHeight() : this._UIC_Props_._measuredHeight;
+            let scaleY:number = this.$getScaleY();
             if (scaleY < 0) {
                 scaleY = -scaleY;
             }
@@ -1212,7 +1212,7 @@ module egret.gui {
             if (this.$getScaleX() >= 0) {
                 return this.$getX();
             }
-            var w:number = this.preferredWidth;
+            let w:number = this.preferredWidth;
             return this.$getX() - w;
         }
 
@@ -1223,7 +1223,7 @@ module egret.gui {
             if (this.$getScaleY() >= 0) {
                 return this.$getY();
             }
-            var h:number = this.preferredHeight;
+            let h:number = this.preferredHeight;
             return this.$getY() - h;
         }
 
@@ -1234,7 +1234,7 @@ module egret.gui {
             if (this.$getScaleX() >= 0) {
                 return this.$getX();
             }
-            var w:number = this.layoutBoundsWidth;
+            let w:number = this.layoutBoundsWidth;
             return this.$getX() - w;
         }
 
@@ -1245,7 +1245,7 @@ module egret.gui {
             if (this.$getScaleY() >= 0) {
                 return this.$getY();
             }
-            var h:number = this.layoutBoundsHeight;
+            let h:number = this.layoutBoundsHeight;
             return this.$getY() - h;
         }
 
@@ -1253,7 +1253,7 @@ module egret.gui {
          * @member egret.gui.UIComponent#layoutBoundsWidth
          */
         public get layoutBoundsWidth():number {
-            var w:number = 0;
+            let w:number = 0;
             if (this._UIC_Props_._layoutWidthExplicitlySet) {
                 w = this._UIC_Props_._uiWidth;
             }
@@ -1262,7 +1262,7 @@ module egret.gui {
             else {
                 w = this._UIC_Props_._measuredWidth;
             }
-            var scaleX:number = this.$getScaleX();
+            let scaleX:number = this.$getScaleX();
             if (scaleX < 0) {
                 scaleX = -scaleX;
             }
@@ -1275,7 +1275,7 @@ module egret.gui {
          * @member egret.gui.UIComponent#layoutBoundsHeight
          */
         public get layoutBoundsHeight():number {
-            var h:number = 0;
+            let h:number = 0;
             if (this._UIC_Props_._layoutHeightExplicitlySet) {
                 h = this._UIC_Props_._uiHeight;
             }
@@ -1284,7 +1284,7 @@ module egret.gui {
             else {
                 h = this._UIC_Props_._measuredHeight;
             }
-            var scaleY:number = this.$getScaleY();
+            let scaleY:number = this.$getScaleY();
             if (scaleY < 0) {
                 scaleY = -scaleY;
             }

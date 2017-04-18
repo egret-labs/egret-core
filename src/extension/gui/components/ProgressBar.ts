@@ -1,6 +1,6 @@
 //////////////////////////////////////////////////////////////////////////////////////
 //
-//  Copyright (c) 2014-2015, Egret Technology Inc.
+//  Copyright (c) 2014-present, Egret Technology.
 //  All rights reserved.
 //  Redistribution and use in source and binary forms, with or without
 //  modification, are permitted provided that the following conditions are met:
@@ -28,7 +28,7 @@
 //////////////////////////////////////////////////////////////////////////////////////
 
 
-module egret.gui {
+namespace egret.gui {
 
 	/**
 	 * @class egret.gui.ProgressBar
@@ -163,7 +163,7 @@ module egret.gui {
                 this.slideToValue = this.nearestValidValue(newValue, this.snapInterval);
                 if (this.slideToValue == this.animationValue)
                     return;
-                var duration:number = this._slideDuration *
+                let duration:number = this._slideDuration *
                     (Math.abs(this.animationValue - this.slideToValue) / (this.maximum - this.minimum));
                 this.animator.duration = duration === Infinity ? 0 : duration;
                 this.animator.motionPaths = [
@@ -181,7 +181,7 @@ module egret.gui {
          * 动画播放更新数值
          */
         private animationUpdateHandler(animation:Animation):void {
-            var value:number = this.nearestValidValue(animation.currentValue["value"], this.snapInterval);
+            let value:number = this.nearestValidValue(animation.currentValue["value"], this.snapInterval);
             this.animationValue = Math.min(this.maximum, Math.max(this.minimum, value));
             this.invalidateDisplayList();
         }
@@ -261,7 +261,7 @@ module egret.gui {
          */
         public updateSkinDisplayList():void {
             this.trackResizedOrMoved = false;
-            var currentValue:number = this.value;
+            let currentValue:number = this.value;
             if(this.animator&&this.animator.isPlaying){
                 currentValue = this.animationValue;
             }
@@ -271,23 +271,23 @@ module egret.gui {
                     currentValue = 0;
                 }
             }
-            var maxValue:number = isNaN(this.maximum) ? 0 : this.maximum;
+            let maxValue:number = isNaN(this.maximum) ? 0 : this.maximum;
             if (this.thumb && this.track) {
-                var trackWidth:number = isNaN(this.track.width) ? 0 : this.track.width;
+                let trackWidth:number = isNaN(this.track.width) ? 0 : this.track.width;
                 trackWidth *= this.track.scaleX;
-                var trackHeight:number = isNaN(this.track.height) ? 0 : this.track.height;
+                let trackHeight:number = isNaN(this.track.height) ? 0 : this.track.height;
                 trackHeight *= this.track.scaleY;
-                var thumbWidth:number = Math.round((currentValue / maxValue) * trackWidth);
+                let thumbWidth:number = Math.round((currentValue / maxValue) * trackWidth);
                 if (isNaN(thumbWidth) || thumbWidth < 0 || thumbWidth === Infinity)
                     thumbWidth = 0;
-                var thumbHeight:number = Math.round((currentValue / maxValue) * trackHeight);
+                let thumbHeight:number = Math.round((currentValue / maxValue) * trackHeight);
                 if (isNaN(thumbHeight) || thumbHeight < 0 || thumbHeight === Infinity)
                     thumbHeight = 0;
 
-                var p:Point = this.track.localToGlobal(0, 0);
-                var thumbPos:Point = this.globalToLocal(p.x, p.y,egret.$TempPoint);
-                var thumbPosX:number = thumbPos.x;
-                var thumbPosY:number = thumbPos.y;
+                let p:Point = this.track.localToGlobal(0, 0);
+                let thumbPos:Point = this.globalToLocal(p.x, p.y,egret.$TempPoint);
+                let thumbPosX:number = thumbPos.x;
+                let thumbPosY:number = thumbPos.y;
 
                 switch (this._direction) {
                     case ProgressBarDirection.LEFT_TO_RIGHT:

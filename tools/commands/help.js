@@ -1,5 +1,5 @@
 /// <reference path="../lib/types.d.ts" />
-var helpParser = require('./help/helpParser');
+var helpParser = require("./help/helpParser");
 var Help = (function () {
     function Help() {
     }
@@ -48,7 +48,5 @@ var Help = (function () {
         return result;
     };
     return Help;
-})();
+}());
 module.exports = Help;
-
-//# sourceMappingURL=help.js.map

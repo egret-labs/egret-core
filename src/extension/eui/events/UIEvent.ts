@@ -1,6 +1,6 @@
 //////////////////////////////////////////////////////////////////////////////////////
 //
-//  Copyright (c) 2014-2015, Egret Technology Inc.
+//  Copyright (c) 2014-present, Egret Technology.
 //  All rights reserved.
 //  Redistribution and use in source and binary forms, with or without
 //  modification, are permitted provided that the following conditions are met:
@@ -28,29 +28,28 @@
 //////////////////////////////////////////////////////////////////////////////////////
 
 
-module eui {
+namespace eui {
 
     /**
-     * @language en_US
      * The UIEvent class represents the event object passed to
      * the event listener for many UI events.
      * @version Egret 2.4
      * @version eui 1.0
      * @platform Web,Native
      * @includeExample  extension/eui/events/UIEventExample.ts
+     * @language en_US
      */
     /**
-     * @language zh_CN
      * UI事件
      * @version Egret 2.4
      * @version eui 1.0
      * @platform Web,Native
      * @includeExample  extension/eui/events/UIEventExample.ts
+     * @language zh_CN
      */
     export class UIEvent extends egret.Event{
 
         /**
-         * @language en_US
          * Constructor.
          *
          * @param type The event type; indicates the action that triggered the event.
@@ -62,9 +61,9 @@ module eui {
          * @version Egret 2.4
          * @version eui 1.0
          * @platform Web,Native
+         * @language en_US
          */
         /**
-         * @language zh_CN
          * 创建一个 UIEvent 实例
          *
          * @param type 事件类型；指示触发事件的动作。
@@ -74,92 +73,92 @@ module eui {
          * @version Egret 2.4
          * @version eui 1.0
          * @platform Web,Native
+         * @language zh_CN
          */
         public constructor(type:string, bubbles?:boolean, cancelable?:boolean){
             super(type, bubbles, cancelable);
         }
 
         /**
-         * @language en_US
          * creation complete of component.
          * @version Egret 2.4
          * @version eui 1.0
          * @platform Web,Native
+         * @language en_US
          */
         /**
-         * @language zh_CN
          * 组件创建完成
          * @version Egret 2.4
          * @version eui 1.0
          * @platform Web,Native
+         * @language zh_CN
          */
         public static CREATION_COMPLETE:string = "creationComplete";
         /**
-         * @language en_US
          * the ending of change.
          * @version Egret 2.4
          * @version eui 1.0
          * @platform Web,Native
+         * @language en_US
          */
         /**
-         * @language zh_CN
          * 改变结束
          * @version Egret 2.4
          * @version eui 1.0
          * @platform Web,Native
+         * @language zh_CN
          */
         public static CHANGE_END:string = "changeEnd";
 
         /**
-         * @language en_US
          * The beginning of change.
          * @version Egret 2.4
          * @version eui 1.0
          * @platform Web,Native
+         * @language en_US
          */
         /**
-         * @language zh_CN
          * 改变开始
          * @version Egret 2.4
          * @version eui 1.0
          * @platform Web,Native
+         * @language zh_CN
          */
         public static CHANGE_START:string = "changeStart";
 
         /**
-         * @language en_US
          * Before close the panel.
          * @version Egret 2.4
          * @version eui 1.0
          * @platform Web,Native
+         * @language en_US
          */
         /**
-         * @language zh_CN
          * 即将关闭面板事件
          * @version Egret 2.4
          * @version eui 1.0
          * @platform Web,Native
+         * @language zh_CN
          */
         public static CLOSING:string = "closing";
 
         /**
-         * @language en_US
          * The coordinates of the UI components changed in it's parent.
          * @version Egret 2.4
          * @version eui 1.0
          * @platform Web,Native
+         * @language en_US
          */
         /**
-         * @language zh_CN
          * UI组件在父级容器中的坐标发生改变事件
          * @version Egret 2.4
          * @version eui 1.0
          * @platform Web,Native
+         * @language zh_CN
          */
         public static MOVE:string = "move";
 
         /**
-         * @language en_US
          * Dispatch an event with specified EventDispatcher. The dispatched event will be cached in the object pool,
          * for the next cycle of reuse.
          *
@@ -171,9 +170,9 @@ module eui {
          * @version Egret 2.4
          * @version eui 1.0
          * @platform Web,Native
+         * @language en_US
          */
         /**
-         * @language zh_CN
          * 使用指定的EventDispatcher对象来抛出事件对象。抛出的对象将会缓存在对象池上，供下次循环复用。
          *
          * @param target 事件派发目标。
@@ -184,13 +183,14 @@ module eui {
          * @version Egret 2.4
          * @version eui 1.0
          * @platform Web,Native
+         * @language zh_CN
          */
         public static dispatchUIEvent(target:egret.IEventDispatcher, eventType:string, bubbles?:boolean, cancelable?:boolean):boolean {
             if(!target.hasEventListener(eventType)){
                 return true;
             }
-            var event = egret.Event.create(UIEvent, eventType, bubbles, cancelable);
-            var result = target.dispatchEvent(event);
+            let event = egret.Event.create(UIEvent, eventType, bubbles, cancelable);
+            let result = target.dispatchEvent(event);
             egret.Event.release(event);
             return result;
         }

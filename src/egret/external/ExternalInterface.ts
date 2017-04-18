@@ -1,6 +1,6 @@
 //////////////////////////////////////////////////////////////////////////////////////
 //
-//  Copyright (c) 2014-2015, Egret Technology Inc.
+//  Copyright (c) 2014-present, Egret Technology.
 //  All rights reserved.
 //  Redistribution and use in source and binary forms, with or without
 //  modification, are permitted provided that the following conditions are met:
@@ -27,54 +27,54 @@
 //
 //////////////////////////////////////////////////////////////////////////////////////
 
-module egret {
+namespace egret {
     /**
-     * @language en_US
      * h5 and native interaction.
-     * @see http://edn.egret.com/cn/index.php?g=&m=article&a=index&id=167&terms1_id=25&terms2_id=39 Android between language communication within the project
+     * @see http://edn.egret.com/cn/article/index/id/714 Egret basic skills to communicate with Native
      * @version Egret 2.4
      * @platform Web,Native
      * @includeExample egret/external/ExternalInterface.ts
+     * @language en_US
      */
     /**
-     * @language zh_CN
      * h5与native交互。
-     * @see http://edn.egret.com/cn/index.php?g=&m=article&a=index&id=167&terms1_id=25&terms2_id=39 Android项目内的语言间通讯
+     * @see http://edn.egret.com/cn/article/index/id/714 Egret 与 Native 通信基本技巧
      * @version Egret 2.4
      * @platform Web,Native
      * @includeExample egret/external/ExternalInterface.ts
+     * @language zh_CN
      */
     export interface ExternalInterface {
 
     }
 
-    export var ExternalInterface: {
+    export let ExternalInterface: {
         /**
-         * @language en_US
          * Call functionName, and the value passed to the native.
          * @version Egret 2.4
          * @platform Web,Native
+         * @language en_US
          */
         /**
-         * @language zh_CN
          * 调用 functionName，并将value传入到native中。
          * @version Egret 2.4
          * @platform Web,Native
+         * @language zh_CN
          */
         call(functionName:string, value:string):void;
 
         /**
-         * @language en_US
          * FunctionName callback listener, you need to have to call functionName this field in native rather than such a call.
          * @version Egret 2.4
          * @platform Web,Native
+         * @language en_US
          */
         /**
-         * @language zh_CN
          * 监听 functionName 回调，需要在native中有调用 functionName 这个字段，而不是 此类的call。
          * @version Egret 2.4
          * @platform Web,Native
+         * @language zh_CN
          */
-        addCallback(functionName:string, listener:(value)=>void):void
+        addCallback(functionName:string, listener:(value:string)=>void):void
     };
 }

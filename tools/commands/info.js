@@ -8,7 +8,5 @@ var info = (function () {
         return 0;
     };
     return info;
-})();
+}());
 module.exports = info;
-
-//# sourceMappingURL=info.js.map

@@ -4,9 +4,10 @@
 /// <reference path="../lib/types.d.ts" />
 //import globals = require("../globals");
 //import params = require("../ParamsParser");
-var file = require('../lib/FileUtil');
+var file = require("../lib/FileUtil");
+var EgretProject = require("../parser/EgretProject");
 //import config = require('../ProjectConfig');
-var config = egret.args.properties;
+var config = EgretProject.utils;
 var CopyFilesCommand = (function () {
     function CopyFilesCommand() {
     }
@@ -25,7 +26,7 @@ var CopyFilesCommand = (function () {
         globals.log2(7, (Date.now() - startTime) / 1000);
     };
     CopyFilesCommand.prototype.copyResources = function (projectPath, outputPath, ignorePathList) {
-        var resources = egret.args.properties.getResources();
+        var resources = config.getResources();
         for (var key in resources) {
             if (file.exists(file.joinPath(projectPath, resources[key]))) {
                 this.copyFilesWithIgnore(file.joinPath(projectPath, resources[key]), file.joinPath(outputPath, resources[key]), ignorePathList);
@@ -55,7 +56,5 @@ var CopyFilesCommand = (function () {
         });
     };
     return CopyFilesCommand;
-})();
+}());
 module.exports = CopyFilesCommand;
-
-//# sourceMappingURL=copyfile.js.map

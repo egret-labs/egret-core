@@ -1,6 +1,6 @@
 //////////////////////////////////////////////////////////////////////////////////////
 //
-//  Copyright (c) 2014-2015, Egret Technology Inc.
+//  Copyright (c) 2014-present, Egret Technology.
 //  All rights reserved.
 //  Redistribution and use in source and binary forms, with or without
 //  modification, are permitted provided that the following conditions are met:
@@ -28,7 +28,7 @@
 //////////////////////////////////////////////////////////////////////////////////////
 
 
-module egret.gui {
+namespace egret.gui {
 
 	/**
 	 * @class egret.gui.SetProperty
@@ -76,7 +76,7 @@ module egret.gui {
 		 * @param parent {IContainer} 
 		 */
 		public apply(parent:IContainer):void{   
-			var obj:any = this.target==null||this.target==""?parent:parent[this.target];
+			let obj:any = this.target==null||this.target==""?parent:parent[this.target];
 			if(obj==null)
 				return;
 			this.oldValue = obj[this.name];
@@ -88,7 +88,7 @@ module egret.gui {
 		 * @param parent {IContainer} 
 		 */
 		public remove(parent:IContainer):void{   
-			var obj:any = this.target==null||this.target==""?parent:parent[this.target];
+			let obj:any = this.target==null||this.target==""?parent:parent[this.target];
 			if(obj==null)
 				return;
 			this.setPropertyValue(obj, this.name, this.oldValue, this.oldValue);

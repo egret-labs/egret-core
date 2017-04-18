@@ -16,7 +16,9 @@
     <xs:attribute name="texture" type="xs:string"/>
   </xs:attributeGroup>
   <xs:group name="egret.BitmapData">
-    <xs:choice/>
+    <xs:choice>
+      <xs:element ref="BitmapData"/>
+    </xs:choice>
   </xs:group>
   <xs:complexType name="egret.BitmapData">
     <xs:group ref="egret.BitmapData"/>
@@ -74,6 +76,23 @@
       <xs:attributeGroup ref="egret.Bitmap"/>
     </xs:complexType>
   </xs:element>
+  <xs:attributeGroup name="egret.BitmapData">
+    <xs:attributeGroup ref="egret.HashObject"/>
+  </xs:attributeGroup>
+  <xs:group name="BitmapData_attributeElement">
+    <xs:choice>
+      <xs:group ref="HashObject_attributeElement"/>
+    </xs:choice>
+  </xs:group>
+  <xs:element name="BitmapData">
+    <xs:complexType>
+      <xs:choice minOccurs="0" maxOccurs="unbounded">
+        <xs:any namespace="##other"/>
+        <xs:group ref="BitmapData_attributeElement"/>
+      </xs:choice>
+      <xs:attributeGroup ref="egret.BitmapData"/>
+    </xs:complexType>
+  </xs:element>
   <xs:attributeGroup name="egret.BitmapFont">
     <xs:attributeGroup ref="egret.SpriteSheet"/>
   </xs:attributeGroup>
@@ -96,6 +115,7 @@
     <xs:attribute name="font" type="xs:string"/>
     <xs:attribute name="letterSpacing" type="xs:decimal"/>
     <xs:attribute name="lineSpacing" type="xs:decimal"/>
+    <xs:attribute name="smoothing" type="xs:boolean"/>
     <xs:attribute name="text" type="xs:string"/>
     <xs:attribute name="textAlign" type="xs:string"/>
     <xs:attribute name="verticalAlign" type="xs:string"/>
@@ -122,6 +142,7 @@
       <xs:element name="font" type="Object"/>
       <xs:element name="letterSpacing" type="number"/>
       <xs:element name="lineSpacing" type="number"/>
+      <xs:element name="smoothing" type="boolean"/>
       <xs:element name="text" type="string"/>
       <xs:element name="textAlign" type="string"/>
       <xs:element name="verticalAlign" type="string"/>
@@ -139,11 +160,13 @@
   <xs:attributeGroup name="egret.BlurFilter">
     <xs:attributeGroup ref="egret.Filter"/>
     <xs:attribute name="blurX" type="xs:decimal"/>
+    <xs:attribute name="blurY" type="xs:decimal"/>
   </xs:attributeGroup>
   <xs:group name="BlurFilter_attributeElement">
     <xs:choice>
       <xs:group ref="Filter_attributeElement"/>
       <xs:element name="blurX" type="number"/>
+      <xs:element name="blurY" type="number"/>
     </xs:choice>
   </xs:group>
   <xs:element name="BlurFilter">
@@ -192,10 +215,13 @@
   <xs:attributeGroup name="egret.DisplayObject">
     <xs:attributeGroup ref="egret.EventDispatcher"/>
     <xs:attribute name="alpha" type="xs:decimal"/>
+    <xs:attribute name="anchorOffsetX" type="xs:decimal"/>
+    <xs:attribute name="anchorOffsetY" type="xs:decimal"/>
     <xs:attribute name="blendMode" type="egret.BlendMode"/>
     <xs:attribute name="cacheAsBitmap" type="xs:boolean"/>
     <xs:attribute name="class" type="xs:string"/>
     <xs:attribute name="excludeFrom" type="xs:string"/>
+    <xs:attribute name="filters" type="xs:string"/>
     <xs:attribute name="height" type="xs:string"/>
     <xs:attribute name="includeIn" type="xs:string"/>
     <xs:attribute name="locked" type="xs:boolean"/>
@@ -230,10 +256,13 @@
     <xs:choice>
       <xs:group ref="EventDispatcher_attributeElement"/>
       <xs:element name="alpha" type="number"/>
+      <xs:element name="anchorOffsetX" type="number"/>
+      <xs:element name="anchorOffsetY" type="number"/>
       <xs:element name="blendMode" type="string"/>
       <xs:element name="cacheAsBitmap" type="boolean"/>
       <xs:element name="class" type="string"/>
       <xs:element name="excludeFrom" type="string"/>
+      <xs:element name="filters" type="Array_any"/>
       <xs:element name="height" type="number"/>
       <xs:element name="includeIn" type="string"/>
       <xs:element name="locked" type="boolean"/>
@@ -283,12 +312,16 @@
   </xs:element>
   <xs:attributeGroup name="egret.DropShadowFilter">
     <xs:attributeGroup ref="egret.GlowFilter"/>
+    <xs:attribute name="angle" type="xs:decimal"/>
     <xs:attribute name="distance" type="xs:decimal"/>
+    <xs:attribute name="hideObject" type="xs:boolean"/>
   </xs:attributeGroup>
   <xs:group name="DropShadowFilter_attributeElement">
     <xs:choice>
       <xs:group ref="GlowFilter_attributeElement"/>
+      <xs:element name="angle" type="number"/>
       <xs:element name="distance" type="number"/>
+      <xs:element name="hideObject" type="boolean"/>
     </xs:choice>
   </xs:group>
   <xs:element name="DropShadowFilter">
@@ -338,12 +371,26 @@
   </xs:element>
   <xs:attributeGroup name="egret.GlowFilter">
     <xs:attributeGroup ref="egret.Filter"/>
+    <xs:attribute name="alpha" type="xs:decimal"/>
+    <xs:attribute name="blurX" type="xs:decimal"/>
+    <xs:attribute name="blurY" type="xs:decimal"/>
     <xs:attribute name="color" type="xs:string"/>
+    <xs:attribute name="inner" type="xs:boolean"/>
+    <xs:attribute name="knockout" type="xs:boolean"/>
+    <xs:attribute name="quality" type="xs:decimal"/>
+    <xs:attribute name="strength" type="xs:decimal"/>
   </xs:attributeGroup>
   <xs:group name="GlowFilter_attributeElement">
     <xs:choice>
       <xs:group ref="Filter_attributeElement"/>
+      <xs:element name="alpha" type="number"/>
+      <xs:element name="blurX" type="number"/>
+      <xs:element name="blurY" type="number"/>
       <xs:element name="color" type="number"/>
+      <xs:element name="inner" type="boolean"/>
+      <xs:element name="knockout" type="boolean"/>
+      <xs:element name="quality" type="number"/>
+      <xs:element name="strength" type="number"/>
     </xs:choice>
   </xs:group>
   <xs:element name="GlowFilter">
@@ -418,6 +465,23 @@
       <xs:attributeGroup ref="egret.Matrix"/>
     </xs:complexType>
   </xs:element>
+  <xs:attributeGroup name="egret.Mesh">
+    <xs:attributeGroup ref="egret.Bitmap"/>
+  </xs:attributeGroup>
+  <xs:group name="Mesh_attributeElement">
+    <xs:choice>
+      <xs:group ref="Bitmap_attributeElement"/>
+    </xs:choice>
+  </xs:group>
+  <xs:element name="Mesh">
+    <xs:complexType>
+      <xs:choice minOccurs="0" maxOccurs="unbounded">
+        <xs:any namespace="##other"/>
+        <xs:group ref="Mesh_attributeElement"/>
+      </xs:choice>
+      <xs:attributeGroup ref="egret.Mesh"/>
+    </xs:complexType>
+  </xs:element>
   <xs:attributeGroup name="egret.Point">
     <xs:attributeGroup ref="egret.HashObject"/>
     <xs:attribute name="x" type="xs:decimal"/>
@@ -486,10 +550,18 @@
   </xs:element>
   <xs:attributeGroup name="egret.RenderTexture">
     <xs:attributeGroup ref="egret.Texture"/>
+    <xs:attribute name="$renderBuffer" type="xs:string"/>
   </xs:attributeGroup>
+  <xs:group name="sys.RenderBuffer">
+    <xs:choice/>
+  </xs:group>
+  <xs:complexType name="sys.RenderBuffer">
+    <xs:group ref="sys.RenderBuffer"/>
+  </xs:complexType>
   <xs:group name="RenderTexture_attributeElement">
     <xs:choice>
       <xs:group ref="Texture_attributeElement"/>
+      <xs:element name="$renderBuffer" type="sys.RenderBuffer"/>
     </xs:choice>
   </xs:group>
   <xs:element name="RenderTexture">
@@ -575,6 +647,7 @@
     <xs:attribute name="borderColor" type="xs:string"/>
     <xs:attribute name="displayAsPassword" type="xs:boolean"/>
     <xs:attribute name="fontFamily" type="xs:string"/>
+    <xs:attribute name="inputType" type="xs:string"/>
     <xs:attribute name="italic" type="xs:boolean"/>
     <xs:attribute name="lineSpacing" type="xs:decimal"/>
     <xs:attribute name="maxChars" type="xs:decimal"/>
@@ -602,6 +675,7 @@
       <xs:element name="borderColor" type="number"/>
       <xs:element name="displayAsPassword" type="boolean"/>
       <xs:element name="fontFamily" type="string"/>
+      <xs:element name="inputType" type="string"/>
       <xs:element name="italic" type="boolean"/>
       <xs:element name="lineSpacing" type="number"/>
       <xs:element name="maxChars" type="number"/>
@@ -631,10 +705,12 @@
   </xs:element>
   <xs:attributeGroup name="egret.Texture">
     <xs:attributeGroup ref="egret.HashObject"/>
+    <xs:attribute name="bitmapData" type="xs:string"/>
   </xs:attributeGroup>
   <xs:group name="Texture_attributeElement">
     <xs:choice>
       <xs:group ref="HashObject_attributeElement"/>
+      <xs:element name="bitmapData" type="egret.BitmapData"/>
     </xs:choice>
   </xs:group>
   <xs:element name="Texture">
@@ -708,36 +784,36 @@
   </xs:element>
   <xs:attributeGroup name="eui.BitmapLabel">
     <xs:attributeGroup ref="egret.BitmapText"/>
-    <xs:attribute name="bottom" type="xs:decimal"/>
-    <xs:attribute name="horizontalCenter" type="xs:decimal"/>
+    <xs:attribute name="bottom" type="xs:string"/>
+    <xs:attribute name="horizontalCenter" type="xs:string"/>
     <xs:attribute name="includeInLayout" type="xs:boolean"/>
-    <xs:attribute name="left" type="xs:decimal"/>
+    <xs:attribute name="left" type="xs:string"/>
     <xs:attribute name="maxHeight" type="xs:decimal"/>
     <xs:attribute name="maxWidth" type="xs:decimal"/>
     <xs:attribute name="minHeight" type="xs:decimal"/>
     <xs:attribute name="minWidth" type="xs:decimal"/>
     <xs:attribute name="percentHeight" type="xs:decimal"/>
     <xs:attribute name="percentWidth" type="xs:decimal"/>
-    <xs:attribute name="right" type="xs:decimal"/>
-    <xs:attribute name="top" type="xs:decimal"/>
-    <xs:attribute name="verticalCenter" type="xs:decimal"/>
+    <xs:attribute name="right" type="xs:string"/>
+    <xs:attribute name="top" type="xs:string"/>
+    <xs:attribute name="verticalCenter" type="xs:string"/>
   </xs:attributeGroup>
   <xs:group name="BitmapLabel_attributeElement">
     <xs:choice>
       <xs:group ref="BitmapText_attributeElement"/>
-      <xs:element name="bottom" type="number"/>
-      <xs:element name="horizontalCenter" type="number"/>
+      <xs:element name="bottom" type="any"/>
+      <xs:element name="horizontalCenter" type="any"/>
       <xs:element name="includeInLayout" type="boolean"/>
-      <xs:element name="left" type="number"/>
+      <xs:element name="left" type="any"/>
       <xs:element name="maxHeight" type="number"/>
       <xs:element name="maxWidth" type="number"/>
       <xs:element name="minHeight" type="number"/>
       <xs:element name="minWidth" type="number"/>
       <xs:element name="percentHeight" type="number"/>
       <xs:element name="percentWidth" type="number"/>
-      <xs:element name="right" type="number"/>
-      <xs:element name="top" type="number"/>
-      <xs:element name="verticalCenter" type="number"/>
+      <xs:element name="right" type="any"/>
+      <xs:element name="top" type="any"/>
+      <xs:element name="verticalCenter" type="any"/>
     </xs:choice>
   </xs:group>
   <xs:element name="BitmapLabel">
@@ -811,44 +887,44 @@
   </xs:element>
   <xs:attributeGroup name="eui.Component">
     <xs:attributeGroup ref="egret.DisplayObjectContainer"/>
-    <xs:attribute name="bottom" type="xs:decimal"/>
+    <xs:attribute name="bottom" type="xs:string"/>
     <xs:attribute name="currentState" type="xs:string"/>
     <xs:attribute name="enabled" type="xs:boolean"/>
-    <xs:attribute name="horizontalCenter" type="xs:decimal"/>
+    <xs:attribute name="horizontalCenter" type="xs:string"/>
     <xs:attribute name="hostComponentKey" type="xs:string"/>
     <xs:attribute name="includeInLayout" type="xs:boolean"/>
-    <xs:attribute name="left" type="xs:decimal"/>
+    <xs:attribute name="left" type="xs:string"/>
     <xs:attribute name="maxHeight" type="xs:decimal"/>
     <xs:attribute name="maxWidth" type="xs:decimal"/>
     <xs:attribute name="minHeight" type="xs:decimal"/>
     <xs:attribute name="minWidth" type="xs:decimal"/>
     <xs:attribute name="percentHeight" type="xs:decimal"/>
     <xs:attribute name="percentWidth" type="xs:decimal"/>
-    <xs:attribute name="right" type="xs:decimal"/>
+    <xs:attribute name="right" type="xs:string"/>
     <xs:attribute name="skinName" type="xs:string"/>
-    <xs:attribute name="top" type="xs:decimal"/>
-    <xs:attribute name="verticalCenter" type="xs:decimal"/>
+    <xs:attribute name="top" type="xs:string"/>
+    <xs:attribute name="verticalCenter" type="xs:string"/>
   </xs:attributeGroup>
   <xs:group name="Component_attributeElement">
     <xs:choice>
       <xs:group ref="DisplayObjectContainer_attributeElement"/>
-      <xs:element name="bottom" type="number"/>
+      <xs:element name="bottom" type="any"/>
       <xs:element name="currentState" type="string"/>
       <xs:element name="enabled" type="boolean"/>
-      <xs:element name="horizontalCenter" type="number"/>
+      <xs:element name="horizontalCenter" type="any"/>
       <xs:element name="hostComponentKey" type="string"/>
       <xs:element name="includeInLayout" type="boolean"/>
-      <xs:element name="left" type="number"/>
+      <xs:element name="left" type="any"/>
       <xs:element name="maxHeight" type="number"/>
       <xs:element name="maxWidth" type="number"/>
       <xs:element name="minHeight" type="number"/>
       <xs:element name="minWidth" type="number"/>
       <xs:element name="percentHeight" type="number"/>
       <xs:element name="percentWidth" type="number"/>
-      <xs:element name="right" type="number"/>
+      <xs:element name="right" type="any"/>
       <xs:element name="skinName" type="any"/>
-      <xs:element name="top" type="number"/>
-      <xs:element name="verticalCenter" type="number"/>
+      <xs:element name="top" type="any"/>
+      <xs:element name="verticalCenter" type="any"/>
       <xs:element ref="Skin"/>
     </xs:choice>
   </xs:group>
@@ -906,10 +982,10 @@
   </xs:element>
   <xs:attributeGroup name="eui.EditableText">
     <xs:attributeGroup ref="egret.TextField"/>
-    <xs:attribute name="bottom" type="xs:decimal"/>
-    <xs:attribute name="horizontalCenter" type="xs:decimal"/>
+    <xs:attribute name="bottom" type="xs:string"/>
+    <xs:attribute name="horizontalCenter" type="xs:string"/>
     <xs:attribute name="includeInLayout" type="xs:boolean"/>
-    <xs:attribute name="left" type="xs:decimal"/>
+    <xs:attribute name="left" type="xs:string"/>
     <xs:attribute name="maxHeight" type="xs:decimal"/>
     <xs:attribute name="maxWidth" type="xs:decimal"/>
     <xs:attribute name="minHeight" type="xs:decimal"/>
@@ -918,17 +994,17 @@
     <xs:attribute name="percentWidth" type="xs:decimal"/>
     <xs:attribute name="prompt" type="xs:string"/>
     <xs:attribute name="promptColor" type="xs:string"/>
-    <xs:attribute name="right" type="xs:decimal"/>
-    <xs:attribute name="top" type="xs:decimal"/>
-    <xs:attribute name="verticalCenter" type="xs:decimal"/>
+    <xs:attribute name="right" type="xs:string"/>
+    <xs:attribute name="top" type="xs:string"/>
+    <xs:attribute name="verticalCenter" type="xs:string"/>
   </xs:attributeGroup>
   <xs:group name="EditableText_attributeElement">
     <xs:choice>
       <xs:group ref="TextField_attributeElement"/>
-      <xs:element name="bottom" type="number"/>
-      <xs:element name="horizontalCenter" type="number"/>
+      <xs:element name="bottom" type="any"/>
+      <xs:element name="horizontalCenter" type="any"/>
       <xs:element name="includeInLayout" type="boolean"/>
-      <xs:element name="left" type="number"/>
+      <xs:element name="left" type="any"/>
       <xs:element name="maxHeight" type="number"/>
       <xs:element name="maxWidth" type="number"/>
       <xs:element name="minHeight" type="number"/>
@@ -937,9 +1013,9 @@
       <xs:element name="percentWidth" type="number"/>
       <xs:element name="prompt" type="string"/>
       <xs:element name="promptColor" type="number"/>
-      <xs:element name="right" type="number"/>
-      <xs:element name="top" type="number"/>
-      <xs:element name="verticalCenter" type="number"/>
+      <xs:element name="right" type="any"/>
+      <xs:element name="top" type="any"/>
+      <xs:element name="verticalCenter" type="any"/>
     </xs:choice>
   </xs:group>
   <xs:element name="EditableText">
@@ -953,27 +1029,27 @@
   </xs:element>
   <xs:attributeGroup name="eui.Group">
     <xs:attributeGroup ref="egret.DisplayObjectContainer"/>
-    <xs:attribute name="bottom" type="xs:decimal"/>
+    <xs:attribute name="bottom" type="xs:string"/>
     <xs:attribute name="currentState" type="xs:string"/>
     <xs:attribute name="elementsContent" type="xs:string"/>
-    <xs:attribute name="horizontalCenter" type="xs:decimal"/>
+    <xs:attribute name="horizontalCenter" type="xs:string"/>
     <xs:attribute name="includeInLayout" type="xs:boolean"/>
     <xs:attribute name="layout" type="xs:string"/>
-    <xs:attribute name="left" type="xs:decimal"/>
+    <xs:attribute name="left" type="xs:string"/>
     <xs:attribute name="maxHeight" type="xs:decimal"/>
     <xs:attribute name="maxWidth" type="xs:decimal"/>
     <xs:attribute name="minHeight" type="xs:decimal"/>
     <xs:attribute name="minWidth" type="xs:decimal"/>
     <xs:attribute name="percentHeight" type="xs:decimal"/>
     <xs:attribute name="percentWidth" type="xs:decimal"/>
-    <xs:attribute name="right" type="xs:decimal"/>
+    <xs:attribute name="right" type="xs:string"/>
     <xs:attribute name="scrollEnabled" type="xs:boolean"/>
     <xs:attribute name="scrollH" type="xs:decimal"/>
     <xs:attribute name="scrollV" type="xs:decimal"/>
     <xs:attribute name="states" type="xs:string"/>
-    <xs:attribute name="top" type="xs:decimal"/>
+    <xs:attribute name="top" type="xs:string"/>
     <xs:attribute name="touchThrough" type="xs:boolean"/>
-    <xs:attribute name="verticalCenter" type="xs:decimal"/>
+    <xs:attribute name="verticalCenter" type="xs:string"/>
   </xs:attributeGroup>
   <xs:group name="egret.DisplayObject">
     <xs:choice>
@@ -995,6 +1071,7 @@
       <xs:element ref="Label"/>
       <xs:element ref="List"/>
       <xs:element ref="ListBase"/>
+      <xs:element ref="Mesh"/>
       <xs:element ref="Panel"/>
       <xs:element ref="ProgressBar"/>
       <xs:element ref="RadioButton"/>
@@ -1042,27 +1119,27 @@
   <xs:group name="Group_attributeElement">
     <xs:choice>
       <xs:group ref="DisplayObjectContainer_attributeElement"/>
-      <xs:element name="bottom" type="number"/>
+      <xs:element name="bottom" type="any"/>
       <xs:element name="currentState" type="string"/>
       <xs:element name="elementsContent" type="Array_egret.DisplayObject"/>
-      <xs:element name="horizontalCenter" type="number"/>
+      <xs:element name="horizontalCenter" type="any"/>
       <xs:element name="includeInLayout" type="boolean"/>
       <xs:element name="layout" type="eui.LayoutBase"/>
-      <xs:element name="left" type="number"/>
+      <xs:element name="left" type="any"/>
       <xs:element name="maxHeight" type="number"/>
       <xs:element name="maxWidth" type="number"/>
       <xs:element name="minHeight" type="number"/>
       <xs:element name="minWidth" type="number"/>
       <xs:element name="percentHeight" type="number"/>
       <xs:element name="percentWidth" type="number"/>
-      <xs:element name="right" type="number"/>
+      <xs:element name="right" type="any"/>
       <xs:element name="scrollEnabled" type="boolean"/>
       <xs:element name="scrollH" type="number"/>
       <xs:element name="scrollV" type="number"/>
       <xs:element name="states" type="Array_eui.State"/>
-      <xs:element name="top" type="number"/>
+      <xs:element name="top" type="any"/>
       <xs:element name="touchThrough" type="boolean"/>
-      <xs:element name="verticalCenter" type="number"/>
+      <xs:element name="verticalCenter" type="any"/>
     </xs:choice>
   </xs:group>
   <xs:element name="Group" m:defaultProp="elementsContent" m:defaultPropType="Array_egret.DisplayObject">
@@ -1128,38 +1205,38 @@
   </xs:element>
   <xs:attributeGroup name="eui.Image">
     <xs:attributeGroup ref="egret.Bitmap"/>
-    <xs:attribute name="bottom" type="xs:decimal"/>
-    <xs:attribute name="horizontalCenter" type="xs:decimal"/>
+    <xs:attribute name="bottom" type="xs:string"/>
+    <xs:attribute name="horizontalCenter" type="xs:string"/>
     <xs:attribute name="includeInLayout" type="xs:boolean"/>
-    <xs:attribute name="left" type="xs:decimal"/>
+    <xs:attribute name="left" type="xs:string"/>
     <xs:attribute name="maxHeight" type="xs:decimal"/>
     <xs:attribute name="maxWidth" type="xs:decimal"/>
     <xs:attribute name="minHeight" type="xs:decimal"/>
     <xs:attribute name="minWidth" type="xs:decimal"/>
     <xs:attribute name="percentHeight" type="xs:decimal"/>
     <xs:attribute name="percentWidth" type="xs:decimal"/>
-    <xs:attribute name="right" type="xs:decimal"/>
+    <xs:attribute name="right" type="xs:string"/>
     <xs:attribute name="source" type="xs:string"/>
-    <xs:attribute name="top" type="xs:decimal"/>
-    <xs:attribute name="verticalCenter" type="xs:decimal"/>
+    <xs:attribute name="top" type="xs:string"/>
+    <xs:attribute name="verticalCenter" type="xs:string"/>
   </xs:attributeGroup>
   <xs:group name="Image_attributeElement">
     <xs:choice>
       <xs:group ref="Bitmap_attributeElement"/>
-      <xs:element name="bottom" type="number"/>
-      <xs:element name="horizontalCenter" type="number"/>
+      <xs:element name="bottom" type="any"/>
+      <xs:element name="horizontalCenter" type="any"/>
       <xs:element name="includeInLayout" type="boolean"/>
-      <xs:element name="left" type="number"/>
+      <xs:element name="left" type="any"/>
       <xs:element name="maxHeight" type="number"/>
       <xs:element name="maxWidth" type="number"/>
       <xs:element name="minHeight" type="number"/>
       <xs:element name="minWidth" type="number"/>
       <xs:element name="percentHeight" type="number"/>
       <xs:element name="percentWidth" type="number"/>
-      <xs:element name="right" type="number"/>
+      <xs:element name="right" type="any"/>
       <xs:element name="source" type="any"/>
-      <xs:element name="top" type="number"/>
-      <xs:element name="verticalCenter" type="number"/>
+      <xs:element name="top" type="any"/>
+      <xs:element name="verticalCenter" type="any"/>
     </xs:choice>
   </xs:group>
   <xs:element name="Image">
@@ -1196,36 +1273,38 @@
   </xs:element>
   <xs:attributeGroup name="eui.Label">
     <xs:attributeGroup ref="egret.TextField"/>
-    <xs:attribute name="bottom" type="xs:decimal"/>
-    <xs:attribute name="horizontalCenter" type="xs:decimal"/>
+    <xs:attribute name="bottom" type="xs:string"/>
+    <xs:attribute name="horizontalCenter" type="xs:string"/>
     <xs:attribute name="includeInLayout" type="xs:boolean"/>
-    <xs:attribute name="left" type="xs:decimal"/>
+    <xs:attribute name="left" type="xs:string"/>
     <xs:attribute name="maxHeight" type="xs:decimal"/>
     <xs:attribute name="maxWidth" type="xs:decimal"/>
     <xs:attribute name="minHeight" type="xs:decimal"/>
     <xs:attribute name="minWidth" type="xs:decimal"/>
     <xs:attribute name="percentHeight" type="xs:decimal"/>
     <xs:attribute name="percentWidth" type="xs:decimal"/>
-    <xs:attribute name="right" type="xs:decimal"/>
-    <xs:attribute name="top" type="xs:decimal"/>
-    <xs:attribute name="verticalCenter" type="xs:decimal"/>
+    <xs:attribute name="right" type="xs:string"/>
+    <xs:attribute name="style" type="xs:string"/>
+    <xs:attribute name="top" type="xs:string"/>
+    <xs:attribute name="verticalCenter" type="xs:string"/>
   </xs:attributeGroup>
   <xs:group name="Label_attributeElement">
     <xs:choice>
       <xs:group ref="TextField_attributeElement"/>
-      <xs:element name="bottom" type="number"/>
-      <xs:element name="horizontalCenter" type="number"/>
+      <xs:element name="bottom" type="any"/>
+      <xs:element name="horizontalCenter" type="any"/>
       <xs:element name="includeInLayout" type="boolean"/>
-      <xs:element name="left" type="number"/>
+      <xs:element name="left" type="any"/>
       <xs:element name="maxHeight" type="number"/>
       <xs:element name="maxWidth" type="number"/>
       <xs:element name="minHeight" type="number"/>
       <xs:element name="minWidth" type="number"/>
       <xs:element name="percentHeight" type="number"/>
       <xs:element name="percentWidth" type="number"/>
-      <xs:element name="right" type="number"/>
-      <xs:element name="top" type="number"/>
-      <xs:element name="verticalCenter" type="number"/>
+      <xs:element name="right" type="any"/>
+      <xs:element name="style" type="string"/>
+      <xs:element name="top" type="any"/>
+      <xs:element name="verticalCenter" type="any"/>
     </xs:choice>
   </xs:group>
   <xs:element name="Label">
@@ -1604,6 +1683,7 @@
   </xs:element>
   <xs:attributeGroup name="eui.ScrollBarBase">
     <xs:attributeGroup ref="eui.Component"/>
+    <xs:attribute name="autoVisibility" type="xs:boolean"/>
     <xs:attribute name="thumb" type="xs:string"/>
     <xs:attribute name="viewport" type="xs:string"/>
   </xs:attributeGroup>
@@ -1623,6 +1703,7 @@
   <xs:group name="ScrollBarBase_attributeElement">
     <xs:choice>
       <xs:group ref="Component_attributeElement"/>
+      <xs:element name="autoVisibility" type="boolean"/>
       <xs:element name="thumb" type="eui.UIComponent"/>
       <xs:element name="viewport" type="eui.IViewport"/>
     </xs:choice>
@@ -1711,6 +1792,9 @@
       </xs:choice>
       <xs:attributeGroup ref="eui.SetProperty"/>
     </xs:complexType>
+  </xs:element>
+  <xs:element name="SetStateProperty">
+    <xs:complexType/>
   </xs:element>
   <xs:attributeGroup name="eui.Skin">
     <xs:attributeGroup ref="egret.EventDispatcher"/>
@@ -1854,6 +1938,7 @@
   <xs:attributeGroup name="eui.TextInput">
     <xs:attributeGroup ref="eui.Component"/>
     <xs:attribute name="displayAsPassword" type="xs:boolean"/>
+    <xs:attribute name="inputType" type="xs:string"/>
     <xs:attribute name="maxChars" type="xs:decimal"/>
     <xs:attribute name="prompt" type="xs:string"/>
     <xs:attribute name="promptDisplay" type="xs:string"/>
@@ -1874,6 +1959,7 @@
     <xs:choice>
       <xs:group ref="Component_attributeElement"/>
       <xs:element name="displayAsPassword" type="boolean"/>
+      <xs:element name="inputType" type="string"/>
       <xs:element name="maxChars" type="number"/>
       <xs:element name="prompt" type="string"/>
       <xs:element name="promptDisplay" type="eui.Label"/>

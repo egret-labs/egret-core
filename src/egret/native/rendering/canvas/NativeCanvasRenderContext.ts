@@ -1,6 +1,6 @@
 //////////////////////////////////////////////////////////////////////////////////////
 //
-//  Copyright (c) 2014-2015, Egret Technology Inc.
+//  Copyright (c) 2014-present, Egret Technology.
 //  All rights reserved.
 //  Redistribution and use in source and binary forms, with or without
 //  modification, are permitted provided that the following conditions are met:
@@ -26,8 +26,8 @@
 //  EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 //
 //////////////////////////////////////////////////////////////////////////////////////
-module egret.native {
-    var blendModesForGL = {
+namespace egret.native {
+    let blendModesForGL = {
         "source-over": [1, 771],
         "lighter": [770, 1],
         "destination-out": [0, 771],
@@ -65,9 +65,10 @@ module egret.native {
 
         public set globalCompositeOperation(value:string) {
             this.$globalCompositeOperation = value;
-            var arr = blendModesForGL[value];
+            let arr = blendModesForGL[value];
             if (arr) {
-                this.$nativeContext.setBlendArg(arr[0], arr[1]);
+                $cmdManager.setContext(this.$nativeContext);
+                $cmdManager.setBlendArg(arr[0], arr[1]);
             }
         }
 
@@ -85,7 +86,8 @@ module egret.native {
 
         public set globalAlpha(value:number) {
             this.$globalAlpha = value;
-            this.$nativeContext.setGlobalAlpha(value);
+            $cmdManager.setContext(this.$nativeContext);
+            $cmdManager.setGlobalAlpha(value);
         }
 
         /**
@@ -139,7 +141,8 @@ module egret.native {
         public set lineWidth(value:number) {
             //console.log("set lineWidth" + value);
             this.$lineWidth = value;
-            this.$nativeContext.lineWidth = value;
+            $cmdManager.setContext(this.$nativeContext);
+            $cmdManager.setLineWidth(value);
         }
 
         private $strokeStyle:any = "#000000";
@@ -164,9 +167,12 @@ module egret.native {
                 else if (value.indexOf("rgb") != -1) {
                     value = this.$parseRGB(value);
                 }
-                egret_native.Label.setStrokeColor(parseInt(value.replace("#", "0x")));
+                $cmdManager.setContext(egret_native.Label);
+                $cmdManager.setStrokeColor(parseInt(value.replace("#", "0x")));
             }
-            this.$nativeContext.strokeStyle = value;
+            $cmdManager.setContext(this.$nativeContext);
+            let s1 = $cmdManager.pushString(value);
+            $cmdManager.setStrokeStyle(s1);
         }
 
         private $fillStyle:any = "#000000";
@@ -191,9 +197,12 @@ module egret.native {
                 else if (value.indexOf("rgb") != -1) {
                     value = this.$parseRGB(value);
                 }
-                egret_native.Label.setTextColor(parseInt(value.replace("#", "0x")));
+                $cmdManager.setContext(egret_native.Label);
+                $cmdManager.setTextColor(parseInt(value.replace("#", "0x")));
             }
-            this.$nativeContext.fillStyle = value;
+            $cmdManager.setContext(this.$nativeContext);
+            let s1 = $cmdManager.pushString(value);
+            $cmdManager.setFillStyle(s1);
         }
 
         private $fillColorStr(s:string):string {
@@ -204,24 +213,24 @@ module egret.native {
         }
 
         private $parseRGBA(str:string):string {
-            var index:number = str.indexOf("(");
+            let index:number = str.indexOf("(");
             str = str.slice(index + 1, str.length - 1);
-            var arr:Array<string> = str.split(",");
-            var a:string = parseInt(<any>(parseFloat(arr[3]) * 255)).toString(16);
-            var r:string = parseInt(arr[0]).toString(16);
-            var g:string = parseInt(arr[1]).toString(16);
-            var b:string = parseInt(arr[2]).toString(16);
+            let arr:string[] = str.split(",");
+            let a:string = parseInt(<any>(parseFloat(arr[3]) * 255)).toString(16);
+            let r:string = parseInt(arr[0]).toString(16);
+            let g:string = parseInt(arr[1]).toString(16);
+            let b:string = parseInt(arr[2]).toString(16);
             str = "#" + this.$fillColorStr(a) + this.$fillColorStr(r) + this.$fillColorStr(g) + this.$fillColorStr(b);
             return str;
         }
 
         private $parseRGB(str:string):string {
-            var index:number = str.indexOf("(");
+            let index:number = str.indexOf("(");
             str = str.slice(index + 1, str.length - 1);
-            var arr:Array<string> = str.split(",");
-            var r:string = parseInt(arr[0]).toString(16);
-            var g:string = parseInt(arr[1]).toString(16);
-            var b:string = parseInt(arr[2]).toString(16);
+            let arr:string[] = str.split(",");
+            let r:string = parseInt(arr[0]).toString(16);
+            let g:string = parseInt(arr[1]).toString(16);
+            let b:string = parseInt(arr[2]).toString(16);
             str = "#" + this.$fillColorStr(r) + this.$fillColorStr(g) + this.$fillColorStr(b);
             return str;
         }
@@ -266,8 +275,9 @@ module egret.native {
          */
         public textBaseline:string;
 
-        private $font:string = "10px sans-serif";
+        private $font:string = "normal normal 10px sans-serif";
         private $fontSize:number = 10;
+        private $fontFamily:string = "";
 
         /**
          * @private
@@ -281,15 +291,48 @@ module egret.native {
 
         public set font(value:string) {
             this.$font = value;
-            var arr:Array<string> = value.split(" ");
-            var length:number = arr.length;
-            for (var i:number = 0; i < length; i++) {
-                var txt:string = arr[i];
-                if (txt.indexOf("px") != -1) {
-                    this.$fontSize = parseInt(txt.replace("px", ""));
-                    //console.log("set font" + this.$lineWidth);
-                    return;
+            let arr:string[] = value.split(" ");
+            let sizeTxt:string = arr[2];
+            if (sizeTxt.indexOf("px") != -1) {
+                this.$fontSize = parseInt(sizeTxt.replace("px", ""));
+                //console.log("set font" + this.$lineWidth);
+            }
+            if(useFontMapping) {
+                let fontFamilyText:string;
+                if(arr.length == 4) {
+                    fontFamilyText = arr[3];
                 }
+                else {
+                    fontFamilyText = arr.slice(3).join(" ");
+                }
+                let arr2;
+                if(fontFamilyText.indexOf(", ") != -1) {
+                    arr2 = fontFamilyText.split(", ");
+                }
+                else if(fontFamilyText.indexOf(",") != -1) {
+                    arr2 = fontFamilyText.split(",");
+                }
+                if(arr2) {
+                    let length:number = arr2.length;
+                    for(let i = 0 ; i < length ; i++) {
+                        let fontFamily = arr2[i];
+                        //暂时先不考虑带有引号的情况
+                        if(fontMapping[fontFamily]) {
+                            this.$fontFamily = fontMapping[fontFamily];
+                            return;
+                        }
+                    }
+                }
+                else {
+                    this.$fontFamily = fontMapping[fontFamilyText];
+                }
+                if(!this.$fontFamily) {
+                    this.$fontFamily = "/system/fonts/DroidSansFallback.ttf";
+                }
+            }
+            else {
+                //兼容旧版本直接将 default_fontFamily 设置为字体路径的情况
+                this.$fontFamily = TextField.default_fontFamily;
             }
         }
 
@@ -306,7 +349,9 @@ module egret.native {
          * @platform Web,Native
          */
         public arc(x:number, y:number, radius:number, startAngle:number, endAngle:number, anticlockwise?:boolean):void {
-            this.$nativeContext.arc(x, y, radius, startAngle, endAngle, anticlockwise);
+            $cmdManager.setContext(this.$nativeContext);
+            $cmdManager.arc(x, y, radius, startAngle, endAngle, anticlockwise ? 1 : 0);
+            // this.$nativeContext.arc(x, y, radius, startAngle, endAngle, anticlockwise);
         }
 
         /**
@@ -321,7 +366,9 @@ module egret.native {
          */
         public quadraticCurveTo(cpx:number, cpy:number, x:number, y:number):void {
             //console.log("quadraticCurveTo " + cpx + " " + cpy + " " + x + " " + y);
-            this.$nativeContext.quadraticCurveTo(cpx, cpy, x, y);
+            $cmdManager.setContext(this.$nativeContext);
+            $cmdManager.quadraticCurveTo(cpx, cpy, x, y);
+            // this.$nativeContext.quadraticCurveTo(cpx, cpy, x, y);
         }
 
         /**
@@ -334,7 +381,8 @@ module egret.native {
          */
         public lineTo(x:number, y:number):void {
             //console.log("lineTo " + x + " " + y);
-            this.$nativeContext.lineTo(x, y);
+            $cmdManager.setContext(this.$nativeContext);
+            $cmdManager.lineTo(x, y);
         }
 
         /**
@@ -347,7 +395,9 @@ module egret.native {
          * @platform Web,Native
          */
         public fill(fillRule?:string):void {
-            this.$nativeContext.fill(fillRule);
+            $cmdManager.setContext(this.$nativeContext);
+            let s1 = $cmdManager.pushString(fillRule);
+            $cmdManager.fill(s1);
         }
 
         /**
@@ -357,7 +407,8 @@ module egret.native {
          * @platform Web,Native
          */
         public closePath():void {
-            this.$nativeContext.closePath();
+            $cmdManager.setContext(this.$nativeContext);
+            $cmdManager.closePath();
             if (this.clipRectArray) {
                 this.$clipRectArray = this.clipRectArray;
                 this.clipRectArray = null;
@@ -375,7 +426,8 @@ module egret.native {
          * @platform Web,Native
          */
         public rect(x:number, y:number, w:number, h:number):void {
-            this.$nativeContext.rect(x, y, w, h);
+            $cmdManager.setContext(this.$nativeContext);
+            $cmdManager.rect(x, y, w, h);
             this.$clipRectArray.push({x: x, y: y, w: w, h: h});
         }
 
@@ -388,7 +440,8 @@ module egret.native {
          * @platform Web,Native
          */
         public moveTo(x:number, y:number):void {
-            this.$nativeContext.moveTo(x, y);
+            $cmdManager.setContext(this.$nativeContext);
+            $cmdManager.moveTo(x, y);
         }
 
         /**
@@ -402,7 +455,9 @@ module egret.native {
          * @platform Web,Native
          */
         public fillRect(x:number, y:number, w:number, h:number):void {
-            this.$nativeContext.fillRect(x, y, w, h);
+            $cmdManager.setContext(this.$nativeContext);
+            $cmdManager.fillRect(x, y, w, h);
+            // this.$nativeContext.fillRect(x, y, w, h);
         }
 
         /**
@@ -419,7 +474,9 @@ module egret.native {
          * @platform Web,Native
          */
         public bezierCurveTo(cp1x:number, cp1y:number, cp2x:number, cp2y:number, x:number, y:number):void {
-            this.$nativeContext.bezierCurveTo(cp1x, cp1y, cp2x, cp2y, x, y);
+            $cmdManager.setContext(this.$nativeContext);
+            $cmdManager.bezierCurveTo(cp1x, cp1y, cp2x, cp2y, x, y);
+            // this.$nativeContext.bezierCurveTo(cp1x, cp1y, cp2x, cp2y, x, y);
         }
 
         /**
@@ -429,7 +486,9 @@ module egret.native {
          * @platform Web,Native
          */
         public stroke():void {
-            this.$nativeContext.stroke();
+            $cmdManager.setContext(this.$nativeContext);
+            $cmdManager.stroke();
+            // this.$nativeContext.stroke();
         }
 
         /**
@@ -444,7 +503,9 @@ module egret.native {
          */
         public strokeRect(x:number, y:number, w:number, h:number):void {
             //console.log("strokeRect");
-            this.$nativeContext.strokeRect(x, y, w, h);
+            $cmdManager.setContext(this.$nativeContext);
+            $cmdManager.strokeRect(x, y, w, h);
+            // this.$nativeContext.strokeRect(x, y, w, h);
         }
 
         private clipRectArray = null;
@@ -456,7 +517,8 @@ module egret.native {
          * @platform Web,Native
          */
         public beginPath():void {
-            this.$nativeContext.beginPath();
+            $cmdManager.setContext(this.$nativeContext);
+            $cmdManager.beginPath();
             this.clipRectArray = this.$clipRectArray.concat();
         }
 
@@ -539,18 +601,19 @@ module egret.native {
         public restore():void {
             //console.log("restore");
             if (this.$saveList.length) {
-                var data = this.$saveList.pop();
-                for (var key in data) {
+                let data = this.$saveList.pop();
+                for (let key in data) {
                     this[key] = data[key];
                 }
                 this.setTransformToNative();
-                this.$nativeContext.restore();
+                $cmdManager.setContext(this.$nativeContext);
+                $cmdManager.restore();
                 this.clipRectArray = null;
             }
 
         }
 
-        private $saveList:Array<any> = [];
+        private $saveList:any[] = [];
 
         /**
          * @private
@@ -560,7 +623,7 @@ module egret.native {
          */
         public save():void {
             //console.log("save");
-            var transformMatrix = new Matrix();
+            let transformMatrix = new Matrix();
             transformMatrix.copyFrom(this.$matrix);
             this.$saveList.push({
                 lineWidth: this.$lineWidth,
@@ -572,15 +635,16 @@ module egret.native {
                 $matrix: transformMatrix,
                 $clipRectArray: this.$clipRectArray.concat()
             });
-            this.$nativeContext.save();
+            $cmdManager.setContext(this.$nativeContext);
+            $cmdManager.save();
         }
 
 
-        private $clipRectArray:Array<any> = [];
+        private $clipRectArray:any[] = [];
 
         private $clipRect:Rectangle = new Rectangle();
         private $saveCount:number = 0;
-        private $clipList:Array<number> = [];
+        private $clipList:number[] = [];
 
 
         /**
@@ -591,16 +655,17 @@ module egret.native {
          */
         public clip(fillRule?:string):void {
             if (this.$clipRectArray.length > 0) {
-                var arr = [];
-                for (var i:number = 0; i < this.$clipRectArray.length; i++) {
-                    var clipRect = this.$clipRectArray[i];
+                let arr = [];
+                for (let i:number = 0; i < this.$clipRectArray.length; i++) {
+                    let clipRect = this.$clipRectArray[i];
                     arr.push(clipRect.x);
                     arr.push(clipRect.y);
                     arr.push(clipRect.w);
                     arr.push(clipRect.h);
                 }
                 //console.log("pushRectStencils " + arr.toString());
-                this.$nativeContext.pushRectStencils(arr);
+                $cmdManager.setContext(this.$nativeContext);
+                $cmdManager.pushRectStencils(arr);
                 this.$clipRectArray.length = 0;
             }
         }
@@ -617,7 +682,8 @@ module egret.native {
          */
         public clearRect(x:number, y:number, width:number, height:number):void {
             //console.log("clearRect x:" + x + " y:" +  y + " width:" + width + " height:" + height);
-            this.$nativeContext.clearRect(x, y, width, height);
+            $cmdManager.setContext(this.$nativeContext);
+            $cmdManager.clearRect(x, y, width, height);
         }
 
         /**
@@ -638,9 +704,28 @@ module egret.native {
         }
 
         private setTransformToNative():void {
-            var m = this.$matrix;
+            let m = this.$matrix;
             //console.log("setTransformToNative::a=" + m.a + " b=" + m.b + " c=" + m.c + " d=" + m.d + " tx=" + m.tx + " ty=" + m.ty);
-            this.$nativeContext.setTransform(m.a, m.b, m.c, m.d, m.tx, m.ty);
+            $cmdManager.setContext(this.$nativeContext);
+            $cmdManager.setTransform(m.a, m.b, m.c, m.d, m.tx, m.ty);
+        }
+        
+        private savedMatrix:Matrix = new Matrix();
+        
+        /**
+         * @private
+         * 保存矩阵，这里只能保存一次，嵌套无效
+         */
+        public saveTransform():void {
+            this.savedMatrix.copyFrom(this.$matrix);
+        }
+
+        /**
+         * @private
+         * 保存矩阵，这里只能保存一次，嵌套无效
+         */
+        public restoreTransform():void {
+            this.$matrix.copyFrom(this.savedMatrix);
         }
 
         /**
@@ -681,10 +766,13 @@ module egret.native {
          */
         public fillText(text:string, x:number, y:number, maxWidth?:number):void {
             //console.log("drawText" + text);
-            var font:string = TextField.default_fontFamily;
-            this.$nativeContext.createLabel(font, this.$fontSize, "", this.$hasStrokeText ? this.$lineWidth : 0);
+            $cmdManager.setContext(this.$nativeContext);
+            let s1 = $cmdManager.pushString(this.$fontFamily);
+            let s2 = $cmdManager.pushString("");
+            $cmdManager.createLabel(s1, this.$fontSize, s2, this.$hasStrokeText ? this.$lineWidth : 0);
             this.$hasStrokeText = false;
-            this.$nativeContext.drawText(text, x, y);
+            let s3 = $cmdManager.pushString(text);
+            $cmdManager.drawText(s3, x, y);
         }
 
         private $hasStrokeText:boolean = false;
@@ -700,8 +788,12 @@ module egret.native {
          * @platform Web,Native
          */
         public measureText(text:string):TextMetrics {
-            var font:string = TextField.default_fontFamily;
-            egret_native.Label.createLabel(font, this.$fontSize, "", this.$hasStrokeText ? this.$lineWidth : 0);
+            $cmdManager.setContext(egret_native.Label);
+            let s1 = $cmdManager.pushString(this.$fontFamily);
+            let s2 = $cmdManager.pushString("");
+            $cmdManager.createLabel(s1, this.$fontSize, s2, this.$hasStrokeText ? this.$lineWidth : 0);
+            //同步更新
+            $cmdManager.flush();
             return {width: egret_native.Label.getTextSize(text)[0]};
         }
 
@@ -712,11 +804,85 @@ module egret.native {
          * @version Egret 2.4
          * @platform Web,Native
          */
-        public drawImage(image:BitmapData, offsetX:number, offsetY:number, width?:number, height?:number,
+        public drawImage(image:BitmapData | NativeCanvas, offsetX:number, offsetY:number, width?:number, height?:number,
                          surfaceOffsetX?:number, surfaceOffsetY?:number, surfaceImageWidth?:number, surfaceImageHeight?:number):void {
-            var bitmapData;
-            if ((<NativeCanvas>image).$nativeCanvas) {
-                bitmapData = (<NativeCanvas>image).$nativeCanvas;
+            let bitmapData;
+            let isNative:boolean;
+            if ((<NativeCanvas><any>image).$nativeCanvas) {
+                bitmapData = (<NativeCanvas><any>image).$nativeCanvas;
+                isNative = true;
+            }
+            else {
+                bitmapData = image;
+                isNative = false;
+            }
+            if (!bitmapData) {
+                return;
+            }
+            if (arguments.length == 3) {
+                surfaceOffsetX = offsetX;
+                surfaceOffsetY = offsetY;
+                offsetX = 0;
+                offsetY = 0;
+                width = surfaceImageWidth = image.width;
+                height = surfaceImageHeight = image.height;
+            }
+            else if (arguments.length == 5) {
+                surfaceOffsetX = offsetX;
+                surfaceOffsetY = offsetY;
+                surfaceImageWidth = width;
+                surfaceImageHeight = height;
+                offsetX = 0;
+                offsetY = 0;
+                width = image.width;
+                height = image.height;
+            }
+            else {
+                if (width == void 0) {
+                    width = image.width;
+                }
+                if (height == void 0) {
+                    height = image.height;
+                }
+                if (surfaceOffsetX == void 0) {
+                    surfaceOffsetX = 0;
+                }
+                if (surfaceOffsetY == void 0) {
+                    surfaceOffsetY = 0;
+                }
+                if (surfaceImageWidth == void 0) {
+                    surfaceImageWidth = width;
+                }
+                if (surfaceImageHeight == void 0) {
+                    surfaceImageHeight = height;
+                }
+            }
+            //console.log("drawImage::" + offsetX + " " + offsetY + " " + width + " " + height + " " + surfaceOffsetX + " " + surfaceOffsetY + " " + surfaceImageWidth + " " + surfaceImageHeight);
+            //console.log("drawImage::" + bitmapData);
+            
+            let imageAdress;
+            if(!isNative) {
+                if(!bitmapData._native_tex_loc) {
+                    bitmapData._native_tex_loc = bitmapData.___native_texture__p;
+                }
+                imageAdress = bitmapData._native_tex_loc;
+            } else {
+                imageAdress = bitmapData.___native_texture__p;
+            }
+            
+            native.$cmdManager.setContext(this.$nativeContext);
+            $cmdManager.drawImage(imageAdress, offsetX, offsetY, width, height, surfaceOffsetX, surfaceOffsetY, surfaceImageWidth, surfaceImageHeight);
+        }
+
+        /**
+         * @private
+         * draw mesh
+         */
+        public drawMesh(image, offsetX, offsetY, width, height, surfaceOffsetX, surfaceOffsetY, surfaceImageWidth, surfaceImageHeight,
+                    textureSourceWidth, textureSourceHeight, meshUVs, meshVertices, meshIndices):void {
+            let bitmapData;
+            if (image.$nativeCanvas) {
+                bitmapData = image.$nativeCanvas;
             }
             else {
                 bitmapData = image;
@@ -762,9 +928,77 @@ module egret.native {
                     surfaceImageHeight = height;
                 }
             }
-            //console.log("drawImage::" + offsetX + " " + offsetY + " " + width + " " + height + " " + surfaceOffsetX + " " + surfaceOffsetY + " " + surfaceImageWidth + " " + surfaceImageHeight);
-            //console.log("drawImage::" + bitmapData);
-            this.$nativeContext.drawImage(bitmapData, offsetX, offsetY, width, height, surfaceOffsetX, surfaceOffsetY, surfaceImageWidth, surfaceImageHeight);
+
+            this.vertices = new Float32Array(meshVertices.length / 2 * 5);
+            this.indicesForMesh = new Uint32Array(meshIndices.length);
+            this.cacheArrays(this.$matrix, 1, offsetX, offsetY, width, height, surfaceOffsetX, surfaceOffsetY,
+                surfaceImageWidth, surfaceImageHeight, textureSourceWidth, textureSourceHeight, meshUVs, meshVertices, meshIndices);
+
+            // 打断批渲染
+            $cmdManager.flush();
+
+            this.$nativeContext.drawMesh(bitmapData, this.vertices, this.indicesForMesh, this.vertices.length, this.indicesForMesh.length);
+        }
+
+        private vertices:Float32Array;
+        private indicesForMesh:Float32Array;
+
+        private cacheArrays(transform, alpha, sourceX, sourceY, sourceWidth, sourceHeight, destX, destY, destWidth, destHeight,
+                    textureSourceWidth, textureSourceHeight, meshUVs, meshVertices, meshIndices) {
+            //计算出绘制矩阵，之后把矩阵还原回之前的
+            let locWorldTransform = transform;
+            let originalA = locWorldTransform.a;
+            let originalB = locWorldTransform.b;
+            let originalC = locWorldTransform.c;
+            let originalD = locWorldTransform.d;
+            let originalTx = locWorldTransform.tx;
+            let originalTy = locWorldTransform.ty;
+            if (destX != 0 || destY != 0) {
+                locWorldTransform.append(1, 0, 0, 1, destX, destY);
+            }
+            if (sourceWidth / destWidth != 1 || sourceHeight / destHeight != 1) {
+                locWorldTransform.append(destWidth / sourceWidth, 0, 0, destHeight / sourceHeight, 0, 0);
+            }
+            let a = locWorldTransform.a;
+            let b = locWorldTransform.b;
+            let c = locWorldTransform.c;
+            let d = locWorldTransform.d;
+            let tx = locWorldTransform.tx;
+            let ty = locWorldTransform.ty;
+            locWorldTransform.a = originalA;
+            locWorldTransform.b = originalB;
+            locWorldTransform.c = originalC;
+            locWorldTransform.d = originalD;
+            locWorldTransform.tx = originalTx;
+            locWorldTransform.ty = originalTy;
+            if (meshVertices) {
+                // 计算索引位置与赋值
+                let vertices = this.vertices;
+                // 缓存顶点数组
+                let i = 0, iD = 0, l = 0;
+                let u = 0, v = 0, x = 0, y = 0;
+                for (i = 0, l = meshUVs.length; i < l; i += 2) {
+                    iD = i * 5 / 2;
+                    x = meshVertices[i];
+                    y = meshVertices[i + 1];
+                    u = meshUVs[i];
+                    v = meshUVs[i + 1];
+                    // xy
+                    vertices[iD + 0] = a * x + c * y + tx;
+                    vertices[iD + 1] = b * x + d * y + ty;
+                    // uv
+                    vertices[iD + 2] = (sourceX + u * sourceWidth) / textureSourceWidth;
+                    vertices[iD + 3] = (sourceY + v * sourceHeight) / textureSourceHeight;
+                    // alpha
+                    vertices[iD + 4] = alpha;
+                }
+                for (i = 0; i < meshIndices.length; i++) {
+                    this.indicesForMesh[i] = meshIndices[i];
+                }
+            }
+            else {
+                console.log("meshVertices not exist");
+            }
         }
 
         /**
@@ -787,7 +1021,10 @@ module egret.native {
          * @platform Web,Native
          */
         public getImageData(sx:number, sy:number, sw:number, sh:number):ImageData {
-            var res;
+
+            $cmdManager.flush();
+
+            let res;
             if (sx != Math.floor(sx)) {
                 sx = Math.floor(sx);
                 sw++;
@@ -801,6 +1038,24 @@ module egret.native {
                 res.data = res.pixelData;
             }
             return res;
+        }
+
+        /**
+         * @private
+         * 设置全局shader
+         * @param filter filter属性生成的json
+         */
+        public setGlobalShader(filter:egret.Filter):void {
+            $cmdManager.setContext(this.$nativeContext);
+
+            let s1;
+            if(filter) {
+                s1 = $cmdManager.pushString(filter.$toJson());
+            } else {
+                s1 = $cmdManager.pushString("");
+            }
+            
+            $cmdManager.setGlobalShader(s1);
         }
     }
 }

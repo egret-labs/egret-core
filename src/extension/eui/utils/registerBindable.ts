@@ -1,6 +1,6 @@
 //////////////////////////////////////////////////////////////////////////////////////
 //
-//  Copyright (c) 2014-2015, Egret Technology Inc.
+//  Copyright (c) 2014-present, Egret Technology.
 //  All rights reserved.
 //  Redistribution and use in source and binary forms, with or without
 //  modification, are permitted provided that the following conditions are met:
@@ -27,12 +27,11 @@
 //
 //////////////////////////////////////////////////////////////////////////////////////
 
-module eui {
+namespace eui {
 
-    var key = "__bindables__";
+    let key = "__bindables__";
 
     /**
-     * @language en_US
      * Register a property of an instance is can be bound.
      * This method is ususally invoked by Watcher class.
      *
@@ -42,9 +41,9 @@ module eui {
      * @version Egret 2.4
      * @version eui 1.0
      * @platform Web,Native
+     * @language en_US
      */
     /**
-     * @language zh_CN
      * 标记实例的一个属性是可绑定的,此方法通常由 Watcher 类调用。
      *
      * @param instance 要标记的实例
@@ -53,6 +52,7 @@ module eui {
      * @version Egret 2.4
      * @version eui 1.0
      * @platform Web,Native
+     * @language zh_CN
      */
     export function registerBindable(instance:any,property:string):void{
         if (DEBUG) {
@@ -68,7 +68,7 @@ module eui {
             instance[key].push(property);
         }
         else{
-            var list = [property];
+            let list = [property];
             if(instance[key]){
                 list = instance[key].concat(list);
             }

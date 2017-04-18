@@ -1,6 +1,6 @@
 //////////////////////////////////////////////////////////////////////////////////////
 //
-//  Copyright (c) 2014-2015, Egret Technology Inc.
+//  Copyright (c) 2014-present, Egret Technology.
 //  All rights reserved.
 //  Redistribution and use in source and binary forms, with or without
 //  modification, are permitted provided that the following conditions are met:
@@ -26,7 +26,7 @@
 //  EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 //
 //////////////////////////////////////////////////////////////////////////////////////
-module egret.localStorage.web {
+namespace egret.localStorage.web {
     /**
      * @private
      * 
@@ -50,7 +50,7 @@ module egret.localStorage.web {
             return true;
         }
         catch(e){
-            egret.$warn(1018, key, value);
+            egret.$warn(1047, key, value);
             return false;
         }
     }

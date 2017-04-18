@@ -1,6 +1,6 @@
 //////////////////////////////////////////////////////////////////////////////////////
 //
-//  Copyright (c) 2014-2015, Egret Technology Inc.
+//  Copyright (c) 2014-present, Egret Technology.
 //  All rights reserved.
 //  Redistribution and use in source and binary forms, with or without
 //  modification, are permitted provided that the following conditions are met:
@@ -28,7 +28,7 @@
 //////////////////////////////////////////////////////////////////////////////////////
 
 
-module egret.gui {
+namespace egret.gui {
 
 	/**
 	 * @class egret.gui.HorizontalLayout
@@ -212,34 +212,34 @@ module egret.gui {
 		 * 测量使用虚拟布局的尺寸
 		 */		
 		private measureVirtual():void{
-			var numElements:number = this.target.numElements;
-			var typicalHeight:number = this.typicalLayoutRect?this.typicalLayoutRect.height:22;
-			var typicalWidth:number = this.typicalLayoutRect?this.typicalLayoutRect.width:71;
-			var measuredWidth:number = this.getElementTotalSize();
-			var measuredHeight:number = Math.max(this.maxElementHeight,typicalHeight);
+			let numElements:number = this.target.numElements;
+			let typicalHeight:number = this.typicalLayoutRect?this.typicalLayoutRect.height:22;
+			let typicalWidth:number = this.typicalLayoutRect?this.typicalLayoutRect.width:71;
+			let measuredWidth:number = this.getElementTotalSize();
+			let measuredHeight:number = Math.max(this.maxElementHeight,typicalHeight);
 			
-			var visibleIndices:Array<number> = this.target.getElementIndicesInView();
-            var length:number = visibleIndices.length;
-			for(var i:number=0;i<length;i++){
-                var index:number = visibleIndices[i];
-				var layoutElement:ILayoutElement = <ILayoutElement> (this.target.getElementAt(index));
+			let visibleIndices:number[] = this.target.getElementIndicesInView();
+            let length:number = visibleIndices.length;
+			for(let i:number=0;i<length;i++){
+                let index:number = visibleIndices[i];
+				let layoutElement:ILayoutElement = <ILayoutElement> (this.target.getElementAt(index));
 				if (layoutElement == null||!layoutElement.includeInLayout)
 					continue;
 				
-				var preferredWidth:number = layoutElement.preferredWidth;
-				var preferredHeight:number = layoutElement.preferredHeight;
+				let preferredWidth:number = layoutElement.preferredWidth;
+				let preferredHeight:number = layoutElement.preferredHeight;
 				measuredWidth += preferredWidth;
 				measuredWidth -= isNaN(this.elementSizeTable[index])?typicalWidth:this.elementSizeTable[index];
 				measuredHeight = Math.max(measuredHeight,preferredHeight);
 			}
-			var padding:number = isNaN(this._padding)?0:this._padding;
-			var paddingL:number = isNaN(this._paddingLeft)?padding:this._paddingLeft;
-			var paddingR:number = isNaN(this._paddingRight)?padding:this._paddingRight;
-			var paddingT:number = isNaN(this._paddingTop)?padding:this._paddingTop;
-			var paddingB:number = isNaN(this._paddingBottom)?padding:this._paddingBottom;
+			let padding:number = isNaN(this._padding)?0:this._padding;
+			let paddingL:number = isNaN(this._paddingLeft)?padding:this._paddingLeft;
+			let paddingR:number = isNaN(this._paddingRight)?padding:this._paddingRight;
+			let paddingT:number = isNaN(this._paddingTop)?padding:this._paddingTop;
+			let paddingB:number = isNaN(this._paddingBottom)?padding:this._paddingBottom;
 			
-			var hPadding:number = paddingL + paddingR;
-			var vPadding:number = paddingT + paddingB;
+			let hPadding:number = paddingL + paddingR;
+			let vPadding:number = paddingT + paddingB;
 			this.target.measuredWidth = Math.ceil(measuredWidth+hPadding);
 			this.target.measuredHeight = Math.ceil(measuredHeight+vPadding);
 		}
@@ -248,30 +248,30 @@ module egret.gui {
 		 * 测量使用真实布局的尺寸
 		 */		
 		private measureReal():void{
-			var count:number = this.target.numElements;
-			var numElements:number = count;
-			var measuredWidth:number = 0;
-			var measuredHeight:number = 0;
-			for (var i:number = 0; i < count; i++){
-				var layoutElement:ILayoutElement = <ILayoutElement> (this.target.getElementAt(i));
+			let count:number = this.target.numElements;
+			let numElements:number = count;
+			let measuredWidth:number = 0;
+			let measuredHeight:number = 0;
+			for (let i:number = 0; i < count; i++){
+				let layoutElement:ILayoutElement = <ILayoutElement> (this.target.getElementAt(i));
 				if (!layoutElement||!layoutElement.includeInLayout){
 					numElements--;
 					continue;
 				}
-				var preferredWidth:number = layoutElement.preferredWidth;
-				var preferredHeight:number = layoutElement.preferredHeight;
+				let preferredWidth:number = layoutElement.preferredWidth;
+				let preferredHeight:number = layoutElement.preferredHeight;
 				measuredWidth += preferredWidth;
 				measuredHeight = Math.max(measuredHeight,preferredHeight);
 			}
-			var gap:number = isNaN(this._gap)?0:this._gap;
+			let gap:number = isNaN(this._gap)?0:this._gap;
 			measuredWidth += (numElements-1)*gap;
-			var padding:number = isNaN(this._padding)?0:this._padding;
-			var paddingL:number = isNaN(this._paddingLeft)?padding:this._paddingLeft;
-			var paddingR:number = isNaN(this._paddingRight)?padding:this._paddingRight;
-			var paddingT:number = isNaN(this._paddingTop)?padding:this._paddingTop;
-			var paddingB:number = isNaN(this._paddingBottom)?padding:this._paddingBottom;
-			var hPadding:number = paddingL + paddingR;
-			var vPadding:number = paddingT + paddingB;
+			let padding:number = isNaN(this._padding)?0:this._padding;
+			let paddingL:number = isNaN(this._paddingLeft)?padding:this._paddingLeft;
+			let paddingR:number = isNaN(this._paddingRight)?padding:this._paddingRight;
+			let paddingT:number = isNaN(this._paddingTop)?padding:this._paddingTop;
+			let paddingB:number = isNaN(this._paddingBottom)?padding:this._paddingBottom;
+			let hPadding:number = paddingL + paddingR;
+			let vPadding:number = paddingT + paddingB;
 			this.target.measuredWidth = Math.ceil(measuredWidth+hPadding);
 			this.target.measuredHeight = Math.ceil(measuredHeight+vPadding);
 		}
@@ -289,11 +289,11 @@ module egret.gui {
 
             if (this.target.numElements == 0)
             {
-                var padding:number = isNaN(this._padding)?0:this._padding;
-                var paddingL:number = isNaN(this._paddingLeft)?padding:this._paddingLeft;
-                var paddingR:number = isNaN(this._paddingRight)?padding:this._paddingRight;
-                var paddingT:number = isNaN(this._paddingTop)?padding:this._paddingTop;
-                var paddingB:number = isNaN(this._paddingBottom)?padding:this._paddingBottom;
+                let padding:number = isNaN(this._padding)?0:this._padding;
+                let paddingL:number = isNaN(this._paddingLeft)?padding:this._paddingLeft;
+                let paddingR:number = isNaN(this._paddingRight)?padding:this._paddingRight;
+                let paddingT:number = isNaN(this._paddingTop)?padding:this._paddingTop;
+                let paddingB:number = isNaN(this._paddingBottom)?padding:this._paddingBottom;
                 this.target.setContentSize(Math.ceil(paddingL+paddingR),Math.ceil(paddingT+paddingB));
                 return;
             }
@@ -310,26 +310,26 @@ module egret.gui {
 		/**
 		 * 虚拟布局使用的子对象尺寸缓存 
 		 */		
-		private elementSizeTable:Array<any> = [];
+		private elementSizeTable:any[] = [];
 		
 		/**
 		 * 获取指定索引的起始位置
 		 */		
 		private getStartPosition(index:number):number{
-			var padding:number = isNaN(this._padding)?0:this._padding;
-			var paddingL:number = isNaN(this._paddingLeft)?padding:this._paddingLeft;
-			var gap:number = isNaN(this._gap)?0:this._gap;
+			let padding:number = isNaN(this._padding)?0:this._padding;
+			let paddingL:number = isNaN(this._paddingLeft)?padding:this._paddingLeft;
+			let gap:number = isNaN(this._gap)?0:this._gap;
 			if(!this.useVirtualLayout){
-				var element:IVisualElement;
+				let element:IVisualElement;
 				if(this.target){
 					element = this.target.getElementAt(index);
 				}
 				return element?element.x:paddingL;
 			}
-			var typicalWidth:number = this.typicalLayoutRect?this.typicalLayoutRect.width:71;
-			var startPos:number = paddingL;
-			for(var i:number = 0;i<index;i++){
-				var eltWidth:number = this.elementSizeTable[i];
+			let typicalWidth:number = this.typicalLayoutRect?this.typicalLayoutRect.width:71;
+			let startPos:number = paddingL;
+			for(let i:number = 0;i<index;i++){
+				let eltWidth:number = this.elementSizeTable[i];
 				if(isNaN(eltWidth)){
 					eltWidth = typicalWidth;
 				}
@@ -343,7 +343,7 @@ module egret.gui {
 		 */		
 		private getElementSize(index:number):number{
 			if(this.useVirtualLayout){
-				var size:number = this.elementSizeTable[index];
+				let size:number = this.elementSizeTable[index];
 				if(isNaN(size)){
 					size = this.typicalLayoutRect?this.typicalLayoutRect.width:71;
 				}
@@ -359,12 +359,12 @@ module egret.gui {
 		 * 获取缓存的子对象尺寸总和
 		 */		
 		private getElementTotalSize():number{
-			var typicalWidth:number = this.typicalLayoutRect?this.typicalLayoutRect.width:71;
-			var gap:number = isNaN(this._gap)?0:this._gap;
-			var totalSize:number = 0;
-			var length:number = this.target.numElements;
-			for(var i:number = 0; i<length; i++){
-				var eltWidth:number = this.elementSizeTable[i];
+			let typicalWidth:number = this.typicalLayoutRect?this.typicalLayoutRect.width:71;
+			let gap:number = isNaN(this._gap)?0:this._gap;
+			let totalSize:number = 0;
+			let length:number = this.target.numElements;
+			for(let i:number = 0; i<length; i++){
+				let eltWidth:number = this.elementSizeTable[i];
 				if(isNaN(eltWidth)){
 					eltWidth = typicalWidth;
 				}
@@ -378,7 +378,7 @@ module egret.gui {
 			if(!this.useVirtualLayout)
 				return;
 			super.elementAdded(index);
-			var typicalWidth:number = this.typicalLayoutRect?this.typicalLayoutRect.width:71;
+			let typicalWidth:number = this.typicalLayoutRect?this.typicalLayoutRect.width:71;
 			this.elementSizeTable.splice(index,0,typicalWidth);
 		}
 		
@@ -406,10 +406,10 @@ module egret.gui {
 		 * 折半查找法寻找指定位置的显示对象索引
 		 */		
 		private findIndexAt(x:number, i0:number, i1:number):number{
-			var index:number = Math.floor((i0 + i1) *0.5);
-			var elementX:number = this.getStartPosition(index);
-			var elementWidth:number = this.getElementSize(index);
-			var gap:number = isNaN(this._gap)?0:this._gap;
+			let index:number = Math.floor((i0 + i1) *0.5);
+			let elementX:number = this.getStartPosition(index);
+			let elementWidth:number = this.getElementSize(index);
+			let gap:number = isNaN(this._gap)?0:this._gap;
 			if ((x >= elementX) && (x < elementX + elementWidth + gap))
 				return index;
 			else if (i0 == i1)
@@ -440,7 +440,7 @@ module egret.gui {
 		public scrollPositionChanged():void{
 			super.scrollPositionChanged();
 			if(this.useVirtualLayout){
-				var changed:boolean = this.getIndexInView();
+				let changed:boolean = this.getIndexInView();
 				if(changed){
 					this.indexInViewCalculated = true;
 					this.target.invalidateDisplayList();
@@ -463,29 +463,29 @@ module egret.gui {
 				return false;
 			}
 			
-			var padding:number = isNaN(this._padding)?0:this._padding;
-			var paddingL:number = isNaN(this._paddingLeft)?padding:this._paddingLeft;
-			var paddingR:number = isNaN(this._paddingRight)?padding:this._paddingRight;
-			var paddingT:number = isNaN(this._paddingTop)?padding:this._paddingTop;
-			var paddingB:number = isNaN(this._paddingBottom)?padding:this._paddingBottom;
+			let padding:number = isNaN(this._padding)?0:this._padding;
+			let paddingL:number = isNaN(this._paddingLeft)?padding:this._paddingLeft;
+			let paddingR:number = isNaN(this._paddingRight)?padding:this._paddingRight;
+			let paddingT:number = isNaN(this._paddingTop)?padding:this._paddingTop;
+			let paddingB:number = isNaN(this._paddingBottom)?padding:this._paddingBottom;
 			
-			var numElements:number = this.target.numElements;
-			var contentWidth:number = this.getStartPosition(numElements-1)+
+			let numElements:number = this.target.numElements;
+			let contentWidth:number = this.getStartPosition(numElements-1)+
 				this.elementSizeTable[numElements-1]+paddingR;			
-			var minVisibleX:number = this.target.horizontalScrollPosition;
+			let minVisibleX:number = this.target.horizontalScrollPosition;
 			if(minVisibleX>contentWidth-paddingR){
 				this.startIndex = -1;
 				this.endIndex = -1;
 				return false;
 			}
-			var maxVisibleX:number = this.target.horizontalScrollPosition + this.target.width;
+			let maxVisibleX:number = this.target.horizontalScrollPosition + this.target.width;
 			if(maxVisibleX<paddingL){
 				this.startIndex = -1;
 				this.endIndex = -1;
 				return false;
 			}
-			var oldStartIndex:number = this.startIndex;
-			var oldEndIndex:number = this.endIndex;
+			let oldStartIndex:number = this.startIndex;
+			let oldEndIndex:number = this.endIndex;
 			this.startIndex = this.findIndexAt(minVisibleX,0,numElements-1);
 			if(this.startIndex==-1)
 				this.startIndex = 0;
@@ -508,13 +508,13 @@ module egret.gui {
 				this.indexInViewCalculated = false;
 			else
 				this.getIndexInView();
-			var padding:number = isNaN(this._padding)?0:this._padding;
-			var paddingR:number = isNaN(this._paddingRight)?padding:this._paddingRight;
-			var paddingT:number = isNaN(this._paddingTop)?padding:this._paddingTop;
-			var paddingB:number = isNaN(this._paddingBottom)?padding:this._paddingBottom;
-			var gap:number = isNaN(this._gap)?0:this._gap;
-			var contentWidth:number;
-			var numElements:number = this.target.numElements;
+			let padding:number = isNaN(this._padding)?0:this._padding;
+			let paddingR:number = isNaN(this._paddingRight)?padding:this._paddingRight;
+			let paddingT:number = isNaN(this._paddingTop)?padding:this._paddingTop;
+			let paddingB:number = isNaN(this._paddingBottom)?padding:this._paddingBottom;
+			let gap:number = isNaN(this._gap)?0:this._gap;
+			let contentWidth:number;
+			let numElements:number = this.target.numElements;
 			if(this.startIndex == -1||this.endIndex==-1){
 				contentWidth = this.getStartPosition(numElements)-gap+paddingR;
 				this.target.setContentSize(Math.ceil(contentWidth),this.target.contentHeight);
@@ -522,9 +522,9 @@ module egret.gui {
 			}
 			this.target.setVirtualElementIndicesInView(this.startIndex,this.endIndex);
 			//获取垂直布局参数
-			var justify:boolean = this._verticalAlign==VerticalAlign.JUSTIFY||this._verticalAlign==VerticalAlign.CONTENT_JUSTIFY;
-			var contentJustify:boolean = this._verticalAlign==VerticalAlign.CONTENT_JUSTIFY;
-			var vAlign:number = 0;
+			let justify:boolean = this._verticalAlign==VerticalAlign.JUSTIFY||this._verticalAlign==VerticalAlign.CONTENT_JUSTIFY;
+			let contentJustify:boolean = this._verticalAlign==VerticalAlign.CONTENT_JUSTIFY;
+			let vAlign:number = 0;
 			if(!justify){
 				if(this._verticalAlign==VerticalAlign.MIDDLE){
 					vAlign = 0.5;
@@ -534,14 +534,14 @@ module egret.gui {
 				}
 			}
 			
-			var targetHeight:number = Math.max(0, height - paddingT - paddingB);
-			var justifyHeight:number = Math.ceil(targetHeight);
-			var layoutElement:ILayoutElement;
-			var typicalHeight:number = this.typicalLayoutRect?this.typicalLayoutRect.height:22;
-			var typicalWidth:number = this.typicalLayoutRect?this.typicalLayoutRect.width:71;
-			var oldMaxH:number = Math.max(typicalHeight,this.maxElementHeight);
+			let targetHeight:number = Math.max(0, height - paddingT - paddingB);
+			let justifyHeight:number = Math.ceil(targetHeight);
+			let layoutElement:ILayoutElement;
+			let typicalHeight:number = this.typicalLayoutRect?this.typicalLayoutRect.height:22;
+			let typicalWidth:number = this.typicalLayoutRect?this.typicalLayoutRect.width:71;
+			let oldMaxH:number = Math.max(typicalHeight,this.maxElementHeight);
 			if(contentJustify){
-				for(var index:number=this.startIndex;index<=this.endIndex;index++){
+				for(let index:number=this.startIndex;index<=this.endIndex;index++){
 					layoutElement = <ILayoutElement> (this.target.getVirtualElementAt(index));
 					if (!layoutElement||!layoutElement.includeInLayout)
 						continue;
@@ -549,14 +549,14 @@ module egret.gui {
 				}
 				justifyHeight = Math.ceil(Math.max(targetHeight,this.maxElementHeight));
 			}
-			var x:number = 0;
-			var y:number = 0;
-			var contentHeight:number = 0;
-			var oldElementSize:number;
-			var needInvalidateSize:boolean = false;
+			let x:number = 0;
+			let y:number = 0;
+			let contentHeight:number = 0;
+			let oldElementSize:number;
+			let needInvalidateSize:boolean = false;
 			//对可见区域进行布局
-			for(var i:number=this.startIndex;i<=this.endIndex;i++){
-				var exceesHeight:number = 0;
+			for(let i:number=this.startIndex;i<=this.endIndex;i++){
+				let exceesHeight:number = 0;
 				layoutElement = <ILayoutElement> (this.target.getVirtualElementAt(i));
 				if (!layoutElement){
 					continue;
@@ -605,18 +605,18 @@ module egret.gui {
 		 * 更新使用真实布局的显示列表
 		 */		
 		private updateDisplayListReal(width:number,height:number):void{
-			var padding:number = isNaN(this._padding)?0:this._padding;
-			var paddingL:number = isNaN(this._paddingLeft)?padding:this._paddingLeft;
-			var paddingR:number = isNaN(this._paddingRight)?padding:this._paddingRight;
-			var paddingT:number = isNaN(this._paddingTop)?padding:this._paddingTop;
-			var paddingB:number = isNaN(this._paddingBottom)?padding:this._paddingBottom;
-			var gap:number = isNaN(this._gap)?0:this._gap;
-			var targetWidth:number = Math.max(0, width - paddingL - paddingR);
-			var targetHeight:number = Math.max(0, height - paddingT - paddingB);
+			let padding:number = isNaN(this._padding)?0:this._padding;
+			let paddingL:number = isNaN(this._paddingLeft)?padding:this._paddingLeft;
+			let paddingR:number = isNaN(this._paddingRight)?padding:this._paddingRight;
+			let paddingT:number = isNaN(this._paddingTop)?padding:this._paddingTop;
+			let paddingB:number = isNaN(this._paddingBottom)?padding:this._paddingBottom;
+			let gap:number = isNaN(this._gap)?0:this._gap;
+			let targetWidth:number = Math.max(0, width - paddingL - paddingR);
+			let targetHeight:number = Math.max(0, height - paddingT - paddingB);
 			
-			var hJustify:boolean = this._horizontalAlign==HorizontalAlign.JUSTIFY;
-			var vJustify:boolean = this._verticalAlign==VerticalAlign.JUSTIFY||this._verticalAlign==VerticalAlign.CONTENT_JUSTIFY;
-			var vAlign:number = 0;
+			let hJustify:boolean = this._horizontalAlign==HorizontalAlign.JUSTIFY;
+			let vJustify:boolean = this._verticalAlign==VerticalAlign.JUSTIFY||this._verticalAlign==VerticalAlign.CONTENT_JUSTIFY;
+			let vAlign:number = 0;
 			if(!vJustify){
 				if(this._verticalAlign==VerticalAlign.MIDDLE){
 					vAlign = 0.5;
@@ -626,18 +626,18 @@ module egret.gui {
 				}
 			}
 			
-			var count:number = this.target.numElements;
-			var numElements:number = count;
-			var x:number = paddingL;
-			var y:number = paddingT;
-			var i:number;
-			var layoutElement:ILayoutElement;
+			let count:number = this.target.numElements;
+			let numElements:number = count;
+			let x:number = paddingL;
+			let y:number = paddingT;
+			let i:number;
+			let layoutElement:ILayoutElement;
 			
-			var totalPreferredWidth:number = 0;
-			var totalPercentWidth:number = 0;
-			var childInfoArray:Array<any> = [];
-			var childInfo:ChildInfo;
-			var widthToDistribute:number = targetWidth;
+			let totalPreferredWidth:number = 0;
+			let totalPercentWidth:number = 0;
+			let childInfoArray:any[] = [];
+			let childInfo:ChildInfo;
+			let widthToDistribute:number = targetWidth;
 			for (i = 0; i < count; i++){
 				layoutElement = <ILayoutElement> (this.target.getElementAt(i));
 				if (!layoutElement||!layoutElement.includeInLayout){
@@ -667,11 +667,11 @@ module egret.gui {
 			}
 			widthToDistribute -= gap * (numElements - 1);
 			widthToDistribute = widthToDistribute>0?widthToDistribute:0;
-			var excessSpace:number = targetWidth - totalPreferredWidth - gap * (numElements - 1);
+			let excessSpace:number = targetWidth - totalPreferredWidth - gap * (numElements - 1);
 			
-			var averageWidth:number;
-			var largeChildrenCount:number = numElements;
-			var widthDic:Array<any> = [];
+			let averageWidth:number;
+			let largeChildrenCount:number = numElements;
+			let widthDic:any[] = [];
 			if(hJustify){
 				if(excessSpace<0){
 					averageWidth = widthToDistribute / numElements;
@@ -680,7 +680,7 @@ module egret.gui {
 						if (!layoutElement || !layoutElement.includeInLayout)
 							continue;
 						
-						var preferredWidth:number = layoutElement.preferredWidth;
+						let preferredWidth:number = layoutElement.preferredWidth;
 						if (preferredWidth <= averageWidth){
 							widthToDistribute -= preferredWidth;
 							largeChildrenCount--;
@@ -694,11 +694,11 @@ module egret.gui {
 				if(totalPercentWidth>0){
 					HorizontalLayout.flexChildrenProportionally(targetWidth,widthToDistribute,
 						totalPercentWidth,childInfoArray);
-					var roundOff:number = 0;
-                    var length:number = childInfoArray.length;
+					let roundOff:number = 0;
+                    let length:number = childInfoArray.length;
 					for (i=0;i<length;i++){
                         childInfo = childInfoArray[i];
-						var childSize:number = Math.round(childInfo.size + roundOff);
+						let childSize:number = Math.round(childInfo.size + roundOff);
 						roundOff += childInfo.size - childSize;
 						
 						widthDic[childInfo.layoutElement.hashCode] = childSize;
@@ -715,18 +715,18 @@ module egret.gui {
 				x = paddingL+widthToDistribute;
 			}
 			
-			var maxX:number = paddingL;
-			var maxY:number = paddingT;
-			var dx:number = 0;
-			var dy:number = 0;
-			var justifyHeight:number = Math.ceil(targetHeight);
+			let maxX:number = paddingL;
+			let maxY:number = paddingT;
+			let dx:number = 0;
+			let dy:number = 0;
+			let justifyHeight:number = Math.ceil(targetHeight);
 			if(this._verticalAlign==VerticalAlign.CONTENT_JUSTIFY)
 				justifyHeight = Math.ceil(Math.max(targetHeight,this.maxElementHeight));
-			roundOff = 0;
-			var layoutElementWidth:number;
-			var childWidth:number;
+			let roundOff = 0;
+			let layoutElementWidth:number;
+			let childWidth:number;
 			for (i = 0; i < count; i++){
-				var exceesHeight:number = 0;
+				let exceesHeight:number = 0;
 				layoutElement = <ILayoutElement> (this.target.getElementAt(i));
 				if (!layoutElement||!layoutElement.includeInLayout)
 					continue;
@@ -752,9 +752,9 @@ module egret.gui {
 					layoutElement.setLayoutBoundsSize(layoutElementWidth,justifyHeight);
 				}
 				else{
-					var layoutElementHeight:number = NaN;
+					let layoutElementHeight:number = NaN;
 					if(!isNaN(layoutElement.percentHeight)){
-						var percent:number = Math.min(100,layoutElement.percentHeight);
+						let percent:number = Math.min(100,layoutElement.percentHeight);
 						layoutElementHeight = Math.round(targetHeight*percent*0.01);
 					}
 					layoutElement.setLayoutBoundsSize(layoutElementWidth,layoutElementHeight);
@@ -777,33 +777,33 @@ module egret.gui {
 		 * @param spaceForChildren {number}
 		 * @param spaceToDistribute {number} 
 		 * @param totalPercent {number} 
-		 * @param childInfoArray {Array<any>} 
+		 * @param childInfoArray {any[]}
 		 */		
 		public static flexChildrenProportionally(spaceForChildren:number,spaceToDistribute:number,
-															totalPercent:number,childInfoArray:Array<any>):void{
+															totalPercent:number,childInfoArray:any[]):void{
 			
-			var numChildren:number = childInfoArray.length;
-			var done:boolean;
+			let numChildren:number = childInfoArray.length;
+			let done:boolean;
 			
 			do{
 				done = true; 
 				
-				var unused:number = spaceToDistribute -
+				let unused:number = spaceToDistribute -
 					(spaceForChildren * totalPercent / 100);
 				if (unused > 0)
 					spaceToDistribute -= unused;
 				else
 					unused = 0;
 				
-				var spacePerPercent:number = spaceToDistribute / totalPercent;
+				let spacePerPercent:number = spaceToDistribute / totalPercent;
 				
-				for (var i:number = 0; i < numChildren; i++){
-					var childInfo:ChildInfo = childInfoArray[i];
+				for (let i:number = 0; i < numChildren; i++){
+					let childInfo:ChildInfo = childInfoArray[i];
 					
-					var size:number = childInfo.percent * spacePerPercent;
+					let size:number = childInfo.percent * spacePerPercent;
 					
 					if (size < childInfo.min){
-						var min:number = childInfo.min;
+						let min:number = childInfo.min;
 						childInfo.size = min;
 						
 						childInfoArray[i] = childInfoArray[--numChildren];
@@ -821,7 +821,7 @@ module egret.gui {
 						break;
 					}
 					else if (size > childInfo.max){
-						var max:number = childInfo.max;
+						let max:number = childInfo.max;
 						childInfo.size = max;
 						
 						childInfoArray[i] = childInfoArray[--numChildren];

@@ -1,6 +1,6 @@
 //////////////////////////////////////////////////////////////////////////////////////
 //
-//  Copyright (c) 2014-2015, Egret Technology Inc.
+//  Copyright (c) 2014-present, Egret Technology.
 //  All rights reserved.
 //  Redistribution and use in source and binary forms, with or without
 //  modification, are permitted provided that the following conditions are met:
@@ -28,7 +28,7 @@
 //////////////////////////////////////////////////////////////////////////////////////
 
 
-module egret.gui {
+namespace egret.gui {
 
 	/**
 	 * @class egret.gui.Group
@@ -68,11 +68,11 @@ module egret.gui {
 		 */		
 		private  elementsContentChanged:boolean = false;
 		
-		private _elementsContent:Array<any> = [];
+		private _elementsContent:any[] = [];
 		/**
 		 * 返回子元素列表
 		 */
-		public _getElementsContent():Array<any>{
+		public _getElementsContent():any[]{
 			return this._elementsContent;
 		}
 
@@ -80,7 +80,7 @@ module egret.gui {
 		 * 设置容器子对象数组 。数组包含要添加到容器的子项列表，之前的已存在于容器中的子项列表被全部移除后添加列表里的每一项到容器。
 		 * 设置该属性时会对您输入的数组进行一次浅复制操作，所以您之后对该数组的操作不会影响到添加到容器的子项列表数量。
 		 */		
-		public set elementsContent(value:Array<any>){
+		public set elementsContent(value:any[]){
 			if(value==null)
 				value = [];
 			if(value==this._elementsContent)
@@ -90,7 +90,7 @@ module egret.gui {
 			}
 			else{
 				this.elementsContentChanged = true;
-				for (var i:number = this._elementsContent.length - 1; i >= 0; i--){
+				for (let i:number = this._elementsContent.length - 1; i >= 0; i--){
 					this._elementRemoved(this._elementsContent[i], i);
 				}
 				this._elementsContent = value;
@@ -100,8 +100,8 @@ module egret.gui {
 		/**
 		 * 设置容器子对象列表
 		 */		
-		private setElementsContent(value:Array<any>):void{
-			var i:number;
+		private setElementsContent(value:any[]):void{
+			let i:number;
 			
 			for (i = this._elementsContent.length - 1; i >= 0; i--){
 				this._elementRemoved(this._elementsContent[i], i);
@@ -109,9 +109,9 @@ module egret.gui {
 			
 			this._elementsContent = value.concat();
 			
-			var n:number = this._elementsContent.length;
+			let n:number = this._elementsContent.length;
 			for (i = 0; i < n; i++){   
-				var elt:IVisualElement = this._elementsContent[i];
+				let elt:IVisualElement = this._elementsContent[i];
 				
 				if(elt.parent&&"removeElement" in elt.parent)
 					(<IVisualElementContainer><any> (elt.parent)).removeElement(elt);
@@ -144,7 +144,7 @@ module egret.gui {
 		}
 		
 		private checkForRangeError(index:number, addingElement:boolean = false):void{
-			var maxIndex:number = this._elementsContent.length - 1;
+			let maxIndex:number = this._elementsContent.length - 1;
 			
 			if (addingElement)
 				maxIndex++;
@@ -159,7 +159,7 @@ module egret.gui {
 		 * @returns {IVisualElement}
 		 */
 		public addElement(element:IVisualElement):IVisualElement{
-			var index:number = this.numElements;
+			let index:number = this.numElements;
 			
 			if (element.parent ==<DisplayObjectContainer><any>this)
 				index = this.numElements-1;
@@ -179,7 +179,7 @@ module egret.gui {
 			
 			this.checkForRangeError(index, true);
 			
-			var host:any = element.owner;
+			let host:any = element.owner;
 			if (host == this||element.parent==this){
 				this.setElementIndex(element, index);
 				return element;
@@ -213,7 +213,7 @@ module egret.gui {
 		public removeElementAt(index:number):IVisualElement{
 			this.checkForRangeError(index);
 			
-			var element:IVisualElement = this._elementsContent[index];
+			let element:IVisualElement = this._elementsContent[index];
 			
 			if (!this.elementsContentChanged)
 				this._elementRemoved(element, index);
@@ -227,7 +227,7 @@ module egret.gui {
 		 * @method egret.gui.Group#removeAllElements
 		 */
 		public removeAllElements():void{
-			for (var i:number = this.numElements - 1; i >= 0; i--){
+			for (let i:number = this.numElements - 1; i >= 0; i--){
 				this.removeElementAt(i);
 			}
 		}
@@ -250,7 +250,7 @@ module egret.gui {
 		public setElementIndex(element:IVisualElement, index:number):void{
 			this.checkForRangeError(index);
 			
-			var oldIndex:number = this.getElementIndex(element);
+			let oldIndex:number = this.getElementIndex(element);
 			if (oldIndex==-1||oldIndex == index)
 				return;
 			
@@ -283,17 +283,17 @@ module egret.gui {
 			this.checkForRangeError(index2);
 			
 			if (index1 > index2){
-				var temp:number = index2;
+				let temp:number = index2;
 				index2 = index1;
 				index1 = temp; 
 			}
 			else if (index1 == index2)
 				return;
 
-            var elementsContent:Array<IVisualElement> = this._elementsContent;
+            let elementsContent:Array<IVisualElement> = this._elementsContent;
 			
-			var element1:IVisualElement = elementsContent[index1];
-			var element2:IVisualElement = elementsContent[index2];
+			let element1:IVisualElement = elementsContent[index1];
+			let element2:IVisualElement = elementsContent[index2];
 			if (!this.elementsContentChanged){
 				this._elementRemoved(element1, index1, false);
 				this._elementRemoved(element2, index2, false);
@@ -315,7 +315,7 @@ module egret.gui {
 		 */		
 		public _elementAdded(element:IVisualElement, index:number, notifyListeners:boolean = true):void{
             if(element instanceof DisplayObject){
-                var childDO:DisplayObject = <DisplayObject><any> element;
+                let childDO:DisplayObject = <DisplayObject><any> element;
                 this._addToDisplayListAt(childDO,index,notifyListeners);
             }
 
@@ -342,7 +342,7 @@ module egret.gui {
 			}
 
             if(element instanceof DisplayObject&&element.parent==this){
-                var childDO:DisplayObject = <DisplayObject><any> element;
+                let childDO:DisplayObject = <DisplayObject><any> element;
                 this._removeFromDisplayList(childDO,notifyListeners);
             }
 

@@ -1,6 +1,6 @@
 //////////////////////////////////////////////////////////////////////////////////////
 //
-//  Copyright (c) 2014-2015, Egret Technology Inc.
+//  Copyright (c) 2014-present, Egret Technology.
 //  All rights reserved.
 //  Redistribution and use in source and binary forms, with or without
 //  modification, are permitted provided that the following conditions are met:
@@ -27,7 +27,7 @@
 //
 //////////////////////////////////////////////////////////////////////////////////////
 
-module egret.web {
+namespace egret.web {
 
     /**
      * @private
@@ -125,7 +125,7 @@ module egret.web {
     }
 
 
-    var parser = new DOMParser();
+    let parser = new DOMParser();
 
     /**
      * @private
@@ -133,10 +133,10 @@ module egret.web {
      * @param text 要解析的字符串
      */
     function parse(text:string):XML {
-        var xmlDoc = parser.parseFromString(text, "text/xml");
-        var length = xmlDoc.childNodes.length;
-        for (var i = 0; i < length; i++) {
-            var node = xmlDoc.childNodes[i];
+        let xmlDoc = parser.parseFromString(text, "text/xml");
+        let length = xmlDoc.childNodes.length;
+        for (let i = 0; i < length; i++) {
+            let node = xmlDoc.childNodes[i];
             if (node.nodeType == 1) {
                 return parseNode(node, null);
             }
@@ -152,31 +152,31 @@ module egret.web {
         if(node.localName=="parsererror"){
             throw new Error(node.textContent);
         }
-        var xml = new XML(node.localName, parent, node.prefix, node.namespaceURI, node.nodeName);
-        var nodeAttributes = node.attributes;
-        var attributes = xml.attributes;
-        var length = nodeAttributes.length;
-        for (var i = 0; i < length; i++) {
-            var attributeNode = nodeAttributes[i];
-            var name = attributeNode.name;
+        let xml = new XML(node.localName, parent, node["prefix"], node.namespaceURI, node.nodeName);
+        let nodeAttributes = node.attributes;
+        let attributes = xml.attributes;
+        let length = nodeAttributes.length;
+        for (let i = 0; i < length; i++) {
+            let attributeNode = nodeAttributes[i];
+            let name = attributeNode.name;
             if (name.indexOf("xmlns:") == 0) {
                 continue;
             }
             attributes[name] = attributeNode.value;
             xml["$" + name] = attributeNode.value;
         }
-        var childNodes = node.childNodes;
+        let childNodes = node.childNodes;
         length = childNodes.length;
-        var children = xml.children;
-        for (i = 0; i < length; i++) {
-            var childNode = childNodes[i];
-            var nodeType = childNode.nodeType;
-            var childXML:any = null;
+        let children = xml.children;
+        for (let i = 0; i < length; i++) {
+            let childNode = childNodes[i];
+            let nodeType = childNode.nodeType;
+            let childXML:any = null;
             if (nodeType == 1) {
                 childXML = parseNode(childNode, xml);
             }
             else if (nodeType == 3) {
-                var text = childNode.textContent.trim();
+                let text = childNode.textContent.trim();
                 if (text) {
                     childXML = new XMLText(text, xml);
                 }

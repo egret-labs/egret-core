@@ -1,6 +1,6 @@
 //////////////////////////////////////////////////////////////////////////////////////
 //
-//  Copyright (c) 2014-2015, Egret Technology Inc.
+//  Copyright (c) 2014-present, Egret Technology.
 //  All rights reserved.
 //  Redistribution and use in source and binary forms, with or without
 //  modification, are permitted provided that the following conditions are met:
@@ -27,10 +27,9 @@
 //
 //////////////////////////////////////////////////////////////////////////////////////
 
-module eui {
+namespace eui {
 
     /**
-     * @language en_US
      * The LayoutBase class defines the base class for all Spark layouts.
      * To create a custom layout that works with the Spark containers,
      * you must extend <code>LayoutBase</code> or one of its subclasses.
@@ -43,9 +42,9 @@ module eui {
      * @version Egret 2.4
      * @version eui 1.0
      * @platform Web,Native
+     * @language en_US
      */
     /**
-     * @language zh_CN
      * 容器布局基类。若要创建使用 Group 容器的自定义布局，必须扩展 <code>LayoutBase</code> 或其子类之一。
      *
      * <p>子类必须实现 <code>updateDisplayList()</code> 方法
@@ -55,22 +54,23 @@ module eui {
      * @version Egret 2.4
      * @version eui 1.0
      * @platform Web,Native
+     * @language zh_CN
      */
     export class LayoutBase extends egret.EventDispatcher {
 
         /**
-         * @language en_US
          * Constructor.
          * @version Egret 2.4
          * @version eui 1.0
          * @platform Web,Native
+         * @language en_US
          */
         /**
-         * @language zh_CN
          * 构造函数。
          * @version Egret 2.4
          * @version eui 1.0
          * @platform Web,Native
+         * @language zh_CN
          */
         public constructor() {
             super();
@@ -82,21 +82,21 @@ module eui {
         $target:Group = null;
 
         /**
-         * @language en_US
          * The Group container whose elements are measured, sized and positioned
          * by this layout.
          *
          * @version Egret 2.4
          * @version eui 1.0
          * @platform Web,Native
+         * @language en_US
          */
         /**
-         * @language zh_CN
          * 此布局将测量其元素、调整其元素的大小并定位其元素的 Group 容器。
          *
          * @version Egret 2.4
          * @version eui 1.0
          * @platform Web,Native
+         * @language zh_CN
          */
         public get target():Group {
             return this.$target;
@@ -116,7 +116,6 @@ module eui {
         $useVirtualLayout:boolean = false;
 
         /**
-         * @language en_US
          * To configure a container to use virtual layout, set the <code>useVirtualLayout</code> property
          * to <code>true</code> for the layout associated with the container.
          * Only DataGroup with layout set to VerticalLayout,
@@ -129,9 +128,9 @@ module eui {
          * @version Egret 2.4
          * @version eui 1.0
          * @platform Web,Native
+         * @language en_US
          */
         /**
-         * @language zh_CN
          * 若要配置容器使用虚拟布局，请为与容器关联的布局的 <code>useVirtualLayout</code> 属性设置为 <code>true</code>。
          * 只有布局设置为 VerticalLayout、HorizontalLayout 或 TileLayout 的 DataGroup 才支持虚拟布局。
          * 不支持虚拟化的布局子类必须禁止更改此属性。
@@ -141,6 +140,7 @@ module eui {
          * @version Egret 2.4
          * @version eui 1.0
          * @platform Web,Native
+         * @language zh_CN
          */
         public get useVirtualLayout():boolean {
             return this.$useVirtualLayout;
@@ -170,7 +170,6 @@ module eui {
         $typicalHeight:number = 22;
 
         /**
-         * @language en_US
          * Set this size of a typical element
          *
          * @param width the height of element
@@ -179,9 +178,9 @@ module eui {
          * @version Egret 2.4
          * @version eui 1.0
          * @platform Web,Native
+         * @language en_US
          */
         /**
-         * @language zh_CN
          * 设置一个典型元素的大小
          *
          * @param width 元素的宽
@@ -190,6 +189,7 @@ module eui {
          * @version Egret 2.4
          * @version eui 1.0
          * @platform Web,Native
+         * @language zh_CN
          */
         public setTypicalSize(width:number, height:number):void {
             width = +width || 71;
@@ -204,28 +204,27 @@ module eui {
         }
 
         /**
-         * @language en_US
          * Called when the <code>verticalScrollPosition</code> or
          * <code>horizontalScrollPosition</code> properties change.
          *
          * @version Egret 2.4
          * @version eui 1.0
          * @platform Web,Native
+         * @language en_US
          */
         /**
-         * @language zh_CN
          * <code>verticalScrollPosition</code> 或 <code>horizontalScrollPosition</code>
          * 属性更改时调用。
          *
          * @version Egret 2.4
          * @version eui 1.0
          * @platform Web,Native
+         * @language zh_CN
          */
         public scrollPositionChanged():void {
         }
 
         /**
-         * @language en_US
          * When <code>useVirtualLayout</code> is <code>true</code>,
          * this method can be used by the layout target
          * to clear cached layout information when the target changes.
@@ -233,21 +232,21 @@ module eui {
          * @version Egret 2.4
          * @version eui 1.0
          * @platform Web,Native
+         * @language en_US
          */
         /**
-         * @language zh_CN
          * 如果 <code>useVirtualLayout</code> 为 <code>true</code>，
          * 则当布局目标改变时，布局目标可以使用此方法来清除已缓存布局信息。
          *
          * @version Egret 2.4
          * @version eui 1.0
          * @platform Web,Native
+         * @language zh_CN
          */
         public clearVirtualLayoutCache():void {
         }
 
         /**
-         * @language en_US
          * Called by the target after a layout element
          * has been added and before the target's size and display list are
          * validated.
@@ -259,9 +258,9 @@ module eui {
          * @version Egret 2.4
          * @version eui 1.0
          * @platform Web,Native
+         * @language en_US
          */
         /**
-         * @language zh_CN
          * 在已添加布局元素之后且在验证目标的大小和显示列表之前，由目标调用。
          * 按元素状态缓存的布局（比如虚拟布局）可以覆盖此方法以更新其缓存。
          *
@@ -270,12 +269,12 @@ module eui {
          * @version Egret 2.4
          * @version eui 1.0
          * @platform Web,Native
+         * @language zh_CN
          */
         public elementAdded(index:number):void {
         }
 
         /**
-         * @language en_US
          * This method must is called by the target after a layout element
          * has been removed and before the target's size and display list are
          * validated.
@@ -287,9 +286,9 @@ module eui {
          * @version Egret 2.4
          * @version eui 1.0
          * @platform Web,Native
+         * @language en_US
          */
         /**
-         * @language zh_CN
          *
          * 必须在已删除布局元素之后且在验证目标的大小和显示列表之前，由目标调用此方法。
          * 按元素状态缓存的布局（比如虚拟布局）可以覆盖此方法以更新其缓存。
@@ -299,12 +298,12 @@ module eui {
          * @version Egret 2.4
          * @version eui 1.0
          * @platform Web,Native
+         * @language zh_CN
          */
         public elementRemoved(index:number):void {
         }
 
         /**
-         * @language en_US
          * Return the indices of the element visible within this Group.
          *
          * @return The indices of the visible element.
@@ -312,9 +311,9 @@ module eui {
          * @version Egret 2.4
          * @version eui 1.0
          * @platform Web,Native
+         * @language en_US
          */
         /**
-         * @language zh_CN
          * 返回此 Group 中可见的元素的索引。
          *
          * @return 可见的元素的索引。
@@ -322,32 +321,32 @@ module eui {
          * @version Egret 2.4
          * @version eui 1.0
          * @platform Web,Native
+         * @language zh_CN
          */
         public getElementIndicesInView():number[]{
             return null;
         }
 
         /**
-         * @language en_US
          * Measures the target's default size based on its content.
          *
          * @version Egret 2.4
          * @version eui 1.0
          * @platform Web,Native
+         * @language en_US
          */
         /**
-         * @language zh_CN
          * 基于目标的内容测量其默认大小
          *
          * @version Egret 2.4
          * @version eui 1.0
          * @platform Web,Native
+         * @language zh_CN
          */
         public measure():void {
         }
 
         /**
-         * @language en_US
          * Sizes and positions the target's elements.
          *
          * @param unscaledWidth Specifies the width of the target, in pixels,
@@ -359,9 +358,9 @@ module eui {
          * @version Egret 2.4
          * @version eui 1.0
          * @platform Web,Native
+         * @language en_US
          */
         /**
-         * @language zh_CN
          * 调整目标的元素的大小并定位这些元素。
          *
          * @param unscaledWidth 指定目标在目标坐标中的宽度（以像素为单位）。
@@ -370,6 +369,7 @@ module eui {
          * @version Egret 2.4
          * @version eui 1.0
          * @platform Web,Native
+         * @language zh_CN
          */
         public updateDisplayList(width:number, height:number):void {
         }

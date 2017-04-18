@@ -1,6 +1,6 @@
 //////////////////////////////////////////////////////////////////////////////////////
 //
-//  Copyright (c) 2014-2015, Egret Technology Inc.
+//  Copyright (c) 2014-present, Egret Technology.
 //  All rights reserved.
 //  Redistribution and use in source and binary forms, with or without
 //  modification, are permitted provided that the following conditions are met:
@@ -27,7 +27,7 @@
 //
 //////////////////////////////////////////////////////////////////////////////////////
 
-module egret.sys {
+namespace egret.sys {
 
     /**
      * @private
@@ -80,7 +80,7 @@ module egret.sys {
      * @private
      * 屏幕适配器实例，开发者可以通过给这个变量赋值实现了IScreenAdapter接口的实例，从而注入自定义的屏幕适配器。
      */
-    export var screenAdapter:IScreenAdapter;
+    export let screenAdapter:IScreenAdapter;
 
     /**
      * @private
@@ -106,12 +106,12 @@ module egret.sys {
          */
         public calculateStageSize(scaleMode:string, screenWidth:number, screenHeight:number,
                                   contentWidth:number, contentHeight:number):StageDisplaySize {
-            var displayWidth = screenWidth;
-            var displayHeight = screenHeight;
-            var stageWidth = contentWidth;
-            var stageHeight = contentHeight;
-            var scaleX = (screenWidth / stageWidth) || 0;
-            var scaleY = (screenHeight / stageHeight) || 0;
+            let displayWidth = screenWidth;
+            let displayHeight = screenHeight;
+            let stageWidth = contentWidth;
+            let stageHeight = contentHeight;
+            let scaleX = (screenWidth / stageWidth) || 0;
+            let scaleY = (screenHeight / stageHeight) || 0;
             switch (scaleMode) {
                 case StageScaleMode.EXACT_FIT:
                     break;
@@ -157,6 +157,19 @@ module egret.sys {
                     stageWidth = screenWidth;
                     stageHeight = screenHeight;
                     break;
+            }
+            //宽高不是2的整数倍会导致图片绘制出现问题
+            if (stageWidth % 2 != 0) {
+                stageWidth += 1;
+            }
+            if (stageHeight % 2 != 0) {
+                stageHeight += 1;
+            }
+            if(displayWidth % 2 != 0) {
+                displayWidth += 1;
+            }
+            if(displayHeight % 2 != 0) {
+                displayHeight += 1;
             }
             return {
                 stageWidth: stageWidth,

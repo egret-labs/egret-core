@@ -1,4 +1,3 @@
-/// <reference path="../lib/types.d.ts" />
 var __extends = (this && this.__extends) || function (d, b) {
     for (var p in b) if (b.hasOwnProperty(p)) d[p] = b[p];
     function __() { this.constructor = d; }
@@ -8,17 +7,16 @@ var events = require("events");
 var ServiceSocket = (function (_super) {
     __extends(ServiceSocket, _super);
     function ServiceSocket(socket) {
-        var _this = this;
-        _super.call(this);
-        this.larkMessageParser = new LarkMessageBody();
-        this.socket = socket;
+        var _this = _super.call(this) || this;
+        _this.socket = socket;
         socket.setEncoding("utf-8");
-        socket.on("data", function (msg) { return _this.onData(msg); });
+        socket.on("data", function (msg) { return _this.onData(msg.toString()); });
         socket.on("end", function () { return _this.emit("end"); });
         socket.on("close", function () { return _this.emit("close"); });
+        return _this;
     }
     ServiceSocket.prototype.send = function (object) {
-        var msg = LarkMessageBody.toMessage(object);
+        var msg = MessageBody.stringify(object);
         try {
             this.socket.write(msg);
         }
@@ -32,44 +30,40 @@ var ServiceSocket = (function (_super) {
         this.socket.end();
     };
     ServiceSocket.prototype.onData = function (text) {
-        var _this = this;
-        this.larkMessageParser.pushData(text, function (data) { return _this.onGotMessage(data); });
+        var data = MessageBody.parse(text);
+        this.onGotMessage(data);
     };
     ServiceSocket.prototype.onGotMessage = function (data) {
         this.emit("message", data);
     };
     return ServiceSocket;
-})(events.EventEmitter);
-var LarkMessageBody = (function () {
-    function LarkMessageBody() {
-    }
-    LarkMessageBody.toMessage = function (data) {
+}(events.EventEmitter));
+var MessageBody;
+(function (MessageBody) {
+    var HEADER = "LARK-MSG";
+    function stringify(data) {
         var json = JSON.stringify(data);
         var length = json.length;
-        var header = LarkMessageBody.LARKHEADER + ":" + length + "\n";
+        var header = HEADER + ":" + length + "\n";
         var msg = header + json;
         return msg;
-    };
-    LarkMessageBody.prototype.pushData = function (text, msgCallback) {
-        if (text.indexOf(LarkMessageBody.LARKHEADER) == 0) {
+    }
+    MessageBody.stringify = stringify;
+    function parse(text) {
+        var data = null;
+        if (text.indexOf(HEADER) == 0) {
             var lines = text.split('\n');
             var header = lines[0];
             var lengthStr = /\d+/.exec(header)[0];
-            this.length = parseInt(lengthStr);
-            this.text = lines[1];
-            this.data = null;
+            var telength = parseInt(lengthStr);
+            text = lines[1];
+            var length = text.length;
+            if (length == telength) {
+                data = JSON.parse(text);
+            }
         }
-        else
-            this.text += text;
-        var length = this.text.length;
-        if (length == this.length) {
-            this.data = JSON.parse(this.text);
-            msgCallback(this.data);
-        }
-    };
-    LarkMessageBody.LARKHEADER = "LARK-MSG";
-    return LarkMessageBody;
-})();
+        return data;
+    }
+    MessageBody.parse = parse;
+})(MessageBody || (MessageBody = {}));
 module.exports = ServiceSocket;
-
-//# sourceMappingURL=ServiceSocket.js.map

@@ -1,6 +1,6 @@
 //////////////////////////////////////////////////////////////////////////////////////
 //
-//  Copyright (c) 2014-2015, Egret Technology Inc.
+//  Copyright (c) 2014-present, Egret Technology.
 //  All rights reserved.
 //  Redistribution and use in source and binary forms, with or without
 //  modification, are permitted provided that the following conditions are met:
@@ -26,36 +26,36 @@
 //  EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 //
 //////////////////////////////////////////////////////////////////////////////////////
-module egret {
+namespace egret {
 
     /**
-     * @language en_US
      * Convert the text in html format to the object that can be assigned to the egret.TextField#textFlow property
-     * @see http://docs.egret-labs.org/jkdoc/manual-text-multiformat.html Text mixed in a variety of style
+     * @see http://edn.egret.com/cn/docs/page/146 Text mixed in a variety of style
      * @version Egret 2.4
      * @platform Web,Native
      * @includeExample egret/text/HtmlTextParser.ts
+     * @language en_US
      */
     /**
-     * @language zh_CN
      * 将html格式文本转换为可赋值给 egret.TextField#textFlow 属性的对象
-     * @see http://docs.egret-labs.org/jkdoc/manual-text-multiformat.html 多种样式文本混合
+     * @see http://edn.egret.com/cn/docs/page/146 多种样式文本混合
      * @version Egret 2.4
      * @platform Web,Native
      * @includeExample egret/text/HtmlTextParser.ts
+     * @language zh_CN
      */
-    export class HtmlTextParser{
+    export class HtmlTextParser {
 
         /**
          * @version Egret 2.4
          * @platform Web,Native
          */
-        constructor () {
+        constructor() {
             this.initReplaceArr();
         }
 
-        private replaceArr:Array<any> = [];
-        private initReplaceArr():void {
+        private replaceArr: any[] = [];
+        private initReplaceArr(): void {
             this.replaceArr = [];
             this.replaceArr.push([/&lt;/g, "<"]);
             this.replaceArr.push([/&gt;/g, ">"]);
@@ -69,10 +69,10 @@ module egret {
          * @param value 
          * @returns 
          */
-        private replaceSpecial(value:string):string {
-            for (var i = 0; i < this.replaceArr.length; i++) {
-                var k = this.replaceArr[i][0];
-                var v = this.replaceArr[i][1];
+        private replaceSpecial(value: string): string {
+            for (let i = 0; i < this.replaceArr.length; i++) {
+                let k = this.replaceArr[i][0];
+                let v = this.replaceArr[i][1];
 
                 value = value.replace(k, v);
             }
@@ -82,32 +82,32 @@ module egret {
         /**
          * @private
          */
-        private resutlArr:Array<egret.ITextElement> = [];
+        private resutlArr: Array<egret.ITextElement> = [];
 
         /**
-         * @language en_US
          * Convert the text in html format to the object that can be assigned to the egret.TextField#textFlow property
          * @param htmltext {string} Text in html
          * @returns {Array<egret.ITextElement>} 可赋值给 egret.TextField#textFlow Object that can be assigned to the egret.TextField#textFlow property
          * @version Egret 2.4
          * @platform Web,Native
+         * @language en_US
          */
         /**
-         * @language zh_CN
          * 将html格式文本转换为可赋值给 egret.TextField#textFlow 属性的对象
          * @param htmltext {string} html文本
          * @returns {Array<egret.ITextElement>} 可赋值给 egret.TextField#textFlow 属性的对象
          * @version Egret 2.4
          * @platform Web,Native
+         * @language zh_CN
          */
-        public parser(htmltext:string):Array<egret.ITextElement> {
+        public parse(htmltext: string): egret.ITextElement[] {
             this.stackArray = [];
             this.resutlArr = [];
 
-            var firstIdx:number = 0;//文本段开始位置
-            var length:number = htmltext.length;
+            let firstIdx = 0;//文本段开始位置
+            let length: number = htmltext.length;
             while (firstIdx < length) {
-                var starIdx:number = htmltext.indexOf("<", firstIdx);
+                let starIdx: number = htmltext.indexOf("<", firstIdx);
                 if (starIdx < 0) {
                     this.addToResultArr(htmltext.substring(firstIdx));
                     firstIdx = length;
@@ -115,7 +115,7 @@ module egret {
                 else {
                     this.addToResultArr(htmltext.substring(firstIdx, starIdx));
 
-                    var fontEnd = htmltext.indexOf(">", starIdx);
+                    let fontEnd = htmltext.indexOf(">", starIdx);
                     if (fontEnd == -1) {
                         egret.$error(1038);
                         fontEnd = starIdx;
@@ -134,12 +134,16 @@ module egret {
             return this.resutlArr;
         }
 
+        public parser(htmltext: string): Array<egret.ITextElement> {
+            return this.parse(htmltext);
+        }
+
         /**
          * @private
          * 
          * @param value 
          */
-        private addToResultArr(value:string):void {
+        private addToResultArr(value: string): void {
             if (value == "") {
                 return;
             }
@@ -147,38 +151,38 @@ module egret {
             value = this.replaceSpecial(value);
 
             if (this.stackArray.length > 0) {
-                this.resutlArr.push({text:value, style:this.stackArray[this.stackArray.length - 1]})
+                this.resutlArr.push({ text: value, style: this.stackArray[this.stackArray.length - 1] })
             }
             else {
-                this.resutlArr.push(<egret.ITextElement>{text:value});
+                this.resutlArr.push(<egret.ITextElement>{ text: value });
             }
         }
 
         //将字符数据转成Json数据
-        private changeStringToObject(str:string):egret.ITextStyle {
+        private changeStringToObject(str: string): egret.ITextStyle {
             str = str.trim();
-            var info:any = {};
+            let info: any = {};
 
-            var header = [];
-            if (str.charAt(0) == "i" || str.charAt(0) == "b" || str.charAt(0) == "u")  {
+            let header = [];
+            if (str.charAt(0) == "i" || str.charAt(0) == "b" || str.charAt(0) == "u") {
                 this.addProperty(info, str, "true");
             }
-            else if (header = str.match(/^(font|a)\s/)){
+            else if (header = str.match(/^(font|a)\s/)) {
                 str = str.substring(header[0].length).trim();
 
-                var next:number = 0;
-                var titles;
+                let next: number = 0;
+                let titles;
                 while (titles = str.match(this.getHeadReg())) {
-                    var title = titles[0];
-                    var value = "";
-                    var str = str.substring(title.length).trim();
+                    let title = titles[0];
+                    let value = "";
+                    str = str.substring(title.length).trim();
                     if (str.charAt(0) == "\"") {
-                        var next = str.indexOf("\"", 1);
+                        next = str.indexOf("\"", 1);
                         value = str.substring(1, next);
                         next += 1;
                     }
                     else if (str.charAt(0) == "\'") {
-                        var next = str.indexOf("\'", 1);
+                        next = str.indexOf("\'", 1);
                         value = str.substring(1, next);
                         next += 1;
                     }
@@ -201,7 +205,7 @@ module egret {
          * 
          * @returns 
          */
-        private getHeadReg():RegExp {
+        private getHeadReg(): RegExp {
             return /^(color|textcolor|strokecolor|stroke|b|bold|i|italic|u|size|fontfamily|href|target)(\s)*=/;
         }
 
@@ -212,42 +216,42 @@ module egret {
          * @param head 
          * @param value 
          */
-        private addProperty(info:egret.ITextStyle, head:string, value:string):void {
+        private addProperty(info: egret.ITextStyle, head: string, value: string): void {
 
             switch (head.toLowerCase()) {
-                case "color" :
-                case "textcolor" :
+                case "color":
+                case "textcolor":
                     value = value.replace(/#/, "0x");
                     info.textColor = parseInt(value);
                     break;
-                case "strokecolor" :
+                case "strokecolor":
                     value = value.replace(/#/, "0x");
                     info.strokeColor = parseInt(value);
                     break;
-                case "stroke" :
+                case "stroke":
                     info.stroke = parseInt(value);
                     break;
-                case "b" :
-                case "bold" :
+                case "b":
+                case "bold":
                     info.bold = value == "true";
                     break;
-                case "u" :
+                case "u":
                     info.underline = value == "true";
                     break;
-                case "i" :
-                case "italic" :
+                case "i":
+                case "italic":
                     info.italic = value == "true";
                     break;
-                case "size" :
+                case "size":
                     info.size = parseInt(value);
                     break;
-                case "fontfamily" :
+                case "fontfamily":
                     info.fontFamily = value;
                     break;
-                case "href" :
+                case "href":
                     info.href = this.replaceSpecial(value);
                     break;
-                case "target" :
+                case "target":
                     info.target = this.replaceSpecial(value);
                     break;
             }
@@ -256,22 +260,22 @@ module egret {
         /**
          * @private
          */
-        private stackArray:Array<egret.ITextStyle>;
+        private stackArray: Array<egret.ITextStyle>;
 
         /**
          * @private
          * 
          * @param infoStr 
          */
-        private addToArray(infoStr:string):void {
-            var info:egret.ITextStyle = this.changeStringToObject(infoStr);
+        private addToArray(infoStr: string): void {
+            let info: egret.ITextStyle = this.changeStringToObject(infoStr);
 
             if (this.stackArray.length == 0) {
                 this.stackArray.push(info);
             }
             else {
-                var lastInfo:Object = this.stackArray[this.stackArray.length - 1];
-                for (var key in lastInfo) {
+                let lastInfo: Object = this.stackArray[this.stackArray.length - 1];
+                for (let key in lastInfo) {
                     if (info[key] == null) {
                         info[key] = lastInfo[key];
                     }

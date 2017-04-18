@@ -1,6 +1,6 @@
 //////////////////////////////////////////////////////////////////////////////////////
 //
-//  Copyright (c) 2014-2015, Egret Technology Inc.
+//  Copyright (c) 2014-present, Egret Technology.
 //  All rights reserved.
 //  Redistribution and use in source and binary forms, with or without
 //  modification, are permitted provided that the following conditions are met:
@@ -28,7 +28,7 @@
 //////////////////////////////////////////////////////////////////////////////////////
 
 
-module egret.gui {
+namespace egret.gui {
 
 	/**
 	 * @class egret.gui.UIEvent
@@ -122,8 +122,8 @@ module egret.gui {
          * @method egret.gui.UIEvent.dispatchUIEvent
          */
         public static dispatchUIEvent(target:IEventDispatcher,type:string):boolean{
-			var event:UIEvent = Event.create(UIEvent, type);
-			var result = target.dispatchEvent(event);
+			let event:UIEvent = Event.create(UIEvent, type);
+			let result = target.dispatchEvent(event);
 			Event.release(event);
 			return result;
         }

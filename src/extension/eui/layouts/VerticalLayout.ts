@@ -1,6 +1,6 @@
 //////////////////////////////////////////////////////////////////////////////////////
 //
-//  Copyright (c) 2014-2015, Egret Technology Inc.
+//  Copyright (c) 2014-present, Egret Technology.
 //  All rights reserved.
 //  Redistribution and use in source and binary forms, with or without
 //  modification, are permitted provided that the following conditions are met:
@@ -27,11 +27,10 @@
 //
 //////////////////////////////////////////////////////////////////////////////////////
 
-module eui {
+namespace eui {
 
-    var UIComponentClass = "eui.UIComponent";
+    let UIComponentClass = "eui.UIComponent";
     /**
-     * @language en_US
      * The VerticalLayout class arranges the layout elements in a vertical sequence,
      * top to bottom, with optional gaps between the elements and optional padding
      * around the sequence of elements.
@@ -40,15 +39,16 @@ module eui {
      * @version eui 1.0
      * @platform Web,Native
      * @includeExample  extension/eui/layout/VerticalLayoutExample.ts
+     * @language en_US
      */
     /**
-     * @language zh_CN
      * VerticalLayout 类按垂直顺序从上向下排列布局元素，在元素和围绕元素顺序的可选填充之间带有可选间隙。
      *
      * @version Egret 2.4
      * @version eui 1.0
      * @platform Web,Native
      * @includeExample  extension/eui/layout/VerticalLayoutExample.ts
+     * @language zh_CN
      */
     export class VerticalLayout extends LinearLayoutBase {
 
@@ -60,14 +60,14 @@ module eui {
          * @platform Web,Native
          */
         protected measureReal():void {
-            var target = this.$target;
-            var count = target.numElements;
-            var numElements = count;
-            var measuredWidth = 0;
-            var measuredHeight = 0;
-            var bounds = egret.$TempRectangle;
-            for (var i = 0; i < count; i++) {
-                var layoutElement = <UIComponent> (target.getElementAt(i));
+            let target = this.$target;
+            let count = target.numElements;
+            let numElements = count;
+            let measuredWidth = 0;
+            let measuredHeight = 0;
+            let bounds = egret.$TempRectangle;
+            for (let i = 0; i < count; i++) {
+                let layoutElement = <UIComponent> (target.getElementAt(i));
                 if (!egret.is(layoutElement, UIComponentClass) || !layoutElement.$includeInLayout) {
                     numElements--;
                     continue;
@@ -77,8 +77,8 @@ module eui {
                 measuredWidth = Math.max(measuredWidth, bounds.width);
             }
             measuredHeight += (numElements - 1) * this.$gap;
-            var hPadding = this.$paddingLeft + this.$paddingRight;
-            var vPadding = this.$paddingTop + this.$paddingBottom;
+            let hPadding = this.$paddingLeft + this.$paddingRight;
+            let vPadding = this.$paddingTop + this.$paddingBottom;
             target.setMeasuredSize(measuredWidth + hPadding, measuredHeight + vPadding);
         }
 
@@ -90,15 +90,15 @@ module eui {
          * @platform Web,Native
          */
         protected measureVirtual():void {
-            var target = this.$target;
-            var typicalHeight = this.$typicalHeight;
-            var measuredHeight = this.getElementTotalSize();
-            var measuredWidth = Math.max(this.maxElementSize, this.$typicalWidth);
-            var bounds = egret.$TempRectangle;
-            var endIndex = this.endIndex;
-            var elementSizeTable = this.elementSizeTable;
-            for (var index = this.startIndex; index < endIndex; index++) {
-                var layoutElement = <UIComponent> (target.getElementAt(index));
+            let target = this.$target;
+            let typicalHeight = this.$typicalHeight;
+            let measuredHeight = this.getElementTotalSize();
+            let measuredWidth = Math.max(this.maxElementSize, this.$typicalWidth);
+            let bounds = egret.$TempRectangle;
+            let endIndex = this.endIndex;
+            let elementSizeTable = this.elementSizeTable;
+            for (let index = this.startIndex; index < endIndex; index++) {
+                let layoutElement = <UIComponent> (target.getElementAt(index));
                 if (!egret.is(layoutElement, UIComponentClass) || !layoutElement.$includeInLayout) {
                     continue;
                 }
@@ -107,8 +107,8 @@ module eui {
                 measuredHeight -= isNaN(elementSizeTable[index]) ? typicalHeight : elementSizeTable[index];
                 measuredWidth = Math.max(measuredWidth, bounds.width);
             }
-            var hPadding = this.$paddingLeft + this.$paddingRight;
-            var vPadding = this.$paddingTop + this.$paddingBottom;
+            let hPadding = this.$paddingLeft + this.$paddingRight;
+            let vPadding = this.$paddingTop + this.$paddingBottom;
             target.setMeasuredSize(measuredWidth + hPadding, measuredHeight + vPadding);
         }
 
@@ -120,18 +120,18 @@ module eui {
          * @platform Web,Native
          */
         protected updateDisplayListReal(width:number, height:number):void {
-            var target = this.$target;
-            var paddingL = this.$paddingLeft;
-            var paddingR = this.$paddingRight;
-            var paddingT = this.$paddingTop;
-            var paddingB = this.$paddingBottom;
-            var gap = this.$gap;
-            var targetWidth = Math.max(0, width - paddingL - paddingR);
-            var targetHeight = Math.max(0, height - paddingT - paddingB);
+            let target = this.$target;
+            let paddingL = this.$paddingLeft;
+            let paddingR = this.$paddingRight;
+            let paddingT = this.$paddingTop;
+            let paddingB = this.$paddingBottom;
+            let gap = this.$gap;
+            let targetWidth = Math.max(0, width - paddingL - paddingR);
+            let targetHeight = Math.max(0, height - paddingT - paddingB);
 
-            var vJustify = this.$verticalAlign == JustifyAlign.JUSTIFY;
-            var hJustify = this.$horizontalAlign == JustifyAlign.JUSTIFY || this.$horizontalAlign == JustifyAlign.CONTENT_JUSTIFY;
-            var hAlign = 0;
+            let vJustify = this.$verticalAlign == JustifyAlign.JUSTIFY;
+            let hJustify = this.$horizontalAlign == JustifyAlign.JUSTIFY || this.$horizontalAlign == JustifyAlign.CONTENT_JUSTIFY;
+            let hAlign = 0;
             if (!hJustify) {
                 if (this.$horizontalAlign == egret.HorizontalAlign.CENTER) {
                     hAlign = 0.5;
@@ -141,22 +141,22 @@ module eui {
                 }
             }
 
-            var count = target.numElements;
-            var numElements = count;
-            var x = paddingL;
-            var y = paddingT;
-            var i:number;
-            var layoutElement:UIComponent;
+            let count = target.numElements;
+            let numElements = count;
+            let x = paddingL;
+            let y = paddingT;
+            let i:number;
+            let layoutElement:UIComponent;
 
-            var totalPreferredHeight = 0;
-            var totalPercentHeight = 0;
-            var childInfoArray:any[] = [];
-            var childInfo:sys.ChildInfo;
-            var heightToDistribute = targetHeight;
-            var maxElementWidth = this.maxElementSize;
-            var bounds = egret.$TempRectangle;
+            let totalPreferredHeight = 0;
+            let totalPercentHeight = 0;
+            let childInfoArray:any[] = [];
+            let childInfo:sys.ChildInfo;
+            let heightToDistribute = targetHeight;
+            let maxElementWidth = this.maxElementSize;
+            let bounds = egret.$TempRectangle;
             for (i = 0; i < count; i++) {
-                var layoutElement = <UIComponent> (target.getElementAt(i));
+                let layoutElement = <UIComponent> (target.getElementAt(i));
                 if (!egret.is(layoutElement, UIComponentClass) || !layoutElement.$includeInLayout) {
                     numElements--;
                     continue;
@@ -167,7 +167,7 @@ module eui {
                     totalPreferredHeight += bounds.height;
                 }
                 else {
-                    var values = layoutElement.$UIComponent;
+                    let values = layoutElement.$UIComponent;
                     if (!isNaN(values[sys.UIKeys.percentHeight])) {
                         totalPercentHeight += values[sys.UIKeys.percentHeight];
 
@@ -186,11 +186,11 @@ module eui {
             }
             heightToDistribute -= gap * (numElements - 1);
             heightToDistribute = heightToDistribute > 0 ? heightToDistribute : 0;
-            var excessSpace = targetHeight - totalPreferredHeight - gap * (numElements - 1);
+            let excessSpace = targetHeight - totalPreferredHeight - gap * (numElements - 1);
 
-            var averageHeight:number;
-            var largeChildrenCount = numElements;
-            var heightDic:any = {};
+            let averageHeight:number;
+            let largeChildrenCount = numElements;
+            let heightDic:any = {};
             if (vJustify) {
                 if (excessSpace < 0) {
                     averageHeight = heightToDistribute / numElements;
@@ -214,11 +214,11 @@ module eui {
                 if (totalPercentHeight > 0) {
                     this.flexChildrenProportionally(targetHeight, heightToDistribute,
                         totalPercentHeight, childInfoArray);
-                    var roundOff = 0;
-                    var length = childInfoArray.length;
+                    let roundOff = 0;
+                    let length = childInfoArray.length;
                     for (i = 0; i < length; i++) {
                         childInfo = childInfoArray[i];
-                        var childSize = Math.round(childInfo.size + roundOff);
+                        let childSize = Math.round(childInfo.size + roundOff);
                         roundOff += childInfo.size - childSize;
 
                         heightDic[childInfo.layoutElement.$hashCode] = childSize;
@@ -235,18 +235,18 @@ module eui {
                 y = paddingT + heightToDistribute;
             }
 
-            var maxX = paddingL;
-            var maxY = paddingT;
-            var dx = 0;
-            var dy = 0;
-            var justifyWidth:number = Math.ceil(targetWidth);
+            let maxX = paddingL;
+            let maxY = paddingT;
+            let dx = 0;
+            let dy = 0;
+            let justifyWidth:number = Math.ceil(targetWidth);
             if (this.$horizontalAlign == JustifyAlign.CONTENT_JUSTIFY)
                 justifyWidth = Math.ceil(Math.max(targetWidth, maxElementWidth));
-            roundOff = 0;
-            var layoutElementHeight:number;
-            var childHeight:number;
+            let roundOff = 0;
+            let layoutElementHeight:number;
+            let childHeight:number;
             for (i = 0; i < count; i++) {
-                var exceesWidth = 0;
+                let exceesWidth = 0;
                 layoutElement = <UIComponent> (target.getElementAt(i));
                 if (!egret.is(layoutElement, UIComponentClass) || !layoutElement.$includeInLayout) {
                     continue;
@@ -275,10 +275,10 @@ module eui {
                     layoutElement.getLayoutBounds(bounds);
                 }
                 else {
-                    var layoutElementWidth = NaN;
-                    var values = layoutElement.$UIComponent;
+                    let layoutElementWidth = NaN;
+                    let values = layoutElement.$UIComponent;
                     if (!isNaN(values[sys.UIKeys.percentWidth])) {
-                        var percent = Math.min(100, values[sys.UIKeys.percentWidth]);
+                        let percent = Math.min(100, values[sys.UIKeys.percentWidth]);
                         layoutElementWidth = Math.round(targetWidth * percent * 0.01);
                     }
                     layoutElement.setLayoutBoundsSize(layoutElementWidth, layoutElementHeight);
@@ -306,29 +306,29 @@ module eui {
          * @platform Web,Native
          */
         protected updateDisplayListVirtual(width:number, height:number):void {
-            var target = this.$target;
+            let target = this.$target;
             if (this.indexInViewCalculated)
                 this.indexInViewCalculated = false;
             else
                 this.getIndexInView();
-            var paddingB = this.$paddingBottom;
-            var paddingL = this.$paddingLeft;
-            var paddingR = this.$paddingRight;
-            var gap = this.$gap;
-            var contentHeight:number;
-            var numElements = target.numElements;
+            let paddingB = this.$paddingBottom;
+            let paddingL = this.$paddingLeft;
+            let paddingR = this.$paddingRight;
+            let gap = this.$gap;
+            let contentHeight:number;
+            let numElements = target.numElements;
             if (this.startIndex == -1 || this.endIndex == -1) {
                 contentHeight = this.getStartPosition(numElements) - gap + paddingB;
                 target.setContentSize(target.contentWidth, contentHeight);
                 return;
             }
 
-            var endIndex = this.endIndex;
+            let endIndex = this.endIndex;
             target.setVirtualElementIndicesInView(this.startIndex, endIndex);
             //获取垂直布局参数
-            var justify = this.$horizontalAlign == JustifyAlign.JUSTIFY || this.$horizontalAlign == JustifyAlign.CONTENT_JUSTIFY;
-            var contentJustify = this.$horizontalAlign == JustifyAlign.CONTENT_JUSTIFY;
-            var hAlign = 0;
+            let justify = this.$horizontalAlign == JustifyAlign.JUSTIFY || this.$horizontalAlign == JustifyAlign.CONTENT_JUSTIFY;
+            let contentJustify = this.$horizontalAlign == JustifyAlign.CONTENT_JUSTIFY;
+            let hAlign = 0;
             if (!justify) {
                 if (this.$horizontalAlign == egret.HorizontalAlign.CENTER) {
                     hAlign = 0.5;
@@ -338,16 +338,16 @@ module eui {
                 }
             }
 
-            var bounds = egret.$TempRectangle;
-            var targetWidth = Math.max(0, width - paddingL - paddingR);
-            var justifyWidth = Math.ceil(targetWidth);
-            var layoutElement:UIComponent;
-            var typicalHeight = this.$typicalHeight;
-            var typicalWidth = this.$typicalWidth;
-            var maxElementWidth = this.maxElementSize;
-            var oldMaxW = Math.max(typicalWidth, this.maxElementSize);
+            let bounds = egret.$TempRectangle;
+            let targetWidth = Math.max(0, width - paddingL - paddingR);
+            let justifyWidth = Math.ceil(targetWidth);
+            let layoutElement:UIComponent;
+            let typicalHeight = this.$typicalHeight;
+            let typicalWidth = this.$typicalWidth;
+            let maxElementWidth = this.maxElementSize;
+            let oldMaxW = Math.max(typicalWidth, this.maxElementSize);
             if (contentJustify) {
-                for (var index = this.startIndex; index <= endIndex; index++) {
+                for (let index = this.startIndex; index <= endIndex; index++) {
                     layoutElement = <UIComponent> (target.getVirtualElementAt(index));
                     if (!egret.is(layoutElement, UIComponentClass) || !layoutElement.$includeInLayout) {
                         continue;
@@ -357,16 +357,16 @@ module eui {
                 }
                 justifyWidth = Math.ceil(Math.max(targetWidth, maxElementWidth));
             }
-            var x = 0;
-            var y = 0;
-            var contentWidth = 0;
-            var oldElementSize:number;
-            var needInvalidateSize = false;
-            var elementSizeTable = this.elementSizeTable;
+            let x = 0;
+            let y = 0;
+            let contentWidth = 0;
+            let oldElementSize:number;
+            let needInvalidateSize = false;
+            let elementSizeTable = this.elementSizeTable;
 
             //对可见区域进行布局
-            for (var i = this.startIndex; i <= endIndex; i++) {
-                var exceesWidth = 0;
+            for (let i = this.startIndex; i <= endIndex; i++) {
+                let exceesWidth = 0;
                 layoutElement = <UIComponent> (target.getVirtualElementAt(i));
                 if (!egret.is(layoutElement, UIComponentClass) || !layoutElement.$includeInLayout) {
                     continue;
@@ -418,18 +418,18 @@ module eui {
         protected getStartPosition(index:number):number {
             if (!this.$useVirtualLayout) {
                 if (this.$target) {
-                    var element = <UIComponent>this.$target.getElementAt(index);
+                    let element = <UIComponent>this.$target.getElementAt(index);
                     if (element) {
                         return element.y;
                     }
                 }
             }
-            var typicalHeight = this.$typicalHeight;
-            var startPos = this.$paddingTop;
-            var gap = this.$gap;
-            var elementSizeTable = this.elementSizeTable;
-            for (var i = 0; i < index; i++) {
-                var h = elementSizeTable[i];
+            let typicalHeight = this.$typicalHeight;
+            let startPos = this.$paddingTop;
+            let gap = this.$gap;
+            let elementSizeTable = this.elementSizeTable;
+            for (let i = 0; i < index; i++) {
+                let h = elementSizeTable[i];
                 if(isNaN(h)) {
                     h = typicalHeight;
                 }
@@ -449,7 +449,7 @@ module eui {
         protected getElementSize(index:number):number {
 
             if (this.$useVirtualLayout) {
-                var size = this.elementSizeTable[index];
+                let size = this.elementSizeTable[index];
                 if (isNaN(size)) {
                     size = this.$typicalHeight;
                 }
@@ -469,13 +469,13 @@ module eui {
          * @platform Web,Native
          */
         protected getElementTotalSize():number {
-            var typicalHeight = this.$typicalHeight;
-            var gap = this.$gap;
-            var totalSize = 0;
-            var length = this.$target.numElements;
-            var elementSizeTable = this.elementSizeTable;
-            for (var i = 0; i < length; i++) {
-                var h = elementSizeTable[i];
+            let typicalHeight = this.$typicalHeight;
+            let gap = this.$gap;
+            let totalSize = 0;
+            let length = this.$target.numElements;
+            let elementSizeTable = this.elementSizeTable;
+            for (let i = 0; i < length; i++) {
+                let h = elementSizeTable[i];
                 if(isNaN(h)) {
                     h = typicalHeight;
                 }
@@ -507,35 +507,35 @@ module eui {
          * @platform Web,Native
          */
         protected getIndexInView():boolean {
-            var target = this.$target;
+            let target = this.$target;
             if (!target || target.numElements == 0) {
                 this.startIndex = this.endIndex = -1;
                 return false;
             }
 
-            var values = target.$UIComponent;
+            let values = target.$UIComponent;
             if (values[sys.UIKeys.width] == 0 || values[sys.UIKeys.height] == 0) {
                 this.startIndex = this.endIndex = -1;
                 return false;
             }
 
-            var numElements = target.numElements;
-            var contentHeight = this.getStartPosition(numElements - 1) +
+            let numElements = target.numElements;
+            let contentHeight = this.getStartPosition(numElements - 1) +
                 this.elementSizeTable[numElements - 1] + this.$paddingBottom;
-            var minVisibleY = target.scrollV;
+            let minVisibleY = target.scrollV;
             if (minVisibleY > contentHeight - this.$paddingBottom) {
                 this.startIndex = -1;
                 this.endIndex = -1;
                 return false;
             }
-            var maxVisibleY = target.scrollV + values[sys.UIKeys.height];
+            let maxVisibleY = target.scrollV + values[sys.UIKeys.height];
             if (maxVisibleY < this.$paddingTop) {
                 this.startIndex = -1;
                 this.endIndex = -1;
                 return false;
             }
-            var oldStartIndex = this.startIndex;
-            var oldEndIndex = this.endIndex;
+            let oldStartIndex = this.startIndex;
+            let oldEndIndex = this.endIndex;
             this.startIndex = this.findIndexAt(minVisibleY, 0, numElements - 1);
             if (this.startIndex == -1)
                 this.startIndex = 0;

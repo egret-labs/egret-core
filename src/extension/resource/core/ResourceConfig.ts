@@ -1,6 +1,6 @@
 //////////////////////////////////////////////////////////////////////////////////////
 //
-//  Copyright (c) 2014-2015, Egret Technology Inc.
+//  Copyright (c) 2014-present, Egret Technology.
 //  All rights reserved.
 //  Redistribution and use in source and binary forms, with or without
 //  modification, are permitted provided that the following conditions are met:
@@ -28,7 +28,7 @@
 //////////////////////////////////////////////////////////////////////////////////////
 
 
-module RES {
+namespace RES {
 
 	/**
 	 * @class RES.ResourceConfig
@@ -48,13 +48,13 @@ module RES {
 		 * @returns {Array<egret.ResourceItem>}
          */
         public getGroupByName(name:string):Array<ResourceItem> {
-            var group:Array<ResourceItem> = new Array<ResourceItem>();
+            let group:Array<ResourceItem> = new Array<ResourceItem>();
             if (!this.groupDic[name])
                 return group;
-            var list:Array<any> = this.groupDic[name];
-            var length:number = list.length;
-            for (var i:number = 0; i < length; i++) {
-                var obj:any = list[i];
+            let list:any[] = this.groupDic[name];
+            let length:number = list.length;
+            for (let i:number = 0; i < length; i++) {
+                let obj:any = list[i];
                 group.push(this.parseResourceItem(obj));
             }
             return group;
@@ -63,9 +63,9 @@ module RES {
          * 根据组名获取原始的组加载项列表
          * @method RES.ResourceConfig#getRawGroupByName
          * @param name {string} 组名
-         * @returns {Array<any>}
+         * @returns {any[]}
          */
-        public getRawGroupByName(name:string):Array<any>{
+        public getRawGroupByName(name:string):any[]{
             if (this.groupDic[name])
                 return this.groupDic[name];
             return [];
@@ -76,29 +76,29 @@ module RES {
          * 可以监听ResourceEvent.CONFIG_COMPLETE事件来确认配置加载完成。
 		 * @method RES.ResourceConfig#createGroup
          * @param name {string} 要创建的加载资源组的组名
-         * @param keys {egret.Array<string>} 要包含的键名列表，key对应配置文件里的name属性或sbuKeys属性的一项或一个资源组名。
+         * @param keys {egret.string[]} 要包含的键名列表，key对应配置文件里的name属性或sbuKeys属性的一项或一个资源组名。
          * @param override {boolean} 是否覆盖已经存在的同名资源组,默认false。
 		 * @returns {boolean}
          */
-        public createGroup(name:string, keys:Array<string>, override:boolean = false):boolean {
+        public createGroup(name:string, keys:string[], override:boolean = false):boolean {
             if ((!override && this.groupDic[name]) || !keys || keys.length == 0)
                 return false;
-            var groupDic:any = this.groupDic;
-            var group:Array<any> = [];
-            var length:number = keys.length;
-            for (var i:number = 0; i < length; i++) {
-                var key:string = keys[i];
-                var g:Array<any> = groupDic[key];
+            let groupDic:any = this.groupDic;
+            let group:any[] = [];
+            let length:number = keys.length;
+            for (let i:number = 0; i < length; i++) {
+                let key:string = keys[i];
+                let g:any[] = groupDic[key];
                 if(g){
-                    var len:number = g.length;
-                    for(var j:number=0;j<len;j++){
-                        var item:any = g[j];
+                    let len:number = g.length;
+                    for(let j:number=0;j<len;j++){
+                        let item:any = g[j];
                         if (group.indexOf(item) == -1)
                             group.push(item);
                     }
                 }
                 else{
-                    item = this.keyMap[key];
+                    let item = this.keyMap[key];
                     if (item){
                         if(group.indexOf(item) == -1)
                             group.push(item);
@@ -133,28 +133,28 @@ module RES {
         public parseConfig(data:any, folder:string):void {
             if (!data)
                 return;
-            var resources:Array<any> = data["resources"];
+            let resources:any[] = data["resources"];
             if (resources) {
-                var length:number = resources.length;
-                for (var i:number = 0; i < length; i++) {
-                    var item:any = resources[i];
-                    var url:string = item.url;
+                let length:number = resources.length;
+                for (let i:number = 0; i < length; i++) {
+                    let item:any = resources[i];
+                    let url:string = item.url;
                     if(url&&url.indexOf("://")==-1)
                         item.url = folder + url;
                     this.addItemToKeyMap(item);
                 }
             }
-            var groups:Array<any> = data["groups"];
+            let groups:any[] = data["groups"];
             if (groups) {
-                length = groups.length;
-                for (i = 0; i < length; i++) {
-                    var group:any = groups[i];
-                    var list:Array<any> = [];
-                    var keys:Array<string> = (<string> group.keys).split(",");
-                    var l:number = keys.length;
-                    for (var j:number = 0; j < l; j++) {
-                        var name:string = keys[j].trim();
-                        item = this.keyMap[name];
+                let length = groups.length;
+                for (let i = 0; i < length; i++) {
+                    let group:any = groups[i];
+                    let list:any[] = [];
+                    let keys:string[] = (<string> group.keys).split(",");
+                    let l:number = keys.length;
+                    for (let j:number = 0; j < l; j++) {
+                        let name:string = keys[j].trim();
+                        let item = this.keyMap[name];
                         if (item && list.indexOf(item) == -1) {
                             list.push(item);
                         }
@@ -171,7 +171,7 @@ module RES {
          * @param name {string} 二级键名所属的资源name属性
          */
         public addSubkey(subkey:string,name:string):void{
-            var item:any = this.keyMap[name];
+            let item:any = this.keyMap[name];
             if(item&&!this.keyMap[subkey]){
                 this.keyMap[subkey] = item;
             }
@@ -184,11 +184,11 @@ module RES {
             if(!this.keyMap[item.name])
                 this.keyMap[item.name] = item;
             if(item.hasOwnProperty("subkeys")){
-                var subkeys:Array<any> = (<string><any> (item.subkeys)).split(",");
+                let subkeys:any[] = (<string><any> (item.subkeys)).split(",");
                 item.subkeys = subkeys;
-                var length:number = subkeys.length;
-                for(var i:number = 0;i < length;i++){
-                    var key:string = subkeys[i];
+                let length:number = subkeys.length;
+                for(let i:number = 0;i < length;i++){
+                    let key:string = subkeys[i];
                     if(this.keyMap[key]!=null)
                         continue;
                     this.keyMap[key] = item;
@@ -203,7 +203,7 @@ module RES {
          * @returns {string}
          */
         public getName(key:string):string{
-            var data:any = this.keyMap[key];
+            let data:any = this.keyMap[key];
             return data?data.name:"";
         }
 
@@ -214,7 +214,7 @@ module RES {
 		 * @returns {string}
          */
         public getType(key:string):string {
-            var data:any = this.keyMap[key];
+            let data:any = this.keyMap[key];
             return data ? data.type : "";
         }
 
@@ -229,7 +229,7 @@ module RES {
 		 * @returns {egret.ResourceItem}
          */
         public getResourceItem(key:string):ResourceItem {
-            var data:any = this.keyMap[key];
+            let data:any = this.keyMap[key];
             if (data)
                 return this.parseResourceItem(data);
             return null;
@@ -239,7 +239,7 @@ module RES {
          * 转换Object数据为ResourceItem对象
          */
         private parseResourceItem(data:any):ResourceItem {
-            var resItem:ResourceItem = new ResourceItem(data.name, data.url, data.type);
+            let resItem:ResourceItem = new ResourceItem(data.name, data.url, data.type);
             resItem.data = data;
             return resItem;
         }

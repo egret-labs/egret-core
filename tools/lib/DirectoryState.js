@@ -1,5 +1,5 @@
-var FS = require('fs');
-var file = require('../lib/FileUtil');
+var FS = require("fs");
+var file = require("../lib/FileUtil");
 var DirectoryState = (function () {
     function DirectoryState() {
     }
@@ -44,7 +44,7 @@ var DirectoryState = (function () {
         return fileChanges;
     };
     return DirectoryState;
-})();
+}());
 exports.DirectoryState = DirectoryState;
 function updateMTime(filePath, states) {
     if (states === void 0) { states = {}; }
@@ -71,5 +71,3 @@ function updateMTime(filePath, states) {
     }
     return states;
 }
-
-//# sourceMappingURL=DirectoryState.js.map

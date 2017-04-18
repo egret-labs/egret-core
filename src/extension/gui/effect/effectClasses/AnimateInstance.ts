@@ -1,6 +1,6 @@
 //////////////////////////////////////////////////////////////////////////////////////
 //
-//  Copyright (c) 2014-2015, Egret Technology Inc.
+//  Copyright (c) 2014-present, Egret Technology.
 //  All rights reserved.
 //  Redistribution and use in source and binary forms, with or without
 //  modification, are permitted provided that the following conditions are met:
@@ -28,7 +28,7 @@
 //////////////////////////////////////////////////////////////////////////////////////
 
 
-module egret.gui {
+namespace egret.gui {
     /**
      * @class egret.gui.AnimateInstance
      * @classdesc
@@ -62,7 +62,7 @@ module egret.gui {
         
         private disabledConstraintsMap:any;
         
-        private _motionPaths:Array<MotionPath>;
+        private _motionPaths:MotionPath[];
         /**
          * MotionPath 对象集，它定义随着时间的推移 Animation 将设置动画的属性和值。
          * @member egret.gui.AnimateInstance#motionPaths
@@ -214,21 +214,21 @@ module egret.gui {
             super.play();
             
             if (!this.motionPaths || this.motionPaths.length == 0){
-                var timer:egret.Timer = new egret.Timer(this.duration, 1);
+                let timer:egret.Timer = new egret.Timer(this.duration, 1);
                 timer.addEventListener(egret.TimerEvent.TIMER, this.noopAnimationHandler, this);
                 timer.start();
                 return;
             }
             
-            this.isStyleMap = new Array<any>(this.motionPaths.length);        
+            this.isStyleMap = new Array<any>(this.motionPaths.length);
             
-            var addWidthMP:boolean;
-            var addHeightMP:boolean;
-            var i:number = 0;
-            var j:number = 0;
+            let addWidthMP:boolean;
+            let addHeightMP:boolean;
+            let i:number = 0;
+            let j:number = 0;
             for (i = 0; i < this.motionPaths.length; ++i){
-                var mp:MotionPath = <MotionPath><any> (this.motionPaths[i]);
-                var keyframes:Array<Keyframe> = mp.keyframes;
+                let mp:MotionPath = <MotionPath><any> (this.motionPaths[i]);
+                let keyframes:Array<Keyframe> = mp.keyframes;
                 if (!keyframes)
                     continue;
                 
@@ -272,8 +272,8 @@ module egret.gui {
          * @method egret.gui.AnimateInstance#applyValues
          */
         public applyValues(anim:Animation):void{
-            for (var i:number = 0; i < this.motionPaths.length; ++i){
-                var prop:string = this.motionPaths[i].property;
+            for (let i:number = 0; i < this.motionPaths.length; ++i){
+                let prop:string = this.motionPaths[i].property;
                 this.setValue(prop, anim.currentValue[prop]);
             }
         }
@@ -287,11 +287,11 @@ module egret.gui {
          * 遍历motionPaths，用计算的值替换null。
          */
         private finalizeValues():void{
-            var j:number = 0;
-            var prevValue:any;
-            for (var i:number = 0; i < this.motionPaths.length; ++i){
-                var motionPath:MotionPath = <MotionPath><any> (this.motionPaths[i]);
-                var keyframes:Array<Keyframe> = motionPath.keyframes;
+            let j:number = 0;
+            let prevValue:any;
+            for (let i:number = 0; i < this.motionPaths.length; ++i){
+                let motionPath:MotionPath = <MotionPath><any> (this.motionPaths[i]);
+                let keyframes:Array<Keyframe> = motionPath.keyframes;
                 if (!keyframes || keyframes.length == 0)
                     continue;
                 if (!this._isValidValue(keyframes[0].value)){
@@ -308,7 +308,7 @@ module egret.gui {
                 
                 prevValue = keyframes[0].value;
                 for (j = 1; j < keyframes.length; ++j){
-                    var kf:Keyframe = <Keyframe><any> (keyframes[j]);
+                    let kf:Keyframe = <Keyframe><any> (keyframes[j]);
                     if (!this._isValidValue(kf.value)){
                         if (this._isValidValue(kf.valueBy))
                             kf.value = motionPath.interpolator.increment(prevValue, kf.valueBy);
@@ -335,7 +335,7 @@ module egret.gui {
                 this.cacheConstraints();
             }
             else if (this.disabledConstraintsMap){
-                for (var constraint in this.disabledConstraintsMap)
+                for (let constraint in this.disabledConstraintsMap)
                     this.cacheConstraint(constraint);
                 this.disabledConstraintsMap = null;
             }
@@ -345,14 +345,14 @@ module egret.gui {
         public animationUpdate(animation:Animation):void{
             this.applyValues(animation);
             if (this.numUpdateListeners > 0){
-                var event:EffectEvent = new EffectEvent(EffectEvent.EFFECT_UPDATE);
+                let event:EffectEvent = new EffectEvent(EffectEvent.EFFECT_UPDATE);
                 event.effectInstance = this;
                 this.dispatchEvent(event);
             }
         }
         
         public animationRepeat(animation:Animation):void{
-            var event:EffectEvent = new EffectEvent(EffectEvent.EFFECT_REPEAT);
+            let event:EffectEvent = new EffectEvent(EffectEvent.EFFECT_REPEAT);
             event.effectInstance = this;
             this.dispatchEvent(event);
         }    
@@ -395,7 +395,7 @@ module egret.gui {
          * 恢复布局属性
          */
         private reenableConstraint(name:string):any{
-            var value:any = this.constraintsHolder[name];
+            let value:any = this.constraintsHolder[name];
             if (value !== undefined){
                 if (name in this.target)
                     this.target[name] = value;
@@ -411,10 +411,10 @@ module egret.gui {
          */
         private reenableConstraints():void{
             if (this.constraintsHolder){
-                var left:any = this.reenableConstraint("left");
-                var right:any = this.reenableConstraint("right");
-                var top:any = this.reenableConstraint("top");
-                var bottom:any = this.reenableConstraint("bottom");
+                let left:any = this.reenableConstraint("left");
+                let right:any = this.reenableConstraint("right");
+                let top:any = this.reenableConstraint("top");
+                let bottom:any = this.reenableConstraint("bottom");
                 this.reenableConstraint("horizontalCenter");
                 this.reenableConstraint("verticalCenter");
                 this.constraintsHolder = null;
@@ -429,8 +429,8 @@ module egret.gui {
          * 缓存布局属性
          */
         private cacheConstraint(name:string):any{
-            var isProperty:boolean = (name in this.target);
-            var value:any;
+            let isProperty:boolean = (name in this.target);
+            let value:any;
             if (isProperty)
                 value = this.target[name];
             else
@@ -451,26 +451,26 @@ module egret.gui {
          * 缓存所有布局属性
          */
         private cacheConstraints():void{
-            var left:any = this.cacheConstraint("left");
-            var right:any = this.cacheConstraint("right");
-            var top:any = this.cacheConstraint("top");
-            var bottom:any = this.cacheConstraint("bottom");
+            let left:any = this.cacheConstraint("left");
+            let right:any = this.cacheConstraint("right");
+            let top:any = this.cacheConstraint("top");
+            let bottom:any = this.cacheConstraint("bottom");
             this.cacheConstraint("verticalCenter");
             this.cacheConstraint("horizontalCenter");
             if (left != undefined && right != undefined && "explicitWidth" in this.target){
-                var w:number = this.target.width;    
+                let w:number = this.target.width;
                 this.oldWidth = this.target.explicitWidth;
                 this.target.width = w;
             }
             if (top != undefined && bottom != undefined && "explicitHeight" in this.target){
-                var h:number = this.target.height;
+                let h:number = this.target.height;
                 this.oldHeight = this.target.explicitHeight;
                 this.target.height = h;
             }
         }
 
         private setupParentLayout(enable:boolean):void{
-            var parent:any = null;
+            let parent:any = null;
             if ("parent" in this.target && this.target.parent)
             {
                 parent = this.target.parent;

@@ -1,6 +1,6 @@
 //////////////////////////////////////////////////////////////////////////////////////
 //
-//  Copyright (c) 2014-2015, Egret Technology Inc.
+//  Copyright (c) 2014-present, Egret Technology.
 //  All rights reserved.
 //  Redistribution and use in source and binary forms, with or without
 //  modification, are permitted provided that the following conditions are met:
@@ -27,25 +27,25 @@
 //
 //////////////////////////////////////////////////////////////////////////////////////
 
-module egret {
+namespace egret {
 
     /**
-     * @language en_US
      * Transfer number to color character string
      * @param value {number} color value ,such as 0xffffff
      * @returns {string} Color character string, for example, #ffffff.
      * @version Egret 2.4
      * @platform Web,Native
      * @includeExample egret/utils/toColorString.ts
+     * @language en_US
      */
     /**
-     * @language zh_CN
      * 转换数字为颜色字符串
      * @param value {number} 颜色值，例如 0xffffff
      * @returns {string} 颜色字符串，例如"#ffffff"。
      * @version Egret 2.4
      * @platform Web,Native
      * @includeExample egret/utils/toColorString.ts
+     * @language zh_CN
      */
     export function toColorString(value:number):string {
         if (value < 0)
@@ -53,7 +53,7 @@ module egret {
         if (value > 16777215)
             value = 16777215;
 
-        var color:string = value.toString(16).toUpperCase();
+        let color:string = value.toString(16).toUpperCase();
         while (color.length > 6) {
             color = color.slice(1, color.length);
         }

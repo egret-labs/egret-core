@@ -1,6 +1,6 @@
 //////////////////////////////////////////////////////////////////////////////////////
 //
-//  Copyright (c) 2014-2015, Egret Technology Inc.
+//  Copyright (c) 2014-present, Egret Technology.
 //  All rights reserved.
 //  Redistribution and use in source and binary forms, with or without
 //  modification, are permitted provided that the following conditions are met:
@@ -26,12 +26,16 @@
 //  EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 //
 //////////////////////////////////////////////////////////////////////////////////////
-/// <reference path="./node.d.ts" />
-var cp = require('child_process');
-var path = require('path');
-var file = require('./FileUtil');
+var __extends = (this && this.__extends) || function (d, b) {
+    for (var p in b) if (b.hasOwnProperty(p)) d[p] = b[p];
+    function __() { this.constructor = d; }
+    d.prototype = b === null ? Object.create(b) : (__.prototype = b.prototype, new __());
+};
+var cp = require("child_process");
+var path = require("path");
+var file = require("./FileUtil");
 var UglifyJS = require("./uglify-js/uglifyjs");
-var net = require('net');
+var net = require("net");
 //第三方调用时，可能不支持颜色显示，可通过添加 -nocoloroutput 移除颜色信息
 var ColorOutputReplacements = {
     "{color_green}": "\033[1;32;1m",
@@ -52,7 +56,8 @@ var NoColorOutputReplacements = {
 function formatStdoutString(message) {
     var replacements = ColorOutputReplacements;
     for (var raw in replacements) {
-        message = message.split(raw).join(replacements[raw]);
+        var replace = (egret.args && egret.args.ide) ? "" : replacements[raw];
+        message = message.split(raw).join(replace);
     }
     return message;
 }
@@ -207,11 +212,7 @@ function minify(sourceFile, output) {
     file.save(output, result.code);
 }
 exports.minify = minify;
-function clean(path) {
-    var excludes = [];
-    for (var _i = 1; _i < arguments.length; _i++) {
-        excludes[_i - 1] = arguments[_i];
-    }
+function clean(path, excludes) {
     var fileList = file.getDirectoryListing(path);
     var length = fileList.length;
     for (var i = 0; i < length; i++) {
@@ -248,7 +249,6 @@ function getAvailablePort(callback, port) {
             server.close();
         });
         server.on('close', function () {
-            console.log("Server running at port:", port);
             callback(port);
         });
         server.on('error', function (err) {
@@ -292,5 +292,96 @@ function addIndents(times, text) {
     return text.replace(new RegExp("\\n", "ig"), '\n' + added);
 }
 exports.addIndents = addIndents;
-
-//# sourceMappingURL=utils.js.map
+function createMap(template) {
+    var map = Object.create(null); // tslint:disable-line:no-null-keyword
+    // Using 'delete' on an object causes V8 to put the object in dictionary mode.
+    // This disables creation of hidden classes, which are expensive when an object is
+    // constantly changing shape.
+    map["__"] = undefined;
+    delete map["__"];
+    // Copies keys/values from template. Note that for..in will not throw if
+    // template is undefined, and instead will just exit the loop.
+    for (var key in template)
+        if (Object.prototype.hasOwnProperty.call(template, key)) {
+            map[key] = template[key];
+        }
+    return map;
+}
+exports.createMap = createMap;
+function shell(path, args, opt, verbase) {
+    var stdout = "";
+    var stderr = "";
+    var cmd = path + " " + args.join(" ");
+    if (verbase) {
+        console.log(cmd);
+    }
+    var printStdoutBufferMessage = function (message) {
+        var str = message.toString();
+        stdout += str;
+        if (verbase) {
+            console.log(str);
+        }
+    };
+    var printStderrBufferMessage = function (message) {
+        var str = message.toString();
+        stderr += str;
+        if (verbase) {
+            console.log(str);
+        }
+    };
+    var callback = function (reslove, reject) {
+        var shell = cp.spawn(path, args, opt);
+        shell.on("error", function (message) { console.log(message); });
+        shell.stderr.on("data", printStderrBufferMessage);
+        shell.stderr.on("error", printStderrBufferMessage);
+        shell.stdout.on("data", printStdoutBufferMessage);
+        shell.stdout.on("error", printStdoutBufferMessage);
+        shell.on('exit', function (code) {
+            if (code != 0) {
+                if (verbase) {
+                    console.log('Failed: ' + code);
+                }
+                reject({ code: code, stdout: stdout, stderr: stderr });
+            }
+            else {
+                reslove({ code: code, stdout: stdout, stderr: stderr });
+            }
+        });
+    };
+    return new Promise(callback);
+}
+exports.shell = shell;
+;
+var error_code_filename = path.join(__dirname, "../error_code.json");
+var errorcode = file.readJSONSync(error_code_filename, { "encoding": "utf-8" });
+var CliException = (function (_super) {
+    __extends(CliException, _super);
+    function CliException(errorId, param) {
+        var _this = _super.call(this) || this;
+        _this.errorId = errorId;
+        var message = errorcode[_this.errorId];
+        if (message) {
+            message = message.replace('{0}', param);
+        }
+        else {
+            message = "unkown error : " + errorId;
+            console.error(message);
+        }
+        _this.message = message;
+        return _this;
+    }
+    return CliException;
+}(Error));
+exports.CliException = CliException;
+function findValidatePathSync(pathStr) {
+    if (!pathStr) {
+        pathStr = process.cwd();
+    }
+    else {
+        if (!file.existsSync(pathStr)) {
+            pathStr = path.join(process.cwd(), pathStr);
+        }
+    }
+    return pathStr;
+}
+exports.findValidatePathSync = findValidatePathSync;

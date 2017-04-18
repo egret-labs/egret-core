@@ -1,6 +1,6 @@
 //////////////////////////////////////////////////////////////////////////////////////
 //
-//  Copyright (c) 2014-2015, Egret Technology Inc.
+//  Copyright (c) 2014-present, Egret Technology.
 //  All rights reserved.
 //  Redistribution and use in source and binary forms, with or without
 //  modification, are permitted provided that the following conditions are met:
@@ -27,7 +27,7 @@
 //
 //////////////////////////////////////////////////////////////////////////////////////
 
-module egret.native {
+namespace egret.native {
     /**
      * @private
      * 呈现最终绘图结果的画布
@@ -38,7 +38,7 @@ module egret.native {
          */
         constructor() {
             super();
-            this.renderContext = new NativeCanvasRenderContext();
+            this.renderContext = $supportCmdBatch ? new NativeCanvasRenderContext() : new OldNativeCanvasRenderContext();
         }
 
         /**
@@ -56,6 +56,10 @@ module egret.native {
 
         public saveToFile(type:string, filePath:string):void {
             if (this.$nativeCanvas && this.$nativeCanvas.saveToFile) {
+                if (native.$supportCmdBatch) {
+                    native.$cmdManager.flush();
+                }
+
                 this.$nativeCanvas.saveToFile(type, filePath);
             }
         }
@@ -76,8 +80,15 @@ module egret.native {
                     if (this.$isRoot) {
                         egret_native.setScreenCanvas(this.$nativeCanvas);
                     }
-                    var context = this.$nativeCanvas.getContext("2d");
-                    context.clearScreen(0, 0, 0, 0);
+                    let context = this.$nativeCanvas.getContext("2d");
+
+                    if($supportCmdBatch) {
+                        $cmdManager.setContext(context);
+                        $cmdManager.clearScreen(0, 0, 0, 0);
+                    } else {
+                        context.clearScreen(0, 0, 0, 0);
+                    }
+
                     this.renderContext.$nativeContext = context;
                 }
                 else {
@@ -104,8 +115,15 @@ module egret.native {
                     if (this.$isRoot) {
                         egret_native.setScreenCanvas(this.$nativeCanvas);
                     }
-                    var context = this.$nativeCanvas.getContext("2d");
-                    context.clearScreen(0, 0, 0, 0);
+                    let context = this.$nativeCanvas.getContext("2d");
+    
+                    if($supportCmdBatch) {
+                        $cmdManager.setContext(context);
+                        $cmdManager.clearScreen(0, 0, 0, 0);
+                    } else {
+                        context.clearScreen(0, 0, 0, 0);
+                    }
+
                     this.renderContext.$nativeContext = context;
                 }
                 else {

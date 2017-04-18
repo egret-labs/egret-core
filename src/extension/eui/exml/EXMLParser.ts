@@ -1,6 +1,6 @@
 //////////////////////////////////////////////////////////////////////////////////////
 //
-//  Copyright (c) 2014-2015, Egret Technology Inc.
+//  Copyright (c) 2014-present, Egret Technology.
 //  All rights reserved.
 //  Redistribution and use in source and binary forms, with or without
 //  modification, are permitted provided that the following conditions are met:
@@ -27,30 +27,32 @@
 //
 //////////////////////////////////////////////////////////////////////////////////////
 
-module eui.sys {
+namespace eui.sys {
 
     /**
      * @private
      * EXML配置管理器实例
      */
-    export var exmlConfig:EXMLConfig;
+    export let exmlConfig:EXMLConfig;
 
-    var exmlParserPool:EXMLParser[] = [];
-    var parsedClasses:any = {};
-    var innerClassCount = 1;
+    let exmlParserPool:EXMLParser[] = [];
+    let parsedClasses:any = {};
+    let innerClassCount = 1;
 
-    var HOST_COMPONENT = "hostComponent";
-    var SKIN_CLASS = "eui.Skin";
-    var DECLARATIONS = "Declarations";
-    var RECTANGLE = "egret.Rectangle";
-    var TYPE_CLASS = "Class";
-    var TYPE_ARRAY = "Array";
-    var TYPE_STATE = "State[]";
-    var SKIN_NAME = "skinName";
-    var ELEMENTS_CONTENT = "elementsContent";
-    var basicTypes:string[] = [TYPE_ARRAY, "boolean", "string", "number"];
-    var wingKeys:string[] = ["id", "locked", "includeIn", "excludeFrom"];
-    var htmlEntities:string[][] = [["<", "&lt;"], [">", "&gt;"], ["&", "&amp;"], ["\"", "&quot;"], ["'", "&apos;"]];
+    let HOST_COMPONENT = "hostComponent";
+    let SKIN_CLASS = "eui.Skin";
+    let DECLARATIONS = "Declarations";
+    let RECTANGLE = "egret.Rectangle";
+    let TYPE_CLASS = "Class";
+    let TYPE_ARRAY = "Array";
+    let TYPE_PERCENTAGE = "Percentage";
+    let TYPE_STATE = "State[]";
+    let SKIN_NAME = "skinName";
+    let ELEMENTS_CONTENT = "elementsContent";
+    let basicTypes:string[] = [TYPE_ARRAY, "boolean", "string", "number"];
+    let wingKeys:string[] = ["id", "locked", "includeIn", "excludeFrom"];
+    let htmlEntities:string[][] = [["<", "&lt;"], [">", "&gt;"], ["&", "&amp;"], ["\"", "&quot;"], ["'", "&apos;"]];
+    let jsKeyWords:string[] = ["null", "NaN", "undefined", "true", "false"];
 
     /**
      * @private
@@ -150,9 +152,45 @@ module eui.sys {
 
         /**
          * @private
+         * 将已有javascript代码注册
+         * @param codeText 执行的javascript代码
+         * @param classStr 类名
+         */
+        public $parseCode(codeText:string, classStr:string):{new():any} {
+            //传入的是编译后的js字符串
+            let className = classStr ? classStr : "$exmlClass" + innerClassCount++;
+            let clazz = eval(codeText);
+            let hasClass = true;
+
+            if (hasClass && clazz) {
+                egret.registerClass(clazz, className);
+                let paths = className.split(".");
+                let length = paths.length;
+                let definition = __global;
+                for (let i = 0; i < length - 1; i++) {
+                    let path = paths[i];
+                    definition = definition[path] || (definition[path] = {});
+                }
+                if (definition[paths[length - 1]]) {
+                    if (DEBUG && !parsedClasses[className]) {
+                        egret.$warn(2101, className, codeText);
+                    }
+                }
+                else {
+                    if (DEBUG) {
+                        parsedClasses[className] = true;
+                    }
+                    definition[paths[length - 1]] = clazz;
+                }
+            }
+            return clazz;
+        }
+
+        /**
+         * @private
          * 编译指定的XML对象为JavaScript代码。
          * @param xmlData 要编译的EXML文件内容
-         * @param className 要编译成的完整类名，包括模块名。
+         *
          */
         public parse(text:string):{new():any} {
             if (DEBUG) {
@@ -160,16 +198,20 @@ module eui.sys {
                     egret.$error(1003, "text");
                 }
             }
-            try {
-                var xmlData = egret.XML.parse(text);
-            }
-            catch (e) {
-                if (DEBUG) {
+            let xmlData:any = null;
+            if (DEBUG) {
+                try {
+                    xmlData = egret.XML.parse(text);
+                }
+                catch (e) {
                     egret.$error(2002, text + "\n" + e.message);
                 }
+            } else {
+                xmlData = egret.XML.parse(text);
             }
-            var className:string = "";
-            var hasClass:boolean = false;
+
+            let hasClass:boolean = false;
+            let className:string = "";
             if (xmlData.attributes["class"]) {
                 className = xmlData.attributes["class"];
                 delete xmlData.attributes["class"];
@@ -178,24 +220,29 @@ module eui.sys {
             else {
                 className = "$exmlClass" + innerClassCount++;
             }
-            var exClass = this.parseClass(xmlData, className);
-            var code = exClass.toCode();
-            try {
-                var clazz = eval(code);
-            }
-            catch (e) {
-                if (DEBUG) {
-                    egret.log(code);
+            let exClass = this.parseClass(xmlData, className);
+            let code = exClass.toCode();
+
+            let clazz:any = null;
+            if (DEBUG) {
+                try {
+                    clazz = eval(code);
                 }
-                return null;
+                catch (e) {
+                    egret.log(code);
+                    return null;
+                }
+            } else {
+                clazz = eval(code);
             }
+
             if (hasClass && clazz) {
                 egret.registerClass(clazz, className);
-                var paths = className.split(".");
-                var length = paths.length;
-                var definition = __global;
-                for (var i = 0; i < length - 1; i++) {
-                    var path = paths[i];
+                let paths = className.split(".");
+                let length = paths.length;
+                let definition = __global;
+                for (let i = 0; i < length - 1; i++) {
+                    let path = paths[i];
                     definition = definition[path] || (definition[path] = {});
                 }
                 if (definition[paths[length - 1]]) {
@@ -233,7 +280,7 @@ module eui.sys {
             this.currentClass = new EXClass();
             this.stateIds = [];
 
-            var index = className.lastIndexOf(".");
+            let index = className.lastIndexOf(".");
             if (index != -1) {
                 this.currentClass.className = className.substring(index + 1);
             }
@@ -242,7 +289,7 @@ module eui.sys {
             }
 
             this.startCompile();
-            var clazz = this.currentClass;
+            let clazz = this.currentClass;
             this.currentClass = null;
             return clazz;
         }
@@ -253,22 +300,22 @@ module eui.sys {
          */
         private startCompile():void {
             if (DEBUG) {
-                var result = this.getRepeatedIds(this.currentXML);
+                let result = this.getRepeatedIds(this.currentXML);
                 if (result.length > 0) {
                     egret.$error(2004, this.currentClassName, result.join("\n"));
                 }
             }
-            var superClass = this.getClassNameOfNode(this.currentXML);
+            let superClass = this.getClassNameOfNode(this.currentXML);
             this.isSkinClass = (superClass == SKIN_CLASS);
             this.currentClass.superClass = superClass;
 
             this.getStateNames();
 
-            var children = this.currentXML.children;
+            let children = this.currentXML.children;
             if (children) {
-                var length = children.length;
-                for (var i = 0; i < length; i++) {
-                    var node:any = children[i];
+                let length = children.length;
+                for (let i = 0; i < length; i++) {
+                    let node:any = children[i];
                     if (node.nodeType === 1 && node.namespace == NS_W &&
                         node.localName == DECLARATIONS) {
                         this.declarations = node;
@@ -278,7 +325,7 @@ module eui.sys {
             }
 
             if (DEBUG) {
-                var list:string[] = [];
+                let list:string[] = [];
                 this.checkDeclarations(this.declarations, list);
 
                 if (list.length > 0) {
@@ -305,9 +352,9 @@ module eui.sys {
             if (!items) {
                 return;
             }
-            var length = items.length;
-            for (var i = 0; i < length; i++) {
-                var node:egret.XML = items[i];
+            let length = items.length;
+            for (let i = 0; i < length; i++) {
+                let node:egret.XML = items[i];
                 if (node.nodeType != 1) {
                     continue;
                 }
@@ -324,18 +371,22 @@ module eui.sys {
                 if (node.namespace == NS_W || !node.localName) {
                 }
                 else if (this.isProperty(node)) {
-                    var prop = node.localName;
-                    var index = prop.indexOf(".");
-                    var children:Array<any> = node.children;
+                    let prop = node.localName;
+                    let index = prop.indexOf(".");
+                    let children:any[] = node.children;
                     if (index == -1 || !children || children.length == 0) {
                         continue;
                     }
-                    var firstChild:egret.XML = children[0];
+                    let firstChild:egret.XML = children[0];
                     this.stateIds.push(firstChild.attributes.id);
                 }
                 else if (node.nodeType === 1) {
-                    var id = node.attributes["id"];
+                    let id = node.attributes["id"];
                     if (id) {
+                        var e = new RegExp("^[a-zA-Z_$]{1}[a-z0-9A-Z_$]*");
+                        if(id.match(e) == null) {
+                            egret.$warn(2022, id);
+                        }
                         if (this.skinParts.indexOf(id) == -1) {
                             this.skinParts.push(id);
                         }
@@ -360,18 +411,19 @@ module eui.sys {
             if (node.hasOwnProperty("isInnerClass")) {
                 return node["isInnerClass"];
             }
-            var result = (node.localName == "Skin" && node.namespace == NS_S);
+            let result = (node.localName == "Skin" && node.namespace == NS_S);
             if (!result) {
                 if (this.isProperty(node)) {
                     result = false;
                 }
                 else {
-                    var parent = node.parent;
+                    let prop:string;
+                    let parent = node.parent;
                     if (this.isProperty(parent)) {
-                        var prop = parent.localName;
-                        var index = prop.indexOf(".");
+                        prop = parent.localName;
+                        let index = prop.indexOf(".");
                         if (index != -1) {
-                            var stateName = prop.substring(index + 1);
+                            let stateName = prop.substring(index + 1);
                             prop = prop.substring(0, index);
                         }
                         parent = parent.parent;
@@ -380,7 +432,7 @@ module eui.sys {
                     else {
                         prop = exmlConfig.getDefaultPropById(parent.localName, parent.namespace);
                     }
-                    var className = exmlConfig.getClassNameById(parent.localName, parent.namespace);
+                    let className = exmlConfig.getClassNameById(parent.localName, parent.namespace);
                     result = (exmlConfig.getPropertyType(prop, className) == TYPE_CLASS);
                 }
             }
@@ -393,14 +445,14 @@ module eui.sys {
          * 检测指定节点的属性是否含有视图状态
          */
         private containsState(node:egret.XML):boolean {
-            var attributes = node.attributes;
-            if (attributes["includeIn"]) {
+            let attributes = node.attributes;
+            if (attributes["includeIn"] || attributes["excludeFrom"]) {
                 return true;
             }
-            var keys = Object.keys(attributes);
-            var length = keys.length;
-            for (var i = 0; i < length; i++) {
-                var name = keys[i];
+            let keys = Object.keys(attributes);
+            let length = keys.length;
+            for (let i = 0; i < length; i++) {
+                let name = keys[i];
                 if (name.indexOf(".") != -1) {
                     return true;
                 }
@@ -413,7 +465,7 @@ module eui.sys {
          * 为指定节点创建id属性
          */
         private createIdForNode(node:egret.XML):void {
-            var idName = this.getNodeId(node);
+            let idName = this.getNodeId(node);
             if (!this.idDic[idName])
                 this.idDic[idName] = 1;
             else
@@ -437,7 +489,7 @@ module eui.sys {
          * 为指定节点创建变量
          */
         private createVarForNode(node:egret.XML):void {
-            var moduleName = this.getClassNameOfNode(node);
+            let moduleName = this.getClassNameOfNode(node);
             if (moduleName == "")
                 return;
             if (!this.currentClass.getVariableByName(node.attributes.id))
@@ -449,19 +501,19 @@ module eui.sys {
          * 为指定节点创建初始化函数,返回函数名引用
          */
         private createFuncForNode(node:egret.XML):string {
-            var className = node.localName;
-            var isBasicType = this.isBasicTypeData(className);
+            let className = node.localName;
+            let isBasicType = this.isBasicTypeData(className);
             if (isBasicType)
                 return this.createBasicTypeForNode(node);
-            var moduleName = this.getClassNameOfNode(node);
-            var func = new EXFunction();
-            var tailName = "_i";
-            var id = node.attributes.id;
+            let moduleName = this.getClassNameOfNode(node);
+            let func = new EXFunction();
+            let tailName = "_i";
+            let id = node.attributes.id;
             func.name = id + tailName;
             this.currentClass.addFunction(func);
-            var cb = new EXCodeBlock();
+            let cb = new EXCodeBlock();
             func.codeBlock = cb;
-            var varName:string = "t";
+            let varName:string = "t";
             if (className == "Object") {
                 cb.addVar(varName, "{}");
             }
@@ -469,7 +521,7 @@ module eui.sys {
                 cb.addVar(varName, "new " + moduleName + "()");
             }
 
-            var containsId = !!this.currentClass.getVariableByName(id);
+            let containsId = !!this.currentClass.getVariableByName(id);
             if (containsId) {
                 cb.addAssignment("this." + id, varName);
             }
@@ -477,11 +529,11 @@ module eui.sys {
             this.addAttributesToCodeBlock(cb, varName, node);
 
             this.initlizeChildNode(node, cb, varName);
-            var delayAssignments = this.delayAssignmentDic[id];
+            let delayAssignments = this.delayAssignmentDic[id];
             if (delayAssignments) {
-                var length = delayAssignments.length;
-                for (var i = 0; i < length; i++) {
-                    var codeBlock:EXCodeBlock = delayAssignments[i];
+                let length = delayAssignments.length;
+                for (let i = 0; i < length; i++) {
+                    let codeBlock:EXCodeBlock = delayAssignments[i];
                     cb.concat(codeBlock);
                 }
             }
@@ -502,24 +554,24 @@ module eui.sys {
          * 为指定基本数据类型节点实例化,返回实例化后的值。
          */
         private createBasicTypeForNode(node:egret.XML):string {
-            var className = node.localName;
-            var returnValue = "";
-            var varItem = this.currentClass.getVariableByName(node.attributes.id);
-            var children:any[] = node.children;
-            var text = "";
+            let className = node.localName;
+            let returnValue = "";
+            let varItem = this.currentClass.getVariableByName(node.attributes.id);
+            let children:any[] = node.children;
+            let text = "";
             if (children && children.length > 0) {
-                var firstChild:egret.XMLText = children[0];
+                let firstChild:egret.XMLText = children[0];
                 if (firstChild.nodeType == 3) {
                     text = firstChild.text.trim();
                 }
             }
             switch (className) {
                 case TYPE_ARRAY:
-                    var values = [];
+                    let values = [];
                     if (children) {
-                        var length = children.length;
-                        for (var i = 0; i < length; i++) {
-                            var child:egret.XML = children[i];
+                        let length = children.length;
+                        for (let i = 0; i < length; i++) {
+                            let child:egret.XML = children[i];
                             if (child.nodeType == 1) {
                                 values.push(this.createFuncForNode(child));
                             }
@@ -549,13 +601,13 @@ module eui.sys {
          * 将节点属性赋值语句添加到代码块
          */
         private addAttributesToCodeBlock(cb:EXCodeBlock, varName:string, node:egret.XML):void {
-            var key:string;
-            var value:string;
-            var attributes = node.attributes;
-            var keyList:string[] = Object.keys(attributes);
+            let key:string;
+            let value:string;
+            let attributes = node.attributes;
+            let keyList:string[] = Object.keys(attributes);
             keyList.sort();//排序一下防止出现随机顺序
-            var length = keyList.length;
-            for (var i = 0; i < length; i++) {
+            let length = keyList.length;
+            for (let i = 0; i < length; i++) {
                 key = keyList[i];
                 if (!this.isNormalKey(key)) {
                     continue;
@@ -567,15 +619,15 @@ module eui.sys {
                     continue;
                 }
                 if (this.currentClass.getVariableByName(value)) {//赋的值对象是一个id
-                    var THIS = "this.";
-                    var id = attributes.id;
-                    var codeLine = THIS + id + " = t;";
+                    let THIS = "this.";
+                    let id = attributes.id;
+                    let codeLine = THIS + id + " = t;";
                     if (!this.currentClass.getVariableByName(id))
                         this.createVarForNode(node);
                     if (!cb.containsCodeLine(codeLine)) {
                         cb.addCodeLineAt(codeLine, 1);
                     }
-                    var delayCb = new EXCodeBlock();
+                    let delayCb = new EXCodeBlock();
                     if (varName == "this") {
                         delayCb.addAssignment(varName, THIS + value, key);
                     }
@@ -600,22 +652,23 @@ module eui.sys {
          * 初始化子项
          */
         private initlizeChildNode(node:egret.XML, cb:EXCodeBlock, varName:string):void {
-            var children:Array<any> = node.children;
+            let children:any[] = node.children;
             if (!children || children.length == 0)
                 return;
-            var className = exmlConfig.getClassNameById(node.localName, node.namespace);
-            var directChild:egret.XML[] = [];
-            var length = children.length;
-            var propList:string[] = [];
-            for (var i = 0; i < length; i++) {
-                var child:egret.XML = children[i];
+            let className = exmlConfig.getClassNameById(node.localName, node.namespace);
+            let directChild:egret.XML[] = [];
+            let length = children.length;
+            let propList:string[] = [];
+            let errorInfo:any;
+            for (let i = 0; i < length; i++) {
+                let child:egret.XML = children[i];
                 if (child.nodeType != 1 || child.namespace == NS_W) {
                     continue;
                 }
                 if (this.isInnerClass(child)) {
                     if (child.localName == "Skin") {
-                        var innerClassName = this.parseInnerClass(child);
-                        var type = exmlConfig.getPropertyType(SKIN_NAME, className);
+                        let innerClassName = this.parseInnerClass(child);
+                        let type = exmlConfig.getPropertyType(SKIN_NAME, className);
                         if (type) {
                             cb.addAssignment(varName, innerClassName, SKIN_NAME);
                         }
@@ -626,12 +679,12 @@ module eui.sys {
                     continue;
                 }
 
-                var prop = child.localName;
+                let prop = child.localName;
                 if (this.isProperty(child)) {
                     if (!this.isNormalKey(prop)) {
                         continue;
                     }
-                    var type = exmlConfig.getPropertyType(child.localName, className);
+                    let type = exmlConfig.getPropertyType(child.localName, className);
                     if (!type) {
                         if (DEBUG) {
                             egret.$error(2005, this.currentClassName, child.localName, getPropertyStr(child));
@@ -645,7 +698,7 @@ module eui.sys {
                         continue;
                     }
                     if (DEBUG) {
-                        var errorInfo = getPropertyStr(child);
+                        errorInfo = getPropertyStr(child);
                     }
                     this.addChildrenToProp(child.children, type, prop, cb, varName, errorInfo, propList, node);
                 }
@@ -656,10 +709,10 @@ module eui.sys {
             }
             if (directChild.length == 0)
                 return;
-            var defaultProp = exmlConfig.getDefaultPropById(node.localName, node.namespace);
-            var defaultType = exmlConfig.getPropertyType(defaultProp, className);
+            let defaultProp = exmlConfig.getDefaultPropById(node.localName, node.namespace);
+            let defaultType = exmlConfig.getPropertyType(defaultProp, className);
             if (DEBUG) {
-                var errorInfo = getPropertyStr(directChild[0]);
+                errorInfo = getPropertyStr(directChild[0]);
             }
             if (!defaultProp || !defaultType) {
                 if (DEBUG) {
@@ -675,12 +728,12 @@ module eui.sys {
          * 解析内部类节点，并返回类名。
          */
         private parseInnerClass(node:egret.XML):string {
-            var parser = exmlParserPool.pop();
+            let parser = exmlParserPool.pop();
             if (!parser) {
                 parser = new EXMLParser();
             }
-            var innerClassName = this.currentClass.className + "$" + node.localName + innerClassCount++;
-            var innerClass = parser.parseClass(node, innerClassName);
+            let innerClassName = this.currentClass.className + "$" + node.localName + innerClassCount++;
+            let innerClass = parser.parseClass(node, innerClassName);
             this.currentClass.addInnerClass(innerClass);
             exmlParserPool.push(parser);
             return innerClassName;
@@ -690,11 +743,11 @@ module eui.sys {
          * @private
          * 添加多个子节点到指定的属性
          */
-        private addChildrenToProp(children:Array<any>, type:string, prop:string,
+        private addChildrenToProp(children:any[], type:string, prop:string,
                                   cb:EXCodeBlock, varName:string, errorInfo:string,
                                   propList:string[], node:egret.XML):void {
-            var childFunc = "";
-            var childLength = children.length;
+            let childFunc = "";
+            let childLength = children.length;
 
             if (childLength > 1) {
                 if (type != TYPE_ARRAY) {
@@ -703,14 +756,14 @@ module eui.sys {
                     }
                     return;
                 }
-                var values:string[] = [];
-                for (var j = 0; j < childLength; j++) {
-                    var item:egret.XML = children[j];
+                let values:string[] = [];
+                for (let j = 0; j < childLength; j++) {
+                    let item:egret.XML = children[j];
                     if (item.nodeType != 1) {
                         continue;
                     }
                     childFunc = this.createFuncForNode(item);
-                    var childClassName = this.getClassNameOfNode(item);
+                    let childClassName = this.getClassNameOfNode(item);
 
                     if (!this.isStateNode(item))
                         values.push(childFunc);
@@ -718,19 +771,19 @@ module eui.sys {
                 childFunc = "[" + values.join(",") + "]";
             }
             else {
-                var firstChild:egret.XML = children[0];
+                let firstChild:egret.XML = children[0];
                 if (type == TYPE_ARRAY) {
                     if (firstChild.localName == TYPE_ARRAY) {
-                        values = [];
+                        let values = [];
                         if (firstChild.children) {
-                            var len = firstChild.children.length;
-                            for (var k = 0; k < len; k++) {
-                                item = <any>firstChild.children[k];
+                            let len = firstChild.children.length;
+                            for (let k = 0; k < len; k++) {
+                                let item = <any>firstChild.children[k];
                                 if (item.nodeType != 1) {
                                     continue;
                                 }
                                 childFunc = this.createFuncForNode(item);
-                                childClassName = this.getClassNameOfNode(item);
+                                let childClassName = this.getClassNameOfNode(item);
 
                                 if (!this.isStateNode(item))
                                     values.push(childFunc);
@@ -740,7 +793,7 @@ module eui.sys {
                     }
                     else {
                         childFunc = this.createFuncForNode(firstChild);
-                        var childClassName = this.getClassNameOfNode(firstChild);
+                        let childClassName = this.getClassNameOfNode(firstChild);
 
                         if (!this.isStateNode(firstChild))
                             childFunc = "[" + childFunc + "]";
@@ -759,7 +812,7 @@ module eui.sys {
                         childFunc = this.parseInnerClass(children[0]);
                     }
                     else {
-                        var targetClass = this.getClassNameOfNode(firstChild);
+                        let targetClass = this.getClassNameOfNode(firstChild);
                         childFunc = this.createFuncForNode(firstChild);
                     }
                 }
@@ -788,18 +841,18 @@ module eui.sys {
             if (node.hasOwnProperty("isProperty")) {
                 return node["isProperty"];
             }
-            var result:boolean;
-            var name = node.localName;
+            let result:boolean;
+            let name = node.localName;
             if (!name || node.nodeType !== 1 || !node.parent || this.isBasicTypeData(name)) {
                 result = false;
             }
             else {
-                var parent = node.parent;
-                var index = name.indexOf(".")
+                let parent = node.parent;
+                let index = name.indexOf(".")
                 if (index != -1) {
                     name = name.substr(0, index);
                 }
-                var className = exmlConfig.getClassNameById(parent.localName, parent.namespace);
+                let className = exmlConfig.getClassNameById(parent.localName, parent.namespace);
                 result = !!exmlConfig.getPropertyType(name, className);
             }
             node["isProperty"] = result;
@@ -812,7 +865,8 @@ module eui.sys {
          * 是否是普通赋值的key
          */
         private isNormalKey(key:string):boolean {
-            if (!key || key.indexOf(".") != -1 || wingKeys.indexOf(key) != -1)
+            if (!key || key.indexOf(".") != -1
+                || key.indexOf(":") != -1 || wingKeys.indexOf(key) != -1)
                 return false;
             return true;
         }
@@ -835,40 +889,30 @@ module eui.sys {
          * @private
          * 格式化值
          */
-        private formatValue(key:string, value:string, node:egret.XML, haveState:boolean = false, stateCallBack:Function = null):string {
+        private formatValue(key:string, value:string, node:egret.XML):string {
             if (!value) {
                 value = "";
             }
-            var stringValue = value;//除了字符串，其他类型都去除两端多余空格。
+            let stringValue = value;//除了字符串，其他类型都去除两端多余空格。
             value = value.trim();
-            var className = this.getClassNameOfNode(node);
-            var type:string = exmlConfig.getPropertyType(key, className);
+            let className = this.getClassNameOfNode(node);
+            let type:string = exmlConfig.getPropertyType(key, className);
             if (DEBUG && !type) {
                 egret.$error(2005, this.currentClassName, key, toXMLString(node));
             }
-            if (value.charAt(0) == "{" && value.charAt(value.length - 1) == "}") {
-                value = value.substr(1, value.length - 2).trim();
-                if (value.indexOf("this.") == 0) {
-                    value = value.substring(5);
-                }
+            let bindingValue = this.formatBinding(key, value, node);
+            if (bindingValue) {
                 this.checkIdForState(node);
-                var firstKey = value.split(".")[0];
-                if (firstKey != HOST_COMPONENT && this.skinParts.indexOf(firstKey) == -1) {
-                    value = HOST_COMPONENT + "." + value;
+                let target = "this";
+                if (node !== this.currentXML) {
+                    target += "." + node.attributes["id"];
                 }
-                if(!haveState){
-                    this.bindings.push(new EXBinding(node.attributes["id"], key, value));
-                    value = "";
-                }else{
-                    if(stateCallBack){
-                        stateCallBack(true);
-                    }
-                }
-
+                this.bindings.push(new EXBinding(target, key, bindingValue.templates, bindingValue.chainIndex));
+                value = "";
             }
             else if (type == RECTANGLE) {
                 if (DEBUG) {
-                    var rect = value.split(",");
+                    let rect = value.split(",");
                     if (rect.length != 4 || isNaN(parseInt(rect[0])) || isNaN(parseInt(rect[1])) ||
                         isNaN(parseInt(rect[2])) || isNaN(parseInt(rect[3]))) {
                         egret.$error(2016, this.currentClassName, toXMLString(node));
@@ -876,8 +920,14 @@ module eui.sys {
                 }
                 value = "new " + RECTANGLE + "(" + value + ")";
             }
+            else if (type == TYPE_PERCENTAGE) {
+                if (value.indexOf("%") != -1) {
+                    value = this.formatString(value);
+                    ;
+                }
+            }
             else {
-                var orgValue:string = value;
+                let orgValue:string = value;
                 switch (type) {
                     case TYPE_CLASS:
                         if (key == SKIN_NAME) {
@@ -885,10 +935,21 @@ module eui.sys {
                         }
                         break;
                     case "number":
-                        if (value.indexOf("#") == 0)
+                        if (value.indexOf("#") == 0) {
+                            if (DEBUG && isNaN(<any>value.substring(1))) {
+                                egret.$warn(2021, this.currentClassName, key, value);
+                            }
                             value = "0x" + value.substring(1);
-                        else if (value.indexOf("%") != -1)
+                        }
+                        else if (value.indexOf("%") != -1) {
+                            if (DEBUG && isNaN(<any>value.substr(0, value.length - 1))) {
+                                egret.$warn(2021, this.currentClassName, key, value);
+                            }
                             value = (parseFloat(value.substr(0, value.length - 1))).toString();
+                        }
+                        else if (DEBUG && isNaN(<any>value)) {
+                            egret.$warn(2021, this.currentClassName, key, value);
+                        }
                         break;
                     case "boolean":
                         value = (value == "false" || !value) ? "false" : "true";
@@ -921,6 +982,88 @@ module eui.sys {
             return value;
         }
 
+        private formatBinding(key:string, value:string, node:egret.XML):{templates:string[],chainIndex:number[]} {
+            if (!value) {
+                return null;
+            }
+            value = value.trim();
+            if (value.charAt(0) != "{" || value.charAt(value.length - 1) != "}") {
+                return null;
+
+            }
+            value = value.substring(1, value.length - 1).trim();
+            let templates = value.indexOf("+") == -1 ? [value] : this.parseTemplates(value);
+            let chainIndex:number[] = [];
+            let length = templates.length;
+            for (let i = 0; i < length; i++) {
+                let item = templates[i].trim();
+                if (!item) {
+                    templates.splice(i, 1);
+                    i--;
+                    length--;
+                    continue;
+                }
+                let first = item.charAt(0);
+                if (first == "'" || first == "\"" || first >= "0" && first <= "9" || first == "-") {
+                    continue;
+                }
+                if (item.indexOf(".") == -1 && jsKeyWords.indexOf(item) != -1) {
+                    continue;
+                }
+                if (item.indexOf("this.") == 0) {
+                    item = item.substring(5);
+                }
+                let firstKey = item.split(".")[0];
+                if (firstKey != HOST_COMPONENT && this.skinParts.indexOf(firstKey) == -1) {
+                    item = HOST_COMPONENT + "." + item;
+                }
+                templates[i] = "\"" + item + "\"";
+                chainIndex.push(i);
+            }
+            return {templates: templates, chainIndex: chainIndex};
+        }
+
+        private parseTemplates(value:string):string[] {
+            //仅仅是表达式相加 如:{a.b+c.d}
+            if (value.indexOf("'") == -1) {
+                return value.split("+");
+            }
+            //包含文本的需要提取文本并对文本进行处理
+            let isSingleQuoteLeak = false;//是否缺失单引号
+            let trimText = "";
+            value = value.split("\\\'").join("\v0\v");
+            while (value.length > 0) {
+                //'成对出现 这是第一个
+                let index = value.indexOf("'");
+                if (index == -1) {
+                    trimText += value;
+                    break;
+                }
+                trimText += value.substring(0, index + 1);
+                value = value.substring(index + 1);
+                //'成对出现 这是第二个
+                index = value.indexOf("'");
+                if (index == -1) {
+                    index = value.length - 1;
+                    isSingleQuoteLeak = true;
+                }
+                let quote = value.substring(0, index + 1);
+                trimText += quote.split("+").join("\v1\v");
+                value = value.substring(index + 1);
+            }
+            value = trimText.split("\v0\v").join("\\\'");
+            //补全缺失的单引号
+            if (isSingleQuoteLeak) {
+                value += "'";
+            }
+            let templates = value.split("+");
+            let length = templates.length;
+            for (let i = 0; i < length; i++) {
+                templates[i] = templates[i].split("\v1\v").join("+");
+            }
+            return templates;
+        }
+
         /**
          * @private
          /**
@@ -929,11 +1072,11 @@ module eui.sys {
         private unescapeHTMLEntity(str:string):string {
             if (!str)
                 return "";
-            var length = htmlEntities.length;
-            for (var i:number = 0; i < length; i++) {
-                var arr = htmlEntities[i];
-                var key:string = arr[0];
-                var value:string = arr[1];
+            let length = htmlEntities.length;
+            for (let i:number = 0; i < length; i++) {
+                let arr = htmlEntities[i];
+                let key:string = arr[0];
+                let value:string = arr[1];
                 str = str.split(value).join(key);
             }
             return str;
@@ -944,21 +1087,21 @@ module eui.sys {
          * 创建构造函数
          */
         private createConstructFunc():void {
-            var cb:EXCodeBlock = new EXCodeBlock;
+            let cb:EXCodeBlock = new EXCodeBlock;
             cb.addEmptyLine();
-            var varName:string = "this";
+            let varName:string = "this";
             this.addAttributesToCodeBlock(cb, varName, this.currentXML);
 
             if (this.declarations) {
-                var children:Array<any> = this.declarations.children;
+                let children:any[] = this.declarations.children;
                 if (children && children.length > 0) {
-                    var length = children.length;
-                    for (var i = 0; i < length; i++) {
-                        var decl:egret.XML = children[i];
+                    let length = children.length;
+                    for (let i = 0; i < length; i++) {
+                        let decl:egret.XML = children[i];
                         if (decl.nodeType != 1) {
                             continue;
                         }
-                        var funcName = this.createFuncForNode(decl);
+                        let funcName = this.createFuncForNode(decl);
                         if (funcName) {
                             cb.addCodeLine(funcName + ";");
                         }
@@ -967,30 +1110,31 @@ module eui.sys {
             }
 
             this.initlizeChildNode(this.currentXML, cb, varName);
-            var id:string;
-            var stateIds = this.stateIds;
+            let id:string;
+            let length:number;
+            let stateIds = this.stateIds;
             if (stateIds.length > 0) {
                 length = stateIds.length;
-                for (var i = 0; i < length; i++) {
+                for (let i = 0; i < length; i++) {
                     id = stateIds[i];
                     cb.addCodeLine("this." + id + "_i();");
                 }
                 cb.addEmptyLine();
             }
 
-            var skinParts = this.skinParts;
-            var skinPartStr:string = "[]";
+            let skinParts = this.skinParts;
+            let skinPartStr:string = "[]";
             length = skinParts.length;
             if (length > 0) {
-                for (i = 0; i < length; i++) {
+                for (let i = 0; i < length; i++) {
                     skinParts[i] = "\"" + skinParts[i] + "\"";
                 }
                 skinPartStr = "[" + skinParts.join(",") + "]";
             }
-            var skinPartFunc:EXFunction = new EXFunction();
+            let skinPartFunc:EXFunction = new EXFunction();
             skinPartFunc.name = "skinParts";
             skinPartFunc.isGet = true;
-            var skinPartCB:EXCodeBlock = new EXCodeBlock();
+            let skinPartCB:EXCodeBlock = new EXCodeBlock();
             skinPartCB.addReturn(skinPartStr);
             skinPartFunc.codeBlock = skinPartCB;
             this.currentClass.addFunction(skinPartFunc);
@@ -999,29 +1143,29 @@ module eui.sys {
             this.currentXML.attributes.id = "";
             //生成视图状态代码
             this.createStates(this.currentXML);
-            var states:EXState[];
-            var node = this.currentXML;
-            var nodeClassName = this.getClassNameOfNode(node);
-            var attributes = node.attributes;
-            var keys = Object.keys(attributes);
-            var keysLength = keys.length;
-            for (var m = 0; m < keysLength; m++) {
-                var itemName = keys[m];
-                var value:string = attributes[itemName];
-                var index = itemName.indexOf(".");
+            let states:EXState[];
+            let node = this.currentXML;
+            let nodeClassName = this.getClassNameOfNode(node);
+            let attributes = node.attributes;
+            let keys = Object.keys(attributes);
+            let keysLength = keys.length;
+            for (let m = 0; m < keysLength; m++) {
+                let itemName = keys[m];
+                let value:string = attributes[itemName];
+                let index = itemName.indexOf(".");
                 if (index != -1) {
-                    var key = itemName.substring(0, index);
+                    let key = itemName.substring(0, index);
                     key = this.formatKey(key, value);
-                    var itemValue = this.formatValue(key, value, node);
+                    let itemValue = this.formatValue(key, value, node);
                     if (!itemValue) {
                         continue;
                     }
-                    var stateName = itemName.substr(index + 1);
+                    let stateName = itemName.substr(index + 1);
                     states = this.getStateByName(stateName, node);
-                    var stateLength = states.length;
+                    let stateLength = states.length;
                     if (stateLength > 0) {
-                        for (i = 0; i < stateLength; i++) {
-                            var state = states[i];
+                        for (let i = 0; i < stateLength; i++) {
+                            let state = states[i];
                             state.addOverride(new EXSetProperty("", key, itemValue));
                         }
                     }
@@ -1029,22 +1173,22 @@ module eui.sys {
             }
 
             //打印视图状态初始化代码
-            var stateCode = this.stateCode;
+            let stateCode = this.stateCode;
             length = stateCode.length;
             if (length > 0) {
-                var indentStr = "	";
+                let indentStr = "	";
                 cb.addCodeLine("this.states = [");
-                var first = true;
-                for (i = 0; i < length; i++) {
-                    state = stateCode[i];
+                let first = true;
+                for (let i = 0; i < length; i++) {
+                    let state = stateCode[i];
                     if (first)
                         first = false;
                     else
                         cb.addCodeLine(indentStr + ",");
-                    var codes = state.toCode().split("\n");
-                    var codeIndex = 0;
+                    let codes = state.toCode().split("\n");
+                    let codeIndex = 0;
                     while (codeIndex < codes.length) {
-                        var code = codes[codeIndex];
+                        let code = codes[codeIndex];
                         if (code)
                             cb.addCodeLine(indentStr + code);
                         codeIndex++;
@@ -1054,12 +1198,12 @@ module eui.sys {
             }
 
             //生成绑定代码
-            var bindings = this.bindings;
+            let bindings = this.bindings;
             length = bindings.length;
             if (length > 0) {
                 cb.addEmptyLine();
-                for (i = 0; i < length; i++) {
-                    var binding = bindings[i];
+                for (let i = 0; i < length; i++) {
+                    let binding = bindings[i];
                     cb.addCodeLine(binding.toCode());
                 }
             }
@@ -1072,7 +1216,7 @@ module eui.sys {
          * 是否含有includeIn和excludeFrom属性
          */
         private isStateNode(node:egret.XML):boolean {
-            var attributes = node.attributes;
+            let attributes = node.attributes;
             return attributes.hasOwnProperty("includeIn") || attributes.hasOwnProperty("excludeFrom");
         }
 
@@ -1081,23 +1225,24 @@ module eui.sys {
          * 获取视图状态名称列表
          */
         private getStateNames():void {
-            var root = this.currentXML;
-            var className = exmlConfig.getClassNameById(root.localName, root.namespace);
-            var type = exmlConfig.getPropertyType("states", className);
+            let root = this.currentXML;
+            let className = exmlConfig.getClassNameById(root.localName, root.namespace);
+            let type = exmlConfig.getPropertyType("states", className);
             if (type != TYPE_STATE) {
                 return;
             }
-            var statesValue = root.attributes["states"];
+            let statesValue = root.attributes["states"];
             if (statesValue) {
                 delete root.attributes["states"];
             }
-            var stateNames = this.stateNames;
-            var stateChildren:any[];
-            var children:any[] = root.children;
+            let stateNames = this.stateNames;
+            let stateChildren:any[];
+            let children:any[] = root.children;
+            let item:egret.XML;
             if (children) {
-                var length = children.length;
-                for (var i = 0; i < length; i++) {
-                    var item:egret.XML = children[i];
+                let length = children.length;
+                for (let i = 0; i < length; i++) {
+                    item = children[i];
                     if (item.nodeType == 1 &&
                         item.localName == "states") {
                         item.namespace = NS_W;
@@ -1122,10 +1267,10 @@ module eui.sys {
 
             if (statesValue) {
 
-                var states = statesValue.split(",");
-                length = states.length;
-                for (var i = 0; i < length; i++) {
-                    var stateName:string = states[i].trim();
+                let states = statesValue.split(",");
+                let length = states.length;
+                for (let i = 0; i < length; i++) {
+                    let stateName:string = states[i].trim();
                     if (!stateName) {
                         continue;
                     }
@@ -1137,19 +1282,19 @@ module eui.sys {
                 return;
             }
 
-            length = stateChildren.length;
-            for (i = 0; i < length; i++) {
-                var state:egret.XML = stateChildren[i];
+            let length = stateChildren.length;
+            for (let i = 0; i < length; i++) {
+                let state:egret.XML = stateChildren[i];
                 if (state.nodeType != 1) {
                     continue;
                 }
-                var stateGroups:Array<any> = [];
-                var attributes = state.attributes;
+                let stateGroups:any[] = [];
+                let attributes = state.attributes;
                 if (attributes["stateGroups"]) {
-                    var groups = attributes.stateGroups.split(",");
-                    var len = groups.length;
-                    for (var j = 0; j < len; j++) {
-                        var group = groups[j].trim();
+                    let groups = attributes.stateGroups.split(",");
+                    let len = groups.length;
+                    for (let j = 0; j < len; j++) {
+                        let group = groups[j].trim();
                         if (group) {
                             if (stateNames.indexOf(group) == -1) {
                                 stateNames.push(group);
@@ -1158,7 +1303,7 @@ module eui.sys {
                         }
                     }
                 }
-                stateName = attributes.name;
+                let stateName = attributes.name;
                 if (stateNames.indexOf(stateName) == -1) {
                     stateNames.push(stateName);
                 }
@@ -1171,13 +1316,13 @@ module eui.sys {
          * 解析视图状态代码
          */
         private createStates(parentNode:egret.XML):void {
-            var items:Array<any> = parentNode.children;
+            let items:any[] = parentNode.children;
             if (!items) {
                 return;
             }
-            var length = items.length;
-            for (var i = 0; i < length; i++) {
-                var node:egret.XML = items[i];
+            let length = items.length;
+            for (let i = 0; i < length; i++) {
+                let node:egret.XML = items[i];
                 if (node.nodeType != 1 || this.isInnerClass(node)) {
                     continue;
                 }
@@ -1186,16 +1331,16 @@ module eui.sys {
                     continue;
                 }
                 if (this.isProperty(node)) {
-                    var prop = node.localName;
-                    var index = prop.indexOf(".");
-                    var children:Array<any> = node.children;
+                    let prop = node.localName;
+                    let index = prop.indexOf(".");
+                    let children:any[] = node.children;
                     if (index == -1 || !children || children.length == 0) {
                         continue;
                     }
-                    var stateName = prop.substring(index + 1);
+                    let stateName = prop.substring(index + 1);
                     prop = prop.substring(0, index);
-                    var className = this.getClassNameOfNode(parentNode);
-                    var type = exmlConfig.getPropertyType(prop, className);
+                    let className = this.getClassNameOfNode(parentNode);
+                    let type = exmlConfig.getPropertyType(prop, className);
                     if (DEBUG) {
                         if (type == TYPE_ARRAY) {
                             egret.$error(2013, this.currentClassName, getPropertyStr(node));
@@ -1205,8 +1350,8 @@ module eui.sys {
                         }
                     }
 
-                    var firstChild:egret.XML = children[0];
-                    var value:string;
+                    let firstChild:egret.XML = children[0];
+                    let value:string;
                     if (firstChild.nodeType == 1) {
                         this.createFuncForNode(firstChild);
                         this.checkIdForState(firstChild);
@@ -1216,26 +1361,26 @@ module eui.sys {
                         value = this.formatValue(prop, (<egret.XMLText><any>firstChild).text, parentNode);
                     }
 
-                    states = this.getStateByName(stateName, node);
-                    var l = states.length;
+                    let states = this.getStateByName(stateName, node);
+                    let l = states.length;
                     if (l > 0) {
-                        for (var j:number = 0; j < l; j++) {
-                            state = states[j];
+                        for (let j:number = 0; j < l; j++) {
+                            let state = states[j];
                             state.addOverride(new EXSetProperty(parentNode.attributes.id, prop, value));
                         }
                     }
                 }
                 else if (this.containsState(node)) {
-                    var attributes = node.attributes;
-                    var id = attributes.id;
-                    var nodeClassName = this.getClassNameOfNode(node);
+                    let attributes = node.attributes;
+                    let id = attributes.id;
+                    let nodeClassName = this.getClassNameOfNode(node);
                     this.checkIdForState(node);
-                    var stateName:string;
-                    var states:Array<EXState>;
-                    var state:EXState;
+                    let stateName:string;
+                    let states:Array<EXState>;
+                    let state:EXState;
                     if (this.isStateNode(node)) {
-                        var propertyName = "";
-                        var parent:egret.XML = node.parent;
+                        let propertyName = "";
+                        let parent:egret.XML = node.parent;
                         if (parent.localName == TYPE_ARRAY)
                             parent = parent.parent;
                         if (parent && parent.parent) {
@@ -1247,21 +1392,21 @@ module eui.sys {
                             propertyName = parent.attributes.id;
                             this.checkIdForState(parent);
                         }
-                        var positionObj = this.findNearNodeId(node);
-                        var stateNames:string[] = [];
+                        let positionObj = this.findNearNodeId(node);
+                        let stateNames:string[] = [];
                         if (attributes.includeIn) {
                             stateNames = attributes.includeIn.split(",");
                         }
                         else {
-                            var excludeNames = attributes.excludeFrom.split(",");
+                            let excludeNames = attributes.excludeFrom.split(",");
 
-                            var stateLength = excludeNames.length;
-                            for (var j = 0; j < stateLength; j++) {
-                                var name:string = excludeNames[j];
+                            let stateLength = excludeNames.length;
+                            for (let j = 0; j < stateLength; j++) {
+                                let name:string = excludeNames[j];
                                 this.getStateByName(name, node);//检查exlcudeFrom是否含有未定义的视图状态名
                             }
                             stateLength = this.stateCode.length;
-                            for (j = 0; j < stateLength; j++) {
+                            for (let j = 0; j < stateLength; j++) {
                                 state = this.stateCode[j];
                                 if (excludeNames.indexOf(state.name) == -1) {
                                     stateNames.push(state.name);
@@ -1270,13 +1415,13 @@ module eui.sys {
                             }
                         }
 
-                        var len = stateNames.length;
-                        for (var k = 0; k < len; k++) {
+                        let len = stateNames.length;
+                        for (let k = 0; k < len; k++) {
                             stateName = stateNames[k];
                             states = this.getStateByName(stateName, node);
                             if (states.length > 0) {
-                                var l = states.length;
-                                for (var j = 0; j < l; j++) {
+                                let l = states.length;
+                                for (let j = 0; j < l; j++) {
                                     state = states[j];
                                     state.addOverride(new EXAddItems(id, propertyName,
                                         positionObj.position, positionObj.relativeTo));
@@ -1285,32 +1430,33 @@ module eui.sys {
                         }
                     }
 
-                    var names = Object.keys(attributes);
-                    var namesLength = names.length;
-                    for (var m = 0; m < namesLength; m++) {
-                        name = names[m];
-                        var value:string = attributes[name];
-                        var index:number = name.indexOf(".");
+                    let names = Object.keys(attributes);
+                    let namesLength = names.length;
+                    for (let m = 0; m < namesLength; m++) {
+                        let name = names[m];
+                        let value:string = attributes[name];
+                        let index:number = name.indexOf(".");
                         if (index != -1) {
-                            var key = name.substring(0, index);
+                            let key = name.substring(0, index);
                             key = this.formatKey(key, value);
-                            var isBinding:boolean = false;
-                            var value = this.formatValue(key, value, node, true,function(vl){
-                                isBinding = vl;
-                            });
-                            if (!value) {
-                                continue;
+                            let bindingValue = this.formatBinding(key, value, node);
+                            if (!bindingValue) {
+                                value = this.formatValue(key, value, node);
+                                if (!value) {
+                                    continue;
+                                }
                             }
+
                             stateName = name.substr(index + 1);
                             states = this.getStateByName(stateName, node);
-                            var l = states.length;
+                            let l = states.length;
                             if (l > 0) {
-                                for (var j = 0; j < l; j++) {
+                                for (let j = 0; j < l; j++) {
                                     state = states[j];
-                                    if(!isBinding){
+                                    if (bindingValue) {
+                                        state.addOverride(new EXSetStateProperty(id, key, bindingValue.templates, bindingValue.chainIndex));
+                                    } else {
                                         state.addOverride(new EXSetProperty(id, key, value));
-                                    }else{
-                                        state.addOverride(new EXSetStateProperty(id, key, "\""+value+"\""));
                                     }
                                 }
                             }
@@ -1330,13 +1476,13 @@ module eui.sys {
                 return;
             }
             this.createVarForNode(node);
-            var id:string = node.attributes.id;
-            var funcName = id + "_i";
-            var func = this.currentClass.getFuncByName(funcName);
+            let id:string = node.attributes.id;
+            let funcName = id + "_i";
+            let func = this.currentClass.getFuncByName(funcName);
             if (!func)
                 return;
-            var codeLine = "this." + id + " = t;";
-            var cb:EXCodeBlock = func.codeBlock;
+            let codeLine = "this." + id + " = t;";
+            let cb:EXCodeBlock = func.codeBlock;
             if (!cb)
                 return;
             if (!cb.containsCodeLine(codeLine)) {
@@ -1349,20 +1495,20 @@ module eui.sys {
          * 通过视图状态名称获取对应的视图状态
          */
         private getStateByName(name:string, node:egret.XML):EXState[] {
-            var states:EXState[] = [];
-            var stateCode = this.stateCode;
-            var length = stateCode.length;
-            for (var i = 0; i < length; i++) {
-                var state = stateCode[i];
+            let states:EXState[] = [];
+            let stateCode = this.stateCode;
+            let length = stateCode.length;
+            for (let i = 0; i < length; i++) {
+                let state = stateCode[i];
                 if (state.name == name) {
                     if (states.indexOf(state) == -1)
                         states.push(state);
                 }
                 else if (state.stateGroups.length > 0) {
-                    var found = false;
-                    var len = state.stateGroups.length;
-                    for (var j:number = 0; j < len; j++) {
-                        var g = state.stateGroups[j];
+                    let found = false;
+                    let len = state.stateGroups.length;
+                    for (let j:number = 0; j < len; j++) {
+                        let g = state.stateGroups[j];
                         if (g == name) {
                             found = true;
                             break;
@@ -1385,17 +1531,17 @@ module eui.sys {
          * 寻找节点的临近节点ID和位置
          */
         private findNearNodeId(node:egret.XML):any {
-            var parentNode:egret.XML = node.parent;
-            var targetId = "";
-            var position:number;
-            var index = -1;
-            var preItem:egret.XML;
-            var afterItem:egret.XML;
-            var found = false;
-            var children:Array<any> = parentNode.children;
-            var length = children.length;
-            for (var i = 0; i < length; i++) {
-                var item = children[i];
+            let parentNode:egret.XML = node.parent;
+            let targetId = "";
+            let position:number;
+            let index = -1;
+            let preItem:egret.XML;
+            let afterItem:egret.XML;
+            let found = false;
+            let children:any[] = parentNode.children;
+            let length = children.length;
+            for (let i = 0; i < length; i++) {
+                let item = children[i];
                 if (this.isProperty(item))
                     continue;
                 if (item == node) {
@@ -1436,7 +1582,7 @@ module eui.sys {
          * 获取节点的完整类名，包括模块名
          */
         private getClassNameOfNode(node:egret.XML):string {
-            var className = exmlConfig.getClassNameById(node.localName, node.namespace);
+            let className = exmlConfig.getClassNameById(node.localName, node.namespace);
             if (DEBUG && !className) {
                 egret.$error(2003, this.currentClassName, toXMLString(node));
             }
@@ -1450,15 +1596,15 @@ module eui.sys {
          * 获取重复的ID名
          */
         function getRepeatedIds(xml:egret.XML):string[] {
-            var result:string[] = [];
+            let result:string[] = [];
             this.repeatedIdMap = {};
             this.getIds(xml, result);
             return result;
         }
 
-        function getIds(xml:any, result:Array<any>):void {
+        function getIds(xml:any, result:any[]):void {
             if (xml.namespace != NS_W && xml.attributes.id) {
-                var id:string = xml.attributes.id;
+                let id:string = xml.attributes.id;
                 if (this.repeatedIdMap[id]) {
                     result.push(toXMLString(xml));
                 }
@@ -1466,12 +1612,12 @@ module eui.sys {
                     this.repeatedIdMap[id] = true;
                 }
             }
-            var children:Array<any> = xml.children;
+            let children:any[] = xml.children;
             if (children) {
-                var length:number = children.length;
-                for (var i:number = 0; i < length; i++) {
-                    var node:any = children[i];
-                    if (this.isInnerClass(node)) {
+                let length:number = children.length;
+                for (let i:number = 0; i < length; i++) {
+                    let node:any = children[i];
+                    if (node.nodeType !== 1 || this.isInnerClass(node)) {
                         continue;
                     }
                     this.getIds(node, result);
@@ -1483,13 +1629,13 @@ module eui.sys {
             if (!node) {
                 return "";
             }
-            var str:string = "  at <" + node.name;
-            var attributes = node.attributes;
-            var keys = Object.keys(attributes);
-            var length = keys.length;
-            for (var i = 0; i < length; i++) {
-                var key = keys[i];
-                var value:string = attributes[key];
+            let str:string = "  at <" + node.name;
+            let attributes = node.attributes;
+            let keys = Object.keys(attributes);
+            let length = keys.length;
+            for (let i = 0; i < length; i++) {
+                let key = keys[i];
+                let value:string = attributes[key];
                 if (key == "id" && value.substring(0, 2) == "__") {
                     continue;
                 }
@@ -1511,11 +1657,11 @@ module eui.sys {
             if (!declarations) {
                 return;
             }
-            var children = declarations.children;
+            let children = declarations.children;
             if (children) {
-                var length = children.length;
-                for (var i = 0; i < length; i++) {
-                    var node:any = children[i];
+                let length = children.length;
+                for (let i = 0; i < length; i++) {
+                    let node:any = children[i];
                     if (node.nodeType != 1) {
                         continue;
                     }
@@ -1531,8 +1677,8 @@ module eui.sys {
         }
 
         function getPropertyStr(child:any):string {
-            var parentStr = toXMLString(child.parent);
-            var childStr = toXMLString(child).substring(5);
+            let parentStr = toXMLString(child.parent);
+            let childStr = toXMLString(child).substring(5);
             return parentStr + "\n      \t" + childStr;
         }
 

@@ -1,6 +1,6 @@
 //////////////////////////////////////////////////////////////////////////////////////
 //
-//  Copyright (c) 2014-2015, Egret Technology Inc.
+//  Copyright (c) 2014-present, Egret Technology.
 //  All rights reserved.
 //  Redistribution and use in source and binary forms, with or without
 //  modification, are permitted provided that the following conditions are met:
@@ -28,7 +28,7 @@
 //////////////////////////////////////////////////////////////////////////////////////
 
 
-module egret.gui {
+namespace egret.gui {
     /**
      * @class egret.gui.ParallelInstance
      * @classdesc
@@ -46,12 +46,12 @@ module egret.gui {
         /**
          * 已经完成的效果实例
          */
-        private doneEffectQueue:Array<any>;
+        private doneEffectQueue:any[];
         
         /**
          * 等待播放的效果实例
          */
-        private replayEffectQueue:Array<any>;
+        private replayEffectQueue:any[];
         
         private isReversed:boolean = false;    
         private timer:egret.Timer;
@@ -60,11 +60,11 @@ module egret.gui {
          * @inheritDoc
          */
         public get _durationWithoutRepeat():number{
-            var _duration:number = 0;
+            let _duration:number = 0;
             
-            var n:number = this._childSets.length;
-            for (var i:number = 0; i < n; i++){
-                var instances:Array<any> = this._childSets[i];
+            let n:number = this._childSets.length;
+            for (let i:number = 0; i < n; i++){
+                let instances:any[] = this._childSets[i];
                 _duration = Math.max(instances[0]._actualDuration, _duration);
             }
             return _duration;
@@ -76,11 +76,11 @@ module egret.gui {
         public _setPlayheadTime(value:number){
             this._setPlayheadTime(value);
             
-            var compositeDur:number = (<Parallel><any> (this.effect)).compositeDuration;
-            var firstCycleDur:number = compositeDur + this.startDelay + this.repeatDelay;
-            var laterCycleDur:number = compositeDur + this.repeatDelay;
-            var totalDur:number = firstCycleDur + laterCycleDur * (this.repeatCount - 1);
-            var childPlayheadTime:number;
+            let compositeDur:number = (<Parallel><any> (this.effect)).compositeDuration;
+            let firstCycleDur:number = compositeDur + this.startDelay + this.repeatDelay;
+            let laterCycleDur:number = compositeDur + this.repeatDelay;
+            let totalDur:number = firstCycleDur + laterCycleDur * (this.repeatCount - 1);
+            let childPlayheadTime:number;
             if (value <= firstCycleDur) {
                 childPlayheadTime = Math.min(value - this.startDelay, compositeDur);
                 this._playCount = 1;
@@ -91,16 +91,16 @@ module egret.gui {
                     this._playCount = this.repeatCount;
                 }
                 else{
-                    var valueAfterFirstCycle:number = value - firstCycleDur;
+                    let valueAfterFirstCycle:number = value - firstCycleDur;
                     childPlayheadTime = valueAfterFirstCycle % laterCycleDur;
                     this._playCount = 1 + valueAfterFirstCycle / laterCycleDur;
                 }
             }
             
-            for (var i:number = 0; i < this._childSets.length; i++){
-                var instances:Array<any> = this._childSets[i];
-                var m:number = instances.length;
-                for (var j:number = 0; j < m; j++)
+            for (let i:number = 0; i < this._childSets.length; i++){
+                let instances:any[] = this._childSets[i];
+                let m:number = instances.length;
+                for (let j:number = 0; j < m; j++)
                     instances[j].playheadTime = this.playReversed ?
                         Math.max(0, (childPlayheadTime - 
                             (this._durationWithoutRepeat - instances[j]._actualDuration))) :
@@ -108,10 +108,10 @@ module egret.gui {
             }
 
             if (this.playReversed && this.replayEffectQueue != null && this.replayEffectQueue.length > 0){
-                var position:number = this._durationWithoutRepeat - this.playheadTime;
-                var numDone:number = this.replayEffectQueue.length;            
-                for (i = numDone - 1; i >= 0; i--){
-                    var childEffect:EffectInstance = this.replayEffectQueue[i];
+                let position:number = this._durationWithoutRepeat - this.playheadTime;
+                let numDone:number = this.replayEffectQueue.length;
+                for (let i = numDone - 1; i >= 0; i--){
+                    let childEffect:EffectInstance = this.replayEffectQueue[i];
                     if (position <= childEffect._actualDuration){
                         if (this._activeEffectQueue == null)
                             this._activeEffectQueue = [];
@@ -136,16 +136,16 @@ module egret.gui {
 
             super.play();
             
-            var n:number = 0;
-            var i:number = 0;
+            let n:number = 0;
+            let i:number = 0;
             
             n = this._childSets.length;
             for (i = 0; i < n; i++){
-                var instances:Array<any> = this._childSets[i];
+                let instances:any[] = this._childSets[i];
                 
-                var m:number = instances.length;
-                for (var j:number = 0; j < m && this._activeEffectQueue != null; j++){
-                    var childEffect:EffectInstance = instances[j];
+                let m:number = instances.length;
+                for (let j:number = 0; j < m && this._activeEffectQueue != null; j++){
+                    let childEffect:EffectInstance = instances[j];
 
                     if (this.playReversed && childEffect._actualDuration < this._durationWithoutRepeat){
                         this.replayEffectQueue.push(childEffect);
@@ -159,7 +159,7 @@ module egret.gui {
             }
             
             if (this._activeEffectQueue.length > 0){
-                var queueCopy:Array<any> = this._activeEffectQueue.slice(0);
+                let queueCopy:any[] = this._activeEffectQueue.slice(0);
                 for (i = 0; i < queueCopy.length; i++){
                     queueCopy[i].startEffect();
                 }
@@ -172,8 +172,8 @@ module egret.gui {
         public pause():void{    
             super.pause();
             if (this._activeEffectQueue){
-                var n:number = this._activeEffectQueue.length;
-                for (var i:number = 0; i < n; i++){
+                let n:number = this._activeEffectQueue.length;
+                for (let i:number = 0; i < n; i++){
                     this._activeEffectQueue[i].pause();
                 }
             }
@@ -186,10 +186,10 @@ module egret.gui {
             this.stopTimer();
             
             if (this._activeEffectQueue){
-                var queueCopy:Array<any> = this._activeEffectQueue.concat();
+                let queueCopy:any[] = this._activeEffectQueue.concat();
                 this._activeEffectQueue = null;
-                var n:number = queueCopy.length;
-                for (var i:number = 0; i < n; i++){
+                let n:number = queueCopy.length;
+                for (let i:number = 0; i < n; i++){
                     if (queueCopy[i])
                         queueCopy[i].stop();
                 }
@@ -203,8 +203,8 @@ module egret.gui {
         public resume():void{
             super.resume();
             if (this._activeEffectQueue){
-                var n:number = this._activeEffectQueue.length;
-                for (var i:number = 0; i < n; i++){
+                let n:number = this._activeEffectQueue.length;
+                for (let i:number = 0; i < n; i++){
                     this._activeEffectQueue[i].resume();
                 }
             }
@@ -216,8 +216,8 @@ module egret.gui {
         public reverse():void{
             super.reverse();
             
-            var n:number = 0;
-            var i:number = 0;
+            let n:number = 0;
+            let i:number = 0;
             
             if (this.isReversed){
                 n = this._activeEffectQueue.length;
@@ -248,10 +248,10 @@ module egret.gui {
             this.stopTimer();
             
             if (this._activeEffectQueue){
-                var queueCopy:Array<any> = this._activeEffectQueue.concat();
+                let queueCopy:any[] = this._activeEffectQueue.concat();
                 this._activeEffectQueue = null;
-                var n:number = queueCopy.length;
-                for (var i:number = 0; i < n; i++){
+                let n:number = queueCopy.length;
+                for (let i:number = 0; i < n; i++){
                     if (queueCopy[i])
                         queueCopy[i].end();
                 }
@@ -267,8 +267,8 @@ module egret.gui {
             if (this._endEffectCalled || this._activeEffectQueue == null)
                 return;
             
-            var n:number = this._activeEffectQueue.length;
-            for (var i:number = 0; i < n; i++){
+            let n:number = this._activeEffectQueue.length;
+            for (let i:number = 0; i < n; i++){
                 if (childEffect == this._activeEffectQueue[i]){
                     this.doneEffectQueue.push(childEffect);
                     this._activeEffectQueue.splice(i, 1);
@@ -295,16 +295,16 @@ module egret.gui {
         }
 
         private timerHandler(event:egret.TimerEvent):void{
-            var position:number = this._durationWithoutRepeat - this.playheadTime;
-            var numDone:number = this.replayEffectQueue.length;    
+            let position:number = this._durationWithoutRepeat - this.playheadTime;
+            let numDone:number = this.replayEffectQueue.length;
             
             if (numDone == 0){
                 this.stopTimer();
                 return;
             }
             
-            for (var i:number = numDone - 1; i >= 0; i--){
-                var childEffect:EffectInstance = this.replayEffectQueue[i];
+            for (let i:number = numDone - 1; i >= 0; i--){
+                let childEffect:EffectInstance = this.replayEffectQueue[i];
                 
                 if (position <= childEffect._actualDuration){
                     if (this._activeEffectQueue == null)

@@ -1,6 +1,6 @@
 //////////////////////////////////////////////////////////////////////////////////////
 //
-//  Copyright (c) 2014-2015, Egret Technology Inc.
+//  Copyright (c) 2014-present, Egret Technology.
 //  All rights reserved.
 //  Redistribution and use in source and binary forms, with or without
 //  modification, are permitted provided that the following conditions are met:
@@ -28,7 +28,7 @@
 //////////////////////////////////////////////////////////////////////////////////////
 
 
-module egret.gui {
+namespace egret.gui {
 
 	/**
 	 * @class egret.gui.SkinnableDataContainer
@@ -208,7 +208,7 @@ module egret.gui {
 				return this.dataGroup.autoLayout;
 			else
 			{
-				var v:any = this._dataGroupProperties.autoLayout;
+				let v:any = this._dataGroupProperties.autoLayout;
 				return (v === undefined) ? true : v;
 			}
 		}
@@ -287,7 +287,7 @@ module egret.gui {
 					RendererExistenceEvent.RENDERER_ADD, this.dispatchEvent, this);
 				this.dataGroup.removeEventListener(
 					RendererExistenceEvent.RENDERER_REMOVE, this.dispatchEvent, this);
-				var newDataGroupProperties:any = {};
+				let newDataGroupProperties:any = {};
 				newDataGroupProperties.layout = this.dataGroup.layout;
 				newDataGroupProperties.autoLayout = this.dataGroup.autoLayout;
 				newDataGroupProperties.dataProvider = this.dataGroup.dataProvider;
@@ -311,7 +311,8 @@ module egret.gui {
 		 * @param priority {number}
 		 */
 		public addEventListener(type:string, listener:Function,thisObject:any,  useCapture:boolean=false, priority:number=0) : void{
-			super.addEventListener(type, listener,thisObject, useCapture, priority);
+			//todo super.addEventListener report error in tsc2.1.4
+			SkinnableComponent.prototype.addEventListener.call(this,type, listener,thisObject, useCapture, priority);
 
 			if (type == RendererExistenceEvent.RENDERER_ADD && this.dataGroup){
 				this.dataGroup.addEventListener(

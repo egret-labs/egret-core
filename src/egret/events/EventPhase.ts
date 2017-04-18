@@ -1,6 +1,6 @@
 //////////////////////////////////////////////////////////////////////////////////////
 //
-//  Copyright (c) 2014-2015, Egret Technology Inc.
+//  Copyright (c) 2014-present, Egret Technology.
 //  All rights reserved.
 //  Redistribution and use in source and binary forms, with or without
 //  modification, are permitted provided that the following conditions are met:
@@ -27,61 +27,61 @@
 //
 //////////////////////////////////////////////////////////////////////////////////////
 
-module egret {
+namespace egret {
 
     /**
-     * @language en_US
      * The EventPhase class provides values for the eventPhase property of the Event class.
      * @version Egret 2.4
      * @platform Web,Native
      * @includeExample egret/events/EventPhase.ts
+     * @language en_US
      */
     /**
-     * @language zh_CN
      * EventPhase 可为 Event 类的 eventPhase 属性提供值。
      * @version Egret 2.4
      * @platform Web,Native
      * @includeExample egret/events/EventPhase.ts
+     * @language zh_CN
      */
     export const enum EventPhase{
 
         /**
-         * @language en_US
          * The capturing phase, which is the first phase of the event flow.
          * @version Egret 2.4
          * @platform Web,Native
+         * @language en_US
          */
         /**
-         * @language zh_CN
          * 捕获阶段。
          * @version Egret 2.4
          * @platform Web,Native
+         * @language zh_CN
          */
         CAPTURING_PHASE = 1,
         /**
-         * @language en_US
          * The target phase, which is the second phase of the event flow.
          * @version Egret 2.4
          * @platform Web,Native
+         * @language en_US
          */
         /**
-         * @language zh_CN
          * 目标阶段，是事件流的第二个阶段。
          * @version Egret 2.4
          * @platform Web,Native
+         * @language zh_CN
          */
         AT_TARGET = 2,
         /**
-         * @language en_US
          * The bubbling phase, which is the third phase of the event flow.
          * @version Egret 2.4
          * @platform Web,Native
+         * @language en_US
          */
         /**
-         * @language zh_CN
          * 冒泡阶段。
          * @version Egret 2.4
          * @platform Web,Native
+         * @language zh_CN
          */
         BUBBLING_PHASE = 3
     }

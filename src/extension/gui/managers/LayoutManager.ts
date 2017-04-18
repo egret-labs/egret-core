@@ -1,6 +1,6 @@
 //////////////////////////////////////////////////////////////////////////////////////
 //
-//  Copyright (c) 2014-2015, Egret Technology Inc.
+//  Copyright (c) 2014-present, Egret Technology.
 //  All rights reserved.
 //  Redistribution and use in source and binary forms, with or without
 //  modification, are permitted provided that the following conditions are met:
@@ -28,7 +28,7 @@
 //////////////////////////////////////////////////////////////////////////////////////
 
 
-module egret.gui {
+namespace egret.gui {
 
 	/**
 	 * @class egret.gui.LayoutManager
@@ -75,7 +75,7 @@ module egret.gui {
 		 * 使提交的属性生效
 		 */		
 		private validateProperties():void{
-			var client:ILayoutManagerClient = this.invalidatePropertiesQueue.shift();
+			let client:ILayoutManagerClient = this.invalidatePropertiesQueue.shift();
 			while(client){
 				if (client.parent){
 					client.validateProperties();
@@ -114,7 +114,7 @@ module egret.gui {
 		 * 测量属性
 		 */		
 		private validateSize():void{
-			var client:ILayoutManagerClient = this.invalidateSizeQueue.pop();
+			let client:ILayoutManagerClient = this.invalidateSizeQueue.pop();
 			while(client){
 				if (client.parent){
 					client.validateSize();
@@ -150,7 +150,7 @@ module egret.gui {
 		 * 测量属性
 		 */		
 		private validateDisplayList():void{
-			var client:ILayoutManagerClient = this.invalidateDisplayListQueue.shift();
+			let client:ILayoutManagerClient = this.invalidateDisplayListQueue.shift();
 			while(client){
 				if (client.parent){
 					client.validateDisplayList();
@@ -206,7 +206,7 @@ module egret.gui {
 			}
 			else{
 				this.listenersAttached = false;
-				var client:ILayoutManagerClient = this.updateCompleteQueue.pop();
+				let client:ILayoutManagerClient = this.updateCompleteQueue.pop();
 				while (client){
 					if (!client.initialized)
 						client.initialized = true;
@@ -223,7 +223,7 @@ module egret.gui {
 		 * @method egret.gui.LayoutManager#validateNow
 		 */		
 		public validateNow():void{
-			var infiniteLoopGuard:number = 0;
+			let infiniteLoopGuard:number = 0;
 			while (this.listenersAttached && infiniteLoopGuard++ < 100)
 				this.doPhasedInstantiationCallBack();
 		}
@@ -235,10 +235,10 @@ module egret.gui {
 		 */			
 		public validateClient(target:ILayoutManagerClient, skipDisplayList:boolean = false):void{
 			
-			var obj:ILayoutManagerClient;
-			var i:number = 0;
-			var done:boolean = false;
-			var oldTargetLevel:number = this.targetLevel;
+			let obj:ILayoutManagerClient;
+			let i:number = 0;
+			let done:boolean = false;
+			let oldTargetLevel:number = this.targetLevel;
 			
 			if (this.targetLevel == Number.MAX_VALUE)
 				this.targetLevel = target.nestLevel;

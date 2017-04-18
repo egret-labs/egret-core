@@ -1,6 +1,6 @@
 //////////////////////////////////////////////////////////////////////////////////////
 //
-//  Copyright (c) 2014-2015, Egret Technology Inc.
+//  Copyright (c) 2014-present, Egret Technology.
 //  All rights reserved.
 //  Redistribution and use in source and binary forms, with or without
 //  modification, are permitted provided that the following conditions are met:
@@ -28,7 +28,7 @@
 //////////////////////////////////////////////////////////////////////////////////////
 
 
-module egret.gui {
+namespace egret.gui {
 
 	/**
 	 * @class egret.gui.ElementExistenceEvent
@@ -80,10 +80,10 @@ module egret.gui {
          */
         public static dispatchElementExistenceEvent(target:IEventDispatcher,type:string,
                                                     element:IVisualElement = null,index:number = -1):boolean{
-			var event:ElementExistenceEvent = Event.create(ElementExistenceEvent, type);
+			let event:ElementExistenceEvent = Event.create(ElementExistenceEvent, type);
 			event.element = element;
 			event.index = index;
-			var result = target.dispatchEvent(event);
+			let result = target.dispatchEvent(event);
 			Event.release(event);
 			return result;
         }

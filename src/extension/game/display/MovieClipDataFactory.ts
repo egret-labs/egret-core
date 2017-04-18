@@ -1,6 +1,6 @@
 //////////////////////////////////////////////////////////////////////////////////////
 //
-//  Copyright (c) 2014-2015, Egret Technology Inc.
+//  Copyright (c) 2014-present, Egret Technology.
 //  All rights reserved.
 //  Redistribution and use in source and binary forms, with or without
 //  modification, are permitted provided that the following conditions are met:
@@ -27,10 +27,10 @@
 //
 //////////////////////////////////////////////////////////////////////////////////////
 
-module egret {
+namespace egret {
     /**
      * @classdesc 使用 MovieClipDataFactory 类，可以生成 MovieClipData 对象用于创建MovieClip
-     * @see http://docs.egret-labs.org/post/manual/displaycon/movieclip.html MovieClip序列帧动画
+     * @see http://edn.egret.com/cn/docs/page/596 MovieClip序列帧动画
      * @version Egret 2.4
      * @platform Web,Native
      */
@@ -94,7 +94,7 @@ module egret {
             if (movieClipName == "") {
                 return null;
             }
-            var output:MovieClipData = this.findFromCache(movieClipName, this.$mcDataCache);
+            let output:MovieClipData = this.findFromCache(movieClipName, this.$mcDataCache);
             if (!output) {
                 output = new MovieClipData();
                 this.fillData(movieClipName, output, this.$mcDataCache);
@@ -125,7 +125,7 @@ module egret {
          */
         private fillData(movieClipName:string, movieClip:MovieClipData, cache:any):void {
             if (this.$mcDataSet) {
-                var mcData = this.$mcDataSet.mc[movieClipName];
+                let mcData = this.$mcDataSet.mc[movieClipName];
                 if (mcData) {
                     movieClip.$init(mcData, this.$mcDataSet.res, this.$spriteSheet);
                     if (this.enableCache) {

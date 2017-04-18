@@ -1,6 +1,6 @@
 //////////////////////////////////////////////////////////////////////////////////////
 //
-//  Copyright (c) 2014-2015, Egret Technology Inc.
+//  Copyright (c) 2014-present, Egret Technology.
 //  All rights reserved.
 //  Redistribution and use in source and binary forms, with or without
 //  modification, are permitted provided that the following conditions are met:
@@ -28,7 +28,7 @@
 //////////////////////////////////////////////////////////////////////////////////////
 
 
-module eui {
+namespace eui {
 
     /**
      * @private
@@ -52,50 +52,52 @@ module eui {
     }
 
     /**
-     * @language en_US
      * The DataGroup class is the base container class for data items.
      * The DataGroup class converts data items to visual elements for display.
      * While this container can hold visual elements, it is often used only
      * to hold data items as children.
      *
      * @see eui.Group
+     * @see http://edn.egret.com/cn/article/index/id/527 Data container
+     * @see http://edn.egret.com/cn/article/index/id/528 Array collection
      * @defaultProperty dataProvider
      * @includeExample  extension/eui/components/DataGroupExample.ts
      * @version Egret 2.4
      * @version eui 1.0
      * @platform Web,Native
+     * @language en_US
      */
     /**
-     * @language zh_CN
      * DataGroup 类将数据项目转换为可视元素以进行显示。
      * 尽管此容器可以包含可视元素，但它通常仅用于包含作为子项的数据项目。
      *
      * @see eui.Group
-     * @see http://edn.egret.com/cn/index.php/article/index/id/527 数据容器
-     * @see http://edn.egret.com/cn/index.php/article/index/id/528 数组集合 	 
+     * @see http://edn.egret.com/cn/article/index/id/527 数据容器
+     * @see http://edn.egret.com/cn/article/index/id/528 数组集合
      * @defaultProperty dataProvider
      * @includeExample  extension/eui/components/DataGroupExample.ts
      * @version Egret 2.4
      * @version eui 1.0
      * @platform Web,Native
+     * @language zh_CN
      */
     export class DataGroup extends Group {
 
         /**
-         * @language en_US
          * Constructor.
          *
          * @version Egret 2.4
          * @version eui 1.0
          * @platform Web,Native
+         * @language en_US
          */
         /**
-         * @language zh_CN
          * 构造函数。
          *
          * @version Egret 2.4
          * @version eui 1.0
          * @platform Web,Native
+         * @language zh_CN
          */
         public constructor() {
             super();
@@ -134,7 +136,7 @@ module eui {
 
         public set useVirtualLayout(value:boolean) {
             value = !!value;
-            var values = this.$DataGroup;
+            let values = this.$DataGroup;
             if (value === values[Keys.useVirtualLayout])
                 return;
 
@@ -159,9 +161,9 @@ module eui {
 
             if (this.$layout && value && (this.$layout.$useVirtualLayout != value.$useVirtualLayout))
                 this.onUseVirtualLayoutChanged();
-            var result:boolean = super.$setLayout(value);
+            let result:boolean = super.$setLayout(value);
             if (value) {
-                var rect = this.$DataGroup[Keys.typicalLayoutRect];
+                let rect = this.$DataGroup[Keys.typicalLayoutRect];
                 if (rect) {
                     value.setTypicalSize(rect.width, rect.height);
                 }
@@ -177,7 +179,7 @@ module eui {
          * 是否使用虚拟布局标记改变
          */
         private onUseVirtualLayoutChanged(event?:egret.Event):void {
-            var values = this.$DataGroup;
+            let values = this.$DataGroup;
             values[Keys.useVirtualLayoutChanged] = true;
             values[Keys.cleanFreeRenderer] = true;
             this.removeDataProviderListener();
@@ -195,11 +197,11 @@ module eui {
             if (!this.$layout || !this.$layout.$useVirtualLayout) {
                 return;
             }
-            var indexToRenderer = this.$indexToRenderer;
-            var keys = Object.keys(indexToRenderer);
-            var length = keys.length;
-            for (var i = 0; i < length; i++) {
-                var index = +keys[i];
+            let indexToRenderer = this.$indexToRenderer;
+            let keys = Object.keys(indexToRenderer);
+            let length = keys.length;
+            for (let i = 0; i < length; i++) {
+                let index = +keys[i];
                 if (index < startIndex || index > endIndex) {
                     this.freeRendererByIndex(index);
                 }
@@ -216,6 +218,7 @@ module eui {
         public getElementAt(index:number):egret.DisplayObject {
             return this.$indexToRenderer[index];
         }
+
         /**
          * @inheritDoc
          *
@@ -227,13 +230,13 @@ module eui {
             index = +index | 0;
             if (index < 0 || index >= this.$dataProvider.length)
                 return null;
-            var renderer = this.$indexToRenderer[index];
+            let renderer = this.$indexToRenderer[index];
             if (!renderer) {
-                var item:any = this.$dataProvider.getItemAt(index);
+                let item:any = this.$dataProvider.getItemAt(index);
                 renderer = this.createVirtualRenderer(item);
                 this.$indexToRenderer[index] = renderer;
                 this.updateRenderer(renderer, index, item);
-                var values = this.$DataGroup;
+                let values = this.$DataGroup;
                 if (values[Keys.createNewRendererFlag]) {
                     renderer.validateNow();
                     values[Keys.createNewRendererFlag] = false;
@@ -248,7 +251,7 @@ module eui {
          * 释放指定索引处的项呈示器
          */
         private freeRendererByIndex(index:number):void {
-            var renderer = this.$indexToRenderer[index];
+            let renderer = this.$indexToRenderer[index];
             if (renderer) {
                 delete this.$indexToRenderer[index];
                 this.doFreeRenderer(renderer);
@@ -261,9 +264,9 @@ module eui {
          * @param renderer
          */
         private doFreeRenderer(renderer:IItemRenderer):void {
-            var values = this.$DataGroup;
-            var rendererClass = values[Keys.rendererToClassMap][renderer.$hashCode];
-            var hashCode = rendererClass.$hashCode;
+            let values = this.$DataGroup;
+            let rendererClass = values[Keys.rendererToClassMap][renderer.$hashCode];
+            let hashCode = rendererClass.$hashCode;
             if (!values[Keys.freeRenderers][hashCode]) {
                 values[Keys.freeRenderers][hashCode] = [];
             }
@@ -289,14 +292,15 @@ module eui {
          * 为指定索引创建虚拟的项呈示器
          */
         private createVirtualRenderer(item:any):IItemRenderer {
-            var renderer:IItemRenderer;
-            var rendererClass = this.itemToRendererClass(item);
-            var hashCode = rendererClass.$hashCode;
-            var values = this.$DataGroup;
-            var freeRenderers = values[Keys.freeRenderers];
+            let renderer:IItemRenderer;
+            let rendererClass = this.itemToRendererClass(item);
+            let hashCode = rendererClass.$hashCode;
+            let values = this.$DataGroup;
+            let freeRenderers = values[Keys.freeRenderers];
             if (freeRenderers[hashCode] && freeRenderers[hashCode].length > 0) {
                 renderer = freeRenderers[hashCode].pop();
                 renderer.visible = true;
+                this.invalidateDisplayList();
                 return renderer;
             }
             values[Keys.createNewRendererFlag] = true;
@@ -308,14 +312,14 @@ module eui {
          * 根据rendererClass创建一个Renderer,并添加到显示列表
          */
         private createOneRenderer(rendererClass:any):IItemRenderer {
-            var renderer = <IItemRenderer> (new rendererClass());
-            var values = this.$DataGroup;
+            let renderer = <IItemRenderer> (new rendererClass());
+            let values = this.$DataGroup;
             values[Keys.rendererToClassMap][renderer.$hashCode] = rendererClass;
             if (!egret.is(renderer, "eui.IItemRenderer")) {
                 return null;
             }
             if (values[Keys.itemRendererSkinName]) {
-                this.setItemRenderSkinName(renderer,values[Keys.itemRendererSkinName]);
+                this.setItemRenderSkinName(renderer, values[Keys.itemRendererSkinName]);
             }
             this.addChild(renderer);
             return renderer;
@@ -325,10 +329,10 @@ module eui {
          * @private
          * 设置项呈示器的默认皮肤
          */
-        private setItemRenderSkinName(renderer:IItemRenderer,skinName:any):void {
+        private setItemRenderSkinName(renderer:IItemRenderer, skinName:any):void {
             if (renderer && renderer instanceof Component) {
-                var comp:Component = <Component> <any>renderer;
-                if (!comp.$Component[sys.ComponentKeys.skinNameExplicitlySet]){
+                let comp:Component = <Component> <any>renderer;
+                if (!comp.$Component[sys.ComponentKeys.skinNameExplicitlySet]) {
                     comp.skinName = skinName;
                     comp.$Component[sys.ComponentKeys.skinNameExplicitlySet] = false;
                 }
@@ -347,7 +351,6 @@ module eui {
         $dataProvider:ICollection = null;
 
         /**
-         * @language en_US
          * The data provider for this DataGroup.
          * It must be an ICollection, such as ArrayCollection
          *
@@ -357,9 +360,9 @@ module eui {
          * @version Egret 2.4
          * @version eui 1.0
          * @platform Web,Native
+         * @language en_US
          */
         /**
-         * @language zh_CN
          * 列表数据源，请使用实现了ICollection接口的数据类型，例如 ArrayCollection
          *
          * @see eui.ICollection
@@ -368,6 +371,7 @@ module eui {
          * @version Egret 2.4
          * @version eui 1.0
          * @platform Web,Native
+         * @language zh_CN
          */
         public get dataProvider():ICollection {
             return this.$dataProvider;
@@ -383,7 +387,7 @@ module eui {
          * @param value
          */
         $setDataProvider(value:ICollection):boolean {
-            if (this.$dataProvider == value)
+            if (this.$dataProvider == value || (value && !value.getItemAt))
                 return false;
             this.removeDataProviderListener();
             this.$dataProvider = value;
@@ -406,7 +410,6 @@ module eui {
         }
 
         /**
-         * @language en_US
          * Called when contents within the dataProvider changes.  We will catch certain
          * events and update our children based on that.
          *
@@ -415,9 +418,9 @@ module eui {
          * @version Egret 2.4
          * @version eui 1.0
          * @platform Web,Native
+         * @language en_US
          */
         /**
-         * @language zh_CN
          * 数据源改变事件处理。
          *
          * @param event 事件<code>eui.CollectionEvent</code>的对象。
@@ -425,6 +428,7 @@ module eui {
          * @version Egret 2.4
          * @version eui 1.0
          * @platform Web,Native
+         * @language zh_CN
          */
         protected onCollectionChange(event:CollectionEvent):void {
             switch (event.kind) {
@@ -441,11 +445,11 @@ module eui {
                 case CollectionEventKind.RESET:
                 case CollectionEventKind.REFRESH:
                     if (this.$layout && this.$layout.$useVirtualLayout) {
-                        var indexToRenderer = this.$indexToRenderer;
-                        var keys = Object.keys(indexToRenderer);
-                        var length = keys.length;
-                        for (var i = 0; i < length; i++) {
-                            var index = +keys[i];
+                        let indexToRenderer = this.$indexToRenderer;
+                        let keys = Object.keys(indexToRenderer);
+                        let length = keys.length;
+                        for (let i = length - 1; i >= 0; i--) {
+                            let index = +keys[i];
                             this.freeRendererByIndex(index);
                         }
                     }
@@ -463,8 +467,8 @@ module eui {
          * 数据源添加项目事件处理
          */
         private itemAddedHandler(items:any[], index:number):void {
-            var length = items.length;
-            for (var i = 0; i < length; i++) {
+            let length = items.length;
+            for (let i = 0; i < length; i++) {
                 this.itemAdded(items[i], index + i);
             }
             this.resetRenderersIndices();
@@ -475,8 +479,8 @@ module eui {
          * 数据源移除项目事件处理
          */
         private itemRemovedHandler(items:any[], location:number):void {
-            var length = items.length;
-            for (var i = length - 1; i >= 0; i--) {
+            let length = items.length;
+            for (let i = length - 1; i >= 0; i--) {
                 this.itemRemoved(items[i], location + i);
             }
 
@@ -484,7 +488,6 @@ module eui {
         }
 
         /**
-         * @language en_US
          * Adds the item for the specified dataProvider item to this DataGroup.
          *
          * This method is called as needed by the DataGroup implementation,
@@ -496,9 +499,9 @@ module eui {
          * @version Egret 2.4
          * @version eui 1.0
          * @platform Web,Native
+         * @language en_US
          */
         /**
-         * @language zh_CN
          * 添加一个指定的数据到数据源。
          *
          * 这个方法不应该由开发者直接调用，而用于本类自动内调用。
@@ -509,6 +512,7 @@ module eui {
          * @version Egret 2.4
          * @version eui 1.0
          * @platform Web,Native
+         * @language zh_CN
          */
         protected itemAdded(item:any, index:number):void {
             if (this.$layout)
@@ -518,11 +522,11 @@ module eui {
                 this.$indexToRenderer.splice(index, 0, null);
                 return;
             }
-            var renderer = this.createVirtualRenderer(item);
+            let renderer = this.createVirtualRenderer(item);
             this.$indexToRenderer.splice(index, 0, renderer);
             if (renderer) {
                 this.updateRenderer(renderer, index, item);
-                var values = this.$DataGroup;
+                let values = this.$DataGroup;
                 if (values[Keys.createNewRendererFlag]) {
                     values[Keys.createNewRendererFlag] = false;
                     this.rendererAdded(renderer, index, item);
@@ -531,7 +535,6 @@ module eui {
         }
 
         /**
-         * @language en_US
          * Removes the itemRenderer for the specified dataProvider item from this DataGroup.
          *
          * This method is called as needed by the DataGroup implementation,
@@ -543,9 +546,9 @@ module eui {
          * @version Egret 2.4
          * @version eui 1.0
          * @platform Web,Native
+         * @language en_US
          */
         /**
-         * @language zh_CN
          * 删除数据源中指定的项。
          *
          * 这个方法不应该由开发者直接调用，而用于本类自动内调用。
@@ -556,11 +559,12 @@ module eui {
          * @version Egret 2.4
          * @version eui 1.0
          * @platform Web,Native
+         * @language zh_CN
          */
         protected itemRemoved(item:any, index:number):void {
             if (this.$layout)
                 this.$layout.elementRemoved(index);
-            var oldRenderer = this.$indexToRenderer[index];
+            let oldRenderer = this.$indexToRenderer[index];
 
             if (this.$indexToRenderer.length > index)
                 this.$indexToRenderer.splice(index, 1);
@@ -581,21 +585,21 @@ module eui {
          * 更新当前所有项的索引
          */
         private resetRenderersIndices():void {
-            var indexToRenderer = this.$indexToRenderer;
+            let indexToRenderer = this.$indexToRenderer;
             if (indexToRenderer.length == 0)
                 return;
 
             if (this.$layout && this.$layout.$useVirtualLayout) {
-                var keys = Object.keys(indexToRenderer);
-                var length = keys.length;
-                for (var i = 0; i < length; i++) {
-                    var index = +keys[i];
+                let keys = Object.keys(indexToRenderer);
+                let length = keys.length;
+                for (let i = 0; i < length; i++) {
+                    let index = +keys[i];
                     this.resetRendererItemIndex(index);
                 }
             }
             else {
-                var indexToRendererLength = indexToRenderer.length;
-                for (index = 0; index < indexToRendererLength; index++) {
+                let indexToRendererLength = indexToRenderer.length;
+                for (let index = 0; index < indexToRendererLength; index++) {
                     this.resetRendererItemIndex(index);
                 }
             }
@@ -610,7 +614,7 @@ module eui {
                 return;//防止无限循环
             }
 
-            var renderer = this.$indexToRenderer[location];
+            let renderer = this.$indexToRenderer[location];
             if (renderer)
                 this.updateRenderer(renderer, location, item);
         }
@@ -620,14 +624,13 @@ module eui {
          * 调整指定项呈示器的索引值
          */
         private resetRendererItemIndex(index:number):void {
-            var renderer = this.$indexToRenderer[index];
+            let renderer = this.$indexToRenderer[index];
             if (renderer)
                 renderer.itemIndex = index;
         }
 
 
         /**
-         * @language en_US
          * The item renderer to use for data items.
          * The class must implement the IItemRenderer interface.
          * If defined, the <code>itemRendererFunction</code> property
@@ -636,22 +639,23 @@ module eui {
          * @version Egret 2.4
          * @version eui 1.0
          * @platform Web,Native
+         * @language en_US
          */
         /**
-         * @language zh_CN
          * 用于数据项目的项呈示器。您应该直接为此属性赋值自定义类的类定义，而不是一个实例。注意：该类必须实现 IItemRenderer 接口。<br/>
          * rendererClass获取顺序：itemRendererFunction > itemRenderer > 默认ItemRenerer。
          *
          * @version Egret 2.4
          * @version eui 1.0
          * @platform Web,Native
+         * @language zh_CN
          */
         public get itemRenderer():any {
             return this.$DataGroup[Keys.itemRenderer];
         }
 
         public set itemRenderer(value:any) {
-            var values = this.$DataGroup;
+            let values = this.$DataGroup;
             if (values[Keys.itemRenderer] == value)
                 return;
             values[Keys.itemRenderer] = value;
@@ -663,28 +667,28 @@ module eui {
         }
 
         /**
-         * @language en_US
          * The skinName property of the itemRenderer.This property will be passed to itemRenderer.skinName as default value,if you
          * did not set it explicitly.<br>
          * Note: This property is invalid if the itemRenderer is not a subclass of the Component class.
          * @version Egret 2.4
          * @version eui 1.0
          * @platform Web,Native
+         * @language en_US
          */
         /**
-         * @language zh_CN
          * 条目渲染器的可选皮肤标识符。在实例化itemRenderer时，若其内部没有设置过skinName,则将此属性的值赋值给它的skinName。
          * 注意:若 itemRenderer 不是 Component 的子类，则此属性无效。
          * @version Egret 2.4
          * @version eui 1.0
          * @platform Web,Native
+         * @language zh_CN
          */
         public get itemRendererSkinName():any {
             return this.$DataGroup[Keys.itemRendererSkinName];
         }
 
         public set itemRendererSkinName(value:any) {
-            var values = this.$DataGroup;
+            let values = this.$DataGroup;
             if (values[Keys.itemRendererSkinName] == value)
                 return;
             values[Keys.itemRendererSkinName] = value;
@@ -695,7 +699,6 @@ module eui {
         }
 
         /**
-         * @language en_US
          * Function that returns an item renderer for a
          * specific item.
          *
@@ -705,21 +708,22 @@ module eui {
          * @version Egret 2.4
          * @version eui 1.0
          * @platform Web,Native
+         * @language en_US
          */
         /**
-         * @language zh_CN
          * 为某个特定数据项返回一个项呈示器类定义的函数。
          * rendererClass获取顺序：itemRendererFunction > itemRenderer > 默认ItemRenerer。
          * @version Egret 2.4
          * @version eui 1.0
          * @platform Web,Native
+         * @language zh_CN
          */
         public get itemRendererFunction():(item:any)=>any {
             return this.$DataGroup[Keys.itemRendererFunction];
         }
 
         public set itemRendererFunction(value:(item:any)=>any) {
-            var values = this.$DataGroup;
+            let values = this.$DataGroup;
             if (values[Keys.itemRendererFunction] == value)
                 return;
             values[Keys.itemRendererFunction] = value;
@@ -734,8 +738,8 @@ module eui {
          * 为特定的数据项返回项呈示器的工厂实例
          */
         private itemToRendererClass(item:any):any {
-            var rendererClass:any;
-            var values = this.$DataGroup;
+            let rendererClass:any;
+            let values = this.$DataGroup;
             if (values[Keys.itemRendererFunction]) {
                 rendererClass = values[Keys.itemRendererFunction](item);
             }
@@ -760,7 +764,7 @@ module eui {
          */
         protected createChildren():void {
             if (!this.$layout) {
-                var layout:VerticalLayout = new VerticalLayout();
+                let layout:VerticalLayout = new VerticalLayout();
                 layout.gap = 0;
                 layout.horizontalAlign = JustifyAlign.CONTENT_JUSTIFY;
                 this.$setLayout(layout);
@@ -777,7 +781,7 @@ module eui {
          * @platform Web,Native
          */
         protected commitProperties():void {
-            var values = this.$DataGroup;
+            let values = this.$DataGroup;
             if (values[Keys.itemRendererChanged] || this.$dataProviderChanged || values[Keys.useVirtualLayoutChanged]) {
                 this.removeAllRenderers();
                 if (this.$layout)
@@ -812,23 +816,23 @@ module eui {
 
             if (values[Keys.itemRendererSkinNameChange]) {
                 values[Keys.itemRendererSkinNameChange] = false;
-                var skinName = values[Keys.itemRendererSkinName];
-                var indexToRenderer = this.$indexToRenderer;
-                var keys = Object.keys(indexToRenderer);
-                var length = keys.length;
-                for (var i = 0; i < length; i++) {
-                    var index = keys[i];
-                    this.setItemRenderSkinName(indexToRenderer[index],skinName);
+                let skinName = values[Keys.itemRendererSkinName];
+                let indexToRenderer = this.$indexToRenderer;
+                let keys = Object.keys(indexToRenderer);
+                let length = keys.length;
+                for (let i = 0; i < length; i++) {
+                    let index = keys[i];
+                    this.setItemRenderSkinName(indexToRenderer[index], skinName);
                 }
-                var freeRenderers = values[Keys.freeRenderers];
-                var keys = Object.keys(freeRenderers);
-                var length = keys.length;
-                for (var i = 0; i < length; i++) {
-                    var hashCode = keys[i];
-                    var list:IItemRenderer[] = freeRenderers[hashCode];
-                    var length = list.length;
-                    for (var i = 0; i < length; i++) {
-                        this.setItemRenderSkinName(list[i],skinName);
+                let freeRenderers = values[Keys.freeRenderers];
+                keys = Object.keys(freeRenderers);
+                length = keys.length;
+                for (let i = 0; i < length; i++) {
+                    let hashCode = keys[i];
+                    let list:IItemRenderer[] = freeRenderers[hashCode];
+                    let length = list.length;
+                    for (let i = 0; i < length; i++) {
+                        this.setItemRenderSkinName(list[i], skinName);
                     }
                 }
             }
@@ -857,19 +861,19 @@ module eui {
          * @platform Web,Native
          */
         protected updateDisplayList(unscaledWidth:number, unscaledHeight:number):void {
-            var useVirtualLayout = (this.$layout && this.$layout.$useVirtualLayout);
+            let useVirtualLayout = (this.$layout && this.$layout.$useVirtualLayout);
             if (useVirtualLayout) {
                 this.ensureTypicalLayoutElement();
             }
             super.updateDisplayList(unscaledWidth, unscaledHeight);
-            var values = this.$DataGroup;
+            let values = this.$DataGroup;
             if (useVirtualLayout) {
                 //检查索引 0 处的项测量大小是否发生改变，若改变就重新计算 typicalLayoutRect
-                var rect = values[Keys.typicalLayoutRect];
+                let rect = values[Keys.typicalLayoutRect];
                 if (rect) {
-                    var renderer = this.$indexToRenderer[0];
+                    let renderer = this.$indexToRenderer[0];
                     if (renderer) {
-                        var bounds = egret.$TempRectangle;
+                        let bounds = egret.$TempRectangle;
                         renderer.getPreferredBounds(bounds);
                         if (bounds.width != rect.width || bounds.height != rect.height) {
                             values[Keys.typicalLayoutRect] = null;
@@ -898,21 +902,21 @@ module eui {
          * 测量项呈示器默认尺寸
          */
         private measureRendererSize():void {
-            var values = this.$DataGroup;
+            let values = this.$DataGroup;
             if (!values[Keys.typicalItem]) {
                 this.setTypicalLayoutRect(null);
                 return;
             }
-            var typicalRenderer = this.createVirtualRenderer(values[Keys.typicalItem]);
+            let typicalRenderer = this.createVirtualRenderer(values[Keys.typicalItem]);
             if (!typicalRenderer) {
                 this.setTypicalLayoutRect(null);
                 return;
             }
             this.updateRenderer(typicalRenderer, 0, values[Keys.typicalItem]);
             typicalRenderer.validateNow();
-            var bounds = egret.$TempRectangle;
+            let bounds = egret.$TempRectangle;
             typicalRenderer.getPreferredBounds(bounds);
-            var rect = new egret.Rectangle(0, 0, bounds.width, bounds.height);
+            let rect = new egret.Rectangle(0, 0, bounds.width, bounds.height);
             if (this.$layout && this.$layout.$useVirtualLayout) {
                 if (values[Keys.createNewRendererFlag]) {
                     this.rendererAdded(typicalRenderer, 0, values[Keys.typicalItem]);
@@ -954,29 +958,29 @@ module eui {
          * 移除所有项呈示器
          */
         private removeAllRenderers():void {
-            var indexToRenderer = this.$indexToRenderer;
-            var keys = Object.keys(indexToRenderer);
-            var length = keys.length;
-            for (var i = 0; i < length; i++) {
-                var index = keys[i];
-                var renderer = indexToRenderer[index];
+            let indexToRenderer = this.$indexToRenderer;
+            let keys = Object.keys(indexToRenderer);
+            let length = keys.length;
+            for (let i = 0; i < length; i++) {
+                let index = keys[i];
+                let renderer = indexToRenderer[index];
                 if (renderer) {
                     this.rendererRemoved(renderer, renderer.itemIndex, renderer.data);
                     this.removeChild(renderer);
                 }
             }
             this.$indexToRenderer = [];
-            var values = this.$DataGroup;
+            let values = this.$DataGroup;
             if (values[Keys.cleanFreeRenderer]) {
-                var freeRenderers = values[Keys.freeRenderers];
-                var keys = Object.keys(freeRenderers);
-                var length = keys.length;
-                for (var i = 0; i < length; i++) {
-                    var hashCode = keys[i];
-                    var list:IItemRenderer[] = freeRenderers[hashCode];
-                    var length = list.length;
-                    for (var i = 0; i < length; i++) {
-                        renderer = list[i];
+                let freeRenderers = values[Keys.freeRenderers];
+                let keys = Object.keys(freeRenderers);
+                let length = keys.length;
+                for (let i = 0; i < length; i++) {
+                    let hashCode = keys[i];
+                    let list:IItemRenderer[] = freeRenderers[hashCode];
+                    let length = list.length;
+                    for (let i = 0; i < length; i++) {
+                        let renderer = list[i];
                         this.rendererRemoved(renderer, renderer.itemIndex, renderer.data);
                         this.removeChild(renderer);
                     }
@@ -994,12 +998,12 @@ module eui {
         private createRenderers():void {
             if (!this.$dataProvider)
                 return;
-            var index = 0;
-            var length = this.$dataProvider.length;
-            for (var i = 0; i < length; i++) {
-                var item = this.$dataProvider.getItemAt(i);
-                var rendererClass = this.itemToRendererClass(item);
-                var renderer:IItemRenderer = this.createOneRenderer(rendererClass);
+            let index = 0;
+            let length = this.$dataProvider.length;
+            for (let i = 0; i < length; i++) {
+                let item = this.$dataProvider.getItemAt(i);
+                let rendererClass = this.itemToRendererClass(item);
+                let renderer:IItemRenderer = this.createOneRenderer(rendererClass);
                 if (!renderer)
                     continue;
                 this.$indexToRenderer[index] = renderer;
@@ -1010,7 +1014,6 @@ module eui {
         }
 
         /**
-         * @language en_US
          * Updates the renderer for reuse.
          * This method first prepares the item
          * renderer for reuse by cleaning out any stale properties
@@ -1026,9 +1029,9 @@ module eui {
          * @version Egret 2.4
          * @version eui 1.0
          * @platform Web,Native
+         * @language en_US
          */
         /**
-         * @language zh_CN
          * 此方法首先会准备项呈示器以重用，方法是清除任何旧属性，同时使用新属性进行更新。<p/>
          *
          * 最后，此方法应对项呈示器设置 data 属性。
@@ -1040,11 +1043,15 @@ module eui {
          * @version Egret 2.4
          * @version eui 1.0
          * @platform Web,Native
+         * @language zh_CN
          */
         public updateRenderer(renderer:IItemRenderer, itemIndex:number, data:any):IItemRenderer {
-            var values = this.$DataGroup;
+            let values = this.$DataGroup;
             values[Keys.renderersBeingUpdated] = true;
             renderer.itemIndex = itemIndex;
+            if(renderer.parent == this) {
+                this.setChildIndex(renderer, itemIndex);
+            }
             renderer.data = data;
             values[Keys.renderersBeingUpdated] = false;
             return renderer;
@@ -1065,7 +1072,6 @@ module eui {
 
 
         /**
-         * @language en_US
          * Adds the itemRenderer for the specified dataProvider item to this DataGroup.
          *
          * This method is called as needed by the DataGroup implementation,
@@ -1078,9 +1084,9 @@ module eui {
          * @version Egret 2.4
          * @version eui 1.0
          * @platform Web,Native
+         * @language en_US
          */
         /**
-         * @language zh_CN
          * 项呈示器被添加.
          *
          * 这个方法不能直接调用，它是由该类自身自动调用的。
@@ -1092,12 +1098,12 @@ module eui {
          * @version Egret 2.4
          * @version eui 1.0
          * @platform Web,Native
+         * @language zh_CN
          */
         protected rendererAdded(renderer:IItemRenderer, index:number, item:any):void {
         }
 
         /**
-         * @language en_US
          * Removes the itemRenderer for the specified dataProvider item from this DataGroup.
          *
          * This method is called as needed by the DataGroup implementation,
@@ -1110,9 +1116,9 @@ module eui {
          * @version Egret 2.4
          * @version eui 1.0
          * @platform Web,Native
+         * @language en_US
          */
         /**
-         * @language zh_CN
          * 项呈示器被移除。
          * 这个方法不能直接调用，它是由该类自身自动调用的。
          *
@@ -1123,6 +1129,7 @@ module eui {
          * @version Egret 2.4
          * @version eui 1.0
          * @platform Web,Native
+         * @language zh_CN
          */
         protected rendererRemoved(renderer:IItemRenderer, index:number, item:any):void {
         }
@@ -1131,7 +1138,5 @@ module eui {
     registerProperty(DataGroup, "itemRenderer", "Class");
     registerProperty(DataGroup, "itemRendererSkinName", "Class");
     registerProperty(DataGroup, "dataProvider", "eui.ICollection", true);
-    if (DEBUG) {
-        egret.$markReadOnly(DataGroup, "numElements");
-    }
+
 }

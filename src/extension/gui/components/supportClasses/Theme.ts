@@ -1,6 +1,6 @@
 //////////////////////////////////////////////////////////////////////////////////////
 //
-//  Copyright (c) 2014-2015, Egret Technology Inc.
+//  Copyright (c) 2014-present, Egret Technology.
 //  All rights reserved.
 //  Redistribution and use in source and binary forms, with or without
 //  modification, are permitted provided that the following conditions are met:
@@ -28,7 +28,7 @@
 //////////////////////////////////////////////////////////////////////////////////////
 
 
-module egret.gui {
+namespace egret.gui {
 
     export class Theme{
         /**
@@ -52,7 +52,7 @@ module egret.gui {
         private _configURL:string;
         private loadConfig(configURL:string):void{
             this._configURL = configURL;
-            var adapter:IThemeAdapter;
+            let adapter:IThemeAdapter;
             try{
                 adapter = $getAdapter("egret.gui.IThemeAdapter");
             }
@@ -64,7 +64,7 @@ module egret.gui {
 
         private onLoadComplete(text:string):void{
             try{
-                var data:any = JSON.parse(text);
+                let data:any = JSON.parse(text);
                 this.skinMap = data.skins;
             }
             catch (e){
@@ -74,7 +74,7 @@ module egret.gui {
         }
 
         private onLoadError(event:IOErrorEvent):void{
-            var loader:egret.HttpRequest = <egret.HttpRequest> (event.target);
+            let loader:egret.HttpRequest = <egret.HttpRequest> (event.target);
             egret.$warn(3000, this._configURL);
             this.handleDelyList();
         }
@@ -89,20 +89,20 @@ module egret.gui {
                 this.delyList = [];
                 return;
             }
-            var list:Array<SkinnableComponent> = this.delyList;
+            let list:Array<SkinnableComponent> = this.delyList;
             this.delyList = [];
-            var length:number = list.length;
-            for(var i:number=0;i<length;i++){
-                var client:SkinnableComponent = list[i];
+            let length:number = list.length;
+            for(let i:number=0;i<length;i++){
+                let client:SkinnableComponent = list[i];
                 if(!client._skin){
-                    var skin:any = this.getDefaultSkin(client);
+                    let skin:any = this.getDefaultSkin(client);
                     client._setSkin(skin);
                 }
             }
         }
 
         public getDefaultSkin(client:SkinnableComponent):any{
-            var skinMap:any = this.skinMap;
+            let skinMap:any = this.skinMap;
             if(!skinMap){
                 if(this.delyList.indexOf(client)==-1){
                     this.delyList.push(client);
@@ -110,13 +110,13 @@ module egret.gui {
                 return null;
             }
 
-            var skinName: string;
-            var hostKey: string = client.hostComponentKey;
+            let skinName: string;
+            let hostKey: string = client.hostComponentKey;
             if(hostKey){
                 skinName = skinMap[hostKey];
             }
             else{
-                var superClass:any = client;
+                let superClass:any = client;
                 while (superClass) {
                     hostKey = egret.getQualifiedClassName(superClass);
                     skinName = skinMap[hostKey];
@@ -130,7 +130,7 @@ module egret.gui {
             if(!skinName){
                 return null;
             }
-            var skinClass:any = egret.getDefinitionByName(skinName);
+            let skinClass:any = egret.getDefinitionByName(skinName);
             if(!skinClass){
                 egret.$warn(3001, skinName);
                 return null;

@@ -1,6 +1,6 @@
 //////////////////////////////////////////////////////////////////////////////////////
 //
-//  Copyright (c) 2014-2015, Egret Technology Inc.
+//  Copyright (c) 2014-present, Egret Technology.
 //  All rights reserved.
 //  Redistribution and use in source and binary forms, with or without
 //  modification, are permitted provided that the following conditions are met:
@@ -28,7 +28,7 @@
 //////////////////////////////////////////////////////////////////////////////////////
 
 
-module egret {
+namespace egret {
 
     /**
      * @version Egret 2.4
@@ -60,63 +60,63 @@ module egret {
         }
 
         /**
-         * @language en_US
          * Frame number
          * @version Egret 2.4
          * @platform Web,Native
+         * @language en_US
          */
         /**
-         * @language zh_CN
          * 标签名
          * @version Egret 2.4
          * @platform Web,Native
+         * @language zh_CN
          */
         public get name():string {
             return this._name;
         }
 
         /**
-         * @language en_US
          * Frame serial number of the label
          * @version Egret 2.4
          * @platform Web,Native
+         * @language en_US
          */
         /**
-         * @language zh_CN
          * 标签所在帧序号
          * @version Egret 2.4
          * @platform Web,Native
+         * @language zh_CN
          */
         public get frame():number /*int*/ {
             return this._frame;
         }
         /**
-         * @language en_US
          * Frame serial number, the end of the label
          * @version Egret 2.4
          * @platform Web,Native
+         * @language en_US
          */
         /**
-         * @language zh_CN
          * 标签对应的结束帧序号
          * @version Egret 2.4
          * @platform Web,Native
+         * @language zh_CN
          */
         public get end(): number /*int*/ {
             return this._end;
         }
 
         /**
-         * @language en_US
          * Duplicate the current frame label object
          * @version Egret 2.4
          * @platform Web,Native
+         * @language en_US
          */
         /**
-         * @language zh_CN
          * 复制当前帧标签对象
          * @version Egret 2.4
          * @platform Web,Native
+         * @language zh_CN
          */
         public clone() {
             return new FrameLabel(this._name, this._frame, this._end);

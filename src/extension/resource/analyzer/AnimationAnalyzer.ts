@@ -1,6 +1,6 @@
 ////////////////////////////////////////////////////////////////////////////////////////
 ////
-////  Copyright (c) 2014-2015, Egret Technology Inc.
+////  Copyright (c) 2014-present, Egret Technology.
 ////  All rights reserved.
 ////  Redistribution and use in source and binary forms, with or without
 ////  modification, are permitted provided that the following conditions are met:
@@ -28,7 +28,7 @@
 ////////////////////////////////////////////////////////////////////////////////////////
 
 
-module RES {
+namespace RES {
 
     /**
      * SpriteSheet解析器
@@ -45,16 +45,16 @@ module RES {
          * 一项加载结束
          */
         public onLoadFinish(event:egret.Event):void {
-            var request = event.target;
-            var data:any = this.resItemDic[request.$hashCode];
+            let request = event.target;
+            let data:any = this.resItemDic[request.$hashCode];
             delete this.resItemDic[request.hashCode];
-            var resItem:ResourceItem = data.item;
-            var compFunc:Function = data.func;
+            let resItem:ResourceItem = data.item;
+            let compFunc:Function = data.func;
             resItem.loaded = (event.type == egret.Event.COMPLETE);
             if (resItem.loaded) {
                 if (request instanceof egret.HttpRequest) {
                     resItem.loaded = false;
-                    var imageUrl:string = this.analyzeConfig(resItem, request.response);
+                    let imageUrl:string = this.analyzeConfig(resItem, request.response);
                     if (imageUrl) {
                         this.loadImage(imageUrl, data);
                         this.recycler.push(request);
@@ -80,11 +80,11 @@ module RES {
          * 解析并缓存加载成功的配置文件
          */
         public analyzeConfig(resItem:ResourceItem, data:string):string {
-            var name:string = resItem.name;
-            var config:any;
-            var imageUrl:string = "";
+            let name:string = resItem.name;
+            let config:any;
+            let imageUrl:string = "";
             try {
-                var str:string = <string> data;
+                let str:string = <string> data;
                 config = JSON.parse(str);
             }
             catch (e) {
@@ -96,11 +96,11 @@ module RES {
                     imageUrl = this.getRelativePath(resItem.url, config["file"]);
                 }
                 else {
-                    var arr = resItem.url.split("?");
-                    var arr2 = arr[0].split("/");
+                    let arr = resItem.url.split("?");
+                    let arr2 = arr[0].split("/");
                     arr2[arr2.length - 1] = arr2[arr2.length - 1].split(".")[0] + ".png";
                     imageUrl = "";
-                    for (var i = 0; i < arr2.length; i++) {
+                    for (let i = 0; i < arr2.length; i++) {
                         imageUrl += arr2[i] + (i < arr2.length - 1 ? "/" : "");
                     }
                     if (arr.length == 2) imageUrl += arr[2];
@@ -113,14 +113,14 @@ module RES {
          * 解析并缓存加载成功的位图数据
          */
         public analyzeBitmap(resItem:ResourceItem, data:egret.BitmapData):void {
-            var name:string = resItem.name;
+            let name:string = resItem.name;
             if (this.fileDic[name] || !data) {
                 return;
             }
-            var config:any = this.sheetMap[name];
+            let config:any = this.sheetMap[name];
             delete this.sheetMap[name];
-            var targetName:string = resItem.data && resItem.data.subkeys ? "" : name;
-            var spriteSheet:any = this.parseAnimation(data, config, targetName);
+            let targetName:string = resItem.data && resItem.data.subkeys ? "" : name;
+            let spriteSheet:any = this.parseAnimation(data, config, targetName);
             this.fileDic[name] = spriteSheet;
         }
 
@@ -129,7 +129,7 @@ module RES {
          */
         public getRelativePath(url:string, file:string):string {
             url = url.split("\\").join("/");
-            var index:number = url.lastIndexOf("/");
+            let index:number = url.lastIndexOf("/");
             if (index != -1) {
                 url = url.substring(0, index + 1) + file;
             }
@@ -140,14 +140,14 @@ module RES {
         }
 
         private parseAnimation(bitmapData:egret.BitmapData, data:any, name:string):egret.Texture[] {
-            var attributes = Object.keys(data.mc);
-            var list:Array<any> = data.mc[attributes[0]].frames;
-            var len = list.length;
-            var config;
-            var animationFrames:egret.Texture[] = [];
-            for (var i = 0; i < len; i++) {
+            let attributes = Object.keys(data.mc);
+            let list:any[] = data.mc[attributes[0]].frames;
+            let len = list.length;
+            let config;
+            let animationFrames:egret.Texture[] = [];
+            for (let i = 0; i < len; i++) {
                 config = data.res[list[i].res];
-                var texture = new egret.Texture();
+                let texture = new egret.Texture();
                 texture._bitmapData = bitmapData;
                 texture.$initData(config.x, config.y, config.w, config.h, list[i].x, list[i].y, list[i].sourceW, list[i].sourceH, bitmapData.width, bitmapData.height);
             }
@@ -155,7 +155,7 @@ module RES {
         }
 
         public destroyRes(name:string):boolean {
-            var sheet:any = this.fileDic[name];
+            let sheet:any = this.fileDic[name];
             if (sheet) {
                 delete this.fileDic[name];
                 return true;
@@ -169,13 +169,13 @@ module RES {
         private recyclerIamge:egret.ImageLoader[] = [];
 
         private loadImage(url:string, data:any):void {
-            var loader = this.getImageLoader();
+            let loader = this.getImageLoader();
             this.resItemDic[loader.hashCode] = data;
             loader.load($getVirtualUrl(url));
         }
 
         private getImageLoader():egret.ImageLoader {
-            var loader = this.recyclerIamge.pop();
+            let loader = this.recyclerIamge.pop();
             if (!loader) {
                 loader = new egret.ImageLoader();
                 loader.addEventListener(egret.Event.COMPLETE, this.onLoadFinish, this);

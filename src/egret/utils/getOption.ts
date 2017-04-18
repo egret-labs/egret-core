@@ -1,6 +1,6 @@
 //////////////////////////////////////////////////////////////////////////////////////
 //
-//  Copyright (c) 2014-2015, Egret Technology Inc.
+//  Copyright (c) 2014-present, Egret Technology.
 //  All rights reserved.
 //  Redistribution and use in source and binary forms, with or without
 //  modification, are permitted provided that the following conditions are met:
@@ -27,24 +27,24 @@
 //
 //////////////////////////////////////////////////////////////////////////////////////
 
-module egret {
+namespace egret {
     /**
-     * @language en_US
      * Get browser or Runtime parameters, returns an empty string if not set
      * Get the url parameter corresponds to the browser, access to the corresponding parameter in the Runtime setOption
      * @method egret.getOption
      * @param key {string} Parameters key
      * @version Egret 2.4
      * @platform Web,Native
+     * @language en_US
      */
     /**
-     * @language zh_CN
      * 获取浏览器或者Runtime参数，如果没有设置返回空字符串
      * 在浏览器中相当于获取url中参数，在Runtime获取对应setOption参数
      * @method egret.getOption
      * @param key {string} 参数key
      * @version Egret 2.4
      * @platform Web,Native
+     * @language zh_CN
      */
-    export var getOption:(key:string)=>string;
+    export let getOption:(key:string)=>string;
 }

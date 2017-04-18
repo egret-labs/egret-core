@@ -1,6 +1,6 @@
 //////////////////////////////////////////////////////////////////////////////////////
 //
-//  Copyright (c) 2014-2015, Egret Technology Inc.
+//  Copyright (c) 2014-present, Egret Technology.
 //  All rights reserved.
 //  Redistribution and use in source and binary forms, with or without
 //  modification, are permitted provided that the following conditions are met:
@@ -28,7 +28,7 @@
 //////////////////////////////////////////////////////////////////////////////////////
 
 
-module egret.gui {
+namespace egret.gui {
     /**
      * @class egret.gui.SequenceInstance
      * @classdesc
@@ -51,7 +51,7 @@ module egret.gui {
         /**
          * 当前播放的效果实例
          */
-        private currentSet:Array<any>;
+        private currentSet:any[];
         private currentSetIndex:number = -1;
         
         private isPaused:boolean = false;
@@ -60,11 +60,11 @@ module egret.gui {
          * @inheritDoc
          */
         public get _durationWithoutRepeat():number{
-            var _duration:number = 0;
+            let _duration:number = 0;
             
-            var n:number = this._childSets.length;
-            for (var i:number = 0; i < n; i++){
-                var instances:Array<any> = this._childSets[i];
+            let n:number = this._childSets.length;
+            for (let i:number = 0; i < n; i++){
+                let instances:any[] = this._childSets[i];
                 _duration += instances[0]._actualDuration;
             }
             
@@ -77,12 +77,12 @@ module egret.gui {
         public _setPlayheadTime(value:number){
             this._setPlayheadTime(value);
 
-            var i:number, j:number, k:number, l:number = 0;
-            var compositeDur:number = (<Sequence><any> (this.effect)).compositeDuration;
-            var firstCycleDur:number = compositeDur + this.startDelay + this.repeatDelay;
-            var laterCycleDur:number = compositeDur + this.repeatDelay;
-            var totalDur:number = firstCycleDur + laterCycleDur * (this.repeatCount - 1);
-            var iterationPlayheadTime:number;
+            let i:number, j:number, k:number, l:number = 0;
+            let compositeDur:number = (<Sequence><any> (this.effect)).compositeDuration;
+            let firstCycleDur:number = compositeDur + this.startDelay + this.repeatDelay;
+            let laterCycleDur:number = compositeDur + this.repeatDelay;
+            let totalDur:number = firstCycleDur + laterCycleDur * (this.repeatCount - 1);
+            let iterationPlayheadTime:number;
             if (value <= firstCycleDur){
                 iterationPlayheadTime = Math.min(value - this.startDelay, compositeDur);
                 this._playCount = 1;
@@ -93,7 +93,7 @@ module egret.gui {
                     this._playCount = this.repeatCount;
                 }
                 else{
-                    var valueAfterFirstCycle:number = value - firstCycleDur;
+                    let valueAfterFirstCycle:number = value - firstCycleDur;
                     iterationPlayheadTime = valueAfterFirstCycle % laterCycleDur;
                     iterationPlayheadTime = Math.min(iterationPlayheadTime, compositeDur);
                     this._playCount = 1 + valueAfterFirstCycle / laterCycleDur;
@@ -101,14 +101,14 @@ module egret.gui {
             }
             
             if (this._activeEffectQueue && this._activeEffectQueue.length  > 0){
-                var cumulativeDuration:number = 0;
+                let cumulativeDuration:number = 0;
                 
-                var activeLength:number = this._activeEffectQueue.length;
+                let activeLength:number = this._activeEffectQueue.length;
                 for (i = 0; i < activeLength; ++i){
-                    var setToCompare:number = this.playReversed ? (activeLength - 1 - i) : i;
-                    var childEffectInstances:Array<any>;
-                    var startTime:number = cumulativeDuration;
-                    var endTime:number = cumulativeDuration + this._childSets[setToCompare][0]._actualDuration;
+                    let setToCompare:number = this.playReversed ? (activeLength - 1 - i) : i;
+                    let childEffectInstances:any[];
+                    let startTime:number = cumulativeDuration;
+                    let endTime:number = cumulativeDuration + this._childSets[setToCompare][0]._actualDuration;
                     cumulativeDuration = endTime;
                     
                     if (startTime <= iterationPlayheadTime && iterationPlayheadTime <= endTime){
@@ -171,7 +171,7 @@ module egret.gui {
                                 }                            
                             }
                             else{
-                                var currentEffectInstances:Array<any> = this.currentSet.concat();
+                                let currentEffectInstances:any[] = this.currentSet.concat();
                                 for (j = 0; j < currentEffectInstances.length; j++)
                                     currentEffectInstances[j].end();
                                 
@@ -207,12 +207,12 @@ module egret.gui {
             this._activeEffectQueue = [];
             this.currentSetIndex = this.playReversed ? this._childSets.length : -1;
             
-            var n:number = 0;
-            var i:number = 0;
+            let n:number = 0;
+            let i:number = 0;
 
             n = this._childSets.length;
             for (i = 0; i < n; i++){
-                var instances:Array<any> = this._childSets[i];
+                let instances:any[] = this._childSets[i];
                 this._activeEffectQueue.push(instances);
             }
             
@@ -232,8 +232,8 @@ module egret.gui {
             super.pause();
             this.isPaused = true;
             if (this.currentSet && this.currentSet.length > 0){
-                var n:number = this.currentSet.length;
-                for (var i:number = 0; i < n; i++){
+                let n:number = this.currentSet.length;
+                for (let i:number = 0; i < n; i++){
                     this.currentSet[i].pause();
                 }
             }
@@ -246,23 +246,23 @@ module egret.gui {
             this.isPaused = false;
             
             if (this._activeEffectQueue && this._activeEffectQueue.length > 0){
-                var queueCopy:Array<any> = this._activeEffectQueue.concat();
+                let queueCopy:any[] = this._activeEffectQueue.concat();
                 this._activeEffectQueue = null;
-                var currentInstances:Array<any> = queueCopy[this.currentSetIndex];
+                let currentInstances:any[] = queueCopy[this.currentSetIndex];
                 if (currentInstances){
-                    var currentCount:number = currentInstances.length;
+                    let currentCount:number = currentInstances.length;
                     
-                    for (var i:number = 0; i < currentCount; i++)
+                    for (let i:number = 0; i < currentCount; i++)
                         currentInstances[i].stop();
                 }
 
-                var n:number = queueCopy.length;
-                for (var j:number = this.currentSetIndex + 1; j < n; j++){
-                    var waitingInstances:Array<any> = queueCopy[j];
-                    var m:number = waitingInstances.length;
+                let n:number = queueCopy.length;
+                for (let j:number = this.currentSetIndex + 1; j < n; j++){
+                    let waitingInstances:any[] = queueCopy[j];
+                    let m:number = waitingInstances.length;
                     
-                    for (var k:number = 0; k < m; k++){
-                        var instance:IEffectInstance = waitingInstances[k];
+                    for (let k:number = 0; k < m; k++){
+                        let instance:IEffectInstance = waitingInstances[k];
                         instance.effect.deleteInstance(instance);
                     }
                 }
@@ -277,8 +277,8 @@ module egret.gui {
             super.resume();
             this.isPaused = false;
             if (this.currentSet && this.currentSet.length > 0){
-                var n:number = this.currentSet.length;
-                for (var i:number = 0; i < n; i++){
+                let n:number = this.currentSet.length;
+                for (let i:number = 0; i < n; i++){
                     this.currentSet[i].resume();
                 }
             }
@@ -290,8 +290,8 @@ module egret.gui {
         public reverse():void{
             super.reverse();
             if (this.currentSet && this.currentSet.length > 0){
-                var n:number = this.currentSet.length;
-                for (var i:number = 0; i < n; i++){
+                let n:number = this.currentSet.length;
+                for (let i:number = 0; i < n; i++){
                     this.currentSet[i].reverse();
                 }
             }
@@ -304,23 +304,23 @@ module egret.gui {
         public end():void{
             this._endEffectCalled = true;
             if (this._activeEffectQueue && this._activeEffectQueue.length > 0){
-                var queueCopy:Array<any> = this._activeEffectQueue.concat();
+                let queueCopy:any[] = this._activeEffectQueue.concat();
                 this._activeEffectQueue = null;
                 
-                var currentInstances:Array<any> = queueCopy[this.currentSetIndex];
+                let currentInstances:any[] = queueCopy[this.currentSetIndex];
                 if (currentInstances){
-                    var currentCount:number = currentInstances.length;                
-                    for (var i:number = 0; i < currentCount; i++){
+                    let currentCount:number = currentInstances.length;
+                    for (let i:number = 0; i < currentCount; i++){
                         currentInstances[i].end();
                     }
                 }
                 
-                var n:number = queueCopy.length;
-                for (var j:number = this.currentSetIndex + 1; j < n; j++){
-                    var waitingInstances:Array<any> = queueCopy[j];
-                    var m:number = waitingInstances.length;
+                let n:number = queueCopy.length;
+                for (let j:number = this.currentSetIndex + 1; j < n; j++){
+                    let waitingInstances:any[] = queueCopy[j];
+                    let m:number = waitingInstances.length;
                     
-                    for (var k:number = 0; k < m; k++){
+                    for (let k:number = 0; k < m; k++){
                         (<EffectInstance><any> (waitingInstances[k]))._playWithNoDuration();
                     }
                 }
@@ -333,7 +333,7 @@ module egret.gui {
          * @inheritDoc
          */
         public _onEffectEnd(childEffect:IEffectInstance):void{
-            for (var i:number = 0; i < this.currentSet.length; i++){
+            for (let i:number = 0; i < this.currentSet.length; i++){
                 if (childEffect == this.currentSet[i]){
                     this.currentSet.splice(i, 1);
                     break;
@@ -349,12 +349,12 @@ module egret.gui {
         }
 
         private playCurrentChildSet():void{
-            var childEffect:EffectInstance;
-            var instances:Array<any> = this._activeEffectQueue[this.currentSetIndex];
+            let childEffect:EffectInstance;
+            let instances:any[] = this._activeEffectQueue[this.currentSetIndex];
             
             this.currentSet = [];
             
-            for (var i:number = 0; i < instances.length; i++){
+            for (let i:number = 0; i < instances.length; i++){
                 childEffect = instances[i];
                 
                 this.currentSet.push(childEffect);

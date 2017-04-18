@@ -1,6 +1,6 @@
 //////////////////////////////////////////////////////////////////////////////////////
 //
-//  Copyright (c) 2014-2015, Egret Technology Inc.
+//  Copyright (c) 2014-present, Egret Technology.
 //  All rights reserved.
 //  Redistribution and use in source and binary forms, with or without
 //  modification, are permitted provided that the following conditions are met:
@@ -28,7 +28,7 @@
 //////////////////////////////////////////////////////////////////////////////////////
 
 
-module egret.gui {
+namespace egret.gui {
 
 	/**
 	 * @class egret.gui.AddItems
@@ -99,7 +99,7 @@ module egret.gui {
 		 * @param parent {IStateClient} 
 		 */
 		public initialize(parent:IStateClient):void{
-			var targetElement:IVisualElement = <IVisualElement> (parent[this.target]);
+			let targetElement:IVisualElement = <IVisualElement> (parent[this.target]);
 			if(!targetElement||targetElement instanceof SkinnableComponent)
 				return;
 			//让UIAsset等素材组件立即开始初始化，防止延迟闪一下或首次点击失效的问题。
@@ -117,15 +117,15 @@ module egret.gui {
 		 * @param parent {IContainer} 
 		 */
 		public apply(parent:IContainer):void{
-			var index:number;
-			var relative:IVisualElement;
+			let index:number;
+			let relative:IVisualElement;
 			try{
 				relative = <IVisualElement> (parent[this.relativeTo]);
 			}
 			catch(e){
 			}
-			var targetElement:IVisualElement = <IVisualElement> (parent[this.target]);
-			var dest:IContainer = <IContainer> (this.propertyName?parent[this.propertyName]:parent);
+			let targetElement:IVisualElement = <IVisualElement> (parent[this.target]);
+			let dest:IContainer = <IContainer> (this.propertyName?parent[this.propertyName]:parent);
 			if(!targetElement||!dest)
 				return;
 			switch (this.position){
@@ -152,9 +152,9 @@ module egret.gui {
 		 * @param parent {IContainer} 
 		 */
 		public remove(parent:IContainer):void{
-			var dest:IContainer = this.propertyName==null||this.propertyName==""?
+			let dest:IContainer = this.propertyName==null||this.propertyName==""?
 				<IContainer> parent:parent[this.propertyName];
-			var targetElement:IVisualElement = <IVisualElement> (parent[this.target]);
+			let targetElement:IVisualElement = <IVisualElement> (parent[this.target]);
 			if(!targetElement||!dest)
 				return;
 			if(dest.getElementIndex(targetElement)!=-1){

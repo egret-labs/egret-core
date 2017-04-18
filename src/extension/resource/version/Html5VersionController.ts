@@ -1,6 +1,6 @@
 //////////////////////////////////////////////////////////////////////////////////////
 //
-//  Copyright (c) 2014-2015, Egret Technology Inc.
+//  Copyright (c) 2014-present, Egret Technology.
 //  All rights reserved.
 //  Redistribution and use in source and binary forms, with or without
 //  modification, are permitted provided that the following conditions are met:
@@ -27,7 +27,7 @@
 //
 //////////////////////////////////////////////////////////////////////////////////////
 
-module RES.web {
+namespace RES.web {
 
     /**
      * @private
@@ -49,11 +49,11 @@ module RES.web {
 
             todo
 
-            var self = this;
+            let self = this;
 
-            var virtualUrl:string = "all.manifest";
+            let virtualUrl:string = "all.manifest";
 
-            var httpLoader:egret.HttpRequest = new egret.HttpRequest();
+            let httpLoader:egret.HttpRequest = new egret.HttpRequest();
             httpLoader.addEventListener(egret.Event.COMPLETE, onLoadComplete, this);
             httpLoader.addEventListener(egret.IOErrorEvent.IO_ERROR, onError, this);
 
@@ -85,7 +85,7 @@ module RES.web {
 
         /**
          * 获取所有有变化的文件
-         * @returns {Array<any>}
+         * @returns {any[]}
          */
         public getChangeList():Array<{url:string; size:number}> {
             return [];

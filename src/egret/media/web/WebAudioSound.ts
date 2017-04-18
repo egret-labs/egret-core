@@ -1,6 +1,6 @@
 //////////////////////////////////////////////////////////////////////////////////////
 //
-//  Copyright (c) 2014-2015, Egret Technology Inc.
+//  Copyright (c) 2014-present, Egret Technology.
 //  All rights reserved.
 //  Redistribution and use in source and binary forms, with or without
 //  modification, are permitted provided that the following conditions are met:
@@ -41,7 +41,7 @@ interface AudioBufferSourceNodeEgret {
     disconnect();
 }
 
-module egret.web {
+namespace egret.web {
 
     /**
      * @private
@@ -59,7 +59,7 @@ module egret.web {
         /**
          * @private
          */
-        public static decodeArr:Array<any> = [];
+        public static decodeArr:any[] = [];
         /**
          * @private
          */
@@ -77,7 +77,7 @@ module egret.web {
                 return;
             }
             WebAudioDecode.isDecoding = true;
-            var decodeInfo = WebAudioDecode.decodeArr.shift();
+            let decodeInfo = WebAudioDecode.decodeArr.shift();
 
             WebAudioDecode.ctx.decodeAudioData(decodeInfo["buffer"], function (audioBuffer) {
                 decodeInfo["self"].audioBuffer = audioBuffer;
@@ -106,30 +106,30 @@ module egret.web {
      */
     export class WebAudioSound extends egret.EventDispatcher implements egret.Sound {
         /**
-         * @language en_US
          * Background music
          * @version Egret 2.4
          * @platform Web,Native
+         * @language en_US
          */
         /**
-         * @language zh_CN
          * 背景音乐
          * @version Egret 2.4
          * @platform Web,Native
+         * @language zh_CN
          */
         public static MUSIC:string = "music";
 
         /**
-         * @language en_US
          * EFFECT
          * @version Egret 2.4
          * @platform Web,Native
+         * @language en_US
          */
         /**
-         * @language zh_CN
          * 音效
          * @version Egret 2.4
          * @platform Web,Native
+         * @language zh_CN
          */
         public static EFFECT:string = "effect";
 
@@ -159,7 +159,6 @@ module egret.web {
         /**
          * @private
          */
-        private _arrayBuffer:ArrayBuffer;
         private audioBuffer:AudioBuffer;
 
 
@@ -178,7 +177,7 @@ module egret.web {
          * @inheritDoc
          */
         public load(url:string):void {
-            var self = this;
+            let self = this;
 
             this.url = url;
 
@@ -186,22 +185,26 @@ module egret.web {
                 egret.$error(3002);
             }
 
-            var request = new XMLHttpRequest();
+            let request = new XMLHttpRequest();
             request.open("GET", url, true);
             request.responseType = "arraybuffer";
-            console.log("loadWebAudio");
-            request.onload = function () {
-                self._arrayBuffer = request.response;
-
-                WebAudioDecode.decodeArr.push({
-                    "buffer": self._arrayBuffer,
-                    "success": onAudioLoaded,
-                    "fail": onAudioError,
-                    "self": self,
-                    "url": self.url
-                });
-                WebAudioDecode.decodeAudios();
-            };
+            request.onreadystatechange = function () {
+                if (request.readyState == 4) {// 4 = "loaded"
+                    let ioError = (request.status >= 400 || request.status == 0);
+                    if (ioError) {//请求错误
+                        self.dispatchEventWith(egret.IOErrorEvent.IO_ERROR);
+                    } else {
+                        WebAudioDecode.decodeArr.push({
+                            "buffer": request.response,
+                            "success": onAudioLoaded,
+                            "fail": onAudioError,
+                            "self": self,
+                            "url": self.url
+                        });
+                        WebAudioDecode.decodeAudios();
+                    }
+                }
+            }
             request.send();
 
             function onAudioLoaded():void {
@@ -222,10 +225,10 @@ module egret.web {
             loops = +loops || 0;
 
             if (DEBUG && this.loaded == false) {
-                egret.$error(3001);
+                egret.$error(1049);
             }
 
-            var channel = new WebAudioSoundChannel();
+            let channel = new WebAudioSoundChannel();
             channel.$url = this.url;
             channel.$loops = loops;
             channel.$audioBuffer = this.audioBuffer;

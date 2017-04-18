@@ -1,40 +1,18 @@
 /// <reference path="../lib/types.d.ts" />
-var os = require('os');
-var crypto = require('crypto');
-var FileUtil = require('../lib/FileUtil');
+var os = require("os");
+var crypto = require("crypto");
+var FileUtil = require("../lib/FileUtil");
 var CompileOptions = (function () {
     function CompileOptions() {
-        this._outDir = null;
         this._host = null;
         this._port = NaN;
         this.esTarget = 'ES5';
         this.runtime = "web";
         this._tmpDir = null;
     }
-    Object.defineProperty(CompileOptions.prototype, "dirName", {
-        get: function () {
-            return FileUtil.getFileName(this.projectDir);
-        },
-        enumerable: true,
-        configurable: true
-    });
     Object.defineProperty(CompileOptions.prototype, "srcDir", {
         get: function () {
             return FileUtil.joinPath(this.projectDir, "src/");
-        },
-        enumerable: true,
-        configurable: true
-    });
-    Object.defineProperty(CompileOptions.prototype, "libsDir", {
-        get: function () {
-            return FileUtil.joinPath(this.projectDir, "libs/");
-        },
-        enumerable: true,
-        configurable: true
-    });
-    Object.defineProperty(CompileOptions.prototype, "larkPropertiesFile", {
-        get: function () {
-            return FileUtil.joinPath(this.projectDir, "lark.json");
         },
         enumerable: true,
         configurable: true
@@ -62,26 +40,6 @@ var CompileOptions = (function () {
     Object.defineProperty(CompileOptions.prototype, "releaseRootDir", {
         get: function () {
             return FileUtil.joinPath(this.projectDir, "bin-release/");
-        },
-        enumerable: true,
-        configurable: true
-    });
-    Object.defineProperty(CompileOptions.prototype, "out", {
-        get: function () {
-            var filename = this.publish ? FileUtil.joinPath(this.outDir, 'main.min.js') : undefined;
-            return filename;
-        },
-        enumerable: true,
-        configurable: true
-    });
-    Object.defineProperty(CompileOptions.prototype, "outDir", {
-        get: function () {
-            if (this._outDir)
-                return this._outDir;
-            return this.publish ? this.releaseDir : this.debugDir;
-        },
-        set: function (value) {
-            this._outDir = value;
         },
         enumerable: true,
         configurable: true
@@ -121,14 +79,6 @@ var CompileOptions = (function () {
         enumerable: true,
         configurable: true
     });
-    Object.defineProperty(CompileOptions.prototype, "manageUrl", {
-        get: function () {
-            var url = "http://" + (this.host || "localhost") + ':' + this.port + '/$/';
-            return url;
-        },
-        enumerable: true,
-        configurable: true
-    });
     Object.defineProperty(CompileOptions.prototype, "startUrl", {
         get: function () {
             var url = "http://" + (this.host || "localhost") + ':' + this.port + '/index.html';
@@ -147,7 +97,7 @@ var CompileOptions = (function () {
             sha1.update(this.projectDir);
             var folder = sha1.digest('hex');
             var systemTmp = os.tmpdir();
-            var dir = FileUtil.joinPath(systemTmp, "lark/" + folder + "/");
+            var dir = FileUtil.joinPath(systemTmp, "egret/" + folder + "/");
             FileUtil.createDirectory(dir);
             this._tmpDir = dir;
         }
@@ -199,7 +149,5 @@ var CompileOptions = (function () {
         return json;
     };
     return CompileOptions;
-})();
+}());
 module.exports = CompileOptions;
-
-//# sourceMappingURL=CompileOptions.js.map

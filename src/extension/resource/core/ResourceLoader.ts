@@ -1,6 +1,6 @@
 //////////////////////////////////////////////////////////////////////////////////////
 //
-//  Copyright (c) 2014-2015, Egret Technology Inc.
+//  Copyright (c) 2014-present, Egret Technology.
 //  All rights reserved.
 //  Redistribution and use in source and binary forms, with or without
 //  modification, are permitted provided that the following conditions are met:
@@ -28,7 +28,7 @@
 //////////////////////////////////////////////////////////////////////////////////////
 
 
-module RES {
+namespace RES {
 
 	/**
 	 * @class RES.ResourceLoader
@@ -109,7 +109,7 @@ module RES {
 				return;
 			if(!list||list.length==0){
                 egret.$warn(3201, groupName);
-				var event:ResourceEvent = new ResourceEvent(ResourceEvent.GROUP_LOAD_ERROR);
+				let event:ResourceEvent = new ResourceEvent(ResourceEvent.GROUP_LOAD_ERROR);
 				event.groupName = groupName;
 				this.dispatchEvent(event);
 				return;
@@ -119,9 +119,9 @@ module RES {
 			else
 				this.priorityQueue[priority] = [groupName];
 			this.itemListDic[groupName] = list;
-            var length:number = list.length;
-            for(var i:number=0;i<length;i++){
-                var resItem:ResourceItem = list[i];
+            let length:number = list.length;
+            for(let i:number=0;i<length;i++){
+                let resItem:ResourceItem = list[i];
 				resItem.groupName = groupName;
 			}
 			this.groupTotalDic[groupName] = list.length;
@@ -151,7 +151,7 @@ module RES {
 		 */
 		private next():void{
             while(this.loadingCount<this.thread) {
-                var resItem:ResourceItem = this.getOneResourceItem();
+                let resItem:ResourceItem = this.getOneResourceItem();
                 if(!resItem)
                     break;
                 this.loadingCount++;
@@ -159,7 +159,7 @@ module RES {
                     this.onItemComplete(resItem);
                 }
                 else{
-					var analyzer:AnalyzerBase = this.resInstance.$getAnalyzerByType(resItem.type);
+					let analyzer:AnalyzerBase = this.resInstance.$getAnalyzerByType(resItem.type);
                     analyzer.loadFile(resItem,this.onItemComplete,this);
                 }
             }
@@ -175,20 +175,20 @@ module RES {
 		private getOneResourceItem():ResourceItem{
             if (this.failedList.length > 0)
                 return this.failedList.shift();
-			var maxPriority:number = Number.NEGATIVE_INFINITY;
-			for(var p in this.priorityQueue){
+			let maxPriority:number = Number.NEGATIVE_INFINITY;
+			for(let p in this.priorityQueue){
 				maxPriority = Math.max(maxPriority,<number><any> p);
 			}
-			var queue:Array<any> = this.priorityQueue[maxPriority];
+			let queue:any[] = this.priorityQueue[maxPriority];
 			if(!queue||queue.length==0){
 				if(this.lazyLoadList.length==0)
 					return null;
 				//后请求的先加载，以便更快获取当前需要的资源
 				return this.lazyLoadList.pop();
 			}
-			var length:number = queue.length;
-			var list:Array<ResourceItem>;
-			for(var i:number=0;i<length;i++){
+			let length:number = queue.length;
+			let list:Array<ResourceItem>;
+			for(let i:number=0;i<length;i++){
 				if(this.queueIndex>=length)
 					this.queueIndex = 0;
 				list = this.itemListDic[queue[this.queueIndex]];
@@ -205,9 +205,9 @@ module RES {
 		 */
 		private onItemComplete(resItem:ResourceItem):void{
             this.loadingCount--;
-			var groupName:string = resItem.groupName;
+			let groupName:string = resItem.groupName;
 			if(!resItem.loaded){//加载失败
-                var times = this.retryTimesDic[resItem.name] || 1;
+                let times = this.retryTimesDic[resItem.name] || 1;
                 if (times > this.maxRetryTimes) {
                     delete this.retryTimesDic[resItem.name];
                     ResourceEvent.dispatchResourceEvent(this.resInstance, ResourceEvent.ITEM_LOAD_ERROR, groupName, resItem);
@@ -222,14 +222,14 @@ module RES {
 
 			if(groupName){
 				this.numLoadedDic[groupName]++;
-                var itemsLoaded:number = this.numLoadedDic[groupName];
-                var itemsTotal:number = this.groupTotalDic[groupName];
+                let itemsLoaded:number = this.numLoadedDic[groupName];
+                let itemsTotal:number = this.groupTotalDic[groupName];
 				if(!resItem.loaded){
 					this.groupErrorDic[groupName] = true;
 				}
                 ResourceEvent.dispatchResourceEvent(this.resInstance,ResourceEvent.GROUP_PROGRESS,groupName,resItem,itemsLoaded,itemsTotal);
 				if(itemsLoaded==itemsTotal){
-					var groupError:boolean = this.groupErrorDic[groupName];
+					let groupError:boolean = this.groupErrorDic[groupName];
 					this.removeGroupName(groupName);
 					delete this.groupTotalDic[groupName];
 					delete this.numLoadedDic[groupName];
@@ -252,14 +252,13 @@ module RES {
 		 * 从优先级队列中移除指定的组名
 		 */
 		private removeGroupName(groupName:string):void{
-			for(var p in this.priorityQueue){
-				var queue:Array<any> = this.priorityQueue[p];
-				var length:number = queue.length;
-				var index:number = 0;
-				var found:boolean = false;
-                var length:number = queue.length;
-                for(var i:number=0;i<length;i++){
-                    var name:string = queue[i];
+			for(let p in this.priorityQueue){
+				let queue:any[] = this.priorityQueue[p];
+				let index:number = 0;
+				let found:boolean = false;
+                let length:number = queue.length;
+                for(let i:number=0;i<length;i++){
+                    let name:string = queue[i];
 					if(name==groupName){
 						queue.splice(index,1);
 						found = true;

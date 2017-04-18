@@ -1,6 +1,6 @@
 //////////////////////////////////////////////////////////////////////////////////////
 //
-//  Copyright (c) 2014-2015, Egret Technology Inc.
+//  Copyright (c) 2014-present, Egret Technology.
 //  All rights reserved.
 //  Redistribution and use in source and binary forms, with or without
 //  modification, are permitted provided that the following conditions are met:
@@ -27,7 +27,7 @@
 //
 //////////////////////////////////////////////////////////////////////////////////////
 
-module egret.native {
+namespace egret.native {
     /**
      * @private
      */
@@ -53,7 +53,7 @@ module egret.native {
         private init(option:PlayerOption):void {
             //暂时无法显示重绘区域
             option.showPaintRect = false;
-            var stage = new egret.Stage();
+            let stage = new egret.Stage();
             stage.$screen = this;
             stage.$scaleMode = option.scaleMode;
             stage.$maxTouches = option.maxTouches;
@@ -61,29 +61,21 @@ module egret.native {
             //设置帧频到native
             stage.frameRate = option.frameRate;
 
-            if(!egret.native.$supportCanvas) {
-                stage.addEventListener(egret.Event.ENTER_FRAME, function (){
-                    if($currentSurface) {
-                        $currentSurface.end();
-                    }
-                }, this);
-            }
-
-            var buffer = new sys.RenderBuffer();
-            var canvas = <NativeCanvas>buffer.surface;
+            let buffer = new sys.RenderBuffer(undefined, undefined, true);
+            let canvas = <NativeCanvas>buffer.surface;
             canvas.$isRoot = true;
 
-            var touch = new NativeTouchHandler(stage);
-            var player = new egret.sys.Player(buffer, stage, option.entryClassName);
+            let touch = new NativeTouchHandler(stage);
+            let player = new egret.sys.Player(buffer, stage, option.entryClassName);
             new NativeHideHandler(stage);
 
             player.showPaintRect(option.showPaintRect);
             if (option.showFPS || option.showLog) {
-                var styleStr:string = <string>option.fpsStyles || "";
-                var stylesArr:Array<string> = styleStr.split(",");
-                var styles = {};
-                for (var i = 0; i < stylesArr.length; i++) {
-                    var tempStyleArr = stylesArr[i].split(":");
+                let styleStr:string = <string>option.fpsStyles || "";
+                let stylesArr:string[] = styleStr.split(",");
+                let styles = {};
+                for (let i = 0; i < stylesArr.length; i++) {
+                    let tempStyleArr = stylesArr[i].split(":");
                     styles[tempStyleArr[0]] = tempStyleArr[1];
                 }
                 option.fpsStyles = styles;
@@ -102,18 +94,20 @@ module egret.native {
         }
 
         public updateScreenSize():void {
-            var option = this.playerOption;
-            var screenWidth:number = egret_native.EGTView.getFrameWidth();
-            var screenHeight:number = egret_native.EGTView.getFrameHeight();
-            var stageSize:sys.StageDisplaySize = egret.sys.screenAdapter.calculateStageSize(this.$stage.$scaleMode,
+            let option = this.playerOption;
+            let screenWidth:number = egret_native.EGTView.getFrameWidth();
+            let screenHeight:number = egret_native.EGTView.getFrameHeight();
+            Capabilities.$boundingClientWidth = screenWidth;
+            Capabilities.$boundingClientHeight = screenHeight;
+            let stageSize:sys.StageDisplaySize = egret.sys.screenAdapter.calculateStageSize(this.$stage.$scaleMode,
                 screenWidth, screenHeight, option.contentWidth, option.contentHeight);
-            var stageWidth:number = stageSize.stageWidth;
-            var stageHeight:number = stageSize.stageHeight;
-            var displayWidth:number = stageSize.displayWidth;
-            var displayHeight:number = stageSize.displayHeight;
+            let stageWidth:number = stageSize.stageWidth;
+            let stageHeight:number = stageSize.stageHeight;
+            let displayWidth:number = stageSize.displayWidth;
+            let displayHeight:number = stageSize.displayHeight;
 
-            var top:number = (screenHeight - displayHeight) / 2;
-            var left:number = (screenWidth - displayWidth) / 2;
+            let top:number = (screenHeight - displayHeight) / 2;
+            let left:number = (screenWidth - displayWidth) / 2;
 
             egret_native.EGTView.setVisibleRect(left, top, displayWidth, displayHeight);
             egret_native.EGTView.setDesignSize(stageWidth, stageHeight);
@@ -122,7 +116,7 @@ module egret.native {
         }
 
         public setContentSize(width:number, height:number):void {
-            var option = this.playerOption;
+            let option = this.playerOption;
             option.contentWidth = width;
             option.contentHeight = height;
             this.updateScreenSize();

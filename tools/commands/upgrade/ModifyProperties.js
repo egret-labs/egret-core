@@ -1,7 +1,7 @@
 /// <reference path="../../lib/types.d.ts" />
 //import globals = require("../../Globals");
 //import params = require("../../ParamsParser");
-var file = require('../../lib/FileUtil');
+var file = require("../../lib/FileUtil");
 var ModifyProperties = (function () {
     function ModifyProperties() {
         this.initProperties();
@@ -53,8 +53,6 @@ var ModifyProperties = (function () {
         return false;
     };
     return ModifyProperties;
-})();
+}());
 var egretProjectConfig = egretProjectConfig || new ModifyProperties();
 module.exports = egretProjectConfig;
-
-//# sourceMappingURL=ModifyProperties.js.map

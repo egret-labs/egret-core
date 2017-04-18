@@ -1,6 +1,6 @@
 //////////////////////////////////////////////////////////////////////////////////////
 //
-//  Copyright (c) 2014-2015, Egret Technology Inc.
+//  Copyright (c) 2014-present, Egret Technology.
 //  All rights reserved.
 //  Redistribution and use in source and binary forms, with or without
 //  modification, are permitted provided that the following conditions are met:
@@ -28,7 +28,7 @@
 //////////////////////////////////////////////////////////////////////////////////////
 
 
-module egret.gui {
+namespace egret.gui {
     /**
      * @class egret.gui.CompositeEffectInstance
      * @classdesc
@@ -46,13 +46,13 @@ module egret.gui {
         /**
          * 正在播放或者等待播放的EffectInstances
          */
-        public _activeEffectQueue:Array<any> = [];
+        public _activeEffectQueue:any[] = [];
         
         /**
          * @inheritDoc
          */
         public get _actualDuration():number{
-            var value:number = NaN;
+            let value:number = NaN;
             if (this.repeatCount > 0){
                 value = this._durationWithoutRepeat * this.repeatCount +
                     (this.repeatDelay * (this.repeatCount - 1)) + this.startDelay;
@@ -76,7 +76,7 @@ module egret.gui {
             super._setPlayheadTime(value);
         }
 
-        public _childSets:Array<any> = [];
+        public _childSets:any[] = [];
 
         /**
          * 不含重复次数的持续时间
@@ -162,16 +162,16 @@ module egret.gui {
          * Sequence 效果将按子效果组的添加顺序一次播放一个子效果组。
          * Parallel 效果将同时播放所有子效果组，而不考虑这些子效果组的添加顺序。
          */
-        public addChildSet(childSet:Array<any>):void{
+        public addChildSet(childSet:any[]):void{
             if (childSet){
-                var n:number = childSet.length;
+                let n:number = childSet.length;
                 if (n > 0){
                     if (!this._childSets)
                         this._childSets = [ childSet ];
                     else
                         this._childSets.push(childSet);
                     
-                    for (var i:number = 0; i < n; i++){
+                    for (let i:number = 0; i < n; i++){
                         childSet[i].addEventListener(EffectEvent.EFFECT_END,
                             this._effectEndHandler,
                             this);

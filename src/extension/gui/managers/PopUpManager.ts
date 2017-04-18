@@ -1,6 +1,6 @@
 //////////////////////////////////////////////////////////////////////////////////////
 //
-//  Copyright (c) 2014-2015, Egret Technology Inc.
+//  Copyright (c) 2014-present, Egret Technology.
 //  All rights reserved.
 //  Redistribution and use in source and binary forms, with or without
 //  modification, are permitted provided that the following conditions are met:
@@ -28,7 +28,7 @@
 //////////////////////////////////////////////////////////////////////////////////////
 
 
-module egret.gui {
+namespace egret.gui {
 
 	/**
 	 * @class egret.gui.PopUpManager
@@ -126,7 +126,7 @@ module egret.gui {
 		 * 已经弹出的窗口列表
 		 * @member egret.gui.PopUpManager.popUpList
 		 */		
-		public static get popUpList():Array<any>{
+		public static get popUpList():any[]{
 			return PopUpManager.getImpl().popUpList;
 		}
 		

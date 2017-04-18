@@ -1,6 +1,6 @@
 //////////////////////////////////////////////////////////////////////////////////////
 //
-//  Copyright (c) 2014-2015, Egret Technology Inc.
+//  Copyright (c) 2014-present, Egret Technology.
 //  All rights reserved.
 //  Redistribution and use in source and binary forms, with or without
 //  modification, are permitted provided that the following conditions are met:
@@ -26,23 +26,23 @@
 //  EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 //
 //////////////////////////////////////////////////////////////////////////////////////
-module egret.sys {
+namespace egret.sys {
 
     /**
      * @private
      */
-    export var $START_TIME:number = 0;
+    export let $START_TIME:number = 0;
 
     /**
      * @private
      * 是否要广播Event.RENDER事件的标志。
      */
-    export var $invalidateRenderFlag:boolean = false;
+    export let $invalidateRenderFlag:boolean = false;
     /**
      * @private
      * 需要立即刷新屏幕的标志
      */
-    export var $requestRenderingFlag:boolean = false;
+    export let $requestRenderingFlag:boolean = false;
 
     /**
      * @private
@@ -57,6 +57,8 @@ module egret.sys {
                 $error(1008, "egret.sys.SystemTicker");
             }
             $START_TIME = Date.now();
+            this.frameDeltaTime = 1000 / this.$frameRate;
+            this.lastCount = this.frameInterval = Math.round(60000 / this.$frameRate);
         }
 
         /**
@@ -85,10 +87,10 @@ module egret.sys {
          * 停止一个播放器实例的运行。
          */
         $removePlayer(player:Player):void {
-            var index = this.playerList.indexOf(player);
+            let index = this.playerList.indexOf(player);
             if (index !== -1) {
                 if (DEBUG) {
-                    var i = egret_stages.indexOf(player.stage);
+                    let i = egret_stages.indexOf(player.stage);
                     egret_stages.splice(i, 1);
                 }
                 this.playerList = this.playerList.concat();
@@ -109,7 +111,7 @@ module egret.sys {
          * @private
          */
         $startTick(callBack:(timeStamp:number)=>boolean, thisObject:any):void {
-            var index = this.getTickIndex(callBack, thisObject);
+            let index = this.getTickIndex(callBack, thisObject);
             if (index != -1) {
                 return;
             }
@@ -122,7 +124,7 @@ module egret.sys {
          * @private
          */
         $stopTick(callBack:(timeStamp:number)=>boolean, thisObject:any):void {
-            var index = this.getTickIndex(callBack, thisObject);
+            let index = this.getTickIndex(callBack, thisObject);
             if (index == -1) {
                 return;
             }
@@ -135,9 +137,9 @@ module egret.sys {
          * @private
          */
         private getTickIndex(callBack:Function, thisObject:any):number {
-            var callBackList = this.callBackList;
-            var thisObjectList = this.thisObjectList;
-            for (var i = callBackList.length - 1; i >= 0; i--) {
+            let callBackList = this.callBackList;
+            let thisObjectList = this.thisObjectList;
+            for (let i = callBackList.length - 1; i >= 0; i--) {
                 if (callBackList[i] == callBack &&
                     thisObjectList[i] == thisObject) {//这里不能用===，因为有可能传入undefined和null.
                     return i;
@@ -164,7 +166,9 @@ module egret.sys {
         /**
          * @private
          */
-        private frameInterval:number = 2000;
+        private frameInterval:number;
+        private frameDeltaTime:number;
+        private lastTimeStamp:number = 0;
 
         /**
          * @private
@@ -187,6 +191,7 @@ module egret.sys {
                 egret_native.setFrameRate(value);
                 value = 60;
             }
+            this.frameDeltaTime = 1000 / value;
             //这里用60*1000来避免浮点数计算不准确的问题。
             this.lastCount = this.frameInterval = Math.round(60000 / value);
             return true;
@@ -195,7 +200,7 @@ module egret.sys {
         /**
          * @private
          */
-        private lastCount:number = 2000;
+        private lastCount:number;
         /**
          * @private
          * ticker 花销的时间
@@ -207,31 +212,38 @@ module egret.sys {
          * 执行一次刷新
          */
         public update():void {
-            var t1 = egret.getTimer();
-            var callBackList = this.callBackList;
-            var thisObjectList = this.thisObjectList;
-            var length = callBackList.length;
-            var requestRenderingFlag = $requestRenderingFlag;
-            var timeStamp = egret.getTimer();
-
-            for (var i = 0; i < length; i++) {
+            let t1 = egret.getTimer();
+            let callBackList = this.callBackList;
+            let thisObjectList = this.thisObjectList;
+            let length = callBackList.length;
+            let requestRenderingFlag = $requestRenderingFlag;
+            let timeStamp = egret.getTimer();
+            this.callLaterAsyncs();
+            for (let i = 0; i < length; i++) {
                 if (callBackList[i].call(thisObjectList[i], timeStamp)) {
                     requestRenderingFlag = true;
                 }
             }
-            this.lastCount -= 1000;
-            var t2 = egret.getTimer();
-            if (this.lastCount > 0) {
-                if (requestRenderingFlag) {
-                    this.render(false, this.costEnterFrame+t2-t1);
-                }
-                return;
+            let t2 = egret.getTimer();
+            let deltaTime = timeStamp - this.lastTimeStamp;
+            this.lastTimeStamp = timeStamp;
+            if (deltaTime >= this.frameDeltaTime) {
+                this.lastCount = this.frameInterval;
             }
-            this.lastCount += this.frameInterval;
-            this.render(true, this.costEnterFrame+t2-t1);
-            var t3 = egret.getTimer();
+            else {
+                this.lastCount -= 1000;
+                if (this.lastCount > 0) {
+                    if (requestRenderingFlag) {
+                        this.render(false, this.costEnterFrame + t2 - t1);
+                    }
+                    return;
+                }
+                this.lastCount += this.frameInterval;
+            }
+            this.render(true, this.costEnterFrame + t2 - t1);
+            let t3 = egret.getTimer();
             this.broadcastEnterFrame();
-            var t4 = egret.getTimer();
+            let t4 = egret.getTimer();
             this.costEnterFrame = t4 - t3;
         }
 
@@ -240,16 +252,17 @@ module egret.sys {
          * 执行一次屏幕渲染
          */
         private render(triggerByFrame:boolean, costTicker:number):void {
-            var playerList = this.playerList;
-            var length = playerList.length;
+            let playerList = this.playerList;
+            let length = playerList.length;
             if (length == 0) {
                 return;
             }
+            this.callLaters();
             if ($invalidateRenderFlag) {
                 this.broadcastRender();
                 $invalidateRenderFlag = false;
             }
-            for (var i = 0; i < length; i++) {
+            for (let i = 0; i < length; i++) {
                 playerList[i].$render(triggerByFrame, costTicker);
             }
             $requestRenderingFlag = false;
@@ -260,13 +273,13 @@ module egret.sys {
          * 广播EnterFrame事件。
          */
         private broadcastEnterFrame():void {
-            var list:Array<any> = DisplayObject.$enterFrameCallBackList;
-            var length = list.length;
+            let list:any[] = DisplayObject.$enterFrameCallBackList;
+            let length = list.length;
             if (length == 0) {
                 return;
             }
             list = list.concat();
-            for (var i = 0; i < length; i++) {
+            for (let i = 0; i < length; i++) {
                 list[i].dispatchEventWith(Event.ENTER_FRAME);
             }
         }
@@ -276,14 +289,65 @@ module egret.sys {
          * 广播Render事件。
          */
         private broadcastRender():void {
-            var list = DisplayObject.$renderCallBackList;
-            var length = list.length;
+            let list = DisplayObject.$renderCallBackList;
+            let length = list.length;
             if (length == 0) {
                 return;
             }
             list = list.concat();
-            for (var i = 0; i < length; i++) {
+            for (let i = 0; i < length; i++) {
                 list[i].dispatchEventWith(Event.RENDER);
+            }
+        }
+
+
+
+        /**
+         * @private
+         */
+        private callLaters():void {
+            let functionList:any[];
+            let thisList:any[];
+            let argsList:any[];
+            if ($callLaterFunctionList.length > 0) {
+                functionList = $callLaterFunctionList;
+                $callLaterFunctionList = [];
+                thisList = $callLaterThisList;
+                $callLaterThisList = [];
+                argsList = $callLaterArgsList;
+                $callLaterArgsList = [];
+            }
+
+            if (functionList) {
+                let length:number = functionList.length;
+                for (let i:number = 0; i < length; i++) {
+                    let func:Function = functionList[i];
+                    if (func != null) {
+                        func.apply(thisList[i], argsList[i]);
+                    }
+                }
+            }
+        }
+
+        /**
+         * @private
+         */
+        private callLaterAsyncs():void {
+            if ($callAsyncFunctionList.length > 0) {
+                let locCallAsyncFunctionList = $callAsyncFunctionList;
+                let locCallAsyncThisList = $callAsyncThisList;
+                let locCallAsyncArgsList = $callAsyncArgsList;
+
+                $callAsyncFunctionList = [];
+                $callAsyncThisList = [];
+                $callAsyncArgsList = [];
+
+                for (let i:number = 0; i < locCallAsyncFunctionList.length; i++) {
+                    let func:Function = locCallAsyncFunctionList[i];
+                    if (func != null) {
+                        func.apply(locCallAsyncThisList[i], locCallAsyncArgsList[i]);
+                    }
+                }
             }
         }
     }
@@ -292,10 +356,14 @@ module egret.sys {
      * @private
      * 心跳计时器单例
      */
-    export var $ticker:SystemTicker = new sys.SystemTicker();
+    export let $ticker:SystemTicker = new sys.SystemTicker();
 
 }
 
+/**
+ * @private
+ */
+declare let egret_stages:egret.Stage[];
 if (DEBUG) {
-    var egret_stages:egret.Stage[] = [];
+    egret_stages = [];
 }

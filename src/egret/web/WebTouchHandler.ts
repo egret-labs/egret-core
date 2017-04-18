@@ -1,6 +1,6 @@
 //////////////////////////////////////////////////////////////////////////////////////
 //
-//  Copyright (c) 2014-2015, Egret Technology Inc.
+//  Copyright (c) 2014-present, Egret Technology.
 //  All rights reserved.
 //  Redistribution and use in source and binary forms, with or without
 //  modification, are permitted provided this the following conditions are met:
@@ -27,7 +27,7 @@
 //
 //////////////////////////////////////////////////////////////////////////////////////
 
-module egret.web {
+namespace egret.web {
 
     /**
      * @private
@@ -99,29 +99,29 @@ module egret.web {
          */
         private addTouchListener():void {
             this.canvas.addEventListener("touchstart", (event:any)=> {
-                var l = event.changedTouches.length;
-                for (var i:number = 0; i < l; i++) {
+                let l = event.changedTouches.length;
+                for (let i:number = 0; i < l; i++) {
                     this.onTouchBegin(event.changedTouches[i]);
                 }
                 this.prevent(event);
             }, false);
             this.canvas.addEventListener("touchmove", (event:any)=> {
-                var l = event.changedTouches.length;
-                for (var i:number = 0; i < l; i++) {
+                let l = event.changedTouches.length;
+                for (let i:number = 0; i < l; i++) {
                     this.onTouchMove(event.changedTouches[i]);
                 }
                 this.prevent(event);
             }, false);
             this.canvas.addEventListener("touchend", (event:any)=> {
-                var l = event.changedTouches.length;
-                for (var i:number = 0; i < l; i++) {
+                let l = event.changedTouches.length;
+                for (let i:number = 0; i < l; i++) {
                     this.onTouchEnd(event.changedTouches[i]);
                 }
                 this.prevent(event);
             }, false);
             this.canvas.addEventListener("touchcancel", (event:any)=> {
-                var l = event.changedTouches.length;
-                for (var i:number = 0; i < l; i++) {
+                let l = event.changedTouches.length;
+                for (let i:number = 0; i < l; i++) {
                     this.onTouchEnd(event.changedTouches[i]);
                 }
                 this.prevent(event);
@@ -142,7 +142,7 @@ module egret.web {
          * @private
          */
         private onTouchBegin = (event:any):void => {
-            var location = this.getLocation(event);
+            let location = this.getLocation(event);
             this.touch.onTouchBegin(location.x, location.y, event.identifier);
         }
 
@@ -150,7 +150,7 @@ module egret.web {
          * @private
          */
         private onTouchMove = (event:any):void => {
-            var location = this.getLocation(event);
+            let location = this.getLocation(event);
             this.touch.onTouchMove(location.x, location.y, event.identifier);
 
         }
@@ -159,7 +159,7 @@ module egret.web {
          * @private
          */
         private onTouchEnd = (event:any):void => {
-            var location = this.getLocation(event);
+            let location = this.getLocation(event);
             this.touch.onTouchEnd(location.x, location.y, event.identifier);
         }
 
@@ -168,12 +168,12 @@ module egret.web {
          */
         private getLocation(event:any):Point {
             event.identifier = +event.identifier || 0;
-            var doc = document.documentElement;
-            var box = this.canvas.getBoundingClientRect();
-            var left = box.left + window.pageXOffset - doc.clientLeft;
-            var top = box.top + window.pageYOffset - doc.clientTop;
-            var x = event.pageX - left, newx = x;
-            var y = event.pageY - top, newy = y;
+            let doc = document.documentElement;
+            let box = this.canvas.getBoundingClientRect();
+            let left = box.left + window.pageXOffset - doc.clientLeft;
+            let top = box.top + window.pageYOffset - doc.clientTop;
+            let x = event.pageX - left, newx = x;
+            let y = event.pageY - top, newy = y;
             if (this.rotation == 90) {
                 newx = y;
                 newy = box.width - x;

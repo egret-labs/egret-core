@@ -1,6 +1,6 @@
 //////////////////////////////////////////////////////////////////////////////////////
 //
-//  Copyright (c) 2014-2015, Egret Technology Inc.
+//  Copyright (c) 2014-present, Egret Technology.
 //  All rights reserved.
 //  Redistribution and use in source and binary forms, with or without
 //  modification, are permitted provided that the following conditions are met:
@@ -28,7 +28,7 @@
 //////////////////////////////////////////////////////////////////////////////////////
 
 
-module egret.gui {
+namespace egret.gui {
 
 	/**
 	 * @class egret.gui.VSlider
@@ -56,8 +56,8 @@ module egret.gui {
 			if (!this.thumb || !this.track)
 				return 0;
 			
-			var range:number = this.maximum - this.minimum;
-			var thumbRange:number = this.track.layoutBoundsHeight - this.thumb.layoutBoundsHeight;
+			let range:number = this.maximum - this.minimum;
+			let thumbRange:number = this.track.layoutBoundsHeight - this.thumb.layoutBoundsHeight;
 			return this.minimum + ((thumbRange != 0) ? ((thumbRange - y) / thumbRange) * range : 0); 
 		}
 		
@@ -68,18 +68,18 @@ module egret.gui {
 			if (!this.thumb || !this.track)
 				return;
 
-            var thumbHeight:number = this.thumb.layoutBoundsHeight;
-			var thumbRange:number = this.track.layoutBoundsHeight - thumbHeight;
-			var range:number = this.maximum - this.minimum;
-			var thumbPosTrackY:number = (range > 0) ? thumbRange - (((this.pendingValue - this.minimum) / range) * thumbRange) : 0;
-			var thumbPos:Point = this.track.localToGlobal(0, thumbPosTrackY);
-            var thumbPosX:number = thumbPos.x;
-            var thumbPosY:number = thumbPos.y;
-			var thumbPosParentY:number = this.thumb.parent.globalToLocal(thumbPosX,thumbPosY,egret.$TempPoint).y;
+            let thumbHeight:number = this.thumb.layoutBoundsHeight;
+			let thumbRange:number = this.track.layoutBoundsHeight - thumbHeight;
+			let range:number = this.maximum - this.minimum;
+			let thumbPosTrackY:number = (range > 0) ? thumbRange - (((this.pendingValue - this.minimum) / range) * thumbRange) : 0;
+			let thumbPos:Point = this.track.localToGlobal(0, thumbPosTrackY);
+            let thumbPosX:number = thumbPos.x;
+            let thumbPosY:number = thumbPos.y;
+			let thumbPosParentY:number = this.thumb.parent.globalToLocal(thumbPosX,thumbPosY,egret.$TempPoint).y;
 			
 			this.thumb.setLayoutBoundsPosition(this.thumb.layoutBoundsX, Math.round(thumbPosParentY));
 			if(this.showTrackHighlight&&this.trackHighlight&&this.trackHighlight.$parent){
-				var trackHighlightY:number = this.trackHighlight.$parent.globalToLocal(thumbPosX,thumbPosY,egret.$TempPoint).y;
+				let trackHighlightY:number = this.trackHighlight.$parent.globalToLocal(thumbPosX,thumbPosY,egret.$TempPoint).y;
 				this.trackHighlight.y = Math.round(trackHighlightY+thumbHeight);
 				this.trackHighlight.height = Math.round(thumbRange-trackHighlightY);
 			}

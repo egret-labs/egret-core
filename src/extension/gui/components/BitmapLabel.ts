@@ -1,6 +1,6 @@
 //////////////////////////////////////////////////////////////////////////////////////
 //
-//  Copyright (c) 2014-2015, Egret Technology Inc.
+//  Copyright (c) 2014-present, Egret Technology.
 //  All rights reserved.
 //  Redistribution and use in source and binary forms, with or without
 //  modification, are permitted provided that the following conditions are met:
@@ -28,7 +28,7 @@
 //////////////////////////////////////////////////////////////////////////////////////
 
 
-module egret.gui {
+namespace egret.gui {
 
     /**
      * @class egret.gui.BitmapLabel
@@ -198,7 +198,7 @@ module egret.gui {
          */
         private parseFont():void {
             this.fontChanged = false;
-            var adapter:IAssetAdapter = BitmapLabel.assetAdapter;
+            let adapter:IAssetAdapter = BitmapLabel.assetAdapter;
             if (!adapter) {
                 adapter = this.getAdapter();
             }
@@ -214,7 +214,7 @@ module egret.gui {
          * 获取资源适配器
          */
         private getAdapter():IAssetAdapter {
-            var adapter:IAssetAdapter;
+            let adapter:IAssetAdapter;
             try {
                 adapter = $getAdapter("egret.gui.IAssetAdapter");
             }
@@ -366,7 +366,7 @@ module egret.gui {
                 }
             }
 
-            var availableWidth:number;
+            let availableWidth:number;
 
             if (!isNaN(this.$getExplicitWidth())) {
                 availableWidth = this.$getExplicitWidth();
@@ -401,11 +401,11 @@ module egret.gui {
                 this._bitmapText.lineSpacing = this._lineSpacing;
             }
 
-            var padding:number = isNaN(this._padding) ? 0 : this._padding;
-            var paddingL:number = isNaN(this._paddingLeft) ? padding : this._paddingLeft;
-            var paddingR:number = isNaN(this._paddingRight) ? padding : this._paddingRight;
-            var paddingT:number = isNaN(this._paddingTop) ? padding : this._paddingTop;
-            var paddingB:number = isNaN(this._paddingBottom) ? padding : this._paddingBottom;
+            let padding:number = isNaN(this._padding) ? 0 : this._padding;
+            let paddingL:number = isNaN(this._paddingLeft) ? padding : this._paddingLeft;
+            let paddingR:number = isNaN(this._paddingRight) ? padding : this._paddingRight;
+            let paddingT:number = isNaN(this._paddingTop) ? padding : this._paddingTop;
+            let paddingB:number = isNaN(this._paddingBottom) ? padding : this._paddingBottom;
 
             this._bitmapText.width = NaN;
             this._bitmapText.height = NaN;
@@ -433,16 +433,16 @@ module egret.gui {
             super.updateDisplayList(unscaledWidth, unscaledHeight);
             if (!this._bitmapText)
                 return;
-            var padding:number = isNaN(this._padding) ? 0 : this._padding;
-            var paddingL:number = isNaN(this._paddingLeft) ? padding : this._paddingLeft;
-            var paddingR:number = isNaN(this._paddingRight) ? padding : this._paddingRight;
-            var paddingT:number = isNaN(this._paddingTop) ? padding : this._paddingTop;
-            var paddingB:number = isNaN(this._paddingBottom) ? padding : this._paddingBottom;
+            let padding:number = isNaN(this._padding) ? 0 : this._padding;
+            let paddingL:number = isNaN(this._paddingLeft) ? padding : this._paddingLeft;
+            let paddingR:number = isNaN(this._paddingRight) ? padding : this._paddingRight;
+            let paddingT:number = isNaN(this._paddingTop) ? padding : this._paddingTop;
+            let paddingB:number = isNaN(this._paddingBottom) ? padding : this._paddingBottom;
 
             this._bitmapText.x = paddingL;
             this._bitmapText.y = paddingT;
             if (this.isSpecialCase()) {
-                var firstTime:boolean = isNaN(this.lastUnscaledWidth) ||
+                let firstTime:boolean = isNaN(this.lastUnscaledWidth) ||
                     this.lastUnscaledWidth != unscaledWidth;
                 this.lastUnscaledWidth = unscaledWidth;
                 if (firstTime) {
@@ -461,7 +461,7 @@ module egret.gui {
                 this._bitmapText.visible = true;
 
             this._bitmapText.width = unscaledWidth - paddingL - paddingR;
-            var unscaledTextHeight:number = unscaledHeight - paddingT - paddingB;
+            let unscaledTextHeight:number = unscaledHeight - paddingT - paddingB;
             this._bitmapText.height = unscaledTextHeight;
 
         }

@@ -1,6 +1,6 @@
 //////////////////////////////////////////////////////////////////////////////////////
 //
-//  Copyright (c) 2014-2015, Egret Technology Inc.
+//  Copyright (c) 2014-present, Egret Technology.
 //  All rights reserved.
 //  Redistribution and use in source and binary forms, with or without
 //  modification, are permitted provided that the following conditions are met:
@@ -27,48 +27,48 @@
 //
 //////////////////////////////////////////////////////////////////////////////////////
 
-module egret {
+namespace egret {
 
     /**
-     * @language en_US
      * The HttpResponseType class provides values that specify how downloaded data is received.
      * @see egret.HttpRequest
      * @version Egret 2.4
      * @platform Web,Native
+     * @language en_US
      */
     /**
-     * @language zh_CN
      * URLLoaderDataFormat 类提供了一些用于指定如何接收已下载数据的值。
      * @see egret.HttpRequest
      * @version Egret 2.4
      * @platform Web,Native
+     * @language zh_CN
      */
     export class HttpResponseType{
 
         /**
-         * @language en_US
          * Specifies that downloaded data is received as text. This is the default value of HttpRequest.responseType
          * @version Egret 2.4
          * @platform Web,Native
+         * @language en_US
          */
         /**
-         * @language zh_CN
          * 返回字符串。HttpRequest.responseType属性的默认值。
          * @version Egret 2.4
          * @platform Web,Native
+         * @language zh_CN
          */
         public static TEXT:string = "text";
         /**
-         * @language en_US
          * Specifies that downloaded data is received as raw binary data.
          * @version Egret 2.4
          * @platform Web,Native
+         * @language en_US
          */
         /**
-         * @language zh_CN
          * 返回二进制的ArrayBuffer对象。
          * @version Egret 2.4
          * @platform Web,Native
+         * @language zh_CN
          */
         public static ARRAY_BUFFER:string = "arraybuffer";
 

@@ -1,6 +1,6 @@
 //////////////////////////////////////////////////////////////////////////////////////
 //
-//  Copyright (c) 2014-2015, Egret Technology Inc.
+//  Copyright (c) 2014-present, Egret Technology.
 //  All rights reserved.
 //  Redistribution and use in source and binary forms, with or without
 //  modification, are permitted provided that the following conditions are met:
@@ -28,7 +28,7 @@
 //////////////////////////////////////////////////////////////////////////////////////
 
 
-module RES {
+namespace RES {
     /**
      * @private
      */
@@ -43,13 +43,13 @@ module RES {
          * 解析并缓存加载成功的数据
          */
         public analyzeData(resItem:ResourceItem,data:any):void{
-            var name:string = resItem.name;
+            let name:string = resItem.name;
             if(this.fileDic[name]||!data){
                 return;
             }
             try{
-                var xmlStr:string = <string> data;
-                var xml:any = egret.XML.parse(xmlStr);
+                let xmlStr:string = <string> data;
+                let xml:any = egret.XML.parse(xmlStr);
                 this.fileDic[name] = xml;
             }
             catch (e){

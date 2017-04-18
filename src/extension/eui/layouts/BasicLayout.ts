@@ -1,6 +1,6 @@
 //////////////////////////////////////////////////////////////////////////////////////
 //
-//  Copyright (c) 2014-2015, Egret Technology Inc.
+//  Copyright (c) 2014-present, Egret Technology.
 //  All rights reserved.
 //  Redistribution and use in source and binary forms, with or without
 //  modification, are permitted provided that the following conditions are met:
@@ -27,10 +27,9 @@
 //
 //////////////////////////////////////////////////////////////////////////////////////
 
-module eui {
+namespace eui {
 
     /**
-     * @language en_US
      * The BasicLayout class arranges the layout elements according to their individual settings,
      * independent of each-other. BasicLayout, also called absolute layout, requires that you
      * explicitly position each container child.
@@ -41,9 +40,9 @@ module eui {
      * @version eui 1.0
      * @platform Web,Native
      * @includeExample  extension/eui/layout/BasicLayoutExample.ts
+     * @language en_US
      */
     /**
-     * @language zh_CN
      * BasicLayout 类根据其各个设置彼此独立地排列布局元素。
      * BasicLayout（也称为绝对布局）要求显式定位每个容器子代。
      * 可以使用子代的 <code>x</code> 和 <code>y</code> 属性，或使用约束来定位每个子代。
@@ -52,22 +51,23 @@ module eui {
      * @version eui 1.0
      * @platform Web,Native
      * @includeExample  extension/eui/layout/BasicLayoutExample.ts
+     * @language zh_CN
      */
     export class BasicLayout extends LayoutBase {
 
         /**
-         * @language en_US
          * Constructor.
          * @version Egret 2.4
          * @version eui 1.0
          * @platform Web,Native
+         * @language en_US
          */
         /**
-         * @language zh_CN
          * 构造函数。
          * @version Egret 2.4
          * @version eui 1.0
          * @platform Web,Native
+         * @language zh_CN
          */
         public constructor() {
             super();
@@ -75,20 +75,20 @@ module eui {
 
 
         /**
-         * @language en_US
          * BasicLayout does not support virtual layout, setting this property is invalid.
          *
          * @version Egret 2.4
          * @version eui 1.0
          * @platform Web,Native
+         * @language en_US
          */
         /**
-         * @language zh_CN
          * BasicLayout不支持虚拟布局，设置这个属性无效。
          *
          * @version Egret 2.4
          * @version eui 1.0
          * @platform Web,Native
+         * @language zh_CN
          */
         public useVirtualLayout:boolean;
 
@@ -114,8 +114,8 @@ module eui {
          */
         public updateDisplayList(unscaledWidth:number, unscaledHeight:number):void {
             super.updateDisplayList(unscaledWidth, unscaledHeight);
-            var target = this.$target;
-            var pos = sys.updateDisplayList(target,unscaledWidth,unscaledHeight);
+            let target = this.$target;
+            let pos = sys.updateDisplayList(target, unscaledWidth, unscaledHeight);
             target.setContentSize(Math.ceil(pos.x), Math.ceil(pos.y));
         }
     }
@@ -137,38 +137,56 @@ module eui {
     }
 }
 
-module eui.sys {
+namespace eui.sys {
 
-    var UIComponentClass = "eui.UIComponent";
+    let UIComponentClass = "eui.UIComponent";
+
+    /**
+     * @private
+     * @param value 要格式化的相对值
+     * @param total 在此值方向上的总长度
+     */
+    function formatRelative(value:number|string, total:number):number {
+        if (!value || typeof value == "number") {
+            return <number>value;
+        }
+        let str = <string>value;
+        let index = str.indexOf("%");
+        if (index == -1) {
+            return +str;
+        }
+        let percent = +str.substring(0, index);
+        return percent * 0.01 * total;
+    }
 
     /**
      * @private
      * 一个工具方法，使用BasicLayout规则测量目标对象。
      */
-    export function measure(target:eui.Group|eui.Component):void{
-        if(!target){
+    export function measure(target:eui.Group|eui.Component):void {
+        if (!target) {
             return;
         }
-        var width = 0;
-        var height = 0;
-        var bounds = egret.$TempRectangle;
-        var count = target.numChildren;
-        for (var i = 0; i < count; i++) {
-            var layoutElement = <eui.UIComponent> (target.getChildAt(i));
-            if (!egret.is(layoutElement,UIComponentClass) || !layoutElement.$includeInLayout) {
+        let width = 0;
+        let height = 0;
+        let bounds = egret.$TempRectangle;
+        let count = target.numChildren;
+        for (let i = 0; i < count; i++) {
+            let layoutElement = <eui.UIComponent> (target.getChildAt(i));
+            if (!egret.is(layoutElement, UIComponentClass) || !layoutElement.$includeInLayout) {
                 continue;
             }
 
-            var values = layoutElement.$UIComponent;
-            var hCenter = values[sys.UIKeys.horizontalCenter];
-            var vCenter = values[sys.UIKeys.verticalCenter];
-            var left = values[sys.UIKeys.left];
-            var right = values[sys.UIKeys.right];
-            var top = values[sys.UIKeys.top];
-            var bottom = values[sys.UIKeys.bottom];
+            let values = layoutElement.$UIComponent;
+            let hCenter = +values[sys.UIKeys.horizontalCenter];
+            let vCenter = +values[sys.UIKeys.verticalCenter];
+            let left = +values[sys.UIKeys.left];
+            let right = +values[sys.UIKeys.right];
+            let top = +values[sys.UIKeys.top];
+            let bottom = +values[sys.UIKeys.bottom];
 
-            var extX:number;
-            var extY:number;
+            let extX:number;
+            let extY:number;
 
             layoutElement.getPreferredBounds(bounds);
 
@@ -200,13 +218,13 @@ module eui.sys {
                 extY = bounds.y;
             }
 
-            var preferredWidth = bounds.width;
-            var preferredHeight = bounds.height;
+            let preferredWidth = bounds.width;
+            let preferredHeight = bounds.height;
             width = Math.ceil(Math.max(width, extX + preferredWidth));
             height = Math.ceil(Math.max(height, extY + preferredHeight));
         }
 
-        target.setMeasuredSize(width,height);
+        target.setMeasuredSize(width, height);
     }
 
     /**
@@ -214,33 +232,33 @@ module eui.sys {
      * 一个工具方法，使用BasicLayout规则布局目标对象。
      */
     export function updateDisplayList(target:eui.Group|eui.Component,
-                                                 unscaledWidth:number, unscaledHeight:number):egret.Point{
+                                      unscaledWidth:number, unscaledHeight:number):egret.Point {
         if (!target)
             return;
 
-        var count = target.numChildren;
+        let count = target.numChildren;
 
-        var maxX = 0;
-        var maxY = 0;
-        var bounds = egret.$TempRectangle;
-        for (var i = 0; i < count; i++) {
-            var layoutElement = <eui.UIComponent> (target.getChildAt(i));
-            if (!egret.is(layoutElement,UIComponentClass) || !layoutElement.$includeInLayout) {
+        let maxX = 0;
+        let maxY = 0;
+        let bounds = egret.$TempRectangle;
+        for (let i = 0; i < count; i++) {
+            let layoutElement = <eui.UIComponent> (target.getChildAt(i));
+            if (!egret.is(layoutElement, UIComponentClass) || !layoutElement.$includeInLayout) {
                 continue;
             }
 
-            var values = layoutElement.$UIComponent;
-            var hCenter = values[sys.UIKeys.horizontalCenter];
-            var vCenter = values[sys.UIKeys.verticalCenter];
-            var left = values[sys.UIKeys.left];
-            var right = values[sys.UIKeys.right];
-            var top = values[sys.UIKeys.top];
-            var bottom = values[sys.UIKeys.bottom];
-            var percentWidth = values[sys.UIKeys.percentWidth];
-            var percentHeight = values[sys.UIKeys.percentHeight];
+            let values = layoutElement.$UIComponent;
+            let hCenter = formatRelative(values[sys.UIKeys.horizontalCenter], unscaledWidth*0.5);
+            let vCenter = formatRelative(values[sys.UIKeys.verticalCenter], unscaledHeight*0.5);
+            let left = formatRelative(values[sys.UIKeys.left], unscaledWidth);
+            let right = formatRelative(values[sys.UIKeys.right], unscaledWidth);
+            let top = formatRelative(values[sys.UIKeys.top], unscaledHeight);
+            let bottom = formatRelative(values[sys.UIKeys.bottom], unscaledHeight);
+            let percentWidth = values[sys.UIKeys.percentWidth];
+            let percentHeight = values[sys.UIKeys.percentHeight];
 
-            var childWidth = NaN;
-            var childHeight = NaN;
+            let childWidth = NaN;
+            let childHeight = NaN;
 
             if (!isNaN(left) && !isNaN(right)) {
                 childWidth = unscaledWidth - right - left;
@@ -258,12 +276,12 @@ module eui.sys {
 
             layoutElement.setLayoutBoundsSize(childWidth, childHeight);
             layoutElement.getLayoutBounds(bounds);
-            var elementWidth = bounds.width;
-            var elementHeight = bounds.height;
+            let elementWidth = bounds.width;
+            let elementHeight = bounds.height;
 
 
-            var childX = NaN;
-            var childY = NaN;
+            let childX = NaN;
+            let childY = NaN;
 
             if (!isNaN(hCenter))
                 childX = Math.round((unscaledWidth - elementWidth) / 2 + hCenter);
@@ -288,6 +306,6 @@ module eui.sys {
             maxX = Math.max(maxX, childX + elementWidth);
             maxY = Math.max(maxY, childY + elementHeight);
         }
-        return egret.$TempPoint.setTo(maxX,maxY);
+        return egret.$TempPoint.setTo(maxX, maxY);
     }
 }

@@ -1,6 +1,6 @@
 //////////////////////////////////////////////////////////////////////////////////////
 //
-//  Copyright (c) 2014-2015, Egret Technology Inc.
+//  Copyright (c) 2014-present, Egret Technology.
 //  All rights reserved.
 //  Redistribution and use in source and binary forms, with or without
 //  modification, are permitted provided that the following conditions are met:
@@ -27,7 +27,7 @@
 //
 //////////////////////////////////////////////////////////////////////////////////////
 
-module egret.native {
+namespace egret.native {
     /**
      * @private
      */
@@ -58,7 +58,7 @@ module egret.native {
             this.host = host;
             this.port = port;
 
-            var socketServerUrl = "ws://" + this.host + ":" + this.port;
+            let socketServerUrl = "ws://" + this.host + ":" + this.port;
             this.socket = new __global["egret_native"]["WebSocket"](socketServerUrl);
             this._bindEvent();
         }
@@ -69,8 +69,8 @@ module egret.native {
         }
 
         private _bindEvent():void {
-            var that = this;
-            var socket = this.socket;
+            let that = this;
+            let socket = this.socket;
             socket.onOpen = function () {
                 if (that.onConnect) {
                     that.onConnect.call(that.thisObject);
@@ -99,6 +99,11 @@ module egret.native {
 
         public close():void {
             this.socket.close();
+        }
+        public disconnect():void {
+            if (this.socket.disconnect) {
+                this.socket.disconnect();
+            }
         }
     }
     if (egret.Capabilities.runtimeType == RuntimeType.NATIVE) {

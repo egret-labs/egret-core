@@ -1,6 +1,6 @@
 //////////////////////////////////////////////////////////////////////////////////////
 //
-//  Copyright (c) 2014-2015, Egret Technology Inc.
+//  Copyright (c) 2014-present, Egret Technology.
 //  All rights reserved.
 //  Redistribution and use in source and binary forms, with or without
 //  modification, are permitted provided that the following conditions are met:
@@ -28,7 +28,7 @@
 //////////////////////////////////////////////////////////////////////////////////////
 
 
-module egret.gui {
+namespace egret.gui {
     /**
      * @class egret.gui.DefaultAssetAdapter
      * @classdesc
@@ -52,7 +52,7 @@ module egret.gui {
          * 对于某些类型素材，例如MovieClip，可以重用传入的显示对象,只修改其数据再返回。
          */
         public getAsset(source:any,compFunc:Function,thisObject:any,oldContent:any):void{
-            var content:any = source;
+            let content:any = source;
             if(source.prototype){
                 content = new source();
             }
@@ -60,8 +60,8 @@ module egret.gui {
                 compFunc.call(thisObject,content,source);
             }
             else if(typeof(source)=="string"){
-                var url:string = <string>source;
-                var loader:ImageLoader = new ImageLoader();
+                let url:string = <string>source;
+                let loader:ImageLoader = new ImageLoader();
                 loader.addEventListener(Event.COMPLETE, function(event:Event){
                     content = new egret.Texture();
                     content._setBitmapData(loader.data);
@@ -83,10 +83,10 @@ module egret.gui {
          */
         public getTheme(url:string,compFunc:Function,errorFunc:Function,thisObject:any):void {
             function onGet(event:egret.Event):void {
-                var loader:egret.HttpRequest = <egret.HttpRequest> (event.target);
+                let loader:egret.HttpRequest = <egret.HttpRequest> (event.target);
                 compFunc.call(thisObject, loader.response);
             }
-            var loader:egret.HttpRequest = new HttpRequest();
+            let loader:egret.HttpRequest = new HttpRequest();
             loader.addEventListener(Event.COMPLETE,onGet,thisObject);
             loader.addEventListener(IOErrorEvent.IO_ERROR,errorFunc,thisObject);
             loader.responseType = egret.HttpResponseType.TEXT;

@@ -1,6 +1,6 @@
 //////////////////////////////////////////////////////////////////////////////////////
 //
-//  Copyright (c) 2014-2015, Egret Technology Inc.
+//  Copyright (c) 2014-present, Egret Technology.
 //  All rights reserved.
 //  Redistribution and use in source and binary forms, with or without
 //  modification, are permitted provided that the following conditions are met:
@@ -27,10 +27,7 @@
 //
 //////////////////////////////////////////////////////////////////////////////////////
 
-/// <reference path="../lib/node.d.ts" />
-
-
-global["$locale_strings"] = global["$locale_strings"] ||{};
+global["$locale_strings"] = global["$locale_strings"] || {};
 var locale_strings = global["$locale_strings"];
 
 locale_strings[10001] = "Compiler option {0} expects an argument";
@@ -49,10 +46,10 @@ locale_strings[10015] = "\"{0}\" is not a valid Egret project folder";
 locale_strings[10016] = "Please visit {0} if no browser open it automatically";
 locale_strings[10017] = "Egret project is created, you can execute \"Egret run\" to run the project";
 locale_strings[10018] = "Found circular dependency when try to sort the TypeScript files. "
-                      + "Maybe you are create an instance of a subclass and assign it to a static member, "
-                      + "or using a subclass in immediately executing codes";
+    + "Maybe you are create an instance of a subclass and assign it to a static member, "
+    + "or using a subclass in immediately executing codes";
 locale_strings[10019] = "Cannot find the projects used to build native apps. These projects are not include on the Github."
-                      + "Please visit http://www.egret.com to download the Egret Installer. If you have install Egret, please contact us.";
+    + "Please visit http://www.egret.com to download the Egret Installer. If you have install Egret, please contact us.";
 locale_strings[10020] = "Compile service is exit unexpectedly";
 
 

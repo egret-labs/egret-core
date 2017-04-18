@@ -1,6 +1,6 @@
 //////////////////////////////////////////////////////////////////////////////////////
 //
-//  Copyright (c) 2014-2015, Egret Technology Inc.
+//  Copyright (c) 2014-present, Egret Technology.
 //  All rights reserved.
 //  Redistribution and use in source and binary forms, with or without
 //  modification, are permitted provided that the following conditions are met:
@@ -28,7 +28,7 @@
 //////////////////////////////////////////////////////////////////////////////////////
 
 
-module egret.gui {
+namespace egret.gui {
 
 	/**
 	 * @class egret.gui.TabBar
@@ -112,9 +112,9 @@ module egret.gui {
 			
 			if (this.requireSelectionChanged_tabBar && this.dataGroup){
 				this.requireSelectionChanged_tabBar = false;
-				var n:number = this.dataGroup.numElements;
-				for (var i:number = 0; i < n; i++){
-					var renderer:TabBarButton = <TabBarButton><any> (this.dataGroup.getElementAt(i));
+				let n:number = this.dataGroup.numElements;
+				for (let i:number = 0; i < n; i++){
+					let renderer:TabBarButton = <TabBarButton><any> (this.dataGroup.getElementAt(i));
 					if (renderer)
 						renderer.allowDeselection = !this.requireSelection;
 				}
@@ -133,11 +133,11 @@ module egret.gui {
 		 * 鼠标在项呈示器上弹起，抛出ItemClick事件。
 		 */	
         public _item_touchEndHandler(event: TouchEvent): void {
-            var itemRenderer: IItemRenderer = <IItemRenderer> (event.currentTarget);
+            let itemRenderer: IItemRenderer = <IItemRenderer> (event.currentTarget);
             if (itemRenderer != this._mouseDownItemRenderer)
                 return;
 
-            var newIndex: number
+            let newIndex: number
             if (itemRenderer)
                 newIndex = itemRenderer.itemIndex;
             else

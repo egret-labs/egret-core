@@ -5,16 +5,15 @@ import utils = require('../lib/utils');
 import htmlparser = require("../lib/htmlparser");
 
 
-export function normalize(project: egret.ILarkProject) {
+export function normalize(project: egret.EgretProjectConfig) {
     project.entryClass = project.entryClass || "Main";
     project.platform = project.platform || "web";
     project.background = project.background || "#888888";
     project.scaleMode = project.scaleMode || "showAll";
     project.orientationMode = project.orientationMode || "auto";
     project.frameRate = project.frameRate || 30;
-    project.contentWidth = project.contentWidth || 480;
-    project.contentHeight = project.contentHeight || 800;
-    project.moduleScripts = project.moduleScripts || [];
+    project.contentWidth = project.contentWidth || 640;
+    project.contentHeight = project.contentHeight || 1136;
     project.showLog = project.showLog || false;
     project.logFilter = project.logFilter || "";
     project.maxTouches = project.maxTouches || 2;
@@ -75,7 +74,7 @@ export function getNativeProjectInfo(html:string) {
     var content = FileUtil.read(html);
 
     var projs = parseProjectInfo(content);
-    var proj: egret.ILarkProject;
+    var proj: egret.EgretProjectConfig;
     if (projs.length == 0) {
         proj = {};
     } else {
@@ -102,13 +101,13 @@ export function getNativeProjectInfo(html:string) {
     return optionStr;
 }
 
-export function parseProjectInfo(html: string): egret.ILarkProject[] {
+export function parseProjectInfo(html: string): egret.EgretProjectConfig[] {
     var handler = new htmlparser.DefaultHandler(function (error, dom) {
         if (error)
             console.log(error);
     });
     var containers: htmlparser.Element[] = [];
-    var projects: egret.ILarkProject[] = [];
+    var projects: egret.EgretProjectConfig[] = [];
     var scripts: string[] = [];
     var nativeScripts: string[] = [];
     var parser = new htmlparser.Parser(handler);
@@ -132,7 +131,7 @@ export function parseProjectInfo(html: string): egret.ILarkProject[] {
 
     function parseProject() {
         containers.forEach(s=> {
-            var project: egret.ILarkProject = {};
+            var project: egret.EgretProjectConfig = {};
             project.contentHeight = s.attribs['data-content-height'] || 800;
             project.contentWidth = s.attribs['data-content-width'] || 480;
             project.entryClass = s.attribs['data-entry-class'];

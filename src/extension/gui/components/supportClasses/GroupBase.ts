@@ -1,6 +1,6 @@
 //////////////////////////////////////////////////////////////////////////////////////
 //
-//  Copyright (c) 2014-2015, Egret Technology Inc.
+//  Copyright (c) 2014-present, Egret Technology.
 //  All rights reserved.
 //  Redistribution and use in source and binary forms, with or without
 //  modification, are permitted provided that the following conditions are met:
@@ -28,7 +28,7 @@
 //////////////////////////////////////////////////////////////////////////////////////
 
 
-module egret.gui {
+namespace egret.gui {
 
 	/**
 	 * @class egret.gui.GroupBase
@@ -75,7 +75,7 @@ module egret.gui {
         private setContentWidth(value:number):void {
             if (value == this._contentWidth)
                 return;
-            var oldValue:number = this._contentWidth;
+            let oldValue:number = this._contentWidth;
             this._contentWidth = value;
             if (this.hasEventListener("propertyChange"))
                 PropertyChangeEvent.dispatchPropertyChangeEvent(this,
@@ -99,7 +99,7 @@ module egret.gui {
         private setContentHeight(value:number):void {
             if (value == this._contentHeight)
                 return;
-            var oldValue:number = this._contentHeight;
+            let oldValue:number = this._contentHeight;
             this._contentHeight = value;
             if (this.hasEventListener("propertyChange"))
                 PropertyChangeEvent.dispatchPropertyChangeEvent(this,
@@ -207,7 +207,7 @@ module egret.gui {
         public set horizontalScrollPosition(value:number) {
             if (value == this._horizontalScrollPosition)
                 return;
-            var oldValue:number = this._horizontalScrollPosition;
+            let oldValue:number = this._horizontalScrollPosition;
             this._horizontalScrollPosition = value;
             this.scrollPositionChanged();
             PropertyChangeEvent.dispatchPropertyChangeEvent(this,
@@ -226,7 +226,7 @@ module egret.gui {
         public set verticalScrollPosition(value:number) {
             if (value == this._verticalScrollPosition)
                 return;
-            var oldValue:number = this._verticalScrollPosition;
+            let oldValue:number = this._verticalScrollPosition;
             this._verticalScrollPosition = value;
             this.scrollPositionChanged();
             PropertyChangeEvent.dispatchPropertyChangeEvent(this,
@@ -254,7 +254,7 @@ module egret.gui {
          */
         private updateScrollRect(w:number, h:number):void{
 
-            var rect:Rectangle = this.scrollRect;
+            let rect:Rectangle = this.scrollRect;
             if(this._clipAndEnableScrolling){
                 if(rect){
                     rect.x = this._horizontalScrollPosition;
@@ -383,9 +383,9 @@ module egret.gui {
 		 * @method egret.gui.GroupBase#getElementIndicesInView
 		 * @returns {number}
          */
-        public getElementIndicesInView():Array<number>{
-            var visibleIndices:Array<number> = [];
-            var index:number;
+        public getElementIndicesInView():number[]{
+            let visibleIndices:number[] = [];
+            let index:number;
             if(!this.scrollRect){
                 for(index = 0;index < this.numChildren;index++){
                     visibleIndices.push(index);
@@ -393,10 +393,10 @@ module egret.gui {
             }
             else{
                 for(index = 0;index < this.numChildren;index++){
-                    var layoutElement:ILayoutElement = <ILayoutElement><any> (this.getChildAt(index));
+                    let layoutElement:ILayoutElement = <ILayoutElement><any> (this.getChildAt(index));
                     if (!layoutElement)
                         continue;
-                    var eltR:Rectangle = new Rectangle();
+                    let eltR:Rectangle = new Rectangle();
                     eltR.x = layoutElement.layoutBoundsX;
                     eltR.y = layoutElement.layoutBoundsY;
                     eltR.width = layoutElement.layoutBoundsWidth;

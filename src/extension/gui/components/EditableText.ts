@@ -1,6 +1,6 @@
 //////////////////////////////////////////////////////////////////////////////////////
 //
-//  Copyright (c) 2014-2015, Egret Technology Inc.
+//  Copyright (c) 2014-present, Egret Technology.
 //  All rights reserved.
 //  Redistribution and use in source and binary forms, with or without
 //  modification, are permitted provided that the following conditions are met:
@@ -27,7 +27,7 @@
 //
 //////////////////////////////////////////////////////////////////////////////////////
 
-module egret.gui {
+namespace egret.gui {
 
 	/**
 	 *
@@ -252,7 +252,7 @@ module egret.gui {
 		private setContentWidth(value:number):void{
 			if (value == this._contentWidth)
 				return;
-			var oldValue:number = this._contentWidth;
+			let oldValue:number = this._contentWidth;
 			this._contentWidth = value;
             this.dispatchPropertyChangeEvent("contentWidth", oldValue, value); 
             
@@ -269,7 +269,7 @@ module egret.gui {
 		private setContentHeight(value:number):void{
 			if (value == this._contentHeight)
 				return;
-			var oldValue:number = this._contentHeight;
+			let oldValue:number = this._contentHeight;
 			this._contentHeight = value;
 			this.dispatchPropertyChangeEvent("contentHeight", oldValue, value); 
 		}
@@ -310,8 +310,8 @@ module egret.gui {
 		private getScrollVByVertitcalPos(value:number):number{
 			if(this._textField.numLines==0)
 				return 1;
-            var lineHeight: number = this._textField.$getLineHeight();
-			var offsetHeight:number = (this.height-4)%lineHeight;
+            let lineHeight: number = this._textField.$getLineHeight();
+			let offsetHeight:number = (this.height-4)%lineHeight;
 			if(this._textField.height + offsetHeight-this.height==value){
                 return this._textField.maxScrollV;
 			}
@@ -323,9 +323,9 @@ module egret.gui {
 		private getVerticalPosByScrollV(scrollV:number = 0):number{
 			if(scrollV == 1||this._textField.numLines == 0)
 				return 0;
-            var lineHeight: number = this._textField.$getLineHeight();
+            let lineHeight: number = this._textField.$getLineHeight();
             if (scrollV == this._textField.maxScrollV) {
-				var offsetHeight:number = (this.height-4)%lineHeight;
+				let offsetHeight:number = (this.height-4)%lineHeight;
 				return this._textField.height + offsetHeight-this.height;
 			}
 			return lineHeight*(scrollV-1)+2;
@@ -334,10 +334,10 @@ module egret.gui {
 		 * @inheritDoc
 		 */
 		public getHorizontalScrollPositionDelta(navigationUnit:number = 0):number{
-			var delta:number = 0;
+			let delta:number = 0;
 			
-			var maxDelta:number = this._contentWidth - this._horizontalScrollPosition - this.width;
-			var minDelta:number = -this._horizontalScrollPosition;
+			let maxDelta:number = this._contentWidth - this._horizontalScrollPosition - this.width;
+			let minDelta:number = -this._horizontalScrollPosition;
 			
 			switch(navigationUnit){
 				case NavigationUnit.LEFT:
@@ -365,10 +365,10 @@ module egret.gui {
 		 * @inheritDoc
 		 */
 		public getVerticalScrollPositionDelta(navigationUnit:number = 0):number{
-			var delta:number = 0;
+			let delta:number = 0;
 			
-			var maxDelta:number = this._contentHeight - this._verticalScrollPosition - this.height;
-			var minDelta:number = -this._verticalScrollPosition;
+			let maxDelta:number = this._contentHeight - this._verticalScrollPosition - this.height;
+			let minDelta:number = -this._verticalScrollPosition;
 			
 			switch(navigationUnit){
 				case NavigationUnit.UP:
@@ -399,11 +399,11 @@ module egret.gui {
 		private getVScrollDelta(offsetLine:number = 0):number{
 			if(!this._textField)
 				return 0;
-			var currentScrollV:number = this.getScrollVByVertitcalPos(this._verticalScrollPosition);
-			var scrollV:number = currentScrollV + offsetLine;
+			let currentScrollV:number = this.getScrollVByVertitcalPos(this._verticalScrollPosition);
+			let scrollV:number = currentScrollV + offsetLine;
             scrollV = Math.max(1, Math.min(this._textField.maxScrollV, scrollV));
-			var startPos:number = this.getVerticalPosByScrollV(scrollV);
-			var delta:number = startPos-this._verticalScrollPosition;
+			let startPos:number = this.getVerticalPosByScrollV(scrollV);
+			let delta:number = startPos-this._verticalScrollPosition;
 			return delta;
 		}
 		
@@ -471,8 +471,8 @@ module egret.gui {
 				}
                 else {
                     //todo:没有文字时的测量
-					var hInLine:number = parseInt(<any>this.heightInLines);
-					var lineHeight:number = 22;
+					let hInLine:number = parseInt(<any>this.heightInLines);
+					let lineHeight:number = 22;
 					if(this._textField.$getText().length>0){
                         lineHeight = this._textField.$getLineHeight();
 					}
@@ -491,7 +491,7 @@ module egret.gui {
 					this.defaultWidth = NaN;
 				}
 				else{
-					var wInChars:number = parseInt(<any>this._widthInChars);
+					let wInChars:number = parseInt(<any>this._widthInChars);
 					this.defaultWidth = this.size*wInChars+5;
 				}
 			}
@@ -516,14 +516,14 @@ module egret.gui {
 			if(!this.clipAndEnableScrolling)
 				return;
 			this.setContentWidth(this._textField.width);
-			var contentHeight:number = 0;
-			var numLines:number = this._textField.numLines;
+			let contentHeight:number = 0;
+			let numLines:number = this._textField.numLines;
 			if(numLines==0){
 				contentHeight = 4;
 			}
 			else{
-                var lineHeight: number = this._textField.$getLineHeight();
-				var offsetHeight:number = (this.height-4)%lineHeight;
+                let lineHeight: number = this._textField.$getLineHeight();
+				let offsetHeight:number = (this.height-4)%lineHeight;
 				contentHeight = this._textField.height + offsetHeight;
 			}
 			this.setContentHeight(contentHeight);
@@ -642,7 +642,7 @@ module egret.gui {
 		private textField_textInputHandler(event:Event):void{
 			event.stopImmediatePropagation();
 			
-			var newEvent:Event =
+			let newEvent:Event =
 				new Event(event.type, false, true);
 			newEvent.data = event.data;
 			this.dispatchEvent(newEvent);

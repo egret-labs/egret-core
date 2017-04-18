@@ -1,6 +1,6 @@
 //////////////////////////////////////////////////////////////////////////////////////
 //
-//  Copyright (c) 2014-2015, Egret Technology Inc.
+//  Copyright (c) 2014-present, Egret Technology.
 //  All rights reserved.
 //  Redistribution and use in source and binary forms, with or without
 //  modification, are permitted provided that the following conditions are met:
@@ -27,10 +27,9 @@
 //
 //////////////////////////////////////////////////////////////////////////////////////
 
-module eui {
+namespace eui {
 
     /**
-     * @language en_US
      * The VScrollBar (vertical scrollbar) control lets you control
      * the portion of data that is displayed when there is too much data
      * to fit vertically in a display area.
@@ -43,9 +42,9 @@ module eui {
      * @version eui 1.0
      * @platform Web,Native
      * @includeExample  extension/eui/components/VScrollBarExample.ts
+     * @language en_US
      */
     /**
-     * @language zh_CN
      * VScrollBar（垂直 ScrollBar）控件可以在因数据太多而不能在显示区域中以垂直方向完全显示时控制显示的数据部分。
      * <p>虽然 VScrollBar 控件可以单独使用，但通常将它与其他组件一起使用来提供滚动功能。</p>
      *
@@ -53,6 +52,7 @@ module eui {
      * @version eui 1.0
      * @platform Web,Native
      * @includeExample  extension/eui/components/VScrollBarExample.ts
+     * @language zh_CN
      */
     export class VScrollBar extends ScrollBarBase {
 
@@ -65,32 +65,32 @@ module eui {
          */
         protected updateDisplayList(unscaledWidth:number, unscaledHeight:number):void {
             super.updateDisplayList(unscaledWidth, unscaledHeight);
-            var thumb = this.thumb;
-            var viewport = this.$viewport;
+            let thumb = this.thumb;
+            let viewport = this.$viewport;
             if (!thumb || !viewport) {
                 return;
             }
-            var bounds = egret.$TempRectangle;
+            let bounds = egret.$TempRectangle;
             thumb.getPreferredBounds(bounds);
-            var thumbHeight = bounds.height;
-            var thumbX = bounds.x;
-            var vsp = viewport.scrollV;
-            var contentHeight = viewport.contentHeight;
-            var height = viewport.height;
+            let thumbHeight = bounds.height;
+            let thumbX = bounds.x;
+            let vsp = viewport.scrollV;
+            let contentHeight = viewport.contentHeight;
+            let height = viewport.height;
             if (vsp <= 0) {
-                var scaleHeight = thumbHeight * (1-(-vsp) / (height * 0.5));
+                let scaleHeight = thumbHeight * (1-(-vsp) / (height * 0.5));
                 scaleHeight = Math.max(5,Math.round(scaleHeight));
                 thumb.setLayoutBoundsSize(NaN, scaleHeight);
                 thumb.setLayoutBoundsPosition(thumbX, 0);
             }
             else if (vsp >= contentHeight - height) {
-                scaleHeight = thumbHeight * (1-(vsp - contentHeight + height) / (height * 0.5));
+                let scaleHeight = thumbHeight * (1-(vsp - contentHeight + height) / (height * 0.5));
                 scaleHeight = Math.max(5,Math.round(scaleHeight));
                 thumb.setLayoutBoundsSize(NaN, scaleHeight);
                 thumb.setLayoutBoundsPosition(thumbX, unscaledHeight - scaleHeight);
             }
             else {
-                var thumbY = (unscaledHeight - thumbHeight) * vsp / (contentHeight - height);
+                let thumbY = (unscaledHeight - thumbHeight) * vsp / (contentHeight - height);
                 thumb.setLayoutBoundsSize(NaN, NaN);
                 thumb.setLayoutBoundsPosition(thumbX, thumbY);
             }

@@ -1,6 +1,6 @@
 //////////////////////////////////////////////////////////////////////////////////////
 //
-//  Copyright (c) 2014-2015, Egret Technology Inc.
+//  Copyright (c) 2014-present, Egret Technology.
 //  All rights reserved.
 //  Redistribution and use in source and binary forms, with or without
 //  modification, are permitted provided that the following conditions are met:
@@ -28,7 +28,7 @@
 //////////////////////////////////////////////////////////////////////////////////////
 
 
-module egret.gui {
+namespace egret.gui {
     /**
      * @class egret.gui.EaseInOutBase
      * @classdesc
@@ -59,7 +59,7 @@ module egret.gui {
         }
         
         public ease(fraction:number):number{
-            var easeOutFraction:number = 1 - this._easeInFraction;
+            let easeOutFraction:number = 1 - this._easeInFraction;
             
             if (fraction <= this._easeInFraction && this._easeInFraction > 0)
                 return this._easeInFraction * this._easeIn(fraction/this._easeInFraction);

@@ -1,6 +1,6 @@
 //////////////////////////////////////////////////////////////////////////////////////
 //
-//  Copyright (c) 2014-2015, Egret Technology Inc.
+//  Copyright (c) 2014-present, Egret Technology.
 //  All rights reserved.
 //  Redistribution and use in source and binary forms, with or without
 //  modification, are permitted provided that the following conditions are met:
@@ -28,26 +28,26 @@
 //////////////////////////////////////////////////////////////////////////////////////
 
 
-module eui {
+namespace eui {
 
-    var groupCount:number = 0;
+    let groupCount:number = 0;
 
     /**
      * @private
      * 显示列表深度排序
      */
     function breadthOrderCompare(a:egret.DisplayObject, b:egret.DisplayObject):number {
-        var aParent = a.parent;
-        var bParent = b.parent;
+        let aParent = a.parent;
+        let bParent = b.parent;
 
         if (!aParent || !bParent)
             return 0;
 
-        var aNestLevel = a.$nestLevel;
-        var bNestLevel = b.$nestLevel;
+        let aNestLevel = a.$nestLevel;
+        let bNestLevel = b.$nestLevel;
 
-        var aIndex = 0;
-        var bIndex = 0;
+        let aIndex = 0;
+        let bIndex = 0;
 
         if (aParent == bParent) {
             aIndex = aParent.getChildIndex(a);
@@ -65,7 +65,6 @@ module eui {
 
 
     /**
-     * @language en_US
      * The RadioButtonGroup component defines a group of RadioButton components
      * that act as a single mutually exclusive component; therefore,
      * a user can select only one RadioButton component at a time.
@@ -77,9 +76,9 @@ module eui {
      * @version eui 1.0
      * @platform Web,Native
      * @includeExample  extension/eui/components/RadioButtonGroupExample.ts
+     * @language en_US
      */
     /**
-     * @language zh_CN
      * RadioButtonGroup 组件定义一组 RadioButton 组件，这些组件相互排斥；因此，用户每次只能选择一个 RadioButton 组件
      *
      * @event egret.Event.CHANGE 此组中所选 RadioButton 组件的值更改时分派。
@@ -88,24 +87,25 @@ module eui {
      * @version eui 1.0
      * @platform Web,Native
      * @includeExample  extension/eui/components/RadioButtonGroupExample.ts
+     * @language zh_CN
      */
     export class RadioButtonGroup extends egret.EventDispatcher {
 
         /**
-         * @language en_US
          * Constructor.
          *
          * @version Egret 2.4
          * @version eui 1.0
          * @platform Web,Native
+         * @language en_US
          */
         /**
-         * @language zh_CN
          * 构造函数。
          *
          * @version Egret 2.4
          * @version eui 1.0
          * @platform Web,Native
+         * @language zh_CN
          */
         public constructor() {
             super();
@@ -124,7 +124,6 @@ module eui {
         private radioButtons:RadioButton[] = [];
 
         /**
-         * @language en_US
          * Returns the RadioButton component at the specified index.
          *
          * @param index The 0-based index of the RadioButton in the
@@ -139,9 +138,9 @@ module eui {
          * @version Egret 2.4
          * @version eui 1.0
          * @platform Web,Native
+         * @language en_US
          */
         /**
-         * @language zh_CN
          * 返回指定索引处的 RadioButton 组件。
          *
          * @param index RadioButtonGroup 中的 RadioButton 的从零开始的索引。
@@ -154,6 +153,7 @@ module eui {
          * @version Egret 2.4
          * @version eui 1.0
          * @platform Web,Native
+         * @language zh_CN
          */
         public getRadioButtonAt(index:number):RadioButton {
             return this.radioButtons[index];
@@ -165,7 +165,6 @@ module eui {
         $enabled:boolean = true;
 
         /**
-         * @language en_US
          * Determines whether selection is allowed.  Note that the value returned
          * only reflects the value that was explicitly set on the
          * <code>RadioButtonGroup</code> and does not reflect any values explicitly
@@ -176,9 +175,9 @@ module eui {
          * @version Egret 2.4
          * @version eui 1.0
          * @platform Web,Native
+         * @language en_US
          */
         /**
-         * @language zh_CN
          * 确定是否允许选择。请注意，返回的值仅反映对 <code>RadioButtonGroup</code> 显式设置的值，
          * 而不反映对各个 RadioButton 显式设置的任何值。
          *
@@ -187,6 +186,7 @@ module eui {
          * @version Egret 2.4
          * @version eui 1.0
          * @platform Web,Native
+         * @language zh_CN
          */
         public get enabled():boolean {
             return this.$enabled;
@@ -197,14 +197,13 @@ module eui {
             if (this.$enabled === value)
                 return;
             this.$enabled = value;
-            var buttons = this.radioButtons;
-            var length = buttons.length;
-            for (var i = 0; i < length; i++)
+            let buttons = this.radioButtons;
+            let length = buttons.length;
+            for (let i = 0; i < length; i++)
                 buttons[i].invalidateState();
         }
 
         /**
-         * @language en_US
          * The number of RadioButtons that belong to this RadioButtonGroup.
          *
          * @default 0
@@ -212,9 +211,9 @@ module eui {
          * @version Egret 2.4
          * @version eui 1.0
          * @platform Web,Native
+         * @language en_US
          */
         /**
-         * @language zh_CN
          *  属于此 RadioButtonGroup 的 RadioButton 数。
          *
          * @default 0
@@ -222,6 +221,7 @@ module eui {
          * @version Egret 2.4
          * @version eui 1.0
          * @platform Web,Native
+         * @language zh_CN
          */
         public get numRadioButtons():number {
             return this.radioButtons.length;
@@ -232,7 +232,6 @@ module eui {
          */
         private _selectedValue:any = null;
         /**
-         * @language en_US
          * The <code>value</code> property of the selected
          * RadioButton component in the group, if it has been set,
          * otherwise, the <code>label</code> property of the selected RadioButton.
@@ -247,9 +246,9 @@ module eui {
          * @version Egret 2.4
          * @version eui 1.0
          * @platform Web,Native
+         * @language en_US
          */
         /**
-         * @language zh_CN
          * 组中所选 RadioButton 组件的 <code>value</code> 属性（如果未设置），
          * 否则为所选 RadioButton 组件的 <code>label</code> 属性。
          * 如果未选择任何 RadioButton，则此属性为 <code>null</code>。
@@ -262,6 +261,7 @@ module eui {
          * @version Egret 2.4
          * @version eui 1.0
          * @platform Web,Native
+         * @language zh_CN
          */
         public get selectedValue():any {
             if (this.selection) {
@@ -278,9 +278,9 @@ module eui {
                 this.$setSelection(null, false);
                 return;
             }
-            var n = this.numRadioButtons;
-            for (var i = 0; i < n; i++) {
-                var radioButton = this.radioButtons[i];
+            let n = this.numRadioButtons;
+            for (let i = 0; i < n; i++) {
+                let radioButton = this.radioButtons[i];
                 if (radioButton.value == value ||
                     radioButton.label == value) {
                     this.changeSelection(i, false);
@@ -296,7 +296,6 @@ module eui {
          */
         private _selection:RadioButton = null;
         /**
-         * @language en_US
          * Contains a reference to the currently selected
          * RadioButton component in the group.This property is valid only
          * when the target RadioButton is displayed on the display list
@@ -306,9 +305,9 @@ module eui {
          * @version Egret 2.4
          * @version eui 1.0
          * @platform Web,Native
+         * @language en_US
          */
         /**
-         * @language zh_CN
          * 当前被选中的单选按钮引用。此属性仅当目标RadioButton在显示列表时有效。
          *
          * @default null
@@ -316,6 +315,7 @@ module eui {
          * @version Egret 2.4
          * @version eui 1.0
          * @platform Web,Native
+         * @language zh_CN
          */
         public get selection():RadioButton {
             return this._selection;
@@ -332,12 +332,12 @@ module eui {
          * 添加单选按钮到组内
          */
         $addInstance(instance:RadioButton):void {
-            instance.addEventListener(egret.Event.REMOVED, this.removedHandler, this);
-            var buttons = this.radioButtons;
+            instance.addEventListener(egret.Event.REMOVED_FROM_STAGE, this.removedHandler, this);
+            let buttons = this.radioButtons;
             buttons.push(instance);
             buttons.sort(breadthOrderCompare);
-            var length = buttons.length;
-            for (var i = 0; i < length; i++) {
+            let length = buttons.length;
+            for (let i = 0; i < length; i++) {
                 buttons[i].$indexNumber = i;
             }
             if (this._selectedValue)
@@ -355,17 +355,17 @@ module eui {
          */
         $removeInstance(instance:RadioButton, addListener?:boolean):void {
             if (instance) {
-                var foundInstance = false;
-                var buttons = this.radioButtons;
-                var length = buttons.length;
-                for (var i = 0; i < length; i++) {
-                    var rb = buttons[i];
+                let foundInstance = false;
+                let buttons = this.radioButtons;
+                let length = buttons.length;
+                for (let i = 0; i < length; i++) {
+                    let rb = buttons[i];
                     if (foundInstance) {
                         rb.$indexNumber = rb.$indexNumber - 1;
                     }
                     else if (rb == instance) {
                         if (addListener)
-                            instance.addEventListener(egret.Event.ADDED, this.addedHandler, this);
+                            instance.addEventListener(egret.Event.ADDED_TO_STAGE, this.addedHandler, this);
                         if (instance == this._selection)
                             this._selection = null;
                         instance.$radioButtonGroup = null;
@@ -396,8 +396,8 @@ module eui {
                 }
             }
             else {
-                var n = this.numRadioButtons;
-                for (var i = 0; i < n; i++) {
+                let n = this.numRadioButtons;
+                for (let i = 0; i < n; i++) {
                     if (value == this.getRadioButtonAt(i)) {
                         this.changeSelection(i, fireChange);
                         break;
@@ -413,7 +413,7 @@ module eui {
          * 改变选中项
          */
         private changeSelection(index:number, fireChange?:boolean):void {
-            var rb = this.getRadioButtonAt(index);
+            let rb = this.getRadioButtonAt(index);
             if (rb && rb != this._selection) {
 
                 if (this._selection)
@@ -431,9 +431,9 @@ module eui {
          * 单选按钮添加到显示列表
          */
         private addedHandler(event:egret.Event):void {
-            var rb:RadioButton = event.target;
-            if (rb) {
-                rb.removeEventListener(egret.Event.ADDED, this.addedHandler, this);
+            let rb:RadioButton = event.target;
+            if (rb == event.currentTarget) {
+                rb.removeEventListener(egret.Event.ADDED_TO_STAGE, this.addedHandler, this);
                 this.$addInstance(rb);
             }
         }
@@ -443,16 +443,13 @@ module eui {
          * 单选按钮从显示列表移除
          */
         private removedHandler(event:egret.Event):void {
-            var rb:RadioButton = event.target;
-            if (rb) {
-                rb.removeEventListener(egret.Event.REMOVED, this.removedHandler, this);
+            let rb:RadioButton = event.target;
+            if (rb == event.currentTarget) {
+                rb.removeEventListener(egret.Event.REMOVED_FROM_STAGE, this.removedHandler, this);
                 this.$removeInstance(rb, true);
             }
         }
     }
     registerBindable(RadioButtonGroup.prototype,"selectedValue");
 
-    if(DEBUG){
-        egret.$markReadOnly(RadioButtonGroup,"numRadioButtons");
-    }
 }

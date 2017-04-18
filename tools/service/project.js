@@ -1,35 +1,28 @@
 /// <reference path="../lib/types.d.ts" />
 var os = require("os");
-var cprocess = require('child_process');
-var utils = require('../lib/utils');
-var FileUtil = require('../lib/FileUtil');
+var cprocess = require("child_process");
+var utils = require("../lib/utils");
+var FileUtil = require("../lib/FileUtil");
 var Project = (function () {
     function Project() {
         this.buildProcessOutputs = [];
     }
-    Object.defineProperty(Project.prototype, "buildPort", {
-        get: function () {
-            return this._buildPort;
-        },
-        set: function (value) {
-            var _this = this;
-            if (this._buildPort) {
-                this._buildPort.send({ command: "shutdown", path: this.path });
+    Project.prototype.setServiceSocket = function (value) {
+        var _this = this;
+        if (this._serviceSocket) {
+            this._serviceSocket.send({ command: "shutdown", path: this.path });
+        }
+        this._serviceSocket = value;
+        this._serviceSocket.on('message', function (msg) { return _this.onBuildServiceMessage(msg); });
+        this._serviceSocket.on('close', function (msg) {
+            console.log("编译服务连接关闭:" + _this.path);
+            if (_this.buildProcess) {
+                _this.buildProcess.kill('10020');
             }
-            this._buildPort = value;
-            this._buildPort.on('message', function (msg) { return _this.onBuildServiceMessage(msg); });
-            this._buildPort.on('close', function (msg) {
-                console.log("编译服务连接关闭:" + _this.path);
-                if (_this.buildProcess) {
-                    _this.buildProcess.kill('10020');
-                }
-                _this._buildPort = null;
-            });
-            setInterval(function () { return _this._buildPort && _this._buildPort.send({}); }, 15000);
-        },
-        enumerable: true,
-        configurable: true
-    });
+            _this._serviceSocket = null;
+        });
+        setInterval(function () { return _this._serviceSocket && _this._serviceSocket.send({}); }, 15000);
+    };
     Project.prototype.init = function () {
     };
     Project.prototype.fileChanged = function (socket, task, path, changeType) {
@@ -69,6 +62,9 @@ var Project = (function () {
         if (this.option && this.option.runtime) {
             params.push("--runtime", this.option.runtime);
         }
+        if (this.option && this.option.experimental) {
+            params.push("-exp");
+        }
         var build = cprocess.spawn(process.execPath, params, {
             detached: true,
             cwd: os.tmpdir()
@@ -85,7 +81,7 @@ var Project = (function () {
         this.buildProcess = build;
     };
     Project.prototype.buildWithExistBuildService = function () {
-        if (!egret.args.debug && (!this.buildProcess || !this._buildPort)) {
+        if (!egret.args.debug && (!this.buildProcess || !this._serviceSocket)) {
             this.buildWholeProject();
             return;
         }
@@ -99,7 +95,7 @@ var Project = (function () {
     };
     Project.prototype.sendCommand = function (cmd) {
         //this.buildProcess.stdin.write(JSON.stringify(cmd), 'utf8');
-        this.buildPort && this.buildPort.send(cmd);
+        this._serviceSocket && this._serviceSocket.send(cmd);
         //this.buildProcess.send(cmd);
     };
     Project.prototype.shutdown = function (retry) {
@@ -114,7 +110,7 @@ var Project = (function () {
                 this.buildProcess.removeAllListeners('exit');
                 this.buildProcess.kill();
                 this.buildProcess = null;
-                this._buildPort = null;
+                this._serviceSocket = null;
             }
         }
         else {
@@ -137,7 +133,7 @@ var Project = (function () {
             option: null
         });
         this.buildProcess = null;
-        this._buildPort = null;
+        this._serviceSocket = null;
     };
     Project.prototype.showBuildWholeProject = function () {
         return false;
@@ -148,7 +144,5 @@ var Project = (function () {
         this.changes = [];
     };
     return Project;
-})();
+}());
 module.exports = Project;
-
-//# sourceMappingURL=project.js.map

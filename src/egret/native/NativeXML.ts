@@ -1,6 +1,6 @@
 //////////////////////////////////////////////////////////////////////////////////////
 //
-//  Copyright (c) 2014-2015, Egret Technology Inc.
+//  Copyright (c) 2014-present, Egret Technology.
 //  All rights reserved.
 //  Redistribution and use in source and binary forms, with or without
 //  modification, are permitted provided that the following conditions are met:
@@ -27,7 +27,7 @@
 //
 //////////////////////////////////////////////////////////////////////////////////////
 
-module egret.web {
+namespace egret.web {
 
     /**
      * @private
@@ -130,8 +130,10 @@ module egret.web {
      * @param text 要解析的字符串
      */
     function parse(text:string):XML {
-        var xmlDocStr = egret_native.xmlStr2JsonStr(text);
-        var xmlDoc = JSON.parse(xmlDocStr);
+        let xmlDocStr = egret_native.xmlStr2JsonStr(text);
+        //替换换行符
+        xmlDocStr = xmlDocStr.replace(/\n/g,"\\n");
+        let xmlDoc = JSON.parse(xmlDocStr);
         return parseNode(xmlDoc, null);
     }
 
@@ -143,24 +145,24 @@ module egret.web {
         if(node.localName=="parsererror"){
             throw new Error(node.textContent);
         }
-        var xml = new XML(node.localName, parent, node.prefix, node.namespace, node.name);
-        var nodeAttributes = node.attributes;
-        var attributes = xml.attributes;
-        for (var key in nodeAttributes) {
-            attributes[key] = nodeAttributes[key];
+        let xml = new XML(node.localName, parent, node.prefix, node.namespace, node.name);
+        let nodeAttributes = node.attributes;
+        let attributes = xml.attributes;
+        for (let key in nodeAttributes) {
+            attributes[key] = xml["$" + key] = nodeAttributes[key];
         }
-        var childNodes = node.children;
-        var length = childNodes.length;
-        var children = xml.children;
-        for (var i = 0; i < length; i++) {
-            var childNode = childNodes[i];
-            var nodeType = childNode.nodeType;
-            var childXML:any = null;
+        let childNodes = node.children;
+        let length = childNodes.length;
+        let children = xml.children;
+        for (let i = 0; i < length; i++) {
+            let childNode = childNodes[i];
+            let nodeType = childNode.nodeType;
+            let childXML:any = null;
             if (nodeType == 1) {
                 childXML = parseNode(childNode, xml);
             }
             else if (nodeType == 3) {
-                var text = childNode.text.trim();
+                let text = childNode.text.trim();
                 if (text) {
                     childXML = new XMLText(text, xml);
                 }

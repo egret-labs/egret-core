@@ -1,6 +1,6 @@
 //////////////////////////////////////////////////////////////////////////////////////
 //
-//  Copyright (c) 2014-2015, Egret Technology Inc.
+//  Copyright (c) 2014-present, Egret Technology.
 //  All rights reserved.
 //  Redistribution and use in source and binary forms, with or without
 //  modification, are permitted provided that the following conditions are met:
@@ -27,7 +27,7 @@
 //
 //////////////////////////////////////////////////////////////////////////////////////
 
-module egret.native {
+namespace egret.native {
 
     /**
      * @private
@@ -35,30 +35,30 @@ module egret.native {
      */
     export class NaSound extends egret.EventDispatcher implements egret.Sound {
         /**
-         * @language en_US
          * Background music
          * @version Egret 2.4
          * @platform Web,Native
+         * @language en_US
          */
         /**
-         * @language zh_CN
          * 背景音乐
          * @version Egret 2.4
          * @platform Web,Native
+         * @language zh_CN
          */
         public static MUSIC:string = "music";
 
         /**
-         * @language en_US
          * EFFECT
          * @version Egret 2.4
          * @platform Web,Native
+         * @language en_US
          */
         /**
-         * @language zh_CN
          * 音效
          * @version Egret 2.4
          * @platform Web,Native
+         * @language zh_CN
          */
         public static EFFECT:string = "effect";
 
@@ -99,7 +99,7 @@ module egret.native {
          * @inheritDoc
          */
         public load(url:string):void {
-            var self = this;
+            let self = this;
 
             this.url = url;
 
@@ -111,11 +111,16 @@ module egret.native {
                 download();
             }
             else {
-                onLoadComplete();
+                if(__global.setTimeout) {
+                    __global.setTimeout(onLoadComplete, 0);
+                }
+                else {
+                    $callAsync(onLoadComplete, self);
+                }
             }
 
             function download() {
-                var promise = PromiseObject.create();
+                let promise = PromiseObject.create();
                 promise.onSuccessFunc = onLoadComplete;
                 promise.onErrorFunc = function () {
                     egret.IOErrorEvent.dispatchIOErrorEvent(self);
@@ -131,9 +136,9 @@ module egret.native {
         }
 
         private preload():void {
-            var self = this;
+            let self = this;
             if (self.type == egret.Sound.EFFECT) {
-                var promise = new egret.PromiseObject();
+                let promise = new egret.PromiseObject();
                 promise.onSuccessFunc = function (soundId) {
                     self.dispatchEventWith(egret.Event.COMPLETE);
                 };
@@ -152,10 +157,10 @@ module egret.native {
             loops = +loops || 0;
 
             if (DEBUG && this.loaded == false) {
-                egret.$error(3001);
+                egret.$error(1049);
             }
 
-            var channel = new NaSoundChannel();
+            let channel = new NaSoundChannel();
             channel.$url = this.url;
             channel.$loops = loops;
             channel.$type = this.type;

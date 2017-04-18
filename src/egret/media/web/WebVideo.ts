@@ -1,6 +1,6 @@
 //////////////////////////////////////////////////////////////////////////////////////
 //
-//  Copyright (c) 2014-2015, Egret Technology Inc.
+//  Copyright (c) 2014-present, Egret Technology.
 //  All rights reserved.
 //  Redistribution and use in source and binary forms, with or without
 //  modification, are permitted provided that the following conditions are met:
@@ -27,7 +27,7 @@
 //
 //////////////////////////////////////////////////////////////////////////////////////
 
-module egret.web {
+namespace egret.web {
 
     /**
      * @private
@@ -38,41 +38,56 @@ module egret.web {
         /**
          * @inheritDoc
          */
-        public src:string;
+        public src: string;
         /**
          * @inheritDoc
          */
-        public poster:string;
+        public poster: string;
 
         /**
          * @private
          */
-        private posterData:BitmapData;
+        private posterData: BitmapData;
         /**
          * @private
          */
-        private video:HTMLVideoElement;
+        private video: HTMLVideoElement;
         /**
          * @private
          */
-        private loaded:boolean = false;
+        private loaded: boolean = false;
         /**
          * @private
          */
-        private closed:boolean = false;
+        private closed: boolean = false;
         /**
          * @private
          */
-        private heightSet:number = NaN;
+        private heightSet: number = NaN;
         /**
          * @private
          */
-        private widthSet:number = NaN;
+        private widthSet: number = NaN;
+        /**
+         * @private
+         * pc上视频卡住的时候不能暂停
+         */
+        private waiting: boolean = false;
+        /**
+         * @private
+         * 用户是否设置了 pause
+         */
+        private userPause: boolean = false;
+        /**
+         * @private
+         * 用户是否设置了 play
+         */
+        private userPlay: boolean = false;
 
         /**
          * @inheritDoc
          */
-        constructor(url?:string) {
+        constructor(url?: string, cache: boolean = true) {
             super();
             this.$renderNode = new sys.BitmapNode();
             this.src = url;
@@ -85,62 +100,76 @@ module egret.web {
         /**
          * @inheritDoc
          */
-        public load(url?:string) {
+        public load(url?: string, cache: boolean = true) {
             url = url || this.src;
             this.src = url;
             if (DEBUG && !url) {
                 egret.$error(3002);
             }
-            if (this.video && this.video.src == url)
+            if (this.video && this.video.src == url) {
                 return;
-            var video = document.createElement("video");
-            video.controls = null;
-            video.src = url;//
+            }
+            let video: HTMLVideoElement;
+            if (!this.video || egret.Capabilities.isMobile) {
+                video = document.createElement("video");
+                this.video = video;
+                video.controls = null;
+            } else {
+                video = this.video;
+            }
+            video.src = url;
             video.setAttribute("autoplay", "autoplay");
             video.setAttribute("webkit-playsinline", "true");
             video.addEventListener("canplay", this.onVideoLoaded);
             video.addEventListener("error", () => this.onVideoError());
             video.addEventListener("ended", () => this.onVideoEnded());
+            var firstPause = false;
+            video.addEventListener("canplay", () => {
+                this.waiting = false;
+
+                if (!firstPause) {
+                    firstPause = true;
+                    video.pause();
+                } else {
+                    if (this.userPause) {
+                        this.pause();
+                    } else if (this.userPlay) {
+                        this.play();
+                    }
+                }
+            });
+            video.addEventListener("waiting", () => {
+                this.waiting = true;
+            });
+
             video.load();
-            video.play();
+            this.videoPlay();
             video.style.position = "absolute";
             video.style.top = "0px";
             video.style.zIndex = "-88888";
             video.style.left = "0px";
             video.height = 1;
             video.width = 1;
-            window.setTimeout(() => video.pause(), 16);
-            this.video = video;
         }
 
-        public get length():number {
-            if (this.video) {
-                return this.video.duration;
-            }
-
-            throw new Error("Video not loaded!");
-            //return 0;
-        }
-
-        private isPlayed:boolean = false;
+        private isPlayed: boolean = false;
 
         /**
          * @inheritDoc
          */
-        public play(startTime?:number, loop:boolean = false) {
-
+        public play(startTime?: number, loop: boolean = false) {
             if (this.loaded == false) {
                 this.load(this.src);
-                this.once(egret.Event.COMPLETE, e=> this.play(startTime, loop), this);
+                this.once(egret.Event.COMPLETE, e => this.play(startTime, loop), this);
                 return;
             }
 
             this.isPlayed = true;
 
-            var video = this.video;
+            let video = this.video;
             if (startTime != undefined)
                 video.currentTime = +startTime || 0;
-            video.loop = !!loop;
+                video.loop = !!loop;
 
             if (egret.Capabilities.isMobile) {
                 video.style.zIndex = "-88888"; //移动端，就算设置成最小，只要全屏，都会在最上层，而且在自动退出去后，不担心挡住canvas
@@ -153,12 +182,27 @@ module egret.web {
             video.style.left = "0px";
             video.height = video.videoHeight;
             video.width = video.videoWidth;
+            if (egret.Capabilities.os != "Windows PC" && egret.Capabilities.os != "Mac OS") {
+                window.setTimeout(function () {//为了解决视频返回挤压页面内容
+                    video.width = 0;
+                }, 1000);
+            }
 
             this.checkFullScreen(this._fullscreen);
         }
+        private videoPlay(){
+            this.userPause = false;
+            if (this.waiting) {
+                this.userPlay = true;
+                return
+            }
+            this.userPlay = false;            
+            
+            this.video.play();
+        }
 
-        private checkFullScreen(playFullScreen:boolean):void {
-            var video = this.video;
+        private checkFullScreen(playFullScreen: boolean): void {
+            let video = this.video;
 
             if (playFullScreen) {
                 if (video.parentElement == null) {
@@ -177,15 +221,20 @@ module egret.web {
                 this.setFullScreenMonitor(false);
 
                 egret.startTick(this.markDirty, this);
-            }
 
-            video.play();
+                if (egret.Capabilities.isMobile) {
+                    this.video.currentTime = 0;
+                    this.onVideoEnded();
+                    return;
+                }
+            }
+            this.videoPlay();
         }
 
-        private goFullscreen():boolean {
-            var video = this.video;
+        private goFullscreen(): boolean {
+            let video = this.video;
 
-            var fullscreenType:string;
+            let fullscreenType: string;
             fullscreenType = egret.web.getPrefixStyleName('requestFullscreen', video);
             if (!video[fullscreenType]) {
                 fullscreenType = egret.web.getPrefixStyleName('requestFullScreen', video);
@@ -203,37 +252,41 @@ module egret.web {
             return true;
         }
 
-        private setFullScreenMonitor(use:boolean):void {
-            var video = this.video;
+        private setFullScreenMonitor(use: boolean): void {
+            let video = this.video;
 
             if (use) {
                 video.addEventListener("mozfullscreenchange", this.screenChanged);
                 video.addEventListener("webkitfullscreenchange", this.screenChanged);
 
-                video.addEventListener("webkitfullscreenerror", this.screenError);
+                video.addEventListener("mozfullscreenerror", this.screenError);
                 video.addEventListener("webkitfullscreenerror", this.screenError);
             }
             else {
                 video.removeEventListener("mozfullscreenchange", this.screenChanged);
                 video.removeEventListener("webkitfullscreenchange", this.screenChanged);
 
-                video.removeEventListener("webkitfullscreenerror", this.screenError);
+                video.removeEventListener("mozfullscreenerror", this.screenError);
                 video.removeEventListener("webkitfullscreenerror", this.screenError);
             }
         }
 
-        private screenError():void {
-            egret.$error(3103);
+        private screenError(): void {
+            egret.$error(3014);
         }
 
-        private screenChanged = (e):void => {
-            var isfullscreen = !!this.video['webkitDisplayingFullscreen'];
+        private screenChanged = (e): void => {
+            let isfullscreen = document.fullscreenEnabled || document.webkitIsFullScreen;
             if (!isfullscreen) {
                 this.checkFullScreen(false);
+
+                if (!egret.Capabilities.isMobile) {
+                    this._fullscreen = isfullscreen;
+                }
             }
         };
 
-        private exitFullscreen():void {
+        private exitFullscreen(): void {
             //退出全屏
             if (document['exitFullscreen']) {
                 document['exitFullscreen']();
@@ -293,9 +346,12 @@ module egret.web {
          * @inheritDoc
          */
         public pause() {
-            if (this.video) {
-                this.video.pause();
+            this.userPlay = false;
+            if (this.waiting) {
+                this.userPause = true;
+                return
             }
+            this.userPause = false;
 
             egret.stopTick(this.markDirty, this);
             this.$invalidate();
@@ -305,7 +361,7 @@ module egret.web {
         /**
          * @inheritDoc
          */
-        public get volume():number {
+        public get volume(): number {
             if (!this.video)
                 return 1;
             return this.video.volume;
@@ -314,7 +370,7 @@ module egret.web {
         /**
          * @inheritDoc
          */
-        public set volume(value:number) {
+        public set volume(value: number) {
             if (!this.video)
                 return;
             this.video.volume = value;
@@ -323,7 +379,7 @@ module egret.web {
         /**
          * @inheritDoc
          */
-        public get position():number {
+        public get position(): number {
             if (!this.video)
                 return 0;
             return this.video.currentTime;
@@ -332,7 +388,7 @@ module egret.web {
         /**
          * @inheritDoc
          */
-        public set position(value:number) {
+        public set position(value: number) {
             if (!this.video)
                 return;
             this.video.currentTime = value;
@@ -342,43 +398,47 @@ module egret.web {
         /**
          * @inheritDoc
          */
-        public get fullscreen():boolean {
+        public get fullscreen(): boolean {
             return this._fullscreen;
         }
 
         /**
          * @inheritDoc
          */
-        public set fullscreen(value:boolean) {
+        public set fullscreen(value: boolean) {
+            if (egret.Capabilities.isMobile) {
+                return;
+            }
             this._fullscreen = !!value;
             if (this.video && this.video.paused == false) {
                 this.checkFullScreen(this._fullscreen);
             }
         }
 
-        private _bitmapData:BitmapData;
+        private _bitmapData: BitmapData;
 
         /**
          * @inheritDoc
          */
-        public get bitmapData():BitmapData {
+        public get bitmapData(): BitmapData {
             if (!this.video || !this.loaded)
                 return null;
             if (!this._bitmapData) {
                 this.video.width = this.video.videoWidth;
                 this.video.height = this.video.videoHeight;
-                this._bitmapData = $toBitmapData(this.video);
+                this._bitmapData = new BitmapData(this.video);
+                this._bitmapData.$deleteSource = false;
             }
             return this._bitmapData;
         }
 
         private loadPoster() {
-            var poster = this.poster;
+            let poster = this.poster;
             if (!poster)
                 return;
-            var imageLoader = new egret.ImageLoader();
-            imageLoader.once(egret.Event.COMPLETE, e=> {
-                var posterData = <HTMLImageElement><any>imageLoader.data;
+            let imageLoader = new egret.ImageLoader();
+            imageLoader.once(egret.Event.COMPLETE, e => {
+                let posterData = <HTMLImageElement><any>imageLoader.data;
                 this.posterData = imageLoader.data;
 
                 this.posterData.width = this.getPlayWidth();
@@ -395,9 +455,9 @@ module egret.web {
          */
         private onVideoLoaded = () => {
             this.video.removeEventListener("canplay", this.onVideoLoaded);
-            var video = this.video;
+            let video = this.video;
             this.loaded = true;
-            video.pause();
+            //video.pause();
             if (this.posterData) {
                 this.posterData.width = this.getPlayWidth();
                 this.posterData.height = this.getPlayHeight();
@@ -405,15 +465,17 @@ module egret.web {
             video.width = video.videoWidth;
             video.height = video.videoHeight;
             this.$invalidateContentBounds();
-            this.dispatchEventWith(egret.Event.COMPLETE);
+            window.setTimeout(() => {
+                this.dispatchEventWith(egret.Event.COMPLETE);
+            }, 200);
         };
 
         /**
          * @private
          */
-        $measureContentBounds(bounds:Rectangle):void {
-            var bitmapData = this.bitmapData;
-            var posterData = this.posterData;
+        $measureContentBounds(bounds: Rectangle): void {
+            let bitmapData = this.bitmapData;
+            let posterData = this.posterData;
             if (bitmapData) {
                 bounds.setTo(0, 0, this.getPlayWidth(), this.getPlayHeight());
             }
@@ -425,7 +487,7 @@ module egret.web {
             }
         }
 
-        private getPlayWidth():number {
+        private getPlayWidth(): number {
             if (!isNaN(this.widthSet)) {
                 return this.widthSet;
             }
@@ -441,7 +503,7 @@ module egret.web {
             return NaN;
         }
 
-        private getPlayHeight():number {
+        private getPlayHeight(): number {
             if (!isNaN(this.heightSet)) {
                 return this.heightSet;
             }
@@ -460,26 +522,29 @@ module egret.web {
         /**
          * @private
          */
-        $render():void {
-            var node = <sys.BitmapNode>this.$renderNode;
-            var bitmapData = this.bitmapData;
-            var posterData = this.posterData;
-            var width = this.getPlayWidth();
-            var height = this.getPlayHeight();
-            if (width <= 0 || height <= 0) {
-                return;
-            }
+        $render(): void {
+            let node = <sys.BitmapNode>this.$renderNode;
+            let bitmapData = this.bitmapData;
+            let posterData = this.posterData;
+            let width = this.getPlayWidth();
+            let height = this.getPlayHeight();
             if ((!this.isPlayed || egret.Capabilities.isMobile) && posterData) {
                 node.image = posterData;
+                node.imageWidth = width;
+                node.imageHeight = height;
                 node.drawImage(0, 0, posterData.width, posterData.height, 0, 0, width, height);
             }
             else if (this.isPlayed && bitmapData) {
                 node.image = bitmapData;
+                node.imageWidth = bitmapData.width;
+                node.imageHeight = bitmapData.height;
+                WebGLUtils.deleteWebGLTexture(bitmapData.webGLTexture);
+                bitmapData.webGLTexture = null;
                 node.drawImage(0, 0, bitmapData.width, bitmapData.height, 0, 0, width, height);
             }
         }
 
-        private markDirty():boolean {
+        private markDirty(): boolean {
             this.$invalidate();
             return true;
         }
@@ -488,7 +553,7 @@ module egret.web {
          * @private
          * 设置显示高度
          */
-        $setHeight(value:number):boolean {
+        $setHeight(value: number): boolean {
             this.heightSet = +value || 0;
             this.$invalidate();
             this.$invalidateContentBounds();
@@ -499,19 +564,27 @@ module egret.web {
          * @private
          * 设置显示宽度
          */
-        $setWidth(value:number):boolean {
+        $setWidth(value: number): boolean {
             this.widthSet = +value || 0;
             this.$invalidate();
             this.$invalidateContentBounds();
             return super.$setWidth(value);
         }
 
-        public get paused():boolean {
+        public get paused(): boolean {
             if (this.video) {
                 return this.video.paused;
             }
-
             return true;
+        }
+        /**
+         * @inheritDoc
+         */
+        public get length(): number {
+            if (this.video) {
+                return this.video.duration;
+            }
+            throw new Error("Video not loaded!");
         }
     }
 

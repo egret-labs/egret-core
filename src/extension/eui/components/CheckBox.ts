@@ -1,6 +1,6 @@
 //////////////////////////////////////////////////////////////////////////////////////
 //
-//  Copyright (c) 2014-2015, Egret Technology Inc.
+//  Copyright (c) 2014-present, Egret Technology.
 //  All rights reserved.
 //  Redistribution and use in source and binary forms, with or without
 //  modification, are permitted provided that the following conditions are met:
@@ -28,10 +28,9 @@
 //////////////////////////////////////////////////////////////////////////////////////
 
 
-module eui {
+namespace eui {
 
 	/**
-	 * @language en_US
 	 * The CheckBox component consists of an optional label and a small box
 	 * that can contain a check mark or not.<p/>
 	 *
@@ -43,9 +42,9 @@ module eui {
 	 * @version eui 1.0
 	 * @platform Web,Native
      * @includeExample extension/eui/components/CheckboxExample.ts
+	 * @language en_US
 	 */
 	/**
-	 * @language zh_CN
 	 * CheckBox 组件包含一个可选标签和一个小方框，该方框内可以包含/不包含复选标记。<p/>
 	 * 用户单击 CheckBox 组件或其关联文本时，CheckBox 组件会将其 selected 属性设置为 true（表示选中）或 false（表示取消选中）。
 	 *
@@ -53,21 +52,22 @@ module eui {
 	 * @version eui 1.0
 	 * @platform Web,Native
      * @includeExample extension/eui/components/CheckboxExample.ts
+	 * @language zh_CN
 	 */
 	export class CheckBox extends ToggleButton{
 		/**
-		 * @language en_US
 		 * Constructor.
 		 * @version Egret 2.4
 		 * @version eui 1.0
 		 * @platform Web,Native
+		 * @language en_US
 		 */
 		/**
-		 * @language zh_CN
 		 * 创建一个CheckBox
 		 * @version Egret 2.4
 		 * @version eui 1.0
 		 * @platform Web,Native
+		 * @language zh_CN
 		 */
 		public constructor(){
 			super();

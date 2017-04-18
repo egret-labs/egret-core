@@ -2,8 +2,9 @@
 /**
  * 打zip包
  */
-var file = require('../lib/FileUtil');
-var FileUtil = require('../lib/FileUtil');
+var file = require("../lib/FileUtil");
+var FileUtil = require("../lib/FileUtil");
+var utils = require("../lib/utils");
 var ZipCommand = (function () {
     function ZipCommand(versionFile) {
         this.versionFile = versionFile;
@@ -39,6 +40,9 @@ var ZipCommand = (function () {
         var self = this;
         build.on("exit", function (result) {
             if (result == 0) {
+                if (!FileUtil.isFile(self.outputFile)) {
+                    console.error(utils.tr(1420));
+                }
                 //结束
                 file.remove(_this.sourcePath);
                 var releasePath = egret.args.releaseDir;
@@ -61,7 +65,5 @@ var ZipCommand = (function () {
         return 0;
     };
     return ZipCommand;
-})();
+}());
 module.exports = ZipCommand;
-
-//# sourceMappingURL=ZipCommand.js.map

@@ -1,6 +1,6 @@
 //////////////////////////////////////////////////////////////////////////////////////
 //
-//  Copyright (c) 2014-2015, Egret Technology Inc.
+//  Copyright (c) 2014-present, Egret Technology.
 //  All rights reserved.
 //  Redistribution and use in source and binary forms, with or without
 //  modification, are permitted provided that the following conditions are met:
@@ -28,7 +28,7 @@
 //////////////////////////////////////////////////////////////////////////////////////
 
 
-module egret.gui {
+namespace egret.gui {
 
 	/**
 	 * @class egret.gui.DropDownController
@@ -220,7 +220,7 @@ module egret.gui {
 				if (this.openButton && this.openButton.contains(target))
 					return true;
 				if (this.hitAreaAdditions != null){
-					for (var i:number = 0;i<this.hitAreaAdditions.length;i++){
+					for (let i:number = 0;i<this.hitAreaAdditions.length;i++){
 						if (this.hitAreaAdditions[i] == target ||
 							((this.hitAreaAdditions[i] instanceof DisplayObjectContainer) && (<DisplayObjectContainer><any> (this.hitAreaAdditions[i])).contains(<DisplayObject><any> target)))
 							return true;
@@ -270,7 +270,7 @@ module egret.gui {
 				if (this.openButton)
 					this.openButton._setKeepDown(false);
 				
-				var dde:UIEvent = new UIEvent(UIEvent.CLOSE, false, true);
+				let dde:UIEvent = new UIEvent(UIEvent.CLOSE, false, true);
 				
 				if (!commit)
 					dde.preventDefault();
@@ -346,12 +346,12 @@ module egret.gui {
 						|| (this.dropDown instanceof DisplayObjectContainer && 
 							!(<DisplayObjectContainer><any> (this.dropDown)).contains(<DisplayObject><any> (event.target)))))){
 				
-				var target:DisplayObject = <DisplayObject><any> (event.target);
+				let target:DisplayObject = <DisplayObject><any> (event.target);
 				if (this.openButton && target && this.openButton.contains(target))
 					return;
 				
 				if (this.hitAreaAdditions != null){
-					for (var i:number = 0;i<this.hitAreaAdditions.length;i++){
+					for (let i:number = 0;i<this.hitAreaAdditions.length;i++){
 						if (this.hitAreaAdditions[i] == event.target ||
 							((this.hitAreaAdditions[i] instanceof DisplayObjectContainer) && (<DisplayObjectContainer><any> (this.hitAreaAdditions[i])).contains(<DisplayObject><any> (event.target))))
 							return;
@@ -367,8 +367,8 @@ module egret.gui {
 		 * @param event {Event} 
 		 */		
 		public stage_mouseMoveHandler(event:Event):void{
-			var target:DisplayObject = <DisplayObject><any> (event.target);
-			var containedTarget:boolean = this.isTargetOverDropDownOrOpenButton(target);
+			let target:DisplayObject = <DisplayObject><any> (event.target);
+			let containedTarget:boolean = this.isTargetOverDropDownOrOpenButton(target);
 			
 			if (containedTarget)
 				return;
@@ -397,8 +397,8 @@ module egret.gui {
 		 * @param event {Event} 
 		 */	
 		public stage_mouseUpHandler(event:Event):void{
-			var target:DisplayObject = <DisplayObject><any> (event.target);
-			var containedTarget:boolean = this.isTargetOverDropDownOrOpenButton(target);
+			let target:DisplayObject = <DisplayObject><any> (event.target);
+			let containedTarget:boolean = this.isTargetOverDropDownOrOpenButton(target);
 			if (containedTarget){
 				UIGlobals.stage.removeEventListener(TouchEvent.TOUCH_END, this.stage_mouseUpHandler, this);
 				UIGlobals.stage.removeEventListener(Event.LEAVE_STAGE, this.stage_mouseUpHandler, this);

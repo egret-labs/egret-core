@@ -103,5 +103,3 @@ function toString() {
 }
 ;
 //export = { parse: parse };
-
-//# sourceMappingURL=index.js.map

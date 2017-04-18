@@ -1,6 +1,6 @@
 //////////////////////////////////////////////////////////////////////////////////////
 //
-//  Copyright (c) 2014-2015, Egret Technology Inc.
+//  Copyright (c) 2014-present, Egret Technology.
 //  All rights reserved.
 //  Redistribution and use in source and binary forms, with or without
 //  modification, are permitted provided that the following conditions are met:
@@ -28,7 +28,7 @@
 //////////////////////////////////////////////////////////////////////////////////////
 
 
-module egret.gui {
+namespace egret.gui {
 
     /**
      * @class egret.gui.Skin
@@ -165,7 +165,7 @@ module egret.gui {
         public _setHostComponent(value:SkinnableComponent){
             if(this._hostComponent==value)
                 return;
-            var i:number;
+            let i:number;
             if(this._hostComponent){
                 for(i = this._elementsContent.length - 1; i >= 0; i--){
                     this._elementRemoved(this._elementsContent[i], i);
@@ -179,7 +179,7 @@ module egret.gui {
             }
 
             if(this._hostComponent){
-                var n:number = this._elementsContent.length;
+                let n:number = this._elementsContent.length;
                 for (i = 0; i < n; i++){
                     this._elementAdded(this._elementsContent[i], i);
                 }
@@ -192,11 +192,11 @@ module egret.gui {
             }
         }
 
-        private _elementsContent:Array<any> = [];
+        private _elementsContent:any[] = [];
         /**
          * 返回子元素列表
          */
-        public _getElementsContent():Array<any>{
+        public _getElementsContent():any[]{
             return this._elementsContent;
         }
 
@@ -204,22 +204,22 @@ module egret.gui {
          * 设置容器子对象数组 。数组包含要添加到容器的子项列表，之前的已存在于容器中的子项列表被全部移除后添加列表里的每一项到容器。
          * 设置该属性时会对您输入的数组进行一次浅复制操作，所以您之后对该数组的操作不会影响到添加到容器的子项列表数量。
          */
-        public set elementsContent(value:Array<any>){
+        public set elementsContent(value:any[]){
             if(value==null)
                 value = [];
             if(value==this._elementsContent)
                 return;
             if(this._hostComponent){
-                var i:number;
+                let i:number;
                 for (i = this._elementsContent.length - 1; i >= 0; i--){
                     this._elementRemoved(this._elementsContent[i], i);
                 }
 
                 this._elementsContent = value.concat();
 
-                var n:number = this._elementsContent.length;
+                let n:number = this._elementsContent.length;
                 for (i = 0; i < n; i++){
-                    var elt:IVisualElement = this._elementsContent[i];
+                    let elt:IVisualElement = this._elementsContent[i];
 
                     if(elt.parent&&"removeElement" in elt.parent)
                         (<IVisualElementContainer><any> (elt.parent)).removeElement(elt);
@@ -252,7 +252,7 @@ module egret.gui {
         }
 
         private checkForRangeError(index:number, addingElement:boolean = false):void{
-            var maxIndex:number = this._elementsContent.length - 1;
+            let maxIndex:number = this._elementsContent.length - 1;
 
             if (addingElement)
                 maxIndex++;
@@ -267,7 +267,7 @@ module egret.gui {
          * @returns {IVisualElement}
          */
         public addElement(element:IVisualElement):IVisualElement{
-            var index:number = this.numElements;
+            let index:number = this.numElements;
 
             if (element.owner == this)
                 index = this.numElements-1;
@@ -284,7 +284,7 @@ module egret.gui {
         public addElementAt(element:IVisualElement, index:number):IVisualElement{
             this.checkForRangeError(index, true);
 
-            var host:any = element.owner;
+            let host:any = element.owner;
             if (host == this){
                 this.setElementIndex(element, index);
                 return element;
@@ -320,7 +320,7 @@ module egret.gui {
         public removeElementAt(index:number):IVisualElement{
             this.checkForRangeError(index);
 
-            var element:IVisualElement = this._elementsContent[index];
+            let element:IVisualElement = this._elementsContent[index];
 
             if(this._hostComponent)
                 this._elementRemoved(element, index);
@@ -349,7 +349,7 @@ module egret.gui {
         public setElementIndex(element:IVisualElement, index:number):void{
             this.checkForRangeError(index);
 
-            var oldIndex:number = this.getElementIndex(element);
+            let oldIndex:number = this.getElementIndex(element);
             if (oldIndex==-1||oldIndex == index)
                 return;
 
@@ -372,7 +372,7 @@ module egret.gui {
         public _elementAdded(element:IVisualElement, index:number, notifyListeners:boolean = true):void{
             element.ownerChanged(this);
             if(element instanceof DisplayObject){
-                var childDO:DisplayObject = <DisplayObject><any> element;
+                let childDO:DisplayObject = <DisplayObject><any> element;
                 this._hostComponent._addToDisplayListAt(childDO,index,notifyListeners);
             }
 
@@ -399,7 +399,7 @@ module egret.gui {
             }
 
             if(element instanceof DisplayObject&&element.parent==this._hostComponent){
-                var childDO:DisplayObject = <DisplayObject><any> element;
+                let childDO:DisplayObject = <DisplayObject><any> element;
                 this._hostComponent._removeFromDisplayList(childDO,notifyListeners);
             }
 
@@ -442,25 +442,25 @@ module egret.gui {
 
         //========================state相关函数===============start=========================
 
-        private _states:Array<any> = [];
+        private _states:any[] = [];
         /**
          * 为此组件定义的视图状态。
          * @member egret.StateClientHelper#states
          */
-        public get states():Array<any>{
+        public get states():any[]{
             return this._states;
         }
-        public set states(value:Array<any>){
+        public set states(value:any[]){
             this._setStates(value);
         }
 
-        public _setStates(value:Array<any>){
+        public _setStates(value:any[]){
             if(!value)
                 value = [];
             if(typeof(value[0]) == "string"){
-                var length:number = value.length;
-                for(var i:number=0;i<length;i++){
-                    var state:State = new State(value[i],[]);
+                let length:number = value.length;
+                for(let i:number=0;i<length;i++){
+                    let state:State = new State(value[i],[]);
                     value[i] = state;
                 }
             }
@@ -558,18 +558,18 @@ module egret.gui {
             if(!this.currentStateChanged)
                 return;
             this.currentStateChanged = false;
-            var destination:State = this.getState(this.requestedCurrentState);
+            let destination:State = this.getState(this.requestedCurrentState);
             if(!destination){
                 this.requestedCurrentState = this.getDefaultState();
             }
 
-            var nextTransition:Transition;
+            let nextTransition:Transition;
             if(this.playStateTransition){
                 nextTransition = this.getTransition(this._currentState, this.requestedCurrentState);
             }
 
-            var prevTransitionFraction:number;
-            var prevTransitionEffect:IEffect;
+            let prevTransitionFraction:number;
+            let prevTransitionEffect:IEffect;
 
             if (this._currentTransition){
                 this._currentTransition.effect.removeEventListener(
@@ -595,7 +595,7 @@ module egret.gui {
                 this._currentTransition = null;
             }
 
-            var oldState:string = this._currentState ? this._currentState : "";
+            let oldState:string = this._currentState ? this._currentState : "";
             if (this.hasEventListener(StateChangeEvent.CURRENT_STATE_CHANGING)) {
                 StateChangeEvent.dispatchStateChangeEvent(this,
                     StateChangeEvent.CURRENT_STATE_CHANGING,oldState,
@@ -615,7 +615,7 @@ module egret.gui {
             }
 
             if (nextTransition){
-                var reverseTransition:boolean =
+                let reverseTransition:boolean =
                     nextTransition && nextTransition.autoReverse &&
                     (nextTransition.toState == oldState ||
                         nextTransition.fromState == this._currentState);
@@ -655,10 +655,10 @@ module egret.gui {
         private getState(stateName:string):State{
             if (!stateName)
                 return null;
-            var states:Array<any> = this._states;
-            var length:number = states.length;
-            for (var i:number = 0; i < length; i++){
-                var state:State = states[i];
+            let states:any[] = this._states;
+            let length:number = states.length;
+            for (let i:number = 0; i < length; i++){
+                let state:State = states[i];
                 if (state.name == stateName)
                     return state;
             }
@@ -669,10 +669,10 @@ module egret.gui {
          * 移除指定的视图状态以及所依赖的所有父级状态，除了与新状态的共同状态外
          */
         private removeState(stateName:string):void{
-            var state:State = this.getState(stateName);
+            let state:State = this.getState(stateName);
             if (state){
-                var overrides:Array<IOverride> = state.overrides;
-                for (var i:number = overrides.length-1; i>=0; i--)
+                let overrides:Array<IOverride> = state.overrides;
+                for (let i:number = overrides.length-1; i>=0; i--)
                     overrides[i].remove(this);
             }
         }
@@ -681,11 +681,11 @@ module egret.gui {
          * 应用新状态
          */
         private applyState(stateName:string):void{
-            var state:State = this.getState(stateName);
+            let state:State = this.getState(stateName);
             if (state){
-                var overrides:Array<any> = state.overrides;
-                var length:number = overrides.length;
-                for (var i:number = 0; i < length; i++)
+                let overrides:any[] = state.overrides;
+                let length:number = overrides.length;
+                for (let i:number = 0; i < length; i++)
                     overrides[i].apply(<IContainer><any>(this));
             }
         }
@@ -699,10 +699,10 @@ module egret.gui {
             if(this.initialized)
                 return;
             this.initialized = true;
-            var states:Array<any> = this._states;
-            var length:number = states.length;
-            for (var i:number = 0; i < length; i++){
-                var state:State = <State> (states[i]);
+            let states:any[] = this._states;
+            let length:number = states.length;
+            for (let i:number = 0; i < length; i++){
+                let state:State = <State> (states[i]);
                 state.initialize(this);
             }
         }
@@ -712,8 +712,8 @@ module egret.gui {
          */
         private getTransition(oldState:string, newState:string):Transition
         {
-            var result:Transition = null;
-            var priority:number = 0;
+            let result:Transition = null;
+            let priority:number = 0;
             if (!this.transitions)
                 return null;
 
@@ -723,8 +723,8 @@ module egret.gui {
             if (!newState)
                 newState = "";
 
-            for (var i:number = 0; i < this.transitions.length; i++){
-                var t:Transition = this.transitions[i];
+            for (let i:number = 0; i < this.transitions.length; i++){
+                let t:Transition = this.transitions[i];
                 if (t.fromState == "*" && t.toState == "*" && priority < 1){
                     result = t;
                     priority = 1;
@@ -766,19 +766,19 @@ module egret.gui {
          */
         private getTotalDuration(effect:IEffect):number
         {
-            var duration:number = 0;
-            var effectObj:any = effect;
+            let duration:number = 0;
+            let effectObj:any = effect;
             if (effect instanceof CompositeEffect){
                 duration = effectObj.compositeDuration;
             }
             else{
                 duration = effect.duration;
             }
-            var repeatDelay:number = ("repeatDelay" in effect) ?
+            let repeatDelay:number = ("repeatDelay" in effect) ?
                 effectObj.repeatDelay : 0;
-            var repeatCount:number = ("repeatCount" in effect) ?
+            let repeatCount:number = ("repeatCount" in effect) ?
                 effectObj.repeatCount : 0;
-            var startDelay:number = ("startDelay" in effect) ?
+            let startDelay:number = ("startDelay" in effect) ?
                 effectObj.startDelay : 0;
             duration = duration * repeatCount +
                 (repeatDelay * (repeatCount - 1)) +

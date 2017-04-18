@@ -17,8 +17,13 @@ egret_native.requireFiles = function () {
 };
 
 egret_native.egretInit = function () {
+    if(egret_native.featureEnable) {
+        //控制一些优化方案是否开启
+        var result = egret_native.featureEnable({
+            
+        });
+    }
     egret_native.requireFiles();
-    egret.TextField.default_fontFamily = "/system/fonts/DroidSansFallback.ttf";
     //egret.dom为空实现
     egret.dom = {};
     egret.dom.drawAsCanvas = function () {
@@ -34,6 +39,6 @@ egret_native.egretStart = function () {
 
     egret.native.NativePlayer.option = option;
     egret.runEgret();
-    egret_native.Label.createLabel(egret.TextField.default_fontFamily, 20, "", 0);
+    egret_native.Label.createLabel("/system/fonts/DroidSansFallback.ttf", 20, "", 0);
     egret_native.EGTView.preSetOffScreenBufferEnable(true);
 };

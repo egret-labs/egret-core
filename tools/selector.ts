@@ -1,6 +1,4 @@
-﻿/// <reference path="lib/node.d.ts" />
-
-/*
+﻿/*
 
  此文件需要放在引擎安装目录
  例如 C:\Program Files\Egret\EgretEngine\win\selector.js
@@ -62,14 +60,16 @@ var localsMessages = {
         2: "Can not find Egret Engine, please open Egret Launcher and press the \"Reset\" button.",
         3: "Egret Engine default version: {0}\nEgret Engine current version: {1}\nYou can upgrade your project via egret upgrade",
         4: "Egret Engine current version: {0}",
-        5: "Error! The egretProperties.json is not a valid json."
+        5: "Error! The egretProperties.json is not a valid json.",
+        6: "Egret path : {0}"
     },
     zh: {
         1: "找不到 Egret Engine {0} 请打开引擎面板并添加对应版本的引擎",
         2: "找不到默认引擎，请尝试打开引擎面板并点击“重置引擎”按钮",
         3: "您的默认引擎版本为 {0}\n当前项目使用版本为 {1}\n您可以执行 egret upgrade 命令升级项目",
         4: "您正在使用的引擎版本为 {0}",
-        5: "错误！！ egretProperties.json 不是有效的 json 文件"
+        5: "错误！！ egretProperties.json 不是有效的 json 文件",
+        6: "Egret安装路径 : {0}"
     }
 }
 
@@ -83,7 +83,7 @@ function entry() {
     readConfig();
     getLanguage();
     args = parseArgs();
-    var requestVersion:any = args.egretversion || args.ev;
+    var requestVersion: any = args.egretversion || args.ev;
     if (requestVersion === true)
         requestVersion = undefined;
     var handled = false;
@@ -94,6 +94,13 @@ function entry() {
 
     var projectVersion = getProjectVersion();
     var defaultVersion = getDefaultEngineInfo();
+
+    if (args.command == "info") {
+        console.log(tr(4, defaultVersion.version));
+        var root = getEgretRoot();
+        console.log(tr(6, root))
+        return;
+    }
 
     if (requestVersion || (projectVersion && !(args.command in commandsToSkip))) {
         requestVersion = requestVersion || projectVersion;
@@ -124,14 +131,41 @@ function entry() {
     }
 }
 
+function getEgretRoot() {
+    var path = require("path");
+    var obj = _getEnv();
+    var egretRoot: string;
+    var globalpath = module['paths'].concat();
+    var existsFlag = false;
+    for (var i = 0; i < globalpath.length; i++) {
+        var prefix = globalpath[i];
+        var url = file.joinPath(prefix, '../');
+        if (file.exists(file.joinPath(url, 'tools/bin/egret'))) {
+            existsFlag = true;
+            break;
+        }
+        url = prefix;
+        if (file.exists(file.joinPath(url, 'tools/bin/egret'))) {
+            existsFlag = true;
+            break;
+        }
+    }
+    if (!existsFlag) {
+        throw new Error("can't find Egret");
+    }
+    egretRoot = url;
+    return file.escapePath(file.joinPath(egretRoot, '/'));
+}
 
-
+function _getEnv() {
+    return process.env;
+}
 
 function printVersions() {
     if (!engines) {
         getAllEngineVersions();
     }
-    Object.keys(engines).sort(compareVersion).reverse().forEach(v=> {
+    Object.keys(engines).sort(compareVersion).reverse().forEach(v => {
         console.log(`Egret Engine ${engines[v].version}  ` + engines[v].root);
     });
 }
@@ -191,7 +225,7 @@ function getBin(versionRoot: string) {
 }
 
 function getEngineVersion(root: string): EngineVersion {
-    var packagePath = file.joinPath(root||"", "package.json");
+    var packagePath = file.joinPath(root || "", "package.json");
     if (!file.exists(packagePath)) {
         return null;
     }
@@ -214,18 +248,18 @@ function getEngineVersion(root: string): EngineVersion {
 
 function getProjectVersion(): string {
     var dir;
-    if(args.command != "create_app"){
+    if (args.command != "create_app") {
         dir = args.projectDir;
-    }else{
+    } else {
         dir = args["f"]
     }
     var propsPath = file.joinPath(dir, "egretProperties.json");
     if (file.exists(propsPath)) {
         var jsonText = file.read(propsPath);
         var props;
-        try{
+        try {
             props = JSON.parse(jsonText);
-        }catch(e) {
+        } catch (e) {
             console.log(tr(5));
             process.exit(2);
         }
@@ -296,7 +330,7 @@ function getAllEngineVersions() {
     }
 
     var versionRoots = file.getDirectoryListing(root);
-    versionRoots && versionRoots.forEach(versionRoot=> {
+    versionRoots && versionRoots.forEach(versionRoot => {
         versionRoot = file.escapePath(versionRoot);
         var bin = getBin(versionRoot);
         var exist = file.exists(bin);
@@ -391,7 +425,7 @@ function parseArgs(): Args {
 
     if (commands.length > 0) {
         options.command = commands[0];
-        if (commands.length >1 && file.isDirectory(commands[1]) ) {
+        if (commands.length > 1 && file.isDirectory(commands[1])) {
             options.projectDir = commands[1];
         }
     }
@@ -411,7 +445,7 @@ function parseArgs(): Args {
 function compareVersion(v1: string, v2: string) {
     return versionToNumber(v1) - versionToNumber(v2);
     function versionToNumber(v: string): number {
-        var numbers = v.split(".").map(n=> {
+        var numbers = v.split(".").map(n => {
             try {
                 return parseInt(n) || 0;
             }

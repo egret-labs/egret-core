@@ -1,6 +1,6 @@
 //////////////////////////////////////////////////////////////////////////////////////
 //
-//  Copyright (c) 2014-2015, Egret Technology Inc.
+//  Copyright (c) 2014-present, Egret Technology.
 //  All rights reserved.
 //  Redistribution and use in source and binary forms, with or without
 //  modification, are permitted provided that the following conditions are met:
@@ -27,10 +27,9 @@
 //
 //////////////////////////////////////////////////////////////////////////////////////
 
-module eui {
+namespace eui {
 
     /**
-     * @language en_US
      * The HScrollBar (horizontal scrollbar) control lets you control
      * the portion of data that is displayed when there is too much data
      * to fit horizontally in a display area.
@@ -43,9 +42,9 @@ module eui {
      * @version Egret 2.4
      * @version eui 1.0
      * @platform Web,Native
+     * @language en_US
      */
     /**
-     * @language zh_CN
      * HScrollBar（水平 ScrollBar）控件可以在因数据太多而不能在显示区域中以水平方向完全显示时控制显示的数据部分。
      * <p>虽然 HScrollBar 控件可以单独使用，但通常将它与其他组件一起使用来提供滚动功能。</p>
      *
@@ -53,6 +52,7 @@ module eui {
      * @version Egret 2.4
      * @version eui 1.0
      * @platform Web,Native
+     * @language zh_CN
      */
     export class HScrollBar extends ScrollBarBase {
 
@@ -65,32 +65,32 @@ module eui {
          */
         protected updateDisplayList(unscaledWidth:number, unscaledHeight:number):void {
             super.updateDisplayList(unscaledWidth, unscaledHeight);
-            var thumb = this.thumb;
-            var viewport = this.$viewport;
+            let thumb = this.thumb;
+            let viewport = this.$viewport;
             if (!thumb || !viewport) {
                 return;
             }
-            var bounds = egret.$TempRectangle;
+            let bounds = egret.$TempRectangle;
             thumb.getPreferredBounds(bounds);
-            var thumbWidth = bounds.width;
-            var thumbY = bounds.y;
-            var hsp = viewport.scrollH;
-            var contentWidth = viewport.contentWidth;
-            var width = viewport.width;
+            let thumbWidth = bounds.width;
+            let thumbY = bounds.y;
+            let hsp = viewport.scrollH;
+            let contentWidth = viewport.contentWidth;
+            let width = viewport.width;
             if (hsp <= 0) {
-                var scaleWidth = thumbWidth * (1-(-hsp) / (width * 0.5));
+                let scaleWidth = thumbWidth * (1-(-hsp) / (width * 0.5));
                 scaleWidth = Math.max(5,Math.round(scaleWidth));
                 thumb.setLayoutBoundsSize(scaleWidth, NaN);
                 thumb.setLayoutBoundsPosition(0, thumbY);
             }
             else if (hsp >= contentWidth - width) {
-                scaleWidth = thumbWidth * (1-(hsp - contentWidth + width) / (width * 0.5));
+                let scaleWidth = thumbWidth * (1-(hsp - contentWidth + width) / (width * 0.5));
                 scaleWidth = Math.max(5,Math.round(scaleWidth));
                 thumb.setLayoutBoundsSize(scaleWidth, NaN);
                 thumb.setLayoutBoundsPosition(unscaledWidth - scaleWidth, thumbY);
             }
             else {
-                var thumbX = (unscaledWidth-thumbWidth) * hsp / (contentWidth - width);
+                let thumbX = (unscaledWidth-thumbWidth) * hsp / (contentWidth - width);
                 thumb.setLayoutBoundsSize(NaN, NaN);
                 thumb.setLayoutBoundsPosition(thumbX, thumbY);
             }

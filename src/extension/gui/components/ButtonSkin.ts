@@ -1,6 +1,6 @@
 //////////////////////////////////////////////////////////////////////////////////////
 //
-//  Copyright (c) 2014-2015, Egret Technology Inc.
+//  Copyright (c) 2014-present, Egret Technology.
 //  All rights reserved.
 //  Redistribution and use in source and binary forms, with or without
 //  modification, are permitted provided that the following conditions are met:
@@ -27,7 +27,7 @@
 //
 //////////////////////////////////////////////////////////////////////////////////////
 
-module egret.gui {
+namespace egret.gui {
     /**
      * @class egret.gui.StateSkin
      * @classdesc
@@ -45,7 +45,7 @@ module egret.gui {
          */
         public constructor(upSkinName:any=null,downSkinName:any=null,disabledSkinName:any=null){
             super();
-            var stateMap = {};
+            let stateMap = {};
             stateMap["up"] = upSkinName;
             stateMap["down"] = downSkinName;
             stateMap["disabled"] = disabledSkinName;
@@ -58,9 +58,9 @@ module egret.gui {
          * @type {string[]}
          * @private
          */
-        private static _skinParts:Array<string> = ["labelDisplay","iconDisplay"];
+        private static _skinParts:string[] = ["labelDisplay","iconDisplay"];
 
-        public get skinParts():Array<string>{
+        public get skinParts():string[]{
             return ButtonSkin._skinParts;
         }
 
@@ -76,7 +76,7 @@ module egret.gui {
          */
         public createChildren():void{
             super.createChildren();
-            var asset:UIAsset = new UIAsset();
+            let asset:UIAsset = new UIAsset();
             asset.left = asset.top = asset.bottom = asset.right = 0;
             this.addElement(asset);
             this.backgroundAsset = asset;
@@ -92,8 +92,8 @@ module egret.gui {
          */
         public commitCurrentState():void{
             super.commitCurrentState();
-            var state:string = this.currentState;
-            var source:any = this.stateMap[state];
+            let state:string = this.currentState;
+            let source:any = this.stateMap[state];
             if(source){
                 this.backgroundAsset.source = this.stateMap[state];
             }
@@ -104,8 +104,8 @@ module egret.gui {
          */
         public measure():void{
             super.measure();
-            var w:number = this.iconDisplay.preferredWidth+this.labelDisplay.preferredWidth+20;
-            var h:number = Math.max(this.iconDisplay.preferredHeight,this.labelDisplay.preferredHeight)+20;
+            let w:number = this.iconDisplay.preferredWidth+this.labelDisplay.preferredWidth+20;
+            let h:number = Math.max(this.iconDisplay.preferredHeight,this.labelDisplay.preferredHeight)+20;
             if(w > this.measuredWidth){
                 if(w < this.minWidth){
                     w = this.minWidth;
@@ -134,15 +134,15 @@ module egret.gui {
          */
         public updateDisplayList(unscaledWidth: number, unscaledHeight: number):void{
             super.updateDisplayList(unscaledWidth, unscaledHeight);
-            var iconWidth:number = this.iconDisplay.layoutBoundsWidth;
-            var iconHeight:number = this.iconDisplay.layoutBoundsHeight;
-            var labelWidth:number = this.labelDisplay.layoutBoundsWidth;
-            var labelHeight:number = this.labelDisplay.layoutBoundsHeight;
-            var iconX:number = (unscaledWidth-iconWidth-labelWidth)*0.5;
-            var iconY:number = (unscaledHeight-iconHeight)*0.5;
+            let iconWidth:number = this.iconDisplay.layoutBoundsWidth;
+            let iconHeight:number = this.iconDisplay.layoutBoundsHeight;
+            let labelWidth:number = this.labelDisplay.layoutBoundsWidth;
+            let labelHeight:number = this.labelDisplay.layoutBoundsHeight;
+            let iconX:number = (unscaledWidth-iconWidth-labelWidth)*0.5;
+            let iconY:number = (unscaledHeight-iconHeight)*0.5;
             this.iconDisplay.setLayoutBoundsPosition(iconX,iconY);
-            var labelX:number = iconX+iconWidth;
-            var labelY:number = (unscaledHeight-labelHeight)*0.5;
+            let labelX:number = iconX+iconWidth;
+            let labelY:number = (unscaledHeight-labelHeight)*0.5;
             this.labelDisplay.setLayoutBoundsPosition(labelX,labelY);
         }
 

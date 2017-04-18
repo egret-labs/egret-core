@@ -1,6 +1,6 @@
 //////////////////////////////////////////////////////////////////////////////////////
 //
-//  Copyright (c) 2014-2015, Egret Technology Inc.
+//  Copyright (c) 2014-present, Egret Technology.
 //  All rights reserved.
 //  Redistribution and use in source and binary forms, with or without
 //  modification, are permitted provided that the following conditions are met:
@@ -28,7 +28,7 @@
 //////////////////////////////////////////////////////////////////////////////////////
 
 
-module egret.gui {
+namespace egret.gui {
 
     /**
      * @class egret.gui.EffectInstance
@@ -84,7 +84,7 @@ module egret.gui {
          * 实际的持续时间包含startDelay，repeatDelay，repeatCount这些值
          */
         public get _actualDuration():number {
-            var value:number = NaN;
+            let value:number = NaN;
             
             if (this.repeatCount > 0){
                 value = this.duration * this.repeatCount +

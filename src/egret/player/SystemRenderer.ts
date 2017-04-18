@@ -1,6 +1,6 @@
 //////////////////////////////////////////////////////////////////////////////////////
 //
-//  Copyright (c) 2014-2015, Egret Technology Inc.
+//  Copyright (c) 2014-present, Egret Technology.
 //  All rights reserved.
 //  Redistribution and use in source and binary forms, with or without
 //  modification, are permitted provided that the following conditions are met:
@@ -27,10 +27,17 @@
 //
 //////////////////////////////////////////////////////////////////////////////////////
 
-module egret.sys {
+namespace egret.sys {
 
-    export var systemRenderer:SystemRenderer;
-
+    /**
+     * @private
+     */
+    export let systemRenderer:SystemRenderer;
+    /**
+     * @private
+     * 用于碰撞检测绘制
+     */
+    export let canvasRenderer:SystemRenderer;
     /**
      * @private
      * 显示渲染器接口

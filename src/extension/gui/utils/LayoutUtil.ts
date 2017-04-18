@@ -1,6 +1,6 @@
 //////////////////////////////////////////////////////////////////////////////////////
 //
-//  Copyright (c) 2014-2015, Egret Technology Inc.
+//  Copyright (c) 2014-present, Egret Technology.
 //  All rights reserved.
 //  Redistribution and use in source and binary forms, with or without
 //  modification, are permitted provided that the following conditions are met:
@@ -28,7 +28,7 @@
 //////////////////////////////////////////////////////////////////////////////////////
 
 
-module egret.gui {
+namespace egret.gui {
 
 	/**
 	 * @class egret.gui.LayoutUtil
@@ -49,12 +49,12 @@ module egret.gui {
 				parent = element.parent;
 			if(!parent)
 				return;
-			var x:number = element.x;
-			var y:number = element.y;
-			var h:number = element.layoutBoundsHeight;
-			var w:number = element.layoutBoundsWidth;
-			var parentW:number = parent.width;
-			var parentH:number = parent.height;
+			let x:number = element.x;
+			let y:number = element.y;
+			let h:number = element.layoutBoundsHeight;
+			let w:number = element.layoutBoundsWidth;
+			let parentW:number = parent.width;
+			let parentH:number = parent.height;
 			if(!isNaN(element.left)){
 				element.left = x;
 			}

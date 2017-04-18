@@ -1,6 +1,6 @@
 //////////////////////////////////////////////////////////////////////////////////////
 //
-//  Copyright (c) 2014-2015, Egret Technology Inc.
+//  Copyright (c) 2014-present, Egret Technology.
 //  All rights reserved.
 //  Redistribution and use in source and binary forms, with or without
 //  modification, are permitted provided that the following conditions are met:
@@ -28,7 +28,7 @@
 //////////////////////////////////////////////////////////////////////////////////////
 
 
-module RES {
+namespace RES {
     /**
      * @private
      */
@@ -48,7 +48,7 @@ module RES {
         /**
          * 加载项字典
          */
-        protected resItemDic:Array<any> = [];
+        protected resItemDic:any[] = [];
 
         /**
          * @inheritDoc
@@ -58,7 +58,7 @@ module RES {
                 compFunc.call(thisObject, resItem);
                 return;
             }
-            var loader = this.getLoader();
+            let loader = this.getLoader();
             this.resItemDic[loader.$hashCode] = {item: resItem, func: compFunc, thisObject: thisObject};
             loader.load($getVirtualUrl(resItem.url));
         }
@@ -72,7 +72,7 @@ module RES {
          * 获取一个Loader对象
          */
         private getLoader():egret.ImageLoader {
-            var loader = this.recycler.pop();
+            let loader = this.recycler.pop();
             if (!loader) {
                 loader = new egret.ImageLoader();
                 loader.addEventListener(egret.Event.COMPLETE, this.onLoadFinish, this);
@@ -85,14 +85,14 @@ module RES {
          * 一项加载结束
          */
         protected onLoadFinish(event:egret.Event):void {
-            var request = <egret.ImageLoader> (event.$target);
-            var data:any = this.resItemDic[request.$hashCode];
+            let request = <egret.ImageLoader> (event.$target);
+            let data:any = this.resItemDic[request.$hashCode];
             delete this.resItemDic[request.$hashCode];
-            var resItem:ResourceItem = data.item;
-            var compFunc:Function = data.func;
+            let resItem:ResourceItem = data.item;
+            let compFunc:Function = data.func;
             resItem.loaded = (event.$type == egret.Event.COMPLETE);
             if (resItem.loaded) {
-                var texture:egret.Texture = new egret.Texture();
+                let texture:egret.Texture = new egret.Texture();
                 texture._setBitmapData(request.data);
 
                 this.analyzeData(resItem, texture)
@@ -105,16 +105,16 @@ module RES {
          * 解析并缓存加载成功的数据
          */
         protected analyzeData(resItem:ResourceItem, texture:egret.Texture):void {
-            var name:string = resItem.name;
+            let name:string = resItem.name;
             if (this.fileDic[name] || !texture) {
                 return;
             }
 
             this.fileDic[name] = texture;
-            var config:any = resItem.data;
+            let config:any = resItem.data;
             if (config && config["scale9grid"]) {
-                var str:string = config["scale9grid"];
-                var list:Array<string> = str.split(",");
+                let str:string = config["scale9grid"];
+                let list:string[] = str.split(",");
                 texture["scale9Grid"] = new egret.Rectangle(parseInt(list[0]), parseInt(list[1]), parseInt(list[2]), parseInt(list[3]));
             }
         }
@@ -130,7 +130,7 @@ module RES {
          * @inheritDoc
          */
         public hasRes(name:string):boolean {
-            var res:any = this.getRes(name);
+            let res:any = this.getRes(name);
             return res != null;
         }
 

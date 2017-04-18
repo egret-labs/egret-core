@@ -1,6 +1,6 @@
 //////////////////////////////////////////////////////////////////////////////////////
 //
-//  Copyright (c) 2014-2015, Egret Technology Inc.
+//  Copyright (c) 2014-present, Egret Technology.
 //  All rights reserved.
 //  Redistribution and use in source and binary forms, with or without
 //  modification, are permitted provided that the following conditions are met:
@@ -27,86 +27,86 @@
 //
 //////////////////////////////////////////////////////////////////////////////////////
 
-module eui {
+namespace eui {
 
     /**
-     * @language en_US
      * Represents events that are dispatched when a item has been touched.
      * @version Egret 2.4
      * @version eui 1.0
      * @platform Web,Native
      * @includeExample  extension/eui/events/ItemTapEventExample.ts
+     * @language en_US
      */
     /**
-     * @language zh_CN
      * 列表项触碰事件
      * @version Egret 2.4
      * @version eui 1.0
      * @platform Web,Native
      * @includeExample  extension/eui/events/ItemTapEventExample.ts
+     * @language zh_CN
      */
     export class ItemTapEvent extends egret.Event {
         /**
-         * @language en_US
          * The type of the event object for an <code>itemTap</code> event.
          * @version Egret 2.4
          * @version eui 1.0
          * @platform Web,Native
+         * @language en_US
          */
         /**
-         * @language zh_CN
          * <code>itemTap</code> 事件的对象类型。
          * @version Egret 2.4
          * @version eui 1.0
          * @platform Web,Native
+         * @language zh_CN
          */
         public static ITEM_TAP:string = "itemTap";
 
         /**
-         * @language en_US
          * The item in the data provider of the associated item.
          * @version Egret 2.4
          * @version eui 1.0
          * @platform Web,Native
+         * @language en_US
          */
         /**
-         * @language zh_CN
          * 触发触摸事件的项呈示器数据源项。
          * @version Egret 2.4
          * @version eui 1.0
          * @platform Web,Native
+         * @language zh_CN
          */
         public item:any = null;
 
         /**
-         * @language en_US
          * The item renderer in the list of the associated item.
          * @version Egret 2.4
          * @version eui 1.0
          * @platform Web,Native
+         * @language en_US
          */
         /**
-         * @language zh_CN
          * 触发触摸事件的项呈示器。
          * @version Egret 2.4
          * @version eui 1.0
          * @platform Web,Native
+         * @language zh_CN
          */
         public itemRenderer:IItemRenderer = null;
 
         /**
-         * @language en_US
          * The index of the associated navigation item.
          * @version Egret 2.4
          * @version eui 1.0
          * @platform Web,Native
+         * @language en_US
          */
         /**
-         * @language zh_CN
          * 触发触摸事件的项索引
          * @version Egret 2.4
          * @version eui 1.0
          * @platform Web,Native
+         * @language zh_CN
          */
         public itemIndex:number = -1;
 
@@ -123,7 +123,6 @@ module eui {
         }
 
         /**
-         * @language en_US
          * Dispatch an event with specified EventDispatcher. The dispatched event will be cached in the object pool,
          * for the next cycle of reuse.
          *
@@ -134,9 +133,9 @@ module eui {
          * @version Egret 2.4
          * @version eui 1.0
          * @platform Web,Native
+         * @language en_US
          */
         /**
-         * @language zh_CN
          * 使用指定的 EventDispatcher 对象来抛出事件对象。抛出的对象将会缓存在对象池上，供下次循环复用。
          *
          * @param target 事件派发目标
@@ -146,16 +145,17 @@ module eui {
          * @version Egret 2.4
          * @version eui 1.0
          * @platform Web,Native
+         * @language zh_CN
          */
         public static dispatchItemTapEvent(target:egret.IEventDispatcher, eventType:string, itemRenderer?:IItemRenderer):boolean {
             if (!target.hasEventListener(eventType)) {
                 return true;
             }
-            var event = egret.Event.create(ItemTapEvent, eventType);
+            let event = egret.Event.create(ItemTapEvent, eventType);
             event.item = itemRenderer.data;
             event.itemIndex = itemRenderer.itemIndex;
             event.itemRenderer = itemRenderer;
-            var result = target.dispatchEvent(event);
+            let result = target.dispatchEvent(event);
             egret.Event.release(event);
             return result;
         }

@@ -1,6 +1,6 @@
 //////////////////////////////////////////////////////////////////////////////////////
 //
-//  Copyright (c) 2014-2015, Egret Technology Inc.
+//  Copyright (c) 2014-present, Egret Technology.
 //  All rights reserved.
 //  Redistribution and use in source and binary forms, with or without
 //  modification, are permitted provided that the following conditions are met:
@@ -27,7 +27,7 @@
 //
 //////////////////////////////////////////////////////////////////////////////////////
 
-module egret {
+namespace egret {
     /**
      * @private
      * @version Egret 2.4
@@ -39,5 +39,51 @@ module egret {
          * @platform Web,Native
          */
         public type:string = null;
+
+        /**
+         * @private 
+         */
+        public $uniforms:any;
+        
+        private $targets:DisplayObject[] = [];
+
+        constructor() {
+            super();
+            this.$uniforms = {};
+        }
+        
+        public $addTarget(target:DisplayObject):void {
+            let length:number = this.$targets.length;
+            for(let i:number = 0 ; i < length ; i++) {
+                if(this.$targets[i].$hashCode == target.$hashCode) {
+                    return;
+                }
+            }
+            this.$targets.push(target);
+        }
+        
+        public $removeTarget(target:DisplayObject):void {
+            let length:number = this.$targets.length;
+            for(let i:number = 0 ; i < length ; i++) {
+                if(this.$targets[i].$hashCode == target.$hashCode) {
+                    this.$targets.splice(i, 1);
+                    return;
+                }
+            }
+        }
+        
+        protected invalidate():void {
+            let length:number = this.$targets.length;
+            for(let i:number = 0 ; i < length ; i++) {
+                this.$targets[i].$invalidateContentBounds();
+            }
+        }
+
+        /**
+         * @private
+         */
+        public $toJson():string {
+            return '';
+        }
     }
 }

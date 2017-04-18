@@ -1,6 +1,6 @@
 //////////////////////////////////////////////////////////////////////////////////////
 //
-//  Copyright (c) 2014-2015, Egret Technology Inc.
+//  Copyright (c) 2014-present, Egret Technology.
 //  All rights reserved.
 //  Redistribution and use in source and binary forms, with or without
 //  modification, are permitted provided that the following conditions are met:
@@ -28,7 +28,7 @@
 //////////////////////////////////////////////////////////////////////////////////////
 
 
-module egret.native {
+namespace egret.native {
 
     /**
      * @classdesc
@@ -42,7 +42,7 @@ module egret.native {
         /**
          * @private
          */
-        private textValue:string = "";
+        private textValue: string = "";
 
         /**
          * @version Egret 2.4
@@ -58,7 +58,7 @@ module egret.native {
          * 
          * @returns 
          */
-        public $getText():string {
+        public $getText(): string {
             if (!this.textValue) {
                 this.textValue = "";
             }
@@ -70,7 +70,7 @@ module egret.native {
          * 
          * @param value 
          */
-        $setText(value:string):boolean {
+        $setText(value: string): boolean {
             this.textValue = value;
 
             return true;
@@ -78,8 +78,8 @@ module egret.native {
         /**
          * @private
          */
-        private colorValue:number = 0xffffff;
-        $setColor(value:number):boolean{
+        private colorValue: number = 0xffffff;
+        $setColor(value: number): boolean {
             this.colorValue = value;
             return true;
         }
@@ -88,21 +88,21 @@ module egret.native {
          * @private
          *
          */
-        $onBlur():void {
+        $onBlur(): void {
         }
 
         /**
          * @private
          */
-        private isFinishDown:boolean = false;
+        private isFinishDown: boolean = false;
         //全屏键盘
-        private showScreenKeyboard():void {
-            var self = this;
+        private showScreenKeyboard(): void {
+            let self = this;
 
             self.dispatchEvent(new egret.Event("focus"));
-            Event.dispatchEvent(self, "focus", false, {"showing" : true});
+            Event.dispatchEvent(self, "focus", false, { "showing": true });
 
-            egret_native.EGT_TextInput = function (appendText:string) {
+            egret_native.EGT_TextInput = function (appendText: string) {
                 if (self.$textfield.multiline) {//多行文本
                     self.textValue = appendText;
                     self.dispatchEvent(new egret.Event("updateText"));
@@ -134,8 +134,11 @@ module egret.native {
          * @private
          * 
          */
-        public $show():void {
-            var self = this;
+        public $show(): void {
+            let self = this;
+
+            let textfield: egret.TextField = this.$textfield;
+            let values = textfield.$TextField;
 
             egret_native.TextInputOp.setKeybordOpen(false);
 
@@ -150,6 +153,12 @@ module egret.native {
 
                 egret_native.EGT_keyboardDidShow = function () {
                 }
+
+                if(egret_native.TextInputOp.updateConfig) {
+                    egret_native.TextInputOp.updateConfig(JSON.stringify({
+                        "font_color": values[sys.TextKeys.textColor]
+                    }));
+                }
             };
 
             egret_native.EGT_keyboardDidHide = function () {
@@ -157,41 +166,62 @@ module egret.native {
 
             egret_native.EGT_deleteBackward = function () {
             };
-
-            var textfield:egret.TextField = this.$textfield;
-            var inputMode = textfield.multiline ? 0 : 6;
-            var inputFlag = -1;//textfield.displayAsPassword ? 0 : -1;
-            var returnType = 1;
-            var maxLength = textfield.maxChars <= 0 ? -1 : textfield.maxChars;
-            egret_native.TextInputOp.setKeybordOpen(true, JSON.stringify({"inputMode" : inputMode,  "inputFlag" : inputFlag,   "returnType" :returnType,   "maxLength" :maxLength}));
+            let inputType = values[sys.TextKeys.inputType];
+            let inputMode = values[sys.TextKeys.multiline] ? 0 : 6;
+            let inputFlag = -1;//textfield.displayAsPassword ? 0 : -1;
+            if (inputType == TextFieldInputType.PASSWORD) {
+                inputFlag = 0;
+            }
+            else if (inputType == TextFieldInputType.TEL) {
+                inputMode = 3;
+            }
+            let returnType = 1;
+            let maxLength = values[sys.TextKeys.maxChars] <= 0 ? -1 : values[sys.TextKeys.maxChars];
+            let node = textfield.$getRenderNode();
+            let point = this.$textfield.localToGlobal(0, 0);
+            egret_native.TextInputOp.setKeybordOpen(true, JSON.stringify({
+                "inputMode": inputMode,
+                "inputFlag": inputFlag,
+                "returnType": returnType,
+                "maxLength": maxLength,
+                
+                "x": point.x,
+                "y": point.y,
+                "width": textfield.width,
+                "height": textfield.height,
+                "font_size": values[sys.TextKeys.fontSize],
+                "font_color": values[sys.TextKeys.textColor],
+                "textAlign": values[sys.TextKeys.textAlign],
+                "verticalAlign": values[sys.TextKeys.verticalAlign]
+            }));
         }
 
         /**
          * @private
          * 
          */
-        public $hide():void {
-            this.dispatchEvent(new egret.Event("blur"));
+        public $hide(): void {
             egret_native.TextInputOp.setKeybordOpen(false);
+            this.dispatchEvent(new egret.Event("blur"));
         }
 
-        $resetStageText():void {
+        $resetStageText(): void {
         }
 
-        public $addToStage():void {
+        public $addToStage(): void {
 
         }
 
-        public $removeFromStage():void {
+        public $removeFromStage(): void {
 
         }
 
         /**
          * @private
          */
-        $textfield:egret.TextField;
+        $textfield: egret.TextField;
 
-        $setTextField(value:egret.TextField):boolean {
+        $setTextField(value: egret.TextField): boolean {
             this.$textfield = value;
 
             return true;

@@ -1,6 +1,6 @@
 //////////////////////////////////////////////////////////////////////////////////////
 //
-//  Copyright (c) 2014-2015, Egret Technology Inc.
+//  Copyright (c) 2014-present, Egret Technology.
 //  All rights reserved.
 //  Redistribution and use in source and binary forms, with or without
 //  modification, are permitted provided that the following conditions are met:
@@ -27,7 +27,7 @@
 //
 //////////////////////////////////////////////////////////////////////////////////////
 
-module egret.gui {
+namespace egret.gui {
 
 	export class SkinnableTextBase extends SkinnableComponent{
 		/**
@@ -112,7 +112,7 @@ module egret.gui {
 		public get maxWidth():number{
 			if(this.textDisplay)
 				return this.textDisplay.maxWidth;
-			var v:any = this.textDisplayProperties.maxWidth;
+			let v:any = this.textDisplayProperties.maxWidth;
 			return (v === undefined) ? super._getMaxWidth() : v;        
 		}
 			
@@ -136,7 +136,7 @@ module egret.gui {
 		public get textColor():number{
 			if(this.textDisplay)
 				return this.textDisplay.textColor;
-			var v:any = this.textDisplayProperties.textColor;
+			let v:any = this.textDisplayProperties.textColor;
 			return (v === undefined) ? 0 : v;
 		}
 		public set textColor(value:number){
@@ -159,7 +159,7 @@ module egret.gui {
 		public get displayAsPassword():boolean{
 			if(this.textDisplay)
 				return this.textDisplay.displayAsPassword;
-			var v:any = this.textDisplayProperties.displayAsPassword
+			let v:any = this.textDisplayProperties.displayAsPassword
 			return (v === undefined) ? false : v;
 		}
 		
@@ -180,7 +180,7 @@ module egret.gui {
 		public get editable():boolean{
 			if(this.textDisplay)
 				return this.textDisplay.editable;
-			var v:any = this.textDisplayProperties.editable;
+			let v:any = this.textDisplayProperties.editable;
 			return (v === undefined) ? true : v;
 		}
 		
@@ -202,7 +202,7 @@ module egret.gui {
 		public get maxChars():number {
 			if(this.textDisplay)
 				return this.textDisplay.maxChars;
-			var v:any = this.textDisplayProperties.maxChars;
+			let v:any = this.textDisplayProperties.maxChars;
 			return (v === undefined) ? 0 : v;
 		}
 		
@@ -228,7 +228,7 @@ module egret.gui {
 		public get restrict():string {
 			if(this.textDisplay)
 				return this.textDisplay.restrict;
-			var v:any = this.textDisplayProperties.restrict;
+			let v:any = this.textDisplayProperties.restrict;
 			return (v === undefined) ? null : v;
 		}
 		
@@ -254,7 +254,7 @@ module egret.gui {
 		public get selectable():boolean{
 			if(this.textDisplay)
 				return this.textDisplay.selectable;
-			var v:any = this.textDisplayProperties.selectable;
+			let v:any = this.textDisplayProperties.selectable;
 			return (v === undefined) ? true : v;
 		}
 		
@@ -337,7 +337,7 @@ module egret.gui {
         public _getText() {
             if (this.textDisplay)
                 return this.textDisplay.text;
-            var v: any = this.textDisplayProperties.text;
+            let v: any = this.textDisplayProperties.text;
             return (v === undefined) ? "" : v;
         }
 		
@@ -360,18 +360,18 @@ module egret.gui {
         }
 		
 		public _getWidthInChars():number{
-			var richEditableText:EditableText = <EditableText><any> (this.textDisplay);
+			let richEditableText:EditableText = <EditableText><any> (this.textDisplay);
 			
 			if (richEditableText)
 				return richEditableText.widthInChars;
 			
-			var v:any = this.textDisplay ? undefined : this.textDisplayProperties.widthInChars;
+			let v:any = this.textDisplay ? undefined : this.textDisplayProperties.widthInChars;
 			return (v === undefined) ? NaN : v;
 		}
 		
 		public _setWidthInChars(value:number):void{
 			if (this.textDisplay){
-				var richEditableText:EditableText = <EditableText><any> (this.textDisplay);
+				let richEditableText:EditableText = <EditableText><any> (this.textDisplay);
 				
 				if (richEditableText)
 					richEditableText.widthInChars = value;
@@ -385,18 +385,18 @@ module egret.gui {
 		}
 		
 		public _getHeightInLines():number{
-			var richEditableText:EditableText = <EditableText><any> (this.textDisplay);
+			let richEditableText:EditableText = <EditableText><any> (this.textDisplay);
 			
 			if (richEditableText)
 				return richEditableText.heightInLines;
 			
-			var v:any = this.textDisplay ? undefined : this.textDisplayProperties.heightInLines;        
+			let v:any = this.textDisplay ? undefined : this.textDisplayProperties.heightInLines;
 			return (v === undefined) ? NaN : v;
 		}
 		
 		public _setHeightInLines(value:number):void{
 			if (this.textDisplay){
-				var richEditableText:EditableText = <EditableText><any> (this.textDisplay);
+				let richEditableText:EditableText = <EditableText><any> (this.textDisplay);
 				
 				if (richEditableText)
 					richEditableText.heightInLines = value;
@@ -414,7 +414,7 @@ module egret.gui {
 		 * @inheritDoc
 		 */
 		public getCurrentSkinState():string{
-			var skin:any = this.skin;
+			let skin:any = this.skin;
 			if(this._prompt&&!this.isFocus&&this.text==""){
 				if (this.enabled&&(<IStateClient><any> skin).hasState("normalWithPrompt"))
 					return "normalWithPrompt";
@@ -510,8 +510,8 @@ module egret.gui {
 		 * textDisplay附加
 		 */		
 		private textDisplayAdded():void{        
-			var newTextDisplayProperties:any = {};
-			var richEditableText:EditableText = <EditableText><any> (this.textDisplay);
+			let newTextDisplayProperties:any = {};
+			let richEditableText:EditableText = <EditableText><any> (this.textDisplay);
 			
 			if(this.textDisplayProperties.displayAsPassword !== undefined){
 				this.textDisplay.displayAsPassword = this.textDisplayProperties.displayAsPassword;
@@ -577,8 +577,8 @@ module egret.gui {
 		 * textDisplay移除
 		 */		
 		private textDisplayRemoved():void{        
-			var newTextDisplayProperties:any = {};
-			var richEditableText:EditableText = <EditableText><any> (this.textDisplay);
+			let newTextDisplayProperties:any = {};
+			let richEditableText:EditableText = <EditableText><any> (this.textDisplay);
 			
 			if(this.textDisplayProperties.displayAsPassword){
 				newTextDisplayProperties.displayAsPassword = this.textDisplay.displayAsPassword;
@@ -637,7 +637,7 @@ module egret.gui {
 		 * textDisplay文字即将改变事件
 		 */		
 		private textDisplay_changingHandler(event:Event):void{
-            var newEvent: Event =
+            let newEvent: Event =
                 new Event(event.type, false, true);
             newEvent.data = event.data;
             this.dispatchEvent(newEvent);

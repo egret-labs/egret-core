@@ -1,6 +1,6 @@
 //////////////////////////////////////////////////////////////////////////////////////
 //
-//  Copyright (c) 2014-2015, Egret Technology Inc.
+//  Copyright (c) 2014-present, Egret Technology.
 //  All rights reserved.
 //  Redistribution and use in source and binary forms, with or without
 //  modification, are permitted provided that the following conditions are met:
@@ -28,7 +28,7 @@
 //////////////////////////////////////////////////////////////////////////////////////
 
 
-module egret.gui {
+namespace egret.gui {
 
     /**
      * @class egret.gui.Label
@@ -246,7 +246,7 @@ module egret.gui {
                 }
             }
 
-            var availableWidth:number;
+            let availableWidth:number;
 
             if (!isNaN(this.$getExplicitWidth()))
                 availableWidth = this.$getExplicitWidth();
@@ -277,11 +277,11 @@ module egret.gui {
                 this._textField.textFlow = this._textFlow;
             }
 
-            var padding:number = isNaN(this._padding)?0:this._padding;
-            var paddingL:number = isNaN(this._paddingLeft)?padding:this._paddingLeft;
-            var paddingR:number = isNaN(this._paddingRight)?padding:this._paddingRight;
-            var paddingT:number = isNaN(this._paddingTop)?padding:this._paddingTop;
-            var paddingB:number = isNaN(this._paddingBottom)?padding:this._paddingBottom;
+            let padding:number = isNaN(this._padding)?0:this._padding;
+            let paddingL:number = isNaN(this._paddingLeft)?padding:this._paddingLeft;
+            let paddingR:number = isNaN(this._paddingRight)?padding:this._paddingRight;
+            let paddingT:number = isNaN(this._paddingTop)?padding:this._paddingTop;
+            let paddingB:number = isNaN(this._paddingBottom)?padding:this._paddingBottom;
 
             this._textField.width = NaN;
             this._textField.height = NaN;
@@ -296,8 +296,8 @@ module egret.gui {
             }
 
             if(this._maxDisplayedLines>0&&this._textField.numLines>this._maxDisplayedLines){
-                var size:number = this._textField.size;
-                var lineSpacing:number = this._textField.lineSpacing;
+                let size:number = this._textField.size;
+                let lineSpacing:number = this._textField.lineSpacing;
                 this.measuredHeight = (size+lineSpacing)*this._maxDisplayedLines-lineSpacing;
             }
 
@@ -315,16 +315,16 @@ module egret.gui {
         public updateDisplayList(unscaledWidth:number,unscaledHeight:number):void{
             this.$updateDisplayList(unscaledWidth,unscaledHeight);
 
-            var padding:number = isNaN(this._padding)?0:this._padding;
-            var paddingL:number = isNaN(this._paddingLeft)?padding:this._paddingLeft;
-            var paddingR:number = isNaN(this._paddingRight)?padding:this._paddingRight;
-            var paddingT:number = isNaN(this._paddingTop)?padding:this._paddingTop;
-            var paddingB:number = isNaN(this._paddingBottom)?padding:this._paddingBottom;
+            let padding:number = isNaN(this._padding)?0:this._padding;
+            let paddingL:number = isNaN(this._paddingLeft)?padding:this._paddingLeft;
+            let paddingR:number = isNaN(this._paddingRight)?padding:this._paddingRight;
+            let paddingT:number = isNaN(this._paddingTop)?padding:this._paddingTop;
+            let paddingB:number = isNaN(this._paddingBottom)?padding:this._paddingBottom;
 
             this._textField.x = paddingL;
             this._textField.y = paddingT;
             if (this.isSpecialCase()){
-                var firstTime:boolean = isNaN(this.lastUnscaledWidth) ||
+                let firstTime:boolean = isNaN(this.lastUnscaledWidth) ||
                     this.lastUnscaledWidth != unscaledWidth;
                 this.lastUnscaledWidth = unscaledWidth;
                 if (firstTime){
@@ -343,13 +343,13 @@ module egret.gui {
                 this._textField.visible = true;
 
             this._textField.width = unscaledWidth - paddingL - paddingR;
-            var unscaledTextHeight:number = unscaledHeight - paddingT - paddingB;
+            let unscaledTextHeight:number = unscaledHeight - paddingT - paddingB;
             this._textField.height = unscaledTextHeight;
 
             if(this._maxDisplayedLines>0&&this._textField.numLines>this._maxDisplayedLines){
-                var size:number = this._textField.size;
-                var lineSpacing:number = this._textField.lineSpacing;
-                var h:number = (size+lineSpacing)*this._maxDisplayedLines-lineSpacing;
+                let size:number = this._textField.size;
+                let lineSpacing:number = this._textField.lineSpacing;
+                let h:number = (size+lineSpacing)*this._maxDisplayedLines-lineSpacing;
                 this._textField.height = Math.min(unscaledTextHeight,h);
             }
         }

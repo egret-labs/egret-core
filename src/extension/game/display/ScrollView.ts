@@ -1,6 +1,6 @@
 //////////////////////////////////////////////////////////////////////////////////////
 //
-//  Copyright (c) 2014-2015, Egret Technology Inc.
+//  Copyright (c) 2014-present, Egret Technology.
 //  All rights reserved.
 //  Redistribution and use in source and binary forms, with or without
 //  modification, are permitted provided that the following conditions are met:
@@ -28,20 +28,20 @@
 //////////////////////////////////////////////////////////////////////////////////////
 
 
-module egret {
+namespace egret {
     /**
-     * @language en_US
      * ScrollView auxiliary classes for slides, you will pass a display object constructor. It can display more than the range display object within the specified size range. And can easily drag in this range.
      * @version Egret 2.4
      * @platform Web,Native
      * @includeExample extension/game/display/ScrollView.ts
+     * @language en_US
      */
     /**
-     * @language zh_CN
      * ScrollView 是用于滑动的辅助类，将一个显示对象传入构造函数即可。可以在指定的尺寸范围内显示超过该范围的显示对象。并可以在此范围内随意拖动。
      * @version Egret 2.4
      * @platform Web,Native
      * @includeExample extension/game/display/ScrollView.ts
+     * @language zh_CN
      */
     export class ScrollView extends DisplayObjectContainer {
 
@@ -51,48 +51,48 @@ module egret {
         public _ScrV_Props_:ScrollViewProperties;
 
         /**
-         * @language en_US
          * Start rolling threshold when the touch point from the initial touch point at a distance exceeding this value will trigger roll
          * @version Egret 2.4
          * @platform Web,Native
+         * @language en_US
          */
         /**
-         * @language zh_CN
          * 开始滚动的阈值，当触摸点偏离初始触摸点的距离超过这个值时才会触发滚动
          * @version Egret 2.4
          * @platform Web,Native
+         * @language zh_CN
          */
         public scrollBeginThreshold:number = 10;
 
 
         /**
-         * @language en_US
          * Scrolling speed, the speed is required and the default speed ratio.
          * The range of scrollSpeed> 0 assigned to 2:00, the speed is 2 times the default speed
          * @version Egret 2.4
          * @platform Web,Native
+         * @language en_US
          */
         /**
-         * @language zh_CN
          * 滚动速度，这个值为需要的速度与默认速度的比值。
          * 取值范围为 scrollSpeed > 0 赋值为 2 时，速度是默认速度的 2 倍
          * @version Egret 2.4
          * @platform Web,Native
+         * @language zh_CN
          */
         public scrollSpeed:number = 1;
 
 
         /**
-         * @language en_US
          * Whether to enable rebound, rebound When enabled, ScrollView contents allowed to continue to drag the border after arriving at the end user drag operation, and then bounce back boundary position
          * @default true
          * @version Egret 2.4
+         * @language en_US
          */
         /**
-         * @language zh_CN
          * 是否启用回弹，当启用回弹后，ScrollView中内容在到达边界后允许继续拖动，在用户拖动操作结束后，再反弹回边界位置
          * @default true
          * @version Egret 2.4
+         * @language zh_CN
          */
         public get bounces(): boolean {
             return this._ScrV_Props_._bounces;
@@ -103,18 +103,18 @@ module egret {
         }
 
         /**
-         * @language en_US
          * Create a egret.ScrollView objects
          * @param content {egret.DisplayObject} You need to scroll object
          * @version Egret 2.4
          * @platform Web,Native
+         * @language en_US
          */
         /**
-         * @language zh_CN
          * 创建一个 egret.ScrollView 对象
          * @param content {egret.DisplayObject} 需要滚动的对象
          * @version Egret 2.4
          * @platform Web,Native
+         * @language zh_CN
          */
         constructor(content:DisplayObject = null) {
             super();
@@ -131,18 +131,18 @@ module egret {
         public _content:DisplayObject = null;
 
         /**
-         * @language en_US
          * Set to scroll object
          * @param content {egret.DisplayObject} You need to scroll object
          * @version Egret 2.4
          * @platform Web,Native
+         * @language en_US
          */
         /**
-         * @language zh_CN
          * 设置需要滚动的对象
          * @param content {egret.DisplayObject} 需要滚动的对象
          * @version Egret 2.4
          * @platform Web,Native
+         * @language zh_CN
          */
         public setContent(content:DisplayObject):void {
             if (this._content === content)
@@ -156,16 +156,16 @@ module egret {
         }
 
         /**
-         * @language en_US
          * Remove rolling objects
          * @version Egret 2.4
          * @platform Web,Native
+         * @language en_US
          */
         /**
-         * @language zh_CN
          * 移除滚动的对象
          * @version Egret 2.4
          * @platform Web,Native
+         * @language zh_CN
          */
         public removeContent():void {
             if (this._content) {
@@ -176,16 +176,16 @@ module egret {
         }
 
         /**
-         * @language en_US
          * Vertical scroll bar display policy, on / off / auto.
          * @version Egret 2.4
          * @platform Web,Native
+         * @language en_US
          */
         /**
-         * @language zh_CN
          * 垂直滚动条显示策略，on/off/auto。
          * @version Egret 2.4
          * @platform Web,Native
+         * @language zh_CN
          */
         public get verticalScrollPolicy():string {
             return this._ScrV_Props_._verticalScrollPolicy;
@@ -199,16 +199,16 @@ module egret {
 
 
         /**
-         * @language en_US
          * The horizontal scroll bar display policy, on / off / auto.
          * @version Egret 2.4
          * @platform Web,Native
+         * @language en_US
          */
         /**
-         * @language zh_CN
          * 水平滚动条显示策略，on/off/auto。
          * @version Egret 2.4
          * @platform Web,Native
+         * @language zh_CN
          */
         public get horizontalScrollPolicy():string {
             return this._ScrV_Props_._horizontalScrollPolicy;
@@ -221,18 +221,18 @@ module egret {
         }
 
         /**
-         * @language en_US
          * Gets or sets the horizontal scroll position
          * @returns {number}
          * @version Egret 2.4
          * @platform Web,Native
+         * @language en_US
          */
         /**
-         * @language zh_CN
          * 获取或设置水平滚动位置,
          * @returns {number}
          * @version Egret 2.4
          * @platform Web,Native
+         * @language zh_CN
          */
         public get scrollLeft():number {
             return this._ScrV_Props_._scrollLeft;
@@ -247,18 +247,18 @@ module egret {
         }
 
         /**
-         * @language en_US
          * Gets or sets the vertical scroll position
          * @returns {number}
          * @version Egret 2.4
          * @platform Web,Native
+         * @language en_US
          */
         /**
-         * @language zh_CN
          * 获取或设置垂直滚动位置,
          * @returns {number}
          * @version Egret 2.4
          * @platform Web,Native
+         * @language zh_CN
          */
         public get scrollTop():number {
             return this._ScrV_Props_._scrollTop;
@@ -273,22 +273,22 @@ module egret {
         }
 
         /**
-         * @language en_US
          * Set scroll position
          * @param top {number} The vertical scroll position
          * @param left {number} The horizontal scroll position
          * @param isOffset {boolean} Optional parameter, the default is false, whether it is the amount of scrolling increase as top = 1 on behalf of one pixel scroll up
          * @version Egret 2.4
          * @platform Web,Native
+         * @language en_US
          */
         /**
-         * @language zh_CN
          * 设置滚动位置
          * @param top {number} 垂直滚动位置
          * @param left {number} 水平滚动位置
          * @param isOffset {boolean} 可选参数，默认是false，是否是滚动增加量，如 top=1 代表往上滚动1像素
          * @version Egret 2.4
          * @platform Web,Native
+         * @language zh_CN
          */
         public setScrollPosition(top:number, left:number, isOffset:boolean = false):void {
             if (isOffset && top == 0 && left == 0)
@@ -296,22 +296,22 @@ module egret {
             if (!isOffset && this._ScrV_Props_._scrollTop == top
                 && this._ScrV_Props_._scrollLeft == left)
                 return;
-            var oldTop = this._ScrV_Props_._scrollTop,
+            let oldTop = this._ScrV_Props_._scrollTop,
                 oldLeft = this._ScrV_Props_._scrollLeft;
             if (isOffset) {
-                var maxLeft = this.getMaxScrollLeft();
-                var maxTop = this.getMaxScrollTop();
+                let maxLeft = this.getMaxScrollLeft();
+                let maxTop = this.getMaxScrollTop();
                 if (oldTop <=0 ||oldTop >= maxTop) {
                     top = top / 2;
                 }
                 if (oldLeft <= 0 || oldLeft >= maxLeft) {
                     left = left / 2;
                 }
-                var newTop = oldTop + top;
-                var newLeft = oldLeft + left;
+                let newTop = oldTop + top;
+                let newLeft = oldLeft + left;
 
                 //判断是否回弹
-                var bounces = this._ScrV_Props_._bounces;
+                let bounces = this._ScrV_Props_._bounces;
                 if (!bounces) {
                     if (newTop <= 0 || newTop >= maxTop)
                         newTop = Math.max(0, Math.min(newTop, maxTop));
@@ -337,14 +337,14 @@ module egret {
          */
         private _validatePosition(top = false, left = false):void {
             if (top) {
-                var height = this.height;
-                var contentHeight = this._getContentHeight();
+                let height = this.height;
+                let contentHeight = this._getContentHeight();
                 this._ScrV_Props_._scrollTop = Math.max(this._ScrV_Props_._scrollTop, (0 - height) / 2);
                 this._ScrV_Props_._scrollTop = Math.min(this._ScrV_Props_._scrollTop, contentHeight > height ? (contentHeight - height / 2) : height / 2);
             }
             if (left) {
-                var width = this.width;
-                var contentWidth = this._getContentWidth();
+                let width = this.width;
+                let contentWidth = this._getContentWidth();
                 this._ScrV_Props_._scrollLeft = Math.max(this._ScrV_Props_._scrollLeft, (0 - width) / 2);
                 this._ScrV_Props_._scrollLeft = Math.min(this._ScrV_Props_._scrollLeft, contentWidth > width ? (contentWidth - width / 2) : width / 2);
             }
@@ -359,7 +359,7 @@ module egret {
                 return false;
             }
 
-            var result:boolean = super.$setWidth(value);
+            let result:boolean = super.$setWidth(value);
             this._updateContentPosition();
 
             return result;
@@ -372,7 +372,7 @@ module egret {
         $setHeight(value:number):boolean {
             if (this.$getExplicitHeight() == value)
                 return false;
-            var result:boolean = super.$setHeight(value);
+            let result:boolean = super.$setHeight(value);
             this._updateContentPosition();
 
             return true;
@@ -383,8 +383,8 @@ module egret {
          *
          */
         public _updateContentPosition():void {
-            var height = this.height;
-            var width = this.width;
+            let height = this.height;
+            let width = this.width;
             //这里将坐标取整，避免有些浏览器精度低产生“黑线”问题
             this.scrollRect = new Rectangle(Math.round(this._ScrV_Props_._scrollLeft), Math.round(this._ScrV_Props_._scrollTop), width, height);
             this.dispatchEvent(new Event(Event.CHANGE));
@@ -396,11 +396,11 @@ module egret {
          * @returns
          */
         public _checkScrollPolicy():boolean {
-            var hpolicy = this._ScrV_Props_._horizontalScrollPolicy;
-            var hCanScroll = this.__checkScrollPolicy(hpolicy, this._getContentWidth(), this.width);
+            let hpolicy = this._ScrV_Props_._horizontalScrollPolicy;
+            let hCanScroll = this.__checkScrollPolicy(hpolicy, this._getContentWidth(), this.width);
             this._ScrV_Props_._hCanScroll = hCanScroll;
-            var vpolicy = this._ScrV_Props_._verticalScrollPolicy;
-            var vCanScroll = this.__checkScrollPolicy(vpolicy, this._getContentHeight(), this.height);
+            let vpolicy = this._ScrV_Props_._verticalScrollPolicy;
+            let vCanScroll = this.__checkScrollPolicy(vpolicy, this._getContentHeight(), this.height);
             this._ScrV_Props_._vCanScroll = vCanScroll;
             return hCanScroll || vCanScroll;
         }
@@ -454,7 +454,7 @@ module egret {
             if (e.$isDefaultPrevented) {
                 return;
             }
-            var canScroll:boolean = this._checkScrollPolicy();
+            let canScroll:boolean = this._checkScrollPolicy();
             if (!canScroll) {
                 return;
             }
@@ -488,12 +488,12 @@ module egret {
          * @param event
          */
         public _onTouchBeginCapture(event:TouchEvent):void {
-            var canScroll:boolean = this._checkScrollPolicy();
+            let canScroll:boolean = this._checkScrollPolicy();
             if (!canScroll) {
                 return;
             }
 
-            var target:DisplayObject = event.target;
+            let target:DisplayObject = event.target;
             while (target != this) {
                 if ("_checkScrollPolicy" in target) {
                     canScroll = (<ScrollView><any> target)._checkScrollPolicy();
@@ -504,7 +504,7 @@ module egret {
                 target = target.parent;
             }
             event.stopPropagation();
-            var evt:TouchEvent = this.cloneTouchEvent(event);
+            let evt:TouchEvent = this.cloneTouchEvent(event);
             this.delayTouchBeginEvent = evt;
             if (!this.touchBeginTimer) {
                 this.touchBeginTimer = new egret.Timer(100, 1);
@@ -526,7 +526,7 @@ module egret {
             }
             this._onTouchBeginTimer();
             event.stopPropagation();
-            var evt: TouchEvent = this.cloneTouchEvent(event);
+            let evt: TouchEvent = this.cloneTouchEvent(event);
             egret.callLater(() => {
                 if (this.stage) {
                     this.dispatchPropagationEvent(evt);
@@ -540,7 +540,7 @@ module egret {
          */
         private _onTouchBeginTimer():void {
             this.touchBeginTimer.stop();
-            var event:TouchEvent = this.delayTouchBeginEvent;
+            let event:TouchEvent = this.delayTouchBeginEvent;
             this.delayTouchBeginEvent = null;
             //Dispatch event only if the scroll view is still on the stage
             if (this.stage)
@@ -554,12 +554,12 @@ module egret {
          * @returns
          */
         private dispatchPropagationEvent(event:TouchEvent):void {
-            var target:egret.DisplayObject = event.$target;
-            var list = this.$getPropagationList(target);
-            var length = list.length;
-            var targetIndex = list.length * 0.5;
-            var startIndex = -1;
-            for (var i = 0; i < length; i++) {
+            let target:egret.DisplayObject = event.$target;
+            let list = this.$getPropagationList(target);
+            let length = list.length;
+            let targetIndex = list.length * 0.5;
+            let startIndex = -1;
+            for (let i = 0; i < length; i++) {
                 if (list[i] === this._content) {
                     startIndex = i;
                     break;
@@ -581,9 +581,9 @@ module egret {
             if (this._ScrV_Props_._lastTouchPosition.x == event.stageX && this._ScrV_Props_._lastTouchPosition.y == event.stageY)
                 return;
             if (!this._ScrV_Props_._scrollStarted) {
-                var x = event.stageX - this._ScrV_Props_._touchStartPosition.x,
+                let x = event.stageX - this._ScrV_Props_._touchStartPosition.x,
                     y = event.stageY - this._ScrV_Props_._touchStartPosition.y;
-                var distance = Math.sqrt(x * x + y * y);
+                let distance = Math.sqrt(x * x + y * y);
                 if (distance < this.scrollBeginThreshold) {
                     this._logTouchEvent(event);
                     return;
@@ -595,7 +595,7 @@ module egret {
                 this.touchBeginTimer.stop();
             }
             this.touchChildren = false;
-            var offset = this._getPointChange(event);
+            let offset = this._getPointChange(event);
             this.setScrollPosition(offset.y, offset.x, true);
             this._calcVelocitys(event);
             this._logTouchEvent(event);
@@ -626,7 +626,7 @@ module egret {
          * @returns
          */
         public _onEnterFrame(event:Event):void {
-            var time = getTimer();
+            let time = getTimer();
             if (time - this._ScrV_Props_._lastTouchTime > 100 && time - this._ScrV_Props_._lastTouchTime < 300) {
                 this._calcVelocitys(this._ScrV_Props_._lastTouchEvent);
             }
@@ -665,13 +665,13 @@ module egret {
          * @returns
          */
         private _calcVelocitys(e:TouchEvent):void {
-            var time = getTimer();
+            let time = getTimer();
             if (this._ScrV_Props_._lastTouchTime == 0) {
                 this._ScrV_Props_._lastTouchTime = time;
                 return;
             }
-            var change = this._getPointChange(e);
-            var timeoffset = time - this._ScrV_Props_._lastTouchTime;
+            let change = this._getPointChange(e);
+            let timeoffset = time - this._ScrV_Props_._lastTouchTime;
             change.x /= timeoffset;
             change.y /= timeoffset;
             this._ScrV_Props_._velocitys.push(change);
@@ -700,40 +700,40 @@ module egret {
         }
 
         /**
-         * @language en_US
          * The left side of the maximum distance
          * @returns The left side of the maximum distance
          * @version Egret 2.4
          * @platform Web,Native
+         * @language en_US
          */
         /**
-         * @language zh_CN
          * 距离左侧的最大值
          * @returns 距离左侧最大值
          * @version Egret 2.4
          * @platform Web,Native
+         * @language zh_CN
          */
         public getMaxScrollLeft():number {
-            var max = this._getContentWidth() - this.width;
+            let max = this._getContentWidth() - this.width;
             return Math.max(0, max);
         }
 
         /**
-         * @language en_US
          * Above the maximum distance
          * @returns Above the maximum distance
          * @version Egret 2.4
          * @platform Web,Native
+         * @language en_US
          */
         /**
-         * @language zh_CN
          * 距离上方最大值
          * @returns 距离上方最大值
          * @version Egret 2.4
          * @platform Web,Native
+         * @language zh_CN
          */
         public getMaxScrollTop():number {
-            var max = this._getContentHeight() - this.height;
+            let max = this._getContentHeight() - this.height;
             return Math.max(0, max);
         }
 
@@ -749,10 +749,10 @@ module egret {
         private _moveAfterTouchEnd():void {
             if (this._ScrV_Props_._velocitys.length == 0)
                 return;
-            var sum = {x: 0, y: 0}, totalW = 0;
-            for (var i = 0; i < this._ScrV_Props_._velocitys.length; i++) {
-                var v = this._ScrV_Props_._velocitys[i];
-                var w = ScrollView.weight[i];
+            let sum = {x: 0, y: 0}, totalW = 0;
+            for (let i = 0; i < this._ScrV_Props_._velocitys.length; i++) {
+                let v = this._ScrV_Props_._velocitys[i];
+                let w = ScrollView.weight[i];
                 sum.x += v.x * w;
                 sum.y += v.y * w;
                 totalW += w;
@@ -761,15 +761,15 @@ module egret {
 
             if (this.scrollSpeed <= 0)
                 this.scrollSpeed = 1;
-            var x = sum.x / totalW * this.scrollSpeed, y = sum.y / totalW * this.scrollSpeed;
-            var pixelsPerMSX = Math.abs(x), pixelsPerMSY = Math.abs(y);
-            var maxLeft = this.getMaxScrollLeft();
-            var maxTop = this.getMaxScrollTop();
-            var datax = pixelsPerMSX > 0.02 ? this.getAnimationDatas(x, this._ScrV_Props_._scrollLeft, maxLeft) : {
+            let x = sum.x / totalW * this.scrollSpeed, y = sum.y / totalW * this.scrollSpeed;
+            let pixelsPerMSX = Math.abs(x), pixelsPerMSY = Math.abs(y);
+            let maxLeft = this.getMaxScrollLeft();
+            let maxTop = this.getMaxScrollTop();
+            let datax = pixelsPerMSX > 0.02 ? this.getAnimationDatas(x, this._ScrV_Props_._scrollLeft, maxLeft) : {
                 position: this._ScrV_Props_._scrollLeft,
                 duration: 1
             };
-            var datay = pixelsPerMSY > 0.02 ? this.getAnimationDatas(y, this._ScrV_Props_._scrollTop, maxTop) : {
+            let datay = pixelsPerMSY > 0.02 ? this.getAnimationDatas(y, this._ScrV_Props_._scrollTop, maxTop) : {
                 position: this._ScrV_Props_._scrollTop,
                 duration: 1
             };
@@ -816,32 +816,32 @@ module egret {
         }
 
         /**
-         * @language en_US
          * Set the scroll position above the distance
          * @param scrollTop Position above distance
          * @param duration Easing of time, in milliseconds
          * @returns Get tween vertical scrolling
          * @version Egret 2.4
          * @platform Web,Native
+         * @language en_US
          */
         /**
-         * @language zh_CN
          * 设置滚动距离上方的位置
          * @param scrollTop 距离上方的位置
          * @param duration 缓动时间，毫秒单位
          * @returns 获取垂直滚动的tween
          * @version Egret 2.4
          * @platform Web,Native
+         * @language zh_CN
          */
         public setScrollTop(scrollTop:number, duration:number = 0):void {
-            var finalPosition = Math.min(this.getMaxScrollTop(), Math.max(scrollTop, 0));
+            let finalPosition = Math.min(this.getMaxScrollTop(), Math.max(scrollTop, 0));
             if (duration == 0) {
                 this.scrollTop = finalPosition;
                 return;
             }
             if (this._ScrV_Props_._bounces == false)
                 scrollTop = finalPosition;
-            var vtween = egret.ScrollTween.get(this).to({scrollTop: scrollTop}, duration, egret.ScrollEase.quartOut);
+            let vtween = egret.ScrollTween.get(this).to({scrollTop: scrollTop}, duration, egret.ScrollEase.quartOut);
             if (finalPosition != scrollTop) {
                 vtween.to({scrollTop: finalPosition}, 300, egret.ScrollEase.quintOut);
             }
@@ -853,32 +853,32 @@ module egret {
         }
 
         /**
-         * @language en_US
          * Set the scroll position from the left side
          * @param scrollLeft From the position on the left side
          * @param duration Get tween vertical scrolling
          * @returns Gets the horizontal scroll tween
          * @version Egret 2.4
          * @platform Web,Native
+         * @language en_US
          */
         /**
-         * @language zh_CN
          * 设置滚动距离左侧的位置
          * @param scrollLeft 距离左侧的位置
          * @param duration 缓动时间，毫秒单位
          * @returns 获取水平滚动的tween
          * @version Egret 2.4
          * @platform Web,Native
+         * @language zh_CN
          */
         public setScrollLeft(scrollLeft:number, duration:number = 0):void {
-            var finalPosition = Math.min(this.getMaxScrollLeft(), Math.max(scrollLeft, 0));
+            let finalPosition = Math.min(this.getMaxScrollLeft(), Math.max(scrollLeft, 0));
             if (duration == 0) {
                 this.scrollLeft = finalPosition;
                 return;
             }
             if (this._ScrV_Props_._bounces == false)
                 scrollLeft = finalPosition;
-            var htween = egret.ScrollTween.get(this).to({scrollLeft: scrollLeft}, duration, egret.ScrollEase.quartOut);
+            let htween = egret.ScrollTween.get(this).to({scrollLeft: scrollLeft}, duration, egret.ScrollEase.quartOut);
             if (finalPosition != scrollLeft) {
                 htween.to({scrollLeft: finalPosition}, 300, egret.ScrollEase.quintOut);
             }
@@ -898,12 +898,12 @@ module egret {
          * @returns
          */
         private getAnimationDatas(pixelsPerMS:number, curPos:number, maxPos:number):{ position: number; duration: number } {
-            var absPixelsPerMS:number = Math.abs(pixelsPerMS);
-            var extraFricition:number = 0.95;
-            var duration:number = 0;
-            var friction:number = 0.998;
-            var minVelocity:number = 0.02;
-            var posTo:number = curPos + pixelsPerMS * 500;
+            let absPixelsPerMS:number = Math.abs(pixelsPerMS);
+            let extraFricition:number = 0.95;
+            let duration:number = 0;
+            let friction:number = 0.998;
+            let minVelocity:number = 0.02;
+            let posTo:number = curPos + pixelsPerMS * 500;
             if (posTo < 0 || posTo > maxPos) {
                 posTo = curPos;
                 while (Math.abs(pixelsPerMS) != Infinity && Math.abs(pixelsPerMS) > minVelocity) {
@@ -921,7 +921,7 @@ module egret {
                 duration = -Math.log(minVelocity / absPixelsPerMS) * 500;
             }
 
-            var result = {
+            let result = {
                 position: Math.min(maxPos + 50, Math.max(posTo, -50)),//允许越界50px
                 duration: duration
             };
@@ -935,7 +935,7 @@ module egret {
          * @returns
          */
         private cloneTouchEvent(event:TouchEvent):TouchEvent {
-            var evt:TouchEvent = new TouchEvent(event.type, event.bubbles, event.cancelable);
+            let evt:TouchEvent = new TouchEvent(event.type, event.bubbles, event.cancelable);
             evt.touchPointID = event.touchPointID
             evt.$stageX = event.stageX;
             evt.$stageY = event.stageY;

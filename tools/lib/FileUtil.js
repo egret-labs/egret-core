@@ -1,6 +1,6 @@
 //////////////////////////////////////////////////////////////////////////////////////
 //
-//  Copyright (c) 2014-2015, Egret Technology Inc.
+//  Copyright (c) 2014-present, Egret Technology.
 //  All rights reserved.
 //  Redistribution and use in source and binary forms, with or without
 //  modification, are permitted provided that the following conditions are met:
@@ -26,7 +26,41 @@
 //  EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 //
 //////////////////////////////////////////////////////////////////////////////////////
-/// <reference path="node.d.ts"/>
+var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, generator) {
+    return new (P || (P = Promise))(function (resolve, reject) {
+        function fulfilled(value) { try { step(generator.next(value)); } catch (e) { reject(e); } }
+        function rejected(value) { try { step(generator["throw"](value)); } catch (e) { reject(e); } }
+        function step(result) { result.done ? resolve(result.value) : new P(function (resolve) { resolve(result.value); }).then(fulfilled, rejected); }
+        step((generator = generator.apply(thisArg, _arguments || [])).next());
+    });
+};
+var __generator = (this && this.__generator) || function (thisArg, body) {
+    var _ = { label: 0, sent: function() { if (t[0] & 1) throw t[1]; return t[1]; }, trys: [], ops: [] }, f, y, t;
+    return { next: verb(0), "throw": verb(1), "return": verb(2) };
+    function verb(n) { return function (v) { return step([n, v]); }; }
+    function step(op) {
+        if (f) throw new TypeError("Generator is already executing.");
+        while (_) try {
+            if (f = 1, y && (t = y[op[0] & 2 ? "return" : op[0] ? "throw" : "next"]) && !(t = t.call(y, op[1])).done) return t;
+            if (y = 0, t) op = [0, t.value];
+            switch (op[0]) {
+                case 0: case 1: t = op; break;
+                case 4: _.label++; return { value: op[1], done: false };
+                case 5: _.label++; y = op[1]; op = [0]; continue;
+                case 7: op = _.ops.pop(); _.trys.pop(); continue;
+                default:
+                    if (!(t = _.trys, t = t.length > 0 && t[t.length - 1]) && (op[0] === 6 || op[0] === 2)) { _ = 0; continue; }
+                    if (op[0] === 3 && (!t || (op[1] > t[0] && op[1] < t[3]))) { _.label = op[1]; break; }
+                    if (op[0] === 6 && _.label < t[1]) { _.label = t[1]; t = op; break; }
+                    if (t && _.label < t[2]) { _.label = t[2]; _.ops.push(op); break; }
+                    if (t[2]) _.ops.pop();
+                    _.trys.pop(); continue;
+            }
+            op = body.call(thisArg, _);
+        } catch (e) { op = [6, e]; y = 0; } finally { f = t = 0; }
+        if (op[0] & 5) throw op[1]; return { value: op[0] ? op[1] : void 0, done: true };
+    }
+};
 var FS = require("fs");
 var Path = require("path");
 var charset = "utf-8";
@@ -45,6 +79,19 @@ function save(path, data) {
     FS.writeFileSync(path, data, charset);
 }
 exports.save = save;
+function writeFileAsync(path, content, charset) {
+    return new Promise(function (resolve, reject) {
+        FS.writeFile(path, content, { encoding: charset }, function (err) {
+            if (err) {
+                reject(err);
+            }
+            else {
+                resolve(true);
+            }
+        });
+    });
+}
+exports.writeFileAsync = writeFileAsync;
 /**
  * 创建文件夹
  */
@@ -112,6 +159,19 @@ function read(path, ignoreCache) {
     return text;
 }
 exports.read = read;
+function readFileAsync(path, charset) {
+    return new Promise(function (resolve, reject) {
+        FS.readFile(path, charset, function (err, data) {
+            if (err) {
+                reject(err);
+            }
+            else {
+                resolve(data);
+            }
+        });
+    });
+}
+exports.readFileAsync = readFileAsync;
 /**
  * 读取字节流文件,返回字节流，若失败，返回null.
  * @param path 要打开的文件路径
@@ -184,7 +244,7 @@ function _copy_file(source_file, output_file) {
 }
 function _copy_dir(sourceDir, outputDir) {
     createDirectory(outputDir);
-    var list = FS.readdirSync(sourceDir);
+    var list = readdirSync(sourceDir);
     list.forEach(function (fileName) {
         copy(Path.join(sourceDir, fileName), Path.join(outputDir, fileName));
     });
@@ -208,7 +268,7 @@ exports.remove = remove;
 function rmdir(path) {
     var files = [];
     if (FS.existsSync(path)) {
-        files = FS.readdirSync(path);
+        files = readdirSync(path);
         files.forEach(function (file) {
             var curPath = path + "/" + file;
             if (FS.statSync(curPath).isDirectory()) {
@@ -279,7 +339,7 @@ function getDirectoryListing(path, relative) {
     if (relative === void 0) { relative = false; }
     path = escapePath(path);
     try {
-        var list = FS.readdirSync(path);
+        var list = readdirSync(path);
     }
     catch (e) {
         return [];
@@ -360,14 +420,23 @@ function searchByFunction(dir, filterFunc, checkDir) {
     return list;
 }
 exports.searchByFunction = searchByFunction;
-function findFiles(filePath, list, extension, filterFunc, checkDir) {
+function readdirSync(filePath) {
     var files = FS.readdirSync(filePath);
+    files.sort();
+    return files;
+}
+function findFiles(filePath, list, extension, filterFunc, checkDir) {
+    var files = readdirSync(filePath);
     var length = files.length;
     for (var i = 0; i < length; i++) {
         if (files[i].charAt(0) == ".") {
             continue;
         }
         var path = joinPath(filePath, files[i]);
+        var exists_1 = FS.existsSync(path);
+        if (!exists_1) {
+            continue;
+        }
         var stat = FS.statSync(path);
         if (stat.isDirectory()) {
             if (checkDir) {
@@ -453,5 +522,97 @@ function getAbsolutePath(path) {
     return joinPath(egret.args.projectDir, path);
 }
 exports.getAbsolutePath = getAbsolutePath;
-
-//# sourceMappingURL=FileUtil.js.map
+function moveAsync(oldPath, newPath) {
+    return new Promise(function (resolve, reject) {
+        copy(oldPath, newPath);
+        remove(oldPath);
+        return resolve();
+    });
+}
+exports.moveAsync = moveAsync;
+function existsSync(path) {
+    return FS.existsSync(path);
+}
+exports.existsSync = existsSync;
+function existsAsync(path) {
+    return new Promise(function (resolve, reject) {
+        FS.exists(path, function (isExist) {
+            return resolve(isExist);
+        });
+    });
+}
+exports.existsAsync = existsAsync;
+function copyAsync(src, dest) {
+    return new Promise(function (resolve, reject) {
+        copy(src, dest);
+        return resolve();
+    });
+}
+exports.copyAsync = copyAsync;
+function removeAsync(dir) {
+    return new Promise(function (resolve, reject) {
+        remove(dir);
+        return resolve();
+    });
+}
+exports.removeAsync = removeAsync;
+function readFileSync(filename, encoding) {
+    return FS.readFileSync(filename, encoding);
+}
+exports.readFileSync = readFileSync;
+function readJSONAsync(file, options) {
+    return new Promise(function (resolve, reject) {
+        FS.readFile(file, options, function (err, data) {
+            if (err) {
+                return reject(err);
+            }
+            else {
+                try {
+                    var retObj = JSON.parse(data);
+                    return resolve(retObj);
+                }
+                catch (err) {
+                    return reject(err);
+                }
+            }
+        });
+    });
+}
+exports.readJSONAsync = readJSONAsync;
+function readJSONSync(file, options) {
+    return __awaiter(this, void 0, void 0, function () {
+        var ret;
+        return __generator(this, function (_a) {
+            switch (_a.label) {
+                case 0: return [4 /*yield*/, readJSONAsync(file, options)];
+                case 1:
+                    ret = _a.sent();
+                    return [2 /*return*/, ret];
+            }
+        });
+    });
+}
+exports.readJSONSync = readJSONSync;
+function statSync(path) {
+    return FS.statSync(path);
+}
+exports.statSync = statSync;
+function writeJSONAsync(file, object) {
+    return new Promise(function (resolve, reject) {
+        try {
+            var retObj = JSON.stringify(object, null, 4);
+            FS.writeFile(file, retObj, { encoding: "utf-8" }, function (err) {
+                if (err) {
+                    reject(err);
+                }
+                else {
+                    resolve();
+                }
+            });
+        }
+        catch (err) {
+            return reject(err);
+        }
+    });
+}
+exports.writeJSONAsync = writeJSONAsync;

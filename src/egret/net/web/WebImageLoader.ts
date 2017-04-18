@@ -1,7 +1,7 @@
 
 //////////////////////////////////////////////////////////////////////////////////////
 //
-//  Copyright (c) 2014-2015, Egret Technology Inc.
+//  Copyright (c) 2014-present, Egret Technology.
 //  All rights reserved.
 //  Redistribution and use in source and binary forms, with or without
 //  modification, are permitted provided that the following conditions are met:
@@ -29,9 +29,9 @@
 //////////////////////////////////////////////////////////////////////////////////////
 
 
-module egret.web {
+namespace egret.web {
 
-    var winURL = window["URL"] || window["webkitURL"];
+    let winURL = window["URL"] || window["webkitURL"];
 
     /**
      * @private
@@ -98,7 +98,7 @@ module egret.web {
                 && url.indexOf("data:") != 0
                 && url.indexOf("http:") != 0
                 && url.indexOf("https:") != 0) {//如果是base64编码或跨域访问的图片，直接使用Image.src解析。
-                var request = this.request;
+                let request = this.request;
                 if (!request) {
                     request = this.request = new egret.web.WebHttpRequest();
                     request.addEventListener(egret.Event.COMPLETE, this.onBlobLoaded, this);
@@ -120,7 +120,8 @@ module egret.web {
          * @private
          */
         private onBlobLoaded(event:egret.Event):void {
-            var blob:Blob = this.request.response;
+            let blob:Blob = this.request.response;
+            this.request = undefined;
             this.loadImage(winURL.createObjectURL(blob));
         }
 
@@ -129,13 +130,14 @@ module egret.web {
          */
         private onBlobError(event:egret.Event):void {
             this.dispatchIOError(this.currentURL);
+            this.request = undefined;
         }
 
         /**
          * @private
          */
         private loadImage(src:string):void {
-            var image = new Image();
+            let image = new Image();
             this.data = null;
             this.currentImage = image;
             if(this._hasCrossOriginSet) {
@@ -162,12 +164,12 @@ module egret.web {
          * @private
          */
         private onImageComplete(event):void {
-            var image = this.getImage(event);
+            let image = this.getImage(event);
             if (!image) {
                 return;
             }
-            this.data = $toBitmapData(image);
-            var self = this;
+            this.data = new egret.BitmapData(image);
+            let self = this;
             window.setTimeout(function ():void {
                 self.dispatchEventWith(Event.COMPLETE);
             }, 0);
@@ -177,7 +179,7 @@ module egret.web {
          * @private
          */
         private onLoadError(event):void {
-            var image = this.getImage(event);
+            let image = this.getImage(event);
             if (!image) {
                 return;
             }
@@ -185,7 +187,7 @@ module egret.web {
         }
 
         private dispatchIOError(url:string):void {
-            var self = this;
+            let self = this;
             window.setTimeout(function ():void {
                 if (DEBUG && !self.hasEventListener(IOErrorEvent.IO_ERROR)) {
                     $error(1011, url);
@@ -198,8 +200,8 @@ module egret.web {
          * @private
          */
         private getImage(event:any):HTMLImageElement {
-            var image:HTMLImageElement = event.target;
-            var url:string = image.src;
+            let image:HTMLImageElement = event.target;
+            let url:string = image.src;
             if (url.indexOf("blob:") == 0) {
                 try {
                     winURL.revokeObjectURL(image.src);

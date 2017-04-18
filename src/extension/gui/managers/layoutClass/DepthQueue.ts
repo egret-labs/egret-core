@@ -1,6 +1,6 @@
 //////////////////////////////////////////////////////////////////////////////////////
 //
-//  Copyright (c) 2014-2015, Egret Technology Inc.
+//  Copyright (c) 2014-present, Egret Technology.
 //  All rights reserved.
 //  Redistribution and use in source and binary forms, with or without
 //  modification, are permitted provided that the following conditions are met:
@@ -28,7 +28,7 @@
 //////////////////////////////////////////////////////////////////////////////////////
 
 
-module egret.gui {
+namespace egret.gui {
 
 	/**
 	 * @class egret.gui.DepthQueue
@@ -45,7 +45,7 @@ module egret.gui {
 		/**
 		 * 深度队列
 		 */
-		private depthBins:Array<any> = [];
+		private depthBins:any[] = [];
 		
 		/**
 		 * 最小深度
@@ -62,8 +62,8 @@ module egret.gui {
 		 * @param client {ILayoutManagerClient} 
 		 */		
 		public insert(client:ILayoutManagerClient):void{
-			var depth:number = client.nestLevel;
-            var hashCode:number = client.hashCode;
+			let depth:number = client.nestLevel;
+            let hashCode:number = client.hashCode;
 			if (this.maxDepth < this.minDepth){
 				this.minDepth = this.maxDepth = depth;
 			}
@@ -74,7 +74,7 @@ module egret.gui {
 					this.maxDepth = depth;
 			}
 			
-			var bin:DepthBin = this.depthBins[depth];
+			let bin:DepthBin = this.depthBins[depth];
 			
 			if (!bin){
 				bin = new DepthBin();
@@ -95,18 +95,18 @@ module egret.gui {
 		 * @returns {ILayoutManagerClient}
 		 */		
 		public pop():ILayoutManagerClient{
-			var client:ILayoutManagerClient = null;
+			let client:ILayoutManagerClient = null;
 			
 			if (this.minDepth <= this.maxDepth){
-				var bin:DepthBin = this.depthBins[this.maxDepth];
+				let bin:DepthBin = this.depthBins[this.maxDepth];
 				while (!bin || bin.length == 0){
 					this.maxDepth--;
 					if (this.maxDepth < this.minDepth)
 						return null;
 					bin = this.depthBins[this.maxDepth];
 				}
-				var items:Array<any> = bin.items;
-				for (var key in items ){
+				let items:any[] = bin.items;
+				for (let key in items ){
 					client = <ILayoutManagerClient> items[key];
 					this.remove(client, this.maxDepth);
 					break;
@@ -129,10 +129,10 @@ module egret.gui {
 		 * @returns {ILayoutManagerClient}
 		 */		
 		public shift():ILayoutManagerClient{
-			var client:ILayoutManagerClient = null;
+			let client:ILayoutManagerClient = null;
 			
 			if (this.minDepth <= this.maxDepth){
-				var bin:DepthBin = this.depthBins[this.minDepth];
+				let bin:DepthBin = this.depthBins[this.minDepth];
 				while (!bin || bin.length == 0){
 					this.minDepth++;
 					if (this.minDepth > this.maxDepth)
@@ -140,8 +140,8 @@ module egret.gui {
 					bin = this.depthBins[this.minDepth];
 				}
 
-                var items:Array<any> = bin.items;
-                for (var key in items ){
+                let items:any[] = bin.items;
+                for (let key in items ){
                     client = <ILayoutManagerClient> items[key];
 					this.remove(client, this.minDepth);
 					break;
@@ -165,11 +165,11 @@ module egret.gui {
 		 * @returns {any}
 		 */
 		public removeLargestChild(client:ILayoutManagerClient ):any{
-			var max:number = this.maxDepth;
-			var min:number = client.nestLevel;
-			var hashCode:number = client.hashCode;
+			let max:number = this.maxDepth;
+			let min:number = client.nestLevel;
+			let hashCode:number = client.hashCode;
 			while (min <= max){
-				var bin:DepthBin = this.depthBins[max];
+				let bin:DepthBin = this.depthBins[max];
 				if (bin && bin.length > 0){
 					if (max == client.nestLevel){
 						if (bin.items[hashCode]){
@@ -178,9 +178,9 @@ module egret.gui {
 						}
 					}
 					else{
-                        var items:Array<any> = bin.items;
-						for (var key in items ){
-                            var value:any = items[key];
+                        let items:any[] = bin.items;
+						for (let key in items ){
+                            let value:any = items[key];
 							if ((value instanceof DisplayObject) && (client instanceof DisplayObjectContainer)
 								&&(<DisplayObjectContainer><any> client).contains(<DisplayObject><any> value)){
 								this.remove(<ILayoutManagerClient><any> value, max);
@@ -210,10 +210,10 @@ module egret.gui {
 		 * @returns {any}
 		 */
 		public removeSmallestChild(client:ILayoutManagerClient ):any{
-			var min:number = client.nestLevel;
-			var hashCode:number = client.hashCode;
+			let min:number = client.nestLevel;
+			let hashCode:number = client.hashCode;
 			while (min <= this.maxDepth){
-				var bin:DepthBin = this.depthBins[min];
+				let bin:DepthBin = this.depthBins[min];
 				if (bin && bin.length > 0){   
 					if (min == client.nestLevel){
 						if (bin.items[hashCode]){
@@ -222,9 +222,9 @@ module egret.gui {
 						}
 					}
 					else{
-                        var items:Array<any> = bin.items;
-						for (var key in items){
-                            var value = items[key];
+                        let items:any[] = bin.items;
+						for (let key in items){
+                            let value = items[key];
 							if ((value instanceof DisplayObject) && (client instanceof DisplayObjectContainer)
 								&&(<DisplayObjectContainer> <any>client).contains(<DisplayObject> <any>value)){
 								this.remove(<ILayoutManagerClient> <any>value, min);
@@ -255,9 +255,9 @@ module egret.gui {
 		 * @returns {ILayoutManagerClient}
 		 */
 		public remove(client:ILayoutManagerClient,level:number=-1):ILayoutManagerClient{
-			var depth:number = (level >= 0) ? level : client.nestLevel;
-            var hashCode:number = client.hashCode;
-			var bin:DepthBin = this.depthBins[depth];
+			let depth:number = (level >= 0) ? level : client.nestLevel;
+            let hashCode:number = client.hashCode;
+			let bin:DepthBin = this.depthBins[depth];
 			if (bin && bin.items[hashCode] != null){
 				delete bin.items[hashCode];
 				bin.length--;

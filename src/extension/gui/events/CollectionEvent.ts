@@ -1,6 +1,6 @@
 //////////////////////////////////////////////////////////////////////////////////////
 //
-//  Copyright (c) 2014-2015, Egret Technology Inc.
+//  Copyright (c) 2014-present, Egret Technology.
 //  All rights reserved.
 //  Redistribution and use in source and binary forms, with or without
 //  modification, are permitted provided that the following conditions are met:
@@ -28,7 +28,7 @@
 //////////////////////////////////////////////////////////////////////////////////////
 
 
-module egret.gui {
+namespace egret.gui {
 
     /**
      * @class egret.gui.CollectionEvent
@@ -51,13 +51,13 @@ module egret.gui {
          * @param kind {string}
          * @param location {number}
          * @param oldLocation {number}
-         * @param items {Array<any>}
-         * @param oldItems {Array<any>}
+         * @param items {any[]}
+         * @param oldItems {any[]}
          */
         public constructor(type:string, bubbles:boolean = false,
                            cancelable:boolean = false,
                            kind:string = null, location:number = -1,
-                           oldLocation:number = -1, items:Array<any> = null,oldItems:Array<any>=null){
+                           oldLocation:number = -1, items:any[] = null,oldItems:any[]=null){
             super(type, bubbles, cancelable);
 
             this.kind = kind;
@@ -75,12 +75,12 @@ module egret.gui {
          * 受事件影响的项目的列表
          * @member egret.gui.CollectionEvent#items
          */
-        public items: Array<any> = null;
+        public items: any[] = null;
         /**
          * 仅当kind的值为CollectionEventKind.REPLACE时，表示替换前的项目列表
          * @member egret.gui.CollectionEvent#oldItems
          */
-        public oldItems: Array<any> = null;
+        public oldItems: any[] = null;
         /**
          * 如果 kind 值为 CollectionEventKind.ADD、 CollectionEventKind.MOVE、
          * CollectionEventKind.REMOVE 或 CollectionEventKind.REPLACE，
@@ -101,15 +101,15 @@ module egret.gui {
          * @method egret.gui.CollectionEvent.dispatchCollectionEvent
          */
         public static dispatchCollectionEvent(target:IEventDispatcher,type:string,kind:string = null, location:number = -1,
-                                             oldLocation:number = -1, items:Array<any> = null,oldItems:Array<any>=null):boolean{
+                                             oldLocation:number = -1, items:any[] = null,oldItems:any[]=null):boolean{
 
-            var event:CollectionEvent = Event.create(CollectionEvent, type);
+            let event:CollectionEvent = Event.create(CollectionEvent, type);
             event.kind = kind;
             event.location = location;
             event.oldLocation = oldLocation;
             event.items = items;
             event.oldItems = oldItems;
-            var result = target.dispatchEvent(event);
+            let result = target.dispatchEvent(event);
             Event.release(event);
             return result;
         }

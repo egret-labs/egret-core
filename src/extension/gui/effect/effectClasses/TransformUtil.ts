@@ -1,6 +1,6 @@
 //////////////////////////////////////////////////////////////////////////////////////
 //
-//  Copyright (c) 2014-2015, Egret Technology Inc.
+//  Copyright (c) 2014-present, Egret Technology.
 //  All rights reserved.
 //  Redistribution and use in source and binary forms, with or without
 //  modification, are permitted provided that the following conditions are met:
@@ -28,7 +28,7 @@
 //////////////////////////////////////////////////////////////////////////////////////
 
 
-module egret.gui {
+namespace egret.gui {
     /**
      * @class egret.gui.TransformUtil
      */
@@ -48,10 +48,11 @@ module egret.gui {
                                                scaleX:number = NaN,
                                                scaleY:number = NaN,
                                                rotation:number = NaN):void{
+            let xformedPt:Point;
             if (translation == null && transformCenter != null){
                 egret.$TempPoint.x = transformCenter.x;
                 egret.$TempPoint.y = transformCenter.y;
-                var xformedPt:egret.Point = TransformUtil.transformPointToParent(obj , egret.$TempPoint);
+                xformedPt = TransformUtil.transformPointToParent(obj , egret.$TempPoint);
             }
             if (!isNaN(rotation))
                 obj.rotation = rotation;
@@ -69,7 +70,7 @@ module egret.gui {
             else{
                 egret.$TempPoint.x = transformCenter.x;
                 egret.$TempPoint.y = transformCenter.y;
-                var postXFormPoint:egret.Point = TransformUtil.transformPointToParent(obj , egret.$TempPoint);
+                let postXFormPoint:egret.Point = TransformUtil.transformPointToParent(obj , egret.$TempPoint);
                 if (translation != null){
                     obj.x += translation.x - postXFormPoint.x;
                     obj.y += translation.y - postXFormPoint.y;
@@ -82,7 +83,7 @@ module egret.gui {
         }
         
         public static transformPointToParent(obj:egret.DisplayObject,localPosition:egret.Point = null):egret.Point{
-            var resultPoint:Point = new Point();
+            let resultPoint:Point = new Point();
             if (localPosition){
                 resultPoint.x = localPosition.x;
                 resultPoint.y = localPosition.y;

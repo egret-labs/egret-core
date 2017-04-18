@@ -1,6 +1,6 @@
 //////////////////////////////////////////////////////////////////////////////////////
 //
-//  Copyright (c) 2014-2015, Egret Technology Inc.
+//  Copyright (c) 2014-present, Egret Technology.
 //  All rights reserved.
 //  Redistribution and use in source and binary forms, with or without
 //  modification, are permitted provided that the following conditions are met:
@@ -27,10 +27,9 @@
 //
 //////////////////////////////////////////////////////////////////////////////////////
 
-module egret {
+namespace egret {
 
     /**
-     * @language en_US
      * A BitmapData object contains an array of pixel data. This data can represent either a fully opaque bitmap or a
      * transparent bitmap that contains alpha channel data. Either type of BitmapData object is stored as a buffer of 32-bit
      * integers. Each 32-bit integer determines the properties of a single pixel in the bitmap.<br/>
@@ -40,9 +39,9 @@ module egret {
      * @see egret.Bitmap
      * @version Egret 2.4
      * @platform Web,Native
+     * @language en_US
      */
     /**
-     * @language zh_CN
      * BitmapData 对象是一个包含像素数据的数组。此数据可以表示完全不透明的位图，或表示包含 Alpha 通道数据的透明位图。
      * 以上任一类型的 BitmapData 对象都作为 32 位整数的缓冲区进行存储。每个 32 位整数确定位图中单个像素的属性。<br/>
      * 每个 32 位整数都是四个 8 位通道值（从 0 到 255）的组合，这些值描述像素的 Alpha 透明度以及红色、绿色、蓝色 (ARGB) 值。
@@ -50,37 +49,245 @@ module egret {
      * @see egret.Bitmap
      * @version Egret 2.4
      * @platform Web,Native
+     * @language zh_CN
      */
-    export interface BitmapData extends HashObject {
+    export class BitmapData extends HashObject {
         /**
-         * @language en_US
          * The width of the bitmap image in pixels.
          * @readOnly
          * @version Egret 2.4
          * @platform Web,Native
+         * @language en_US
          */
         /**
-         * @language zh_CN
          * 位图图像的宽度，以像素为单位。
          * @readOnly
          * @version Egret 2.4
          * @platform Web,Native
+         * @language zh_CN
          */
         width: number;
         /**
-         * @language en_US
          * The height of the bitmap image in pixels.
          * @readOnly
          * @version Egret 2.4
          * @platform Web,Native
+         * @language en_US
          */
         /**
-         * @language zh_CN
          * 位图图像的高度，以像素为单位。
          * @readOnly
          * @version Egret 2.4
          * @platform Web,Native
+         * @language zh_CN
          */
         height: number;
+
+        /**
+         * Original bitmap image.
+         * @version Egret 2.4
+         * @platform Web,Native
+         * @private
+         * @language en_US
+         */
+        /**
+         * 原始位图图像。
+         * @version Egret 2.4
+         * @platform Web,Native
+         * @private
+         * @language zh_CN
+         */
+        source: any;
+
+        /**
+         * WebGL texture.
+         * @version Egret 2.4
+         * @platform Web,Native
+         * @private
+         * @language en_US
+         */
+        /**
+         * WebGL纹理。
+         * @version Egret 2.4
+         * @platform Web,Native
+         * @private
+         * @language zh_CN
+         */
+        webGLTexture: any;
+
+        /**
+         * Texture format.
+         * @version Egret 2.4
+         * @platform Web,Native
+         * @language en_US
+         */
+        /**
+         * 纹理格式。
+         * @version Egret 2.4
+         * @platform Web,Native
+         * @language zh_CN
+         */
+        format: string = "image";
+
+        /**
+         * @private
+         * webgl纹理生成后，是否删掉原始图像数据
+         */
+        $deleteSource: boolean = true;
+
+        constructor(source) {
+            super();
+            this.source = source;
+            this.width = source.width;
+            this.height = source.height;
+        }
+
+        public static create(type: "arraybuffer", data: ArrayBuffer): BitmapData;
+        public static create(type: "base64", data: string): BitmapData;
+        public static create(type: "arraybuffer" | "base64", data: ArrayBuffer | string): BitmapData {
+            if (Capabilities.runtimeType === RuntimeType.WEB) {
+                let base64 = "";
+                if (type === "arraybuffer") {
+                    base64 = egret.Base64Util.encode(data as ArrayBuffer);
+                }
+                else {
+                    base64 = data as string;
+                }
+                let imageType = "image/png";//default value
+                if (base64.charAt(0) === '/') {
+                    imageType = "image/jpeg";
+                } else if (base64.charAt(0) === 'R') {
+                    imageType = "image/gif";
+                } else if (base64.charAt(0) === 'i') {
+                    imageType = "image/png";
+                }
+                let img: HTMLImageElement = new Image();
+                img.src = "data:" + imageType + ";base64," + base64;
+                img.crossOrigin = '*';
+                img.onload = function () {
+                    return new BitmapData(img);
+                }
+            }
+            else {
+                let buffer: ArrayBuffer = null;
+                if (type === "arraybuffer") {
+                    buffer = data as ArrayBuffer;
+                }
+                else {
+                    buffer = egret.Base64Util.decode(data as string);
+                }
+                let native_texture = egret_native.Texture.createTextureFromArrayBuffer(buffer);
+                return new BitmapData(native_texture);
+            }
+        }
+
+        public $dispose(): void {
+            if (Capabilities.runtimeType == RuntimeType.WEB && Capabilities.renderMode == "webgl" && this.webGLTexture) {
+                egret.WebGLUtils.deleteWebGLTexture(this.webGLTexture);
+                this.webGLTexture = null;
+            }
+            //native
+            if (this.source && this.source.dispose) {
+                this.source.dispose();
+            }
+            this.source = null;
+            BitmapData.$dispose(this);
+        }
+
+
+
+        private static _displayList = egret.createMap<DisplayObject[]>();
+        static $addDisplayObject(displayObject: DisplayObject, bitmapData: BitmapData | Texture): void {
+            let hashCode: number;
+            if ((<Texture>bitmapData)._bitmapData && (<Texture>bitmapData)._bitmapData.hashCode) {
+                hashCode = (<Texture>bitmapData)._bitmapData.hashCode;
+            }
+            else {
+                hashCode = bitmapData.hashCode;
+            }
+            if (!hashCode) {
+                return;
+            }
+            if (!BitmapData._displayList[hashCode]) {
+                BitmapData._displayList[hashCode] = [displayObject];
+                return;
+            }
+
+            let tempList: Array<DisplayObject> = BitmapData._displayList[hashCode];
+            if (tempList.indexOf(displayObject) < 0) {
+                tempList.push(displayObject);
+            }
+        }
+
+        static $removeDisplayObject(displayObject: DisplayObject, bitmapData: BitmapData | Texture): void {
+            let hashCode: number;
+            if ((<Texture>bitmapData)._bitmapData && (<Texture>bitmapData)._bitmapData.hashCode) {
+                hashCode = (<Texture>bitmapData)._bitmapData.hashCode;
+            }
+            else {
+                hashCode = bitmapData.hashCode;
+            }
+            if (!hashCode) {
+                return;
+            }
+            if (!BitmapData._displayList[hashCode]) {
+                return;
+            }
+
+            let tempList: Array<DisplayObject> = BitmapData._displayList[hashCode];
+            let index: number = tempList.indexOf(displayObject);
+            if (index >= 0) {
+                tempList.splice(index);
+            }
+        }
+
+        static $invalidate(bitmapData: BitmapData | Texture): void {
+            let hashCode: number;
+            if ((<Texture>bitmapData)._bitmapData && (<Texture>bitmapData)._bitmapData.hashCode) {
+                hashCode = (<Texture>bitmapData)._bitmapData.hashCode;
+            }
+            else {
+                hashCode = bitmapData.hashCode;
+            }
+            if (!hashCode) {
+                return;
+            }
+
+            if (!BitmapData._displayList[hashCode]) {
+                return;
+            }
+            let tempList: Array<DisplayObject> = BitmapData._displayList[hashCode];
+            for (let i: number = 0; i < tempList.length; i++) {
+                if (tempList[i] instanceof egret.Bitmap) {
+                    (<egret.Bitmap>tempList[i]).$refreshImageData();
+                }
+                tempList[i].$invalidateContentBounds();
+            }
+        }
+
+        static $dispose(bitmapData: BitmapData | Texture): void {
+            let hashCode: number;
+            if ((<Texture>bitmapData)._bitmapData && (<Texture>bitmapData)._bitmapData.hashCode) {
+                hashCode = (<Texture>bitmapData)._bitmapData.hashCode;
+            }
+            else {
+                hashCode = bitmapData.hashCode;
+            }
+            if (!hashCode) {
+                return;
+            }
+
+            if (!BitmapData._displayList[hashCode]) {
+                return;
+            }
+            let tempList = BitmapData._displayList[hashCode];
+            for (let node of tempList) {
+                if (node instanceof egret.Bitmap) {
+                    node.$Bitmap[sys.BitmapKeys.image] = null;
+                }
+                node.$invalidateContentBounds();
+            }
+            delete BitmapData._displayList[hashCode];
+        }
     }
 }

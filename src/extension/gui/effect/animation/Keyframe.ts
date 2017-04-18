@@ -1,6 +1,6 @@
 //////////////////////////////////////////////////////////////////////////////////////
 //
-//  Copyright (c) 2014-2015, Egret Technology Inc.
+//  Copyright (c) 2014-present, Egret Technology.
 //  All rights reserved.
 //  Redistribution and use in source and binary forms, with or without
 //  modification, are permitted provided that the following conditions are met:
@@ -28,7 +28,7 @@
 //////////////////////////////////////////////////////////////////////////////////////
 
 
-module egret.gui {
+namespace egret.gui {
     /**
      * @class egret.gui.Keyframe
      * @classdesc
@@ -54,7 +54,7 @@ module egret.gui {
          * 返回此 Keyframe 对象的副本。
          */
         public clone():Keyframe{
-            var kf:Keyframe = new Keyframe(this.time, this.value, this.valueBy);
+            let kf:Keyframe = new Keyframe(this.time, this.value, this.valueBy);
             kf.easer = this.easer;
             kf._timeFraction = this._timeFraction;
             return kf;

@@ -1,15 +1,11 @@
-﻿/// <reference path="node.d.ts" />
-/// <reference path="totaljs/totaljs.d.ts" />
-/// <reference path="xml/xml.ts" />
+﻿/// <reference path="xml/xml.ts" />
 /// <reference path="../globals.ts" />
-/// <reference path="./typescript/tsclark.d.ts" />
-
+/// <reference path="./typescript-plus/lib/typescriptServices.d.ts" />
 
 declare module egret {
 
     export interface Command {
-        isAsync?:boolean;
-        execute():number;
+        execute(): number | PromiseLike<number>
     }
 
     export interface Action {
@@ -34,6 +30,8 @@ declare module egret {
     }
     export interface ToolArgs {
         command: string;
+        //子命令
+        subCommand?:string;
         action?: string;
         commands?: string[];
         platform?: string;
@@ -45,37 +43,27 @@ declare module egret {
         compile?: boolean;
         password?: string;
         keepEXMLTS: boolean;
-        exmlGenJs:boolean;
+        ide: string;
+        exmlGenJs: boolean;
         log: boolean;
         nativeTemplatePath: string;
         all: boolean;
         projectDir: string;
-        libsDir: string;
         getTmpDir(): string;
         srcDir: string;
-        larkPropertiesFile: string;
         debugDir: string;
         releaseDir: string;
         releaseRootDir: string;
         templateDir: string;
-        out: string;
-        outDir: string;
         /** 用户命令行指定的引擎版本 */
         egretVersion?: string;
         port: number;
-        host: string;
+        host: string | null;
         websocketUrl: string;
-        manageUrl: string;
         startUrl: string;
         debug?: boolean;
         getStartURL(address: string): string;
         template?: string;
-        /**
-        * egretProperties.json 信息
-        */
-        properties: EgretPropertiesClass;
-
-
         publish?: boolean;
         minify?: boolean;
         sourceMap?: boolean;
@@ -84,19 +72,19 @@ declare module egret {
         serverOnly?: boolean;
         declaration?: boolean;
         autoCompile?: boolean;
+        experimental?: boolean;
         fileName?: string;
         added: string[];
         removed: string[];
         modified: string[];
-        compilerOptions:ts.CompilerOptions;
         tsconfigError: string[];//tsconfig 配置文件的错误信息
 
         toJSON: () => any;
-        getProject(empty?:boolean): egret.ILarkProject;
+        getProject(empty?: boolean): egret.EgretProjectConfig;
         //工具用
     }
 
-    export interface ILarkTheme {
+    export interface EgretEUIThemeConfig {
         skins?: { [host: string]: string };
         exmls?: Array<any>;
         autoGenerateExmlsList?: boolean;
@@ -108,77 +96,33 @@ declare module egret {
         native?: any;
         egret_version?: string;
     }
-    export interface EgretPropertiesClass {
-        properties: Object;
-        modulesConfig: Object;
-        init(projectRoot: string);
-        reload();
-        /**
-         * 是否有swan
-         */
-        hasEUI(): boolean;
 
-        /**
-         * 获取项目的根路径
-         * @returns {*}
-         */
-        getProjectRoot(): string
 
-        /**
-         * 获取项目使用的egret版本号
-         * @returns {any}
-         */
-        getVersion(): string
-
-        /**
-         * 发布路径的根目录
-         * @returns {string}
-         */
-        getReleaseRoot(): string
-
-        /**
-         * 获取已经生成的js文件列表
-         * @param runtime
-         * @returns {string[]|T[]}
-         */
-        getAllFileList(runtime): Array <any>
-
-        getVersionCode(runtime)
-
-        getIgnorePath(): Array <any>
-
-        getNativePath(platform)
-
-        getModulePath(moduleName)
-
-        getModuleConfig(moduleName)
-
-        //绝对路径
-        getModuleOutput(moduleName)
-
-        getModuleFileList(moduleName)
-        getModuleFileListWithAbsolutePath(moduleName)
-
-        getModulePrefixPath(moduleName)
-
-        getModuleSourcePath(moduleName)
-
-        getModuleDependenceList(moduleName)
-
-        getAllModuleNames()
-
-        getModuleDecouple(moduleName)
-
-        //获取项目需要的所有模块的.d.ts文件
-        getModulesDts()
-
-        getModuleReferenceInfo()
-
-        getPublishType(runtime:string):number;
-        getResources():Array<string>;
+    export type EgretPropertyModule = {
+        "name": string,
+        "version"?: string,
+        "path": string;
     }
 
-    export interface ILarkProject {
+    export type EgretVersion = {
+        "version": string,
+        "path": string;
+    }
+
+    export type EgretProperty = {
+        "modules": EgretPropertyModule[],
+        "native"?: {
+            "path_ignore": string[];
+        },
+        "publish"?: {
+            "web": number,
+            "native": number,
+            "path": string;
+        },
+        "egret_version"?: string;
+    }
+
+    export interface EgretProjectConfig {
         modules?: EgretModule[];
         platform?: string;
         port?: number;
@@ -186,13 +130,12 @@ declare module egret {
         contentWidth?: number;
         contentHeight?: number;
         type?: string;
-        toJSON?(): ILarkProject;
+        toJSON?(): EgretProjectConfig;
         save?(path?: string);
         orientationMode?: string;
         frameRate?: number;
         background?: string;
         entryClass?: string;
-        moduleScripts?: string[];
         scripts?: string[];
         nativeScripts?: string[];
         resolutionMode?: string;
@@ -245,7 +188,7 @@ declare module egret {
         export var options: ToolArgs;
         export interface ViewModel {
             options: ToolArgs;
-            [other:string]:any;
+            [other: string]: any;
         }
         export var console: {
             on(event: string, listener: Function): any;
@@ -256,7 +199,7 @@ declare module egret {
 
     export var manifest: egret.Manifest;
     export interface Manifest {
-        registerClass:string;
+        registerClass: string;
         modules: EgretModule[];
         platforms: TargetPlatform[];
         configurations: CompileConfiguration[];
@@ -283,7 +226,7 @@ declare module egret {
     export interface EgretModule {
         name: string;
         description?: string;
-        files?: Array<string|ManifestSourceFile>;
+        files?: Array<string | ManifestSourceFile>;
         dependencies?: string[];
         sourceRoot?: string;
         root?: string;
@@ -294,7 +237,7 @@ declare module egret {
     export interface ManifestSourceFile {
         platform?: string;
         debug?: boolean;
-        path:string
+        path: string
     }
 
     export interface CompileConfiguration {
@@ -315,12 +258,13 @@ declare module egret {
         compileSingle(path: string): number;
     }
 
-    export type FileChanges = Array<FileChange>;
+    export type FileChanges = FileChange[];
 
     export interface FileChange {
         fileName: string;
         type: string;
     }
+
 }
 
 declare var DEBUG: boolean;

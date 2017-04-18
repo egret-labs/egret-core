@@ -1,6 +1,6 @@
 //////////////////////////////////////////////////////////////////////////////////////
 //
-//  Copyright (c) 2014-2015, Egret Technology Inc.
+//  Copyright (c) 2014-present, Egret Technology.
 //  All rights reserved.
 //  Redistribution and use in source and binary forms, with or without
 //  modification, are permitted provided that the following conditions are met:
@@ -28,7 +28,7 @@
 //////////////////////////////////////////////////////////////////////////////////////
 
 
-module egret.gui {
+namespace egret.gui {
 
 	/**
 	 * @class egret.gui.PopUpAnchor
@@ -159,7 +159,7 @@ module egret.gui {
 		 * 计算popUp的弹出位置
 		 */		
 		private calculatePopUpPosition():Point{
-            var registrationPoint: Point = egret.$TempPoint;
+            let registrationPoint: Point = egret.$TempPoint;
             switch (this._popUpPosition) {
                 case PopUpPosition.SCREEN_CENTER:
                     //由popup manager负责居中显示
@@ -240,9 +240,9 @@ module egret.gui {
 		 * 动画播放过程中触发的更新数值函数
 		 */		
 		private animationUpdateHandler(animation:Animation):void{
-            var rect:Rectangle = (<DisplayObject><any> (this.popUp)).scrollRect;
-            var x:number = Math.round(animation.currentValue["x"]);
-            var y:number = Math.round(animation.currentValue["y"]);
+            let rect:Rectangle = (<DisplayObject><any> (this.popUp)).scrollRect;
+            let x:number = Math.round(animation.currentValue["x"]);
+            let y:number = Math.round(animation.currentValue["y"]);
             if(rect){
                 rect.x = x;
                 rect.y = y;
@@ -326,7 +326,7 @@ module egret.gui {
 				this.popUp.height = unscaledHeight;
 			if("validateNow" in this.popUp)
 				(<IInvalidating><any> (this.popUp)).validateNow();
-			var popUpPoint:Point = this.calculatePopUpPosition();
+			let popUpPoint:Point = this.calculatePopUpPosition();
 			this.popUp.x = popUpPoint.x;
 			this.popUp.y = popUpPoint.y;
 		}
@@ -354,9 +354,9 @@ module egret.gui {
 		 * 创建动画轨迹
 		 */		
 		private createMotionPath():Array<MotionPath>{
-			var xPath:SimpleMotionPath = new SimpleMotionPath("x");
-			var yPath:SimpleMotionPath = new SimpleMotionPath("y");
-			var path:Array<MotionPath> = [xPath,yPath];
+			let xPath:SimpleMotionPath = new SimpleMotionPath("x");
+			let yPath:SimpleMotionPath = new SimpleMotionPath("y");
+			let path:Array<MotionPath> = [xPath,yPath];
 			switch(this._popUpPosition){
 				case PopUpPosition.TOP_LEFT:
 				case PopUpPosition.CENTER:
@@ -390,7 +390,7 @@ module egret.gui {
 			}
 			this.valueRange = Math.abs(this.valueRange);
 			if(!this.popUpIsDisplayed){
-				var tempValue:number = xPath.valueFrom;
+				let tempValue:number = xPath.valueFrom;
 				xPath.valueFrom = xPath.valueTo;
 				xPath.valueTo = tempValue;
 				tempValue = yPath.valueFrom;

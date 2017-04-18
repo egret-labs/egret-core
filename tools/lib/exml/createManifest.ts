@@ -257,7 +257,7 @@ function sortFileList(list, srcPath) {
 
     var paths = [];
     //把所有引用关系都合并到pathInfoList里，并把类名替换为对应文件路径。
-    for (var path in pathInfoList) {
+    for (let path in pathInfoList) {
         paths.push(path);
         var list = pathInfoList[path];
         var classList = pathToClassNames[path];
@@ -455,7 +455,7 @@ function sortOnPathLevel(list, pathRelyInfo, throwError) {
 /**
  * 设置文件引用深度
  */
-function setPathLevel(path, level, pathLevelInfo, map, pathRelyInfo, throwError, checkNew=false) {
+function setPathLevel(path, level, pathLevelInfo, map, pathRelyInfo, throwError, checkNew = false) {
     if (pathLevelInfo[path] == null) {
         pathLevelInfo[path] = level;
     } else {
@@ -508,16 +508,6 @@ function readReferenceFromExml(path) {
         return;
     }
     var list = [];
-    if (modeulClassToPath) {
-        list.push(modeulClassToPath["lark.gui.AddItems"]);
-        list.push(modeulClassToPath["lark.gui.SetProperty"]);
-        list.push(modeulClassToPath["lark.gui.SetStyle"]);
-        list.push(modeulClassToPath["lark.gui.State"]);
-        list.push(modeulClassToPath["lark.gui.getScale9Grid"]);
-        list.push(modeulClassToPath["lark.gui.ClassFactory"]);
-        list.push(modeulClassToPath["lark.gui.setProperties"]);
-        list.push(modeulClassToPath["lark.gui.ButtonSkin"]);
-    }
     readReferenceFromNode(exml, list);
     referenceInfoList[path] = list;
 }

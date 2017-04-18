@@ -1,6 +1,6 @@
 //////////////////////////////////////////////////////////////////////////////////////
 //
-//  Copyright (c) 2014-2015, Egret Technology Inc.
+//  Copyright (c) 2014-present, Egret Technology.
 //  All rights reserved.
 //  Redistribution and use in source and binary forms, with or without
 //  modification, are permitted provided that the following conditions are met:
@@ -28,7 +28,7 @@
 //////////////////////////////////////////////////////////////////////////////////////
 
 
-module egret {
+namespace egret {
     /**
      * @class egret.MainContext
      * @classdesc
@@ -63,14 +63,6 @@ module egret {
          * @platform Web,Native
          */
         //public touchContext:TouchContext = null;
-
-        /**
-         * 网络Context
-         * @member egret.MainContext#netContext
-         * @version Egret 2.4
-         * @platform Web,Native
-         */
-        //public netContext:NetContext = null;
 
         /**
          * 设备divice
@@ -118,7 +110,7 @@ module egret {
          * @platform Web,Native
          */
         public static get runtimeType():string {
-            egret.$warn(1041);
+            egret.$warn(1041, "egret.MainContext.runtimeType", "egret.Capabilities.runtimeType");
             return MainContext._runtimeType;
         }
         /**
@@ -162,17 +154,20 @@ module egret {
         }
     }
 }
-
-
-var testDeviceType1 = function () {
+/**
+ * @private
+ */
+let testDeviceType1 = function () {
     if (!this["navigator"]) {
         return true
     }
-    var ua = navigator.userAgent.toLowerCase();
+    let ua = navigator.userAgent.toLowerCase();
     return (ua.indexOf('mobile') != -1 || ua.indexOf('android') != -1);
 };
-
-var testRuntimeType1 = function () {
+/**
+ * @private
+ */
+let testRuntimeType1 = function () {
     if (this["navigator"]) {
         return true;
     }
@@ -181,7 +176,6 @@ var testRuntimeType1 = function () {
 
 egret.MainContext.deviceType = testDeviceType1() ? egret.MainContext.DEVICE_MOBILE : egret.MainContext.DEVICE_PC;
 egret.MainContext._runtimeType = testRuntimeType1() ? egret.MainContext.RUNTIME_HTML5 : egret.MainContext.RUNTIME_NATIVE;
-
 
 delete testDeviceType1;
 delete testRuntimeType1;

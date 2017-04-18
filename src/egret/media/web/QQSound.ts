@@ -1,6 +1,6 @@
 //////////////////////////////////////////////////////////////////////////////////////
 //
-//  Copyright (c) 2014-2015, Egret Technology Inc.
+//  Copyright (c) 2014-present, Egret Technology.
 //  All rights reserved.
 //  Redistribution and use in source and binary forms, with or without
 //  modification, are permitted provided that the following conditions are met:
@@ -27,8 +27,10 @@
 //
 //////////////////////////////////////////////////////////////////////////////////////
 
-
-declare module QZAppExternal {
+/**
+ * @private
+ */
+declare namespace QZAppExternal {
     function playLocalSound(call, data);
 
     function playLocalBackSound(call, data);
@@ -41,7 +43,7 @@ declare module QZAppExternal {
 }
 
 
-module egret.web {
+namespace egret.web {
 
     /**
      * @private
@@ -49,30 +51,30 @@ module egret.web {
      */
     export class QQSound extends egret.EventDispatcher implements egret.Sound {
         /**
-         * @language en_US
          * Background music
          * @version Egret 2.4
          * @platform Web,Native
+         * @language en_US
          */
         /**
-         * @language zh_CN
          * 背景音乐
          * @version Egret 2.4
          * @platform Web,Native
+         * @language zh_CN
          */
         public static MUSIC:string = "music";
 
         /**
-         * @language en_US
          * EFFECT
          * @version Egret 2.4
          * @platform Web,Native
+         * @language en_US
          */
         /**
-         * @language zh_CN
          * 音效
          * @version Egret 2.4
          * @platform Web,Native
+         * @language zh_CN
          */
         public static EFFECT:string = "effect";
 
@@ -103,7 +105,7 @@ module egret.web {
          * @inheritDoc
          */
         public load(url:string):void {
-            var self = this;
+            let self = this;
 
             this.url = url;
 
@@ -144,10 +146,10 @@ module egret.web {
             loops = +loops || 0;
 
             if (DEBUG && this.loaded == false) {
-                egret.$error(3001);
+                egret.$error(1049);
             }
 
-            var channel = new QQSoundChannel();
+            let channel = new QQSoundChannel();
             channel.$url = this.url;
             channel.$loops = loops;
             channel.$type = this.type;

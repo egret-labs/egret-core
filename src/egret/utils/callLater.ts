@@ -1,6 +1,6 @@
 //////////////////////////////////////////////////////////////////////////////////////
 //
-//  Copyright (c) 2014-2015, Egret Technology Inc.
+//  Copyright (c) 2014-present, Egret Technology.
 //  All rights reserved.
 //  Redistribution and use in source and binary forms, with or without
 //  modification, are permitted provided that the following conditions are met:
@@ -27,23 +27,22 @@
 //
 //////////////////////////////////////////////////////////////////////////////////////
 
-module egret {
+namespace egret {
 
     /**
      * @private
      */
-    export var $callLaterFunctionList:Array<any> = [];
+    export let $callLaterFunctionList:any[] = [];
     /**
      * @private
      */
-    export var $callLaterThisList:Array<any> = [];
+    export let $callLaterThisList:any[] = [];
     /**
      * @private
      */
-    export var $callLaterArgsList:Array<any> = [];
+    export let $callLaterArgsList:any[] = [];
 
     /**
-     * @language en_US
      * Delay the function to run unless screen is redrawn.
      * @param method {Function} The function to be delayed to run
      * @param thisObject {any} this reference of callback function
@@ -51,9 +50,9 @@ module egret {
      * @version Egret 2.4
      * @platform Web,Native
      * @includeExample egret/utils/callLater.ts
+     * @language en_US
      */
     /**
-     * @language zh_CN
      * 延迟函数到屏幕重绘前执行。
      * @param method {Function} 要延迟执行的函数
      * @param thisObject {any} 回调函数的this引用
@@ -61,6 +60,7 @@ module egret {
      * @version Egret 2.4
      * @platform Web,Native
      * @includeExample egret/utils/callLater.ts
+     * @language zh_CN
      */
     export function callLater(method:Function,thisObject:any,...args):void
     {
@@ -72,15 +72,15 @@ module egret {
     /**
      * @private
      */
-    export var $callAsyncFunctionList:Array<any> = [];
+    export let $callAsyncFunctionList:any[] = [];
     /**
      * @private
      */
-    export var $callAsyncThisList:Array<any> = [];
+    export let $callAsyncThisList:any[] = [];
     /**
      * @private
      */
-    export var $callAsyncArgsList:Array<any> = [];
+    export let $callAsyncArgsList:any[] = [];
     /**
      * 异步调用函数
      * @param method {Function} 要异步调用的函数

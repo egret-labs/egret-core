@@ -1,6 +1,6 @@
 //////////////////////////////////////////////////////////////////////////////////////
 //
-//  Copyright (c) 2014-2015, Egret Technology Inc.
+//  Copyright (c) 2014-present, Egret Technology.
 //  All rights reserved.
 //  Redistribution and use in source and binary forms, with or without
 //  modification, are permitted provided that the following conditions are met:
@@ -27,84 +27,84 @@
 //
 //////////////////////////////////////////////////////////////////////////////////////
 
-module eui {
+namespace eui {
 
 	/**
-	 * @language en_US
 	 * Defines values for setting the <code>direction</code> property
 	 * of the <code>ProgressBar</code> class.
 	 * @version Egret 2.4
 	 * @version eui 1.0
 	 * @platform Web,Native
 	 * @includeExample  extension/eui/core/DirectionExample.ts
+	 * @language en_US
 	 */
 	/**
-	 * @language zh_CN
 	 * 定义进度条等控件增长方向的常量
 	 * @version Egret 2.4
 	 * @version eui 1.0
 	 * @platform Web,Native
 	 * @includeExample  extension/eui/core/DirectionExample.ts
+	 * @language zh_CN
 	 */
 	export class Direction{
 		/**
-		 * @language en_US
 		 * Specifies left-to-right direction.
 		 * @version Egret 2.4
 		 * @version eui 1.0
 		 * @platform Web,Native
+		 * @language en_US
 		 */
 		/**
-		 * @language zh_CN
 		 * 水平从左到右增长
 		 * @version Egret 2.4
 		 * @version eui 1.0
 		 * @platform Web,Native
+		 * @language zh_CN
 		 */
 		public static LTR:string = "ltr";
 		/**
-		 * @language en_US
 		 * Specifies right-to-left direction.
 		 * @version Egret 2.4
 		 * @version eui 1.0
 		 * @platform Web,Native
+		 * @language en_US
 		 */
 		/**
-		 * @language zh_CN
 		 * 水平从右到左增长
 		 * @version Egret 2.4
 		 * @version eui 1.0
 		 * @platform Web,Native
+		 * @language zh_CN
 		 */
 		public static RTL:string = "rtl";
 		/**
-		 * @language en_US
 		 * Specifies top-to-bottom direction.
 		 * @version Egret 2.4
 		 * @version eui 1.0
 		 * @platform Web,Native
+		 * @language en_US
 		 */
 		/**
-		 * @language zh_CN
 		 * 竖直从上到下增长
 		 * @version Egret 2.4
 		 * @version eui 1.0
 		 * @platform Web,Native
+		 * @language zh_CN
 		 */
 		public static TTB:string = "ttb";
 		/**
-		 * @language en_US
 		 * Specifies bottom-to-top direction.
 		 * @version Egret 2.4
 		 * @version eui 1.0
 		 * @platform Web,Native
+		 * @language en_US
 		 */
 		/**
-		 * @language zh_CN
 		 * 竖直从下到上增长
 		 * @version Egret 2.4
 		 * @version eui 1.0
 		 * @platform Web,Native
+		 * @language zh_CN
 		 */
 		public static BTT:string = "btt";
 	}

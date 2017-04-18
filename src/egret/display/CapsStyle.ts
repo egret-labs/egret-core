@@ -1,6 +1,6 @@
 //////////////////////////////////////////////////////////////////////////////////////
 //
-//  Copyright (c) 2014-2015, Egret Technology Inc.
+//  Copyright (c) 2014-present, Egret Technology.
 //  All rights reserved.
 //  Redistribution and use in source and binary forms, with or without
 //  modification, are permitted provided that the following conditions are met:
@@ -27,62 +27,62 @@
 //
 //////////////////////////////////////////////////////////////////////////////////////
 
-module egret {
+namespace egret {
 
     /**
-     * @language en_US
      * The CapsStyle class is an enumeration of constant values that specify the caps style to use in drawing lines.
      * The constants are provided for use as values in the caps parameter of the egret.Graphics.lineStyle() method.
      * @see egret.Graphics#lineStyle()
      * @version Egret 2.5
      * @platform Web,Native
+     * @language en_US
      */
     /**
-     * @language zh_CN
      * CapsStyle 类是可指定在绘制线条中使用的端点样式的常量值枚举。常量可用作 egret.Graphics.lineStyle() 方法的 caps 参数中的值。
      * @see egret.Graphics#lineStyle()
      * @version Egret 2.5
      * @platform Web,Native
+     * @language zh_CN
      */
-    export class CapsStyle {
+    export const CapsStyle = {
         /**
-         * @language en_US
          * Used to specify no caps in the caps parameter of the egret.Graphics.lineStyle() method.
          * @version Egret 2.5
          * @platform Web,Native
+         * @language en_US
          */
         /**
-         * @language zh_CN
          * 用于在 egret.Graphics.lineStyle() 方法的 caps 参数中指定没有端点。
          * @version Egret 2.5
          * @platform Web,Native
+         * @language zh_CN
          */
-        public static NONE:string = "none";
+        NONE: "none",
         /**
-         * @language en_US
          * Used to specify round caps in the caps parameter of the egret.Graphics.lineStyle() method.
          * @version Egret 2.5
          * @platform Web,Native
+         * @language en_US
          */
         /**
-         * @language zh_CN
          * 用于在 egret.Graphics.lineStyle() 方法的 caps 参数中指定圆头端点。
          * @version Egret 2.5
          * @platform Web,Native
+         * @language zh_CN
          */
-        public static ROUND:string = "round";
+        ROUND: "round",
         /**
-         * @language en_US
          * Used to specify square caps in the caps parameter of the egret.Graphics.lineStyle() method.
          * @version Egret 2.5
          * @platform Web,Native
+         * @language en_US
          */
         /**
-         * @language zh_CN
          * 用于在 egret.Graphics.lineStyle() 方法的 caps 参数中指定方头端点。
          * @version Egret 2.5
          * @platform Web,Native
+         * @language zh_CN
          */
-        public static SQUARE:string = "square";
+        SQUARE: "square"
     }
 }

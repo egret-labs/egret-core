@@ -1,6 +1,6 @@
 //////////////////////////////////////////////////////////////////////////////////////
 //
-//  Copyright (c) 2014-2015, Egret Technology Inc.
+//  Copyright (c) 2014-present, Egret Technology.
 //  All rights reserved.
 //  Redistribution and use in source and binary forms, with or without
 //  modification, are permitted provided that the following conditions are met:
@@ -28,7 +28,7 @@
 //////////////////////////////////////////////////////////////////////////////////////
 
 
-module egret.gui {
+namespace egret.gui {
 
 	/**
 	 * @class egret.gui.State
@@ -67,7 +67,7 @@ module egret.gui {
 		 * 此视图状态作为 String 数组所属的状态组。 
 		 * @member egret.gui.State#stateGroups
 		 */		
-		public stateGroups:Array<any>;
+		public stateGroups:any[];
 		/**
 		 * 初始化视图
 		 * @method egret.gui.State#initialize
@@ -76,7 +76,7 @@ module egret.gui {
 		public initialize(parent:IStateClient):void{
 			if (!this.initialized){
 				this.initialized = true;
-				for (var i:number = 0; i < this.overrides.length; i++){
+				for (let i:number = 0; i < this.overrides.length; i++){
 					(<IOverride> (this.overrides[i])).initialize(parent);
 				}
 			}

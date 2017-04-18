@@ -1,6 +1,6 @@
 //////////////////////////////////////////////////////////////////////////////////////
 //
-//  Copyright (c) 2014-2015, Egret Technology Inc.
+//  Copyright (c) 2014-present, Egret Technology.
 //  All rights reserved.
 //  Redistribution and use in source and binary forms, with or without
 //  modification, are permitted provided that the following conditions are met:
@@ -27,7 +27,7 @@
 //
 //////////////////////////////////////////////////////////////////////////////////////
 
-module eui.sys {
+namespace eui.sys {
 
     /**
      * @private
@@ -56,36 +56,36 @@ module eui.sys {
     }
 }
 
-module eui {
+namespace eui {
 
     /**
-     * @language en_US
      * The operation of adding a state to view.
      * @version Egret 2.4
      * @version eui 1.0
      * @platform Web,Native
+     * @language en_US
      */
     /**
-     * @language zh_CN
      * 视图添加状态显示元素操作
      * @version Egret 2.4
      * @version eui 1.0
      * @platform Web,Native
+     * @language zh_CN
      */
     export class AddItems implements IOverride {
         /**
-         * @language en_US
          * Constructor.
          * @version Egret 2.4
          * @version eui 1.0
          * @platform Web,Native
+         * @language en_US
          */
         /**
-         * @language zh_CN
          * 创建一个AddItems实例
          * @version Egret 2.4
          * @version eui 1.0
          * @platform Web,Native
+         * @language zh_CN
          */
         public constructor(target:string, propertyName:string, position:number, relativeTo:string) {
             this.target = target;
@@ -95,66 +95,66 @@ module eui {
         }
 
         /**
-         * @language en_US
          * The name of the property that is being added.
          * @version Egret 2.4
          * @version eui 1.0
          * @platform Web,Native
+         * @language en_US
          */
         /**
-         * @language zh_CN
          * 要添加到的属性
          * @version Egret 2.4
          * @version eui 1.0
          * @platform Web,Native
+         * @language zh_CN
          */
         public propertyName:string;
 
         /**
-         * @language en_US
          * The position to be added. Valid values: "first","last","before","after"
          * @version Egret 2.4
          * @version eui 1.0
          * @platform Web,Native
+         * @language en_US
          */
         /**
-         * @language zh_CN
          * 添加的位置，有效值为: "first","last","before","after"
          * @version Egret 2.4
          * @version eui 1.0
          * @platform Web,Native
+         * @language zh_CN
          */
         public position:number;
 
         /**
-         * @language en_US
          * an instance name of relative visual element.
          * @version Egret 2.4
          * @version eui 1.0
          * @platform Web,Native
+         * @language en_US
          */
         /**
-         * @language zh_CN
          * 相对的显示元素的实例名
          * @version Egret 2.4
          * @version eui 1.0
          * @platform Web,Native
+         * @language zh_CN
          */
         public relativeTo:string;
 
         /**
-         * @language en_US
          * The target instance name.
          * @version Egret 2.4
          * @version eui 1.0
          * @platform Web,Native
+         * @language en_US
          */
         /**
-         * @language zh_CN
          * 目标实例名
          * @version Egret 2.4
          * @version eui 1.0
          * @platform Web,Native
+         * @language zh_CN
          */
         public target:string;
 
@@ -166,10 +166,10 @@ module eui {
          * @platform Web,Native
          */
         public apply(host:any, parent:egret.DisplayObjectContainer):void {
-            var index:number;
-            var relative:egret.DisplayObject = host[this.relativeTo];
-            var target:egret.DisplayObject = host[this.target];
-            var container:egret.DisplayObjectContainer = this.propertyName ? host[this.propertyName] : parent;
+            let index:number;
+            let relative:egret.DisplayObject = host[this.relativeTo];
+            let target:egret.DisplayObject = host[this.target];
+            let container:egret.DisplayObjectContainer = this.propertyName ? host[this.propertyName] : parent;
             if (!target || !container)
                 return;
             switch (this.position) {
@@ -203,16 +203,16 @@ module eui {
          * @platform Web,Native
          */
         public remove(host:any,parent:egret.DisplayObjectContainer):void {
-            var container:egret.DisplayObjectContainer = this.propertyName ? host[this.propertyName] : parent;
-            var target:egret.DisplayObject = host[this.target];
+            let container:egret.DisplayObjectContainer = this.propertyName ? host[this.propertyName] : parent;
+            let target:egret.DisplayObject = host[this.target];
             if (!target || !container)
                 return;
             if (target.$parent === container) {
                 container.removeChild(target);
             }
             if (egret.is(container, "eui.Component")) {
-                var arr = (<Skin>(<Component>container).$Component[sys.ComponentKeys.skin]).$elementsContent;
-                var idx = arr.indexOf(target);
+                let arr = (<Skin>(<Component>container).$Component[sys.ComponentKeys.skin]).$elementsContent;
+                let idx = arr.indexOf(target);
                 if (idx > -1) {
                     arr.splice(idx, 1);
                 }

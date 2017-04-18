@@ -1,6 +1,6 @@
 //////////////////////////////////////////////////////////////////////////////////////
 //
-//  Copyright (c) 2014-2015, Egret Technology Inc.
+//  Copyright (c) 2014-present, Egret Technology.
 //  All rights reserved.
 //  Redistribution and use in source and binary forms, with or without
 //  modification, are permitted provided that the following conditions are met:
@@ -28,7 +28,7 @@
 //////////////////////////////////////////////////////////////////////////////////////
 
 
-module egret.gui {
+namespace egret.gui {
 
 	/**
 	 * @class egret.gui.DefaultSkinAdapter
@@ -57,7 +57,7 @@ module egret.gui {
                 return new skinName();
             }
             else if(typeof(skinName)=="string"){
-                var clazz:any = getDefinitionByName(<string><any> skinName);
+                let clazz:any = getDefinitionByName(<string><any> skinName);
                 if(clazz){
                     return new clazz();
                 }

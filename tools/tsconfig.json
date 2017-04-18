@@ -1,0 +1,22 @@
+{
+    "compilerOptions": {
+        "module": "commonjs",
+        "target": "es5",
+        "noImplicitAny": false,
+        "sourceMap": false,
+        "noImplicitUseStrict": true,
+        "allowUnreachableCode": true,
+        "strictNullChecks": false,
+        "lib": [
+            "es5",
+            "es2015.promise"
+        ]
+    },
+    "include": [
+        "**/*.ts"
+    ],
+    "exclude": [
+        "templates/**/*.ts",
+        "lib/typescript-plus/lib/*.d.ts"
+    ]
+}

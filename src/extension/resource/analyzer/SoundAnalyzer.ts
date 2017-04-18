@@ -1,6 +1,6 @@
 //////////////////////////////////////////////////////////////////////////////////////
 //
-//  Copyright (c) 2014-2015, Egret Technology Inc.
+//  Copyright (c) 2014-present, Egret Technology.
 //  All rights reserved.
 //  Redistribution and use in source and binary forms, with or without
 //  modification, are permitted provided that the following conditions are met:
@@ -27,7 +27,7 @@
 //
 //////////////////////////////////////////////////////////////////////////////////////
 
-module RES {
+namespace RES {
     /**
      * @private
      */
@@ -47,7 +47,7 @@ module RES {
         /**
          * 加载项字典
          */
-        protected resItemDic:Array<any> = [];
+        protected resItemDic:any[] = [];
 
         /**
          * @inheritDoc
@@ -57,7 +57,7 @@ module RES {
                 callBack.call(thisObject, resItem);
                 return;
             }
-            var sound = new egret.Sound();
+            let sound = new egret.Sound();
             sound.addEventListener(egret.Event.COMPLETE, this.onLoadFinish, this);
             sound.addEventListener(egret.IOErrorEvent.IO_ERROR, this.onLoadFinish, this);
             this.resItemDic[sound.$hashCode] = {item: resItem, func: callBack, thisObject: thisObject};
@@ -71,13 +71,13 @@ module RES {
          * 一项加载结束
          */
         protected onLoadFinish(event:egret.Event):void {
-            var sound = <egret.Sound> (event.$target);
+            let sound = <egret.Sound> (event.$target);
             sound.removeEventListener(egret.Event.COMPLETE, this.onLoadFinish, this);
             sound.removeEventListener(egret.IOErrorEvent.IO_ERROR, this.onLoadFinish, this);
-            var data:any = this.resItemDic[sound.$hashCode];
+            let data:any = this.resItemDic[sound.$hashCode];
             delete this.resItemDic[sound.$hashCode];
-            var resItem:ResourceItem = data.item;
-            var compFunc:Function = data.func;
+            let resItem:ResourceItem = data.item;
+            let compFunc:Function = data.func;
             resItem.loaded = (event.$type == egret.Event.COMPLETE);
             if (resItem.loaded) {
                 this.analyzeData(resItem, sound)
@@ -89,7 +89,7 @@ module RES {
          * 解析并缓存加载成功的数据
          */
         protected analyzeData(resItem:ResourceItem, data:egret.Sound):void {
-            var name:string = resItem.name;
+            let name:string = resItem.name;
             if (this.soundDic[name] || !data) {
                 return;
             }

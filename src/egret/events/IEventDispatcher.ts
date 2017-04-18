@@ -1,6 +1,6 @@
 //////////////////////////////////////////////////////////////////////////////////////
 //
-//  Copyright (c) 2014-2015, Egret Technology Inc.
+//  Copyright (c) 2014-present, Egret Technology.
 //  All rights reserved.
 //  Redistribution and use in source and binary forms, with or without
 //  modification, are permitted provided that the following conditions are met:
@@ -28,9 +28,8 @@
 //////////////////////////////////////////////////////////////////////////////////////
 
 
-module egret {
+namespace egret {
     /**
-     * @language en_US
      * The IEventDispatcher interface defines methods for adding or removing event listeners, checks whether specific types
      * of event listeners are registered, and dispatches events. Event targets are an important part of the Egret event model.
      * The event target serves as the focal point for how events flow through the display list hierarchy. When an event 
@@ -46,9 +45,9 @@ module egret {
      * @version Egret 2.4
      * @platform Web,Native
      * @includeExample egret/events/IEventDispatcher.ts
+     * @language en_US
      */
     /**
-     * @language zh_CN
      * IEventDispatcher 接口定义用于添加或删除事件侦听器的方法，检查是否已注册特定类型的事件侦听器，并调度事件。
      * 事件目标是 Egret 事件模型的重要组成部分。事件目标是事件如何通过显示列表层次结构这一问题的焦点。当发生触摸轻拍事件时，
      * 会将事件对象调度到从显示列表根开始的事件流中。事件对象进行到事件目标的往返行程，在概念上，此往返行程被划分为三个阶段：<br/>
@@ -59,11 +58,11 @@ module egret {
      * @version Egret 2.4
      * @platform Web,Native
      * @includeExample egret/events/IEventDispatcher.ts
+     * @language zh_CN
      */
     export interface IEventDispatcher extends HashObject {
 
         /**
-         * @language en_US
          * Registers an event listener object with an EventDispatcher object so that the listener receives notification of an
          * event. You can register event listeners on all nodes in the display list for a specific type of event, phase,
          * and priority.After you successfully register an event listener, you cannot change its priority through additional 
@@ -97,9 +96,9 @@ module egret {
          * @see #removeEventListener()
          * @version Egret 2.4
          * @platform Web,Native
+         * @language en_US
          */
         /**
-         * @language zh_CN
          * 使用 EventDispatcher 对象注册事件侦听器对象，以使侦听器能够接收事件通知。可以为特定类型的事件、阶段和优先级在显示列表的所有节
          * 点上注册事件侦听器。成功注册一个事件侦听器后，无法通过额外调用 on() 来更改其优先级。要更改侦听器的优先级，必须
          * 先调用 removeEventListener()。然后，可以使用新的优先级再次注册该侦听器。注册该侦听器后，如果继续调用具有不同 type 或 useCapture
@@ -123,10 +122,10 @@ module egret {
          * @see #removeEventListener()
          * @version Egret 2.4
          * @platform Web,Native
+         * @language zh_CN
          */
         addEventListener(type:string, listener:Function, thisObject:any, useCapture?:boolean, priority?:number):void;
         /**
-         * @language en_US
          * Registers an event listener object with an EventDispatcher object so that the listener receives notification of an
          * event. Different from the on() method,the listener receives notification only once,and then it will be removed
          * automatically.
@@ -147,9 +146,9 @@ module egret {
          * @see #removeEventListener()
          * @version Egret 2.4
          * @platform Web,Native
+         * @language en_US
          */
         /**
-         * @language zh_CN
          * 添加仅回调一次的事件侦听器，此方法与on()方法不同，on()方法会持续产生回调，而此方法在第一次回调时就会自动移除监听。
          * @param type 事件的类型。
          * @param listener 处理事件的侦听器函数。此函数必须接受 Event 对象作为其唯一的参数，并且不能返回任何结果，
@@ -164,10 +163,10 @@ module egret {
          * @see #removeEventListener()
          * @version Egret 2.4
          * @platform Web,Native
+         * @language zh_CN
          */
         once(type:string, listener:Function, thisObject:any, useCapture?:boolean, priority?:number):void;
         /**
-         * @language en_US
          * Removes a listener from the EventDispatcher object. If there is no matching listener registered with the
          * EventDispatcher object, a call to this method has no effect.
          * @param type The type of event.
@@ -178,9 +177,9 @@ module egret {
          * are required to remove both: one call with useCapture set to true, and another call with useCapture set to false.
          * @version Egret 2.4
          * @platform Web,Native
+         * @language en_US
          */
         /**
-         * @language zh_CN
          * 从 EventDispatcher 对象中删除侦听器。如果没有向 EventDispatcher 对象注册任何匹配的侦听器，则对此方法的调用没有任何效果。
          * @param type 事件的类型。
          * @param listener 要删除的侦听器对象
@@ -189,11 +188,11 @@ module egret {
          * removeEventListener() 进行两次调用才能将这两个侦听器删除：一次调用将 useCapture 设置为 true，另一次调用将 useCapture 设置为 false。。
          * @version Egret 2.4
          * @platform Web,Native
+         * @language zh_CN
          */
         removeEventListener(type:string, listener:Function, thisObject:any, useCapture?:boolean):void;
 
         /**
-         * @language en_US
          * Checks whether the EventDispatcher object has any listeners registered for a specific type of event. This allows
          * you to determine where an EventDispatcher object has altered handling of an event type in the event flow hierarchy.
          * To determine whether a specific event type will actually trigger an event listener, use IEventDispatcher.willTrigger().
@@ -204,9 +203,9 @@ module egret {
          * @see #willTrigger()
          * @version Egret 2.4
          * @platform Web,Native
+         * @language en_US
          */
         /**
-         * @language zh_CN
          * 检查 EventDispatcher 对象是否为特定事件类型注册了任何侦听器。这样，您就可以确定 EventDispatcher 对象在事件流层次结构中的哪个
          * 位置改变了对事件类型的处理。要确定特定事件类型是否确实会触发事件侦听器，请使用 IEventDispatcher.willTrigger()。hasEventListener()
          * 与 willTrigger() 的区别是：hasEventListener() 只检查它所属的对象，而 willTrigger() 检查整个事件流以查找由 type 参数指定的事件。
@@ -215,29 +214,29 @@ module egret {
          * @see #willTrigger()
          * @version Egret 2.4
          * @platform Web,Native
+         * @language zh_CN
          */
         hasEventListener(type:string):boolean;
 
         /**
-         * @language en_US
          * Dispatches an event into the event flow. The event target is the EventDispatcher object upon which dispatchEvent() is called.
          * @param event The event object dispatched into the event flow.
          * @returns A value of true unless preventDefault() is called on the event, in which case it returns false.
          * @version Egret 2.4
          * @platform Web,Native
+         * @language en_US
          */
         /**
-         * @language zh_CN
          * 将事件分派到事件流中。事件目标是对其调用 dispatchEvent() 方法的 EventDispatcher 对象。
          * @param event 调度到事件流中的 Event 对象。
          * @returns 如果成功调度了事件，则值为 true。值 false 表示失败或对事件调用了 preventDefault()。
          * @version Egret 2.4
          * @platform Web,Native
+         * @language zh_CN
          */
         dispatchEvent(event:Event):boolean;
 
         /**
-         * @language en_US
          * Checks whether an event listener is registered with this EventDispatcher object or any of its ancestors for the
          * specified event type. This method returns true if an event listener is triggered during any phase of the event
          * flow when an event of the specified type is dispatched to this EventDispatcher object or any of its descendants.
@@ -246,9 +245,9 @@ module egret {
          * @see #hasEventListener()
          * @version Egret 2.4
          * @platform Web,Native
+         * @language en_US
          */
         /**
-         * @language zh_CN
          * 检查是否用此 EventDispatcher 对象或其任何始祖为指定事件类型注册了事件侦听器。将指定类型的事件调度给此
          * EventDispatcher 对象或其任一后代时，如果在事件流的任何阶段触发了事件侦听器，则此方法返回 true。
          * hasEventListener() 与 willTrigger() 方法的区别是：hasEventListener() 只检查它所属的对象，
@@ -258,6 +257,7 @@ module egret {
          * @see #hasEventListener()
          * @version Egret 2.4
          * @platform Web,Native
+         * @language zh_CN
          */
         willTrigger(type:string):boolean;
     }

@@ -1,6 +1,6 @@
 //////////////////////////////////////////////////////////////////////////////////////
 //
-//  Copyright (c) 2014-2015, Egret Technology Inc.
+//  Copyright (c) 2014-present, Egret Technology.
 //  All rights reserved.
 //  Redistribution and use in source and binary forms, with or without
 //  modification, are permitted provided that the following conditions are met:
@@ -28,7 +28,7 @@
 //////////////////////////////////////////////////////////////////////////////////////
 
 
-module egret.gui {
+namespace egret.gui {
 
 	/**
 	 * @class egret.gui.DropDownListBase
@@ -203,7 +203,7 @@ module egret.gui {
 		 * @returns {boolean}
 		 */
 		public commitSelection(dispatchChangedEvents:boolean = true):boolean{
-			var retVal:boolean = super.commitSelection(dispatchChangedEvents);
+			let retVal:boolean = super.commitSelection(dispatchChangedEvents);
 			this.updateLabelDisplay();
 			return retVal; 
 		}
@@ -264,7 +264,7 @@ module egret.gui {
         public _item_touchEndHandler(event: TouchEvent): void {
             super._item_touchEndHandler(event);
 
-            var itemRenderer: IItemRenderer = <IItemRenderer> (event.currentTarget);
+            let itemRenderer: IItemRenderer = <IItemRenderer> (event.currentTarget);
             if (itemRenderer != this._mouseDownItemRenderer)
                 return;
             this._dispatchListEvent(event, ListEvent.ITEM_CLICK, itemRenderer);

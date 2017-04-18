@@ -1,6 +1,6 @@
 //////////////////////////////////////////////////////////////////////////////////////
 //
-//  Copyright (c) 2014-2015, Egret Technology Inc.
+//  Copyright (c) 2014-present, Egret Technology.
 //  All rights reserved.
 //  Redistribution and use in source and binary forms, with or without
 //  modification, are permitted provided that the following conditions are met:
@@ -28,41 +28,41 @@
 //////////////////////////////////////////////////////////////////////////////////////
 
 
-module egret {
+namespace egret {
 
     /**
      * @private
      */
-    var getDefinitionByNameCache = {};
+    let getDefinitionByNameCache = {};
 
     /**
-     * @language en_US
      * Returns a reference to the class object of the class specified by the name parameter.
      * @param name The name of a class.
      * @version Egret 2.4
      * @platform Web,Native
      * @includeExample egret/utils/getDefinitionByName.ts
+     * @language en_US
      */
     /**
-     * @language zh_CN
      * 返回 name 参数指定的类的类对象引用。
      * @param name 类的名称。
      * @version Egret 2.4
      * @platform Web,Native
      * @includeExample egret/utils/getDefinitionByName.ts
+     * @language zh_CN
      */
     export function getDefinitionByName(name:string):any {
         if (!name)
             return null;
-        var definition = getDefinitionByNameCache[name];
+        let definition = getDefinitionByNameCache[name];
         if (definition) {
             return definition;
         }
-        var paths = name.split(".");
-        var length = paths.length;
+        let paths = name.split(".");
+        let length = paths.length;
         definition = __global;
-        for (var i = 0; i < length; i++) {
-            var path = paths[i];
+        for (let i = 0; i < length; i++) {
+            let path = paths[i];
             definition = definition[path];
             if (!definition) {
                 return null;
@@ -80,4 +80,4 @@ module egret {
 
 }
 
-var __global = __global || this;
+let __global = this.__global || this;

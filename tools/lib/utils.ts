@@ -1,6 +1,6 @@
 ﻿//////////////////////////////////////////////////////////////////////////////////////
 //
-//  Copyright (c) 2014-2015, Egret Technology Inc.
+//  Copyright (c) 2014-present, Egret Technology.
 //  All rights reserved.
 //  Redistribution and use in source and binary forms, with or without
 //  modification, are permitted provided that the following conditions are met:
@@ -26,8 +26,6 @@
 //  EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 //
 //////////////////////////////////////////////////////////////////////////////////////
-
-/// <reference path="./node.d.ts" />
 
 import cp = require('child_process');
 import path = require('path');
@@ -57,7 +55,8 @@ var NoColorOutputReplacements = {
 function formatStdoutString(message) {
     var replacements = ColorOutputReplacements;
     for (var raw in replacements) {
-        message = message.split(raw).join(replacements[raw]);
+        let replace = (egret.args && egret.args.ide) ? "" : replacements[raw];
+        message = message.split(raw).join(replace);
     }
     return message;
 }
@@ -82,7 +81,7 @@ export function tr(code: number, ...args): string {
 export function format(text: string, ...args): string {
     var length = args.length;
     for (var i = 0; i < length || i < 5; i++) {
-        text = text.replace(new RegExp("\\{" + i + "\\}", "ig"), args[i]||"");
+        text = text.replace(new RegExp("\\{" + i + "\\}", "ig"), args[i] || "");
     }
 
     text = formatStdoutString(text);
@@ -90,18 +89,18 @@ export function format(text: string, ...args): string {
     return text;
 }
 
-export function ti(code: number,injector?:any): string {
+export function ti(code: number, injector?: any): string {
     var text = $locale_strings[code];
     if (!text) {
         return "{" + code + "}";
     }
-    text = inject.call(this,text,injector);
+    text = inject.call(this, text, injector);
     return text;
 }
 
-export function inject(text: string,injector?:any):string {
-    if(injector){
-        for(var p in injector){
+export function inject(text: string, injector?: any): string {
+    if (injector) {
+        for (var p in injector) {
             text = text.replace(new RegExp("\\{" + p + "\\}", "ig"), injector[p]);
         }
     }
@@ -111,7 +110,7 @@ export function inject(text: string,injector?:any):string {
 export function exit(code: number, ...args) {
     if (code) {
         var text: string = $locale_strings[code];
-        if (text&&text.indexOf("{0}") < 0 || args && args.length > 0) {
+        if (text && text.indexOf("{0}") < 0 || args && args.length > 0) {
             var message = tr.apply(this, [code].concat(args));
             console.error(message);
         }
@@ -133,7 +132,7 @@ export function getEgretRoot() {
     for (var i = 0; i < globalpath.length; i++) {
         var prefix = globalpath[i];
         var url = file.joinPath(prefix, '../');
-        if (file.exists(file.joinPath(url,'tools/bin/egret'))) {
+        if (file.exists(file.joinPath(url, 'tools/bin/egret'))) {
             existsFlag = true;
             break;
         }
@@ -171,16 +170,16 @@ export function open(target, appName?, callback?, options?) {
             break;
         case 'win32':
             // if the first parameter to start is quoted, it uses that as the title
-                // so we pass a blank title so we can quote the file we are opening
-                if (appName) {
-                    opener = 'start "" "' + escape(appName) + '"';
-                } else {
-                    opener = 'start ""';
-                }
-                break;
-            default:
-                if (appName) {
-                    opener = escape(appName);
+            // so we pass a blank title so we can quote the file we are opening
+            if (appName) {
+                opener = 'start "" "' + escape(appName) + '"';
+            } else {
+                opener = 'start ""';
+            }
+            break;
+        default:
+            if (appName) {
+                opener = escape(appName);
             } else {
                 // use Portlands xdg-open everywhere else
                 opener = path.join(__dirname, '../vendor/xdg-open');
@@ -188,7 +187,7 @@ export function open(target, appName?, callback?, options?) {
             break;
     }
 
-    return cp.exec(opener + ' "' + escape(target) + '"',options, callback);
+    return cp.exec(opener + ' "' + escape(target) + '"', options, callback);
 }
 
 
@@ -214,11 +213,10 @@ export function minify(sourceFile: string, output: string) {
     file.save(output, result.code);
 }
 
-export function clean(path: string,...excludes:string[]) {
+export function clean(path: string, excludes?: string[]) {
     var fileList = file.getDirectoryListing(path);
     var length = fileList.length;
-    for (var i = 0; i < length; i++)
-    {
+    for (var i = 0; i < length; i++) {
         var path = fileList[i];
         if (excludes && excludes.indexOf(path) >= 0)
             continue;
@@ -244,7 +242,7 @@ export function getNetworkAddress(): string[] {
     return ips;
 }
 
-export function getAvailablePort(callback: (port: number) => void, port= 0) {
+export function getAvailablePort(callback: (port: number) => void, port = 0) {
 
     function getPort() {
         var server = net.createServer();
@@ -253,7 +251,6 @@ export function getAvailablePort(callback: (port: number) => void, port= 0) {
             server.close()
         })
         server.on('close', function () {
-            console.log("Server running at port:", port);
             callback(port)
         })
         server.on('error', function (err) {
@@ -274,26 +271,126 @@ export function checkEgret() {
     }
 }
 
-export function isFormatString(text:string):boolean{
-    if(text){
-        if(text.indexOf("\n")!=-1){
+export function isFormatString(text: string): boolean {
+    if (text) {
+        if (text.indexOf("\n") != -1) {
             return true;
         }
     }
     return false;
 }
 
-export function addIndents(times:number,text:string){
-    if(times == 0)
+export function addIndents(times: number, text: string) {
+    if (times == 0)
         return text;
     var added = '\t';
-    for(var i=0;i<times-1;i++){
-        added+=added;
+    for (var i = 0; i < times - 1; i++) {
+        added += added;
     }
     //开头
-    if(text != null){
-        text = added+text;
+    if (text != null) {
+        text = added + text;
     }
     //替换\n
-    return text.replace(new RegExp("\\n", "ig"),'\n'+added);
+    return text.replace(new RegExp("\\n", "ig"), '\n' + added);
+}
+
+interface MapLike<T> {
+    [index: string]: T;
+}
+
+export interface Map<T> extends MapLike<T> {
+    __mapBrand: any;
+}
+
+export function createMap<T>(template?: MapLike<T>): Map<T> {
+    const map: Map<T> = Object.create(null); // tslint:disable-line:no-null-keyword
+
+    // Using 'delete' on an object causes V8 to put the object in dictionary mode.
+    // This disables creation of hidden classes, which are expensive when an object is
+    // constantly changing shape.
+    map["__"] = undefined;
+    delete map["__"];
+
+    // Copies keys/values from template. Note that for..in will not throw if
+    // template is undefined, and instead will just exit the loop.
+    for (const key in template) if (Object.prototype.hasOwnProperty.call(template, key)) {
+        map[key] = template[key];
+    }
+
+    return map;
+}
+
+export function shell(path: string, args: string[], opt?: cp.SpawnOptions, verbase?: boolean):Promise<number>{
+    let stdout = "";
+    let stderr = "";
+    var cmd = `${path} ${args.join(" ")}`;
+    if (verbase) {
+        console.log(cmd);
+    }
+    let printStdoutBufferMessage = (message) => {
+        var str = message.toString();
+        stdout += str;
+        if (verbase) {
+            console.log(str);
+        }
+    };
+    let printStderrBufferMessage = (message) => {
+        var str = message.toString();
+        stderr += str;
+        if (verbase) {
+            console.log(str);
+        }
+    };
+    let callback = (reslove, reject) => {
+        var shell = cp.spawn(path, args, opt);
+        shell.on("error", (message) => { console.log(message); });
+        shell.stderr.on("data", printStderrBufferMessage);
+        shell.stderr.on("error", printStderrBufferMessage);
+        shell.stdout.on("data", printStdoutBufferMessage);
+        shell.stdout.on("error", printStdoutBufferMessage);
+        shell.on('exit', function (code) {
+            if (code != 0) {
+                if (verbase) {
+                    console.log('Failed: ' + code);
+                }
+                reject({ code, stdout, stderr });
+            }
+            else {
+                reslove({ code, stdout, stderr });
+            }
+        });
+    };
+    return new Promise(callback);
+};
+
+let error_code_filename = path.join(__dirname,"../error_code.json");
+let errorcode = file.readJSONSync(error_code_filename,{"encoding":"utf-8"});
+export class CliException extends Error {
+
+    public message;
+
+    constructor(public errorId,param?:string){
+        super();
+        var message:string = errorcode[this.errorId];
+        if (message){
+            message = message.replace('{0}',param);
+        }
+        else{
+            message = `unkown error : ${errorId}`;
+            console.error(message);
+        }
+        this.message = message;
+    }
+}
+
+export function findValidatePathSync(pathStr:string):string{
+    if(!pathStr){
+        pathStr = process.cwd();
+    }else{
+        if(!file.existsSync(pathStr)){
+            pathStr = path.join(process.cwd(),pathStr);
+        }
+    }
+    return pathStr;
 }

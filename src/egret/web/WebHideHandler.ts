@@ -1,6 +1,6 @@
 //////////////////////////////////////////////////////////////////////////////////////
 //
-//  Copyright (c) 2014-2015, Egret Technology Inc.
+//  Copyright (c) 2014-present, Egret Technology.
 //  All rights reserved.
 //  Redistribution and use in source and binary forms, with or without
 //  modification, are permitted provided that the following conditions are met:
@@ -27,7 +27,7 @@
 //
 //////////////////////////////////////////////////////////////////////////////////////
 
-module egret.web {
+namespace egret.web {
     /**
      * @private
      */
@@ -55,9 +55,9 @@ module egret.web {
          * 
          */
         private registerListener():void {
-            var self = this;
+            let self = this;
             //失去焦点
-            var onBlurHandler = function () {
+            let onBlurHandler = function () {
                 if (!self.isActivate) {
                     return;
                 }
@@ -65,7 +65,7 @@ module egret.web {
                 self.stage.dispatchEvent(new Event(Event.DEACTIVATE));
             };
             //激活
-            var onFocusHandler = function () {
+            let onFocusHandler = function () {
                 if (self.isActivate) {
                     return;
                 }
@@ -74,7 +74,7 @@ module egret.web {
                 self.stage.dispatchEvent(new Event(Event.ACTIVATE));
             };
 
-            var handleVisibilityChange = function () {
+            let handleVisibilityChange = function () {
                 if (!document[hidden]) {
                     onFocusHandler();
                 }
@@ -86,7 +86,7 @@ module egret.web {
             window.addEventListener("focus", onFocusHandler, false);
             window.addEventListener("blur", onBlurHandler, false);
 
-            var hidden, visibilityChange;
+            let hidden, visibilityChange;
             if (typeof document.hidden !== "undefined") {
                 hidden = "hidden";
                 visibilityChange = "visibilitychange";
@@ -111,20 +111,20 @@ module egret.web {
                 document.addEventListener(visibilityChange, handleVisibilityChange, false);
             }
 
-            var ua = navigator.userAgent;
-            var isWX = /micromessenger/gi.test(ua);
-            var isQQBrowser = /mqq/ig.test(ua);
-            var isQQ = /mobile.*qq/gi.test(ua);
+            let ua = navigator.userAgent;
+            let isWX = /micromessenger/gi.test(ua);
+            let isQQBrowser = /mqq/ig.test(ua);
+            let isQQ = /mobile.*qq/gi.test(ua);
 
             if (isQQ || isWX) {
                 isQQBrowser = false;
             }
             if(isQQBrowser)
             {
-                var browser = window["browser"] || {};
+                let browser = window["browser"] || {};
                 browser.execWebFn =  browser.execWebFn || {};
                 browser.execWebFn.postX5GamePlayerMessage = function(event){
-                    var eventType = event.type;
+                    let eventType = event.type;
                     if (eventType == "app_enter_background"){
                         onBlurHandler();
                     }

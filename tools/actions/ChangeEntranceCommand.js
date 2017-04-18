@@ -1,5 +1,5 @@
 /// <reference path="../lib/types.d.ts" />
-var FileUtil = require('../lib/FileUtil');
+var FileUtil = require("../lib/FileUtil");
 var ChangeEntranceCommand = (function () {
     function ChangeEntranceCommand() {
     }
@@ -51,6 +51,42 @@ var ChangeEntranceCommand = (function () {
                     this.platformContent = null;
                 }
                 break;
+            case "android_as":
+                //判断入口文件是否存在
+                var entranceFile = FileUtil.joinPath(url, "app", "src", "main", "AndroidManifest.xml");
+                if (!FileUtil.exists(entranceFile)) {
+                    console.log(entranceFile + " is not exists");
+                    break;
+                }
+                var DOMParser = require('../lib/core/xmldom/dom-parser').DOMParser;
+                var xmlContent = FileUtil.read(entranceFile);
+                var doc = new DOMParser().parseFromString(xmlContent);
+                var filePath = doc.documentElement.getElementsByTagName('manifest')._node.getAttribute('package').replace(/\./g, "/");
+                var javaName;
+                var activities = doc.documentElement.getElementsByTagName("activity");
+                for (var i = 0; i < activities.length; i++) {
+                    var activity = activities[i];
+                    if (activity.hasAttribute("android:name") && activity.getAttribute("android:label") == "@string/app_name") {
+                        javaName = activity.getAttribute('android:name').replace(/\./g, "/");
+                        break;
+                    }
+                }
+                var javaSrcPath = FileUtil.joinPath(url, "app", "src", "main", "java");
+                //console.log(" javaSrcPath = "+javaSrcPath);
+                if (FileUtil.exists(FileUtil.joinPath(javaSrcPath, javaName + ".java"))) {
+                    this.platformPath = FileUtil.joinPath(javaSrcPath, javaName + ".java");
+                    //console.log(" platformPath 1= "+this.platformPath);
+                    this.platformContent = FileUtil.read(this.platformPath);
+                }
+                else if (FileUtil.exists(FileUtil.joinPath(javaSrcPath, filePath, javaName + ".java"))) {
+                    this.platformPath = FileUtil.joinPath(javaSrcPath, filePath, javaName + ".java");
+                    //console.log(" platformPath 2= "+this.platformPath);
+                    this.platformContent = FileUtil.read(this.platformPath);
+                }
+                else {
+                    this.platformContent = null;
+                }
+                break;
             case "ios":
                 var projectName = '';
                 var fileList = FileUtil.getDirectoryListing(url, true);
@@ -83,6 +119,7 @@ var ChangeEntranceCommand = (function () {
             this.changeLoaderUrl(0, platform);
             switch (platform) {
                 case "android":
+                case "android_as":
                     this.platformContent = this.platformContent.replace(/private static final String EGRET_PUBLISH_ZIP =.*/, 'private static final String EGRET_PUBLISH_ZIP = "game_code_' + versionFile + '.zip";');
                     break;
                 case "ios":
@@ -102,6 +139,7 @@ var ChangeEntranceCommand = (function () {
     ChangeEntranceCommand.prototype.changeLoaderUrl = function (code, platform) {
         switch (platform) {
             case "android":
+            case "android_as":
                 this.platformContent = this.platformContent.replace(/setLoaderUrl\((\s)*\d(\s)*\);/, 'setLoaderUrl(' + code + ');');
                 break;
             case "ios":
@@ -110,7 +148,5 @@ var ChangeEntranceCommand = (function () {
         }
     };
     return ChangeEntranceCommand;
-})();
+}());
 module.exports = ChangeEntranceCommand;
-
-//# sourceMappingURL=ChangeEntranceCommand.js.map

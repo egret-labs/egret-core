@@ -1,6 +1,6 @@
 //////////////////////////////////////////////////////////////////////////////////////
 //
-//  Copyright (c) 2014-2015, Egret Technology Inc.
+//  Copyright (c) 2014-present, Egret Technology.
 //  All rights reserved.
 //  Redistribution and use in source and binary forms, with or without
 //  modification, are permitted provided that the following conditions are met:
@@ -30,7 +30,7 @@
 /// <reference path="../core/ClassFactory.ts" />
 /// <reference path="./supportClasses/TreeItemRenderer.ts" />
 
-module egret.gui {
+namespace egret.gui {
 
 	/**
 	 * @class egret.gui.Tree
@@ -69,8 +69,8 @@ module egret.gui {
 		 */
 		public updateRenderer(renderer:IItemRenderer, itemIndex:number, data:any):IItemRenderer{
 			if("hasChildren" in renderer&&"hasChildren" in this.dataProvider){
-				var treeCollection:ITreeCollection = <ITreeCollection><any> (this.dataProvider);
-				var treeRenderer:ITreeItemRenderer = <ITreeItemRenderer><any> renderer;
+				let treeCollection:ITreeCollection = <ITreeCollection><any> (this.dataProvider);
+				let treeRenderer:ITreeItemRenderer = <ITreeItemRenderer><any> renderer;
 				treeRenderer.hasChildren = treeCollection.hasChildren(data);
 				treeRenderer.opened = treeCollection.isItemOpen(data);
 				treeRenderer.depth = treeCollection.getDepth(data);
@@ -91,7 +91,7 @@ module egret.gui {
 			if(this._iconFunction!=null)
 				return this._iconFunction(data);
 
-			var skinName:any;
+			let skinName:any;
 			if(data instanceof Object){
 				try{
 					if(data[this.iconField]){
@@ -117,15 +117,15 @@ module egret.gui {
 		 * 节点即将打开
 		 */
 		private onItemOpening(event:TreeEvent):void{
-			var renderer:ITreeItemRenderer = event.itemRenderer;
-			var item:any = event.item;
-            var dp:ICollection = this._getDataProvider();
+			let renderer:ITreeItemRenderer = event.itemRenderer;
+			let item:any = event.item;
+            let dp:ICollection = this._getDataProvider();
 			if(!renderer||!dp||!("hasChildren" in dp))
 				return;
 			if(this.dispatchEvent(event)){
-				var opend:boolean = !renderer.opened;
+				let opend:boolean = !renderer.opened;
 				(<ITreeCollection><any> dp).expandItem(item,opend);
-				var type:string = opend?TreeEvent.ITEM_OPEN:TreeEvent.ITEM_CLOSE;
+				let type:string = opend?TreeEvent.ITEM_OPEN:TreeEvent.ITEM_CLOSE;
                 TreeEvent.dispatchTreeEvent(this,type,renderer.itemIndex,item,renderer);
 			}
 		}
@@ -184,7 +184,7 @@ module egret.gui {
 		 * @param open {boolean} true表示打开节点，反之关闭。
 		 */
 		public expandItem(item:any,open:boolean = true):void{
-            var dp:ICollection = this._getDataProvider();
+            let dp:ICollection = this._getDataProvider();
             if(!dp||!("hasChildren" in dp))
 				return;
 			(<ITreeCollection><any> (dp)).expandItem(item,open);
@@ -196,7 +196,7 @@ module egret.gui {
 		 * @returns {boolean}
 		 */
 		public isItemOpen(item:any):boolean{
-            var dp:ICollection = this._getDataProvider();
+            let dp:ICollection = this._getDataProvider();
 			if(!dp||!("hasChildren" in dp))
 				return false;
 			return (<ITreeCollection><any> (dp)).isItemOpen(item);
@@ -209,7 +209,7 @@ module egret.gui {
 		public dataProvider_collectionChangeHandler(event:CollectionEvent):void{
 			super.dataProvider_collectionChangeHandler(event);
 			if(event.kind == CollectionEventKind.OPEN||event.kind == CollectionEventKind.CLOSE){
-				var renderer:ITreeItemRenderer = this.dataGroup?
+				let renderer:ITreeItemRenderer = this.dataGroup?
 					<ITreeItemRenderer><any> (this.dataGroup.getElementAt(event.location)):null;
 				if(renderer){
 					this.updateRenderer(renderer,event.location,event.items[0]);
@@ -229,17 +229,17 @@ module egret.gui {
 			super.commitProperties();
 			if(this.iconFieldOrFunctionChanged){
 				if(this.dataGroup!=null){
-					var itemIndex:number;
+					let itemIndex:number;
 					if(this.layout && this.layout.useVirtualLayout){
-                        var list:Array<number> = this.dataGroup.getElementIndicesInView();
-                        var length:number = list.length;
-						for (var i:number=0;i<length;i++){
-                            var itemIndex:number = list[i];
+                        let list:number[] = this.dataGroup.getElementIndicesInView();
+                        let length:number = list.length;
+						for (let i:number=0;i<length;i++){
+                            let itemIndex:number = list[i];
 							this.updateRendererIconProperty(itemIndex);
 						}
 					}
 					else{
-						var n:number = this.dataGroup.numElements;
+						let n:number = this.dataGroup.numElements;
 						for (itemIndex = 0; itemIndex < n; itemIndex++){
 							this.updateRendererIconProperty(itemIndex);
 						}
@@ -252,7 +252,7 @@ module egret.gui {
 		 * 更新指定索引项的图标
 		 */
 		private updateRendererIconProperty(itemIndex:number):void{
-			var renderer:ITreeItemRenderer = <ITreeItemRenderer><any> (this.dataGroup.getElementAt(itemIndex));
+			let renderer:ITreeItemRenderer = <ITreeItemRenderer><any> (this.dataGroup.getElementAt(itemIndex));
 			if (renderer)
 				renderer.iconSkinName = this.itemToIcon(renderer.data);
 		}

@@ -1,6 +1,6 @@
 //////////////////////////////////////////////////////////////////////////////////////
 //
-//  Copyright (c) 2014-2015, Egret Technology Inc.
+//  Copyright (c) 2014-present, Egret Technology.
 //  All rights reserved.
 //  Redistribution and use in source and binary forms, with or without
 //  modification, are permitted provided that the following conditions are met:
@@ -28,7 +28,7 @@
 //////////////////////////////////////////////////////////////////////////////////////
 
 
-module egret.gui {
+namespace egret.gui {
 
     /**
      * @class egret.gui.List
@@ -81,21 +81,21 @@ module egret.gui {
             this._allowMultipleSelection = value;
         }
 
-        private _selectedIndices:Array<number> = [];
+        private _selectedIndices:number[] = [];
 
-        private _proposedSelectedIndices:Array<number>;
+        private _proposedSelectedIndices:number[];
 
         /**
          * 当前选中的一个或多个项目的索引列表
          * @member egret.gui.List#selectedIndices
          */
-        public get selectedIndices():Array<number> {
+        public get selectedIndices():number[] {
             if (this._proposedSelectedIndices)
                 return this._proposedSelectedIndices;
             return this._selectedIndices;
         }
 
-        public set selectedIndices(value:Array<number>) {
+        public set selectedIndices(value:number[]) {
             this._setSelectedIndices(value, false);
         }
 
@@ -120,12 +120,12 @@ module egret.gui {
          * @member egret.gui.List#selectedItems
          */
         public get selectedItems():Array<Object> {
-            var result:Array<Object> = [];
-            var list:Array<number> = this.selectedIndices;
+            let result:Array<Object> = [];
+            let list:number[] = this.selectedIndices;
             if (list) {
-                var count:number = list.length;
+                let count:number = list.length;
 
-                for (var i:number = 0; i < count; i++)
+                for (let i:number = 0; i < count; i++)
                     result[i] = this.dataProvider.getItemAt(list[i]);
             }
 
@@ -133,13 +133,13 @@ module egret.gui {
         }
 
         public set selectedItems(value:Array<Object>) {
-            var indices:Array<number> = [];
+            let indices:number[] = [];
 
             if (value) {
-                var count:number = value.length;
+                let count:number = value.length;
 
-                for (var i:number = 0; i < count; i++) {
-                    var index:number = this.dataProvider.getItemIndex(value[i]);
+                for (let i:number = 0; i < count; i++) {
+                    let index:number = this.dataProvider.getItemIndex(value[i]);
                     if (index != -1) {
                         indices.splice(0, 0, index);
                     }
@@ -155,7 +155,7 @@ module egret.gui {
         /**
          * 设置多个选中项
          */
-        public _setSelectedIndices(value:Array<number>, dispatchChangeEvent:boolean = false):void {
+        public _setSelectedIndices(value:number[], dispatchChangeEvent:boolean = false):void {
             if (dispatchChangeEvent)
                 this._dispatchChangeAfterSelection = (this._dispatchChangeAfterSelection || dispatchChangeEvent);
 
@@ -183,12 +183,12 @@ module egret.gui {
          * @returns {boolean}
          */
         public commitSelection(dispatchChangedEvents:boolean = true):boolean {
-            var oldSelectedIndex:number = this._selectedIndex;
+            let oldSelectedIndex:number = this._selectedIndex;
             if (this._proposedSelectedIndices) {
                 this._proposedSelectedIndices = this._proposedSelectedIndices.filter(this.isValidIndex);
 
                 if (!this.allowMultipleSelection && this._proposedSelectedIndices.length > 0) {
-                    var temp:Array<number> = [];
+                    let temp:number[] = [];
                     temp.push(this._proposedSelectedIndices[0]);
                     this._proposedSelectedIndices = temp;
                 }
@@ -200,7 +200,7 @@ module egret.gui {
                 }
             }
 
-            var retVal:boolean = super.commitSelection(false);
+            let retVal:boolean = super.commitSelection(false);
 
             if (!retVal) {
                 this._proposedSelectedIndices = null;
@@ -238,7 +238,7 @@ module egret.gui {
         /**
          * 是否是有效的索引
          */
-        private isValidIndex = (item:number, index:number, v:Array<number>):boolean => {
+        private isValidIndex = (item:number, index:number, v:number[]):boolean => {
             return this.dataProvider && (item >= 0) && (item < this.dataProvider.length);
         }
 
@@ -246,10 +246,10 @@ module egret.gui {
          * 提交多项选中项属性
          */
         public commitMultipleSelection():void {
-            var removedItems:Array<number> = [];
-            var addedItems:Array<number> = [];
-            var i:number;
-            var count:number;
+            let removedItems:number[] = [];
+            let addedItems:number[] = [];
+            let i:number;
+            let count:number;
 
             if (this._selectedIndices.length > 0 && this._proposedSelectedIndices.length > 0) {
                 count = this._proposedSelectedIndices.length;
@@ -305,7 +305,7 @@ module egret.gui {
         public dataGroup_rendererAddHandler(event:RendererExistenceEvent):void {
             super.dataGroup_rendererAddHandler(event);
 
-            var renderer:DisplayObject = <DisplayObject><any> (event.renderer);
+            let renderer:DisplayObject = <DisplayObject><any> (event.renderer);
             if (renderer == null)
                 return;
 
@@ -328,7 +328,7 @@ module egret.gui {
         public dataGroup_rendererRemoveHandler(event:RendererExistenceEvent):void {
             super.dataGroup_rendererRemoveHandler(event);
 
-            var renderer:DisplayObject = <DisplayObject><any> (event.renderer);
+            let renderer:DisplayObject = <DisplayObject><any> (event.renderer);
             if (renderer == null)
                 return;
 
@@ -352,7 +352,7 @@ module egret.gui {
             if (event.$isDefaultPrevented)
                 return;
 
-            var itemRenderer:IItemRenderer = <IItemRenderer> (event.currentTarget);
+            let itemRenderer:IItemRenderer = <IItemRenderer> (event.currentTarget);
             this._mouseDownItemRenderer = itemRenderer;
             UIGlobals.stage.addEventListener(TouchEvent.TOUCH_END, this.stage_touchEndHandler, this);
             UIGlobals.stage.addEventListener(Event.LEAVE_STAGE, this.stage_touchEndHandler, this);
@@ -361,8 +361,8 @@ module egret.gui {
         /**
          * 计算当前的选中项列表
          */
-        private calculateSelectedIndices(index:number):Array<number> {
-            var interval:Array<number> = [];
+        private calculateSelectedIndices(index:number):number[] {
+            let interval:number[] = [];
             if (this._selectedIndices.length > 0) {
                 if (this._selectedIndices.length == 1 && (this._selectedIndices[0] == index)) {
                     if (!this.requireSelection)
@@ -372,8 +372,8 @@ module egret.gui {
                     return interval;
                 }
                 else {
-                    var found:boolean = false;
-                    for (var i = 0; i < this._selectedIndices.length; i++) {
+                    let found:boolean = false;
+                    for (let i = 0; i < this._selectedIndices.length; i++) {
                         if (this._selectedIndices[i] == index)
                             found = true;
                         else if (this._selectedIndices[i] != index)
@@ -395,11 +395,11 @@ module egret.gui {
          * 鼠标在项呈示器上弹起，抛出ItemClick事件。
          */
         public _item_touchEndHandler(event:TouchEvent):void {
-            var itemRenderer:IItemRenderer = <IItemRenderer> (event.currentTarget);
+            let itemRenderer:IItemRenderer = <IItemRenderer> (event.currentTarget);
             if (itemRenderer != this._mouseDownItemRenderer)
                 return;
 
-            var newIndex:number;
+            let newIndex:number;
             if (itemRenderer)
                 newIndex = itemRenderer.itemIndex;
             else

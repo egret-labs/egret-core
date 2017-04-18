@@ -16,7 +16,9 @@
     <xs:attribute name="texture" type="xs:string"/>
   </xs:attributeGroup>
   <xs:group name="egret.BitmapData">
-    <xs:choice/>
+    <xs:choice>
+      <xs:element ref="BitmapData"/>
+    </xs:choice>
   </xs:group>
   <xs:complexType name="egret.BitmapData">
     <xs:group ref="egret.BitmapData"/>
@@ -74,6 +76,23 @@
       <xs:attributeGroup ref="egret.Bitmap"/>
     </xs:complexType>
   </xs:element>
+  <xs:attributeGroup name="egret.BitmapData">
+    <xs:attributeGroup ref="egret.HashObject"/>
+  </xs:attributeGroup>
+  <xs:group name="BitmapData_attributeElement">
+    <xs:choice>
+      <xs:group ref="HashObject_attributeElement"/>
+    </xs:choice>
+  </xs:group>
+  <xs:element name="BitmapData">
+    <xs:complexType>
+      <xs:choice minOccurs="0" maxOccurs="unbounded">
+        <xs:any namespace="##other"/>
+        <xs:group ref="BitmapData_attributeElement"/>
+      </xs:choice>
+      <xs:attributeGroup ref="egret.BitmapData"/>
+    </xs:complexType>
+  </xs:element>
   <xs:attributeGroup name="egret.BitmapFont">
     <xs:attributeGroup ref="egret.SpriteSheet"/>
   </xs:attributeGroup>
@@ -96,6 +115,7 @@
     <xs:attribute name="font" type="xs:string"/>
     <xs:attribute name="letterSpacing" type="xs:decimal"/>
     <xs:attribute name="lineSpacing" type="xs:decimal"/>
+    <xs:attribute name="smoothing" type="xs:boolean"/>
     <xs:attribute name="text" type="xs:string"/>
     <xs:attribute name="textAlign" type="xs:string"/>
     <xs:attribute name="verticalAlign" type="xs:string"/>
@@ -122,6 +142,7 @@
       <xs:element name="font" type="Object"/>
       <xs:element name="letterSpacing" type="number"/>
       <xs:element name="lineSpacing" type="number"/>
+      <xs:element name="smoothing" type="boolean"/>
       <xs:element name="text" type="string"/>
       <xs:element name="textAlign" type="string"/>
       <xs:element name="verticalAlign" type="string"/>
@@ -139,11 +160,13 @@
   <xs:attributeGroup name="egret.BlurFilter">
     <xs:attributeGroup ref="egret.Filter"/>
     <xs:attribute name="blurX" type="xs:decimal"/>
+    <xs:attribute name="blurY" type="xs:decimal"/>
   </xs:attributeGroup>
   <xs:group name="BlurFilter_attributeElement">
     <xs:choice>
       <xs:group ref="Filter_attributeElement"/>
       <xs:element name="blurX" type="number"/>
+      <xs:element name="blurY" type="number"/>
     </xs:choice>
   </xs:group>
   <xs:element name="BlurFilter">
@@ -192,8 +215,11 @@
   <xs:attributeGroup name="egret.DisplayObject">
     <xs:attributeGroup ref="egret.EventDispatcher"/>
     <xs:attribute name="alpha" type="xs:decimal"/>
+    <xs:attribute name="anchorOffsetX" type="xs:decimal"/>
+    <xs:attribute name="anchorOffsetY" type="xs:decimal"/>
     <xs:attribute name="blendMode" type="egret.BlendMode"/>
     <xs:attribute name="cacheAsBitmap" type="xs:boolean"/>
+    <xs:attribute name="filters" type="xs:string"/>
     <xs:attribute name="height" type="xs:string"/>
     <xs:attribute name="mask" type="xs:string"/>
     <xs:attribute name="matrix" type="xs:string"/>
@@ -230,8 +256,11 @@
     <xs:choice>
       <xs:group ref="EventDispatcher_attributeElement"/>
       <xs:element name="alpha" type="number"/>
+      <xs:element name="anchorOffsetX" type="number"/>
+      <xs:element name="anchorOffsetY" type="number"/>
       <xs:element name="blendMode" type="string"/>
       <xs:element name="cacheAsBitmap" type="boolean"/>
+      <xs:element name="filters" type="Array"/>
       <xs:element name="height" type="number"/>
       <xs:element name="mask" type="any"/>
       <xs:element name="matrix" type="egret.Matrix"/>
@@ -279,12 +308,16 @@
   </xs:element>
   <xs:attributeGroup name="egret.DropShadowFilter">
     <xs:attributeGroup ref="egret.GlowFilter"/>
+    <xs:attribute name="angle" type="xs:decimal"/>
     <xs:attribute name="distance" type="xs:decimal"/>
+    <xs:attribute name="hideObject" type="xs:boolean"/>
   </xs:attributeGroup>
   <xs:group name="DropShadowFilter_attributeElement">
     <xs:choice>
       <xs:group ref="GlowFilter_attributeElement"/>
+      <xs:element name="angle" type="number"/>
       <xs:element name="distance" type="number"/>
+      <xs:element name="hideObject" type="boolean"/>
     </xs:choice>
   </xs:group>
   <xs:element name="DropShadowFilter">
@@ -334,12 +367,26 @@
   </xs:element>
   <xs:attributeGroup name="egret.GlowFilter">
     <xs:attributeGroup ref="egret.Filter"/>
+    <xs:attribute name="alpha" type="xs:decimal"/>
+    <xs:attribute name="blurX" type="xs:decimal"/>
+    <xs:attribute name="blurY" type="xs:decimal"/>
     <xs:attribute name="color" type="xs:string"/>
+    <xs:attribute name="inner" type="xs:boolean"/>
+    <xs:attribute name="knockout" type="xs:boolean"/>
+    <xs:attribute name="quality" type="xs:decimal"/>
+    <xs:attribute name="strength" type="xs:decimal"/>
   </xs:attributeGroup>
   <xs:group name="GlowFilter_attributeElement">
     <xs:choice>
       <xs:group ref="Filter_attributeElement"/>
+      <xs:element name="alpha" type="number"/>
+      <xs:element name="blurX" type="number"/>
+      <xs:element name="blurY" type="number"/>
       <xs:element name="color" type="number"/>
+      <xs:element name="inner" type="boolean"/>
+      <xs:element name="knockout" type="boolean"/>
+      <xs:element name="quality" type="number"/>
+      <xs:element name="strength" type="number"/>
     </xs:choice>
   </xs:group>
   <xs:element name="GlowFilter">
@@ -414,6 +461,23 @@
       <xs:attributeGroup ref="egret.Matrix"/>
     </xs:complexType>
   </xs:element>
+  <xs:attributeGroup name="egret.Mesh">
+    <xs:attributeGroup ref="egret.Bitmap"/>
+  </xs:attributeGroup>
+  <xs:group name="Mesh_attributeElement">
+    <xs:choice>
+      <xs:group ref="Bitmap_attributeElement"/>
+    </xs:choice>
+  </xs:group>
+  <xs:element name="Mesh">
+    <xs:complexType>
+      <xs:choice minOccurs="0" maxOccurs="unbounded">
+        <xs:any namespace="##other"/>
+        <xs:group ref="Mesh_attributeElement"/>
+      </xs:choice>
+      <xs:attributeGroup ref="egret.Mesh"/>
+    </xs:complexType>
+  </xs:element>
   <xs:attributeGroup name="egret.Point">
     <xs:attributeGroup ref="egret.HashObject"/>
     <xs:attribute name="x" type="xs:decimal"/>
@@ -482,10 +546,18 @@
   </xs:element>
   <xs:attributeGroup name="egret.RenderTexture">
     <xs:attributeGroup ref="egret.Texture"/>
+    <xs:attribute name="$renderBuffer" type="xs:string"/>
   </xs:attributeGroup>
+  <xs:group name="sys.RenderBuffer">
+    <xs:choice/>
+  </xs:group>
+  <xs:complexType name="sys.RenderBuffer">
+    <xs:group ref="sys.RenderBuffer"/>
+  </xs:complexType>
   <xs:group name="RenderTexture_attributeElement">
     <xs:choice>
       <xs:group ref="Texture_attributeElement"/>
+      <xs:element name="$renderBuffer" type="sys.RenderBuffer"/>
     </xs:choice>
   </xs:group>
   <xs:element name="RenderTexture">
@@ -571,6 +643,7 @@
     <xs:attribute name="borderColor" type="xs:string"/>
     <xs:attribute name="displayAsPassword" type="xs:boolean"/>
     <xs:attribute name="fontFamily" type="xs:string"/>
+    <xs:attribute name="inputType" type="xs:string"/>
     <xs:attribute name="italic" type="xs:boolean"/>
     <xs:attribute name="lineSpacing" type="xs:decimal"/>
     <xs:attribute name="maxChars" type="xs:decimal"/>
@@ -598,6 +671,7 @@
       <xs:element name="borderColor" type="number"/>
       <xs:element name="displayAsPassword" type="boolean"/>
       <xs:element name="fontFamily" type="string"/>
+      <xs:element name="inputType" type="string"/>
       <xs:element name="italic" type="boolean"/>
       <xs:element name="lineSpacing" type="number"/>
       <xs:element name="maxChars" type="number"/>
@@ -627,10 +701,12 @@
   </xs:element>
   <xs:attributeGroup name="egret.Texture">
     <xs:attributeGroup ref="egret.HashObject"/>
+    <xs:attribute name="bitmapData" type="xs:string"/>
   </xs:attributeGroup>
   <xs:group name="Texture_attributeElement">
     <xs:choice>
       <xs:group ref="HashObject_attributeElement"/>
+      <xs:element name="bitmapData" type="egret.BitmapData"/>
     </xs:choice>
   </xs:group>
   <xs:element name="Texture">
@@ -965,6 +1041,7 @@
     <xs:attribute name="paddingLeft" type="xs:decimal"/>
     <xs:attribute name="paddingRight" type="xs:decimal"/>
     <xs:attribute name="paddingTop" type="xs:decimal"/>
+    <xs:attribute name="smoothing" type="xs:boolean"/>
     <xs:attribute name="text" type="xs:string"/>
   </xs:attributeGroup>
   <xs:group name="BitmapLabel_attributeElement">
@@ -978,6 +1055,7 @@
       <xs:element name="paddingLeft" type="number"/>
       <xs:element name="paddingRight" type="number"/>
       <xs:element name="paddingTop" type="number"/>
+      <xs:element name="smoothing" type="boolean"/>
       <xs:element name="text" type="string"/>
     </xs:choice>
   </xs:group>
@@ -1278,6 +1356,7 @@
       <xs:element ref="Label"/>
       <xs:element ref="List"/>
       <xs:element ref="ListBase"/>
+      <xs:element ref="Mesh"/>
       <xs:element ref="Panel"/>
       <xs:element ref="PopUpAnchor"/>
       <xs:element ref="ProgressBar"/>

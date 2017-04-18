@@ -1,6 +1,6 @@
 //////////////////////////////////////////////////////////////////////////////////////
 //
-//  Copyright (c) 2014-2015, Egret Technology Inc.
+//  Copyright (c) 2014-present, Egret Technology.
 //  All rights reserved.
 //  Redistribution and use in source and binary forms, with or without
 //  modification, are permitted provided that the following conditions are met:
@@ -28,7 +28,7 @@
 //////////////////////////////////////////////////////////////////////////////////////
 
 
-module egret.gui {
+namespace egret.gui {
 
 	/**
 	 * @class egret.gui.RadioButtonGroup
@@ -55,7 +55,7 @@ module egret.gui {
 		/**
 		 * 单选按钮列表
 		 */		
-		private radioButtons:Array<any>  = [];
+		private radioButtons:any[]  = [];
 		
 		private _enabled:boolean = true;
 		/**
@@ -70,7 +70,7 @@ module egret.gui {
 				return;
 			
 			this._enabled = value;
-			for (var i:number = 0; i < this.numRadioButtons; i++)
+			for (let i:number = 0; i < this.numRadioButtons; i++)
 				this.getRadioButtonAt(i).invalidateSkinState();
 		}
 		/**
@@ -100,9 +100,9 @@ module egret.gui {
 				this._setSelection(null, false);
 				return;
 			}
-			var n:number = this.numRadioButtons;
-			for (var i:number = 0; i < n; i++){
-				var radioButton:RadioButton = this.getRadioButtonAt(i);
+			let n:number = this.numRadioButtons;
+			for (let i:number = 0; i < n; i++){
+				let radioButton:RadioButton = this.getRadioButtonAt(i);
 				if (radioButton.value == value ||
 					radioButton.label == value){
 					this.changeSelection(i, false);
@@ -148,7 +148,7 @@ module egret.gui {
 			
 			this.radioButtons.push(instance);
 			this.radioButtons.sort(breadthOrderCompare);
-			for (var i:number = 0; i < this.radioButtons.length; i++)
+			for (let i:number = 0; i < this.radioButtons.length; i++)
 				this.radioButtons[i]._indexNumber = i;
 			if (this._selectedValue)
 				this.selectedValue = this._selectedValue;
@@ -161,17 +161,17 @@ module egret.gui {
 			this.dispatchEventWith("numRadioButtonsChanged");
 
             function breadthOrderCompare(a:DisplayObject, b:DisplayObject):number{
-                var aParent:DisplayObjectContainer = a.parent;
-                var bParent:DisplayObjectContainer = b.parent;
+                let aParent:DisplayObjectContainer = a.parent;
+                let bParent:DisplayObjectContainer = b.parent;
 
                 if (!aParent || !bParent)
                     return 0;
 
-                var aNestLevel:number = (a instanceof UIComponent) ? (<UIComponent><any> a).nestLevel : -1;
-                var bNestLevel:number = (b instanceof UIComponent) ? (<UIComponent><any> b).nestLevel : -1;
+                let aNestLevel:number = (a instanceof UIComponent) ? (<UIComponent><any> a).nestLevel : -1;
+                let bNestLevel:number = (b instanceof UIComponent) ? (<UIComponent><any> b).nestLevel : -1;
 
-                var aIndex:number = 0;
-                var bIndex:number = 0;
+                let aIndex:number = 0;
+                let bIndex:number = 0;
 
                 if (aParent == bParent){
                     if ("getElementIndex" in aParent && "ownerChanged" in a)
@@ -207,9 +207,9 @@ module egret.gui {
 		 */		
 		private doRemoveInstance(instance:RadioButton,addListener:boolean=true):void{
 			if (instance){
-				var foundInstance:boolean = false;
-				for (var i:number = 0; i < this.numRadioButtons; i++){
-					var rb:RadioButton = this.getRadioButtonAt(i);
+				let foundInstance:boolean = false;
+				for (let i:number = 0; i < this.numRadioButtons; i++){
+					let rb:RadioButton = this.getRadioButtonAt(i);
 					
 					if (foundInstance){
 						
@@ -251,8 +251,8 @@ module egret.gui {
 				}
 			}
 			else{
-				var n:number = this.numRadioButtons;
-				for (var i:number = 0; i < n; i++){
+				let n:number = this.numRadioButtons;
+				for (let i:number = 0; i < n; i++){
 					if (value == this.getRadioButtonAt(i)){
 						this.changeSelection(i, fireChange);
 						break;
@@ -265,7 +265,7 @@ module egret.gui {
 		 * 改变选中项
 		 */		
 		private changeSelection(index:number, fireChange:boolean = true):void{
-			var rb:RadioButton = this.getRadioButtonAt(index);
+			let rb:RadioButton = this.getRadioButtonAt(index);
 			if (rb && rb != this._selection){
 				
 				if (this._selection)
@@ -282,7 +282,7 @@ module egret.gui {
 		 * 单选按钮添加到显示列表
 		 */		
 		private radioButton_addedHandler(event:Event):void{
-			var rb:RadioButton = <RadioButton><any> (event.target);
+			let rb:RadioButton = <RadioButton><any> (event.target);
 			if (rb){
 				rb.removeEventListener(Event.ADDED, this.radioButton_addedHandler, this);
 				this._addInstance(rb);
@@ -292,7 +292,7 @@ module egret.gui {
 		 * 单选按钮从显示列表移除
 		 */		
 		private radioButton_removedHandler(event:Event):void{
-			var rb:RadioButton = <RadioButton><any> (event.target);
+			let rb:RadioButton = <RadioButton><any> (event.target);
 			if (rb){
 				rb.removeEventListener(Event.REMOVED, this.radioButton_removedHandler, this);
 				this.doRemoveInstance(rb);

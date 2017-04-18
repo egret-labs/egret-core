@@ -1,6 +1,6 @@
 //////////////////////////////////////////////////////////////////////////////////////
 //
-//  Copyright (c) 2014-2015, Egret Technology Inc.
+//  Copyright (c) 2014-present, Egret Technology.
 //  All rights reserved.
 //  Redistribution and use in source and binary forms, with or without
 //  modification, are permitted provided that the following conditions are met:
@@ -28,7 +28,7 @@
 //////////////////////////////////////////////////////////////////////////////////////
 
 
-module egret.gui {
+namespace egret.gui {
 
 	/**
 	 * @class egret.gui.TextBase
@@ -113,7 +113,7 @@ module egret.gui {
 		 * @member egret.gui.TextBase#fontFamily
 		 */
 		public get fontFamily():string{
-			var chain:any = this._UIC_Props_._styleProtoChain;
+			let chain:any = this._UIC_Props_._styleProtoChain;
 			if(chain&&chain["fontFamily"]!==undefined){
 				return chain["fontFamily"];
 			}
@@ -131,7 +131,7 @@ module egret.gui {
 		 * @member egret.gui.TextBase#size
 		 */
 		public get size(): number{
-			var chain:any = this._UIC_Props_._styleProtoChain;
+			let chain:any = this._UIC_Props_._styleProtoChain;
 			if(chain&&chain["size"]!==undefined){
 				return chain["size"];
 			}
@@ -173,7 +173,7 @@ module egret.gui {
 		 * @member egret.gui.TextBase#bold
 		 */
 		public get bold():boolean{
-			var chain:any = this._UIC_Props_._styleProtoChain;
+			let chain:any = this._UIC_Props_._styleProtoChain;
 			if(chain&&chain["bold"]!==undefined){
 				return chain["bold"];
 			}
@@ -191,7 +191,7 @@ module egret.gui {
 		 * @member egret.gui.TextBase#italic
 		 */
 		public get italic():boolean{
-			var chain:any = this._UIC_Props_._styleProtoChain;
+			let chain:any = this._UIC_Props_._styleProtoChain;
 			if(chain&&chain["italic"]!==undefined){
 				return chain["italic"];
 			}
@@ -210,7 +210,7 @@ module egret.gui {
 		 * @member egret.gui.TextBase#textAlign
 		 */
 		public get textAlign():string{
-			var chain:any = this._UIC_Props_._styleProtoChain;
+			let chain:any = this._UIC_Props_._styleProtoChain;
 			if(chain&&chain["textAlign"]!==undefined){
 				return chain["textAlign"];
 			}
@@ -229,7 +229,7 @@ module egret.gui {
 		 * @member egret.gui.TextBase#verticalAlign
 		 */
 		public get verticalAlign():string{
-			var chain:any = this._UIC_Props_._styleProtoChain;
+			let chain:any = this._UIC_Props_._styleProtoChain;
 			if(chain&&chain["verticalAlign"]!==undefined){
 				return chain["verticalAlign"];
 			}
@@ -275,7 +275,7 @@ module egret.gui {
 		 * @member egret.gui.TextBase#textColor
 		 */
 		public get textColor():number{
-			var chain:any = this._UIC_Props_._styleProtoChain;
+			let chain:any = this._UIC_Props_._styleProtoChain;
 			if(chain&&chain["textColor"]!==undefined){
 				return chain["textColor"];
 			}

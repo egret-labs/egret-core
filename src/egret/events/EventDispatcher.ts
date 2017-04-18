@@ -1,6 +1,6 @@
 //////////////////////////////////////////////////////////////////////////////////////
 //
-//  Copyright (c) 2014-2015, Egret Technology Inc.
+//  Copyright (c) 2014-present, Egret Technology.
 //  All rights reserved.
 //  Redistribution and use in source and binary forms, with or without
 //  modification, are permitted provided that the following conditions are met:
@@ -28,7 +28,7 @@
 //////////////////////////////////////////////////////////////////////////////////////
 
 
-module egret {
+namespace egret {
 
     /**
      * @private
@@ -41,10 +41,9 @@ module egret {
     }
 
 
-    var ONCE_EVENT_LIST:egret.sys.EventBin[] = [];
+    let ONCE_EVENT_LIST:egret.sys.EventBin[] = [];
 
     /**
-     * @language en_US
      * The EventDispatcher class is the base class for all classes that dispatchEvent events. The EventDispatcher class implements
      * the IEventDispatcher interface and is the base class for the DisplayObject class. The EventDispatcher class allows
      * any object on the display list to be an event target and as such, to use the methods of the IEventDispatcher interface.
@@ -63,9 +62,9 @@ module egret {
      * @version Egret 2.4
      * @platform Web,Native
      * @includeExample egret/events/EventDispatcher.ts
+     * @language en_US
      */
     /**
-     * @language zh_CN
      * EventDispatcher 是 Egret 的事件派发器类，负责进行事件的发送和侦听。
      * 事件目标是事件如何通过显示列表层次结构这一问题的焦点。当发生鼠标单击、触摸或按键等事件时，
      * 框架会将事件对象调度到从显示列表根开始的事件流中。然后该事件对象在显示列表中前进，直到到达事件目标，
@@ -77,25 +76,26 @@ module egret {
      * @version Egret 2.4
      * @platform Web,Native
      * @includeExample egret/events/EventDispatcher.ts
+     * @language zh_CN
      */
     export class EventDispatcher extends HashObject implements IEventDispatcher {
 
         /**
-         * @language en_US
          * create an instance of the EventDispatcher class.
          * @param target The target object for events dispatched to the EventDispatcher object. This parameter is used when
          * the EventDispatcher instance is aggregated by a class that implements IEventDispatcher; it is necessary so that the
          * containing object can be the target for events. Do not use this parameter in simple cases in which a class extends EventDispatcher.
          * @version Egret 2.4
          * @platform Web,Native
+         * @language en_US
          */
         /**
-         * @language zh_CN
          * 创建一个 EventDispatcher 类的实例
          * @param target 此 EventDispatcher 所抛出事件对象的 target 指向。此参数主要用于一个实现了 IEventDispatcher 接口的自定义类，
          * 以便抛出的事件对象的 target 属性可以指向自定义类自身。请勿在直接继承 EventDispatcher 的情况下使用此参数。
          * @version Egret 2.4
          * @platform Web,Native
+         * @language zh_CN
          */
         public constructor(target:IEventDispatcher = null) {
             super();
@@ -118,8 +118,8 @@ module egret {
          * @param useCapture
          */
         $getEventMap(useCapture?:boolean) {
-            var values = this.$EventDispatcher;
-            var eventMap:any = useCapture ? values[Keys.captureEventsMap] : values[Keys.eventsMap];
+            let values = this.$EventDispatcher;
+            let eventMap:any = useCapture ? values[Keys.captureEventsMap] : values[Keys.eventsMap];
             return eventMap;
         }
 
@@ -148,9 +148,9 @@ module egret {
             if (DEBUG && !listener) {
                 $error(1003, "listener");
             }
-            var values = this.$EventDispatcher;
-            var eventMap:any = useCapture ? values[Keys.captureEventsMap] : values[Keys.eventsMap];
-            var list:egret.sys.EventBin[] = eventMap[type];
+            let values = this.$EventDispatcher;
+            let eventMap:any = useCapture ? values[Keys.captureEventsMap] : values[Keys.eventsMap];
+            let list:egret.sys.EventBin[] = eventMap[type];
             if (!list) {
                 list = eventMap[type] = [];
             }
@@ -161,12 +161,12 @@ module egret {
             this.$insertEventBin(list, type, listener, thisObject, useCapture, priority, dispatchOnce);
         }
 
-        $insertEventBin(list:Array<any>, type:string, listener:Function, thisObject:any, useCapture?:boolean, priority?:number, dispatchOnce?:boolean):boolean {
+        $insertEventBin(list:any[], type:string, listener:Function, thisObject:any, useCapture?:boolean, priority?:number, dispatchOnce?:boolean):boolean {
             priority = +priority | 0;
-            var insertIndex = -1;
-            var length = list.length;
-            for (var i = 0; i < length; i++) {
-                var bin = list[i];
+            let insertIndex = -1;
+            let length = list.length;
+            for (let i = 0; i < length; i++) {
+                let bin = list[i];
                 if (bin.listener == listener && bin.thisObject == thisObject && bin.target == this) {
                     return false;
                 }
@@ -174,7 +174,7 @@ module egret {
                     insertIndex = i;
                 }
             }
-            var eventBin:sys.EventBin = {
+            let eventBin:sys.EventBin = {
                 type: type, listener: listener, thisObject: thisObject, priority: priority,
                 target: this, useCapture: useCapture, dispatchOnce: !!dispatchOnce
             };
@@ -194,9 +194,9 @@ module egret {
          */
         public removeEventListener(type:string, listener:Function, thisObject:any, useCapture?:boolean):void {
 
-            var values = this.$EventDispatcher;
-            var eventMap:Object = useCapture ? values[Keys.captureEventsMap] : values[Keys.eventsMap];
-            var list:egret.sys.EventBin[] = eventMap[type];
+            let values = this.$EventDispatcher;
+            let eventMap:Object = useCapture ? values[Keys.captureEventsMap] : values[Keys.eventsMap];
+            let list:egret.sys.EventBin[] = eventMap[type];
             if (!list) {
                 return;
             }
@@ -211,10 +211,10 @@ module egret {
             }
         }
 
-        $removeEventBin(list:Array<any>, listener:Function, thisObject:any):boolean {
-            var length = list.length;
-            for (var i = 0; i < length; i++) {
-                var bin = list[i];
+        $removeEventBin(list:any[], listener:Function, thisObject:any):boolean {
+            let length = list.length;
+            for (let i = 0; i < length; i++) {
+                let bin = list[i];
                 if (bin.listener == listener && bin.thisObject == thisObject && bin.target == this) {
                     list.splice(i, 1);
                     return true;
@@ -230,7 +230,7 @@ module egret {
          * @platform Web,Native
          */
         public hasEventListener(type:string):boolean {
-            var values = this.$EventDispatcher;
+            let values = this.$EventDispatcher;
             return !!(values[Keys.eventsMap][type] || values[Keys.captureEventsMap][type]);
         }
 
@@ -259,21 +259,21 @@ module egret {
          * @private
          */
         $notifyListener(event:Event, capturePhase:boolean):boolean {
-            var values = this.$EventDispatcher;
-            var eventMap:Object = capturePhase ? values[Keys.captureEventsMap] : values[Keys.eventsMap];
-            var list:egret.sys.EventBin[] = eventMap[event.$type];
+            let values = this.$EventDispatcher;
+            let eventMap:Object = capturePhase ? values[Keys.captureEventsMap] : values[Keys.eventsMap];
+            let list:egret.sys.EventBin[] = eventMap[event.$type];
             if (!list) {
                 return true;
             }
-            var length = list.length;
+            let length = list.length;
             if (length == 0) {
                 return true;
             }
-            var onceList = ONCE_EVENT_LIST;
+            let onceList = ONCE_EVENT_LIST;
             //做个标记，防止外部修改原始数组导致遍历错误。这里不直接调用list.concat()因为dispatch()方法调用通常比on()等方法频繁。
             values[Keys.notifyLevel]++;
-            for (var i = 0; i < length; i++) {
-                var eventBin = list[i];
+            for (let i = 0; i < length; i++) {
+                let eventBin = list[i];
                 eventBin.listener.call(eventBin.thisObject, event);
                 if (eventBin.dispatchOnce) {
                     onceList.push(eventBin);
@@ -284,36 +284,38 @@ module egret {
             }
             values[Keys.notifyLevel]--;
             while (onceList.length) {
-                eventBin = onceList.pop();
+                let eventBin = onceList.pop();
                 eventBin.target.removeEventListener(eventBin.type, eventBin.listener, eventBin.thisObject, eventBin.useCapture);
             }
             return !event.$isDefaultPrevented;
         }
 
         /**
-         * @language en_US
          * Distribute a specified event parameters.
          * @param type The type of the event. Event listeners can access this information through the inherited type property.
          * @param bubbles Determines whether the Event object bubbles. Event listeners can access this information through
          * the inherited bubbles property.
          * @param data {any} data
+         * @param cancelable Determines whether the Event object can be canceled. The default values is false.
          * @version Egret 2.4
          * @platform Web,Native
+         * @language en_US
          */
         /**
-         * @language zh_CN
          * 派发一个指定参数的事件。
          * @param type {string} 事件类型
          * @param bubbles {boolean} 确定 Event 对象是否参与事件流的冒泡阶段。默认值为 false。
          * @param data {any} 事件data
+         * @param cancelable {boolean} 确定是否可以取消 Event 对象。默认值为 false。
          * @version Egret 2.4
          * @platform Web,Native
+         * @language zh_CN
          */
-        public dispatchEventWith(type:string, bubbles?:boolean, data?:any):boolean {
+        public dispatchEventWith(type:string, bubbles?:boolean, data?:any, cancelable?: boolean):boolean {
             if (bubbles || this.hasEventListener(type)) {
-                var event:Event = Event.create(Event, type, bubbles);
+                let event:Event = Event.create(Event, type, bubbles, cancelable);
                 event.data = data;
-                var result = this.dispatchEvent(event);
+                let result = this.dispatchEvent(event);
                 Event.release(event);
                 return result;
             }
@@ -323,7 +325,7 @@ module egret {
 
 }
 
-module egret.sys {
+namespace egret.sys {
     /**
      * @private
      * 事件信息对象

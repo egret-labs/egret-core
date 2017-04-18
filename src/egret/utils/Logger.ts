@@ -1,6 +1,6 @@
 //////////////////////////////////////////////////////////////////////////////////////
 //
-//  Copyright (c) 2014-2015, Egret Technology Inc.
+//  Copyright (c) 2014-present, Egret Technology.
 //  All rights reserved.
 //  Redistribution and use in source and binary forms, with or without
 //  modification, are permitted provided that the following conditions are met:
@@ -27,107 +27,106 @@
 //
 //////////////////////////////////////////////////////////////////////////////////////
 
-module egret {
+namespace egret {
     /**
-     * @language en_US
-     * Logger is an entrance for the log processing module of the engine
+     * Logger is an entrance for the log processing namespace of the engine
      * @version Egret 2.4
      * @platform Web,Native
+     * @language en_US
      */
     /**
-     * @language zh_CN
      * Logger是引擎的日志处理模块入口
      * @version Egret 2.4
      * @platform Web,Native
+     * @language zh_CN
      */
     export class Logger {
 
         /**
-         * @language en_US
          * open all
          * @version Egret 2.4
          * @platform Web,Native
+         * @language en_US
          */
         /**
-         * @language zh_CN
          * 全开
          * @version Egret 2.4
          * @platform Web,Native
+         * @language zh_CN
          */
         public static ALL:string = "all";
 
         /**
-         * @language en_US
          * level: DEBUG
          * @version Egret 2.4
          * @platform Web,Native
+         * @language en_US
          */
         /**
-         * @language zh_CN
          * 等级为 DEBUG
          * @version Egret 2.4
          * @platform Web,Native
+         * @language zh_CN
          */
         public static DEBUG:string = "debug";
 
         /**
-         * @language en_US
          * level: INFO
          * @version Egret 2.4
          * @platform Web,Native
+         * @language en_US
          */
         /**
-         * @language zh_CN
          * 等级为 INFO
          * @version Egret 2.4
          * @platform Web,Native
+         * @language zh_CN
          */
         public static INFO:string = "info";
 
         /**
-         * @language en_US
          * level: WARN
          * @version Egret 2.4
          * @platform Web,Native
+         * @language en_US
          */
         /**
-         * @language zh_CN
          * 等级为 WARN
          * @version Egret 2.4
          * @platform Web,Native
+         * @language zh_CN
          */
         public static WARN:string = "warn";
 
         /**
-         * @language en_US
          * level: ERROR
          * @version Egret 2.4
          * @platform Web,Native
+         * @language en_US
          */
         /**
-         * @language zh_CN
          * 等级为 ERROR
          * @version Egret 2.4
          * @platform Web,Native
+         * @language zh_CN
          */
         public static ERROR:string = "error";
 
         /**
-         * @language en_US
          * close all
          * @version Egret 2.4
          * @platform Web,Native
+         * @language en_US
          */
         /**
-         * @language zh_CN
          * 全关
          * @version Egret 2.4
          * @platform Web,Native
+         * @language zh_CN
          */
         public static OFF:string = "off";
 
         /**
-         * @language en_US
          * Set the current need to open the log level. Grade level are: ALL <DEBUG <INFO <WARN <ERROR <OFF<br/>
          * This feature is only in DEBUG mode to take effect. <br/>
          * <Ul>
@@ -141,9 +140,9 @@ module egret {
          *param LogType from this level to start printing.
          * @version Egret 2.4
          * @platform Web,Native
+         * @language en_US
          */
         /**
-         * @language zh_CN
          * 设置当前需要开启的log级别。级别等级分别为：ALL < DEBUG < INFO < WARN < ERROR < OFF<br/>
          * 此功能只在 DEBUG 模式下才生效。<br/>
          * <ul>
@@ -157,6 +156,7 @@ module egret {
          * @param logType 从这个等级开始打印。
          * @version Egret 2.4
          * @platform Web,Native
+         * @language zh_CN
          */
         public static set logLevel(logType:string) {
         }

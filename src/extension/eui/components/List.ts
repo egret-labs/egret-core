@@ -1,6 +1,6 @@
 //////////////////////////////////////////////////////////////////////////////////////
 //
-//  Copyright (c) 2014-2015, Egret Technology Inc.
+//  Copyright (c) 2014-present, Egret Technology.
 //  All rights reserved.
 //  Redistribution and use in source and binary forms, with or without
 //  modification, are permitted provided that the following conditions are met:
@@ -27,10 +27,9 @@
 //
 //////////////////////////////////////////////////////////////////////////////////////
 
-module eui {
+namespace eui {
 
     /**
-     * @language en_US
      * The List control displays a vertical or horizontal list of items.
      * The user can select one or more items from the list, depending
      * on the value of the <code>allowMultipleSelection</code> property.
@@ -39,21 +38,21 @@ module eui {
      * @version eui 1.0
      * @platform Web,Native
      * @includeExample  extension/eui/components/ListExample.ts
+     * @language en_US
      */
     /**
-     * @language zh_CN
      * List 控件可显示垂直或水平的项目列表。用户可以根据 <code>allowMultipleSelection</code> 属性的值从列表中选择一个或多个项目。
      *
      * @version Egret 2.4
      * @version eui 1.0
      * @platform Web,Native
      * @includeExample  extension/eui/components/ListExample.ts
+     * @language zh_CN
      */
     export class List extends ListBase {
 
 
         /**
-         * @language en_US
          * whether are allowed to multiple selection.
          * If <code>true</code> tap an unselected item will be selected,
          * and tap the item again will cancel selection.
@@ -63,9 +62,9 @@ module eui {
          * @version Egret 2.4
          * @version eui 1.0
          * @platform Web,Native
+         * @language en_US
          */
         /**
-         * @language zh_CN
          * 是否允许同时选中多项,设置为 <code>true</code> 时，触摸按下未选中的项呈示器，将会设置该项选中，再次按下将会取消选中。
          * 可以设置多项为选中状态。
          *
@@ -74,6 +73,7 @@ module eui {
          * @version Egret 2.4
          * @version eui 1.0
          * @platform Web,Native
+         * @language zh_CN
          */
         public allowMultipleSelection:boolean = false;
 
@@ -88,7 +88,6 @@ module eui {
         private _proposedSelectedIndices:number[];
 
         /**
-         * @language en_US
          * An Array of numbers representing the indices of the currently selected
          * item or items.
          *
@@ -97,9 +96,9 @@ module eui {
          * @version Egret 2.4
          * @version eui 1.0
          * @platform Web,Native
+         * @language en_US
          */
         /**
-         * @language zh_CN
          * 当前选中的一个或多个项目的索引列表。
          *
          * @default []
@@ -107,6 +106,7 @@ module eui {
          * @version Egret 2.4
          * @version eui 1.0
          * @platform Web,Native
+         * @language zh_CN
          */
         public get selectedIndices():number[] {
             if (this._proposedSelectedIndices)
@@ -139,27 +139,27 @@ module eui {
         }
 
         /**
-         * @language en_US
          * An Array representing the currently selected data items.
          *
          * @version Egret 2.4
          * @version eui 1.0
          * @platform Web,Native
+         * @language en_US
          */
         /**
-         * @language zh_CN
          * 表示当前选定数据项的列表
          *
          * @version Egret 2.4
          * @version eui 1.0
          * @platform Web,Native
+         * @language zh_CN
          */
         public get selectedItems():any[] {
-            var result:any[] = [];
-            var list = this.selectedIndices;
+            let result:any[] = [];
+            let list = this.selectedIndices;
             if (list) {
-                var count = list.length;
-                for (var i = 0; i < count; i++) {
+                let count = list.length;
+                for (let i = 0; i < count; i++) {
                     result[i] = this.$dataProvider.getItemAt(list[i]);
                 }
             }
@@ -167,13 +167,13 @@ module eui {
         }
 
         public set selectedItems(value:any[]) {
-            var indices:number[] = [];
+            let indices:number[] = [];
 
             if (value) {
-                var count = value.length;
+                let count = value.length;
 
-                for (var i = 0; i < count; i++) {
-                    var index:number = this.$dataProvider.getItemIndex(value[i]);
+                for (let i = 0; i < count; i++) {
+                    let index:number = this.$dataProvider.getItemIndex(value[i]);
                     if (index != -1) {
                         indices.splice(0, 0, index);
                     }
@@ -187,7 +187,6 @@ module eui {
         }
 
         /**
-         * @language en_US
          * Specify whether the selectedIndices changed programmatically or due to
          * user interaction.
          *
@@ -197,9 +196,9 @@ module eui {
          * @version Egret 2.4
          * @version eui 1.0
          * @platform Web,Native
+         * @language en_US
          */
         /**
-         * @language zh_CN
          * 设置多个选中项。
          *
          * @param value 选中项索引的数组
@@ -208,9 +207,10 @@ module eui {
          * @version Egret 2.4
          * @version eui 1.0
          * @platform Web,Native
+         * @language zh_CN
          */
         protected setSelectedIndices(value:number[], dispatchChangeEvent?:boolean):void {
-            var values = this.$ListBase;
+            let values = this.$ListBase;
             if (dispatchChangeEvent)
                 values[sys.ListBaseKeys.dispatchChangeAfterSelection] =
                     (values[sys.ListBaseKeys.dispatchChangeAfterSelection] || dispatchChangeEvent);
@@ -244,13 +244,13 @@ module eui {
          * @platform Web,Native
          */
         protected commitSelection(dispatchChangedEvents:boolean = true):boolean {
-            var values = this.$ListBase;
-            var oldSelectedIndex = values[sys.ListBaseKeys.selectedIndex];
+            let values = this.$ListBase;
+            let oldSelectedIndex = values[sys.ListBaseKeys.selectedIndex];
             if (this._proposedSelectedIndices) {
                 this._proposedSelectedIndices = this._proposedSelectedIndices.filter(this.isValidIndex);
 
                 if (!this.allowMultipleSelection && this._proposedSelectedIndices.length > 0) {
-                    var temp:number[] = [];
+                    let temp:number[] = [];
                     temp.push(this._proposedSelectedIndices[0]);
                     this._proposedSelectedIndices = temp;
                 }
@@ -262,14 +262,14 @@ module eui {
                 }
             }
 
-            var retVal = super.commitSelection(false);
+            let retVal = super.commitSelection(false);
 
             if (!retVal) {
                 this._proposedSelectedIndices = null;
                 return false;
             }
 
-            var selectedIndex = this.$getSelectedIndex();
+            let selectedIndex = this.$getSelectedIndex();
             if (selectedIndex > ListBase.NO_SELECTION) {
                 if (this._proposedSelectedIndices) {
                     if (this._proposedSelectedIndices.indexOf(selectedIndex) == -1)
@@ -307,7 +307,6 @@ module eui {
         }
 
         /**
-         * @language en_US
          * Given a new selection interval, figure out which
          * items are newly added/removed from the selection interval and update
          * selection properties and view accordingly.
@@ -315,23 +314,24 @@ module eui {
          * @version Egret 2.4
          * @version eui 1.0
          * @platform Web,Native
+         * @language en_US
          */
         /**
-         * @language zh_CN
          * 从给定的选择区间中找出新增或者移除的项，并更新属性。
          *
          * @version Egret 2.4
          * @version eui 1.0
          * @platform Web,Native
+         * @language zh_CN
          */
         protected commitMultipleSelection():void {
-            var removedItems:number[] = [];
-            var addedItems:number[] = [];
-            var i:number;
-            var count:number;
+            let removedItems:number[] = [];
+            let addedItems:number[] = [];
+            let i:number;
+            let count:number;
 
-            var selectedIndices = this._selectedIndices;
-            var proposedSelectedIndices = this._proposedSelectedIndices;
+            let selectedIndices = this._selectedIndices;
+            let proposedSelectedIndices = this._proposedSelectedIndices;
             if (selectedIndices.length > 0 && proposedSelectedIndices.length > 0) {
                 count = proposedSelectedIndices.length;
                 for (i = 0; i < count; i++) {
@@ -401,9 +401,9 @@ module eui {
          * 计算当前的选中项列表
          */
         private calculateSelectedIndices(index:number):number[] {
-            var interval:number[] = [];
-            var selectedIndices = this._selectedIndices;
-            var length = selectedIndices.length;
+            let interval:number[] = [];
+            let selectedIndices = this._selectedIndices;
+            let length = selectedIndices.length;
             if (length > 0) {
                 if (length == 1 && (selectedIndices[0] == index)) {
                     if (!this.$ListBase[sys.ListBaseKeys.requireSelection]) {
@@ -413,8 +413,8 @@ module eui {
                     return interval;
                 }
                 else {
-                    var found = false;
-                    for (var i = 0; i < length; i++) {
+                    let found = false;
+                    for (let i = 0; i < length; i++) {
                         if (selectedIndices[i] == index) {
                             found = true;
                         }
@@ -443,8 +443,8 @@ module eui {
          */
         protected onRendererTouchEnd(event:egret.TouchEvent):void {
             if (this.allowMultipleSelection) {
-                var itemRenderer = <IItemRenderer> (event.currentTarget);
-                var touchDownItemRenderer = this.$ListBase[sys.ListBaseKeys.touchDownItemRenderer];
+                let itemRenderer = <IItemRenderer> (event.currentTarget);
+                let touchDownItemRenderer = this.$ListBase[sys.ListBaseKeys.touchDownItemRenderer];
                 if (itemRenderer != touchDownItemRenderer)
                     return;
                 this.setSelectedIndices(this.calculateSelectedIndices(itemRenderer.itemIndex), true);

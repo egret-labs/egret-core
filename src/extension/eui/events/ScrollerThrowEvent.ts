@@ -1,4 +1,4 @@
-module eui {
+namespace eui {
 
     /**
      * @private

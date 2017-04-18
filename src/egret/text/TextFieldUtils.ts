@@ -1,6 +1,6 @@
 //////////////////////////////////////////////////////////////////////////////////////
 //
-//  Copyright (c) 2014-2015, Egret Technology Inc.
+//  Copyright (c) 2014-present, Egret Technology.
 //  All rights reserved.
 //  Redistribution and use in source and binary forms, with or without
 //  modification, are permitted provided that the following conditions are met:
@@ -28,7 +28,7 @@
 //////////////////////////////////////////////////////////////////////////////////////
 
 
-module egret {
+namespace egret {
     /**
      * @private
      * @version Egret 2.4
@@ -43,10 +43,10 @@ module egret {
          * @private
          */
         static $getStartLine(textfield:egret.TextField):number {
-            var values = textfield.$TextField;
-            var textHeight:number = TextFieldUtils.$getTextHeight(textfield);
-            var startLine:number = 0;
-            var textFieldHeight: number = values[sys.TextKeys.textFieldHeight];
+            let values = textfield.$TextField;
+            let textHeight:number = TextFieldUtils.$getTextHeight(textfield);
+            let startLine:number = 0;
+            let textFieldHeight: number = values[sys.TextKeys.textFieldHeight];
             if (!isNaN(textFieldHeight)) {//
                 if (textHeight < textFieldHeight) {//最大高度比需要显示的高度小
 
@@ -74,8 +74,8 @@ module egret {
          * @private
          */
         static $getHalign(textfield:egret.TextField):number {
-            var lineArr:Array<egret.ILineElement>  = textfield.$getLinesArr();
-            var halign:number = 0;
+            let lineArr:Array<egret.ILineElement>  = textfield.$getLinesArr();
+            let halign:number = 0;
             if (textfield.$TextField[sys.TextKeys.textAlign] == HorizontalAlign.CENTER) {
                 halign = 0.5;
             }
@@ -97,7 +97,7 @@ module egret {
          * @returns 
          */
         static $getTextHeight(textfield:egret.TextField):number {
-            var textHeight:number = (egret.TextFieldType.INPUT == textfield.$TextField[sys.TextKeys.type]
+            let textHeight:number = (egret.TextFieldType.INPUT == textfield.$TextField[sys.TextKeys.type]
                 && !textfield.$TextField[sys.TextKeys.multiline]) ? textfield.$TextField[sys.TextKeys.fontSize] : (textfield.$TextField[sys.TextKeys.textHeight] + (textfield.$TextField[sys.TextKeys.numLines] - 1) * textfield.$TextField[sys.TextKeys.lineSpacing]);
             return textHeight;
         }
@@ -109,17 +109,17 @@ module egret {
          * @private
          */
         static $getValign(textfield:egret.TextField):number{
-            var textHeight:number = TextFieldUtils.$getTextHeight(textfield);
+            let textHeight:number = TextFieldUtils.$getTextHeight(textfield);
             //if (textfield.$TextField[sys.TextKeys.type] == egret.TextFieldType.INPUT) {
             //    if (textfield.$TextField[sys.TextKeys.multiline]) {
                     //return 0;
                 //}
                 //return 0.5;
             //}
-            var textFieldHeight:number = textfield.$TextField[sys.TextKeys.textFieldHeight];
+            let textFieldHeight:number = textfield.$TextField[sys.TextKeys.textFieldHeight];
             if (!isNaN(textFieldHeight)) {//
                 if (textHeight < textFieldHeight) {//最大高度比需要显示的高度小
-                    var valign:number = 0;
+                    let valign:number = 0;
                     if (textfield.$TextField[sys.TextKeys.verticalAlign] == VerticalAlign.MIDDLE)
                         valign = 0.5;
                     else if (textfield.$TextField[sys.TextKeys.verticalAlign] == VerticalAlign.BOTTOM)
@@ -140,9 +140,9 @@ module egret {
          * @private
          */
         static $getTextElement(textfield:egret.TextField, x:number, y:number):ITextElement {
-            var hitTextEle:IHitTextElement = TextFieldUtils.$getHit(textfield, x, y);
+            let hitTextEle:IHitTextElement = TextFieldUtils.$getHit(textfield, x, y);
 
-            var lineArr:Array<egret.ILineElement>  = textfield.$getLinesArr();
+            let lineArr:Array<egret.ILineElement>  = textfield.$getLinesArr();
             if (hitTextEle && lineArr[hitTextEle.lineIndex] && lineArr[hitTextEle.lineIndex].elements[hitTextEle.textElementIndex]) {
                 return lineArr[hitTextEle.lineIndex].elements[hitTextEle.textElementIndex];
             }
@@ -158,29 +158,31 @@ module egret {
          * @private
          */
         static $getHit(textfield:egret.TextField, x:number, y:number):IHitTextElement {
-            var lineArr:Array<egret.ILineElement>  = textfield.$getLinesArr();
+            let lineArr:Array<egret.ILineElement>  = textfield.$getLinesArr();
             if (textfield.$TextField[sys.TextKeys.textFieldWidth] == 0) {//文本可点击区域
                 return null;
             }
-            var line:number = 0;
+            let line:number = 0;
 
-            var textHeight:number = TextFieldUtils.$getTextHeight(textfield);
-            var startY:number = 0;
-            var textFieldHeight:number = textfield.$TextField[sys.TextKeys.textFieldHeight];
+            let textHeight:number = TextFieldUtils.$getTextHeight(textfield);
+            let startY:number = 0;
+            let textFieldHeight:number = textfield.$TextField[sys.TextKeys.textFieldHeight];
             if (!isNaN(textFieldHeight) && textFieldHeight > textHeight) {
-                var valign:number = TextFieldUtils.$getValign(textfield);
+                let valign:number = TextFieldUtils.$getValign(textfield);
                 startY = valign * (textFieldHeight - textHeight);
                 if (startY != 0) {
                     y -= startY;
                 }
             }
 
-            var startLine:number = TextFieldUtils.$getStartLine(textfield);
-            var lineH:number = 0;
-            for (var i:number = startLine; i < lineArr.length; i++) {
-                var lineEle:egret.ILineElement = lineArr[i];
+            let startLine:number = TextFieldUtils.$getStartLine(textfield);
+            let lineH:number = 0;
+            for (let i:number = startLine; i < lineArr.length; i++) {
+                let lineEle:egret.ILineElement = lineArr[i];
                 if (lineH + lineEle.height >= y) {
-                    line = i + 1;
+                    if (lineH < y) {
+                        line = i + 1;
+                    }
                     break;
                 }
                 else {
@@ -196,13 +198,23 @@ module egret {
             if(line == 0) {
                 return null;
             }
-            var lineElement:egret.ILineElement = lineArr[line - 1];
-            var startX:number = TextFieldUtils.$getHalign(textfield) * (textfield.width - egret.sys.measureText(textfield.text, textfield.fontFamily, textfield.size, textfield.bold, textfield.italic));
-            var lineW:number = startX;
-            for (i = 0; i < lineElement.elements.length; i++) {
-                var iwTE:IWTextElement = lineElement.elements[i];
-                lineW += iwTE.width;
-                if (x >= startX && x <= lineW) {
+            let lineElement:egret.ILineElement = lineArr[line - 1];
+
+
+            let textFieldWidth:number = textfield.$TextField[sys.TextKeys.textFieldWidth];
+            if (isNaN(textFieldWidth)) {
+                textFieldWidth = textfield.textWidth;
+            }
+            let halign:number = TextFieldUtils.$getHalign(textfield);
+            x -= halign * (textFieldWidth - lineElement.width);
+            let lineW:number = 0;
+            for (let i = 0; i < lineElement.elements.length; i++) {
+                let iwTE:IWTextElement = lineElement.elements[i];
+
+                if (lineW + iwTE.width <= x) {
+                    lineW += iwTE.width;
+                }
+                else if (lineW < x) {
                     return {"lineIndex" : line - 1, "textElementIndex" : i};
                 }
             }
@@ -217,13 +229,13 @@ module egret {
          * @private
          */
         static $getScrollNum(textfield:egret.TextField):number {
-            var scrollNum:number = 1;
+            let scrollNum:number = 1;
             if (textfield.$TextField[sys.TextKeys.multiline]) {
-                var height = textfield.height;
-                var size = textfield.size;
-                var lineSpacing = textfield.lineSpacing;
+                let height = textfield.height;
+                let size = textfield.size;
+                let lineSpacing = textfield.lineSpacing;
                 scrollNum = Math.floor(height / (size + lineSpacing));
-                var leftH = height - (size + lineSpacing) * scrollNum;
+                let leftH = height - (size + lineSpacing) * scrollNum;
                 if (leftH > size / 2) {
                     scrollNum++;
                 }

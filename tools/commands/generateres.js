@@ -1,5 +1,5 @@
 /// <reference path="../lib/types.d.ts" />
-var FileUtil = require('../lib/FileUtil');
+var FileUtil = require("../lib/FileUtil");
 var GenerateResource = (function () {
     function GenerateResource() {
     }
@@ -22,7 +22,7 @@ var GenerateResource = (function () {
         return 0;
     };
     return GenerateResource;
-})();
+}());
 var resourceExtensions = {
     png: true,
     jpg: true,
@@ -50,5 +50,3 @@ function isResource(fileName) {
     return ext in resourceExtensions;
 }
 module.exports = GenerateResource;
-
-//# sourceMappingURL=generateres.js.map

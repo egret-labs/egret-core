@@ -1,6 +1,6 @@
 //////////////////////////////////////////////////////////////////////////////////////
 //
-//  Copyright (c) 2014-2015, Egret Technology Inc.
+//  Copyright (c) 2014-present, Egret Technology.
 //  All rights reserved.
 //  Redistribution and use in source and binary forms, with or without
 //  modification, are permitted provided that the following conditions are met:
@@ -27,7 +27,7 @@
 //
 //////////////////////////////////////////////////////////////////////////////////////
 
-module egret.sys {
+namespace egret.sys {
 
     /**
      * @private
@@ -42,6 +42,6 @@ module egret.sys {
          * 更新对象在舞台上的显示区域和透明度,返回显示区域是否发生改变。
          * 注意：此方法必须在$getRenderNode()被调用之后执行。
          */
-        $update():boolean;
+        $update(dirtyRegionPolicy:string, bounds?:Rectangle):boolean;
     }
 }

@@ -1,6 +1,6 @@
 //////////////////////////////////////////////////////////////////////////////////////
 //
-//  Copyright (c) 2014-2015, Egret Technology Inc.
+//  Copyright (c) 2014-present, Egret Technology.
 //  All rights reserved.
 //  Redistribution and use in source and binary forms, with or without
 //  modification, are permitted provided that the following conditions are met:
@@ -28,7 +28,7 @@
 //////////////////////////////////////////////////////////////////////////////////////
 
 
-module egret.gui {
+namespace egret.gui {
 
     /**
      * @class egret.gui.PopUpManagerImpl
@@ -46,26 +46,26 @@ module egret.gui {
             super();
         }
 
-        private _popUpList:Array<any> = [];
+        private _popUpList:any[] = [];
         /**
          * 已经弹出的窗口列表
          * @member egret.gui.PopUpManagerImpl#popUpList
          */
-        public get popUpList():Array<any>{
+        public get popUpList():any[]{
             return this._popUpList.concat();
         }
         /**
          * 模态窗口列表
          */
-        private popUpDataList:Array<any> = [];
+        private popUpDataList:any[] = [];
         /**
          * 根据popUp获取对应的popUpData
          */
         private findPopUpData(popUp:IVisualElement):PopUpData{
-            var list:Array<any> = this.popUpDataList;
-            var length:number = list.length;
-            for(var i:number=0;i<length;i++){
-                var data:PopUpData = list[i];
+            let list:any[] = this.popUpDataList;
+            let length:number = list.length;
+            for(let i:number=0;i<length;i++){
+                let data:PopUpData = list[i];
                 if(data.popUp==popUp)
                     return data;
             }
@@ -81,8 +81,8 @@ module egret.gui {
          * @param center {boolean} 是否居中窗口。等效于在外部调用centerPopUp()来居中。默认true。
          */
         public addPopUp(popUp:IVisualElement,modal:boolean=false,center:boolean=true):void{
-            var uiStage:IUIStage = UIGlobals.uiStage;
-            var data:PopUpData = this.findPopUpData(popUp);
+            let uiStage:IUIStage = UIGlobals.uiStage;
+            let data:PopUpData = this.findPopUpData(popUp);
             if(data){
                 data.modal = modal;
                 popUp.removeEventListener(PopUpManagerImpl.REMOVE_FROM_UISTAGE,this.onRemoved,this);
@@ -107,11 +107,11 @@ module egret.gui {
          * 从舞台移除
          */
         private onRemoved(event:Event):void{
-            var index:number = 0;
-            var list:Array<any> = this.popUpDataList;
-            var length:number = list.length;
-            for(var i:number=0;i<length;i++){
-                var data:PopUpData = list[i];
+            let index:number = 0;
+            let list:any[] = this.popUpDataList;
+            let length:number = list.length;
+            for(let i:number=0;i<length;i++){
+                let data:PopUpData = list[i];
                 if(data.popUp==event.target){
                     if("isPopUp" in data.popUp)
                         (<IUIComponent> (data.popUp)).isPopUp = false;
@@ -181,11 +181,12 @@ module egret.gui {
          * 更新窗口模态效果
          */
         private updateModal(uiStage:IUIStage):void{
-            var popUpContainer:IContainer = uiStage.popUpContainer;
-            var found:boolean = false;
-            for(var i:number = popUpContainer.numElements-1;i>=0;i--){
-                var element:IVisualElement = popUpContainer.getElementAt(i);
-                var data:PopUpData = this.findPopUpData(element);
+            let popUpContainer:IContainer = uiStage.popUpContainer;
+            let found:boolean = false;
+            let i:number;
+            for(i = popUpContainer.numElements-1;i>=0;i--){
+                let element:IVisualElement = popUpContainer.getElementAt(i);
+                let data:PopUpData = this.findPopUpData(element);
                 if(data&&data.modal){
                     found = true;
                     break;
@@ -237,7 +238,7 @@ module egret.gui {
         public centerPopUp(popUp:IVisualElement):void{
             popUp.top = popUp.bottom = popUp.left = popUp.right = NaN;
             popUp.verticalCenter = popUp.horizontalCenter = 0;
-            var parent:DisplayObjectContainer = popUp.parent;
+            let parent:DisplayObjectContainer = popUp.parent;
             if(parent){
                 if("validateNow" in popUp)
                     (<IInvalidating><any>popUp).validateNow();
@@ -252,9 +253,9 @@ module egret.gui {
          * @param popUp {IVisualElement} 要最前显示的窗口
          */
         public bringToFront(popUp:IVisualElement):void{
-            var data:PopUpData = this.findPopUpData(popUp);
+            let data:PopUpData = this.findPopUpData(popUp);
             if(data&&popUp.parent&&"popUpContainer" in popUp.parent){
-                var uiStage:IUIStage = <IUIStage><any>(popUp.parent);
+                let uiStage:IUIStage = <IUIStage><any>(popUp.parent);
                 uiStage.popUpContainer.setElementIndex(popUp,uiStage.popUpContainer.numElements-1);
                 this.invalidateModal();
             }

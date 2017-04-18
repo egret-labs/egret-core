@@ -1,6 +1,6 @@
 //////////////////////////////////////////////////////////////////////////////////////
 //
-//  Copyright (c) 2014-2015, Egret Technology Inc.
+//  Copyright (c) 2014-present, Egret Technology.
 //  All rights reserved.
 //  Redistribution and use in source and binary forms, with or without
 //  modification, are permitted provided that the following conditions are met:
@@ -28,10 +28,9 @@
 //////////////////////////////////////////////////////////////////////////////////////
 
 
-module eui {
+namespace eui {
 
     /**
-     * @language en_US
      * The State class defines a view state, a particular view of a component.
      *
      * For example, a product thumbnail could have two view states;
@@ -41,9 +40,9 @@ module eui {
      * @version Egret 2.4
      * @version eui 1.0
      * @platform Web,Native
+     * @language en_US
      */
     /**
-     * @language zh_CN
      * State 类定义视图状态，即组件的特定视图。
      *
      * 例如，产品缩略图可以有两个视图状态，包含最少信息的基本视图状态和包含附加信息的丰富视图状态。
@@ -51,10 +50,10 @@ module eui {
      * @version Egret 2.4
      * @version eui 1.0
      * @platform Web,Native
+     * @language zh_CN
      */
     export class State extends egret.HashObject {
         /**
-         * @language en_US
          * Constructor.
          *
          * @param name The name of the view state.
@@ -67,9 +66,9 @@ module eui {
          * @version Egret 2.4
          * @version eui 1.0
          * @platform Web,Native
+         * @language en_US
          */
         /**
-         * @language zh_CN
          * 创建一个State实例。
          *
          * @param name 视图状态的名称。给定组件的状态名称必须唯一。必须设置此属性。
@@ -79,6 +78,7 @@ module eui {
          * @version Egret 2.4
          * @version eui 1.0
          * @platform Web,Native
+         * @language zh_CN
          */
         public constructor(name:string, overrides:IOverride[]=[]) {
             super();
@@ -87,7 +87,6 @@ module eui {
         }
 
         /**
-         * @language en_US
          * The name of the view state.
          * State names must be unique for a given component.
          * This property must be set.
@@ -95,19 +94,19 @@ module eui {
          * @version Egret 2.4
          * @version eui 1.0
          * @platform Web,Native
+         * @language en_US
          */
         /**
-         * @language zh_CN
          * 视图状态的名称。给定组件的状态名称必须唯一。必须设置此属性。
          *
          * @version Egret 2.4
          * @version eui 1.0
          * @platform Web,Native
+         * @language zh_CN
          */
         public name:string;
 
         /**
-         * @language en_US
          * The overrides for this view state, as an Array of objects that implement
          * the IOverride interface. These overrides are applied in order when the
          * state is entered, and removed in reverse order when the state is exited.
@@ -115,53 +114,54 @@ module eui {
          * @version Egret 2.4
          * @version eui 1.0
          * @platform Web,Native
+         * @language en_US
          */
         /**
-         * @language zh_CN
          * 该视图状态的覆盖，表现为实现 IOverride 接口的对象的数组。
          * 这些覆盖在进入状态时按顺序应用，在退出状态时按相反的顺序删除。
          * @version Egret 2.4
          * @version eui 1.0
          * @platform Web,Native
+         * @language zh_CN
          */
         public overrides:IOverride[];
         /**
-         * @language en_US
          * The state groups that this view state belongs to as an array of String.
          * @version Egret 2.4
          * @version eui 1.0
          * @platform Web,Native
+         * @language en_US
          */
         /**
-         * @language zh_CN
          * 此视图状态作为 string 数组所属的状态组。
          * @version Egret 2.4
          * @version eui 1.0
          * @platform Web,Native
+         * @language zh_CN
          */
         public stateGroups:string[];
 
         /**
-         * @language en_US
          * Initialize this state and all of its overrides.
          * @version Egret 2.4
          * @version eui 1.0
          * @platform Web,Native
+         * @language en_US
          */
         /**
-         * @language zh_CN
          * 初始化视图状态
          * @version Egret 2.4
          * @version eui 1.0
          * @platform Web,Native
+         * @language zh_CN
          */
         public initialize(host:any, stage:egret.Stage):void {
-            var overrides = this.overrides;
-            var length = overrides.length;
-            for (var i = 0; i < length; i++) {
-                var addItems:AddItems = <AddItems>overrides[i];
+            let overrides = this.overrides;
+            let length = overrides.length;
+            for (let i = 0; i < length; i++) {
+                let addItems:AddItems = <AddItems>overrides[i];
                 if (addItems instanceof eui.AddItems) {
-                    var target:egret.DisplayObject = host[addItems.target];
+                    let target:egret.DisplayObject = host[addItems.target];
                     if (target&&target instanceof eui.Image&&!target.$parent) {
                         stage.addChild(target);
                         stage.removeChild(target);
@@ -173,7 +173,7 @@ module eui {
 
 }
 
-module eui.sys {
+namespace eui.sys {
 
     /**
      * @private
@@ -196,12 +196,12 @@ module eui.sys {
         public set states(value:eui.State[]) {
             if (!value)
                 value = [];
-            var values = this.$stateValues;
+            let values = this.$stateValues;
             values.states = value;
-            var statesMap = {};
-            var length = value.length;
-            for (var i = 0; i < length; i++) {
-                var state = value[i];
+            let statesMap = {};
+            let length = value.length;
+            for (let i = 0; i < length; i++) {
+                let state = value[i];
                 statesMap[state.name] = state;
             }
             values.statesMap = statesMap;
@@ -219,7 +219,7 @@ module eui.sys {
         }
 
         public set currentState(value:string) {
-            var values = this.$stateValues;
+            let values = this.$stateValues;
             values.explicitState = value;
             values.currentState = value;
             this.commitCurrentState();
@@ -230,11 +230,11 @@ module eui.sys {
          * 应用当前的视图状态。子类覆盖此方法在视图状态发生改变时执行相应更新操作。
          */
         private commitCurrentState():void {
-            var values = this.$stateValues;
+            let values = this.$stateValues;
             if (!values.parent) {
                 return;
             }
-            var destination:eui.State = values.statesMap[values.currentState];
+            let destination:eui.State = values.statesMap[values.currentState];
             if (!destination) {
                 if (values.states.length > 0) {
                     values.currentState = values.states[0].name;
@@ -247,12 +247,12 @@ module eui.sys {
                 return;
             }
 
-            var parent = values.parent;
-            var state = values.statesMap[values.oldState];
+            let parent = values.parent;
+            let state = values.statesMap[values.oldState];
             if (state) {
-                var overrides = state.overrides;
-                var length = overrides.length;
-                for (var i = 0; i < length; i++) {
+                let overrides = state.overrides;
+                let length = overrides.length;
+                for (let i = 0; i < length; i++) {
                     overrides[i].remove(this, parent);
                 }
             }
@@ -261,9 +261,9 @@ module eui.sys {
 
             state = values.statesMap[values.currentState];
             if (state) {
-                overrides = state.overrides;
-                length = overrides.length;
-                for (i = 0; i < length; i++) {
+                let overrides = state.overrides;
+                let length = overrides.length;
+                for (let i = 0; i < length; i++) {
                     overrides[i].apply(this, parent);
                 }
             }
@@ -284,9 +284,9 @@ module eui.sys {
          */
         private initializeStates(stage:egret.Stage):void {
             this.$stateValues.intialized = true;
-            var states = this.states;
-            var length = states.length;
-            for (var i = 0; i < length; i++) {
+            let states = this.states;
+            let length = states.length;
+            for (let i = 0; i < length; i++) {
                 states[i].initialize(this,stage);
             }
         }

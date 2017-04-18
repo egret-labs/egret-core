@@ -1,6 +1,6 @@
 //////////////////////////////////////////////////////////////////////////////////////
 //
-//  Copyright (c) 2014-2015, Egret Technology Inc.
+//  Copyright (c) 2014-present, Egret Technology.
 //  All rights reserved.
 //  Redistribution and use in source and binary forms, with or without
 //  modification, are permitted provided that the following conditions are met:
@@ -28,7 +28,7 @@
 //////////////////////////////////////////////////////////////////////////////////////
 
 
-module egret.gui {
+namespace egret.gui {
 
 	/**
 	 * @class egret.gui.TrackBase
@@ -158,7 +158,7 @@ module egret.gui {
 		 * @param increase {boolean} 
 		 */
 		public changeValueByStep(increase:boolean = true):void{
-			var prevValue:number = this.value;
+			let prevValue:number = this.value;
 			
 			super.changeValueByStep(increase);
 			
@@ -280,7 +280,7 @@ module egret.gui {
 			UIGlobals.stage.addEventListener(Event.LEAVE_STAGE,this.stage_mouseUpHandler,this);
 			this.addEventListener(Event.ENTER_FRAME,this.onEnterFrame,this);
 			
-			var clickOffset:Point = this.thumb.globalToLocal(event.stageX, event.stageY,egret.$TempPoint);
+			let clickOffset:Point = this.thumb.globalToLocal(event.stageX, event.stageY,egret.$TempPoint);
             this._clickOffsetX = clickOffset.x;
             this._clickOffsetY = clickOffset.y;
 
@@ -309,8 +309,8 @@ module egret.gui {
 		public updateWhenMouseMove():void{
 			if(!this.track)
 				return;
-			var p:Point = this.track.globalToLocal(this._moveStageX, this._moveStageY,egret.$TempPoint);
-			var newValue:number = this.pointToValue(p.x - this._clickOffsetX, p.y - this._clickOffsetY);
+			let p:Point = this.track.globalToLocal(this._moveStageX, this._moveStageY,egret.$TempPoint);
+			let newValue:number = this.pointToValue(p.x - this._clickOffsetX, p.y - this._clickOffsetY);
 			newValue = this.nearestValidValue(newValue, this.snapInterval);
 			
 			if (newValue != this.value){
@@ -398,9 +398,9 @@ module egret.gui {
 			UIGlobals.stage.removeEventListener(TouchEvent.TOUCH_END, this.stage_mouseUpSomewhereHandler, this);
 			UIGlobals.stage.removeEventListener(Event.LEAVE_STAGE,this.stage_mouseUpSomewhereHandler,this);
 			if (this.mouseDownTarget != event.target && event instanceof TouchEvent && this.contains(<DisplayObject> (event.target))){ 
-				var mEvent:TouchEvent = <TouchEvent> event;
+				let mEvent:TouchEvent = <TouchEvent> event;
 
-                var mousePoint:Point = (<DisplayObject> (event.target)).localToGlobal(mEvent.localX, mEvent.localY);
+                let mousePoint:Point = (<DisplayObject> (event.target)).localToGlobal(mEvent.localX, mEvent.localY);
 
                 TouchEvent.dispatchTouchEvent(this,
                     TouchEvent.TOUCH_TAP, false, false,mousePoint.x,mousePoint.y ,mEvent.touchPointID,mEvent.touchDown);

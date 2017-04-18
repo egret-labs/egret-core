@@ -1,8 +1,8 @@
-module egret {
+namespace egret {
 
     $locale_strings = $locale_strings || {};
     $locale_strings["en_US"] = $locale_strings["en_US"] || {};
-    var locale_strings = $locale_strings["en_US"];
+    let locale_strings = $locale_strings["en_US"];
 
     //RES 3200-3299
     locale_strings[3200] = "RES.createGroup() passed in non-existed key value in configuration: {0}";

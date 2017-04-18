@@ -1,6 +1,6 @@
 //////////////////////////////////////////////////////////////////////////////////////
 //
-//  Copyright (c) 2014-2015, Egret Technology Inc.
+//  Copyright (c) 2014-present, Egret Technology.
 //  All rights reserved.
 //  Redistribution and use in source and binary forms, with or without
 //  modification, are permitted provided that the following conditions are met:
@@ -28,7 +28,7 @@
 //////////////////////////////////////////////////////////////////////////////////////
 
 
-module egret.gui {
+namespace egret.gui {
 
 	/**
 	 * @class egret.gui.TitleWindow
@@ -151,7 +151,7 @@ module egret.gui {
 		 */		
 		public moveArea_mouseDownHandler(event:TouchEvent):void{
 			if (this.enabled && this.isPopUp){
-				var offsetPoint:Point = this.globalToLocal(event.stageX, event.stageY,egret.$TempPoint);
+				let offsetPoint:Point = this.globalToLocal(event.stageX, event.stageY,egret.$TempPoint);
                 this._offsetPointX = offsetPoint.x;
                 this._offsetPointY = offsetPoint.y;
 				this._UIC_Props_._includeInLayout = false;
@@ -169,7 +169,7 @@ module egret.gui {
 		 * @param event {TouchEvent} 
 		 */		
 		public moveArea_mouseMoveHandler(event:TouchEvent):void{
-			var pos:Point = this.globalToLocal(event.stageX,event.stageY,egret.$TempPoint);
+			let pos:Point = this.globalToLocal(event.stageX,event.stageY,egret.$TempPoint);
 			this.x += pos.x - this._offsetPointX;
 			this.y += pos.y - this._offsetPointY;
 		}
@@ -197,9 +197,9 @@ module egret.gui {
 		private adjustPosForStage():void{
 			if(!this.moveArea||!this.stage)
 				return;
-			var pos:Point = this.moveArea.localToGlobal(0,0);
-			var stageX:number = pos.x;
-			var stageY:number = pos.y;
+			let pos:Point = this.moveArea.localToGlobal(0,0);
+			let stageX:number = pos.x;
+			let stageY:number = pos.y;
 			if(pos.x+this.moveArea.width<35){
 				stageX = 35 - this.moveArea.width;
 			}

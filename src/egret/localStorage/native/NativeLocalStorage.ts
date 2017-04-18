@@ -1,6 +1,6 @@
 //////////////////////////////////////////////////////////////////////////////////////
 //
-//  Copyright (c) 2014-2015, Egret Technology Inc.
+//  Copyright (c) 2014-present, Egret Technology.
 //  All rights reserved.
 //  Redistribution and use in source and binary forms, with or without
 //  modification, are permitted provided that the following conditions are met:
@@ -26,10 +26,10 @@
 //  EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 //
 //////////////////////////////////////////////////////////////////////////////////////
-module egret.localStorage.native {
-    var filePath:string = "LocalStorage.local";
+namespace egret.localStorage.native {
+    let filePath:string = "LocalStorage.local";
 
-    var localStorageData = {};
+    let localStorageData = {};
 
     /**
      * @private
@@ -49,6 +49,15 @@ module egret.localStorage.native {
      * @returns
      */
     function setItem(key:string, value:string):boolean {
+        if(value === undefined) {
+            value = "undefined";
+        }
+        else if(value === null) {
+            value = "null";
+        }
+        else {
+            value = value.toString();
+        }
         localStorageData[key] = value;
         try {
             save();
@@ -75,7 +84,7 @@ module egret.localStorage.native {
      *
      */
     function clear():void {
-        for (var key in localStorageData) {
+        for (let key in localStorageData) {
             delete localStorageData[key];
         }
         save();
@@ -90,7 +99,7 @@ module egret.localStorage.native {
     }
 
     if (egret_native.isRecordExists(filePath)) {
-        var str:string = egret_native.loadRecord(filePath);
+        let str:string = egret_native.loadRecord(filePath);
 
         try {
             localStorageData = JSON.parse(str);

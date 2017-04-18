@@ -1,8 +1,9 @@
 /// <reference path="../lib/types.d.ts" />
-var utils = require('../lib/utils');
-var file = require('../lib/FileUtil');
+var utils = require("../lib/utils");
+var file = require("../lib/FileUtil");
 var CompileOptions = require("./CompileOptions");
-var properties = require("./EgretProperties");
+var project = require("./EgretProject");
+var path = require("path");
 exports.optionDeclarations = [
     {
         name: "action",
@@ -97,13 +98,28 @@ exports.optionDeclarations = [
         type: 'boolean',
         shortName: "e"
     }, {
+        name: 'experimental',
+        type: 'boolean',
+        shortName: "exp"
+    }, {
         name: 'egretVersion',
         type: 'string',
         shortName: "ev"
     }, {
+        name: 'ide',
+        type: 'string'
+    }, {
         name: 'exmlGenJs',
         type: 'boolean',
         shortName: 'gjs'
+    }, {
+        name: 'androidProjectPath',
+        type: 'string',
+        shortName: 'p'
+    }, {
+        name: 'sdk',
+        type: 'string',
+        shortName: 's'
     }
 ];
 var shortOptionNames = {};
@@ -172,24 +188,27 @@ function parseCommandLine(commandLine) {
                 options.projectDir = commands[1];
                 commands.splice(1, 1);
             }
+            else if (options.command == "native" &&
+                options.commands[1] &&
+                options.commands[2]) {
+                options.projectDir = commands[2];
+                commands.splice(2, 1);
+            }
         }
         //create_app命令不强制设置projectDir属性
         if (options.projectDir == null && options.command == "create_app") {
         }
         else {
-            if (options.projectDir == null)
+            if (!options.projectDir)
                 options.projectDir = process.cwd();
             else {
-                var absPath = file.joinPath(process.cwd(), options.projectDir);
+                var absPath = path.resolve(process.cwd(), options.projectDir);
                 if (file.isDirectory(absPath)) {
                     options.projectDir = absPath;
                 }
-                else if (file.isDirectory(options.projectDir)) {
-                }
             }
             options.projectDir = file.joinPath(options.projectDir, "/");
-            properties.init(options.projectDir);
-            options.properties = properties;
+            project.utils.init(options.projectDir);
         }
         var packagePath = file.joinPath(egret.root, "package.json");
         var content = file.read(packagePath);
@@ -223,8 +242,7 @@ function parseJSON(json) {
     options.modified = json.modified;
     options.removed = json.removed;
     options.runtime = json.runtime;
+    options.experimental = json.experimental;
     return options;
 }
 exports.parseJSON = parseJSON;
-
-//# sourceMappingURL=Parser.js.map

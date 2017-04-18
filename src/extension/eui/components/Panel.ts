@@ -1,6 +1,6 @@
 //////////////////////////////////////////////////////////////////////////////////////
 //
-//  Copyright (c) 2014-2015, Egret Technology Inc.
+//  Copyright (c) 2014-present, Egret Technology.
 //  All rights reserved.
 //  Redistribution and use in source and binary forms, with or without
 //  modification, are permitted provided that the following conditions are met:
@@ -28,10 +28,9 @@
 //////////////////////////////////////////////////////////////////////////////////////
 
 
-module eui {
+namespace eui {
 
     /**
-     * @language en_US
      * The Panel class defines a container that includes a title bar,
      * a closeButton, a moveArea, and a content area for its children.
      *
@@ -43,9 +42,9 @@ module eui {
      * @version eui 1.0
      * @platform Web,Native
      * @includeExample  extension/eui/components/PanelExample.ts
+     * @language en_US
      */
     /**
-     * @language zh_CN
      * Panel 类定义一个容器，该容器为其子代提供标题栏、关闭按钮、可移动区域和内容区域。
      *
      * @event eui.UIEvent.CLOSING 面板即将关闭事件，在关闭按钮被点击后抛出，
@@ -56,24 +55,25 @@ module eui {
      * @version eui 1.0
      * @platform Web,Native
      * @includeExample  extension/eui/components/PanelExample.ts
+     * @language zh_CN
      */
     export class Panel extends Component {
 
         /**
-         * @language en_US
          * Constructor.
          *
          * @version Egret 2.4
          * @version eui 1.0
          * @platform Web,Native
+         * @language en_US
          */
         /**
-         * @language zh_CN
          * 构造函数。
          *
          * @version Egret 2.4
          * @version eui 1.0
          * @platform Web,Native
+         * @language zh_CN
          */
         public constructor() {
             super();
@@ -90,31 +90,30 @@ module eui {
 
 
         /**
-         * @language en_US
          * write-only property,This property is Usually invoked in resolving an EXML for adding multiple children quickly.
          *
          * @version Egret 2.4
          * @version eui 1.0
          * @platform Web,Native
+         * @language en_US
          */
         /**
-         * @language zh_CN
          * 只写属性，此属性通常在 EXML 的解析器中调用，便于快速添加多个子项。
          * @version Egret 2.4
          * @version eui 1.0
          * @platform Web,Native
+         * @language zh_CN
          */
         public set elementsContent(value:egret.DisplayObject[]) {
             if (value) {
-                var length = value.length;
-                for (var i = 0; i < length; i++) {
+                let length = value.length;
+                for (let i = 0; i < length; i++) {
                     this.addChild(value[i]);
                 }
             }
         }
 
         /**
-         * @language en_US
          * The skin part that defines the appearance of the close button.
          * When taped, the close button dispatches a <code>closing</code> event.
          *
@@ -123,9 +122,9 @@ module eui {
          * @version Egret 2.4
          * @version eui 1.0
          * @platform Web,Native
+         * @language en_US
          */
         /**
-         * @language zh_CN
          * 关闭按钮
          *
          * @skinPart
@@ -133,19 +132,19 @@ module eui {
          * @version Egret 2.4
          * @version eui 1.0
          * @platform Web,Native
+         * @language zh_CN
          */
         public closeButton:Button = null;
 
         /**
-         * @language en_US
          * The area where the user must drag to move the window.
          *
          * @version Egret 2.4
          * @version eui 1.0
          * @platform Web,Native
+         * @language en_US
          */
         /**
-         * @language zh_CN
          * 可移动区域
          *
          * @skinPart
@@ -153,11 +152,11 @@ module eui {
          * @version Egret 2.4
          * @version eui 1.0
          * @platform Web,Native
+         * @language zh_CN
          */
         public moveArea:egret.DisplayObject = null;
 
         /**
-         * @language en_US
          * The skin part that defines the appearance of the
          * title text in the container.
          *
@@ -166,9 +165,9 @@ module eui {
          * @version Egret 2.4
          * @version eui 1.0
          * @platform Web,Native
+         * @language en_US
          */
         /**
-         * @language zh_CN
          * 标题显示对象
          *
          * @skinPart
@@ -176,6 +175,7 @@ module eui {
          * @version Egret 2.4
          * @version eui 1.0
          * @platform Web,Native
+         * @language zh_CN
          */
         public titleDisplay:IDisplayText = null;
 
@@ -185,7 +185,6 @@ module eui {
         private _title:string = "";
 
         /**
-         * @language en_US
          * Title or caption displayed in the title bar.
          *
          * @default ""
@@ -193,9 +192,9 @@ module eui {
          * @version Egret 2.4
          * @version eui 1.0
          * @platform Web,Native
+         * @language en_US
          */
         /**
-         * @language zh_CN
          * 标题栏中显示的标题。
          *
          * @default ""
@@ -203,6 +202,7 @@ module eui {
          * @version Egret 2.4
          * @version eui 1.0
          * @platform Web,Native
+         * @language zh_CN
          */
         public get title():string {
             return this._title;
@@ -252,20 +252,20 @@ module eui {
         }
 
         /**
-         * @language en_US
          * Dispatch the "closing" event when the closeButton is clicked.
          *
          * @version Egret 2.4
          * @version eui 1.0
          * @platform Web,Native
+         * @language en_US
          */
         /**
-         * @language zh_CN
          * 当 closeButton 被点击时派发 “closing” 事件
          *
          * @version Egret 2.4
          * @version eui 1.0
          * @platform Web,Native
+         * @language zh_CN
          */
         protected onCloseButtonClick(event:egret.TouchEvent):void {
             if (UIEvent.dispatchUIEvent(this, UIEvent.CLOSING, true, true)) {
@@ -274,20 +274,20 @@ module eui {
         }
 
         /**
-         * @language en_US
          * Close the panel and remove from the parent container.
          *
          * @version Egret 2.4
          * @version eui 1.0
          * @platform Web,Native
+         * @language en_US
          */
         /**
-         * @language zh_CN
          * 关闭面板，从父级容器移除自身。
          *
          * @version Egret 2.4
          * @version eui 1.0
          * @platform Web,Native
+         * @language zh_CN
          */
         public close():void {
             if (!this.$parent) {
@@ -307,20 +307,20 @@ module eui {
         private offsetPointY:number = 0;
 
         /**
-         * @language en_US
          * Called when the user starts dragging a Panel.
          *
          * @version Egret 2.4
          * @version eui 1.0
          * @platform Web,Native
+         * @language en_US
          */
         /**
-         * @language zh_CN
          * 在可移动区域按下
          *
          * @version Egret 2.4
          * @version eui 1.0
          * @platform Web,Native
+         * @language zh_CN
          */
         protected onTouchBegin(event:egret.TouchEvent):void {
             this.$includeInLayout = false;
@@ -331,20 +331,20 @@ module eui {
         }
 
         /**
-         * @language en_US
          * Called when the user drags a Panel.
          *
          * @version Egret 2.4
          * @version eui 1.0
          * @platform Web,Native
+         * @language en_US
          */
         /**
-         * @language zh_CN
          * 触摸拖拽时的移动事件
          *
          * @version Egret 2.4
          * @version eui 1.0
          * @platform Web,Native
+         * @language zh_CN
          */
         protected onTouchMove(event:egret.TouchEvent):void {
             this.x = event.$stageX + this.offsetPointX;
@@ -352,24 +352,25 @@ module eui {
         }
 
         /**
-         * @language en_US
          * Called when the user releases the Panel.
          *
          * @version Egret 2.4
          * @version eui 1.0
          * @platform Web,Native
+         * @language en_US
          */
         /**
-         * @language zh_CN
          * 在舞台上弹起事件
          *
          * @version Egret 2.4
          * @version eui 1.0
          * @platform Web,Native
+         * @language zh_CN
          */
         protected onTouchEnd(event:egret.TouchEvent):void {
-            this.$stage.removeEventListener(egret.TouchEvent.TOUCH_MOVE, this.onTouchMove, this);
-            this.$stage.removeEventListener(egret.TouchEvent.TOUCH_END, this.onTouchEnd, this);
+            let stage = event.$currentTarget;
+            stage.removeEventListener(egret.TouchEvent.TOUCH_MOVE, this.onTouchMove, this);
+            stage.removeEventListener(egret.TouchEvent.TOUCH_END, this.onTouchEnd, this);
         }
     }
 

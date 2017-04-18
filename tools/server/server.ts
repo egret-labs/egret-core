@@ -1,99 +1,78 @@
 ﻿/// <reference path="../lib/types.d.ts" />
 
-
-global.TotalJS = { Controller: {} };
-
 import http = require('http');
 import events = require('events');
 import utils = require('../lib/utils');
-import file = require('../lib/FileUtil');
+import fs = require('fs');
 import cp = require('child_process');
-import Default = require('./controllers/default');
-global.lark = global.lark || {};
+import url = require('url');
+import path = require('path');
 
 
-export function startServer(options: egret.ToolArgs, startupUrl?:string) {
-
-    var total: TotalJS.Framework = require('../lib/totaljs/');
-    total.setRoot(__dirname);
-    options.port = options.port || 3000;
-    Default.UserProjectPath = options.projectDir;
-    options.projectDir = options.projectDir || '/public/';
-
-
-    egret.server = {
-        options: options,
-        console: new ServerConsole(),
-        IPs: getLocalIPAddress()
-    };
-
-    var serverTmp = '~' + options.getTmpDir() + 'server/';
-
-    framework.config['directory-temp'] = serverTmp;
-    framework.config['directory-public'] = serverTmp;
-    framework.config['directory-views'] = '~' + __dirname + '/views/';
-    framework.config['directory-controllers'] = '~' + __dirname + '/controllers/';
-    framework.config['default-websocket-encodedecode'] = false;
-    framework.config['allow-compile-js'] = false;
-    framework.config['allow-compile-html'] = false;
-    framework.config['allow-compile-css'] = false;
-    try {
-        total.http('debug', { port: options.port, ip: '0.0.0.0' });
-        if (!options.serverOnly)
-            utils.open(startupUrl || options.manageUrl);
-    }
-    catch (e) {
-        if (e.toString().indexOf('listen EADDRINUSE') !== -1) {
-            if (!options.serverOnly)
-                utils.open(startupUrl || options.manageUrl);
-        }
-    }
-}
+var mine = {
+    "css": "text/css",
+    "gif": "image/gif",
+    "html": "text/html",
+    "ico": "image/x-icon",
+    "jpeg": "image/jpeg",
+    "jpg": "image/jpeg",
+    "js": "text/javascript",
+    "json": "application/json",
+    "pdf": "application/pdf",
+    "png": "image/png",
+    "svg": "image/svg+xml",
+    "swf": "application/x-shockwave-flash",
+    "tiff": "image/tiff",
+    "txt": "text/plain",
+    "wav": "audio/x-wav",
+    "wma": "audio/x-ms-wma",
+    "wmv": "video/x-ms-wmv",
+    "xml": "text/xml"
+};
 
 
-class ServerConsole extends events.EventEmitter {
+
+
+class Server {
+
+    private middleware: Server.Middleware;
+
     constructor() {
-        super();
-        this.attach();
     }
-    attach() {
 
-        if (console['override']) 
-            return;
+    use(middleware: Server.Middleware) {
+        this.middleware = middleware;
+    }
 
+    start(root: string, port: number, startupUrl: string, openWithBrowser: boolean = true) {
 
-        console['override'] = true;
-        ["log", "warn", "error"].forEach((method)=> {
-            var oldMethod = console[method].bind(console);
-            console['old_' + method] = oldMethod;
-            console[method] = (...params: string[]) => {
-                oldMethod.apply(console, params);
-                if (!params || !params.length)
-                    return;
-                this.log(params);
-            };
+        let ips = getLocalIPAddress();
+
+        let m = this.middleware();
+
+        var server = http.createServer((request, response) => {
+            response.setHeader("Access-Control-Allow-Origin", "*");
+            m(request, response).then(() => {
+                response.end();
+            }).catch((e) => {
+                console.error(e);
+                response.end();
+            });
         });
-    }
+        server.listen(port);
+        console.log("Server running at port: " + port + ".");
+        if (openWithBrowser) {
+            utils.open(startupUrl);
+        }
 
-    dettach() {
-
-        ["log", "warn", "error"].forEach(function (method) {
-            console[method] = console['old_' + method];
-        });
-        console['override'] = false;
-    }
-
-    log(params:string[]) {
-        this.emit('log', params);
     }
 }
 
 
-
-function getLocalIPAddress(): string[] {
+function getLocalIPAddress() {
     var os = require('os');
     var ifaces = os.networkInterfaces();
-    var ips = [ 'localhost', '127.0.0.1'];
+    var ips = ['localhost', '127.0.0.1'];
     Object.keys(ifaces).forEach(function (ifname) {
         var alias = 0;
 
@@ -108,3 +87,57 @@ function getLocalIPAddress(): string[] {
 
     return ips;
 }
+
+
+
+
+
+namespace Server {
+
+
+    export var fileReader = (root) => () => {
+        return function (request: http.IncomingMessage, response: http.ServerResponse) {
+            return new Promise((reslove, reject) => {
+                var pathname = url.parse(request.url).pathname;
+                var realPath = path.join(root, pathname);
+                //console.log(realPath);
+                var ext = path.extname(realPath);
+                ext = ext ? ext.slice(1) : 'unknown';
+                fs.exists(realPath, function (exists) {
+                    if (!exists) {
+                        response.writeHead(404, {
+                            'Content-Type': 'text/plain'
+                        });
+                        response.write("This request URL " + pathname + " was not found on this server.");
+                        reslove();
+                    } else {
+                        fs.readFile(realPath, "binary", function (err, file) {
+                            if (err) {
+                                response.writeHead(500, {
+                                    'Content-Type': 'text/plain'
+                                });
+                                reslove();
+                            } else {
+                                var contentType = mine[ext] || "text/plain";
+                                response.writeHead(200, {
+                                    'Content-Type': contentType
+                                });
+                                response.write(file, "binary");
+                                reslove();
+                            }
+                        });
+                    }
+                })
+            })
+        }
+    }
+
+
+    export type Middleware = (...arg) => (request: http.IncomingMessage, response: http.ServerResponse) => Promise<any>
+
+
+}
+
+
+
+export = Server;

@@ -1,6 +1,6 @@
 //////////////////////////////////////////////////////////////////////////////////////
 //
-//  Copyright (c) 2014-2015, Egret Technology Inc.
+//  Copyright (c) 2014-present, Egret Technology.
 //  All rights reserved.
 //  Redistribution and use in source and binary forms, with or without
 //  modification, are permitted provided that the following conditions are met:
@@ -28,7 +28,7 @@
 //////////////////////////////////////////////////////////////////////////////////////
 
 
-module egret.gui {
+namespace egret.gui {
 
 	/**
 	 * @class egret.gui.SliderBase
@@ -166,8 +166,8 @@ module egret.gui {
 			if(!this.track)
 				return;
 			
-			var pos:Point = this.track.globalToLocal(this._moveStageX, this._moveStageY, egret.$TempPoint);
-			var newValue:number = this.pointToValue(pos.x - this._clickOffsetX,pos.y - this._clickOffsetY);
+			let pos:Point = this.track.globalToLocal(this._moveStageX, this._moveStageY, egret.$TempPoint);
+			let newValue:number = this.pointToValue(pos.x - this._clickOffsetX,pos.y - this._clickOffsetY);
 			newValue = this.nearestValidValue(newValue, this.snapInterval);
 			
 			if (newValue != this.pendingValue){
@@ -201,13 +201,13 @@ module egret.gui {
 		public track_mouseDownHandler(event:TouchEvent):void{
 			if (!this.enabled)
 				return;
-			var thumbW:number = (this.thumb) ? this.thumb.width : 0;
-			var thumbH:number = (this.thumb) ? this.thumb.height : 0;
-			var offsetX:number = event.stageX - (thumbW / 2);
-			var offsetY:number = event.stageY - (thumbH / 2);
-			var p:Point = this.track.globalToLocal(offsetX, offsetY,egret.$TempPoint);
+			let thumbW:number = (this.thumb) ? this.thumb.width : 0;
+			let thumbH:number = (this.thumb) ? this.thumb.height : 0;
+			let offsetX:number = event.stageX - (thumbW / 2);
+			let offsetY:number = event.stageY - (thumbH / 2);
+			let p:Point = this.track.globalToLocal(offsetX, offsetY,egret.$TempPoint);
 			
-			var newValue:number = this.pointToValue(p.x, p.y);
+			let newValue:number = this.pointToValue(p.x, p.y);
 			newValue = this.nearestValidValue(newValue, this.snapInterval);
 
 			if (newValue != this.pendingValue){

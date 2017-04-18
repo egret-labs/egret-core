@@ -1,6 +1,6 @@
 //////////////////////////////////////////////////////////////////////////////////////
 //
-//  Copyright (c) 2014-2015, Egret Technology Inc.
+//  Copyright (c) 2014-present, Egret Technology.
 //  All rights reserved.
 //  Redistribution and use in source and binary forms, with or without
 //  modification, are permitted provided that the following conditions are met:
@@ -27,7 +27,10 @@
 //
 //////////////////////////////////////////////////////////////////////////////////////
 
-declare module egret{
+declare namespace egret{
+    /**
+    * @private
+    */
     export class Utils {
         static unzip();
         static unzipBase64AsArray(input, bytes);
@@ -35,12 +38,21 @@ declare module egret{
     }
 }
 
-declare module egret.Codec{
+/**
+* @private
+*/
+declare namespace egret.Codec{
+    /**
+    * @private
+    */
     export class Base64 {
         static decodeAsArray(input, bytes);
     }
 }
 
+/**
+* @private
+*/
 declare class Zlib{
 
     static Inflate(obj):void;

@@ -1,6 +1,6 @@
 //////////////////////////////////////////////////////////////////////////////////////
 //
-//  Copyright (c) 2014-2015, Egret Technology Inc.
+//  Copyright (c) 2014-present, Egret Technology.
 //  All rights reserved.
 //  Redistribution and use in source and binary forms, with or without
 //  modification, are permitted provided that the following conditions are met:
@@ -28,7 +28,7 @@
 //////////////////////////////////////////////////////////////////////////////////////
 
 
-module egret.gui {
+namespace egret.gui {
     /**
      *  @classdesc
      * HScrollBar（水平 ScrollBar）控件可以在因数据太多而不能在显示区域中以水平方向完全显示时控制显示的数据部分。
@@ -45,7 +45,7 @@ module egret.gui {
          * @private
          */
         public _setViewportMetric(width:number, contentWidth:number) {
-            var max = Math.max(0, contentWidth - width);
+            let max = Math.max(0, contentWidth - width);
             this._setMaximun(max);
             this._setMinimun(0);
             this._thumbLengthRatio = (contentWidth > width) ? width / contentWidth : 1;
@@ -118,15 +118,15 @@ module egret.gui {
             if (!this.thumb || !this.track)
                 return;
 
-            var thumbWidth = this.track.layoutBoundsWidth * this._thumbLengthRatio;
-            var oldThumbWidth: number = this.thumb.layoutBoundsWidth;
-            var thumbRange: number = this.track.layoutBoundsWidth - this.thumb.layoutBoundsWidth;
-            var range: number = this.maximum - this.minimum;
-            var thumbPosTrackX: number = (range > 0) ? ((this.pendingValue - this.minimum) / range) * thumbRange : 0;
-            var thumbPos: Point = this.track.localToGlobal(thumbPosTrackX, 0);
-            var thumbPosX: number = thumbPos.x;
-            var thumbPosY: number = thumbPos.y;
-            var thumbPosParentX: number = this.thumb.parent.globalToLocal(thumbPosX, thumbPosY, egret.$TempPoint).x;
+            let thumbWidth = this.track.layoutBoundsWidth * this._thumbLengthRatio;
+            let oldThumbWidth: number = this.thumb.layoutBoundsWidth;
+            let thumbRange: number = this.track.layoutBoundsWidth - this.thumb.layoutBoundsWidth;
+            let range: number = this.maximum - this.minimum;
+            let thumbPosTrackX: number = (range > 0) ? ((this.pendingValue - this.minimum) / range) * thumbRange : 0;
+            let thumbPos: Point = this.track.localToGlobal(thumbPosTrackX, 0);
+            let thumbPosX: number = thumbPos.x;
+            let thumbPosY: number = thumbPos.y;
+            let thumbPosParentX: number = this.thumb.parent.globalToLocal(thumbPosX, thumbPosY, egret.$TempPoint).x;
             this.thumb.setLayoutBoundsPosition(Math.round(thumbPosParentX), this.thumb.layoutBoundsY);
             if (thumbWidth != oldThumbWidth)
                 this.thumb.setLayoutBoundsSize(thumbWidth, this.thumb.layoutBoundsHeight);

@@ -1,6 +1,6 @@
 //////////////////////////////////////////////////////////////////////////////////////
 //
-//  Copyright (c) 2014-2015, Egret Technology Inc.
+//  Copyright (c) 2014-present, Egret Technology.
 //  All rights reserved.
 //  Redistribution and use in source and binary forms, with or without
 //  modification, are permitted provided that the following conditions are met:
@@ -28,7 +28,7 @@
 //////////////////////////////////////////////////////////////////////////////////////
 
 
-module egret.gui {
+namespace egret.gui {
 
 	/**
 	 * @class egret.gui.PopUpEvent
@@ -85,10 +85,10 @@ module egret.gui {
          */
         public static dispatchPopUpEvent(target:IEventDispatcher,type:string,
                                          popUp:IVisualElement=null,modal:boolean = false):boolean{
-			var event:PopUpEvent = Event.create(PopUpEvent, type);
+			let event:PopUpEvent = Event.create(PopUpEvent, type);
 			event.popUp = popUp;
 			event.modal = modal;
-			var result = target.dispatchEvent(event);
+			let result = target.dispatchEvent(event);
 			Event.release(event);
 			return result;
         }

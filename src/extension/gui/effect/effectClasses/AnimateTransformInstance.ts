@@ -1,6 +1,6 @@
 //////////////////////////////////////////////////////////////////////////////////////
 //
-//  Copyright (c) 2014-2015, Egret Technology Inc.
+//  Copyright (c) 2014-present, Egret Technology.
 //  All rights reserved.
 //  Redistribution and use in source and binary forms, with or without
 //  modification, are permitted provided that the following conditions are met:
@@ -28,7 +28,7 @@
 //////////////////////////////////////////////////////////////////////////////////////
 
 
-module egret.gui {
+namespace egret.gui {
     /**
      * @class egret.gui.AnimateTransformInstance
      * @classdesc
@@ -84,7 +84,7 @@ module egret.gui {
         private insertKeyframe(keyframes:Array<Keyframe>, 
                                         newKF:Keyframe, startDelay:number = 0, first:boolean = false):void{
             newKF.time += startDelay;
-            for (var i:number = 0; i < keyframes.length; i++){
+            for (let i:number = 0; i < keyframes.length; i++){
                 if (keyframes[i].time >= newKF.time){
                     if (keyframes[i].time == newKF.time){
                         if (first){
@@ -112,14 +112,14 @@ module egret.gui {
          * @member egret.gui.AnimateTransformInstance#addMotionPath
          */
         public addMotionPath(newMotionPath:MotionPath, newEffectStartTime:number = 0):void{
-            var added:boolean = false;
+            let added:boolean = false;
             if (this.motionPaths){
-                var i:number = 0;
-                var j:number = 0;
-                var mp:MotionPath;
-                var n:number = this.motionPaths.length;
+                let i:number = 0;
+                let j:number = 0;
+                let mp:MotionPath;
+                let n:number = this.motionPaths.length;
                 if (newEffectStartTime < this.instanceStartTime){
-                    var deltaStartTime:number = this.instanceStartTime - newEffectStartTime;
+                    let deltaStartTime:number = this.instanceStartTime - newEffectStartTime;
                     for (i = 0; i < n; i++){
                         mp = <MotionPath><any> (this.motionPaths[i]);
                         for (j = 0; j < mp.keyframes.length; j++)
@@ -140,21 +140,21 @@ module egret.gui {
                 }
             }
             else{
-                this.motionPaths = new Array<MotionPath>();
+                this.motionPaths = [];
                 this.instanceStartTime = newEffectStartTime;
             }
             if (!added){
                 if (newEffectStartTime > this.instanceStartTime){
-                    for (j = 0; j < newMotionPath.keyframes.length; j++)
+                    for (let j = 0; j < newMotionPath.keyframes.length; j++)
                         newMotionPath.keyframes[j].time += 
                             (newEffectStartTime - this.instanceStartTime);
                 }
                 this.motionPaths.push(newMotionPath);
             }
-            n = this.motionPaths.length;
-            for (i = 0; i < n; i++){
-                mp = <MotionPath><any> (this.motionPaths[i]);
-                var kf:Keyframe = mp.keyframes[mp.keyframes.length-1];
+            let n = this.motionPaths.length;
+            for (let i = 0; i < n; i++){
+                let mp = <MotionPath><any> (this.motionPaths[i]);
+                let kf:Keyframe = mp.keyframes[mp.keyframes.length-1];
                 if (!isNaN(kf.time))
                     this.duration = Math.max(this.duration, kf.time);
             }
@@ -162,18 +162,18 @@ module egret.gui {
         
         public play():void{
             if (this.motionPaths){
-                var i:number = 0;
-                var j:number = 0;
+                let i:number = 0;
+                let j:number = 0;
                 this.updateTransformCenter();
-                var adjustXY:boolean = (this.transformCenter.x != 0 || this.transformCenter.y != 0);
+                let adjustXY:boolean = (this.transformCenter.x != 0 || this.transformCenter.y != 0);
                 
                 for (i = 0; i < this.motionPaths.length; ++i){
-                    var animProp:MotionPath = this.motionPaths[i];
+                    let animProp:MotionPath = this.motionPaths[i];
                     if (adjustXY && 
                         (animProp.property == "translationX" || 
                             animProp.property == "translationY")){
                         for (j = 0; j < animProp.keyframes.length; ++j){
-                            var kf:Keyframe = animProp.keyframes[j];
+                            let kf:Keyframe = animProp.keyframes[j];
                             if (this._isValidValue(kf.value)){
                                 if (animProp.property == "translationX"){
                                     kf.value += this.transformCenter.x;
@@ -211,7 +211,7 @@ module egret.gui {
                 case "translationX":
                 case "translationY":{
                     this.updateTransformCenter();
-                    var position:egret.Point = TransformUtil.transformPointToParent(<egret.DisplayObject><any> (this.target),this.transformCenter);
+                    let position:egret.Point = TransformUtil.transformPointToParent(<egret.DisplayObject><any> (this.target),this.transformCenter);
                     if (property == "translationX")
                         return position.x;
                     if (property == "translationY")
@@ -230,12 +230,12 @@ module egret.gui {
         private lastTranslationPoint:Point;
         private static position:egret.Point = new egret.Point();
         public applyValues(anim:Animation):void{
-            var tmpScaleX:number;
-            var tmpScaleY:number;
-            var tmpPosition:egret.Point;
-            var tmpRotation:number;
+            let tmpScaleX:number;
+            let tmpScaleY:number;
+            let tmpPosition:egret.Point;
+            let tmpRotation:number;
 
-            for (var i:number = 0; i < this.motionPaths.length; ++i){
+            for (let i:number = 0; i < this.motionPaths.length; ++i){
                 if (this.currentValues[this.motionPaths[i].property] !== undefined)
                     this.currentValues[this.motionPaths[i].property] =
                         anim.currentValue[this.motionPaths[i].property];

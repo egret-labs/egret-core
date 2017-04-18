@@ -1,6 +1,6 @@
 //////////////////////////////////////////////////////////////////////////////////////
 //
-//  Copyright (c) 2014-2015, Egret Technology Inc.
+//  Copyright (c) 2014-present, Egret Technology.
 //  All rights reserved.
 //  Redistribution and use in source and binary forms, with or without
 //  modification, are permitted provided that the following conditions are met:
@@ -28,7 +28,7 @@
 //////////////////////////////////////////////////////////////////////////////////////
 
 
-module egret.gui {
+namespace egret.gui {
     /**
      * @class egret.gui.FadeInstance
      * @classdesc
@@ -56,8 +56,8 @@ module egret.gui {
         public alphaTo:number;
         
         public play():void{
-            var fromValue:number = this.alphaFrom;
-            var toValue:number = this.alphaTo;
+            let fromValue:number = this.alphaFrom;
+            let toValue:number = this.alphaTo;
 
             if ("visible" in this.target && !this.target.visible){
                 if (isNaN(fromValue))

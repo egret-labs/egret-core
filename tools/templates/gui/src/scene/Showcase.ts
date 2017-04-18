@@ -1,6 +1,6 @@
 //////////////////////////////////////////////////////////////////////////////////////
 //
-//  Copyright (c) 2014-2015, Egret Technology Inc.
+//  Copyright (c) 2014-present, Egret Technology.
 //  All rights reserved.
 //  Redistribution and use in source and binary forms, with or without
 //  modification, are permitted provided that the following conditions are met:
@@ -88,7 +88,7 @@ class Showcase extends egret.gui.SkinnableComponent {
     private dataSource:Array<any> = [];
 
     private initListData():void {
-        for (var i = 1; i < 50; i++) {
+        for (let i = 1; i < 50; i++) {
             this.dataSource.push({label: "List Item " + i});
         }
     }
@@ -124,7 +124,7 @@ class Showcase extends egret.gui.SkinnableComponent {
     }
 
     private onButtonClick(event:egret.TouchEvent):void {
-        var selection = this.list.selectedItem ? this.list.selectedItem.label : "nothing";
+        let selection = this.list.selectedItem ? this.list.selectedItem.label : "nothing";
         egret.gui.Alert.show("You have selected " + selection, "Title");
     }
 

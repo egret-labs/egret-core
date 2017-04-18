@@ -1,6 +1,6 @@
 //////////////////////////////////////////////////////////////////////////////////////
 //
-//  Copyright (c) 2014-2015, Egret Technology Inc.
+//  Copyright (c) 2014-present, Egret Technology.
 //  All rights reserved.
 //  Redistribution and use in source and binary forms, with or without
 //  modification, are permitted provided that the following conditions are met:
@@ -27,7 +27,7 @@
 //
 //////////////////////////////////////////////////////////////////////////////////////
 
-module egret.sys {
+namespace egret.sys {
 
     /**
      * @private
@@ -78,7 +78,7 @@ module egret.sys {
             this.lastTouchX = x;
             this.lastTouchY = y;
 
-            var target = this.findTarget(x, y);
+            let target = this.findTarget(x, y);
             if (this.touchDownTarget[touchPointID] == null) {
                 this.touchDownTarget[touchPointID] = target;
                 this.useTouchesCount++;
@@ -114,7 +114,7 @@ module egret.sys {
             this.lastTouchX = x;
             this.lastTouchY = y;
 
-            var target = this.findTarget(x, y);
+            let target = this.findTarget(x, y);
             TouchEvent.dispatchTouchEvent(target, TouchEvent.TOUCH_MOVE, true, true, x, y, touchPointID, true);
         }
 
@@ -130,8 +130,8 @@ module egret.sys {
                 return;
             }
 
-            var target = this.findTarget(x, y);
-            var oldTarget = this.touchDownTarget[touchPointID];
+            let target = this.findTarget(x, y);
+            let oldTarget = this.touchDownTarget[touchPointID];
             delete this.touchDownTarget[touchPointID];
             this.useTouchesCount--;
 
@@ -149,7 +149,7 @@ module egret.sys {
          * 获取舞台坐标下的触摸对象
          */
         private findTarget(stageX:number, stageY:number):DisplayObject {
-            var target = this.stage.$hitTest(stageX, stageY);
+            let target = this.stage.$hitTest(stageX, stageY);
             if (!target) {
                 target = this.stage;
             }

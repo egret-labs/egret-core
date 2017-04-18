@@ -1,6 +1,6 @@
 //////////////////////////////////////////////////////////////////////////////////////
 //
-//  Copyright (c) 2014-2015, Egret Technology Inc.
+//  Copyright (c) 2014-present, Egret Technology.
 //  All rights reserved.
 //  Redistribution and use in source and binary forms, with or without
 //  modification, are permitted provided that the following conditions are met:
@@ -27,58 +27,10 @@
 //
 //////////////////////////////////////////////////////////////////////////////////////
 
-module eui {
-    /**
-     * @language en_US
-     * Interface of theme adapter.
-     * If your project need to custom the theme rule, you need to implement the <code>IThemeAdapter</code>.
-     * And use the following code to inject it to the system:
-     * <pre>
-     *      var themeAdapter = new YourThemeAdapter();
-     *      Stage.registerImplementation("eui.IThemeAdapter",themeAdapter);
-     * </pre>
-     *
-     * @version Egret 2.4
-     * @version eui 1.0
-     * @platform Web,Native
-     */
-    /**
-     * @language zh_CN
-     * 主题适配器接口。
-     * 若项目需要自定义主题需要实现这个接口，
-     * 然后调用如下代码注入自定义实现到框架即可：
-     * <pre>
-     *      var themeAdapter = new YourThemeAdapter();
-     *      Stage.registerImplementation("eui.IThemeAdapter",themeAdapter);
-     * </pre>
-     * @version Egret 2.4
-     * @version eui 1.0
-     * @platform Web,Native
-     */
-    export interface IThemeAdapter{
+namespace eui {
 
-        /**
-         * @language en_US
-         * Resolves theme
-         * @param url theme url
-         * @param compFunc compFunc，example：compFunc(e:egret.Event):void;
-         * @param errorFunc errorFunc，example：errorFunc():void;
-         * @param thisObject thisObject
-         * @version Egret 2.4
-         * @version eui 1.0
-         * @platform Web,Native
-         */
-        /**
-         * @language zh_CN
-         * 解析主题
-         * @param url 待解析的主题url
-         * @param compFunc 解析完成回调函数，示例：compFunc(e:egret.Event):void;
-         * @param errorFunc 解析失败回调函数，示例：errorFunc():void;
-         * @param thisObject 回调的this引用
-         * @version Egret 2.4
-         * @version eui 1.0
-         * @platform Web,Native
-         */
-        getTheme(url:string,compFunc:Function,errorFunc:Function,thisObject:any):void;
+    export interface IThemeAdapter {
+
+        getTheme(url: string, compFunc: Function, errorFunc: Function, thisObject: any): void;
     }
 }

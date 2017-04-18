@@ -1,6 +1,6 @@
 //////////////////////////////////////////////////////////////////////////////////////
 //
-//  Copyright (c) 2014-2015, Egret Technology Inc.
+//  Copyright (c) 2014-present, Egret Technology.
 //  All rights reserved.
 //  Redistribution and use in source and binary forms, with or without
 //  modification, are permitted provided that the following conditions are met:
@@ -28,10 +28,9 @@
 //////////////////////////////////////////////////////////////////////////////////////
 
 
-module eui {
+namespace eui {
 
     /**
-     * @language en_US
      * The SetProperty class specifies a property value that is in effect only
      * during the parent view state.
      * You use this class in the <code>overrides</code> property of the State class.
@@ -39,19 +38,19 @@ module eui {
      * @version Egret 2.4
      * @version eui 1.0
      * @platform Web,Native
+     * @language en_US
      */
 
     /**
-     * @language zh_CN
      * SetProperty 类指定只在父视图状态期间有效的属性值。可以在 State 类的 overrides 属性中使用该类。
      *
      * @version Egret 2.4
      * @version eui 1.0
      * @platform Web,Native
+     * @language zh_CN
      */
     export class SetStateProperty implements IOverride {
         /**
-         * @language en_US
          * Constructor.
          *
          * @param target The object whose property is being set.
@@ -62,9 +61,9 @@ module eui {
          * @version Egret 2.4
          * @version eui 1.0
          * @platform Web,Native
+         * @language en_US
          */
         /**
-         * @language zh_CN
          * 创建一个SetProperty实例。
          *
          * @param target 要设置其属性的对象。默认情况下，EUI 使用 State 对象的直接父级。
@@ -74,38 +73,47 @@ module eui {
          * @version Egret 2.4
          * @version eui 1.0
          * @platform Web,Native
+         * @language zh_CN
          */
-        public constructor(host: any, chain: string[], target: any, prop: string) {
+        public constructor(host:any, templates:any[], chainIndex:number[], target:any, prop:string) {
             this.host = host;
-            this.chain = chain;
+            this.templates = templates;
+            this.chainIndex = chainIndex;
             this.target = target;
             this.prop = prop;
         }
+
         /**
          * 皮肤对象
          * @private
          */
-        private host: any;
+        private host:any;
         /**
-         * 绑定链
          * @private
+         * 绑定的模板列表
          */
-        private chain: string[];
+        public templates:any[];
+
+        /**
+         * @private
+         * chainIndex是一个索引列表，每个索引指向templates中的一个值，该值是代表属性链。
+         */
+        public chainIndex:number[];
         /**
          * 要绑定的对象
          * @private
          */
-        private target: any;
+        private target:any;
         /**
          * 要绑定对象的属性
          * @private
          */
-        private prop: string;
+        private prop:string;
         /**
          * 上一次的数据
          * @private
          */
-        private oldValue: any;
+        private oldValue:any;
 
         /**
          * @inheritDoc
@@ -114,23 +122,20 @@ module eui {
          * @version eui 1.0
          * @platform Web,Native
          */
-        public apply(host: Skin, parent: egret.DisplayObjectContainer): void {
+        public apply(host:Skin, parent:egret.DisplayObjectContainer):void {
             if (!this.target) {
                 return;
             }
-            var nextOldValue = this.target[this.prop];
+            let nextOldValue = this.target[this.prop];
             if (this.oldValue) {
                 this.setPropertyValue(this.target, this.prop, this.oldValue, this.oldValue);
             }
             if (nextOldValue) {
                 this.oldValue = nextOldValue;
             }
-            var chain = [];
-            for (var i = 0, len = this.chain.length; i < len; i++) {
-                chain[i] = this.chain[i];
-            }
-            eui.Binding.bindProperty(this.host, chain, this.target, this.prop);
+            eui.Binding.$bindProperties(this.host, this.templates.concat(), this.chainIndex.concat(), this.target, this.prop);
         }
+
         /**
          * @inheritDoc
          *
@@ -138,11 +143,11 @@ module eui {
          * @version eui 1.0
          * @platform Web,Native
          */
-        public remove(host: Skin, parent: egret.DisplayObjectContainer): void {
+        public remove(host:Skin, parent:egret.DisplayObjectContainer):void {
             if (!this.target) {
                 return;
             }
-            var oldValue = this.oldValue;
+            let oldValue = this.oldValue;
             if (this.target[this.prop]) {
                 this.oldValue = this.target[this.prop];
             }
@@ -150,12 +155,13 @@ module eui {
                 this.setPropertyValue(this.target, this.prop, oldValue, oldValue);
             }
         }
+
         /**
          * @private
          * 设置属性值
          */
-        private setPropertyValue(obj: any, name: string, value: any,
-                                 valueForType: any): void {
+        private setPropertyValue(obj:any, name:string, value:any,
+                                 valueForType:any):void {
             if (value === undefined || value === null)
                 obj[name] = value;
             else if (typeof (valueForType) == "number")
@@ -165,11 +171,12 @@ module eui {
             else
                 obj[name] = value;
         }
+
         /**
          * @private
          * 转成Boolean值
          */
-        private toBoolean(value: any): boolean {
+        private toBoolean(value:any):boolean {
             if (typeof (value) == "string")
                 return value.toLowerCase() == "true";
 

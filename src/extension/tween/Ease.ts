@@ -1,6 +1,6 @@
 //////////////////////////////////////////////////////////////////////////////////////
 //
-//  Copyright (c) 2014-2015, Egret Technology Inc.
+//  Copyright (c) 2014-present, Egret Technology.
 //  All rights reserved.
 //  Redistribution and use in source and binary forms, with or without
 //  modification, are permitted provided that the following conditions are met:
@@ -28,20 +28,20 @@
 //////////////////////////////////////////////////////////////////////////////////////
 
 
-module egret {
+namespace egret {
     /**
-     * @language en_US
      * Easing function set. Different easing functions are used to make an animation proceed according to the corresponding equation
      * @see http://edn.egret.com/cn/index.php/article/index/id/53 Easing effect Demo
      * @version Egret 2.4
      * @platform Web,Native
+     * @language en_US
      */
     /**
-     * @language zh_CN
      * 缓动函数集合，使用不同的缓动函数使得动画按照对应的方程进行
      * @see http://edn.egret.com/cn/index.php/article/index/id/53 缓动效果演示
      * @version Egret 2.4
      * @platform Web,Native
+     * @language zh_CN
      */
     export class Ease {
         /**
@@ -53,25 +53,25 @@ module egret {
         }
 
         /**
-         * @language en_US
          * get.See example.
          * @version Egret 2.4
          * @platform Web,Native
+         * @language en_US
          */
         /**
-         * @language zh_CN
          * get。请查看示例
          * @version Egret 2.4
          * @platform Web,Native
+         * @language zh_CN
          */
-        public static get(amount):Function {
+        public static get(amount: number) {
             if (amount < -1) {
                 amount = -1;
             }
             if (amount > 1) {
                 amount = 1;
             }
-            return function (t) {
+            return function (t: number) {
                 if (amount == 0) {
                     return t;
                 }
@@ -83,408 +83,408 @@ module egret {
         }
 
         /**
-         * @language en_US
          * get pow in.See example.
          * @version Egret 2.4
          * @platform Web,Native
+         * @language en_US
          */
         /**
-         * @language zh_CN
          * get pow in。请查看示例
          * @version Egret 2.4
          * @platform Web,Native
+         * @language zh_CN
          */
-        public static getPowIn(pow):Function {
-            return function (t) {
+        public static getPowIn(pow: number) {
+            return function (t: number) {
                 return Math.pow(t, pow);
             }
         }
 
         /**
-         * @language en_US
          * get pow out.See example.
          * @version Egret 2.4
          * @platform Web,Native
+         * @language en_US
          */
         /**
-         * @language zh_CN
          * get pow out。请查看示例
          * @version Egret 2.4
          * @platform Web,Native
+         * @language zh_CN
          */
-        public static getPowOut(pow):Function {
-            return function (t) {
+        public static getPowOut(pow: number) {
+            return function (t: number) {
                 return 1 - Math.pow(1 - t, pow);
             }
         }
 
         /**
-         * @language en_US
          * get pow in out.See example.
          * @version Egret 2.4
          * @platform Web,Native
+         * @language en_US
          */
         /**
-         * @language zh_CN
          * get pow in out。请查看示例
          * @version Egret 2.4
          * @platform Web,Native
+         * @language zh_CN
          */
-        public static getPowInOut(pow):Function {
-            return function (t) {
+        public static getPowInOut(pow: number) {
+            return function (t: number) {
                 if ((t *= 2) < 1) return 0.5 * Math.pow(t, pow);
                 return 1 - 0.5 * Math.abs(Math.pow(2 - t, pow));
             }
         }
 
         /**
-         * @language en_US
          * quad in.See example.
          * @version Egret 2.4
          * @platform Web,Native
+         * @language en_US
          */
         /**
-         * @language zh_CN
          * quad in。请查看示例
          * @version Egret 2.4
          * @platform Web,Native
+         * @language zh_CN
          */
-        public static quadIn:Function = Ease.getPowIn(2);
+        public static quadIn = Ease.getPowIn(2);
         /**
-         * @language en_US
          * quad out.See example.
          * @version Egret 2.4
          * @platform Web,Native
+         * @language en_US
          */
         /**
-         * @language zh_CN
          * quad out。请查看示例
          * @version Egret 2.4
          * @platform Web,Native
+         * @language zh_CN
          */
-        public static quadOut:Function = Ease.getPowOut(2);
+        public static quadOut = Ease.getPowOut(2);
         /**
-         * @language en_US
          * quad in out.See example.
          * @version Egret 2.4
          * @platform Web,Native
+         * @language en_US
          */
         /**
-         * @language zh_CN
          * quad in out。请查看示例
          * @version Egret 2.4
          * @platform Web,Native
+         * @language zh_CN
          */
-        public static quadInOut:Function = Ease.getPowInOut(2);
+        public static quadInOut = Ease.getPowInOut(2);
         /**
-         * @language en_US
          * cubic in.See example.
          * @version Egret 2.4
          * @platform Web,Native
+         * @language en_US
          */
         /**
-         * @language zh_CN
          * cubic in。请查看示例
          * @version Egret 2.4
          * @platform Web,Native
+         * @language zh_CN
          */
-        public static cubicIn:Function = Ease.getPowIn(3);
+        public static cubicIn = Ease.getPowIn(3);
         /**
-         * @language en_US
          * cubic out.See example.
          * @version Egret 2.4
          * @platform Web,Native
+         * @language en_US
          */
         /**
-         * @language zh_CN
          * cubic out。请查看示例
          * @version Egret 2.4
          * @platform Web,Native
+         * @language zh_CN
          */
-        public static cubicOut:Function = Ease.getPowOut(3);
+        public static cubicOut = Ease.getPowOut(3);
         /**
-         * @language en_US
          * cubic in out.See example.
          * @version Egret 2.4
          * @platform Web,Native
+         * @language en_US
          */
         /**
-         * @language zh_CN
          * cubic in out。请查看示例
          * @version Egret 2.4
          * @platform Web,Native
+         * @language zh_CN
          */
-        public static cubicInOut:Function = Ease.getPowInOut(3);
+        public static cubicInOut = Ease.getPowInOut(3);
         /**
-         * @language en_US
          * quart in.See example.
          * @version Egret 2.4
          * @platform Web,Native
+         * @language en_US
          */
         /**
-         * @language zh_CN
          * quart in。请查看示例
          * @version Egret 2.4
          * @platform Web,Native
+         * @language zh_CN
          */
-        public static quartIn:Function = Ease.getPowIn(4);
+        public static quartIn = Ease.getPowIn(4);
         /**
-         * @language en_US
          * quart out.See example.
          * @version Egret 2.4
          * @platform Web,Native
+         * @language en_US
          */
         /**
-         * @language zh_CN
          * quart out。请查看示例
          * @version Egret 2.4
          * @platform Web,Native
+         * @language zh_CN
          */
-        public static quartOut:Function = Ease.getPowOut(4);
+        public static quartOut = Ease.getPowOut(4);
         /**
-         * @language en_US
          * quart in out.See example.
          * @version Egret 2.4
          * @platform Web,Native
+         * @language en_US
          */
         /**
-         * @language zh_CN
          * quart in out。请查看示例
          * @version Egret 2.4
          * @platform Web,Native
+         * @language zh_CN
          */
-        public static quartInOut:Function = Ease.getPowInOut(4);
+        public static quartInOut = Ease.getPowInOut(4);
         /**
-         * @language en_US
          * quint in.See example.
          * @version Egret 2.4
          * @platform Web,Native
+         * @language en_US
          */
         /**
-         * @language zh_CN
          * quint in。请查看示例
          * @version Egret 2.4
          * @platform Web,Native
+         * @language zh_CN
          */
-        public static quintIn:Function = Ease.getPowIn(5);
+        public static quintIn = Ease.getPowIn(5);
         /**
-         * @language en_US
          * quint out.See example.
          * @version Egret 2.4
          * @platform Web,Native
+         * @language en_US
          */
         /**
-         * @language zh_CN
          * quint out。请查看示例
          * @version Egret 2.4
          * @platform Web,Native
+         * @language zh_CN
          */
-        public static quintOut:Function = Ease.getPowOut(5);
+        public static quintOut = Ease.getPowOut(5);
         /**
-         * @language en_US
          * quint in out.See example.
          * @version Egret 2.4
          * @platform Web,Native
+         * @language en_US
          */
         /**
-         * @language zh_CN
          * quint in out。请查看示例
          * @version Egret 2.4
          * @platform Web,Native
+         * @language zh_CN
          */
-        public static quintInOut:Function = Ease.getPowInOut(5);
+        public static quintInOut = Ease.getPowInOut(5);
 
         /**
-         * @language en_US
          * sine in.See example.
          * @version Egret 2.4
          * @platform Web,Native
+         * @language en_US
          */
         /**
-         * @language zh_CN
          * sine in。请查看示例
          * @version Egret 2.4
          * @platform Web,Native
+         * @language zh_CN
          */
-        public static sineIn(t):number {
+        public static sineIn(t: number) {
             return 1 - Math.cos(t * Math.PI / 2);
         }
 
         /**
-         * @language en_US
          * sine out.See example.
          * @version Egret 2.4
          * @platform Web,Native
+         * @language en_US
          */
         /**
-         * @language zh_CN
          * sine out。请查看示例
          * @version Egret 2.4
          * @platform Web,Native
+         * @language zh_CN
          */
-        public static sineOut(t):number {
+        public static sineOut(t: number) {
             return Math.sin(t * Math.PI / 2);
         }
 
         /**
-         * @language en_US
          * sine in out.See example.
          * @version Egret 2.4
          * @platform Web,Native
+         * @language en_US
          */
         /**
-         * @language zh_CN
          * sine in out。请查看示例
          * @version Egret 2.4
          * @platform Web,Native
+         * @language zh_CN
          */
-        public static sineInOut(t):number {
+        public static sineInOut(t: number) {
             return -0.5 * (Math.cos(Math.PI * t) - 1)
         }
 
         /**
-         * @language en_US
          * get back in.See example.
          * @version Egret 2.4
          * @platform Web,Native
+         * @language en_US
          */
         /**
-         * @language zh_CN
          * get back in。请查看示例
          * @version Egret 2.4
          * @platform Web,Native
+         * @language zh_CN
          */
-        public static getBackIn(amount):Function {
-            return function (t) {
+        public static getBackIn(amount: number) {
+            return function (t: number) {
                 return t * t * ((amount + 1) * t - amount);
             }
         }
 
         /**
-         * @language en_US
          * back in.See example.
          * @version Egret 2.4
          * @platform Web,Native
+         * @language en_US
          */
         /**
-         * @language zh_CN
          * back in。请查看示例
          * @version Egret 2.4
          * @platform Web,Native
+         * @language zh_CN
          */
-        public static backIn:Function = Ease.getBackIn(1.7);
+        public static backIn = Ease.getBackIn(1.7);
 
         /**
-         * @language en_US
          * get back out.See example.
          * @version Egret 2.4
          * @platform Web,Native
+         * @language en_US
          */
         /**
-         * @language zh_CN
          * get back out。请查看示例
          * @version Egret 2.4
          * @platform Web,Native
+         * @language zh_CN
          */
-        public static getBackOut(amount):Function {
+        public static getBackOut(amount: number) {
             return function (t) {
                 return (--t * t * ((amount + 1) * t + amount) + 1);
             }
         }
 
         /**
-         * @language en_US
          * back out.See example.
          * @version Egret 2.4
          * @platform Web,Native
+         * @language en_US
          */
         /**
-         * @language zh_CN
          * back out。请查看示例
          * @version Egret 2.4
          * @platform Web,Native
+         * @language zh_CN
          */
-        public static backOut:Function = Ease.getBackOut(1.7);
+        public static backOut = Ease.getBackOut(1.7);
 
         /**
-         * @language en_US
          * get back in out.See example.
          * @version Egret 2.4
          * @platform Web,Native
+         * @language en_US
          */
         /**
-         * @language zh_CN
          * get back in out。请查看示例
          * @version Egret 2.4
          * @platform Web,Native
+         * @language zh_CN
          */
-        public static getBackInOut(amount):Function {
+        public static getBackInOut(amount: number) {
             amount *= 1.525;
-            return function (t) {
+            return function (t: number) {
                 if ((t *= 2) < 1) return 0.5 * (t * t * ((amount + 1) * t - amount));
                 return 0.5 * ((t -= 2) * t * ((amount + 1) * t + amount) + 2);
             }
         }
 
         /**
-         * @language en_US
          * back in out.See example.
          * @version Egret 2.4
          * @platform Web,Native
+         * @language en_US
          */
         /**
-         * @language zh_CN
          * back in out。请查看示例
          * @version Egret 2.4
          * @platform Web,Native
+         * @language zh_CN
          */
-        public static backInOut:Function = Ease.getBackInOut(1.7);
+        public static backInOut = Ease.getBackInOut(1.7);
 
         /**
-         * @language en_US
          * circ in.See example.
          * @version Egret 2.4
          * @platform Web,Native
+         * @language en_US
          */
         /**
-         * @language zh_CN
          * circ in。请查看示例
          * @version Egret 2.4
          * @platform Web,Native
+         * @language zh_CN
          */
-        public static circIn(t):number {
+        public static circIn(t: number) {
             return -(Math.sqrt(1 - t * t) - 1);
         }
 
         /**
-         * @language en_US
          * circ out.See example.
          * @version Egret 2.4
          * @platform Web,Native
+         * @language en_US
          */
         /**
-         * @language zh_CN
          * circ out。请查看示例
          * @version Egret 2.4
          * @platform Web,Native
+         * @language zh_CN
          */
-        public static circOut(t):number {
+        public static circOut(t: number) {
             return Math.sqrt(1 - (--t) * t);
         }
 
         /**
-         * @language en_US
          * circ in out.See example.
          * @version Egret 2.4
          * @platform Web,Native
+         * @language en_US
          */
         /**
-         * @language zh_CN
          * circ in out。请查看示例
          * @version Egret 2.4
          * @platform Web,Native
+         * @language zh_CN
          */
-        public static circInOut(t):number {
+        public static circInOut(t: number) {
             if ((t *= 2) < 1) {
                 return -0.5 * (Math.sqrt(1 - t * t) - 1);
             }
@@ -492,34 +492,34 @@ module egret {
         }
 
         /**
-         * @language en_US
          * bounce in.See example.
          * @version Egret 2.4
          * @platform Web,Native
+         * @language en_US
          */
         /**
-         * @language zh_CN
          * bounce in。请查看示例
          * @version Egret 2.4
          * @platform Web,Native
+         * @language zh_CN
          */
-        public static bounceIn(t):number {
+        public static bounceIn(t: number) {
             return 1 - Ease.bounceOut(1 - t);
         }
 
         /**
-         * @language en_US
          * bounce out.See example.
          * @version Egret 2.4
          * @platform Web,Native
+         * @language en_US
          */
         /**
-         * @language zh_CN
          * bounce out。请查看示例
          * @version Egret 2.4
          * @platform Web,Native
+         * @language zh_CN
          */
-        public static bounceOut(t):number {
+        public static bounceOut(t: number) {
             if (t < 1 / 2.75) {
                 return (7.5625 * t * t);
             } else if (t < 2 / 2.75) {
@@ -532,125 +532,125 @@ module egret {
         }
 
         /**
-         * @language en_US
          * bounce in out.See example.
          * @version Egret 2.4
          * @platform Web,Native
+         * @language en_US
          */
         /**
-         * @language zh_CN
          * bounce in out。请查看示例
          * @version Egret 2.4
          * @platform Web,Native
+         * @language zh_CN
          */
-        public static bounceInOut(t):number {
+        public static bounceInOut(t: number) {
             if (t < 0.5) return Ease.bounceIn(t * 2) * .5;
             return Ease.bounceOut(t * 2 - 1) * 0.5 + 0.5;
         }
 
         /**
-         * @language en_US
          * get elastic in.See example.
          * @version Egret 2.4
          * @platform Web,Native
+         * @language en_US
          */
         /**
-         * @language zh_CN
          * get elastic in。请查看示例
          * @version Egret 2.4
          * @platform Web,Native
+         * @language zh_CN
          */
-        public static getElasticIn(amplitude, period):Function {
-            var pi2 = Math.PI * 2;
-            return function (t) {
+        public static getElasticIn(amplitude: number, period: number) {
+            let pi2 = Math.PI * 2;
+            return function (t: number) {
                 if (t == 0 || t == 1) return t;
-                var s = period / pi2 * Math.asin(1 / amplitude);
+                let s = period / pi2 * Math.asin(1 / amplitude);
                 return -(amplitude * Math.pow(2, 10 * (t -= 1)) * Math.sin((t - s) * pi2 / period));
             }
         }
 
         /**
-         * @language en_US
          * elastic in.See example.
          * @version Egret 2.4
          * @platform Web,Native
+         * @language en_US
          */
         /**
-         * @language zh_CN
          * elastic in。请查看示例
          * @version Egret 2.4
          * @platform Web,Native
+         * @language zh_CN
          */
-        public static elasticIn:Function = Ease.getElasticIn(1, 0.3);
+        public static elasticIn = Ease.getElasticIn(1, 0.3);
 
         /**
-         * @language en_US
          * get elastic out.See example.
          * @version Egret 2.4
          * @platform Web,Native
+         * @language en_US
          */
         /**
-         * @language zh_CN
          * get elastic out。请查看示例
          * @version Egret 2.4
          * @platform Web,Native
+         * @language zh_CN
          */
-        public static getElasticOut(amplitude, period):Function {
-            var pi2 = Math.PI * 2;
-            return function (t) {
+        public static getElasticOut(amplitude: number, period: number) {
+            let pi2 = Math.PI * 2;
+            return function (t: number) {
                 if (t == 0 || t == 1) return t;
-                var s = period / pi2 * Math.asin(1 / amplitude);
+                let s = period / pi2 * Math.asin(1 / amplitude);
                 return (amplitude * Math.pow(2, -10 * t) * Math.sin((t - s) * pi2 / period) + 1);
             }
         }
 
         /**
-         * @language en_US
          * elastic out.See example.
          * @version Egret 2.4
          * @platform Web,Native
+         * @language en_US
          */
         /**
-         * @language zh_CN
          * elastic out。请查看示例
          * @version Egret 2.4
          * @platform Web,Native
+         * @language zh_CN
          */
-        public static elasticOut:Function = Ease.getElasticOut(1, 0.3);
+        public static elasticOut = Ease.getElasticOut(1, 0.3);
 
         /**
-         * @language en_US
          * get elastic in out.See example.
          * @version Egret 2.4
          * @platform Web,Native
+         * @language en_US
          */
         /**
-         * @language zh_CN
          * get elastic in out。请查看示例
          * @version Egret 2.4
          * @platform Web,Native
+         * @language zh_CN
          */
-        public static getElasticInOut(amplitude, period):Function {
-            var pi2 = Math.PI * 2;
-            return function (t) {
-                var s = period / pi2 * Math.asin(1 / amplitude);
+        public static getElasticInOut(amplitude: number, period: number) {
+            let pi2 = Math.PI * 2;
+            return function (t: number) {
+                let s = period / pi2 * Math.asin(1 / amplitude);
                 if ((t *= 2) < 1) return -0.5 * (amplitude * Math.pow(2, 10 * (t -= 1)) * Math.sin((t - s) * pi2 / period));
                 return amplitude * Math.pow(2, -10 * (t -= 1)) * Math.sin((t - s) * pi2 / period) * 0.5 + 1;
             }
         }
 
         /**
-         * @language en_US
          * elastic in out.See example.
          * @version Egret 2.4
          * @platform Web,Native
+         * @language en_US
          */
         /**
-         * @language zh_CN
          * elastic in out。请查看示例
          * @version Egret 2.4
          * @platform Web,Native
+         * @language zh_CN
          */
-        public static elasticInOut:Function = Ease.getElasticInOut(1, 0.3 * 1.5);
+        public static elasticInOut = Ease.getElasticInOut(1, 0.3 * 1.5);
     }
 }

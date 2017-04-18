@@ -1,8 +1,9 @@
 /// <reference path="../lib/types.d.ts" />
 //import globals = require("../globals");
-var FileUtil = require('../lib/FileUtil');
+var FileUtil = require("../lib/FileUtil");
 var fs = require("fs");
 var CopyFilesCommand = require("../commands/copyfile");
+var EgretProject = require("../parser/EgretProject");
 var GenerateVersionCommand = (function () {
     function GenerateVersionCommand() {
     }
@@ -10,12 +11,12 @@ var GenerateVersionCommand = (function () {
         var tempTime = Date.now();
         //globals.debugLog(1407);
         var releasePath = egret.args.releaseDir;
-        var ignorePathList = egret.args.properties.getIgnorePath();
+        var ignorePathList = EgretProject.utils.getIgnorePath();
         var allPath = FileUtil.joinPath(releasePath, "all.manifest");
         var sourceRoot = egret.args.projectDir;
-        var resources = egret.args.properties.getResources();
-        if (egret.args.properties.getPublishType(egret.args.runtime) != 1) {
-            var config = egret.args.properties;
+        var resources = EgretProject.utils.getResources();
+        if (EgretProject.utils.getPublishType(egret.args.runtime) != 1) {
+            var config = EgretProject.utils;
             var cpFiles = new CopyFilesCommand();
             cpFiles.copyResources(sourceRoot, releasePath, config.getIgnorePath());
             return 0;
@@ -48,8 +49,21 @@ var GenerateVersionCommand = (function () {
         });
         var allVersion = {};
         var length = list.length;
+        var copyExmlList = EgretProject.utils.getCopyExmlList();
         for (var i = 0; i < length; i++) {
             var filePath = list[i];
+            if (copyExmlList.length && filePath.slice(filePath.lastIndexOf(".") + 1) == "exml") {
+                var needCopy = false;
+                for (var j = 0; j < copyExmlList.length; j++) {
+                    if (filePath.indexOf(copyExmlList[j]) != -1) {
+                        needCopy = true;
+                        break;
+                    }
+                }
+                if (!needCopy) {
+                    continue;
+                }
+            }
             var txt = FileUtil.read(filePath);
             var crc32 = globals.getCrc32();
             var txtCrc32 = crc32(txt);
@@ -73,7 +87,5 @@ var GenerateVersionCommand = (function () {
         return 0;
     };
     return GenerateVersionCommand;
-})();
+}());
 module.exports = GenerateVersionCommand;
-
-//# sourceMappingURL=GenerateVersionCommand.js.map

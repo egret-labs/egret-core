@@ -1,6 +1,6 @@
 //////////////////////////////////////////////////////////////////////////////////////
 //
-//  Copyright (c) 2014-2015, Egret Technology Inc.
+//  Copyright (c) 2014-present, Egret Technology.
 //  All rights reserved.
 //  Redistribution and use in source and binary forms, with or without
 //  modification, are permitted provided that the following conditions are met:
@@ -28,7 +28,7 @@
 //////////////////////////////////////////////////////////////////////////////////////
 
 
-module RES {
+namespace RES {
     /**
      * @private
      */
@@ -39,11 +39,11 @@ module RES {
         }
 
         public analyzeConfig(resItem:ResourceItem, data:string):string {
-            var name:string = resItem.name;
-            var config:any;
-            var imageUrl:string = "";
+            let name:string = resItem.name;
+            let config:any;
+            let imageUrl:string = "";
             try {
-                var str:string = <string> data;
+                let str:string = <string> data;
                 config = JSON.parse(str);
             }
             catch (e) {
@@ -61,23 +61,23 @@ module RES {
 
         public analyzeBitmap(resItem:ResourceItem, texture:egret.Texture):void {
 
-            var name:string = resItem.name;
+            let name:string = resItem.name;
             if (this.fileDic[name] || !texture) {
                 return;
             }
 
-            var config:any = this.sheetMap[name];
+            let config:any = this.sheetMap[name];
             delete this.sheetMap[name];
-            var bitmapFont:egret.BitmapFont = new egret.BitmapFont(texture, config);
+            let bitmapFont:egret.BitmapFont = new egret.BitmapFont(texture, config);
             this.fileDic[name] = bitmapFont;
         }
 
         private getTexturePath(url:string, fntText:string):string {
 
-            var file:string = "";
-            var lines = fntText.split("\n");
-            var pngLine = lines[2];
-            var index:number = pngLine.indexOf("file=\"");
+            let file:string = "";
+            let lines = fntText.split("\n");
+            let pngLine = lines[2];
+            let index:number = pngLine.indexOf("file=\"");
             if (index != -1) {
                 pngLine = pngLine.substring(index + 6);
                 index = pngLine.indexOf("\"");
@@ -85,7 +85,7 @@ module RES {
             }
 
             url = url.split("\\").join("/");
-            var index:number = url.lastIndexOf("/");
+            index = url.lastIndexOf("/");
             if (index != -1) {
                 url = url.substring(0, index + 1) + file;
             }

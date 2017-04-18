@@ -1,6 +1,6 @@
 //////////////////////////////////////////////////////////////////////////////////////
 //
-//  Copyright (c) 2014-2015, Egret Technology Inc.
+//  Copyright (c) 2014-present, Egret Technology.
 //  All rights reserved.
 //  Redistribution and use in source and binary forms, with or without
 //  modification, are permitted provided that the following conditions are met:
@@ -28,7 +28,7 @@
 //////////////////////////////////////////////////////////////////////////////////////
 
 
-module egret.gui {
+namespace egret.gui {
     /**
      * @class egret.gui.MotionPath
      * @classdesc
@@ -61,11 +61,11 @@ module egret.gui {
          * 返回此 MotionPath 对象的副本（包含每个关键帧的副本）。
          */
         public clone():MotionPath{
-            var mp:MotionPath = new MotionPath(this.property);
+            let mp:MotionPath = new MotionPath(this.property);
             mp.interpolator = this.interpolator;
             if (this.keyframes !== null){
                 mp.keyframes = new Array<Keyframe>();
-                for (var i:number = 0; i < this.keyframes.length; ++i)
+                for (let i:number = 0; i < this.keyframes.length; ++i)
                     mp.keyframes[i] = this.keyframes[i].clone();
             }
             return mp;
@@ -75,9 +75,9 @@ module egret.gui {
          * 计算每一个关键帧的timeFraction值
          */
         public _scaleKeyframes(duration:number):void{
-            var n:number = this.keyframes.length;
-            for (var i:number = 0; i < n; ++i){
-                var kf:Keyframe = this.keyframes[i];
+            let n:number = this.keyframes.length;
+            for (let i:number = 0; i < n; ++i){
+                let kf:Keyframe = this.keyframes[i];
                 kf._timeFraction = kf.time / duration;
             }
         }
@@ -92,9 +92,9 @@ module egret.gui {
         public getValue(fraction:number):any{
             if (!this.keyframes)
                 return null;
-            var n:number = this.keyframes.length;
+            let n:number = this.keyframes.length;
             if (n == 2 && this.keyframes[1]._timeFraction == 1){
-                var easedF:number = (this.keyframes[1].easer!=null) ?
+                let easedF:number = (this.keyframes[1].easer!=null) ?
                     this.keyframes[1].easer.ease(fraction) :
                     fraction;
                 return this.interpolator.interpolate(easedF, this.keyframes[0].value,
@@ -102,13 +102,13 @@ module egret.gui {
             }
             if (isNaN(this.keyframes[0]._timeFraction))
                 this._scaleKeyframes(this.keyframes[this.keyframes.length-1].time);
-            var prevT:number = 0;
-            var prevValue:any = this.keyframes[0].value;
-            for (var i:number = 1; i < n; ++i){
-                var kf:Keyframe = this.keyframes[i];
+            let prevT:number = 0;
+            let prevValue:any = this.keyframes[0].value;
+            for (let i:number = 1; i < n; ++i){
+                let kf:Keyframe = this.keyframes[i];
                 if (fraction >= prevT && fraction < kf._timeFraction){
-                    var t:number = (fraction - prevT) / (kf._timeFraction - prevT);
-                    var easedT:number = (kf.easer!=null) ? kf.easer.ease(t) : t;
+                    let t:number = (fraction - prevT) / (kf._timeFraction - prevT);
+                    let easedT:number = (kf.easer!=null) ? kf.easer.ease(t) : t;
                     return this.interpolator.interpolate(easedT, prevValue, kf.value);
                 }
                 prevT = kf._timeFraction;

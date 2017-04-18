@@ -1,6 +1,6 @@
 //////////////////////////////////////////////////////////////////////////////////////
 //
-//  Copyright (c) 2014-2015, Egret Technology Inc.
+//  Copyright (c) 2014-present, Egret Technology.
 //  All rights reserved.
 //  Redistribution and use in source and binary forms, with or without
 //  modification, are permitted provided that the following conditions are met:
@@ -28,7 +28,7 @@
 //////////////////////////////////////////////////////////////////////////////////////
 
 
-module egret.gui {
+namespace egret.gui {
 
 	/**
 	 * @class egret.gui.TreeEvent
@@ -99,12 +99,12 @@ module egret.gui {
         public static dispatchTreeEvent(target:IEventDispatcher,type:string,itemIndex:number = -1,
                                          item:any = null,itemRenderer:ITreeItemRenderer = null,opening:boolean=false,
                                          bubbles:boolean = false,cancelable:boolean = false):boolean{
-			var event:TreeEvent = Event.create(TreeEvent, type);
+			let event:TreeEvent = Event.create(TreeEvent, type);
 			event.itemIndex = itemIndex;
 			event.item = item;
 			event.itemRenderer = itemRenderer;
 			event.opening = opening;
-			var result = target.dispatchEvent(event);
+			let result = target.dispatchEvent(event);
 			Event.release(event);
 			return result;
         }

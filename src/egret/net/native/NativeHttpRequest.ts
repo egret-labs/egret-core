@@ -1,6 +1,6 @@
 //////////////////////////////////////////////////////////////////////////////////////
 //
-//  Copyright (c) 2014-2015, Egret Technology Inc.
+//  Copyright (c) 2014-present, Egret Technology.
 //  All rights reserved.
 //  Redistribution and use in source and binary forms, with or without
 //  modification, are permitted provided that the following conditions are met:
@@ -27,7 +27,7 @@
 //
 //////////////////////////////////////////////////////////////////////////////////////
 
-module egret.native {
+namespace egret.native {
 
     /**
      * @private
@@ -113,12 +113,17 @@ module egret.native {
          * @param data 需要发送的数据
          */
         public send(data?:any):void {
-            var self = this;
+            let self = this;
             if (self.isNetUrl(self._url)) {//网络请求
                 self.urlData.type = self._method;
                 //写入POST数据
                 if (self._method == HttpMethod.POST && data) {
-                    self.urlData.data = data.toString();
+                    if(data instanceof ArrayBuffer) {
+                        self.urlData.data = data;
+                    }
+                    else {
+                        self.urlData.data = data.toString();
+                    }
                 }
                 else {
                     delete self.urlData["data"];
@@ -136,10 +141,10 @@ module egret.native {
                 else {
                     delete self.urlData.header;
                 }
-                var promise = PromiseObject.create();
+                let promise = PromiseObject.create();
                 promise.onSuccessFunc = function (getted_str) {
                     self._response = getted_str;
-                    callLater(Event.dispatchEvent, Event, self, Event.COMPLETE);
+                    $callAsync(egret.Event.dispatchEvent, egret.Event, self, egret.Event.COMPLETE);
                 };
                 promise.onErrorFunc = function (error_code) {
                     $warn(1019, error_code);
@@ -157,7 +162,7 @@ module egret.native {
             }
 
             function readFileAsync() {
-                var promise = new egret.PromiseObject();
+                let promise = new egret.PromiseObject();
                 promise.onSuccessFunc = function (content) {
                     self._response = content;
                     Event.dispatchEvent(self, Event.COMPLETE);
@@ -174,7 +179,7 @@ module egret.native {
             }
 
             function download() {
-                var promise = PromiseObject.create();
+                let promise = PromiseObject.create();
                 promise.onSuccessFunc = readFileAsync;
                 promise.onErrorFunc = function () {
                     Event.dispatchEvent(self, IOErrorEvent.IO_ERROR);
@@ -191,7 +196,7 @@ module egret.native {
          * @returns {boolean}
          */
         private isNetUrl(url:string):boolean {
-            return url.indexOf("http://") != -1 || url.indexOf("HTTP://") != -1;
+            return url.indexOf("http://") != -1 || url.indexOf("HTTP://") != -1 || url.indexOf("https://") != -1 || url.indexOf("HTTPS://") != -1;
         }
 
         /**
@@ -205,8 +210,8 @@ module egret.native {
 
         private onResponseHeader(headers:string):void {
             this.responseHeader = "";
-            var obj = JSON.parse(headers);
-            for(var key in obj) {
+            let obj = JSON.parse(headers);
+            for(let key in obj) {
                 this.responseHeader += key + ": " + obj[key] + "\r\n";
             }
         }
@@ -245,7 +250,4 @@ module egret.native {
     }
     HttpRequest = NativeHttpRequest;
 
-    if (DEBUG) {
-        egret.$markReadOnly(NativeHttpRequest, "response");
-    }
 }

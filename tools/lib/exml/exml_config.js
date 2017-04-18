@@ -530,16 +530,16 @@ var EXMLConfig = (function () {
         }
         return this.isInstanceOf(dataA["super"], classNameB);
     };
-    /**
-     * Egret命名空间
-     */
-    EXMLConfig.E = "http://ns.egret-labs.org/egret";
-    /**
-     * Wing命名空间
-     */
-    EXMLConfig.W = "http://ns.egret-labs.org/wing";
     return EXMLConfig;
-})();
+}());
+/**
+ * Egret命名空间
+ */
+EXMLConfig.E = "http://ns.egret-labs.org/egret";
+/**
+ * Wing命名空间
+ */
+EXMLConfig.W = "http://ns.egret-labs.org/wing";
 var Component = (function () {
     /**
      * 构造函数
@@ -563,8 +563,6 @@ var Component = (function () {
         }
     }
     return Component;
-})();
+}());
 var exmlConfig;
 module.exports = EXMLConfig;
-
-//# sourceMappingURL=exml_config.js.map

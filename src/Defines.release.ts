@@ -1,6 +1,6 @@
 //////////////////////////////////////////////////////////////////////////////////////
 //
-//  Copyright (c) 2014-2015, Egret Technology Inc.
+//  Copyright (c) 2014-present, Egret Technology.
 //  All rights reserved.
 //  Redistribution and use in source and binary forms, with or without
 //  modification, are permitted provided that the following conditions are met:
@@ -30,15 +30,19 @@
 
 //此文件仅保证程序中的debug代码能够通过编译，不会生成代码，在JS代码压缩阶段，会移除所有debug代码
 
+/**
+ * @private
+ */
+declare let DEBUG:boolean;
+/**
+ * @private
+ */
+declare let RELEASE:boolean;
 
-declare var DEBUG:boolean;
-declare var RELEASE:boolean;
-
-module egret {
+namespace egret {
     export declare function $error(code:number,...params:any[]):void;
     export declare function $warn(code:number,...params:any[]):void;
     export declare function getString(code:number, ...params:any[]):string;
-    export declare function $markReadOnly(instance:any,property:string, isProperty?:boolean):void;
     export declare function $markCannotUse(instance:any, property:string, defaultVale:any):void;
 
     /**
@@ -60,9 +64,6 @@ module egret {
 
     egret.$warn = _warn;
 
-    function _markReadOnly():void {
-    }
-    egret.$markReadOnly = _markReadOnly;
 
     function markCannotUse():void {
     }

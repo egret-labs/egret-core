@@ -1,6 +1,6 @@
 //////////////////////////////////////////////////////////////////////////////////////
 //
-//  Copyright (c) 2014-2015, Egret Technology Inc.
+//  Copyright (c) 2014-present, Egret Technology.
 //  All rights reserved.
 //  Redistribution and use in source and binary forms, with or without
 //  modification, are permitted provided that the following conditions are met:
@@ -28,7 +28,7 @@
 //////////////////////////////////////////////////////////////////////////////////////
 
 
-module egret.gui {
+namespace egret.gui {
 
 	/**
 	 * @class egret.gui.RadioButton
@@ -88,7 +88,7 @@ module egret.gui {
 			if (!this._group&&this._groupName){
 				if(!RadioButton.automaticRadioButtonGroups)
 					RadioButton.automaticRadioButtonGroups = {};
-				var g:RadioButtonGroup = RadioButton.automaticRadioButtonGroups[this._groupName];
+				let g:RadioButtonGroup = RadioButton.automaticRadioButtonGroups[this._groupName];
 				if (!g){
 					g = new RadioButtonGroup();
 					g._name = this._groupName;
@@ -206,7 +206,7 @@ module egret.gui {
 		 * 添此单选按钮加到组
 		 */		
 		private addToGroup():RadioButtonGroup{        
-			var g:RadioButtonGroup = this.group; 
+			let g:RadioButtonGroup = this.group;
 			if (g)
 				g._addInstance(this);
 			return g;

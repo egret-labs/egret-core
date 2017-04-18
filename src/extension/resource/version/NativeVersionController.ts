@@ -1,6 +1,6 @@
 //////////////////////////////////////////////////////////////////////////////////////
 //
-//  Copyright (c) 2014-2015, Egret Technology Inc.
+//  Copyright (c) 2014-present, Egret Technology.
 //  All rights reserved.
 //  Redistribution and use in source and binary forms, with or without
 //  modification, are permitted provided that the following conditions are met:
@@ -27,7 +27,7 @@
 //
 //////////////////////////////////////////////////////////////////////////////////////
 
-module RES.native {
+namespace RES.native {
 
     /**
      * @private
@@ -37,7 +37,7 @@ module RES.native {
         private _versionInfo:Object = {};
         private _versionPath:string = "";
 
-        private _localFileArr:Array<string> = [];
+        private _localFileArr:string[] = [];
 
         constructor() {
         }
@@ -47,7 +47,7 @@ module RES.native {
                 callback.onSuccess(null);
                 return;
             }
-            var self = this;
+            let self = this;
             self._versionPath = "all.manifest";
 
             self._versionInfo = self.getLocalData(self._versionPath);
@@ -57,10 +57,10 @@ module RES.native {
                 }, self);
                 return;
             }
-            var count = 0;
-            var loadOver = function (paths:Array<string>) {
+            let count = 0;
+            let loadOver = function (paths:string[]) {
                 if (paths) {
-                    for (var i = 0; i < paths.length; i++) {
+                    for (let i = 0; i < paths.length; i++) {
                         if (paths[i] && paths[i] != "") {
                             self._localFileArr.push("resource/" + paths[i]);
                         }
@@ -77,7 +77,7 @@ module RES.native {
         }
 
         private getList(callback:Function, type:string, root:string = ""):void {
-            var promise = egret.PromiseObject.create();
+            let promise = egret.PromiseObject.create();
             promise.onSuccessFunc = function(paths) {
                 callback(paths);
             };
@@ -94,13 +94,13 @@ module RES.native {
 
         /**
          * 获取所有有变化的文件
-         * @returns {Array<any>}
+         * @returns {any[]}
          */
         public getChangeList():Array<{url:string; size:number}> {
-            var temp:Array<any> = [];
+            let temp:any[] = [];
 
-            var localFileArr = this._localFileArr;
-            for (var key in this._versionInfo) {
+            let localFileArr = this._localFileArr;
+            for (let key in this._versionInfo) {
                 if (localFileArr.indexOf(this.getVirtualUrl(key)) < 0) {
                     temp.push({"url":this.getVirtualUrl(key), "size":this._versionInfo[key]["s"]});
                 }
@@ -124,7 +124,7 @@ module RES.native {
         private getLocalData(filePath):Object {
             if (egret_native.readUpdateFileSync && egret_native.readResourceFileSync) {
                 //先取更新目录
-                var content:string = egret_native.readUpdateFileSync(filePath);
+                let content:string = egret_native.readUpdateFileSync(filePath);
                 if (content != null) {
                     return JSON.parse(content);
                 }

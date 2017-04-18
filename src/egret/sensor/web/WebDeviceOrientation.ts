@@ -1,4 +1,4 @@
-module egret.web {
+namespace egret.web {
 
     /**
      * @private
@@ -25,7 +25,7 @@ module egret.web {
          * @private
          */
         protected onChange = (e: DeviceOrientationEvent) => {
-            var event = new OrientationEvent(Event.CHANGE);
+            let event = new OrientationEvent(Event.CHANGE);
             event.beta = e.beta;
             event.gamma = e.gamma;
             event.alpha = e.alpha;

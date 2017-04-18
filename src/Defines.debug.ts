@@ -1,6 +1,6 @@
 //////////////////////////////////////////////////////////////////////////////////////
 //
-//  Copyright (c) 2014-2015, Egret Technology Inc.
+//  Copyright (c) 2014-present, Egret Technology.
 //  All rights reserved.
 //  Redistribution and use in source and binary forms, with or without
 //  modification, are permitted provided that the following conditions are met:
@@ -43,20 +43,43 @@
 //  console.log("release");
 //
 
-declare var DEBUG:boolean;
-declare var RELEASE:boolean;
+/**
+ * Is debug mode.
+ * @version Egret 2.5
+ * @platform Web,Native
+ * @language en_US
+ */
+/**
+ * 是否为 debug 模式。
+ * @version Egret 2.5
+ * @platform Web,Native
+ * @language zh_CN
+ */
+declare let DEBUG:boolean;
+/**
+ * Is release mode.
+ * @version Egret 2.5
+ * @platform Web,Native
+ * @language en_US
+ */
+/**
+ * 是否为 release 模式。
+ * @version Egret 2.5
+ * @platform Web,Native
+ * @language zh_CN
+ */
+declare let RELEASE:boolean;
 
 this["DEBUG"] = true;
 this["RELEASE"] = false;
 
-module egret {
+namespace egret {
     export declare function $error(code:number, ...params:any[]):void;
 
     export declare function $warn(code:number, ...params:any[]):void;
 
     export declare function getString(code:number, ...params:any[]):string;
 
-    export declare function $markReadOnly(instance:any, property:string, isProperty?:boolean):void;
     export declare function $markCannotUse(instance:any, property:string, defaultVale:any):void;
 
     /**
@@ -68,7 +91,7 @@ module egret {
     egret.getString = _getString;
 
     function _error(code:number, ...params:any[]):void {
-        var text:string = egret.sys.tr.apply(null, arguments);
+        let text:string = egret.sys.tr.apply(null, arguments);
         if (DEBUG) {
             egret.sys.$logToFPS("Error #" + code + ": " + text)
         }
@@ -78,7 +101,7 @@ module egret {
     egret.$error = _error;
 
     function _warn(code:number, ...params:any[]):void {
-        var text:string = egret.sys.tr.apply(null, arguments);
+        let text:string = egret.sys.tr.apply(null, arguments);
         if (DEBUG) {
             egret.sys.$logToFPS("Warning #" + code + ": " + text)
         }
@@ -88,7 +111,7 @@ module egret {
     egret.$warn = _warn;
 
     function _markReadOnly(instance:any, property:string, isProperty:boolean = true):void {
-        var data:PropertyDescriptor = Object.getOwnPropertyDescriptor(isProperty ? instance.prototype : instance, property);
+        let data:PropertyDescriptor = Object.getOwnPropertyDescriptor(isProperty ? instance.prototype : instance, property);
         if (data == null) {
             console.log(instance);
             return;
@@ -104,7 +127,6 @@ module egret {
         Object.defineProperty(instance.prototype, property, data);
     }
 
-    egret.$markReadOnly = _markReadOnly;
 
     function markCannotUse(instance:any, property:string, defaultValue:any):void {
         Object.defineProperty(instance.prototype, property, {

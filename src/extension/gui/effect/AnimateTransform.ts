@@ -1,6 +1,6 @@
 //////////////////////////////////////////////////////////////////////////////////////
 //
-//  Copyright (c) 2014-2015, Egret Technology Inc.
+//  Copyright (c) 2014-present, Egret Technology.
 //  All rights reserved.
 //  Redistribution and use in source and binary forms, with or without
 //  modification, are permitted provided that the following conditions are met:
@@ -29,7 +29,7 @@
 
 /// <reference path="easing/Linear.ts" />
 
-module egret.gui {
+namespace egret.gui {
 
     /**
      * @class egret.gui.AnimateTransform
@@ -69,8 +69,8 @@ module egret.gui {
          * 获取效果所属的复合效果
          */
         private getOwningParallelEffect():Parallel{
-            var prevParent:Parallel = null;
-            var parent:Effect = this._parentCompositeEffect;
+            let prevParent:Parallel = null;
+            let parent:Effect = this._parentCompositeEffect;
             while (parent){
                 if (parent instanceof Sequence)
                     break;
@@ -84,12 +84,12 @@ module egret.gui {
             if (!target)
                 target = this.target;
 
-            var sharedInstance:IEffectInstance = null;
-            var topmostParallel:Parallel = this.getOwningParallelEffect();
+            let sharedInstance:IEffectInstance = null;
+            let topmostParallel:Parallel = this.getOwningParallelEffect();
             if (topmostParallel != null)
                 sharedInstance = <IEffectInstance><any> (AnimateTransform.getSharedInstance(topmostParallel, target));
             if (!sharedInstance){
-                var newInstance:IEffectInstance = super.createInstance(target);
+                let newInstance:IEffectInstance = super.createInstance(target);
                 if (topmostParallel)
                     AnimateTransform.storeSharedInstance(topmostParallel, target, newInstance);
                 return newInstance;
@@ -102,7 +102,7 @@ module egret.gui {
 
         public _effectStartHandler(event:EffectEvent):void{
             super._effectStartHandler(event);
-            var topmostParallel:Parallel = this.getOwningParallelEffect();
+            let topmostParallel:Parallel = this.getOwningParallelEffect();
             if (topmostParallel != null)
                 AnimateTransform.removeSharedInstance(topmostParallel, event.effectInstance.target);
         }
@@ -111,12 +111,12 @@ module egret.gui {
          * 计算目标的转换中心
          */
         private computeTransformCenterForTarget(target:any, valueMap:any = null):egret.Point{
-            var computedTransformCenter:egret.Point;
+            let computedTransformCenter:egret.Point;
             if (this.autoCenterTransform){
-                var w:number = (valueMap != null && valueMap["width"] !== undefined) ?
+                let w:number = (valueMap != null && valueMap["width"] !== undefined) ?
                     valueMap["width"] :
                     target.width;
-                var h:number = (valueMap != null && valueMap["height"] !== undefined) ?
+                let h:number = (valueMap != null && valueMap["height"] !== undefined) ?
                     valueMap["height"] :
                     target.height;
                 computedTransformCenter = new egret.Point(w/2, h/2);
@@ -135,7 +135,7 @@ module egret.gui {
          * 插入关键帧
          */
         private insertKeyframe(keyframes:Array<Keyframe>, newKF:Keyframe):void{
-            for (var i:number = 0; i < keyframes.length; i++){
+            for (let i:number = 0; i < keyframes.length; i++){
                 if (keyframes[i].time > newKF.time){
                     keyframes.splice(i, 0, newKF);
                     return;
@@ -158,16 +158,16 @@ module egret.gui {
                 if (!isNaN(valueTo) && !isNaN(valueBy))
                     valueFrom = valueTo - valueBy;
             }
-            var mp:MotionPath = new MotionPath(property);
+            let mp:MotionPath = new MotionPath(property);
             mp.keyframes = [new Keyframe(0, valueFrom), new Keyframe(this.duration, valueTo, valueBy)];
             mp.keyframes[1].easer = this.easer;
 
             if (this.motionPaths){
-                var n:number = this.motionPaths.length;
-                for (var i:number = 0; i < n; i++){
-                    var prop:MotionPath = <MotionPath><any> (this.motionPaths[i]);
+                let n:number = this.motionPaths.length;
+                for (let i:number = 0; i < n; i++){
+                    let prop:MotionPath = <MotionPath><any> (this.motionPaths[i]);
                     if (prop.property == mp.property){
-                        for (var j:number = 0; j < mp.keyframes.length; j++){
+                        for (let j:number = 0; j < mp.keyframes.length; j++){
                             this.insertKeyframe(prop.keyframes, mp.keyframes[j]);
                         }
                         return;
@@ -181,20 +181,20 @@ module egret.gui {
         }
 
         public _initInstance(instance:IEffectInstance):void{
-            var i:number = 0;
-            var adjustedDuration:number = this.duration;
+            let i:number = 0;
+            let adjustedDuration:number = this.duration;
 
-            var transformInstance:AnimateTransformInstance =
+            let transformInstance:AnimateTransformInstance =
                 <AnimateTransformInstance><any> instance;
 
             if (this.motionPaths){
-                var instanceAnimProps:Array<any> = [];
+                let instanceAnimProps:any[] = [];
                 for (i = 0; i < this.motionPaths.length; ++i){
                     instanceAnimProps[i] = this.motionPaths[i].clone();
-                    var mp:MotionPath = <MotionPath><any> (instanceAnimProps[i]);
+                    let mp:MotionPath = <MotionPath><any> (instanceAnimProps[i]);
                     if (mp.keyframes){
-                        for (var j:number = 0; j < mp.keyframes.length; ++j){
-                            var kf:Keyframe = <Keyframe><any> (mp.keyframes[j]);
+                        for (let j:number = 0; j < mp.keyframes.length; ++j){
+                            let kf:Keyframe = <Keyframe><any> (mp.keyframes[j]);
                             if (isNaN(kf.time))
                                 kf.time = this.duration;
                             if (this.startDelay != 0)
@@ -204,7 +204,7 @@ module egret.gui {
                             mp.keyframes[mp.keyframes.length - 1].time);
                     }
                 }
-                var globalStartTime:number = this.getGlobalStartTime();
+                let globalStartTime:number = this.getGlobalStartTime();
                 for (i = 0; i < instanceAnimProps.length; ++i)
                     transformInstance.addMotionPath(instanceAnimProps[i], globalStartTime);
             }
@@ -218,9 +218,9 @@ module egret.gui {
                     this.computeTransformCenterForTarget(instance.target);
             transformInstance.autoCenterTransform = this.autoCenterTransform;
 
-            var tmpStartDelay:number = this.startDelay;
+            let tmpStartDelay:number = this.startDelay;
             this.startDelay = 0;
-            var tmpAnimProps:Array<MotionPath> = this.motionPaths;
+            let tmpAnimProps:Array<MotionPath> = this.motionPaths;
             this.motionPaths = null;
             super._initInstance(instance);
             this.startDelay = tmpStartDelay;
@@ -234,14 +234,14 @@ module egret.gui {
         private static linearEaser:Linear = new Linear();
 
         private getGlobalStartTime():number{
-            var globalStartTime:number = 0;
-            var parent:Effect = this._parentCompositeEffect;
+            let globalStartTime:number = 0;
+            let parent:Effect = this._parentCompositeEffect;
             while (parent){
                 globalStartTime += parent.startDelay;
                 if (parent instanceof Sequence){
-                    var sequence:Sequence = <Sequence><any> parent;
-                    for (var i:number = 0; i < sequence.children.length; ++i)                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                            {
-                        var child:Effect = sequence.children[i];
+                    let sequence:Sequence = <Sequence><any> parent;
+                    for (let i:number = 0; i < sequence.children.length; ++i)                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                            {
+                        let child:Effect = sequence.children[i];
                         if (child == this)
                             break;
                         if (child instanceof CompositeEffect)
@@ -265,7 +265,7 @@ module egret.gui {
          */
         private static getSharedInstance(topmostParallel:Parallel , target:any):IEffectInstance{
             if (topmostParallel != null){
-                var sharedObjectMap:any = AnimateTransform.sharedObjectMaps[topmostParallel.hashCode];
+                let sharedObjectMap:any = AnimateTransform.sharedObjectMaps[topmostParallel.hashCode];
                 if (sharedObjectMap != null)
                     return sharedObjectMap[target.hashCode];
             }
@@ -274,7 +274,7 @@ module egret.gui {
 
         private static removeSharedInstance(topmostParallel:Parallel , target:any):void{
             if (topmostParallel != null){
-                var sharedObjectMap:any = AnimateTransform.sharedObjectMaps[topmostParallel.hashCode];
+                let sharedObjectMap:any = AnimateTransform.sharedObjectMaps[topmostParallel.hashCode];
                 if (!sharedObjectMap)
                     return;
                 if (sharedObjectMap[target.hashCode]){
@@ -290,7 +290,7 @@ module egret.gui {
 
         private static storeSharedInstance(topmostParallel:Parallel , target:any , effectInstance:IEffectInstance):void{
             if (topmostParallel != null){
-                var sharedObjectMap:any = AnimateTransform.sharedObjectMaps[topmostParallel.hashCode];
+                let sharedObjectMap:any = AnimateTransform.sharedObjectMaps[topmostParallel.hashCode];
                 if (!sharedObjectMap){
                     sharedObjectMap = {};
                     AnimateTransform.sharedObjectMaps[topmostParallel.hashCode] = sharedObjectMap;

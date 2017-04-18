@@ -1,6 +1,6 @@
 //////////////////////////////////////////////////////////////////////////////////////
 //
-//  Copyright (c) 2014-2015, Egret Technology Inc.
+//  Copyright (c) 2014-present, Egret Technology.
 //  All rights reserved.
 //  Redistribution and use in source and binary forms, with or without
 //  modification, are permitted provided that the following conditions are met:
@@ -27,7 +27,7 @@
 //
 //////////////////////////////////////////////////////////////////////////////////////
 
-module egret.sys {
+namespace egret.sys {
 
     /**
      * @private
@@ -111,5 +111,16 @@ module egret.sys {
         public $texture;
         public $textureWidth;
         public $textureHeight;
+
+        /**
+         * 清除非绘制的缓存数据
+         */
+        public clean():void {
+            if(this.$texture) {
+                WebGLUtils.deleteWebGLTexture(this.$texture);
+                this.$texture = null;
+                this.dirtyRender = true;
+            }
+        }
     }
 }

@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="utf-8"?>
+<e:Skin class="skins.RadioButtonSkin" states="up,down,disabled,upAndSelected,downAndSelected,disabledAndSelected" xmlns:e="http://ns.egret.com/eui">
+    <e:Group width="100%" height="100%">
+        <e:layout>
+            <e:HorizontalLayout verticalAlign="middle"/>
+        </e:layout>
+        <e:Image fillMode="scale" alpha="1" alpha.disabled="0.5" alpha.down="0.7"
+                 source="radiobutton_unselect_png"
+                 source.upAndSelected="radiobutton_select_up_png"
+                 source.downAndSelected="radiobutton_select_down_png"
+                 source.disabledAndSelected="radiobutton_select_disabled_png"/>
+        <e:Label id="labelDisplay" size="20" textColor="0x707070"
+                 textAlign="center" verticalAlign="middle"
+                 fontFamily="Tahoma"/>
+    </e:Group>
+</e:Skin>

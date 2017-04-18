@@ -1,6 +1,6 @@
 //////////////////////////////////////////////////////////////////////////////////////
 //
-//  Copyright (c) 2014-2015, Egret Technology Inc.
+//  Copyright (c) 2014-present, Egret Technology.
 //  All rights reserved.
 //  Redistribution and use in source and binary forms, with or without
 //  modification, are permitted provided that the following conditions are met:
@@ -28,7 +28,7 @@
 //////////////////////////////////////////////////////////////////////////////////////
 
 
-module egret.gui {
+namespace egret.gui {
 
     /**
      * @class egret.gui.Animate
@@ -124,7 +124,7 @@ module egret.gui {
         public _initInstance(instance:IEffectInstance):void{
             super._initInstance(instance);
             
-            var animateInstance:AnimateInstance = <AnimateInstance><any> instance;
+            let animateInstance:AnimateInstance = <AnimateInstance><any> instance;
             
             animateInstance.addEventListener(EffectEvent.EFFECT_REPEAT, this.animationEventHandler, this);
             if (this.numUpdateListeners > 0)
@@ -143,7 +143,7 @@ module egret.gui {
             
             if (this.motionPaths){
                 animateInstance.motionPaths = new Array<MotionPath>();
-                for (var i:number = 0; i < this.motionPaths.length; ++i)
+                for (let i:number = 0; i < this.motionPaths.length; ++i)
                     animateInstance.motionPaths[i] = this.motionPaths[i].clone();
             }
         }

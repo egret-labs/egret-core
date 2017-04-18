@@ -6,12 +6,13 @@
 //import globals = require("../globals");
 //import params = require("../ParamsParser");
 import file = require('../lib/FileUtil');
+import EgretProject = require('../parser/EgretProject');
 //import config = require('../ProjectConfig');
-var config = egret.args.properties;
+var config = EgretProject.utils;
 class CopyFilesCommand implements egret.Command {
-    outputPath:string;
-    ignorePathList:Array<any>;
-    execute():number {
+    outputPath: string;
+    ignorePathList: Array<any>;
+    execute(): number {
         this.copyFilesToNative(egret.args.projectDir, this.outputPath, this.ignorePathList);
         return 0;
     }
@@ -32,7 +33,7 @@ class CopyFilesCommand implements egret.Command {
     }
 
     copyResources(projectPath, outputPath, ignorePathList) {
-        var resources = egret.args.properties.getResources();
+        var resources = config.getResources();
         for (var key in resources) {
             if (file.exists(file.joinPath(projectPath, resources[key]))) {
                 this.copyFilesWithIgnore(file.joinPath(projectPath, resources[key]), file.joinPath(outputPath, resources[key]), ignorePathList);

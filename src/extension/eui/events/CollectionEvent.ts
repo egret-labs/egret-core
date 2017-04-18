@@ -1,6 +1,6 @@
 //////////////////////////////////////////////////////////////////////////////////////
 //
-//  Copyright (c) 2014-2015, Egret Technology Inc.
+//  Copyright (c) 2014-present, Egret Technology.
 //  All rights reserved.
 //  Redistribution and use in source and binary forms, with or without
 //  modification, are permitted provided that the following conditions are met:
@@ -28,44 +28,43 @@
 //////////////////////////////////////////////////////////////////////////////////////
 
 
-module eui {
+namespace eui {
 
     /**
-     * @language en_US
      * The eui.CollectionEvent class represents an event that is
      * dispatched when the associated collection changes.
      * @version Egret 2.4
      * @version eui 1.0
      * @platform Web,Native
      * @includeExample  extension/eui/events/CollectionEventExample.ts
+     * @language en_US
      */
     /**
-     * @language zh_CN
      * 集合类型数据改变事件
      * @version Egret 2.4
      * @version eui 1.0
      * @platform Web,Native
      * @includeExample  extension/eui/events/CollectionEventExample.ts
+     * @language zh_CN
      */
     export class CollectionEvent extends egret.Event {
         /**
-         * @language en_US
          * Dispatched when a collection has changed.
          * @version Egret 2.4
          * @version eui 1.0
          * @platform Web,Native
+         * @language en_US
          */
         /**
-         * @language zh_CN
          * 集合类数据发生改变
          * @version Egret 2.4
          * @version eui 1.0
          * @platform Web,Native
+         * @language zh_CN
          */
         public static COLLECTION_CHANGE:string = "collectionChange";
 
         /**
-         * @language en_US
          * Constructor.
          *
          * @param type The event type; indicates the action that triggered the event.
@@ -95,9 +94,9 @@ module eui {
          * @version Egret 2.4
          * @version eui 1.0
          * @platform Web,Native
+         * @language en_US
          */
         /**
-         * @language zh_CN
          * 创建一个 CollectionEvent 实例
          *
          * @param type 事件类型；指示触发事件的动作。
@@ -116,6 +115,7 @@ module eui {
          * @version Egret 2.4
          * @version eui 1.0
          * @platform Web,Native
+         * @language zh_CN
          */
         public constructor(type:string, bubbles?:boolean, cancelable?:boolean,
                            kind?:string, location?:number, oldLocation?:number,
@@ -142,56 +142,55 @@ module eui {
         }
 
         /**
-         * @language en_US
          * Indicates the kind of event that occured.
          * The parameter value can be one of the values in the CollectionEventKind
          * class, or <code>null</code>, which indicates that the kind is unknown.
          * @version Egret 2.4
          * @version eui 1.0
          * @platform Web,Native
+         * @language en_US
          */
         /**
-         * @language zh_CN
          * 指示发生的事件类型。此属性值可以是 CollectionEventKind 类中的一个值，也可以是 null，用于指示类型未知。
          * @version Egret 2.4
          * @version eui 1.0
          * @platform Web,Native
+         * @language zh_CN
          */
         public kind:string;
         /**
-         * @language en_US
          * Array of objects with information about the items.
          * affected by the event.
          * @version Egret 2.4
          * @version eui 1.0
          * @platform Web,Native
+         * @language en_US
          */
         /**
-         * @language zh_CN
          * 受事件影响的项目的列表。
          * @version Egret 2.4
          * @version eui 1.0
          * @platform Web,Native
+         * @language zh_CN
          */
         public items:any[];
         /**
-         * @language en_US
          * When the <code>kine</code> is <code>CollectionEventKind.REPLACE</code> the value represents
          * a list of items before replaced.
          * @version Egret 2.4
          * @version eui 1.0
          * @platform Web,Native
+         * @language en_US
          */
         /**
-         * @language zh_CN
          * 仅当kind的值为CollectionEventKind.REPLACE时，表示替换前的项目列表。
          * @version Egret 2.4
          * @version eui 1.0
          * @platform Web,Native
+         * @language zh_CN
          */
         public oldItems:any[];
         /**
-         * @language en_US
          * When the <code>kind</code> is
          * <code>CollectionEventKind.ADD</code>,
          * <code>CollectionEventKind.REMOVE</code>,
@@ -203,9 +202,9 @@ module eui {
          * @version Egret 2.4
          * @version eui 1.0
          * @platform Web,Native
+         * @language en_US
          */
         /**
-         * @language zh_CN
          * 如果 kind 值为 CollectionEventKind.ADD、
          * CollectionEventKind.REMOVE 或 CollectionEventKind.REPLACE，
          * CollectionEventKind.UPDATE
@@ -213,23 +212,24 @@ module eui {
          * @version Egret 2.4
          * @version eui 1.0
          * @platform Web,Native
+         * @language zh_CN
          */
         public location:number;
         /**
-         * @language en_US
          * this value indicates
          * the old location within the target collection
          * of the item(s) specified in the <code>items</code> property.
          * @version Egret 2.4
          * @version eui 1.0
          * @platform Web,Native
+         * @language en_US
          */
         /**
-         * @language zh_CN
          * 此属性为 items 属性中指定的项目在目标集合中原来位置的从零开始的索引。
          * @version Egret 2.4
          * @version eui 1.0
          * @platform Web,Native
+         * @language zh_CN
          */
         public oldLocation:number;
 
@@ -246,7 +246,6 @@ module eui {
         }
 
         /**
-         * @language en_US
          * Dispatch an event with specified EventDispatcher. The dispatched event will be cached in the object pool,
          * for the next cycle of reuse.
          *
@@ -274,9 +273,9 @@ module eui {
          * @version Egret 2.4
          * @version eui 1.0
          * @platform Web,Native
+         * @language en_US
          */
         /**
-         * @language zh_CN
          * 使用指定的EventDispatcher对象来抛出事件对象。抛出的对象将会缓存在对象池上，供下次循环复用。
          *
          * @param target 事件派发目标。
@@ -294,15 +293,16 @@ module eui {
          * @version Egret 2.4
          * @version eui 1.0
          * @platform Web,Native
+         * @language zh_CN
          */
         public static dispatchCollectionEvent(target:egret.IEventDispatcher, eventType:string, kind?:string, location?:number,
                                           oldLocation?:number, items?:any[], oldItems?:any[]):boolean {
             if (!target.hasEventListener(eventType)) {
                 return true;
             }
-            var event = egret.Event.create(CollectionEvent, eventType);
+            let event = egret.Event.create(CollectionEvent, eventType);
             event.$initTo(kind, location, oldLocation, items, oldItems);
-            var result = target.dispatchEvent(event);
+            let result = target.dispatchEvent(event);
             egret.Event.release(event);
             return result;
         }

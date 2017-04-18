@@ -1,6 +1,6 @@
 //////////////////////////////////////////////////////////////////////////////////////
 //
-//  Copyright (c) 2014-2015, Egret Technology Inc.
+//  Copyright (c) 2014-present, Egret Technology.
 //  All rights reserved.
 //  Redistribution and use in source and binary forms, with or without
 //  modification, are permitted provided that the following conditions are met:
@@ -27,10 +27,9 @@
 //
 //////////////////////////////////////////////////////////////////////////////////////
 
-module eui {
+namespace eui {
 
     /**
-     * @language en_US
      * Register a property for a class definition in running,
      * so that the EUI can get type of property accurate when parsing a EXML.
      * This need not be called directly in most of time. Only when you have a custom UI
@@ -70,9 +69,9 @@ module eui {
      * @version Egret 2.4
      * @version eui 1.0
      * @platform Web,Native
+     * @language en_US
      */
     /**
-     * @language zh_CN
      * 为一个类定义注册运行时属性类型，以便运行时的EXML文件解析过程能获取准确的属性类型。大多数情况下，您都不需要手动调用此方法显式注册属性类型。
      * 仅当您有一个自定义的 UI 组件，需要在EXML中用标签描述时可能需要显式注册，但以下情况除外：
      * 当属性类型为基本数据类型：boolean,number,string,Array这四种其中之一时，您只需要为自定义的属性赋值上正确的初始值，
@@ -101,6 +100,7 @@ module eui {
      * @version Egret 2.4
      * @version eui 1.0
      * @platform Web,Native
+     * @language zh_CN
      */
     export function registerProperty(classDefinition:any,property:string,type:string,asDefault?:boolean):void{
         if (DEBUG) {
@@ -117,7 +117,7 @@ module eui {
                 egret.$error(1003, "type");
             }
         }
-        var prototype: any = classDefinition.prototype;
+        let prototype: any = classDefinition.prototype;
         prototype.__meta__ = prototype.__meta__||{};
         prototype.__meta__[property] = type;
         if(asDefault){

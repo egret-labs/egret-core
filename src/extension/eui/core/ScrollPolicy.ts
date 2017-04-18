@@ -1,6 +1,6 @@
 //////////////////////////////////////////////////////////////////////////////////////
 //
-//  Copyright (c) 2014-2015, Egret Technology Inc.
+//  Copyright (c) 2014-present, Egret Technology.
 //  All rights reserved.
 //  Redistribution and use in source and binary forms, with or without
 //  modification, are permitted provided that the following conditions are met:
@@ -27,10 +27,9 @@
 //
 //////////////////////////////////////////////////////////////////////////////////////
 
-module eui {
+namespace eui {
 
 	/**
-	 * @language en_US
 	 * Values for the <code>horizontalCanScroll</code> and
 	 * <code>verticalCanScroll</code> properties of the Scroller classes.
 	 *
@@ -38,9 +37,9 @@ module eui {
 	 * @version eui 1.0
 	 * @platform Web,Native
 	 * @includeExample  extension/eui/core/ScrollPolicyExample.ts
+	 * @language en_US
 	 */
 	/**
-	 * @language zh_CN
 	 * 滚动条显示策略常量。
 	 * Scroller 类的 <code>horizontalCanScroll</code> 和 <code>verticalCanScroll</code> 属性的值。
 	 *
@@ -48,53 +47,54 @@ module eui {
 	 * @version eui 1.0
 	 * @platform Web,Native
 	 * @includeExample  extension/eui/core/ScrollPolicyExample.ts
+	 * @language zh_CN
 	 */
 	export class ScrollPolicy{
 		/**
-		 * @language en_US
 		 * Show the scrollbar if the children exceed the owner's dimension.
 		 * @version Egret 2.4
 		 * @version eui 1.0
 		 * @platform Web,Native
+		 * @language en_US
 		 */
 		/**
-		 * @language zh_CN
 		 * 如果子项超出父级的尺寸，则允许滚动，反之不允许滚动。
 		 * @version Egret 2.4
 		 * @version eui 1.0
 		 * @platform Web,Native
+		 * @language zh_CN
 		 */
 		public static AUTO:string = "auto";
 		
 		/**
-		 * @language en_US
 		 * Never show the scrollbar.
 		 * @version Egret 2.4
 		 * @version eui 1.0
 		 * @platform Web,Native
+		 * @language en_US
 		 */
 		/**
-		 * @language zh_CN
 		 * 从不允许滚动。
 		 * @version Egret 2.4
 		 * @version eui 1.0
 		 * @platform Web,Native
+		 * @language zh_CN
 		 */
 		public static OFF:string = "off";
 
 		/**
-		 * @language en_US
 		 * Always show the scrollbar.
 		 * @version Egret 2.4
 		 * @version eui 1.0
 		 * @platform Web,Native
+		 * @language en_US
 		 */
 		/**
-		 * @language zh_CN
 		 * 总是允许滚动。
 		 * @version Egret 2.4
 		 * @version eui 1.0
 		 * @platform Web,Native
+		 * @language zh_CN
 		 */
 		public static ON:string = "on";
 	}

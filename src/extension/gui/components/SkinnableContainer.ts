@@ -1,6 +1,6 @@
 //////////////////////////////////////////////////////////////////////////////////////
 //
-//  Copyright (c) 2014-2015, Egret Technology Inc.
+//  Copyright (c) 2014-present, Egret Technology.
 //  All rights reserved.
 //  Redistribution and use in source and binary forms, with or without
 //  modification, are permitted provided that the following conditions are met:
@@ -28,7 +28,7 @@
 //////////////////////////////////////////////////////////////////////////////////////
 
 
-module egret.gui {
+namespace egret.gui {
 
 	/**
 	 * @class egret.gui.SkinnableContainer
@@ -81,7 +81,7 @@ module egret.gui {
          * 设置容器子对象数组 。数组包含要添加到容器的子项列表，之前的已存在于容器中的子项列表被全部移除后添加列表里的每一项到容器。
          * 设置该属性时会对您输入的数组进行一次浅复制操作，所以您之后对该数组的操作不会影响到添加到容器的子项列表数量。
          */
-        public set elementsContent(value:Array<any>) {
+        public set elementsContent(value:any[]) {
             this._getCurrentContentGroup().elementsContent = value;
         }
 
@@ -212,7 +212,7 @@ module egret.gui {
                 return this.contentGroup.autoLayout;
             else
             {
-                var v:any = this.contentGroupProperties.autoLayout;
+                let v:any = this.contentGroupProperties.autoLayout;
                 return (v === undefined) ? true : v;
             }
         }
@@ -248,15 +248,15 @@ module egret.gui {
                         ElementExistenceEvent.ELEMENT_ADD, this._contentGroup_elementAddedHandler, this);
                     this._placeHolderGroup.removeEventListener(
                         ElementExistenceEvent.ELEMENT_REMOVE, this._contentGroup_elementRemovedHandler, this);
-                    var sourceContent:Array<any> = this._placeHolderGroup._getElementsContent().concat();
-                    for (var i:number = this._placeHolderGroup.numElements; i > 0; i--) {
-                        var element:IVisualElement = this._placeHolderGroup.removeElementAt(0);
+                    let sourceContent:any[] = this._placeHolderGroup._getElementsContent().concat();
+                    for (let i:number = this._placeHolderGroup.numElements; i > 0; i--) {
+                        let element:IVisualElement = this._placeHolderGroup.removeElementAt(0);
                         element.ownerChanged(null);
                     }
                     this._removeFromDisplayList(<DisplayObject><any>this._placeHolderGroup);
                     this.contentGroup.elementsContent = sourceContent;
-                    for (i = sourceContent.length - 1; i >= 0; i--) {
-                        element = sourceContent[i];
+                    for (let i = sourceContent.length - 1; i >= 0; i--) {
+                        let element = sourceContent[i];
                         element.ownerChanged(this);
                     }
                     this._placeHolderGroup = null;

@@ -1,6 +1,6 @@
 //////////////////////////////////////////////////////////////////////////////////////
 //
-//  Copyright (c) 2014-2015, Egret Technology Inc.
+//  Copyright (c) 2014-present, Egret Technology.
 //  All rights reserved.
 //  Redistribution and use in source and binary forms, with or without
 //  modification, are permitted provided that the following conditions are met:
@@ -28,7 +28,7 @@
 //////////////////////////////////////////////////////////////////////////////////////
 
 
-module egret.gui {
+namespace egret.gui {
 
 	/**
 	 * @class egret.gui.SkinBasicLayout
@@ -68,25 +68,25 @@ module egret.gui {
             if (this.target == null)
                 return;
 
-            var measureW:number = 0;
-            var measureH:number = 0;
+            let measureW:number = 0;
+            let measureH:number = 0;
 
-            var target:any = this._target;
-            var count:number = target.numElements;
-            for (var i:number = 0; i < count; i++) {
-                var layoutElement:ILayoutElement = <ILayoutElement><any>target.getElementAt(i);
+            let target:any = this._target;
+            let count:number = target.numElements;
+            for (let i:number = 0; i < count; i++) {
+                let layoutElement:ILayoutElement = <ILayoutElement><any>target.getElementAt(i);
                 if (!layoutElement || !layoutElement.includeInLayout)
                     continue;
 
-                var hCenter:number = layoutElement.horizontalCenter;
-                var vCenter:number = layoutElement.verticalCenter;
-                var left:number = layoutElement.left;
-                var right:number = layoutElement.right;
-                var top:number = layoutElement.top;
-                var bottom:number = layoutElement.bottom;
+                let hCenter:number = layoutElement.horizontalCenter;
+                let vCenter:number = layoutElement.verticalCenter;
+                let left:number = layoutElement.left;
+                let right:number = layoutElement.right;
+                let top:number = layoutElement.top;
+                let bottom:number = layoutElement.bottom;
 
-                var extX:number;
-                var extY:number;
+                let extX:number;
+                let extY:number;
 
                 if (!isNaN(left) && !isNaN(right)) {
                     extX = left + right;
@@ -116,8 +116,8 @@ module egret.gui {
                     extY = layoutElement.preferredY;
                 }
 
-                var preferredWidth:number = layoutElement.preferredWidth;
-                var preferredHeight:number = layoutElement.preferredHeight;
+                let preferredWidth:number = layoutElement.preferredWidth;
+                let preferredHeight:number = layoutElement.preferredHeight;
 
                 measureW = Math.ceil(Math.max(measureW, extX + preferredWidth));
                 measureH = Math.ceil(Math.max(measureH, extY + preferredHeight));
@@ -137,23 +137,23 @@ module egret.gui {
             if (this.target == null)
                 return;
 
-            var count:number = this.target.numElements;
-            for (var i:number = 0; i < count; i++) {
-                var layoutElement:ILayoutElement = <ILayoutElement><any> this.target.getElementAt(i);
+            let count:number = this.target.numElements;
+            for (let i:number = 0; i < count; i++) {
+                let layoutElement:ILayoutElement = <ILayoutElement><any> this.target.getElementAt(i);
                 if (layoutElement == null || !layoutElement.includeInLayout)
                     continue;
 
-                var hCenter:number = layoutElement.horizontalCenter;
-                var vCenter:number = layoutElement.verticalCenter;
-                var left:number = layoutElement.left;
-                var right:number = layoutElement.right;
-                var top:number = layoutElement.top;
-                var bottom:number = layoutElement.bottom;
-                var percentWidth:number = layoutElement.percentWidth;
-                var percentHeight:number = layoutElement.percentHeight;
+                let hCenter:number = layoutElement.horizontalCenter;
+                let vCenter:number = layoutElement.verticalCenter;
+                let left:number = layoutElement.left;
+                let right:number = layoutElement.right;
+                let top:number = layoutElement.top;
+                let bottom:number = layoutElement.bottom;
+                let percentWidth:number = layoutElement.percentWidth;
+                let percentHeight:number = layoutElement.percentHeight;
 
-                var childWidth:number = NaN;
-                var childHeight:number = NaN;
+                let childWidth:number = NaN;
+                let childHeight:number = NaN;
 
 
                 if (!isNaN(left) && !isNaN(right)) {
@@ -172,12 +172,12 @@ module egret.gui {
 
                 layoutElement.setLayoutBoundsSize(childWidth, childHeight);
 
-                var elementWidth:number = layoutElement.layoutBoundsWidth;
-                var elementHeight:number = layoutElement.layoutBoundsHeight;
+                let elementWidth:number = layoutElement.layoutBoundsWidth;
+                let elementHeight:number = layoutElement.layoutBoundsHeight;
 
 
-                var childX:number = NaN;
-                var childY:number = NaN;
+                let childX:number = NaN;
+                let childY:number = NaN;
 
                 if (!isNaN(hCenter))
                     childX = Math.round((unscaledWidth - elementWidth) / 2 + hCenter);

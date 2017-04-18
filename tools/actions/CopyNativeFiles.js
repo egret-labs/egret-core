@@ -1,7 +1,8 @@
 /// <reference path="../lib/types.d.ts" />
-var FileUtil = require('../lib/FileUtil');
+var FileUtil = require("../lib/FileUtil");
 var CopyFilesCommand = require("../commands/copyfile");
 var ChangeEntranceCMD = require("../actions/ChangeEntranceCommand");
+var EgretProject = require("../parser/EgretProject");
 var CopyNativeFiles = (function () {
     function CopyNativeFiles() {
     }
@@ -9,7 +10,7 @@ var CopyNativeFiles = (function () {
         var options = egret.args;
         //拷贝项目到native工程中
         var cpFiles = new CopyFilesCommand();
-        if (platform == "android") {
+        if (platform == "android" || platform == "android_as") {
             var url2 = FileUtil.joinPath(nativePath, "proj.android/assets", "egret-game");
         }
         else if (platform == "ios") {
@@ -17,7 +18,7 @@ var CopyNativeFiles = (function () {
         }
         FileUtil.remove(url2);
         if (isDebug) {
-            var config = egret.args.properties;
+            var config = EgretProject.utils;
             try {
                 cpFiles.outputPath = url2;
                 cpFiles.ignorePathList = config.getIgnorePath();
@@ -29,9 +30,9 @@ var CopyNativeFiles = (function () {
             var sourceRuntime = FileUtil.joinPath(options.templateDir, "runtime");
             var outputRuntime = FileUtil.joinPath(url2, "launcher");
             FileUtil.copy(sourceRuntime, outputRuntime);
-            var sourceRuntime = FileUtil.joinPath(options.libsDir);
-            var outputRuntime = FileUtil.joinPath(url2, "libs");
-            FileUtil.copy(sourceRuntime, outputRuntime);
+            EgretProject.utils.getModulesConfig('native').forEach(function (m) {
+                FileUtil.copy(m.sourceDir, FileUtil.joinPath(url2, m.targetDir));
+            });
         }
         else {
             FileUtil.copy(options.releaseDir, url2);
@@ -39,8 +40,17 @@ var CopyNativeFiles = (function () {
     };
     CopyNativeFiles.refreshNative = function (isDebug, versionFile) {
         if (versionFile === void 0) { versionFile = null; }
-        var config = egret.args.properties;
+        var config = EgretProject.utils;
         var nativePath;
+        if (nativePath = config.getNativePath("android_as")) {
+            var url1 = FileUtil.joinPath(nativePath, "proj.android");
+            var url2 = FileUtil.joinPath(nativePath, "proj.android/assets", "egret-game");
+            CopyNativeFiles.copyProjectFiles("android_as", nativePath, isDebug);
+            //修改java文件
+            var entrance = new ChangeEntranceCMD();
+            entrance.initCommand(url1, "android_as", versionFile);
+            entrance.execute();
+        }
         if (nativePath = config.getNativePath("android")) {
             var url1 = FileUtil.joinPath(nativePath, "proj.android");
             var url2 = FileUtil.joinPath(nativePath, "proj.android/assets", "egret-game");
@@ -61,7 +71,5 @@ var CopyNativeFiles = (function () {
         }
     };
     return CopyNativeFiles;
-})();
+}());
 module.exports = CopyNativeFiles;
-
-//# sourceMappingURL=CopyNativeFiles.js.map

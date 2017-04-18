@@ -1,6 +1,6 @@
 //////////////////////////////////////////////////////////////////////////////////////
 //
-//  Copyright (c) 2014-2015, Egret Technology Inc.
+//  Copyright (c) 2014-present, Egret Technology.
 //  All rights reserved.
 //  Redistribution and use in source and binary forms, with or without
 //  modification, are permitted provided that the following conditions are met:
@@ -28,7 +28,7 @@
 //////////////////////////////////////////////////////////////////////////////////////
 
 
-module egret.gui {
+namespace egret.gui {
 
     /**
      * @class egret.gui.Effect
@@ -45,7 +45,7 @@ module egret.gui {
             this.target = target;
         }
         
-        private _instances:Array<any> = [];
+        private _instances:any[] = [];
         
         private _isPaused:boolean = false;
         
@@ -163,20 +163,20 @@ module egret.gui {
                 this._targets[0] = value;
         }
         
-        private _targets:Array<any> = [];
+        private _targets:any[] = [];
         /**
          * 一个对象 Array，这些对象都是效果的目标。播放效果时，会对各个目标并行执行效果。
          * 设置 target 属性将替换此 Array 中的所有对象。
          * 设置 targets 属性后，target 属性将返回此 Array 中的第一个项目。
          * @member egret.gui.Effect#targets
          */
-        public get targets():Array<any>{
+        public get targets():any[]{
             return this._targets;
         }
 
-        public set targets(value:Array<any>){
-            var n:number = value.length;
-            for (var i:number = n - 1; i >= 0; i--){
+        public set targets(value:any[]){
+            let n:number = value.length;
+            for (let i:number = n - 1; i >= 0; i--){
                 if (value[i] == null)
                     value.splice(i,1);
             }
@@ -189,7 +189,7 @@ module egret.gui {
          * @member egret.gui.Effect#playheadTime
          */
         public get playheadTime():number {
-            for (var i:number = 0; i < this._instances.length; i++){
+            for (let i:number = 0; i < this._instances.length; i++){
                 if (this._instances[i])
                     return (<IEffectInstance><any> (this._instances[i])).playheadTime;
             }
@@ -197,12 +197,12 @@ module egret.gui {
         }
 
         public set playheadTime(value:number){
-            var started:boolean = false;
+            let started:boolean = false;
             if (this._instances.length == 0){
                 this.play();
                 started = true;
             }
-            for (var i:number = 0; i < this._instances.length; i++){
+            for (let i:number = 0; i < this._instances.length; i++){
                 if (this._instances[i])
                     (<IEffectInstance><any> (this._instances[i])).playheadTime = value;
             }
@@ -217,17 +217,17 @@ module egret.gui {
          * @param targets 要使用此效果设置动画的对象的数组。
          * @return 效果的效果实例对象的数组，一个目标一个数组。
          */
-        public createInstances(targets:Array<any> = null):Array<any>{
+        public createInstances(targets:any[] = null):any[]{
             if (!targets)
                 targets = this.targets;
             
-            var newInstances:Array<any> = [];
-            var offsetDelay:number = 0;
+            let newInstances:any[] = [];
+            let offsetDelay:number = 0;
             
-            var length:number = targets.length;
-            for(var i:number = 0;i < length;i++){
-                var target:any = targets[i];
-                var newInstance:IEffectInstance = this.createInstance(target);
+            let length:number = targets.length;
+            for(let i:number = 0;i < length;i++){
+                let target:any = targets[i];
+                let newInstance:IEffectInstance = this.createInstance(target);
                 if (newInstance){
                     newInstance.startDelay += offsetDelay;
                     offsetDelay += this.perElementOffset;
@@ -253,7 +253,7 @@ module egret.gui {
             if (!target)
                 target = this.target;
             
-            var newInstance:IEffectInstance = <IEffectInstance><any> (new this.instanceClass(target));
+            let newInstance:IEffectInstance = <IEffectInstance><any> (new this.instanceClass(target));
             this._initInstance(newInstance);
             
             (<egret.EventDispatcher><any> newInstance).addEventListener(EffectEvent.EFFECT_START, this._effectStartHandler, this);
@@ -292,8 +292,8 @@ module egret.gui {
             (<egret.EventDispatcher><any> instance).removeEventListener(
                 EffectEvent.EFFECT_END, this._effectEndHandler, this);
             
-            var n:number = this._instances.length;
-            for (var i:number = 0; i < n; i++){
+            let n:number = this._instances.length;
+            for (let i:number = 0; i < n; i++){
                 if (this._instances[i] === instance)
                     this._instances.splice(i, 1);
             }
@@ -306,16 +306,16 @@ module egret.gui {
          * @param playReversedFromEnd 如果为 true，则向后播放效果。
          * @return 效果的 EffectInstance 对象的数组，一个目标一个数组。
          */
-        public play(targets:Array<any> = null,playReversedFromEnd:boolean = false):Array<any>{
+        public play(targets:any[] = null,playReversedFromEnd:boolean = false):any[]{
             this.effectStopped = false;
             this._isPaused = false;
             this.playReversed = playReversedFromEnd;
             
-            var newInstances:Array<any> = this.createInstances(targets);
+            let newInstances:any[] = this.createInstances(targets);
             
-            var n:number = newInstances.length;
-            for (var i:number = 0; i < n; i++) {
-                var newInstance:IEffectInstance = <IEffectInstance><any> (newInstances[i]);
+            let n:number = newInstances.length;
+            for (let i:number = 0; i < n; i++) {
+                let newInstance:IEffectInstance = <IEffectInstance><any> (newInstances[i]);
                 (<any> newInstance).playReversed = playReversedFromEnd;
                 newInstance.startEffect();
             }
@@ -329,8 +329,8 @@ module egret.gui {
         public pause():void{
             if (this.isPlaying && !this._isPaused){
                 this._isPaused = true;
-                var n:number = this._instances.length;
-                for (var i:number = 0; i < n; i++){
+                let n:number = this._instances.length;
+                for (let i:number = 0; i < n; i++){
                     (<IEffectInstance><any> (this._instances[i])).pause();
                 }
             }
@@ -343,9 +343,9 @@ module egret.gui {
          * @method egret.gui.Effect#stop
          */
         public stop():void{   
-            var n:number = this._instances.length - 1;
-            for (var i:number = n; i >= 0; i--){
-                var instance:IEffectInstance = <IEffectInstance><any> (this._instances[i]);
+            let n:number = this._instances.length - 1;
+            for (let i:number = n; i >= 0; i--){
+                let instance:IEffectInstance = <IEffectInstance><any> (this._instances[i]);
                 if (instance)
                     instance.stop();
             }
@@ -358,8 +358,8 @@ module egret.gui {
         public resume():void{
             if (this.isPlaying && this._isPaused){
                 this._isPaused = false;
-                var n:number = this._instances.length;
-                for (var i:number = 0; i < n; i++){
+                let n:number = this._instances.length;
+                for (let i:number = 0; i < n; i++){
                     (<IEffectInstance><any> (this._instances[i])).resume();
                 }
             }
@@ -371,8 +371,8 @@ module egret.gui {
          */
         public reverse():void{
             if (this.isPlaying){
-                var n:number = this._instances.length;
-                for (var i:number = 0; i < n; i++){
+                let n:number = this._instances.length;
+                for (let i:number = 0; i < n; i++){
                     (<IEffectInstance><any> (this._instances[i])).reverse();
                 }
             }
@@ -390,9 +390,9 @@ module egret.gui {
                 effectInstance.end();
             }
             else{
-                var n:number = this._instances.length;
-                for (var i:number = n - 1; i >= 0; i--){
-                    var instance:IEffectInstance = <IEffectInstance><any> (this._instances[i]);
+                let n:number = this._instances.length;
+                for (let i:number = n - 1; i >= 0; i--){
+                    let instance:IEffectInstance = <IEffectInstance><any> (this._instances[i]);
                     if (instance)
                         instance.end();
                 }
@@ -418,7 +418,7 @@ module egret.gui {
          * 当效果实例完成播放时调用。
          */
         public _effectEndHandler(event:EffectEvent):void {
-            var instance:IEffectInstance = <IEffectInstance><any> (event.effectInstance);
+            let instance:IEffectInstance = <IEffectInstance><any> (event.effectInstance);
             this.deleteInstance(instance);
             this.dispatchEvent(event);
         }

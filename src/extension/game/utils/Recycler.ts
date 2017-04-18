@@ -1,6 +1,6 @@
 //////////////////////////////////////////////////////////////////////////////////////
 //
-//  Copyright (c) 2014-2015, Egret Technology Inc.
+//  Copyright (c) 2014-present, Egret Technology.
 //  All rights reserved.
 //  Redistribution and use in source and binary forms, with or without
 //  modification, are permitted provided that the following conditions are met:
@@ -28,38 +28,38 @@
 //////////////////////////////////////////////////////////////////////////////////////
 
 
-module egret {
+namespace egret {
     /**
-     * @language en_US
      * Tool class for object cache repeat use, which can be used to construct an object pool. Objects are automatically recycled after a certain duration.
      * @version Egret 2.4
      * @platform Web,Native
      * @includeExample extension/game/utils/Recycler.ts
      * @private
+     * @language en_US
      */
     /**
-     * @language zh_CN
      * 对象缓存复用工具类，可用于构建对象池，一段时间后会自动回收对象。
      * @version Egret 2.4
      * @platform Web,Native
      * @includeExample extension/game/utils/Recycler.ts
      * @private
+     * @language zh_CN
      */
     export class Recycler extends HashObject{
 
 		/**
-         * @language en_US
          * Create an egret.Recycler object
 		 * @param autoDisposeTime {number} Number of frames when objects are destroyed automatically. Default value: 300
          * @version Egret 2.4
          * @platform Web,Native
+         * @language en_US
 		 */
 		/**
-         * @language zh_CN
          * 创建一个 egret.Recycler 对象
 		 * @param autoDisposeTime {number} 多少帧后自动销毁对象，默认值300
          * @version Egret 2.4
          * @platform Web,Native
+         * @language zh_CN
 		 */
         public constructor(autoDisposeTime:number = 300){
             super();
@@ -72,15 +72,15 @@ module egret {
         /**
          * @private
          */
-        public static _callBackList:Array<any> = [];
+        public static _callBackList:any[] = [];
 
         public static $init():void {
             sys.$ticker.$startTick(Recycler.onUpdate, Recycler);
         }
 
         public static onUpdate(timeStamp:number):boolean {
-            var list = Recycler._callBackList;
-            for (var i = list.length - 1; i >= 0; i--) {
+            let list = Recycler._callBackList;
+            for (let i = list.length - 1; i >= 0; i--) {
                 list[i].$checkFrame();
             }
             return false;
@@ -111,43 +111,43 @@ module egret {
         /**
          * @private
          */
-        private objectPool:Array<any> = [];
+        private objectPool:any[] = [];
 
         /**
          * @private
          */
         private _length:number = 0;
         /**
-         * @language en_US
          * Number of cached objects"
          * @version Egret 2.4
          * @platform Web,Native
+         * @language en_US
          */
         /**
-         * @language zh_CN
          * 缓存的对象数量
          * @version Egret 2.4
          * @platform Web,Native
+         * @language zh_CN
          */
         public get length():number{
             return this._length;
         }
         /**
-         * @language en_US
          * Cache an object for repeat use
          * @param object {any} The object to be cached
          * @version Egret 2.4
          * @platform Web,Native
+         * @language en_US
          */
         /**
-         * @language zh_CN
          * 缓存一个对象以复用
          * @param object {any} 需要缓存的对象
          * @version Egret 2.4
          * @platform Web,Native
+         * @language zh_CN
          */
         public push(object:any):void{
-            var pool:Array<any> = this.objectPool;
+            let pool:any[] = this.objectPool;
             if(pool.indexOf(object)==-1){
                 pool.push(object);
                 if (object.__recycle) {
@@ -162,18 +162,18 @@ module egret {
             }
         }
         /**
-         * @language en_US
          * Obtain a cached object
 		 * @returns {any} The obtained cached object
          * @version Egret 2.4
          * @platform Web,Native
+         * @language en_US
          */
         /**
-         * @language zh_CN
          * 获取一个缓存的对象
 		 * @returns {any} 获得的缓存对象
          * @version Egret 2.4
          * @platform Web,Native
+         * @language zh_CN
          */
         public pop():any{
             if(this._length==0)
@@ -182,16 +182,16 @@ module egret {
             return this.objectPool.pop();
         }
         /**
-         * @language en_US
          * Immediately clear all cached objects.
          * @version Egret 2.4
          * @platform Web,Native
+         * @language en_US
          */
         /**
-         * @language zh_CN
          * 立即清空所有缓存的对象。
          * @version Egret 2.4
          * @platform Web,Native
+         * @language zh_CN
          */
         public dispose():void{
             if(this._length>0){
@@ -199,8 +199,8 @@ module egret {
                 this._length = 0;
             }
             this.frameCount = 0;
-            var list:Array<any> = Recycler._callBackList;
-            var index:number = list.indexOf(this);
+            let list:any[] = Recycler._callBackList;
+            let index:number = list.indexOf(this);
             if(index!=-1){
                 list.splice(index,1);
             }

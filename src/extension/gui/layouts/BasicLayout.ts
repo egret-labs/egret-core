@@ -1,6 +1,6 @@
 //////////////////////////////////////////////////////////////////////////////////////
 //
-//  Copyright (c) 2014-2015, Egret Technology Inc.
+//  Copyright (c) 2014-present, Egret Technology.
 //  All rights reserved.
 //  Redistribution and use in source and binary forms, with or without
 //  modification, are permitted provided that the following conditions are met:
@@ -28,7 +28,7 @@
 //////////////////////////////////////////////////////////////////////////////////////
 
 
-module egret.gui {
+namespace egret.gui {
 
 	/**
 	 * @class egret.gui.BasicLayout
@@ -66,28 +66,28 @@ module egret.gui {
 		}
 
 		public getElementBoundsLeftOfScrollRect(scrollRect:Rectangle):Rectangle{
-			var bounds:Rectangle = new Rectangle();
+			let bounds:Rectangle = new Rectangle();
 			bounds.x = scrollRect.x - this._mouseWheelSpeed;
 			bounds.right = scrollRect.x;
 			return bounds;
 		}
 
 		public getElementBoundsRightOfScrollRect(scrollRect:Rectangle):Rectangle{
-			var bounds:Rectangle = new Rectangle();
+			let bounds:Rectangle = new Rectangle();
 			bounds.x = scrollRect.right;
 			bounds.right = scrollRect.right + this._mouseWheelSpeed;
 			return bounds;
 		}
 
 		public getElementBoundsAboveScrollRect(scrollRect:Rectangle):Rectangle{
-			var bounds:Rectangle = new Rectangle();
+			let bounds:Rectangle = new Rectangle();
 			bounds.y = scrollRect.y - this._mouseWheelSpeed;
 			bounds.bottom = scrollRect.y;
 			return bounds;
 		}
 
 		public getElementBoundsBelowScrollRect(scrollRect:Rectangle):Rectangle{
-			var bounds:Rectangle = new Rectangle();
+			let bounds:Rectangle = new Rectangle();
 			bounds.y = scrollRect.bottom;
 			bounds.bottom = scrollRect.bottom + this._mouseWheelSpeed;
 			return bounds;
@@ -102,24 +102,24 @@ module egret.gui {
 			if (this.target==null)
 				return;
 
-			var width:number = 0;
-			var height:number = 0;
+			let width:number = 0;
+			let height:number = 0;
 
-			var count:number = this.target.numElements;
-			for (var i:number = 0; i < count; i++){
-				var layoutElement:ILayoutElement = <ILayoutElement> (this.target.getElementAt(i));
+			let count:number = this.target.numElements;
+			for (let i:number = 0; i < count; i++){
+				let layoutElement:ILayoutElement = <ILayoutElement> (this.target.getElementAt(i));
 				if (!layoutElement||!layoutElement.includeInLayout)
 					continue;
 
-				var hCenter:number   = layoutElement.horizontalCenter;
-				var vCenter:number   = layoutElement.verticalCenter;
-				var left:number      = layoutElement.left;
-				var right:number     = layoutElement.right;
-				var top:number       = layoutElement.top;
-				var bottom:number    = layoutElement.bottom;
+				let hCenter:number   = layoutElement.horizontalCenter;
+				let vCenter:number   = layoutElement.verticalCenter;
+				let left:number      = layoutElement.left;
+				let right:number     = layoutElement.right;
+				let top:number       = layoutElement.top;
+				let bottom:number    = layoutElement.bottom;
 
-				var extX:number;
-				var extY:number;
+				let extX:number;
+				let extY:number;
 
 				if (!isNaN(left) && !isNaN(right)){
 					extX = left + right;
@@ -149,8 +149,8 @@ module egret.gui {
 					extY = layoutElement.preferredY;
 				}
 
-				var preferredWidth:number = layoutElement.preferredWidth;
-				var preferredHeight:number = layoutElement.preferredHeight;
+				let preferredWidth:number = layoutElement.preferredWidth;
+				let preferredHeight:number = layoutElement.preferredHeight;
 
 				width = Math.ceil(Math.max(width, extX + preferredWidth));
 				height = Math.ceil(Math.max(height, extY + preferredHeight));
@@ -172,26 +172,26 @@ module egret.gui {
 			if (this.target==null)
 				return;
 
-			var count:number = this.target.numElements;
+			let count:number = this.target.numElements;
 
-			var maxX:number = 0;
-			var maxY:number = 0;
-			for (var i:number = 0; i < count; i++){
-				var layoutElement:ILayoutElement = <ILayoutElement> (this.target.getElementAt(i));
+			let maxX:number = 0;
+			let maxY:number = 0;
+			for (let i:number = 0; i < count; i++){
+				let layoutElement:ILayoutElement = <ILayoutElement> (this.target.getElementAt(i));
 				if (layoutElement==null||!layoutElement.includeInLayout)
 					continue;
 
-				var hCenter:number          = layoutElement.horizontalCenter;
-				var vCenter:number          = layoutElement.verticalCenter;
-				var left:number             = layoutElement.left;
-				var right:number            = layoutElement.right;
-				var top:number              = layoutElement.top;
-				var bottom:number           = layoutElement.bottom;
-				var percentWidth:number     = layoutElement.percentWidth;
-				var percentHeight:number    = layoutElement.percentHeight;
+				let hCenter:number          = layoutElement.horizontalCenter;
+				let vCenter:number          = layoutElement.verticalCenter;
+				let left:number             = layoutElement.left;
+				let right:number            = layoutElement.right;
+				let top:number              = layoutElement.top;
+				let bottom:number           = layoutElement.bottom;
+				let percentWidth:number     = layoutElement.percentWidth;
+				let percentHeight:number    = layoutElement.percentHeight;
 				
-				var childWidth:number = NaN;
-				var childHeight:number = NaN;
+				let childWidth:number = NaN;
+				let childHeight:number = NaN;
 				
 				
 				if(!isNaN(left) && !isNaN(right)){
@@ -210,12 +210,12 @@ module egret.gui {
 				
 				layoutElement.setLayoutBoundsSize(childWidth, childHeight);
 				
-				var elementWidth:number = layoutElement.layoutBoundsWidth;
-				var elementHeight:number = layoutElement.layoutBoundsHeight;
+				let elementWidth:number = layoutElement.layoutBoundsWidth;
+				let elementHeight:number = layoutElement.layoutBoundsHeight;
 				
 				
-				var childX:number = NaN;
-				var childY:number = NaN;
+				let childX:number = NaN;
+				let childY:number = NaN;
 				
 				if (!isNaN(hCenter))
 					childX = Math.round((unscaledWidth - elementWidth) / 2 + hCenter);

@@ -1,6 +1,6 @@
 //////////////////////////////////////////////////////////////////////////////////////
 //
-//  Copyright (c) 2014-2015, Egret Technology Inc.
+//  Copyright (c) 2014-present, Egret Technology.
 //  All rights reserved.
 //  Redistribution and use in source and binary forms, with or without
 //  modification, are permitted provided that the following conditions are met:
@@ -29,7 +29,8 @@
 /// <reference path="../types.d.ts" />
 var __global = global;
 var xml = require("../xml/index");
-var config = require("./parser/EXMLConfig");
+var utils = require("../utils");
+var config = require("./EXMLConfig");
 egret.XML = xml;
 /**
  * @private
@@ -176,7 +177,17 @@ function getClassNameById(id, ns) {
     return name;
 }
 function getDtsInfoFromExml(exmlFile) {
-    var xml = egret.XML.parse(require("../FileUtil").read(exmlFile));
+    var xml;
+    try {
+        xml = egret.XML.parse(require("../FileUtil").read(exmlFile));
+    }
+    catch (e) {
+        console.log(e);
+        utils.exit(2002, exmlFile);
+    }
+    if (!xml) {
+        utils.exit(2002, exmlFile);
+    }
     var className = config.EXMLConfig.getInstance().getClassNameById(xml.localName, xml.namespace);
     var extendName = "";
     if (xml["$class"]) {
@@ -186,5 +197,3 @@ function getDtsInfoFromExml(exmlFile) {
     return { className: className, extendName: extendName };
 }
 exports.getDtsInfoFromExml = getDtsInfoFromExml;
-
-//# sourceMappingURL=EXML.js.map

@@ -6,32 +6,30 @@ import server = require('../server/server');
 import service = require('../service/index');
 import ServiceSocket = require('../service/ServiceSocket');
 import FileUtil = require('../lib/FileUtil');
-import Native = require('../actions/NativeProject');
-import CopyFiles = require('../actions/CopyFiles');
 import exmlActions = require('../actions/exml');
 import state = require('../lib/DirectoryState');
 import CompileProject = require('../actions/CompileProject');
 import CompileTemplate = require('../actions/CompileTemplate');
 import parser = require('../parser/Parser');
-import LoadConfig = require('../actions/LoadConfig');
+import EgretProject = require('../parser/EgretProject');
+import copyNative = require("../actions/CopyNativeFiles");
 
 class AutoCompileCommand implements egret.Command {
-    private compileProject:CompileProject;
-    private dirState:state.DirectoryState;
+    private compileProject: CompileProject;
+    private dirState: state.DirectoryState;
 
-    execute():number {
+    execute(): number {
 
-        if (JSON.stringify(egret.args.properties.modulesConfig) == "{}") {
-            console.log(utils.tr(1602));//缺少egretProperties.json
+        if (EgretProject.utils.invalid(true)) {
             process.exit(0);
             return;
         }
 
-        this._request = service.execCommand({
+        this._request = service.client.execCommand({
             command: "init",
             path: egret.args.projectDir,
             option: egret.args
-        }, m=> this.onServiceMessage(m), false);
+        }, m => this.onServiceMessage(m), false);
         this._request.once(
             'end',
             () => process.exit());
@@ -59,10 +57,10 @@ class AutoCompileCommand implements egret.Command {
     }
 
 
-    private exitCode:[number, number] = [0, 0];
-    private messages:[string[], string[], string[],string[]] = [[], [], [], []];
-    private _request:ServiceSocket = null;
-    private _scripts:string[];
+    private exitCode: [number, number] = [0, 0];
+    private messages: [string[], string[], string[], string[]] = [[], [], [], []];
+    private _request: ServiceSocket = null;
+    private _scripts: string[];
     private _lastBuildTime = Date.now();
     private sourceMapStateChanged = false;
 
@@ -96,11 +94,19 @@ class AutoCompileCommand implements egret.Command {
 
         CompileTemplate.modifyIndexHTML(_scripts);
 
-        CompileTemplate.modifyNativeRequire();
+        CompileTemplate.modifyNativeRequire(true);
 
         exmlActions.afterBuild();
 
-        Native.build();
+        CompileTemplate.modifyNativeRequire(true);
+
+        //拷贝项目到native工程中
+        if (egret.args.runtime == "native") {
+            console.log("----native build-----");
+
+            copyNative.refreshNative(true);
+        }
+
         this.dirState.init();
 
         this._scripts = result.files;
@@ -115,33 +121,40 @@ class AutoCompileCommand implements egret.Command {
         return exitCode;
     }
 
-    buildChanges(filesChanged?:egret.FileChanges) {
+    buildChanges(filesChanged?: egret.FileChanges) {
         //console.log('-------compileservice.buildChanges------')
 
         this._lastBuildTime = Date.now();
         if (!this.compileProject)
             return this.buildProject();
-        var codes:egret.FileChanges = [];
-        var exmls:egret.FileChanges = [];
-        var others:egret.FileChanges = [];
+        var codes: egret.FileChanges = [];
+        var exmls: egret.FileChanges = [];
+        var others: egret.FileChanges = [];
 
         filesChanged = filesChanged || this.dirState.checkChanges();
 
         //console.log("filesChanged:", this.dirState);
-
-        filesChanged.forEach(f=> {
+        let hasAddedFile = false;
+        filesChanged.forEach(f => {
             if (this.shouldSkip(f.fileName)) {
                 return;
             }
-            if (/\.ts$/.test(f.fileName))
+            if (/\.ts$/.test(f.fileName)) {
+                if (f.type == "added") {
+                    hasAddedFile = true;
+                }
                 codes.push(f);
+            }
             else if (/\.exml$/.test(f.fileName))
                 exmls.push(f);
             else
                 others.push(f);
         });
+        if (hasAddedFile) {
+            return this.buildProject();
+        }
         if (others.length > 0) {
-            var fileName:string;
+            var fileName: string;
             for (var i = 0, len = others.length; i < len; i++) {
                 fileName = others[i].fileName;
                 if (fileName.indexOf("tsconfig.json") > -1) {//console.log("tsconfig 改变，重新编译项目");
@@ -149,7 +162,7 @@ class AutoCompileCommand implements egret.Command {
                     this.messages[2] = egret.args.tsconfigError;
                 }
                 else if (fileName.indexOf("egretProperties.json") > -1) {
-                    egret.args.properties.reload();
+                    EgretProject.utils.reload();
                     this.copyLibs();
                     this.compileProject.compileProject(egret.args);
                     this.messages[2] = egret.args.tsconfigError;
@@ -164,8 +177,9 @@ class AutoCompileCommand implements egret.Command {
         var exmlTS = this.buildChangedEXML(exmls);
         this.buildChangedRes(others);
         codes = codes.concat(exmlTS);
-        this.messages[1] = [];
+
         if (codes.length || this.sourceMapStateChanged) {
+            this.messages[1] = [];
             this.sourceMapStateChanged = false;
             var result = this.buildChangedTS(codes);
             //console.log("result.files:", result.files);
@@ -180,7 +194,14 @@ class AutoCompileCommand implements egret.Command {
         if (exmls.length) {
             exmlActions.afterBuildChanges(exmls);
         }
-        Native.build();
+        CompileTemplate.modifyNativeRequire(true);
+
+        //拷贝项目到native工程中
+        if (egret.args.runtime == "native") {
+            console.log("----native build-----");
+
+            copyNative.refreshNative(true);
+        }
         this.dirState.init();
 
         this.sendCommand();
@@ -188,28 +209,28 @@ class AutoCompileCommand implements egret.Command {
         return this.exitCode[0] || this.exitCode[1];
     }
 
-    private copyLibs(){
+    private copyLibs() {
         //刷新libs 中 modules 文件
-        CopyFiles.copyToLibs();
+        CompileTemplate.copyToLibs();
         //修改 html 中 modules 块
-        CopyFiles.modifyHTMLWithModules();
+        CompileTemplate.modifyIndexHTML();
     }
 
 
-    private buildChangedTS(filesChanged:egret.FileChanges) {
+    private buildChangedTS(filesChanged: egret.FileChanges) {
         //console.log("changed ts:", filesChanged);
         return this.compileProject.compileProject(egret.args, filesChanged);
     }
 
-    private buildChangedEXML(filesChanges:egret.FileChanges):egret.FileChanges {
+    private buildChangedEXML(filesChanges: egret.FileChanges): egret.FileChanges {
         if (!filesChanges || filesChanges.length == 0)
             return [];
 
-        var result = exmlActions.buildChanges(filesChanges.map(f=> f.fileName));
+        var result = exmlActions.buildChanges(filesChanges.map(f => f.fileName));
         this.exitCode[0] = result.exitCode;
         this.messages[0] = result.messages;
 
-        var exmlTS:egret.FileChanges = [];
+        var exmlTS: egret.FileChanges = [];
         filesChanges.forEach(exml => {
             var ts = exml.fileName.replace(/\.exml$/, ".g.ts");
             if (FileUtil.exists(ts))
@@ -222,25 +243,27 @@ class AutoCompileCommand implements egret.Command {
         return exmlTS;
     }
 
-    private buildChangedRes(fileNames:egret.FileChanges) {
+    private buildChangedRes(fileNames: egret.FileChanges) {
 
 
         var src = egret.args.srcDir,
             temp = egret.args.templateDir,
-            proj = egret.args.larkPropertiesFile,
             start = "index.html";
 
-
+        console.log(fileNames)
         fileNames.forEach(f => {
             var fileName = f.fileName;
-            if (fileName == proj) {
-                this.buildProject();
-            }
+            // if (fileName == tsconfig) {  // handle tsconfig.json
+            //     this.buildProject();
+            // }
             if (fileName.indexOf(src) < 0/* && fileName.indexOf(temp) < 0*/) {
                 return;
             }
             var relativePath = fileName.replace(src, '').replace(temp, '');
             var output = FileUtil.joinPath(egret.args.debugDir, relativePath);
+            // console.log('⬇⬇⬇⬇⬇⬇⬇⬇')
+            // console.log(fileName, output, relativePath)
+            // console.log('⬆⬆⬆⬆⬆⬆⬆⬆')
             if (FileUtil.exists(fileName)) {
                 FileUtil.copy(fileName, output);
                 console.log('Copy: ', fileName, "\n  to: ", output);
@@ -256,25 +279,23 @@ class AutoCompileCommand implements egret.Command {
     }
 
 
-    private onTemplateIndexChanged():number {
+    private onTemplateIndexChanged(): number {
         var index = FileUtil.joinPath(egret.args.templateDir, "index.html");
         index = FileUtil.escapePath(index);
         console.log('Compile Template: ' + index);
 
         CompileTemplate.modifyIndexHTML(this._scripts);
 
-        CompileTemplate.modifyNativeRequire();
+        CompileTemplate.modifyNativeRequire(true);
 
         return 0;
     }
 
-    private onServiceMessage(msg:egret.ServiceBuildCommand) {
+    private onServiceMessage(msg: egret.ServiceBuildCommand) {
         //console.log("onServiceMessage:",msg)
         if (msg.command == 'build' && msg.option) {
             this.sourceMapStateChanged = msg.option.sourceMap != egret.args.sourceMap;
-            var props = egret.args.properties;
             egret.args = parser.parseJSON(msg.option);
-            egret.args.properties = props;
         }
         if (msg.command == 'build')
             this.buildChanges(msg.changes);
@@ -282,7 +303,7 @@ class AutoCompileCommand implements egret.Command {
             utils.exit(0);
     }
 
-    private sendCommand(cmd?:egret.ServiceCommand) {
+    private sendCommand(cmd?: egret.ServiceCommand) {
         if (!cmd) {
             var msg = this.messages[0].concat(this.messages[1]).concat(this.messages[2]).concat(this.messages[3]);
 
@@ -304,7 +325,7 @@ class AutoCompileCommand implements egret.Command {
             process.exit(0);
     }
 
-    private shouldSkip(file:string) {
+    private shouldSkip(file: string) {
         if (file.indexOf("exml.g.d.ts") >= 0)
             return true;
         return false;

@@ -1,6 +1,6 @@
 //////////////////////////////////////////////////////////////////////////////////////
 //
-//  Copyright (c) 2014-2015, Egret Technology Inc.
+//  Copyright (c) 2014-present, Egret Technology.
 //  All rights reserved.
 //  Redistribution and use in source and binary forms, with or without
 //  modification, are permitted provided that the following conditions are met:
@@ -29,7 +29,7 @@
 
 /// <reference path="../easing/Sine.ts" />
 
-module egret.gui {
+namespace egret.gui {
     /**
      * @class egret.gui.Animation
      * @classdesc
@@ -276,7 +276,7 @@ module egret.gui {
                     animation.motionPaths[0].property == "height")){
                 Animation.activeAnimations.splice(0, 0, animation);
                 animation.id = 0;
-                for (var i:number = 1; i < Animation.activeAnimations.length; ++i)
+                for (let i:number = 1; i < Animation.activeAnimations.length; ++i)
                     (<Animation><any> (Animation.activeAnimations[i])).id = i;
             }
             else{
@@ -298,9 +298,9 @@ module egret.gui {
             if (index >= 0 && index < Animation.activeAnimations.length){
                 Animation.activeAnimations.splice(index, 1);
 
-                var n:number = Animation.activeAnimations.length;
-                for (var i:number = index; i < n; i++){
-                    var curAnimation:Animation = <Animation><any> (Animation.activeAnimations[i]);
+                let n:number = Animation.activeAnimations.length;
+                for (let i:number = index; i < n; i++){
+                    let curAnimation:Animation = <Animation><any> (Animation.activeAnimations[i]);
                     curAnimation.id--;
                 }
             }
@@ -314,11 +314,11 @@ module egret.gui {
         private static timerHandler(event:egret.TimerEvent):void{
             Animation.intervalTime = Animation.pulse();
 
-            var i:number = 0;
+            let i:number = 0;
 
             while (i < Animation.activeAnimations.length){
-                var incrementIndex:boolean = true;
-                var animation:Animation = <Animation><any> (Animation.activeAnimations[i]);
+                let incrementIndex:boolean = true;
+                let animation:Animation = <Animation><any> (Animation.activeAnimations[i]);
                 if (animation)
                     incrementIndex = !animation.doInterval();
                 if (incrementIndex)
@@ -326,8 +326,8 @@ module egret.gui {
             }
 
             while (Animation.delayedStartAnims.length > 0){
-                var anim:Animation = <Animation><any> (Animation.delayedStartAnims[0]);
-                var animStartTime:number = anim.delayedStartTime;
+                let anim:Animation = <Animation><any> (Animation.delayedStartAnims[0]);
+                let animStartTime:number = anim.delayedStartTime;
                 if (animStartTime < Animation.currentTime)
                     if (anim.playReversed)
                         anim.end();
@@ -342,14 +342,14 @@ module egret.gui {
          * 计算插补值，派发更新事件。如果动画结束了则返回true
          */
         private doInterval():boolean{
-            var animationEnded:boolean = false;
-            var repeated:boolean = false;
+            let animationEnded:boolean = false;
+            let repeated:boolean = false;
 
             if (this._isPlaying || this._doSeek){
-                var currentTime:number = Animation.intervalTime - this.cycleStartTime;
+                let currentTime:number = Animation.intervalTime - this.cycleStartTime;
                 this._playheadTime = Animation.intervalTime - this.startTime;
                 if (currentTime >= this.duration){
-                    var numRepeats:number = 2;
+                    let numRepeats:number = 2;
                     if ((this.duration + this.repeatDelay) > 0)
                         numRepeats += Math.floor((this._playheadTime - this.duration) / (this.duration + this.repeatDelay));
                     if (this.repeatCount == 0 || numRepeats <= this.repeatCount){
@@ -379,7 +379,7 @@ module egret.gui {
                                 this.calculateValue(this._cycleTime);
                                 this.sendUpdateEvent();
                                 Animation.removeAnimation(this);
-                                var delayTimer:egret.Timer = new egret.Timer(this.repeatDelay, 1);
+                                let delayTimer:egret.Timer = new egret.Timer(this.repeatDelay, 1);
                                 delayTimer.addEventListener(egret.TimerEvent.TIMER, this.repeat, this);
                                 delayTimer.start();
                                 return false;
@@ -434,7 +434,7 @@ module egret.gui {
          * 计算当前值
          */
         private calculateValue(currentTime:number):void{
-            var i:number = 0;
+            let i:number = 0;
 
             this.currentValue = {};
             if (this.duration == 0){
@@ -460,7 +460,7 @@ module egret.gui {
 
         private removeFromDelayedAnimations():void{
             if (this.delayedStartTime>=0){
-                for (var i:number = 0; i < Animation.delayedStartAnims.length; ++i){
+                for (let i:number = 0; i < Animation.delayedStartAnims.length; ++i){
                     if (Animation.delayedStartAnims[i] == this){
                         Animation.delayedStartAnims.splice(i, 1);
                         break;
@@ -512,10 +512,10 @@ module egret.gui {
                 Animation.timer.addEventListener(egret.TimerEvent.TIMER, Animation.timerHandler, Animation);
                 Animation.timer.start();
             }
-            var animStartTime:number = Animation.currentTime + timeToDelay;
-            var insertIndex:number = -1;
-            for (var i:number = 0; i < Animation.delayedStartAnims.length; ++i){
-                var timeAtIndex:number = Animation.delayedStartAnims[i].delayedStartTime;
+            let animStartTime:number = Animation.currentTime + timeToDelay;
+            let insertIndex:number = -1;
+            for (let i:number = 0; i < Animation.delayedStartAnims.length; ++i){
+                let timeAtIndex:number = Animation.delayedStartAnims[i].delayedStartTime;
                 if (animStartTime < timeAtIndex){
                     insertIndex = i;
                     break;
@@ -534,14 +534,14 @@ module egret.gui {
          */
         public play():void{
             this.stopAnimation();
-            var i:number = 0;
-            var j:number = 0;
+            let i:number = 0;
+            let j:number = 0;
             for (i = 0; i < this.motionPaths.length; ++i){
-                var keyframes:Array<Keyframe> = this.motionPaths[i].keyframes;
+                let keyframes:Array<Keyframe> = this.motionPaths[i].keyframes;
                 if (isNaN(keyframes[0].time))
                     keyframes[0].time = 0;
                 else if (keyframes[0].time > 0){
-                    var startTime:number = keyframes[0].time;
+                    let startTime:number = keyframes[0].time;
                     keyframes.splice(0, 0, new Keyframe(0, null));
                     keyframes.splice(1, 0, new Keyframe(startTime-1, null));
                     if (this.playReversed){
@@ -574,12 +574,12 @@ module egret.gui {
             this._doSeek = true;
 
             if (!this._isPlaying || this.playReversed){
-                var isPlayingTmp:boolean = this._isPlaying;
+                let isPlayingTmp:boolean = this._isPlaying;
                 Animation.intervalTime = Animation.currentTime;
                 if (includeStartDelay && this.startDelay > 0){
                     if (this.delayedStartTime>=0){
                         this.removeFromDelayedAnimations();
-                        var postDelaySeekTime:number = playheadTime - this.startDelay;
+                        let postDelaySeekTime:number = playheadTime - this.startDelay;
                         if (this.playReversed)
                             postDelaySeekTime -= this.duration;
                         if (postDelaySeekTime < 0){
@@ -612,7 +612,7 @@ module egret.gui {
          */
         private setupInterpolation():void{
             if (this.interpolator && this.motionPaths)
-                for (var i:number = 0; i < this.motionPaths.length; ++i)
+                for (let i:number = 0; i < this.motionPaths.length; ++i)
                     this.motionPaths[i].interpolator = this.interpolator;
         }
 
@@ -691,9 +691,9 @@ module egret.gui {
         }
 
         private start(event:egret.TimerEvent = null):void{
-            var actualStartTime:number = 0;
+            let actualStartTime:number = 0;
             if (!this.playReversed && this.delayedStartTime>=0){
-                var overrun:number = Animation.currentTime - this.delayedStartTime;
+                let overrun:number = Animation.currentTime - this.delayedStartTime;
                 if (overrun > 0)
                     actualStartTime = Math.min(overrun, this.duration);
                 this.removeFromDelayedAnimations();

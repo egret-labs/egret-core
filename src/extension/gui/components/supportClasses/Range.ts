@@ -1,6 +1,6 @@
 //////////////////////////////////////////////////////////////////////////////////////
 //
-//  Copyright (c) 2014-2015, Egret Technology Inc.
+//  Copyright (c) 2014-present, Egret Technology.
 //  All rights reserved.
 //  Redistribution and use in source and binary forms, with or without
 //  modification, are permitted provided that the following conditions are met:
@@ -28,7 +28,7 @@
 //////////////////////////////////////////////////////////////////////////////////////
 
 
-module egret.gui {
+namespace egret.gui {
 
 	/**
 	 * @class egret.gui.Range
@@ -213,7 +213,7 @@ module egret.gui {
             }
 
             if (this.valueChanged || this.maxChanged || this.minChanged || this.snapIntervalChanged) {
-                var currentValue:number = (this.valueChanged) ? this._changedValue : this._value;
+                let currentValue:number = (this.valueChanged) ? this._changedValue : this._value;
                 this.valueChanged = false;
                 this.maxChanged = false;
                 this.minChanged = false;
@@ -238,11 +238,11 @@ module egret.gui {
          * 修正stepSize到最接近snapInterval的整数倍
          */
         private nearestValidSize(size:number):number {
-            var interval:number = this.snapInterval;
+            let interval:number = this.snapInterval;
             if (interval == 0)
                 return size;
 
-            var validSize:number = Math.round(size / interval) * interval;
+            let validSize:number = Math.round(size / interval) * interval;
             return (Math.abs(validSize) < interval) ? interval : validSize;
         }
 
@@ -257,21 +257,21 @@ module egret.gui {
             if (interval == 0)
                 return Math.max(this.minimum, Math.min(this.maximum, value));
 
-            var maxValue:number = this.maximum - this.minimum;
-            var scale:number = 1;
+            let maxValue:number = this.maximum - this.minimum;
+            let scale:number = 1;
 
             value -= this.minimum;
             if (interval != Math.round(interval)) {
-                var parts:Array<any> = ((1 + interval).toString()).split(".");
+                let parts:any[] = ((1 + interval).toString()).split(".");
                 scale = Math.pow(10, parts[1].length);
                 maxValue *= scale;
                 value = Math.round(value * scale);
                 interval = Math.round(interval * scale);
             }
 
-            var lower:number = Math.max(0, Math.floor(value / interval) * interval);
-            var upper:number = Math.min(maxValue, Math.floor((value + interval) / interval) * interval);
-            var validValue:number = ((value - lower) >= ((upper - lower) / 2)) ? upper : lower;
+            let lower:number = Math.max(0, Math.floor(value / interval) * interval);
+            let upper:number = Math.min(maxValue, Math.floor((value + interval) / interval) * interval);
+            let validValue:number = ((value - lower) >= ((upper - lower) / 2)) ? upper : lower;
 
             return (validValue / scale) + this.minimum;
         }
@@ -303,7 +303,7 @@ module egret.gui {
             if (this.stepSize == 0)
                 return;
 
-            var newValue:number = (increase) ? this.value + this.stepSize : this.value - this.stepSize;
+            let newValue:number = (increase) ? this.value + this.stepSize : this.value - this.stepSize;
             this.setValue(this.nearestValidValue(newValue, this.snapInterval));
         }
     }

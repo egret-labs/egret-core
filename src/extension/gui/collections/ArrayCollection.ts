@@ -1,6 +1,6 @@
 //////////////////////////////////////////////////////////////////////////////////////
 //
-//  Copyright (c) 2014-2015, Egret Technology Inc.
+//  Copyright (c) 2014-present, Egret Technology.
 //  All rights reserved.
 //  Redistribution and use in source and binary forms, with or without
 //  modification, are permitted provided that the following conditions are met:
@@ -28,7 +28,7 @@
 //////////////////////////////////////////////////////////////////////////////////////
 
 
-module egret.gui {
+namespace egret.gui {
 
     /**
      * @class egret.gui.ArrayCollection
@@ -43,9 +43,9 @@ module egret.gui {
         /**
          * 构造函数
          * @method egret.gui.ArrayCollection#constructor
-         * @param source {Array<any>} 数据源
+         * @param source {any[]} 数据源
          */
-        public constructor(source:Array<any> = null){
+        public constructor(source:any[] = null){
             super();
             if(source){
                 this._source = source;
@@ -58,18 +58,18 @@ module egret.gui {
         /**
          *
          */
-        private _source:Array<any>;
+        private _source:any[];
         /**
          * 数据源
          * 通常情况下请不要直接调用Array的方法操作数据源，否则对应的视图无法收到数据改变的通知。
          * 若对数据源进行了排序或过滤等操作，请手动调用refresh()方法刷新数据。<br/>
          * @member egret.gui.ArrayCollection#source
          */
-        public get source():Array<any>{
+        public get source():any[]{
             return this._source;
         }
 
-        public set source(value:Array<any>){
+        public set source(value:any[]){
             if(!value)
                 value = [];
             this._source = value;
@@ -151,8 +151,8 @@ module egret.gui {
          * @returns {number}
          */
         public getItemIndex(item:any):number{
-            var length:number = this._source.length;
-            for(var i:number=0;i<length;i++){
+            let length:number = this._source.length;
+            for(let i:number=0;i<length;i++){
                 if(this._source[i]===item){
                     return i;
                 }
@@ -165,7 +165,7 @@ module egret.gui {
          * @param item {any}
          */
         public itemUpdated(item:any):void{
-            var index:number = this.getItemIndex(item);
+            let index:number = this.getItemIndex(item);
             if(index!=-1){
                 this.dispatchCoEvent(CollectionEventKind.UPDATE,index,-1,[item]);
             }
@@ -175,7 +175,7 @@ module egret.gui {
          * @method egret.gui.ArrayCollection#removeAll
          */
         public removeAll():void{
-            var items:Array<any> = this._source.concat();
+            let items:any[] = this._source.concat();
             this._source.length = 0;
             this.dispatchCoEvent(CollectionEventKind.REMOVE,0,-1,items);
         }
@@ -187,7 +187,7 @@ module egret.gui {
          */
         public removeItemAt(index:number):any{
             this.checkIndex(index);
-            var item:any = this._source.splice(index,1)[0];
+            let item:any = this._source.splice(index,1)[0];
             this.dispatchCoEvent(CollectionEventKind.REMOVE,index,-1,[item]);
             return item;
         }
@@ -200,24 +200,24 @@ module egret.gui {
          */
         public replaceItemAt(item:any, index:number):any{
             this.checkIndex(index);
-            var oldItem:any = this._source.splice(index,1,item)[0];
+            let oldItem:any = this._source.splice(index,1,item)[0];
             this.dispatchCoEvent(CollectionEventKind.REPLACE,index,-1,[item],[oldItem]);
             return oldItem;
         }
         /**
          * 用新数据源替换原始数据源，此方法与直接设置source不同，它不会导致目标视图重置滚动位置。
          * @method egret.gui.ArrayCollection#replaceAll
-         * @param newSource {Array<any>} 新的数据源
+         * @param newSource {any[]} 新的数据源
          */
-        public replaceAll(newSource:Array<any>):void{
+        public replaceAll(newSource:any[]):void{
             if(!newSource)
                 newSource = [];
-            var newLength:number = newSource.length;
-            var oldLenght:number = this._source.length;
-            for(var i:number = newLength;i<oldLenght;i++){
+            let newLength:number = newSource.length;
+            let oldLenght:number = this._source.length;
+            for(let i:number = newLength;i<oldLenght;i++){
                 this.removeItemAt(newLength);
             }
-            for(i=0;i<newLength;i++){
+            for(let i=0;i<newLength;i++){
                 if(i>=oldLenght)
                     this.addItemAt(newSource[i],i);
                 else
@@ -238,7 +238,7 @@ module egret.gui {
         public moveItemAt(oldIndex:number,newIndex:number):any{
             this.checkIndex(oldIndex);
             this.checkIndex(newIndex);
-            var item:any = this._source.splice(oldIndex,1)[0];
+            let item:any = this._source.splice(oldIndex,1)[0];
             this._source.splice(newIndex,0,item);
             this.dispatchCoEvent(CollectionEventKind.MOVE,newIndex,oldIndex,[item]);
             return item;
@@ -248,7 +248,7 @@ module egret.gui {
          * 抛出事件
          */
         private dispatchCoEvent(kind:string = null, location:number = -1,
-                                oldLocation:number = -1, items:Array<any> = null,oldItems:Array<any>=null):void{
+                                oldLocation:number = -1, items:any[] = null,oldItems:any[]=null):void{
 
             CollectionEvent.dispatchCollectionEvent(this,CollectionEvent.COLLECTION_CHANGE,kind,location,oldLocation,items,oldItems);
         }

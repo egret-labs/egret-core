@@ -1,6 +1,6 @@
 //////////////////////////////////////////////////////////////////////////////////////
 //
-//  Copyright (c) 2014-2015, Egret Technology Inc.
+//  Copyright (c) 2014-present, Egret Technology.
 //  All rights reserved.
 //  Redistribution and use in source and binary forms, with or without
 //  modification, are permitted provided that the following conditions are met:
@@ -27,11 +27,10 @@
 //
 //////////////////////////////////////////////////////////////////////////////////////
 
-module eui {
+namespace eui {
 
-    var UIImpl = sys.UIComponentImpl;
+    let UIImpl = sys.UIComponentImpl;
     /**
-     * @language en_US
      * Label is an UIComponent that can render one or more lines of text.
      * The text to be displayed is determined by the <code>text</code> property.
      * The formatting of the text is specified by the styles，
@@ -58,9 +57,9 @@ module eui {
      * @version eui 1.0
      * @platform Web,Native
      * @includeExample  extension/eui/components/LabelExample.ts
+     * @language en_US
      */
     /**
-     * @language zh_CN
      * Label 是可以呈示一行或多行统一格式文本的UI组件。要显示的文本由 text 属性确定。文本格式由样式属性指定，例如 fontFamily 和 size。
      * 因为 Label 运行速度快且占用内存少，所以它特别适合用于显示多个小型非交互式文本的情况，例如，项呈示器和 Button 外观中的标签。
      * 在 Label 中，将以下三个字符序列识别为显式换行符：CR（“\r”）、LF（“\n”）和 CR+LF（“\r\n”）。
@@ -71,11 +70,11 @@ module eui {
      * @version eui 1.0
      * @platform Web,Native
      * @includeExample  extension/eui/components/LabelExample.ts
+     * @language zh_CN
      */
     export class Label extends egret.TextField implements UIComponent,IDisplayText {
 
         /**
-         * @language en_US
          * Constructor.
          *
          * @param text The text displayed by this text component.
@@ -83,9 +82,9 @@ module eui {
          * @version Egret 2.4
          * @version eui 1.0
          * @platform Web,Native
+         * @language en_US
          */
         /**
-         * @language zh_CN
          * 构造函数。
          *
          * @param text 此文本组件所显示的文本。
@@ -93,11 +92,237 @@ module eui {
          * @version Egret 2.4
          * @version eui 1.0
          * @platform Web,Native
+         * @language zh_CN
          */
         public constructor(text?:string) {
             super();
             this.initializeUIValues();
             this.text = text;
+        }
+
+        /**
+         * style中属性是否允许被赋值，当主动赋值过属性之后将不允许被赋值
+         */
+        private $styleSetMap = {
+            "fontFamily": true,
+            "size": true,
+            "bold": true,
+            "italic": true,
+            "textAlign": true,
+            "verticalAlign": true,
+            "lineSpacing": true,
+            "textColor": true,
+            "wordWrap": true,
+            "displayAsPassword": true,
+            "strokeColor": true,
+            "stroke": true,
+            "maxChars": true,
+            "multiline": true,
+            "border": true,
+            "borderColor": true,
+            "background": true,
+            "backgroundColor": true
+        };
+        private $revertStyle = {};
+        private $style: string = null;
+
+        private $changeFromStyle:boolean = false;
+
+        /**
+         * The style of text.
+         * @version Egret 3.2.1
+         * @platform Web,Native
+         * @language en_US
+         */
+        /**
+         * 文本样式。
+         * @version Egret 3.2.1
+         * @platform Web,Native
+         * @language zh_CN
+         */
+        public get style(): string {
+            return this.$style;
+        }
+
+        public set style(value: string) {
+            this.$setStyle(value);
+        }
+
+        $setStyle(value: string) {
+            if (this.$style == value) {
+                return;
+            }
+            this.$style = value;
+            let theme: Theme = egret.getImplementation("eui.Theme");
+            if (theme) {
+                this.$changeFromStyle = true;
+                for (let key in this.$revertStyle) {
+                    this[key] = this.$revertStyle[key];
+                }
+                this.$revertStyle = {};
+                if (value == null) {
+                    this.$changeFromStyle = false;
+                    return;
+                }
+                let styleList = value.split(",");
+                for (let i = 0; i < styleList.length; i++) {
+                    let config = theme.$getStyleConfig(styleList[i]);
+                    if (config) {
+                        for (let key in config) {
+                            if (this.$styleSetMap[key]) {
+                                let revertValue = this[key];
+                                this[key] = config[key];
+                                this.$revertStyle[key] = revertValue;
+                            }
+                        }
+                    }
+                }
+                this.$changeFromStyle = false;
+            }
+        }
+
+        $setFontFamily(value: string): boolean {
+            if (!this.$changeFromStyle) {
+                delete this.$revertStyle["fontFanily"];
+                this.$styleSetMap["fontFanily"] = false;
+            }
+            return super.$setFontFamily(value);
+        }
+
+        $setSize(value: number): boolean {
+            if (!this.$changeFromStyle) {
+                delete this.$revertStyle["size"];
+                this.$styleSetMap["size"] = false;
+            }
+            return super.$setSize(value);
+        }
+
+        $setBold(value: boolean): boolean {
+            if (!this.$changeFromStyle) {
+                delete this.$revertStyle["bold"];
+                this.$styleSetMap["bold"] = false;
+            }
+            return super.$setBold(value);
+        }
+
+        $setItalic(value: boolean): boolean {
+            if (!this.$changeFromStyle) {
+                delete this.$revertStyle["italic"];
+                this.$styleSetMap["italic"] = false;
+            }
+            return super.$setItalic(value);
+        }
+
+        $setTextAlign(value: string): boolean {
+            if (!this.$changeFromStyle) {
+                delete this.$revertStyle["textAlign"];
+                this.$styleSetMap["textAlign"] = false;
+            }
+            return super.$setTextAlign(value);
+        }
+
+        $setVerticalAlign(value: string): boolean {
+            if (!this.$changeFromStyle) {
+                delete this.$revertStyle["verticalAlign"];
+                this.$styleSetMap["verticalAlign"] = false;
+            }
+            return super.$setVerticalAlign(value);
+        }
+
+        $setLineSpacing(value: number): boolean {
+            if (!this.$changeFromStyle) {
+                delete this.$revertStyle["lineSpacing"];
+                this.$styleSetMap["lineSpacing"] = false;
+            }
+            return super.$setLineSpacing(value);
+        }
+
+        $setTextColor(value: number): boolean {
+            if (!this.$changeFromStyle) {
+                delete this.$revertStyle["textColor"];
+                this.$styleSetMap["textColor"] = false;
+            }
+            return super.$setTextColor(value);
+        }
+
+        $setWordWrap(value: boolean): void {
+            if (!this.$changeFromStyle) {
+                delete this.$revertStyle["wordWrap"];
+                this.$styleSetMap["wordWrap"] = false;
+            }
+            super.$setWordWrap(value);
+        }
+
+        $setDisplayAsPassword(value: boolean): boolean {
+            if (!this.$changeFromStyle) {
+                delete this.$revertStyle["displayAsPassword"];
+                this.$styleSetMap["displayAsPassword"] = false;
+            }
+            return super.$setDisplayAsPassword(value);
+        }
+
+        $setStrokeColor(value: number): boolean {
+            if (!this.$changeFromStyle) {
+                delete this.$revertStyle["strokeColor"];
+                this.$styleSetMap["strokeColor"] = false;
+            }
+            return super.$setStrokeColor(value);
+        }
+
+        $setStroke(value: number): boolean {
+            if (!this.$changeFromStyle) {
+                delete this.$revertStyle["stroke"];
+                this.$styleSetMap["stroke"] = false;
+            }
+            return super.$setStroke(value);
+        }
+
+        $setMaxChars(value: number): boolean {
+            if (!this.$changeFromStyle) {
+                delete this.$revertStyle["maxChars"];
+                this.$styleSetMap["maxChars"] = false;
+            }
+            return super.$setMaxChars(value);
+        }
+
+        $setMultiline(value: boolean): boolean {
+            if (!this.$changeFromStyle) {
+                delete this.$revertStyle["multiline"];
+                this.$styleSetMap["multiline"] = false;
+            }
+            return super.$setMultiline(value);
+        }
+
+        $setBorder(value: boolean): void {
+            if (!this.$changeFromStyle) {
+                delete this.$revertStyle["border"];
+                this.$styleSetMap["border"] = false;
+            }
+            super.$setBorder(value);
+        }
+
+        $setBorderColor(value: number): void {
+            if (!this.$changeFromStyle) {
+                delete this.$revertStyle["borderColor"];
+                this.$styleSetMap["borderColor"] = false;
+            }
+            super.$setBorderColor(value);
+        }
+
+        $setBackground(value: boolean): void {
+            if (!this.$changeFromStyle) {
+                delete this.$revertStyle["background"];
+                this.$styleSetMap["background"] = false;
+            }
+            super.$setBackground(value);
+        }
+
+        $setBackgroundColor(value: number): void {
+            if (!this.$changeFromStyle) {
+                delete this.$revertStyle["backgroundColor"];
+                this.$styleSetMap["backgroundColor"] = false;
+            }
+            super.$setBackgroundColor(value);
         }
 
         /**
@@ -115,8 +340,8 @@ module eui {
          * @param value
          */
         $setWidth(value:number):boolean {
-            var result1:boolean = super.$setWidth(value);
-            var result2:boolean = UIImpl.prototype.$setWidth.call(this, value);
+            let result1:boolean = super.$setWidth(value);
+            let result2:boolean = UIImpl.prototype.$setWidth.call(this, value);
             return result1 && result2;
         }
 
@@ -126,8 +351,8 @@ module eui {
          * @param value
          */
         $setHeight(value:number):boolean {
-            var result1:boolean = super.$setHeight(value);
-            var result2:boolean = UIImpl.prototype.$setHeight.call(this, value);
+            let result1:boolean = super.$setHeight(value);
+            let result2:boolean = UIImpl.prototype.$setHeight.call(this, value);
             return result1 && result2;
         }
 
@@ -137,7 +362,7 @@ module eui {
          * @param value
          */
         $setText(value:string):boolean {
-            var result:boolean = super.$setText(value);
+            let result:boolean = super.$setText(value);
             PropertyEvent.dispatchPropertyEvent(this, PropertyEvent.PROPERTY_CHANGE, "text");
             return result;
         }
@@ -187,7 +412,6 @@ module eui {
         protected commitProperties():void {
 
         }
-
         /**
          * @copy eui.UIComponent#measure
          *
@@ -196,10 +420,10 @@ module eui {
          * @platform Web,Native
          */
         protected measure():void {
-            var values = this.$UIComponent;
-            var textValues = this.$TextField;
-            var oldWidth = textValues[egret.sys.TextKeys.textFieldWidth];
-            var availableWidth = NaN;
+            let values = this.$UIComponent;
+            let textValues = this.$TextField;
+            let oldWidth = textValues[egret.sys.TextKeys.textFieldWidth];
+            let availableWidth = NaN;
             if (!isNaN(this._widthConstraint)) {
                 availableWidth = this._widthConstraint;
                 this._widthConstraint = NaN;
@@ -263,7 +487,7 @@ module eui {
          * @version eui 1.0
          * @platform Web,Native
          */
-        public left:number;
+        public left:any;
 
         /**
          * @copy eui.UIComponent#right
@@ -272,7 +496,7 @@ module eui {
          * @version eui 1.0
          * @platform Web,Native
          */
-        public right:number;
+        public right:any;
 
         /**
          * @copy eui.UIComponent#top
@@ -281,7 +505,7 @@ module eui {
          * @version eui 1.0
          * @platform Web,Native
          */
-        public top:number;
+        public top:any;
 
         /**
          * @copy eui.UIComponent#bottom
@@ -290,7 +514,7 @@ module eui {
          * @version eui 1.0
          * @platform Web,Native
          */
-        public bottom:number;
+        public bottom:any;
 
         /**
          * @copy eui.UIComponent#horizontalCenter
@@ -299,7 +523,7 @@ module eui {
          * @version eui 1.0
          * @platform Web,Native
          */
-        public horizontalCenter:number;
+        public horizontalCenter:any;
 
         /**
          * @copy eui.UIComponent#verticalCenter
@@ -308,7 +532,7 @@ module eui {
          * @version eui 1.0
          * @platform Web,Native
          */
-        public verticalCenter:number;
+        public verticalCenter:any;
 
         /**
          * @copy eui.UIComponent#percentWidth
@@ -471,16 +695,17 @@ module eui {
         public setLayoutBoundsSize(layoutWidth:number, layoutHeight:number):void {
             UIImpl.prototype.setLayoutBoundsSize.call(this, layoutWidth, layoutHeight);
             if (isNaN(layoutWidth) || layoutWidth === this._widthConstraint || layoutWidth == 0) {
+                this._widthConstraint = layoutWidth;
                 return;
             }
-            var values = this.$UIComponent;
+            this._widthConstraint = layoutWidth;
+            let values = this.$UIComponent;
             if (!isNaN(values[sys.UIKeys.explicitHeight])) {
                 return;
             }
             if (layoutWidth == values[sys.UIKeys.measuredWidth]) {
                 return;
             }
-            this._widthConstraint = layoutWidth;
             this.invalidateSize();
         }
 

@@ -1,6 +1,6 @@
 //////////////////////////////////////////////////////////////////////////////////////
 //
-//  Copyright (c) 2014-2015, Egret Technology Inc.
+//  Copyright (c) 2014-present, Egret Technology.
 //  All rights reserved.
 //  Redistribution and use in source and binary forms, with or without
 //  modification, are permitted provided that the following conditions are met:
@@ -27,10 +27,10 @@
 //
 //////////////////////////////////////////////////////////////////////////////////////
 
-module eui.sys {
+namespace eui.sys {
 
-    var SOLUTION_TOLERANCE = 0.1;
-    var MIN_MAX_TOLERANCE = 0.1;
+    let SOLUTION_TOLERANCE = 0.1;
+    let MIN_MAX_TOLERANCE = 0.1;
 
     /**
      * @private
@@ -48,12 +48,12 @@ module eui.sys {
             if (isNaN(width) && isNaN(height))
                 return egret.Point.create(preferredWidth, preferredHeight);
 
-            var newMinWidth = (minWidth < MIN_MAX_TOLERANCE) ? 0 : minWidth - MIN_MAX_TOLERANCE;
-            var newMinHeight = (minHeight < MIN_MAX_TOLERANCE) ? 0 : minHeight - MIN_MAX_TOLERANCE;
-            var newMaxWidth = maxWidth + MIN_MAX_TOLERANCE;
-            var newMaxHeight = maxHeight + MIN_MAX_TOLERANCE;
+            let newMinWidth = (minWidth < MIN_MAX_TOLERANCE) ? 0 : minWidth - MIN_MAX_TOLERANCE;
+            let newMinHeight = (minHeight < MIN_MAX_TOLERANCE) ? 0 : minHeight - MIN_MAX_TOLERANCE;
+            let newMaxWidth = maxWidth + MIN_MAX_TOLERANCE;
+            let newMaxHeight = maxHeight + MIN_MAX_TOLERANCE;
 
-            var actualSize:egret.Point;
+            let actualSize:egret.Point;
 
             if (!isNaN(width) && !isNaN(height)) {
                 actualSize = calcUBoundsToFitTBounds(width, height, matrix,
@@ -61,7 +61,7 @@ module eui.sys {
                     newMaxWidth, newMaxHeight);
 
                 if (!actualSize) {
-                    var actualSize1:egret.Point;
+                    let actualSize1:egret.Point;
                     actualSize1 = fitTBoundsWidth(width, matrix,
                         explicitWidth, explicitHeight,
                         preferredWidth, preferredHeight,
@@ -69,7 +69,7 @@ module eui.sys {
                         newMaxWidth, newMaxHeight);
 
                     if (actualSize1) {
-                        var fitHeight = transformSize(actualSize1.x, actualSize1.y, matrix).height;
+                        let fitHeight = transformSize(actualSize1.x, actualSize1.y, matrix).height;
                         if (fitHeight - SOLUTION_TOLERANCE > height)
                         {
                             egret.Point.release(actualSize1);
@@ -77,7 +77,7 @@ module eui.sys {
                         }
                     }
 
-                    var actualSize2:egret.Point
+                    let actualSize2:egret.Point
                     actualSize2 = fitTBoundsHeight(height, matrix,
                         explicitWidth, explicitHeight,
                         preferredWidth, preferredHeight,
@@ -85,7 +85,7 @@ module eui.sys {
                         newMaxWidth, newMaxHeight);
 
                     if (actualSize2) {
-                        var fitWidth = transformSize(actualSize2.x, actualSize2.y, matrix).width;
+                        let fitWidth = transformSize(actualSize2.x, actualSize2.y, matrix).width;
                         if (fitWidth - SOLUTION_TOLERANCE > width)
                         {
                             egret.Point.release(actualSize2);
@@ -132,7 +132,7 @@ module eui.sys {
                              preferredWidth:number, preferredHeight:number,
                              minWidth:number, minHeight:number,
                              maxWidth:number, maxHeight:number):egret.Point {
-        var actualSize:egret.Point;
+        let actualSize:egret.Point;
 
         if (!isNaN(explicitWidth) && isNaN(explicitHeight)) {
             actualSize = calcUBoundsToFitTBoundsWidth(width, matrix,
@@ -168,7 +168,7 @@ module eui.sys {
                               preferredWidth:number, preferredHeight:number,
                               minWidth:number, minHeight:number,
                               maxWidth:number, maxHeight:number):egret.Point {
-        var actualSize:egret.Point;
+        let actualSize:egret.Point;
 
         if (!isNaN(explicitWidth) && isNaN(explicitHeight)) {
             actualSize = calcUBoundsToFitTBoundsHeight(height, matrix,
@@ -208,8 +208,8 @@ module eui.sys {
                                            minY:number,
                                            maxX:number,
                                            maxY:number):egret.Point {
-        var b = matrix.b;
-        var d = matrix.d;
+        let b = matrix.b;
+        let d = matrix.d;
 
         if (-1.0e-9 < b && b < +1.0e-9)
             b = 0;
@@ -227,14 +227,14 @@ module eui.sys {
         else if (d == 0)
             return egret.Point.create(h / Math.abs(b), preferredY);
 
-        var d1 = (b * d >= 0) ? d : -d;
+        let d1 = (b * d >= 0) ? d : -d;
 
-        var s:egret.Point;
-        var x:number;
-        var y:number;
+        let s:egret.Point;
+        let x:number;
+        let y:number;
 
         if (d1 != 0 && preferredX > 0) {
-            var invD1 = 1 / d1;
+            let invD1 = 1 / d1;
             preferredX = Math.max(minX, Math.min(maxX, preferredX));
             x = preferredX;
 
@@ -256,7 +256,7 @@ module eui.sys {
         }
 
         if (b != 0 && preferredY > 0) {
-            var invB = 1 / b;
+            let invB = 1 / b;
             preferredY = Math.max(minY, Math.min(maxY, preferredY));
             y = preferredY;
 
@@ -281,9 +281,9 @@ module eui.sys {
         if (s)
             return s;
 
-        var a = matrix.a;
-        var c = matrix.c;
-        var c1 = ( a * c >= 0 ) ? c : -c;
+        let a = matrix.a;
+        let c = matrix.c;
+        let c1 = ( a * c >= 0 ) ? c : -c;
         return solveEquation(b, d1, h, minX, minY, maxX, maxY, a, c1);
     }
 
@@ -299,8 +299,8 @@ module eui.sys {
                                           maxX:number,
                                           maxY:number):egret.Point {
 
-        var a = matrix.a;
-        var c = matrix.c;
+        let a = matrix.a;
+        let c = matrix.c;
 
         if (-1.0e-9 < a && a < +1.0e-9)
             a = 0;
@@ -315,14 +315,14 @@ module eui.sys {
         else if (c == 0)
             return egret.Point.create(w / Math.abs(a), preferredY);
 
-        var c1 = ( a * c >= 0 ) ? c : -c;
+        let c1 = ( a * c >= 0 ) ? c : -c;
 
-        var s:egret.Point;
-        var x:number;
-        var y:number;
+        let s:egret.Point;
+        let x:number;
+        let y:number;
 
         if (c1 != 0 && preferredX > 0) {
-            var invC1 = 1 / c1;
+            let invC1 = 1 / c1;
             preferredX = Math.max(minX, Math.min(maxX, preferredX));
             x = preferredX;
 
@@ -344,7 +344,7 @@ module eui.sys {
         }
 
         if (a != 0 && preferredY > 0) {
-            var invA = 1 / a;
+            let invA = 1 / a;
             preferredY = Math.max(minY, Math.min(maxY, preferredY));
             y = preferredY;
 
@@ -372,9 +372,9 @@ module eui.sys {
         if (s)
             return s;
 
-        var b = matrix.b;
-        var d = matrix.d;
-        var d1 = (b * d >= 0) ? d : -d;
+        let b = matrix.b;
+        let d = matrix.d;
+        let d1 = (b * d >= 0) ? d : -d;
         return solveEquation(a, c1, w, minX, minY, maxX, maxY, b, d1);
     }
 
@@ -393,14 +393,14 @@ module eui.sys {
         if (a == 0 || c == 0)
             return null;
 
-        var x:number;
-        var y:number;
+        let x:number;
+        let y:number;
 
-        var A = (w - minX * a) / c;
-        var B = (w - maxX * a) / c;
-        var rangeMinY = Math.max(minY, Math.min(A, B));
-        var rangeMaxY = Math.min(maxY, Math.max(A, B));
-        var det = (b * c - a * d);
+        let A = (w - minX * a) / c;
+        let B = (w - maxX * a) / c;
+        let rangeMinY = Math.max(minY, Math.min(A, B));
+        let rangeMaxY = Math.min(maxY, Math.max(A, B));
+        let det = (b * c - a * d);
 
         if (rangeMinY <= rangeMaxY) {
             if (Math.abs(det) < 1.0e-9) {
@@ -448,10 +448,10 @@ module eui.sys {
                                      maxX:number,
                                      maxY:number):egret.Point {
 
-        var a = matrix.a;
-        var b = matrix.b;
-        var c = matrix.c;
-        var d = matrix.d;
+        let a = matrix.a;
+        let b = matrix.b;
+        let c = matrix.c;
+        let d = matrix.d;
 
         if (-1.0e-9 < a && a < +1.0e-9)
             a = 0;
@@ -476,10 +476,10 @@ module eui.sys {
             return egret.Point.create(h / Math.abs(b), w / Math.abs(c));
         }
 
-        var c1 = ( a * c >= 0 ) ? c : -c;
-        var d1 = ( b * d >= 0 ) ? d : -d;
+        let c1 = ( a * c >= 0 ) ? c : -c;
+        let d1 = ( b * d >= 0 ) ? d : -d;
 
-        var det = a * d1 - b * c1;
+        let det = a * d1 - b * c1;
         if (Math.abs(det) < 1.0e-9) {
             if (c1 == 0 || a == 0 || a == -c1)
                 return null;
@@ -490,11 +490,11 @@ module eui.sys {
             return solveEquation(a, c1, w, minX, minX, maxX, maxY, b, d1);
         }
 
-        var invDet = 1 / det;
+        let invDet = 1 / det;
         w *= invDet;
         h *= invDet;
 
-        var s:egret.Point;
+        let s:egret.Point;
         s = solveSystem(a, c1, b, d1, w, h);
         if (s &&
             minX <= s.x && s.x <= maxX && minY <= s.y && s.y <= maxY &&
@@ -532,7 +532,7 @@ module eui.sys {
      */
     function transformSize(width:number, height:number, matrix:egret.Matrix):egret.Rectangle {
 
-        var bounds = egret.$TempRectangle.setTo(0, 0, width, height);
+        let bounds = egret.$TempRectangle.setTo(0, 0, width, height);
         matrix.$transformBounds(bounds);
         return bounds;
     }

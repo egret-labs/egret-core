@@ -1,6 +1,6 @@
 //////////////////////////////////////////////////////////////////////////////////////
 //
-//  Copyright (c) 2014-2015, Egret Technology Inc.
+//  Copyright (c) 2014-present, Egret Technology.
 //  All rights reserved.
 //  Redistribution and use in source and binary forms, with or without
 //  modification, are permitted provided that the following conditions are met:
@@ -29,7 +29,7 @@
 
 
 
-module eui.sys {
+namespace eui.sys {
 
     /**
      * @private
@@ -147,19 +147,19 @@ module eui.sys {
          * 计算当前值并返回动画是否结束
          */
         private doInterval(currentTime:number):boolean {
-            var runningTime = currentTime - this.startTime;
+            let runningTime = currentTime - this.startTime;
             if (!this.isPlaying) {
                 this.isPlaying = true;
             }
-            var duration = this.duration;
-            var fraction = duration == 0 ? 1 : Math.min(runningTime, duration) / duration;
+            let duration = this.duration;
+            let fraction = duration == 0 ? 1 : Math.min(runningTime, duration) / duration;
             if (this.easerFunction){
                 fraction = this.easerFunction(fraction);
             }
             this.currentValue = this.from + (this.to - this.from) * fraction;
             if (this.updateFunction)
                 this.updateFunction.call(this.thisObject, this);
-            var isEnded = runningTime >= duration;
+            let isEnded = runningTime >= duration;
             if (isEnded) {
                 this.stop();
             }

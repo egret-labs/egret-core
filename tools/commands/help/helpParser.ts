@@ -71,7 +71,7 @@ function getRepeatString(sBase, nRepeat) {
     }
 }
 
-module help {
+namespace help {
     export function logHelpDef( command ) {
 
         var json = help_def_set[ command ];

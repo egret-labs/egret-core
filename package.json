@@ -1,6 +1,6 @@
 {
   "name": "egret",
-  "version": "3.0.7",
+  "version": "4.0.3",
   "private": true,
   "author": "egret-labs",
   "scripts": {
@@ -16,7 +16,7 @@
     "modules": [
       {
         "name": "egret",
-        "description": "Egret 核心库",
+        "description": "egret 核心库",
         "files": [
           {
             "path": "../Defines.debug.ts",
@@ -31,19 +31,11 @@
             "platform": "native"
           },
           {
-            "path": "native/rendering/rendertexture/NativeRenderTextureRenderContext.ts",
-            "platform": "native"
-          },
-          {
-            "path": "native/rendering/rendertexture/NativeRenderTexture.ts",
-            "platform": "native"
-          },
-          {
-            "path": "native/rendering/rendertexture/NativeRenderTextureRenderBuffer.ts",
-            "platform": "native"
-          },
-          {
             "path": "native/rendering/canvas/NativeCanvasRenderContext.ts",
+            "platform": "native"
+          },
+          {
+            "path": "native/rendering/canvas/OldNativeCanvasRenderContext.ts",
             "platform": "native"
           },
           {
@@ -64,6 +56,10 @@
           },
           {
             "path": "native/EgretNative.ts",
+            "platform": "native"
+          },
+          {
+            "path": "native/NativeFps.ts",
             "platform": "native"
           },
           {
@@ -88,6 +84,10 @@
           },
           {
             "path": "media/native/NaSoundChannel.ts",
+            "platform": "native"
+          },
+          {
+            "path": "media/native/NativeVideo.ts",
             "platform": "native"
           },
           {
@@ -211,6 +211,10 @@
             "platform": "web"
           },
           {
+            "path": "web/WebFps.ts",
+            "platform": "web"
+          },
+          {
             "path": "web/WebGetOption.ts",
             "platform": "web"
           },
@@ -247,31 +251,19 @@
             "platform": "web"
           },
           {
-            "path": "web/rendering/webgl/WebGLUtils.ts",
+            "path": "web/rendering/webgl/WebGLDrawCmdManager.ts",
             "platform": "web"
           },
           {
-            "path": "web/rendering/webgl/shaders/EgretShader.ts",
-            "platform": "web"
-          },
-          {
-            "path": "web/rendering/webgl/shaders/PrimitiveShader.ts",
-            "platform": "web"
-          },
-          {
-            "path": "web/rendering/webgl/shaders/BlurShader.ts",
-            "platform": "web"
-          },
-          {
-            "path": "web/rendering/webgl/shaders/ColorTransformShader.ts",
-            "platform": "web"
-          },
-          {
-            "path": "web/rendering/webgl/WebGLShaderManager.ts",
+            "path": "web/rendering/webgl/WebGLVertexArrayObject.ts",
             "platform": "web"
           },
           {
             "path": "web/rendering/webgl/WebGLRenderTarget.ts",
+            "platform": "web"
+          },
+          {
+            "path": "web/rendering/webgl/WebGLRenderContext.ts",
             "platform": "web"
           },
           {
@@ -281,68 +273,105 @@
           {
             "path": "web/rendering/webgl/WebGLRenderer.ts",
             "platform": "web"
-          }
-        ],
-        "root": "src/egret",
-        "dependencies": [ ]
-      },
-      {
-        "name": "game",
-        "description": "Egret Game Extension",
-        "files": [
-          {
-            "path": "net/native/NativeNetContext.ts",
-            "platform": "native"
           },
           {
-            "path": "net/web/HTML5NetContext.ts",
+            "path": "web/rendering/webgl/EgretWebGLAttribute.ts",
+            "platform": "web"
+          },
+          {
+            "path": "web/rendering/webgl/EgretWebGLProgram.ts",
+            "platform": "web"
+          },
+          {
+            "path": "web/rendering/webgl/EgretWebGLUniform.ts",
+            "platform": "web"
+          },
+          {
+            "path": "web/rendering/webgl/shaders/EgretShaderLib.ts",
             "platform": "web"
           }
         ],
+        "root": "src/egret",
+        "dependencies": []
+      },
+      {
+        "name": "game",
+        "description": "game 游戏库",
+        "files": [],
         "root": "src/extension/game",
-        "dependencies": [ "egret" ]
+        "dependencies": [
+          "egret"
+        ]
       },
       {
         "name": "gui",
-        "description": "Egret UI Framework",
-        "files": [ ],
+        "description": "gui 界面制作库",
+        "files": [],
         "root": "src/extension/gui",
-        "dependencies": [ "egret", "game" ]
+        "dependencies": [
+          "egret",
+          "game"
+        ]
       },
       {
         "name": "res",
-        "description": "Egret Resource Loader",
-        "files": [ ],
+        "description": "res 资源加载库",
+        "files": [],
         "root": "src/extension/resource",
-        "dependencies": [ "egret", "game" ]
+        "dependencies": [
+          "egret",
+          "game"
+        ]
       },
       {
         "name": "eui",
-        "description": "Egret UI",
-        "files": [ ],
+        "description": "eui 界面制作库",
+        "files": [],
         "root": "src/extension/eui",
-        "dependencies": [ "egret" ]
+        "dependencies": [
+          "egret"
+        ]
+      },
+      {
+        "name": "experimental",
+        "description": "egret实验功能库",
+        "files": [],
+        "root": "src/extension/experimental",
+        "dependencies": [
+          "egret"
+        ]
       },
       {
         "name": "tween",
-        "description": "Egret Tween",
-        "files": [ ],
+        "description": "tween 缓动动画库",
+        "files": [],
         "root": "src/extension/tween",
-        "dependencies": [ "egret" ]
-      },
-      {
-        "name": "dragonBones",
-        "description": "dragonbones",
-        "files": [ ],
-        "root": "src/extension/dragonbones",
-        "dependencies": [ "egret" ]
+        "dependencies": [
+          "egret"
+        ]
       },
       {
         "name": "socket",
-        "description": "Web Socket",
-        "files": [ ],
+        "description": "socket 网络通讯库",
+        "files": [],
         "root": "src/extension/socket",
-        "dependencies": [ "egret" ]
+        "dependencies": [
+          "egret"
+        ]
+      },
+      {
+        "name": "dragonBones",
+        "description": "dragonbones 龙骨动画库",
+        "files": [],
+        "root": "",
+        "dependencies": []
+      },
+      {
+        "name": "egret3d",
+        "description": "egret 3D引擎库",
+        "files": [],
+        "root": "",
+        "dependencies": []
       }
     ],
     "platforms": [
@@ -367,15 +396,26 @@
         "language": "TypeScript",
         "tag": "game,app,TypeScript",
         "description": "创建一个空项目,仅添加 Egret 相关模块引用",
-        "modules": [ "egret" ]
+        "defaultWidth": 640,
+        "defaultHeight": 1136,
+        "modules": [
+          "egret"
+        ]
       },
       {
         "name": "game",
         "displayName": "Egret 游戏项目",
         "language": "TypeScript",
         "tag": "game,TypeScript",
-        "description": "创建一个Egret 游戏项目",
-        "modules": [ "egret", "game", "tween", "res" ]
+        "description": "创建一个 Egret 游戏项目",
+        "defaultWidth": 640,
+        "defaultHeight": 1136,
+        "modules": [
+          "egret",
+          "game",
+          "tween",
+          "res"
+        ]
       },
       {
         "name": "eui",
@@ -383,15 +423,74 @@
         "language": "TypeScript",
         "tag": "game,app,TypeScript",
         "description": "使用 eui 扩展库创建友好的交互界面",
-        "modules": [ "egret", "eui", "res" ]
+        "defaultWidth": 640,
+        "defaultHeight": 1136,
+        "modules": [
+          "egret",
+          "eui",
+          "res",
+          "tween"
+        ]
       },
       {
         "name": "gui",
         "displayName": "Egret GUI 项目",
         "language": "TypeScript",
         "tag": "game,app,TypeScript",
-        "description": "创建一个Egret GUI 项目(建议创建eui项目，它更易于使用，可以为您提高创建界面的效率及性能)",
-        "modules": [ "egret", "game", "res", "gui" ]
+        "description": "创建一个 Egret GUI 项目(建议创建eui项目，它更易于使用，可以为您提高创建界面的效率及性能)",
+        "defaultWidth": 640,
+        "defaultHeight": 1136,
+        "modules": [
+          "egret",
+          "game",
+          "res",
+          "gui"
+        ]
+      },
+      {
+        "name": "egret3d",
+        "displayName": "Egret 3D 项目",
+        "language": "TypeScript",
+        "tag": "game,app,TypeScript",
+        "description": "创建一个 Egret 3D 项目",
+        "defaultWidth": 640,
+        "defaultHeight": 960,
+        "modules": [
+          "egret",
+          "egret3d"
+        ]
+      },
+      {
+        "name": "facebook-instant-demo",
+        "displayName": "Facebook Instant Game Demo 项目",
+        "language": "TypeScript",
+        "tag": "game,app,TypeScript",
+        "description": "Facebook 推出的一种游戏类型",
+        "defaultWidth": 640,
+        "defaultHeight": 1136,
+        "modules": [
+          "egret",
+          "game",
+          "res",
+          "eui",
+          "tween"
+        ]
+      },
+      {
+        "name": "res-examples",
+        "displayName": "ResourceManager 示例项目",
+        "language": "TypeScript",
+        "tag": "game,app,TypeScript",
+        "description": "ResourceManager 示例项目",
+        "defaultWidth": 640,
+        "defaultHeight": 1136,
+        "modules": [
+          "egret",
+          "game",
+          "res",
+          "eui",
+          "tween"
+        ]
       }
     ],
     "scaleModes": [
@@ -446,5 +545,6 @@
         "description": "强制旋转应用程序至横屏状态。此模式下，当屏幕高度大于屏幕宽度时，会自动将应用程序逆时针旋转90°。"
       }
     ]
-  }
+  },
+  "dependencies": {}
 }

@@ -1,6 +1,6 @@
 //////////////////////////////////////////////////////////////////////////////////////
 //
-//  Copyright (c) 2014-2015, Egret Technology Inc.
+//  Copyright (c) 2014-present, Egret Technology.
 //  All rights reserved.
 //  Redistribution and use in source and binary forms, with or without
 //  modification, are permitted provided that the following conditions are met:
@@ -27,7 +27,7 @@
 //
 //////////////////////////////////////////////////////////////////////////////////////
 
-module egret {
+namespace egret {
 
     /**
      * @private
@@ -49,189 +49,191 @@ module egret {
 
 
     /**
-     * @language en_US
      * Text Style
      * @version Egret 2.4
      * @platform Web,Native
+     * @language en_US
      */
     /**
-     * @language zh_CN
      * 文本样式
      * @version Egret 2.4
      * @platform Web,Native
+     * @language zh_CN
      */
     export interface ITextStyle {
         /**
-         * @language en_US
          * text color
          * @version Egret 2.4
          * @platform Web,Native
+         * @see http://edn.egret.com/cn/docs/page/146 多种样式混合文本的基本结构
+         * @language en_US
          */
         /**
-         * @language zh_CN
          * 颜色值
          * @version Egret 2.4
          * @platform Web,Native
+         * @see http://edn.egret.com/cn/docs/page/146 多种样式混合文本的基本结构
+         * @language zh_CN
          */
         textColor?:number;
         /**
-         * @language en_US
          * stroke color
          * @version Egret 2.4
          * @platform Web,Native
+         * @language en_US
          */
         /**
-         * @language zh_CN
          * 描边颜色值
          * @version Egret 2.4
          * @platform Web,Native
+         * @language zh_CN
          */
         strokeColor?:number;
         /**
-         * @language en_US
          * size
          * @version Egret 2.4
          * @platform Web,Native
+         * @language en_US
          */
         /**
-         * @language zh_CN
          * 字号
          * @version Egret 2.4
          * @platform Web,Native
+         * @language zh_CN
          */
         size?:number;
         /**
-         * @language en_US
          * stroke width
          * @version Egret 2.4
          * @platform Web,Native
+         * @language en_US
          */
         /**
-         * @language zh_CN
          * 描边大小
          * @version Egret 2.4
          * @platform Web,Native
+         * @language zh_CN
          */
         stroke?:number;
         /**
-         * @language en_US
          * whether bold
          * @version Egret 2.4
          * @platform Web,Native
+         * @language en_US
          */
         /**
-         * @language zh_CN
          * 是否加粗
          * @version Egret 2.4
          * @platform Web,Native
+         * @language zh_CN
          */
         bold?:boolean;
         /**
-         * @language en_US
          * whether italic
          * @version Egret 2.4
          * @platform Web,Native
+         * @language en_US
          */
         /**
-         * @language zh_CN
          * 是否倾斜
          * @version Egret 2.4
          * @platform Web,Native
+         * @language zh_CN
          */
         italic?:boolean;
         /**
-         * @language en_US
          * fontFamily
          * @version Egret 2.4
          * @platform Web,Native
+         * @language en_US
          */
         /**
-         * @language zh_CN
          * 字体名称
          * @version Egret 2.4
          * @platform Web,Native
+         * @language zh_CN
          */
         fontFamily?:string;
         /**
-         * @language en_US
          * Link events or address
          * @version Egret 2.4
          * @platform Web,Native
+         * @language en_US
          */
         /**
-         * @language zh_CN
          * 链接事件或者地址
          * @version Egret 2.4
          * @platform Web,Native
+         * @language zh_CN
          */
         href?:string;
         /**
-         * @language en_US
          * @private
          * @version Egret 2.4
          * @platform Web,Native
+         * @language en_US
          */
         /**
-         * @language zh_CN
          * @private
          * @version Egret 2.4
          * @platform Web,Native
+         * @language zh_CN
          */
         target?:string;
         /**
-         * @language en_US
          * Is underlined
          * @version Egret 2.4
          * @platform Web,Native
+         * @language en_US
          */
         /**
-         * @language zh_CN
          * 是否加下划线
          * @version Egret 2.4
          * @platform Web,Native
+         * @language zh_CN
          */
         underline?:boolean;
     }
 
     /**
-     * @language en_US
      * Used to build the basic structure of text with a variety of mixed styles, mainly for setting textFlow property
-     * @see http://docs.egret-labs.org/jkdoc/manual-text-multiformat.html Text mixed in a variety of style
+     * @see http://edn.egret.com/cn/docs/page/146 Text mixed in a variety of style
      * @version Egret 2.4
      * @platform Web,Native
+     * @language en_US
      */
     /**
-     * @language zh_CN
      * 用于建立多种样式混合文本的基本结构，主要用于设置 textFlow 属性
-     * @see http://docs.egret-labs.org/jkdoc/manual-text-multiformat.html 多种样式文本混合
+     * @see http://edn.egret.com/cn/docs/page/146 多种样式文本混合
      * @version Egret 2.4
      * @platform Web,Native
+     * @language zh_CN
      */
     export interface ITextElement {
         /**
-         * @language en_US
          * String Content
          * @version Egret 2.4
          * @platform Web,Native
+         * @language en_US
          */
         /**
-         * @language zh_CN
          * 字符串内容
          * @version Egret 2.4
          * @platform Web,Native
+         * @language zh_CN
          */
         text:string;
         /**
-         * @language en_US
          * Text Style
          * @version Egret 2.4
          * @platform Web,Native
+         * @language en_US
          */
         /**
-         * @language zh_CN
          * 文本样式
          * @version Egret 2.4
          * @platform Web,Native
+         * @language zh_CN
          */
         style?:ITextStyle;
     }

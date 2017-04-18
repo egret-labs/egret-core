@@ -1,6 +1,6 @@
 //////////////////////////////////////////////////////////////////////////////////////
 //
-//  Copyright (c) 2014-2015, Egret Technology Inc.
+//  Copyright (c) 2014-present, Egret Technology.
 //  All rights reserved.
 //  Redistribution and use in source and binary forms, with or without
 //  modification, are permitted provided that the following conditions are met:
@@ -28,7 +28,7 @@
 //////////////////////////////////////////////////////////////////////////////////////
 
 
-module egret.gui {
+namespace egret.gui {
     /**
      * @class egret.gui.Sequence
      * @classdesc
@@ -45,10 +45,10 @@ module egret.gui {
         }
 
         public get compositeDuration():number{
-            var sequenceDuration:number = 0;
-            for (var i:number = 0; i < this.children.length; ++i){
-                var childDuration:number;
-                var child:Effect = <Effect><any> (this.children[i]);
+            let sequenceDuration:number = 0;
+            for (let i:number = 0; i < this.children.length; ++i){
+                let childDuration:number;
+                let child:Effect = <Effect><any> (this.children[i]);
                 if (child instanceof CompositeEffect)
                     childDuration = (<CompositeEffect><any> child).compositeDuration;
                 else

@@ -1,6 +1,6 @@
 //////////////////////////////////////////////////////////////////////////////////////
 //
-//  Copyright (c) 2014-2015, Egret Technology Inc.
+//  Copyright (c) 2014-present, Egret Technology.
 //  All rights reserved.
 //  Redistribution and use in source and binary forms, with or without
 //  modification, are permitted provided that the following conditions are met:
@@ -26,16 +26,16 @@
 //  EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 //
 //////////////////////////////////////////////////////////////////////////////////////
-module egret.web {
+namespace egret {
     /**
      * @private
      */
     export class WebGLUtils {
-        public static compileProgram(gl:WebGLRenderingContext, vertexSrc:string, fragmentSrc:string):WebGLProgram {
-            var fragmentShader:WebGLShader = WebGLUtils.compileFragmentShader(gl, fragmentSrc);
-            var vertexShader:WebGLShader = WebGLUtils.compileVertexShader(gl, vertexSrc);
+        public static compileProgram(gl: WebGLRenderingContext, vertexSrc: string, fragmentSrc: string): WebGLProgram {
+            let fragmentShader: WebGLShader = WebGLUtils.compileFragmentShader(gl, fragmentSrc);
+            let vertexShader: WebGLShader = WebGLUtils.compileVertexShader(gl, vertexSrc);
 
-            var shaderProgram:WebGLProgram = gl.createProgram();
+            let shaderProgram: WebGLProgram = gl.createProgram();
             gl.attachShader(shaderProgram, vertexShader);
             gl.attachShader(shaderProgram, fragmentShader);
             gl.linkProgram(shaderProgram);
@@ -46,16 +46,16 @@ module egret.web {
             return shaderProgram;
         }
 
-        public static compileFragmentShader(gl:WebGLRenderingContext, shaderSrc:string):WebGLShader {
+        public static compileFragmentShader(gl: WebGLRenderingContext, shaderSrc: string): WebGLShader {
             return WebGLUtils._compileShader(gl, shaderSrc, gl.FRAGMENT_SHADER);
         }
 
-        public static compileVertexShader(gl:WebGLRenderingContext, shaderSrc:string):WebGLShader {
+        public static compileVertexShader(gl: WebGLRenderingContext, shaderSrc: string): WebGLShader {
             return WebGLUtils._compileShader(gl, shaderSrc, gl.VERTEX_SHADER);
         }
 
-        private static _compileShader(gl:WebGLRenderingContext, shaderSrc:string, shaderType:number):WebGLShader {
-            var shader:WebGLShader = gl.createShader(shaderType);
+        private static _compileShader(gl: WebGLRenderingContext, shaderSrc: string, shaderType: number): WebGLShader {
+            let shader: WebGLShader = gl.createShader(shaderType);
             gl.shaderSource(shader, shaderSrc);
             gl.compileShader(shader);
 
@@ -66,12 +66,12 @@ module egret.web {
             return shader;
         }
 
-        private static canUseWebGL:boolean;
+        private static canUseWebGL: boolean;
 
-        public static checkCanUseWebGL():boolean {
+        public static checkCanUseWebGL(): boolean {
             if (WebGLUtils.canUseWebGL == undefined) {
                 try {
-                    var canvas = document.createElement("canvas");
+                    let canvas = document.createElement("canvas");
                     WebGLUtils.canUseWebGL = !!window["WebGLRenderingContext"]
                         && !!(canvas.getContext("webgl") || canvas.getContext("experimental-webgl"));
                 }
@@ -82,17 +82,12 @@ module egret.web {
             return WebGLUtils.canUseWebGL;
         }
 
-        public static deleteWebGLTexture(bitmapData):void {
+        public static deleteWebGLTexture(bitmapData): void {
             if (bitmapData) {
-                var webGLTexture = bitmapData.webGLTexture;
-                if (webGLTexture) {
-                    for (var key in webGLTexture) {
-                        var glTexture = webGLTexture[key];
-                        var gl = glTexture.glContext;
-                        gl.deleteTexture(glTexture);
-                    }
+                let gl = bitmapData.glContext;
+                if (gl) {
+                    gl.deleteTexture(bitmapData);
                 }
-                bitmapData.webGLTexture = null;
             }
         }
     }

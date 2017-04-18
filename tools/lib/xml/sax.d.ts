@@ -2,7 +2,6 @@
 // Project: https://github.com/isaacs/sax-js
 // Definitions by: Asana <https://asana.com>
 // Definitions: https://github.com/borisyankov/DefinitelyTyped
-/// <reference path="../node.d.ts" />
 
 import stream = require("stream");
 declare module sax {
@@ -34,7 +33,6 @@ declare module sax {
         /**
          * @language zh_CN
          * 节点类型，1：XML，2：XMLAttribute，3：XMLText
-         * @version Lark 1.0
          * @platform Web,Native
          */
         nodeType: number;

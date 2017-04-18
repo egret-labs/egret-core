@@ -1,6 +1,6 @@
 //////////////////////////////////////////////////////////////////////////////////////
 //
-//  Copyright (c) 2014-2015, Egret Technology Inc.
+//  Copyright (c) 2014-present, Egret Technology.
 //  All rights reserved.
 //  Redistribution and use in source and binary forms, with or without
 //  modification, are permitted provided that the following conditions are met:
@@ -27,10 +27,9 @@
 //
 //////////////////////////////////////////////////////////////////////////////////////
 
-module eui {
+namespace eui {
 
 	/**
-	 * @language en_US
 	 * The ColumnAlign class defines the possible values for the
 	 * <code>columnAlign</code> property of the TileLayout class.
 	 *
@@ -38,68 +37,69 @@ module eui {
 	 * @version eui 1.0
 	 * @platform Web,Native
 	 * @includeExample  extension/eui/layout/ColumnAlignExample.ts
+	 * @language en_US
 	 */
 	/**
-	 * @language zh_CN
 	 * ColumnAlign 类为 TileLayout 类的 <code>columnAlign</code> 属性定义可能的值。
 	 *
 	 * @version Egret 2.4
 	 * @version eui 1.0
 	 * @platform Web,Native
 	 * @includeExample  extension/eui/layout/ColumnAlignExample.ts
+	 * @language zh_CN
 	 */
 	export class ColumnAlign{
 		/**
-		 * @language en_US
 		 * Do not justify the rows.
 		 *
 		 * @version Egret 2.4
 		 * @version eui 1.0
 		 * @platform Web,Native
+		 * @language en_US
 		 */
 		/**
-		 * @language zh_CN
 		 * 不将行两端对齐。
 		 *
 		 * @version Egret 2.4
 		 * @version eui 1.0
 		 * @platform Web,Native
+		 * @language zh_CN
 		 */
 		public static LEFT:string = "left";
 		
 		/**
-		 * @language en_US
 		 * Justify the rows by increasing the vertical gap.
 		 *
 		 * @version Egret 2.4
 		 * @version eui 1.0
 		 * @platform Web,Native
+		 * @language en_US
 		 */
 		/**
-		 * @language zh_CN
 		 * 通过增大水平间隙将行两端对齐。
 		 *
 		 * @version Egret 2.4
 		 * @version eui 1.0
 		 * @platform Web,Native
+		 * @language zh_CN
 		 */
 		public static JUSTIFY_USING_GAP:string = "justifyUsingGap";
 		
 		/**
-		 * @language en_US
 		 * Justify the rows by increasing the row height.
 		 *
 		 * @version Egret 2.4
 		 * @version eui 1.0
 		 * @platform Web,Native
+		 * @language en_US
 		 */
 		/**
-		 * @language zh_CN
 		 * 通过增大行高度将行两端对齐。
 		 *
 		 * @version Egret 2.4
 		 * @version eui 1.0
 		 * @platform Web,Native
+		 * @language zh_CN
 		 */
 		public static JUSTIFY_USING_WIDTH:string = "justifyUsingWidth";
 	}

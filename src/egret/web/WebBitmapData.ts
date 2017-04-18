@@ -1,6 +1,6 @@
 //////////////////////////////////////////////////////////////////////////////////////
 //
-//  Copyright (c) 2014-2015, Egret Technology Inc.
+//  Copyright (c) 2014-present, Egret Technology.
 //  All rights reserved.
 //  Redistribution and use in source and binary forms, with or without
 //  modification, are permitted provided that the following conditions are met:
@@ -31,20 +31,21 @@
 if (DEBUG&&window['HTMLVideoElement'] == undefined) {
     window['HTMLVideoElement'] = HTMLDivElement;
 }
-module egret.web {
+namespace egret.web {
 
-    var className = "egret.BitmapData";
+    let className = "egret.BitmapData";
     registerClass(HTMLImageElement, className);
     registerClass(HTMLCanvasElement, className);
     registerClass(HTMLVideoElement, className);
 
 }
 
-module egret {
+namespace egret {
 
     /**
      * 转换 Image，Canvas，Video 为 Egret 框架内使用的 BitmapData 对象。
      * @param data 需要转换的对象，包括HTMLImageElement|HTMLCanvasElement|HTMLVideoElement
+     * @deprecated
      */
     export function $toBitmapData(data:any):BitmapData {
         data["hashCode"] = data["$hashCode"] = $hashCount++;

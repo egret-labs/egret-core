@@ -1,6 +1,6 @@
 //////////////////////////////////////////////////////////////////////////////////////
 //
-//  Copyright (c) 2014-2015, Egret Technology Inc.
+//  Copyright (c) 2014-present, Egret Technology.
 //  All rights reserved.
 //  Redistribution and use in source and binary forms, with or without
 //  modification, are permitted provided that the following conditions are met:
@@ -28,7 +28,7 @@
 //////////////////////////////////////////////////////////////////////////////////////
 
 
-module egret.gui {
+namespace egret.gui {
 
     /**
      * @class egret.gui.SkinnableComponent
@@ -105,14 +105,14 @@ module egret.gui {
          * 解析skinName
          */
         private parseSkinName():void{
-            var adapter:ISkinAdapter = SkinnableComponent.skinAdapter;
+            let adapter:ISkinAdapter = SkinnableComponent.skinAdapter;
             if(!adapter){
                 adapter = this.getSkinAdapter();
             }
-            var key = this.hostComponentKey || egret.getQualifiedClassName(this);
-            var skin: any = adapter.getSkin(this._skinName, key);
+            let key = this.hostComponentKey || egret.getQualifiedClassName(this);
+            let skin: any = adapter.getSkin(this._skinName, key);
             if(!skin){
-                var theme:Theme = SkinnableComponent._defaultTheme;
+                let theme:Theme = SkinnableComponent._defaultTheme;
                 if(theme){
                     skin = theme.getDefaultSkin(this);
                 }
@@ -123,7 +123,7 @@ module egret.gui {
          * 获取皮肤适配器
          */
         private getSkinAdapter():ISkinAdapter{
-            var adapter:ISkinAdapter;
+            let adapter:ISkinAdapter;
             try{
                 adapter = $getAdapter("egret.gui.ISkinAdapter");
             }
@@ -147,7 +147,7 @@ module egret.gui {
          * 设置皮肤
          */
         public _setSkin(skin:any):void{
-            var oldSkin:any = this._skin;
+            let oldSkin:any = this._skin;
             this.detachSkin(oldSkin);
             if(oldSkin instanceof DisplayObject){
                 this._removeFromDisplayList(<DisplayObjectContainer> oldSkin);
@@ -180,7 +180,7 @@ module egret.gui {
                 this.skinLayoutEnabled = false;
 
             if(skin&&"hostComponent" in skin){
-                var newSkin:ISkin = <ISkin> skin;
+                let newSkin:ISkin = <ISkin> skin;
                 newSkin.hostComponent = this;
                 this.findSkinParts();
             }
@@ -191,12 +191,12 @@ module egret.gui {
          * @method egret.gui.SkinnableComponent#findSkinParts
          */
         public findSkinParts():void{
-            var skin:any = this._skin;
+            let skin:any = this._skin;
             if(skin&&"skinParts" in skin){
-                var skinParts:Array<any> = skin.skinParts;
-                var length:number = skinParts.length;
-                for(var i:number=0;i<length;i++){
-                    var partName:string = skinParts[i];
+                let skinParts:any[] = skin.skinParts;
+                let length:number = skinParts.length;
+                for(let i:number=0;i<length;i++){
+                    let partName:string = skinParts[i];
                     if((partName in skin)){
                         try{
                             this[partName] = skin[partName];
@@ -217,10 +217,10 @@ module egret.gui {
         public detachSkin(skin:any):void{
             if(skin){
                 if("skinParts" in skin){
-                    var skinParts:Array<any> = skin.skinParts;
-                    var length:number = skinParts.length;
-                    for(var i:number=0;i<length;i++){
-                        var partName:string = skinParts[i];
+                    let skinParts:any[] = skin.skinParts;
+                    let length:number = skinParts.length;
+                    for(let i:number=0;i<length;i++){
+                        let partName:string = skinParts[i];
                         if(!(partName in this))
                             continue;
                         if (this[partName] != null){
@@ -277,8 +277,8 @@ module egret.gui {
          * @method egret.gui.SkinnableComponent#validateSkinState
          */
         public validateSkinState():void{
-            var curState:string = this.getCurrentSkinState();
-            var skin:any = this._skin;
+            let curState:string = this.getCurrentSkinState();
+            let skin:any = this._skin;
             if(skin&&"currentState" in skin){
                 (<IStateClient> skin).currentState = curState;
             }
@@ -415,7 +415,7 @@ module egret.gui {
          */
         public measure():void{
             super.measure();
-            var skin:any = this._skin;
+            let skin:any = this._skin;
             if(!skin)
                 return;
             if(this.skinLayoutEnabled){
@@ -443,7 +443,7 @@ module egret.gui {
          */
         public updateDisplayList(unscaledWidth:number, unscaledHeight:number):void{
             super.updateDisplayList(unscaledWidth,unscaledHeight);
-            var skin:any = this._skin;
+            let skin:any = this._skin;
             if(skin) {
                 if(this.skinLayoutEnabled){
                     skin.updateDisplayList(unscaledWidth,unscaledHeight);

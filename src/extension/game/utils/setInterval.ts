@@ -1,12 +1,11 @@
-module egret {
-    var setIntervalCache:any = {};
-    var setIntervalIndex:number = 0;
+namespace egret {
+    let setIntervalCache: any = {};
+    let setIntervalIndex: number = 0;
 
-    var setIntervalCount:number = 0;
-    var lastTime:number = 0;
+    let setIntervalCount: number = 0;
+    let lastTime: number = 0;
 
     /**
-     * @language en_US
      * To specify a delay (in milliseconds) calls the function specified interval loop.
      * @param listener {Function} Listener function
      * @param thisObject {any} this object
@@ -16,9 +15,9 @@ module egret {
      * @version Egret 2.4
      * @platform Web,Native
      * @includeExample extension/game/utils/setInterval.ts
+     * @language en_US
      */
     /**
-     * @language zh_CN
      * 以指定的延迟（以毫秒为单位）间隔循环调用指定的函数。
      * @param listener {Function} 侦听函数
      * @param thisObject {any} this对象
@@ -28,9 +27,10 @@ module egret {
      * @version Egret 2.4
      * @platform Web,Native
      * @includeExample extension/game/utils/setInterval.ts
+     * @language zh_CN
      */
-    export function setInterval(listener:Function, thisObject:any, delay:number, ...args):number {
-        var data = {listener: listener, thisObject: thisObject, delay: delay, originDelay: delay, params: args};
+    export function setInterval<Z>(listener: (this: Z, ...arg) => void, thisObject: Z, delay: number, ...args): number {
+        let data = { listener: listener, thisObject: thisObject, delay: delay, originDelay: delay, params: args };
 
         setIntervalCount++;
         if (setIntervalCount == 1) {
@@ -43,22 +43,22 @@ module egret {
     }
 
     /**
-     * @language en_US
      * Clear function to run after a specified delay.
      * @param key {number} Index that egret.setInterval returns
      * @version Egret 2.4
      * @platform Web,Native
      * @includeExample egret/utils/setInterval.ts
+     * @language en_US
      */
     /**
-     * @language zh_CN
      * 清除指定延迟后运行的函数。
      * @param key {number} egret.setInterval所返回的索引
      * @version Egret 2.4
      * @platform Web,Native
      * @includeExample egret/utils/setInterval.ts
+     * @language zh_CN
      */
-    export function clearInterval(key:number):void {
+    export function clearInterval(key: number): void {
         if (setIntervalCache[key]) {
             setIntervalCount--;
 
@@ -74,12 +74,12 @@ module egret {
      * 
      * @param dt 
      */
-    function intervalUpdate(timeStamp:number):boolean {
-        var dt:number = timeStamp - lastTime;
+    function intervalUpdate(timeStamp: number): boolean {
+        let dt: number = timeStamp - lastTime;
         lastTime = timeStamp;
 
-        for (var key in setIntervalCache) {
-            var data = setIntervalCache[key];
+        for (let key in setIntervalCache) {
+            let data = setIntervalCache[key];
             data.delay -= dt;
             if (data.delay <= 0) {
                 data.delay = data.originDelay;
