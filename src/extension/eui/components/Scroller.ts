@@ -520,6 +520,11 @@ namespace eui {
             if (this.$Scroller[Keys.touchCancle]) {
                 event.stopPropagation();
                 this.onTouchEnd(event);
+
+                event.$isPropagationStopped = false;
+                event.$bubbles = false;
+
+                this.dispatchEvent(event);
             }
         }
 
@@ -530,6 +535,11 @@ namespace eui {
         private onTouchTapCapture(event:egret.TouchEvent):void {
             if (this.$Scroller[Keys.touchCancle]) {
                 event.stopPropagation();
+
+                event.$isPropagationStopped = false;
+                event.$bubbles = false;
+
+                this.dispatchEvent(event);
             }
         }
 

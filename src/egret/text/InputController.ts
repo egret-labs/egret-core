@@ -200,7 +200,11 @@ namespace egret {
                 return;
             }
 
-            this.tempStage.addEventListener(egret.TouchEvent.TOUCH_BEGIN, this.onStageDownHandler, this);
+            this.tempStage.removeEventListener(egret.TouchEvent.TOUCH_BEGIN, this.onStageDownHandler, this);
+            egret.callLater(()=> {
+                this.tempStage.addEventListener(egret.TouchEvent.TOUCH_BEGIN, this.onStageDownHandler, this);
+            }, this);
+            
 
             //强制更新输入框位置
             this.stageText.$show();

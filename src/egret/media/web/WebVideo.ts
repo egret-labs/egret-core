@@ -276,7 +276,7 @@ namespace egret.web {
         }
 
         private screenChanged = (e): void => {
-            let isfullscreen = !!this.video['webkitDisplayingFullscreen'];
+            let isfullscreen = document.fullscreenEnabled || document.webkitIsFullScreen;
             if (!isfullscreen) {
                 this.checkFullScreen(false);
 
