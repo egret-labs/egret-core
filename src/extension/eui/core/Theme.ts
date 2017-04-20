@@ -204,17 +204,18 @@ namespace eui {
          *
          * @param str
          */
-        private onConfigLoaded(str: string): void {
+        private onConfigLoaded(str: string | any): void {
             let data: any;
-            if (DEBUG) {
+            if (typeof str == "string") {
                 try {
                     data = JSON.parse(str);
                 }
                 catch (e) {
                     egret.$error(3000);
                 }
-            } else {
-                data = JSON.parse(str);
+            }
+            else {
+                data = str;
             }
             if (data && data.skins) {
                 let skinMap = this.skinMap

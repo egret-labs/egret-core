@@ -67,7 +67,7 @@ namespace eui {
             }
             themeAdapter = (source: string) => {
                 return new Promise((reslove, reject) => {
-                    polyfill.getTheme(source, reslove, reject, this);
+                    polyfill.getTheme(source, (data) => { reslove(data) }, reject, this);
                 })
             }
         }
