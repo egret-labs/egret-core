@@ -13489,6 +13489,10 @@ declare namespace egret {
          */
         static BIG_ENDIAN: string;
     }
+    const enum EndianConst {
+        LITTLE_ENDIAN = 0,
+        BIG_ENDIAN = 1,
+    }
     /**
      * The ByteArray class provides methods and attributes for optimized reading and writing as well as dealing with binary data.
      * Note: The ByteArray class is applied to the advanced developers who need to access data at the byte layer.
@@ -13509,77 +13513,42 @@ declare namespace egret {
         /**
          * @private
          */
-        private static SIZE_OF_BOOLEAN;
+        protected bufferExtSize: number;
+        protected data: DataView;
+        protected _bytes: Uint8Array;
         /**
          * @private
          */
-        private static SIZE_OF_INT8;
+        protected _position: number;
         /**
-         * @private
+         *
+         * 已经使用的字节偏移量
+         * @protected
+         * @type {number}
+         * @memberOf ByteArray
          */
-        private static SIZE_OF_INT16;
+        protected write_position: number;
         /**
-         * @private
-         */
-        private static SIZE_OF_INT32;
-        /**
-         * @private
-         */
-        private static SIZE_OF_UINT8;
-        /**
-         * @private
-         */
-        private static SIZE_OF_UINT16;
-        /**
-         * @private
-         */
-        private static SIZE_OF_UINT32;
-        /**
-         * @private
-         */
-        private static SIZE_OF_FLOAT32;
-        /**
-         * @private
-         */
-        private static SIZE_OF_FLOAT64;
-        /**
-         * @private
-         */
-        private BUFFER_EXT_SIZE;
-        private data;
-        /**
-         * @private
-         */
-        private _position;
-        /**
-         * @private
-         */
-        private write_position;
-        /**
-         * Changes or reads the byte order; egret.Endian.BIG_ENDIAN or egret.Endian.LITTLE_ENDIAN.
-         * @default egret.Endian.BIG_ENDIAN
+         * Changes or reads the byte order; egret.EndianConst.BIG_ENDIAN or egret.EndianConst.LITTLE_EndianConst.
+         * @default egret.EndianConst.BIG_ENDIAN
          * @version Egret 2.4
          * @platform Web,Native
          * @language en_US
          */
         /**
-         * 更改或读取数据的字节顺序；egret.Endian.BIG_ENDIAN 或 egret.Endian.LITTLE_ENDIAN。
-         * @default egret.Endian.BIG_ENDIAN
+         * 更改或读取数据的字节顺序；egret.EndianConst.BIG_ENDIAN 或 egret.EndianConst.LITTLE_ENDIAN。
+         * @default egret.EndianConst.BIG_ENDIAN
          * @version Egret 2.4
          * @platform Web,Native
          * @language zh_CN
          */
         endian: string;
+        protected $endian: EndianConst;
         /**
          * @version Egret 2.4
          * @platform Web,Native
          */
-        constructor(buffer?: ArrayBuffer);
-        /**
-         * @private
-         * @param buffer
-         */
-        private _setArrayBuffer(buffer);
+        constructor(buffer?: ArrayBuffer | Uint8Array, bufferExtSize?: number);
         /**
          * @deprecated
          * @version Egret 2.4
@@ -13587,9 +13556,19 @@ declare namespace egret {
          */
         setArrayBuffer(buffer: ArrayBuffer): void;
         /**
+         * 可读的剩余字节数
+         *
+         * @returns
+         *
+         * @memberOf ByteArray
+         */
+        readonly readAvailable: number;
+        /**
          * @private
          */
         buffer: ArrayBuffer;
+        readonly rawBuffer: ArrayBuffer;
+        readonly bytes: Uint8Array;
         /**
          * @private
          * @version Egret 2.4
@@ -13633,6 +13612,7 @@ declare namespace egret {
          * @language zh_CN
          */
         length: number;
+        protected _validateBuffer(value: number): void;
         /**
          * The number of bytes that can be read from the current position of the byte array to the end of the array data.
          * When you access a ByteArray object, the bytesAvailable property in conjunction with the read methods each use to make sure you are reading valid data.
@@ -13656,7 +13636,6 @@ declare namespace egret {
          */
         /**
          * 清除字节数组的内容，并将 length 和 position 属性重置为 0。
-
          * @version Egret 2.4
          * @platform Web,Native
          * @language zh_CN
@@ -14036,7 +14015,7 @@ declare namespace egret {
          * @param bytes 要写入的Uint8Array
          * @param validateBuffer
          */
-        _writeUint8Array(bytes: Uint8Array, validateBuffer?: boolean): void;
+        _writeUint8Array(bytes: Uint8Array | ArrayLike<number>, validateBuffer?: boolean): void;
         /**
          * @param len
          * @returns
@@ -14052,62 +14031,38 @@ declare namespace egret {
          * @param len
          * @param needReplace
          */
-        private validateBuffer(len, needReplace?);
+        protected validateBuffer(len: number): void;
         /**
-         * @private
-         * UTF-8 Encoding/Decoding
-         */
-        private encodeUTF8(str);
-        /**
-         * @private
+         * 获取字符串使用Utf8编码的字节长度
          *
-         * @param data
+         * 参考 https://github.com/dcodeIO/protobuf.js/tree/master/lib/utf8
+         * @static
+         * @param {string} string
          * @returns
-         */
-        private decodeUTF8(data);
-        /**
-         * @private
          *
-         * @param code_point
+         * @memberOf ByteArray
          */
-        private encoderError(code_point);
+        static utf8ByteLength(string: string): number;
         /**
-         * @private
+         * 接续utf8字符串
          *
-         * @param fatal
-         * @param opt_code_point
+         * 参考 https://github.com/dcodeIO/protobuf.js/tree/master/lib/utf8
+         * @param {string} string
          * @returns
+         * @protected
+         * @memberOf ByteArray
          */
-        private decoderError(fatal, opt_code_point?);
+        encodeUTF8(string: string): number[];
         /**
-         * @private
-         */
-        private EOF_byte;
-        /**
-         * @private
-         */
-        private EOF_code_point;
-        /**
-         * @private
+         * 从字节数组中读取utf8字符串
          *
-         * @param a
-         * @param min
-         * @param max
-         */
-        private inRange(a, min, max);
-        /**
-         * @private
+         * 参考 https://github.com/dcodeIO/protobuf.js/tree/master/lib/utf8
+         * @param {(Uint8Array | ArrayLike<number>)} buffer
+         * @returns
          *
-         * @param n
-         * @param d
+         * @memberOf ByteArray
          */
-        private div(n, d);
-        /**
-         * @private
-         *
-         * @param string
-         */
-        private stringToCodePoints(string);
+        decodeUTF8(buffer: Uint8Array | ArrayLike<number>): any;
     }
 }
 declare namespace egret {
