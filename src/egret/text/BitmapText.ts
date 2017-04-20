@@ -575,7 +575,7 @@ namespace egret {
         /**
          * @private
          */
-        private textLines: string[];
+        private textLines: string[] = [];
         /**
          * @private 每一行文字的宽度
          */
