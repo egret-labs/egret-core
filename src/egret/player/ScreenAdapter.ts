@@ -154,28 +154,31 @@ namespace egret.sys {
                     }
                     break;
                 default :
-                    stageWidth = screenWidth;
-                    stageHeight = screenHeight;
+                    //noScale 增加检查屏幕DPR的处理
+                    //native时，白鹭有window对象，devicePixelRatio为undefined，同低版本浏览器一致，使用1处理
+                    const DPR = window.devicePixelRatio || 1;
+                    stageWidth = screenWidth * DPR;
+                    stageHeight = screenHeight * DPR;
                     break;
             }
             //宽高不是2的整数倍会导致图片绘制出现问题
-            if (stageWidth % 2 != 0) {
+            if (stageWidth & 1) {
                 stageWidth += 1;
             }
-            if (stageHeight % 2 != 0) {
+            if (stageHeight & 1) {
                 stageHeight += 1;
             }
-            if(displayWidth % 2 != 0) {
+            if (displayWidth & 1) {
                 displayWidth += 1;
             }
-            if(displayHeight % 2 != 0) {
+            if (displayHeight & 1) {
                 displayHeight += 1;
             }
             return {
-                stageWidth: stageWidth,
-                stageHeight: stageHeight,
-                displayWidth: displayWidth,
-                displayHeight: displayHeight
+                stageWidth,
+                stageHeight,
+                displayWidth,
+                displayHeight
             };
         }
     }
