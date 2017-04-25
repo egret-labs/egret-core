@@ -34,6 +34,8 @@ import UglifyJS = require("./uglify-js/uglifyjs");
 import net = require('net');
 
 
+
+
 //第三方调用时，可能不支持颜色显示，可通过添加 -nocoloroutput 移除颜色信息
 var ColorOutputReplacements = {
     "{color_green}": "\033[1;32;1m",
@@ -321,7 +323,7 @@ export function createMap<T>(template?: MapLike<T>): Map<T> {
     return map;
 }
 
-export function shell(path: string, args: string[], opt?: cp.SpawnOptions, verbase?: boolean):Promise<number>{
+export function shell(path: string, args: string[], opt?: cp.SpawnOptions, verbase?: boolean): Promise<number> {
     let stdout = "";
     let stderr = "";
     var cmd = `${path} ${args.join(" ")}`;
@@ -364,19 +366,19 @@ export function shell(path: string, args: string[], opt?: cp.SpawnOptions, verba
     return new Promise(callback);
 };
 
-let error_code_filename = path.join(__dirname,"../error_code.json");
-let errorcode = file.readJSONSync(error_code_filename,{"encoding":"utf-8"});
+let error_code_filename = path.join(__dirname, "../error_code.json");
+let errorcode = file.readJSONSync(error_code_filename, { "encoding": "utf-8" });
 export class CliException extends Error {
 
     public message;
 
-    constructor(public errorId,param?:string){
+    constructor(public errorId, param?: string) {
         super();
-        var message:string = errorcode[this.errorId];
-        if (message){
-            message = message.replace('{0}',param);
+        var message: string = errorcode[this.errorId];
+        if (message) {
+            message = message.replace('{0}', param);
         }
-        else{
+        else {
             message = `unkown error : ${errorId}`;
             console.error(message);
         }
@@ -384,13 +386,25 @@ export class CliException extends Error {
     }
 }
 
-export function findValidatePathSync(pathStr:string):string{
-    if(!pathStr){
+export function findValidatePathSync(pathStr: string): string {
+    if (!pathStr) {
         pathStr = process.cwd();
-    }else{
-        if(!file.existsSync(pathStr)){
-            pathStr = path.join(process.cwd(),pathStr);
+    } else {
+        if (!file.existsSync(pathStr)) {
+            pathStr = path.join(process.cwd(), pathStr);
         }
     }
     return pathStr;
+}
+
+
+export const cache: MethodDecorator = (target, propertyKey, descriptor: TypedPropertyDescriptor<any>) => {
+    const method = descriptor.value;
+    let cacheValue = null;
+    descriptor.value = function (...arg) {
+        if (!cacheValue) {
+            cacheValue = method.apply(this, arg);
+        }
+        return cacheValue;
+    }
 }

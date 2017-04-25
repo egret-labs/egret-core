@@ -385,3 +385,17 @@ function findValidatePathSync(pathStr) {
     return pathStr;
 }
 exports.findValidatePathSync = findValidatePathSync;
+exports.cache = function (target, propertyKey, descriptor) {
+    var method = descriptor.value;
+    var cacheValue = null;
+    descriptor.value = function () {
+        var arg = [];
+        for (var _i = 0; _i < arguments.length; _i++) {
+            arg[_i] = arguments[_i];
+        }
+        if (!cacheValue) {
+            cacheValue = method.apply(this, arg);
+        }
+        return cacheValue;
+    };
+};

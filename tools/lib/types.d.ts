@@ -31,7 +31,7 @@ declare module egret {
     export interface ToolArgs {
         command: string;
         //子命令
-        subCommand?:string;
+        subCommand?: string;
         action?: string;
         commands?: string[];
         platform?: string;
@@ -104,7 +104,7 @@ declare module egret {
         "path": string;
     }
 
-    export type EgretVersion = {
+    export type VersionInfo = {
         "version": string,
         "path": string;
     }

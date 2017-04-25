@@ -61,7 +61,6 @@ export function copyToLibs() {
     let project = EgretProject.utils;
     let moduleDir = project.getLibraryFolder();
     FileUtil.remove(moduleDir);
-
     project.getModulesConfig("web").forEach(m => {
         FileUtil.copy(m.sourceDir, project.getFilePath(m.targetDir));
     })

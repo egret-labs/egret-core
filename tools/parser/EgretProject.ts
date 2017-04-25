@@ -1,11 +1,9 @@
-﻿/// <reference path="../lib/types.d.ts" />
-
-import os = require('os');
+﻿import os = require('os');
 import crypto = require('crypto');
 import file = require('../lib/FileUtil');
 import _utils = require('../lib/utils');
-import path = require("path");
-import cprocess = require('child_process');
+import _path = require("path");
+import cp = require('child_process');
 
 type SourceCode = {
 
@@ -18,8 +16,6 @@ export class EgretProject {
     private egretProperties: egret.EgretProperty = {
         modules: []
     };
-
-    private moduleConfig;
 
     projectRoot = "";
     init(projectRoot: string) {
@@ -70,7 +66,7 @@ export class EgretProject {
     }
 
     getFilePath(fileName: string) {
-        return path.resolve(this.getProjectRoot(), fileName);
+        return _path.resolve(this.getProjectRoot(), fileName);
     }
 
     /**
@@ -113,16 +109,17 @@ export class EgretProject {
 
     getNativePath(platform) {
         if (globals.hasKeys(this.egretProperties, ["native", platform + "_path"])) {
-            return path.resolve(this.getProjectRoot(), this.egretProperties.native[platform + "_path"]);
+            return _path.resolve(this.getProjectRoot(), this.egretProperties.native[platform + "_path"]);
         }
         return null;
     }
 
-    private getModulePath(m: egret.EgretPropertyModule, egretVersions: Array<egret.EgretVersion>) {
+    private getModulePath(m: egret.EgretPropertyModule) {
         let dir = "";
         if (m.path == null) {
             let root;
             if (m.version) {
+                let egretVersions = this.getEgretVersionInfos();
                 for (let version of egretVersions) {
                     if (version.version == m.version) {
                         root = version.path;
@@ -136,13 +133,13 @@ export class EgretProject {
             else {
                 root = egret.root;
             }
-            dir = path.join(egret.root, "build", m.name);
+            dir = _path.join(egret.root, "build", m.name);
         }
         else {
             let tempModulePath = file.getAbsolutePath(m.path);
-            dir = path.join(tempModulePath, "bin", m.name);
+            dir = _path.join(tempModulePath, "bin", m.name);
             if (!file.exists(dir)) {
-                dir = path.join(tempModulePath, "bin");
+                dir = _path.join(tempModulePath, "bin");
                 if (!file.exists(dir)) {
                     dir = tempModulePath;
                 }
@@ -155,56 +152,58 @@ export class EgretProject {
         return this.getFilePath('libs/modules');
     }
 
-
-
-    getModulesConfig(platform: "web" | "native") {
-        if (this.moduleConfig) {
-            return this.moduleConfig;
-        }
-        var build = cprocess.spawnSync("egret", ["versions"], {
+    getEgretVersionInfos() {
+        var build = cp.spawnSync("egret", ["versions"], {
             encoding: "utf-8"
         });
-        let versions;
+        let versions: string[];
         if (build && build.stdout) {
-            versions = (<string><any>build.stdout).split("\n");
+            versions = build.stdout.toString().split("\n");
             //删除最后一行空格
             versions = versions.slice(0, versions.length - 1);
         }
         else {
             versions = [];
         }
-        let egretVersions: Array<egret.EgretVersion> = versions.map(versionStr => {
-            let egretVersion: string;
-            let egretPath: string;
+        let result: egret.VersionInfo[] = versions.map(versionStr => {
+            let version: string;
+            let path: string;
             const versionRegExp = /(\d+\.){2}\d+(\.\d+)?/g;
             let matchResultVersion = versionStr.match(versionRegExp);
             if (matchResultVersion && matchResultVersion.length > 0) {
-                egretVersion = matchResultVersion[0];
+                version = matchResultVersion[0];
             }
             const pathRegExp = /(?:[a-zA-Z]\:)?(?:[\\|\/][^\\|\/]+)+[\\|\/]?/g;
             let matchResult2 = versionStr.match(pathRegExp);
             if (matchResult2 && matchResult2.length > 0) {
-                egretPath = path.join(matchResult2[0], '.');
+                path = _path.join(matchResult2[0], '.');
             }
-            return { version: egretVersion, path: egretPath };
+            return { version, path };
         });
-        this.moduleConfig = this.egretProperties.modules.map(m => {
+        return result;
+    }
+
+
+    @_utils.cache
+    getModulesConfig(platform: "web" | "native") {
+
+        let result = this.egretProperties.modules.map(m => {
             let name = m.name;
-            let sourceDir = this.getModulePath(m, egretVersions);
-            let targetDir = path.join(this.getLibraryFolder(), name)
-            let relative = path.relative(this.getProjectRoot(), sourceDir);
-            if (relative.indexOf("..") == -1 && !path.isAbsolute(relative)) { // source 在项目中
+            let sourceDir = this.getModulePath(m);
+            let targetDir = _path.join(this.getLibraryFolder(), name)
+            let relative = _path.relative(this.getProjectRoot(), sourceDir);
+            if (relative.indexOf("..") == -1 && !_path.isAbsolute(relative)) { // source 在项目中
                 targetDir = sourceDir;
             }
-            targetDir = file.escapePath(path.relative(this.getProjectRoot(), targetDir)) + path.sep;
+            targetDir = file.escapePath(_path.relative(this.getProjectRoot(), targetDir)) + _path.sep;
             let source = [
                 file.joinPath(sourceDir, name + ".js"),
                 file.joinPath(sourceDir, name + "." + platform + ".js")
             ].filter(file.exists);
 
             let target: SourceCode[] = source.map(s => {
-                let debug = file.joinPath(targetDir, path.basename(s));
-                let release = file.joinPath(targetDir, path.basename(s, '.js') + '.min.js');
+                let debug = file.joinPath(targetDir, _path.basename(s));
+                let release = file.joinPath(targetDir, _path.basename(s, '.js') + '.min.js');
                 return {
                     debug,
                     release,
@@ -213,7 +212,7 @@ export class EgretProject {
             });
             return { name, target, sourceDir, targetDir };
         })
-        return this.moduleConfig;
+        return result;
     }
 
     getPublishType(runtime: string): number {
