@@ -20928,7 +20928,12 @@ var EXML;
     function $parseURLContent(url, text) {
         var clazz = null;
         if (text) {
-            clazz = parse(text);
+            try {
+                clazz = parse(text);
+            }
+            catch (e) {
+                console.error(url + "\n" + e.message);
+            }
         }
         if (url) {
             parsedClasses[url] = clazz;
