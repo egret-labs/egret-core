@@ -139,10 +139,10 @@ Egret 项目使用 TypeScirpt 语言来开发。TypeScript 是 JavaScript 的超
 * 使用 [ecs](https://github.com/egret-labs/egret-game-library/tree/master/ecs) 实体组件系统支持库
 * 使用 [euiextension](https://github.com/egret-labs/egret-game-library/tree/master/euiextension) EUI 扩展库
 * 使用 [gesture](https://github.com/egret-labs/egret-game-library/tree/master/gesture) 手势库
-* 使用 [keyboard](https://github.com/egret-labs/egret-game-library/tree/master/greensock) 键盘事件监听库
-* 使用 [Greensock]() Greensock 动画库
+* 使用 [keyboard](https://github.com/egret-labs/egret-game-library/tree/master/keyboard) 键盘事件监听库
+* 使用 [Greensock](https://github.com/egret-labs/egret-game-library/tree/master/greensock) Greensock 动画库
 * 使用 [jszip](https://github.com/egret-labs/egret-game-library/tree/master/jszip) jszip 压缩库
-* 使用 [md5](https://github.com/egret-labs/egret-game-library/tree/master/keyboard) 一个简单的md5库
+* 使用 [md5](https://github.com/egret-labs/egret-game-library/tree/master/md5) 一个简单的md5库
 * 使用 [mouse](https://github.com/egret-labs/egret-game-library/tree/master/mouse) pc鼠标支持库 
 * 使用 [particle](https://github.com/egret-labs/egret-game-library/tree/master/particle) 粒子系统
 * 使用 [physics](https://github.com/egret-labs/egret-game-library/tree/master/physics) p2物理引擎，当前使用的版本为0.7.0
