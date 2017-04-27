@@ -184,7 +184,7 @@ namespace egret.web {
                 }
             }
 
-            if (ua.indexOf("egretnative") >=0) {// Egret Native
+            if (ua.indexOf("egretnative") >= 0) {// Egret Native
                 Html5Capatibility.setAudioType(AudioType.HTML5_AUDIO);
             }
 
