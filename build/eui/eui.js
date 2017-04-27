@@ -727,7 +727,7 @@ var eui;
             }
             eui.themeAdapter = function (source) {
                 return new Promise(function (reslove, reject) {
-                    polyfill_2.getTheme(source, reslove, reject, _this);
+                    polyfill_2.getTheme(source, function (data) { reslove(data); }, reject, _this);
                 });
             };
         }
@@ -18676,7 +18676,7 @@ var eui;
          */
         Theme.prototype.onConfigLoaded = function (str) {
             var data;
-            if (true) {
+            if (typeof str == "string") {
                 try {
                     data = JSON.parse(str);
                 }
@@ -18685,7 +18685,7 @@ var eui;
                 }
             }
             else {
-                data = JSON.parse(str);
+                data = str;
             }
             if (data && data.skins) {
                 var skinMap = this.skinMap;

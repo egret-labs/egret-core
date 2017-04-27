@@ -3704,6 +3704,9 @@ var egret;
                         egret.Capabilities.$os = "Mac OS";
                     }
                 }
+                if (ua.indexOf("egretnative") >= 0) {
+                    Html5Capatibility.setAudioType(AudioType.HTML5_AUDIO);
+                }
                 var winURL = window["URL"] || window["webkitURL"];
                 if (!winURL) {
                     Html5Capatibility._canUseBlob = false;
