@@ -48,5 +48,55 @@ namespace egret.web {
         static addCallback(functionName:string, listener:(value)=>void):void {
         }
     }
-    ExternalInterface = WebExternalInterface;
+
+    let ua:string = navigator.userAgent.toLowerCase();
+
+    if (ua.indexOf("egretnative") < 0) {
+        ExternalInterface = WebExternalInterface;
+    }
+}
+
+namespace egret.web {
+    let callBackDic = {};
+
+    /**
+     * @private
+     */
+    export class NativeExternalInterface implements ExternalInterface {
+
+        static call(functionName:string, value:string):void {
+            let data:any = {};
+            data.functionName = functionName;
+            data.value = value;
+            egret_native.sendInfoToPlugin(JSON.stringify(data));
+        }
+
+        static addCallback(functionName:string, listener:(value)=>void):void {
+            callBackDic[functionName] = listener;
+        }
+    }
+
+    /**
+     * @private
+     * @param info
+     */
+    function onReceivedPluginInfo(info:string):void {
+        let data = JSON.parse(info);
+        let functionName = data.functionName;
+        let listener = callBackDic[functionName];
+        if (listener) {
+            let value = data.value;
+            listener.call(null, value);
+        }
+        else {
+            egret.$warn(1050, functionName);
+        }
+    }
+
+    let ua:string = navigator.userAgent.toLowerCase();
+
+    if (ua.indexOf("egretnative") >= 0) {
+        ExternalInterface = NativeExternalInterface;
+        egret_native.receivedPluginInfo = onReceivedPluginInfo;
+    }
 }

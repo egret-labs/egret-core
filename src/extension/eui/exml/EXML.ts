@@ -223,7 +223,12 @@ namespace EXML {
     export function $parseURLContent(url: string, text: string): any {
         let clazz: any = null;
         if (text) {
-            clazz = parse(text);
+            try {
+                clazz = parse(text);
+            }
+            catch(e) {
+                console.error(url + "\n" + e.message)
+            }
         }
         if (url) {
             parsedClasses[url] = clazz;
