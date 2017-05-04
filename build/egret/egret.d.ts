@@ -9111,6 +9111,15 @@ declare namespace egret.sys {
         changeSurfaceSize(): void;
         private $dirtyRegionPolicy;
         setDirtyRegionPolicy(policy: string): void;
+        /**
+         * @private
+         */
+        static $pixelRatio: number;
+        /**
+         * @private
+         */
+        static $setDevicePixelRatio(ratio: number): void;
+        private static $preMultiplyInto(other);
     }
 }
 declare namespace egret {
@@ -9128,6 +9137,8 @@ declare namespace egret {
         renderMode?: string;
         audioType?: number;
         screenAdapter?: sys.IScreenAdapter;
+        antialias: boolean;
+        retina: boolean;
     }): void;
     /**
      * Refresh the screen display

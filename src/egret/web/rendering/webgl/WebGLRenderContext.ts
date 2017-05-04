@@ -71,6 +71,8 @@ namespace egret.web {
             return this.instance;
         }
 
+        public $maxTextureSize:number;
+
         /**
          * 顶点数组管理器
          */
@@ -269,6 +271,9 @@ namespace egret.web {
             this.surface.addEventListener("webglcontextrestored", this.handleContextRestored.bind(this), false);
 
             this.getWebGLContext();
+
+            let gl = this.context;
+            this.$maxTextureSize = gl.getParameter(gl.MAX_TEXTURE_SIZE);
         }
 
         private handleContextLost() {

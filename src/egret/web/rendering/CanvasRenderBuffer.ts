@@ -178,15 +178,16 @@ namespace egret.web {
         public beginClip(regions:sys.Region[], offsetX?:number, offsetY?:number):void {
             offsetX = +offsetX || 0;
             offsetY = +offsetY || 0;
+            let pixelRatio = sys.DisplayList.$pixelRatio;
             let context = this.context;
             context.save();
             context.beginPath();
-            context.setTransform(1, 0, 0, 1, offsetX, offsetY);
+            context.setTransform(1, 0, 0, 1, offsetX * pixelRatio, offsetY * pixelRatio);
             let length = regions.length;
             for (let i = 0; i < length; i++) {
                 let region = regions[i];
-                context.clearRect(region.minX, region.minY, region.width, region.height);
-                context.rect(region.minX, region.minY, region.width, region.height);
+                context.clearRect(region.minX * pixelRatio, region.minY * pixelRatio, region.width * pixelRatio, region.height * pixelRatio);
+                context.rect(region.minX * pixelRatio, region.minY * pixelRatio, region.width * pixelRatio, region.height * pixelRatio);
             }
             context.clip();
         }

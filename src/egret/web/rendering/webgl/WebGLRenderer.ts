@@ -130,15 +130,14 @@ namespace egret.web {
                         renderAlpha = displayObject.$getConcatenatedAlphaAt(root, displayObject.$getConcatenatedAlpha());
                         m = Matrix.create().copyFrom(displayObject.$getConcatenatedMatrix());
                         displayObject.$getConcatenatedMatrixAt(root, m);
-                        matrix.$preMultiplyInto(m, m);
-                        buffer.setTransform(m.a, m.b, m.c, m.d, m.tx, m.ty);
-                        Matrix.release(m);
                     }
                     else {
                         renderAlpha = node.renderAlpha;
-                        m = node.renderMatrix;
-                        buffer.setTransform(m.a, m.b, m.c, m.d, m.tx + matrix.tx, m.ty + matrix.ty);
+                        m = Matrix.create().copyFrom(node.renderMatrix);
                     }
+                    matrix.$preMultiplyInto(m, m);
+                    buffer.setTransform(m.a, m.b, m.c, m.d, m.tx, m.ty);
+                    Matrix.release(m);
                     buffer.globalAlpha = renderAlpha;
                     this.renderNode(node, buffer);
                     node.needRedraw = false;
@@ -191,6 +190,9 @@ namespace egret.web {
         private drawWithFilter(displayObject: DisplayObject, buffer: WebGLRenderBuffer, dirtyList: egret.sys.Region[],
             matrix: Matrix, clipRegion: sys.Region, root: DisplayObject): number {
             let drawCalls = 0;
+            if (displayObject.$children && displayObject.$children.length == 0) {
+                return;
+            }
             let filters = displayObject.$getFilters();
             let hasBlendMode = (displayObject.$blendMode !== 0);
             let compositeOp: string;
@@ -201,28 +203,31 @@ namespace egret.web {
                 }
             }
 
-            if (filters.length == 1 && ( filters[0].type == "colorTransform" || (filters[0].type === "custom" && (<CustomFilter>filters[0]).padding === 0) ) && !displayObject.$children) {
-                if (hasBlendMode) {
-                    buffer.context.setGlobalCompositeOperation(compositeOp);
-                }
+            if (filters.length == 1 && (filters[0].type == "colorTransform" || (filters[0].type === "custom" && (<CustomFilter>filters[0]).padding === 0))) {
+                let childrenDrawCount = this.getRenderCount(displayObject);
+                if (!displayObject.$children || childrenDrawCount == 1) {
+                    if (hasBlendMode) {
+                        buffer.context.setGlobalCompositeOperation(compositeOp);
+                    }
 
-                buffer.context.$filter = <ColorMatrixFilter>filters[0];
-                if ((displayObject.$mask && (displayObject.$mask.$parentDisplayList || root))) {
-                    drawCalls += this.drawWithClip(displayObject, buffer, dirtyList, matrix, clipRegion, root);
-                }
-                else if (displayObject.$scrollRect || displayObject.$maskRect) {
-                    drawCalls += this.drawWithScrollRect(displayObject, buffer, dirtyList, matrix, clipRegion, root);
-                }
-                else {
-                    drawCalls += this.drawDisplayObject(displayObject, buffer, dirtyList, matrix, displayObject.$displayList, clipRegion, root);
-                }
-                buffer.context.$filter = null;
+                    buffer.context.$filter = <ColorMatrixFilter>filters[0];
+                    if ((displayObject.$mask && (displayObject.$mask.$parentDisplayList || root))) {
+                        drawCalls += this.drawWithClip(displayObject, buffer, dirtyList, matrix, clipRegion, root);
+                    }
+                    else if (displayObject.$scrollRect || displayObject.$maskRect) {
+                        drawCalls += this.drawWithScrollRect(displayObject, buffer, dirtyList, matrix, clipRegion, root);
+                    }
+                    else {
+                        drawCalls += this.drawDisplayObject(displayObject, buffer, dirtyList, matrix, displayObject.$displayList, clipRegion, root);
+                    }
+                    buffer.context.$filter = null;
 
-                if (hasBlendMode) {
-                    buffer.context.setGlobalCompositeOperation(defaultCompositeOp);
-                }
+                    if (hasBlendMode) {
+                        buffer.context.setGlobalCompositeOperation(defaultCompositeOp);
+                    }
 
-                return drawCalls;
+                    return drawCalls;
+                }
             }
 
             // 获取显示对象的链接矩阵
@@ -240,10 +245,10 @@ namespace egret.web {
 
             // 为显示对象创建一个新的buffer
             // todo 这里应该计算 region.x region.y
-            let displayBuffer = this.createRenderBuffer(region.width, region.height);
+            let displayBuffer = this.createRenderBuffer(region.width * matrix.a, region.height * matrix.d);
             displayBuffer.context.pushBuffer(displayBuffer);
-            displayBuffer.setTransform(1, 0, 0, 1, -region.minX, -region.minY);
-            let offsetM = Matrix.create().setTo(1, 0, 0, 1, -region.minX, -region.minY);
+            displayBuffer.setTransform(matrix.a, 0, 0, matrix.d, -region.minX * matrix.a, -region.minY * matrix.d);
+            let offsetM = Matrix.create().setTo(matrix.a, 0, 0, matrix.d, -region.minX * matrix.a, -region.minY * matrix.d);
 
             //todo 可以优化减少draw次数
             if ((displayObject.$mask && (displayObject.$mask.$parentDisplayList || root))) {
@@ -268,7 +273,7 @@ namespace egret.web {
 
                 drawCalls++;
                 buffer.globalAlpha = 1;
-                buffer.setTransform(1, 0, 0, 1, region.minX + matrix.tx, region.minY + matrix.ty);
+                buffer.setTransform(1, 0, 0, 1, (region.minX + matrix.tx) * matrix.a, (region.minY + matrix.ty) * matrix.d);
                 // 绘制结果的时候，应用滤镜
                 buffer.context.drawTargetWidthFilters(filters, displayBuffer);
 
@@ -283,6 +288,20 @@ namespace egret.web {
             Matrix.release(displayMatrix);
 
             return drawCalls;
+        }
+
+        private getRenderCount(displayObject:DisplayObject): number {
+            let childrenDrawCount = 0;
+            if (displayObject.$children) {
+                for (let child of displayObject.$children) {
+                    let node = child.$getRenderNode();
+                    childrenDrawCount += node.$getRenderCount();
+                    if(child.$children) {
+                        childrenDrawCount += this.getRenderCount(child);
+                    }
+                }
+            }
+            return childrenDrawCount;
         }
 
         /**
@@ -383,7 +402,7 @@ namespace egret.web {
             if (!mask && (!displayObject.$children || displayObject.$children.length == 0)) {
                 if (scrollRect) {
                     let m = displayMatrix;
-                    buffer.setTransform(m.a, m.b, m.c, m.d, m.tx - region.minX, m.ty - region.minY);
+                    buffer.setTransform(m.a, m.b, m.c, m.d, m.tx, m.ty);
                     buffer.context.pushMask(scrollRect);
                 }
                 //绘制显示对象
@@ -404,11 +423,11 @@ namespace egret.web {
             }
             else {
                 //绘制显示对象自身，若有scrollRect，应用clip
-                let displayBuffer = this.createRenderBuffer(region.width, region.height);
+                let displayBuffer = this.createRenderBuffer(region.width * matrix.a, region.height * matrix.d);
                 // let displayContext = displayBuffer.context;
                 displayBuffer.context.pushBuffer(displayBuffer);
-                displayBuffer.setTransform(1, 0, 0, 1, -region.minX, -region.minY);
-                let offsetM = Matrix.create().setTo(1, 0, 0, 1, -region.minX, -region.minY);
+                displayBuffer.setTransform(matrix.a, 0, 0, matrix.d, -region.minX * matrix.a, -region.minY * matrix.d);
+                let offsetM = Matrix.create().setTo(matrix.a, 0, 0, matrix.d, -region.minX * matrix.a, -region.minY * matrix.d);
 
                 drawCalls += this.drawDisplayObject(displayObject, displayBuffer, dirtyList, offsetM,
                     displayObject.$displayList, region, root);
@@ -423,10 +442,10 @@ namespace egret.web {
                     //        mask.$displayList, region, root);
                     //}
                     //else {
-                    let maskBuffer = this.createRenderBuffer(region.width, region.height);
+                    let maskBuffer = this.createRenderBuffer(region.width * matrix.a, region.height * matrix.d);
                     maskBuffer.context.pushBuffer(maskBuffer);
-                    maskBuffer.setTransform(1, 0, 0, 1, -region.minX, -region.minY);
-                    offsetM = Matrix.create().setTo(1, 0, 0, 1, -region.minX, -region.minY);
+                    maskBuffer.setTransform(matrix.a, 0, 0, matrix.d, -region.minX * matrix.a, -region.minY * matrix.d);
+                    offsetM = Matrix.create().setTo(matrix.a, 0, 0, matrix.d, -region.minX * matrix.a, -region.minY * matrix.d);
                     drawCalls += this.drawDisplayObject(mask, maskBuffer, dirtyList, offsetM,
                         mask.$displayList, region, root);
                     maskBuffer.context.popBuffer();
@@ -454,11 +473,12 @@ namespace egret.web {
                     }
                     if (scrollRect) {
                         let m = displayMatrix;
-                        displayBuffer.setTransform(m.a, m.b, m.c, m.d, m.tx - region.minX, m.ty - region.minY);
+                        matrix.$preMultiplyInto(m, m);
+                        displayBuffer.setTransform(m.a, m.b, m.c, m.d, m.tx, m.ty);
                         displayBuffer.context.pushMask(scrollRect);
                     }
                     buffer.globalAlpha = 1;
-                    buffer.setTransform(1, 0, 0, -1, region.minX + matrix.tx, region.minY + matrix.ty + displayBuffer.height);
+                    buffer.setTransform(1, 0, 0, -1, (region.minX + matrix.tx) * matrix.a, (region.minY + matrix.ty) * matrix.d + displayBuffer.height);
                     let displayBufferWidth = displayBuffer.rootRenderTarget.width;
                     let displayBufferHeight = displayBuffer.rootRenderTarget.height;
                     buffer.context.drawTexture(displayBuffer.rootRenderTarget.texture, 0, 0, displayBufferWidth, displayBufferHeight,
@@ -527,7 +547,8 @@ namespace egret.web {
             }
 
             //绘制显示对象自身
-            buffer.setTransform(m.a, m.b, m.c, m.d, m.tx + matrix.tx, m.ty + matrix.ty);
+            matrix.$preMultiplyInto(m, m);
+            buffer.setTransform(m.a, m.b, m.c, m.d, m.tx, m.ty);
 
             let context = buffer.context;
             let scissor = false;
@@ -741,6 +762,15 @@ namespace egret.web {
         private renderText(node: sys.TextNode, buffer: WebGLRenderBuffer): void {
             let width = node.width - node.x;
             let height = node.height - node.y;
+            let pixelRatio = sys.DisplayList.$pixelRatio;
+            let maxTextureSize = buffer.context.$maxTextureSize;
+            if (width * pixelRatio > maxTextureSize || height * pixelRatio > maxTextureSize) {
+                pixelRatio *= width * pixelRatio > height * pixelRatio ? maxTextureSize / (width * pixelRatio) : maxTextureSize / (height * pixelRatio);
+            }
+            width *= pixelRatio;
+            height *= pixelRatio;
+            let x = node.x * pixelRatio;
+            let y = node.y * pixelRatio;
             if (node.drawData.length == 0) {
                 return;
             }
@@ -748,6 +778,9 @@ namespace egret.web {
             if (!this.canvasRenderBuffer || !this.canvasRenderBuffer.context) {
                 this.canvasRenderer = new CanvasRenderer();
                 this.canvasRenderBuffer = new CanvasRenderBuffer(width, height);
+                if (pixelRatio != 1) {
+                    this.canvasRenderBuffer.context.setTransform(pixelRatio, 0, 0, pixelRatio, 0, 0);
+                }
             }
             else if (node.dirtyRender) {
                 this.canvasRenderBuffer.resize(width, height);
@@ -757,11 +790,11 @@ namespace egret.web {
                 return;
             }
 
-            if (node.x || node.y) {
+            if (x || y) {
                 if (node.dirtyRender) {
-                    this.canvasRenderBuffer.context.translate(-node.x, -node.y);
+                    this.canvasRenderBuffer.context.setTransform(pixelRatio, 0, 0, pixelRatio, -x, -y);
                 }
-                buffer.transform(1, 0, 0, 1, node.x, node.y);
+                buffer.transform(1, 0, 0, 1, x / pixelRatio, y / pixelRatio);
             }
 
 
@@ -785,13 +818,13 @@ namespace egret.web {
 
             let textureWidth = node.$textureWidth;
             let textureHeight = node.$textureHeight;
-            buffer.context.drawTexture(node.$texture, 0, 0, textureWidth, textureHeight, 0, 0, textureWidth, textureHeight, textureWidth, textureHeight);
+            buffer.context.drawTexture(node.$texture, 0, 0, textureWidth, textureHeight, 0, 0, textureWidth / pixelRatio, textureHeight / pixelRatio, textureWidth, textureHeight);
 
-            if (node.x || node.y) {
+            if (x || y) {
                 if (node.dirtyRender) {
-                    this.canvasRenderBuffer.context.translate(node.x, node.y);
+                    this.canvasRenderBuffer.context.setTransform(pixelRatio, 0, 0, pixelRatio, 0, 0);
                 }
-                buffer.transform(1, 0, 0, 1, -node.x, -node.y);
+                buffer.transform(1, 0, 0, 1, -x / pixelRatio, -y / pixelRatio);
             }
             node.dirtyRender = false;
         }

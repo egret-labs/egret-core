@@ -67,6 +67,7 @@ namespace egret.sys {
             this.dirtyRegion = new DirtyRegion(root);
             this.isStage = (root instanceof Stage);
             this.dirtyNodes = egret.createMap<boolean>();
+            this.offsetMatrix.a = this.offsetMatrix.d = DisplayList.$pixelRatio;
         }
 
         private isStage: boolean = false;
@@ -99,8 +100,8 @@ namespace egret.sys {
 
             //必须在访问moved属性前调用以下两个方法，因为moved属性在以下两个方法内重置。
             let concatenatedMatrix = target.$getConcatenatedMatrix();
+            let displayList = target.$parentDisplayList;
             if (dirtyRegionPolicy == DirtyRegionPolicy.OFF) {
-                let displayList = target.$parentDisplayList;
                 if (this.needUpdateRegions) {
                     this.updateDirtyRegions();
                 }
@@ -113,10 +114,12 @@ namespace egret.sys {
                 if (root !== target.$stage) {
                     target.$getConcatenatedMatrixAt(root, matrix);
                 }
+                if(DisplayList.$pixelRatio != 1) {
+                    DisplayList.$preMultiplyInto(matrix);
+                }
             }
             else {
                 let bounds = target.$getOriginalBounds();
-                let displayList = target.$parentDisplayList;
                 let region = node.renderRegion;
                 if (this.needUpdateRegions) {
                     this.updateDirtyRegions();
@@ -136,6 +139,9 @@ namespace egret.sys {
                 let root = displayList.root;
                 if (root !== target.$stage) {
                     target.$getConcatenatedMatrixAt(root, matrix);
+                }
+                if(DisplayList.$pixelRatio != 1) {
+                    DisplayList.$preMultiplyInto(matrix);
                 }
                 region.updateRegion(bounds, matrix);
             }
@@ -177,6 +183,8 @@ namespace egret.sys {
          */
         public setClipRect(width: number, height: number): void {
             this.dirtyRegion.setClipRect(width, height);
+            width *= DisplayList.$pixelRatio;
+            height *= DisplayList.$pixelRatio;
             this.renderBuffer.resize(width, height);
         }
 
@@ -237,7 +245,7 @@ namespace egret.sys {
                 let display = dirtyNodeList[i];
                 let node = display.$getRenderNode();
                 //有可能 markDirty 之后，显示对象自身改变，变的没有renderNode
-                if(node) {
+                if (node) {
                     node.needRedraw = false;//先清空上次缓存的标记,防止上次没遍历到的节点 needRedraw 始终为 true.
                     if (this.isStage) {
                         if (node.renderAlpha > 0 && node.renderVisible) {
@@ -292,7 +300,7 @@ namespace egret.sys {
                     renderNode.drawData.length = 0;
                     let width = surface.width;
                     let height = surface.height;
-                    if(!this.bitmapData) {
+                    if (!this.bitmapData) {
                         this.bitmapData = new egret.BitmapData(surface);
                     }
                     else {
@@ -303,7 +311,7 @@ namespace egret.sys {
                     renderNode.image = this.bitmapData;
                     renderNode.imageWidth = width;
                     renderNode.imageHeight = height;
-                    renderNode.drawImage(0, 0, width, height, -this.offsetX, -this.offsetY, width, height);
+                    renderNode.drawImage(0, 0, width, height, -this.offsetX, -this.offsetY, width / DisplayList.$pixelRatio, height / DisplayList.$pixelRatio);
                 }
             }
 
@@ -330,13 +338,15 @@ namespace egret.sys {
             let oldOffsetX = this.offsetX;
             let oldOffsetY = this.offsetY;
             let bounds = this.root.$getOriginalBounds();
+            var scaleX = DisplayList.$pixelRatio;
+            var scaleY = DisplayList.$pixelRatio;
             this.offsetX = -bounds.x;
             this.offsetY = -bounds.y;
-            this.offsetMatrix.setTo(1, 0, 0, 1, this.offsetX, this.offsetY);
+            this.offsetMatrix.setTo(this.offsetMatrix.a, 0, 0, this.offsetMatrix.d, this.offsetX, this.offsetY);
             let buffer = this.renderBuffer;
             //在chrome里，小等于256*256的canvas会不启用GPU加速。
-            let width = Math.max(257, bounds.width);
-            let height = Math.max(257, bounds.height);
+            let width = Math.max(257, bounds.width * scaleX);
+            let height = Math.max(257, bounds.height * scaleY);
             if (this.offsetX == oldOffsetX &&
                 this.offsetY == oldOffsetY &&
                 buffer.surface.width == width &&
@@ -348,7 +358,7 @@ namespace egret.sys {
                 buffer.resize(width, height);
             }
             else {
-                buffer.resizeTo(width, height, this.offsetX - oldOffsetX, this.offsetY - oldOffsetY);
+                buffer.resizeTo(width, height, (this.offsetX - oldOffsetX) * scaleX, (this.offsetY - oldOffsetY) * scaleY);
             }
         }
 
@@ -359,6 +369,43 @@ namespace egret.sys {
             this.$dirtyRegionPolicy = policy;
             this.dirtyRegion.setDirtyRegionPolicy(policy);
             this.renderBuffer.setDirtyRegionPolicy(policy);
+        }
+
+        /**
+         * @private
+         */
+        public static $pixelRatio: number = 1;
+
+        /**
+         * @private
+         */
+        public static $setDevicePixelRatio(ratio: number): void {
+            if (DisplayList.$pixelRatio == ratio) {
+                return;
+            }
+            DisplayList.$pixelRatio = ratio;
+        }
+
+        private static $preMultiplyInto(other:Matrix):void {
+            let pixelRatio = DisplayList.$pixelRatio;
+            let a =  other.a * pixelRatio;
+            let b =  0.0;
+            let c =  0.0;
+            let d =  other.d * pixelRatio;
+            let tx = other.tx * pixelRatio;
+            let ty = other.ty * pixelRatio;
+
+            if (other.b !== 0.0 || other.c !== 0.0) {
+                b  += other.b * pixelRatio;
+                c  += other.c * pixelRatio;
+            }
+
+            other.a = a;
+            other.b = b;
+            other.c = c;
+            other.d = d;
+            other.tx = tx;
+            other.ty = ty;
         }
     }
 }

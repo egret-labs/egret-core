@@ -131,15 +131,14 @@ namespace egret {
                         renderAlpha = displayObject.$getConcatenatedAlphaAt(root, displayObject.$getConcatenatedAlpha());
                         m = Matrix.create().copyFrom(displayObject.$getConcatenatedMatrix());
                         displayObject.$getConcatenatedMatrixAt(root, m);
-                        matrix.$preMultiplyInto(m, m);
-                        context.setTransform(m.a, m.b, m.c, m.d, m.tx, m.ty);
-                        Matrix.release(m);
                     }
                     else {
                         renderAlpha = node.renderAlpha;
-                        m = node.renderMatrix;
-                        context.setTransform(m.a, m.b, m.c, m.d, m.tx + matrix.tx, m.ty + matrix.ty);
+                        m = Matrix.create().copyFrom(node.renderMatrix);
                     }
+                    matrix.$preMultiplyInto(m, m);
+                    context.setTransform(m.a, m.b, m.c, m.d, m.tx, m.ty);
+                    Matrix.release(m);
                     context.globalAlpha = renderAlpha;
                     drawCalls += this.renderNode(node, context);
                     node.needRedraw = false;
@@ -311,10 +310,10 @@ namespace egret {
 
             // 为显示对象创建一个新的buffer
             // todo 这里应该计算 region.x region.y
-            let displayBuffer = this.createRenderBuffer(region.width, region.height, true);
+            let displayBuffer = this.createRenderBuffer(region.width * matrix.a, region.height * matrix.d, true);
             let displayContext = displayBuffer.context;
-            displayContext.setTransform(1, 0, 0, 1, -region.minX, -region.minY);
-            let offsetM = Matrix.create().setTo(1, 0, 0, 1, -region.minX, -region.minY);
+            displayContext.setTransform(matrix.a, 0, 0, matrix.d, -region.minX * matrix.a, -region.minY * matrix.d);
+            let offsetM = Matrix.create().setTo(matrix.a, 0, 0, matrix.d, -region.minX * matrix.a, -region.minY * matrix.d);
 
             //todo 可以优化减少draw次数
             if (displayObject.$mask && (displayObject.$mask.$parentDisplayList || root)) {
@@ -337,8 +336,6 @@ namespace egret {
                 }
 
                 drawCalls++;
-                context.globalAlpha = 1;
-                context.setTransform(1, 0, 0, 1, region.minX + matrix.tx, region.minY + matrix.ty);
 
                 // 应用滤镜
                 let imageData = displayContext.getImageData(0, 0, displayBuffer.surface.width, displayBuffer.surface.height);
@@ -367,6 +364,8 @@ namespace egret {
                 }  
                 displayContext.putImageData(imageData, 0, 0);
 
+                context.globalAlpha = 1;
+                context.setTransform(1, 0, 0, 1, (region.minX + matrix.tx) * matrix.a, (region.minY + matrix.ty) * matrix.d);
                 // 绘制结果的时候，应用滤镜
                 context.drawImage(<any>displayBuffer.surface, 0, 0);
 
@@ -485,7 +484,8 @@ namespace egret {
                 if (scrollRect) {
                     let m = displayMatrix;
                     context.save();
-                    context.setTransform(m.a, m.b, m.c, m.d, m.tx - region.minX, m.ty - region.minY);
+                    matrix.$preMultiplyInto(m, m);
+                    context.setTransform(m.a, m.b, m.c, m.d, m.tx, m.ty);
                     context.beginPath();
                     context.rect(scrollRect.x, scrollRect.y, scrollRect.width, scrollRect.height);
                     context.clip();
@@ -502,6 +502,8 @@ namespace egret {
                 if (scrollRect) {
                     context.restore();
                 }
+                sys.Region.release(region);
+                Matrix.release(displayMatrix);
                 return drawCalls;
             }
 
@@ -519,7 +521,8 @@ namespace egret {
                 this.renderingMask = false;
                 if (scrollRect) {
                     let m = displayMatrix;
-                    context.setTransform(m.a, m.b, m.c, m.d, m.tx - region.minX, m.ty - region.minY);
+                    matrix.$preMultiplyInto(m, m);
+                    context.setTransform(m.a, m.b, m.c, m.d, m.tx, m.ty);
                     context.beginPath();
                     context.rect(scrollRect.x, scrollRect.y, scrollRect.width, scrollRect.height);
                     context.clip();
@@ -527,13 +530,15 @@ namespace egret {
                 calls += this.drawDisplayObject(displayObject, context, dirtyList, matrix,
                     displayObject.$displayList, clipRegion, root);
                 context.restore();
+                sys.Region.release(region);
+                Matrix.release(displayMatrix);
                 return calls;
             }
             
             //todo 若显示对象是容器，同时子项有混合模式，则需要先绘制背景到displayBuffer并清除背景区域
 
             //绘制显示对象自身，若有scrollRect，应用clip
-            let displayBuffer = this.createRenderBuffer(region.width, region.height);
+            let displayBuffer = this.createRenderBuffer(region.width * matrix.a, region.height * matrix.d);
             let displayContext = displayBuffer.context;
             if (!displayContext) {//RenderContext创建失败，放弃绘制遮罩。
                 drawCalls += this.drawDisplayObject(displayObject, context, dirtyList, matrix,
@@ -542,8 +547,8 @@ namespace egret {
                 Matrix.release(displayMatrix);
                 return drawCalls;
             }
-            displayContext.setTransform(1, 0, 0, 1, -region.minX, -region.minY);
-            let offsetM = Matrix.create().setTo(1, 0, 0, 1, -region.minX, -region.minY);
+            displayContext.setTransform(matrix.a, 0, 0, matrix.d, -region.minX * matrix.a, -region.minY * matrix.d);
+            let offsetM = Matrix.create().setTo(matrix.a, 0, 0, matrix.d, -region.minX * matrix.a, -region.minY * matrix.d);
 
             drawCalls += this.drawDisplayObject(displayObject, displayContext, dirtyList, offsetM,
                 displayObject.$displayList, region, root);
@@ -556,7 +561,7 @@ namespace egret {
                         mask.$displayList, region, root);
                 }
                 else {
-                    let maskBuffer = this.createRenderBuffer(region.width, region.height);
+                    let maskBuffer = this.createRenderBuffer(region.width * matrix.a, region.height * matrix.d);
                     let maskContext = maskBuffer.context;
                     if (!maskContext) {//RenderContext创建失败，放弃绘制遮罩。
                         drawCalls += this.drawDisplayObject(displayObject, context, dirtyList, matrix,
@@ -566,8 +571,8 @@ namespace egret {
                         Matrix.release(displayMatrix);
                         return drawCalls;
                     }
-                    maskContext.setTransform(1, 0, 0, 1, -region.minX, -region.minY);
-                    offsetM = Matrix.create().setTo(1, 0, 0, 1, -region.minX, -region.minY);
+                    maskContext.setTransform(matrix.a, 0, 0, matrix.d, -region.minX * matrix.a, -region.minY * matrix.d);
+                    offsetM = Matrix.create().setTo(matrix.a, 0, 0, matrix.d, -region.minX * matrix.a, -region.minY * matrix.d);
                     drawCalls += this.drawDisplayObject(mask, maskContext, dirtyList, offsetM,
                     mask.$displayList, region, root);
                     displayContext.globalCompositeOperation = "destination-in";
@@ -588,13 +593,14 @@ namespace egret {
                 if (scrollRect) {
                     let m = displayMatrix;
                     context.save();
-                    context.setTransform(m.a, m.b, m.c, m.d, m.tx - region.minX, m.ty - region.minY);
+                    matrix.$preMultiplyInto(m, m);
+                    context.setTransform(m.a, m.b, m.c, m.d, m.tx, m.ty);
                     context.beginPath();
                     context.rect(scrollRect.x, scrollRect.y, scrollRect.width, scrollRect.height);
                     context.clip();
                 }
                 context.globalAlpha = 1;
-                context.setTransform(1, 0, 0, 1, region.minX + matrix.tx, region.minY + matrix.ty);
+                context.setTransform(1, 0, 0, 1, (region.minX + matrix.tx) * matrix.a, (region.minY + matrix.ty) * matrix.d);
                 context.drawImage(<any>displayBuffer.surface, 0, 0);
                 if (scrollRect) {
                     context.restore();
@@ -658,7 +664,8 @@ namespace egret {
 
             //绘制显示对象自身
             context.save();
-            context.setTransform(m.a, m.b, m.c, m.d, m.tx + matrix.tx, m.ty + matrix.ty);
+            matrix.$preMultiplyInto(m, m);
+            context.setTransform(m.a, m.b, m.c, m.d, m.tx, m.ty);
             context.beginPath();
             context.rect(scrollRect.x, scrollRect.y, scrollRect.width, scrollRect.height);
             context.clip();

@@ -38,7 +38,13 @@ namespace egret {
      * @param options 一个可选对象，包含初始化Egret引擎需要的参数。
      * @language zh_CN
      */
-    export declare function runEgret(options?:{renderMode?:string;audioType?:number;screenAdapter?:sys.IScreenAdapter}):void;
+    export declare function runEgret(options?:{
+        renderMode?:string;
+        audioType?:number;
+        screenAdapter?:sys.IScreenAdapter;
+        antialias:boolean,
+        retina:boolean
+    }):void;
     /**
      * Refresh the screen display
      * @language en_US

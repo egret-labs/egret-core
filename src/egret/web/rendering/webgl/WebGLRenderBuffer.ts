@@ -258,50 +258,50 @@ namespace egret.web {
             this.setTransform(1, 0, 0, 1, offsetX, offsetY);
             let length = regions.length;
             //只有一个区域且刚好为舞台大小时,不设置模板
-            if (length == 1 && regions[0].minX == 0 && regions[0].minY == 0 &&
-                regions[0].width == this.rootRenderTarget.width && regions[0].height == this.rootRenderTarget.height) {
+            // if (length == 1 && regions[0].minX == 0 && regions[0].minY == 0 &&
+            //     regions[0].width == this.rootRenderTarget.width && regions[0].height == this.rootRenderTarget.height) {
                 this.maskPushed = false;
                 this.rootRenderTarget.useFrameBuffer && this.context.clear();
                 this.context.popBuffer();
                 return;
-            }
+            // }
             // 擦除脏矩形区域
-            for (let i = 0; i < length; i++) {
-                let region = regions[i];
-                this.context.clearRect(region.minX, region.minY, region.width, region.height);
-            }
-            // 设置模版
-            if (length > 0) {
+            // for (let i = 0; i < length; i++) {
+            //     let region = regions[i];
+            //     this.context.clearRect(region.minX, region.minY, region.width, region.height);
+            // }
+            // // 设置模版
+            // if (length > 0) {
 
-                // 对第一个且只有一个mask用scissor处理
-                if(!this.$hasScissor && length == 1) {
-                    let region = regions[0];
-                    regions = regions.slice(1);
-                    let x = region.minX + offsetX;
-                    let y = region.minY + offsetY;
-                    let width = region.width;
-                    let height = region.height;
-                    this.context.enableScissor(x, - y - height + this.height, width, height);
-                    this.scissorEnabled = true;
-                } else {
-                    this.scissorEnabled = false;
-                }
+            //     // 对第一个且只有一个mask用scissor处理
+            //     if(!this.$hasScissor && length == 1) {
+            //         let region = regions[0];
+            //         regions = regions.slice(1);
+            //         let x = region.minX + offsetX;
+            //         let y = region.minY + offsetY;
+            //         let width = region.width;
+            //         let height = region.height;
+            //         this.context.enableScissor(x, - y - height + this.height, width, height);
+            //         this.scissorEnabled = true;
+            //     } else {
+            //         this.scissorEnabled = false;
+            //     }
 
-                if(regions.length > 0) {
-                    this.context.pushMask(regions);
-                    this.maskPushed = true;
-                } else {
-                    this.maskPushed = false;
-                }
+            //     if(regions.length > 0) {
+            //         this.context.pushMask(regions);
+            //         this.maskPushed = true;
+            //     } else {
+            //         this.maskPushed = false;
+            //     }
 
-                this.offsetX = offsetX;
-                this.offsetY = offsetY;
-            }
-            else {
-                this.maskPushed = false;
-            }
+            //     this.offsetX = offsetX;
+            //     this.offsetY = offsetY;
+            // }
+            // else {
+            //     this.maskPushed = false;
+            // }
 
-            this.context.popBuffer();
+            // this.context.popBuffer();
         }
 
         private maskPushed:boolean;
