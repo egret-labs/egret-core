@@ -42,7 +42,8 @@ namespace egret.web {
         CLEAR_COLOR,
         ACT_BUFFER,
         ENABLE_SCISSOR,
-        DISABLE_SCISSOR
+        DISABLE_SCISSOR,
+        SMOOTHING
     }
 
     /**
@@ -105,7 +106,16 @@ namespace egret.web {
                 this.drawData[this.drawDataLen - 1].count += count;
 
             }
+        }
 
+        public pushChangeSmoothing(texture:WebGLTexture, smoothing:boolean):void {
+            texture["smoothing"] = smoothing;
+            let data = this.drawData[this.drawDataLen] || {};
+            data.type = DRAWABLE_TYPE.SMOOTHING;
+            data.texture = texture;
+            data.smoothing = smoothing;
+            this.drawData[this.drawDataLen] = data;
+            this.drawDataLen++;
         }
 
         /**

@@ -688,14 +688,14 @@ namespace egret.web {
                 buffer.context.$filter = node.filter;
                 while (pos < length) {
                     buffer.context.drawImage(image, data[pos++], data[pos++], data[pos++], data[pos++],
-                        data[pos++], data[pos++], data[pos++], data[pos++], node.imageWidth, node.imageHeight);
+                        data[pos++], data[pos++], data[pos++], data[pos++], node.imageWidth, node.imageHeight, node.smoothing);
                 }
                 buffer.context.$filter = null;
             }
             else {
                 while (pos < length) {
                     buffer.context.drawImage(image, data[pos++], data[pos++], data[pos++], data[pos++],
-                        data[pos++], data[pos++], data[pos++], data[pos++], node.imageWidth, node.imageHeight);
+                        data[pos++], data[pos++], data[pos++], data[pos++], node.imageWidth, node.imageHeight, node.smoothing);
                 }
             }
             if (blendMode) {
@@ -725,7 +725,7 @@ namespace egret.web {
             }
             while (pos < length) {
                 buffer.context.drawMesh(image, data[pos++], data[pos++], data[pos++], data[pos++],
-                    data[pos++], data[pos++], data[pos++], data[pos++], node.imageWidth, node.imageHeight, node.uvs, node.vertices, node.indices, node.bounds);
+                    data[pos++], data[pos++], data[pos++], data[pos++], node.imageWidth, node.imageHeight, node.uvs, node.vertices, node.indices, node.bounds, node.smoothing);
             }
             if (m) {
                 buffer.restoreTransform();

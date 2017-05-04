@@ -416,6 +416,8 @@ namespace egret.web {
                 if (bitmapData.$deleteSource && bitmapData.webGLTexture) {
                     bitmapData.source = null;
                 }
+                //todo 默认值
+                bitmapData.webGLTexture["smoothing"] = true;
             }
             return bitmapData.webGLTexture;
         }
@@ -464,7 +466,7 @@ namespace egret.web {
         public drawImage(image: BitmapData,
             sourceX: number, sourceY: number, sourceWidth: number, sourceHeight: number,
             destX: number, destY: number, destWidth: number, destHeight: number,
-            imageSourceWidth: number, imageSourceHeight: number): void {
+            imageSourceWidth: number, imageSourceHeight: number, smoothing?:boolean): void {
             let buffer = this.currentBuffer;
             if (this.contextLost || !image || !buffer) {
                 return;
@@ -489,7 +491,8 @@ namespace egret.web {
             this.drawTexture(texture,
                 sourceX, sourceY, sourceWidth, sourceHeight,
                 destX, destY, destWidth, destHeight,
-                imageSourceWidth, imageSourceHeight);
+                imageSourceWidth, imageSourceHeight, 
+                undefined, undefined, undefined, undefined, smoothing);
 
             if (image.source && image.source["texture"]) {
                 buffer.restoreTransform();
@@ -503,7 +506,7 @@ namespace egret.web {
             sourceX: number, sourceY: number, sourceWidth: number, sourceHeight: number,
             destX: number, destY: number, destWidth: number, destHeight: number,
             imageSourceWidth: number, imageSourceHeight: number,
-            meshUVs: number[], meshVertices: number[], meshIndices: number[], bounds: Rectangle
+            meshUVs: number[], meshVertices: number[], meshIndices: number[], bounds: Rectangle, smoothing:boolean
         ): void {
             let buffer = this.currentBuffer;
             if (this.contextLost || !image || !buffer) {
@@ -529,7 +532,7 @@ namespace egret.web {
             this.drawTexture(texture,
                 sourceX, sourceY, sourceWidth, sourceHeight,
                 destX, destY, destWidth, destHeight,
-                imageSourceWidth, imageSourceHeight, meshUVs, meshVertices, meshIndices, bounds);
+                imageSourceWidth, imageSourceHeight, meshUVs, meshVertices, meshIndices, bounds, smoothing);
 
             if (image["texture"] || (image.source && image.source["texture"])) {
                 buffer.restoreTransform();
@@ -542,7 +545,7 @@ namespace egret.web {
         public drawTexture(texture: WebGLTexture,
             sourceX: number, sourceY: number, sourceWidth: number, sourceHeight: number,
             destX: number, destY: number, destWidth: number, destHeight: number, textureWidth: number, textureHeight: number,
-            meshUVs?: number[], meshVertices?: number[], meshIndices?: number[], bounds?: Rectangle): void {
+            meshUVs?: number[], meshVertices?: number[], meshIndices?: number[], bounds?: Rectangle, smoothing?:boolean): void {
             let buffer = this.currentBuffer;
             if (this.contextLost || !texture || !buffer) {
                 return;
@@ -556,6 +559,10 @@ namespace egret.web {
                 if (this.vao.reachMaxSize()) {
                     this.$drawWebGL();
                 }
+            }
+
+            if(smoothing != undefined && texture["smoothing"] != smoothing) {
+                this.drawCmdManager.pushChangeSmoothing(texture, smoothing);
             }
 
             if (meshUVs) {
@@ -807,6 +814,17 @@ namespace egret.web {
                     buffer = this.activatedBuffer;
                     if (buffer) {
                         buffer.disableScissor();
+                    }
+                    break;
+                case DRAWABLE_TYPE.SMOOTHING:
+                    gl.bindTexture(gl.TEXTURE_2D, data.texture);
+                    if(data.smoothing) {
+                        gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MAG_FILTER, gl.LINEAR);
+                        gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MIN_FILTER, gl.LINEAR);
+                    }
+                    else {
+                        gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MAG_FILTER, gl.NEAREST);
+                        gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MIN_FILTER, gl.NEAREST);
                     }
                     break;
                 default:
