@@ -140,7 +140,6 @@ namespace egret.web {
             style = container.style;
             style.overflow = "hidden";
             style.position = "relative";
-            style["webkitTransform"] = "translateZ(0)";
         }
 
         private playerOption:PlayerOption;
