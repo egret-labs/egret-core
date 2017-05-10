@@ -184,13 +184,14 @@ namespace egret.web {
                 }
             }
 
-            if (ua.indexOf("egretnative") >= 0) {// Egret Native
-                Html5Capatibility.setAudioType(AudioType.HTML5_AUDIO);
-            }
-
             let winURL = window["URL"] || window["webkitURL"];
             if (!winURL) {
                 Html5Capatibility._canUseBlob = false;
+            }
+
+            if (ua.indexOf("egretnative") >= 0) {// Egret Native
+                Html5Capatibility.setAudioType(AudioType.HTML5_AUDIO);
+                Html5Capatibility._canUseBlob = true;
             }
 
             egret.Sound = Html5Capatibility._AudioClass;

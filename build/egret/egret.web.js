@@ -3705,12 +3705,13 @@ var egret;
                         egret.Capabilities.$os = "Mac OS";
                     }
                 }
-                if (ua.indexOf("egretnative") >= 0) {
-                    Html5Capatibility.setAudioType(AudioType.HTML5_AUDIO);
-                }
                 var winURL = window["URL"] || window["webkitURL"];
                 if (!winURL) {
                     Html5Capatibility._canUseBlob = false;
+                }
+                if (ua.indexOf("egretnative") >= 0) {
+                    Html5Capatibility.setAudioType(AudioType.HTML5_AUDIO);
+                    Html5Capatibility._canUseBlob = true;
                 }
                 egret.Sound = Html5Capatibility._AudioClass;
             };
@@ -4569,7 +4570,6 @@ var egret;
                 style = container.style;
                 style.overflow = "hidden";
                 style.position = "relative";
-                style["webkitTransform"] = "translateZ(0)";
             };
             /**
              * @private
