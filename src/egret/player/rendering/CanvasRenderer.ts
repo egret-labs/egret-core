@@ -420,7 +420,10 @@ namespace egret {
             let maskRegion:sys.Region;
             let displayMatrix = Matrix.create();
             displayMatrix.copyFrom(displayObject.$getConcatenatedMatrix());
-            if (displayObject.$parentDisplayList) {
+            if(root) {
+                displayObject.$getConcatenatedMatrixAt(root, displayMatrix);
+            }
+            else if (displayObject.$parentDisplayList) {
                 let displayRoot = displayObject.$parentDisplayList.root;
                 if (displayRoot !== displayObject.$stage) {
                     displayObject.$getConcatenatedMatrixAt(displayRoot, displayMatrix);
@@ -433,6 +436,9 @@ namespace egret {
                 maskRegion = sys.Region.create();
                 let m = Matrix.create();
                 m.copyFrom(mask.$getConcatenatedMatrix());
+                if(root) {
+                    mask.$getConcatenatedMatrixAt(root, m);
+                }
                 maskRegion.updateRegion(bounds, m);
                 Matrix.release(m);
             }
