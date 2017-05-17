@@ -178,7 +178,7 @@ namespace egret {
             this.bufferExtSize = bufferExtSize;
             let bytes: Uint8Array, wpos = 0;
             if (buffer) {//有数据，则可写字节数从字节尾开始
-                let uint8: Uint8Array, wpos: number;
+                let uint8: Uint8Array;
                 if (buffer instanceof Uint8Array) {
                     uint8 = buffer;
                     wpos = buffer.length;

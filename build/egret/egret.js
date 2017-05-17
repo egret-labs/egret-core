@@ -22349,16 +22349,16 @@ var egret;
             this.bufferExtSize = bufferExtSize;
             var bytes, wpos = 0;
             if (buffer) {
-                var uint8 = void 0, wpos_1;
+                var uint8 = void 0;
                 if (buffer instanceof Uint8Array) {
                     uint8 = buffer;
-                    wpos_1 = buffer.length;
+                    wpos = buffer.length;
                 }
                 else {
-                    wpos_1 = buffer.byteLength;
+                    wpos = buffer.byteLength;
                     uint8 = new Uint8Array(buffer);
                 }
-                var multi = (wpos_1 / bufferExtSize | 0) + 1;
+                var multi = (wpos / bufferExtSize | 0) + 1;
                 bytes = new Uint8Array(multi * bufferExtSize);
                 bytes.set(uint8);
             }
