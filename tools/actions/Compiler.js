@@ -109,7 +109,8 @@ var Compiler = (function () {
             configObj = JSON.parse(file.read(url));
         }
         catch (e) {
-            // errLog.push(utils.tr(1117));//不是有效的 json 文件
+            console.log(utils.tr(1117)); //不是有效的 json 文件
+            // errLog.push();
             configObj = {
                 "compilerOptions": {
                     "target": "es5",

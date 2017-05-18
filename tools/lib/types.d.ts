@@ -100,7 +100,6 @@ declare module egret {
 
     export type EgretPropertyModule = {
         "name": string,
-        "version"?: string,
         "path": string;
     }
 

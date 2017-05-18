@@ -513,15 +513,22 @@ function relative(from, to) {
 }
 exports.relative = relative;
 function getAbsolutePath(path) {
-    var tempPath = Path.resolve(path);
-    tempPath = escapePath(tempPath);
-    path = escapePath(path);
-    if (tempPath == path) {
-        return path;
+    if (Path.isAbsolute(path)) {
+        return escapePath(path);
     }
     return joinPath(egret.args.projectDir, path);
 }
 exports.getAbsolutePath = getAbsolutePath;
+function searchPath(searchPaths) {
+    for (var _i = 0, searchPaths_1 = searchPaths; _i < searchPaths_1.length; _i++) {
+        var searchPath_1 = searchPaths_1[_i];
+        if (exists(searchPath_1)) {
+            return searchPath_1;
+        }
+    }
+    return null;
+}
+exports.searchPath = searchPath;
 function moveAsync(oldPath, newPath) {
     return new Promise(function (resolve, reject) {
         copy(oldPath, newPath);

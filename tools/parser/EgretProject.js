@@ -99,37 +99,32 @@ var EgretProject = (function () {
         }
         return null;
     };
-    EgretProject.prototype.getModulePath = function (m) {
-        var dir = "";
-        if (m.path == null) {
-            var root = void 0;
-            if (m.version) {
-                var egretVersions = this.getEgretVersionInfos();
-                for (var _i = 0, egretVersions_1 = egretVersions; _i < egretVersions_1.length; _i++) {
-                    var version = egretVersions_1[_i];
-                    if (version.version == m.version) {
-                        root = version.path;
-                    }
-                }
-                if (!root) {
-                    globals.log(1118, m.version);
-                    root = egret.root;
-                }
-            }
-            else {
-                root = egret.root;
-            }
-            dir = _path.join(egret.root, "build", m.name);
+    EgretProject.prototype.getModulePath2 = function (p) {
+        if (!p) {
+            return egret.root;
         }
-        else {
-            var tempModulePath = file.getAbsolutePath(m.path);
-            dir = _path.join(tempModulePath, "bin", m.name);
-            if (!file.exists(dir)) {
-                dir = _path.join(tempModulePath, "bin");
-                if (!file.exists(dir)) {
-                    dir = tempModulePath;
-                }
-            }
+        var egretLibs = getAppDataEnginesRootPath();
+        var keyword = '${EGRET_APP_DATA}';
+        if (p.indexOf(keyword) >= 0) {
+            p = p.replace(keyword, egretLibs);
+        }
+        var keyword2 = '${EGRET_CURRENT}';
+        if (p.indexOf(keyword2) >= 0) {
+            p = p.replace(keyword2, egret.root);
+        }
+        return p;
+    };
+    EgretProject.prototype.getModulePath = function (m) {
+        var modulePath = this.getModulePath2(m.path);
+        modulePath = file.getAbsolutePath(modulePath);
+        var dir = file.searchPath([
+            _path.join(modulePath, "bin", m.name),
+            _path.join(modulePath, "bin"),
+            _path.join(modulePath, "build", m.name),
+            modulePath
+        ]);
+        if (!dir) {
+            globals.exit(1050, modulePath);
         }
         return dir;
     };
@@ -213,3 +208,23 @@ __decorate([
 ], EgretProject.prototype, "getModulesConfig", null);
 exports.EgretProject = EgretProject;
 exports.utils = new EgretProject();
+function getAppDataEnginesRootPath() {
+    var path;
+    switch (process.platform) {
+        case 'darwin':
+            var home = process.env.HOME || ("/Users/" + (process.env.NAME || process.env.LOGNAME));
+            if (!home)
+                return null;
+            path = home + "/Library/Application Support/Egret/engine/";
+            break;
+        case 'win32':
+            var appdata = process.env.AppData || process.env.USERPROFILE + "/AppData/Roaming/";
+            path = file.escapePath(appdata + "/Egret/engine/");
+            break;
+        default:
+            ;
+    }
+    if (file.exists(path))
+        return path;
+    return null;
+}

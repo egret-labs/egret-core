@@ -59,7 +59,6 @@ class Build implements egret.Command {
             globals.exit(1022);
         }
         compiler.compile(options, fileNames);
-
         let outDir = path.dirname(outFile);
         let outFileName = path.basename(outFile);
         let minFile = path.join(outDir, outFileName.replace(".js", ".min.js"));
