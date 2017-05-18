@@ -178,7 +178,7 @@ namespace egret {
             this.bufferExtSize = bufferExtSize;
             let bytes: Uint8Array, wpos = 0;
             if (buffer) {//有数据，则可写字节数从字节尾开始
-                let uint8: Uint8Array, wpos: number;
+                let uint8: Uint8Array;
                 if (buffer instanceof Uint8Array) {
                     uint8 = buffer;
                     wpos = buffer.length;
@@ -425,22 +425,24 @@ namespace egret {
          * @language zh_CN
          */
         public readBytes(bytes: ByteArray, offset: number = 0, length: number = 0): void {
+            if (!bytes) {//由于bytes不返回，所以new新的无意义
+                return
+            }
+            let pos = this._position;
+            let available = this.write_position - pos;
+            if (available < 0) {
+                egret.$error(1025);
+                return
+            }
             if (length == 0) {
-                length = this.bytesAvailable;
+                length = available;
             }
-            else if (!this.validate(length)) {
-                return;
+            else if (length > available) {
+                egret.$error(1025);
+                return
             }
-            if (bytes) {
-                bytes.validateBuffer(offset + length);
-            }
-            else {
-                bytes = new ByteArray(new ArrayBuffer(offset + length));
-            }
-            //This method is expensive
-            for (let i = 0; i < length; i++) {
-                bytes.data.setUint8(i + offset, this.data.getUint8(this.position++));
-            }
+            bytes.validateBuffer(offset + length);
+            bytes._bytes.set(this._bytes.subarray(pos, pos + length), offset);
         }
 
         /**
