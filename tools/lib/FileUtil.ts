@@ -534,8 +534,8 @@ export function readFileSync(filename: string, encoding: string): string {
     return FS.readFileSync(filename, encoding);
 }
 
-export function readJSONAsync(file: string, options?: { encoding: string; flag?: string; }): Promise<void> {
-    return new Promise<void>((resolve, reject) => {
+export function readJSONAsync(file: string, options?: { encoding: string; flag?: string; }): Promise<any> {
+    return new Promise<any>((resolve, reject) => {
         FS.readFile(file, options, (err, data: string) => {
             if (err) {
                 return reject(err);
