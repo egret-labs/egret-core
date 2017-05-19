@@ -62,7 +62,7 @@ class Publish implements egret.Command {
 
         //生成 all.manifest 并拷贝资源
 
-        let commandResult = await utils.executeCommand("res config");
+        // let commandResult = await utils.executeCommand("res config");
         let useResourceMangerPublish = false;//commandResult.error && egret.args.runtime == "web" ? false : true;
         if (!useResourceMangerPublish) {
             (new GenerateVersion).execute();

@@ -65,7 +65,7 @@ var Publish = (function () {
     };
     Publish.prototype.execute = function () {
         return __awaiter(this, void 0, void 0, function () {
-            var options, config, versionFile, runtime, compileProject, result, outfile, commandResult, useResourceMangerPublish, listInfo, allMainfestPath, zip, copyAction, releaseHtmlPath, htmlContent, libsList, version, commandResult1;
+            var options, config, versionFile, runtime, compileProject, result, outfile, useResourceMangerPublish, listInfo, allMainfestPath, zip, copyAction, releaseHtmlPath, htmlContent, libsList, version, commandResult1;
             return __generator(this, function (_a) {
                 switch (_a.label) {
                     case 0:
@@ -83,9 +83,6 @@ var Publish = (function () {
                         result = compileProject.compile(options);
                         outfile = FileUtil.joinPath(options.releaseDir, 'main.min.js');
                         utils.minify(outfile, outfile);
-                        return [4 /*yield*/, utils.executeCommand("res config")];
-                    case 1:
-                        commandResult = _a.sent();
                         useResourceMangerPublish = false;
                         if (!useResourceMangerPublish) {
                             (new GenerateVersion).execute();
@@ -123,13 +120,13 @@ var Publish = (function () {
                             libsList = project.getLibsList(htmlContent, false, false);
                             copyAction.copy(libsList);
                         }
-                        if (!useResourceMangerPublish) return [3 /*break*/, 3];
+                        if (!useResourceMangerPublish) return [3 /*break*/, 2];
                         version = path.join(runtime, versionFile);
                         return [4 /*yield*/, utils.executeCommand("res publish " + config.getProjectRoot() + " " + options.releaseDir)];
-                    case 2:
+                    case 1:
                         commandResult1 = _a.sent();
-                        _a.label = 3;
-                    case 3: return [2 /*return*/, DontExitCode];
+                        _a.label = 2;
+                    case 2: return [2 /*return*/, DontExitCode];
                 }
             });
         });
