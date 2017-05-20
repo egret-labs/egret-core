@@ -3,7 +3,7 @@ import service = require('../service/index');
 import Project = require('../parser/EgretProject');
 import path = require('path');
 import utils = require('../lib/utils')
-
+import modify = require("./upgrade/ModifyProperties");
 type VersionInfo = {
 
     v: string,
@@ -27,11 +27,12 @@ class UpgradeCommand implements egret.Command {
         if (!version) {
             version = "1.0.0";
         }
-        var modify = require("./upgrade/ModifyProperties");
+
 
         let upgradeConfigArr: VersionInfo[] = [
             { "v": "4.0.1", command: Upgrade_4_0_1 },
-            { "v": "4.0.3" }
+            { "v": "4.0.3" },
+            { "v": "4.1.0", command: Upgrade_4_1_0 }
         ];
 
         try {
@@ -141,6 +142,17 @@ class Upgrade_4_0_1 {
 
         globals.log(1703, "https://github.com/egret-labs/egret-core/tree/master/docs/cn/release-note/4.0.1")
 
+        return 0;
+    }
+}
+
+class Upgrade_4_1_0 {
+    /**
+     * 将用户的系统内置模块添加 path 字段，并指向老版本的模块，而非新版本模块
+     */
+    async execute() {
+        modify.upgradeModulePath();
+        globals.log(1703, "https://github.com/egret-labs/egret-core/tree/master/docs/cn/release-note/4.0.1")
         return 0;
     }
 }

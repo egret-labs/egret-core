@@ -39,7 +39,7 @@ class Publish implements egret.Command {
         //return (Math.round(Date.now() / 1000)).toString();
     }
 
-    execute(): number {
+    async execute(): Promise<number> {
         utils.checkEgret();
 
         var options = egret.args;
@@ -61,7 +61,14 @@ class Publish implements egret.Command {
         utils.minify(outfile, outfile);
 
         //生成 all.manifest 并拷贝资源
-        (new GenerateVersion).execute();
+
+        // let commandResult = await utils.executeCommand("res config");
+        let useResourceMangerPublish = false;//commandResult.error && egret.args.runtime == "web" ? false : true;
+        if (!useResourceMangerPublish) {
+            (new GenerateVersion).execute();
+        }
+
+
         //拷贝资源后还原default.thm.json bug修复 by yanjiaqi
         if (exml.updateSetting) {
             exml.updateSetting();
@@ -109,6 +116,11 @@ class Publish implements egret.Command {
             let libsList = project.getLibsList(htmlContent, false, false);
 
             copyAction.copy(libsList);
+        }
+
+        if (useResourceMangerPublish) {
+            let version = path.join(runtime, versionFile);
+            let commandResult1 = await utils.executeCommand(`res publish ${config.getProjectRoot()} ${options.releaseDir}`);
         }
 
         return DontExitCode;

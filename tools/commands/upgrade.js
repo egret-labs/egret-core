@@ -38,6 +38,7 @@ var service = require("../service/index");
 var Project = require("../parser/EgretProject");
 var path = require("path");
 var utils = require("../lib/utils");
+var modify = require("./upgrade/ModifyProperties");
 var UpgradeCommand = (function () {
     function UpgradeCommand() {
     }
@@ -48,7 +49,7 @@ var UpgradeCommand = (function () {
     };
     UpgradeCommand.prototype.run = function () {
         return __awaiter(this, void 0, void 0, function () {
-            var version, modify, upgradeConfigArr, e_1;
+            var version, upgradeConfigArr, e_1;
             return __generator(this, function (_a) {
                 switch (_a.label) {
                     case 0:
@@ -56,10 +57,10 @@ var UpgradeCommand = (function () {
                         if (!version) {
                             version = "1.0.0";
                         }
-                        modify = require("./upgrade/ModifyProperties");
                         upgradeConfigArr = [
                             { "v": "4.0.1", command: Upgrade_4_0_1 },
-                            { "v": "4.0.3" }
+                            { "v": "4.0.3" },
+                            { "v": "4.1.0", command: Upgrade_4_1_0 }
                         ];
                         _a.label = 1;
                     case 1:
@@ -172,5 +173,22 @@ var Upgrade_4_0_1 = (function () {
         });
     };
     return Upgrade_4_0_1;
+}());
+var Upgrade_4_1_0 = (function () {
+    function Upgrade_4_1_0() {
+    }
+    /**
+     * 将用户的系统内置模块添加 path 字段，并指向老版本的模块，而非新版本模块
+     */
+    Upgrade_4_1_0.prototype.execute = function () {
+        return __awaiter(this, void 0, void 0, function () {
+            return __generator(this, function (_a) {
+                modify.upgradeModulePath();
+                globals.log(1703, "https://github.com/egret-labs/egret-core/tree/master/docs/cn/release-note/4.0.1");
+                return [2 /*return*/, 0];
+            });
+        });
+    };
+    return Upgrade_4_1_0;
 }());
 module.exports = UpgradeCommand;

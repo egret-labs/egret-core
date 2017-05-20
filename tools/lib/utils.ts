@@ -154,42 +154,44 @@ export function getEgretRoot() {
 }
 
 
-export function open(target, appName?, callback?, options?) {
-    var opener;
-
-    if (typeof (appName) === 'function') {
-        callback = appName;
-        appName = null;
-    }
+export function open(target, appName?) {
+    var command;
 
     switch (process.platform) {
         case 'darwin':
             if (appName) {
-                opener = 'open -a "' + escape(appName) + '"';
+                command = 'open -a "' + escape(appName) + '"';
             } else {
-                opener = 'open';
+                command = 'open';
             }
             break;
         case 'win32':
             // if the first parameter to start is quoted, it uses that as the title
             // so we pass a blank title so we can quote the file we are opening
             if (appName) {
-                opener = 'start "" "' + escape(appName) + '"';
+                command = 'start "" "' + escape(appName) + '"';
             } else {
-                opener = 'start ""';
+                command = 'start ""';
             }
             break;
         default:
             if (appName) {
-                opener = escape(appName);
+                command = escape(appName);
             } else {
                 // use Portlands xdg-open everywhere else
-                opener = path.join(__dirname, '../vendor/xdg-open');
+                command = path.join(__dirname, '../vendor/xdg-open');
             }
             break;
     }
+    executeCommand(command + ' "' + escape(target) + '"')
+}
 
-    return cp.exec(opener + ' "' + escape(target) + '"', options, callback);
+export async function executeCommand(command: string) {
+    return new Promise<{ error: Error, stdout: string, stderr: string }>((reslove, reject) => {
+        cp.exec(command, {}, (error, stdout, stderr) => {
+            reslove({ error, stdout, stderr })
+        });
+    })
 }
 
 

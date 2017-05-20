@@ -87,7 +87,7 @@ export class Compiler {
             let message = ts.flattenDiagnosticMessageText(diagnostic.messageText, "\n");
             let msg;
             if (diagnostic.file) {
-                let {line, character} = diagnostic.file.getLineAndCharacterOfPosition(diagnostic.start);
+                let { line, character } = diagnostic.file.getLineAndCharacterOfPosition(diagnostic.start);
                 msg = `  Error ${diagnostic.file.fileName} (${line + 1},${character + 1}): ${message}`;
             }
             else {
@@ -141,8 +141,10 @@ export class Compiler {
         var configObj: any;
         try {
             configObj = JSON.parse(file.read(url));
+
         } catch (e) {
-            // errLog.push(utils.tr(1117));//不是有效的 json 文件
+            console.log(utils.tr(1117))//不是有效的 json 文件
+            // errLog.push();
             configObj = {
                 "compilerOptions": {
                     "target": "es5",

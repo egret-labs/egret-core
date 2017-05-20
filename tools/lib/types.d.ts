@@ -100,8 +100,7 @@ declare module egret {
 
     export type EgretPropertyModule = {
         "name": string,
-        "version"?: string,
-        "path": string;
+        "path"?: string;
     }
 
     export type VersionInfo = {
@@ -112,7 +111,7 @@ declare module egret {
     export type EgretProperty = {
         "modules": EgretPropertyModule[],
         "native"?: {
-            "path_ignore": string[];
+            "path_ignore"?: string[];
         },
         "publish"?: {
             "web": number,

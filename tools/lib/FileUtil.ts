@@ -29,8 +29,8 @@
 
 import FS = require("fs");
 import Path = require("path");
-import {resolve} from "url";
-import {Stats} from "fs";
+import { resolve } from "url";
+import { Stats } from "fs";
 
 var charset = "utf-8";
 
@@ -49,12 +49,12 @@ export function save(path: string, data: any): void {
     FS.writeFileSync(path, data, charset);
 }
 
-export function writeFileAsync(path:string,content:string,charset:string):Promise<boolean>{
-    return new Promise((resolve,reject)=>{
-        FS.writeFile(path,content,{encoding:charset},(err)=>{
-            if(err){
+export function writeFileAsync(path: string, content: string, charset: string): Promise<boolean> {
+    return new Promise((resolve, reject) => {
+        FS.writeFile(path, content, { encoding: charset }, (err) => {
+            if (err) {
                 reject(err);
-            }else{
+            } else {
                 resolve(true);
             }
         });
@@ -127,15 +127,15 @@ export function read(path: string, ignoreCache = false): string {
     return text;
 }
 
-export function readFileAsync(path:string,charset:string):Promise<string>{
-    return new Promise((resolve,reject)=>{
-           FS.readFile(path,charset,(err,data)=>{
-               if(err){
-                   reject(err);
-               }else{
-                   resolve(data);
-               }
-           });
+export function readFileAsync(path: string, charset: string): Promise<string> {
+    return new Promise((resolve, reject) => {
+        FS.readFile(path, charset, (err, data) => {
+            if (err) {
+                reject(err);
+            } else {
+                resolve(data);
+            }
+        });
     });
 }
 
@@ -480,94 +480,99 @@ export function relative(from: string, to: string) {
 }
 
 export function getAbsolutePath(path: string) {
-    var tempPath = Path.resolve(path);
-    tempPath = escapePath(tempPath);
-    path = escapePath(path);
-    if (tempPath == path) {
-        return path;
+    if (Path.isAbsolute(path)) {
+        return escapePath(path);
     }
-
     return joinPath(egret.args.projectDir, path);
 }
 
+export function searchPath(searchPaths: string[]): string | null {
+    for (let searchPath of searchPaths) {
+        if (exists(searchPath)) {
+            return searchPath;
+        }
+    }
+    return null;
+}
 
-export function moveAsync(oldPath:string,newPath:string):Promise<void>{
-    return new Promise<void>((resolve,reject)=>{
-        copy(oldPath,newPath);
+
+export function moveAsync(oldPath: string, newPath: string): Promise<void> {
+    return new Promise<void>((resolve, reject) => {
+        copy(oldPath, newPath);
         remove(oldPath);
         return resolve();
     });
 }
 
-export function existsSync(path: string): boolean{
+export function existsSync(path: string): boolean {
     return FS.existsSync(path);
 }
 
-export function existsAsync(path: string): Promise<boolean>{
-    return new Promise<boolean>((resolve,reject)=>{
-        FS.exists(path,isExist=>{
+export function existsAsync(path: string): Promise<boolean> {
+    return new Promise<boolean>((resolve, reject) => {
+        FS.exists(path, isExist => {
             return resolve(isExist);
         })
     });
 }
 
-export function copyAsync(src: string, dest: string): Promise<void>{
-    return new Promise<void>((resolve,reject)=>{
-        copy(src,dest);
+export function copyAsync(src: string, dest: string): Promise<void> {
+    return new Promise<void>((resolve, reject) => {
+        copy(src, dest);
         return resolve();
     });
 }
 
-export function removeAsync(dir: string): Promise<void>{
-    return new Promise<void>((resolve,reject)=>{
+export function removeAsync(dir: string): Promise<void> {
+    return new Promise<void>((resolve, reject) => {
         remove(dir);
         return resolve();
     });
 }
 
-export function readFileSync(filename: string, encoding: string): string{
-    return FS.readFileSync(filename,encoding);
+export function readFileSync(filename: string, encoding: string): string {
+    return FS.readFileSync(filename, encoding);
 }
 
-export function readJSONAsync(file: string, options?: {encoding: string;flag?: string;}): Promise<void>{
-    return new Promise<void>((resolve,reject)=>{
-       FS.readFile(file,options,(err,data:string)=>{
-            if(err){
+export function readJSONAsync(file: string, options?: { encoding: string; flag?: string; }): Promise<any> {
+    return new Promise<any>((resolve, reject) => {
+        FS.readFile(file, options, (err, data: string) => {
+            if (err) {
                 return reject(err);
-            }else{
-                try{
+            } else {
+                try {
                     let retObj = JSON.parse(data);
                     return resolve(retObj);
-                }catch(err){
+                } catch (err) {
                     return reject(err);
                 }
             }
-       });
+        });
     });
 }
 
-export async function readJSONSync(file: string, options?: {encoding: string;flag?: string;}){
-    let ret = await readJSONAsync(file,options);
+export async function readJSONSync(file: string, options?: { encoding: string; flag?: string; }) {
+    let ret = await readJSONAsync(file, options);
     return ret;
 }
 
 
-export function statSync(path: string): Stats{
+export function statSync(path: string): Stats {
     return FS.statSync(path);
 }
 
-export function writeJSONAsync(file: string, object: any): Promise<void>{
-    return new Promise<void>((resolve,reject)=>{
-        try{
-            let retObj:string = JSON.stringify(object,null,4);
-            FS.writeFile(file,retObj,{encoding:"utf-8"},err=>{
-                if(err){
+export function writeJSONAsync(file: string, object: any): Promise<void> {
+    return new Promise<void>((resolve, reject) => {
+        try {
+            let retObj: string = JSON.stringify(object, null, 4);
+            FS.writeFile(file, retObj, { encoding: "utf-8" }, err => {
+                if (err) {
                     reject(err);
-                }else{
+                } else {
                     resolve();
                 }
             });
-        }catch(err) {
+        } catch (err) {
             return reject(err);
         }
     });
