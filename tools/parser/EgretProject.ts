@@ -123,7 +123,7 @@ export class EgretProject {
         if (p.indexOf(keyword) >= 0) {
             p = p.replace(keyword, egretLibs);
         }
-        let keyword2 = '${EGRET_CURRENT}';
+        let keyword2 = '${EGRET_DEFAULT}';
         if (p.indexOf(keyword2) >= 0) {
             p = p.replace(keyword2, egret.root);
         }
