@@ -56,7 +56,7 @@ class Build implements egret.Command {
         let { options, fileNames } = compiler.parseTsconfig(projectDir, egret.args.publish);
         let outFile = options.outFile;
         if (!outFile) {
-            globals.exit(1022);
+            globals.exit(1122);
         }
         compiler.compile(options, fileNames);
         let outDir = path.dirname(outFile);
