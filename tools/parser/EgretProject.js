@@ -39,7 +39,7 @@ var EgretProject = (function () {
             for (var _i = 0, _a = this.egretProperties.modules; _i < _a.length; _i++) {
                 var m = _a[_i];
                 //兼容小写
-                if (m.name == "dragonbones" && !m.path) {
+                if (m.name == "dragonbones") {
                     m.name = "dragonBones";
                 }
                 if (m.name == "gui" || m.name == "eui") {
