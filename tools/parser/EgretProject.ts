@@ -44,7 +44,7 @@ export class EgretProject {
             let useGUIorEUI = 0;
             for (let m of this.egretProperties.modules) {
                 //兼容小写
-                if (m.name == "dragonbones" && !m.path) {
+                if (m.name == "dragonbones") {
                     m.name = "dragonBones";
                 }
                 if (m.name == "gui" || m.name == "eui") {

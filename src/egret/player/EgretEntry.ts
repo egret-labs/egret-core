@@ -42,8 +42,8 @@ namespace egret {
         renderMode?:string;
         audioType?:number;
         screenAdapter?:sys.IScreenAdapter;
-        antialias:boolean,
-        retina:boolean
+        antialias?:boolean,
+        retina?:boolean
     }):void;
     /**
      * Refresh the screen display
