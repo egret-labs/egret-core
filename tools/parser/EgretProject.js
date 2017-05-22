@@ -108,7 +108,7 @@ var EgretProject = (function () {
         if (p.indexOf(keyword) >= 0) {
             p = p.replace(keyword, egretLibs);
         }
-        var keyword2 = '${EGRET_CURRENT}';
+        var keyword2 = '${EGRET_DEFAULT}';
         if (p.indexOf(keyword2) >= 0) {
             p = p.replace(keyword2, egret.root);
         }
