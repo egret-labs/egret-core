@@ -5,18 +5,9 @@ import file = require('../../lib/FileUtil');
 class ModifyProperties {
     private projectConfig: egret.EgretProperty
     constructor() {
-        this.initProperties();
     }
 
-    getProperties() {
-        return this.projectConfig;
-    }
-    //变更目录后必须调用此方法同步配置文件的变化
-    changeProjectDir() {
-        this.initProperties();
-    }
-
-    private initProperties() {
+    initProperties() {
         var projectPath = file.joinPath(egret.args.projectDir, "egretProperties.json");
         this.projectConfig = JSON.parse(file.read(projectPath));
     }

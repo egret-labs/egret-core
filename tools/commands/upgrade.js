@@ -65,6 +65,7 @@ var UpgradeCommand = (function () {
                         _a.label = 1;
                     case 1:
                         _a.trys.push([1, 4, , 5]);
+                        modify.initProperties();
                         return [4 /*yield*/, series(upgrade, upgradeConfigArr.concat())];
                     case 2:
                         _a.sent();

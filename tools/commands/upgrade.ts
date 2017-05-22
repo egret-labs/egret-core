@@ -36,6 +36,7 @@ class UpgradeCommand implements egret.Command {
         ];
 
         try {
+            modify.initProperties();
             await series(upgrade, upgradeConfigArr.concat())
             modify.save(upgradeConfigArr.pop().v);
             globals.log(1702);
