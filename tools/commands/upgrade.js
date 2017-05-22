@@ -185,7 +185,7 @@ var Upgrade_4_1_0 = (function () {
         return __awaiter(this, void 0, void 0, function () {
             return __generator(this, function (_a) {
                 modify.upgradeModulePath();
-                globals.log(1703, "https://github.com/egret-labs/egret-core/tree/master/docs/cn/release-note/4.0.1");
+                globals.log(1703, "https://github.com/egret-labs/egret-core/tree/master/docs/cn/release-note/4.1.0");
                 return [2 /*return*/, 0];
             });
         });
