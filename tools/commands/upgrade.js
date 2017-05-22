@@ -65,6 +65,7 @@ var UpgradeCommand = (function () {
                         _a.label = 1;
                     case 1:
                         _a.trys.push([1, 4, , 5]);
+                        modify.initProperties();
                         return [4 /*yield*/, series(upgrade, upgradeConfigArr.concat())];
                     case 2:
                         _a.sent();
@@ -184,7 +185,7 @@ var Upgrade_4_1_0 = (function () {
         return __awaiter(this, void 0, void 0, function () {
             return __generator(this, function (_a) {
                 modify.upgradeModulePath();
-                globals.log(1703, "https://github.com/egret-labs/egret-core/tree/master/docs/cn/release-note/4.0.1");
+                globals.log(1703, "https://github.com/egret-labs/egret-core/tree/master/docs/cn/release-note/4.1.0");
                 return [2 /*return*/, 0];
             });
         });

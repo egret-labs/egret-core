@@ -36,6 +36,7 @@ class UpgradeCommand implements egret.Command {
         ];
 
         try {
+            modify.initProperties();
             await series(upgrade, upgradeConfigArr.concat())
             modify.save(upgradeConfigArr.pop().v);
             globals.log(1702);
@@ -152,7 +153,7 @@ class Upgrade_4_1_0 {
      */
     async execute() {
         modify.upgradeModulePath();
-        globals.log(1703, "https://github.com/egret-labs/egret-core/tree/master/docs/cn/release-note/4.0.1")
+        globals.log(1703, "https://github.com/egret-labs/egret-core/tree/master/docs/cn/release-note/4.1.0")
         return 0;
     }
 }
