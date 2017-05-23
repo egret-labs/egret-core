@@ -7490,7 +7490,9 @@ var egret;
                     for (var _i = 0, _a = displayObject.$children; _i < _a.length; _i++) {
                         var child = _a[_i];
                         var node = child.$getRenderNode();
-                        childrenDrawCount += node.$getRenderCount();
+                        if (node) {
+                            childrenDrawCount += node.$getRenderCount();
+                        }
                         if (child.$children) {
                             childrenDrawCount += this.getRenderCount(child);
                         }

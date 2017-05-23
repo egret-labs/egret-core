@@ -295,7 +295,9 @@ namespace egret.web {
             if (displayObject.$children) {
                 for (let child of displayObject.$children) {
                     let node = child.$getRenderNode();
-                    childrenDrawCount += node.$getRenderCount();
+                    if(node) {
+                        childrenDrawCount += node.$getRenderCount();
+                    }
                     if(child.$children) {
                         childrenDrawCount += this.getRenderCount(child);
                     }
