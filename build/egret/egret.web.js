@@ -2287,10 +2287,6 @@ var egret;
                 /**
                  * @private
                  */
-                _this._isNeesHide = false;
-                /**
-                 * @private
-                 */
                 _this.textValue = "";
                 /**
                  * @private
@@ -2411,12 +2407,9 @@ var egret;
             };
             /**
              * @private
-             *
              */
             HTML5StageText.prototype.$hide = function () {
-                //标记当前点击其他地方关闭
-                this._isNeesHide = true;
-                if (this.htmlInput && egret.web.Html5Capatibility._System_OS == egret.web.SystemOSType.IOS) {
+                if (this.htmlInput) {
                     this.htmlInput.disconnectStageText(this);
                 }
             };

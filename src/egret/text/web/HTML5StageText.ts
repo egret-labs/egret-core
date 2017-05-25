@@ -206,17 +206,8 @@ namespace egret.web {
         /**
          * @private
          */
-        private _isNeesHide:boolean = false;
-
-        /**
-         * @private
-         * 
-         */
         $hide():void {
-            //标记当前点击其他地方关闭
-            this._isNeesHide = true;
-
-            if (this.htmlInput && egret.web.Html5Capatibility._System_OS == egret.web.SystemOSType.IOS) {//ios
+            if (this.htmlInput) {
                 this.htmlInput.disconnectStageText(this);
             }
         }
