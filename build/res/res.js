@@ -2305,7 +2305,7 @@ var RES;
 /// <reference path="analyzer/SoundAnalyzer.ts" />
 /// <reference path="analyzer/XMLAnalyzer.ts" />
 /// <reference path="version/IVersionController.ts" />
-/// <reference path="version/HTML5VersionController.ts" />
+/// <reference path="version/Html5VersionController.ts" />
 /// <reference path="version/NativeVersionController.ts" />
 var RES;
 (function (RES) {
