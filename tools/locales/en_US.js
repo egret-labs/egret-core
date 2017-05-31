@@ -64,7 +64,7 @@ locale_strings[1117] = "Warning! The tsconfig.json is not a valid json.";
 locale_strings[1118] = "The {0} version of the engine was not found and will be replaced with the default version of the engine. Please install the corresponding version engine in EgretEngine.";
 locale_strings[1119] = "Third party library compilation error, you can visit {color_underline} http://developer.egret.com/cn/github/egret-docs/Engine2D/projectConfig/libraryProject/index.html {color_normal} Learn more ";
 locale_strings[1120] = "Egret engine 4.1 use the new structure for third-party library upgrades, please upgrade your third-party library first";
-locale_strings[1121] = "Your module package.json does not contain the 'typings' attribute, which causes the exported module to not have a TypeScript Definition file (.d.ts), and can not contain smart syntax prompts in TypeScript"
+locale_strings[1121] = "Your module package.json does not contain the 'typings' attribute, which causes the exported module to not have a TypeScript Definition file (.d.ts), and can not contain smart syntax prompts in TypeScript";
 locale_strings[1122] = "Third-party library tsconfig.json must include outFile this attribute";
 //compile
 locale_strings[1301] = "Cannot find egret_file_list.js or game_file_list.js compiled under the path {0}, please check whether the compile path is correct";

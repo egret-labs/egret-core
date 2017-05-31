@@ -4,7 +4,6 @@ import FileUtil = require('../../lib/FileUtil');
 class UnzipCommand {
     static unzip(srcPath, destPath, callback): any {
         var compilerPath = FileUtil.joinPath(egret.root, "tools/lib/zip/EGTZipTool_v1.0.2.js");
-        var cmd = `java -jar "${compilerPath}" "${srcPath}" "${destPath}"`
         var nodePath = globals.addQuotes(process.execPath);
         nodePath = FileUtil.escapePath(nodePath);
 
