@@ -9,13 +9,13 @@ import FileUtil = require('../lib/FileUtil');
 import utils = require('../lib/utils');
 
 class ZipCommand implements egret.Command {
-    private outputFile:string;
-    private sourcePath:string;
-    private password:string;
+    private outputFile: string;
+    private sourcePath: string;
+    private password: string;
 
-    private useList:Array<string>;
-    private versionFile:string;
-    constructor(versionFile:string) {
+    private useList: Array<string>;
+    private versionFile: string;
+    constructor(versionFile: string) {
         this.versionFile = versionFile;
     }
     private init() {
@@ -34,31 +34,31 @@ class ZipCommand implements egret.Command {
         this.password = egret.args.password || "";
     }
 
-    execute(callback?:(exitCode:number)=>void):number {
+    execute(callback?: (exitCode: number) => void): number {
         //
         var tempTime = Date.now();
         globals.debugLog(1410);
         this.init();
 
-        var compilerPath = FileUtil.joinPath(egret.root, "tools/lib/zip/EGTZipTool_v1.0.2.jar");
+        var compilerPath = FileUtil.joinPath(egret.root, "tools/lib/zip/EGTZipTool_v1.0.2.js");
         compilerPath = globals.addQuotes(compilerPath);
 
-        var cmd = globals.getGlobalJava() + ' -jar ' + compilerPath + ' zip ' + globals.addQuotes(this.outputFile) + ' ' + globals.addQuotes(this.sourcePath) + ' ' + this.password;
+        var cmd = globals.addQuotes(process.execPath) + ' ' + compilerPath + ' zip ' + globals.addQuotes(this.outputFile) + ' ' + globals.addQuotes(this.sourcePath) + ' ' + this.password;
         var cp_exec1 = require('child_process').exec;
         var build = cp_exec1(cmd);
-        build.stdout.on("data", function(data) {
+        build.stdout.on("data", function (data) {
             //console.log(data);
         });
-        build.stderr.on("data", function(data) {
+        build.stderr.on("data", function (data) {
             //console.log(data);
         });
 
 
 
         var self = this;
-        build.on("exit", (result)=> {
+        build.on("exit", (result) => {
             if (result == 0) {
-                if(!FileUtil.isFile(self.outputFile)){
+                if (!FileUtil.isFile(self.outputFile)) {
                     console.error(utils.tr(1420))
                 }
                 //结束
@@ -71,7 +71,7 @@ class ZipCommand implements egret.Command {
                 }
 
                 //globals.debugLog(1411, (Date.now() - tempTime) / 1000);
-                if(callback) {
+                if (callback) {
                     callback(result);
 
                 }

@@ -4,6 +4,7 @@ var SDKConfig = (function () {
     }
     SDKConfig.prototype.execute = function () {
         InstallSDK.printAndroidSDKConfig();
+        return DontExitCode;
     };
     return SDKConfig;
 }());

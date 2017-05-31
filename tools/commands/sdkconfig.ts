@@ -1,9 +1,10 @@
 
 import InstallSDK = require("./installsdk");
 
-class SDKConfig {
+class SDKConfig implements egret.Command {
     execute() {
         InstallSDK.printAndroidSDKConfig();
+        return DontExitCode;
     }
 }
 
