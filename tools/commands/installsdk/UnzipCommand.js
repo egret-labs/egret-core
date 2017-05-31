@@ -4,6 +4,7 @@ var UnzipCommand = (function () {
     }
     UnzipCommand.unzip = function (srcPath, destPath, callback) {
         var compilerPath = FileUtil.joinPath(egret.root, "tools/lib/zip/EGTZipTool_v1.0.2.js");
+        compilerPath = globals.addQuotes(compilerPath);
         compilerPath = FileUtil.escapePath(compilerPath);
         var nodePath = globals.addQuotes(process.execPath);
         nodePath = FileUtil.escapePath(nodePath);
