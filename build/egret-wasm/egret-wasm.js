@@ -1618,7 +1618,13 @@ var egret;
              * @language zh_CN
              */
             get: function () {
-                return this.$filters.concat();
+                var self = this;
+                if (self.$filters) {
+                    return self.$filters.concat();
+                }
+                else {
+                    return null;
+                }
             },
             set: function (value) {
                 var self = this;
@@ -2279,6 +2285,7 @@ var egret;
                 }
                 this.setBitmapData(null, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0);
                 this.$renderDirty = true;
+                this.$waNode.setBitmapData(null);
                 return true;
             }
             if (this.$stage) {
