@@ -1,0 +1,13 @@
+{
+	"groups":[
+	{
+		"keys":"star_png",
+		"name":"preload"
+	}],
+	"resources":[
+	{
+		"name":"star_png",
+		"type":"image",
+		"url":"assets/star.png"
+	}]
+}
