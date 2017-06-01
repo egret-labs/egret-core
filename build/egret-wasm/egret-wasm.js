@@ -18339,7 +18339,7 @@ var egret;
             };
             function initImpl() {
                 var script = document.createElement('script');
-                script.src = isWasm ? "./libs/egret.webassambly.js" : "./libs/egret.asm.js";
+                script.src = isWasm == 1 ? "./libs/egret.webassembly.js" : "./libs/egret.asm.js";
                 document.body.appendChild(script);
                 Module.wasmBinary = (isWasm == 1) ? _xhr.response : null;
                 Module.postRun.push(function () {
@@ -18369,12 +18369,12 @@ var egret;
             switch (isWasm) {
                 case 1:
                     _xhr = new XMLHttpRequest();
-                    _xhr.open('GET', './libs/egret.webassambly.wasm', true);
+                    _xhr.open('GET', './libs/egret.webassembly.wasm', true);
                     break;
                 case 2:
                     _xhr = new XMLHttpRequest();
                     Module['buffer'] = new ArrayBuffer(wasmSize);
-                    var memoryInitializer = './libs/egret.webassambly.js.mem';
+                    var memoryInitializer = './libs/egret.asm.js.mem';
                     Module['memoryInitializerRequest'] = _xhr;
                     _xhr.open('GET', memoryInitializer, true);
                     break;
