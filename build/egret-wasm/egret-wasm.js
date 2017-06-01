@@ -4647,6 +4647,7 @@ var egret;
             list[index2] = child1;
             this.$childAdded(child2, index1);
             this.$childAdded(child1, index2);
+            this.$waNode.swapChild(index1, index2);
         };
         /**
          * Removes all child DisplayObject instances from the child list of the DisplayObjectContainer instance. The parent
@@ -19106,6 +19107,13 @@ var egret;
             displayCmdBuffer[displayCmdBufferIndex++] = 2 /* REMOVE_CHILD */;
             displayCmdBuffer[displayCmdBufferIndex++] = this.id;
             displayCmdBuffer[displayCmdBufferIndex++] = childId;
+            displayCmdBufferSize++;
+        };
+        WebAssemblyNode.prototype.swapChild = function (index1, index2) {
+            displayCmdBuffer[displayCmdBufferIndex++] = 4 /* SWAP_CHILD_AT */;
+            displayCmdBuffer[displayCmdBufferIndex++] = this.id;
+            displayCmdBuffer[displayCmdBufferIndex++] = index1;
+            displayCmdBuffer[displayCmdBufferIndex++] = index2;
             displayCmdBufferSize++;
         };
         WebAssemblyNode.prototype.setX = function (value) {

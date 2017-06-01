@@ -10819,6 +10819,7 @@ declare namespace egret {
         constructor(type: number);
         addChildAt(childId: number, index: number): void;
         removeChild(childId: number): void;
+        swapChild(index1: number, index2: number): void;
         setX(value: number): void;
         setY(value: number): void;
         setRotation(value: number): void;
