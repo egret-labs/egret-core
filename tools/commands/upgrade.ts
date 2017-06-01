@@ -32,7 +32,8 @@ class UpgradeCommand implements egret.Command {
         let upgradeConfigArr: VersionInfo[] = [
             { "v": "4.0.1", command: Upgrade_4_0_1 },
             { "v": "4.0.3" },
-            { "v": "4.1.0", command: Upgrade_4_1_0 }
+            { "v": "4.1.0", command: Upgrade_4_1_0 },
+            { "v": "5.0.0" }
         ];
 
         try {
