@@ -13970,11 +13970,11 @@ var eui;
          */
         Scroller.prototype.onTouchEndCapture = function (event) {
             if (this.$Scroller[12 /* touchCancle */]) {
+                event.$bubbles = false;
+                this.dispatchBubbleEvent(event);
+                event.$bubbles = true;
                 event.stopPropagation();
                 this.onTouchEnd(event);
-                event.$isPropagationStopped = false;
-                event.$bubbles = false;
-                this.dispatchEvent(event);
             }
         };
         /**
@@ -13983,10 +13983,10 @@ var eui;
          */
         Scroller.prototype.onTouchTapCapture = function (event) {
             if (this.$Scroller[12 /* touchCancle */]) {
-                event.stopPropagation();
-                event.$isPropagationStopped = false;
                 event.$bubbles = false;
-                this.dispatchEvent(event);
+                this.dispatchBubbleEvent(event);
+                event.$bubbles = true;
+                event.stopPropagation();
             }
         };
         /**
@@ -14141,6 +14141,32 @@ var eui;
          * @private
          * @param event
          */
+        Scroller.prototype.dispatchBubbleEvent = function (event) {
+            var viewport = this.$Scroller[10 /* viewport */];
+            if (!viewport) {
+                return;
+            }
+            var cancelEvent = new egret.TouchEvent(event.type, event.bubbles, event.cancelable);
+            var target = this.downTarget;
+            var list = this.$getPropagationList(target);
+            var length = list.length;
+            var targetIndex = list.length * 0.5;
+            var startIndex = -1;
+            for (var i = 0; i < length; i++) {
+                if (list[i] === viewport) {
+                    startIndex = i;
+                    break;
+                }
+            }
+            list.splice(0, list.length - startIndex + 1);
+            targetIndex = 0;
+            this.$dispatchPropagationEvent(cancelEvent, list, targetIndex);
+            egret.Event.release(cancelEvent);
+        };
+        /**
+         * @private
+         * @param event
+         */
         Scroller.prototype.dispatchCancelEvent = function (event) {
             var viewport = this.$Scroller[10 /* viewport */];
             if (!viewport) {
@@ -14158,7 +14184,8 @@ var eui;
                     break;
                 }
             }
-            list.splice(0, startIndex + 1);
+            list.splice(0, startIndex + 1 - 2);
+            list.splice(list.length - 1 - startIndex + 2, startIndex + 1 - 2);
             targetIndex -= startIndex + 1;
             this.$dispatchPropagationEvent(cancelEvent, list, targetIndex);
             egret.Event.release(cancelEvent);

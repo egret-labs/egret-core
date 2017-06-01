@@ -8337,6 +8337,11 @@ declare namespace eui {
          * @private
          * @param event
          */
+        private dispatchBubbleEvent(event);
+        /**
+         * @private
+         * @param event
+         */
         private dispatchCancelEvent(event);
         /**
          * @private

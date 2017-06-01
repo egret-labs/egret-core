@@ -518,13 +518,12 @@ namespace eui {
          */
         private onTouchEndCapture(event:egret.TouchEvent):void {
             if (this.$Scroller[Keys.touchCancle]) {
+                event.$bubbles = false;
+                this.dispatchBubbleEvent(event);
+
+                event.$bubbles = true;
                 event.stopPropagation();
                 this.onTouchEnd(event);
-
-                event.$isPropagationStopped = false;
-                event.$bubbles = false;
-
-                this.dispatchEvent(event);
             }
         }
 
@@ -534,12 +533,12 @@ namespace eui {
          */
         private onTouchTapCapture(event:egret.TouchEvent):void {
             if (this.$Scroller[Keys.touchCancle]) {
+                event.$bubbles = false;
+                this.dispatchBubbleEvent(event);
+
+                event.$bubbles = true;
                 event.stopPropagation();
 
-                event.$isPropagationStopped = false;
-                event.$bubbles = false;
-
-                this.dispatchEvent(event);
             }
         }
 
@@ -709,6 +708,36 @@ namespace eui {
          * @private
          * @param event
          */
+        private dispatchBubbleEvent(event:egret.TouchEvent) {
+            let viewport = this.$Scroller[Keys.viewport];
+            if (!viewport) {
+                return;
+            }
+            let cancelEvent = new egret.TouchEvent(event.type, event.bubbles, event.cancelable);
+            let target:egret.DisplayObject = this.downTarget;
+            let list = this.$getPropagationList(target);
+            let length = list.length;
+            let targetIndex = list.length * 0.5;
+            let startIndex = -1;
+
+            for (let i = 0; i < length; i++) {
+                if (list[i] === viewport) {
+                    startIndex = i;
+                    break;
+                }
+            }
+            list.splice(0, list.length - startIndex + 1);
+            targetIndex = 0;
+
+            this.$dispatchPropagationEvent(cancelEvent, list, targetIndex);
+            egret.Event.release(cancelEvent);
+        }
+
+
+        /**
+         * @private
+         * @param event
+         */
         private dispatchCancelEvent(event:egret.TouchEvent) {
             let viewport = this.$Scroller[Keys.viewport];
             if (!viewport) {
@@ -727,7 +756,9 @@ namespace eui {
                     break;
                 }
             }
-            list.splice(0, startIndex + 1);
+            list.splice(0, startIndex + 1 - 2);
+            list.splice(list.length - 1 - startIndex + 2, startIndex + 1 - 2);
+
             targetIndex -= startIndex + 1;
             this.$dispatchPropagationEvent(cancelEvent, list, targetIndex);
             egret.Event.release(cancelEvent);
@@ -884,6 +915,7 @@ namespace eui {
                 if (this.verticalScrollBar.autoVisibility) {
                     this.verticalScrollBar.visible = false;
                 }
+                
             }
         }
     }
