@@ -701,23 +701,23 @@ var eui;
 var eui;
 (function (eui) {
     function getAssets(source, callback) {
-        var polyfill = egret.getImplementation("eui.IAssetAdapter");
-        if (!polyfill) {
-            polyfill = new eui.DefaultAssetAdapter();
-            polyfill.getAsset(source, function (content) {
-                callback(content);
-            }, this);
+        var adapter = egret.getImplementation("eui.IAssetAdapter");
+        if (!adapter) {
+            adapter = new eui.DefaultAssetAdapter();
         }
+        adapter.getAsset(source, function (content) {
+            callback(content);
+        }, this);
     }
     eui.getAssets = getAssets;
     function getTheme(source, callback) {
-        var polyfill = egret.getImplementation("eui.IThemeAdapter");
-        if (!polyfill) {
-            polyfill = new eui.DefaultThemeAdapter();
-            polyfill.getTheme(source, function (data) {
-                callback(data);
-            }, function (e) { console.log(e); }, this);
+        var adapter = egret.getImplementation("eui.IThemeAdapter");
+        if (!adapter) {
+            adapter = new eui.DefaultThemeAdapter();
         }
+        adapter.getTheme(source, function (data) {
+            callback(data);
+        }, function (e) { console.log(e); }, this);
     }
     eui.getTheme = getTheme;
 })(eui || (eui = {}));

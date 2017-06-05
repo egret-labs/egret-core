@@ -34,24 +34,24 @@ namespace eui {
 
 
     export function getAssets(source: string, callback: (content: any) => void) {
-        let polyfill: IAssetAdapter = egret.getImplementation("eui.IAssetAdapter");
-        if (!polyfill) {
-            polyfill = new DefaultAssetAdapter();
-            polyfill.getAsset(source, content => {
-                callback(content);
-            }, this);
+        let adapter: IAssetAdapter = egret.getImplementation("eui.IAssetAdapter");
+        if (!adapter) {
+            adapter = new DefaultAssetAdapter();
         }
+        adapter.getAsset(source, content => {
+            callback(content);
+        }, this);
     }
 
     export function getTheme(source: string, callback: (content: any) => void) {
 
-        let polyfill: IThemeAdapter = egret.getImplementation("eui.IThemeAdapter");
-        if (!polyfill) {
-            polyfill = new DefaultThemeAdapter();
-            polyfill.getTheme(source, (data) => {
-                callback(data)
-            }, (e) => { console.log(e) }, this);
+        let adapter: IThemeAdapter = egret.getImplementation("eui.IThemeAdapter");
+        if (!adapter) {
+            adapter = new DefaultThemeAdapter();
         }
+        adapter.getTheme(source, (data) => {
+            callback(data)
+        }, (e) => { console.log(e) }, this);
 
     }
 
