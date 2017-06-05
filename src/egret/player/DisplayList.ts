@@ -114,9 +114,6 @@ namespace egret.sys {
                 if (root !== target.$stage) {
                     target.$getConcatenatedMatrixAt(root, matrix);
                 }
-                if(DisplayList.$pixelRatio != 1) {
-                    DisplayList.$preMultiplyInto(matrix);
-                }
             }
             else {
                 let bounds = target.$getOriginalBounds();
@@ -139,9 +136,6 @@ namespace egret.sys {
                 let root = displayList.root;
                 if (root !== target.$stage) {
                     target.$getConcatenatedMatrixAt(root, matrix);
-                }
-                if(DisplayList.$pixelRatio != 1) {
-                    DisplayList.$preMultiplyInto(matrix);
                 }
                 region.updateRegion(bounds, matrix);
             }
@@ -311,7 +305,7 @@ namespace egret.sys {
                     renderNode.image = this.bitmapData;
                     renderNode.imageWidth = width;
                     renderNode.imageHeight = height;
-                    renderNode.drawImage(0, 0, width, height, -this.offsetX, -this.offsetY, width / DisplayList.$pixelRatio, height / DisplayList.$pixelRatio);
+                    renderNode.drawImage(0, 0, width, height, -this.offsetX / DisplayList.$pixelRatio , -this.offsetY / DisplayList.$pixelRatio , width / DisplayList.$pixelRatio, height / DisplayList.$pixelRatio);
                 }
             }
 
@@ -340,8 +334,8 @@ namespace egret.sys {
             let bounds = this.root.$getOriginalBounds();
             var scaleX = DisplayList.$pixelRatio;
             var scaleY = DisplayList.$pixelRatio;
-            this.offsetX = -bounds.x;
-            this.offsetY = -bounds.y;
+            this.offsetX = -bounds.x * DisplayList.$pixelRatio;
+            this.offsetY = -bounds.y * DisplayList.$pixelRatio;
             this.offsetMatrix.setTo(this.offsetMatrix.a, 0, 0, this.offsetMatrix.d, this.offsetX, this.offsetY);
             let buffer = this.renderBuffer;
             //在chrome里，小等于256*256的canvas会不启用GPU加速。

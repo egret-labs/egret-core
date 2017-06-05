@@ -12893,6 +12893,10 @@ var egret;
              */
             DirtyRegion.prototype.addRegion = function (target) {
                 var minX = target.minX, minY = target.minY, maxX = target.maxX, maxY = target.maxY;
+                minX *= sys.DisplayList.$pixelRatio;
+                minY *= sys.DisplayList.$pixelRatio;
+                maxX *= sys.DisplayList.$pixelRatio;
+                maxY *= sys.DisplayList.$pixelRatio;
                 if (this.hasClipRect) {
                     if (minX < 0) {
                         minX = 0;
@@ -13160,9 +13164,6 @@ var egret;
                     if (root !== target.$stage) {
                         target.$getConcatenatedMatrixAt(root, matrix);
                     }
-                    if (DisplayList.$pixelRatio != 1) {
-                        DisplayList.$preMultiplyInto(matrix);
-                    }
                 }
                 else {
                     var bounds = target.$getOriginalBounds();
@@ -13184,9 +13185,6 @@ var egret;
                     var root = displayList.root;
                     if (root !== target.$stage) {
                         target.$getConcatenatedMatrixAt(root, matrix);
-                    }
-                    if (DisplayList.$pixelRatio != 1) {
-                        DisplayList.$preMultiplyInto(matrix);
                     }
                     region.updateRegion(bounds, matrix);
                 }
@@ -13301,7 +13299,7 @@ var egret;
                         renderNode.image = this.bitmapData;
                         renderNode.imageWidth = width;
                         renderNode.imageHeight = height;
-                        renderNode.drawImage(0, 0, width, height, -this.offsetX, -this.offsetY, width / DisplayList.$pixelRatio, height / DisplayList.$pixelRatio);
+                        renderNode.drawImage(0, 0, width, height, -this.offsetX / DisplayList.$pixelRatio, -this.offsetY / DisplayList.$pixelRatio, width / DisplayList.$pixelRatio, height / DisplayList.$pixelRatio);
                     }
                 }
                 this.dirtyList = null;
@@ -13320,8 +13318,8 @@ var egret;
                 var bounds = this.root.$getOriginalBounds();
                 var scaleX = DisplayList.$pixelRatio;
                 var scaleY = DisplayList.$pixelRatio;
-                this.offsetX = -bounds.x;
-                this.offsetY = -bounds.y;
+                this.offsetX = -bounds.x * DisplayList.$pixelRatio;
+                this.offsetY = -bounds.y * DisplayList.$pixelRatio;
                 this.offsetMatrix.setTo(this.offsetMatrix.a, 0, 0, this.offsetMatrix.d, this.offsetX, this.offsetY);
                 var buffer = this.renderBuffer;
                 //在chrome里，小等于256*256的canvas会不启用GPU加速。
@@ -17802,7 +17800,7 @@ var egret;
              * @language zh_CN
              */
             get: function () {
-                return "4.1.0";
+                return "5.0.0";
             },
             enumerable: true,
             configurable: true
