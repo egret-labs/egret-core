@@ -193,10 +193,7 @@ namespace eui {
          * @param url
          */
         private load(url: string): void {
-            eui.getTheme(url).then(data => this.onConfigLoaded(data))
-                .catch(e => {
-                    egret.$error(3000, this.$configURL);
-                });
+            eui.getTheme(url, data => this.onConfigLoaded(data))
         }
 
         /**

@@ -231,7 +231,7 @@ namespace eui {
             let source = this._source;
             if (source && typeof source == "string") {
 
-                getAssets(<string>this._source).then((data) => {
+                getAssets(<string>this._source, (data) => {
                     if (source !== this._source)
                         return;
                     if (!egret.is(data, "egret.Texture")) {

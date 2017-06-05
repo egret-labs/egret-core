@@ -226,7 +226,7 @@ namespace EXML {
             try {
                 clazz = parse(text);
             }
-            catch(e) {
+            catch (e) {
                 console.error(url + "\n" + e.message)
             }
         }
@@ -259,6 +259,6 @@ namespace EXML {
             }
             callback(url, str);
         };
-        eui.getTheme(openUrl).then(onConfigLoaded).catch(onConfigLoaded);
+        eui.getTheme(openUrl, onConfigLoaded);
     }
 }
