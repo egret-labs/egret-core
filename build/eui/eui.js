@@ -700,38 +700,24 @@ var eui;
 /// <reference path="Validator.ts" />
 var eui;
 (function (eui) {
-    function getAssets(source) {
-        var _this = this;
-        if (!eui.assetsAdapter) {
-            var polyfill_1 = egret.getImplementation("eui.IAssetAdapter");
-            if (!polyfill_1) {
-                polyfill_1 = new eui.DefaultAssetAdapter();
-            }
-            eui.assetsAdapter = function (source) {
-                return new Promise(function (reslove, reject) {
-                    polyfill_1.getAsset(source, function (content) {
-                        reslove(content);
-                    }, _this);
-                });
-            };
+    function getAssets(source, callback) {
+        var adapter = egret.getImplementation("eui.IAssetAdapter");
+        if (!adapter) {
+            adapter = new eui.DefaultAssetAdapter();
         }
-        return eui.assetsAdapter(source);
+        adapter.getAsset(source, function (content) {
+            callback(content);
+        }, this);
     }
     eui.getAssets = getAssets;
-    function getTheme(source) {
-        var _this = this;
-        if (!eui.themeAdapter) {
-            var polyfill_2 = egret.getImplementation("eui.IThemeAdapter");
-            if (!polyfill_2) {
-                polyfill_2 = new eui.DefaultThemeAdapter();
-            }
-            eui.themeAdapter = function (source) {
-                return new Promise(function (reslove, reject) {
-                    polyfill_2.getTheme(source, function (data) { reslove(data); }, reject, _this);
-                });
-            };
+    function getTheme(source, callback) {
+        var adapter = egret.getImplementation("eui.IThemeAdapter");
+        if (!adapter) {
+            adapter = new eui.DefaultThemeAdapter();
         }
-        return eui.themeAdapter(source);
+        adapter.getTheme(source, function (data) {
+            callback(data);
+        }, function (e) { console.log(e); }, this);
     }
     eui.getTheme = getTheme;
 })(eui || (eui = {}));
@@ -18209,7 +18195,7 @@ var eui;
             this.sourceChanged = false;
             var source = this._source;
             if (source && typeof source == "string") {
-                eui.getAssets(this._source).then(function (data) {
+                eui.getAssets(this._source, function (data) {
                     if (source !== _this._source)
                         return;
                     if (!egret.is(data, "egret.Texture")) {
@@ -18691,10 +18677,7 @@ var eui;
          */
         Theme.prototype.load = function (url) {
             var _this = this;
-            eui.getTheme(url).then(function (data) { return _this.onConfigLoaded(data); })
-                .catch(function (e) {
-                egret.$error(3000, _this.$configURL);
-            });
+            eui.getTheme(url, function (data) { return _this.onConfigLoaded(data); });
         };
         /**
          * @private
@@ -20540,7 +20523,7 @@ var eui;
             this.$fontChanged = false;
             var font = this.$font;
             if (typeof font == "string") {
-                eui.getAssets(font).then(function (bitmapFont) {
+                eui.getAssets(font, function (bitmapFont) {
                     _this.$setFontData(bitmapFont);
                 });
             }
@@ -20990,7 +20973,7 @@ var EXML;
             }
             callback(url, str);
         };
-        eui.getTheme(openUrl).then(onConfigLoaded).catch(onConfigLoaded);
+        eui.getTheme(openUrl, onConfigLoaded);
     }
 })(EXML || (EXML = {}));
 //////////////////////////////////////////////////////////////////////////////////////

@@ -112,7 +112,7 @@ namespace eui {
             this.$fontChanged = false;
             let font = this.$font;
             if (typeof font == "string") {
-                getAssets(font).then((bitmapFont) => {
+                getAssets(font, (bitmapFont) => {
                     this.$setFontData(bitmapFont);
                 })
             } else {

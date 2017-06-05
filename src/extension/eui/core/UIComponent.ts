@@ -33,45 +33,26 @@ namespace eui {
 
 
 
-    export type AssetsAdapter = (source: string) => Promise<any>;
-
-    export type ThemeAdapter = (url: string) => Promise<string>;
-
-    export var assetsAdapter: AssetsAdapter;
-
-    export var themeAdapter: ThemeAdapter;
-
-    export function getAssets(source: string) {
-        if (!assetsAdapter) {
-            let polyfill: IAssetAdapter = egret.getImplementation("eui.IAssetAdapter");
-            if (!polyfill) {
-                polyfill = new DefaultAssetAdapter();
-            }
-            assetsAdapter = (source: string) => {
-                return new Promise((reslove, reject) => {
-                    polyfill.getAsset(source, content => {
-                        reslove(content);
-                    }, this);
-                })
-
-            }
+    export function getAssets(source: string, callback: (content: any) => void) {
+        let adapter: IAssetAdapter = egret.getImplementation("eui.IAssetAdapter");
+        if (!adapter) {
+            adapter = new DefaultAssetAdapter();
         }
-        return assetsAdapter(source)
+        adapter.getAsset(source, content => {
+            callback(content);
+        }, this);
     }
 
-    export function getTheme(source: string) {
-        if (!themeAdapter) {
-            let polyfill: IThemeAdapter = egret.getImplementation("eui.IThemeAdapter");
-            if (!polyfill) {
-                polyfill = new DefaultThemeAdapter();
-            }
-            themeAdapter = (source: string) => {
-                return new Promise((reslove, reject) => {
-                    polyfill.getTheme(source, (data) => { reslove(data) }, reject, this);
-                })
-            }
+    export function getTheme(source: string, callback: (content: any) => void) {
+
+        let adapter: IThemeAdapter = egret.getImplementation("eui.IThemeAdapter");
+        if (!adapter) {
+            adapter = new DefaultThemeAdapter();
         }
-        return themeAdapter(source);
+        adapter.getTheme(source, (data) => {
+            callback(data)
+        }, (e) => { console.log(e) }, this);
+
     }
 
     /**
