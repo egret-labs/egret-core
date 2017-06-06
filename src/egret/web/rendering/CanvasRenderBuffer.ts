@@ -182,7 +182,7 @@ namespace egret.web {
             let context = this.context;
             context.save();
             context.beginPath();
-            context.setTransform(1, 0, 0, 1, offsetX * pixelRatio, offsetY * pixelRatio);
+            context.setTransform(1, 0, 0, 1, offsetX, offsetY);
             let length = regions.length;
             for (let i = 0; i < length; i++) {
                 let region = regions[i];

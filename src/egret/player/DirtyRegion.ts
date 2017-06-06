@@ -103,10 +103,6 @@ namespace egret.sys {
          */
         public addRegion(target:Region):boolean {
             let minX = target.minX, minY = target.minY, maxX = target.maxX, maxY = target.maxY;
-            minX *= DisplayList.$pixelRatio;
-            minY *= DisplayList.$pixelRatio;
-            maxX *= DisplayList.$pixelRatio;
-            maxY *= DisplayList.$pixelRatio;
             if (this.hasClipRect) {
                 if (minX < 0) {
                     minX = 0;

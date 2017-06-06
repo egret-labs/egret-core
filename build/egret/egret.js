@@ -12893,10 +12893,6 @@ var egret;
              */
             DirtyRegion.prototype.addRegion = function (target) {
                 var minX = target.minX, minY = target.minY, maxX = target.maxX, maxY = target.maxY;
-                minX *= sys.DisplayList.$pixelRatio;
-                minY *= sys.DisplayList.$pixelRatio;
-                maxX *= sys.DisplayList.$pixelRatio;
-                maxY *= sys.DisplayList.$pixelRatio;
                 if (this.hasClipRect) {
                     if (minX < 0) {
                         minX = 0;
@@ -13719,8 +13715,9 @@ var egret;
             length = dirtyList.length;
             for (var i = 0; i < length; i++) {
                 var region = dirtyList[i];
-                context.clearRect(region.minX, region.minY, region.width, region.height);
-                context.rect(region.minX, region.minY, region.width, region.height);
+                var pixelRatio = sys.DisplayList.$pixelRatio;
+                context.clearRect(region.minX * pixelRatio, region.minY * pixelRatio, region.width * pixelRatio, region.height * pixelRatio);
+                context.rect(region.minX * pixelRatio, region.minY * pixelRatio, region.width * pixelRatio, region.height * pixelRatio);
             }
             context.clip();
             context.drawImage(this.stageDisplayList.renderBuffer.surface, 0, 0);
@@ -13732,7 +13729,8 @@ var egret;
         function drawDirtyRect(x, y, width, height, context) {
             context.strokeStyle = 'rgb(255,0,0)';
             context.lineWidth = 5;
-            context.strokeRect(x - 0.5, y - 0.5, width, height);
+            var pixelRatio = sys.DisplayList.$pixelRatio;
+            context.strokeRect(x * pixelRatio - 0.5, y * pixelRatio - 0.5, width * pixelRatio, height * pixelRatio);
         }
         /**
          * FPS显示对象

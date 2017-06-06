@@ -3141,7 +3141,7 @@ var egret;
                 var context = this.context;
                 context.save();
                 context.beginPath();
-                context.setTransform(1, 0, 0, 1, offsetX * pixelRatio, offsetY * pixelRatio);
+                context.setTransform(1, 0, 0, 1, offsetX, offsetY);
                 var length = regions.length;
                 for (var i = 0; i < length; i++) {
                     var region = regions[i];
