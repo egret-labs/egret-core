@@ -71,7 +71,7 @@ var Publish = (function () {
                     case 0:
                         utils.checkEgret();
                         options = egret.args;
-                        config = EgretProject.utils;
+                        config = EgretProject.data;
                         versionFile = this.getVersionInfo();
                         runtime = egret.args.runtime == 'native' ? 'native' : "web";
                         options.releaseDir = FileUtil.joinPath(config.getReleaseRoot(), runtime, versionFile);

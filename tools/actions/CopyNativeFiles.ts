@@ -22,7 +22,7 @@ class CopyNativeFiles {
         FileUtil.remove(url2);
 
         if (isDebug) {
-            var config = EgretProject.utils;
+            var config = EgretProject.data;
             try {
                 cpFiles.outputPath = url2;
                 cpFiles.ignorePathList = config.getIgnorePath();
@@ -37,7 +37,7 @@ class CopyNativeFiles {
             FileUtil.copy(sourceRuntime, outputRuntime);
 
 
-            EgretProject.utils.getModulesConfig('native').forEach(m => {
+            EgretProject.data.getModulesConfig('native').forEach(m => {
                 FileUtil.copy(m.sourceDir, FileUtil.joinPath(url2, m.targetDir));
             })
         }
@@ -47,7 +47,7 @@ class CopyNativeFiles {
     }
 
     static refreshNative(isDebug, versionFile = null) {
-        var config = EgretProject.utils;
+        var config = EgretProject.data;
         var nativePath;
         if (nativePath = config.getNativePath("android_as")) {
             var url1 = FileUtil.joinPath(nativePath, "proj.android");

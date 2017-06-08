@@ -43,7 +43,7 @@ class Publish implements egret.Command {
         utils.checkEgret();
 
         var options = egret.args;
-        var config = EgretProject.utils;
+        var config = EgretProject.data;
         //重新设置 releaseDir
         var versionFile = this.getVersionInfo();
 

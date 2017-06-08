@@ -7,7 +7,7 @@
 var file = require("../lib/FileUtil");
 var EgretProject = require("../project/EgretProject");
 //import config = require('../ProjectConfig');
-var config = EgretProject.utils;
+var config = EgretProject.data;
 var CopyFilesCommand = (function () {
     function CopyFilesCommand() {
     }

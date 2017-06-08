@@ -19,7 +19,7 @@ var AutoCompileCommand = (function () {
     }
     AutoCompileCommand.prototype.execute = function () {
         var _this = this;
-        if (EgretProject.utils.invalid(true)) {
+        if (EgretProject.data.invalid(true)) {
             process.exit(0);
             return;
         }
@@ -121,7 +121,7 @@ var AutoCompileCommand = (function () {
                     this.messages[2] = egret.args.tsconfigError;
                 }
                 else if (fileName.indexOf("egretProperties.json") > -1) {
-                    EgretProject.utils.reload();
+                    EgretProject.data.reload();
                     this.copyLibs();
                     this.compileProject.compileProject(egret.args);
                     this.messages[2] = egret.args.tsconfigError;
@@ -162,7 +162,7 @@ var AutoCompileCommand = (function () {
     };
     AutoCompileCommand.prototype.copyLibs = function () {
         //刷新libs 中 modules 文件
-        CompileTemplate.copyToLibs();
+        EgretProject.manager.copyToLibs();
         //修改 html 中 modules 块
         CompileTemplate.modifyIndexHTML();
     };

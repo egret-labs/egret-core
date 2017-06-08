@@ -4,6 +4,7 @@ var service = require("../service/index");
 var CompileProject = require("../actions/CompileProject");
 var CompileTemplate = require("../actions/CompileTemplate");
 var copyNative = require("../actions/CopyNativeFiles");
+var EgretProject = require("../project/EgretProject");
 console.log(utils.tr(1106, 0));
 var timeBuildStart = (new Date()).getTime();
 var Clean = (function () {
@@ -15,7 +16,7 @@ var Clean = (function () {
         service.client.closeServer(options.projectDir);
         utils.clean(options.debugDir);
         //刷新libs 中 modules 文件
-        CompileTemplate.copyToLibs();
+        EgretProject.manager.copyToLibs();
         CompileTemplate.modifyIndexHTML();
         //编译 bin-debug 文件
         var compileProject = new CompileProject();

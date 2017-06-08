@@ -12,15 +12,15 @@ class GenerateVersionCommand implements egret.Command {
         //globals.debugLog(1407);
 
         var releasePath = egret.args.releaseDir;
-        var ignorePathList = EgretProject.utils.getIgnorePath();
+        var ignorePathList = EgretProject.data.getIgnorePath();
         var allPath = FileUtil.joinPath(releasePath, "all.manifest");
 
         var sourceRoot = egret.args.projectDir;
 
-        var resources = EgretProject.utils.getResources();
+        var resources = EgretProject.data.getResources();
 
-        if (EgretProject.utils.getPublishType(egret.args.runtime) != 1) {
-            var config = EgretProject.utils;
+        if (EgretProject.data.getPublishType(egret.args.runtime) != 1) {
+            var config = EgretProject.data;
             var cpFiles = new CopyFilesCommand();
             cpFiles.copyResources(sourceRoot, releasePath, config.getIgnorePath());
             return 0;
@@ -59,7 +59,7 @@ class GenerateVersionCommand implements egret.Command {
 
         var allVersion = {};
         var length = list.length;
-        const copyExmlList = EgretProject.utils.getCopyExmlList();
+        const copyExmlList = EgretProject.data.getCopyExmlList();
         for (var i = 0; i < length; i++) {
             var filePath = list[i];
             if (copyExmlList.length && filePath.slice(filePath.lastIndexOf(".") + 1) == "exml") {

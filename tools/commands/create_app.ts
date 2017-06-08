@@ -109,7 +109,7 @@ class CreateAppCommand implements egret.Command {
         properties["native"][platform + "_path"] = file.relative(projectPath, nativePath);
         file.save(file.joinPath(projectPath, "egretProperties.json"), JSON.stringify(properties, null, "\t"));
 
-        EgretProject.utils.init(arg_h5_path);
+        EgretProject.data.init(arg_h5_path);
 
         //修改native项目配置
         new ParseConfigCommand().execute();

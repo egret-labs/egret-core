@@ -10,7 +10,7 @@ class CreateLib implements egret.Command {
             return 0;
         }
         const moduleName = FileUtil.basename(option.projectDir);
-        const project = EgretProject.utils;
+        const project = EgretProject.data;
         const libraryTemplate = FileUtil.joinPath(egret.root, "tools/templates/library");
         FileUtil.copy(libraryTemplate, project.getProjectRoot());
 

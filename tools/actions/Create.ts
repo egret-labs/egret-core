@@ -17,7 +17,7 @@ class Create implements egret.Command {
 
         var proj = this.project;
         var options = egret.args;
-        let project = EgretProject.utils;
+        let project = EgretProject.data;
 
         projectAction.normalize(proj);
 

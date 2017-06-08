@@ -19,12 +19,12 @@ function changeHtmlToRelease(htmlPath) {
 }
 exports.changeHtmlToRelease = changeHtmlToRelease;
 function modifyNativeRequire(isDebug) {
-    var indexHTML = EgretProject.utils.getFilePath('index.html');
+    var indexHTML = EgretProject.data.getFilePath('index.html');
     return refreshNativeRequire(indexHTML, isDebug);
 }
 exports.modifyNativeRequire = modifyNativeRequire;
 function modifyIndexHTML(scripts) {
-    var projectDir = EgretProject.utils.getProjectRoot();
+    var projectDir = EgretProject.data.getProjectRoot();
     var list = FileUtil.getDirectoryListing(projectDir).filter(function (filepath) { return FileUtil.getExtension(filepath) == "html"; });
     list.forEach(function (htmlFilePath) { return refreshDebugHtml(htmlFilePath, scripts); });
 }
@@ -43,15 +43,8 @@ function refreshDebugHtml(htmlPath, gameScripts) {
     }
     FileUtil.save(htmlPath, htmlContent);
 }
-function copyToLibs() {
-    var project = EgretProject.utils;
-    var moduleDir = project.getLibraryFolder();
-    FileUtil.remove(moduleDir);
-    project.getModulesConfig("web").forEach(function (m) {
-        FileUtil.copy(m.sourceDir, project.getFilePath(m.targetDir));
-    });
-}
-exports.copyToLibs = copyToLibs;
+// export function copyToLibs() {
+// }
 function getScript(type, src, releaseSrc) {
     switch (type) {
         case 'lib':
@@ -67,7 +60,7 @@ function getScript(type, src, releaseSrc) {
 }
 //只刷新 modules
 function getModuleScripts() {
-    var properties = EgretProject.utils;
+    var properties = EgretProject.data;
     var projectRoot = properties.getProjectRoot();
     var modules = properties.getModulesConfig("web");
     var str = "";

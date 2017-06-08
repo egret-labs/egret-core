@@ -137,7 +137,7 @@ function sort(exmls: exml.EXMLFile[]) {
 
 }
 
-const ignorePath = EgretProject.utils.getIgnorePath();
+const ignorePath = EgretProject.data.getIgnorePath();
 function exmlFilter(f: string) {
     var isIgnore = false;
     ignorePath.forEach(path => {

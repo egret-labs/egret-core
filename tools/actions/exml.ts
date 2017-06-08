@@ -7,7 +7,7 @@ import exmlGUI = require("./exml.gui");
 import exmlEUI = require("./exml.eui");
 import EgretProject = require('../project/EgretProject')
 
-var hasSwan = EgretProject.utils.hasEUI();
+var hasSwan = EgretProject.data.hasEUI();
 var exmlHandlers = hasSwan ? exmlEUI : exmlGUI;
 
 export = exmlHandlers;

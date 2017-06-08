@@ -9,6 +9,7 @@ import htmlparser = require("../lib/htmlparser");
 import * as EgretProject from '../project/EgretProject';
 
 
+
 export function changeHtmlToRelease(htmlPath) {
 
     var htmlContent = FileUtil.read(htmlPath);
@@ -26,13 +27,13 @@ export function changeHtmlToRelease(htmlPath) {
 }
 
 export function modifyNativeRequire(isDebug: boolean) {
-    let indexHTML = EgretProject.utils.getFilePath('index.html');
+    let indexHTML = EgretProject.data.getFilePath('index.html');
     return refreshNativeRequire(indexHTML, isDebug);
 }
 
 export function modifyIndexHTML(scripts?: string[]) {
 
-    let projectDir = EgretProject.utils.getProjectRoot();
+    let projectDir = EgretProject.data.getProjectRoot();
     let list = FileUtil.getDirectoryListing(projectDir).filter(filepath => FileUtil.getExtension(filepath) == "html");
     list.forEach(htmlFilePath => refreshDebugHtml(htmlFilePath, scripts));
 }
@@ -57,14 +58,9 @@ function refreshDebugHtml(htmlPath, gameScripts?: string[]) {
     FileUtil.save(htmlPath, htmlContent);
 }
 
-export function copyToLibs() {
-    let project = EgretProject.utils;
-    let moduleDir = project.getLibraryFolder();
-    FileUtil.remove(moduleDir);
-    project.getModulesConfig("web").forEach(m => {
-        FileUtil.copy(m.sourceDir, project.getFilePath(m.targetDir));
-    })
-}
+// export function copyToLibs() {
+
+// }
 
 function getScript(type: 'lib' | 'game' | 'none', src, releaseSrc?) {
     switch (type) {
@@ -82,7 +78,7 @@ function getScript(type: 'lib' | 'game' | 'none', src, releaseSrc?) {
 
 //只刷新 modules
 export function getModuleScripts() {
-    var properties = EgretProject.utils;
+    var properties = EgretProject.data;
     let projectRoot = properties.getProjectRoot();
     var modules = properties.getModulesConfig("web");
     var str = "";

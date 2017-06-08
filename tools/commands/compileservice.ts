@@ -20,7 +20,7 @@ class AutoCompileCommand implements egret.Command {
 
     execute(): number {
 
-        if (EgretProject.utils.invalid(true)) {
+        if (EgretProject.data.invalid(true)) {
             process.exit(0);
             return;
         }
@@ -162,7 +162,7 @@ class AutoCompileCommand implements egret.Command {
                     this.messages[2] = egret.args.tsconfigError;
                 }
                 else if (fileName.indexOf("egretProperties.json") > -1) {
-                    EgretProject.utils.reload();
+                    EgretProject.data.reload();
                     this.copyLibs();
                     this.compileProject.compileProject(egret.args);
                     this.messages[2] = egret.args.tsconfigError;
@@ -211,7 +211,7 @@ class AutoCompileCommand implements egret.Command {
 
     private copyLibs() {
         //刷新libs 中 modules 文件
-        CompileTemplate.copyToLibs();
+        EgretProject.manager.copyToLibs();
         //修改 html 中 modules 块
         CompileTemplate.modifyIndexHTML();
     }

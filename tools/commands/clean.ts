@@ -8,6 +8,7 @@ import FileUtil = require('../lib/FileUtil');
 import CompileProject = require('../actions/CompileProject');
 import CompileTemplate = require('../actions/CompileTemplate');
 import copyNative = require("../actions/CopyNativeFiles");
+import * as EgretProject from '../project/EgretProject';
 
 console.log(utils.tr(1106, 0));
 var timeBuildStart: number = (new Date()).getTime();
@@ -20,7 +21,7 @@ class Clean implements egret.Command {
         utils.clean(options.debugDir);
 
         //刷新libs 中 modules 文件
-        CompileTemplate.copyToLibs();
+        EgretProject.manager.copyToLibs();
         CompileTemplate.modifyIndexHTML();
         //编译 bin-debug 文件
         var compileProject = new CompileProject();

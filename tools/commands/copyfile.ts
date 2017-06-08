@@ -8,7 +8,7 @@
 import file = require('../lib/FileUtil');
 import EgretProject = require('../project/EgretProject');
 //import config = require('../ProjectConfig');
-var config = EgretProject.utils;
+var config = EgretProject.data;
 class CopyFilesCommand implements egret.Command {
     outputPath: string;
     ignorePathList: Array<any>;

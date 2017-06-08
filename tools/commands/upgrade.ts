@@ -23,7 +23,7 @@ class UpgradeCommand implements egret.Command {
     }
 
     private async run() {
-        var version = Project.utils.getVersion();
+        var version = Project.data.getVersion();
         if (!version) {
             version = "1.0.0";
         }
@@ -41,7 +41,7 @@ class UpgradeCommand implements egret.Command {
             await series(upgrade, upgradeConfigArr.concat())
             modify.save(upgradeConfigArr.pop().v);
             globals.log(1702);
-            await service.client.closeServer(Project.utils.getProjectRoot())
+            await service.client.closeServer(Project.data.getProjectRoot())
             globals.exit(0);
         }
         catch (e) {
@@ -86,7 +86,7 @@ let series = <T>(cb: (data: T, index?: number, result?: any) => PromiseLike<numb
 }
 
 function upgrade(info: VersionInfo) {
-    var version = Project.utils.getVersion();
+    var version = Project.data.getVersion();
     var v = info.v;
     var command: egret.Command;
     if (info.command) {
@@ -119,10 +119,10 @@ class Upgrade_4_0_1 {
 
     async execute() {
 
-        let tsconfigPath = Project.utils.getFilePath('tsconfig.json');
+        let tsconfigPath = Project.data.getFilePath('tsconfig.json');
         if (!file.exists(tsconfigPath)) {
             let source = file.joinPath(egret.root, "tools/templates/empty/tsconfig.json");
-            let target = Project.utils.getFilePath("tsconfig.json")
+            let target = Project.data.getFilePath("tsconfig.json")
             file.copy(source, target);
         }
         let tsconfigContent = file.read(tsconfigPath);
@@ -140,7 +140,7 @@ class Upgrade_4_0_1 {
         })
         tsconfigContent = JSON.stringify(tsconfig, null, "\t");
         file.save(tsconfigPath, tsconfigContent);
-        file.copy(path.join(egret.root, 'tools/templates/empty/polyfill'), Project.utils.getFilePath('polyfill'));
+        file.copy(path.join(egret.root, 'tools/templates/empty/polyfill'), Project.data.getFilePath('polyfill'));
 
         globals.log(1703, "https://github.com/egret-labs/egret-core/tree/master/docs/cn/release-note/4.0.1")
 
