@@ -151,14 +151,6 @@
             "platform": "web"
           },
           {
-            "path": "media/web/QQSound.ts",
-            "platform": "web"
-          },
-          {
-            "path": "media/web/QQSoundChannel.ts",
-            "platform": "web"
-          },
-          {
             "path": "media/web/WebAudioSound.ts",
             "platform": "web"
           },

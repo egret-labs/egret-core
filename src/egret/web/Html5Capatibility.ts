@@ -36,10 +36,6 @@ namespace egret.web {
         /**
          * @private
          */
-        static QQ_AUDIO:number = 1;
-        /**
-         * @private
-         */
         static WEB_AUDIO:number = 2;
         /**
          * @private
@@ -83,11 +79,6 @@ namespace egret.web {
         /**
          * @private
          */
-        public static _QQRootPath:string = "";
-
-        /**
-         * @private
-         */
         public static _System_OS:number = 0;
 
         /**
@@ -118,7 +109,7 @@ namespace egret.web {
             let audioType = Html5Capatibility._audioType;
             let canUseWebAudio = window["AudioContext"] || window["webkitAudioContext"] || window["mozAudioContext"];
 
-            if (audioType == 1 || audioType == 2 || audioType == 3) {
+            if (audioType == AudioType.WEB_AUDIO || audioType == AudioType.HTML5_AUDIO) {
                 checkAudioType = false;
                 Html5Capatibility.setAudioType(audioType);
             }
@@ -140,27 +131,6 @@ namespace egret.web {
                         Html5Capatibility.setAudioType(AudioType.WEB_AUDIO);
                     } else {
                         Html5Capatibility.setAudioType(AudioType.HTML5_AUDIO);
-                    }
-                }
-
-                if (window.hasOwnProperty("QZAppExternal") && ua.indexOf("qzone") >= 0) {
-                    if(checkAudioType) {
-                        Html5Capatibility.setAudioType(AudioType.QQ_AUDIO);
-                    }
-
-                    let bases = document.getElementsByTagName('base');
-                    if (bases && bases.length > 0) {
-                        Html5Capatibility._QQRootPath = bases[0]["baseURI"];
-                    }
-                    else {
-                        let endIdx = window.location.href.indexOf("?");
-                        if (endIdx == -1) {
-                            endIdx = window.location.href.length;
-                        }
-                        let url = window.location.href.substring(0, endIdx);
-                        url = url.substring(0, url.lastIndexOf("/"));
-
-                        Html5Capatibility._QQRootPath = url + "/";
                     }
                 }
             }
@@ -200,9 +170,6 @@ namespace egret.web {
         private static setAudioType(type:number):void {
             Html5Capatibility._audioType = type;
             switch (type) {
-                case AudioType.QQ_AUDIO:
-                    Html5Capatibility._AudioClass = egret.web.QQSound;
-                    break;
                 case AudioType.WEB_AUDIO:
                     Html5Capatibility._AudioClass = egret.web.WebAudioSound;
                     break;
