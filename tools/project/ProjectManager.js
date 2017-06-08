@@ -35,6 +35,7 @@ var __generator = (this && this.__generator) || function (thisArg, body) {
 };
 var ProjectData_1 = require("./ProjectData");
 var FileUtil = require("../lib/FileUtil");
+var ejs = require("../lib/ejs/ejs");
 var manager;
 (function (manager) {
     function copyToLibs() {
@@ -47,15 +48,19 @@ var manager;
     manager.copyToLibs = copyToLibs;
     function compileDebugHTML() {
         return __awaiter(this, void 0, void 0, function () {
-            var template, content;
+            var templateFilePath, content, options, templateData;
             return __generator(this, function (_a) {
                 switch (_a.label) {
                     case 0:
-                        template = ProjectData_1.data.getFilePath("template/debug/index.html");
-                        return [4 /*yield*/, FileUtil.readFileAsync(template, "utf-8")];
+                        templateFilePath = ProjectData_1.data.getFilePath("template/debug/index.ejs");
+                        return [4 /*yield*/, FileUtil.readFileAsync(templateFilePath, "utf-8")];
                     case 1:
                         content = _a.sent();
-                        FileUtil.copy(template, ProjectData_1.data.getFilePath("index.html"));
+                        options = {};
+                        templateData = ProjectData_1.data.getModulesConfig("web");
+                        console.log(templateData);
+                        content = ejs.render(content, { modules: templateData }, options);
+                        console.log(content);
                         return [2 /*return*/];
                 }
             });

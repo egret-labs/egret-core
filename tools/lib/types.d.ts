@@ -5,7 +5,7 @@
 declare module egret {
 
     export interface Command {
-        execute(): number | PromiseLike<number>
+        execute(): number | Promise<number>
     }
 
     export interface Action {
