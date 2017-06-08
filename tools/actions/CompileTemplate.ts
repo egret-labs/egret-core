@@ -6,7 +6,7 @@
 import FileUtil = require('../lib/FileUtil');
 import project = require("../actions/Project");
 import htmlparser = require("../lib/htmlparser");
-import * as EgretProject from '../parser/EgretProject';
+import * as EgretProject from '../project/EgretProject';
 
 
 export function changeHtmlToRelease(htmlPath) {

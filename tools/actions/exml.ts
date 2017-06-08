@@ -5,7 +5,7 @@ import file = require('../lib/FileUtil');
 
 import exmlGUI = require("./exml.gui");
 import exmlEUI = require("./exml.eui");
-import EgretProject = require('../parser/EgretProject')
+import EgretProject = require('../project/EgretProject')
 
 var hasSwan = EgretProject.utils.hasEUI();
 var exmlHandlers = hasSwan ? exmlEUI : exmlGUI;

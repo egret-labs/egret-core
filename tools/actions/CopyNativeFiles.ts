@@ -6,7 +6,7 @@ import Compiler = require('./Compiler');
 import FileUtil = require('../lib/FileUtil');
 import CopyFilesCommand = require("../commands/copyfile");
 import ChangeEntranceCMD = require("../actions/ChangeEntranceCommand");
-import EgretProject = require("../parser/EgretProject");
+import EgretProject = require("../project/EgretProject");
 class CopyNativeFiles {
     static copyProjectFiles(platform, nativePath, isDebug) {
         var options = egret.args;

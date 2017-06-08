@@ -1,6 +1,6 @@
 import file = require('../lib/FileUtil');
 import service = require('../service/index');
-import Project = require('../parser/EgretProject');
+import Project = require('../project/EgretProject');
 import path = require('path');
 import utils = require('../lib/utils')
 import modify = require("./upgrade/ModifyProperties");

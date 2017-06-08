@@ -4,7 +4,7 @@
 import FileUtil = require('../lib/FileUtil');
 var fs = require("fs");
 import CopyFilesCommand = require("../commands/copyfile");
-import EgretProject = require('../parser/EgretProject');
+import EgretProject = require('../project/EgretProject');
 
 class GenerateVersionCommand implements egret.Command {
     execute(): number {

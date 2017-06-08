@@ -7,7 +7,7 @@ var state = require("../lib/DirectoryState");
 var CompileProject = require("../actions/CompileProject");
 var CompileTemplate = require("../actions/CompileTemplate");
 var parser = require("../parser/Parser");
-var EgretProject = require("../parser/EgretProject");
+var EgretProject = require("../project/EgretProject");
 var copyNative = require("../actions/CopyNativeFiles");
 var AutoCompileCommand = (function () {
     function AutoCompileCommand() {

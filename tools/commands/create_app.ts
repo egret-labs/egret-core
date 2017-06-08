@@ -5,7 +5,7 @@
 import file = require('../lib/FileUtil');
 import BuildCommand = require("./build");
 //import config = require("../ProjectConfig");
-import EgretProject = require('../parser/EgretProject');
+import EgretProject = require('../project/EgretProject');
 
 import CopyFilesCommand = require("./copyfile");
 import ParseConfigCommand = require("../actions/ParseConfig");
@@ -38,7 +38,7 @@ class CreateAppCommand implements egret.Command {
         var template_path = option.nativeTemplatePath;
         var arg_h5_path = option.fileName;
         var reg = new RegExp("^[a-zA-Z]");
-        if(!reg.test(app_name)){
+        if (!reg.test(app_name)) {
             globals.exit(1612);
         }
         if (!arg_app_name) {

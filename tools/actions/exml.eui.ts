@@ -4,7 +4,7 @@
 import utils = require('../lib/utils');
 import file = require('../lib/FileUtil');
 import exml = require("../lib/eui/EXML");
-import EgretProject = require('../parser/EgretProject');
+import EgretProject = require('../project/EgretProject');
 
 export function beforeBuild() {
     generateExmlDTS();

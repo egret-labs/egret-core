@@ -6,7 +6,7 @@ import service = require('../service/index');
 import FileUtil = require('../lib/FileUtil');
 import CompileProject = require('../actions/CompileProject');
 import CompileTemplate = require('../actions/CompileTemplate');
-import * as project from '../parser/EgretProject';
+import * as project from '../project/EgretProject';
 import ts = require('../lib/typescript-plus/lib/typescript')
 import * as path from 'path';
 

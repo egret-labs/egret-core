@@ -12,7 +12,7 @@ import ZipCMD = require("../actions/ZipCommand");
 import ChangeEntranceCMD = require("../actions/ChangeEntranceCommand");
 
 import project = require("../actions/Project");
-import EgretProject = require("../parser/EgretProject");
+import EgretProject = require("../project/EgretProject");
 
 import copyNative = require("../actions/CopyNativeFiles");
 

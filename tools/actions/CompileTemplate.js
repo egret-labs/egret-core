@@ -5,7 +5,7 @@
 var FileUtil = require("../lib/FileUtil");
 var project = require("../actions/Project");
 var htmlparser = require("../lib/htmlparser");
-var EgretProject = require("../parser/EgretProject");
+var EgretProject = require("../project/EgretProject");
 function changeHtmlToRelease(htmlPath) {
     var htmlContent = FileUtil.read(htmlPath);
     //替换使用 html 中的 src-release 目录

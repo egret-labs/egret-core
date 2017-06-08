@@ -11,7 +11,7 @@ import state = require('../lib/DirectoryState');
 import CompileProject = require('../actions/CompileProject');
 import CompileTemplate = require('../actions/CompileTemplate');
 import parser = require('../parser/Parser');
-import EgretProject = require('../parser/EgretProject');
+import EgretProject = require('../project/EgretProject');
 import copyNative = require("../actions/CopyNativeFiles");
 
 class AutoCompileCommand implements egret.Command {

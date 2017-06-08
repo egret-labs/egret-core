@@ -5,6 +5,28 @@ import _utils = require('../lib/utils');
 import _path = require("path");
 import cp = require('child_process');
 
+
+export type Package_JSON = {
+
+    /**
+     * 废弃属性
+     */
+    modules?: PACKAGE_JSON_MODULE[];
+
+    typings: string | null;
+
+}
+
+export type PACKAGE_JSON_MODULE = {
+
+    files: string[],
+
+    name: string;
+
+    root: string
+
+}
+
 type SourceCode = {
 
     debug: string,
@@ -12,7 +34,7 @@ type SourceCode = {
     platform: "web" | "native"
 }
 
-export class EgretProject {
+export class EgretProjectData {
     private egretProperties: egret.EgretProperty = {
         modules: []
     };
@@ -229,31 +251,8 @@ export class EgretProject {
         return ["resource"];
     }
 }
-export var utils = new EgretProject();
+export var utils = new EgretProjectData();
 
-
-export type Package_JSON = {
-
-    /**
-     * 废弃属性
-     */
-    modules?: PACKAGE_JSON_MODULE[];
-
-    typings: string | null;
-
-
-
-}
-
-export type PACKAGE_JSON_MODULE = {
-
-    files: string[],
-
-    name: string;
-
-    root: string
-
-}
 
 
 function getAppDataEnginesRootPath(): string {

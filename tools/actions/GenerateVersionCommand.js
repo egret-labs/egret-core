@@ -3,7 +3,7 @@
 var FileUtil = require("../lib/FileUtil");
 var fs = require("fs");
 var CopyFilesCommand = require("../commands/copyfile");
-var EgretProject = require("../parser/EgretProject");
+var EgretProject = require("../project/EgretProject");
 var GenerateVersionCommand = (function () {
     function GenerateVersionCommand() {
     }

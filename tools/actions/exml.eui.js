@@ -1,7 +1,7 @@
 /// <reference path="../lib/types.d.ts" />
 var file = require("../lib/FileUtil");
 var exml = require("../lib/eui/EXML");
-var EgretProject = require("../parser/EgretProject");
+var EgretProject = require("../project/EgretProject");
 function beforeBuild() {
     generateExmlDTS();
 }

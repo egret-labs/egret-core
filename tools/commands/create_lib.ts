@@ -1,6 +1,6 @@
 ﻿import utils = require('../lib/utils');
 import FileUtil = require('../lib/FileUtil');
-import EgretProject = require('../parser/EgretProject');
+import EgretProject = require('../project/EgretProject');
 class CreateLib implements egret.Command {
 
     async execute() {

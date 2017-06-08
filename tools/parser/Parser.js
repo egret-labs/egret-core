@@ -2,7 +2,7 @@
 var utils = require("../lib/utils");
 var file = require("../lib/FileUtil");
 var CompileOptions = require("./CompileOptions");
-var project = require("./EgretProject");
+var project = require("../project/EgretProject");
 var path = require("path");
 exports.optionDeclarations = [
     {
