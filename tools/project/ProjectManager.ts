@@ -10,6 +10,13 @@ export namespace manager {
             FileUtil.copy(m.sourceDir, data.getFilePath(m.targetDir));
         })
     }
+
+    export async function compileDebugHTML() {
+        let template = data.getFilePath("template/debug/index.html");
+        let content = await FileUtil.readFileAsync(template, "utf-8");
+        FileUtil.copy(template, data.getFilePath("index.html"));
+    }
 }
+
 
 
