@@ -1,6 +1,5 @@
 import { data } from './ProjectData';
 import * as FileUtil from '../lib/FileUtil';
-import * as ejs from '../lib/ejs/ejs';
 
 export namespace manager {
 
@@ -21,8 +20,8 @@ export namespace manager {
         let templateData = data.getModulesConfig("web");
         console.log(templateData)
 
-        content = ejs.render(content, { modules: templateData }, options);
-        console.log(content)
+        // content = ejs.render(content, { modules: templateData }, options);
+        // console.log(content)
 
         // => Rendered HTML string
 

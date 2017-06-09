@@ -35,7 +35,6 @@ var __generator = (this && this.__generator) || function (thisArg, body) {
 };
 var ProjectData_1 = require("./ProjectData");
 var FileUtil = require("../lib/FileUtil");
-var ejs = require("../lib/ejs/ejs");
 var manager;
 (function (manager) {
     function copyToLibs() {
@@ -59,8 +58,6 @@ var manager;
                         options = {};
                         templateData = ProjectData_1.data.getModulesConfig("web");
                         console.log(templateData);
-                        content = ejs.render(content, { modules: templateData }, options);
-                        console.log(content);
                         return [2 /*return*/];
                 }
             });
