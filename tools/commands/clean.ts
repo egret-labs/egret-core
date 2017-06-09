@@ -22,18 +22,13 @@ class Clean implements egret.Command {
 
         //刷新libs 中 modules 文件
         EgretProject.manager.copyToLibs();
-        CompileTemplate.modifyIndexHTML();
-
-        await EgretProject.manager.compileDebugHTML();
         //编译 bin-debug 文件
         var compileProject = new CompileProject();
         var result = compileProject.compile(options);
         if (!result) {
             return 1;
         }
-        //修改 html 中 game_list 块
-        // CompileTemplate.modifyIndexHTML(result.files);
-
+        await EgretProject.manager.generateManifest(result.files);
 
         // CompileTemplate.modifyNativeRequire(true);
 

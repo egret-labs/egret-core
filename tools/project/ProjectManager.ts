@@ -11,20 +11,21 @@ export namespace manager {
         })
     }
 
-    export async function compileDebugHTML() {
-        let templateFilePath = data.getFilePath("template/debug/index.ejs");
-        let content = await FileUtil.readFileAsync(templateFilePath, "utf-8");
-        // FileUtil.copy(templateFilePath, data.getFilePath("index.html"));
-        let options = {};
-        // => Rendered HTML string
-        let templateData = data.getModulesConfig("web");
-        console.log(templateData)
-
-        // content = ejs.render(content, { modules: templateData }, options);
-        // console.log(content)
-
-        // => Rendered HTML string
-
+    export async function generateManifest(gameFileList: string[]) {
+        let initial = [];
+        data.getModulesConfig("web").forEach(m => {
+            m.target.forEach(m => {
+                initial.push(m.debug);
+            });
+        });
+        gameFileList.forEach(m => {
+            initial.push("bin-debug/" + m);
+        });
+        //todo res config
+        let manifest = { initial };
+        FileUtil.save(FileUtil.joinPath(egret.args.projectDir, "manifest.json"), JSON.stringify(manifest, undefined, "\t"));
+        FileUtil.copy(FileUtil.joinPath(egret.args.projectDir, "template", "debug", "index.html"),
+            FileUtil.joinPath(egret.args.projectDir, "index.html"));
     }
 }
 

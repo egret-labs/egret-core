@@ -45,23 +45,25 @@ var manager;
         });
     }
     manager.copyToLibs = copyToLibs;
-    function compileDebugHTML() {
+    function generateManifest(gameFileList) {
         return __awaiter(this, void 0, void 0, function () {
-            var templateFilePath, content, options, templateData;
+            var initial, manifest;
             return __generator(this, function (_a) {
-                switch (_a.label) {
-                    case 0:
-                        templateFilePath = ProjectData_1.data.getFilePath("template/debug/index.ejs");
-                        return [4 /*yield*/, FileUtil.readFileAsync(templateFilePath, "utf-8")];
-                    case 1:
-                        content = _a.sent();
-                        options = {};
-                        templateData = ProjectData_1.data.getModulesConfig("web");
-                        console.log(templateData);
-                        return [2 /*return*/];
-                }
+                initial = [];
+                ProjectData_1.data.getModulesConfig("web").forEach(function (m) {
+                    m.target.forEach(function (m) {
+                        initial.push(m.debug);
+                    });
+                });
+                gameFileList.forEach(function (m) {
+                    initial.push("bin-debug/" + m);
+                });
+                manifest = { initial: initial };
+                FileUtil.save(FileUtil.joinPath(egret.args.projectDir, "manifest.json"), JSON.stringify(manifest, undefined, "\t"));
+                FileUtil.copy(FileUtil.joinPath(egret.args.projectDir, "template", "debug", "index.html"), FileUtil.joinPath(egret.args.projectDir, "index.html"));
+                return [2 /*return*/];
             });
         });
     }
-    manager.compileDebugHTML = compileDebugHTML;
+    manager.generateManifest = generateManifest;
 })(manager = exports.manager || (exports.manager = {}));

@@ -37,7 +37,6 @@ var __generator = (this && this.__generator) || function (thisArg, body) {
 var utils = require("../lib/utils");
 var service = require("../service/index");
 var CompileProject = require("../actions/CompileProject");
-var CompileTemplate = require("../actions/CompileTemplate");
 var copyNative = require("../actions/CopyNativeFiles");
 var EgretProject = require("../project/EgretProject");
 console.log(utils.tr(1106, 0));
@@ -57,17 +56,14 @@ var Clean = (function () {
                         utils.clean(options.debugDir);
                         //刷新libs 中 modules 文件
                         EgretProject.manager.copyToLibs();
-                        CompileTemplate.modifyIndexHTML();
-                        return [4 /*yield*/, EgretProject.manager.compileDebugHTML()];
-                    case 1:
-                        _a.sent();
                         compileProject = new CompileProject();
                         result = compileProject.compile(options);
                         if (!result) {
                             return [2 /*return*/, 1];
                         }
-                        //修改 html 中 game_list 块
-                        // CompileTemplate.modifyIndexHTML(result.files);
+                        return [4 /*yield*/, EgretProject.manager.generateManifest(result.files)];
+                    case 1:
+                        _a.sent();
                         // CompileTemplate.modifyNativeRequire(true);
                         //拷贝项目到native工程中
                         if (egret.args.runtime == "native") {
