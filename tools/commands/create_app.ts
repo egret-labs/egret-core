@@ -9,7 +9,6 @@ import EgretProject = require('../project/EgretProject');
 
 import CopyFilesCommand = require("./copyfile");
 import ParseConfigCommand = require("../actions/ParseConfig");
-import CompileTemplate = require('../actions/CompileTemplate');
 
 var fs = require('fs');
 var cp_exec = require('child_process').exec;
@@ -113,7 +112,7 @@ class CreateAppCommand implements egret.Command {
 
         //修改native项目配置
         new ParseConfigCommand().execute();
-        CompileTemplate.modifyNativeRequire(true);
+        EgretProject.manager.modifyNativeRequire();
 
         //拷贝项目到native工程中
         copyNative.refreshNative(true);

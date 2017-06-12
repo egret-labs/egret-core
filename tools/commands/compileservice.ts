@@ -9,7 +9,6 @@ import FileUtil = require('../lib/FileUtil');
 import exmlActions = require('../actions/exml');
 import state = require('../lib/DirectoryState');
 import CompileProject = require('../actions/CompileProject');
-import CompileTemplate = require('../actions/CompileTemplate');
 import parser = require('../parser/Parser');
 import EgretProject = require('../project/EgretProject');
 import copyNative = require("../actions/CopyNativeFiles");
@@ -92,18 +91,17 @@ class AutoCompileCommand implements egret.Command {
         //操作其他文件
         _scripts = result.files.length > 0 ? result.files : _scripts;
 
-        CompileTemplate.modifyIndexHTML(_scripts);
-
-        CompileTemplate.modifyNativeRequire(true);
+        EgretProject.manager.generateManifest(_scripts);
+        FileUtil.copy(FileUtil.joinPath(options.templateDir, "debug", "index.html"),
+            FileUtil.joinPath(options.projectDir, "index.html"));
 
         exmlActions.afterBuild();
 
-        CompileTemplate.modifyNativeRequire(true);
 
         //拷贝项目到native工程中
         if (egret.args.runtime == "native") {
             console.log("----native build-----");
-
+            EgretProject.manager.modifyNativeRequire();
             copyNative.refreshNative(true);
         }
 
@@ -164,6 +162,10 @@ class AutoCompileCommand implements egret.Command {
                 else if (fileName.indexOf("egretProperties.json") > -1) {
                     EgretProject.data.reload();
                     this.copyLibs();
+                    //修改 html 中 modules 块
+                    EgretProject.manager.generateManifest(this._scripts);
+                    FileUtil.copy(FileUtil.joinPath(egret.args.templateDir, "debug", "index.html"),
+                        FileUtil.joinPath(egret.args.projectDir, "index.html"));
                     this.compileProject.compileProject(egret.args);
                     this.messages[2] = egret.args.tsconfigError;
                 }
@@ -194,12 +196,11 @@ class AutoCompileCommand implements egret.Command {
         if (exmls.length) {
             exmlActions.afterBuildChanges(exmls);
         }
-        CompileTemplate.modifyNativeRequire(true);
 
         //拷贝项目到native工程中
         if (egret.args.runtime == "native") {
             console.log("----native build-----");
-
+            EgretProject.manager.modifyNativeRequire();
             copyNative.refreshNative(true);
         }
         this.dirState.init();
@@ -212,8 +213,6 @@ class AutoCompileCommand implements egret.Command {
     private copyLibs() {
         //刷新libs 中 modules 文件
         EgretProject.manager.copyToLibs();
-        //修改 html 中 modules 块
-        CompileTemplate.modifyIndexHTML();
     }
 
 
@@ -284,9 +283,11 @@ class AutoCompileCommand implements egret.Command {
         index = FileUtil.escapePath(index);
         console.log('Compile Template: ' + index);
 
-        CompileTemplate.modifyIndexHTML(this._scripts);
+        EgretProject.manager.generateManifest(this._scripts);
+        FileUtil.copy(FileUtil.joinPath(egret.args.templateDir, "debug", "index.html"),
+            FileUtil.joinPath(egret.args.projectDir, "index.html"));
 
-        CompileTemplate.modifyNativeRequire(true);
+        EgretProject.manager.modifyNativeRequire();
 
         return 0;
     }

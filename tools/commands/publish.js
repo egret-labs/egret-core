@@ -38,10 +38,8 @@ var utils = require("../lib/utils");
 var FileUtil = require("../lib/FileUtil");
 var exml = require("../actions/exml");
 var CompileProject = require("../actions/CompileProject");
-var CompileTemplate = require("../actions/CompileTemplate");
 var GenerateVersion = require("../actions/GenerateVersionCommand");
 var ZipCMD = require("../actions/ZipCommand");
-var project = require("../actions/Project");
 var EgretProject = require("../project/EgretProject");
 var copyNative = require("../actions/CopyNativeFiles");
 var path = require("path");
@@ -65,7 +63,7 @@ var Publish = (function () {
     };
     Publish.prototype.execute = function () {
         return __awaiter(this, void 0, void 0, function () {
-            var options, config, versionFile, runtime, compileProject, result, outfile, useResourceMangerPublish, listInfo, allMainfestPath, zip, copyAction, releaseHtmlPath, htmlContent, libsList, version, commandResult1;
+            var options, config, versionFile, runtime, compileProject, result, outfile, useResourceMangerPublish, manifestPath, allMainfestPath, zip, copyAction, version, commandResult1;
             return __generator(this, function (_a) {
                 switch (_a.label) {
                     case 0:
@@ -92,7 +90,9 @@ var Publish = (function () {
                             exml.updateSetting();
                         }
                         if (egret.args.runtime == "native") {
-                            listInfo = CompileTemplate.modifyNativeRequire(false);
+                            manifestPath = FileUtil.joinPath(options.releaseDir, "ziptemp", "manifest.json");
+                            EgretProject.manager.generateManifest(null, manifestPath, false, "native");
+                            EgretProject.manager.modifyNativeRequire();
                             allMainfestPath = FileUtil.joinPath(options.releaseDir, "all.manifest");
                             if (FileUtil.exists(allMainfestPath)) {
                                 FileUtil.copy(allMainfestPath, FileUtil.joinPath(options.releaseDir, "ziptemp", "all.manifest"));
@@ -102,23 +102,19 @@ var Publish = (function () {
                             FileUtil.copy(FileUtil.joinPath(options.templateDir, "runtime"), FileUtil.joinPath(options.releaseDir, "ziptemp", "launcher"));
                             FileUtil.copy(FileUtil.joinPath(options.releaseDir, "main.min.js"), FileUtil.joinPath(options.releaseDir, "ziptemp", "main.min.js"));
                             FileUtil.remove(FileUtil.joinPath(options.releaseDir, "main.min.js"));
-                            listInfo.libs.forEach(function (filepath) {
-                                FileUtil.copy(FileUtil.joinPath(options.projectDir, filepath), FileUtil.joinPath(options.releaseDir, "ziptemp", filepath));
-                            });
+                            EgretProject.manager.copyLibsForPublish(manifestPath, FileUtil.joinPath(options.releaseDir, "ziptemp"), "native");
                             zip = new ZipCMD(versionFile);
                             zip.execute(function (code) {
                                 copyNative.refreshNative(false, versionFile);
                             });
                         }
                         else {
+                            manifestPath = FileUtil.joinPath(options.releaseDir, "manifest.json");
+                            FileUtil.copy(FileUtil.joinPath(options.templateDir, "web", "index.html"), FileUtil.joinPath(options.releaseDir, "index.html"));
+                            EgretProject.manager.generateManifest(null, manifestPath, false, "web");
                             copyAction = new CopyAction(options.projectDir, options.releaseDir);
-                            copyAction.copy("index.html");
                             copyAction.copy("favicon.ico");
-                            releaseHtmlPath = FileUtil.joinPath(options.releaseDir, "index.html");
-                            CompileTemplate.changeHtmlToRelease(releaseHtmlPath);
-                            htmlContent = FileUtil.read(releaseHtmlPath);
-                            libsList = project.getLibsList(htmlContent, false, false);
-                            copyAction.copy(libsList);
+                            EgretProject.manager.copyLibsForPublish(manifestPath, options.releaseDir, "web");
                         }
                         if (!useResourceMangerPublish) return [3 /*break*/, 2];
                         version = path.join(runtime, versionFile);

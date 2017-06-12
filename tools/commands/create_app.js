@@ -5,7 +5,6 @@ var file = require("../lib/FileUtil");
 //import config = require("../ProjectConfig");
 var EgretProject = require("../project/EgretProject");
 var ParseConfigCommand = require("../actions/ParseConfig");
-var CompileTemplate = require("../actions/CompileTemplate");
 var fs = require('fs');
 var cp_exec = require('child_process').exec;
 var copyNative = require("../actions/CopyNativeFiles");
@@ -97,7 +96,7 @@ var CreateAppCommand = (function () {
         EgretProject.data.init(arg_h5_path);
         //修改native项目配置
         new ParseConfigCommand().execute();
-        CompileTemplate.modifyNativeRequire(true);
+        EgretProject.manager.modifyNativeRequire();
         //拷贝项目到native工程中
         copyNative.refreshNative(true);
         globals.log2(1606, (Date.now() - startTime) / 1000);

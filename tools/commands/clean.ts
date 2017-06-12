@@ -6,7 +6,6 @@ import server = require('../server/server');
 import service = require('../service/index');
 import FileUtil = require('../lib/FileUtil');
 import CompileProject = require('../actions/CompileProject');
-import CompileTemplate = require('../actions/CompileTemplate');
 import copyNative = require("../actions/CopyNativeFiles");
 import * as EgretProject from '../project/EgretProject';
 
@@ -28,14 +27,14 @@ class Clean implements egret.Command {
         if (!result) {
             return 1;
         }
-        await EgretProject.manager.generateManifest(result.files);
-
-        // CompileTemplate.modifyNativeRequire(true);
+        EgretProject.manager.generateManifest(result.files);
+        FileUtil.copy(FileUtil.joinPath(options.templateDir, "debug", "index.html"),
+            FileUtil.joinPath(options.projectDir, "index.html"));
 
         //拷贝项目到native工程中
         if (egret.args.runtime == "native") {
             console.log("----native build-----");
-
+            EgretProject.manager.modifyNativeRequire();
             copyNative.refreshNative(true);
         }
         var timeBuildEnd = new Date().getTime();

@@ -1,9 +1,5 @@
-
-var game_file_list = [
-    //以下为自动修改，请勿修改
-    //----auto game_file_list start----
-    //----auto game_file_list end----
-];
+var manifest = egret_native.readFileSync("manifest.json");
+var game_file_list = JSON.parse(manifest).initial;
 
 var window = this;
 

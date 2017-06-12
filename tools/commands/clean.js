@@ -36,6 +36,7 @@ var __generator = (this && this.__generator) || function (thisArg, body) {
 };
 var utils = require("../lib/utils");
 var service = require("../service/index");
+var FileUtil = require("../lib/FileUtil");
 var CompileProject = require("../actions/CompileProject");
 var copyNative = require("../actions/CopyNativeFiles");
 var EgretProject = require("../project/EgretProject");
@@ -48,34 +49,30 @@ var Clean = (function () {
         return __awaiter(this, void 0, void 0, function () {
             var options, compileProject, result, timeBuildEnd, timeBuildUsed;
             return __generator(this, function (_a) {
-                switch (_a.label) {
-                    case 0:
-                        utils.checkEgret();
-                        options = egret.args;
-                        service.client.closeServer(options.projectDir);
-                        utils.clean(options.debugDir);
-                        //刷新libs 中 modules 文件
-                        EgretProject.manager.copyToLibs();
-                        compileProject = new CompileProject();
-                        result = compileProject.compile(options);
-                        if (!result) {
-                            return [2 /*return*/, 1];
-                        }
-                        return [4 /*yield*/, EgretProject.manager.generateManifest(result.files)];
-                    case 1:
-                        _a.sent();
-                        // CompileTemplate.modifyNativeRequire(true);
-                        //拷贝项目到native工程中
-                        if (egret.args.runtime == "native") {
-                            console.log("----native build-----");
-                            copyNative.refreshNative(true);
-                        }
-                        timeBuildEnd = new Date().getTime();
-                        timeBuildUsed = (timeBuildEnd - timeBuildStart) / 1000;
-                        console.log(utils.tr(1108, timeBuildUsed));
-                        //Wait for 'shutdown' command, node will exit when there are no tasks.
-                        return [2 /*return*/, DontExitCode];
+                utils.checkEgret();
+                options = egret.args;
+                service.client.closeServer(options.projectDir);
+                utils.clean(options.debugDir);
+                //刷新libs 中 modules 文件
+                EgretProject.manager.copyToLibs();
+                compileProject = new CompileProject();
+                result = compileProject.compile(options);
+                if (!result) {
+                    return [2 /*return*/, 1];
                 }
+                EgretProject.manager.generateManifest(result.files);
+                FileUtil.copy(FileUtil.joinPath(options.templateDir, "debug", "index.html"), FileUtil.joinPath(options.projectDir, "index.html"));
+                //拷贝项目到native工程中
+                if (egret.args.runtime == "native") {
+                    console.log("----native build-----");
+                    EgretProject.manager.modifyNativeRequire();
+                    copyNative.refreshNative(true);
+                }
+                timeBuildEnd = new Date().getTime();
+                timeBuildUsed = (timeBuildEnd - timeBuildStart) / 1000;
+                console.log(utils.tr(1108, timeBuildUsed));
+                //Wait for 'shutdown' command, node will exit when there are no tasks.
+                return [2 /*return*/, DontExitCode];
             });
         });
     };

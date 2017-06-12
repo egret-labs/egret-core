@@ -65,7 +65,7 @@
     };
 
     var xhr = new XMLHttpRequest();
-    xhr.open('GET', './manifest.json', true);
+    xhr.open('GET', './manifest.json?v=' + Math.random(), true);
     xhr.addEventListener("load", function () {
         var list = JSON.parse(xhr.response).initial;
         loadScript(list, function () {

@@ -6,7 +6,6 @@ import service = require('../service/index');
 import FileUtil = require('../lib/FileUtil');
 import exml = require("../actions/exml");
 import CompileProject = require('../actions/CompileProject');
-import CompileTemplate = require('../actions/CompileTemplate');
 import GenerateVersion = require('../actions/GenerateVersionCommand');
 import ZipCMD = require("../actions/ZipCommand");
 import ChangeEntranceCMD = require("../actions/ChangeEntranceCommand");
@@ -73,16 +72,16 @@ class Publish implements egret.Command {
         if (exml.updateSetting) {
             exml.updateSetting();
         }
-
+        let manifestPath;
         if (egret.args.runtime == "native") {
-
-            var listInfo = CompileTemplate.modifyNativeRequire(false);
+            manifestPath = FileUtil.joinPath(options.releaseDir, "ziptemp", "manifest.json");
+            EgretProject.manager.generateManifest(null, manifestPath, false, "native");
+            EgretProject.manager.modifyNativeRequire();
             var allMainfestPath = FileUtil.joinPath(options.releaseDir, "all.manifest");
             if (FileUtil.exists(allMainfestPath)) {
                 FileUtil.copy(allMainfestPath, FileUtil.joinPath(options.releaseDir, "ziptemp", "all.manifest"));
             }
             FileUtil.remove(allMainfestPath);
-
 
             //先拷贝 launcher
             FileUtil.copy(FileUtil.joinPath(options.templateDir, "runtime"), FileUtil.joinPath(options.releaseDir, "ziptemp", "launcher"));
@@ -90,10 +89,7 @@ class Publish implements egret.Command {
             FileUtil.copy(FileUtil.joinPath(options.releaseDir, "main.min.js"), FileUtil.joinPath(options.releaseDir, "ziptemp", "main.min.js"));
             FileUtil.remove(FileUtil.joinPath(options.releaseDir, "main.min.js"));
 
-            listInfo.libs.forEach(function (filepath) {
-                FileUtil.copy(FileUtil.joinPath(options.projectDir, filepath), FileUtil.joinPath(options.releaseDir, "ziptemp", filepath));
-            });
-
+            EgretProject.manager.copyLibsForPublish(manifestPath, FileUtil.joinPath(options.releaseDir, "ziptemp"), "native");
 
             //runtime  打包所有js文件以及all.manifest
             var zip = new ZipCMD(versionFile);
@@ -102,20 +98,14 @@ class Publish implements egret.Command {
             });
         }
         else {
-
+            manifestPath = FileUtil.joinPath(options.releaseDir, "manifest.json");
+            FileUtil.copy(FileUtil.joinPath(options.templateDir, "web", "index.html"),
+                FileUtil.joinPath(options.releaseDir, "index.html"));
+            EgretProject.manager.generateManifest(null, manifestPath, false, "web");
             let copyAction = new CopyAction(options.projectDir, options.releaseDir);
-            copyAction.copy("index.html");
-            copyAction.copy("favicon.ico")
+            copyAction.copy("favicon.ico");
 
-            var releaseHtmlPath = FileUtil.joinPath(options.releaseDir, "index.html");
-            CompileTemplate.changeHtmlToRelease(releaseHtmlPath);
-
-            var htmlContent = FileUtil.read(releaseHtmlPath);
-
-            //根据 html 拷贝使用的 js 文件
-            let libsList = project.getLibsList(htmlContent, false, false);
-
-            copyAction.copy(libsList);
+            EgretProject.manager.copyLibsForPublish(manifestPath, options.releaseDir, "web");
         }
 
         if (useResourceMangerPublish) {
