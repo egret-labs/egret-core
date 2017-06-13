@@ -199,7 +199,10 @@ var Upgrade_5_0_1 = (function () {
     }
     Upgrade_5_0_1.prototype.execute = function () {
         return __awaiter(this, void 0, void 0, function () {
+            var options;
             return __generator(this, function (_a) {
+                options = egret.args;
+                file.copy(file.joinPath(options.projectDir, "index.html"), file.joinPath(options.projectDir, "index-backup.html"));
                 globals.log(1703, "https://www.baidu.com");
                 return [2 /*return*/, 0];
             });

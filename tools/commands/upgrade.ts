@@ -162,6 +162,8 @@ class Upgrade_4_1_0 {
 
 class Upgrade_5_0_1 {
     async execute() {
+        let options = egret.args;
+        file.copy(file.joinPath(options.projectDir, "index.html"),file.joinPath(options.projectDir, "index-backup.html"));
         globals.log(1703, "https://www.baidu.com");
         return 0;
     }
