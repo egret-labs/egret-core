@@ -235,6 +235,16 @@ export class EgretProjectData {
         return result;
     }
 
+    isWasmProject(): boolean {
+        let boo = false;
+        this.getModulesConfig("web").forEach(m => {
+            if (m.name == "egret-wasm") {
+                boo = true;
+            }
+        });
+        return boo;
+    }
+
     getPublishType(runtime: string): number {
         if (globals.hasKeys(this.egretProperties, ["publish", runtime])) {
             return this.egretProperties["publish"][runtime];

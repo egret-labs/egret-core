@@ -189,6 +189,15 @@ var EgretProjectData = (function () {
         });
         return result;
     };
+    EgretProjectData.prototype.isWasmProject = function () {
+        var boo = false;
+        this.getModulesConfig("web").forEach(function (m) {
+            if (m.name == "egret-wasm") {
+                boo = true;
+            }
+        });
+        return boo;
+    };
     EgretProjectData.prototype.getPublishType = function (runtime) {
         if (globals.hasKeys(this.egretProperties, ["publish", runtime])) {
             return this.egretProperties["publish"][runtime];

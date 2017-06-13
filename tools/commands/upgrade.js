@@ -202,6 +202,14 @@ var Upgrade_5_0_1 = (function () {
             var options;
             return __generator(this, function (_a) {
                 options = egret.args;
+                if (!Project.data.isWasmProject()) {
+                    file.copy(file.joinPath(egret.root, "tools", "templates", "empty", "template", "debug"), file.joinPath(options.projectDir, "template", "debug"));
+                    file.copy(file.joinPath(egret.root, "tools", "templates", "empty", "template", "web"), file.joinPath(options.projectDir, "template", "web"));
+                }
+                else {
+                    file.copy(file.joinPath(egret.root, "tools", "templates", "wasm", "template", "debug"), file.joinPath(options.projectDir, "template", "debug"));
+                    file.copy(file.joinPath(egret.root, "tools", "templates", "wasm", "template", "web"), file.joinPath(options.projectDir, "template", "web"));
+                }
                 file.copy(file.joinPath(options.projectDir, "index.html"), file.joinPath(options.projectDir, "index-backup.html"));
                 globals.log(1703, "https://www.baidu.com");
                 return [2 /*return*/, 0];
