@@ -33,7 +33,8 @@ class UpgradeCommand implements egret.Command {
             { "v": "4.0.1", command: Upgrade_4_0_1 },
             { "v": "4.0.3" },
             { "v": "4.1.0", command: Upgrade_4_1_0 },
-            { "v": "5.0.0" }
+            { "v": "5.0.0" },
+            { "v": "5.0.1", command: Upgrade_5_0_1 }
         ];
 
         try {
@@ -155,6 +156,13 @@ class Upgrade_4_1_0 {
     async execute() {
         modify.upgradeModulePath();
         globals.log(1703, "https://github.com/egret-labs/egret-core/tree/master/docs/cn/release-note/4.1.0")
+        return 0;
+    }
+}
+
+class Upgrade_5_0_1 {
+    async execute() {
+        globals.log(1703, "https://www.baidu.com");
         return 0;
     }
 }
