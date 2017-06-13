@@ -124,7 +124,7 @@ var Compiler = (function () {
                 ]
             };
         }
-        var notSupport = ["module", "noLib", "rootDir", "out"];
+        var notSupport = ["noLib", "rootDir", "out"];
         var defaultSupport = { target: "es5", outDir: "bin-debug" };
         var compilerOptions = configObj.compilerOptions;
         for (var _i = 0, notSupport_1 = notSupport; _i < notSupport_1.length; _i++) {
