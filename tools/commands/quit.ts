@@ -5,7 +5,6 @@ import utils = require('../lib/utils');
 import service = require('../service/index');
 import FileUtil = require('../lib/FileUtil');
 import CompileProject = require('../actions/CompileProject');
-import CompileTemplate = require('../actions/CompileTemplate');
 
 class Quit implements egret.Command {
     execute(): number {

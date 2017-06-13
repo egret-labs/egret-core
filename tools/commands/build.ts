@@ -5,8 +5,7 @@ import server = require('../server/server');
 import service = require('../service/index');
 import FileUtil = require('../lib/FileUtil');
 import CompileProject = require('../actions/CompileProject');
-import CompileTemplate = require('../actions/CompileTemplate');
-import * as project from '../parser/EgretProject';
+import * as project from '../project/EgretProject';
 import ts = require('../lib/typescript-plus/lib/typescript')
 import * as path from 'path';
 
@@ -19,14 +18,14 @@ class Build implements egret.Command {
 
         var options = egret.args;
         let packageJsonContent
-        if (packageJsonContent = FileUtil.read(project.utils.getFilePath("package.json"))) {
+        if (packageJsonContent = FileUtil.read(project.data.getFilePath("package.json"))) {
             let packageJson: project.Package_JSON = JSON.parse(packageJsonContent);
             if (packageJson.modules) {//通过有modules来识别是egret库项目
                 globals.log(1119);
                 globals.exit(1120);
                 return 0;
             }
-            if (FileUtil.exists(project.utils.getFilePath("tsconfig.json"))) {
+            if (FileUtil.exists(project.data.getFilePath("tsconfig.json"))) {
                 this.buildLib2(packageJson);
                 return 0;
             }
@@ -38,7 +37,7 @@ class Build implements egret.Command {
             utils.exit(10015, options.projectDir);
         }
         if (!FileUtil.exists(FileUtil.joinPath(options.projectDir, 'libs/modules/egret/'))) {
-            CompileTemplate.copyToLibs();
+            project.manager.copyToLibs();
         }
 
         service.client.execCommand({

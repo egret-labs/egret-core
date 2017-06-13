@@ -98,7 +98,7 @@ function executeCommandLine(args) {
         entry.exit(exitcode);
     }
     else {
-        exitcode.then(function (value) { return entry.exit(value); });
+        exitcode.then(function (value) { return entry.exit(value); }).catch(function (e) { return console.log(e); });
     }
 }
 exports.executeCommandLine = executeCommandLine;

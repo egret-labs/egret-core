@@ -6,7 +6,7 @@ import Compiler = require('./Compiler');
 import FileUtil = require('../lib/FileUtil');
 import CopyFilesCommand = require("../commands/copyfile");
 import ChangeEntranceCMD = require("../actions/ChangeEntranceCommand");
-import EgretProject = require("../parser/EgretProject");
+import EgretProject = require("../project/EgretProject");
 class CopyNativeFiles {
     static copyProjectFiles(platform, nativePath, isDebug) {
         var options = egret.args;
@@ -22,7 +22,7 @@ class CopyNativeFiles {
         FileUtil.remove(url2);
 
         if (isDebug) {
-            var config = EgretProject.utils;
+            var config = EgretProject.data;
             try {
                 cpFiles.outputPath = url2;
                 cpFiles.ignorePathList = config.getIgnorePath();
@@ -35,9 +35,9 @@ class CopyNativeFiles {
             var sourceRuntime = FileUtil.joinPath(options.templateDir, "runtime");
             var outputRuntime = FileUtil.joinPath(url2, "launcher");
             FileUtil.copy(sourceRuntime, outputRuntime);
+            EgretProject.manager.copyManifestForNative(FileUtil.joinPath(url2, "manifest.json"));
 
-
-            EgretProject.utils.getModulesConfig('native').forEach(m => {
+            EgretProject.data.getModulesConfig('native').forEach(m => {
                 FileUtil.copy(m.sourceDir, FileUtil.joinPath(url2, m.targetDir));
             })
         }
@@ -47,11 +47,10 @@ class CopyNativeFiles {
     }
 
     static refreshNative(isDebug, versionFile = null) {
-        var config = EgretProject.utils;
+        var config = EgretProject.data;
         var nativePath;
         if (nativePath = config.getNativePath("android_as")) {
             var url1 = FileUtil.joinPath(nativePath, "proj.android");
-            var url2 = FileUtil.joinPath(nativePath, "proj.android/assets", "egret-game");
             CopyNativeFiles.copyProjectFiles("android_as", nativePath, isDebug);
             //修改java文件
             var entrance = new ChangeEntranceCMD();
@@ -60,7 +59,6 @@ class CopyNativeFiles {
         }
         if (nativePath = config.getNativePath("android")) {
             var url1 = FileUtil.joinPath(nativePath, "proj.android");
-            var url2 = FileUtil.joinPath(nativePath, "proj.android/assets", "egret-game");
 
             CopyNativeFiles.copyProjectFiles("android", nativePath, isDebug);
 
@@ -72,7 +70,6 @@ class CopyNativeFiles {
 
         if (nativePath = config.getNativePath("ios")) {
             var url1 = FileUtil.joinPath(nativePath, "proj.ios");
-            var url2 = FileUtil.joinPath(nativePath, "Resources", "egret-game");
 
             CopyNativeFiles.copyProjectFiles("ios", nativePath, isDebug);
 

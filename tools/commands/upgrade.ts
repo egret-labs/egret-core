@@ -1,6 +1,6 @@
 import file = require('../lib/FileUtil');
 import service = require('../service/index');
-import Project = require('../parser/EgretProject');
+import Project = require('../project/EgretProject');
 import path = require('path');
 import utils = require('../lib/utils')
 import modify = require("./upgrade/ModifyProperties");
@@ -23,7 +23,7 @@ class UpgradeCommand implements egret.Command {
     }
 
     private async run() {
-        var version = Project.utils.getVersion();
+        var version = Project.data.getVersion();
         if (!version) {
             version = "1.0.0";
         }
@@ -33,7 +33,8 @@ class UpgradeCommand implements egret.Command {
             { "v": "4.0.1", command: Upgrade_4_0_1 },
             { "v": "4.0.3" },
             { "v": "4.1.0", command: Upgrade_4_1_0 },
-            { "v": "5.0.0" }
+            { "v": "5.0.0" },
+            { "v": "5.0.1", command: Upgrade_5_0_1 }
         ];
 
         try {
@@ -41,7 +42,7 @@ class UpgradeCommand implements egret.Command {
             await series(upgrade, upgradeConfigArr.concat())
             modify.save(upgradeConfigArr.pop().v);
             globals.log(1702);
-            await service.client.closeServer(Project.utils.getProjectRoot())
+            await service.client.closeServer(Project.data.getProjectRoot())
             globals.exit(0);
         }
         catch (e) {
@@ -86,7 +87,7 @@ let series = <T>(cb: (data: T, index?: number, result?: any) => PromiseLike<numb
 }
 
 function upgrade(info: VersionInfo) {
-    var version = Project.utils.getVersion();
+    var version = Project.data.getVersion();
     var v = info.v;
     var command: egret.Command;
     if (info.command) {
@@ -119,10 +120,10 @@ class Upgrade_4_0_1 {
 
     async execute() {
 
-        let tsconfigPath = Project.utils.getFilePath('tsconfig.json');
+        let tsconfigPath = Project.data.getFilePath('tsconfig.json');
         if (!file.exists(tsconfigPath)) {
             let source = file.joinPath(egret.root, "tools/templates/empty/tsconfig.json");
-            let target = Project.utils.getFilePath("tsconfig.json")
+            let target = Project.data.getFilePath("tsconfig.json")
             file.copy(source, target);
         }
         let tsconfigContent = file.read(tsconfigPath);
@@ -140,7 +141,7 @@ class Upgrade_4_0_1 {
         })
         tsconfigContent = JSON.stringify(tsconfig, null, "\t");
         file.save(tsconfigPath, tsconfigContent);
-        file.copy(path.join(egret.root, 'tools/templates/empty/polyfill'), Project.utils.getFilePath('polyfill'));
+        file.copy(path.join(egret.root, 'tools/templates/empty/polyfill'), Project.data.getFilePath('polyfill'));
 
         globals.log(1703, "https://github.com/egret-labs/egret-core/tree/master/docs/cn/release-note/4.0.1")
 
@@ -155,6 +156,27 @@ class Upgrade_4_1_0 {
     async execute() {
         modify.upgradeModulePath();
         globals.log(1703, "https://github.com/egret-labs/egret-core/tree/master/docs/cn/release-note/4.1.0")
+        return 0;
+    }
+}
+
+class Upgrade_5_0_1 {
+    async execute() {
+        let options = egret.args;
+        if (!Project.data.isWasmProject()) {
+            file.copy(file.joinPath(egret.root, "tools", "templates", "empty", "template", "debug"),
+                file.joinPath(options.projectDir, "template", "debug"));
+            file.copy(file.joinPath(egret.root, "tools", "templates", "empty", "template", "web"),
+                file.joinPath(options.projectDir, "template", "web"));
+        }
+        else {
+            file.copy(file.joinPath(egret.root, "tools", "templates", "wasm", "template", "debug"),
+                file.joinPath(options.projectDir, "template", "debug"));
+            file.copy(file.joinPath(egret.root, "tools", "templates", "wasm", "template", "web"),
+                file.joinPath(options.projectDir, "template", "web"));
+        }
+        file.copy(file.joinPath(options.projectDir, "index.html"), file.joinPath(options.projectDir, "index-backup.html"));
+        globals.log(1703, "https://www.baidu.com");
         return 0;
     }
 }

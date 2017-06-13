@@ -4,7 +4,7 @@
 import utils = require('../lib/utils');
 import file = require('../lib/FileUtil');
 import exml = require("../lib/eui/EXML");
-import EgretProject = require('../parser/EgretProject');
+import EgretProject = require('../project/EgretProject');
 
 export function beforeBuild() {
     generateExmlDTS();
@@ -137,7 +137,7 @@ function sort(exmls: exml.EXMLFile[]) {
 
 }
 
-const ignorePath = EgretProject.utils.getIgnorePath();
+const ignorePath = EgretProject.data.getIgnorePath();
 function exmlFilter(f: string) {
     var isIgnore = false;
     ignorePath.forEach(path => {

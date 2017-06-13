@@ -1,7 +1,7 @@
 /// <reference path="../lib/types.d.ts" />
 var file = require("../lib/FileUtil");
 var exml = require("../lib/eui/EXML");
-var EgretProject = require("../parser/EgretProject");
+var EgretProject = require("../project/EgretProject");
 function beforeBuild() {
     generateExmlDTS();
 }
@@ -115,7 +115,7 @@ function searchEXML() {
 function sort(exmls) {
     var preload = exmls.filter(function (e) { return e.preload; });
 }
-var ignorePath = EgretProject.utils.getIgnorePath();
+var ignorePath = EgretProject.data.getIgnorePath();
 function exmlFilter(f) {
     var isIgnore = false;
     ignorePath.forEach(function (path) {

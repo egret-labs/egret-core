@@ -2,7 +2,7 @@
 var utils = require("../lib/utils");
 var file = require("../lib/FileUtil");
 var CompileOptions = require("./CompileOptions");
-var project = require("./EgretProject");
+var project = require("../project/EgretProject");
 var path = require("path");
 exports.optionDeclarations = [
     {
@@ -208,7 +208,7 @@ function parseCommandLine(commandLine) {
                 }
             }
             options.projectDir = file.joinPath(options.projectDir, "/");
-            project.utils.init(options.projectDir);
+            project.data.init(options.projectDir);
         }
         var packagePath = file.joinPath(egret.root, "package.json");
         var content = file.read(packagePath);

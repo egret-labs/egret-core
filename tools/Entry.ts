@@ -116,7 +116,7 @@ export function executeCommandLine(args: string[]): void {
         entry.exit(exitcode);
     }
     else {
-        exitcode.then(value => entry.exit(value))
+        exitcode.then(value => entry.exit(value)).catch(e => console.log(e))
     }
 }
 class Entry {

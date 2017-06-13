@@ -38,7 +38,7 @@ var utils = require("../lib/utils");
 var projectAction = require("../actions/Project");
 var FileUtil = require("../lib/FileUtil");
 var doT = require("../lib/doT");
-var EgretProject = require("../parser/EgretProject");
+var EgretProject = require("../project/EgretProject");
 var TemplatesRoot = "tools/templates/";
 var Clean = require("../commands/clean");
 var Create = (function () {
@@ -50,7 +50,7 @@ var Create = (function () {
             return __generator(this, function (_a) {
                 proj = this.project;
                 options = egret.args;
-                project = EgretProject.utils;
+                project = EgretProject.data;
                 projectAction.normalize(proj);
                 emptyTemplate = FileUtil.joinPath(egret.root, TemplatesRoot + "empty");
                 template = FileUtil.joinPath(egret.root, TemplatesRoot + proj.type);

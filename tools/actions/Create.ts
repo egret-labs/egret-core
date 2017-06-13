@@ -5,10 +5,9 @@ import utils = require('../lib/utils');
 import server = require('../server/server');
 import CompileProject = require('../actions/CompileProject');
 import projectAction = require('../actions/Project');
-import CompileTemplate = require('../actions/CompileTemplate');
 import FileUtil = require('../lib/FileUtil');
 import doT = require('../lib/doT');
-import EgretProject = require('../parser/EgretProject');
+import EgretProject = require('../project/EgretProject');
 var TemplatesRoot = "tools/templates/";
 import Clean = require('../commands/clean');
 
@@ -18,7 +17,7 @@ class Create implements egret.Command {
 
         var proj = this.project;
         var options = egret.args;
-        let project = EgretProject.utils;
+        let project = EgretProject.data;
 
         projectAction.normalize(proj);
 
