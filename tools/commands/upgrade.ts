@@ -4,6 +4,9 @@ import Project = require('../project/EgretProject');
 import path = require('path');
 import utils = require('../lib/utils')
 import modify = require("./upgrade/ModifyProperties");
+import doT = require('../lib/doT');
+import projectAction = require('../actions/Project');
+
 type VersionInfo = {
 
     v: string,
@@ -163,18 +166,26 @@ class Upgrade_4_1_0 {
 class Upgrade_5_0_1 {
     async execute() {
         let options = egret.args;
-        if (!Project.data.isWasmProject()) {
-            file.copy(file.joinPath(egret.root, "tools", "templates", "empty", "template", "debug"),
-                file.joinPath(options.projectDir, "template", "debug"));
-            file.copy(file.joinPath(egret.root, "tools", "templates", "empty", "template", "web"),
-                file.joinPath(options.projectDir, "template", "web"));
+        let moduleName = "empty";
+        if (Project.data.isWasmProject()) {
+            moduleName = "wasm";
         }
-        else {
-            file.copy(file.joinPath(egret.root, "tools", "templates", "wasm", "template", "debug"),
-                file.joinPath(options.projectDir, "template", "debug"));
-            file.copy(file.joinPath(egret.root, "tools", "templates", "wasm", "template", "web"),
-                file.joinPath(options.projectDir, "template", "web"));
-        }
+        file.copy(file.joinPath(egret.root, "tools", "templates", moduleName, "template", "debug"),
+            file.joinPath(options.projectDir, "template", "debug"));
+        file.copy(file.joinPath(egret.root, "tools", "templates", moduleName, "template", "web"),
+            file.joinPath(options.projectDir, "template", "web"));
+        let proj = options.getProject(true);
+        projectAction.normalize(proj);
+        let debugFile = file.joinPath(options.projectDir, "template", "debug", "index.html");
+        let contentDebug = file.read(debugFile);
+        contentDebug = doT.template(contentDebug)(proj);
+        file.save(debugFile, contentDebug);
+        
+        let webFile = file.joinPath(options.projectDir, "template", "web", "index.html");
+        let contentWeb = file.read(webFile);
+        contentWeb = doT.template(contentWeb)(proj);
+        file.save(webFile, contentWeb);
+
         file.copy(file.joinPath(options.projectDir, "index.html"), file.joinPath(options.projectDir, "index-backup.html"));
         globals.log(1703, "https://www.baidu.com");
         return 0;

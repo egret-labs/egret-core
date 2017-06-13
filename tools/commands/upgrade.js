@@ -39,6 +39,8 @@ var Project = require("../project/EgretProject");
 var path = require("path");
 var utils = require("../lib/utils");
 var modify = require("./upgrade/ModifyProperties");
+var doT = require("../lib/doT");
+var projectAction = require("../actions/Project");
 var UpgradeCommand = (function () {
     function UpgradeCommand() {
     }
@@ -199,17 +201,25 @@ var Upgrade_5_0_1 = (function () {
     }
     Upgrade_5_0_1.prototype.execute = function () {
         return __awaiter(this, void 0, void 0, function () {
-            var options;
+            var options, moduleName, proj, debugFile, contentDebug, webFile, contentWeb;
             return __generator(this, function (_a) {
                 options = egret.args;
-                if (!Project.data.isWasmProject()) {
-                    file.copy(file.joinPath(egret.root, "tools", "templates", "empty", "template", "debug"), file.joinPath(options.projectDir, "template", "debug"));
-                    file.copy(file.joinPath(egret.root, "tools", "templates", "empty", "template", "web"), file.joinPath(options.projectDir, "template", "web"));
+                moduleName = "empty";
+                if (Project.data.isWasmProject()) {
+                    moduleName = "wasm";
                 }
-                else {
-                    file.copy(file.joinPath(egret.root, "tools", "templates", "wasm", "template", "debug"), file.joinPath(options.projectDir, "template", "debug"));
-                    file.copy(file.joinPath(egret.root, "tools", "templates", "wasm", "template", "web"), file.joinPath(options.projectDir, "template", "web"));
-                }
+                file.copy(file.joinPath(egret.root, "tools", "templates", moduleName, "template", "debug"), file.joinPath(options.projectDir, "template", "debug"));
+                file.copy(file.joinPath(egret.root, "tools", "templates", moduleName, "template", "web"), file.joinPath(options.projectDir, "template", "web"));
+                proj = options.getProject(true);
+                projectAction.normalize(proj);
+                debugFile = file.joinPath(options.projectDir, "template", "debug", "index.html");
+                contentDebug = file.read(debugFile);
+                contentDebug = doT.template(contentDebug)(proj);
+                file.save(debugFile, contentDebug);
+                webFile = file.joinPath(options.projectDir, "template", "web", "index.html");
+                contentWeb = file.read(webFile);
+                contentWeb = doT.template(contentWeb)(proj);
+                file.save(webFile, contentWeb);
                 file.copy(file.joinPath(options.projectDir, "index.html"), file.joinPath(options.projectDir, "index-backup.html"));
                 globals.log(1703, "https://www.baidu.com");
                 return [2 /*return*/, 0];
