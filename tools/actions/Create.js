@@ -86,6 +86,8 @@ function updateEgretProperties(modules) {
     if (!props.modules) {
         props.modules = modules.map(function (m) { return ({ name: m.name }); });
     }
+    var promise = { name: "promise", path: "./promise" };
+    props.modules.push(promise);
     FileUtil.save(propFile, JSON.stringify(props, null, "  "));
 }
 module.exports = Create;

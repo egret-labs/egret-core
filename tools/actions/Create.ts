@@ -59,6 +59,8 @@ function updateEgretProperties(modules: egret.EgretModule[]) {
     if (!props.modules) {
         props.modules = modules.map(m => ({ name: m.name }));
     }
+    let promise = {name: "promise", path:"./promise"};
+    props.modules.push(promise);
     FileUtil.save(propFile, JSON.stringify(props, null, "  "));
 }
 
