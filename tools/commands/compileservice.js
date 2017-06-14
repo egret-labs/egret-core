@@ -5,9 +5,8 @@ var FileUtil = require("../lib/FileUtil");
 var exmlActions = require("../actions/exml");
 var state = require("../lib/DirectoryState");
 var CompileProject = require("../actions/CompileProject");
-var CompileTemplate = require("../actions/CompileTemplate");
 var parser = require("../parser/Parser");
-var EgretProject = require("../parser/EgretProject");
+var EgretProject = require("../project/EgretProject");
 var copyNative = require("../actions/CopyNativeFiles");
 var AutoCompileCommand = (function () {
     function AutoCompileCommand() {
@@ -19,7 +18,7 @@ var AutoCompileCommand = (function () {
     }
     AutoCompileCommand.prototype.execute = function () {
         var _this = this;
-        if (EgretProject.utils.invalid(true)) {
+        if (EgretProject.data.invalid(true)) {
             process.exit(0);
             return;
         }
@@ -64,13 +63,13 @@ var AutoCompileCommand = (function () {
         var result = compileProject.compileProject(options);
         //操作其他文件
         _scripts = result.files.length > 0 ? result.files : _scripts;
-        CompileTemplate.modifyIndexHTML(_scripts);
-        CompileTemplate.modifyNativeRequire(true);
+        EgretProject.manager.generateManifest(_scripts);
+        FileUtil.copy(FileUtil.joinPath(options.templateDir, "debug", "index.html"), FileUtil.joinPath(options.projectDir, "index.html"));
         exmlActions.afterBuild();
-        CompileTemplate.modifyNativeRequire(true);
         //拷贝项目到native工程中
         if (egret.args.runtime == "native") {
             console.log("----native build-----");
+            EgretProject.manager.modifyNativeRequire();
             copyNative.refreshNative(true);
         }
         this.dirState.init();
@@ -121,8 +120,11 @@ var AutoCompileCommand = (function () {
                     this.messages[2] = egret.args.tsconfigError;
                 }
                 else if (fileName.indexOf("egretProperties.json") > -1) {
-                    EgretProject.utils.reload();
+                    EgretProject.data.reload();
                     this.copyLibs();
+                    //修改 html 中 modules 块
+                    EgretProject.manager.generateManifest(this._scripts);
+                    FileUtil.copy(FileUtil.joinPath(egret.args.templateDir, "debug", "index.html"), FileUtil.joinPath(egret.args.projectDir, "index.html"));
                     this.compileProject.compileProject(egret.args);
                     this.messages[2] = egret.args.tsconfigError;
                 }
@@ -149,10 +151,10 @@ var AutoCompileCommand = (function () {
         if (exmls.length) {
             exmlActions.afterBuildChanges(exmls);
         }
-        CompileTemplate.modifyNativeRequire(true);
         //拷贝项目到native工程中
         if (egret.args.runtime == "native") {
             console.log("----native build-----");
+            EgretProject.manager.modifyNativeRequire();
             copyNative.refreshNative(true);
         }
         this.dirState.init();
@@ -162,9 +164,7 @@ var AutoCompileCommand = (function () {
     };
     AutoCompileCommand.prototype.copyLibs = function () {
         //刷新libs 中 modules 文件
-        CompileTemplate.copyToLibs();
-        //修改 html 中 modules 块
-        CompileTemplate.modifyIndexHTML();
+        EgretProject.manager.copyToLibs();
     };
     AutoCompileCommand.prototype.buildChangedTS = function (filesChanged) {
         //console.log("changed ts:", filesChanged);
@@ -220,8 +220,9 @@ var AutoCompileCommand = (function () {
         var index = FileUtil.joinPath(egret.args.templateDir, "index.html");
         index = FileUtil.escapePath(index);
         console.log('Compile Template: ' + index);
-        CompileTemplate.modifyIndexHTML(this._scripts);
-        CompileTemplate.modifyNativeRequire(true);
+        EgretProject.manager.generateManifest(this._scripts);
+        FileUtil.copy(FileUtil.joinPath(egret.args.templateDir, "debug", "index.html"), FileUtil.joinPath(egret.args.projectDir, "index.html"));
+        EgretProject.manager.modifyNativeRequire();
         return 0;
     };
     AutoCompileCommand.prototype.onServiceMessage = function (msg) {

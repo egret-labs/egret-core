@@ -10,7 +10,6 @@ import Server = require('../server/server');
 import FileUtil = require('../lib/FileUtil');
 import service = require('../service/index');
 import CompileProject = require('../actions/CompileProject');
-import CompileTemplate = require('../actions/CompileTemplate');
 
 class Run implements egret.Command {
 

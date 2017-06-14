@@ -35,10 +35,12 @@ var __generator = (this && this.__generator) || function (thisArg, body) {
 };
 var file = require("../lib/FileUtil");
 var service = require("../service/index");
-var Project = require("../parser/EgretProject");
+var Project = require("../project/EgretProject");
 var path = require("path");
 var utils = require("../lib/utils");
 var modify = require("./upgrade/ModifyProperties");
+var doT = require("../lib/doT");
+var projectAction = require("../actions/Project");
 var UpgradeCommand = (function () {
     function UpgradeCommand() {
     }
@@ -53,7 +55,7 @@ var UpgradeCommand = (function () {
             return __generator(this, function (_a) {
                 switch (_a.label) {
                     case 0:
-                        version = Project.utils.getVersion();
+                        version = Project.data.getVersion();
                         if (!version) {
                             version = "1.0.0";
                         }
@@ -61,7 +63,8 @@ var UpgradeCommand = (function () {
                             { "v": "4.0.1", command: Upgrade_4_0_1 },
                             { "v": "4.0.3" },
                             { "v": "4.1.0", command: Upgrade_4_1_0 },
-                            { "v": "5.0.0" }
+                            { "v": "5.0.0" },
+                            { "v": "5.1.0", command: Upgrade_5_1_0 }
                         ];
                         _a.label = 1;
                     case 1:
@@ -72,7 +75,7 @@ var UpgradeCommand = (function () {
                         _a.sent();
                         modify.save(upgradeConfigArr.pop().v);
                         globals.log(1702);
-                        return [4 /*yield*/, service.client.closeServer(Project.utils.getProjectRoot())];
+                        return [4 /*yield*/, service.client.closeServer(Project.data.getProjectRoot())];
                     case 3:
                         _a.sent();
                         globals.exit(0);
@@ -114,7 +117,7 @@ var series = function (cb, arr) {
         .then(function () { return results; });
 };
 function upgrade(info) {
-    var version = Project.utils.getVersion();
+    var version = Project.data.getVersion();
     var v = info.v;
     var command;
     if (info.command) {
@@ -147,10 +150,10 @@ var Upgrade_4_0_1 = (function () {
         return __awaiter(this, void 0, void 0, function () {
             var tsconfigPath, source, target, tsconfigContent, tsconfig, needLibs;
             return __generator(this, function (_a) {
-                tsconfigPath = Project.utils.getFilePath('tsconfig.json');
+                tsconfigPath = Project.data.getFilePath('tsconfig.json');
                 if (!file.exists(tsconfigPath)) {
                     source = file.joinPath(egret.root, "tools/templates/empty/tsconfig.json");
-                    target = Project.utils.getFilePath("tsconfig.json");
+                    target = Project.data.getFilePath("tsconfig.json");
                     file.copy(source, target);
                 }
                 tsconfigContent = file.read(tsconfigPath);
@@ -168,7 +171,7 @@ var Upgrade_4_0_1 = (function () {
                 });
                 tsconfigContent = JSON.stringify(tsconfig, null, "\t");
                 file.save(tsconfigPath, tsconfigContent);
-                file.copy(path.join(egret.root, 'tools/templates/empty/polyfill'), Project.utils.getFilePath('polyfill'));
+                file.copy(path.join(egret.root, 'tools/templates/empty/polyfill'), Project.data.getFilePath('polyfill'));
                 globals.log(1703, "https://github.com/egret-labs/egret-core/tree/master/docs/cn/release-note/4.0.1");
                 return [2 /*return*/, 0];
             });
@@ -192,5 +195,37 @@ var Upgrade_4_1_0 = (function () {
         });
     };
     return Upgrade_4_1_0;
+}());
+var Upgrade_5_1_0 = (function () {
+    function Upgrade_5_1_0() {
+    }
+    Upgrade_5_1_0.prototype.execute = function () {
+        return __awaiter(this, void 0, void 0, function () {
+            var options, moduleName, proj, debugFile, contentDebug, webFile, contentWeb;
+            return __generator(this, function (_a) {
+                options = egret.args;
+                moduleName = "empty";
+                if (Project.data.isWasmProject()) {
+                    moduleName = "wasm";
+                }
+                file.copy(file.joinPath(egret.root, "tools", "templates", moduleName, "template", "debug"), file.joinPath(options.projectDir, "template", "debug"));
+                file.copy(file.joinPath(egret.root, "tools", "templates", moduleName, "template", "web"), file.joinPath(options.projectDir, "template", "web"));
+                proj = options.getProject(true);
+                projectAction.normalize(proj);
+                debugFile = file.joinPath(options.projectDir, "template", "debug", "index.html");
+                contentDebug = file.read(debugFile);
+                contentDebug = doT.template(contentDebug)(proj);
+                file.save(debugFile, contentDebug);
+                webFile = file.joinPath(options.projectDir, "template", "web", "index.html");
+                contentWeb = file.read(webFile);
+                contentWeb = doT.template(contentWeb)(proj);
+                file.save(webFile, contentWeb);
+                file.copy(file.joinPath(options.projectDir, "index.html"), file.joinPath(options.projectDir, "index-backup.html"));
+                globals.log(1703, "https://www.baidu.com");
+                return [2 /*return*/, 0];
+            });
+        });
+    };
+    return Upgrade_5_1_0;
 }());
 module.exports = UpgradeCommand;

@@ -3,7 +3,7 @@
 import utils = require('../lib/utils');
 import file = require('../lib/FileUtil');
 import CompileOptions = require("./CompileOptions");
-import * as project from "./EgretProject";
+import * as project from "../project/EgretProject";
 import path = require("path");
 
 
@@ -204,12 +204,12 @@ export function parseCommandLine(commandLine: string[]) {
                 || options.command == "apitest") {
                 options.projectDir = commands[1];
                 commands.splice(1, 1);
-            }else if(
+            } else if (
                 options.command == "native" &&
                 options.commands[1] &&
-                options.commands[2]){
+                options.commands[2]) {
                 options.projectDir = commands[2];
-                commands.splice(2,1);
+                commands.splice(2, 1);
             }
             //else if (file.isDirectory(commands[1]) && !file.exists(commands[1]) || options.command=="create_app") {
             //    options.projectDir = commands[1];
@@ -237,7 +237,7 @@ export function parseCommandLine(commandLine: string[]) {
                 }
             }
             options.projectDir = file.joinPath(options.projectDir, "/");
-            project.utils.init(options.projectDir);
+            project.data.init(options.projectDir);
         }
 
         var packagePath = file.joinPath(egret.root, "package.json");

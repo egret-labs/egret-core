@@ -2,8 +2,7 @@
 var utils = require("../lib/utils");
 var service = require("../service/index");
 var FileUtil = require("../lib/FileUtil");
-var CompileTemplate = require("../actions/CompileTemplate");
-var project = require("../parser/EgretProject");
+var project = require("../project/EgretProject");
 var ts = require("../lib/typescript-plus/lib/typescript");
 var path = require("path");
 var Compiler = require("../actions/Compiler");
@@ -16,14 +15,14 @@ var Build = (function () {
         callback = callback || defaultBuildCallback;
         var options = egret.args;
         var packageJsonContent;
-        if (packageJsonContent = FileUtil.read(project.utils.getFilePath("package.json"))) {
+        if (packageJsonContent = FileUtil.read(project.data.getFilePath("package.json"))) {
             var packageJson = JSON.parse(packageJsonContent);
             if (packageJson.modules) {
                 globals.log(1119);
                 globals.exit(1120);
                 return 0;
             }
-            if (FileUtil.exists(project.utils.getFilePath("tsconfig.json"))) {
+            if (FileUtil.exists(project.data.getFilePath("tsconfig.json"))) {
                 this.buildLib2(packageJson);
                 return 0;
             }
@@ -33,7 +32,7 @@ var Build = (function () {
             utils.exit(10015, options.projectDir);
         }
         if (!FileUtil.exists(FileUtil.joinPath(options.projectDir, 'libs/modules/egret/'))) {
-            CompileTemplate.copyToLibs();
+            project.manager.copyToLibs();
         }
         service.client.execCommand({
             path: egret.args.projectDir,

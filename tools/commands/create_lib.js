@@ -35,7 +35,7 @@ var __generator = (this && this.__generator) || function (thisArg, body) {
 };
 var utils = require("../lib/utils");
 var FileUtil = require("../lib/FileUtil");
-var EgretProject = require("../parser/EgretProject");
+var EgretProject = require("../project/EgretProject");
 var CreateLib = (function () {
     function CreateLib() {
     }
@@ -51,7 +51,7 @@ var CreateLib = (function () {
                             return [2 /*return*/, 0];
                         }
                         moduleName = FileUtil.basename(option.projectDir);
-                        project = EgretProject.utils;
+                        project = EgretProject.data;
                         libraryTemplate = FileUtil.joinPath(egret.root, "tools/templates/library");
                         FileUtil.copy(libraryTemplate, project.getProjectRoot());
                         return [4 /*yield*/, convert(project.getFilePath("package.json"), function (data) {
