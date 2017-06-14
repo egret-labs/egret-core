@@ -50,11 +50,7 @@ namespace egret.web {
         /**
          * @private
          */
-        public static canUseWebAudio = window["AudioContext"] || window["webkitAudioContext"] || window["mozAudioContext"];
-        /**
-         * @private
-         */
-        public static ctx = WebAudioDecode.canUseWebAudio ? new (window["AudioContext"] || window["webkitAudioContext"] || window["mozAudioContext"])() : undefined;
+        public static ctx;
 
         /**
          * @private

@@ -604,14 +604,6 @@ var egret;
         /**
          * @private
          */
-        WebAudioDecode.canUseWebAudio = window["AudioContext"] || window["webkitAudioContext"] || window["mozAudioContext"];
-        /**
-         * @private
-         */
-        WebAudioDecode.ctx = WebAudioDecode.canUseWebAudio ? new (window["AudioContext"] || window["webkitAudioContext"] || window["mozAudioContext"])() : undefined;
-        /**
-         * @private
-         */
         WebAudioDecode.decodeArr = [];
         /**
          * @private
@@ -3337,10 +3329,19 @@ var egret;
                 Html5Capatibility.ua = ua;
                 egret.Capabilities.$isMobile = (ua.indexOf('mobile') != -1 || ua.indexOf('android') != -1);
                 Html5Capatibility._canUseBlob = false;
-                var checkAudioType;
-                var audioType = Html5Capatibility._audioType;
                 var canUseWebAudio = window["AudioContext"] || window["webkitAudioContext"] || window["mozAudioContext"];
-                if (audioType == AudioType.WEB_AUDIO || audioType == AudioType.HTML5_AUDIO) {
+                if (canUseWebAudio) {
+                    try {
+                        //防止某些chrome版本创建异常问题
+                        web.WebAudioDecode.ctx = new (window["AudioContext"] || window["webkitAudioContext"] || window["mozAudioContext"])();
+                    }
+                    catch (e) {
+                        canUseWebAudio = false;
+                    }
+                }
+                var audioType = Html5Capatibility._audioType;
+                var checkAudioType;
+                if ((audioType == AudioType.WEB_AUDIO && canUseWebAudio) || audioType == AudioType.HTML5_AUDIO) {
                     checkAudioType = false;
                     Html5Capatibility.setAudioType(audioType);
                 }
@@ -3355,13 +3356,8 @@ var egret;
                 else if (ua.indexOf("android") >= 0) {
                     egret.Capabilities.$os = "Android";
                     Html5Capatibility._System_OS = SystemOSType.ADNROID;
-                    if (checkAudioType) {
-                        if (canUseWebAudio) {
-                            Html5Capatibility.setAudioType(AudioType.WEB_AUDIO);
-                        }
-                        else {
-                            Html5Capatibility.setAudioType(AudioType.HTML5_AUDIO);
-                        }
+                    if (checkAudioType && canUseWebAudio) {
+                        Html5Capatibility.setAudioType(AudioType.WEB_AUDIO);
                     }
                 }
                 else if (ua.indexOf("iphone") >= 0 || ua.indexOf("ipad") >= 0 || ua.indexOf("ipod") >= 0) {
@@ -3369,7 +3365,7 @@ var egret;
                     Html5Capatibility._System_OS = SystemOSType.IOS;
                     if (Html5Capatibility.getIOSVersion() >= 7) {
                         Html5Capatibility._canUseBlob = true;
-                        if (checkAudioType) {
+                        if (checkAudioType && canUseWebAudio) {
                             Html5Capatibility.setAudioType(AudioType.WEB_AUDIO);
                         }
                     }
