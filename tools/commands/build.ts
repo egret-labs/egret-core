@@ -132,11 +132,30 @@ function onGotBuildCommandResult(cmd: egret.ServiceCommandResult, callback: (exi
         cmd.messages.forEach(m => console.log(m));
     }
 
-    if (!cmd.exitCode && egret.args.platform) {
-        setTimeout(() => callback(0), 500);
+    let properties = project.data.egretProperties;
+    if (properties.main && properties.main.build && properties.main.build.after) {
+        utils.executeCommand(properties.main.build.after).then((result) => {
+            console.log(result.stdout);
+            console.log(result.stderr);
+            if (result.error) {
+                console.log(result.error);
+            }
+            if (!cmd.exitCode && egret.args.platform) {
+                setTimeout(() => callback(0), 500);
+            }
+            else
+                callback(cmd.exitCode || 0);
+        })
     }
-    else
-        callback(cmd.exitCode || 0);
+    else {
+        if (!cmd.exitCode && egret.args.platform) {
+            setTimeout(() => callback(0), 500);
+        }
+        else
+            callback(cmd.exitCode || 0);
+    }
+
+
 }
 
 function defaultBuildCallback(code) {

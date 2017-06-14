@@ -35,7 +35,7 @@ type SourceCode = {
 }
 
 export class EgretProjectData {
-    private egretProperties: egret.EgretProperty = {
+    egretProperties: egret.EgretProperty = {
         modules: []
     };
 

@@ -119,11 +119,28 @@ function onGotBuildCommandResult(cmd, callback) {
     if (cmd.messages) {
         cmd.messages.forEach(function (m) { return console.log(m); });
     }
-    if (!cmd.exitCode && egret.args.platform) {
-        setTimeout(function () { return callback(0); }, 500);
+    var properties = project.data.egretProperties;
+    if (properties.main && properties.main.build && properties.main.build.after) {
+        utils.executeCommand(properties.main.build.after).then(function (result) {
+            console.log(result.stdout);
+            console.log(result.stderr);
+            if (result.error) {
+                console.log(result.error);
+            }
+            if (!cmd.exitCode && egret.args.platform) {
+                setTimeout(function () { return callback(0); }, 500);
+            }
+            else
+                callback(cmd.exitCode || 0);
+        });
     }
-    else
-        callback(cmd.exitCode || 0);
+    else {
+        if (!cmd.exitCode && egret.args.platform) {
+            setTimeout(function () { return callback(0); }, 500);
+        }
+        else
+            callback(cmd.exitCode || 0);
+    }
 }
 function defaultBuildCallback(code) {
     var timeBuildEnd = (new Date()).getTime();

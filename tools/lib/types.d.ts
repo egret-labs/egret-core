@@ -119,6 +119,11 @@ declare module egret {
             "path": string;
         },
         "egret_version"?: string;
+        "main"?: {
+            "build"?: {
+                "after"?: string
+            }
+        }
     }
 
     export interface EgretProjectConfig {
