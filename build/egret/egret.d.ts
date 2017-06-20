@@ -10193,6 +10193,18 @@ declare namespace egret.sys {
          */
         bounds: Rectangle;
         /**
+         * 使用的混合模式
+         */
+        blendMode: number;
+        /**
+         * 相对透明度
+         */
+        alpha: number;
+        /**
+         * 颜色变换滤镜
+         */
+        filter: ColorMatrixFilter;
+        /**
          * 绘制一次位图
          */
         drawMesh(sourceX: number, sourceY: number, sourceW: number, sourceH: number, drawX: number, drawY: number, drawW: number, drawH: number): void;

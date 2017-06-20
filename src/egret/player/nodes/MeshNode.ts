@@ -77,7 +77,19 @@ namespace egret.sys {
         /**
          * 顶点索引。
          */
-        public bounds:Rectangle = new Rectangle();;
+        public bounds:Rectangle = new Rectangle();
+        /**
+         * 使用的混合模式
+         */
+        public blendMode: number = null;
+        /**
+         * 相对透明度
+         */
+        public alpha: number = NaN;
+        /**
+         * 颜色变换滤镜
+         */
+        public filter: ColorMatrixFilter = null;
         /**
          * 绘制一次位图
          */

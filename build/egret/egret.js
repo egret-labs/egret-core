@@ -15563,13 +15563,24 @@ var egret;
                  * 顶点索引。
                  */
                 _this.bounds = new egret.Rectangle();
+                /**
+                 * 使用的混合模式
+                 */
+                _this.blendMode = null;
+                /**
+                 * 相对透明度
+                 */
+                _this.alpha = NaN;
+                /**
+                 * 颜色变换滤镜
+                 */
+                _this.filter = null;
                 _this.type = 7 /* MeshNode */;
                 _this.vertices = [];
                 _this.uvs = [];
                 _this.indices = [];
                 return _this;
             }
-            ;
             /**
              * 绘制一次位图
              */
@@ -16839,17 +16850,46 @@ var egret;
             var length = data.length;
             var pos = 0;
             var m = node.matrix;
+            var blendMode = node.blendMode;
+            var alpha = node.alpha;
+            var saved = false;
             if (m) {
                 context.saveTransform();
                 context.transform(m.a, m.b, m.c, m.d, m.tx, m.ty);
             }
-            while (pos < length) {
-                context.drawMesh(image.source, data[pos++], data[pos++], data[pos++], data[pos++], data[pos++], data[pos++], data[pos++], data[pos++], node.imageWidth, node.imageHeight, node.uvs, node.vertices, node.indices, node.bounds);
+            if (blendMode) {
+                context.globalCompositeOperation = blendModes[blendMode];
+            }
+            var originAlpha;
+            if (alpha == alpha) {
+                originAlpha = context.globalAlpha;
+                context.globalAlpha *= alpha;
+            }
+            var drawCalls = 0;
+            var filter = node.filter;
+            if (filter) {
+                egret_native.Graphics.setGlobalShader(filter);
+                while (pos < length) {
+                    drawCalls++;
+                    context.drawMesh(image.source, data[pos++], data[pos++], data[pos++], data[pos++], data[pos++], data[pos++], data[pos++], data[pos++], node.imageWidth, node.imageHeight, node.uvs, node.vertices, node.indices, node.bounds);
+                }
+                egret_native.Graphics.setGlobalShader(null);
+            }
+            else {
+                while (pos < length) {
+                    drawCalls++;
+                    context.drawMesh(image.source, data[pos++], data[pos++], data[pos++], data[pos++], data[pos++], data[pos++], data[pos++], data[pos++], node.imageWidth, node.imageHeight, node.uvs, node.vertices, node.indices, node.bounds);
+                }
             }
             if (m) {
                 context.restoreTransform();
             }
-            // TODO 应该计算合理的drawCall？
+            if (blendMode) {
+                context.globalCompositeOperation = defaultCompositeOp;
+            }
+            if (alpha == alpha) {
+                context.globalAlpha = originAlpha;
+            }
             return 1;
         };
         /**
@@ -17798,7 +17838,7 @@ var egret;
              * @language zh_CN
              */
             get: function () {
-                return "5.0.0";
+                return "5.1.0";
             },
             enumerable: true,
             configurable: true

@@ -31,8 +31,8 @@
  * @private
  */
 interface CanvasRenderingContext2D {
-    imageSmoothingEnabled:boolean;
-    $imageSmoothingEnabled:boolean;
+    imageSmoothingEnabled: boolean;
+    $imageSmoothingEnabled: boolean;
 }
 
 namespace egret {
@@ -40,9 +40,9 @@ namespace egret {
     let blendModes = ["source-over", "lighter", "destination-out"];
     let defaultCompositeOp = "source-over";
     let BLACK_COLOR = "#000000";
-    let CAPS_STYLES = {none: 'butt', square: 'square', round: 'round'};
-    let renderBufferPool:sys.RenderBuffer[] = [];//渲染缓冲区对象池
-    let renderBufferPool_Filters:sys.RenderBuffer[] = [];//滤镜缓冲区对象池
+    let CAPS_STYLES = { none: 'butt', square: 'square', round: 'round' };
+    let renderBufferPool: sys.RenderBuffer[] = [];//渲染缓冲区对象池
+    let renderBufferPool_Filters: sys.RenderBuffer[] = [];//滤镜缓冲区对象池
     /**
      * @private
      * Canvas渲染器
@@ -53,7 +53,7 @@ namespace egret {
 
         }
 
-        private nestLevel:number = 0;//渲染的嵌套层次，0表示在调用堆栈的最外层。
+        private nestLevel: number = 0;//渲染的嵌套层次，0表示在调用堆栈的最外层。
         /**
          * 渲染一个显示对象
          * @param displayObject 要渲染的显示对象
@@ -63,10 +63,10 @@ namespace egret {
          * @param forRenderTexture 绘制目标是RenderTexture的标志
          * @returns drawCall触发绘制的次数
          */
-        public render(displayObject:DisplayObject, buffer:sys.RenderBuffer, matrix:Matrix, dirtyList?:egret.sys.Region[], forRenderTexture?:boolean):number {
+        public render(displayObject: DisplayObject, buffer: sys.RenderBuffer, matrix: Matrix, dirtyList?: egret.sys.Region[], forRenderTexture?: boolean): number {
             this.nestLevel++;
             let context = buffer.context;
-            let root:DisplayObject = forRenderTexture ? displayObject : null;
+            let root: DisplayObject = forRenderTexture ? displayObject : null;
             //绘制显示对象
             let drawCall = this.drawDisplayObject(displayObject, context, dirtyList, matrix, null, null, root);
             this.nestLevel--;
@@ -79,7 +79,7 @@ namespace egret {
                 for (let i = 0; i < length; i++) {
                     renderBufferPool[i].resize(0, 0);
                 }
-                if(renderBufferPool_Filters.length > 1) {
+                if (renderBufferPool_Filters.length > 1) {
                     renderBufferPool_Filters.length = 1;
                     renderBufferPool_Filters[0].resize(0, 0);
                 }
@@ -91,10 +91,10 @@ namespace egret {
          * @private
          * 绘制一个显示对象
          */
-        private drawDisplayObject(displayObject:DisplayObject, context:CanvasRenderingContext2D, dirtyList:egret.sys.Region[],
-                                  matrix:Matrix, displayList:sys.DisplayList, clipRegion:sys.Region, root:DisplayObject):number {
+        private drawDisplayObject(displayObject: DisplayObject, context: CanvasRenderingContext2D, dirtyList: egret.sys.Region[],
+            matrix: Matrix, displayList: sys.DisplayList, clipRegion: sys.Region, root: DisplayObject): number {
             let drawCalls = 0;
-            let node:sys.RenderNode;
+            let node: sys.RenderNode;
             if (displayList && !root) {
                 if (displayList.isDirty) {
                     drawCalls += displayList.drawToSurface();
@@ -125,8 +125,8 @@ namespace egret {
                     node.needRedraw = true;
                 }
                 if (node.needRedraw) {
-                    let renderAlpha:number;
-                    let m:Matrix;
+                    let renderAlpha: number;
+                    let m: Matrix;
                     if (root) {
                         renderAlpha = displayObject.$getConcatenatedAlphaAt(root, displayObject.$getConcatenatedAlpha());
                         m = Matrix.create().copyFrom(displayObject.$getConcatenatedMatrix());
@@ -156,7 +156,7 @@ namespace egret {
                         continue;
                     }
                     let filters = child.$getFilters();
-                    if(filters && filters.length > 0) {
+                    if (filters && filters.length > 0) {
                         drawCalls += this.drawWithFilter(child, context, dirtyList, matrix, clipRegion, root);
                     }
                     else if ((child.$blendMode !== 0 ||
@@ -184,13 +184,13 @@ namespace egret {
          * @private
          */
         private drawWithFilter(displayObject: DisplayObject, context: CanvasRenderingContext2D, dirtyList: egret.sys.Region[],
-            matrix: Matrix, clipRegion: sys.Region, root: DisplayObject):number {
+            matrix: Matrix, clipRegion: sys.Region, root: DisplayObject): number {
 
-            if(Capabilities.runtimeType == RuntimeType.NATIVE) { // for native
+            if (Capabilities.runtimeType == RuntimeType.NATIVE) { // for native
                 let drawCalls = 0;
                 let filters = displayObject.$getFilters();
                 let hasBlendMode = (displayObject.$blendMode !== 0);
-                let compositeOp:string;
+                let compositeOp: string;
                 if (hasBlendMode) {
                     compositeOp = blendModes[displayObject.$blendMode];
                     if (!compositeOp) {
@@ -202,7 +202,7 @@ namespace egret {
                     if (hasBlendMode) {
                         context.globalCompositeOperation = compositeOp;
                     }
-                    
+
                     (<any>context).setGlobalShader(filters[0]);
 
                     if (displayObject.$mask && (displayObject.$mask.$parentDisplayList || root)) {
@@ -227,7 +227,7 @@ namespace egret {
                 // 获取显示对象的链接矩阵
                 let displayMatrix = Matrix.create();
                 displayMatrix.copyFrom(displayObject.$getConcatenatedMatrix());
-                if(root) {
+                if (root) {
                     displayObject.$getConcatenatedMatrixAt(root, displayMatrix);
                 }
 
@@ -285,9 +285,9 @@ namespace egret {
 
             let drawCalls = 0;
             let filters = displayObject.$getFilters();
-            let filtersLen:number = filters.length;
+            let filtersLen: number = filters.length;
             let hasBlendMode = (displayObject.$blendMode !== 0);
-            let compositeOp:string;
+            let compositeOp: string;
             if (hasBlendMode) {
                 compositeOp = blendModes[displayObject.$blendMode];
                 if (!compositeOp) {
@@ -298,7 +298,7 @@ namespace egret {
             // 获取显示对象的链接矩阵
             let displayMatrix = Matrix.create();
             displayMatrix.copyFrom(displayObject.$getConcatenatedMatrix());
-            if(root) {
+            if (root) {
                 displayObject.$getConcatenatedMatrixAt(root, displayMatrix);
             }
 
@@ -339,29 +339,29 @@ namespace egret {
 
                 // 应用滤镜
                 let imageData = displayContext.getImageData(0, 0, displayBuffer.surface.width, displayBuffer.surface.height);
-                for(let i = 0; i < filtersLen; i++) {
+                for (let i = 0; i < filtersLen; i++) {
                     let filter = filters[i];
 
-                    if(filter.type == "colorTransform") {
+                    if (filter.type == "colorTransform") {
                         colorFilter(imageData.data, displayBuffer.surface.width, displayBuffer.surface.height, (<ColorMatrixFilter>filter).$matrix);
-                    } else if(filter.type == "blur") {
+                    } else if (filter.type == "blur") {
                         blurFilter(imageData.data, displayBuffer.surface.width, displayBuffer.surface.height, (<BlurFilter>filter).$blurX, (<BlurFilter>filter).$blurY);
-                    } else if(filter.type == "glow") {
+                    } else if (filter.type == "glow") {
                         let r = (<GlowFilter>filter).$red;
                         let g = (<GlowFilter>filter).$green;
                         let b = (<GlowFilter>filter).$blue;
                         let a = (<GlowFilter>filter).$alpha;
-                        if((<GlowFilter>filter).$inner || (<GlowFilter>filter).$knockout || (<DropShadowFilter>filter).$hideObject) {
+                        if ((<GlowFilter>filter).$inner || (<GlowFilter>filter).$knockout || (<DropShadowFilter>filter).$hideObject) {
                             dropShadowFilter2(imageData.data, displayBuffer.surface.width, displayBuffer.surface.height, [r / 255, g / 255, b / 255, a], (<GlowFilter>filter).$blurX, (<GlowFilter>filter).$blurY,
-                            (<DropShadowFilter>filter).$angle ? ((<DropShadowFilter>filter).$angle / 180 * Math.PI) : 0, (<DropShadowFilter>filter).$distance || 0, (<GlowFilter>filter).$strength, (<GlowFilter>filter).$inner ? 1 : 0, (<GlowFilter>filter).$knockout ? 0 : 1, (<DropShadowFilter>filter).$hideObject ? 1 : 0);
+                                (<DropShadowFilter>filter).$angle ? ((<DropShadowFilter>filter).$angle / 180 * Math.PI) : 0, (<DropShadowFilter>filter).$distance || 0, (<GlowFilter>filter).$strength, (<GlowFilter>filter).$inner ? 1 : 0, (<GlowFilter>filter).$knockout ? 0 : 1, (<DropShadowFilter>filter).$hideObject ? 1 : 0);
                         } else {
                             // 如果没有高级效果，使用性能比较高的方式
                             dropShadowFilter(imageData.data, displayBuffer.surface.width, displayBuffer.surface.height, [r / 255, g / 255, b / 255, a], (<GlowFilter>filter).$blurX, (<GlowFilter>filter).$blurY, (<DropShadowFilter>filter).$angle ? ((<DropShadowFilter>filter).$angle / 180 * Math.PI) : 0, (<DropShadowFilter>filter).$distance || 0, (<GlowFilter>filter).$strength);
                         }
-                    } else if(filter.type == "custom") {
+                    } else if (filter.type == "custom") {
                         // 目前canvas渲染不支持自定义滤镜
                     }
-                }  
+                }
                 displayContext.putImageData(imageData, 0, 0);
 
                 context.globalAlpha = 1;
@@ -387,11 +387,11 @@ namespace egret {
         /**
          * @private
          */
-        private drawWithClip(displayObject:DisplayObject, context:CanvasRenderingContext2D, dirtyList:egret.sys.Region[],
-                             matrix:Matrix, clipRegion:sys.Region, root:DisplayObject):number {
+        private drawWithClip(displayObject: DisplayObject, context: CanvasRenderingContext2D, dirtyList: egret.sys.Region[],
+            matrix: Matrix, clipRegion: sys.Region, root: DisplayObject): number {
             let drawCalls = 0;
             let hasBlendMode = (displayObject.$blendMode !== 0);
-            let compositeOp:string;
+            let compositeOp: string;
             if (hasBlendMode) {
                 compositeOp = blendModes[displayObject.$blendMode];
                 if (!compositeOp) {
@@ -401,13 +401,13 @@ namespace egret {
 
             let scrollRect = displayObject.$scrollRect ? displayObject.$scrollRect : displayObject.$maskRect;
             let mask = displayObject.$mask;
-            let maskRenderNode:sys.RenderNode;
-            if(mask) {
+            let maskRenderNode: sys.RenderNode;
+            if (mask) {
                 maskRenderNode = mask.$getRenderNode();
-                if(maskRenderNode) {
+                if (maskRenderNode) {
                     let maskRenderMatrix = maskRenderNode.renderMatrix;
                     //遮罩scaleX或scaleY为0，放弃绘制
-                    if((maskRenderMatrix.a == 0 && maskRenderMatrix.b == 0) || (maskRenderMatrix.c == 0 && maskRenderMatrix.d == 0)) {
+                    if ((maskRenderMatrix.a == 0 && maskRenderMatrix.b == 0) || (maskRenderMatrix.c == 0 && maskRenderMatrix.d == 0)) {
                         return drawCalls;
                     }
                 }
@@ -417,10 +417,10 @@ namespace egret {
             //}
 
             //计算scrollRect和mask的clip区域是否需要绘制，不需要就直接返回，跳过所有子项的遍历。
-            let maskRegion:sys.Region;
+            let maskRegion: sys.Region;
             let displayMatrix = Matrix.create();
             displayMatrix.copyFrom(displayObject.$getConcatenatedMatrix());
-            if(root) {
+            if (root) {
                 displayObject.$getConcatenatedMatrixAt(root, displayMatrix);
             }
             else if (displayObject.$parentDisplayList) {
@@ -430,19 +430,19 @@ namespace egret {
                 }
             }
 
-            let bounds:Rectangle;
+            let bounds: Rectangle;
             if (mask) {
                 bounds = mask.$getOriginalBounds();
                 maskRegion = sys.Region.create();
                 let m = Matrix.create();
                 m.copyFrom(mask.$getConcatenatedMatrix());
-                if(root) {
+                if (root) {
                     mask.$getConcatenatedMatrixAt(root, m);
                 }
                 maskRegion.updateRegion(bounds, m);
                 Matrix.release(m);
             }
-            let region:sys.Region;
+            let region: sys.Region;
             if (scrollRect) {
                 region = sys.Region.create();
                 region.updateRegion(scrollRect, displayMatrix);
@@ -540,7 +540,7 @@ namespace egret {
                 Matrix.release(displayMatrix);
                 return calls;
             }
-            
+
             //todo 若显示对象是容器，同时子项有混合模式，则需要先绘制背景到displayBuffer并清除背景区域
 
             //绘制显示对象自身，若有scrollRect，应用clip
@@ -580,7 +580,7 @@ namespace egret {
                     maskContext.setTransform(matrix.a, 0, 0, matrix.d, -region.minX * matrix.a, -region.minY * matrix.d);
                     offsetM = Matrix.create().setTo(matrix.a, 0, 0, matrix.d, -region.minX * matrix.a, -region.minY * matrix.d);
                     drawCalls += this.drawDisplayObject(mask, maskContext, dirtyList, offsetM,
-                    mask.$displayList, region, root);
+                        mask.$displayList, region, root);
                     displayContext.globalCompositeOperation = "destination-in";
                     displayContext.setTransform(1, 0, 0, 1, 0, 0);
                     displayContext.globalAlpha = 1;
@@ -624,8 +624,8 @@ namespace egret {
         /**
          * @private
          */
-        private drawWithScrollRect(displayObject:DisplayObject, context:CanvasRenderingContext2D, dirtyList:egret.sys.Region[],
-                                   matrix:Matrix, clipRegion:sys.Region, root:DisplayObject):number {
+        private drawWithScrollRect(displayObject: DisplayObject, context: CanvasRenderingContext2D, dirtyList: egret.sys.Region[],
+            matrix: Matrix, clipRegion: sys.Region, root: DisplayObject): number {
             let drawCalls = 0;
             let scrollRect = displayObject.$scrollRect ? displayObject.$scrollRect : displayObject.$maskRect;
             if (scrollRect.isEmpty()) {
@@ -633,7 +633,7 @@ namespace egret {
             }
             let m = Matrix.create();
             m.copyFrom(displayObject.$getConcatenatedMatrix());
-            if(root) {
+            if (root) {
                 displayObject.$getConcatenatedMatrixAt(root, m);
             }
             else if (displayObject.$parentDisplayList) {
@@ -642,7 +642,7 @@ namespace egret {
                     displayObject.$getConcatenatedMatrixAt(displayRoot, m);
                 }
             }
-            let region:sys.Region = sys.Region.create();
+            let region: sys.Region = sys.Region.create();
             region.updateRegion(scrollRect, m);
             if (region.isEmpty() || (clipRegion && !clipRegion.intersects(region))) {
                 sys.Region.release(region);
@@ -690,7 +690,7 @@ namespace egret {
          * @param matrix 要叠加的矩阵
          * @param forHitTest 绘制结果是用于碰撞检测。若为true，当渲染GraphicsNode时，会忽略透明度样式设置，全都绘制为不透明的。
          */
-        public drawNodeToBuffer(node:sys.RenderNode, buffer:sys.RenderBuffer, matrix:Matrix, forHitTest?:boolean):void {
+        public drawNodeToBuffer(node: sys.RenderNode, buffer: sys.RenderBuffer, matrix: Matrix, forHitTest?: boolean): void {
             let context = buffer.context;
             context.setTransform(matrix.a, matrix.b, matrix.c, matrix.d, matrix.tx, matrix.ty);
             this.renderNode(node, context, forHitTest);
@@ -699,7 +699,7 @@ namespace egret {
         /**
          * @private
          */
-        private renderNode(node:sys.RenderNode, context:any, forHitTest?:boolean):number {
+        private renderNode(node: sys.RenderNode, context: any, forHitTest?: boolean): number {
             let drawCalls = 0;
             switch (node.type) {
                 case sys.RenderNodeType.BitmapNode:
@@ -728,8 +728,8 @@ namespace egret {
         /** 
          * render mesh 
          */
-        private renderMesh(node:sys.MeshNode, context:any):number {
-            if(Capabilities.runtimeType != RuntimeType.NATIVE) {
+        private renderMesh(node: sys.MeshNode, context: any): number {
+            if (Capabilities.runtimeType != RuntimeType.NATIVE) {
                 return 0;
             }
             let image = node.image;
@@ -737,18 +737,49 @@ namespace egret {
             let length = data.length;
             let pos = 0;
             let m = node.matrix;
+            let blendMode = node.blendMode;
+            let alpha = node.alpha;
+            let saved = false;
             if (m) {
                 context.saveTransform();
                 context.transform(m.a, m.b, m.c, m.d, m.tx, m.ty);
             }
-            while (pos < length) {
-                context.drawMesh(image.source, data[pos++], data[pos++], data[pos++], data[pos++], data[pos++], data[pos++], data[pos++],
-                    data[pos++], node.imageWidth, node.imageHeight, node.uvs, node.vertices, node.indices, node.bounds);
+            if (blendMode) {
+                context.globalCompositeOperation = blendModes[blendMode];
+            }
+            let originAlpha: number;
+            if (alpha == alpha) {
+                originAlpha = context.globalAlpha;
+                context.globalAlpha *= alpha;
+            }
+
+            let drawCalls: number = 0;
+            let filter = node.filter;
+            if (filter) {
+                egret_native.Graphics.setGlobalShader(filter);
+                while (pos < length) {
+                    drawCalls++;
+                    context.drawMesh(image.source, data[pos++], data[pos++], data[pos++], data[pos++], data[pos++], data[pos++], data[pos++],
+                        data[pos++], node.imageWidth, node.imageHeight, node.uvs, node.vertices, node.indices, node.bounds);
+                }
+                egret_native.Graphics.setGlobalShader(null);
+            }
+            else {
+                while (pos < length) {
+                    drawCalls++;
+                    context.drawMesh(image.source, data[pos++], data[pos++], data[pos++], data[pos++], data[pos++], data[pos++], data[pos++],
+                        data[pos++], node.imageWidth, node.imageHeight, node.uvs, node.vertices, node.indices, node.bounds);
+                }
             }
             if (m) {
                 context.restoreTransform();
             }
-            // TODO 应该计算合理的drawCall？
+            if (blendMode) {
+                context.globalCompositeOperation = defaultCompositeOp;
+            }
+            if (alpha == alpha) {
+                context.globalAlpha = originAlpha;
+            }
             return 1;
         }
 
@@ -756,9 +787,9 @@ namespace egret {
         /**
          * @private
          */
-        private renderBitmap(node:sys.BitmapNode, context:CanvasRenderingContext2D):number {
+        private renderBitmap(node: sys.BitmapNode, context: CanvasRenderingContext2D): number {
             let image = node.image;
-            if(!image || !image.source) {
+            if (!image || !image.source) {
                 return 0;
             }
             if (context.$imageSmoothingEnabled != node.smoothing) {
@@ -774,7 +805,7 @@ namespace egret {
 
             let saved = false;
             if (m) {
-                if((<any>context).saveTransform) {//for native
+                if ((<any>context).saveTransform) {//for native
                     (<any>context).saveTransform();
                 }
                 else {
@@ -784,20 +815,20 @@ namespace egret {
                 context.transform(m.a, m.b, m.c, m.d, m.tx, m.ty);
             }
             //这里不考虑嵌套
-            if(blendMode) {
+            if (blendMode) {
                 context.globalCompositeOperation = blendModes[blendMode];
             }
-            let originAlpha:number;
-            if(alpha == alpha) {
+            let originAlpha: number;
+            if (alpha == alpha) {
                 originAlpha = context.globalAlpha;
                 context.globalAlpha *= alpha;
             }
-            
-            let drawCalls:number = 0;
+
+            let drawCalls: number = 0;
             let filter = node.filter;
             //todo 暂时只考虑绘制一次的情况
-            if(filter && length == 8) {
-                if(Capabilities.runtimeType == RuntimeType.NATIVE) { // for native
+            if (filter && length == 8) {
+                if (Capabilities.runtimeType == RuntimeType.NATIVE) { // for native
                     egret_native.Graphics.setGlobalShader(filter);
                     while (pos < length) {
                         drawCalls++;
@@ -806,7 +837,7 @@ namespace egret {
                     egret_native.Graphics.setGlobalShader(null);
                 }
                 else {
-                    let displayBuffer = this.createRenderBuffer(data[6],data[7]);
+                    let displayBuffer = this.createRenderBuffer(data[6], data[7]);
                     let displayContext = displayBuffer.context;
                     drawCalls++;
                     displayContext.drawImage(image.source, data[0], data[1], data[2], data[3], 0, 0, data[6], data[7]);
@@ -828,12 +859,12 @@ namespace egret {
                 }
             }
             if (saved) {
-                if((<any>context).restoreTransform) {//for native
+                if ((<any>context).restoreTransform) {//for native
                     (<any>context).restoreTransform();
-                    if(blendMode) {
+                    if (blendMode) {
                         context.globalCompositeOperation = defaultCompositeOp;
                     }
-                    if(alpha == alpha) {
+                    if (alpha == alpha) {
                         context.globalAlpha = originAlpha;
                     }
                 }
@@ -841,11 +872,11 @@ namespace egret {
                     context.restore();
                 }
             }
-            else  {
-                if(blendMode){
+            else {
+                if (blendMode) {
                     context.globalCompositeOperation = defaultCompositeOp;
                 }
-                if(alpha == alpha) {
+                if (alpha == alpha) {
                     context.globalAlpha = originAlpha;
                 }
             }
@@ -855,7 +886,7 @@ namespace egret {
         /**
          * @private
          */
-        public renderText(node:sys.TextNode, context:CanvasRenderingContext2D):void {
+        public renderText(node: sys.TextNode, context: CanvasRenderingContext2D): void {
             context.textAlign = "left";
             context.textBaseline = "middle";
             context.lineJoin = "round";//确保描边样式是圆角
@@ -866,7 +897,7 @@ namespace egret {
                 let x = drawData[pos++];
                 let y = drawData[pos++];
                 let text = drawData[pos++];
-                let format:sys.TextFormat = drawData[pos++];
+                let format: sys.TextFormat = drawData[pos++];
                 context.font = getFontString(node, format);
                 let textColor = format.textColor == null ? node.textColor : format.textColor;
                 let strokeColor = format.strokeColor == null ? node.strokeColor : format.strokeColor;
@@ -884,12 +915,12 @@ namespace egret {
         /**
          * @private
          */
-        public renderGraphics(node:sys.GraphicsNode, context:CanvasRenderingContext2D, forHitTest?:boolean):number {
+        public renderGraphics(node: sys.GraphicsNode, context: CanvasRenderingContext2D, forHitTest?: boolean): number {
             let drawData = node.drawData;
             let length = drawData.length;
             forHitTest = !!forHitTest;
             for (let i = 0; i < length; i++) {
-                let path:sys.Path2D = drawData[i];
+                let path: sys.Path2D = drawData[i];
                 switch (path.type) {
                     case sys.PathType.Fill:
                         let fillPath = <sys.FillPath>path;
@@ -936,7 +967,7 @@ namespace egret {
             return length == 0 ? 0 : 1;
         }
 
-        private renderPath(path:sys.Path2D, context:CanvasRenderingContext2D):void {
+        private renderPath(path: sys.Path2D, context: CanvasRenderingContext2D): void {
             context.beginPath();
             let data = path.$data;
             let commands = path.$commands;
@@ -962,11 +993,11 @@ namespace egret {
         }
 
 
-        private renderGroup(groupNode:sys.GroupNode, context:CanvasRenderingContext2D):number {
+        private renderGroup(groupNode: sys.GroupNode, context: CanvasRenderingContext2D): number {
             let m = groupNode.matrix;
             let saved = false;
             if (m) {
-                if((<any>context).saveTransform) {//for native
+                if ((<any>context).saveTransform) {//for native
                     (<any>context).saveTransform();
                 }
                 else {
@@ -976,16 +1007,16 @@ namespace egret {
                 context.transform(m.a, m.b, m.c, m.d, m.tx, m.ty);
             }
 
-            let drawCalls:number = 0;
+            let drawCalls: number = 0;
             let children = groupNode.drawData;
             let length = children.length;
             for (let i = 0; i < length; i++) {
-                let node:sys.RenderNode = children[i];
+                let node: sys.RenderNode = children[i];
                 drawCalls += this.renderNode(node, context);
             }
 
             if (saved) {
-                if((<any>context).restoreTransform) {//for native
+                if ((<any>context).restoreTransform) {//for native
                     (<any>context).restoreTransform();
                 }
                 else {
@@ -998,7 +1029,7 @@ namespace egret {
         /**
          * @private
          */
-        private createRenderBuffer(width:number, height:number, useForFilters?:boolean):sys.RenderBuffer {
+        private createRenderBuffer(width: number, height: number, useForFilters?: boolean): sys.RenderBuffer {
             let buffer = useForFilters ? renderBufferPool_Filters.pop() : renderBufferPool.pop();
             if (buffer) {
                 buffer.resize(width, height, true);
@@ -1014,12 +1045,12 @@ namespace egret {
      * @private
      * 获取字体字符串
      */
-    function getFontString(node:sys.TextNode, format:sys.TextFormat):string {
-        let italic:boolean = format.italic == null ? node.italic : format.italic;
-        let bold:boolean = format.bold == null ? node.bold : format.bold;
-        let size:number = format.size == null ? node.size : format.size;
-        let fontFamily:string = format.fontFamily || node.fontFamily;
-        let font:string = italic ? "italic " : "normal ";
+    function getFontString(node: sys.TextNode, format: sys.TextFormat): string {
+        let italic: boolean = format.italic == null ? node.italic : format.italic;
+        let bold: boolean = format.bold == null ? node.bold : format.bold;
+        let size: number = format.size == null ? node.size : format.size;
+        let fontFamily: string = format.fontFamily || node.fontFamily;
+        let font: string = italic ? "italic " : "normal ";
         font += bold ? "bold " : "normal ";
         font += size + "px " + fontFamily;
         return font;
@@ -1029,7 +1060,7 @@ namespace egret {
      * @private
      * 获取RGBA字符串
      */
-    function getRGBAString(color:number, alpha:number):string {
+    function getRGBAString(color: number, alpha: number): string {
         let red = color >> 16;
         let green = (color >> 8) & 0xFF;
         let blue = color & 0xFF;
@@ -1040,9 +1071,9 @@ namespace egret {
      * @private
      * 获取渐变填充样式对象
      */
-    function getGradient(context:CanvasRenderingContext2D, type:string, colors:number[],
-                         alphas:number[], ratios:number[], matrix:Matrix):CanvasGradient {
-        let gradient:CanvasGradient;
+    function getGradient(context: CanvasRenderingContext2D, type: string, colors: number[],
+        alphas: number[], ratios: number[], matrix: Matrix): CanvasGradient {
+        let gradient: CanvasGradient;
         if (type == GradientType.LINEAR) {
             gradient = context.createLinearGradient(-1, 0, 1, 0);
         }
@@ -1059,12 +1090,12 @@ namespace egret {
 
     // 判断浏览器是否支持 Uint8ClampedArray
     let use8Clamp = false;
-    try{
+    try {
         use8Clamp = (typeof Uint8ClampedArray !== undefined);
-    } catch(e) {}
+    } catch (e) { }
 
-    function setArray(a, b, index:number = 0):void {
-        for(let i = 0, l = b.length; i < l; i++) {
+    function setArray(a, b, index: number = 0): void {
+        for (let i = 0, l = b.length; i < l; i++) {
             a[i + index] = b[i];
         }
     }
@@ -1073,8 +1104,8 @@ namespace egret {
      * @private
      */
     function colorFilter(buffer, w, h, matrix) {
-        let r0 = matrix[0],  r1 = matrix[1],  r2 = matrix[2],  r3 = matrix[3],  r4 = matrix[4];
-        let g0 = matrix[5],  g1 = matrix[6],  g2 = matrix[7],  g3 = matrix[8],  g4 = matrix[9];
+        let r0 = matrix[0], r1 = matrix[1], r2 = matrix[2], r3 = matrix[3], r4 = matrix[4];
+        let g0 = matrix[5], g1 = matrix[6], g2 = matrix[7], g3 = matrix[8], g4 = matrix[9];
         let b0 = matrix[10], b1 = matrix[11], b2 = matrix[12], b3 = matrix[13], b4 = matrix[14];
         let a0 = matrix[15], a1 = matrix[16], a2 = matrix[17], a3 = matrix[18], a4 = matrix[19];
         for (let p = 0, e = w * h * 4; p < e; p += 4) {
@@ -1103,7 +1134,7 @@ namespace egret {
      */
     function blurFilterH(buffer, w, h, blurX) {
         let lineBuffer;
-        if(use8Clamp) {
+        if (use8Clamp) {
             lineBuffer = new Uint8ClampedArray(w * 4);
         } else {
             lineBuffer = new Array(w * 4);
@@ -1117,7 +1148,7 @@ namespace egret {
             // Fill window
             for (let ptr = -blurX * 4, end = blurX * 4 + 4; ptr < end; ptr += 4) {
                 let key = pLineStart + ptr;
-                if(key < pLineStart || key >= pLineStart + lineSize) {
+                if (key < pLineStart || key >= pLineStart + lineSize) {
                     continue;
                 }
                 alpha = buffer[key + 3];
@@ -1129,7 +1160,7 @@ namespace egret {
             // Slide window
             for (let ptr = pLineStart, end = pLineStart + lineSize, linePtr = 0, lastPtr = ptr - blurX * 4, nextPtr = ptr + (blurX + 1) * 4; ptr < end; ptr += 4, linePtr += 4, nextPtr += 4, lastPtr += 4) {
 
-                if(_as === 0) {
+                if (_as === 0) {
                     lineBuffer[linePtr + 0] = 0;
                     lineBuffer[linePtr + 1] = 0;
                     lineBuffer[linePtr + 2] = 0;
@@ -1140,12 +1171,12 @@ namespace egret {
                     lineBuffer[linePtr + 2] = bs / _as;
                     lineBuffer[linePtr + 3] = _as / windowLength;
                 }
-                
+
                 alpha = buffer[nextPtr + 3];
                 alpha2 = buffer[lastPtr + 3];
-                
-                if(alpha || alpha == 0) {
-                    if(alpha2 || alpha2 == 0) {
+
+                if (alpha || alpha == 0) {
+                    if (alpha2 || alpha2 == 0) {
                         rs += buffer[nextPtr + 0] * alpha - buffer[lastPtr + 0] * alpha2;
                         gs += buffer[nextPtr + 1] * alpha - buffer[lastPtr + 1] * alpha2;
                         bs += buffer[nextPtr + 2] * alpha - buffer[lastPtr + 2] * alpha2;
@@ -1157,7 +1188,7 @@ namespace egret {
                         _as += alpha;
                     }
                 } else {
-                    if(alpha2 || alpha2 == 0) {
+                    if (alpha2 || alpha2 == 0) {
                         rs += - buffer[lastPtr + 0] * alpha2;
                         gs += - buffer[lastPtr + 1] * alpha2;
                         bs += - buffer[lastPtr + 2] * alpha2;
@@ -1168,7 +1199,7 @@ namespace egret {
                 }
             }
             // Copy line
-            if(use8Clamp) {
+            if (use8Clamp) {
                 buffer.set(lineBuffer, pLineStart);
             } else {
                 setArray(buffer, lineBuffer, pLineStart);
@@ -1181,7 +1212,7 @@ namespace egret {
      */
     function blurFilterV(buffer, w, h, blurY) {
         let columnBuffer;
-        if(use8Clamp) {
+        if (use8Clamp) {
             columnBuffer = new Uint8ClampedArray(h * 4);
         } else {
             columnBuffer = new Array(h * 4);
@@ -1194,7 +1225,7 @@ namespace egret {
             // Fill window
             for (let ptr = -blurY * stride, end = blurY * stride + stride; ptr < end; ptr += stride) {
                 let key = pColumnStart + ptr;
-                if(key < pColumnStart || key >= pColumnStart + h * stride) {
+                if (key < pColumnStart || key >= pColumnStart + h * stride) {
                     continue;
                 }
                 alpha = buffer[key + 3];
@@ -1206,7 +1237,7 @@ namespace egret {
             // Slide window
             for (let ptr = pColumnStart, end = pColumnStart + h * stride, columnPtr = 0, lastPtr = pColumnStart - blurY * stride, nextPtr = pColumnStart + ((blurY + 1) * stride); ptr < end; ptr += stride, columnPtr += 4, nextPtr += stride, lastPtr += stride) {
 
-                if(_as === 0) {
+                if (_as === 0) {
                     columnBuffer[columnPtr + 0] = 0;
                     columnBuffer[columnPtr + 1] = 0;
                     columnBuffer[columnPtr + 2] = 0;
@@ -1217,12 +1248,12 @@ namespace egret {
                     columnBuffer[columnPtr + 2] = bs / _as;
                     columnBuffer[columnPtr + 3] = _as / windowLength;
                 }
-                
+
                 alpha = buffer[nextPtr + 3];
                 alpha2 = buffer[lastPtr + 3];
 
-                if(alpha || alpha == 0) {
-                    if(alpha2 || alpha2 == 0) {
+                if (alpha || alpha == 0) {
+                    if (alpha2 || alpha2 == 0) {
                         rs += buffer[nextPtr + 0] * alpha - buffer[lastPtr + 0] * alpha2;
                         gs += buffer[nextPtr + 1] * alpha - buffer[lastPtr + 1] * alpha2;
                         bs += buffer[nextPtr + 2] * alpha - buffer[lastPtr + 2] * alpha2;
@@ -1234,7 +1265,7 @@ namespace egret {
                         _as += alpha;
                     }
                 } else {
-                    if(alpha2 || alpha2 == 0) {
+                    if (alpha2 || alpha2 == 0) {
                         rs += - buffer[lastPtr + 0] * alpha2;
                         gs += - buffer[lastPtr + 1] * alpha2;
                         bs += - buffer[lastPtr + 2] * alpha2;
@@ -1265,7 +1296,7 @@ namespace egret {
         scaleAlphaChannel(tmp, strength);
         compositeSourceOver(tmp, buffer);
         buffer.set(tmp);
-        if(use8Clamp) {
+        if (use8Clamp) {
             buffer.set(tmp);
         } else {
             setArray(buffer, tmp);
@@ -1277,7 +1308,7 @@ namespace egret {
             color = [0, 0, 0, 0];
         }
         let plane;
-        if(use8Clamp) {
+        if (use8Clamp) {
             plane = new Uint8ClampedArray(buffer)
         } else {
             plane = new Array(buffer.length);
@@ -1300,9 +1331,9 @@ namespace egret {
     function panFilter(buffer, w, h, angle, distance) {
         let dy = (Math.sin(angle) * distance) | 0;
         let dx = (Math.cos(angle) * distance) | 0;
-        
+
         let oldBuffer, newBuffer;
-        if(use8Clamp) {
+        if (use8Clamp) {
             oldBuffer = new Int32Array(buffer.buffer);
             newBuffer = new Int32Array(oldBuffer.length);
 
@@ -1383,14 +1414,14 @@ namespace egret {
     // 模拟shader中的算法，可以实现内发光，挖空等高级效果
     function dropShadowFilter2(buffer, w, h, color, blurX, blurY, angle, distance, strength, inner, knockout, hideObject) {
         let plane;
-        if(use8Clamp) {
+        if (use8Clamp) {
             plane = new Uint8ClampedArray(buffer.length);
         } else {
             plane = new Array(buffer.length);
         }
 
         let alpha = color[3];
-        
+
         let curDistanceX = 0;
         let curDistanceY = 0;
         let offsetX = distance * Math.cos(angle);
@@ -1406,12 +1437,12 @@ namespace egret {
         let stepY = blurY / linearSamplingTimes;
 
         // 遍历像素
-        for(let u = 0; u < w; u++) {
-            for(let v = 0; v < h; v++) {
+        for (let u = 0; u < w; u++) {
+            for (let v = 0; v < h; v++) {
 
                 // 此处为了避免毛刺可以添加一个随机值
                 let offset = 0;
-                
+
                 // 处理单个像素
                 let key = v * w * 4 + u * 4;
                 let totalAlpha = 0;
@@ -1443,7 +1474,7 @@ namespace egret {
                         maxTotalAlpha += (linearSamplingTimes - i);
                     }
                 }
-                
+
                 _a = Math.max(_a, 0.0001);
                 // 'ownColor.rgb = ownColor.rgb / ownColor.a;',
 
@@ -1473,12 +1504,12 @@ namespace egret {
             }
         }
 
-        if(use8Clamp) {
+        if (use8Clamp) {
             buffer.set(plane);
         } else {
             setArray(buffer, plane);
         }
-        
+
     }
 
 
