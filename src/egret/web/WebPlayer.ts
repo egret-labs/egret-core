@@ -176,15 +176,22 @@ namespace egret.web {
                 return;
             let option = this.playerOption;
             let screenRect = this.container.getBoundingClientRect();
+            let top = 0;
+            let boundingClientWidth = screenRect.width;
+            let boundingClientHeight = screenRect.height;
+            if(screenRect.top < 0) {
+                boundingClientHeight += screenRect.top;
+                top = -screenRect.top;
+            }
             let shouldRotate = false;
 
             let orientation:string = this.stage.$orientation;
             if (orientation != OrientationMode.AUTO) {
-                shouldRotate = orientation != OrientationMode.PORTRAIT && screenRect.height > screenRect.width
-                    || orientation == OrientationMode.PORTRAIT && screenRect.width > screenRect.height;
+                shouldRotate = orientation != OrientationMode.PORTRAIT && boundingClientHeight > boundingClientWidth
+                    || orientation == OrientationMode.PORTRAIT && boundingClientWidth > boundingClientHeight;
             }
-            let screenWidth = shouldRotate ? screenRect.height : screenRect.width;
-            let screenHeight = shouldRotate ? screenRect.width : screenRect.height;
+            let screenWidth = shouldRotate ? boundingClientHeight : boundingClientWidth;
+            let screenHeight = shouldRotate ? boundingClientWidth : boundingClientHeight;
             Capabilities.$boundingClientWidth = screenWidth;
             Capabilities.$boundingClientHeight = screenHeight;
             let stageSize = egret.sys.screenAdapter.calculateStageSize(this.stage.$scaleMode,
@@ -206,18 +213,18 @@ namespace egret.web {
             if (shouldRotate) {
                 if (orientation == OrientationMode.LANDSCAPE) {//
                     rotation = 90;
-                    canvas.style.top = (screenRect.height - displayWidth) / 2 + "px";
-                    canvas.style.left = (screenRect.width + displayHeight) / 2 + "px";
+                    canvas.style.top = top + (boundingClientHeight - displayWidth) / 2 + "px";
+                    canvas.style.left = (boundingClientWidth + displayHeight) / 2 + "px";
                 }
                 else {
                     rotation = -90;
-                    canvas.style.top = (screenRect.height + displayWidth) / 2 + "px";
-                    canvas.style.left = (screenRect.width - displayHeight) / 2 + "px";
+                    canvas.style.top = top + (boundingClientHeight + displayWidth) / 2 + "px";
+                    canvas.style.left = (boundingClientWidth - displayHeight) / 2 + "px";
                 }
             }
             else {
-                canvas.style.top = (screenRect.height - displayHeight) / 2 + "px";
-                canvas.style.left = (screenRect.width - displayWidth) / 2 + "px";
+                canvas.style.top = top + (boundingClientHeight - displayHeight) / 2 + "px";
+                canvas.style.left = (boundingClientWidth - displayWidth) / 2 + "px";
             }
 
             let transform = `rotate(${ rotation }deg)`;
