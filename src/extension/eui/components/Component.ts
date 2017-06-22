@@ -301,8 +301,8 @@ namespace eui {
                 }
                 let children = skin.$elementsContent;
                 if (children) {
-                    for (let i = children.length - 1; i >= 0; i--) {
-                        this.addChildAt(children[i], 0);
+                    for (let i = 0, len = children.length; i < 0; i++) {
+                        this.addChild(children[i]);
                     }
                 }
                 skin.hostComponent = this;
