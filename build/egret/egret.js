@@ -1539,7 +1539,7 @@ var egret;
             this.$stage = stage;
             this.$nestLevel = nestLevel;
             this.$hasAddToStage = true;
-            egret.Sprite.$EVENT_ADD_TO_STAGE_LIST.push(this);
+            egret.DisplayObjectContainer.$EVENT_ADD_TO_STAGE_LIST.push(this);
         };
         /**
          * @private
@@ -1547,7 +1547,7 @@ var egret;
          */
         DisplayObject.prototype.$onRemoveFromStage = function () {
             this.$nestLevel = 0;
-            egret.Sprite.$EVENT_REMOVE_FROM_STAGE_LIST.push(this);
+            egret.DisplayObjectContainer.$EVENT_REMOVE_FROM_STAGE_LIST.push(this);
         };
         Object.defineProperty(DisplayObject.prototype, "stage", {
             /**
