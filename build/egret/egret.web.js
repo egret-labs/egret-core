@@ -3130,110 +3130,67 @@ var egret;
 (function (egret) {
     var web;
     (function (web) {
-        /**
-         * @private
-         */
-        var WebHideHandler = (function (_super) {
-            __extends(WebHideHandler, _super);
-            /**
-             * @private
-             */
-            function WebHideHandler(stage) {
-                var _this = _super.call(this) || this;
-                /**
-                 * @private
-                 */
-                _this.isActivate = true;
-                _this.stage = stage;
-                _this.registerListener();
-                return _this;
-            }
-            /**
-             * @private
-             *
-             */
-            WebHideHandler.prototype.registerListener = function () {
-                var self = this;
-                //失去焦点
-                var onBlurHandler = function () {
-                    if (!self.isActivate) {
-                        return;
-                    }
-                    self.isActivate = false;
-                    self.stage.dispatchEvent(new egret.Event(egret.Event.DEACTIVATE));
-                };
-                //激活
-                var onFocusHandler = function () {
-                    if (self.isActivate) {
-                        return;
-                    }
-                    self.isActivate = true;
-                    self.stage.dispatchEvent(new egret.Event(egret.Event.ACTIVATE));
-                };
-                var handleVisibilityChange = function () {
-                    if (!document[hidden]) {
-                        onFocusHandler();
-                    }
-                    else {
-                        onBlurHandler();
-                    }
-                };
-                window.addEventListener("focus", onFocusHandler, false);
-                window.addEventListener("blur", onBlurHandler, false);
-                var hidden, visibilityChange;
-                if (typeof document.hidden !== "undefined") {
-                    hidden = "hidden";
-                    visibilityChange = "visibilitychange";
+        web.WebLifeCycleHandler = function (context) {
+            var handleVisibilityChange = function () {
+                if (!document[hidden]) {
+                    context.onResume();
                 }
-                else if (typeof document["mozHidden"] !== "undefined") {
-                    hidden = "mozHidden";
-                    visibilityChange = "mozvisibilitychange";
-                }
-                else if (typeof document["msHidden"] !== "undefined") {
-                    hidden = "msHidden";
-                    visibilityChange = "msvisibilitychange";
-                }
-                else if (typeof document["webkitHidden"] !== "undefined") {
-                    hidden = "webkitHidden";
-                    visibilityChange = "webkitvisibilitychange";
-                }
-                else if (typeof document["oHidden"] !== "undefined") {
-                    hidden = "oHidden";
-                    visibilityChange = "ovisibilitychange";
-                }
-                if ("onpageshow" in window && "onpagehide" in window) {
-                    window.addEventListener("pageshow", onFocusHandler, false);
-                    window.addEventListener("pagehide", onBlurHandler, false);
-                }
-                if (hidden && visibilityChange) {
-                    document.addEventListener(visibilityChange, handleVisibilityChange, false);
-                }
-                var ua = navigator.userAgent;
-                var isWX = /micromessenger/gi.test(ua);
-                var isQQBrowser = /mqq/ig.test(ua);
-                var isQQ = /mobile.*qq/gi.test(ua);
-                if (isQQ || isWX) {
-                    isQQBrowser = false;
-                }
-                if (isQQBrowser) {
-                    var browser = window["browser"] || {};
-                    browser.execWebFn = browser.execWebFn || {};
-                    browser.execWebFn.postX5GamePlayerMessage = function (event) {
-                        var eventType = event.type;
-                        if (eventType == "app_enter_background") {
-                            onBlurHandler();
-                        }
-                        else if (eventType == "app_enter_foreground") {
-                            onFocusHandler();
-                        }
-                    };
-                    window["browser"] = browser;
+                else {
+                    context.onPause();
                 }
             };
-            return WebHideHandler;
-        }(egret.HashObject));
-        web.WebHideHandler = WebHideHandler;
-        __reflect(WebHideHandler.prototype, "egret.web.WebHideHandler");
+            window.addEventListener("focus", context.onResume, false);
+            window.addEventListener("blur", context.onPause, false);
+            var hidden, visibilityChange;
+            if (typeof document.hidden !== "undefined") {
+                hidden = "hidden";
+                visibilityChange = "visibilitychange";
+            }
+            else if (typeof document["mozHidden"] !== "undefined") {
+                hidden = "mozHidden";
+                visibilityChange = "mozvisibilitychange";
+            }
+            else if (typeof document["msHidden"] !== "undefined") {
+                hidden = "msHidden";
+                visibilityChange = "msvisibilitychange";
+            }
+            else if (typeof document["webkitHidden"] !== "undefined") {
+                hidden = "webkitHidden";
+                visibilityChange = "webkitvisibilitychange";
+            }
+            else if (typeof document["oHidden"] !== "undefined") {
+                hidden = "oHidden";
+                visibilityChange = "ovisibilitychange";
+            }
+            if ("onpageshow" in window && "onpagehide" in window) {
+                window.addEventListener("pageshow", context.onResume, false);
+                window.addEventListener("pagehide", context.onPause, false);
+            }
+            if (hidden && visibilityChange) {
+                document.addEventListener(visibilityChange, handleVisibilityChange, false);
+            }
+            var ua = navigator.userAgent;
+            var isWX = /micromessenger/gi.test(ua);
+            var isQQBrowser = /mqq/ig.test(ua);
+            var isQQ = /mobile.*qq/gi.test(ua);
+            if (isQQ || isWX) {
+                isQQBrowser = false;
+            }
+            if (isQQBrowser) {
+                var browser = window["browser"] || {};
+                browser.execWebFn = browser.execWebFn || {};
+                browser.execWebFn.postX5GamePlayerMessage = function (event) {
+                    var eventType = event.type;
+                    if (eventType == "app_enter_background") {
+                        context.onPause();
+                    }
+                    else if (eventType == "app_enter_foreground") {
+                        context.onResume();
+                    }
+                };
+                window["browser"] = browser;
+            }
+        };
     })(web = egret.web || (egret.web = {}));
 })(egret || (egret = {}));
 //////////////////////////////////////////////////////////////////////////////////////
@@ -4026,7 +3983,8 @@ var egret;
                 this.attachCanvas(container, canvas);
                 var webTouch = new web.WebTouchHandler(stage, canvas);
                 var player = new egret.sys.Player(buffer, stage, option.entryClassName);
-                var webHide = new egret.web.WebHideHandler(stage);
+                egret.lifecycle.stage = stage;
+                egret.lifecycle.addLifecycleListener(web.WebLifeCycleHandler);
                 var webInput = new web.HTMLInput();
                 player.showPaintRect(option.showPaintRect);
                 if (option.showFPS || option.showLog) {
@@ -4039,7 +3997,6 @@ var egret;
                 this.player = player;
                 this.webTouchHandler = webTouch;
                 this.webInput = webInput;
-                this.webHide = webHide;
                 egret.web.$cacheTextAdapter(webInput, stage, container, canvas);
                 this.updateScreenSize();
                 this.updateMaxTouches();

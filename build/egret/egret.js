@@ -14917,23 +14917,29 @@ var egret;
     egret.$ticker = new egret.sys.SystemTicker();
     var lifecycle;
     (function (lifecycle) {
+        var isActivate = true;
         lifecycle.context = {
             onPause: function () {
                 //console.log("pauseApp");
-                lifecycle.stage.dispatchEvent(new egret.Event(egret.Event.DEACTIVATE));
                 egret_native.Audio.pauseBackgroundMusic();
                 egret_native.Audio.pauseAllEffects();
-                if (lifecycle.onPause) {
-                    lifecycle.onPause();
+                if (isActivate) {
+                    isActivate = false;
+                    lifecycle.stage.dispatchEvent(new egret.Event(egret.Event.DEACTIVATE));
+                    if (lifecycle.onPause) {
+                        lifecycle.onPause();
+                    }
                 }
             },
             onResume: function () {
                 //console.log("resumeApp");
-                lifecycle.stage.dispatchEvent(new egret.Event(egret.Event.ACTIVATE));
                 egret_native.Audio.resumeBackgroundMusic();
                 egret_native.Audio.resumeAllEffects();
-                if (lifecycle.onResume) {
-                    lifecycle.onResume();
+                if (!isActivate) {
+                    lifecycle.stage.dispatchEvent(new egret.Event(egret.Event.ACTIVATE));
+                    if (lifecycle.onResume) {
+                        lifecycle.onResume();
+                    }
                 }
             }
         };

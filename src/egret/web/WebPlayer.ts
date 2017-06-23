@@ -33,13 +33,13 @@ namespace egret.web {
      */
     export class WebPlayer extends egret.HashObject implements egret.sys.Screen {
 
-        public constructor(container:HTMLDivElement, options:{renderMode?:string;screenAdapter?:sys.IScreenAdapter}) {
+        public constructor(container: HTMLDivElement, options: { renderMode?: string; screenAdapter?: sys.IScreenAdapter }) {
             super();
             this.init(container, options);
             this.initOrientation();
         }
 
-        private init(container:HTMLDivElement, options:{renderMode?:string;screenAdapter?:sys.IScreenAdapter}):void {
+        private init(container: HTMLDivElement, options: { renderMode?: string; screenAdapter?: sys.IScreenAdapter }): void {
             let option = this.readOption(container, options);
             let stage = new egret.Stage();
             stage.$screen = this;
@@ -55,7 +55,10 @@ namespace egret.web {
 
             let webTouch = new WebTouchHandler(stage, canvas);
             let player = new egret.sys.Player(buffer, stage, option.entryClassName);
-            let webHide = new egret.web.WebHideHandler(stage);
+
+            lifecycle.stage = stage;
+            lifecycle.addLifecycleListener(WebLifeCycleHandler);
+
             let webInput = new HTMLInput();
 
             player.showPaintRect(option.showPaintRect);
@@ -69,7 +72,6 @@ namespace egret.web {
             this.player = player;
             this.webTouchHandler = webTouch;
             this.webInput = webInput;
-            this.webHide = webHide;
 
             egret.web.$cacheTextAdapter(webInput, stage, container, canvas);
 
@@ -78,7 +80,7 @@ namespace egret.web {
             player.start();
         }
 
-        private initOrientation():void {
+        private initOrientation(): void {
             let self = this;
             window.addEventListener("orientationchange", function () {
                 window.setTimeout(function () {
@@ -90,8 +92,8 @@ namespace egret.web {
         /**
          * 读取初始化参数
          */
-        private readOption(container:HTMLDivElement, options:{renderMode?:string;screenAdapter?:sys.IScreenAdapter}):PlayerOption {
-            let option:PlayerOption = {};
+        private readOption(container: HTMLDivElement, options: { renderMode?: string; screenAdapter?: sys.IScreenAdapter }): PlayerOption {
+            let option: PlayerOption = {};
             option.entryClassName = container.getAttribute("data-entry-class");
             option.scaleMode = container.getAttribute("data-scale-mode") || egret.StageScaleMode.NO_SCALE;
             option.frameRate = +container.getAttribute("data-frame-rate") || 30;
@@ -101,7 +103,7 @@ namespace egret.web {
             option.maxTouches = +container.getAttribute("data-multi-fingered") || 2;
             option.textureScaleFactor = +container.getAttribute("texture-scale-factor") || 1;
 
-            if(options.renderMode == "webgl") {
+            if (options.renderMode == "webgl") {
                 option.showPaintRect = false;
             }
             else {
@@ -127,7 +129,7 @@ namespace egret.web {
          * @private
          * 添加canvas到container。
          */
-        private attachCanvas(container:HTMLElement, canvas:HTMLCanvasElement):void {
+        private attachCanvas(container: HTMLElement, canvas: HTMLCanvasElement): void {
 
             let style = canvas.style;
             style.cursor = "inherit";
@@ -142,35 +144,34 @@ namespace egret.web {
             style.position = "relative";
         }
 
-        private playerOption:PlayerOption;
+        private playerOption: PlayerOption;
 
         /**
          * @private
          * 画布实例
          */
-        private canvas:HTMLCanvasElement;
+        private canvas: HTMLCanvasElement;
         /**
          * @private
          * 播放器容器实例
          */
-        private container:HTMLElement;
+        private container: HTMLElement;
 
         /**
          * @private
          * 舞台引用
          */
-        public stage:Stage;
+        public stage: Stage;
 
-        private webTouchHandler:WebTouchHandler;
-        private player:egret.sys.Player;
-        private webInput:egret.web.HTMLInput;
-        private webHide:egret.web.WebHideHandler;
+        private webTouchHandler: WebTouchHandler;
+        private player: egret.sys.Player;
+        private webInput: egret.web.HTMLInput;
 
         /**
          * @private
          * 更新播放器视口尺寸
          */
-        public updateScreenSize():void {
+        public updateScreenSize(): void {
             let canvas = this.canvas;
             if (canvas['userTyping'])
                 return;
@@ -179,13 +180,13 @@ namespace egret.web {
             let top = 0;
             let boundingClientWidth = screenRect.width;
             let boundingClientHeight = screenRect.height;
-            if(screenRect.top < 0) {
+            if (screenRect.top < 0) {
                 boundingClientHeight += screenRect.top;
                 top = -screenRect.top;
             }
             let shouldRotate = false;
 
-            let orientation:string = this.stage.$orientation;
+            let orientation: string = this.stage.$orientation;
             if (orientation != OrientationMode.AUTO) {
                 shouldRotate = orientation != OrientationMode.PORTRAIT && boundingClientHeight > boundingClientWidth
                     || orientation == OrientationMode.PORTRAIT && boundingClientWidth > boundingClientHeight;
@@ -227,7 +228,7 @@ namespace egret.web {
                 canvas.style.left = (boundingClientWidth - displayWidth) / 2 + "px";
             }
 
-            let transform = `rotate(${ rotation }deg)`;
+            let transform = `rotate(${rotation}deg)`;
             canvas.style[egret.web.getPrefixStyleName("transform")] = transform;
             let scalex = displayWidth / stageWidth,
                 scaley = displayHeight / stageHeight;
@@ -238,7 +239,7 @@ namespace egret.web {
 
         }
 
-        public setContentSize(width:number, height:number):void {
+        public setContentSize(width: number, height: number): void {
             let option = this.playerOption;
             option.contentWidth = width;
             option.contentHeight = height;

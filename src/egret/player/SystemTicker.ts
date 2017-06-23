@@ -392,27 +392,36 @@ module egret {
          */
         export let stage: egret.Stage;
 
+        let isActivate = true;
+
         export let context = {
 
             onPause: function () {
                 //console.log("pauseApp");
-                stage.dispatchEvent(new Event(Event.DEACTIVATE));
+
                 egret_native.Audio.pauseBackgroundMusic();
                 egret_native.Audio.pauseAllEffects();
-                if (onPause) {
-                    onPause();
+                if (isActivate) {
+                    isActivate = false;
+                    stage.dispatchEvent(new Event(Event.DEACTIVATE));
+                    if (onPause) {
+                        onPause();
+                    }
                 }
-
             },
 
             onResume: function () {
                 //console.log("resumeApp");
-                stage.dispatchEvent(new Event(Event.ACTIVATE));
+
                 egret_native.Audio.resumeBackgroundMusic();
                 egret_native.Audio.resumeAllEffects();
-                if (onResume) {
-                    onResume();
+                if (!isActivate) {
+                    stage.dispatchEvent(new Event(Event.ACTIVATE));
+                    if (onResume) {
+                        onResume();
+                    }
                 }
+
             }
         }
 
