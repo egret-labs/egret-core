@@ -52,7 +52,7 @@ namespace egret.native {
     // }
 
 
-    export let NativeLifeCycleHandler: egret.sys.LifecyclePlugin = (context) => {
+    export let NativeLifeCycleHandler: egret.lifecycle.LifecyclePlugin = (context) => {
         egret_native.pauseApp = () => {
             context.onPause();
             egret_native.Audio.pauseBackgroundMusic();

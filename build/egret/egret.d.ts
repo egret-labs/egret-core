@@ -9940,11 +9940,9 @@ declare module egret {
     /**
      * 心跳计时器单例
      */
-<<<<<<< HEAD
-    let $ticker: SystemTicker;
-    type LifecyclePlugin = (context: typeof lifecycle.context) => void;
-    type LifeCycle = {};
+    let $ticker: sys.SystemTicker;
     namespace lifecycle {
+        type LifecyclePlugin = (context: typeof lifecycle.context) => void;
         /**
          * @private
          */
@@ -9957,9 +9955,7 @@ declare module egret {
         let onPause: any;
         function addLifecycleListener(plugin: LifecyclePlugin): void;
     }
-=======
     let ticker: sys.SystemTicker;
->>>>>>> dc6b92babcd25e3fde119253138e9b57674bf2c6
 }
 /**
  * @private

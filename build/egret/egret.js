@@ -14908,47 +14908,40 @@ var egret;
         }());
         sys.SystemTicker = SystemTicker;
         __reflect(SystemTicker.prototype, "egret.sys.SystemTicker");
-<<<<<<< HEAD
-        /**
-         * @private
-         * 心跳计时器单例
-         */
-        sys.$ticker = new sys.SystemTicker();
-        var lifecycle;
-        (function (lifecycle) {
-            lifecycle.context = {
-                onPause: function () {
-                    //console.log("pauseApp");
-                    lifecycle.stage.dispatchEvent(new egret.Event(egret.Event.DEACTIVATE));
-                    egret_native.Audio.pauseBackgroundMusic();
-                    egret_native.Audio.pauseAllEffects();
-                    if (lifecycle.onPause) {
-                        lifecycle.onPause();
-                    }
-                },
-                onResume: function () {
-                    //console.log("resumeApp");
-                    lifecycle.stage.dispatchEvent(new egret.Event(egret.Event.ACTIVATE));
-                    egret_native.Audio.resumeBackgroundMusic();
-                    egret_native.Audio.resumeAllEffects();
-                    if (lifecycle.onResume) {
-                        lifecycle.onResume();
-                    }
-                }
-            };
-            function addLifecycleListener(plugin) {
-                plugin(lifecycle.context);
-            }
-            lifecycle.addLifecycleListener = addLifecycleListener;
-        })(lifecycle = sys.lifecycle || (sys.lifecycle = {}));
-=======
->>>>>>> dc6b92babcd25e3fde119253138e9b57674bf2c6
     })(sys = egret.sys || (egret.sys = {}));
 })(egret || (egret = {}));
 (function (egret) {
     /**
      * 心跳计时器单例
      */
+    egret.$ticker = new egret.sys.SystemTicker();
+    var lifecycle;
+    (function (lifecycle) {
+        lifecycle.context = {
+            onPause: function () {
+                //console.log("pauseApp");
+                lifecycle.stage.dispatchEvent(new egret.Event(egret.Event.DEACTIVATE));
+                egret_native.Audio.pauseBackgroundMusic();
+                egret_native.Audio.pauseAllEffects();
+                if (lifecycle.onPause) {
+                    lifecycle.onPause();
+                }
+            },
+            onResume: function () {
+                //console.log("resumeApp");
+                lifecycle.stage.dispatchEvent(new egret.Event(egret.Event.ACTIVATE));
+                egret_native.Audio.resumeBackgroundMusic();
+                egret_native.Audio.resumeAllEffects();
+                if (lifecycle.onResume) {
+                    lifecycle.onResume();
+                }
+            }
+        };
+        function addLifecycleListener(plugin) {
+            plugin(lifecycle.context);
+        }
+        lifecycle.addLifecycleListener = addLifecycleListener;
+    })(lifecycle = egret.lifecycle || (egret.lifecycle = {}));
     egret.ticker = new egret.sys.SystemTicker();
 })(egret || (egret = {}));
 if (true) {

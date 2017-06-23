@@ -1595,7 +1595,8 @@ var egret;
                 canvas.$isRoot = true;
                 var touch = new native.NativeTouchHandler(stage);
                 var player = new egret.sys.Player(buffer, stage, option.entryClassName);
-                egret.sys.lifecycle.addLifecycleListener(native.NativeLifeCycleHandler);
+                egret.lifecycle.stage = stage;
+                egret.lifecycle.addLifecycleListener(native.NativeLifeCycleHandler);
                 player.showPaintRect(option.showPaintRect);
                 if (option.showFPS || option.showLog) {
                     var styleStr = option.fpsStyles || "";

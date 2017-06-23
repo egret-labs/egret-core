@@ -67,8 +67,8 @@ namespace egret.native {
 
             let touch = new NativeTouchHandler(stage);
             let player = new egret.sys.Player(buffer, stage, option.entryClassName);
-            sys.lifecycle.stage = stage;
-            sys.lifecycle.addLifecycleListener(NativeLifeCycleHandler);
+            lifecycle.stage = stage;
+            lifecycle.addLifecycleListener(NativeLifeCycleHandler);
 
             player.showPaintRect(option.showPaintRect);
             if (option.showFPS || option.showLog) {
