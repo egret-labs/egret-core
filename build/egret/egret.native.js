@@ -1595,7 +1595,7 @@ var egret;
                 canvas.$isRoot = true;
                 var touch = new native.NativeTouchHandler(stage);
                 var player = new egret.sys.Player(buffer, stage, option.entryClassName);
-                new native.NativeHideHandler(stage);
+                egret.sys.lifecycle.addLifecycleListener(native.NativeLifeCycleHandler);
                 player.showPaintRect(option.showPaintRect);
                 if (option.showFPS || option.showLog) {
                     var styleStr = option.fpsStyles || "";
@@ -4595,31 +4595,38 @@ var egret;
 (function (egret) {
     var native;
     (function (native) {
-        /**
-         * @private
-         */
-        var NativeHideHandler = (function (_super) {
-            __extends(NativeHideHandler, _super);
-            function NativeHideHandler(stage) {
-                var _this = _super.call(this) || this;
-                egret_native.pauseApp = function () {
-                    //console.log("pauseApp");
-                    stage.dispatchEvent(new egret.Event(egret.Event.DEACTIVATE));
-                    egret_native.Audio.pauseBackgroundMusic();
-                    egret_native.Audio.pauseAllEffects();
-                };
-                egret_native.resumeApp = function () {
-                    //console.log("resumeApp");
-                    stage.dispatchEvent(new egret.Event(egret.Event.ACTIVATE));
-                    egret_native.Audio.resumeBackgroundMusic();
-                    egret_native.Audio.resumeAllEffects();
-                };
-                return _this;
-            }
-            return NativeHideHandler;
-        }(egret.HashObject));
-        native.NativeHideHandler = NativeHideHandler;
-        __reflect(NativeHideHandler.prototype, "egret.native.NativeHideHandler");
+        // /**
+        //  * @private
+        //  */
+        // export class NativeHideHandler extends HashObject {
+        //     constructor(stage: Stage) {
+        //         super();
+        //         egret_native.pauseApp = function () {
+        //             //console.log("pauseApp");
+        //             stage.dispatchEvent(new Event(Event.DEACTIVATE));
+        //             egret_native.Audio.pauseBackgroundMusic();
+        //             egret_native.Audio.pauseAllEffects();
+        //         };
+        //         egret_native.resumeApp = function () {
+        //             //console.log("resumeApp");
+        //             stage.dispatchEvent(new Event(Event.ACTIVATE));
+        //             egret_native.Audio.resumeBackgroundMusic();
+        //             egret_native.Audio.resumeAllEffects();
+        //         };
+        //     }
+        // }
+        native.NativeLifeCycleHandler = function (context) {
+            egret_native.pauseApp = function () {
+                context.onPause();
+                egret_native.Audio.pauseBackgroundMusic();
+                egret_native.Audio.pauseAllEffects();
+            };
+            egret_native.resumeApp = function () {
+                context.onResume();
+                egret_native.Audio.resumeBackgroundMusic();
+                egret_native.Audio.resumeAllEffects();
+            };
+        };
     })(native = egret.native || (egret.native = {}));
 })(egret || (egret = {}));
 //////////////////////////////////////////////////////////////////////////////////////

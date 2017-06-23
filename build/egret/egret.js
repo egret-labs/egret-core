@@ -14896,6 +14896,33 @@ var egret;
          * 心跳计时器单例
          */
         sys.$ticker = new sys.SystemTicker();
+        var lifecycle;
+        (function (lifecycle) {
+            lifecycle.context = {
+                onPause: function () {
+                    //console.log("pauseApp");
+                    lifecycle.stage.dispatchEvent(new egret.Event(egret.Event.DEACTIVATE));
+                    egret_native.Audio.pauseBackgroundMusic();
+                    egret_native.Audio.pauseAllEffects();
+                    if (lifecycle.onPause) {
+                        lifecycle.onPause();
+                    }
+                },
+                onResume: function () {
+                    //console.log("resumeApp");
+                    lifecycle.stage.dispatchEvent(new egret.Event(egret.Event.ACTIVATE));
+                    egret_native.Audio.resumeBackgroundMusic();
+                    egret_native.Audio.resumeAllEffects();
+                    if (lifecycle.onResume) {
+                        lifecycle.onResume();
+                    }
+                }
+            };
+            function addLifecycleListener(plugin) {
+                plugin(lifecycle.context);
+            }
+            lifecycle.addLifecycleListener = addLifecycleListener;
+        })(lifecycle = sys.lifecycle || (sys.lifecycle = {}));
     })(sys = egret.sys || (egret.sys = {}));
 })(egret || (egret = {}));
 if (true) {

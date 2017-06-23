@@ -32,25 +32,25 @@ namespace egret.native {
      * @private
      */
     export class NativePlayer extends egret.HashObject implements egret.sys.Screen {
-        public static option:PlayerOption;
+        public static option: PlayerOption;
         /**
          * @private
          * 舞台引用
          */
-        public $stage:Stage;
+        public $stage: Stage;
 
-        private playerOption:PlayerOption;
+        private playerOption: PlayerOption;
 
-        private player:egret.sys.Player;
+        private player: egret.sys.Player;
 
-        private nativeTouch:NativeTouchHandler;
+        private nativeTouch: NativeTouchHandler;
 
         public constructor() {
             super();
             this.init(NativePlayer.option);
         }
 
-        private init(option:PlayerOption):void {
+        private init(option: PlayerOption): void {
             //暂时无法显示重绘区域
             option.showPaintRect = false;
             let stage = new egret.Stage();
@@ -67,12 +67,13 @@ namespace egret.native {
 
             let touch = new NativeTouchHandler(stage);
             let player = new egret.sys.Player(buffer, stage, option.entryClassName);
-            new NativeHideHandler(stage);
+            sys.lifecycle.stage = stage;
+            sys.lifecycle.addLifecycleListener(NativeLifeCycleHandler);
 
             player.showPaintRect(option.showPaintRect);
             if (option.showFPS || option.showLog) {
-                let styleStr:string = <string>option.fpsStyles || "";
-                let stylesArr:string[] = styleStr.split(",");
+                let styleStr: string = <string>option.fpsStyles || "";
+                let stylesArr: string[] = styleStr.split(",");
                 let styles = {};
                 for (let i = 0; i < stylesArr.length; i++) {
                     let tempStyleArr = stylesArr[i].split(":");
@@ -93,21 +94,21 @@ namespace egret.native {
             player.start();
         }
 
-        public updateScreenSize():void {
+        public updateScreenSize(): void {
             let option = this.playerOption;
-            let screenWidth:number = egret_native.EGTView.getFrameWidth();
-            let screenHeight:number = egret_native.EGTView.getFrameHeight();
+            let screenWidth: number = egret_native.EGTView.getFrameWidth();
+            let screenHeight: number = egret_native.EGTView.getFrameHeight();
             Capabilities.$boundingClientWidth = screenWidth;
             Capabilities.$boundingClientHeight = screenHeight;
-            let stageSize:sys.StageDisplaySize = egret.sys.screenAdapter.calculateStageSize(this.$stage.$scaleMode,
+            let stageSize: sys.StageDisplaySize = egret.sys.screenAdapter.calculateStageSize(this.$stage.$scaleMode,
                 screenWidth, screenHeight, option.contentWidth, option.contentHeight);
-            let stageWidth:number = stageSize.stageWidth;
-            let stageHeight:number = stageSize.stageHeight;
-            let displayWidth:number = stageSize.displayWidth;
-            let displayHeight:number = stageSize.displayHeight;
+            let stageWidth: number = stageSize.stageWidth;
+            let stageHeight: number = stageSize.stageHeight;
+            let displayWidth: number = stageSize.displayWidth;
+            let displayHeight: number = stageSize.displayHeight;
 
-            let top:number = (screenHeight - displayHeight) / 2;
-            let left:number = (screenWidth - displayWidth) / 2;
+            let top: number = (screenHeight - displayHeight) / 2;
+            let left: number = (screenWidth - displayWidth) / 2;
 
             egret_native.EGTView.setVisibleRect(left, top, displayWidth, displayHeight);
             egret_native.EGTView.setDesignSize(stageWidth, stageHeight);
@@ -115,7 +116,7 @@ namespace egret.native {
             this.player.updateStageSize(stageWidth, stageHeight);
         }
 
-        public setContentSize(width:number, height:number):void {
+        public setContentSize(width: number, height: number): void {
             let option = this.playerOption;
             option.contentWidth = width;
             option.contentHeight = height;

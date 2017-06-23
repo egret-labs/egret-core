@@ -31,18 +31,18 @@ namespace egret.sys {
     /**
      * @private
      */
-    export let $START_TIME:number = 0;
+    export let $START_TIME: number = 0;
 
     /**
      * @private
      * 是否要广播Event.RENDER事件的标志。
      */
-    export let $invalidateRenderFlag:boolean = false;
+    export let $invalidateRenderFlag: boolean = false;
     /**
      * @private
      * 需要立即刷新屏幕的标志
      */
-    export let $requestRenderingFlag:boolean = false;
+    export let $requestRenderingFlag: boolean = false;
 
     /**
      * @private
@@ -64,13 +64,13 @@ namespace egret.sys {
         /**
          * @private
          */
-        private playerList:Player[] = [];
+        private playerList: Player[] = [];
 
         /**
          * @private
          * 注册一个播放器实例并运行
          */
-        $addPlayer(player:Player):void {
+        $addPlayer(player: Player): void {
             if (this.playerList.indexOf(player) != -1) {
                 return;
             }
@@ -86,7 +86,7 @@ namespace egret.sys {
          * @private
          * 停止一个播放器实例的运行。
          */
-        $removePlayer(player:Player):void {
+        $removePlayer(player: Player): void {
             let index = this.playerList.indexOf(player);
             if (index !== -1) {
                 if (DEBUG) {
@@ -101,16 +101,16 @@ namespace egret.sys {
         /**
          * @private
          */
-        private callBackList:Function[] = [];
+        private callBackList: Function[] = [];
         /**
          * @private
          */
-        private thisObjectList:any[] = [];
+        private thisObjectList: any[] = [];
 
         /**
          * @private
          */
-        $startTick(callBack:(timeStamp:number)=>boolean, thisObject:any):void {
+        $startTick(callBack: (timeStamp: number) => boolean, thisObject: any): void {
             let index = this.getTickIndex(callBack, thisObject);
             if (index != -1) {
                 return;
@@ -123,7 +123,7 @@ namespace egret.sys {
         /**
          * @private
          */
-        $stopTick(callBack:(timeStamp:number)=>boolean, thisObject:any):void {
+        $stopTick(callBack: (timeStamp: number) => boolean, thisObject: any): void {
             let index = this.getTickIndex(callBack, thisObject);
             if (index == -1) {
                 return;
@@ -136,7 +136,7 @@ namespace egret.sys {
         /**
          * @private
          */
-        private getTickIndex(callBack:Function, thisObject:any):number {
+        private getTickIndex(callBack: Function, thisObject: any): number {
             let callBackList = this.callBackList;
             let thisObjectList = this.thisObjectList;
             for (let i = callBackList.length - 1; i >= 0; i--) {
@@ -152,7 +152,7 @@ namespace egret.sys {
          * @private
          *
          */
-        private concatTick():void {
+        private concatTick(): void {
             this.callBackList = this.callBackList.concat();
             this.thisObjectList = this.thisObjectList.concat();
         }
@@ -161,20 +161,20 @@ namespace egret.sys {
          * @private
          * 全局帧率
          */
-        $frameRate:number = 30;
+        $frameRate: number = 30;
 
         /**
          * @private
          */
-        private frameInterval:number;
-        private frameDeltaTime:number;
-        private lastTimeStamp:number = 0;
+        private frameInterval: number;
+        private frameDeltaTime: number;
+        private lastTimeStamp: number = 0;
 
         /**
          * @private
          * 设置全局帧率
          */
-        $setFrameRate(value:number):boolean {
+        $setFrameRate(value: number): boolean {
             value = +value || 0;
             if (value <= 0) {
                 return false;
@@ -200,18 +200,18 @@ namespace egret.sys {
         /**
          * @private
          */
-        private lastCount:number;
+        private lastCount: number;
         /**
          * @private
          * ticker 花销的时间
          */
-        private costEnterFrame:number = 0;
+        private costEnterFrame: number = 0;
 
         /**
          * @private
          * 执行一次刷新
          */
-        public update():void {
+        public update(): void {
             let t1 = egret.getTimer();
             let callBackList = this.callBackList;
             let thisObjectList = this.thisObjectList;
@@ -251,7 +251,7 @@ namespace egret.sys {
          * @private
          * 执行一次屏幕渲染
          */
-        private render(triggerByFrame:boolean, costTicker:number):void {
+        private render(triggerByFrame: boolean, costTicker: number): void {
             let playerList = this.playerList;
             let length = playerList.length;
             if (length == 0) {
@@ -272,8 +272,8 @@ namespace egret.sys {
          * @private
          * 广播EnterFrame事件。
          */
-        private broadcastEnterFrame():void {
-            let list:any[] = DisplayObject.$enterFrameCallBackList;
+        private broadcastEnterFrame(): void {
+            let list: any[] = DisplayObject.$enterFrameCallBackList;
             let length = list.length;
             if (length == 0) {
                 return;
@@ -288,7 +288,7 @@ namespace egret.sys {
          * @private
          * 广播Render事件。
          */
-        private broadcastRender():void {
+        private broadcastRender(): void {
             let list = DisplayObject.$renderCallBackList;
             let length = list.length;
             if (length == 0) {
@@ -305,10 +305,10 @@ namespace egret.sys {
         /**
          * @private
          */
-        private callLaters():void {
-            let functionList:any[];
-            let thisList:any[];
-            let argsList:any[];
+        private callLaters(): void {
+            let functionList: any[];
+            let thisList: any[];
+            let argsList: any[];
             if ($callLaterFunctionList.length > 0) {
                 functionList = $callLaterFunctionList;
                 $callLaterFunctionList = [];
@@ -319,9 +319,9 @@ namespace egret.sys {
             }
 
             if (functionList) {
-                let length:number = functionList.length;
-                for (let i:number = 0; i < length; i++) {
-                    let func:Function = functionList[i];
+                let length: number = functionList.length;
+                for (let i: number = 0; i < length; i++) {
+                    let func: Function = functionList[i];
                     if (func != null) {
                         func.apply(thisList[i], argsList[i]);
                     }
@@ -332,7 +332,7 @@ namespace egret.sys {
         /**
          * @private
          */
-        private callLaterAsyncs():void {
+        private callLaterAsyncs(): void {
             if ($callAsyncFunctionList.length > 0) {
                 let locCallAsyncFunctionList = $callAsyncFunctionList;
                 let locCallAsyncThisList = $callAsyncThisList;
@@ -342,8 +342,8 @@ namespace egret.sys {
                 $callAsyncThisList = [];
                 $callAsyncArgsList = [];
 
-                for (let i:number = 0; i < locCallAsyncFunctionList.length; i++) {
-                    let func:Function = locCallAsyncFunctionList[i];
+                for (let i: number = 0; i < locCallAsyncFunctionList.length; i++) {
+                    let func: Function = locCallAsyncFunctionList[i];
                     if (func != null) {
                         func.apply(locCallAsyncThisList[i], locCallAsyncArgsList[i]);
                     }
@@ -356,14 +356,61 @@ namespace egret.sys {
      * @private
      * 心跳计时器单例
      */
-    export let $ticker:SystemTicker = new sys.SystemTicker();
+    export let $ticker: SystemTicker = new sys.SystemTicker();
+
+    export type LifecyclePlugin = (context: typeof lifecycle.context) => void;
+
+    export type LifeCycle = {};
+
+    export namespace lifecycle {
+
+        /**
+         * @private
+         */
+        export let stage: egret.Stage;
+
+        export let context = {
+
+            onPause: function () {
+                //console.log("pauseApp");
+                stage.dispatchEvent(new Event(Event.DEACTIVATE));
+                egret_native.Audio.pauseBackgroundMusic();
+                egret_native.Audio.pauseAllEffects();
+                if (onPause) {
+                    onPause();
+                }
+
+            },
+
+            onResume: function () {
+                //console.log("resumeApp");
+                stage.dispatchEvent(new Event(Event.ACTIVATE));
+                egret_native.Audio.resumeBackgroundMusic();
+                egret_native.Audio.resumeAllEffects();
+                if (onResume) {
+                    onResume();
+                }
+            }
+        }
+
+        export let onResume;
+
+        export let onPause;
+
+        export function addLifecycleListener(plugin: LifecyclePlugin) {
+            plugin(context);
+        }
+
+
+
+    }
 
 }
 
 /**
  * @private
  */
-declare let egret_stages:egret.Stage[];
+declare let egret_stages: egret.Stage[];
 if (DEBUG) {
     egret_stages = [];
 }

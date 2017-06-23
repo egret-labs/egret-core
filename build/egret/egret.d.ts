@@ -9928,6 +9928,21 @@ declare namespace egret.sys {
      * 心跳计时器单例
      */
     let $ticker: SystemTicker;
+    type LifecyclePlugin = (context: typeof lifecycle.context) => void;
+    type LifeCycle = {};
+    namespace lifecycle {
+        /**
+         * @private
+         */
+        let stage: egret.Stage;
+        let context: {
+            onPause: () => void;
+            onResume: () => void;
+        };
+        let onResume: any;
+        let onPause: any;
+        function addLifecycleListener(plugin: LifecyclePlugin): void;
+    }
 }
 /**
  * @private
