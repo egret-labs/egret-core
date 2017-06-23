@@ -413,7 +413,7 @@ namespace egret {
             }
             if (this.$stage) {//在舞台上
                 child.$onRemoveFromStage();
-                let list = DisplayObjectContainer.$EVENT_REMOVE_FROM_STAGE_LIST
+                let list = DisplayObjectContainer.$EVENT_REMOVE_FROM_STAGE_LIST;
                 while (list.length > 0) {
                     let childAddToStage = list.shift();
                     if (notifyListeners && childAddToStage.$hasAddToStage) {

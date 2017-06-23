@@ -725,11 +725,11 @@ namespace egret {
             }
             this.isStopped = value;
             if (value) {
-                sys.$ticker.$stopTick(this.advanceTime, this);
+                ticker.$stopTick(this.advanceTime, this);
             } else {
                 this.playTimes = this.playTimes == 0 ? 1 : this.playTimes;
                 this.lastTime = egret.getTimer();
-                sys.$ticker.$startTick(this.advanceTime, this);
+                ticker.$startTick(this.advanceTime, this);
             }
         }
     }

@@ -442,7 +442,7 @@ namespace egret {
             this.$stage = stage;
             this.$nestLevel = nestLevel;
             this.$hasAddToStage = true;
-            Sprite.$EVENT_ADD_TO_STAGE_LIST.push(this);
+            DisplayObjectContainer.$EVENT_ADD_TO_STAGE_LIST.push(this);
         }
 
         /**
@@ -451,7 +451,7 @@ namespace egret {
          */
         $onRemoveFromStage(): void {
             this.$nestLevel = 0;
-            Sprite.$EVENT_REMOVE_FROM_STAGE_LIST.push(this);
+            DisplayObjectContainer.$EVENT_REMOVE_FROM_STAGE_LIST.push(this);
         }
 
         /**

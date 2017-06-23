@@ -116,7 +116,7 @@ namespace egret.sys {
             if (!this.root) {
                 this.initialize();
             }
-            $ticker.$addPlayer(this);
+            ticker.$addPlayer(this);
         }
 
         /**
@@ -161,7 +161,7 @@ namespace egret.sys {
                 return;
             }
             this.isPlaying = false;
-            $ticker.$removePlayer(this);
+            ticker.$removePlayer(this);
         }
 
         /**
@@ -457,7 +457,7 @@ namespace egret.sys {
             this.costTicker += costTicker;
             if (this.totalTime >= 1000) {
 
-                let lastFPS = Math.min(Math.ceil(this.totalTick * 1000 / this.totalTime), sys.$ticker.$frameRate);
+                let lastFPS = Math.min(Math.ceil(this.totalTick * 1000 / this.totalTime), ticker.$frameRate);
                 let lastDrawCalls = Math.round(this.drawCalls / this.totalTick);
                 let lastDirtyRatio = Math.round(this.dirtyRatio / this.totalTick);
                 let lastCostDirty = Math.round(this.costDirty / this.totalTick);

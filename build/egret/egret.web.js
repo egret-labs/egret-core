@@ -3591,7 +3591,7 @@ var egret;
                     context_1.backingStorePixelRatio || 1;
                 egret.sys.DisplayList.$setDevicePixelRatio((window.devicePixelRatio || 1) / backingStore);
             }
-            var ticker = egret.sys.$ticker;
+            var ticker = egret.ticker;
             startTicker(ticker);
             if (options.screenAdapter) {
                 egret.sys.screenAdapter = options.screenAdapter;

@@ -35,7 +35,7 @@ namespace egret {
         setIntervalCount++;
         if (setIntervalCount == 1) {
             lastTime = egret.getTimer();
-            sys.$ticker.$startTick(intervalUpdate, null);
+            ticker.$startTick(intervalUpdate, null);
         }
         setIntervalIndex++;
         setIntervalCache[setIntervalIndex] = data;
@@ -64,7 +64,7 @@ namespace egret {
 
             delete setIntervalCache[key];
             if (setIntervalCount == 0) {
-                sys.$ticker.$stopTick(intervalUpdate, null);
+                ticker.$stopTick(intervalUpdate, null);
             }
         }
     }

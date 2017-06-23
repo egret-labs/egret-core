@@ -204,7 +204,7 @@ namespace egret {
                 return;
             this.lastCount = this.updateInterval;
             this.lastTimeStamp = getTimer();
-            sys.$ticker.$startTick(this.$update,this);
+            ticker.$startTick(this.$update,this);
             this._running = true;
         }
 

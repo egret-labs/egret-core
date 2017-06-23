@@ -27,7 +27,6 @@
 //
 //////////////////////////////////////////////////////////////////////////////////////
 namespace egret.sys {
-
     /**
      * @private
      */
@@ -45,7 +44,6 @@ namespace egret.sys {
     export let $requestRenderingFlag: boolean = false;
 
     /**
-     * @private
      * Egret心跳计时器
      */
     export class SystemTicker {
@@ -53,7 +51,7 @@ namespace egret.sys {
          * @private
          */
         public constructor() {
-            if (DEBUG && $ticker) {
+            if (DEBUG && ticker) {
                 $error(1008, "egret.sys.SystemTicker");
             }
             $START_TIME = Date.now();
@@ -167,7 +165,13 @@ namespace egret.sys {
          * @private
          */
         private frameInterval: number;
+        /**
+         * @private
+         */
         private frameDeltaTime: number;
+        /**
+         * @private
+         */
         private lastTimeStamp: number = 0;
 
         /**
@@ -207,6 +211,21 @@ namespace egret.sys {
          */
         private costEnterFrame: number = 0;
 
+
+        /**
+         * @private
+         * 是否被暂停
+         */
+        private isPaused: boolean = false;
+
+        public pause(): void {
+            this.isPaused = true;
+        }
+
+        public resume(): void {
+            this.isPaused = false;
+        }
+
         /**
          * @private
          * 执行一次刷新
@@ -218,6 +237,10 @@ namespace egret.sys {
             let length = callBackList.length;
             let requestRenderingFlag = $requestRenderingFlag;
             let timeStamp = egret.getTimer();
+            if (this.isPaused) {
+                this.lastTimeStamp = timeStamp;
+                return;
+            }
             this.callLaterAsyncs();
             for (let i = 0; i < length; i++) {
                 if (callBackList[i].call(thisObjectList[i], timeStamp)) {
@@ -300,8 +323,6 @@ namespace egret.sys {
             }
         }
 
-
-
         /**
          * @private
          */
@@ -351,18 +372,20 @@ namespace egret.sys {
             }
         }
     }
+}
 
+module egret {
     /**
-     * @private
      * 心跳计时器单例
      */
-    export let $ticker: SystemTicker = new sys.SystemTicker();
 
-    export type LifecyclePlugin = (context: typeof lifecycle.context) => void;
+    export let $ticker: sys.SystemTicker = new sys.SystemTicker();
 
-    export type LifeCycle = {};
+
 
     export namespace lifecycle {
+
+        export type LifecyclePlugin = (context: typeof lifecycle.context) => void;
 
         /**
          * @private
@@ -405,6 +428,7 @@ namespace egret.sys {
 
     }
 
+    export let ticker: sys.SystemTicker = new sys.SystemTicker();
 }
 
 /**

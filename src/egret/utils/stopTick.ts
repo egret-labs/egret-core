@@ -52,6 +52,6 @@ namespace egret {
         if (DEBUG && !callBack) {
             $error(1003, "callBack");
         }
-        sys.$ticker.$stopTick(callBack,thisObject);
+        ticker.$stopTick(callBack,thisObject);
     }
 }
