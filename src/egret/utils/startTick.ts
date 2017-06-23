@@ -53,6 +53,6 @@ namespace egret {
         if (DEBUG && !callBack) {
             $error(1003, "callBack");
         }
-        sys.$ticker.$startTick(callBack,thisObject);
+        ticker.$startTick(callBack,thisObject);
     }
 }

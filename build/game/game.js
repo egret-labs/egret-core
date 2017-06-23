@@ -1090,7 +1090,7 @@ var egret;
                 tweens.push(tween);
                 if (!ScrollTween._inited) {
                     ScrollTween._lastTime = egret.getTimer();
-                    egret.sys.$ticker.$startTick(ScrollTween.tick, null);
+                    egret.ticker.$startTick(ScrollTween.tick, null);
                     ScrollTween._inited = true;
                 }
             }
@@ -3571,12 +3571,12 @@ var egret;
             }
             this.isStopped = value;
             if (value) {
-                egret.sys.$ticker.$stopTick(this.advanceTime, this);
+                egret.ticker.$stopTick(this.advanceTime, this);
             }
             else {
                 this.playTimes = this.playTimes == 0 ? 1 : this.playTimes;
                 this.lastTime = egret.getTimer();
-                egret.sys.$ticker.$startTick(this.advanceTime, this);
+                egret.ticker.$startTick(this.advanceTime, this);
             }
         };
         return MovieClip;
@@ -4144,7 +4144,7 @@ var egret;
                     egret.$error(1033);
                 }
             }
-            egret.sys.$ticker.$startTick(_this.update, _this);
+            egret.ticker.$startTick(_this.update, _this);
             _this._lastTime = egret.getTimer();
             return _this;
         }
@@ -4492,7 +4492,7 @@ var egret;
             return _this;
         }
         Recycler.$init = function () {
-            egret.sys.$ticker.$startTick(Recycler.onUpdate, Recycler);
+            egret.ticker.$startTick(Recycler.onUpdate, Recycler);
         };
         Recycler.onUpdate = function (timeStamp) {
             var list = Recycler._callBackList;
@@ -4651,7 +4651,7 @@ var egret;
         setIntervalCount++;
         if (setIntervalCount == 1) {
             lastTime = egret.getTimer();
-            egret.sys.$ticker.$startTick(intervalUpdate, null);
+            egret.ticker.$startTick(intervalUpdate, null);
         }
         setIntervalIndex++;
         setIntervalCache[setIntervalIndex] = data;
@@ -4679,7 +4679,7 @@ var egret;
             setIntervalCount--;
             delete setIntervalCache[key];
             if (setIntervalCount == 0) {
-                egret.sys.$ticker.$stopTick(intervalUpdate, null);
+                egret.ticker.$stopTick(intervalUpdate, null);
             }
         }
     }
@@ -4768,9 +4768,9 @@ var egret;
         }
         var data = { listener: listener, thisObject: thisObject, delay: delay, params: args };
         setTimeoutCount++;
-        if (setTimeoutCount == 1 && egret.sys.$ticker) {
+        if (setTimeoutCount == 1 && egret.ticker) {
             lastTime = egret.getTimer();
-            egret.sys.$ticker.$startTick(timeoutUpdate, null);
+            egret.ticker.$startTick(timeoutUpdate, null);
         }
         setTimeoutIndex++;
         setTimeoutCache[setTimeoutIndex] = data;
@@ -4795,8 +4795,8 @@ var egret;
         if (setTimeoutCache[key]) {
             setTimeoutCount--;
             delete setTimeoutCache[key];
-            if (setTimeoutCount == 0 && egret.sys.$ticker) {
-                egret.sys.$ticker.$stopTick(timeoutUpdate, null);
+            if (setTimeoutCount == 0 && egret.ticker) {
+                egret.ticker.$stopTick(timeoutUpdate, null);
             }
         }
     }

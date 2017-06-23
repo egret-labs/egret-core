@@ -85,11 +85,11 @@ namespace egret {
          * @language zh_CN
          */
         public get frameRate():number {
-            return sys.$ticker.$frameRate;
+            return ticker.$frameRate;
         }
 
         public set frameRate(value:number) {
-            sys.$ticker.$setFrameRate(value);
+            ticker.$setFrameRate(value);
         }
 
         /**

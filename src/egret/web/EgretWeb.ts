@@ -128,7 +128,7 @@ namespace egret.web {
             sys.DisplayList.$setDevicePixelRatio((window.devicePixelRatio || 1) / backingStore);
         }
 
-        let ticker = egret.sys.$ticker;
+        let ticker = egret.ticker;
         startTicker(ticker);
         if (options.screenAdapter) {
             egret.sys.screenAdapter = options.screenAdapter;

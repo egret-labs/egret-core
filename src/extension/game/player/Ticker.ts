@@ -54,7 +54,7 @@ namespace egret {
                 }
             }
 
-            sys.$ticker.$startTick(this.update, this);
+            ticker.$startTick(this.update, this);
 
             this._lastTime = egret.getTimer();
         }

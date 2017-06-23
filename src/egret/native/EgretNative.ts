@@ -655,7 +655,7 @@ namespace egret.native {
         } catch (e) {
 
         }
-        let ticker = egret.sys.$ticker;
+        let ticker = egret.ticker;
         let mainLoop = $supportCmdBatch ? function () {
             ticker.update();
             $cmdManager.flush();

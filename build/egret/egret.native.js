@@ -2152,7 +2152,7 @@ var egret;
             }
             catch (e) {
             }
-            var ticker = egret.sys.$ticker;
+            var ticker = egret.ticker;
             var mainLoop = native.$supportCmdBatch ? function () {
                 ticker.update();
                 native.$cmdManager.flush();
