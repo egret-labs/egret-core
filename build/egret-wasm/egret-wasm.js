@@ -2360,7 +2360,12 @@ var egret;
                 self.$scale9Grid = value;
                 self.$renderDirty = true;
                 if (self.$waNode) {
-                    self.$waNode.setScale9Grid(value.x, value.y, value.width, value.height);
+                    if (value) {
+                        self.$waNode.setScale9Grid(value.x, value.y, value.width, value.height);
+                    }
+                    else {
+                        self.$waNode.setScale9Grid(0, 0, -1, -1);
+                    }
                 }
             },
             enumerable: true,
@@ -7205,7 +7210,7 @@ var egret;
              * @language zh_CN
              */
             get: function () {
-                return "5.1.0";
+                return "4.0.3";
             },
             enumerable: true,
             configurable: true
@@ -13159,6 +13164,9 @@ var egret;
             _this.$renderNode = new egret.sys.MeshNode();
             return _this;
         }
+        Mesh.prototype.createWebAssemblyNode = function () {
+            this.$waNode = new egret.WebAssemblyNode(12 /* MESH */);
+        };
         /**
          * @private
          */
@@ -18323,6 +18331,7 @@ var egret;
     (function (WebAssembly) {
         var renderCmdBuffer;
         var vertexCmdBuffer;
+        var indexCmdBuffer;
         var updateFun;
         var renderFun;
         var resizeFun;
@@ -18355,7 +18364,7 @@ var egret;
                     Module.downloadBuffers(function (buffer, buffer1, buffer2, buffer3) {
                         renderCmdBuffer = buffer;
                         vertexCmdBuffer = buffer1;
-                        // that._idxData = buffer2;
+                        indexCmdBuffer = buffer2;
                         egret.WebAssemblyNode.init(buffer3, textFieldMap, graphicsMap, bitmapDataMap, filterMap, dirtyTextField, dirtyGraphics);
                         updateFun = Module.update;
                         renderFun = Module.render;
@@ -18485,11 +18494,13 @@ var egret;
             }
             return false;
         };
+        var bindDefaultIndex = false;
         WebAssembly.render = function () {
             if (!context && isWebGLRenderer) {
                 context = egret.WebGLRenderContext.getInstance(3, 3);
                 gl = context.context;
                 context.uploadIndicesArray(context.vao.getIndices());
+                bindDefaultIndex = true;
                 var blendModeWebGL = blendModesWebGL[0];
                 gl.blendFunc(blendModeWebGL[0], blendModeWebGL[1]);
                 //todo lcj 这是个隐患
@@ -18506,6 +18517,7 @@ var egret;
             var cmdMax = cmds[0];
             var cmdId = 0;
             var idx = 1;
+            var useCustomIndexBuffer = false;
             while (cmdId < cmdMax) {
                 switch (cmds[idx]) {
                     case 0 /* CLEAR */:
@@ -18624,6 +18636,24 @@ var egret;
                         offset += drawGraphicsWithFilterWebGL(cmds[idx + 1], cmds[idx + 2], offset, cmds[idx + 2]);
                         idx += 4;
                         drawCalls++;
+                        break;
+                    case 25 /* USE_CUSTOM_INDEX_BUFFER */:
+                        useCustomIndexBuffer = (cmds[idx + 1] === 1);
+                        idx += 2;
+                        break;
+                    case 26 /* UPLOAD_INDEX_BUFFER */:
+                        if (useCustomIndexBuffer) {
+                            var indexArray = indexCmdBuffer.subarray(cmds[idx + 1], cmds[idx + 2]);
+                            gl.bufferData(gl.ELEMENT_ARRAY_BUFFER, indexArray, gl.STATIC_DRAW);
+                            bindDefaultIndex = false;
+                        }
+                        else {
+                            if (!bindDefaultIndex) {
+                                context.uploadIndicesArray(context.vao.getIndices());
+                            }
+                        }
+                        idx += 3;
+                        offset = 0;
                         break;
                     //Canvas cmd
                     case 500 /* CANVAS_CLEAR */:
@@ -18812,6 +18842,9 @@ var egret;
             return count * 6;
         };
         var drawGraphicsWebGL = function (graphicsId, count, offset) {
+            if (!graphicsMap[graphicsId]) {
+                return count * 6;
+            }
             var node = graphicsMap[graphicsId].$renderNode;
             var width = node.width;
             var height = node.height;
@@ -30542,14 +30575,21 @@ var egret;
                 return;
             var option = this.playerOption;
             var screenRect = this.container.getBoundingClientRect();
+            var top = 0;
+            var boundingClientWidth = screenRect.width;
+            var boundingClientHeight = screenRect.height;
+            if (screenRect.top < 0) {
+                boundingClientHeight += screenRect.top;
+                top = -screenRect.top;
+            }
             var shouldRotate = false;
             var orientation = this.stage.$orientation;
             if (orientation != egret.OrientationMode.AUTO) {
-                shouldRotate = orientation != egret.OrientationMode.PORTRAIT && screenRect.height > screenRect.width
-                    || orientation == egret.OrientationMode.PORTRAIT && screenRect.width > screenRect.height;
+                shouldRotate = orientation != egret.OrientationMode.PORTRAIT && boundingClientHeight > boundingClientWidth
+                    || orientation == egret.OrientationMode.PORTRAIT && boundingClientWidth > boundingClientHeight;
             }
-            var screenWidth = shouldRotate ? screenRect.height : screenRect.width;
-            var screenHeight = shouldRotate ? screenRect.width : screenRect.height;
+            var screenWidth = shouldRotate ? boundingClientHeight : boundingClientWidth;
+            var screenHeight = shouldRotate ? boundingClientWidth : boundingClientHeight;
             egret.Capabilities.$boundingClientWidth = screenWidth;
             egret.Capabilities.$boundingClientHeight = screenHeight;
             var stageSize = egret.sys.screenAdapter.calculateStageSize(this.stage.$scaleMode, screenWidth, screenHeight, option.contentWidth, option.contentHeight);
@@ -30570,18 +30610,18 @@ var egret;
             if (shouldRotate) {
                 if (orientation == egret.OrientationMode.LANDSCAPE) {
                     rotation = 90;
-                    canvas.style.top = (screenRect.height - displayWidth) / 2 + "px";
-                    canvas.style.left = (screenRect.width + displayHeight) / 2 + "px";
+                    canvas.style.top = top + (boundingClientHeight - displayWidth) / 2 + "px";
+                    canvas.style.left = (boundingClientWidth + displayHeight) / 2 + "px";
                 }
                 else {
                     rotation = -90;
-                    canvas.style.top = (screenRect.height + displayWidth) / 2 + "px";
-                    canvas.style.left = (screenRect.width - displayHeight) / 2 + "px";
+                    canvas.style.top = top + (boundingClientHeight + displayWidth) / 2 + "px";
+                    canvas.style.left = (boundingClientWidth - displayHeight) / 2 + "px";
                 }
             }
             else {
-                canvas.style.top = (screenRect.height - displayHeight) / 2 + "px";
-                canvas.style.left = (screenRect.width - displayWidth) / 2 + "px";
+                canvas.style.top = top + (boundingClientHeight - displayHeight) / 2 + "px";
+                canvas.style.left = (boundingClientWidth - displayWidth) / 2 + "px";
             }
             var transform = "rotate(" + rotation + "deg)";
             canvas.style[egret.getPrefixStyleName("transform")] = transform;
