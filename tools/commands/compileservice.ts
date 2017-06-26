@@ -91,9 +91,15 @@ class AutoCompileCommand implements egret.Command {
         //操作其他文件
         _scripts = result.files.length > 0 ? result.files : _scripts;
 
-        EgretProject.manager.generateManifest(_scripts);
-        FileUtil.copy(FileUtil.joinPath(options.templateDir, "debug", "index.html"),
-            FileUtil.joinPath(options.projectDir, "index.html"));
+        let manifestPath = FileUtil.joinPath(egret.args.projectDir, "manifest.json");
+        let indexPath = FileUtil.joinPath(egret.args.projectDir, "index.html");
+        EgretProject.manager.generateManifest(_scripts, manifestPath);
+        if (!EgretProject.data.useTemplate) {
+            EgretProject.manager.modifyIndex(manifestPath, indexPath);
+        }
+        else {
+            FileUtil.copy(FileUtil.joinPath(options.templateDir, "debug", "index.html"), indexPath);
+        }
 
         exmlActions.afterBuild();
 
@@ -101,7 +107,7 @@ class AutoCompileCommand implements egret.Command {
         //拷贝项目到native工程中
         if (egret.args.runtime == "native") {
             console.log("----native build-----");
-            EgretProject.manager.modifyNativeRequire();
+            EgretProject.manager.modifyNativeRequire(manifestPath);
             copyNative.refreshNative(true);
         }
 
@@ -163,9 +169,15 @@ class AutoCompileCommand implements egret.Command {
                     EgretProject.data.reload();
                     this.copyLibs();
                     //修改 html 中 modules 块
-                    EgretProject.manager.generateManifest(this._scripts);
-                    FileUtil.copy(FileUtil.joinPath(egret.args.templateDir, "debug", "index.html"),
-                        FileUtil.joinPath(egret.args.projectDir, "index.html"));
+                    let manifestPath = FileUtil.joinPath(egret.args.projectDir, "manifest.json");
+                    let indexPath = FileUtil.joinPath(egret.args.projectDir, "index.html");
+                    EgretProject.manager.generateManifest(this._scripts, manifestPath);
+                    if (!EgretProject.data.useTemplate) {
+                        EgretProject.manager.modifyIndex(manifestPath, indexPath);
+                    }
+                    else {
+                        FileUtil.copy(FileUtil.joinPath(egret.args.templateDir, "debug", "index.html"), indexPath);
+                    }
                     this.compileProject.compileProject(egret.args);
                     this.messages[2] = egret.args.tsconfigError;
                 }
@@ -200,7 +212,8 @@ class AutoCompileCommand implements egret.Command {
         //拷贝项目到native工程中
         if (egret.args.runtime == "native") {
             console.log("----native build-----");
-            EgretProject.manager.modifyNativeRequire();
+            let manifestPath = FileUtil.joinPath(egret.args.projectDir, "manifest.json");
+            EgretProject.manager.modifyNativeRequire(manifestPath);
             copyNative.refreshNative(true);
         }
         this.dirState.init();
@@ -283,11 +296,17 @@ class AutoCompileCommand implements egret.Command {
         index = FileUtil.escapePath(index);
         console.log('Compile Template: ' + index);
 
-        EgretProject.manager.generateManifest(this._scripts);
-        FileUtil.copy(FileUtil.joinPath(egret.args.templateDir, "debug", "index.html"),
-            FileUtil.joinPath(egret.args.projectDir, "index.html"));
+        let manifestPath = FileUtil.joinPath(egret.args.projectDir, "manifest.json");
+        let indexPath = FileUtil.joinPath(egret.args.projectDir, "index.html");
+        EgretProject.manager.generateManifest(this._scripts, manifestPath);
+        if (!EgretProject.data.useTemplate) {
+            EgretProject.manager.modifyIndex(manifestPath, indexPath);
+        }
+        else {
+            FileUtil.copy(FileUtil.joinPath(egret.args.templateDir, "debug", "index.html"), indexPath);
+        }
 
-        EgretProject.manager.modifyNativeRequire();
+        EgretProject.manager.modifyNativeRequire(manifestPath);
 
         return 0;
     }

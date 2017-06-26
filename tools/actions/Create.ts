@@ -54,8 +54,9 @@ function compileTemplate(projectConfig: egret.EgretProjectConfig) {
 function updateEgretProperties(modules: egret.EgretModule[]) {
     var propFile = FileUtil.joinPath(egret.args.projectDir, "egretProperties.json");
     var jsonString = FileUtil.read(propFile);
-    var props: egret.EgretProperties = JSON.parse(jsonString);
+    var props: egret.EgretProperty = JSON.parse(jsonString);
     props.egret_version = egret.version;
+    props.template = {};
     if (!props.modules) {
         props.modules = modules.map(m => ({ name: m.name }));
     }

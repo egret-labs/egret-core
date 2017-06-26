@@ -8149,6 +8149,7 @@ declare namespace egret {
      */
     class Mesh extends Bitmap {
         constructor(value?: Texture);
+        protected createWebAssemblyNode(): void;
         /**
          * @private
          */
@@ -10878,6 +10879,7 @@ declare namespace egret {
         SPRITE = 9,
         PARTICLE_SYSTEM = 10,
         BITMAP_TEXT = 11,
+        MESH = 12,
     }
 }
 declare namespace egret {

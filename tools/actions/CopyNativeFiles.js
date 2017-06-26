@@ -30,7 +30,9 @@ var CopyNativeFiles = (function () {
             var sourceRuntime = FileUtil.joinPath(options.templateDir, "runtime");
             var outputRuntime = FileUtil.joinPath(url2, "launcher");
             FileUtil.copy(sourceRuntime, outputRuntime);
-            EgretProject.manager.copyManifestForNative(FileUtil.joinPath(url2, "manifest.json"));
+            if (EgretProject.data.useTemplate) {
+                EgretProject.manager.copyManifestForNative(FileUtil.joinPath(url2, "manifest.json"));
+            }
             EgretProject.data.getModulesConfig('native').forEach(function (m) {
                 FileUtil.copy(m.sourceDir, FileUtil.joinPath(url2, m.targetDir));
             });

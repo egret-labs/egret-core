@@ -96,7 +96,8 @@ var CreateAppCommand = (function () {
         EgretProject.data.init(arg_h5_path);
         //修改native项目配置
         new ParseConfigCommand().execute();
-        EgretProject.manager.modifyNativeRequire();
+        var manifestPath = file.joinPath(egret.args.projectDir, "manifest.json");
+        EgretProject.manager.modifyNativeRequire(manifestPath);
         //拷贝项目到native工程中
         copyNative.refreshNative(true);
         globals.log2(1606, (Date.now() - startTime) / 1000);

@@ -47,7 +47,7 @@ var Clean = (function () {
     }
     Clean.prototype.execute = function () {
         return __awaiter(this, void 0, void 0, function () {
-            var options, compileProject, result, timeBuildEnd, timeBuildUsed;
+            var options, compileProject, result, manifestPath, indexPath, timeBuildEnd, timeBuildUsed;
             return __generator(this, function (_a) {
                 utils.checkEgret();
                 options = egret.args;
@@ -60,12 +60,19 @@ var Clean = (function () {
                 if (!result) {
                     return [2 /*return*/, 1];
                 }
-                EgretProject.manager.generateManifest(result.files);
-                FileUtil.copy(FileUtil.joinPath(options.templateDir, "debug", "index.html"), FileUtil.joinPath(options.projectDir, "index.html"));
+                manifestPath = FileUtil.joinPath(egret.args.projectDir, "manifest.json");
+                indexPath = FileUtil.joinPath(egret.args.projectDir, "index.html");
+                EgretProject.manager.generateManifest(result.files, manifestPath);
+                if (!EgretProject.data.useTemplate) {
+                    EgretProject.manager.modifyIndex(manifestPath, indexPath);
+                }
+                else {
+                    FileUtil.copy(FileUtil.joinPath(options.templateDir, "debug", "index.html"), indexPath);
+                }
                 //拷贝项目到native工程中
                 if (egret.args.runtime == "native") {
                     console.log("----native build-----");
-                    EgretProject.manager.modifyNativeRequire();
+                    EgretProject.manager.modifyNativeRequire(manifestPath);
                     copyNative.refreshNative(true);
                 }
                 timeBuildEnd = new Date().getTime();

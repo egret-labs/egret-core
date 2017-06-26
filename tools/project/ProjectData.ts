@@ -260,6 +260,10 @@ export class EgretProjectData {
 
         return ["resource"];
     }
+
+    get useTemplate(): boolean {
+        return this.egretProperties.template != undefined;
+    }
 }
 
 export var data = new EgretProjectData();

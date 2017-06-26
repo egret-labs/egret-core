@@ -27,14 +27,20 @@ class Clean implements egret.Command {
         if (!result) {
             return 1;
         }
-        EgretProject.manager.generateManifest(result.files);
-        FileUtil.copy(FileUtil.joinPath(options.templateDir, "debug", "index.html"),
-            FileUtil.joinPath(options.projectDir, "index.html"));
+        let manifestPath = FileUtil.joinPath(egret.args.projectDir, "manifest.json");
+        let indexPath = FileUtil.joinPath(egret.args.projectDir, "index.html");
+        EgretProject.manager.generateManifest(result.files, manifestPath);
+        if (!EgretProject.data.useTemplate) {
+            EgretProject.manager.modifyIndex(manifestPath, indexPath);
+        }
+        else {
+            FileUtil.copy(FileUtil.joinPath(options.templateDir, "debug", "index.html"), indexPath);
+        }
 
         //拷贝项目到native工程中
         if (egret.args.runtime == "native") {
             console.log("----native build-----");
-            EgretProject.manager.modifyNativeRequire();
+            EgretProject.manager.modifyNativeRequire(manifestPath);
             copyNative.refreshNative(true);
         }
         var timeBuildEnd = new Date().getTime();

@@ -83,6 +83,7 @@ function updateEgretProperties(modules) {
     var jsonString = FileUtil.read(propFile);
     var props = JSON.parse(jsonString);
     props.egret_version = egret.version;
+    props.template = {};
     if (!props.modules) {
         props.modules = modules.map(function (m) { return ({ name: m.name }); });
     }

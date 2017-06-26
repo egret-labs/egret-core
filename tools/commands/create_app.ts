@@ -112,7 +112,8 @@ class CreateAppCommand implements egret.Command {
 
         //修改native项目配置
         new ParseConfigCommand().execute();
-        EgretProject.manager.modifyNativeRequire();
+        let manifestPath = file.joinPath(egret.args.projectDir, "manifest.json");
+        EgretProject.manager.modifyNativeRequire(manifestPath);
 
         //拷贝项目到native工程中
         copyNative.refreshNative(true);

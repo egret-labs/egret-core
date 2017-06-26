@@ -210,6 +210,13 @@ var EgretProjectData = (function () {
         }
         return ["resource"];
     };
+    Object.defineProperty(EgretProjectData.prototype, "useTemplate", {
+        get: function () {
+            return this.egretProperties.template != undefined;
+        },
+        enumerable: true,
+        configurable: true
+    });
     return EgretProjectData;
 }());
 __decorate([

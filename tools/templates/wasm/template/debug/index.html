@@ -67,7 +67,8 @@
     var xhr = new XMLHttpRequest();
     xhr.open('GET', './manifest.json?v=' + Math.random(), true);
     xhr.addEventListener("load", function () {
-        var list = JSON.parse(xhr.response).initial;
+        var manifest = JSON.parse(xhr.response);
+        var list = manifest.initial.concat(manifest.game);
         loadScript(list, function () {
             /**
              * {
@@ -79,7 +80,7 @@
              **/
             egret.WebAssembly.init(function () {
                 egret.runEgret({ renderMode: "webgl", audioType: 0 });
-            }, undefined, 1);
+            }, undefined, window.WebAssembly ? 1 : 2);
         });
     });
     xhr.send(null);

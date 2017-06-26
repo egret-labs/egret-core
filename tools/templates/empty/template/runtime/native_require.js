@@ -1,5 +1,5 @@
-var manifest = egret_native.readFileSync("manifest.json");
-var game_file_list = JSON.parse(manifest).initial;
+var manifest = JSON.parse(egret_native.readFileSync("manifest.json"));
+var game_file_list = manifest.initial.concat(manifest.game);
 
 var window = this;
 
