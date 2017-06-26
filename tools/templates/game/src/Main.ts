@@ -41,6 +41,20 @@ class Main extends egret.DisplayObjectContainer {
     }
 
     private onAddToStage(event: egret.Event) {
+
+        egret.lifecycle.addLifecycleListener((context) => {
+            // custom lifecycle plugin
+        })
+
+        egret.lifecycle.onPause = () => {
+            egret.ticker.pause();
+        }
+
+        egret.lifecycle.onResume = () => {
+            egret.ticker.resume();
+        }
+
+
         //设置加载进度界面
         //Config to load process interface
         this.loadingView = new LoadingUI();

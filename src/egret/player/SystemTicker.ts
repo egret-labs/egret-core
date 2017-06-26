@@ -425,9 +425,9 @@ module egret {
             }
         }
 
-        export let onResume;
+        export let onResume: () => void;
 
-        export let onPause;
+        export let onPause: () => void;
 
         export function addLifecycleListener(plugin: LifecyclePlugin) {
             plugin(context);
