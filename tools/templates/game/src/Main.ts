@@ -44,6 +44,10 @@ class Main extends egret.DisplayObjectContainer {
 
         egret.lifecycle.addLifecycleListener((context) => {
             // custom lifecycle plugin
+
+            context.onUpdate = () => {
+                console.log('hello,world')
+            }
         })
 
         egret.lifecycle.onPause = () => {

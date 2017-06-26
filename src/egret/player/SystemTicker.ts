@@ -237,6 +237,12 @@ namespace egret.sys {
             let length = callBackList.length;
             let requestRenderingFlag = $requestRenderingFlag;
             let timeStamp = egret.getTimer();
+            let contexts = lifecycle.contexts;
+            for (let c of contexts) {
+                if (c.onUpdate) {
+                    c.onUpdate();
+                }
+            }
             if (this.isPaused) {
                 this.lastTimeStamp = timeStamp;
                 return;
@@ -385,22 +391,22 @@ module egret {
 
     export namespace lifecycle {
 
-        export type LifecyclePlugin = (context: typeof lifecycle.context) => void;
+        export type LifecyclePlugin = (context: LifecycleContext) => void;
 
         /**
          * @private
          */
         export let stage: egret.Stage;
 
+        /**
+         * @private
+         */
+        export let contexts: LifecycleContext[] = [];
         let isActivate = true;
 
-        export let context = {
+        export class LifecycleContext {
 
-            onPause: function () {
-                //console.log("pauseApp");
-
-                egret_native.Audio.pauseBackgroundMusic();
-                egret_native.Audio.pauseAllEffects();
+            pause() {
                 if (isActivate) {
                     isActivate = false;
                     stage.dispatchEvent(new Event(Event.DEACTIVATE));
@@ -408,21 +414,19 @@ module egret {
                         onPause();
                     }
                 }
-            },
+            }
 
-            onResume: function () {
-                //console.log("resumeApp");
-
-                egret_native.Audio.resumeBackgroundMusic();
-                egret_native.Audio.resumeAllEffects();
+            resume() {
                 if (!isActivate) {
+                    isActivate = true;
                     stage.dispatchEvent(new Event(Event.ACTIVATE));
                     if (onResume) {
                         onResume();
                     }
                 }
-
             }
+
+            onUpdate?: () => void;
         }
 
         export let onResume: () => void;
@@ -430,6 +434,8 @@ module egret {
         export let onPause: () => void;
 
         export function addLifecycleListener(plugin: LifecyclePlugin) {
+            let context = new LifecycleContext();
+            contexts.push(context);
             plugin(context);
         }
 

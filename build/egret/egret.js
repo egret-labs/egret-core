@@ -14778,6 +14778,13 @@ var egret;
                 var length = callBackList.length;
                 var requestRenderingFlag = sys.$requestRenderingFlag;
                 var timeStamp = egret.getTimer();
+                var contexts = egret.lifecycle.contexts;
+                for (var _i = 0, contexts_1 = contexts; _i < contexts_1.length; _i++) {
+                    var c = contexts_1[_i];
+                    if (c.onUpdate) {
+                        c.onUpdate();
+                    }
+                }
                 if (this.isPaused) {
                     this.lastTimeStamp = timeStamp;
                     return;
@@ -14917,12 +14924,15 @@ var egret;
     egret.$ticker = new egret.sys.SystemTicker();
     var lifecycle;
     (function (lifecycle) {
+        /**
+         * @private
+         */
+        lifecycle.contexts = [];
         var isActivate = true;
-        lifecycle.context = {
-            onPause: function () {
-                //console.log("pauseApp");
-                egret_native.Audio.pauseBackgroundMusic();
-                egret_native.Audio.pauseAllEffects();
+        var LifecycleContext = (function () {
+            function LifecycleContext() {
+            }
+            LifecycleContext.prototype.pause = function () {
                 if (isActivate) {
                     isActivate = false;
                     lifecycle.stage.dispatchEvent(new egret.Event(egret.Event.DEACTIVATE));
@@ -14930,21 +14940,24 @@ var egret;
                         lifecycle.onPause();
                     }
                 }
-            },
-            onResume: function () {
-                //console.log("resumeApp");
-                egret_native.Audio.resumeBackgroundMusic();
-                egret_native.Audio.resumeAllEffects();
+            };
+            LifecycleContext.prototype.resume = function () {
                 if (!isActivate) {
+                    isActivate = true;
                     lifecycle.stage.dispatchEvent(new egret.Event(egret.Event.ACTIVATE));
                     if (lifecycle.onResume) {
                         lifecycle.onResume();
                     }
                 }
-            }
-        };
+            };
+            return LifecycleContext;
+        }());
+        lifecycle.LifecycleContext = LifecycleContext;
+        __reflect(LifecycleContext.prototype, "egret.lifecycle.LifecycleContext");
         function addLifecycleListener(plugin) {
-            plugin(lifecycle.context);
+            var context = new LifecycleContext();
+            lifecycle.contexts.push(context);
+            plugin(context);
         }
         lifecycle.addLifecycleListener = addLifecycleListener;
     })(lifecycle = egret.lifecycle || (egret.lifecycle = {}));

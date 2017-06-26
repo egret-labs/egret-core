@@ -34,15 +34,15 @@ namespace egret.web {
 
         let handleVisibilityChange = function () {
             if (!document[hidden]) {
-                context.onResume();
+                context.resume();
             }
             else {
-                context.onPause();
+                context.pause();
             }
         };
 
-        window.addEventListener("focus", context.onResume, false);
-        window.addEventListener("blur", context.onPause, false);
+        window.addEventListener("focus", context.resume, false);
+        window.addEventListener("blur", context.pause, false);
 
         let hidden, visibilityChange;
         if (typeof document.hidden !== "undefined") {
@@ -62,8 +62,8 @@ namespace egret.web {
             visibilityChange = "ovisibilitychange";
         }
         if ("onpageshow" in window && "onpagehide" in window) {
-            window.addEventListener("pageshow", context.onResume, false);
-            window.addEventListener("pagehide", context.onPause, false);
+            window.addEventListener("pageshow", context.resume, false);
+            window.addEventListener("pagehide", context.pause, false);
         }
         if (hidden && visibilityChange) {
             document.addEventListener(visibilityChange, handleVisibilityChange, false);
@@ -83,10 +83,10 @@ namespace egret.web {
             browser.execWebFn.postX5GamePlayerMessage = function (event) {
                 let eventType = event.type;
                 if (eventType == "app_enter_background") {
-                    context.onPause();
+                    context.pause();
                 }
                 else if (eventType == "app_enter_foreground") {
-                    context.onResume();
+                    context.resume();
                 }
             };
             window["browser"] = browser;

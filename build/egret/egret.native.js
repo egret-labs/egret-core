@@ -4618,12 +4618,12 @@ var egret;
         // }
         native.NativeLifeCycleHandler = function (context) {
             egret_native.pauseApp = function () {
-                context.onPause();
+                context.pause();
                 egret_native.Audio.pauseBackgroundMusic();
                 egret_native.Audio.pauseAllEffects();
             };
             egret_native.resumeApp = function () {
-                context.onResume();
+                context.resume();
                 egret_native.Audio.resumeBackgroundMusic();
                 egret_native.Audio.resumeAllEffects();
             };
