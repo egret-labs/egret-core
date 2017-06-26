@@ -90,14 +90,6 @@ declare module egret {
         autoGenerateExmlsList?: boolean;
     }
 
-    export interface EgretProperties {
-        document_class?: string;
-        modules?: EgretModule[];
-        native?: any;
-        egret_version?: string;
-    }
-
-
     export type EgretPropertyModule = {
         "name": string,
         "path"?: string;
@@ -110,6 +102,9 @@ declare module egret {
 
     export type EgretProperty = {
         "modules": EgretPropertyModule[],
+        "template"?:{
+            
+        },
         "native"?: {
             "path_ignore"?: string[];
         },

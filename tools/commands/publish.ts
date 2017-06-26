@@ -76,7 +76,7 @@ class Publish implements egret.Command {
         if (egret.args.runtime == "native") {
             manifestPath = FileUtil.joinPath(options.releaseDir, "ziptemp", "manifest.json");
             EgretProject.manager.generateManifest(null, manifestPath, false, "native");
-            EgretProject.manager.modifyNativeRequire();
+            EgretProject.manager.modifyNativeRequire(manifestPath);
             var allMainfestPath = FileUtil.joinPath(options.releaseDir, "all.manifest");
             if (FileUtil.exists(allMainfestPath)) {
                 FileUtil.copy(allMainfestPath, FileUtil.joinPath(options.releaseDir, "ziptemp", "all.manifest"));
@@ -98,10 +98,18 @@ class Publish implements egret.Command {
             });
         }
         else {
-            manifestPath = FileUtil.joinPath(options.releaseDir, "manifest.json");
-            FileUtil.copy(FileUtil.joinPath(options.templateDir, "web", "index.html"),
-                FileUtil.joinPath(options.releaseDir, "index.html"));
+            manifestPath = FileUtil.joinPath(egret.args.releaseDir, "manifest.json");
+            let indexPath = FileUtil.joinPath(egret.args.releaseDir, "index.html");
             EgretProject.manager.generateManifest(null, manifestPath, false, "web");
+            if (!EgretProject.data.useTemplate) {
+                FileUtil.copy(FileUtil.joinPath(options.projectDir, "index.html"), indexPath);
+                EgretProject.manager.modifyIndex(manifestPath, indexPath);
+            }
+            else {
+                FileUtil.copy(FileUtil.joinPath(options.templateDir, "debug", "index.html"), indexPath);
+                EgretProject.manager.modifyIndex(manifestPath, indexPath);
+            }
+
             let copyAction = new CopyAction(options.projectDir, options.releaseDir);
             copyAction.copy("favicon.ico");
 
