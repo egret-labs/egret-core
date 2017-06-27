@@ -62,7 +62,7 @@ var UpgradeCommand = (function () {
                             { "v": "4.0.3" },
                             { "v": "4.1.0", command: Upgrade_4_1_0 },
                             { "v": "5.0.0" },
-                            { "v": "5.1.0", command: Upgrade_5_1_0 }
+                            { "v": "5.0.1", command: Upgrade_5_0_1 }
                         ];
                         _a.label = 1;
                     case 1:
@@ -194,27 +194,27 @@ var Upgrade_4_1_0 = (function () {
     };
     return Upgrade_4_1_0;
 }());
-var Upgrade_5_1_0 = (function () {
-    function Upgrade_5_1_0() {
+var Upgrade_5_0_1 = (function () {
+    function Upgrade_5_0_1() {
     }
-    Upgrade_5_1_0.prototype.execute = function () {
+    Upgrade_5_0_1.prototype.execute = function () {
         return __awaiter(this, void 0, void 0, function () {
             var options, jsonPath, json, modules;
             return __generator(this, function (_a) {
                 options = egret.args;
                 if (file.exists(file.joinPath(options.projectDir, "polyfill"))) {
                     file.rename(file.joinPath(options.projectDir, "polyfill"), file.joinPath(options.projectDir, "promise"));
+                    jsonPath = file.joinPath(options.projectDir, "egretProperties.json");
+                    json = JSON.parse(file.read(jsonPath));
+                    modules = json.modules;
+                    modules.push({ name: "promise", path: "./promise" });
+                    file.save(jsonPath, JSON.stringify(json, undefined, "\t"));
+                    modify.initProperties();
                 }
-                jsonPath = file.joinPath(options.projectDir, "egretProperties.json");
-                json = JSON.parse(file.read(jsonPath));
-                modules = json.modules;
-                modules.push({ name: "promise", path: "./promise" });
-                file.save(jsonPath, JSON.stringify(json, undefined, "\t"));
-                modify.initProperties();
                 return [2 /*return*/, 0];
             });
         });
     };
-    return Upgrade_5_1_0;
+    return Upgrade_5_0_1;
 }());
 module.exports = UpgradeCommand;

@@ -7210,7 +7210,7 @@ var egret;
              * @language zh_CN
              */
             get: function () {
-                return "4.0.3";
+                return "5.0.1";
             },
             enumerable: true,
             configurable: true

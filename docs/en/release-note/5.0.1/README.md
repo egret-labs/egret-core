@@ -1,6 +1,6 @@
-Egret Engine 5.1.0 Release Note
+Egret Engine 5.0.1 Release Note
 ===============================
-Latest update: June 14, 2017
+Latest update: June 27, 2017
 
 Welcome to use Egret Engine !
 

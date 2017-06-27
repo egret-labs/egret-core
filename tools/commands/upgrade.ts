@@ -37,7 +37,7 @@ class UpgradeCommand implements egret.Command {
             { "v": "4.0.3" },
             { "v": "4.1.0", command: Upgrade_4_1_0 },
             { "v": "5.0.0" },
-            { "v": "5.1.0", command: Upgrade_5_1_0 }
+            { "v": "5.0.1", command: Upgrade_5_0_1 }
         ];
 
         try {
@@ -163,18 +163,18 @@ class Upgrade_4_1_0 {
     }
 }
 
-class Upgrade_5_1_0 {
+class Upgrade_5_0_1 {
     async execute() {
         let options = egret.args;
         if (file.exists(file.joinPath(options.projectDir, "polyfill"))) {
             file.rename(file.joinPath(options.projectDir, "polyfill"), file.joinPath(options.projectDir, "promise"));
+            let jsonPath = file.joinPath(options.projectDir, "egretProperties.json");
+            let json = JSON.parse(file.read(jsonPath));
+            let modules = json.modules;
+            modules.push({ name: "promise", path: "./promise" });
+            file.save(jsonPath, JSON.stringify(json, undefined, "\t"));
+            modify.initProperties();
         }
-        let jsonPath = file.joinPath(options.projectDir, "egretProperties.json");
-        let json = JSON.parse(file.read(jsonPath));
-        let modules = json.modules;
-        modules.push({ name: "promise", path: "./promise" });
-        file.save(jsonPath, JSON.stringify(json, undefined, "\t"));
-        modify.initProperties();
         return 0;
     }
 }
