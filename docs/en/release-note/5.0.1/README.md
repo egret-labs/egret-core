@@ -19,6 +19,7 @@ In this update, in addition to engine running code, the egret engine provides a 
 
 * 2D rendering - JavaScript
     * Fix the retina setting in some cases after rendering the exception problem
+    * Fix iPhone Safari crossbar adaptation error problem
 
 ## Known Issues
     * developers using WebAssembly renderer will now create object times errors at the class's static variable declarations
