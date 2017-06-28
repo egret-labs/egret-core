@@ -45,6 +45,7 @@ var Build = (function () {
         var projectDir = egret.args.projectDir;
         var compiler = new Compiler.Compiler();
         var _a = compiler.parseTsconfig(projectDir, egret.args.publish), options = _a.options, fileNames = _a.fileNames;
+        options.emitReflection = true;
         var outFile = options.outFile;
         if (!outFile) {
             globals.exit(1122);
