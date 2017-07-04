@@ -1348,6 +1348,10 @@ declare namespace egret {
         /**
          * @private
          */
+        protected $setScale9Grid(value: egret.Rectangle): void;
+        /**
+         * @private
+         */
         $fillMode: string;
         /**
          * Determines how the bitmap fills in the dimensions.
@@ -3449,6 +3453,8 @@ declare namespace egret {
         renderMode?: string;
         audioType?: number;
         screenAdapter?: sys.IScreenAdapter;
+        wasmSize?: number;
+        isWasm?: number;
     }): void;
     /**
      * Refresh the screen display
@@ -8390,11 +8396,6 @@ declare namespace egret {
         private constructFrame();
         /**
          * @private
-         *
-         */
-        /**
-         * @private
-         *
          */
         private handlePendingEvent();
         /**
@@ -11035,7 +11036,7 @@ declare namespace egret {
          * @private
          */
         $setText(value: string): boolean;
-        private $textFieldWidth;
+        protected $textFieldWidth: number;
         /**
          * @private
          */
@@ -11058,8 +11059,8 @@ declare namespace egret {
          * @private
          */
         $setHeight(value: number): boolean;
-        private $font;
-        private $fontStringChanged;
+        protected $font: BitmapFont;
+        protected $fontStringChanged: boolean;
         /**
          * The name of the font to use, or a comma-separated list of font names, the type of value must be BitmapFont.
          * @default null
@@ -15110,9 +15111,7 @@ declare namespace egret {
          * @platform Web,Native
          * @language zh_CN
          */
-        attributes: {
-            [key: string]: string;
-        };
+        attributes: any;
         /**
          * the children of the xml node.
          * @version Egret 2.4
@@ -15178,6 +15177,17 @@ declare namespace egret {
          * @language zh_CN
          */
         namespace: string;
+        /**
+         * parses a text to XML instance.
+         * @param text the text to be parsed.
+         * @language en_US
+         */
+        /**
+         * 解析字符串为XML对象
+         * @param text 要解析的XML对象。
+         * @language zh_CN
+         */
+        static parse(text: string): XML;
     }
     /**
      * The XMLText class represents a string node in the XML.
@@ -15209,17 +15219,6 @@ declare namespace egret {
          * @language zh_CN
          */
         text: string;
-        /**
-     * parses a text to XML instance.
-     * @param text the text to be parsed.
-     * @language en_US
-     */
-        /**
-         * 解析字符串为XML对象
-         * @param text 要解析的XML对象。
-         * @language zh_CN
-         */
-        static parse(text: string): XML;
     }
 }
 declare namespace egret {

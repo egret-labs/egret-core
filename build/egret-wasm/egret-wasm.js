@@ -1,3 +1,6 @@
+var __reflect = (this && this.__reflect) || function (p, c, t) {
+    p.__class__ = c, t ? t.push(c) : t = [c], p.__types__ = p.__types__ ? t.concat(p.__types__) : t;
+};
 var __extends = (this && this.__extends) || function (d, b) {
     for (var p in b) if (b.hasOwnProperty(p)) d[p] = b[p];
     function __() { this.constructor = d; }
@@ -101,6 +104,7 @@ var egret;
         return HashObject;
     }());
     egret.HashObject = HashObject;
+    __reflect(HashObject.prototype, "egret.HashObject", ["egret.IHashObject"]);
 })(egret || (egret = {}));
 //////////////////////////////////////////////////////////////////////////////////////
 //
@@ -393,6 +397,7 @@ var egret;
         return EventDispatcher;
     }(egret.HashObject));
     egret.EventDispatcher = EventDispatcher;
+    __reflect(EventDispatcher.prototype, "egret.EventDispatcher", ["egret.IEventDispatcher"]);
 })(egret || (egret = {}));
 //////////////////////////////////////////////////////////////////////////////////////
 //
@@ -2107,6 +2112,7 @@ var egret;
      */
     DisplayObject.$renderCallBackList = [];
     egret.DisplayObject = DisplayObject;
+    __reflect(DisplayObject.prototype, "egret.DisplayObject");
 })(egret || (egret = {}));
 //////////////////////////////////////////////////////////////////////////////////////
 //
@@ -2356,21 +2362,27 @@ var egret;
                 return this.$scale9Grid;
             },
             set: function (value) {
-                var self = this;
-                self.$scale9Grid = value;
-                self.$renderDirty = true;
-                if (self.$waNode) {
-                    if (value) {
-                        self.$waNode.setScale9Grid(value.x, value.y, value.width, value.height);
-                    }
-                    else {
-                        self.$waNode.setScale9Grid(0, 0, -1, -1);
-                    }
-                }
+                this.$setScale9Grid(value);
             },
             enumerable: true,
             configurable: true
         });
+        /**
+         * @private
+         */
+        Bitmap.prototype.$setScale9Grid = function (value) {
+            var self = this;
+            self.$scale9Grid = value;
+            self.$renderDirty = true;
+            if (self.$waNode) {
+                if (value) {
+                    self.$waNode.setScale9Grid(value.x, value.y, value.width, value.height);
+                }
+                else {
+                    self.$waNode.setScale9Grid(0, 0, -1, -1);
+                }
+            }
+        };
         Object.defineProperty(Bitmap.prototype, "fillMode", {
             /**
              * Determines how the bitmap fills in the dimensions.
@@ -2585,6 +2597,7 @@ var egret;
      */
     Bitmap.defaultSmoothing = true;
     egret.Bitmap = Bitmap;
+    __reflect(Bitmap.prototype, "egret.Bitmap");
 })(egret || (egret = {}));
 //////////////////////////////////////////////////////////////////////////////////////
 //
@@ -2714,6 +2727,7 @@ var egret;
         return Filter;
     }(egret.HashObject));
     egret.Filter = Filter;
+    __reflect(Filter.prototype, "egret.Filter");
 })(egret || (egret = {}));
 //////////////////////////////////////////////////////////////////////////////////////
 //
@@ -3561,6 +3575,7 @@ var egret;
      */
     Event.SOUND_COMPLETE = "soundComplete";
     egret.Event = Event;
+    __reflect(Event.prototype, "egret.Event");
 })(egret || (egret = {}));
 //////////////////////////////////////////////////////////////////////////////////////
 //
@@ -3726,6 +3741,7 @@ var egret;
      */
     Logger.OFF = "off";
     egret.Logger = Logger;
+    __reflect(Logger.prototype, "egret.Logger");
 })(egret || (egret = {}));
 //////////////////////////////////////////////////////////////////////////////////////
 //
@@ -4098,6 +4114,7 @@ var egret;
         return Point;
     }(egret.HashObject));
     egret.Point = Point;
+    __reflect(Point.prototype, "egret.Point");
     /**
      * @private
      * 仅供框架内复用，要防止暴露引用到外部。
@@ -4861,6 +4878,7 @@ var egret;
      */
     DisplayObjectContainer.$EVENT_REMOVE_FROM_STAGE_LIST = [];
     egret.DisplayObjectContainer = DisplayObjectContainer;
+    __reflect(DisplayObjectContainer.prototype, "egret.DisplayObjectContainer");
 })(egret || (egret = {}));
 //////////////////////////////////////////////////////////////////////////////////////
 //
@@ -5198,6 +5216,7 @@ var egret;
         return GlowFilter;
     }(egret.Filter));
     egret.GlowFilter = GlowFilter;
+    __reflect(GlowFilter.prototype, "egret.GlowFilter");
 })(egret || (egret = {}));
 //////////////////////////////////////////////////////////////////////////////////////
 //
@@ -5551,6 +5570,7 @@ var egret;
             return RenderNode;
         }());
         sys.RenderNode = RenderNode;
+        __reflect(RenderNode.prototype, "egret.sys.RenderNode");
     })(sys = egret.sys || (egret.sys = {}));
 })(egret || (egret = {}));
 //////////////////////////////////////////////////////////////////////////////////////
@@ -5859,6 +5879,7 @@ var egret;
             return Path2D;
         }());
         sys.Path2D = Path2D;
+        __reflect(Path2D.prototype, "egret.sys.Path2D");
     })(sys = egret.sys || (egret.sys = {}));
 })(egret || (egret = {}));
 //////////////////////////////////////////////////////////////////////////////////////
@@ -6530,6 +6551,7 @@ var egret;
         return CanvasRenderer;
     }());
     egret.CanvasRenderer = CanvasRenderer;
+    __reflect(CanvasRenderer.prototype, "egret.CanvasRenderer", ["egret.sys.SystemRenderer"]);
     /**
      * @private
      * 获取字体字符串
@@ -7322,6 +7344,7 @@ var egret;
     Capabilities.$boundingClientWidth = 0;
     Capabilities.$boundingClientHeight = 0;
     egret.Capabilities = Capabilities;
+    __reflect(Capabilities.prototype, "egret.Capabilities");
 })(egret || (egret = {}));
 /**
  * @private
@@ -7550,6 +7573,7 @@ var egret;
         return SpriteSheet;
     }(egret.HashObject));
     egret.SpriteSheet = SpriteSheet;
+    __reflect(SpriteSheet.prototype, "egret.SpriteSheet");
 })(egret || (egret = {}));
 //////////////////////////////////////////////////////////////////////////////////////
 //
@@ -8099,6 +8123,7 @@ var egret;
         return Texture;
     }(egret.HashObject));
     egret.Texture = Texture;
+    __reflect(Texture.prototype, "egret.Texture");
     var sharedCanvas;
     var sharedContext;
     /**
@@ -8316,6 +8341,7 @@ var particle;
         return ParticleSystem;
     }(egret.DisplayObject));
     particle.ParticleSystem = ParticleSystem;
+    __reflect(ParticleSystem.prototype, "particle.ParticleSystem");
 })(particle || (particle = {}));
 //////////////////////////////////////////////////////////////////////////////////////
 //
@@ -8398,6 +8424,7 @@ var egret;
      */
     GeolocationEvent.UNAVAILABLE = "unavailable";
     egret.GeolocationEvent = GeolocationEvent;
+    __reflect(GeolocationEvent.prototype, "egret.GeolocationEvent");
 })(egret || (egret = {}));
 //////////////////////////////////////////////////////////////////////////////////////
 //
@@ -8531,6 +8558,7 @@ var egret;
      */
     HTTPStatusEvent.HTTP_STATUS = "httpStatus";
     egret.HTTPStatusEvent = HTTPStatusEvent;
+    __reflect(HTTPStatusEvent.prototype, "egret.HTTPStatusEvent");
 })(egret || (egret = {}));
 //////////////////////////////////////////////////////////////////////////////////////
 //
@@ -8665,6 +8693,7 @@ var egret;
      */
     IOErrorEvent.IO_ERROR = "ioError";
     egret.IOErrorEvent = IOErrorEvent;
+    __reflect(IOErrorEvent.prototype, "egret.IOErrorEvent");
 })(egret || (egret = {}));
 //////////////////////////////////////////////////////////////////////////////////////
 //
@@ -8722,6 +8751,7 @@ var egret;
         return MotionEvent;
     }(egret.Event));
     egret.MotionEvent = MotionEvent;
+    __reflect(MotionEvent.prototype, "egret.MotionEvent");
 })(egret || (egret = {}));
 //////////////////////////////////////////////////////////////////////////////////////
 //
@@ -8779,6 +8809,7 @@ var egret;
         return OrientationEvent;
     }(egret.Event));
     egret.OrientationEvent = OrientationEvent;
+    __reflect(OrientationEvent.prototype, "egret.OrientationEvent");
 })(egret || (egret = {}));
 //////////////////////////////////////////////////////////////////////////////////////
 //
@@ -8943,6 +8974,7 @@ var egret;
      */
     ProgressEvent.SOCKET_DATA = "socketData";
     egret.ProgressEvent = ProgressEvent;
+    __reflect(ProgressEvent.prototype, "egret.ProgressEvent");
 })(egret || (egret = {}));
 //////////////////////////////////////////////////////////////////////////////////////
 //
@@ -9051,6 +9083,7 @@ var egret;
      */
     StageOrientationEvent.ORIENTATION_CHANGE = "orientationChange";
     egret.StageOrientationEvent = StageOrientationEvent;
+    __reflect(StageOrientationEvent.prototype, "egret.StageOrientationEvent");
 })(egret || (egret = {}));
 //////////////////////////////////////////////////////////////////////////////////////
 //
@@ -9172,6 +9205,7 @@ var egret;
      */
     TextEvent.LINK = "link";
     egret.TextEvent = TextEvent;
+    __reflect(TextEvent.prototype, "egret.TextEvent");
 })(egret || (egret = {}));
 //////////////////////////////////////////////////////////////////////////////////////
 //
@@ -9351,6 +9385,7 @@ var egret;
      */
     TimerEvent.TIMER_COMPLETE = "timerComplete";
     egret.TimerEvent = TimerEvent;
+    __reflect(TimerEvent.prototype, "egret.TimerEvent");
 })(egret || (egret = {}));
 //////////////////////////////////////////////////////////////////////////////////////
 //
@@ -9476,6 +9511,7 @@ var egret;
         return FrameLabel;
     }(egret.EventDispatcher));
     egret.FrameLabel = FrameLabel;
+    __reflect(FrameLabel.prototype, "egret.FrameLabel");
 })(egret || (egret = {}));
 //////////////////////////////////////////////////////////////////////////////////////
 //
@@ -9848,6 +9884,7 @@ var egret;
      */
     TouchEvent.TOUCH_ROLL_OVER = "touchRollOver";
     egret.TouchEvent = TouchEvent;
+    __reflect(TouchEvent.prototype, "egret.TouchEvent");
 })(egret || (egret = {}));
 var egret;
 (function (egret) {
@@ -9950,6 +9987,7 @@ var egret;
         return WebExternalInterface;
     }());
     egret.WebExternalInterface = WebExternalInterface;
+    __reflect(WebExternalInterface.prototype, "egret.WebExternalInterface", ["egret.ExternalInterface"]);
     egret.ExternalInterface = WebExternalInterface;
 })(egret || (egret = {}));
 //////////////////////////////////////////////////////////////////////////////////////
@@ -10139,6 +10177,7 @@ var egret;
         return BlurFilter;
     }(egret.Filter));
     egret.BlurFilter = BlurFilter;
+    __reflect(BlurFilter.prototype, "egret.BlurFilter");
     var BlurXFilter = (function (_super) {
         __extends(BlurXFilter, _super);
         function BlurXFilter(blurX) {
@@ -10160,6 +10199,7 @@ var egret;
         });
         return BlurXFilter;
     }(egret.Filter));
+    __reflect(BlurXFilter.prototype, "BlurXFilter", ["egret.IBlurXFilter"]);
     var BlurYFilter = (function (_super) {
         __extends(BlurYFilter, _super);
         function BlurYFilter(blurY) {
@@ -10181,6 +10221,7 @@ var egret;
         });
         return BlurYFilter;
     }(egret.Filter));
+    __reflect(BlurYFilter.prototype, "BlurYFilter", ["egret.IBlurYFilter"]);
 })(egret || (egret = {}));
 //////////////////////////////////////////////////////////////////////////////////////
 //
@@ -10338,6 +10379,7 @@ var egret;
         return ColorMatrixFilter;
     }(egret.Filter));
     egret.ColorMatrixFilter = ColorMatrixFilter;
+    __reflect(ColorMatrixFilter.prototype, "egret.ColorMatrixFilter");
 })(egret || (egret = {}));
 //////////////////////////////////////////////////////////////////////////////////////
 //
@@ -10470,6 +10512,7 @@ var egret;
         return CustomFilter;
     }(egret.Filter));
     egret.CustomFilter = CustomFilter;
+    __reflect(CustomFilter.prototype, "egret.CustomFilter");
 })(egret || (egret = {}));
 //////////////////////////////////////////////////////////////////////////////////////
 //
@@ -10692,6 +10735,7 @@ var egret;
         return DropShadowFilter;
     }(egret.GlowFilter));
     egret.DropShadowFilter = DropShadowFilter;
+    __reflect(DropShadowFilter.prototype, "egret.DropShadowFilter");
 })(egret || (egret = {}));
 //////////////////////////////////////////////////////////////////////////////////////
 //
@@ -11468,6 +11512,7 @@ var egret;
         return Graphics;
     }(egret.HashObject));
     egret.Graphics = Graphics;
+    __reflect(Graphics.prototype, "egret.Graphics");
 })(egret || (egret = {}));
 //////////////////////////////////////////////////////////////////////////////////////
 //
@@ -12347,6 +12392,7 @@ var egret;
         return Matrix;
     }(egret.HashObject));
     egret.Matrix = Matrix;
+    __reflect(Matrix.prototype, "egret.Matrix");
     /**
      * @private
      * 仅供框架内复用，要防止暴露引用到外部。
@@ -13035,6 +13081,7 @@ var egret;
         return Rectangle;
     }(egret.HashObject));
     egret.Rectangle = Rectangle;
+    __reflect(Rectangle.prototype, "egret.Rectangle");
     /**
      * @private
      * 仅供框架内复用，要防止暴露引用到外部。
@@ -13231,6 +13278,7 @@ var egret;
         return Mesh;
     }(egret.Bitmap));
     egret.Mesh = Mesh;
+    __reflect(Mesh.prototype, "egret.Mesh");
 })(egret || (egret = {}));
 var egret;
 (function (egret) {
@@ -13784,20 +13832,6 @@ var egret;
         };
         /**
          * @private
-         *
-         */
-        // public $renderFrame(): void {
-        //     let self = this;
-        //     let texture = this.$movieClipData.getTextureByFrame(this.$currentFrameNum);
-        //     self.$waNode.setDataToBitmapNode(self.$waNode.id, texture,
-        //         [texture._bitmapX, texture._bitmapY, texture._bitmapWidth, texture._bitmapHeight,
-        //         texture._offsetX, texture._offsetY, texture.$getScaleBitmapWidth(), texture.$getScaleBitmapHeight(),
-        //         texture._sourceWidth, texture._sourceHeight]);
-        //     self.$renderDirty = true;
-        // }
-        /**
-         * @private
-         *
          */
         MovieClip.prototype.handlePendingEvent = function () {
             if (this.$eventPool.length != 0) {
@@ -13969,6 +14003,7 @@ var egret;
         return MovieClip;
     }(egret.DisplayObject));
     egret.MovieClip = MovieClip;
+    __reflect(MovieClip.prototype, "egret.MovieClip");
 })(egret || (egret = {}));
 //////////////////////////////////////////////////////////////////////////////////////
 //
@@ -14130,6 +14165,7 @@ var egret;
      */
     HttpMethod.POST = "POST";
     egret.HttpMethod = HttpMethod;
+    __reflect(HttpMethod.prototype, "egret.HttpMethod");
 })(egret || (egret = {}));
 //////////////////////////////////////////////////////////////////////////////////////
 //
@@ -14496,6 +14532,7 @@ var egret;
         return HttpRequest;
     }(egret.EventDispatcher));
     egret.HttpRequest = HttpRequest;
+    __reflect(HttpRequest.prototype, "egret.HttpRequest");
 })(egret || (egret = {}));
 //////////////////////////////////////////////////////////////////////////////////////
 //
@@ -14573,6 +14610,7 @@ var egret;
      */
     HttpResponseType.ARRAY_BUFFER = "arraybuffer";
     egret.HttpResponseType = HttpResponseType;
+    __reflect(HttpResponseType.prototype, "egret.HttpResponseType");
 })(egret || (egret = {}));
 //////////////////////////////////////////////////////////////////////////////////////
 //
@@ -14844,6 +14882,7 @@ var egret;
      */
     ImageLoader.crossOrigin = null;
     egret.ImageLoader = ImageLoader;
+    __reflect(ImageLoader.prototype, "egret.ImageLoader");
 })(egret || (egret = {}));
 //////////////////////////////////////////////////////////////////////////////////////
 //
@@ -14967,6 +15006,7 @@ var particle;
         return GravityParticleSystem;
     }(particle.ParticleSystem));
     particle.GravityParticleSystem = GravityParticleSystem;
+    __reflect(GravityParticleSystem.prototype, "particle.GravityParticleSystem");
 })(particle || (particle = {}));
 //////////////////////////////////////////////////////////////////////////////////////
 //
@@ -15245,6 +15285,7 @@ var egret;
         return MovieClipData;
     }(egret.HashObject));
     egret.MovieClipData = MovieClipData;
+    __reflect(MovieClipData.prototype, "egret.MovieClipData");
 })(egret || (egret = {}));
 //////////////////////////////////////////////////////////////////////////////////////
 //
@@ -15420,6 +15461,7 @@ var egret;
         return MovieClipDataFactory;
     }(egret.EventDispatcher));
     egret.MovieClipDataFactory = MovieClipDataFactory;
+    __reflect(MovieClipDataFactory.prototype, "egret.MovieClipDataFactory");
 })(egret || (egret = {}));
 //////////////////////////////////////////////////////////////////////////////////////
 //
@@ -15675,6 +15717,7 @@ var egret;
         return FPSDisplay;
     }());
     egret.FPSDisplay = FPSDisplay;
+    __reflect(FPSDisplay.prototype, "egret.FPSDisplay");
 })(egret || (egret = {}));
 //////////////////////////////////////////////////////////////////////////////////////
 //
@@ -15839,6 +15882,7 @@ var egret;
             return GraphicsNode;
         }(sys.RenderNode));
         sys.GraphicsNode = GraphicsNode;
+        __reflect(GraphicsNode.prototype, "egret.sys.GraphicsNode");
     })(sys = egret.sys || (egret.sys = {}));
 })(egret || (egret = {}));
 //////////////////////////////////////////////////////////////////////////////////////
@@ -15918,6 +15962,7 @@ var egret;
             return MeshNode;
         }(sys.RenderNode));
         sys.MeshNode = MeshNode;
+        __reflect(MeshNode.prototype, "egret.sys.MeshNode");
     })(sys = egret.sys || (egret.sys = {}));
 })(egret || (egret = {}));
 //////////////////////////////////////////////////////////////////////////////////////
@@ -16047,6 +16092,7 @@ var egret;
      */
     MovieClipEvent.FRAME_LABEL = "frame_label";
     egret.MovieClipEvent = MovieClipEvent;
+    __reflect(MovieClipEvent.prototype, "egret.MovieClipEvent");
 })(egret || (egret = {}));
 //////////////////////////////////////////////////////////////////////////////////////
 //
@@ -16178,6 +16224,7 @@ var egret;
             return TextNode;
         }(sys.RenderNode));
         sys.TextNode = TextNode;
+        __reflect(TextNode.prototype, "egret.sys.TextNode");
     })(sys = egret.sys || (egret.sys = {}));
 })(egret || (egret = {}));
 //////////////////////////////////////////////////////////////////////////////////////
@@ -16226,6 +16273,7 @@ var egret;
             return FillPath;
         }(sys.Path2D));
         sys.FillPath = FillPath;
+        __reflect(FillPath.prototype, "egret.sys.FillPath");
     })(sys = egret.sys || (egret.sys = {}));
 })(egret || (egret = {}));
 //////////////////////////////////////////////////////////////////////////////////////
@@ -16274,6 +16322,7 @@ var egret;
             return GradientFillPath;
         }(sys.Path2D));
         sys.GradientFillPath = GradientFillPath;
+        __reflect(GradientFillPath.prototype, "egret.sys.GradientFillPath");
     })(sys = egret.sys || (egret.sys = {}));
 })(egret || (egret = {}));
 //////////////////////////////////////////////////////////////////////////////////////
@@ -16376,6 +16425,7 @@ var egret;
             return StrokePath;
         }(sys.Path2D));
         sys.StrokePath = StrokePath;
+        __reflect(StrokePath.prototype, "egret.sys.StrokePath");
     })(sys = egret.sys || (egret.sys = {}));
 })(egret || (egret = {}));
 //////////////////////////////////////////////////////////////////////////////////////
@@ -16556,6 +16606,7 @@ var egret;
             return Player;
         }(egret.HashObject));
         sys.Player = Player;
+        __reflect(Player.prototype, "egret.sys.Player");
         var infoLines = [];
         var fpsDisplay;
         var fpsStyle;
@@ -16644,6 +16695,7 @@ var egret;
             };
             return FPS;
         }());
+        __reflect(FPS.prototype, "FPS");
         function toArray(argument) {
             var args = [];
             for (var i = 0; i < argument.length; i++) {
@@ -16818,6 +16870,7 @@ var egret;
     }(egret.HashObject));
     BitmapData._bitmapList = egret.createMap();
     egret.BitmapData = BitmapData;
+    __reflect(BitmapData.prototype, "egret.BitmapData");
 })(egret || (egret = {}));
 //////////////////////////////////////////////////////////////////////////////////////
 //
@@ -16995,6 +17048,7 @@ var egret;
         return RenderTexture;
     }(egret.Texture));
     egret.RenderTexture = RenderTexture;
+    __reflect(RenderTexture.prototype, "egret.RenderTexture");
 })(egret || (egret = {}));
 //////////////////////////////////////////////////////////////////////////////////////
 //
@@ -17147,6 +17201,7 @@ var egret;
             return DefaultScreenAdapter;
         }(egret.HashObject));
         sys.DefaultScreenAdapter = DefaultScreenAdapter;
+        __reflect(DefaultScreenAdapter.prototype, "egret.sys.DefaultScreenAdapter", ["egret.sys.IScreenAdapter"]);
     })(sys = egret.sys || (egret.sys = {}));
 })(egret || (egret = {}));
 //////////////////////////////////////////////////////////////////////////////////////
@@ -17636,6 +17691,7 @@ var egret;
             return SystemTicker;
         }());
         sys.SystemTicker = SystemTicker;
+        __reflect(SystemTicker.prototype, "egret.sys.SystemTicker");
         /**
          * @private
          * 心跳计时器单例
@@ -17789,6 +17845,7 @@ var egret;
             return TouchHandler;
         }(egret.HashObject));
         sys.TouchHandler = TouchHandler;
+        __reflect(TouchHandler.prototype, "egret.sys.TouchHandler");
     })(sys = egret.sys || (egret.sys = {}));
 })(egret || (egret = {}));
 //////////////////////////////////////////////////////////////////////////////////////
@@ -17889,6 +17946,7 @@ var egret;
         return DeviceOrientation;
     }(egret.EventDispatcher));
     egret.DeviceOrientation = DeviceOrientation;
+    __reflect(DeviceOrientation.prototype, "egret.DeviceOrientation");
 })(egret || (egret = {}));
 //////////////////////////////////////////////////////////////////////////////////////
 //
@@ -18004,6 +18062,7 @@ var egret;
         return Shape;
     }(egret.DisplayObject));
     egret.Shape = Shape;
+    __reflect(Shape.prototype, "egret.Shape");
 })(egret || (egret = {}));
 //////////////////////////////////////////////////////////////////////////////////////
 //
@@ -18157,6 +18216,7 @@ var egret;
         return Sprite;
     }(egret.DisplayObjectContainer));
     egret.Sprite = Sprite;
+    __reflect(Sprite.prototype, "egret.Sprite");
 })(egret || (egret = {}));
 //////////////////////////////////////////////////////////////////////////////////////
 //
@@ -18346,10 +18406,18 @@ var egret;
         var rootCanvasBuffer;
         var canvasContext;
         WebAssembly.forHitTest = false;
+        var isInit = false;
         // isWasm: 1: wasm, 2: use asm release, 3: use asm debug, almost asm
         WebAssembly.init = function (callback, wasmSize, isWasm) {
             if (wasmSize === void 0) { wasmSize = (128 * 1024 * 1024); }
             if (isWasm === void 0) { isWasm = 1; }
+            if (isInit) {
+                if (callback) {
+                    callback();
+                }
+                return;
+            }
+            isInit = true;
             var that = this;
             Module = {
                 postRun: []
@@ -19546,6 +19614,7 @@ var egret;
         return WebAssemblyNode;
     }());
     egret.WebAssemblyNode = WebAssemblyNode;
+    __reflect(WebAssemblyNode.prototype, "egret.WebAssemblyNode");
 })(egret || (egret = {}));
 //////////////////////////////////////////////////////////////////////////////////////
 //
@@ -19774,6 +19843,7 @@ var egret;
         return BitmapFont;
     }(egret.SpriteSheet));
     egret.BitmapFont = BitmapFont;
+    __reflect(BitmapFont.prototype, "egret.BitmapFont");
 })(egret || (egret = {}));
 //////////////////////////////////////////////////////////////////////////////////////
 //
@@ -20443,6 +20513,7 @@ var egret;
      */
     BitmapText.EMPTY_FACTOR = 0.33;
     egret.BitmapText = BitmapText;
+    __reflect(BitmapText.prototype, "egret.BitmapText");
 })(egret || (egret = {}));
 //////////////////////////////////////////////////////////////////////////////////////
 //
@@ -20569,6 +20640,7 @@ var egret;
      */
     HorizontalAlign.CONTENT_JUSTIFY = "contentJustify";
     egret.HorizontalAlign = HorizontalAlign;
+    __reflect(HorizontalAlign.prototype, "egret.HorizontalAlign");
 })(egret || (egret = {}));
 //////////////////////////////////////////////////////////////////////////////////////
 //
@@ -20829,6 +20901,7 @@ var egret;
         return HtmlTextParser;
     }());
     egret.HtmlTextParser = HtmlTextParser;
+    __reflect(HtmlTextParser.prototype, "egret.HtmlTextParser");
 })(egret || (egret = {}));
 //////////////////////////////////////////////////////////////////////////////////////
 //
@@ -21112,6 +21185,7 @@ var egret;
         return InputController;
     }(egret.HashObject));
     egret.InputController = InputController;
+    __reflect(InputController.prototype, "egret.InputController");
 })(egret || (egret = {}));
 //////////////////////////////////////////////////////////////////////////////////////
 //
@@ -21460,6 +21534,7 @@ var egret;
         return Stage;
     }(egret.DisplayObjectContainer));
     egret.Stage = Stage;
+    __reflect(Stage.prototype, "egret.Stage");
     if (true) {
         egret.$markCannotUse(Stage, "alpha", 1);
         egret.$markCannotUse(Stage, "visible", true);
@@ -23373,6 +23448,7 @@ var egret;
      */
     TextField.default_textColor = 0xffffff;
     egret.TextField = TextField;
+    __reflect(TextField.prototype, "egret.TextField");
 })(egret || (egret = {}));
 //////////////////////////////////////////////////////////////////////////////////////
 //
@@ -23461,6 +23537,7 @@ var egret;
      */
     TextFieldInputType.PASSWORD = "password";
     egret.TextFieldInputType = TextFieldInputType;
+    __reflect(TextFieldInputType.prototype, "egret.TextFieldInputType");
 })(egret || (egret = {}));
 //////////////////////////////////////////////////////////////////////////////////////
 //
@@ -23536,6 +23613,7 @@ var egret;
      */
     TextFieldType.INPUT = "input";
     egret.TextFieldType = TextFieldType;
+    __reflect(TextFieldType.prototype, "egret.TextFieldType");
 })(egret || (egret = {}));
 //////////////////////////////////////////////////////////////////////////////////////
 //
@@ -23763,6 +23841,7 @@ var egret;
         return TextFieldUtils;
     }());
     egret.TextFieldUtils = TextFieldUtils;
+    __reflect(TextFieldUtils.prototype, "egret.TextFieldUtils");
 })(egret || (egret = {}));
 //////////////////////////////////////////////////////////////////////////////////////
 //
@@ -23956,6 +24035,7 @@ var egret;
      */
     VerticalAlign.CONTENT_JUSTIFY = "contentJustify";
     egret.VerticalAlign = VerticalAlign;
+    __reflect(VerticalAlign.prototype, "egret.VerticalAlign");
 })(egret || (egret = {}));
 //////////////////////////////////////////////////////////////////////////////////////
 //
@@ -24358,6 +24438,7 @@ var egret;
         return HTML5StageText;
     }(egret.EventDispatcher));
     egret.HTML5StageText = HTML5StageText;
+    __reflect(HTML5StageText.prototype, "egret.HTML5StageText", ["egret.StageText"]);
     egret.StageText = HTML5StageText;
 })(egret || (egret = {}));
 (function (egret) {
@@ -24593,6 +24674,7 @@ var egret;
         return HTMLInput;
     }());
     egret.HTMLInput = HTMLInput;
+    __reflect(HTMLInput.prototype, "egret.HTMLInput");
 })(egret || (egret = {}));
 (function (egret) {
     var stageToTextLayerMap = {};
@@ -24815,6 +24897,7 @@ var egret;
         return Base64Util;
     }());
     egret.Base64Util = Base64Util;
+    __reflect(Base64Util.prototype, "egret.Base64Util");
 })(egret || (egret = {}));
 /**
  * @private
@@ -24904,6 +24987,7 @@ var egret;
      */
     Endian.BIG_ENDIAN = "bigEndian";
     egret.Endian = Endian;
+    __reflect(Endian.prototype, "egret.Endian");
     /**
      * The ByteArray class provides methods and attributes for optimized reading and writing as well as dealing with binary data.
      * Note: The ByteArray class is applied to the advanced developers who need to access data at the byte layer.
@@ -25943,6 +26027,7 @@ var egret;
      */
     ByteArray.SIZE_OF_FLOAT64 = 8;
     egret.ByteArray = ByteArray;
+    __reflect(ByteArray.prototype, "egret.ByteArray");
 })(egret || (egret = {}));
 //////////////////////////////////////////////////////////////////////////////////////
 //
@@ -26918,6 +27003,7 @@ var egret;
         return WebTouchHandler;
     }(egret.HashObject));
     egret.WebTouchHandler = WebTouchHandler;
+    __reflect(WebTouchHandler.prototype, "egret.WebTouchHandler");
 })(egret || (egret = {}));
 //////////////////////////////////////////////////////////////////////////////////////
 //
@@ -27129,6 +27215,7 @@ var egret;
      */
     FocusEvent.FOCUS_OUT = "focusOut";
     egret.FocusEvent = FocusEvent;
+    __reflect(FocusEvent.prototype, "egret.FocusEvent");
 })(egret || (egret = {}));
 //////////////////////////////////////////////////////////////////////////////////////
 //
@@ -27267,6 +27354,7 @@ var egret;
         return NumberUtils;
     }());
     egret.NumberUtils = NumberUtils;
+    __reflect(NumberUtils.prototype, "egret.NumberUtils");
 })(egret || (egret = {}));
 /**
  * @private
@@ -27682,6 +27770,7 @@ var egret;
         return Timer;
     }(egret.EventDispatcher));
     egret.Timer = Timer;
+    __reflect(Timer.prototype, "egret.Timer");
 })(egret || (egret = {}));
 //////////////////////////////////////////////////////////////////////////////////////
 //
@@ -27882,6 +27971,7 @@ var egret;
         return XMLNode;
     }());
     egret.XMLNode = XMLNode;
+    __reflect(XMLNode.prototype, "egret.XMLNode");
     /**
      * The XML class contains properties for working with XML objects.
      * @version Egret 2.4
@@ -27933,9 +28023,31 @@ var egret;
             _this.name = name;
             return _this;
         }
+        /**
+         * parses a text to XML instance.
+         * @param text the text to be parsed.
+         * @language en_US
+         */
+        /**
+         * 解析字符串为XML对象
+         * @param text 要解析的XML对象。
+         * @language zh_CN
+         */
+        XML.parse = function (text) {
+            var xmlDoc = parser.parseFromString(text, "text/xml");
+            var length = xmlDoc.childNodes.length;
+            for (var i = 0; i < length; i++) {
+                var node = xmlDoc.childNodes[i];
+                if (node.nodeType == 1) {
+                    return parseNode(node, null);
+                }
+            }
+            return null;
+        };
         return XML;
     }(XMLNode));
     egret.XML = XML;
+    __reflect(XML.prototype, "egret.XML");
     /**
      * The XMLText class represents a string node in the XML.
      * @version Egret 2.4
@@ -27958,30 +28070,10 @@ var egret;
             _this.text = text;
             return _this;
         }
-        /**
-     * parses a text to XML instance.
-     * @param text the text to be parsed.
-     * @language en_US
-     */
-        /**
-         * 解析字符串为XML对象
-         * @param text 要解析的XML对象。
-         * @language zh_CN
-         */
-        XMLText.parse = function (text) {
-            var xmlDoc = parser.parseFromString(text, "text/xml");
-            var length = xmlDoc.childNodes.length;
-            for (var i = 0; i < length; i++) {
-                var node = xmlDoc.childNodes[i];
-                if (node.nodeType == 1) {
-                    return parseNode(node, null);
-                }
-            }
-            return null;
-        };
         return XMLText;
     }(XMLNode));
     egret.XMLText = XMLText;
+    __reflect(XMLText.prototype, "egret.XMLText");
     var parser = new DOMParser();
     /**
      * @private
@@ -28115,31 +28207,33 @@ var egret;
         if (!options) {
             options = {};
         }
-        // Html5Capatibility._audioType = options.audioType;
-        egret.Html5Capatibility.$init();
-        // WebGL上下文参数自定义
-        if (options.renderMode == "webgl") {
-            // WebGL抗锯齿默认关闭，提升PC及某些平台性能
-            var antialias = options.antialias;
-            egret.WebGLRenderContext.antialias = !!antialias;
-        }
-        egret.sys.CanvasRenderBuffer = egret.CanvasRenderBuffer;
-        setRenderMode(options.renderMode);
-        var ticker = egret.sys.$ticker;
-        startTicker(ticker);
-        if (options.screenAdapter) {
-            egret.sys.screenAdapter = options.screenAdapter;
-        }
-        else if (!egret.sys.screenAdapter) {
-            egret.sys.screenAdapter = new egret.sys.DefaultScreenAdapter();
-        }
-        var list = document.querySelectorAll(".egret-player");
-        var length = list.length;
-        for (var i = 0; i < length; i++) {
-            var container = list[i];
-            var player = new egret.WebPlayer(container, options);
-            container["egret-player"] = player;
-        }
+        egret.WebAssembly.init(function () {
+            // Html5Capatibility._audioType = options.audioType;
+            egret.Html5Capatibility.$init();
+            // WebGL上下文参数自定义
+            if (options.renderMode == "webgl") {
+                // WebGL抗锯齿默认关闭，提升PC及某些平台性能
+                var antialias = options.antialias;
+                egret.WebGLRenderContext.antialias = !!antialias;
+            }
+            egret.sys.CanvasRenderBuffer = egret.CanvasRenderBuffer;
+            setRenderMode(options.renderMode);
+            var ticker = egret.sys.$ticker;
+            startTicker(ticker);
+            if (options.screenAdapter) {
+                egret.sys.screenAdapter = options.screenAdapter;
+            }
+            else if (!egret.sys.screenAdapter) {
+                egret.sys.screenAdapter = new egret.sys.DefaultScreenAdapter();
+            }
+            var list = document.querySelectorAll(".egret-player");
+            var length = list.length;
+            for (var i = 0; i < length; i++) {
+                var container = list[i];
+                var player = new egret.WebPlayer(container, options);
+                container["egret-player"] = player;
+            }
+        }, options.wasmSize, options.isWasm);
     }
     /**
      * 设置渲染模式。"auto","webgl","canvas"
@@ -28266,6 +28360,7 @@ var egret;
      */
     AudioType.HTML5_AUDIO = 3;
     egret.AudioType = AudioType;
+    __reflect(AudioType.prototype, "egret.AudioType");
     /**
      * @private
      */
@@ -28287,6 +28382,7 @@ var egret;
      */
     SystemOSType.ADNROID = 3;
     egret.SystemOSType = SystemOSType;
+    __reflect(SystemOSType.prototype, "egret.SystemOSType");
     /**
      * html5兼容性配置
      * @private
@@ -28384,6 +28480,7 @@ var egret;
      */
     Html5Capatibility.ua = "";
     egret.Html5Capatibility = Html5Capatibility;
+    __reflect(Html5Capatibility.prototype, "egret.Html5Capatibility");
     /**
      * @private
      */
@@ -28591,6 +28688,7 @@ var egret;
         return CanvasRenderBuffer;
     }());
     egret.CanvasRenderBuffer = CanvasRenderBuffer;
+    __reflect(CanvasRenderBuffer.prototype, "egret.CanvasRenderBuffer", ["egret.sys.RenderBuffer"]);
 })(egret || (egret = {}));
 //////////////////////////////////////////////////////////////////////////////////////
 //
@@ -28693,6 +28791,7 @@ var egret;
         return EgretWebGLAttribute;
     }());
     egret.EgretWebGLAttribute = EgretWebGLAttribute;
+    __reflect(EgretWebGLAttribute.prototype, "egret.EgretWebGLAttribute");
 })(egret || (egret = {}));
 //////////////////////////////////////////////////////////////////////////////////////
 //
@@ -28794,6 +28893,7 @@ var egret;
     }());
     EgretWebGLProgram.programCache = {};
     egret.EgretWebGLProgram = EgretWebGLProgram;
+    __reflect(EgretWebGLProgram.prototype, "egret.EgretWebGLProgram");
 })(egret || (egret = {}));
 //////////////////////////////////////////////////////////////////////////////////////
 //
@@ -29052,6 +29152,7 @@ var egret;
         return EgretWebGLUniform;
     }());
     egret.EgretWebGLUniform = EgretWebGLUniform;
+    __reflect(EgretWebGLUniform.prototype, "egret.EgretWebGLUniform");
 })(egret || (egret = {}));
 var egret;
 (function (egret) {
@@ -29070,6 +29171,7 @@ var egret;
     EgretShaderLib.primitive_frag = "precision lowp float;\nvarying vec2 vTextureCoord;\nvarying vec4 vColor;\nvoid main(void) {\n    gl_FragColor = vColor;\n}";
     EgretShaderLib.texture_frag = "precision lowp float;\nvarying vec2 vTextureCoord;\nvarying vec4 vColor;\nuniform sampler2D uSampler;\nvoid main(void) {\n    gl_FragColor = texture2D(uSampler, vTextureCoord) * vColor;\n}";
     egret.EgretShaderLib = EgretShaderLib;
+    __reflect(EgretShaderLib.prototype, "egret.EgretShaderLib");
 })(egret || (egret = {}));
 ;
 //////////////////////////////////////////////////////////////////////////////////////
@@ -29308,6 +29410,7 @@ var egret;
         return WebGLDrawCmdManager;
     }());
     egret.WebGLDrawCmdManager = WebGLDrawCmdManager;
+    __reflect(WebGLDrawCmdManager.prototype, "egret.WebGLDrawCmdManager");
 })(egret || (egret = {}));
 //////////////////////////////////////////////////////////////////////////////////////
 //
@@ -29456,6 +29559,7 @@ var egret;
     }(egret.HashObject));
     WebGLRenderBuffer.autoClear = true;
     egret.WebGLRenderBuffer = WebGLRenderBuffer;
+    __reflect(WebGLRenderBuffer.prototype, "egret.WebGLRenderBuffer", ["egret.sys.RenderBuffer"]);
 })(egret || (egret = {}));
 //////////////////////////////////////////////////////////////////////////////////////
 //
@@ -29737,6 +29841,7 @@ var egret;
     }());
     WebGLRenderContext.glContextId = 0;
     egret.WebGLRenderContext = WebGLRenderContext;
+    __reflect(WebGLRenderContext.prototype, "egret.WebGLRenderContext");
 })(egret || (egret = {}));
 //////////////////////////////////////////////////////////////////////////////////////
 //
@@ -29808,6 +29913,7 @@ var egret;
         return WebGLRenderer;
     }());
     egret.WebGLRenderer = WebGLRenderer;
+    __reflect(WebGLRenderer.prototype, "egret.WebGLRenderer", ["egret.sys.SystemRenderer"]);
 })(egret || (egret = {}));
 //////////////////////////////////////////////////////////////////////////////////////
 //
@@ -29948,6 +30054,7 @@ var egret;
         return WebGLRenderTarget;
     }(egret.HashObject));
     egret.WebGLRenderTarget = WebGLRenderTarget;
+    __reflect(WebGLRenderTarget.prototype, "egret.WebGLRenderTarget");
 })(egret || (egret = {}));
 //////////////////////////////////////////////////////////////////////////////////////
 //
@@ -30037,6 +30144,7 @@ var egret;
         return WebGLUtils;
     }());
     egret.WebGLUtils = WebGLUtils;
+    __reflect(WebGLUtils.prototype, "egret.WebGLUtils");
 })(egret || (egret = {}));
 //////////////////////////////////////////////////////////////////////////////////////
 //
@@ -30137,6 +30245,7 @@ var egret;
         return WebGLVertexArrayObject;
     }());
     egret.WebGLVertexArrayObject = WebGLVertexArrayObject;
+    __reflect(WebGLVertexArrayObject.prototype, "egret.WebGLVertexArrayObject");
 })(egret || (egret = {}));
 //////////////////////////////////////////////////////////////////////////////////////
 //
@@ -30298,6 +30407,7 @@ var egret;
         return WebCapability;
     }());
     egret.WebCapability = WebCapability;
+    __reflect(WebCapability.prototype, "egret.WebCapability");
     WebCapability.detect();
 })(egret || (egret = {}));
 //////////////////////////////////////////////////////////////////////////////////////
@@ -30433,6 +30543,7 @@ var egret;
         return WebHideHandler;
     }(egret.HashObject));
     egret.WebHideHandler = WebHideHandler;
+    __reflect(WebHideHandler.prototype, "egret.WebHideHandler");
 })(egret || (egret = {}));
 //////////////////////////////////////////////////////////////////////////////////////
 //
@@ -30646,6 +30757,7 @@ var egret;
         return WebPlayer;
     }(egret.HashObject));
     egret.WebPlayer = WebPlayer;
+    __reflect(WebPlayer.prototype, "egret.WebPlayer", ["egret.sys.Screen"]);
 })(egret || (egret = {}));
 //////////////////////////////////////////////////////////////////////////////////////
 //
@@ -30924,5 +31036,6 @@ var egret;
             return Region;
         }());
         sys.Region = Region;
+        __reflect(Region.prototype, "egret.sys.Region");
     })(sys = egret.sys || (egret.sys = {}));
 })(egret || (egret = {}));
