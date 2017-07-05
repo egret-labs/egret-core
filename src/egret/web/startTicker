@@ -108,7 +108,8 @@ namespace egret.web {
         sys.CanvasRenderBuffer = web.CanvasRenderBuffer;
         setRenderMode(options.renderMode);
         let ticker = egret.sys.$ticker;
-        startTicker(ticker);
+        
+        (ticker);
         if (options.screenAdapter) {
             egret.sys.screenAdapter = options.screenAdapter;
         }
