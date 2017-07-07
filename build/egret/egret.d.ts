@@ -3703,6 +3703,10 @@ declare namespace egret {
          */
         _bitmapData: BitmapData;
         /**
+         * @private
+         */
+        $rotated: boolean;
+        /**
          * The BitmapData object being referenced.
          * @version Egret 2.4
          * @platform Web,Native
@@ -3742,7 +3746,7 @@ declare namespace egret {
          * @param sourceWidth
          * @param sourceHeight
          */
-        $initData(bitmapX: number, bitmapY: number, bitmapWidth: number, bitmapHeight: number, offsetX: number, offsetY: number, textureWidth: number, textureHeight: number, sourceWidth: number, sourceHeight: number): void;
+        $initData(bitmapX: number, bitmapY: number, bitmapWidth: number, bitmapHeight: number, offsetX: number, offsetY: number, textureWidth: number, textureHeight: number, sourceWidth: number, sourceHeight: number, rotated?: boolean): void;
         /**
          * @deprecated
          */
@@ -10069,6 +10073,10 @@ declare namespace egret.sys {
          * 颜色变换滤镜
          */
         filter: ColorMatrixFilter;
+        /**
+         * 翻转
+         */
+        rotated: boolean;
         /**
          * 绘制一次位图
          */

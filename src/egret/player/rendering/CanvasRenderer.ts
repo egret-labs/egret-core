@@ -823,39 +823,105 @@ namespace egret {
                 originAlpha = context.globalAlpha;
                 context.globalAlpha *= alpha;
             }
-
             let drawCalls: number = 0;
             let filter = node.filter;
             //todo 暂时只考虑绘制一次的情况
             if (filter && length == 8) {
                 if (Capabilities.runtimeType == RuntimeType.NATIVE) { // for native
                     egret_native.Graphics.setGlobalShader(filter);
-                    while (pos < length) {
-                        drawCalls++;
-                        context.drawImage(image.source, data[pos++], data[pos++], data[pos++], data[pos++], data[pos++], data[pos++], data[pos++], data[pos++]);
+                    drawCalls++;
+                    if (node.rotated) {
+                        let sourceX = data[0];
+                        let sourceY = data[1];
+                        let sourceHeight = data[2];
+                        let sourceWidth = data[3];
+                        let offsetX = data[4];
+                        let offsetY = data[5];
+                        let destHeight = data[6];
+                        let destWidth = data[7];
+                        if ((<any>context).saveTransform) {//for native
+                            (<any>context).saveTransform();
+                        }
+                        else {
+                            context.save();
+                        }
+                        context.transform(0, -1, 1, 0, 0, destWidth);
+                        context.drawImage(image.source, sourceX, sourceY, sourceWidth, sourceHeight, offsetX, offsetY, destWidth, destHeight);
+                        if ((<any>context).restoreTransform) {//for native
+                            (<any>context).restoreTransform();
+                        }
+                        else {
+                            context.restore();
+                        }
+                    }
+                    else {
+                        context.drawImage(image.source, data[0], data[1], data[2], data[3], data[4], data[5], data[6], data[7]);
                     }
                     egret_native.Graphics.setGlobalShader(null);
                 }
                 else {
-                    let displayBuffer = this.createRenderBuffer(data[6], data[7]);
+                    let sourceX = data[0];
+                    let sourceY = data[1];
+                    let sourceWidth = data[2];
+                    let sourceHeight = data[3];
+                    let offsetX = data[4];
+                    let offsetY = data[5];
+                    let destWidth = data[6];
+                    let destHeight = data[7];
+                    if(node.rotated) {
+                        sourceWidth = data[3];
+                        sourceHeight = data[2];
+                        destWidth = data[7];
+                        destHeight = data[6];
+                    }
+                    let displayBuffer = this.createRenderBuffer(destWidth, destHeight);
                     let displayContext = displayBuffer.context;
                     drawCalls++;
-                    displayContext.drawImage(image.source, data[0], data[1], data[2], data[3], 0, 0, data[6], data[7]);
+                    if(node.rotated) {
+                        context.transform(0, -1, 1, 0, 0, destWidth);
+                    }
+                    displayContext.drawImage(image.source, sourceX, sourceY, sourceWidth, sourceHeight, 0, 0, destWidth, destHeight);
                     //绘制结果到屏幕
                     drawCalls++;
                     // 应用滤镜
-                    let imageData = displayContext.getImageData(0, 0, displayBuffer.surface.width, displayBuffer.surface.height);
-                    colorFilter(imageData.data, displayBuffer.surface.width, displayBuffer.surface.height, (<ColorMatrixFilter>filter).$matrix);
+                    let imageData = displayContext.getImageData(0, 0, destWidth, destHeight);
+                    colorFilter(imageData.data, destWidth, destHeight, (<ColorMatrixFilter>filter).$matrix);
                     displayContext.putImageData(imageData, 0, 0);
                     // 绘制结果的时候，应用滤镜
-                    context.drawImage(<any>displayBuffer.surface, 0, 0, data[6], data[7], data[4], data[5], data[6], data[7]);
+                    context.drawImage(<any>displayBuffer.surface, 0, 0, destWidth, destHeight, offsetX, offsetY, destWidth, destHeight);
                     renderBufferPool.push(displayBuffer);
                 }
             }
             else {
                 while (pos < length) {
                     drawCalls++;
-                    context.drawImage(image.source, data[pos++], data[pos++], data[pos++], data[pos++], data[pos++], data[pos++], data[pos++], data[pos++]);
+                    if (node.rotated) {
+                        let sourceX = data[pos++];
+                        let sourceY = data[pos++];
+                        let sourceHeight = data[pos++];
+                        let sourceWidth = data[pos++];
+                        let offsetX = data[pos++];
+                        let offsetY = data[pos++];
+                        let destHeight = data[pos++];
+                        let destWidth = data[pos++];
+                        if ((<any>context).saveTransform) {//for native
+                            (<any>context).saveTransform();
+                        }
+                        else {
+                            context.save();
+                        }
+                        context.transform(0, -1, 1, 0, 0, destWidth);
+                        context.drawImage(image.source, sourceX, sourceY, sourceWidth, sourceHeight, offsetX, offsetY, destWidth, destHeight);
+                        if ((<any>context).restoreTransform) {//for native
+                            (<any>context).restoreTransform();
+                        }
+                        else {
+                            context.restore();
+                        }
+                    }
+                    else {
+                        context.drawImage(image.source, data[pos++], data[pos++], data[pos++], data[pos++], data[pos++], data[pos++], data[pos++], data[pos++]);
+                    }
                 }
             }
             if (saved) {

@@ -181,6 +181,11 @@ namespace egret {
         public _bitmapData:BitmapData = null;
 
         /**
+         * @private
+         */
+        public $rotated:boolean = false;
+
+        /**
          * The BitmapData object being referenced.
          * @version Egret 2.4
          * @platform Web,Native
@@ -235,7 +240,7 @@ namespace egret {
          * @param sourceHeight
          */
         public $initData(bitmapX:number, bitmapY:number, bitmapWidth:number, bitmapHeight:number, offsetX:number, offsetY:number,
-                        textureWidth:number, textureHeight:number, sourceWidth:number, sourceHeight:number):void {
+                        textureWidth:number, textureHeight:number, sourceWidth:number, sourceHeight:number, rotated:boolean = false):void {
             let scale = $TextureScaleFactor;
             this._bitmapX = bitmapX / scale;
             this._bitmapY = bitmapY / scale;
@@ -249,6 +254,8 @@ namespace egret {
 
             this._sourceWidth = sourceWidth;
             this._sourceHeight = sourceHeight;
+
+            this.$rotated = rotated;
 
             //todo
             BitmapData.$invalidate(this);

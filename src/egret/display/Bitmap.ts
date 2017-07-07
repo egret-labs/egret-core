@@ -113,10 +113,15 @@ namespace egret {
                 9: 0,        // textureHeight
                 10: Bitmap.defaultSmoothing,    // smoothing
                 11: NaN,     //explicitBitmapWidth,
-                12: NaN      //explicitBitmapHeight,
+                12: NaN,     //explicitBitmapHeight,
+                13: NaN,     //sourceWidth,
+                14: NaN,     //sourceHeight
             };
 
             this.$setBitmapData(value);
+            if(value instanceof Texture) {
+                (<sys.BitmapNode>this.$renderNode).rotated = value.$rotated;
+            }
         }
 
         /**
@@ -203,7 +208,11 @@ namespace egret {
         }
 
         public set texture(value: Texture) {
-            this.$setBitmapData(value);
+            let self = this;
+            self.$setBitmapData(value);
+            if(value && self.$renderNode) {
+                (<sys.BitmapNode>self.$renderNode).rotated = value.$rotated;
+            }
         }
 
         /**

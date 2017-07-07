@@ -5081,7 +5081,7 @@ var egret;
             /**
              * 缓存一组顶点
              */
-            WebGLVertexArrayObject.prototype.cacheArrays = function (transform, alpha, sourceX, sourceY, sourceWidth, sourceHeight, destX, destY, destWidth, destHeight, textureSourceWidth, textureSourceHeight, meshUVs, meshVertices, meshIndices) {
+            WebGLVertexArrayObject.prototype.cacheArrays = function (transform, alpha, sourceX, sourceY, sourceWidth, sourceHeight, destX, destY, destWidth, destHeight, textureSourceWidth, textureSourceHeight, meshUVs, meshVertices, meshIndices, rotated) {
                 //计算出绘制矩阵，之后把矩阵还原回之前的
                 var locWorldTransform = transform;
                 var originalA = locWorldTransform.a;
@@ -5146,42 +5146,81 @@ var egret;
                     var h = sourceHeight;
                     sourceX = sourceX / width;
                     sourceY = sourceY / height;
-                    sourceWidth = sourceWidth / width;
-                    sourceHeight = sourceHeight / height;
                     var vertices = this.vertices;
                     var index = this.vertexIndex * this.vertSize;
-                    // xy
-                    vertices[index++] = tx;
-                    vertices[index++] = ty;
-                    // uv
-                    vertices[index++] = sourceX;
-                    vertices[index++] = sourceY;
-                    // alpha
-                    vertices[index++] = alpha;
-                    // xy
-                    vertices[index++] = a * w + tx;
-                    vertices[index++] = b * w + ty;
-                    // uv
-                    vertices[index++] = sourceWidth + sourceX;
-                    vertices[index++] = sourceY;
-                    // alpha
-                    vertices[index++] = alpha;
-                    // xy
-                    vertices[index++] = a * w + c * h + tx;
-                    vertices[index++] = d * h + b * w + ty;
-                    // uv
-                    vertices[index++] = sourceWidth + sourceX;
-                    vertices[index++] = sourceHeight + sourceY;
-                    // alpha
-                    vertices[index++] = alpha;
-                    // xy
-                    vertices[index++] = c * h + tx;
-                    vertices[index++] = d * h + ty;
-                    // uv
-                    vertices[index++] = sourceX;
-                    vertices[index++] = sourceHeight + sourceY;
-                    // alpha
-                    vertices[index++] = alpha;
+                    if (rotated) {
+                        var temp = sourceWidth;
+                        sourceWidth = sourceHeight / width;
+                        sourceHeight = temp / height;
+                        // xy
+                        vertices[index++] = tx;
+                        vertices[index++] = ty;
+                        // uv
+                        vertices[index++] = sourceWidth + sourceX;
+                        vertices[index++] = sourceY;
+                        // alpha
+                        vertices[index++] = alpha;
+                        // xy
+                        vertices[index++] = a * w + tx;
+                        vertices[index++] = b * w + ty;
+                        // uv
+                        vertices[index++] = sourceWidth + sourceX;
+                        vertices[index++] = sourceHeight + sourceY;
+                        // alpha
+                        vertices[index++] = alpha;
+                        // xy
+                        vertices[index++] = a * w + c * h + tx;
+                        vertices[index++] = d * h + b * w + ty;
+                        // uv
+                        vertices[index++] = sourceX;
+                        vertices[index++] = sourceHeight + sourceY;
+                        // alpha
+                        vertices[index++] = alpha;
+                        // xy
+                        vertices[index++] = c * h + tx;
+                        vertices[index++] = d * h + ty;
+                        // uv
+                        vertices[index++] = sourceX;
+                        vertices[index++] = sourceY;
+                        // alpha
+                        vertices[index++] = alpha;
+                    }
+                    else {
+                        sourceWidth = sourceWidth / width;
+                        sourceHeight = sourceHeight / height;
+                        // xy
+                        vertices[index++] = tx;
+                        vertices[index++] = ty;
+                        // uv
+                        vertices[index++] = sourceX;
+                        vertices[index++] = sourceY;
+                        // alpha
+                        vertices[index++] = alpha;
+                        // xy
+                        vertices[index++] = a * w + tx;
+                        vertices[index++] = b * w + ty;
+                        // uv
+                        vertices[index++] = sourceWidth + sourceX;
+                        vertices[index++] = sourceY;
+                        // alpha
+                        vertices[index++] = alpha;
+                        // xy
+                        vertices[index++] = a * w + c * h + tx;
+                        vertices[index++] = d * h + b * w + ty;
+                        // uv
+                        vertices[index++] = sourceWidth + sourceX;
+                        vertices[index++] = sourceHeight + sourceY;
+                        // alpha
+                        vertices[index++] = alpha;
+                        // xy
+                        vertices[index++] = c * h + tx;
+                        vertices[index++] = d * h + ty;
+                        // uv
+                        vertices[index++] = sourceX;
+                        vertices[index++] = sourceHeight + sourceY;
+                        // alpha
+                        vertices[index++] = alpha;
+                    }
                     // 缓存索引数组
                     if (this.hasMesh) {
                         var indicesForMesh = this.indicesForMesh;
@@ -5705,7 +5744,7 @@ var egret;
             /**
              * 绘制图片，image参数可以是BitmapData或者renderTarget
              */
-            WebGLRenderContext.prototype.drawImage = function (image, sourceX, sourceY, sourceWidth, sourceHeight, destX, destY, destWidth, destHeight, imageSourceWidth, imageSourceHeight, smoothing) {
+            WebGLRenderContext.prototype.drawImage = function (image, sourceX, sourceY, sourceWidth, sourceHeight, destX, destY, destWidth, destHeight, imageSourceWidth, imageSourceHeight, rotated, smoothing) {
                 var buffer = this.currentBuffer;
                 if (this.contextLost || !image || !buffer) {
                     return;
@@ -5726,7 +5765,7 @@ var egret;
                 if (!texture) {
                     return;
                 }
-                this.drawTexture(texture, sourceX, sourceY, sourceWidth, sourceHeight, destX, destY, destWidth, destHeight, imageSourceWidth, imageSourceHeight, undefined, undefined, undefined, undefined, smoothing);
+                this.drawTexture(texture, sourceX, sourceY, sourceWidth, sourceHeight, destX, destY, destWidth, destHeight, imageSourceWidth, imageSourceHeight, undefined, undefined, undefined, undefined, rotated, smoothing);
                 if (image.source && image.source["texture"]) {
                     buffer.restoreTransform();
                 }
@@ -5763,7 +5802,7 @@ var egret;
             /**
              * 绘制材质
              */
-            WebGLRenderContext.prototype.drawTexture = function (texture, sourceX, sourceY, sourceWidth, sourceHeight, destX, destY, destWidth, destHeight, textureWidth, textureHeight, meshUVs, meshVertices, meshIndices, bounds, smoothing) {
+            WebGLRenderContext.prototype.drawTexture = function (texture, sourceX, sourceY, sourceWidth, sourceHeight, destX, destY, destWidth, destHeight, textureWidth, textureHeight, meshUVs, meshVertices, meshIndices, bounds, rotated, smoothing) {
                 var buffer = this.currentBuffer;
                 if (this.contextLost || !texture || !buffer) {
                     return;
@@ -5789,7 +5828,7 @@ var egret;
                 var count = meshIndices ? meshIndices.length / 3 : 2;
                 // 应用$filter，因为只可能是colorMatrixFilter，最后两个参数可不传
                 this.drawCmdManager.pushDrawTexture(texture, count, this.$filter);
-                this.vao.cacheArrays(transform, alpha, sourceX, sourceY, sourceWidth, sourceHeight, destX, destY, destWidth, destHeight, textureWidth, textureHeight, meshUVs, meshVertices, meshIndices);
+                this.vao.cacheArrays(transform, alpha, sourceX, sourceY, sourceWidth, sourceHeight, destX, destY, destWidth, destHeight, textureWidth, textureHeight, meshUVs, meshVertices, meshIndices, rotated);
             };
             /**
              * 绘制矩形（仅用于遮罩擦除等）
@@ -6431,11 +6470,11 @@ var egret;
                 var oldHeight = this.rootRenderTarget.height;
                 var tempBuffer = WebGLRenderBuffer.create(oldWidth, oldHeight);
                 this.context.pushBuffer(tempBuffer);
-                this.context.drawImage(this.rootRenderTarget, 0, 0, oldWidth, oldHeight, 0, 0, oldWidth, oldHeight, oldWidth, oldHeight);
+                this.context.drawImage(this.rootRenderTarget, 0, 0, oldWidth, oldHeight, 0, 0, oldWidth, oldHeight, oldWidth, oldHeight, false);
                 this.context.popBuffer();
                 this.resize(width, height);
                 this.setTransform(1, 0, 0, 1, 0, 0);
-                this.context.drawImage(tempBuffer.rootRenderTarget, 0, 0, oldWidth, oldHeight, offsetX, offsetY, oldWidth, oldHeight, oldWidth, oldHeight);
+                this.context.drawImage(tempBuffer.rootRenderTarget, 0, 0, oldWidth, oldHeight, offsetX, offsetY, oldWidth, oldHeight, oldWidth, oldHeight, false);
                 WebGLRenderBuffer.release(tempBuffer);
                 this.context.popBuffer();
             };
@@ -6591,7 +6630,7 @@ var egret;
                 this.globalAlpha = 1;
                 this.context.setGlobalCompositeOperation("source-over");
                 clear && this.context.clear();
-                this.context.drawImage(this.rootRenderTarget, sourceX, sourceY, sourceWidth, sourceHeight, destX, destY, destWidth, destHeight, sourceWidth, sourceHeight);
+                this.context.drawImage(this.rootRenderTarget, sourceX, sourceY, sourceWidth, sourceHeight, destX, destY, destWidth, destHeight, sourceWidth, sourceHeight, false);
                 this.context.$drawWebGL();
                 this.rootRenderTarget.useFrameBuffer = true;
                 this.rootRenderTarget.activate();
@@ -6613,7 +6652,7 @@ var egret;
                 this.globalAlpha = 1;
                 this.context.setGlobalCompositeOperation("source-over");
                 clear && this.context.clear();
-                this.context.drawImage(this.context.surface, sourceX, sourceY, sourceWidth, sourceHeight, destX, destY, destWidth, destHeight, sourceWidth, sourceHeight);
+                this.context.drawImage(this.context.surface, sourceX, sourceY, sourceWidth, sourceHeight, destX, destY, destWidth, destHeight, sourceWidth, sourceHeight, false);
                 this.context.$drawWebGL();
                 this.rootRenderTarget.useFrameBuffer = false;
                 this.rootRenderTarget.activate();
@@ -7373,13 +7412,13 @@ var egret;
                 if (node.filter) {
                     buffer.context.$filter = node.filter;
                     while (pos < length) {
-                        buffer.context.drawImage(image, data[pos++], data[pos++], data[pos++], data[pos++], data[pos++], data[pos++], data[pos++], data[pos++], node.imageWidth, node.imageHeight, node.smoothing);
+                        buffer.context.drawImage(image, data[pos++], data[pos++], data[pos++], data[pos++], data[pos++], data[pos++], data[pos++], data[pos++], node.imageWidth, node.imageHeight, node.rotated, node.smoothing);
                     }
                     buffer.context.$filter = null;
                 }
                 else {
                     while (pos < length) {
-                        buffer.context.drawImage(image, data[pos++], data[pos++], data[pos++], data[pos++], data[pos++], data[pos++], data[pos++], data[pos++], node.imageWidth, node.imageHeight, node.smoothing);
+                        buffer.context.drawImage(image, data[pos++], data[pos++], data[pos++], data[pos++], data[pos++], data[pos++], data[pos++], data[pos++], node.imageWidth, node.imageHeight, node.rotated, node.smoothing);
                     }
                 }
                 if (blendMode) {

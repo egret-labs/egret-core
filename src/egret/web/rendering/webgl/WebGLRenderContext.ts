@@ -71,7 +71,7 @@ namespace egret.web {
             return this.instance;
         }
 
-        public $maxTextureSize:number;
+        public $maxTextureSize: number;
 
         /**
          * 顶点数组管理器
@@ -471,7 +471,7 @@ namespace egret.web {
         public drawImage(image: BitmapData,
             sourceX: number, sourceY: number, sourceWidth: number, sourceHeight: number,
             destX: number, destY: number, destWidth: number, destHeight: number,
-            imageSourceWidth: number, imageSourceHeight: number, smoothing?:boolean): void {
+            imageSourceWidth: number, imageSourceHeight: number, rotated: boolean, smoothing?: boolean): void {
             let buffer = this.currentBuffer;
             if (this.contextLost || !image || !buffer) {
                 return;
@@ -496,8 +496,8 @@ namespace egret.web {
             this.drawTexture(texture,
                 sourceX, sourceY, sourceWidth, sourceHeight,
                 destX, destY, destWidth, destHeight,
-                imageSourceWidth, imageSourceHeight, 
-                undefined, undefined, undefined, undefined, smoothing);
+                imageSourceWidth, imageSourceHeight,
+                undefined, undefined, undefined, undefined, rotated, smoothing);
 
             if (image.source && image.source["texture"]) {
                 buffer.restoreTransform();
@@ -511,7 +511,7 @@ namespace egret.web {
             sourceX: number, sourceY: number, sourceWidth: number, sourceHeight: number,
             destX: number, destY: number, destWidth: number, destHeight: number,
             imageSourceWidth: number, imageSourceHeight: number,
-            meshUVs: number[], meshVertices: number[], meshIndices: number[], bounds: Rectangle, smoothing:boolean
+            meshUVs: number[], meshVertices: number[], meshIndices: number[], bounds: Rectangle, smoothing: boolean
         ): void {
             let buffer = this.currentBuffer;
             if (this.contextLost || !image || !buffer) {
@@ -550,7 +550,7 @@ namespace egret.web {
         public drawTexture(texture: WebGLTexture,
             sourceX: number, sourceY: number, sourceWidth: number, sourceHeight: number,
             destX: number, destY: number, destWidth: number, destHeight: number, textureWidth: number, textureHeight: number,
-            meshUVs?: number[], meshVertices?: number[], meshIndices?: number[], bounds?: Rectangle, smoothing?:boolean): void {
+            meshUVs?: number[], meshVertices?: number[], meshIndices?: number[], bounds?: Rectangle, rotated?: boolean, smoothing?: boolean): void {
             let buffer = this.currentBuffer;
             if (this.contextLost || !texture || !buffer) {
                 return;
@@ -566,7 +566,7 @@ namespace egret.web {
                 }
             }
 
-            if(smoothing != undefined && texture["smoothing"] != smoothing) {
+            if (smoothing != undefined && texture["smoothing"] != smoothing) {
                 this.drawCmdManager.pushChangeSmoothing(texture, smoothing);
             }
 
@@ -581,8 +581,9 @@ namespace egret.web {
             // 应用$filter，因为只可能是colorMatrixFilter，最后两个参数可不传
             this.drawCmdManager.pushDrawTexture(texture, count, this.$filter);
 
-            this.vao.cacheArrays(transform, alpha, sourceX, sourceY, sourceWidth, sourceHeight, destX, destY, destWidth, destHeight, textureWidth, textureHeight,
-                meshUVs, meshVertices, meshIndices);
+            this.vao.cacheArrays(transform, alpha, sourceX, sourceY, sourceWidth, sourceHeight,
+                destX, destY, destWidth, destHeight, textureWidth, textureHeight,
+                meshUVs, meshVertices, meshIndices, rotated);
         }
 
         /**
@@ -823,7 +824,7 @@ namespace egret.web {
                     break;
                 case DRAWABLE_TYPE.SMOOTHING:
                     gl.bindTexture(gl.TEXTURE_2D, data.texture);
-                    if(data.smoothing) {
+                    if (data.smoothing) {
                         gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MAG_FILTER, gl.LINEAR);
                         gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MIN_FILTER, gl.LINEAR);
                     }

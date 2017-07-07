@@ -35,37 +35,37 @@ namespace egret.web {
      */
     export class WebGLRenderBuffer extends HashObject implements sys.RenderBuffer {
 
-        public static autoClear:boolean = true;
+        public static autoClear: boolean = true;
 
         /**
          * 渲染上下文
          */
-        public context:WebGLRenderContext;
+        public context: WebGLRenderContext;
 
         /**
          * 如果是舞台缓存，为canvas
          * 如果是普通缓存，为renderTarget
          */
-        public surface:any;
+        public surface: any;
 
         /**
          * root render target
          * 根渲染目标，用来执行主渲染
          */
-        public rootRenderTarget:WebGLRenderTarget;
+        public rootRenderTarget: WebGLRenderTarget;
 
         /**
          * 是否为舞台buffer
          */
-        private root:boolean;
+        private root: boolean;
 
-        public constructor(width?:number, height?:number, root?:boolean) {
+        public constructor(width?: number, height?: number, root?: boolean) {
             super();
             // 获取webglRenderContext
             this.context = WebGLRenderContext.getInstance(width, height);
             // buffer 对应的 render target
             this.rootRenderTarget = new WebGLRenderTarget(this.context.context, 3, 3);
-            if(width && height) {
+            if (width && height) {
                 this.resize(width, height);
             }
 
@@ -73,14 +73,14 @@ namespace egret.web {
             this.root = root;
 
             // 如果是用于舞台渲染的renderBuffer，则默认添加renderTarget到renderContext中，而且是第一个
-            if(this.root) {
+            if (this.root) {
                 this.context.pushBuffer(this);
                 // 画布
                 this.surface = this.context.surface;
             } else {
                 // 由于创建renderTarget造成的frameBuffer绑定，这里重置绑定
                 let lastBuffer = this.context.activatedBuffer;
-                if(lastBuffer) {
+                if (lastBuffer) {
                     lastBuffer.rootRenderTarget.activate();
                 }
                 this.rootRenderTarget.initFrameBuffer();
@@ -88,31 +88,31 @@ namespace egret.web {
             }
         }
 
-        public globalAlpha:number = 1;
+        public globalAlpha: number = 1;
         /**
          * stencil state
          * 模版开关状态
          */
-        private stencilState:boolean = false;
+        private stencilState: boolean = false;
         public $stencilList = [];
-        public stencilHandleCount:number = 0;
+        public stencilHandleCount: number = 0;
 
-        public enableStencil():void {
-            if(!this.stencilState) {
+        public enableStencil(): void {
+            if (!this.stencilState) {
                 this.context.enableStencilTest();
                 this.stencilState = true;
             }
         }
 
-        public disableStencil():void {
-            if(this.stencilState) {
+        public disableStencil(): void {
+            if (this.stencilState) {
                 this.context.disableStencilTest();
                 this.stencilState = false;
             }
         }
 
-        public restoreStencil():void {
-            if(this.stencilState) {
+        public restoreStencil(): void {
+            if (this.stencilState) {
                 this.context.enableStencilTest();
             } else {
                 this.context.disableStencilTest();
@@ -123,28 +123,28 @@ namespace egret.web {
          * scissor state
          * scissor 开关状态  
          */
-        public $scissorState:boolean = false;
-        private scissorRect:Rectangle = new egret.Rectangle();
-        public $hasScissor:boolean = false;
+        public $scissorState: boolean = false;
+        private scissorRect: Rectangle = new egret.Rectangle();
+        public $hasScissor: boolean = false;
 
-        public enableScissor(x:number, y:number, width:number, height:number):void {
-            if(!this.$scissorState) {
+        public enableScissor(x: number, y: number, width: number, height: number): void {
+            if (!this.$scissorState) {
                 this.$scissorState = true;
                 this.scissorRect.setTo(x, y, width, height);
                 this.context.enableScissorTest(this.scissorRect);
             }
         }
 
-        public disableScissor():void {
-            if(this.$scissorState) {
+        public disableScissor(): void {
+            if (this.$scissorState) {
                 this.$scissorState = false;
                 this.scissorRect.setEmpty();
                 this.context.disableScissorTest();
-            }  
+            }
         }
 
-        public restoreScissor():void {
-            if(this.$scissorState) {
+        public restoreScissor(): void {
+            if (this.$scissorState) {
                 this.context.enableScissorTest(this.scissorRect);
             } else {
                 this.context.disableScissorTest();
@@ -155,7 +155,7 @@ namespace egret.web {
          * 渲染缓冲的宽度，以像素为单位。
          * @readOnly
          */
-        public get width():number {
+        public get width(): number {
             return this.rootRenderTarget.width;
         }
 
@@ -163,7 +163,7 @@ namespace egret.web {
          * 渲染缓冲的高度，以像素为单位。
          * @readOnly
          */
-        public get height():number {
+        public get height(): number {
             return this.rootRenderTarget.height;
         }
 
@@ -173,14 +173,14 @@ namespace egret.web {
          * @param height 改变后的高
          * @param useMaxSize 若传入true，则将改变后的尺寸与已有尺寸对比，保留较大的尺寸。
          */
-        public resize(width:number, height:number, useMaxSize?:boolean):void {
+        public resize(width: number, height: number, useMaxSize?: boolean): void {
             this.context.pushBuffer(this);
 
             width = width || 1;
             height = height || 1;
 
             // render target 尺寸重置
-            if(width != this.rootRenderTarget.width || height != this.rootRenderTarget.height) {
+            if (width != this.rootRenderTarget.width || height != this.rootRenderTarget.height) {
                 this.context.drawCmdManager.pushResize(this, width, height);
                 // 同步更改宽高
                 this.rootRenderTarget.width = width;
@@ -188,7 +188,7 @@ namespace egret.web {
             }
 
             // 如果是舞台的渲染缓冲，执行resize，否则surface大小不随之改变
-            if(this.root) {
+            if (this.root) {
                 this.context.resize(width, height, useMaxSize);
             }
 
@@ -206,28 +206,30 @@ namespace egret.web {
          * @param offsetX 原始图像数据在改变后缓冲区的绘制起始位置x
          * @param offsetY 原始图像数据在改变后缓冲区的绘制起始位置y
          */
-        public resizeTo(width:number, height:number, offsetX:number, offsetY:number):void {
+        public resizeTo(width: number, height: number, offsetX: number, offsetY: number): void {
             this.context.pushBuffer(this);
 
             let oldWidth = this.rootRenderTarget.width;
             let oldHeight = this.rootRenderTarget.height;
-            let tempBuffer:WebGLRenderBuffer = WebGLRenderBuffer.create(oldWidth, oldHeight);
+            let tempBuffer: WebGLRenderBuffer = WebGLRenderBuffer.create(oldWidth, oldHeight);
             this.context.pushBuffer(tempBuffer);
-            this.context.drawImage(<BitmapData><any>this.rootRenderTarget, 0, 0, oldWidth, oldHeight, 0, 0, oldWidth, oldHeight, oldWidth, oldHeight);
+            this.context.drawImage(<BitmapData><any>this.rootRenderTarget, 0, 0, oldWidth, oldHeight,
+                0, 0, oldWidth, oldHeight, oldWidth, oldHeight, false);
             this.context.popBuffer();
 
             this.resize(width, height);
 
             this.setTransform(1, 0, 0, 1, 0, 0);
-            this.context.drawImage(<BitmapData><any>tempBuffer.rootRenderTarget, 0, 0, oldWidth, oldHeight, offsetX, offsetY, oldWidth, oldHeight, oldWidth, oldHeight);
+            this.context.drawImage(<BitmapData><any>tempBuffer.rootRenderTarget, 0, 0, oldWidth, oldHeight,
+                offsetX, offsetY, oldWidth, oldHeight, oldWidth, oldHeight, false);
             WebGLRenderBuffer.release(tempBuffer);
             this.context.popBuffer();
         }
 
         // dirtyRegionPolicy hack
-        private dirtyRegionPolicy:boolean = true;
-        private _dirtyRegionPolicy:boolean = true;// 默认设置为true，保证第一帧绘制在frameBuffer上
-        public setDirtyRegionPolicy(state:string):void {
+        private dirtyRegionPolicy: boolean = true;
+        private _dirtyRegionPolicy: boolean = true;// 默认设置为true，保证第一帧绘制在frameBuffer上
+        public setDirtyRegionPolicy(state: string): void {
             this.dirtyRegionPolicy = (state == "on");
         }
 
@@ -237,13 +239,13 @@ namespace egret.web {
          * @param offsetX 矩形要加上的偏移量x
          * @param offsetY 矩形要加上的偏移量y
          */
-        public beginClip(regions:sys.Region[], offsetX?:number, offsetY?:number):void {
+        public beginClip(regions: sys.Region[], offsetX?: number, offsetY?: number): void {
 
             this.context.pushBuffer(this);
 
-            if(this.root) {
+            if (this.root) {
                 // dirtyRegionPolicy hack
-                if(this._dirtyRegionPolicy) {
+                if (this._dirtyRegionPolicy) {
                     this.rootRenderTarget.useFrameBuffer = true;
                     this.rootRenderTarget.activate();
                 } else {
@@ -260,10 +262,10 @@ namespace egret.web {
             //只有一个区域且刚好为舞台大小时,不设置模板
             // if (length == 1 && regions[0].minX == 0 && regions[0].minY == 0 &&
             //     regions[0].width == this.rootRenderTarget.width && regions[0].height == this.rootRenderTarget.height) {
-                this.maskPushed = false;
-                this.rootRenderTarget.useFrameBuffer && this.context.clear();
-                this.context.popBuffer();
-                return;
+            this.maskPushed = false;
+            this.rootRenderTarget.useFrameBuffer && this.context.clear();
+            this.context.popBuffer();
+            return;
             // }
             // 擦除脏矩形区域
             // for (let i = 0; i < length; i++) {
@@ -304,24 +306,24 @@ namespace egret.web {
             // this.context.popBuffer();
         }
 
-        private maskPushed:boolean;
-        private scissorEnabled:boolean;
-        private offsetX:number;
-        private offsetY:number;
+        private maskPushed: boolean;
+        private scissorEnabled: boolean;
+        private offsetX: number;
+        private offsetY: number;
 
         /**
          * 取消上一次设置的clip。
          */
-        public endClip():void {
+        public endClip(): void {
             if (this.maskPushed || this.scissorEnabled) {
                 this.context.pushBuffer(this);
 
-                if(this.maskPushed) {
+                if (this.maskPushed) {
                     this.setTransform(1, 0, 0, 1, this.offsetX, this.offsetY);
                     this.context.popMask();
                 }
 
-                if(this.scissorEnabled) {
+                if (this.scissorEnabled) {
                     this.context.disableScissor();
                 }
 
@@ -332,7 +334,7 @@ namespace egret.web {
         /**
          * 获取指定区域的像素
          */
-        public getPixels(x:number, y:number, width:number = 1, height:number = 1):number[] {
+        public getPixels(x: number, y: number, width: number = 1, height: number = 1): number[] {
             let pixels = new Uint8Array(4 * width * height);
 
             let useFrameBuffer = this.rootRenderTarget.useFrameBuffer;
@@ -346,8 +348,8 @@ namespace egret.web {
 
             //图像反转
             let result = new Uint8Array(4 * width * height);
-            for(let i = 0 ; i < height ; i++) {
-                for(let j = 0 ; j < width ; j++) {
+            for (let i = 0; i < height; i++) {
+                for (let j = 0; j < width; j++) {
                     result[(width * (height - i - 1) + j) * 4] = pixels[(width * i + j) * 4];
                     result[(width * (height - i - 1) + j) * 4 + 1] = pixels[(width * i + j) * 4 + 1];
                     result[(width * (height - i - 1) + j) * 4 + 2] = pixels[(width * i + j) * 4 + 2];
@@ -362,27 +364,27 @@ namespace egret.web {
          * 转换成base64字符串，如果图片（或者包含的图片）跨域，则返回null
          * @param type 转换的类型，如: "image/png","image/jpeg"
          */
-        public toDataURL(type?:string, encoderOptions?:number):string {
+        public toDataURL(type?: string, encoderOptions?: number): string {
             return this.context.surface.toDataURL(type, encoderOptions);
         }
 
         /**
          * 销毁绘制对象
          */
-        public destroy():void {
+        public destroy(): void {
             this.context.destroy();
         }
 
-        public onRenderFinish():void {
+        public onRenderFinish(): void {
             this.$drawCalls = 0;
 
             // 如果是舞台渲染buffer，判断脏矩形策略
-            if(this.root) {
+            if (this.root) {
                 // dirtyRegionPolicy hack
-                if(!this._dirtyRegionPolicy && this.dirtyRegionPolicy) {
+                if (!this._dirtyRegionPolicy && this.dirtyRegionPolicy) {
                     this.drawSurfaceToFrameBuffer(0, 0, this.rootRenderTarget.width, this.rootRenderTarget.height, 0, 0, this.rootRenderTarget.width, this.rootRenderTarget.height, true);
                 }
-                if(this._dirtyRegionPolicy) {
+                if (this._dirtyRegionPolicy) {
                     this.drawFrameBufferToSurface(0, 0, this.rootRenderTarget.width, this.rootRenderTarget.height, 0, 0, this.rootRenderTarget.width, this.rootRenderTarget.height);
                 }
                 this._dirtyRegionPolicy = this.dirtyRegionPolicy;
@@ -394,8 +396,8 @@ namespace egret.web {
          * @param width 宽度
          * @param height 高度
          */
-        private drawFrameBufferToSurface(sourceX:number,
-          sourceY:number, sourceWidth:number, sourceHeight:number, destX:number, destY:number, destWidth:number, destHeight:number, clear:boolean = false):void {
+        private drawFrameBufferToSurface(sourceX: number,
+            sourceY: number, sourceWidth: number, sourceHeight: number, destX: number, destY: number, destWidth: number, destHeight: number, clear: boolean = false): void {
             this.rootRenderTarget.useFrameBuffer = false;
             this.rootRenderTarget.activate();
 
@@ -406,7 +408,8 @@ namespace egret.web {
             this.globalAlpha = 1;
             this.context.setGlobalCompositeOperation("source-over");
             clear && this.context.clear();
-            this.context.drawImage(<BitmapData><any>this.rootRenderTarget, sourceX, sourceY, sourceWidth, sourceHeight, destX, destY, destWidth, destHeight, sourceWidth, sourceHeight);
+            this.context.drawImage(<BitmapData><any>this.rootRenderTarget, sourceX, sourceY, sourceWidth, sourceHeight,
+                destX, destY, destWidth, destHeight, sourceWidth, sourceHeight, false);
             this.context.$drawWebGL();
 
             this.rootRenderTarget.useFrameBuffer = true;
@@ -421,8 +424,8 @@ namespace egret.web {
          * @param width 宽度
          * @param height 高度
          */
-        private drawSurfaceToFrameBuffer(sourceX:number,
-          sourceY:number, sourceWidth:number, sourceHeight:number, destX:number, destY:number, destWidth:number, destHeight:number, clear:boolean = false):void {
+        private drawSurfaceToFrameBuffer(sourceX: number,
+            sourceY: number, sourceWidth: number, sourceHeight: number, destX: number, destY: number, destWidth: number, destHeight: number, clear: boolean = false): void {
             this.rootRenderTarget.useFrameBuffer = true;
             this.rootRenderTarget.activate();
 
@@ -433,7 +436,8 @@ namespace egret.web {
             this.globalAlpha = 1;
             this.context.setGlobalCompositeOperation("source-over");
             clear && this.context.clear();
-            this.context.drawImage(<BitmapData><any>this.context.surface, sourceX, sourceY, sourceWidth, sourceHeight, destX, destY, destWidth, destHeight, sourceWidth, sourceHeight);
+            this.context.drawImage(<BitmapData><any>this.context.surface, sourceX, sourceY, sourceWidth, sourceHeight,
+                destX, destY, destWidth, destHeight, sourceWidth, sourceHeight, false);
             this.context.$drawWebGL();
 
             this.rootRenderTarget.useFrameBuffer = false;
@@ -446,17 +450,17 @@ namespace egret.web {
         /**
          * 清空缓冲区数据
          */
-        public clear():void {
+        public clear(): void {
             this.context.clear();
         }
 
-        public $drawCalls:number = 0;
-        public $computeDrawCall:boolean = false;
+        public $drawCalls: number = 0;
+        public $computeDrawCall: boolean = false;
 
-        public globalMatrix:Matrix = new Matrix();
-        public savedGlobalMatrix:Matrix = new Matrix();
+        public globalMatrix: Matrix = new Matrix();
+        public savedGlobalMatrix: Matrix = new Matrix();
 
-        public setTransform(a:number, b:number, c:number, d:number, tx:number, ty:number):void {
+        public setTransform(a: number, b: number, c: number, d: number, tx: number, ty: number): void {
             // this.globalMatrix.setTo(a, b, c, d, tx, ty);
             let matrix = this.globalMatrix;
             matrix.a = a;
@@ -467,7 +471,7 @@ namespace egret.web {
             matrix.ty = ty;
         }
 
-        public transform(a:number, b:number, c:number, d:number, tx:number, ty:number):void {
+        public transform(a: number, b: number, c: number, d: number, tx: number, ty: number): void {
             // this.globalMatrix.append(a, b, c, d, tx, ty);
             let matrix = this.globalMatrix;
             let a1 = matrix.a;
@@ -484,14 +488,14 @@ namespace egret.web {
             matrix.ty = tx * b1 + ty * d1 + matrix.ty;
         }
 
-        public translate(dx:number, dy:number):void {
+        public translate(dx: number, dy: number): void {
             // this.globalMatrix.translate(dx, dy);
             let matrix = this.globalMatrix;
             matrix.tx += dx;
             matrix.ty += dy;
         }
 
-        public saveTransform():void {
+        public saveTransform(): void {
             // this.savedGlobalMatrix.copyFrom(this.globalMatrix);
             let matrix = this.globalMatrix;
             let sMatrix = this.savedGlobalMatrix;
@@ -503,7 +507,7 @@ namespace egret.web {
             sMatrix.ty = matrix.ty;
         }
 
-        public restoreTransform():void {
+        public restoreTransform(): void {
             // this.globalMatrix.copyFrom(this.savedGlobalMatrix);
             let matrix = this.globalMatrix;
             let sMatrix = this.savedGlobalMatrix;
@@ -518,7 +522,7 @@ namespace egret.web {
         /**
          * 创建一个buffer实例
          */
-        public static create(width:number, height:number):WebGLRenderBuffer {
+        public static create(width: number, height: number): WebGLRenderBuffer {
             let buffer = renderBufferPool.pop();
             // width = Math.min(width, 1024);
             // height = Math.min(height, 1024);
@@ -542,11 +546,11 @@ namespace egret.web {
         /**
          * 回收一个buffer实例
          */
-        public static release(buffer:WebGLRenderBuffer):void {
+        public static release(buffer: WebGLRenderBuffer): void {
             renderBufferPool.push(buffer);
         }
 
     }
 
-    let renderBufferPool:WebGLRenderBuffer[] = [];//渲染缓冲区对象池
+    let renderBufferPool: WebGLRenderBuffer[] = [];//渲染缓冲区对象池
 }

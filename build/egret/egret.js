@@ -4429,9 +4429,14 @@ var egret;
                 9: 0,
                 10: Bitmap.defaultSmoothing,
                 11: NaN,
-                12: NaN //explicitBitmapHeight,
+                12: NaN,
+                13: NaN,
+                14: NaN,
             };
             _this.$setBitmapData(value);
+            if (value instanceof egret.Texture) {
+                _this.$renderNode.rotated = value.$rotated;
+            }
             return _this;
         }
         /**
@@ -4511,7 +4516,11 @@ var egret;
                 }
             },
             set: function (value) {
-                this.$setBitmapData(value);
+                var self = this;
+                self.$setBitmapData(value);
+                if (value && self.$renderNode) {
+                    self.$renderNode.rotated = value.$rotated;
+                }
             },
             enumerable: true,
             configurable: true
@@ -6232,6 +6241,10 @@ var egret;
              * @private
              */
             _this._bitmapData = null;
+            /**
+             * @private
+             */
+            _this.$rotated = false;
             return _this;
         }
         Object.defineProperty(Texture.prototype, "textureWidth", {
@@ -6339,7 +6352,8 @@ var egret;
          * @param sourceWidth
          * @param sourceHeight
          */
-        Texture.prototype.$initData = function (bitmapX, bitmapY, bitmapWidth, bitmapHeight, offsetX, offsetY, textureWidth, textureHeight, sourceWidth, sourceHeight) {
+        Texture.prototype.$initData = function (bitmapX, bitmapY, bitmapWidth, bitmapHeight, offsetX, offsetY, textureWidth, textureHeight, sourceWidth, sourceHeight, rotated) {
+            if (rotated === void 0) { rotated = false; }
             var scale = egret.$TextureScaleFactor;
             this._bitmapX = bitmapX / scale;
             this._bitmapY = bitmapY / scale;
@@ -6351,6 +6365,7 @@ var egret;
             this._textureHeight = textureHeight;
             this._sourceWidth = sourceWidth;
             this._sourceHeight = sourceHeight;
+            this.$rotated = rotated;
             //todo
             egret.BitmapData.$invalidate(this);
         };
@@ -15172,6 +15187,10 @@ var egret;
                  * 颜色变换滤镜
                  */
                 _this.filter = null;
+                /**
+                 * 翻转
+                 */
+                _this.rotated = false;
                 _this.type = 1 /* BitmapNode */;
                 return _this;
             }
@@ -17001,32 +17020,99 @@ var egret;
             if (filter && length == 8) {
                 if (egret.Capabilities.runtimeType == egret.RuntimeType.NATIVE) {
                     egret_native.Graphics.setGlobalShader(filter);
-                    while (pos < length) {
-                        drawCalls++;
-                        context.drawImage(image.source, data[pos++], data[pos++], data[pos++], data[pos++], data[pos++], data[pos++], data[pos++], data[pos++]);
+                    drawCalls++;
+                    if (node.rotated) {
+                        var sourceX = data[0];
+                        var sourceY = data[1];
+                        var sourceHeight = data[2];
+                        var sourceWidth = data[3];
+                        var offsetX = data[4];
+                        var offsetY = data[5];
+                        var destHeight = data[6];
+                        var destWidth = data[7];
+                        if (context.saveTransform) {
+                            context.saveTransform();
+                        }
+                        else {
+                            context.save();
+                        }
+                        context.transform(0, -1, 1, 0, 0, destWidth);
+                        context.drawImage(image.source, sourceX, sourceY, sourceWidth, sourceHeight, offsetX, offsetY, destWidth, destHeight);
+                        if (context.restoreTransform) {
+                            context.restoreTransform();
+                        }
+                        else {
+                            context.restore();
+                        }
+                    }
+                    else {
+                        context.drawImage(image.source, data[0], data[1], data[2], data[3], data[4], data[5], data[6], data[7]);
                     }
                     egret_native.Graphics.setGlobalShader(null);
                 }
                 else {
-                    var displayBuffer = this.createRenderBuffer(data[6], data[7]);
+                    var sourceX = data[0];
+                    var sourceY = data[1];
+                    var sourceWidth = data[2];
+                    var sourceHeight = data[3];
+                    var offsetX = data[4];
+                    var offsetY = data[5];
+                    var destWidth = data[6];
+                    var destHeight = data[7];
+                    if (node.rotated) {
+                        sourceWidth = data[3];
+                        sourceHeight = data[2];
+                        destWidth = data[7];
+                        destHeight = data[6];
+                    }
+                    var displayBuffer = this.createRenderBuffer(destWidth, destHeight);
                     var displayContext = displayBuffer.context;
                     drawCalls++;
-                    displayContext.drawImage(image.source, data[0], data[1], data[2], data[3], 0, 0, data[6], data[7]);
+                    if (node.rotated) {
+                        context.transform(0, -1, 1, 0, 0, destWidth);
+                    }
+                    displayContext.drawImage(image.source, sourceX, sourceY, sourceWidth, sourceHeight, 0, 0, destWidth, destHeight);
                     //绘制结果到屏幕
                     drawCalls++;
                     // 应用滤镜
-                    var imageData = displayContext.getImageData(0, 0, displayBuffer.surface.width, displayBuffer.surface.height);
-                    colorFilter(imageData.data, displayBuffer.surface.width, displayBuffer.surface.height, filter.$matrix);
+                    var imageData = displayContext.getImageData(0, 0, destWidth, destHeight);
+                    colorFilter(imageData.data, destWidth, destHeight, filter.$matrix);
                     displayContext.putImageData(imageData, 0, 0);
                     // 绘制结果的时候，应用滤镜
-                    context.drawImage(displayBuffer.surface, 0, 0, data[6], data[7], data[4], data[5], data[6], data[7]);
+                    context.drawImage(displayBuffer.surface, 0, 0, destWidth, destHeight, offsetX, offsetY, destWidth, destHeight);
                     renderBufferPool.push(displayBuffer);
                 }
             }
             else {
                 while (pos < length) {
                     drawCalls++;
-                    context.drawImage(image.source, data[pos++], data[pos++], data[pos++], data[pos++], data[pos++], data[pos++], data[pos++], data[pos++]);
+                    if (node.rotated) {
+                        var sourceX = data[pos++];
+                        var sourceY = data[pos++];
+                        var sourceHeight = data[pos++];
+                        var sourceWidth = data[pos++];
+                        var offsetX = data[pos++];
+                        var offsetY = data[pos++];
+                        var destHeight = data[pos++];
+                        var destWidth = data[pos++];
+                        if (context.saveTransform) {
+                            context.saveTransform();
+                        }
+                        else {
+                            context.save();
+                        }
+                        context.transform(0, -1, 1, 0, 0, destWidth);
+                        context.drawImage(image.source, sourceX, sourceY, sourceWidth, sourceHeight, offsetX, offsetY, destWidth, destHeight);
+                        if (context.restoreTransform) {
+                            context.restoreTransform();
+                        }
+                        else {
+                            context.restore();
+                        }
+                    }
+                    else {
+                        context.drawImage(image.source, data[pos++], data[pos++], data[pos++], data[pos++], data[pos++], data[pos++], data[pos++], data[pos++]);
+                    }
                 }
             }
             if (saved) {

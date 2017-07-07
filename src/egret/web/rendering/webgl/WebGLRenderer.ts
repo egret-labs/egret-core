@@ -717,14 +717,14 @@ namespace egret.web {
                 buffer.context.$filter = node.filter;
                 while (pos < length) {
                     buffer.context.drawImage(image, data[pos++], data[pos++], data[pos++], data[pos++],
-                        data[pos++], data[pos++], data[pos++], data[pos++], node.imageWidth, node.imageHeight, node.smoothing);
+                        data[pos++], data[pos++], data[pos++], data[pos++], node.imageWidth, node.imageHeight, node.rotated, node.smoothing);
                 }
                 buffer.context.$filter = null;
             }
             else {
                 while (pos < length) {
                     buffer.context.drawImage(image, data[pos++], data[pos++], data[pos++], data[pos++],
-                        data[pos++], data[pos++], data[pos++], data[pos++], node.imageWidth, node.imageHeight, node.smoothing);
+                        data[pos++], data[pos++], data[pos++], data[pos++], node.imageWidth, node.imageHeight, node.rotated, node.smoothing);
                 }
             }
             if (blendMode) {
