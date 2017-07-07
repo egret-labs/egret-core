@@ -3285,8 +3285,6 @@ declare namespace dragonBones {
         static debug: boolean;
         static debugDraw: boolean;
         static readonly armatures: Array<Armature>;
-        static readonly warn: (message?: any, ...optionalParams: any[]) => void;
-        static readonly assert: (test?: boolean | undefined, message?: string | undefined, ...optionalParams: any[]) => void;
         static hasArmature(value: Armature): boolean;
         static addArmature(value: Armature): void;
         static removeArmature(value: Armature): void;
