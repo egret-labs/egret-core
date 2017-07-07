@@ -12911,7 +12911,11 @@ declare namespace egret {
         /**
          * @private
          */
-        $isTyping: boolean;
+        private $isTyping;
+        /**
+         * @private
+         */
+        $setIsTyping(value: boolean): void;
         /**
          * @private
          * 返回要绘制的下划线列表

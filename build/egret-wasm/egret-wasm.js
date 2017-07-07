@@ -21041,7 +21041,7 @@ var egret;
             if (!this._isFocus) {
                 this._isFocus = true;
                 if (!event["showing"]) {
-                    this._text.$isTyping = true;
+                    this._text.$setIsTyping(true);
                 }
                 this._text.$renderDirty = true;
                 this._text.dispatchEvent(new egret.FocusEvent(egret.FocusEvent.FOCUS_IN, true));
@@ -21057,7 +21057,7 @@ var egret;
                 //不再显示竖线，并且输入框显示最开始
                 this._isFocus = false;
                 this.tempStage.removeEventListener(egret.TouchEvent.TOUCH_BEGIN, this.onStageDownHandler, this);
-                this._text.$isTyping = false;
+                this._text.$setIsTyping(false);
                 this._text.$renderDirty = true;
                 //失去焦点后调用
                 this.stageText.$onBlur();
@@ -23318,6 +23318,14 @@ var egret;
             }
             values[29 /* numLines */] = linesArr.length;
             return linesArr;
+        };
+        /**
+         * @private
+         */
+        TextField.prototype.$setIsTyping = function (value) {
+            this.$isTyping = value;
+            this.$waNode.setIsTyping(value);
+            this.$invalidateTextField();
         };
         /**
          * @private
