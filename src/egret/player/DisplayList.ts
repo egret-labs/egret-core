@@ -53,6 +53,12 @@ namespace egret.sys {
                 return null;
             }
             displayList.root = target;
+            if (Capabilities.$renderMode == "webgl") {
+                let policy = egret.DirtyRegionPolicy.OFF;
+                displayList.$dirtyRegionPolicy = policy;
+                displayList.dirtyRegion.setDirtyRegionPolicy(policy);
+                displayList.renderBuffer.setDirtyRegionPolicy(policy);
+            }
             return displayList;
         }
 
@@ -352,7 +358,7 @@ namespace egret.sys {
                 buffer.resize(width, height);
             }
             else {
-                buffer.resizeTo(width, height, (this.offsetX - oldOffsetX) * scaleX, (this.offsetY - oldOffsetY) * scaleY);
+                buffer.resizeTo(width, height, this.offsetX - oldOffsetX, this.offsetY - oldOffsetY);
             }
         }
 
