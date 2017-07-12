@@ -27,18 +27,13 @@
 //
 //////////////////////////////////////////////////////////////////////////////////////
 
-module egret.native {
-
-    /**
-     * @private
-     */
-    export var $supportCanvas = egret_native.Canvas ? true : false;
+namespace egret.native {
 
     /**
      * @private
      * 判断当前runtime版本是否支持cmdBatch
      */
-    export var $supportCmdBatch = egret_native.sendToC ? true : false;
+    export let $supportCmdBatch = egret_native.sendToC ? true : false;
 
     /*
      * @private
@@ -59,7 +54,7 @@ module egret.native {
         /*
          * 存储字符串的数组
          */
-        private strArray:Array<string> = new Array();
+        private strArray:string[] = [];
 
         /*
          * native上下文
@@ -86,13 +81,13 @@ module egret.native {
                 }
 
                 this.context = ctx;
-                var uint32View = this.uint32View;
-                var arrayBufferLen = this.arrayBufferLen;
+                let uint32View = this.uint32View;
+                let arrayBufferLen = this.arrayBufferLen;
                 uint32View[arrayBufferLen++] = 1000;
 
                 // uint32View[arrayBufferLen++] = ctx.___native_texture__p;
                 // 兼容64位
-                var addr = ctx.___native_texture__p;
+                let addr = ctx.___native_texture__p;
                 uint32View[arrayBufferLen++] = (addr / 4294967296) >>> 0;
                 uint32View[arrayBufferLen++] = (addr & 4294967295) >>> 0;
                 // uint32View[arrayBufferLen++] = addr >> 32;
@@ -114,8 +109,8 @@ module egret.native {
          * 压入一个字符串并返回索引 
          */
         public pushString(str:string):number {
-            var array = this.strArray;
-            var len = array.length;
+            let array = this.strArray;
+            let len = array.length;
             array[len] = str;
             return len;
         }
@@ -127,8 +122,8 @@ module egret.native {
                 this.flush();
             }
 
-            var uint32View = this.uint32View;
-            var arrayBufferLen = this.arrayBufferLen;
+            let uint32View = this.uint32View;
+            let arrayBufferLen = this.arrayBufferLen;
 
             uint32View[arrayBufferLen++] = 100;
 
@@ -145,9 +140,9 @@ module egret.native {
                 this.flush();
             }
 
-            var uint32View = this.uint32View;
-            var float32View = this.float32View;
-            var arrayBufferLen = this.arrayBufferLen;
+            let uint32View = this.uint32View;
+            let float32View = this.float32View;
+            let arrayBufferLen = this.arrayBufferLen;
 
             uint32View[arrayBufferLen++] = 101;
 
@@ -175,9 +170,9 @@ module egret.native {
                 this.flush();
             }
 
-            var uint32View = this.uint32View;
-            var float32View = this.float32View;
-            var arrayBufferLen = this.arrayBufferLen;
+            let uint32View = this.uint32View;
+            let float32View = this.float32View;
+            let arrayBufferLen = this.arrayBufferLen;
 
             uint32View[arrayBufferLen++] = 103;
 
@@ -196,9 +191,9 @@ module egret.native {
                 this.flush();
             }
 
-            var uint32View = this.uint32View;
-            var float32View = this.float32View;
-            var arrayBufferLen = this.arrayBufferLen;
+            let uint32View = this.uint32View;
+            let float32View = this.float32View;
+            let arrayBufferLen = this.arrayBufferLen;
 
             uint32View[arrayBufferLen++] = 106;
 
@@ -208,20 +203,20 @@ module egret.native {
         }
 
         public pushRectStencils(array:any):void {
-            var len = array.length;
+            let len = array.length;
 
             if(this.arrayBufferLen + len + 1 > this.maxArrayBufferLen) {
                 this.flush();
             }
 
-            var uint32View = this.uint32View;
-            var float32View = this.float32View;
-            var arrayBufferLen = this.arrayBufferLen;
+            let uint32View = this.uint32View;
+            let float32View = this.float32View;
+            let arrayBufferLen = this.arrayBufferLen;
 
             uint32View[arrayBufferLen++] = 113;
 
             uint32View[arrayBufferLen++] = len;
-            for(var i = 0; i < len; i++) {
+            for(let i = 0; i < len; i++) {
                 float32View[arrayBufferLen++] = array[i];
             }
 
@@ -249,9 +244,9 @@ module egret.native {
                 this.flush();
             }
 
-            var uint32View = this.uint32View;
-            var float32View = this.float32View;
-            var arrayBufferLen = this.arrayBufferLen;
+            let uint32View = this.uint32View;
+            let float32View = this.float32View;
+            let arrayBufferLen = this.arrayBufferLen;
 
             uint32View[arrayBufferLen++] = 120;
 
@@ -282,9 +277,9 @@ module egret.native {
                 this.flush();
             }
 
-            var uint32View = this.uint32View;
-            var float32View = this.float32View;
-            var arrayBufferLen = this.arrayBufferLen;
+            let uint32View = this.uint32View;
+            let float32View = this.float32View;
+            let arrayBufferLen = this.arrayBufferLen;
 
             uint32View[arrayBufferLen++] = 210;
 
@@ -301,9 +296,9 @@ module egret.native {
                 this.flush();
             }
 
-            var uint32View = this.uint32View;
-            var float32View = this.float32View;
-            var arrayBufferLen = this.arrayBufferLen;
+            let uint32View = this.uint32View;
+            let float32View = this.float32View;
+            let arrayBufferLen = this.arrayBufferLen;
 
             uint32View[arrayBufferLen++] = 214;
 
@@ -320,9 +315,9 @@ module egret.native {
                 this.flush();
             }
 
-            var uint32View = this.uint32View;
-            var float32View = this.float32View;
-            var arrayBufferLen = this.arrayBufferLen;
+            let uint32View = this.uint32View;
+            let float32View = this.float32View;
+            let arrayBufferLen = this.arrayBufferLen;
 
             uint32View[arrayBufferLen++] = 300;
 
@@ -339,9 +334,9 @@ module egret.native {
                 this.flush();
             }
 
-            var uint32View = this.uint32View;
-            var float32View = this.float32View;
-            var arrayBufferLen = this.arrayBufferLen;
+            let uint32View = this.uint32View;
+            let float32View = this.float32View;
+            let arrayBufferLen = this.arrayBufferLen;
 
             uint32View[arrayBufferLen++] = 301;
 
@@ -357,8 +352,8 @@ module egret.native {
                 this.flush();
             }
 
-            var uint32View = this.uint32View;
-            var arrayBufferLen = this.arrayBufferLen;
+            let uint32View = this.uint32View;
+            let arrayBufferLen = this.arrayBufferLen;
 
             uint32View[arrayBufferLen++] = 302;
 
@@ -372,8 +367,8 @@ module egret.native {
                 this.flush();
             }
 
-            var uint32View = this.uint32View;
-            var arrayBufferLen = this.arrayBufferLen;
+            let uint32View = this.uint32View;
+            let arrayBufferLen = this.arrayBufferLen;
 
             uint32View[arrayBufferLen++] = 303;
 
@@ -387,8 +382,8 @@ module egret.native {
                 this.flush();
             }
 
-            var uint32View = this.uint32View;
-            var arrayBufferLen = this.arrayBufferLen;
+            let uint32View = this.uint32View;
+            let arrayBufferLen = this.arrayBufferLen;
 
             uint32View[arrayBufferLen++] = 1200;
 
@@ -402,8 +397,8 @@ module egret.native {
                 this.flush();
             }
 
-            var uint32View = this.uint32View;
-            var arrayBufferLen = this.arrayBufferLen;
+            let uint32View = this.uint32View;
+            let arrayBufferLen = this.arrayBufferLen;
 
             uint32View[arrayBufferLen++] = 1201;
 
@@ -417,9 +412,9 @@ module egret.native {
                 this.flush();
             }
 
-            var uint32View = this.uint32View;
-            var float32View = this.float32View;
-            var arrayBufferLen = this.arrayBufferLen;
+            let uint32View = this.uint32View;
+            let float32View = this.float32View;
+            let arrayBufferLen = this.arrayBufferLen;
 
             uint32View[arrayBufferLen++] = 1202;
 
@@ -433,9 +428,9 @@ module egret.native {
                 this.flush();
             }
 
-            var uint32View = this.uint32View;
-            var float32View = this.float32View;
-            var arrayBufferLen = this.arrayBufferLen;
+            let uint32View = this.uint32View;
+            let float32View = this.float32View;
+            let arrayBufferLen = this.arrayBufferLen;
 
             uint32View[arrayBufferLen++] = 207;
 
@@ -450,9 +445,9 @@ module egret.native {
                 this.flush();
             }
 
-            var uint32View = this.uint32View;
-            var float32View = this.float32View;
-            var arrayBufferLen = this.arrayBufferLen;
+            let uint32View = this.uint32View;
+            let float32View = this.float32View;
+            let arrayBufferLen = this.arrayBufferLen;
 
             uint32View[arrayBufferLen++] = 208;
 
@@ -467,8 +462,8 @@ module egret.native {
                 this.flush();
             }
 
-            var uint32View = this.uint32View;
-            var arrayBufferLen = this.arrayBufferLen;
+            let uint32View = this.uint32View;
+            let arrayBufferLen = this.arrayBufferLen;
 
             uint32View[arrayBufferLen++] = 203;
 
@@ -482,9 +477,9 @@ module egret.native {
                 this.flush();
             }
 
-            var uint32View = this.uint32View;
-            var float32View = this.float32View;
-            var arrayBufferLen = this.arrayBufferLen;
+            let uint32View = this.uint32View;
+            let float32View = this.float32View;
+            let arrayBufferLen = this.arrayBufferLen;
 
             uint32View[arrayBufferLen++] = 107;
 
@@ -504,6 +499,128 @@ module egret.native {
             this.uint32View[this.arrayBufferLen++] = 108;
         }
 
+        public stroke():void {
+            if(this.arrayBufferLen + 1 > this.maxArrayBufferLen) {
+                this.flush();
+            }
+
+            this.uint32View[this.arrayBufferLen++] = 206;
+        }
+
+        public arc(f1:number, f2:number, f3:number, f4:number, f5:number, i6:number):void {
+            if(this.arrayBufferLen + 7 > this.maxArrayBufferLen) {
+                this.flush();
+            }
+
+            let uint32View = this.uint32View;
+            let float32View = this.float32View;
+            let arrayBufferLen = this.arrayBufferLen;
+
+            uint32View[arrayBufferLen++] = 209;
+
+            float32View[arrayBufferLen++] = f1;
+            float32View[arrayBufferLen++] = f2;
+            float32View[arrayBufferLen++] = f3;
+            float32View[arrayBufferLen++] = f4;
+            float32View[arrayBufferLen++] = f5;
+            uint32View[arrayBufferLen++] = i6;
+
+            this.arrayBufferLen = arrayBufferLen;
+        }
+
+        public quadraticCurveTo(f1:number, f2:number, f3:number, f4:number):void {
+            if(this.arrayBufferLen + 5 > this.maxArrayBufferLen) {
+                this.flush();
+            }
+
+            let uint32View = this.uint32View;
+            let float32View = this.float32View;
+            let arrayBufferLen = this.arrayBufferLen;
+
+            uint32View[arrayBufferLen++] = 211;
+
+            float32View[arrayBufferLen++] = f1;
+            float32View[arrayBufferLen++] = f2;
+            float32View[arrayBufferLen++] = f3;
+            float32View[arrayBufferLen++] = f4;
+
+            this.arrayBufferLen = arrayBufferLen;
+        }
+
+        public fillRect(f1:number, f2:number, f3:number, f4:number):void {
+            if(this.arrayBufferLen + 5 > this.maxArrayBufferLen) {
+                this.flush();
+            }
+
+            let uint32View = this.uint32View;
+            let float32View = this.float32View;
+            let arrayBufferLen = this.arrayBufferLen;
+
+            uint32View[arrayBufferLen++] = 212;
+
+            float32View[arrayBufferLen++] = f1;
+            float32View[arrayBufferLen++] = f2;
+            float32View[arrayBufferLen++] = f3;
+            float32View[arrayBufferLen++] = f4;
+
+            this.arrayBufferLen = arrayBufferLen;
+        }
+
+        public strokeRect(f1:number, f2:number, f3:number, f4:number):void {
+            if(this.arrayBufferLen + 5 > this.maxArrayBufferLen) {
+                this.flush();
+            }
+
+            let uint32View = this.uint32View;
+            let float32View = this.float32View;
+            let arrayBufferLen = this.arrayBufferLen;
+
+            uint32View[arrayBufferLen++] = 213;
+
+            float32View[arrayBufferLen++] = f1;
+            float32View[arrayBufferLen++] = f2;
+            float32View[arrayBufferLen++] = f3;
+            float32View[arrayBufferLen++] = f4;
+
+            this.arrayBufferLen = arrayBufferLen;
+        }
+
+        public bezierCurveTo(f1:number, f2:number, f3:number, f4:number, f5:number, f6:number):void {
+            if(this.arrayBufferLen + 7 > this.maxArrayBufferLen) {
+                this.flush();
+            }
+
+            let uint32View = this.uint32View;
+            let float32View = this.float32View;
+            let arrayBufferLen = this.arrayBufferLen;
+
+            uint32View[arrayBufferLen++] = 215;
+
+            float32View[arrayBufferLen++] = f1;
+            float32View[arrayBufferLen++] = f2;
+            float32View[arrayBufferLen++] = f3;
+            float32View[arrayBufferLen++] = f4;
+            float32View[arrayBufferLen++] = f5;
+            float32View[arrayBufferLen++] = f6;
+
+            this.arrayBufferLen = arrayBufferLen;
+        }
+
+        public setGlobalShader(i1:number):void {
+            if(this.arrayBufferLen + 2 > this.maxArrayBufferLen) {
+                this.flush();
+            }
+
+            let uint32View = this.uint32View;
+            let arrayBufferLen = this.arrayBufferLen;
+
+            uint32View[arrayBufferLen++] = 111;
+
+            uint32View[arrayBufferLen++] = i1;
+
+            this.arrayBufferLen = arrayBufferLen;
+        }
+
         //------绘制命令 end-------------
 
     }
@@ -512,10 +629,10 @@ module egret.native {
      * @private 
      * 输出一个单例命令控制器，供所有需要调用的地方使用
      */
-    export var $cmdManager = new CmdManager();
+    export let $cmdManager = new CmdManager();
 
-    var isRunning:boolean = false;
-    var playerList:Array<NativePlayer> = [];
+    let isRunning:boolean = false;
+    let playerList:Array<NativePlayer> = [];
 
     function runEgret(options?:{renderMode?:string;audioType?:number;screenAdapter?:sys.IScreenAdapter}) {
         if (isRunning) {
@@ -528,7 +645,7 @@ module egret.native {
         setRenderMode(options.renderMode);
         if (DEBUG) {
             //todo 获得系统语言版本
-            var language = "zh_CN";
+            let language = "zh_CN";
 
             if (language in egret.$locale_strings)
                 egret.$language = language;
@@ -538,8 +655,8 @@ module egret.native {
         } catch (e) {
 
         }
-        var ticker = egret.sys.$ticker;
-        var mainLoop = $supportCmdBatch ? function () {
+        let ticker = egret.ticker;
+        let mainLoop = $supportCmdBatch ? function () {
             ticker.update();
             $cmdManager.flush();
         } : function() {
@@ -556,16 +673,10 @@ module egret.native {
         }
 
         //todo
-        var player = new NativePlayer();
+        let player = new NativePlayer();
         playerList.push(player);
         sys.customHitTestBuffer = new NativeCanvasRenderBuffer(3, 3);
         sys.canvasHitTestBuffer = sys.customHitTestBuffer;
-        //老版本runtime不支持canvas,关闭脏矩形
-        if (!$supportCanvas) {
-            player.$stage.dirtyRegionPolicy = DirtyRegionPolicy.OFF;
-            egret.sys.DisplayList.prototype.setDirtyRegionPolicy = function () {
-            };
-        }
     }
 
     /**
@@ -573,29 +684,23 @@ module egret.native {
      * @param renderMode
      */
     function setRenderMode(renderMode:string):void{
-        if($supportCanvas) {
-            sys.RenderBuffer = NativeCanvasRenderBuffer;
-            sys.CanvasRenderBuffer = NativeCanvasRenderBuffer;
-        }
-        else {
-            sys.RenderBuffer = NativeRenderTextureRenderBuffer;
-            sys.CanvasRenderBuffer = NativeRenderTextureRenderBuffer;
-        }
+        sys.RenderBuffer = NativeCanvasRenderBuffer;
+        sys.CanvasRenderBuffer = NativeCanvasRenderBuffer;
         sys.systemRenderer = new CanvasRenderer();
         sys.canvasRenderer = sys.systemRenderer;
         Capabilities.$renderMode = "canvas";
     }
 
     function updateAllScreens():void {
-        var length:number = playerList.length;
-        for (var i:number = 0; i < length; i++) {
+        let length:number = playerList.length;
+        for (let i:number = 0; i < length; i++) {
             playerList[i].updateScreenSize();
         }
     }
 
     function toArray(argument) {
-        var args = [];
-        for (var i = 0; i < argument.length; i++) {
+        let args = [];
+        for (let i = 0; i < argument.length; i++) {
             args.push(argument[i]);
         }
         return args;
@@ -608,14 +713,26 @@ module egret.native {
         console.error.apply(console, toArray(arguments))
     };
     egret.assert = function () {
-        console.assert.apply(console, toArray(arguments))
+        if (console.assert) {
+            console.assert.apply(console, toArray(arguments));
+        } else {
+            let args = toArray(arguments);
+            if (!args[0]) {
+                let args2 = [];
+                for (let i = 1; i < args.length; i++) {
+                    args2.push(args[i]);
+                }
+                console.error.apply(console, args2);
+            }
+            
+        }
     };
     if (DEBUG) {
         egret.log = function () {
             if (DEBUG) {
-                var length = arguments.length;
-                var info = "";
-                for (var i = 0; i < length; i++) {
+                let length = arguments.length;
+                let info = "";
+                for (let i = 0; i < length; i++) {
                     info += arguments[i] + " ";
                 }
                 sys.$logToFPS(info);

@@ -1,29 +1,47 @@
-﻿/// <reference path="../lib/types.d.ts" />
-
-import utils = require('../lib/utils');
+﻿import utils = require('../lib/utils');
 import FileUtil = require('../lib/FileUtil');
-
+import EgretProject = require('../project/EgretProject');
 class CreateLib implements egret.Command {
 
-    execute(): number {
-        var option = egret.args;
+    async execute() {
+        const option = egret.args;
         if (FileUtil.exists(option.projectDir)) {
             console.log(utils.tr(1002));
             return 0;
         }
-        var packageJson:any = {};
-        packageJson.name = "egret";
-        packageJson.version = egret.version;
-        var modules = [];
-        var project = option.projectDir.slice(0, option.projectDir.length - 1);
-        modules.push({name:project, description:project, files:[], root:"src"});
-        packageJson.modules = modules;
-        FileUtil.save(FileUtil.joinPath(option.projectDir, "package.json"), JSON.stringify(packageJson, null, "\t"));
-        FileUtil.createDirectory(FileUtil.joinPath(option.projectDir, "src"));
-        FileUtil.createDirectory(FileUtil.joinPath(option.projectDir, "bin"));
-        FileUtil.createDirectory(FileUtil.joinPath(option.projectDir, "libs"));
-        return 0;
+        const moduleName = FileUtil.basename(option.projectDir);
+        const project = EgretProject.data;
+        const libraryTemplate = FileUtil.joinPath(egret.root, "tools/templates/library");
+        FileUtil.copy(libraryTemplate, project.getProjectRoot());
+
+        type Package_JSON = { name: string };
+
+        type TSCONFIG_JSON = {
+            compilerOptions: {
+                outFile: string;
+            }
+        };
+
+        await convert<Package_JSON>(project.getFilePath("package.json"),
+            (data) => {
+                data.name = moduleName;
+                return data
+            });
+
+        await convert<TSCONFIG_JSON>(project.getFilePath("tsconfig.json"),
+            (data) => {
+                data.compilerOptions.outFile = `bin/${moduleName}.js`;
+                return data;
+            });
     }
+}
+
+
+async function convert<T>(filePath: string, processor: (from: T) => T) {
+    const data: T = await FileUtil.readJSONAsync(filePath);
+    const result = processor(data);
+    const content = JSON.stringify(result, null, "\t");
+    FileUtil.save(filePath, content);
 }
 
 

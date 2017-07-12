@@ -27,13 +27,13 @@
 //
 //////////////////////////////////////////////////////////////////////////////////////
 
-module egret.native {
+namespace egret.native {
 
     /**
      * 创建一个canvas。
      */
     function createCanvas(width?:number, height?:number):NativeCanvas {
-        var result = new NativeCanvas();
+        let result = new NativeCanvas();
         if (!isNaN(width) && !isNaN(height)) {
             result.width = width;
             result.height = height;
@@ -41,7 +41,7 @@ module egret.native {
         return result;
     }
 
-    var sharedCanvas:NativeCanvas;
+    let sharedCanvas:NativeCanvas;
 
     /**
      * @private
@@ -62,7 +62,7 @@ module egret.native {
         /**
          * 呈现最终绘图结果的画布
          */
-        public surface:any;
+        public surface:NativeCanvas;
 
         /**
          * 渲染缓冲的宽度，以像素为单位。
@@ -87,7 +87,11 @@ module egret.native {
          * @param useMaxSize 若传入true，则将改变后的尺寸与已有尺寸对比，保留较大的尺寸。
          */
         public resize(width:number, height:number, useMaxSize?:boolean):void {
-            var surface = this.surface;
+            //resize 之前要提交下绘制命令
+            if($supportCmdBatch) {
+                $cmdManager.flush();
+            }
+            let surface = this.surface;
             surface.width = width;
             surface.height = height;
             this.clear();
@@ -101,13 +105,17 @@ module egret.native {
          * @param offsetY 原始图像数据在改变后缓冲区的绘制起始位置y
          */
         public resizeTo(width:number, height:number, offsetX:number, offsetY:number):void {
+            //resize 之前要提交下绘制命令
+            if($supportCmdBatch) {
+                $cmdManager.flush();
+            }
             if(!sharedCanvas) {
                 sharedCanvas = createCanvas();
             }
-            var oldContext = this.context;
-            var oldSurface = this.surface;
-            var newSurface = sharedCanvas;
-            var newContext = newSurface.getContext("2d");
+            let oldContext = this.context;
+            let oldSurface = this.surface;
+            let newSurface = sharedCanvas;
+            let newContext = newSurface.getContext("2d");
             sharedCanvas = oldSurface;
             this.context = newContext;
             this.surface = newSurface;
@@ -132,13 +140,13 @@ module egret.native {
         public beginClip(regions:sys.Region[], offsetX?:number, offsetY?:number):void {
             offsetX = +offsetX || 0;
             offsetY = +offsetY || 0;
-            var context = this.context;
+            let context = this.context;
             context.save();
             context.beginPath();
             context.setTransform(1, 0, 0, 1, offsetX, offsetY);
-            var length = regions.length;
-            for (var i = 0; i < length; i++) {
-                var region = regions[i];
+            let length = regions.length;
+            for (let i = 0; i < length; i++) {
+                let region = regions[i];
                 context.clearRect(region.minX, region.minY, region.width, region.height);
                 context.rect(region.minX, region.minY, region.width, region.height);
             }
@@ -153,10 +161,10 @@ module egret.native {
         }
 
         /**
-         * 获取指定坐标的像素
+         * 获取指定区域的像素
          */
-        public getPixel(x:number, y:number):number[] {
-            return this.context.getImageData(x, y, 1, 1).data;
+        public getPixels(x:number, y:number, width:number = 1, height:number = 1):number[] {
+            return this.context.getImageData(x, y, width, height).data;
         }
 
         /**
@@ -171,8 +179,8 @@ module egret.native {
          * 清空缓冲区数据
          */
         public clear():void {
-            var width = this.surface.width;
-            var height = this.surface.height;
+            let width = this.surface.width;
+            let height = this.surface.height;
             if(width > 0 && height > 0) {
                 this.context.setTransform(1, 0, 0, 1, 0, 0);
                 this.context.clearRect(0, 0, width, height);

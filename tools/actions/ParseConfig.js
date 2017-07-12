@@ -3,7 +3,7 @@
  */
 /// <reference path="../lib/types.d.ts" />
 //import params = require("../ParamsParser");
-var file = require('../lib/FileUtil');
+var file = require("../lib/FileUtil");
 //import config = require('../ProjectConfig');
 //import globals = require("../Globals");
 var ParseConfigCommand = (function () {

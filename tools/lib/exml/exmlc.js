@@ -1,36 +1,10 @@
-/*
- * Copyright (c) 2014,lark.com
- * All rights reserved.
- * Redistribution and use in source and binary forms, with or without
- * modification, are permitted provided that the following conditions are met:
- *
- *     * Redistributions of source code must retain the above copyright
- *       notice, this list of conditions and the following disclaimer.
- *     * Redistributions in binary form must reproduce the above copyright
- *       notice, this list of conditions and the following disclaimer in the
- *       documentation and/or other materials provided with the distribution.
- *     * Neither the name of the lark.com nor the
- *       names of its contributors may be used to endorse or promote products
- *       derived from this software without specific prior written permission.
- *
- * THIS SOFTWARE IS PROVIDED BY lark-LABS.ORG AND CONTRIBUTORS "AS IS" AND ANY
- * EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED
- * WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE
- * DISCLAIMED. IN NO EVENT SHALL lark-LABS.ORG AND CONTRIBUTORS BE LIABLE FOR ANY
- * DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES
- * (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES;
- * LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND
- * ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT
- * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
- * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
- */
+/// <reference path="../types.d.ts" />
+/// <reference path="exml_config.ts"/>
 var __extends = (this && this.__extends) || function (d, b) {
     for (var p in b) if (b.hasOwnProperty(p)) d[p] = b[p];
     function __() { this.constructor = d; }
     d.prototype = b === null ? Object.create(b) : (__.prototype = b.prototype, new __());
 };
-/// <reference path="../types.d.ts" />
-/// <reference path="exml_config.ts"/>
 var xml = require("../xml/index");
 var utils = require("../utils");
 var file = require("../FileUtil");
@@ -1226,21 +1200,21 @@ var EXMLCompiler = (function () {
     EXMLCompiler.prototype.isPackageName = function (name) {
         return name.indexOf(".") != -1;
     };
-    /**
-     * Egret命名空间
-     */
-    EXMLCompiler.E = "http://ns.egret-labs.org/egret";
-    /**
-     * Wing命名空间
-     */
-    EXMLCompiler.W = "http://ns.egret-labs.org/wing";
-    EXMLCompiler.DECLARATIONS = "Declarations";
-    /**
-     * 命名空间为fs的属性名列表
-     */
-    EXMLCompiler.wingKeys = ["$id", "$locked", "$includeIn", "$excludeFrom", "id", "locked", "includeIn", "excludeFrom"];
     return EXMLCompiler;
 }());
+/**
+ * Egret命名空间
+ */
+EXMLCompiler.E = "http://ns.egret-labs.org/egret";
+/**
+ * Wing命名空间
+ */
+EXMLCompiler.W = "http://ns.egret-labs.org/wing";
+EXMLCompiler.DECLARATIONS = "Declarations";
+/**
+ * 命名空间为fs的属性名列表
+ */
+EXMLCompiler.wingKeys = ["$id", "$locked", "$includeIn", "$excludeFrom", "id", "locked", "includeIn", "excludeFrom"];
 //=================代码生成工具类===================
 var CodeBase = (function () {
     function CodeBase() {
@@ -1269,11 +1243,12 @@ var CpArguments = (function (_super) {
     function CpArguments(name, type) {
         if (name === void 0) { name = ""; }
         if (type === void 0) { type = ""; }
-        _super.call(this);
-        this.name = "";
-        this.type = "";
-        this.name = name;
-        this.type = type;
+        var _this = _super.call(this) || this;
+        _this.name = "";
+        _this.type = "";
+        _this.name = name;
+        _this.type = type;
+        return _this;
     }
     CpArguments.prototype.toCode = function () {
         return this.name + ":" + this.type;
@@ -1283,44 +1258,45 @@ var CpArguments = (function (_super) {
 var CpClass = (function (_super) {
     __extends(CpClass, _super);
     function CpClass() {
-        _super.call(this);
+        var _this = _super.call(this) || this;
         /**
          * 构造函数的参数列表
          */
-        this.argumentBlock = [];
+        _this.argumentBlock = [];
         /**
          * 类名
          */
-        this.className = "CpClass";
+        _this.className = "CpClass";
         /**
          * 类所在的路径，用于计算reference的相对路径
          */
-        this.classPath = "";
+        _this.classPath = "";
         /**
          * 包名
          */
-        this.moduleName = "";
+        _this.moduleName = "";
         /**
          * 父类类名
          */
-        this.superClass = "";
+        _this.superClass = "";
         /**
          * 接口列表
          */
-        this.interfaceBlock = [];
+        _this.interfaceBlock = [];
         /**
          * 引用文件区块
          */
-        this.referenceBlock = [];
+        _this.referenceBlock = [];
         /**
          * 变量定义区块
          */
-        this.variableBlock = [];
+        _this.variableBlock = [];
         /**
          * 函数定义区块
          */
-        this.functionBlock = [];
-        this.indent = 1;
+        _this.functionBlock = [];
+        _this.indent = 1;
+        return _this;
     }
     /**
      * 添加构造函数的参数
@@ -1586,9 +1562,10 @@ var CpClass = (function (_super) {
 var CpCodeBlock = (function (_super) {
     __extends(CpCodeBlock, _super);
     function CpCodeBlock() {
-        _super.call(this);
-        this.lines = [];
-        this.indent = 0;
+        var _this = _super.call(this) || this;
+        _this.lines = [];
+        _this.indent = 0;
+        return _this;
     }
     /**
      * 添加变量声明语句
@@ -1716,27 +1693,28 @@ var CpCodeBlock = (function (_super) {
 var CpFunction = (function (_super) {
     __extends(CpFunction, _super);
     function CpFunction() {
-        _super.call(this);
+        var _this = _super.call(this) || this;
         /**
          * 修饰符 ,默认Modifiers.M_PRIVATE
          */
-        this.modifierName = Modifiers.M_PRIVATE;
+        _this.modifierName = Modifiers.M_PRIVATE;
         /**
          * 是否是静态 ，默认false
          */
-        this.isStatic = false;
-        this.isSet = false;
-        this.isGet = false;
+        _this.isStatic = false;
+        _this.isSet = false;
+        _this.isGet = false;
         /**
          *参数列表
          */
-        this.argumentBlock = [];
+        _this.argumentBlock = [];
         /**
          * 函数名
          */
-        this.name = "";
-        this.returnType = DataType.DT_VOID;
-        this.indent = 2;
+        _this.name = "";
+        _this.returnType = DataType.DT_VOID;
+        _this.indent = 2;
+        return _this;
     }
     /**
      * 添加参数
@@ -1800,9 +1778,10 @@ var CpNotation = (function (_super) {
     __extends(CpNotation, _super);
     function CpNotation(notation) {
         if (notation === void 0) { notation = ""; }
-        _super.call(this);
-        this.notation = "";
-        this.notation = notation;
+        var _this = _super.call(this) || this;
+        _this.notation = "";
+        _this.notation = notation;
+        return _this;
     }
     CpNotation.prototype.toCode = function () {
         var lines = this.notation.split("\n");
@@ -1828,29 +1807,30 @@ var CpVariable = (function (_super) {
         if (type === void 0) { type = "any"; }
         if (defaultValue === void 0) { defaultValue = ""; }
         if (isStatic === void 0) { isStatic = false; }
-        _super.call(this);
+        var _this = _super.call(this) || this;
         /**
          * 修饰符
          */
-        this.modifierName = Modifiers.M_PUBLIC;
+        _this.modifierName = Modifiers.M_PUBLIC;
         /**
          * 是否是静态
          */
-        this.isStatic = false;
+        _this.isStatic = false;
         /**
          * 常量名
          */
-        this.name = "varName";
+        _this.name = "varName";
         /**
          * 默认值
          */
-        this.defaultValue = "";
-        this.indent = 2;
-        this.name = name;
-        this.modifierName = modifierName;
-        this.type = type;
-        this.isStatic = isStatic;
-        this.defaultValue = defaultValue;
+        _this.defaultValue = "";
+        _this.indent = 2;
+        _this.name = name;
+        _this.modifierName = modifierName;
+        _this.type = type;
+        _this.isStatic = isStatic;
+        _this.defaultValue = defaultValue;
+        return _this;
     }
     CpVariable.prototype.toCode = function () {
         var noteStr = "";
@@ -1872,17 +1852,18 @@ var CpState = (function (_super) {
     __extends(CpState, _super);
     function CpState(name, stateGroups) {
         if (stateGroups === void 0) { stateGroups = null; }
-        _super.call(this);
+        var _this = _super.call(this) || this;
         /**
          * 视图状态名称
          */
-        this.name = "";
-        this.stateGroups = [];
-        this.addItems = [];
-        this.setProperty = [];
-        this.name = name;
+        _this.name = "";
+        _this.stateGroups = [];
+        _this.addItems = [];
+        _this.setProperty = [];
+        _this.name = name;
         if (stateGroups)
-            this.stateGroups = stateGroups;
+            _this.stateGroups = stateGroups;
+        return _this;
     }
     /**
      * 添加一个覆盖
@@ -1922,11 +1903,12 @@ var CpState = (function (_super) {
 var CpAddItems = (function (_super) {
     __extends(CpAddItems, _super);
     function CpAddItems(target, propertyName, position, relativeTo) {
-        _super.call(this);
-        this.target = target;
-        this.propertyName = propertyName;
-        this.position = position;
-        this.relativeTo = relativeTo;
+        var _this = _super.call(this) || this;
+        _this.target = target;
+        _this.propertyName = propertyName;
+        _this.position = position;
+        _this.relativeTo = relativeTo;
+        return _this;
     }
     CpAddItems.prototype.toCode = function () {
         var indentStr = this.getIndent(1);
@@ -1938,10 +1920,11 @@ var CpAddItems = (function (_super) {
 var CpSetProperty = (function (_super) {
     __extends(CpSetProperty, _super);
     function CpSetProperty(target, name, value) {
-        _super.call(this);
-        this.target = target;
-        this.name = name;
-        this.value = value;
+        var _this = _super.call(this) || this;
+        _this.target = target;
+        _this.name = name;
+        _this.value = value;
+        return _this;
     }
     CpSetProperty.prototype.toCode = function () {
         var indentStr = this.getIndent(1);
@@ -1952,10 +1935,11 @@ var CpSetProperty = (function (_super) {
 var CpSetStyle = (function (_super) {
     __extends(CpSetStyle, _super);
     function CpSetStyle(target, name, value) {
-        _super.call(this);
-        this.target = target;
-        this.name = name;
-        this.value = value;
+        var _this = _super.call(this) || this;
+        _this.target = target;
+        _this.name = name;
+        _this.value = value;
+        return _this;
     }
     CpSetStyle.prototype.toCode = function () {
         var indentStr = this.getIndent(1);
@@ -1966,37 +1950,37 @@ var CpSetStyle = (function (_super) {
 var DataType = (function () {
     function DataType() {
     }
-    DataType.DT_VOID = "void";
-    DataType.DT_NUMBER = "number";
-    DataType.DT_BOOLEAN = "boolean";
-    DataType.DT_ARRAY = "Array";
-    DataType.DT_STRING = "string";
-    DataType.DT_OBJECT = "Object";
-    DataType.DT_FUNCTION = "Function";
     return DataType;
 }());
+DataType.DT_VOID = "void";
+DataType.DT_NUMBER = "number";
+DataType.DT_BOOLEAN = "boolean";
+DataType.DT_ARRAY = "Array";
+DataType.DT_STRING = "string";
+DataType.DT_OBJECT = "Object";
+DataType.DT_FUNCTION = "Function";
 var KeyWords = (function () {
     function KeyWords() {
     }
-    KeyWords.KW_CLASS = "class";
-    KeyWords.KW_FUNCTION = "function";
-    KeyWords.KW_VAR = "var";
-    KeyWords.KW_INTERFACE = "interface";
-    KeyWords.KW_EXTENDS = "extends";
-    KeyWords.KW_IMPLEMENTS = "implements";
-    KeyWords.KW_MODULE = "module";
-    KeyWords.KW_SUPER = "super";
-    KeyWords.KW_THIS = "this";
-    KeyWords.KW_OVERRIDE = "override";
-    KeyWords.KW_RETURN = "return";
-    KeyWords.KW_EXPORT = "export";
     return KeyWords;
 }());
+KeyWords.KW_CLASS = "class";
+KeyWords.KW_FUNCTION = "function";
+KeyWords.KW_VAR = "var";
+KeyWords.KW_INTERFACE = "interface";
+KeyWords.KW_EXTENDS = "extends";
+KeyWords.KW_IMPLEMENTS = "implements";
+KeyWords.KW_MODULE = "module";
+KeyWords.KW_SUPER = "super";
+KeyWords.KW_THIS = "this";
+KeyWords.KW_OVERRIDE = "override";
+KeyWords.KW_RETURN = "return";
+KeyWords.KW_EXPORT = "export";
 var Modifiers = (function () {
     function Modifiers() {
     }
-    Modifiers.M_PUBLIC = "public";
-    Modifiers.M_PRIVATE = "private";
-    Modifiers.M_STATIC = "static";
     return Modifiers;
 }());
+Modifiers.M_PUBLIC = "public";
+Modifiers.M_PRIVATE = "private";
+Modifiers.M_STATIC = "static";

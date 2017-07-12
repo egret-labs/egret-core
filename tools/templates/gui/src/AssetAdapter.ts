@@ -46,7 +46,7 @@ class AssetAdapter implements egret.gui.IAssetAdapter {
             compFunc.call(thisObject, data, source);
         }
 
-        var content:any = source;
+        let content:any = source;
         if (source.prototype) {
             content = new source();
         }
@@ -55,7 +55,7 @@ class AssetAdapter implements egret.gui.IAssetAdapter {
         }
         else if (typeof(source) == "string") {
             if (RES.hasRes(source)) {
-                var data = RES.getRes(source);
+                let data = RES.getRes(source);
                 if(data){
                     onGetRes(data);
                 }

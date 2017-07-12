@@ -27,7 +27,7 @@
 //
 //////////////////////////////////////////////////////////////////////////////////////
 
-module egret.sys {
+namespace egret.sys {
 
     if (DEBUG) {
         function isF(num:number):boolean {
@@ -39,10 +39,10 @@ module egret.sys {
      * @private
      */
     function unionArea(r1:Region, r2:Region):number {
-        var minX = r1.minX < r2.minX ? r1.minX : r2.minX;
-        var minY = r1.minY < r2.minY ? r1.minY : r2.minY;
-        var maxX = r1.maxX > r2.maxX ? r1.maxX : r2.maxX;
-        var maxY = r1.maxY > r2.maxY ? r1.maxY : r2.maxY;
+        let minX = r1.minX < r2.minX ? r1.minX : r2.minX;
+        let minY = r1.minY < r2.minY ? r1.minY : r2.minY;
+        let maxX = r1.maxX > r2.maxX ? r1.maxX : r2.maxX;
+        let maxY = r1.maxY > r2.maxY ? r1.maxY : r2.maxY;
         return (maxX - minX) * (maxY - minY);
     }
 
@@ -102,8 +102,7 @@ module egret.sys {
          * 添加一个脏矩形区域，返回是否添加成功，当矩形为空或者在屏幕之外时返回false。
          */
         public addRegion(target:Region):boolean {
-            var minX = target.minX, minY = target.minY, maxX = target.maxX, maxY = target.maxY;
-
+            let minX = target.minX, minY = target.minY, maxX = target.maxX, maxY = target.maxY;
             if (this.hasClipRect) {
                 if (minX < 0) {
                     minX = 0;
@@ -124,8 +123,8 @@ module egret.sys {
             if (this.clipRectChanged) {
                 return true;
             }
-            var dirtyList = this.dirtyList;
-            var region:Region = Region.create();
+            let dirtyList = this.dirtyList;
+            let region:Region = Region.create();
             dirtyList.push(region.setTo(minX, minY, maxX, maxY));
             if (this.$dirtyRegionPolicy != egret.DirtyRegionPolicy.OFF) {
                 this.mergeDirtyList(dirtyList);
@@ -137,9 +136,9 @@ module egret.sys {
          * @private
          */
         public clear():void {
-            var dirtyList = this.dirtyList;
-            var length = dirtyList.length;
-            for (var i = 0; i < length; i++) {
+            let dirtyList = this.dirtyList;
+            let length = dirtyList.length;
+            for (let i = 0; i < length; i++) {
                 Region.release(dirtyList[i]);
             }
             dirtyList.length = 0;
@@ -150,32 +149,32 @@ module egret.sys {
          * 获取最终的脏矩形列表
          */
         public getDirtyRegions():Region[] {
-            var dirtyList = this.dirtyList;
-            if (this.$dirtyRegionPolicy == egret.DirtyRegionPolicy.OFF || (Capabilities.runtimeType == RuntimeType.NATIVE && !egret["native"]["$supportCanvas" + ""])) {
+            let dirtyList = this.dirtyList;
+            if (this.$dirtyRegionPolicy == egret.DirtyRegionPolicy.OFF) {
                 this.clipRectChanged = true;//阻止所有的addRegion()
                 this.clear();
-                var region:Region = Region.create();
+                let region:Region = Region.create();
                 if (this.hasClipRect) {
                     dirtyList.push(region.setTo(0, 0, this.clipWidth, this.clipHeight));
                 }
                 else {
-                    var bounds = this.root.$getOriginalBounds();
+                    let bounds = this.root.$getOriginalBounds();
                     dirtyList.push(region.setTo(bounds.x, bounds.y, bounds.width, bounds.height));
                 }
             }
             else if (this.clipRectChanged) {
                 this.clipRectChanged = false;
                 this.clear();
-                var region:Region = Region.create();
+                let region:Region = Region.create();
                 dirtyList.push(region.setTo(0, 0, this.clipWidth, this.clipHeight));
             }
             else {
                 while (this.mergeDirtyList(dirtyList)) {
                 }
             }
-            var numDirty = this.dirtyList.length;
+            let numDirty = this.dirtyList.length;
             if (numDirty > 0) {
-                for (var i = 0; i < numDirty; i++) {
+                for (let i = 0; i < numDirty; i++) {
                     this.dirtyList[i].intValues();
                 }
             }
@@ -187,21 +186,21 @@ module egret.sys {
          * 合并脏矩形列表
          */
         private mergeDirtyList(dirtyList:Region[]):boolean {
-            var length = dirtyList.length;
+            let length = dirtyList.length;
             if (length < 2) {
                 return false;
             }
-            var hasClipRect = this.hasClipRect;
-            var bestDelta = length > 3 ? Number.POSITIVE_INFINITY : 0;
-            var mergeA = 0;
-            var mergeB = 0;
-            var totalArea = 0;
-            for (var i = 0; i < length - 1; i++) {
-                var regionA = dirtyList[i];
+            let hasClipRect = this.hasClipRect;
+            let bestDelta = length > 3 ? Number.POSITIVE_INFINITY : 0;
+            let mergeA = 0;
+            let mergeB = 0;
+            let totalArea = 0;
+            for (let i = 0; i < length - 1; i++) {
+                let regionA = dirtyList[i];
                 hasClipRect && (totalArea += regionA.area);
-                for (var j = i + 1; j < length; j++) {
-                    var regionB = dirtyList[j];
-                    var delta = unionArea(regionA, regionB) - regionA.area - regionB.area;
+                for (let j = i + 1; j < length; j++) {
+                    let regionB = dirtyList[j];
+                    let delta = unionArea(regionA, regionB) - regionA.area - regionB.area;
                     if (bestDelta > delta) {
                         mergeA = i;
                         mergeB = j;
@@ -213,7 +212,7 @@ module egret.sys {
                 this.clipRectChanged = true;
             }
             if (mergeA != mergeB) {
-                var region = dirtyList[mergeB];
+                let region = dirtyList[mergeB];
                 dirtyList[mergeA].union(region);
                 Region.release(region);
                 dirtyList.splice(mergeB, 1);

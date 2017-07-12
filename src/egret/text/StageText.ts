@@ -28,7 +28,7 @@
 //////////////////////////////////////////////////////////////////////////////////////
 
 
-module egret {
+namespace egret {
     /**
      * @private
      * @version Egret 2.4
@@ -103,5 +103,5 @@ module egret {
      * @version Egret 2.4
      * @platform Web,Native
      */
-    export var StageText:{new():StageText};
+    export let StageText:{new():StageText};
 }

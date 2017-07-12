@@ -27,7 +27,7 @@
 //
 //////////////////////////////////////////////////////////////////////////////////////
 
-module egret.web {
+namespace egret.web {
 
     /**
      * @private
@@ -86,6 +86,7 @@ module egret.web {
 
             try {
                 //this.audio.pause();
+                this.audio.volume = this._volume;
                 this.audio.currentTime = this.$startTime;
             }
             catch (e) {
@@ -128,23 +129,32 @@ module egret.web {
             }
             this.isStopped = true;
 
-            var audio = this.audio;
-            audio.pause();
+            let audio = this.audio;
             audio.removeEventListener("ended", this.onPlayEnd);
+            audio.volume = 0;
+            this._volume = 0;
             this.audio = null;
 
-            HtmlSound.$recycle(this.$url, audio);
+            let url = this.$url;
 
+            //延迟一定时间再停止，规避chrome报错
+            window.setTimeout(function () {
+                audio.pause();
+                HtmlSound.$recycle(url, audio);
+            }, 200);
         }
+
+        /**
+         * @private
+         */
+        private _volume:number = 1;
 
         /**
          * @private
          * @inheritDoc
          */
         public get volume():number {
-            if (!this.audio)
-                return 1;
-            return this.audio.volume;
+            return this._volume;
         }
 
         /**
@@ -155,7 +165,7 @@ module egret.web {
                 egret.$error(1036);
                 return;
             }
-
+            this._volume = value;
             if (!this.audio)
                 return;
             this.audio.volume = value;

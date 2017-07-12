@@ -13,28 +13,24 @@ class Project {
     timer: NodeJS.Timer;
     buildProcess: cprocess.ChildProcess;
     buildProcessOutputs: string[] = [];
-    _buildPort: ServiceSocket;
+    _serviceSocket: ServiceSocket;
     pendingRequest: ServiceSocket;
     option: egret.ToolArgs;
 
-    set buildPort(value: ServiceSocket) {
-        if (this._buildPort) {
-            this._buildPort.send({ command: "shutdown", path: this.path });
+    setServiceSocket(value: ServiceSocket) {
+        if (this._serviceSocket) {
+            this._serviceSocket.send({ command: "shutdown", path: this.path });
         }
-        this._buildPort = value;
-        this._buildPort.on('message', msg => this.onBuildServiceMessage(msg));
-        this._buildPort.on('close', msg => {
+        this._serviceSocket = value;
+        this._serviceSocket.on('message', msg => this.onBuildServiceMessage(msg));
+        this._serviceSocket.on('close', msg => {
             console.log("编译服务连接关闭:" + this.path);
             if (this.buildProcess) {
                 this.buildProcess.kill('10020');
             }
-            this._buildPort = null;
+            this._serviceSocket = null;
         });
-        setInterval(() => this._buildPort && this._buildPort.send({}), 15000);
-    }
-
-    get buildPort() {
-        return this._buildPort;
+        setInterval(() => this._serviceSocket && this._serviceSocket.send({}), 15000);
     }
 
     init() {
@@ -78,14 +74,17 @@ class Project {
         if (this.option && this.option.runtime) {
             params.push("--runtime", this.option.runtime);
         }
-        var build = cprocess.spawn(process.execPath, params , {
+        if (this.option && this.option.experimental) {
+            params.push("-exp");
+        }
+        var build = cprocess.spawn(process.execPath, params, {
             detached: true,
             cwd: os.tmpdir()
         });
         build.on('exit', (code, signal) => this.onBuildServiceExit(code, signal));
         build.stdout.setEncoding("utf-8");
         build.stderr.setEncoding("utf-8");
-        var handleOutput = msg=> {
+        var handleOutput = msg => {
             this.buildProcessOutputs.push(msg);
             console.log(msg);
         };
@@ -96,12 +95,12 @@ class Project {
     }
 
     buildWithExistBuildService() {
-        if (!egret.args.debug && (!this.buildProcess || !this._buildPort)) {
+        if (!egret.args.debug && (!this.buildProcess || !this._serviceSocket)) {
             this.buildWholeProject();
             return;
         }
 
-        console.log("项目文件改变:",this.changes);
+        console.log("项目文件改变:", this.changes);
 
         this.sendCommand({
             command: "build",
@@ -114,7 +113,7 @@ class Project {
 
     private sendCommand(cmd: egret.ServiceCommand) {
         //this.buildProcess.stdin.write(JSON.stringify(cmd), 'utf8');
-        this.buildPort && this.buildPort.send(cmd);
+        this._serviceSocket && this._serviceSocket.send(cmd);
         //this.buildProcess.send(cmd);
     }
 
@@ -128,7 +127,7 @@ class Project {
                 this.buildProcess.removeAllListeners('exit');
                 this.buildProcess.kill();
                 this.buildProcess = null;
-                this._buildPort = null;
+                this._serviceSocket = null;
             }
         }
         else {
@@ -143,7 +142,7 @@ class Project {
         }
     }
 
-    private onBuildServiceExit(code: number, signal:string) {
+    private onBuildServiceExit(code: number, signal: string) {
         console.log("编译服务退出:", code, signal);
         this.onBuildServiceMessage({
             exitCode: 10020,
@@ -153,7 +152,7 @@ class Project {
             option: null
         });
         this.buildProcess = null;
-        this._buildPort = null;
+        this._serviceSocket = null;
     }
 
     private showBuildWholeProject() {

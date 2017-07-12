@@ -3,7 +3,7 @@
  */
 interface BrowerGeolocation extends Geolocation { }
 
-module egret.web {
+namespace egret.web {
     /**
      * @private
      */
@@ -29,7 +29,7 @@ module egret.web {
          * 
          */
         public start() {
-            var geo = this.geolocation;
+            let geo = this.geolocation;
             if (geo)
                 this.watchId = geo.watchPosition(this.onUpdate, this.onError);
             else
@@ -46,7 +46,7 @@ module egret.web {
          * 
          */
         public stop() {
-            var geo = this.geolocation;
+            let geo = this.geolocation;
             geo.clearWatch(this.watchId);
         }
 
@@ -54,8 +54,8 @@ module egret.web {
          * @private
          */
         private onUpdate = (position: Position) => {
-            var event = new GeolocationEvent(Event.CHANGE);
-            var coords = position.coords;
+            let event = new GeolocationEvent(Event.CHANGE);
+            let coords = position.coords;
             event.altitude = coords.altitude;
             event.heading = coords.heading;
             event.accuracy  = coords.accuracy;
@@ -71,11 +71,11 @@ module egret.web {
          */
         private onError = (error: { code: number; message: string; PERMISSION_DENIED:number; POSITION_UNAVAILABLE:number} ) => {
 
-            var errorType = GeolocationEvent.UNAVAILABLE;
+            let errorType = GeolocationEvent.UNAVAILABLE;
             if (error.code == error.PERMISSION_DENIED)
                 errorType = GeolocationEvent.PERMISSION_DENIED;
 
-            var event = new GeolocationEvent(IOErrorEvent.IO_ERROR);
+            let event = new GeolocationEvent(IOErrorEvent.IO_ERROR);
             event.errorType = errorType;
             event.errorMessage = error.message;
             this.dispatchEvent(event);

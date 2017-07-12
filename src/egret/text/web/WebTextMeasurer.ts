@@ -28,16 +28,16 @@
 //////////////////////////////////////////////////////////////////////////////////////
 
 
-module egret.web {
+namespace egret.web {
 
     /**
      * @private
      */
-    var context:CanvasRenderingContext2D = null;
+    let context:CanvasRenderingContext2D = null;
     /**
      * @private
      */
-    var fontCache:any = {};
+    let fontCache:any = {};
 
     /**
      * 测量文本在指定样式下的宽度。
@@ -51,25 +51,15 @@ module egret.web {
         if(!context) {
             createContext();
         }
-        var font = "";
+        let font = "";
         if (italic)
             font += "italic ";
         if (bold)
             font += "bold ";
         font += (fontSize || 12) + "px ";
         font += (fontFamily || "Arial");
-        var width = 0;
-        var cache:{ [char: string]: number } = fontCache[font] || (fontCache[font] = {});
-
         context.font = font;
-
-        var length = text.length;
-        for (var i = 0; i < length; i++) {
-            var letter = text.charCodeAt(i);
-            var w = cache[letter] || (cache[letter] = context.measureText(text.charAt(i)).width);
-            width += w;
-        }
-        return width;
+        return context.measureText(text).width;
     }
 
     /**

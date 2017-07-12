@@ -1,5 +1,5 @@
 /// <reference path="../lib/types.d.ts" />
-var helpParser = require('./help/helpParser');
+var helpParser = require("./help/helpParser");
 var Help = (function () {
     function Help() {
     }

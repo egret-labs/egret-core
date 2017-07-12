@@ -27,47 +27,47 @@
 //
 //////////////////////////////////////////////////////////////////////////////////////
 
-module egret {
+namespace egret {
 
     /**
-     * @language en_US
      * Values for the dirty region policy
      * @version Egret 2.5
      * @platform Web,Native
+     * @language en_US
      */
     /**
-     * @language zh_CN
      * 脏矩形策略常量。
      * @version Egret 3.0
      * @platform Web,Native
+     * @language zh_CN
      */
     export const DirtyRegionPolicy = {
 
         /**
-         * @language en_US
          * Close automatic detection of dirty region
          * @version Egret 3.0
          * @platform Web,Native
+         * @language en_US
          */
         /**
-         * @language zh_CN
          * 关闭自动脏矩形检测
          * @version Egret 3.0
          * @platform Web,Native
+         * @language zh_CN
          */
         OFF: "off",
 
         /**
-         * @language en_US
          * Open automatic detection of dirty region
          * @version Egret 3.0
          * @platform Web,Native
+         * @language en_US
          */
         /**
-         * @language zh_CN
          * 开启自动脏矩形检测
          * @version Egret 3.0
          * @platform Web,Native
+         * @language zh_CN
          */
         ON: "on"
     }

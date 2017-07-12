@@ -27,72 +27,72 @@
 //
 //////////////////////////////////////////////////////////////////////////////////////
 
-module egret {
+namespace egret {
 
     /**
-     * @language en_US
      * RenderTexture is a dynamic texture
      * @extends egret.Texture
      * @version Egret 2.4
      * @platform Web,Native
      * @includeExample egret/display/RenderTexture.ts
+     * @language en_US
      */
     /**
-     * @language zh_CN
      * RenderTexture 是动态纹理类，他实现了将显示对象及其子对象绘制成为一个纹理的功能
      * @extends egret.Texture
      * @version Egret 2.4
      * @platform Web,Native
      * @includeExample egret/display/RenderTexture.ts
+     * @language zh_CN
      */
     export class RenderTexture extends egret.Texture {
 
         constructor() {
             super();
-            this.renderBuffer = new sys.CanvasRenderBuffer();
-            var bitmapData = new egret.BitmapData(this.renderBuffer.surface);
+            this.$renderBuffer = new sys.RenderBuffer();
+            let bitmapData = new egret.BitmapData(this.$renderBuffer.surface);
             bitmapData.$deleteSource = false;
             this._setBitmapData(bitmapData);
         }
 
-        private renderBuffer:sys.RenderBuffer;
+        public $renderBuffer:sys.RenderBuffer;
         /**
-         * @language en_US
          * The specified display object is drawn as a texture
          * @param displayObject {egret.DisplayObject} the display to draw
          * @param clipBounds {egret.Rectangle} clip rect
          * @param scale {number} scale factor
          * @version Egret 2.4
          * @platform Web,Native
+         * @language en_US
          */
         /**
-         * @language zh_CN
          * 将指定显示对象绘制为一个纹理
          * @param displayObject {egret.DisplayObject} 需要绘制的显示对象
          * @param clipBounds {egret.Rectangle} 绘制矩形区域
          * @param scale {number} 缩放比例
          * @version Egret 2.4
          * @platform Web,Native
+         * @language zh_CN
          */
         public drawToTexture(displayObject:egret.DisplayObject, clipBounds?:Rectangle, scale:number = 1):boolean {
             if (clipBounds && (clipBounds.width == 0 || clipBounds.height == 0)) {
                 return false;
             }
 
-            var bounds = clipBounds || displayObject.$getOriginalBounds();
+            let bounds = clipBounds || displayObject.$getOriginalBounds();
             if (bounds.width == 0 || bounds.height == 0) {
                 return false;
             }
 
             scale /= $TextureScaleFactor;
-            var width = (bounds.x + bounds.width) * scale;
-            var height = (bounds.y + bounds.height) * scale;
+            let width = (bounds.x + bounds.width) * scale;
+            let height = (bounds.y + bounds.height) * scale;
             if (clipBounds) {
                 width = bounds.width * scale;
                 height = bounds.height * scale;
             }
 
-            var renderBuffer = this.renderBuffer;
+            let renderBuffer = this.$renderBuffer;
             if (!renderBuffer) {
                 return false;
             }
@@ -100,38 +100,42 @@ module egret {
             this._bitmapData.width = width;
             this._bitmapData.height = height;
 
-            var matrix = Matrix.create();
+            let matrix = Matrix.create();
             matrix.identity();
             //应用裁切
             if (clipBounds) {
                 matrix.translate(-clipBounds.x, -clipBounds.y);
             }
             matrix.scale(scale, scale);
-            sys.canvasRenderer.render(displayObject, renderBuffer, matrix, null, true);
+            sys.systemRenderer.render(displayObject, renderBuffer, matrix, null, true);
             Matrix.release(matrix);
 
             //设置纹理参数
             this.$initData(0, 0, width, height, 0, 0, width, height, width, height);
             
-            //防止RenderTexture渲染破坏脏标记
-            displayObject.$propagateFlagsDown(sys.DisplayObjectFlags.InvalidRenderNodes);
             return true;
         }
 
+        /**
+         * @inheritDoc
+         */
         public getPixel32(x:number, y:number):number[] {
-            var data:number[];
-            if (this.renderBuffer) {
-                var scale = $TextureScaleFactor;
+            let data:number[];
+            if (this.$renderBuffer) {
+                let scale = $TextureScaleFactor;
                 x = Math.round(x / scale);
                 y = Math.round(y / scale);
-                data = this.renderBuffer.getPixel(x, y);
+                data = this.$renderBuffer.getPixels(x, y, 1, 1);
             }
             return data;
         }
 
+        /**
+         * @inheritDoc
+         */
         public dispose():void {
             super.dispose();
-            this.renderBuffer = null;
+            this.$renderBuffer = null;
         }
     }
 }

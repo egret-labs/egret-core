@@ -27,21 +27,21 @@
 //
 //////////////////////////////////////////////////////////////////////////////////////
 
-module egret.web {
+namespace egret.web {
     /**
      * @private
      */
     export class WebPlayer extends egret.HashObject implements egret.sys.Screen {
 
-        public constructor(container:HTMLDivElement, options:{renderMode?:string;screenAdapter?:sys.IScreenAdapter}) {
+        public constructor(container: HTMLDivElement, options: { renderMode?: string; screenAdapter?: sys.IScreenAdapter }) {
             super();
             this.init(container, options);
             this.initOrientation();
         }
 
-        private init(container:HTMLDivElement, options:{renderMode?:string;screenAdapter?:sys.IScreenAdapter}):void {
-            var option = this.readOption(container, options);
-            var stage = new egret.Stage();
+        private init(container: HTMLDivElement, options: { renderMode?: string; screenAdapter?: sys.IScreenAdapter }): void {
+            let option = this.readOption(container, options);
+            let stage = new egret.Stage();
             stage.$screen = this;
             stage.$scaleMode = option.scaleMode;
             stage.$orientation = option.orientation;
@@ -49,14 +49,17 @@ module egret.web {
             stage.frameRate = option.frameRate;
             stage.textureScaleFactor = option.textureScaleFactor;
 
-            var buffer = new sys.RenderBuffer(undefined, undefined, true);
-            var canvas = <HTMLCanvasElement>buffer.surface;
+            let buffer = new sys.RenderBuffer(undefined, undefined, true);
+            let canvas = <HTMLCanvasElement>buffer.surface;
             this.attachCanvas(container, canvas);
 
-            var webTouch = new WebTouchHandler(stage, canvas);
-            var player = new egret.sys.Player(buffer, stage, option.entryClassName);
-            var webHide = new egret.web.WebHideHandler(stage);
-            var webInput = new HTMLInput();
+            let webTouch = new WebTouchHandler(stage, canvas);
+            let player = new egret.sys.Player(buffer, stage, option.entryClassName);
+
+            lifecycle.stage = stage;
+            lifecycle.addLifecycleListener(WebLifeCycleHandler);
+
+            let webInput = new HTMLInput();
 
             player.showPaintRect(option.showPaintRect);
             if (option.showFPS || option.showLog) {
@@ -69,7 +72,6 @@ module egret.web {
             this.player = player;
             this.webTouchHandler = webTouch;
             this.webInput = webInput;
-            this.webHide = webHide;
 
             egret.web.$cacheTextAdapter(webInput, stage, container, canvas);
 
@@ -78,8 +80,8 @@ module egret.web {
             player.start();
         }
 
-        private initOrientation():void {
-            var self = this;
+        private initOrientation(): void {
+            let self = this;
             window.addEventListener("orientationchange", function () {
                 window.setTimeout(function () {
                     egret.StageOrientationEvent.dispatchStageOrientationEvent(self.stage, StageOrientationEvent.ORIENTATION_CHANGE);
@@ -90,8 +92,8 @@ module egret.web {
         /**
          * 读取初始化参数
          */
-        private readOption(container:HTMLDivElement, options:{renderMode?:string;screenAdapter?:sys.IScreenAdapter}):PlayerOption {
-            var option:PlayerOption = {};
+        private readOption(container: HTMLDivElement, options: { renderMode?: string; screenAdapter?: sys.IScreenAdapter }): PlayerOption {
+            let option: PlayerOption = {};
             option.entryClassName = container.getAttribute("data-entry-class");
             option.scaleMode = container.getAttribute("data-scale-mode") || egret.StageScaleMode.NO_SCALE;
             option.frameRate = +container.getAttribute("data-frame-rate") || 30;
@@ -101,7 +103,7 @@ module egret.web {
             option.maxTouches = +container.getAttribute("data-multi-fingered") || 2;
             option.textureScaleFactor = +container.getAttribute("texture-scale-factor") || 1;
 
-            if(options.renderMode == "webgl") {
+            if (options.renderMode == "webgl") {
                 option.showPaintRect = false;
             }
             else {
@@ -109,11 +111,11 @@ module egret.web {
             }
             option.showFPS = container.getAttribute("data-show-fps") == "true";
 
-            var styleStr = container.getAttribute("data-show-fps-style") || "";
-            var stylesArr = styleStr.split(",");
-            var styles = {};
-            for (var i = 0; i < stylesArr.length; i++) {
-                var tempStyleArr = stylesArr[i].split(":");
+            let styleStr = container.getAttribute("data-show-fps-style") || "";
+            let stylesArr = styleStr.split(",");
+            let styles = {};
+            for (let i = 0; i < stylesArr.length; i++) {
+                let tempStyleArr = stylesArr[i].split(":");
                 styles[tempStyleArr[0]] = tempStyleArr[1];
             }
             option.fpsStyles = styles;
@@ -127,9 +129,9 @@ module egret.web {
          * @private
          * 添加canvas到container。
          */
-        private attachCanvas(container:HTMLElement, canvas:HTMLCanvasElement):void {
+        private attachCanvas(container: HTMLElement, canvas: HTMLCanvasElement): void {
 
-            var style = canvas.style;
+            let style = canvas.style;
             style.cursor = "inherit";
             style.position = "absolute";
             style.top = "0";
@@ -140,60 +142,65 @@ module egret.web {
             style = container.style;
             style.overflow = "hidden";
             style.position = "relative";
-            style["webkitTransform"] = "translateZ(0)";
         }
 
-        private playerOption:PlayerOption;
+        private playerOption: PlayerOption;
 
         /**
          * @private
          * 画布实例
          */
-        private canvas:HTMLCanvasElement;
+        private canvas: HTMLCanvasElement;
         /**
          * @private
          * 播放器容器实例
          */
-        private container:HTMLElement;
+        private container: HTMLElement;
 
         /**
          * @private
          * 舞台引用
          */
-        public stage:Stage;
+        public stage: Stage;
 
-        private webTouchHandler:WebTouchHandler;
-        private player:egret.sys.Player;
-        private webInput:egret.web.HTMLInput;
-        private webHide:egret.web.WebHideHandler;
+        private webTouchHandler: WebTouchHandler;
+        private player: egret.sys.Player;
+        private webInput: egret.web.HTMLInput;
 
         /**
          * @private
          * 更新播放器视口尺寸
          */
-        public updateScreenSize():void {
-            var canvas = this.canvas;
+        public updateScreenSize(): void {
+            let canvas = this.canvas;
             if (canvas['userTyping'])
                 return;
-            var option = this.playerOption;
-            var screenRect = this.container.getBoundingClientRect();
-            var shouldRotate = false;
-
-            var orientation:string = this.stage.$orientation;
-            if (orientation != OrientationMode.AUTO) {
-                shouldRotate = orientation != OrientationMode.PORTRAIT && screenRect.height > screenRect.width
-                    || orientation == OrientationMode.PORTRAIT && screenRect.width > screenRect.height;
+            let option = this.playerOption;
+            let screenRect = this.container.getBoundingClientRect();
+            let top = 0;
+            let boundingClientWidth = screenRect.width;
+            let boundingClientHeight = screenRect.height;
+            if (screenRect.top < 0) {
+                boundingClientHeight += screenRect.top;
+                top = -screenRect.top;
             }
-            var screenWidth = shouldRotate ? screenRect.height : screenRect.width;
-            var screenHeight = shouldRotate ? screenRect.width : screenRect.height;
+            let shouldRotate = false;
+
+            let orientation: string = this.stage.$orientation;
+            if (orientation != OrientationMode.AUTO) {
+                shouldRotate = orientation != OrientationMode.PORTRAIT && boundingClientHeight > boundingClientWidth
+                    || orientation == OrientationMode.PORTRAIT && boundingClientWidth > boundingClientHeight;
+            }
+            let screenWidth = shouldRotate ? boundingClientHeight : boundingClientWidth;
+            let screenHeight = shouldRotate ? boundingClientWidth : boundingClientHeight;
             Capabilities.$boundingClientWidth = screenWidth;
             Capabilities.$boundingClientHeight = screenHeight;
-            var stageSize = egret.sys.screenAdapter.calculateStageSize(this.stage.$scaleMode,
+            let stageSize = egret.sys.screenAdapter.calculateStageSize(this.stage.$scaleMode,
                 screenWidth, screenHeight, option.contentWidth, option.contentHeight);
-            var stageWidth = stageSize.stageWidth;
-            var stageHeight = stageSize.stageHeight;
-            var displayWidth = stageSize.displayWidth;
-            var displayHeight = stageSize.displayHeight;
+            let stageWidth = stageSize.stageWidth;
+            let stageHeight = stageSize.stageHeight;
+            let displayWidth = stageSize.displayWidth;
+            let displayHeight = stageSize.displayHeight;
             if (canvas.width !== stageWidth) {
                 canvas.width = stageWidth;
             }
@@ -203,27 +210,27 @@ module egret.web {
             canvas.style[egret.web.getPrefixStyleName("transformOrigin")] = "0% 0% 0px";
             canvas.style.width = displayWidth + "px";
             canvas.style.height = displayHeight + "px";
-            var rotation = 0;
+            let rotation = 0;
             if (shouldRotate) {
                 if (orientation == OrientationMode.LANDSCAPE) {//
                     rotation = 90;
-                    canvas.style.top = (screenRect.height - displayWidth) / 2 + "px";
-                    canvas.style.left = (screenRect.width + displayHeight) / 2 + "px";
+                    canvas.style.top = top + (boundingClientHeight - displayWidth) / 2 + "px";
+                    canvas.style.left = (boundingClientWidth + displayHeight) / 2 + "px";
                 }
                 else {
                     rotation = -90;
-                    canvas.style.top = (screenRect.height + displayWidth) / 2 + "px";
-                    canvas.style.left = (screenRect.width - displayHeight) / 2 + "px";
+                    canvas.style.top = top + (boundingClientHeight + displayWidth) / 2 + "px";
+                    canvas.style.left = (boundingClientWidth - displayHeight) / 2 + "px";
                 }
             }
             else {
-                canvas.style.top = (screenRect.height - displayHeight) / 2 + "px";
-                canvas.style.left = (screenRect.width - displayWidth) / 2 + "px";
+                canvas.style.top = top + (boundingClientHeight - displayHeight) / 2 + "px";
+                canvas.style.left = (boundingClientWidth - displayWidth) / 2 + "px";
             }
 
-            var transform = `rotate(${ rotation }deg)`;
+            let transform = `rotate(${rotation}deg)`;
             canvas.style[egret.web.getPrefixStyleName("transform")] = transform;
-            var scalex = displayWidth / stageWidth,
+            let scalex = displayWidth / stageWidth,
                 scaley = displayHeight / stageHeight;
 
             this.webTouchHandler.updateScaleMode(scalex, scaley, rotation);
@@ -232,8 +239,8 @@ module egret.web {
 
         }
 
-        public setContentSize(width:number, height:number):void {
-            var option = this.playerOption;
+        public setContentSize(width: number, height: number): void {
+            let option = this.playerOption;
             option.contentWidth = width;
             option.contentHeight = height;
             this.updateScreenSize();

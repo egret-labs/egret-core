@@ -6,14 +6,14 @@ import Compiler = require('./Compiler');
 import FileUtil = require('../lib/FileUtil');
 import CopyFilesCommand = require("../commands/copyfile");
 import ChangeEntranceCMD = require("../actions/ChangeEntranceCommand");
-
+import EgretProject = require("../project/EgretProject");
 class CopyNativeFiles {
-	static copyProjectFiles(platform, nativePath, isDebug){
+    static copyProjectFiles(platform, nativePath, isDebug) {
         var options = egret.args;
 
         //拷贝项目到native工程中
         var cpFiles = new CopyFilesCommand();
-        if (platform == "android" || platform == "android_as" ) {
+        if (platform == "android" || platform == "android_as") {
             var url2 = FileUtil.joinPath(nativePath, "proj.android/assets", "egret-game");
         }
         else if (platform == "ios") {
@@ -22,23 +22,26 @@ class CopyNativeFiles {
         FileUtil.remove(url2);
 
         if (isDebug) {
-            var config = egret.args.properties;
+            var config = EgretProject.data;
             try {
                 cpFiles.outputPath = url2;
                 cpFiles.ignorePathList = config.getIgnorePath();
                 cpFiles.execute();
             }
-            catch(e) {
+            catch (e) {
                 globals.exit(10021);
             }
 
             var sourceRuntime = FileUtil.joinPath(options.templateDir, "runtime");
             var outputRuntime = FileUtil.joinPath(url2, "launcher");
             FileUtil.copy(sourceRuntime, outputRuntime);
+            if(EgretProject.data.useTemplate) {
+                EgretProject.manager.copyManifestForNative(FileUtil.joinPath(url2, "manifest.json"));
+            }
 
-            var sourceRuntime = FileUtil.joinPath(options.libsDir);
-            var outputRuntime = FileUtil.joinPath(url2, "libs");
-            FileUtil.copy(sourceRuntime, outputRuntime);
+            EgretProject.data.getModulesConfig('native').forEach(m => {
+                FileUtil.copy(m.sourceDir, FileUtil.joinPath(url2, m.targetDir));
+            })
         }
         else {
             FileUtil.copy(options.releaseDir, url2);
@@ -46,11 +49,10 @@ class CopyNativeFiles {
     }
 
     static refreshNative(isDebug, versionFile = null) {
-        var config = egret.args.properties;
+        var config = EgretProject.data;
         var nativePath;
         if (nativePath = config.getNativePath("android_as")) {
             var url1 = FileUtil.joinPath(nativePath, "proj.android");
-            var url2 = FileUtil.joinPath(nativePath, "proj.android/assets", "egret-game");
             CopyNativeFiles.copyProjectFiles("android_as", nativePath, isDebug);
             //修改java文件
             var entrance = new ChangeEntranceCMD();
@@ -59,7 +61,6 @@ class CopyNativeFiles {
         }
         if (nativePath = config.getNativePath("android")) {
             var url1 = FileUtil.joinPath(nativePath, "proj.android");
-            var url2 = FileUtil.joinPath(nativePath, "proj.android/assets", "egret-game");
 
             CopyNativeFiles.copyProjectFiles("android", nativePath, isDebug);
 
@@ -71,7 +72,6 @@ class CopyNativeFiles {
 
         if (nativePath = config.getNativePath("ios")) {
             var url1 = FileUtil.joinPath(nativePath, "proj.ios");
-            var url2 = FileUtil.joinPath(nativePath, "Resources", "egret-game");
 
             CopyNativeFiles.copyProjectFiles("ios", nativePath, isDebug);
 

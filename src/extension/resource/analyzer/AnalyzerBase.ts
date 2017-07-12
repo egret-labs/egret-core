@@ -28,7 +28,7 @@
 //////////////////////////////////////////////////////////////////////////////////////
 
 
-module RES {
+namespace RES {
     /**
      * @classic
      * @private
@@ -82,7 +82,7 @@ module RES {
             if(!name){
                 return "";
             }
-            var index:number = name.indexOf(".");
+            let index:number = name.indexOf(".");
             if(index!=-1) {
                 return name.substring(0, index);
             }
@@ -96,7 +96,7 @@ module RES {
             if(!name){
                 return "";
             }
-            var index:number = name.indexOf(".");
+            let index:number = name.indexOf(".");
             if(index!=-1) {
                 return name.substring(index+1);
             }

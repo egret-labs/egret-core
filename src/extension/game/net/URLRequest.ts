@@ -28,39 +28,39 @@
 //////////////////////////////////////////////////////////////////////////////////////
 
 
-module egret {
+namespace egret {
 
     /**
-     * @language en_US
      * The URLRequest class captures all of the information in a single HTTP request.
      * @see http://edn.egret.com/cn/index.php/article/index/id/601 Build communication request
      * @version Egret 2.4
      * @platform Web,Native
      * @includeExample extension/game/net/URLRequest.ts
+     * @language en_US
      */
     /**
-     * @language zh_CN
      * URLRequest 类可捕获单个 HTTP 请求中的所有信息。
      * @see http://edn.egret.com/cn/index.php/article/index/id/601 构建通信请求
      * @version Egret 2.4
      * @platform Web,Native
      * @includeExample extension/game/net/URLRequest.ts
+     * @language zh_CN
      */
     export class URLRequest extends HashObject {
 
         /**
-         * @language en_US
          * Create an egret.URLRequest object
          * @param url {string} Addresses for URL requests
          * @version Egret 2.4
          * @platform Web,Native
+         * @language en_US
          */
         /**
-         * @language zh_CN
          * 创建一个 egret.URLRequest 对象
          * @param url {string} 进行网络请求的地址
          * @version Egret 2.4
          * @platform Web,Native
+         * @language zh_CN
          */
         public constructor(url:string = null) {
             super();
@@ -68,7 +68,6 @@ module egret {
         }
 
         /**
-         * @language en_US
          * An object contains data to be transmitted with the URL request.
          * This property is used in conjunction with the method property.  When the value of method is GET, the value of data is appended to the value of URLRequest.url, using HTTP query-string syntax.
          * When the method value is POST (or any value other than GET), the value of data is transmitted in the body of the HTTP request.
@@ -80,9 +79,9 @@ module egret {
          * Otherwise, the object is converted into a string, and the string is used as the POST or GET data.
          * @version Egret 2.4
          * @platform Web,Native
+         * @language en_US
          */
         /**
-         * @language zh_CN
          * 一个对象，它包含将随 URL 请求一起传输的数据。
          * 该属性与 method 属性配合使用。当 method 值为 GET 时，将使用 HTTP 查询字符串语法将 data 值追加到 URLRequest.url 值。
          * 当 method 值为 POST（或 GET 之外的任何值）时，将在 HTTP 请求体中传输 data 值。
@@ -94,52 +93,53 @@ module egret {
          * 否则，该对象会转换为字符串，并且该字符串会用作 POST 或 GET 数据。
          * @version Egret 2.4
          * @platform Web,Native
+         * @language zh_CN
          */
         public data:any = null;
 
         /**
-         * @language en_US
          * Request method, valid values are URLRequestMethod.GET or URLRequestMethod.POST.
          * @version Egret 2.4
          * @platform Web,Native
+         * @language en_US
          */
         /**
-         * @language zh_CN
          * 请求方式，有效值为URLRequestMethod.GET 或 URLRequestMethod.POST。
          * @version Egret 2.4
          * @platform Web,Native
+         * @language zh_CN
          */
         public method:string = URLRequestMethod.GET;
 
         /**
-         * @language en_US
          * The requested URL.
          * @version Egret 2.4
          * @platform Web,Native
+         * @language en_US
          */
         /**
-         * @language zh_CN
          * 所请求的 URL。
          * @version Egret 2.4
          * @platform Web,Native
+         * @language zh_CN
          */
         public url:string = "";
 
         /**
-         * @language en_US
          * The array of HTTP request headers to be appended to the HTTP request. The array is composed of URLRequestHeader objects.
          * Each object in the array must be a URLRequestHeader object that contains a name string and a value string.
          * Because of browser compatibility, this property has not been achieved in html5
          * @version Egret 2.4
          * @platform Web,Native
+         * @language en_US
          */
         /**
-         * @language zh_CN
          * 要追加到 HTTP 请求的 HTTP 请求标头的数组。该数组由 URLRequestHeader 对象组成。
          * 数组中的每一对象必须是包含一个名称字符串和一个值字符串的 URLRequestHeader 对象。
          * 由于浏览器兼容性原因，该属性在 html5 中并未实现
          * @version Egret 2.4
          * @platform Web,Native
+         * @language zh_CN
          */
         public requestHeaders:Array<URLRequestHeader> = [];
     }

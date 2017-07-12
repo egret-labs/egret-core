@@ -27,27 +27,42 @@
 //
 //////////////////////////////////////////////////////////////////////////////////////
 
-module egret.native {
-    /**
-     * @private
-     */
-    export class NativeHideHandler extends HashObject {
-        constructor(stage:Stage) {
-            super();
+namespace egret.native {
+    // /**
+    //  * @private
+    //  */
+    // export class NativeHideHandler extends HashObject {
+    //     constructor(stage: Stage) {
+    //         super();
 
-            egret_native.pauseApp = function () {
-                //console.log("pauseApp");
-                stage.dispatchEvent(new Event(Event.DEACTIVATE));
-                egret_native.Audio.pauseBackgroundMusic();
-                egret_native.Audio.pauseAllEffects();
-            };
+    //         egret_native.pauseApp = function () {
+    //             //console.log("pauseApp");
+    //             stage.dispatchEvent(new Event(Event.DEACTIVATE));
+    //             egret_native.Audio.pauseBackgroundMusic();
+    //             egret_native.Audio.pauseAllEffects();
+    //         };
 
-            egret_native.resumeApp = function () {
-                //console.log("resumeApp");
-                stage.dispatchEvent(new Event(Event.ACTIVATE));
-                egret_native.Audio.resumeBackgroundMusic();
-                egret_native.Audio.resumeAllEffects();
-            };
-        }
+    //         egret_native.resumeApp = function () {
+    //             //console.log("resumeApp");
+    //             stage.dispatchEvent(new Event(Event.ACTIVATE));
+    //             egret_native.Audio.resumeBackgroundMusic();
+    //             egret_native.Audio.resumeAllEffects();
+    //         };
+    //     }
+    // }
+
+
+    export let NativeLifeCycleHandler: egret.lifecycle.LifecyclePlugin = (context) => {
+        egret_native.pauseApp = () => {
+            context.pause();
+            egret_native.Audio.pauseBackgroundMusic();
+            egret_native.Audio.pauseAllEffects();
+        };
+
+        egret_native.resumeApp = () => {
+            context.resume();
+            egret_native.Audio.resumeBackgroundMusic();
+            egret_native.Audio.resumeAllEffects();
+        };
     }
 }

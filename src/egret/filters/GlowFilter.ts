@@ -27,7 +27,7 @@
 //
 //////////////////////////////////////////////////////////////////////////////////////
 
-module egret {
+namespace egret {
     /**
      * @class egret.GlowFilter
      * @classdesc
@@ -50,7 +50,6 @@ module egret {
          */
         public $blue:number;
         /**
-         * @language en_US
          * Initializes a new GlowFilter instance.
          * @method egret.GlowFilter#constructor
          * @param color {number} The color of the glow. Valid values are in the hexadecimal format 0xRRGGBB. The default value is 0xFF0000.
@@ -63,9 +62,9 @@ module egret {
          * @param knockout {number} Specifies whether the object has a knockout effect. A value of true makes the object's fill transparent and reveals the background color of the document. The default value is false (no knockout effect).
          * @version Egret 3.1.4
          * @platform Web
+         * @language en_US
          */
         /**
-         * @language zh_CN
          * 初始化 GlowFilter 对象
          * @method egret.GlowFilter#constructor
          * @param color {number} 光晕颜色，采用十六进制格式 0xRRGGBB。默认值为 0xFF0000。
@@ -78,6 +77,7 @@ module egret {
          * @param knockout {number} 指定对象是否具有挖空效果。值为 true 将使对象的填充变为透明，并显示文档的背景颜色。
          * @version Egret 3.1.4
          * @platform Web
+         * @language zh_CN
          */
         constructor(color:number = 0xFF0000, alpha:number = 1.0, blurX:number = 6.0, blurY:number = 6.0, strength:number = 2, quality:number = 1, inner:boolean = false, knockout:boolean = false) {
             super();
@@ -94,6 +94,15 @@ module egret {
             this.$quality = quality;
             this.$inner = inner;
             this.$knockout = knockout;
+
+            this.$uniforms.color = {x: this.$red / 255, y: this.$green / 255, z: this.$blue / 255, w: 1};
+            this.$uniforms.alpha = alpha;
+            this.$uniforms.blurX = blurX;
+            this.$uniforms.blurY = blurY;
+            this.$uniforms.strength = strength;
+            // this.$uniforms.quality = quality;
+            this.$uniforms.inner = inner ? 1 : 0;
+            this.$uniforms.knockout = knockout ? 0 : 1;
         }
 
         /**
@@ -102,16 +111,16 @@ module egret {
         public $color:number;
 
         /**
-         * @language en_US
          * The color of the glow.
          * @version Egret 3.1.4
          * @platform Web
+         * @language en_US
          */
         /**
-         * @language zh_CN
          * 光晕颜色。
          * @version Egret 3.1.4
          * @platform Web
+         * @language zh_CN
          */
         public get color():number {
             return this.$color;
@@ -125,6 +134,9 @@ module egret {
             this.$blue = value & 0x0000FF;
             this.$green = (value & 0x00ff00) >> 8;
             this.$red = value >> 16;
+            this.$uniforms.color.x = this.$red / 255;
+            this.$uniforms.color.y = this.$green / 255;
+            this.$uniforms.color.z = this.$blue / 255;
             this.invalidate();
         }
 
@@ -134,16 +146,16 @@ module egret {
         public $alpha:number;
 
         /**
-         * @language en_US
          * The alpha transparency value for the color.
          * @version Egret 3.1.4
          * @platform Web
+         * @language en_US
          */
         /**
-         * @language zh_CN
          * 颜色的 Alpha 透明度值。
          * @version Egret 3.1.4
          * @platform Web
+         * @language zh_CN
          */
         public get alpha():number {
             return this.$alpha;
@@ -154,6 +166,7 @@ module egret {
                 return;
             }
             this.$alpha = value;
+            this.$uniforms.alpha = value;
             this.invalidate();
         }
 
@@ -163,16 +176,16 @@ module egret {
         public $blurX:number;
 
         /**
-         * @language en_US
          * The amount of horizontal blur.
          * @version Egret 3.1.4
          * @platform Web
+         * @language en_US
          */
         /**
-         * @language zh_CN
          * 水平模糊量。
          * @version Egret 3.1.4
          * @platform Web
+         * @language zh_CN
          */
         public get blurX():number {
             return this.$blurX;
@@ -183,6 +196,7 @@ module egret {
                 return;
             }
             this.$blurX = value;
+            this.$uniforms.blurX = value;
             this.invalidate();
         }
 
@@ -192,16 +206,16 @@ module egret {
         public $blurY:number;
 
         /**
-         * @language en_US
          * The amount of vertical blur.
          * @version Egret 3.1.4
          * @platform Web
+         * @language en_US
          */
         /**
-         * @language zh_CN
          * 垂直模糊量。
          * @version Egret 3.1.4
          * @platform Web
+         * @language zh_CN
          */
         public get blurY():number {
             return this.$blurY;
@@ -212,6 +226,7 @@ module egret {
                 return;
             }
             this.$blurY = value;
+            this.$uniforms.blurY = value;
             this.invalidate();
         }
 
@@ -221,16 +236,16 @@ module egret {
         public $strength:number;
 
         /**
-         * @language en_US
          * The strength of the imprint or spread.
          * @version Egret 3.1.4
          * @platform Web
+         * @language en_US
          */
         /**
-         * @language zh_CN
          * 印记或跨页的强度。
          * @version Egret 3.1.4
          * @platform Web
+         * @language zh_CN
          */
         public get strength():number {
             return this.$strength;
@@ -241,6 +256,7 @@ module egret {
                 return;
             }
             this.$strength = value;
+            this.$uniforms.strength = value;
             this.invalidate();
         }
 
@@ -250,16 +266,16 @@ module egret {
         public $quality:number;
 
         /**
-         * @language en_US
          * The number of times to apply the filter.
          * @version Egret 3.1.4
          * @platform Web
+         * @language en_US
          */
         /**
-         * @language zh_CN
          * 应用滤镜的次数。
          * @version Egret 3.1.4
          * @platform Web
+         * @language zh_CN
          */
         public get quality():number {
             return this.$quality;
@@ -279,16 +295,16 @@ module egret {
         public $inner:boolean;
 
         /**
-         * @language en_US
          * Specifies whether the glow is an inner glow.
          * @version Egret 3.1.4
          * @platform Web
+         * @language en_US
          */
         /**
-         * @language zh_CN
          * 指定发光是否为内侧发光。
          * @version Egret 3.1.4
          * @platform Web
+         * @language zh_CN
          */
         public get inner():boolean {
             return this.$inner;
@@ -299,6 +315,7 @@ module egret {
                 return;
             }
             this.$inner = value;
+            this.$uniforms.inner = value ? 1 : 0;
             this.invalidate();
         }
 
@@ -308,16 +325,16 @@ module egret {
         public $knockout:boolean;
 
         /**
-         * @language en_US
          * Specifies whether the object has a knockout effect.
          * @version Egret 3.1.4
          * @platform Web
+         * @language en_US
          */
         /**
-         * @language zh_CN
          * 指定对象是否具有挖空效果。
          * @version Egret 3.1.4
          * @platform Web
+         * @language zh_CN
          */
         public get knockout():boolean {
             return this.$knockout;
@@ -328,7 +345,15 @@ module egret {
                 return;
             }
             this.$knockout = value;
+            this.$uniforms.knockout = value ? 0 : 1;
             this.invalidate();
+        }
+
+        /**
+         * @private
+         */
+        public $toJson():string {
+            return '{"color": ' + this.$color + ', "red": ' + this.$red + ', "green": ' + this.$green + ', "blue": ' + this.$blue + ', "alpha": ' + this.$alpha + ', "blurX": ' + this.$blurX + ', "blurY": ' + this.blurY + ', "strength": ' + this.$strength + ', "quality": ' + this.$quality + ', "inner": ' + this.$inner + ', "knockout": ' + this.$knockout + '}';
         }
     }
 }

@@ -28,7 +28,7 @@
 //////////////////////////////////////////////////////////////////////////////////////
 
 
-module egret.native {
+namespace egret.native {
 
     /**
      * @classdesc
@@ -97,7 +97,7 @@ module egret.native {
         private isFinishDown: boolean = false;
         //全屏键盘
         private showScreenKeyboard(): void {
-            var self = this;
+            let self = this;
 
             self.dispatchEvent(new egret.Event("focus"));
             Event.dispatchEvent(self, "focus", false, { "showing": true });
@@ -135,7 +135,10 @@ module egret.native {
          * 
          */
         public $show(): void {
-            var self = this;
+            let self = this;
+
+            let textfield: egret.TextField = this.$textfield;
+            let values = textfield.$TextField;
 
             egret_native.TextInputOp.setKeybordOpen(false);
 
@@ -150,6 +153,12 @@ module egret.native {
 
                 egret_native.EGT_keyboardDidShow = function () {
                 }
+
+                if(egret_native.TextInputOp.updateConfig) {
+                    egret_native.TextInputOp.updateConfig(JSON.stringify({
+                        "font_color": values[sys.TextKeys.textColor]
+                    }));
+                }
             };
 
             egret_native.EGT_keyboardDidHide = function () {
@@ -157,30 +166,27 @@ module egret.native {
 
             egret_native.EGT_deleteBackward = function () {
             };
-
-            var textfield: egret.TextField = this.$textfield;
-            var values = textfield.$TextField;
-            var inputType = values[sys.TextKeys.inputType];
-            var inputMode = values[sys.TextKeys.multiline] ? 0 : 6;
-            var inputFlag = -1;//textfield.displayAsPassword ? 0 : -1;
+            let inputType = values[sys.TextKeys.inputType];
+            let inputMode = values[sys.TextKeys.multiline] ? 0 : 6;
+            let inputFlag = -1;//textfield.displayAsPassword ? 0 : -1;
             if (inputType == TextFieldInputType.PASSWORD) {
                 inputFlag = 0;
             }
             else if (inputType == TextFieldInputType.TEL) {
                 inputMode = 3;
             }
-            var returnType = 1;
-            var maxLength = values[sys.TextKeys.maxChars] <= 0 ? -1 : values[sys.TextKeys.maxChars];
-            var node = textfield.$getRenderNode();
-            var matrix = node.renderMatrix;
+            let returnType = 1;
+            let maxLength = values[sys.TextKeys.maxChars] <= 0 ? -1 : values[sys.TextKeys.maxChars];
+            let node = textfield.$getRenderNode();
+            let point = this.$textfield.localToGlobal(0, 0);
             egret_native.TextInputOp.setKeybordOpen(true, JSON.stringify({
                 "inputMode": inputMode,
                 "inputFlag": inputFlag,
                 "returnType": returnType,
                 "maxLength": maxLength,
                 
-                "x": matrix.tx,
-                "y": matrix.ty,
+                "x": point.x,
+                "y": point.y,
                 "width": textfield.width,
                 "height": textfield.height,
                 "font_size": values[sys.TextKeys.fontSize],

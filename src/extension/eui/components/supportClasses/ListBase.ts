@@ -27,7 +27,7 @@
 //
 //////////////////////////////////////////////////////////////////////////////////////
 
-module eui.sys {
+namespace eui.sys {
 
     /**
      * @private
@@ -72,10 +72,9 @@ module eui.sys {
     }
 }
 
-module eui {
+namespace eui {
 
     /**
-     * @language en_US
      * The ListBase class is the base class for list component.
      * It can display items of list as vertical or horizontal such as SELECT of HTML.
      * @event egret.Event.CHANGE Dispatched after the selection has changed.
@@ -91,9 +90,9 @@ module eui {
      * @version Egret 2.4
      * @version eui 1.0
      * @platform Web,Native
+     * @language en_US
      */
     /**
-     * @language zh_CN
      * ListBase 是列表控件基类。可显示垂直或水平的项目列表。其功能与 HTML 中的 SELECT 表单元素的功能相似。
      * @event egret.Event.CHANGE 选中的索引已经发生改变,注意：此事件仅在索引改变是由用户触摸操作引起时才抛出。
      * @event egret.Event.CHANGING 选中的索引即将发生改变，可以通过调用事件对象的 preventDefault() 方法来阻止改变。<p/>
@@ -105,22 +104,23 @@ module eui {
      * @version Egret 2.4
      * @version eui 1.0
      * @platform Web,Native
+     * @language zh_CN
      */
     export class ListBase extends DataGroup {
 
         /**
-         * @language en_US
          * Constructor.
          * @version Egret 2.4
          * @version eui 1.0
          * @platform Web,Native
+         * @language en_US
          */
         /**
-         * @language zh_CN
          * 构造函数
          * @version Egret 2.4
          * @version eui 1.0
          * @platform Web,Native
+         * @language zh_CN
          */
         public constructor() {
             super();
@@ -142,53 +142,53 @@ module eui {
          */
         $ListBase:Object;
         /**
-         * @language en_US
          * Static constant representing the value "no selection".
          * @version Egret 2.4
          * @version eui 1.0
          * @platform Web,Native
+         * @language en_US
          */
         /**
-         * @language zh_CN
          * 未选中任何项时的索引值
          * @version Egret 2.4
          * @version eui 1.0
          * @platform Web,Native
+         * @language zh_CN
          */
         public static NO_SELECTION:number = -1;
 
         /**
-         * @language en_US
          * Static constant representing no proposed selection.
          * @version Egret 2.4
          * @version eui 1.0
          * @platform Web,Native
+         * @language en_US
          */
         /**
-         * @language zh_CN
          * 未设置缓存选中项的值
          * @version Egret 2.4
          * @version eui 1.0
          * @platform Web,Native
+         * @language zh_CN
          */
         public static NO_PROPOSED_SELECTION:number = -2;
 
         /**
-         * @language en_US
          * If <code>true</code>, a data item must always be selected in the control.
          * If the value is <code>true</code>, the <code>selectedIndex</code> property
          * is always set to a value between 0 and (<code>dataProvider.length</code> - 1).
          * @version Egret 2.4
          * @version eui 1.0
          * @platform Web,Native
+         * @language en_US
          */
         /**
-         * @language zh_CN
          * 如果为 true，则控件中必须含有选中的数据项目。
          * 如果该值为 true，则始终将 selectedIndex 属性设置为 0 和 (dataProvider.length - 1) 之间的一个值。
          * @version Egret 2.4
          * @version eui 1.0
          * @platform Web,Native
+         * @language zh_CN
          */
         public get requireSelection():boolean {
             return this.$ListBase[sys.ListBaseKeys.requireSelection];
@@ -196,7 +196,7 @@ module eui {
 
         public set requireSelection(value:boolean) {
             value = !!value;
-            var values = this.$ListBase;
+            let values = this.$ListBase;
             if (value === values[sys.ListBaseKeys.requireSelection]) {
                 return;
             }
@@ -208,7 +208,6 @@ module eui {
         }
 
         /**
-         * @language en_US
          * he 0-based index of the selected item, or -1 if no item is selected.
          * Setting the <code>selectedIndex</code> property deselects the currently selected
          * item and selects the data item at the specified index.<p/>
@@ -234,9 +233,9 @@ module eui {
          * @version Egret 2.4
          * @version eui 1.0
          * @platform Web,Native
+         * @language en_US
          */
         /**
-         * @language zh_CN
          * 选中项目的基于 0 的索引。
          * 或者如果未选中项目，则为-1。设置 selectedIndex 属性会取消选择当前选定的项目并选择指定索引位置的数据项目。<p/>
          *
@@ -256,6 +255,7 @@ module eui {
          * @version Egret 2.4
          * @version eui 1.0
          * @platform Web,Native
+         * @language zh_CN
          */
         public get selectedIndex():number {
             return this.$getSelectedIndex();
@@ -267,7 +267,7 @@ module eui {
          * @returns
          */
         $getSelectedIndex():number {
-            var values = this.$ListBase;
+            let values = this.$ListBase;
             if (values[sys.ListBaseKeys.proposedSelectedIndex] != ListBase.NO_PROPOSED_SELECTION)
                 return values[sys.ListBaseKeys.proposedSelectedIndex];
             return values[sys.ListBaseKeys.selectedIndex];
@@ -279,7 +279,6 @@ module eui {
         }
 
         /**
-         * @language en_US
          * Used internally to specify whether the selectedIndex changed programmatically or due to
          * user interaction.
          * @param value the new index need to select.
@@ -288,21 +287,22 @@ module eui {
          * @version Egret 2.4
          * @version eui 1.0
          * @platform Web,Native
+         * @language en_US
          */
         /**
-         * @language zh_CN
          * 由程序或者用户设置选中项。
          * @param value 索引值。
          * @param dispatchChangeEvent 当索引值发生改变，且该参数为true的时候，组件派发出一个“change”事件。
          * @version Egret 2.4
          * @version eui 1.0
          * @platform Web,Native
+         * @language zh_CN
          */
         protected setSelectedIndex(value:number, dispatchChangeEvent?:boolean):void {
             if (value == this.selectedIndex) {
                 return;
             }
-            var values = this.$ListBase;
+            let values = this.$ListBase;
             if (dispatchChangeEvent)
                 values[sys.ListBaseKeys.dispatchChangeAfterSelection] =
                     (values[sys.ListBaseKeys.dispatchChangeAfterSelection] || dispatchChangeEvent);
@@ -312,7 +312,6 @@ module eui {
 
 
         /**
-         * @language en_US
          * The item that is currently selected.
          * Setting this property deselects the currently selected
          * item and selects the newly specified item.<p/>
@@ -338,9 +337,9 @@ module eui {
          * @version Egret 2.4
          * @version eui 1.0
          * @platform Web,Native
+         * @language en_US
          */
         /**
-         * @language zh_CN
          * 当前已选中的项目。设置此属性会取消选中当前选定的项目并选择新指定的项目。<p/>
          *
          * 如果设置的<code>selectedItem</code>不在当前列表里那么<code>selectedItem</code>将被设置
@@ -361,13 +360,14 @@ module eui {
          * @version Egret 2.4
          * @version eui 1.0
          * @platform Web,Native
+         * @language zh_CN
          */
         public get selectedItem():any {
-            var values = this.$ListBase;
+            let values = this.$ListBase;
             if (values[sys.ListBaseKeys.pendingSelectedItem] !== undefined)
                 return values[sys.ListBaseKeys.pendingSelectedItem];
 
-            var selectedIndex = this.$getSelectedIndex();
+            let selectedIndex = this.$getSelectedIndex();
             if (selectedIndex == ListBase.NO_SELECTION || this.$dataProvider == null)
                 return undefined;
 
@@ -379,7 +379,6 @@ module eui {
         }
 
         /**
-         * @language en_US
          * Used internally to specify whether the selectedItem changed programmatically or due to
          * user interaction.
          * @param value the new item need to select.
@@ -387,21 +386,22 @@ module eui {
          * @version Egret 2.4
          * @version eui 1.0
          * @platform Web,Native
+         * @language en_US
          */
         /**
-         * @language zh_CN
          * 由程序或用户设置选中项数据源。
          * @param value 要选中的项。
          * @param dispatchChangeEvent 当索引值发生改变，且该参数为true的时候，组件派发出一个“change”事件。
          * @version Egret 2.4
          * @version eui 1.0
          * @platform Web,Native
+         * @language zh_CN
          */
         protected setSelectedItem(value:any, dispatchChangeEvent:boolean = false):void {
             if (this.selectedItem === value)
                 return;
 
-            var values = this.$ListBase;
+            let values = this.$ListBase;
             if (dispatchChangeEvent)
                 values[sys.ListBaseKeys.dispatchChangeAfterSelection] =
                     (values[sys.ListBaseKeys.dispatchChangeAfterSelection] || dispatchChangeEvent);
@@ -411,26 +411,26 @@ module eui {
         }
 
         /**
-         * @language en_US
          * Processes the properties set on the component.
          * @version Egret 2.4
          * @version eui 1.0
          * @platform Web,Native
+         * @language en_US
          */
         /**
-         * @language zh_CN
          * 处理对组件设置的属性
          * @version Egret 2.4
          * @version eui 1.0
          * @platform Web,Native
+         * @language zh_CN
          */
         protected commitProperties():void {
-            var dataProviderChanged = this.$dataProviderChanged;
+            let dataProviderChanged = this.$dataProviderChanged;
             super.commitProperties();
 
-            var values = this.$ListBase;
-            var selectedIndex = this.$getSelectedIndex();
-            var dataProvider = this.$dataProvider;
+            let values = this.$ListBase;
+            let selectedIndex = this.$getSelectedIndex();
+            let dataProvider = this.$dataProvider;
             if (dataProviderChanged) {
                 if (selectedIndex >= 0 && dataProvider && selectedIndex < dataProvider.length)
                     this.itemSelected(selectedIndex, true);
@@ -461,7 +461,7 @@ module eui {
                 values[sys.ListBaseKeys.pendingSelectedItem] = undefined;
             }
 
-            var changedSelection = false;
+            let changedSelection = false;
             if (values[sys.ListBaseKeys.proposedSelectedIndex] != ListBase.NO_PROPOSED_SELECTION)
                 changedSelection = this.commitSelection();
 
@@ -474,18 +474,18 @@ module eui {
         }
 
         /**
-         * @language en_US
          * Updates an item renderer for use or reuse.
          * @version Egret 2.4
          * @version eui 1.0
          * @platform Web,Native
+         * @language en_US
          */
         /**
-         * @language zh_CN
          * 更新项呈示器，以备使用或重用
          * @version Egret 2.4
          * @version eui 1.0
          * @platform Web,Native
+         * @language zh_CN
          */
         public updateRenderer(renderer:IItemRenderer, itemIndex:number, data:any):IItemRenderer {
             this.itemSelected(itemIndex, this.$isItemIndexSelected(itemIndex));
@@ -493,7 +493,6 @@ module eui {
         }
 
         /**
-         * @language en_US
          * Called when an item is selected or deselected.
          * Subclasses must override this method to display the selection.
          * @param index The item index that was selected.
@@ -502,18 +501,19 @@ module eui {
          * @version Egret 2.4
          * @version eui 1.0
          * @platform Web,Native
+         * @language en_US
          */
         /**
-         * @language zh_CN
          * 选中或取消选中项目时调用。子类必须覆盖此方法才可设置选中项。
          * @param index 已选中的项目索引。
          * @param selected <code>true</code>为选中，<code>false</code>取消选中
          * @version Egret 2.4
          * @version eui 1.0
          * @platform Web,Native
+         * @language zh_CN
          */
         protected itemSelected(index:number, selected:boolean):void {
-            var renderer = this.$indexToRenderer[index];
+            let renderer = this.$indexToRenderer[index];
             if (renderer) {
                 renderer.selected = selected;
             }
@@ -528,7 +528,6 @@ module eui {
         }
 
         /**
-         * @language en_US
          * The selection validation and commitment workhorse method.
          * Called to commit the pending selected index. This method dispatches
          * the "changing" event, and if the event is not cancelled,
@@ -540,9 +539,9 @@ module eui {
          * @version Egret 2.4
          * @version eui 1.0
          * @platform Web,Native
+         * @language en_US
          */
         /**
-         * @language zh_CN
          * 提交选中项属性。该方法会派发一个“changing”事件，如果该事件没有被阻止，
          * 该方法将会提交选择项病根据参数派发“change”事件。
          * @param dispatchChangedEvents 是否派发一个“changed”事件。
@@ -550,13 +549,14 @@ module eui {
          * @version Egret 2.4
          * @version eui 1.0
          * @platform Web,Native
+         * @language zh_CN
          */
         protected commitSelection(dispatchChangedEvents:boolean = true):boolean {
-            var dataProvider = this.$dataProvider;
-            var values = this.$ListBase;
-            var maxIndex = dataProvider ? dataProvider.length - 1 : -1;
-            var oldSelectedIndex = values[sys.ListBaseKeys.selectedIndex];
-            var tmpProposedIndex = values[sys.ListBaseKeys.proposedSelectedIndex];
+            let dataProvider = this.$dataProvider;
+            let values = this.$ListBase;
+            let maxIndex = dataProvider ? dataProvider.length - 1 : -1;
+            let oldSelectedIndex = values[sys.ListBaseKeys.selectedIndex];
+            let tmpProposedIndex = values[sys.ListBaseKeys.proposedSelectedIndex];
             if (tmpProposedIndex < ListBase.NO_SELECTION)
                 tmpProposedIndex = ListBase.NO_SELECTION;
             if (tmpProposedIndex > maxIndex)
@@ -570,7 +570,7 @@ module eui {
 
 
             if (values[sys.ListBaseKeys.dispatchChangeAfterSelection]) {
-                var result = this.dispatchEventWith(egret.Event.CHANGING, false, true, true);
+                let result = this.dispatchEventWith(egret.Event.CHANGING, false, true, true);
                 if (!result) {
                     this.itemSelected(values[sys.ListBaseKeys.proposedSelectedIndex], false);
                     values[sys.ListBaseKeys.proposedSelectedIndex] = ListBase.NO_PROPOSED_SELECTION;
@@ -602,7 +602,6 @@ module eui {
         }
 
         /**
-         * @language en_US
          * Adjusts the selected index to account for items being added to or
          * removed from this component.
          * It does not dispatch a <code>change</code> event because the change did not
@@ -617,18 +616,19 @@ module eui {
          * @version Egret 2.4
          * @version eui 1.0
          * @platform Web,Native
+         * @language en_US
          */
         /**
-         * @language zh_CN
          * 仅调整选中索引值而不更新选中项,即在提交属性阶段itemSelected方法不会被调用，也不会触发changing和change事件。
          * @param newIndex 新索引。
          * @param add 如果已将项目添加到组件，则为<code>true</code>；如果已删除项目，则为<code>false</code>。
          * @version Egret 2.4
          * @version eui 1.0
          * @platform Web,Native
+         * @language zh_CN
          */
         protected adjustSelection(newIndex:number, add:boolean = false):void {
-            var values = this.$ListBase;
+            let values = this.$ListBase;
             if (values[sys.ListBaseKeys.proposedSelectedIndex] != ListBase.NO_PROPOSED_SELECTION)
                 values[sys.ListBaseKeys.proposedSelectedIndex] = newIndex;
             else
@@ -638,7 +638,6 @@ module eui {
         }
 
         /**
-         * @language en_US
          * Called when an item has been added to this component. Selection
          * and caret related properties are adjusted accordingly.
          * @param item The item being added.
@@ -646,19 +645,20 @@ module eui {
          * @version Egret 2.4
          * @version eui 1.0
          * @platform Web,Native
+         * @language en_US
          */
         /**
-         * @language zh_CN
          * 数据项添加
          * @param item 被添加的项。
          * @param index 被添加的项的索引。
          * @version Egret 2.4
          * @version eui 1.0
          * @platform Web,Native
+         * @language zh_CN
          */
         protected itemAdded(item:any, index:number):void {
             super.itemAdded(item, index);
-            var selectedIndex = this.$getSelectedIndex();
+            let selectedIndex = this.$getSelectedIndex();
             if (selectedIndex == ListBase.NO_SELECTION) {
                 if (this.$ListBase[sys.ListBaseKeys.requireSelection])
                     this.adjustSelection(index, true);
@@ -669,7 +669,6 @@ module eui {
         }
 
         /**
-         * @language en_US
          * Called when an item has been removed from this component.
          * Selection and caret related properties are adjusted
          * accordingly.
@@ -678,22 +677,23 @@ module eui {
          * @version Egret 2.4
          * @version eui 1.0
          * @platform Web,Native
+         * @language en_US
          */
         /**
-         * @language zh_CN
          * 数据项移除
          * @param item 被移除的项。
          * @param index 被移除的项的索引。
          * @version Egret 2.4
          * @version eui 1.0
          * @platform Web,Native
+         * @language zh_CN
          */
         protected itemRemoved(item:any, index:number):void {
             super.itemRemoved(item, index);
             if (this.selectedIndex == ListBase.NO_SELECTION)
                 return;
 
-            var selectedIndex = this.$getSelectedIndex();
+            let selectedIndex = this.$getSelectedIndex();
             if (index == selectedIndex) {
                 if (this.requireSelection && this.$dataProvider && this.$dataProvider.length > 0) {
                     if (index == 0) {
@@ -713,20 +713,20 @@ module eui {
 
 
         /**
-         * @language en_US
          * Event Listener of source data changed.
          * @param The <code>egret.gui.CollectionEvent</code> object.
          * @version Egret 2.4
          * @version eui 1.0
          * @platform Web,Native
+         * @language en_US
          */
         /**
-         * @language zh_CN
          * 数据源改变事件处理。
          * @param event 事件 <code>egret.gui.CollectionEvent</code> 的对象。
          * @version Egret 2.4
          * @version eui 1.0
          * @platform Web,Native
+         * @language zh_CN
          */
         protected onCollectionChange(event:CollectionEvent):void {
             super.onCollectionChange(event);
@@ -741,25 +741,24 @@ module eui {
         }
 
         /**
-         * @language en_US
          * Default response to dataProvider refresh events: clear the selection and caret.
          * @version Egret 2.4
          * @version eui 1.0
          * @platform Web,Native
+         * @language en_US
          */
         /**
-         * @language zh_CN
          * 数据源刷新时触发。此方法不从组件外部调用，仅用于编写自定义组件时，子类覆盖父类的此方法，以便在数据源发生改变时，自动执行一些额外的根据数据刷新视图的操作。
          * @version Egret 2.4
          * @version eui 1.0
          * @platform Web,Native
+         * @language zh_CN
          */
         protected dataProviderRefreshed():void {
             this.setSelectedIndex(ListBase.NO_SELECTION, false);
         }
 
         /**
-         * @language en_US
          * Called when an item has been added to this component.
          * @param renderer the renderer being added.
          * @param index the index of renderer
@@ -767,9 +766,9 @@ module eui {
          * @version Egret 2.4
          * @version eui 1.0
          * @platform Web,Native
+         * @language en_US
          */
         /**
-         * @language zh_CN
          * 项呈示器被添加
          * @param renderer 添加的项呈示器
          * @param index 项呈示器的索引
@@ -777,6 +776,7 @@ module eui {
          * @version Egret 2.4
          * @version eui 1.0
          * @platform Web,Native
+         * @language zh_CN
          */
         protected rendererAdded(renderer:IItemRenderer, index:number, item:any):void {
             renderer.addEventListener(egret.TouchEvent.TOUCH_BEGIN, this.onRendererTouchBegin, this);
@@ -785,7 +785,6 @@ module eui {
         }
 
         /**
-         * @language en_US
          * Called when an item has been removed to this component.
          * @param renderer the renderer being removed.
          * @param index the index of renderer.
@@ -793,9 +792,9 @@ module eui {
          * @version Egret 2.4
          * @version eui 1.0
          * @platform Web,Native
+         * @language en_US
          */
         /**
-         * @language zh_CN
          * 项呈示器被移除
          * @param renderer 移除的项呈示器
          * @param index 项呈示器的索引
@@ -803,6 +802,7 @@ module eui {
          * @version Egret 2.4
          * @version eui 1.0
          * @platform Web,Native
+         * @language zh_CN
          */
         protected rendererRemoved(renderer:IItemRenderer, index:number, item:any):void {
             renderer.removeEventListener(egret.TouchEvent.TOUCH_BEGIN, this.onRendererTouchBegin, this);
@@ -811,25 +811,25 @@ module eui {
         }
 
         /**
-         * @language en_US
          * Handles <code>egret.TouchEvent.TOUCH_BEGIN</code> events from any of the
          * item renderers. This method handles <code>egret.TouchEvent.TOUCH_END</code>.
          * @param event The <code>egret.TouchEvent</code> object.
          * @version Egret 2.4
          * @version eui 1.0
          * @platform Web,Native
+         * @language en_US
          */
         /**
-         * @language zh_CN
          * 侦听项呈示器<code>egret.TouchEvent.TOUCH_BEGIN</code>事件的方法。同时会添加对舞台<code>egret.TouchEvent.TOUCH_END</code>
          * 事件的侦听。
          * @param event 事件<code>egret.TouchEvent</code>的对象。
          * @version Egret 2.4
          * @version eui 1.0
          * @platform Web,Native
+         * @language zh_CN
          */
         protected onRendererTouchBegin(event:egret.TouchEvent):void {
-            var values = this.$ListBase;
+            let values = this.$ListBase;
             if (event.$isDefaultPrevented)
                 return;
             values[sys.ListBaseKeys.touchCancle] = false;
@@ -837,25 +837,25 @@ module eui {
             this.$stage.addEventListener(egret.TouchEvent.TOUCH_END, this.stage_touchEndHandler, this);
         }
         /**
-         * @language en_US
          * Handles <code>egret.TouchEvent.TOUCH_CANCEL</code> events from any of the
          * item renderers. This method will cancel the handles <code>egret.TouchEvent.TOUCH_END</code> and <code>egret.TouchEvent.TOUCH_TAP</code>.
          * @param event The <code>egret.TouchEvent</code> object.
          * @version Egret 3.0.1
          * @version eui 1.0
          * @platform Web,Native
+         * @language en_US
          */
         /**
-         * @language zh_CN
          * 侦听项呈示器<code>egret.TouchEvent.TOUCH_CANCEL</code>事件的方法。触发时会取消对舞台<code>egret.TouchEvent.TOUCH_END</code>
          * 和<code>egret.TouchEvent.TOUCH_TAP</code>事件的侦听。
          * @param event 事件<code>egret.TouchEvent</code>的对象。
          * @version Egret 3.0.1
          * @version eui 1.0
          * @platform Web,Native
+         * @language zh_CN
          */
         protected onRendererTouchCancle(event:egret.TouchEvent):void {
-            var values = this.$ListBase;
+            let values = this.$ListBase;
             values[sys.ListBaseKeys.touchDownItemRenderer] = null;
             values[sys.ListBaseKeys.touchCancle] = true;
             if(this.$stage){
@@ -863,25 +863,25 @@ module eui {
             }
         }
         /**
-         * @language en_US
          * Handles <code>egret.TouchEvent.TOUCH_END</code> events and dispatch <code>ItemTapEvent.ITEM_TAP</code> event.
          * @param event The <code>egret.TouchEvent</code> object.
          * @version Egret 2.4
          * @version eui 1.0
          * @platform Web,Native
+         * @language en_US
          */
         /**
-         * @language zh_CN
          * 触摸在项呈示器上结束，抛出<code>ItemTapEvent.ITEM_TAP</code>事件。
          * @param event 事件<code>egret.TouchEvent</code>的对象。
          * @version Egret 2.4
          * @version eui 1.0
          * @platform Web,Native
+         * @language zh_CN
          */
         protected onRendererTouchEnd(event:egret.TouchEvent):void {
-            var values = this.$ListBase;
-            var itemRenderer = <IItemRenderer> (event.$currentTarget);
-            var touchDownItemRenderer = values[sys.ListBaseKeys.touchDownItemRenderer];
+            let values = this.$ListBase;
+            let itemRenderer = <IItemRenderer> (event.$currentTarget);
+            let touchDownItemRenderer = values[sys.ListBaseKeys.touchDownItemRenderer];
             if (itemRenderer != touchDownItemRenderer)
                 return;
             if(!values[sys.ListBaseKeys.touchCancle]){
@@ -896,7 +896,7 @@ module eui {
          * 触摸在舞台上结束
          */
         private stage_touchEndHandler(event:egret.Event):void {
-            var stage = <egret.Stage>event.$currentTarget;
+            let stage = <egret.Stage>event.$currentTarget;
             stage.removeEventListener(egret.TouchEvent.TOUCH_END, this.stage_touchEndHandler, this);
             this.$ListBase[sys.ListBaseKeys.touchDownItemRenderer] = null;
         }

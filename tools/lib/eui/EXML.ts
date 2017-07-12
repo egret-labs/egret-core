@@ -34,7 +34,7 @@
 var __global = global;
 var xml = require("../xml/index");
 var utils = require("../utils");
-import config = require("./parser/EXMLConfig");
+import config = require("./EXMLConfig");
 egret.XML = xml;
 
 
@@ -234,7 +234,14 @@ function getClassNameById(id: string, ns: string): string {
 }
 
 export function getDtsInfoFromExml(exmlFile:string):{className:string,extendName:string}{
-    var xml:egret.XML = egret.XML.parse(require("../FileUtil").read(exmlFile));
+    var xml:egret.XML;
+    try {
+        xml = egret.XML.parse(require("../FileUtil").read(exmlFile))
+    }
+    catch(e) {
+        console.log(e);
+        utils.exit(2002, exmlFile);
+    }
     if(!xml) {
         utils.exit(2002, exmlFile);
     }

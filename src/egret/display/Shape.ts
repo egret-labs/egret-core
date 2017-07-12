@@ -28,38 +28,38 @@
 //////////////////////////////////////////////////////////////////////////////////////
 
 
-module egret {
+namespace egret {
 
     /**
-     * @language en_US
      * This class is used to create lightweight shapes using the drawing application program interface (API). The Shape
      * class includes a graphics property, which lets you access methods from the Graphics class.
      * @see egret.Graphics
      * @version Egret 2.4
      * @platform Web,Native
      * @includeExample egret/display/Shape.ts
+     * @language en_US
      */
     /**
-     * @language zh_CN
      * 此类用于使用绘图应用程序编程接口 (API) 创建简单形状。Shape 类含有 graphics 属性，通过该属性您可以访问各种矢量绘图方法。
      * @see egret.Graphics
      * @version Egret 2.4
      * @platform Web,Native
      * @includeExample egret/display/Shape.ts
+     * @language zh_CN
      */
     export class Shape extends DisplayObject {
 
         /**
-         * @language en_US
          * Creates a new Shape object.
          * @version Egret 2.4
          * @platform Web,Native
+         * @language en_US
          */
         /**
-         * @language zh_CN
          * 创建一个 Shape 对象
          * @version Egret 2.4
          * @platform Web,Native
+         * @language zh_CN
          */
         public constructor() {
             super();
@@ -73,16 +73,16 @@ module egret {
         $graphics:Graphics;
 
         /**
-         * @language en_US
          * Specifies the Graphics object belonging to this Shape object, where vector drawing commands can occur.
          * @version Egret 2.4
          * @platform Web,Native
+         * @language en_US
          */
         /**
-         * @language zh_CN
          * 获取 Shape 中的 Graphics 对象。可通过此对象执行矢量绘图命令。
          * @version Egret 2.4
          * @platform Web,Native
+         * @language zh_CN
          */
         public get graphics():Graphics {
             return this.$graphics;
@@ -96,7 +96,7 @@ module egret {
         }
 
         $hitTest(stageX:number, stageY:number):DisplayObject {
-            var target = super.$hitTest(stageX, stageY);
+            let target = super.$hitTest(stageX, stageY);
             if (target == this) {
                 target = this.$graphics.$hitTest(stageX, stageY);
             }
@@ -114,7 +114,4 @@ module egret {
         }
     }
 
-    if (DEBUG) {
-        egret.$markReadOnly(Shape, "graphics");
-    }
 }

@@ -27,7 +27,7 @@
 //
 //////////////////////////////////////////////////////////////////////////////////////
 
-module egret.web {
+namespace egret.web {
 
     /**
      * @private
@@ -105,9 +105,9 @@ module egret.web {
                 this.bufferSource.onended = null;
                 this.bufferSource = null;
             }
-            var context = this.context;
-            var gain = this.gain;
-            var bufferSource = context.createBufferSource();
+            let context = this.context;
+            let gain = this.gain;
+            let bufferSource = context.createBufferSource();
             this.bufferSource = bufferSource;
             bufferSource.buffer = this.$audioBuffer;
             bufferSource.connect(gain);
@@ -122,14 +122,15 @@ module egret.web {
 
         public stop():void {
             if (this.bufferSource) {
-                var sourceNode = this.bufferSource;
+                let sourceNode = this.bufferSource;
                 if (sourceNode.stop) {
                     sourceNode.stop(0);
                 }
                 else {
                     sourceNode.noteOff(0);
                 }
-                this.bufferSource.disconnect();
+                sourceNode.onended = null;
+                sourceNode.disconnect();
                 this.bufferSource = null;
 
                 this.$audioBuffer = null;

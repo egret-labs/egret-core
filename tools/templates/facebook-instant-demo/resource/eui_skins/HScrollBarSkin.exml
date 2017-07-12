@@ -1,0 +1,4 @@
+<?xml version="1.0" encoding="utf-8"?>
+<e:Skin class="skins.HScrollBarSkin" minWidth="20" minHeight="8" xmlns:e="http://ns.egret.com/eui">
+    <e:Image id="thumb" source="roundthumb_png" scale9Grid="3,3,2,2" height="8" width="30" verticalCenter="0"/>
+</e:Skin>

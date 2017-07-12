@@ -1,12 +1,11 @@
 /// <reference path="../lib/types.d.ts" />
-/// <reference path="../lib/typescript/tsclark.d.ts" />
 
 import utils = require('../lib/utils');
-import Compiler = require('./Compiler');
+// import Compiler = require('./Compiler');
 import FileUtil = require('../lib/FileUtil');
-import tsclark = require("../lib/typescript/tsclark");
 import exmlActions = require('../actions/exml');
-import LoadConfig = require('./LoadConfig');
+import path = require('path');
+import * as Compiler from './Compiler';
 
 class CompileProject {
     compile(options: egret.ToolArgs) {
@@ -16,65 +15,69 @@ class CompileProject {
         exmlActions.build();
         var result = this.compileProject(options);
         exmlActions.afterBuild();
-        if(result.exitStatus)
+        if (result.exitStatus)
             return null;
 
         return result;
     }
-    private compilerOptions:ts.CompilerOptions;
-    public compileProject(option: egret.ToolArgs, files?: egret.FileChanges) {
+    private compilerOptions: ts.CompilerOptions;
+    public compileProject(args: egret.ToolArgs, files?: egret.FileChanges) {
         //console.log("----compileProject.compileProject----")
-        var compileResult: tsclark.LarkCompileResult;
-        if (files && this.recompile) {// console.log("----compileProject.compileProject.B-----")
-            files.forEach(f=> f.fileName = f.fileName.replace(option.projectDir, ""));
-            var realCWD = process.cwd();
-            process.chdir(option.projectDir);
-
-            var sourceMap = option.sourceMap;
-            if(sourceMap == undefined){
+        if (files && this.compilerHost) {// console.log("----compileProject.compileProject.B-----")
+            // files.forEach(f => f.fileName = f.fileName.replace(args.projectDir, ""));
+            // var realCWD = process.cwd();
+            // process.chdir(args.projectDir);
+            var sourceMap = args.sourceMap;
+            if (sourceMap == undefined) {
                 sourceMap = this.compilerOptions.sourceMap;
             }
-            compileResult = this.recompile(files, sourceMap);
-            process.chdir(realCWD);
+            this.compilerHost = this.compilerHost.compileWithChanges(files, sourceMap);
+            // process.chdir(realCWD);
         }
         else { //console.log("----compileProject.compileProject.A-----")
-            var compiler = new Compiler();
-            var tsList: string[] = FileUtil.search(option.srcDir, "ts");
-            var libsList:string[] = FileUtil.search(option.libsDir, "ts");
+            var compiler = new Compiler.Compiler();
+            let configParsedResult = compiler.parseTsconfig(egret.args.projectDir, egret.args.publish);
+            this.compilerOptions = configParsedResult.options;
+            let fileNames = configParsedResult.fileNames;
+            args.tsconfigError = configParsedResult.errors.map(d => d.messageText.toString());
+            if (args.publish) {
+                this.compilerOptions.outFile = path.join(args.releaseDir, "main.min.js");
+            }
+            else {
+                this.compilerOptions.outDir = path.join(args.projectDir, "bin-debug");
+            }
+            if (args.sourceMap == true) {
+                this.compilerOptions.sourceMap = true;//引擎命令行的sourcemap属性优先
+            }
+            this.compilerOptions.allowUnreachableCode = true;
+            this.compilerOptions.emitReflection = true;
+            this.compilerHost = compiler.compile(this.compilerOptions, fileNames);
+        }
+        let relative = f => path.relative(args.projectDir, f)
 
-            var urlConfig = option.projectDir + "tsconfig.json";//加载配置文件
-            LoadConfig.loadTsConfig(urlConfig,option);
-            this.compilerOptions = option.compilerOptions;
+        var fileResult = GetJavaScriptFileNames(this.compilerHost.files.map(relative), /^src\//)
+        this.compilerHost.files = fileResult;
 
-            var compileOptions = {
-                args: option,
-                files: tsList.concat(libsList),
-                out: option.out,
-                outDir: option.outDir
-            };
-            compileResult = compiler.compile(compileOptions);
-            this.recompile = compileResult.compileWithChanges;
+        if (this.compilerHost.messages.length > 0) {
+            this.compilerHost.exitStatus = 1303;
         }
 
-        var fileResult: string[] = GetJavaScriptFileNames(compileResult.files, /^src\//);
-        compileResult.files = fileResult;
-
-        return compileResult;
+        return this.compilerHost;
 
     }
 
-    private recompile: (files: egret.FileChanges, sourceMap?: boolean ) => tsclark.LarkCompileResult;
+    private compilerHost: Compiler.EgretCompilerHost;
 }
 
-function GetJavaScriptFileNames(tsFiles: string[],root:string|RegExp,prefix?:string) {
+function GetJavaScriptFileNames(tsFiles: string[], root: string | RegExp, prefix?: string) {
     var files: string[] = [];
-    tsFiles.forEach(f=> {
+    tsFiles.forEach(f => {
         if (!f)
             return;
         if (/\.d\.ts$/.test(f))
             return;
         f = FileUtil.escapePath(f);
-        f = f.replace(<any>root, '').replace(/\.ts$/, '.js').replace(/^\//,'');
+        f = f.replace(<any>root, '').replace(/\.ts$/, '.js').replace(/^\//, '');
         if (prefix) {
             f = prefix + f;
         }

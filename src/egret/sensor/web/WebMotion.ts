@@ -1,6 +1,6 @@
 
 
-module egret.web {
+namespace egret.web {
 
     /**
      * @private
@@ -27,18 +27,18 @@ module egret.web {
          * @private
          */
         protected onChange = (e: DeviceMotionEvent) => {
-            var event = new MotionEvent(Event.CHANGE);
-            var acceleration: egret.DeviceAcceleration = {
+            let event = new MotionEvent(Event.CHANGE);
+            let acceleration: egret.DeviceAcceleration = {
                 x: e.acceleration.x,
                 y: e.acceleration.y,
                 z: e.acceleration.z
             };
-            var accelerationIncludingGravity: egret.DeviceAcceleration = {
+            let accelerationIncludingGravity: egret.DeviceAcceleration = {
                 x: e.accelerationIncludingGravity.x,
                 y: e.accelerationIncludingGravity.y,
                 z: e.accelerationIncludingGravity.z
             };
-            var rotation: egret.DeviceRotationRate = {
+            let rotation: egret.DeviceRotationRate = {
                 alpha: e.rotationRate.alpha,
                 beta: e.rotationRate.beta,
                 gamma: e.rotationRate.gamma

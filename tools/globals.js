@@ -64,64 +64,14 @@ var globals;
         return true;
     }
     globals.hasKeys = hasKeys;
-    function getAsync() {
-        return require('./lib/core/async');
-    }
-    globals.getAsync = getAsync;
     function getCrc32() {
         return require("./lib/core/crc32");
     }
     globals.getCrc32 = getCrc32;
-    function getCompiler(method) {
-        if (method == "uglify") {
-            return require("./lib/uglify-js/uglify_adapt");
-        }
-        else {
-            return require("./lib/core/closureCompiler");
-        }
-    }
-    globals.getCompiler = getCompiler;
-    function getExmlc() {
-        return require("./lib/exml/exmlc");
-    }
-    globals.getExmlc = getExmlc;
-    function getCodeUtil() {
-        return require("./lib/core/code_util");
-    }
-    globals.getCodeUtil = getCodeUtil;
-    function getOpen() {
-        return require("./lib/core/open");
-    }
-    globals.getOpen = getOpen;
-    function getCreateManifest() {
-        return require("./lib/tools/create_manifest.js");
-    }
-    globals.getCreateManifest = getCreateManifest;
     function addQuotes(str) {
         return "\"" + str + "\"";
     }
     globals.addQuotes = addQuotes;
-    function getGlobalJava() {
-        var JAVA_EXT = process.platform == 'win32' ? '.exe' : '';
-        var java = file.joinPath(process.execPath, "../jre/bin", "java" + JAVA_EXT);
-        if (!file.exists(java)) {
-            java = null;
-            if (process.env["JAVA_HOME"]) {
-                java = file.joinPath(process.env["JAVA_HOME"], "bin", "java" + JAVA_EXT);
-                if (!file.exists(java)) {
-                    java = null;
-                }
-            }
-        }
-        if (!java) {
-            java = "java";
-        }
-        else {
-            java = '"' + java + '"';
-        }
-        return java;
-    }
-    globals.getGlobalJava = getGlobalJava;
     var CodeUtil = require("./lib/exml/code_util.js");
     /**
      * 这个文件是否只含有接口

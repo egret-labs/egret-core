@@ -28,15 +28,15 @@
 //////////////////////////////////////////////////////////////////////////////////////
 
 
-module egret.native {
+namespace egret.native {
 
     /**
      * @private
      */
-    function convertImageToRenderTexture(texture:egret.Texture, rect?:egret.Rectangle):NativeCanvas {
-        var buffer = <NativeCanvasRenderBuffer><any>sys.canvasHitTestBuffer;
-        var w = texture.$getTextureWidth();
-        var h = texture.$getTextureHeight();
+    function convertImageToRenderTexture(texture: egret.Texture, rect?: egret.Rectangle): NativeCanvasRenderBuffer {
+        let buffer = <NativeCanvasRenderBuffer><any>sys.canvasHitTestBuffer;
+        let w = texture.$getTextureWidth();
+        let h = texture.$getTextureHeight();
         if (rect == null) {
             rect = egret.$TempRectangle;
             rect.x = 0;
@@ -50,30 +50,29 @@ module egret.native {
         rect.width = Math.min(rect.width, w - rect.x);
         rect.height = Math.min(rect.height, h - rect.y);
 
-        var iWidth = rect.width;
-        var iHeight = rect.height;
-        var surface = buffer.surface;
-        buffer.resize(iWidth,iHeight);
+        let iWidth = rect.width;
+        let iHeight = rect.height;
+        let surface = buffer.surface;
+        buffer.resize(iWidth, iHeight);
 
-        var bitmapData = texture;
-        var offsetX:number = Math.round(bitmapData._offsetX);
-        var offsetY:number = Math.round(bitmapData._offsetY);
-        var bitmapWidth:number = bitmapData._bitmapWidth;
-        var bitmapHeight:number = bitmapData._bitmapHeight;
-        buffer.context.drawImage(bitmapData._bitmapData, bitmapData._bitmapX + rect.x / $TextureScaleFactor, bitmapData._bitmapY + rect.y / $TextureScaleFactor,
+        let bitmapData = texture;
+        let offsetX: number = Math.round(bitmapData._offsetX);
+        let offsetY: number = Math.round(bitmapData._offsetY);
+        let bitmapWidth: number = bitmapData._bitmapWidth;
+        let bitmapHeight: number = bitmapData._bitmapHeight;
+        buffer.context.drawImage(bitmapData._bitmapData.source, bitmapData._bitmapX + rect.x / $TextureScaleFactor, bitmapData._bitmapY + rect.y / $TextureScaleFactor,
             bitmapWidth * rect.width / w, bitmapHeight * rect.height / h, offsetX, offsetY, rect.width, rect.height);
 
-        return surface;
+        return buffer;
     }
 
     /**
      * @private
      */
-    function toDataURL(type:string, rect?:egret.Rectangle):string {
+    function toDataURL(type: string, rect?: egret.Rectangle): string {
         try {
-            var renderTexture = convertImageToRenderTexture(this, rect);
-            var base64 = renderTexture.toDataURL(type);
-            //renderTexture.$dispose();
+            let buffer = convertImageToRenderTexture(this, rect);
+            let base64 = buffer.toDataURL(type);
             return base64
         }
         catch (e) {
@@ -83,23 +82,39 @@ module egret.native {
     }
 
 
-    function saveToFile(type:string, filePath:string, rect?:egret.Rectangle):void {
+    function saveToFile(type: string, filePath: string, rect?: egret.Rectangle): void {
         try {
-            var renderTexture = convertImageToRenderTexture(this, rect);
-            renderTexture.saveToFile(type, filePath);
-            //renderTexture.$dispose();
+            let buffer = convertImageToRenderTexture(this, rect);
+            buffer.surface.saveToFile(type, filePath);
         }
         catch (e) {
             egret.$error(1033);
         }
     }
 
-    function getPixel32(x:number, y:number):number[] {
-        egret.$error(1035);
-        return null;
+    function getPixel32(x: number, y: number): number[] {
+        egret.$warn(1041, "getPixel32", "getPixels");
+        return this.getPixels(x, y);
+    }
+
+    function getPixels(x: number, y: number, width: number = 1, height: number = 1): number[] {
+        let self = this;
+        if ((<RenderTexture>self).$renderBuffer) {
+            return (<RenderTexture>self).$renderBuffer.getPixels(x, y, width, height);
+        }
+        else {
+            try {
+                let buffer = convertImageToRenderTexture(this);
+                return buffer.getPixels(x, y, width, height);
+            }
+            catch (e) {
+                egret.$error(1033);
+            }
+        }
     }
 
     Texture.prototype.toDataURL = toDataURL;
     Texture.prototype.saveToFile = saveToFile;
     Texture.prototype.getPixel32 = getPixel32;
+    Texture.prototype.getPixels = getPixels;
 }

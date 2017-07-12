@@ -111,7 +111,8 @@ export function afterBuildChanges(exmlsChanged: egret.FileChanges) {
     generateExmlDTS();
 }
 
-
+export function updateSetting(merge = false) {
+}
 
 function generateExmlDTS(): string {
     var srcPath = egret.args.srcDir;

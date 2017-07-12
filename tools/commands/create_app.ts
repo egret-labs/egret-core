@@ -4,12 +4,11 @@
 //import params = require("../ParamsParser");
 import file = require('../lib/FileUtil');
 import BuildCommand = require("./build");
-import FileAutoChangeCommand = require("../actions/FileAutoChange");
 //import config = require("../ProjectConfig");
-var config = egret.args.properties;
+import EgretProject = require('../project/EgretProject');
+
 import CopyFilesCommand = require("./copyfile");
 import ParseConfigCommand = require("../actions/ParseConfig");
-import CompileTemplate = require('../actions/CompileTemplate');
 
 var fs = require('fs');
 var cp_exec = require('child_process').exec;
@@ -17,9 +16,9 @@ var cp_exec = require('child_process').exec;
 import copyNative = require("../actions/CopyNativeFiles");
 
 class CreateAppCommand implements egret.Command {
-    executeRes:number = 0;
+    executeRes: number = 0;
 
-    execute():number {
+    execute(): number {
         this.run();
         return this.executeRes;
     }
@@ -33,10 +32,14 @@ class CreateAppCommand implements egret.Command {
         //var arg_app_name = params.getCommandArgs()[0];
         //var template_path = params.getOption("-t");
         //var arg_h5_path = params.getOption("-f");
+        var app_name = option.commands[1];
         var arg_app_name = option.projectDir;
         var template_path = option.nativeTemplatePath;
         var arg_h5_path = option.fileName;
-
+        var reg = new RegExp("^[a-zA-Z]");
+        if (!reg.test(app_name)) {
+            globals.exit(1612);
+        }
         if (!arg_app_name) {
             globals.exit(1610);
         }
@@ -70,7 +73,7 @@ class CreateAppCommand implements egret.Command {
 
         var app_data = this.read_json_from(file.joinPath(template_path, "create_app.json"));
         if (!app_data) {
-            globals.exit(1603);
+            globals.exit(1603, template_path);
         }
 
         var platform = "";
@@ -105,11 +108,12 @@ class CreateAppCommand implements egret.Command {
         properties["native"][platform + "_path"] = file.relative(projectPath, nativePath);
         file.save(file.joinPath(projectPath, "egretProperties.json"), JSON.stringify(properties, null, "\t"));
 
-        config.init(arg_h5_path);
+        EgretProject.data.init(arg_h5_path);
 
         //修改native项目配置
         new ParseConfigCommand().execute();
-        CompileTemplate.modifyNativeRequire();
+        let manifestPath = file.joinPath(egret.args.projectDir, "manifest.json");
+        EgretProject.manager.modifyNativeRequire(manifestPath);
 
         //拷贝项目到native工程中
         copyNative.refreshNative(true);
@@ -131,6 +135,10 @@ class CreateAppCommand implements egret.Command {
             if (file.isFile(file.joinPath(file.joinPath(app_path, "proj.android"), "build.gradle"))) {
                 this.modifyAndroidStudioSupport(app_path);
                 this.modifyLocalProperties(app_path);
+            }
+            else if (file.isFile(file.joinPath(file.joinPath(app_path, "proj.android"), "project.properties"))) {
+                //修改ADT工程的
+                this.modifyAndroidADTSupport(app_path);
             }
         }
     }
@@ -262,7 +270,7 @@ class CreateAppCommand implements egret.Command {
         return "undefined";
     }
 
-    private getAndroidSDKAPILevelValue() {
+    private getAndroidSDKAPILevelValue(target_level?) {
         // check ANDROID_HOME
         var android_home = process.env.ANDROID_HOME
         if (!android_home) {
@@ -294,6 +302,11 @@ class CreateAppCommand implements egret.Command {
                 platformVersion = this.getAndroidSDKAPILevel(path);
                 if ("undefined" != platformVersion) {
                     versionValue = parseInt(platformVersion);
+                    //如果本地存在所需的SDK。直接返回
+                    if ("undefined" != target_level && target_level == versionValue) {
+                        resultVersion = target_level;
+                        break;
+                    }
                     if (versionValue > tempVersion) {
                         tempVersion = versionValue;
                         resultVersion = platformVersion;
@@ -345,6 +358,79 @@ class CreateAppCommand implements egret.Command {
             globals.exit(1613);
         }
 
+    };
+
+    //获取当前ADT项目默认的Android API Level
+    private getProjTargetAPILevel(app_path) {
+        var projectPropertiesFile = file.joinPath(file.joinPath(app_path, "proj.android"), "project.properties");
+        if (file.isFile(projectPropertiesFile)) {
+            var fileContent = file.read(projectPropertiesFile, true);
+            var lines = fileContent.split("\n");
+            var index = -1;
+            var index2 = -1;
+            var version = "";
+            for (var i = 0; i < lines.length; i++) {
+                index = lines[i].indexOf("target");
+                if (index != -1 && -1 != lines[i].indexOf("=")) {
+                    version = lines[i].substring(lines[i].indexOf("-") + 1);
+
+                    index = version.indexOf("\r");
+                    if (index != -1) {
+                        version = version.substring(0, index);
+                    }
+                    break;
+                }
+            }
+            return version;
+        }
+        else {
+            console.error("找不到 project.properties 文件。app_path ： " + app_path);
+        }
+        return "undefined";
+    };
+
+    //修正Android ADT Support 项目
+    private modifyAndroidADTSupport(app_path) {
+        var projTargetAPILevel = this.getProjTargetAPILevel(app_path);
+        if (projTargetAPILevel == "undefined") {
+            return;
+        }
+        var platformVersion = this.getAndroidSDKAPILevelValue(projTargetAPILevel);
+        if (platformVersion == "undefined") {
+            return;
+        }
+
+        if (parseInt(platformVersion) < parseInt(projTargetAPILevel)) {
+            console.error("All installed platforms is lower then project target API level , project target API Levle is = " + projTargetAPILevel + "; app_path:" + app_path);
+            return;
+        }
+        var projectPropertiesFile = file.joinPath(file.joinPath(app_path, "proj.android"), "project.properties");
+        if (file.isFile(projectPropertiesFile)) {
+            var fileContent = file.read(projectPropertiesFile);
+            var lines = fileContent.split("\n");
+            var len = lines.length;
+            var i = 0;
+            for (i = 0; i < len; i++) {
+                let index = lines[i].indexOf("target");
+                if (index != -1 && -1 != lines[i].indexOf("=")) {
+                    let version = lines[i].substring(lines[i].indexOf("-") + 1);
+                    index = version.indexOf("\r");
+                    if (index != -1) {
+                        version = version.substring(0, index);
+                    }
+
+                    var resultLine = lines[i].replace(new RegExp(version, "g"), platformVersion);
+                    fileContent = fileContent.replace(new RegExp(lines[i], "g"), resultLine);
+
+                    file.save(projectPropertiesFile, fileContent);
+                    break;
+                }
+            }
+        }
+        else {
+            console.error("找不到 project.properties 文件。app_path ： " + file.getAbsolutePath(app_path));
+            globals.exit(1611);
+        }
     };
 
     private run_unzip(app_path, template_path, app_data) {

@@ -1,17 +1,17 @@
-declare module egret {
+declare namespace egret {
     /**
-     * @language en_US
      * Easing function set. Different easing functions are used to make an animation proceed according to the corresponding equation
      * @see http://edn.egret.com/cn/index.php/article/index/id/53 Easing effect Demo
      * @version Egret 2.4
      * @platform Web,Native
+     * @language en_US
      */
     /**
-     * @language zh_CN
      * 缓动函数集合，使用不同的缓动函数使得动画按照对应的方程进行
      * @see http://edn.egret.com/cn/index.php/article/index/id/53 缓动效果演示
      * @version Egret 2.4
      * @platform Web,Native
+     * @language zh_CN
      */
     class Ease {
         /**
@@ -20,504 +20,504 @@ declare module egret {
          */
         constructor();
         /**
-         * @language en_US
          * get.See example.
          * @version Egret 2.4
          * @platform Web,Native
+         * @language en_US
          */
         /**
-         * @language zh_CN
          * get。请查看示例
          * @version Egret 2.4
          * @platform Web,Native
+         * @language zh_CN
          */
-        static get(amount: any): Function;
+        static get(amount: number): (t: number) => number;
         /**
-         * @language en_US
          * get pow in.See example.
          * @version Egret 2.4
          * @platform Web,Native
+         * @language en_US
          */
         /**
-         * @language zh_CN
          * get pow in。请查看示例
          * @version Egret 2.4
          * @platform Web,Native
+         * @language zh_CN
          */
-        static getPowIn(pow: any): Function;
+        static getPowIn(pow: number): (t: number) => number;
         /**
-         * @language en_US
          * get pow out.See example.
          * @version Egret 2.4
          * @platform Web,Native
+         * @language en_US
          */
         /**
-         * @language zh_CN
          * get pow out。请查看示例
          * @version Egret 2.4
          * @platform Web,Native
+         * @language zh_CN
          */
-        static getPowOut(pow: any): Function;
+        static getPowOut(pow: number): (t: number) => number;
         /**
-         * @language en_US
          * get pow in out.See example.
          * @version Egret 2.4
          * @platform Web,Native
+         * @language en_US
          */
         /**
-         * @language zh_CN
          * get pow in out。请查看示例
          * @version Egret 2.4
          * @platform Web,Native
+         * @language zh_CN
          */
-        static getPowInOut(pow: any): Function;
+        static getPowInOut(pow: number): (t: number) => number;
         /**
-         * @language en_US
          * quad in.See example.
          * @version Egret 2.4
          * @platform Web,Native
+         * @language en_US
          */
         /**
-         * @language zh_CN
          * quad in。请查看示例
          * @version Egret 2.4
          * @platform Web,Native
+         * @language zh_CN
          */
-        static quadIn: Function;
+        static quadIn: (t: number) => number;
         /**
-         * @language en_US
          * quad out.See example.
          * @version Egret 2.4
          * @platform Web,Native
+         * @language en_US
          */
         /**
-         * @language zh_CN
          * quad out。请查看示例
          * @version Egret 2.4
          * @platform Web,Native
+         * @language zh_CN
          */
-        static quadOut: Function;
+        static quadOut: (t: number) => number;
         /**
-         * @language en_US
          * quad in out.See example.
          * @version Egret 2.4
          * @platform Web,Native
+         * @language en_US
          */
         /**
-         * @language zh_CN
          * quad in out。请查看示例
          * @version Egret 2.4
          * @platform Web,Native
+         * @language zh_CN
          */
-        static quadInOut: Function;
+        static quadInOut: (t: number) => number;
         /**
-         * @language en_US
          * cubic in.See example.
          * @version Egret 2.4
          * @platform Web,Native
+         * @language en_US
          */
         /**
-         * @language zh_CN
          * cubic in。请查看示例
          * @version Egret 2.4
          * @platform Web,Native
+         * @language zh_CN
          */
-        static cubicIn: Function;
+        static cubicIn: (t: number) => number;
         /**
-         * @language en_US
          * cubic out.See example.
          * @version Egret 2.4
          * @platform Web,Native
+         * @language en_US
          */
         /**
-         * @language zh_CN
          * cubic out。请查看示例
          * @version Egret 2.4
          * @platform Web,Native
+         * @language zh_CN
          */
-        static cubicOut: Function;
+        static cubicOut: (t: number) => number;
         /**
-         * @language en_US
          * cubic in out.See example.
          * @version Egret 2.4
          * @platform Web,Native
+         * @language en_US
          */
         /**
-         * @language zh_CN
          * cubic in out。请查看示例
          * @version Egret 2.4
          * @platform Web,Native
+         * @language zh_CN
          */
-        static cubicInOut: Function;
+        static cubicInOut: (t: number) => number;
         /**
-         * @language en_US
          * quart in.See example.
          * @version Egret 2.4
          * @platform Web,Native
+         * @language en_US
          */
         /**
-         * @language zh_CN
          * quart in。请查看示例
          * @version Egret 2.4
          * @platform Web,Native
+         * @language zh_CN
          */
-        static quartIn: Function;
+        static quartIn: (t: number) => number;
         /**
-         * @language en_US
          * quart out.See example.
          * @version Egret 2.4
          * @platform Web,Native
+         * @language en_US
          */
         /**
-         * @language zh_CN
          * quart out。请查看示例
          * @version Egret 2.4
          * @platform Web,Native
+         * @language zh_CN
          */
-        static quartOut: Function;
+        static quartOut: (t: number) => number;
         /**
-         * @language en_US
          * quart in out.See example.
          * @version Egret 2.4
          * @platform Web,Native
+         * @language en_US
          */
         /**
-         * @language zh_CN
          * quart in out。请查看示例
          * @version Egret 2.4
          * @platform Web,Native
+         * @language zh_CN
          */
-        static quartInOut: Function;
+        static quartInOut: (t: number) => number;
         /**
-         * @language en_US
          * quint in.See example.
          * @version Egret 2.4
          * @platform Web,Native
+         * @language en_US
          */
         /**
-         * @language zh_CN
          * quint in。请查看示例
          * @version Egret 2.4
          * @platform Web,Native
+         * @language zh_CN
          */
-        static quintIn: Function;
+        static quintIn: (t: number) => number;
         /**
-         * @language en_US
          * quint out.See example.
          * @version Egret 2.4
          * @platform Web,Native
+         * @language en_US
          */
         /**
-         * @language zh_CN
          * quint out。请查看示例
          * @version Egret 2.4
          * @platform Web,Native
+         * @language zh_CN
          */
-        static quintOut: Function;
+        static quintOut: (t: number) => number;
         /**
-         * @language en_US
          * quint in out.See example.
          * @version Egret 2.4
          * @platform Web,Native
+         * @language en_US
          */
         /**
-         * @language zh_CN
          * quint in out。请查看示例
          * @version Egret 2.4
          * @platform Web,Native
+         * @language zh_CN
          */
-        static quintInOut: Function;
+        static quintInOut: (t: number) => number;
         /**
-         * @language en_US
          * sine in.See example.
          * @version Egret 2.4
          * @platform Web,Native
+         * @language en_US
          */
         /**
-         * @language zh_CN
          * sine in。请查看示例
          * @version Egret 2.4
          * @platform Web,Native
+         * @language zh_CN
          */
-        static sineIn(t: any): number;
+        static sineIn(t: number): number;
         /**
-         * @language en_US
          * sine out.See example.
          * @version Egret 2.4
          * @platform Web,Native
+         * @language en_US
          */
         /**
-         * @language zh_CN
          * sine out。请查看示例
          * @version Egret 2.4
          * @platform Web,Native
+         * @language zh_CN
          */
-        static sineOut(t: any): number;
+        static sineOut(t: number): number;
         /**
-         * @language en_US
          * sine in out.See example.
          * @version Egret 2.4
          * @platform Web,Native
+         * @language en_US
          */
         /**
-         * @language zh_CN
          * sine in out。请查看示例
          * @version Egret 2.4
          * @platform Web,Native
+         * @language zh_CN
          */
-        static sineInOut(t: any): number;
+        static sineInOut(t: number): number;
         /**
-         * @language en_US
          * get back in.See example.
          * @version Egret 2.4
          * @platform Web,Native
+         * @language en_US
          */
         /**
-         * @language zh_CN
          * get back in。请查看示例
          * @version Egret 2.4
          * @platform Web,Native
+         * @language zh_CN
          */
-        static getBackIn(amount: any): Function;
+        static getBackIn(amount: number): (t: number) => number;
         /**
-         * @language en_US
          * back in.See example.
          * @version Egret 2.4
          * @platform Web,Native
+         * @language en_US
          */
         /**
-         * @language zh_CN
          * back in。请查看示例
          * @version Egret 2.4
          * @platform Web,Native
+         * @language zh_CN
          */
-        static backIn: Function;
+        static backIn: (t: number) => number;
         /**
-         * @language en_US
          * get back out.See example.
          * @version Egret 2.4
          * @platform Web,Native
+         * @language en_US
          */
         /**
-         * @language zh_CN
          * get back out。请查看示例
          * @version Egret 2.4
          * @platform Web,Native
+         * @language zh_CN
          */
-        static getBackOut(amount: any): Function;
+        static getBackOut(amount: number): (t: any) => number;
         /**
-         * @language en_US
          * back out.See example.
          * @version Egret 2.4
          * @platform Web,Native
+         * @language en_US
          */
         /**
-         * @language zh_CN
          * back out。请查看示例
          * @version Egret 2.4
          * @platform Web,Native
+         * @language zh_CN
          */
-        static backOut: Function;
+        static backOut: (t: any) => number;
         /**
-         * @language en_US
          * get back in out.See example.
          * @version Egret 2.4
          * @platform Web,Native
+         * @language en_US
          */
         /**
-         * @language zh_CN
          * get back in out。请查看示例
          * @version Egret 2.4
          * @platform Web,Native
+         * @language zh_CN
          */
-        static getBackInOut(amount: any): Function;
+        static getBackInOut(amount: number): (t: number) => number;
         /**
-         * @language en_US
          * back in out.See example.
          * @version Egret 2.4
          * @platform Web,Native
+         * @language en_US
          */
         /**
-         * @language zh_CN
          * back in out。请查看示例
          * @version Egret 2.4
          * @platform Web,Native
+         * @language zh_CN
          */
-        static backInOut: Function;
+        static backInOut: (t: number) => number;
         /**
-         * @language en_US
          * circ in.See example.
          * @version Egret 2.4
          * @platform Web,Native
+         * @language en_US
          */
         /**
-         * @language zh_CN
          * circ in。请查看示例
          * @version Egret 2.4
          * @platform Web,Native
+         * @language zh_CN
          */
-        static circIn(t: any): number;
+        static circIn(t: number): number;
         /**
-         * @language en_US
          * circ out.See example.
          * @version Egret 2.4
          * @platform Web,Native
+         * @language en_US
          */
         /**
-         * @language zh_CN
          * circ out。请查看示例
          * @version Egret 2.4
          * @platform Web,Native
+         * @language zh_CN
          */
-        static circOut(t: any): number;
+        static circOut(t: number): number;
         /**
-         * @language en_US
          * circ in out.See example.
          * @version Egret 2.4
          * @platform Web,Native
+         * @language en_US
          */
         /**
-         * @language zh_CN
          * circ in out。请查看示例
          * @version Egret 2.4
          * @platform Web,Native
+         * @language zh_CN
          */
-        static circInOut(t: any): number;
+        static circInOut(t: number): number;
         /**
-         * @language en_US
          * bounce in.See example.
          * @version Egret 2.4
          * @platform Web,Native
+         * @language en_US
          */
         /**
-         * @language zh_CN
          * bounce in。请查看示例
          * @version Egret 2.4
          * @platform Web,Native
+         * @language zh_CN
          */
-        static bounceIn(t: any): number;
+        static bounceIn(t: number): number;
         /**
-         * @language en_US
          * bounce out.See example.
          * @version Egret 2.4
          * @platform Web,Native
+         * @language en_US
          */
         /**
-         * @language zh_CN
          * bounce out。请查看示例
          * @version Egret 2.4
          * @platform Web,Native
+         * @language zh_CN
          */
-        static bounceOut(t: any): number;
+        static bounceOut(t: number): number;
         /**
-         * @language en_US
          * bounce in out.See example.
          * @version Egret 2.4
          * @platform Web,Native
+         * @language en_US
          */
         /**
-         * @language zh_CN
          * bounce in out。请查看示例
          * @version Egret 2.4
          * @platform Web,Native
+         * @language zh_CN
          */
-        static bounceInOut(t: any): number;
+        static bounceInOut(t: number): number;
         /**
-         * @language en_US
          * get elastic in.See example.
          * @version Egret 2.4
          * @platform Web,Native
+         * @language en_US
          */
         /**
-         * @language zh_CN
          * get elastic in。请查看示例
          * @version Egret 2.4
          * @platform Web,Native
+         * @language zh_CN
          */
-        static getElasticIn(amplitude: any, period: any): Function;
+        static getElasticIn(amplitude: number, period: number): (t: number) => number;
         /**
-         * @language en_US
          * elastic in.See example.
          * @version Egret 2.4
          * @platform Web,Native
+         * @language en_US
          */
         /**
-         * @language zh_CN
          * elastic in。请查看示例
          * @version Egret 2.4
          * @platform Web,Native
+         * @language zh_CN
          */
-        static elasticIn: Function;
+        static elasticIn: (t: number) => number;
         /**
-         * @language en_US
          * get elastic out.See example.
          * @version Egret 2.4
          * @platform Web,Native
+         * @language en_US
          */
         /**
-         * @language zh_CN
          * get elastic out。请查看示例
          * @version Egret 2.4
          * @platform Web,Native
+         * @language zh_CN
          */
-        static getElasticOut(amplitude: any, period: any): Function;
+        static getElasticOut(amplitude: number, period: number): (t: number) => number;
         /**
-         * @language en_US
          * elastic out.See example.
          * @version Egret 2.4
          * @platform Web,Native
+         * @language en_US
          */
         /**
-         * @language zh_CN
          * elastic out。请查看示例
          * @version Egret 2.4
          * @platform Web,Native
+         * @language zh_CN
          */
-        static elasticOut: Function;
+        static elasticOut: (t: number) => number;
         /**
-         * @language en_US
          * get elastic in out.See example.
          * @version Egret 2.4
          * @platform Web,Native
+         * @language en_US
          */
         /**
-         * @language zh_CN
          * get elastic in out。请查看示例
          * @version Egret 2.4
          * @platform Web,Native
+         * @language zh_CN
          */
-        static getElasticInOut(amplitude: any, period: any): Function;
+        static getElasticInOut(amplitude: number, period: number): (t: number) => number;
         /**
-         * @language en_US
          * elastic in out.See example.
          * @version Egret 2.4
          * @platform Web,Native
+         * @language en_US
          */
         /**
-         * @language zh_CN
          * elastic in out。请查看示例
          * @version Egret 2.4
          * @platform Web,Native
+         * @language zh_CN
          */
-        static elasticInOut: Function;
+        static elasticInOut: (t: number) => number;
     }
 }
-declare module egret {
+declare namespace egret {
     /**
-     * @language en_US
      * Tween is the animation easing class of Egret
      * @see http://edn.egret.com/cn/docs/page/576 Tween ease animation
      * @version Egret 2.4
      * @platform Web,Native
      * @includeExample extension/tween/Tween.ts
+     * @language en_US
      */
     /**
-     * @language zh_CN
      * Tween是Egret的动画缓动类
      * @see http://edn.egret.com/cn/docs/page/576 Tween缓动动画
      * @version Egret 2.4
      * @platform Web,Native
      * @includeExample extension/tween/Tween.ts
+     * @language zh_CN
      */
     class Tween extends EventDispatcher {
         /**
@@ -589,10 +589,6 @@ declare module egret {
         /**
          * @private
          */
-        private _actions;
-        /**
-         * @private
-         */
         private paused;
         /**
          * @private
@@ -619,7 +615,6 @@ declare module egret {
          */
         private passive;
         /**
-         * @language en_US
          * Activate an object and add a Tween animation to the object
          * @param target {any} The object to be activated
          * @param props {any} Parameters, support loop onChange onChangeObj
@@ -628,9 +623,9 @@ declare module egret {
          * Not recommended, you can use Tween.removeTweens(target) instead.
          * @version Egret 2.4
          * @platform Web,Native
+         * @language en_US
          */
         /**
-         * @language zh_CN
          * 激活一个对象，对其添加 Tween 动画
          * @param target {any} 要激活 Tween 的对象
          * @param props {any} 参数，支持loop(循环播放) onChange(变化函数) onChangeObj(变化函数作用域)
@@ -639,51 +634,56 @@ declare module egret {
          * 不建议使用，可使用 Tween.removeTweens(target) 代替。
          * @version Egret 2.4
          * @platform Web,Native
+         * @language zh_CN
          */
-        static get(target: any, props?: any, pluginData?: any, override?: boolean): Tween;
+        static get(target: any, props?: {
+            loop?: boolean;
+            onChange?: Function;
+            onChangeObj?: any;
+        }, pluginData?: any, override?: boolean): Tween;
         /**
-         * @language en_US
          * Delete all Tween animations from an object
          * @param target The object whose Tween to be deleted
          * @version Egret 2.4
          * @platform Web,Native
+         * @language en_US
          */
         /**
-         * @language zh_CN
          * 删除一个对象上的全部 Tween 动画
          * @param target  需要移除 Tween 的对象
          * @version Egret 2.4
          * @platform Web,Native
+         * @language zh_CN
          */
         static removeTweens(target: any): void;
         /**
-         * @language en_US
          * Pause all Tween animations of a certain object
          * @param target The object whose Tween to be paused
          * @version Egret 2.4
          * @platform Web,Native
+         * @language en_US
          */
         /**
-         * @language zh_CN
          * 暂停某个对象的所有 Tween
          * @param target 要暂停 Tween 的对象
          * @version Egret 2.4
          * @platform Web,Native
+         * @language zh_CN
          */
         static pauseTweens(target: any): void;
         /**
-         * @language en_US
          * Resume playing all easing of a certain object
          * @param target The object whose Tween to be resumed
          * @version Egret 2.4
          * @platform Web,Native
+         * @language en_US
          */
         /**
-         * @language zh_CN
          * 继续播放某个对象的所有缓动
          * @param target 要继续播放 Tween 的对象
          * @version Egret 2.4
          * @platform Web,Native
+         * @language zh_CN
          */
         static resumeTweens(target: any): void;
         /**
@@ -702,16 +702,16 @@ declare module egret {
          */
         private static _register(tween, value);
         /**
-         * @language en_US
          * Delete all Tween
          * @version Egret 2.4
          * @platform Web,Native
+         * @language en_US
          */
         /**
-         * @language zh_CN
          * 删除所有 Tween
          * @version Egret 2.4
          * @platform Web,Native
+         * @language zh_CN
          */
         static removeAllTweens(): void;
         /**
@@ -736,7 +736,7 @@ declare module egret {
          * @param actionsMode
          * @returns
          */
-        private setPosition(value, actionsMode?);
+        setPosition(value: number, actionsMode?: number): boolean;
         /**
          * @private
          *
@@ -744,7 +744,7 @@ declare module egret {
          * @param endPos
          * @param includeStart
          */
-        private _runActions(startPos, endPos, includeStart?);
+        private _runAction(action, startPos, endPos, includeStart?);
         /**
          * @private
          *
@@ -753,20 +753,20 @@ declare module egret {
          */
         private _updateTargetProps(step, ratio);
         /**
-         * @language en_US
          * Whether setting is paused
          * @param value {boolean} Whether to pause
          * @returns Tween object itself
          * @version Egret 2.4
          * @platform Web,Native
+         * @language en_US
          */
         /**
-         * @language zh_CN
          * 设置是否暂停
          * @param value {boolean} 是否暂停
          * @returns Tween对象本身
          * @version Egret 2.4
          * @platform Web,Native
+         * @language zh_CN
          */
         setPaused(value: boolean): Tween;
         /**
@@ -805,26 +805,25 @@ declare module egret {
          */
         private _set(props, o);
         /**
-         * @language en_US
          * Wait the specified milliseconds before the execution of the next animation
          * @param duration {number} Waiting time, in milliseconds
          * @param passive {boolean} Whether properties are updated during the waiting time
          * @returns Tween object itself
          * @version Egret 2.4
          * @platform Web,Native
+         * @language en_US
          */
         /**
-         * @language zh_CN
          * 等待指定毫秒后执行下一个动画
          * @param duration {number} 要等待的时间，以毫秒为单位
          * @param passive {boolean} 等待期间属性是否会更新
          * @returns Tween对象本身
          * @version Egret 2.4
          * @platform Web,Native
+         * @language zh_CN
          */
         wait(duration: number, passive?: boolean): Tween;
         /**
-         * @language en_US
          * Modify the property of the specified object to a specified value
          * @param props {Object} Property set of an object
          * @param duration {number} Duration
@@ -832,9 +831,9 @@ declare module egret {
          * @returns {egret.Tween} Tween object itself
          * @version Egret 2.4
          * @platform Web,Native
+         * @language en_US
          */
         /**
-         * @language zh_CN
          * 将指定对象的属性修改为指定值
          * @param props {Object} 对象的属性集合
          * @param duration {number} 持续时间
@@ -842,14 +841,14 @@ declare module egret {
          * @returns {egret.Tween} Tween对象本身
          * @version Egret 2.4
          * @platform Web,Native
+         * @language zh_CN
          */
         to(props: any, duration?: number, ease?: Function): Tween;
         /**
-         * @language en_US
          * Execute callback function
          * @param callback {Function} Callback method
          * @param thisObj {any} this action scope of the callback method
-         * @param params {Array<any>} Parameter of the callback method
+         * @param params {any[]} Parameter of the callback method
          * @returns {egret.Tween} Tween object itself
          * @version Egret 2.4
          * @platform Web,Native
@@ -860,13 +859,13 @@ declare module egret {
          *      console.log("b: " + b); // the second parameter passed “hello”
          *  }, this, [233, "hello"]);
          * </pre>
+         * @language en_US
          */
         /**
-         * @language zh_CN
          * 执行回调函数
          * @param callback {Function} 回调方法
          * @param thisObj {any} 回调方法this作用域
-         * @param params {Array<any>} 回调方法参数
+         * @param params {any[]} 回调方法参数
          * @returns {egret.Tween} Tween对象本身
          * @version Egret 2.4
          * @platform Web,Native
@@ -877,8 +876,9 @@ declare module egret {
          *      console.log("b: " + b); //对应传入的第二个参数 “hello”
          *  }, this, [233, "hello"]);
          * </pre>
+         * @language zh_CN
          */
-        call(callback: Function, thisObj?: any, params?: Array<any>): Tween;
+        call(callback: Function, thisObj?: any, params?: any[]): Tween;
         /**
          * Now modify the properties of the specified object to the specified value
          * @param props {Object} Property set of an object
@@ -897,37 +897,37 @@ declare module egret {
          */
         set(props: any, target?: any): Tween;
         /**
-         * @language en_US
          * Execute
          * @param tween {egret.Tween} The Tween object to be operated. Default: this
          * @returns {egret.Tween} Tween object itself
          * @version Egret 2.4
          * @platform Web,Native
+         * @language en_US
          */
         /**
-         * @language zh_CN
          * 执行
          * @param tween {egret.Tween} 需要操作的 Tween 对象，默认this
          * @returns {egret.Tween} Tween对象本身
          * @version Egret 2.4
          * @platform Web,Native
+         * @language zh_CN
          */
         play(tween?: Tween): Tween;
         /**
-         * @language en_US
          * Pause
          * @param tween {egret.Tween} The Tween object to be operated. Default: this
          * @returns {egret.Tween} Tween object itself
          * @version Egret 2.4
          * @platform Web,Native
+         * @language en_US
          */
         /**
-         * @language zh_CN
          * 暂停
          * @param tween {egret.Tween} 需要操作的 Tween 对象，默认this
          * @returns {egret.Tween} Tween对象本身
          * @version Egret 2.4
          * @platform Web,Native
+         * @language zh_CN
          */
         pause(tween?: Tween): Tween;
         /**
@@ -937,197 +937,186 @@ declare module egret {
          * @version Egret 2.4
          * @platform Web,Native
          */
-        tick(delta: number): void;
+        $tick(delta: number): void;
     }
 }
-declare module egret.tween {
+declare namespace egret.tween {
     type EaseType = 'quadIn' | 'quadOut' | 'quadOut' | 'quadInOut' | 'cubicIn' | 'cubicOut' | 'cubicInOut' | 'quartIn' | 'quartOut' | 'quartInOut' | 'quintIn' | 'quintOut' | 'quintInOut' | 'sineIn' | 'sineOut' | 'sineInOut' | 'backIn' | 'backOut' | 'backInOut' | 'circIn' | 'circOut' | 'circInOut' | 'bounceIn' | 'bounceOut' | 'bounceInOut' | 'elasticIn' | 'elasticOut' | 'elasticInOut';
-    interface TweenProps {
-        useTicks?: boolean;
-        ignoreGlobalPause?: boolean;
-        loop?: boolean;
-        override?: boolean;
-        paused?: boolean;
-        position?: number;
-        onChange?: () => void;
-        onChangeObj?: any;
-    }
     /**
-     * @language en_US
      * Abstract class, Indicate the base action.
      * @version Egret 3.1.8
      * @platform Web,Native
+     * @language en_US
      */
     /**
-     * @language zh_CN
      * 抽象类，表示一个基本动作
      * @version Egret 3.1.8
      * @platform Web,Native
+     * @language zh_CN
      */
     abstract class BasePath extends EventDispatcher {
         /**
-         * @language en_US
          * the name of this action.
          * @version Egret 3.1.8
          * @platform Web,Native
+         * @language en_US
          */
         /**
-         * @language zh_CN
          * 动作的名称
          * @version Egret 3.1.8
          * @platform Web,Native
+         * @language zh_CN
          */
         name: string;
     }
     /**
-     * @language en_US
      * Indicate the to action. See <code>Tween.to</code>
      * @version Egret 3.1.8
      * @platform Web,Native
+     * @language en_US
      */
     /**
-     * @language zh_CN
      * 表示一个to动作，参见<code>Tween.to</code>
      * @version Egret 3.1.8
      * @platform Web,Native
+     * @language zh_CN
      */
     class To extends BasePath {
         /**
-         * @language en_US
          * Property set of an object
          * @version Egret 3.1.8
          * @platform Web,Native
+         * @language en_US
          */
         /**
-         * @language zh_CN
          * 对象的属性集合
          * @version Egret 3.1.8
          * @platform Web,Native
+         * @language zh_CN
          */
         props: Object;
         /**
-         * @language en_US
          * Duration
          * @version Egret 3.1.8
          * @platform Web,Native
+         * @language en_US
          */
         /**
-         * @language zh_CN
          * 持续时间
          * @version Egret 3.1.8
          * @platform Web,Native
+         * @language zh_CN
          */
         duration: number;
         /**
-         * @language en_US
          * Easing algorithm
          * @version Egret 3.1.8
          * @platform Web,Native
+         * @language en_US
          */
         /**
-         * @language zh_CN
          * 缓动算法
          * @version Egret 3.1.8
          * @platform Web,Native
+         * @language zh_CN
          */
         ease: EaseType | Function;
     }
     /**
-     * @language en_US
      * Indicate the wait action. See <code>Tween.wait</code>
      * @version Egret 3.1.8
      * @platform Web,Native
+     * @language en_US
      */
     /**
-     * @language zh_CN
      * 表示一个wait动作，参见<code>Tween.wait</code>
      * @version Egret 3.1.8
      * @platform Web,Native
+     * @language zh_CN
      */
     class Wait extends BasePath {
         /**
-         * @language en_US
          * Duration
          * @version Egret 3.1.8
          * @platform Web,Native
+         * @language en_US
          */
         /**
-         * @language zh_CN
          * 持续时间
          * @version Egret 3.1.8
          * @platform Web,Native
+         * @language zh_CN
          */
         duration: number;
         /**
-         * @language en_US
          * Whether properties are updated during the waiting time
          * @version Egret 3.1.8
          * @platform Web,Native
+         * @language en_US
          */
         /**
-         * @language zh_CN
          * 等待期间属性是否会更新
          * @version Egret 3.1.8
          * @platform Web,Native
+         * @language zh_CN
          */
         passive: boolean;
     }
     /**
-     * @language en_US
      * Indicate the set action. See <code>Tween.set</code>
      * @version Egret 3.1.8
      * @platform Web,Native
+     * @language en_US
      */
     /**
-     * @language zh_CN
      * 表示一个set动作，参见<code>Tween.set</code>
      * @version Egret 3.1.8
      * @platform Web,Native
+     * @language zh_CN
      */
     class Set extends BasePath {
         /**
-         * @language en_US
          * Property set of an object
          * @version Egret 3.1.8
          * @platform Web,Native
+         * @language en_US
          */
         /**
-         * @language zh_CN
          * 对象的属性集合
          * @version Egret 3.1.8
          * @platform Web,Native
+         * @language zh_CN
          */
         props: Object;
     }
     /**
-     * @language en_US
      * Indicate the tick action. See <code>Tween.tick</code>
      * @version Egret 3.1.8
      * @platform Web,Native
+     * @language en_US
      */
     /**
-     * @language zh_CN
      * 表示一个tick动作，参见<code>Tween.tick</code>
      * @version Egret 3.1.8
      * @platform Web,Native
+     * @language zh_CN
      */
     class Tick extends BasePath {
         /**
-         * @language en_US
          * Delta time
          * @version Egret 3.1.8
          * @platform Web,Native
+         * @language en_US
          */
         /**
-         * @language zh_CN
          * 增加的时间
          * @version Egret 3.1.8
          * @platform Web,Native
+         * @language zh_CN
          */
         delta: number;
     }
     /**
-     * @language en_US
      * TweenItem is a wrapper for Tween, which can set the behavior of Tween by setting attributes and adding Path.
      *
      * @event pathComplete Dispatched when some Path has complete.
@@ -1136,9 +1125,9 @@ declare module egret.tween {
      * @defaultProperty props
      * @version Egret 3.1.8
      * @platform Web,Native
+     * @language en_US
      */
     /**
-     * @language zh_CN
      * TweenItem是对Tween的包装器，能通过设置属性和添加Path的方式设置Tween的行为。
      * 通常用于使用在EXML中定义组件的动画。
      *
@@ -1148,6 +1137,7 @@ declare module egret.tween {
      * @defaultProperty props
      * @version Egret 3.1.8
      * @platform Web,Native
+     * @language zh_CN
      */
     /**
      * Use in exml:
@@ -1182,33 +1172,33 @@ declare module egret.tween {
          */
         private _props;
         /**
-         * @language en_US
          * The Tween's props.
          * @version Egret 3.1.8
          * @platform Web,Native
+         * @language en_US
          */
         /**
-         * @language zh_CN
          * Tween的props参数。
          * @version Egret 3.1.8
          * @platform Web,Native
+         * @language zh_CN
          */
-        props: TweenProps;
+        props: any;
         /**
          * @private
          */
         private _target;
         /**
-         * @language en_US
          * The Tween's target.
          * @version Egret 3.1.8
          * @platform Web,Native
+         * @language en_US
          */
         /**
-         * @language zh_CN
          * Tween的target参数。
          * @version Egret 3.1.8
          * @platform Web,Native
+         * @language zh_CN
          */
         target: any;
         /**
@@ -1216,51 +1206,65 @@ declare module egret.tween {
          */
         private _paths;
         /**
-         * @language en_US
          * The Actions in Tween.
          * @version Egret 3.1.8
          * @platform Web,Native
+         * @language en_US
          */
         /**
-         * @language zh_CN
          * TweenItem中添加的行为。
          * @version Egret 3.1.8
          * @platform Web,Native
+         * @language zh_CN
          */
         paths: BasePath[];
         /**
-         * @language en_US
          * Play the Tween
+         * @time The starting position, the default is from the last position to play
          * @version Egret 3.1.8
          * @platform Web,Native
-         */
-        /**
-         * @language zh_CN
-         * 播放Tween
-         * @version Egret 3.1.8
-         * @platform Web,Native
-         */
-        play(): void;
-        /**
          * @language en_US
+         */
+        /**
+         * 播放Tween
+         * @time 播放的起始位置, 默认为从上次位置继续播放
+         * @version Egret 3.1.8
+         * @platform Web,Native
+         * @language zh_CN
+         */
+        play(time?: number): void;
+        /**
          * Pause the Tween
          * @version Egret 3.1.8
          * @platform Web,Native
+         * @language en_US
          */
         /**
-         * @language zh_CN
          * 暂停Tween
          * @version Egret 3.1.8
          * @platform Web,Native
+         * @language zh_CN
          */
         pause(): void;
+        /**
+         * Stop the Tween
+         * @version Egret 3.1.8
+         * @platform Web,Native
+         * @language en_US
+         */
+        /**
+         * 停止Tween
+         * @version Egret 3.1.8
+         * @platform Web,Native
+         * @language zh_CN
+         */
+        stop(): void;
         private createTween();
         private applyPaths();
         private applyPath(path);
         private pathComplete(path);
     }
     /**
-     * @language en_US
      * TweenGroup is a collection of TweenItem that can be played in parallel with each Item
      *
      * @event itemComplete Dispatched when some TweenItem has complete.
@@ -1269,13 +1273,14 @@ declare module egret.tween {
      * @version Egret 3.1.8
      * @platform Web,Native
      * @includeExample extension/tween/TweenWrapper.ts
+     * @language en_US
      */
     /**
-     * @language zh_CN
      * TweenGroup是TweenItem的集合，可以并行播放每一个Item
      * @version Egret 3.1.8
      * @platform Web,Native
      * @includeExample extension/tween/TweenWrapper.ts
+     * @language zh_CN
      */
     class TweenGroup extends EventDispatcher {
         private completeCount;
@@ -1285,45 +1290,60 @@ declare module egret.tween {
          */
         private _items;
         /**
-         * @language en_US
          * The Array that TweenItems in TweenGroup.
          * @version Egret 3.1.8
          * @platform Web,Native
+         * @language en_US
          */
         /**
-         * @language zh_CN
          * TweenGroup要控制的TweenItem集合。
          * @version Egret 3.1.8
          * @platform Web,Native
+         * @language zh_CN
          */
         items: TweenItem[];
         private registerEvent(add);
         /**
-         * @language en_US
          * Play the all TweenItems
+         * @time The starting position, the default is from the last position to play。If use 0, the group will play from the start position.
          * @version Egret 3.1.8
          * @platform Web,Native
-         */
-        /**
-         * @language zh_CN
-         * 播放所有的TweenItem
-         * @version Egret 3.1.8
-         * @platform Web,Native
-         */
-        play(): void;
-        /**
          * @language en_US
+         */
+        /**
+         * 播放所有的TweenItem
+         * @time 播放的起始位置, 默认为从上次位置继续播放。如果为0，则从起始位置开始播放。
+         * @version Egret 3.1.8
+         * @platform Web,Native
+         * @language zh_CN
+         */
+        play(time?: number): void;
+        /**
          * Pause the all TweenItems
          * @version Egret 3.1.8
          * @platform Web,Native
+         * @language en_US
          */
         /**
-         * @language zh_CN
          * 暂停播放所有的TweenItem
          * @version Egret 3.1.8
          * @platform Web,Native
+         * @language zh_CN
          */
         pause(): void;
+        /**
+         * Stop the all TweenItems
+         * @version Egret 3.1.8
+         * @platform Web,Native
+         * @language en_US
+         */
+        /**
+         * 停止所有的TweenItem
+         * @version Egret 3.1.8
+         * @platform Web,Native
+         * @language zh_CN
+         */
+        stop(): void;
         private itemComplete(e);
     }
 }

@@ -27,7 +27,7 @@
 //
 //////////////////////////////////////////////////////////////////////////////////////
 
-module egret.native {
+namespace egret.native {
 
     /**
      * @private
@@ -78,6 +78,7 @@ module egret.native {
 
             }
             finally {
+                this.audio.volume = this.$volume;
                 this.audio.play();
             }
         }
@@ -115,7 +116,7 @@ module egret.native {
             }
             this.isStopped = true;
 
-            var audio = this.audio;
+            let audio = this.audio;
             audio.pause();
             audio.removeEventListener("ended", this.onPlayEnd);
             this.audio = null;
@@ -123,14 +124,13 @@ module egret.native {
             NativeSound.$recycle(this.$url, audio);
         }
 
+        private $volume:number = 1;
         /**
          * @private
          * @inheritDoc
          */
         public get volume():number {
-            if (!this.audio)
-                return 1;
-            return this.audio.volume;
+            return this.$volume;
         }
 
         /**
@@ -141,7 +141,7 @@ module egret.native {
                 egret.$error(1036);
                 return;
             }
-
+            this.$volume = value;            
             if (!this.audio)
                 return;
             this.audio.volume = value;

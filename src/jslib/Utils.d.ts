@@ -27,7 +27,7 @@
 //
 //////////////////////////////////////////////////////////////////////////////////////
 
-declare module egret{
+declare namespace egret{
     /**
     * @private
     */
@@ -41,7 +41,7 @@ declare module egret{
 /**
 * @private
 */
-declare module egret.Codec{
+declare namespace egret.Codec{
     /**
     * @private
     */

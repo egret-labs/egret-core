@@ -27,60 +27,60 @@
 //
 //////////////////////////////////////////////////////////////////////////////////////
 
-module egret {
+namespace egret {
     /**
-     * @language en_US
      * The JointStyle class is an enumeration of constant values that specify the joint style to use in drawing lines.
      * These constants are provided for use as values in the joints parameter of the egret.Graphics.lineStyle() method.
      * @see egret.Graphics#lineStyle()
      * @version Egret 2.5
      * @platform Web,Native
+     * @language en_US
      */
     /**
-     * @language zh_CN
      * JointStyle 类是指定要在绘制线条中使用的联接点样式的常量值枚举。提供的这些常量用作 egret.Graphics.lineStyle() 方法的 joints 参数中的值。
      * @see egret.Graphics#lineStyle()
      * @version Egret 2.5
      * @platform Web,Native
+     * @language zh_CN
      */
     export const JointStyle = {
         /**
-         * @language en_US
          * Specifies beveled joints in the joints parameter of the egret.Graphics.lineStyle() method.
          * @version Egret 2.5
          * @platform Web,Native
+         * @language en_US
          */
         /**
-         * @language zh_CN
          * 在 egret.Graphics.lineStyle() 方法的 joints 参数中指定斜角连接。
          * @version Egret 2.5
          * @platform Web,Native
+         * @language zh_CN
          */
         BEVEL: "bevel",
         /**
-         * @language en_US
          * Specifies mitered joints in the joints parameter of the egret.Graphics.lineStyle() method.
          * @version Egret 2.5
          * @platform Web,Native
+         * @language en_US
          */
         /**
-         * @language zh_CN
          * 在 egret.Graphics.lineStyle() 方法的 joints 参数中指定尖角连接。
          * @version Egret 2.5
          * @platform Web,Native
+         * @language zh_CN
          */
          MITER : "miter",
         /**
-         * @language en_US
          * Specifies round joints in the joints parameter of the egret.Graphics.lineStyle() method.
          * @version Egret 2.5
          * @platform Web,Native
+         * @language en_US
          */
         /**
-         * @language zh_CN
          * 在 egret.Graphics.lineStyle() 方法的 joints 参数中指定圆角连接。
          * @version Egret 2.5
          * @platform Web,Native
+         * @language zh_CN
          */
         ROUND:"round"
     }

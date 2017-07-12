@@ -26,16 +26,16 @@
 //  EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 //
 //////////////////////////////////////////////////////////////////////////////////////
-module egret {
+namespace egret {
     /**
      * @private
      */
     export class WebGLUtils {
         public static compileProgram(gl: WebGLRenderingContext, vertexSrc: string, fragmentSrc: string): WebGLProgram {
-            var fragmentShader: WebGLShader = WebGLUtils.compileFragmentShader(gl, fragmentSrc);
-            var vertexShader: WebGLShader = WebGLUtils.compileVertexShader(gl, vertexSrc);
+            let fragmentShader: WebGLShader = WebGLUtils.compileFragmentShader(gl, fragmentSrc);
+            let vertexShader: WebGLShader = WebGLUtils.compileVertexShader(gl, vertexSrc);
 
-            var shaderProgram: WebGLProgram = gl.createProgram();
+            let shaderProgram: WebGLProgram = gl.createProgram();
             gl.attachShader(shaderProgram, vertexShader);
             gl.attachShader(shaderProgram, fragmentShader);
             gl.linkProgram(shaderProgram);
@@ -55,7 +55,7 @@ module egret {
         }
 
         private static _compileShader(gl: WebGLRenderingContext, shaderSrc: string, shaderType: number): WebGLShader {
-            var shader: WebGLShader = gl.createShader(shaderType);
+            let shader: WebGLShader = gl.createShader(shaderType);
             gl.shaderSource(shader, shaderSrc);
             gl.compileShader(shader);
 
@@ -71,7 +71,7 @@ module egret {
         public static checkCanUseWebGL(): boolean {
             if (WebGLUtils.canUseWebGL == undefined) {
                 try {
-                    var canvas = document.createElement("canvas");
+                    let canvas = document.createElement("canvas");
                     WebGLUtils.canUseWebGL = !!window["WebGLRenderingContext"]
                         && !!(canvas.getContext("webgl") || canvas.getContext("experimental-webgl"));
                 }
@@ -84,7 +84,7 @@ module egret {
 
         public static deleteWebGLTexture(bitmapData): void {
             if (bitmapData) {
-                var gl = bitmapData.glContext;
+                let gl = bitmapData.glContext;
                 if (gl) {
                     gl.deleteTexture(bitmapData);
                 }

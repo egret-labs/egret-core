@@ -28,21 +28,21 @@
 //////////////////////////////////////////////////////////////////////////////////////
 
 /// <reference path="../core/UIComponent.ts" />
-module eui {
-    var UIImpl = sys.UIComponentImpl;
+namespace eui {
+    let UIImpl = sys.UIComponentImpl;
     /**
-     * @language en_US
      * BitmapLabel is one line or multiline uneditable BitmapText
      * @version Egret 2.5.3
      * @version eui 1.0
      * @platform Web,Native
+     * @language en_US
      */
     /**
-     * @language zh_CN
      * BitmapLabel 组件是一行或多行不可编辑的位图文本
      * @version Egret 2.5.3
      * @version eui 1.0
      * @platform Web,Native
+     * @language zh_CN
      */
     export class BitmapLabel extends egret.BitmapText implements UIComponent, IDisplayText {
         public constructor(text?: string) {
@@ -64,8 +64,8 @@ module eui {
          * @param value
          */
         $setWidth(value: number): boolean {
-            var result1: boolean = super.$setWidth(value);
-            var result2: boolean = UIImpl.prototype.$setWidth.call(this, value);
+            let result1: boolean = super.$setWidth(value);
+            let result2: boolean = UIImpl.prototype.$setWidth.call(this, value);
             return result1 && result2;
         }
         /**
@@ -74,8 +74,8 @@ module eui {
          * @param value
          */
         $setHeight(value: number): boolean {
-            var result1: boolean = super.$setHeight(value);
-            var result2: boolean = UIImpl.prototype.$setHeight.call(this, value);
+            let result1: boolean = super.$setHeight(value);
+            let result2: boolean = UIImpl.prototype.$setHeight.call(this, value);
             return result1 && result2;
         }
         /**
@@ -84,13 +84,13 @@ module eui {
          * @param value
          */
         $setText(value: string): boolean {
-            var result: boolean = super.$setText(value);
+            let result: boolean = super.$setText(value);
             PropertyEvent.dispatchPropertyEvent(this, PropertyEvent.PROPERTY_CHANGE, "text");
             return result;
         }
-        private $font: any;
+        private $font: string | egret.BitmapFont;
         $setFont(value: any): boolean {
-            var values = this.$BitmapText;
+            let values = this.$BitmapText;
             if (this.$font == value) {
                 return false;
             }
@@ -110,25 +110,16 @@ module eui {
          */
         private $parseFont(): void {
             this.$fontChanged = false;
-            if (this.$font && typeof this.$font == "string") {
-                var adapter: IAssetAdapter = this.$stage.getImplementation("eui.IAssetAdapter");
-                if (!adapter) {
-                    adapter = new DefaultAssetAdapter();
-                }
-                adapter.getAsset(this.$font, this.$onFontChanged, this);
+            let font = this.$font;
+            if (typeof font == "string") {
+                getAssets(font, (bitmapFont) => {
+                    this.$setFontData(bitmapFont);
+                })
             } else {
-                this.$setFontData(this.$font);
+                this.$setFontData(font);
             }
         }
-        /**
-         * 皮肤发生改变
-         */
-        private $onFontChanged(bitmapFont: any, font: any): void {
-            if (font !== this.$font) {
-                return;
-            }
-            this.$setFontData(bitmapFont);
-        }
+
         $setFontData(value: egret.BitmapFont): boolean {
             if (value == this.$BitmapText[egret.sys.BitmapTextKeys.font]) {
                 return false;
@@ -191,10 +182,10 @@ module eui {
          * @platform Web,Native
          */
         protected measure(): void {
-            var values = this.$UIComponent;
-            var textValues = this.$BitmapText;
-            var oldWidth = textValues[egret.sys.BitmapTextKeys.textFieldWidth];
-            var availableWidth = NaN;
+            let values = this.$UIComponent;
+            let textValues = this.$BitmapText;
+            let oldWidth = textValues[egret.sys.BitmapTextKeys.textFieldWidth];
+            let availableWidth = NaN;
             if (!isNaN(this._widthConstraint)) {
                 availableWidth = this._widthConstraint;
                 this._widthConstraint = NaN;
@@ -466,7 +457,7 @@ module eui {
             if (isNaN(layoutWidth) || layoutWidth === this._widthConstraint || layoutWidth == 0) {
                 return;
             }
-            var values = this.$UIComponent;
+            let values = this.$UIComponent;
             if (!isNaN(values[sys.UIKeys.explicitHeight])) {
                 return;
             }

@@ -16,7 +16,9 @@
     <xs:attribute name="texture" type="xs:string"/>
   </xs:attributeGroup>
   <xs:group name="egret.BitmapData">
-    <xs:choice/>
+    <xs:choice>
+      <xs:element ref="BitmapData"/>
+    </xs:choice>
   </xs:group>
   <xs:complexType name="egret.BitmapData">
     <xs:group ref="egret.BitmapData"/>
@@ -72,6 +74,23 @@
         <xs:group ref="Bitmap_attributeElement"/>
       </xs:choice>
       <xs:attributeGroup ref="egret.Bitmap"/>
+    </xs:complexType>
+  </xs:element>
+  <xs:attributeGroup name="egret.BitmapData">
+    <xs:attributeGroup ref="egret.HashObject"/>
+  </xs:attributeGroup>
+  <xs:group name="BitmapData_attributeElement">
+    <xs:choice>
+      <xs:group ref="HashObject_attributeElement"/>
+    </xs:choice>
+  </xs:group>
+  <xs:element name="BitmapData">
+    <xs:complexType>
+      <xs:choice minOccurs="0" maxOccurs="unbounded">
+        <xs:any namespace="##other"/>
+        <xs:group ref="BitmapData_attributeElement"/>
+      </xs:choice>
+      <xs:attributeGroup ref="egret.BitmapData"/>
     </xs:complexType>
   </xs:element>
   <xs:attributeGroup name="egret.BitmapFont">
@@ -291,12 +310,14 @@
     <xs:attributeGroup ref="egret.GlowFilter"/>
     <xs:attribute name="angle" type="xs:decimal"/>
     <xs:attribute name="distance" type="xs:decimal"/>
+    <xs:attribute name="hideObject" type="xs:boolean"/>
   </xs:attributeGroup>
   <xs:group name="DropShadowFilter_attributeElement">
     <xs:choice>
       <xs:group ref="GlowFilter_attributeElement"/>
       <xs:element name="angle" type="number"/>
       <xs:element name="distance" type="number"/>
+      <xs:element name="hideObject" type="boolean"/>
     </xs:choice>
   </xs:group>
   <xs:element name="DropShadowFilter">
@@ -525,10 +546,18 @@
   </xs:element>
   <xs:attributeGroup name="egret.RenderTexture">
     <xs:attributeGroup ref="egret.Texture"/>
+    <xs:attribute name="$renderBuffer" type="xs:string"/>
   </xs:attributeGroup>
+  <xs:group name="sys.RenderBuffer">
+    <xs:choice/>
+  </xs:group>
+  <xs:complexType name="sys.RenderBuffer">
+    <xs:group ref="sys.RenderBuffer"/>
+  </xs:complexType>
   <xs:group name="RenderTexture_attributeElement">
     <xs:choice>
       <xs:group ref="Texture_attributeElement"/>
+      <xs:element name="$renderBuffer" type="sys.RenderBuffer"/>
     </xs:choice>
   </xs:group>
   <xs:element name="RenderTexture">
@@ -591,24 +620,11 @@
       <xs:attributeGroup ref="egret.SpriteSheet"/>
     </xs:complexType>
   </xs:element>
-  <xs:simpleType name="egret.TextFieldInputType">
-    <xs:restriction base="xs:string">
-      <xs:enumeration value="text"/>
-      <xs:enumeration value="tel"/>
-      <xs:enumeration value="password"/>
-    </xs:restriction>
-  </xs:simpleType>
   <xs:simpleType name="text_textAlign">
     <xs:restriction base="xs:string">
       <xs:enumeration value="left"/>
       <xs:enumeration value="right"/>
       <xs:enumeration value="center"/>
-    </xs:restriction>
-  </xs:simpleType>
-  <xs:simpleType name="egret.TextFieldType">
-    <xs:restriction base="xs:string">
-      <xs:enumeration value="dynamic"/>
-      <xs:enumeration value="input"/>
     </xs:restriction>
   </xs:simpleType>
   <xs:simpleType name="text_verticalAlign">
@@ -627,7 +643,7 @@
     <xs:attribute name="borderColor" type="xs:string"/>
     <xs:attribute name="displayAsPassword" type="xs:boolean"/>
     <xs:attribute name="fontFamily" type="xs:string"/>
-    <xs:attribute name="inputType" type="egret.TextFieldInputType"/>
+    <xs:attribute name="inputType" type="xs:string"/>
     <xs:attribute name="italic" type="xs:boolean"/>
     <xs:attribute name="lineSpacing" type="xs:decimal"/>
     <xs:attribute name="maxChars" type="xs:decimal"/>
@@ -641,7 +657,7 @@
     <xs:attribute name="textAlign" type="text_textAlign"/>
     <xs:attribute name="textColor" type="xs:string"/>
     <xs:attribute name="textFlow" type="xs:string"/>
-    <xs:attribute name="type" type="egret.TextFieldType"/>
+    <xs:attribute name="type" type="xs:string"/>
     <xs:attribute name="verticalAlign" type="text_verticalAlign"/>
     <xs:attribute name="wordWrap" type="xs:boolean"/>
   </xs:attributeGroup>
@@ -685,10 +701,12 @@
   </xs:element>
   <xs:attributeGroup name="egret.Texture">
     <xs:attributeGroup ref="egret.HashObject"/>
+    <xs:attribute name="bitmapData" type="xs:string"/>
   </xs:attributeGroup>
   <xs:group name="Texture_attributeElement">
     <xs:choice>
       <xs:group ref="HashObject_attributeElement"/>
+      <xs:element name="bitmapData" type="egret.BitmapData"/>
     </xs:choice>
   </xs:group>
   <xs:element name="Texture">

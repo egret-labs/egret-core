@@ -1,10 +1,10 @@
 /// <reference path="../lib/types.d.ts" />
-var service = require('../service/index');
+var service = require("../service/index");
 var Quit = (function () {
     function Quit() {
     }
     Quit.prototype.execute = function () {
-        service.execCommand({
+        service.client.execCommand({
             path: egret.args.projectDir,
             command: "shutdown",
             option: egret.args

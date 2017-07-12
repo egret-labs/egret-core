@@ -27,34 +27,34 @@
 //
 //////////////////////////////////////////////////////////////////////////////////////
 
-module egret {
+namespace egret {
     /**
-     * @language en_US
      * The Sprite class is a basic display list building block: a display list node that can contain children.
      * @version Egret 2.4
      * @platform Web,Native
      * @includeExample egret/display/Sprite.ts
+     * @language en_US
      */
     /**
-     * @language zh_CN
      * Sprite 类是基本显示列表构造块：一个可包含子项的显示列表节点。
      * @version Egret 2.4
      * @platform Web,Native
      * @includeExample egret/display/Sprite.ts
+     * @language zh_CN
      */
     export class Sprite extends DisplayObjectContainer {
 
         /**
-         * @language en_US
          * Creates a new Sprite instance.
          * @version Egret 2.4
          * @platform Web,Native
+         * @language en_US
          */
         /**
-         * @language zh_CN
          * 实例化一个容器
          * @version Egret 2.4
          * @platform Web,Native
+         * @language zh_CN
          */
         public constructor() {
             super();
@@ -68,16 +68,16 @@ module egret {
         $graphics:Graphics;
 
         /**
-         * @language en_US
          * Specifies the Graphics object belonging to this Shape object, where vector drawing commands can occur.
          * @version Egret 2.4
          * @platform Web,Native
+         * @language en_US
          */
         /**
-         * @language zh_CN
          * 获取 Shape 中的 Graphics 对象。可通过此对象执行矢量绘图命令。
          * @version Egret 2.4
          * @platform Web,Native
+         * @language zh_CN
          */
         public get graphics():Graphics {
             return this.$graphics;
@@ -87,11 +87,11 @@ module egret {
             if (!this.$visible) {
                 return null;
             }
-            var m = this.$getInvertedConcatenatedMatrix();
-            var localX = m.a * stageX + m.c * stageY + m.tx;
-            var localY = m.b * stageX + m.d * stageY + m.ty;
+            let m = this.$getInvertedConcatenatedMatrix();
+            let localX = m.a * stageX + m.c * stageY + m.tx;
+            let localY = m.b * stageX + m.d * stageY + m.ty;
 
-            var rect = this.$scrollRect ? this.$scrollRect : this.$maskRect;
+            let rect = this.$scrollRect ? this.$scrollRect : this.$maskRect;
             if (rect && !rect.contains(localX, localY)) {
                 return null;
             }
@@ -99,14 +99,15 @@ module egret {
             if (this.$mask && !this.$mask.$hitTest(stageX, stageY)) {
                 return null;
             }
-            var children = this.$children;
-            var found = false;
-            for (var i = children.length - 1; i >= 0; i--) {
-                var child = children[i];
+            let children = this.$children;
+            let found = false;
+            let target:DisplayObject = null;
+            for (let i = children.length - 1; i >= 0; i--) {
+                let child = children[i];
                 if (child.$maskedObject) {
                     continue;
                 }
-                var target = child.$hitTest(stageX, stageY);
+                target = child.$hitTest(stageX, stageY);
                 if (target) {
                     found = true;
                     if(target.$touchEnabled){

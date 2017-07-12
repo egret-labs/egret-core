@@ -1,48 +1,18 @@
 /// <reference path="../../lib/types.d.ts" />
 
-//import globals = require("../../Globals");
-//import params = require("../../ParamsParser");
 import file = require('../../lib/FileUtil');
 
 class ModifyProperties {
-    private projectConfig;
+    private projectConfig: egret.EgretProperty
     constructor() {
-        this.initProperties();
     }
 
-    getProperties() {
-        return this.projectConfig;
-    }
-    //变更目录后必须调用此方法同步配置文件的变化
-    changeProjectDir(){
-        this.initProperties();
-    }
-
-    private initProperties() {
+    initProperties() {
         var projectPath = file.joinPath(egret.args.projectDir, "egretProperties.json");
-        var content = file.read(projectPath);
-        if (!content) {
-            this.projectConfig = {
-                "modules": [
-                    {
-                        "name": "core"
-                    }
-                ],
-                "native": {
-                    "path_ignore": []
-                }
-            }
-
-        }
-        else {
-            this.projectConfig = JSON.parse(content);
-        }
-        if (!this.projectConfig.native) {
-            this.projectConfig.native = {};
-        }
+        this.projectConfig = JSON.parse(file.read(projectPath));
     }
 
-    save(version?:string) {
+    save(version?: string) {
         if (version) {
             this.projectConfig.egret_version = version;
         }
@@ -52,16 +22,13 @@ class ModifyProperties {
         file.save(projectPath, content);
     }
 
-    hasModule(moduleName:string):boolean {
-        var modules = this.projectConfig.modules;
-        for(var i:number = 0 ; i < modules.length ; i++) {
-            if(modules[i].name == moduleName) {
-                return true;
+    upgradeModulePath() {
+        let config = this.projectConfig
+        for (let m of config.modules) {
+            if (!m.path) {
+                m.path = '${EGRET_APP_DATA}/' + config.egret_version;
             }
         }
-        return false;
     }
 }
-
-var egretProjectConfig = egretProjectConfig || new ModifyProperties();
-export = egretProjectConfig;
+export = new ModifyProperties();

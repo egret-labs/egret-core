@@ -27,7 +27,7 @@
 //
 //////////////////////////////////////////////////////////////////////////////////////
 
-module egret.web {
+namespace egret.web {
 
     /**
      * @private
@@ -38,8 +38,8 @@ module egret.web {
          * 检测系统属性
          */
         public static detect():void {
-            var capabilities = egret.Capabilities;
-            var ua = navigator.userAgent.toLowerCase();
+            let capabilities = egret.Capabilities;
+            let ua = navigator.userAgent.toLowerCase();
             capabilities.$isMobile = (ua.indexOf('mobile') != -1 || ua.indexOf('android') != -1);
             if(capabilities.$isMobile){
                 if(ua.indexOf("windows") < 0&&(ua.indexOf("iphone") != -1 || ua.indexOf("ipad") != -1 || ua.indexOf("ipod") != -1)){
@@ -61,8 +61,8 @@ module egret.web {
                 }
             }
             
-            var language = (navigator.language || navigator.browserLanguage).toLowerCase();
-            var strings = language.split("-");
+            let language = (navigator.language || navigator["browserLanguage"]).toLowerCase();
+            let strings = language.split("-");
             if (strings.length > 1) {
                 strings[1] = strings[1].toUpperCase();
             }
@@ -73,7 +73,7 @@ module egret.web {
 
         public static injectUIntFixOnIE9(){
             if(/msie 9.0/i.test(navigator.userAgent) && !/opera/i.test(navigator.userAgent)) {
-                var IEBinaryToArray_ByteStr_Script =
+                let IEBinaryToArray_ByteStr_Script =
                     "<!-- IEBinaryToArray_ByteStr -->\r\n"+
                     "<script type='text/vbscript' language='VBScript'>\r\n"+
                     "Function IEBinaryToArray_ByteStr(Binary)\r\n"+
@@ -90,16 +90,16 @@ module egret.web {
                     "End Function\r\n" + "<\/script>\r\n" +
                     "<!-- convertResponseBodyToText -->\r\n"+
                     "<script>\r\n"+
-                    "var convertResponseBodyToText = function (binary) {\r\n" +
-                    "   var byteMapping = {};\r\n" +
-                    "   for ( var i = 0; i < 256; i++ ) {\r\n" +
-                    "       for ( var j = 0; j < 256; j++ ) {\r\n" +
+                    "let convertResponseBodyToText = function (binary) {\r\n" +
+                    "   let byteMapping = {};\r\n" +
+                    "   for ( let i = 0; i < 256; i++ ) {\r\n" +
+                    "       for ( let j = 0; j < 256; j++ ) {\r\n" +
                     "           byteMapping[ String.fromCharCode( i + j * 256 ) ] =\r\n" +
                     "           String.fromCharCode(i) + String.fromCharCode(j);\r\n" +
                     "       }\r\n" +
                     "   }\r\n" +
-                    "   var rawBytes = IEBinaryToArray_ByteStr(binary);\r\n" +
-                    "   var lastChr = IEBinaryToArray_ByteStr_Last(binary);\r\n" +
+                    "   let rawBytes = IEBinaryToArray_ByteStr(binary);\r\n" +
+                    "   let lastChr = IEBinaryToArray_ByteStr_Last(binary);\r\n" +
                     "   return rawBytes.replace(/[\\s\\S]/g," +
                     "                           function( match ) { return byteMapping[match]; }) + lastChr;\r\n" +
                     "};\r\n" +

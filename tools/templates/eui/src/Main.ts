@@ -35,11 +35,24 @@ class Main extends eui.UILayer {
     private loadingView: LoadingUI;
     protected createChildren(): void {
         super.createChildren();
+
+        egret.lifecycle.addLifecycleListener((context) => {
+            // custom lifecycle plugin
+        })
+
+        egret.lifecycle.onPause = () => {
+            egret.ticker.pause();
+        }
+
+        egret.lifecycle.onResume = () => {
+            egret.ticker.resume();
+        }
+
         //inject the custom material parser
         //注入自定义的素材解析器
-        var assetAdapter = new AssetAdapter();
-        this.stage.registerImplementation("eui.IAssetAdapter",assetAdapter);
-        this.stage.registerImplementation("eui.IThemeAdapter",new ThemeAdapter());
+        let assetAdapter = new AssetAdapter();
+        egret.registerImplementation("eui.IAssetAdapter", assetAdapter);
+        egret.registerImplementation("eui.IThemeAdapter", new ThemeAdapter());
         //Config loading process interface
         //设置加载进度界面
         this.loadingView = new LoadingUI();
@@ -53,11 +66,11 @@ class Main extends eui.UILayer {
      * 配置文件加载完成,开始预加载皮肤主题资源和preload资源组。
      * Loading of configuration file is complete, start to pre-load the theme configuration file and the preload resource group
      */
-    private onConfigComplete(event:RES.ResourceEvent):void {
+    private onConfigComplete(event: RES.ResourceEvent): void {
         RES.removeEventListener(RES.ResourceEvent.CONFIG_COMPLETE, this.onConfigComplete, this);
         // load skin theme configuration file, you can manually modify the file. And replace the default skin.
         //加载皮肤主题配置文件,可以手动修改这个文件。替换默认皮肤。
-        var theme = new eui.Theme("resource/default.thm.json", this.stage);
+        let theme = new eui.Theme("resource/default.thm.json", this.stage);
         theme.addEventListener(eui.UIEvent.COMPLETE, this.onThemeLoadComplete, this);
 
         RES.addEventListener(RES.ResourceEvent.GROUP_COMPLETE, this.onResourceLoadComplete, this);
@@ -80,7 +93,7 @@ class Main extends eui.UILayer {
      * preload资源组加载完成
      * preload resource group is loaded
      */
-    private onResourceLoadComplete(event:RES.ResourceEvent):void {
+    private onResourceLoadComplete(event: RES.ResourceEvent): void {
         if (event.groupName == "preload") {
             this.stage.removeChild(this.loadingView);
             RES.removeEventListener(RES.ResourceEvent.GROUP_COMPLETE, this.onResourceLoadComplete, this);
@@ -91,8 +104,8 @@ class Main extends eui.UILayer {
             this.createScene();
         }
     }
-    private createScene(){
-        if(this.isThemeLoadEnd && this.isResourceLoadEnd){
+    private createScene() {
+        if (this.isThemeLoadEnd && this.isResourceLoadEnd) {
             this.startCreateScene();
         }
     }
@@ -100,14 +113,14 @@ class Main extends eui.UILayer {
      * 资源组加载出错
      *  The resource group loading failed
      */
-    private onItemLoadError(event:RES.ResourceEvent):void {
+    private onItemLoadError(event: RES.ResourceEvent): void {
         console.warn("Url:" + event.resItem.url + " has failed to load");
     }
     /**
      * 资源组加载出错
      * Resource group loading failed
      */
-    private onResourceLoadError(event:RES.ResourceEvent):void {
+    private onResourceLoadError(event: RES.ResourceEvent): void {
         //TODO
         console.warn("Group:" + event.groupName + " has failed to load");
         //忽略加载失败的项目
@@ -118,47 +131,47 @@ class Main extends eui.UILayer {
      * preload资源组加载进度
      * loading process of preload resource
      */
-    private onResourceProgress(event:RES.ResourceEvent):void {
+    private onResourceProgress(event: RES.ResourceEvent): void {
         if (event.groupName == "preload") {
             this.loadingView.setProgress(event.itemsLoaded, event.itemsTotal);
         }
     }
-    private textfield:egret.TextField;
+    private textfield: egret.TextField;
     /**
      * 创建场景界面
      * Create scene interface
      */
     protected startCreateScene(): void {
-        var sky:egret.Bitmap = this.createBitmapByName("bg_jpg");
+        let sky = this.createBitmapByName("bg_jpg");
         this.addChild(sky);
-        var stageW:number = this.stage.stageWidth;
-        var stageH:number = this.stage.stageHeight;
+        let stageW = this.stage.stageWidth;
+        let stageH = this.stage.stageHeight;
         sky.width = stageW;
         sky.height = stageH;
 
-        var topMask = new egret.Shape();
+        let topMask = new egret.Shape();
         topMask.graphics.beginFill(0x000000, 0.5);
         topMask.graphics.drawRect(0, 0, stageW, 172);
         topMask.graphics.endFill();
         topMask.y = 33;
         this.addChild(topMask);
 
-        var icon:egret.Bitmap = this.createBitmapByName("egret_icon_png");
+        let icon: egret.Bitmap = this.createBitmapByName("egret_icon_png");
         this.addChild(icon);
         icon.x = 26;
         icon.y = 33;
 
-        var line = new egret.Shape();
-        line.graphics.lineStyle(2,0xffffff);
-        line.graphics.moveTo(0,0);
-        line.graphics.lineTo(0,117);
+        let line = new egret.Shape();
+        line.graphics.lineStyle(2, 0xffffff);
+        line.graphics.moveTo(0, 0);
+        line.graphics.lineTo(0, 117);
         line.graphics.endFill();
         line.x = 172;
         line.y = 61;
         this.addChild(line);
 
 
-        var colorLabel = new egret.TextField();
+        let colorLabel = new egret.TextField();
         colorLabel.textColor = 0xffffff;
         colorLabel.width = stageW - 172;
         colorLabel.textAlign = "center";
@@ -168,7 +181,7 @@ class Main extends eui.UILayer {
         colorLabel.y = 80;
         this.addChild(colorLabel);
 
-        var textfield = new egret.TextField();
+        let textfield = new egret.TextField();
         this.addChild(textfield);
         textfield.alpha = 0;
         textfield.width = stageW - 172;
@@ -183,7 +196,7 @@ class Main extends eui.UILayer {
         // Get asynchronously a json configuration file according to name keyword. As for the property of name please refer to the configuration file of resources/resource.json.
         RES.getResAsync("description_json", this.startAnimation, this);
 
-        var button = new eui.Button();
+        let button = new eui.Button();
         button.label = "Click!";
         button.horizontalCenter = 0;
         button.verticalCenter = 0;
@@ -194,9 +207,9 @@ class Main extends eui.UILayer {
      * 根据name关键字创建一个Bitmap对象。name属性请参考resources/resource.json配置文件的内容。
      * Create a Bitmap object according to name keyword.As for the property of name please refer to the configuration file of resources/resource.json.
      */
-    private createBitmapByName(name:string):egret.Bitmap {
-        var result = new egret.Bitmap();
-        var texture:egret.Texture = RES.getRes(name);
+    private createBitmapByName(name: string): egret.Bitmap {
+        let result = new egret.Bitmap();
+        let texture: egret.Texture = RES.getRes(name);
         result.texture = texture;
         return result;
     }
@@ -204,48 +217,38 @@ class Main extends eui.UILayer {
      * 描述文件加载成功，开始播放动画
      * Description file loading is successful, start to play the animation
      */
-    private startAnimation(result:Array<any>):void {
-        var self:any = this;
+    private startAnimation(result: Array<any>): void {
+        let parser = new egret.HtmlTextParser();
 
-        var parser = new egret.HtmlTextParser();
-        var textflowArr:Array<Array<egret.ITextElement>> = [];
-        for (var i:number = 0; i < result.length; i++) {
-            textflowArr.push(parser.parser(result[i]));
-        }
-
-        var textfield = self.textfield;
-        var count = -1;
-        var change:Function = function () {
+        let textflowArr = result.map(text => parser.parse(text));
+        let textfield = this.textfield;
+        let count = -1;
+        let change = () => {
             count++;
             if (count >= textflowArr.length) {
                 count = 0;
             }
-            var lineArr = textflowArr[count];
+            let textFlow = textflowArr[count];
 
-            self.changeDescription(textfield, lineArr);
-
-            var tw = egret.Tween.get(textfield);
-            tw.to({"alpha": 1}, 200);
+            // 切换描述内容
+            // Switch to described content
+            textfield.textFlow = textFlow;
+            let tw = egret.Tween.get(textfield);
+            tw.to({ "alpha": 1 }, 200);
             tw.wait(2000);
-            tw.to({"alpha": 0}, 200);
-            tw.call(change, self);
+            tw.to({ "alpha": 0 }, 200);
+            tw.call(change, this);
         };
 
         change();
     }
-    /**
-     * 切换描述内容
-     * Switch to described content
-     */
-    private changeDescription(textfield:egret.TextField, textFlow:Array<egret.ITextElement>):void {
-        textfield.textFlow = textFlow;
-    }
+
     /**
      * 点击按钮
      * Click the button
      */
     private onButtonClick(e: egret.TouchEvent) {
-        var panel = new eui.Panel();
+        let panel = new eui.Panel();
         panel.title = "Title";
         panel.horizontalCenter = 0;
         panel.verticalCenter = 0;

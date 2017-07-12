@@ -28,10 +28,9 @@
 //////////////////////////////////////////////////////////////////////////////////////
 
 
-module eui {
+namespace eui {
 
     /**
-     * @language en_US
      * The ScrollBarBase class helps to position
      * the portion of data that is displayed when there is too much data
      * to fit in a display area.
@@ -43,9 +42,9 @@ module eui {
      * @version Egret 2.4
      * @version eui 1.0
      * @platform Web,Native
+     * @language en_US
      */
     /**
-     * @language zh_CN
      * <code>ScrollBarBase</code> 滚动条基类，该类帮助在因数据太多而不能在显示区域完全显示时定位显示的数据部分。
      * ScrollBarBase 类显示视区的一部分和一个指示滑块。
      * 视区是一个IViewport接口实现的实例。
@@ -55,41 +54,42 @@ module eui {
      * @version Egret 2.4
      * @version eui 1.0
      * @platform Web,Native
+     * @language zh_CN
      */
     export class ScrollBarBase extends Component {
         /**
-         * @language en_US
          * Constructor.
          * @version Egret 2.4
          * @version eui 1.0
          * @platform Web,Native
+         * @language en_US
          */
         /**
-         * @language zh_CN
          * 创建一个ScrollBarBase实例。
          * @version Egret 2.4
          * @version eui 1.0
          * @platform Web,Native
+         * @language zh_CN
          */
         public constructor() {
             super();
         }
 
         /**
-         * @language en_US
          * [SkinPart] Thumb display object.
          * @skinPart
          * @version Egret 2.4
          * @version eui 1.0
          * @platform Web,Native
+         * @language en_US
          */
         /**
-         * @language zh_CN
          * [SkinPart]滑块显示对象。
          * @skinPart
          * @version Egret 2.4
          * @version eui 1.0
          * @platform Web,Native
+         * @language zh_CN
          */
         public thumb:eui.UIComponent = null;
 
@@ -99,7 +99,6 @@ module eui {
         $viewport:IViewport = null;
 
         /**
-         * @language en_US
          * The viewport controlled by this scrollbar.
          *
          * If a viewport is specified, then changes to its actual size, content
@@ -120,9 +119,9 @@ module eui {
          * @version Egret 2.4
          * @version eui 1.0
          * @platform Web,Native
+         * @language en_US
          */
         /**
-         * @language zh_CN
          * 由该滚动条控制的视区。
          *
          * 如果指定了视区，则对其实际大小、内容大小和滚动位置的更改会导致运行相对应的 ScrollBarBase 方法：
@@ -140,6 +139,7 @@ module eui {
          * @version Egret 2.4
          * @version eui 1.0
          * @platform Web,Native
+         * @language zh_CN
          */
         public get viewport():IViewport {
             return this.$viewport;
@@ -149,7 +149,7 @@ module eui {
             if (value == this.$viewport) {
                 return;
             }
-            var viewport = this.$viewport;
+            let viewport = this.$viewport;
             if (viewport)
             {
                 viewport.removeEventListener(eui.PropertyEvent.PROPERTY_CHANGE, this.onPropertyChanged,this);
@@ -174,37 +174,37 @@ module eui {
         }
 
         /**
-         * @language en_US
          * Properties of viewport changed.
          * @param event
          * @version Egret 2.4
          * @version eui 1.0
          * @platform Web,Native
+         * @language en_US
          */
         /**
-         * @language zh_CN
          * 视区属性发生改变。
          * @param event
          * @version Egret 2.4
          * @version eui 1.0
          * @platform Web,Native
+         * @language zh_CN
          */
         protected onPropertyChanged(event:eui.PropertyEvent):void{
 
         }
         /**
-         * @language en_US
          * Whether the scrollbar can be autohide.
          * @version Egret 3.0.2
          * @version eui 1.0
          * @platform Web,Native
+         * @language en_US
          */
         /**
-         * @language zh_CN
          * 是否自动隐藏 scrollbar
          * @version Egret 3.0.2
          * @version eui 1.0
          * @platform Web,Native
+         * @language zh_CN
          */
         public autoVisibility:boolean = true;
     }

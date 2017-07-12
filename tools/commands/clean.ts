@@ -5,47 +5,46 @@ import utils = require('../lib/utils');
 import server = require('../server/server');
 import service = require('../service/index');
 import FileUtil = require('../lib/FileUtil');
-import CopyFiles = require('../actions/CopyFiles');
 import CompileProject = require('../actions/CompileProject');
-import CompileTemplate = require('../actions/CompileTemplate');
+import copyNative = require("../actions/CopyNativeFiles");
+import * as EgretProject from '../project/EgretProject';
 
-import NativeProject = require('../actions/NativeProject');
 console.log(utils.tr(1106, 0));
 var timeBuildStart: number = (new Date()).getTime();
 class Clean implements egret.Command {
-    execute(): number {
+    async execute() {
         utils.checkEgret();
 
         var options = egret.args;
-
-        service.execCommand({
-            path: options.projectDir,
-            command: "shutdown",
-            option: egret.args
-        }, null, false);
-
+        service.client.closeServer(options.projectDir);
         utils.clean(options.debugDir);
 
         //刷新libs 中 modules 文件
-        CopyFiles.copyToLibs();
-
+        EgretProject.manager.copyToLibs();
         //编译 bin-debug 文件
         var compileProject = new CompileProject();
         var result = compileProject.compile(options);
         if (!result) {
             return 1;
         }
+        let manifestPath = FileUtil.joinPath(egret.args.projectDir, "manifest.json");
+        let indexPath = FileUtil.joinPath(egret.args.projectDir, "index.html");
+        EgretProject.manager.generateManifest(result.files, manifestPath);
+        if (!EgretProject.data.useTemplate) {
+            EgretProject.manager.modifyIndex(manifestPath, indexPath);
+        }
+        else {
+            FileUtil.copy(FileUtil.joinPath(options.templateDir, "debug", "index.html"), indexPath);
+        }
 
-        //修改 html 中 modules 块
-        //CopyFiles.modifyHTMLWithModules();
-
-        //修改 html 中 game_list 块
-        CompileTemplate.modifyIndexHTML(result.files);
-
-        //根据 index.html 修改 native_require.js 文件，并看情况刷新 native 工程
-        NativeProject.build();
-        var timeBuildEnd: number = (new Date()).getTime();
-        var timeBuildUsed:number = (timeBuildEnd - timeBuildStart)/1000;
+        //拷贝项目到native工程中
+        if (egret.args.runtime == "native") {
+            console.log("----native build-----");
+            EgretProject.manager.modifyNativeRequire(manifestPath);
+            copyNative.refreshNative(true);
+        }
+        var timeBuildEnd = new Date().getTime();
+        var timeBuildUsed = (timeBuildEnd - timeBuildStart) / 1000;
         console.log(utils.tr(1108, timeBuildUsed));
         //Wait for 'shutdown' command, node will exit when there are no tasks.
         return DontExitCode;

@@ -27,7 +27,7 @@
 //
 //////////////////////////////////////////////////////////////////////////////////////
 
-module egret.web {
+namespace egret.web {
 
     /**
      * @private
@@ -65,8 +65,8 @@ module egret.web {
             }
 
             if (this._responseType == "arraybuffer" && /msie 9.0/i.test(navigator.userAgent)){
-                var w:any = window;
-                return w.convertResponseBodyToText(this._xhr.responseBody);
+                let w:any = window;
+                return w.convertResponseBodyToText(this._xhr["responseBody"]);
             }
 
             if (this._responseType == "document") {
@@ -167,7 +167,7 @@ module egret.web {
                 this._xhr.withCredentials = this._withCredentials;
             }
             if (this.headerObj) {
-                for(var key in this.headerObj) {
+                for(let key in this.headerObj) {
                     this._xhr.setRequestHeader(key, this.headerObj[key]);
                 }
             }
@@ -192,7 +192,7 @@ module egret.web {
             if (!this._xhr) {
                 return null;
             }
-            var result = this._xhr.getAllResponseHeaders();
+            let result = this._xhr.getAllResponseHeaders();
             return result ? result : "";
         }
 
@@ -219,7 +219,7 @@ module egret.web {
             if (!this._xhr) {
                 return null;
             }
-            var result = this._xhr.getResponseHeader(header);
+            let result = this._xhr.getResponseHeader(header);
             return result ? result : "";
         }
 
@@ -227,11 +227,11 @@ module egret.web {
          * @private
          */
         private onReadyStateChange():void {
-            var xhr = this._xhr;
+            let xhr = this._xhr;
             if (xhr.readyState == 4) {// 4 = "loaded"
-                var ioError = (xhr.status >= 400 || xhr.status == 0);
-                var url = this._url;
-                var self = this;
+                let ioError = (xhr.status >= 400 || xhr.status == 0);
+                let url = this._url;
+                let self = this;
                 window.setTimeout(function ():void {
                     if (ioError) {//请求错误
                         if (DEBUG && !self.hasEventListener(IOErrorEvent.IO_ERROR)) {
@@ -259,7 +259,4 @@ module egret.web {
     }
     HttpRequest = WebHttpRequest;
 
-    if (DEBUG) {
-        egret.$markReadOnly(WebHttpRequest, "response");
-    }
 }

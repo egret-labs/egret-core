@@ -28,61 +28,61 @@
 //
 //////////////////////////////////////////////////////////////////////////////////////
 
-module egret {
+namespace egret {
 
 	/**
-     * @language en_US
      * TextFieldInputType class is an enumeration of constant value used in setting the inputType property of the TextField class.
      * @version Egret 3.1.2
      * @platform Web,Native
+     * @language en_US
 	 */
 	/**
-     * @language zh_CN
      * TextFieldInputType 类是在设置 TextField 类的 inputType 属性时使用的常数值的枚举。
      * @version Egret 3.1.2
      * @platform Web,Native
+     * @language zh_CN
 	 */
     export class TextFieldInputType {
 
 		/**
-         * @language en_US
          * The default
          * @version Egret 3.1.2
          * @platform Web,Native
+         * @language en_US
 		 */
 		/**
-         * @language zh_CN
          * 默认 input 类型
          * @version Egret 3.1.2
          * @platform Web,Native
+         * @language zh_CN
 		 */
         public static TEXT:string = "text";
 
 		/**
-         * @language en_US
          * Telephone Number Inputs
          * @version Egret 3.1.2
          * @platform Web,Native
+         * @language en_US
 		 */
 		/**
-         * @language zh_CN
          * 电话号码 input 类型
          * @version Egret 3.1.2
          * @platform Web,Native
+         * @language zh_CN
 		 */
         public static TEL:string = "tel";
         
         /**
-         * @language en_US
          * Password Inputs
          * @version Egret 3.1.2
          * @platform Web,Native
+         * @language en_US
 		 */
 		/**
-         * @language zh_CN
          * password 类型
          * @version Egret 3.1.2
          * @platform Web,Native
+         * @language zh_CN
 		 */
         public static PASSWORD:string = "password";
     }

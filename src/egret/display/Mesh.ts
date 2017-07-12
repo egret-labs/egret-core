@@ -27,7 +27,7 @@
 //
 //////////////////////////////////////////////////////////////////////////////////////
 
-module egret {
+namespace egret {
     /**
      * @private
      */
@@ -42,25 +42,25 @@ module egret {
          * @private
          */
         $render(): void {
-            var values = this.$Bitmap;
-            var image = values[sys.BitmapKeys.image];
+            let values = this.$Bitmap;
+            let image = values[sys.BitmapKeys.image];
             if (!image) {
                 return;
             }
 
-            var scale = $TextureScaleFactor;
-            var node = <sys.MeshNode>this.$renderNode;
+            let scale = $TextureScaleFactor;
+            let node = <sys.MeshNode>this.$renderNode;
             node.smoothing = values[sys.BitmapKeys.smoothing];
             node.image = image;
             node.imageWidth = values[sys.BitmapKeys.sourceWidth];
             node.imageHeight = values[sys.BitmapKeys.sourceHeight];
 
-            var destW: number = !isNaN(values[sys.BitmapKeys.explicitBitmapWidth]) ? values[sys.BitmapKeys.explicitBitmapWidth] : values[sys.BitmapKeys.textureWidth];
-            var destH: number = !isNaN(values[sys.BitmapKeys.explicitBitmapHeight]) ? values[sys.BitmapKeys.explicitBitmapHeight] : values[sys.BitmapKeys.textureHeight];
-            var tsX: number = destW / values[sys.BitmapKeys.textureWidth];
-            var tsY: number = destH / values[sys.BitmapKeys.textureHeight];
-            var bitmapWidth: number = values[sys.BitmapKeys.bitmapWidth];
-            var bitmapHeight: number = values[sys.BitmapKeys.bitmapHeight];
+            let destW: number = !isNaN(values[sys.BitmapKeys.explicitBitmapWidth]) ? values[sys.BitmapKeys.explicitBitmapWidth] : values[sys.BitmapKeys.textureWidth];
+            let destH: number = !isNaN(values[sys.BitmapKeys.explicitBitmapHeight]) ? values[sys.BitmapKeys.explicitBitmapHeight] : values[sys.BitmapKeys.textureHeight];
+            let tsX: number = destW / values[sys.BitmapKeys.textureWidth];
+            let tsY: number = destH / values[sys.BitmapKeys.textureHeight];
+            let bitmapWidth: number = values[sys.BitmapKeys.bitmapWidth];
+            let bitmapHeight: number = values[sys.BitmapKeys.bitmapHeight];
 
             node.drawMesh(
                 values[sys.BitmapKeys.bitmapX], values[sys.BitmapKeys.bitmapY],
@@ -89,13 +89,13 @@ module egret {
         $measureContentBounds(bounds: Rectangle): void {
             if (this._verticesDirty) {
                 this._verticesDirty = false;
-                var node = <sys.MeshNode>this.$renderNode;
-                var vertices = node.vertices;
+                let node = <sys.MeshNode>this.$renderNode;
+                let vertices = node.vertices;
                 if (vertices.length) {
                     this._bounds.setTo(Number.MAX_VALUE, Number.MAX_VALUE, Number.MIN_VALUE, Number.MIN_VALUE);
-                    for (var i = 0, l = vertices.length; i < l; i += 2) {
-                        var x = vertices[i];
-                        var y = vertices[i + 1];
+                    for (let i = 0, l = vertices.length; i < l; i += 2) {
+                        let x = vertices[i];
+                        let y = vertices[i + 1];
                         if (this._bounds.x > x) this._bounds.x = x;
                         if (this._bounds.width < x) this._bounds.width = x;
                         if (this._bounds.y > y) this._bounds.y = y;

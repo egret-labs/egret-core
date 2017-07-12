@@ -26,7 +26,6 @@
 //  EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 //
 //////////////////////////////////////////////////////////////////////////////////////
-/// <reference path="../lib/node.d.ts" />
 global["$locale_strings"] = global["$locale_strings"] || {};
 var locale_strings = global["$locale_strings"];
 locale_strings[0] = "Successful implementation";
@@ -35,9 +34,11 @@ locale_strings[3] = "Time: {0} second";
 locale_strings[4] = "Script execution failed";
 locale_strings[5] = "Compile failed";
 locale_strings[6] = "manifest.json generated successfully";
-locale_strings[7] = "Total time for native copy: {0} second",
-    //create
-    locale_strings[1001] = "Enter a project name. Example:  {color_green}egret create [project_name]{color_normal}";
+locale_strings[7] = "Total time for native copy: {0} second";
+locale_strings[8] = "Project modules can not use both gui and eui, and the eui module is recommended";
+locale_strings[1050] = 'Could not find module at ${0}';
+//create
+locale_strings[1001] = "Enter a project name. Example:  {color_green}egret create [project_name]{color_normal}";
 locale_strings[1002] = "The project already exists";
 locale_strings[1003] = "Creating a new project folder ...";
 locale_strings[1004] = "Compiling the project ...";
@@ -60,6 +61,11 @@ locale_strings[1114] = "{0} Copy other documents";
 locale_strings[1115] = "The total elapsed time of the 3rd party libraries: {0} secs";
 locale_strings[1116] = "Not support the compiler option: '{0}' in tsconfig.json.";
 locale_strings[1117] = "Warning! The tsconfig.json is not a valid json.";
+locale_strings[1118] = "The {0} version of the engine was not found and will be replaced with the default version of the engine. Please install the corresponding version engine in EgretEngine.";
+locale_strings[1119] = "Third party library compilation error, you can visit {color_underline} http://developer.egret.com/cn/github/egret-docs/Engine2D/projectConfig/libraryProject/index.html {color_normal} Learn more ";
+locale_strings[1120] = "Egret engine 4.1 use the new structure for third-party library upgrades, please upgrade your third-party library first";
+locale_strings[1121] = "Your module package.json does not contain the 'typings' attribute, which causes the exported module to not have a TypeScript Definition file (.d.ts), and can not contain smart syntax prompts in TypeScript";
+locale_strings[1122] = "Third-party library tsconfig.json must include outFile this attribute";
 //compile
 locale_strings[1301] = "Cannot find egret_file_list.js or game_file_list.js compiled under the path {0}, please check whether the compile path is correct";
 locale_strings[1302] = "Please enter the compile path. Example: {color_green}egret compile --source [your_typescript_source_dir] --output [your_output_dir]{color_normal}";
@@ -96,7 +102,7 @@ locale_strings[1501] = "Unable to start the server, please check the authority o
 //create_app
 locale_strings[1601] = "Please enter a h5 game project name, and mobile platform support library.Example: {color_green}egret create_app [app_name] -f [h5_game_path] -t [template_path] {color_normal} \n If you do not install the latest mobile platform support library,please download from the following address：\nAndroid: http://www.egret-labs.org/download/egret-android-packager-download.html, \niOS:http://www.egret-labs.org/download/egret-ios-packager-download.html";
 locale_strings[1602] = "EgretProperties.json missing or incorrectly formatted.  \n Please upgrade egret-core to the latest version from http://www.egret-labs.org/download/egret-download.html";
-locale_strings[1603] = "create_app.json is missing.\n Please download the latest mobile platform support library from the following address \n Android:  http://www.egret-labs.org/download/egret-android-packager-download.html, \n\tiOS:  http://www.egret-labs.org/download/egret-ios-packager-download.html";
+locale_strings[1603] = "create_app.json is missing in {color_red}{0}{color_normal}.\nPlease download the latest mobile platform support library from the following address \nAndroid:  http://www.egret-labs.org/download/egret-android-packager-download.html\niOS:  http://www.egret-labs.org/download/egret-ios-packager-download.html";
 locale_strings[1604] = "Egret build command execution fails";
 locale_strings[1605] = "Mobile platform project directory cannot be the same one with html5 project directory, please modify the mobile platform project directory.";
 locale_strings[1606] = "Created, total time: {0} second";
@@ -105,10 +111,11 @@ locale_strings[1608] = "> replace all configure elements ...";
 locale_strings[1609] = "> rename project name ...";
 locale_strings[1610] = "Project name is missing. Example:{color_green}egret create_app [app_name] -f [h5_game_path] -t [template_path] {color_normal}";
 locale_strings[1611] = "The project is exist, please use another name.Example:{color_green}egret create_app [app_name] -f [h5_game_path] -t [template_path] {color_normal}";
+locale_strings[1612] = "The first letter of the project name must be a-z";
 //upgrade
 locale_strings[1701] = "Project version is lower than egret version, please implement egret upgrade {your_project} command to upgrade your project, \n do not add braces {} in the commands";
 locale_strings[1702] = "Upgrade successful";
-locale_strings[1703] = "\n After the first step to upgrade is completed, {color_red} press {color_underline}https://github.com/egret-labs/egret-core/wiki/Egret_Upgrade/upgrade/index.html{color_red} to complete the remaining steps to upgrade {color_normal}\n";
+locale_strings[1703] = "Upgrade script completed . Please check {color_underline}{0}{color_normal} for details";
 locale_strings[1704] = "Updating to {0}";
 locale_strings[1705] = "Update error，pleaet check engine and files and rerun";
 locale_strings[1706] = "Total {color_red}{0}{color_normal} API conflicts,please edit your project then rerun command command";
@@ -153,6 +160,18 @@ locale_strings[2019] = "{0}: error the container’s child item must be visible 
 locale_strings[2020] = "{0}: error error for child nodes in w: Declarations, the includeIn and excludeFrom properties are not allowed to use \n {1}";
 locale_strings[2102] = "{0}: warning no child node can be found on the property code \n {1}";
 locale_strings[2103] = "{0}: warning the same property '{1}' on the node is assigned multiple times \n {2}";
+// android sdk install
+locale_strings[2201] = "{0} file(s) will be downloaded!";
+locale_strings[2202] = "The total size is {0}MB";
+locale_strings[2203] = "Start to download!";
+locale_strings[2204] = "{0} downloaded successfully!";
+locale_strings[2205] = "This file size is {0}MB";
+locale_strings[2206] = "All files are downloaded successfully!";
+locale_strings[2207] = "{0} file(s) will be unzipped and installed!";
+locale_strings[2208] = "Start to unzip and install!";
+locale_strings[2209] = "{0} unzipped and installed successfully!";
+locale_strings[2210] = "All files are unzipped and installed successfully!";
+locale_strings[2211] = "Android SDK installed successfully!";
 locale_strings[8001] = "please input value of the command option {color_green} {0} {color_normal},and it must be one of these: {color_green}[{1}]{color_normal}";
 locale_strings[8002] = "{color_red}Please choose the Egret project folder{color_normal}\n\tEgret_Project\t\t{color_gray}//project folder{color_normal}\n\t\t--launcher\t{color_gray}//launcher folder{color_normal}\n\t\t--src\t\t{color_gray}//source code folder{color_normal}";
 locale_strings[8003] = "The file {0} not exist";
@@ -247,4 +266,5 @@ var helpModule;
         "apitest": "Check the api was replaced or not after upgrade engine. Only for the 2.4(or before) upgrade to 2.5(or later).Use this command in 2.5(or later) project"
     };
     global["helpModule"] = global["helpModule"] || helpModule;
+    //global["helpModule"]["help_dict"] = help_dict;
 })(helpModule || (helpModule = {}));

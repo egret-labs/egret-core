@@ -1,6 +1,6 @@
 /// <reference path="../lib/types.d.ts" />
-var file = require('../lib/FileUtil');
-var exmlc = require('../lib/exml/exmlc');
+var file = require("../lib/FileUtil");
+var exmlc = require("../lib/exml/exmlc");
 function beforeBuild() {
     //todo move to upgrade
     var oldPath = file.joinPath(egret.args.srcDir, "libs", "exml.g.d.ts");
@@ -92,6 +92,10 @@ function afterBuildChanges(exmlsChanged) {
     generateExmlDTS();
 }
 exports.afterBuildChanges = afterBuildChanges;
+function updateSetting(merge) {
+    if (merge === void 0) { merge = false; }
+}
+exports.updateSetting = updateSetting;
 function generateExmlDTS() {
     var srcPath = egret.args.srcDir;
     var projectPath = egret.args.projectDir;

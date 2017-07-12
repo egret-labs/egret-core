@@ -27,26 +27,26 @@
 //
 //////////////////////////////////////////////////////////////////////////////////////
 
-module eui.sys {
+namespace eui.sys {
 
     /**
      * @private
      * EUI 命名空间
      */
-    export var NS_S:string = "http://ns.egret.com/eui";
+    export let NS_S:string = "http://ns.egret.com/eui";
     /**
      * @private
      * Wing命名空间
      */
-    export var NS_W:string = "http://ns.egret.com/wing";
-    var coreClasses:string[] = ["Point","Matrix","Rectangle"];
-    var basicTypes:string[] = ["Array", "boolean", "string", "number"];
+    export let NS_W:string = "http://ns.egret.com/wing";
+    let coreClasses:string[] = ["Point","Matrix","Rectangle"];
+    let basicTypes:string[] = ["Array", "boolean", "string", "number"];
 
-    var MODULE_NAME = "eui.";
+    let MODULE_NAME = "eui.";
 
-    var hashCount = 0;
+    let hashCount = 0;
 
-    var properties: any = {};
+    let properties: any = {};
 
     /**
      * @private
@@ -60,11 +60,11 @@ module eui.sys {
             if (!instance) {
                 return null;
             }
-            var prototype = Object.getPrototypeOf(instance);
+            let prototype = Object.getPrototypeOf(instance);
             if (!prototype) {
                 return null;
             }
-            var info:any;
+            let info:any;
             if(prototype.hasOwnProperty("__hashCode__")){
 
                 info = properties[prototype.__hashCode__];
@@ -73,15 +73,15 @@ module eui.sys {
                 }
             }
 
-            var superProto = Object.getPrototypeOf(prototype);
+            let superProto = Object.getPrototypeOf(prototype);
             if (!superProto) {
                 return null;
             }
 
-            var superInstance = getInstanceOf(superProto.constructor);
-            var superInfo = this.$describe(superInstance);
+            let superInstance = getInstanceOf(superProto.constructor);
+            let superInfo = this.$describe(superInstance);
             if (superInfo) {
-                function factory():void {
+                let factory = function():void {
                 }
 
                 factory.prototype = superInfo;
@@ -93,15 +93,15 @@ module eui.sys {
             if(DEBUG){
                 info.__class__ = prototype.constructor.name;
             }
-            var keys = Object.keys(prototype).concat(Object.keys(instance));
-            var length = keys.length;
-            var meta = instance.__meta__;
-            for (var i = 0; i < length; i++) {
-                var key = keys[i];
+            let keys = Object.keys(prototype).concat(Object.keys(instance));
+            let length = keys.length;
+            let meta = instance.__meta__;
+            for (let i = 0; i < length; i++) {
+                let key = keys[i];
                 if (key == "constructor" || key.charAt(0) == "_" || key.charAt(0) == "$") {
                     continue;
                 }
-                var resultType:string;
+                let resultType:string;
                 if (meta && meta[key]) {
                     resultType = meta[key];
                 }
@@ -142,7 +142,7 @@ module eui.sys {
                 }
             }
 
-            var name:string = "";
+            let name:string = "";
             if (basicTypes.indexOf(id) != -1) {
                 return id;
             }
@@ -169,9 +169,9 @@ module eui.sys {
          * @return 默认属性名
          */
         public getDefaultPropById(id:string, ns:string):string {
-            var className:string = this.getClassNameById(id, ns);
-            var prototype = getPrototypeOf(className);
-            var property:string;
+            let className:string = this.getClassNameById(id, ns);
+            let prototype = getPrototypeOf(className);
+            let property:string;
             if (prototype) {
                 property = prototype.__defaultProperty__;
             }
@@ -188,12 +188,12 @@ module eui.sys {
             if (className == "Object") {
                 return "any";
             }
-            var resultType:string = "";
-            var prototype = getPrototypeOf(className);
+            let resultType:string = "";
+            let prototype = getPrototypeOf(className);
             if (prototype) {
                 if (!prototype.hasOwnProperty("__hashCode__")) {
-                    var clazz = egret.getDefinitionByName(className);
-                    var instance = getInstanceOf(clazz);
+                    let clazz = egret.getDefinitionByName(className);
+                    let instance = getInstanceOf(clazz);
                     if (!instance) {
                         if (DEBUG) {
                             egret.$warn(2104, className);
@@ -202,7 +202,7 @@ module eui.sys {
                     }
                     this.$describe(instance);
                 }
-                var info = properties[prototype.__hashCode__];
+                let info = properties[prototype.__hashCode__];
                 if (info) {
                     resultType = info[property];
                 }
@@ -224,7 +224,7 @@ module eui.sys {
      * 获取一个类名对应的prototype引用
      */
     function getPrototypeOf(className:string):any {
-        var clazz = egret.getDefinitionByName(className);
+        let clazz = egret.getDefinitionByName(className);
         if (!clazz) {
             return null;
         }
@@ -239,16 +239,17 @@ module eui.sys {
         if (!clazz) {
             return null;
         }
+        let instance:any;
         if(DEBUG){
             try {
-                var instance = new clazz();
+                instance = new clazz();
             }
             catch (e) {
                 egret.error(e);
                 return null;
             }
         }else{
-            var instance = new clazz();
+            instance = new clazz();
         }
 
         return instance;

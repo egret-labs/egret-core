@@ -1,5 +1,5 @@
-var FS = require('fs');
-var file = require('../lib/FileUtil');
+var FS = require("fs");
+var file = require("../lib/FileUtil");
 var DirectoryState = (function () {
     function DirectoryState() {
     }

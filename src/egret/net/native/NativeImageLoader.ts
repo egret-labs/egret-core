@@ -27,7 +27,7 @@
 //
 //////////////////////////////////////////////////////////////////////////////////////
 
-module egret.native {
+namespace egret.native {
 
     /**
      * @private
@@ -72,7 +72,7 @@ module egret.native {
         }
 
         private check(url:string):void {
-            var self = this;
+            let self = this;
             if (self.isNetUrl(url)) {//网络请求
                 self.download(url);
             }
@@ -85,8 +85,8 @@ module egret.native {
         }
 
         private download(url:string):void {
-            var self = this;
-            var promise = egret.PromiseObject.create();
+            let self = this;
+            let promise = egret.PromiseObject.create();
             promise.onSuccessFunc = function () {
                 self.loadTexture(url);
             };
@@ -97,8 +97,8 @@ module egret.native {
         }
 
         private loadTexture(url:string):void {
-            var self = this;
-            var promise = new egret.PromiseObject();
+            let self = this;
+            let promise = new egret.PromiseObject();
             promise.onSuccessFunc = function (bitmapData) {
                 self.data = new egret.BitmapData(bitmapData);
 
@@ -117,7 +117,7 @@ module egret.native {
          * @returns {boolean}
          */
         private isNetUrl(url:string):boolean {
-            return url.indexOf("http://") != -1 || url.indexOf("HTTP://") != -1;
+            return url.indexOf("http://") != -1 || url.indexOf("HTTP://") != -1 || url.indexOf("https://") != -1 || url.indexOf("HTTPS://") != -1;
         }
     }
 

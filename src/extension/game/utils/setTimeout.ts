@@ -27,15 +27,14 @@
 //
 //////////////////////////////////////////////////////////////////////////////////////
 
-module egret {
+namespace egret {
 
-    var setTimeoutCache:any = {};
-    var setTimeoutIndex:number = 0;
+    let setTimeoutCache: any = {};
+    let setTimeoutIndex: number = 0;
 
-    var setTimeoutCount:number = 0;
-    var lastTime:number = 0;
+    let setTimeoutCount: number = 0;
+    let lastTime: number = 0;
     /**
-     * @language en_US
      * Run the designated function in specified delay (in milliseconds).
      * @param listener {Function} Listener function
      * @param thisObject {any} this object
@@ -45,9 +44,9 @@ module egret {
      * @version Egret 2.4
      * @platform Web,Native
      * @includeExample extension/game/utils/setTimeout.ts
+     * @language en_US
      */
     /**
-     * @language zh_CN
      * 在指定的延迟（以毫秒为单位）后运行指定的函数。
      * @param listener {Function} 侦听函数
      * @param thisObject {any} this对象
@@ -57,14 +56,15 @@ module egret {
      * @version Egret 2.4
      * @platform Web,Native
      * @includeExample extension/game/utils/setTimeout.ts
+     * @language zh_CN
      */
-    export function setTimeout(listener:Function, thisObject:any, delay:number, ...args):number {
-        var data = {listener: listener, thisObject: thisObject, delay: delay, params: args};
+    export function setTimeout<Z>(listener: (this: Z, ...arg) => void, thisObject: Z, delay: number, ...args): number {
+        let data = { listener, thisObject, delay: delay, params: args };
 
         setTimeoutCount++;
-        if (setTimeoutCount == 1 && sys.$ticker) {
+        if (setTimeoutCount == 1 && ticker) {
             lastTime = egret.getTimer();
-            sys.$ticker.$startTick(timeoutUpdate, null);
+            ticker.$startTick(timeoutUpdate, null);
         }
 
         setTimeoutIndex++;
@@ -73,26 +73,26 @@ module egret {
     }
 
     /**
-     * @language en_US
      * Function run after the specified delay is cleared.
      * @param key {number} Index that egret.setTimeout returns
      * @version Egret 2.4
      * @platform Web,Native
+     * @language en_US
      */
     /**
-     * @language zh_CN
      * 清除指定延迟后运行的函数。
      * @param key {number} egret.setTimeout所返回的索引
      * @version Egret 2.4
      * @platform Web,Native
+     * @language zh_CN
      */
-    export function clearTimeout(key:number):void {
+    export function clearTimeout(key: number): void {
         if (setTimeoutCache[key]) {
             setTimeoutCount--;
             delete setTimeoutCache[key];
 
-            if (setTimeoutCount == 0 && sys.$ticker) {
-                sys.$ticker.$stopTick(timeoutUpdate, null);
+            if (setTimeoutCount == 0 && ticker) {
+                ticker.$stopTick(timeoutUpdate, null);
             }
         }
 
@@ -103,13 +103,13 @@ module egret {
      * 
      * @param dt 
      */
-    function timeoutUpdate(timeStamp:number):boolean {
-        var dt:number = timeStamp - lastTime;
+    function timeoutUpdate(timeStamp: number): boolean {
+        let dt: number = timeStamp - lastTime;
         lastTime = timeStamp;
 
-        for (var key in setTimeoutCache) {
-            var key2:any = key;
-            var data = setTimeoutCache[key2];
+        for (let key in setTimeoutCache) {
+            let key2: any = key;
+            let data = setTimeoutCache[key2];
             data.delay -= dt;
             if (data.delay <= 0) {
                 data.listener.apply(data.thisObject, data.params);

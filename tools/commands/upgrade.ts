@@ -1,146 +1,183 @@
-/**
- * Created by yanjiaqi on 15/9/7.
- */
-/// <reference path="../lib/types.d.ts" />
-/// <reference path="../lib/async/async.d.ts" />
-
-
-//import params = require("../ParamsParser");
 import file = require('../lib/FileUtil');
-import async = require('../lib/async/async');
 import service = require('../service/index');
-//import config = require('../lib/ProjectConfig');
-//import globals = require("../Globals");
+import Project = require('../project/EgretProject');
+import path = require('path');
+import utils = require('../lib/utils')
+import modify = require("./upgrade/ModifyProperties");
+import doT = require('../lib/doT');
+import projectAction = require('../actions/Project');
+
+type VersionInfo = {
+
+    v: string,
+    command?: { new (): egret.Command }
+}
 
 class UpgradeCommand implements egret.Command {
 
-    isAsync:boolean;
-    constructor(){
-        //升级命令是一个异步命令 内含异步控制流程
-        this.isAsync = true;
+    constructor() {
     }
 
-    execute():number {
+    execute(): number {
+
+        utils.checkEgret();
         this.run();
-        return 0;
+        return DontExitCode
     }
 
-    private run() {
-        //var currDir = params.getProjectRoot();
-
-        //var config = require("../core/projectConfig.js");
-        //config.init(currDir);
-        var version = egret.args.properties.getVersion();
+    private async run() {
+        var version = Project.data.getVersion();
         if (!version) {
             version = "1.0.0";
         }
-        var modify = require("./upgrade/ModifyProperties");
-        async.eachSeries(this.upgradeConfigArr,function(info,callback){
 
-            function handleCallBack(err?:string){
-                if(!err){
-                    modify.save(v);
-                    callback();
-                }else{
-                    callback({name:"",message:err});
-                }
-            }
 
-            var v = info["v"];
-            var command;
-            if(info["command"]) {
-                command = new info["command"]();
-            }
+        let upgradeConfigArr: VersionInfo[] = [
+            { "v": "4.0.1", command: Upgrade_4_0_1 },
+            { "v": "4.0.3" },
+            { "v": "4.1.0", command: Upgrade_4_1_0 },
+            { "v": "5.0.0" },
+            { "v": "5.0.1", command: Upgrade_5_0_1 },
+            { "v": "5.0.2" }
+        ];
 
-            var result = globals.compressVersion(version, v);
+        try {
+            modify.initProperties();
+            await series(upgrade, upgradeConfigArr.concat())
+            modify.save(upgradeConfigArr.pop().v);
+            globals.log(1702);
+            await service.client.closeServer(Project.data.getProjectRoot())
+            globals.exit(0);
+        }
+        catch (e) {
+            console.log("升级中断，具体原因如下")
+            console.log(e)
+            globals.exit(1705);
+        }
+    }
+}
 
-            if (result < 0) {
-                globals.log(1704, v);
-                if(!command){
-                    handleCallBack();
-                }else
-                if(command.isAsync){
-                    command.execute(handleCallBack);
-                }else{
-                    var upgradeCommandError = command.execute();
-                    if(upgradeCommandError != 0){
-                        handleCallBack('升级中断');
-                    }else{
-                        handleCallBack();
-                    }
-                }
-            }else{
-                callback();
-            }
-        },function(error){
-            if(error){
-                globals.exit(1705);
-            }else{
-                service.execCommand({
-                    path: egret.args.projectDir,
-                    command: "shutdown",
-                    option: egret.args
-                }, () => {
-                    globals.log(1702);
-                    return globals.exit(0);
-                }, true);
-            }
-        });
 
-        //for (var i = 0; i < this.upgradeConfigArr.length; i++) {
-        //    var info = this.upgradeConfigArr[i];
-        //    var v = info["v"];
-        //    var command = new info["command"]();
-        //
-        //    var result = globals.compressVersion(version, v);
-        //    if (result < 0) {
-        //        globals.log(1704, v);
-        //        var upgradeCommandError = 0;
-        //        if (command) {
-        //            upgradeCommandError = command.execute();
-        //        }
-        //        if (!upgradeCommandError){
-        //            modify.save(v);
-        //        }
-        //    }
-        //}
-        //
-        //globals.exit(1702);
+let series = <T>(cb: (data: T, index?: number, result?: any) => PromiseLike<number>, arr: T[]) => {
+
+    let parallel = 1;
+
+    // allow default parallel count of 1 if array
+    // passed as second param (this a good idea?)
+    if (Array.isArray(parallel)) {
+        arr = parallel;
+        parallel = 1;
     }
 
-    private upgradeConfigArr = [
-        //todo
-        {"v": "1.0.3", "command": require("./upgrade/UpgradeCommand_1_0_3")},
-        {"v": "1.0.4", "command": require("./upgrade/UpgradeCommand_1_0_4")},
-        {"v": "1.0.5", "command": require("./upgrade/UpgradeCommand_1_0_5")},
-        //{"v" : "1.0.6"},
-        {"v": "1.1.0", "command": require("./upgrade/UpgradeCommand_1_1_0")},
-        //{"v" : "1.1.1"},
-        //{"v" : "1.1.2"},
-        //{"v" : "1.1.3"},
-        //{"v" : "1.1.4"},
-        {"v": "1.5.0", "command": require("./upgrade/UpgradeCommand_1_5_0")},
-        {"v": "1.5.1", "command": require("./upgrade/UpgradeCommand_1_5_1")},
-        {"v": "1.5.2", "command": require("./upgrade/UpgradeCommand_1_5_2")},
-        //{"v" : "1.5.3"},
-        //{"v" : "1.5.4"},
-        {"v": "1.5.5", "command": require("./upgrade/UpgradeCommand_1_5_5")},
-        //{"v" : "1.6.0"},
-        //{"v" : "1.6.1"},
-        //{"v" : "1.6.2"},
-        //{"v" : "1.7.0"},
-        //{"v" : "1.7.1"},
-        //{"v": "1.7.2"},
-        {"v": "1.7.3", "command": require("./upgrade/UpgradeCommand_1_7_3")},
-        //{"v": "2.0.0"},
-        //{"v": "2.0.1"},
-        //{"v": "2.0.2"},
-        //{"v": "2.4.0"},
-        //{"v": "2.4.1"},
-        {"v": "2.5.0", "command": require("./upgrade/UpgradeCommand_2_4_3")},
-        {"v": "2.5.1", "command": require("./upgrade/UpgradeCommand_2_5_1")},
-        {"v": "3.1.8"}
-    ];
+    const results = [];
+    const promises = [];
+
+    for (var i = 0; i < parallel; i++)
+        promises.push(Promise.resolve());
+
+    arr.forEach((item, ix) => {
+
+        const position = ix % parallel;
+        const promise = promises[position];
+
+        promises[position] = promise.then(() => {
+            return Promise.resolve(cb(item, ix, results))
+                .then(res => results.push(res));
+        });
+    });
+
+    return Promise.all(promises)
+        .then(() => results);
+}
+
+function upgrade(info: VersionInfo) {
+    var version = Project.data.getVersion();
+    var v = info.v;
+    var command: egret.Command;
+    if (info.command) {
+        command = new info.command();
+    }
+    var result = globals.compressVersion(version, v);
+    if (result < 0) {
+        globals.log(1704, v);
+        if (!command) {
+            return Promise.resolve(0);
+        } else {
+            var commandPromise = command.execute();
+            if (typeof commandPromise == 'number') {
+                console.error('internal error !!!')
+            }
+            else {
+                return commandPromise;
+            }
+
+        }
+
+    } else {
+        return Promise.resolve(0)
+    }
+}
+
+
+class Upgrade_4_0_1 {
+
+
+    async execute() {
+
+        let tsconfigPath = Project.data.getFilePath('tsconfig.json');
+        if (!file.exists(tsconfigPath)) {
+            let source = file.joinPath(egret.root, "tools/templates/empty/tsconfig.json");
+            let target = Project.data.getFilePath("tsconfig.json")
+            file.copy(source, target);
+        }
+        let tsconfigContent = file.read(tsconfigPath);
+        let tsconfig = JSON.parse(tsconfigContent);
+        let needLibs = [
+            "es5", "dom", "es2015.promise"
+        ];
+        if (!tsconfig.compilerOptions.lib) {
+            tsconfig.compilerOptions.lib = [];
+        }
+        needLibs.forEach(lib => {
+            if (tsconfig.compilerOptions.lib.indexOf(lib) == -1) {
+                tsconfig.compilerOptions.lib.push(lib);
+            }
+        })
+        tsconfigContent = JSON.stringify(tsconfig, null, "\t");
+        file.save(tsconfigPath, tsconfigContent);
+        file.copy(path.join(egret.root, 'tools/templates/empty/polyfill'), Project.data.getFilePath('polyfill'));
+
+        globals.log(1703, "https://github.com/egret-labs/egret-core/tree/master/docs/cn/release-note/4.0.1")
+
+        return 0;
+    }
+}
+
+class Upgrade_4_1_0 {
+    /**
+     * 将用户的系统内置模块添加 path 字段，并指向老版本的模块，而非新版本模块
+     */
+    async execute() {
+        modify.upgradeModulePath();
+        globals.log(1703, "https://github.com/egret-labs/egret-core/tree/master/docs/cn/release-note/4.1.0")
+        return 0;
+    }
+}
+
+class Upgrade_5_0_1 {
+    async execute() {
+        let options = egret.args;
+        if (file.exists(file.joinPath(options.projectDir, "polyfill"))) {
+            file.rename(file.joinPath(options.projectDir, "polyfill"), file.joinPath(options.projectDir, "promise"));
+            let jsonPath = file.joinPath(options.projectDir, "egretProperties.json");
+            let json = JSON.parse(file.read(jsonPath));
+            let modules = json.modules;
+            modules.push({ name: "promise", path: "./promise" });
+            file.save(jsonPath, JSON.stringify(json, undefined, "\t"));
+            modify.initProperties();
+        }
+        return 0;
+    }
 }
 
 export = UpgradeCommand;

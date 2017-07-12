@@ -27,144 +27,144 @@
 //
 //////////////////////////////////////////////////////////////////////////////////////
 
-module RES {
+namespace RES {
 
 	/**
-	 * @language en_US
 	 * Resource term. One of the resources arrays in resource.json.
 	 * @version Egret 2.4
 	 * @platform Web,Native
+	 * @language en_US
 	 */
 	/**
-	 * @language zh_CN
 	 * 资源项。对应 resource.json 中 resources 数组中的一项。
 	 * @version Egret 2.4
 	 * @platform Web,Native
+	 * @language zh_CN
 	 */
 	export class ResourceItem{
 
 		/**
-		 * @language en_US
 		 * XML file.
 		 * @version Egret 2.4
 		 * @platform Web,Native
+		 * @language en_US
 		 */
 		/**
-		 * @language zh_CN
 		 * XML 文件。
 		 * @version Egret 2.4
 		 * @platform Web,Native
+		 * @language zh_CN
 		 */
 		public static TYPE_XML:string = "xml";
 		/**
-		 * @language en_US
 		 * Picture file.
 		 * @version Egret 2.4
 		 * @platform Web,Native
+		 * @language en_US
 		 */
 		/**
-		 * @language zh_CN
 		 * 图片文件。
 		 * @version Egret 2.4
 		 * @platform Web,Native
+		 * @language zh_CN
 		 */
 		public static TYPE_IMAGE:string = "image";
 		/**
-		 * @language en_US
 		 * Binary file.
 		 * @version Egret 2.4
 		 * @platform Web
+		 * @language en_US
 		 */
 		/**
-		 * @language zh_CN
 		 * 二进制文件。
 		 * @version Egret 2.4
 		 * @platform Web
+		 * @language zh_CN
 		 */
 		public static TYPE_BIN:string = "bin";
 		/**
-		 * @language en_US
 		 * Text file.
 		 * @version Egret 2.4
 		 * @platform Web,Native
+		 * @language en_US
 		 */
 		/**
-		 * @language zh_CN
 		 * 文本文件。
 		 * @version Egret 2.4
 		 * @platform Web,Native
+		 * @language zh_CN
 		 */
 		public static TYPE_TEXT:string = "text";
 		/**
-		 * @language en_US
 		 * JSON file.
 		 * @version Egret 2.4
 		 * @platform Web,Native
+		 * @language en_US
 		 */
 		/**
-		 * @language zh_CN
 		 * JSON 文件。
 		 * @version Egret 2.4
 		 * @platform Web,Native
+		 * @language zh_CN
 		 */
         public static TYPE_JSON:string = "json";
 		/**
-		 * @language en_US
 		 * SpriteSheet file.
 		 * @version Egret 2.4
 		 * @platform Web,Native
+		 * @language en_US
 		 */
 		/**
-		 * @language zh_CN
 		 * SpriteSheet 文件。
 		 * @version Egret 2.4
 		 * @platform Web,Native
+		 * @language zh_CN
 		 */
         public static TYPE_SHEET:string = "sheet";
 		/**
-		 * @language en_US
 		 * BitmapTextSpriteSheet file.
 		 * @version Egret 2.4
 		 * @platform Web,Native
+		 * @language en_US
 		 */
 		/**
-		 * @language zh_CN
 		 * BitmapTextSpriteSheet 文件。
 		 * @version Egret 2.4
 		 * @platform Web,Native
+		 * @language zh_CN
 		 */
         public static TYPE_FONT:string = "font";
 		/**
-		 * @language en_US
 		 * Sound file.
 		 * @version Egret 2.4
 		 * @platform Web,Native
+		 * @language en_US
 		 */
 		/**
-		 * @language zh_CN
 		 * 声音文件。
 		 * @version Egret 2.4
 		 * @platform Web,Native
+		 * @language zh_CN
 		 */
         public static TYPE_SOUND:string = "sound";
 
 		/**
-		 * @language en_US
 		 * Constructor.
 		 * @param name Name of resource term.
 		 * @param url URL of resource term.
 		 * @param type Type of resource term.
 		 * @version Egret 2.4
 		 * @platform Web,Native
+		 * @language en_US
 		 */
 		/**
-		 * @language zh_CN
 		 * 构造函数。
 		 * @param name 加载项名称。
 		 * @param url 要加载的文件地址。
 		 * @param type 加载项文件类型。
 		 * @version Egret 2.4
 		 * @platform Web,Native
+		 * @language zh_CN
 		 */
 		public constructor(name:string,url:string,type:string){
 			this.name = name;
@@ -173,84 +173,84 @@ module RES {
 		}
 
 		/**
-		 * @language en_US
 		 * Name of resource term.
 		 * @version Egret 2.4
 		 * @platform Web,Native
+		 * @language en_US
 		 */
 		/**
-		 * @language zh_CN
 		 * 加载项名称。
 		 * @version Egret 2.4
 		 * @platform Web,Native
+		 * @language zh_CN
 		 */
 		public name:string;
 		/**
-		 * @language en_US
 		 * URL of resource term.
 		 * @version Egret 2.4
 		 * @platform Web,Native
+		 * @language en_US
 		 */
 		/**
-		 * @language zh_CN
 		 * 要加载的文件地址。
 		 * @version Egret 2.4
 		 * @platform Web,Native
+		 * @language zh_CN
 		 */
 		public url:string;
 		/**
-		 * @language en_US
 		 * Type of resource term.
 		 * @version Egret 2.4
 		 * @platform Web,Native
+		 * @language en_US
 		 */
 		/**
-		 * @language zh_CN
 		 * 加载项文件类型。
 		 * @version Egret 2.4
 		 * @platform Web,Native
+		 * @language zh_CN
 		 */
 		public type:string;
 
 		/**
-		 * @language en_US
 		 * Name of the resource term group.
 		 * @version Egret 2.4
 		 * @platform Web,Native
+		 * @language en_US
 		 */
 		/**
-		 * @language zh_CN
 		 * 资源所属的组名。
 		 * @version Egret 2.4
 		 * @platform Web,Native
+		 * @language zh_CN
 		 */
 		public groupName:string = "";
 		/**
-		 * @language en_US
 		 * The raw data object to be referenced.
 		 * @version Egret 2.4
 		 * @platform Web,Native
+		 * @language en_US
 		 */
 		/**
-		 * @language zh_CN
 		 * 被引用的原始数据对象。
 		 * @version Egret 2.4
 		 * @platform Web,Native
+		 * @language zh_CN
 		 */
 		public data:any = null;
 		
 		private _loaded:boolean = false;
 		/**
-		 * @language en_US
 		 * Load complete flag.
 		 * @version Egret 2.4
 		 * @platform Web,Native
+		 * @language en_US
 		 */
 		/**
-		 * @language zh_CN
 		 * 加载完成的标志。
 		 * @version Egret 2.4
 		 * @platform Web,Native
+		 * @language zh_CN
 		 */
 		public get loaded():boolean{
 			return this.data?this.data.loaded:this._loaded;
@@ -263,16 +263,16 @@ module RES {
 		}
 
 		/**
-		 * @language en_US
 		 * Turn into a string.
 		 * @version Egret 2.4
 		 * @platform Web,Native
+		 * @language en_US
 		 */
 		/**
-		 * @language zh_CN
 		 * 转成字符串。
 		 * @version Egret 2.4
 		 * @platform Web,Native
+		 * @language zh_CN
 		 */
 		public toString():string{
 			return "[ResourceItem name=\""+this.name+"\" url=\""+this.url+"\" type=\""+this.type+"\"]";

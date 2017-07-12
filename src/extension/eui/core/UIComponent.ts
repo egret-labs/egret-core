@@ -29,10 +29,33 @@
 
 /// <reference path="Validator.ts" />
 
-module eui {
+namespace eui {
+
+
+
+    export function getAssets(source: string, callback: (content: any) => void) {
+        let adapter: IAssetAdapter = egret.getImplementation("eui.IAssetAdapter");
+        if (!adapter) {
+            adapter = new DefaultAssetAdapter();
+        }
+        adapter.getAsset(source, content => {
+            callback(content);
+        }, this);
+    }
+
+    export function getTheme(source: string, callback: (content: any) => void) {
+
+        let adapter: IThemeAdapter = egret.getImplementation("eui.IThemeAdapter");
+        if (!adapter) {
+            adapter = new DefaultThemeAdapter();
+        }
+        adapter.getTheme(source, (data) => {
+            callback(data)
+        }, (e) => { console.log(e) }, this);
+
+    }
 
     /**
-     * @language en_US
      * The UIComponent class is the base class for all visual components, both skinnable and nonskinnable.
      *
      * @event egret.Event.RESIZE Dispatch when the component is resized.
@@ -43,10 +66,10 @@ module eui {
      * @version Egret 2.4
      * @version eui 1.0
      * @platform Web,Native
+     * @language en_US
      */
 
     /**
-     * @language zh_CN
      * UIComponent 类是所有可视组件（可定制皮肤和不可定制皮肤）的基类。
      *
      * @event egret.Event.RESIZE 当UI组件的尺寸发生改变时调度
@@ -56,6 +79,7 @@ module eui {
      * @version Egret 2.4
      * @version eui 1.0
      * @platform Web,Native
+     * @language zh_CN
      */
 
     export interface UIComponent extends egret.DisplayObject {
@@ -95,15 +119,14 @@ module eui {
         /**
          * @private
          */
-        $UIComponent:Object;
+        $UIComponent: Object;
 
         /**
          * @private
          */
-        $includeInLayout:boolean;
+        $includeInLayout: boolean;
 
         /**
-         * @language en_US
          * Specifies whether this component is included in the layout of the
          * parent container.
          * If <code>false</code>, the object size and position are not affected by its parent container's
@@ -115,9 +138,9 @@ module eui {
          * @version Egret 2.4
          * @version eui 1.0
          * @platform Web,Native
+         * @language en_US
          */
         /**
-         * @language zh_CN
          * 指定此组件是否包含在父容器的布局中。若为false，则父级容器在测量和布局阶段都忽略此组件。
          * 注意，visible属性与此属性不同，设置visible为false，父级容器仍会对其布局。
          *
@@ -126,10 +149,10 @@ module eui {
          * @version Egret 2.4
          * @version eui 1.0
          * @platform Web,Native
+         * @language zh_CN
          */
-        includeInLayout:boolean;
+        includeInLayout: boolean;
         /**
-         * @language en_US
          * The horizontal distance in pixels from the left edge of the component to the
          * anchor target's left edge.
          *
@@ -138,9 +161,9 @@ module eui {
          * @version Egret 2.4
          * @version eui 1.0
          * @platform Web,Native
+         * @language en_US
          */
         /**
-         * @language zh_CN
          * 距父级容器离左边距离。
          *
          * @default NaN
@@ -148,11 +171,11 @@ module eui {
          * @version Egret 2.4
          * @version eui 1.0
          * @platform Web,Native
+         * @language zh_CN
          */
-        left:any;
+        left: any;
 
         /**
-         * @language en_US
          * The horizontal distance in pixels from the right edge of the component to the
          * anchor target's right edge.
          *
@@ -161,9 +184,9 @@ module eui {
          * @version Egret 2.4
          * @version eui 1.0
          * @platform Web,Native
+         * @language en_US
          */
         /**
-         * @language zh_CN
          * 距父级容器右边距离。
          *
          * @default NaN
@@ -171,11 +194,11 @@ module eui {
          * @version Egret 2.4
          * @version eui 1.0
          * @platform Web,Native
+         * @language zh_CN
          */
-        right:any;
+        right: any;
 
         /**
-         * @language en_US
          * The vertical distance in pixels from the top edge of the component to the
          * anchor target's top edge.
          *
@@ -184,9 +207,9 @@ module eui {
          * @version Egret 2.4
          * @version eui 1.0
          * @platform Web,Native
+         * @language en_US
          */
         /**
-         * @language zh_CN
          * 距父级容器顶部距离。
          *
          * @default NaN
@@ -194,11 +217,11 @@ module eui {
          * @version Egret 2.4
          * @version eui 1.0
          * @platform Web,Native
+         * @language zh_CN
          */
-        top:any;
+        top: any;
 
         /**
-         * @language en_US
          * The vertical distance in pixels from the bottom edge of the component to the
          * anchor target's bottom edge.
          *
@@ -207,9 +230,9 @@ module eui {
          * @version Egret 2.4
          * @version eui 1.0
          * @platform Web,Native
+         * @language en_US
          */
         /**
-         * @language zh_CN
          * 距父级容器底部距离。
          *
          * @default NaN
@@ -217,11 +240,11 @@ module eui {
          * @version Egret 2.4
          * @version eui 1.0
          * @platform Web,Native
+         * @language zh_CN
          */
-        bottom:any;
+        bottom: any;
 
         /**
-         * @language en_US
          * The horizontal distance in pixels from the center of the component to the
          * center of the anchor target's content area.
          *
@@ -230,9 +253,9 @@ module eui {
          * @version Egret 2.4
          * @version eui 1.0
          * @platform Web,Native
+         * @language en_US
          */
         /**
-         * @language zh_CN
          * 在父级容器中距水平中心位置的距离。
          *
          * @default NaN
@@ -240,11 +263,11 @@ module eui {
          * @version Egret 2.4
          * @version eui 1.0
          * @platform Web,Native
+         * @language zh_CN
          */
-        horizontalCenter:any;
+        horizontalCenter: any;
 
         /**
-         * @language en_US
          * The vertical distance in pixels from the center of the component to the
          *  center of the anchor target's content area.
          *
@@ -253,9 +276,9 @@ module eui {
          * @version Egret 2.4
          * @version eui 1.0
          * @platform Web,Native
+         * @language en_US
          */
         /**
-         * @language zh_CN
          * 在父级容器中距竖直中心位置的距离。
          *
          * @default NaN
@@ -263,11 +286,11 @@ module eui {
          * @version Egret 2.4
          * @version eui 1.0
          * @platform Web,Native
+         * @language zh_CN
          */
-        verticalCenter:any;
+        verticalCenter: any;
 
         /**
-         * @language en_US
          * Specifies the width of a component as a percentage
          * of its parent's size. Allowed values are 0-100.
          * Setting the <code>width</code> or <code>explicitWidth</code> properties
@@ -278,9 +301,9 @@ module eui {
          * @version Egret 2.4
          * @version eui 1.0
          * @platform Web,Native
+         * @language en_US
          */
         /**
-         * @language zh_CN
          * 相对父级容器宽度的百分比。
          *
          * @default NaN
@@ -288,11 +311,11 @@ module eui {
          * @version Egret 2.4
          * @version eui 1.0
          * @platform Web,Native
+         * @language zh_CN
          */
-        percentWidth:number;
+        percentWidth: number;
 
         /**
-         * @language en_US
          * Specifies the height of a component as a percentage
          * of its parent's size. Allowed values are 0-100.
          * Setting the <code>height</code> or <code>explicitHeight</code> properties
@@ -303,9 +326,9 @@ module eui {
          * @version Egret 2.4
          * @version eui 1.0
          * @platform Web,Native
+         * @language en_US
          */
         /**
-         * @language zh_CN
          * 相对父级容器高度的百分比。
          *
          * @default NaN
@@ -313,47 +336,47 @@ module eui {
          * @version Egret 2.4
          * @version eui 1.0
          * @platform Web,Native
+         * @language zh_CN
          */
-        percentHeight:number;
+        percentHeight: number;
 
         /**
-         * @language en_US
          * Number that specifies the explicit width of the component,
          * in pixels, in the component's coordinates.
          * @version Egret 2.4
          * @version eui 1.0
          * @platform Web,Native
+         * @language en_US
          */
         /**
-         * @language zh_CN
          * 外部显式指定的宽度。
          * @version Egret 2.4
          * @version eui 1.0
          * @platform Web,Native
+         * @language zh_CN
          */
-        explicitWidth:number;
+        explicitWidth: number;
 
         /**
-         * @language en_US
          * Number that specifies the explicit height of the component,
          * in pixels, in the component's coordinates.
          * @readOnly
          * @version Egret 2.4
          * @version eui 1.0
          * @platform Web,Native
+         * @language en_US
          */
         /**
-         * @language zh_CN
          * 外部显式指定的高度。
          * @readOnly
          * @version Egret 2.4
          * @version eui 1.0
          * @platform Web,Native
+         * @language zh_CN
          */
-        explicitHeight:number;
+        explicitHeight: number;
 
         /**
-         * @language en_US
          * The minimum recommended width of the component to be considered
          * by the parent during layout. This value is in the
          * component's coordinates, in pixels. The default value depends on
@@ -362,18 +385,18 @@ module eui {
          * @version Egret 2.4
          * @version eui 1.0
          * @platform Web,Native
+         * @language en_US
          */
         /**
-         * @language zh_CN
          * 组件的最小宽度,此属性设置为大于maxWidth的值时无效。同时影响测量和自动布局的尺寸。
          * @readOnly
          * @version Egret 2.4
          * @version eui 1.0
          * @platform Web,Native
+         * @language zh_CN
          */
-        minWidth:number;
+        minWidth: number;
         /**
-         * @language en_US
          * The maximum recommended width of the component to be considered
          * by the parent during layout. This value is in the
          * component's coordinates, in pixels. The default value of this property is
@@ -381,18 +404,18 @@ module eui {
          * @version Egret 2.4
          * @version eui 1.0
          * @platform Web,Native
+         * @language en_US
          */
         /**
-         * @language zh_CN
          * 组件的最大高度。同时影响测量和自动布局的尺寸。
          * @version Egret 2.4
          * @version eui 1.0
          * @platform Web,Native
+         * @language zh_CN
          */
-        maxWidth:number;
+        maxWidth: number;
 
         /**
-         * @language en_US
          * The minimum recommended height of the component to be considered
          * by the parent during layout. This value is in the
          * component's coordinates, in pixels. The default value depends on
@@ -400,18 +423,18 @@ module eui {
          * @version Egret 2.4
          * @version eui 1.0
          * @platform Web,Native
+         * @language en_US
          */
         /**
-         * @language zh_CN
          * 组件的最小高度,此属性设置为大于maxHeight的值时无效。同时影响测量和自动布局的尺寸。
          * @version Egret 2.4
          * @version eui 1.0
          * @platform Web,Native
+         * @language zh_CN
          */
-        minHeight:number;
+        minHeight: number;
 
         /**
-         * @language en_US
          * The maximum recommended height of the component to be considered
          * by the parent during layout. This value is in the
          * component's coordinates, in pixels. The default value of this property is
@@ -419,38 +442,38 @@ module eui {
          * @version Egret 2.4
          * @version eui 1.0
          * @platform Web,Native
+         * @language en_US
          */
         /**
-         * @language zh_CN
          * 组件的最大高度,同时影响测量和自动布局的尺寸。
          * @version Egret 2.4
          * @version eui 1.0
          * @platform Web,Native
+         * @language zh_CN
          */
-        maxHeight:number;
+        maxHeight: number;
 
         /**
-         * @language en_US
          * Set the result of measuring.
          * @param width measured width
          * @param height measured height
          * @version Egret 2.4
          * @version eui 1.0
          * @platform Web,Native
+         * @language en_US
          */
         /**
-         * @language zh_CN
          * 设置测量结果。
          * @param width 测量宽度
          * @param height 测量高度
          * @version Egret 2.4
          * @version eui 1.0
          * @platform Web,Native
+         * @language zh_CN
          */
-        setMeasuredSize(width:number, height:number):void;
+        setMeasuredSize(width: number, height: number): void;
 
         /**
-         * @language en_US
          * Marks a component so that its <code>commitProperties()</code>
          * method gets called during a later screen update.<p/>
          *
@@ -471,9 +494,9 @@ module eui {
          * @version Egret 2.4
          * @version eui 1.0
          * @platform Web,Native
+         * @language en_US
          */
         /**
-         * @language zh_CN
          * 标记提交过需要延迟应用的属性，以便在稍后屏幕更新期间调用该组件的 commitProperties() 方法。<p/>
          *
          * 这是一个很有用的机制，可将组件更改延迟到稍后屏幕更新时进行处理，从而消除了重复的工作。<p/>
@@ -485,11 +508,11 @@ module eui {
          * @version Egret 2.4
          * @version eui 1.0
          * @platform Web,Native
+         * @language zh_CN
          */
-        invalidateProperties():void;
+        invalidateProperties(): void;
 
         /**
-         * @language en_US
          * Used by layout logic to validate the properties of a component
          * by calling the <code>commitProperties()</code> method.
          * In general, subclassers should
@@ -497,19 +520,19 @@ module eui {
          * @version Egret 2.4
          * @version eui 1.0
          * @platform Web,Native
+         * @language en_US
          */
         /**
-         * @language zh_CN
          * 由布局逻辑用于通过调用 commitProperties() 方法来验证组件的属性。
          * 通常，子类应覆盖 commitProperties() 方法，而不是覆盖此方法。
          * @version Egret 2.4
          * @version eui 1.0
          * @platform Web,Native
+         * @language zh_CN
          */
-        validateProperties():void;
+        validateProperties(): void;
 
         /**
-         * @language en_US
          * Marks a component so that its <code>measure()</code>
          * method gets called during a later screen update.<p/>
          *
@@ -530,9 +553,9 @@ module eui {
          * @version Egret 2.4
          * @version eui 1.0
          * @platform Web,Native
+         * @language en_US
          */
         /**
-         * @language zh_CN
          * 标记提交过需要验证组件尺寸，以便在稍后屏幕更新期间调用该组件的 measure() 方法。<p/>
          *
          * Invalidation 是一个很有用的机制，可将组件更改延迟到稍后屏幕更新时进行处理，从而消除了重复的工作。<p/>
@@ -545,30 +568,30 @@ module eui {
          * @version Egret 2.4
          * @version eui 1.0
          * @platform Web,Native
+         * @language zh_CN
          */
-        invalidateSize():void;
+        invalidateSize(): void;
 
         /**
-         * @language en_US
          * Validates the measured size of the component.
          * @param recursive If <code>true</code>, call this method
          *  on the objects children.
          * @version Egret 2.4
          * @version eui 1.0
          * @platform Web,Native
+         * @language en_US
          */
         /**
-         * @language zh_CN
          * 验证组件的尺寸。
          * @param recursive 如果为 true，则调用对象子项的此方法。
          * @version Egret 2.4
          * @version eui 1.0
          * @platform Web,Native
+         * @language zh_CN
          */
-        validateSize(recursive?:boolean):void;
+        validateSize(recursive?: boolean): void;
 
         /**
-         * @language en_US
          * Marks a component so that its <code>updateDisplayList()</code>
          * method gets called during a later screen update.<p/>
          *
@@ -589,9 +612,9 @@ module eui {
          * @version Egret 2.4
          * @version eui 1.0
          * @platform Web,Native
+         * @language en_US
          */
         /**
-         * @language zh_CN
          * 标记需要验证显示列表，以便在稍后屏幕更新期间调用该组件的 updateDisplayList() 方法。<p/>
          *
          * Invalidation 是一个很有用的机制，可将组件更改延迟到稍后屏幕更新时进行处理，从而消除了重复的工作。<p/>
@@ -604,28 +627,28 @@ module eui {
          * @version Egret 2.4
          * @version eui 1.0
          * @platform Web,Native
+         * @language zh_CN
          */
-        invalidateDisplayList():void;
+        invalidateDisplayList(): void;
 
         /**
-         * @language en_US
          * Validates the position and size of children and draws other
          * visuals.
          * @version Egret 2.4
          * @version eui 1.0
          * @platform Web,Native
+         * @language en_US
          */
         /**
-         * @language zh_CN
          * 验证子项的位置和大小，并绘制其他可视内容。
          * @version Egret 2.4
          * @version eui 1.0
          * @platform Web,Native
+         * @language zh_CN
          */
-        validateDisplayList():void;
+        validateDisplayList(): void;
 
         /**
-         * @language en_US
          * Validate and update the properties and layout of this object
          * and redraw it, if necessary.<p/>
          *
@@ -640,9 +663,9 @@ module eui {
          * @version Egret 2.4
          * @version eui 1.0
          * @platform Web,Native
+         * @language en_US
          */
         /**
-         * @language zh_CN
          * 验证并更新此对象的属性和布局，如果需要的话重绘对象。<p/>
          *
          * 通常只有当脚本执行完毕后，才会处理要求进行大量计算的处理属性。<p/>
@@ -653,11 +676,11 @@ module eui {
          * @version Egret 2.4
          * @version eui 1.0
          * @platform Web,Native
+         * @language zh_CN
          */
-        validateNow():void;
+        validateNow(): void;
 
         /**
-         * @language en_US
          * Sets the layout size of the element.
          * This is the size that the element uses to draw on screen.<p/>
          *
@@ -673,9 +696,9 @@ module eui {
          * @version Egret 2.4
          * @version eui 1.0
          * @platform Web,Native
+         * @language en_US
          */
         /**
-         * @language zh_CN
          * 设置元素的布局大小。这是元素在屏幕上进行绘制时所用的大小。<p/>
          *
          * 如果 width 和/或 height 参数尚未指定 (NaN))，则 EUI 会将该元素的布局大小设置为首选宽度和/或首选高度。<p/>
@@ -689,11 +712,11 @@ module eui {
          * @version Egret 2.4
          * @version eui 1.0
          * @platform Web,Native
+         * @language zh_CN
          */
-        setLayoutBoundsSize(layoutWidth:number, layoutHeight:number):void;
+        setLayoutBoundsSize(layoutWidth: number, layoutHeight: number): void;
 
         /**
-         * @language en_US
          * Sets the coordinates that the element uses to draw on screen.<p/>
          *
          * Note that calls to the <code>setLayoutBoundSize()</code> method can affect the layout position, so
@@ -705,9 +728,9 @@ module eui {
          * @version Egret 2.4
          * @version eui 1.0
          * @platform Web,Native
+         * @language en_US
          */
         /**
-         * @language zh_CN
          * 设置元素在屏幕上进行绘制时所用的布局坐标。<p/>
          *
          * 请注意，调用 setLayoutBoundSize() 方法会影响布局位置，因此请在调用 setLayoutBoundSize()
@@ -719,11 +742,11 @@ module eui {
          * @version Egret 2.4
          * @version eui 1.0
          * @platform Web,Native
+         * @language zh_CN
          */
-        setLayoutBoundsPosition(x:number, y:number):void;
+        setLayoutBoundsPosition(x: number, y: number): void;
 
         /**
-         * @language en_US
          * Get the layout bounds that the element uses to draw on screen.
          * Commonly used in the <code>updateDisplayList()</code> method in parent container.<p/>
          * Priority: layout > explicit > measure.<p/>
@@ -734,9 +757,9 @@ module eui {
          * @version Egret 2.4
          * @version eui 1.0
          * @platform Web,Native
+         * @language en_US
          */
         /**
-         * @language zh_CN
          * 组件的布局尺寸,常用于父级的<code>updateDisplayList()</code>方法中。<p/>
          * 按照：布局尺寸>外部显式设置尺寸>测量尺寸 的优先级顺序返回尺寸。<p/>
          * 注意此方法返回值已经包含scale和rotation。
@@ -746,11 +769,11 @@ module eui {
          * @version Egret 2.4
          * @version eui 1.0
          * @platform Web,Native
+         * @language zh_CN
          */
-        getLayoutBounds(bounds:egret.Rectangle):void;
+        getLayoutBounds(bounds: egret.Rectangle): void;
 
         /**
-         * @language en_US
          * Get the element's preferred bounds。
          * Commonly used in the <code>measure()</code> method in parent container.<p/>
          * Priority: explicit > measure.<p/>
@@ -761,9 +784,9 @@ module eui {
          * @version Egret 2.4
          * @version eui 1.0
          * @platform Web,Native
+         * @language en_US
          */
         /**
-         * @language zh_CN
          * 获取组件的首选尺寸,常用于父级的<code>measure()</code>方法中。<p/>
          * 按照：外部显式设置尺寸>测量尺寸 的优先级顺序返回尺寸。<p/>
          * 注意此方法返回值已经包含scale和rotation。
@@ -773,13 +796,14 @@ module eui {
          * @version Egret 2.4
          * @version eui 1.0
          * @platform Web,Native
+         * @language zh_CN
          */
-        getPreferredBounds(bounds:egret.Rectangle):void;
+        getPreferredBounds(bounds: egret.Rectangle): void;
     }
 
 }
 
-module eui.sys {
+namespace eui.sys {
 
     /**
      * @private
@@ -817,13 +841,13 @@ module eui.sys {
         initialized
     }
 
-    var UIComponentClass = "eui.UIComponent";
+    let UIComponentClass = "eui.UIComponent";
 
-    function isDeltaIdentity(m:egret.Matrix):boolean {
+    function isDeltaIdentity(m: egret.Matrix): boolean {
         return (m.a === 1 && m.b === 0 && m.c === 0 && m.d === 1);
     }
 
-    var validator = new sys.Validator();
+    let validator = new sys.Validator();
 
     /**
      * @private
@@ -844,7 +868,7 @@ module eui.sys {
          * @private
          * UIComponentImpl 定义的所有变量请不要添加任何初始值，必须统一在此处初始化。
          */
-        private initializeUIValues():void {
+        private initializeUIValues(): void {
             this.$UIComponent = {
                 0: NaN,       //left
                 1: NaN,       //right
@@ -889,7 +913,7 @@ module eui.sys {
          * 子类覆盖此方法可以执行一些初始化子项操作。此方法仅在组件第一次添加到舞台时回调一次。
          * 请务必调用super.createChildren()以完成父类组件的初始化
          */
-        protected createChildren():void {
+        protected createChildren(): void {
 
         }
 
@@ -897,7 +921,7 @@ module eui.sys {
          * @private
          * 子项创建完成,此方法在createChildren()之后执行。
          */
-        protected childrenCreated():void {
+        protected childrenCreated(): void {
 
         }
 
@@ -905,8 +929,8 @@ module eui.sys {
          * @private
          * 提交属性，子类在调用完invalidateProperties()方法后，应覆盖此方法以应用属性
          */
-        protected commitProperties():void {
-            var values = this.$UIComponent;
+        protected commitProperties(): void {
+            let values = this.$UIComponent;
             if (values[UIKeys.oldWidth] != values[UIKeys.width] || values[UIKeys.oldHeight] != values[UIKeys.height]) {
                 this.dispatchEventWith(egret.Event.RESIZE);
                 values[UIKeys.oldWidth] = values[UIKeys.width];
@@ -923,7 +947,7 @@ module eui.sys {
          * @private
          * 测量组件尺寸
          */
-        protected measure():void {
+        protected measure(): void {
 
         }
 
@@ -931,25 +955,25 @@ module eui.sys {
          * @private
          * 更新显示列表
          */
-        protected updateDisplayList(unscaledWidth:number, unscaledHeight:number):void {
+        protected updateDisplayList(unscaledWidth: number, unscaledHeight: number): void {
         }
 
-        $super:any;
+        $super: any;
 
-        $UIComponent:Object;
+        $UIComponent: Object;
 
-        $includeInLayout:boolean;
+        $includeInLayout: boolean;
 
         /**
          * @private
          * 指定此组件是否包含在父容器的布局中。若为false，则父级容器在测量和布局阶段都忽略此组件。默认值为true。
          * 注意，visible属性与此属性不同，设置visible为false，父级容器仍会对其布局。
          */
-        public get includeInLayout():boolean {
+        public get includeInLayout(): boolean {
             return this.$includeInLayout;
         }
 
-        public set includeInLayout(value:boolean) {
+        public set includeInLayout(value: boolean) {
             value = !!value;
             if (this.$includeInLayout === value)
                 return;
@@ -964,10 +988,10 @@ module eui.sys {
          * @param stage
          * @param nestLevel
          */
-        $onAddToStage(stage:egret.Stage, nestLevel:number):void {
+        $onAddToStage(stage: egret.Stage, nestLevel: number): void {
             this.$super.$onAddToStage.call(this, stage, nestLevel);
             this.checkInvalidateFlag();
-            var values = this.$UIComponent;
+            let values = this.$UIComponent;
             if (!values[sys.UIKeys.initialized]) {
                 values[sys.UIKeys.initialized] = true;
                 this.createChildren();
@@ -980,8 +1004,8 @@ module eui.sys {
          * @private
          * 检查属性失效标记并应用
          */
-        private checkInvalidateFlag(event?:Event):void {
-            var values = this.$UIComponent;
+        private checkInvalidateFlag(event?: Event): void {
+            let values = this.$UIComponent;
             if (values[sys.UIKeys.invalidatePropertiesFlag]) {
                 validator.invalidateProperties(this);
             }
@@ -997,11 +1021,11 @@ module eui.sys {
          * @private
          * 距父级容器离左边距离
          */
-        public get left():any {
+        public get left(): any {
             return this.$UIComponent[UIKeys.left];
         }
 
-        public set left(value:any) {
+        public set left(value: any) {
             if (!value || typeof value == "number") {
                 value = +value;
             }
@@ -1009,7 +1033,7 @@ module eui.sys {
                 value = value.toString().trim();
             }
 
-            var values = this.$UIComponent;
+            let values = this.$UIComponent;
             if (values[UIKeys.left] === value)
                 return;
             values[UIKeys.left] = value;
@@ -1020,18 +1044,18 @@ module eui.sys {
          * @private
          * 距父级容器右边距离
          */
-        public get right():any {
+        public get right(): any {
             return this.$UIComponent[UIKeys.right];
         }
 
-        public set right(value:any) {
+        public set right(value: any) {
             if (!value || typeof value == "number") {
                 value = +value;
             }
             else {
                 value = value.toString().trim();
             }
-            var values = this.$UIComponent;
+            let values = this.$UIComponent;
             if (values[UIKeys.right] === value)
                 return;
             values[UIKeys.right] = value;
@@ -1042,18 +1066,18 @@ module eui.sys {
          * @private
          * 距父级容器顶部距离
          */
-        public get top():any {
+        public get top(): any {
             return this.$UIComponent[UIKeys.top];
         }
 
-        public set top(value:any) {
+        public set top(value: any) {
             if (!value || typeof value == "number") {
                 value = +value;
             }
             else {
                 value = value.toString().trim();
             }
-            var values = this.$UIComponent;
+            let values = this.$UIComponent;
             if (values[UIKeys.top] === value)
                 return;
             values[UIKeys.top] = value;
@@ -1064,18 +1088,18 @@ module eui.sys {
          * @private
          * 距父级容器底部距离
          */
-        public get bottom():any {
+        public get bottom(): any {
             return this.$UIComponent[UIKeys.bottom];
         }
 
-        public set bottom(value:any) {
+        public set bottom(value: any) {
             if (!value || typeof value == "number") {
                 value = +value;
             }
             else {
                 value = value.toString().trim();
             }
-            var values = this.$UIComponent;
+            let values = this.$UIComponent;
             if (values[UIKeys.bottom] == value)
                 return;
             values[UIKeys.bottom] = value;
@@ -1087,18 +1111,18 @@ module eui.sys {
          * @private
          * 在父级容器中距水平中心位置的距离
          */
-        public get horizontalCenter():any {
+        public get horizontalCenter(): any {
             return this.$UIComponent[UIKeys.horizontalCenter];
         }
 
-        public set horizontalCenter(value:any) {
+        public set horizontalCenter(value: any) {
             if (!value || typeof value == "number") {
                 value = +value;
             }
             else {
                 value = value.toString().trim();
             }
-            var values = this.$UIComponent;
+            let values = this.$UIComponent;
             if (values[UIKeys.horizontalCenter] === value)
                 return;
             values[UIKeys.horizontalCenter] = value;
@@ -1109,18 +1133,18 @@ module eui.sys {
          * @private
          * 在父级容器中距竖直中心位置的距离
          */
-        public get verticalCenter():any {
+        public get verticalCenter(): any {
             return this.$UIComponent[UIKeys.verticalCenter];
         }
 
-        public set verticalCenter(value:any) {
+        public set verticalCenter(value: any) {
             if (!value || typeof value == "number") {
                 value = +value;
             }
             else {
                 value = value.toString().trim();
             }
-            var values = this.$UIComponent;
+            let values = this.$UIComponent;
             if (values[UIKeys.verticalCenter] === value)
                 return;
             values[UIKeys.verticalCenter] = value;
@@ -1132,13 +1156,13 @@ module eui.sys {
          * @private
          * 相对父级容器宽度的百分比
          */
-        public get percentWidth():number {
+        public get percentWidth(): number {
             return this.$UIComponent[UIKeys.percentWidth];
         }
 
-        public set percentWidth(value:number) {
+        public set percentWidth(value: number) {
             value = +value;
-            var values = this.$UIComponent;
+            let values = this.$UIComponent;
             if (values[UIKeys.percentWidth] === value)
                 return;
             values[UIKeys.percentWidth] = value;
@@ -1149,13 +1173,13 @@ module eui.sys {
          * @private
          * 相对父级容器高度的百分比
          */
-        public get percentHeight():number {
+        public get percentHeight(): number {
             return this.$UIComponent[UIKeys.percentHeight];
         }
 
-        public set percentHeight(value:number) {
+        public set percentHeight(value: number) {
             value = +value;
-            var values = this.$UIComponent;
+            let values = this.$UIComponent;
             if (values[UIKeys.percentHeight] === value)
                 return;
             values[UIKeys.percentHeight] = value;
@@ -1166,7 +1190,7 @@ module eui.sys {
          * @private
          * 外部显式指定的宽度
          */
-        public get explicitWidth():number {
+        public get explicitWidth(): number {
             return this.$UIComponent[UIKeys.explicitWidth];
         }
 
@@ -1174,7 +1198,7 @@ module eui.sys {
          * @private
          * 外部显式指定的高度
          */
-        public get explicitHeight():number {
+        public get explicitHeight(): number {
             return this.$UIComponent[UIKeys.explicitHeight];
         }
 
@@ -1182,7 +1206,7 @@ module eui.sys {
          * @private
          * 组件宽度,默认值为egret.NaN,设置为NaN将使用组件的measure()方法自动计算尺寸
          */
-        $getWidth():number {
+        $getWidth(): number {
             this.validateSizeNow();
             return this.$UIComponent[UIKeys.width];
         }
@@ -1192,9 +1216,9 @@ module eui.sys {
          *
          * @param value
          */
-        $setWidth(value:number):boolean {
+        $setWidth(value: number): boolean {
             value = +value;
-            var values = this.$UIComponent;
+            let values = this.$UIComponent;
             if (value < 0 || values[UIKeys.width] === value && values[UIKeys.explicitWidth] === value)
                 return false;
             values[UIKeys.explicitWidth] = value;
@@ -1211,7 +1235,7 @@ module eui.sys {
          * @private
          * 立即验证自身的尺寸。
          */
-        private validateSizeNow():void {
+        private validateSizeNow(): void {
             this.validateSize(true);
             this.updateFinalSize();
         }
@@ -1220,7 +1244,7 @@ module eui.sys {
          * @private
          * 组件高度,默认值为NaN,设置为NaN将使用组件的measure()方法自动计算尺寸
          */
-        $getHeight():number {
+        $getHeight(): number {
             this.validateSizeNow();
             return this.$UIComponent[UIKeys.height];
         }
@@ -1230,9 +1254,9 @@ module eui.sys {
          *
          * @param value
          */
-        $setHeight(value:number):boolean {
+        $setHeight(value: number): boolean {
             value = +value;
-            var values = this.$UIComponent;
+            let values = this.$UIComponent;
             if (value < 0 || values[UIKeys.height] === value && values[UIKeys.explicitHeight] === value)
                 return false;
             values[UIKeys.explicitHeight] = value;
@@ -1249,13 +1273,13 @@ module eui.sys {
          * @private
          * 组件的最小宽度,此属性设置为大于maxWidth的值时无效。同时影响测量和自动布局的尺寸。
          */
-        public get minWidth():number {
+        public get minWidth(): number {
             return this.$UIComponent[UIKeys.minWidth];
         }
 
-        public set minWidth(value:number) {
+        public set minWidth(value: number) {
             value = +value || 0;
-            var values = this.$UIComponent;
+            let values = this.$UIComponent;
             if (value < 0 || values[UIKeys.minWidth] === value) {
                 return;
             }
@@ -1268,13 +1292,13 @@ module eui.sys {
          * @private
          * 组件的最大高度。同时影响测量和自动布局的尺寸。
          */
-        public get maxWidth():number {
+        public get maxWidth(): number {
             return this.$UIComponent[UIKeys.maxWidth];
         }
 
-        public set maxWidth(value:number) {
+        public set maxWidth(value: number) {
             value = +value || 0;
-            var values = this.$UIComponent;
+            let values = this.$UIComponent;
             if (value < 0 || values[UIKeys.maxWidth] === value) {
                 return;
             }
@@ -1287,13 +1311,13 @@ module eui.sys {
          * @private
          * 组件的最小高度,此属性设置为大于maxHeight的值时无效。同时影响测量和自动布局的尺寸。
          */
-        public get minHeight():number {
+        public get minHeight(): number {
             return this.$UIComponent[UIKeys.minHeight];
         }
 
-        public set minHeight(value:number) {
+        public set minHeight(value: number) {
             value = +value || 0;
-            var values = this.$UIComponent;
+            let values = this.$UIComponent;
             if (value < 0 || values[UIKeys.minHeight] === value) {
                 return;
             }
@@ -1307,13 +1331,13 @@ module eui.sys {
          * @private
          * 组件的最大高度,同时影响测量和自动布局的尺寸。
          */
-        public get maxHeight():number {
+        public get maxHeight(): number {
             return this.$UIComponent[UIKeys.maxHeight];
         }
 
-        public set maxHeight(value:number) {
+        public set maxHeight(value: number) {
             value = +value || 0;
-            var values = this.$UIComponent;
+            let values = this.$UIComponent;
             if (value < 0 || values[UIKeys.maxHeight] === value) {
                 return;
             }
@@ -1328,8 +1352,8 @@ module eui.sys {
          * @param width 测量宽度
          * @param height 测量高度
          */
-        public setMeasuredSize(width:number, height:number):void {
-            var values = this.$UIComponent;
+        public setMeasuredSize(width: number, height: number): void {
+            let values = this.$UIComponent;
             values[UIKeys.measuredWidth] = Math.ceil(+width || 0);
             values[UIKeys.measuredHeight] = Math.ceil(+height || 0);
         }
@@ -1340,9 +1364,9 @@ module eui.sys {
          * 设置组件的宽高。此方法不同于直接设置width,height属性，
          * 不会影响显式标记尺寸属性
          */
-        private setActualSize(w:number, h:number):void {
-            var change = false;
-            var values = this.$UIComponent;
+        private setActualSize(w: number, h: number): void {
+            let change = false;
+            let values = this.$UIComponent;
             if (values[UIKeys.width] !== w) {
                 values[UIKeys.width] = w;
                 change = true;
@@ -1360,7 +1384,7 @@ module eui.sys {
         /**
          * @private
          */
-        $invalidateMatrix():void {
+        $invalidateMatrix(): void {
             this.$super.$invalidateMatrix.call(this);
             this.invalidateParentLayout();
         }
@@ -1368,7 +1392,7 @@ module eui.sys {
          * @private
          */
         $setMatrix(matrix: egret.Matrix, needUpdateProperties: boolean = true): boolean {
-            this.$super.$setMatrix.call(this,matrix,needUpdateProperties);
+            this.$super.$setMatrix.call(this, matrix, needUpdateProperties);
             this.invalidateParentLayout();
             return true;
         }
@@ -1376,7 +1400,7 @@ module eui.sys {
          * @private
          */
         $setAnchorOffsetX(value: number): boolean {
-            this.$super.$setAnchorOffsetX.call(this,value);
+            this.$super.$setAnchorOffsetX.call(this, value);
             this.invalidateParentLayout();
             return true;
         }
@@ -1384,7 +1408,7 @@ module eui.sys {
          * @private
          */
         $setAnchorOffsetY(value: number): boolean {
-            this.$super.$setAnchorOffsetY.call(this,value);
+            this.$super.$setAnchorOffsetY.call(this, value);
             this.invalidateParentLayout();
             return true;
         }
@@ -1395,8 +1419,8 @@ module eui.sys {
          * @param value
          * @returns
          */
-        $setX(value:number):boolean {
-            var change = this.$super.$setX.call(this, value);
+        $setX(value: number): boolean {
+            let change = this.$super.$setX.call(this, value);
             if (change) {
                 this.invalidateParentLayout();
                 this.invalidateProperties();
@@ -1410,8 +1434,8 @@ module eui.sys {
          * @param value
          * @returns
          */
-        $setY(value:number):boolean {
-            var change = this.$super.$setY.call(this, value);
+        $setY(value: number): boolean {
+            let change = this.$super.$setY.call(this, value);
             if (change) {
                 this.invalidateParentLayout();
                 this.invalidateProperties();
@@ -1424,8 +1448,8 @@ module eui.sys {
          * @private
          * 标记属性失效
          */
-        public invalidateProperties():void {
-            var values = this.$UIComponent;
+        public invalidateProperties(): void {
+            let values = this.$UIComponent;
             if (!values[sys.UIKeys.invalidatePropertiesFlag]) {
                 values[sys.UIKeys.invalidatePropertiesFlag] = true;
                 if (this.$stage)
@@ -1437,8 +1461,8 @@ module eui.sys {
          * @private
          * 验证组件的属性
          */
-        public validateProperties():void {
-            var values = this.$UIComponent;
+        public validateProperties(): void {
+            let values = this.$UIComponent;
             if (values[sys.UIKeys.invalidatePropertiesFlag]) {
                 this.commitProperties();
                 values[sys.UIKeys.invalidatePropertiesFlag] = false;
@@ -1449,8 +1473,8 @@ module eui.sys {
          * @private
          * 标记提交过需要验证组件尺寸
          */
-        public invalidateSize():void {
-            var values = this.$UIComponent;
+        public invalidateSize(): void {
+            let values = this.$UIComponent;
             if (!values[sys.UIKeys.invalidateSizeFlag]) {
                 values[sys.UIKeys.invalidateSizeFlag] = true;
                 if (this.$stage)
@@ -1462,22 +1486,22 @@ module eui.sys {
          * @private
          * 验证组件的尺寸
          */
-        public validateSize(recursive?:boolean):void {
+        public validateSize(recursive?: boolean): void {
             if (recursive) {
-                var children = this.$children;
+                let children = this.$children;
                 if (children) {
-                    var length = children.length;
-                    for (var i = 0; i < length; i++) {
-                        var child = children[i];
+                    let length = children.length;
+                    for (let i = 0; i < length; i++) {
+                        let child = children[i];
                         if (egret.is(child, UIComponentClass)) {
                             (<eui.UIComponent>child).validateSize(true);
                         }
                     }
                 }
             }
-            var values = this.$UIComponent;
+            let values = this.$UIComponent;
             if (values[sys.UIKeys.invalidateSizeFlag]) {
-                var changed = this.measureSizes();
+                let changed = this.measureSizes();
                 if (changed) {
                     this.invalidateDisplayList();
                     this.invalidateParentLayout();
@@ -1490,9 +1514,9 @@ module eui.sys {
          * @private
          * 测量组件尺寸，返回尺寸是否发生变化
          */
-        private measureSizes():boolean {
-            var changed = false;
-            var values = this.$UIComponent;
+        private measureSizes(): boolean {
+            let changed = false;
+            let values = this.$UIComponent;
             if (!values[sys.UIKeys.invalidateSizeFlag])
                 return changed;
 
@@ -1511,8 +1535,8 @@ module eui.sys {
                     values[UIKeys.measuredHeight] = values[UIKeys.maxHeight]
                 }
             }
-            var preferredW = this.getPreferredUWidth();
-            var preferredH = this.getPreferredUHeight();
+            let preferredW = this.getPreferredUWidth();
+            let preferredH = this.getPreferredUHeight();
             if (preferredW !== values[UIKeys.oldPreferWidth] ||
                 preferredH !== values[UIKeys.oldPreferHeight]) {
                 values[UIKeys.oldPreferWidth] = preferredW;
@@ -1526,8 +1550,8 @@ module eui.sys {
          * @private
          * 标记需要验证显示列表
          */
-        public invalidateDisplayList():void {
-            var values = this.$UIComponent;
+        public invalidateDisplayList(): void {
+            let values = this.$UIComponent;
             if (!values[sys.UIKeys.invalidateDisplayListFlag]) {
                 values[sys.UIKeys.invalidateDisplayListFlag] = true;
                 if (this.$stage)
@@ -1539,8 +1563,8 @@ module eui.sys {
          * @private
          * 验证子项的位置和大小，并绘制其他可视内容
          */
-        public validateDisplayList():void {
-            var values = this.$UIComponent;
+        public validateDisplayList(): void {
+            let values = this.$UIComponent;
             if (values[sys.UIKeys.invalidateDisplayListFlag]) {
                 this.updateFinalSize();
                 this.updateDisplayList(values[UIKeys.width], values[UIKeys.height]);
@@ -1552,10 +1576,10 @@ module eui.sys {
          * @private
          * 更新最终的组件宽高
          */
-        private updateFinalSize():void {
-            var unscaledWidth = 0;
-            var unscaledHeight = 0;
-            var values = this.$UIComponent;
+        private updateFinalSize(): void {
+            let unscaledWidth = 0;
+            let unscaledHeight = 0;
+            let values = this.$UIComponent;
             if (values[sys.UIKeys.layoutWidthExplicitlySet]) {
                 unscaledWidth = values[UIKeys.width];
             }
@@ -1581,7 +1605,7 @@ module eui.sys {
          * @private
          * 立即应用组件及其子项的所有属性
          */
-        public validateNow():void {
+        public validateNow(): void {
             if (this.$stage)
                 validator.validateClient(this);
         }
@@ -1590,8 +1614,8 @@ module eui.sys {
          * @private
          * 标记父级容器的尺寸和显示列表为失效
          */
-        protected invalidateParentLayout():void {
-            var parent = this.$parent;
+        protected invalidateParentLayout(): void {
+            let parent = this.$parent;
             if (!parent || !this.$includeInLayout || !egret.is(parent, UIComponentClass))
                 return;
             (<eui.UIComponent><any>parent).invalidateSize();
@@ -1602,19 +1626,19 @@ module eui.sys {
          * @private
          * 设置组件的布局宽高
          */
-        public setLayoutBoundsSize(layoutWidth:number, layoutHeight:number):void {
+        public setLayoutBoundsSize(layoutWidth: number, layoutHeight: number): void {
             layoutHeight = +layoutHeight;
             layoutWidth = +layoutWidth;
             if (layoutHeight < 0 || layoutWidth < 0) {
                 return;
             }
-            var values = this.$UIComponent;
-            var maxWidth = values[UIKeys.maxWidth];
-            var maxHeight = values[UIKeys.maxHeight];
-            var minWidth = Math.min(values[UIKeys.minWidth], maxWidth);
-            var minHeight = Math.min(values[UIKeys.minHeight], maxHeight);
-            var width:number;
-            var height:number;
+            let values = this.$UIComponent;
+            let maxWidth = values[UIKeys.maxWidth];
+            let maxHeight = values[UIKeys.maxHeight];
+            let minWidth = Math.min(values[UIKeys.minWidth], maxWidth);
+            let minHeight = Math.min(values[UIKeys.minHeight], maxHeight);
+            let width: number;
+            let height: number;
             if (isNaN(layoutWidth)) {
                 values[sys.UIKeys.layoutWidthExplicitlySet] = false;
                 width = this.getPreferredUWidth();
@@ -1631,13 +1655,13 @@ module eui.sys {
                 values[sys.UIKeys.layoutHeightExplicitlySet] = true;
                 height = Math.max(minHeight, Math.min(maxHeight, layoutHeight));
             }
-            var matrix = this.getAnchorMatrix();
+            let matrix = this.getAnchorMatrix();
             if (isDeltaIdentity(matrix)) {
                 this.setActualSize(width, height);
                 return;
             }
 
-            var fitSize = sys.MatrixUtil.fitBounds(layoutWidth, layoutHeight, matrix,
+            let fitSize = sys.MatrixUtil.fitBounds(layoutWidth, layoutHeight, matrix,
                 values[UIKeys.explicitWidth], values[UIKeys.explicitHeight],
                 this.getPreferredUWidth(), this.getPreferredUHeight(),
                 minWidth, minHeight, maxWidth, maxHeight);
@@ -1652,15 +1676,15 @@ module eui.sys {
          * @private
          * 设置组件的布局位置
          */
-        public setLayoutBoundsPosition(x:number, y:number):void {
-            var matrix = this.$getMatrix();
+        public setLayoutBoundsPosition(x: number, y: number): void {
+            let matrix = this.$getMatrix();
             if (!isDeltaIdentity(matrix) || this.anchorOffsetX != 0 || this.anchorOffsetY != 0) {
-                var bounds = egret.$TempRectangle;
+                let bounds = egret.$TempRectangle;
                 this.getLayoutBounds(bounds);
                 x += this.$getX() - bounds.x;
                 y += this.$getY() - bounds.y;
             }
-            var changed:boolean = this.$super.$setX.call(this, x);
+            let changed: boolean = this.$super.$setX.call(this, x);
             if (this.$super.$setY.call(this, y) || changed) {
                 UIEvent.dispatchUIEvent(this, UIEvent.MOVE);
             }
@@ -1672,9 +1696,9 @@ module eui.sys {
          * 按照：布局尺寸>外部显式设置尺寸>测量尺寸 的优先级顺序返回尺寸,
          * 注意此方法返回值已经包含scale和rotation。
          */
-        public getLayoutBounds(bounds:egret.Rectangle):void {
-            var values = this.$UIComponent;
-            var w:number;
+        public getLayoutBounds(bounds: egret.Rectangle): void {
+            let values = this.$UIComponent;
+            let w: number;
             if (values[sys.UIKeys.layoutWidthExplicitlySet]) {
                 w = values[UIKeys.width];
             }
@@ -1684,7 +1708,7 @@ module eui.sys {
             else {
                 w = values[UIKeys.measuredWidth];
             }
-            var h:number;
+            let h: number;
             if (values[sys.UIKeys.layoutHeightExplicitlySet]) {
                 h = values[UIKeys.height];
             }
@@ -1703,8 +1727,8 @@ module eui.sys {
          *
          * @returns
          */
-        private getPreferredUWidth():number {
-            var values = this.$UIComponent;
+        private getPreferredUWidth(): number {
+            let values = this.$UIComponent;
             return isNaN(values[UIKeys.explicitWidth]) ?
                 values[UIKeys.measuredWidth] : values[UIKeys.explicitWidth];
         }
@@ -1714,8 +1738,8 @@ module eui.sys {
          *
          * @returns
          */
-        private getPreferredUHeight():number {
-            var values = this.$UIComponent;
+        private getPreferredUHeight(): number {
+            let values = this.$UIComponent;
             return isNaN(values[UIKeys.explicitHeight]) ?
                 values[UIKeys.measuredHeight] : values[UIKeys.explicitHeight];
         }
@@ -1726,23 +1750,19 @@ module eui.sys {
          * 按照：外部显式设置尺寸>测量尺寸 的优先级顺序返回尺寸，
          * 注意此方法返回值已经包含scale和rotation。
          */
-        public getPreferredBounds(bounds:egret.Rectangle):void {
-            var w = this.getPreferredUWidth();
-            var h = this.getPreferredUHeight();
+        public getPreferredBounds(bounds: egret.Rectangle): void {
+            let w = this.getPreferredUWidth();
+            let h = this.getPreferredUHeight();
             this.applyMatrix(bounds, w, h);
         }
 
 
         /**
          * @private
-         *
-         * @param bounds
-         * @param w
-         * @param h
          */
-        private applyMatrix(bounds:egret.Rectangle, w:number, h:number):void {
-            var bounds = bounds.setTo(0, 0, w, h);
-            var matrix = this.getAnchorMatrix();
+        private applyMatrix(bounds: egret.Rectangle, w: number, h: number): void {
+            bounds.setTo(0, 0, w, h);
+            let matrix = this.getAnchorMatrix();
 
             if (isDeltaIdentity(matrix)) {
                 bounds.x += matrix.tx;
@@ -1757,12 +1777,12 @@ module eui.sys {
         /**
          * @private
          */
-        private getAnchorMatrix():egret.Matrix {
-            var matrix = this.$getMatrix();
-            var offsetX = this.anchorOffsetX;
-            var offsetY = this.anchorOffsetY;
+        private getAnchorMatrix(): egret.Matrix {
+            let matrix = this.$getMatrix();
+            let offsetX = this.anchorOffsetX;
+            let offsetY = this.anchorOffsetY;
             if (offsetX != 0 || offsetY != 0) {
-                var tempM = egret.$TempMatrix;
+                let tempM = egret.$TempMatrix;
                 matrix.$preMultiplyInto(tempM.setTo(1, 0, 0, 1, -offsetX, -offsetY), tempM);
                 return tempM;
             }
@@ -1773,13 +1793,13 @@ module eui.sys {
     /**
      * 检查一个函数的方法体是否为空。
      */
-    function isEmptyFunction(prototype:any, key:string):boolean {
+    function isEmptyFunction(prototype: any, key: string): boolean {
         if (typeof prototype[key] != "function") {
             return false;
         }
-        var body = prototype[key].toString();
-        var index = body.indexOf("{");
-        var lastIndex = body.lastIndexOf("}");
+        let body = prototype[key].toString();
+        let index = body.indexOf("{");
+        let lastIndex = body.lastIndexOf("}");
         body = body.substring(index + 1, lastIndex);
         return body.trim() == "";
     }
@@ -1790,23 +1810,23 @@ module eui.sys {
      * @param target 目标类
      * @param template 模板类
      */
-    export function mixin(target:any, template:any):void {
-        for (var property in template) {
+    export function mixin(target: any, template: any): void {
+        for (let property in template) {
             if (property != "prototype" && template.hasOwnProperty(property)) {
                 target[property] = template[property];
             }
         }
-        var prototype = target.prototype;
-        var protoBase = template.prototype;
-        var keys = Object.keys(protoBase);
-        var length = keys.length;
-        for (var i = 0; i < length; i++) {
-            var key = keys[i];
+        let prototype = target.prototype;
+        let protoBase = template.prototype;
+        let keys = Object.keys(protoBase);
+        let length = keys.length;
+        for (let i = 0; i < length; i++) {
+            let key = keys[i];
             if (key == "__meta__") {
                 continue;
             }
             if (!prototype.hasOwnProperty(key) || isEmptyFunction(prototype, key)) {
-                var value = Object.getOwnPropertyDescriptor(protoBase, key);
+                let value = Object.getOwnPropertyDescriptor(protoBase, key);
                 Object.defineProperty(prototype, key, value);
             }
         }
@@ -1822,9 +1842,9 @@ module eui.sys {
      * @param descendant 自定义的UIComponent子类
      * @param base 自定义子类继承的父类
      */
-    export function implementUIComponent(descendant:any, base:any, isContainer?:boolean):void {
+    export function implementUIComponent(descendant: any, base: any, isContainer?: boolean): void {
         mixin(descendant, UIComponentImpl);
-        var prototype = descendant.prototype;
+        let prototype = descendant.prototype;
         prototype.$super = base.prototype;
 
         registerProperty(descendant, "left", "Percentage");
@@ -1834,23 +1854,21 @@ module eui.sys {
         registerProperty(descendant, "horizontalCenter", "Percentage");
         registerProperty(descendant, "verticalCenter", "Percentage");
         if (isContainer) {
-            prototype.$childAdded = function (child:egret.DisplayObject, index:number):void {
+            prototype.$childAdded = function (child: egret.DisplayObject, index: number): void {
                 this.invalidateSize();
                 this.invalidateDisplayList();
             };
-            prototype.$childRemoved = function (child:egret.DisplayObject, index:number):void {
+            prototype.$childRemoved = function (child: egret.DisplayObject, index: number): void {
                 this.invalidateSize();
                 this.invalidateDisplayList();
             };
         }
 
         if (DEBUG) {//用于调试时查看布局尺寸的便利属性，发行版时移除。
-            egret.$markReadOnly(descendant, "explicitWidth");
-            egret.$markReadOnly(descendant, "explicitHeight");
 
             Object.defineProperty(prototype, "preferredWidth", {
                 get: function () {
-                    var bounds = egret.$TempRectangle;
+                    let bounds = egret.$TempRectangle;
                     this.getPreferredBounds(bounds);
                     return bounds.width;
                 },
@@ -1859,7 +1877,7 @@ module eui.sys {
             });
             Object.defineProperty(prototype, "preferredHeight", {
                 get: function () {
-                    var bounds = egret.$TempRectangle;
+                    let bounds = egret.$TempRectangle;
                     this.getPreferredBounds(bounds);
                     return bounds.height;
                 },
@@ -1868,7 +1886,7 @@ module eui.sys {
             });
             Object.defineProperty(prototype, "preferredX", {
                 get: function () {
-                    var bounds = egret.$TempRectangle;
+                    let bounds = egret.$TempRectangle;
                     this.getPreferredBounds(bounds);
                     return bounds.x;
                 },
@@ -1877,7 +1895,7 @@ module eui.sys {
             });
             Object.defineProperty(prototype, "preferredY", {
                 get: function () {
-                    var bounds = egret.$TempRectangle;
+                    let bounds = egret.$TempRectangle;
                     this.getPreferredBounds(bounds);
                     return bounds.y;
                 },
@@ -1886,7 +1904,7 @@ module eui.sys {
             });
             Object.defineProperty(prototype, "layoutBoundsX", {
                 get: function () {
-                    var bounds = egret.$TempRectangle;
+                    let bounds = egret.$TempRectangle;
                     this.getLayoutBounds(bounds);
                     return bounds.x;
                 },
@@ -1895,7 +1913,7 @@ module eui.sys {
             });
             Object.defineProperty(prototype, "layoutBoundsY", {
                 get: function () {
-                    var bounds = egret.$TempRectangle;
+                    let bounds = egret.$TempRectangle;
                     this.getLayoutBounds(bounds);
                     return bounds.y;
                 },
@@ -1904,7 +1922,7 @@ module eui.sys {
             });
             Object.defineProperty(prototype, "layoutBoundsWidth", {
                 get: function () {
-                    var bounds = egret.$TempRectangle;
+                    let bounds = egret.$TempRectangle;
                     this.getLayoutBounds(bounds);
                     return bounds.width;
                 },
@@ -1913,7 +1931,7 @@ module eui.sys {
             });
             Object.defineProperty(prototype, "layoutBoundsHeight", {
                 get: function () {
-                    var bounds = egret.$TempRectangle;
+                    let bounds = egret.$TempRectangle;
                     this.getLayoutBounds(bounds);
                     return bounds.height;
                 },

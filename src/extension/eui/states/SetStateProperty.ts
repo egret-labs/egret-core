@@ -28,10 +28,9 @@
 //////////////////////////////////////////////////////////////////////////////////////
 
 
-module eui {
+namespace eui {
 
     /**
-     * @language en_US
      * The SetProperty class specifies a property value that is in effect only
      * during the parent view state.
      * You use this class in the <code>overrides</code> property of the State class.
@@ -39,19 +38,19 @@ module eui {
      * @version Egret 2.4
      * @version eui 1.0
      * @platform Web,Native
+     * @language en_US
      */
 
     /**
-     * @language zh_CN
      * SetProperty 类指定只在父视图状态期间有效的属性值。可以在 State 类的 overrides 属性中使用该类。
      *
      * @version Egret 2.4
      * @version eui 1.0
      * @platform Web,Native
+     * @language zh_CN
      */
     export class SetStateProperty implements IOverride {
         /**
-         * @language en_US
          * Constructor.
          *
          * @param target The object whose property is being set.
@@ -62,9 +61,9 @@ module eui {
          * @version Egret 2.4
          * @version eui 1.0
          * @platform Web,Native
+         * @language en_US
          */
         /**
-         * @language zh_CN
          * 创建一个SetProperty实例。
          *
          * @param target 要设置其属性的对象。默认情况下，EUI 使用 State 对象的直接父级。
@@ -74,6 +73,7 @@ module eui {
          * @version Egret 2.4
          * @version eui 1.0
          * @platform Web,Native
+         * @language zh_CN
          */
         public constructor(host:any, templates:any[], chainIndex:number[], target:any, prop:string) {
             this.host = host;
@@ -126,7 +126,7 @@ module eui {
             if (!this.target) {
                 return;
             }
-            var nextOldValue = this.target[this.prop];
+            let nextOldValue = this.target[this.prop];
             if (this.oldValue) {
                 this.setPropertyValue(this.target, this.prop, this.oldValue, this.oldValue);
             }
@@ -147,7 +147,7 @@ module eui {
             if (!this.target) {
                 return;
             }
-            var oldValue = this.oldValue;
+            let oldValue = this.oldValue;
             if (this.target[this.prop]) {
                 this.oldValue = this.target[this.prop];
             }

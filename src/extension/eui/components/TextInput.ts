@@ -1,4 +1,4 @@
-module eui.sys {
+namespace eui.sys {
     /**
      * @private
      */
@@ -14,28 +14,28 @@ module eui.sys {
         inputType
     }
 }
-module eui {
+namespace eui {
     import FocusEvent = egret.FocusEvent;
     /**
      *
      */
     /**
-     * @language en_US
      * The TextInput is a textfield input component, the user can input and edit the text.
      *
      * @version Egret 2.5.7
      * @version eui 1.0
      * @platform Web,Native
      * @includeExample  extension/eui/components/TextInputExample.ts
+     * @language en_US
      */
     /**
-     * @language zh_CN
      * TextInput 是一个文本输入控件，供用户输入和编辑统一格式文本
      *
      * @version Egret 2.5.7
      * @version eui 1.0
      * @platform Web,Native
      * @includeExample  extension/eui/components/TextInputExample.ts
+     * @language zh_CN
      */
     export class TextInput extends Component {
         constructor() {
@@ -58,37 +58,37 @@ module eui {
          */
         $TextInput:Object;
         /**
-         * @language en_US
          * [SkinPart] The TextInput display
          * @skinPart
          * @version Egret 2.5.7
          * @version eui 1.0
          * @platform Web,Native
+         * @language en_US
          */
         /**
-         * @language zh_CN
          * [SkinPart] 实体文本输入组件
          * @skinPart
          * @version Egret 2.5.7
          * @version eui 1.0
          * @platform Web,Native
+         * @language zh_CN
          */
         public textDisplay:EditableText;
         /**
-         * @language zh_CN
          * [SkinPart] When the property of the text is empty, it will show the defalut string.
          * @skinPart
          * @version Egret 2.4
          * @version eui 1.0
          * @platform Web,Native
+         * @language zh_CN
          */
         /**
-         * @language zh_CN
          * [SkinPart] 当text属性为空字符串时要显示的文本。
          * @skinPart
          * @version Egret 2.4
          * @version eui 1.0
          * @platform Web,Native
+         * @language zh_CN
          */
         public promptDisplay:Label;
 
@@ -133,7 +133,7 @@ module eui {
             if (this.textDisplay) {
                 return this.textDisplay.displayAsPassword;
             }
-            var v = this.$TextInput[sys.TextInputKeys.displayAsPassword];
+            let v = this.$TextInput[sys.TextInputKeys.displayAsPassword];
             return v ? v : false;
         }
 
@@ -159,7 +159,6 @@ module eui {
          * @platform Web,Native
          */
         public set inputType(value: string) {
-            console.log('set inputType')
             this.$TextInput[sys.TextInputKeys.inputType] = value;
             if (this.textDisplay) {
                 this.textDisplay.inputType = value;
@@ -174,7 +173,6 @@ module eui {
          * @platform Web,Native
          */
         public get inputType(): string {
-            console.log('get inputType')
             if (this.textDisplay) {
                 return this.textDisplay.inputType;
             }
@@ -222,7 +220,7 @@ module eui {
             if (this.textDisplay) {
                 return this.textDisplay.maxChars;
             }
-            var v = this.$TextInput[sys.TextInputKeys.maxChars];
+            let v = this.$TextInput[sys.TextInputKeys.maxChars];
             return v ? v : 0;
         }
 
@@ -252,7 +250,7 @@ module eui {
             if (this.textDisplay) {
                 return this.textDisplay.maxWidth;
             }
-            var v = this.$TextInput[sys.TextInputKeys.maxWidth];
+            let v = this.$TextInput[sys.TextInputKeys.maxWidth];
             return v ? v : 100000;
         }
 
@@ -282,7 +280,7 @@ module eui {
             if (this.textDisplay) {
                 //return this.textDisplay.maxHeight;
             }
-            var v = this.$TextInput[sys.TextInputKeys.maxHeight];
+            let v = this.$TextInput[sys.TextInputKeys.maxHeight];
             return v ? v : 100000;
         }
 
@@ -391,7 +389,7 @@ module eui {
          * @platform Web,Native
          */
         protected getCurrentState():string {
-            var skin = this.skin;
+            let skin = this.skin;
             if (this.prompt && !this.isFocus && !this.text) {
                 if (this.enabled && skin.hasState("normalWithPrompt")) {
                     return "normalWithPrompt";
@@ -419,7 +417,7 @@ module eui {
          */
         protected partAdded(partName:string, instance:any):void {
             super.partAdded(partName, instance);
-            var values = this.$TextInput;
+            let values = this.$TextInput;
             if (instance == this.textDisplay) {
                 this.textDisplayAdded();
                 if (this.textDisplay instanceof EditableText) {
@@ -459,7 +457,7 @@ module eui {
          * @private
          */
         private textDisplayAdded():void {
-            var values = this.$TextInput;
+            let values = this.$TextInput;
             if (values[sys.TextInputKeys.displayAsPassword]) {
                 this.textDisplay.displayAsPassword = values[sys.TextInputKeys.displayAsPassword];
             }
@@ -489,7 +487,7 @@ module eui {
          * @private
          */
         private textDisplayRemoved() {
-            var values = this.$TextInput;
+            let values = this.$TextInput;
             values[sys.TextInputKeys.displayAsPassword] = this.textDisplay.displayAsPassword;
             values[sys.TextInputKeys.textColor] = this.textDisplay.textColor;
             values[sys.TextInputKeys.maxChars] = this.textDisplay.maxChars;

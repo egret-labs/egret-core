@@ -26,33 +26,33 @@
 //  EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 //
 //////////////////////////////////////////////////////////////////////////////////////
-module egret {
+namespace egret {
     /**
-     * @language en_US
      * @private
      * @version Egret 2.4
      * @platform Web,Native
+     * @language en_US
      */
     /**
-     * @language zh_CN
      * @private
      * @version Egret 2.4
      * @platform Web,Native
+     * @language zh_CN
      */
     export interface ISocket {
         /**
-         * @language en_US
          * 连接
          * @method egret.ISocket#connect
          * @version Egret 2.4
          * @platform Web,Native
+         * @language en_US
          */
         /**
-         * @language zh_CN
          * 连接
          * @method egret.ISocket#connect
          * @version Egret 2.4
          * @platform Web,Native
+         * @language zh_CN
          */
         connect(host:string, port:number):void;
 
@@ -63,7 +63,6 @@ module egret {
         connectByUrl(url:string):void;
 
         /**
-         * @language en_US
          * 
          * @param onConnect 
          * @param onClose 
@@ -72,9 +71,9 @@ module egret {
          * @param thisObject 
          * @version Egret 2.4
          * @platform Web,Native
+         * @language en_US
          */
         /**
-         * @language zh_CN
          * 
          * @param onConnect 
          * @param onClose 
@@ -83,50 +82,64 @@ module egret {
          * @param thisObject 
          * @version Egret 2.4
          * @platform Web,Native
+         * @language zh_CN
          */
         addCallBacks(onConnect:Function, onClose:Function, onSocketData:Function, onError:Function, thisObject:any):void;
 
         /**
-         * @language en_US
          * 
          * @param message 
          * @version Egret 2.4
          * @platform Web,Native
+         * @language en_US
          */
         /**
-         * @language zh_CN
          * 
          * @param message 
          * @version Egret 2.4
          * @platform Web,Native
+         * @language zh_CN
          */
         send(message:any):void;
 
         /**
-         * @language en_US
          * 
          * @version Egret 2.4
          * @platform Web,Native
+         * @language en_US
          */
         /**
-         * @language zh_CN
          * 
          * @version Egret 2.4
          * @platform Web,Native
+         * @language zh_CN
          */
         close():void;
+        /**
+         * 
+         * @version Egret 4.1.0
+         * @platform Web,Native
+         * @language en_US
+         */
+        /**
+         * 
+         * @version Egret 4.1.0
+         * @platform Web,Native
+         * @language zh_CN
+         */
+        disconnect():void;
     }
 
     /**
-     * @language en_US
      * @version Egret 2.4
      * @platform Web,Native
+     * @language en_US
      */
     /**
-     * @language zh_CN
      * @version Egret 2.4
      * @platform Web,Native
+     * @language zh_CN
      */
-    export var ISocket:{new():ISocket};
+    export let ISocket:{new():ISocket};
 
 }

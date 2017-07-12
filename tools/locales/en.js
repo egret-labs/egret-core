@@ -26,7 +26,6 @@
 //  EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 //
 //////////////////////////////////////////////////////////////////////////////////////
-/// <reference path="../lib/node.d.ts" />
 global["$locale_strings"] = global["$locale_strings"] || {};
 var locale_strings = global["$locale_strings"];
 locale_strings[10001] = "Compiler option {0} expects an argument";

@@ -30,7 +30,7 @@
 /// <reference path="../states/State.ts" />
 /// <reference path="../core/UIComponent.ts" />
 /// <reference path="../utils/registerProperty.ts" />
-module eui {
+namespace eui {
 
     /**
      * @private
@@ -45,7 +45,6 @@ module eui {
     }
 
     /**
-     * @language en_US
      * The Group class is defines the base class for layout component.
      * If the contents of the sub items are too large to scroll to show, you can wrap a Scroller component outside the
      * group (Give the instance of Group to <code>viewport</code> property of Scroller component).
@@ -57,9 +56,9 @@ module eui {
      * @version Egret 2.4
      * @version eui 1.0
      * @platform Web,Native
+     * @language en_US
      */
     /**
-     * @language zh_CN
      * Group 是自动布局的容器基类。如果包含的子项内容太大需要滚动显示，可以在在 Group 外部包裹一层 Scroller 组件
      * (将 Group 实例赋值给 Scroller 组件的 viewport 属性)。Scroller 会为 Group 添加滚动的触摸操作功能，并显示垂直或水平的滚动条。
      *
@@ -69,24 +68,25 @@ module eui {
      * @version Egret 2.4
      * @version eui 1.0
      * @platform Web,Native
+     * @language zh_CN
      */
     export class Group extends egret.DisplayObjectContainer implements IViewport {
 
         /**
-         * @language en_US
          * Constructor.
          *
          * @version Egret 2.4
          * @version eui 1.0
          * @platform Web,Native
+         * @language en_US
          */
         /**
-         * @language zh_CN
          * 构造函数。
          *
          * @version Egret 2.4
          * @version eui 1.0
          * @platform Web,Native
+         * @language zh_CN
          */
         public constructor() {
             super();
@@ -105,24 +105,24 @@ module eui {
         $Group:Object;
 
         /**
-         * @language en_US
          * This property is Usually invoked in resolving an EXML for adding multiple children quickly.
          *
          * @version Egret 2.4
          * @version eui 1.0
          * @platform Web,Native
+         * @language en_US
          */
         /**
-         * @language zh_CN
          * 此属性通常在 EXML 的解析器中调用，便于快速添加多个子项。
          * @version Egret 2.4
          * @version eui 1.0
          * @platform Web,Native
+         * @language zh_CN
          */
         public set elementsContent(value:egret.DisplayObject[]) {
             if (value) {
-                var length = value.length;
-                for (var i = 0; i < length; i++) {
+                let length = value.length;
+                for (let i = 0; i < length; i++) {
                     this.addChild(value[i]);
                 }
             }
@@ -134,7 +134,6 @@ module eui {
         $layout:LayoutBase = null;
 
         /**
-         * @language en_US
          * The layout object for this container.
          * This object is responsible for the measurement and layout of
          * the UIcomponent in the container.
@@ -144,9 +143,9 @@ module eui {
          * @version Egret 2.4
          * @version eui 1.0
          * @platform Web,Native
+         * @language en_US
          */
         /**
-         * @language zh_CN
          * 此容器的布局对象。
          *
          * s@default eui.BasicLayout
@@ -154,6 +153,7 @@ module eui {
          * @version Egret 2.4
          * @version eui 1.0
          * @platform Web,Native
+         * @language zh_CN
          */
         public get layout():LayoutBase {
             return this.$layout;
@@ -207,7 +207,6 @@ module eui {
         }
 
         /**
-         * @language en_US
          *
          * Sets the <code>contentWidth</code> and <code>contentHeight</code>
          * properties.
@@ -221,9 +220,9 @@ module eui {
          * @version Egret 2.4
          * @version eui 1.0
          * @platform Web,Native
+         * @language en_US
          */
         /**
-         * @language zh_CN
          *
          * 设置 <code>contentWidth</code> 和 <code>contentHeight</code> 属性。
          * 此方法由布局来调用，开发者应该在布局类的 <code>updateDisplayList()</code> 方法中对其进行调用。
@@ -234,13 +233,14 @@ module eui {
          * @version Egret 2.4
          * @version eui 1.0
          * @platform Web,Native
+         * @language zh_CN
          */
         public setContentSize(width:number, height:number):void {
             width = Math.ceil(+width || 0);
             height = Math.ceil(+height || 0);
-            var values = this.$Group;
-            var wChange = (values[Keys.contentWidth] !== width);
-            var hChange = (values[Keys.contentHeight] !== height);
+            let values = this.$Group;
+            let wChange = (values[Keys.contentWidth] !== width);
+            let hChange = (values[Keys.contentHeight] !== height);
             if (!wChange && !hChange) {
                 return;
             }
@@ -266,7 +266,7 @@ module eui {
 
         public set scrollEnabled(value:boolean) {
             value = !!value;
-            var values = this.$Group;
+            let values = this.$Group;
             if (value === values[Keys.scrollEnabled])
                 return;
             values[Keys.scrollEnabled] = value;
@@ -286,7 +286,7 @@ module eui {
 
         public set scrollH(value:number) {
             value = +value || 0;
-            var values = this.$Group;
+            let values = this.$Group;
             if (value === values[Keys.scrollH])
                 return;
             values[Keys.scrollH] = value;
@@ -309,7 +309,7 @@ module eui {
 
         public set scrollV(value:number) {
             value = +value || 0;
-            var values = this.$Group;
+            let values = this.$Group;
             if (value == values[Keys.scrollV])
                 return;
             values[Keys.scrollV] = value;
@@ -325,10 +325,10 @@ module eui {
          * @returns
          */
         private updateScrollRect():boolean {
-            var values = this.$Group;
-            var hasClip = values[Keys.scrollEnabled];
+            let values = this.$Group;
+            let hasClip = values[Keys.scrollEnabled];
             if (hasClip) {
-                var uiValues = this.$UIComponent;
+                let uiValues = this.$UIComponent;
                 this.scrollRect = egret.$TempRectangle.setTo(values[Keys.scrollH],
                     values[Keys.scrollV],
                     uiValues[sys.UIKeys.width], uiValues[sys.UIKeys.height]);
@@ -340,40 +340,40 @@ module eui {
         }
 
         /**
-         * @language en_US
          * The number of layout element in this container.
          *
          * @version Egret 2.4
          * @version eui 1.0
          * @platform Web,Native
+         * @language en_US
          */
         /**
-         * @language zh_CN
          * 布局元素子项的数量。
          *
          * @version Egret 2.4
          * @version eui 1.0
          * @platform Web,Native
+         * @language zh_CN
          */
         public get numElements():number {
             return this.$children.length;
         }
 
         /**
-         * @language en_US
          * Returns the layout element at the specified index.
          *
          * @version Egret 2.4
          * @version eui 1.0
          * @platform Web,Native
+         * @language en_US
          */
         /**
-         * @language zh_CN
          * 获取一个布局元素子项。
          *
          * @version Egret 2.4
          * @version eui 1.0
          * @platform Web,Native
+         * @language zh_CN
          */
         public getElementAt(index:number):egret.DisplayObject {
             return this.$children[index];
@@ -383,7 +383,6 @@ module eui {
         }
 
         /**
-         * @language en_US
          * Set the index range of the sub Visual element in container which support virtual layout.
          * This method is invalid in container which do not support virtual layout.
          * This method is usually invoked before layout. Override this method to release the invisible elements.
@@ -394,9 +393,9 @@ module eui {
          * @version Egret 2.4
          * @version eui 1.0
          * @platform Web,Native
+         * @language en_US
          */
         /**
-         * @language zh_CN
          * 在支持虚拟布局的容器中，设置容器内可见的子元素索引范围。此方法在不支持虚拟布局的容器中无效。
          * 通常在即将重新布局子项之前会被调用一次，容器覆盖此方法提前释放已经不可见的子元素。
          *
@@ -406,13 +405,13 @@ module eui {
          * @version Egret 2.4
          * @version eui 1.0
          * @platform Web,Native
+         * @language zh_CN
          */
         public setVirtualElementIndicesInView(startIndex:number, endIndex:number):void {
 
         }
 
         /**
-         * @language en_US
          * When <code>true</code>, this property
          * ensures that the entire bounds of the Group respond to
          * touch events such as begin.
@@ -420,14 +419,15 @@ module eui {
          * @version Egret 2.4
          * @version eui 1.0
          * @platform Web,Native
+         * @language en_US
          */
         /**
-         * @language zh_CN
          * 触摸组件的背景透明区域是否可以穿透。设置为true表示可以穿透，反之透明区域也会响应触摸事件。默认 false。
          *
          * @version Egret 2.4
          * @version eui 1.0
          * @platform Web,Native
+         * @language zh_CN
          */
         public get touchThrough():boolean{
             return this.$Group[Keys.touchThrough];
@@ -441,17 +441,17 @@ module eui {
          * @private
          */
         $hitTest(stageX:number, stageY:number):egret.DisplayObject {
-            var target = super.$hitTest(stageX, stageY);
+            let target = super.$hitTest(stageX, stageY);
             if (target || this.$Group[Keys.touchThrough]) {
                 return target;
             }
             if (!this.$visible || !this.touchEnabled) {
                 return null;
             }
-            var point = this.globalToLocal(stageX, stageY, egret.$TempPoint);
-            var values = this.$UIComponent;
-            var bounds = egret.$TempRectangle.setTo(0, 0, values[sys.UIKeys.width], values[sys.UIKeys.height]);
-            var scrollRect = this.$scrollRect;
+            let point = this.globalToLocal(stageX, stageY, egret.$TempPoint);
+            let values = this.$UIComponent;
+            let bounds = egret.$TempRectangle.setTo(0, 0, values[sys.UIKeys.width], values[sys.UIKeys.height]);
+            let scrollRect = this.$scrollRect;
             if(scrollRect){
                 bounds.x = scrollRect.x;
                 bounds.y = scrollRect.y;
@@ -469,20 +469,20 @@ module eui {
         $stateValues:sys.StateValues = new sys.StateValues();
 
         /**
-         * @language en_US
          * The list of state for this component.
          *
          * @version Egret 2.4
          * @version eui 1.0
          * @platform Web,Native
+         * @language en_US
          */
         /**
-         * @language zh_CN
          * 为此组件定义的视图状态。
          *
          * @version Egret 2.4
          * @version eui 1.0
          * @platform Web,Native
+         * @language zh_CN
          */
         public states:State[];
 
@@ -522,7 +522,7 @@ module eui {
          * @platform Web,Native
          */
         public invalidateState():void {
-            var values = this.$stateValues;
+            let values = this.$stateValues;
             if (values.stateIsDirty) {
                 return;
             }
@@ -583,7 +583,7 @@ module eui {
          */
         protected commitProperties():void {
             sys.UIComponentImpl.prototype["commitProperties"].call(this);
-            var values = this.$stateValues;
+            let values = this.$stateValues;
             if (values.stateIsDirty) {
                 values.stateIsDirty = false;
                 if (!values.explicitState) {
@@ -905,9 +905,4 @@ module eui {
     registerProperty(Group, "elementsContent", "Array", true);
     registerProperty(Group, "states", "State[]");
 
-    if(DEBUG){
-        egret.$markReadOnly(Group,"contentWidth");
-        egret.$markReadOnly(Group,"contentHeight");
-        egret.$markReadOnly(Group,"numElements");
-    }
 }

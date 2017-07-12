@@ -1,8 +1,8 @@
-module egret {
+namespace egret {
 
     $locale_strings = $locale_strings || {};
     $locale_strings["zh_CN"] = $locale_strings["zh_CN"] || {};
-    var locale_strings = $locale_strings["zh_CN"];
+    let locale_strings = $locale_strings["zh_CN"];
 
     //eui 2000-2999
     //RES 3200-3299
@@ -42,9 +42,9 @@ module egret {
     locale_strings[1036] = "声音已停止，请重新调用 Sound.play() 来播放声音！";
     locale_strings[1037] = "非正确的blob加载！";
     locale_strings[1038] = "XML 格式错误!";
-    locale_strings[1039] = "跨域图片不能设置 pixelHitTest 属性!";
+    locale_strings[1039] = "跨域图片不能获取像素信息!";
     locale_strings[1040] = "hitTestPoint 不能对跨域图片进行检测! 请检查该显示对象内是否含有跨域元素";
-    locale_strings[1041] = "egret.MainContext.runtimeType 已废弃,请使用egret.Capabilities.runtimeType 代替";
+    locale_strings[1041] = "{0} 已废弃,请使用 {1} 代替";
     locale_strings[1042] = "drawToTexture方法传入的区域各个参数需要为整数,否则某些浏览器绘制会出现异常";
     locale_strings[1043] = "{0} 中存在编译错误，属性名 : {1}，属性值 : {2}";
     locale_strings[1044] = "当前的 runtime 版本不支持视频播放,请使用最新的版本";
@@ -53,6 +53,7 @@ module egret {
     locale_strings[1047] = "egret.localStorage.setItem保存失败,key={0}&value={1}";
     locale_strings[1048] = "视频加载失败";
     locale_strings[1049] = "声音在没有加载完之前不允许播放";
+    locale_strings[1050] = "ExternalInterface调用了js没有注册的方法: {0}";
 
     //gui  3000-3099
     locale_strings[3000] = "主题配置文件加载失败: {0}";

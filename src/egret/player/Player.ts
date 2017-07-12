@@ -29,9 +29,9 @@
 
 /// <reference path="../display/Sprite.ts" />
 
-module egret.sys {
+namespace egret.sys {
 
-    export var $TempStage:egret.Stage;
+    export let $TempStage: egret.Stage;
 
     /**
      * @private
@@ -43,7 +43,7 @@ module egret.sys {
          * @private
          * 实例化一个播放器对象。
          */
-        public constructor(buffer:RenderBuffer, stage:Stage, entryClassName:string) {
+        public constructor(buffer: RenderBuffer, stage: Stage, entryClassName: string) {
             super();
             if (DEBUG && !buffer) {
                 $error(1003, "buffer");
@@ -67,8 +67,8 @@ module egret.sys {
         /**
          * @private
          */
-        private createDisplayList(stage:Stage, buffer:RenderBuffer):DisplayList {
-            var displayList = new DisplayList(stage);
+        private createDisplayList(stage: Stage, buffer: RenderBuffer): DisplayList {
+            let displayList = new DisplayList(stage);
             displayList.renderBuffer = buffer;
             stage.$displayList = displayList;
             //displayList.setClipRect(stage.$stageWidth, stage.$stageHeight);
@@ -79,33 +79,33 @@ module egret.sys {
         /**
          * @private
          */
-        private screenDisplayList:DisplayList;
+        private screenDisplayList: DisplayList;
         /**
          * @private
          * 入口类的完整类名
          */
-        private entryClassName:string;
+        private entryClassName: string;
         /**
          * @private
          * 舞台引用
          */
-        public stage:Stage;
+        public stage: Stage;
         /**
          * @private
          * 入口类实例
          */
-        private root:DisplayObject;
+        private root: DisplayObject;
 
         /**
          * @private
          */
-        private isPlaying:boolean = false;
+        private isPlaying: boolean = false;
 
         /**
          * @private
          * 启动播放器
          */
-        public start():void {
+        public start(): void {
             if (this.isPlaying || !this.stage) {
                 return;
             }
@@ -116,20 +116,20 @@ module egret.sys {
             if (!this.root) {
                 this.initialize();
             }
-            $ticker.$addPlayer(this);
+            ticker.$addPlayer(this);
         }
 
         /**
          * @private
          *
          */
-        private initialize():void {
-            var rootClass;
+        private initialize(): void {
+            let rootClass;
             if (this.entryClassName) {
                 rootClass = egret.getDefinitionByName(this.entryClassName);
             }
             if (rootClass) {
-                var rootContainer:any = new rootClass();
+                let rootContainer: any = new rootClass();
                 this.root = rootContainer;
                 if (rootContainer instanceof egret.DisplayObject) {
                     this.stage.addChild(rootContainer);
@@ -147,7 +147,7 @@ module egret.sys {
          * @private
          * 停止播放器，停止后将不能重新启动。
          */
-        public stop():void {
+        public stop(): void {
             this.pause();
             this.stage = null;
         }
@@ -156,100 +156,47 @@ module egret.sys {
          * @private
          * 暂停播放器，后续可以通过调用start()重新启动播放器。
          */
-        public pause():void {
+        public pause(): void {
             if (!this.isPlaying) {
                 return;
             }
             this.isPlaying = false;
-            $ticker.$removePlayer(this);
+            ticker.$removePlayer(this);
         }
 
         /**
          * @private
          * 渲染屏幕
          */
-        $render(triggerByFrame:boolean, costTicker:number):void {
+        $render(triggerByFrame: boolean, costTicker: number): void {
             if (this.showFPS || this.showLog) {
-                this.stage.addChild(this.fpsDisplay);
+                this.stage.addChild(this.fps);
             }
-            this.callLaters();
-            this.callLaterAsyncs();
-            var stage = this.stage;
-            var t = egret.getTimer();
-            var dirtyList = stage.$displayList.updateDirtyRegions();
+            let stage = this.stage;
+            let t = egret.getTimer();
+            let dirtyList = stage.$displayList.updateDirtyRegions();
 
-            var t1 = egret.getTimer();
+            let t1 = egret.getTimer();
             dirtyList = dirtyList.concat();
-            var drawCalls = stage.$displayList.drawToSurface();
+            let drawCalls = stage.$displayList.drawToSurface();
 
             if (this._showPaintRect) {
                 this.drawPaintRect(dirtyList);
             }
-            var t2 = egret.getTimer();
+            let t2 = egret.getTimer();
             if (triggerByFrame && this.showFPS) {
-                var dirtyRatio = 0;
+                let dirtyRatio = 0;
                 if (drawCalls > 0) {
-                    var length = dirtyList.length;
-                    var dirtyArea = 0;
-                    for (var i = 0; i < length; i++) {
+                    let length = dirtyList.length;
+                    let dirtyArea = 0;
+                    for (let i = 0; i < length; i++) {
                         dirtyArea += dirtyList[i].area;
                     }
                     dirtyRatio = Math.ceil(dirtyArea * 1000 / (stage.stageWidth * stage.stageHeight)) / 10;
                 }
-                this.fpsDisplay.update(drawCalls, dirtyRatio, t1 - t, t2 - t1, costTicker);
+                this.fps.update(drawCalls, dirtyRatio, t1 - t, t2 - t1, costTicker);
             }
         }
-
-        /**
-         * @private
-         *
-         */
-        private callLaters():void {
-            if ($callLaterFunctionList.length > 0) {
-                var functionList:Array<any> = $callLaterFunctionList;
-                $callLaterFunctionList = [];
-                var thisList:Array<any> = $callLaterThisList;
-                $callLaterThisList = [];
-                var argsList:Array<any> = $callLaterArgsList;
-                $callLaterArgsList = [];
-            }
-
-            if (functionList) {
-                var length:number = functionList.length;
-                for (var i:number = 0; i < length; i++) {
-                    var func:Function = functionList[i];
-                    if (func != null) {
-                        func.apply(thisList[i], argsList[i]);
-                    }
-                }
-            }
-
-        }
-
-        /**
-         * @private
-         *
-         */
-        private callLaterAsyncs():void {
-            if ($callAsyncFunctionList.length > 0) {
-                var locCallAsyncFunctionList = $callAsyncFunctionList;
-                var locCallAsyncThisList = $callAsyncThisList;
-                var locCallAsyncArgsList = $callAsyncArgsList;
-
-                $callAsyncFunctionList = [];
-                $callAsyncThisList = [];
-                $callAsyncArgsList = [];
-
-                for (var i:number = 0; i < locCallAsyncFunctionList.length; i++) {
-                    var func:Function = locCallAsyncFunctionList[i];
-                    if (func != null) {
-                        func.apply(locCallAsyncThisList[i], locCallAsyncArgsList[i]);
-                    }
-                }
-            }
-
-        }
-
 
         /**
          * @private
@@ -257,17 +204,17 @@ module egret.sys {
          * @param stageWidth 舞台宽度（以像素为单位）
          * @param stageHeight 舞台高度（以像素为单位）
          */
-        public updateStageSize(stageWidth:number, stageHeight:number):void {
-            var stage = this.stage;
+        public updateStageSize(stageWidth: number, stageHeight: number): void {
+            let stage = this.stage;
             //if (stageWidth !== stage.$stageWidth || stageHeight !== stage.$stageHeight) {
-                stage.$stageWidth = stageWidth;
-                stage.$stageHeight = stageHeight;
-                this.screenDisplayList.setClipRect(stageWidth, stageHeight);
-                if (this.stageDisplayList) {
-                    this.stageDisplayList.setClipRect(stageWidth, stageHeight);
-                }
-                stage.dispatchEventWith(Event.RESIZE);
-                stage.$invalidate(true);
+            stage.$stageWidth = stageWidth;
+            stage.$stageHeight = stageHeight;
+            this.screenDisplayList.setClipRect(stageWidth, stageHeight);
+            if (this.stageDisplayList) {
+                this.stageDisplayList.setClipRect(stageWidth, stageHeight);
+            }
+            stage.dispatchEventWith(Event.RESIZE);
+            stage.$invalidate(true);
             //}
         }
 
@@ -276,45 +223,45 @@ module egret.sys {
          * @private
          * 显示FPS。
          */
-        public displayFPS:(showFPS:boolean, showLog:boolean, logFilter:string, fpsStyles:Object)=>void;
+        public displayFPS: (showFPS: boolean, showLog: boolean, logFilter: string, fpsStyles: Object) => void;
         /**
          * @private
          */
-        private showFPS:boolean;
+        private showFPS: boolean;
         /**
          * @private
          */
-        private showLog:boolean;
+        private showLog: boolean;
         /**
          * @private
          */
-        private fpsDisplay:FPS;
+        private fps: FPS;
 
         /**
          * @private
          * 是否显示脏矩形重绘区。
          */
-        public showPaintRect:(value:boolean)=>void;
+        public showPaintRect: (value: boolean) => void;
         /**
          * @private
          */
-        private drawDirtyRect:(x:number, y:number, width:number, height:number, context:any)=>void;
+        private drawDirtyRect: (x: number, y: number, width: number, height: number, context: any) => void;
         /**
          * @private
          */
-        private _showPaintRect:boolean;
+        private _showPaintRect: boolean;
         /**
          * @private
          */
-        private stageDisplayList:DisplayList;
+        private stageDisplayList: DisplayList;
         /**
          * @private
          */
-        private paintList:any[];
+        private paintList: any[];
         /**
          * @private
          */
-        private drawPaintRect:(dirtyList:Region[])=>void;
+        private drawPaintRect: (dirtyList: Region[]) => void;
 
     }
 
@@ -324,31 +271,31 @@ module egret.sys {
      * FPS显示对象
      */
     interface FPS extends Sprite {
-        new (stage:Stage, showFPS:boolean, showLog:boolean, logFilter:string):FPS
+        new (stage: Stage, showFPS: boolean, showLog: boolean, logFilter: string): FPS
         /**
          * 更新FPS信息
          */
-        update(drawCalls:number, dirtyRatio:number, ...args):void;
+        update(drawCalls: number, dirtyRatio: number, ...args): void;
 
         /**
          * 插入一条日志信息
          */
-        updateInfo(info:string):void;
+        updateInfo(info: string): void;
     }
 
-    declare var FPS:{new (stage:Stage, showFPS:boolean, showLog:boolean, logFilter:string, styles:Object):FPS};
+    declare let FPS: { new (stage: Stage, showFPS: boolean, showLog: boolean, logFilter: string, styles: Object): FPS };
 
     /**
      * @private
      */
-    export var $logToFPS:(info:string)=>void;
+    export let $logToFPS: (info: string) => void;
 
 
-    var infoLines:string[] = [];
-    var fpsDisplay:FPS;
-    var fpsStyle:Object;
+    let infoLines: string[] = [];
+    let fpsDisplay: FPS;
+    let fpsStyle: Object;
 
-    $logToFPS = function (info:string):void {
+    $logToFPS = function (info: string): void {
         if (!fpsDisplay) {
             infoLines.push(info);
             return;
@@ -356,12 +303,12 @@ module egret.sys {
         fpsDisplay.updateInfo(info);
     };
 
-    function displayFPS(showFPS:boolean, showLog:boolean, logFilter:string, styles:Object):void {
+    function displayFPS(showFPS: boolean, showLog: boolean, logFilter: string, styles: Object): void {
         if (showLog) {
             egret.log = function () {
-                var length = arguments.length;
-                var info = "";
-                for (var i = 0; i < length; i++) {
+                let length = arguments.length;
+                let info = "";
+                for (let i = 0; i < length; i++) {
                     info += arguments[i] + " ";
                 }
                 sys.$logToFPS(info);
@@ -372,15 +319,15 @@ module egret.sys {
         showLog = !!showLog;
         this.showFPS = !!showFPS;
         this.showLog = showLog;
-        if (!this.fpsDisplay) {
-            var x = styles["x"] === undefined ? 0 : styles["x"];
-            var y = styles["y"] === undefined ? 0 : styles["y"];
-            fpsDisplay = this.fpsDisplay = new FPS(this.stage, showFPS, showLog, logFilter, styles);
+        if (!this.fps) {
+            let x = styles["x"] === undefined ? 0 : styles["x"];
+            let y = styles["y"] === undefined ? 0 : styles["y"];
+            fpsDisplay = this.fps = new FPS(this.stage, showFPS, showLog, logFilter, styles);
             fpsDisplay.x = x;
             fpsDisplay.y = y;
 
-            var length = infoLines.length;
-            for (var i = 0; i < length; i++) {
+            let length = infoLines.length;
+            for (let i = 0; i < length; i++) {
                 fpsDisplay.updateInfo(infoLines[i]);
             }
             infoLines = null;
@@ -388,7 +335,7 @@ module egret.sys {
     }
 
 
-    function showPaintRect(value:boolean):void {
+    function showPaintRect(value: boolean): void {
         value = !!value;
         if (this._showPaintRect == value) {
             return;
@@ -406,40 +353,41 @@ module egret.sys {
     }
 
 
-    function drawPaintRect(dirtyList:Region[]):void {
-        var length = dirtyList.length;
-        var list = [];
-        for (var i = 0; i < length; i++) {
-            var region:Region = dirtyList[i];
+    function drawPaintRect(dirtyList: Region[]): void {
+        let length = dirtyList.length;
+        let list = [];
+        for (let i = 0; i < length; i++) {
+            let region: Region = dirtyList[i];
             list[i] = [region.minX, region.minY, region.width, region.height];
             region.width -= 1;
             region.height -= 1;
         }
-        var repaintList = this.paintList;
+        let repaintList = this.paintList;
         repaintList.push(list);
         if (repaintList.length > 1) {
             repaintList.shift();
         }
-        var renderBuffer = this.screenDisplayList.renderBuffer;
-        var context = renderBuffer.context;
+        let renderBuffer = this.screenDisplayList.renderBuffer;
+        let context = renderBuffer.context;
         context.setTransform(1, 0, 0, 1, 0, 0);
         context.clearRect(0, 0, renderBuffer.surface.width, renderBuffer.surface.height);
         context.drawImage(this.stageDisplayList.renderBuffer.surface, 0, 0);
         length = repaintList.length;
-        for (i = 0; i < length; i++) {
+        for (let i = 0; i < length; i++) {
             list = repaintList[i];
-            for (var j = list.length - 1; j >= 0; j--) {
-                var r:number[] = list[j];
+            for (let j = list.length - 1; j >= 0; j--) {
+                let r: number[] = list[j];
                 this.drawDirtyRect(r[0], r[1], r[2], r[3], context);
             }
         }
         context.save();
         context.beginPath();
-        var length = dirtyList.length;
-        for (var i = 0; i < length; i++) {
-            var region = dirtyList[i];
-            context.clearRect(region.minX, region.minY, region.width, region.height);
-            context.rect(region.minX, region.minY, region.width, region.height);
+        length = dirtyList.length;
+        for (let i = 0; i < length; i++) {
+            let region = dirtyList[i];
+            let pixelRatio = DisplayList.$pixelRatio;
+            context.clearRect(region.minX * pixelRatio, region.minY * pixelRatio, region.width * pixelRatio, region.height * pixelRatio);
+            context.rect(region.minX * pixelRatio, region.minY * pixelRatio, region.width * pixelRatio, region.height * pixelRatio);
         }
         context.clip();
         context.drawImage(this.stageDisplayList.renderBuffer.surface, 0, 0);
@@ -449,18 +397,19 @@ module egret.sys {
     /**
      * 绘制一个脏矩形显示区域，在显示重绘区功能开启时调用。
      */
-    function drawDirtyRect(x:number, y:number, width:number, height:number, context:any):void {
+    function drawDirtyRect(x: number, y: number, width: number, height: number, context: any): void {
         context.strokeStyle = 'rgb(255,0,0)';
         context.lineWidth = 5;
-        context.strokeRect(x - 0.5, y - 0.5, width, height);
+        let pixelRatio = DisplayList.$pixelRatio;
+        context.strokeRect(x * pixelRatio - 0.5, y * pixelRatio - 0.5, width * pixelRatio, height * pixelRatio);
     }
 
     /**
      * FPS显示对象
      */
-    FPS = (function (_super):FPS {
+    FPS = (function (_super): FPS {
         __extends(FPSImpl, _super);
-        function FPSImpl(stage, showFPS, showLog, logFilter, styles:Object) {
+        function FPSImpl(stage, showFPS, showLog, logFilter, styles: Object) {
             _super.call(this);
             this["isFPS"] = true;
             this.infoLines = [];
@@ -479,22 +428,25 @@ module egret.sys {
             this.touchChildren = false;
             this.touchEnabled = false;
             this.styles = styles;
-            this.fpsDisplay = new FPSDisplay(stage,showFPS,showLog,logFilter,styles);
+            this.fpsDisplay = new FPSDisplay(stage, showFPS, showLog, logFilter, styles);
             this.addChild(this.fpsDisplay);
+            let logFilterRegExp: RegExp;
             try {
-                var logFilterRegExp = logFilter ? new RegExp(logFilter) : null;
+                logFilterRegExp = logFilter ? new RegExp(logFilter) : null;
+
             }
             catch (e) {
                 log(e);
             }
-            this.filter = function (message:string):boolean {
+
+            this.filter = function (message: string): boolean {
                 if (logFilterRegExp)
                     return logFilterRegExp.test(message);
                 return !logFilter || message.indexOf(logFilter) == 0;
             }
         }
         FPSImpl.prototype.update = function (drawCalls, dirtyRatio, costDirty, costRender, costTicker) {
-            var current = egret.getTimer();
+            let current = egret.getTimer();
             this.totalTime += current - this.lastTime;
             this.lastTime = current;
             this.totalTick++;
@@ -505,20 +457,20 @@ module egret.sys {
             this.costTicker += costTicker;
             if (this.totalTime >= 1000) {
 
-                var lastFPS = Math.min(Math.ceil(this.totalTick * 1000 / this.totalTime), sys.$ticker.$frameRate);
-                var lastDrawCalls = Math.round(this.drawCalls / this.totalTick);
-                var lastDirtyRatio = Math.round(this.dirtyRatio / this.totalTick);
-                var lastCostDirty = Math.round(this.costDirty / this.totalTick);
-                var lastCostRender = Math.round(this.costRender / this.totalTick);
-                var lastCostTicker = Math.round(this.costTicker / this.totalTick);
+                let lastFPS = Math.min(Math.ceil(this.totalTick * 1000 / this.totalTime), ticker.$frameRate);
+                let lastDrawCalls = Math.round(this.drawCalls / this.totalTick);
+                let lastDirtyRatio = Math.round(this.dirtyRatio / this.totalTick);
+                let lastCostDirty = Math.round(this.costDirty / this.totalTick);
+                let lastCostRender = Math.round(this.costRender / this.totalTick);
+                let lastCostTicker = Math.round(this.costTicker / this.totalTick);
                 this.fpsDisplay.update(
                     {
-                        fps:lastFPS,
-                        draw:lastDrawCalls,
-                        dirty:lastDirtyRatio,
-                        costTicker:lastCostTicker,
-                        costDirty:lastCostDirty,
-                        costRender:lastCostRender
+                        fps: lastFPS,
+                        draw: lastDrawCalls,
+                        dirty: lastDirtyRatio,
+                        costTicker: lastCostTicker,
+                        costDirty: lastCostDirty,
+                        costRender: lastCostRender
                     }
                 )
                 this.totalTick = 0;
@@ -531,7 +483,7 @@ module egret.sys {
             }
         };
         FPSImpl.prototype.updateInfo = function (info) {
-            if(!info){
+            if (!info) {
                 return;
             }
             if (!this.showLog) {
@@ -546,8 +498,8 @@ module egret.sys {
     })(egret.Sprite);
 
     function toArray(argument) {
-        var args = [];
-        for (var i = 0; i < argument.length; i++) {
+        let args = [];
+        for (let i = 0; i < argument.length; i++) {
             args.push(argument[i]);
         }
         return args;

@@ -1,9 +1,16 @@
 {
     "compilerOptions": {
         "target": "es5",
-        "noImplicitAny": false,
         "sourceMap": false,
-        "outFile":"test.js"
+        "declaration": true,
+        "allowUnreachableCode": true,
+        "newLine": "LF",
+        "lib": [
+            "es5",
+            "dom",
+            "es2015.promise",
+            "scripthost"
+        ]
     },
     "exclude": [
         "node_modules"

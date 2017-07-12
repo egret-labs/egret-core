@@ -27,7 +27,40 @@
 //
 //////////////////////////////////////////////////////////////////////////////////////
 
-module egret.web {
+namespace egret.web {
+
+    let customContext: CustomContext;
+
+    let context: EgretContext = {
+
+        setAutoClear: function(value:boolean):void {
+            WebGLRenderBuffer.autoClear = value;
+        },
+
+        save: function () {
+            // do nothing
+        },
+
+        restore: function () {
+            let context = WebGLRenderContext.getInstance(0, 0);
+            let gl = context.context;
+            gl.bindBuffer(gl.ARRAY_BUFFER, context["vertexBuffer"]);
+            gl.bindBuffer(gl.ELEMENT_ARRAY_BUFFER, context["indexBuffer"]);
+            gl.activeTexture(gl.TEXTURE0);
+            context.currentProgram = null;
+            context["bindIndices"] = false;
+            let buffer = context.$bufferStack[1];
+            context["activateBuffer"](buffer);
+            gl.enable(gl.BLEND);
+            context["setBlendMode"]("source-over");
+        }
+    }
+
+    function setRendererContext(custom: CustomContext) {
+        custom.onStart(context);
+        customContext = custom;
+    }
+    egret.setRendererContext = setRendererContext;
 
     /**
      * @private
@@ -38,22 +71,28 @@ module egret.web {
         if (!isRunning) {
             return;
         }
-        var containerList = document.querySelectorAll(".egret-player");
-        var length = containerList.length;
-        for (var i = 0; i < length; i++) {
-            var container = containerList[i];
-            var player = <WebPlayer>container["egret-player"];
+        let containerList = document.querySelectorAll(".egret-player");
+        let length = containerList.length;
+        for (let i = 0; i < length; i++) {
+            let container = containerList[i];
+            let player = <WebPlayer>container["egret-player"];
             player.updateScreenSize();
         }
     }
 
-    var isRunning:boolean = false;
+    let isRunning:boolean = false;
 
     /**
      * @private
      * 网页加载完成，实例化页面中定义的Egret标签
      */
-    function runEgret(options?:{renderMode?:string;audioType?:number;screenAdapter?:sys.IScreenAdapter;antialias?:boolean}):void {
+    function runEgret(options?:{
+        renderMode?:string;
+        audioType?:number;
+        screenAdapter?:sys.IScreenAdapter;
+        antialias?:boolean;
+        retina?:boolean
+    }):void {
         if (isRunning) {
             return;
         }
@@ -67,14 +106,29 @@ module egret.web {
         // WebGL上下文参数自定义
         if(options.renderMode == "webgl") {
             // WebGL抗锯齿默认关闭，提升PC及某些平台性能
-            var antialias = options.antialias;
+            let antialias = options.antialias;
             WebGLRenderContext.antialias = !!antialias;
             // WebGLRenderContext.antialias = (typeof antialias == undefined) ? true : antialias;
         }
 
         sys.CanvasRenderBuffer = web.CanvasRenderBuffer;
         setRenderMode(options.renderMode);
-        var ticker = egret.sys.$ticker;
+
+
+        if(options.retina) {
+            //based on : https://github.com/jondavidjohn/hidpi-canvas-polyfill
+            let context = sys.canvasHitTestBuffer.context;
+            let backingStore = context.backingStorePixelRatio ||
+                context.webkitBackingStorePixelRatio ||
+                context.mozBackingStorePixelRatio ||
+                context.msBackingStorePixelRatio ||
+                context.oBackingStorePixelRatio ||
+                context.backingStorePixelRatio || 1;
+
+            sys.DisplayList.$setDevicePixelRatio((window.devicePixelRatio || 1) / backingStore);
+        }
+
+        let ticker = egret.ticker;
         startTicker(ticker);
         if (options.screenAdapter) {
             egret.sys.screenAdapter = options.screenAdapter;
@@ -83,18 +137,19 @@ module egret.web {
             egret.sys.screenAdapter = new egret.sys.DefaultScreenAdapter();
         }        
 
-        var list = document.querySelectorAll(".egret-player");
-        var length = list.length;
-        for (var i = 0; i < length; i++) {
-            var container = <HTMLDivElement>list[i];
-            var player = new WebPlayer(container, options);
+        let list = document.querySelectorAll(".egret-player");
+        let length = list.length;
+        for (let i = 0; i < length; i++) {
+            let container = <HTMLDivElement>list[i];
+            let player = new WebPlayer(container, options);
             container["egret-player"] = player;
             //webgl模式关闭脏矩形
-            if(options.renderMode == "webgl") {
+            if(Capabilities.$renderMode == "webgl") {
                player.stage.dirtyRegionPolicy = DirtyRegionPolicy.OFF;
-               egret.sys.DisplayList.prototype.setDirtyRegionPolicy = function () {
-               };
             }
+        }
+        if(Capabilities.$renderMode == "webgl") {
+            egret.sys.DisplayList.prototype.setDirtyRegionPolicy = function () {};
         }
     }
 
@@ -126,7 +181,7 @@ module egret.web {
      * 启动心跳计时器。
      */
     function startTicker(ticker:egret.sys.SystemTicker):void {
-        var requestAnimationFrame =
+        let requestAnimationFrame =
             window["requestAnimationFrame"] ||
             window["webkitRequestAnimationFrame"] ||
             window["mozRequestAnimationFrame"] ||
@@ -141,6 +196,11 @@ module egret.web {
 
         requestAnimationFrame.call(window, onTick);
         function onTick():void {
+
+            if(customContext) {
+                customContext.onRender(context);
+            }
+
             ticker.update();
             requestAnimationFrame.call(window, onTick)
         }
@@ -155,12 +215,16 @@ module egret.web {
     egret.runEgret = runEgret;
     egret.updateAllScreens = updateAllScreens;
 
-    var resizeTimer:number = NaN;
+    let resizeTimer:number = NaN;
 
     function doResize() {
         resizeTimer = NaN;
 
         egret.updateAllScreens();
+
+        if(customContext) {
+            customContext.onResize(context);
+        }
     }
 
     window.addEventListener("resize", function () {
@@ -171,7 +235,7 @@ module egret.web {
 }
 
 if (DEBUG) {
-    var language = navigator.language || navigator.browserLanguage || "en_US";
+    let language = navigator.language || navigator["browserLanguage"] || "en_US";
     language = language.replace("-", "_");
 
     if (language in egret.$locale_strings)

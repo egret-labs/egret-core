@@ -1,12 +1,12 @@
 /// <reference path="../lib/types.d.ts" />
-var utils = require('../lib/utils');
+var utils = require("../lib/utils");
 // import fileUtil = require('../lib/FileUtil');
 var watch = require("../lib/watch");
 var path = require("path");
-var Build = require('./build');
-var server = require('../server/server');
-var FileUtil = require('../lib/FileUtil');
-var service = require('../service/index');
+var Build = require("./build");
+var Server = require("../server/server");
+var FileUtil = require("../lib/FileUtil");
+var service = require("../service/index");
 var Run = (function () {
     function Run() {
         var _this = this;
@@ -38,7 +38,11 @@ var Run = (function () {
             egret.args.host = addresses[0];
         }
         this.serverStarted = true;
-        server.startServer(egret.args, this.wrapByParams(egret.args.startUrl));
+        var openWithBrowser = !egret.args.serverOnly;
+        var server = new Server();
+        var projectDir = egret.args.projectDir;
+        server.use(Server.fileReader(projectDir));
+        server.start(projectDir, port, this.wrapByParams(egret.args.startUrl), openWithBrowser);
         if (egret.args.serverOnly) {
             console.log("Url:" + this.wrapByParams(egret.args.startUrl));
         }
@@ -75,7 +79,8 @@ var Run = (function () {
                 .on("removed", (f) => this.shutDown(f, "removed"))
                 .on("changed", (f) => this.shutDown(f, "modified"));
         });*/
-        watch.createMonitor(path.dirname(dir), { persistent: true, interval: 2007, filter: function (f, stat) {
+        watch.createMonitor(path.dirname(dir), {
+            persistent: true, interval: 2007, filter: function (f, stat) {
                 if (path.basename(f) == "egretProperties.json") {
                     _this.initVersion = _this.getVersion(f);
                     return true;
@@ -83,8 +88,8 @@ var Run = (function () {
                 else {
                     return false;
                 }
-            } }, function (m) {
-            var _this = this;
+            }
+        }, function (m) {
             m.on("created", function (f) { return _this.shutDown(f, "added"); })
                 .on("removed", function (f) { return _this.shutDown(f, "removed"); })
                 .on("changed", function (f) { return _this.shutDown(f, "modified"); });
@@ -103,7 +108,7 @@ var Run = (function () {
             isShutdown = true;
         }
         if (isShutdown) {
-            service.execCommand({
+            service.client.execCommand({
                 path: egret.args.projectDir,
                 command: "shutdown",
                 option: egret.args
@@ -113,7 +118,7 @@ var Run = (function () {
     Run.prototype.sendBuildCMD = function (file, type) {
         file = FileUtil.escapePath(file);
         egret.args[type] = [file];
-        service.execCommand({ command: "build", path: egret.args.projectDir, option: egret.args }, function (cmd) {
+        service.client.execCommand({ command: "build", path: egret.args.projectDir, option: egret.args }, function (cmd) {
             if (!cmd.exitCode)
                 console.log('    ' + utils.tr(10011));
             else

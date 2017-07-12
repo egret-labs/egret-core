@@ -27,7 +27,7 @@
 //
 //////////////////////////////////////////////////////////////////////////////////////
 
-module egret.native {
+namespace egret.native {
     /**
      * @private
      * 呈现最终绘图结果的画布
@@ -56,6 +56,10 @@ module egret.native {
 
         public saveToFile(type:string, filePath:string):void {
             if (this.$nativeCanvas && this.$nativeCanvas.saveToFile) {
+                if (native.$supportCmdBatch) {
+                    native.$cmdManager.flush();
+                }
+
                 this.$nativeCanvas.saveToFile(type, filePath);
             }
         }
@@ -76,7 +80,7 @@ module egret.native {
                     if (this.$isRoot) {
                         egret_native.setScreenCanvas(this.$nativeCanvas);
                     }
-                    var context = this.$nativeCanvas.getContext("2d");
+                    let context = this.$nativeCanvas.getContext("2d");
 
                     if($supportCmdBatch) {
                         $cmdManager.setContext(context);
@@ -111,7 +115,7 @@ module egret.native {
                     if (this.$isRoot) {
                         egret_native.setScreenCanvas(this.$nativeCanvas);
                     }
-                    var context = this.$nativeCanvas.getContext("2d");
+                    let context = this.$nativeCanvas.getContext("2d");
     
                     if($supportCmdBatch) {
                         $cmdManager.setContext(context);

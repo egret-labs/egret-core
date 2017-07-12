@@ -28,7 +28,7 @@
 //////////////////////////////////////////////////////////////////////////////////////
 
 
-module egret.sys {
+namespace egret.sys {
     /**
      * @private
      * 显示对象失效标志
@@ -123,7 +123,7 @@ module egret.sys {
     }
 }
 
-module egret {
+namespace egret {
 
     /**
      * @private
@@ -167,7 +167,6 @@ module egret {
     }
 
     /**
-     * @language en_US
      * The DisplayObject class is the base class for all objects that can be placed on the display list. The display list
      * manages all objects displayed in the runtime. Use the DisplayObjectContainer class to arrange the display
      * objects in the display list. DisplayObjectContainer objects can have child display objects, while other display objects,
@@ -195,9 +194,9 @@ module egret {
      * @version Egret 2.4
      * @platform Web,Native
      * @includeExample egret/display/DisplayObject.ts
+     * @language en_US
      */
     /**
-     * @language zh_CN
      * DisplayObject 类是可放在显示列表中的所有对象的基类。该显示列表管理运行时中显示的所有对象。使用 DisplayObjectContainer 类排列
      * 显示列表中的显示对象。DisplayObjectContainer 对象可以有子显示对象，而其他显示对象（如 Shape 和 TextField 对象）是“叶”节点，没有子项，只有父级和
      * 同级。DisplayObject 类有一些基本的属性（如确定坐标位置的 x 和 y 属性），也有一些高级的对象属性（如 Matrix 矩阵变换）。<br/>
@@ -213,53 +212,54 @@ module egret {
      * @event egret.Event.ENTER_FRAME [广播事件] 播放头进入新帧时调度。
      * @event egret.Event.RENDER [广播事件] 将要更新和呈现显示列表时调度。
      * @event egret.TouchEvent.TOUCH_MOVE 当用户触碰设备时进行调度，而且会连续调度，直到接触点被删除。
-     * @event egret.TouchEvent.TOUCH_BEGIN 当用户第一次触摸启用触摸的设备时（例如，用手指触摸配有触摸屏的移动电话或平板电脑）调度。
-     * @event egret.TouchEvent.TOUCH_END 当用户移除与启用触摸的设备的接触时（例如，将手指从配有触摸屏的移动电话或平板电脑上抬起）调度。
-     * @event egret.TouchEvent.TOUCH_TAP 当用户在启用触摸设备上的已启动接触的同一 DisplayObject 实例上抬起接触点时（例如，在配有触摸屏的移动电话或平板电脑的显示对象上的某一点处按下并释放手指）调度。
-     * @event egret.TouchEvent.TOUCH_RELEASE_OUTSIDE 当用户在启用触摸设备上的已启动接触的不同 DisplayObject 实例上抬起接触点时（例如，在配有触摸屏的移动电话或平板电脑的显示对象上的某一点处按下并释放手指）调度。
+     * @event egret.TouchEvent.TOUCH_BEGIN 当用户第一次触摸启用触摸的设备时（例如，用手指触摸手机屏幕）调度。
+     * @event egret.TouchEvent.TOUCH_END 当用户移除与启用触摸的设备的接触时（例如，将手指从屏幕上抬起）调度。
+     * @event egret.TouchEvent.TOUCH_TAP 当用户在启用触摸设备上的已启动接触的同一 DisplayObject 实例上抬起接触点时（例如，手机点击屏幕后抬起）调度。
+     * @event egret.TouchEvent.TOUCH_RELEASE_OUTSIDE 当用户在启用触摸设备上的已启动接触的不同 DisplayObject 实例上抬起接触点时（例如，按住屏幕上的某个对象,然后从它上面挪开后再松开手指）调度。
      * @version Egret 2.4
      * @platform Web,Native
      * @includeExample egret/display/DisplayObject.ts
+     * @language zh_CN
      */
     export class DisplayObject extends EventDispatcher implements sys.Renderable {
 
         /**
-         * @language en_US
          * Initializes a DisplayObject object
          * @version Egret 2.4
          * @platform Web,Native
+         * @language en_US
          */
         /**
-         * @language zh_CN
          * 创建一个显示对象
          * @version Egret 2.4
          * @platform Web,Native
+         * @language zh_CN
          */
         public constructor() {
             super();
             this.$displayFlags = sys.DisplayObjectFlags.InitFlags;
             this.$DisplayObject = {
-                0:1,                //scaleX,
-                1:1,                //scaleY,
-                2:0,                //skewX,
-                3:0,                //skewY,
-                4:0,                //rotation
-                5:"",               //name
-                6:new Matrix(),     //matrix,
-                7:new Matrix(),     //concatenatedMatrix,
-                8:new Matrix(),     //invertedConcatenatedMatrix,
-                9:new Rectangle(),  //bounds,
-                10:new Rectangle(), //contentBounds
-                11:false,           //cacheAsBitmap
-                12:0,               //anchorOffsetX,
-                13:0,               //anchorOffsetY,
-                14:NaN,             //explicitWidth,
-                15:NaN,             //explicitHeight,
-                16:0,               //skewXdeg,
-                17:0,               //skewYdeg,
-                18:0,               //concatenatedAlpha,
-                19:null,            //concatenatedVisible,
-                20:null             //filters
+                0: 1,                //scaleX,
+                1: 1,                //scaleY,
+                2: 0,                //skewX,
+                3: 0,                //skewY,
+                4: 0,                //rotation
+                5: "",               //name
+                6: new Matrix(),     //matrix,
+                7: new Matrix(),     //concatenatedMatrix,
+                8: new Matrix(),     //invertedConcatenatedMatrix,
+                9: new Rectangle(),  //bounds,
+                10: new Rectangle(), //contentBounds
+                11: false,           //cacheAsBitmap
+                12: 0,               //anchorOffsetX,
+                13: 0,               //anchorOffsetY,
+                14: NaN,             //explicitWidth,
+                15: NaN,             //explicitHeight,
+                16: 0,               //skewXdeg,
+                17: 0,               //skewYdeg,
+                18: 0,               //concatenatedAlpha,
+                19: null,            //concatenatedVisible,
+                20: null             //filters
             };
         }
 
@@ -298,7 +298,7 @@ module egret {
                 return;
             }
             this.$removeFlags(flags)
-            var parent = this.$parent;
+            let parent = this.$parent;
             if (parent) {
                 parent.$removeFlagsUp(flags);
             }
@@ -321,7 +321,7 @@ module egret {
                 return;
             }
             this.$setFlags(flags);
-            var parent = this.$parent;
+            let parent = this.$parent;
             if (parent) {
                 parent.$propagateFlagsUp(flags);
             }
@@ -331,7 +331,7 @@ module egret {
          * @private
          * 沿着显示列表向下传递标志量，非容器直接设置自身的flag，此方法会在 DisplayObjectContainer 中被覆盖。
          */
-        $propagateFlagsDown(flags: number): void {
+        $propagateFlagsDown(flags: number, cachedBreak: boolean = false): void {
             this.$setFlags(flags);
         }
 
@@ -378,18 +378,18 @@ module egret {
         $children: DisplayObject[] = null;
 
         /**
-         * @language en_US
          * Indicates the instance name of the DisplayObject. The object can be identified in the child list of its parent
          * display object container by calling the getChildByName() method of the display object container.
          * @version Egret 2.4
          * @platform Web,Native
+         * @language en_US
          */
         /**
-         * @language zh_CN
          * 表示 DisplayObject 的实例名称。
          * 通过调用父显示对象容器的 getChildByName() 方法，可以在父显示对象容器的子列表中标识该对象。
          * @version Egret 2.4
          * @platform Web,Native
+         * @language zh_CN
          */
         public get name(): string {
             return this.$DisplayObject[Keys.name];
@@ -405,18 +405,18 @@ module egret {
         $parent: DisplayObjectContainer = null;
 
         /**
-         * @language en_US
          * Indicates the DisplayObjectContainer object that contains this display object. Use the parent property to specify
          * a relative path to display objects that are above the current display object in the display list hierarchy.
          * @version Egret 2.4
          * @platform Web,Native
+         * @language en_US
          */
         /**
-         * @language zh_CN
          * 表示包含此显示对象的 DisplayObjectContainer 对象。
          * 使用 parent 属性可以指定高于显示列表层次结构中当前显示对象的显示对象的相对路径。
          * @version Egret 2.4
          * @platform Web,Native
+         * @language zh_CN
          */
         public get parent(): DisplayObjectContainer {
             return this.$parent;
@@ -442,7 +442,7 @@ module egret {
             this.$stage = stage;
             this.$nestLevel = nestLevel;
             this.$hasAddToStage = true;
-            Sprite.$EVENT_ADD_TO_STAGE_LIST.push(this);
+            DisplayObjectContainer.$EVENT_ADD_TO_STAGE_LIST.push(this);
         }
 
         /**
@@ -451,7 +451,7 @@ module egret {
          */
         $onRemoveFromStage(): void {
             this.$nestLevel = 0;
-            Sprite.$EVENT_REMOVE_FROM_STAGE_LIST.push(this);
+            DisplayObjectContainer.$EVENT_REMOVE_FROM_STAGE_LIST.push(this);
         }
 
         /**
@@ -466,51 +466,51 @@ module egret {
         $nestLevel: number = 0;
 
         /**
-         * @language en_US
          * The Stage of the display object. you can create and load multiple display objects into the display list, and
          * the stage property of each display object refers to the same Stage object.<br/>
          * If a display object is not added to the display list, its stage property is set to null.
          * @version Egret 2.4
          * @platform Web,Native
+         * @language en_US
          */
         /**
-         * @language zh_CN
          * 显示对象的舞台。
          * 例如，您可以创建多个显示对象并加载到显示列表中，每个显示对象的 stage 属性是指向相同的 Stage 对象。<br/>
          * 如果显示对象未添加到显示列表，则其 stage 属性会设置为 null。
          * @version Egret 2.4
          * @platform Web,Native
+         * @language zh_CN
          */
         public get stage(): Stage {
             return this.$stage;
         }
 
         /**
-         * @language en_US
          * A Matrix object containing values that alter the scaling, rotation, and translation of the display object.<br/>
          * Note: to change the value of a display object's matrix, you must make a copy of the entire matrix object, then copy
          * the new object into the matrix property of the display object.
          * @example the following code increases the tx value of a display object's matrix
          * <pre>
-         *     var myMatrix:Matrix = myDisplayObject.matrix;
+         *     let myMatrix:Matrix = myDisplayObject.matrix;
          *     myMatrix.tx += 10;
          *     myDisplayObject.matrix = myMatrix;
          * </pre>
          * @version Egret 2.4
          * @platform Web,Native
+         * @language en_US
          */
         /**
-         * @language zh_CN
          * 一个 Matrix 对象，其中包含更改显示对象的缩放、旋转和平移的值。<br/>
          * 注意：要改变一个显示对象矩阵的值，您必引用整个矩阵对象，然后将它重新赋值给显示对象的 matrix 属性。
          * @example 以下代码改变了显示对象矩阵的tx属性值：
          * <pre>
-         *     var myMatrix:Matrix = myDisplayObject.matrix;
+         *     let myMatrix:Matrix = myDisplayObject.matrix;
          *     myMatrix.tx += 10;
          *     myDisplayObject.matrix = myMatrix;
          * </pre>
          * @version Egret 2.4
          * @platform Web,Native
+         * @language zh_CN
          */
         public get matrix(): Matrix {
             return this.$getMatrix().clone();
@@ -521,7 +521,7 @@ module egret {
          * 获取矩阵
          */
         $getMatrix(): Matrix {
-            var values = this.$DisplayObject;
+            let values = this.$DisplayObject;
             if (this.$hasFlags(sys.DisplayObjectFlags.InvalidMatrix)) {
                 values[Keys.matrix].$updateScaleAndRotation(values[Keys.scaleX], values[Keys.scaleY], values[Keys.skewX], values[Keys.skewY]);
                 this.$removeFlags(sys.DisplayObjectFlags.InvalidMatrix);
@@ -539,8 +539,8 @@ module egret {
          */
         $setMatrix(matrix: Matrix, needUpdateProperties: boolean = true): boolean {
             let self = this;
-            var values = self.$DisplayObject;
-            var m = values[Keys.matrix];
+            let values = self.$DisplayObject;
+            let m = values[Keys.matrix];
             if (m.equals(matrix)) {
                 return false;
             }
@@ -567,7 +567,7 @@ module egret {
          * 获得这个显示对象以及它所有父级对象的连接矩阵。
          */
         $getConcatenatedMatrix(): Matrix {
-            var matrix = this.$DisplayObject[Keys.concatenatedMatrix];
+            let matrix = this.$DisplayObject[Keys.concatenatedMatrix];
             if (this.$hasFlags(sys.DisplayObjectFlags.InvalidConcatenatedMatrix)) {
                 if (this.$parent) {
                     this.$parent.$getConcatenatedMatrix().$preMultiplyInto(this.$getMatrix(),
@@ -576,10 +576,10 @@ module egret {
                     matrix.copyFrom(this.$getMatrix());
                 }
 
-                var values = this.$DisplayObject;
-                var offsetX = values[Keys.anchorOffsetX];
-                var offsetY = values[Keys.anchorOffsetY];
-                var rect = this.$scrollRect;
+                let values = this.$DisplayObject;
+                let offsetX = values[Keys.anchorOffsetX];
+                let offsetY = values[Keys.anchorOffsetY];
+                let rect = this.$scrollRect;
                 if (rect) {
                     matrix.$preMultiplyInto($TempMatrix.setTo(1, 0, 0, 1, -rect.x - offsetX, -rect.y - offsetY), matrix);
 
@@ -604,7 +604,7 @@ module egret {
          * 获取链接矩阵
          */
         $getInvertedConcatenatedMatrix(): Matrix {
-            var values = this.$DisplayObject;
+            let values = this.$DisplayObject;
             if (this.$hasFlags(sys.DisplayObjectFlags.InvalidInvertedConcatenatedMatrix)) {
                 this.$getConcatenatedMatrix().$invertInto(values[Keys.invertedConcatenatedMatrix]);
                 this.$removeFlags(sys.DisplayObjectFlags.InvalidInvertedConcatenatedMatrix);
@@ -613,7 +613,6 @@ module egret {
         }
 
         /**
-         * @language en_US
          * Indicates the x coordinate of the DisplayObject instance relative to the local coordinates of the parent
          * DisplayObjectContainer.<br/>
          * If the object is inside a DisplayObjectContainer that has transformations, it is in
@@ -623,15 +622,16 @@ module egret {
          * @default 0
          * @version Egret 2.4
          * @platform Web,Native
+         * @language en_US
          */
         /**
-         * @language zh_CN
          * 表示 DisplayObject 实例相对于父级 DisplayObjectContainer 本地坐标的 x 坐标。<br/>
          * 如果该对象位于具有变形的 DisplayObjectContainer 内，则它也位于包含 DisplayObjectContainer 的本地坐标系中。
          * 因此，对于逆时针旋转 90 度的 DisplayObjectContainer，该 DisplayObjectContainer 的子级将继承逆时针旋转 90 度的坐标系。
          * @default 0
          * @version Egret 2.4
          * @platform Web,Native
+         * @language zh_CN
          */
         public get x(): number {
             return this.$getX();
@@ -655,7 +655,7 @@ module egret {
          */
         $setX(value: number): boolean {
             value = +value || 0;
-            var m = this.$DisplayObject[Keys.matrix];
+            let m = this.$DisplayObject[Keys.matrix];
             if (value == m.tx) {
                 return false;
             }
@@ -665,7 +665,6 @@ module egret {
         }
 
         /**
-         * @language en_US
          * Indicates the y coordinate of the DisplayObject instance relative to the local coordinates of the parent
          * DisplayObjectContainer. <br/>
          * If the object is inside a DisplayObjectContainer that has transformations, it is in
@@ -675,15 +674,16 @@ module egret {
          * @default 0
          * @version Egret 2.4
          * @platform Web,Native
+         * @language en_US
          */
         /**
-         * @language zh_CN
          * 表示 DisplayObject 实例相对于父级 DisplayObjectContainer 本地坐标的 y 坐标。<br/>
          * 如果该对象位于具有变形的 DisplayObjectContainer 内，则它也位于包含 DisplayObjectContainer 的本地坐标系中。
          * 因此，对于逆时针旋转 90 度的 DisplayObjectContainer，该 DisplayObjectContainer 的子级将继承逆时针旋转 90 度的坐标系。
          * @default 0
          * @version Egret 2.4
          * @platform Web,Native
+         * @language zh_CN
          */
         public get y(): number {
             return this.$getY();
@@ -707,7 +707,7 @@ module egret {
          */
         $setY(value: number): boolean {
             value = +value || 0;
-            var m = this.$DisplayObject[Keys.matrix];
+            let m = this.$DisplayObject[Keys.matrix];
             if (value == m.ty) {
                 return false;
             }
@@ -718,20 +718,20 @@ module egret {
 
 
         /**
-         * @language en_US
          * Indicates the horizontal scale (percentage) of the object as applied from the registration point. <br/>
          * The default 1.0 equals 100% scale.
          * @default 1
          * @version Egret 2.4
          * @platform Web,Native
+         * @language en_US
          */
         /**
-         * @language zh_CN
          * 表示从注册点开始应用的对象的水平缩放比例（百分比）。<br/>
          * 1.0 等于 100% 缩放。
          * @default 1
          * @version Egret 2.4
          * @platform Web,Native
+         * @language zh_CN
          */
         public get scaleX(): number {
             return this.$getScaleX();
@@ -756,7 +756,7 @@ module egret {
          */
         $setScaleX(value: number): boolean {
             value = +value || 0;
-            var values = this.$DisplayObject;
+            let values = this.$DisplayObject;
             if (value == values[Keys.scaleX]) {
                 return false;
             }
@@ -766,19 +766,19 @@ module egret {
         }
 
         /**
-         * @language en_US
          * Indicates the vertical scale (percentage) of an object as applied from the registration point of the object.
          * 1.0 is 100% scale.
          * @default 1
          * @version Egret 2.4
          * @platform Web,Native
+         * @language en_US
          */
         /**
-         * @language zh_CN
          * 表示从对象注册点开始应用的对象的垂直缩放比例（百分比）。1.0 是 100% 缩放。
          * @default 1
          * @version Egret 2.4
          * @platform Web,Native
+         * @language zh_CN
          */
         public get scaleY(): number {
             return this.$getScaleY();
@@ -812,7 +812,6 @@ module egret {
         }
 
         /**
-         * @language en_US
          * Indicates the rotation of the DisplayObject instance, in degrees, from its original orientation. Values from
          * 0 to 180 represent clockwise rotation; values from 0 to -180 represent counterclockwise rotation. Values outside
          * this range are added to or subtracted from 360 to obtain a value within the range. For example, the statement
@@ -820,15 +819,16 @@ module egret {
          * @default 0
          * @version Egret 2.4
          * @platform Web,Native
+         * @language en_US
          */
         /**
-         * @language zh_CN
          * 表示 DisplayObject 实例距其原始方向的旋转程度，以度为单位。
          * 从 0 到 180 的值表示顺时针方向旋转；从 0 到 -180 的值表示逆时针方向旋转。对于此范围之外的值，可以通过加上或
          * 减去 360 获得该范围内的值。例如，myDisplayObject.rotation = 450语句与 myDisplayObject.rotation = 90 是相同的。
          * @default 0
          * @version Egret 2.4
          * @platform Web,Native
+         * @language zh_CN
          */
         public get rotation(): number {
             return this.$getRotation();
@@ -850,12 +850,12 @@ module egret {
         $setRotation(value: number): boolean {
             value = +value || 0;
             value = clampRotation(value);
-            var values = this.$DisplayObject;
+            let values = this.$DisplayObject;
             if (value == values[Keys.rotation]) {
                 return false;
             }
-            var delta = value - values[Keys.rotation];
-            var angle = delta / 180 * Math.PI;
+            let delta = value - values[Keys.rotation];
+            let angle = delta / 180 * Math.PI;
             values[Keys.skewX] += angle;
             values[Keys.skewY] += angle;
             values[Keys.rotation] = value;
@@ -886,7 +886,7 @@ module egret {
          */
         $setSkewX(value: number): boolean {
             value = +value || 0;
-            var values = this.$DisplayObject;
+            let values = this.$DisplayObject;
             if (value == values[Keys.skewXdeg]) {
                 return false;
             }
@@ -923,7 +923,7 @@ module egret {
          */
         $setSkewY(value: number): boolean {
             value = +value || 0;
-            var values = this.$DisplayObject;
+            let values = this.$DisplayObject;
             if (value == values[Keys.skewYdeg]) {
                 return false;
             }
@@ -939,17 +939,17 @@ module egret {
         }
 
         /**
-         * @language en_US
          * Indicates the width of the display object, in pixels. The width is calculated based on the bounds of the content
          * of the display object.
          * @version Egret 2.4
          * @platform Web,Native
+         * @language en_US
          */
         /**
-         * @language zh_CN
          * 表示显示对象的宽度，以像素为单位。宽度是根据显示对象内容的范围来计算的。
          * @version Egret 2.4
          * @platform Web,Native
+         * @language zh_CN
          */
         public get width(): number {
             return this.$getWidth();
@@ -991,15 +991,15 @@ module egret {
             }
 
             // if (false) {
-            //     var values = this.$DisplayObject;
-            //     var originalBounds = this.$getOriginalBounds();
-            //     var bounds = this.$getTransformedBounds(this.$parent, $TempRectangle);
-            //     var angle = values[Keys.rotation] / 180 * Math.PI;
-            //     var baseWidth = originalBounds.$getBaseWidth(angle);
+            //     let values = this.$DisplayObject;
+            //     let originalBounds = this.$getOriginalBounds();
+            //     let bounds = this.$getTransformedBounds(this.$parent, $TempRectangle);
+            //     let angle = values[Keys.rotation] / 180 * Math.PI;
+            //     let baseWidth = originalBounds.$getBaseWidth(angle);
             //     if (!baseWidth) {
             //         return false;
             //     }
-            //     var baseHeight = originalBounds.$getBaseHeight(angle);
+            //     let baseHeight = originalBounds.$getBaseHeight(angle);
             //     values[Keys.scaleY] = bounds.height / baseHeight;
             //     values[Keys.scaleX] = value / baseWidth;
             // }
@@ -1009,17 +1009,17 @@ module egret {
         }
 
         /**
-         * @language en_US
          * Indicates the height of the display object, in pixels. The height is calculated based on the bounds of the
          * content of the display object.
          * @version Egret 2.4
          * @platform Web,Native
+         * @language en_US
          */
         /**
-         * @language zh_CN
          * 表示显示对象的高度，以像素为单位。高度是根据显示对象内容的范围来计算的。
          * @version Egret 2.4
          * @platform Web,Native
+         * @language zh_CN
          */
         public get height(): number {
             return this.$getHeight();
@@ -1061,15 +1061,15 @@ module egret {
             }
 
             // if (false) {
-            //     var values = this.$DisplayObject;
-            //     var originalBounds = this.$getOriginalBounds();
-            //     var bounds = this.$getTransformedBounds(this.$parent, $TempRectangle);
-            //     var angle = values[Keys.rotation] / 180 * Math.PI;
-            //     var baseHeight = originalBounds.$getBaseHeight(angle);
+            //     let values = this.$DisplayObject;
+            //     let originalBounds = this.$getOriginalBounds();
+            //     let bounds = this.$getTransformedBounds(this.$parent, $TempRectangle);
+            //     let angle = values[Keys.rotation] / 180 * Math.PI;
+            //     let baseHeight = originalBounds.$getBaseHeight(angle);
             //     if (!baseHeight) {
             //         return false;
             //     }
-            //     var baseWidth = originalBounds.$getBaseWidth(angle);
+            //     let baseWidth = originalBounds.$getBaseWidth(angle);
             //     values[Keys.scaleY] = value / baseHeight;
             //     values[Keys.scaleX] = bounds.width / baseWidth;
             // }
@@ -1102,18 +1102,18 @@ module egret {
         }
 
         /**
-         * @language en_US
          * X represents the object of which is the anchor.
          * @default 0
          * @version Egret 2.4
          * @platform Web,Native
+         * @language en_US
          */
         /**
-         * @language zh_CN
          * 表示从对象绝对锚点X。
          * @default 0
          * @version Egret 2.4
          * @platform Web,Native
+         * @language zh_CN
          */
         public get anchorOffsetX(): number {
             return this.$DisplayObject[Keys.anchorOffsetX];
@@ -1147,18 +1147,18 @@ module egret {
         }
 
         /**
-         * @language en_US
          * Y represents the object of which is the anchor.
          * @default 0
          * @version Egret 2.4
          * @platform Web,Native
+         * @language en_US
          */
         /**
-         * @language zh_CN
          * 表示从对象绝对锚点Y。
          * @default 0
          * @version Egret 2.4
          * @platform Web,Native
+         * @language zh_CN
          */
         public get anchorOffsetY(): number {
             return this.$DisplayObject[Keys.anchorOffsetY];
@@ -1197,19 +1197,19 @@ module egret {
         $visible: boolean = true;
 
         /**
-         * @language en_US
          * Whether or not the display object is visible. Display objects that are not visible are disabled. For example,
          * if visible=false for an DisplayObject instance, it cannot receive touch or other user input.
          * @default true
          * @version Egret 2.4
          * @platform Web,Native
+         * @language en_US
          */
         /**
-         * @language zh_CN
          * 显示对象是否可见。不可见的显示对象将被禁用。例如，如果实例的 visible 为 false，则无法接受触摸或用户交互操作。
          * @default true
          * @version Egret 2.4
          * @platform Web,Native
+         * @language zh_CN
          */
         public get visible(): boolean {
             return this.$visible;
@@ -1235,10 +1235,10 @@ module egret {
          * 获取这个显示对象跟它所有父级透明度的乘积
          */
         $getConcatenatedVisible(): boolean {
-            var values = this.$DisplayObject;
+            let values = this.$DisplayObject;
             if (this.$hasFlags(sys.DisplayObjectFlags.InvalidConcatenatedVisible)) {
                 if (this.$parent) {
-                    var parentVisible = this.$parent.$getConcatenatedVisible();
+                    let parentVisible = this.$parent.$getConcatenatedVisible();
                     values[Keys.concatenatedVisible] = parentVisible && this.$visible;
                 }
                 else {
@@ -1256,7 +1256,6 @@ module egret {
         $displayList: egret.sys.DisplayList = null;
 
         /**
-         * @language en_US
          * If set to true, Egret runtime caches an internal bitmap representation of the display object. This caching can
          * increase performance for display objects that contain complex vector content. After you set the cacheAsBitmap
          * property to true, the rendering does not change, however the display object performs pixel snapping automatically.
@@ -1266,9 +1265,9 @@ module egret {
          * @default false
          * @version Egret 2.4
          * @platform Web,Native
+         * @language en_US
          */
         /**
-         * @language zh_CN
          * 如果设置为 true，则 Egret 运行时将缓存显示对象的内部位图表示形式。此缓存可以提高包含复杂矢量内容的显示对象的性能。
          * 将 cacheAsBitmap 属性设置为 true 后，呈现并不更改，但是，显示对象将自动执行像素贴紧。执行速度可能会大大加快，
          * 具体取决于显示对象内容的复杂性。最好将 cacheAsBitmap 属性与主要具有静态内容且不频繁缩放或旋转的显示对象一起使用。<br/>
@@ -1276,6 +1275,7 @@ module egret {
          * @default false
          * @version Egret 2.4
          * @platform Web,Native
+         * @language zh_CN
          */
         public get cacheAsBitmap(): boolean {
             return this.$DisplayObject[Keys.cacheAsBitmap];
@@ -1288,12 +1288,12 @@ module egret {
         }
 
         public $setHasDisplayList(value: boolean): void {
-            var hasDisplayList = !!this.$displayList;
+            let hasDisplayList = !!this.$displayList;
             if (hasDisplayList == value) {
                 return;
             }
             if (value) {
-                var displayList = sys.DisplayList.create(this);
+                let displayList = sys.DisplayList.create(this);
                 if (displayList) {
                     this.$displayList = displayList;
                     if (this.$parentDisplayList) {
@@ -1313,7 +1313,7 @@ module egret {
          * cacheAsBitmap属性改变
          */
         $cacheAsBitmapChanged(): void {
-            var parentCache = this.$displayList || this.$parentDisplayList;
+            let parentCache = this.$displayList || this.$parentDisplayList;
             if (this.$renderNode && parentCache) {
                 parentCache.markDirty(this);
             }
@@ -1327,20 +1327,20 @@ module egret {
         $alpha: number = 1;
 
         /**
-         * @language en_US
          * Indicates the alpha transparency value of the object specified. Valid values are 0 (fully transparent) to 1 (fully opaque).
          * The default value is 1. Display objects with alpha set to 0 are active, even though they are invisible.
          * @default 1
          * @version Egret 2.4
          * @platform Web,Native
+         * @language en_US
          */
         /**
-         * @language zh_CN
          * 表示指定对象的 Alpha 透明度值。
          * 有效值为 0（完全透明）到 1（完全不透明）。alpha 设置为 0 的显示对象是可触摸的，即使它们不可见。
          * @default 1
          * @version Egret 2.4
          * @platform Web,Native
+         * @language zh_CN
          */
         public get alpha(): number {
             return this.$alpha;
@@ -1372,10 +1372,10 @@ module egret {
          * 获取这个显示对象跟它所有父级透明度的乘积
          */
         $getConcatenatedAlpha(): number {
-            var values = this.$DisplayObject;
+            let values = this.$DisplayObject;
             if (this.$hasFlags(sys.DisplayObjectFlags.InvalidConcatenatedAlpha)) {
                 if (this.$parent) {
-                    var parentAlpha = this.$parent.$getConcatenatedAlpha();
+                    let parentAlpha = this.$parent.$getConcatenatedAlpha();
                     values[Keys.concatenatedAlpha] = parentAlpha * this.$alpha;
                 }
                 else {
@@ -1388,25 +1388,24 @@ module egret {
 
         /**
          * @private
-         * @language en_US
          * The default touchEnabled property of DisplayObject
          * @default false
          * @version Egret 2.5
          * @platform Web,Native
+         * @language en_US
          */
         /**
          * @private
-         * @language zh_CN
          * 显示对象默认的 touchEnabled 属性
          * @default false
          * @version Egret 2.5
          * @platform Web,Native
+         * @language zh_CN
          */
         static defaultTouchEnabled: boolean = false;
 
         $touchEnabled: boolean = DisplayObject.defaultTouchEnabled;
         /**
-         * @language en_US
          * Specifies whether this object receives touch or other user input. The default value is false, which means that
          * by default any DisplayObject instance that is on the display list cannot receive touch events. If touchEnabled is
          * set to false, the instance does not receive any touch events (or other user input events). Any children of
@@ -1416,9 +1415,9 @@ module egret {
          * @default false
          * @version Egret 2.4
          * @platform Web,Native
+         * @language en_US
          */
         /**
-         * @language zh_CN
          * 指定此对象是否接收触摸或其他用户输入。默认值为 false，这表示默认情况下，显示列表上的任何 DisplayObject 实例都不会接收触摸事件或
          * 其他用户输入事件。如果将 touchEnabled 设置为 false，则实例将不接收任何触摸事件（或其他用户输入事件）。显示列表上的该实例的任
          * 何子级都不会受到影响。要更改显示列表上对象的所有子级的 touchEnabled 行为，请使用 DisplayObjectContainer.touchChildren。
@@ -1426,6 +1425,7 @@ module egret {
          * @default false
          * @version Egret 2.4
          * @platform Web,Native
+         * @language zh_CN
          */
         public get touchEnabled(): boolean {
             return this.$getTouchEnabled();
@@ -1461,7 +1461,6 @@ module egret {
         $scrollRect: Rectangle = null;
 
         /**
-         * @language en_US
          * The scroll rectangle bounds of the display object. The display object is cropped to the size defined by the rectangle,
          * and it scrolls within the rectangle when you change the x and y properties of the scrollRect object. A scrolled display
          * object always scrolls in whole pixel increments.You can scroll an object left and right by setting the x property of
@@ -1473,15 +1472,15 @@ module egret {
          * the new object into the scrollRect property of the display object.
          * @example the following code increases the x value of a display object's scrollRect
          * <pre>
-         *     var myRectangle:Rectangle = myDisplayObject.scrollRect;
+         *     let myRectangle:Rectangle = myDisplayObject.scrollRect;
          *     myRectangle.x += 10;
          *     myDisplayObject.scrollRect = myRectangle;
          * </pre>
          * @version Egret 2.4
          * @platform Web,Native
+         * @language en_US
          */
         /**
-         * @language zh_CN
          * 显示对象的滚动矩形范围。显示对象被裁切为矩形定义的大小，当您更改 scrollRect 对象的 x 和 y 属性时，它会在矩形内滚动。
          * 滚动的显示对象始终以整像素为增量进行滚动。您可以通过设置 scrollRect Rectangle 对象的 x 属性来左右滚动对象， 还可以通过设置
          * scrollRect 对象的 y 属性来上下滚动对象。如果显示对象旋转了 90 度，并且您左右滚动它，则实际上显示对象会上下滚动。<br/>
@@ -1489,12 +1488,13 @@ module egret {
          * 注意：要改变一个显示对象 scrollRect 属性的值，您必引用整个 scrollRect 对象，然后将它重新赋值给显示对象的 scrollRect 属性。
          * @example 以下代码改变了显示对象 scrollRect 的 x 属性值：
          * <pre>
-         *     var myRectangle:Rectangle = myDisplayObject.scrollRect;
+         *     let myRectangle:Rectangle = myDisplayObject.scrollRect;
          *     myRectangle.x += 10;
          *     myDisplayObject.scrollRect = myRectangle;//设置完scrollRect的x、y、width、height值之后，一定要对myDisplayObject重新赋值scrollRect，不然会出问题。
          * </pre>
          * @version Egret 2.4
          * @platform Web,Native
+         * @language zh_CN
          */
         public get scrollRect(): Rectangle {
             return this.$scrollRect;
@@ -1533,7 +1533,6 @@ module egret {
         $blendMode: number = 0;
 
         /**
-         * @language en_US
          * A value from the BlendMode class that specifies which blend mode to use. Determine how a source image (new one)
          * is drawn on the target image (old one).<br/>
          * If you attempt to set this property to an invalid value, Egret runtime set the value to BlendMode.NORMAL.
@@ -1541,22 +1540,23 @@ module egret {
          * @see egret.BlendMode
          * @version Egret 2.4
          * @platform Web,Native
+         * @language en_US
          */
         /**
-         * @language zh_CN
          * BlendMode 枚举中的一个值，用于指定要使用的混合模式，确定如何将一个源（新的）图像绘制到目标（已有）的图像上<br/>
          * 如果尝试将此属性设置为无效值，则运行时会将此值设置为 BlendMode.NORMAL。
          * @default egret.BlendMode.NORMAL
          * @see egret.BlendMode
          * @version Egret 2.4
          * @platform Web,Native
+         * @language zh_CN
          */
         public get blendMode(): string {
             return sys.numberToBlendMode(this.$blendMode);
         }
 
         public set blendMode(value: string) {
-            var mode = sys.blendModeToNumber(value);
+            let mode = sys.blendModeToNumber(value);
             if (mode == this.$blendMode) {
                 return;
             }
@@ -1581,7 +1581,6 @@ module egret {
         $maskRect: Rectangle = null;
 
         /**
-         * @language en_US
          * The calling display object is masked by the specified mask object. To ensure that masking works when the Stage
          * is scaled, the mask display object must be in an active part of the display list. The mask object itself is not drawn.
          * Set mask to null to remove the mask. To be able to scale a mask object, it must be on the display list. To be
@@ -1590,9 +1589,9 @@ module egret {
          * to a second display object, it is removed as the mask of the first object, and that object's mask property becomes null.
          * @version Egret 2.4
          * @platform Web,Native
+         * @language en_US
          */
         /**
-         * @language zh_CN
          * 调用显示对象被指定的 mask 对象遮罩。要确保当舞台缩放时蒙版仍然有效，mask 显示对象必须处于显示列表的活动部分。
          * 但不绘制 mask 对象本身。将 mask 设置为 null 可删除蒙版。要能够缩放遮罩对象，它必须在显示列表中。要能够拖动蒙版
          * 对象，它必须在显示列表中。<br/>
@@ -1602,12 +1601,13 @@ module egret {
          * 下面例子为 mask 为 Rectangle 类型对象，这种情况下，修改 mask 的值后，一定要对 myDisplayObject 重新赋值 mask，不然会出问题。
          * @example 以下代码改变了显示对象 mask 的 x 属性值：
          * <pre>
-         *     var myMask:Rectangle = myDisplayObject.mask;
+         *     let myMask:Rectangle = myDisplayObject.mask;
          *     myMask.x += 10;
          *     myDisplayObject.mask = myMask;//设置完 mask 的x、y、width、height值之后，一定要对myDisplayObject重新赋值 mask，不然会出问题。
          * </pre>
          * @version Egret 2.4
          * @platform Web,Native
+         * @language zh_CN
          */
         public get mask(): DisplayObject | Rectangle {
             return this.$mask ? this.$mask : this.$maskRect;
@@ -1671,25 +1671,23 @@ module egret {
         }
 
         /**
-         * @language en_US
          * An indexed array that contains each filter object currently associated with the display object.
-         * Note: Currently only the next support WebGL, Canvas rendering and native are not supported.
          * @version Egret 3.1.0
          * @platform Web
+         * @language en_US
          */
         /**
-         * @language zh_CN
          * 包含当前与显示对象关联的每个滤镜对象的索引数组。
-         * 注意 : 目前只有 WebGL 下支持，Canvs 渲染以及 native 均不支持。
          * @version Egret 3.1.0
          * @platform Web
+         * @language zh_CN
          */
-        public get filters(): Array<Filter> {
+        public get filters(): Array<Filter | CustomFilter> {
             return this.$DisplayObject[Keys.filters];
         }
 
-        public set filters(value: Array<Filter>) {
-            var filters: Array<Filter> = this.$DisplayObject[Keys.filters];
+        public set filters(value: Array<Filter | CustomFilter>) {
+            let filters: Array<Filter> = this.$DisplayObject[Keys.filters];
             if (!filters && !value) {
                 this.$DisplayObject[Keys.filters] = value;
                 return;
@@ -1698,15 +1696,15 @@ module egret {
             //需要通知子项
             this.$invalidate(true);
             if (filters && filters.length) {
-                var length: number = filters.length;
-                for (var i: number = 0; i < length; i++) {
+                let length: number = filters.length;
+                for (let i: number = 0; i < length; i++) {
                     filters[i].$removeTarget(this);
                 }
             }
             this.$DisplayObject[Keys.filters] = value;
             if (value && value.length) {
-                length = value.length;
-                for (i = 0; i < length; i++) {
+                let length = value.length;
+                for (let i = 0; i < length; i++) {
                     value[i].$addTarget(this);
                 }
             }
@@ -1721,7 +1719,6 @@ module egret {
         }
 
         /**
-         * @language en_US
          * Returns a rectangle that defines the area of the display object relative to the coordinate system of the targetCoordinateSpace object.
          * @param targetCoordinateSpace The display object that defines the coordinate system to use.
          * @param resultRect A reusable instance of Rectangle for saving the results. Passing this parameter can reduce the number of reallocate objects
@@ -1729,15 +1726,16 @@ module egret {
          * @returns The rectangle that defines the area of the display object relative to the targetCoordinateSpace object's coordinate system.
          * @version Egret 2.4
          * @platform Web,Native
+         * @language en_US
          */
         /**
-         * @language zh_CN
          * 返回一个矩形，该矩形定义相对于 targetCoordinateSpace 对象坐标系的显示对象区域。
          * @param targetCoordinateSpace 定义要使用的坐标系的显示对象。
          * @param resultRect 一个用于存储结果的可复用Rectangle实例，传入此参数能够减少内部创建对象的次数，从而获得更高的运行性能。
          * @returns 定义与 targetCoordinateSpace 对象坐标系统相关的显示对象面积的矩形。
          * @version Egret 2.4
          * @platform Web,Native
+         * @language zh_CN
          */
         public getTransformedBounds(targetCoordinateSpace: DisplayObject, resultRect?: Rectangle): Rectangle {
             targetCoordinateSpace = targetCoordinateSpace || this;
@@ -1745,27 +1743,27 @@ module egret {
         }
 
         /**
-         * @language en_US
          * Obtain measurement boundary of display object
          * @param resultRect {Rectangle} Optional. It is used to import Rectangle object for saving results, preventing duplicate object creation.
          * @param calculateAnchor {boolean} Optional. It is used to determine whether to calculate anchor point.
          * @returns {Rectangle}
          * @version Egret 2.4
          * @platform Web,Native
+         * @language en_US
          */
         /**
-         * @language zh_CN
          * 获取显示对象的测量边界
          * @param resultRect {Rectangle} 可选参数，传入用于保存结果的Rectangle对象，避免重复创建对象。
          * @param calculateAnchor {boolean} 可选参数，是否会计算锚点。
          * @returns {Rectangle}
          * @version Egret 2.4
          * @platform Web,Native
+         * @language zh_CN
          */
         public getBounds(resultRect?: Rectangle, calculateAnchor: boolean = true): egret.Rectangle {
             resultRect = this.$getTransformedBounds(this, resultRect);
             if (calculateAnchor) {
-                var values = this.$DisplayObject;
+                let values = this.$DisplayObject;
                 if (values[Keys.anchorOffsetX] != 0 || values[Keys.anchorOffsetY] != 0) {
                     resultRect.x -= values[Keys.anchorOffsetX];
                     resultRect.y -= values[Keys.anchorOffsetY];
@@ -1779,18 +1777,18 @@ module egret {
          * @private
          */
         $getTransformedBounds(targetCoordinateSpace: DisplayObject, resultRect?: Rectangle): Rectangle {
-            var bounds = this.$getOriginalBounds();
+            let bounds = this.$getOriginalBounds();
             if (!resultRect) {
                 resultRect = new Rectangle();
             }
             resultRect.copyFrom(bounds);
-            if (targetCoordinateSpace == this || resultRect.isEmpty()) {
+            if (targetCoordinateSpace == this) {
                 return resultRect;
             }
-            var m: Matrix;
+            let m: Matrix;
             if (targetCoordinateSpace) {
                 m = $TempMatrix;
-                var invertedTargetMatrix = targetCoordinateSpace.$getInvertedConcatenatedMatrix();
+                let invertedTargetMatrix = targetCoordinateSpace.$getInvertedConcatenatedMatrix();
                 invertedTargetMatrix.$preMultiplyInto(this.$getConcatenatedMatrix(), m);
             } else {
                 m = this.$getConcatenatedMatrix();
@@ -1800,7 +1798,6 @@ module egret {
         }
 
         /**
-         * @language en_US
          * Converts the point object from the Stage (global) coordinates to the display object's (local) coordinates.
          * @param stageX the x value in the global coordinates
          * @param stageY the y value in the global coordinates
@@ -1809,9 +1806,9 @@ module egret {
          * @returns A Point object with coordinates relative to the display object.
          * @version Egret 2.4
          * @platform Web,Native
+         * @language en_US
          */
         /**
-         * @language zh_CN
          * 将从舞台（全局）坐标转换为显示对象的（本地）坐标。
          * @param stageX 舞台坐标x
          * @param stageY 舞台坐标y
@@ -1819,14 +1816,14 @@ module egret {
          * @returns 具有相对于显示对象的坐标的 Point 对象。
          * @version Egret 2.4
          * @platform Web,Native
+         * @language zh_CN
          */
         public globalToLocal(stageX: number = 0, stageY: number = 0, resultPoint?: Point): Point {
-            var m = this.$getInvertedConcatenatedMatrix();
+            let m = this.$getInvertedConcatenatedMatrix();
             return m.transformPoint(stageX, stageY, resultPoint);
         }
 
         /**
-         * @language en_US
          * Converts the point object from the display object's (local) coordinates to the Stage (global) coordinates.
          * @param localX the x value in the local coordinates
          * @param localY the x value in the local coordinates
@@ -1835,9 +1832,9 @@ module egret {
          * @returns  A Point object with coordinates relative to the Stage.
          * @version Egret 2.4
          * @platform Web,Native
+         * @language en_US
          */
         /**
-         * @language zh_CN
          * 将显示对象的（本地）坐标转换为舞台（全局）坐标。
          * @param localX 本地坐标 x
          * @param localY 本地坐标 y
@@ -1845,9 +1842,10 @@ module egret {
          * @returns 一个具有相对于舞台坐标的 Point 对象。
          * @version Egret 2.4
          * @platform Web,Native
+         * @language zh_CN
          */
         public localToGlobal(localX: number = 0, localY: number = 0, resultPoint?: Point): Point {
-            var m = this.$getConcatenatedMatrix();
+            let m = this.$getConcatenatedMatrix();
             return m.transformPoint(localX, localY, resultPoint);
         }
 
@@ -1866,7 +1864,7 @@ module egret {
          * 获取显示对象占用的矩形区域集合，通常包括自身绘制的测量区域，如果是容器，还包括所有子项占据的区域。
          */
         $getOriginalBounds(): Rectangle {
-            var bounds:Rectangle = this.$DisplayObject[Keys.bounds];
+            let bounds: Rectangle = this.$DisplayObject[Keys.bounds];
             if (this.$hasFlags(sys.DisplayObjectFlags.InvalidBounds)) {
                 bounds.copyFrom(this.$getContentBounds());
                 this.$measureChildBounds(bounds);
@@ -1874,12 +1872,12 @@ module egret {
                 if (this.$displayList) {
                     this.$displayList.$renderNode.moved = true;
                 }
-                var offset = this.$measureFiltersOffset();
-                if(offset) {
+                let offset = this.$measureFiltersOffset(false);
+                if (offset) {
                     bounds.x += offset.minX;
                     bounds.y += offset.minY;
-                    bounds.width += offset.maxX;
-                    bounds.height += offset.maxY;
+                    bounds.width += -offset.minX + offset.maxX;
+                    bounds.height += -offset.minY + offset.maxY;
                 }
             }
             return bounds;
@@ -1898,7 +1896,7 @@ module egret {
          * @private
          */
         $getContentBounds(): Rectangle {
-            var bounds = this.$DisplayObject[Keys.contentBounds];
+            let bounds = this.$DisplayObject[Keys.contentBounds];
             if (this.$hasFlags(sys.DisplayObjectFlags.InvalidContentBounds)) {
                 this.$measureContentBounds(bounds);
                 if (this.$renderNode) {
@@ -1928,11 +1926,11 @@ module egret {
          * @param notiryChildren 是否标记子项也需要重绘。传入false或不传入，将只标记自身需要重绘。注意:当子项cache时不会继续向下标记
          */
         $invalidate(notifyChildren?: boolean): void {
-            if (!this.$renderNode || this.$hasFlags(sys.DisplayObjectFlags.DirtyRender)) {
+            if (!this.$renderNode || this.$hasFlags(sys.DisplayObjectFlags.DirtyRender | sys.DisplayObjectFlags.InvalidRenderNodes)) {
                 return;
             }
             this.$setFlags(sys.DisplayObjectFlags.DirtyRender | sys.DisplayObjectFlags.InvalidRenderNodes);
-            var displayList = this.$displayList ? this.$displayList : this.$parentDisplayList;
+            let displayList = this.$displayList ? this.$displayList : this.$parentDisplayList;
             if (displayList) {
                 displayList.markDirty(this);
             }
@@ -1949,7 +1947,7 @@ module egret {
                 return;
             }
             self.$setFlags(sys.DisplayObjectFlags.DirtyChildren);
-            var displayList = self.$displayList;
+            let displayList = self.$displayList;
             if ((displayList || self.$renderNode) && self.$parentDisplayList) {
                 self.$parentDisplayList.markDirty(displayList || self);
             }
@@ -1967,7 +1965,7 @@ module egret {
          * 获取渲染节点
          */
         $getRenderNode(): sys.RenderNode {
-            var node = this.$renderNode;
+            let node = this.$renderNode;
             if (!node) {
                 return null;
             }
@@ -1988,27 +1986,27 @@ module egret {
 
             let self = this;
             self.$removeFlagsUp(sys.DisplayObjectFlags.Dirty);
-            var node = self.$renderNode;
+            let node = self.$renderNode;
             node.renderAlpha = self.$getConcatenatedAlpha();
             //必须在访问moved属性前调用以下两个方法，因为moved属性在以下两个方法内重置。
-            var concatenatedMatrix = self.$getConcatenatedMatrix();
+            let concatenatedMatrix = self.$getConcatenatedMatrix();
             if (dirtyRegionPolicy == DirtyRegionPolicy.OFF) {
-                var displayList = self.$displayList || self.$parentDisplayList;
+                let displayList = self.$displayList || self.$parentDisplayList;
                 if (!displayList) {
                     return false;
                 }
-                var matrix = node.renderMatrix;
+                let matrix = node.renderMatrix;
                 matrix.copyFrom(concatenatedMatrix);
-                var root = displayList.root;
+                let root = displayList.root;
                 if (root !== self.$stage) {
                     self.$getConcatenatedMatrixAt(root, matrix);
                 }
             }
             else {
-                var renderBounds = bounds || self.$getContentBounds();
+                let renderBounds = bounds || self.$getContentBounds();
                 node.renderVisible = self.$getConcatenatedVisible();
-                var displayList = self.$displayList || self.$parentDisplayList;
-                var region = node.renderRegion;
+                let displayList = self.$displayList || self.$parentDisplayList;
+                let region = node.renderRegion;
                 if (!displayList) {
                     region.setTo(0, 0, 0, 0);
                     node.moved = false;
@@ -2018,15 +2016,15 @@ module egret {
                     return false;
                 }
                 node.moved = false;
-                var matrix = node.renderMatrix;
+                let matrix = node.renderMatrix;
                 matrix.copyFrom(concatenatedMatrix);
-                var root = displayList.root;
+                let root = displayList.root;
                 if (root !== self.$stage) {
                     self.$getConcatenatedMatrixAt(root, matrix);
                 }
                 region.updateRegion(renderBounds, matrix);
-                var offset = self.$measureFiltersOffset();
-                if(offset) {
+                let offset = self.$measureFiltersOffset(true);
+                if (offset) {
                     region.minX += offset.minX;
                     region.minY += offset.minY;
                     region.maxX += offset.maxX;
@@ -2042,59 +2040,79 @@ module egret {
         /**
          * @private
          */
-        public $measureFiltersOffset(): any {
-            var filters = this.$DisplayObject[Keys.filters];
-            if (filters && filters.length) {
-                var length = filters.length;
-                var minX: number = 0;
-                var minY: number = 0;
-                var maxX: number = 0;
-                var maxY: number = 0;
-                for (var i: number = 0; i < length; i++) {
-                    var filter: Filter = filters[i];
-                    if (filter.type == "blur") {
-                        var offsetX = (<BlurFilter>filter).blurX;
-                        var offsetY = (<BlurFilter>filter).blurY;
-                        minX -= offsetX;
-                        minY -= offsetY;
-                        maxX += offsetX * 2;
-                        maxY += offsetY * 2;
-                    }
-                    else if (filter.type == "glow") {
-                        var offsetX = (<BlurFilter>filter).blurX;
-                        var offsetY = (<BlurFilter>filter).blurY;
-                        minX -= offsetX;
-                        minY -= offsetY;
-                        maxX += offsetX * 2;
-                        maxY += offsetY * 2;
-                        var distance: number = (<DropShadowFilter>filter).distance || 0;
-                        var angle: number = (<DropShadowFilter>filter).angle || 0;
-                        var distanceX = 0;
-                        var distanceY = 0;
-                        if (distance != 0) {
-                            //todo 缓存这个数据
-                            distanceX = Math.ceil(distance * egret.NumberUtils.cos(angle));
-                            distanceY = Math.ceil(distance * egret.NumberUtils.sin(angle));
-                            if (distanceX > 0) {
-                                maxX += distanceX;
-                            }
-                            else if (distanceX < 0) {
+        private $measureFiltersOffset(fromParent: boolean): any {
+            let display: DisplayObject = this;
+            let minX: number = 0;
+            let minY: number = 0;
+            let maxX: number = 0;
+            let maxY: number = 0;
+            while (display) {
+                let filters = display.$DisplayObject[Keys.filters];
+                if (filters && filters.length) {
+                    let length = filters.length;
+                    for (let i: number = 0; i < length; i++) {
+                        let filter: Filter = filters[i];
+                        //todo 缓存这个数据
+                        if (filter.type == "blur") {
+                            let offsetX = (<BlurFilter>filter).blurX;
+                            let offsetY = (<BlurFilter>filter).blurY;
+                            minX -= offsetX;
+                            minY -= offsetY;
+                            maxX += offsetX;
+                            maxY += offsetY;
+                        }
+                        else if (filter.type == "glow") {
+                            let offsetX = (<GlowFilter>filter).blurX;
+                            let offsetY = (<GlowFilter>filter).blurY;
+                            minX -= offsetX;
+                            minY -= offsetY;
+                            maxX += offsetX;
+                            maxY += offsetY;
+                            let distance: number = (<DropShadowFilter>filter).distance || 0;
+                            let angle: number = (<DropShadowFilter>filter).angle || 0;
+                            let distanceX = 0;
+                            let distanceY = 0;
+                            if (distance != 0) {
+                                distanceX = distance * egret.NumberUtils.cos(angle);
+                                if (distanceX > 0) {
+                                    distanceX = Math.ceil(distanceX);
+                                }
+                                else {
+                                    distanceX = Math.floor(distanceX);
+                                }
+                                distanceY = distance * egret.NumberUtils.sin(angle);
+                                if (distanceY > 0) {
+                                    distanceY = Math.ceil(distanceY);
+                                }
+                                else {
+                                    distanceY = Math.floor(distanceY);
+                                }
                                 minX += distanceX;
-                                maxX -= distanceX;
-                            }
-                            if (distanceY > 0) {
+                                maxX += distanceX;
+                                minY += distanceY;
                                 maxY += distanceY;
                             }
-                            else if (distanceY < 0) {
-                                minY += distanceY;
-                                maxY -= distanceY;
-                            }
+                        } else if(filter.type == "custom") {
+                            let padding = (<CustomFilter>filter).padding;
+                            minX -= padding;
+                            minY -= padding;
+                            maxX += padding;
+                            maxY += padding;
                         }
                     }
                 }
-                return {minX, minY, maxX, maxY};
+                if (fromParent) {
+                    display = display.$parent;
+                }
+                else {
+                    display = null;
+                }
             }
-            return null;
+            minX = Math.min(minX, 0);
+            minY = Math.min(minY, 0);
+            maxX = Math.max(maxX, 0);
+            maxY = Math.max(maxY, 0);
+            return { minX, minY, maxX, maxY };
         }
 
         /**
@@ -2104,13 +2122,13 @@ module egret {
          * @param matrix 目标显示对象相对于舞台的完整连接矩阵。
          */
         $getConcatenatedMatrixAt(root: DisplayObject, matrix: Matrix): void {
-            var invertMatrix = root.$getInvertedConcatenatedMatrix();
+            let invertMatrix = root.$getInvertedConcatenatedMatrix();
             if (invertMatrix.a === 0 || invertMatrix.d === 0) {//缩放值为0，逆矩阵无效
-                var target: DisplayObject = this;
-                var rootLevel = root.$nestLevel;
+                let target: DisplayObject = this;
+                let rootLevel = root.$nestLevel;
                 matrix.identity();
                 while (target.$nestLevel > rootLevel) {
-                    var rect = target.$scrollRect;
+                    let rect = target.$scrollRect;
                     if (rect) {
                         matrix.concat($TempMatrix.setTo(1, 0, 0, 1, -rect.x, -rect.y));
                     }
@@ -2124,11 +2142,11 @@ module egret {
         }
 
         $getConcatenatedAlphaAt(root: DisplayObject, alpha: number): number {
-            var rootAlpha = root.$getConcatenatedAlpha();
+            let rootAlpha = root.$getConcatenatedAlpha();
             if (rootAlpha === 0) {
                 alpha = 1;
-                var target: DisplayObject = this;
-                var rootLevel = root.$nestLevel;
+                let target: DisplayObject = this;
+                let rootLevel = root.$nestLevel;
                 while (target.$nestLevel > rootLevel) {
                     alpha *= target.$alpha;
                     target = target.$parent;
@@ -2152,21 +2170,21 @@ module egret {
          * @private
          */
         $hitTest(stageX: number, stageY: number): DisplayObject {
-            var values = this.$DisplayObject;
+            let values = this.$DisplayObject;
             if (!this.$renderNode || !this.$visible || values[Keys.scaleX] == 0 || values[Keys.scaleY] == 0) {
                 return null;
             }
-            var m = this.$getInvertedConcatenatedMatrix();
+            let m = this.$getInvertedConcatenatedMatrix();
             if (m.a == 0 && m.b == 0 && m.c == 0 && m.d == 0) {//防止父类影响子类
                 return null;
             }
-            var bounds = this.$getContentBounds();
-            var localX = m.a * stageX + m.c * stageY + m.tx;
-            var localY = m.b * stageX + m.d * stageY + m.ty;
+            let bounds = this.$getContentBounds();
+            let localX = m.a * stageX + m.c * stageY + m.tx;
+            let localY = m.b * stageX + m.d * stageY + m.ty;
             if (bounds.contains(localX, localY)) {
                 if (!this.$children) {//容器已经检查过scrollRect和mask，避免重复对遮罩进行碰撞。
 
-                    var rect = this.$scrollRect ? this.$scrollRect : this.$maskRect;
+                    let rect = this.$scrollRect ? this.$scrollRect : this.$maskRect;
                     if (rect && !rect.contains(localX, localY)) {
                         return null;
                     }
@@ -2180,7 +2198,6 @@ module egret {
         }
 
         /**
-         * @language en_US
          * Calculate the display object to determine whether it overlaps or crosses with the points specified by the x and y parameters. The x and y parameters specify the points in the coordinates of the stage, rather than the points in the display object container that contains display objects (except the situation where the display object container is a stage).
          * Note: Don't use accurate pixel collision detection on a large number of objects. Otherwise, this will cause serious performance deterioration.
          * @param x {number}  x coordinate of the object to be tested.
@@ -2189,9 +2206,9 @@ module egret {
          * @returns {boolean} If display object overlaps or crosses with the specified point, it is true; otherwise, it is false.
          * @version Egret 2.4
          * @platform Web,Native
+         * @language en_US
          */
         /**
-         * @language zh_CN
          * 计算显示对象，以确定它是否与 x 和 y 参数指定的点重叠或相交。x 和 y 参数指定舞台的坐标空间中的点，而不是包含显示对象的显示对象容器中的点（除非显示对象容器是舞台）。
          * 注意，不要在大量物体中使用精确碰撞像素检测，这回带来巨大的性能开销
          * @param x {number}  要测试的此对象的 x 坐标。
@@ -2200,20 +2217,21 @@ module egret {
          * @returns {boolean} 如果显示对象与指定的点重叠或相交，则为 true；否则为 false。
          * @version Egret 2.4
          * @platform Web,Native
+         * @language zh_CN
          */
         public hitTestPoint(x: number, y: number, shapeFlag?: boolean): boolean {
             if (!shapeFlag) {
-                var values = this.$DisplayObject;
+                let values = this.$DisplayObject;
                 if (values[Keys.scaleX] == 0 || values[Keys.scaleY] == 0) {
                     return false;
                 }
-                var m = this.$getInvertedConcatenatedMatrix();
-                var bounds = this.getBounds(null, false);
-                var localX = m.a * x + m.c * y + m.tx;
-                var localY = m.b * x + m.d * y + m.ty;
+                let m = this.$getInvertedConcatenatedMatrix();
+                let bounds = this.getBounds(null, false);
+                let localX = m.a * x + m.c * y + m.tx;
+                let localY = m.b * x + m.d * y + m.ty;
                 if (bounds.contains(localX, localY)) {
                     //这里不考虑设置mask的情况
-                    var rect = this.$scrollRect ? this.$scrollRect : this.$maskRect;
+                    let rect = this.$scrollRect ? this.$scrollRect : this.$maskRect;
                     if (rect && !rect.contains(localX, localY)) {
                         return false;
                     }
@@ -2222,31 +2240,31 @@ module egret {
                 return false;
             }
             else {
-                var m = this.$getInvertedConcatenatedMatrix();
-                var localX = m.a * x + m.c * y + m.tx;
-                var localY = m.b * x + m.d * y + m.ty;
-                var data: number[];
-                var displayList = this.$displayList;
+                let m = this.$getInvertedConcatenatedMatrix();
+                let localX = m.a * x + m.c * y + m.tx;
+                let localY = m.b * x + m.d * y + m.ty;
+                let data: number[];
+                let displayList = this.$displayList;
                 if (displayList) {
-                    var buffer = displayList.renderBuffer;
+                    let buffer = displayList.renderBuffer;
                     try {
-                        data = buffer.getPixel(localX - displayList.offsetX, localY - displayList.offsetY);
+                        data = buffer.getPixels(localX - displayList.offsetX, localY - displayList.offsetY);
                     }
                     catch (e) {
                         throw new Error(sys.tr(1039));
                     }
                 }
                 else {
-                    var buffer = sys.customHitTestBuffer;
+                    let buffer = sys.customHitTestBuffer;
                     buffer.resize(3, 3);
-                    var matrix = Matrix.create();
+                    let matrix = Matrix.create();
                     matrix.identity();
                     matrix.translate(1 - localX, 1 - localY);
                     sys.systemRenderer.render(this, buffer, matrix, null, true);
                     Matrix.release(matrix);
 
                     try {
-                        data = buffer.getPixel(1, 1);
+                        data = buffer.getPixels(1, 1);
                     }
                     catch (e) {
                         throw new Error(sys.tr(1039));
@@ -2273,9 +2291,9 @@ module egret {
          */
         $addListener(type: string, listener: Function, thisObject: any, useCapture?: boolean, priority?: number, dispatchOnce?: boolean): void {
             super.$addListener(type, listener, thisObject, useCapture, priority, dispatchOnce);
-            var isEnterFrame = (type == Event.ENTER_FRAME);
+            let isEnterFrame = (type == Event.ENTER_FRAME);
             if (isEnterFrame || type == Event.RENDER) {
-                var list = isEnterFrame ? DisplayObject.$enterFrameCallBackList : DisplayObject.$renderCallBackList;
+                let list = isEnterFrame ? DisplayObject.$enterFrameCallBackList : DisplayObject.$renderCallBackList;
                 if (list.indexOf(this) == -1) {
                     list.push(this);
                 }
@@ -2289,10 +2307,10 @@ module egret {
          */
         public removeEventListener(type: string, listener: Function, thisObject: any, useCapture?: boolean): void {
             super.removeEventListener(type, listener, thisObject, useCapture);
-            var isEnterFrame: boolean = (type == Event.ENTER_FRAME);
+            let isEnterFrame: boolean = (type == Event.ENTER_FRAME);
             if ((isEnterFrame || type == Event.RENDER) && !this.hasEventListener(type)) {
-                var list = isEnterFrame ? DisplayObject.$enterFrameCallBackList : DisplayObject.$renderCallBackList;
-                var index = list.indexOf(this);
+                let list = isEnterFrame ? DisplayObject.$enterFrameCallBackList : DisplayObject.$renderCallBackList;
+                let index = list.indexOf(this);
                 if (index !== -1) {
                     list.splice(index, 1);
                 }
@@ -2309,8 +2327,8 @@ module egret {
                 return super.dispatchEvent(event);
             }
 
-            var list = this.$getPropagationList(this);
-            var targetIndex = list.length * 0.5;
+            let list = this.$getPropagationList(this);
+            let targetIndex = list.length * 0.5;
             event.$setTarget(this);
             this.$dispatchPropagationEvent(event, list, targetIndex);
             return !event.$isDefaultPrevented;
@@ -2331,12 +2349,12 @@ module egret {
          * Egret最终采用了HTML里目标节点触发两次的事件流方式。
          */
         $getPropagationList(target: DisplayObject): DisplayObject[] {
-            var list: DisplayObject[] = [];
+            let list: DisplayObject[] = [];
             while (target) {
                 list.push(target);
                 target = target.$parent;
             }
-            var captureList = list.concat();
+            let captureList = list.concat();
             captureList.reverse();//使用一次reverse()方法比多次调用unshift()性能高。
             list = captureList.concat(list);
             return list;
@@ -2346,10 +2364,10 @@ module egret {
          * @private
          */
         $dispatchPropagationEvent(event: Event, list: DisplayObject[], targetIndex: number): void {
-            var length = list.length;
-            var captureIndex = targetIndex - 1;
-            for (var i = 0; i < length; i++) {
-                var currentTarget = list[i];
+            let length = list.length;
+            let captureIndex = targetIndex - 1;
+            for (let i = 0; i < length; i++) {
+                let currentTarget = list[i];
                 event.$currentTarget = currentTarget;
                 if (i < captureIndex)
                     event.$eventPhase = EventPhase.CAPTURING_PHASE;
@@ -2370,7 +2388,7 @@ module egret {
          * @platform Web,Native
          */
         public willTrigger(type: string): boolean {
-            var parent: DisplayObject = this;
+            let parent: DisplayObject = this;
             while (parent) {
                 if (parent.hasEventListener(type))
                     return true;
@@ -2381,8 +2399,4 @@ module egret {
 
     }
 
-    if (DEBUG) {
-        egret.$markReadOnly(DisplayObject, "parent");
-        egret.$markReadOnly(DisplayObject, "stage");
-    }
 }

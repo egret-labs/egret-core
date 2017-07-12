@@ -26,7 +26,7 @@
 //  EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 //
 //////////////////////////////////////////////////////////////////////////////////////
-module egret.native {
+namespace egret.native {
     /**
      * @private
      */
@@ -62,7 +62,7 @@ module egret.native {
             }
         }
         private addFps() {
-            var fps = new egret.TextField();
+            let fps = new egret.TextField();
             fps.x = fps.y = 4;
             this.textFps = fps;
             this.addChild(fps);
@@ -80,7 +80,7 @@ module egret.native {
         }
 
         private addLog() {
-            var text = new egret.TextField();
+            let text = new egret.TextField();
             text.size = this.fontSize;
             text.textColor = this.fontColor;
             text.x = 4;
@@ -90,17 +90,17 @@ module egret.native {
         private arrFps = [];
         public update(datas:FPSData) {
             this.arrFps.push(datas.fps);
-            var fpsTotal = 0;
-            var lenFps = this.arrFps.length;
+            let fpsTotal = 0;
+            let lenFps = this.arrFps.length;
 
             if (lenFps > 101) {
                 lenFps = 101;
                 this.arrFps.shift();
             }
-            var fpsMin = this.arrFps[0];
-            var fpsMax = this.arrFps[0];
+            let fpsMin = this.arrFps[0];
+            let fpsMax = this.arrFps[0];
             for (let i = 0; i < lenFps; i++) {
-                var num = this.arrFps[i];
+                let num = this.arrFps[i];
                 fpsTotal += num;
                 if (num < fpsMin) fpsMin = num;
                 else if (num > fpsMax) fpsMax = num;
@@ -119,7 +119,7 @@ module egret.native {
         };
         private arrLog:string[] = [];
         public updateInfo(info:string) {
-            var fpsHeight = 0;
+            let fpsHeight = 0;
             if (this.showFps) {
                 fpsHeight = this.textFps.height;
                 this.textLog.y = fpsHeight + 4;
@@ -142,7 +142,7 @@ module egret.native {
             if (egret.Capabilities.runtimeType == RuntimeType.NATIVE) {
                 return;
             }
-            var g = this.shape.$graphics;
+            let g = this.shape.$graphics;
             g.clear();
             g.beginFill(0x000000, this.bgAlpha);
             g.drawRect(0, 0, this.width + 8, this.height + 8);
