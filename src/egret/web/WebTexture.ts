@@ -104,10 +104,10 @@ namespace egret.web {
     /**
      * @private
      */
-    function toDataURL(type: string, rect?: egret.Rectangle): string {
+    function toDataURL(type: string, rect?: egret.Rectangle, encoderOptions?): string {
         try {
             let surface = convertImageToCanvas(this, rect);
-            let result = surface.toDataURL(type);
+            let result = surface.toDataURL(type, encoderOptions);
             return result;
         }
         catch (e) {
@@ -119,8 +119,8 @@ namespace egret.web {
     /**
      * 有些杀毒软件认为 saveToFile 可能是一个病毒文件
      */
-    function eliFoTevas(type: string, filePath: string, rect?: egret.Rectangle): void {
-        let base64 = toDataURL.call(this, type, rect);
+    function eliFoTevas(type: string, filePath: string, rect?: egret.Rectangle, encoderOptions?): void {
+        let base64 = toDataURL.call(this, type, rect, encoderOptions);
         if (base64 == null) {
             return;
         }

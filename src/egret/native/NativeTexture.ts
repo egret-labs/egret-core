@@ -69,10 +69,10 @@ namespace egret.native {
     /**
      * @private
      */
-    function toDataURL(type: string, rect?: egret.Rectangle): string {
+    function toDataURL(type: string, rect?: egret.Rectangle, encoderOptions?): string {
         try {
             let buffer = convertImageToRenderTexture(this, rect);
-            let base64 = buffer.toDataURL(type);
+            let base64 = buffer.toDataURL(type, encoderOptions);
             return base64
         }
         catch (e) {

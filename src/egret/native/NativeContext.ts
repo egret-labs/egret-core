@@ -268,7 +268,7 @@ declare namespace egret_native {
 
         dispose();
 
-        toDataURL(type);
+        toDataURL(type, encoderOptions?);
 
         saveToFile(type: string, filePath: string);
     }
