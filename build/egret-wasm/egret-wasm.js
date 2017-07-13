@@ -7232,7 +7232,7 @@ var egret;
              * @language zh_CN
              */
             get: function () {
-                return "5.0.2";
+                return "5.0.1";
             },
             enumerable: true,
             configurable: true
@@ -13992,12 +13992,12 @@ var egret;
             }
             this.isStopped = value;
             if (value) {
-                egret.sys.$ticker.$stopTick(this.advanceTime, this);
+                egret.ticker.$stopTick(this.advanceTime, this);
             }
             else {
                 this.playTimes = this.playTimes == 0 ? 1 : this.playTimes;
                 this.lastTime = egret.getTimer();
-                egret.sys.$ticker.$startTick(this.advanceTime, this);
+                egret.ticker.$startTick(this.advanceTime, this);
             }
         };
         return MovieClip;
@@ -16501,7 +16501,7 @@ var egret;
                 if (!this.root) {
                     this.initialize();
                 }
-                sys.$ticker.$addPlayer(this);
+                egret.ticker.$addPlayer(this);
             };
             /**
              * @private
@@ -16543,7 +16543,7 @@ var egret;
                     return;
                 }
                 this.isPlaying = false;
-                sys.$ticker.$removePlayer(this);
+                egret.ticker.$removePlayer(this);
             };
             /**
              * @private
@@ -16658,7 +16658,7 @@ var egret;
                 this.costRender += costRender;
                 this.costDraw += costDraw;
                 if (this.totalTime >= 1000) {
-                    var lastFPS = Math.min(Math.ceil(this.totalTick * 1000 / this.totalTime), sys.$ticker.$frameRate);
+                    var lastFPS = Math.min(Math.ceil(this.totalTick * 1000 / this.totalTime), egret.ticker.$frameRate);
                     var lastDrawCalls = Math.round(this.drawCalls / this.totalTick);
                     var lastCostTicker = Math.round(this.costTicker / this.totalTick);
                     var lastCostUpdate = Math.round(this.costUpdate / this.totalTick);
@@ -17446,13 +17446,21 @@ var egret;
                  * 全局帧率
                  */
                 this.$frameRate = 30;
+                /**
+                 * @private
+                 */
                 this.lastTimeStamp = 0;
                 /**
                  * @private
                  * ticker 花销的时间
                  */
                 this.costEnterFrame = 0;
-                if (true && sys.$ticker) {
+                /**
+                 * @private
+                 * 是否被暂停
+                 */
+                this.isPaused = false;
+                if (true && egret.ticker) {
                     egret.$error(1008, "egret.sys.SystemTicker");
                 }
                 sys.$START_TIME = Date.now();
@@ -17555,6 +17563,12 @@ var egret;
                 this.lastCount = this.frameInterval = Math.round(60000 / value);
                 return true;
             };
+            SystemTicker.prototype.pause = function () {
+                this.isPaused = true;
+            };
+            SystemTicker.prototype.resume = function () {
+                this.isPaused = false;
+            };
             /**
              * @private
              * 执行一次刷新
@@ -17566,6 +17580,10 @@ var egret;
                 var length = callBackList.length;
                 var requestRenderingFlag = sys.$requestRenderingFlag;
                 var timeStamp = egret.getTimer();
+                if (this.isPaused) {
+                    this.lastTimeStamp = timeStamp;
+                    return;
+                }
                 this.callLaterAsyncs();
                 for (var i = 0; i < length; i++) {
                     if (callBackList[i].call(thisObjectList[i], timeStamp)) {
@@ -17692,12 +17710,14 @@ var egret;
         }());
         sys.SystemTicker = SystemTicker;
         __reflect(SystemTicker.prototype, "egret.sys.SystemTicker");
-        /**
-         * @private
-         * 心跳计时器单例
-         */
-        sys.$ticker = new sys.SystemTicker();
     })(sys = egret.sys || (egret.sys = {}));
+})(egret || (egret = {}));
+(function (egret) {
+    /**
+     * @private
+     * 心跳计时器单例
+     */
+    egret.ticker = new egret.sys.SystemTicker();
 })(egret || (egret = {}));
 if (true) {
     egret_stages = [];
@@ -21314,10 +21334,10 @@ var egret;
              * @language zh_CN
              */
             get: function () {
-                return egret.sys.$ticker.$frameRate;
+                return egret.ticker.$frameRate;
             },
             set: function (value) {
-                egret.sys.$ticker.$setFrameRate(value);
+                egret.ticker.$setFrameRate(value);
             },
             enumerable: true,
             configurable: true
@@ -27458,7 +27478,7 @@ var egret;
         if (true && !callBack) {
             egret.$error(1003, "callBack");
         }
-        egret.sys.$ticker.$startTick(callBack, thisObject);
+        egret.ticker.$startTick(callBack, thisObject);
     }
     egret.startTick = startTick;
 })(egret || (egret = {}));
@@ -27515,7 +27535,7 @@ var egret;
         if (true && !callBack) {
             egret.$error(1003, "callBack");
         }
-        egret.sys.$ticker.$stopTick(callBack, thisObject);
+        egret.ticker.$stopTick(callBack, thisObject);
     }
     egret.stopTick = stopTick;
 })(egret || (egret = {}));
@@ -27727,7 +27747,7 @@ var egret;
                 return;
             this.lastCount = this.updateInterval;
             this.lastTimeStamp = egret.getTimer();
-            egret.sys.$ticker.$startTick(this.$update, this);
+            egret.ticker.$startTick(this.$update, this);
             this._running = true;
         };
         /**
@@ -28226,7 +28246,7 @@ var egret;
             }
             egret.sys.CanvasRenderBuffer = egret.CanvasRenderBuffer;
             setRenderMode(options.renderMode);
-            var ticker = egret.sys.$ticker;
+            var ticker = egret.ticker;
             startTicker(ticker);
             if (options.screenAdapter) {
                 egret.sys.screenAdapter = options.screenAdapter;
@@ -28936,34 +28956,6 @@ var egret;
     /**
      * @private
      */
-    var WEBGL_UNIFORM_TYPE;
-    (function (WEBGL_UNIFORM_TYPE) {
-        WEBGL_UNIFORM_TYPE[WEBGL_UNIFORM_TYPE["FLOAT_VEC2"] = 35664] = "FLOAT_VEC2";
-        WEBGL_UNIFORM_TYPE[WEBGL_UNIFORM_TYPE["FLOAT_VEC3"] = 35665] = "FLOAT_VEC3";
-        WEBGL_UNIFORM_TYPE[WEBGL_UNIFORM_TYPE["FLOAT_VEC4"] = 35666] = "FLOAT_VEC4";
-        WEBGL_UNIFORM_TYPE[WEBGL_UNIFORM_TYPE["INT_VEC2"] = 35667] = "INT_VEC2";
-        WEBGL_UNIFORM_TYPE[WEBGL_UNIFORM_TYPE["INT_VEC3"] = 35668] = "INT_VEC3";
-        WEBGL_UNIFORM_TYPE[WEBGL_UNIFORM_TYPE["INT_VEC4"] = 35669] = "INT_VEC4";
-        WEBGL_UNIFORM_TYPE[WEBGL_UNIFORM_TYPE["BOOL"] = 35670] = "BOOL";
-        WEBGL_UNIFORM_TYPE[WEBGL_UNIFORM_TYPE["BOOL_VEC2"] = 35671] = "BOOL_VEC2";
-        WEBGL_UNIFORM_TYPE[WEBGL_UNIFORM_TYPE["BOOL_VEC3"] = 35672] = "BOOL_VEC3";
-        WEBGL_UNIFORM_TYPE[WEBGL_UNIFORM_TYPE["BOOL_VEC4"] = 35673] = "BOOL_VEC4";
-        WEBGL_UNIFORM_TYPE[WEBGL_UNIFORM_TYPE["FLOAT_MAT2"] = 35674] = "FLOAT_MAT2";
-        WEBGL_UNIFORM_TYPE[WEBGL_UNIFORM_TYPE["FLOAT_MAT3"] = 35675] = "FLOAT_MAT3";
-        WEBGL_UNIFORM_TYPE[WEBGL_UNIFORM_TYPE["FLOAT_MAT4"] = 35676] = "FLOAT_MAT4";
-        WEBGL_UNIFORM_TYPE[WEBGL_UNIFORM_TYPE["SAMPLER_2D"] = 35678] = "SAMPLER_2D";
-        WEBGL_UNIFORM_TYPE[WEBGL_UNIFORM_TYPE["SAMPLER_CUBE"] = 35680] = "SAMPLER_CUBE";
-        WEBGL_UNIFORM_TYPE[WEBGL_UNIFORM_TYPE["BYTE"] = 65535] = "BYTE";
-        WEBGL_UNIFORM_TYPE[WEBGL_UNIFORM_TYPE["UNSIGNED_BYTE"] = 5121] = "UNSIGNED_BYTE";
-        WEBGL_UNIFORM_TYPE[WEBGL_UNIFORM_TYPE["SHORT"] = 5122] = "SHORT";
-        WEBGL_UNIFORM_TYPE[WEBGL_UNIFORM_TYPE["UNSIGNED_SHORT"] = 5123] = "UNSIGNED_SHORT";
-        WEBGL_UNIFORM_TYPE[WEBGL_UNIFORM_TYPE["INT"] = 5124] = "INT";
-        WEBGL_UNIFORM_TYPE[WEBGL_UNIFORM_TYPE["UNSIGNED_INT"] = 5125] = "UNSIGNED_INT";
-        WEBGL_UNIFORM_TYPE[WEBGL_UNIFORM_TYPE["FLOAT"] = 5126] = "FLOAT";
-    })(WEBGL_UNIFORM_TYPE = egret.WEBGL_UNIFORM_TYPE || (egret.WEBGL_UNIFORM_TYPE = {}));
-    /**
-     * @private
-     */
     var EgretWebGLUniform = (function () {
         function EgretWebGLUniform(gl, program, uniformData) {
             this.gl = gl;
@@ -28978,42 +28970,42 @@ var egret;
         EgretWebGLUniform.prototype.setDefaultValue = function () {
             var type = this.type;
             switch (type) {
-                case WEBGL_UNIFORM_TYPE.FLOAT:
-                case WEBGL_UNIFORM_TYPE.SAMPLER_2D:
-                case WEBGL_UNIFORM_TYPE.SAMPLER_CUBE:
-                case WEBGL_UNIFORM_TYPE.BOOL:
-                case WEBGL_UNIFORM_TYPE.INT:
+                case 5126 /* FLOAT */:
+                case 35678 /* SAMPLER_2D */:
+                case 35680 /* SAMPLER_CUBE */:
+                case 35670 /* BOOL */:
+                case 5124 /* INT */:
                     this.value = 0;
                     break;
-                case WEBGL_UNIFORM_TYPE.FLOAT_VEC2:
-                case WEBGL_UNIFORM_TYPE.BOOL_VEC2:
-                case WEBGL_UNIFORM_TYPE.INT_VEC2:
+                case 35664 /* FLOAT_VEC2 */:
+                case 35671 /* BOOL_VEC2 */:
+                case 35667 /* INT_VEC2 */:
                     this.value = [0, 0];
                     break;
-                case WEBGL_UNIFORM_TYPE.FLOAT_VEC3:
-                case WEBGL_UNIFORM_TYPE.BOOL_VEC3:
-                case WEBGL_UNIFORM_TYPE.INT_VEC3:
+                case 35665 /* FLOAT_VEC3 */:
+                case 35672 /* BOOL_VEC3 */:
+                case 35668 /* INT_VEC3 */:
                     this.value = [0, 0, 0];
                     break;
-                case WEBGL_UNIFORM_TYPE.FLOAT_VEC4:
-                case WEBGL_UNIFORM_TYPE.BOOL_VEC4:
-                case WEBGL_UNIFORM_TYPE.INT_VEC4:
+                case 35666 /* FLOAT_VEC4 */:
+                case 35673 /* BOOL_VEC4 */:
+                case 35669 /* INT_VEC4 */:
                     this.value = [0, 0, 0, 0];
                     break;
-                case WEBGL_UNIFORM_TYPE.FLOAT_MAT2:
+                case 35674 /* FLOAT_MAT2 */:
                     this.value = new Float32Array([
                         1, 0,
                         0, 1
                     ]);
                     break;
-                case WEBGL_UNIFORM_TYPE.FLOAT_MAT3:
+                case 35675 /* FLOAT_MAT3 */:
                     this.value = new Float32Array([
                         1, 0, 0,
                         0, 1, 0,
                         0, 0, 1
                     ]);
                     break;
-                case WEBGL_UNIFORM_TYPE.FLOAT_MAT4:
+                case 35676 /* FLOAT_MAT4 */:
                     this.value = new Float32Array([
                         1, 0, 0, 0,
                         0, 1, 0, 0,
@@ -29026,20 +29018,20 @@ var egret;
         EgretWebGLUniform.prototype.generateSetValue = function () {
             var type = this.type;
             switch (type) {
-                case WEBGL_UNIFORM_TYPE.FLOAT:
-                case WEBGL_UNIFORM_TYPE.SAMPLER_2D:
-                case WEBGL_UNIFORM_TYPE.SAMPLER_CUBE:
-                case WEBGL_UNIFORM_TYPE.BOOL:
-                case WEBGL_UNIFORM_TYPE.INT:
+                case 5126 /* FLOAT */:
+                case 35678 /* SAMPLER_2D */:
+                case 35680 /* SAMPLER_CUBE */:
+                case 35670 /* BOOL */:
+                case 5124 /* INT */:
                     this.setValue = function (value) {
                         var notEqual = this.value !== value;
                         this.value = value;
                         notEqual && this.upload();
                     };
                     break;
-                case WEBGL_UNIFORM_TYPE.FLOAT_VEC2:
-                case WEBGL_UNIFORM_TYPE.BOOL_VEC2:
-                case WEBGL_UNIFORM_TYPE.INT_VEC2:
+                case 35664 /* FLOAT_VEC2 */:
+                case 35671 /* BOOL_VEC2 */:
+                case 35667 /* INT_VEC2 */:
                     this.setValue = function (value) {
                         var notEqual = this.value[0] !== value.x || this.value[1] !== value.y;
                         this.value[0] = value.x;
@@ -29047,9 +29039,9 @@ var egret;
                         notEqual && this.upload();
                     };
                     break;
-                case WEBGL_UNIFORM_TYPE.FLOAT_VEC3:
-                case WEBGL_UNIFORM_TYPE.BOOL_VEC3:
-                case WEBGL_UNIFORM_TYPE.INT_VEC3:
+                case 35665 /* FLOAT_VEC3 */:
+                case 35672 /* BOOL_VEC3 */:
+                case 35668 /* INT_VEC3 */:
                     this.setValue = function (value) {
                         this.value[0] = value.x;
                         this.value[1] = value.y;
@@ -29057,9 +29049,9 @@ var egret;
                         this.upload();
                     };
                     break;
-                case WEBGL_UNIFORM_TYPE.FLOAT_VEC4:
-                case WEBGL_UNIFORM_TYPE.BOOL_VEC4:
-                case WEBGL_UNIFORM_TYPE.INT_VEC4:
+                case 35666 /* FLOAT_VEC4 */:
+                case 35673 /* BOOL_VEC4 */:
+                case 35669 /* INT_VEC4 */:
                     this.setValue = function (value) {
                         this.value[0] = value.x;
                         this.value[1] = value.y;
@@ -29068,9 +29060,9 @@ var egret;
                         this.upload();
                     };
                     break;
-                case WEBGL_UNIFORM_TYPE.FLOAT_MAT2:
-                case WEBGL_UNIFORM_TYPE.FLOAT_MAT3:
-                case WEBGL_UNIFORM_TYPE.FLOAT_MAT4:
+                case 35674 /* FLOAT_MAT2 */:
+                case 35675 /* FLOAT_MAT3 */:
+                case 35676 /* FLOAT_MAT4 */:
                     this.setValue = function (value) {
                         this.value.set(value);
                         this.upload();
@@ -29083,73 +29075,73 @@ var egret;
             var type = this.type;
             var location = this.location;
             switch (type) {
-                case WEBGL_UNIFORM_TYPE.FLOAT:
+                case 5126 /* FLOAT */:
                     this.upload = function () {
                         var value = this.value;
                         gl.uniform1f(location, value);
                     };
                     break;
-                case WEBGL_UNIFORM_TYPE.FLOAT_VEC2:
+                case 35664 /* FLOAT_VEC2 */:
                     this.upload = function () {
                         var value = this.value;
                         gl.uniform2f(location, value[0], value[1]);
                     };
                     break;
-                case WEBGL_UNIFORM_TYPE.FLOAT_VEC3:
+                case 35665 /* FLOAT_VEC3 */:
                     this.upload = function () {
                         var value = this.value;
                         gl.uniform3f(location, value[0], value[1], value[2]);
                     };
                     break;
-                case WEBGL_UNIFORM_TYPE.FLOAT_VEC4:
+                case 35666 /* FLOAT_VEC4 */:
                     this.upload = function () {
                         var value = this.value;
                         gl.uniform4f(location, value[0], value[1], value[2], value[3]);
                     };
                     break;
-                case WEBGL_UNIFORM_TYPE.SAMPLER_2D:
-                case WEBGL_UNIFORM_TYPE.SAMPLER_CUBE:
-                case WEBGL_UNIFORM_TYPE.BOOL:
-                case WEBGL_UNIFORM_TYPE.INT:
+                case 35678 /* SAMPLER_2D */:
+                case 35680 /* SAMPLER_CUBE */:
+                case 35670 /* BOOL */:
+                case 5124 /* INT */:
                     this.upload = function () {
                         var value = this.value;
                         gl.uniform1i(location, value);
                     };
                     break;
-                case WEBGL_UNIFORM_TYPE.BOOL_VEC2:
-                case WEBGL_UNIFORM_TYPE.INT_VEC2:
+                case 35671 /* BOOL_VEC2 */:
+                case 35667 /* INT_VEC2 */:
                     this.upload = function () {
                         var value = this.value;
                         gl.uniform2i(location, value[0], value[1]);
                     };
                     break;
-                case WEBGL_UNIFORM_TYPE.BOOL_VEC3:
-                case WEBGL_UNIFORM_TYPE.INT_VEC3:
+                case 35672 /* BOOL_VEC3 */:
+                case 35668 /* INT_VEC3 */:
                     this.upload = function () {
                         var value = this.value;
                         gl.uniform3i(location, value[0], value[1], value[2]);
                     };
                     break;
-                case WEBGL_UNIFORM_TYPE.BOOL_VEC4:
-                case WEBGL_UNIFORM_TYPE.INT_VEC4:
+                case 35673 /* BOOL_VEC4 */:
+                case 35669 /* INT_VEC4 */:
                     this.upload = function () {
                         var value = this.value;
                         gl.uniform4i(location, value[0], value[1], value[2], value[3]);
                     };
                     break;
-                case WEBGL_UNIFORM_TYPE.FLOAT_MAT2:
+                case 35674 /* FLOAT_MAT2 */:
                     this.upload = function () {
                         var value = this.value;
                         gl.uniformMatrix2fv(location, false, value);
                     };
                     break;
-                case WEBGL_UNIFORM_TYPE.FLOAT_MAT3:
+                case 35675 /* FLOAT_MAT3 */:
                     this.upload = function () {
                         var value = this.value;
                         gl.uniformMatrix3fv(location, false, value);
                     };
                     break;
-                case WEBGL_UNIFORM_TYPE.FLOAT_MAT4:
+                case 35676 /* FLOAT_MAT4 */:
                     this.upload = function () {
                         var value = this.value;
                         gl.uniformMatrix4fv(location, false, value);

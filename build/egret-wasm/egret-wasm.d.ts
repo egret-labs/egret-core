@@ -10396,7 +10396,13 @@ declare namespace egret.sys {
          * @private
          */
         private frameInterval;
+        /**
+         * @private
+         */
         private frameDeltaTime;
+        /**
+         * @private
+         */
         private lastTimeStamp;
         /**
          * @private
@@ -10412,6 +10418,13 @@ declare namespace egret.sys {
          * ticker 花销的时间
          */
         private costEnterFrame;
+        /**
+         * @private
+         * 是否被暂停
+         */
+        private isPaused;
+        pause(): void;
+        resume(): void;
         /**
          * @private
          * 执行一次刷新
@@ -10441,11 +10454,13 @@ declare namespace egret.sys {
          */
         private callLaterAsyncs();
     }
+}
+declare namespace egret {
     /**
      * @private
      * 心跳计时器单例
      */
-    let $ticker: SystemTicker;
+    let ticker: sys.SystemTicker;
 }
 /**
  * @private
@@ -15418,7 +15433,7 @@ declare namespace egret {
     /**
      * @private
      */
-    enum WEBGL_UNIFORM_TYPE {
+    const enum WEBGL_UNIFORM_TYPE {
         FLOAT_VEC2 = 35664,
         FLOAT_VEC3 = 35665,
         FLOAT_VEC4 = 35666,
