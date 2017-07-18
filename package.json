@@ -296,16 +296,6 @@
         ]
       },
       {
-        "name": "gui",
-        "description": "gui 界面制作库",
-        "files": [],
-        "root": "src/extension/gui",
-        "dependencies": [
-          "egret",
-          "game"
-        ]
-      },
-      {
         "name": "res",
         "description": "res 资源加载库",
         "files": [],
@@ -422,21 +412,6 @@
           "eui",
           "res",
           "tween"
-        ]
-      },
-      {
-        "name": "gui",
-        "displayName": "Egret GUI 项目",
-        "language": "TypeScript",
-        "tag": "game,app,TypeScript",
-        "description": "创建一个 Egret GUI 项目(建议创建eui项目，它更易于使用，可以为您提高创建界面的效率及性能)",
-        "defaultWidth": 640,
-        "defaultHeight": 1136,
-        "modules": [
-          "egret",
-          "game",
-          "res",
-          "gui"
         ]
       },
       {
