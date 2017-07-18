@@ -151,6 +151,12 @@ namespace egret.web {
         if(Capabilities.$renderMode == "webgl") {
             egret.sys.DisplayList.prototype.setDirtyRegionPolicy = function () {};
         }
+
+        window.addEventListener("resize", function () {
+            if (isNaN(resizeTimer)) {
+                resizeTimer = window.setTimeout(doResize, 300);
+            }
+        });
     }
 
     /**
@@ -226,12 +232,6 @@ namespace egret.web {
             customContext.onResize(context);
         }
     }
-
-    window.addEventListener("resize", function () {
-        if (isNaN(resizeTimer)) {
-            resizeTimer = window.setTimeout(doResize, 300);
-        }
-    });
 }
 
 if (DEBUG) {

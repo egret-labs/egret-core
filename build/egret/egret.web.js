@@ -3570,6 +3570,11 @@ var egret;
             if (egret.Capabilities.$renderMode == "webgl") {
                 egret.sys.DisplayList.prototype.setDirtyRegionPolicy = function () { };
             }
+            window.addEventListener("resize", function () {
+                if (isNaN(resizeTimer)) {
+                    resizeTimer = window.setTimeout(doResize, 300);
+                }
+            });
         }
         /**
          * 设置渲染模式。"auto","webgl","canvas"
@@ -3632,11 +3637,6 @@ var egret;
                 customContext.onResize(context);
             }
         }
-        window.addEventListener("resize", function () {
-            if (isNaN(resizeTimer)) {
-                resizeTimer = window.setTimeout(doResize, 300);
-            }
-        });
     })(web = egret.web || (egret.web = {}));
 })(egret || (egret = {}));
 if (true) {
