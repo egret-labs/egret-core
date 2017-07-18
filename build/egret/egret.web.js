@@ -4057,7 +4057,7 @@ var egret;
                 container.appendChild(canvas);
                 style = container.style;
                 style.overflow = "hidden";
-                style.position = "relative";
+                style.position = "absolute";
             };
             /**
              * @private
