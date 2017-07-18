@@ -1,3 +1,4 @@
+Object.defineProperty(exports, "__esModule", { value: true });
 var ProjectData_1 = require("./ProjectData");
 var FileUtil = require("../lib/FileUtil");
 var project = require("../actions/Project");

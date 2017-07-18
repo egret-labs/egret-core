@@ -43,6 +43,7 @@
 
 
  */
+Object.defineProperty(exports, "__esModule", { value: true });
 var FS = require("fs");
 var Path = require("path");
 var DEFAULT_ENGINE = "defaultEngine";

@@ -1,3 +1,4 @@
+Object.defineProperty(exports, "__esModule", { value: true });
 var Server = require("../server/server");
 var Dashboard = require("./Dashboard");
 var FileUtil = require("../lib/FileUtil");

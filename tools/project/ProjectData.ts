@@ -122,6 +122,20 @@ export class EgretProjectData {
         return [];
     }
 
+    getExmlRoot(): string {
+        if (globals.hasKeys(this.egretProperties, ["eui", "exmlRoot"])) {
+            return this.egretProperties.eui.exmlRoot;
+        }
+        return egret.args.projectDir;
+    }
+
+    getThemes(): string[] {
+        if (globals.hasKeys(this.egretProperties, ["eui", "themes"])) {
+            return this.egretProperties.eui.themes;
+        }
+        return null;
+    }
+
     getCopyExmlList(): Array<string> {
         if (globals.hasKeys(this.egretProperties, [egret.args.runtime, "copyExmlList"])) {
             return this.egretProperties[egret.args.runtime]["copyExmlList"];

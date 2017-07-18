@@ -1,4 +1,5 @@
 /// <reference path="../lib/types.d.ts" />
+Object.defineProperty(exports, "__esModule", { value: true });
 var utils = require("../lib/utils");
 var file = require("../lib/FileUtil");
 var CompileOptions = require("./CompileOptions");
@@ -194,6 +195,18 @@ function parseCommandLine(commandLine) {
                 options.projectDir = commands[2];
                 commands.splice(2, 1);
             }
+            //else if (file.isDirectory(commands[1]) && !file.exists(commands[1]) || options.command=="create_app") {
+            //    options.projectDir = commands[1];
+            //    commands.splice(1, 1);
+            //}
+            //else if (file.isDirectory(commands[1]) || options.command=="create_lib") {
+            //    options.projectDir = commands[1];
+            //    commands.splice(1, 1);
+            //}
+            //else if (file.isDirectory(commands[1]) || options.command == "apitest") {
+            //    options.projectDir = commands[1];
+            //    commands.splice(1, 1);
+            //}
         }
         //create_app命令不强制设置projectDir属性
         if (options.projectDir == null && options.command == "create_app") {

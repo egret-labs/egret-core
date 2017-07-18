@@ -46,7 +46,7 @@ export function save(path: string, data: any): void {
     path = escapePath(path);
     textTemp[path] = data;
     createDirectory(Path.dirname(path));
-    FS.writeFileSync(path, data, charset);
+    FS.writeFileSync(path, data, { encoding: charset });
 }
 
 export function writeFileAsync(path: string, content: string, charset: string): Promise<boolean> {

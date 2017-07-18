@@ -14,26 +14,26 @@ var indent = '    ';
 var HelpDefParserKey = (function () {
     function HelpDefParserKey() {
     }
+    HelpDefParserKey.COMMAND = "command";
+    HelpDefParserKey.DESC = "desc";
+    HelpDefParserKey.PARAMETERS = "parameters";
+    HelpDefParserKey.PLACEHOLDER = "placeholder";
+    HelpDefParserKey.OPTIONAL = "optional";
+    HelpDefParserKey.CONFIGS = "configs";
+    HelpDefParserKey.NAME = "name";
+    HelpDefParserKey.PREFIX = "prefix";
+    HelpDefParserKey.CONFIG_PARAS = "config-paras";
+    HelpDefParserKey.TYPE = "type";
+    HelpDefParserKey.ENUM_LIST = "enum-list";
     return HelpDefParserKey;
 }());
-HelpDefParserKey.COMMAND = "command";
-HelpDefParserKey.DESC = "desc";
-HelpDefParserKey.PARAMETERS = "parameters";
-HelpDefParserKey.PLACEHOLDER = "placeholder";
-HelpDefParserKey.OPTIONAL = "optional";
-HelpDefParserKey.CONFIGS = "configs";
-HelpDefParserKey.NAME = "name";
-HelpDefParserKey.PREFIX = "prefix";
-HelpDefParserKey.CONFIG_PARAS = "config-paras";
-HelpDefParserKey.TYPE = "type";
-HelpDefParserKey.ENUM_LIST = "enum-list";
 var CfgParaType = (function () {
     function CfgParaType() {
     }
+    CfgParaType.STRING = "string";
+    CfgParaType.ENUM = "enum";
     return CfgParaType;
 }());
-CfgParaType.STRING = "string";
-CfgParaType.ENUM = "enum";
 var DetailBody = (function () {
     function DetailBody(word, desc) {
         this.word = word;

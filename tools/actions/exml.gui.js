@@ -1,4 +1,5 @@
 /// <reference path="../lib/types.d.ts" />
+Object.defineProperty(exports, "__esModule", { value: true });
 var file = require("../lib/FileUtil");
 var exmlc = require("../lib/exml/exmlc");
 function beforeBuild() {

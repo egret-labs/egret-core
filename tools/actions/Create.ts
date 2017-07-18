@@ -36,11 +36,7 @@ class Create implements egret.Command {
 
 function compileTemplate(projectConfig: egret.EgretProjectConfig) {
     var options = egret.args;
-
-    var modules = projectConfig.modules;
-    var platform = projectConfig.platform;
-
-    updateEgretProperties(modules);
+    updateEgretProperties(projectConfig);
 
     var files = FileUtil.searchByFunction(options.projectDir, f => f.indexOf("index.html") > 0);
     files.forEach(file => {
@@ -48,19 +44,25 @@ function compileTemplate(projectConfig: egret.EgretProjectConfig) {
         content = doT.template(content)(projectConfig)
         FileUtil.save(file, content);
     });
-
 }
 
-function updateEgretProperties(modules: egret.EgretModule[]) {
+function updateEgretProperties(projectConfig: egret.EgretProjectConfig) {
+    let modules = projectConfig.modules;
     var propFile = FileUtil.joinPath(egret.args.projectDir, "egretProperties.json");
     var jsonString = FileUtil.read(propFile);
     var props: egret.EgretProperty = JSON.parse(jsonString);
     props.egret_version = egret.version;
     props.template = {};
+    if (projectConfig.type == "eui") {
+        props.eui = {
+            exmlRoot: "resource/eui_skins",
+            themes: ["resource/default.thm.json"]
+        };
+    }
     if (!props.modules) {
         props.modules = modules.map(m => ({ name: m.name }));
     }
-    let promise = {name: "promise", path:"./promise"};
+    let promise = { name: "promise", path: "./promise" };
     props.modules.push(promise);
     FileUtil.save(propFile, JSON.stringify(props, null, "  "));
 }

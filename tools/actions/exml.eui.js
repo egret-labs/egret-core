@@ -1,4 +1,5 @@
 /// <reference path="../lib/types.d.ts" />
+Object.defineProperty(exports, "__esModule", { value: true });
 var file = require("../lib/FileUtil");
 var exml = require("../lib/eui/EXML");
 var EgretProject = require("../project/EgretProject");
@@ -105,15 +106,16 @@ function updateSetting(merge) {
 }
 exports.updateSetting = updateSetting;
 function searchTheme() {
+    var result = EgretProject.data.getThemes();
+    if (result) {
+        return result;
+    }
     var files = file.searchByFunction(egret.args.projectDir, themeFilter);
     files = files.map(function (it) { return file.getRelativePath(egret.args.projectDir, it); });
     return files;
 }
 function searchEXML() {
-    return file.searchByFunction(egret.args.projectDir, exmlFilter);
-}
-function sort(exmls) {
-    var preload = exmls.filter(function (e) { return e.preload; });
+    return file.searchByFunction(EgretProject.data.getExmlRoot(), exmlFilter);
 }
 var ignorePath = EgretProject.data.getIgnorePath();
 function exmlFilter(f) {

@@ -1,3 +1,4 @@
+Object.defineProperty(exports, "__esModule", { value: true });
 var utils = require("../lib/utils");
 var file = require("../lib/FileUtil");
 var ts = require("../lib/typescript-plus/lib/typescript");

@@ -121,20 +121,17 @@ export function updateSetting(merge = false) {
 }
 
 function searchTheme(): string[] {
+    let result = EgretProject.data.getThemes();
+    if(result) {
+        return result;
+    }
     var files = file.searchByFunction(egret.args.projectDir, themeFilter);
     files = files.map(it => file.getRelativePath(egret.args.projectDir, it));
     return files;
 }
 
 function searchEXML(): string[] {
-    return file.searchByFunction(egret.args.projectDir, exmlFilter);
-}
-
-function sort(exmls: exml.EXMLFile[]) {
-
-    var preload = exmls.filter(e => e.preload);
-
-
+    return file.searchByFunction(EgretProject.data.getExmlRoot(), exmlFilter);
 }
 
 const ignorePath = EgretProject.data.getIgnorePath();
@@ -148,7 +145,7 @@ function exmlFilter(f: string) {
     return /\.exml$/.test(f) && (f.indexOf(egret.args.releaseRootDir) < 0) && !isIgnore;
 }
 function themeFilter(f: string) {
-    return (f.indexOf('.thm.json') > 0) && (f.indexOf(egret.args.releaseRootDir) < 0)
+    return (f.indexOf('.thm.json') > 0) && (f.indexOf(egret.args.releaseRootDir) < 0);
 }
 
 export interface SettingData {
@@ -225,4 +222,3 @@ function generateExmlDTS(): string {
 
     return dts;
 }
-

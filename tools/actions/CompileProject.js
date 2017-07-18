@@ -29,6 +29,7 @@ var CompileProject = (function () {
                 sourceMap = this.compilerOptions.sourceMap;
             }
             this.compilerHost = this.compilerHost.compileWithChanges(files, sourceMap);
+            // process.chdir(realCWD);
         }
         else {
             var compiler = new Compiler.Compiler();

@@ -26,6 +26,7 @@
 //  EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 //
 //////////////////////////////////////////////////////////////////////////////////////
+Object.defineProperty(exports, "__esModule", { value: true });
 /// <reference path="./lib/types.d.ts" />
 global.DEBUG = true;
 global.egret = global.egret || {};

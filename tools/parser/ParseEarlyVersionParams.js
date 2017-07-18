@@ -1,4 +1,5 @@
 /// <reference path="../lib/types.d.ts" />
+Object.defineProperty(exports, "__esModule", { value: true });
 function parse(args, rawArgs) {
     var commandMap = {
         "c": convertCreate,

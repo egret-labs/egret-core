@@ -4,6 +4,7 @@ var __decorate = (this && this.__decorate) || function (decorators, target, key,
     else for (var i = decorators.length - 1; i >= 0; i--) if (d = decorators[i]) r = (c < 3 ? d(r) : c > 3 ? d(target, key, r) : d(target, key)) || r;
     return c > 3 && r && Object.defineProperty(target, key, r), r;
 };
+Object.defineProperty(exports, "__esModule", { value: true });
 var file = require("../lib/FileUtil");
 var _utils = require("../lib/utils");
 var _path = require("path");
@@ -86,6 +87,18 @@ var EgretProjectData = (function () {
             return this.egretProperties[egret.args.runtime]["path_ignore"];
         }
         return [];
+    };
+    EgretProjectData.prototype.getExmlRoot = function () {
+        if (globals.hasKeys(this.egretProperties, ["eui", "exmlRoot"])) {
+            return this.egretProperties.eui.exmlRoot;
+        }
+        return egret.args.projectDir;
+    };
+    EgretProjectData.prototype.getThemes = function () {
+        if (globals.hasKeys(this.egretProperties, ["eui", "themes"])) {
+            return this.egretProperties.eui.themes;
+        }
+        return null;
     };
     EgretProjectData.prototype.getCopyExmlList = function () {
         if (globals.hasKeys(this.egretProperties, [egret.args.runtime, "copyExmlList"])) {
@@ -217,11 +230,11 @@ var EgretProjectData = (function () {
         enumerable: true,
         configurable: true
     });
+    __decorate([
+        _utils.cache
+    ], EgretProjectData.prototype, "getModulesConfig", null);
     return EgretProjectData;
 }());
-__decorate([
-    _utils.cache
-], EgretProjectData.prototype, "getModulesConfig", null);
 exports.EgretProjectData = EgretProjectData;
 exports.data = new EgretProjectData();
 function getAppDataEnginesRootPath() {

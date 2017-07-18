@@ -1,3 +1,4 @@
+Object.defineProperty(exports, "__esModule", { value: true });
 /**
  * Created by yanjiaqi on 15/10/21.
  */
@@ -261,8 +262,8 @@ var EXMLConfig = (function () {
         }
         return type;
     };
+    //added by yanjiaqi 2015.10.21
+    EXMLConfig.__instance = null;
     return EXMLConfig;
 }());
-//added by yanjiaqi 2015.10.21
-EXMLConfig.__instance = null;
 exports.EXMLConfig = EXMLConfig;

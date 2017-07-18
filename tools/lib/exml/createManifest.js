@@ -1,4 +1,5 @@
 /// <reference path="../types.d.ts" />
+Object.defineProperty(exports, "__esModule", { value: true });
 var file = require("../FileUtil");
 var xml = require("../xml/index");
 var CodeUtil = require("./code_util");

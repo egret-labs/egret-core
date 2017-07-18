@@ -16,6 +16,7 @@ var Help = (function () {
                 var bParseConfig = true;
                 if (bParseConfig) {
                     var result = helpParser.logHelpDef(helpName);
+                    //console.log( ">>>: " + result );
                 }
                 return;
             }

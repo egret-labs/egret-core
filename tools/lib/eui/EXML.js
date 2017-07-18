@@ -26,6 +26,7 @@
 //  EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 //
 //////////////////////////////////////////////////////////////////////////////////////
+Object.defineProperty(exports, "__esModule", { value: true });
 /// <reference path="../types.d.ts" />
 var __global = global;
 var xml = require("../xml/index");

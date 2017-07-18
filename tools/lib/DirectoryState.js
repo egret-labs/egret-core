@@ -1,3 +1,4 @@
+Object.defineProperty(exports, "__esModule", { value: true });
 var FS = require("fs");
 var file = require("../lib/FileUtil");
 var DirectoryState = (function () {

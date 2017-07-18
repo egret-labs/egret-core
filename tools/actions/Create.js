@@ -8,8 +8,8 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
     });
 };
 var __generator = (this && this.__generator) || function (thisArg, body) {
-    var _ = { label: 0, sent: function() { if (t[0] & 1) throw t[1]; return t[1]; }, trys: [], ops: [] }, f, y, t;
-    return { next: verb(0), "throw": verb(1), "return": verb(2) };
+    var _ = { label: 0, sent: function() { if (t[0] & 1) throw t[1]; return t[1]; }, trys: [], ops: [] }, f, y, t, g;
+    return g = { next: verb(0), "throw": verb(1), "return": verb(2) }, typeof Symbol === "function" && (g[Symbol.iterator] = function() { return this; }), g;
     function verb(n) { return function (v) { return step([n, v]); }; }
     function step(op) {
         if (f) throw new TypeError("Generator is already executing.");
@@ -68,9 +68,7 @@ var Create = (function () {
 }());
 function compileTemplate(projectConfig) {
     var options = egret.args;
-    var modules = projectConfig.modules;
-    var platform = projectConfig.platform;
-    updateEgretProperties(modules);
+    updateEgretProperties(projectConfig);
     var files = FileUtil.searchByFunction(options.projectDir, function (f) { return f.indexOf("index.html") > 0; });
     files.forEach(function (file) {
         var content = FileUtil.read(file);
@@ -78,12 +76,19 @@ function compileTemplate(projectConfig) {
         FileUtil.save(file, content);
     });
 }
-function updateEgretProperties(modules) {
+function updateEgretProperties(projectConfig) {
+    var modules = projectConfig.modules;
     var propFile = FileUtil.joinPath(egret.args.projectDir, "egretProperties.json");
     var jsonString = FileUtil.read(propFile);
     var props = JSON.parse(jsonString);
     props.egret_version = egret.version;
     props.template = {};
+    if (projectConfig.type == "eui") {
+        props.eui = {
+            exmlRoot: "resource/eui_skins",
+            themes: ["resource/default.thm.json"]
+        };
+    }
     if (!props.modules) {
         props.modules = modules.map(function (m) { return ({ name: m.name }); });
     }

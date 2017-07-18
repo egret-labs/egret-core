@@ -20,7 +20,7 @@ var ChangeEntranceCommand = (function () {
     };
     ChangeEntranceCommand.prototype.init = function (url, platform) {
         switch (platform) {
-            case "android":
+            case "android"://修改java文件
                 //判断入口文件是否存在
                 var entranceFile = FileUtil.joinPath(url, "AndroidManifest.xml");
                 if (!FileUtil.exists(entranceFile)) {
@@ -87,7 +87,7 @@ var ChangeEntranceCommand = (function () {
                     this.platformContent = null;
                 }
                 break;
-            case "ios":
+            case "ios"://修改ios入口文件
                 var projectName = '';
                 var fileList = FileUtil.getDirectoryListing(url, true);
                 for (var key in fileList) {

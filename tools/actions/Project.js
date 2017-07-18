@@ -1,4 +1,5 @@
 /// <reference path="../lib/types.d.ts" />
+Object.defineProperty(exports, "__esModule", { value: true });
 var htmlparser = require("../lib/htmlparser");
 function normalize(project) {
     project.entryClass = project.entryClass || "Main";

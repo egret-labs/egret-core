@@ -1,4 +1,5 @@
 /// <reference path="../lib/types.d.ts" />
+Object.defineProperty(exports, "__esModule", { value: true });
 var url = require("url");
 var net = require("net");
 var Project = require("./project");
