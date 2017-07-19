@@ -218,10 +218,34 @@ namespace egret.sys {
          */
         private isPaused: boolean = false;
 
+        /**
+         * Pause the ticker.
+         * @version Egret 5.0.2
+         * @platform Web,Native
+         * @language en_US
+         */
+        /**
+         * 暂停心跳
+         * @version Egret 5.0.2
+         * @platform Web,Native
+         * @language zh_CN
+         */
         public pause(): void {
             this.isPaused = true;
         }
 
+        /**
+         * Resume the ticker.
+         * @version Egret 5.0.2
+         * @platform Web,Native
+         * @language en_US
+         */
+        /**
+         * 恢复心跳
+         * @version Egret 5.0.2
+         * @platform Web,Native
+         * @language zh_CN
+         */
         public resume(): void {
             this.isPaused = false;
         }

@@ -28,7 +28,9 @@
 //////////////////////////////////////////////////////////////////////////////////////
 
 namespace egret.web {
-
+    /**
+     * @private
+     */
     export let WebLifeCycleHandler: egret.lifecycle.LifecyclePlugin = (context) => {
 
 

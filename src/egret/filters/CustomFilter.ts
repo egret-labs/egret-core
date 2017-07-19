@@ -114,6 +114,18 @@ namespace egret {
          */
         public padding:number = 0;
 
+        /**
+         * The initial value of the uniform in the shader (key, value one-to-one correspondence), currently only supports numbers and arrays.
+         * @version Egret 4.1.0
+         * @platform Web
+         * @language en_US
+         */
+        /**
+         * 着色器中uniform的初始值（key，value一一对应），目前仅支持数字和数组。
+         * @version Egret 4.1.0
+         * @platform Web
+         * @language zh_CN
+         */
         public get uniforms():any {
             return this.$uniforms;
         }

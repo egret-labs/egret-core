@@ -3130,6 +3130,9 @@ var egret;
 (function (egret) {
     var web;
     (function (web) {
+        /**
+         * @private
+         */
         web.WebLifeCycleHandler = function (context) {
             var handleVisibilityChange = function () {
                 if (!document[hidden]) {

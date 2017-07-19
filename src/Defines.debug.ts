@@ -74,12 +74,21 @@ this["DEBUG"] = true;
 this["RELEASE"] = false;
 
 namespace egret {
+    /**
+     * @private
+     */
     export declare function $error(code:number, ...params:any[]):void;
-
+    /**
+     * @private
+     */
     export declare function $warn(code:number, ...params:any[]):void;
-
+    /**
+     * @private
+     */
     export declare function getString(code:number, ...params:any[]):string;
-
+    /**
+     * @private
+     */
     export declare function $markCannotUse(instance:any, property:string, defaultVale:any):void;
 
     /**

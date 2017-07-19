@@ -4616,6 +4616,9 @@ var egret;
         //         };
         //     }
         // }
+        /**
+         * @private
+         */
         native.NativeLifeCycleHandler = function (context) {
             egret_native.pauseApp = function () {
                 context.pause();

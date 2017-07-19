@@ -85,10 +85,12 @@ namespace egret {
 
     /**
      * Insert render context, now for egret3d
+     * @private
      * @language en_US
      */
     /**
      * 插入渲染上下文，目前用于egret3d的混入
+     * @private
      * @language zh_CN
      */
     export declare function setRendererContext(custom: CustomContext):void;

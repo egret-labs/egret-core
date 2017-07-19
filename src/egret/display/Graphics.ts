@@ -64,8 +64,16 @@ namespace egret {
     export class Graphics extends HashObject {
 
         /**
+         * Initializes a Graphics object.
          * @version Egret 2.4
          * @platform Web,Native
+         * @language en_US
+         */
+        /**
+         * 创建一个 Graphics 对象。
+         * @version Egret 2.4
+         * @platform Web,Native
+         * @language zh_CN
          */
         public constructor() {
             super();

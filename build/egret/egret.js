@@ -10045,11 +10045,19 @@ var egret;
     var CustomFilter = (function (_super) {
         __extends(CustomFilter, _super);
         /**
+         * Initialize the CustomFilter object.
+         * @param vertexSrc Custom vertex shader program.
+         * @param fragmentSrc Custom fragment shader program.
+         * @param uniforms The initial value of the uniform in the shader (key, value one-to-one correspondence), currently only supports numbers and arrays.
+         * @version Egret 4.1.0
+         * @platform Web
+         * @language en_US
+         */
+        /**
          * 初始化 CustomFilter 对象
-         * @method egret.CustomFilter#constructor
-         * @param vertexSrc {string} 自定义的顶点着色器程序。
-         * @param fragmentSrc {string} 自定义的片段着色器程序。
-         * @param uniforms {any} 着色器中uniform的初始值（key，value一一对应），目前仅支持数字和数组。
+         * @param vertexSrc 自定义的顶点着色器程序。
+         * @param fragmentSrc 自定义的片段着色器程序。
+         * @param uniforms 着色器中uniform的初始值（key，value一一对应），目前仅支持数字和数组。
          * @version Egret 4.1.0
          * @platform Web
          * @language zh_CN
@@ -10057,6 +10065,13 @@ var egret;
         function CustomFilter(vertexSrc, fragmentSrc, uniforms) {
             if (uniforms === void 0) { uniforms = {}; }
             var _this = _super.call(this) || this;
+            /**
+             * The inner margin of the filter.
+             * If the desired area of the custom filter is larger than the original area (stroke, etc.), you need to set it manually.
+             * @version Egret 4.1.0
+             * @platform Web
+             * @language en_US
+             */
             /**
              * 滤镜的内边距
              * 如果自定义滤镜所需区域比原区域大（描边等），需要手动设置
@@ -10077,6 +10092,18 @@ var egret;
             return _this;
         }
         Object.defineProperty(CustomFilter.prototype, "uniforms", {
+            /**
+             * The initial value of the uniform in the shader (key, value one-to-one correspondence), currently only supports numbers and arrays.
+             * @version Egret 4.1.0
+             * @platform Web
+             * @language en_US
+             */
+            /**
+             * 着色器中uniform的初始值（key，value一一对应），目前仅支持数字和数组。
+             * @version Egret 4.1.0
+             * @platform Web
+             * @language zh_CN
+             */
             get: function () {
                 return this.$uniforms;
             },
@@ -10391,8 +10418,16 @@ var egret;
     var Graphics = (function (_super) {
         __extends(Graphics, _super);
         /**
+         * Initializes a Graphics object.
          * @version Egret 2.4
          * @platform Web,Native
+         * @language en_US
+         */
+        /**
+         * 创建一个 Graphics 对象。
+         * @version Egret 2.4
+         * @platform Web,Native
+         * @language zh_CN
          */
         function Graphics() {
             var _this = _super.call(this) || this;
@@ -14782,9 +14817,33 @@ var egret;
                 this.lastCount = this.frameInterval = Math.round(60000 / value);
                 return true;
             };
+            /**
+             * Pause the ticker.
+             * @version Egret 5.0.2
+             * @platform Web,Native
+             * @language en_US
+             */
+            /**
+             * 暂停心跳
+             * @version Egret 5.0.2
+             * @platform Web,Native
+             * @language zh_CN
+             */
             SystemTicker.prototype.pause = function () {
                 this.isPaused = true;
             };
+            /**
+             * Resume the ticker.
+             * @version Egret 5.0.2
+             * @platform Web,Native
+             * @language en_US
+             */
+            /**
+             * 恢复心跳
+             * @version Egret 5.0.2
+             * @platform Web,Native
+             * @language zh_CN
+             */
             SystemTicker.prototype.resume = function () {
                 this.isPaused = false;
             };
@@ -22438,6 +22497,9 @@ var egret;
  * @private
  */
 var chars = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789+/";
+/**
+ * @private
+ */
 var lookup = new Uint8Array(256);
 for (var i = 0; i < chars.length; i++) {
     lookup[chars.charCodeAt(i)] = i;

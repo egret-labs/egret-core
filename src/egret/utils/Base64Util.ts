@@ -124,6 +124,9 @@ namespace egret {
  * @private
  */
 let chars = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789+/";
+/**
+ * @private
+ */
 let lookup = new Uint8Array(256);
 
 for (let i = 0; i < chars.length; i++) {

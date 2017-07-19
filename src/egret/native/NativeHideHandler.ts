@@ -51,7 +51,9 @@ namespace egret.native {
     //     }
     // }
 
-
+    /**
+     * @private
+     */
     export let NativeLifeCycleHandler: egret.lifecycle.LifecyclePlugin = (context) => {
         egret_native.pauseApp = () => {
             context.pause();
