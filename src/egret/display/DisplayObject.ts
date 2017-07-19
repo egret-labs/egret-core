@@ -582,7 +582,6 @@ namespace egret {
                 let rect = this.$scrollRect;
                 if (rect) {
                     matrix.$preMultiplyInto($TempMatrix.setTo(1, 0, 0, 1, -rect.x - offsetX, -rect.y - offsetY), matrix);
-
                 }
                 else if (offsetX != 0 || offsetY != 0) {
                     matrix.$preMultiplyInto($TempMatrix.setTo(1, 0, 0, 1, -offsetX, -offsetY), matrix);

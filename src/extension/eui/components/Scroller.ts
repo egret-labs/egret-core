@@ -599,6 +599,8 @@ namespace eui {
          */
         private downTarget:egret.DisplayObject;
 
+        private tempStage:egret.Stage;
+
         /**
          * @private
          *
@@ -628,6 +630,7 @@ namespace eui {
             stage.addEventListener(egret.TouchEvent.TOUCH_END, this.onTouchEnd, this, true);
             this.addEventListener(egret.TouchEvent.TOUCH_CANCEL, this.onTouchCancel, this);
             this.addEventListener(egret.Event.REMOVED_FROM_STAGE, this.onRemoveListeners, this);
+            this.tempStage = stage;
         }
 
         /**
@@ -713,8 +716,9 @@ namespace eui {
             if (!viewport) {
                 return;
             }
-            let cancelEvent = new egret.TouchEvent(event.type, event.bubbles, event.cancelable);
+            let cancelEvent = new egret.TouchEvent(event.type, event.bubbles, event.cancelable, event.$stageX, event.$stageY, event.touchPointID);
             let target:egret.DisplayObject = this.downTarget;
+            cancelEvent.$setTarget(target);
             let list = this.$getPropagationList(target);
             let length = list.length;
             let targetIndex = list.length * 0.5;
@@ -743,8 +747,9 @@ namespace eui {
             if (!viewport) {
                 return;
             }
-            let cancelEvent = new egret.TouchEvent(egret.TouchEvent.TOUCH_CANCEL, event.bubbles, event.cancelable);
+            let cancelEvent = new egret.TouchEvent(egret.TouchEvent.TOUCH_CANCEL, event.bubbles, event.cancelable, event.$stageX, event.$stageY, event.touchPointID);
             let target:egret.DisplayObject = this.downTarget;
+            cancelEvent.$setTarget(target);
             let list = this.$getPropagationList(target);
             let length = list.length;
             let targetIndex = list.length * 0.5;
@@ -789,7 +794,7 @@ namespace eui {
          * @private
          */
         private onRemoveListeners():void {
-            let stage = this.$stage;
+            let stage = this.tempStage || this.$stage;
             this.removeEventListener(egret.TouchEvent.TOUCH_MOVE, this.onTouchMove, this);
             stage.removeEventListener(egret.TouchEvent.TOUCH_END, this.onTouchEnd, this, true);
             stage.removeEventListener(egret.TouchEvent.TOUCH_MOVE, this.onTouchMove, this);

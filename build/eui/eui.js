@@ -14052,6 +14052,7 @@ var eui;
             stage.addEventListener(egret.TouchEvent.TOUCH_END, this.onTouchEnd, this, true);
             this.addEventListener(egret.TouchEvent.TOUCH_CANCEL, this.onTouchCancel, this);
             this.addEventListener(egret.Event.REMOVED_FROM_STAGE, this.onRemoveListeners, this);
+            this.tempStage = stage;
         };
         /**
          * @private
@@ -14132,8 +14133,9 @@ var eui;
             if (!viewport) {
                 return;
             }
-            var cancelEvent = new egret.TouchEvent(event.type, event.bubbles, event.cancelable);
+            var cancelEvent = new egret.TouchEvent(event.type, event.bubbles, event.cancelable, event.$stageX, event.$stageY, event.touchPointID);
             var target = this.downTarget;
+            cancelEvent.$setTarget(target);
             var list = this.$getPropagationList(target);
             var length = list.length;
             var targetIndex = list.length * 0.5;
@@ -14158,8 +14160,9 @@ var eui;
             if (!viewport) {
                 return;
             }
-            var cancelEvent = new egret.TouchEvent(egret.TouchEvent.TOUCH_CANCEL, event.bubbles, event.cancelable);
+            var cancelEvent = new egret.TouchEvent(egret.TouchEvent.TOUCH_CANCEL, event.bubbles, event.cancelable, event.$stageX, event.$stageY, event.touchPointID);
             var target = this.downTarget;
+            cancelEvent.$setTarget(target);
             var list = this.$getPropagationList(target);
             var length = list.length;
             var targetIndex = list.length * 0.5;
@@ -14197,7 +14200,7 @@ var eui;
          * @private
          */
         Scroller.prototype.onRemoveListeners = function () {
-            var stage = this.$stage;
+            var stage = this.tempStage || this.$stage;
             this.removeEventListener(egret.TouchEvent.TOUCH_MOVE, this.onTouchMove, this);
             stage.removeEventListener(egret.TouchEvent.TOUCH_END, this.onTouchEnd, this, true);
             stage.removeEventListener(egret.TouchEvent.TOUCH_MOVE, this.onTouchMove, this);
