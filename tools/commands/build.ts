@@ -52,6 +52,7 @@ class Build implements egret.Command {
         let projectDir = egret.args.projectDir;
         let compiler = new Compiler.Compiler();
         let { options, fileNames } = compiler.parseTsconfig(projectDir, egret.args.publish);
+        options.defines = undefined;
         options.emitReflection = true;
         let outFile = options.outFile;
         if (!outFile) {
