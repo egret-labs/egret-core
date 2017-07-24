@@ -124,7 +124,7 @@ export class EgretProjectData {
 
     getExmlRoot(): string {
         if (globals.hasKeys(this.egretProperties, ["eui", "exmlRoot"])) {
-            return this.egretProperties.eui.exmlRoot;
+            return _path.join(egret.args.projectDir, this.egretProperties.eui.exmlRoot);
         }
         return egret.args.projectDir;
     }
