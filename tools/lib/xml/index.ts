@@ -20,7 +20,7 @@ import sax = require("./sax");
 var saxparser = sax.parser(true);
 
 export function parse(xmlString): egret.XML {
-    var object:sax.Tag = null;
+    var object: sax.Tag = null;
     var namespaces = {};
     var hasError = false;
     saxparser.resume();
@@ -30,11 +30,11 @@ export function parse(xmlString): egret.XML {
     saxparser.onopentag = function (node: sax.Tag) {
         node.nodeType = 1;
         var attribs = node.attributes;
-        delete node["attributes"];
+        // delete node["attributes"];
         for (var key in attribs) {
             index = key.indexOf("xmlns:");
             if (index == 0) {
-                var prefix:string = key.substring(6);
+                var prefix: string = key.substring(6);
                 var uri = attribs[key];
                 namespaces[prefix] = uri;
                 delete attribs[key];
@@ -52,7 +52,7 @@ export function parse(xmlString): egret.XML {
             node.prefix = "";
             node.localName = name;
         } else {
-            var prefix:string = name.substring(0, index);
+            var prefix: string = name.substring(0, index);
             node.prefix = prefix;
             node.namespace = namespaces[prefix];
             node.localName = name.substring(index + 1);
@@ -86,6 +86,10 @@ export function parse(xmlString): egret.XML {
     };
 
     saxparser.ontext = function (text) {
+        //忽略格式化字符
+        if (text.indexOf("\n") != -1) {
+            return;
+        }
         if (object && !object.text && !object.children) {
             object.nodeType = 3;
             object.text = text;

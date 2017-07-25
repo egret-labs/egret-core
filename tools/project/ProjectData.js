@@ -100,6 +100,12 @@ var EgretProjectData = (function () {
         }
         return null;
     };
+    EgretProjectData.prototype.getExmlPublishPolicy = function () {
+        if (globals.hasKeys(this.egretProperties, ["eui", "exmlPublishPolicy"])) {
+            return this.egretProperties.eui.exmlPublishPolicy;
+        }
+        return "content";
+    };
     EgretProjectData.prototype.getCopyExmlList = function () {
         if (globals.hasKeys(this.egretProperties, [egret.args.runtime, "copyExmlList"])) {
             return this.egretProperties[egret.args.runtime]["copyExmlList"];

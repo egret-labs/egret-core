@@ -136,6 +136,13 @@ export class EgretProjectData {
         return null;
     }
 
+    getExmlPublishPolicy(): string {
+        if (globals.hasKeys(this.egretProperties, ["eui", "exmlPublishPolicy"])) {
+            return this.egretProperties.eui.exmlPublishPolicy;
+        }
+        return "content";
+    }
+
     getCopyExmlList(): Array<string> {
         if (globals.hasKeys(this.egretProperties, [egret.args.runtime, "copyExmlList"])) {
             return this.egretProperties[egret.args.runtime]["copyExmlList"];

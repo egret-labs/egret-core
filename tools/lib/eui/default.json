@@ -1,0 +1,93 @@
+{
+  "eui.ArrayCollection":{
+    "default":"source",
+    "source":"Array"
+  },
+  "eui.DataGroup":{
+    "default":"dataProvider",
+    "itemRenderer":"Class",
+    "itemRendererSkinName":"Class",
+    "dataProvider":"eui.ICollection"
+  },
+  "eui.Group":{
+    "default":"elementsContent",
+    "elementsContent":"Array",
+    "states":"State[]",
+    "left": "Percentage",
+    "right": "Percentage",
+    "top": "Percentage",
+    "bottom": "Percentage",
+    "horizontalCenter": "Percentage",
+    "verticalCenter": "Percentage"
+  },
+  "eui.Panel":{
+    "default":"elementsContent",
+    "elementsContent":"Array"
+  },
+  "eui.Scroller":{
+    "default":"viewport",
+    "viewport":"eui.IViewport"
+  },
+  "eui.Skin":{
+    "default":"elementsContent",
+    "elementsContent":"Array",
+    "states":"State[]"
+  },
+  "eui.State":{
+    "default":"overrides"
+  },
+  "egret.BitmapText":{
+    "font":"string"
+  },
+  "eui.Component":{
+    "skinName":"Class",
+    "left": "Percentage",
+    "right": "Percentage",
+    "top": "Percentage",
+    "bottom": "Percentage",
+    "horizontalCenter": "Percentage",
+    "verticalCenter": "Percentage"
+  },
+  "eui.BitmapLabel":{
+    "left": "Percentage",
+    "right": "Percentage",
+    "top": "Percentage",
+    "bottom": "Percentage",
+    "horizontalCenter": "Percentage",
+    "verticalCenter": "Percentage"
+  },
+  "eui.Image":{
+    "scale9Grid":"egret.Rectangle",
+    "left": "Percentage",
+    "right": "Percentage",
+    "top": "Percentage",
+    "bottom": "Percentage",
+    "horizontalCenter": "Percentage",
+    "verticalCenter": "Percentage"
+  },
+  "eui.sys.UIComponentImpl": {
+    "left": "Percentage",
+    "right": "Percentage",
+    "top": "Percentage",
+    "bottom": "Percentage",
+    "horizontalCenter": "Percentage",
+    "verticalCenter": "Percentage"
+  },
+  "eui.Label":{
+    "left": "Percentage",
+    "right": "Percentage",
+    "top": "Percentage",
+    "bottom": "Percentage",
+    "horizontalCenter": "Percentage",
+    "verticalCenter": "Percentage"
+  },
+  "egret.tween.TweenGroup": {
+    "default":"items"
+  },
+  "egret.tween.TweenItem":{
+    "default":"paths"
+  },
+  "egret.tween.To": {
+    "ease":"string"
+  }
+}

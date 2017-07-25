@@ -54,9 +54,11 @@ function updateEgretProperties(projectConfig: egret.EgretProjectConfig) {
     props.egret_version = egret.version;
     props.template = {};
     if (projectConfig.type == "eui") {
+        //添加eui项目默认配置
         props.eui = {
             exmlRoot: "resource/eui_skins",
-            themes: ["resource/default.thm.json"]
+            themes: ["resource/default.thm.json"],
+            exmlPublishPolicy: "content"
         };
     }
     if (!props.modules) {

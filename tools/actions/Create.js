@@ -86,7 +86,8 @@ function updateEgretProperties(projectConfig) {
     if (projectConfig.type == "eui") {
         props.eui = {
             exmlRoot: "resource/eui_skins",
-            themes: ["resource/default.thm.json"]
+            themes: ["resource/default.thm.json"],
+            exmlPublishPolicy: "content"
         };
     }
     if (!props.modules) {

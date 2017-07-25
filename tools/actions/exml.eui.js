@@ -3,6 +3,8 @@ Object.defineProperty(exports, "__esModule", { value: true });
 var file = require("../lib/FileUtil");
 var exml = require("../lib/eui/EXML");
 var EgretProject = require("../project/EgretProject");
+var exmlParser = require("../lib/eui/EXMLParser");
+var parser = new exmlParser.EXMLParser();
 function beforeBuild() {
     generateExmlDTS();
 }
@@ -85,7 +87,24 @@ function updateSetting(merge) {
     themeDatas.forEach(function (thm) { return thm.exmls = []; });
     exmls.forEach(function (e) {
         var epath = e.path;
-        var exmlEl = merge ? { path: e.path, content: e.content } : epath;
+        var exmlEl = epath;
+        if (merge) {
+            var state = EgretProject.data.getExmlPublishPolicy();
+            switch (state) {
+                case "content":
+                    exmlEl = { path: e.path, content: e.content };
+                    break;
+                case "gjs":
+                    exmlEl = { path: e.path, gjs: parser.parse(e.content) };
+                    break;
+                //todo
+                case "bin":
+                    break;
+                default:
+                    exmlEl = { path: e.path, content: e.content };
+                    break;
+            }
+        }
         themeDatas.forEach(function (thm, i) {
             if (epath in oldEXMLS) {
                 var thmPath = themes[i];

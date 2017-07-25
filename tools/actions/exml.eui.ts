@@ -5,6 +5,8 @@ import utils = require('../lib/utils');
 import file = require('../lib/FileUtil');
 import exml = require("../lib/eui/EXML");
 import EgretProject = require('../project/EgretProject');
+import exmlParser = require("../lib/eui/EXMLParser");
+var parser = new exmlParser.EXMLParser();
 
 export function beforeBuild() {
     generateExmlDTS();
@@ -96,7 +98,26 @@ export function updateSetting(merge = false) {
 
     exmls.forEach(e => {
         var epath = e.path;
-        var exmlEl = merge ? { path: e.path, content: e.content } : epath;
+        var exmlEl: any = epath;
+        if (merge) {
+            let state = EgretProject.data.getExmlPublishPolicy();
+            switch (state) {
+                case "path":
+                    break;
+                case "content":
+                    exmlEl = { path: e.path, content: e.content };
+                    break;
+                case "gjs":
+                    exmlEl = { path: e.path, gjs: parser.parse(e.content) };
+                    break;
+                //todo
+                case "bin":
+                    break;
+                default:
+                    exmlEl = { path: e.path, content: e.content };
+                    break;
+            }
+        }
         themeDatas.forEach((thm, i) => {
             if (epath in oldEXMLS) {
                 var thmPath = themes[i];
@@ -122,7 +143,7 @@ export function updateSetting(merge = false) {
 
 function searchTheme(): string[] {
     let result = EgretProject.data.getThemes();
-    if(result) {
+    if (result) {
         return result;
     }
     var files = file.searchByFunction(egret.args.projectDir, themeFilter);

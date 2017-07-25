@@ -108,6 +108,7 @@ declare module egret {
         "eui"?:{
             "exmlRoot"?: string;
             "themes"?: string[];
+            "exmlPublishPolicy"?: string;
         },
         "native"?: {
             "path_ignore"?: string[];
