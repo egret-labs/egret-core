@@ -35,7 +35,7 @@ var __generator = (this && this.__generator) || function (thisArg, body) {
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 var FiltUtil = require("../../FileUtil");
-var ts = require("typescript");
+var ts = require("../../typescript-plus");
 var utils = require("./typescript-utils");
 var baseTypeCache = {};
 function hasBaseTypes(theType, typeToFind, checker) {

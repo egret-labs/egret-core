@@ -1,4 +1,4 @@
-import * as ts from "typescript";
+import * as ts from "../../typescript-plus";
 
 export function getClassExtendsHeritageClauseElement(node: ts.ClassLikeDeclaration) {
     let heritageClause = getHeritageClause(node.heritageClauses, ts.SyntaxKind.ExtendsKeyword);
