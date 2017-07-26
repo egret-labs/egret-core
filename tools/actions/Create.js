@@ -84,11 +84,15 @@ function updateEgretProperties(projectConfig) {
     props.egret_version = egret.version;
     props.template = {};
     if (projectConfig.type == "eui") {
+        //添加eui项目默认配置
         props.eui = {
             exmlRoot: "resource/eui_skins",
             themes: ["resource/default.thm.json"],
             exmlPublishPolicy: "content"
         };
+    }
+    else if (projectConfig.type == "wasm") {
+        props.wasm = {};
     }
     if (!props.modules) {
         props.modules = modules.map(function (m) { return ({ name: m.name }); });

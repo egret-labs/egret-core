@@ -61,6 +61,9 @@ function updateEgretProperties(projectConfig: egret.EgretProjectConfig) {
             exmlPublishPolicy: "content"
         };
     }
+    else if (projectConfig.type == "wasm") {
+        props.wasm = {};
+    }
     if (!props.modules) {
         props.modules = modules.map(m => ({ name: m.name }));
     }

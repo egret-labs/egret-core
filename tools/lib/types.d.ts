@@ -105,6 +105,9 @@ declare module egret {
         "template"?:{
             
         },
+        "wasm"?:{
+            
+        },
         "eui"?:{
             "exmlRoot"?: string;
             "themes"?: string[];

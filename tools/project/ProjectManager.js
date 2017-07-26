@@ -72,6 +72,18 @@ var manager;
                 FileUtil.copy(FileUtil.joinPath(options.projectDir, m.release), FileUtil.joinPath(toPath, m.release));
             });
         });
+        if (ProjectData_1.data.isWasmProject()) {
+            //todo db
+            var arr = [
+                "egret.asm.js",
+                "egret.asm.js.mem",
+                "egret.webassembly.js",
+                "egret.webassembly.wasm"
+            ];
+            arr.forEach(function (item) {
+                FileUtil.copy(FileUtil.joinPath(options.projectDir, "libs", item), FileUtil.joinPath(toPath, "libs", item));
+            });
+        }
     }
     manager.copyLibsForPublish = copyLibsForPublish;
     function copyManifestForNative(toPath) {

@@ -91,6 +91,8 @@ function updateSetting(merge) {
         if (merge) {
             var state = EgretProject.data.getExmlPublishPolicy();
             switch (state) {
+                case "path":
+                    break;
                 case "content":
                     exmlEl = { path: e.path, content: e.content };
                     break;

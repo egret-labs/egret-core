@@ -468,7 +468,7 @@
         "defaultWidth": 640,
         "defaultHeight": 1136,
         "modules": [
-          "egret-wasm",
+          "egret",
           "media",
           "res"
         ]

@@ -227,8 +227,13 @@ export class EgretProjectData {
 
     @_utils.cache
     getModulesConfig(platform: "web" | "native") {
-
         let result = this.egretProperties.modules.map(m => {
+            if(this.isWasmProject()) {
+                // todo  || m.name == "dragonBones"
+                if(m.name == "egret" || m.name == "eui") {
+                    m.name += "-wasm";
+                }
+            }
             let name = m.name;
             let sourceDir = this.getModulePath(m);
             let targetDir = _path.join(this.getLibraryFolder(), name)
@@ -257,13 +262,10 @@ export class EgretProjectData {
     }
 
     isWasmProject(): boolean {
-        let boo = false;
-        this.getModulesConfig("web").forEach(m => {
-            if (m.name == "egret-wasm") {
-                boo = true;
-            }
-        });
-        return boo;
+        if (globals.hasKeys(this.egretProperties, ["wasm"])) {
+            return true;
+        }
+        return false;
     }
 
     getPublishType(runtime: string): number {

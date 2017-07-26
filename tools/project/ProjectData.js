@@ -183,6 +183,12 @@ var EgretProjectData = (function () {
     EgretProjectData.prototype.getModulesConfig = function (platform) {
         var _this = this;
         var result = this.egretProperties.modules.map(function (m) {
+            if (_this.isWasmProject()) {
+                // todo  || m.name == "dragonBones"
+                if (m.name == "egret" || m.name == "eui") {
+                    m.name += "-wasm";
+                }
+            }
             var name = m.name;
             var sourceDir = _this.getModulePath(m);
             var targetDir = _path.join(_this.getLibraryFolder(), name);
@@ -209,13 +215,10 @@ var EgretProjectData = (function () {
         return result;
     };
     EgretProjectData.prototype.isWasmProject = function () {
-        var boo = false;
-        this.getModulesConfig("web").forEach(function (m) {
-            if (m.name == "egret-wasm") {
-                boo = true;
-            }
-        });
-        return boo;
+        if (globals.hasKeys(this.egretProperties, ["wasm"])) {
+            return true;
+        }
+        return false;
     };
     EgretProjectData.prototype.getPublishType = function (runtime) {
         if (globals.hasKeys(this.egretProperties, ["publish", runtime])) {

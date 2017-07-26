@@ -36,7 +36,7 @@ export namespace manager {
         FileUtil.save(manifestPath, JSON.stringify(manifest, undefined, "\t"));
     }
 
-    export function modifyNativeRequire(manifestPath:string) {
+    export function modifyNativeRequire(manifestPath: string) {
         let options = egret.args;
         let indexPath = data.getFilePath('index.html');
         let requirePath = FileUtil.joinPath(options.templateDir, "runtime", "native_require.js");
@@ -46,7 +46,7 @@ export namespace manager {
         }
         if (!data.useTemplate) {
             let manifest = JSON.parse(FileUtil.read(manifestPath));
-            let fileList:Array<string> = manifest.initial.concat(manifest.game);
+            let fileList: Array<string> = manifest.initial.concat(manifest.game);
             let listStr = "\n";
             fileList.forEach(function (filepath) {
                 filepath = filepath.replace(".web.", ".native.");
@@ -72,6 +72,19 @@ export namespace manager {
                     FileUtil.joinPath(toPath, m.release));
             });
         });
+        if (data.isWasmProject()) {
+            //todo db
+            let arr = [
+                "egret.asm.js",
+                "egret.asm.js.mem",
+                "egret.webassembly.js",
+                "egret.webassembly.wasm"
+            ];
+            arr.forEach(function (item) {
+                FileUtil.copy(FileUtil.joinPath(options.projectDir, "libs", item),
+                    FileUtil.joinPath(toPath, "libs", item));
+            });
+        }
     }
 
     export function copyManifestForNative(toPath: string): void {
