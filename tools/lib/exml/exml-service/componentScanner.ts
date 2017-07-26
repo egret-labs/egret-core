@@ -1,6 +1,6 @@
 import * as FiltUtil from "../../FileUtil";
 import * as path from "path";
-import * as ts from "typescript";
+import * as ts from "../../typescript-plus";
 import * as utils from "./typescript-utils";
 
 var baseTypeCache = {};
