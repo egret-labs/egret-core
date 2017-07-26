@@ -75,6 +75,12 @@ var dragonBones;
         return DragonBones;
     }());
     dragonBones.DragonBones = DragonBones;
+    if (!console.warn) {
+        console.warn = function () { };
+    }
+    if (!console.assert) {
+        console.assert = function () { };
+    }
 })(dragonBones || (dragonBones = {}));
 var dragonBones;
 (function (dragonBones) {
