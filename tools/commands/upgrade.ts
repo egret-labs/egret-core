@@ -145,7 +145,7 @@ class Upgrade_4_0_1 {
         })
         tsconfigContent = JSON.stringify(tsconfig, null, "\t");
         file.save(tsconfigPath, tsconfigContent);
-        file.copy(path.join(egret.root, 'tools/templates/empty/polyfill'), Project.data.getFilePath('polyfill'));
+        file.copy(path.join(egret.root, 'tools/templates/empty/promise'), Project.data.getFilePath('polyfill'));
 
         globals.log(1703, "https://github.com/egret-labs/egret-core/tree/master/docs/cn/release-note/4.0.1")
 
