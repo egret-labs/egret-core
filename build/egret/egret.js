@@ -1637,8 +1637,8 @@ var egret;
             if (needUpdateProperties) {
                 values[0 /* scaleX */] = m.$getScaleX();
                 values[1 /* scaleY */] = m.$getScaleY();
-                values[2 /* skewX */] = matrix.$getSkewX();
-                values[3 /* skewY */] = matrix.$getSkewY();
+                values[2 /* skewX */] = m.$getSkewX();
+                values[3 /* skewY */] = m.$getSkewY();
                 values[16 /* skewXdeg */] = clampRotation(values[2 /* skewX */] * 180 / Math.PI);
                 values[17 /* skewYdeg */] = clampRotation(values[3 /* skewY */] * 180 / Math.PI);
                 values[4 /* rotation */] = clampRotation(values[3 /* skewY */] * 180 / Math.PI);

@@ -540,7 +540,7 @@ namespace egret {
         $setMatrix(matrix: Matrix, needUpdateProperties: boolean = true): boolean {
             let self = this;
             let values = self.$DisplayObject;
-            let m = values[Keys.matrix];
+            let m:egret.Matrix = values[Keys.matrix];
             if (m.equals(matrix)) {
                 return false;
             }
@@ -549,8 +549,8 @@ namespace egret {
             if (needUpdateProperties) {
                 values[Keys.scaleX] = m.$getScaleX();
                 values[Keys.scaleY] = m.$getScaleY();
-                values[Keys.skewX] = matrix.$getSkewX();
-                values[Keys.skewY] = matrix.$getSkewY();
+                values[Keys.skewX] = m.$getSkewX();
+                values[Keys.skewY] = m.$getSkewY();
                 values[Keys.skewXdeg] = clampRotation(values[Keys.skewX] * 180 / Math.PI);
                 values[Keys.skewYdeg] = clampRotation(values[Keys.skewY] * 180 / Math.PI);
                 values[Keys.rotation] = clampRotation(values[Keys.skewY] * 180 / Math.PI);
