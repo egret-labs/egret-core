@@ -57,9 +57,11 @@ function hasBaseTypes(theType, typeToFind, checker) {
         var baseTypes = target.getBaseTypes().concat(utils.getImplementedInterfaces(target, checker));
         for (var _i = 0, baseTypes_1 = baseTypes; _i < baseTypes_1.length; _i++) {
             var t = baseTypes_1[_i];
-            var found = find(t);
-            if (found) {
-                return true;
+            if (t) {
+                var found = find(t);
+                if (found) {
+                    return true;
+                }
             }
         }
         q.pop();

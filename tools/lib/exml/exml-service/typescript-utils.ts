@@ -39,14 +39,19 @@ export function getFullyQualifiedNameOfType(type:ts.Type,checker:ts.TypeChecker)
 
 export function getImplementedInterfaces(type: ts.Type,checker:ts.TypeChecker) {
     var superInterfaces: Array<any> = null;
-    var result :Array<ts.ObjectType> = [];
+    var result :Array<ts.BaseType> = [];
     
     
     if (type.symbol.declarations) {
         type.symbol.declarations.forEach(node=> {
     
             var interfaceType = checker.getTypeAtLocation(node);
-            let baseObjectTypes = interfaceType.getBaseTypes().map((i)=> i.objectFlags );
+            let baseObjectTypes = interfaceType.getBaseTypes().map((i) => {
+                if((<ts.ObjectType>i).objectFlags) {
+                    return (<ts.ObjectType>i).objectFlags;
+                }
+                return null;
+            });
             var isClass = baseObjectTypes.indexOf(ts.ObjectFlags.Class);
             if (isClass)
                 superInterfaces = getClassImplementsHeritageClauseElements(<ts.ClassLikeDeclaration>node);

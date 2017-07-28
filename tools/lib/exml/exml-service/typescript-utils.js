@@ -43,7 +43,12 @@ function getImplementedInterfaces(type, checker) {
     if (type.symbol.declarations) {
         type.symbol.declarations.forEach(function (node) {
             var interfaceType = checker.getTypeAtLocation(node);
-            var baseObjectTypes = interfaceType.getBaseTypes().map(function (i) { return i.objectFlags; });
+            var baseObjectTypes = interfaceType.getBaseTypes().map(function (i) {
+                if (i.objectFlags) {
+                    return i.objectFlags;
+                }
+                return null;
+            });
             var isClass = baseObjectTypes.indexOf(ts.ObjectFlags.Class);
             if (isClass)
                 superInterfaces = getClassImplementsHeritageClauseElements(node);

@@ -25,9 +25,11 @@ function hasBaseTypes(theType: ts.Type, typeToFind: string, checker: ts.TypeChec
 
         var baseTypes = target.getBaseTypes().concat(utils.getImplementedInterfaces(target, checker));
         for (var t of baseTypes) {
-            var found = find(t);
-            if (found) {
-                return true;
+            if (t) {
+                var found = find(t);
+                if (found) {
+                    return true;
+                }
             }
         }
         q.pop();

@@ -160,7 +160,7 @@ export class Compiler {
         }
 
         let notSupport = ["module", "noLib", "rootDir", "out"];
-        let defaultSupport = { target: "es5", outDir: "bin-debug" };
+        let defaultSupport = { outDir: "bin-debug" };
         let compilerOptions = configObj.compilerOptions;
         for (let optionName of notSupport) {
             if (compilerOptions.hasOwnProperty(optionName)) {
