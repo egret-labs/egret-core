@@ -157,7 +157,7 @@ namespace egret {
 /**
  * @private
  */
-let testDeviceType1 = function () {
+egret["testDeviceType1"] = function () {
     if (!this["navigator"]) {
         return true
     }
@@ -167,15 +167,15 @@ let testDeviceType1 = function () {
 /**
  * @private
  */
-let testRuntimeType1 = function () {
+egret["testRuntimeType1"] = function () {
     if (this["navigator"]) {
         return true;
     }
     return false;
 };
 
-egret.MainContext.deviceType = testDeviceType1() ? egret.MainContext.DEVICE_MOBILE : egret.MainContext.DEVICE_PC;
-egret.MainContext._runtimeType = testRuntimeType1() ? egret.MainContext.RUNTIME_HTML5 : egret.MainContext.RUNTIME_NATIVE;
+egret.MainContext.deviceType = egret["testDeviceType1"]() ? egret.MainContext.DEVICE_MOBILE : egret.MainContext.DEVICE_PC;
+egret.MainContext._runtimeType = egret["testRuntimeType1"]() ? egret.MainContext.RUNTIME_HTML5 : egret.MainContext.RUNTIME_NATIVE;
 
-delete testDeviceType1;
-delete testRuntimeType1;
+delete egret["testDeviceType1"];
+delete egret["testRuntimeType1"];

@@ -2294,14 +2294,6 @@ declare namespace egret {
         static readonly instance: egret.MainContext;
     }
 }
-/**
- * @private
- */
-declare let testDeviceType1: () => boolean;
-/**
- * @private
- */
-declare let testRuntimeType1: () => boolean;
 declare namespace egret {
     /**
      * Tool class for object cache repeat use, which can be used to construct an object pool. Objects are automatically recycled after a certain duration.

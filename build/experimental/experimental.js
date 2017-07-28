@@ -391,6 +391,7 @@ var egret;
                     if (experimental.debug)
                         console.log("Found 0xFFE1 marker");
                     return readEXIFData(dataView, offset + 4);
+                    // offset += 2 + file.getShortAt(offset+2, true);
                 }
                 else {
                     offset += 2 + dataView.getUint16(offset + 2);
@@ -494,7 +495,7 @@ var egret;
             var type = file.getUint16(entryOffset + 2, !bigEnd), numValues = file.getUint32(entryOffset + 4, !bigEnd), valueOffset = file.getUint32(entryOffset + 8, !bigEnd) + tiffStart, offset, vals, val, n, numerator, denominator;
             switch (type) {
                 case 1: // byte, 8-bit unsigned int
-                case 7:
+                case 7:// undefined, 8-bit byte, value depending on field
                     if (numValues == 1) {
                         return file.getUint8(entryOffset + 8, !bigEnd);
                     }
@@ -506,10 +507,10 @@ var egret;
                         }
                         return vals;
                     }
-                case 2:
+                case 2:// ascii, 8-bit byte
                     offset = numValues > 4 ? valueOffset : (entryOffset + 8);
                     return getStringFromDB(file, offset, numValues - 1);
-                case 3:
+                case 3:// short, 16 bit int
                     if (numValues == 1) {
                         return file.getUint16(entryOffset + 8, !bigEnd);
                     }
@@ -521,7 +522,7 @@ var egret;
                         }
                         return vals;
                     }
-                case 4:
+                case 4:// long, 32 bit int
                     if (numValues == 1) {
                         return file.getUint32(entryOffset + 8, !bigEnd);
                     }
@@ -532,7 +533,7 @@ var egret;
                         }
                         return vals;
                     }
-                case 5:
+                case 5:// rational = two long values, first is numerator, second is denominator
                     if (numValues == 1) {
                         numerator = file.getUint32(valueOffset, !bigEnd);
                         denominator = file.getUint32(valueOffset + 4, !bigEnd);
@@ -552,7 +553,7 @@ var egret;
                         }
                         return vals;
                     }
-                case 9:
+                case 9:// slong, 32 bit signed int
                     if (numValues == 1) {
                         return file.getInt32(entryOffset + 8, !bigEnd);
                     }
@@ -563,7 +564,7 @@ var egret;
                         }
                         return vals;
                     }
-                case 10:
+                case 10:// signed rational, two slongs, first is numerator, second is denominator
                     if (numValues == 1) {
                         return file.getInt32(valueOffset, !bigEnd) / file.getInt32(valueOffset + 4, !bigEnd);
                     }

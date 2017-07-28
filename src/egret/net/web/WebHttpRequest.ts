@@ -85,17 +85,17 @@ namespace egret.web {
         /**
          * @private
          */
-        private _responseType:string;
+        private _responseType:"" | "arraybuffer" | "blob" | "document" | "json" | "text";
 
         /**
          * @private
          * 设置返回的数据格式，请使用 HttpResponseType 里定义的枚举值。设置非法的值或不设置，都将使用HttpResponseType.TEXT。
          */
-        public get responseType():string {
+        public get responseType():"" | "arraybuffer" | "blob" | "document" | "json" | "text" {
             return this._responseType;
         }
 
-        public set responseType(value:string) {
+        public set responseType(value:"" | "arraybuffer" | "blob" | "document" | "json" | "text") {
             this._responseType = value;
         }
 

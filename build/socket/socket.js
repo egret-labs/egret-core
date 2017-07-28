@@ -1,11 +1,16 @@
 var __reflect = (this && this.__reflect) || function (p, c, t) {
     p.__class__ = c, t ? t.push(c) : t = [c], p.__types__ = p.__types__ ? t.concat(p.__types__) : t;
 };
-var __extends = (this && this.__extends) || function (d, b) {
-    for (var p in b) if (b.hasOwnProperty(p)) d[p] = b[p];
-    function __() { this.constructor = d; }
-    d.prototype = b === null ? Object.create(b) : (__.prototype = b.prototype, new __());
-};
+var __extends = (this && this.__extends) || (function () {
+    var extendStatics = Object.setPrototypeOf ||
+        ({ __proto__: [] } instanceof Array && function (d, b) { d.__proto__ = b; }) ||
+        function (d, b) { for (var p in b) if (b.hasOwnProperty(p)) d[p] = b[p]; };
+    return function (d, b) {
+        extendStatics(d, b);
+        function __() { this.constructor = d; }
+        d.prototype = b === null ? Object.create(b) : (__.prototype = b.prototype, new __());
+    };
+})();
 //////////////////////////////////////////////////////////////////////////////////////
 //
 //  Copyright (c) 2014-present, Egret Technology.
@@ -440,34 +445,34 @@ var egret;
             enumerable: true,
             configurable: true
         });
+        /**
+         * Send and receive data in character string format
+         * @version Egret 2.4
+         * @platform Web,Native
+         * @language en_US
+         */
+        /**
+         * 以字符串格式发送和接收数据
+         * @version Egret 2.4
+         * @platform Web,Native
+         * @language zh_CN
+         */
+        WebSocket.TYPE_STRING = "webSocketTypeString";
+        /**
+         * Send and receive data in binary format
+         * @version Egret 2.4
+         * @platform Web,Native
+         * @language en_US
+         */
+        /**
+         * 以二进制格式发送和接收数据
+         * @version Egret 2.4
+         * @platform Web,Native
+         * @language zh_CN
+         */
+        WebSocket.TYPE_BINARY = "webSocketTypeBinary";
         return WebSocket;
     }(egret.EventDispatcher));
-    /**
-     * Send and receive data in character string format
-     * @version Egret 2.4
-     * @platform Web,Native
-     * @language en_US
-     */
-    /**
-     * 以字符串格式发送和接收数据
-     * @version Egret 2.4
-     * @platform Web,Native
-     * @language zh_CN
-     */
-    WebSocket.TYPE_STRING = "webSocketTypeString";
-    /**
-     * Send and receive data in binary format
-     * @version Egret 2.4
-     * @platform Web,Native
-     * @language en_US
-     */
-    /**
-     * 以二进制格式发送和接收数据
-     * @version Egret 2.4
-     * @platform Web,Native
-     * @language zh_CN
-     */
-    WebSocket.TYPE_BINARY = "webSocketTypeBinary";
     egret.WebSocket = WebSocket;
     __reflect(WebSocket.prototype, "egret.WebSocket");
 })(egret || (egret = {}));
