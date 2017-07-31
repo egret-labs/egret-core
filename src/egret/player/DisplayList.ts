@@ -291,7 +291,7 @@ namespace egret.sys {
                 let buffer = this.renderBuffer;
                 buffer.beginClip(this.dirtyList, this.offsetX, this.offsetY);
                 dirtyList = this.$dirtyRegionPolicy == egret.DirtyRegionPolicy.OFF ? null : this.dirtyList;
-                drawCalls = systemRenderer.render(this.root, buffer, this.offsetMatrix, dirtyList);
+                drawCalls = systemRenderer.render(this.root, buffer, this.offsetMatrix, dirtyList, !this.isStage);
                 buffer.endClip();
 
                 if (!this.isStage) {//对非舞台画布要保存渲染节点。

@@ -1349,8 +1349,7 @@ var egret;
          * @private
          * 沿着显示列表向下传递标志量，非容器直接设置自身的flag，此方法会在 DisplayObjectContainer 中被覆盖。
          */
-        DisplayObject.prototype.$propagateFlagsDown = function (flags, cachedBreak) {
-            if (cachedBreak === void 0) { cachedBreak = false; }
+        DisplayObject.prototype.$propagateFlagsDown = function (flags) {
             this.$setFlags(flags);
         };
         /**
@@ -3360,19 +3359,15 @@ var egret;
         /**
          * @private
          */
-        DisplayObjectContainer.prototype.$propagateFlagsDown = function (flags, cachedBreak) {
-            if (cachedBreak === void 0) { cachedBreak = false; }
+        DisplayObjectContainer.prototype.$propagateFlagsDown = function (flags) {
             if (this.$hasFlags(flags)) {
                 return;
             }
             this.$setFlags(flags);
-            if (cachedBreak && this.$displayList) {
-                return;
-            }
             var children = this.$children;
             var length = children.length;
             for (var i = 0; i < length; i++) {
-                children[i].$propagateFlagsDown(flags, cachedBreak);
+                children[i].$propagateFlagsDown(flags);
             }
         };
         Object.defineProperty(DisplayObjectContainer.prototype, "numChildren", {
@@ -3498,7 +3493,7 @@ var egret;
             }
             var displayList = this.$displayList || this.$parentDisplayList;
             this.assignParentDisplayList(child, displayList, displayList);
-            child.$propagateFlagsDown(1648 /* DownOnAddedOrRemoved */, true);
+            child.$propagateFlagsDown(1648 /* DownOnAddedOrRemoved */);
             this.$propagateFlagsUp(4 /* InvalidBounds */);
             this.$childAdded(child, index);
             return child;
@@ -3704,7 +3699,7 @@ var egret;
             }
             var displayList = this.$displayList || this.$parentDisplayList;
             this.assignParentDisplayList(child, displayList, null);
-            child.$propagateFlagsDown(1648 /* DownOnAddedOrRemoved */, true);
+            child.$propagateFlagsDown(1648 /* DownOnAddedOrRemoved */);
             child.$setParent(null);
             var indexNow = children.indexOf(child);
             if (indexNow != -1) {
@@ -13337,7 +13332,7 @@ var egret;
                     var buffer = this.renderBuffer;
                     buffer.beginClip(this.dirtyList, this.offsetX, this.offsetY);
                     dirtyList = this.$dirtyRegionPolicy == egret.DirtyRegionPolicy.OFF ? null : this.dirtyList;
-                    drawCalls = sys.systemRenderer.render(this.root, buffer, this.offsetMatrix, dirtyList);
+                    drawCalls = sys.systemRenderer.render(this.root, buffer, this.offsetMatrix, dirtyList, !this.isStage);
                     buffer.endClip();
                     if (!this.isStage) {
                         var surface = buffer.surface;

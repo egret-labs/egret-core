@@ -73,18 +73,15 @@ namespace egret {
         /**
          * @private
          */
-        $propagateFlagsDown(flags: sys.DisplayObjectFlags, cachedBreak:boolean = false) {
+        $propagateFlagsDown(flags: sys.DisplayObjectFlags) {
             if (this.$hasFlags(flags)) {
                 return;
             }
             this.$setFlags(flags);
-            if(cachedBreak && this.$displayList) {
-                return;
-            }
             let children = this.$children;
             let length = children.length
             for (let i = 0; i < length; i++) {
-                children[i].$propagateFlagsDown(flags, cachedBreak);
+                children[i].$propagateFlagsDown(flags);
             }
         }
 
@@ -214,7 +211,7 @@ namespace egret {
             }
             let displayList = this.$displayList || this.$parentDisplayList;
             this.assignParentDisplayList(child, displayList, displayList);
-            child.$propagateFlagsDown(sys.DisplayObjectFlags.DownOnAddedOrRemoved, true);
+            child.$propagateFlagsDown(sys.DisplayObjectFlags.DownOnAddedOrRemoved);
             this.$propagateFlagsUp(sys.DisplayObjectFlags.InvalidBounds);
             this.$childAdded(child, index);
             return child;
@@ -426,7 +423,7 @@ namespace egret {
             }
             let displayList = this.$displayList || this.$parentDisplayList;
             this.assignParentDisplayList(child, displayList, null);
-            child.$propagateFlagsDown(sys.DisplayObjectFlags.DownOnAddedOrRemoved, true);
+            child.$propagateFlagsDown(sys.DisplayObjectFlags.DownOnAddedOrRemoved);
             child.$setParent(null);
             let indexNow = children.indexOf(child);
             if(indexNow!=-1){
