@@ -200,7 +200,7 @@ namespace egret.web {
             };
         }
 
-        requestAnimationFrame.call(window, onTick);
+        requestAnimationFrame(onTick);
         function onTick():void {
 
             if(customContext) {
@@ -208,7 +208,7 @@ namespace egret.web {
             }
 
             ticker.update();
-            requestAnimationFrame.call(window, onTick)
+            requestAnimationFrame(onTick);
         }
     }
 
