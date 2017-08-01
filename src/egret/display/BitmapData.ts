@@ -180,9 +180,14 @@ namespace egret {
                 let img: HTMLImageElement = new Image();
                 img.src = "data:" + imageType + ";base64," + base64;
                 img.crossOrigin = '*';
+                let bitmapData = new BitmapData(img);
                 img.onload = function () {
-                    return new BitmapData(img);
+                    img.onload = undefined;
+                    bitmapData.source = img;
+                    bitmapData.height = img.height;
+                    bitmapData.width = img.width;
                 }
+                return bitmapData;
             }
             else {
                 let buffer: ArrayBuffer = null;
