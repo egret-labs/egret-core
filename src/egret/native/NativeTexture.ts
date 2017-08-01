@@ -72,7 +72,8 @@ namespace egret.native {
     function toDataURL(type: string, rect?: egret.Rectangle, encoderOptions?): string {
         try {
             let buffer = convertImageToRenderTexture(this, rect);
-            let base64 = buffer.toDataURL(type, encoderOptions);
+            //todo encoderOptions
+            let base64 = buffer.toDataURL(type);
             return base64
         }
         catch (e) {

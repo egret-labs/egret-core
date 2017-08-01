@@ -3951,11 +3951,12 @@ declare namespace egret {
          * 转换成base64字符串，如果图片（或者包含的图片）跨域，则返回null
          * @param type 转换的类型，如  "image/png"
          * @param rect 需要转换的区域
+         * @param {any} encoderOptions 编码用的参数
          * @returns {any} base64字符串
          * @version Egret 2.4
          * @language zh_CN
          */
-        toDataURL(type: string, rect?: egret.Rectangle): string;
+        toDataURL(type: string, rect?: egret.Rectangle, encoderOptions?: any): string;
         /**
          * Crop designated area and save it as image.
          * native support only "image / png" and "image / jpeg"; Web browser because of the various implementations are not the same, it is recommended to use only these two kinds.

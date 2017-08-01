@@ -1497,9 +1497,10 @@ var egret;
         /**
          * @private
          */
-        function toDataURL(type, rect) {
+        function toDataURL(type, rect, encoderOptions) {
             try {
                 var buffer = convertImageToRenderTexture(this, rect);
+                //todo encoderOptions
                 var base64 = buffer.toDataURL(type);
                 return base64;
             }

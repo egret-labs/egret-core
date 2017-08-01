@@ -6387,11 +6387,12 @@ var egret;
          * 转换成base64字符串，如果图片（或者包含的图片）跨域，则返回null
          * @param type 转换的类型，如  "image/png"
          * @param rect 需要转换的区域
+         * @param {any} encoderOptions 编码用的参数
          * @returns {any} base64字符串
          * @version Egret 2.4
          * @language zh_CN
          */
-        Texture.prototype.toDataURL = function (type, rect) {
+        Texture.prototype.toDataURL = function (type, rect, encoderOptions) {
             throw new Error();
         };
         /**
@@ -9075,9 +9076,14 @@ var egret;
                 var img_1 = new Image();
                 img_1.src = "data:" + imageType + ";base64," + base64;
                 img_1.crossOrigin = '*';
+                var bitmapData_1 = new BitmapData(img_1);
                 img_1.onload = function () {
-                    return new BitmapData(img_1);
+                    img_1.onload = undefined;
+                    bitmapData_1.source = img_1;
+                    bitmapData_1.height = img_1.height;
+                    bitmapData_1.width = img_1.width;
                 };
+                return bitmapData_1;
             }
             else {
                 var buffer = null;

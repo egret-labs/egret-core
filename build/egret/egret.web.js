@@ -3851,13 +3851,13 @@ var egret;
                     return window.setTimeout(callback, 1000 / 60);
                 };
             }
-            requestAnimationFrame.call(window, onTick);
+            requestAnimationFrame(onTick);
             function onTick() {
                 if (customContext) {
                     customContext.onRender(context);
                 }
                 ticker.update();
-                requestAnimationFrame.call(window, onTick);
+                requestAnimationFrame(onTick);
             }
         }
         //覆盖原生的isNaN()方法实现，在不同浏览器上有2~10倍性能提升。
@@ -4478,10 +4478,10 @@ var egret;
         /**
          * @private
          */
-        function toDataURL(type, rect) {
+        function toDataURL(type, rect, encoderOptions) {
             try {
                 var surface = convertImageToCanvas(this, rect);
-                var result = surface.toDataURL(type);
+                var result = surface.toDataURL(type, encoderOptions);
                 return result;
             }
             catch (e) {
@@ -4492,8 +4492,8 @@ var egret;
         /**
          * 有些杀毒软件认为 saveToFile 可能是一个病毒文件
          */
-        function eliFoTevas(type, filePath, rect) {
-            var base64 = toDataURL.call(this, type, rect);
+        function eliFoTevas(type, filePath, rect, encoderOptions) {
+            var base64 = toDataURL.call(this, type, rect, encoderOptions);
             if (base64 == null) {
                 return;
             }
