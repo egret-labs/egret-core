@@ -184,8 +184,8 @@ var EgretProjectData = (function () {
         var _this = this;
         var result = this.egretProperties.modules.map(function (m) {
             if (_this.isWasmProject()) {
-                // todo  || m.name == "dragonBones"
-                if (m.name == "egret" || m.name == "eui") {
+                // todo  || m.name == "game"
+                if (m.name == "egret" || m.name == "eui" || m.name == "dragonBones") {
                     m.name += "-wasm";
                 }
             }
@@ -239,6 +239,15 @@ var EgretProjectData = (function () {
         enumerable: true,
         configurable: true
     });
+    EgretProjectData.prototype.hasModule = function (name) {
+        var result = false;
+        this.egretProperties.modules.forEach(function (module) {
+            if (module.name == name || module.name == name) {
+                result = true;
+            }
+        });
+        return result;
+    };
     __decorate([
         _utils.cache
     ], EgretProjectData.prototype, "getModulesConfig", null);

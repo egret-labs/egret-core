@@ -228,9 +228,9 @@ export class EgretProjectData {
     @_utils.cache
     getModulesConfig(platform: "web" | "native") {
         let result = this.egretProperties.modules.map(m => {
-            if(this.isWasmProject()) {
-                // todo  || m.name == "dragonBones"
-                if(m.name == "egret" || m.name == "eui") {
+            if (this.isWasmProject()) {
+                // todo  || m.name == "game"
+                if (m.name == "egret" || m.name == "eui" || m.name == "dragonBones") {
                     m.name += "-wasm";
                 }
             }
@@ -286,6 +286,16 @@ export class EgretProjectData {
 
     get useTemplate(): boolean {
         return this.egretProperties.template != undefined;
+    }
+
+    hasModule(name: string): boolean {
+        let result = false;
+        this.egretProperties.modules.forEach(function (module: egret.EgretPropertyModule) {
+            if(module.name == name || module.name == name) {
+                result = true;
+            }
+        });
+        return result;
     }
 }
 

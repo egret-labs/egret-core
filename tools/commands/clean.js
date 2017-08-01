@@ -47,7 +47,7 @@ var Clean = (function () {
     }
     Clean.prototype.execute = function () {
         return __awaiter(this, void 0, void 0, function () {
-            var options, compileProject, result, manifestPath, indexPath, timeBuildEnd, timeBuildUsed;
+            var options, compileProject, result, manifestPath, indexPath, arr, moduleName_1, timeBuildEnd, timeBuildUsed;
             return __generator(this, function (_a) {
                 utils.checkEgret();
                 options = egret.args;
@@ -74,6 +74,21 @@ var Clean = (function () {
                     console.log("----native build-----");
                     EgretProject.manager.modifyNativeRequire(manifestPath);
                     copyNative.refreshNative(true);
+                }
+                if (EgretProject.data.isWasmProject()) {
+                    arr = [
+                        ".asm.js",
+                        ".asm.js.mem",
+                        ".webassembly.js",
+                        ".webassembly.wasm"
+                    ];
+                    moduleName_1 = "egret";
+                    if (EgretProject.data.hasModule("dragonBones-wasm")) {
+                        moduleName_1 = "egretWithDragonBones";
+                    }
+                    arr.forEach(function (item) {
+                        FileUtil.copy(FileUtil.joinPath(egret.root, "tools", "templates", "wasm_libs", moduleName_1 + item), FileUtil.joinPath(options.projectDir, "libs", "egret" + item));
+                    });
                 }
                 timeBuildEnd = new Date().getTime();
                 timeBuildUsed = (timeBuildEnd - timeBuildStart) / 1000;
