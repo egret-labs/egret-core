@@ -61,7 +61,12 @@ class Build implements egret.Command {
         let outDir = path.dirname(outFile);
         let outFileName = path.basename(outFile);
         let minFile = path.join(outDir, outFileName.replace(".js", ".min.js"));
-        utils.minify(outFile, minFile);
+        options.outFile = minFile;
+        options.defines["DEBUG"] = false;
+        options.defines["RELEASE"] = true;
+        options.declaration = false;
+        compiler.compile(options, fileNames);
+        utils.minify(minFile, minFile);
         if (options.allowJs) {
             if (packageJson.typings) {
                 FileUtil.copy(

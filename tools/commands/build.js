@@ -54,7 +54,12 @@ var Build = (function () {
         var outDir = path.dirname(outFile);
         var outFileName = path.basename(outFile);
         var minFile = path.join(outDir, outFileName.replace(".js", ".min.js"));
-        utils.minify(outFile, minFile);
+        options.outFile = minFile;
+        options.defines["DEBUG"] = false;
+        options.defines["RELEASE"] = true;
+        options.declaration = false;
+        compiler.compile(options, fileNames);
+        utils.minify(minFile, minFile);
         if (options.allowJs) {
             if (packageJson.typings) {
                 FileUtil.copy(path.join(projectDir, packageJson.typings), path.join(outDir, path.basename(packageJson.typings)));
