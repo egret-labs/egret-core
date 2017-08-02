@@ -184,8 +184,7 @@ var EgretProjectData = (function () {
         var _this = this;
         var result = this.egretProperties.modules.map(function (m) {
             if (_this.isWasmProject()) {
-                // todo  || m.name == "game"
-                if (m.name == "egret" || m.name == "eui" || m.name == "dragonBones") {
+                if (m.name == "egret" || m.name == "eui" || m.name == "dragonBones" || m.name == "game") {
                     m.name += "-wasm";
                 }
             }
