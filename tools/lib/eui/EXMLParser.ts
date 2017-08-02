@@ -167,7 +167,7 @@ export class EXMLParser {
      * @param xmlData 要编译的EXML文件内容
      *
      */
-    public parse(text: string): string {
+    public parse(text: string): {code:string, className:string} {
         if (DEBUG) {
             if (!text) {
                 egretbridge.$error(1003, "text");
@@ -198,7 +198,7 @@ export class EXMLParser {
         this._className = className;
         let exClass = this.parseClass(xmlData, className);
         let code = exClass.toCode();
-        return code;
+        return {code, className};
     }
 
     /**

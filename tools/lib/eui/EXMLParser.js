@@ -122,7 +122,7 @@ var EXMLParser = (function () {
         this._className = className;
         var exClass = this.parseClass(xmlData, className);
         var code = exClass.toCode();
-        return code;
+        return { code: code, className: className };
     };
     /**
      * @private

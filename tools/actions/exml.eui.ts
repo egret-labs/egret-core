@@ -108,7 +108,8 @@ export function updateSetting(merge = false) {
                     exmlEl = { path: e.path, content: e.content };
                     break;
                 case "gjs":
-                    exmlEl = { path: e.path, gjs: parser.parse(e.content) };
+                    let result = parser.parse(e.content);
+                    exmlEl = { path: e.path, gjs: result.code, className: result.className };
                     break;
                 //todo
                 case "bin":
