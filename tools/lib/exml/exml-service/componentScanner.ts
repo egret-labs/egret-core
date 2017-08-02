@@ -3,44 +3,6 @@ import * as path from "path";
 import * as ts from "../../typescript-plus";
 import * as utils from "./typescript-utils";
 
-var baseTypeCache = {};
-function hasBaseTypes(theType: ts.Type, typeToFind: string, checker: ts.TypeChecker) {
-    var q: string[] = [];
-    var result = find(theType);
-    if (result) {
-        if (!baseTypeCache[typeToFind]) {
-            baseTypeCache[typeToFind] = {};
-        }
-        q.forEach(t => baseTypeCache[typeToFind][t] = true);
-    }
-    return result;
-
-    function find(target: ts.Type): boolean {
-
-        var name = checker.getFullyQualifiedName(target.getSymbol());
-        q.push(name);
-        if (name == typeToFind || (baseTypeCache[typeToFind] && baseTypeCache[typeToFind][name])) {
-            return true;
-        }
-
-        var baseTypes = target.getBaseTypes().concat(utils.getImplementedInterfaces(target, checker));
-        for (var t of baseTypes) {
-            if (t) {
-                var found = find(t);
-                if (found) {
-                    return true;
-                }
-            }
-        }
-        q.pop();
-        return false;
-    }
-
-}
-
-
-
-
 function watch(rootFileNames: string[], options: ts.CompilerOptions) {
     const files = {};
 
@@ -80,9 +42,8 @@ function delint(program: ts.Program, sourceFile: ts.SourceFile, base: string) {
                 var theType = checker.getTypeAtLocation(node);
 
                 var className = checker.getFullyQualifiedName(checker.getTypeAtLocation(node).getSymbol());
-                // console.log("-->" + className, node.flags & ts.NodeFlags.Abstract, hasBaseTypes(theType, base, checker))
                 let mf = ts.getCombinedModifierFlags(node);
-                if (!(mf & ts.ModifierFlags.Abstract)) {//} && hasBaseTypes(theType, base, checker)) {
+                if (!(mf & ts.ModifierFlags.Abstract)) {
                     var className = checker.getFullyQualifiedName(checker.getTypeAtLocation(node).getSymbol());
                     var superTypes = checker.getBaseTypes(<ts.InterfaceType>theType);
 
@@ -98,12 +59,12 @@ function delint(program: ts.Program, sourceFile: ts.SourceFile, base: string) {
 
                     var props = theType.getSymbol().members;
 
-                    for (var name in props) {
-
+                    props.forEach(function (value) {
+                        let name = value.name;
                         if (name.indexOf("$") == 0 || name.indexOf("_") == 0)
-                            continue;
+                            return;
 
-                        var p = props[name];
+                        var p = value;
 
                         if ((p.flags & ts.SymbolFlags.Property) || (p.flags & ts.SymbolFlags.Accessor)) {
                             var type = checker.getTypeAtLocation(p.declarations[0]);
@@ -119,7 +80,7 @@ function delint(program: ts.Program, sourceFile: ts.SourceFile, base: string) {
                                 }
                             }
                         }
-                    }
+                    });
                 }
         }
         ts.forEachChild(node, delintNode);

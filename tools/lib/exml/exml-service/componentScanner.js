@@ -37,37 +37,6 @@ Object.defineProperty(exports, "__esModule", { value: true });
 var FiltUtil = require("../../FileUtil");
 var ts = require("../../typescript-plus");
 var utils = require("./typescript-utils");
-var baseTypeCache = {};
-function hasBaseTypes(theType, typeToFind, checker) {
-    var q = [];
-    var result = find(theType);
-    if (result) {
-        if (!baseTypeCache[typeToFind]) {
-            baseTypeCache[typeToFind] = {};
-        }
-        q.forEach(function (t) { return baseTypeCache[typeToFind][t] = true; });
-    }
-    return result;
-    function find(target) {
-        var name = checker.getFullyQualifiedName(target.getSymbol());
-        q.push(name);
-        if (name == typeToFind || (baseTypeCache[typeToFind] && baseTypeCache[typeToFind][name])) {
-            return true;
-        }
-        var baseTypes = target.getBaseTypes().concat(utils.getImplementedInterfaces(target, checker));
-        for (var _i = 0, baseTypes_1 = baseTypes; _i < baseTypes_1.length; _i++) {
-            var t = baseTypes_1[_i];
-            if (t) {
-                var found = find(t);
-                if (found) {
-                    return true;
-                }
-            }
-        }
-        q.pop();
-        return false;
-    }
-}
 function watch(rootFileNames, options) {
     var files = {};
     // initialize the list of files
@@ -100,7 +69,6 @@ function delint(program, sourceFile, base) {
             case ts.SyntaxKind.ClassDeclaration:
                 var theType = checker.getTypeAtLocation(node);
                 var className = checker.getFullyQualifiedName(checker.getTypeAtLocation(node).getSymbol());
-                // console.log("-->" + className, node.flags & ts.NodeFlags.Abstract, hasBaseTypes(theType, base, checker))
                 var mf = ts.getCombinedModifierFlags(node);
                 if (!(mf & ts.ModifierFlags.Abstract)) {
                     var className = checker.getFullyQualifiedName(checker.getTypeAtLocation(node).getSymbol());
@@ -115,10 +83,11 @@ function delint(program, sourceFile, base) {
                     // console.log("==>" + className)
                     superTypes.forEach(function (t) { return __single__data["super"] = checker.getFullyQualifiedName(t.getSymbol()); });
                     var props = theType.getSymbol().members;
-                    for (var name in props) {
+                    props.forEach(function (value) {
+                        var name = value.name;
                         if (name.indexOf("$") == 0 || name.indexOf("_") == 0)
-                            continue;
-                        var p = props[name];
+                            return;
+                        var p = value;
                         if ((p.flags & ts.SymbolFlags.Property) || (p.flags & ts.SymbolFlags.Accessor)) {
                             var type = checker.getTypeAtLocation(p.declarations[0]);
                             var typeString = utils.getFullyQualifiedNameOfType(type, checker);
@@ -133,7 +102,7 @@ function delint(program, sourceFile, base) {
                                 }
                             }
                         }
-                    }
+                    });
                 }
         }
         ts.forEachChild(node, delintNode);
