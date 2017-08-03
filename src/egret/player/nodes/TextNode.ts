@@ -106,8 +106,6 @@ namespace egret.sys {
          * 脏渲染标记
          */
         public dirtyRender:boolean = true;
-        // public $canvasRenderer;
-        // public $canvasRenderBuffer;
         public $texture;
         public $textureWidth;
         public $textureHeight;

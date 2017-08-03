@@ -9557,18 +9557,6 @@ var egret;
          * @language zh_CN
          */
         TouchEvent.TOUCH_RELEASE_OUTSIDE = "touchReleaseOutside";
-        /**
-         * @deprecated
-         * @version Egret 2.4
-         * @platform Web,Native
-         */
-        TouchEvent.TOUCH_ROLL_OUT = "touchRollOut";
-        /**
-         * @deprecated
-         * @version Egret 2.4
-         * @platform Web,Native
-         */
-        TouchEvent.TOUCH_ROLL_OVER = "touchRollOver";
         return TouchEvent;
     }(egret.Event));
     egret.TouchEvent = TouchEvent;

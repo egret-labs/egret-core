@@ -166,20 +166,6 @@ namespace egret {
         public static TOUCH_RELEASE_OUTSIDE: "touchReleaseOutside" = "touchReleaseOutside";
 
         /**
-         * @deprecated
-         * @version Egret 2.4
-         * @platform Web,Native
-         */
-        public static TOUCH_ROLL_OUT: "touchRollOut" = "touchRollOut";
-
-        /**
-         * @deprecated
-         * @version Egret 2.4
-         * @platform Web,Native
-         */
-        public static TOUCH_ROLL_OVER: "touchRollOver" = "touchRollOver";
-
-        /**
          * Creates an Event object that contains information about touch events.
          * @param type  The type of the event, accessible as Event.type.
          * @param bubbles  Determines whether the Event object participates in the bubbling stage of the event flow. The default value is false.
