@@ -36,7 +36,7 @@ var AutoCompileCommand = (function () {
                 path: egret.args.projectDir,
                 option: egret.args
             });
-            _this.exitAfter5Minutes();
+            _this.exitAfter60Minutes();
         }, 60000);
         this.dirState = new state.DirectoryState();
         this.dirState.path = egret.args.projectDir;
@@ -271,10 +271,10 @@ var AutoCompileCommand = (function () {
         }
         this._request.send(cmd);
     };
-    AutoCompileCommand.prototype.exitAfter5Minutes = function () {
+    AutoCompileCommand.prototype.exitAfter60Minutes = function () {
         var now = Date.now();
         var timespan = (now - this._lastBuildTime) / 1000 / 60;
-        if (timespan > 5)
+        if (timespan > 60)
             process.exit(0);
     };
     AutoCompileCommand.prototype.shouldSkip = function (file) {

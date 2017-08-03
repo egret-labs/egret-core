@@ -76,7 +76,9 @@ var server;
             heapTotal = heapTotal / 1024 / 1024;
             heapTotal = heapTotal | 0;
             console.log("\u5185\u5B58\u5360\u7528: " + heapTotal + "M " + proj.path);
-            if (heapTotal > 500) {
+            //取系统最大内存的四分之一，最低500M
+            var maxHeap = Math.max(require("os").totalmem() / 1024 / 1024 / 4, 500);
+            if (heapTotal > maxHeap) {
                 console.log("内存占用过高,关闭进程:" + proj.path);
                 proj.shutdown();
             }
