@@ -181,9 +181,9 @@ declare namespace dragonBones {
         static debugDraw: boolean;
         static webAssembly: boolean;
         static readonly VERSION: string;
+        private readonly _clock;
         private readonly _events;
         private readonly _objects;
-        private _clock;
         private _eventManager;
         constructor(eventManager: IEventDispatcher);
         advanceTime(passedTime: number): void;
@@ -1774,7 +1774,7 @@ declare namespace dragonBones {
      * @version DragonBones 3.0
      * @language zh_CN
      */
-    class Armature extends BaseObject implements IAnimateble {
+    class Armature extends BaseObject implements IAnimatable {
         static toString(): string;
         private static _onSortSlots(a, b);
         /**
@@ -2739,7 +2739,7 @@ declare namespace dragonBones {
      * @version DragonBones 3.0
      * @language zh_CN
      */
-    interface IAnimateble {
+    interface IAnimatable {
         /**
          * 更新时间。
          * @param passedTime 前进的时间。 (以秒为单位)
@@ -2763,7 +2763,7 @@ declare namespace dragonBones {
      * @version DragonBones 3.0
      * @language zh_CN
      */
-    class WorldClock implements IAnimateble {
+    class WorldClock implements IAnimatable {
         /**
          * 一个可以直接使用的全局 WorldClock 实例.
          * @version DragonBones 3.0
@@ -2806,21 +2806,21 @@ declare namespace dragonBones {
          * @version DragonBones 3.0
          * @language zh_CN
          */
-        contains(value: IAnimateble): boolean;
+        contains(value: IAnimatable): boolean;
         /**
          * 添加 IAnimatable 实例。
          * @param value IAnimatable 实例。
          * @version DragonBones 3.0
          * @language zh_CN
          */
-        add(value: IAnimateble): void;
+        add(value: IAnimatable): void;
         /**
          * 移除 IAnimatable 实例。
          * @param value IAnimatable 实例。
          * @version DragonBones 3.0
          * @language zh_CN
          */
-        remove(value: IAnimateble): void;
+        remove(value: IAnimatable): void;
         /**
          * 清除所有的 IAnimatable 实例。
          * @version DragonBones 3.0
@@ -3843,6 +3843,18 @@ declare namespace dragonBones {
         /**
          * @private
          */
+        private _intArrayJson;
+        private _floatArrayJson;
+        private _frameIntArrayJson;
+        private _frameFloatArrayJson;
+        private _frameArrayJson;
+        private _timelineArrayJson;
+        private _intArrayBuffer;
+        private _floatArrayBuffer;
+        private _frameIntArrayBuffer;
+        private _frameFloatArrayBuffer;
+        private _frameArrayBuffer;
+        private _timelineArrayBuffer;
         protected static _getBoolean(rawData: any, key: string, defaultValue: boolean): boolean;
         /**
          * @private
@@ -3992,6 +4004,10 @@ declare namespace dragonBones {
          */
         protected _parseArray(rawData: any): void;
         /**
+         * @private
+         */
+        protected _parseWASMArray(): void;
+        /**
          * @inheritDoc
          */
         parseDragonBonesData(rawData: any, scale?: number): DragonBonesData | null;
@@ -4026,6 +4042,7 @@ declare namespace dragonBones {
         private _timelineArray;
         private _inRange(a, min, max);
         private _decodeUTF8(data);
+        private _getUTF16Key(value);
         private _parseBinaryTimeline(type, offset, timelineData?);
         /**
          * @private
@@ -4818,6 +4835,9 @@ declare namespace dragonBones {
          * @language zh_CN
          */
         static readonly factory: EgretFactory;
+        /**
+         * @inheritDoc
+         */
         constructor(dataParser?: DataParser | null);
         /**
          * @private
@@ -4836,7 +4856,7 @@ declare namespace dragonBones {
          */
         protected _buildSlot(dataPackage: BuildArmaturePackage, slotData: SlotData, displays: Array<DisplayData>, armature: Armature): Slot;
         /**
-         * 创建一个指定名称的骨架，并使用骨架的显示容器来更新骨架动画。
+         * 创建一个指定名称的骨架。
          * @param armatureName 骨架名称。
          * @param dragonBonesName 龙骨数据名称，如果未设置，将检索所有的龙骨数据，如果多个数据中包含同名的骨架数据，可能无法创建出准确的骨架。
          * @param skinName 皮肤名称，如果未设置，则使用默认皮肤。
@@ -5054,7 +5074,7 @@ declare namespace dragonBones {
      * @see dragonBones.buildMovie
      * @version DragonBones 4.7
      */
-    class Movie extends egret.DisplayObjectContainer implements IAnimateble {
+    class Movie extends egret.DisplayObjectContainer implements IAnimatable {
         private static _cleanBeforeRender();
         /**
          * @language zh_CN
