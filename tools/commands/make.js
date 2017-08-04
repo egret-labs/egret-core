@@ -26,6 +26,7 @@ var CompileEgretEngine = (function () {
             FileUtil.escapePath(path.join(outputDir, "eui-wasm")),
             FileUtil.escapePath(path.join(outputDir, "dragonBones-wasm")),
             FileUtil.escapePath(path.join(outputDir, "game-wasm")),
+            FileUtil.escapePath(path.join(outputDir, "wasm_libs")),
             FileUtil.escapePath(path.join(outputDir, "media")),
             FileUtil.escapePath(path.join(outputDir, "nest")),
             FileUtil.escapePath(path.join(outputDir, "dragonBones"))

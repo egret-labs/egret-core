@@ -18051,7 +18051,7 @@ var egret;
              * @language zh_CN
              */
             get: function () {
-                return "5.0.4";
+                return "5.0.5";
             },
             enumerable: true,
             configurable: true
@@ -22603,31 +22603,64 @@ var egret;
          * @version Egret 2.4
          * @platform Web,Native
          */
-        function ByteArray(buffer) {
+        function ByteArray(buffer, bufferExtSize) {
+            if (bufferExtSize === void 0) { bufferExtSize = 256; }
             /**
              * @private
              */
-            this.BUFFER_EXT_SIZE = 0; //Buffer expansion size
-            /**
-             * @private
-             */
-            this.EOF_byte = -1;
-            /**
-             * @private
-             */
-            this.EOF_code_point = -1;
-            this._setArrayBuffer(buffer || new ArrayBuffer(this.BUFFER_EXT_SIZE));
+            this.bufferExtSize = 256; //Buffer expansion size
+            if (bufferExtSize < 0) {
+                bufferExtSize = 256;
+            }
+            this.bufferExtSize = bufferExtSize;
+            var bytes, wpos = 0;
+            if (buffer) {
+                var uint8 = void 0;
+                if (buffer instanceof Uint8Array) {
+                    uint8 = buffer;
+                    wpos = buffer.length;
+                }
+                else {
+                    wpos = buffer.byteLength;
+                    uint8 = new Uint8Array(buffer);
+                }
+                var multi = (wpos / bufferExtSize | 0) + 1;
+                bytes = new Uint8Array(multi * bufferExtSize);
+                bytes.set(uint8);
+            }
+            else {
+                bytes = new Uint8Array(bufferExtSize);
+            }
+            this.write_position = wpos;
+            this._position = 0;
+            this._bytes = bytes;
+            this.data = new DataView(bytes.buffer);
             this.endian = Endian.BIG_ENDIAN;
         }
-        /**
-         * @private
-         * @param buffer
-         */
-        ByteArray.prototype._setArrayBuffer = function (buffer) {
-            this.write_position = buffer.byteLength;
-            this.data = new DataView(buffer);
-            this._position = 0;
-        };
+        Object.defineProperty(ByteArray.prototype, "endian", {
+            /**
+             * Changes or reads the byte order; egret.EndianConst.BIG_ENDIAN or egret.EndianConst.LITTLE_EndianConst.
+             * @default egret.EndianConst.BIG_ENDIAN
+             * @version Egret 2.4
+             * @platform Web,Native
+             * @language en_US
+             */
+            /**
+             * 更改或读取数据的字节顺序；egret.EndianConst.BIG_ENDIAN 或 egret.EndianConst.LITTLE_ENDIAN。
+             * @default egret.EndianConst.BIG_ENDIAN
+             * @version Egret 2.4
+             * @platform Web,Native
+             * @language zh_CN
+             */
+            get: function () {
+                return this.$endian == 0 /* LITTLE_ENDIAN */ ? Endian.LITTLE_ENDIAN : Endian.BIG_ENDIAN;
+            },
+            set: function (value) {
+                this.$endian = value == Endian.LITTLE_ENDIAN ? 0 /* LITTLE_ENDIAN */ : 1 /* BIG_ENDIAN */;
+            },
+            enumerable: true,
+            configurable: true
+        });
         /**
          * @deprecated
          * @version Egret 2.4
@@ -22635,15 +22668,51 @@ var egret;
          */
         ByteArray.prototype.setArrayBuffer = function (buffer) {
         };
+        Object.defineProperty(ByteArray.prototype, "readAvailable", {
+            /**
+             * 可读的剩余字节数
+             *
+             * @returns
+             *
+             * @memberOf ByteArray
+             */
+            get: function () {
+                return this.write_position - this._position;
+            },
+            enumerable: true,
+            configurable: true
+        });
         Object.defineProperty(ByteArray.prototype, "buffer", {
             get: function () {
-                return this.data.buffer;
+                return this.data.buffer.slice(0, this.write_position);
             },
             /**
              * @private
              */
             set: function (value) {
-                this.data = new DataView(value);
+                var wpos = value.byteLength;
+                var uint8 = new Uint8Array(value);
+                var bufferExtSize = this.bufferExtSize;
+                var multi = (wpos / bufferExtSize | 0) + 1;
+                var bytes = new Uint8Array(multi * bufferExtSize);
+                bytes.set(uint8);
+                this.write_position = wpos;
+                this._bytes = bytes;
+                this.data = new DataView(bytes.buffer);
+            },
+            enumerable: true,
+            configurable: true
+        });
+        Object.defineProperty(ByteArray.prototype, "rawBuffer", {
+            get: function () {
+                return this.data.buffer;
+            },
+            enumerable: true,
+            configurable: true
+        });
+        Object.defineProperty(ByteArray.prototype, "bytes", {
+            get: function () {
+                return this._bytes;
             },
             enumerable: true,
             configurable: true
@@ -22661,8 +22730,7 @@ var egret;
              * @private
              */
             set: function (value) {
-                this.data = value;
-                this.write_position = value.byteLength;
+                this.buffer = value.buffer;
             },
             enumerable: true,
             configurable: true
@@ -22694,13 +22762,10 @@ var egret;
                 return this._position;
             },
             set: function (value) {
-                //if (this._position < value) {
-                //    if (!this.validate(value - this._position)) {
-                //        return;
-                //    }
-                //}
                 this._position = value;
-                this.write_position = value > this.write_position ? value : this.write_position;
+                if (value > this.write_position) {
+                    this.write_position = value;
+                }
             },
             enumerable: true,
             configurable: true
@@ -22727,18 +22792,24 @@ var egret;
             },
             set: function (value) {
                 this.write_position = value;
-                var tmp = new Uint8Array(new ArrayBuffer(value));
-                var byteLength = this.data.buffer.byteLength;
-                if (byteLength > value) {
+                if (this.data.byteLength > value) {
                     this._position = value;
                 }
-                var length = Math.min(byteLength, value);
-                tmp.set(new Uint8Array(this.data.buffer, 0, length));
-                this.buffer = tmp.buffer;
+                this._validateBuffer(value);
             },
             enumerable: true,
             configurable: true
         });
+        ByteArray.prototype._validateBuffer = function (value) {
+            if (this.data.byteLength < value) {
+                var be = this.bufferExtSize;
+                var nLen = ((value / be >> 0) + 1) * be;
+                var tmp = new Uint8Array(nLen);
+                tmp.set(this._bytes);
+                this._bytes = tmp;
+                this.data = new DataView(tmp.buffer);
+            }
+        };
         Object.defineProperty(ByteArray.prototype, "bytesAvailable", {
             /**
              * The number of bytes that can be read from the current position of the byte array to the end of the array data.
@@ -22768,13 +22839,16 @@ var egret;
          */
         /**
          * 清除字节数组的内容，并将 length 和 position 属性重置为 0。
-
          * @version Egret 2.4
          * @platform Web,Native
          * @language zh_CN
          */
         ByteArray.prototype.clear = function () {
-            this._setArrayBuffer(new ArrayBuffer(this.BUFFER_EXT_SIZE));
+            var buffer = this.data.buffer.slice(0, this.bufferExtSize);
+            this.data = new DataView(buffer);
+            this._bytes = new Uint8Array(buffer);
+            this._position = 0;
+            this.write_position = 0;
         };
         /**
          * Read a Boolean value from the byte stream. Read a simple byte. If the byte is non-zero, it returns true; otherwise, it returns false.
@@ -22791,9 +22865,8 @@ var egret;
          * @language zh_CN
          */
         ByteArray.prototype.readBoolean = function () {
-            if (!this.validate(ByteArray.SIZE_OF_BOOLEAN))
-                return null;
-            return this.data.getUint8(this.position++) != 0;
+            if (this.validate(1 /* SIZE_OF_BOOLEAN */))
+                return !!this._bytes[this.position++];
         };
         /**
          * Read signed bytes from the byte stream.
@@ -22810,9 +22883,8 @@ var egret;
          * @language zh_CN
          */
         ByteArray.prototype.readByte = function () {
-            if (!this.validate(ByteArray.SIZE_OF_INT8))
-                return null;
-            return this.data.getInt8(this.position++);
+            if (this.validate(1 /* SIZE_OF_INT8 */))
+                return this.data.getInt8(this.position++);
         };
         /**
          * Read data byte number specified by the length parameter from the byte stream. Starting from the position specified by offset, read bytes into the ByteArray object specified by the bytes parameter, and write bytes into the target ByteArray
@@ -22835,22 +22907,24 @@ var egret;
         ByteArray.prototype.readBytes = function (bytes, offset, length) {
             if (offset === void 0) { offset = 0; }
             if (length === void 0) { length = 0; }
+            if (!bytes) {
+                return;
+            }
+            var pos = this._position;
+            var available = this.write_position - pos;
+            if (available < 0) {
+                egret.$error(1025);
+                return;
+            }
             if (length == 0) {
-                length = this.bytesAvailable;
+                length = available;
             }
-            else if (!this.validate(length)) {
-                return null;
+            else if (length > available) {
+                egret.$error(1025);
+                return;
             }
-            if (bytes) {
-                bytes.validateBuffer(offset + length);
-            }
-            else {
-                bytes = new ByteArray(new ArrayBuffer(offset + length));
-            }
-            //This method is expensive
-            for (var i = 0; i < length; i++) {
-                bytes.data.setUint8(i + offset, this.data.getUint8(this.position++));
-            }
+            bytes.validateBuffer(offset + length);
+            bytes._bytes.set(this._bytes.subarray(pos, pos + length), offset);
         };
         /**
          * Read an IEEE 754 double-precision (64 bit) floating point number from the byte stream
@@ -22867,11 +22941,11 @@ var egret;
          * @language zh_CN
          */
         ByteArray.prototype.readDouble = function () {
-            if (!this.validate(ByteArray.SIZE_OF_FLOAT64))
-                return null;
-            var value = this.data.getFloat64(this.position, this.endian == Endian.LITTLE_ENDIAN);
-            this.position += ByteArray.SIZE_OF_FLOAT64;
-            return value;
+            if (this.validate(8 /* SIZE_OF_FLOAT64 */)) {
+                var value = this.data.getFloat64(this._position, this.$endian == 0 /* LITTLE_ENDIAN */);
+                this.position += 8 /* SIZE_OF_FLOAT64 */;
+                return value;
+            }
         };
         /**
          * Read an IEEE 754 single-precision (32 bit) floating point number from the byte stream
@@ -22888,11 +22962,11 @@ var egret;
          * @language zh_CN
          */
         ByteArray.prototype.readFloat = function () {
-            if (!this.validate(ByteArray.SIZE_OF_FLOAT32))
-                return null;
-            var value = this.data.getFloat32(this.position, this.endian == Endian.LITTLE_ENDIAN);
-            this.position += ByteArray.SIZE_OF_FLOAT32;
-            return value;
+            if (this.validate(4 /* SIZE_OF_FLOAT32 */)) {
+                var value = this.data.getFloat32(this._position, this.$endian == 0 /* LITTLE_ENDIAN */);
+                this.position += 4 /* SIZE_OF_FLOAT32 */;
+                return value;
+            }
         };
         /**
          * Read a 32-bit signed integer from the byte stream.
@@ -22909,24 +22983,12 @@ var egret;
          * @language zh_CN
          */
         ByteArray.prototype.readInt = function () {
-            if (!this.validate(ByteArray.SIZE_OF_INT32))
-                return null;
-            var value = this.data.getInt32(this.position, this.endian == Endian.LITTLE_ENDIAN);
-            this.position += ByteArray.SIZE_OF_INT32;
-            return value;
+            if (this.validate(4 /* SIZE_OF_INT32 */)) {
+                var value = this.data.getInt32(this._position, this.$endian == 0 /* LITTLE_ENDIAN */);
+                this.position += 4 /* SIZE_OF_INT32 */;
+                return value;
+            }
         };
-        ///**
-        // * 使用指定的字符集从字节流中读取指定长度的多字节字符串
-        // * @param length 要从字节流中读取的字节数
-        // * @param charSet 表示用于解释字节的字符集的字符串。可能的字符集字符串包括 "shift-jis"、"cn-gb"、"iso-8859-1"”等
-        // * @return UTF-8 编码的字符串
-        // * @method egret.ByteArray#readMultiByte
-        // */
-        //public readMultiByte(length:number, charSet?:string):string {
-        //    if (!this.validate(length)) return null;
-        //
-        //    return "";
-        //}
         /**
          * Read a 16-bit signed integer from the byte stream.
          * @return A 16-bit signed integer ranging from -32768 to 32767
@@ -22942,11 +23004,11 @@ var egret;
          * @language zh_CN
          */
         ByteArray.prototype.readShort = function () {
-            if (!this.validate(ByteArray.SIZE_OF_INT16))
-                return null;
-            var value = this.data.getInt16(this.position, this.endian == Endian.LITTLE_ENDIAN);
-            this.position += ByteArray.SIZE_OF_INT16;
-            return value;
+            if (this.validate(2 /* SIZE_OF_INT16 */)) {
+                var value = this.data.getInt16(this._position, this.$endian == 0 /* LITTLE_ENDIAN */);
+                this.position += 2 /* SIZE_OF_INT16 */;
+                return value;
+            }
         };
         /**
          * Read unsigned bytes from the byte stream.
@@ -22963,9 +23025,8 @@ var egret;
          * @language zh_CN
          */
         ByteArray.prototype.readUnsignedByte = function () {
-            if (!this.validate(ByteArray.SIZE_OF_UINT8))
-                return null;
-            return this.data.getUint8(this.position++);
+            if (this.validate(1 /* SIZE_OF_UINT8 */))
+                return this._bytes[this.position++];
         };
         /**
          * Read a 32-bit unsigned integer from the byte stream.
@@ -22982,11 +23043,11 @@ var egret;
          * @language zh_CN
          */
         ByteArray.prototype.readUnsignedInt = function () {
-            if (!this.validate(ByteArray.SIZE_OF_UINT32))
-                return null;
-            var value = this.data.getUint32(this.position, this.endian == Endian.LITTLE_ENDIAN);
-            this.position += ByteArray.SIZE_OF_UINT32;
-            return value;
+            if (this.validate(4 /* SIZE_OF_UINT32 */)) {
+                var value = this.data.getUint32(this._position, this.$endian == 0 /* LITTLE_ENDIAN */);
+                this.position += 4 /* SIZE_OF_UINT32 */;
+                return value;
+            }
         };
         /**
          * Read a 16-bit unsigned integer from the byte stream.
@@ -23003,11 +23064,11 @@ var egret;
          * @language zh_CN
          */
         ByteArray.prototype.readUnsignedShort = function () {
-            if (!this.validate(ByteArray.SIZE_OF_UINT16))
-                return null;
-            var value = this.data.getUint16(this.position, this.endian == Endian.LITTLE_ENDIAN);
-            this.position += ByteArray.SIZE_OF_UINT16;
-            return value;
+            if (this.validate(2 /* SIZE_OF_UINT16 */)) {
+                var value = this.data.getUint16(this._position, this.$endian == 0 /* LITTLE_ENDIAN */);
+                this.position += 2 /* SIZE_OF_UINT16 */;
+                return value;
+            }
         };
         /**
          * Read a UTF-8 character string from the byte stream Assume that the prefix of the character string is a short unsigned integer (use byte to express length)
@@ -23024,10 +23085,7 @@ var egret;
          * @language zh_CN
          */
         ByteArray.prototype.readUTF = function () {
-            if (!this.validate(ByteArray.SIZE_OF_UINT16))
-                return null;
-            var length = this.data.getUint16(this.position, this.endian == Endian.LITTLE_ENDIAN);
-            this.position += ByteArray.SIZE_OF_UINT16;
+            var length = this.readUnsignedShort();
             if (length > 0) {
                 return this.readUTFBytes(length);
             }
@@ -23053,13 +23111,9 @@ var egret;
          */
         ByteArray.prototype.readUTFBytes = function (length) {
             if (!this.validate(length))
-                return null;
-            var bytes = new Uint8Array(this.buffer, this.bufferOffset + this.position, length);
+                return;
+            var bytes = new Uint8Array(this.buffer, this.bufferOffset + this._position, length);
             this.position += length;
-            /*let bytes: Uint8Array = new Uint8Array(new ArrayBuffer(length));
-             for (let i = 0; i < length; i++) {
-             bytes[i] = this.data.getUint8(this.position++);
-             }*/
             return this.decodeUTF8(bytes);
         };
         /**
@@ -23077,8 +23131,8 @@ var egret;
          * @language zh_CN
          */
         ByteArray.prototype.writeBoolean = function (value) {
-            this.validateBuffer(ByteArray.SIZE_OF_BOOLEAN);
-            this.data.setUint8(this.position++, value ? 1 : 0);
+            this.validateBuffer(1 /* SIZE_OF_BOOLEAN */);
+            this._bytes[this.position++] = +value;
         };
         /**
          * Write a byte into the byte stream
@@ -23097,8 +23151,8 @@ var egret;
          * @language zh_CN
          */
         ByteArray.prototype.writeByte = function (value) {
-            this.validateBuffer(ByteArray.SIZE_OF_INT8);
-            this.data.setInt8(this.position++, value);
+            this.validateBuffer(1 /* SIZE_OF_INT8 */);
+            this._bytes[this.position++] = value & 0xff;
         };
         /**
          * Write the byte sequence that includes length bytes in the specified byte array, bytes, (starting at the byte specified by offset, using a zero-based index), into the byte stream
@@ -23140,17 +23194,8 @@ var egret;
             }
             if (writeLength > 0) {
                 this.validateBuffer(writeLength);
-                var tmp_data = new DataView(bytes.buffer);
-                var length_11 = writeLength;
-                var BYTES_OF_UINT32 = 4;
-                for (; length_11 > BYTES_OF_UINT32; length_11 -= BYTES_OF_UINT32) {
-                    this.data.setUint32(this._position, tmp_data.getUint32(offset));
-                    this.position += BYTES_OF_UINT32;
-                    offset += BYTES_OF_UINT32;
-                }
-                for (; length_11 > 0; length_11--) {
-                    this.data.setUint8(this.position++, tmp_data.getUint8(offset++));
-                }
+                this._bytes.set(bytes._bytes.subarray(offset, offset + writeLength), this._position);
+                this.position = this._position + writeLength;
             }
         };
         /**
@@ -23168,9 +23213,9 @@ var egret;
          * @language zh_CN
          */
         ByteArray.prototype.writeDouble = function (value) {
-            this.validateBuffer(ByteArray.SIZE_OF_FLOAT64);
-            this.data.setFloat64(this.position, value, this.endian == Endian.LITTLE_ENDIAN);
-            this.position += ByteArray.SIZE_OF_FLOAT64;
+            this.validateBuffer(8 /* SIZE_OF_FLOAT64 */);
+            this.data.setFloat64(this._position, value, this.$endian == 0 /* LITTLE_ENDIAN */);
+            this.position += 8 /* SIZE_OF_FLOAT64 */;
         };
         /**
          * Write an IEEE 754 single-precision (32 bit) floating point number into the byte stream
@@ -23187,9 +23232,9 @@ var egret;
          * @language zh_CN
          */
         ByteArray.prototype.writeFloat = function (value) {
-            this.validateBuffer(ByteArray.SIZE_OF_FLOAT32);
-            this.data.setFloat32(this.position, value, this.endian == Endian.LITTLE_ENDIAN);
-            this.position += ByteArray.SIZE_OF_FLOAT32;
+            this.validateBuffer(4 /* SIZE_OF_FLOAT32 */);
+            this.data.setFloat32(this._position, value, this.$endian == 0 /* LITTLE_ENDIAN */);
+            this.position += 4 /* SIZE_OF_FLOAT32 */;
         };
         /**
          * Write a 32-bit signed integer into the byte stream
@@ -23206,9 +23251,9 @@ var egret;
          * @language zh_CN
          */
         ByteArray.prototype.writeInt = function (value) {
-            this.validateBuffer(ByteArray.SIZE_OF_INT32);
-            this.data.setInt32(this.position, value, this.endian == Endian.LITTLE_ENDIAN);
-            this.position += ByteArray.SIZE_OF_INT32;
+            this.validateBuffer(4 /* SIZE_OF_INT32 */);
+            this.data.setInt32(this._position, value, this.$endian == 0 /* LITTLE_ENDIAN */);
+            this.position += 4 /* SIZE_OF_INT32 */;
         };
         /**
          * Write a 16-bit integer into the byte stream. The low 16 bits of the parameter are used. The high 16 bits are ignored.
@@ -23225,9 +23270,9 @@ var egret;
          * @language zh_CN
          */
         ByteArray.prototype.writeShort = function (value) {
-            this.validateBuffer(ByteArray.SIZE_OF_INT16);
-            this.data.setInt16(this.position, value, this.endian == Endian.LITTLE_ENDIAN);
-            this.position += ByteArray.SIZE_OF_INT16;
+            this.validateBuffer(2 /* SIZE_OF_INT16 */);
+            this.data.setInt16(this._position, value, this.$endian == 0 /* LITTLE_ENDIAN */);
+            this.position += 2 /* SIZE_OF_INT16 */;
         };
         /**
          * Write a 32-bit unsigned integer into the byte stream
@@ -23244,9 +23289,9 @@ var egret;
          * @language zh_CN
          */
         ByteArray.prototype.writeUnsignedInt = function (value) {
-            this.validateBuffer(ByteArray.SIZE_OF_UINT32);
-            this.data.setUint32(this.position, value, this.endian == Endian.LITTLE_ENDIAN);
-            this.position += ByteArray.SIZE_OF_UINT32;
+            this.validateBuffer(4 /* SIZE_OF_UINT32 */);
+            this.data.setUint32(this._position, value, this.$endian == 0 /* LITTLE_ENDIAN */);
+            this.position += 4 /* SIZE_OF_UINT32 */;
         };
         /**
          * Write a 16-bit unsigned integer into the byte stream
@@ -23263,9 +23308,9 @@ var egret;
          * @language zh_CN
          */
         ByteArray.prototype.writeUnsignedShort = function (value) {
-            this.validateBuffer(ByteArray.SIZE_OF_UINT16);
-            this.data.setUint16(this.position, value, this.endian == Endian.LITTLE_ENDIAN);
-            this.position += ByteArray.SIZE_OF_UINT16;
+            this.validateBuffer(2 /* SIZE_OF_UINT16 */);
+            this.data.setUint16(this._position, value, this.$endian == 0 /* LITTLE_ENDIAN */);
+            this.position += 2 /* SIZE_OF_UINT16 */;
         };
         /**
          * Write a UTF-8 string into the byte stream. The length of the UTF-8 string in bytes is written first, as a 16-bit integer, followed by the bytes representing the characters of the string
@@ -23284,9 +23329,9 @@ var egret;
         ByteArray.prototype.writeUTF = function (value) {
             var utf8bytes = this.encodeUTF8(value);
             var length = utf8bytes.length;
-            this.validateBuffer(ByteArray.SIZE_OF_UINT16 + length);
-            this.data.setUint16(this.position, length, this.endian == Endian.LITTLE_ENDIAN);
-            this.position += ByteArray.SIZE_OF_UINT16;
+            this.validateBuffer(2 /* SIZE_OF_UINT16 */ + length);
+            this.data.setUint16(this._position, length, this.$endian == 0 /* LITTLE_ENDIAN */);
+            this.position += 2 /* SIZE_OF_UINT16 */;
             this._writeUint8Array(utf8bytes, false);
         };
         /**
@@ -23323,12 +23368,13 @@ var egret;
          */
         ByteArray.prototype._writeUint8Array = function (bytes, validateBuffer) {
             if (validateBuffer === void 0) { validateBuffer = true; }
+            var pos = this._position;
+            var npos = pos + bytes.length;
             if (validateBuffer) {
-                this.validateBuffer(this.position + bytes.length);
+                this.validateBuffer(npos);
             }
-            for (var i = 0; i < bytes.length; i++) {
-                this.data.setUint8(this.position++, bytes[i]);
-            }
+            this.bytes.set(bytes, pos);
+            this.position = npos;
         };
         /**
          * @param len
@@ -23338,8 +23384,8 @@ var egret;
          * @private
          */
         ByteArray.prototype.validate = function (len) {
-            //len += this.data.byteOffset;
-            if (this.data.byteLength > 0 && this._position + len <= this.data.byteLength) {
+            var bl = this._bytes.length;
+            if (bl > 0 && this._position + len <= bl) {
                 return true;
             }
             else {
@@ -23354,274 +23400,148 @@ var egret;
          * @param len
          * @param needReplace
          */
-        ByteArray.prototype.validateBuffer = function (len, needReplace) {
-            if (needReplace === void 0) { needReplace = false; }
+        ByteArray.prototype.validateBuffer = function (len) {
             this.write_position = len > this.write_position ? len : this.write_position;
             len += this._position;
-            if (this.data.byteLength < len || needReplace) {
-                var tmp = new Uint8Array(new ArrayBuffer(len + this.BUFFER_EXT_SIZE));
-                var length_12 = Math.min(this.data.buffer.byteLength, len + this.BUFFER_EXT_SIZE);
-                tmp.set(new Uint8Array(this.data.buffer, 0, length_12));
-                this.buffer = tmp.buffer;
-            }
+            this._validateBuffer(len);
         };
+        // /**
+        //  * @private
+        //  *
+        //  * @param code_point
+        //  */
+        // private encoderError(code_point) {
+        //     egret.$error(1026, code_point);
+        // }
+        // /**
+        //  * @private
+        //  *
+        //  * @param fatal
+        //  * @param opt_code_point
+        //  * @returns
+        //  */
+        // private decoderError(fatal, opt_code_point?): number {
+        //     if (fatal) {
+        //         egret.$error(1027);
+        //     }
+        //     return opt_code_point || 0xFFFD;
+        // }
         /**
-         * @private
-         * UTF-8 Encoding/Decoding
-         */
-        ByteArray.prototype.encodeUTF8 = function (str) {
-            var pos = 0;
-            var codePoints = this.stringToCodePoints(str);
-            var outputBytes = [];
-            while (codePoints.length > pos) {
-                var code_point = codePoints[pos++];
-                if (this.inRange(code_point, 0xD800, 0xDFFF)) {
-                    this.encoderError(code_point);
-                }
-                else if (this.inRange(code_point, 0x0000, 0x007f)) {
-                    outputBytes.push(code_point);
-                }
-                else {
-                    var count = void 0, offset = void 0;
-                    if (this.inRange(code_point, 0x0080, 0x07FF)) {
-                        count = 1;
-                        offset = 0xC0;
-                    }
-                    else if (this.inRange(code_point, 0x0800, 0xFFFF)) {
-                        count = 2;
-                        offset = 0xE0;
-                    }
-                    else if (this.inRange(code_point, 0x10000, 0x10FFFF)) {
-                        count = 3;
-                        offset = 0xF0;
-                    }
-                    outputBytes.push(this.div(code_point, Math.pow(64, count)) + offset);
-                    while (count > 0) {
-                        var temp = this.div(code_point, Math.pow(64, count - 1));
-                        outputBytes.push(0x80 + (temp % 64));
-                        count -= 1;
-                    }
-                }
-            }
-            return new Uint8Array(outputBytes);
-        };
-        /**
-         * @private
+         * 获取字符串使用Utf8编码的字节长度
          *
-         * @param data
+         * 参考 https://github.com/dcodeIO/protobuf.js/tree/master/lib/utf8
+         * @static
+         * @param {string} string
          * @returns
+         *
+         * @memberOf ByteArray
          */
-        ByteArray.prototype.decodeUTF8 = function (data) {
-            var fatal = false;
-            var pos = 0;
-            var result = "";
-            var code_point;
-            var utf8_code_point = 0;
-            var utf8_bytes_needed = 0;
-            var utf8_bytes_seen = 0;
-            var utf8_lower_boundary = 0;
-            while (data.length > pos) {
-                var _byte = data[pos++];
-                if (_byte == this.EOF_byte) {
-                    if (utf8_bytes_needed != 0) {
-                        code_point = this.decoderError(fatal);
-                    }
-                    else {
-                        code_point = this.EOF_code_point;
-                    }
+        ByteArray.utf8ByteLength = function (string) {
+            var len = 0, c = 0;
+            for (var i = 0; i < string.length; ++i) {
+                c = string.charCodeAt(i);
+                if (c < 128)
+                    len += 1;
+                else if (c < 2048)
+                    len += 2;
+                else if ((c & 0xFC00) === 0xD800 && (string.charCodeAt(i + 1) & 0xFC00) === 0xDC00) {
+                    ++i;
+                    len += 4;
                 }
-                else {
-                    if (utf8_bytes_needed == 0) {
-                        if (this.inRange(_byte, 0x00, 0x7F)) {
-                            code_point = _byte;
-                        }
-                        else {
-                            if (this.inRange(_byte, 0xC2, 0xDF)) {
-                                utf8_bytes_needed = 1;
-                                utf8_lower_boundary = 0x80;
-                                utf8_code_point = _byte - 0xC0;
-                            }
-                            else if (this.inRange(_byte, 0xE0, 0xEF)) {
-                                utf8_bytes_needed = 2;
-                                utf8_lower_boundary = 0x800;
-                                utf8_code_point = _byte - 0xE0;
-                            }
-                            else if (this.inRange(_byte, 0xF0, 0xF4)) {
-                                utf8_bytes_needed = 3;
-                                utf8_lower_boundary = 0x10000;
-                                utf8_code_point = _byte - 0xF0;
-                            }
-                            else {
-                                this.decoderError(fatal);
-                            }
-                            utf8_code_point = utf8_code_point * Math.pow(64, utf8_bytes_needed);
-                            code_point = null;
-                        }
-                    }
-                    else if (!this.inRange(_byte, 0x80, 0xBF)) {
-                        utf8_code_point = 0;
-                        utf8_bytes_needed = 0;
-                        utf8_bytes_seen = 0;
-                        utf8_lower_boundary = 0;
-                        pos--;
-                        code_point = this.decoderError(fatal, _byte);
-                    }
-                    else {
-                        utf8_bytes_seen += 1;
-                        utf8_code_point = utf8_code_point + (_byte - 0x80) * Math.pow(64, utf8_bytes_needed - utf8_bytes_seen);
-                        if (utf8_bytes_seen !== utf8_bytes_needed) {
-                            code_point = null;
-                        }
-                        else {
-                            var cp = utf8_code_point;
-                            var lower_boundary = utf8_lower_boundary;
-                            utf8_code_point = 0;
-                            utf8_bytes_needed = 0;
-                            utf8_bytes_seen = 0;
-                            utf8_lower_boundary = 0;
-                            if (this.inRange(cp, lower_boundary, 0x10FFFF) && !this.inRange(cp, 0xD800, 0xDFFF)) {
-                                code_point = cp;
-                            }
-                            else {
-                                code_point = this.decoderError(fatal, _byte);
-                            }
-                        }
-                    }
-                }
-                //Decode string
-                if (code_point !== null && code_point !== this.EOF_code_point) {
-                    if (code_point <= 0xFFFF) {
-                        if (code_point > 0)
-                            result += String.fromCharCode(code_point);
-                    }
-                    else {
-                        code_point -= 0x10000;
-                        result += String.fromCharCode(0xD800 + ((code_point >> 10) & 0x3ff));
-                        result += String.fromCharCode(0xDC00 + (code_point & 0x3ff));
-                    }
-                }
+                else
+                    len += 3;
             }
-            return result;
+            return len;
         };
         /**
-         * @private
+         * 接续utf8字符串
          *
-         * @param code_point
-         */
-        ByteArray.prototype.encoderError = function (code_point) {
-            egret.$error(1026, code_point);
-        };
-        /**
-         * @private
-         *
-         * @param fatal
-         * @param opt_code_point
+         * 参考 https://github.com/dcodeIO/protobuf.js/tree/master/lib/utf8
+         * @param {string} string
          * @returns
+         * @protected
+         * @memberOf ByteArray
          */
-        ByteArray.prototype.decoderError = function (fatal, opt_code_point) {
-            if (fatal) {
-                egret.$error(1027);
-            }
-            return opt_code_point || 0xFFFD;
-        };
-        /**
-         * @private
-         *
-         * @param a
-         * @param min
-         * @param max
-         */
-        ByteArray.prototype.inRange = function (a, min, max) {
-            return min <= a && a <= max;
-        };
-        /**
-         * @private
-         *
-         * @param n
-         * @param d
-         */
-        ByteArray.prototype.div = function (n, d) {
-            return Math.floor(n / d);
-        };
-        /**
-         * @private
-         *
-         * @param string
-         */
-        ByteArray.prototype.stringToCodePoints = function (string) {
-            /** @type {Array.<number>} */
-            var cps = [];
-            // Based on http://www.w3.org/TR/WebIDL/#idl-DOMString
-            var i = 0, n = string.length;
-            while (i < string.length) {
-                var c = string.charCodeAt(i);
-                if (!this.inRange(c, 0xD800, 0xDFFF)) {
-                    cps.push(c);
+        ByteArray.prototype.encodeUTF8 = function (string) {
+            var offset = 0, c1, // character 1
+            c2; // character 2
+            var buffer = []; //new Uint8Array(ByteArray.utf8ByteLength(string));
+            for (var i = 0; i < string.length; ++i) {
+                c1 = string.charCodeAt(i);
+                if (c1 < 128) {
+                    buffer[offset++] = c1;
                 }
-                else if (this.inRange(c, 0xDC00, 0xDFFF)) {
-                    cps.push(0xFFFD);
+                else if (c1 < 2048) {
+                    buffer[offset++] = c1 >> 6 | 192;
+                    buffer[offset++] = c1 & 63 | 128;
+                }
+                else if ((c1 & 0xFC00) === 0xD800 && ((c2 = string.charCodeAt(i + 1)) & 0xFC00) === 0xDC00) {
+                    c1 = 0x10000 + ((c1 & 0x03FF) << 10) + (c2 & 0x03FF);
+                    ++i;
+                    buffer[offset++] = c1 >> 18 | 240;
+                    buffer[offset++] = c1 >> 12 & 63 | 128;
+                    buffer[offset++] = c1 >> 6 & 63 | 128;
+                    buffer[offset++] = c1 & 63 | 128;
                 }
                 else {
-                    if (i == n - 1) {
-                        cps.push(0xFFFD);
-                    }
-                    else {
-                        var d = string.charCodeAt(i + 1);
-                        if (this.inRange(d, 0xDC00, 0xDFFF)) {
-                            var a = c & 0x3FF;
-                            var b = d & 0x3FF;
-                            i += 1;
-                            cps.push(0x10000 + (a << 10) + b);
-                        }
-                        else {
-                            cps.push(0xFFFD);
-                        }
-                    }
+                    buffer[offset++] = c1 >> 12 | 224;
+                    buffer[offset++] = c1 >> 6 & 63 | 128;
+                    buffer[offset++] = c1 & 63 | 128;
                 }
-                i += 1;
             }
-            return cps;
+            return buffer;
         };
         /**
-         * @private
+         * 从字节数组中读取utf8字符串
+         *
+         * 参考 https://github.com/dcodeIO/protobuf.js/tree/master/lib/utf8
+         * @param {(Uint8Array | ArrayLike<number>)} buffer
+         * @returns
+         *
+         * @memberOf ByteArray
          */
-        ByteArray.SIZE_OF_BOOLEAN = 1;
-        /**
-         * @private
-         */
-        ByteArray.SIZE_OF_INT8 = 1;
-        /**
-         * @private
-         */
-        ByteArray.SIZE_OF_INT16 = 2;
-        /**
-         * @private
-         */
-        ByteArray.SIZE_OF_INT32 = 4;
-        /**
-         * @private
-         */
-        ByteArray.SIZE_OF_UINT8 = 1;
-        /**
-         * @private
-         */
-        ByteArray.SIZE_OF_UINT16 = 2;
-        /**
-         * @private
-         */
-        ByteArray.SIZE_OF_UINT32 = 4;
-        /**
-         * @private
-         */
-        ByteArray.SIZE_OF_FLOAT32 = 4;
-        /**
-         * @private
-         */
-        ByteArray.SIZE_OF_FLOAT64 = 8;
+        ByteArray.prototype.decodeUTF8 = function (buffer) {
+            var len = buffer.length;
+            if (len < 1)
+                return "";
+            var parts = null, chunk = [], start = 0, i = 0, // char offset
+            t; // temporary
+            while (start < len) {
+                t = buffer[start++];
+                if (t < 128)
+                    chunk[i++] = t;
+                else if (t > 191 && t < 224)
+                    chunk[i++] = (t & 31) << 6 | buffer[start++] & 63;
+                else if (t > 239 && t < 365) {
+                    t = ((t & 7) << 18 | (buffer[start++] & 63) << 12 | (buffer[start++] & 63) << 6 | buffer[start++] & 63) - 0x10000;
+                    chunk[i++] = 0xD800 + (t >> 10);
+                    chunk[i++] = 0xDC00 + (t & 1023);
+                }
+                else
+                    chunk[i++] = (t & 15) << 12 | (buffer[start++] & 63) << 6 | buffer[start++] & 63;
+                if (i > 8191) {
+                    (parts || (parts = [])).push(String.fromCharCode.apply(String, chunk));
+                    i = 0;
+                }
+            }
+            if (parts) {
+                if (i)
+                    parts.push(String.fromCharCode.apply(String, chunk.slice(0, i)));
+                return parts.join("");
+            }
+            return String.fromCharCode.apply(String, chunk.slice(0, i));
+        };
         return ByteArray;
     }());
     egret.ByteArray = ByteArray;
     __reflect(ByteArray.prototype, "egret.ByteArray");
+    var pt = ByteArray.prototype;
+    if (typeof TextDecoder === "function") {
+        var td = new TextDecoder();
+        pt.decodeUTF8 = td.decode.bind(td);
+        var te = new TextEncoder();
+        pt.encodeUTF8 = te.encode.bind(te);
+    }
 })(egret || (egret = {}));
 //////////////////////////////////////////////////////////////////////////////////////
 //
@@ -23886,8 +23806,8 @@ var egret;
         }
         var superTypes = prototype.__types__;
         if (prototype.__types__) {
-            var length_13 = superTypes.length;
-            for (var i = 0; i < length_13; i++) {
+            var length_11 = superTypes.length;
+            for (var i = 0; i < length_11; i++) {
                 var name_1 = superTypes[i];
                 if (types.indexOf(name_1) == -1) {
                     types.push(name_1);
