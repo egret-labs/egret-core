@@ -7981,7 +7981,7 @@ var dragonBones;
             }
         };
         ObjectDataParser.prototype._mergeActionFrame = function (rawData, frameStart, type, bone, slot) {
-            var actionOffset = this._armature.actions.length;
+            var actionOffset = dragonBones.DragonBones.webAssembly ? this._armature.actions.size() : this._armature.actions.length;
             var actionCount = this._parseActionData(rawData, this._armature.actions, type, bone, slot);
             var frame = null;
             if (this._actionFrames.length === 0) {

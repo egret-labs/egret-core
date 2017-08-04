@@ -180,9 +180,9 @@ declare namespace dragonBones {
         static debugDraw: boolean;
         static webAssembly: boolean;
         static readonly VERSION: string;
+        private readonly _clock;
         private readonly _events;
         private readonly _objects;
-        private _clock;
         private _eventManager;
         constructor(eventManager: IEventDispatcher);
         advanceTime(passedTime: number): void;
@@ -4041,6 +4041,7 @@ declare namespace dragonBones {
         private _timelineArray;
         private _inRange(a, min, max);
         private _decodeUTF8(data);
+        private _getUTF16Key(value);
         private _parseBinaryTimeline(type, offset, timelineData?);
         /**
          * @private
@@ -4604,6 +4605,9 @@ declare namespace dragonBones {
          * @private
          */
         private _rawTextures;
+        /**
+         * @inheritDoc
+         */
         constructor();
         /**
          * @private
@@ -4630,7 +4634,7 @@ declare namespace dragonBones {
          */
         parseTextureAtlasData(rawData: any, textureAtlas: any, name?: string | null, scale?: number): TextureAtlasData;
         /**
-         * 创建一个指定名称的骨架，并使用骨架的显示容器来更新骨架动画。
+         * 创建一个指定名称的骨架。
          * @param armatureName 骨架名称。
          * @param dragonBonesName 龙骨数据名称，如果未设置，将检索所有的龙骨数据，如果多个数据中包含同名的骨架数据，可能无法创建出准确的骨架。
          * @param skinName 皮肤名称，如果未设置，则使用默认皮肤。
