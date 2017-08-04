@@ -55,7 +55,7 @@ class Clean implements egret.Command {
                 moduleName = "egretWithDragonBones";
             }
             arr.forEach(function (item) {
-                FileUtil.copy(FileUtil.joinPath(egret.root, "tools", "templates", "wasm_libs", moduleName + item),
+                FileUtil.copy(FileUtil.joinPath(egret.root, "build", "wasm_libs", moduleName + item),
                     FileUtil.joinPath(options.projectDir, "libs", "egret" + item));
             });
         }

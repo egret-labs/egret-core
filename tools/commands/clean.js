@@ -87,7 +87,7 @@ var Clean = (function () {
                         moduleName_1 = "egretWithDragonBones";
                     }
                     arr.forEach(function (item) {
-                        FileUtil.copy(FileUtil.joinPath(egret.root, "tools", "templates", "wasm_libs", moduleName_1 + item), FileUtil.joinPath(options.projectDir, "libs", "egret" + item));
+                        FileUtil.copy(FileUtil.joinPath(egret.root, "build", "wasm_libs", moduleName_1 + item), FileUtil.joinPath(options.projectDir, "libs", "egret" + item));
                     });
                 }
                 timeBuildEnd = new Date().getTime();
