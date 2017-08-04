@@ -43,7 +43,7 @@ class AutoCompileCommand implements egret.Command {
                 path: egret.args.projectDir,
                 option: egret.args
             });
-            this.exitAfter5Minutes();
+            this.exitAfter60Minutes();
         }, 60000);
 
         this.dirState = new state.DirectoryState();
@@ -338,10 +338,10 @@ class AutoCompileCommand implements egret.Command {
         this._request.send(cmd);
     }
 
-    private exitAfter5Minutes() {
+    private exitAfter60Minutes() {
         var now = Date.now();
         var timespan = (now - this._lastBuildTime) / 1000 / 60;
-        if (timespan > 5)
+        if (timespan > 60)
             process.exit(0);
     }
 

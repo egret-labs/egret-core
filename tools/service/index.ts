@@ -90,7 +90,9 @@ export namespace server {
             heapTotal = heapTotal / 1024 / 1024;
             heapTotal = heapTotal | 0;
             console.log(`内存占用: ${heapTotal}M ${proj.path}`);
-            if (heapTotal > 500) {
+            //取系统最大内存的四分之一，最低500M
+            let maxHeap = Math.max(require("os").totalmem() / 1024 / 1024 / 4, 500);
+            if (heapTotal > maxHeap) {
                 console.log("内存占用过高,关闭进程:" + proj.path);
                 proj.shutdown();
             }
