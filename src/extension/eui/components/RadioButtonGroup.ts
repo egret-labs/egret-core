@@ -340,8 +340,9 @@ namespace eui {
             for (let i = 0; i < length; i++) {
                 buttons[i].$indexNumber = i;
             }
-            if (this._selectedValue)
+            if (this._selectedValue != null) {
                 this.selectedValue = this._selectedValue;
+            }
             if (instance.selected == true)
                 this.selection = instance;
 
