@@ -117,7 +117,7 @@ var Publish = (function () {
                                 EgretProject.manager.modifyIndex(manifestPath, indexPath);
                             }
                             else {
-                                FileUtil.copy(FileUtil.joinPath(options.templateDir, "debug", "index.html"), indexPath);
+                                FileUtil.copy(FileUtil.joinPath(options.templateDir, "web", "index.html"), indexPath);
                                 EgretProject.manager.modifyIndex(manifestPath, indexPath);
                             }
                             copyAction = new CopyAction(options.projectDir, options.releaseDir);
