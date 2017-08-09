@@ -177,10 +177,16 @@ export class EgretProjectData {
     private getModulePath(m: egret.EgretPropertyModule) {
         let modulePath = this.getModulePath2(m.path)
         modulePath = file.getAbsolutePath(modulePath);
+        let name = m.name;
+        if (this.isWasmProject()) {
+            if (name == "egret" || name == "eui" || name == "dragonBones" || name == "game") {
+                name += "-wasm";
+            }
+        }
         let dir = file.searchPath([
-            _path.join(modulePath, "bin", m.name),
+            _path.join(modulePath, "bin", name),
             _path.join(modulePath, "bin"),
-            _path.join(modulePath, "build", m.name),
+            _path.join(modulePath, "build", name),
             modulePath
         ])
         if (!dir) {
@@ -228,14 +234,9 @@ export class EgretProjectData {
     @_utils.cache
     getModulesConfig(platform: "web" | "native") {
         let result = this.egretProperties.modules.map(m => {
-            if (this.isWasmProject()) {
-                if (m.name == "egret" || m.name == "eui" || m.name == "dragonBones" || m.name == "game") {
-                    m.name += "-wasm";
-                }
-            }
             let name = m.name;
             let sourceDir = this.getModulePath(m);
-            let targetDir = _path.join(this.getLibraryFolder(), name)
+            let targetDir = _path.join(this.getLibraryFolder(), name);
             let relative = _path.relative(this.getProjectRoot(), sourceDir);
             if (relative.indexOf("..") == -1 && !_path.isAbsolute(relative)) { // source 在项目中
                 targetDir = sourceDir;

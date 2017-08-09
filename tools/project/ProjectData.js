@@ -136,10 +136,16 @@ var EgretProjectData = (function () {
     EgretProjectData.prototype.getModulePath = function (m) {
         var modulePath = this.getModulePath2(m.path);
         modulePath = file.getAbsolutePath(modulePath);
+        var name = m.name;
+        if (this.isWasmProject()) {
+            if (name == "egret" || name == "eui" || name == "dragonBones" || name == "game") {
+                name += "-wasm";
+            }
+        }
         var dir = file.searchPath([
-            _path.join(modulePath, "bin", m.name),
+            _path.join(modulePath, "bin", name),
             _path.join(modulePath, "bin"),
-            _path.join(modulePath, "build", m.name),
+            _path.join(modulePath, "build", name),
             modulePath
         ]);
         if (!dir) {
@@ -183,11 +189,6 @@ var EgretProjectData = (function () {
     EgretProjectData.prototype.getModulesConfig = function (platform) {
         var _this = this;
         var result = this.egretProperties.modules.map(function (m) {
-            if (_this.isWasmProject()) {
-                if (m.name == "egret" || m.name == "eui" || m.name == "dragonBones" || m.name == "game") {
-                    m.name += "-wasm";
-                }
-            }
             var name = m.name;
             var sourceDir = _this.getModulePath(m);
             var targetDir = _path.join(_this.getLibraryFolder(), name);

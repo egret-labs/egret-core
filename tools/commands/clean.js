@@ -77,17 +77,17 @@ var Clean = (function () {
                 }
                 if (EgretProject.data.isWasmProject()) {
                     arr = [
-                        ".asm.js",
-                        ".asm.js.mem",
-                        ".webassembly.js",
-                        ".webassembly.wasm"
+                        "egret.asm.js",
+                        "egret.asm.js.mem",
+                        "egret.webassembly.js",
+                        "egret.webassembly.wasm"
                     ];
                     moduleName_1 = "egret";
-                    if (EgretProject.data.hasModule("dragonBones-wasm")) {
+                    if (EgretProject.data.hasModule("dragonBones")) {
                         moduleName_1 = "egretWithDragonBones";
                     }
                     arr.forEach(function (item) {
-                        FileUtil.copy(FileUtil.joinPath(egret.root, "build", "wasm_libs", moduleName_1 + item), FileUtil.joinPath(options.projectDir, "libs", "egret" + item));
+                        FileUtil.copy(FileUtil.joinPath(egret.root, "build", "wasm_libs", moduleName_1, item), FileUtil.joinPath(options.projectDir, "libs", item));
                     });
                 }
                 timeBuildEnd = new Date().getTime();
