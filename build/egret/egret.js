@@ -22925,6 +22925,7 @@ var egret;
             }
             bytes.validateBuffer(offset + length);
             bytes._bytes.set(this._bytes.subarray(pos, pos + length), offset);
+            this.position += length;
         };
         /**
          * Read an IEEE 754 double-precision (64 bit) floating point number from the byte stream

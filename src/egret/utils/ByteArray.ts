@@ -426,23 +426,24 @@ namespace egret {
          */
         public readBytes(bytes: ByteArray, offset: number = 0, length: number = 0): void {
             if (!bytes) {//由于bytes不返回，所以new新的无意义
-                return
+                return;
             }
             let pos = this._position;
             let available = this.write_position - pos;
             if (available < 0) {
                 egret.$error(1025);
-                return
+                return;
             }
             if (length == 0) {
                 length = available;
             }
             else if (length > available) {
                 egret.$error(1025);
-                return
+                return;
             }
             bytes.validateBuffer(offset + length);
             bytes._bytes.set(this._bytes.subarray(pos, pos + length), offset);
+            this.position += length;
         }
 
         /**
