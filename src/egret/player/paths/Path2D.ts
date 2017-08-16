@@ -45,7 +45,7 @@ namespace egret.sys {
         /**
          * 线条路径
          */
-        Stroke,
+        Stroke
     }
     /**
      * @private
@@ -55,7 +55,7 @@ namespace egret.sys {
         MoveTo = 1,
         LineTo,
         CurveTo,
-        CubicCurveTo,
+        CubicCurveTo
     }
 
     /**

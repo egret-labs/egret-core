@@ -82,7 +82,7 @@ namespace egret.sys {
         /**
          * @private
          */
-        smoothing,
+        smoothing
     }
 }
 namespace egret {

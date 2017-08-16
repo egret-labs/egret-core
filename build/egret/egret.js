@@ -4960,7 +4960,7 @@ var egret;
          * @language en_US
          */
         /**
-         * 循环完成
+         * 循环完成。循环最后一次只派发 COMPLETE 事件，不派发 LOOP_COMPLETE 事件。
          * @version Egret 2.4
          * @platform Web,Native
          * @language zh_CN
