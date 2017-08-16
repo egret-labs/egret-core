@@ -14178,36 +14178,60 @@ declare namespace egret {
          */
         protected validateBuffer(len: number): void;
         /**
-         * 获取字符串使用Utf8编码的字节长度
-         *
-         * 参考 https://github.com/dcodeIO/protobuf.js/tree/master/lib/utf8
-         * @static
-         * @param {string} string
-         * @returns
-         *
-         * @memberOf ByteArray
+         * @private
+         * UTF-8 Encoding/Decoding
          */
-        static utf8ByteLength(string: string): number;
+        private encodeUTF8(str);
         /**
-         * 接续utf8字符串
+         * @private
          *
-         * 参考 https://github.com/dcodeIO/protobuf.js/tree/master/lib/utf8
-         * @param {string} string
+         * @param data
          * @returns
-         * @protected
-         * @memberOf ByteArray
          */
-        encodeUTF8(string: string): number[];
+        private decodeUTF8(data);
         /**
-         * 从字节数组中读取utf8字符串
+         * @private
          *
-         * 参考 https://github.com/dcodeIO/protobuf.js/tree/master/lib/utf8
-         * @param {(Uint8Array | ArrayLike<number>)} buffer
-         * @returns
-         *
-         * @memberOf ByteArray
+         * @param code_point
          */
-        decodeUTF8(buffer: Uint8Array | ArrayLike<number>): any;
+        private encoderError(code_point);
+        /**
+         * @private
+         *
+         * @param fatal
+         * @param opt_code_point
+         * @returns
+         */
+        private decoderError(fatal, opt_code_point?);
+        /**
+         * @private
+         */
+        private EOF_byte;
+        /**
+         * @private
+         */
+        private EOF_code_point;
+        /**
+         * @private
+         *
+         * @param a
+         * @param min
+         * @param max
+         */
+        private inRange(a, min, max);
+        /**
+         * @private
+         *
+         * @param n
+         * @param d
+         */
+        private div(n, d);
+        /**
+         * @private
+         *
+         * @param string
+         */
+        private stringToCodePoints(string);
     }
 }
 declare namespace egret {

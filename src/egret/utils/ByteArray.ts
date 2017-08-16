@@ -124,7 +124,7 @@ namespace egret {
         /**
          * @private
          */
-        protected bufferExtSize = 256;//Buffer expansion size
+        protected bufferExtSize = 0;//Buffer expansion size
 
         protected data: DataView;
 
@@ -171,9 +171,9 @@ namespace egret {
          * @version Egret 2.4
          * @platform Web,Native
          */
-        constructor(buffer?: ArrayBuffer | Uint8Array, bufferExtSize = 256) {
+        constructor(buffer?: ArrayBuffer | Uint8Array, bufferExtSize = 0) {
             if (bufferExtSize < 0) {
-                bufferExtSize = 256;
+                bufferExtSize = 0;
             }
             this.bufferExtSize = bufferExtSize;
             let bytes: Uint8Array, wpos = 0;
@@ -186,8 +186,13 @@ namespace egret {
                     wpos = buffer.byteLength;
                     uint8 = new Uint8Array(buffer);
                 }
-                let multi = (wpos / bufferExtSize | 0) + 1;
-                bytes = new Uint8Array(multi * bufferExtSize);
+                if (bufferExtSize == 0) {
+                    bytes = new Uint8Array(wpos);
+                }
+                else {
+                    let multi = (wpos / bufferExtSize | 0) + 1;
+                    bytes = new Uint8Array(multi * bufferExtSize);
+                }
                 bytes.set(uint8);
             } else {
                 bytes = new Uint8Array(bufferExtSize);
@@ -235,8 +240,14 @@ namespace egret {
             let wpos = value.byteLength;
             let uint8 = new Uint8Array(value);
             let bufferExtSize = this.bufferExtSize;
-            let multi = (wpos / bufferExtSize | 0) + 1;
-            let bytes = new Uint8Array(multi * bufferExtSize);
+            let bytes:Uint8Array;
+            if (bufferExtSize == 0) {
+                bytes = new Uint8Array(wpos);
+            }
+            else {
+                let multi = (wpos / bufferExtSize | 0) + 1;
+                bytes = new Uint8Array(multi * bufferExtSize);
+            }
             bytes.set(uint8);
             this.write_position = wpos;
             this._bytes = bytes;
@@ -324,8 +335,14 @@ namespace egret {
         protected _validateBuffer(value: number) {
             if (this.data.byteLength < value) {
                 let be = this.bufferExtSize;
-                let nLen = ((value / be >> 0) + 1) * be;
-                let tmp: Uint8Array = new Uint8Array(nLen);
+                let tmp: Uint8Array;
+                if (be == 0) {
+                    tmp = new Uint8Array(value);
+                }
+                else {
+                    let nLen = ((value / be >> 0) + 1) * be;
+                    tmp = new Uint8Array(nLen);
+                }
                 tmp.set(this._bytes);
                 this._bytes = tmp;
                 this.data = new DataView(tmp.buffer);
@@ -363,7 +380,7 @@ namespace egret {
          * @language zh_CN
          */
         public clear(): void {
-            let buffer = this.data.buffer.slice(0, this.bufferExtSize);
+            let buffer = new ArrayBuffer(this.bufferExtSize);
             this.data = new DataView(buffer);
             this._bytes = new Uint8Array(buffer);
             this._position = 0;
@@ -941,156 +958,230 @@ namespace egret {
             this._validateBuffer(len);
         }
 
-        // /**
-        //  * @private
-        //  *
-        //  * @param code_point
-        //  */
-        // private encoderError(code_point) {
-        //     egret.$error(1026, code_point);
-        // }
-
-        // /**
-        //  * @private
-        //  *
-        //  * @param fatal
-        //  * @param opt_code_point
-        //  * @returns
-        //  */
-        // private decoderError(fatal, opt_code_point?): number {
-        //     if (fatal) {
-        //         egret.$error(1027);
-        //     }
-        //     return opt_code_point || 0xFFFD;
-        // }
-
         /**
-         * 获取字符串使用Utf8编码的字节长度
-         * 
-         * 参考 https://github.com/dcodeIO/protobuf.js/tree/master/lib/utf8
-         * @static
-         * @param {string} string 
-         * @returns 
-         * 
-         * @memberOf ByteArray
+         * @private
+         * UTF-8 Encoding/Decoding
          */
-        public static utf8ByteLength(string: string) {
-            let len = 0,
-                c = 0;
-            for (let i = 0; i < string.length; ++i) {
-                c = string.charCodeAt(i);
-                if (c < 128)
-                    len += 1;
-                else if (c < 2048)
-                    len += 2;
-                else if ((c & 0xFC00) === 0xD800 && (string.charCodeAt(i + 1) & 0xFC00) === 0xDC00) {
-                    ++i;
-                    len += 4;
-                } else
-                    len += 3;
-            }
-            return len;
-        }
+        private encodeUTF8(str:string):Uint8Array {
+            let pos:number = 0;
+            let codePoints = this.stringToCodePoints(str);
+            let outputBytes = [];
 
-        /**
-         * 接续utf8字符串
-         * 
-         * 参考 https://github.com/dcodeIO/protobuf.js/tree/master/lib/utf8
-         * @param {string} string 
-         * @returns 
-         * @protected
-         * @memberOf ByteArray
-         */
-        encodeUTF8(string: string) {
-            let offset = 0,
-                c1: number, // character 1
-                c2: number; // character 2
-            let buffer: number[] = [];//new Uint8Array(ByteArray.utf8ByteLength(string));
-            for (var i = 0; i < string.length; ++i) {
-                c1 = string.charCodeAt(i);
-                if (c1 < 128) {
-                    buffer[offset++] = c1;
-                } else if (c1 < 2048) {
-                    buffer[offset++] = c1 >> 6 | 192;
-                    buffer[offset++] = c1 & 63 | 128;
-                } else if ((c1 & 0xFC00) === 0xD800 && ((c2 = string.charCodeAt(i + 1)) & 0xFC00) === 0xDC00) {
-                    c1 = 0x10000 + ((c1 & 0x03FF) << 10) + (c2 & 0x03FF);
-                    ++i;
-                    buffer[offset++] = c1 >> 18 | 240;
-                    buffer[offset++] = c1 >> 12 & 63 | 128;
-                    buffer[offset++] = c1 >> 6 & 63 | 128;
-                    buffer[offset++] = c1 & 63 | 128;
+            while (codePoints.length > pos) {
+                let code_point:number = codePoints[pos++];
+
+                if (this.inRange(code_point, 0xD800, 0xDFFF)) {
+                    this.encoderError(code_point);
+                }
+                else if (this.inRange(code_point, 0x0000, 0x007f)) {
+                    outputBytes.push(code_point);
                 } else {
-                    buffer[offset++] = c1 >> 12 | 224;
-                    buffer[offset++] = c1 >> 6 & 63 | 128;
-                    buffer[offset++] = c1 & 63 | 128;
+                    let count, offset;
+                    if (this.inRange(code_point, 0x0080, 0x07FF)) {
+                        count = 1;
+                        offset = 0xC0;
+                    } else if (this.inRange(code_point, 0x0800, 0xFFFF)) {
+                        count = 2;
+                        offset = 0xE0;
+                    } else if (this.inRange(code_point, 0x10000, 0x10FFFF)) {
+                        count = 3;
+                        offset = 0xF0;
+                    }
+
+                    outputBytes.push(this.div(code_point, Math.pow(64, count)) + offset);
+
+                    while (count > 0) {
+                        let temp = this.div(code_point, Math.pow(64, count - 1));
+                        outputBytes.push(0x80 + (temp % 64));
+                        count -= 1;
+                    }
                 }
             }
-            return buffer;
+            return new Uint8Array(outputBytes);
         }
 
         /**
-         * 从字节数组中读取utf8字符串
-         * 
-         * 参考 https://github.com/dcodeIO/protobuf.js/tree/master/lib/utf8
-         * @param {(Uint8Array | ArrayLike<number>)} buffer 
-         * @returns 
-         * 
-         * @memberOf ByteArray
+         * @private
+         *
+         * @param data
+         * @returns
          */
-        decodeUTF8(buffer: Uint8Array | ArrayLike<number>) {
-            var len = buffer.length;
-            if (len < 1)
-                return "";
-            var parts = null,
-                chunk = [],
-                start = 0,
-                i = 0, // char offset
-                t;     // temporary
-            while (start < len) {
-                t = buffer[start++];
-                if (t < 128)
-                    chunk[i++] = t;
-                else if (t > 191 && t < 224)
-                    chunk[i++] = (t & 31) << 6 | buffer[start++] & 63;
-                else if (t > 239 && t < 365) {
-                    t = ((t & 7) << 18 | (buffer[start++] & 63) << 12 | (buffer[start++] & 63) << 6 | buffer[start++] & 63) - 0x10000;
-                    chunk[i++] = 0xD800 + (t >> 10);
-                    chunk[i++] = 0xDC00 + (t & 1023);
-                } else
-                    chunk[i++] = (t & 15) << 12 | (buffer[start++] & 63) << 6 | buffer[start++] & 63;
-                if (i > 8191) {
-                    (parts || (parts = [])).push(String.fromCharCode.apply(String, chunk));
-                    i = 0;
+        private decodeUTF8(data:Uint8Array):string {
+            let fatal:boolean = false;
+            let pos:number = 0;
+            let result:string = "";
+            let code_point:number;
+            let utf8_code_point = 0;
+            let utf8_bytes_needed = 0;
+            let utf8_bytes_seen = 0;
+            let utf8_lower_boundary = 0;
+
+            while (data.length > pos) {
+
+                let _byte = data[pos++];
+
+                if (_byte == this.EOF_byte) {
+                    if (utf8_bytes_needed != 0) {
+                        code_point = this.decoderError(fatal);
+                    } else {
+                        code_point = this.EOF_code_point;
+                    }
+                } else {
+
+                    if (utf8_bytes_needed == 0) {
+                        if (this.inRange(_byte, 0x00, 0x7F)) {
+                            code_point = _byte;
+                        } else {
+                            if (this.inRange(_byte, 0xC2, 0xDF)) {
+                                utf8_bytes_needed = 1;
+                                utf8_lower_boundary = 0x80;
+                                utf8_code_point = _byte - 0xC0;
+                            } else if (this.inRange(_byte, 0xE0, 0xEF)) {
+                                utf8_bytes_needed = 2;
+                                utf8_lower_boundary = 0x800;
+                                utf8_code_point = _byte - 0xE0;
+                            } else if (this.inRange(_byte, 0xF0, 0xF4)) {
+                                utf8_bytes_needed = 3;
+                                utf8_lower_boundary = 0x10000;
+                                utf8_code_point = _byte - 0xF0;
+                            } else {
+                                this.decoderError(fatal);
+                            }
+                            utf8_code_point = utf8_code_point * Math.pow(64, utf8_bytes_needed);
+                            code_point = null;
+                        }
+                    } else if (!this.inRange(_byte, 0x80, 0xBF)) {
+                        utf8_code_point = 0;
+                        utf8_bytes_needed = 0;
+                        utf8_bytes_seen = 0;
+                        utf8_lower_boundary = 0;
+                        pos--;
+                        code_point = this.decoderError(fatal, _byte);
+                    } else {
+
+                        utf8_bytes_seen += 1;
+                        utf8_code_point = utf8_code_point + (_byte - 0x80) * Math.pow(64, utf8_bytes_needed - utf8_bytes_seen);
+
+                        if (utf8_bytes_seen !== utf8_bytes_needed) {
+                            code_point = null;
+                        } else {
+
+                            let cp = utf8_code_point;
+                            let lower_boundary = utf8_lower_boundary;
+                            utf8_code_point = 0;
+                            utf8_bytes_needed = 0;
+                            utf8_bytes_seen = 0;
+                            utf8_lower_boundary = 0;
+                            if (this.inRange(cp, lower_boundary, 0x10FFFF) && !this.inRange(cp, 0xD800, 0xDFFF)) {
+                                code_point = cp;
+                            } else {
+                                code_point = this.decoderError(fatal, _byte);
+                            }
+                        }
+
+                    }
+                }
+                //Decode string
+                if (code_point !== null && code_point !== this.EOF_code_point) {
+                    if (code_point <= 0xFFFF) {
+                        if (code_point > 0)result += String.fromCharCode(code_point);
+                    } else {
+                        code_point -= 0x10000;
+                        result += String.fromCharCode(0xD800 + ((code_point >> 10) & 0x3ff));
+                        result += String.fromCharCode(0xDC00 + (code_point & 0x3ff));
+                    }
                 }
             }
-            if (parts) {
-                if (i)
-                    parts.push(String.fromCharCode.apply(String, chunk.slice(0, i)));
-                return parts.join("");
+            return result;
+        }
+
+        /**
+         * @private
+         *
+         * @param code_point
+         */
+        private encoderError(code_point) {
+            egret.$error(1026, code_point);
+        }
+
+        /**
+         * @private
+         *
+         * @param fatal
+         * @param opt_code_point
+         * @returns
+         */
+        private decoderError(fatal, opt_code_point?):number {
+            if (fatal) {
+                egret.$error(1027);
             }
-            return String.fromCharCode.apply(String, chunk.slice(0, i));
+            return opt_code_point || 0xFFFD;
+        }
+
+        /**
+         * @private
+         */
+        private EOF_byte:number = -1;
+        /**
+         * @private
+         */
+        private EOF_code_point:number = -1;
+
+        /**
+         * @private
+         *
+         * @param a
+         * @param min
+         * @param max
+         */
+        private inRange(a, min, max) {
+            return min <= a && a <= max;
+        }
+
+        /**
+         * @private
+         *
+         * @param n
+         * @param d
+         */
+        private div(n, d) {
+            return Math.floor(n / d);
+        }
+
+        /**
+         * @private
+         *
+         * @param string
+         */
+        private stringToCodePoints(string) {
+            /** @type {Array.<number>} */
+            let cps = [];
+            // Based on http://www.w3.org/TR/WebIDL/#idl-DOMString
+            let i = 0, n = string.length;
+            while (i < string.length) {
+                let c = string.charCodeAt(i);
+                if (!this.inRange(c, 0xD800, 0xDFFF)) {
+                    cps.push(c);
+                } else if (this.inRange(c, 0xDC00, 0xDFFF)) {
+                    cps.push(0xFFFD);
+                } else { // (inRange(c, 0xD800, 0xDBFF))
+                    if (i == n - 1) {
+                        cps.push(0xFFFD);
+                    } else {
+                        let d = string.charCodeAt(i + 1);
+                        if (this.inRange(d, 0xDC00, 0xDFFF)) {
+                            let a = c & 0x3FF;
+                            let b = d & 0x3FF;
+                            i += 1;
+                            cps.push(0x10000 + (a << 10) + b);
+                        } else {
+                            cps.push(0xFFFD);
+                        }
+                    }
+                }
+                i += 1;
+            }
+            return cps;
         }
     }
-    let pt = ByteArray.prototype;
-    if (typeof TextDecoder === "function") {//如果有原生的文本编码解析类  浏览器支持状况： http://caniuse.com/#feat=textencoder
-        let td = new TextDecoder();
-        pt.decodeUTF8 = td.decode.bind(td);
-        let te = new TextEncoder();
-        pt.encodeUTF8 = te.encode.bind(te);
-    }
-    interface TextDecoder {
-        decode(buffer: ArrayBufferView, options?: { stream: boolean });
-    }
-    interface TextDecoderConstructor {
-        new (): TextDecoder;
-    }
-    declare var TextDecoder: TextDecoderConstructor;
-    interface TextEncoder {
-        encode(buffer: string, options?: { stream: boolean });
-    }
-    interface TextEncoderConstructor {
-        new (): TextEncoder;
-    }
-    declare var TextEncoder: TextEncoderConstructor;
 }
