@@ -88,11 +88,21 @@ var EgretProjectData = (function () {
         }
         return [];
     };
-    EgretProjectData.prototype.getExmlRoot = function () {
+    EgretProjectData.prototype.getExmlRoots = function () {
         if (globals.hasKeys(this.egretProperties, ["eui", "exmlRoot"])) {
-            return _path.join(egret.args.projectDir, this.egretProperties.eui.exmlRoot);
+            var result = this.egretProperties.eui.exmlRoot;
+            if (typeof result == "string") {
+                return [_path.join(egret.args.projectDir, result)];
+            }
+            else {
+                var temp = this.egretProperties.eui.exmlRoot;
+                return temp.reduce(function (previousValue, currentValue) {
+                    previousValue.push(_path.join(egret.args.projectDir, currentValue));
+                    return previousValue;
+                }, []);
+            }
         }
-        return egret.args.projectDir;
+        return [egret.args.projectDir];
     };
     EgretProjectData.prototype.getThemes = function () {
         if (globals.hasKeys(this.egretProperties, ["eui", "themes"])) {

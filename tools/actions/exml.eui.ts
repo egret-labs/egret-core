@@ -153,7 +153,16 @@ function searchTheme(): string[] {
 }
 
 function searchEXML(): string[] {
-    return file.searchByFunction(EgretProject.data.getExmlRoot(), exmlFilter);
+    let exmlRoots = EgretProject.data.getExmlRoots();
+    if (exmlRoots.length == 1) {
+        return file.searchByFunction(exmlRoots[0], exmlFilter);
+    }
+    else {
+        return exmlRoots.reduce(function (previousValue: string[], currentValue: string) {
+            previousValue = previousValue.concat(file.searchByFunction(currentValue, exmlFilter));
+            return previousValue;
+        }, []);
+    }
 }
 
 const ignorePath = EgretProject.data.getIgnorePath();

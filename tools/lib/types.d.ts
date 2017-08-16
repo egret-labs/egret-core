@@ -109,7 +109,7 @@ declare module egret {
             
         },
         "eui"?:{
-            "exmlRoot"?: string;
+            "exmlRoot"?: string | string[];
             "themes"?: string[];
             "exmlPublishPolicy"?: string;
         },

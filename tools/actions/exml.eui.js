@@ -137,7 +137,16 @@ function searchTheme() {
     return files;
 }
 function searchEXML() {
-    return file.searchByFunction(EgretProject.data.getExmlRoot(), exmlFilter);
+    var exmlRoots = EgretProject.data.getExmlRoots();
+    if (exmlRoots.length == 1) {
+        return file.searchByFunction(exmlRoots[0], exmlFilter);
+    }
+    else {
+        return exmlRoots.reduce(function (previousValue, currentValue) {
+            previousValue = previousValue.concat(file.searchByFunction(currentValue, exmlFilter));
+            return previousValue;
+        }, []);
+    }
 }
 var ignorePath = EgretProject.data.getIgnorePath();
 function exmlFilter(f) {
