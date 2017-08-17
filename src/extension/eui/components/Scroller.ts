@@ -716,7 +716,8 @@ namespace eui {
             if (!viewport) {
                 return;
             }
-            let cancelEvent = new egret.TouchEvent(event.type, event.bubbles, event.cancelable, event.$stageX, event.$stageY, event.touchPointID);
+            let cancelEvent = egret.Event.create(egret.TouchEvent, event.type, event.bubbles, event.cancelable);
+            cancelEvent.$initTo(event.$stageX,event.$stageY,event.touchPointID);
             let target:egret.DisplayObject = this.downTarget;
             cancelEvent.$setTarget(target);
             let list = this.$getPropagationList(target);
@@ -747,7 +748,8 @@ namespace eui {
             if (!viewport) {
                 return;
             }
-            let cancelEvent = new egret.TouchEvent(egret.TouchEvent.TOUCH_CANCEL, event.bubbles, event.cancelable, event.$stageX, event.$stageY, event.touchPointID);
+            let cancelEvent = egret.Event.create(egret.TouchEvent, event.type, event.bubbles, event.cancelable);
+            cancelEvent.$initTo(event.$stageX,event.$stageY,event.touchPointID);
             let target:egret.DisplayObject = this.downTarget;
             cancelEvent.$setTarget(target);
             let list = this.$getPropagationList(target);

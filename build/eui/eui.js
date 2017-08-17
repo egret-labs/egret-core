@@ -14560,7 +14560,8 @@ var eui;
             if (!viewport) {
                 return;
             }
-            var cancelEvent = new egret.TouchEvent(event.type, event.bubbles, event.cancelable, event.$stageX, event.$stageY, event.touchPointID);
+            var cancelEvent = egret.Event.create(egret.TouchEvent, event.type, event.bubbles, event.cancelable);
+            cancelEvent.$initTo(event.$stageX, event.$stageY, event.touchPointID);
             var target = this.downTarget;
             cancelEvent.$setTarget(target);
             var list = this.$getPropagationList(target);
@@ -14587,7 +14588,8 @@ var eui;
             if (!viewport) {
                 return;
             }
-            var cancelEvent = new egret.TouchEvent(egret.TouchEvent.TOUCH_CANCEL, event.bubbles, event.cancelable, event.$stageX, event.$stageY, event.touchPointID);
+            var cancelEvent = egret.Event.create(egret.TouchEvent, event.type, event.bubbles, event.cancelable);
+            cancelEvent.$initTo(event.$stageX, event.$stageY, event.touchPointID);
             var target = this.downTarget;
             cancelEvent.$setTarget(target);
             var list = this.$getPropagationList(target);
