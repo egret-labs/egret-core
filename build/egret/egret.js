@@ -13210,6 +13210,7 @@ var egret;
                     if (root !== target.$stage) {
                         target.$getConcatenatedMatrixAt(root, matrix);
                     }
+                    node.renderAlpha = target.$getConcatenatedAlpha();
                 }
                 else {
                     var bounds = target.$getOriginalBounds();
@@ -13233,6 +13234,7 @@ var egret;
                         target.$getConcatenatedMatrixAt(root, matrix);
                     }
                     region.updateRegion(bounds, matrix);
+                    node.renderAlpha = target.$getConcatenatedAlpha();
                 }
                 return true;
             };

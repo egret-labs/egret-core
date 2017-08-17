@@ -120,6 +120,7 @@ namespace egret.sys {
                 if (root !== target.$stage) {
                     target.$getConcatenatedMatrixAt(root, matrix);
                 }
+                node.renderAlpha = target.$getConcatenatedAlpha();
             }
             else {
                 let bounds = target.$getOriginalBounds();
@@ -144,6 +145,7 @@ namespace egret.sys {
                     target.$getConcatenatedMatrixAt(root, matrix);
                 }
                 region.updateRegion(bounds, matrix);
+                node.renderAlpha = target.$getConcatenatedAlpha();
             }
             return true;
         }
