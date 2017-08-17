@@ -105,11 +105,11 @@ declare namespace dragonBones {
         BoneS = 13,
         BoneX = 14,
         BoneY = 15,
-        BoneRotation = 16,
+        BoneRotate = 16,
         BoneSkew = 17,
         BoneScaleX = 18,
         BoneScaleY = 19,
-        SlotDisplayIndex = 20,
+        SlotDisplay = 20,
         SlotColor = 21,
         SlotFFD = 22,
         AnimationTime = 40,
@@ -1803,7 +1803,7 @@ declare namespace dragonBones {
          */
         userData: any;
         private _debugDraw;
-        private _delayDispose;
+        private _lockUpdate;
         private _bonesDirty;
         private _slotsDirty;
         private _zOrderDirty;
@@ -1816,6 +1816,7 @@ declare namespace dragonBones {
         _cacheFrameIndex: number;
         private readonly _bones;
         private readonly _slots;
+        private readonly _actions;
         private _animation;
         private _proxy;
         private _display;
@@ -1866,6 +1867,11 @@ declare namespace dragonBones {
          * @private
          */
         _removeSlotFromSlotList(value: Slot): void;
+        /**
+         * @internal
+         * @private
+         */
+        _bufferAction(action: ActionData, append: boolean): void;
         /**
          * 释放骨架。 (回收到对象池)
          * @version DragonBones 3.0
@@ -3737,6 +3743,12 @@ declare namespace dragonBones {
         protected static readonly Z_ORDER: string;
         protected static readonly FFD: string;
         protected static readonly FRAME: string;
+        protected static readonly TRANSLATE_FRAME: string;
+        protected static readonly ROTATE_FRAME: string;
+        protected static readonly SCALE_FRAME: string;
+        protected static readonly VISIBLE_FRAME: string;
+        protected static readonly DISPLAY_FRAME: string;
+        protected static readonly COLOR_FRAME: string;
         protected static readonly DEFAULT_ACTIONS: string;
         protected static readonly ACTIONS: string;
         protected static readonly EVENTS: string;
@@ -3786,12 +3798,13 @@ declare namespace dragonBones {
         protected static readonly ACTION: string;
         protected static readonly X: string;
         protected static readonly Y: string;
-        protected static readonly ROTATION: string;
-        protected static readonly SKEW: string;
         protected static readonly SKEW_X: string;
         protected static readonly SKEW_Y: string;
         protected static readonly SCALE_X: string;
         protected static readonly SCALE_Y: string;
+        protected static readonly VALUE: string;
+        protected static readonly ROTATE: string;
+        protected static readonly SKEW: string;
         protected static readonly ALPHA_OFFSET: string;
         protected static readonly RED_OFFSET: string;
         protected static readonly GREEN_OFFSET: string;
