@@ -35,9 +35,11 @@ var dragonBones;
                 for (var i = 0; i < this._events.length; ++i) {
                     var eventObject = this._events[i];
                     var armature = eventObject.armature;
-                    armature.eventDispatcher._dispatchEvent(eventObject.type, eventObject);
-                    if (eventObject.type === dragonBones.EventObject.SOUND_EVENT) {
-                        this._eventManager._dispatchEvent(eventObject.type, eventObject);
+                    if (armature.armatureData !== null) {
+                        armature.eventDispatcher._dispatchEvent(eventObject.type, eventObject);
+                        if (eventObject.type === dragonBones.EventObject.SOUND_EVENT) {
+                            this._eventManager._dispatchEvent(eventObject.type, eventObject);
+                        }
                     }
                     this.bufferObject(eventObject);
                 }
