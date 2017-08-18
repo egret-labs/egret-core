@@ -102,8 +102,6 @@ namespace egret.sys {
             }
             target.$removeFlagsUp(DisplayObjectFlags.Dirty);
             let node = this.$renderNode;
-            //这里不需要更新node.renderAlpha。因为alpha已经写入到缓存的内部
-
             //必须在访问moved属性前调用以下两个方法，因为moved属性在以下两个方法内重置。
             let concatenatedMatrix = target.$getConcatenatedMatrix();
             let displayList = target.$parentDisplayList;

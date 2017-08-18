@@ -203,7 +203,7 @@ namespace egret.web {
                 }
             }
 
-            if (filters.length == 1 && (filters[0].type == "colorTransform" || (filters[0].type === "custom" && (<CustomFilter>filters[0]).padding === 0))) {
+            if (!displayObject.mask && filters.length == 1 && (filters[0].type == "colorTransform" || (filters[0].type === "custom" && (<CustomFilter>filters[0]).padding === 0))) {
                 let childrenDrawCount = this.getRenderCount(displayObject);
                 if (!displayObject.$children || childrenDrawCount == 1) {
                     if (hasBlendMode) {
@@ -211,10 +211,7 @@ namespace egret.web {
                     }
 
                     buffer.context.$filter = <ColorMatrixFilter>filters[0];
-                    if ((displayObject.$mask && (displayObject.$mask.$parentDisplayList || root))) {
-                        drawCalls += this.drawWithClip(displayObject, buffer, dirtyList, matrix, clipRegion, root);
-                    }
-                    else if (displayObject.$scrollRect || displayObject.$maskRect) {
+                    if (displayObject.$scrollRect || displayObject.$maskRect) {
                         drawCalls += this.drawWithScrollRect(displayObject, buffer, dirtyList, matrix, clipRegion, root);
                     }
                     else {
