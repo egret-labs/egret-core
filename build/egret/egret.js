@@ -13193,7 +13193,6 @@ var egret;
                 }
                 target.$removeFlagsUp(768 /* Dirty */);
                 var node = this.$renderNode;
-                //这里不需要更新node.renderAlpha。因为alpha已经写入到缓存的内部
                 //必须在访问moved属性前调用以下两个方法，因为moved属性在以下两个方法内重置。
                 var concatenatedMatrix = target.$getConcatenatedMatrix();
                 var displayList = target.$parentDisplayList;
@@ -13210,6 +13209,7 @@ var egret;
                     if (root !== target.$stage) {
                         target.$getConcatenatedMatrixAt(root, matrix);
                     }
+                    node.renderAlpha = target.$getConcatenatedAlpha();
                 }
                 else {
                     var bounds = target.$getOriginalBounds();
@@ -13233,6 +13233,7 @@ var egret;
                         target.$getConcatenatedMatrixAt(root, matrix);
                     }
                     region.updateRegion(bounds, matrix);
+                    node.renderAlpha = target.$getConcatenatedAlpha();
                 }
                 return true;
             };

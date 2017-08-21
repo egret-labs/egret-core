@@ -618,27 +618,27 @@ declare namespace dragonBones {
         /**
          * @private
          */
-        intArray: Array<number> | Int16Array;
+        intArray: Int16Array;
         /**
          * @private
          */
-        floatArray: Array<number> | Float32Array;
+        floatArray: Float32Array;
         /**
          * @private
          */
-        frameIntArray: Array<number> | Int16Array;
+        frameIntArray: Int16Array;
         /**
          * @private
          */
-        frameFloatArray: Array<number> | Float32Array;
+        frameFloatArray: Float32Array;
         /**
          * @private
          */
-        frameArray: Array<number> | Int16Array;
+        frameArray: Int16Array;
         /**
          * @private
          */
-        timelineArray: Array<number> | Uint16Array;
+        timelineArray: Uint16Array;
         /**
          * @private
          */
@@ -3853,21 +3853,6 @@ declare namespace dragonBones {
      * @private
      */
     class ObjectDataParser extends DataParser {
-        /**
-         * @private
-         */
-        private _intArrayJson;
-        private _floatArrayJson;
-        private _frameIntArrayJson;
-        private _frameFloatArrayJson;
-        private _frameArrayJson;
-        private _timelineArrayJson;
-        private _intArrayBuffer;
-        private _floatArrayBuffer;
-        private _frameIntArrayBuffer;
-        private _frameFloatArrayBuffer;
-        private _frameArrayBuffer;
-        private _timelineArrayBuffer;
         protected static _getBoolean(rawData: any, key: string, defaultValue: boolean): boolean;
         /**
          * @private
@@ -3904,6 +3889,12 @@ declare namespace dragonBones {
         private readonly _cacheBones;
         private readonly _meshs;
         private readonly _slotChildActions;
+        private readonly _intArray;
+        private readonly _floatArray;
+        private readonly _frameIntArray;
+        private readonly _frameFloatArray;
+        private readonly _frameArray;
+        private readonly _timelineArray;
         /**
          * @private
          */
@@ -3975,11 +3966,11 @@ declare namespace dragonBones {
         /**
          * @private
          */
-        protected _parseFrame(rawData: any, frameStart: number, frameCount: number, frameArray: Array<number>): number;
+        protected _parseFrame(rawData: any, frameStart: number, frameCount: number): number;
         /**
          * @private
          */
-        protected _parseTweenFrame(rawData: any, frameStart: number, frameCount: number, frameArray: Array<number>): number;
+        protected _parseTweenFrame(rawData: any, frameStart: number, frameCount: number): number;
         /**
          * @private
          */
@@ -4019,7 +4010,7 @@ declare namespace dragonBones {
         /**
          * @private
          */
-        protected _parseWASMArray(): void;
+        protected _modifyArray(): void;
         /**
          * @inheritDoc
          */
@@ -4047,12 +4038,12 @@ declare namespace dragonBones {
     class BinaryDataParser extends ObjectDataParser {
         private _binary;
         private _binaryOffset;
-        private _intArray;
-        private _floatArray;
-        private _frameIntArray;
-        private _frameFloatArray;
-        private _frameArray;
-        private _timelineArray;
+        private _intArrayBuffer;
+        private _floatArrayBuffer;
+        private _frameIntArrayBuffer;
+        private _frameFloatArrayBuffer;
+        private _frameArrayBuffer;
+        private _timelineArrayBuffer;
         private _inRange(a, min, max);
         private _decodeUTF8(data);
         private _getUTF16Key(value);
