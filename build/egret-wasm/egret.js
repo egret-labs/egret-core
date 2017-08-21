@@ -6526,7 +6526,7 @@ var egret;
              * @language zh_CN
              */
             get: function () {
-                return "5.0.5";
+                return "5.0.6";
             },
             enumerable: true,
             configurable: true
@@ -19260,11 +19260,12 @@ var egret;
             if (value == null) {
                 value = "";
             }
+            value = String(value);
             var self = this;
             if (value == self.$text)
                 return false;
             self.$text = value;
-            this.$invalidateContentBounds();
+            self.$invalidateContentBounds();
             return true;
         };
         /**
