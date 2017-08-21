@@ -19260,11 +19260,12 @@ var egret;
             if (value == null) {
                 value = "";
             }
+            value = String(value);
             var self = this;
             if (value == self.$text)
                 return false;
             self.$text = value;
-            this.$invalidateContentBounds();
+            self.$invalidateContentBounds();
             return true;
         };
         /**
