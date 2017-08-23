@@ -132,6 +132,10 @@ namespace eui {
          * @private
          */
         private _widthConstraint: number = NaN;
+        /**
+         * @private
+         */
+        private _heightConstraint: number = NaN;
         //=======================UIComponent接口实现===========================
         /**
          * @private
@@ -185,6 +189,7 @@ namespace eui {
             let values = this.$UIComponent;
             let textValues = this.$BitmapText;
             let oldWidth = textValues[egret.sys.BitmapTextKeys.textFieldWidth];
+            let oldHeight = textValues[egret.sys.BitmapTextKeys.textFieldHeight];
             let availableWidth = NaN;
             if (!isNaN(this._widthConstraint)) {
                 availableWidth = this._widthConstraint;
@@ -197,8 +202,21 @@ namespace eui {
                 availableWidth = values[sys.UIKeys.maxWidth];
             }
             super.$setWidth(availableWidth);
+            let availableHeight = NaN;
+            if (!isNaN(this._heightConstraint)) {
+                availableHeight = this._heightConstraint;
+                this._heightConstraint = NaN;
+            }
+            else if (!isNaN(values[sys.UIKeys.explicitHeight])) {
+                availableHeight = values[sys.UIKeys.explicitHeight];
+            }
+            else if (values[sys.UIKeys.maxHeight] != 100000) {
+                availableHeight = values[sys.UIKeys.maxHeight];
+            }
+            super.$setHeight(availableHeight);
             this.setMeasuredSize(this.textWidth, this.textHeight);
             super.$setWidth(oldWidth);
+            super.$setHeight(oldHeight);
         }
         /**
          * @copy eui.UIComponent#updateDisplayList
@@ -465,6 +483,7 @@ namespace eui {
                 return;
             }
             this._widthConstraint = layoutWidth;
+            this._heightConstraint = layoutHeight;
             this.invalidateSize();
         }
 

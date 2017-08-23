@@ -12842,6 +12842,10 @@ declare namespace eui {
         private _widthConstraint;
         /**
          * @private
+         */
+        private _heightConstraint;
+        /**
+         * @private
          * UIComponentImpl 定义的所有变量请不要添加任何初始值，必须统一在此处初始化。
          */
         private initializeUIValues;
