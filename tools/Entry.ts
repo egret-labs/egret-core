@@ -92,16 +92,15 @@ function getEgretPath() {
 
 
 function getLanguageInfo() {
-    var i18n = getPackageJsonConfig().i18n;
-    if (i18n == "en") {
-        i18n = "en_US";
-        require('./locales/en_US');
-    }
-    else {
-        i18n = "zh_CN";
+    let osLocal = require("./lib/os-local.js");
+    let i18n:string = osLocal();
+    i18n = i18n.toLowerCase();
+    if (i18n == "zh_cn" || i18n == "zh_tw" || i18n == "zh_hk") {
         require('./locales/zh_CN');
     }
-    return i18n;
+    else {
+        require('./locales/en_US');
+    }
 }
 getLanguageInfo();//引用语言包
 

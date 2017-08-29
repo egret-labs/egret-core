@@ -46,7 +46,7 @@ export class DirectoryState {
             }
         });
         this.lastStates = currentStates;
-        console.log("扫描到的文件变化列表:");
+        globals.log(1310);
         console.log(fileChanges);
         return fileChanges;
     }

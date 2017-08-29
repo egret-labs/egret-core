@@ -73,6 +73,7 @@ locale_strings[1119] = "Third party library compilation error, you can visit {co
 locale_strings[1120] = "Egret engine 4.1 use the new structure for third-party library upgrades, please upgrade your third-party library first";
 locale_strings[1121] = "Your module package.json does not contain the 'typings' attribute, which causes the exported module to not have a TypeScript Definition file (.d.ts), and can not contain smart syntax prompts in TypeScript"
 locale_strings[1122] = "Third-party library tsconfig.json must include outFile this attribute";
+locale_strings[1123] = "{0} will be adjusted to '{1}'";
 //compile
 locale_strings[1301] = "Cannot find egret_file_list.js or game_file_list.js compiled under the path {0}, please check whether the compile path is correct";
 locale_strings[1302] = "Please enter the compile path. Example: {color_green}egret compile --source [your_typescript_source_dir] --output [your_output_dir]{color_normal}";
@@ -83,6 +84,7 @@ locale_strings[1306] = "Fail to  find variable definition of the document class 
 locale_strings[1307] = ".ts or .d.ts file {0} does not exist in the module, and cannot be compiled, so please fill.ts or .d.ts in file_list field of the module ";
 locale_strings[1308] = "Class or interface name conflict: '{0}' exists in both of the following two files: \n {1} \n {2}";
 locale_strings[1309] = "Compile successfully";
+locale_strings[1310] = "Scan to file changes list:";
 //publish
 locale_strings[1401] = "java can't be found or java version is too old (at least java 7), please install the java and execute egret publish -testJava command for test";
 locale_strings[1402] = "Start to publish {0} version: {1}";
@@ -134,6 +136,7 @@ locale_strings[1713] = "{color_green}Egret QQ group 481169576 {color_normal}";
 locale_strings[1714] = "Updating the egretProperties.json";
 locale_strings[1715] = "Project testing sucessful";
 locale_strings[1716] = "You had use the old 3rd part library {0}.Please make sure these files not used the removed API";
+locale_strings[1717] = "upgrade interruption, for the following reasons";
 //info
 locale_strings[1801] = "Egret version：{0}";
 locale_strings[1802] = "Egret install path:{0}";

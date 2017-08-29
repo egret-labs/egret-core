@@ -70,12 +70,12 @@
         var manifest = JSON.parse(xhr.response);
         var list = manifest.initial.concat(manifest.game);
         loadScript(list, function () {
-            /**
+             /**
              * {
-             * "renderMode":, //引擎渲染模式，"canvas" 或者 "webgl"
-             * "audioType": 0 //使用的音频类型，0:默认，2:web audio，3:audio
-             * "antialias": //WebGL模式下是否开启抗锯齿，true:开启，false:关闭，默认为false
-             * "retina": //是否基于devicePixelRatio缩放画布
+             * "renderMode":, //Engine rendering mode, "canvas" or "webgl"
+             * "audioType": 0 //Use the audio type, 0: default, 2: web audio, 3: audio
+             * "antialias": //Whether the anti-aliasing is enabled in WebGL mode, true: on, false: off, defaults to false
+             * "retina": //Whether the canvas is based on the devicePixelRatio
              * }
              **/
             egret.runEgret({ renderMode: "webgl", audioType: 0 });

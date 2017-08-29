@@ -81,7 +81,7 @@ var UpgradeCommand = (function () {
                         return [3 /*break*/, 5];
                     case 4:
                         e_1 = _a.sent();
-                        console.log("升级中断，具体原因如下");
+                        globals.log(1717);
                         console.log(e_1);
                         globals.exit(1705);
                         return [3 /*break*/, 5];

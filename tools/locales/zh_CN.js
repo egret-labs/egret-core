@@ -69,6 +69,7 @@ var egret;
     locale_strings[1120] = "白鹭引擎 4.1 使用新结构进行第三方库升级，请先升级您的第三方库";
     locale_strings[1121] = "您的模块 package.json 中不包含 typings 属性，这会导致导出的模块不存在 TypeScript Definition 文件 ( .d.ts )，近而无法在 TypeScript 中包含智能语法提示";
     locale_strings[1122] = "第三方库的 tsconfig.json 中必须包含 outFile 这一属性";
+    locale_strings[1123] = "{0} 将被调整为'{1}'";
     //compile
     locale_strings[1301] = "在编译路径 {0} 下找不到 egret_file_list.js 或 game_file_list.js，请检查编译路径是否正确";
     locale_strings[1302] = "请输入编译路径。例:{color_green}egret compile --source [your_typescript_source_dir] --output [your_output_dir]{color_normal}";
@@ -79,6 +80,7 @@ var egret;
     locale_strings[1307] = "模块 {0} 中不存在任何 .ts 或 .d.ts 文件，无法编译，请在模块的 file_list 字段中填写 .ts 或 .d.ts ";
     locale_strings[1308] = "类或接口名冲突：‘{0}’同时存在于以下两个文件内：\n{1}\n{2}";
     locale_strings[1309] = "编译成功";
+    locale_strings[1310] = "扫描到的文件变化列表:";
     //publish
     locale_strings[1401] = "找不到java或java版本过低（最低需求为 java 7 ),请安装java并执行 egret publish -testJava 命令进行测试";
     locale_strings[1402] = "开始发布 {0} 版本：{1}";
@@ -129,6 +131,7 @@ var egret;
     locale_strings[1714] = "正在更新配置文件..";
     locale_strings[1715] = "项目检测成功";
     locale_strings[1716] = "检测到你使用了旧的第三方库{0},建议手动检查这些库文件是否使用了废弃的API或使用与{1}兼容的第三方库";
+    locale_strings[1717] = "升级中断，具体原因如下";
     //info
     locale_strings[1801] = "当前Egret版本：{0}";
     locale_strings[1802] = "Egret安装路径：{0}";
