@@ -800,7 +800,7 @@ namespace egret.web {
                     if (this.activatedBuffer) {
                         let target = this.activatedBuffer.rootRenderTarget;
                         if (target.width != 0 || target.height != 0) {
-                            target.clear();
+                            target.clear(true);
                         }
                     }
                     break;
