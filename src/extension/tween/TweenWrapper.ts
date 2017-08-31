@@ -365,25 +365,29 @@ namespace egret.tween {
 
         /**
          * Play the Tween
-         * @time The starting position, the default is from the last position to play
+         * @position The starting position, the default is from the last position to play
          * @version Egret 3.1.8
          * @platform Web,Native
          * @language en_US
          */
         /**
          * 播放Tween
-         * @time 播放的起始位置, 默认为从上次位置继续播放
+         * @position 播放的起始位置, 默认为从上次位置继续播放
          * @version Egret 3.1.8
          * @platform Web,Native
          * @language zh_CN
          */
-        public play(time?: number): void {
+        public play(position?: number): void {
             if (!this.tween) {
-                this.createTween();
+                this.createTween(position);
             } else {
                 this.tween.setPaused(false);
-                if (time !== undefined && time !== null) {
-                    this.tween.setPosition(time);
+                if(this.isStop && position == undefined) {
+                    position = 0;
+                    this.isStop = false;
+                }
+                if (position !== undefined && position !== null) {
+                    this.tween.setPosition(position);
                 }
             }
         }
@@ -406,6 +410,8 @@ namespace egret.tween {
             }
         }
 
+        private isStop:boolean = false;
+
         /**
          * Stop the Tween
          * @version Egret 3.1.8
@@ -420,15 +426,18 @@ namespace egret.tween {
          */
         public stop(): void {
             this.pause();
-            this.tween = null;
+            this.isStop = true;
         }
 
-        private createTween(): void {
+        private createTween(position: number): void {
             this.tween = Tween.get(this._target, this._props);
 
             if (this._paths) {
                 this.applyPaths();
             }
+            if (position !== undefined && position !== null) {
+                    this.tween.setPosition(position);
+                }
         }
 
         private applyPaths(): void {

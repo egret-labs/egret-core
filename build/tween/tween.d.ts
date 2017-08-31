@@ -1220,19 +1220,19 @@ declare namespace egret.tween {
         paths: BasePath[];
         /**
          * Play the Tween
-         * @time The starting position, the default is from the last position to play
+         * @position The starting position, the default is from the last position to play
          * @version Egret 3.1.8
          * @platform Web,Native
          * @language en_US
          */
         /**
          * 播放Tween
-         * @time 播放的起始位置, 默认为从上次位置继续播放
+         * @position 播放的起始位置, 默认为从上次位置继续播放
          * @version Egret 3.1.8
          * @platform Web,Native
          * @language zh_CN
          */
-        play(time?: number): void;
+        play(position?: number): void;
         /**
          * Pause the Tween
          * @version Egret 3.1.8
@@ -1246,6 +1246,7 @@ declare namespace egret.tween {
          * @language zh_CN
          */
         pause(): void;
+        private isStop;
         /**
          * Stop the Tween
          * @version Egret 3.1.8
@@ -1259,7 +1260,7 @@ declare namespace egret.tween {
          * @language zh_CN
          */
         stop(): void;
-        private createTween();
+        private createTween(position);
         private applyPaths();
         private applyPath(path);
         private pathComplete(path);
