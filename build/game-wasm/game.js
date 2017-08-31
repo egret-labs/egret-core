@@ -2936,6 +2936,8 @@ var egret;
         function MovieClip(movieClipData) {
             var _this = _super.call(this) || this;
             //Render Property
+            _this.$texture = null;
+            //Render Property
             _this.offsetPoint = egret.Point.create(0, 0);
             //Data Property
             _this.$movieClipData = null;
@@ -3055,6 +3057,19 @@ var egret;
             if (this.$movieClipData.$isTextureValid()) {
                 this.advanceFrame();
                 this.constructFrame();
+            }
+        };
+        MovieClip.prototype.$measureContentBounds = function (bounds) {
+            var texture = this.$texture;
+            if (texture) {
+                var x = this.offsetPoint.x;
+                var y = this.offsetPoint.y;
+                var w = texture.$getTextureWidth();
+                var h = texture.$getTextureHeight();
+                bounds.setTo(x, y, w, h);
+            }
+            else {
+                bounds.setEmpty();
             }
         };
         /**
@@ -3337,6 +3352,7 @@ var egret;
                 return;
             }
             var texture = self.$movieClipData.getTextureByFrame(self.$currentFrameNum);
+            this.$texture = texture;
             self.$movieClipData.$getOffsetByFrame(currentFrameNum, self.offsetPoint);
             self.$waNode.setDataToBitmapNode(self.$waNode.id, texture, [texture._bitmapX, texture._bitmapY, texture._bitmapWidth, texture._bitmapHeight,
                 self.offsetPoint.x, self.offsetPoint.y, texture.$getScaleBitmapWidth(), texture.$getScaleBitmapHeight(),

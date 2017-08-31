@@ -1467,6 +1467,7 @@ declare namespace egret {
      * @language zh_CN
      */
     class MovieClip extends DisplayObject {
+        $texture: Texture;
         private offsetPoint;
         $movieClipData: MovieClipData;
         /**
@@ -1557,6 +1558,7 @@ declare namespace egret {
          *
          */
         private _initFrame();
+        $measureContentBounds(bounds: Rectangle): void;
         /**
          * @private
          *
