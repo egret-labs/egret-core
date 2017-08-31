@@ -15,12 +15,12 @@ egret_native.requireFiles = function () {
 egret_native.egretInit = function () {
     if(egret_native.featureEnable) {
         //控制一些优化方案是否开启
+        //Control whether some optimization options are open
         var result = egret_native.featureEnable({
             
         });
     }
     egret_native.requireFiles();
-    //egret.dom为空实现
     egret.dom = {};
     egret.dom.drawAsCanvas = function () {
     };
@@ -29,6 +29,7 @@ egret_native.egretInit = function () {
 egret_native.egretStart = function () {
     var option = {
         //以下为自动修改，请勿修改
+        //The following is automatically modified, please do not modify
         //----auto option start----
         //----auto option end----
     };

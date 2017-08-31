@@ -78,16 +78,15 @@ function getEgretPath() {
     return egret_path;
 }
 function getLanguageInfo() {
-    var i18n = getPackageJsonConfig().i18n;
-    if (i18n == "en") {
-        i18n = "en_US";
-        require('./locales/en_US');
-    }
-    else {
-        i18n = "zh_CN";
+    var osLocal = require("./lib/os-local.js");
+    var i18n = osLocal();
+    i18n = i18n.toLowerCase();
+    if (i18n == "zh_cn" || i18n == "zh_tw" || i18n == "zh_hk") {
         require('./locales/zh_CN');
     }
-    return i18n;
+    else {
+        require('./locales/en_US');
+    }
 }
 getLanguageInfo(); //引用语言包
 function executeCommandLine(args) {

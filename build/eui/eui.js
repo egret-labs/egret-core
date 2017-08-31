@@ -20729,6 +20729,10 @@ var eui;
              * @private
              */
             _this._widthConstraint = NaN;
+            /**
+             * @private
+             */
+            _this._heightConstraint = NaN;
             _this.initializeUIValues();
             _this.text = text;
             return _this;
@@ -20852,6 +20856,7 @@ var eui;
             var values = this.$UIComponent;
             var textValues = this.$BitmapText;
             var oldWidth = textValues[0 /* textFieldWidth */];
+            var oldHeight = textValues[1 /* textFieldHeight */];
             var availableWidth = NaN;
             if (!isNaN(this._widthConstraint)) {
                 availableWidth = this._widthConstraint;
@@ -20864,8 +20869,21 @@ var eui;
                 availableWidth = values[13 /* maxWidth */];
             }
             _super.prototype.$setWidth.call(this, availableWidth);
+            var availableHeight = NaN;
+            if (!isNaN(this._heightConstraint)) {
+                availableHeight = this._heightConstraint;
+                this._heightConstraint = NaN;
+            }
+            else if (!isNaN(values[9 /* explicitHeight */])) {
+                availableHeight = values[9 /* explicitHeight */];
+            }
+            else if (values[15 /* maxHeight */] != 100000) {
+                availableHeight = values[15 /* maxHeight */];
+            }
+            _super.prototype.$setHeight.call(this, availableHeight);
             this.setMeasuredSize(this.textWidth, this.textHeight);
             _super.prototype.$setWidth.call(this, oldWidth);
+            _super.prototype.$setHeight.call(this, oldHeight);
         };
         /**
          * @copy eui.UIComponent#updateDisplayList
@@ -20979,6 +20997,7 @@ var eui;
                 return;
             }
             this._widthConstraint = layoutWidth;
+            this._heightConstraint = layoutHeight;
             this.invalidateSize();
         };
         /**

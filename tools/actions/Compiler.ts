@@ -173,7 +173,8 @@ export class Compiler {
             if (compilerOptions[optionName] != defaultSupport[optionName]) {
                 if (compilerOptions[optionName]) {
                     var error = utils.tr(1116, optionName);
-                    console.log(`${error} 将被调整为'${defaultSupport[optionName]}'`)
+                    error = utils.tr(1123, error, defaultSupport[optionName]);
+                    console.log(error);
                 }
                 compilerOptions[optionName] = defaultSupport[optionName];
             }

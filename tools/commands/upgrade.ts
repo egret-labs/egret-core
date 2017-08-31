@@ -50,7 +50,7 @@ class UpgradeCommand implements egret.Command {
             globals.exit(0);
         }
         catch (e) {
-            console.log("升级中断，具体原因如下")
+            globals.log(1717);
             console.log(e)
             globals.exit(1705);
         }

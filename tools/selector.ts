@@ -571,20 +571,13 @@ module file {
 }
 
 function getLanguage() {
-    var selector: string = process['mainModule'].filename;
-    var languageXML = file.escapePath(file.joinPath(Path.dirname(selector), '../locales/language.xml'));
-    if (file.exists(languageXML)) {
-        var xml = file.read(languageXML);
-        var lang = /\<language\>([\w_]*)\<\/language>/.exec(xml);
-        if (lang) {
-            var localParts = lang[1].split('_');
-            if (localParts.length >= 1) {
-                language = localParts[0];
-            }
-        }
+    let osLocal = require("./lib/os-local.js");
+    let i18n:string = osLocal();
+    i18n = i18n.toLowerCase();
+    if (i18n == "zh_cn" || i18n == "zh_tw" || i18n == "zh_hk") {
+        language = "en";
     }
-
-    if (!language || language != "zh") {
+    else {
         language = "en";
     }
 }
