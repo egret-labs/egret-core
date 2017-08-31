@@ -94,7 +94,9 @@ export class Compiler {
                 msg = `  Error: ${message}`;
             }
             console.log(msg);
-            this.errors.push(msg);
+            if(this.errors.length < 100) {
+                this.errors.push(msg);
+            }
         });
     }
 

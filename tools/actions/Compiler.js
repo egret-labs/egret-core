@@ -65,7 +65,9 @@ var Compiler = (function () {
                 msg = "  Error: " + message;
             }
             console.log(msg);
-            _this.errors.push(msg);
+            if (_this.errors.length < 100) {
+                _this.errors.push(msg);
+            }
         });
     };
     Compiler.prototype.compileWithChanges = function (filesChanged, sourceMap) {
