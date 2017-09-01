@@ -61,9 +61,7 @@ var UpgradeCommand = (function () {
                             { "v": "4.0.1", command: Upgrade_4_0_1 },
                             { "v": "4.0.3" },
                             { "v": "4.1.0", command: Upgrade_4_1_0 },
-                            { "v": "5.0.0" },
-                            { "v": "5.0.1", command: Upgrade_5_0_1 },
-                            { "v": "5.0.6" }
+                            { "v": "4.1.1", command: Upgrade_4_1_1 }
                         ];
                         _a.label = 1;
                     case 1:
@@ -195,10 +193,10 @@ var Upgrade_4_1_0 = (function () {
     };
     return Upgrade_4_1_0;
 }());
-var Upgrade_5_0_1 = (function () {
-    function Upgrade_5_0_1() {
+var Upgrade_4_1_1 = (function () {
+    function Upgrade_4_1_1() {
     }
-    Upgrade_5_0_1.prototype.execute = function () {
+    Upgrade_4_1_1.prototype.execute = function () {
         return __awaiter(this, void 0, void 0, function () {
             var options, jsonPath, json, modules;
             return __generator(this, function (_a) {
@@ -216,6 +214,6 @@ var Upgrade_5_0_1 = (function () {
             });
         });
     };
-    return Upgrade_5_0_1;
+    return Upgrade_4_1_1;
 }());
 module.exports = UpgradeCommand;

@@ -1,6 +1,6 @@
 {
   "name": "egret",
-  "version": "5.0.6",
+  "version": "4.1.1",
   "private": true,
   "author": "egret-labs",
   "scripts": {
@@ -457,20 +457,6 @@
           "res",
           "eui",
           "tween"
-        ]
-      },
-      {
-        "name": "wasm",
-        "displayName": "WebAssembly 示例项目",
-        "language": "TypeScript",
-        "tag": "game,app,TypeScript,WebAssembly",
-        "description": "WebAssembly 示例项目",
-        "defaultWidth": 640,
-        "defaultHeight": 1136,
-        "modules": [
-          "egret",
-          "media",
-          "res"
         ]
       }
     ],

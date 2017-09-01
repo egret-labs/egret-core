@@ -72,18 +72,6 @@ export namespace manager {
                     FileUtil.joinPath(toPath, m.release));
             });
         });
-        if (data.isWasmProject()) {
-            let arr = [
-                "egret.asm.js",
-                "egret.asm.js.mem",
-                "egret.webassembly.js",
-                "egret.webassembly.wasm"
-            ];
-            arr.forEach(function (item) {
-                FileUtil.copy(FileUtil.joinPath(options.projectDir, "libs", item),
-                    FileUtil.joinPath(toPath, "libs", item));
-            });
-        }
     }
 
     export function copyManifestForNative(toPath: string): void {

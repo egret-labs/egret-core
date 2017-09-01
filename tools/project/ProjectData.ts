@@ -188,21 +188,12 @@ export class EgretProjectData {
         let modulePath = this.getModulePath2(m.path)
         modulePath = file.getAbsolutePath(modulePath);
         let name = m.name;
-        if (this.isWasmProject()) {
-            if (name == "egret" || name == "eui" || name == "dragonBones" || name == "game") {
-                name += "-wasm";
-            }
-        }
         let searchPaths = [
             _path.join(modulePath, "bin", name),
             _path.join(modulePath, "bin"),
             _path.join(modulePath, "build", name),
             modulePath
         ];
-        if (this.isWasmProject()) {
-            searchPaths.unshift(_path.join(modulePath, "bin-wasm"));
-            searchPaths.unshift(_path.join(modulePath, "bin-wasm", name));
-        }
         let dir = file.searchPath(searchPaths);
         if (!dir) {
             globals.exit(1050, modulePath);
@@ -274,13 +265,6 @@ export class EgretProjectData {
             return { name, target, sourceDir, targetDir };
         })
         return result;
-    }
-
-    isWasmProject(): boolean {
-        if (globals.hasKeys(this.egretProperties, ["wasm"])) {
-            return true;
-        }
-        return false;
     }
 
     getPublishType(runtime: string): number {

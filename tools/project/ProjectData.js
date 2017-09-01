@@ -147,21 +147,12 @@ var EgretProjectData = (function () {
         var modulePath = this.getModulePath2(m.path);
         modulePath = file.getAbsolutePath(modulePath);
         var name = m.name;
-        if (this.isWasmProject()) {
-            if (name == "egret" || name == "eui" || name == "dragonBones" || name == "game") {
-                name += "-wasm";
-            }
-        }
         var searchPaths = [
             _path.join(modulePath, "bin", name),
             _path.join(modulePath, "bin"),
             _path.join(modulePath, "build", name),
             modulePath
         ];
-        if (this.isWasmProject()) {
-            searchPaths.unshift(_path.join(modulePath, "bin-wasm"));
-            searchPaths.unshift(_path.join(modulePath, "bin-wasm", name));
-        }
         var dir = file.searchPath(searchPaths);
         if (!dir) {
             globals.exit(1050, modulePath);
@@ -228,12 +219,6 @@ var EgretProjectData = (function () {
             return { name: name, target: target, sourceDir: sourceDir, targetDir: targetDir };
         });
         return result;
-    };
-    EgretProjectData.prototype.isWasmProject = function () {
-        if (globals.hasKeys(this.egretProperties, ["wasm"])) {
-            return true;
-        }
-        return false;
     };
     EgretProjectData.prototype.getPublishType = function (runtime) {
         if (globals.hasKeys(this.egretProperties, ["publish", runtime])) {

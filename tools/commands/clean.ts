@@ -43,22 +43,6 @@ class Clean implements egret.Command {
             EgretProject.manager.modifyNativeRequire(manifestPath);
             copyNative.refreshNative(true);
         }
-        if (EgretProject.data.isWasmProject()) {
-            let arr = [
-                "egret.asm.js",
-                "egret.asm.js.mem",
-                "egret.webassembly.js",
-                "egret.webassembly.wasm"
-            ];
-            let moduleName = "egret";
-            if (EgretProject.data.hasModule("dragonBones")) {
-                moduleName = "egretWithDragonBones";
-            }
-            arr.forEach(function (item) {
-                FileUtil.copy(FileUtil.joinPath(egret.root, "build", "wasm_libs", moduleName, item),
-                    FileUtil.joinPath(options.projectDir, "libs", item));
-            });
-        }
 
         var timeBuildEnd = new Date().getTime();
         var timeBuildUsed = (timeBuildEnd - timeBuildStart) / 1000;

@@ -36,9 +36,7 @@ class UpgradeCommand implements egret.Command {
             { "v": "4.0.1", command: Upgrade_4_0_1 },
             { "v": "4.0.3" },
             { "v": "4.1.0", command: Upgrade_4_1_0 },
-            { "v": "5.0.0" },
-            { "v": "5.0.1", command: Upgrade_5_0_1 },
-            { "v": "5.0.6" }
+            { "v": "4.1.1", command: Upgrade_4_1_1 }
         ];
 
         try {
@@ -164,7 +162,7 @@ class Upgrade_4_1_0 {
     }
 }
 
-class Upgrade_5_0_1 {
+class Upgrade_4_1_1 {
     async execute() {
         let options = egret.args;
         if (file.exists(file.joinPath(options.projectDir, "polyfill"))) {

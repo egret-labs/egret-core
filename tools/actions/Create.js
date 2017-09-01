@@ -91,9 +91,6 @@ function updateEgretProperties(projectConfig) {
             exmlPublishPolicy: "content"
         };
     }
-    else if (projectConfig.type == "wasm") {
-        props.wasm = {};
-    }
     if (!props.modules) {
         props.modules = modules.map(function (m) { return ({ name: m.name }); });
     }
