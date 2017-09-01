@@ -185,7 +185,7 @@ namespace egret {
          * @platform Web,Native
          * @language zh_CN
          */
-        new():Sound
+        new():Sound;
 
         /**
          * Background music

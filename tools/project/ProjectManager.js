@@ -73,7 +73,6 @@ var manager;
             });
         });
         if (ProjectData_1.data.isWasmProject()) {
-            //todo db
             var arr = [
                 "egret.asm.js",
                 "egret.asm.js.mem",

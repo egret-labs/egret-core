@@ -1311,71 +1311,59 @@ declare namespace egret {
     function getString(code: number, ...params: any[]): string;
     function $markCannotUse(instance: any, property: string, defaultVale: any): void;
 }
-declare namespace particle {
-    class ParticleSystem extends egret.DisplayObject {
-        private _emitterX;
-        private _emitterY;
-        private _emitterBounds;
-        /**
-         * 表示粒子出现总时间，单位毫秒，取值范围(0,Number.MAX_VALUE]，-1表示无限时间
-         * @member {number} particle.ParticleSystem#emissionTime
-         * @default -1
-         */
-        emissionTime: number;
-        /**
-         * 表示粒子出现间隔，单位毫秒，取值范围(0,Number.MAX_VALUE]
-         * @member {number} particle.ParticleSystem#emissionRate
-         */
-        emissionRate: number;
-        /**
-         * 表示粒子所使用的纹理
-         * @member {egret.Texture} particle.ParticleSystem#texture
-         */
-        texture: egret.Texture;
-        /**
-         * 表示粒子系统最大粒子数，超过该数量将不会继续创建粒子，取值范围[1,Number.MAX_VALUE]
-         * @member {number} particle.ParticleSystem#maxParticles
-         * @default 200
-         */
-        maxParticles: number;
-        /**
-         * 表示粒子类，如果设置创建粒子时将创建该类
-         * @member {number} particle.ParticleSystem#particleClass
-         */
-        particleClass: any;
-        $particleConfig: any;
-        constructor(texture: egret.Texture, emissionRate: number);
-        initConfig(emissionRate: number, emitterX: number, emitterY: number): void;
-        protected createWebAssemblyNode(): void;
-        /**
-         * 开始创建粒子
-         * @param duration {number} 粒子出现总时间
-         */
-        start(duration?: number): void;
-        /**
-         * 表示粒子出现点X坐标，取值范围[-Number.MAX_VALUE,Number.MAX_VALUE]
-         * @member {number} particle.ParticleSystem#emitterX
-         * @default 0
-         */
-        emitterX: number;
-        /**
-         * 表示粒子出现点Y坐标，取值范围[-Number.MAX_VALUE,Number.MAX_VALUE]
-         * @member {number} particle.ParticleSystem#emitterY
-         * @default 0
-         */
-        emitterY: number;
-        /**
-         * @private
-         */
-        $setTexture(texture: egret.Texture): void;
-        stop(clear?: boolean): void;
-        /**
-         * 表示当前粒子系统中发射粒子的渲染边界范围，使用以发射点为基准的坐标系
-         * @member {egret.Rectangle} particle.ParticleSystem#emitterBounds
-         */
-        emitterBounds: egret.Rectangle;
-        changeTexture(texture: egret.Texture): void;
-    }
+declare namespace egret {
+    /**
+     * egret project entry function
+     * @param options An object containing the initialization properties for egret engine.
+     * @language en_US
+     */
+    /**
+     * egret工程入口函数
+     * @param options 一个可选对象，包含初始化Egret引擎需要的参数。
+     * @language zh_CN
+     */
+    function runEgret(options?: {
+        renderMode?: string;
+        audioType?: number;
+        screenAdapter?: sys.IScreenAdapter;
+        wasmSize?: number;
+        isWasm?: number;
+    }): void;
+    /**
+     * Refresh the screen display
+     * @language en_US
+     */
+    /**
+     * 刷新屏幕显示
+     * @language zh_CN
+     */
+    function updateAllScreens(): void;
+    /**
+     * @private
+     */
+    type CustomContext = {
+        onStart: (egretContext: EgretContext) => void;
+        onRender: (egretContext: EgretContext) => void;
+        onStop: (egretContext: EgretContext) => void;
+        onResize: (egretContext: EgretContext) => void;
+    };
+    /**
+     * @private
+     */
+    type EgretContext = {
+        setAutoClear: (value: boolean) => void;
+        save: () => void;
+        restore: () => void;
+    };
+    /**
+     * Insert render context, now for egret3d
+     * @language en_US
+     */
+    /**
+     * 插入渲染上下文，目前用于egret3d的混入
+     * @language zh_CN
+     */
+    function setRendererContext(custom: CustomContext): void;
 }
 declare namespace egret {
     /**
@@ -1611,10 +1599,6 @@ declare namespace egret {
          */
         pixelHitTest: boolean;
         $hitTest(stageX: number, stageY: number): DisplayObject;
-        /**
-         * @private
-         */
-        private hitTestPixel(stageX, stageY);
     }
 }
 declare namespace egret {
@@ -2770,60 +2754,6 @@ declare namespace egret {
          */
         dispose(): void;
     }
-}
-declare namespace egret {
-    /**
-     * egret project entry function
-     * @param options An object containing the initialization properties for egret engine.
-     * @language en_US
-     */
-    /**
-     * egret工程入口函数
-     * @param options 一个可选对象，包含初始化Egret引擎需要的参数。
-     * @language zh_CN
-     */
-    function runEgret(options?: {
-        renderMode?: string;
-        audioType?: number;
-        screenAdapter?: sys.IScreenAdapter;
-        wasmSize?: number;
-        isWasm?: number;
-    }): void;
-    /**
-     * Refresh the screen display
-     * @language en_US
-     */
-    /**
-     * 刷新屏幕显示
-     * @language zh_CN
-     */
-    function updateAllScreens(): void;
-    /**
-     * @private
-     */
-    type CustomContext = {
-        onStart: (egretContext: EgretContext) => void;
-        onRender: (egretContext: EgretContext) => void;
-        onStop: (egretContext: EgretContext) => void;
-        onResize: (egretContext: EgretContext) => void;
-    };
-    /**
-     * @private
-     */
-    type EgretContext = {
-        setAutoClear: (value: boolean) => void;
-        save: () => void;
-        restore: () => void;
-    };
-    /**
-     * Insert render context, now for egret3d
-     * @language en_US
-     */
-    /**
-     * 插入渲染上下文，目前用于egret3d的混入
-     * @language zh_CN
-     */
-    function setRendererContext(custom: CustomContext): void;
 }
 declare namespace egret.sys {
     /**
@@ -4593,6 +4523,75 @@ declare namespace egret {
          * @language zh_CN
          */
         static logLevel: string;
+    }
+}
+declare namespace egret {
+    interface HttpRequest {
+        addEventListener<Z>(type: "ioError", listener: (this: Z, e: IOErrorEvent) => void, thisObject: Z, useCapture?: boolean, priority?: number): any;
+        addEventListener(type: string, listener: Function, thisObject: any, useCapture?: boolean, priority?: number): any;
+    }
+    /**
+     * @classdesc IO流事件，当错误导致输入或输出操作失败时调度 IOErrorEvent 对象。
+     * @version Egret 2.4
+     * @platform Web,Native
+     * @includeExample egret/events/IOErrorEvent.ts
+     * @language en_US
+     */
+    /**
+     * @classdesc IO流事件，当错误导致输入或输出操作失败时调度 IOErrorEvent 对象。
+     * @version Egret 2.4
+     * @platform Web,Native
+     * @includeExample egret/events/IOErrorEvent.ts
+     * @language zh_CN
+     */
+    class IOErrorEvent extends Event {
+        /**
+         * io error
+         * @version Egret 2.4
+         * @platform Web,Native
+         * @language en_US
+         */
+        /**
+         * io发生错误
+         * @version Egret 2.4
+         * @platform Web,Native
+         * @language zh_CN
+         */
+        static IO_ERROR: "ioError";
+        /**
+         * Create a egret.IOErrorEvent objects
+         * @param type {string} Type of event, accessible as Event.type.
+         * @param bubbles {boolean} Determines whether the Event object participates in the bubbling stage of the event flow. The default value is false.
+         * @param cancelable {boolean} Determine whether the Event object can be canceled. The default value is false.
+         * @version Egret 2.4
+         * @platform Web,Native
+         * @language en_US
+         */
+        /**
+         * 创建一个 egret.IOErrorEvent 对象
+         * @param type {string} 事件的类型，可以作为 Event.type 访问。
+         * @param bubbles {boolean} 确定 Event 对象是否参与事件流的冒泡阶段。默认值为 false。
+         * @param cancelable {boolean} 确定是否可以取消 Event 对象。默认值为 false。
+         * @version Egret 2.4
+         * @platform Web,Native
+         * @language zh_CN
+         */
+        constructor(type: string, bubbles?: boolean, cancelable?: boolean);
+        /**
+         * EventDispatcher object using the specified event object thrown Event. The objects will be thrown in the object cache pool for the next round robin.
+         * @param target {egret.IEventDispatcher} Distribute event target
+         * @version Egret 2.4
+         * @platform Web,Native
+         * @language en_US
+         */
+        /**
+         * 使用指定的EventDispatcher对象来抛出Event事件对象。抛出的对象将会缓存在对象池上，供下次循环复用。
+         * @param target {egret.IEventDispatcher} 派发事件目标
+         * @version Egret 2.4
+         * @platform Web,Native
+         * @language zh_CN
+         */
+        static dispatchIOErrorEvent(target: IEventDispatcher): boolean;
     }
 }
 declare namespace egret {
@@ -7953,148 +7952,6 @@ declare namespace egret {
         private getImage(event);
     }
 }
-declare namespace particle {
-    class GravityParticleSystem extends ParticleSystem {
-        /**
-         * 表示粒子初始坐标 x 差值，取值范围[-Number.MAX_VALUE,Number.MAX_VALUE]
-         * @member {number} particle.GravityParticleSystem#emitterXVariance
-         */
-        private emitterXVariance;
-        /**
-         * 表示粒子初始坐标 y 差值，取值范围[-Number.MAX_VALUE,Number.MAX_VALUE]
-         * @member {number} particle.GravityParticleSystem#emitterYVariance
-         */
-        private emitterYVariance;
-        /**
-         * 表示粒子存活时间，单位毫秒，取值范围(0,Number.MAX_VALUE]
-         * @member {number} particle.GravityParticleSystem#lifespan
-         */
-        private lifespan;
-        /**
-         * 表示粒子存活时间差值，单位毫秒，取值范围(0,Number.MAX_VALUE]且不大于 lifespan
-         * @member {number} particle.GravityParticleSystem#lifespanVariance
-         */
-        private lifespanVariance;
-        /**
-         * 表示粒子出现时大小，取值范围(0,Number.MAX_VALUE]，粒子将会在存活时间内由 startSize 慢慢变为 endSize
-         * @member {number} particle.GravityParticleSystem#startSize
-         */
-        private startSize;
-        /**
-         * 表示粒子出现时大小差值，取值范围(0,Number.MAX_VALUE]
-         * @member {number} particle.GravityParticleSystem#startSizeVariance
-         */
-        private startSizeVariance;
-        /**
-         * 表示粒子消失时大小，取值范围(0,Number.MAX_VALUE]，粒子将会在存活时间内由 startSize慢慢变为 endSize
-         * @member {number} particle.GravityParticleSystem#endSize
-         */
-        private endSize;
-        /**
-         * 表示粒子消失时大小差值，取值范围(0,Number.MAX_VALUE]，且不大于endSize
-         * @member {number} particle.GravityParticleSystem#endSizeVariance
-         */
-        private endSizeVariance;
-        /**
-         * 表示粒子出现时的角度，取值范围[-Number.MAX_VALUE,Number.MAX_VALUE]
-         * @member {number} particle.GravityParticleSystem#emitAngle
-         */
-        private emitAngle;
-        /**
-         * 表示粒子出现时的角度差值，取值范围[-Number.MAX_VALUE,Number.MAX_VALUE]
-         * @member {number} particle.GravityParticleSystem#emitAngleVariance
-         */
-        private emitAngleVariance;
-        /**
-         * 表示粒子出现时旋转值，取值范围[-Number.MAX_VALUE,Number.MAX_VALUE]，粒子将会在存活时间内由 startRotation 慢慢变为 endRotation
-         * @member {number} particle.GravityParticleSystem#startRotation
-         */
-        private startRotation;
-        /**
-         * 表示粒子出现时旋转值差值，取值范围[-Number.MAX_VALUE,Number.MAX_VALUE]
-         * @member {number} particle.GravityParticleSystem#startRotationVariance
-         */
-        private startRotationVariance;
-        /**
-         * 表示粒子消失时旋转值，取值范围[-Number.MAX_VALUE,Number.MAX_VALUE]，粒子将会在存活时间内由 startRotation 慢慢变为 endRotation
-         * @member {number} particle.GravityParticleSystem#endRotation
-         */
-        private endRotation;
-        /**
-         * 表示粒子消失时旋转值差值，取值范围[-Number.MAX_VALUE,Number.MAX_VALUE]
-         * @member {number} particle.GravityParticleSystem#endRotationVariance
-         */
-        private endRotationVariance;
-        /**
-         * 表示粒子出现时速度，取值范围[-Number.MAX_VALUE,Number.MAX_VALUE]
-         * @member {number} particle.GravityParticleSystem#speed
-         */
-        private speed;
-        /**
-         * 表示粒子出现时速度差值，取值范围[-Number.MAX_VALUE,Number.MAX_VALUE]
-         * @member {number} particle.GravityParticleSystem#speedVariance
-         */
-        private speedVariance;
-        /**
-         * 表示粒子水平重力，取值范围[-Number.MAX_VALUE,Number.MAX_VALUE]
-         * @member {number} particle.GravityParticleSystem#gravityX
-         */
-        private gravityX;
-        /**
-         * 表示粒子垂直重力，取值范围[-Number.MAX_VALUE,Number.MAX_VALUE]
-         * @member {number} particle.GravityParticleSystem#gravityX
-         */
-        private gravityY;
-        /**
-         * 表示粒子径向加速度，取值范围[-Number.MAX_VALUE,Number.MAX_VALUE]
-         * @member {number} particle.GravityParticleSystem#radialAcceleration
-         */
-        private radialAcceleration;
-        /**
-         * 表示粒子径向加速度差值，取值范围[-Number.MAX_VALUE,Number.MAX_VALUE]
-         * @member {number} particle.GravityParticleSystem#radialAccelerationVariance
-         */
-        private radialAccelerationVariance;
-        /**
-         * 表示粒子切向加速度，取值范围[-Number.MAX_VALUE,Number.MAX_VALUE]
-         * @member {number} particle.GravityParticleSystem#tangentialAcceleration
-         */
-        private tangentialAcceleration;
-        /**
-         * 表示粒子切向加速度差值，取值范围[-Number.MAX_VALUE,Number.MAX_VALUE]
-         * @member {number} particle.GravityParticleSystem#tangentialAccelerationVariance
-         */
-        private tangentialAccelerationVariance;
-        /**
-         * 表示粒子出现时的 Alpha 透明度值，取值范围[-Number.MAX_VALUE,Number.MAX_VALUE]，粒子将会在存活时间内由 startAlpha 慢慢变为 endAlpha
-         * @member {number} particle.GravityParticleSystem#startAlpha
-         */
-        private startAlpha;
-        /**
-         * 表示粒子出现时的 Alpha 透明度差值，取值范围[-Number.MAX_VALUE,Number.MAX_VALUE]
-         * @member {number} particle.GravityParticleSystem#startAlphaVariance
-         */
-        private startAlphaVariance;
-        /**
-         * 表示粒子消失时的 Alpha 透明度值，取值范围[-Number.MAX_VALUE,Number.MAX_VALUE]，粒子将会在存活时间内由 startAlpha 慢慢变为 endAlpha
-         * @member {number} particle.GravityParticleSystem#endAlpha
-         */
-        private endAlpha;
-        /**
-         * 表示粒子消失时的 Alpha 透明度差值，取值范围[-Number.MAX_VALUE,Number.MAX_VALUE]
-         * @member {number} particle.GravityParticleSystem#endAlphaVariance
-         */
-        private endAlphaVariance;
-        /**
-         * 表示粒子使用的混合模式
-         * @member {number} particle.GravityParticleSystem#blendMode
-         */
-        private particleBlendMode;
-        constructor(texture: egret.Texture, config: any);
-        start(duration?: number): void;
-        private $parseConfig(config);
-    }
-}
 declare namespace egret {
     /**
      * RenderTexture is a dynamic texture
@@ -8142,67 +7999,6 @@ declare namespace egret {
          * @inheritDoc
          */
         dispose(): void;
-    }
-}
-declare namespace egret {
-    /**
-     * This class is used to create lightweight shapes using the drawing application program interface (API). The Shape
-     * class includes a graphics property, which lets you access methods from the Graphics class.
-     * @see egret.Graphics
-     * @version Egret 2.4
-     * @platform Web,Native
-     * @includeExample egret/display/Shape.ts
-     * @language en_US
-     */
-    /**
-     * 此类用于使用绘图应用程序编程接口 (API) 创建简单形状。Shape 类含有 graphics 属性，通过该属性您可以访问各种矢量绘图方法。
-     * @see egret.Graphics
-     * @version Egret 2.4
-     * @platform Web,Native
-     * @includeExample egret/display/Shape.ts
-     * @language zh_CN
-     */
-    class Shape extends DisplayObject {
-        /**
-         * Creates a new Shape object.
-         * @version Egret 2.4
-         * @platform Web,Native
-         * @language en_US
-         */
-        /**
-         * 创建一个 Shape 对象
-         * @version Egret 2.4
-         * @platform Web,Native
-         * @language zh_CN
-         */
-        constructor();
-        protected createWebAssemblyNode(): void;
-        /**
-         * @private
-         */
-        $graphics: Graphics;
-        /**
-         * Specifies the Graphics object belonging to this Shape object, where vector drawing commands can occur.
-         * @version Egret 2.4
-         * @platform Web,Native
-         * @language en_US
-         */
-        /**
-         * 获取 Shape 中的 Graphics 对象。可通过此对象执行矢量绘图命令。
-         * @version Egret 2.4
-         * @platform Web,Native
-         * @language zh_CN
-         */
-        readonly graphics: Graphics;
-        /**
-         * @private
-         */
-        $measureContentBounds(bounds: Rectangle): void;
-        $hitTest(stageX: number, stageY: number): DisplayObject;
-        /**
-         * @private
-         */
-        $onRemoveFromStage(): void;
     }
 }
 declare namespace egret {
@@ -9100,28 +8896,31 @@ declare namespace egret.sys {
 }
 declare namespace egret {
     /**
-     * The Sprite class is a basic display list building block: a display list node that can contain children.
+     * This class is used to create lightweight shapes using the drawing application program interface (API). The Shape
+     * class includes a graphics property, which lets you access methods from the Graphics class.
+     * @see egret.Graphics
      * @version Egret 2.4
      * @platform Web,Native
-     * @includeExample egret/display/Sprite.ts
+     * @includeExample egret/display/Shape.ts
      * @language en_US
      */
     /**
-     * Sprite 类是基本显示列表构造块：一个可包含子项的显示列表节点。
+     * 此类用于使用绘图应用程序编程接口 (API) 创建简单形状。Shape 类含有 graphics 属性，通过该属性您可以访问各种矢量绘图方法。
+     * @see egret.Graphics
      * @version Egret 2.4
      * @platform Web,Native
-     * @includeExample egret/display/Sprite.ts
+     * @includeExample egret/display/Shape.ts
      * @language zh_CN
      */
-    class Sprite extends DisplayObjectContainer {
+    class Shape extends DisplayObject {
         /**
-         * Creates a new Sprite instance.
+         * Creates a new Shape object.
          * @version Egret 2.4
          * @platform Web,Native
          * @language en_US
          */
         /**
-         * 实例化一个容器
+         * 创建一个 Shape 对象
          * @version Egret 2.4
          * @platform Web,Native
          * @language zh_CN
@@ -9145,15 +8944,51 @@ declare namespace egret {
          * @language zh_CN
          */
         readonly graphics: Graphics;
-        $hitTest(stageX: number, stageY: number): DisplayObject;
         /**
          * @private
          */
         $measureContentBounds(bounds: Rectangle): void;
+        $hitTest(stageX: number, stageY: number): DisplayObject;
         /**
          * @private
          */
         $onRemoveFromStage(): void;
+    }
+}
+declare namespace egret.sys {
+    /**
+     * @private
+     * 文本格式
+     */
+    interface TextFormat {
+        /**
+         * 颜色值
+         */
+        textColor?: number;
+        /**
+         * 描边颜色值
+         */
+        strokeColor?: number;
+        /**
+         * 字号
+         */
+        size?: number;
+        /**
+         * 描边大小
+         */
+        stroke?: number;
+        /**
+         * 是否加粗
+         */
+        bold?: boolean;
+        /**
+         * 是否倾斜
+         */
+        italic?: boolean;
+        /**
+         * 字体名称
+         */
+        fontFamily?: string;
     }
 }
 declare namespace egret {
@@ -9270,78 +9105,6 @@ declare namespace egret {
 declare namespace egret.sys {
     /**
      * @private
-     * 文本渲染节点
-     */
-    class TextNode extends RenderNode {
-        constructor();
-        /**
-         * 颜色值
-         */
-        textColor: number;
-        /**
-         * 描边颜色值
-         */
-        strokeColor: number;
-        /**
-         * 字号
-         */
-        size: number;
-        /**
-         * 描边大小
-         */
-        stroke: number;
-        /**
-         * 是否加粗
-         */
-        bold: boolean;
-        /**
-         * 是否倾斜
-         */
-        italic: boolean;
-        /**
-         * 字体名称
-         */
-        fontFamily: string;
-        /**
-         * 绘制一行文本
-         */
-        drawText(x: number, y: number, text: string, format: TextFormat): void;
-        /**
-         * 在显示对象的$updateRenderNode()方法被调用前，自动清空自身的drawData数据。
-         */
-        cleanBeforeRender(): void;
-        /**
-         * 绘制x偏移
-         */
-        x: number;
-        /**
-         * 绘制y偏移
-         */
-        y: number;
-        /**
-         * 绘制宽度
-         */
-        width: number;
-        /**
-         * 绘制高度
-         */
-        height: number;
-        /**
-         * 脏渲染标记
-         */
-        dirtyRender: boolean;
-        $texture: any;
-        $textureWidth: any;
-        $textureHeight: any;
-        /**
-         * 清除非绘制的缓存数据
-         */
-        clean(): void;
-    }
-}
-declare namespace egret.sys {
-    /**
-     * @private
      * 填充路径
      */
     class FillPath extends Path2D {
@@ -9368,6 +9131,99 @@ declare namespace egret.sys {
         alphas: number[];
         ratios: number[];
         matrix: Matrix;
+    }
+}
+declare namespace egret {
+    /**
+     * The Sprite class is a basic display list building block: a display list node that can contain children.
+     * @version Egret 2.4
+     * @platform Web,Native
+     * @includeExample egret/display/Sprite.ts
+     * @language en_US
+     */
+    /**
+     * Sprite 类是基本显示列表构造块：一个可包含子项的显示列表节点。
+     * @version Egret 2.4
+     * @platform Web,Native
+     * @includeExample egret/display/Sprite.ts
+     * @language zh_CN
+     */
+    class Sprite extends DisplayObjectContainer {
+        /**
+         * Creates a new Sprite instance.
+         * @version Egret 2.4
+         * @platform Web,Native
+         * @language en_US
+         */
+        /**
+         * 实例化一个容器
+         * @version Egret 2.4
+         * @platform Web,Native
+         * @language zh_CN
+         */
+        constructor();
+        protected createWebAssemblyNode(): void;
+        /**
+         * @private
+         */
+        $graphics: Graphics;
+        /**
+         * Specifies the Graphics object belonging to this Shape object, where vector drawing commands can occur.
+         * @version Egret 2.4
+         * @platform Web,Native
+         * @language en_US
+         */
+        /**
+         * 获取 Shape 中的 Graphics 对象。可通过此对象执行矢量绘图命令。
+         * @version Egret 2.4
+         * @platform Web,Native
+         * @language zh_CN
+         */
+        readonly graphics: Graphics;
+        $hitTest(stageX: number, stageY: number): DisplayObject;
+        /**
+         * @private
+         */
+        $measureContentBounds(bounds: Rectangle): void;
+        /**
+         * @private
+         */
+        $onRemoveFromStage(): void;
+    }
+}
+declare namespace egret.sys {
+    /**
+     * @private
+     * 线条路径。
+     * 注意：当线条宽度（lineWidth）为1或3像素时，需要特殊处理，往右下角偏移0.5像素，以显示清晰锐利的线条。
+     */
+    class StrokePath extends Path2D {
+        constructor();
+        /**
+         * 线条宽度。
+         * 注意：绘制时对1像素和3像素要特殊处理，整体向右下角偏移0.5像素，以显示清晰锐利的线条。
+         */
+        lineWidth: number;
+        /**
+         * 线条颜色
+         */
+        lineColor: number;
+        /**
+         * 线条透明度
+         */
+        lineAlpha: number;
+        /**
+         * 端点样式,"none":无端点,"round":圆头端点,"square":方头端点
+         */
+        caps: CapsStyle;
+        /**
+         * 联接点样式,"bevel":斜角连接,"miter":尖角连接,"round":圆角连接
+         */
+        joints: JointStyle;
+        /**
+         * 用于表示剪切斜接的极限值的数字。
+         */
+        miterLimit: number;
     }
 }
 declare namespace egret {
@@ -9454,39 +9310,57 @@ declare namespace egret.sys {
      */
     function numberToBlendMode(blendMode: number): BlendMode;
 }
-declare namespace egret.sys {
+declare module egret {
     /**
-     * @private
-     * 线条路径。
-     * 注意：当线条宽度（lineWidth）为1或3像素时，需要特殊处理，往右下角偏移0.5像素，以显示清晰锐利的线条。
+     * Orientation monitor the orientation of the device, send CHANGE event when the orientation is changed
+     *
+     * @event egret.Event.CHANGE device's orientation is changed
+     * @version Egret 2.4
+     * @platform Web
+     * @includeExample egret/sensor/DeviceOrientation.ts
+     * @see http://edn.egret.com/cn/docs/page/661 获取设备旋转角度
+     * @language en_US
      */
-    class StrokePath extends Path2D {
-        constructor();
+    /**
+     * Orientation 监听设备方向的变化，当方向变化时派发 CHANGE 事件
+     * @event egret.Event.CHANGE 设备方向改变时派发
+     * @version Egret 2.4
+     * @platform Web
+     * @includeExample egret/sensor/DeviceOrientation.ts
+     * @see http://edn.egret.com/cn/docs/page/661 获取设备旋转角度
+     * @language zh_CN
+     */
+    class DeviceOrientation extends EventDispatcher {
         /**
-         * 线条宽度。
-         * 注意：绘制时对1像素和3像素要特殊处理，整体向右下角偏移0.5像素，以显示清晰锐利的线条。
+         * Start to monitor the device's orientation
+         * @version Egret 2.4
+         * @platform Web
+         * @language en_US
          */
-        lineWidth: number;
         /**
-         * 线条颜色
+         * 开始监听设备方向变化
+         * @version Egret 2.4
+         * @platform Web
+         * @language zh_CN
          */
-        lineColor: number;
+        start(): void;
         /**
-         * 线条透明度
+         * Stop monitor the device's orientation
+         * @version Egret 2.4
+         * @platform Web
+         * @language en_US
          */
-        lineAlpha: number;
         /**
-         * 端点样式,"none":无端点,"round":圆头端点,"square":方头端点
+         * 停止监听设备方向变化
+         * @version Egret 2.4
+         * @platform Web
+         * @language zh_CN
          */
-        caps: CapsStyle;
+        stop(): void;
         /**
-         * 联接点样式,"bevel":斜角连接,"miter":尖角连接,"round":圆角连接
+         * @private
          */
-        joints: JointStyle;
-        /**
-         * 用于表示剪切斜接的极限值的数字。
-         */
-        miterLimit: number;
+        protected onChange: (e: DeviceOrientationEvent) => void;
     }
 }
 declare namespace egret {
@@ -9700,59 +9574,6 @@ declare namespace egret {
         setContentSize(width: number, height: number): void;
     }
 }
-declare module egret {
-    /**
-     * Orientation monitor the orientation of the device, send CHANGE event when the orientation is changed
-     *
-     * @event egret.Event.CHANGE device's orientation is changed
-     * @version Egret 2.4
-     * @platform Web
-     * @includeExample egret/sensor/DeviceOrientation.ts
-     * @see http://edn.egret.com/cn/docs/page/661 获取设备旋转角度
-     * @language en_US
-     */
-    /**
-     * Orientation 监听设备方向的变化，当方向变化时派发 CHANGE 事件
-     * @event egret.Event.CHANGE 设备方向改变时派发
-     * @version Egret 2.4
-     * @platform Web
-     * @includeExample egret/sensor/DeviceOrientation.ts
-     * @see http://edn.egret.com/cn/docs/page/661 获取设备旋转角度
-     * @language zh_CN
-     */
-    class DeviceOrientation extends EventDispatcher {
-        /**
-         * Start to monitor the device's orientation
-         * @version Egret 2.4
-         * @platform Web
-         * @language en_US
-         */
-        /**
-         * 开始监听设备方向变化
-         * @version Egret 2.4
-         * @platform Web
-         * @language zh_CN
-         */
-        start(): void;
-        /**
-         * Stop monitor the device's orientation
-         * @version Egret 2.4
-         * @platform Web
-         * @language en_US
-         */
-        /**
-         * 停止监听设备方向变化
-         * @version Egret 2.4
-         * @platform Web
-         * @language zh_CN
-         */
-        stop(): void;
-        /**
-         * @private
-         */
-        protected onChange: (e: DeviceOrientationEvent) => void;
-    }
-}
 declare namespace egret {
     /**
      * The CapsStyle class is an enumeration of constant values that specify the caps style to use in drawing lines.
@@ -9832,19 +9653,6 @@ declare namespace egret {
 }
 declare namespace egret {
     /**
-     * @private
-     */
-    class EgretShaderLib {
-        static blur_frag: string;
-        static colorTransform_frag: string;
-        static default_vert: string;
-        static glow_frag: string;
-        static primitive_frag: string;
-        static texture_frag: string;
-    }
-}
-declare namespace egret {
-    /**
      * Adds an interface-name-to-implementation-class mapping to the registry.
      * @param interfaceName the interface name to register. For example："eui.IAssetAdapter","eui.Theme"
      * @param instance the instance to register.
@@ -9897,6 +9705,8 @@ declare namespace egret.WebAssembly {
     let setRenderMode: (mode: string) => void;
     let renderDisplayObject: (id: number, scale: number, useClip: boolean, clipX: number, clipY: number, clipW: number, clipH: number) => void;
     let renderDisplayObjectWithOffset: (id: number, offsetX: number, offsetY: number) => void;
+    let localToGlobal: (id: number, localX: number, localY: number) => string;
+    let globalToLocal: (id: number, globalX: number, globalY: number) => string;
     let resize: (width: number, height: number) => void;
     let update: () => void;
     let updatePreCallback: (currTimeStamp: number) => boolean;
@@ -9940,6 +9750,7 @@ declare namespace egret {
         static setValuesToBitmapData(value: Texture): void;
         setBitmapData(value: Texture): void;
         setBitmapDataToParticle(value: Texture): void;
+        setStopToParticle(value: boolean): void;
         setCustomData(config: any): void;
         setWidth(value: number): void;
         setHeight(value: number): void;
@@ -10147,7 +9958,7 @@ declare namespace egret {
          * @private
          */
         $invalidateContentBounds(): void;
-        private $textFieldHeight;
+        protected $textFieldHeight: number;
         /**
          * @private
          */
@@ -10516,111 +10327,6 @@ declare namespace egret {
      * @version Egret 2.4
      * @platform Web,Native
      */
-    class InputController extends HashObject {
-        /**
-         * @private
-         */
-        private stageText;
-        /**
-         * @private
-         */
-        private stageTextAdded;
-        /**
-         * @private
-         */
-        private _text;
-        /**
-         * @private
-         */
-        private _isFocus;
-        /**
-         * @version Egret 2.4
-         * @platform Web,Native
-         */
-        constructor();
-        /**
-         *
-         * @param text
-         * @version Egret 2.4
-         * @platform Web,Native
-         */
-        init(text: TextField): void;
-        /**
-         * @private
-         *
-         */
-        _addStageText(): void;
-        /**
-         * @private
-         *
-         */
-        _removeStageText(): void;
-        /**
-         * @private
-         *
-         * @returns
-         */
-        _getText(): string;
-        /**
-         * @private
-         *
-         * @param value
-         */
-        _setText(value: string): void;
-        /**
-         * @private
-         */
-        _setColor(value: number): void;
-        /**
-         * @private
-         *
-         * @param event
-         */
-        private focusHandler(event);
-        /**
-         * @private
-         *
-         * @param event
-         */
-        private blurHandler(event);
-        private tempStage;
-        private onMouseDownHandler(event);
-        $onFocus(): void;
-        private onStageDownHandler(event);
-        /**
-         * @private
-         *
-         * @param event
-         */
-        private updateTextHandler(event);
-        /**
-         * @private
-         *
-         */
-        private resetText();
-        /**
-         * @private
-         *
-         */
-        _hideInput(): void;
-        /**
-         * @private
-         *
-         */
-        private updateInput();
-        /**
-         * @private
-         *
-         */
-        _updateProperties(): void;
-    }
-}
-declare namespace egret {
-    /**
-     * @private
-     * @version Egret 2.4
-     * @platform Web,Native
-     */
     interface IHitTextElement {
         /**
          * @version Egret 2.4
@@ -10874,59 +10580,120 @@ declare namespace egret {
 }
 declare namespace egret {
     /**
-     * The EventPhase class provides values for the eventPhase property of the Event class.
+     * @private
      * @version Egret 2.4
      * @platform Web,Native
-     * @includeExample egret/events/EventPhase.ts
-     * @language en_US
      */
+    class InputController extends HashObject {
+        /**
+         * @private
+         */
+        private stageText;
+        /**
+         * @private
+         */
+        private stageTextAdded;
+        /**
+         * @private
+         */
+        private _text;
+        /**
+         * @private
+         */
+        private _isFocus;
+        /**
+         * @version Egret 2.4
+         * @platform Web,Native
+         */
+        constructor();
+        /**
+         *
+         * @param text
+         * @version Egret 2.4
+         * @platform Web,Native
+         */
+        init(text: TextField): void;
+        /**
+         * @private
+         *
+         */
+        _addStageText(): void;
+        /**
+         * @private
+         *
+         */
+        _removeStageText(): void;
+        /**
+         * @private
+         *
+         * @returns
+         */
+        _getText(): string;
+        /**
+         * @private
+         *
+         * @param value
+         */
+        _setText(value: string): void;
+        /**
+         * @private
+         */
+        _setColor(value: number): void;
+        /**
+         * @private
+         *
+         * @param event
+         */
+        private focusHandler(event);
+        /**
+         * @private
+         *
+         * @param event
+         */
+        private blurHandler(event);
+        private tempStage;
+        private onMouseDownHandler(event);
+        $onFocus(): void;
+        private onStageDownHandler(event);
+        /**
+         * @private
+         *
+         * @param event
+         */
+        private updateTextHandler(event);
+        /**
+         * @private
+         *
+         */
+        private resetText();
+        /**
+         * @private
+         *
+         */
+        _hideInput(): void;
+        /**
+         * @private
+         *
+         */
+        private updateInput();
+        /**
+         * @private
+         *
+         */
+        _updateProperties(): void;
+    }
+}
+declare namespace egret {
     /**
-     * EventPhase 可为 Event 类的 eventPhase 属性提供值。
-     * @version Egret 2.4
-     * @platform Web,Native
-     * @includeExample egret/events/EventPhase.ts
-     * @language zh_CN
+     * @private
      */
-    const enum EventPhase {
-        /**
-         * The capturing phase, which is the first phase of the event flow.
-         * @version Egret 2.4
-         * @platform Web,Native
-         * @language en_US
-         */
-        /**
-         * 捕获阶段。
-         * @version Egret 2.4
-         * @platform Web,Native
-         * @language zh_CN
-         */
-        CAPTURING_PHASE = 1,
-        /**
-         * The target phase, which is the second phase of the event flow.
-         * @version Egret 2.4
-         * @platform Web,Native
-         * @language en_US
-         */
-        /**
-         * 目标阶段，是事件流的第二个阶段。
-         * @version Egret 2.4
-         * @platform Web,Native
-         * @language zh_CN
-         */
-        AT_TARGET = 2,
-        /**
-         * The bubbling phase, which is the third phase of the event flow.
-         * @version Egret 2.4
-         * @platform Web,Native
-         * @language en_US
-         */
-        /**
-         * 冒泡阶段。
-         * @version Egret 2.4
-         * @platform Web,Native
-         * @language zh_CN
-         */
-        BUBBLING_PHASE = 3,
+    class EgretShaderLib {
+        static blur_frag: string;
+        static colorTransform_frag: string;
+        static default_vert: string;
+        static glow_frag: string;
+        static primitive_frag: string;
+        static texture_frag: string;
     }
 }
 declare namespace egret.sys {
@@ -12035,65 +11802,59 @@ declare namespace egret {
 }
 declare namespace egret {
     /**
-     * When the user changes the focus from one object in the display list to another object, the object dispatches a FocusEvent object. Currently only supports input text.
-     * Focus events: FocusEvent.FOCUS_IN FocusEvent.FOCUS_OUT
+     * The EventPhase class provides values for the eventPhase property of the Event class.
      * @version Egret 2.4
      * @platform Web,Native
+     * @includeExample egret/events/EventPhase.ts
      * @language en_US
      */
     /**
-     * 用户将焦点从显示列表中的一个对象更改到另一个对象时，对象将调度 FocusEvent 对象。目前只支持输入文本。
-     * 焦点事件：FocusEvent.FOCUS_IN FocusEvent.FOCUS_OUT
+     * EventPhase 可为 Event 类的 eventPhase 属性提供值。
      * @version Egret 2.4
      * @platform Web,Native
+     * @includeExample egret/events/EventPhase.ts
      * @language zh_CN
      */
-    class FocusEvent extends egret.Event {
+    const enum EventPhase {
         /**
-         * Gets focus
+         * The capturing phase, which is the first phase of the event flow.
          * @version Egret 2.4
          * @platform Web,Native
          * @language en_US
          */
         /**
-         * 获得焦点
+         * 捕获阶段。
          * @version Egret 2.4
          * @platform Web,Native
          * @language zh_CN
          */
-        static FOCUS_IN: "focusIn";
+        CAPTURING_PHASE = 1,
         /**
-         * Loses focus
+         * The target phase, which is the second phase of the event flow.
          * @version Egret 2.4
          * @platform Web,Native
          * @language en_US
          */
         /**
-         * 失去焦点
+         * 目标阶段，是事件流的第二个阶段。
          * @version Egret 2.4
          * @platform Web,Native
          * @language zh_CN
          */
-        static FOCUS_OUT: "focusOut";
+        AT_TARGET = 2,
         /**
-         * Create a egret.FocusEvent objects
-         * @param type  The type of the event, accessible as Event.type.
-         * @param bubbles  Determines whether the Event object participates in the bubbling stage of the event flow. The default value is false.
-         * @param cancelable Determines whether the Event object can be canceled. The default values is false.
+         * The bubbling phase, which is the third phase of the event flow.
          * @version Egret 2.4
          * @platform Web,Native
          * @language en_US
          */
         /**
-         * 创建一个 egret.FocusEvent 对象
-         * @param type  事件的类型，可以作为 Event.type 访问。
-         * @param bubbles  确定 Event 对象是否参与事件流的冒泡阶段。默认值为 false。
-         * @param cancelable 确定是否可以取消 Event 对象。默认值为 false。
+         * 冒泡阶段。
          * @version Egret 2.4
          * @platform Web,Native
          * @language zh_CN
          */
-        constructor(type: string, bubbles?: boolean, cancelable?: boolean);
+        BUBBLING_PHASE = 3,
     }
 }
 declare namespace egret {
@@ -13171,58 +12932,94 @@ declare namespace egret {
 }
 declare namespace egret {
     /**
-     * @private
-     */
-    let $callLaterFunctionList: any[];
-    /**
-     * @private
-     */
-    let $callLaterThisList: any[];
-    /**
-     * @private
-     */
-    let $callLaterArgsList: any[];
-    /**
-     * Delay the function to run unless screen is redrawn.
-     * @param method {Function} The function to be delayed to run
-     * @param thisObject {any} this reference of callback function
-     * @param ...args {any} Function parameter list
+     * When the user changes the focus from one object in the display list to another object, the object dispatches a FocusEvent object. Currently only supports input text.
+     * Focus events: FocusEvent.FOCUS_IN FocusEvent.FOCUS_OUT
      * @version Egret 2.4
      * @platform Web,Native
-     * @includeExample egret/utils/callLater.ts
      * @language en_US
      */
     /**
-     * 延迟函数到屏幕重绘前执行。
-     * @param method {Function} 要延迟执行的函数
-     * @param thisObject {any} 回调函数的this引用
-     * @param ...args {any} 函数参数列表
+     * 用户将焦点从显示列表中的一个对象更改到另一个对象时，对象将调度 FocusEvent 对象。目前只支持输入文本。
+     * 焦点事件：FocusEvent.FOCUS_IN FocusEvent.FOCUS_OUT
      * @version Egret 2.4
      * @platform Web,Native
-     * @includeExample egret/utils/callLater.ts
      * @language zh_CN
      */
-    function callLater(method: Function, thisObject: any, ...args: any[]): void;
+    class FocusEvent extends egret.Event {
+        /**
+         * Gets focus
+         * @version Egret 2.4
+         * @platform Web,Native
+         * @language en_US
+         */
+        /**
+         * 获得焦点
+         * @version Egret 2.4
+         * @platform Web,Native
+         * @language zh_CN
+         */
+        static FOCUS_IN: "focusIn";
+        /**
+         * Loses focus
+         * @version Egret 2.4
+         * @platform Web,Native
+         * @language en_US
+         */
+        /**
+         * 失去焦点
+         * @version Egret 2.4
+         * @platform Web,Native
+         * @language zh_CN
+         */
+        static FOCUS_OUT: "focusOut";
+        /**
+         * Create a egret.FocusEvent objects
+         * @param type  The type of the event, accessible as Event.type.
+         * @param bubbles  Determines whether the Event object participates in the bubbling stage of the event flow. The default value is false.
+         * @param cancelable Determines whether the Event object can be canceled. The default values is false.
+         * @version Egret 2.4
+         * @platform Web,Native
+         * @language en_US
+         */
+        /**
+         * 创建一个 egret.FocusEvent 对象
+         * @param type  事件的类型，可以作为 Event.type 访问。
+         * @param bubbles  确定 Event 对象是否参与事件流的冒泡阶段。默认值为 false。
+         * @param cancelable 确定是否可以取消 Event 对象。默认值为 false。
+         * @version Egret 2.4
+         * @platform Web,Native
+         * @language zh_CN
+         */
+        constructor(type: string, bubbles?: boolean, cancelable?: boolean);
+    }
+}
+declare namespace egret {
     /**
      * @private
      */
-    let $callAsyncFunctionList: any[];
+    let fontMapping: {};
     /**
+     * 兼容旧版本不使用 fontMapping 的情况
      * @private
      */
-    let $callAsyncThisList: any[];
+    let useFontMapping: boolean;
     /**
-     * @private
+     * Register font mapping.
+     * @param fontFamily The font family name to register.
+     * @param value The font value.
+     * @version Egret 3.2.3
+     * @platform Native
+     * @language en_US
      */
-    let $callAsyncArgsList: any[];
     /**
-     * 异步调用函数
-     * @param method {Function} 要异步调用的函数
-     * @param thisObject {any} 函数的this引用
-     * @param ...args {any} 函数参数列表
-     * @private
+     * 注册字体映射
+     * @param fontFamily 要注册的字体名称
+     * @param value 注册的字体值
+     * @version Egret 3.2.3
+     * @platform Native
+     * @language zh_CN
      */
-    function $callAsync(method: Function, thisObject: any, ...args: any[]): void;
+    function registerFontMapping(fontFamily: string, value: string): void;
 }
 declare namespace egret {
     interface Geolocation {
@@ -13403,224 +13200,6 @@ declare namespace egret {
          */
         errorMessage: string;
     }
-}
-declare namespace egret {
-    /**
-     * Call setter properties of the parent class, instead of the other writing languages, such as super.alpha = 1;
-     * @param currentClass The current class class name, non-string
-     * @param thisObj The current object. Always this
-     * @param type Setter property names need to call
-     * @param values Value passed to the parent class
-     *
-     * @exmaple egret.superSetter(egret.Sprite, this, "alpha", 1);
-     * @language en_US
-     */
-    /**
-     * 调用父类的setter属性，代替其他语言的写法，如 super.alpha = 1;
-     * @param thisObj 当前对象。永远都this
-     * @param currentClass 当前 class 类名，非字符串
-     * @param type 需要调用的setter属性名称
-     * @param values 传给父类的值
-     *
-     * @exmaple egret.superSetter(egret.Sprite, this, "alpha", 1);
-     * @language zh_CN
-     */
-    function superSetter(currentClass: any, thisObj: any, type: string, ...values: any[]): any;
-    /**
-     * Get getter property value of the parent class. Instead of writing in other languages, such as super.alpha;
-     * @param currentClass The current class class name, non-string
-     * @param thisObj The current object. Always this
-     * @param type Setter property names need to call
-     * @returns {any} The value returned by the parent
-     *
-     * @exmaple egret.superGetter(egret.Sprite, this, "alpha");
-     * @language en_US
-     */
-    /**
-     * 获取父类的getter属性值。代替其他语言的写法，如 super.alpha;
-     * @param thisObj 当前对象。永远都this
-     * @param currentClass 当前 class 类名，非字符串
-     * @param type 需要调用的setter属性名称
-     * @returns {any} 父类返回的值
-     *
-     * @exmaple egret.superGetter(egret.Sprite, this, "alpha");
-     * @language zh_CN
-     */
-    function superGetter(currentClass: any, thisObj: any, type: string): any;
-}
-declare namespace egret {
-    /**
-     * @private
-     */
-    let fontMapping: {};
-    /**
-     * 兼容旧版本不使用 fontMapping 的情况
-     * @private
-     */
-    let useFontMapping: boolean;
-    /**
-     * Register font mapping.
-     * @param fontFamily The font family name to register.
-     * @param value The font value.
-     * @version Egret 3.2.3
-     * @platform Native
-     * @language en_US
-     */
-    /**
-     * 注册字体映射
-     * @param fontFamily 要注册的字体名称
-     * @param value 注册的字体值
-     * @version Egret 3.2.3
-     * @platform Native
-     * @language zh_CN
-     */
-    function registerFontMapping(fontFamily: string, value: string): void;
-}
-declare namespace egret {
-    /**
-     * Returns a reference to the class object of the class specified by the name parameter.
-     * @param name The name of a class.
-     * @version Egret 2.4
-     * @platform Web,Native
-     * @includeExample egret/utils/getDefinitionByName.ts
-     * @language en_US
-     */
-    /**
-     * 返回 name 参数指定的类的类对象引用。
-     * @param name 类的名称。
-     * @version Egret 2.4
-     * @platform Web,Native
-     * @includeExample egret/utils/getDefinitionByName.ts
-     * @language zh_CN
-     */
-    function getDefinitionByName(name: string): any;
-}
-declare let __global: any;
-declare namespace egret {
-    /**
-     * Get browser or Runtime parameters, returns an empty string if not set
-     * Get the url parameter corresponds to the browser, access to the corresponding parameter in the Runtime setOption
-     * @method egret.getOption
-     * @param key {string} Parameters key
-     * @version Egret 2.4
-     * @platform Web,Native
-     * @language en_US
-     */
-    /**
-     * 获取浏览器或者Runtime参数，如果没有设置返回空字符串
-     * 在浏览器中相当于获取url中参数，在Runtime获取对应setOption参数
-     * @method egret.getOption
-     * @param key {string} 参数key
-     * @version Egret 2.4
-     * @platform Web,Native
-     * @language zh_CN
-     */
-    let getOption: (key: string) => string;
-}
-declare namespace egret {
-    /**
-     * Return the fully qualified class name of an object
-     * @param value The object for which a fully qualified class name is desired. Any JavaScript value may be passed to
-     * this method including all available JavaScript types, object instances, primitive types such as number, and class objects.
-     * @returns A string containing the fully qualified class name.
-     * @example
-     * <pre>
-     *  egret.getQualifiedClassName(egret.DisplayObject) //return "egret.DisplayObject"
-     * </pre>
-     * @version Egret 2.4
-     * @platform Web,Native
-     * @includeExample egret/utils/getQualifiedClassName.ts
-     * @language en_US
-     */
-    /**
-     * 返回对象的完全限定类名。
-     * @param value 需要完全限定类名称的对象，可以将任何 JavaScript 值传递给此方法，包括所有可用的 JavaScript 类型、对象实例、原始类型
-     * （如number)和类对象
-     * @returns 包含完全限定类名称的字符串。
-     * @example
-     * <pre>
-     *  egret.getQualifiedClassName(egret.DisplayObject) //返回 "egret.DisplayObject"
-     * </pre>
-     * @version Egret 2.4
-     * @platform Web,Native
-     * @includeExample egret/utils/getQualifiedClassName.ts
-     * @language zh_CN
-     */
-    function getQualifiedClassName(value: any): string;
-}
-declare namespace egret {
-    /**
-     * Returns the fully qualified class name of the base class of the object specified by the value parameter.
-     * @param value The object for which a parent class is desired. Any JavaScript value may be passed to this method including
-     * all available JavaScript types, object instances, primitive types such as number, and class objects.
-     * @returns  A fully qualified base class name, or null if none exists.
-     * @example
-     * <pre>
-     *  egret.getQualifiedSuperclassName(egret.Bitmap) //return "egret.DisplayObject"
-     * </pre>
-     * @version Egret 2.4
-     * @platform Web,Native
-     * @includeExample egret/utils/getQualifiedSuperclassName.ts
-     * @language en_US
-     */
-    /**
-     * 返回 value 参数指定的对象的基类的完全限定类名。
-     * @param value 需要取得父类的对象，可以将任何 JavaScript 值传递给此方法，包括所有可用的 JavaScript 类型、对象实例、原始类型（如number）和类对象
-     * @returns 完全限定的基类名称，或 null（如果不存在基类名称）。
-     * @example
-     * <pre>
-     *  egret.getQualifiedSuperclassName(egret.Sprite) //返回 "egret.DisplayObject"
-     * </pre>
-     * @version Egret 2.4
-     * @platform Web,Native
-     * @includeExample egret/utils/getQualifiedSuperclassName.ts
-     * @language zh_CN
-     */
-    function getQualifiedSuperclassName(value: any): string;
-}
-declare namespace egret {
-    /**
-     * Used to compute relative time.this method returns the number of milliseconds since the Egret framework was initialized
-     * @returns The number of milliseconds since the Egret framework was initialized
-     * @version Egret 2.4
-     * @platform Web,Native
-     * @includeExample egret/utils/getTimer.ts
-     * @language en_US
-     */
-    /**
-     * 用于计算相对时间。此方法返回自启动 Egret 框架以来经过的毫秒数。
-     * @returns 启动 Egret 框架以来经过的毫秒数。
-     * @version Egret 2.4
-     * @platform Web,Native
-     * @includeExample egret/utils/getTimer.ts
-     * @language zh_CN
-     */
-    function getTimer(): number;
-}
-declare namespace egret {
-    /**
-     * Check whether a public definition exists in the specified application domain. The definition can be that of a class, a naming space or a function.
-     * @param name {string} Name of the definition.
-     * @returns {boolean} Whether the public definition exists
-     * @example
-     * egret.hasDefinition("egret.DisplayObject") //return true
-     * @version Egret 2.4
-     * @platform Web,Native
-     * @includeExample egret/utils/hasDefinition.ts
-     * @language en_US
-     */
-    /**
-     * 检查指定的应用程序域之内是否存在一个公共定义。该定义可以是一个类、一个命名空间或一个函数的定义。
-     * @param name {string} 定义的名称。
-     * @returns {boolean} 公共定义是否存在
-     * @example
-     * egret.hasDefinition("egret.DisplayObject") //返回 true
-     * @version Egret 2.4
-     * @platform Web,Native
-     * @includeExample egret/utils/hasDefinition.ts
-     * @language zh_CN
-     */
-    function hasDefinition(name: string): boolean;
 }
 declare namespace egret {
     /**
@@ -13938,113 +13517,6 @@ declare namespace egret {
 }
 declare namespace egret {
     /**
-     * Indicates whether an object is a instance of the class or interface specified as the parameter.This method has better performance
-     * compared width the instanceOf operator,and it can indicate whether an object is a instance of the specific interface.
-     * @param instance the instance to be checked.
-     * @param typeName the string value representing a specific class or interface.
-     * @returns A value of true if the object is a instance of the class or interface specified as the parameter.
-     * @example
-     * <pre>
-     *     let instance = new egret.Sprite();
-     *     egret.log(egret.is(instance,"egret.Sprite"))  //true
-     *     egret.log(egret.is(instance,"egret.DisplayObjectContainer"))  //true
-     *     egret.log(egret.is(instance,"egret.Bitmap"))  //false
-     * </pre>
-     * @see egret.registerClass()
-     * @version Egret 2.4
-     * @platform Web,Native
-     * @language en_US
-     */
-    /**
-     * 检查指定对象是否为 Egret 框架内指定接口或类或其子类的实例。此方法与使用 instanceOf 关键字相比具有更高的性能，并且能判断接口的实现。
-     * @param instance 要判断的实例。
-     * @param typeName 类或接口的完全名称.
-     * @returns 返回true表示当前对象是指定类或接口的实例。
-     * @example
-     * <pre>
-     *     let instance = new egret.Sprite();
-     *     egret.log(egret.is(instance,"egret.Sprite"))  //true
-     *     egret.log(egret.is(instance,"egret.DisplayObjectContainer"))  //true
-     *     egret.log(egret.is(instance,"egret.Bitmap"))  //false
-     * </pre>
-     * @see egret.registerClass()
-     * @version Egret 2.4
-     * @platform Web,Native
-     * @language zh_CN
-     */
-    function is(instance: any, typeName: string): boolean;
-}
-declare namespace egret {
-    interface HttpRequest {
-        addEventListener<Z>(type: "ioError", listener: (this: Z, e: IOErrorEvent) => void, thisObject: Z, useCapture?: boolean, priority?: number): any;
-        addEventListener(type: string, listener: Function, thisObject: any, useCapture?: boolean, priority?: number): any;
-    }
-    /**
-     * @classdesc IO流事件，当错误导致输入或输出操作失败时调度 IOErrorEvent 对象。
-     * @version Egret 2.4
-     * @platform Web,Native
-     * @includeExample egret/events/IOErrorEvent.ts
-     * @language en_US
-     */
-    /**
-     * @classdesc IO流事件，当错误导致输入或输出操作失败时调度 IOErrorEvent 对象。
-     * @version Egret 2.4
-     * @platform Web,Native
-     * @includeExample egret/events/IOErrorEvent.ts
-     * @language zh_CN
-     */
-    class IOErrorEvent extends Event {
-        /**
-         * io error
-         * @version Egret 2.4
-         * @platform Web,Native
-         * @language en_US
-         */
-        /**
-         * io发生错误
-         * @version Egret 2.4
-         * @platform Web,Native
-         * @language zh_CN
-         */
-        static IO_ERROR: "ioError";
-        /**
-         * Create a egret.IOErrorEvent objects
-         * @param type {string} Type of event, accessible as Event.type.
-         * @param bubbles {boolean} Determines whether the Event object participates in the bubbling stage of the event flow. The default value is false.
-         * @param cancelable {boolean} Determine whether the Event object can be canceled. The default value is false.
-         * @version Egret 2.4
-         * @platform Web,Native
-         * @language en_US
-         */
-        /**
-         * 创建一个 egret.IOErrorEvent 对象
-         * @param type {string} 事件的类型，可以作为 Event.type 访问。
-         * @param bubbles {boolean} 确定 Event 对象是否参与事件流的冒泡阶段。默认值为 false。
-         * @param cancelable {boolean} 确定是否可以取消 Event 对象。默认值为 false。
-         * @version Egret 2.4
-         * @platform Web,Native
-         * @language zh_CN
-         */
-        constructor(type: string, bubbles?: boolean, cancelable?: boolean);
-        /**
-         * EventDispatcher object using the specified event object thrown Event. The objects will be thrown in the object cache pool for the next round robin.
-         * @param target {egret.IEventDispatcher} Distribute event target
-         * @version Egret 2.4
-         * @platform Web,Native
-         * @language en_US
-         */
-        /**
-         * 使用指定的EventDispatcher对象来抛出Event事件对象。抛出的对象将会缓存在对象池上，供下次循环复用。
-         * @param target {egret.IEventDispatcher} 派发事件目标
-         * @version Egret 2.4
-         * @platform Web,Native
-         * @language zh_CN
-         */
-        static dispatchIOErrorEvent(target: IEventDispatcher): boolean;
-    }
-}
-declare namespace egret {
-    /**
      * @version Egret 2.4
      * @platform Web,Native
      */
@@ -14128,51 +13600,6 @@ declare let egret_cos_map: {};
  * @private
  */
 declare let DEG_TO_RAD: number;
-declare namespace egret {
-    /**
-     * Register and start a timer,which will notify the callback method at a rate of 60 FPS ,and pass the current time stamp as parameters.<br/>
-     * Note: After the registration,it will notify the callback method continuously,you can call the stopTick () method to stop it.
-     * @param callBack the call back method. the timeStamp parameter of this method represents the number of milliseconds
-     * since the Egret framework was initialized. If the return value of this method is true, it will force Egret runtime
-     * to render after processing of this method completes.
-     * @param thisObject the call back method's "this"
-     * @version Egret 2.4
-     * @platform Web,Native
-     * @language en_US
-     */
-    /**
-     * 注册并启动一个计时器，通常会以60FPS的速率触发回调方法，并传入当前时间戳。注意：注册后将会持续触发回调方法，若要停止回调，需要手动调用stopTick()方法。
-     * @param callBack 要执行的回调方法。参数 timeStamp 表示从启动Egret框架开始经过的时间(毫秒)。
-     * 若回调方法返回值为true，其作用与TimerEvent.updateAfterEvent()类似，将会忽略帧频限制，在此方法处理完成后立即重绘屏幕。
-     * @param thisObject 回调方法的this对象引用。
-     * @version Egret 2.4
-     * @platform Web,Native
-     * @language zh_CN
-     */
-    function startTick(callBack: (timeStamp: number) => boolean, thisObject: any): void;
-}
-declare namespace egret {
-    /**
-     * Stops the timer started by the egret.startTick() method.
-     * @param callBack the call back method. the timeStamp parameter of this method represents the number of milliseconds
-     * since the Egret framework was initialized. If the return value of this method is true, it will force Egret runtime
-     * to render after processing of this method completes.
-     * @param thisObject the call back method's "this"
-     * @version Egret 2.4
-     * @platform Web,Native
-     * @language en_US
-     */
-    /**
-     * 停止之前用 startTick() 方法启动的计时器。
-     * @param callBack 要执行的回调方法。参数 timeStamp 表示从启动Egret框架开始经过的时间(毫秒)。
-     * 若回调方法返回值为true，其作用与TimerEvent.updateAfterEvent()类似，将会忽略帧频限制，在此方法处理完成后立即重绘屏幕。
-     * @param thisObject 回调方法的this对象引用。
-     * @version Egret 2.4
-     * @platform Web,Native
-     * @language zh_CN
-     */
-    function stopTick(callBack: (timeStamp: number) => boolean, thisObject: any): void;
-}
 declare namespace egret {
     /**
      * The Timer class is the interface to timers, which let you run code on a specified time sequence. Use the start()
@@ -14345,27 +13772,6 @@ declare namespace egret {
          */
         $update(timeStamp: number): boolean;
     }
-}
-declare namespace egret {
-    /**
-     * Transfer number to color character string
-     * @param value {number} color value ,such as 0xffffff
-     * @returns {string} Color character string, for example, #ffffff.
-     * @version Egret 2.4
-     * @platform Web,Native
-     * @includeExample egret/utils/toColorString.ts
-     * @language en_US
-     */
-    /**
-     * 转换数字为颜色字符串
-     * @param value {number} 颜色值，例如 0xffffff
-     * @returns {string} 颜色字符串，例如"#ffffff"。
-     * @version Egret 2.4
-     * @platform Web,Native
-     * @includeExample egret/utils/toColorString.ts
-     * @language zh_CN
-     */
-    function toColorString(value: number): string;
 }
 declare namespace egret {
     /**
@@ -14550,6 +13956,355 @@ declare namespace egret {
          */
         text: string;
     }
+}
+declare namespace egret {
+    /**
+     * @private
+     */
+    let $callLaterFunctionList: any[];
+    /**
+     * @private
+     */
+    let $callLaterThisList: any[];
+    /**
+     * @private
+     */
+    let $callLaterArgsList: any[];
+    /**
+     * Delay the function to run unless screen is redrawn.
+     * @param method {Function} The function to be delayed to run
+     * @param thisObject {any} this reference of callback function
+     * @param ...args {any} Function parameter list
+     * @version Egret 2.4
+     * @platform Web,Native
+     * @includeExample egret/utils/callLater.ts
+     * @language en_US
+     */
+    /**
+     * 延迟函数到屏幕重绘前执行。
+     * @param method {Function} 要延迟执行的函数
+     * @param thisObject {any} 回调函数的this引用
+     * @param ...args {any} 函数参数列表
+     * @version Egret 2.4
+     * @platform Web,Native
+     * @includeExample egret/utils/callLater.ts
+     * @language zh_CN
+     */
+    function callLater(method: Function, thisObject: any, ...args: any[]): void;
+    /**
+     * @private
+     */
+    let $callAsyncFunctionList: any[];
+    /**
+     * @private
+     */
+    let $callAsyncThisList: any[];
+    /**
+     * @private
+     */
+    let $callAsyncArgsList: any[];
+    /**
+     * 异步调用函数
+     * @param method {Function} 要异步调用的函数
+     * @param thisObject {any} 函数的this引用
+     * @param ...args {any} 函数参数列表
+     * @private
+     */
+    function $callAsync(method: Function, thisObject: any, ...args: any[]): void;
+}
+declare namespace egret {
+    /**
+     * Call setter properties of the parent class, instead of the other writing languages, such as super.alpha = 1;
+     * @param currentClass The current class class name, non-string
+     * @param thisObj The current object. Always this
+     * @param type Setter property names need to call
+     * @param values Value passed to the parent class
+     *
+     * @exmaple egret.superSetter(egret.Sprite, this, "alpha", 1);
+     * @language en_US
+     */
+    /**
+     * 调用父类的setter属性，代替其他语言的写法，如 super.alpha = 1;
+     * @param thisObj 当前对象。永远都this
+     * @param currentClass 当前 class 类名，非字符串
+     * @param type 需要调用的setter属性名称
+     * @param values 传给父类的值
+     *
+     * @exmaple egret.superSetter(egret.Sprite, this, "alpha", 1);
+     * @language zh_CN
+     */
+    function superSetter(currentClass: any, thisObj: any, type: string, ...values: any[]): any;
+    /**
+     * Get getter property value of the parent class. Instead of writing in other languages, such as super.alpha;
+     * @param currentClass The current class class name, non-string
+     * @param thisObj The current object. Always this
+     * @param type Setter property names need to call
+     * @returns {any} The value returned by the parent
+     *
+     * @exmaple egret.superGetter(egret.Sprite, this, "alpha");
+     * @language en_US
+     */
+    /**
+     * 获取父类的getter属性值。代替其他语言的写法，如 super.alpha;
+     * @param thisObj 当前对象。永远都this
+     * @param currentClass 当前 class 类名，非字符串
+     * @param type 需要调用的setter属性名称
+     * @returns {any} 父类返回的值
+     *
+     * @exmaple egret.superGetter(egret.Sprite, this, "alpha");
+     * @language zh_CN
+     */
+    function superGetter(currentClass: any, thisObj: any, type: string): any;
+}
+declare namespace egret {
+    /**
+     * Returns a reference to the class object of the class specified by the name parameter.
+     * @param name The name of a class.
+     * @version Egret 2.4
+     * @platform Web,Native
+     * @includeExample egret/utils/getDefinitionByName.ts
+     * @language en_US
+     */
+    /**
+     * 返回 name 参数指定的类的类对象引用。
+     * @param name 类的名称。
+     * @version Egret 2.4
+     * @platform Web,Native
+     * @includeExample egret/utils/getDefinitionByName.ts
+     * @language zh_CN
+     */
+    function getDefinitionByName(name: string): any;
+}
+declare let __global: any;
+declare namespace egret {
+    /**
+     * Get browser or Runtime parameters, returns an empty string if not set
+     * Get the url parameter corresponds to the browser, access to the corresponding parameter in the Runtime setOption
+     * @method egret.getOption
+     * @param key {string} Parameters key
+     * @version Egret 2.4
+     * @platform Web,Native
+     * @language en_US
+     */
+    /**
+     * 获取浏览器或者Runtime参数，如果没有设置返回空字符串
+     * 在浏览器中相当于获取url中参数，在Runtime获取对应setOption参数
+     * @method egret.getOption
+     * @param key {string} 参数key
+     * @version Egret 2.4
+     * @platform Web,Native
+     * @language zh_CN
+     */
+    let getOption: (key: string) => string;
+}
+declare namespace egret {
+    /**
+     * Return the fully qualified class name of an object
+     * @param value The object for which a fully qualified class name is desired. Any JavaScript value may be passed to
+     * this method including all available JavaScript types, object instances, primitive types such as number, and class objects.
+     * @returns A string containing the fully qualified class name.
+     * @example
+     * <pre>
+     *  egret.getQualifiedClassName(egret.DisplayObject) //return "egret.DisplayObject"
+     * </pre>
+     * @version Egret 2.4
+     * @platform Web,Native
+     * @includeExample egret/utils/getQualifiedClassName.ts
+     * @language en_US
+     */
+    /**
+     * 返回对象的完全限定类名。
+     * @param value 需要完全限定类名称的对象，可以将任何 JavaScript 值传递给此方法，包括所有可用的 JavaScript 类型、对象实例、原始类型
+     * （如number)和类对象
+     * @returns 包含完全限定类名称的字符串。
+     * @example
+     * <pre>
+     *  egret.getQualifiedClassName(egret.DisplayObject) //返回 "egret.DisplayObject"
+     * </pre>
+     * @version Egret 2.4
+     * @platform Web,Native
+     * @includeExample egret/utils/getQualifiedClassName.ts
+     * @language zh_CN
+     */
+    function getQualifiedClassName(value: any): string;
+}
+declare namespace egret {
+    /**
+     * Returns the fully qualified class name of the base class of the object specified by the value parameter.
+     * @param value The object for which a parent class is desired. Any JavaScript value may be passed to this method including
+     * all available JavaScript types, object instances, primitive types such as number, and class objects.
+     * @returns  A fully qualified base class name, or null if none exists.
+     * @example
+     * <pre>
+     *  egret.getQualifiedSuperclassName(egret.Bitmap) //return "egret.DisplayObject"
+     * </pre>
+     * @version Egret 2.4
+     * @platform Web,Native
+     * @includeExample egret/utils/getQualifiedSuperclassName.ts
+     * @language en_US
+     */
+    /**
+     * 返回 value 参数指定的对象的基类的完全限定类名。
+     * @param value 需要取得父类的对象，可以将任何 JavaScript 值传递给此方法，包括所有可用的 JavaScript 类型、对象实例、原始类型（如number）和类对象
+     * @returns 完全限定的基类名称，或 null（如果不存在基类名称）。
+     * @example
+     * <pre>
+     *  egret.getQualifiedSuperclassName(egret.Sprite) //返回 "egret.DisplayObject"
+     * </pre>
+     * @version Egret 2.4
+     * @platform Web,Native
+     * @includeExample egret/utils/getQualifiedSuperclassName.ts
+     * @language zh_CN
+     */
+    function getQualifiedSuperclassName(value: any): string;
+}
+declare namespace egret {
+    /**
+     * Used to compute relative time.this method returns the number of milliseconds since the Egret framework was initialized
+     * @returns The number of milliseconds since the Egret framework was initialized
+     * @version Egret 2.4
+     * @platform Web,Native
+     * @includeExample egret/utils/getTimer.ts
+     * @language en_US
+     */
+    /**
+     * 用于计算相对时间。此方法返回自启动 Egret 框架以来经过的毫秒数。
+     * @returns 启动 Egret 框架以来经过的毫秒数。
+     * @version Egret 2.4
+     * @platform Web,Native
+     * @includeExample egret/utils/getTimer.ts
+     * @language zh_CN
+     */
+    function getTimer(): number;
+}
+declare namespace egret {
+    /**
+     * Check whether a public definition exists in the specified application domain. The definition can be that of a class, a naming space or a function.
+     * @param name {string} Name of the definition.
+     * @returns {boolean} Whether the public definition exists
+     * @example
+     * egret.hasDefinition("egret.DisplayObject") //return true
+     * @version Egret 2.4
+     * @platform Web,Native
+     * @includeExample egret/utils/hasDefinition.ts
+     * @language en_US
+     */
+    /**
+     * 检查指定的应用程序域之内是否存在一个公共定义。该定义可以是一个类、一个命名空间或一个函数的定义。
+     * @param name {string} 定义的名称。
+     * @returns {boolean} 公共定义是否存在
+     * @example
+     * egret.hasDefinition("egret.DisplayObject") //返回 true
+     * @version Egret 2.4
+     * @platform Web,Native
+     * @includeExample egret/utils/hasDefinition.ts
+     * @language zh_CN
+     */
+    function hasDefinition(name: string): boolean;
+}
+declare namespace egret {
+    /**
+     * Indicates whether an object is a instance of the class or interface specified as the parameter.This method has better performance
+     * compared width the instanceOf operator,and it can indicate whether an object is a instance of the specific interface.
+     * @param instance the instance to be checked.
+     * @param typeName the string value representing a specific class or interface.
+     * @returns A value of true if the object is a instance of the class or interface specified as the parameter.
+     * @example
+     * <pre>
+     *     let instance = new egret.Sprite();
+     *     egret.log(egret.is(instance,"egret.Sprite"))  //true
+     *     egret.log(egret.is(instance,"egret.DisplayObjectContainer"))  //true
+     *     egret.log(egret.is(instance,"egret.Bitmap"))  //false
+     * </pre>
+     * @see egret.registerClass()
+     * @version Egret 2.4
+     * @platform Web,Native
+     * @language en_US
+     */
+    /**
+     * 检查指定对象是否为 Egret 框架内指定接口或类或其子类的实例。此方法与使用 instanceOf 关键字相比具有更高的性能，并且能判断接口的实现。
+     * @param instance 要判断的实例。
+     * @param typeName 类或接口的完全名称.
+     * @returns 返回true表示当前对象是指定类或接口的实例。
+     * @example
+     * <pre>
+     *     let instance = new egret.Sprite();
+     *     egret.log(egret.is(instance,"egret.Sprite"))  //true
+     *     egret.log(egret.is(instance,"egret.DisplayObjectContainer"))  //true
+     *     egret.log(egret.is(instance,"egret.Bitmap"))  //false
+     * </pre>
+     * @see egret.registerClass()
+     * @version Egret 2.4
+     * @platform Web,Native
+     * @language zh_CN
+     */
+    function is(instance: any, typeName: string): boolean;
+}
+declare namespace egret {
+    /**
+     * Register and start a timer,which will notify the callback method at a rate of 60 FPS ,and pass the current time stamp as parameters.<br/>
+     * Note: After the registration,it will notify the callback method continuously,you can call the stopTick () method to stop it.
+     * @param callBack the call back method. the timeStamp parameter of this method represents the number of milliseconds
+     * since the Egret framework was initialized. If the return value of this method is true, it will force Egret runtime
+     * to render after processing of this method completes.
+     * @param thisObject the call back method's "this"
+     * @version Egret 2.4
+     * @platform Web,Native
+     * @language en_US
+     */
+    /**
+     * 注册并启动一个计时器，通常会以60FPS的速率触发回调方法，并传入当前时间戳。注意：注册后将会持续触发回调方法，若要停止回调，需要手动调用stopTick()方法。
+     * @param callBack 要执行的回调方法。参数 timeStamp 表示从启动Egret框架开始经过的时间(毫秒)。
+     * 若回调方法返回值为true，其作用与TimerEvent.updateAfterEvent()类似，将会忽略帧频限制，在此方法处理完成后立即重绘屏幕。
+     * @param thisObject 回调方法的this对象引用。
+     * @version Egret 2.4
+     * @platform Web,Native
+     * @language zh_CN
+     */
+    function startTick(callBack: (timeStamp: number) => boolean, thisObject: any): void;
+}
+declare namespace egret {
+    /**
+     * Stops the timer started by the egret.startTick() method.
+     * @param callBack the call back method. the timeStamp parameter of this method represents the number of milliseconds
+     * since the Egret framework was initialized. If the return value of this method is true, it will force Egret runtime
+     * to render after processing of this method completes.
+     * @param thisObject the call back method's "this"
+     * @version Egret 2.4
+     * @platform Web,Native
+     * @language en_US
+     */
+    /**
+     * 停止之前用 startTick() 方法启动的计时器。
+     * @param callBack 要执行的回调方法。参数 timeStamp 表示从启动Egret框架开始经过的时间(毫秒)。
+     * 若回调方法返回值为true，其作用与TimerEvent.updateAfterEvent()类似，将会忽略帧频限制，在此方法处理完成后立即重绘屏幕。
+     * @param thisObject 回调方法的this对象引用。
+     * @version Egret 2.4
+     * @platform Web,Native
+     * @language zh_CN
+     */
+    function stopTick(callBack: (timeStamp: number) => boolean, thisObject: any): void;
+}
+declare namespace egret {
+    /**
+     * Transfer number to color character string
+     * @param value {number} color value ,such as 0xffffff
+     * @returns {string} Color character string, for example, #ffffff.
+     * @version Egret 2.4
+     * @platform Web,Native
+     * @includeExample egret/utils/toColorString.ts
+     * @language en_US
+     */
+    /**
+     * 转换数字为颜色字符串
+     * @param value {number} 颜色值，例如 0xffffff
+     * @returns {string} 颜色字符串，例如"#ffffff"。
+     * @version Egret 2.4
+     * @platform Web,Native
+     * @includeExample egret/utils/toColorString.ts
+     * @language zh_CN
+     */
+    function toColorString(value: number): string;
 }
 declare namespace egret {
 }
@@ -15182,40 +14937,6 @@ declare namespace egret {
 declare namespace egret {
     /**
      * @private
-     * WebGL渲染器
-     */
-    class WebGLRenderer implements sys.SystemRenderer {
-        constructor();
-        /**
-         * 渲染一个显示对象
-         * @param displayObject 要渲染的显示对象
-         * @param buffer 渲染缓冲
-         * @param matrix 要对显示对象整体叠加的变换矩阵
-         * @param dirtyList 脏矩形列表
-         * @param forRenderTexture 绘制目标是RenderTexture的标志
-         * @returns drawCall触发绘制的次数
-         */
-        render(displayObject: DisplayObject, buffer: sys.RenderBuffer, offsetX: number, offsetY: number, forRenderTexture?: boolean): number;
-        /**
-         * 将一个RenderNode对象绘制到渲染缓冲
-         * @param node 要绘制的节点
-         * @param buffer 渲染缓冲
-         * @param matrix 要叠加的矩阵
-         * @param forHitTest 绘制结果是用于碰撞检测。若为true，当渲染GraphicsNode时，会忽略透明度样式设置，全都绘制为不透明的。
-         */
-        drawNodeToBuffer(node: sys.RenderNode, buffer: WebGLRenderBuffer, matrix: Matrix, forHitTest?: boolean): void;
-        /**
-         * 将一个DisplayObject绘制到渲染缓冲，用于RenderTexture绘制
-         * @param displayObject 要绘制的显示对象
-         * @param buffer 渲染缓冲
-         * @param matrix 要叠加的矩阵
-         */
-        drawDisplayToBuffer(displayObject: DisplayObject, buffer: WebGLRenderBuffer, matrix: Matrix): number;
-    }
-}
-declare namespace egret {
-    /**
-     * @private
      * WebGLRenderTarget类
      * 一个WebGL渲染目标，拥有一个frame buffer和texture
      */
@@ -15252,6 +14973,40 @@ declare namespace egret {
          */
         clear(bind?: boolean): void;
         enabledStencil(): void;
+    }
+}
+declare namespace egret {
+    /**
+     * @private
+     * WebGL渲染器
+     */
+    class WebGLRenderer implements sys.SystemRenderer {
+        constructor();
+        /**
+         * 渲染一个显示对象
+         * @param displayObject 要渲染的显示对象
+         * @param buffer 渲染缓冲
+         * @param matrix 要对显示对象整体叠加的变换矩阵
+         * @param dirtyList 脏矩形列表
+         * @param forRenderTexture 绘制目标是RenderTexture的标志
+         * @returns drawCall触发绘制的次数
+         */
+        render(displayObject: DisplayObject, buffer: sys.RenderBuffer, offsetX: number, offsetY: number, forRenderTexture?: boolean): number;
+        /**
+         * 将一个RenderNode对象绘制到渲染缓冲
+         * @param node 要绘制的节点
+         * @param buffer 渲染缓冲
+         * @param matrix 要叠加的矩阵
+         * @param forHitTest 绘制结果是用于碰撞检测。若为true，当渲染GraphicsNode时，会忽略透明度样式设置，全都绘制为不透明的。
+         */
+        drawNodeToBuffer(node: sys.RenderNode, buffer: WebGLRenderBuffer, matrix: Matrix, forHitTest?: boolean): void;
+        /**
+         * 将一个DisplayObject绘制到渲染缓冲，用于RenderTexture绘制
+         * @param displayObject 要绘制的显示对象
+         * @param buffer 渲染缓冲
+         * @param matrix 要叠加的矩阵
+         */
+        drawDisplayToBuffer(displayObject: DisplayObject, buffer: WebGLRenderBuffer, matrix: Matrix): number;
     }
 }
 declare namespace egret {
@@ -15308,36 +15063,72 @@ declare namespace egret {
 declare namespace egret.sys {
     /**
      * @private
-     * 文本格式
+     * 文本渲染节点
      */
-    interface TextFormat {
+    class TextNode extends RenderNode {
+        constructor();
         /**
          * 颜色值
          */
-        textColor?: number;
+        textColor: number;
         /**
          * 描边颜色值
          */
-        strokeColor?: number;
+        strokeColor: number;
         /**
          * 字号
          */
-        size?: number;
+        size: number;
         /**
          * 描边大小
          */
-        stroke?: number;
+        stroke: number;
         /**
          * 是否加粗
          */
-        bold?: boolean;
+        bold: boolean;
         /**
          * 是否倾斜
          */
-        italic?: boolean;
+        italic: boolean;
         /**
          * 字体名称
          */
-        fontFamily?: string;
+        fontFamily: string;
+        /**
+         * 绘制一行文本
+         */
+        drawText(x: number, y: number, text: string, format: TextFormat): void;
+        /**
+         * 在显示对象的$updateRenderNode()方法被调用前，自动清空自身的drawData数据。
+         */
+        cleanBeforeRender(): void;
+        /**
+         * 绘制x偏移
+         */
+        x: number;
+        /**
+         * 绘制y偏移
+         */
+        y: number;
+        /**
+         * 绘制宽度
+         */
+        width: number;
+        /**
+         * 绘制高度
+         */
+        height: number;
+        /**
+         * 脏渲染标记
+         */
+        dirtyRender: boolean;
+        $texture: any;
+        $textureWidth: any;
+        $textureHeight: any;
+        /**
+         * 清除非绘制的缓存数据
+         */
+        clean(): void;
     }
 }

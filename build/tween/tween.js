@@ -1770,7 +1770,9 @@ var egret;
         var TweenItem = (function (_super) {
             __extends(TweenItem, _super);
             function TweenItem() {
-                return _super.call(this) || this;
+                var _this = _super.call(this) || this;
+                _this.isStop = false;
+                return _this;
             }
             Object.defineProperty(TweenItem.prototype, "props", {
                 /**
@@ -1840,26 +1842,30 @@ var egret;
             });
             /**
              * Play the Tween
-             * @time The starting position, the default is from the last position to play
+             * @position The starting position, the default is from the last position to play
              * @version Egret 3.1.8
              * @platform Web,Native
              * @language en_US
              */
             /**
              * 播放Tween
-             * @time 播放的起始位置, 默认为从上次位置继续播放
+             * @position 播放的起始位置, 默认为从上次位置继续播放
              * @version Egret 3.1.8
              * @platform Web,Native
              * @language zh_CN
              */
-            TweenItem.prototype.play = function (time) {
+            TweenItem.prototype.play = function (position) {
                 if (!this.tween) {
-                    this.createTween();
+                    this.createTween(position);
                 }
                 else {
                     this.tween.setPaused(false);
-                    if (time !== undefined && time !== null) {
-                        this.tween.setPosition(time);
+                    if (this.isStop && position == undefined) {
+                        position = 0;
+                        this.isStop = false;
+                    }
+                    if (position !== undefined && position !== null) {
+                        this.tween.setPosition(position);
                     }
                 }
             };
@@ -1894,12 +1900,15 @@ var egret;
              */
             TweenItem.prototype.stop = function () {
                 this.pause();
-                this.tween = null;
+                this.isStop = true;
             };
-            TweenItem.prototype.createTween = function () {
+            TweenItem.prototype.createTween = function (position) {
                 this.tween = egret.Tween.get(this._target, this._props);
                 if (this._paths) {
                     this.applyPaths();
+                }
+                if (position !== undefined && position !== null) {
+                    this.tween.setPosition(position);
                 }
             };
             TweenItem.prototype.applyPaths = function () {

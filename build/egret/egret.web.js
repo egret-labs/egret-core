@@ -6261,7 +6261,7 @@ var egret;
                         if (this.activatedBuffer) {
                             var target = this.activatedBuffer.rootRenderTarget;
                             if (target.width != 0 || target.height != 0) {
-                                target.clear();
+                                target.clear(true);
                             }
                         }
                         break;

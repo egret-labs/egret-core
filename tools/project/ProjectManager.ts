@@ -73,7 +73,6 @@ export namespace manager {
             });
         });
         if (data.isWasmProject()) {
-            //todo db
             let arr = [
                 "egret.asm.js",
                 "egret.asm.js.mem",

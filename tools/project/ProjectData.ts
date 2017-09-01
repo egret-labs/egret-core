@@ -193,12 +193,17 @@ export class EgretProjectData {
                 name += "-wasm";
             }
         }
-        let dir = file.searchPath([
+        let searchPaths = [
             _path.join(modulePath, "bin", name),
             _path.join(modulePath, "bin"),
             _path.join(modulePath, "build", name),
             modulePath
-        ])
+        ];
+        if (this.isWasmProject()) {
+            searchPaths.unshift(_path.join(modulePath, "bin-wasm"));
+            searchPaths.unshift(_path.join(modulePath, "bin-wasm", name));
+        }
+        let dir = file.searchPath(searchPaths);
         if (!dir) {
             globals.exit(1050, modulePath);
         }
