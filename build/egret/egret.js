@@ -12177,7 +12177,7 @@ var egret;
                 var node = this.$renderNode;
                 var vertices = node.vertices;
                 if (vertices.length) {
-                    this._bounds.setTo(Number.MAX_VALUE, Number.MAX_VALUE, Number.MIN_VALUE, Number.MIN_VALUE);
+                    this._bounds.setTo(Number.MAX_VALUE, Number.MAX_VALUE, -Number.MAX_VALUE, -Number.MAX_VALUE);
                     for (var i = 0, l = vertices.length; i < l; i += 2) {
                         var x = vertices[i];
                         var y = vertices[i + 1];
