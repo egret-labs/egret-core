@@ -748,7 +748,7 @@ namespace eui {
             if (!viewport) {
                 return;
             }
-            let cancelEvent = egret.Event.create(egret.TouchEvent, event.type, event.bubbles, event.cancelable);
+            let cancelEvent = egret.Event.create(egret.TouchEvent, egret.TouchEvent.TOUCH_CANCEL, event.bubbles, event.cancelable);
             cancelEvent.$initTo(event.$stageX,event.$stageY,event.touchPointID);
             let target:egret.DisplayObject = this.downTarget;
             cancelEvent.$setTarget(target);

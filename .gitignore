@@ -37,3 +37,9 @@ src/tsc_config_temp.txt
 .wing/settings.json
 /built
 /tests
+
+build/egret-wasm
+build/eui-wasm
+build/dragonBones-wasm
+build/game-wasm
+build/wasm_libs
