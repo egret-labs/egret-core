@@ -92,7 +92,7 @@ namespace egret {
                 let node = <sys.MeshNode>this.$renderNode;
                 let vertices = node.vertices;
                 if (vertices.length) {
-                    this._bounds.setTo(Number.MAX_VALUE, Number.MAX_VALUE, Number.MIN_VALUE, Number.MIN_VALUE);
+                    this._bounds.setTo(Number.MAX_VALUE, Number.MAX_VALUE, -Number.MAX_VALUE, -Number.MAX_VALUE);
                     for (let i = 0, l = vertices.length; i < l; i += 2) {
                         let x = vertices[i];
                         let y = vertices[i + 1];
