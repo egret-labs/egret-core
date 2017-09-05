@@ -81,7 +81,7 @@ class ZipCommand implements egret.Command {
             } else {
                 //todo zip异常
                 //globals.warn(result);
-                console.error("打zip包出现异常！");
+                globals.log(1421);
             }
         });
 

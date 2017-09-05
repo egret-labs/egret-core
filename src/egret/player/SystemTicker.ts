@@ -405,13 +405,6 @@ namespace egret.sys {
 }
 
 module egret {
-    /**
-     * 心跳计时器单例
-     */
-
-    export let $ticker: sys.SystemTicker = new sys.SystemTicker();
-
-
 
     export namespace lifecycle {
 
@@ -462,11 +455,11 @@ module egret {
             contexts.push(context);
             plugin(context);
         }
-
-
-
     }
 
+    /**
+     * 心跳计时器单例
+     */
     export let ticker: sys.SystemTicker = new sys.SystemTicker();
 }
 

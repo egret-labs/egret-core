@@ -8,9 +8,4 @@ class info implements egret.Command {
     }
 }
 
-function getEnvLocale(env) {
-	env = env || process.env;
-	return env.LC_ALL || env.LC_MESSAGES || env.LANG || env.LANGUAGE;
-}
-
 export = info;

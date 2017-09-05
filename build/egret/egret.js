@@ -14993,10 +14993,6 @@ var egret;
     })(sys = egret.sys || (egret.sys = {}));
 })(egret || (egret = {}));
 (function (egret) {
-    /**
-     * 心跳计时器单例
-     */
-    egret.$ticker = new egret.sys.SystemTicker();
     var lifecycle;
     (function (lifecycle) {
         /**
@@ -15036,6 +15032,9 @@ var egret;
         }
         lifecycle.addLifecycleListener = addLifecycleListener;
     })(lifecycle = egret.lifecycle || (egret.lifecycle = {}));
+    /**
+     * 心跳计时器单例
+     */
     egret.ticker = new egret.sys.SystemTicker();
 })(egret || (egret = {}));
 if (true) {

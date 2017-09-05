@@ -190,7 +190,7 @@ class CreateAppCommand implements egret.Command {
             //console.log(propertiesFile + " : "+version);
             return version;
         } else {
-            console.error("找不到 source.properties 文件。buildToolDir ： " + buildToolDir);
+            globals.log(1619, buildToolDir);
         }
         return "undefined";
     }
@@ -208,7 +208,7 @@ class CreateAppCommand implements egret.Command {
         //get Android build tool version
         var buildToolsPath = file.joinPath(android_home, "build-tools");
         if (!file.isDirectory(buildToolsPath)) {
-            console.error("找不到 build_tools 文件夹。android_hom ： " + android_home);
+            globals.log(1618, android_home);
             globals.exit(1611);
         }
 
@@ -265,7 +265,7 @@ class CreateAppCommand implements egret.Command {
             //console.log(propertiesFile + " : "+version);
             return version;
         } else {
-            console.error("找不到 source.properties 文件。platformDir ： " + platformDir);
+            globals.log(1617, platformDir);
         }
         return "undefined";
     }
@@ -281,7 +281,7 @@ class CreateAppCommand implements egret.Command {
         //get Android build tool version
         var platformsPath = file.joinPath(android_home, "platforms");
         if (!file.isDirectory(platformsPath)) {
-            console.error("找不到 platforms 文件夹。android_hom ： " + android_home);
+            globals.log(1616, android_home);
             globals.exit(1611);
         }
 
@@ -330,7 +330,7 @@ class CreateAppCommand implements egret.Command {
             c = c.replace(new RegExp("EGT_ANDROID_SDK", "g"), platformVersion);
             file.save(buildGradleFile, c);
         } else {
-            console.error("找不到 build.gradle 文件。app_path ： " + file.getAbsolutePath(app_path));
+            globals.log(1615, file.getAbsolutePath(app_path));
             globals.exit(1611);
         }
 
@@ -354,8 +354,7 @@ class CreateAppCommand implements egret.Command {
             c = c.replace(new RegExp("EGT_ANDROID_SDK_DIR", "g"), android_home);
             file.save(localPropertiesFile, c);
         } else {
-            console.error("找不到 local.properties 文件。app_path ： " + file.getAbsolutePath(app_path));
-            globals.exit(1613);
+            globals.exit(1614, file.getAbsolutePath(app_path));
         }
 
     };
@@ -384,7 +383,7 @@ class CreateAppCommand implements egret.Command {
             return version;
         }
         else {
-            console.error("找不到 project.properties 文件。app_path ： " + app_path);
+            globals.log(1614, file.getAbsolutePath(app_path));
         }
         return "undefined";
     };
@@ -428,7 +427,7 @@ class CreateAppCommand implements egret.Command {
             }
         }
         else {
-            console.error("找不到 project.properties 文件。app_path ： " + file.getAbsolutePath(app_path));
+            globals.log(1614, file.getAbsolutePath(app_path));
             globals.exit(1611);
         }
     };
@@ -447,7 +446,7 @@ class CreateAppCommand implements egret.Command {
             if (result == 0) {
                 self.rename_app(app_path, app_data);
             } else {
-                console.error("unzip出现异常！");
+                globals.log(1613);
             }
         });
     }

@@ -99,6 +99,7 @@ locale_strings[1417] = "Successful detection ";
 locale_strings[1418] = "WebP format fail : {0}";
 locale_strings[1419] = "Format WebP : {0} / {1}";
 locale_strings[1420] = "Zip package filed, there may be special characters in the path";
+locale_strings[1421] = "Playing zip package exception!";
 //startserver
 locale_strings[1501] = "Unable to start the server, please check the authority or whether the port is occupied";
 //create_app
@@ -114,6 +115,13 @@ locale_strings[1609] = "> rename project name ...";
 locale_strings[1610] = "Project name is missing. Example:{color_green}egret create_app [app_name] -f [h5_game_path] -t [template_path] {color_normal}";
 locale_strings[1611] = "The project is exist, please use another name.Example:{color_green}egret create_app [app_name] -f [h5_game_path] -t [template_path] {color_normal}";
 locale_strings[1612] = "The first letter of the project name must be a-z";
+locale_strings[1613] = "unzip exception!";
+locale_strings[1614] = "The project.properties file could not be found. app_path: {0}";
+locale_strings[1615] = "The build.gradle file could not be found. app_path: {0}";
+locale_strings[1616] = "The platforms folder could not be found. android_home: {0}";
+locale_strings[1617] = "The source.properties file could not be found. platformDir: {0}";
+locale_strings[1618] = "The build_tools folder could not be found. android_home: {0}";
+locale_strings[1619] = "The source.properties file could not be found. buildToolDir: {0}";
 //upgrade
 locale_strings[1701] = "Project version is lower than egret version, please implement egret upgrade {your_project} command to upgrade your project, \n do not add braces {} in the commands";
 locale_strings[1702] = "Upgrade successful";

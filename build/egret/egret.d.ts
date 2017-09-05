@@ -10003,10 +10003,6 @@ declare namespace egret.sys {
     }
 }
 declare module egret {
-    /**
-     * 心跳计时器单例
-     */
-    let $ticker: sys.SystemTicker;
     namespace lifecycle {
         type LifecyclePlugin = (context: LifecycleContext) => void;
         /**
@@ -10026,6 +10022,9 @@ declare module egret {
         let onPause: () => void;
         function addLifecycleListener(plugin: LifecyclePlugin): void;
     }
+    /**
+     * 心跳计时器单例
+     */
     let ticker: sys.SystemTicker;
 }
 /**

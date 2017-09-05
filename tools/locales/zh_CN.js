@@ -102,6 +102,7 @@ var egret;
     locale_strings[1418] = "WebP格式转换失败 : {0}";
     locale_strings[1419] = "转换WebP格式 : {0} / {1}";
     locale_strings[1420] = "打包失败，请检查路径中是否有中文或特殊的字符";
+    locale_strings[1421] = "打zip包出现异常！";
     //startserver
     locale_strings[1501] = "无法启动服务器，请检查权限或端口是否被占用";
     //create_app
@@ -117,6 +118,13 @@ var egret;
     locale_strings[1610] = "缺少项目名称 例:{color_green}egret create_app [app_name] -f [h5_game_path] -t [template_path] {color_normal}";
     locale_strings[1611] = "项目已存在,请重新输入 例:{color_green}egret create_app [app_name] -f [h5_game_path] -t [template_path] {color_normal}";
     locale_strings[1612] = "项目名称必须以字母为开头";
+    locale_strings[1613] = "unzip出现异常！";
+    locale_strings[1614] = "找不到 project.properties 文件。app_path ： {0}";
+    locale_strings[1615] = "找不到 build.gradle 文件。app_path ： {0}";
+    locale_strings[1616] = "找不到 platforms 文件夹。android_home ： {0}";
+    locale_strings[1617] = "找不到 source.properties 文件。platformDir ： {0}";
+    locale_strings[1618] = "找不到 build_tools 文件夹。android_home ： {0}";
+    locale_strings[1619] = "找不到 source.properties 文件。buildToolDir ： {0}";
     //upgrade
     locale_strings[1701] = "项目版本低于 egret 版本，请执行 egret upgrade {your_project} 命令升级您的项目，\n命令中请不要加上大括号{}";
     locale_strings[1702] = "项目升级成功";
