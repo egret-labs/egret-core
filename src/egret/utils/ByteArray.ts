@@ -240,7 +240,7 @@ namespace egret {
             let wpos = value.byteLength;
             let uint8 = new Uint8Array(value);
             let bufferExtSize = this.bufferExtSize;
-            let bytes:Uint8Array;
+            let bytes: Uint8Array;
             if (bufferExtSize == 0) {
                 bytes = new Uint8Array(wpos);
             }
@@ -653,8 +653,11 @@ namespace egret {
          * @language zh_CN
          */
         public readUTFBytes(length: number): string {
-            if (!this.validate(length)) return;
-            let bytes = new Uint8Array(this.buffer, this.bufferOffset + this._position, length);
+            if (!this.validate(length)) {
+                return;
+            }
+            let data = this.data;
+            let bytes = new Uint8Array(data.buffer, data.byteOffset + this._position, length);
             this.position += length;
             return this.decodeUTF8(bytes);
         }
@@ -962,13 +965,13 @@ namespace egret {
          * @private
          * UTF-8 Encoding/Decoding
          */
-        private encodeUTF8(str:string):Uint8Array {
-            let pos:number = 0;
+        private encodeUTF8(str: string): Uint8Array {
+            let pos: number = 0;
             let codePoints = this.stringToCodePoints(str);
             let outputBytes = [];
 
             while (codePoints.length > pos) {
-                let code_point:number = codePoints[pos++];
+                let code_point: number = codePoints[pos++];
 
                 if (this.inRange(code_point, 0xD800, 0xDFFF)) {
                     this.encoderError(code_point);
@@ -1006,11 +1009,11 @@ namespace egret {
          * @param data
          * @returns
          */
-        private decodeUTF8(data:Uint8Array):string {
-            let fatal:boolean = false;
-            let pos:number = 0;
-            let result:string = "";
-            let code_point:number;
+        private decodeUTF8(data: Uint8Array): string {
+            let fatal: boolean = false;
+            let pos: number = 0;
+            let result: string = "";
+            let code_point: number;
             let utf8_code_point = 0;
             let utf8_bytes_needed = 0;
             let utf8_bytes_seen = 0;
@@ -1084,7 +1087,7 @@ namespace egret {
                 //Decode string
                 if (code_point !== null && code_point !== this.EOF_code_point) {
                     if (code_point <= 0xFFFF) {
-                        if (code_point > 0)result += String.fromCharCode(code_point);
+                        if (code_point > 0) result += String.fromCharCode(code_point);
                     } else {
                         code_point -= 0x10000;
                         result += String.fromCharCode(0xD800 + ((code_point >> 10) & 0x3ff));
@@ -1111,7 +1114,7 @@ namespace egret {
          * @param opt_code_point
          * @returns
          */
-        private decoderError(fatal, opt_code_point?):number {
+        private decoderError(fatal, opt_code_point?): number {
             if (fatal) {
                 egret.$error(1027);
             }
@@ -1121,11 +1124,11 @@ namespace egret {
         /**
          * @private
          */
-        private EOF_byte:number = -1;
+        private EOF_byte: number = -1;
         /**
          * @private
          */
-        private EOF_code_point:number = -1;
+        private EOF_code_point: number = -1;
 
         /**
          * @private

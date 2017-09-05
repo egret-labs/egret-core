@@ -23137,9 +23137,11 @@ var egret;
          * @language zh_CN
          */
         ByteArray.prototype.readUTFBytes = function (length) {
-            if (!this.validate(length))
+            if (!this.validate(length)) {
                 return;
-            var bytes = new Uint8Array(this.buffer, this.bufferOffset + this._position, length);
+            }
+            var data = this.data;
+            var bytes = new Uint8Array(data.buffer, data.byteOffset + this._position, length);
             this.position += length;
             return this.decodeUTF8(bytes);
         };
