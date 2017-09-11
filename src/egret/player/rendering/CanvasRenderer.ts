@@ -198,6 +198,11 @@ namespace egret {
                     }
                 }
 
+                let bounds = displayObject.$getOriginalBounds();
+                if(bounds.width <= 0 || bounds.height <= 0) {
+                    return drawCalls;
+                }
+
                 if (filters.length == 1 && filters[0].type == "colorTransform" && !displayObject.$children) {
                     if (hasBlendMode) {
                         context.globalCompositeOperation = compositeOp;
@@ -234,7 +239,6 @@ namespace egret {
                 // 获取显示对象的矩形区域
                 let region: sys.Region;
                 region = sys.Region.create();
-                let bounds = displayObject.$getOriginalBounds();
                 region.updateRegion(bounds, displayMatrix);
 
                 // 为显示对象创建一个新的buffer
@@ -295,6 +299,11 @@ namespace egret {
                 }
             }
 
+            let bounds = displayObject.$getOriginalBounds();
+            if(bounds.width <= 0 || bounds.height <= 0) {
+                return drawCalls;
+            }
+
             // 获取显示对象的链接矩阵
             let displayMatrix = Matrix.create();
             displayMatrix.copyFrom(displayObject.$getConcatenatedMatrix());
@@ -305,7 +314,6 @@ namespace egret {
             // 获取显示对象的矩形区域
             let region: sys.Region;
             region = sys.Region.create();
-            let bounds = displayObject.$getOriginalBounds();
             region.updateRegion(bounds, displayMatrix);
 
             // 为显示对象创建一个新的buffer
@@ -465,6 +473,9 @@ namespace egret {
                 region = sys.Region.create();
                 bounds = displayObject.$getOriginalBounds();
                 region.updateRegion(bounds, displayMatrix);
+            }
+            if(region.width <= 0 || region.height <= 0) {
+                return drawCalls;
             }
             let found = false;
             if (!dirtyList) {//forRenderTexture

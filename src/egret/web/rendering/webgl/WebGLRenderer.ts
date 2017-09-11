@@ -203,6 +203,11 @@ namespace egret.web {
                 }
             }
 
+            let bounds = displayObject.$getOriginalBounds();
+            if(bounds.width <= 0 || bounds.height <= 0) {
+                return drawCalls;
+            }
+
             if (!displayObject.mask && filters.length == 1 && (filters[0].type == "colorTransform" || (filters[0].type === "custom" && (<CustomFilter>filters[0]).padding === 0))) {
                 let childrenDrawCount = this.getRenderCount(displayObject);
                 if (!displayObject.$children || childrenDrawCount == 1) {
@@ -237,7 +242,6 @@ namespace egret.web {
             // 获取显示对象的矩形区域
             let region: sys.Region;
             region = sys.Region.create();
-            let bounds = displayObject.$getOriginalBounds();
             region.updateRegion(bounds, displayMatrix);
 
             // 为显示对象创建一个新的buffer
@@ -383,6 +387,9 @@ namespace egret.web {
                 region = sys.Region.create();
                 bounds = displayObject.$getOriginalBounds();
                 region.updateRegion(bounds, displayMatrix);
+            }
+            if(region.width <= 0 || region.height <= 0) {
+                return drawCalls;
             }
             let found = false;
             if (!dirtyList) {//forRenderTexture

@@ -7196,6 +7196,10 @@ var egret;
                         compositeOp = defaultCompositeOp;
                     }
                 }
+                var bounds = displayObject.$getOriginalBounds();
+                if (bounds.width <= 0 || bounds.height <= 0) {
+                    return drawCalls;
+                }
                 if (!displayObject.mask && filters.length == 1 && (filters[0].type == "colorTransform" || (filters[0].type === "custom" && filters[0].padding === 0))) {
                     var childrenDrawCount = this.getRenderCount(displayObject);
                     if (!displayObject.$children || childrenDrawCount == 1) {
@@ -7225,7 +7229,6 @@ var egret;
                 // 获取显示对象的矩形区域
                 var region;
                 region = egret.sys.Region.create();
-                var bounds = displayObject.$getOriginalBounds();
                 region.updateRegion(bounds, displayMatrix);
                 // 为显示对象创建一个新的buffer
                 // todo 这里应该计算 region.x region.y
@@ -7356,6 +7359,9 @@ var egret;
                     region = egret.sys.Region.create();
                     bounds = displayObject.$getOriginalBounds();
                     region.updateRegion(bounds, displayMatrix);
+                }
+                if (region.width <= 0 || region.height <= 0) {
+                    return drawCalls;
                 }
                 var found = false;
                 if (!dirtyList) {
