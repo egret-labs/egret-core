@@ -109,6 +109,7 @@ var Entry = (function () {
         var self = this;
         options.command = options.command || "help";
         try {
+            console.log(options.command);
             var CommandClass = require("./commands/" + options.command);
         }
         catch (e) {
