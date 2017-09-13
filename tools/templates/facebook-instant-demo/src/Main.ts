@@ -41,12 +41,13 @@ class Main extends eui.UILayer {
 
         //初始化Facebook SDK，在回调方法里获取相关信息
         FBInstant.initializeAsync().then(function () {
-            console.log("getLocale:", FBInstant.getLocale());
-            console.log("getPlatform:", FBInstant.getPlatform());
-            console.log("getSDKVersion", FBInstant.getSDKVersion());
             console.log("player.getID", FBInstant.player.getID());
             console.log("player.getName", FBInstant.player.getName());
             console.log("player.getPhoto", FBInstant.player.getPhoto());
+
+            console.log("getLocale:", FBInstant.getLocale());
+            console.log("getPlatform:", FBInstant.getPlatform());
+            console.log("getSDKVersion", FBInstant.getSDKVersion());
         })
     }
     /**
@@ -87,7 +88,7 @@ class Main extends eui.UILayer {
      */
     private createScene() {
         if (this.isThemeLoadEnd && this.isResourceLoadEnd) {
-            console.log('FBInstantGameSDK v2.1')
+            console.log('FBInstantGameSDK')
             console.warn('注意:正式版需要使用下面FBInstant.startGameAsync方法')
             // FBInstant.startGameAsync().then(() => {
             //     console.log('用户点击了开始游戏的按钮');
@@ -107,7 +108,6 @@ class Main extends eui.UILayer {
         }
     }
     private textfield: egret.TextField;
-    private score: number = 0;
     /**
      * 创建场景界面
      */
@@ -143,33 +143,12 @@ class Main extends eui.UILayer {
         group.verticalCenter = 0;
         this.addChild(group);
 
-        let btnScore = new eui.Button();
-        btnScore.label = "点击增加分数";
-        group.addChild(btnScore);
-        btnScore.addEventListener(egret.TouchEvent.TOUCH_TAP, () => {
-            this.score += 1;
-            this.textfield.text = "当前分数：" + this.score;
-            //通知 Facebook 平台当前的分数
-            FBInstant.setScore(this.score);
-        }, this);
-
-        let btnGameOver = new eui.Button();
-        btnGameOver.label = "点击结束游戏";
-        group.addChild(btnGameOver);
-        btnGameOver.addEventListener(egret.TouchEvent.TOUCH_TAP, () => {
-            //通知 Facebook 平台游戏结束，显示平台统一的结束界面
-            FBInstant.endGameAsync().then(() => {
-                //重新开始游戏的回调方法
-                this.score = 0;
-                this.textfield.text = "游戏开始";
-            });
-        }, this);
 
         let btnSetData = new eui.Button();
         btnSetData.label = "点击保存数据";
         group.addChild(btnSetData);
         btnSetData.addEventListener(egret.TouchEvent.TOUCH_TAP, () => {
-            //注意，该方法只在 Facebook 真实环境下生效
+            console.log("注意，该方法只在 Facebook 真实环境下生效");
             var saveData = {
                 achievements: ['medal1', 'medal2', 'medal3'],
                 currentLife: 300,
@@ -185,7 +164,7 @@ class Main extends eui.UILayer {
         btnGetData.label = "点击读取数据";
         group.addChild(btnGetData);
         btnGetData.addEventListener(egret.TouchEvent.TOUCH_TAP, () => {
-            //注意，该方法只在 Facebook 真实环境下生效
+            console.log("注意，该方法只在 Facebook 真实环境下生效");
             console.log('开始读取数据');
             FBInstant.player.getDataAsync(['achievements', 'currentLife']).then((data) => {
                 //读取数据的回调方法
@@ -197,44 +176,18 @@ class Main extends eui.UILayer {
         btnContext.label = "获取游戏来源";
         group.addChild(btnContext);
         btnContext.addEventListener(egret.TouchEvent.TOUCH_TAP, () => {
-            //注意，该方法只在 Facebook 真实环境下生效
+            console.log("注意，该方法只在 Facebook 真实环境下生效");
             console.log('获取游戏来源id', FBInstant.context.getID());
             console.log('获取游戏来源类型', FBInstant.context.getType());
         }, this);
 
-        let btnTackeScreenShot = new eui.Button();
-        //该功能只在messenger app里生效
-        btnTackeScreenShot.label = "点击进行截屏";
-        group.addChild(btnTackeScreenShot);
-        btnTackeScreenShot.addEventListener(egret.TouchEvent.TOUCH_TAP, () => {
-            FBInstant.takeScreenshotAsync().then(function () {
-                console.log('Screenshot taken!');
-            }).catch(function () {
-                console.log('Failed to take screenshot.');
-            });
-        }, this);
 
-        let btnSendScreenshot = new eui.Button();
-        //该功能只在messenger app里生效
-        btnSendScreenshot.label = "点击发送截屏";
-        group.addChild(btnSendScreenshot);
-        btnSendScreenshot.addEventListener(egret.TouchEvent.TOUCH_TAP, () => {
-            var renderTexture: egret.RenderTexture = new egret.RenderTexture();
-            renderTexture.drawToTexture(this);
-            var b64 = renderTexture.toDataURL("image/png", new egret.Rectangle(0, 0, this.stage.stageWidth, this.stage.stageHeight))
-            FBInstant.sendScreenshotAsync(b64).then(function () {
-                console.log('Screenshot sent!');
-            }).catch(function (error) {
-                console.log('Failed to send screenshot.');
-                console.log(error.toString());
-            });
-        }, this);
-
-        let btnAbort = new eui.Button();
-        btnAbort.label = "点击报错退出";
-        group.addChild(btnAbort);
-        btnAbort.addEventListener(egret.TouchEvent.TOUCH_TAP, () => {
-            FBInstant.abort('error');
+        let btnGameOver = new eui.Button();
+        btnGameOver.label = "点击退出游戏";
+        group.addChild(btnGameOver);
+        btnGameOver.addEventListener(egret.TouchEvent.TOUCH_TAP, () => {
+            console.log("注意，该方法只在 Facebook 真实环境下生效");
+            FBInstant.quit();
         }, this);
 
 
