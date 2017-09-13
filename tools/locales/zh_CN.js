@@ -65,7 +65,7 @@ var egret;
     locale_strings[1116] = "目前不支持修改 tsconfig.json 中的编译选项: '{0}'.";
     locale_strings[1117] = "警告! tsconfig.json 不是有效的 json 文件";
     locale_strings[1118] = "未找到 {0} 版本引擎，将使用默认版本引擎替换，请在一键安装包中安装对应版本引擎";
-    locale_strings[1119] = "第三方库编译报错，您可以访问{color_underline}http://developer.egret.com/cn/github/egret-docs/Engine2D/projectConfig/libraryProject/index.html{color_normal}了解详情";
+    locale_strings[1119] = "第三方库编译报错，您可以访问{color_underline} http://developer.egret.com/cn/github/egret-docs/Engine2D/projectConfig/libraryProject/index.html {color_normal}了解详情";
     locale_strings[1120] = "白鹭引擎 4.1 使用新结构进行第三方库升级，请先升级您的第三方库";
     locale_strings[1121] = "您的模块 package.json 中不包含 typings 属性，这会导致导出的模块不存在 TypeScript Definition 文件 ( .d.ts )，近而无法在 TypeScript 中包含智能语法提示";
     locale_strings[1122] = "第三方库的 tsconfig.json 中必须包含 outFile 这一属性";
@@ -106,9 +106,9 @@ var egret;
     //startserver
     locale_strings[1501] = "无法启动服务器，请检查权限或端口是否被占用";
     //create_app
-    locale_strings[1601] = "请输入h5游戏目录以及手机平台支持库。例: {color_green}egret create_app [app_name] -f [h5_game_path] -t [template_path] {color_normal} \n如没有安装最新手机平台支持库，请从以下地址下载：\nAndroid: http://www.egret-labs.org/download/egret-android-packager-download.html, \niOS:http://www.egret-labs.org/download/egret-ios-packager-download.html";
-    locale_strings[1602] = "不是h5游戏目录(缺少egretProperties.json或格式不正确) \n请从http://www.egret-labs.org/download/egret-download.html升级egret-core到最新版";
-    locale_strings[1603] = "{color_red}{0}{color_normal}中不存在create_app.json，请检查支持库路径是否正确。\n请从以下地址下载最新手机平台支持库\nAndroid: http://www.egret-labs.org/download/egret-android-packager-download.html\niOS: http://www.egret-labs.org/download/egret-ios-packager-download.html";
+    locale_strings[1601] = "请输入h5游戏目录以及手机平台支持库。例: {color_green}egret create_app [app_name] -f [h5_game_path] -t [template_path] {color_normal} \n如没有安装最新手机平台支持库，请从以下地址下载：\nAndroid: https://www.egret.com/downloads/android.html, \niOS:https://www.egret.com/downloads/ios.html";
+    locale_strings[1602] = "不是h5游戏目录(缺少egretProperties.json或格式不正确) \n请从 https://www.egret.com/products/engine.html 升级引擎到最新版";
+    locale_strings[1603] = "{color_red}{0}{color_normal}中不存在create_app.json，请检查支持库路径是否正确。\n请从以下地址下载最新手机平台支持库\nAndroid: https://www.egret.com/downloads/android.html\niOS: https://www.egret.com/downloads/ios.html";
     locale_strings[1604] = "执行egret build命令失败";
     locale_strings[1605] = "移动平台项目目录不能与html5项目目录为同一目录，请修改移动平台项目目录。";
     locale_strings[1606] = "创建完毕，共计耗时：{0}秒";
@@ -224,8 +224,6 @@ var egret;
     locale_strings[12003] = "选择屏幕缩放模式";
     locale_strings[12004] = "选择扩展模块";
     locale_strings[12005] = "请选择希望发布的平台";
-    locale_strings[13000] = "出现错误,请自查!";
-    locale_strings[13001] = "需要设置原生模板路径 使用 --nativeTemplatePath 或 -t";
 })(egret || (egret = {}));
 var helpModule;
 (function (helpModule) {
