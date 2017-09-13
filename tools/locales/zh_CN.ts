@@ -236,9 +236,6 @@ module egret {
     locale_strings[12004] = "选择扩展模块";
     locale_strings[12005] = "请选择希望发布的平台";
 
-    locale_strings[13000] = "出现错误,请自查!";
-    locale_strings[13001] = "需要设置原生模板路径 使用 --nativeTemplatePath 或 -t";
-
 }
 
 module helpModule {
