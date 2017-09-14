@@ -99,10 +99,7 @@ function executeCommandLine(args) {
     }
     else {
         exitcode.then(function (value) {
-            // 如果直接关闭进程，会导致 catch 无法执行，所以设置一个 100ms 的延迟
-            setTimeout(function () {
-                entry.exit(value);
-            }, 100);
+            entry.exit(value);
         }).catch(function (e) { return console.log(e); });
     }
 }
@@ -114,7 +111,6 @@ var Entry = (function () {
         var self = this;
         options.command = options.command || "help";
         try {
-            console.log(options.command);
             var CommandClass = require("./commands/" + options.command);
         }
         catch (e) {
@@ -123,7 +119,6 @@ var Entry = (function () {
         }
         var command = new CommandClass();
         var result = command.execute();
-        console.log(result);
         return result;
     };
     Entry.prototype.exit = function (exitCode) {
