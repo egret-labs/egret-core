@@ -38,7 +38,7 @@ var utils = require("../lib/utils");
 var FileUtil = require("../lib/FileUtil");
 var exml = require("../actions/exml");
 var CompileProject = require("../actions/CompileProject");
-var GenerateVersion = require("../actions/GenerateVersionCommand");
+var GenerateVersionAction_1 = require("../actions/GenerateVersionAction");
 var ZipCMD = require("../actions/ZipCommand");
 var EgretProject = require("../project/EgretProject");
 var copyNative = require("../actions/CopyNativeFiles");
@@ -83,13 +83,13 @@ var Publish = (function () {
                         utils.minify(outfile, outfile);
                         useResourceMangerPublish = false;
                         if (!useResourceMangerPublish) {
-                            (new GenerateVersion).execute();
+                            GenerateVersionAction_1.generateVersion(runtime);
                         }
                         //拷贝资源后还原default.thm.json bug修复 by yanjiaqi
                         if (exml.updateSetting) {
                             exml.updateSetting();
                         }
-                        if (egret.args.runtime == "native") {
+                        if (runtime == "native") {
                             manifestPath = FileUtil.joinPath(options.releaseDir, "ziptemp", "manifest.json");
                             EgretProject.manager.generateManifest(null, manifestPath, false, "native");
                             EgretProject.manager.modifyNativeRequire(manifestPath);

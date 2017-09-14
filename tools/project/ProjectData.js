@@ -237,7 +237,7 @@ var EgretProjectData = (function () {
     };
     EgretProjectData.prototype.getPublishType = function (runtime) {
         if (globals.hasKeys(this.egretProperties, ["publish", runtime])) {
-            return this.egretProperties["publish"][runtime];
+            return this.egretProperties.publish[runtime];
         }
         return 0;
     };

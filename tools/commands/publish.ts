@@ -6,7 +6,7 @@ import service = require('../service/index');
 import FileUtil = require('../lib/FileUtil');
 import exml = require("../actions/exml");
 import CompileProject = require('../actions/CompileProject');
-import GenerateVersion = require('../actions/GenerateVersionCommand');
+import { generateVersion } from '../actions/GenerateVersionAction'
 import ZipCMD = require("../actions/ZipCommand");
 import ChangeEntranceCMD = require("../actions/ChangeEntranceCommand");
 
@@ -46,7 +46,7 @@ class Publish implements egret.Command {
         //重新设置 releaseDir
         var versionFile = this.getVersionInfo();
 
-        let runtime = egret.args.runtime == 'native' ? 'native' : "web";
+        const runtime = egret.args.runtime == 'native' ? 'native' : "web";
         options.releaseDir = FileUtil.joinPath(config.getReleaseRoot(), runtime, versionFile);
         globals.log(1402, runtime, versionFile);
 
@@ -64,7 +64,7 @@ class Publish implements egret.Command {
         // let commandResult = await utils.executeCommand("res config");
         let useResourceMangerPublish = false;//commandResult.error && egret.args.runtime == "web" ? false : true;
         if (!useResourceMangerPublish) {
-            (new GenerateVersion).execute();
+            generateVersion(runtime);
         }
 
 
@@ -73,7 +73,7 @@ class Publish implements egret.Command {
             exml.updateSetting();
         }
         let manifestPath;
-        if (egret.args.runtime == "native") {
+        if (runtime == "native") {
             manifestPath = FileUtil.joinPath(options.releaseDir, "ziptemp", "manifest.json");
             EgretProject.manager.generateManifest(null, manifestPath, false, "native");
             EgretProject.manager.modifyNativeRequire(manifestPath);

@@ -283,11 +283,10 @@ export class EgretProjectData {
         return false;
     }
 
-    getPublishType(runtime: string): number {
+    getPublishType(runtime: "web" | "native") {
         if (globals.hasKeys(this.egretProperties, ["publish", runtime])) {
-            return this.egretProperties["publish"][runtime];
+            return this.egretProperties.publish[runtime];
         }
-
         return 0;
     }
 
