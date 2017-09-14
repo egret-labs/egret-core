@@ -12,9 +12,8 @@ class EgretResourceManager implements egret.Command {
         }
 
         let command = process.argv[3];
-        let p = getProjectPath(process.argv[4]);
+        let projectRoot = getProjectPath(process.argv[4]);
         console.log(command)
-        return 0;
 
         executeCommand(command).catch(handleException);
         return 0;
@@ -26,17 +25,14 @@ class EgretResourceManager implements egret.Command {
                     return res.version();
                     break;
                 case "upgrade":
-                    return res.upgrade(p);
+                    return res.upgrade(projectRoot);
                     break;
                 case "build":
                 case "publish":
-                    return res.build(p);
-                    break;
-                case "watch":
-                    return res.watch(p)
+                    return res.build({ projectRoot, debug: true, command });
                     break;
                 case "config":
-                    return res.printConfig(p);
+                    return res.printConfig(projectRoot);
                     break;
                 case "env":
                     const key = process.argv[3];

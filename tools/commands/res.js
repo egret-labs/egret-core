@@ -50,17 +50,14 @@ var EgretResourceManager = (function () {
                                 return [2 /*return*/, res.version()];
                                 break;
                             case "upgrade":
-                                return [2 /*return*/, res.upgrade(p)];
+                                return [2 /*return*/, res.upgrade(projectRoot)];
                                 break;
                             case "build":
                             case "publish":
-                                return [2 /*return*/, res.build(p)];
-                                break;
-                            case "watch":
-                                return [2 /*return*/, res.watch(p)];
+                                return [2 /*return*/, res.build({ projectRoot: projectRoot, debug: true, command: command })];
                                 break;
                             case "config":
-                                return [2 /*return*/, res.printConfig(p)];
+                                return [2 /*return*/, res.printConfig(projectRoot)];
                                 break;
                             case "env":
                                 key = process.argv[3];
@@ -82,14 +79,15 @@ var EgretResourceManager = (function () {
                     });
                 });
             }
-            var res, handleException, ResourceManagerUserConfig, command, p;
+            var res, handleException, ResourceManagerUserConfig, command, projectRoot;
             return __generator(this, function (_a) {
                 res = require('../lib/res/res.js');
                 handleException = res.handleException;
                 ResourceManagerUserConfig = res.ResourceManagerUserConfig;
                 command = process.argv[3];
-                p = getProjectPath(process.argv[4]);
+                projectRoot = getProjectPath(process.argv[4]);
                 console.log(command);
+                executeCommand(command).catch(handleException);
                 return [2 /*return*/, 0];
             });
         });

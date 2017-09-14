@@ -115,7 +115,12 @@ export function executeCommandLine(args: string[]): void {
         entry.exit(exitcode);
     }
     else {
-        exitcode.then(value => entry.exit(value)).catch(e => console.log(e))
+        exitcode.then(value => {
+            // 如果直接关闭进程，会导致 catch 无法执行，所以设置一个 100ms 的延迟
+            setTimeout(() => {
+                entry.exit(value);
+            }, 100);
+        }).catch(e => console.log(e))
     }
 }
 class Entry {
@@ -132,7 +137,9 @@ class Entry {
             return 10002;
         }
         var command = new CommandClass();
-        return command.execute();
+        let result = command.execute();
+        console.log(result)
+        return result;
     }
 
     exit(exitCode) {

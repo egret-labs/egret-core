@@ -98,7 +98,12 @@ function executeCommandLine(args) {
         entry.exit(exitcode);
     }
     else {
-        exitcode.then(function (value) { return entry.exit(value); }).catch(function (e) { return console.log(e); });
+        exitcode.then(function (value) {
+            // 如果直接关闭进程，会导致 catch 无法执行，所以设置一个 100ms 的延迟
+            setTimeout(function () {
+                entry.exit(value);
+            }, 100);
+        }).catch(function (e) { return console.log(e); });
     }
 }
 exports.executeCommandLine = executeCommandLine;
@@ -117,7 +122,9 @@ var Entry = (function () {
             return 10002;
         }
         var command = new CommandClass();
-        return command.execute();
+        var result = command.execute();
+        console.log(result);
+        return result;
     };
     Entry.prototype.exit = function (exitCode) {
         if (DontExitCode == exitCode)
