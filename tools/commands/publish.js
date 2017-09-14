@@ -65,61 +65,67 @@ var Publish = (function () {
         return __awaiter(this, void 0, void 0, function () {
             var options, config, versionFile, runtime, compileProject, result, outfile, manifestPath, allMainfestPath, zip, indexPath, copyAction;
             return __generator(this, function (_a) {
-                utils.checkEgret();
-                options = egret.args;
-                config = EgretProject.data;
-                versionFile = this.getVersionInfo();
-                runtime = egret.args.runtime == 'native' ? 'native' : "web";
-                options.releaseDir = FileUtil.joinPath(config.getReleaseRoot(), runtime, versionFile);
-                globals.log(1402, runtime, versionFile);
-                utils.clean(options.releaseDir);
-                options.minify = true;
-                options.publish = true;
-                compileProject = new CompileProject();
-                result = compileProject.compile(options);
-                outfile = FileUtil.joinPath(options.releaseDir, 'main.min.js');
-                utils.minify(outfile, outfile);
-                PublishResourceAction_1.publishResource(runtime);
-                //拷贝资源后还原default.thm.json bug修复 by yanjiaqi
-                if (exml.updateSetting) {
-                    exml.updateSetting();
+                switch (_a.label) {
+                    case 0:
+                        utils.checkEgret();
+                        options = egret.args;
+                        config = EgretProject.data;
+                        versionFile = this.getVersionInfo();
+                        runtime = egret.args.runtime == 'native' ? 'native' : "web";
+                        options.releaseDir = FileUtil.joinPath(config.getReleaseRoot(), runtime, versionFile);
+                        globals.log(1402, runtime, versionFile);
+                        utils.clean(options.releaseDir);
+                        options.minify = true;
+                        options.publish = true;
+                        compileProject = new CompileProject();
+                        result = compileProject.compile(options);
+                        outfile = FileUtil.joinPath(options.releaseDir, 'main.min.js');
+                        utils.minify(outfile, outfile);
+                        // await publishResource(runtime);
+                        //拷贝资源后还原default.thm.json bug修复 by yanjiaqi
+                        if (exml.updateSetting) {
+                            exml.updateSetting();
+                        }
+                        if (runtime == "native") {
+                            manifestPath = FileUtil.joinPath(options.releaseDir, "ziptemp", "manifest.json");
+                            EgretProject.manager.generateManifest(null, manifestPath, false, "native");
+                            EgretProject.manager.modifyNativeRequire(manifestPath);
+                            allMainfestPath = FileUtil.joinPath(options.releaseDir, "all.manifest");
+                            if (FileUtil.exists(allMainfestPath)) {
+                                FileUtil.copy(allMainfestPath, FileUtil.joinPath(options.releaseDir, "ziptemp", "all.manifest"));
+                            }
+                            FileUtil.remove(allMainfestPath);
+                            //先拷贝 launcher
+                            FileUtil.copy(FileUtil.joinPath(options.templateDir, "runtime"), FileUtil.joinPath(options.releaseDir, "ziptemp", "launcher"));
+                            FileUtil.copy(FileUtil.joinPath(options.releaseDir, "main.min.js"), FileUtil.joinPath(options.releaseDir, "ziptemp", "main.min.js"));
+                            FileUtil.remove(FileUtil.joinPath(options.releaseDir, "main.min.js"));
+                            EgretProject.manager.copyLibsForPublish(manifestPath, FileUtil.joinPath(options.releaseDir, "ziptemp"), "native");
+                            zip = new ZipCommand(versionFile);
+                            zip.execute(function (code) {
+                                copyNative.refreshNative(false, versionFile);
+                            });
+                        }
+                        else {
+                            manifestPath = FileUtil.joinPath(egret.args.releaseDir, "manifest.json");
+                            indexPath = FileUtil.joinPath(egret.args.releaseDir, "index.html");
+                            EgretProject.manager.generateManifest(null, manifestPath, false, "web");
+                            if (!EgretProject.data.useTemplate) {
+                                FileUtil.copy(FileUtil.joinPath(options.projectDir, "index.html"), indexPath);
+                                EgretProject.manager.modifyIndex(manifestPath, indexPath);
+                            }
+                            else {
+                                FileUtil.copy(FileUtil.joinPath(options.templateDir, "web", "index.html"), indexPath);
+                                EgretProject.manager.modifyIndex(manifestPath, indexPath);
+                            }
+                            copyAction = new CopyAction(options.projectDir, options.releaseDir);
+                            copyAction.copy("favicon.ico");
+                            EgretProject.manager.copyLibsForPublish(manifestPath, options.releaseDir, "web");
+                        }
+                        return [4 /*yield*/, PublishResourceAction_1.publishResource(runtime)];
+                    case 1:
+                        _a.sent();
+                        return [2 /*return*/, DontExitCode];
                 }
-                if (runtime == "native") {
-                    manifestPath = FileUtil.joinPath(options.releaseDir, "ziptemp", "manifest.json");
-                    EgretProject.manager.generateManifest(null, manifestPath, false, "native");
-                    EgretProject.manager.modifyNativeRequire(manifestPath);
-                    allMainfestPath = FileUtil.joinPath(options.releaseDir, "all.manifest");
-                    if (FileUtil.exists(allMainfestPath)) {
-                        FileUtil.copy(allMainfestPath, FileUtil.joinPath(options.releaseDir, "ziptemp", "all.manifest"));
-                    }
-                    FileUtil.remove(allMainfestPath);
-                    //先拷贝 launcher
-                    FileUtil.copy(FileUtil.joinPath(options.templateDir, "runtime"), FileUtil.joinPath(options.releaseDir, "ziptemp", "launcher"));
-                    FileUtil.copy(FileUtil.joinPath(options.releaseDir, "main.min.js"), FileUtil.joinPath(options.releaseDir, "ziptemp", "main.min.js"));
-                    FileUtil.remove(FileUtil.joinPath(options.releaseDir, "main.min.js"));
-                    EgretProject.manager.copyLibsForPublish(manifestPath, FileUtil.joinPath(options.releaseDir, "ziptemp"), "native");
-                    zip = new ZipCommand(versionFile);
-                    zip.execute(function (code) {
-                        copyNative.refreshNative(false, versionFile);
-                    });
-                }
-                else {
-                    manifestPath = FileUtil.joinPath(egret.args.releaseDir, "manifest.json");
-                    indexPath = FileUtil.joinPath(egret.args.releaseDir, "index.html");
-                    EgretProject.manager.generateManifest(null, manifestPath, false, "web");
-                    if (!EgretProject.data.useTemplate) {
-                        FileUtil.copy(FileUtil.joinPath(options.projectDir, "index.html"), indexPath);
-                        EgretProject.manager.modifyIndex(manifestPath, indexPath);
-                    }
-                    else {
-                        FileUtil.copy(FileUtil.joinPath(options.templateDir, "web", "index.html"), indexPath);
-                        EgretProject.manager.modifyIndex(manifestPath, indexPath);
-                    }
-                    copyAction = new CopyAction(options.projectDir, options.releaseDir);
-                    copyAction.copy("favicon.ico");
-                    EgretProject.manager.copyLibsForPublish(manifestPath, options.releaseDir, "web");
-                }
-                return [2 /*return*/, DontExitCode];
             });
         });
     };

@@ -2,7 +2,8 @@
 
 //import globals = require("../globals");
 import FileUtil = require('../lib/FileUtil');
-var fs = require("fs");
+import * as fs from 'fs';
+import * as path from 'path';
 import CopyFilesCommand = require("../commands/copyfile");
 import EgretProject = require('../project/EgretProject');
 
@@ -96,7 +97,15 @@ function publishResourceWithVersion(projectDir: string, releaseDir: string) {
     //globals.debugLog(1408, (Date.now() - tempTime) / 1000);
 }
 
-export function publishResource(runtime: "web" | "native"): number {
+async function publishWithResourceManager(projectDir: string, releaseDir: string): Promise<number> {
+    publishResourceOrigin(projectDir, releaseDir);
+    let res = require('../lib/res/res.js');
+    let projectRoot = path.join(projectDir, "bin-release/web/1111");
+    let command = "publish"
+    return await res.build({ projectRoot, debug: true, command });
+}
+
+export function publishResource(runtime: "web" | "native") {
 
     let { releaseDir, projectDir } = egret.args;
 
@@ -107,6 +116,9 @@ export function publishResource(runtime: "web" | "native"): number {
             break;
         case 1:
             return publishResourceWithVersion(projectDir, releaseDir);
+            break;
+        case 2:
+            return publishWithResourceManager(projectDir, releaseDir);
             break;
         default:
             return 1;
