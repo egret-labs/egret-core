@@ -6,8 +6,8 @@ import service = require('../service/index');
 import FileUtil = require('../lib/FileUtil');
 import exml = require("../actions/exml");
 import CompileProject = require('../actions/CompileProject');
-import { generateVersion } from '../actions/GenerateVersionAction'
-import ZipCMD = require("../actions/ZipCommand");
+import { publishResource } from '../actions/PublishResourceAction';
+import ZipCommand = require("../actions/ZipCommand");
 import ChangeEntranceCMD = require("../actions/ChangeEntranceCommand");
 
 import project = require("../actions/Project");
@@ -59,14 +59,7 @@ class Publish implements egret.Command {
         var outfile = FileUtil.joinPath(options.releaseDir, 'main.min.js');
         utils.minify(outfile, outfile);
 
-        //生成 all.manifest 并拷贝资源
-
-        // let commandResult = await utils.executeCommand("res config");
-        let useResourceMangerPublish = false;//commandResult.error && egret.args.runtime == "web" ? false : true;
-        if (!useResourceMangerPublish) {
-            generateVersion(runtime);
-        }
-
+        publishResource(runtime);
 
         //拷贝资源后还原default.thm.json bug修复 by yanjiaqi
         if (exml.updateSetting) {
@@ -92,7 +85,7 @@ class Publish implements egret.Command {
             EgretProject.manager.copyLibsForPublish(manifestPath, FileUtil.joinPath(options.releaseDir, "ziptemp"), "native");
 
             //runtime  打包所有js文件以及all.manifest
-            var zip = new ZipCMD(versionFile);
+            var zip = new ZipCommand(versionFile);
             zip.execute(function (code) {
                 copyNative.refreshNative(false, versionFile);
             });
@@ -115,12 +108,6 @@ class Publish implements egret.Command {
 
             EgretProject.manager.copyLibsForPublish(manifestPath, options.releaseDir, "web");
         }
-
-        if (useResourceMangerPublish) {
-            let version = path.join(runtime, versionFile);
-            let commandResult1 = await utils.executeCommand(`res publish ${config.getProjectRoot()} ${options.releaseDir}`);
-        }
-
         return DontExitCode;
     }
 
