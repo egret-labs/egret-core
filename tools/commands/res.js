@@ -86,9 +86,7 @@ var EgretResourceManager = (function () {
                 ResourceManagerUserConfig = res.ResourceManagerUserConfig;
                 command = process.argv[3];
                 projectRoot = getProjectPath(process.argv[4]);
-                console.log(command);
-                executeCommand(command).catch(handleException);
-                return [2 /*return*/, 0];
+                return [2 /*return*/, executeCommand(command).catch(handleException)];
             });
         });
     };

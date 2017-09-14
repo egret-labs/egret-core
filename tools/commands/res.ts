@@ -13,10 +13,8 @@ class EgretResourceManager implements egret.Command {
 
         let command = process.argv[3];
         let projectRoot = getProjectPath(process.argv[4]);
-        console.log(command)
 
-        executeCommand(command).catch(handleException);
-        return 0;
+        return executeCommand(command).catch(handleException);
 
         async function executeCommand(command: string) {
 

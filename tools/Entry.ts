@@ -116,10 +116,7 @@ export function executeCommandLine(args: string[]): void {
     }
     else {
         exitcode.then(value => {
-            // 如果直接关闭进程，会导致 catch 无法执行，所以设置一个 100ms 的延迟
-            setTimeout(() => {
-                entry.exit(value);
-            }, 100);
+            entry.exit(value);
         }).catch(e => console.log(e))
     }
 }
@@ -129,7 +126,6 @@ class Entry {
         var self = this;
         options.command = options.command || "help";
         try {
-            console.log(options.command)
             var CommandClass: { new(): egret.Command } = require("./commands/" + options.command);
         }
         catch (e) {
@@ -138,7 +134,6 @@ class Entry {
         }
         var command = new CommandClass();
         let result = command.execute();
-        console.log(result)
         return result;
     }
 
