@@ -106,6 +106,7 @@ locale_strings[1417] = "Successful detection ";
 locale_strings[1418] = "WebP format fail : {0}";
 locale_strings[1419] = "Format WebP : {0} / {1}";
 locale_strings[1420] = "Zip package failed, there may be special characters in the path";
+locale_strings[1421] = "Playing zip package exception!";
 //startserver
 locale_strings[1501] = "Unable to start the server, please check the authority or whether the port is occupied";
 //create_app
@@ -144,6 +145,7 @@ locale_strings[1714] = "Updating the egretProperties.json";
 locale_strings[1715] = "Project testing sucessfully";
 locale_strings[1716] = "You use the old 3rd part library {0}.Please make sure these files not used the removed API or use the compatible 3rd party library {1}";
 locale_strings[1717] = "upgrade interruption, for the following reasons";
+locale_strings[1718] = "5.0.8 later version will delete template/debug/index.html template file, use index.html directly";
 //info
 locale_strings[1801] = "Egret version：{0}";
 locale_strings[1802] = "Egret installation path:{0}";

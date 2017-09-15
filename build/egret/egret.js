@@ -18060,7 +18060,7 @@ var egret;
              * @language zh_CN
              */
             get: function () {
-                return "5.0.7";
+                return "5.0.8";
             },
             enumerable: true,
             configurable: true

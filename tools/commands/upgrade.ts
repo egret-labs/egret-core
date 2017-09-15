@@ -38,7 +38,7 @@ class UpgradeCommand implements egret.Command {
             { "v": "4.1.0", command: Upgrade_4_1_0 },
             { "v": "5.0.0" },
             { "v": "5.0.1", command: Upgrade_5_0_1 },
-            { "v": "5.0.7" }
+            { "v": "5.0.8", command: Upgrade_5_0_8 }
         ];
 
         try {
@@ -175,6 +175,17 @@ class Upgrade_5_0_1 {
             modules.push({ name: "promise", path: "./promise" });
             file.save(jsonPath, JSON.stringify(json, undefined, "\t"));
             modify.initProperties();
+        }
+        return 0;
+    }
+}
+
+class Upgrade_5_0_8 {
+    async execute() {
+        let options = egret.args;
+        if (file.exists(file.joinPath(options.projectDir, "template", "debug"))) {
+            globals.log(1718);
+            file.remove(file.joinPath(options.projectDir, "template", "debug"));
         }
         return 0;
     }
