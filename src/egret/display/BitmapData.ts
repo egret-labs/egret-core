@@ -158,9 +158,9 @@ namespace egret {
             this.height = source.height;
         }
 
-        public static create(type: "arraybuffer", data: ArrayBuffer): BitmapData;
-        public static create(type: "base64", data: string): BitmapData;
-        public static create(type: "arraybuffer" | "base64", data: ArrayBuffer | string): BitmapData {
+        public static create(type: "arraybuffer", data: ArrayBuffer, callback?:(bitmapData: BitmapData)=>void): BitmapData;
+        public static create(type: "base64", data: string, callback?:(bitmapData: BitmapData)=>void): BitmapData;
+        public static create(type: "arraybuffer" | "base64", data: ArrayBuffer | string, callback?:(bitmapData: BitmapData)=>void): BitmapData {
             if (Capabilities.runtimeType === RuntimeType.WEB) {
                 let base64 = "";
                 if (type === "arraybuffer") {
@@ -186,6 +186,9 @@ namespace egret {
                     bitmapData.source = img;
                     bitmapData.height = img.height;
                     bitmapData.width = img.width;
+                    if(callback){
+                        callback(bitmapData);
+                    }
                 }
                 return bitmapData;
             }
@@ -198,7 +201,11 @@ namespace egret {
                     buffer = egret.Base64Util.decode(data as string);
                 }
                 let native_texture = egret_native.Texture.createTextureFromArrayBuffer(buffer);
-                return new BitmapData(native_texture);
+                let bitmapData = new BitmapData(native_texture);
+                if(callback){
+                    callback(bitmapData);
+                }
+                return bitmapData;
             }
         }
 
