@@ -3402,6 +3402,24 @@ declare namespace egret {
         constructor();
         /**
          * @private
+         * 纹理id
+         */
+        $textureId: number;
+        /**
+         * Whether to destroy the corresponding BitmapData when the texture is destroyed
+         * @version Egret 5.0.8
+         * @platform Web,Native
+         * @language en_US
+         */
+        /**
+         * 销毁纹理时是否销毁对应BitmapData
+         * @version Egret 5.0.8
+         * @platform Web,Native
+         * @language zh_CN
+         */
+        disposeBitmapData: boolean;
+        /**
+         * @private
          * 表示这个纹理在 bitmapData 上的 x 起始位置
          */
         _bitmapX: number;
@@ -9093,6 +9111,11 @@ declare namespace egret {
          * webgl纹理生成后，是否删掉原始图像数据
          */
         $deleteSource: boolean;
+        /**
+         * @private
+         * id
+         */
+        $bitmapDataId: number;
         constructor(source: any);
         $dispose(): void;
         private static _bitmapList;
@@ -9716,7 +9739,6 @@ declare namespace egret.WebAssembly {
     let render: () => void;
     let executeRenderCommand: () => number;
     let activateWebGLBuffer: (buffer: WebGLRenderBuffer) => void;
-    let deleteTexture: (bitmapData: BitmapData) => void;
     let getCurrentBuffer: () => sys.RenderBuffer;
     let activateBuffer: (buffer: sys.RenderBuffer) => void;
 }
@@ -9765,6 +9787,7 @@ declare namespace egret {
         setGraphicsRect(x: number, y: number, w: number, h: number, isSprite: boolean): void;
         setDataToBitmapNode(id: number, texture: Texture, arr: number[]): void;
         disposeDisplayObject(): void;
+        static disposeTexture(texture: Texture): void;
         static disposeBitmapData(bitmapData: BitmapData): void;
         static disposeFilter(filter: Filter): void;
     }

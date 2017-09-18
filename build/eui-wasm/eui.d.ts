@@ -4009,6 +4009,105 @@ declare namespace eui {
         updateDisplayList(width: number, height: number): void;
     }
 }
+declare namespace eui {
+    /**
+     * The ToggleButton component defines a toggle button.
+     * Clicking the button toggles it between the up and an down states.
+     * If you click the button while it is in the up state,
+     * it toggles to the down state. You must click the button again
+     * to toggle it back to the up state.
+     * <p>You can get or set this state programmatically
+     * by using the <code>selected</code> property.</p>
+     *
+     * @event egret.Event.CHANGE Dispatched when the <code>selected</code> property
+     * changes for the ToggleButton control.
+     * This event is dispatched only when the
+     * user interacts with the control by touching.
+     *
+     * @state up Button up state
+     * @state down Button down state
+     * @state disabled Button disabled state
+     * @state upAndSelected Up state when the button is selected
+     * @state downAndSelected Down state when the button is selected
+     * @state disabledAndSelected Disabled state when the button is selected
+     * @version Egret 2.4
+     * @version eui 1.0
+     * @platform Web,Native
+     * @includeExample  extension/eui/components/ToggleButtonExample.ts
+     * @language en_US
+     */
+    /**
+     * ToggleButton 组件定义切换按钮。单击该按钮会在弹起状态和按下状态之间进行切换。
+     * 如果在按钮处于弹起状态时单击该按钮，则它会切换到按下状态。必须再次单击该按钮才可将其切换回弹起状态。
+     * <p>可以使用 <code>selected</code> 属性以编程方式获取或设置此状态。</p>
+     *
+     * @event egret.Event.CHANGE ToggleButtonBase 控件的 <code>selected</code> 属性更改时分派。
+     * 仅当用户通过触摸与控件交互时，才分派此事件。
+     *
+     * @state up 按钮弹起状态
+     * @state down 按钮按下状态
+     * @state disabled 按钮禁用状态
+     * @state upAndSelected 按钮选择时的弹起状态
+     * @state downAndSelected 按钮选择时的按下状态
+     * @state disabledAndSelected 按钮选择时的禁用状态
+     * @version Egret 2.4
+     * @version eui 1.0
+     * @platform Web,Native
+     * @includeExample  extension/eui/components/ToggleButtonExample.ts
+     * @language zh_CN
+     */
+    class ToggleButton extends Button {
+        /**
+         * @private
+         */
+        $selected: boolean;
+        /**
+         * Contains <code>true</code> if the button is in the down state,
+         * and <code>false</code> if it is in the up state.
+         *
+         * @version Egret 2.4
+         * @version eui 1.0
+         * @platform Web,Native
+         * @language en_US
+         */
+        /**
+         * 按钮处于按下状态时为 <code>true</code>，而按钮处于弹起状态时为 <code>false</code>。
+         *
+         * @version Egret 2.4
+         * @version eui 1.0
+         * @platform Web,Native
+         * @language zh_CN
+         */
+        selected: boolean;
+        /**
+         * @private
+         *
+         * @param value
+         */
+        $setSelected(value: boolean): boolean;
+        /**
+         * @inheritDoc
+         *
+         * @version Egret 2.4
+         * @version eui 1.0
+         * @platform Web,Native
+         */
+        protected getCurrentState(): string;
+        /**
+         * @private
+         * 是否根据触摸事件自动变换选中状态,默认true。仅框架内使用。
+         */
+        $autoSelected: boolean;
+        /**
+         * @inheritDoc
+         *
+         * @version Egret 2.4
+         * @version eui 1.0
+         * @platform Web,Native
+         */
+        protected buttonReleased(): void;
+    }
+}
 declare namespace eui.sys {
     /**
      * @private
@@ -4590,84 +4689,6 @@ declare namespace eui {
 }
 declare namespace eui {
     /**
-     * The Binding class defines utility methods for performing data binding.
-     * You can use the methods defined in this class to configure data bindings.
-     * @version Egret 2.4
-     * @version eui 1.0
-     * @platform Web,Native
-     * @includeExample extension/eui/binding/BindingExample.ts
-     * @language en_US
-     */
-    /**
-     * 绑定工具类，用于执行数据绑定用的方法集。您可以使用此类中定义的方法来配置数据绑定。
-     * @version Egret 2.4
-     * @version eui 1.0
-     * @platform Web,Native
-     * @includeExample extension/eui/binding/BindingExample.ts
-     * @language zh_CN
-     */
-    class Binding {
-        /**
-         * Binds a property, <prop>prop</code> on the <code>target</code> Object, to a bindable property or peoperty chain.
-         * @param host The object that hosts the property or property chain to be watched.
-         * The <code>host</code> maintains a list of <code>targets</code> to update theirs <code>prop</code> when <code>chain</code> changes.
-         * @param chain A value specifying the property or chain to be watched. For example, when watch the property <code>host.a.b.c</code>,
-         * you need call the method like this: <code>indProperty(host, ["a","b","c"], ...)</code>
-         * @param target The Object defining the property to be bound to <code>chain</code>.
-         * @param prop The name of the public property defined in the <code>site</code> Object to be bound.
-         * @returns A ChangeWatcher instance, if at least one property name has been specified
-         * to the <code>chain</code> argument; null otherwise.
-         * @version Egret 2.4
-         * @version eui 1.0
-         * @platform Web,Native
-         * @language en_US
-         */
-        /**
-         * 绑定一个对象的属性值到要监视的对象属性上。
-         * @param host 用于承载要监视的属性或属性链的对象。
-         * 当 <code>host</code>上<code>chain</code>所对应的值发生改变时，<code>target</code>上的<code>prop</code>属性将被自动更新。
-         * @param chain 用于指定要监视的属性链的值。例如，要监视属性 <code>host.a.b.c</code>，需按以下形式调用此方法：<code>bindProperty(host, ["a","b","c"], ...)。</code>
-         * @param target 本次绑定要更新的目标对象。
-         * @param prop 本次绑定要更新的目标属性名称。
-         * @returns 如果已为 chain 参数至少指定了一个属性名称，则返回 Watcher 实例；否则返回 null。
-         * @version Egret 2.4
-         * @version eui 1.0
-         * @platform Web,Native
-         * @language zh_CN
-         */
-        static bindProperty(host: any, chain: string[], target: any, prop: string): Watcher;
-        /**
-         * Binds a callback, <prop>handler</code> on the <code>target</code> Object, to a bindable property or peoperty chain.
-         * Callback method to invoke with an argument of the current value of <code>chain</code> when that value changes.
-         * @param host The object that hosts the property or property chain to be watched.
-         * @param chain A value specifying the property or chain to be watched. For example, when watch the property <code>host.a.b.c</code>,
-         * you need call the method like this: <code>indProperty(host, ["a","b","c"], ...)</code>
-         * @param handler method to invoke with an argument of the current value of <code>chain</code> when that value changes.
-         * @param thisObject <code>this</code> object of binding method
-         * @returns A ChangeWatcher instance, if at least one property name has been  specified to the <code>chain</code> argument; null otherwise.
-         * @version Egret 2.4
-         * @version eui 1.0
-         * @platform Web,Native
-         * @language en_US
-         */
-        /**
-         * 绑定一个回调函数到要监视的对象属性上。当 host上 chain 所对应的值发生改变时，handler 方法将被自动调用。
-         * @param host 用于承载要监视的属性或属性链的对象。
-         * @param chain 用于指定要监视的属性链的值。例如，要监视属性 host.a.b.c，需按以下形式调用此方法：bindSetter(host, ["a","b","c"], ...)。
-         * @param handler 在监视的目标属性链中任何属性的值发生改变时调用的事件处理函数。
-         * @param thisObject handler 方法绑定的this对象
-         * @returns 如果已为 chain 参数至少指定了一个属性名称，则返回 Watcher 实例；否则返回 null。
-         * @version Egret 2.4
-         * @version eui 1.0
-         * @platform Web,Native
-         * @language zh_CN
-         */
-        static bindHandler(host: any, chain: string[], handler: (value: any) => void, thisObject: any): Watcher;
-        static $bindProperties(host: any, templates: any[], chainIndex: number[], target: any, prop: string): Watcher;
-    }
-}
-declare namespace eui {
-    /**
      * The ScrollBarBase class helps to position
      * the portion of data that is displayed when there is too much data
      * to fit in a display area.
@@ -5174,105 +5195,6 @@ declare namespace eui {
          * @language zh_CN
          */
         protected onTrackTouchBegin(event: egret.TouchEvent): void;
-    }
-}
-declare namespace eui {
-    /**
-     * The ToggleButton component defines a toggle button.
-     * Clicking the button toggles it between the up and an down states.
-     * If you click the button while it is in the up state,
-     * it toggles to the down state. You must click the button again
-     * to toggle it back to the up state.
-     * <p>You can get or set this state programmatically
-     * by using the <code>selected</code> property.</p>
-     *
-     * @event egret.Event.CHANGE Dispatched when the <code>selected</code> property
-     * changes for the ToggleButton control.
-     * This event is dispatched only when the
-     * user interacts with the control by touching.
-     *
-     * @state up Button up state
-     * @state down Button down state
-     * @state disabled Button disabled state
-     * @state upAndSelected Up state when the button is selected
-     * @state downAndSelected Down state when the button is selected
-     * @state disabledAndSelected Disabled state when the button is selected
-     * @version Egret 2.4
-     * @version eui 1.0
-     * @platform Web,Native
-     * @includeExample  extension/eui/components/ToggleButtonExample.ts
-     * @language en_US
-     */
-    /**
-     * ToggleButton 组件定义切换按钮。单击该按钮会在弹起状态和按下状态之间进行切换。
-     * 如果在按钮处于弹起状态时单击该按钮，则它会切换到按下状态。必须再次单击该按钮才可将其切换回弹起状态。
-     * <p>可以使用 <code>selected</code> 属性以编程方式获取或设置此状态。</p>
-     *
-     * @event egret.Event.CHANGE ToggleButtonBase 控件的 <code>selected</code> 属性更改时分派。
-     * 仅当用户通过触摸与控件交互时，才分派此事件。
-     *
-     * @state up 按钮弹起状态
-     * @state down 按钮按下状态
-     * @state disabled 按钮禁用状态
-     * @state upAndSelected 按钮选择时的弹起状态
-     * @state downAndSelected 按钮选择时的按下状态
-     * @state disabledAndSelected 按钮选择时的禁用状态
-     * @version Egret 2.4
-     * @version eui 1.0
-     * @platform Web,Native
-     * @includeExample  extension/eui/components/ToggleButtonExample.ts
-     * @language zh_CN
-     */
-    class ToggleButton extends Button {
-        /**
-         * @private
-         */
-        $selected: boolean;
-        /**
-         * Contains <code>true</code> if the button is in the down state,
-         * and <code>false</code> if it is in the up state.
-         *
-         * @version Egret 2.4
-         * @version eui 1.0
-         * @platform Web,Native
-         * @language en_US
-         */
-        /**
-         * 按钮处于按下状态时为 <code>true</code>，而按钮处于弹起状态时为 <code>false</code>。
-         *
-         * @version Egret 2.4
-         * @version eui 1.0
-         * @platform Web,Native
-         * @language zh_CN
-         */
-        selected: boolean;
-        /**
-         * @private
-         *
-         * @param value
-         */
-        $setSelected(value: boolean): boolean;
-        /**
-         * @inheritDoc
-         *
-         * @version Egret 2.4
-         * @version eui 1.0
-         * @platform Web,Native
-         */
-        protected getCurrentState(): string;
-        /**
-         * @private
-         * 是否根据触摸事件自动变换选中状态,默认true。仅框架内使用。
-         */
-        $autoSelected: boolean;
-        /**
-         * @inheritDoc
-         *
-         * @version Egret 2.4
-         * @version eui 1.0
-         * @platform Web,Native
-         */
-        protected buttonReleased(): void;
     }
 }
 declare namespace eui.sys {
@@ -6131,6 +6053,49 @@ declare namespace eui.sys {
          * @private
          */
         max: number;
+    }
+}
+declare namespace eui {
+    /**
+     * The CheckBox component consists of an optional label and a small box
+     * that can contain a check mark or not.<p/>
+     *
+     * When a user clicks a CheckBox component or its associated text,
+     * the CheckBox component sets its <code>selected</code> property
+     * to <code>true</code> for checked, and to <code>false</code> for unchecked.
+     *
+     * @version Egret 2.4
+     * @version eui 1.0
+     * @platform Web,Native
+     * @includeExample extension/eui/components/CheckboxExample.ts
+     * @language en_US
+     */
+    /**
+     * CheckBox 组件包含一个可选标签和一个小方框，该方框内可以包含/不包含复选标记。<p/>
+     * 用户单击 CheckBox 组件或其关联文本时，CheckBox 组件会将其 selected 属性设置为 true（表示选中）或 false（表示取消选中）。
+     *
+     * @version Egret 2.4
+     * @version eui 1.0
+     * @platform Web,Native
+     * @includeExample extension/eui/components/CheckboxExample.ts
+     * @language zh_CN
+     */
+    class CheckBox extends ToggleButton {
+        /**
+         * Constructor.
+         * @version Egret 2.4
+         * @version eui 1.0
+         * @platform Web,Native
+         * @language en_US
+         */
+        /**
+         * 创建一个CheckBox
+         * @version Egret 2.4
+         * @version eui 1.0
+         * @platform Web,Native
+         * @language zh_CN
+         */
+        constructor();
     }
 }
 declare namespace eui {
@@ -8728,6 +8693,7 @@ declare namespace eui {
          * 记录按下的对象，touchCancle时使用
          */
         private downTarget;
+        private tempStage;
         /**
          * @private
          *
@@ -8745,6 +8711,11 @@ declare namespace eui {
          * @param event
          */
         private onTouchCancel(event);
+        /**
+         * @private
+         * @param event
+         */
+        private dispatchBubbleEvent(event);
         /**
          * @private
          * @param event
@@ -9096,6 +9067,836 @@ declare namespace eui {
         private commitCurrentState;
     }
 }
+declare namespace eui {
+    /**
+     * The TabBar class displays a set of identical tabs.
+     * One tab can be selected at a time, and the first tab is selected by default.
+     * <p>The set of tabs is defined by the <code>dataProvider</code> property.
+     * The appearance of each tab is defined by the <code>ItemRenderer</code> class.</p>
+     * <p>You can use the TabBar control to set the active child of a ViewStack container,
+     * as the following example shows:</p>
+     * <pre>
+     *       <s:TabBar dataProvider="{viewStack}"/>
+     *       <s:ViewStack id="viewStack">
+     *          <s:Group name="tab1"/>
+     *          <s:Group name="tab2"/>
+     *          <s:Group name="tab3"/>
+     *       </s:ViewStack>
+     * </pre>
+     *
+     * @version Egret 2.4
+     * @version eui 1.0
+     * @platform Web,Native
+     * @includeExample  extension/eui/components/TabBarExample.ts
+     * @language en_US
+     */
+    /**
+     * TabBar 类显示一组相同的选项卡。一次可以选择一个选项卡，且默认情况下选择第一个选项卡。
+     * <p>该组选项卡由 <code>dataProvider</code> 属性定义。
+     * 每个选项卡的外观由 <code>ItemRenderer</code> 定义。</p>
+     * <p>可以使用 TabBar 控件设置 ViewStack 容器的活动子代，如下例所示：</p>
+     * <pre>
+     *       <s:TabBar dataProvider="{viewStack}"/>
+     *       <s:ViewStack id="viewStack">
+     *          <s:Group name="tab1"/>
+     *          <s:Group name="tab2"/>
+     *          <s:Group name="tab3"/>
+     *       </s:ViewStack>
+     * </pre>
+     *
+     * @version Egret 2.4
+     * @version eui 1.0
+     * @platform Web,Native
+     * @includeExample  extension/eui/components/TabBarExample.ts
+     * @language zh_CN
+     */
+    class TabBar extends ListBase {
+        /**
+         * Constructor.
+         *
+         * @version Egret 2.4
+         * @version eui 1.0
+         * @platform Web,Native
+         * @language en_US
+         */
+        /**
+         * 构造函数。
+         *
+         * @version Egret 2.4
+         * @version eui 1.0
+         * @platform Web,Native
+         * @language zh_CN
+         */
+        constructor();
+        /**
+         * @inheritDoc
+         *
+         * @version Egret 2.4
+         * @version eui 1.0
+         * @platform Web,Native
+         */
+        protected createChildren(): void;
+        /**
+         * @private
+         *
+         * @param value
+         */
+        $setDataProvider(value: ICollection): boolean;
+        /**
+         * @private
+         */
+        private indexBeingUpdated;
+        /**
+         * @private
+         * 触摸点击的选中项改变
+         */
+        private onIndexChanged(event);
+        /**
+         * @private
+         * ViewStack选中项发生改变
+         */
+        private onViewStackIndexChange(event);
+    }
+}
+declare namespace eui.sys {
+    /**
+     * @private
+     */
+    const enum TextInputKeys {
+        prompt = 0,
+        displayAsPassword = 1,
+        textColor = 2,
+        maxChars = 3,
+        maxWidth = 4,
+        maxHeight = 5,
+        text = 6,
+        restrict = 7,
+        inputType = 8,
+    }
+}
+declare namespace eui {
+    /**
+     *
+     */
+    /**
+     * The TextInput is a textfield input component, the user can input and edit the text.
+     *
+     * @version Egret 2.5.7
+     * @version eui 1.0
+     * @platform Web,Native
+     * @includeExample  extension/eui/components/TextInputExample.ts
+     * @language en_US
+     */
+    /**
+     * TextInput 是一个文本输入控件，供用户输入和编辑统一格式文本
+     *
+     * @version Egret 2.5.7
+     * @version eui 1.0
+     * @platform Web,Native
+     * @includeExample  extension/eui/components/TextInputExample.ts
+     * @language zh_CN
+     */
+    class TextInput extends Component {
+        constructor();
+        /**
+         * @private
+         */
+        $TextInput: Object;
+        /**
+         * [SkinPart] The TextInput display
+         * @skinPart
+         * @version Egret 2.5.7
+         * @version eui 1.0
+         * @platform Web,Native
+         * @language en_US
+         */
+        /**
+         * [SkinPart] 实体文本输入组件
+         * @skinPart
+         * @version Egret 2.5.7
+         * @version eui 1.0
+         * @platform Web,Native
+         * @language zh_CN
+         */
+        textDisplay: EditableText;
+        /**
+         * [SkinPart] When the property of the text is empty, it will show the defalut string.
+         * @skinPart
+         * @version Egret 2.4
+         * @version eui 1.0
+         * @platform Web,Native
+         * @language zh_CN
+         */
+        /**
+         * [SkinPart] 当text属性为空字符串时要显示的文本。
+         * @skinPart
+         * @version Egret 2.4
+         * @version eui 1.0
+         * @platform Web,Native
+         * @language zh_CN
+         */
+        promptDisplay: Label;
+        /**
+         * @copy eui.EditableText#prompt
+         *
+         * @version Egret 2.5.7
+         * @version eui 1.0
+         * @platform Web,Native
+         */
+        /**
+         * @copy eui.EditableText#prompt
+         *
+         * @version Egret 2.5.7
+         * @version eui 1.0
+         * @platform Web,Native
+         */
+        prompt: string;
+        /**
+         * @copy egret.TextField#displayAsPassword
+         *
+         * @version Egret 2.5.7
+         * @version eui 1.0
+         * @platform Web,Native
+         */
+        /**
+         * @copy egret.TextField#displayAsPassword
+         *
+         * @version Egret 2.5.7
+         * @version eui 1.0
+         * @platform Web,Native
+         */
+        displayAsPassword: boolean;
+        /**
+         * @copy egret.TextField#inputType
+         *
+         * @version Egret 3.1.6
+         * @version eui 1.0
+         * @platform Web,Native
+         */
+        /**
+         * @copy egret.TextField#inputType
+         *
+         * @version Egret 3.1.6
+         * @version eui 1.0
+         * @platform Web,Native
+         */
+        inputType: string;
+        /**
+         * @copy egret.TextField#textColor
+         *
+         * @version Egret 2.5.7
+         * @version eui 1.0
+         * @platform Web,Native
+         */
+        /**
+         * @copy egret.TextField#textColor
+         *
+         * @version Egret 2.5.7
+         * @version eui 1.0
+         * @platform Web,Native
+         */
+        textColor: number;
+        /**
+         * @copy egret.TextField#maxChars
+         *
+         * @version Egret 2.5.7
+         * @version eui 1.0
+         * @platform Web,Native
+         */
+        /**
+         * @copy egret.TextField#maxChars
+         *
+         * @version Egret 2.5.7
+         * @version eui 1.0
+         * @platform Web,Native
+         */
+        maxChars: number;
+        /**
+         * @inheritDoc
+         *
+         * @version Egret 2.5.7
+         * @version eui 1.0
+         * @platform Web,Native
+         */
+        /**
+         * @inheritDoc
+         *
+         * @version Egret 2.5.7
+         * @version eui 1.0
+         * @platform Web,Native
+         */
+        maxWidth: number;
+        /**
+         * @inheritDoc
+         *
+         * @version Egret 2.5.7
+         * @version eui 1.0
+         * @platform Web,Native
+         */
+        /**
+         * @inheritDoc
+         *
+         * @version Egret 2.5.7
+         * @version eui 1.0
+         * @platform Web,Native
+         */
+        maxHeight: number;
+        /**
+         * @copy egret.TextField#text
+         *
+         * @version Egret 2.5.7
+         * @version eui 1.0
+         * @platform Web,Native
+         */
+        /**
+         * @copy egret.TextField#text
+         *
+         * @version Egret 2.5.7
+         * @version eui 1.0
+         * @platform Web,Native
+         */
+        text: string;
+        /**
+         * @copy egret.TextField#restrict
+         *
+         * @version Egret 2.5.7
+         * @version eui 1.0
+         * @platform Web,Native
+         */
+        /**
+         * @copy egret.TextField#restrict
+         *
+         * @version Egret 2.5.7
+         * @version eui 1.0
+         * @platform Web,Native
+         */
+        restrict: string;
+        /**
+         * @private
+         */
+        private isFocus;
+        /**
+         * @private
+         * 焦点移入
+         */
+        private focusInHandler(event);
+        /**
+         * @private
+         * 焦点移出
+         */
+        private focusOutHandler(event);
+        /**
+         * @inheritDoc
+         *
+         * @version Egret 2.5.7
+         * @version eui 1.0
+         * @platform Web,Native
+         */
+        protected getCurrentState(): string;
+        /**
+         * @inheritDoc
+         *
+         * @version Egret 2.5.7
+         * @version eui 1.0
+         * @platform Web,Native
+         */
+        protected partAdded(partName: string, instance: any): void;
+        /**
+         * @inheritDoc
+         *
+         * @version Egret 2.5.7
+         * @version eui 1.0
+         * @platform Web,Native
+         */
+        protected partRemoved(partName: string, instance: any): void;
+        /**
+         * @private
+         */
+        private textDisplayAdded();
+        /**
+         * @private
+         */
+        private textDisplayRemoved();
+    }
+}
+declare namespace eui {
+    /**
+     * The Binding class defines utility methods for performing data binding.
+     * You can use the methods defined in this class to configure data bindings.
+     * @version Egret 2.4
+     * @version eui 1.0
+     * @platform Web,Native
+     * @includeExample extension/eui/binding/BindingExample.ts
+     * @language en_US
+     */
+    /**
+     * 绑定工具类，用于执行数据绑定用的方法集。您可以使用此类中定义的方法来配置数据绑定。
+     * @version Egret 2.4
+     * @version eui 1.0
+     * @platform Web,Native
+     * @includeExample extension/eui/binding/BindingExample.ts
+     * @language zh_CN
+     */
+    class Binding {
+        /**
+         * Binds a property, <prop>prop</code> on the <code>target</code> Object, to a bindable property or peoperty chain.
+         * @param host The object that hosts the property or property chain to be watched.
+         * The <code>host</code> maintains a list of <code>targets</code> to update theirs <code>prop</code> when <code>chain</code> changes.
+         * @param chain A value specifying the property or chain to be watched. For example, when watch the property <code>host.a.b.c</code>,
+         * you need call the method like this: <code>indProperty(host, ["a","b","c"], ...)</code>
+         * @param target The Object defining the property to be bound to <code>chain</code>.
+         * @param prop The name of the public property defined in the <code>site</code> Object to be bound.
+         * @returns A ChangeWatcher instance, if at least one property name has been specified
+         * to the <code>chain</code> argument; null otherwise.
+         * @version Egret 2.4
+         * @version eui 1.0
+         * @platform Web,Native
+         * @language en_US
+         */
+        /**
+         * 绑定一个对象的属性值到要监视的对象属性上。
+         * @param host 用于承载要监视的属性或属性链的对象。
+         * 当 <code>host</code>上<code>chain</code>所对应的值发生改变时，<code>target</code>上的<code>prop</code>属性将被自动更新。
+         * @param chain 用于指定要监视的属性链的值。例如，要监视属性 <code>host.a.b.c</code>，需按以下形式调用此方法：<code>bindProperty(host, ["a","b","c"], ...)。</code>
+         * @param target 本次绑定要更新的目标对象。
+         * @param prop 本次绑定要更新的目标属性名称。
+         * @returns 如果已为 chain 参数至少指定了一个属性名称，则返回 Watcher 实例；否则返回 null。
+         * @version Egret 2.4
+         * @version eui 1.0
+         * @platform Web,Native
+         * @language zh_CN
+         */
+        static bindProperty(host: any, chain: string[], target: any, prop: string): Watcher;
+        /**
+         * Binds a callback, <prop>handler</code> on the <code>target</code> Object, to a bindable property or peoperty chain.
+         * Callback method to invoke with an argument of the current value of <code>chain</code> when that value changes.
+         * @param host The object that hosts the property or property chain to be watched.
+         * @param chain A value specifying the property or chain to be watched. For example, when watch the property <code>host.a.b.c</code>,
+         * you need call the method like this: <code>indProperty(host, ["a","b","c"], ...)</code>
+         * @param handler method to invoke with an argument of the current value of <code>chain</code> when that value changes.
+         * @param thisObject <code>this</code> object of binding method
+         * @returns A ChangeWatcher instance, if at least one property name has been  specified to the <code>chain</code> argument; null otherwise.
+         * @version Egret 2.4
+         * @version eui 1.0
+         * @platform Web,Native
+         * @language en_US
+         */
+        /**
+         * 绑定一个回调函数到要监视的对象属性上。当 host上 chain 所对应的值发生改变时，handler 方法将被自动调用。
+         * @param host 用于承载要监视的属性或属性链的对象。
+         * @param chain 用于指定要监视的属性链的值。例如，要监视属性 host.a.b.c，需按以下形式调用此方法：bindSetter(host, ["a","b","c"], ...)。
+         * @param handler 在监视的目标属性链中任何属性的值发生改变时调用的事件处理函数。
+         * @param thisObject handler 方法绑定的this对象
+         * @returns 如果已为 chain 参数至少指定了一个属性名称，则返回 Watcher 实例；否则返回 null。
+         * @version Egret 2.4
+         * @version eui 1.0
+         * @platform Web,Native
+         * @language zh_CN
+         */
+        static bindHandler(host: any, chain: string[], handler: (value: any) => void, thisObject: any): Watcher;
+        static $bindProperties(host: any, templates: any[], chainIndex: number[], target: any, prop: string): Watcher;
+    }
+}
+declare namespace eui {
+    /**
+     * The ToggleSwitch control defines an on-off control.
+     *
+     * @version Egret 2.4
+     * @version eui 1.0
+     * @platform Web,Native
+     * @includeExample  extension/eui/components/ToggleSwitchExample.ts
+     * @language en_US
+     */
+    /**
+     * ToggleSwitch 表示一个开关组件。
+     *
+     * @version Egret 2.4
+     * @version eui 1.0
+     * @platform Web,Native
+     * @includeExample  extension/eui/components/ToggleSwitchExample.ts
+     * @language zh_CN
+     */
+    class ToggleSwitch extends ToggleButton {
+        /**
+         * Constructor.
+         *
+         * @version Egret 2.4
+         * @version eui 1.0
+         * @platform Web,Native
+         * @language en_US
+         */
+        /**
+         * 构造函数。
+         *
+         * @version Egret 2.4
+         * @version eui 1.0
+         * @platform Web,Native
+         * @language zh_CN
+         */
+        constructor();
+    }
+}
+declare namespace eui {
+    /**
+     * The UILayer class is the subclass of the Group class.It not only has the standard function of the Group class,but also
+     * can keep its size the same to the stage size (Stage.stageWidth,Stage.stageHeight).Its size will changes as the stage size changes.
+     * like any normal container class,you can create multiple instance of the UILayer class,but it is usually used as the root of the UI display list.
+     * @version Egret 2.4
+     * @version eui 1.0
+     * @platform Web,Native
+     * @language en_US
+     */
+    /**
+     * UILayer 是 Group 的子类，它除了具有容器的所有标准功能，还能够自动保持自身尺寸始终与舞台尺寸相同（Stage.stageWidth,Stage.stageHeight）。
+     * 当舞台尺寸发生改变时，它会跟随舞台尺寸改变。UILayer 跟普通容器一样，允许创建多个实例，但通常都将它作为UI显示列表的根节点使用。
+     * @version Egret 2.4
+     * @version eui 1.0
+     * @platform Web,Native
+     * @language zh_CN
+     */
+    class UILayer extends Group {
+        /**
+         * Constructor.
+         *
+         * @version Egret 2.4
+         * @version eui 1.0
+         * @platform Web,Native
+         * @language en_US
+         */
+        /**
+         * 构造函数。
+         *
+         * @version Egret 2.4
+         * @version eui 1.0
+         * @platform Web,Native
+         * @language zh_CN
+         */
+        constructor();
+        /**
+         * @private
+         * 添加到舞台
+         */
+        private onAddToStage(event?);
+        /**
+         * @private
+         * 从舞台移除
+         */
+        private onRemoveFromStage(event);
+        /**
+         * @private
+         * 舞台尺寸改变
+         */
+        private onResize(event?);
+    }
+}
+declare namespace eui {
+    /**
+     * An ViewStack navigator container consists of a collection of child
+     * containers stacked on top of each other, where only one child
+     * at a time is visible.
+     * When a different child container is selected, it seems to replace
+     * the old one because it appears in the same location.
+     * However, the old child container still exists; it is just invisible.
+     *
+     * @event eui.CollectionEvent.COLLECTION_CHANGE Dispatched when the ICollection has been updated in some way.
+     *
+     * @version Egret 2.4
+     * @version eui 1.0
+     * @platform Web,Native
+     * @includeExample  extension/eui/components/ViewStackExample.ts
+     * @language en_US
+     */
+    /**
+     * ViewStack 导航器容器由一组彼此上下堆叠的子容器组成，其中一次只可以显示一个子容器。
+     * 选择另一个子容器后，它将显示在原来子容器的位置处，所以看起来好像此子容器替换了原来的子容器。
+     * 但是，原来的子容器仍然存在，只不过它现在处于不可见状态。
+     *
+     * @event eui.CollectionEvent.COLLECTION_CHANGE 以某种方式更新 ICollection 后分派。
+     *
+     * @version Egret 2.4
+     * @version eui 1.0
+     * @platform Web,Native
+     * @includeExample  extension/eui/components/ViewStackExample.ts
+     * @language zh_CN
+     */
+    class ViewStack extends Group implements ICollection {
+        /**
+         * Constructor.
+         *
+         * @version Egret 2.4
+         * @version eui 1.0
+         * @platform Web,Native
+         * @language en_US
+         */
+        /**
+         * 构造函数。
+         *
+         * @version Egret 2.4
+         * @version eui 1.0
+         * @platform Web,Native
+         * @language zh_CN
+         */
+        constructor();
+        /**
+         * The layout object for this container.
+         * This object is responsible for the measurement and layout of
+         * the visual elements in the container.
+         *
+         * @default eui.BasicLayout
+         *
+         * @version Egret 2.4
+         * @version eui 1.0
+         * @platform Web,Native
+         * @language en_US
+         */
+        /**
+         * 此容器的 layout 对象。此对象负责容器中可视元素的测量和布局。
+         *
+         * @default eui.BasicLayout
+         *
+         * @version Egret 2.4
+         * @version eui 1.0
+         * @platform Web,Native
+         * @language zh_CN
+         */
+        readonly layout: LayoutBase;
+        /**
+         * @private
+         */
+        private _selectedChild;
+        /**
+         * A reference to the currently visible child container.
+         * The default is a reference to the first child.
+         * If there are no children, this property is <code>null</code>.
+         *
+         * @version Egret 2.4
+         * @version eui 1.0
+         * @platform Web,Native
+         * @language en_US
+         */
+        /**
+         * 对当前可见子容器的引用。默认设置为对第一个子容器的引用。如果没有子项，则此属性为 <code>null</code>。
+         *
+         * @version Egret 2.4
+         * @version eui 1.0
+         * @platform Web,Native
+         * @language zh_CN
+         */
+        selectedChild: egret.DisplayObject;
+        /**
+         * @private
+         * 在属性提交前缓存选中项索引
+         */
+        private proposedSelectedIndex;
+        /**
+         * @private
+         */
+        _selectedIndex: number;
+        /**
+         * The zero-based index of the currently visible child container.
+         * Child indexes are in the range 0, 1, 2, ..., n - 1,
+         * where <code>n</code> is the number of children.
+         * The default value is 0, corresponding to the first child.
+         * If there are no children, the value of this property is <code>-1</code>.
+         *
+         * @version Egret 2.4
+         * @version eui 1.0
+         * @platform Web,Native
+         * @language en_US
+         */
+        /**
+         * 当前可见子容器的从零开始的索引。子索引的范围是 0、1、2、...、n - 1，其中 <code>n</code> 是子项的数目。
+         * 默认值是 0，对应于第一个子项。如果不存在子容器，则此属性的值为 -1。
+         *
+         * @version Egret 2.4
+         * @version eui 1.0
+         * @platform Web,Native
+         * @language zh_CN
+         */
+        selectedIndex: number;
+        /**
+         * @private
+         * 设置选中项索引
+         */
+        private setSelectedIndex(value);
+        /**
+         * @private
+         * 一个子项被添加到容器内，此方法不仅在操作addChild()时会被回调，在操作setChildIndex()或swapChildren时也会回调。
+         * 当子项索引发生改变时，会先触发$childRemoved()方法，然后触发$childAdded()方法。
+         */
+        $childAdded(child: egret.DisplayObject, index: number): void;
+        /**
+         * @private
+         * 一个子项从容器内移除，此方法不仅在操作removeChild()时会被回调，在操作setChildIndex()或swapChildren时也会回调。
+         * 当子项索引发生改变时，会先触发$childRemoved()方法，然后触发$childAdded()方法。
+         */
+        $childRemoved(child: egret.DisplayObject, index: number): void;
+        /**
+         * @inheritDoc
+         *
+         * @version Egret 2.4
+         * @version eui 1.0
+         * @platform Web,Native
+         */
+        protected commitProperties(): void;
+        /**
+         * @private
+         *
+         * @param newIndex
+         */
+        private commitSelection(newIndex);
+        /**
+         * @private
+         *
+         * @param child
+         * @param visible
+         */
+        private showOrHide(child, visible);
+        /**
+         * number of children
+         *
+         * @version Egret 2.4
+         * @version eui 1.0
+         * @platform Web,Native
+         * @language en_US
+         */
+        /**
+         * 子项数量
+         *
+         * @version Egret 2.4
+         * @version eui 1.0
+         * @platform Web,Native
+         * @language zh_CN
+         */
+        readonly length: number;
+        /**
+         * @inheritDoc
+         *
+         * @version Egret 2.4
+         * @version eui 1.0
+         * @platform Web,Native
+         */
+        getItemAt(index: number): any;
+        /**
+         * @inheritDoc
+         *
+         * @version Egret 2.4
+         * @version eui 1.0
+         * @platform Web,Native
+         */
+        getItemIndex(item: any): number;
+    }
+}
+declare namespace eui {
+    /**
+     * The VScrollBar (vertical scrollbar) control lets you control
+     * the portion of data that is displayed when there is too much data
+     * to fit vertically in a display area.
+     *
+     * <p>Although you can use the VScrollBar control as a stand-alone control,
+     * you usually combine it as part of another group of components to
+     * provide scrolling functionality.</p>
+     *
+     * @version Egret 2.4
+     * @version eui 1.0
+     * @platform Web,Native
+     * @includeExample  extension/eui/components/VScrollBarExample.ts
+     * @language en_US
+     */
+    /**
+     * VScrollBar（垂直 ScrollBar）控件可以在因数据太多而不能在显示区域中以垂直方向完全显示时控制显示的数据部分。
+     * <p>虽然 VScrollBar 控件可以单独使用，但通常将它与其他组件一起使用来提供滚动功能。</p>
+     *
+     * @version Egret 2.4
+     * @version eui 1.0
+     * @platform Web,Native
+     * @includeExample  extension/eui/components/VScrollBarExample.ts
+     * @language zh_CN
+     */
+    class VScrollBar extends ScrollBarBase {
+        /**
+         * @inheritDoc
+         *
+         * @version Egret 2.4
+         * @version eui 1.0
+         * @platform Web,Native
+         */
+        protected updateDisplayList(unscaledWidth: number, unscaledHeight: number): void;
+        /**
+         * @inheritDoc
+         *
+         * @version Egret 2.4
+         * @version eui 1.0
+         * @platform Web,Native
+         */
+        protected onPropertyChanged(event: eui.PropertyEvent): void;
+    }
+}
+declare namespace eui {
+    /**
+     * The VSlider (vertical slider) control lets users select a value
+     * by moving a slider thumb between the end points of the slider track.
+     * The current value of the slider is determined by the relative location of the thumb between
+     * the end points of the slider, corresponding to the slider's minimum and maximum values.
+     *
+     * @version Egret 2.4
+     * @version eui 1.0
+     * @platform Web,Native
+     * @includeExample  extension/eui/components/VSliderExample.ts
+     * @language en_US
+     */
+    /**
+     * 使用 VSlider（垂直滑块）控件，用户可通过在滑块轨道的端点之间移动滑块来选择值。
+     * 滑块的当前值由滑块端点（对应于滑块的最小值和最大值）之间滑块的相对位置确定。
+     *
+     * @version Egret 2.4
+     * @version eui 1.0
+     * @platform Web,Native
+     * @includeExample  extension/eui/components/VSliderExample.ts
+     * @language zh_CN
+     */
+    class VSlider extends SliderBase {
+        /**
+         * Constructor.
+         *
+         * @version Egret 2.4
+         * @version eui 1.0
+         * @platform Web,Native
+         * @language en_US
+         */
+        /**
+         * 构造函数。
+         *
+         * @version Egret 2.4
+         * @version eui 1.0
+         * @platform Web,Native
+         * @language zh_CN
+         */
+        constructor();
+        /**
+         * @inheritDoc
+         *
+         * @version Egret 2.4
+         * @version eui 1.0
+         * @platform Web,Native
+         */
+        protected pointToValue(x: number, y: number): number;
+        /**
+         * @private
+         *
+         * @returns
+         */
+        private getThumbRange();
+        /**
+         * @inheritDoc
+         *
+         * @version Egret 2.4
+         * @version eui 1.0
+         * @platform Web,Native
+         */
+        updateSkinDisplayList(): void;
+    }
+}
 declare namespace eui.sys {
     /**
      * @private
@@ -9203,15 +10004,195 @@ declare namespace eui {
         getTheme(url: string, compFunc: Function, errorFunc: Function, thisObject: any): void;
     }
 }
-declare namespace eui.sys {
+declare namespace eui {
     /**
-     * @private
+     * The Watcher class defines utility method that you can use with bindable properties.
+     * These methods let you define an event handler that is executed whenever a bindable property is updated.
+     *
+     * @version Egret 2.4
+     * @version eui 1.0
+     * @platform Web,Native
+     * @includeExample extension/eui/binding/WatcherExample.ts
+     * @language en_US
      */
-    class MatrixUtil {
+    /**
+     * Watcher 类能够监视可绑定属性的改变，您可以定义一个事件处理函数作为 Watcher 的回调方法，在每次可绑定属性的值改变时都执行此函数。
+     *
+     * @version Egret 2.4
+     * @version eui 1.0
+     * @platform Web,Native
+     * @includeExample extension/eui/binding/WatcherExample.ts
+     * @language zh_CN
+     */
+    class Watcher {
+        /**
+         * Creates and starts a Watcher instance.
+         * The Watcher can only watch the property of a Object which host is instance of egret.IEventDispatcher.
+         * @param host The object that hosts the property or property chain to be watched.
+         * You can use the use the <code>reset()</code> method to change the value of the <code>host</code> argument
+         * after creating the Watcher instance.
+         * The <code>host</code> maintains a list of <code>handlers</code> to invoke when <code>prop</code> changes.
+         * @param chain A value specifying the property or chain to be watched.
+         * For example, to watch the property <code>host.a.b.c</code>,
+         * call the method as: <code>watch(host, ["a","b","c"], ...)</code>.
+         * @param handler  An event handler function called when the value of the watched property
+         * (or any property in a watched chain) is modified.
+         * @param thisObject <code>this</code> object of which binding with handler
+         * @returns he ChangeWatcher instance, if at least one property name has been specified to
+         * the <code>chain</code> argument; null otherwise.
+         * @version Egret 2.4
+         * @version eui 1.0
+         * @platform Web,Native
+         * @language en_US
+         */
+        /**
+         * 创建并启动 Watcher 实例。注意：Watcher 只能监视 host 为 egret.IEventDispatcher 对象的属性改变。若属性链中某个属性所对应的实例不是 egret.IEventDispatcher，
+         * 则属性链中在它之后的属性改变将无法检测到。
+         * @param host 用于承载要监视的属性或属性链的对象。
+         * 创建Watcher实例后，您可以利用<code>reset()</code>方法更改<code>host</code>参数的值。
+         * 当<code>prop</code>改变的时候，会使得host对应的一系列<code>handlers</code>被触发。
+         * @param chain 用于指定要监视的属性链的值。例如，要监视属性 host.a.b.c，需按以下形式调用此方法：watch¬(host, ["a","b","c"], ...)。
+         * @param handler 在监视的目标属性链中任何属性的值发生改变时调用的事件处理函数。
+         * @param thisObject handler 方法绑定的this对象
+         * @returns 如果已为 chain 参数至少指定了一个属性名称，则返回 Watcher 实例；否则返回 null。
+         * @version Egret 2.4
+         * @version eui 1.0
+         * @platform Web,Native
+         * @language zh_CN
+         */
+        static watch(host: any, chain: string[], handler: (value: any) => void, thisObject: any): Watcher;
+        /**
+         * @private
+         * 检查属性是否可以绑定。若还未绑定，尝试添加绑定事件。若是只读或只写属性，返回false。
+         */
+        private static checkBindable(host, property);
+        /**
+         * Constructor.
+         * Not for public use. This method is called only from the <code>watch()</code> method.
+         * See the <code>watch()</code> method for parameter usage.
+         * @version Egret 2.4
+         * @version eui 1.0
+         * @platform Web,Native
+         * @language en_US
+         */
+        /**
+         * 构造函数，非公开。只能从 watch() 方法中调用此方法。有关参数用法，请参阅 watch() 方法。
+         * @version Egret 2.4
+         * @version eui 1.0
+         * @platform Web,Native
+         * @language zh_CN
+         */
+        constructor(property: string, handler: (value: any) => void, thisObject: any, next?: Watcher);
         /**
          * @private
          */
-        static fitBounds(width: number, height: number, matrix: egret.Matrix, explicitWidth: number, explicitHeight: number, preferredWidth: number, preferredHeight: number, minWidth: number, minHeight: number, maxWidth: number, maxHeight: number): egret.Point;
+        private host;
+        /**
+         * @private
+         */
+        private property;
+        /**
+         * @private
+         */
+        private handler;
+        /**
+         * @private
+         */
+        private thisObject;
+        /**
+         * @private
+         */
+        private next;
+        /**
+         * @private
+         */
+        private isExecuting;
+        /**
+         * Detaches this Watcher instance, and its handler function, from the current host.
+         * @version Egret 2.4
+         * @version eui 1.0
+         * @platform Web,Native
+         * @language en_US
+         */
+        /**
+         * 从当前宿主中断开此 Watcher 实例及其处理函数。
+         * @version Egret 2.4
+         * @version eui 1.0
+         * @platform Web,Native
+         * @language zh_CN
+         */
+        unwatch(): void;
+        /**
+         * Retrieves the current value of the watched property or property chain, or null if the host object is null.
+         * @example
+         * <pre>
+         * watch(obj, ["a","b","c"], ...).getValue() === obj.a.b.c
+         * </pre>
+         * @version Egret 2.4
+         * @version eui 1.0
+         * @platform Web,Native
+         * @language en_US
+         */
+        /**
+         * 检索观察的属性或属性链的当前值，当宿主对象为空时此值为空。
+         * @example
+         * <pre>
+         * watch(obj, ["a","b","c"], ...).getValue() === obj.a.b.c
+         * </pre>
+         * @version Egret 2.4
+         * @version eui 1.0
+         * @platform Web,Native
+         * @language zh_CN
+         */
+        getValue(): any;
+        /**
+         * Sets the handler function.s
+         * @param handler The handler function. This argument must not be null.
+         * @version Egret 2.4
+         * @version eui 1.0
+         * @platform Web,Native
+         * @language en_US
+         */
+        /**
+         * 设置处理函数。
+         * @param handler 处理函数，此参数必须为非空。
+         * @version Egret 2.4
+         * @version eui 1.0
+         * @platform Web,Native
+         * @language zh_CN
+         */
+        setHandler(handler: (value: any) => void, thisObject: any): void;
+        /**
+         * Resets this ChangeWatcher instance to use a new host object.
+         * You can call this method to reuse a watcher instance on a different host.
+         * @version Egret 2.4
+         * @version eui 1.0
+         * @platform Web,Native
+         * @language en_US
+         */
+        /**
+         * 重置此 Watcher 实例使用新的宿主对象。
+         * 您可以通过该方法实现一个Watcher实例用于不同的宿主。
+         * @version Egret 2.4
+         * @version eui 1.0
+         * @platform Web,Native
+         * @language zh_CN
+         */
+        reset(newHost: egret.IEventDispatcher): void;
+        /**
+         * @private
+         *
+         * @returns
+         */
+        private getHostPropertyValue();
+        /**
+         * @private
+         */
+        private wrapHandler(event);
+        /**
+         * @private
+         */
+        private onPropertyChange(property);
     }
 }
 declare namespace eui {
@@ -9960,6 +10941,10 @@ declare namespace eui {
         private _widthConstraint;
         /**
          * @private
+         */
+        private _heightConstraint;
+        /**
+         * @private
          * UIComponentImpl 定义的所有变量请不要添加任何初始值，必须统一在此处初始化。
          */
         private initializeUIValues;
@@ -10366,985 +11351,6 @@ declare namespace eui.sys {
          * 更新水平滚动位置
          */
         private onScrollingUpdate(animation);
-    }
-}
-declare namespace eui {
-    /**
-     * The TabBar class displays a set of identical tabs.
-     * One tab can be selected at a time, and the first tab is selected by default.
-     * <p>The set of tabs is defined by the <code>dataProvider</code> property.
-     * The appearance of each tab is defined by the <code>ItemRenderer</code> class.</p>
-     * <p>You can use the TabBar control to set the active child of a ViewStack container,
-     * as the following example shows:</p>
-     * <pre>
-     *       <s:TabBar dataProvider="{viewStack}"/>
-     *       <s:ViewStack id="viewStack">
-     *          <s:Group name="tab1"/>
-     *          <s:Group name="tab2"/>
-     *          <s:Group name="tab3"/>
-     *       </s:ViewStack>
-     * </pre>
-     *
-     * @version Egret 2.4
-     * @version eui 1.0
-     * @platform Web,Native
-     * @includeExample  extension/eui/components/TabBarExample.ts
-     * @language en_US
-     */
-    /**
-     * TabBar 类显示一组相同的选项卡。一次可以选择一个选项卡，且默认情况下选择第一个选项卡。
-     * <p>该组选项卡由 <code>dataProvider</code> 属性定义。
-     * 每个选项卡的外观由 <code>ItemRenderer</code> 定义。</p>
-     * <p>可以使用 TabBar 控件设置 ViewStack 容器的活动子代，如下例所示：</p>
-     * <pre>
-     *       <s:TabBar dataProvider="{viewStack}"/>
-     *       <s:ViewStack id="viewStack">
-     *          <s:Group name="tab1"/>
-     *          <s:Group name="tab2"/>
-     *          <s:Group name="tab3"/>
-     *       </s:ViewStack>
-     * </pre>
-     *
-     * @version Egret 2.4
-     * @version eui 1.0
-     * @platform Web,Native
-     * @includeExample  extension/eui/components/TabBarExample.ts
-     * @language zh_CN
-     */
-    class TabBar extends ListBase {
-        /**
-         * Constructor.
-         *
-         * @version Egret 2.4
-         * @version eui 1.0
-         * @platform Web,Native
-         * @language en_US
-         */
-        /**
-         * 构造函数。
-         *
-         * @version Egret 2.4
-         * @version eui 1.0
-         * @platform Web,Native
-         * @language zh_CN
-         */
-        constructor();
-        /**
-         * @inheritDoc
-         *
-         * @version Egret 2.4
-         * @version eui 1.0
-         * @platform Web,Native
-         */
-        protected createChildren(): void;
-        /**
-         * @private
-         *
-         * @param value
-         */
-        $setDataProvider(value: ICollection): boolean;
-        /**
-         * @private
-         */
-        private indexBeingUpdated;
-        /**
-         * @private
-         * 触摸点击的选中项改变
-         */
-        private onIndexChanged(event);
-        /**
-         * @private
-         * ViewStack选中项发生改变
-         */
-        private onViewStackIndexChange(event);
-    }
-}
-declare namespace eui.sys {
-    /**
-     * @private
-     */
-    const enum TextInputKeys {
-        prompt = 0,
-        displayAsPassword = 1,
-        textColor = 2,
-        maxChars = 3,
-        maxWidth = 4,
-        maxHeight = 5,
-        text = 6,
-        restrict = 7,
-        inputType = 8,
-    }
-}
-declare namespace eui {
-    /**
-     *
-     */
-    /**
-     * The TextInput is a textfield input component, the user can input and edit the text.
-     *
-     * @version Egret 2.5.7
-     * @version eui 1.0
-     * @platform Web,Native
-     * @includeExample  extension/eui/components/TextInputExample.ts
-     * @language en_US
-     */
-    /**
-     * TextInput 是一个文本输入控件，供用户输入和编辑统一格式文本
-     *
-     * @version Egret 2.5.7
-     * @version eui 1.0
-     * @platform Web,Native
-     * @includeExample  extension/eui/components/TextInputExample.ts
-     * @language zh_CN
-     */
-    class TextInput extends Component {
-        constructor();
-        /**
-         * @private
-         */
-        $TextInput: Object;
-        /**
-         * [SkinPart] The TextInput display
-         * @skinPart
-         * @version Egret 2.5.7
-         * @version eui 1.0
-         * @platform Web,Native
-         * @language en_US
-         */
-        /**
-         * [SkinPart] 实体文本输入组件
-         * @skinPart
-         * @version Egret 2.5.7
-         * @version eui 1.0
-         * @platform Web,Native
-         * @language zh_CN
-         */
-        textDisplay: EditableText;
-        /**
-         * [SkinPart] When the property of the text is empty, it will show the defalut string.
-         * @skinPart
-         * @version Egret 2.4
-         * @version eui 1.0
-         * @platform Web,Native
-         * @language zh_CN
-         */
-        /**
-         * [SkinPart] 当text属性为空字符串时要显示的文本。
-         * @skinPart
-         * @version Egret 2.4
-         * @version eui 1.0
-         * @platform Web,Native
-         * @language zh_CN
-         */
-        promptDisplay: Label;
-        /**
-         * @copy eui.EditableText#prompt
-         *
-         * @version Egret 2.5.7
-         * @version eui 1.0
-         * @platform Web,Native
-         */
-        /**
-         * @copy eui.EditableText#prompt
-         *
-         * @version Egret 2.5.7
-         * @version eui 1.0
-         * @platform Web,Native
-         */
-        prompt: string;
-        /**
-         * @copy egret.TextField#displayAsPassword
-         *
-         * @version Egret 2.5.7
-         * @version eui 1.0
-         * @platform Web,Native
-         */
-        /**
-         * @copy egret.TextField#displayAsPassword
-         *
-         * @version Egret 2.5.7
-         * @version eui 1.0
-         * @platform Web,Native
-         */
-        displayAsPassword: boolean;
-        /**
-         * @copy egret.TextField#inputType
-         *
-         * @version Egret 3.1.6
-         * @version eui 1.0
-         * @platform Web,Native
-         */
-        /**
-         * @copy egret.TextField#inputType
-         *
-         * @version Egret 3.1.6
-         * @version eui 1.0
-         * @platform Web,Native
-         */
-        inputType: string;
-        /**
-         * @copy egret.TextField#textColor
-         *
-         * @version Egret 2.5.7
-         * @version eui 1.0
-         * @platform Web,Native
-         */
-        /**
-         * @copy egret.TextField#textColor
-         *
-         * @version Egret 2.5.7
-         * @version eui 1.0
-         * @platform Web,Native
-         */
-        textColor: number;
-        /**
-         * @copy egret.TextField#maxChars
-         *
-         * @version Egret 2.5.7
-         * @version eui 1.0
-         * @platform Web,Native
-         */
-        /**
-         * @copy egret.TextField#maxChars
-         *
-         * @version Egret 2.5.7
-         * @version eui 1.0
-         * @platform Web,Native
-         */
-        maxChars: number;
-        /**
-         * @inheritDoc
-         *
-         * @version Egret 2.5.7
-         * @version eui 1.0
-         * @platform Web,Native
-         */
-        /**
-         * @inheritDoc
-         *
-         * @version Egret 2.5.7
-         * @version eui 1.0
-         * @platform Web,Native
-         */
-        maxWidth: number;
-        /**
-         * @inheritDoc
-         *
-         * @version Egret 2.5.7
-         * @version eui 1.0
-         * @platform Web,Native
-         */
-        /**
-         * @inheritDoc
-         *
-         * @version Egret 2.5.7
-         * @version eui 1.0
-         * @platform Web,Native
-         */
-        maxHeight: number;
-        /**
-         * @copy egret.TextField#text
-         *
-         * @version Egret 2.5.7
-         * @version eui 1.0
-         * @platform Web,Native
-         */
-        /**
-         * @copy egret.TextField#text
-         *
-         * @version Egret 2.5.7
-         * @version eui 1.0
-         * @platform Web,Native
-         */
-        text: string;
-        /**
-         * @copy egret.TextField#restrict
-         *
-         * @version Egret 2.5.7
-         * @version eui 1.0
-         * @platform Web,Native
-         */
-        /**
-         * @copy egret.TextField#restrict
-         *
-         * @version Egret 2.5.7
-         * @version eui 1.0
-         * @platform Web,Native
-         */
-        restrict: string;
-        /**
-         * @private
-         */
-        private isFocus;
-        /**
-         * @private
-         * 焦点移入
-         */
-        private focusInHandler(event);
-        /**
-         * @private
-         * 焦点移出
-         */
-        private focusOutHandler(event);
-        /**
-         * @inheritDoc
-         *
-         * @version Egret 2.5.7
-         * @version eui 1.0
-         * @platform Web,Native
-         */
-        protected getCurrentState(): string;
-        /**
-         * @inheritDoc
-         *
-         * @version Egret 2.5.7
-         * @version eui 1.0
-         * @platform Web,Native
-         */
-        protected partAdded(partName: string, instance: any): void;
-        /**
-         * @inheritDoc
-         *
-         * @version Egret 2.5.7
-         * @version eui 1.0
-         * @platform Web,Native
-         */
-        protected partRemoved(partName: string, instance: any): void;
-        /**
-         * @private
-         */
-        private textDisplayAdded();
-        /**
-         * @private
-         */
-        private textDisplayRemoved();
-    }
-}
-declare namespace eui {
-    /**
-     * An <code>ICollectionView</code> is a view onto a collection of data.
-     * @version Egret 2.4
-     * @version eui 1.0
-     * @platform Web,Native
-     * @language en_US
-     */
-    /**
-     *
-     * <code>ICollection</code>是一个列表的集合类数据源对象的查看接口。
-     * @version Egret 2.4
-     * @version eui 1.0
-     * @platform Web,Native
-     * @language zh_CN
-     */
-    interface ICollection extends egret.IEventDispatcher {
-        /**
-         * The number of items in this view.
-         * 0 means no items, while -1 means that the length is unknown.
-         * @readOnly
-         * @version Egret 2.4
-         * @version eui 1.0
-         * @platform Web,Native
-         * @language en_US
-         */
-        /**
-         * 此集合中的项目数。0 表示不包含项目。
-         * @readOnly
-         * @version Egret 2.4
-         * @version eui 1.0
-         * @platform Web,Native
-         * @language zh_CN
-         */
-        length: number;
-        /**
-         * Gets the item at the specified index.
-         * @param index The index in the list from which to retrieve the item.
-         * @return The item at that index, or <code>null</code> if there is none.
-         * @version Egret 2.4
-         * @version eui 1.0
-         * @platform Web,Native
-         * @language en_US
-         */
-        /**
-         * 获取指定索引处的项目。
-         * @param index 要得到的项的指定位置。
-         * @return 在索引位置的项，如果没有该项则返回null。
-         * @version Egret 2.4
-         * @version eui 1.0
-         * @platform Web,Native
-         * @language zh_CN
-         */
-        getItemAt(index: number): any;
-        /**
-         * Returns the index of the item if it is in the list。-1 otherwise.
-         * @param item The item to find.
-         * @return The index of the item, or -1 if the item is not in the list.
-         * @version Egret 2.4
-         * @version eui 1.0
-         * @platform Web,Native
-         * @language en_US
-         */
-        /**
-         * 如果项目位于列表中,返回该项目的索引。否则返回-1。
-         * @param item 要查找的项。
-         * @return 项的索引，如果该项没有在列表中将返回-1.
-         * @version Egret 2.4
-         * @version eui 1.0
-         * @platform Web,Native
-         * @language zh_CN
-         */
-        getItemIndex(item: any): number;
-    }
-}
-declare namespace eui {
-    /**
-     * The Watcher class defines utility method that you can use with bindable properties.
-     * These methods let you define an event handler that is executed whenever a bindable property is updated.
-     *
-     * @version Egret 2.4
-     * @version eui 1.0
-     * @platform Web,Native
-     * @includeExample extension/eui/binding/WatcherExample.ts
-     * @language en_US
-     */
-    /**
-     * Watcher 类能够监视可绑定属性的改变，您可以定义一个事件处理函数作为 Watcher 的回调方法，在每次可绑定属性的值改变时都执行此函数。
-     *
-     * @version Egret 2.4
-     * @version eui 1.0
-     * @platform Web,Native
-     * @includeExample extension/eui/binding/WatcherExample.ts
-     * @language zh_CN
-     */
-    class Watcher {
-        /**
-         * Creates and starts a Watcher instance.
-         * The Watcher can only watch the property of a Object which host is instance of egret.IEventDispatcher.
-         * @param host The object that hosts the property or property chain to be watched.
-         * You can use the use the <code>reset()</code> method to change the value of the <code>host</code> argument
-         * after creating the Watcher instance.
-         * The <code>host</code> maintains a list of <code>handlers</code> to invoke when <code>prop</code> changes.
-         * @param chain A value specifying the property or chain to be watched.
-         * For example, to watch the property <code>host.a.b.c</code>,
-         * call the method as: <code>watch(host, ["a","b","c"], ...)</code>.
-         * @param handler  An event handler function called when the value of the watched property
-         * (or any property in a watched chain) is modified.
-         * @param thisObject <code>this</code> object of which binding with handler
-         * @returns he ChangeWatcher instance, if at least one property name has been specified to
-         * the <code>chain</code> argument; null otherwise.
-         * @version Egret 2.4
-         * @version eui 1.0
-         * @platform Web,Native
-         * @language en_US
-         */
-        /**
-         * 创建并启动 Watcher 实例。注意：Watcher 只能监视 host 为 egret.IEventDispatcher 对象的属性改变。若属性链中某个属性所对应的实例不是 egret.IEventDispatcher，
-         * 则属性链中在它之后的属性改变将无法检测到。
-         * @param host 用于承载要监视的属性或属性链的对象。
-         * 创建Watcher实例后，您可以利用<code>reset()</code>方法更改<code>host</code>参数的值。
-         * 当<code>prop</code>改变的时候，会使得host对应的一系列<code>handlers</code>被触发。
-         * @param chain 用于指定要监视的属性链的值。例如，要监视属性 host.a.b.c，需按以下形式调用此方法：watch¬(host, ["a","b","c"], ...)。
-         * @param handler 在监视的目标属性链中任何属性的值发生改变时调用的事件处理函数。
-         * @param thisObject handler 方法绑定的this对象
-         * @returns 如果已为 chain 参数至少指定了一个属性名称，则返回 Watcher 实例；否则返回 null。
-         * @version Egret 2.4
-         * @version eui 1.0
-         * @platform Web,Native
-         * @language zh_CN
-         */
-        static watch(host: any, chain: string[], handler: (value: any) => void, thisObject: any): Watcher;
-        /**
-         * @private
-         * 检查属性是否可以绑定。若还未绑定，尝试添加绑定事件。若是只读或只写属性，返回false。
-         */
-        private static checkBindable(host, property);
-        /**
-         * Constructor.
-         * Not for public use. This method is called only from the <code>watch()</code> method.
-         * See the <code>watch()</code> method for parameter usage.
-         * @version Egret 2.4
-         * @version eui 1.0
-         * @platform Web,Native
-         * @language en_US
-         */
-        /**
-         * 构造函数，非公开。只能从 watch() 方法中调用此方法。有关参数用法，请参阅 watch() 方法。
-         * @version Egret 2.4
-         * @version eui 1.0
-         * @platform Web,Native
-         * @language zh_CN
-         */
-        constructor(property: string, handler: (value: any) => void, thisObject: any, next?: Watcher);
-        /**
-         * @private
-         */
-        private host;
-        /**
-         * @private
-         */
-        private property;
-        /**
-         * @private
-         */
-        private handler;
-        /**
-         * @private
-         */
-        private thisObject;
-        /**
-         * @private
-         */
-        private next;
-        /**
-         * @private
-         */
-        private isExecuting;
-        /**
-         * Detaches this Watcher instance, and its handler function, from the current host.
-         * @version Egret 2.4
-         * @version eui 1.0
-         * @platform Web,Native
-         * @language en_US
-         */
-        /**
-         * 从当前宿主中断开此 Watcher 实例及其处理函数。
-         * @version Egret 2.4
-         * @version eui 1.0
-         * @platform Web,Native
-         * @language zh_CN
-         */
-        unwatch(): void;
-        /**
-         * Retrieves the current value of the watched property or property chain, or null if the host object is null.
-         * @example
-         * <pre>
-         * watch(obj, ["a","b","c"], ...).getValue() === obj.a.b.c
-         * </pre>
-         * @version Egret 2.4
-         * @version eui 1.0
-         * @platform Web,Native
-         * @language en_US
-         */
-        /**
-         * 检索观察的属性或属性链的当前值，当宿主对象为空时此值为空。
-         * @example
-         * <pre>
-         * watch(obj, ["a","b","c"], ...).getValue() === obj.a.b.c
-         * </pre>
-         * @version Egret 2.4
-         * @version eui 1.0
-         * @platform Web,Native
-         * @language zh_CN
-         */
-        getValue(): any;
-        /**
-         * Sets the handler function.s
-         * @param handler The handler function. This argument must not be null.
-         * @version Egret 2.4
-         * @version eui 1.0
-         * @platform Web,Native
-         * @language en_US
-         */
-        /**
-         * 设置处理函数。
-         * @param handler 处理函数，此参数必须为非空。
-         * @version Egret 2.4
-         * @version eui 1.0
-         * @platform Web,Native
-         * @language zh_CN
-         */
-        setHandler(handler: (value: any) => void, thisObject: any): void;
-        /**
-         * Resets this ChangeWatcher instance to use a new host object.
-         * You can call this method to reuse a watcher instance on a different host.
-         * @version Egret 2.4
-         * @version eui 1.0
-         * @platform Web,Native
-         * @language en_US
-         */
-        /**
-         * 重置此 Watcher 实例使用新的宿主对象。
-         * 您可以通过该方法实现一个Watcher实例用于不同的宿主。
-         * @version Egret 2.4
-         * @version eui 1.0
-         * @platform Web,Native
-         * @language zh_CN
-         */
-        reset(newHost: egret.IEventDispatcher): void;
-        /**
-         * @private
-         *
-         * @returns
-         */
-        private getHostPropertyValue();
-        /**
-         * @private
-         */
-        private wrapHandler(event);
-        /**
-         * @private
-         */
-        private onPropertyChange(property);
-    }
-}
-declare namespace eui {
-    /**
-     * The UILayer class is the subclass of the Group class.It not only has the standard function of the Group class,but also
-     * can keep its size the same to the stage size (Stage.stageWidth,Stage.stageHeight).Its size will changes as the stage size changes.
-     * like any normal container class,you can create multiple instance of the UILayer class,but it is usually used as the root of the UI display list.
-     * @version Egret 2.4
-     * @version eui 1.0
-     * @platform Web,Native
-     * @language en_US
-     */
-    /**
-     * UILayer 是 Group 的子类，它除了具有容器的所有标准功能，还能够自动保持自身尺寸始终与舞台尺寸相同（Stage.stageWidth,Stage.stageHeight）。
-     * 当舞台尺寸发生改变时，它会跟随舞台尺寸改变。UILayer 跟普通容器一样，允许创建多个实例，但通常都将它作为UI显示列表的根节点使用。
-     * @version Egret 2.4
-     * @version eui 1.0
-     * @platform Web,Native
-     * @language zh_CN
-     */
-    class UILayer extends Group {
-        /**
-         * Constructor.
-         *
-         * @version Egret 2.4
-         * @version eui 1.0
-         * @platform Web,Native
-         * @language en_US
-         */
-        /**
-         * 构造函数。
-         *
-         * @version Egret 2.4
-         * @version eui 1.0
-         * @platform Web,Native
-         * @language zh_CN
-         */
-        constructor();
-        /**
-         * @private
-         * 添加到舞台
-         */
-        private onAddToStage(event?);
-        /**
-         * @private
-         * 从舞台移除
-         */
-        private onRemoveFromStage(event);
-        /**
-         * @private
-         * 舞台尺寸改变
-         */
-        private onResize(event?);
-    }
-}
-declare namespace eui {
-    /**
-     * An ViewStack navigator container consists of a collection of child
-     * containers stacked on top of each other, where only one child
-     * at a time is visible.
-     * When a different child container is selected, it seems to replace
-     * the old one because it appears in the same location.
-     * However, the old child container still exists; it is just invisible.
-     *
-     * @event eui.CollectionEvent.COLLECTION_CHANGE Dispatched when the ICollection has been updated in some way.
-     *
-     * @version Egret 2.4
-     * @version eui 1.0
-     * @platform Web,Native
-     * @includeExample  extension/eui/components/ViewStackExample.ts
-     * @language en_US
-     */
-    /**
-     * ViewStack 导航器容器由一组彼此上下堆叠的子容器组成，其中一次只可以显示一个子容器。
-     * 选择另一个子容器后，它将显示在原来子容器的位置处，所以看起来好像此子容器替换了原来的子容器。
-     * 但是，原来的子容器仍然存在，只不过它现在处于不可见状态。
-     *
-     * @event eui.CollectionEvent.COLLECTION_CHANGE 以某种方式更新 ICollection 后分派。
-     *
-     * @version Egret 2.4
-     * @version eui 1.0
-     * @platform Web,Native
-     * @includeExample  extension/eui/components/ViewStackExample.ts
-     * @language zh_CN
-     */
-    class ViewStack extends Group implements ICollection {
-        /**
-         * Constructor.
-         *
-         * @version Egret 2.4
-         * @version eui 1.0
-         * @platform Web,Native
-         * @language en_US
-         */
-        /**
-         * 构造函数。
-         *
-         * @version Egret 2.4
-         * @version eui 1.0
-         * @platform Web,Native
-         * @language zh_CN
-         */
-        constructor();
-        /**
-         * The layout object for this container.
-         * This object is responsible for the measurement and layout of
-         * the visual elements in the container.
-         *
-         * @default eui.BasicLayout
-         *
-         * @version Egret 2.4
-         * @version eui 1.0
-         * @platform Web,Native
-         * @language en_US
-         */
-        /**
-         * 此容器的 layout 对象。此对象负责容器中可视元素的测量和布局。
-         *
-         * @default eui.BasicLayout
-         *
-         * @version Egret 2.4
-         * @version eui 1.0
-         * @platform Web,Native
-         * @language zh_CN
-         */
-        readonly layout: LayoutBase;
-        /**
-         * @private
-         */
-        private _selectedChild;
-        /**
-         * A reference to the currently visible child container.
-         * The default is a reference to the first child.
-         * If there are no children, this property is <code>null</code>.
-         *
-         * @version Egret 2.4
-         * @version eui 1.0
-         * @platform Web,Native
-         * @language en_US
-         */
-        /**
-         * 对当前可见子容器的引用。默认设置为对第一个子容器的引用。如果没有子项，则此属性为 <code>null</code>。
-         *
-         * @version Egret 2.4
-         * @version eui 1.0
-         * @platform Web,Native
-         * @language zh_CN
-         */
-        selectedChild: egret.DisplayObject;
-        /**
-         * @private
-         * 在属性提交前缓存选中项索引
-         */
-        private proposedSelectedIndex;
-        /**
-         * @private
-         */
-        _selectedIndex: number;
-        /**
-         * The zero-based index of the currently visible child container.
-         * Child indexes are in the range 0, 1, 2, ..., n - 1,
-         * where <code>n</code> is the number of children.
-         * The default value is 0, corresponding to the first child.
-         * If there are no children, the value of this property is <code>-1</code>.
-         *
-         * @version Egret 2.4
-         * @version eui 1.0
-         * @platform Web,Native
-         * @language en_US
-         */
-        /**
-         * 当前可见子容器的从零开始的索引。子索引的范围是 0、1、2、...、n - 1，其中 <code>n</code> 是子项的数目。
-         * 默认值是 0，对应于第一个子项。如果不存在子容器，则此属性的值为 -1。
-         *
-         * @version Egret 2.4
-         * @version eui 1.0
-         * @platform Web,Native
-         * @language zh_CN
-         */
-        selectedIndex: number;
-        /**
-         * @private
-         * 设置选中项索引
-         */
-        private setSelectedIndex(value);
-        /**
-         * @private
-         * 一个子项被添加到容器内，此方法不仅在操作addChild()时会被回调，在操作setChildIndex()或swapChildren时也会回调。
-         * 当子项索引发生改变时，会先触发$childRemoved()方法，然后触发$childAdded()方法。
-         */
-        $childAdded(child: egret.DisplayObject, index: number): void;
-        /**
-         * @private
-         * 一个子项从容器内移除，此方法不仅在操作removeChild()时会被回调，在操作setChildIndex()或swapChildren时也会回调。
-         * 当子项索引发生改变时，会先触发$childRemoved()方法，然后触发$childAdded()方法。
-         */
-        $childRemoved(child: egret.DisplayObject, index: number): void;
-        /**
-         * @inheritDoc
-         *
-         * @version Egret 2.4
-         * @version eui 1.0
-         * @platform Web,Native
-         */
-        protected commitProperties(): void;
-        /**
-         * @private
-         *
-         * @param newIndex
-         */
-        private commitSelection(newIndex);
-        /**
-         * @private
-         *
-         * @param child
-         * @param visible
-         */
-        private showOrHide(child, visible);
-        /**
-         * number of children
-         *
-         * @version Egret 2.4
-         * @version eui 1.0
-         * @platform Web,Native
-         * @language en_US
-         */
-        /**
-         * 子项数量
-         *
-         * @version Egret 2.4
-         * @version eui 1.0
-         * @platform Web,Native
-         * @language zh_CN
-         */
-        readonly length: number;
-        /**
-         * @inheritDoc
-         *
-         * @version Egret 2.4
-         * @version eui 1.0
-         * @platform Web,Native
-         */
-        getItemAt(index: number): any;
-        /**
-         * @inheritDoc
-         *
-         * @version Egret 2.4
-         * @version eui 1.0
-         * @platform Web,Native
-         */
-        getItemIndex(item: any): number;
-    }
-}
-declare namespace eui {
-    /**
-     * The VScrollBar (vertical scrollbar) control lets you control
-     * the portion of data that is displayed when there is too much data
-     * to fit vertically in a display area.
-     *
-     * <p>Although you can use the VScrollBar control as a stand-alone control,
-     * you usually combine it as part of another group of components to
-     * provide scrolling functionality.</p>
-     *
-     * @version Egret 2.4
-     * @version eui 1.0
-     * @platform Web,Native
-     * @includeExample  extension/eui/components/VScrollBarExample.ts
-     * @language en_US
-     */
-    /**
-     * VScrollBar（垂直 ScrollBar）控件可以在因数据太多而不能在显示区域中以垂直方向完全显示时控制显示的数据部分。
-     * <p>虽然 VScrollBar 控件可以单独使用，但通常将它与其他组件一起使用来提供滚动功能。</p>
-     *
-     * @version Egret 2.4
-     * @version eui 1.0
-     * @platform Web,Native
-     * @includeExample  extension/eui/components/VScrollBarExample.ts
-     * @language zh_CN
-     */
-    class VScrollBar extends ScrollBarBase {
-        /**
-         * @inheritDoc
-         *
-         * @version Egret 2.4
-         * @version eui 1.0
-         * @platform Web,Native
-         */
-        protected updateDisplayList(unscaledWidth: number, unscaledHeight: number): void;
-        /**
-         * @inheritDoc
-         *
-         * @version Egret 2.4
-         * @version eui 1.0
-         * @platform Web,Native
-         */
-        protected onPropertyChanged(event: eui.PropertyEvent): void;
-    }
-}
-declare namespace eui {
-    /**
-     * The VSlider (vertical slider) control lets users select a value
-     * by moving a slider thumb between the end points of the slider track.
-     * The current value of the slider is determined by the relative location of the thumb between
-     * the end points of the slider, corresponding to the slider's minimum and maximum values.
-     *
-     * @version Egret 2.4
-     * @version eui 1.0
-     * @platform Web,Native
-     * @includeExample  extension/eui/components/VSliderExample.ts
-     * @language en_US
-     */
-    /**
-     * 使用 VSlider（垂直滑块）控件，用户可通过在滑块轨道的端点之间移动滑块来选择值。
-     * 滑块的当前值由滑块端点（对应于滑块的最小值和最大值）之间滑块的相对位置确定。
-     *
-     * @version Egret 2.4
-     * @version eui 1.0
-     * @platform Web,Native
-     * @includeExample  extension/eui/components/VSliderExample.ts
-     * @language zh_CN
-     */
-    class VSlider extends SliderBase {
-        /**
-         * Constructor.
-         *
-         * @version Egret 2.4
-         * @version eui 1.0
-         * @platform Web,Native
-         * @language en_US
-         */
-        /**
-         * 构造函数。
-         *
-         * @version Egret 2.4
-         * @version eui 1.0
-         * @platform Web,Native
-         * @language zh_CN
-         */
-        constructor();
-        /**
-         * @inheritDoc
-         *
-         * @version Egret 2.4
-         * @version eui 1.0
-         * @platform Web,Native
-         */
-        protected pointToValue(x: number, y: number): number;
-        /**
-         * @private
-         *
-         * @returns
-         */
-        private getThumbRange();
-        /**
-         * @inheritDoc
-         *
-         * @version Egret 2.4
-         * @version eui 1.0
-         * @platform Web,Native
-         */
-        updateSkinDisplayList(): void;
     }
 }
 declare namespace eui {
@@ -13157,47 +13163,77 @@ declare namespace eui.sys {
 }
 declare namespace eui {
     /**
-     * The HScrollBar (horizontal scrollbar) control lets you control
-     * the portion of data that is displayed when there is too much data
-     * to fit horizontally in a display area.
-     *
-     * <p>Although you can use the HScrollBar control as a stand-alone control,
-     * you usually combine it as part of another group of components to
-     * provide scrolling functionality.</p>
-     *
-     * @includeExample  extension/eui/components/HScrollBarExample.ts
+     * An <code>ICollectionView</code> is a view onto a collection of data.
      * @version Egret 2.4
      * @version eui 1.0
      * @platform Web,Native
      * @language en_US
      */
     /**
-     * HScrollBar（水平 ScrollBar）控件可以在因数据太多而不能在显示区域中以水平方向完全显示时控制显示的数据部分。
-     * <p>虽然 HScrollBar 控件可以单独使用，但通常将它与其他组件一起使用来提供滚动功能。</p>
      *
-     * @includeExample  extension/eui/components/HScrollBarExample.ts
+     * <code>ICollection</code>是一个列表的集合类数据源对象的查看接口。
      * @version Egret 2.4
      * @version eui 1.0
      * @platform Web,Native
      * @language zh_CN
      */
-    class HScrollBar extends ScrollBarBase {
+    interface ICollection extends egret.IEventDispatcher {
         /**
-         * @inheritDoc
-         *
+         * The number of items in this view.
+         * 0 means no items, while -1 means that the length is unknown.
+         * @readOnly
          * @version Egret 2.4
          * @version eui 1.0
          * @platform Web,Native
+         * @language en_US
          */
-        protected updateDisplayList(unscaledWidth: number, unscaledHeight: number): void;
         /**
-         * @inheritDoc
-         *
+         * 此集合中的项目数。0 表示不包含项目。
+         * @readOnly
          * @version Egret 2.4
          * @version eui 1.0
          * @platform Web,Native
+         * @language zh_CN
          */
-        protected onPropertyChanged(event: eui.PropertyEvent): void;
+        length: number;
+        /**
+         * Gets the item at the specified index.
+         * @param index The index in the list from which to retrieve the item.
+         * @return The item at that index, or <code>null</code> if there is none.
+         * @version Egret 2.4
+         * @version eui 1.0
+         * @platform Web,Native
+         * @language en_US
+         */
+        /**
+         * 获取指定索引处的项目。
+         * @param index 要得到的项的指定位置。
+         * @return 在索引位置的项，如果没有该项则返回null。
+         * @version Egret 2.4
+         * @version eui 1.0
+         * @platform Web,Native
+         * @language zh_CN
+         */
+        getItemAt(index: number): any;
+        /**
+         * Returns the index of the item if it is in the list。-1 otherwise.
+         * @param item The item to find.
+         * @return The index of the item, or -1 if the item is not in the list.
+         * @version Egret 2.4
+         * @version eui 1.0
+         * @platform Web,Native
+         * @language en_US
+         */
+        /**
+         * 如果项目位于列表中,返回该项目的索引。否则返回-1。
+         * @param item 要查找的项。
+         * @return 项的索引，如果该项没有在列表中将返回-1.
+         * @version Egret 2.4
+         * @version eui 1.0
+         * @platform Web,Native
+         * @language zh_CN
+         */
+        getItemIndex(item: any): number;
     }
 }
 declare namespace EXML {
@@ -13738,114 +13774,6 @@ declare namespace eui {
          * @language zh_CN
          */
         static JUSTIFY_USING_HEIGHT: string;
-    }
-}
-declare namespace eui {
-    /**
-     * The HSlider (horizontal slider) control lets users select a value
-     * by moving a slider thumb between the end points of the slider track.
-     * The current value of the slider is determined by the relative location of the thumb between
-     * the end points of the slider, corresponding to the slider's minimum and maximum values.
-     *
-     * @includeExample  extension/eui/components/HSliderExample.ts
-     * @version Egret 2.4
-     * @version eui 1.0
-     * @platform Web,Native
-     * @language en_US
-     */
-    /**
-     * 使用 HSlider（水平滑块）控件，用户可通过在滑块轨道的端点之间移动滑块来选择值。
-     * 滑块的当前值由滑块端点（对应于滑块的最小值和最大值）之间滑块的相对位置确定。
-     *
-     * @includeExample  extension/eui/components/HSliderExample.ts
-     * @version Egret 2.4
-     * @version eui 1.0
-     * @platform Web,Native
-     * @language zh_CN
-     */
-    class HSlider extends SliderBase {
-        /**
-         * Constructor.
-         *
-         * @version Egret 2.4
-         * @version eui 1.0
-         * @platform Web,Native
-         * @language en_US
-         */
-        /**
-         * 构造函数。
-         *
-         * @version Egret 2.4
-         * @version eui 1.0
-         * @platform Web,Native
-         * @language zh_CN
-         */
-        constructor();
-        /**
-         * @inheritDoc
-         *
-         * @version Egret 2.4
-         * @version eui 1.0
-         * @platform Web,Native
-         */
-        protected pointToValue(x: number, y: number): number;
-        /**
-         * @private
-         *
-         * @returns
-         */
-        private getThumbRange();
-        /**
-         * @inheritDoc
-         *
-         * @version Egret 2.4
-         * @version eui 1.0
-         * @platform Web,Native
-         */
-        protected updateSkinDisplayList(): void;
-    }
-}
-declare namespace eui {
-    /**
-     * The CheckBox component consists of an optional label and a small box
-     * that can contain a check mark or not.<p/>
-     *
-     * When a user clicks a CheckBox component or its associated text,
-     * the CheckBox component sets its <code>selected</code> property
-     * to <code>true</code> for checked, and to <code>false</code> for unchecked.
-     *
-     * @version Egret 2.4
-     * @version eui 1.0
-     * @platform Web,Native
-     * @includeExample extension/eui/components/CheckboxExample.ts
-     * @language en_US
-     */
-    /**
-     * CheckBox 组件包含一个可选标签和一个小方框，该方框内可以包含/不包含复选标记。<p/>
-     * 用户单击 CheckBox 组件或其关联文本时，CheckBox 组件会将其 selected 属性设置为 true（表示选中）或 false（表示取消选中）。
-     *
-     * @version Egret 2.4
-     * @version eui 1.0
-     * @platform Web,Native
-     * @includeExample extension/eui/components/CheckboxExample.ts
-     * @language zh_CN
-     */
-    class CheckBox extends ToggleButton {
-        /**
-         * Constructor.
-         * @version Egret 2.4
-         * @version eui 1.0
-         * @platform Web,Native
-         * @language en_US
-         */
-        /**
-         * 创建一个CheckBox
-         * @version Egret 2.4
-         * @version eui 1.0
-         * @platform Web,Native
-         * @language zh_CN
-         */
-        constructor();
     }
 }
 declare namespace eui {
@@ -14625,6 +14553,116 @@ declare namespace eui {
         protected getIndexInView(): boolean;
     }
 }
+declare namespace eui {
+    /**
+     * The HScrollBar (horizontal scrollbar) control lets you control
+     * the portion of data that is displayed when there is too much data
+     * to fit horizontally in a display area.
+     *
+     * <p>Although you can use the HScrollBar control as a stand-alone control,
+     * you usually combine it as part of another group of components to
+     * provide scrolling functionality.</p>
+     *
+     * @includeExample  extension/eui/components/HScrollBarExample.ts
+     * @version Egret 2.4
+     * @version eui 1.0
+     * @platform Web,Native
+     * @language en_US
+     */
+    /**
+     * HScrollBar（水平 ScrollBar）控件可以在因数据太多而不能在显示区域中以水平方向完全显示时控制显示的数据部分。
+     * <p>虽然 HScrollBar 控件可以单独使用，但通常将它与其他组件一起使用来提供滚动功能。</p>
+     *
+     * @includeExample  extension/eui/components/HScrollBarExample.ts
+     * @version Egret 2.4
+     * @version eui 1.0
+     * @platform Web,Native
+     * @language zh_CN
+     */
+    class HScrollBar extends ScrollBarBase {
+        /**
+         * @inheritDoc
+         *
+         * @version Egret 2.4
+         * @version eui 1.0
+         * @platform Web,Native
+         */
+        protected updateDisplayList(unscaledWidth: number, unscaledHeight: number): void;
+        /**
+         * @inheritDoc
+         *
+         * @version Egret 2.4
+         * @version eui 1.0
+         * @platform Web,Native
+         */
+        protected onPropertyChanged(event: eui.PropertyEvent): void;
+    }
+}
+declare namespace eui {
+    /**
+     * The HSlider (horizontal slider) control lets users select a value
+     * by moving a slider thumb between the end points of the slider track.
+     * The current value of the slider is determined by the relative location of the thumb between
+     * the end points of the slider, corresponding to the slider's minimum and maximum values.
+     *
+     * @includeExample  extension/eui/components/HSliderExample.ts
+     * @version Egret 2.4
+     * @version eui 1.0
+     * @platform Web,Native
+     * @language en_US
+     */
+    /**
+     * 使用 HSlider（水平滑块）控件，用户可通过在滑块轨道的端点之间移动滑块来选择值。
+     * 滑块的当前值由滑块端点（对应于滑块的最小值和最大值）之间滑块的相对位置确定。
+     *
+     * @includeExample  extension/eui/components/HSliderExample.ts
+     * @version Egret 2.4
+     * @version eui 1.0
+     * @platform Web,Native
+     * @language zh_CN
+     */
+    class HSlider extends SliderBase {
+        /**
+         * Constructor.
+         *
+         * @version Egret 2.4
+         * @version eui 1.0
+         * @platform Web,Native
+         * @language en_US
+         */
+        /**
+         * 构造函数。
+         *
+         * @version Egret 2.4
+         * @version eui 1.0
+         * @platform Web,Native
+         * @language zh_CN
+         */
+        constructor();
+        /**
+         * @inheritDoc
+         *
+         * @version Egret 2.4
+         * @version eui 1.0
+         * @platform Web,Native
+         */
+        protected pointToValue(x: number, y: number): number;
+        /**
+         * @private
+         *
+         * @returns
+         */
+        private getThumbRange();
+        /**
+         * @inheritDoc
+         *
+         * @version Egret 2.4
+         * @version eui 1.0
+         * @platform Web,Native
+         */
+        protected updateSkinDisplayList(): void;
+    }
+}
 declare namespace eui.sys {
     /**
      * @private
@@ -15075,42 +15113,14 @@ declare namespace eui {
         private toBoolean(value);
     }
 }
-declare namespace eui {
+declare namespace eui.sys {
     /**
-     * The ToggleSwitch control defines an on-off control.
-     *
-     * @version Egret 2.4
-     * @version eui 1.0
-     * @platform Web,Native
-     * @includeExample  extension/eui/components/ToggleSwitchExample.ts
-     * @language en_US
+     * @private
      */
-    /**
-     * ToggleSwitch 表示一个开关组件。
-     *
-     * @version Egret 2.4
-     * @version eui 1.0
-     * @platform Web,Native
-     * @includeExample  extension/eui/components/ToggleSwitchExample.ts
-     * @language zh_CN
-     */
-    class ToggleSwitch extends ToggleButton {
+    class MatrixUtil {
         /**
-         * Constructor.
-         *
-         * @version Egret 2.4
-         * @version eui 1.0
-         * @platform Web,Native
-         * @language en_US
+         * @private
          */
-        /**
-         * 构造函数。
-         *
-         * @version Egret 2.4
-         * @version eui 1.0
-         * @platform Web,Native
-         * @language zh_CN
-         */
-        constructor();
+        static fitBounds(width: number, height: number, matrix: egret.Matrix, explicitWidth: number, explicitHeight: number, preferredWidth: number, preferredHeight: number, minWidth: number, minHeight: number, maxWidth: number, maxHeight: number): egret.Point;
     }
 }
