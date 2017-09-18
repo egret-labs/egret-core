@@ -158,9 +158,9 @@ namespace egret {
             this.height = source.height;
         }
 
-        public static create(type: "arraybuffer", data: ArrayBuffer, callback:Function): BitmapData;
-        public static create(type: "base64", data: string, callback:Function): BitmapData;
-        public static create(type: "arraybuffer" | "base64", data: ArrayBuffer | string, callback:Function = null): BitmapData {
+        public static create(type: "arraybuffer", data: ArrayBuffer, callback?:(bitmapData: BitmapData)=>void): BitmapData;
+        public static create(type: "base64", data: string, callback?:(bitmapData: BitmapData)=>void): BitmapData;
+        public static create(type: "arraybuffer" | "base64", data: ArrayBuffer | string, callback?:(bitmapData: BitmapData)=>void): BitmapData {
             if (Capabilities.runtimeType === RuntimeType.WEB) {
                 let base64 = "";
                 if (type === "arraybuffer") {
@@ -186,9 +186,9 @@ namespace egret {
                     bitmapData.source = img;
                     bitmapData.height = img.height;
                     bitmapData.width = img.width;
-	                  if(callback){
-		                    callback(bitmapData);
-	                  }
+                    if(callback){
+                        callback(bitmapData);
+                    }
                 }
                 return bitmapData;
             }
