@@ -190,7 +190,7 @@ namespace egret.web {
         private drawWithFilter(displayObject: DisplayObject, buffer: WebGLRenderBuffer, dirtyList: egret.sys.Region[],
             matrix: Matrix, clipRegion: sys.Region, root: DisplayObject): number {
             let drawCalls = 0;
-            if (displayObject.$children && displayObject.$children.length == 0) {
+            if (displayObject.$children && displayObject.$children.length == 0 && (!displayObject.$renderNode || displayObject.$renderNode.$getRenderCount() == 0)) {
                 return;
             }
             let filters = displayObject.$getFilters();
