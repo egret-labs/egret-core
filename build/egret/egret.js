@@ -9054,7 +9054,7 @@ var egret;
             _this.height = source.height;
             return _this;
         }
-        BitmapData.create = function (type, data) {
+        BitmapData.create = function (type, data, callback) {
             if (egret.Capabilities.runtimeType === egret.RuntimeType.WEB) {
                 var base64 = "";
                 if (type === "arraybuffer") {
@@ -9082,6 +9082,9 @@ var egret;
                     bitmapData_1.source = img_1;
                     bitmapData_1.height = img_1.height;
                     bitmapData_1.width = img_1.width;
+                    if (callback) {
+                        callback(bitmapData_1);
+                    }
                 };
                 return bitmapData_1;
             }
@@ -9094,7 +9097,11 @@ var egret;
                     buffer = egret.Base64Util.decode(data);
                 }
                 var native_texture = egret_native.Texture.createTextureFromArrayBuffer(buffer);
-                return new BitmapData(native_texture);
+                var bitmapData = new BitmapData(native_texture);
+                if (callback) {
+                    callback(bitmapData);
+                }
+                return bitmapData;
             }
         };
         BitmapData.prototype.$dispose = function () {

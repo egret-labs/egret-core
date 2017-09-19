@@ -242,6 +242,9 @@ var EXMLParser = (function () {
                     if (id.match(e) == null) {
                         egretbridge_1.egretbridge.$warn(2022, id);
                     }
+                    if (id.match(new RegExp(/ /g)) != null) {
+                        egretbridge_1.egretbridge.$warn(2022, id);
+                    }
                     if (this.skinParts.indexOf(id) == -1) {
                         this.skinParts.push(id);
                     }

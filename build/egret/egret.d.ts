@@ -6000,8 +6000,8 @@ declare namespace egret {
          * @language zh_CN
          */
         constructor(source: any);
-        static create(type: "arraybuffer", data: ArrayBuffer): BitmapData;
-        static create(type: "base64", data: string): BitmapData;
+        static create(type: "arraybuffer", data: ArrayBuffer, callback?: (bitmapData: BitmapData) => void): BitmapData;
+        static create(type: "base64", data: string, callback?: (bitmapData: BitmapData) => void): BitmapData;
         $dispose(): void;
         private static _displayList;
         static $addDisplayObject(displayObject: DisplayObject, bitmapData: BitmapData | Texture): void;
