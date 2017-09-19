@@ -114,7 +114,7 @@ namespace egret.sys {
          * @param miterLimit 用于表示剪切斜接的极限值的数字。
          */
         public lineStyle(thickness?:number, color?:number, alpha:number = 1, caps?:string,
-                         joints?:string, miterLimit:number = 3):Path2D {
+                         joints?:string, miterLimit:number = 3):StrokePath {
             if (CAPS_STYLES.indexOf(caps) == -1) {
                 caps = "round";
             }

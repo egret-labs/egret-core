@@ -9054,7 +9054,7 @@ var egret;
             _this.height = source.height;
             return _this;
         }
-        BitmapData.create = function (type, data) {
+        BitmapData.create = function (type, data, callback) {
             if (egret.Capabilities.runtimeType === egret.RuntimeType.WEB) {
                 var base64 = "";
                 if (type === "arraybuffer") {
@@ -9082,6 +9082,9 @@ var egret;
                     bitmapData_1.source = img_1;
                     bitmapData_1.height = img_1.height;
                     bitmapData_1.width = img_1.width;
+                    if (callback) {
+                        callback(bitmapData_1);
+                    }
                 };
                 return bitmapData_1;
             }
@@ -9094,7 +9097,11 @@ var egret;
                     buffer = egret.Base64Util.decode(data);
                 }
                 var native_texture = egret_native.Texture.createTextureFromArrayBuffer(buffer);
-                return new BitmapData(native_texture);
+                var bitmapData = new BitmapData(native_texture);
+                if (callback) {
+                    callback(bitmapData);
+                }
+                return bitmapData;
             }
         };
         BitmapData.prototype.$dispose = function () {
@@ -10604,7 +10611,7 @@ var egret;
          * @platform Web,Native
          * @language zh_CN
          */
-        Graphics.prototype.lineStyle = function (thickness, color, alpha, pixelHinting, scaleMode, caps, joints, miterLimit) {
+        Graphics.prototype.lineStyle = function (thickness, color, alpha, pixelHinting, scaleMode, caps, joints, miterLimit, lineDash) {
             if (thickness === void 0) { thickness = NaN; }
             if (color === void 0) { color = 0; }
             if (alpha === void 0) { alpha = 1.0; }
@@ -10624,6 +10631,12 @@ var egret;
                 miterLimit = +miterLimit || 0;
                 this.setStrokeWidth(thickness);
                 this.strokePath = this.$renderNode.lineStyle(thickness, color, alpha, caps, joints, miterLimit);
+                if (lineDash) {
+                    this.strokePath.setLineDash(lineDash);
+                }
+                else {
+                    this.strokePath.setLineDash([]);
+                }
                 if (this.$renderNode.drawData.length > 1) {
                     this.strokePath.moveTo(this.lastX, this.lastY);
                 }
@@ -16327,6 +16340,12 @@ var egret;
                 _this.type = 3 /* Stroke */;
                 return _this;
             }
+            StrokePath.prototype.setLineDash = function (segments) {
+                this.$commands[this.commandPosition++] = 5 /* SetLineDash */;
+                var pos = this.dataPosition;
+                this.$data[pos++] = segments;
+                this.dataPosition = pos;
+            };
             return StrokePath;
         }(sys.Path2D));
         sys.StrokePath = StrokePath;
@@ -17310,6 +17329,9 @@ var egret;
                         break;
                     case 1 /* MoveTo */:
                         context.moveTo(data[pos++], data[pos++]);
+                        break;
+                    case 5 /* SetLineDash */:
+                        context.setLineDash(data[pos++]);
                         break;
                 }
             }

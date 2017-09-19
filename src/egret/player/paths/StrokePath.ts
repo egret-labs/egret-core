@@ -35,7 +35,7 @@ namespace egret.sys {
      */
     export class StrokePath extends Path2D {
 
-        public constructor(){
+        public constructor() {
             super();
             this.type = PathType.Stroke;
         }
@@ -44,26 +44,33 @@ namespace egret.sys {
          * 线条宽度。
          * 注意：绘制时对1像素和3像素要特殊处理，整体向右下角偏移0.5像素，以显示清晰锐利的线条。
          */
-        public lineWidth:number;
+        public lineWidth: number;
         /**
          * 线条颜色
          */
-        public lineColor:number;
+        public lineColor: number;
         /**
          * 线条透明度
          */
-        public lineAlpha:number;
+        public lineAlpha: number;
         /**
          * 端点样式,"none":无端点,"round":圆头端点,"square":方头端点
          */
-        public caps:string;
+        public caps: string;
         /**
          * 联接点样式,"bevel":斜角连接,"miter":尖角连接,"round":圆角连接
          */
-        public joints:string;
+        public joints: string;
         /**
          * 用于表示剪切斜接的极限值的数字。
          */
-        public miterLimit:number;
+        public miterLimit: number;
+
+        public setLineDash(segments: number[]): void {
+            this.$commands[this.commandPosition++] = PathCommand.SetLineDash;
+            let pos = this.dataPosition;
+            this.$data[pos++] = segments;
+            this.dataPosition = pos;
+        }
     }
 }

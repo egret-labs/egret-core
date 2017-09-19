@@ -4370,6 +4370,7 @@ declare namespace egret.sys {
         LineTo = 2,
         CurveTo = 3,
         CubicCurveTo = 4,
+        SetLineDash = 5,
     }
     /**
      * @private
@@ -4381,9 +4382,9 @@ declare namespace egret.sys {
          */
         type: number;
         $commands: number[];
-        $data: number[];
-        private commandPosition;
-        private dataPosition;
+        $data: number | number[][];
+        protected commandPosition: number;
+        protected dataPosition: number;
         /**
          * 当前移动到的坐标X
          * 注意：目前只有drawArc之前会被赋值
@@ -6000,8 +6001,8 @@ declare namespace egret {
          * @language zh_CN
          */
         constructor(source: any);
-        static create(type: "arraybuffer", data: ArrayBuffer): BitmapData;
-        static create(type: "base64", data: string): BitmapData;
+        static create(type: "arraybuffer", data: ArrayBuffer, callback?: (bitmapData: BitmapData) => void): BitmapData;
+        static create(type: "base64", data: string, callback?: (bitmapData: BitmapData) => void): BitmapData;
         $dispose(): void;
         private static _displayList;
         static $addDisplayObject(displayObject: DisplayObject, bitmapData: BitmapData | Texture): void;
@@ -6939,7 +6940,7 @@ declare namespace egret {
          * @platform Web,Native
          * @language zh_CN
          */
-        lineStyle(thickness?: number, color?: number, alpha?: number, pixelHinting?: boolean, scaleMode?: string, caps?: string, joints?: string, miterLimit?: number): void;
+        lineStyle(thickness?: number, color?: number, alpha?: number, pixelHinting?: boolean, scaleMode?: string, caps?: string, joints?: string, miterLimit?: number, lineDash?: number[]): void;
         /**
          * Draw a rectangle
          * @param x x position of the center, relative to the registration point of the parent display object (in pixels).
@@ -10192,7 +10193,7 @@ declare namespace egret.sys {
          * @param joints 指定用于拐角的连接外观的类型。默认值：JointStyle.ROUND
          * @param miterLimit 用于表示剪切斜接的极限值的数字。
          */
-        lineStyle(thickness?: number, color?: number, alpha?: number, caps?: string, joints?: string, miterLimit?: number): Path2D;
+        lineStyle(thickness?: number, color?: number, alpha?: number, caps?: string, joints?: string, miterLimit?: number): StrokePath;
         /**
          * 清空所有缓存的绘制数据
          */
@@ -10610,6 +10611,7 @@ declare namespace egret.sys {
          * 用于表示剪切斜接的极限值的数字。
          */
         miterLimit: number;
+        setLineDash(segments: number[]): void;
     }
 }
 /**

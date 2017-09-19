@@ -1065,6 +1065,9 @@ namespace egret {
                     case sys.PathCommand.MoveTo:
                         context.moveTo(data[pos++], data[pos++]);
                         break;
+                    case sys.PathCommand.SetLineDash:
+                        context.setLineDash(data[pos++]);
+                        break;
                 }
             }
         }
