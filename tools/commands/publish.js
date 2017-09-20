@@ -81,7 +81,9 @@ var Publish = (function () {
                         result = compileProject.compile(options);
                         outfile = FileUtil.joinPath(options.releaseDir, 'main.min.js');
                         utils.minify(outfile, outfile);
-                        // await publishResource(runtime);
+                        return [4 /*yield*/, PublishResourceAction_1.publishResource(runtime)];
+                    case 1:
+                        _a.sent();
                         //拷贝资源后还原default.thm.json bug修复 by yanjiaqi
                         if (exml.updateSetting) {
                             exml.updateSetting();
@@ -121,9 +123,7 @@ var Publish = (function () {
                             copyAction.copy("favicon.ico");
                             EgretProject.manager.copyLibsForPublish(manifestPath, options.releaseDir, "web");
                         }
-                        return [4 /*yield*/, PublishResourceAction_1.publishResource(runtime)];
-                    case 1:
-                        _a.sent();
+                        // await publishResource(runtime);
                         return [2 /*return*/, DontExitCode];
                 }
             });

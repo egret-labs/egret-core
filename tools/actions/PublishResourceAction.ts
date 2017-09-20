@@ -100,9 +100,9 @@ function publishResourceWithVersion(projectDir: string, releaseDir: string) {
 async function publishWithResourceManager(projectDir: string, releaseDir: string): Promise<number> {
     publishResourceOrigin(projectDir, releaseDir);
     let res = require('../lib/res/res.js');
-    let projectRoot = path.join(projectDir, "bin-release/web/1111");
-    let command = "publish"
-    return await res.build({ projectRoot, debug: true, command });
+    let command = "publish";
+    temp();
+    return await res.build({ projectRoot: releaseDir, debug: true, command });
 }
 
 export function publishResource(runtime: "web" | "native") {
@@ -123,4 +123,27 @@ export function publishResource(runtime: "web" | "native") {
         default:
             return 1;
     }
+
+
+
+}
+
+function temp() {
+    var options = egret.args;
+    let manifestPath = FileUtil.joinPath(egret.args.releaseDir, "manifest.json");
+    let indexPath = FileUtil.joinPath(egret.args.releaseDir, "index.html");
+    EgretProject.manager.generateManifest(null, manifestPath, false, "web");
+    if (!EgretProject.data.useTemplate) {
+        FileUtil.copy(FileUtil.joinPath(options.projectDir, "index.html"), indexPath);
+        EgretProject.manager.modifyIndex(manifestPath, indexPath);
+    }
+    else {
+        FileUtil.copy(FileUtil.joinPath(options.templateDir, "web", "index.html"), indexPath);
+        EgretProject.manager.modifyIndex(manifestPath, indexPath);
+    }
+
+    // let copyAction = new CopyAction(options.projectDir, options.releaseDir);
+    // copyAction.copy("favicon.ico");
+
+    EgretProject.manager.copyLibsForPublish(manifestPath, options.releaseDir, "web");
 }

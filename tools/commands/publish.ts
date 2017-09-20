@@ -59,7 +59,7 @@ class Publish implements egret.Command {
         var outfile = FileUtil.joinPath(options.releaseDir, 'main.min.js');
         utils.minify(outfile, outfile);
 
-        // await publishResource(runtime);
+        await publishResource(runtime);
 
         //拷贝资源后还原default.thm.json bug修复 by yanjiaqi
         if (exml.updateSetting) {
@@ -109,7 +109,7 @@ class Publish implements egret.Command {
             EgretProject.manager.copyLibsForPublish(manifestPath, options.releaseDir, "web");
         }
 
-        await publishResource(runtime);
+        // await publishResource(runtime);
         return DontExitCode;
     }
 

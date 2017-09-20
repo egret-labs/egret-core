@@ -38,7 +38,6 @@ Object.defineProperty(exports, "__esModule", { value: true });
 //import globals = require("../globals");
 var FileUtil = require("../lib/FileUtil");
 var fs = require("fs");
-var path = require("path");
 var CopyFilesCommand = require("../commands/copyfile");
 var EgretProject = require("../project/EgretProject");
 function publishResourceOrigin(projectDir, releaseDir) {
@@ -118,15 +117,15 @@ function publishResourceWithVersion(projectDir, releaseDir) {
 }
 function publishWithResourceManager(projectDir, releaseDir) {
     return __awaiter(this, void 0, void 0, function () {
-        var res, projectRoot, command;
+        var res, command;
         return __generator(this, function (_a) {
             switch (_a.label) {
                 case 0:
                     publishResourceOrigin(projectDir, releaseDir);
                     res = require('../lib/res/res.js');
-                    projectRoot = path.join(projectDir, "bin-release/web/1111");
                     command = "publish";
-                    return [4 /*yield*/, res.build({ projectRoot: projectRoot, debug: true, command: command })];
+                    temp();
+                    return [4 /*yield*/, res.build({ projectRoot: releaseDir, debug: true, command: command })];
                 case 1: return [2 /*return*/, _a.sent()];
             }
         });
@@ -150,3 +149,20 @@ function publishResource(runtime) {
     }
 }
 exports.publishResource = publishResource;
+function temp() {
+    var options = egret.args;
+    var manifestPath = FileUtil.joinPath(egret.args.releaseDir, "manifest.json");
+    var indexPath = FileUtil.joinPath(egret.args.releaseDir, "index.html");
+    EgretProject.manager.generateManifest(null, manifestPath, false, "web");
+    if (!EgretProject.data.useTemplate) {
+        FileUtil.copy(FileUtil.joinPath(options.projectDir, "index.html"), indexPath);
+        EgretProject.manager.modifyIndex(manifestPath, indexPath);
+    }
+    else {
+        FileUtil.copy(FileUtil.joinPath(options.templateDir, "web", "index.html"), indexPath);
+        EgretProject.manager.modifyIndex(manifestPath, indexPath);
+    }
+    // let copyAction = new CopyAction(options.projectDir, options.releaseDir);
+    // copyAction.copy("favicon.ico");
+    EgretProject.manager.copyLibsForPublish(manifestPath, options.releaseDir, "web");
+}
