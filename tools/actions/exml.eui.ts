@@ -8,16 +8,9 @@ import EgretProject = require('../project/EgretProject');
 import exmlParser = require("../lib/eui/EXMLParser");
 var parser = new exmlParser.EXMLParser();
 
-export function beforeBuild() {
-    generateExmlDTS();
-}
-
-export function beforeBuildChanges(exmlsChanged: egret.FileChanges) {
-    generateExmlDTS();
-}
 
 export function build(): egret.TaskResult {
-    var exmls = searchEXML();
+    const exmls = searchEXML();
     return buildChanges(exmls);
 }
 
@@ -200,7 +193,7 @@ function getExmlDtsPath() {
     return file.joinPath(egret.args.projectDir, "libs", "exml.e.d.ts");
 }
 
-function generateExmlDTS(): string {
+export function generateExmlDTS(): string {
     //去掉重复定义
     var classDefinations = {};
     var sourceList = searchEXML();

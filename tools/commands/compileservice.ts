@@ -76,7 +76,7 @@ class AutoCompileCommand implements egret.Command {
 
         //预处理
         utils.clean(options.debugDir);
-        exmlActions.beforeBuild();
+        exmlActions.generateExmlDTS();
 
 
         //第一次运行，拷贝项目文件
@@ -185,7 +185,7 @@ class AutoCompileCommand implements egret.Command {
         }
 
         if (exmls.length) {
-            exmlActions.beforeBuildChanges(exmls);
+            exmlActions.generateExmlDTS()//;(exmls);
         }
 
         var exmlTS = this.buildChangedEXML(exmls);

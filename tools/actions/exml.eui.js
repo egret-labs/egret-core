@@ -5,14 +5,6 @@ var exml = require("../lib/eui/EXML");
 var EgretProject = require("../project/EgretProject");
 var exmlParser = require("../lib/eui/EXMLParser");
 var parser = new exmlParser.EXMLParser();
-function beforeBuild() {
-    generateExmlDTS();
-}
-exports.beforeBuild = beforeBuild;
-function beforeBuildChanges(exmlsChanged) {
-    generateExmlDTS();
-}
-exports.beforeBuildChanges = beforeBuildChanges;
 function build() {
     var exmls = searchEXML();
     return buildChanges(exmls);
@@ -219,3 +211,4 @@ function generateExmlDTS() {
     file.save(exmlDtsPath, dts);
     return dts;
 }
+exports.generateExmlDTS = generateExmlDTS;

@@ -53,7 +53,7 @@ var AutoCompileCommand = (function () {
         var _scripts = this._scripts || [];
         //预处理
         utils.clean(options.debugDir);
-        exmlActions.beforeBuild();
+        exmlActions.generateExmlDTS();
         //第一次运行，拷贝项目文件
         this.copyLibs();
         //编译
@@ -145,7 +145,7 @@ var AutoCompileCommand = (function () {
             }
         }
         if (exmls.length) {
-            exmlActions.beforeBuildChanges(exmls);
+            exmlActions.generateExmlDTS(); //;(exmls);
         }
         var exmlTS = this.buildChangedEXML(exmls);
         this.buildChangedRes(others);

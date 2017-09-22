@@ -8,9 +8,7 @@ var CompileProject = (function () {
     function CompileProject() {
     }
     CompileProject.prototype.compile = function (options) {
-        //console.log("----compileProject.compile----")
-        exmlActions.beforeBuild();
-        //编译
+        exmlActions.generateExmlDTS();
         exmlActions.build();
         var result = this.compileProject(options);
         exmlActions.afterBuild();

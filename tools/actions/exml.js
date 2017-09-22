@@ -1,7 +1,5 @@
-/// <reference path="../lib/types.d.ts" />
-var exmlGUI = require("./exml.gui");
-var exmlEUI = require("./exml.eui");
-var EgretProject = require("../project/EgretProject");
-var hasSwan = EgretProject.data.hasEUI();
-var exmlHandlers = hasSwan ? exmlEUI : exmlGUI;
-module.exports = exmlHandlers;
+function __export(m) {
+    for (var p in m) if (!exports.hasOwnProperty(p)) exports[p] = m[p];
+}
+Object.defineProperty(exports, "__esModule", { value: true });
+__export(require("./exml.eui"));
